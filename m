@@ -2,130 +2,114 @@ Return-Path: <SRS0=yYSg=DG=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88BAC47420
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Sep 2020 18:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF29C47420
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Sep 2020 19:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 970BE2076D
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Sep 2020 18:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1601405781;
-	bh=B4LAoCA5W+8yr4Ajd8NMhnc+SSJLU315huDeq+kqHT0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=MdVg4kYGBNAbHIdz5ROE0vKh/vmvDgmBUcut4RVBB34LN4ovNXApfsKDyHlNVivAp
-	 EssMTMJ1T5IiDC/blFHSSMCceeWNwI426pISHd3g8jx/a/CsT1EsE/QuBN6i4Z88sR
-	 eJE2s+4+nDr80jwmk0Li2/Mq/AzJuk5RkHSvsbk8=
+	by mail.kernel.org (Postfix) with ESMTP id 526CD20774
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Sep 2020 19:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgI2S4R (ORCPT
+        id S1728300AbgI2TcI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 29 Sep 2020 14:56:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbgI2S4Q (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 29 Sep 2020 14:56:16 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9A622076D;
-        Tue, 29 Sep 2020 18:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601405775;
-        bh=B4LAoCA5W+8yr4Ajd8NMhnc+SSJLU315huDeq+kqHT0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=K3kaRVQui+deC0532ckd9YNAnVhOcaqYzyqkRIy1t5X9hEm7PTeEMXip/Y0isOHre
-         dUXVtpwqhw0FMn56Tj9t/8gSeVLwjY6xrqk7TLaueetVHjsoVMNui6tScT/IO4QTT7
-         QBtev1ZKwIOco3iXvT+6s1BvGgR373hV3pMkdw7w=
-Date:   Tue, 29 Sep 2020 14:01:56 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tue, 29 Sep 2020 15:32:08 -0400
+Received: from mother.openwall.net ([195.42.179.200]:50838 "HELO
+        mother.openwall.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727740AbgI2TcH (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 29 Sep 2020 15:32:07 -0400
+X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Sep 2020 15:32:06 EDT
+Received: (qmail 14121 invoked from network); 29 Sep 2020 19:25:24 -0000
+Received: from localhost (HELO pvt.openwall.com) (127.0.0.1)
+  by localhost with SMTP; 29 Sep 2020 19:25:24 -0000
+Received: by pvt.openwall.com (Postfix, from userid 503)
+        id DAFE6AB844; Tue, 29 Sep 2020 21:25:17 +0200 (CEST)
+Date:   Tue, 29 Sep 2020 21:25:17 +0200
+From:   Solar Designer <solar@openwall.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kernel-hardening@lists.openwall.com,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ice: Replace one-element array with flexible-array
- member
-Message-ID: <20200929190156.GA25604@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Subject: Re: Linux-specific kernel hardening
+Message-ID: <20200929192517.GA2718@openwall.com>
+References: <202009281907.946FBE7B@keescook>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <202009281907.946FBE7B@keescook>
+User-Agent: Mutt/1.4.2.3i
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare having
-a dynamically sized set of trailing elements in a structure. Kernel code
-should always use “flexible array members”[1] for these cases. The older
-style of one-element or zero-length arrays should no longer be used[2].
+Hi Kees,
 
-Refactor the code according to the use of a flexible-array member in
-struct ice_res_tracker, instead of a one-element array and use the
-struct_size() helper to calculate the size for the allocations.
+Ouch.  I wouldn't have suggested we do anything at all about that minor
+problem if I knew you'd split the list in two as a result.  That's very
+confusing.  Assuming that's what you already did anyway, some comments:
 
-Also, notice that the code below suggests that, currently, two too many
-bytes are being allocated with devm_kzalloc(), as the total number of
-entries (pf->irq_tracker->num_entries) for pf->irq_tracker->list[] is
-_vectors_ and sizeof(*pf->irq_tracker) also includes the size of the
-one-element array _list_ in struct ice_res_tracker.
+On Tue, Sep 29, 2020 at 10:14:03AM -0700, Kees Cook wrote:
+> The work of improving the Linux kernel's security is, of course,
+> and endless task. While many of the new features come through on the
+> kernel-hardening@lists.openwall.com list[1], there is a stated desire
+> to avoid "maintenance" topics[2] on the list, and that isn't compatible
+> with the on-going work done within the upstream Linux kernel development
+> community, which may need to discuss the nuances of performing that work.
+> 
+> As such there is now a new list, linux-hardening@vger.kernel.org[3],
+> which will take kernel-hardening's place in the Linux MAINTAINERS
+> file.
 
-drivers/net/ethernet/intel/ice/ice_main.c:3511:
-3511         /* populate SW interrupts pool with number of OS granted IRQs. */
-3512         pf->num_avail_sw_msix = (u16)vectors;
-3513         pf->irq_tracker->num_entries = (u16)vectors;
-3514         pf->irq_tracker->end = pf->irq_tracker->num_entries;
+OK'ish so far.
 
-With this change, the right amount of dynamic memory is now allocated
-because, contrary to one-element arrays which occupy at least as much
-space as a single object of the type, flexible-array members don't
-occupy such space in the containing structure.
+> New topics and on-going work will be discussed there, and I urge
+> anyone interested in Linux kernel hardening to join the new list. It's
+> my intention that all future upstream work can be CCed there, following
+> the standard conventions of the Linux development model, for better or
+> worse. ;)
+> 
+> For anyone discussing new topics or ideas, please continue to CC
+> kernel-hardening too, as there will likely be many people only subscribed
+> there. Hopefully this will get the desired split of topics between the
+> two lists.
 
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/v5.9-rc1/process/deprecated.html#zero-length-and-one-element-arrays
+I find this confusing.  Given that "new topics and on-going work will be
+discussed" on the new linux-hardening list, what's left for the old
+kernel-hardening list?  Just a legacy list to be CC'ed because people
+are still subscribed to it?  If so, it looks like basically because of
+my concern about a minor issue you chose to move the list from one place
+to another without actually addressing my concern in any way but causing
+lots of inconvenience.  That would be weird, so I hope I misunderstand.
 
-Built-tested-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/intel/ice/ice.h      | 2 +-
- drivers/net/ethernet/intel/ice/ice_main.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+To me, "new topics" are certainly desirable on kernel-hardening.  Ditto
+for "on-going work" as long as it's work on kernel hardening per se
+(patch review, etc.) rather than e.g. documentation formatting fixes for
+former kernel hardening changes that are already accepted upstream and
+are only CC'ed here because of a formality (link from MAINTAINERS)
+rather than anyone's well-reasoned decision.
 
-diff --git a/drivers/net/ethernet/intel/ice/ice.h b/drivers/net/ethernet/intel/ice/ice.h
-index 65583f0a1797..a4c84faa36d6 100644
---- a/drivers/net/ethernet/intel/ice/ice.h
-+++ b/drivers/net/ethernet/intel/ice/ice.h
-@@ -164,7 +164,7 @@ struct ice_tc_cfg {
- struct ice_res_tracker {
- 	u16 num_entries;
- 	u16 end;
--	u16 list[1];
-+	u16 list[];
- };
- 
- struct ice_qs_cfg {
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 2297ee7dba26..f6a7a23615eb 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -3500,9 +3500,9 @@ static int ice_init_interrupt_scheme(struct ice_pf *pf)
- 		return vectors;
- 
- 	/* set up vector assignment tracking */
--	pf->irq_tracker =
--		devm_kzalloc(ice_pf_to_dev(pf), sizeof(*pf->irq_tracker) +
--			     (sizeof(u16) * vectors), GFP_KERNEL);
-+	pf->irq_tracker = devm_kzalloc(ice_pf_to_dev(pf),
-+				       struct_size(pf->irq_tracker, list, vectors),
-+				       GFP_KERNEL);
- 	if (!pf->irq_tracker) {
- 		ice_dis_msix(pf);
- 		return -ENOMEM;
--- 
-2.27.0
+I suggested that a small minority of messages on kernel-hardening be
+removed from here.  You're effectively replacing one list with another,
+or if that's not what you're doing then you haven't described it well,
+and I wouldn't expect to "get the desired split of topics".
 
+Then there's also the lists' naming and the Subject on this message.
+Are you suggesting that the kernel-hardening list be used for kernel
+hardening that is not Linux specific?  That would be a reuse of an
+abandoned list, if it would be, but I don't know whether there's demand
+for that and it's probably incompatible with continuing to CC the list
+on Linux-specific topics and it might not be well-received by all
+current subscribers who assumed it was a Linux list, which it was.
+
+Please clarify.
+
+> [1] https://www.openwall.com/lists/kernel-hardening/
+>     https://lore.kernel.org/kernel-hardening/
+> 
+> [2] https://lore.kernel.org/kernel-hardening/20200902121604.GA10684@openwall.com/
+> 
+> [3] http://vger.kernel.org/vger-lists.html#linux-hardening
+>     https://lore.kernel.org/linux-hardening/
+
+Alexander
