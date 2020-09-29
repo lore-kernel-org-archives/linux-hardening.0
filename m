@@ -2,105 +2,130 @@ Return-Path: <SRS0=yYSg=DG=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4925DC4727C
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Sep 2020 17:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88BAC47420
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Sep 2020 18:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5BFB208FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Sep 2020 17:14:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EgdYcQxE"
+	by mail.kernel.org (Postfix) with ESMTP id 970BE2076D
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Sep 2020 18:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1601405781;
+	bh=B4LAoCA5W+8yr4Ajd8NMhnc+SSJLU315huDeq+kqHT0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=MdVg4kYGBNAbHIdz5ROE0vKh/vmvDgmBUcut4RVBB34LN4ovNXApfsKDyHlNVivAp
+	 EssMTMJ1T5IiDC/blFHSSMCceeWNwI426pISHd3g8jx/a/CsT1EsE/QuBN6i4Z88sR
+	 eJE2s+4+nDr80jwmk0Li2/Mq/AzJuk5RkHSvsbk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgI2ROG (ORCPT
+        id S1728276AbgI2S4R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 29 Sep 2020 13:14:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727650AbgI2ROG (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 29 Sep 2020 13:14:06 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DFDC061755
-        for <linux-hardening@vger.kernel.org>; Tue, 29 Sep 2020 10:14:05 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 5so4387815pgf.5
-        for <linux-hardening@vger.kernel.org>; Tue, 29 Sep 2020 10:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=glZ74uXs4uVYpYfsBsjhUYHj82y51C7rtcPVZ0nTWqQ=;
-        b=EgdYcQxE7ZZjtGIKn7hfGvTL2dAAS4WYGICct/4ovCNiMZS8Km97CjFJt3irHOI5b0
-         1NWe9X+2BEnZBNDw5VjAHScU5u1VsM0MZGeZL2ZPww6WQLY/oSfCJ+ylsXnv6zQCov1F
-         A9BS2Ff1KEPFtA7BOyPRVy9zLkxBaesNC7P0U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=glZ74uXs4uVYpYfsBsjhUYHj82y51C7rtcPVZ0nTWqQ=;
-        b=C5qEI2gdFBIBEfA1OE09CSX3miBGeCsjPh1VF7v6rxEPYRNVtPQRvHLptiNM2b44Lz
-         WA/UCgzdhh/1rCnHiUEfiuCTIQjjLs6B7/7FPvU/mOuk48mFFdA9X8RFQSrjGPE8Yi8M
-         c23svo82iJiAb8zruWR93W3maCO85ZSPKZlzQaUnl7nCEBMwJE9K5cDkGTWRuRdlPF4f
-         +LuA+fTkKE4yYk+O01onJjpm6MfY7Us4sYcdiIR8kP/OT9qyDJFYA3zT2S0IehhUnb4O
-         ZGpyx3qRb0sSYAyjmo63wkIVEvmQK0apcSRyvZ0svl/YfNpau0j6BUy1zgguG2hlHrms
-         t7jQ==
-X-Gm-Message-State: AOAM532kAE/zxdvu9WKwvgLSXR683/WvxG0S772v4XU3zDXMRPTabG1C
-        zIt8Jv1CvrxAUpATnXq/yMYlKC0Cy27NkG9O
-X-Google-Smtp-Source: ABdhPJzuL2+fzVC78Z9pEdc5ORcVZEwJAqOmtAdORpe3kHYq4M0bJk0KZSyfqie2KFGEJ6y7C2rEtg==
-X-Received: by 2002:a63:2319:: with SMTP id j25mr3946103pgj.75.1601399645297;
-        Tue, 29 Sep 2020 10:14:05 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y126sm221637pgb.40.2020.09.29.10.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2020 10:14:04 -0700 (PDT)
-Date:   Tue, 29 Sep 2020 10:14:03 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     kernel-hardening@lists.openwall.com,
+        Tue, 29 Sep 2020 14:56:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727740AbgI2S4Q (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 29 Sep 2020 14:56:16 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9A622076D;
+        Tue, 29 Sep 2020 18:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601405775;
+        bh=B4LAoCA5W+8yr4Ajd8NMhnc+SSJLU315huDeq+kqHT0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=K3kaRVQui+deC0532ckd9YNAnVhOcaqYzyqkRIy1t5X9hEm7PTeEMXip/Y0isOHre
+         dUXVtpwqhw0FMn56Tj9t/8gSeVLwjY6xrqk7TLaueetVHjsoVMNui6tScT/IO4QTT7
+         QBtev1ZKwIOco3iXvT+6s1BvGgR373hV3pMkdw7w=
+Date:   Tue, 29 Sep 2020 14:01:56 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Linux-specific kernel hardening
-Message-ID: <202009281907.946FBE7B@keescook>
+Subject: [PATCH][next] ice: Replace one-element array with flexible-array
+ member
+Message-ID: <20200929190156.GA25604@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-The work of improving the Linux kernel's security is, of course,
-and endless task. While many of the new features come through on the
-kernel-hardening@lists.openwall.com list[1], there is a stated desire
-to avoid "maintenance" topics[2] on the list, and that isn't compatible
-with the on-going work done within the upstream Linux kernel development
-community, which may need to discuss the nuances of performing that work.
+Refactor the code according to the use of a flexible-array member in
+struct ice_res_tracker, instead of a one-element array and use the
+struct_size() helper to calculate the size for the allocations.
 
-As such there is now a new list, linux-hardening@vger.kernel.org[3],
-which will take kernel-hardening's place in the Linux MAINTAINERS
-file. New topics and on-going work will be discussed there, and I urge
-anyone interested in Linux kernel hardening to join the new list. It's
-my intention that all future upstream work can be CCed there, following
-the standard conventions of the Linux development model, for better or
-worse. ;)
+Also, notice that the code below suggests that, currently, two too many
+bytes are being allocated with devm_kzalloc(), as the total number of
+entries (pf->irq_tracker->num_entries) for pf->irq_tracker->list[] is
+_vectors_ and sizeof(*pf->irq_tracker) also includes the size of the
+one-element array _list_ in struct ice_res_tracker.
 
-For anyone discussing new topics or ideas, please continue to CC
-kernel-hardening too, as there will likely be many people only subscribed
-there. Hopefully this will get the desired split of topics between the
-two lists.
+drivers/net/ethernet/intel/ice/ice_main.c:3511:
+3511         /* populate SW interrupts pool with number of OS granted IRQs. */
+3512         pf->num_avail_sw_msix = (u16)vectors;
+3513         pf->irq_tracker->num_entries = (u16)vectors;
+3514         pf->irq_tracker->end = pf->irq_tracker->num_entries;
 
-Thanks and take care,
+With this change, the right amount of dynamic memory is now allocated
+because, contrary to one-element arrays which occupy at least as much
+space as a single object of the type, flexible-array members don't
+occupy such space in the containing structure.
 
--Kees
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.9-rc1/process/deprecated.html#zero-length-and-one-element-arrays
 
-[1] https://www.openwall.com/lists/kernel-hardening/
-    https://lore.kernel.org/kernel-hardening/
+Built-tested-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/ethernet/intel/ice/ice.h      | 2 +-
+ drivers/net/ethernet/intel/ice/ice_main.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-[2] https://lore.kernel.org/kernel-hardening/20200902121604.GA10684@openwall.com/
-
-[3] http://vger.kernel.org/vger-lists.html#linux-hardening
-    https://lore.kernel.org/linux-hardening/
-
+diff --git a/drivers/net/ethernet/intel/ice/ice.h b/drivers/net/ethernet/intel/ice/ice.h
+index 65583f0a1797..a4c84faa36d6 100644
+--- a/drivers/net/ethernet/intel/ice/ice.h
++++ b/drivers/net/ethernet/intel/ice/ice.h
+@@ -164,7 +164,7 @@ struct ice_tc_cfg {
+ struct ice_res_tracker {
+ 	u16 num_entries;
+ 	u16 end;
+-	u16 list[1];
++	u16 list[];
+ };
+ 
+ struct ice_qs_cfg {
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 2297ee7dba26..f6a7a23615eb 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -3500,9 +3500,9 @@ static int ice_init_interrupt_scheme(struct ice_pf *pf)
+ 		return vectors;
+ 
+ 	/* set up vector assignment tracking */
+-	pf->irq_tracker =
+-		devm_kzalloc(ice_pf_to_dev(pf), sizeof(*pf->irq_tracker) +
+-			     (sizeof(u16) * vectors), GFP_KERNEL);
++	pf->irq_tracker = devm_kzalloc(ice_pf_to_dev(pf),
++				       struct_size(pf->irq_tracker, list, vectors),
++				       GFP_KERNEL);
+ 	if (!pf->irq_tracker) {
+ 		ice_dis_msix(pf);
+ 		return -ENOMEM;
 -- 
-Kees Cook
+2.27.0
+
