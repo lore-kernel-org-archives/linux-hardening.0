@@ -2,228 +2,131 @@ Return-Path: <SRS0=y3Vi=DH=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D12C4727F
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Sep 2020 09:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A93C4363D
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Sep 2020 21:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C814E20719
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Sep 2020 09:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D091F2076A
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Sep 2020 21:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1601499762;
+	bh=hEW2lfnz94TX8YvGzA25neEhx4sqLqPCJj+osYv0f84=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=hQPs9chLnNfnHIli/MLFQma8BlXHsJ6XJ+W9IiDYNJFvbsu9FAAtC3mWGl4kHoIga
+	 BfehzpWI7OnVyuDQzqP4nIx785dlC63lnkq6Nv/AZGTg6SWMrIrzzod1gw607Q3lBi
+	 OxVfhlBINgtFgjVT9n2qCd3c/MFJMS6zCN7FybZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbgI3JCj (ORCPT
+        id S1730090AbgI3VCm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Sep 2020 05:02:39 -0400
-Received: from mother.openwall.net ([195.42.179.200]:43767 "HELO
-        mother.openwall.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725776AbgI3JCj (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Sep 2020 05:02:39 -0400
-Received: (qmail 31945 invoked from network); 30 Sep 2020 09:02:36 -0000
-Received: from localhost (HELO pvt.openwall.com) (127.0.0.1)
-  by localhost with SMTP; 30 Sep 2020 09:02:36 -0000
-Received: by pvt.openwall.com (Postfix, from userid 503)
-        id 4B347AB844; Wed, 30 Sep 2020 11:02:32 +0200 (CEST)
-Date:   Wed, 30 Sep 2020 11:02:32 +0200
-From:   Solar Designer <solar@openwall.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kernel-hardening@lists.openwall.com,
+        Wed, 30 Sep 2020 17:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbgI3VCm (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 30 Sep 2020 17:02:42 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A2162071E;
+        Wed, 30 Sep 2020 21:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601499761;
+        bh=hEW2lfnz94TX8YvGzA25neEhx4sqLqPCJj+osYv0f84=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kB0qqgz2Qg5kqmagsLjOnmi5VS9A0KdFC8OuKPMCmSb2lPxu2++Ex4nxbEuKwSUnM
+         wIn6zAXZkNhnq6dfT7ziW+s9r4bjatfxBsm+TUVSRjvk0De9MdnqQkidBm6zy/HFp1
+         QH7/bokmJ01Sqi/yNifloTTQduQJ4nzPjOkHBiIg=
+Date:   Wed, 30 Sep 2020 16:08:24 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: Linux-specific kernel hardening
-Message-ID: <20200930090232.GA5067@openwall.com>
-References: <202009281907.946FBE7B@keescook> <20200929192517.GA2718@openwall.com> <202009291558.04F4D35@keescook>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH][next] mtd: rawnand: Replace one-element array with
+ flexible-array member
+Message-ID: <20200930210824.GA12277@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202009291558.04F4D35@keescook>
-User-Agent: Mutt/1.4.2.3i
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 04:41:45PM -0700, Kees Cook wrote:
-> On Tue, Sep 29, 2020 at 09:25:17PM +0200, Solar Designer wrote:
-> > On Tue, Sep 29, 2020 at 10:14:03AM -0700, Kees Cook wrote:
-> > > New topics and on-going work will be discussed there, and I urge
-> > > anyone interested in Linux kernel hardening to join the new list. It's
-> > > my intention that all future upstream work can be CCed there, following
-> > > the standard conventions of the Linux development model, for better or
-> > > worse. ;)
-> > > 
-> > > For anyone discussing new topics or ideas, please continue to CC
-> > > kernel-hardening too, as there will likely be many people only subscribed
-> > > there. Hopefully this will get the desired split of topics between the
-> > > two lists.
-> > 
-> > I find this confusing.  Given that "new topics and on-going work will be
-> > discussed" on the new linux-hardening list, what's left for the old
-> > kernel-hardening list?  Just a legacy list to be CC'ed because people
-> 
-> My intention is to allow for linux-hardening@ to be the defacto place
-> for upstream Linux kernel hardening work. (And I include "upstream"
-> there again intentionally, and "work", which is larger than just
-> discussing new features.) Such a place must exist for the mechanical
-> and social processes inherent in the Linux kernel development model to
-> operate. Something needs to be listed in the MAINTAINERS file, and tools
-> direct email delivery much more commonly than individuals.
-> 
-> Since it is not part of the established Linux development processes to
-> _remove_ lists from CC when they're part of the maintainership chain or
-> git history, it's simply not possible for kernel-hardening@ to serve in
-> that role, given the constraints on topic applicability.
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-We could simply keep the constraints relaxed as necessary.  I didn't
-even suggest removing the list from CC on messages sent per git history;
-in fact, I don't recall that ever resulting in undesirable messages in
-here.  I merely suggested removing the list from the MAINTAINERS file.
-I don't see why that couldn't simply be done, but I didn't insist.  What
-you're doing now is far worse than keeping the list in MAINTAINERS or
-removing it from there, in my opinion.
+Refactor the code according to the use of a flexible-array member
+instead of a one-element array. Also, make use of the struct_size()
+helper to calculate the size of the allocation for _nand_. In order
+to keep the code as maintainable as possible and to keep _cs_ as an
+array, add a new macro CS_N to aid in the allocation size calculation,
+in case there is a need for more Chip Select IDs in the future. In the
+meantime, the macro is set to 1. This also avoids having to use a magic
+number '1' as the last argument for struct_size().
 
-> For stuff that IS a new topic, where people are explicitly choosing
-> what lists to send to, CCing both linux-hardening@ and kernel-hardening@
-> seems like the right thing to do to get that topic split.
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.9-rc1/process/deprecated.html#zero-length-and-one-element-arrays
 
-I think this will most likely result in one of 3 things:
+Build-tested-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/5f7473c0.Vv4h6yzXSga90P04%25lkp@intel.com/
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/mtd/nand/raw/tegra_nand.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-1. 90%+ of messages CC'ed to both lists.
+diff --git a/drivers/mtd/nand/raw/tegra_nand.c b/drivers/mtd/nand/raw/tegra_nand.c
+index fbf67722a049..43b8359dcd85 100644
+--- a/drivers/mtd/nand/raw/tegra_nand.c
++++ b/drivers/mtd/nand/raw/tegra_nand.c
+@@ -163,6 +163,9 @@
+ 				HWSTATUS_RBSY_MASK(NAND_STATUS_READY) | \
+ 				HWSTATUS_RBSY_VALUE(NAND_STATUS_READY))
+ 
++/* Number of Chip Selects. Currently, only one. */
++#define CS_N			1
++
+ struct tegra_nand_controller {
+ 	struct nand_controller controller;
+ 	struct device *dev;
+@@ -183,7 +186,7 @@ struct tegra_nand_chip {
+ 	u32 config;
+ 	u32 config_ecc;
+ 	u32 bch_config;
+-	int cs[1];
++	int cs[];
+ };
+ 
+ static inline struct tegra_nand_controller *
+@@ -1086,14 +1089,14 @@ static int tegra_nand_chips_init(struct device *dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Retrieve CS id, currently only single die NAND supported */
++	/* Retrieve CS id, currently only single-die NAND supported */
+ 	ret = of_property_read_u32(np_nand, "reg", &cs);
+ 	if (ret) {
+ 		dev_err(dev, "could not retrieve reg property: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-	nand = devm_kzalloc(dev, sizeof(*nand), GFP_KERNEL);
++	nand = devm_kzalloc(dev, struct_size(nand, cs, CS_N), GFP_KERNEL);
+ 	if (!nand)
+ 		return -ENOMEM;
+ 
+-- 
+2.27.0
 
-2. Topics arbitrarily limited to just one of the two lists, with no
-clear separation on what goes where, and some CC'ed to both lists.
-
-3. Everything staying on/moving to just one of the two lists eventually,
-after struggling with 1 or 2 above for a while.
-
-It'll be really hard (almost unrealistic) for us to arrive at a
-reasonable topic split between the lists now.  Moreover, I don't know of
-such reasonable split even if we could somehow make it happen.
-
-> > are still subscribed to it?  If so, it looks like basically because of
-> > my concern about a minor issue you chose to move the list from one place
-> > to another without actually addressing my concern in any way but causing
-> > lots of inconvenience.  That would be weird, so I hope I misunderstand.
-> 
-> I don't think the Linux kernel's (email) development model is compatible
-> with having a "strictly on-topic" mailing list as part of the standard
-> process. Your concerns are perfectly valid, but just not something that
-> I see a way to solving without significant effort (e.g. making the list
-> entirely moderated, etc).
-
-Removing the list from the MAINTAINERS file (maybe replacing it with the
-new list as you suggest) wouldn't be significant effort.  If that is
-somehow not suitable, we can live with the occasional noise that brings.
-
-My concerns were not related to Openwall hosting the list.  They were
-related to well-being of KSPP, no matter where the list is hosted.  So
-by moving the list you have not addressed my concerns at all.  You've
-only made things far worse.
-
-> And moderation is actually another aspect of
-> the desire to move; emails are regularly auto-moderated which just
-> creates more manual work (for both of us).
-
-Messages that are auto-approved don't create any work for either of us,
-and that's the majority of them.  Messages that are held for moderation
-(until I add the sender to moderation bypass) do involve some work, but
-that's the only way to avoid spam on the list.  I think that amount of
-work is small compared to all subscribers' time wasted on occasional
-spam on the list.  If it's unacceptable for you, I can remove you from
-list moderators and maybe add someone else as a co-moderator.  I think
-it wouldn't be hard for us to find a volunteer.  Please let me know.
-
-Besides, the split doesn't solve this problem for kernel-hardening@.
-
-> > To me, "new topics" are certainly desirable on kernel-hardening.  Ditto
-> > for "on-going work" as long as it's work on kernel hardening per se
-> > (patch review, etc.) rather than e.g. documentation formatting fixes for
-> > former kernel hardening changes that are already accepted upstream and
-> > are only CC'ed here because of a formality (link from MAINTAINERS)
-> > rather than anyone's well-reasoned decision.
-> 
-> I don't want myself or anyone else to have to worry about where the line
-> is drawn. If kernel-hardening@ is on CC for new topics, we're all good.
-> With the MAINTAINERS file updated, and a .mailmap entry added to redirect
-> kernel-hardening@ to linux-hardening@, all the "mechanical" threads will
-> avoid kernel-hardening@, and we'll be close to what will work best for
-> the topic split.
-
-OK, let's hope this will work, although I doubt it and I don't know what
-topic split is desirable.
-
-> > I suggested that a small minority of messages on kernel-hardening be
-> > removed from here.  You're effectively replacing one list with another,
-> > or if that's not what you're doing then you haven't described it well,
-> > and I wouldn't expect to "get the desired split of topics".
-> 
-> I understand what you mean, but I think the effort required to remove
-> those messages is too high. As an upstream Linux kernel maintainer, I
-> have different constraints on how I need a development discussion list
-> to operate. In the quoted thread[2] from earlier, I explained (perhaps
-> badly) those constraints, and you disagreed and additionally said
-> further discussion would hinder kernel-hardening@. It's your list and
-> list server, so I obviously can't make you agree to operate it the way
-> Linux kernel development lists are expected to work, so I didn't really
-> have any other choice but to start a new list.
-
-That's a major misunderstanding.  I cared primarily about the well-being
-of KSPP, and not so much about hosting/administering a list with a
-policy I disagree with in a minor way, which I accepted.  I didn't want
-to continue that discussion "for very long" as it "hurts actual work",
-not because I disagreed with you (although I did) and insisted on that
-deciding list policy (I did not, and it did not).  BTW, now we're having
-another such discussion that hurts actual work, so I am also not going
-to continue it for very long.
-
-If you didn't want to add to a thread given my comment about it hurting,
-you could always e-mail me off-list, and I'd tell you that you certainly
-did have other choices.
-
-> I recognize you've made a
-> lot of changes over the past several years (e.g. Subject prefixes, etc)
-> to adapt to those norms, but the list's acceptable "range of discussion"
-> seemed like a pretty fundamental difference that was unlikely to be
-> easily solved with a single list.
-
-Fair enough, although I only suggested excluding CC's resulting from
-MAINTAINERS, which didn't feel fundamental enough to insist on it (so I
-did not), let alone to split the list in two.
-
-> > Then there's also the lists' naming and the Subject on this message.
-> > Are you suggesting that the kernel-hardening list be used for kernel
-> > hardening that is not Linux specific?  That would be a reuse of an
-> 
-> The better distinction is between upstream and not. Another aspect driving
-> this change is the belief by people that the Linux Kernel Self-Protection
-> Project is somehow not upstream, which I think is somewhat reinforced
-> by the mailing list not living on vger.kernel.org. It's hardly a strong
-> enough reason to move (much like the auto-moderation hassles), but when
-> all are combined, I found the move sufficiently justified.
-
-Actually, that feels like the only valid reason to me.
-
-> > abandoned list, if it would be, but I don't know whether there's demand
-> > for that and it's probably incompatible with continuing to CC the list
-> > on Linux-specific topics and it might not be well-received by all
-> > current subscribers who assumed it was a Linux list, which it was.
-> 
-> Agreed, I should have said "upstream-specific" in the Subject. That was
-> not clear there.
-
-So your suggested use of kernel-hardening@ is for discussions of Linux
-kernel hardening projects or work-in-progress that isn't to be submitted
-upstream or isn't yet submitted upstream.  If, and as soon as, a patch
-series is sent upstream, that should go on the new linux-hardening@
-list?  And only in there or also CC'ed to kernel-hardening@?  I'm just
-trying to understand.
-
-> Hopefully this clears things up. I'm fundamentally seeking less
-> work/irritation for both of us, as well as for the folks doing upstream
-> work who find themselves CCing a development mailing list, and the folks
-> who want to just see the discussion of new features.
-
-I currently don't expect this to work well, but let's see.
-
-> > [2] https://lore.kernel.org/kernel-hardening/20200902121604.GA10684@openwall.com/
-
-Alexander
