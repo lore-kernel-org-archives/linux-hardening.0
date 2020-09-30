@@ -2,46 +2,69 @@ Return-Path: <SRS0=y3Vi=DH=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E92C4363D
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Sep 2020 21:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB92C4363D
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Sep 2020 22:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20B292074A
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Sep 2020 21:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1601501452;
-	bh=feeviU9+A/gTyUPoDCemRtabALCS/oslSvMzA1uSTlc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IQgojMmpelwX68e0ne3ZAIxHXLciZfS3ZD5LUL3lkgMalubi5R4ZZTlxFq2VouS8N
-	 BYUoqtDZdv02qqzs71HJgeZu/hht8K8Wu5C5ttzAhAbk3xRsWVWY3rcNroa/sb5RPA
-	 TFZKanI2JHRibfAe0FRLPykCiyFnFlQ4D6+GCyLU=
+	by mail.kernel.org (Postfix) with ESMTP id C41352071E
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Sep 2020 22:32:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dhje9PS0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgI3Vav (ORCPT
+        id S1730441AbgI3Wc4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Sep 2020 17:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbgI3Vav (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Sep 2020 17:30:51 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A19720739;
-        Wed, 30 Sep 2020 21:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601501451;
-        bh=feeviU9+A/gTyUPoDCemRtabALCS/oslSvMzA1uSTlc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iOvN2DZkfruxM4tVe4v/noGq5UC5MncnkeoZiocJeejKgelDd1XQHw++sgRbjdkVw
-         5om65naAvbW/rdeJjUwCC90cIKG5Jk7MHWG+kgO2vNtK29kKitcE4/NVmhpLiKeRmX
-         Mvxb+Rh/naYoC7WrYSwsgeW62an08UQ3yJ0oRYqs=
-Date:   Wed, 30 Sep 2020 16:36:34 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jann Horn <jannh@google.com>
+        Wed, 30 Sep 2020 18:32:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbgI3Wcx (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 30 Sep 2020 18:32:53 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A1CC061755
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Sep 2020 15:32:52 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id p15so5126067ejm.7
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Sep 2020 15:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=e6O73OjsDxvOW+WlmK+Heyu52Yeg2Jcu5CCnSK4DBT0=;
+        b=dhje9PS0dPsa5SE9icH+VbXOR2J377+pA6AR6uz7LR2jewZZUPNCxEx6w+qeI+oGkb
+         pgU/Vb4RuH9x1o/7GsN/aY+anl8p5kSPJtUaM9a0o94wriLqJ2cGZs+wE5676T0ulPf8
+         BXwGd6kMl1uNGRSkEODujQFaabYaR/jyu8XLHnpac3gWWKX1su6fID3NwUeJ94ZoqRVv
+         1ucqZJMZRb6Oj2TB/uYmuKSarxmrBRQcFAT7o55E1FLn+lf28LlGLiTYQjqrHlvaDdBx
+         eImGrKIKL1bPXTyJB7fx4FhTJ14CiYHzHY+NRMHqOzFuH8/U8OBCntm0+2fpTUpt9kIU
+         gr2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=e6O73OjsDxvOW+WlmK+Heyu52Yeg2Jcu5CCnSK4DBT0=;
+        b=gMr6UB/Qhp4XHu9uighl8IswaQAEWkoouYeuDRwknIq+PUATGsFD3D4RiY6OBjoPnl
+         epHAWwcGafNv1Rs+cFKMIdHU6VK48bO/1Zk9lPj2Mj1njxf/3LcFcIPiC9gVcBQzDVxh
+         0YJddP4SFjq2TvQyCK9WonN5Zen3HaUcAQZDQQHoD4Hvh5xy0CGCE1BJMgfUv09VzUmq
+         aFmOXSkjrtpanS8Tfe9M6V/ghG9BkjnGbyvz0BgDneCwRaTRloLMEn59kNlBSa4NOv8U
+         QjRr01ivr9xzR/ekTcc33c7CmQC+iEsiBeK9GvAUq7qPpIR/RxRre912dquwcXy+PXjz
+         sRvw==
+X-Gm-Message-State: AOAM531CsDTldFqmSIwT2zz9Q4Pa1fkK/PDwj3sqsla9tqny9vDdmzLs
+        IKgSPoIMLUMenzRWp2yaSy8TOKyp9JEL5VTduBBSqg==
+X-Google-Smtp-Source: ABdhPJwuv3/9oLHPCAAThwJbncDoDe0+vEaaHx0SqrZ12nS/jDEjdx91TQe9PImrenr/WKrUFEJBbbgzZucV8QwN8uw=
+X-Received: by 2002:a17:907:94cf:: with SMTP id dn15mr5256195ejc.114.1601505170533;
+ Wed, 30 Sep 2020 15:32:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200930210824.GA12277@embeddedor> <CAG48ez3X3aZwfde3_2Sc+gdtUGRHfzan6oNFiffAvNzFDSsFDw@mail.gmail.com>
+ <20200930213634.GA12855@embeddedor>
+In-Reply-To: <20200930213634.GA12855@embeddedor>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 1 Oct 2020 00:32:24 +0200
+Message-ID: <CAG48ez3XqE0m2UmRh+OtmYJRhyCBYY=sdJKaWBXtJZKCRpLMYQ@mail.gmail.com>
+Subject: Re: [PATCH][next] mtd: rawnand: Replace one-element array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
@@ -51,67 +74,36 @@ Cc:     Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>,
         linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org,
         kernel list <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] mtd: rawnand: Replace one-element array with
- flexible-array member
-Message-ID: <20200930213634.GA12855@embeddedor>
-References: <20200930210824.GA12277@embeddedor>
- <CAG48ez3X3aZwfde3_2Sc+gdtUGRHfzan6oNFiffAvNzFDSsFDw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez3X3aZwfde3_2Sc+gdtUGRHfzan6oNFiffAvNzFDSsFDw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 11:10:43PM +0200, Jann Horn wrote:
-> On Wed, Sep 30, 2020 at 11:02 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> > There is a regular need in the kernel to provide a way to declare having
-> > a dynamically sized set of trailing elements in a structure. Kernel code
-> > should always use “flexible array members”[1] for these cases. The older
-> > style of one-element or zero-length arrays should no longer be used[2].
-> 
-> But this is not such a case, right? Isn't this a true fixed-size
-> array? It sounds like you're just changing it because it
-> pattern-matched on "array of length 1 at the end of a struct".
+On Wed, Sep 30, 2020 at 11:30 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+> On Wed, Sep 30, 2020 at 11:10:43PM +0200, Jann Horn wrote:
+> > On Wed, Sep 30, 2020 at 11:02 PM Gustavo A. R. Silva
+> > <gustavoars@kernel.org> wrote:
+> > > There is a regular need in the kernel to provide a way to declare hav=
+ing
+> > > a dynamically sized set of trailing elements in a structure. Kernel c=
+ode
+> > > should always use =E2=80=9Cflexible array members=E2=80=9D[1] for the=
+se cases. The older
+> > > style of one-element or zero-length arrays should no longer be used[2=
+].
+> >
+> > But this is not such a case, right? Isn't this a true fixed-size
+> > array? It sounds like you're just changing it because it
+> > pattern-matched on "array of length 1 at the end of a struct".
+>
+> Yeah; I should have changed that 'dynamically' part of the text above
+> a bit. However, as I commented in the text below, in the case that more
+> CS IDs are needed (let's wait for the maintainers to comment on this...)
+> in the future, this change makes the code more maintainable, as for
+> the allocation part, the developer would only have to update the CS_N
+> macro to the number of CS IDs that are needed.
 
-Yeah; I should have changed that 'dynamically' part of the text above
-a bit. However, as I commented in the text below, in the case that more
-CS IDs are needed (let's wait for the maintainers to comment on this...)
-in the future, this change makes the code more maintainable, as for
-the allocation part, the developer would only have to update the CS_N
-macro to the number of CS IDs that are needed.
-
-Thanks
---
-Gustavo
-
-> 
-> > Refactor the code according to the use of a flexible-array member
-> > instead of a one-element array. Also, make use of the struct_size()
-> > helper to calculate the size of the allocation for _nand_. In order
-> > to keep the code as maintainable as possible and to keep _cs_ as an
-> > array, add a new macro CS_N to aid in the allocation size calculation,
-> > in case there is a need for more Chip Select IDs in the future. In the
-> > meantime, the macro is set to 1. This also avoids having to use a magic
-> > number '1' as the last argument for struct_size().
-> [...]
-> > diff --git a/drivers/mtd/nand/raw/tegra_nand.c b/drivers/mtd/nand/raw/tegra_nand.c
-> [...]
-> > +/* Number of Chip Selects. Currently, only one. */
-> > +#define CS_N                   1
-> > +
-> >  struct tegra_nand_controller {
-> >         struct nand_controller controller;
-> >         struct device *dev;
-> > @@ -183,7 +186,7 @@ struct tegra_nand_chip {
-> >         u32 config;
-> >         u32 config_ecc;
-> >         u32 bch_config;
-> > -       int cs[1];
-> > +       int cs[];
-> >  };
-> [...]
+But in that case, shouldn't you change it to "int cs[CS_N]" and get
+rid of the struct_size() stuff?
