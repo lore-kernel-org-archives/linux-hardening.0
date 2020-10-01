@@ -4,104 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F941C4727C
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Oct 2020 15:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAFBC4727C
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Oct 2020 15:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C840207F7
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Oct 2020 15:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104BC207F7
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Oct 2020 15:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1601565564;
-	bh=8VKZGEFHrKs7cF0eqpZCnnNWBUjSkjDN23cuZvEmuO4=;
+	s=default; t=1601565597;
+	bh=ZoWJIt7tW81VESqtsxKPRRDnGuYfZzDylCo+K+tvRks=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KxcGB1lV1myyyAIApMuChIk//bc/x9f+5iC9xkahLGLIDSa+zw4D7i9FuSe9QvFJN
-	 x4Zsoo8sIaeGLYr1iWKagCZnLP6YzFk85l5kijSyM2OF5GX91bD0Ofmn3glQTpZPWM
-	 D5lslN3XY0NBVmISp5uAyjHyPOfbkTT0NzxyMf/8=
+	b=iAnuQRdn8i8IqBzTijihre19jdiNZ5Qi7d1wcmnnkNXy5WRDMSBqXN2XkgEn1FyX5
+	 22+c9487eK0bo7k3yRRuCuTP5cuyTyVAIgjpryGYVhj91psyZ8E7Sq1lOttMohMOZp
+	 gCZRQuBE1TnqzhYIe3X1OOkPETV3jQscawZbMEgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732609AbgJAPTY (ORCPT
+        id S1732516AbgJAPT4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Oct 2020 11:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36380 "EHLO mail.kernel.org"
+        Thu, 1 Oct 2020 11:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732516AbgJAPTX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Oct 2020 11:19:23 -0400
+        id S1732410AbgJAPT4 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 1 Oct 2020 11:19:56 -0400
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A078207F7;
-        Thu,  1 Oct 2020 15:19:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05F0F207F7;
+        Thu,  1 Oct 2020 15:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601565562;
-        bh=8VKZGEFHrKs7cF0eqpZCnnNWBUjSkjDN23cuZvEmuO4=;
+        s=default; t=1601565596;
+        bh=ZoWJIt7tW81VESqtsxKPRRDnGuYfZzDylCo+K+tvRks=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gexSBMbvvhnkTqrEfdKdtHNaOoRqAy0b38hOAPnMpLt4p0iFwqOYaXy9FGu534KsL
-         xt/PlLW+UNuQOebGd678VBr7hIYF/uIcjPjUc15OY+Nrnht88gmAbK+XHr3rBz1pRz
-         LKAuRnulRE7BXc80OpUDI0GCEYOERpf39xQdbl2c=
-Date:   Thu, 1 Oct 2020 10:25:08 -0500
+        b=IzqzfHEhgWUe0fqq82zQG/SZhoH0zH3JdKuhdJ5FFO6oyna4DB2rBg/AlsK322Zyc
+         4yN/7A3EhimttE1706T95hQX7/PosYbSnWDLilAyaBPaGzsmmvAJ73sTt/D+NG8aYH
+         wujJNPsFEZ+XS0O4Cccjha9xj+f/ed9zRSEPVt8M=
+Date:   Thu, 1 Oct 2020 10:25:42 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-hardening@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 1/3][next] lib/stackdepot.c: Replace one-element array with
- flexible-array member
-Message-ID: <2f1e6a17aaa891ad9c58817cf0a10b8ab8894f59.1601565471.git.gustavoars@kernel.org>
+Subject: [PATCH 2/3][next] lib/stackdepot.c: Use flex_array_size() helper in
+ memcpy()
+Message-ID: <186e37fe07196ee41a0e562fa8a8cb7a01112ec5.1601565471.git.gustavoars@kernel.org>
 References: <cover.1601565471.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 In-Reply-To: <cover.1601565471.git.gustavoars@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare having
-a dynamically sized set of trailing elements in a structure. Kernel code
-should always use “flexible array members”[1] for these cases. The older
-style of one-element or zero-length arrays should no longer be used[2].
+Make use of the flex_array_size() helper to calculate the size of a
+flexible array member within an enclosing structure.
 
-Refactor the code according to the use of a flexible-array member in
-struct stack_record, instead of a one-element array, and use the
-struct_size() helper to calculate the size for the allocation.
+This helper offers defense-in-depth against potential integer
+overflows, while at the same time makes it explicitly clear that
+we are dealing with a flexible array member.
 
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/v5.9-rc1/process/deprecated.html#zero-length-and-one-element-arrays
-
-Build-tested-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/5f75876b.x9zdN10esiC0qLHV%25lkp@intel.com/
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- lib/stackdepot.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ lib/stackdepot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index 2caffc64e4c8..c6106cfb7950 100644
+index c6106cfb7950..683b6a8ddade 100644
 --- a/lib/stackdepot.c
 +++ b/lib/stackdepot.c
-@@ -62,7 +62,7 @@ struct stack_record {
- 	u32 hash;			/* Hash in the hastable */
- 	u32 size;			/* Number of frames in the stack */
- 	union handle_parts handle;
--	unsigned long entries[1];	/* Variable-sized array of entries. */
-+	unsigned long entries[];	/* Variable-sized array of entries. */
- };
+@@ -135,7 +135,7 @@ static struct stack_record *depot_alloc_stack(unsigned long *entries, int size,
+ 	stack->handle.slabindex = depot_index;
+ 	stack->handle.offset = depot_offset >> STACK_ALLOC_ALIGN;
+ 	stack->handle.valid = 1;
+-	memcpy(stack->entries, entries, size * sizeof(unsigned long));
++	memcpy(stack->entries, entries, flex_array_size(stack, entries, size));
+ 	depot_offset += required_size;
  
- static void *stack_slabs[STACK_ALLOC_MAX_SLABS];
-@@ -104,9 +104,8 @@ static bool init_stack_slab(void **prealloc)
- static struct stack_record *depot_alloc_stack(unsigned long *entries, int size,
- 		u32 hash, void **prealloc, gfp_t alloc_flags)
- {
--	int required_size = offsetof(struct stack_record, entries) +
--		sizeof(unsigned long) * size;
- 	struct stack_record *stack;
-+	size_t required_size = struct_size(stack, entries, size);
- 
- 	required_size = ALIGN(required_size, 1 << STACK_ALLOC_ALIGN);
- 
+ 	return stack;
 -- 
 2.27.0
 
