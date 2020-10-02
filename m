@@ -2,86 +2,117 @@ Return-Path: <SRS0=+MkC=DJ=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C0BC35257
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Oct 2020 23:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0354AC35257
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Oct 2020 23:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE9C206B7
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Oct 2020 23:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1601683070;
-	bh=D69kYhvZhty/rRcWBokfk6DHbfSvto2f9RsRcfYH5dY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wUKg1BBEIHOUjHzk6WgROb3SN9UBS2E4aE6UzY3keKIp12+QqW1eA3sbx9+Oos3BC
-	 pvKQXXa1uXEFTZSnoaj/rEttpiQsL9rv1GAUXjKHzz9uYSLkQxOhilmPBpJl6t/Ipt
-	 fTNgQ4e+puQqqHYt7ZixZz1ws6LYruISldEHm4e0=
+	by mail.kernel.org (Postfix) with ESMTP id C4D20206B7
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Oct 2020 23:58:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ct22wxHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725497AbgJBX5u (ORCPT
+        id S1725764AbgJBX6h (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Oct 2020 19:57:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgJBX5t (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Oct 2020 19:57:49 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3A0206B7;
-        Fri,  2 Oct 2020 23:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601683069;
-        bh=D69kYhvZhty/rRcWBokfk6DHbfSvto2f9RsRcfYH5dY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rhMNZf3GW4d8DjbjPwhSSeOCla2skLZ5iKfbM6AzAWJrJFyrZd7UmhLS3uIatWNFF
-         jeUckbfdf7oIdX7X4E0HjuZXNVPFS5tckNZcY16uUzUvd/2C/60VcZSmcUxqdN4Kbf
-         9eQFYpHibNELjiTCG3f9gYUvizFACwMNF0yQBBc4=
-Date:   Fri, 2 Oct 2020 19:03:38 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+        Fri, 2 Oct 2020 19:58:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgJBX6h (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 2 Oct 2020 19:58:37 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B118C0613E2
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Oct 2020 16:58:36 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id f18so2452269pfa.10
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Oct 2020 16:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n3FtDjywRYZVCPo0ueVtBW5R3Lk6yWZXURM1EQ0TNlg=;
+        b=Ct22wxHpRWzfOSSiVXmEfzF79sGTyyQOBW5bFbAJcU2MyV6Gr+9C/tweJxKTY8abc3
+         aLbjT0ZSLxIR/9asN1PG8Z3tYSpqYTsVGfm04sSyWCs0+mzf5fkNn2w5LdiGikwwLGv8
+         Q+acAVlqHn8iDeJqG7XPL8JqC+klaIYsNAGnqVoGKBo9s0RXZKqbi5Z7ybJkvHSEbRGI
+         Io+knCVn35v41Lc+fv4U/lUc09GRfLPZNg9UAeCHQURJNKzfArdC0vVsaO3pmZNhactW
+         D4s8OC0VswuJ4FzKiwNm19i5wYp+jZ5AY21jW9WiHVaDBOYfnfbnX2KYnDpX13785DpD
+         pBzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n3FtDjywRYZVCPo0ueVtBW5R3Lk6yWZXURM1EQ0TNlg=;
+        b=OdjejxAMjT17GhYvnb1Sld65LqnrYTIrjwS5mlAoOLJMiP6A6a3F+FfvZpd9rhHVKp
+         F3cREk+89RVRHFcBguSVVBjI35I7Wzcq+VsGDRgXd8bKf88vIAid4HbhfvrFd9bfDZj7
+         gsIxVKJjDx6PxLo9bpEtdYgckuzcZUeXIDvlkPKTVUiIHJD7qkp2dN/8K1tqZuih/X85
+         4ip9YIoODu5VS5ROqzRiXfuMQwVF90t4EcscuMyatdnIpAg1VianGzVGnZYl10gU36bI
+         dE76xe0D518/CPdcoyT9XrWzpdBJVv2svl1FJQe+knHebb5i6Sx5BkiOmvIugzPSkwuy
+         QVrg==
+X-Gm-Message-State: AOAM531gutP6mREKGFi2h61yFq/qcl7V7FJFEK/G7KBhazK0RsrcLl8A
+        mnRqRCI5OwfgJJa/xFOnQ+9PPg==
+X-Google-Smtp-Source: ABdhPJwaBkSvSZDGuQwnXVeAp67bpb7DN3pIABGIInb1GxOry+5Yd59rzH+BsAO6mAkAqGpkfCef0g==
+X-Received: by 2002:aa7:8ec7:0:b029:13e:d13d:a137 with SMTP id b7-20020aa78ec70000b029013ed13da137mr5408059pfr.31.1601683115490;
+        Fri, 02 Oct 2020 16:58:35 -0700 (PDT)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id z13sm2735593pjn.51.2020.10.02.16.58.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Oct 2020 16:58:34 -0700 (PDT)
 Subject: Re: [PATCH][next] block: scsi_ioctl: Avoid the use of one-element
  arrays
-Message-ID: <20201003000338.GA13557@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
 References: <20201002231033.GA6273@embeddedor>
  <ea92a55b-d12c-357e-62b2-879643ae18ce@kernel.dk>
+ <20201003000338.GA13557@embeddedor>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c06da705-3151-0902-066a-92d2e7c558bd@kernel.dk>
+Date:   Fri, 2 Oct 2020 17:58:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea92a55b-d12c-357e-62b2-879643ae18ce@kernel.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20201003000338.GA13557@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 02, 2020 at 05:53:05PM -0600, Jens Axboe wrote:
-> On 10/2/20 5:10 PM, Gustavo A. R. Silva wrote:
-> > diff --git a/include/uapi/linux/cdrom.h b/include/uapi/linux/cdrom.h
-> > index 2817230148fd..6c34f6e2f1f7 100644
-> > --- a/include/uapi/linux/cdrom.h
-> > +++ b/include/uapi/linux/cdrom.h
-> > @@ -289,7 +289,10 @@ struct cdrom_generic_command
-> >  	unsigned char		data_direction;
-> >  	int			quiet;
-> >  	int			timeout;
-> > -	void			__user *reserved[1];	/* unused, actually */
-> > +	union {
-> > +		void		__user *reserved[1];	/* unused, actually */
-> > +		void            __user *unused;
-> > +	};
+On 10/2/20 6:03 PM, Gustavo A. R. Silva wrote:
+> On Fri, Oct 02, 2020 at 05:53:05PM -0600, Jens Axboe wrote:
+>> On 10/2/20 5:10 PM, Gustavo A. R. Silva wrote:
+>>> diff --git a/include/uapi/linux/cdrom.h b/include/uapi/linux/cdrom.h
+>>> index 2817230148fd..6c34f6e2f1f7 100644
+>>> --- a/include/uapi/linux/cdrom.h
+>>> +++ b/include/uapi/linux/cdrom.h
+>>> @@ -289,7 +289,10 @@ struct cdrom_generic_command
+>>>  	unsigned char		data_direction;
+>>>  	int			quiet;
+>>>  	int			timeout;
+>>> -	void			__user *reserved[1];	/* unused, actually */
+>>> +	union {
+>>> +		void		__user *reserved[1];	/* unused, actually */
+>>> +		void            __user *unused;
+>>> +	};
+>>
+>> What's the point of this union, why not just turn it into
+>>
+>> 	void *			__user *unused;
+>>
+>> ?
 > 
-> What's the point of this union, why not just turn it into
-> 
-> 	void *			__user *unused;
-> 
-> ?
+> I just don't want to take any chances of breaking any user-space
+> application that, for some reason, may be considering that field.
 
-I just don't want to take any chances of breaking any user-space
-application that, for some reason, may be considering that field.
+I guess that's a valid concern, who knows what applications are doing
+to an ignored field.
 
---
-Gustavo
+I'll apply it, thanks.
+
+-- 
+Jens Axboe
+
