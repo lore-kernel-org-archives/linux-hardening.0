@@ -2,98 +2,92 @@ Return-Path: <SRS0=+MkC=DJ=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C0DC35257
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Oct 2020 23:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9A6C35257
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Oct 2020 23:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 492DF20796
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Oct 2020 23:36:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1601681794;
-	bh=iOVObYJsM+EFNqUv+ULTp5M07bWQLZYcS5493ovJNM4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=IqYqF3HWe4FWnu2N5oZqzp3DX7HdU4PfLCSz/ow/c7bX/yJ4VGSGTxe3MOjkUf9e7
-	 QJMraPTXj0RUZCFkNStCOWMm96O2lW/SYk/TfxmmxkNLGOYgGOwAtXQWL5OKCWZVTp
-	 zT+1jk7s8ytajx3Ro8rqcW52yhxi87UqOW2ovZCE=
+	by mail.kernel.org (Postfix) with ESMTP id B5303206A4
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Oct 2020 23:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ks+IR8q3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725648AbgJBXg3 (ORCPT
+        id S1725283AbgJBXwj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Oct 2020 19:36:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgJBXg3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Oct 2020 19:36:29 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EFBD206B7;
-        Fri,  2 Oct 2020 23:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601681788;
-        bh=iOVObYJsM+EFNqUv+ULTp5M07bWQLZYcS5493ovJNM4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VhJb/GwO/mAoRHW9/eBJv4/NvJiJX94JViRvsHucqBIgoPhRJjxsMM51Q9/yYoSYm
-         CbefN5tC9q9a7mTBdA/BhW9lu+8gyo8mDhTRv0Vh2Euz1DmowE6LkwSNkoA6sahnjT
-         /eIh+XhXj6eIS5MNieK40/WwquhUCt/B3VZrcMVM=
-Date:   Fri, 2 Oct 2020 18:42:17 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Fri, 2 Oct 2020 19:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgJBXwg (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 2 Oct 2020 19:52:36 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0729C0613D0
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Oct 2020 16:52:34 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id 144so2471900pfb.4
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Oct 2020 16:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0DJfVPYB+sVtt5O1Oa8Zekpgikluk6DkPQtGUjAgJlA=;
+        b=ks+IR8q3r+6/HLVgizvYpFbU+qnF/X4yPlu/67dItSrGoLaiBgypQx8xGSk2y3QL3C
+         g/wn8tvlFnwHQNBn3lU7NupfGmOfXUy64ZKyNzVqMJVPAohEKvDvFHEqB58LQVLV0IZc
+         GsR+MGvfzF7asnMMZb7iOhar7Zf9fFubiXddL6lODcZIA4PXw2XhWow70F4rhQcQvnDD
+         47mGZcUXyMQS7z1KQpVXY3EnR+G9q4p3byrjW+MMqJ4hf4uOVPmG6b//o0P9EIQYuwqw
+         wmqjNz7nW9F7eIKdo2aEuIK0zINsb+qSP6VZdp2lJ5TRTJucT/he1mA3td/PZJtX1VeF
+         N+rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0DJfVPYB+sVtt5O1Oa8Zekpgikluk6DkPQtGUjAgJlA=;
+        b=bEtSO+16CnfVYuiyAwnb4oKH+PH5KZNn2grE8O6HZ1XflTQag9Ro8nimaPRYXkh7vO
+         d5Mxivxo8Vy3QtgF7nH9xj+NpF8dVHL5RePc90eaV9qHl3T7GdX9DBJ0evyds60jYkYm
+         sZxzNuLgX6/Qkcv2H69EoSDbLb1EYKA3sqico3/9RZmZjesjYqpjQ8G91Pi5m4OlTZU1
+         2p6Yp3zmLiJTunqZmRspdhKNhBKHBGQQzyX7h5ZpIp+aTTE3CLqiv1Ft+xPCSjXZezoF
+         C4NdFTNEmtCxbnE0C2CNFB45ukNuk0ycaa2raudafo7B7csUj4PdwCzxwRphDNfuFlfU
+         P1UQ==
+X-Gm-Message-State: AOAM5339wb27dvLETx0PMO2mI8gdlf8MunzBY86icA4kais/LltoPl9z
+        darbyKlQ2TWomx66ilJKIugjX+BOlIy8sUyW
+X-Google-Smtp-Source: ABdhPJy7K+Q8r0RzR7rSAzeX3kKVhmlq4kUYPcbn7wh1uB/vDrsgSEnR4qhfNLKOa5/U01XewwtSSg==
+X-Received: by 2002:aa7:9ac9:0:b029:13e:d13d:a133 with SMTP id x9-20020aa79ac90000b029013ed13da133mr5067023pfp.27.1601682753874;
+        Fri, 02 Oct 2020 16:52:33 -0700 (PDT)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id x140sm3270606pfc.211.2020.10.02.16.52.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Oct 2020 16:52:33 -0700 (PDT)
+Subject: Re: [PATCH][next] pata_cmd64x: Use fallthrough pseudo-keyword
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] bpf: verifier: Use fallthrough pseudo-keyword
-Message-ID: <20201002234217.GA12280@embeddedor>
+References: <20201002224852.GA463@embeddedor>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8cad7d36-b5d5-41bb-0f40-502720dc2e53@kernel.dk>
+Date:   Fri, 2 Oct 2020 17:52:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20201002224852.GA463@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace /* fallthrough */ comments with the new pseudo-keyword macro
-fallthrough[1].
+On 10/2/20 4:48 PM, Gustavo A. R. Silva wrote:
+> Replace /* FALL THRU */ comment with the new pseudo-keyword macro
+> fallthrough[1].
+> 
+> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+Applied, thanks.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- kernel/bpf/verifier.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 015a1c074b6b..fcef04b80b66 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2667,7 +2667,7 @@ static bool may_access_direct_pkt_data(struct bpf_verifier_env *env,
- 	case BPF_PROG_TYPE_CGROUP_SKB:
- 		if (t == BPF_WRITE)
- 			return false;
--		/* fallthrough */
-+		fallthrough;
- 
- 	/* Program types with direct read + write access go here! */
- 	case BPF_PROG_TYPE_SCHED_CLS:
-@@ -5432,7 +5432,7 @@ static int adjust_ptr_min_max_vals(struct bpf_verifier_env *env,
- 		/* smin_val represents the known value */
- 		if (known && smin_val == 0 && opcode == BPF_ADD)
- 			break;
--		/* fall-through */
-+		fallthrough;
- 	case PTR_TO_PACKET_END:
- 	case PTR_TO_SOCKET:
- 	case PTR_TO_SOCKET_OR_NULL:
 -- 
-2.27.0
+Jens Axboe
 
