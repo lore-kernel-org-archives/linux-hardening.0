@@ -1,61 +1,65 @@
-Return-Path: <SRS0=ee44=DL=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=pEkV=DM=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D932FC41604
-	for <linux-hardening@archiver.kernel.org>; Sun,  4 Oct 2020 00:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A235C4363A
+	for <linux-hardening@archiver.kernel.org>; Mon,  5 Oct 2020 07:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD13B206A1
-	for <linux-hardening@archiver.kernel.org>; Sun,  4 Oct 2020 00:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156F020774
+	for <linux-hardening@archiver.kernel.org>; Mon,  5 Oct 2020 07:26:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gZ3le+Br"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgJDAdu (ORCPT
+        id S1725881AbgJEH0A (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 3 Oct 2020 20:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57886 "EHLO
+        Mon, 5 Oct 2020 03:26:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgJDAdt (ORCPT
+        with ESMTP id S1725875AbgJEH0A (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 3 Oct 2020 20:33:49 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D491FC0613D0;
-        Sat,  3 Oct 2020 17:33:49 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C388511E3E4CB;
-        Sat,  3 Oct 2020 17:17:01 -0700 (PDT)
-Date:   Sat, 03 Oct 2020 17:33:48 -0700 (PDT)
-Message-Id: <20201003.173348.274419775415549268.davem@davemloft.net>
-To:     gustavoars@kernel.org
-Cc:     aelior@marvell.com, skalluru@marvell.com, kuba@kernel.org,
-        GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] bnx2x: Use fallthrough pseudo-keyword
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20201002232611.GA8809@embeddedor>
-References: <20201002232611.GA8809@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 27.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Sat, 03 Oct 2020 17:17:02 -0700 (PDT)
+        Mon, 5 Oct 2020 03:26:00 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A33C0613CE;
+        Mon,  5 Oct 2020 00:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5sM6+fPAuGy2swhfps1Vh088uPyk+Nclxk6vr8avp4U=; b=gZ3le+BrS/YBFbsfqY9n0gSqSd
+        GdTnl+ZXSnKjByjsumxnE3yMQpa4pnT0q+YzM3hDXAmmcLFC4gDTkaQKwOYueuDPDl65KzXOWQCd3
+        onUw2Xb3pcYhvLgGNsQSDdzx+rlsE3HisgN0jtBA6l36wUgtWnjF+a6KR3Q8Hqn01z4a0kthN19UV
+        3MCG+Oi7SWO8sEgYWdVeK0S3SNXsjMKrI2dwdk1CzR+qf7HmapjOJGOtmLz3q4b/vxb/qUtdTR53A
+        BSkJqC/kwPWCXwS5gEyo1qr+6UYJjR3qIOb/t23QdQXqkdnUo7W/8OIRJMQXQ+bH9QlvmQTejpW9B
+        X4SuaQgg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kPKsf-0004UC-VK; Mon, 05 Oct 2020 07:25:58 +0000
+Date:   Mon, 5 Oct 2020 08:25:57 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH][next] block: scsi_ioctl: Avoid the use of one-element
+ arrays
+Message-ID: <20201005072557.GB14204@infradead.org>
+References: <20201002231033.GA6273@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201002231033.GA6273@embeddedor>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Date: Fri, 2 Oct 2020 18:26:11 -0500
+On Fri, Oct 02, 2020 at 06:10:33PM -0500, Gustavo A. R. Silva wrote:
+> One-element arrays are being deprecated[1]. Replace the one-element array
+> with a simple object of type compat_caddr_t: 'compat_caddr_t unused'[2],
+> once it seems this field is actually never used.
 
-> Replace /* no break */ comments with the new pseudo-keyword macro
-> fallthrough[1].
-> 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Applied.
+They are only deprecated when abused as variable length array.  That is
+not the case here.
