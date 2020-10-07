@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155CCC41604
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Oct 2020 15:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9440C41604
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Oct 2020 15:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6763216C4
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Oct 2020 15:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516E321707
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Oct 2020 15:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1602086293;
-	bh=HBwtJxagqbtQwZ67Dx8naXj+wlYZpPAKjHhzii40SSg=;
+	s=default; t=1602086330;
+	bh=ZIXfWwTPMtSWQtAsNNmnq/E01PDvR4T4ANy6nPbnjXc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qN61aKkDz2aTlFQKSPel6hSLZgh/6gZ7wblCyhqL1n6VlMBu9ieFavUQ67z3bFFgU
-	 9NcQ7v9W7KIeEVHWZqct6OX0xasWx6YIaPYFcvBBVhVjm/jcYF2tU0tNauNBKWiwsp
-	 WBVIK9H/vmfO/pG3tPFwEfCSaTFAJHGIc4/lnkLM=
+	b=tYD8TfDvnAjMjnZOWUpsG6OcgLZeSSQ08e+mO0K/8N5BdTRV/KK1u6sYgIGup5OKJ
+	 JbhB/iUzTyIQnthZR+2HF/OXCxVCDp86u/kE1E+/07zYqGmOMql4188pwyCgl7Y9+v
+	 iS4vh/bBgJ0nB25q/VHn05Voi+9D6GY87DD61Fdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgJGP6N (ORCPT
+        id S1728902AbgJGP6u (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Oct 2020 11:58:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43876 "EHLO mail.kernel.org"
+        Wed, 7 Oct 2020 11:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbgJGP6N (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Oct 2020 11:58:13 -0400
+        id S1728900AbgJGP6t (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 7 Oct 2020 11:58:49 -0400
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8373120789;
-        Wed,  7 Oct 2020 15:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C865F215A4;
+        Wed,  7 Oct 2020 15:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602086292;
-        bh=HBwtJxagqbtQwZ67Dx8naXj+wlYZpPAKjHhzii40SSg=;
+        s=default; t=1602086329;
+        bh=ZIXfWwTPMtSWQtAsNNmnq/E01PDvR4T4ANy6nPbnjXc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sBminQ92WVBJEwwafMT2XaIQUmSq/7wGDo+qB95LHJy0g79ZrIWTtmvjjuIlyhn4Z
-         9yEtPd43j5BDsGcUzvcwnhQ277O6G/ZPA6BpyL779Q0fsxFTeoCOh2tIXEM+KEnG2t
-         ZL8UqyTHDh3i/CmVF7LUqo+0XVsmt1okRgFdFtqA=
-Date:   Wed, 7 Oct 2020 11:04:12 -0500
+        b=bJ4tbuvTG2Dnh8B4NerafV1cgJFZNQ51eEMIbGMHt+FOj1DYU6eJIyzvm3eOtFivn
+         LcQVnQuFvlRSdOWS4cNmlukjGvO6Sm2mDkXJBOoeStjuSrKPVehuoMgzei9cHHhiVq
+         9pMkvXquCgnaKigjPZ8mNL6rluFf/leTg69TF5Ek=
+Date:   Wed, 7 Oct 2020 11:04:49 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-hardening@vger.kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-hardening@vger.kernel.org,
         Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 03/14] drm/amd/pm: Replace one-element array with
- flexible-array in struct phm_clock_array
-Message-ID: <661ad1c0e07f4eda264c08b219c8c702d67a9531.1602020074.git.gustavoars@kernel.org>
+Subject: [PATCH 04/14] drm/amd/pm: Replace one-element array with
+ flexible-array in struct phm_uvd_clock_voltage_dependency_table
+Message-ID: <737f08bfa48ba706952bba91e823129f0dba1389.1602020074.git.gustavoars@kernel.org>
 References: <cover.1602020074.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -69,108 +69,63 @@ should always use “flexible array members”[1] for these cases. The older
 style of one-element or zero-length arrays should no longer be used[2].
 
 Refactor the code according to the use of a flexible-array member in
-struct phm_clock_array, instead of a one-element array, and use the
-struct_size() helper to calculate the size for the allocation.
+struct phm_uvd_clock_voltage_dependency_table, instead of a one-element
+array, and use the struct_size() helper to calculate the size for the
+allocation.
+
+Also, save some heap space as the original code is multiplying
+table->numEntries by sizeof(struct phm_uvd_clock_voltage_dependency_table)
+when it should have multiplied it by sizeof(phm_uvd_clock_voltage_dependency_record)
+instead.
 
 [1] https://en.wikipedia.org/wiki/Flexible_array_member
 [2] https://www.kernel.org/doc/html/v5.9-rc1/process/deprecated.html#zero-length-and-one-element-arrays
 
 Build-tested-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/5f7c433f.ZyMD+YUIVAwiHGVe%25lkp@intel.com/
+Link: https://lore.kernel.org/lkml/5f7c433e.pXkC6KsN6HN%2FLdhj%25lkp@intel.com/
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
  drivers/gpu/drm/amd/pm/inc/hwmgr.h                    |  2 +-
- .../amd/pm/powerplay/hwmgr/process_pptables_v1_0.c    | 11 ++++-------
- .../gpu/drm/amd/pm/powerplay/hwmgr/processpptables.c  |  7 +++----
- .../amd/pm/powerplay/hwmgr/vega10_processpptables.c   |  9 +++------
- 4 files changed, 11 insertions(+), 18 deletions(-)
+ .../gpu/drm/amd/pm/powerplay/hwmgr/processpptables.c  | 11 ++++-------
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/gpu/drm/amd/pm/inc/hwmgr.h b/drivers/gpu/drm/amd/pm/inc/hwmgr.h
-index d68b547743e6..e84cff09af2d 100644
+index e84cff09af2d..2f1886bc5535 100644
 --- a/drivers/gpu/drm/amd/pm/inc/hwmgr.h
 +++ b/drivers/gpu/drm/amd/pm/inc/hwmgr.h
-@@ -91,7 +91,7 @@ struct phm_set_power_state_input {
+@@ -140,7 +140,7 @@ struct phm_uvd_clock_voltage_dependency_record {
  
- struct phm_clock_array {
- 	uint32_t count;
--	uint32_t values[1];
-+	uint32_t values[];
+ struct phm_uvd_clock_voltage_dependency_table {
+ 	uint8_t count;
+-	struct phm_uvd_clock_voltage_dependency_record entries[1];
++	struct phm_uvd_clock_voltage_dependency_record entries[];
  };
  
- struct phm_clock_voltage_dependency_record {
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/process_pptables_v1_0.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/process_pptables_v1_0.c
-index b760f95e7fa7..52188f6cd150 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/process_pptables_v1_0.c
-+++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/process_pptables_v1_0.c
-@@ -318,19 +318,16 @@ static int get_valid_clk(
- 		phm_ppt_v1_clock_voltage_dependency_table const *clk_volt_pp_table
- 		)
- {
--	uint32_t table_size, i;
-+	uint32_t i;
- 	struct phm_clock_array *table;
- 	phm_ppt_v1_clock_voltage_dependency_record *dep_record;
- 
- 	PP_ASSERT_WITH_CODE((0 != clk_volt_pp_table->count),
- 		"Invalid PowerPlay Table!", return -1);
- 
--	table_size = sizeof(uint32_t) +
--		sizeof(uint32_t) * clk_volt_pp_table->count;
--
--	table = kzalloc(table_size, GFP_KERNEL);
--
--	if (NULL == table)
-+	table = kzalloc(struct_size(table, values, clk_volt_pp_table->count),
-+			GFP_KERNEL);
-+	if (!table)
- 		return -ENOMEM;
- 
- 	table->count = (uint32_t)clk_volt_pp_table->count;
+ struct phm_acp_clock_voltage_dependency_record {
 diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/processpptables.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/processpptables.c
-index d94a7d8e0587..d9bed4df6f65 100644
+index d9bed4df6f65..305d95c4162d 100644
 --- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/processpptables.c
 +++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/processpptables.c
-@@ -404,12 +404,11 @@ static int get_valid_clk(struct pp_hwmgr *hwmgr,
- 			struct phm_clock_array **ptable,
- 			const struct phm_clock_voltage_dependency_table *table)
+@@ -1105,15 +1105,12 @@ static int get_uvd_clock_voltage_limit_table(struct pp_hwmgr *hwmgr,
+ 		const ATOM_PPLIB_UVD_Clock_Voltage_Limit_Table *table,
+ 		const UVDClockInfoArray *array)
  {
 -	unsigned long table_size, i;
 +	unsigned long i;
- 	struct phm_clock_array *clock_table;
+ 	struct phm_uvd_clock_voltage_dependency_table *uvd_table;
  
--	table_size = sizeof(unsigned long) + sizeof(unsigned long) * table->count;
--	clock_table = kzalloc(table_size, GFP_KERNEL);
--	if (NULL == clock_table)
-+	clock_table = kzalloc(struct_size(clock_table, values, table->count), GFP_KERNEL);
-+	if (!clock_table)
+-	table_size = sizeof(unsigned long) +
+-		 sizeof(struct phm_uvd_clock_voltage_dependency_table) *
+-		 table->numEntries;
+-
+-	uvd_table = kzalloc(table_size, GFP_KERNEL);
+-	if (NULL == uvd_table)
++	uvd_table = kzalloc(struct_size(uvd_table, entries, table->numEntries),
++			    GFP_KERNEL);
++	if (!uvd_table)
  		return -ENOMEM;
  
- 	clock_table->count = (unsigned long)table->count;
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_processpptables.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_processpptables.c
-index f29af5ca0aa0..e655c04ccdfb 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_processpptables.c
-+++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_processpptables.c
-@@ -875,17 +875,14 @@ static int get_valid_clk(
- 		struct phm_clock_array **clk_table,
- 		const phm_ppt_v1_clock_voltage_dependency_table *clk_volt_pp_table)
- {
--	uint32_t table_size, i;
-+	uint32_t i;
- 	struct phm_clock_array *table;
- 
- 	PP_ASSERT_WITH_CODE(clk_volt_pp_table->count,
- 			"Invalid PowerPlay Table!", return -1);
- 
--	table_size = sizeof(uint32_t) +
--			sizeof(uint32_t) * clk_volt_pp_table->count;
--
--	table = kzalloc(table_size, GFP_KERNEL);
--
-+	table = kzalloc(struct_size(table, values, clk_volt_pp_table->count),
-+			GFP_KERNEL);
- 	if (!table)
- 		return -ENOMEM;
- 
+ 	uvd_table->count = table->numEntries;
 -- 
 2.27.0
 
