@@ -2,120 +2,108 @@ Return-Path: <SRS0=DAdQ=DP=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF89C433E7
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 18:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FDAC433DF
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 18:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7EC020760
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 18:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417EB2076E
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 18:24:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PhCVwNEQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IRLUvU6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731096AbgJHSL3 (ORCPT
+        id S1728837AbgJHSYi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Oct 2020 14:11:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34826 "EHLO
+        Thu, 8 Oct 2020 14:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729316AbgJHSL3 (ORCPT
+        with ESMTP id S1728831AbgJHSYi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Oct 2020 14:11:29 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07705C061755;
-        Thu,  8 Oct 2020 11:11:29 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i2so6773270ljg.4;
-        Thu, 08 Oct 2020 11:11:28 -0700 (PDT)
+        Thu, 8 Oct 2020 14:24:38 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C38C0613D2
+        for <linux-hardening@vger.kernel.org>; Thu,  8 Oct 2020 11:24:38 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id dt13so9474413ejb.12
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Oct 2020 11:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G3mrHFgsl4yRBSpBY2KK+yE6uxmlc+TxwEDQsNmv4cc=;
-        b=PhCVwNEQPJOov0cSmL537oCIOTrYgAe4jM+pmEbETQZDP2DHFu8p2t5cROBpiAGJPg
-         Yo/yGIIYiuK5Gtnh6JkTAjANM6mZjLgyZ1Qp/nzVsOgDBbjDhk9epotbdyztKO7s3jH/
-         HpXV4FGK4pTp6il0zGS8nLgpfztWn/mesNVDAAACvfXeOyvVRavwGju/AEaCeBb/3xUE
-         C70X92MMFGQevzm3dK1C0anSPhkJGHLY4p2K5DVHhfXGBXPmEbtFJI3toCeeiak7RXlF
-         uuUhGpj1uXd/SPuPz14ehDlle7QxEkf8FrxrHIgpo+wzqRw837ePeNEuFL7RN/5+ZHvw
-         p6bA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Borjchw/TSeW3kJDI9UKxpuNWct0CBHNGPaPSuEeWc0=;
+        b=IRLUvU6KvCA9S8YqNRovWPVwdRX38O6TQeYHK3U+O1R156cyJO7W0l5DeI6ZC6WDUj
+         8bAcQcTGuQ80kphRc7K57wpCXH02eMHVeEat+TbOJfRp2LGKVnvmlu7XCq/8P8Khf7LI
+         fJp/AB1ZS/Cdp9N99hecl6fZ5uRXvRFDepWAUt/clMIL5Cl2cJPK8QdHb/v7jbFDnO/U
+         JwoRHe6FM8obRsuCAyuye38uRj58FOZqbWKkQF8WMSCds5U7Ao9OAMAKC/5RUN012jmW
+         3yRJKx6UGAWBwIHpmBzHrBr1BAHD+I2YkdymeW0lrwPbzXjcY7dv0vNOyIqSBCl4i7og
+         Rekg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G3mrHFgsl4yRBSpBY2KK+yE6uxmlc+TxwEDQsNmv4cc=;
-        b=b2oeQeTMnf3KR/xcMNPY+OIX0LlrueJs1AHusDTrTggAzbibiZ3AGGO7pqqCE3gU4P
-         wCTitMW5tbSJ2AdIp07K8pvFty3D7OAtTTY7ZmxFD/3UK8/Ac15nhVTDjGB2mG5JX177
-         1PLR09Ldz/Ekub0YjCF8cgZYgeb660iLR0HVhyxmgBfJmIqRTx8C6ac7+FHr9payns8l
-         V5bR46RZOuJZSP08bvd2WNpTghJqhDc5TIEN0biZARY2hQ+UyrtnF/waQWK8EkyEbQQF
-         xgaCXDTLT+I843AhOsZe0agDgKJKa2cgojMKhaC2+Dg5s+V6urEZXpQAc6vQHz2+68vo
-         Q7NA==
-X-Gm-Message-State: AOAM5327KFTASqXwsDpeNl+NY0F3HVUma83AEEQdW2dcNqde+I1oAXfo
-        rPYgj4SPjiJ7grn8vGpOnvMrfJVL6k8=
-X-Google-Smtp-Source: ABdhPJz1UBLxdWzx8/hYgAzppJLKkNeg+nW+R08uBrpCVJSk6ut97gWc1kHPX8suMHfg7491c84EEg==
-X-Received: by 2002:a2e:82c8:: with SMTP id n8mr3998729ljh.62.1602180687184;
-        Thu, 08 Oct 2020 11:11:27 -0700 (PDT)
-Received: from [192.168.1.112] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
-        by smtp.gmail.com with ESMTPSA id e19sm992864lfd.200.2020.10.08.11.11.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Oct 2020 11:11:26 -0700 (PDT)
-Subject: Re: [PATCH RESEND v2] mm: Optional full ASLR for mmap() and mremap()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20201008165408.38228-1-toiwoton@gmail.com>
- <20201008170728.GK20115@casper.infradead.org>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <1d08abd1-4343-59e7-108a-68af5f7778c0@gmail.com>
-Date:   Thu, 8 Oct 2020 21:11:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Borjchw/TSeW3kJDI9UKxpuNWct0CBHNGPaPSuEeWc0=;
+        b=Uyby9MW97rPnsYgcTEtES8DqqfdRikyKa77UapAxpIhmFgfaSFdLRpPF6mlZPC3ala
+         rVYLvOOQQ3NKYh+Hi/SPz3UjNz+w8m9QPeGd0jIHIGGsQNE7wbCaKhcb6o68yd10hMb3
+         /PZQlIt15wl6SroQ4/dd/Q1cRAYYrohGX/Xmd52BOhKbXQz6UyvfXaiEBiODXPGlEEdp
+         aw4fco9lhk+jeip6dPAD02pByfgZ+J7OfoiFoXIgqC8za8/ow6QnCyZDiIi1pXYSqlkh
+         QF72KjtRJ0/kO8rATHb5p9nwKtIaya0w3/HNSOvrO2ATPOZlLi9gh6CyW2iW0VzL6Q+N
+         Gh9Q==
+X-Gm-Message-State: AOAM530uemiRpSzc3VT4Y5uOUQiZAcXf1PfO5bfUu0kj21RkuT2SOzkp
+        NLQnGb7e8vVW2wHqO6M6gX1sNHqcinotdGwRShK9IQ==
+X-Google-Smtp-Source: ABdhPJzL2QX6JHv/YMDr/k6dMfOuCOooSIAnhsR97uRydnSAr6eU9VWguUWdd7kXmEHnUTejzMEO8wZSq7maWqIl8UQ=
+X-Received: by 2002:a17:906:fcae:: with SMTP id qw14mr10420740ejb.537.1602181476510;
+ Thu, 08 Oct 2020 11:24:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20201008170728.GK20115@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20201008165408.38228-1-toiwoton@gmail.com> <CAG48ez1OU9PFQ06mf4L59SEmi6Vwxnao8RuVXH=dCiyMhqVwYA@mail.gmail.com>
+ <3413d0c8-17c7-fbae-e5fa-74a918e61239@gmail.com>
+In-Reply-To: <3413d0c8-17c7-fbae-e5fa-74a918e61239@gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 8 Oct 2020 20:24:10 +0200
+Message-ID: <CAG48ez2bDCEKxUdFUQ2MAkJgKi1zN+h46ypC2zNr0a1fp-FqWQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2] mm: Optional full ASLR for mmap() and mremap()
+To:     Topi Miettinen <toiwoton@gmail.com>
+Cc:     linux-hardening@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 8.10.2020 20.07, Matthew Wilcox wrote:
-> On Thu, Oct 08, 2020 at 07:54:08PM +0300, Topi Miettinen wrote:
->> +3   Additionally enable full randomization of memory mappings created
->> +    with mmap(NULL, ...). With 2, the base of the VMA used for such
->> +    mappings is random, but the mappings are created in predictable
->> +    places within the VMA and in sequential order. With 3, new VMAs
->> +    are created to fully randomize the mappings. Also mremap(...,
->> +    MREMAP_MAYMOVE) will move the mappings even if not necessary.
->> +
->> +    On 32 bit systems this may cause problems due to increased VM
->> +    fragmentation if the address space gets crowded.
-> 
-> On all systems, it will reduce performance and increase memory usage due
-> to less efficient use of page tables and inability to merge adjacent VMAs
-> with compatible attributes.
+On Thu, Oct 8, 2020 at 8:10 PM Topi Miettinen <toiwoton@gmail.com> wrote:
+> On 8.10.2020 20.13, Jann Horn wrote:
+> > On Thu, Oct 8, 2020 at 6:54 PM Topi Miettinen <toiwoton@gmail.com> wrote:
+> >> Writing a new value of 3 to /proc/sys/kernel/randomize_va_space
+> >> enables full randomization of memory mappings created with mmap(NULL,
+> >> ...). With 2, the base of the VMA used for such mappings is random,
+> >> but the mappings are created in predictable places within the VMA and
+> >> in sequential order. With 3, new VMAs are created to fully randomize
+> >> the mappings. Also mremap(..., MREMAP_MAYMOVE) will move the mappings
+> >> even if not necessary.
+> > [...]
+> >> +       if ((flags & MREMAP_MAYMOVE) && randomize_va_space >= 3) {
+> >> +               /*
+> >> +                * Caller is happy with a different address, so let's
+> >> +                * move even if not necessary!
+> >> +                */
+> >> +               new_addr = arch_mmap_rnd();
+> >> +
+> >> +               ret = mremap_to(addr, old_len, new_addr, new_len,
+> >> +                               &locked, flags, &uf, &uf_unmap_early,
+> >> +                               &uf_unmap);
+> >> +               goto out;
+> >> +       }
+> >
+> > You just pick a random number as the address, and try to place the
+> > mapping there? Won't this fail if e.g. the old address range overlaps
+> > with the new one, causing mremap_to() to bail out at "if (addr +
+> > old_len > new_addr && new_addr + new_len > addr)"?
+>
+> Thanks for the review. I think overlap would be OK in this case and the
+> check should be skipped.
 
-Right, I'll update the description.
-
->> +	if ((flags & MREMAP_MAYMOVE) && randomize_va_space >= 3) {
->> +		/*
->> +		 * Caller is happy with a different address, so let's
->> +		 * move even if not necessary!
->> +		 */
->> +		new_addr = arch_mmap_rnd();
->> +
->> +		ret = mremap_to(addr, old_len, new_addr, new_len,
->> +				&locked, flags, &uf, &uf_unmap_early,
->> +				&uf_unmap);
->> +		goto out;
->> +	}
->> +
->> +
-> 
-> Overly enthusiastic newline
-> 
-
-Will remove.
-
--Topi
+No, mremap() can't deal with overlap (and trying to add such support
+would make mremap() unnecessarily complicated).
