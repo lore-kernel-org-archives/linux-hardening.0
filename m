@@ -2,209 +2,261 @@ Return-Path: <SRS0=DAdQ=DP=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C92C43457
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 16:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A88EC433DF
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 16:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12CC6206F0
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 16:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F1E21D7D
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 16:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gu/Sv0y8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r1nkHaQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731634AbgJHQAi (ORCPT
+        id S1729800AbgJHQy1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Oct 2020 12:00:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41590 "EHLO
+        Thu, 8 Oct 2020 12:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731539AbgJHPxt (ORCPT
+        with ESMTP id S1729257AbgJHQy1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Oct 2020 11:53:49 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD27DC0613D2;
-        Thu,  8 Oct 2020 08:53:48 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k18so7020217wmj.5;
-        Thu, 08 Oct 2020 08:53:48 -0700 (PDT)
+        Thu, 8 Oct 2020 12:54:27 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29454C061755;
+        Thu,  8 Oct 2020 09:54:27 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id i2so6528382ljg.4;
+        Thu, 08 Oct 2020 09:54:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zfnSh1S7AyPLXhddsPPCiUSDnY9RVRvL/aKUF/eOH70=;
-        b=gu/Sv0y8h5LSilfHz1MlSh63wBSqedxUpjHZ9D7e7N2KII5tH40//lqH6Fz5UX14ER
-         yWvPU8RWuCFlzEETOWn8TqUJmOsaOtWtUrjk+Qe2g5Ik1i3APa/dZeWp3RV3F7dkmyqf
-         aXy6M7xwzCfDsWL7DsaE2kWcPHTozXSKfHq9iW3ggLRp61PupjQ5Wh3hOt+o4+gxNlJY
-         HeDSM89yFYmjZZwyrui0CcRx4d1kHmPnWAZav0k18FphCpge7vr9gFFlaEwo4HTxgg9G
-         z2z930PDCXH39lBpsUOKBuL9TEYHJsrEU3w0zJBHvn4FoFSx3nsjbMQojwb6W+kygXi5
-         DZsg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HaQHMvsAbN6cMevstK9X71pYZ6JlF0DetbVYPC1lGLA=;
+        b=r1nkHaQJuFcB7uC4ho7uvig5jKozNzmLY8hyJcWgAqiCly9Ohab7JX4Fbddic9IG59
+         x/64aKJUvf/0hYw3P0VsU6Ml9HodFc3amIR5CSJydo1CsdonBkpCNMMEkcYjuEGXNzWY
+         PQ7SK8rYD7QDhzs63eLdw2l/STVfh4zvmMVL1q4DwTvYExs7lPIW432kFcs9eO/9qVH3
+         NErhyMwSYVQn7AfNRYly4oWJpg1lGc50uWjGkOT/YBo/7s0c/9tXAwGTJyzIxVEVCWdV
+         oC47WeX3pR0huCP7BWR8SG5iYpvxwhmEOyqI2bLHZMkAdjIELnyooXJdLif2GKtaK5Rw
+         tfsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zfnSh1S7AyPLXhddsPPCiUSDnY9RVRvL/aKUF/eOH70=;
-        b=mbLRBmZfQJiD+ItQmzCEvNjitrp/7FdoaBqBc022Abl33KC0EfZIjsr2iovirpHVWZ
-         fVrmei23Gv9926DC8w5/wMjQwM/CZFdD3qBRccMlLsvWyD00S/5eygPKFTkzztq/87+0
-         RK7WiCBmscZWs/ufPSUeuEQuT0KphyrFD33uDFfnrEPj4cd2yIbLDUrWo6IcY2nFs2Gs
-         XYZkTP1wu2wooQcRA6r/xi//Dqc22XO3PKmK9+6m8QlNiMc65BZnDMIxXu2FKJDSBrTS
-         a7TGZjQG43dqjiyo+VWLZrGM7id9s723bB2+DB5Ho1HZGlybMlBxopuxTifIlsz5UgAx
-         J/wQ==
-X-Gm-Message-State: AOAM531rhRVBWwG6IGztAxJvJv/IgW4WO//zVsacolpB9r3i0ZkNvah1
-        gwzvrJ7D8N3kCA/LlbkaaRxGNF0YCXnwJZhoSmI=
-X-Google-Smtp-Source: ABdhPJy/tXQQdC55L192BlAu88uxZZ2IKYZOOTv9bZVSpdIXRW5uMtsF9H/ESiLz3OiNlXuEgE+LvtzdwHwx4rgwlwY=
-X-Received: by 2002:a7b:c7d5:: with SMTP id z21mr5233566wmk.73.1602172427513;
- Thu, 08 Oct 2020 08:53:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HaQHMvsAbN6cMevstK9X71pYZ6JlF0DetbVYPC1lGLA=;
+        b=ZH9+W2yIfRebPbGOaC3VwjOuaRe6+LWESOkHkk1N0234GIpjY4dzr8eO6abCxXrmZe
+         JxOYr4OQ60Y+kjD/90gFvQ8nMKg8WI5bN3wWdITBrg23daUX1cAkRZynzr6tYKKS2fQs
+         ya59c45zB8pzni3vj0Cd4+CUSapUXm9wrZhIhh1cq7LglYCpFw87rNlicW8jVdSsK/sv
+         ZwtJ7hbANk2oOKM+qxrIfxsQcYLNjWpXYaF53j33Xb4nCUyUwP2OJWQMRXO9nXRBQbAl
+         ciQBpniqjwT4QZ/kWljFDb+UsA8zKNCPs1ek84i38xyA9eB183Cq7wKaqu+qyasiM6sd
+         XvTQ==
+X-Gm-Message-State: AOAM531/CtjHbKXsNl8c93MTVYGjz6Qv1ZrP71ueCf16s1GTQHdPCvAZ
+        e5X2LGio+6aj3sYedeebM/J7AlcNuMg=
+X-Google-Smtp-Source: ABdhPJz/plXwTht2xCVVQp/qk4FJe1rVnLu6QowNVc/WjIKj3Dn3u+OmqIlQ0ESGqRpySz7e2Oyeiw==
+X-Received: by 2002:a2e:9817:: with SMTP id a23mr3341223ljj.280.1602176064914;
+        Thu, 08 Oct 2020 09:54:24 -0700 (PDT)
+Received: from localhost.localdomain (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
+        by smtp.gmail.com with ESMTPSA id o15sm946696lfg.226.2020.10.08.09.54.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Oct 2020 09:54:24 -0700 (PDT)
+From:   Topi Miettinen <toiwoton@gmail.com>
+To:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Topi Miettinen <toiwoton@gmail.com>
+Subject: [PATCH RESEND v2] mm: Optional full ASLR for mmap() and mremap()
+Date:   Thu,  8 Oct 2020 19:54:08 +0300
+Message-Id: <20201008165408.38228-1-toiwoton@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <cover.1602020074.git.gustavoars@kernel.org> <d71c8436-334c-45d9-d464-9798e75f2a73@amd.com>
-In-Reply-To: <d71c8436-334c-45d9-d464-9798e75f2a73@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 8 Oct 2020 11:53:36 -0400
-Message-ID: <CADnq5_O3KSo3ZkhS0HKiyzM1h-LccUHUOkqi4FE_KnSGHZJiGQ@mail.gmail.com>
-Subject: Re: [PATCH 00/14] drm/amd/pm: Replace one-element arrays with
- flexible-array members
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 8, 2020 at 3:20 AM Christian K=C3=B6nig <christian.koenig@amd.c=
-om> wrote:
->
-> Am 07.10.20 um 18:01 schrieb Gustavo A. R. Silva:
-> > Hi all,
-> >
-> > This series aims to replace one-element arrays with flexible-array
-> > members.
-> >
-> > There is a regular need in the kernel to provide a way to declare havin=
-g
-> > a dynamically sized set of trailing elements in a structure. Kernel cod=
-e
-> > should always use =E2=80=9Cflexible array members=E2=80=9D[1] for these=
- cases. The older
-> > style of one-element or zero-length arrays should no longer be used[2].
-> >
-> > Refactor the code according to the use of flexible-array members, inste=
-ad
-> > of one-element arrays, and use the struct_size() helper to calculate th=
-e
-> > size for the dynamic memory allocation.
-> >
-> > Also, save some heap space in the process. More on this on each individ=
-ual
-> > patch.
->
-> Ah! Nice to see that finally be documented and cleaned up.
->
-> Feel free to add an Acked-by: Christian K=C3=B6nig <christian.koenig@amd.=
-com>
+Writing a new value of 3 to /proc/sys/kernel/randomize_va_space
+enables full randomization of memory mappings created with mmap(NULL,
+...). With 2, the base of the VMA used for such mappings is random,
+but the mappings are created in predictable places within the VMA and
+in sequential order. With 3, new VMAs are created to fully randomize
+the mappings. Also mremap(..., MREMAP_MAYMOVE) will move the mappings
+even if not necessary.
 
-Applied 1-13.  patch 14 is changing a file shared with firmware, so I
-left it for consistency.
+On 32 bit systems this may cause problems due to increased VM
+fragmentation if the address space gets crowded.
 
-Thanks!
+In this example, with value of 2, ld.so.cache, libc, an anonymous mmap
+and locale-archive are located close to each other:
+$ strace /bin/sync
+...
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=189096, ...}) = 0
+mmap(NULL, 189096, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7d9c1e7f2000
+...
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0n\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1839792, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7d9c1e7f0000
+mmap(NULL, 1852680, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7d9c1e62b000
+...
+openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=5642592, ...}) = 0
+mmap(NULL, 5642592, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7d9c1e0c9000
 
-Alex
+With 3, they are located in unrelated addresses:
+$ echo 3 > /proc/sys/kernel/randomize_va_space
+$ /bin/sync
+...
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=189096, ...}) = 0
+mmap(NULL, 189096, PROT_READ, MAP_PRIVATE, 3, 0) = 0xeda4fbea000
+...
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0n\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1839792, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xb8fb9c1d000
+mmap(NULL, 1852680, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0xaabd8598000
+...
+openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=5642592, ...}) = 0
+mmap(NULL, 5642592, PROT_READ, MAP_PRIVATE, 3, 0) = 0xbe351ab8000
 
->
-> I also know about a case where we don't use struct_size in the DMA-buf co=
-de.
->
-> I'm the maintainer of that stuff as well, so be prepared to get patches
-> thrown at you to clean that up as well.
->
-> Thanks,
-> Christian.
->
-> >
-> > This series also addresses multiple of the following sorts of warnings:
-> >
-> > drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/smu8_hwmgr.c:1515:37:
-> > warning: array subscript 1 is above array bounds of =E2=80=98const stru=
-ct
-> > phm_clock_voltage_dependency_record[1]=E2=80=99 [-Warray-bounds]
-> >
-> > which, in this case, they are false positives, but nervertheless should=
- be
-> > fixed in order to enable -Warray-bounds[3][4].
-> >
-> > [1] https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-Fen.wikipedia.org%2Fwiki%2FFlexible_array_member&amp;data=3D02%7C01%7Cchris=
-tian.koenig%40amd.com%7C5312862a3b8c41838ef508d86ad969c1%7C3dd8961fe4884e60=
-8e11a82d994e183d%7C0%7C0%7C637376829947099179&amp;sdata=3D5LEWyR8pYSxmHsqhH=
-iYiOS%2BPPk%2Fm5suOc6H7f5cIBL4%3D&amp;reserved=3D0
-> > [2] https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-Fwww.kernel.org%2Fdoc%2Fhtml%2Fv5.9-rc1%2Fprocess%2Fdeprecated.html%23zero-=
-length-and-one-element-arrays&amp;data=3D02%7C01%7Cchristian.koenig%40amd.c=
-om%7C5312862a3b8c41838ef508d86ad969c1%7C3dd8961fe4884e608e11a82d994e183d%7C=
-0%7C0%7C637376829947099179&amp;sdata=3DwOqxnNkA9FnOI%2BfB3dHn9RU7cqPJ62qqGC=
-K9gsd2i%2Bo%3D&amp;reserved=3D0
-> > [3] https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-Fgit.kernel.org%2Flinus%2F44720996e2d79e47d508b0abe99b931a726a3197&amp;data=
-=3D02%7C01%7Cchristian.koenig%40amd.com%7C5312862a3b8c41838ef508d86ad969c1%=
-7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637376829947099179&amp;sdata=
-=3Dx%2BSJeOrQA11HXoTaZEdyLyNWL9rC4GngDyoDMRBUn4M%3D&amp;reserved=3D0
-> > [4] https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-Fgithub.com%2FKSPP%2Flinux%2Fissues%2F109&amp;data=3D02%7C01%7Cchristian.ko=
-enig%40amd.com%7C5312862a3b8c41838ef508d86ad969c1%7C3dd8961fe4884e608e11a82=
-d994e183d%7C0%7C0%7C637376829947099179&amp;sdata=3D48155uVo7AboCdSZfsTP10i2=
-rHfBJctG%2F432lD%2BpfHo%3D&amp;reserved=3D0
-> >
-> > Gustavo A. R. Silva (14):
-> >    drm/amd/pm: Replace one-element array with flexible-array member
-> >    drm/amd/pm: Replace one-element array with flexible-array member in
-> >      struct vi_dpm_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_clock_array
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_uvd_clock_voltage_dependency_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_acp_clock_voltage_dependency_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_phase_shedding_limits_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_vce_clock_voltage_dependency_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_cac_leakage_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_samu_clock_voltage_dependency_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_ppt_v1_clock_voltage_dependency_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_ppt_v1_mm_clock_voltage_dependency_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_ppt_v1_voltage_lookup_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      phm_ppt_v1_pcie_table
-> >    drm/amd/pm: Replace one-element array with flexible-array in struct
-> >      ATOM_Vega10_GFXCLK_Dependency_Table
-> >
-> >   drivers/gpu/drm/amd/pm/inc/hwmgr.h            | 20 ++---
-> >   .../drm/amd/pm/powerplay/hwmgr/hwmgr_ppt.h    |  8 +-
-> >   .../powerplay/hwmgr/process_pptables_v1_0.c   | 85 +++++++-----------
-> >   .../amd/pm/powerplay/hwmgr/processpptables.c  | 85 +++++++-----------
-> >   .../drm/amd/pm/powerplay/hwmgr/smu8_hwmgr.c   |  2 +-
-> >   .../drm/amd/pm/powerplay/hwmgr/smu_helper.c   |  5 +-
-> >   .../amd/pm/powerplay/hwmgr/vega10_pptable.h   |  2 +-
-> >   .../powerplay/hwmgr/vega10_processpptables.c  | 88 ++++++------------=
--
-> >   8 files changed, 107 insertions(+), 188 deletions(-)
-> >
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
+---
+Resent also to hardening list (hopefully the right one)
+v2: also randomize mremap(..., MREMAP_MAYMOVE)
+---
+ Documentation/admin-guide/hw-vuln/spectre.rst |  6 +++---
+ Documentation/admin-guide/sysctl/kernel.rst   | 11 +++++++++++
+ init/Kconfig                                  |  2 +-
+ mm/mmap.c                                     |  7 ++++++-
+ mm/mremap.c                                   | 15 +++++++++++++++
+ 5 files changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/admin-guide/hw-vuln/spectre.rst b/Documentation/admin-guide/hw-vuln/spectre.rst
+index e05e581af5cf..9ea250522077 100644
+--- a/Documentation/admin-guide/hw-vuln/spectre.rst
++++ b/Documentation/admin-guide/hw-vuln/spectre.rst
+@@ -254,7 +254,7 @@ Spectre variant 2
+    left by the previous process will also be cleared.
+ 
+    User programs should use address space randomization to make attacks
+-   more difficult (Set /proc/sys/kernel/randomize_va_space = 1 or 2).
++   more difficult (Set /proc/sys/kernel/randomize_va_space = 1, 2 or 3).
+ 
+ 3. A virtualized guest attacking the host
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+@@ -499,8 +499,8 @@ Spectre variant 2
+    more overhead and run slower.
+ 
+    User programs should use address space randomization
+-   (/proc/sys/kernel/randomize_va_space = 1 or 2) to make attacks more
+-   difficult.
++   (/proc/sys/kernel/randomize_va_space = 1, 2 or 3) to make attacks
++   more difficult.
+ 
+ 3. VM mitigation
+ ^^^^^^^^^^^^^^^^
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index d4b32cc32bb7..acd0612155d9 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -1060,6 +1060,17 @@ that support this feature.
+     Systems with ancient and/or broken binaries should be configured
+     with ``CONFIG_COMPAT_BRK`` enabled, which excludes the heap from process
+     address space randomization.
++
++3   Additionally enable full randomization of memory mappings created
++    with mmap(NULL, ...). With 2, the base of the VMA used for such
++    mappings is random, but the mappings are created in predictable
++    places within the VMA and in sequential order. With 3, new VMAs
++    are created to fully randomize the mappings. Also mremap(...,
++    MREMAP_MAYMOVE) will move the mappings even if not necessary.
++
++    On 32 bit systems this may cause problems due to increased VM
++    fragmentation if the address space gets crowded.
++
+ ==  ===========================================================================
+ 
+ 
+diff --git a/init/Kconfig b/init/Kconfig
+index d6a0b31b13dc..c5ea2e694f6a 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1859,7 +1859,7 @@ config COMPAT_BRK
+ 	  also breaks ancient binaries (including anything libc5 based).
+ 	  This option changes the bootup default to heap randomization
+ 	  disabled, and can be overridden at runtime by setting
+-	  /proc/sys/kernel/randomize_va_space to 2.
++	  /proc/sys/kernel/randomize_va_space to 2 or 3.
+ 
+ 	  On non-ancient distros (post-2000 ones) N is usually a safe choice.
+ 
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 40248d84ad5f..489368f43af1 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -47,6 +47,7 @@
+ #include <linux/pkeys.h>
+ #include <linux/oom.h>
+ #include <linux/sched/mm.h>
++#include <linux/elf-randomize.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/cacheflush.h>
+@@ -206,7 +207,7 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
+ #ifdef CONFIG_COMPAT_BRK
+ 	/*
+ 	 * CONFIG_COMPAT_BRK can still be overridden by setting
+-	 * randomize_va_space to 2, which will still cause mm->start_brk
++	 * randomize_va_space to >= 2, which will still cause mm->start_brk
+ 	 * to be arbitrarily shifted
+ 	 */
+ 	if (current->brk_randomized)
+@@ -1407,6 +1408,10 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ 	if (mm->map_count > sysctl_max_map_count)
+ 		return -ENOMEM;
+ 
++	/* Pick a random address even outside current VMAs? */
++	if (!addr && randomize_va_space >= 3)
++		addr = arch_mmap_rnd();
++
+ 	/* Obtain the address to map to. we verify (or select) it and ensure
+ 	 * that it represents a valid section of the address space.
+ 	 */
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 138abbae4f75..c7fd1ab5fb5f 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -24,6 +24,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/mm-arch-hooks.h>
+ #include <linux/userfaultfd_k.h>
++#include <linux/elf-randomize.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/tlbflush.h>
+@@ -720,6 +721,20 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+ 		goto out;
+ 	}
+ 
++	if ((flags & MREMAP_MAYMOVE) && randomize_va_space >= 3) {
++		/*
++		 * Caller is happy with a different address, so let's
++		 * move even if not necessary!
++		 */
++		new_addr = arch_mmap_rnd();
++
++		ret = mremap_to(addr, old_len, new_addr, new_len,
++				&locked, flags, &uf, &uf_unmap_early,
++				&uf_unmap);
++		goto out;
++	}
++
++
+ 	/*
+ 	 * Always allow a shrinking remap: that just unmaps
+ 	 * the unnecessary pages..
+-- 
+2.28.0
+
