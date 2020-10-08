@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC387C433E7
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 22:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2390CC433E7
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 22:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51FF422245
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 22:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CF022241
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 22:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1602194623;
-	bh=AeT6tduvvnK32DuXyUelUNi0j2jvtQ1WF3gbVAximcE=;
+	s=default; t=1602195200;
+	bh=QwC/kxxkaru98nLEFoJk/4mhtYf+gyr8z3Rnw7Q/3Q8=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=aRW+g7E4wllyQFWm6hZ3y92GcyXscroSQkXHv/qozhmnSePjrqVnmxve9KEj2XG4C
-	 9jTGzCJ3VrbS1nbl0Gy8g+wDH/NQkPuDPpH/500xpSLBbI8bmuOXmMY66GkdgL89Eh
-	 tkL5yyMaDy1gjU+I7GdPqJ2hPbHHvv6aWlyG3ItY=
+	b=KrvAFr2Mn6k6xyQXRKvtygfB48d8IsqNSQaF6RJCHZc1iRLLTjAtDt+ownIMwk+Au
+	 gaQ6QkJ8C10gJ+9rxTvNTx/UYbq3NNNolo9NK8SZB6Sn3RCgNeNSSGsrUjb/lTdEdA
+	 ERdvzKq0WycLS47ePE9Pj4ta3moBMKkCfcNncRhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgJHWDn (ORCPT
+        id S1728271AbgJHWNU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Oct 2020 18:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54580 "EHLO mail.kernel.org"
+        Thu, 8 Oct 2020 18:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgJHWDm (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Oct 2020 18:03:42 -0400
+        id S1725852AbgJHWNT (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 8 Oct 2020 18:13:19 -0400
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 666E022241;
-        Thu,  8 Oct 2020 22:03:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC8A22241;
+        Thu,  8 Oct 2020 22:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602194622;
-        bh=AeT6tduvvnK32DuXyUelUNi0j2jvtQ1WF3gbVAximcE=;
+        s=default; t=1602195199;
+        bh=QwC/kxxkaru98nLEFoJk/4mhtYf+gyr8z3Rnw7Q/3Q8=;
         h=Date:From:To:Cc:Subject:From;
-        b=dvud6lF9LsqMei3QC5ri01tEoAWoj0IANTB2ZNNDLbbikORBHnrb1ro086cGhFRmR
-         FZ+GbB3AaArn/pcPgSUaC/p3YSnzxz9uM81CxIa4lAmycsRdGoCDY7CcnYR1yBdDXJ
-         SR9/2ZCmk0KYnasJuNw9lK2onWz/93pdE3rGcrg0=
-Date:   Thu, 8 Oct 2020 17:09:05 -0500
+        b=PsCHVunq6rzcCfkb6KsoAbgWbosMsjvZIUnlSgnXksbycIEKwOU0aBvtgicRJMZsz
+         2/NZwBxKr75b48N/nUFfsKkilDl0c9+2B/yNDUurNIwu/TKrhmGMe0biIg3EOwacva
+         RUfKfSXB5m6uclm4GlssXSIZvPQubV9ImgvrFWBU=
+Date:   Thu, 8 Oct 2020 17:18:42 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wlcore: Use fallthrough pseudo-keyword
-Message-ID: <20201008220905.GA8040@embeddedor>
+Subject: [PATCH][next] drm/i915/display: Use fallthrough pseudo-keyword
+Message-ID: <20201008221842.GA9463@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -59,7 +61,7 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In order to enable -Wimplicit-fallthrough for Clang[1], replace the
-existing /* fall-through */ comments with the new pseudo-keyword
+existing /* fall through */ comments with the new pseudo-keyword
 macro fallthrough[2].
 
 [1] https://git.kernel.org/linus/e2079e93f562c7f7a030eb7642017ee5eabaaa10
@@ -67,31 +69,31 @@ macro fallthrough[2].
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/main.c | 4 ++--
+ drivers/gpu/drm/i915/display/intel_ddi.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index 6863fd552d5e..122c7a4b374f 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -2227,7 +2227,7 @@ static int wl12xx_init_vif_data(struct wl1271 *wl, struct ieee80211_vif *vif)
- 	switch (ieee80211_vif_type_p2p(vif)) {
- 	case NL80211_IFTYPE_P2P_CLIENT:
- 		wlvif->p2p = 1;
--		/* fall-through */
+diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
+index 4d06178cd76c..2941051ac3e1 100644
+--- a/drivers/gpu/drm/i915/display/intel_ddi.c
++++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+@@ -1090,7 +1090,7 @@ ehl_get_combo_buf_trans(struct intel_encoder *encoder, int type, int rate,
+ 				return icl_combo_phy_ddi_translations_edp_hbr2;
+ 			}
+ 		}
+-		/* fall through */
 +		fallthrough;
- 	case NL80211_IFTYPE_STATION:
- 	case NL80211_IFTYPE_P2P_DEVICE:
- 		wlvif->bss_type = BSS_TYPE_STA_BSS;
-@@ -2237,7 +2237,7 @@ static int wl12xx_init_vif_data(struct wl1271 *wl, struct ieee80211_vif *vif)
- 		break;
- 	case NL80211_IFTYPE_P2P_GO:
- 		wlvif->p2p = 1;
--		/* fall-through */
+ 	default:
+ 		/* All combo DP and eDP ports that do not support low_vswing */
+ 		*n_entries = ARRAY_SIZE(ehl_combo_phy_ddi_translations_dp);
+@@ -1126,7 +1126,7 @@ tgl_get_combo_buf_trans(struct intel_encoder *encoder, int type, int rate,
+ 			*n_entries = ARRAY_SIZE(icl_combo_phy_ddi_translations_edp_hbr2);
+ 			return icl_combo_phy_ddi_translations_edp_hbr2;
+ 		}
+-		/* fall through */
 +		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 	case NL80211_IFTYPE_MESH_POINT:
- 		wlvif->bss_type = BSS_TYPE_AP_BSS;
+ 	default:
+ 		/* All combo DP and eDP ports that do not support low_vswing */
+ 		if (rate > 270000) {
 -- 
 2.27.0
 
