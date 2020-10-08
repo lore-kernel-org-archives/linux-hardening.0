@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2390CC433E7
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 22:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED3CC433DF
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 22:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0CF022241
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 22:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5F122244
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Oct 2020 22:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1602195200;
-	bh=QwC/kxxkaru98nLEFoJk/4mhtYf+gyr8z3Rnw7Q/3Q8=;
+	s=default; t=1602195592;
+	bh=vh2MTDkqTCddfhj24WjA3iu9qgZTb5K4SXKLvmgxfR0=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=KrvAFr2Mn6k6xyQXRKvtygfB48d8IsqNSQaF6RJCHZc1iRLLTjAtDt+ownIMwk+Au
-	 gaQ6QkJ8C10gJ+9rxTvNTx/UYbq3NNNolo9NK8SZB6Sn3RCgNeNSSGsrUjb/lTdEdA
-	 ERdvzKq0WycLS47ePE9Pj4ta3moBMKkCfcNncRhA=
+	b=cutbiBHZky3xziAiNn+9yNyLzjeiG5tD5KGmLN1dErewm1q9RXUOfImPAMtN1s4VD
+	 KhzghcOXfSDDEjKTYl7EUy69KtuFQafCbtF8hSKPiiMIQi8sRvtb3vYdCY+aUlwX1p
+	 aaNn33rS5GjIyzeGHIXehVwdFv77gaw1sZ3PAUAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgJHWNU (ORCPT
+        id S1730038AbgJHWTw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Oct 2020 18:13:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
+        Thu, 8 Oct 2020 18:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgJHWNT (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Oct 2020 18:13:19 -0400
+        id S1725852AbgJHWTv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 8 Oct 2020 18:19:51 -0400
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC8A22241;
-        Thu,  8 Oct 2020 22:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26CF322241;
+        Thu,  8 Oct 2020 22:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602195199;
-        bh=QwC/kxxkaru98nLEFoJk/4mhtYf+gyr8z3Rnw7Q/3Q8=;
+        s=default; t=1602195590;
+        bh=vh2MTDkqTCddfhj24WjA3iu9qgZTb5K4SXKLvmgxfR0=;
         h=Date:From:To:Cc:Subject:From;
-        b=PsCHVunq6rzcCfkb6KsoAbgWbosMsjvZIUnlSgnXksbycIEKwOU0aBvtgicRJMZsz
-         2/NZwBxKr75b48N/nUFfsKkilDl0c9+2B/yNDUurNIwu/TKrhmGMe0biIg3EOwacva
-         RUfKfSXB5m6uclm4GlssXSIZvPQubV9ImgvrFWBU=
-Date:   Thu, 8 Oct 2020 17:18:42 -0500
+        b=XHtojaceDHnalxQKsgQbWYwAiIv98i4g8qt4yqeqTZrW6hX+YqJ4EEKyXa2gzWQRO
+         /QMNHJa4wnfUZzXfxpuCVqY+A8OjYYJiozjZDl0xkwhSZLycwsmIDe6pEjFaJohr8g
+         uvkJx1ca1jt97uP2pWnA79Sx92QvCr/O5Q31HTIY=
+Date:   Thu, 8 Oct 2020 17:25:14 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/i915/display: Use fallthrough pseudo-keyword
-Message-ID: <20201008221842.GA9463@embeddedor>
+Subject: [PATCH][next] Input: libps2 - Use fallthrough pseudo-keyword
+Message-ID: <20201008222514.GA17682@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -61,7 +56,7 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In order to enable -Wimplicit-fallthrough for Clang[1], replace the
-existing /* fall through */ comments with the new pseudo-keyword
+existing /* Fall through */ comment with the new pseudo-keyword
 macro fallthrough[2].
 
 [1] https://git.kernel.org/linus/e2079e93f562c7f7a030eb7642017ee5eabaaa10
@@ -69,31 +64,22 @@ macro fallthrough[2].
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/i915/display/intel_ddi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/serio/libps2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-index 4d06178cd76c..2941051ac3e1 100644
---- a/drivers/gpu/drm/i915/display/intel_ddi.c
-+++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-@@ -1090,7 +1090,7 @@ ehl_get_combo_buf_trans(struct intel_encoder *encoder, int type, int rate,
- 				return icl_combo_phy_ddi_translations_edp_hbr2;
- 			}
+diff --git a/drivers/input/serio/libps2.c b/drivers/input/serio/libps2.c
+index 8a16e41f7b7f..250e213cc80c 100644
+--- a/drivers/input/serio/libps2.c
++++ b/drivers/input/serio/libps2.c
+@@ -405,7 +405,7 @@ bool ps2_handle_ack(struct ps2dev *ps2dev, u8 data)
+ 			ps2dev->nak = PS2_RET_ERR;
+ 			break;
  		}
--		/* fall through */
+-		/* Fall through */
 +		fallthrough;
- 	default:
- 		/* All combo DP and eDP ports that do not support low_vswing */
- 		*n_entries = ARRAY_SIZE(ehl_combo_phy_ddi_translations_dp);
-@@ -1126,7 +1126,7 @@ tgl_get_combo_buf_trans(struct intel_encoder *encoder, int type, int rate,
- 			*n_entries = ARRAY_SIZE(icl_combo_phy_ddi_translations_edp_hbr2);
- 			return icl_combo_phy_ddi_translations_edp_hbr2;
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		/* All combo DP and eDP ports that do not support low_vswing */
- 		if (rate > 270000) {
+ 
+ 	/*
+ 	 * Workaround for mice which don't ACK the Get ID command.
 -- 
 2.27.0
 
