@@ -2,128 +2,207 @@ Return-Path: <SRS0=sPYh=D3=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,WEIRD_QUOTING autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B731C4363A
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 17:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72231C4363A
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 19:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C62A322242
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 17:23:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j31T+kYp"
+	by mail.kernel.org (Postfix) with ESMTP id 1B65C2225C
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 19:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390876AbgJTRXL (ORCPT
+        id S2391338AbgJTTTS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Oct 2020 13:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390857AbgJTRXL (ORCPT
+        Tue, 20 Oct 2020 15:19:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57529 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbgJTTTR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Oct 2020 13:23:11 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2972CC0613CE
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Oct 2020 10:23:11 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t22so1363510plr.9
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Oct 2020 10:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=C2whC7dxW7uUCx15c2+3j06uyxnCZ7apflsBs7iRZkw=;
-        b=j31T+kYpVPSb8G7+0XJNMo3ngCFXQTxTlChxMq63AJIXv0q0hHe09F0bNrh80H46oG
-         oac6zTN9cNnU+RQQOUrdKf832mCpEjILW/aEpL3FcOCM/VpcG1B0xVeQ4Gu+r3fkYg4R
-         sbSAKB8Opy9iSHN7mvm6josCYSB+jz4ySPN04=
+        Tue, 20 Oct 2020 15:19:17 -0400
+Received: from mail-qk1-f198.google.com ([209.85.222.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1kUxAA-0002mS-DT
+        for linux-hardening@vger.kernel.org; Tue, 20 Oct 2020 19:19:14 +0000
+Received: by mail-qk1-f198.google.com with SMTP id z16so2765749qkg.15
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Oct 2020 12:19:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=C2whC7dxW7uUCx15c2+3j06uyxnCZ7apflsBs7iRZkw=;
-        b=unB6Mexkid1jd8CwBCqmcdebvoeQKL8EgREZUN35qGw3Ji2rMVVk0rXtOk+8hpYKcv
-         mfxqq8lhjfTXsK8B7Ott6cd2BIRW8NiukSd+ecf34HdxPfK4Fe+zheUkLEsudDWN5LDo
-         KCWUCF7DKPrXAC1bBy/WzcsfsSdYNd6VDiFLwZOecva4srC8ll2pFlPWS+rkgmvVuy3o
-         ZoDdrty7kEwea9zjWrNK9eK/3vi17w2bI5nKIeJbgwu26zxzrS8vnEiwwFzO4icJEZz2
-         LQAdRqAftUDYzoO96Jza7c+Nmxy2qQhAPDrO5hVoPCPbvMeqxGz7g3kbMFirE6eBoz7p
-         iWMA==
-X-Gm-Message-State: AOAM531GxO8N1Z/0fZPOD7hcrdCVKgtTsvJVFP9KiTQiC7sPPWf4rmAf
-        nXrnEV+PzOeUtstH3HzPclmcdwOcbOanaQ==
-X-Google-Smtp-Source: ABdhPJw+Xvk7WDG8BtEeO4/9z1QNsAOZ+PKIsVdsodrmAZ9VNkBpYUAm8VniEpyhhXr7+U+fyQrgjA==
-X-Received: by 2002:a17:90a:148:: with SMTP id z8mr3773544pje.173.1603214590685;
-        Tue, 20 Oct 2020 10:23:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m4sm2561498pgv.87.2020.10.20.10.23.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2020 10:23:09 -0700 (PDT)
-Date:   Tue, 20 Oct 2020 10:23:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Francis Laniel <laniel_francis@privacyrequired.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>, linux-hardening@vger.kernel.org,
-        davem@davemloft.net
-Subject: Re: [RFC][PATCH v2 2/3] Modify return value of nla_strlcpy to match
- that of strscpy.
-Message-ID: <202010201022.B016A3A41A@keescook>
-References: <20201016125216.10922-1-laniel_francis@privacyrequired.com>
- <202010191559.3AC2C3F97@keescook>
- <20201019163449.0a3f4675@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <6912124.fRD6ipzQbq@machine>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FqqSeg/bCyOeyqz7A1Q415iiRjBhbX8psNpMHRp7K2w=;
+        b=AczhvDKMpid2OWXLZ5jygW9NXAtygGEw3ySONRKhK3p77koIw9BxWGq6qJUTZiFY7W
+         BELVT2iinA/z41xZtIEbyScvIfhXKYs+dDXAyJWT/gTd3b5izhUGP8sDTKbmf2zfTboy
+         O8ezBMQa3qE/7murddWpA1Gym/JVLWdhWLpHtau61H4DVQAYiEHjdLlOlQbjbQ226sEC
+         bDDkh2K2NtNgF19KejdUZLuQ/GSYu+Jx3EKSHqNi0rRs3lB/4P3VpBPsphg3ttxq83tF
+         zVG9nCXzIjLeiH8wqWg6JrWcln0/4akCEobj8ISbGMF+9FE+9D6EyOZuzUBH349Ejlxc
+         Mh4A==
+X-Gm-Message-State: AOAM530OK6QZNJB4LLlw8KTAC3JEmJtWRQZBhJltJJ/y+ORvpFy8Vcn1
+        7OwmvO6UBJYS4eLmZ4cYZNNLOF+C+sjHS0drQjdE4LjnfASi8BYTTLMpW2+WOPNh06PcRfeC1kR
+        6owsLJIgZoVhaowkdtWj5I2L1meFujMwZp+XPUYtooiMVeg==
+X-Received: by 2002:a37:61d0:: with SMTP id v199mr4153542qkb.208.1603221553214;
+        Tue, 20 Oct 2020 12:19:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzOPi++qpAgYzAyEfboIs+zkD7OqvlS2/RI3sqk+6wCVsDU2YbxaWqVk9uyIVt/PCEHEd2MoA==
+X-Received: by 2002:a37:61d0:: with SMTP id v199mr4153507qkb.208.1603221552675;
+        Tue, 20 Oct 2020 12:19:12 -0700 (PDT)
+Received: from [192.168.1.75] (200-160-93-101.static-user.ajato.com.br. [200.160.93.101])
+        by smtp.gmail.com with ESMTPSA id h125sm1298325qkc.36.2020.10.20.12.19.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Oct 2020 12:19:11 -0700 (PDT)
+Subject: Re: [PATCH] mm, hugetlb: Avoid double clearing for hugetlb pages
+To:     Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>, david@redhat.com
+Cc:     linux-mm@kvack.org, kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org, kernel@gpiccoli.net,
+        cascardo@canonical.com, Alexander Potapenko <glider@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>, gpiccoli@canonical.com
+References: <20201019182853.7467-1-gpiccoli@canonical.com>
+ <20201020082022.GL27114@dhcp22.suse.cz>
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
+ xsBNBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
+ Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
+ 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
+ irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
+ 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
+ AAHNLUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPsLAdwQT
+ AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
+ 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
+ 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
+ q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
+ iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
+ LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltvezsBNBFpVBxcBCADbxD6J
+ aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
+ pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
+ kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
+ nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
+ bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAHCwF8EGAEIAAkFAlpV
+ BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
+ 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
+ egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
+ Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
+ kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
+ X18zwLgdiQ==
+Message-ID: <9cecd9d9-e25c-4495-50e2-8f7cb7497429@canonical.com>
+Date:   Tue, 20 Oct 2020 16:19:06 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20201020082022.GL27114@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6912124.fRD6ipzQbq@machine>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 20, 2020 at 12:28:49PM +0200, Francis Laniel wrote:
-> Le mardi 20 octobre 2020, 01:34:49 CEST Jakub Kicinski a écrit :
-> > On Mon, 19 Oct 2020 16:01:27 -0700 Kees Cook wrote:
-> > > On Mon, Oct 19, 2020 at 09:43:55AM -0700, Jakub Kicinski wrote:
-> > > > On Mon, 19 Oct 2020 17:23:30 +0200 laniel_francis@privacyrequired.com
-> > > > 
-> > > > wrote:
-> > > > > -size_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t
-> > > > > dstsize)
-> > > > > +ssize_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t
-> > > > > dstsize)
-> > > > > 
-> > > > >  {
-> > > > > 
-> > > > > +	size_t len;
-> > > > > +	ssize_t ret;
-> > > > > 
-> > > > >  	size_t srclen = nla_len(nla);
-> > > > >  	char *src = nla_data(nla);
-> > > > 
-> > > > Sort local variables long to short.
-> > > 
-> > > Specifically, "reverse christmas tree":
-> > >  	size_t srclen = nla_len(nla);
-> > >  	char *src = nla_data(nla);
-> > >  	size_t len;
-> > >  	ssize_t ret;
-> > 
-> > Or even
-> > 
-> >  	size_t srclen = nla_len(nla);
-> >  	char *src = nla_data(nla);
-> >  	ssize_t ret;
-> >  	size_t len;
-> > 
-> > ;)
+Hi Michal, thanks a lot for your thorough response. I'll address the
+comments inline, below. Thanks also David and Mike - in fact, I almost
+don't need to respond here after Mike, he was right to the point I'm
+going to discuss heh...
+
+
+On 20/10/2020 05:20, Michal Hocko wrote:
 > 
-> I reordered the variables names for the v3.
-> Just to know, is it a new rule? Because scripts/checkpatch.pl did not report 
-> anything and I was not aware of it.
+> Yes zeroying is quite costly and that is to be expected when the feature
+> is enabled. Hugetlb like other allocator users perform their own
+> initialization rather than go through __GFP_ZERO path. More on that
+> below.
+> 
+> Could you be more specific about why this is a problem. Hugetlb pool is
+> usualy preallocatd once during early boot. 24s for 65GB of 2MB pages
+> is non trivial amount of time but it doens't look like a major disaster
+> either. If the pool is allocated later it can take much more time due to
+> memory fragmentation.
+> 
+> I definitely do not want to downplay this but I would like to hear about
+> the real life examples of the problem.
 
-This is specific to netdev, but I actually can't find reference to this
-in either Documentation/process/coding-style.rst nor
-Documentation/networking/netdev-FAQ.rst.
+Indeed, 24s of delay (!) is not so harmful for boot time, but...64G was
+just my simple test in a guest, the real case is much worse! It aligns
+with Mike's comment, we have complains of minute-like delays, due to a
+very big pool of hugepages being allocated.
 
-I swear I found this written down before, but it eludes me now.
+Users have their own methodology for allocating pages, some would prefer
+do that "later" for a variety of reasons, so early boot time allocations
+are not always used, that shouldn't be the only focus of the discussion
+here.
+In the specific report I had, the user complains about more than 3
+minutes to allocate ~542G of 2M hugetlb pages.
 
--- 
-Kees Cook
+Now, you'll ask why in the heck they are using init_on_alloc then -
+right? So, the Kconfig option "CONFIG_INIT_ON_ALLOC_DEFAULT_ON" is set
+by default in Ubuntu, for hardening reasons. So, the workaround for the
+users complaining of delays in allocating hugetlb pages currently is to
+set "init_on_alloc" to 0. It's a bit lame to ask users to disable such
+hardening thing just because we have a double initialization in hugetlb...
+
+
+> 
+> 
+> This has been discussed already (http://lkml.kernel.org/r/20190514143537.10435-4-glider@google.com.
+> Previously it has been brought up in SLUB context AFAIR. Your numbers
+> are quite clear here but do we really need a gfp flag with all the
+> problems we tend to grow in with them?
+> 
+> One potential way around this specifically for hugetlb would be to use
+> __GFP_ZERO when allocating from the allocator and marking the fact in
+> the struct page while it is sitting in the pool. Page fault handler
+> could then skip the zeroying phase. Not an act of beauty TBH but it
+> fits into the existing model of the full control over initialization.
+> Btw. it would allow to implement init_on_free semantic as well. I
+> haven't implemented the actual two main methods
+> hugetlb_test_clear_pre_init_page and hugetlb_mark_pre_init_page because
+> I am not entirely sure about the current state of hugetlb struct page in
+> the pool. But there should be a lot of room in there (or in tail pages).
+> Mike will certainly know much better. But the skeleton of the patch
+> would look like something like this (not even compile tested).
+> [code...]
+
+Thanks a lot for pointing the previous discussion for me! I should have
+done my homework properly and read all versions of the patchset...my
+bad! I'm glad to see this problem was discussed and considered early in
+the patch submission, I guess it only missed more real-world numbers.
+
+Your approach seems interesting, but as per Mike's response (which seems
+to have anticipated all my arguments heheh) your approach is a bit
+reversed, solving a ""non-existent"" problem (of zeroing hugetlb pages
+in fault time), whereas the big problem hereby tentatively fixed is the
+massive delay on allocation time of the hugetlb pages.
+
+I understand that your suggestion has no burden of introducing more GFP
+flags, and I agree that those are potentially dangerous if misused (and
+I totally agree with David that __GFP_NOINIT_ON_ALLOC is heinous, I'd
+rather go with the originally proposed __GFP_NO_AUTOINIT), but...
+wouldn't it be letting the code just drive a design decision? Like "oh,
+adding a flag is so bad..better just let this bug/perf issue to stay".
+
+I agree with the arguments here, don't get me wrong - specially since
+I'm far from being any kind of mm expert, I trust your judgement that
+GFP flags are the utmost villains, but at the same time I'd rather not
+change something (like the hugetlb zeroing code) that is not really
+fixing the hereby discussed issue. I'm open to other suggestions, of
+course, but the GFP flag seems the least hacky way for fixing that, and
+ultimately, the flags are meant for this, right? Control page behavior
+stuff.
+
+About misuse of a GFP flag, this is a risk for every "API" on kernel,
+and we rely in the (knowingly great) kernel review process to block
+that. We could even have a more "terrifying" comment there around the
+flag, asking new users to CC all relevant involved people in the patch
+submission before using that...
+
+Anyway, thanks a bunch for the good points raised here Michal, David and
+Mike, and appreciate your patience with somebody trying to mess your GFP
+flags. Let me know your thoughts!
+
+Cheers,
+
+
+Guilherme
