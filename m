@@ -7,46 +7,43 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E30FC433DF
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 10:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B1CC433DF
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 10:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4F42224F
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 10:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33F72222D
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 10:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="UZK9TsNO"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="snujRkIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733263AbgJTKTB (ORCPT
+        id S2388942AbgJTK2v (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Oct 2020 06:19:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733223AbgJTKTB (ORCPT
+        Tue, 20 Oct 2020 06:28:51 -0400
+Received: from devianza.investici.org ([198.167.222.108]:24951 "EHLO
+        devianza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388927AbgJTK2v (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Oct 2020 06:19:01 -0400
-Received: from latitanza.investici.org (latitanza.investici.org [IPv6:2001:888:2000:56::19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C715C061755
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Oct 2020 03:19:01 -0700 (PDT)
-Received: from mx3.investici.org (unknown [127.0.0.1])
-        by latitanza.investici.org (Postfix) with ESMTP id 4CFqNM2BZ5z8sgt;
-        Tue, 20 Oct 2020 10:18:59 +0000 (UTC)
+        Tue, 20 Oct 2020 06:28:51 -0400
+Received: from mx2.investici.org (unknown [127.0.0.1])
+        by devianza.investici.org (Postfix) with ESMTP id 4CFqbk2p3vz6vJN;
+        Tue, 20 Oct 2020 10:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1603189139;
-        bh=VdOiczFK7NJZwAgzkZQ5t6jM8sozS7MFUIciGWipgk4=;
+        s=stigmate; t=1603189730;
+        bh=fH0cm4Oe/u4r+dGE0VGNyyI6K0b7FRS6id7NAUQdJ+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZK9TsNOYwWwzgbPgeHFsRNwcpxj1cTH7HWYTUZn8HTEFv2OthQw1ULWCfDwJZvWU
-         LyTtM3U2cULZE/7a3rrq/fsyxvuVfoZK/6ZUV4uG54hoZh0mwlZbGc0ofshW/mJ2N6
-         WRdXaiC2MKGa0ebgbOGNVJgBs02VjFNPi6Vrhyr0=
-Received: from [82.94.249.234] (mx3.investici.org [82.94.249.234]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CFqNL5jbNz8sgQ;
-        Tue, 20 Oct 2020 10:18:58 +0000 (UTC)
+        b=snujRkIKsLaefgofU5UpREq5YfRvZULEwsIyxYvnUGgG+2wXVbHX6IxuBmYoYmwS1
+         H/Qmxd5vLN2Zunaase/kzr9H0yzAcCafukXXf8Aa32dvaaarSYWjGMgdcLfanUMowg
+         m7WzLnL/9QNMdz2y//dLRYMtfl/kD0gshqlz2ir8=
+Received: from [198.167.222.108] (mx2.investici.org [198.167.222.108]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CFqbk18htz6vJH;
+        Tue, 20 Oct 2020 10:28:50 +0000 (UTC)
 From:   Francis Laniel <laniel_francis@privacyrequired.com>
 To:     Jakub Kicinski <kuba@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
         davem@davemloft.net
-Subject: Re: [RFC][PATCH v2 0/3] Fix inefficiences and rename nla_strlcpy
-Date:   Tue, 20 Oct 2020 12:18:58 +0200
-Message-ID: <2449441.JnRqNryMRx@machine>
-In-Reply-To: <20201019163412.28c81fc4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20201016125216.10922-1-laniel_francis@privacyrequired.com> <202010191557.C2653B0A@keescook> <20201019163412.28c81fc4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Subject: Re: [RFC][PATCH v2 2/3] Modify return value of nla_strlcpy to match that of strscpy.
+Date:   Tue, 20 Oct 2020 12:28:49 +0200
+Message-ID: <6912124.fRD6ipzQbq@machine>
+In-Reply-To: <20201019163449.0a3f4675@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <20201016125216.10922-1-laniel_francis@privacyrequired.com> <202010191559.3AC2C3F97@keescook> <20201019163449.0a3f4675@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
@@ -54,39 +51,46 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Le mardi 20 octobre 2020, 01:34:12 CEST Jakub Kicinski a =E9crit :
-> On Mon, 19 Oct 2020 15:58:36 -0700 Kees Cook wrote:
-> > On Mon, Oct 19, 2020 at 09:45:15AM -0700, Jakub Kicinski wrote:
-> > > On Mon, 19 Oct 2020 17:23:28 +0200 laniel_francis@privacyrequired.com
+Le mardi 20 octobre 2020, 01:34:49 CEST Jakub Kicinski a =E9crit :
+> On Mon, 19 Oct 2020 16:01:27 -0700 Kees Cook wrote:
+> > On Mon, Oct 19, 2020 at 09:43:55AM -0700, Jakub Kicinski wrote:
+> > > On Mon, 19 Oct 2020 17:23:30 +0200 laniel_francis@privacyrequired.com
 > > >=20
 > > > wrote:
-> > > > To sum up, the first patch fixes an inefficiency where some bytes in
-> > > > dst were written twice, one with 0 the other with src content.
-> > > > The second one modifies nla_strlcpy to return the same value as
-> > > > strscpy,
-> > > > i.e. number of bytes written or -E2BIG if src was truncated.
-> > > > The third rename nla_strlcpy to nla_strcpy.
+> > > > -size_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t
+> > > > dstsize)
+> > > > +ssize_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t
+> > > > dstsize)
 > > > >=20
-> > > > Unfortunately, I did not find how to create struct nlattr objects s=
-o I
-> > > > tested my modifications on simple char*.
-> > > > This is why I tag this patch set as RFC.
+> > > >  {
 > > > >=20
-> > > > If you see any way to improve the code or have any remark, feel free
-> > > > to comment.> >=20
-> > > You follow semantics of strscpy, yet rename to strcpy. Wouldn't it be
-> > > more intuitive for developers to rename to nla_strscpy?
+> > > > +	size_t len;
+> > > > +	ssize_t ret;
+> > > >=20
+> > > >  	size_t srclen =3D nla_len(nla);
+> > > >  	char *src =3D nla_data(nla);
+> > >=20
+> > > Sort local variables long to short.
 > >=20
-> > It's closer to strscpy_pad() but that seems a long name. What's
-> > preferred from the NLA perspective?
+> > Specifically, "reverse christmas tree":
+> >  	size_t srclen =3D nla_len(nla);
+> >  	char *src =3D nla_data(nla);
+> >  	size_t len;
+> >  	ssize_t ret;
 >=20
-> I think the pad part is pretty much implied in the netlink world.
-> All this stuff goes to user space, so we can't have uninit memory.
-> We may get more informed opinions once this hits netdev@.
+> Or even
+>=20
+>  	size_t srclen =3D nla_len(nla);
+>  	char *src =3D nla_data(nla);
+>  	ssize_t ret;
+>  	size_t len;
+>=20
+> ;)
 
-I will rename it nla_strscpy for the next version and we will discuss the n=
-ame=20
-with the netdev list.
+I reordered the variables names for the v3.
+Just to know, is it a new rule? Because scripts/checkpatch.pl did not repor=
+t=20
+anything and I was not aware of it.
 
 
 
