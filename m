@@ -2,634 +2,267 @@ Return-Path: <SRS0=sPYh=D3=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAD1C4363A
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 16:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505CFC4363A
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 16:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 071AE22242
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 16:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F002820704
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Oct 2020 16:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="RIaxhpyU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S6p7x4dP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388520AbgJTQrl (ORCPT
+        id S2394990AbgJTQ42 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Oct 2020 12:47:41 -0400
-Received: from devianza.investici.org ([198.167.222.108]:44253 "EHLO
-        devianza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388339AbgJTQrl (ORCPT
+        Tue, 20 Oct 2020 12:56:28 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39574 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389348AbgJTQ42 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Oct 2020 12:47:41 -0400
-Received: from mx2.investici.org (unknown [127.0.0.1])
-        by devianza.investici.org (Postfix) with ESMTP id 4CG00q0r9Jz6vKl;
-        Tue, 20 Oct 2020 16:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1603212459;
-        bh=fnMPOTm3iNVbgQq7P+E+LQrp4oh4vckUKxN9SIakQ5o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIaxhpyUEfeEPpxTgN0x4Qy292CiDGGzFJ2RzcD9WX2eAWgWhasXPt5jwkLo3R1+7
-         IqIptVT4gofDCJz859J3s9mR/USBL9zYDf2tVmus4V1HKg7FsENbPhyY+1CMr00c5n
-         a92RvWKLp7i8i3+JI7RCvvVZ+0KxCToK1WsOVbfc=
-Received: from [198.167.222.108] (mx2.investici.org [198.167.222.108]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CG00p5hFZz6vKj;
-        Tue, 20 Oct 2020 16:47:38 +0000 (UTC)
-From:   laniel_francis@privacyrequired.com
-To:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Cc:     davem@davemloft.net, kuba@kernel.org,
-        Francis Laniel <laniel_francis@privacyrequired.com>
-Subject: [RFC][PATCH v3 3/3] Rename nla_strlcpy to nla_strscpy.
-Date:   Tue, 20 Oct 2020 18:47:07 +0200
-Message-Id: <20201020164707.30402-4-laniel_francis@privacyrequired.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20201020164707.30402-1-laniel_francis@privacyrequired.com>
-References: <20201020164707.30402-1-laniel_francis@privacyrequired.com>
+        Tue, 20 Oct 2020 12:56:28 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09KGo9Do012897;
+        Tue, 20 Oct 2020 16:56:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=g2w/XqLmU8UpN/I2EdgbT0PljdnADmx25FRLiqYGeBE=;
+ b=S6p7x4dPqTVipzDZug+8Izysu59bG2Cq5sm5SDQMs2iLy/NvPXuWu/poQLj+a8gh9fKs
+ ZvECjtIkf4ALAS00ZuIRKUZTXf8j7LEYhzX5xibGhXTQf65UJRCGpoi8LnmNgUiG490P
+ Fvpx+tP3GOYvslvHOW9vT8RA+5rWktYYfT2d0Liyexb6JPUigzD2ze1cTKVVitNqf3dJ
+ uLVXsnS/cK3ctivB07J2746spUchwWjLjDEhpmWA17xxhG7n/eVXjzNTrqiZChCIaT4S
+ rfkKFzdwaEVuPqZma1wT3mOvt1NjPjgYmjW49C0V6cITJc8YKWtD3jgl/2MSuQ4DbJCt AQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 347s8mv6hm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 20 Oct 2020 16:56:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09KGnbWk182224;
+        Tue, 20 Oct 2020 16:56:01 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 348agxn59x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Oct 2020 16:56:01 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09KGtxBN031056;
+        Tue, 20 Oct 2020 16:55:59 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 20 Oct 2020 09:55:59 -0700
+Subject: Re: [PATCH] mm, hugetlb: Avoid double clearing for hugetlb pages
+To:     Michal Hocko <mhocko@suse.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     linux-mm@kvack.org, kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org, kernel@gpiccoli.net,
+        cascardo@canonical.com, Alexander Potapenko <glider@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>
+References: <20201019182853.7467-1-gpiccoli@canonical.com>
+ <20201020082022.GL27114@dhcp22.suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <c2a0210a-7298-ba31-168c-b488fa69e9a7@oracle.com>
+Date:   Tue, 20 Oct 2020 09:55:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201020082022.GL27114@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9780 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 spamscore=0 suspectscore=2 bulkscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010200114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9780 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=2
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
+ phishscore=0 clxscore=1011 bulkscore=0 impostorscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010200114
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Francis Laniel <laniel_francis@privacyrequired.com>
+On 10/20/20 1:20 AM, Michal Hocko wrote:
+> On Mon 19-10-20 15:28:53, Guilherme G. Piccoli wrote:
+> 
+> Yes zeroying is quite costly and that is to be expected when the feature
+> is enabled. Hugetlb like other allocator users perform their own
+> initialization rather than go through __GFP_ZERO path. More on that
+> below.
+> 
+> Could you be more specific about why this is a problem. Hugetlb pool is
+> usualy preallocatd once during early boot. 24s for 65GB of 2MB pages
+> is non trivial amount of time but it doens't look like a major disaster
+> either. If the pool is allocated later it can take much more time due to
+> memory fragmentation.
+> 
+> I definitely do not want to downplay this but I would like to hear about
+> the real life examples of the problem.
+> 
+> [...]
+>>
+>> Hi everybody, thanks in advance for the review/comments. I'd like to
+>> point 2 things related to the implementation:
+>>
+>> 1) I understand that adding GFP flags is not really welcome by the
+>> mm community; I've considered passing that as function parameter but
+>> that would be a hacky mess, so I decided to add the flag since it seems
+>> this is a fair use of the flag mechanism (to control actions on pages).
+>> If anybody has a better/simpler suggestion to implement this, I'm all
+>> ears - thanks!
+> 
+> This has been discussed already (http://lkml.kernel.org/r/20190514143537.10435-4-glider@google.com.
+> Previously it has been brought up in SLUB context AFAIR. Your numbers
+> are quite clear here but do we really need a gfp flag with all the
+> problems we tend to grow in with them?
+> 
+> One potential way around this specifically for hugetlb would be to use
+> __GFP_ZERO when allocating from the allocator and marking the fact in
+> the struct page while it is sitting in the pool. Page fault handler
+> could then skip the zeroying phase. Not an act of beauty TBH but it
+> fits into the existing model of the full control over initialization.
+> Btw. it would allow to implement init_on_free semantic as well. I
+> haven't implemented the actual two main methods
+> hugetlb_test_clear_pre_init_page and hugetlb_mark_pre_init_page because
+> I am not entirely sure about the current state of hugetlb struct page in
+> the pool. But there should be a lot of room in there (or in tail pages).
+> Mike will certainly know much better. But the skeleton of the patch
+> would look like something like this (not even compile tested).
 
-Calls to nla_strlcpy are now replaced by calls to nla_strscpy which is the new
-name of this function.
+Thanks Michal.  I was not involved in the discussions for init_on_alloc,
+so was waiting for someone else to comment.
 
-Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
----
- drivers/infiniband/core/nldev.c            | 10 +++++-----
- drivers/net/can/vxcan.c                    |  4 ++--
- drivers/net/veth.c                         |  4 ++--
- include/linux/genl_magic_struct.h          |  2 +-
- include/net/netlink.h                      |  4 ++--
- include/net/pkt_cls.h                      |  2 +-
- kernel/taskstats.c                         |  2 +-
- lib/nlattr.c                               |  6 +++---
- net/core/fib_rules.c                       |  4 ++--
- net/core/rtnetlink.c                       | 12 ++++++------
- net/decnet/dn_dev.c                        |  2 +-
- net/ieee802154/nl-mac.c                    |  2 +-
- net/ipv4/devinet.c                         |  2 +-
- net/ipv4/fib_semantics.c                   |  2 +-
- net/ipv4/metrics.c                         |  2 +-
- net/netfilter/ipset/ip_set_hash_netiface.c |  4 ++--
- net/netfilter/nf_tables_api.c              |  6 +++---
- net/netfilter/nfnetlink_acct.c             |  2 +-
- net/netfilter/nfnetlink_cthelper.c         |  4 ++--
- net/netfilter/nft_ct.c                     |  2 +-
- net/netfilter/nft_log.c                    |  2 +-
- net/netlabel/netlabel_mgmt.c               |  2 +-
- net/nfc/netlink.c                          |  2 +-
- net/sched/act_api.c                        |  2 +-
- net/sched/act_ipt.c                        |  2 +-
- net/sched/act_simple.c                     |  4 ++--
- net/sched/cls_api.c                        |  2 +-
- net/sched/sch_api.c                        |  2 +-
- net/tipc/netlink_compat.c                  |  2 +-
- 29 files changed, 49 insertions(+), 49 deletions(-)
+My first though was to also do as you propose.  Skip the clear on page
+fault if page was already cleared at allocation time.  Yes, there should
+be plenty of room to store this state while huge pages are in the pool.
 
-diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
-index 12d29d54a081..08366e254b1d 100644
---- a/drivers/infiniband/core/nldev.c
-+++ b/drivers/infiniband/core/nldev.c
-@@ -932,7 +932,7 @@ static int nldev_set_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	if (tb[RDMA_NLDEV_ATTR_DEV_NAME]) {
- 		char name[IB_DEVICE_NAME_MAX] = {};
- 
--		nla_strlcpy(name, tb[RDMA_NLDEV_ATTR_DEV_NAME],
-+		nla_strscpy(name, tb[RDMA_NLDEV_ATTR_DEV_NAME],
- 			    IB_DEVICE_NAME_MAX);
- 		if (strlen(name) == 0) {
- 			err = -EINVAL;
-@@ -1529,13 +1529,13 @@ static int nldev_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	    !tb[RDMA_NLDEV_ATTR_LINK_TYPE] || !tb[RDMA_NLDEV_ATTR_NDEV_NAME])
- 		return -EINVAL;
- 
--	nla_strlcpy(ibdev_name, tb[RDMA_NLDEV_ATTR_DEV_NAME],
-+	nla_strscpy(ibdev_name, tb[RDMA_NLDEV_ATTR_DEV_NAME],
- 		    sizeof(ibdev_name));
- 	if (strchr(ibdev_name, '%') || strlen(ibdev_name) == 0)
- 		return -EINVAL;
- 
--	nla_strlcpy(type, tb[RDMA_NLDEV_ATTR_LINK_TYPE], sizeof(type));
--	nla_strlcpy(ndev_name, tb[RDMA_NLDEV_ATTR_NDEV_NAME],
-+	nla_strscpy(type, tb[RDMA_NLDEV_ATTR_LINK_TYPE], sizeof(type));
-+	nla_strscpy(ndev_name, tb[RDMA_NLDEV_ATTR_NDEV_NAME],
- 		    sizeof(ndev_name));
- 
- 	ndev = dev_get_by_name(sock_net(skb->sk), ndev_name);
-@@ -1602,7 +1602,7 @@ static int nldev_get_chardev(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	if (err || !tb[RDMA_NLDEV_ATTR_CHARDEV_TYPE])
- 		return -EINVAL;
- 
--	nla_strlcpy(client_name, tb[RDMA_NLDEV_ATTR_CHARDEV_TYPE],
-+	nla_strscpy(client_name, tb[RDMA_NLDEV_ATTR_CHARDEV_TYPE],
- 		    sizeof(client_name));
- 
- 	if (tb[RDMA_NLDEV_ATTR_DEV_INDEX]) {
-diff --git a/drivers/net/can/vxcan.c b/drivers/net/can/vxcan.c
-index d6ba9426be4d..fa47bab510bb 100644
---- a/drivers/net/can/vxcan.c
-+++ b/drivers/net/can/vxcan.c
-@@ -186,7 +186,7 @@ static int vxcan_newlink(struct net *net, struct net_device *dev,
- 	}
- 
- 	if (ifmp && tbp[IFLA_IFNAME]) {
--		nla_strlcpy(ifname, tbp[IFLA_IFNAME], IFNAMSIZ);
-+		nla_strscpy(ifname, tbp[IFLA_IFNAME], IFNAMSIZ);
- 		name_assign_type = NET_NAME_USER;
- 	} else {
- 		snprintf(ifname, IFNAMSIZ, DRV_NAME "%%d");
-@@ -223,7 +223,7 @@ static int vxcan_newlink(struct net *net, struct net_device *dev,
- 
- 	/* register first device */
- 	if (tb[IFLA_IFNAME])
--		nla_strlcpy(dev->name, tb[IFLA_IFNAME], IFNAMSIZ);
-+		nla_strscpy(dev->name, tb[IFLA_IFNAME], IFNAMSIZ);
- 	else
- 		snprintf(dev->name, IFNAMSIZ, DRV_NAME "%%d");
- 
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index 8c737668008a..359d3ab33c4d 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -1329,7 +1329,7 @@ static int veth_newlink(struct net *src_net, struct net_device *dev,
- 	}
- 
- 	if (ifmp && tbp[IFLA_IFNAME]) {
--		nla_strlcpy(ifname, tbp[IFLA_IFNAME], IFNAMSIZ);
-+		nla_strscpy(ifname, tbp[IFLA_IFNAME], IFNAMSIZ);
- 		name_assign_type = NET_NAME_USER;
- 	} else {
- 		snprintf(ifname, IFNAMSIZ, DRV_NAME "%%d");
-@@ -1379,7 +1379,7 @@ static int veth_newlink(struct net *src_net, struct net_device *dev,
- 		eth_hw_addr_random(dev);
- 
- 	if (tb[IFLA_IFNAME])
--		nla_strlcpy(dev->name, tb[IFLA_IFNAME], IFNAMSIZ);
-+		nla_strscpy(dev->name, tb[IFLA_IFNAME], IFNAMSIZ);
- 	else
- 		snprintf(dev->name, IFNAMSIZ, DRV_NAME "%%d");
- 
-diff --git a/include/linux/genl_magic_struct.h b/include/linux/genl_magic_struct.h
-index eeae59d3ceb7..35d21fddaf2d 100644
---- a/include/linux/genl_magic_struct.h
-+++ b/include/linux/genl_magic_struct.h
-@@ -89,7 +89,7 @@ static inline int nla_put_u64_0pad(struct sk_buff *skb, int attrtype, u64 value)
- 			nla_get_u64, nla_put_u64_0pad, false)
- #define __str_field(attr_nr, attr_flag, name, maxlen) \
- 	__array(attr_nr, attr_flag, name, NLA_NUL_STRING, char, maxlen, \
--			nla_strlcpy, nla_put, false)
-+			nla_strscpy, nla_put, false)
- #define __bin_field(attr_nr, attr_flag, name, maxlen) \
- 	__array(attr_nr, attr_flag, name, NLA_BINARY, char, maxlen, \
- 			nla_memcpy, nla_put, false)
-diff --git a/include/net/netlink.h b/include/net/netlink.h
-index 446ca182e13d..1ceec518ab49 100644
---- a/include/net/netlink.h
-+++ b/include/net/netlink.h
-@@ -142,7 +142,7 @@
-  * Attribute Misc:
-  *   nla_memcpy(dest, nla, count)	copy attribute into memory
-  *   nla_memcmp(nla, data, size)	compare attribute with memory area
-- *   nla_strlcpy(dst, nla, size)	copy attribute to a sized string
-+ *   nla_strscpy(dst, nla, size)	copy attribute to a sized string
-  *   nla_strcmp(nla, str)		compare attribute with string
-  *
-  * Attribute Parsing:
-@@ -506,7 +506,7 @@ int __nla_parse(struct nlattr **tb, int maxtype, const struct nlattr *head,
- 		struct netlink_ext_ack *extack);
- int nla_policy_len(const struct nla_policy *, int);
- struct nlattr *nla_find(const struct nlattr *head, int len, int attrtype);
--ssize_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t dstsize);
-+ssize_t nla_strscpy(char *dst, const struct nlattr *nla, size_t dstsize);
- char *nla_strdup(const struct nlattr *nla, gfp_t flags);
- int nla_memcpy(void *dest, const struct nlattr *src, int count);
- int nla_memcmp(const struct nlattr *nla, const void *data, size_t size);
-diff --git a/include/net/pkt_cls.h b/include/net/pkt_cls.h
-index db9a828f4f4f..133f9ad4d4f9 100644
---- a/include/net/pkt_cls.h
-+++ b/include/net/pkt_cls.h
-@@ -512,7 +512,7 @@ tcf_change_indev(struct net *net, struct nlattr *indev_tlv,
- 	char indev[IFNAMSIZ];
- 	struct net_device *dev;
- 
--	if (nla_strlcpy(indev, indev_tlv, IFNAMSIZ) < 0) {
-+	if (nla_strscpy(indev, indev_tlv, IFNAMSIZ) < 0) {
- 		NL_SET_ERR_MSG_ATTR(extack, indev_tlv,
- 				    "Interface name too long");
- 		return -EINVAL;
-diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-index a2802b6ff4bb..2b4898b4752e 100644
---- a/kernel/taskstats.c
-+++ b/kernel/taskstats.c
-@@ -346,7 +346,7 @@ static int parse(struct nlattr *na, struct cpumask *mask)
- 	data = kmalloc(len, GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
--	nla_strlcpy(data, na, len);
-+	nla_strscpy(data, na, len);
- 	ret = cpulist_parse(data, mask);
- 	kfree(data);
- 	return ret;
-diff --git a/lib/nlattr.c b/lib/nlattr.c
-index 447182543c03..09aa181569e0 100644
---- a/lib/nlattr.c
-+++ b/lib/nlattr.c
-@@ -709,7 +709,7 @@ struct nlattr *nla_find(const struct nlattr *head, int len, int attrtype)
- EXPORT_SYMBOL(nla_find);
- 
- /**
-- * nla_strlcpy - Copy string attribute payload into a sized buffer
-+ * nla_strscpy - Copy string attribute payload into a sized buffer
-  * @dst: Where to copy the string to.
-  * @nla: Attribute to copy the string from.
-  * @dstsize: Size of destination buffer.
-@@ -722,7 +722,7 @@ EXPORT_SYMBOL(nla_find);
-  * * -E2BIG - If @dstsize is 0 or greater than U16_MAX or @nla length greater
-  *            than @dstsize.
-  */
--ssize_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t dstsize)
-+ssize_t nla_strscpy(char *dst, const struct nlattr *nla, size_t dstsize)
- {
- 	size_t srclen = nla_len(nla);
- 	char *src = nla_data(nla);
-@@ -749,7 +749,7 @@ ssize_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t dstsize)
- 
- 	return ret;
- }
--EXPORT_SYMBOL(nla_strlcpy);
-+EXPORT_SYMBOL(nla_strscpy);
- 
- /**
-  * nla_strdup - Copy string attribute payload into a newly allocated buffer
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index 7bcfb16854cb..cd80ffed6d26 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -563,7 +563,7 @@ static int fib_nl2rule(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		struct net_device *dev;
- 
- 		nlrule->iifindex = -1;
--		nla_strlcpy(nlrule->iifname, tb[FRA_IIFNAME], IFNAMSIZ);
-+		nla_strscpy(nlrule->iifname, tb[FRA_IIFNAME], IFNAMSIZ);
- 		dev = __dev_get_by_name(net, nlrule->iifname);
- 		if (dev)
- 			nlrule->iifindex = dev->ifindex;
-@@ -573,7 +573,7 @@ static int fib_nl2rule(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		struct net_device *dev;
- 
- 		nlrule->oifindex = -1;
--		nla_strlcpy(nlrule->oifname, tb[FRA_OIFNAME], IFNAMSIZ);
-+		nla_strscpy(nlrule->oifname, tb[FRA_OIFNAME], IFNAMSIZ);
- 		dev = __dev_get_by_name(net, nlrule->oifname);
- 		if (dev)
- 			nlrule->oifindex = dev->ifindex;
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index 68e0682450c6..e0059256fe93 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -1939,7 +1939,7 @@ static const struct rtnl_link_ops *linkinfo_to_kind_ops(const struct nlattr *nla
- 	if (linfo[IFLA_INFO_KIND]) {
- 		char kind[MODULE_NAME_LEN];
- 
--		nla_strlcpy(kind, linfo[IFLA_INFO_KIND], sizeof(kind));
-+		nla_strscpy(kind, linfo[IFLA_INFO_KIND], sizeof(kind));
- 		ops = rtnl_link_ops_get(kind);
- 	}
- 
-@@ -2953,9 +2953,9 @@ static struct net_device *rtnl_dev_get(struct net *net,
- 	if (!ifname) {
- 		ifname = buffer;
- 		if (ifname_attr)
--			nla_strlcpy(ifname, ifname_attr, IFNAMSIZ);
-+			nla_strscpy(ifname, ifname_attr, IFNAMSIZ);
- 		else if (altifname_attr)
--			nla_strlcpy(ifname, altifname_attr, ALTIFNAMSIZ);
-+			nla_strscpy(ifname, altifname_attr, ALTIFNAMSIZ);
- 		else
- 			return NULL;
- 	}
-@@ -2983,7 +2983,7 @@ static int rtnl_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		goto errout;
- 
- 	if (tb[IFLA_IFNAME])
--		nla_strlcpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
-+		nla_strscpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
- 	else
- 		ifname[0] = '\0';
- 
-@@ -3264,7 +3264,7 @@ static int __rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		return err;
- 
- 	if (tb[IFLA_IFNAME])
--		nla_strlcpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
-+		nla_strscpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
- 	else
- 		ifname[0] = '\0';
- 
-@@ -3296,7 +3296,7 @@ static int __rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		memset(linkinfo, 0, sizeof(linkinfo));
- 
- 	if (linkinfo[IFLA_INFO_KIND]) {
--		nla_strlcpy(kind, linkinfo[IFLA_INFO_KIND], sizeof(kind));
-+		nla_strscpy(kind, linkinfo[IFLA_INFO_KIND], sizeof(kind));
- 		ops = rtnl_link_ops_get(kind);
- 	} else {
- 		kind[0] = '\0';
-diff --git a/net/decnet/dn_dev.c b/net/decnet/dn_dev.c
-index 15d42353f1a3..d1c50a48614b 100644
---- a/net/decnet/dn_dev.c
-+++ b/net/decnet/dn_dev.c
-@@ -658,7 +658,7 @@ static int dn_nl_newaddr(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	ifa->ifa_dev = dn_db;
- 
- 	if (tb[IFA_LABEL])
--		nla_strlcpy(ifa->ifa_label, tb[IFA_LABEL], IFNAMSIZ);
-+		nla_strscpy(ifa->ifa_label, tb[IFA_LABEL], IFNAMSIZ);
- 	else
- 		memcpy(ifa->ifa_label, dev->name, IFNAMSIZ);
- 
-diff --git a/net/ieee802154/nl-mac.c b/net/ieee802154/nl-mac.c
-index 6d091e419d3e..9c640d670ffe 100644
---- a/net/ieee802154/nl-mac.c
-+++ b/net/ieee802154/nl-mac.c
-@@ -149,7 +149,7 @@ static struct net_device *ieee802154_nl_get_dev(struct genl_info *info)
- 	if (info->attrs[IEEE802154_ATTR_DEV_NAME]) {
- 		char name[IFNAMSIZ + 1];
- 
--		nla_strlcpy(name, info->attrs[IEEE802154_ATTR_DEV_NAME],
-+		nla_strscpy(name, info->attrs[IEEE802154_ATTR_DEV_NAME],
- 			    sizeof(name));
- 		dev = dev_get_by_name(&init_net, name);
- 	} else if (info->attrs[IEEE802154_ATTR_DEV_INDEX]) {
-diff --git a/net/ipv4/devinet.c b/net/ipv4/devinet.c
-index 123a6d39438f..a50951a90f63 100644
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -881,7 +881,7 @@ static struct in_ifaddr *rtm_to_ifaddr(struct net *net, struct nlmsghdr *nlh,
- 		ifa->ifa_broadcast = nla_get_in_addr(tb[IFA_BROADCAST]);
- 
- 	if (tb[IFA_LABEL])
--		nla_strlcpy(ifa->ifa_label, tb[IFA_LABEL], IFNAMSIZ);
-+		nla_strscpy(ifa->ifa_label, tb[IFA_LABEL], IFNAMSIZ);
- 	else
- 		memcpy(ifa->ifa_label, dev->name, IFNAMSIZ);
- 
-diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
-index 1f75dc686b6b..4b505074b24f 100644
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -973,7 +973,7 @@ bool fib_metrics_match(struct fib_config *cfg, struct fib_info *fi)
- 			char tmp[TCP_CA_NAME_MAX];
- 			bool ecn_ca = false;
- 
--			nla_strlcpy(tmp, nla, sizeof(tmp));
-+			nla_strscpy(tmp, nla, sizeof(tmp));
- 			val = tcp_ca_get_key_by_name(fi->fib_net, tmp, &ecn_ca);
- 		} else {
- 			if (nla_len(nla) != sizeof(u32))
-diff --git a/net/ipv4/metrics.c b/net/ipv4/metrics.c
-index 3205d5f7c8c9..25ea6ac44db9 100644
---- a/net/ipv4/metrics.c
-+++ b/net/ipv4/metrics.c
-@@ -31,7 +31,7 @@ static int ip_metrics_convert(struct net *net, struct nlattr *fc_mx,
- 		if (type == RTAX_CC_ALGO) {
- 			char tmp[TCP_CA_NAME_MAX];
- 
--			nla_strlcpy(tmp, nla, sizeof(tmp));
-+			nla_strscpy(tmp, nla, sizeof(tmp));
- 			val = tcp_ca_get_key_by_name(net, tmp, &ecn_ca);
- 			if (val == TCP_CA_UNSPEC) {
- 				NL_SET_ERR_MSG(extack, "Unknown tcp congestion algorithm");
-diff --git a/net/netfilter/ipset/ip_set_hash_netiface.c b/net/netfilter/ipset/ip_set_hash_netiface.c
-index be5e95a0d876..b96fd0c55eaa 100644
---- a/net/netfilter/ipset/ip_set_hash_netiface.c
-+++ b/net/netfilter/ipset/ip_set_hash_netiface.c
-@@ -225,7 +225,7 @@ hash_netiface4_uadt(struct ip_set *set, struct nlattr *tb[],
- 		if (e.cidr > HOST_MASK)
- 			return -IPSET_ERR_INVALID_CIDR;
- 	}
--	nla_strlcpy(e.iface, tb[IPSET_ATTR_IFACE], IFNAMSIZ);
-+	nla_strscpy(e.iface, tb[IPSET_ATTR_IFACE], IFNAMSIZ);
- 
- 	if (tb[IPSET_ATTR_CADT_FLAGS]) {
- 		u32 cadt_flags = ip_set_get_h32(tb[IPSET_ATTR_CADT_FLAGS]);
-@@ -442,7 +442,7 @@ hash_netiface6_uadt(struct ip_set *set, struct nlattr *tb[],
- 
- 	ip6_netmask(&e.ip, e.cidr);
- 
--	nla_strlcpy(e.iface, tb[IPSET_ATTR_IFACE], IFNAMSIZ);
-+	nla_strscpy(e.iface, tb[IPSET_ATTR_IFACE], IFNAMSIZ);
- 
- 	if (tb[IPSET_ATTR_CADT_FLAGS]) {
- 		u32 cadt_flags = ip_set_get_h32(tb[IPSET_ATTR_CADT_FLAGS]);
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 9957e0ed8658..90c39e694e87 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1281,7 +1281,7 @@ static struct nft_chain *nft_chain_lookup(struct net *net,
- 	if (nla == NULL)
- 		return ERR_PTR(-EINVAL);
- 
--	nla_strlcpy(search, nla, sizeof(search));
-+	nla_strscpy(search, nla, sizeof(search));
- 
- 	WARN_ON(!rcu_read_lock_held() &&
- 		!lockdep_commit_lock_is_held(net));
-@@ -1721,7 +1721,7 @@ static struct nft_hook *nft_netdev_hook_alloc(struct net *net,
- 		goto err_hook_alloc;
- 	}
- 
--	nla_strlcpy(ifname, attr, IFNAMSIZ);
-+	nla_strscpy(ifname, attr, IFNAMSIZ);
- 	dev = __dev_get_by_name(net, ifname);
- 	if (!dev) {
- 		err = -ENOENT;
-@@ -5734,7 +5734,7 @@ struct nft_object *nft_obj_lookup(const struct net *net,
- 	struct rhlist_head *tmp, *list;
- 	struct nft_object *obj;
- 
--	nla_strlcpy(search, nla, sizeof(search));
-+	nla_strscpy(search, nla, sizeof(search));
- 	k.name = search;
- 
- 	WARN_ON_ONCE(!rcu_read_lock_held() &&
-diff --git a/net/netfilter/nfnetlink_acct.c b/net/netfilter/nfnetlink_acct.c
-index 5bfec829c12f..5e511df8d709 100644
---- a/net/netfilter/nfnetlink_acct.c
-+++ b/net/netfilter/nfnetlink_acct.c
-@@ -112,7 +112,7 @@ static int nfnl_acct_new(struct net *net, struct sock *nfnl,
- 		nfacct->flags = flags;
- 	}
- 
--	nla_strlcpy(nfacct->name, tb[NFACCT_NAME], NFACCT_NAME_MAX);
-+	nla_strscpy(nfacct->name, tb[NFACCT_NAME], NFACCT_NAME_MAX);
- 
- 	if (tb[NFACCT_BYTES]) {
- 		atomic64_set(&nfacct->bytes,
-diff --git a/net/netfilter/nfnetlink_cthelper.c b/net/netfilter/nfnetlink_cthelper.c
-index 5b0d0a77379c..0f94fce1d3ed 100644
---- a/net/netfilter/nfnetlink_cthelper.c
-+++ b/net/netfilter/nfnetlink_cthelper.c
-@@ -146,7 +146,7 @@ nfnl_cthelper_expect_policy(struct nf_conntrack_expect_policy *expect_policy,
- 	    !tb[NFCTH_POLICY_EXPECT_TIMEOUT])
- 		return -EINVAL;
- 
--	nla_strlcpy(expect_policy->name,
-+	nla_strscpy(expect_policy->name,
- 		    tb[NFCTH_POLICY_NAME], NF_CT_HELPER_NAME_LEN);
- 	expect_policy->max_expected =
- 		ntohl(nla_get_be32(tb[NFCTH_POLICY_EXPECT_MAX]));
-@@ -233,7 +233,7 @@ nfnl_cthelper_create(const struct nlattr * const tb[],
- 	if (ret < 0)
- 		goto err1;
- 
--	nla_strlcpy(helper->name,
-+	nla_strscpy(helper->name,
- 		    tb[NFCTH_NAME], NF_CT_HELPER_NAME_LEN);
- 	size = ntohl(nla_get_be32(tb[NFCTH_PRIV_DATA_LEN]));
- 	if (size > sizeof_field(struct nf_conn_help, data)) {
-diff --git a/net/netfilter/nft_ct.c b/net/netfilter/nft_ct.c
-index 322bd674963e..a8c4d442231c 100644
---- a/net/netfilter/nft_ct.c
-+++ b/net/netfilter/nft_ct.c
-@@ -990,7 +990,7 @@ static int nft_ct_helper_obj_init(const struct nft_ctx *ctx,
- 	if (!priv->l4proto)
- 		return -ENOENT;
- 
--	nla_strlcpy(name, tb[NFTA_CT_HELPER_NAME], sizeof(name));
-+	nla_strscpy(name, tb[NFTA_CT_HELPER_NAME], sizeof(name));
- 
- 	if (tb[NFTA_CT_HELPER_L3PROTO])
- 		family = ntohs(nla_get_be16(tb[NFTA_CT_HELPER_L3PROTO]));
-diff --git a/net/netfilter/nft_log.c b/net/netfilter/nft_log.c
-index 57899454a530..a06a46b039c5 100644
---- a/net/netfilter/nft_log.c
-+++ b/net/netfilter/nft_log.c
-@@ -152,7 +152,7 @@ static int nft_log_init(const struct nft_ctx *ctx,
- 		priv->prefix = kmalloc(nla_len(nla) + 1, GFP_KERNEL);
- 		if (priv->prefix == NULL)
- 			return -ENOMEM;
--		nla_strlcpy(priv->prefix, nla, nla_len(nla) + 1);
-+		nla_strscpy(priv->prefix, nla, nla_len(nla) + 1);
- 	} else {
- 		priv->prefix = (char *)nft_log_null_prefix;
- 	}
-diff --git a/net/netlabel/netlabel_mgmt.c b/net/netlabel/netlabel_mgmt.c
-index eb1d66d20afb..df1b41ed73fd 100644
---- a/net/netlabel/netlabel_mgmt.c
-+++ b/net/netlabel/netlabel_mgmt.c
-@@ -95,7 +95,7 @@ static int netlbl_mgmt_add_common(struct genl_info *info,
- 			ret_val = -ENOMEM;
- 			goto add_free_entry;
- 		}
--		nla_strlcpy(entry->domain,
-+		nla_strscpy(entry->domain,
- 			    info->attrs[NLBL_MGMT_A_DOMAIN], tmp_size);
- 	}
- 
-diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
-index e894254c17d4..438ff1f30a33 100644
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -1226,7 +1226,7 @@ static int nfc_genl_fw_download(struct sk_buff *skb, struct genl_info *info)
- 	if (!dev)
- 		return -ENODEV;
- 
--	nla_strlcpy(firmware_name, info->attrs[NFC_ATTR_FIRMWARE_NAME],
-+	nla_strscpy(firmware_name, info->attrs[NFC_ATTR_FIRMWARE_NAME],
- 		    sizeof(firmware_name));
- 
- 	rc = nfc_fw_download(dev, firmware_name);
-diff --git a/net/sched/act_api.c b/net/sched/act_api.c
-index 541574520c52..eac24a73115f 100644
---- a/net/sched/act_api.c
-+++ b/net/sched/act_api.c
-@@ -935,7 +935,7 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
- 			NL_SET_ERR_MSG(extack, "TC action kind must be specified");
- 			goto err_out;
- 		}
--		if (nla_strlcpy(act_name, kind, IFNAMSIZ) < 0) {
-+		if (nla_strscpy(act_name, kind, IFNAMSIZ) < 0) {
- 			NL_SET_ERR_MSG(extack, "TC action name too long");
- 			goto err_out;
- 		}
-diff --git a/net/sched/act_ipt.c b/net/sched/act_ipt.c
-index 8dc3bec0d325..ac7297f42355 100644
---- a/net/sched/act_ipt.c
-+++ b/net/sched/act_ipt.c
-@@ -166,7 +166,7 @@ static int __tcf_ipt_init(struct net *net, unsigned int id, struct nlattr *nla,
- 	if (unlikely(!tname))
- 		goto err1;
- 	if (tb[TCA_IPT_TABLE] == NULL ||
--	    nla_strlcpy(tname, tb[TCA_IPT_TABLE], IFNAMSIZ) >= IFNAMSIZ)
-+	    nla_strscpy(tname, tb[TCA_IPT_TABLE], IFNAMSIZ) >= IFNAMSIZ)
- 		strcpy(tname, "mangle");
- 
- 	t = kmemdup(td, td->u.target_size, GFP_KERNEL);
-diff --git a/net/sched/act_simple.c b/net/sched/act_simple.c
-index a4f3d0f0daa9..726cc956d06f 100644
---- a/net/sched/act_simple.c
-+++ b/net/sched/act_simple.c
-@@ -52,7 +52,7 @@ static int alloc_defdata(struct tcf_defact *d, const struct nlattr *defdata)
- 	d->tcfd_defdata = kzalloc(SIMP_MAX_DATA, GFP_KERNEL);
- 	if (unlikely(!d->tcfd_defdata))
- 		return -ENOMEM;
--	nla_strlcpy(d->tcfd_defdata, defdata, SIMP_MAX_DATA);
-+	nla_strscpy(d->tcfd_defdata, defdata, SIMP_MAX_DATA);
- 	return 0;
- }
- 
-@@ -71,7 +71,7 @@ static int reset_policy(struct tc_action *a, const struct nlattr *defdata,
- 	spin_lock_bh(&d->tcf_lock);
- 	goto_ch = tcf_action_set_ctrlact(a, p->action, goto_ch);
- 	memset(d->tcfd_defdata, 0, SIMP_MAX_DATA);
--	nla_strlcpy(d->tcfd_defdata, defdata, SIMP_MAX_DATA);
-+	nla_strscpy(d->tcfd_defdata, defdata, SIMP_MAX_DATA);
- 	spin_unlock_bh(&d->tcf_lock);
- 	if (goto_ch)
- 		tcf_chain_put_by_act(goto_ch);
-diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
-index c78241c853a5..6ff3b817083a 100644
---- a/net/sched/cls_api.c
-+++ b/net/sched/cls_api.c
-@@ -223,7 +223,7 @@ static inline u32 tcf_auto_prio(struct tcf_proto *tp)
- static bool tcf_proto_check_kind(struct nlattr *kind, char *name)
- {
- 	if (kind)
--		return nla_strlcpy(name, kind, IFNAMSIZ) < 0;
-+		return nla_strscpy(name, kind, IFNAMSIZ) < 0;
- 	memset(name, 0, IFNAMSIZ);
- 	return false;
- }
-diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-index f9b053b30a7b..cb4f30700c74 100644
---- a/net/sched/sch_api.c
-+++ b/net/sched/sch_api.c
-@@ -1170,7 +1170,7 @@ static struct Qdisc *qdisc_create(struct net_device *dev,
- #ifdef CONFIG_MODULES
- 	if (ops == NULL && kind != NULL) {
- 		char name[IFNAMSIZ];
--		if (nla_strlcpy(name, kind, IFNAMSIZ) > 0) {
-+		if (nla_strscpy(name, kind, IFNAMSIZ) > 0) {
- 			/* We dropped the RTNL semaphore in order to
- 			 * perform the module load.  So, even if we
- 			 * succeeded in loading the module we have to
-diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-index 1c7aa51cc2a3..644c7ec41ddf 100644
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -695,7 +695,7 @@ static int tipc_nl_compat_link_dump(struct tipc_nl_compat_msg *msg,
- 
- 	link_info.dest = nla_get_flag(link[TIPC_NLA_LINK_DEST]);
- 	link_info.up = htonl(nla_get_flag(link[TIPC_NLA_LINK_UP]));
--	nla_strlcpy(link_info.str, link[TIPC_NLA_LINK_NAME],
-+	nla_strscpy(link_info.str, link[TIPC_NLA_LINK_NAME],
- 		    TIPC_MAX_LINK_NAME);
- 
- 	return tipc_add_tlv(msg->rep, TIPC_TLV_LINK_INFO,
+Of course, users will still see those delays at allocation time pointed
+out in the commit message.  I guess that should be expected.  We do have
+users which allocate over 1TB of huge pages via sysctl.  Those pages are
+used and cleared via page faults, but not necessarily all at the
+same time.  If such users would ever set init_on_alloc they would see a
+huge delay.  My 'guess' is that such users are unlikely to ever use
+init_on_alloc or init_on_free for general performance reasons.
 -- 
-2.20.1
+Mike Kravetz
 
+> 
+> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+> index b5c109703daa..031af7cdf8a7 100644
+> --- a/fs/hugetlbfs/inode.c
+> +++ b/fs/hugetlbfs/inode.c
+> @@ -724,7 +724,8 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
+>  			error = PTR_ERR(page);
+>  			goto out;
+>  		}
+> -		clear_huge_page(page, addr, pages_per_huge_page(h));
+> +		if (!hugetlb_test_clear_pre_init_page(page))
+> +			clear_huge_page(page, addr, pages_per_huge_page(h));
+>  		__SetPageUptodate(page);
+>  		error = huge_add_to_page_cache(page, mapping, index);
+>  		if (unlikely(error)) {
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 67fc6383995b..83cc8abb4d69 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1413,6 +1413,7 @@ static void __free_huge_page(struct page *page)
+>  	page->mapping = NULL;
+>  	restore_reserve = PagePrivate(page);
+>  	ClearPagePrivate(page);
+> +	hugetlb_test_clear_pre_init_page(page);
+>  
+>  	/*
+>  	 * If PagePrivate() was set on page, page allocation consumed a
+> @@ -1703,6 +1704,7 @@ static struct page *alloc_buddy_huge_page(struct hstate *h,
+>  	int order = huge_page_order(h);
+>  	struct page *page;
+>  	bool alloc_try_hard = true;
+> +	bool pre_init = false;
+>  
+>  	/*
+>  	 * By default we always try hard to allocate the page with
+> @@ -1718,10 +1720,18 @@ static struct page *alloc_buddy_huge_page(struct hstate *h,
+>  		gfp_mask |= __GFP_RETRY_MAYFAIL;
+>  	if (nid == NUMA_NO_NODE)
+>  		nid = numa_mem_id();
+> +
+> +	/* prevent from double initialization */
+> +	if (want_init_on_alloc(gfp_mask)) {
+> +		gfp_mask |= __GFP_ZERO;
+> +		pre_init = true;
+> +	}
+> +
+>  	page = __alloc_pages_nodemask(gfp_mask, order, nid, nmask);
+> -	if (page)
+> +	if (page) {
+>  		__count_vm_event(HTLB_BUDDY_PGALLOC);
+> -	else
+> +		hugetlb_mark_pre_init_page(page);
+> +	} else
+>  		__count_vm_event(HTLB_BUDDY_PGALLOC_FAIL);
+>  
+>  	/*
+> @@ -4221,6 +4231,7 @@ static vm_fault_t hugetlb_cow(struct mm_struct *mm, struct vm_area_struct *vma,
+>  		goto out_release_all;
+>  	}
+>  
+> +	hugetlb_test_clear_pre_init_page(new_page);
+>  	copy_user_huge_page(new_page, old_page, address, vma,
+>  			    pages_per_huge_page(h));
+>  	__SetPageUptodate(new_page);
+> @@ -4411,7 +4422,8 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+>  			ret = vmf_error(PTR_ERR(page));
+>  			goto out;
+>  		}
+> -		clear_huge_page(page, address, pages_per_huge_page(h));
+> +		if (!hugetlb_test_clear_pre_init_page(page))
+> +			clear_huge_page(page, address, pages_per_huge_page(h));
+>  		__SetPageUptodate(page);
+>  		new_page = true;
+>  
+> @@ -4709,6 +4721,7 @@ int hugetlb_mcopy_atomic_pte(struct mm_struct *dst_mm,
+>  		if (IS_ERR(page))
+>  			goto out;
+>  
+> +		hugetlb_test_clear_pre_init_page(page);
+>  		ret = copy_huge_page_from_user(page,
+>  						(const void __user *) src_addr,
+>  						pages_per_huge_page(h), false);
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index eddbe4e56c73..8cc1fc9c4d13 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -525,7 +525,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  	unsigned long flags = qp->flags;
+>  	int ret;
+>  	bool has_unmovable = false;
+> -	pte_t *pte;
+> +	pte_t *pte, *mapped_pte;
+>  	spinlock_t *ptl;
+>  
+>  	ptl = pmd_trans_huge_lock(pmd, vma);
+> @@ -539,7 +539,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  	if (pmd_trans_unstable(pmd))
+>  		return 0;
+>  
+> -	pte = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
+> +	mapped_pte = pte = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
+>  	for (; addr != end; pte++, addr += PAGE_SIZE) {
+>  		if (!pte_present(*pte))
+>  			continue;
+> @@ -571,7 +571,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  		} else
+>  			break;
+>  	}
+> -	pte_unmap_unlock(pte - 1, ptl);
+> +	pte_unmap_unlock(mapped_pte, ptl);
+>  	cond_resched();
+>  
+>  	if (has_unmovable)
+> 
