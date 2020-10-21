@@ -7,93 +7,89 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7544EC2D0A3
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Oct 2020 23:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A71EC4363A
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Oct 2020 23:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0783A24171
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Oct 2020 23:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E362417D
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Oct 2020 23:48:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ye5ZUzA8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SSiuK9Hq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2507285AbgJUXq1 (ORCPT
+        id S2507295AbgJUXsj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Oct 2020 19:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38358 "EHLO
+        Wed, 21 Oct 2020 19:48:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2507284AbgJUXq1 (ORCPT
+        with ESMTP id S2440447AbgJUXsj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Oct 2020 19:46:27 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0FEC0613CF
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2020 16:46:25 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r10so2434597pgb.10
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2020 16:46:25 -0700 (PDT)
+        Wed, 21 Oct 2020 19:48:39 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290ADC0613CF
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2020 16:48:39 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t14so2475150pgg.1
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2020 16:48:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TmQP6v1B8+/tLLxrFpMrrvi5YYx2Cgo1Q1V8lX9wCpg=;
-        b=Ye5ZUzA8ULWh7+72dKcjo021B5wfIpPIjBZHf4T0IlWzexHh9IGpIgEfgYKUycsN++
-         OMRXTVifteoX9sHYgJYrE9BfueoTgC5tye2p0qA9yNlMTwCGySXvzoqDMRKOPvbEWOPa
-         P8btVLBF8pHER7y6ATLlAXQQdMVcIHgYa/kgs=
+        bh=f10vmgX7jXKo9E3thDnh3S0Y4fRJR8z4hDcpxjP8T+g=;
+        b=SSiuK9Hq+WzNgZWEJtiFvDoomfJr/Xi6SGtiB3J0TJmw1+PSqkQMZndBNPrXlAQYV7
+         19TmcfEpR1CjVKGWhfRpr3eKqWHv5cuy6kBViF12WikINxrdTii/QyKh7JdBS7DCP9J+
+         EmDPc5dfzep+2IRH7zsclqQ6lZC20B7tnQ7lE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TmQP6v1B8+/tLLxrFpMrrvi5YYx2Cgo1Q1V8lX9wCpg=;
-        b=ZGNCDF7jGGmyNlnZP363bdNA7pMmHgB9BTX2gVpEil2k1kzTczwTRqCFlmmPRdouS4
-         QezCoU5QYlAZi19XJGL7DIwIhvZfmwpH4AvLWYF3XifM6C1POn1JvLM7zJTT4YE2uY13
-         cwpHi0Of76tqyAtWRtmAJcKO9IOQCRqZgRmEtJ1dEsdS7w0krm14EYVZufIzTOs0alBM
-         kGsPbrsqzpkaFRrM7IGaxx4UXP3JTYZywkgBP0QCU6Gc3SeZOHXaGEzGop04pktcEp0b
-         fHDfnvKz0/sTGGCxD6y/hXFuga4mMzK9LPv0oa2bzFatkyHOcSbG9MVdJq8z6vr3USFx
-         p+fw==
-X-Gm-Message-State: AOAM5311ni7DAlacPKeiR/lrmSt45DuKDibrbGNtMIbVTSYG3j16bzDU
-        9U9F2hQHH7wNd7woXYUNN5L3OA==
-X-Google-Smtp-Source: ABdhPJzfmxGcecuNR/Int5rEj8keHJDgbQujEogTC7Raf5VSD+STg8stH24xHynfrW1Pt0KwpZuYiQ==
-X-Received: by 2002:a65:4483:: with SMTP id l3mr51203pgq.96.1603323985144;
-        Wed, 21 Oct 2020 16:46:25 -0700 (PDT)
+        bh=f10vmgX7jXKo9E3thDnh3S0Y4fRJR8z4hDcpxjP8T+g=;
+        b=Btk6JHI0J1BYjGaGeserr+3lArwLHjTBxHF50d5X4cHqk5tE2NbMiR8f7JnjLQg8xk
+         FaN3WrTklrTm6fojxx18+EBqgmtgP1yr8/KY9dGNPcI6WKGWJTJ0owmW4u+Q4rrTRzZU
+         /nXkzYjL6J7jXCSDoB1ZWDH2zrT5PVltQMNHex69/CZnL+aMJbo2bWc9i57aTFq5noc2
+         oRL1tdnnXyrOFFUHfMhHZFsjDuTA/ZEMNbDG+sOA/c8kwwaju/wvVb0W+j73swfpdvip
+         K0uWI6Vxq+ItVyUpiU8QFgPV3JxUn70Kdv1KgR/bhfdj4CIIaHrFMpVijmxaSv3/NPOd
+         lSXg==
+X-Gm-Message-State: AOAM5323Mx6dmqVxlCIDAifqJF4jBJ5eaHrKpo+dMpiDrQUdKaif3cdu
+        0fs4ZrInaU91CXRPxSEoTayCOQ==
+X-Google-Smtp-Source: ABdhPJxqbDqLPvR+s6SlaFCJTQyNZAo8JVF2fzS2DVEHzp+Kzr27m/Ow1Zi17gLvmPgEspBua8YrAQ==
+X-Received: by 2002:aa7:97ba:0:b029:152:879f:4789 with SMTP id d26-20020aa797ba0000b0290152879f4789mr16223pfq.81.1603324118711;
+        Wed, 21 Oct 2020 16:48:38 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w17sm3314764pga.16.2020.10.21.16.46.24
+        by smtp.gmail.com with ESMTPSA id 186sm3370129pff.95.2020.10.21.16.48.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2020 16:46:24 -0700 (PDT)
-Date:   Wed, 21 Oct 2020 16:46:23 -0700
+        Wed, 21 Oct 2020 16:48:38 -0700 (PDT)
+Date:   Wed, 21 Oct 2020 16:48:37 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     laniel_francis@privacyrequired.com
 Cc:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
         davem@davemloft.net, kuba@kernel.org
-Subject: Re: [RFC][PATCH v3 1/3] Fix unefficient call to memset before memcpu
- in nla_strlcpy.
-Message-ID: <202010211646.28D4C5642@keescook>
+Subject: Re: [RFC][PATCH v3 2/3] Modify return value of nla_strlcpy to match
+ that of strscpy.
+Message-ID: <202010211648.4CBF3805A9@keescook>
 References: <20201020164707.30402-1-laniel_francis@privacyrequired.com>
- <20201020164707.30402-2-laniel_francis@privacyrequired.com>
+ <20201020164707.30402-3-laniel_francis@privacyrequired.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201020164707.30402-2-laniel_francis@privacyrequired.com>
+In-Reply-To: <20201020164707.30402-3-laniel_francis@privacyrequired.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 20, 2020 at 06:47:05PM +0200, laniel_francis@privacyrequired.com wrote:
+On Tue, Oct 20, 2020 at 06:47:06PM +0200, laniel_francis@privacyrequired.com wrote:
 > From: Francis Laniel <laniel_francis@privacyrequired.com>
 > 
-> Before this commit, nla_strlcpy first memseted dst to 0 then wrote src into it.
-> This is inefficient because bytes whom number is less than src length are written
-> twice.
+> nla_strlcpy now returns -E2BIG if src was truncated when written to dst.
+> It also returns this error value if dstsize is 0 or higher than INT_MAX.
 > 
-> This patch solves this issue by first writing src into dst then fill dst with
-> 0's.
-> Note that, in the case where src length is higher than dst, only 0 is written.
-> Otherwise there are as many 0's written to fill dst.
+> For example, if src is "foo\0" and dst is 3 bytes long, the result will be:
+> 1. "foG" after memcpy (G means garbage).
+> 2. "fo\0" after memset.
+> 3. -E2BIG is returned because src was not completely written into dst.
 > 
-> For example, if src is "foo\0" and dst is 5 bytes long, the result will be:
-> 1. "fooGG" after memcpy (G means garbage).
-> 2. "foo\0\0" after memset.
+> The callers of nla_strlcpy were modified to take into account this modification.
 > 
 > Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
 
-Looks good! (If there are future versions of this series, I think you
-can drop the RFC part...)
+This looks correct to me. Thanks for the respin!
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
