@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83264C55178
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Oct 2020 15:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DACC388F9
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Oct 2020 15:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3FF20BED
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Oct 2020 15:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E0520BED
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Oct 2020 15:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="kkE6Vw4d"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="BkVWkDLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2444000AbgJUPG1 (ORCPT
+        id S2444001AbgJUPGa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Oct 2020 11:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42684 "EHLO
+        Wed, 21 Oct 2020 11:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443805AbgJUPG1 (ORCPT
+        with ESMTP id S2443805AbgJUPGa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Oct 2020 11:06:27 -0400
+        Wed, 21 Oct 2020 11:06:30 -0400
 Received: from confino.investici.org (confino.investici.org [IPv6:2a00:c38:11e:ffff::a020])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FCB2C0613CE
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2020 08:06:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66985C0613CE
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2020 08:06:30 -0700 (PDT)
 Received: from mx1.investici.org (unknown [127.0.0.1])
-        by confino.investici.org (Postfix) with ESMTP id 4CGYjZ2B8Qz12jp;
-        Wed, 21 Oct 2020 15:06:26 +0000 (UTC)
+        by confino.investici.org (Postfix) with ESMTP id 4CGYjd1Wxjz12jq;
+        Wed, 21 Oct 2020 15:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1603292786;
-        bh=gEisyTzwLUV41IxjCWVvB3lfkoTrhPqzQD7vKXGFNgI=;
+        s=stigmate; t=1603292789;
+        bh=TxYAC9j0ASbKP643M9/2azNe1Lwy9RQE7h+DEvTSJhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkE6Vw4d0KU8pysTF378+V9T9a3PXA6PUQh6jN6GlXssvythZI5DPSwwyn3eB2Gnv
-         hkj5PNbkY9TEm1q4K/UncQ3uDn6mZFifTEfGuqtRdjV15O4RKwn3ZBUNPigpx5n7aU
-         oeOWt1qwwtleW39Qv9FS6L1xU5tnlsUF9KpGykLA=
-Received: from [212.103.72.250] (mx1.investici.org [212.103.72.250]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CGYjZ1D8zz12jm;
-        Wed, 21 Oct 2020 15:06:26 +0000 (UTC)
+        b=BkVWkDLIievt/u/1BmLvqXACuX3HQP+yHBbkOoGb2JA8jQzxKpP9shFqVqrZwYTlU
+         1cqxoHAnHh7GFKnYBwPSPYaCCgGUu3oZXfu4gY7VKZVVAze+sZ9efHnOZMCQ3D/Jqu
+         79aj+dHkGSk8mMXjgzCrzXl4vp97zY9BpmX6cXAk=
+Received: from [212.103.72.250] (mx1.investici.org [212.103.72.250]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CGYjd0gBxz12jp;
+        Wed, 21 Oct 2020 15:06:29 +0000 (UTC)
 From:   laniel_francis@privacyrequired.com
 To:     linux-hardening@vger.kernel.org
 Cc:     dja@axtens.net, Francis Laniel <laniel_francis@privacyrequired.com>
-Subject: [RFC][PATCH v3 3/5] Fortify string function strscpy.
-Date:   Wed, 21 Oct 2020 17:06:06 +0200
-Message-Id: <20201021150608.16469-4-laniel_francis@privacyrequired.com>
+Subject: [RFC][PATCH v3 4/5] Add new file in LKDTM to test fortified strscpy.
+Date:   Wed, 21 Oct 2020 17:06:07 +0200
+Message-Id: <20201021150608.16469-5-laniel_francis@privacyrequired.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20201021150608.16469-1-laniel_francis@privacyrequired.com>
 References: <20201021150608.16469-1-laniel_francis@privacyrequired.com>
@@ -55,69 +55,118 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Francis Laniel <laniel_francis@privacyrequired.com>
 
-Fortified strscpy detects write overflows to dest.
+This new test generates a crash at runtime because there is a write overflow in
+destination string.
 
 Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
 ---
- include/linux/string.h | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/misc/lkdtm/Makefile             |  1 +
+ drivers/misc/lkdtm/core.c               |  1 +
+ drivers/misc/lkdtm/fortify.c            | 47 +++++++++++++++++++++++++
+ drivers/misc/lkdtm/lkdtm.h              |  3 ++
+ tools/testing/selftests/lkdtm/tests.txt |  1 +
+ 5 files changed, 53 insertions(+)
+ create mode 100644 drivers/misc/lkdtm/fortify.c
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 46e91d684c47..add7426ff718 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -6,6 +6,8 @@
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
- #include <linux/stddef.h>	/* for NULL */
-+#include <linux/bug.h>		/* for WARN_ON_ONCE */
-+#include <linux/errno.h>	/* for E2BIG */
- #include <stdarg.h>
- #include <uapi/linux/string.h>
+diff --git a/drivers/misc/lkdtm/Makefile b/drivers/misc/lkdtm/Makefile
+index c70b3822013f..d898f7b22045 100644
+--- a/drivers/misc/lkdtm/Makefile
++++ b/drivers/misc/lkdtm/Makefile
+@@ -10,6 +10,7 @@ lkdtm-$(CONFIG_LKDTM)		+= rodata_objcopy.o
+ lkdtm-$(CONFIG_LKDTM)		+= usercopy.o
+ lkdtm-$(CONFIG_LKDTM)		+= stackleak.o
+ lkdtm-$(CONFIG_LKDTM)		+= cfi.o
++lkdtm-$(CONFIG_LKDTM)		+= fortify.o
  
-@@ -357,6 +359,42 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
- 	return ret;
- }
+ KASAN_SANITIZE_stackleak.o	:= n
+ KCOV_INSTRUMENT_rodata.o	:= n
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index a002f39a5964..4326e2d09870 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -180,6 +180,7 @@ static const struct crashtype crashtypes[] = {
+ #ifdef CONFIG_X86_32
+ 	CRASHTYPE(DOUBLE_FAULT),
+ #endif
++	CRASHTYPE(FORTIFIED_STRSCPY),
+ };
  
-+/* defined after fortified strnlen to reuse it */
-+extern ssize_t __real_strscpy(char *, const char *, size_t) __RENAME(strscpy);
-+__FORTIFY_INLINE ssize_t strscpy(char *p, const char *q, size_t size)
+ 
+diff --git a/drivers/misc/lkdtm/fortify.c b/drivers/misc/lkdtm/fortify.c
+new file mode 100644
+index 000000000000..cecdfbb8ba55
+--- /dev/null
++++ b/drivers/misc/lkdtm/fortify.c
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020 Francis Laniel <laniel_francis@privacyrequired.com>
++ *
++ * Add tests related to fortified functions in this file.
++ */
++#include <linux/string.h>
++#include <linux/slab.h>
++#include "lkdtm.h"
++
++
++/*
++ * Calls fortified strscpy to test that it returns the same result as vanilla
++ * strscpy and generate a panic because there is a write overflow (i.e. src
++ * length is greater than dst length).
++ */
++void lkdtm_FORTIFIED_STRSCPY(void)
 +{
-+	size_t len;
-+	/*
-+	 * Use 1 as second argument to guess only p size even and not the
-+	 * surrounding struct size (in case it is embedded inside a struct).
-+	 */
-+	size_t p_size = __builtin_object_size(p, 1);
++#if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
++	char *src;
++	char dst[3];
++
++	src = kstrdup("foobar", GFP_KERNEL);
++
++	if (src == NULL)
++		return;
++
++	/* Vanilla strscpy returns -E2BIG if size is 0. */
++	WARN_ON(strscpy(dst, src, 0) != -E2BIG);
++
++	/* Vanilla strscpy returns -E2BIG if src is truncated. */
++	WARN_ON(strscpy(dst, src, sizeof(dst)) != -E2BIG);
++
++	/* After above call, dst must contain "fo" because src was truncated. */
++	WARN_ON(strncmp(dst, "fo", sizeof(dst)) != 0);
 +
 +	/*
-+	 * If size can be known at compile time and is greater than
-+	 * p_size, generate a compile time write overflow error.
++	 * Use strlen here so size cannot be known at compile time and there is
++	 * a runtime overflow.
 +	 */
-+	if (__builtin_constant_p(size) && size > p_size)
-+		__write_overflow();
++	strscpy(dst, src, strlen(src));
 +
-+	len = strnlen(q, size);
-+	/*
-+	 * strscpy handles read overflows by stop reading q when '\0' is
-+	 * met.
-+	 * We stick to this behavior here.
-+	 */
-+	len = (len >= size) ? size : len;
++	pr_info("Fail: No overflow in above strscpy call!\n");
 +
-+	/* Otherwise generate a runtime write overflow error. */
-+	if (len > p_size)
-+		fortify_panic(__func__);
-+	/*
-+	 * Still use size as third argument to correctly compute max
-+	 * inside strscpy.
-+	 */
-+	return __real_strscpy(p, q, size);
++	kfree(src);
++#endif
 +}
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 70c8b7c9460f..29c12dcdeab1 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -106,4 +106,7 @@ void lkdtm_STACKLEAK_ERASING(void);
+ /* cfi.c */
+ void lkdtm_CFI_FORWARD_PROTO(void);
+ 
++/* fortify.c */
++void lkdtm_FORTIFIED_STRSCPY(void);
 +
- /* defined after fortified strlen and strnlen to reuse them */
- __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
- {
+ #endif
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+index 9d266e79c6a2..4234109579eb 100644
+--- a/tools/testing/selftests/lkdtm/tests.txt
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -70,3 +70,4 @@ USERCOPY_KERNEL
+ USERCOPY_KERNEL_DS
+ STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
+ CFI_FORWARD_PROTO
++FORTIFIED_STRSCPY
+\ No newline at end of file
 -- 
 2.20.1
 
