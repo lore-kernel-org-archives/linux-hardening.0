@@ -2,82 +2,73 @@ Return-Path: <SRS0=thHn=D6=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A55C4363A
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Oct 2020 15:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CECC388F9
+	for <linux-hardening@archiver.kernel.org>; Fri, 23 Oct 2020 15:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF55208B6
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Oct 2020 15:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="KrNAQiY8"
+	by mail.kernel.org (Postfix) with ESMTP id DF1A420E65
+	for <linux-hardening@archiver.kernel.org>; Fri, 23 Oct 2020 15:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1603466963;
+	bh=S5Kn3O68f3PPLfkqkvktfe3VeUC3zGbtEVTjNDfQ1dI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ev7+SOO4FFuZNdFRIiYDooTENB4VYPTrO2tGEbqfFxyrqEugtJ9oej/yEEMKKMCb9
+	 4lGUjT2d6GV5UB9FHThRY7dbnS8Qjusu0Y7ccwU+9QKo2fRx13aV13poSCJx8Btwtq
+	 m2nxvrzKvx35PJW5W1Ksxx7xG/BVtvtPUKtWR47I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S465691AbgJWPQe (ORCPT
+        id S465822AbgJWP3X (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Oct 2020 11:16:34 -0400
-Received: from confino.investici.org ([212.103.72.250]:29061 "EHLO
-        confino.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S461842AbgJWPQe (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Oct 2020 11:16:34 -0400
-Received: from mx1.investici.org (unknown [127.0.0.1])
-        by confino.investici.org (Postfix) with ESMTP id 4CHnrJ6Vb2z12mW;
-        Fri, 23 Oct 2020 15:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1603466192;
-        bh=zwyYFuxvaBt4KIpY975rk0ZV3MFjtqKqJl69cm8F9Q4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KrNAQiY8Vzy9yksym1IOUQIIyp3S4A741LOBsNSFLt5K+QUh5YD7m91j20AqsYhYk
-         UCDHAcpnevssHa9enJPXG60YeLTRxt+EvPxsLMZ76roqYzcb7Q7Cf3UGKNItzg+9U6
-         MnojlPS/BeRcVfIWVkGQpn3kRXg9oC3ElOaVYGDg=
-Received: from [212.103.72.250] (mx1.investici.org [212.103.72.250]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CHnrJ55Rbz12lk;
-        Fri, 23 Oct 2020 15:16:32 +0000 (UTC)
-From:   Francis Laniel <laniel_francis@privacyrequired.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        netdev@vger.kernel.org, davem@davemloft.net
+        Fri, 23 Oct 2020 11:29:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S465813AbgJWP3X (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 23 Oct 2020 11:29:23 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 801ED21D47;
+        Fri, 23 Oct 2020 15:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603466962;
+        bh=S5Kn3O68f3PPLfkqkvktfe3VeUC3zGbtEVTjNDfQ1dI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k2SO/YRozuovEuKIf8sn6zUN/XwdtHaF9gL3hkJKPAE6Cs643zu+niAbpUS4R4MtE
+         ECSBECy/GVl/FeWRYrh2+Ce0w0QPLyOF+eEzKzhkkpFk24bKCBubpTQ56pPrt2l1gy
+         7So0ful2VpPJKGQZVYEeMaKyIsl2cYqkIWzORdN4=
+Date:   Fri, 23 Oct 2020 08:29:20 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
 Subject: Re: [RFC][PATCH v3 3/3] Rename nla_strlcpy to nla_strscpy.
-Date:   Fri, 23 Oct 2020 17:16:32 +0200
-Message-ID: <6007556.b03v0mpVyF@machine>
-In-Reply-To: <20201022160551.33d85912@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-References: <20201020164707.30402-1-laniel_francis@privacyrequired.com> <202010221302.5BA047AC9@keescook> <20201022160551.33d85912@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+Message-ID: <20201023082920.6addf3cb@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <b55d502089c44b3589973fa4e0d90617@AcuMS.aculab.com>
+References: <20201020164707.30402-1-laniel_francis@privacyrequired.com>
+        <20201020164707.30402-4-laniel_francis@privacyrequired.com>
+        <202010211649.ABD53841B@keescook>
+        <2286512.66XcFyAlgq@machine>
+        <202010221302.5BA047AC9@keescook>
+        <20201022160551.33d85912@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+        <b55d502089c44b3589973fa4e0d90617@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Le vendredi 23 octobre 2020, 01:05:51 CEST Jakub Kicinski a =E9crit :
-> On Thu, 22 Oct 2020 13:04:32 -0700 Kees Cook wrote:
-> > > > > From: Francis Laniel <laniel_francis@privacyrequired.com>
-> > > > >=20
-> > > > > Calls to nla_strlcpy are now replaced by calls to nla_strscpy whi=
-ch
-> > > > > is the
-> > > > > new name of this function.
-> > > > >=20
-> > > > > Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
-> > > >=20
-> > > > The Subject could also be: "treewide: Rename nla_strlcpy to
-> > > > nla_strscpy"
-> > > >=20
-> > > > But otherwise, yup, easy mechanical change.
-> > >=20
-> > > Should I submit a v4 for this change?
-> >=20
-> > I'll say yes. :) Drop the RFC, bump to v4, and send it to netdev (along
-> > with all the other CCs you have here already), and add the Reviewed-bys
-> > from v3.
->=20
-> Maybe wait until next week, IIRC this doesn't fix any bugs, so it's
-> -next material. We don't apply anything to net-next during the merge
-> window.
+On Fri, 23 Oct 2020 08:07:44 +0000 David Laight wrote:
+> FWIW I suspect  the 'return -ERR on overflow' is going to bite us.
+> Code that does p += strsxxx(p, ..., lim - p, ...) assuming (or not
+> caring) about overflow goes badly wrong.
 
-I will wait for next Friday to submit the v4.
-
-
-
+I don't really care either way, but in netlink there's usually an
+attribute per value, nothing combines strings like p += strx..().
+Looking at the conversion in patch 2 the callers just want to 
+check for overflow.
