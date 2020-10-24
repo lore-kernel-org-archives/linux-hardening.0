@@ -1,113 +1,218 @@
-Return-Path: <SRS0=thHn=D6=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=kTaS=D7=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92C1C4363A
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Oct 2020 17:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD974C55178
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 05:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C48D20760
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Oct 2020 17:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC0A22254
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 05:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bD+nsvaI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VAsHc4HK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S463150AbgJWRxC (ORCPT
+        id S1759534AbgJXFEH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Oct 2020 13:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33286 "EHLO
+        Sat, 24 Oct 2020 01:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S463135AbgJWRxB (ORCPT
+        with ESMTP id S1759532AbgJXFEG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Oct 2020 13:53:01 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C06C0613CE;
-        Fri, 23 Oct 2020 10:53:01 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id y17so2205286ilg.4;
-        Fri, 23 Oct 2020 10:53:01 -0700 (PDT)
+        Sat, 24 Oct 2020 01:04:06 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1A9C0613CE
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2020 22:04:06 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id kk5so315610pjb.1
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2020 22:04:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VtAgTEHRkAGqz+I14jNPk509SDkqha7SHbM3mBCCgZY=;
-        b=bD+nsvaIX4zp29UYZ+2JOdkUFkScGE8zl+rcJpNB4AsWeJe0EJpHRYpGF9ckMXyEAE
-         eY6nY+lL78x+HZe3dqUl0NiWH3V7J8yP9nwnBEh+ssJ6yWJ4KLH8KjbXfyTlckN25RX7
-         VkolVVpARdJ1j3kH8s9VUT9CY4qpphaYqthbfNQ+WP3Ff4aSw3LUoU5qWGc7iUFJ4n7y
-         m1vAyhI1jWbcMfYcHDitC0D/AAPkG/igpqDpwO4crbtgU3PRhg2xswA6w78CDzh0jrBy
-         /flM8gaJ2HK0VxqkgAi4O0EsED4eLdGMthqGWhfNnXJsLLDe2P8RUXvO4B5ieoJOO2Y+
-         XtuA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3HfrNgNyw9kbNLIqwBXcRSjAZHZrpM/JEy6HdTow6Ds=;
+        b=VAsHc4HKeweOmiIbcvaDvAtfckNlGgu1H9quimn/Ntl8Z3MRFpTxoWZ5Ze7lPZuiAS
+         j4XhhDYAWIYvcOmP6Fcs+nBlVW/3Qcahf09/pHkUgwenEde3fkHi/wwt3BClQr97Nilx
+         Pq9p6I/eEV3gFeIx+AJbeEJ43wLR4pT8J1GjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VtAgTEHRkAGqz+I14jNPk509SDkqha7SHbM3mBCCgZY=;
-        b=nkc8Wk3oe776csUvW9tKM5/TjkI769bbWQZLz2sM3MJLr7UvzfGLS+MS6NLGGa+Wt2
-         9hXbrU2Sr8/MPuoZRR+cRCLYJzZY0mLKyoKB+4nED58F4e1j6q6kiCKpp6UlAPJjEjZQ
-         /x2QvJOJrhvxGdGFHRetdtATJ1pemGNeKiVponOccdntRBPENcA6JSROLRNa9GOSZJkb
-         NDHA+LzDVjafpFb1W8z5o+r+SiZ9YkxNMibVnQxB17D+Z79FYRLhW6C3Cowu8346V19Y
-         ApWURfbI4Z5XFJTH52kb3o1te+7b5lZBhA0zdciQNvqcCi1UjnfgB6JEDbpKQRZZ0n/g
-         6TsQ==
-X-Gm-Message-State: AOAM530PukmVntuq/bWd6EPs1Lt/8+ofst3PtijZ279K2WYDmQ/SkNcZ
-        p44xUXUsYN1FrBqNDuuZjph86iCtjPNyJxpaqHUPsYp/Yk95sg==
-X-Google-Smtp-Source: ABdhPJy2EtC+Jp6f2du99WT/FJet4nqfOd4rMxYcV8yqiQVUKzPy9q5NN3+QK+mO/scRsa8G2nVIF4q9Fo9IJWlasYo=
-X-Received: by 2002:a92:ba14:: with SMTP id o20mr2650068ili.76.1603475580876;
- Fri, 23 Oct 2020 10:53:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3HfrNgNyw9kbNLIqwBXcRSjAZHZrpM/JEy6HdTow6Ds=;
+        b=SDy8Y+PQer3ogAjAagsmlXJGp3JGcQ3KkzDyBvpdENhXRin6qyjjCmtjraDPy9b0bq
+         TUFm4DlJ3MXE/AhC0aqDZyvdtk0AOzYk0KkgxuYnFyc6GUTEWVGRcwdSprJKa7pekRsD
+         WM+unX7lOJX2Q5jcfNpYQ1EtDfjhfLLDyNe4qTj3RjGEk6BkSoH5/+8KEBeIy6PUYeuu
+         n92YSLw882A8OsZUi/vQSYpLpyUuT13mnjiDA0mIO3n2Y3UjpQoE1/QXlqJ7Anw2ycIt
+         jAdFyE5wI/Z5ej82MleLrA9QFqvJDPCINwjy4w5n3pKwmjX/gXgNiXwseM7bzKYFP9VZ
+         ptqQ==
+X-Gm-Message-State: AOAM531SrfKN8D185Hc43REutzBVLntaGBG4nGFmRdnr5yz5iM3EYodW
+        v60aiinomYlRTuyIqFKRX+PzUEfepgXHNA==
+X-Google-Smtp-Source: ABdhPJwXGt4KAL1E9tZXa9kclc9U7Aupn51I8H5g62CQb6x0hSfWsBnfI10eUK19eyCWKyEG0rT+Ww==
+X-Received: by 2002:a17:90b:14a:: with SMTP id em10mr5328341pjb.142.1603515846439;
+        Fri, 23 Oct 2020 22:04:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j20sm4090335pfd.40.2020.10.23.22.04.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2020 22:04:05 -0700 (PDT)
+Date:   Fri, 23 Oct 2020 22:04:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     laniel_francis@privacyrequired.com
+Cc:     linux-hardening@vger.kernel.org, dja@axtens.net
+Subject: Re: [RFC][PATCH v3 3/5] Fortify string function strscpy.
+Message-ID: <202010232017.14FB7034@keescook>
+References: <20201021150608.16469-1-laniel_francis@privacyrequired.com>
+ <20201021150608.16469-4-laniel_francis@privacyrequired.com>
 MIME-Version: 1.0
-References: <8584c14f-5c28-9d70-c054-7c78127d84ea@arm.com> <20201022075447.GO3819@arm.com>
- <78464155-f459-773f-d0ee-c5bdbeb39e5d@gmail.com> <202010221256.A4F95FD11@keescook>
- <180cd894-d42d-2bdb-093c-b5360b0ecb1e@gmail.com>
-In-Reply-To: <180cd894-d42d-2bdb-093c-b5360b0ecb1e@gmail.com>
-From:   Salvatore Mesoraca <s.mesoraca16@gmail.com>
-Date:   Fri, 23 Oct 2020 18:52:50 +0100
-Message-ID: <CAJHCu1Jrtx=OVEiTVwPJg7CxRkV83tS=HsYeLoAGRf_tgYq_iQ@mail.gmail.com>
-Subject: Re: BTI interaction between seccomp filters in systemd and glibc
- mprotect calls, causing service failures
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, libc-alpha@sourceware.org,
-        systemd-devel@lists.freedesktop.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Dave Martin <dave.martin@arm.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201021150608.16469-4-laniel_francis@privacyrequired.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Wed, Oct 21, 2020 at 05:06:06PM +0200, laniel_francis@privacyrequired.com wrote:
+> From: Francis Laniel <laniel_francis@privacyrequired.com>
+> 
+> Fortified strscpy detects write overflows to dest.
 
-On Thu, 22 Oct 2020 at 23:24, Topi Miettinen <toiwoton@gmail.com> wrote:
-> SARA looks interesting. What is missing is a prctl() to enable all W^X
-> protections irrevocably for the current process, then systemd could
-> enable it for services with MemoryDenyWriteExecute=yes.
+This commit log needs to be expanded to explain the "why" of the change
+with some detail.
 
-SARA actually has a procattr[0] interface to do just that.
-There is also a library[1] to help using it.
+Also, please look at the git commit history of include/linux/string.h
+for a sense of the kinds of Subject prefixes being used. I think this
+Subject should be something like:
 
-> I didn't also see specific measures against memfd_create() or file
-> system W&X, but perhaps those can be added later.
+	Subject: string.h: Add FORTIFY coverage for strscpy()
 
-You are right, there are no measures against those vectors.
-It would be interesting to add them, though.
+> 
+> Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
+> ---
+>  include/linux/string.h | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 46e91d684c47..add7426ff718 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -6,6 +6,8 @@
+>  #include <linux/compiler.h>	/* for inline */
+>  #include <linux/types.h>	/* for size_t */
+>  #include <linux/stddef.h>	/* for NULL */
+> +#include <linux/bug.h>		/* for WARN_ON_ONCE */
 
-> Maybe pkey_mprotect()
-> is not handled either unless it uses the same LSM hook as mprotect().
+^^^ no longer needed
 
-IIRC mprotect is implemented more or less as a pkey_mprotect with -1 as pkey.
-The same LSM hook should cover both.
+> +#include <linux/errno.h>	/* for E2BIG */
+>  #include <stdarg.h>
+>  #include <uapi/linux/string.h>
+>  
+> @@ -357,6 +359,42 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
+>  	return ret;
+>  }
+>  
+> +/* defined after fortified strnlen to reuse it */
+> +extern ssize_t __real_strscpy(char *, const char *, size_t) __RENAME(strscpy);
+> +__FORTIFY_INLINE ssize_t strscpy(char *p, const char *q, size_t size)
+> +{
+> +	size_t len;
+> +	/*
+> +	 * Use 1 as second argument to guess only p size even and not the
 
-Salvatore
+This isn't a "guess". Perhaps just say:
 
-[0] https://lore.kernel.org/lkml/1562410493-8661-10-git-send-email-s.mesoraca16@gmail.com/
-[1] https://github.com/smeso/libsara
+/* Use string size rather than possible enclosing struct size. */
+
+> +	 * surrounding struct size (in case it is embedded inside a struct).
+> +	 */
+> +	size_t p_size = __builtin_object_size(p, 1);
+
+A short-circuit path should be added here:
+
+	size_t q_size = __builtin_object_size(q, 1);
+        if (p_size == (size_t)-1 && q_size == (size_t)-1)
+                return __real_strscpy(p, q, size);
+
+> +	/*
+> +	 * If size can be known at compile time and is greater than
+> +	 * p_size, generate a compile time write overflow error.
+> +	 */
+> +	if (__builtin_constant_p(size) && size > p_size)
+> +		__write_overflow();
+
+Compile-time size > p_size is caught here.
+
+Compile-time over-read on strings isn't catchable.
+
+> +
+> +	len = strnlen(q, size);
+
+Runtime over-read is caught here.
+
+> +	/*
+> +	 * strscpy handles read overflows by stop reading q when '\0' is
+> +	 * met.
+> +	 * We stick to this behavior here.
+> +	 */
+> +	len = (len >= size) ? size : len;
+
+This test isn't needed: strnlen(q, size) will never return larger than
+size. (i.e. len has already been reduced to size.)
+
+> +
+> +	/* Otherwise generate a runtime write overflow error. */
+> +	if (len > p_size)
+> +		fortify_panic(__func__);
+
+Runtime over-write is caught here, though I think this needs to be:
+
+	if (len + 1 > p_size)
+		fortify_panic(__func__);
+
+since we need to fit "len" plus NUL in p_size. len + 1 == p_size is ok.
+
+> +	/*
+> +	 * Still use size as third argument to correctly compute max
+> +	 * inside strscpy.
+> +	 */
+
+If we do this, then we run the risk of doing the over-read anyway. For
+this call, we need to use len in most cases.
+
+> +	return __real_strscpy(p, q, size);
+
+In the unfortified case, -E2BIG will happen when strlen(q) >= size. When
+fortified, strnlen is capped at min(size, q_size), so -E2BIG could only
+happen when len == size. If len < size, there will never be -E2BIG.
+
+So I think this means we need the __real_strscpy() call to look like this:
+
+	// All safe from over-read  (len + 1 <= min(size, q_size): strnlen() above).
+	// All safe from over-write (len + 1 <= p_size: explicit test above).
+	if (len < size)
+		return __real_strscpy(p, q, len + 1); // not E2BIG
+	else if (len + 1 == size)
+		return __real_strscpy(p, q, len + 1); // not E2BIG
+	else if (len == size) // therefore size < min(size, q_size, p_size)
+		return __real_strscpy(p, q, size);    // E2BIG
+	else //  len + 1 > size
+		return __real_strscpy(p, q, len + 1); // E2BIG
+
+or simply:
+
+	return __real_strscpy(p, q, len == size ? size : len + 1);
+
+But the complexity here clearly calls for test cases.
+
+> +}
+> +
+>  /* defined after fortified strlen and strnlen to reuse them */
+>  __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
+>  {
+> -- 
+> 2.20.1
+> 
+
+-- 
+Kees Cook
