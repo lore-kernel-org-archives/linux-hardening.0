@@ -4,48 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB509C4363A
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 10:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE304C4363A
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 10:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25E852226B
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 10:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A634E2226B
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 10:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="iCihgVlI"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="KGF3lxui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1760917AbgJXKTs (ORCPT
+        id S1760991AbgJXKgt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 24 Oct 2020 06:19:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1760916AbgJXKTs (ORCPT
+        Sat, 24 Oct 2020 06:36:49 -0400
+Received: from confino.investici.org ([212.103.72.250]:25441 "EHLO
+        confino.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1760913AbgJXKgt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 24 Oct 2020 06:19:48 -0400
-Received: from latitanza.investici.org (latitanza.investici.org [IPv6:2001:888:2000:56::19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFFCDC0613CE
-        for <linux-hardening@vger.kernel.org>; Sat, 24 Oct 2020 03:19:47 -0700 (PDT)
-Received: from mx3.investici.org (unknown [127.0.0.1])
-        by latitanza.investici.org (Postfix) with ESMTP id 4CJHCP3zYFz8wgW;
-        Sat, 24 Oct 2020 10:19:45 +0000 (UTC)
+        Sat, 24 Oct 2020 06:36:49 -0400
+Received: from mx1.investici.org (unknown [127.0.0.1])
+        by confino.investici.org (Postfix) with ESMTP id 4CJHb25zWSz12bk;
+        Sat, 24 Oct 2020 10:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1603534785;
-        bh=Wa0yfVjmKCkFr1gbrPAvLAk1MAsdKasb0+S443HaO2U=;
+        s=stigmate; t=1603535806;
+        bh=xWkDeALRgm8S298EDz6zxzlwhDmf59s75GtPFeBgo3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCihgVlIi/UUcF6trVQSHZlecSS6p9xLOyZlu2oRw4iSchhon8zHeRBm5y1eet12Q
-         rENmkGp0D3SMH90OZxrDarDOA8e7fCzvCrEfzm5yr61oTn7A0p938d7RYOmjrG9ndy
-         Svt2nEBg/cQIiJBALpgN9moqPFK31Iq4rsMgNNcw=
-Received: from [82.94.249.234] (mx3.investici.org [82.94.249.234]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CJHCP1rQKz8wgV;
-        Sat, 24 Oct 2020 10:19:45 +0000 (UTC)
+        b=KGF3lxuikKA+63mPuI1Jm1LqlR5Vnc2ueouk0phEBJxHCAEttX+xppuoM/onL1aXC
+         b4k+Df2eG2osTlwnzA83Q0CDJHFIEBBtoQ4L2ZZItbUxzNQzWZyUcM5yIGrGMWrUHA
+         VCVsZCFX57q7np3OjREKSisLI75pvkE6dhfa9X/g=
+Received: from [212.103.72.250] (mx1.investici.org [212.103.72.250]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CJHb252rqz12bV;
+        Sat, 24 Oct 2020 10:36:46 +0000 (UTC)
 From:   Francis Laniel <laniel_francis@privacyrequired.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     linux-hardening@vger.kernel.org, dja@axtens.net
-Subject: Re: [RFC][PATCH v3 4/5] Add new file in LKDTM to test fortified strscpy.
-Date:   Sat, 24 Oct 2020 12:19:44 +0200
-Message-ID: <3172137.tozOrHZ9KS@machine>
-In-Reply-To: <202010232204.9DCF5501DA@keescook>
-References: <20201021150608.16469-1-laniel_francis@privacyrequired.com> <20201021150608.16469-5-laniel_francis@privacyrequired.com> <202010232204.9DCF5501DA@keescook>
+Subject: Re: [RFC][PATCH v3 3/5] Fortify string function strscpy.
+Date:   Sat, 24 Oct 2020 12:36:46 +0200
+Message-ID: <1757511.6Qb6Y897ce@machine>
+In-Reply-To: <202010232017.14FB7034@keescook>
+References: <20201021150608.16469-1-laniel_francis@privacyrequired.com> <20201021150608.16469-4-laniel_francis@privacyrequired.com> <202010232017.14FB7034@keescook>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
@@ -53,197 +50,198 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Le samedi 24 octobre 2020, 07:23:01 CEST Kees Cook a =E9crit :
-> On Wed, Oct 21, 2020 at 05:06:07PM +0200, laniel_francis@privacyrequired.=
+Le samedi 24 octobre 2020, 07:04:04 CEST Kees Cook a =E9crit :
+> On Wed, Oct 21, 2020 at 05:06:06PM +0200, laniel_francis@privacyrequired.=
 com=20
 wrote:
 > > From: Francis Laniel <laniel_francis@privacyrequired.com>
 > >=20
-> > This new test generates a crash at runtime because there is a write
-> > overflow in destination string.
-> >=20
+> > Fortified strscpy detects write overflows to dest.
+>=20
+> This commit log needs to be expanded to explain the "why" of the change
+> with some detail.
+>=20
+> Also, please look at the git commit history of include/linux/string.h
+> for a sense of the kinds of Subject prefixes being used. I think this
+> Subject should be something like:
+>=20
+> 	Subject: string.h: Add FORTIFY coverage for strscpy()
+>=20
+
+I will expand the commit message for the next version and adapt the title t=
+o=20
+follow the history.
+
 > > Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
 > > ---
 > >=20
-> >  drivers/misc/lkdtm/Makefile             |  1 +
-> >  drivers/misc/lkdtm/core.c               |  1 +
-> >  drivers/misc/lkdtm/fortify.c            | 47 +++++++++++++++++++++++++
-> >  drivers/misc/lkdtm/lkdtm.h              |  3 ++
-> >  tools/testing/selftests/lkdtm/tests.txt |  1 +
-> >  5 files changed, 53 insertions(+)
-> >  create mode 100644 drivers/misc/lkdtm/fortify.c
+> >  include/linux/string.h | 38 ++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
 > >=20
-> > diff --git a/drivers/misc/lkdtm/Makefile b/drivers/misc/lkdtm/Makefile
-> > index c70b3822013f..d898f7b22045 100644
-> > --- a/drivers/misc/lkdtm/Makefile
-> > +++ b/drivers/misc/lkdtm/Makefile
-> > @@ -10,6 +10,7 @@ lkdtm-$(CONFIG_LKDTM)		+=3D rodata_objcopy.o
+> > diff --git a/include/linux/string.h b/include/linux/string.h
+> > index 46e91d684c47..add7426ff718 100644
+> > --- a/include/linux/string.h
+> > +++ b/include/linux/string.h
+> > @@ -6,6 +6,8 @@
 > >=20
-> >  lkdtm-$(CONFIG_LKDTM)		+=3D usercopy.o
-> >  lkdtm-$(CONFIG_LKDTM)		+=3D stackleak.o
-> >  lkdtm-$(CONFIG_LKDTM)		+=3D cfi.o
+> >  #include <linux/compiler.h>	/* for inline */
+> >  #include <linux/types.h>	/* for size_t */
+> >  #include <linux/stddef.h>	/* for NULL */
 > >=20
-> > +lkdtm-$(CONFIG_LKDTM)		+=3D fortify.o
+> > +#include <linux/bug.h>		/* for WARN_ON_ONCE */
+>=20
+> ^^^ no longer needed
+
+I will remove it!
+
+>=20
+> > +#include <linux/errno.h>	/* for E2BIG */
 > >=20
-> >  KASAN_SANITIZE_stackleak.o	:=3D n
-> >  KCOV_INSTRUMENT_rodata.o	:=3D n
+> >  #include <stdarg.h>
+> >  #include <uapi/linux/string.h>
 > >=20
-> > diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-> > index a002f39a5964..4326e2d09870 100644
-> > --- a/drivers/misc/lkdtm/core.c
-> > +++ b/drivers/misc/lkdtm/core.c
-> > @@ -180,6 +180,7 @@ static const struct crashtype crashtypes[] =3D {
-> >=20
-> >  #ifdef CONFIG_X86_32
+> > @@ -357,6 +359,42 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char
+> > *q, size_t size)>=20
+> >  	return ret;
 > > =20
-> >  	CRASHTYPE(DOUBLE_FAULT),
-> > =20
-> >  #endif
+> >  }
 > >=20
-> > +	CRASHTYPE(FORTIFIED_STRSCPY),
-> >=20
-> >  };
-> >=20
-> > diff --git a/drivers/misc/lkdtm/fortify.c b/drivers/misc/lkdtm/fortify.c
-> > new file mode 100644
-> > index 000000000000..cecdfbb8ba55
-> > --- /dev/null
-> > +++ b/drivers/misc/lkdtm/fortify.c
-> > @@ -0,0 +1,47 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2020 Francis Laniel <laniel_francis@privacyrequired.c=
-om>
-> > + *
-> > + * Add tests related to fortified functions in this file.
-> > + */
-> > +#include <linux/string.h>
-> > +#include <linux/slab.h>
-> > +#include "lkdtm.h"
-> > +
-> > +
-> > +/*
-> > + * Calls fortified strscpy to test that it returns the same result as
-> > vanilla + * strscpy and generate a panic because there is a write
-> > overflow (i.e. src + * length is greater than dst length).
-> > + */
-> > +void lkdtm_FORTIFIED_STRSCPY(void)
-> > +{
-> > +#if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) &&
-> > defined(CONFIG_FORTIFY_SOURCE)
-> I would drop the #if: just let it run and freak out on non-fortified
-> kernels.
-
-I will drop it for v4.
-
-> > +	char *src;
-> > +	char dst[3];
-> > +
-> > +	src =3D kstrdup("foobar", GFP_KERNEL);
-> > +
-> > +	if (src =3D=3D NULL)
-> > +		return;
-> > +
-> > +	/* Vanilla strscpy returns -E2BIG if size is 0. */
-> > +	WARN_ON(strscpy(dst, src, 0) !=3D -E2BIG);
->=20
-> For LKDTM, we have different reporting that "normal", in the sense that
-> usually the WARN/BUG outcomes are _desirable_ (i.e. "freak out on stack
-> overflow"). So, I would write this as:
->=20
-> 	if (strscpy(dst, src, 0) !=3D -E2BIG)
-> 		pr_warn("FAIL: strscpy() of 0 length did not return -E2BIG\n");
-
-I was not sure if using WARN_* lile macro was a good idea in LKDTM since if=
- I=20
-understood correctly the goal of a LKDTM test is to fail.
-I will rewrite it the way you suggested it for the v4.
-
-> > +
-> > +	/* Vanilla strscpy returns -E2BIG if src is truncated. */
-> > +	WARN_ON(strscpy(dst, src, sizeof(dst)) !=3D -E2BIG);
->=20
-> Same.
->=20
-> > +
-> > +	/* After above call, dst must contain "fo" because src was truncated.=
- */
-> > +	WARN_ON(strncmp(dst, "fo", sizeof(dst)) !=3D 0);
->=20
-> Same.
->=20
-> > +
+> > +/* defined after fortified strnlen to reuse it */
+> > +extern ssize_t __real_strscpy(char *, const char *, size_t)
+> > __RENAME(strscpy); +__FORTIFY_INLINE ssize_t strscpy(char *p, const char
+> > *q, size_t size) +{
+> > +	size_t len;
 > > +	/*
-> > +	 * Use strlen here so size cannot be known at compile time and there =
-is
-> > +	 * a runtime overflow.
+> > +	 * Use 1 as second argument to guess only p size even and not the
+>=20
+> This isn't a "guess". Perhaps just say:
+>=20
+> /* Use string size rather than possible enclosing struct size. */
+>=20
+
+Your comment is clearer than mine, I will add it for the next release.
+
+> > +	 * surrounding struct size (in case it is embedded inside a struct).
 > > +	 */
-> > +	strscpy(dst, src, strlen(src));
+> > +	size_t p_size =3D __builtin_object_size(p, 1);
 >=20
-> I think we'll need a couple more corner cases, and any that need to Oops
-> separately can be separate functions. Here's a corner case to test to
-> strnlen():
+> A short-circuit path should be added here:
 >=20
-> struct {
-> 	union {
-> 	        char big[10];
-> 	        char src[5];
-> 	};
-> } weird =3D { .big =3D "hello!" };
-> char dst[sizeof(weird.src) + 1];
+> 	size_t q_size =3D __builtin_object_size(q, 1);
+>         if (p_size =3D=3D (size_t)-1 && q_size =3D=3D (size_t)-1)
+>                 return __real_strscpy(p, q, size);
 >=20
-> strscpy(dst, weird.src, sizeof(dst));
->=20
-> if (strcmp(dst, "hello") !=3D 0)
-> 	pr_warn("FAIL ...
->=20
-> But each of the cases being tested in the fortified strscpy() should be
-> exercised.
 
-I will try to add these cases and other tests, if I think to more, for the=
+I thought I misunderstood one of your passed message because I understood t=
+hat=20
+I should remove this snippet.
+I will readd it and sorry for the misunderstanding.
+
+> > +	/*
+> > +	 * If size can be known at compile time and is greater than
+> > +	 * p_size, generate a compile time write overflow error.
+> > +	 */
+> > +	if (__builtin_constant_p(size) && size > p_size)
+> > +		__write_overflow();
+>=20
+> Compile-time size > p_size is caught here.
+>=20
+> Compile-time over-read on strings isn't catchable.
+>=20
+> > +
+> > +	len =3D strnlen(q, size);
+>=20
+> Runtime over-read is caught here.
+>=20
+> > +	/*
+> > +	 * strscpy handles read overflows by stop reading q when '\0' is
+> > +	 * met.
+> > +	 * We stick to this behavior here.
+> > +	 */
+> > +	len =3D (len >=3D size) ? size : len;
+>=20
+> This test isn't needed: strnlen(q, size) will never return larger than
+> size. (i.e. len has already been reduced to size.)
+
+Nice catch! I will remove this branch then.
+
+>=20
+> > +
+> > +	/* Otherwise generate a runtime write overflow error. */
+> > +	if (len > p_size)
+> > +		fortify_panic(__func__);
+>=20
+> Runtime over-write is caught here, though I think this needs to be:
+>=20
+> 	if (len + 1 > p_size)
+> 		fortify_panic(__func__);
+>=20
+> since we need to fit "len" plus NUL in p_size. len + 1 =3D=3D p_size is o=
+k.
+>=20
+
+I am not really sure about this but I need to think more about it after cod=
+ing=20
+a new version and tested it.
+
+> > +	/*
+> > +	 * Still use size as third argument to correctly compute max
+> > +	 * inside strscpy.
+> > +	 */
+>=20
+> If we do this, then we run the risk of doing the over-read anyway. For
+> this call, we need to use len in most cases.
+
+I had trouble when I used len as argument in previous version of this patch=
 =20
-next version so the tests cover as most case as possible.
+set.
+But you are right we totally need to use len, moreover it avoids having=20
+write_overflow.
+I will then switch to len and test the code with LKDTM and gdb.
 
-> > +
-> > +	pr_info("Fail: No overflow in above strscpy call!\n");
 >=20
-> pr_warn("FAIL: ...
+> > +	return __real_strscpy(p, q, size);
+>=20
+> In the unfortified case, -E2BIG will happen when strlen(q) >=3D size. When
+> fortified, strnlen is capped at min(size, q_size), so -E2BIG could only
+> happen when len =3D=3D size. If len < size, there will never be -E2BIG.
+>=20
+> So I think this means we need the __real_strscpy() call to look like this:
+>=20
+> 	// All safe from over-read  (len + 1 <=3D min(size, q_size): strnlen()
+> above). // All safe from over-write (len + 1 <=3D p_size: explicit test
+> above). if (len < size)
+> 		return __real_strscpy(p, q, len + 1); // not E2BIG
+> 	else if (len + 1 =3D=3D size)
+> 		return __real_strscpy(p, q, len + 1); // not E2BIG
+> 	else if (len =3D=3D size) // therefore size < min(size, q_size, p_size)
+> 		return __real_strscpy(p, q, size);    // E2BIG
+> 	else //  len + 1 > size
+> 		return __real_strscpy(p, q, len + 1); // E2BIG
+>=20
+> or simply:
+>=20
+> 	return __real_strscpy(p, q, len =3D=3D size ? size : len + 1);
+>=20
+> But the complexity here clearly calls for test cases.
 >=20
 
-Will be modified for next release!
+Modifying the last argument of __real_strscpy() can modify what it returns =
+so=20
+fortified strscpy will not return the same as __real_strscpy().
+I will stick for the behavior of __real__strscpy() for next release.
+Maybe I will first write the test then the fortified function so I am sure =
+there=20
+is no problem with the new version.
 
-> > +
-> > +	kfree(src);
-> > +#endif
+Thank you for the complete review though!
+
 > > +}
-> > diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-> > index 70c8b7c9460f..29c12dcdeab1 100644
-> > --- a/drivers/misc/lkdtm/lkdtm.h
-> > +++ b/drivers/misc/lkdtm/lkdtm.h
-> > @@ -106,4 +106,7 @@ void lkdtm_STACKLEAK_ERASING(void);
-> >=20
-> >  /* cfi.c */
-> >  void lkdtm_CFI_FORWARD_PROTO(void);
-> >=20
-> > +/* fortify.c */
-> > +void lkdtm_FORTIFIED_STRSCPY(void);
 > > +
 > >=20
-> >  #endif
-> >=20
-> > diff --git a/tools/testing/selftests/lkdtm/tests.txt
-> > b/tools/testing/selftests/lkdtm/tests.txt index
-> > 9d266e79c6a2..4234109579eb 100644
-> > --- a/tools/testing/selftests/lkdtm/tests.txt
-> > +++ b/tools/testing/selftests/lkdtm/tests.txt
-> > @@ -70,3 +70,4 @@ USERCOPY_KERNEL
-> >=20
-> >  USERCOPY_KERNEL_DS
-> >  STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
-> >  CFI_FORWARD_PROTO
-> >=20
-> > +FORTIFIED_STRSCPY
-> > \ No newline at end of file
+> >  /* defined after fortified strlen and strnlen to reuse them */
+> >  __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t
+> >  count) {
 
 
 
