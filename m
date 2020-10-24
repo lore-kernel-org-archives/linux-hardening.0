@@ -4,45 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE304C4363A
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 10:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD25EC4363A
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 10:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A634E2226B
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 10:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B1C2463D
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Oct 2020 10:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="KGF3lxui"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="nFZnMIxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1760991AbgJXKgt (ORCPT
+        id S1761032AbgJXKlr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 24 Oct 2020 06:36:49 -0400
-Received: from confino.investici.org ([212.103.72.250]:25441 "EHLO
-        confino.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1760913AbgJXKgt (ORCPT
+        Sat, 24 Oct 2020 06:41:47 -0400
+Received: from latitanza.investici.org ([82.94.249.234]:60303 "EHLO
+        latitanza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1761030AbgJXKlp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 24 Oct 2020 06:36:49 -0400
-Received: from mx1.investici.org (unknown [127.0.0.1])
-        by confino.investici.org (Postfix) with ESMTP id 4CJHb25zWSz12bk;
-        Sat, 24 Oct 2020 10:36:46 +0000 (UTC)
+        Sat, 24 Oct 2020 06:41:45 -0400
+Received: from mx3.investici.org (unknown [127.0.0.1])
+        by latitanza.investici.org (Postfix) with ESMTP id 4CJHhh14yYz8wgZ;
+        Sat, 24 Oct 2020 10:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1603535806;
-        bh=xWkDeALRgm8S298EDz6zxzlwhDmf59s75GtPFeBgo3U=;
+        s=stigmate; t=1603536100;
+        bh=7K2S+t3oYxbWIQc9iG2isb9FdYbU8BiOE3v8yNFkK/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KGF3lxuikKA+63mPuI1Jm1LqlR5Vnc2ueouk0phEBJxHCAEttX+xppuoM/onL1aXC
-         b4k+Df2eG2osTlwnzA83Q0CDJHFIEBBtoQ4L2ZZItbUxzNQzWZyUcM5yIGrGMWrUHA
-         VCVsZCFX57q7np3OjREKSisLI75pvkE6dhfa9X/g=
-Received: from [212.103.72.250] (mx1.investici.org [212.103.72.250]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CJHb252rqz12bV;
-        Sat, 24 Oct 2020 10:36:46 +0000 (UTC)
+        b=nFZnMIxyE2xKqOXoRlGWh4OxrUdnkyGdNbERkBu/BxT69wT2ACfDV2g/XXC+VNKap
+         QJTmKnPR/EWWssjIuztpFzI4wmwlo2M/KqK63rSyk6xs5zwhNMCk3F0xB451M5gt1I
+         blu46cXXwzcalqYuN8LRbYbsq0v6XvNTtXe1aoQc=
+Received: from [82.94.249.234] (mx3.investici.org [82.94.249.234]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CJHhg3w1Wz8wgV;
+        Sat, 24 Oct 2020 10:41:39 +0000 (UTC)
 From:   Francis Laniel <laniel_francis@privacyrequired.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, dja@axtens.net
-Subject: Re: [RFC][PATCH v3 3/5] Fortify string function strscpy.
-Date:   Sat, 24 Oct 2020 12:36:46 +0200
-Message-ID: <1757511.6Qb6Y897ce@machine>
-In-Reply-To: <202010232017.14FB7034@keescook>
-References: <20201021150608.16469-1-laniel_francis@privacyrequired.com> <20201021150608.16469-4-laniel_francis@privacyrequired.com> <202010232017.14FB7034@keescook>
+Cc:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+        davem@davemloft.net, kuba@kernel.org
+Subject: Re: [RFC][PATCH v3 3/3] Rename nla_strlcpy to nla_strscpy.
+Date:   Sat, 24 Oct 2020 12:41:39 +0200
+Message-ID: <14989414.U5IcmKQhkP@machine>
+In-Reply-To: <202010221302.5BA047AC9@keescook>
+References: <20201020164707.30402-1-laniel_francis@privacyrequired.com> <2286512.66XcFyAlgq@machine> <202010221302.5BA047AC9@keescook>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
@@ -50,198 +51,949 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Le samedi 24 octobre 2020, 07:04:04 CEST Kees Cook a =E9crit :
-> On Wed, Oct 21, 2020 at 05:06:06PM +0200, laniel_francis@privacyrequired.=
-com=20
-wrote:
-> > From: Francis Laniel <laniel_francis@privacyrequired.com>
+Le jeudi 22 octobre 2020, 22:04:32 CEST Kees Cook a =E9crit :
+> On Thu, Oct 22, 2020 at 11:41:31AM +0200, Francis Laniel wrote:
+> > Le jeudi 22 octobre 2020, 01:49:59 CEST Kees Cook a =E9crit :
+> > > On Tue, Oct 20, 2020 at 06:47:07PM +0200,
+> > > laniel_francis@privacyrequired.com>=20
+> > wrote:
+> > > > From: Francis Laniel <laniel_francis@privacyrequired.com>
+> > > >=20
+> > > > Calls to nla_strlcpy are now replaced by calls to nla_strscpy which=
+ is
+> > > > the
+> > > > new name of this function.
+> > > >=20
+> > > > Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
+> > >=20
+> > > The Subject could also be: "treewide: Rename nla_strlcpy to nla_strsc=
+py"
+> > >=20
+> > > But otherwise, yup, easy mechanical change.
 > >=20
-> > Fortified strscpy detects write overflows to dest.
+> > Should I submit a v4 for this change?
 >=20
-> This commit log needs to be expanded to explain the "why" of the change
-> with some detail.
->=20
-> Also, please look at the git commit history of include/linux/string.h
-> for a sense of the kinds of Subject prefixes being used. I think this
-> Subject should be something like:
->=20
-> 	Subject: string.h: Add FORTIFY coverage for strscpy()
->=20
+> I'll say yes. :) Drop the RFC, bump to v4, and send it to netdev (along
+> with all the other CCs you have here already), and add the Reviewed-bys
+> from v3.
 
-I will expand the commit message for the next version and adapt the title t=
-o=20
-follow the history.
-
-> > Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
-> > ---
-> >=20
-> >  include/linux/string.h | 38 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 38 insertions(+)
-> >=20
-> > diff --git a/include/linux/string.h b/include/linux/string.h
-> > index 46e91d684c47..add7426ff718 100644
-> > --- a/include/linux/string.h
-> > +++ b/include/linux/string.h
-> > @@ -6,6 +6,8 @@
-> >=20
-> >  #include <linux/compiler.h>	/* for inline */
-> >  #include <linux/types.h>	/* for size_t */
-> >  #include <linux/stddef.h>	/* for NULL */
-> >=20
-> > +#include <linux/bug.h>		/* for WARN_ON_ONCE */
->=20
-> ^^^ no longer needed
-
-I will remove it!
-
->=20
-> > +#include <linux/errno.h>	/* for E2BIG */
-> >=20
-> >  #include <stdarg.h>
-> >  #include <uapi/linux/string.h>
-> >=20
-> > @@ -357,6 +359,42 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char
-> > *q, size_t size)>=20
-> >  	return ret;
-> > =20
-> >  }
-> >=20
-> > +/* defined after fortified strnlen to reuse it */
-> > +extern ssize_t __real_strscpy(char *, const char *, size_t)
-> > __RENAME(strscpy); +__FORTIFY_INLINE ssize_t strscpy(char *p, const char
-> > *q, size_t size) +{
-> > +	size_t len;
-> > +	/*
-> > +	 * Use 1 as second argument to guess only p size even and not the
->=20
-> This isn't a "guess". Perhaps just say:
->=20
-> /* Use string size rather than possible enclosing struct size. */
->=20
-
-Your comment is clearer than mine, I will add it for the next release.
-
-> > +	 * surrounding struct size (in case it is embedded inside a struct).
-> > +	 */
-> > +	size_t p_size =3D __builtin_object_size(p, 1);
->=20
-> A short-circuit path should be added here:
->=20
-> 	size_t q_size =3D __builtin_object_size(q, 1);
->         if (p_size =3D=3D (size_t)-1 && q_size =3D=3D (size_t)-1)
->                 return __real_strscpy(p, q, size);
->=20
-
-I thought I misunderstood one of your passed message because I understood t=
-hat=20
-I should remove this snippet.
-I will readd it and sorry for the misunderstanding.
-
-> > +	/*
-> > +	 * If size can be known at compile time and is greater than
-> > +	 * p_size, generate a compile time write overflow error.
-> > +	 */
-> > +	if (__builtin_constant_p(size) && size > p_size)
-> > +		__write_overflow();
->=20
-> Compile-time size > p_size is caught here.
->=20
-> Compile-time over-read on strings isn't catchable.
->=20
-> > +
-> > +	len =3D strnlen(q, size);
->=20
-> Runtime over-read is caught here.
->=20
-> > +	/*
-> > +	 * strscpy handles read overflows by stop reading q when '\0' is
-> > +	 * met.
-> > +	 * We stick to this behavior here.
-> > +	 */
-> > +	len =3D (len >=3D size) ? size : len;
->=20
-> This test isn't needed: strnlen(q, size) will never return larger than
-> size. (i.e. len has already been reduced to size.)
-
-Nice catch! I will remove this branch then.
-
->=20
-> > +
-> > +	/* Otherwise generate a runtime write overflow error. */
-> > +	if (len > p_size)
-> > +		fortify_panic(__func__);
->=20
-> Runtime over-write is caught here, though I think this needs to be:
->=20
-> 	if (len + 1 > p_size)
-> 		fortify_panic(__func__);
->=20
-> since we need to fit "len" plus NUL in p_size. len + 1 =3D=3D p_size is o=
-k.
->=20
-
-I am not really sure about this but I need to think more about it after cod=
-ing=20
-a new version and tested it.
-
-> > +	/*
-> > +	 * Still use size as third argument to correctly compute max
-> > +	 * inside strscpy.
-> > +	 */
->=20
-> If we do this, then we run the risk of doing the over-read anyway. For
-> this call, we need to use len in most cases.
-
-I had trouble when I used len as argument in previous version of this patch=
+I will add it for the next version (which will be submitted Friday 30th=20
+October).
+About the "Reviewed-by" tags, yesterday I read this document:
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+(I should have read it sooner)
+And I found about the "Suggested-by" tag, should I add this tag and quoting=
 =20
-set.
-But you are right we totally need to use len, moreover it avoids having=20
-write_overflow.
-I will then switch to len and test the code with LKDTM and gdb.
+you as the suggester? Since you put this issue on GitHub and I just=20
+implemented it.
 
->=20
-> > +	return __real_strscpy(p, q, size);
->=20
-> In the unfortified case, -E2BIG will happen when strlen(q) >=3D size. When
-> fortified, strnlen is capped at min(size, q_size), so -E2BIG could only
-> happen when len =3D=3D size. If len < size, there will never be -E2BIG.
->=20
-> So I think this means we need the __real_strscpy() call to look like this:
->=20
-> 	// All safe from over-read  (len + 1 <=3D min(size, q_size): strnlen()
-> above). // All safe from over-write (len + 1 <=3D p_size: explicit test
-> above). if (len < size)
-> 		return __real_strscpy(p, q, len + 1); // not E2BIG
-> 	else if (len + 1 =3D=3D size)
-> 		return __real_strscpy(p, q, len + 1); // not E2BIG
-> 	else if (len =3D=3D size) // therefore size < min(size, q_size, p_size)
-> 		return __real_strscpy(p, q, size);    // E2BIG
-> 	else //  len + 1 > size
-> 		return __real_strscpy(p, q, len + 1); // E2BIG
->=20
-> or simply:
->=20
-> 	return __real_strscpy(p, q, len =3D=3D size ? size : len + 1);
->=20
-> But the complexity here clearly calls for test cases.
->=20
+> Thanks!
 
-Modifying the last argument of __real_strscpy() can modify what it returns =
-so=20
-fortified strscpy will not return the same as __real_strscpy().
-I will stick for the behavior of __real__strscpy() for next release.
-Maybe I will first write the test then the fortified function so I am sure =
-there=20
-is no problem with the new version.
+You are welcome and thank you for all the reviews!
 
-Thank you for the complete review though!
-
-> > +}
-> > +
-> >=20
-> >  /* defined after fortified strlen and strnlen to reuse them */
-> >  __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t
-> >  count) {
+> -Kees
+>=20
+> > > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > >=20
+> > > > ---
+> > > >=20
+> > > >  drivers/infiniband/core/nldev.c            | 10 +++++-----
+> > > >  drivers/net/can/vxcan.c                    |  4 ++--
+> > > >  drivers/net/veth.c                         |  4 ++--
+> > > >  include/linux/genl_magic_struct.h          |  2 +-
+> > > >  include/net/netlink.h                      |  4 ++--
+> > > >  include/net/pkt_cls.h                      |  2 +-
+> > > >  kernel/taskstats.c                         |  2 +-
+> > > >  lib/nlattr.c                               |  6 +++---
+> > > >  net/core/fib_rules.c                       |  4 ++--
+> > > >  net/core/rtnetlink.c                       | 12 ++++++------
+> > > >  net/decnet/dn_dev.c                        |  2 +-
+> > > >  net/ieee802154/nl-mac.c                    |  2 +-
+> > > >  net/ipv4/devinet.c                         |  2 +-
+> > > >  net/ipv4/fib_semantics.c                   |  2 +-
+> > > >  net/ipv4/metrics.c                         |  2 +-
+> > > >  net/netfilter/ipset/ip_set_hash_netiface.c |  4 ++--
+> > > >  net/netfilter/nf_tables_api.c              |  6 +++---
+> > > >  net/netfilter/nfnetlink_acct.c             |  2 +-
+> > > >  net/netfilter/nfnetlink_cthelper.c         |  4 ++--
+> > > >  net/netfilter/nft_ct.c                     |  2 +-
+> > > >  net/netfilter/nft_log.c                    |  2 +-
+> > > >  net/netlabel/netlabel_mgmt.c               |  2 +-
+> > > >  net/nfc/netlink.c                          |  2 +-
+> > > >  net/sched/act_api.c                        |  2 +-
+> > > >  net/sched/act_ipt.c                        |  2 +-
+> > > >  net/sched/act_simple.c                     |  4 ++--
+> > > >  net/sched/cls_api.c                        |  2 +-
+> > > >  net/sched/sch_api.c                        |  2 +-
+> > > >  net/tipc/netlink_compat.c                  |  2 +-
+> > > >  29 files changed, 49 insertions(+), 49 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/infiniband/core/nldev.c
+> > > > b/drivers/infiniband/core/nldev.c index 12d29d54a081..08366e254b1d
+> > > > 100644
+> > > > --- a/drivers/infiniband/core/nldev.c
+> > > > +++ b/drivers/infiniband/core/nldev.c
+> > > > @@ -932,7 +932,7 @@ static int nldev_set_doit(struct sk_buff *skb,
+> > > > struct
+> > > > nlmsghdr *nlh,>
+> > > >=20
+> > > >  	if (tb[RDMA_NLDEV_ATTR_DEV_NAME]) {
+> > > >  =09
+> > > >  		char name[IB_DEVICE_NAME_MAX] =3D {};
+> > > >=20
+> > > > -		nla_strlcpy(name, tb[RDMA_NLDEV_ATTR_DEV_NAME],
+> > > > +		nla_strscpy(name, tb[RDMA_NLDEV_ATTR_DEV_NAME],
+> > > >=20
+> > > >  			    IB_DEVICE_NAME_MAX);
+> > > >  	=09
+> > > >  		if (strlen(name) =3D=3D 0) {
+> > > >  	=09
+> > > >  			err =3D -EINVAL;
+> > > >=20
+> > > > @@ -1529,13 +1529,13 @@ static int nldev_newlink(struct sk_buff *sk=
+b,
+> > > > struct nlmsghdr *nlh,>
+> > > >=20
+> > > >  	    !tb[RDMA_NLDEV_ATTR_LINK_TYPE] ||
+> > > >  	    !tb[RDMA_NLDEV_ATTR_NDEV_NAME])
+> > > >  	=09
+> > > >  		return -EINVAL;
+> > > >=20
+> > > > -	nla_strlcpy(ibdev_name, tb[RDMA_NLDEV_ATTR_DEV_NAME],
+> > > > +	nla_strscpy(ibdev_name, tb[RDMA_NLDEV_ATTR_DEV_NAME],
+> > > >=20
+> > > >  		    sizeof(ibdev_name));
+> > > >  =09
+> > > >  	if (strchr(ibdev_name, '%') || strlen(ibdev_name) =3D=3D 0)
+> > > >  =09
+> > > >  		return -EINVAL;
+> > > >=20
+> > > > -	nla_strlcpy(type, tb[RDMA_NLDEV_ATTR_LINK_TYPE], sizeof(type));
+> > > > -	nla_strlcpy(ndev_name, tb[RDMA_NLDEV_ATTR_NDEV_NAME],
+> > > > +	nla_strscpy(type, tb[RDMA_NLDEV_ATTR_LINK_TYPE], sizeof(type));
+> > > > +	nla_strscpy(ndev_name, tb[RDMA_NLDEV_ATTR_NDEV_NAME],
+> > > >=20
+> > > >  		    sizeof(ndev_name));
+> > > >  =09
+> > > >  	ndev =3D dev_get_by_name(sock_net(skb->sk), ndev_name);
+> > > >=20
+> > > > @@ -1602,7 +1602,7 @@ static int nldev_get_chardev(struct sk_buff
+> > > > *skb,
+> > > > struct nlmsghdr *nlh,>
+> > > >=20
+> > > >  	if (err || !tb[RDMA_NLDEV_ATTR_CHARDEV_TYPE])
+> > > >  =09
+> > > >  		return -EINVAL;
+> > > >=20
+> > > > -	nla_strlcpy(client_name, tb[RDMA_NLDEV_ATTR_CHARDEV_TYPE],
+> > > > +	nla_strscpy(client_name, tb[RDMA_NLDEV_ATTR_CHARDEV_TYPE],
+> > > >=20
+> > > >  		    sizeof(client_name));
+> > > >  =09
+> > > >  	if (tb[RDMA_NLDEV_ATTR_DEV_INDEX]) {
+> > > >=20
+> > > > diff --git a/drivers/net/can/vxcan.c b/drivers/net/can/vxcan.c
+> > > > index d6ba9426be4d..fa47bab510bb 100644
+> > > > --- a/drivers/net/can/vxcan.c
+> > > > +++ b/drivers/net/can/vxcan.c
+> > > > @@ -186,7 +186,7 @@ static int vxcan_newlink(struct net *net, struct
+> > > > net_device *dev,>
+> > > >=20
+> > > >  	}
+> > > >  =09
+> > > >  	if (ifmp && tbp[IFLA_IFNAME]) {
+> > > >=20
+> > > > -		nla_strlcpy(ifname, tbp[IFLA_IFNAME], IFNAMSIZ);
+> > > > +		nla_strscpy(ifname, tbp[IFLA_IFNAME], IFNAMSIZ);
+> > > >=20
+> > > >  		name_assign_type =3D NET_NAME_USER;
+> > > >  =09
+> > > >  	} else {
+> > > >  =09
+> > > >  		snprintf(ifname, IFNAMSIZ, DRV_NAME "%%d");
+> > > >=20
+> > > > @@ -223,7 +223,7 @@ static int vxcan_newlink(struct net *net, struct
+> > > > net_device *dev,>
+> > > >=20
+> > > >  	/* register first device */
+> > > >  	if (tb[IFLA_IFNAME])
+> > > >=20
+> > > > -		nla_strlcpy(dev->name, tb[IFLA_IFNAME], IFNAMSIZ);
+> > > > +		nla_strscpy(dev->name, tb[IFLA_IFNAME], IFNAMSIZ);
+> > > >=20
+> > > >  	else
+> > > >  =09
+> > > >  		snprintf(dev->name, IFNAMSIZ, DRV_NAME "%%d");
+> > > >=20
+> > > > diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+> > > > index 8c737668008a..359d3ab33c4d 100644
+> > > > --- a/drivers/net/veth.c
+> > > > +++ b/drivers/net/veth.c
+> > > > @@ -1329,7 +1329,7 @@ static int veth_newlink(struct net *src_net,
+> > > > struct
+> > > > net_device *dev,>
+> > > >=20
+> > > >  	}
+> > > >  =09
+> > > >  	if (ifmp && tbp[IFLA_IFNAME]) {
+> > > >=20
+> > > > -		nla_strlcpy(ifname, tbp[IFLA_IFNAME], IFNAMSIZ);
+> > > > +		nla_strscpy(ifname, tbp[IFLA_IFNAME], IFNAMSIZ);
+> > > >=20
+> > > >  		name_assign_type =3D NET_NAME_USER;
+> > > >  =09
+> > > >  	} else {
+> > > >  =09
+> > > >  		snprintf(ifname, IFNAMSIZ, DRV_NAME "%%d");
+> > > >=20
+> > > > @@ -1379,7 +1379,7 @@ static int veth_newlink(struct net *src_net,
+> > > > struct
+> > > > net_device *dev,>
+> > > >=20
+> > > >  		eth_hw_addr_random(dev);
+> > > >  =09
+> > > >  	if (tb[IFLA_IFNAME])
+> > > >=20
+> > > > -		nla_strlcpy(dev->name, tb[IFLA_IFNAME], IFNAMSIZ);
+> > > > +		nla_strscpy(dev->name, tb[IFLA_IFNAME], IFNAMSIZ);
+> > > >=20
+> > > >  	else
+> > > >  =09
+> > > >  		snprintf(dev->name, IFNAMSIZ, DRV_NAME "%%d");
+> > > >=20
+> > > > diff --git a/include/linux/genl_magic_struct.h
+> > > > b/include/linux/genl_magic_struct.h index eeae59d3ceb7..35d21fddaf2d
+> > > > 100644
+> > > > --- a/include/linux/genl_magic_struct.h
+> > > > +++ b/include/linux/genl_magic_struct.h
+> > > > @@ -89,7 +89,7 @@ static inline int nla_put_u64_0pad(struct sk_buff
+> > > > *skb,
+> > > > int attrtype, u64 value)>
+> > > >=20
+> > > >  			nla_get_u64, nla_put_u64_0pad, false)
+> > > > =20
+> > > >  #define __str_field(attr_nr, attr_flag, name, maxlen) \
+> > > > =20
+> > > >  	__array(attr_nr, attr_flag, name, NLA_NUL_STRING, char, maxlen, \
+> > > >=20
+> > > > -			nla_strlcpy, nla_put, false)
+> > > > +			nla_strscpy, nla_put, false)
+> > > >=20
+> > > >  #define __bin_field(attr_nr, attr_flag, name, maxlen) \
+> > > > =20
+> > > >  	__array(attr_nr, attr_flag, name, NLA_BINARY, char, maxlen, \
+> > > >  =09
+> > > >  			nla_memcpy, nla_put, false)
+> > > >=20
+> > > > diff --git a/include/net/netlink.h b/include/net/netlink.h
+> > > > index 446ca182e13d..1ceec518ab49 100644
+> > > > --- a/include/net/netlink.h
+> > > > +++ b/include/net/netlink.h
+> > > > @@ -142,7 +142,7 @@
+> > > >=20
+> > > >   * Attribute Misc:
+> > > >   *   nla_memcpy(dest, nla, count)	copy attribute into memory
+> > > >   *   nla_memcmp(nla, data, size)	compare attribute with memory area
+> > > >=20
+> > > > - *   nla_strlcpy(dst, nla, size)	copy attribute to a sized string
+> > > > + *   nla_strscpy(dst, nla, size)	copy attribute to a sized string
+> > > >=20
+> > > >   *   nla_strcmp(nla, str)		compare attribute with string
+> > > >   *
+> > > >=20
+> > > >   * Attribute Parsing:
+> > > > @@ -506,7 +506,7 @@ int __nla_parse(struct nlattr **tb, int maxtype,
+> > > > const
+> > > > struct nlattr *head,>
+> > > >=20
+> > > >  		struct netlink_ext_ack *extack);
+> > > > =20
+> > > >  int nla_policy_len(const struct nla_policy *, int);
+> > > >  struct nlattr *nla_find(const struct nlattr *head, int len, int
+> > > >  attrtype);
+> > > >=20
+> > > > -ssize_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t
+> > > > dstsize);
+> > > > +ssize_t nla_strscpy(char *dst, const struct nlattr *nla, size_t
+> > > > dstsize);
+> > > >=20
+> > > >  char *nla_strdup(const struct nlattr *nla, gfp_t flags);
+> > > >  int nla_memcpy(void *dest, const struct nlattr *src, int count);
+> > > >  int nla_memcmp(const struct nlattr *nla, const void *data, size_t
+> > > >  size);
+> > > >=20
+> > > > diff --git a/include/net/pkt_cls.h b/include/net/pkt_cls.h
+> > > > index db9a828f4f4f..133f9ad4d4f9 100644
+> > > > --- a/include/net/pkt_cls.h
+> > > > +++ b/include/net/pkt_cls.h
+> > > > @@ -512,7 +512,7 @@ tcf_change_indev(struct net *net, struct nlattr
+> > > > *indev_tlv,>
+> > > >=20
+> > > >  	char indev[IFNAMSIZ];
+> > > >  	struct net_device *dev;
+> > > >=20
+> > > > -	if (nla_strlcpy(indev, indev_tlv, IFNAMSIZ) < 0) {
+> > > > +	if (nla_strscpy(indev, indev_tlv, IFNAMSIZ) < 0) {
+> > > >=20
+> > > >  		NL_SET_ERR_MSG_ATTR(extack, indev_tlv,
+> > > >  	=09
+> > > >  				    "Interface name too long");
+> > > >  	=09
+> > > >  		return -EINVAL;
+> > > >=20
+> > > > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+> > > > index a2802b6ff4bb..2b4898b4752e 100644
+> > > > --- a/kernel/taskstats.c
+> > > > +++ b/kernel/taskstats.c
+> > > > @@ -346,7 +346,7 @@ static int parse(struct nlattr *na, struct cpum=
+ask
+> > > > *mask)>
+> > > >=20
+> > > >  	data =3D kmalloc(len, GFP_KERNEL);
+> > > >  	if (!data)
+> > > >  =09
+> > > >  		return -ENOMEM;
+> > > >=20
+> > > > -	nla_strlcpy(data, na, len);
+> > > > +	nla_strscpy(data, na, len);
+> > > >=20
+> > > >  	ret =3D cpulist_parse(data, mask);
+> > > >  	kfree(data);
+> > > >  	return ret;
+> > > >=20
+> > > > diff --git a/lib/nlattr.c b/lib/nlattr.c
+> > > > index 447182543c03..09aa181569e0 100644
+> > > > --- a/lib/nlattr.c
+> > > > +++ b/lib/nlattr.c
+> > > > @@ -709,7 +709,7 @@ struct nlattr *nla_find(const struct nlattr *he=
+ad,
+> > > > int
+> > > > len, int attrtype)>
+> > > >=20
+> > > >  EXPORT_SYMBOL(nla_find);
+> > > > =20
+> > > >  /**
+> > > >=20
+> > > > - * nla_strlcpy - Copy string attribute payload into a sized buffer
+> > > > + * nla_strscpy - Copy string attribute payload into a sized buffer
+> > > >=20
+> > > >   * @dst: Where to copy the string to.
+> > > >   * @nla: Attribute to copy the string from.
+> > > >   * @dstsize: Size of destination buffer.
+> > > >=20
+> > > > @@ -722,7 +722,7 @@ EXPORT_SYMBOL(nla_find);
+> > > >=20
+> > > >   * * -E2BIG - If @dstsize is 0 or greater than U16_MAX or @nla len=
+gth
+> > > >   greater *            than @dstsize.
+> > > >   */
+> > > >=20
+> > > > -ssize_t nla_strlcpy(char *dst, const struct nlattr *nla, size_t
+> > > > dstsize)
+> > > > +ssize_t nla_strscpy(char *dst, const struct nlattr *nla, size_t
+> > > > dstsize)
+> > > >=20
+> > > >  {
+> > > > =20
+> > > >  	size_t srclen =3D nla_len(nla);
+> > > >  	char *src =3D nla_data(nla);
+> > > >=20
+> > > > @@ -749,7 +749,7 @@ ssize_t nla_strlcpy(char *dst, const struct nla=
+ttr
+> > > > *nla, size_t dstsize)>
+> > > >=20
+> > > >  	return ret;
+> > > > =20
+> > > >  }
+> > > >=20
+> > > > -EXPORT_SYMBOL(nla_strlcpy);
+> > > > +EXPORT_SYMBOL(nla_strscpy);
+> > > >=20
+> > > >  /**
+> > > > =20
+> > > >   * nla_strdup - Copy string attribute payload into a newly allocat=
+ed
+> > > >   buffer
+> > > >=20
+> > > > diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
+> > > > index 7bcfb16854cb..cd80ffed6d26 100644
+> > > > --- a/net/core/fib_rules.c
+> > > > +++ b/net/core/fib_rules.c
+> > > > @@ -563,7 +563,7 @@ static int fib_nl2rule(struct sk_buff *skb, str=
+uct
+> > > > nlmsghdr *nlh,>
+> > > >=20
+> > > >  		struct net_device *dev;
+> > > >  	=09
+> > > >  		nlrule->iifindex =3D -1;
+> > > >=20
+> > > > -		nla_strlcpy(nlrule->iifname, tb[FRA_IIFNAME], IFNAMSIZ);
+> > > > +		nla_strscpy(nlrule->iifname, tb[FRA_IIFNAME], IFNAMSIZ);
+> > > >=20
+> > > >  		dev =3D __dev_get_by_name(net, nlrule->iifname);
+> > > >  		if (dev)
+> > > >  	=09
+> > > >  			nlrule->iifindex =3D dev->ifindex;
+> > > >=20
+> > > > @@ -573,7 +573,7 @@ static int fib_nl2rule(struct sk_buff *skb, str=
+uct
+> > > > nlmsghdr *nlh,>
+> > > >=20
+> > > >  		struct net_device *dev;
+> > > >  	=09
+> > > >  		nlrule->oifindex =3D -1;
+> > > >=20
+> > > > -		nla_strlcpy(nlrule->oifname, tb[FRA_OIFNAME], IFNAMSIZ);
+> > > > +		nla_strscpy(nlrule->oifname, tb[FRA_OIFNAME], IFNAMSIZ);
+> > > >=20
+> > > >  		dev =3D __dev_get_by_name(net, nlrule->oifname);
+> > > >  		if (dev)
+> > > >  	=09
+> > > >  			nlrule->oifindex =3D dev->ifindex;
+> > > >=20
+> > > > diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
+> > > > index 68e0682450c6..e0059256fe93 100644
+> > > > --- a/net/core/rtnetlink.c
+> > > > +++ b/net/core/rtnetlink.c
+> > > > @@ -1939,7 +1939,7 @@ static const struct rtnl_link_ops
+> > > > *linkinfo_to_kind_ops(const struct nlattr *nla>
+> > > >=20
+> > > >  	if (linfo[IFLA_INFO_KIND]) {
+> > > >  =09
+> > > >  		char kind[MODULE_NAME_LEN];
+> > > >=20
+> > > > -		nla_strlcpy(kind, linfo[IFLA_INFO_KIND], sizeof(kind));
+> > > > +		nla_strscpy(kind, linfo[IFLA_INFO_KIND], sizeof(kind));
+> > > >=20
+> > > >  		ops =3D rtnl_link_ops_get(kind);
+> > > >  =09
+> > > >  	}
+> > > >=20
+> > > > @@ -2953,9 +2953,9 @@ static struct net_device *rtnl_dev_get(struct
+> > > > net
+> > > > *net,>
+> > > >=20
+> > > >  	if (!ifname) {
+> > > >  =09
+> > > >  		ifname =3D buffer;
+> > > >  		if (ifname_attr)
+> > > >=20
+> > > > -			nla_strlcpy(ifname, ifname_attr, IFNAMSIZ);
+> > > > +			nla_strscpy(ifname, ifname_attr, IFNAMSIZ);
+> > > >=20
+> > > >  		else if (altifname_attr)
+> > > >=20
+> > > > -			nla_strlcpy(ifname, altifname_attr, ALTIFNAMSIZ);
+> > > > +			nla_strscpy(ifname, altifname_attr, ALTIFNAMSIZ);
+> > > >=20
+> > > >  		else
+> > > >  	=09
+> > > >  			return NULL;
+> > > >  =09
+> > > >  	}
+> > > >=20
+> > > > @@ -2983,7 +2983,7 @@ static int rtnl_setlink(struct sk_buff *skb,
+> > > > struct
+> > > > nlmsghdr *nlh,>
+> > > >=20
+> > > >  		goto errout;
+> > > >  =09
+> > > >  	if (tb[IFLA_IFNAME])
+> > > >=20
+> > > > -		nla_strlcpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
+> > > > +		nla_strscpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
+> > > >=20
+> > > >  	else
+> > > >  =09
+> > > >  		ifname[0] =3D '\0';
+> > > >=20
+> > > > @@ -3264,7 +3264,7 @@ static int __rtnl_newlink(struct sk_buff *skb,
+> > > > struct nlmsghdr *nlh,>
+> > > >=20
+> > > >  		return err;
+> > > >  =09
+> > > >  	if (tb[IFLA_IFNAME])
+> > > >=20
+> > > > -		nla_strlcpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
+> > > > +		nla_strscpy(ifname, tb[IFLA_IFNAME], IFNAMSIZ);
+> > > >=20
+> > > >  	else
+> > > >  =09
+> > > >  		ifname[0] =3D '\0';
+> > > >=20
+> > > > @@ -3296,7 +3296,7 @@ static int __rtnl_newlink(struct sk_buff *skb,
+> > > > struct nlmsghdr *nlh,>
+> > > >=20
+> > > >  		memset(linkinfo, 0, sizeof(linkinfo));
+> > > >  =09
+> > > >  	if (linkinfo[IFLA_INFO_KIND]) {
+> > > >=20
+> > > > -		nla_strlcpy(kind, linkinfo[IFLA_INFO_KIND], sizeof(kind));
+> > > > +		nla_strscpy(kind, linkinfo[IFLA_INFO_KIND], sizeof(kind));
+> > > >=20
+> > > >  		ops =3D rtnl_link_ops_get(kind);
+> > > >  =09
+> > > >  	} else {
+> > > >  =09
+> > > >  		kind[0] =3D '\0';
+> > > >=20
+> > > > diff --git a/net/decnet/dn_dev.c b/net/decnet/dn_dev.c
+> > > > index 15d42353f1a3..d1c50a48614b 100644
+> > > > --- a/net/decnet/dn_dev.c
+> > > > +++ b/net/decnet/dn_dev.c
+> > > > @@ -658,7 +658,7 @@ static int dn_nl_newaddr(struct sk_buff *skb,
+> > > > struct
+> > > > nlmsghdr *nlh,>
+> > > >=20
+> > > >  	ifa->ifa_dev =3D dn_db;
+> > > >  =09
+> > > >  	if (tb[IFA_LABEL])
+> > > >=20
+> > > > -		nla_strlcpy(ifa->ifa_label, tb[IFA_LABEL], IFNAMSIZ);
+> > > > +		nla_strscpy(ifa->ifa_label, tb[IFA_LABEL], IFNAMSIZ);
+> > > >=20
+> > > >  	else
+> > > >  =09
+> > > >  		memcpy(ifa->ifa_label, dev->name, IFNAMSIZ);
+> > > >=20
+> > > > diff --git a/net/ieee802154/nl-mac.c b/net/ieee802154/nl-mac.c
+> > > > index 6d091e419d3e..9c640d670ffe 100644
+> > > > --- a/net/ieee802154/nl-mac.c
+> > > > +++ b/net/ieee802154/nl-mac.c
+> > > > @@ -149,7 +149,7 @@ static struct net_device
+> > > > *ieee802154_nl_get_dev(struct
+> > > > genl_info *info)>
+> > > >=20
+> > > >  	if (info->attrs[IEEE802154_ATTR_DEV_NAME]) {
+> > > >  =09
+> > > >  		char name[IFNAMSIZ + 1];
+> > > >=20
+> > > > -		nla_strlcpy(name, info->attrs[IEEE802154_ATTR_DEV_NAME],
+> > > > +		nla_strscpy(name, info->attrs[IEEE802154_ATTR_DEV_NAME],
+> > > >=20
+> > > >  			    sizeof(name));
+> > > >  	=09
+> > > >  		dev =3D dev_get_by_name(&init_net, name);
+> > > >  =09
+> > > >  	} else if (info->attrs[IEEE802154_ATTR_DEV_INDEX]) {
+> > > >=20
+> > > > diff --git a/net/ipv4/devinet.c b/net/ipv4/devinet.c
+> > > > index 123a6d39438f..a50951a90f63 100644
+> > > > --- a/net/ipv4/devinet.c
+> > > > +++ b/net/ipv4/devinet.c
+> > > > @@ -881,7 +881,7 @@ static struct in_ifaddr *rtm_to_ifaddr(struct n=
+et
+> > > > *net, struct nlmsghdr *nlh,>
+> > > >=20
+> > > >  		ifa->ifa_broadcast =3D nla_get_in_addr(tb[IFA_BROADCAST]);
+> > > >  =09
+> > > >  	if (tb[IFA_LABEL])
+> > > >=20
+> > > > -		nla_strlcpy(ifa->ifa_label, tb[IFA_LABEL], IFNAMSIZ);
+> > > > +		nla_strscpy(ifa->ifa_label, tb[IFA_LABEL], IFNAMSIZ);
+> > > >=20
+> > > >  	else
+> > > >  =09
+> > > >  		memcpy(ifa->ifa_label, dev->name, IFNAMSIZ);
+> > > >=20
+> > > > diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
+> > > > index 1f75dc686b6b..4b505074b24f 100644
+> > > > --- a/net/ipv4/fib_semantics.c
+> > > > +++ b/net/ipv4/fib_semantics.c
+> > > > @@ -973,7 +973,7 @@ bool fib_metrics_match(struct fib_config *cfg,
+> > > > struct
+> > > > fib_info *fi)>
+> > > >=20
+> > > >  			char tmp[TCP_CA_NAME_MAX];
+> > > >  			bool ecn_ca =3D false;
+> > > >=20
+> > > > -			nla_strlcpy(tmp, nla, sizeof(tmp));
+> > > > +			nla_strscpy(tmp, nla, sizeof(tmp));
+> > > >=20
+> > > >  			val =3D tcp_ca_get_key_by_name(fi->fib_net, tmp, &ecn_ca);
+> > > >  	=09
+> > > >  		} else {
+> > > >  	=09
+> > > >  			if (nla_len(nla) !=3D sizeof(u32))
+> > > >=20
+> > > > diff --git a/net/ipv4/metrics.c b/net/ipv4/metrics.c
+> > > > index 3205d5f7c8c9..25ea6ac44db9 100644
+> > > > --- a/net/ipv4/metrics.c
+> > > > +++ b/net/ipv4/metrics.c
+> > > > @@ -31,7 +31,7 @@ static int ip_metrics_convert(struct net *net,
+> > > > struct
+> > > > nlattr *fc_mx,>
+> > > >=20
+> > > >  		if (type =3D=3D RTAX_CC_ALGO) {
+> > > >  	=09
+> > > >  			char tmp[TCP_CA_NAME_MAX];
+> > > >=20
+> > > > -			nla_strlcpy(tmp, nla, sizeof(tmp));
+> > > > +			nla_strscpy(tmp, nla, sizeof(tmp));
+> > > >=20
+> > > >  			val =3D tcp_ca_get_key_by_name(net, tmp, &ecn_ca);
+> > > >  			if (val =3D=3D TCP_CA_UNSPEC) {
+> > > >  		=09
+> > > >  				NL_SET_ERR_MSG(extack, "Unknown tcp congestion=20
+algorithm");
+> > > >=20
+> > > > diff --git a/net/netfilter/ipset/ip_set_hash_netiface.c
+> > > > b/net/netfilter/ipset/ip_set_hash_netiface.c index
+> > > > be5e95a0d876..b96fd0c55eaa 100644
+> > > > --- a/net/netfilter/ipset/ip_set_hash_netiface.c
+> > > > +++ b/net/netfilter/ipset/ip_set_hash_netiface.c
+> > > > @@ -225,7 +225,7 @@ hash_netiface4_uadt(struct ip_set *set, struct
+> > > > nlattr
+> > > > *tb[],>
+> > > >=20
+> > > >  		if (e.cidr > HOST_MASK)
+> > > >  	=09
+> > > >  			return -IPSET_ERR_INVALID_CIDR;
+> > > >  =09
+> > > >  	}
+> > > >=20
+> > > > -	nla_strlcpy(e.iface, tb[IPSET_ATTR_IFACE], IFNAMSIZ);
+> > > > +	nla_strscpy(e.iface, tb[IPSET_ATTR_IFACE], IFNAMSIZ);
+> > > >=20
+> > > >  	if (tb[IPSET_ATTR_CADT_FLAGS]) {
+> > > >  =09
+> > > >  		u32 cadt_flags =3D ip_set_get_h32(tb[IPSET_ATTR_CADT_FLAGS]);
+> > > >=20
+> > > > @@ -442,7 +442,7 @@ hash_netiface6_uadt(struct ip_set *set, struct
+> > > > nlattr
+> > > > *tb[],>
+> > > >=20
+> > > >  	ip6_netmask(&e.ip, e.cidr);
+> > > >=20
+> > > > -	nla_strlcpy(e.iface, tb[IPSET_ATTR_IFACE], IFNAMSIZ);
+> > > > +	nla_strscpy(e.iface, tb[IPSET_ATTR_IFACE], IFNAMSIZ);
+> > > >=20
+> > > >  	if (tb[IPSET_ATTR_CADT_FLAGS]) {
+> > > >  =09
+> > > >  		u32 cadt_flags =3D ip_set_get_h32(tb[IPSET_ATTR_CADT_FLAGS]);
+> > > >=20
+> > > > diff --git a/net/netfilter/nf_tables_api.c
+> > > > b/net/netfilter/nf_tables_api.c
+> > > > index 9957e0ed8658..90c39e694e87 100644
+> > > > --- a/net/netfilter/nf_tables_api.c
+> > > > +++ b/net/netfilter/nf_tables_api.c
+> > > > @@ -1281,7 +1281,7 @@ static struct nft_chain *nft_chain_lookup(str=
+uct
+> > > > net
+> > > > *net,>
+> > > >=20
+> > > >  	if (nla =3D=3D NULL)
+> > > >  =09
+> > > >  		return ERR_PTR(-EINVAL);
+> > > >=20
+> > > > -	nla_strlcpy(search, nla, sizeof(search));
+> > > > +	nla_strscpy(search, nla, sizeof(search));
+> > > >=20
+> > > >  	WARN_ON(!rcu_read_lock_held() &&
+> > > >  =09
+> > > >  		!lockdep_commit_lock_is_held(net));
+> > > >=20
+> > > > @@ -1721,7 +1721,7 @@ static struct nft_hook
+> > > > *nft_netdev_hook_alloc(struct
+> > > > net *net,>
+> > > >=20
+> > > >  		goto err_hook_alloc;
+> > > >  =09
+> > > >  	}
+> > > >=20
+> > > > -	nla_strlcpy(ifname, attr, IFNAMSIZ);
+> > > > +	nla_strscpy(ifname, attr, IFNAMSIZ);
+> > > >=20
+> > > >  	dev =3D __dev_get_by_name(net, ifname);
+> > > >  	if (!dev) {
+> > > >  =09
+> > > >  		err =3D -ENOENT;
+> > > >=20
+> > > > @@ -5734,7 +5734,7 @@ struct nft_object *nft_obj_lookup(const struct
+> > > > net
+> > > > *net,>
+> > > >=20
+> > > >  	struct rhlist_head *tmp, *list;
+> > > >  	struct nft_object *obj;
+> > > >=20
+> > > > -	nla_strlcpy(search, nla, sizeof(search));
+> > > > +	nla_strscpy(search, nla, sizeof(search));
+> > > >=20
+> > > >  	k.name =3D search;
+> > > >  =09
+> > > >  	WARN_ON_ONCE(!rcu_read_lock_held() &&
+> > > >=20
+> > > > diff --git a/net/netfilter/nfnetlink_acct.c
+> > > > b/net/netfilter/nfnetlink_acct.c index 5bfec829c12f..5e511df8d709
+> > > > 100644
+> > > > --- a/net/netfilter/nfnetlink_acct.c
+> > > > +++ b/net/netfilter/nfnetlink_acct.c
+> > > > @@ -112,7 +112,7 @@ static int nfnl_acct_new(struct net *net, struct
+> > > > sock
+> > > > *nfnl,>
+> > > >=20
+> > > >  		nfacct->flags =3D flags;
+> > > >  =09
+> > > >  	}
+> > > >=20
+> > > > -	nla_strlcpy(nfacct->name, tb[NFACCT_NAME], NFACCT_NAME_MAX);
+> > > > +	nla_strscpy(nfacct->name, tb[NFACCT_NAME], NFACCT_NAME_MAX);
+> > > >=20
+> > > >  	if (tb[NFACCT_BYTES]) {
+> > > >  =09
+> > > >  		atomic64_set(&nfacct->bytes,
+> > > >=20
+> > > > diff --git a/net/netfilter/nfnetlink_cthelper.c
+> > > > b/net/netfilter/nfnetlink_cthelper.c index 5b0d0a77379c..0f94fce1d3=
+ed
+> > > > 100644
+> > > > --- a/net/netfilter/nfnetlink_cthelper.c
+> > > > +++ b/net/netfilter/nfnetlink_cthelper.c
+> > > > @@ -146,7 +146,7 @@ nfnl_cthelper_expect_policy(struct
+> > > > nf_conntrack_expect_policy *expect_policy,>
+> > > >=20
+> > > >  	    !tb[NFCTH_POLICY_EXPECT_TIMEOUT])
+> > > >  	=09
+> > > >  		return -EINVAL;
+> > > >=20
+> > > > -	nla_strlcpy(expect_policy->name,
+> > > > +	nla_strscpy(expect_policy->name,
+> > > >=20
+> > > >  		    tb[NFCTH_POLICY_NAME], NF_CT_HELPER_NAME_LEN);
+> > > >  =09
+> > > >  	expect_policy->max_expected =3D
+> > > >  =09
+> > > >  		ntohl(nla_get_be32(tb[NFCTH_POLICY_EXPECT_MAX]));
+> > > >=20
+> > > > @@ -233,7 +233,7 @@ nfnl_cthelper_create(const struct nlattr * const
+> > > > tb[],
+> > > >=20
+> > > >  	if (ret < 0)
+> > > >  =09
+> > > >  		goto err1;
+> > > >=20
+> > > > -	nla_strlcpy(helper->name,
+> > > > +	nla_strscpy(helper->name,
+> > > >=20
+> > > >  		    tb[NFCTH_NAME], NF_CT_HELPER_NAME_LEN);
+> > > >  =09
+> > > >  	size =3D ntohl(nla_get_be32(tb[NFCTH_PRIV_DATA_LEN]));
+> > > >  	if (size > sizeof_field(struct nf_conn_help, data)) {
+> > > >=20
+> > > > diff --git a/net/netfilter/nft_ct.c b/net/netfilter/nft_ct.c
+> > > > index 322bd674963e..a8c4d442231c 100644
+> > > > --- a/net/netfilter/nft_ct.c
+> > > > +++ b/net/netfilter/nft_ct.c
+> > > > @@ -990,7 +990,7 @@ static int nft_ct_helper_obj_init(const struct
+> > > > nft_ctx
+> > > > *ctx,>
+> > > >=20
+> > > >  	if (!priv->l4proto)
+> > > >  =09
+> > > >  		return -ENOENT;
+> > > >=20
+> > > > -	nla_strlcpy(name, tb[NFTA_CT_HELPER_NAME], sizeof(name));
+> > > > +	nla_strscpy(name, tb[NFTA_CT_HELPER_NAME], sizeof(name));
+> > > >=20
+> > > >  	if (tb[NFTA_CT_HELPER_L3PROTO])
+> > > >  =09
+> > > >  		family =3D ntohs(nla_get_be16(tb[NFTA_CT_HELPER_L3PROTO]));
+> > > >=20
+> > > > diff --git a/net/netfilter/nft_log.c b/net/netfilter/nft_log.c
+> > > > index 57899454a530..a06a46b039c5 100644
+> > > > --- a/net/netfilter/nft_log.c
+> > > > +++ b/net/netfilter/nft_log.c
+> > > > @@ -152,7 +152,7 @@ static int nft_log_init(const struct nft_ctx *c=
+tx,
+> > > >=20
+> > > >  		priv->prefix =3D kmalloc(nla_len(nla) + 1, GFP_KERNEL);
+> > > >  		if (priv->prefix =3D=3D NULL)
+> > > >  	=09
+> > > >  			return -ENOMEM;
+> > > >=20
+> > > > -		nla_strlcpy(priv->prefix, nla, nla_len(nla) + 1);
+> > > > +		nla_strscpy(priv->prefix, nla, nla_len(nla) + 1);
+> > > >=20
+> > > >  	} else {
+> > > >  =09
+> > > >  		priv->prefix =3D (char *)nft_log_null_prefix;
+> > > >  =09
+> > > >  	}
+> > > >=20
+> > > > diff --git a/net/netlabel/netlabel_mgmt.c
+> > > > b/net/netlabel/netlabel_mgmt.c
+> > > > index eb1d66d20afb..df1b41ed73fd 100644
+> > > > --- a/net/netlabel/netlabel_mgmt.c
+> > > > +++ b/net/netlabel/netlabel_mgmt.c
+> > > > @@ -95,7 +95,7 @@ static int netlbl_mgmt_add_common(struct genl_info
+> > > > *info,
+> > > >=20
+> > > >  			ret_val =3D -ENOMEM;
+> > > >  			goto add_free_entry;
+> > > >  	=09
+> > > >  		}
+> > > >=20
+> > > > -		nla_strlcpy(entry->domain,
+> > > > +		nla_strscpy(entry->domain,
+> > > >=20
+> > > >  			    info->attrs[NLBL_MGMT_A_DOMAIN], tmp_size);
+> > > >  =09
+> > > >  	}
+> > > >=20
+> > > > diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
+> > > > index e894254c17d4..438ff1f30a33 100644
+> > > > --- a/net/nfc/netlink.c
+> > > > +++ b/net/nfc/netlink.c
+> > > > @@ -1226,7 +1226,7 @@ static int nfc_genl_fw_download(struct sk_buff
+> > > > *skb,
+> > > > struct genl_info *info)>
+> > > >=20
+> > > >  	if (!dev)
+> > > >  =09
+> > > >  		return -ENODEV;
+> > > >=20
+> > > > -	nla_strlcpy(firmware_name, info->attrs[NFC_ATTR_FIRMWARE_NAME],
+> > > > +	nla_strscpy(firmware_name, info->attrs[NFC_ATTR_FIRMWARE_NAME],
+> > > >=20
+> > > >  		    sizeof(firmware_name));
+> > > >  =09
+> > > >  	rc =3D nfc_fw_download(dev, firmware_name);
+> > > >=20
+> > > > diff --git a/net/sched/act_api.c b/net/sched/act_api.c
+> > > > index 541574520c52..eac24a73115f 100644
+> > > > --- a/net/sched/act_api.c
+> > > > +++ b/net/sched/act_api.c
+> > > > @@ -935,7 +935,7 @@ struct tc_action *tcf_action_init_1(struct net
+> > > > *net,
+> > > > struct tcf_proto *tp,>
+> > > >=20
+> > > >  			NL_SET_ERR_MSG(extack, "TC action kind must be specified");
+> > > >  			goto err_out;
+> > > >  	=09
+> > > >  		}
+> > > >=20
+> > > > -		if (nla_strlcpy(act_name, kind, IFNAMSIZ) < 0) {
+> > > > +		if (nla_strscpy(act_name, kind, IFNAMSIZ) < 0) {
+> > > >=20
+> > > >  			NL_SET_ERR_MSG(extack, "TC action name too long");
+> > > >  			goto err_out;
+> > > >  	=09
+> > > >  		}
+> > > >=20
+> > > > diff --git a/net/sched/act_ipt.c b/net/sched/act_ipt.c
+> > > > index 8dc3bec0d325..ac7297f42355 100644
+> > > > --- a/net/sched/act_ipt.c
+> > > > +++ b/net/sched/act_ipt.c
+> > > > @@ -166,7 +166,7 @@ static int __tcf_ipt_init(struct net *net,
+> > > > unsigned
+> > > > int id, struct nlattr *nla,>
+> > > >=20
+> > > >  	if (unlikely(!tname))
+> > > >  =09
+> > > >  		goto err1;
+> > > >  =09
+> > > >  	if (tb[TCA_IPT_TABLE] =3D=3D NULL ||
+> > > >=20
+> > > > -	    nla_strlcpy(tname, tb[TCA_IPT_TABLE], IFNAMSIZ) >=3D IFNAMSIZ)
+> > > > +	    nla_strscpy(tname, tb[TCA_IPT_TABLE], IFNAMSIZ) >=3D IFNAMSIZ)
+> > > >=20
+> > > >  		strcpy(tname, "mangle");
+> > > >  =09
+> > > >  	t =3D kmemdup(td, td->u.target_size, GFP_KERNEL);
+> > > >=20
+> > > > diff --git a/net/sched/act_simple.c b/net/sched/act_simple.c
+> > > > index a4f3d0f0daa9..726cc956d06f 100644
+> > > > --- a/net/sched/act_simple.c
+> > > > +++ b/net/sched/act_simple.c
+> > > > @@ -52,7 +52,7 @@ static int alloc_defdata(struct tcf_defact *d, co=
+nst
+> > > > struct nlattr *defdata)>
+> > > >=20
+> > > >  	d->tcfd_defdata =3D kzalloc(SIMP_MAX_DATA, GFP_KERNEL);
+> > > >  	if (unlikely(!d->tcfd_defdata))
+> > > >  =09
+> > > >  		return -ENOMEM;
+> > > >=20
+> > > > -	nla_strlcpy(d->tcfd_defdata, defdata, SIMP_MAX_DATA);
+> > > > +	nla_strscpy(d->tcfd_defdata, defdata, SIMP_MAX_DATA);
+> > > >=20
+> > > >  	return 0;
+> > > > =20
+> > > >  }
+> > > >=20
+> > > > @@ -71,7 +71,7 @@ static int reset_policy(struct tc_action *a, const
+> > > > struct nlattr *defdata,>
+> > > >=20
+> > > >  	spin_lock_bh(&d->tcf_lock);
+> > > >  	goto_ch =3D tcf_action_set_ctrlact(a, p->action, goto_ch);
+> > > >  	memset(d->tcfd_defdata, 0, SIMP_MAX_DATA);
+> > > >=20
+> > > > -	nla_strlcpy(d->tcfd_defdata, defdata, SIMP_MAX_DATA);
+> > > > +	nla_strscpy(d->tcfd_defdata, defdata, SIMP_MAX_DATA);
+> > > >=20
+> > > >  	spin_unlock_bh(&d->tcf_lock);
+> > > >  	if (goto_ch)
+> > > >  =09
+> > > >  		tcf_chain_put_by_act(goto_ch);
+> > > >=20
+> > > > diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+> > > > index c78241c853a5..6ff3b817083a 100644
+> > > > --- a/net/sched/cls_api.c
+> > > > +++ b/net/sched/cls_api.c
+> > > > @@ -223,7 +223,7 @@ static inline u32 tcf_auto_prio(struct tcf_proto
+> > > > *tp)
+> > > >=20
+> > > >  static bool tcf_proto_check_kind(struct nlattr *kind, char *name)
+> > > >  {
+> > > > =20
+> > > >  	if (kind)
+> > > >=20
+> > > > -		return nla_strlcpy(name, kind, IFNAMSIZ) < 0;
+> > > > +		return nla_strscpy(name, kind, IFNAMSIZ) < 0;
+> > > >=20
+> > > >  	memset(name, 0, IFNAMSIZ);
+> > > >  	return false;
+> > > > =20
+> > > >  }
+> > > >=20
+> > > > diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
+> > > > index f9b053b30a7b..cb4f30700c74 100644
+> > > > --- a/net/sched/sch_api.c
+> > > > +++ b/net/sched/sch_api.c
+> > > > @@ -1170,7 +1170,7 @@ static struct Qdisc *qdisc_create(struct
+> > > > net_device
+> > > > *dev,>
+> > > >=20
+> > > >  #ifdef CONFIG_MODULES
+> > > > =20
+> > > >  	if (ops =3D=3D NULL && kind !=3D NULL) {
+> > > >  =09
+> > > >  		char name[IFNAMSIZ];
+> > > >=20
+> > > > -		if (nla_strlcpy(name, kind, IFNAMSIZ) > 0) {
+> > > > +		if (nla_strscpy(name, kind, IFNAMSIZ) > 0) {
+> > > >=20
+> > > >  			/* We dropped the RTNL semaphore in order to
+> > > >  		=09
+> > > >  			 * perform the module load.  So, even if we
+> > > >  			 * succeeded in loading the module we have to
+> > > >=20
+> > > > diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+> > > > index 1c7aa51cc2a3..644c7ec41ddf 100644
+> > > > --- a/net/tipc/netlink_compat.c
+> > > > +++ b/net/tipc/netlink_compat.c
+> > > > @@ -695,7 +695,7 @@ static int tipc_nl_compat_link_dump(struct
+> > > > tipc_nl_compat_msg *msg,>
+> > > >=20
+> > > >  	link_info.dest =3D nla_get_flag(link[TIPC_NLA_LINK_DEST]);
+> > > >  	link_info.up =3D htonl(nla_get_flag(link[TIPC_NLA_LINK_UP]));
+> > > >=20
+> > > > -	nla_strlcpy(link_info.str, link[TIPC_NLA_LINK_NAME],
+> > > > +	nla_strscpy(link_info.str, link[TIPC_NLA_LINK_NAME],
+> > > >=20
+> > > >  		    TIPC_MAX_LINK_NAME);
+> > > >  =09
+> > > >  	return tipc_add_tlv(msg->rep, TIPC_TLV_LINK_INFO,
 
 
 
