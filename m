@@ -1,108 +1,109 @@
-Return-Path: <SRS0=pkcq=EA=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=1bDI=EB=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AF2C388F7
-	for <linux-hardening@archiver.kernel.org>; Sun, 25 Oct 2020 13:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3846CC4363A
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 14:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 259EA22259
-	for <linux-hardening@archiver.kernel.org>; Sun, 25 Oct 2020 13:43:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b="sj0R0QHA"
+	by mail.kernel.org (Postfix) with ESMTP id 0B9AD22281
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 14:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416386AbgJYNnI (ORCPT
+        id S1782050AbgJZOwx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 25 Oct 2020 09:43:08 -0400
-Received: from mail-03.mail-europe.com ([91.134.188.129]:44936 "EHLO
-        mail-03.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416382AbgJYNnI (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 25 Oct 2020 09:43:08 -0400
-Date:   Sun, 25 Oct 2020 13:42:57 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.ch;
-        s=protonmail; t=1603633383;
-        bh=RztYREdZbMudtChMjooBjWJtc3ZFeXsHMYskl+O762c=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=sj0R0QHA8mqAXANRDKgYvjZhWMKMupZnQj4pVghO9waIHM0GZdAfuLoNKs8vyjMSR
-         ihE/K6adlqkG3V5FlMGaysO/RHAjnG81d/8IKEt8QqJEw717G5vzYGzUsc7HLvQy+a
-         JbQVwXnf3kpaeSfaQVe3QqKYJ4ub6Ae87GXO1U3g=
-To:     Salvatore Mesoraca <s.mesoraca16@gmail.com>
-From:   Jordan Glover <Golden_Miller83@protonmail.ch>
-Cc:     Topi Miettinen <toiwoton@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
+        Mon, 26 Oct 2020 10:52:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2442716AbgJZOwx (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 26 Oct 2020 10:52:53 -0400
+Received: from gaia (unknown [95.145.162.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AADC720773;
+        Mon, 26 Oct 2020 14:52:49 +0000 (UTC)
+Date:   Mon, 26 Oct 2020 14:52:46 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Topi Miettinen <toiwoton@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
         Szabolcs Nagy <szabolcs.nagy@arm.com>,
         Jeremy Linton <jeremy.linton@arm.com>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        "systemd-devel@lists.freedesktop.org" 
-        <systemd-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>, libc-alpha@sourceware.org,
+        systemd-devel@lists.freedesktop.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Mark Brown <broonie@kernel.org>,
         Dave Martin <dave.martin@arm.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Reply-To: Jordan Glover <Golden_Miller83@protonmail.ch>
-Subject: Re: BTI interaction between seccomp filters in systemd and glibc mprotect calls, causing service failures
-Message-ID: <_2cdGtwD1Z9iBKSrB4v55wrfcso1gpABXQas61V7fdAD2SqYF8RyG_ggCXGigvJ4jkMr7OlVLP484_SPsjP01JFeoI2_lP8PM4IOGZAlRBk=@protonmail.ch>
-In-Reply-To: <CAJHCu1JskXZTvSsspQD-wk4L59FxesvVJdjMSX=jiHg-R2zCuQ@mail.gmail.com>
-References: <8584c14f-5c28-9d70-c054-7c78127d84ea@arm.com> <20201022075447.GO3819@arm.com> <78464155-f459-773f-d0ee-c5bdbeb39e5d@gmail.com> <202010221256.A4F95FD11@keescook> <180cd894-d42d-2bdb-093c-b5360b0ecb1e@gmail.com> <CAJHCu1Jrtx=OVEiTVwPJg7CxRkV83tS=HsYeLoAGRf_tgYq_iQ@mail.gmail.com> <3cb894d4-049f-aa25-4450-d1df36a1b92e@gmail.com> <CAJHCu1JskXZTvSsspQD-wk4L59FxesvVJdjMSX=jiHg-R2zCuQ@mail.gmail.com>
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: BTI interaction between seccomp filters in systemd and glibc
+ mprotect calls, causing service failures
+Message-ID: <20201026145245.GD3117@gaia>
+References: <8584c14f-5c28-9d70-c054-7c78127d84ea@arm.com>
+ <20201022075447.GO3819@arm.com>
+ <78464155-f459-773f-d0ee-c5bdbeb39e5d@gmail.com>
+ <202010221256.A4F95FD11@keescook>
+ <20201023090232.GA25736@gaia>
+ <cf655c11-d854-281a-17ae-262ddf0aaa08@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf655c11-d854-281a-17ae-262ddf0aaa08@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Saturday, October 24, 2020 2:12 PM, Salvatore Mesoraca <s.mesoraca16@gma=
-il.com> wrote:
+On Sat, Oct 24, 2020 at 02:01:30PM +0300, Topi Miettinen wrote:
+> On 23.10.2020 12.02, Catalin Marinas wrote:
+> > On Thu, Oct 22, 2020 at 01:02:18PM -0700, Kees Cook wrote:
+> > > Regardless, it makes sense to me to have the kernel load the executable
+> > > itself with BTI enabled by default. I prefer gaining Catalin's suggested
+> > > patch[2]. :)
+> > [...]
+> > > [2] https://lore.kernel.org/linux-arm-kernel/20201022093104.GB1229@gaia/
+> > 
+> > I think I first heard the idea at Mark R ;).
+> > 
+> > It still needs glibc changes to avoid the mprotect(), or at least ignore
+> > the error. Since this is an ABI change and we don't know which kernels
+> > would have it backported, maybe better to still issue the mprotect() but
+> > ignore the failure.
+> 
+> What about kernel adding an auxiliary vector as a flag to indicate that BTI
+> is supported and recommended by the kernel? Then dynamic loader could use
+> that to detect that a) the main executable is BTI protected and there's no
+> need to mprotect() it and b) PROT_BTI flag should be added to all PROT_EXEC
+> pages.
 
-> On Sat, 24 Oct 2020 at 12:34, Topi Miettinen toiwoton@gmail.com wrote:
->
-> > On 23.10.2020 20.52, Salvatore Mesoraca wrote:
-> >
-> > > Hi,
-> > > On Thu, 22 Oct 2020 at 23:24, Topi Miettinen toiwoton@gmail.com wrote=
-:
-> > >
-> > > > SARA looks interesting. What is missing is a prctl() to enable all =
-W^X
-> > > > protections irrevocably for the current process, then systemd could
-> > > > enable it for services with MemoryDenyWriteExecute=3Dyes.
-> > >
-> > > SARA actually has a procattr[0] interface to do just that.
-> > > There is also a library[1] to help using it.
-> >
-> > That means that /proc has to be available and writable at that point, s=
-o
-> > setting up procattrs has to be done before mount namespaces are set up.
-> > In general, it would be nice for sandboxing facilities in kernel if
-> > there would be a way to start enforcing restrictions only at next
-> > execve(), like setexeccon() for SELinux and aa_change_onexec() for
-> > AppArmor. Otherwise the exact order of setting up various sandboxing
-> > options can be very tricky to arrange correctly, since each option may
-> > have a subtle effect to the sandboxing features enabled later. In case
-> > of SARA, the operations done between shuffling the mount namespace and
-> > before execve() shouldn't be affected so it isn't important. Even if it
-> > did (a new sandboxing feature in the future would need trampolines or
-> > JIT code generation), maybe the procattr file could be opened early but
-> > it could be written closer to execve().
->
-> A new "apply on exec" procattr file seems reasonable and relatively easy =
-to add.
-> As Kees pointed out, the main obstacle here is the fact that SARA is
-> not upstream :(
->
-> Salvatore
+We could add a bit to AT_FLAGS, it's always been 0 for Linux.
 
-Is there a chance we will see new SARA iteration soon on lkml? :)
+> In absence of the vector, the dynamic loader might choose to skip doing
+> PROT_BTI at all (since the main executable isn't protected anyway either, or
+> maybe even the kernel is up-to-date but it knows that it's not recommended
+> for some reason, or maybe the kernel is so ancient that it doesn't know
+> about BTI). Optionally it could still read the flag from ELF later (for
+> compatibility with old kernels) and then do the mprotect() dance, which may
+> trip seccomp filters, possibly fatally.
 
-Jordan
+I think the safest is for the dynamic loader to issue an mprotect() and
+ignore the EPERM error. Not all user deployments have this seccomp
+filter, so they can still benefit, and user can't tell whether the
+kernel change has been backported.
+
+Now, if the dynamic loader silently ignores the mprotect() failure on
+the main executable, is there much value in exposing a flag in the aux
+vectors? It saves a few (one?) mprotect() calls but I don't think it
+matters much. Anyway, I don't mind the flag.
+
+The only potential risk is if the dynamic loader decides not to turn
+PROT_BTI one because of some mix and match of objects but AFAIK BTI
+allows interworking.
+
+-- 
+Catalin
