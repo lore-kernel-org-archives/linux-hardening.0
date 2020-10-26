@@ -2,352 +2,167 @@ Return-Path: <SRS0=1bDI=EB=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D9CC55178
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 16:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932A7C4363A
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 16:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCD1122404
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 16:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C392224A
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 16:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qoUXlPfQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilyK4nri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1784948AbgJZQGF (ORCPT
+        id S1786026AbgJZQcO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Oct 2020 12:06:05 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39464 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1774604AbgJZQGF (ORCPT
+        Mon, 26 Oct 2020 12:32:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45178 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1786024AbgJZQcO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Oct 2020 12:06:05 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m16so10790233ljo.6;
-        Mon, 26 Oct 2020 09:06:01 -0700 (PDT)
+        Mon, 26 Oct 2020 12:32:14 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a4so10876035lji.12;
+        Mon, 26 Oct 2020 09:32:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i6SNfrIeRdhbIJ2K270eovGd8McyAIKhl+WbtW1/vTg=;
-        b=qoUXlPfQMIw4Ui+CML3nZUmm6TBm9LwbPLPgySWg1W5Qby/RfMOQf/k2L0Kt3CgPdA
-         KCmLwmdP0HVjSq8sTaDZrZgSeyXDlX4u6JK6E1u0k2igVUoUA+U2Px4C1RLa4+wL59H8
-         1ukBgPuGAa9fhKvNJwqP6iIyEVormAK1dY2tFZiDg6zOF7IZAobfuFt8dmD/gzlsCi6x
-         WkKBfa8mG+0sTQEMi5sVb3QSpGg1m328u75H3htvBkqLJ/qy+OdGQrYRDhC0Wu3Zn5nG
-         4dlkQzWZF0/a6t+d0DxxmHPmW1sVsA4bbNNUmmeLFMCzkXB76FnRU1S7+LPEHd67tT2p
-         yK7w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=81sFbAVwzGBYdqNxSKasnwihrmLk5qFx2xW7a2yOVFA=;
+        b=ilyK4nriJpTU+ZsR5TzVNUPI2EICBAV+EtzdIfm0c8gnj9uEXsmcIlrH4esm52Sof5
+         Z9W3RF1ohEzkLaXmgew/evfyvbKalDRv4wGUlakWh1vwJi+Holvp1iFQavUz7IIINteZ
+         DXfWJqJcuIjSWoOYQlpTF8qMEVNtDnTAy14ZhUAoO6a9psISAvTf4eiGo88ojEk0OVOt
+         DoluxxDfBapo4lA0C3ZHtuZ8p4Qzmm8/zACDjcDNBsCtA/MAYCoro7MwWTB4NW5u7X6u
+         DympMB1G1hMAQePPLbaLhpIDiugGlLowk9LLdoo0k7DAhyw+bMfwmtOEMfW0IrE3liO8
+         VgLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=i6SNfrIeRdhbIJ2K270eovGd8McyAIKhl+WbtW1/vTg=;
-        b=HK4+HaHW8/vGUuLzwvOLtJar/Oifbmb7zohApUHJFeRlsgv4e4f59xny5RDZZaO6/1
-         vHRhbWratuVJbN9rRgz95YmDWA7Xq3FrF/5o1TGYkgG9gJ2jlaG04jJOtvWNaVJ7YEz6
-         UXk3JItI7OcbN6Q3cP9bOZbb8EG9+dFoBA2gxzZy8Z+F1oIi3ke8bBWa7a73WwDP/WWF
-         zoBZr6Wc2Zo+Ulo5tT0qGRMKoWIUhV9dEAMJ+oPuCGjyu+58kZ9GYHeDZlTTyzdwfoNO
-         3ocUAddb4MNI5jf9zD9pNyb9dMLbjUwdKy2ig1yWJT/YNK4S8yBw5Jsdo5jC4i7PpUfH
-         MVIQ==
-X-Gm-Message-State: AOAM532cMhBtEKZgO/JFtNbV+KGMMffDxY5L1XVq32YBysjoFkXQ3cGK
-        7zD7RR8yLZ8s2NRMEyjhGXwWIJlNvPk=
-X-Google-Smtp-Source: ABdhPJxceJ7qG/cEAKOJqIcrGmxd7hVOyKZLuovvAwlOtosnmpTXf6GkNkDq14SYmeGcMxvsROudMQ==
-X-Received: by 2002:a05:651c:32a:: with SMTP id b10mr3782921ljp.256.1603728360089;
-        Mon, 26 Oct 2020 09:06:00 -0700 (PDT)
-Received: from localhost.localdomain (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
-        by smtp.gmail.com with ESMTPSA id l5sm493491lfg.146.2020.10.26.09.05.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2020 09:05:59 -0700 (PDT)
+        bh=81sFbAVwzGBYdqNxSKasnwihrmLk5qFx2xW7a2yOVFA=;
+        b=aBD6BVbE9GaYshfcgxadgaPU+aGfpaOayN3P62A/cJUaWvnj7KHw/aYtW1wIKX8c1W
+         mWMRFNjPdLsO/dzpTrm2h6X276k+rCHXcH174gazTUKJ3lGcIAzhDOg/bEvBrw1Zyj6K
+         w8aNrK7mXXxSqT43lC2k4wqghadFXp4Pnnqhr9iLEdcJC2H8jhRY8qgvSue3ktmkHHFF
+         ulnNAWMPJ8cTgxeMf/pztIwZhBsCKrnCjie6U+lFWYAAm2ycF41s5bGSJQ4fKlEqaNIg
+         iACewGugwkBLAyyH4OYowMKeoEcInH/DueTXhPGJE2cxCQRlrTmY6fJb4nExnvWx0E4z
+         V3RA==
+X-Gm-Message-State: AOAM530qw7zP4PUjFwCTG0vewLcj1tXKFBFIGxilasEniAS34LyiWIrD
+        NelPotsLWrdJKf9AAhihR0tVWqgoPeInSQ==
+X-Google-Smtp-Source: ABdhPJyBBZepygrfLeS9IiJiGCwiL99FGQQQhPP2SALgITxO/hNm/8c7G2c/C1WBoQBEiojldvEEsA==
+X-Received: by 2002:a2e:2ac6:: with SMTP id q189mr5924430ljq.269.1603729930410;
+        Mon, 26 Oct 2020 09:32:10 -0700 (PDT)
+Received: from [192.168.1.112] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
+        by smtp.gmail.com with ESMTPSA id q123sm1264618ljq.108.2020.10.26.09.32.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Oct 2020 09:32:09 -0700 (PDT)
+Subject: Re: BTI interaction between seccomp filters in systemd and glibc
+ mprotect calls, causing service failures
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, libc-alpha@sourceware.org,
+        systemd-devel@lists.freedesktop.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Dave Martin <dave.martin@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org
+References: <8584c14f-5c28-9d70-c054-7c78127d84ea@arm.com>
+ <20201022075447.GO3819@arm.com>
+ <78464155-f459-773f-d0ee-c5bdbeb39e5d@gmail.com>
+ <202010221256.A4F95FD11@keescook> <20201023090232.GA25736@gaia>
+ <cf655c11-d854-281a-17ae-262ddf0aaa08@gmail.com> <20201026145245.GD3117@gaia>
 From:   Topi Miettinen <toiwoton@gmail.com>
-To:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Topi Miettinen <toiwoton@gmail.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v4] mm: Optional full ASLR for mmap() and mremap()
-Date:   Mon, 26 Oct 2020 18:05:18 +0200
-Message-Id: <20201026160518.9212-1-toiwoton@gmail.com>
-X-Mailer: git-send-email 2.28.0
+Message-ID: <d7f45447-0f71-2855-98ac-6e873291ed09@gmail.com>
+Date:   Mon, 26 Oct 2020 18:31:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201026145245.GD3117@gaia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Writing a new value of 3 to /proc/sys/kernel/randomize_va_space
-enables full randomization of memory mappings created with mmap(NULL,
-...). With 2, the base of the VMA used for such mappings is random,
-but the mappings are created in predictable places within the VMA and
-in sequential order. With 3, new VMAs are created to fully randomize
-the mappings. Also mremap(..., MREMAP_MAYMOVE) will move the mappings
-even if not necessary.
+On 26.10.2020 16.52, Catalin Marinas wrote:
+> On Sat, Oct 24, 2020 at 02:01:30PM +0300, Topi Miettinen wrote:
+>> On 23.10.2020 12.02, Catalin Marinas wrote:
+>>> On Thu, Oct 22, 2020 at 01:02:18PM -0700, Kees Cook wrote:
+>>>> Regardless, it makes sense to me to have the kernel load the executable
+>>>> itself with BTI enabled by default. I prefer gaining Catalin's suggested
+>>>> patch[2]. :)
+>>> [...]
+>>>> [2] https://lore.kernel.org/linux-arm-kernel/20201022093104.GB1229@gaia/
+>>>
+>>> I think I first heard the idea at Mark R ;).
+>>>
+>>> It still needs glibc changes to avoid the mprotect(), or at least ignore
+>>> the error. Since this is an ABI change and we don't know which kernels
+>>> would have it backported, maybe better to still issue the mprotect() but
+>>> ignore the failure.
+>>
+>> What about kernel adding an auxiliary vector as a flag to indicate that BTI
+>> is supported and recommended by the kernel? Then dynamic loader could use
+>> that to detect that a) the main executable is BTI protected and there's no
+>> need to mprotect() it and b) PROT_BTI flag should be added to all PROT_EXEC
+>> pages.
+> 
+> We could add a bit to AT_FLAGS, it's always been 0 for Linux.
 
-The method is to randomize the new address without considering
-VMAs. If the address fails checks because of overlap with the stack
-area (or in case of mremap(), overlap with the old mapping), the
-operation is retried a few times before falling back to old method.
+Great!
 
-On 32 bit systems this may cause problems due to increased VM
-fragmentation if the address space gets crowded.
+>> In absence of the vector, the dynamic loader might choose to skip doing
+>> PROT_BTI at all (since the main executable isn't protected anyway either, or
+>> maybe even the kernel is up-to-date but it knows that it's not recommended
+>> for some reason, or maybe the kernel is so ancient that it doesn't know
+>> about BTI). Optionally it could still read the flag from ELF later (for
+>> compatibility with old kernels) and then do the mprotect() dance, which may
+>> trip seccomp filters, possibly fatally.
+> 
+> I think the safest is for the dynamic loader to issue an mprotect() and
+> ignore the EPERM error. Not all user deployments have this seccomp
+> filter, so they can still benefit, and user can't tell whether the
+> kernel change has been backported.
 
-On all systems, it will reduce performance and increase memory
-usage due to less efficient use of page tables and inability to
-merge adjacent VMAs with compatible attributes.
+But the seccomp filter can be set to kill the process, so that's 
+definitely not the safest way. I think safest is that when the AT_FLAGS 
+bit is seen, ld.so doesn't do any mprotect() calls but instead when 
+mapping the segments, mmap() flags are adjusted to include PROT_BTI, so 
+mprotect() calls are not necessary. If there's no seccomp filter, 
+there's no disadvantage for avoiding the useless mprotect() calls.
 
-In this example with value of 2, dynamic loader, libc, anonymous
-memory reserved with mmap() and locale-archive are located close to
-each other:
+I'd expect the backported kernel change to include both aux vector and 
+also using PROT_BTI for the main executable. Then the logic would work 
+with backported kernels as well.
 
-$ cat /proc/self/maps (only first line for each object shown for brevity)
-58c1175b1000-58c1175b3000 r--p 00000000 fe:0c 1868624                    /usr/bin/cat
-79752ec17000-79752f179000 r--p 00000000 fe:0c 2473999                    /usr/lib/locale/locale-archive
-79752f179000-79752f279000 rw-p 00000000 00:00 0
-79752f279000-79752f29e000 r--p 00000000 fe:0c 2402415                    /usr/lib/x86_64-linux-gnu/libc-2.31.so
-79752f43a000-79752f440000 rw-p 00000000 00:00 0
-79752f46f000-79752f470000 r--p 00000000 fe:0c 2400484                    /usr/lib/x86_64-linux-gnu/ld-2.31.so
-79752f49b000-79752f49c000 rw-p 00000000 00:00 0
-7ffdcad9e000-7ffdcadbf000 rw-p 00000000 00:00 0                          [stack]
-7ffdcadd2000-7ffdcadd6000 r--p 00000000 00:00 0                          [vvar]
-7ffdcadd6000-7ffdcadd8000 r-xp 00000000 00:00 0                          [vdso]
+If there's no aux vector, all bets are off. The kernel could be old and 
+unpatched, even so old that PROT_BTI is not known. Perhaps also in the 
+future there may be new technologies which have replaced BTI and the 
+kernel could want a previous generation ld.so not to try to use BTI, so 
+this could be also indicated with the lack of aux vector. The dynamic 
+loader could still attempt to mprotect() the pages, but that could be 
+fatal. Getting to the point where the error can be ignored means that 
+there's no seccomp filter, at least none set to kill. Perhaps the pain 
+is only temporary, new or patched kernels should eventually replace the 
+old versions.
 
-With 3, they are located at unrelated addresses:
-$ echo 3 > /proc/sys/kernel/randomize_va_space
-$ cat /proc/self/maps (only first line for each object shown for brevity)
-1206a8fa000-1206a8fb000 r--p 00000000 fe:0c 2400484                      /usr/lib/x86_64-linux-gnu/ld-2.31.so
-1206a926000-1206a927000 rw-p 00000000 00:00 0
-19174173000-19174175000 rw-p 00000000 00:00 0
-ac82f419000-ac82f519000 rw-p 00000000 00:00 0
-afa66a42000-afa66fa4000 r--p 00000000 fe:0c 2473999                      /usr/lib/locale/locale-archive
-d8656ba9000-d8656bce000 r--p 00000000 fe:0c 2402415                      /usr/lib/x86_64-linux-gnu/libc-2.31.so
-d8656d6a000-d8656d6e000 rw-p 00000000 00:00 0
-5df90b712000-5df90b714000 r--p 00000000 fe:0c 1868624                    /usr/bin/cat
-7ffe1be4c000-7ffe1be6d000 rw-p 00000000 00:00 0                          [stack]
-7ffe1bf07000-7ffe1bf0b000 r--p 00000000 00:00 0                          [vvar]
-7ffe1bf0b000-7ffe1bf0d000 r-xp 00000000 00:00 0                          [vdso]
+> Now, if the dynamic loader silently ignores the mprotect() failure on
+> the main executable, is there much value in exposing a flag in the aux
+> vectors? It saves a few (one?) mprotect() calls but I don't think it
+> matters much. Anyway, I don't mind the flag.
 
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Jann Horn <jannh@google.com>
-CC: Kees Cook <keescook@chromium.org>
-CC: Matthew Wilcox <willy@infradead.org>
-CC: Mike Rapoport <rppt@kernel.org>
-Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
----
-v2: also randomize mremap(..., MREMAP_MAYMOVE)
-v3: avoid stack area and retry in case of bad random address (Jann
-Horn), improve description in kernel.rst (Matthew Wilcox)
-v4: use /proc/$pid/maps in the example (Mike Rapaport), CCs (Andrew
-Morton), only check randomize_va_space == 3
----
- Documentation/admin-guide/hw-vuln/spectre.rst |  6 ++--
- Documentation/admin-guide/sysctl/kernel.rst   | 15 ++++++++++
- init/Kconfig                                  |  2 +-
- mm/internal.h                                 |  8 +++++
- mm/mmap.c                                     | 30 +++++++++++++------
- mm/mremap.c                                   | 27 +++++++++++++++++
- 6 files changed, 75 insertions(+), 13 deletions(-)
+Saving a few system calls is indeed not an issue, but not being able to 
+use MDWX and PROT_BTI simultaneously was the original problem (service 
+failures).
 
-diff --git a/Documentation/admin-guide/hw-vuln/spectre.rst b/Documentation/admin-guide/hw-vuln/spectre.rst
-index e05e581af5cf..9ea250522077 100644
---- a/Documentation/admin-guide/hw-vuln/spectre.rst
-+++ b/Documentation/admin-guide/hw-vuln/spectre.rst
-@@ -254,7 +254,7 @@ Spectre variant 2
-    left by the previous process will also be cleared.
- 
-    User programs should use address space randomization to make attacks
--   more difficult (Set /proc/sys/kernel/randomize_va_space = 1 or 2).
-+   more difficult (Set /proc/sys/kernel/randomize_va_space = 1, 2 or 3).
- 
- 3. A virtualized guest attacking the host
- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-@@ -499,8 +499,8 @@ Spectre variant 2
-    more overhead and run slower.
- 
-    User programs should use address space randomization
--   (/proc/sys/kernel/randomize_va_space = 1 or 2) to make attacks more
--   difficult.
-+   (/proc/sys/kernel/randomize_va_space = 1, 2 or 3) to make attacks
-+   more difficult.
- 
- 3. VM mitigation
- ^^^^^^^^^^^^^^^^
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index d4b32cc32bb7..bc3bb74d544d 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -1060,6 +1060,21 @@ that support this feature.
-     Systems with ancient and/or broken binaries should be configured
-     with ``CONFIG_COMPAT_BRK`` enabled, which excludes the heap from process
-     address space randomization.
-+
-+3   Additionally enable full randomization of memory mappings created
-+    with mmap(NULL, ...). With 2, the base of the VMA used for such
-+    mappings is random, but the mappings are created in predictable
-+    places within the VMA and in sequential order. With 3, new VMAs
-+    are created to fully randomize the mappings. Also mremap(...,
-+    MREMAP_MAYMOVE) will move the mappings even if not necessary.
-+
-+    On 32 bit systems this may cause problems due to increased VM
-+    fragmentation if the address space gets crowded.
-+
-+    On all systems, it will reduce performance and increase memory
-+    usage due to less efficient use of page tables and inability to
-+    merge adjacent VMAs with compatible attributes.
-+
- ==  ===========================================================================
- 
- 
-diff --git a/init/Kconfig b/init/Kconfig
-index c9446911cf41..6146e2cd3b77 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1863,7 +1863,7 @@ config COMPAT_BRK
- 	  also breaks ancient binaries (including anything libc5 based).
- 	  This option changes the bootup default to heap randomization
- 	  disabled, and can be overridden at runtime by setting
--	  /proc/sys/kernel/randomize_va_space to 2.
-+	  /proc/sys/kernel/randomize_va_space to 2 or 3.
- 
- 	  On non-ancient distros (post-2000 ones) N is usually a safe choice.
- 
-diff --git a/mm/internal.h b/mm/internal.h
-index c43ccdddb0f6..b964c8dbb242 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -618,4 +618,12 @@ struct migration_target_control {
- 	gfp_t gfp_mask;
- };
- 
-+#ifndef arch_get_mmap_end
-+#define arch_get_mmap_end(addr)	(TASK_SIZE)
-+#endif
-+
-+#ifndef arch_get_mmap_base
-+#define arch_get_mmap_base(addr, base) (base)
-+#endif
-+
- #endif	/* __MM_INTERNAL_H */
-diff --git a/mm/mmap.c b/mm/mmap.c
-index d91ecb00d38c..3677491e999b 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -47,6 +47,7 @@
- #include <linux/pkeys.h>
- #include <linux/oom.h>
- #include <linux/sched/mm.h>
-+#include <linux/elf-randomize.h>
- 
- #include <linux/uaccess.h>
- #include <asm/cacheflush.h>
-@@ -73,6 +74,8 @@ const int mmap_rnd_compat_bits_max = CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX;
- int mmap_rnd_compat_bits __read_mostly = CONFIG_ARCH_MMAP_RND_COMPAT_BITS;
- #endif
- 
-+#define MAX_RANDOM_MMAP_RETRIES			5
-+
- static bool ignore_rlimit_data;
- core_param(ignore_rlimit_data, ignore_rlimit_data, bool, 0644);
- 
-@@ -206,7 +209,7 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
- #ifdef CONFIG_COMPAT_BRK
- 	/*
- 	 * CONFIG_COMPAT_BRK can still be overridden by setting
--	 * randomize_va_space to 2, which will still cause mm->start_brk
-+	 * randomize_va_space to >= 2, which will still cause mm->start_brk
- 	 * to be arbitrarily shifted
- 	 */
- 	if (current->brk_randomized)
-@@ -1445,6 +1448,23 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 	if (mm->map_count > sysctl_max_map_count)
- 		return -ENOMEM;
- 
-+	/* Pick a random address even outside current VMAs? */
-+	if (!addr && randomize_va_space == 3) {
-+		int i = MAX_RANDOM_MMAP_RETRIES;
-+		unsigned long max_addr = arch_get_mmap_base(addr, mm->mmap_base);
-+
-+		do {
-+			/* Try a few times to find a free area */
-+			addr = arch_mmap_rnd();
-+			if (addr >= max_addr)
-+				continue;
-+			addr = get_unmapped_area(file, addr, len, pgoff, flags);
-+		} while (--i >= 0 && !IS_ERR_VALUE(addr));
-+
-+		if (IS_ERR_VALUE(addr))
-+			addr = 0;
-+	}
-+
- 	/* Obtain the address to map to. we verify (or select) it and ensure
- 	 * that it represents a valid section of the address space.
- 	 */
-@@ -2142,14 +2162,6 @@ unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info)
- 	return addr;
- }
- 
--#ifndef arch_get_mmap_end
--#define arch_get_mmap_end(addr)	(TASK_SIZE)
--#endif
--
--#ifndef arch_get_mmap_base
--#define arch_get_mmap_base(addr, base) (base)
--#endif
--
- /* Get an address range which is currently unmapped.
-  * For shmat() with addr=0.
-  *
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 138abbae4f75..c5b2ed2bfd2d 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -24,12 +24,15 @@
- #include <linux/uaccess.h>
- #include <linux/mm-arch-hooks.h>
- #include <linux/userfaultfd_k.h>
-+#include <linux/elf-randomize.h>
- 
- #include <asm/cacheflush.h>
- #include <asm/tlbflush.h>
- 
- #include "internal.h"
- 
-+#define MAX_RANDOM_MREMAP_RETRIES		5
-+
- static pmd_t *get_old_pmd(struct mm_struct *mm, unsigned long addr)
- {
- 	pgd_t *pgd;
-@@ -720,6 +723,30 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 		goto out;
- 	}
- 
-+	if ((flags & MREMAP_MAYMOVE) && randomize_va_space == 3) {
-+		/*
-+		 * Caller is happy with a different address, so let's
-+		 * move even if not necessary!
-+		 */
-+		int i = MAX_RANDOM_MREMAP_RETRIES;
-+		unsigned long max_addr = arch_get_mmap_base(addr, mm->mmap_base);
-+
-+		do {
-+			/* Try a few times to find a free area */
-+			new_addr = arch_mmap_rnd();
-+			if (new_addr >= max_addr)
-+				continue;
-+			ret = mremap_to(addr, old_len, new_addr, new_len,
-+					&locked, flags, &uf, &uf_unmap_early,
-+					&uf_unmap);
-+			if (!IS_ERR_VALUE(ret))
-+				goto out;
-+		} while (--i >= 0);
-+
-+		/* Give up and try the old address */
-+		new_addr = addr;
-+	}
-+
- 	/*
- 	 * Always allow a shrinking remap: that just unmaps
- 	 * the unnecessary pages..
-
-base-commit: 3650b228f83adda7e5ee532e2b90429c03f7b9ec
--- 
-2.28.0
-
+-Topi
