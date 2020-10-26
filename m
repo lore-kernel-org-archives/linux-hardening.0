@@ -2,111 +2,171 @@ Return-Path: <SRS0=1bDI=EB=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75D1C4363A
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 16:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B34FC56202
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 20:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F79221FC
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 16:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D6622242
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 20:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1603731156;
-	bh=Xb2UwSkNcM9cbBM3zlY+jbuzH3M6a/pJtoQEPvBsp7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vSHCFZ+zZQJSNDk3/sGRyTevh80z7PNljaHOJGQgSeRVyYnX4HAmPPTuOz2vgW1EM
-	 X1+hzOvtkWa8815JdBRaxfM4pU2ASv/t94nanVqf5FoJPKGgyzfqzDbq25kuuMq2kV
-	 NB1Vq4kKmepTEmyl5xlGGF3ObmBraTbXNWD02tXQ=
+	s=default; t=1603742896;
+	bh=nqiSiVnZ0rhfYdOwfE4FtrcQRW3wI+osVJOzPMj6Cy4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=a4kfDb8Mq7zgta6L8ME6IZLM0u4d7qdU0RhPtiMjN5VivmKYiWo9RGNrjtAs9mWx5
+	 WH9x/dv7kXT3MmOlPZa1od8a2DhsmeuBsQxEVupK47bZwzMSJsVY6XP6n8K/N9nVf7
+	 1H/XbAzfQHdGAkmDT8NS2jqRIbzp9MiDCXYm5KL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1786538AbgJZQwR (ORCPT
+        id S1726061AbgJZUIN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Oct 2020 12:52:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44992 "EHLO mail.kernel.org"
+        Mon, 26 Oct 2020 16:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1781267AbgJZQva (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Oct 2020 12:51:30 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726059AbgJZUIM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 26 Oct 2020 16:08:12 -0400
+Received: from sol.attlocal.net (172-10-235-113.lightspeed.sntcca.sbcglobal.net [172.10.235.113])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66404221FC;
-        Mon, 26 Oct 2020 16:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B276821BE5;
+        Mon, 26 Oct 2020 20:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603731089;
-        bh=Xb2UwSkNcM9cbBM3zlY+jbuzH3M6a/pJtoQEPvBsp7k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n0OeLdOtic5bPMHrJNTDAZZk8om61ybbk/lRM2morVVr0p0gU5pxKpJ4ky+5XuUFC
-         Ueqjsz/CimTtIXrSzJ4EsJ+6cFUVL3htTzpmmNkqnHb/PeJeGrvVrRpv50GvRYw3O+
-         hsZProyK79R1Ngd6rjPchjVWWDcfW2JaFoFrTEA0=
-Date:   Mon, 26 Oct 2020 16:51:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Topi Miettinen <toiwoton@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
-        systemd-devel@lists.freedesktop.org,
+        s=default; t=1603742892;
+        bh=nqiSiVnZ0rhfYdOwfE4FtrcQRW3wI+osVJOzPMj6Cy4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=npYKCGJQlwbwQhm4NR1Gi5cNRyMVPcd5j98huT1AmLqbzY0vjhXRVyt0cBkicSMq3
+         nAIlja9fAjuPvq0rGI5IlX6CBG0JlbCMM6leyx6mLdEN5U5xeBiW3p1N/uqa+NSdpy
+         sSR65LGWv72V7FdOFHPniH6rJAQdKJ6rJ7lgTt4Y=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     syzkaller-bugs@googlegroups.com, linux-hardening@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jann Horn <jannh@google.com>,
         Kees Cook <keescook@chromium.org>,
-        kernel-hardening@lists.openwall.com,
-        Will Deacon <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        linux-hardening@vger.kernel.org, libc-alpha@sourceware.org,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: BTI interaction between seccomp filters in systemd and glibc
- mprotect calls, causing service failures
-Message-ID: <20201026165125.GF7402@sirena.org.uk>
-References: <8584c14f-5c28-9d70-c054-7c78127d84ea@arm.com>
- <20201022075447.GO3819@arm.com>
- <78464155-f459-773f-d0ee-c5bdbeb39e5d@gmail.com>
- <202010221256.A4F95FD11@keescook>
- <20201023090232.GA25736@gaia>
- <cf655c11-d854-281a-17ae-262ddf0aaa08@gmail.com>
- <20201026145245.GD3117@gaia>
- <20201026155628.GA27285@arm.com>
+        Elena Petrova <lenaptr@google.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        stable@vger.kernel.org,
+        syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com
+Subject: [PATCH] crypto: af_alg - avoid undefined behavior accessing salg_name
+Date:   Mon, 26 Oct 2020 13:07:15 -0700
+Message-Id: <20201026200715.170261-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.29.1
+In-Reply-To: <CACT4Y+beaHrWisaSsV90xQn+t2Xn-bxvVgmx8ih_h=yJYPjs4A@mail.gmail.com>
+References: <CACT4Y+beaHrWisaSsV90xQn+t2Xn-bxvVgmx8ih_h=yJYPjs4A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cpvLTH7QU4gwfq3S"
-Content-Disposition: inline
-In-Reply-To: <20201026155628.GA27285@arm.com>
-X-Cookie: Safety Third.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+From: Eric Biggers <ebiggers@google.com>
 
---cpvLTH7QU4gwfq3S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Commit 3f69cc60768b ("crypto: af_alg - Allow arbitrarily long algorithm
+names") made the kernel start accepting arbitrarily long algorithm names
+in sockaddr_alg.  However, the actual length of the salg_name field
+stayed at the original 64 bytes.
 
-On Mon, Oct 26, 2020 at 03:56:35PM +0000, Dave Martin wrote:
-> On Mon, Oct 26, 2020 at 02:52:46PM +0000, Catalin Marinas via Libc-alpha wrote:
+This is broken because the kernel can access indices >= 64 in salg_name,
+which is undefined behavior -- even though the memory that is accessed
+is still located within the sockaddr structure.  It would only be
+defined behavior if the array were properly marked as arbitrary-length
+(either by making it a flexible array, which is the recommended way
+these days, or by making it an array of length 0 or 1).
 
-> > Now, if the dynamic loader silently ignores the mprotect() failure on
-> > the main executable, is there much value in exposing a flag in the aux
-> > vectors? It saves a few (one?) mprotect() calls but I don't think it
-> > matters much. Anyway, I don't mind the flag.
+We can't simply change salg_name into a flexible array, since that would
+break source compatibility with userspace programs that embed
+sockaddr_alg into another struct, or (more commonly) declare a
+sockaddr_alg like 'struct sockaddr_alg sa = { .salg_name = "foo" };'.
 
-> I don't see a problem with the aforementioned patch [2] to pre-set BTI
-> on the pages of the main binary.
+One solution would be to change salg_name into a flexible array only
+when '#ifdef __KERNEL__'.  However, that would keep userspace without an
+easy way to actually use the longer algorithm names.
 
-Me either FWIW.
+Instead, add a new structure 'sockaddr_alg_new' that has the flexible
+array field, and expose it to both userspace and the kernel.
+Make the kernel use it correctly in alg_bind().
 
---cpvLTH7QU4gwfq3S
-Content-Type: application/pgp-signature; name="signature.asc"
+This addresses the syzbot report
+"UBSAN: array-index-out-of-bounds in alg_bind"
+(https://syzkaller.appspot.com/bug?extid=92ead4eb8e26a26d465e).
 
------BEGIN PGP SIGNATURE-----
+Reported-by: syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com
+Fixes: 3f69cc60768b ("crypto: af_alg - Allow arbitrarily long algorithm names")
+Cc: <stable@vger.kernel.org> # v4.12+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ crypto/af_alg.c             | 10 +++++++---
+ include/uapi/linux/if_alg.h | 16 ++++++++++++++++
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl+W/owACgkQJNaLcl1U
-h9BOigf8CXtljKYe6CrS8pjN5GZ0G4Ck5VOuFDx7E+7wl6HjW0EnIfZJJ+R5GO4N
-PgFC5QZ6B1Owa5cpdGcqRKoY17ZgkD6doR4DTvxdCUrquxRXYQIlOM9MtwGFhd1W
-NzfCPYvUokn9d/y76Arklbzo+pFcrGI1Bo4y78S4mz6JOfsg1+8DQsyrPRqwIIbs
-4xTXIyOfSsQph8bBbkR/BZdy+z40qGNDzw0YQRIwvIcxWDQM1+Tim5uAuZLuEe7M
-V0giL+8RNDUFkBMCYwnlvtdnl/pUfcJ9QlWvSVJokUf3iWuDy1Gynj5Tau+/zzx0
-Ch3k65pQs41XF6BKzS4lhttNnT6Rog==
-=Rtx1
------END PGP SIGNATURE-----
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index d11db80d24cd1..9acb9d2c4bcf9 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -147,7 +147,7 @@ static int alg_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 	const u32 allowed = CRYPTO_ALG_KERN_DRIVER_ONLY;
+ 	struct sock *sk = sock->sk;
+ 	struct alg_sock *ask = alg_sk(sk);
+-	struct sockaddr_alg *sa = (void *)uaddr;
++	struct sockaddr_alg_new *sa = (void *)uaddr;
+ 	const struct af_alg_type *type;
+ 	void *private;
+ 	int err;
+@@ -155,7 +155,11 @@ static int alg_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 	if (sock->state == SS_CONNECTED)
+ 		return -EINVAL;
+ 
+-	if (addr_len < sizeof(*sa))
++	BUILD_BUG_ON(offsetof(struct sockaddr_alg_new, salg_name) !=
++		     offsetof(struct sockaddr_alg, salg_name));
++	BUILD_BUG_ON(offsetof(struct sockaddr_alg, salg_name) != sizeof(*sa));
++
++	if (addr_len < sizeof(*sa) + 1)
+ 		return -EINVAL;
+ 
+ 	/* If caller uses non-allowed flag, return error. */
+@@ -163,7 +167,7 @@ static int alg_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 		return -EINVAL;
+ 
+ 	sa->salg_type[sizeof(sa->salg_type) - 1] = 0;
+-	sa->salg_name[sizeof(sa->salg_name) + addr_len - sizeof(*sa) - 1] = 0;
++	sa->salg_name[addr_len - sizeof(*sa) - 1] = 0;
+ 
+ 	type = alg_get_type(sa->salg_type);
+ 	if (PTR_ERR(type) == -ENOENT) {
+diff --git a/include/uapi/linux/if_alg.h b/include/uapi/linux/if_alg.h
+index 60b7c2efd921c..dc52a11ba6d15 100644
+--- a/include/uapi/linux/if_alg.h
++++ b/include/uapi/linux/if_alg.h
+@@ -24,6 +24,22 @@ struct sockaddr_alg {
+ 	__u8	salg_name[64];
+ };
+ 
++/*
++ * Linux v4.12 and later removed the 64-byte limit on salg_name[]; it's now an
++ * arbitrary-length field.  We had to keep the original struct above for source
++ * compatibility with existing userspace programs, though.  Use the new struct
++ * below if support for very long algorithm names is needed.  To do this,
++ * allocate 'sizeof(struct sockaddr_alg_new) + strlen(algname) + 1' bytes, and
++ * copy algname (including the null terminator) into salg_name.
++ */
++struct sockaddr_alg_new {
++	__u16	salg_family;
++	__u8	salg_type[14];
++	__u32	salg_feat;
++	__u32	salg_mask;
++	__u8	salg_name[];
++};
++
+ struct af_alg_iv {
+ 	__u32	ivlen;
+ 	__u8	iv[0];
 
---cpvLTH7QU4gwfq3S--
+base-commit: 3650b228f83adda7e5ee532e2b90429c03f7b9ec
+-- 
+2.29.1
+
