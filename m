@@ -1,123 +1,69 @@
-Return-Path: <SRS0=1bDI=EB=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=UqY4=EE=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A52C2D0A3
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 23:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7176C56202
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Oct 2020 00:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43FC7206FB
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Oct 2020 23:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6A420790
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Oct 2020 00:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1603755617;
-	bh=ZgbflWpbtTfBxG7usPJTb2WZqEYqd438hFIgnDyXuZk=;
+	s=default; t=1603931715;
+	bh=XPg4SEeqKrCMXwqHCp6LcifvhrM3ld8XV/RL6baPbrg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UkSh39rRDlm8ul1ePL/8Udm2gHqbUzie8nOeB46JfDuerr9mU+DZf0hsyseQYgo2R
-	 V1tcxNRgDuj0Ff+e32Q50ur6/Rmiu9FDiJI9QxF/9nUj8Fd6VuS2Fv8su6/MhzjdHC
-	 vYgnRdRrc1w0O1+p8wuR1Lp41ZB3pKqCch08/Z1U=
+	b=mrY7VBgZ+UbQ5IIB225zWKa9irJokHb8TbTWnjhFYH27BsXD0p4A3/vw8/KdEMc3H
+	 +1NDQB/Ag9Piz+u8+FCvuPoukf/DyXJMFEaCfPcAlF3kiCJWiadyyRgEhxDkI9YbnD
+	 pjWZXBCRp5bU4sJ3Zd7BscbuzgbMyz0ITJ0ObaCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407442AbgJZXkN (ORCPT
+        id S1731705AbgJ1WT1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Oct 2020 19:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37002 "EHLO mail.kernel.org"
+        Wed, 28 Oct 2020 18:19:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407433AbgJZXkM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:40:12 -0400
-Received: from gmail.com (unknown [104.132.1.76])
+        id S1731667AbgJ1WRl (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 28 Oct 2020 18:17:41 -0400
+Received: from localhost (unknown [122.171.163.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C14C206FB;
-        Mon, 26 Oct 2020 23:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B757C2231B;
+        Wed, 28 Oct 2020 05:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603755611;
-        bh=ZgbflWpbtTfBxG7usPJTb2WZqEYqd438hFIgnDyXuZk=;
+        s=default; t=1603864605;
+        bh=XPg4SEeqKrCMXwqHCp6LcifvhrM3ld8XV/RL6baPbrg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s4jrG+TkxPz3M1yPMrS2r30WcawYO1jYf1AyyGHiEtn1vMdQ1ui0K8jDexcGCGsR4
-         qgptXFeRExv0dD6gh+fJm5OBVo/+BvYnP2/KSs6/f7rLeJY31E+VlYDOdJudJL6N96
-         sKfCkkyZpbO6hx2jpem2/n1ODJmzZYKLLznl6ih8=
-Date:   Mon, 26 Oct 2020 16:40:10 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
+        b=klApAEC0oKB+qer/j+opIGAlfrANR7UnFTZbrStUDvw5/vDWKWc46c1tpgOZz+b1a
+         ogq1U35gUn+VEg9fpSAn5LCcOzrYMd7p35XBpFA4jGby1v1NG+63Dng3vUExRDJgrz
+         aOxmXwc6EK46dOTK+Z8TrrXka3GBW5iVVaKAis28=
+Date:   Wed, 28 Oct 2020 11:26:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        syzkaller-bugs@googlegroups.com, linux-hardening@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Elena Petrova <lenaptr@google.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        stable@vger.kernel.org,
-        syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com
-Subject: Re: [PATCH] crypto: af_alg - avoid undefined behavior accessing
- salg_name
-Message-ID: <20201026234010.GD1947033@gmail.com>
-References: <CACT4Y+beaHrWisaSsV90xQn+t2Xn-bxvVgmx8ih_h=yJYPjs4A@mail.gmail.com>
- <20201026200715.170261-1-ebiggers@kernel.org>
- <20201026212148.GA26823@embeddedor>
- <20201026231059.GB26823@embeddedor>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] dmaengine: stm32-mdma: Use struct_size() in
+ kzalloc()
+Message-ID: <20201028055641.GI3550@vkoul-mobl>
+References: <20201008141828.GA20325@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201026231059.GB26823@embeddedor>
+In-Reply-To: <20201008141828.GA20325@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 06:10:59PM -0500, Gustavo A. R. Silva wrote:
-> On Mon, Oct 26, 2020 at 04:21:48PM -0500, Gustavo A. R. Silva wrote:
-> > > +/*
-> > > + * Linux v4.12 and later removed the 64-byte limit on salg_name[]; it's now an
-> > > + * arbitrary-length field.  We had to keep the original struct above for source
-> > > + * compatibility with existing userspace programs, though.  Use the new struct
-> > > + * below if support for very long algorithm names is needed.  To do this,
-> > > + * allocate 'sizeof(struct sockaddr_alg_new) + strlen(algname) + 1' bytes, and
-> > > + * copy algname (including the null terminator) into salg_name.
-> > > + */
-> > > +struct sockaddr_alg_new {
-> > > +	__u16	salg_family;
-> > > +	__u8	salg_type[14];
-> > > +	__u32	salg_feat;
-> > > +	__u32	salg_mask;
-> > > +	__u8	salg_name[];
-> > > +};
-> > > +
-> > 
-> > How something like this, instead:
-> > 
-> >  struct sockaddr_alg {
-> > -	__u16	salg_family;
-> > -	__u8	salg_type[14];
-> > -	__u32	salg_feat;
-> > -	__u32	salg_mask;
-> > -	__u8	salg_name[64];
-> > +	union {
-> > +		struct {
-> > +			__u16	salg_v1_family;
-> > +			__u8	salg_v1_type[14];
-> > +			__u32	salg_v1_feat;
-> > +			__u32	salg_v1_mask;
-> > +			__u8	salg_name[64];
-> > +		};
-> > +		struct {
-> > +			__u16	salg_family;
-> > +			__u8	salg_type[14];
-> > +			__u32	salg_feat;
-> > +			__u32	salg_mask;
-> > +			__u8	salg_name_new[];
-> > +		};
-> > +	};
-> >  };
-> > 
-> 
-> Something similar to the following approach might work:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=testing/uapi/gntalloc&id=db46c8aba41c436edb0b4ef2941bd7390b0e5d61
-> 
+On 08-10-20, 09:18, Gustavo A. R. Silva wrote:
+> Make use of the new struct_size() helper instead of the offsetof() idiom.
 
-I suppose so.  It's very confusing to see a union like that at first glance,
-though.  It definitely needs an explanatory comment...
+Applied, thanks
 
-- Eric
+-- 
+~Vinod
