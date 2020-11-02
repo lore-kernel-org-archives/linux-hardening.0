@@ -1,95 +1,127 @@
-Return-Path: <SRS0=mkbF=EF=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=Ug7b=EI=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B65C55178
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Oct 2020 19:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32A3C388F2
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 Nov 2020 02:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358E7206E3
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Oct 2020 19:26:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="in5Ey64O"
+	by mail.kernel.org (Postfix) with ESMTP id A1695206D4
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 Nov 2020 02:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgJ3T0d (ORCPT
+        id S1727461AbgKBCRT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Oct 2020 15:26:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgJ3TZk (ORCPT
+        Sun, 1 Nov 2020 21:17:19 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:40899 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727686AbgKBCRS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Oct 2020 15:25:40 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8366BC0613CF
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Oct 2020 12:25:40 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id r3so3451448plo.1
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Oct 2020 12:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gwqDDwLjsVYw6Whxs6WBNDQqodgj/3KGgtAXZxmlzdc=;
-        b=in5Ey64Ooa7h9u9fOLI75hRMHbBrWTVJ4fTHsuIRjGV28rrYyCZIMYHTYv5VM5FGtC
-         qi6ok+56l3Jt27UzF3akA9pGaonaWrDiR5n1r2cJTK0M3+dISSQnwks9zKIdsJmVwwkg
-         F3zf4CSNqHc+e5eN8drTa+2k0VX4ySRLdoHB4=
+        Sun, 1 Nov 2020 21:17:18 -0500
+Received: by mail-il1-f199.google.com with SMTP id g14so9210675ilr.7
+        for <linux-hardening@vger.kernel.org>; Sun, 01 Nov 2020 18:17:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gwqDDwLjsVYw6Whxs6WBNDQqodgj/3KGgtAXZxmlzdc=;
-        b=fXAMSrdFfe8UElHdKUFlxFDrUV1qKHDm4vUmgPIsDrAiZWU6hYdLiG4wQMwoYabdgu
-         oVyVO5E71rOpUEAIsXK2v0UMIaND8zEBk3wcSF9Ljoqm8HdTXmPbHxw/PkbUTv0AgT/8
-         MJgC3cbfm85tdBLthBVoXooa+YyfD4prjcJqND4ZQKZYnFN1qxJjSyu0olfuYO0ZmwD0
-         trx5/Xvc62Ar7Re2qqfFWkuAxdCX/JDcLVFr7ZMLSYo3nAbT65qSYaEi8KYhmsCzG+1w
-         uB/J3A0nszhqZtxmcKZR3JI2eBZ1AZgngsLVDT7SmV2q3sEiEMwAYSpucCVLEijCyLUm
-         ycMg==
-X-Gm-Message-State: AOAM531Zcg9qlX/I32o4ppVN75PQvzoqPOsZ8803LzB7plYb1fAj9z38
-        3nBTP4fABWzH4zP29yXiEkDkjQ==
-X-Google-Smtp-Source: ABdhPJzS7AYNBywkEkiPG3bwCpsnEKWb+YgsaJTHo362/atJQ2fZSXau2VlI8LwbB6SC2AXEvdlryg==
-X-Received: by 2002:a17:902:b192:b029:d2:f08:f85a with SMTP id s18-20020a170902b192b02900d20f08f85amr10218034plr.49.1604085940123;
-        Fri, 30 Oct 2020 12:25:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w19sm2254173pff.76.2020.10.30.12.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2020 12:25:39 -0700 (PDT)
-Date:   Fri, 30 Oct 2020 12:25:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     laniel_francis@privacyrequired.com
-Cc:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-        davem@davemloft.net, kuba@kernel.org
-Subject: Re: [PATCH v4 2/3] Modify return value of nla_strlcpy to match that
- of strscpy.
-Message-ID: <202010301217.7EF0009E83@keescook>
-References: <20201030153647.4408-1-laniel_francis@privacyrequired.com>
- <20201030153647.4408-3-laniel_francis@privacyrequired.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=bX3kU4P8yJuAY82nsfBl0rlgJH/7CdYcGrqPlOLjb6A=;
+        b=YAsTJdWBVXG+3R2faF7tcOm5Mfu7mQEfG0m3VnISVbsn+F8ENt0bVvN4y5HshIF0qj
+         zbE/GXtnh7qfcpNZCJ0B22Bo++yy11EbeGCUHW14b4BEvxtmHi2ug9fE50cOWhuGgdZS
+         zU7Cf7SBkZacfCG+VlwhV27xlERk2AR4MXPShSXy0bLgMELjMxE6Q7ankKG93x4OzZZ0
+         9ZmcyEv0gwgpkvNrZjWhM13cQmwA9oUDsuZ12gb2ThOwjmyc4ilv7bLAT0sI2vVElOtH
+         j6PWg/UC3/NTrEdaxNLlM3Se2v9O27YALZ57apG7W+7XoQ+sFEsjPda0mWTdFM9A1AKF
+         6PZg==
+X-Gm-Message-State: AOAM5315ZQ4Pjb+a7ZLv0p70z64mf+GBfSiZjNgixCZIeUy+xRnbEfAd
+        oqtquBib/OcR+Dn4UMeIfeze+VQeWx4zjS06Z1wPT/ALmydS
+X-Google-Smtp-Source: ABdhPJwULsSw1nWFIVrIGiYn037uYE295gM+Ktp0k2e6asH2TIZtXJtu6z7hccagspKZOHSss24KU1iUY9QXh3Ua/3XwHqAxGA21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201030153647.4408-3-laniel_francis@privacyrequired.com>
+X-Received: by 2002:a05:6638:a11:: with SMTP id 17mr10180222jan.59.1604283437871;
+ Sun, 01 Nov 2020 18:17:17 -0800 (PST)
+Date:   Sun, 01 Nov 2020 18:17:17 -0800
+In-Reply-To: <00000000000014370305b1c55370@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006ef8a105b31658b5@google.com>
+Subject: Re: UBSAN: array-index-out-of-bounds in alg_bind
+From:   syzbot <syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dvyukov@google.com, ebiggers@kernel.org,
+        gustavoars@kernel.org, herbert@gondor.apana.org.au,
+        jannh@google.com, keescook@chromium.org, lenaptr@google.com,
+        linux-api@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        vegard.nossum@oracle.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 30, 2020 at 04:36:46PM +0100, laniel_francis@privacyrequired.com wrote:
-> diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-> index 2a76a2f5ed88..f9b053b30a7b 100644
-> --- a/net/sched/sch_api.c
-> +++ b/net/sched/sch_api.c
-> @@ -1170,7 +1170,7 @@ static struct Qdisc *qdisc_create(struct net_device *dev,
->  #ifdef CONFIG_MODULES
->  	if (ops == NULL && kind != NULL) {
->  		char name[IFNAMSIZ];
-> -		if (nla_strlcpy(name, kind, IFNAMSIZ) < IFNAMSIZ) {
-> +		if (nla_strlcpy(name, kind, IFNAMSIZ) > 0) {
->  			/* We dropped the RTNL semaphore in order to
->  			 * perform the module load.  So, even if we
->  			 * succeeded in loading the module we have to
+syzbot has found a reproducer for the following issue on:
 
-Oops, I think this should be >= 0 ?
+HEAD commit:    3cea11cd Linux 5.10-rc2
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1443bf92500000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e791ddf0875adf65
+dashboard link: https://syzkaller.appspot.com/bug?extid=92ead4eb8e26a26d465e
+compiler:       clang version 11.0.0 (https://github.com/llvm/llvm-project.git ca2dcbd030eadbf0aa9b660efe864ff08af6e18b)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145afc2c500000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141ad11a500000
 
--- 
-Kees Cook
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com
+
+================================================================================
+UBSAN: array-index-out-of-bounds in crypto/af_alg.c:166:2
+index 98 is out of range for type '__u8 [64]'
+CPU: 1 PID: 8468 Comm: syz-executor983 Not tainted 5.10.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x137/0x1be lib/dump_stack.c:118
+ ubsan_epilogue lib/ubsan.c:148 [inline]
+ __ubsan_handle_out_of_bounds+0xdb/0x130 lib/ubsan.c:356
+ alg_bind+0x738/0x740 crypto/af_alg.c:166
+ __sys_bind+0x283/0x360 net/socket.c:1656
+ __do_sys_bind net/socket.c:1667 [inline]
+ __se_sys_bind net/socket.c:1665 [inline]
+ __x64_sys_bind+0x76/0x80 net/socket.c:1665
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4402c9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe05301528 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402c9
+RDX: 000000000000007b RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401ad0
+R13: 0000000000401b60 R14: 0000000000000000 R15: 0000000000000000
+================================================================================
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 8468 Comm: syz-executor983 Not tainted 5.10.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x137/0x1be lib/dump_stack.c:118
+ panic+0x291/0x800 kernel/panic.c:231
+ ubsan_epilogue lib/ubsan.c:162 [inline]
+ __ubsan_handle_out_of_bounds+0x12b/0x130 lib/ubsan.c:356
+ alg_bind+0x738/0x740 crypto/af_alg.c:166
+ __sys_bind+0x283/0x360 net/socket.c:1656
+ __do_sys_bind net/socket.c:1667 [inline]
+ __se_sys_bind net/socket.c:1665 [inline]
+ __x64_sys_bind+0x76/0x80 net/socket.c:1665
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4402c9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe05301528 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402c9
+RDX: 000000000000007b RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401ad0
+R13: 0000000000401b60 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
