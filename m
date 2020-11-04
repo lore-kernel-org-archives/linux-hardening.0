@@ -2,36 +2,55 @@ Return-Path: <SRS0=8UcS=EK=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E76AC2D0A3
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Nov 2020 14:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B23C4741F
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Nov 2020 14:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B545420739
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Nov 2020 14:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5868820756
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Nov 2020 14:45:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FuehmNZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgKDOl2 (ORCPT
+        id S1730250AbgKDOp6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 Nov 2020 09:41:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726564AbgKDOl2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 Nov 2020 09:41:28 -0500
-Received: from gaia (unknown [2.26.170.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 4 Nov 2020 09:45:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49589 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729898AbgKDOp5 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 4 Nov 2020 09:45:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604501156;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2/qDMVtos7dYdtcZu5rNmBGlotvjjozf9G0PRDDGQXs=;
+        b=FuehmNZcdrcy7rGZnQ6XxJIDWzKhga0wN8DWf9q9lAn5+h7YMqS/iRfTkVcDYtLce2bqEv
+        rpV8BHUYd8xNdGdP48JbZTM5DM6puvHJbrMDqYBiiEC5BY4k19KWWdwDQlVcWqmpb8BpPz
+        Cs/+yMIC2jWRjTSFP4fauRvai2JRQJE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-jgwp6zJgNeGan1kW1fiemg-1; Wed, 04 Nov 2020 09:45:52 -0500
+X-MC-Unique: jgwp6zJgNeGan1kW1fiemg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5960206DB;
-        Wed,  4 Nov 2020 14:41:23 +0000 (UTC)
-Date:   Wed, 4 Nov 2020 14:41:21 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Szabolcs Nagy <szabolcs.nagy@arm.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D1931084C80;
+        Wed,  4 Nov 2020 14:45:50 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-12.ams2.redhat.com [10.36.113.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C3E125B4D8;
+        Wed,  4 Nov 2020 14:45:45 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
         Mark Brown <broonie@kernel.org>, libc-alpha@sourceware.org,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
         Kees Cook <keescook@chromium.org>,
         Salvatore Mesoraca <s.mesoraca16@gmail.com>,
         Lennart Poettering <mzxreary@0pointer.de>,
@@ -41,60 +60,34 @@ Cc:     Jeremy Linton <jeremy.linton@arm.com>,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 0/4] aarch64: avoid mprotect(PROT_BTI|PROT_EXEC) [BZ
  #26831]
-Message-ID: <20201104144120.GD28902@gaia>
 References: <cover.1604393169.git.szabolcs.nagy@arm.com>
- <20201103173438.GD5545@sirena.org.uk>
- <8c99cc8e-41af-d066-b786-53ac13c2af8a@arm.com>
- <20201104085704.GB24704@arm.com>
+        <20201103173438.GD5545@sirena.org.uk>
+        <8c99cc8e-41af-d066-b786-53ac13c2af8a@arm.com>
+        <20201104085704.GB24704@arm.com> <20201104144120.GD28902@gaia>
+Date:   Wed, 04 Nov 2020 15:45:44 +0100
+In-Reply-To: <20201104144120.GD28902@gaia> (Catalin Marinas's message of "Wed,
+        4 Nov 2020 14:41:21 +0000")
+Message-ID: <87ft5p2naf.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201104085704.GB24704@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 08:57:05AM +0000, Szabolcs Nagy wrote:
-> The 11/03/2020 23:41, Jeremy Linton wrote:
-> > On 11/3/20 11:34 AM, Mark Brown wrote:
-> > > On Tue, Nov 03, 2020 at 10:25:37AM +0000, Szabolcs Nagy wrote:
-> > > 
-> > > > Re-mmap executable segments instead of mprotecting them in
-> > > > case mprotect is seccomp filtered.
-> > > 
-> > > > For the kernel mapped main executable we don't have the fd
-> > > > for re-mmap so linux needs to be updated to add BTI. (In the
-> > > > presence of seccomp filters for mprotect(PROT_EXEC) the libc
-> > > > cannot change BTI protection at runtime based on user space
-> > > > policy so it is better if the kernel maps BTI compatible
-> > > > binaries with PROT_BTI by default.)
-> > > 
-> > > Given that there were still some ongoing discussions on a more robust
-> > > kernel interface here and there seem to be a few concerns with this
-> > > series should we perhaps just take a step back and disable this seccomp
-> > > filter in systemd on arm64, at least for the time being?  That seems
-> > > safer than rolling out things that set ABI quickly, a big part of the
-> > 
-> > So, that's a bigger hammer than I think is needed and punishes !BTI
-> > machines. I'm going to suggest that if we need to carry a temp patch its
-> > more like the glibc patch I mentioned in the Fedora defect. That patch
-> > simply logs a message, on the mprotect failures rather than aborting. Its
-> > fairly non-intrusive.
-> > 
-> > That leaves seccomp functional, and BTI generally functional except when
-> > seccomp is restricting it. I've also been asked that if a patch like that is
-> > needed, its (temporary?) merged to the glibc trunk, rather than just being
-> > carried by the distro's.
-> 
-> note that changing mprotect into mmap in glibc works
-> even if the kernel or systemd decides to do things
-> differently: currently the only wart is that on the
-> main exe we have to use mprotect and silently ignore
-> the failures.
+* Catalin Marinas:
 
-Can the dynamic loader mmap() the main exe again while munmap'ing the
-original one? (sorry if it was already discussed)
+> Can the dynamic loader mmap() the main exe again while munmap'ing the
+> original one? (sorry if it was already discussed)
 
+No, we don't have a descriptor for that.  /proc may not be mounted, and
+using the path stored there has a race condition anyway.
+
+Thanks,
+Florian
 -- 
-Catalin
+Red Hat GmbH, https://de.redhat.com/ , Registered seat: Grasbrunn,
+Commercial register: Amtsgericht Muenchen, HRB 153243,
+Managing Directors: Charles Cachera, Brian Klemm, Laurie Krebs, Michael O'Neill
+
