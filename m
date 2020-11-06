@@ -1,113 +1,98 @@
-Return-Path: <SRS0=2w0E=EL=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=Z8Gd=EM=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF0FC388F7
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Nov 2020 19:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80587C56201
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Nov 2020 07:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4157020704
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Nov 2020 19:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3222D20825
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Nov 2020 07:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbgKETiG (ORCPT
+        id S1726050AbgKFHBl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Nov 2020 14:38:06 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:45818 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727017AbgKETiF (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Nov 2020 14:38:05 -0500
-Received: from mail-qk1-f198.google.com ([209.85.222.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1kal58-0000yl-BN
-        for linux-hardening@vger.kernel.org; Thu, 05 Nov 2020 19:38:02 +0000
-Received: by mail-qk1-f198.google.com with SMTP id x2so1630922qkd.23
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2020 11:38:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=U+a+gNIbJITYFSm1fPB5NcpyqxVoTmbEhGD5seomukY=;
-        b=BTrnEkHJG08dA0NUgAzn11CuxBXRR/L1M/gmrg7qEOrlIx2rfikSjYlwdeGAYF1OoV
-         UKLsHLPP9yf4BT/Vd5c54XXOXjD9LV1w8HFtghJ8Iz1HcUdjWXQJ8FyOMLGy9IcvPM6s
-         +DneMNLpHVKiKFqW059nOJg3x4zu+SeOp1wEn8zfFWc2nK/4r6F2VRvYV/Sb67nxgzYr
-         PiasNj+NgviTyg1XyGTpZi1RMLK1Tmc7IV6GsvmUNjDy7MCUnL7E9NuKQGdDJDpYosId
-         rADucFXMRnzIKSwulh0BtBYAzYDnO2ijk/O8oiahudVV+i03KgbBidTfh6mN62RVkafD
-         D8vg==
-X-Gm-Message-State: AOAM533K7GxZf5OoYGxF+d8/aZsjAHh05VTpW+sdR/+ty7UteVZr8z92
-        2WpO/fMZqredO2LbhNSUgIgMQtgb8sgwKAvkBpg/50268Yo/9CrkXjrnRBE2eNIDcZQ5yXTUo0c
-        T2fNtit6fIGDs+oTFQ0sSa4X/9jdvd8TQtdoKuYZf6eKbMQ==
-X-Received: by 2002:ac8:540e:: with SMTP id b14mr3630707qtq.136.1604605081490;
-        Thu, 05 Nov 2020 11:38:01 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwogUYq8CCKM+u/T4cSYijlorWkNQQUKBHl8kr1d+TVLfKeqZioURlPJbfLkAGZuLSMkNW7mg==
-X-Received: by 2002:ac8:540e:: with SMTP id b14mr3630680qtq.136.1604605081219;
-        Thu, 05 Nov 2020 11:38:01 -0800 (PST)
-Received: from [192.168.1.75] ([177.215.78.178])
-        by smtp.gmail.com with ESMTPSA id z2sm1693271qkl.22.2020.11.05.11.37.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2020 11:38:00 -0800 (PST)
-Subject: Re: [PATCH] mm, hugetlb: Avoid double clearing for hugetlb pages
-To:     linux-mm@kvack.org
-Cc:     kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org, kernel@gpiccoli.net,
-        cascardo@canonical.com, Alexander Potapenko <glider@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
+        Fri, 6 Nov 2020 02:01:41 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:35026 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgKFHBl (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 6 Nov 2020 02:01:41 -0500
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kavkQ-00080h-KI; Fri, 06 Nov 2020 18:01:23 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 06 Nov 2020 18:01:22 +1100
+Date:   Fri, 6 Nov 2020 18:01:22 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-crypto@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-hardening@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>,
         Kees Cook <keescook@chromium.org>,
-        Michal Hocko <mhocko@suse.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>, david@redhat.com
-References: <20201019182853.7467-1-gpiccoli@canonical.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
- xsBNBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
- Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
- 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
- irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
- 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
- AAHNLUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPsLAdwQT
- AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
- 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
- 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
- q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
- iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
- LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltvezsBNBFpVBxcBCADbxD6J
- aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
- pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
- kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
- nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
- bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAHCwF8EGAEIAAkFAlpV
- BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
- 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
- egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
- Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
- kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
- X18zwLgdiQ==
-Message-ID: <6c17f146-3d1e-8b9f-835c-1dc33d95aa0c@canonical.com>
-Date:   Thu, 5 Nov 2020 16:37:55 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Elena Petrova <lenaptr@google.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        stable@vger.kernel.org,
+        syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com
+Subject: Re: [PATCH] crypto: af_alg - avoid undefined behavior accessing
+ salg_name
+Message-ID: <20201106070122.GC11620@gondor.apana.org.au>
+References: <CACT4Y+beaHrWisaSsV90xQn+t2Xn-bxvVgmx8ih_h=yJYPjs4A@mail.gmail.com>
+ <20201026200715.170261-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20201019182853.7467-1-gpiccoli@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201026200715.170261-1-ebiggers@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Thanks all for the valuable opinions and feedback!
-Closing the loop here: so, the proposal wasn't accepted, but an
-interesting idea to optimize later hugeTLB allocations was discussed in
-the thread - it doesn't help much our case, but it is a performance
-optimization.
+On Mon, Oct 26, 2020 at 01:07:15PM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Commit 3f69cc60768b ("crypto: af_alg - Allow arbitrarily long algorithm
+> names") made the kernel start accepting arbitrarily long algorithm names
+> in sockaddr_alg.  However, the actual length of the salg_name field
+> stayed at the original 64 bytes.
+> 
+> This is broken because the kernel can access indices >= 64 in salg_name,
+> which is undefined behavior -- even though the memory that is accessed
+> is still located within the sockaddr structure.  It would only be
+> defined behavior if the array were properly marked as arbitrary-length
+> (either by making it a flexible array, which is the recommended way
+> these days, or by making it an array of length 0 or 1).
+> 
+> We can't simply change salg_name into a flexible array, since that would
+> break source compatibility with userspace programs that embed
+> sockaddr_alg into another struct, or (more commonly) declare a
+> sockaddr_alg like 'struct sockaddr_alg sa = { .salg_name = "foo" };'.
+> 
+> One solution would be to change salg_name into a flexible array only
+> when '#ifdef __KERNEL__'.  However, that would keep userspace without an
+> easy way to actually use the longer algorithm names.
+> 
+> Instead, add a new structure 'sockaddr_alg_new' that has the flexible
+> array field, and expose it to both userspace and the kernel.
+> Make the kernel use it correctly in alg_bind().
+> 
+> This addresses the syzbot report
+> "UBSAN: array-index-out-of-bounds in alg_bind"
+> (https://syzkaller.appspot.com/bug?extid=92ead4eb8e26a26d465e).
+> 
+> Reported-by: syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com
+> Fixes: 3f69cc60768b ("crypto: af_alg - Allow arbitrarily long algorithm names")
+> Cc: <stable@vger.kernel.org> # v4.12+
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  crypto/af_alg.c             | 10 +++++++---
+>  include/uapi/linux/if_alg.h | 16 ++++++++++++++++
+>  2 files changed, 23 insertions(+), 3 deletions(-)
 
-Cheers,
-
-
-Guilherme
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
