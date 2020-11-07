@@ -1,98 +1,92 @@
-Return-Path: <SRS0=Z8Gd=EM=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=ysH7=EN=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80587C56201
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Nov 2020 07:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926EDC388F9
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Nov 2020 11:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3222D20825
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Nov 2020 07:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C21206F4
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Nov 2020 11:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EmpBnFMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgKFHBl (ORCPT
+        id S1727611AbgKGLac (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Nov 2020 02:01:41 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:35026 "EHLO fornost.hmeau.com"
+        Sat, 7 Nov 2020 06:30:32 -0500
+Received: from z5.mailgun.us ([104.130.96.5]:23265 "EHLO z5.mailgun.us"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgKFHBl (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Nov 2020 02:01:41 -0500
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kavkQ-00080h-KI; Fri, 06 Nov 2020 18:01:23 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 06 Nov 2020 18:01:22 +1100
-Date:   Fri, 6 Nov 2020 18:01:22 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-crypto@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-hardening@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Elena Petrova <lenaptr@google.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        stable@vger.kernel.org,
-        syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com
-Subject: Re: [PATCH] crypto: af_alg - avoid undefined behavior accessing
- salg_name
-Message-ID: <20201106070122.GC11620@gondor.apana.org.au>
-References: <CACT4Y+beaHrWisaSsV90xQn+t2Xn-bxvVgmx8ih_h=yJYPjs4A@mail.gmail.com>
- <20201026200715.170261-1-ebiggers@kernel.org>
+        id S1726242AbgKGLab (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 7 Nov 2020 06:30:31 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1604748631; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=s5w8P52coHT1ckZPA5STiTXPDWdV+uMsoiOmwcLwmkU=;
+ b=EmpBnFMFUdp8C3wPJ4ZF12dl/UtxgU2iCZUQffKTW5pgePF+8BwMczzd2iwYawcxG+odoxGq
+ LuW7819JPZN+IlTCWNdViF355d4hpAjAlTStNEAB/oQ1WLNDoPnBXoRkldNqSUrLVoJkwxC6
+ JQfttFKZCkiHTEO9vlkMqzZ+g3s=
+X-Mailgun-Sending-Ip: 104.130.96.5
+X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5fa685519d6b206d944a6f79 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 07 Nov 2020 11:30:25
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C8327C433C8; Sat,  7 Nov 2020 11:30:25 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4FBDC433C6;
+        Sat,  7 Nov 2020 11:30:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A4FBDC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201026200715.170261-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] ray_cs: Use fallthrough pseudo-keyword
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20201008220422.GA6926@embeddedor>
+References: <20201008220422.GA6926@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20201107113025.C8327C433C8@smtp.codeaurora.org>
+Date:   Sat,  7 Nov 2020 11:30:25 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 01:07:15PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> Commit 3f69cc60768b ("crypto: af_alg - Allow arbitrarily long algorithm
-> names") made the kernel start accepting arbitrarily long algorithm names
-> in sockaddr_alg.  However, the actual length of the salg_name field
-> stayed at the original 64 bytes.
-> 
-> This is broken because the kernel can access indices >= 64 in salg_name,
-> which is undefined behavior -- even though the memory that is accessed
-> is still located within the sockaddr structure.  It would only be
-> defined behavior if the array were properly marked as arbitrary-length
-> (either by making it a flexible array, which is the recommended way
-> these days, or by making it an array of length 0 or 1).
-> 
-> We can't simply change salg_name into a flexible array, since that would
-> break source compatibility with userspace programs that embed
-> sockaddr_alg into another struct, or (more commonly) declare a
-> sockaddr_alg like 'struct sockaddr_alg sa = { .salg_name = "foo" };'.
-> 
-> One solution would be to change salg_name into a flexible array only
-> when '#ifdef __KERNEL__'.  However, that would keep userspace without an
-> easy way to actually use the longer algorithm names.
-> 
-> Instead, add a new structure 'sockaddr_alg_new' that has the flexible
-> array field, and expose it to both userspace and the kernel.
-> Make the kernel use it correctly in alg_bind().
-> 
-> This addresses the syzbot report
-> "UBSAN: array-index-out-of-bounds in alg_bind"
-> (https://syzkaller.appspot.com/bug?extid=92ead4eb8e26a26d465e).
-> 
-> Reported-by: syzbot+92ead4eb8e26a26d465e@syzkaller.appspotmail.com
-> Fixes: 3f69cc60768b ("crypto: af_alg - Allow arbitrarily long algorithm names")
-> Cc: <stable@vger.kernel.org> # v4.12+
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  crypto/af_alg.c             | 10 +++++++---
->  include/uapi/linux/if_alg.h | 16 ++++++++++++++++
->  2 files changed, 23 insertions(+), 3 deletions(-)
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-Patch applied.  Thanks.
+> In order to enable -Wimplicit-fallthrough for Clang[1], replace the
+> existing /* fall through */ comments with the new pseudo-keyword
+> macro fallthrough[2].
+> 
+> [1] https://git.kernel.org/linus/e2079e93f562c7f7a030eb7642017ee5eabaaa10
+> [2] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Patch applied to wireless-drivers-next.git, thanks.
+
+256ff2ef6c14 ray_cs: Use fallthrough pseudo-keyword
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+https://patchwork.kernel.org/project/linux-wireless/patch/20201008220422.GA6926@embeddedor/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
