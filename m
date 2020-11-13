@@ -1,92 +1,89 @@
-Return-Path: <SRS0=ysH7=EN=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D53BC388F7
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Nov 2020 11:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4100C63697
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 Nov 2020 09:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05817206F4
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Nov 2020 11:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4444E22265
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 Nov 2020 09:38:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UTL7Iy5+"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="p+xYWWwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgKGLc0 (ORCPT
+        id S1726618AbgKMJil (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 7 Nov 2020 06:32:26 -0500
-Received: from m42-4.mailgun.net ([69.72.42.4]:54103 "EHLO m42-4.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbgKGLc0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 7 Nov 2020 06:32:26 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1604748745; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=3OaIpUUxN0+eoHMI2OrY6Na1JgZTiFUtOu3vTjDOwBA=;
- b=UTL7Iy5+62oV23NnkV4Eu5jcQf7lyubJ2LI0QMoAUUvWhnGWP/lNfLuDVPaW9SsmoexGspuQ
- C4yvk8rjR9WlYURcQhbXTJTfCxL/MUJ4CncyFQxZS/MmsXVHve+eui4uLIHbNMkD8NxefT9f
- 8CwcW1gkv9GoQq/EmLzVPfwQh/M=
-X-Mailgun-Sending-Ip: 69.72.42.4
-X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5fa6857f7e36360900add94d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 07 Nov 2020 11:31:11
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 615AEC433C8; Sat,  7 Nov 2020 11:31:11 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3276BC433C8;
-        Sat,  7 Nov 2020 11:31:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3276BC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 13 Nov 2020 04:38:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgKMJij (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 13 Nov 2020 04:38:39 -0500
+Received: from confino.investici.org (confino.investici.org [IPv6:2a00:c38:11e:ffff::a020])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F58BC0613D6;
+        Fri, 13 Nov 2020 01:38:38 -0800 (PST)
+Received: from mx1.investici.org (unknown [127.0.0.1])
+        by confino.investici.org (Postfix) with ESMTP id 4CXYLd6R7pz1132;
+        Fri, 13 Nov 2020 09:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
+        s=stigmate; t=1605260313;
+        bh=OAJ5KD0r/OiDibphGT3PLYWsOfovB3Nb036IIl60DlI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p+xYWWwQ9P8uwg66bDh8CY/ajVi/Sg48dLNwc8N9xrcJnOqbJtMbSi9AeQwmL85Ek
+         /8zs+5KHV6duTGCgj89Pw72UzNW1yViQigjraxSkr3YYouQKyH0+1e4QK9pTkuzrKU
+         evxR3j+6lzyKiubkcqqVPXfmx6CcksrUF/yxdQG8=
+Received: from [212.103.72.250] (mx1.investici.org [212.103.72.250]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CXYLd5K1Bz112w;
+        Fri, 13 Nov 2020 09:38:33 +0000 (UTC)
+From:   Francis Laniel <laniel_francis@privacyrequired.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+        davem@davemloft.net, kuba@kernel.org
+Subject: Re: [PATCH v4 2/3] Modify return value of nla_strlcpy to match that of strscpy.
+Date:   Fri, 13 Nov 2020 10:38:33 +0100
+Message-ID: <3167137.UV11EXrnFd@machine>
+In-Reply-To: <202010301217.7EF0009E83@keescook>
+References: <20201030153647.4408-1-laniel_francis@privacyrequired.com> <20201030153647.4408-3-laniel_francis@privacyrequired.com> <202010301217.7EF0009E83@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] wlcore: Use fallthrough pseudo-keyword
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20201008220905.GA8040@embeddedor>
-References: <20201008220905.GA8040@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20201107113111.615AEC433C8@smtp.codeaurora.org>
-Date:   Sat,  7 Nov 2020 11:31:11 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+Le vendredi 30 octobre 2020, 20:25:38 CET Kees Cook a =E9crit :
+> On Fri, Oct 30, 2020 at 04:36:46PM +0100, laniel_francis@privacyrequired.=
+com=20
+wrote:
+> > diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
+> > index 2a76a2f5ed88..f9b053b30a7b 100644
+> > --- a/net/sched/sch_api.c
+> > +++ b/net/sched/sch_api.c
+> > @@ -1170,7 +1170,7 @@ static struct Qdisc *qdisc_create(struct net_devi=
+ce
+> > *dev,>=20
+> >  #ifdef CONFIG_MODULES
+> > =20
+> >  	if (ops =3D=3D NULL && kind !=3D NULL) {
+> >  =09
+> >  		char name[IFNAMSIZ];
+> >=20
+> > -		if (nla_strlcpy(name, kind, IFNAMSIZ) < IFNAMSIZ) {
+> > +		if (nla_strlcpy(name, kind, IFNAMSIZ) > 0) {
+> >=20
+> >  			/* We dropped the RTNL semaphore in order to
+> >  		=09
+> >  			 * perform the module load.  So, even if we
+> >  			 * succeeded in loading the module we have to
+>=20
+> Oops, I think this should be >=3D 0 ?
 
-> In order to enable -Wimplicit-fallthrough for Clang[1], replace the
-> existing /* fall-through */ comments with the new pseudo-keyword
-> macro fallthrough[2].
-> 
-> [1] https://git.kernel.org/linus/e2079e93f562c7f7a030eb7642017ee5eabaaa10
-> [2] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Good catch! I will modify this, rebase my patch on top of master, test it a=
+=20
+bit more than what I did for the v4 and push  v5!
 
-Patch applied to wireless-drivers-next.git, thanks.
 
-a821e3858e4d wlcore: Use fallthrough pseudo-keyword
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20201008220905.GA8040@embeddedor/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
