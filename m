@@ -2,72 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31043C2D0E4
-	for <linux-hardening@archiver.kernel.org>; Sun, 15 Nov 2020 17:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E4C2D0E4
+	for <linux-hardening@archiver.kernel.org>; Sun, 15 Nov 2020 17:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFBE2244C
-	for <linux-hardening@archiver.kernel.org>; Sun, 15 Nov 2020 17:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93B4221F9
+	for <linux-hardening@archiver.kernel.org>; Sun, 15 Nov 2020 17:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="XQJrBPUl"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="QoA7TR+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgKORFn (ORCPT
+        id S1726826AbgKORI3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 15 Nov 2020 12:05:43 -0500
-Received: from devianza.investici.org ([198.167.222.108]:47001 "EHLO
-        devianza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbgKORFn (ORCPT
+        Sun, 15 Nov 2020 12:08:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgKORI2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 15 Nov 2020 12:05:43 -0500
-Received: from mx2.investici.org (unknown [127.0.0.1])
-        by devianza.investici.org (Postfix) with ESMTP id 4CYz9c50Hcz6vMj;
-        Sun, 15 Nov 2020 17:05:40 +0000 (UTC)
+        Sun, 15 Nov 2020 12:08:28 -0500
+Received: from confino.investici.org (confino.investici.org [IPv6:2a00:c38:11e:ffff::a020])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF56BC0613D1;
+        Sun, 15 Nov 2020 09:08:28 -0800 (PST)
+Received: from mx1.investici.org (unknown [127.0.0.1])
+        by confino.investici.org (Postfix) with ESMTP id 4CYzDn52DKz1179;
+        Sun, 15 Nov 2020 17:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1605459940;
-        bh=TCdQcphmgwyMGsoWSCbgniZ7fgrtS8ox93JBV9SE7WA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQJrBPUlMHWi8HGKD4wvzfbxZ2361GTuUNefk6lVT325l5WjAe5YhdajArOwHtwOK
-         FJLfEDzbLbfLTjTpuPpQy8tiN89/OZmPMWzv1n0gMMfapFtgWnd+A0q6Va0pd6esOm
-         p7bAGluS9Ul/tT3LYrRtmLyiWi0RHxfTJ/gw9cn8=
-Received: from [198.167.222.108] (mx2.investici.org [198.167.222.108]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CYz9c2h17z6vMh;
-        Sun, 15 Nov 2020 17:05:40 +0000 (UTC)
-From:   Francis Laniel <laniel_francis@privacyrequired.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        netdev@vger.kernel.org, davem@davemloft.net
-Subject: Re: [PATCH v5 0/3] Fix inefficiences and rename nla_strlcpy
-Date:   Sun, 15 Nov 2020 18:05:39 +0100
-Message-ID: <7105193.AbosYe1RmR@machine>
-In-Reply-To: <20201114161837.10f58f95@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20201113111133.15011-1-laniel_francis@privacyrequired.com> <202011131054.28BD6A9@keescook> <20201114161837.10f58f95@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        s=stigmate; t=1605460105;
+        bh=DVCw3AOuOJ588nHp3qo8FnNDgBvPpzmhwU8Id2izUtQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QoA7TR+CAMCmcp4DKyn9tXNzLzme2rywfXgwh+GHQLZcHTdBHSkdq5qNdAsba+noR
+         tJf6imAR2mIa8323vBuY/CK2s2oj7cs3FmTQAEBw7uAIbYRFAqOSIKwixd8/CCtR3C
+         3JVOpJlFzNZs8LEHs7y5YXcv1xf+854Qws8mfwH0=
+Received: from [212.103.72.250] (mx1.investici.org [212.103.72.250]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CYzDn38hhz115B;
+        Sun, 15 Nov 2020 17:08:25 +0000 (UTC)
+From:   laniel_francis@privacyrequired.com
+To:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org, keescook@chromium.org,
+        Francis Laniel <laniel_francis@privacyrequired.com>
+Subject: [RESEND,net-next,PATCH v5 0/3] Fix inefficiences and rename nla_strlcpy
+Date:   Sun, 15 Nov 2020 18:08:03 +0100
+Message-Id: <20201115170806.3578-1-laniel_francis@privacyrequired.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Le dimanche 15 novembre 2020, 01:18:37 CET Jakub Kicinski a =E9crit :
-> On Fri, 13 Nov 2020 10:56:26 -0800 Kees Cook wrote:
-> > Thanks! This looks good to me.
-> >=20
-> > Jakub, does this look ready to you?
->=20
-> Yup, looks good, sorry!
->=20
-> But it didn't get into patchwork cleanly :/
->=20
-> One more resend please? (assuming we're expected to take this
-> into net-next)
+From: Francis Laniel <laniel_francis@privacyrequired.com>
 
-I will send it again and tag it for net-next.
-
-Just to know, is patchwork this:
-https://patchwork.kernel.org/project/netdevbpf/list/
-?
+Hi.
 
 
+I hope you are all fine and the same for your relatives.
+
+This patch set answers to first three issues listed in:
+https://github.com/KSPP/linux/issues/110
+
+To sum up, the patch contributions are the following:
+1. the first patch fixes an inefficiency where some bytes in dst were written
+twice, one with 0 the other with src content.
+2. The second one modifies nla_strlcpy to return the same value as strscpy,
+i.e. number of bytes written or -E2BIG if src was truncated.
+It also modifies code that calls nla_strlcpy and checks for its return value.
+3. The third renames nla_strlcpy to nla_strscpy.
+
+Unfortunately, I did not find how to create struct nlattr objects so I tested
+my modifications on simple char* and with GDB using tc to get to
+tcf_proto_check_kind.
+
+If you see any way to improve the code or have any remark, feel free to comment.
+
+
+Best regards and take care of yourselves.
+
+Francis Laniel (3):
+  Fix unefficient call to memset before memcpu in nla_strlcpy.
+  Modify return value of nla_strlcpy to match that of strscpy.
+  treewide: rename nla_strlcpy to nla_strscpy.
+
+ drivers/infiniband/core/nldev.c            | 10 +++---
+ drivers/net/can/vxcan.c                    |  4 +--
+ drivers/net/veth.c                         |  4 +--
+ include/linux/genl_magic_struct.h          |  2 +-
+ include/net/netlink.h                      |  4 +--
+ include/net/pkt_cls.h                      |  2 +-
+ kernel/taskstats.c                         |  2 +-
+ lib/nlattr.c                               | 42 ++++++++++++++--------
+ net/core/fib_rules.c                       |  4 +--
+ net/core/rtnetlink.c                       | 12 +++----
+ net/decnet/dn_dev.c                        |  2 +-
+ net/ieee802154/nl-mac.c                    |  2 +-
+ net/ipv4/devinet.c                         |  2 +-
+ net/ipv4/fib_semantics.c                   |  2 +-
+ net/ipv4/metrics.c                         |  2 +-
+ net/netfilter/ipset/ip_set_hash_netiface.c |  4 +--
+ net/netfilter/nf_tables_api.c              |  6 ++--
+ net/netfilter/nfnetlink_acct.c             |  2 +-
+ net/netfilter/nfnetlink_cthelper.c         |  4 +--
+ net/netfilter/nft_ct.c                     |  2 +-
+ net/netfilter/nft_log.c                    |  2 +-
+ net/netlabel/netlabel_mgmt.c               |  2 +-
+ net/nfc/netlink.c                          |  2 +-
+ net/sched/act_api.c                        |  2 +-
+ net/sched/act_ipt.c                        |  2 +-
+ net/sched/act_simple.c                     |  4 +--
+ net/sched/cls_api.c                        |  2 +-
+ net/sched/sch_api.c                        |  2 +-
+ net/tipc/netlink_compat.c                  |  2 +-
+ 29 files changed, 73 insertions(+), 61 deletions(-)
+
+-- 
+2.20.1
 
