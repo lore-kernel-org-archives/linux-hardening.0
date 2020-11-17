@@ -4,86 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EB0C63798
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 Nov 2020 22:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE1BC2D0E4
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 Nov 2020 22:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD8422210
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 Nov 2020 22:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0966D241A7
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 Nov 2020 22:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lV3mhNUa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lZfw16iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgKQWEH (ORCPT
+        id S1726472AbgKQWGR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 Nov 2020 17:04:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
+        Tue, 17 Nov 2020 17:06:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgKQWEG (ORCPT
+        with ESMTP id S1726182AbgKQWGR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 Nov 2020 17:04:06 -0500
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 588A5C0617A6
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2020 14:04:05 -0800 (PST)
-Received: by mail-pj1-x1043.google.com with SMTP id ei22so1321507pjb.2
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2020 14:04:05 -0800 (PST)
+        Tue, 17 Nov 2020 17:06:17 -0500
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15888C0613CF
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2020 14:06:17 -0800 (PST)
+Received: by mail-pf1-x443.google.com with SMTP id v12so40477pfm.13
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2020 14:06:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=xkxgOlLMZv/mBA18RIBww2IQHFUe3xRNs8TjbDvkQ4I=;
-        b=lV3mhNUanzdZGMsD9jHTT/dHxKx9Utu3wkgIXFkUSb2BLpcFUnW637CqWtmiC90PcD
-         g9hoaxhu/Ft8znXxLZGKjE/iLkT6TUkjoQRaJOkebthXpOs5L2htShYa4Isl6A+CY3PD
-         5WUaIy2o4fEUVa+u+vcsn+4pjSvoFGvvbQG9E=
+        bh=KMzHGfgKgHH9Q7DYJZTvY9huOKnhq3Uw8YTha6ix4Dk=;
+        b=lZfw16izALKPSwU9E2uB5wHjIyBKog7bB9SFuyG61JvYDxMmIiKSfudz7kkmduanaJ
+         QMkPzmtzWxVKFx8+qvH5jIM99Ix82HS3Ag7yXw4octz0t3RgdTSXhoP6HRXmsD2IJfTA
+         Y7C9RG10oO3WCi++8Cb/UawaqfcwgS6cOjc8c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=xkxgOlLMZv/mBA18RIBww2IQHFUe3xRNs8TjbDvkQ4I=;
-        b=GYs/M68HYROSG2gApNzQ2KlazXOT7lx7BA9c8Xl+EQIqt+De79LKysUV3WCRKSxHMy
-         fc3jsRL+9rQm9xtvN9kcm9d6WT0JbTffcf6G9seN2jI+BDQDfdP87y5JY3J8HPJ39KKa
-         tkhGoAISq52R2UEH1xbUJDVap3hA6kTWgIt1hIhvJadOjcZ9x2oXp494cbrxoDWHMRfv
-         vZLg9qnciMyTFydcWIkV+8Rh4lpSmjZgMA7DDjsHciuDBnx863K6uyAVzihRswGsCe0/
-         UUpgaM53TtOtpdLuTypFBOV/jeoRCf0GxY1saLkVITd0+9+eWEhRYM/iGm+09L1eYogJ
-         D59Q==
-X-Gm-Message-State: AOAM531ZjUFuGCGfOumWhFf/hmP6KStfztoD9+91Lcyxwqhw6RwH6P9b
-        jfhZL9Bmy01RTgul2hAyp4pEbIs5uQeYQsFN
-X-Google-Smtp-Source: ABdhPJyohZgaVAYUdKDqvhhYQdby2vb0mA0oc9Jlf4eyYgbaE6wkBTD9m4fVND4RAXZfsyem5dpU1A==
-X-Received: by 2002:a17:902:74c7:b029:d7:e593:fcb with SMTP id f7-20020a17090274c7b02900d7e5930fcbmr1582638plt.71.1605650644986;
-        Tue, 17 Nov 2020 14:04:04 -0800 (PST)
+        bh=KMzHGfgKgHH9Q7DYJZTvY9huOKnhq3Uw8YTha6ix4Dk=;
+        b=F2AcHxi1E+gs2OHcs2H8YnOtOh19pV4SavP7/BIedcS3+ZpcgzO19o8BLhEYsXKJ02
+         NE2va9wu6Byu3oDq0puuSeyY+qqzYCoyWNPOXpZPJ/YeElwdauPajpitHIyc/uGaXDVs
+         Tkmm+NWSFwtBg0NjTeJkk6tHyg+VuQpPW4Qgo3Mfr0dGd2m+JOEuYL/wTjKgHKQgab60
+         33wq2+0ccBpDeNUWeb6gmqI8I+HQqMCLm+Vs5CeMcslIqyMBtH4DlHe1p+HzCoz/XaN/
+         6R/HczHAsso+aJNdPQQ5Y+a/Wt2TByuJYUYPOukpSuw+ZFGa2DVysbtqOD2ejJJuXrZz
+         7feA==
+X-Gm-Message-State: AOAM530+iNPMQnKzVaze00hPB316l3iXBnU2FBc01gbEO45e+QRICWgb
+        U01bBdExvmCy3ju3lmlzQI/Cqf821sCQX20O
+X-Google-Smtp-Source: ABdhPJzn7DDz10g8h9OwN+shzffrUwfJHAKqR9KfIYwYKmcX3HSnw2Z2R6QRbhbhdCE1JS142B51JA==
+X-Received: by 2002:a65:6a50:: with SMTP id o16mr5302169pgu.292.1605650776612;
+        Tue, 17 Nov 2020 14:06:16 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l10sm65821pjg.3.2020.11.17.14.04.03
+        by smtp.gmail.com with ESMTPSA id e66sm7006000pfh.102.2020.11.17.14.06.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2020 14:04:04 -0800 (PST)
-Date:   Tue, 17 Nov 2020 14:04:02 -0800
+        Tue, 17 Nov 2020 14:06:08 -0800 (PST)
+Date:   Tue, 17 Nov 2020 14:06:07 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     laniel_francis@privacyrequired.com
 Cc:     linux-hardening@vger.kernel.org, dja@axtens.net
-Subject: Re: [RFC PATCH v4 4/5] Add new file in LKDTM to test fortified
- strscpy.
-Message-ID: <202011171404.5E0F44C@keescook>
+Subject: Re: [RFC PATCH v4 0/5] Fortify strscpy()
+Message-ID: <202011171404.2CFCB24344@keescook>
 References: <20201116145012.24471-1-laniel_francis@privacyrequired.com>
- <20201116145012.24471-5-laniel_francis@privacyrequired.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201116145012.24471-5-laniel_francis@privacyrequired.com>
+In-Reply-To: <20201116145012.24471-1-laniel_francis@privacyrequired.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Nov 16, 2020 at 03:50:11PM +0100, laniel_francis@privacyrequired.com wrote:
-> From: Francis Laniel <laniel_francis@privacyrequired.com>
+On Mon, Nov 16, 2020 at 03:50:07PM +0100, laniel_francis@privacyrequired.com wrote:
+> This patch set answers to this issue:
+> https://github.com/KSPP/linux/issues/46
 > 
-> This new test ensures that fortified strscpy has the same behavior than vanilla
-> strscpy (e.g. returning -E2BIG when src content is truncated).
-> Finally, it generates a crash at runtime because there is a write overflow in
-> destination string.
+> I based my modifications on top of two patches from Daniel Axtens which modify
+> calls to __builtin_object_size to ensure the true size of char * are returned
+> and not the surrounding structure size.
 > 
-> Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
+> To sum up, in my first patch I implemented a fortified version of strscpy.
+> This new version ensures the following before calling vanilla strscpy:
+> 1. There is no read overflow because we either size is smaller than src length
+> or we shrink size to src length by calling fortified strnlen.
+> 2. There is no write overflow because we either failed during compilation or at
+> runtime by checking that size is smaller than dest size.
+> The second patch brings a new file in LKDTM driver to test this new version.
+> The test ensures the fortified version still returns the same value as the
+> vanilla one while panic'ing when there is a write overflow.
+> The third just corrects some typos in LKDTM related file.
+> 
+> If you see any problem or way to improve the code, feel free to share it.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Thanks! This looks really good. You can drop the "RFC" parts, and for
+v5, please use
+
+	To: Andrew Morton <akpm@linux-foundation.org>
+
+and add to Cc:
+
+	linux-mm@kvack.org
+	linux-kernel@vger.kernel.org
+
+I think going via -mm is the most sensible, since that's where the other
+fortify pieces landed.
 
 -- 
 Kees Cook
