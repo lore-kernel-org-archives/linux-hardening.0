@@ -7,43 +7,46 @@ X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE923C56202
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Nov 2020 11:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E5EC63777
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Nov 2020 11:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 859DE223C7
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Nov 2020 11:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52145238E6
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Nov 2020 11:07:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="pJ+fCi0/"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="mMgCOAbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgKRLH6 (ORCPT
+        id S1726654AbgKRLH7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Nov 2020 06:07:58 -0500
-Received: from latitanza.investici.org ([82.94.249.234]:23343 "EHLO
-        latitanza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        Wed, 18 Nov 2020 06:07:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S1726068AbgKRLH6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Wed, 18 Nov 2020 06:07:58 -0500
+Received: from latitanza.investici.org (latitanza.investici.org [IPv6:2001:888:2000:56::19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6140C0613D4
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Nov 2020 03:07:58 -0800 (PST)
 Received: from mx3.investici.org (unknown [127.0.0.1])
-        by latitanza.investici.org (Postfix) with ESMTP id 4Cbg5R2kbLz8shF;
-        Wed, 18 Nov 2020 11:07:55 +0000 (UTC)
+        by latitanza.investici.org (Postfix) with ESMTP id 4Cbg5T4cCyz8shP;
+        Wed, 18 Nov 2020 11:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1605697675;
-        bh=+C0i2GkkWKQEX9khs8ZKUF2KVS5DhQb5yHyYo5u1mKs=;
+        s=stigmate; t=1605697677;
+        bh=/ovjSkkj+pP7zpXzoV2FaBY80rRmAkeAXTToEnVDEWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pJ+fCi0/B1Q7s1EqMEMHyuC5pLghwJn6x9h+wVFMkLkkkqJBubVQlbA6XDgAma4LB
-         C0xeqTxFCROrZMX5uftPlHDws0BSZRS58sTAlvxwQ16es7OzGzhmJf2st+WJSXWH5S
-         227/eyXZa4r4/M9cx6B4qh088mOiDj5wOmgCAZQA=
-Received: from [82.94.249.234] (mx3.investici.org [82.94.249.234]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4Cbg5Q4Tntz8sgF;
-        Wed, 18 Nov 2020 11:07:54 +0000 (UTC)
+        b=mMgCOAbDjQ+yGDUHcYfa9kc9nDG2pwfSWDacKs/gYhxxw7jGSdwNFr6vnbLYR6EBz
+         PrDr1/5L0eSxcTJ3jcwibtQ7ipw3xVF3O+FW3gq/hhy1XZmk43rLAsMm0Z5vBUUlHM
+         mmeSUYZva9uKATjxFT7NNNTPHdi69npYBI0wVb/g=
+Received: from [82.94.249.234] (mx3.investici.org [82.94.249.234]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4Cbg5S686vz8sgF;
+        Wed, 18 Nov 2020 11:07:56 +0000 (UTC)
 From:   laniel_francis@privacyrequired.com
 To:     akpm@linux-foundation.org
 Cc:     linux-hardening@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, dja@axtens.net,
         keescook@chromium.org,
         Francis Laniel <laniel_francis@privacyrequired.com>
-Subject: [PATCH v5 4/5] Add new file in LKDTM to test fortified strscpy.
-Date:   Wed, 18 Nov 2020 12:07:30 +0100
-Message-Id: <20201118110731.15833-5-laniel_francis@privacyrequired.com>
+Subject: [PATCH v5 5/5] Correct wrong filenames in comment.
+Date:   Wed, 18 Nov 2020 12:07:31 +0100
+Message-Id: <20201118110731.15833-6-laniel_francis@privacyrequired.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20201118110731.15833-1-laniel_francis@privacyrequired.com>
 References: <20201118110731.15833-1-laniel_francis@privacyrequired.com>
@@ -55,155 +58,77 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Francis Laniel <laniel_francis@privacyrequired.com>
 
-This new test ensures that fortified strscpy has the same behavior than vanilla
-strscpy (e.g. returning -E2BIG when src content is truncated).
-Finally, it generates a crash at runtime because there is a write overflow in
-destination string.
+In lkdtm.h, files targeted in comments are named "lkdtm_file.c" while there are
+named "file.c" in directory.
 
 Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/misc/lkdtm/Makefile             |  1 +
- drivers/misc/lkdtm/core.c               |  1 +
- drivers/misc/lkdtm/fortify.c            | 82 +++++++++++++++++++++++++
- drivers/misc/lkdtm/lkdtm.h              |  3 +
- tools/testing/selftests/lkdtm/tests.txt |  1 +
- 5 files changed, 88 insertions(+)
- create mode 100644 drivers/misc/lkdtm/fortify.c
+ drivers/misc/lkdtm/lkdtm.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/misc/lkdtm/Makefile b/drivers/misc/lkdtm/Makefile
-index c70b3822013f..d898f7b22045 100644
---- a/drivers/misc/lkdtm/Makefile
-+++ b/drivers/misc/lkdtm/Makefile
-@@ -10,6 +10,7 @@ lkdtm-$(CONFIG_LKDTM)		+= rodata_objcopy.o
- lkdtm-$(CONFIG_LKDTM)		+= usercopy.o
- lkdtm-$(CONFIG_LKDTM)		+= stackleak.o
- lkdtm-$(CONFIG_LKDTM)		+= cfi.o
-+lkdtm-$(CONFIG_LKDTM)		+= fortify.o
- 
- KASAN_SANITIZE_stackleak.o	:= n
- KCOV_INSTRUMENT_rodata.o	:= n
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index b8c51a633fcc..3c0a67f072c0 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -175,6 +175,7 @@ static const struct crashtype crashtypes[] = {
- 	CRASHTYPE(USERCOPY_KERNEL),
- 	CRASHTYPE(STACKLEAK_ERASING),
- 	CRASHTYPE(CFI_FORWARD_PROTO),
-+	CRASHTYPE(FORTIFIED_STRSCPY),
- #ifdef CONFIG_X86_32
- 	CRASHTYPE(DOUBLE_FAULT),
- #endif
-diff --git a/drivers/misc/lkdtm/fortify.c b/drivers/misc/lkdtm/fortify.c
-new file mode 100644
-index 000000000000..790d46591bf5
---- /dev/null
-+++ b/drivers/misc/lkdtm/fortify.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020 Francis Laniel <laniel_francis@privacyrequired.com>
-+ *
-+ * Add tests related to fortified functions in this file.
-+ */
-+#include <linux/string.h>
-+#include <linux/slab.h>
-+#include "lkdtm.h"
-+
-+
-+/*
-+ * Calls fortified strscpy to test that it returns the same result as vanilla
-+ * strscpy and generate a panic because there is a write overflow (i.e. src
-+ * length is greater than dst length).
-+ */
-+void lkdtm_FORTIFIED_STRSCPY(void)
-+{
-+	char *src;
-+	char dst[5];
-+
-+	struct {
-+		union {
-+			char big[10];
-+			char src[5];
-+		};
-+	} weird = { .big = "hello!" };
-+	char weird_dst[sizeof(weird.src) + 1];
-+
-+	src = kstrdup("foobar", GFP_KERNEL);
-+
-+	if (src == NULL)
-+		return;
-+
-+	/* Vanilla strscpy returns -E2BIG if size is 0. */
-+	if (strscpy(dst, src, 0) != -E2BIG)
-+		pr_warn("FAIL: strscpy() of 0 length did not return -E2BIG\n");
-+
-+	/* Vanilla strscpy returns -E2BIG if src is truncated. */
-+	if (strscpy(dst, src, sizeof(dst)) != -E2BIG)
-+		pr_warn("FAIL: strscpy() did not return -E2BIG while src is truncated\n");
-+
-+	/* After above call, dst must contain "foob" because src was truncated. */
-+	if (strncmp(dst, "foob", sizeof(dst)) != 0)
-+		pr_warn("FAIL: after strscpy() dst does not contain \"foob\" but \"%s\"\n",
-+			dst);
-+
-+	/* Shrink src so the strscpy() below succeeds. */
-+	src[3] = '\0';
-+
-+	/*
-+	 * Vanilla strscpy returns number of character copied if everything goes
-+	 * well.
-+	 */
-+	if (strscpy(dst, src, sizeof(dst)) != 3)
-+		pr_warn("FAIL: strscpy() did not return 3 while src was copied entirely truncated\n");
-+
-+	/* After above call, dst must contain "foo" because src was copied. */
-+	if (strncmp(dst, "foo", sizeof(dst)) != 0)
-+		pr_warn("FAIL: after strscpy() dst does not contain \"foo\" but \"%s\"\n",
-+			dst);
-+
-+	/* Test when src is embedded inside a union. */
-+	strscpy(weird_dst, weird.src, sizeof(weird_dst));
-+
-+	if (strcmp(weird_dst, "hello") != 0)
-+		pr_warn("FAIL: after strscpy() weird_dst does not contain \"hello\" but \"%s\"\n",
-+			weird_dst);
-+
-+	/* Restore src to its initial value. */
-+	src[3] = 'b';
-+
-+	/*
-+	 * Use strlen here so size cannot be known at compile time and there is
-+	 * a runtime write overflow.
-+	 */
-+	strscpy(dst, src, strlen(src));
-+
-+	pr_warn("FAIL: No overflow in above strscpy()\n");
-+
-+	kfree(src);
-+}
 diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 49e6b945feb7..138f06254b61 100644
+index 138f06254b61..6aa6d6a1a839 100644
 --- a/drivers/misc/lkdtm/lkdtm.h
 +++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -104,4 +104,7 @@ void lkdtm_STACKLEAK_ERASING(void);
- /* cfi.c */
- void lkdtm_CFI_FORWARD_PROTO(void);
+@@ -6,7 +6,7 @@
  
-+/* fortify.c */
-+void lkdtm_FORTIFIED_STRSCPY(void);
-+
- #endif
-diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-index 74a8d329a72c..92ba4cc41314 100644
---- a/tools/testing/selftests/lkdtm/tests.txt
-+++ b/tools/testing/selftests/lkdtm/tests.txt
-@@ -68,3 +68,4 @@ USERCOPY_STACK_BEYOND
- USERCOPY_KERNEL
- STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
- CFI_FORWARD_PROTO
-+FORTIFIED_STRSCPY
+ #include <linux/kernel.h>
+ 
+-/* lkdtm_bugs.c */
++/* bugs.c */
+ void __init lkdtm_bugs_init(int *recur_param);
+ void lkdtm_PANIC(void);
+ void lkdtm_BUG(void);
+@@ -35,7 +35,7 @@ void lkdtm_CORRUPT_PAC(void);
+ void lkdtm_FORTIFY_OBJECT(void);
+ void lkdtm_FORTIFY_SUBOBJECT(void);
+ 
+-/* lkdtm_heap.c */
++/* heap.c */
+ void __init lkdtm_heap_init(void);
+ void __exit lkdtm_heap_exit(void);
+ void lkdtm_OVERWRITE_ALLOCATION(void);
+@@ -47,7 +47,7 @@ void lkdtm_SLAB_FREE_DOUBLE(void);
+ void lkdtm_SLAB_FREE_CROSS(void);
+ void lkdtm_SLAB_FREE_PAGE(void);
+ 
+-/* lkdtm_perms.c */
++/* perms.c */
+ void __init lkdtm_perms_init(void);
+ void lkdtm_WRITE_RO(void);
+ void lkdtm_WRITE_RO_AFTER_INIT(void);
+@@ -62,7 +62,7 @@ void lkdtm_EXEC_NULL(void);
+ void lkdtm_ACCESS_USERSPACE(void);
+ void lkdtm_ACCESS_NULL(void);
+ 
+-/* lkdtm_refcount.c */
++/* refcount.c */
+ void lkdtm_REFCOUNT_INC_OVERFLOW(void);
+ void lkdtm_REFCOUNT_ADD_OVERFLOW(void);
+ void lkdtm_REFCOUNT_INC_NOT_ZERO_OVERFLOW(void);
+@@ -83,10 +83,10 @@ void lkdtm_REFCOUNT_SUB_AND_TEST_SATURATED(void);
+ void lkdtm_REFCOUNT_TIMING(void);
+ void lkdtm_ATOMIC_TIMING(void);
+ 
+-/* lkdtm_rodata.c */
++/* rodata.c */
+ void lkdtm_rodata_do_nothing(void);
+ 
+-/* lkdtm_usercopy.c */
++/* usercopy.c */
+ void __init lkdtm_usercopy_init(void);
+ void __exit lkdtm_usercopy_exit(void);
+ void lkdtm_USERCOPY_HEAP_SIZE_TO(void);
+@@ -98,7 +98,7 @@ void lkdtm_USERCOPY_STACK_FRAME_FROM(void);
+ void lkdtm_USERCOPY_STACK_BEYOND(void);
+ void lkdtm_USERCOPY_KERNEL(void);
+ 
+-/* lkdtm_stackleak.c */
++/* stackleak.c */
+ void lkdtm_STACKLEAK_ERASING(void);
+ 
+ /* cfi.c */
 -- 
 2.20.1
 
