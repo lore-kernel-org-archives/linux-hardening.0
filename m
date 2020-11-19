@@ -2,78 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB23C6369E
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Nov 2020 17:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E50C63697
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Nov 2020 18:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1031D24695
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Nov 2020 17:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCEAC241A6
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Nov 2020 18:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMTu6e5P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RY/0VieM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgKSRI7 (ORCPT
+        id S1729522AbgKSSqM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 Nov 2020 12:08:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbgKSRI7 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 Nov 2020 12:08:59 -0500
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1723B2468B;
-        Thu, 19 Nov 2020 17:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605805738;
-        bh=K24ZkZs9Ul6PSkGObd2SXEbhNuIAKGPVjWEDWBbjJa8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=oMTu6e5PW+tBCfUb4t6FVfsdotCoo8Q71ulrJ1wYgx7KMbaBbcI2zpwkfX7dN0rTE
-         BJnWTTjyyfOvIXMDy/ekIm1yAtUbUoxJcSM4d1FYOgid+aeb6Wd7QBoINrliWoTLBe
-         olJfCyA9oVCeUvh5+pq9xi45eUBvfBOBQ9Uwrw3I=
-Date:   Thu, 19 Nov 2020 11:09:01 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alban Bedel <albeu@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] gpio: ath79: Fix fall-through warning for Clang
-Message-ID: <20201119170901.GA22703@embeddedor>
+        Thu, 19 Nov 2020 13:46:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729295AbgKSSqM (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 19 Nov 2020 13:46:12 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22447C0613CF;
+        Thu, 19 Nov 2020 10:46:12 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id t21so5039952pgl.3;
+        Thu, 19 Nov 2020 10:46:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=81c71i5dO4kP419lzpy1jsGyR1x4EYOTkNO5ZXs8xA4=;
+        b=RY/0VieMtwbooEEqoeNmP9YX+YSQZZVjswBdIVye9H6Ocr89tfv3dGIj5rSfHpgKs2
+         J74kUXhjmN02SK5PUudKM40zKos7/50/wqMADgaNwAgdBMzYRp8hyhAbmxeUg+onr0rv
+         rQVmcLbGpLazYMKi/G8jir9p+I9idPZeZjXleSxSAzsrd9sOatbCNUYLeCrHcitsIbtx
+         S9rUrIpdbRHxhSYU5utzfra5S90GObx18aUpJ8qerqPSOAiYK8g6Pe5+4PVpRavET5Oy
+         F/tu3PxiAkh2+VwYbRQZYBRTMH6aZ6AsxK6ob6XrHHb5Mr9cSgnyL5KBb5Rf+HrfMMK1
+         AXwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=81c71i5dO4kP419lzpy1jsGyR1x4EYOTkNO5ZXs8xA4=;
+        b=Z0rh+Wq2KfPQ7U/4AEZNs60y3wXnRaaVkXUEG2KMfsRKoUvzExlSlTmpDQvMT6J/JA
+         13WqRZaWOJTqANqpZ8u6b0w8/1X8NzvsSumMrYU0vwhHKxqaMXmUSgolYMlpFqPVjTvV
+         PZ8Gbpjm0J+2SsYfZcUemH8Au1KiITi/Xyp0m4Ezhtw29fiwcI8E/AlzXdh51eQCGdgb
+         A+KkaXW3fZLnobQXYMqLWA6iwaaNX8/YBmEnzPwy1cTSbH7INu2WMtmU4Sp24Od3b4/u
+         21FQcpe8ZkHmgh3iMU4GH0fJD9raIK4YqnN3ikvklXwrcfROBDGQhkKVjF34S64GbzsF
+         SrZA==
+X-Gm-Message-State: AOAM532Umk616pKDeCxpbgIjBBMVU4IG/RD8t/OgEiigUIHqW9o3DAci
+        VUmdBXzfvdmx12QhKfg4e97K+HSWu1DqiScPyjU=
+X-Google-Smtp-Source: ABdhPJxkkFDCifiaHA1UjuO9zoWlYT44l5SrPQZw3HAQAX8iOvl8P3pi4wXBgM0Dhz2kvQBh86rcXn0pNCndX8djTYU=
+X-Received: by 2002:a62:7c95:0:b029:18c:5002:a1ab with SMTP id
+ x143-20020a627c950000b029018c5002a1abmr10085635pfc.40.1605811571629; Thu, 19
+ Nov 2020 10:46:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20201119170739.GA22665@embeddedor>
+In-Reply-To: <20201119170739.GA22665@embeddedor>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 19 Nov 2020 20:47:00 +0200
+Message-ID: <CAHp75Ve2G25FBzMKAaTw-9mFAvwU2uBG+TZ0UdLW+c8zra=Fhg@mail.gmail.com>
+Subject: Re: [PATCH][next] gpiolib: acpi: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a
-warning by explicitly adding a fallthrough pseudo-keyword to indicate
-that the code is intended to fall through to the next case.
+On Thu, Nov 19, 2020 at 7:08 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
 
-Link: https://github.com/KSPP/linux/issues/115
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpio/gpio-ath79.c | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
-index d5359341cc6b..678ddd375891 100644
---- a/drivers/gpio/gpio-ath79.c
-+++ b/drivers/gpio/gpio-ath79.c
-@@ -123,6 +123,7 @@ static int ath79_gpio_irq_set_type(struct irq_data *data,
- 	switch (flow_type) {
- 	case IRQ_TYPE_EDGE_RISING:
- 		polarity |= mask;
-+		fallthrough;
- 	case IRQ_TYPE_EDGE_FALLING:
- 	case IRQ_TYPE_EDGE_BOTH:
- 		break;
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/gpio/gpiolib-acpi.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 6cc5f91bfe2e..e37a57d0a2f0 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -233,6 +233,7 @@ acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio, int polarity)
+>                 default:
+>                         break;
+>                 }
+> +               break;
+>         default:
+>                 break;
+>         }
+> --
+> 2.27.0
+>
+
+
 -- 
-2.27.0
-
+With Best Regards,
+Andy Shevchenko
