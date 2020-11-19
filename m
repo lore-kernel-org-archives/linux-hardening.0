@@ -2,130 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E42C6379D
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Nov 2020 16:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA35CC56201
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Nov 2020 17:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA072222A
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Nov 2020 16:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6042821D7F
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Nov 2020 17:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="RIf3dRQk"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+25jA7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgKSQti (ORCPT
+        id S1727677AbgKSRHi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 Nov 2020 11:49:38 -0500
-Received: from devianza.investici.org ([198.167.222.108]:53667 "EHLO
-        devianza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728328AbgKSQti (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 Nov 2020 11:49:38 -0500
-Received: from mx2.investici.org (unknown [127.0.0.1])
-        by devianza.investici.org (Postfix) with ESMTP id 4CcQdD6qLxz6vP2;
-        Thu, 19 Nov 2020 16:49:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1605804576;
-        bh=/ovjSkkj+pP7zpXzoV2FaBY80rRmAkeAXTToEnVDEWw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIf3dRQkUmcQPBUPAYsIknMIU1qTiydhfTN2U6wlsrJUvu+n3wt/3fna3F5/sMy4Y
-         GEEqsTJrvL5QIZfMnEkK7DOIRbJ1peLjXCsSQMOWwPTXa/iBA9QhlMKbpA05NUnqh4
-         uKfquW5Kn0bTdXbyU5d7vreCRjJY3ohJKE8zGiHw=
-Received: from [198.167.222.108] (mx2.investici.org [198.167.222.108]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CcQdD3bTpz6vNC;
-        Thu, 19 Nov 2020 16:49:36 +0000 (UTC)
-From:   laniel_francis@privacyrequired.com
-To:     akpm@linux-foundation.org
-Cc:     linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, dja@axtens.net,
-        keescook@chromium.org,
-        Francis Laniel <laniel_francis@privacyrequired.com>
-Subject: [PATCH v6 5/5] Correct wrong filenames in comment.
-Date:   Thu, 19 Nov 2020 17:49:15 +0100
-Message-Id: <20201119164915.10618-6-laniel_francis@privacyrequired.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20201119164915.10618-1-laniel_francis@privacyrequired.com>
-References: <20201119164915.10618-1-laniel_francis@privacyrequired.com>
+        Thu, 19 Nov 2020 12:07:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727499AbgKSRHh (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 19 Nov 2020 12:07:37 -0500
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4201B21D7F;
+        Thu, 19 Nov 2020 17:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605805657;
+        bh=fI862XlhPx9mq5hwaYDyi6MNfrSQvgnPYHTZsZ6XsUE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=K+25jA7DzZEo3jH+19mK6rZl2tG95yR/hAGgLYlg0EnbLWReqaToyflq9iib1wFS1
+         Hf9fLSew9eW+mfDUIbX/AxcD064iqWB301p1i1segFK0NJUGWmQmt0QtfT61q5D421
+         IN7ops/doEg7pjZklN15dyPEK3XHfCz5LieC27Dc=
+Date:   Thu, 19 Nov 2020 11:07:39 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] gpiolib: acpi: Fix fall-through warnings for Clang
+Message-ID: <20201119170739.GA22665@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Francis Laniel <laniel_francis@privacyrequired.com>
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+by explicitly adding a break statement instead of letting the code fall
+through to the next case.
 
-In lkdtm.h, files targeted in comments are named "lkdtm_file.c" while there are
-named "file.c" in directory.
-
-Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
-Acked-by: Kees Cook <keescook@chromium.org>
+Link: https://github.com/KSPP/linux/issues/115
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/misc/lkdtm/lkdtm.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpio/gpiolib-acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 138f06254b61..6aa6d6a1a839 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -6,7 +6,7 @@
- 
- #include <linux/kernel.h>
- 
--/* lkdtm_bugs.c */
-+/* bugs.c */
- void __init lkdtm_bugs_init(int *recur_param);
- void lkdtm_PANIC(void);
- void lkdtm_BUG(void);
-@@ -35,7 +35,7 @@ void lkdtm_CORRUPT_PAC(void);
- void lkdtm_FORTIFY_OBJECT(void);
- void lkdtm_FORTIFY_SUBOBJECT(void);
- 
--/* lkdtm_heap.c */
-+/* heap.c */
- void __init lkdtm_heap_init(void);
- void __exit lkdtm_heap_exit(void);
- void lkdtm_OVERWRITE_ALLOCATION(void);
-@@ -47,7 +47,7 @@ void lkdtm_SLAB_FREE_DOUBLE(void);
- void lkdtm_SLAB_FREE_CROSS(void);
- void lkdtm_SLAB_FREE_PAGE(void);
- 
--/* lkdtm_perms.c */
-+/* perms.c */
- void __init lkdtm_perms_init(void);
- void lkdtm_WRITE_RO(void);
- void lkdtm_WRITE_RO_AFTER_INIT(void);
-@@ -62,7 +62,7 @@ void lkdtm_EXEC_NULL(void);
- void lkdtm_ACCESS_USERSPACE(void);
- void lkdtm_ACCESS_NULL(void);
- 
--/* lkdtm_refcount.c */
-+/* refcount.c */
- void lkdtm_REFCOUNT_INC_OVERFLOW(void);
- void lkdtm_REFCOUNT_ADD_OVERFLOW(void);
- void lkdtm_REFCOUNT_INC_NOT_ZERO_OVERFLOW(void);
-@@ -83,10 +83,10 @@ void lkdtm_REFCOUNT_SUB_AND_TEST_SATURATED(void);
- void lkdtm_REFCOUNT_TIMING(void);
- void lkdtm_ATOMIC_TIMING(void);
- 
--/* lkdtm_rodata.c */
-+/* rodata.c */
- void lkdtm_rodata_do_nothing(void);
- 
--/* lkdtm_usercopy.c */
-+/* usercopy.c */
- void __init lkdtm_usercopy_init(void);
- void __exit lkdtm_usercopy_exit(void);
- void lkdtm_USERCOPY_HEAP_SIZE_TO(void);
-@@ -98,7 +98,7 @@ void lkdtm_USERCOPY_STACK_FRAME_FROM(void);
- void lkdtm_USERCOPY_STACK_BEYOND(void);
- void lkdtm_USERCOPY_KERNEL(void);
- 
--/* lkdtm_stackleak.c */
-+/* stackleak.c */
- void lkdtm_STACKLEAK_ERASING(void);
- 
- /* cfi.c */
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 6cc5f91bfe2e..e37a57d0a2f0 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -233,6 +233,7 @@ acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio, int polarity)
+ 		default:
+ 			break;
+ 		}
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
-2.20.1
+2.27.0
 
