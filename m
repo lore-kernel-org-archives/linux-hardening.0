@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCE6C6379D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA286C83011
 	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B3321D91
+	by mail.kernel.org (Postfix) with ESMTP id 994B022464
 	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/i9w9Dj"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKioQg4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731126AbgKTSk5 (ORCPT
+        id S1731319AbgKTSkr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:40:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59198 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:40:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731658AbgKTSkz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:40:55 -0500
+        id S1731658AbgKTSko (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:40:44 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B04424655;
-        Fri, 20 Nov 2020 18:40:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7294A22464;
+        Fri, 20 Nov 2020 18:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897654;
-        bh=PZVaIjk40l4bncqdoGs4NhN5bCd08ySW8uH6LdCAoTw=;
+        s=default; t=1605897644;
+        bh=GXU4AgXMBqPQpSCaCSed3HmvRQBli2f8mKyjPp8T+q0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f/i9w9Dj5WbgbDNIZXrlTq5LE4Ig2xpAhPsZMTOz7vPCTZKtEz4K2FZyJNHJlKMF4
-         1LB9eYYINopT0xnLSyxmMz+B+iciOM0V/2Vcbvy2OwblwScQ/GYKBsIRl/GE8XZd7u
-         dzSl7Tbdwq8fW/yaX55cpt3xP+DVAlc9UKykKZPg=
-Date:   Fri, 20 Nov 2020 12:41:00 -0600
+        b=oKioQg4ef1sKf6vVKGKs9/eFAtsmQQ1lBd2ckWXfmVVzTz+m6M0f181SFKMM99DOH
+         8sXvM2FxvFFbE64OUupYFHcSNyfGTUIQwsNoA1BfcrGT+s51LUk+jp77+ovtSm7DSO
+         uBtP6DZWBkVdXLXXZ4CLPo64ogEW9coXMoT/Z+JY=
+Date:   Fri, 20 Nov 2020 12:40:49 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+To:     Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 139/141] xfrm: Fix fall-through warnings for Clang
-Message-ID: <ddfa06633ac050d96303cc6455b2cf6d4a09b818.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 137/141] wcn36xx: Fix fall-through warnings for Clang
+Message-ID: <f932c887e013767cbdabfdddd671086e8ae63193.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,28 +55,33 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of letting the code fall
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a
+warning by replacing a /* fall through */ comment with the new
+pseudo-keyword macro fallthrough; instead of letting the code fall
 through to the next case.
+
+Notice that Clang doesn't recognize /* fall through */ comments as
+implicit fall-through markings.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/xfrm/xfrm_interface.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/wcn36xx/smd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-index 9b8e292a7c6a..8ea705df8e3c 100644
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -433,6 +433,7 @@ static int xfrmi4_err(struct sk_buff *skb, u32 info)
- 	case ICMP_DEST_UNREACH:
- 		if (icmp_hdr(skb)->code != ICMP_FRAG_NEEDED)
- 			return 0;
-+		break;
- 	case ICMP_REDIRECT:
- 		break;
- 	default:
+diff --git a/drivers/net/wireless/ath/wcn36xx/smd.c b/drivers/net/wireless/ath/wcn36xx/smd.c
+index 766400f7b61c..4c8f4a7e7085 100644
+--- a/drivers/net/wireless/ath/wcn36xx/smd.c
++++ b/drivers/net/wireless/ath/wcn36xx/smd.c
+@@ -2568,7 +2568,7 @@ static int wcn36xx_smd_hw_scan_ind(struct wcn36xx *wcn, void *buf, size_t len)
+ 	case WCN36XX_HAL_SCAN_IND_FAILED:
+ 	case WCN36XX_HAL_SCAN_IND_DEQUEUED:
+ 		scan_info.aborted = true;
+-		/* fall through */
++		fallthrough;
+ 	case WCN36XX_HAL_SCAN_IND_COMPLETED:
+ 		mutex_lock(&wcn->scan_lock);
+ 		wcn->scan_req = NULL;
 -- 
 2.27.0
 
