@@ -2,128 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81954C56202
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 21:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79AEC2D0E4
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 21:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6412240B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 21:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2FE22403
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 21:40:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hjCAAPiQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lo6qc0IB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgKTVin (ORCPT
+        id S1728065AbgKTVjp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 16:38:43 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:60948 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgKTVim (ORCPT
+        Fri, 20 Nov 2020 16:39:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgKTVjp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 16:38:42 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKLc9ED004163;
-        Fri, 20 Nov 2020 21:38:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=vdgWyMqTZ/KgANno+C5rCsxsLffEg7/4wEFhdg4BzwI=;
- b=hjCAAPiQuGKgg9PQlmF2CEhfXgsK4V3IL0TBllq3pwdLW2cAsCBNqTQ4ThGfPvnQoh9+
- V7EbbfgvR6mElEDy6mt+/BayXJ+D9umRbQoMUux/U76sqn2bBS0eFkGWVhKyhmvo+iOW
- pOZGAsOecys9/DjyqOootIsFGCbj54uTsMShNy2TgH7R72HHP4isQNzlEyT35/1CmhDI
- JCsQZTzIA37BdmeXrTiRI13i2DeCcMcrOP56wP6TIXdMpjjWdE4ef5e6oK3KN5BTnDFc
- Ak9rAB4fR9ngZI1whbbshi5ybA/yEtPOObnfChfOccclqBnRcR5YseEhI/aYwHBhJ2g3 3Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 34t76mcr2p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Nov 2020 21:38:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKLVUlF003267;
-        Fri, 20 Nov 2020 21:36:31 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 34umd3yqg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Nov 2020 21:36:31 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AKLaREe006534;
-        Fri, 20 Nov 2020 21:36:28 GMT
-Received: from [10.74.102.87] (/10.74.102.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 20 Nov 2020 13:36:27 -0800
-Subject: Re: [PATCH 058/141] xen-blkfront: Fix fall-through warnings for Clang
+        Fri, 20 Nov 2020 16:39:45 -0500
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56BA8C0613CF;
+        Fri, 20 Nov 2020 13:39:45 -0800 (PST)
+Received: by mail-qt1-x843.google.com with SMTP id g17so8259242qts.5;
+        Fri, 20 Nov 2020 13:39:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=s1WYbCf4DLtQCOZZjao8Kq3OsBZTVKuAEA5HpJECn0U=;
+        b=Lo6qc0IBxen4XlAgIpJdR6sjJ1pLYCV3g7ArGA/SM2jyVR8pYG/MWvFdccJhivY0wa
+         vW0MOv1VTxK/YFH/8Yf4mRzNdpA0I1G0zr2BJ7FbDoD8SFUQKU09T8ebe/DsA5nNI60I
+         /pGFVG3h4sI1bpOsaCnY9+OiKvEv/rh5hcI5yuwOg/QDKontUYQa6Z8gV6sVlDRQhcrT
+         5ENhtCCLnzijiNk2a5Ql62wErNiDYBtsoChGBfS6f9ABR0uBrDUGK+yEHFgD47MDAvIe
+         6r3nmbz+miE4Upg2IlE9Zr21xWIitL0eHpXPNyv52fo06GFTCl4oHFk8nwu/fARsAqgh
+         pP3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s1WYbCf4DLtQCOZZjao8Kq3OsBZTVKuAEA5HpJECn0U=;
+        b=Ourl23PM+zpVFITEndx3hWyX0M0ENQOCRYPuaIdlTw23DYhUxlDFr7oN8qVz4lWRsH
+         Aw5yiUym3Mm5WYrYSmLGI7H+Job5h0oUB1IE9aC/trKorkjqK0EYo/bWqLxJenSYL1Yk
+         xdm2c9ugNWiJ7YzVneIeLElApncyv3/hkw/BXWotU2e9loGrTgZaTBMvxUFcpmzBEzVX
+         40gtXm7f2sE17sml9GydLsWGubh8qfAzAUwDp1KDOY/7ZIwbPb0XVX/O495mhhXgNVt+
+         XqpsclpsvKLVuJS1xxatm6yGTrqTi5b3QNTudHvuwLrjMkHwvu6BbFeh3Ij84UqN1u+f
+         8zDw==
+X-Gm-Message-State: AOAM530zoY/JwnQGql6unyrU/IVuOvO0I+Nz/2SlG1MtbT/i+PbviNrO
+        /dc4WjB7PY1Bprfb8XEyIaurMsniGks=
+X-Google-Smtp-Source: ABdhPJxlEDpvnIi2bfpP/20pkYh6uSD1+pHNqKtO6zJ5NyqxFy86CZQ3Yhy6PKqsimLIwcrAqbTekQ==
+X-Received: by 2002:ac8:5848:: with SMTP id h8mr13137812qth.232.1605908384275;
+        Fri, 20 Nov 2020 13:39:44 -0800 (PST)
+Received: from ?IPv6:2620:10d:c0a8:1102::1844? ([2620:10d:c091:480::1:6eec])
+        by smtp.gmail.com with ESMTPSA id s7sm2823401qkm.124.2020.11.20.13.39.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Nov 2020 13:39:43 -0800 (PST)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH 117/141] rtl8xxxu: Fix fall-through warnings for Clang
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <33057688012c34dd60315ad765ff63f070e98c0c.1605896059.git.gustavoars@kernel.org>
-From:   boris.ostrovsky@oracle.com
-Organization: Oracle Corporation
-Message-ID: <e8d67ea1-3d0d-509a-a2f1-cf1758bb373f@oracle.com>
-Date:   Fri, 20 Nov 2020 16:36:26 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.4.3
+ <d522f387b2d0dde774785c7169c1f25aa529989d.1605896060.git.gustavoars@kernel.org>
+Message-ID: <691515e4-4d40-56cf-5f7a-1819aad1afa9@gmail.com>
+Date:   Fri, 20 Nov 2020 16:39:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <33057688012c34dd60315ad765ff63f070e98c0c.1605896059.git.gustavoars@kernel.org>
+In-Reply-To: <d522f387b2d0dde774785c7169c1f25aa529989d.1605896060.git.gustavoars@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9811 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011200143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9811 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011200143
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-On 11/20/20 1:32 PM, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of letting the code fall
-> through to the next case.
->
+On 11/20/20 1:38 PM, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix
+> multiple warnings by replacing /* fall through */ comments with
+> the new pseudo-keyword macro fallthrough; instead of letting the
+> code fall through to the next case.
+> 
+> Notice that Clang doesn't recognize /* fall through */ comments as
+> implicit fall-through markings.
+> 
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/block/xen-blkfront.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-> index 48629d3433b4..34b028be78ab 100644
-> --- a/drivers/block/xen-blkfront.c
-> +++ b/drivers/block/xen-blkfront.c
-> @@ -2462,6 +2462,7 @@ static void blkback_changed(struct xenbus_device *dev,
->  			break;
->  		if (talk_to_blkback(dev, info))
->  			break;
-> +		break;
->  	case XenbusStateInitialising:
->  	case XenbusStateInitialised:
->  	case XenbusStateReconfiguring:
+>  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+
+While I wasn't CC'ed on the cover-letter I see Jakub also raised issues
+about this unnecessary patch noise.
+
+Quite frankly, this seems to be patch churn for the sake of patch churn.
+If clang is broken, fix clang instead.
+
+NACK
 
 
-Reviewed-by Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Jes
 
-
-(for patch 138 as well)
-
-
-Although I thought using 'fallthrough' attribute was the more common approach.
-
-
--boris
+> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> index 5cd7ef3625c5..afc97958fa4d 100644
+> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> @@ -1145,7 +1145,7 @@ void rtl8xxxu_gen1_config_channel(struct ieee80211_hw *hw)
+>  	switch (hw->conf.chandef.width) {
+>  	case NL80211_CHAN_WIDTH_20_NOHT:
+>  		ht = false;
+> -		/* fall through */
+> +		fallthrough;
+>  	case NL80211_CHAN_WIDTH_20:
+>  		opmode |= BW_OPMODE_20MHZ;
+>  		rtl8xxxu_write8(priv, REG_BW_OPMODE, opmode);
+> @@ -1272,7 +1272,7 @@ void rtl8xxxu_gen2_config_channel(struct ieee80211_hw *hw)
+>  	switch (hw->conf.chandef.width) {
+>  	case NL80211_CHAN_WIDTH_20_NOHT:
+>  		ht = false;
+> -		/* fall through */
+> +		fallthrough;
+>  	case NL80211_CHAN_WIDTH_20:
+>  		rf_mode_bw |= WMAC_TRXPTCL_CTL_BW_20;
+>  		subchannel = 0;
+> @@ -1741,11 +1741,11 @@ static int rtl8xxxu_identify_chip(struct rtl8xxxu_priv *priv)
+>  		case 3:
+>  			priv->ep_tx_low_queue = 1;
+>  			priv->ep_tx_count++;
+> -			/* fall through */
+> +			fallthrough;
+>  		case 2:
+>  			priv->ep_tx_normal_queue = 1;
+>  			priv->ep_tx_count++;
+> -			/* fall through */
+> +			fallthrough;
+>  		case 1:
+>  			priv->ep_tx_high_queue = 1;
+>  			priv->ep_tx_count++;
+> 
 
