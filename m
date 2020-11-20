@@ -2,81 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47309C2D0E4
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B66DC56201
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0326722464
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADB12245F
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="dop1Dk46"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OB69uT03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731500AbgKTSmd (ORCPT
+        id S1730365AbgKTSuM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731600AbgKTSk3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:40:29 -0500
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CFD8246A5;
-        Fri, 20 Nov 2020 18:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897626;
-        bh=Y8kh4owvTk63yVbmvl7KFgSqNLo2VS4SK56SXLF+fBI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dop1Dk46ltomSe9RnVeh+F4JQdthkLRZGJkGbcpFRXggLCnBfNjtF6Qh30G6n3yh6
-         jPfF/2qAWBAInawMufgN75RsUlg+KGdHY64wLZXOCwlNlFzof9nhzTcoZjD2RxQIQ/
-         8uf1yq40dFK9D7Ue5Q/Wr4bohI0P/XZLWdzxFBlY=
-Date:   Fri, 20 Nov 2020 12:40:32 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Andres Salomon <dilinger@queued.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-geode@lists.infradead.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 134/141] video: fbdev: lxfb_ops: Fix fall-through warnings
- for Clang
-Message-ID: <9c1dcb12aae7c7ff0907ffb99ffd227656cbe444.1605896060.git.gustavoars@kernel.org>
+        Fri, 20 Nov 2020 13:50:12 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:30038 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727880AbgKTSuM (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:50:12 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AKIjK1T014077;
+        Fri, 20 Nov 2020 10:50:10 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0220;
+ bh=2Q+/Lc7L9HQ0KAAyRR4rlh48QHiyoVhXquehjGB4IYU=;
+ b=OB69uT03ShtkRsi1S3WKlFV2xsMMhKw+QCmgIoiutjQVjKHDX80i3agBOY9gyS1PboIA
+ OMv1eg26GTiy5+oLfUygpU+4BT5GaX5SczWZaLlhUOre6yd9akeYoymp36x/7UFt8S42
+ u6zDKoVLEuQVn1y/Fa0x1wNde0LQ4TT+UCTGqV/dcTd5Z1yCesd3UOaj69PuDSmm4lIy
+ /uoxn57OvA+TDNAyuhW+ksWqCQgr6wnkURhyX/JMVzvrIEnVb3K0s8mefXU594fzHvi3
+ KnJwqCt+QdQdtumt4dOvpfG5CHLg4YLgqwE+trfosrsOw4mprJczKyi4R8q+o8epsnMi OA== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 34xbeyhqem-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 20 Nov 2020 10:50:10 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 20 Nov
+ 2020 10:50:09 -0800
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 20 Nov
+ 2020 10:50:09 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 20 Nov 2020 10:50:09 -0800
+Received: from [10.193.39.169] (NN-LT0019.marvell.com [10.193.39.169])
+        by maili.marvell.com (Postfix) with ESMTP id 2F4FD3F7044;
+        Fri, 20 Nov 2020 10:50:06 -0800 (PST)
+Subject: Re: [EXT] [PATCH 018/141] qed: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
+ <35915deb94f9ad166f8984259050cfadd80b2567.1605896059.git.gustavoars@kernel.org>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <9bcfa09c-dd8d-f879-4762-1b88779fa397@marvell.com>
+Date:   Fri, 20 Nov 2020 21:50:06 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) Gecko/20100101
+ Thunderbird/83.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1605896059.git.gustavoars@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <35915deb94f9ad166f8984259050cfadd80b2567.1605896059.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-20_12:2020-11-20,2020-11-20 signatures=0
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of letting the code fall
-through to the next case.
 
-Link: https://github.com/KSPP/linux/issues/115
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/video/fbdev/geode/lxfb_ops.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/fbdev/geode/lxfb_ops.c b/drivers/video/fbdev/geode/lxfb_ops.c
-index b3a041fce570..32baaf59fcf7 100644
---- a/drivers/video/fbdev/geode/lxfb_ops.c
-+++ b/drivers/video/fbdev/geode/lxfb_ops.c
-@@ -682,6 +682,7 @@ static void lx_restore_display_ctlr(struct lxfb_par *par)
- 		case DC_DV_CTL:
- 			/* set all ram to dirty */
- 			write_dc(par, i, par->dc[i] | DC_DV_CTL_CLEAR_DV_RAM);
-+			break;
- 
- 		case DC_RSVD_1:
- 		case DC_RSVD_2:
--- 
-2.27.0
+On 20/11/2020 9:26 pm, Gustavo A. R. Silva wrote:
+> External Email
+> 
+> ----------------------------------------------------------------------
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+> warnings by explicitly adding a couple of break statements instead of
+> just letting the code fall through to the next case.
+> 
+> Link:
+> https://urldefense.proofpoint.com/v2/url?u=https-3A__github.com_KSPP_linux
+> _issues_115&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=GtqbaEwqFLiM6BiwNMdKmpXb5o
+> up1VLiSIroUNQwbYA&m=6E7IvGvqcEGj8wEOVoN1BySZhGUVECVTBJCmNiRsHUw&s=J1SWrfEL
+> erJOzUlJdD_S5afGaZosmVP8lyKsu9DTULw&e= 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Reviewed-by: Igor Russkikh <irusskikh@marvell.com>
+
+Thanks,
+  Igor
