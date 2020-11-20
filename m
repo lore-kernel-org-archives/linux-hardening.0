@@ -7,47 +7,41 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CFDC6379D
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17490C8300B
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C88F24197
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D666C24124
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQsFoDfP"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiWaCkpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbgKTSga (ORCPT
+        id S1731105AbgKTSgk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:36:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54704 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:36:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730741AbgKTSga (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:36:30 -0500
+        id S1731066AbgKTSgf (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:36:35 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9623B24181;
-        Fri, 20 Nov 2020 18:36:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5686E24178;
+        Fri, 20 Nov 2020 18:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897389;
-        bh=7S93R+eoNCKQZlGjseYylH7acpfwBG3SpW0Kxq4QE48=;
+        s=default; t=1605897394;
+        bh=QvTdWsyEWNwiEFozRZ7h6dPDYFbpYH5Fk87FBAkBFqo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BQsFoDfPt97Hqe4bMx/+nJFBErE3ihpYfstpHH32WMT49PEd4wRxgDpUD34xKhXQE
-         saTC+HYJtwePMgK+VHzkWcy7hHruj3NGoAhcd15x4PD6dQAsW/S8b9Gf6VZD5+3L6V
-         ZCvrFiQE92MpRAglO182rMzltAxj1IX4ZE4MKVpE=
-Date:   Fri, 20 Nov 2020 12:36:35 -0600
+        b=YiWaCkpcZdojuHqXDs5Sy83qa3vXfAJqXjKdHBjQKmEV53ZsJGkbj3hbEchpZHnT+
+         axsY882jTaCe9NVgRgU8z7Uk/rVPrLbXzyFrenwq6tXEuHgjcvOShT9rJzheC3niWX
+         AhyQGOsPA/G2cUKYB9GkP769nU9z9QviVn3lGVNs=
+Date:   Fri, 20 Nov 2020 12:36:40 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 091/141] iwlwifi: iwl-drv: Fix fall-through warnings for Clang
-Message-ID: <edd98d194bfc98b4be93a9bdc303630b719c0e66.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 092/141] libata: Fix fall-through warnings for Clang
+Message-ID: <e3498b34cae37d0f93db5824e5f61b183a7293f1.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -58,33 +52,28 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a
-warning by replacing a /* fall through */ comment with the new
-pseudo-keyword macro fallthrough; instead of letting the code fall
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+by explicitly adding a break statement instead of letting the code fall
 through to the next case.
-
-Notice that Clang doesn't recognize /* fall through */ comments as
-implicit fall-through markings.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/libata-eh.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-index 9dcd2e990c9c..6a9be73d7661 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-@@ -1579,7 +1579,7 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
- 		break;
- 	default:
- 		WARN(1, "Invalid fw type %d\n", fw->type);
--		/* fall through */
-+		fallthrough;
- 	case IWL_FW_MVM:
- 		op = &iwlwifi_opmode_table[MVM_OP_MODE];
- 		break;
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index b6f92050e60c..2db1e9c66088 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -2613,6 +2613,7 @@ int ata_eh_reset(struct ata_link *link, int classify,
+ 			switch (tmp) {
+ 			case -EAGAIN:
+ 				rc = -EAGAIN;
++				break;
+ 			case 0:
+ 				break;
+ 			default:
 -- 
 2.27.0
 
