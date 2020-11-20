@@ -2,72 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF29EC64E8A
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1A7C2D0E4
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 19:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5CF241A6
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F267E2245F
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 19:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732143AbgKTSzP (ORCPT
+        id S1728349AbgKTTE4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:55:15 -0500
-Received: from mga12.intel.com ([192.55.52.136]:60653 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732139AbgKTSzO (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:55:14 -0500
-IronPort-SDR: vGt8cgmLjUqOy0p5FYfXowlxAybwHIXrPXypSIw2h3+Hfr4uscJbJ2mC+rNpD4BLxks5RPw3WU
- eSTXLsBhWCig==
-X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="150788420"
-X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="150788420"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 10:55:14 -0800
-IronPort-SDR: AWmO/6KsI/Qp62TUx1W3PMnoqTT2mxLQjlGsttyki7oiQoZNyZopGqWcwpPtVsuwKdGFzhvQ6E
- oMhH1SLTHwXQ==
-X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="331416503"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 10:55:11 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kgBZt-008LwO-8M; Fri, 20 Nov 2020 20:56:13 +0200
-Date:   Fri, 20 Nov 2020 20:56:13 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Alban Bedel <albeu@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 007/141] gpio: Fix fall-through warnings for Clang
-Message-ID: <20201120185613.GT4077@smile.fi.intel.com>
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <9611e213448b27f3f08a010c683d566c712bdbbb.1605896059.git.gustavoars@kernel.org>
+        Fri, 20 Nov 2020 14:04:56 -0500
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:36294 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728076AbgKTTEz (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 14:04:55 -0500
+Received: by mail-oo1-f68.google.com with SMTP id l20so2443438oot.3;
+        Fri, 20 Nov 2020 11:04:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GZA3+M/VVNa3SUOOY7jLzWKoR84YmwgaI/DsfKj9aqU=;
+        b=HyP61hAt5Gr1OI2qdLLxiKGqwV9lUi9d/01uaGzaLMzXyXOFr/YthCzrLu319gAVZM
+         GS6MUln4+kyelqx2jXJ5kqjiTVihvp6rzbBqhJ8xO7LXUoN9jf5+mCSktW+ZrGU+yc2O
+         Y4C7JrzhABx2HzK1SV3HjRuWq6gpAXKtGsePM2UrX5WyVyKp+qk5Ej6F+QKdLp4FXFTg
+         PWXJWEogyxyjGN/3anO4Y1geUlvrR4UaMBBytWaPXhKjvLUMgr+wNT20Mkz30yYZE98r
+         2Vm9vUo55MWu43QuX2QYn0bhv2pzFiKfA4PCfJq79S2kqxN3aUMVjgMmkaXZOBqGZL0z
+         7l/w==
+X-Gm-Message-State: AOAM532nunou55uxjN3NviRLaI4mVAPfpPcD70N21wVcVBvKbE88ECE/
+        XTGtTyMlzG6JMkDyz8s+42o5METrWj2A4uLP0Pc=
+X-Google-Smtp-Source: ABdhPJwl/mRWeppvi1dwTiN5ioQWhB7KWKxlwUdKmlSbCN3evBAbGlx0526M4UT3y5zLWSFcqAWi5nCCaq59k6y+lv4=
+X-Received: by 2002:a4a:e80b:: with SMTP id b11mr14876540oob.1.1605899094394;
+ Fri, 20 Nov 2020 11:04:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9611e213448b27f3f08a010c683d566c712bdbbb.1605896059.git.gustavoars@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.1605896059.git.gustavoars@kernel.org> <da20103af0c22424c5d08a12f7107771bf4c01c5.1605896059.git.gustavoars@kernel.org>
+In-Reply-To: <da20103af0c22424c5d08a12f7107771bf4c01c5.1605896059.git.gustavoars@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Nov 2020 20:04:42 +0100
+Message-ID: <CAMuHMdWcooXsRULUVwZR35z=2fUN=5pJoV9arAK+baWCz8ECjg@mail.gmail.com>
+Subject: Re: [PATCH 049/141] pinctrl: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 12:25:16PM -0600, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-> warnings by explicitly adding a break and a fallthrough statements
-> instead of just letting the code fall through to the next case.
+On Fri, Nov 20, 2020 at 7:31 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
+>
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Shouldn't this go via GPIO tree?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v5.11.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
