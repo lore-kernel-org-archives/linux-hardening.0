@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46D2C8301B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB65CC8301E
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D43422464
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2E122464
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="TH+QoL/v"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="0bZ/wnpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgKTSjW (ORCPT
+        id S1731204AbgKTSjc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:39:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57758 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:39:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729041AbgKTSjV (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:39:21 -0500
+        id S1731470AbgKTSjb (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:39:31 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A49D21D91;
-        Fri, 20 Nov 2020 18:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C75E21D91;
+        Fri, 20 Nov 2020 18:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897560;
-        bh=RqqgcxMvaSOfAkQahvw6xsxnznyPix8tRQtQTvAF1uE=;
+        s=default; t=1605897570;
+        bh=+0V4Adbk9ke2IxbY3dNXG4xhcuMPG1UyTveFxir8HPM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TH+QoL/vAqmhndav8BJK/kvQ7hviiARBKO4uuPyu7jcNXnDYKRvjR/9Poz/lhULU1
-         selFUbtZ1foyWpvgMVDt5V+rYp/xlkqA6r8blXF/HaZmnce5m3sNn4+T0mwXn5Hqra
-         XHWbHfHGNrO2ZYHRY2xOlYEClYh3YDGw3CqTjY+s=
-Date:   Fri, 20 Nov 2020 12:39:26 -0600
+        b=0bZ/wnpXuWa7zMb4ABAoHpxa1hWyY3Tj5HpMfD/+sPIDfq+CCptEigkYiBQGMD2gw
+         2iH4a53WBz+OxKBB31vr61bAxj0YDFscNshmL3QaIJX/j7wrZFaQzoDNQMQyZ6B+aw
+         IOCbvzq4KYOOvppSnFFsl8D6d9CdWFXHmZ+WopWc=
+Date:   Fri, 20 Nov 2020 12:39:36 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 122/141] scsi: csiostor: Fix fall-through warnings for Clang
-Message-ID: <b77ee091548f16b52056c3b9ee8c76dc6691f868.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 124/141] scsi: stex: Fix fall-through warnings for Clang
+Message-ID: <20a7bcc10af2b762325c7078a4f472121a4fabc7.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -60,21 +60,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/scsi/csiostor/csio_wr.c | 1 +
+ drivers/scsi/stex.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/csiostor/csio_wr.c b/drivers/scsi/csiostor/csio_wr.c
-index 9010cb6045dc..fe0355c964bc 100644
---- a/drivers/scsi/csiostor/csio_wr.c
-+++ b/drivers/scsi/csiostor/csio_wr.c
-@@ -830,6 +830,7 @@ csio_wr_destroy_queues(struct csio_hw *hw, bool cmd)
- 				if (flq_idx != -1)
- 					csio_q_flid(hw, flq_idx) = CSIO_MAX_QID;
- 			}
-+			break;
- 		default:
- 			break;
+diff --git a/drivers/scsi/stex.c b/drivers/scsi/stex.c
+index d4f10c0d813c..40473e4f850f 100644
+--- a/drivers/scsi/stex.c
++++ b/drivers/scsi/stex.c
+@@ -685,6 +685,7 @@ stex_queuecommand_lck(struct scsi_cmnd *cmd, void (*done)(struct scsi_cmnd *))
+ 			done(cmd);
+ 			return 0;
  		}
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.27.0
 
