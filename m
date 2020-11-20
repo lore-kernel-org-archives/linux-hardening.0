@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B932C8300B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60440C8300E
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3460924124
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E69024124
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7e1EXxD"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ke24FtxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbgKTSfX (ORCPT
+        id S1730971AbgKTSfe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:35:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53830 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:35:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730718AbgKTSfX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:35:23 -0500
+        id S1730968AbgKTSfd (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:35:33 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E908F22470;
-        Fri, 20 Nov 2020 18:35:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D5B42415B;
+        Fri, 20 Nov 2020 18:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897322;
-        bh=ie/LCDYmZuGTxpKSbL46UdJ7XA5FHydrxwdxq946TG4=;
+        s=default; t=1605897333;
+        bh=K72XwcqubbCn0/cF3FjTr0nrUJ8a1fLNnC3o241FtB4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N7e1EXxDE/TNItuFChOENyXqj0wWtMHQpLOVWIRCSEpD0QJpUvc8EnVGkQUfykUJp
-         zUvpA2UNY/wMOUJ67+zckXs/8sjXHESLV/jsC4ZZ1qddliTRS6k5pHKmcr7+3U4ELz
-         HkxxdYOfrtzqqqPIE0nhB/p/0xq6xq5qGuURQjFY=
-Date:   Fri, 20 Nov 2020 12:35:28 -0600
+        b=Ke24FtxZgfBvFgrLZModd34j5XqpmnqVAhQwZGW/EpKXlAdJW9cT49U31E2Q7Ng63
+         355g+l1ymFPKNiiV+BYP3rmxZJrQhb1o4OeUO0j+wVXO71SpZMllPYSKflX8QQZFbw
+         GA8exwLVlTts0IEsF7nTx1wnipc1PRtOEbJtXEdA=
+Date:   Fri, 20 Nov 2020 12:35:38 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
 Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 081/141] drm/nouveau/clk: Fix fall-through warnings for Clang
-Message-ID: <3335770b6f7998934ab30db6b4a799b25811916c.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 083/141] drm/nouveau/therm: Fix fall-through warnings for
+ Clang
+Message-ID: <fa8206f7ff034993a696f6914c4056fbbb52b740.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -60,14 +61,14 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/clk/nv50.c | 1 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/therm/gf119.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/clk/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/clk/nv50.c
-index da1770e47490..ae2733035ac2 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/clk/nv50.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/clk/nv50.c
-@@ -313,6 +313,7 @@ nv50_clk_read(struct nvkm_clk *base, enum nv_clk_src src)
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gf119.c b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gf119.c
+index 0981b02790e2..bb2e71bf537f 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gf119.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gf119.c
+@@ -41,6 +41,7 @@ pwm_info(struct nvkm_therm *therm, int line)
  		default:
  			break;
  		}
