@@ -5,46 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C23AC8300B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708E4C63798
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C8C2224C
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E534246AA
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pm4C+zOq"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="fP8LorIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbgKTS10 (ORCPT
+        id S1729553AbgKTS1c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:27:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:27:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730130AbgKTS1Z (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:27:25 -0500
+        id S1729144AbgKTS1c (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:27:32 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B1A42224C;
-        Fri, 20 Nov 2020 18:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C682415A;
+        Fri, 20 Nov 2020 18:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896845;
-        bh=If0qQ61dzdqslYDbaW8NHfhoLDyPAWQ4qzC18ToYedY=;
+        s=default; t=1605896851;
+        bh=fLmEoecdeaRM8oGYWWnG5fKqd37Y+u0nknDa9Jmb8Lw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Pm4C+zOqjrRT4mNzdLrmTlZXhOvoIwt1fdiVLv7zAtbZBjXtwlkhXY+lvMTWJkhdw
-         kRH/ZoSpd4fdBfrJsoZby8FRDCnJSABLH9c2+6Al/2uqntUC53rDe0aH0vHoAsbJzb
-         8ObXGmNCovxosVDef488ULTICoxxT06pnACM3uBY=
-Date:   Fri, 20 Nov 2020 12:27:30 -0600
+        b=fP8LorIs/8eVqI3ODfsLIn5j59MeegzVg0DYIja9Z/zB9oBf5utSSBfZHR0G0BYHg
+         xAPNfKCC3AIb1OQkLIeijObe1/KeuRACdBHZyqRYibDiDCLKtGtE5HiG9WQbBdkRqp
+         GTfvK58daonZG1ru2fkAZ6biXxxBW8r+/F5n2keI=
+Date:   Fri, 20 Nov 2020 12:27:37 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 022/141] scsi: bfa: Fix fall-through warnings for Clang
-Message-ID: <2ae1cafd858238b85fc5e7fe5cc183843e21ec9f.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 023/141] staging: rtl8723bs: core: Fix fall-through warnings
+ for Clang
+Message-ID: <cd07e3ebc11b44a3fe016341438e24cf950994a3.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -56,72 +54,53 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-warnings by explicitly adding a couple break statements and replacing
-/* fall through */ comments with the new pseudo-keyword macro
-fallthrough; instead of just letting the code fall through to the next
-case.
-
-Notice that Clang doesn't recognize /* fall through */ comments as
-implicit fall-through markings.
+warnings by explicitly adding multiple break statements instead of just
+letting the code fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/scsi/bfa/bfa_fcs_lport.c | 2 +-
- drivers/scsi/bfa/bfa_ioc.c       | 6 ++++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_cmd.c       | 1 +
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c  | 1 +
+ drivers/staging/rtl8723bs/core/rtw_wlan_util.c | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/bfa/bfa_fcs_lport.c b/drivers/scsi/bfa/bfa_fcs_lport.c
-index 3486e402bfc1..49a14157f123 100644
---- a/drivers/scsi/bfa/bfa_fcs_lport.c
-+++ b/drivers/scsi/bfa/bfa_fcs_lport.c
-@@ -5671,7 +5671,7 @@ bfa_fcs_lport_scn_process_rscn(struct bfa_fcs_lport_s *port,
- 				bfa_fcs_lport_ms_fabric_rscn(port);
- 				break;
- 			}
--			/* !!!!!!!!! Fall Through !!!!!!!!!!!!! */
-+			fallthrough;
- 
- 		case FC_RSCN_FORMAT_AREA:
- 		case FC_RSCN_FORMAT_DOMAIN:
-diff --git a/drivers/scsi/bfa/bfa_ioc.c b/drivers/scsi/bfa/bfa_ioc.c
-index 325ad8a592bb..5740302d83ac 100644
---- a/drivers/scsi/bfa/bfa_ioc.c
-+++ b/drivers/scsi/bfa/bfa_ioc.c
-@@ -387,7 +387,7 @@ bfa_ioc_sm_getattr(struct bfa_ioc_s *ioc, enum ioc_event event)
- 	case IOC_E_PFFAILED:
- 	case IOC_E_HWERROR:
- 		bfa_ioc_timer_stop(ioc);
--		/* !!! fall through !!! */
-+		fallthrough;
- 	case IOC_E_TIMEOUT:
- 		ioc->cbfn->enable_cbfn(ioc->bfa, BFA_STATUS_IOC_FAILURE);
- 		bfa_fsm_set_state(ioc, bfa_ioc_sm_fail);
-@@ -437,7 +437,7 @@ bfa_ioc_sm_op(struct bfa_ioc_s *ioc, enum ioc_event event)
- 	case IOC_E_PFFAILED:
- 	case IOC_E_HWERROR:
- 		bfa_hb_timer_stop(ioc);
--		/* !!! fall through !!! */
-+		fallthrough;
- 	case IOC_E_HBFAIL:
- 		if (ioc->iocpf.auto_recover)
- 			bfa_fsm_set_state(ioc, bfa_ioc_sm_fail_retry);
-@@ -3299,6 +3299,7 @@ bfa_ablk_isr(void *cbarg, struct bfi_mbmsg_s *msg)
- 	case BFI_ABLK_I2H_PORT_CONFIG:
- 		/* update config port mode */
- 		ablk->ioc->port_mode_cfg = rsp->port_mode;
-+		break;
- 
- 	case BFI_ABLK_I2H_PF_DELETE:
- 	case BFI_ABLK_I2H_PF_UPDATE:
-@@ -5871,6 +5872,7 @@ bfa_dconf_sm_uninit(struct bfa_dconf_mod_s *dconf, enum bfa_dconf_event event)
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index 2abe205e3453..232661e6a5c9 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -1487,6 +1487,7 @@ void lps_ctrl_wk_hdl(struct adapter *padapter, u8 lps_ctrl_type)
  		break;
- 	case BFA_DCONF_SM_EXIT:
- 		bfa_fsm_send_event(&dconf->bfa->iocfc, IOCFC_E_DCONF_DONE);
+ 	case LPS_CTRL_TRAFFIC_BUSY:
+ 		LPS_Leave(padapter, "LPS_CTRL_TRAFFIC_BUSY");
 +		break;
- 	case BFA_DCONF_SM_IOCDISABLE:
- 	case BFA_DCONF_SM_WR:
- 	case BFA_DCONF_SM_FLASH_COMP:
+ 	default:
+ 		break;
+ 	}
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index b912ad2f4b72..ea44d653a591 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -1708,6 +1708,7 @@ unsigned int OnAssocRsp(struct adapter *padapter, union recv_frame *precv_frame)
+ 
+ 		case _ERPINFO_IE_:
+ 			ERP_IE_handler(padapter, pIE);
++			break;
+ 
+ 		default:
+ 			break;
+diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+index 372ce17c3569..2b13c683ba5c 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
++++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+@@ -1505,6 +1505,7 @@ unsigned int is_ap_in_tkip(struct adapter *padapter)
+ 			case _RSN_IE_2_:
+ 				if (!memcmp((pIE->data + 8), RSN_TKIP_CIPHER, 4))
+ 					return true;
++				break;
+ 
+ 			default:
+ 				break;
 -- 
 2.27.0
 
