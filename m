@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8362BC63777
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EC6C63777
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2735F2415A
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D9324124
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRL8r0R3"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYZodTvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgKTSgK (ORCPT
+        id S1730839AbgKTSgV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:36:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54530 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:36:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730816AbgKTSgJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:36:09 -0500
+        id S1730741AbgKTSgU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:36:20 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7181824178;
-        Fri, 20 Nov 2020 18:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94EE324124;
+        Fri, 20 Nov 2020 18:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897369;
-        bh=/KDY4J07mjjm5lcTX58j7+USUutizIZZ0ViN5Kxbmkk=;
+        s=default; t=1605897380;
+        bh=ztkRCbtkWtGvXLSbnQZrK/THzmiKGv5SeG3+LBnao+8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WRL8r0R3Mdb47Vlf9I97aZMr5QO3SEebP18pjNtVd1HBd8nsl8CFBXiVYGkOXyDCf
-         QWF23eaSG5b14+hgQXX+ZLhRkgoYmEHRK1mYTGOfJbwnLvENaNhv7OgBFSEjWPrHVa
-         HWIqelj7mIqnlJqunk8qT5tlf9VaffVauMDbki/g=
-Date:   Fri, 20 Nov 2020 12:36:14 -0600
+        b=hYZodTvXJ+dp0sqeNrDUx46LbwGzRhKJpFFP5UYT18FXl7tJzDnPqQym2/bWMIE8P
+         HFymR6+nhFKmJFgGUvYdGfq/esohnAIcV8jqsRn/7Rbsge8cUqOdWZkZ33nkz8516E
+         jibmexJ8QdzylVLK/jissYTJ1ASWQIjF3vbZMEr0=
+Date:   Fri, 20 Nov 2020 12:36:26 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     =?utf-8?Q?Przemys=C5=82aw?= Gaj <pgaj@cadence.com>,
-        Boris Brezillon <bbrezillon@kernel.org>
-Cc:     linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 088/141] i3c: master: cdns: Fix fall-through warnings for
- Clang
-Message-ID: <84750a7bd4a70dbebd6662c5d5bf132b2a215d06.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 090/141] iio: adc: cpcap: Fix fall-through warnings for Clang
+Message-ID: <b3c1c3f9c76f2f0e832f956587f227e44af57d3d.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,22 +61,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/i3c/master/i3c-master-cdns.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/adc/cpcap-adc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i3c/master/i3c-master-cdns.c b/drivers/i3c/master/i3c-master-cdns.c
-index 3f2226928fe0..5b37ffe5ad5b 100644
---- a/drivers/i3c/master/i3c-master-cdns.c
-+++ b/drivers/i3c/master/i3c-master-cdns.c
-@@ -1379,6 +1379,8 @@ static void cnds_i3c_master_demux_ibis(struct cdns_i3c_master *master)
- 
- 		case IBIR_TYPE_MR:
- 			WARN_ON(IBIR_XFER_BYTES(ibir) || (ibir & IBIR_ERROR));
-+			break;
-+
- 		default:
- 			break;
- 		}
+diff --git a/drivers/iio/adc/cpcap-adc.c b/drivers/iio/adc/cpcap-adc.c
+index 64c3cc382311..f19c9aa93f17 100644
+--- a/drivers/iio/adc/cpcap-adc.c
++++ b/drivers/iio/adc/cpcap-adc.c
+@@ -557,6 +557,7 @@ static void cpcap_adc_setup_bank(struct cpcap_adc *ddata,
+ 		break;
+ 	case CPCAP_ADC_BATTP_PI16 ... CPCAP_ADC_BATTI_PI17:
+ 		value1 |= CPCAP_BIT_RAND1;
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.27.0
 
