@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3847AC64E7B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6991EC64E90
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67FB24124
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1614F24124
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cr3cakHz"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hrmt+c+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731296AbgKTSkk (ORCPT
+        id S1730701AbgKTSky (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:40:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58646 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:40:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731641AbgKTSkj (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:40:39 -0500
+        id S1731670AbgKTSkx (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:40:53 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C64782242B;
-        Fri, 20 Nov 2020 18:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C64FD2467D;
+        Fri, 20 Nov 2020 18:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897638;
-        bh=nvGQ358IdnZ1yymOehQFBhd6nEfksDWCdHl95U47kz4=;
+        s=default; t=1605897649;
+        bh=b9FdqbhetGxlSrLNwiAqLkeUTdEkk4mAKgqcmtTsp+U=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Cr3cakHzfRciZcI88G0gdU7jQpNQUWk0Apktg62cStEuHpFlfn1aghIzdBaP/p/xL
-         FxB2qFjn97+OQxbVVztTkDIDE0weCl0Y1g8IqeVypY2TZQMYmyborc5/kQD8H6qPwO
-         6D34ixS3+h+g5Udk0CCF5NDjUvAkEdxDMU2UDV2g=
-Date:   Fri, 20 Nov 2020 12:40:44 -0600
+        b=Hrmt+c+r6d/bWt+4ljBbSgqtFgarptX12kO+U2fLRv5VtqpaFFiUvoqLobkrL44vb
+         YzASrHzjRkeEDxzxAjUDereBGScx1uBnMz/YCJDvmwUPgBPkS2EvsTCQpisizSL5Lh
+         KeRWZ32/JPMy2/BEohFcbSIzB6HdVvQS5AJDIFaw=
+Date:   Fri, 20 Nov 2020 12:40:55 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 136/141] virtio_net: Fix fall-through warnings for Clang
-Message-ID: <cb9b9534572bc476f4fb7b49a73dc8646b780c84.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 138/141] xen/manage: Fix fall-through warnings for Clang
+Message-ID: <5cfc00b1d8ed68eb2c2b6317806a0aa7e57d27f1.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -56,27 +55,27 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a goto statement instead of letting the code fall
+by explicitly adding a break statement instead of letting the code fall
 through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/virtio_net.c | 1 +
+ drivers/xen/manage.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 21b71148c532..fd326dc586aa 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -732,6 +732,7 @@ static struct sk_buff *receive_small(struct net_device *dev,
- 			fallthrough;
- 		case XDP_ABORTED:
- 			trace_xdp_exception(vi->dev, xdp_prog, act);
-+			goto err_xdp;
- 		case XDP_DROP:
- 			goto err_xdp;
- 		}
+diff --git a/drivers/xen/manage.c b/drivers/xen/manage.c
+index cd046684e0d1..374d36de7f5a 100644
+--- a/drivers/xen/manage.c
++++ b/drivers/xen/manage.c
+@@ -179,6 +179,7 @@ static int poweroff_nb(struct notifier_block *cb, unsigned long code, void *unus
+ 	case SYS_HALT:
+ 	case SYS_POWER_OFF:
+ 		shutting_down = SHUTDOWN_POWEROFF;
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.27.0
 
