@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D892BC64E7B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75604C64E7D
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFB022464
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271DC21D91
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCCw476K"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwL9eI/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbgKTSlz (ORCPT
+        id S1730986AbgKTSkF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:41:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:40:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731543AbgKTSkJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:40:09 -0500
+        id S1730799AbgKTSkD (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:40:03 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 773412242B;
-        Fri, 20 Nov 2020 18:40:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F5212415A;
+        Fri, 20 Nov 2020 18:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897609;
-        bh=B/PWRVssyp95V3yRR2KQnwMdlovlDJSISj7CoiNmeh4=;
+        s=default; t=1605897602;
+        bh=kvNu1AecsB3qb/9gvKDWdvnXY/lZR0Q75MQ4NElqdiA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SCCw476KOu03o1xkMgCxaH5YNUmznvnmG/uVKvwPzsRd2kuU2OkB2a/V5Bcq9muai
-         LWUE0OwDFid+1hs5akQ3kRvbexeCvifjQTKRhLg+VaWj19oRzo2QD/d5ZPG7zdEcuK
-         lC6xrsISL4KE1m5gQ6QZ4XppMUTrcJqNq2jL7Zwg=
-Date:   Fri, 20 Nov 2020 12:40:14 -0600
+        b=iwL9eI/C9QAKLeFLezdCLBTkkS8bTbKgCJiGMcD8MWJM3JjGb2wa32Pd5Hza0iVn4
+         ZI9iQNkjLvkTZHOWxdwpmirLZsYhDKt+3x6D+0rcV92c4zKbIYHmntxCe16bffSjlm
+         JTjeA8mzcyVgXGqu65NqYDkOmc+12g4NHdmrm+so=
+Date:   Fri, 20 Nov 2020 12:40:08 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+To:     Jon Maloy <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 131/141] tpm: Fix fall-through warnings for Clang
-Message-ID: <1804f48dac434541dc60ada5eefcb86f74905671.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 130/141] tipc: Fix fall-through warnings for Clang
+Message-ID: <73d7bf7a4aea53ddce817ac08c043203b48df50f.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,21 +61,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/char/tpm/eventlog/tpm1.c | 1 +
+ net/tipc/link.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/char/tpm/eventlog/tpm1.c b/drivers/char/tpm/eventlog/tpm1.c
-index 2c96977ad080..8aa9057601d6 100644
---- a/drivers/char/tpm/eventlog/tpm1.c
-+++ b/drivers/char/tpm/eventlog/tpm1.c
-@@ -210,6 +210,7 @@ static int get_event_name(char *dest, struct tcpa_event *event,
- 		default:
+diff --git a/net/tipc/link.c b/net/tipc/link.c
+index 06b880da2a8e..839082cf259e 100644
+--- a/net/tipc/link.c
++++ b/net/tipc/link.c
+@@ -615,6 +615,7 @@ int tipc_link_fsm_evt(struct tipc_link *l, int evt)
  			break;
- 		}
-+		break;
- 	default:
- 		break;
- 	}
+ 		case LINK_FAILOVER_BEGIN_EVT:
+ 			l->state = LINK_FAILINGOVER;
++			break;
+ 		case LINK_FAILURE_EVT:
+ 		case LINK_RESET_EVT:
+ 		case LINK_ESTABLISH_EVT:
 -- 
 2.27.0
 
