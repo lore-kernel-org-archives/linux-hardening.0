@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E5CC64E7A
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAE0C64E7D
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE94422464
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F121E24178
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4jMdMY5"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpRxsJrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbgKTS21 (ORCPT
+        id S1729772AbgKTS2d (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:28:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48856 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:28:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730363AbgKTS21 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:28:27 -0500
+        id S1729771AbgKTS2c (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:28:32 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B1422253;
-        Fri, 20 Nov 2020 18:28:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C24F2224C;
+        Fri, 20 Nov 2020 18:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896906;
-        bh=Y8vpVMcmlTUsUOP9pEeod738ijyLLvAD8dEkm6gpY9g=;
+        s=default; t=1605896912;
+        bh=ssvHPrhtc5RCPny0nBzYLJShq5+Wt0kEALg8BV3eIWo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o4jMdMY5wxuevhdDh/Pewtd62/r9me5BKkoC4mBouzkIUJoCD3fV8iJkwRya0aYt8
-         lvqvL8YecxiHY3O88WlmE1BxoiwlGh13FCeq8B9PO/xhgTmXpHtaJqhsN0IqCfXpsh
-         uKIE5ujdotOV6voOtZQko2xAX5jAMxOf7r4TbzYk=
-Date:   Fri, 20 Nov 2020 12:28:32 -0600
+        b=IpRxsJrOqAWba4bZv/4F8tw0/m486AgJhgDKTUjEnEensBBs9izLoqTeMQ7B9KHZW
+         qTkprQFGHn3/dIUe9cXajWqF22ZUM5Xf/R8LffZvXqveQWZbG3wVUtSF3OwKra59xp
+         Sz1y9i3YtrRB2S3urnGjEoJVg/p+eFVjcKfW+OI8=
+Date:   Fri, 20 Nov 2020 12:28:37 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 031/141] ext4: Fix fall-through warnings for Clang
-Message-ID: <03497331f088a938d7a728e7a689bd7953139429.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 032/141] floppy: Fix fall-through warnings for Clang
+Message-ID: <ede7ffddba64f621150f8f5c5f2b8f080b560903.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,27 +53,27 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of just letting the code
-fall through to the next case.
+by explicitly adding a fallthrough pseudo-keyword in places where the
+code is intended to fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- fs/ext4/super.c | 1 +
+ drivers/block/floppy.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 6633b20224d5..ca04389fc718 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4877,6 +4877,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 			       "requested data journaling mode");
- 			goto failed_mount_wq;
- 		}
-+		break;
- 	default:
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 7df79ae6b0a1..21a2a7becba0 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -2124,6 +2124,7 @@ static void format_interrupt(void)
+ 	switch (interpret_errors()) {
+ 	case 1:
+ 		cont->error();
++		fallthrough;
+ 	case 2:
  		break;
- 	}
+ 	case 0:
 -- 
 2.27.0
 
