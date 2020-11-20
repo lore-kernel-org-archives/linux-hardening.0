@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23902C56201
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD039C6379D
 	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D183D24137
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869502408E
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="vGhM8XQ8"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8D/Xtnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgKTSZW (ORCPT
+        id S1729721AbgKTSZb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:25:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46874 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:25:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728698AbgKTSZW (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:25:22 -0500
+        id S1728698AbgKTSZa (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:25:30 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFCD824124;
-        Fri, 20 Nov 2020 18:25:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FF6A2224C;
+        Fri, 20 Nov 2020 18:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896721;
-        bh=pf6kfPHaE4HzxEiOc7dj5m5zf+4ABXtrZUmxTrBrs64=;
+        s=default; t=1605896729;
+        bh=W0doVExi+7l5tGvbjfwECBr+mScLF6o8Q5o+wMEAbOQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vGhM8XQ8zi1783KAgnAwvuVBBc93CvB158cTTQNqnhyjy+Q/EUYe806GD2IufmK33
-         npmPDfMra03ksYPRSPi5C/+6jncNTP7GP8vmA/igOvMEKEFVHpF0yTrnb0BepJSgdA
-         tqd0Bsk5AjeSaxSRN+G7YbmKxbM33CGZft9cXGBY=
-Date:   Fri, 20 Nov 2020 12:25:27 -0600
+        b=a8D/XtnmN3onvQ7+QylrGfLegFPEylbYocI6o4ld6v/HtHfOOwiQBKnNZKFmAHU/i
+         9bU8O21b6Msl6ofAQR0dy9g8IGiEbQHFpMI6zAZmMSefS8f/70a6mIvxHAXwMSE5Hk
+         HJg8K5Zzu0NSdWOKKoxzzOlG5u/zpNuGHa9t3pIM=
+Date:   Fri, 20 Nov 2020 12:25:35 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 008/141] IB/hfi1: Fix fall-through warnings for Clang
-Message-ID: <13cc2fe2cf8a71a778dbb3d996b07f5e5d04fd40.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 009/141] igb: Fix fall-through warnings for Clang
+Message-ID: <f4696db7798ce0efd9e1d10ce28f6413a09c3c57.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,62 +62,47 @@ letting the code fall through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/qp.c       | 1 +
- drivers/infiniband/hw/hfi1/tid_rdma.c | 5 +++++
- 2 files changed, 6 insertions(+)
+ drivers/net/ethernet/intel/igb/e1000_phy.c   | 1 +
+ drivers/net/ethernet/intel/igb/igb_ethtool.c | 1 +
+ drivers/net/ethernet/intel/igb/igb_ptp.c     | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/qp.c b/drivers/infiniband/hw/hfi1/qp.c
-index 356518e17fa6..681bb4e918c9 100644
---- a/drivers/infiniband/hw/hfi1/qp.c
-+++ b/drivers/infiniband/hw/hfi1/qp.c
-@@ -339,6 +339,7 @@ int hfi1_setup_wqe(struct rvt_qp *qp, struct rvt_swqe *wqe, bool *call_send)
- 			return -EINVAL;
- 		if (ibp->sl_to_sc[rdma_ah_get_sl(&ah->attr)] == 0xf)
- 			return -EINVAL;
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/drivers/infiniband/hw/hfi1/tid_rdma.c b/drivers/infiniband/hw/hfi1/tid_rdma.c
-index 73d197e21730..92aa2a9b3b5a 100644
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -2826,6 +2826,7 @@ static bool handle_read_kdeth_eflags(struct hfi1_ctxtdata *rcd,
- 		default:
+diff --git a/drivers/net/ethernet/intel/igb/e1000_phy.c b/drivers/net/ethernet/intel/igb/e1000_phy.c
+index 8c8eb82e6272..a018000f7db9 100644
+--- a/drivers/net/ethernet/intel/igb/e1000_phy.c
++++ b/drivers/net/ethernet/intel/igb/e1000_phy.c
+@@ -836,6 +836,7 @@ s32 igb_copper_link_setup_igp(struct e1000_hw *hw)
  			break;
- 		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -3005,6 +3006,7 @@ bool hfi1_handle_kdeth_eflags(struct hfi1_ctxtdata *rcd,
- 		default:
- 			break;
- 		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -3221,6 +3223,7 @@ bool hfi1_tid_rdma_wqe_interlock(struct rvt_qp *qp, struct rvt_swqe *wqe)
- 			req = wqe_to_tid_req(prev);
- 			if (req->ack_seg != req->total_segs)
- 				goto interlock;
+ 		case e1000_ms_auto:
+ 			data &= ~CR_1000T_MS_ENABLE;
 +			break;
  		default:
  			break;
  		}
-@@ -3239,9 +3242,11 @@ bool hfi1_tid_rdma_wqe_interlock(struct rvt_qp *qp, struct rvt_swqe *wqe)
- 			req = wqe_to_tid_req(prev);
- 			if (req->ack_seg != req->total_segs)
- 				goto interlock;
-+			break;
- 		default:
- 			break;
- 		}
+diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+index 28baf203459a..486d3e67d3a9 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -3022,6 +3022,7 @@ static int igb_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
+ 		break;
+ 	case ETHTOOL_SRXCLSRLDEL:
+ 		ret = igb_del_ethtool_nfc_entry(adapter, cmd);
 +		break;
  	default:
  		break;
  	}
+diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
+index 7cc5428c3b3d..f3ff565da0a1 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ptp.c
++++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
+@@ -1008,6 +1008,7 @@ static int igb_ptp_set_timestamp_mode(struct igb_adapter *adapter,
+ 	switch (config->tx_type) {
+ 	case HWTSTAMP_TX_OFF:
+ 		tsync_tx_ctl = 0;
++		break;
+ 	case HWTSTAMP_TX_ON:
+ 		break;
+ 	default:
 -- 
 2.27.0
 
