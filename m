@@ -5,45 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC2BC6379D
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EEDC64E7B
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1835B2415B
+	by mail.kernel.org (Postfix) with ESMTP id CA35D2224C
 	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1w7rg+w"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9mbaJya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgKTS1p (ORCPT
+        id S1730240AbgKTS1u (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:27:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48216 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:27:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729345AbgKTS1p (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:27:45 -0500
+        id S1729345AbgKTS1u (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:27:50 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 102AD24137;
-        Fri, 20 Nov 2020 18:27:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8582224C;
+        Fri, 20 Nov 2020 18:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896864;
-        bh=PzUQRnrAN0ELgA9SqxL3NXdQazZeB/6txsbYX7eZgPA=;
+        s=default; t=1605896870;
+        bh=ZkN2E5iC9yYgk2lvFGmuCNBM20ad7vKF98d/MtbSjdo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K1w7rg+wZH5p4fwQQmVBNiCLUPOPN4+zY2D138B9vVOPspxlxg058eOp2ihxpjHDf
-         oEWswK03Zo0WtzxF4Ang/HS6K4ptWk6QQ9AuhC+2r1cLnXjt4s/M2ztYvLsW28TOig
-         rFp/Y1lpmkatNi9QZrDy+63o2b4dm4KWXkMotCw4=
-Date:   Fri, 20 Nov 2020 12:27:50 -0600
+        b=C9mbaJyaK+TSgajVEkvF5OigO8zMZ5JL4/zSJ1vYiqcNm8FrVp7CS7LnU5RIbnlGf
+         T86AG0es4ZZtGw9/0KsB0jOhFXoKESYu3AJRC977+J80SwOb8Uv40JNd5wtfiC2khz
+         uAZToXA3OdacK2nlImfuq8kboz5BcAGKrgtEZz8A=
+Date:   Fri, 20 Nov 2020 12:27:55 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Jeff Layton <jlayton@kernel.org>, Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 025/141] bnxt_en: Fix fall-through warnings for Clang
-Message-ID: <37e648502a1a5d8c2f4c00b8ee1a4fb264acc0c8.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 026/141] ceph: Fix fall-through warnings for Clang
+Message-ID: <36ade28cd060cf4920476fffefcc40e38ef1e205.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,28 +52,33 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of just letting the code
-fall through to the next case.
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a couple
+of warnings by explicitly adding a break and a goto statements instead
+of just letting the code fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ceph/dir.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 7975f59735d6..b593237915e3 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -2137,6 +2137,7 @@ static int bnxt_hwrm_handler(struct bnxt *bp, struct tx_cmp *txcmp)
- 	case CMPL_BASE_TYPE_HWRM_ASYNC_EVENT:
- 		bnxt_async_event_process(bp,
- 					 (struct hwrm_async_event_cmpl *)txcmp);
+diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+index a4d48370b2b3..e9b44f613932 100644
+--- a/fs/ceph/dir.c
++++ b/fs/ceph/dir.c
+@@ -631,10 +631,12 @@ static loff_t ceph_dir_llseek(struct file *file, loff_t offset, int whence)
+ 	switch (whence) {
+ 	case SEEK_CUR:
+ 		offset += file->f_pos;
 +		break;
- 
- 	default:
+ 	case SEEK_SET:
  		break;
+ 	case SEEK_END:
+ 		retval = -EOPNOTSUPP;
++		goto out;
+ 	default:
+ 		goto out;
+ 	}
 -- 
 2.27.0
 
