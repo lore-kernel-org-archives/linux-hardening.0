@@ -2,94 +2,170 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45AFC83013
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 19:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF890C6379F
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 20:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF19206B6
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 19:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB1922253
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 20:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NjicivzP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="avd4TaFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbgKTTwK (ORCPT
+        id S1730075AbgKTUsM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 14:52:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54122 "EHLO
+        Fri, 20 Nov 2020 15:48:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730291AbgKTTwK (ORCPT
+        with ESMTP id S1729541AbgKTUsF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 14:52:10 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1986EC0613CF
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2020 11:52:10 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id c66so8889971pfa.4
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2020 11:52:10 -0800 (PST)
+        Fri, 20 Nov 2020 15:48:05 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78B4C061A54
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2020 12:48:03 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id q28so8336898pgk.1
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2020 12:48:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=X8uKo4cphvUHXqX5JxQoRlUg2+q0bv7B3NpzE4jNXx4=;
-        b=NjicivzP6e7SYMGkEBIyXRQXAuwbm0gtPM2k8GbKG+FXs5uMK6r45ZW9k43d90VPhz
-         DEwlvk+hjPwAEmTwtOxx5b+TNVWu4eUMG/3N0D/8FspQpW3NT+b44HH9yfqn1UraPXHu
-         F0SjPXkVaYltiU4GPMrXvii7LnjgTXN6SUtys=
+         :content-disposition:in-reply-to;
+        bh=v0uQ3+ZvQ790GJbfbb1ESqfRrqQ38XoL7hho1t1Gb0k=;
+        b=avd4TaFUM+Ab56B8iWTc3giej2JyPXQeNqj8Vqwh4pMfYMm6E7ROZ43KbUMGq3c2kN
+         Y7wgImiWtwhH33QCuhXwX5xfYnbd8ZoAoymaiVLMsflRM4OrtMTi7raBVieCeB5e9/kv
+         qCr4nXKui27aGXF6t1ziK2ispJ9UlbNRnpYGc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=X8uKo4cphvUHXqX5JxQoRlUg2+q0bv7B3NpzE4jNXx4=;
-        b=mcH9+lEk3KyTHt2naCYVB0yBZ2FXBf4TswXLVg8LYgRssAiziwfy2g85VwWGHc359f
-         CykwS/ffKUjoJNr6atv8aZB/I+E0iAYcgyWGwqbetG0jGpkfBYSFRIsgHv7DCVw5ySWZ
-         fGMLcsSAT/3Nu/C/T/Sg3q9d8HYGQpwPFfeINUcM6Ja0mkBiOCwbfmA27QqYNKnwKuHA
-         aO/6MPmVopEWSr36QcJqc9/dPRv0OXOhN71ASXPbiTEEnf+3CnXAgKeenIxQyVZSaam9
-         LT62TfUu+CP1Xetsqm/CoKVbm5/0ME6FpL5VdLWNh2msL521TDuesZtg85y8R9RaoJTL
-         cRpA==
-X-Gm-Message-State: AOAM532VM27sxzmXJcK9FRt6spxSQ7dGZjZAC3w27ZiLBK5nChirQ8QA
-        cHUFA27JPz8Z0qHhkh/6xx4oAigCxJ/ZUYYW
-X-Google-Smtp-Source: ABdhPJwmhNo/oa0SgoI9bFv2vw35wuYBJ8aIsma7B0R9UgFb9THn90BCMvVwZzJYilwrEanzKZdGvQ==
-X-Received: by 2002:a65:56c8:: with SMTP id w8mr18436826pgs.383.1605901929516;
-        Fri, 20 Nov 2020 11:52:09 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to;
+        bh=v0uQ3+ZvQ790GJbfbb1ESqfRrqQ38XoL7hho1t1Gb0k=;
+        b=PNdYyqBAt4dWWky9VuVWTFxGVQJU4FEraSGOTSQ3mlHWNXCY+CpHGsDYXzWFgtaEPp
+         uTxXAPZ7dcyN6W2YnP4SIWaw3Ps+RtTlPJSeEd9j+zFJtFX9GrDsd53a8s7eZWthtTgh
+         VtWlWkGwUiIbCX/adaWkpjpTx+nO/ZIQTSJ7OQetodbWxBj5Q1GUM/RaVLj1RIaaJn4W
+         hpCdRTUWvP42iCDd0ZsVc/x/hGCaVk0cxZuNcWfPKs2u3lzr/Ufs4zuWuZb9UdEFp8zl
+         OhB+ImEM9jD2mQWSlYlD2/Q0qXsC9Hg0BcYhgrBcwOD+wowoP4BMZXF2G4H9S6L2meQ+
+         +n6A==
+X-Gm-Message-State: AOAM533Mu46ursuFzsVVIwbrexLYh3MAIE97s4s6s2RGWfrmY+PvUrtl
+        VtOof/8/r1VkgUBpQzS3xBP2gw==
+X-Google-Smtp-Source: ABdhPJzEbaB+IYipfwOUXoCmdplAutZXXBsmC8OBp1xOfb5CPZl7t2eHSBKNbswFZQhoeAMsBYl7Qg==
+X-Received: by 2002:a62:d108:0:b029:163:d3cf:f00e with SMTP id z8-20020a62d1080000b0290163d3cff00emr15313890pfg.43.1605905283088;
+        Fri, 20 Nov 2020 12:48:03 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z5sm2749417pgp.79.2020.11.20.11.52.08
+        by smtp.gmail.com with ESMTPSA id a67sm3215381pfa.77.2020.11.20.12.48.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2020 11:52:08 -0800 (PST)
-Date:   Fri, 20 Nov 2020 11:52:07 -0800
+        Fri, 20 Nov 2020 12:48:02 -0800 (PST)
+Date:   Fri, 20 Nov 2020 12:48:01 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Francis Laniel <laniel_francis@privacyrequired.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, dja@axtens.net
-Subject: Re: [PATCH v6 0/5] Fortify strscpy()
-Message-ID: <202011201150.AE57F56EB@keescook>
-References: <20201119164915.10618-1-laniel_francis@privacyrequired.com>
- <20201119173543.8821881942022fc4f39c4c73@linux-foundation.org>
- <5676804.6kI0aEeX2c@machine>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        amd-gfx@lists.freedesktop.org, bridge@lists.linux-foundation.org,
+        ceph-devel@vger.kernel.org, cluster-devel@redhat.com,
+        coreteam@netfilter.org, devel@driverdev.osuosl.org,
+        dm-devel@redhat.com, drbd-dev@lists.linbit.com,
+        dri-devel@lists.freedesktop.org, GR-everest-linux-l2@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, intel-gfx@lists.freedesktop.org,
+        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-ext4@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+Message-ID: <202011201244.78E002D5@keescook>
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook>
+ <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5676804.6kI0aEeX2c@machine>
+In-Reply-To: <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 10:40:38AM +0100, Francis Laniel wrote:
-> Le vendredi 20 novembre 2020, 02:35:43 CET Andrew Morton a écrit :
-> > On Thu, 19 Nov 2020 17:49:10 +0100 laniel_francis@privacyrequired.com wrote:
-> > > This patch set answers to this issue:
-> > > https://github.com/KSPP/linux/issues/46
+On Fri, Nov 20, 2020 at 11:51:42AM -0800, Jakub Kicinski wrote:
+> On Fri, 20 Nov 2020 11:30:40 -0800 Kees Cook wrote:
+> > On Fri, Nov 20, 2020 at 10:53:44AM -0800, Jakub Kicinski wrote:
+> > > On Fri, 20 Nov 2020 12:21:39 -0600 Gustavo A. R. Silva wrote:  
+> > > > This series aims to fix almost all remaining fall-through warnings in
+> > > > order to enable -Wimplicit-fallthrough for Clang.
+> > > > 
+> > > > In preparation to enable -Wimplicit-fallthrough for Clang, explicitly
+> > > > add multiple break/goto/return/fallthrough statements instead of just
+> > > > letting the code fall through to the next case.
+> > > > 
+> > > > Notice that in order to enable -Wimplicit-fallthrough for Clang, this
+> > > > change[1] is meant to be reverted at some point. So, this patch helps
+> > > > to move in that direction.
+> > > > 
+> > > > Something important to mention is that there is currently a discrepancy
+> > > > between GCC and Clang when dealing with switch fall-through to empty case
+> > > > statements or to cases that only contain a break/continue/return
+> > > > statement[2][3][4].  
+> > > 
+> > > Are we sure we want to make this change? Was it discussed before?
+> > > 
+> > > Are there any bugs Clangs puritanical definition of fallthrough helped
+> > > find?
+> > > 
+> > > IMVHO compiler warnings are supposed to warn about issues that could
+> > > be bugs. Falling through to default: break; can hardly be a bug?!  
 > > 
-> > I fail to understand what this patchset has to do with that
-> > one-element-array issue :(
->
-> I think I linked another issue totally not related with that one...
+> > It's certainly a place where the intent is not always clear. I think
+> > this makes all the cases unambiguous, and doesn't impact the machine
+> > code, since the compiler will happily optimize away any behavioral
+> > redundancy.
+> 
+> If none of the 140 patches here fix a real bug, and there is no change
+> to machine code then it sounds to me like a W=2 kind of a warning.
 
-This just looks like a typo. The URL should be:
-https://github.com/KSPP/linux/issues/96
+I'd like to avoid splitting common -W options between default and W=2
+just based on the compiler. Getting -Wimplicit-fallthrough enabled found
+plenty of bugs, so making sure it works correctly for both compilers
+feels justified to me. (This is just a subset of the same C language
+short-coming.)
+
+> I think clang is just being annoying here, but if I'm the only one who
+> feels this way chances are I'm wrong :)
+
+It's being pretty pedantic, but I don't think it's unreasonable to
+explicitly state how every case ends. GCC's silence for the case of
+"fall through to a break" doesn't really seem justified.
 
 -- 
 Kees Cook
