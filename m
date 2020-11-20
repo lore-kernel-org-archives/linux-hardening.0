@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B6BC6379F
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC2BC6379D
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94DD12415B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1835B2415B
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrVkdKVg"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1w7rg+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbgKTS1k (ORCPT
+        id S1730221AbgKTS1p (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:27:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48178 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:27:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729144AbgKTS1j (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:27:39 -0500
+        id S1729345AbgKTS1p (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:27:45 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7589024137;
-        Fri, 20 Nov 2020 18:27:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 102AD24137;
+        Fri, 20 Nov 2020 18:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896859;
-        bh=fmjm1AiZxkRaF0b1/Nesig0WMravFjRhy2EbeFt3hTo=;
+        s=default; t=1605896864;
+        bh=PzUQRnrAN0ELgA9SqxL3NXdQazZeB/6txsbYX7eZgPA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IrVkdKVgpgaoVGWxLIUc9x/BKLIikfPolq7fpmPdtW3t+I7hXd0ci+0nOm8BGFl3r
-         0G0zgkyYRfzDwY3OcBDDWJqHN+Z2eIbB24707ZN5gtbMGbZz3AtlLd02OakvzrSU+z
-         a5tbL4fJzLP+jOE9BSGXtYk1xvRR869/rdUOckgo=
-Date:   Fri, 20 Nov 2020 12:27:44 -0600
+        b=K1w7rg+wZH5p4fwQQmVBNiCLUPOPN4+zY2D138B9vVOPspxlxg058eOp2ihxpjHDf
+         oEWswK03Zo0WtzxF4Ang/HS6K4ptWk6QQ9AuhC+2r1cLnXjt4s/M2ztYvLsW28TOig
+         rFp/Y1lpmkatNi9QZrDy+63o2b4dm4KWXkMotCw4=
+Date:   Fri, 20 Nov 2020 12:27:50 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+To:     Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 024/141] staging: vt6655: Fix fall-through warnings for Clang
-Message-ID: <863fda60074850bc976974af48fa769c64725e64.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 025/141] bnxt_en: Fix fall-through warnings for Clang
+Message-ID: <37e648502a1a5d8c2f4c00b8ee1a4fb264acc0c8.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -53,49 +54,28 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-warnings by explicitly adding multiple break statements instead of just
-letting the code fall through to the next case.
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+by explicitly adding a break statement instead of just letting the code
+fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/staging/vt6655/device_main.c | 1 +
- drivers/staging/vt6655/rxtx.c        | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/vt6655/device_main.c b/drivers/staging/vt6655/device_main.c
-index 09ab6d6f2429..0adbd2b67df0 100644
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -1579,6 +1579,7 @@ static int vnt_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
- 	case DISABLE_KEY:
- 		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse))
- 			clear_bit(key->hw_key_idx, &priv->key_entry_inuse);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 7975f59735d6..b593237915e3 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -2137,6 +2137,7 @@ static int bnxt_hwrm_handler(struct bnxt *bp, struct tx_cmp *txcmp)
+ 	case CMPL_BASE_TYPE_HWRM_ASYNC_EVENT:
+ 		bnxt_async_event_process(bp,
+ 					 (struct hwrm_async_event_cmpl *)txcmp);
 +		break;
+ 
  	default:
  		break;
- 	}
-diff --git a/drivers/staging/vt6655/rxtx.c b/drivers/staging/vt6655/rxtx.c
-index 477d19314634..1a64152de189 100644
---- a/drivers/staging/vt6655/rxtx.c
-+++ b/drivers/staging/vt6655/rxtx.c
-@@ -1004,6 +1004,7 @@ s_cbFillTxBufHead(struct vnt_private *pDevice, unsigned char byPktType,
- 		switch (info->control.hw_key->cipher) {
- 		case WLAN_CIPHER_SUITE_CCMP:
- 			cbMICHDR = sizeof(struct vnt_mic_hdr);
-+			break;
- 		default:
- 			break;
- 		}
-@@ -1318,6 +1319,7 @@ int vnt_generate_fifo_header(struct vnt_private *priv, u32 dma_idx,
- 			break;
- 		case WLAN_CIPHER_SUITE_CCMP:
- 			tx_buffer_head->frag_ctl |= cpu_to_le16(FRAGCTL_AES);
-+			break;
- 		default:
- 			break;
- 		}
 -- 
 2.27.0
 
