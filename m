@@ -5,48 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73453C2D0E4
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9483C2D0E4
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2653924137
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4D02415B
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="02O/nS3V"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+zo2l5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgKTS01 (ORCPT
+        id S1729935AbgKTS0f (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:26:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47530 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:26:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbgKTS01 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:26:27 -0500
+        id S1728002AbgKTS0f (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:26:35 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 760642224C;
-        Fri, 20 Nov 2020 18:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D67702224C;
+        Fri, 20 Nov 2020 18:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896786;
-        bh=C1JYVYbiH42EE/uLPi+6zsu3Ta2+yYlrVB4LGZYwlek=;
+        s=default; t=1605896794;
+        bh=o44rxYz07qY5iicaWYINSD1h0xz85jFmVrcs/FkZ3Fg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=02O/nS3V848EYX5SWiVylqOyVZ2x8zgyL7+aqZVLGDMvG9GObDZnOMdRvtc5KZhRN
-         BFHp4vvUT3rf3/onWxVYy0ayCbU3GWwUSSinDiR/bR2twi9ckY/EjwqcUmRb81A3Y0
-         CeL2jMn6s7eOQvxy531gNDfpAmCjf+lZ6F4sCgq4=
-Date:   Fri, 20 Nov 2020 12:26:31 -0600
+        b=l+zo2l5ZOB4HjwYEZaCNpb7w7RAlH8TN1043XUTV/1BuQ1tr6Ua7cM8z/DdLQ6wlF
+         1/ofi0echZs+v98JCEjLkYZOaGepy49A2mgkeXq+Qm5oCaGl4WfKxTyqPFAXE4oKj9
+         EPgHJreoOBKqQbAVRGB18z8GmMxHoVNxfoZ99QcU=
+Date:   Fri, 20 Nov 2020 12:26:40 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 015/141] netfilter: Fix fall-through warnings for Clang
-Message-ID: <ed43418cabacc651f198fbad9a9fcfe32c6ddf6f.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 016/141] nfsd: Fix fall-through warnings for Clang
+Message-ID: <0669408377bdc6ee87b214b2756465a6edc354fc.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -58,53 +54,40 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-warnings by explicitly adding multiple break statements instead of just
-letting the code fall through to the next case.
+warnings by explicitly adding a couple of break statements instead of
+just letting the code fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/netfilter/nf_conntrack_proto_dccp.c | 1 +
- net/netfilter/nf_tables_api.c           | 1 +
- net/netfilter/nft_ct.c                  | 1 +
- 3 files changed, 3 insertions(+)
+ fs/nfsd/nfs4state.c | 1 +
+ fs/nfsd/nfsctl.c    | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/net/netfilter/nf_conntrack_proto_dccp.c b/net/netfilter/nf_conntrack_proto_dccp.c
-index b3f4a334f9d7..94001eb51ffe 100644
---- a/net/netfilter/nf_conntrack_proto_dccp.c
-+++ b/net/netfilter/nf_conntrack_proto_dccp.c
-@@ -397,6 +397,7 @@ dccp_new(struct nf_conn *ct, const struct sk_buff *skb,
- 			msg = "not picking up existing connection ";
- 			goto out_invalid;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index d7f27ed6b794..cdab0d5be186 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -3113,6 +3113,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 			goto out_nolock;
  		}
+ 		new->cl_mach_cred = true;
 +		break;
- 	case CT_DCCP_REQUEST:
+ 	case SP4_NONE:
  		break;
- 	case CT_DCCP_INVALID:
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 0f58e98542be..78d0bbc8868c 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -8342,6 +8342,7 @@ static int nf_tables_check_loops(const struct nft_ctx *ctx,
- 							data->verdict.chain);
- 				if (err < 0)
- 					return err;
-+				break;
- 			default:
- 				break;
- 			}
-diff --git a/net/netfilter/nft_ct.c b/net/netfilter/nft_ct.c
-index 322bd674963e..fec68b75f39a 100644
---- a/net/netfilter/nft_ct.c
-+++ b/net/netfilter/nft_ct.c
-@@ -530,6 +530,7 @@ static void __nft_ct_set_destroy(const struct nft_ctx *ctx, struct nft_ct *priv)
- 	case NFT_CT_ZONE:
- 		if (--nft_ct_pcpu_template_refcnt == 0)
- 			nft_ct_tmpl_put_pcpu();
+ 	default:				/* checked by xdr code */
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index f6d5d783f4a4..9a3bb1e217f9 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1165,6 +1165,7 @@ static struct inode *nfsd_get_inode(struct super_block *sb, umode_t mode)
+ 		inode->i_fop = &simple_dir_operations;
+ 		inode->i_op = &simple_dir_inode_operations;
+ 		inc_nlink(inode);
 +		break;
- #endif
  	default:
  		break;
+ 	}
 -- 
 2.27.0
 
