@@ -4,44 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF7CC2D0E4
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CE9C64E90
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D916E2224C
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924422415B
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRrWysql"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQ/KZo2k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgKTS35 (ORCPT
+        id S1729713AbgKTS3W (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:29:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49772 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:29:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729572AbgKTS35 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:29:57 -0500
+        id S1730436AbgKTS3K (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:29:10 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11B7D2224C;
-        Fri, 20 Nov 2020 18:29:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A76CF2224C;
+        Fri, 20 Nov 2020 18:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896996;
-        bh=LI5dppKYFXmpET3UXCEMVT3nMwGAHMo4iLh6NaayELQ=;
+        s=default; t=1605896949;
+        bh=MYHVWHWVXuqSxyq4vscs/ENZtj+RwkcSZwdJhLL4R6E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MRrWysqlNGFWo+ioOVoiGfwruEpZ/BVjc9yIYhIk3Bsu9GKQc7gO+0OQyk0XJvBF7
-         2OOPDT1eD8ShEhzw8iiKH4saLMMu5WtqAClKALCcC7UKO9+j1zBHzB895zPRQ5MSdQ
-         467Pyh5f39dB4KkQLm5VlXXbEf6t0KTf2BFy6Tws=
-Date:   Fri, 20 Nov 2020 12:30:02 -0600
+        b=aQ/KZo2k3G4eBTaYrrod9aQ9Oa7SyRYipIV+hfjerRKta5ffDfN/sQsSfbBpC3QoK
+         UfZbu9+K0od2TxE8EJ/OgJXA6xqqOKw7lHrQ0a0jqnO6IsojRbtzy1oP01yBP8srfC
+         MKstif1zSR6WK0lU6CfkfR00xqufr+WNUHG0l6QY=
+Date:   Fri, 20 Nov 2020 12:29:15 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 037/141] Input: pcspkr - Fix fall-through warnings for Clang
-Message-ID: <4b659e3e65f2fa3c8bb7ed153e2016c3fb395bbc.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 036/141] ice: Fix fall-through warnings for Clang
+Message-ID: <f31ed82718bf09e396b2a1fb36de72c048e0c542.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -59,21 +62,21 @@ fall through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/input/misc/pcspkr.c | 1 +
+ drivers/net/ethernet/intel/ice/ice_txrx_lib.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/misc/pcspkr.c b/drivers/input/misc/pcspkr.c
-index e5e0d8ba80e1..9c666b2f14fe 100644
---- a/drivers/input/misc/pcspkr.c
-+++ b/drivers/input/misc/pcspkr.c
-@@ -33,6 +33,7 @@ static int pcspkr_event(struct input_dev *dev, unsigned int type,
- 	case SND_BELL:
- 		if (value)
- 			value = 1000;
+diff --git a/drivers/net/ethernet/intel/ice/ice_txrx_lib.c b/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
+index bc2f4390b51d..c7b47ad36416 100644
+--- a/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
+@@ -143,6 +143,7 @@ ice_rx_csum(struct ice_ring *ring, struct sk_buff *skb,
+ 	case ICE_RX_PTYPE_INNER_PROT_UDP:
+ 	case ICE_RX_PTYPE_INNER_PROT_SCTP:
+ 		skb->ip_summed = CHECKSUM_UNNECESSARY;
 +		break;
- 	case SND_TONE:
- 		break;
  	default:
+ 		break;
+ 	}
 -- 
 2.27.0
 
