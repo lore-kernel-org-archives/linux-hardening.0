@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6B1C83014
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72582C83019
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B06D24181
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155242242B
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ivt4iX8/"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzfnJv48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731410AbgKTSjG (ORCPT
+        id S1731423AbgKTSjL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:39:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:39:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731151AbgKTSjF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:39:05 -0500
+        id S1731146AbgKTSjK (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:39:10 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB0562242B;
-        Fri, 20 Nov 2020 18:39:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE27821D91;
+        Fri, 20 Nov 2020 18:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897544;
-        bh=t3ClybAIVgVgMruU6IzTwMzc933R2eHYAPe5wLYOfo4=;
+        s=default; t=1605897549;
+        bh=5czwBWlX+NOIZ/hDmGXvsib6oKR4rr0f/d+IvUNt/A8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ivt4iX8/qEnWiABubOsfiIWojSQPWY1Q8cgAefwtBrPcfn3Nw1D4GFaGSLcgd0iCw
-         pTYVU4PogldR64dt5ZMmKid257lEPwwmkFRKTVekaSGhEDwij7DhwvAwei1028peO5
-         rfXwCegjrOCE5JW5SuIeAAUcaoVrKVp/ME2cOnuM=
-Date:   Fri, 20 Nov 2020 12:39:10 -0600
+        b=KzfnJv48skZ4PoaPEUPu1nMYoJ8yEuy5tDARACqCt5J0CaiRd0SXCDbaKSRFFSrRG
+         gw7wz1EOVQniE7reHeMovOPc2tW5z3tK65s+fjI3CQ0jXWPNHrHDedsUnXW3EX2s+4
+         sJKlCSIBjik9qxC5It997iQ9+fvtYkLz9EBI+poY=
+Date:   Fri, 20 Nov 2020 12:39:15 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 119/141] rxrpc: Fix fall-through warnings for Clang
-Message-ID: <93f1b2299a5ab99835cfb5b683e7a38d83da341a.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 120/141] scsi: aacraid: Fix fall-through warnings for Clang
+Message-ID: <e4e25e57964a69f7173f868ff93df9d6d08f360f.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,21 +61,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/rxrpc/af_rxrpc.c | 1 +
+ drivers/scsi/aacraid/commsup.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
-index 0a2f4817ec6c..aa43191dbb09 100644
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -471,6 +471,7 @@ static int rxrpc_connect(struct socket *sock, struct sockaddr *addr,
- 	switch (rx->sk.sk_state) {
- 	case RXRPC_UNBOUND:
- 		rx->sk.sk_state = RXRPC_CLIENT_UNBOUND;
-+		break;
- 	case RXRPC_CLIENT_UNBOUND:
- 	case RXRPC_CLIENT_BOUND:
- 		break;
+diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
+index b99ca1b0c553..0ae0d1fa2b50 100644
+--- a/drivers/scsi/aacraid/commsup.c
++++ b/drivers/scsi/aacraid/commsup.c
+@@ -1448,6 +1448,7 @@ static void aac_handle_aif(struct aac_dev * dev, struct fib * fibptr)
+ 				break;
+ 			}
+ 			scsi_rescan_device(&device->sdev_gendev);
++			break;
+ 
+ 		default:
+ 			break;
 -- 
 2.27.0
 
