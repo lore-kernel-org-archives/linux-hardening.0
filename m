@@ -2,61 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BF8C6379D
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 22:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE064C2D0E4
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 23:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7B32408E
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 22:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD3D2240C
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 23:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbgKTWtW (ORCPT
+        id S1728210AbgKTXS1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 17:49:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbgKTWtW (ORCPT
+        Fri, 20 Nov 2020 18:18:27 -0500
+Received: from smtprelay0213.hostedemail.com ([216.40.44.213]:38790 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728359AbgKTXS0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 17:49:22 -0500
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [IPv6:2a0a:51c0:0:12e:520::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C24F1C0613CF;
-        Fri, 20 Nov 2020 14:49:21 -0800 (PST)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1kgFDF-0003Os-Vx; Fri, 20 Nov 2020 23:49:06 +0100
-Date:   Fri, 20 Nov 2020 23:49:05 +0100
-From:   Florian Westphal <fw@strlen.de>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fri, 20 Nov 2020 18:18:26 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 9655D182CED2A;
+        Fri, 20 Nov 2020 23:18:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: grade25_3d0ec972734f
+X-Filterd-Recvd-Size: 1719
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 20 Nov 2020 23:18:24 +0000 (UTC)
+Message-ID: <5e9c1d953c6b6254a3288f1e797064666e82a79d.camel@perches.com>
+Subject: Re: [PATCH 001/141] afs: Fix fall-through warnings for Clang
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 108/141] netfilter: ipt_REJECT: Fix fall-through warnings
- for Clang
-Message-ID: <20201120224905.GS15137@breakpoint.cc>
+Date:   Fri, 20 Nov 2020 15:18:23 -0800
+In-Reply-To: <51150b54e0b0431a2c401cd54f2c4e7f50e94601.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <ff4cbf9ab833a9d17306674850116693a17f2780.1605896060.git.gustavoars@kernel.org>
+         <51150b54e0b0431a2c401cd54f2c4e7f50e94601.1605896059.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.38.1-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff4cbf9ab833a9d17306674850116693a17f2780.1605896060.git.gustavoars@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of letting the code fall
-> through to the next case.
+On Fri, 2020-11-20 at 12:23 -0600, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+> warnings by explicitly adding multiple fallthrough pseudo-keywords
+> in places where the code is intended to fall through to the next
+> case.
 
-Acked-by: Florian Westphal <fw@strlen.de>
+This is the first of the actual patches I've seen.
+I think adding fallthough for these patches isn't the best option.
+
+> diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
+[]
+> @@ -322,6 +322,8 @@ static int afs_deliver_cb_callback(struct afs_call *call)
+>  			return ret;
+>  
+> 
+>  		call->unmarshall++;
+> +
+> +		fallthrough;
+
+My preference would be to change these to break and not fallthrough;
+
+>  	case 5:
+>  		break;
+>  	}
+
+etc...
+
