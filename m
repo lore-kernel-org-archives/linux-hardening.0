@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDADFC63777
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582EDC64E7B
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5E92416E
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167B32415A
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dp/gcwZ7"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgOl38Ow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbgKTSac (ORCPT
+        id S1730103AbgKTSak (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:30:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:30:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730103AbgKTSab (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:30:31 -0500
+        id S1729888AbgKTSaj (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:30:39 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 708EB2224C;
-        Fri, 20 Nov 2020 18:30:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6123322464;
+        Fri, 20 Nov 2020 18:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897031;
-        bh=Mi6Etvvh4r8mrSIwrdOuNeq4lh4mbEd6eeO+cjJCRNI=;
+        s=default; t=1605897039;
+        bh=okgN29pfOeUZfXeK9u9pNLZfoX962MTdM34mDM9TBYA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dp/gcwZ7u7UzGFJihJ5G0NqXL5pRmOBHXbE0pha2rJNJovIh6zR6ZTvlUDtHu9MRW
-         6UxNV1bi8+QCJUqprL59djGc2XXxmK4JI7ZjjNJvahvg+Qm8JP4b2LrhIlo/fyRn/d
-         OaKbroMS6/McMeg8UAEoAFntPqKhz63LwrympvI0=
-Date:   Fri, 20 Nov 2020 12:30:36 -0600
+        b=SgOl38Ow2zfvcZzyKUFNft2VI/Hl/uOvdcPcTpFqNo35iIpuo9kIxncjgCiL9hS3W
+         R90dRFfQNRbITSW3TKTofurSxy/ekZSA1d2N6aLr6UGNQ/whh31Iy5w/2H6mJXT2CA
+         PWNKHXSetcVVwO5tEhkgt21wvEt8pwIIWYzpHd+A=
+Date:   Fri, 20 Nov 2020 12:30:44 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 039/141] ixgbevf: Fix fall-through warnings for Clang
-Message-ID: <cec560b39c59d4c6b854fbe534cbe77050d097a8.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 040/141] kprobes/x86: Fix fall-through warnings for Clang
+Message-ID: <65385c498bdc4fb67460395d10c9523dc6a647e2.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,21 +61,21 @@ fall through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 1 +
+ arch/x86/kernel/kprobes/core.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index 82fce27f682b..afab78c51be0 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -2639,6 +2639,7 @@ static void ixgbevf_set_num_queues(struct ixgbevf_adapter *adapter)
- 			adapter->num_rx_queues = rss;
- 			adapter->num_tx_queues = rss;
- 			adapter->num_xdp_queues = adapter->xdp_prog ? rss : 0;
-+			break;
- 		default:
- 			break;
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 547c7abb39f5..983738bc08c0 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -864,6 +864,7 @@ static void resume_execution(struct kprobe *p, struct pt_regs *regs,
+ 			p->ainsn.boostable = true;
+ 			goto no_change;
  		}
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.27.0
 
