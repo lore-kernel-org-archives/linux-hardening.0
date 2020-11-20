@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE00C6379F
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD8EC83012
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C21E24171
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451972415A
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQ2h4K/y"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="PU1cTvUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbgKTScV (ORCPT
+        id S1730343AbgKTScc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:32:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51404 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:32:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730416AbgKTScV (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:32:21 -0500
+        id S1730416AbgKTScc (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:32:32 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2C0B2415A;
-        Fri, 20 Nov 2020 18:32:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE6324171;
+        Fri, 20 Nov 2020 18:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897140;
-        bh=1LZU8FpZUMLgvhSd5M/jyE0eLp713Xrz3qaYf9NDI8I=;
+        s=default; t=1605897152;
+        bh=Uiq6WbZsFcZNa2qICMel25kTRPDI4/E6GffHMbwMUi8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lQ2h4K/yHomv4tUQRLyfVMLME7HMghpj5JWLVl1UZ/TkGGGgBWgtaVtFS1a7riutP
-         7lSdn4OnbVULu5xGcs+lZX8SAEYIllOrNMZX7y2Bpmy9ZK9kdunhTaBXpMn07u70K8
-         6dYLo73W84y05FwjIIFl4ojPOmiF5K/sm8FmXL/E=
-Date:   Fri, 20 Nov 2020 12:32:26 -0600
+        b=PU1cTvUZR4VHL6s/0INk6PcX3kNchPKLgx7UBDh0VcqpmnOPVJQ400d3DIBu8n9cT
+         fSszpMtkQo4CCRpdmIUtblnX3lFG/vyvAY6I7sg0Quok9q9dsO2knTZjv0XXm85WKw
+         5ZYCxYHfAG4TTJ4HJCdNsNebgKxGPjspDVsbDTvE=
+Date:   Fri, 20 Nov 2020 12:32:37 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>
-Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 053/141] selinux: Fix fall-through warnings for Clang
-Message-ID: <c543804fee333ba315ddf4056ceed79f94e10d19.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 055/141] uprobes/x86: Fix fall-through warnings for Clang
+Message-ID: <aebe7ddf558d3804781345a7fc20a7b1472acdb5.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,18 +61,19 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- security/selinux/hooks.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/uprobes.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 6b1826fc3658..e57774367b3a 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -4029,6 +4029,7 @@ static int selinux_kernel_load_data(enum kernel_load_data_id id, bool contents)
- 	switch (id) {
- 	case LOADING_MODULE:
- 		rc = selinux_kernel_module_from_file(NULL);
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 3fdaa042823d..90f44f44c209 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -1015,6 +1015,8 @@ int arch_uprobe_exception_notify(struct notifier_block *self, unsigned long val,
+ 		if (uprobe_post_sstep_notifier(regs))
+ 			ret = NOTIFY_STOP;
+ 
 +		break;
++
  	default:
  		break;
  	}
