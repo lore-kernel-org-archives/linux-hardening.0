@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17490C8300B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3B2C83011
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D666C24124
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F3324124
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiWaCkpc"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyGy+5Sj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbgKTSgk (ORCPT
+        id S1731118AbgKTSgy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:36:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54888 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:36:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731066AbgKTSgf (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:36:35 -0500
+        id S1731128AbgKTSgv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:36:51 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5686E24178;
-        Fri, 20 Nov 2020 18:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C55E524124;
+        Fri, 20 Nov 2020 18:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897394;
-        bh=QvTdWsyEWNwiEFozRZ7h6dPDYFbpYH5Fk87FBAkBFqo=;
+        s=default; t=1605897411;
+        bh=+lg9ENCIf/yCYLdwyjv31ofMLjSyOQlV0ABlqBWAYeo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YiWaCkpcZdojuHqXDs5Sy83qa3vXfAJqXjKdHBjQKmEV53ZsJGkbj3hbEchpZHnT+
-         axsY882jTaCe9NVgRgU8z7Uk/rVPrLbXzyFrenwq6tXEuHgjcvOShT9rJzheC3niWX
-         AhyQGOsPA/G2cUKYB9GkP769nU9z9QviVn3lGVNs=
-Date:   Fri, 20 Nov 2020 12:36:40 -0600
+        b=iyGy+5Sj3/t/50PTM5j/6rEBQJaia0e2F14V9RaJK/MT08Ube62x52QtGo4pgHPy7
+         zcVwNcKp9OsZDKyO4b3/C3wChRV1f6R7WRzPKoQikYHtsWF/Il/RiRy/zWfoqw1uWv
+         bJcCp+z9pY2wJlSlGjoNVxlc77FKoHbcwZnLbrgc=
+Date:   Fri, 20 Nov 2020 12:36:57 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 092/141] libata: Fix fall-through warnings for Clang
-Message-ID: <e3498b34cae37d0f93db5824e5f61b183a7293f1.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 095/141] media: dvb_frontend: Fix fall-through warnings for
+ Clang
+Message-ID: <2023134a1e897bddf48e2851bdcc53706e892e6d.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -59,21 +60,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/ata/libata-eh.c | 1 +
+ drivers/media/dvb-core/dvb_frontend.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
-index b6f92050e60c..2db1e9c66088 100644
---- a/drivers/ata/libata-eh.c
-+++ b/drivers/ata/libata-eh.c
-@@ -2613,6 +2613,7 @@ int ata_eh_reset(struct ata_link *link, int classify,
- 			switch (tmp) {
- 			case -EAGAIN:
- 				rc = -EAGAIN;
-+				break;
- 			case 0:
- 				break;
- 			default:
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 06ea30a689d7..fb35697dd93c 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -984,6 +984,7 @@ static int dvb_frontend_check_parameters(struct dvb_frontend *fe)
+ 				 fe->ops.info.symbol_rate_max);
+ 			return -EINVAL;
+ 		}
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.27.0
 
