@@ -5,44 +5,45 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B487C71155
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F8BC71156
 	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9EBA2415A
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78D12415A
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="2mClBoat"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="YE4KnDQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbgKTSaw (ORCPT
+        id S1729980AbgKTSbC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:30:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50352 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:31:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730533AbgKTSav (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:30:51 -0500
+        id S1729850AbgKTSbC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:31:02 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74E9524137;
-        Fri, 20 Nov 2020 18:30:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E7B24137;
+        Fri, 20 Nov 2020 18:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897051;
-        bh=n4gmw6oYJQw9aNSzbjcpzFOwDVRrQdAVrgo2Zbxzdgc=;
+        s=default; t=1605897061;
+        bh=WXJEfqRj94HpGAo2eaWvHvqPElV8GZV+WC7FXBXG4DU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2mClBoataV/HE4LTG8pURPdfyWhi5cUchM4NroUZkVlDTvfkKW/9jZvJrRG6G5W7j
-         4rC6UDh9OubJO9EnJ47bb31G7CCOC+A2XpqoLldRN7si+mLuGOLaRvXTm3R3lIMlxl
-         3SjEzpBfjximHtht+2dxuD9kHmBGYVMeriOm/X3Y=
-Date:   Fri, 20 Nov 2020 12:30:56 -0600
+        b=YE4KnDQkCFztMDeRF09ZPZtRZbJybx4zNL3956kFoUonKqcY67RxpgAGwo0d+P9xu
+         nmpsw8Dkv2ffoVIXorC50bc2vW6F6QhhDLFRRdkpHAJOkREa1Ev/n0IIo5pruiqsun
+         J+nOVgTFVXHWXiymvIrUMziVH/FmU9mpgIW3GqRY=
+Date:   Fri, 20 Nov 2020 12:31:07 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
+To:     Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 042/141] net: 3c509: Fix fall-through warnings for Clang
-Message-ID: <56f997b3e97326076d16930901a4089056e8b6c6.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 044/141] net/mlx4: Fix fall-through warnings for Clang
+Message-ID: <84cd69bc9b9768cf3bc032c0205ffe485b80ba03.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -60,21 +61,21 @@ fall through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/3com/3c509.c | 1 +
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/3com/3c509.c b/drivers/net/ethernet/3com/3c509.c
-index 667f38c9e4c6..676cdc6900b5 100644
---- a/drivers/net/ethernet/3com/3c509.c
-+++ b/drivers/net/ethernet/3com/3c509.c
-@@ -1052,6 +1052,7 @@ el3_netdev_get_ecmd(struct net_device *dev, struct ethtool_link_ksettings *cmd)
- 		break;
- 	case 3:
- 		cmd->base.port = PORT_BNC;
+diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+index 1187ef1375e2..e6b8b8dc7894 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -2660,6 +2660,7 @@ int mlx4_FREE_RES_wrapper(struct mlx4_dev *dev, int slave,
+ 	case RES_XRCD:
+ 		err = xrcdn_free_res(dev, slave, vhcr->op_modifier, alop,
+ 				     vhcr->in_param, &vhcr->out_param);
 +		break;
+ 
  	default:
  		break;
- 	}
 -- 
 2.27.0
 
