@@ -7,44 +7,48 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D543C8300C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EDFC8300E
 	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C68DA24124
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335B422464
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="x4wIZXPc"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIfDMP4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgKTShh (ORCPT
+        id S1730788AbgKTSho (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:37:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:37:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730315AbgKTShg (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:37:36 -0500
+        id S1730579AbgKTShn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:37:43 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CDB24654;
-        Fri, 20 Nov 2020 18:37:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5084D24124;
+        Fri, 20 Nov 2020 18:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897456;
-        bh=2bhoMmVygSUPKT93A0DAHGg2hZg6OEYngPqQhxzi7tM=;
+        s=default; t=1605897463;
+        bh=tBaPpJPmxXUf73eAJA+QVsu+zTVoZtKsBdcV4QFuZxc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x4wIZXPclmEBR9oWZSh3r4QafP0RM3CQ6A2K1P79N5DRNPh2wOMO9lwZ1XgIgrA9s
-         w6ajaGuDdbIwP2Bh88++DYv1tnRUtDeMGr0jtV2LrCz/ac3lqgo01hPX97FscNe0EX
-         t6uI+wp5ahdWHPITurZSdPOHpHqDg1eTuuHfuSCg=
-Date:   Fri, 20 Nov 2020 12:37:42 -0600
+        b=lIfDMP4gnKR37+GQEfhGQBBWIAbbesWesMWbQeIwLDAsnJhWQRadcR3FDcieCwm4Y
+         nuPx/bGuKrXkgUoVFxrgPG39qUeTzkhNKP/kW8ANdGh3ry2A4ZZ42AVT0LxsUre1X2
+         i4iCxCGntBFwV7Z4RoqlGP8oC/8mswe1Ykxuming=
+Date:   Fri, 20 Nov 2020 12:37:48 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     linux-mtd@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 103/141] mtd: rawnand: fsmc: Fix fall-through warnings for
- Clang
-Message-ID: <3020f35812cb74a63323bcc36971aa598a5e3730.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 104/141] mtd: rawnand: stm32_fmc2: Fix fall-through warnings
+ for Clang
+Message-ID: <299d044a69b59eff2c733543b927aa608282a9a8.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,28 +59,36 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of letting the code fall
-through to the next case.
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a couple
+of warnings by explicitly adding a couple of fallthrough pseudo-keywords
+instead of letting the code fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/mtd/nand/raw/fsmc_nand.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mtd/nand/raw/fsmc_nand.c b/drivers/mtd/nand/raw/fsmc_nand.c
-index 4191831df182..273626d49769 100644
---- a/drivers/mtd/nand/raw/fsmc_nand.c
-+++ b/drivers/mtd/nand/raw/fsmc_nand.c
-@@ -916,6 +916,7 @@ static int fsmc_nand_attach_chip(struct nand_chip *nand)
- 				 "Using 4-bit SW BCH ECC scheme\n");
+diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+index 550bda4d1415..002fa521036f 100644
+--- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
++++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+@@ -531,6 +531,7 @@ static int stm32_fmc2_nfc_ham_correct(struct nand_chip *chip, u8 *dat,
+ 		switch (b % 4) {
+ 		case 2:
+ 			bit_position += shifting;
++			fallthrough;
+ 		case 1:
  			break;
- 		}
-+		break;
- 
- 	case NAND_ECC_ENGINE_TYPE_ON_DIE:
- 		break;
+ 		default:
+@@ -546,6 +547,7 @@ static int stm32_fmc2_nfc_ham_correct(struct nand_chip *chip, u8 *dat,
+ 		switch (b % 4) {
+ 		case 2:
+ 			byte_addr += shifting;
++			fallthrough;
+ 		case 1:
+ 			break;
+ 		default:
 -- 
 2.27.0
 
