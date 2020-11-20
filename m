@@ -5,43 +5,45 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B29C64E69
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E437AC56201
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 462322416E
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC5A2242B
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxYLyx0Z"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgs/Mwvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbgKTShF (ORCPT
+        id S1730885AbgKTSgt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:37:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55078 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:36:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731147AbgKTShD (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:37:03 -0500
+        id S1731118AbgKTSgp (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:36:45 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0455624181;
-        Fri, 20 Nov 2020 18:37:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C98AF24178;
+        Fri, 20 Nov 2020 18:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897422;
-        bh=udADudDkChcMOUmnZIGrdCb9+vn9Qn+OTPsqWB7CIuE=;
+        s=default; t=1605897404;
+        bh=P0ho12sgAaK4DoLh6QPmF0ZxrwPVgf6Fhfqmw03f+BA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uxYLyx0ZzX0o17QnUqeSP/HNMQaVMLMiwDXjr44TUHtiSLSzuNzkWjeV8aupmSbt4
-         4HqG5B2x3fXVK4us9pYGhjoF+SWwguYzi+OIQ+3tODutBdKApaj/Qg2KRJCDfEsBzP
-         /Rwh4hY0pbO/TOzr3HjxWw847YwvzhtBlFYDVdus=
-Date:   Fri, 20 Nov 2020 12:37:08 -0600
+        b=hgs/MwvnI4/Qh1IfQWTHC1V2ek1jzIsFGde9Z77it39Ux6x6UXhMXSCW3aTWRqGNI
+         uzDVKZ5aVrFvT4UQkApb7Kz94DD0EAgCxWyudIoi/jKDymBGjsIo8fqxt1jQHPoC8q
+         tEDI7k/xz0naaRL1SOLGHcKfFclDyhc+0Vxp77Og=
+Date:   Fri, 20 Nov 2020 12:36:50 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 097/141] media: saa7134: Fix fall-through warnings for Clang
-Message-ID: <cc5053e144f9ff5901e9cf894c72aa933cf480f3.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 094/141] media: atomisp: Fix fall-through warnings for Clang
+Message-ID: <6a1c9b29a2d8e5accb48cd179cfe43b87fd83a00.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -59,21 +61,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/media/pci/saa7134/saa7134-tvaudio.c | 1 +
+ drivers/staging/media/atomisp/pci/runtime/isys/src/rx.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/pci/saa7134/saa7134-tvaudio.c b/drivers/media/pci/saa7134/saa7134-tvaudio.c
-index 5cc4ef21f9d3..5dc97990fa0e 100644
---- a/drivers/media/pci/saa7134/saa7134-tvaudio.c
-+++ b/drivers/media/pci/saa7134/saa7134-tvaudio.c
-@@ -885,6 +885,7 @@ void saa7134_enable_i2s(struct saa7134_dev *dev)
- 	    saa_writeb(SAA7134_I2S_OUTPUT_FORMAT, i2s_format);
- 	    saa_writeb(SAA7134_I2S_OUTPUT_LEVEL,  0x0F);
- 	    saa_writeb(SAA7134_I2S_AUDIO_OUTPUT,  0x01);
-+	    break;
- 
+diff --git a/drivers/staging/media/atomisp/pci/runtime/isys/src/rx.c b/drivers/staging/media/atomisp/pci/runtime/isys/src/rx.c
+index b4813cd50daa..4a18da6bf0c1 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/isys/src/rx.c
++++ b/drivers/staging/media/atomisp/pci/runtime/isys/src/rx.c
+@@ -368,6 +368,7 @@ static mipi_predictor_t sh_css_csi2_compression_type_2_mipi_predictor(
+ 		break;
+ 	case IA_CSS_CSI2_COMPRESSION_TYPE_2:
+ 		predictor = MIPI_PREDICTOR_TYPE2 - 1;
++		break;
  	default:
- 	    break;
+ 		break;
+ 	}
 -- 
 2.27.0
 
