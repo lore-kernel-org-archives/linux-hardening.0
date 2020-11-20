@@ -5,46 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD039C6379D
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3234C56201
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 869502408E
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0CB2408E
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8D/Xtnm"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZiiEaON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgKTSZb (ORCPT
+        id S1728696AbgKTSZm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:25:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46914 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:25:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728698AbgKTSZa (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:25:30 -0500
+        id S1728416AbgKTSZm (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:25:42 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FF6A2224C;
-        Fri, 20 Nov 2020 18:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 812CB2224C;
+        Fri, 20 Nov 2020 18:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896729;
-        bh=W0doVExi+7l5tGvbjfwECBr+mScLF6o8Q5o+wMEAbOQ=;
+        s=default; t=1605896741;
+        bh=AiYFtsLjV0u9Bb2aXIHKzTabREy1yEWQo6B0+R+mk5k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a8D/XtnmN3onvQ7+QylrGfLegFPEylbYocI6o4ld6v/HtHfOOwiQBKnNZKFmAHU/i
-         9bU8O21b6Msl6ofAQR0dy9g8IGiEbQHFpMI6zAZmMSefS8f/70a6mIvxHAXwMSE5Hk
-         HJg8K5Zzu0NSdWOKKoxzzOlG5u/zpNuGHa9t3pIM=
-Date:   Fri, 20 Nov 2020 12:25:35 -0600
+        b=nZiiEaONGZCiRQd8Tg2KbZLlgvo9NPq72Wj693BLQERiQm+K6VEm5pdegEukxEOH9
+         DJSL6tYSn61KBlNMAC8dBHW4pbbSDOarsmqdvAeYEohbhdk/egvhF/xbVz/o2i/5Qp
+         XJ0nHsyaV0XWPvJHDHwrkqVlalxeBwc+0Q4QDmIE=
+Date:   Fri, 20 Nov 2020 12:25:46 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 009/141] igb: Fix fall-through warnings for Clang
-Message-ID: <f4696db7798ce0efd9e1d10ce28f6413a09c3c57.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 010/141] ima: Fix fall-through warnings for Clang
+Message-ID: <ae416f97079da13568026228d930e9e59118cc4c.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,47 +63,42 @@ letting the code fall through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/e1000_phy.c   | 1 +
- drivers/net/ethernet/intel/igb/igb_ethtool.c | 1 +
- drivers/net/ethernet/intel/igb/igb_ptp.c     | 1 +
- 3 files changed, 3 insertions(+)
+ security/integrity/ima/ima_main.c   | 1 +
+ security/integrity/ima/ima_policy.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_phy.c b/drivers/net/ethernet/intel/igb/e1000_phy.c
-index 8c8eb82e6272..a018000f7db9 100644
---- a/drivers/net/ethernet/intel/igb/e1000_phy.c
-+++ b/drivers/net/ethernet/intel/igb/e1000_phy.c
-@@ -836,6 +836,7 @@ s32 igb_copper_link_setup_igp(struct e1000_hw *hw)
- 			break;
- 		case e1000_ms_auto:
- 			data &= ~CR_1000T_MS_ENABLE;
-+			break;
- 		default:
- 			break;
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 2d1af8899cab..600b97677085 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -743,6 +743,7 @@ int ima_load_data(enum kernel_load_data_id id, bool contents)
+ 			pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
+ 			return -EACCES;	/* INTEGRITY_UNKNOWN */
  		}
-diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-index 28baf203459a..486d3e67d3a9 100644
---- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-@@ -3022,6 +3022,7 @@ static int igb_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
- 		break;
- 	case ETHTOOL_SRXCLSRLDEL:
- 		ret = igb_del_ethtool_nfc_entry(adapter, cmd);
 +		break;
  	default:
  		break;
  	}
-diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
-index 7cc5428c3b3d..f3ff565da0a1 100644
---- a/drivers/net/ethernet/intel/igb/igb_ptp.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
-@@ -1008,6 +1008,7 @@ static int igb_ptp_set_timestamp_mode(struct igb_adapter *adapter,
- 	switch (config->tx_type) {
- 	case HWTSTAMP_TX_OFF:
- 		tsync_tx_ctl = 0;
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 9b5adeaa47fc..ea634fc3b82f 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -566,6 +566,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+ 			rc = ima_filter_rule_match(secid, rule->lsm[i].type,
+ 						   Audit_equal,
+ 						   rule->lsm[i].rule);
++			break;
+ 		default:
+ 			break;
+ 		}
+@@ -802,6 +803,7 @@ void __init ima_init_policy(void)
+ 		add_rules(default_measurement_rules,
+ 			  ARRAY_SIZE(default_measurement_rules),
+ 			  IMA_DEFAULT_POLICY);
 +		break;
- 	case HWTSTAMP_TX_ON:
- 		break;
  	default:
+ 		break;
+ 	}
 -- 
 2.27.0
 
