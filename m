@@ -7,44 +7,41 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A436C2D0E4
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A43C6379F
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4AC22415A
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E7A2224C
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="0LzDxwT0"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="WhIf7PNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbgKTS2O (ORCPT
+        id S1730352AbgKTS2U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:28:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:28:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730287AbgKTS2N (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:28:13 -0500
+        id S1730287AbgKTS2T (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:28:19 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19ABA2415B;
-        Fri, 20 Nov 2020 18:28:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE7B124137;
+        Fri, 20 Nov 2020 18:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896893;
-        bh=NeHeQJmUla3vmR7XyOy4O+i4tOPT/mQV3ZB26CkYB+k=;
+        s=default; t=1605896899;
+        bh=umCtXJe8ll0gFNyQleab4zJTSuNlW6aLS9t82OOmt0Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0LzDxwT02XC/zjRyU2aD6yhNI2oqissMzOjVjZCP5ylJcVfyAIV5T8irwHobJkVy+
-         CTctFcyaWf/R65c/syCY7YsEHLDnzkUR0bfWa1vDgGJR9/WG1f0ognK7vembhXR+S1
-         Jhrxm8Uxe6WMzYBKIbyPx7vCINxT3gWiI++cnPFU=
-Date:   Fri, 20 Nov 2020 12:28:18 -0600
+        b=WhIf7PNH9jh1Q6xEZherV2tHASA7sql89Jw7dkHpWD7jm1qiosaAcONuCLzMUgaTH
+         Hd9bFMFvudepy7GlG9t2E5xECricBhtCQ2za62lEvvWFxxswcUKqcH2EBIIOvRDE0N
+         3WUm9OisLDP4MPhPDK+28zFEAqDqfc+mXJifbvAs=
+Date:   Fri, 20 Nov 2020 12:28:25 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Jan Kara <jack@suse.com>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 029/141] e1000: Fix fall-through warnings for Clang
-Message-ID: <ea9567cc53425566b874484143c4b44619b17ae7.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 030/141] ext2: Fix fall-through warnings for Clang
+Message-ID: <73d8ae2d06d639815672ee9ee4550ea4bfa08489.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,21 +59,21 @@ fall through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_hw.c | 1 +
+ fs/ext2/inode.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_hw.c b/drivers/net/ethernet/intel/e1000/e1000_hw.c
-index 4c0c9433bd60..19cf36360933 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_hw.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_hw.c
-@@ -1183,6 +1183,7 @@ static s32 e1000_copper_link_igp_setup(struct e1000_hw *hw)
- 			break;
- 		case e1000_ms_auto:
- 			phy_data &= ~CR_1000T_MS_ENABLE;
+diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+index 11c5c6fe75bb..78c417d3c898 100644
+--- a/fs/ext2/inode.c
++++ b/fs/ext2/inode.c
+@@ -1256,6 +1256,7 @@ static void __ext2_truncate_blocks(struct inode *inode, loff_t offset)
+ 				mark_inode_dirty(inode);
+ 				ext2_free_branches(inode, &nr, &nr+1, 3);
+ 			}
 +			break;
- 		default:
- 			break;
- 		}
+ 		case EXT2_TIND_BLOCK:
+ 			;
+ 	}
 -- 
 2.27.0
 
