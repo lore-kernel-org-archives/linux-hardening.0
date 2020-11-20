@@ -5,45 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75604C64E7D
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47309C2D0E4
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 271DC21D91
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0326722464
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwL9eI/C"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="dop1Dk46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbgKTSkF (ORCPT
+        id S1731500AbgKTSmd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:40:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730799AbgKTSkD (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:40:03 -0500
+        id S1731600AbgKTSk3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:40:29 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F5212415A;
-        Fri, 20 Nov 2020 18:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CFD8246A5;
+        Fri, 20 Nov 2020 18:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897602;
-        bh=kvNu1AecsB3qb/9gvKDWdvnXY/lZR0Q75MQ4NElqdiA=;
+        s=default; t=1605897626;
+        bh=Y8kh4owvTk63yVbmvl7KFgSqNLo2VS4SK56SXLF+fBI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iwL9eI/C9QAKLeFLezdCLBTkkS8bTbKgCJiGMcD8MWJM3JjGb2wa32Pd5Hza0iVn4
-         ZI9iQNkjLvkTZHOWxdwpmirLZsYhDKt+3x6D+0rcV92c4zKbIYHmntxCe16bffSjlm
-         JTjeA8mzcyVgXGqu65NqYDkOmc+12g4NHdmrm+so=
-Date:   Fri, 20 Nov 2020 12:40:08 -0600
+        b=dop1Dk46ltomSe9RnVeh+F4JQdthkLRZGJkGbcpFRXggLCnBfNjtF6Qh30G6n3yh6
+         jPfF/2qAWBAInawMufgN75RsUlg+KGdHY64wLZXOCwlNlFzof9nhzTcoZjD2RxQIQ/
+         8uf1yq40dFK9D7Ue5Q/Wr4bohI0P/XZLWdzxFBlY=
+Date:   Fri, 20 Nov 2020 12:40:32 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jon Maloy <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Andres Salomon <dilinger@queued.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-geode@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 130/141] tipc: Fix fall-through warnings for Clang
-Message-ID: <73d7bf7a4aea53ddce817ac08c043203b48df50f.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 134/141] video: fbdev: lxfb_ops: Fix fall-through warnings
+ for Clang
+Message-ID: <9c1dcb12aae7c7ff0907ffb99ffd227656cbe444.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,21 +62,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/tipc/link.c | 1 +
+ drivers/video/fbdev/geode/lxfb_ops.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/tipc/link.c b/net/tipc/link.c
-index 06b880da2a8e..839082cf259e 100644
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -615,6 +615,7 @@ int tipc_link_fsm_evt(struct tipc_link *l, int evt)
- 			break;
- 		case LINK_FAILOVER_BEGIN_EVT:
- 			l->state = LINK_FAILINGOVER;
+diff --git a/drivers/video/fbdev/geode/lxfb_ops.c b/drivers/video/fbdev/geode/lxfb_ops.c
+index b3a041fce570..32baaf59fcf7 100644
+--- a/drivers/video/fbdev/geode/lxfb_ops.c
++++ b/drivers/video/fbdev/geode/lxfb_ops.c
+@@ -682,6 +682,7 @@ static void lx_restore_display_ctlr(struct lxfb_par *par)
+ 		case DC_DV_CTL:
+ 			/* set all ram to dirty */
+ 			write_dc(par, i, par->dc[i] | DC_DV_CTL_CLEAR_DV_RAM);
 +			break;
- 		case LINK_FAILURE_EVT:
- 		case LINK_RESET_EVT:
- 		case LINK_ESTABLISH_EVT:
+ 
+ 		case DC_RSVD_1:
+ 		case DC_RSVD_2:
 -- 
 2.27.0
 
