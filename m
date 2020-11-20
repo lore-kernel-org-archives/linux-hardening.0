@@ -7,44 +7,42 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C68C63798
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A86BC2D0E4
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C110C22D0A
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DAB24124
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="wL76BqgQ"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="xqvDPXBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgKTSYp (ORCPT
+        id S1729151AbgKTSY6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:24:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:24:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729151AbgKTSYo (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:24:44 -0500
+        id S1728698AbgKTSY6 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:24:58 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B1C52224C;
-        Fri, 20 Nov 2020 18:24:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D735C22D0A;
+        Fri, 20 Nov 2020 18:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605896684;
-        bh=F9oY8QqIOYHoDKOxegk1orF7e6RDnnMuym8/27lt+ok=;
+        s=default; t=1605896697;
+        bh=KBzDhAzZHGY8tkFQ5a+WRFRkYcWwaJ4kODIp3uel6Ac=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wL76BqgQ2cuxRvIAM08Eh1T29sfwwzqMJvw6FOnTn8mDOC9ACCJaKMed4tTudCL9K
-         MjnpSALFurqwkJXrc9ARo7i9xw7XU2Yvo9Zew9OkOwvKKHZvsyTfp/nQVnIJ36XZLF
-         FcY0q1NEDnltkG0FVVnZojYVG1uFZd1brPnfjuB8=
-Date:   Fri, 20 Nov 2020 12:24:49 -0600
+        b=xqvDPXBvQYv8ejRZqCA510QAiXcg3OlcI4LjOyp8zruUJjArLGpRbdVn+aSwN2kdz
+         xm1npoLEoGQemeZjDpWKSvMsNvayCqvBWgo2NeJ018JmOFR8r5GcDJy3P1oKbQLbiS
+         squHGYIvex/BP/Dp/+sJBYbOG+Vk/jMUfdapD3Ww=
+Date:   Fri, 20 Nov 2020 12:25:03 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 005/141] drm/radeon: Fix fall-through warnings for Clang
-Message-ID: <4737ca598d8548f06e5cae6333c0e100b74ffa65.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 006/141] gfs2: Fix fall-through warnings for Clang
+Message-ID: <84d07c8510abf95c9e656454961c09b14485b856.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -56,60 +54,48 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-warnings by explicitly adding multiple fallthrough pseudo-keyword macros,
-as replacement for /* fall through */ comments.
-
-Notice that Clang doesn't recognize /* fall through */ comments as
-implicit fall-through markings.
+warnings by explicitly adding multiple goto statements instead of just
+letting the code fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/radeon/ci_dpm.c | 2 +-
- drivers/gpu/drm/radeon/r300.c   | 1 +
- drivers/gpu/drm/radeon/si_dpm.c | 2 +-
- 3 files changed, 3 insertions(+), 2 deletions(-)
+ fs/gfs2/inode.c    | 2 ++
+ fs/gfs2/recovery.c | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
-index 886e9959496f..3d0a2e81b2de 100644
---- a/drivers/gpu/drm/radeon/ci_dpm.c
-+++ b/drivers/gpu/drm/radeon/ci_dpm.c
-@@ -4860,8 +4860,8 @@ static void ci_request_link_speed_change_before_state_change(struct radeon_devic
- 		case RADEON_PCIE_GEN2:
- 			if (radeon_acpi_pcie_performance_request(rdev, PCIE_PERF_REQ_PECI_GEN2, false) == 0)
- 				break;
-+			fallthrough;
- #endif
--			/* fall through */
- 		default:
- 			pi->force_pcie_gen = ci_get_current_pcie_speed(rdev);
- 			break;
-diff --git a/drivers/gpu/drm/radeon/r300.c b/drivers/gpu/drm/radeon/r300.c
-index 73f67bf222e1..213dc49b6322 100644
---- a/drivers/gpu/drm/radeon/r300.c
-+++ b/drivers/gpu/drm/radeon/r300.c
-@@ -1162,6 +1162,7 @@ static int r300_packet0_check(struct radeon_cs_parser *p,
- 		/* valid register only on RV530 */
- 		if (p->rdev->family == CHIP_RV530)
- 			break;
-+		fallthrough;
- 		/* fallthrough do not move */
+diff --git a/fs/gfs2/inode.c b/fs/gfs2/inode.c
+index 077ccb1b3ccc..9a85214c2505 100644
+--- a/fs/gfs2/inode.c
++++ b/fs/gfs2/inode.c
+@@ -960,6 +960,7 @@ static int gfs2_link(struct dentry *old_dentry, struct inode *dir,
+ 		break;
+ 	case 0:
+ 		error = -EEXIST;
++		goto out_gunlock;
  	default:
- 		goto fail;
-diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
-index d1c73e9db889..d19c08e0ad5a 100644
---- a/drivers/gpu/drm/radeon/si_dpm.c
-+++ b/drivers/gpu/drm/radeon/si_dpm.c
-@@ -5748,8 +5748,8 @@ static void si_request_link_speed_change_before_state_change(struct radeon_devic
- 		case RADEON_PCIE_GEN2:
- 			if (radeon_acpi_pcie_performance_request(rdev, PCIE_PERF_REQ_PECI_GEN2, false) == 0)
- 				break;
-+			fallthrough;
- #endif
--			/* fall through */
- 		default:
- 			si_pi->force_pcie_gen = si_get_current_pcie_speed(rdev);
+ 		goto out_gunlock;
+ 	}
+@@ -1500,6 +1501,7 @@ static int gfs2_rename(struct inode *odir, struct dentry *odentry,
  			break;
+ 		case 0:
+ 			error = -EEXIST;
++			goto out_gunlock;
+ 		default:
+ 			goto out_gunlock;
+ 		}
+diff --git a/fs/gfs2/recovery.c b/fs/gfs2/recovery.c
+index c26c68ebd29d..5b2a01d9c463 100644
+--- a/fs/gfs2/recovery.c
++++ b/fs/gfs2/recovery.c
+@@ -437,6 +437,7 @@ void gfs2_recover_func(struct work_struct *work)
+ 		case GLR_TRYFAILED:
+ 			fs_info(sdp, "jid=%u: Busy\n", jd->jd_jid);
+ 			error = 0;
++			goto fail;
+ 
+ 		default:
+ 			goto fail;
 -- 
 2.27.0
 
