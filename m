@@ -2,79 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4DAC63798
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 09:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AECC63777
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 13:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18E1422404
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 09:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="CVubdfDF"
+	by mail.kernel.org (Postfix) with ESMTP id B3E16222BA
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 13:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgKTJlt (ORCPT
+        id S1728326AbgKTNfD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 04:41:49 -0500
-Received: from latitanza.investici.org ([82.94.249.234]:40917 "EHLO
-        latitanza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbgKTJlt (ORCPT
+        Fri, 20 Nov 2020 08:35:03 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34002 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728073AbgKTNfD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 04:41:49 -0500
-Received: from mx3.investici.org (unknown [127.0.0.1])
-        by latitanza.investici.org (Postfix) with ESMTP id 4Ccs570zRhz8shR;
-        Fri, 20 Nov 2020 09:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1605865307;
-        bh=tBQjbRxRmmM2FXxuzx0z8uEn2WQkoLKnaGfyzbzpCgg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CVubdfDFqnnBICaQzyN+eSK85jPOR6A6MS1rU9To5YB1+JDFSUeTDJAxPnVc150rW
-         OGktopcDfBcaW49glL2gCtgZk4kJ7yHf3/pFVxQWPM4QdkkgPVwA962FGxdzaUOq+K
-         bxxV6lSfNXyTvhm9fph81PM4ddmIH8BKiK+FHTlM=
-Received: from [82.94.249.234] (mx3.investici.org [82.94.249.234]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4Ccs563Jh5z8sgs;
-        Fri, 20 Nov 2020 09:41:46 +0000 (UTC)
-From:   Francis Laniel <laniel_francis@privacyrequired.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, dja@axtens.net,
-        keescook@chromium.org, Daniel Micay <danielmicay@gmail.com>
-Subject: Re: [PATCH v6 1/5] string.h: detect intra-object overflow in fortified string functions
-Date:   Fri, 20 Nov 2020 10:41:45 +0100
-Message-ID: <2634935.IsWps63H46@machine>
-In-Reply-To: <20201119173822.779c253bd946f7da30155cc8@linux-foundation.org>
-References: <20201119164915.10618-1-laniel_francis@privacyrequired.com> <20201119164915.10618-2-laniel_francis@privacyrequired.com> <20201119173822.779c253bd946f7da30155cc8@linux-foundation.org>
+        Fri, 20 Nov 2020 08:35:03 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-307-k68k3iBwMt6esAsLjNMf2g-1; Fri, 20 Nov 2020 13:33:53 +0000
+X-MC-Unique: k68k3iBwMt6esAsLjNMf2g-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 20 Nov 2020 13:33:53 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 20 Nov 2020 13:33:53 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Andrew Morton' <akpm@linux-foundation.org>,
+        "laniel_francis@privacyrequired.com" 
+        <laniel_francis@privacyrequired.com>
+CC:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dja@axtens.net" <dja@axtens.net>,
+        "keescook@chromium.org" <keescook@chromium.org>
+Subject: RE: [PATCH v6 0/5] Fortify strscpy()
+Thread-Topic: [PATCH v6 0/5] Fortify strscpy()
+Thread-Index: AQHWvt28L9KcmdS460uoK5rk/t0ar6nRBYCg
+Date:   Fri, 20 Nov 2020 13:33:53 +0000
+Message-ID: <824aad3a91254445b0f30359f1606e2a@AcuMS.aculab.com>
+References: <20201119164915.10618-1-laniel_francis@privacyrequired.com>
+ <20201119173543.8821881942022fc4f39c4c73@linux-foundation.org>
+In-Reply-To: <20201119173543.8821881942022fc4f39c4c73@linux-foundation.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Le vendredi 20 novembre 2020, 02:38:22 CET Andrew Morton a =E9crit :
-> On Thu, 19 Nov 2020 17:49:11 +0100 laniel_francis@privacyrequired.com wro=
-te:
-> > From: Daniel Axtens <dja@axtens.net>
-> >=20
-> > ...
-> >=20
-> > Cc: Daniel Micay <danielmicay@gmail.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Daniel Axtens <dja@axtens.net>
->=20
-> This patch should have your signoff as well, as per
-> Documentation/process/submitting-patches.rst "Developer's Certificate
-> of Origin 1.1".
->=20
-> I think it would be best to send out a v7 to address this and the cover
-> letter issue, please.
+From: Andrew Morton
+> Sent: 20 November 2020 01:36
+...
+> Could you please send along a reworked [0/n] cover letter?  Explain in
+> your own words, without requiring that readers go off and read web
+> pages
+> 
+> - What problem the patchset solves
+> - How it solves it
+> - The value of the patchset (to kernel developers or to end-users) so that we
+>   can understand why it should be merged.
 
-Will be done for the v7!
-I just read the documentation page, rebase on Linus Torvalds tree and send =
-the=20
-v7!
+- How much it slows things down.
 
+	David
 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
