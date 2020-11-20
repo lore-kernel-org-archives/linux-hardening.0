@@ -5,45 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EC6C63777
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CFDC6379D
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D9324124
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C88F24197
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:37:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYZodTvX"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQsFoDfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbgKTSgV (ORCPT
+        id S1731028AbgKTSga (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:36:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:36:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730741AbgKTSgU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:36:20 -0500
+        id S1730741AbgKTSga (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:36:30 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94EE324124;
-        Fri, 20 Nov 2020 18:36:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9623B24181;
+        Fri, 20 Nov 2020 18:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897380;
-        bh=ztkRCbtkWtGvXLSbnQZrK/THzmiKGv5SeG3+LBnao+8=;
+        s=default; t=1605897389;
+        bh=7S93R+eoNCKQZlGjseYylH7acpfwBG3SpW0Kxq4QE48=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hYZodTvXJ+dp0sqeNrDUx46LbwGzRhKJpFFP5UYT18FXl7tJzDnPqQym2/bWMIE8P
-         HFymR6+nhFKmJFgGUvYdGfq/esohnAIcV8jqsRn/7Rbsge8cUqOdWZkZ33nkz8516E
-         jibmexJ8QdzylVLK/jissYTJ1ASWQIjF3vbZMEr0=
-Date:   Fri, 20 Nov 2020 12:36:26 -0600
+        b=BQsFoDfPt97Hqe4bMx/+nJFBErE3ihpYfstpHH32WMT49PEd4wRxgDpUD34xKhXQE
+         saTC+HYJtwePMgK+VHzkWcy7hHruj3NGoAhcd15x4PD6dQAsW/S8b9Gf6VZD5+3L6V
+         ZCvrFiQE92MpRAglO182rMzltAxj1IX4ZE4MKVpE=
+Date:   Fri, 20 Nov 2020 12:36:35 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+To:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 090/141] iio: adc: cpcap: Fix fall-through warnings for Clang
-Message-ID: <b3c1c3f9c76f2f0e832f956587f227e44af57d3d.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 091/141] iwlwifi: iwl-drv: Fix fall-through warnings for Clang
+Message-ID: <edd98d194bfc98b4be93a9bdc303630b719c0e66.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,28 +58,33 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of letting the code fall
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a
+warning by replacing a /* fall through */ comment with the new
+pseudo-keyword macro fallthrough; instead of letting the code fall
 through to the next case.
+
+Notice that Clang doesn't recognize /* fall through */ comments as
+implicit fall-through markings.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/iio/adc/cpcap-adc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/cpcap-adc.c b/drivers/iio/adc/cpcap-adc.c
-index 64c3cc382311..f19c9aa93f17 100644
---- a/drivers/iio/adc/cpcap-adc.c
-+++ b/drivers/iio/adc/cpcap-adc.c
-@@ -557,6 +557,7 @@ static void cpcap_adc_setup_bank(struct cpcap_adc *ddata,
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index 9dcd2e990c9c..6a9be73d7661 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -1579,7 +1579,7 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
  		break;
- 	case CPCAP_ADC_BATTP_PI16 ... CPCAP_ADC_BATTI_PI17:
- 		value1 |= CPCAP_BIT_RAND1;
-+		break;
  	default:
+ 		WARN(1, "Invalid fw type %d\n", fw->type);
+-		/* fall through */
++		fallthrough;
+ 	case IWL_FW_MVM:
+ 		op = &iwlwifi_opmode_table[MVM_OP_MODE];
  		break;
- 	}
 -- 
 2.27.0
 
