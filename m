@@ -7,47 +7,44 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B4FC64E69
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C239C56201
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3049A24137
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA612415A
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKNjKoxr"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="VV8fsxo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbgKTSbJ (ORCPT
+        id S1730302AbgKTSbU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:31:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50512 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:31:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729492AbgKTSbI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:31:08 -0500
+        id S1730290AbgKTSbT (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:31:19 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF2024171;
-        Fri, 20 Nov 2020 18:31:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A0C02415A;
+        Fri, 20 Nov 2020 18:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897067;
-        bh=QYXhdK+3EdmYSTWb4k0uZ7ooZZCcolf1Sjnxe+zYfU8=;
+        s=default; t=1605897079;
+        bh=XIKYmKdjRI1gzWhxZBG74EcKpmMnCy+d6L7fpt4lhpU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IKNjKoxrIZ3NYQzm+8lIHMvCy3hdOecFoEld3xr8QZSNcAOe5aA5NPZtkBfJk2Jsd
-         zQ/yHGjG2lpvRrUd6QJSJ2qlJak/Ls/P8z1gRlDd/CbwTDtZQOeXe9Q21h/r7z19eq
-         1miYyehS2rRBwbTkhcSO3425P9eJW2eYz/yCFkDc=
-Date:   Fri, 20 Nov 2020 12:31:13 -0600
+        b=VV8fsxo8EX/RFHekr1c3eC9PXyl/gd0O1mMGagRxUtQFNnvJ+5PWhV8VJZgPwfaEs
+         mX1EWT9GhYCSYCfVLdYioqA8OnWa3XIUROs+UdPA/+z8QBo6hdlDNT13szvDz9xaZH
+         y4gv5wAkRoa8hb8X5uu/JS5/Pl658dSJvk6DhdVE=
+Date:   Fri, 20 Nov 2020 12:31:24 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+To:     Manish Chopra <manishc@marvell.com>,
+        Rahul Verma <rahulv@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+Cc:     GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 045/141] net: mscc: ocelot: Fix fall-through warnings for
- Clang
-Message-ID: <a36175068f59c804403ec36a303cf1b72473a5a5.1605896059.git.gustavoars@kernel.org>
+Subject: [PATCH 046/141] netxen_nic: Fix fall-through warnings for Clang
+Message-ID: <e66c4bcf4b1347cfc14075dc7b17ed8c3300c0f7.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -59,27 +56,27 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of just letting the code
+by explicitly adding a goto statement instead of just letting the code
 fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot_vcap.c | 1 +
+ drivers/net/ethernet/qlogic/netxen/netxen_nic_init.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot_vcap.c b/drivers/net/ethernet/mscc/ocelot_vcap.c
-index d8c778ee6f1b..8f3ed81b9a08 100644
---- a/drivers/net/ethernet/mscc/ocelot_vcap.c
-+++ b/drivers/net/ethernet/mscc/ocelot_vcap.c
-@@ -761,6 +761,7 @@ static void is1_entry_set(struct ocelot *ocelot, int ix,
- 			vcap_key_bytes_set(vcap, &data, VCAP_IS1_HK_ETYPE,
- 					   etype.value, etype.mask);
+diff --git a/drivers/net/ethernet/qlogic/netxen/netxen_nic_init.c b/drivers/net/ethernet/qlogic/netxen/netxen_nic_init.c
+index 94546ed5f867..2cd089cca622 100644
+--- a/drivers/net/ethernet/qlogic/netxen/netxen_nic_init.c
++++ b/drivers/net/ethernet/qlogic/netxen/netxen_nic_init.c
+@@ -1686,6 +1686,7 @@ netxen_process_rcv_ring(struct nx_host_sds_ring *sds_ring, int max)
+ 			break;
+ 		case NETXEN_NIC_RESPONSE_DESC:
+ 			netxen_handle_fw_message(desc_cnt, consumer, sds_ring);
++			goto skip;
+ 		default:
+ 			goto skip;
  		}
-+		break;
- 	}
- 	default:
- 		break;
 -- 
 2.27.0
 
