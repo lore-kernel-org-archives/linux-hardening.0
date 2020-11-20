@@ -5,45 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC24C63798
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4608C64E7A
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58AE722464
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DEB22464
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="mk9MEjo7"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="czM23Dg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731565AbgKTSkR (ORCPT
+        id S1731636AbgKTSke (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:40:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:40:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731562AbgKTSkQ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:40:16 -0500
+        id S1731283AbgKTSkd (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:40:33 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74D082242B;
-        Fri, 20 Nov 2020 18:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83C8F24199;
+        Fri, 20 Nov 2020 18:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897616;
-        bh=wudRPP+wqVsv4+yGObzaOuxmgZG9U6wManSiQKXTp9Y=;
+        s=default; t=1605897633;
+        bh=oIjtqNLYIkTSqEv6yZBBls96BEPjwIXxLUv/qgXxB+g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mk9MEjo79V+BzFEhe/4/27YbZZSwG2D/amMJ2qUK3ttuSO2YOcj1P3+2Hy/2cNjog
-         fyWLNx8xun49tk4kv9GB3BCP4uWJMQ0+fvjcA5qB7gRUuuuBtJqGvdT6a+3yoyO+bS
-         svMmEQpIOaG+AZ99G/il4YGp9fCcdu94aY1xppW4=
-Date:   Fri, 20 Nov 2020 12:40:21 -0600
+        b=czM23Dg4ah+n8l8q7M67LASBY9rWzxM+56iA+3K4dlqM9yoymjdIUHf/YjzFgEJkl
+         lVRmF+KMJ5CmcVtktjoMi1D8qCZyjVcsIefsE3/lobXMkJ4i13PojEGbf/mISutYL3
+         y4uMiP4rUMt7hAT4YT5gSDo6va9q3OObex3tqZEE=
+Date:   Fri, 20 Nov 2020 12:40:38 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 132/141] ubi: Fix fall-through warnings for Clang
-Message-ID: <f0e64930fe514c59ff2354b1c17f1341e70366c6.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 135/141] video: fbdev: pm2fb: Fix fall-through warnings for
+ Clang
+Message-ID: <0eedb3972a0032da4997a2a47cf0665fbe9c56ca.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,27 +54,26 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a fallthrough pseudo-keyword instead of letting the
-code fall through to the next case.
+by explicitly adding a fallthrough pseudo-keyword.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/mtd/ubi/build.c | 1 +
+ drivers/video/fbdev/pm2fb.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
-index e85b04e9716b..75b6e98db775 100644
---- a/drivers/mtd/ubi/build.c
-+++ b/drivers/mtd/ubi/build.c
-@@ -1353,6 +1353,7 @@ static int bytes_str_to_int(const char *str)
- 		result *= 1024;
- 		if (endp[1] == 'i' && endp[2] == 'B')
- 			endp += 2;
+diff --git a/drivers/video/fbdev/pm2fb.c b/drivers/video/fbdev/pm2fb.c
+index 0642555289e0..27893fa139b0 100644
+--- a/drivers/video/fbdev/pm2fb.c
++++ b/drivers/video/fbdev/pm2fb.c
+@@ -239,6 +239,7 @@ static u32 to3264(u32 timing, int bpp, int is64)
+ 		fallthrough;
+ 	case 16:
+ 		timing >>= 1;
 +		fallthrough;
- 	case '\0':
+ 	case 32:
  		break;
- 	default:
+ 	}
 -- 
 2.27.0
 
