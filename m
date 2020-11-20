@@ -5,44 +5,45 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3358C64E7B
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCAFC63777
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5DD24124
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2F72415A
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Nov 2020 18:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjtdKwVh"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="ib59Iv5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbgKTSh7 (ORCPT
+        id S1731266AbgKTSiL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Nov 2020 13:37:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
+        Fri, 20 Nov 2020 13:38:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731242AbgKTSh6 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Nov 2020 13:37:58 -0500
+        id S1730987AbgKTSiK (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Nov 2020 13:38:10 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D18824124;
-        Fri, 20 Nov 2020 18:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C46A42415A;
+        Fri, 20 Nov 2020 18:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605897478;
-        bh=7R4PtXf5LCp6UdlNr8ha3dsZONi3NhDHVN2EdWXcMj4=;
+        s=default; t=1605897489;
+        bh=w43+w0NhHj4tUm5QZvfc5WScxWGZOtkmawFdJQ+rDlc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hjtdKwVhtYtgRNaINdslT+ko1N3bWz6WIzwjBbTnWA8SdSPOZnZyjRHcgh5CM2u7D
-         0OsEuvZhrZq23fzl2ZC8tRcIVm+s+h9/ftDAU++A72Bd47kKKs0v/dUhxazyOMGb8J
-         NqtIiIkAzVoZJtGTFMJaNDmlbFNI6uq6U144R1RE=
-Date:   Fri, 20 Nov 2020 12:38:03 -0600
+        b=ib59Iv5qY0KYe8OzGs2E/Fk/VwyqqT+cWBbgcDjWtI9jjxm9EfoDwCk/iXzgc9nwc
+         cAJ9pfm+EOhRYbXnL8ZHTXDPBbnWnIvF4iFMY4kZ83Hl9t9ISQb+TpTa6xX7o8CyKj
+         ci+CT6nh4SNFLJi1fU33ki22LmmY7rTPcbytCJL0=
+Date:   Fri, 20 Nov 2020 12:38:15 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+Cc:     linux-hams@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 107/141] net: core: Fix fall-through warnings for Clang
-Message-ID: <8439b30a691bef3d486f825f07f4e73f81064ec3.1605896060.git.gustavoars@kernel.org>
+Subject: [PATCH 109/141] net: netrom: Fix fall-through warnings for Clang
+Message-ID: <c9a262ebaebd704e66c264fb68462bd8b9664d38.1605896060.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -53,28 +54,52 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of letting the code fall
-through to the next case.
+In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+warnings by explicitly adding multiple break statements instead of
+letting the code fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/core/dev.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/netrom/nr_route.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 82dc6b48e45f..9efb03ce504d 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -5214,6 +5214,7 @@ static int __netif_receive_skb_core(struct sk_buff **pskb, bool pfmemalloc,
- 			goto another_round;
- 		case RX_HANDLER_EXACT:
- 			deliver_exact = true;
-+			break;
- 		case RX_HANDLER_PASS:
- 			break;
- 		default:
+diff --git a/net/netrom/nr_route.c b/net/netrom/nr_route.c
+index 78da5eab252a..de0456073dc0 100644
+--- a/net/netrom/nr_route.c
++++ b/net/netrom/nr_route.c
+@@ -266,6 +266,7 @@ static int __must_check nr_add_node(ax25_address *nr, const char *mnemonic,
+ 		fallthrough;
+ 	case 2:
+ 		re_sort_routes(nr_node, 0, 1);
++		break;
+ 	case 1:
+ 		break;
+ 	}
+@@ -359,6 +360,7 @@ static int nr_del_node(ax25_address *callsign, ax25_address *neighbour, struct n
+ 					fallthrough;
+ 				case 1:
+ 					nr_node->routes[1] = nr_node->routes[2];
++					fallthrough;
+ 				case 2:
+ 					break;
+ 				}
+@@ -482,6 +484,7 @@ static int nr_dec_obs(void)
+ 					fallthrough;
+ 				case 1:
+ 					s->routes[1] = s->routes[2];
++					break;
+ 				case 2:
+ 					break;
+ 				}
+@@ -529,6 +532,7 @@ void nr_rt_device_down(struct net_device *dev)
+ 							fallthrough;
+ 						case 1:
+ 							t->routes[1] = t->routes[2];
++							break;
+ 						case 2:
+ 							break;
+ 						}
 -- 
 2.27.0
 
