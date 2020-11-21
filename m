@@ -2,125 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEE9C6379D
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 19:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC7DC63777
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 19:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 480E021D81
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 19:11:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=roeck-us.net header.i=@roeck-us.net header.b="zOvCV+om"
+	by mail.kernel.org (Postfix) with ESMTP id BC4C6221FB
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 19:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgKUTLF (ORCPT
+        id S1728456AbgKUTuX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 21 Nov 2020 14:11:05 -0500
-Received: from gproxy5-pub.mail.unifiedlayer.com ([67.222.38.55]:47747 "EHLO
-        gproxy5-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728150AbgKUTLF (ORCPT
+        Sat, 21 Nov 2020 14:50:23 -0500
+Received: from smtprelay0079.hostedemail.com ([216.40.44.79]:56188 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728402AbgKUTuW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 21 Nov 2020 14:11:05 -0500
-Received: from cmgw12.unifiedlayer.com (unknown [10.9.0.12])
-        by gproxy5.mail.unifiedlayer.com (Postfix) with ESMTP id B90E314041B
-        for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2020 11:49:52 -0700 (MST)
-Received: from bh-25.webhostbox.net ([208.91.199.152])
-        by cmsmtp with ESMTP
-        id gXxIkTFsMeMJHgXxIkbR47; Sat, 21 Nov 2020 11:49:52 -0700
-X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.3 cv=T72iscCQ c=1 sm=1 tr=0
- a=QNED+QcLUkoL9qulTODnwA==:117 a=2cfIYNtKkjgZNaOwnGXpGw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=kj9zAlcOel0A:10:nop_charset_1
- a=nNwsprhYR40A:10:nop_rcvd_month_year
- a=evQFzbml-YQA:10:endurance_base64_authed_username_1 a=iH7RfIX4AAAA:20
- a=VwQbUJbxAAAA:8 a=_jlGtV7tAAAA:8 a=HOh39_7OrIoUAtzd_H4A:9
- a=CjuIK1q_8ugA:10:nop_charset_2 a=AjGcO6oz07-iQ99wixmX:22
- a=nlm17XC03S6CtCLSeiRr:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=roeck-us.net; s=default; h=In-Reply-To:Content-Type:MIME-Version:References
-        :Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
-        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ma9SNEJKRKcEL3w9mUf3WVZyKUvisTLK9xTFAPqR6yE=; b=zOvCV+omlDOOeljNgIHaQlZmfB
-        l7npLiH9HBCVd5xY1R0U+EH8qeHQMquj0NUpSYFTZIA8VLn+7a21T/x+6jJHnJXW4YyRS38hGoaXs
-        56c9MQYanFKI1dwLXPYMlK/vHFvpOw53epzVF14PVrlk8Ns3cUbmjwiIdc+OMS7TRTogyZfXfcrF3
-        mjNB7ixyYXBF5qbQzMFdqcHILQWSxajwc69SSLJOSOo5jottummp+1g46bmoP2oDG8XbwUdjwe271
-        0Y2zbcN1oovUkdcXlSw+cO2dh0v+UPopHLRp4/MwM1VgLAX7sGzVtmUo+oaOLVtmMfktCMrwPyVMt
-        q5Mhzl2Q==;
-Received: from 108-223-40-66.lightspeed.sntcca.sbcglobal.net ([108.223.40.66]:40988 helo=localhost)
-        by bh-25.webhostbox.net with esmtpa (Exim 4.93)
-        (envelope-from <linux@roeck-us.net>)
-        id 1kgXxH-003CPv-QN; Sat, 21 Nov 2020 18:49:51 +0000
-Date:   Sat, 21 Nov 2020 10:49:51 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 057/141] watchdog: Fix fall-through warnings for Clang
-Message-ID: <20201121184951.GA114144@roeck-us.net>
+        Sat, 21 Nov 2020 14:50:22 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 9CD14127B;
+        Sat, 21 Nov 2020 19:50:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: knee97_180892727356
+X-Filterd-Recvd-Size: 2999
+Received: from XPS-9350.home (unknown [47.151.128.180])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 21 Nov 2020 19:50:18 +0000 (UTC)
+Message-ID: <de5b16cf3fdac1f783e291acc325b78368653ec5.camel@perches.com>
+Subject: Re: [PATCH 072/141] can: peak_usb: Fix fall-through warnings for
+ Clang
+From:   Joe Perches <joe@perches.com>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date:   Sat, 21 Nov 2020 11:50:17 -0800
+In-Reply-To: <bf3dbc5c-c34e-b3ef-abb6-0c88d8a90332@pengutronix.de>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
+         <aab7cf16bf43cc7c3e9c9930d2dae850c1d07a3c.1605896059.git.gustavoars@kernel.org>
+         <bf3dbc5c-c34e-b3ef-abb6-0c88d8a90332@pengutronix.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.38.1-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - bh-25.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - roeck-us.net
-X-BWhitelist: no
-X-Source-IP: 108.223.40.66
-X-Source-L: No
-X-Exim-ID: 1kgXxH-003CPv-QN
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 108-223-40-66.lightspeed.sntcca.sbcglobal.net (localhost) [108.223.40.66]:40988
-X-Source-Auth: guenter@roeck-us.net
-X-Email-Count: 55
-X-Source-Cap: cm9lY2s7YWN0aXZzdG07YmgtMjUud2ViaG9zdGJveC5uZXQ=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 12:32:51PM -0600, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a fallthrough pseudo-keyword instead of letting the
-> code fall through to the next case.
+On Sat, 2020-11-21 at 14:17 +0100, Marc Kleine-Budde wrote:
+> On 11/20/20 7:34 PM, Gustavo A. R. Silva wrote:
+> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> > by explicitly adding a break statement instead of letting the code fall
+> > through to the next case.
+> > 
+> > Link: https://github.com/KSPP/linux/issues/115
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+[]
+> > diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+[]
+> > @@ -299,6 +299,8 @@ static void peak_usb_write_bulk_callback(struct urb *urb)
+> >  		if (net_ratelimit())
+> >  			netdev_err(netdev, "Tx urb aborted (%d)\n",
+> >  				   urb->status);
+> > +		break;
+> > +
+> >  	case -EPROTO:
+> >  	case -ENOENT:
+> >  	case -ECONNRESET:
+> > 
 > 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/watchdog/machzwd.c | 1 +
->  1 file changed, 1 insertion(+)
+> What about moving the default to the end if the case, which is more common anyways:
 > 
-> diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
-> index 743377c5b173..73f2221f6222 100644
-> --- a/drivers/watchdog/machzwd.c
-> +++ b/drivers/watchdog/machzwd.c
-> @@ -174,6 +174,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
->  		fallthrough;
->  	case WD2:
->  		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
-> +		fallthrough;
-
-fallthrough to return ? Oh well, this is an old style driver anyway,
-so I guess who cares.
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-
-Guenter
-
->  	default:
->  		return;
->  	}
-> -- 
-> 2.27.0
+> diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+[]
+> @@ -295,16 +295,16 @@ static void peak_usb_write_bulk_callback(struct urb *urb)
+>                 netif_trans_update(netdev);
+>                 break;
+>  
 > 
+> -       default:
+> -               if (net_ratelimit())
+> -                       netdev_err(netdev, "Tx urb aborted (%d)\n",
+> -                                  urb->status);
+>         case -EPROTO:
+>         case -ENOENT:
+>         case -ECONNRESET:
+>         case -ESHUTDOWN:
+> -
+>                 break;
+> +
+> +       default:
+> +               if (net_ratelimit())
+> +                       netdev_err(netdev, "Tx urb aborted (%d)\n",
+> +                                  urb->status);
+
+That's fine and is more generally used style but this
+default: case should IMO also end with a break;
+
++		break;
+
+>         }
+
+
