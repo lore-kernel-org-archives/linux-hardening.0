@@ -2,109 +2,243 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-20.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DC7C388F9
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 12:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2880FC56202
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 13:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6B422226
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 12:35:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDWVGPy2"
+	by mail.kernel.org (Postfix) with ESMTP id ECD4F2224A
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 13:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgKUMew (ORCPT
+        id S1727677AbgKUNSA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 21 Nov 2020 07:34:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38998 "EHLO
+        Sat, 21 Nov 2020 08:18:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbgKUMev (ORCPT
+        with ESMTP id S1727418AbgKUNSA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 21 Nov 2020 07:34:51 -0500
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2619CC0613CF;
-        Sat, 21 Nov 2020 04:34:51 -0800 (PST)
-Received: by mail-ot1-x341.google.com with SMTP id y24so5897464otk.3;
-        Sat, 21 Nov 2020 04:34:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aFs8DcA7BTn3eJDn4alHdT9ItsgYx3VRwqAdzyG6ZGA=;
-        b=HDWVGPy2VqZkxVV49/4NQN9UjguuJiGyUtIxgH7WlZce2gZc7ooKmy2j6b/wvCW59N
-         36tnj1slQC/GC+SghyD8XqlGXEXRRrkOWS/uf6qWl5w8aloPMjl8B2fvqm14cltfEWdP
-         U0YP7coKv+rl11jXaWy3SmmzYDZ+TkDo8BWEOevSooVUyP6mnAVflUwRhN8Pd7B8AS5b
-         3fvllXlhZg5Di8pETTeMDfJf99gVicCPiOgJqhE9WL2wTsO/Z/yKbtWgutkgFVUEIVMe
-         oGQKkGDoDMTrh+ohzcoz8XYnQQ3OoqPNTscfRJQ/Q+cUYBk+uSGf9Pwip0oz1iUI0+Zy
-         m4cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aFs8DcA7BTn3eJDn4alHdT9ItsgYx3VRwqAdzyG6ZGA=;
-        b=iG6jZFgQk9GRf2HQEMPtgapkNiRNCGKLNpjsohKqlQ/RATh2Og/tGD+n238YtzvWKa
-         KGnFSjZs4WGoaqU0cU/Tu/pc7LTTeahJRVvnCHMSWpZwGhKTjMly9TE5OhbJcrPyqaye
-         8bKCSd7zITCJT8KKWqj3dy18igs12LS7ScFtt7jms1oLIcCkiiUhQLq9dTvnF1C3Nfvu
-         NxBZfz7OgeKxLoLg07CYlPpzf6BWaDg9OWNBTpE68BSWBtZHe93sVvIxv+6eTqHxf5jT
-         49W+GVFajLcMxEh4hu9Daz4a8sb+0a+UDXHxTVrf6rE1JCSBYGcqT3nALQtuIZMgyESo
-         hYTg==
-X-Gm-Message-State: AOAM533AUOU6aSlfCPNG/vmJYi+4hfEGI/PK+nwL789qiQvPLaLPJu0s
-        yyo/cH2XQeTSU9ncVuPpgvNUuY6vh3ioC43TJF4=
-X-Google-Smtp-Source: ABdhPJziLUYNIi2uSYeBHOd3YCYahQTUik2qV+et/tVjQ9fRLGw2nFaGV4kqX+GJ1O/d43MdbKy94GVOR62L1CFFRxU=
-X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr16845585otc.145.1605962090469;
- Sat, 21 Nov 2020 04:34:50 -0800 (PST)
+        Sat, 21 Nov 2020 08:18:00 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AFEC0613CF
+        for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2020 05:18:00 -0800 (PST)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1kgSm0-00089W-LG; Sat, 21 Nov 2020 14:17:52 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:4c1f:9c86:2b81:b0ea] (unknown [IPv6:2a03:f580:87bc:d400:4c1f:9c86:2b81:b0ea])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 5BCBD5983CB;
+        Sat, 21 Nov 2020 13:17:50 +0000 (UTC)
+Subject: Re: [PATCH 072/141] can: peak_usb: Fix fall-through warnings for
+ Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <aab7cf16bf43cc7c3e9c9930d2dae850c1d07a3c.1605896059.git.gustavoars@kernel.org>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <bf3dbc5c-c34e-b3ef-abb6-0c88d8a90332@pengutronix.de>
+Date:   Sat, 21 Nov 2020 14:17:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <cover.1605896059.git.gustavoars@kernel.org> <34c177585dfd5c6dc3e101ec8f11e4733b7fd11a.1605896059.git.gustavoars@kernel.org>
-In-Reply-To: <34c177585dfd5c6dc3e101ec8f11e4733b7fd11a.1605896059.git.gustavoars@kernel.org>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Sat, 21 Nov 2020 14:34:23 +0200
-Message-ID: <CAFCwf11izHF=g1mGry1fE5kvFFFrxzhPSM6qKAO8gxSp=Kr_CQ@mail.gmail.com>
-Subject: Re: [PATCH 060/141] habanalabs: Fix fall-through warnings for Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <aab7cf16bf43cc7c3e9c9930d2dae850c1d07a3c.1605896059.git.gustavoars@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="Um0PBROohAn87SHKH5Z0CxiUa3ZnYBeOM"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 8:33 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a fallthrough pseudo-keyword instead of letting the
-> code fall through to the next case.
->
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Um0PBROohAn87SHKH5Z0CxiUa3ZnYBeOM
+Content-Type: multipart/mixed; boundary="uwJFcgT96ZkDsWpG9kNWehKVQzdOYN6eR";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Wolfgang Grandegger <wg@grandegger.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Message-ID: <bf3dbc5c-c34e-b3ef-abb6-0c88d8a90332@pengutronix.de>
+Subject: Re: [PATCH 072/141] can: peak_usb: Fix fall-through warnings for
+ Clang
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <aab7cf16bf43cc7c3e9c9930d2dae850c1d07a3c.1605896059.git.gustavoars@kernel.org>
+In-Reply-To: <aab7cf16bf43cc7c3e9c9930d2dae850c1d07a3c.1605896059.git.gustavoars@kernel.org>
+
+--uwJFcgT96ZkDsWpG9kNWehKVQzdOYN6eR
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 11/20/20 7:34 PM, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warnin=
+g
+> by explicitly adding a break statement instead of letting the code fall=
+
+> through to the next case.
+>=20
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/misc/habanalabs/gaudi/gaudi.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-> index 2519a34e25b7..eab4c0dc65c5 100644
-> --- a/drivers/misc/habanalabs/gaudi/gaudi.c
-> +++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-> @@ -5436,6 +5436,7 @@ static void gaudi_handle_ecc_event(struct hl_device *hdev, u16 event_type,
->                 params.num_memories = 33;
->                 params.derr = true;
->                 params.disable_clock_gating = true;
-> +               fallthrough;
->         default:
->                 return;
->         }
-> --
-> 2.27.0
->
-Hi Gustavo,
-So this is actually an error in the code, there shouldn't be a
-fallthrough there.
-So NAK for this patch, I'll have to send a fix for that.
-Thanks for catching this :)
+>  drivers/net/can/usb/peak_usb/pcan_usb_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net=
+/can/usb/peak_usb/pcan_usb_core.c
+> index c2764799f9ef..fd65a155be3b 100644
+> --- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+> +++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+> @@ -299,6 +299,8 @@ static void peak_usb_write_bulk_callback(struct urb=
+ *urb)
+>  		if (net_ratelimit())
+>  			netdev_err(netdev, "Tx urb aborted (%d)\n",
+>  				   urb->status);
+> +		break;
+> +
+>  	case -EPROTO:
+>  	case -ENOENT:
+>  	case -ECONNRESET:
+>=20
 
-Oded
+What about moving the default to the end if the case, which is more commo=
+n anyways:
+
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/c=
+an/usb/peak_usb/pcan_usb_core.c
+index 204ccb27d6d9..e8977dd10902 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+@@ -295,16 +295,16 @@ static void peak_usb_write_bulk_callback(struct urb=
+ *urb)
+                netif_trans_update(netdev);
+                break;
+=20
+-       default:
+-               if (net_ratelimit())
+-                       netdev_err(netdev, "Tx urb aborted (%d)\n",
+-                                  urb->status);
+        case -EPROTO:
+        case -ENOENT:
+        case -ECONNRESET:
+        case -ESHUTDOWN:
+-
+                break;
++
++       default:
++               if (net_ratelimit())
++                       netdev_err(netdev, "Tx urb aborted (%d)\n",
++                                  urb->status);
+        }
+=20
+        /* should always release echo skb and corresponding context */
+
+
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+
+--uwJFcgT96ZkDsWpG9kNWehKVQzdOYN6eR--
+
+--Um0PBROohAn87SHKH5Z0CxiUa3ZnYBeOM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEK3kIWJt9yTYMP3ehqclaivrt76kFAl+5E3kACgkQqclaivrt
+76kOuAf9FXn8cpXGeMIslKjsSJryU/nEjyGXwnMsE4DWltNdOsTzjaomGpAPxq7V
+lkXiduWwveC8VMEJwfYiK6XwOWctQ+tZvMCXzue25RDjk+wRHGSL93DBY8vnlj6w
+Xq3HueD2jPEbc/P4rXH0Gu/+MnCkT8dwSEDJHslTYxk2Pl7GPYvdS+L6rARGw9tA
+ZtI4J7DMZHOtxCVhCcJitIl5uIa+0gtz64UIyAqq5pR2ffAkLKi4dj9JXMTwbBXt
+mtTun+VyBOaThPCLw0SX70V1SGlT8q8yj34G1TALFuBU+kdh/wau1qf7HjenLEEU
+13++IkqjMhyCTpJXS7Zz8jIMNOs2ug==
+=YRBG
+-----END PGP SIGNATURE-----
+
+--Um0PBROohAn87SHKH5Z0CxiUa3ZnYBeOM--
