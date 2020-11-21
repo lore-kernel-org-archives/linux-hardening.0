@@ -7,34 +7,36 @@ X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A755C63798
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEE9C6379D
 	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 19:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF18B21D81
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 19:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480E021D81
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 19:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=roeck-us.net header.i=@roeck-us.net header.b="Y/HNNQ55"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=roeck-us.net header.i=@roeck-us.net header.b="zOvCV+om"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgKUTLD (ORCPT
+        id S1728088AbgKUTLF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 21 Nov 2020 14:11:03 -0500
-Received: from gproxy8-pub.mail.unifiedlayer.com ([67.222.33.93]:56141 "EHLO
-        gproxy8-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728088AbgKUTLD (ORCPT
+        Sat, 21 Nov 2020 14:11:05 -0500
+Received: from gproxy5-pub.mail.unifiedlayer.com ([67.222.38.55]:47747 "EHLO
+        gproxy5-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728150AbgKUTLF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 21 Nov 2020 14:11:03 -0500
-Received: from CMGW (unknown [10.9.0.13])
-        by gproxy8.mail.unifiedlayer.com (Postfix) with ESMTP id 38C4E1AB020
-        for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2020 11:50:12 -0700 (MST)
+        Sat, 21 Nov 2020 14:11:05 -0500
+Received: from cmgw12.unifiedlayer.com (unknown [10.9.0.12])
+        by gproxy5.mail.unifiedlayer.com (Postfix) with ESMTP id B90E314041B
+        for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2020 11:49:52 -0700 (MST)
 Received: from bh-25.webhostbox.net ([208.91.199.152])
         by cmsmtp with ESMTP
-        id gXxbkRS05i1lMgXxckQy7R; Sat, 21 Nov 2020 11:50:12 -0700
+        id gXxIkTFsMeMJHgXxIkbR47; Sat, 21 Nov 2020 11:49:52 -0700
 X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.2 cv=D4A3ErZj c=1 sm=1 tr=0
+X-Authority-Analysis: v=2.3 cv=T72iscCQ c=1 sm=1 tr=0
  a=QNED+QcLUkoL9qulTODnwA==:117 a=2cfIYNtKkjgZNaOwnGXpGw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=kj9zAlcOel0A:10 a=nNwsprhYR40A:10
- a=evQFzbml-YQA:10 a=iH7RfIX4AAAA:20 a=VwQbUJbxAAAA:8 a=_jlGtV7tAAAA:8
- a=C2tvwzfEKYeKYKrD1t0A:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=kj9zAlcOel0A:10:nop_charset_1
+ a=nNwsprhYR40A:10:nop_rcvd_month_year
+ a=evQFzbml-YQA:10:endurance_base64_authed_username_1 a=iH7RfIX4AAAA:20
+ a=VwQbUJbxAAAA:8 a=_jlGtV7tAAAA:8 a=HOh39_7OrIoUAtzd_H4A:9
+ a=CjuIK1q_8ugA:10:nop_charset_2 a=AjGcO6oz07-iQ99wixmX:22
  a=nlm17XC03S6CtCLSeiRr:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=roeck-us.net; s=default; h=In-Reply-To:Content-Type:MIME-Version:References
@@ -42,31 +44,30 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8b9vr57xzkf1VDiWMstyj8UQWq9B2jqEErH6/3baziY=; b=Y/HNNQ55DkowKcg9mRP964rJLn
-        R31Nkc9jjVHkphn7fZKVmVEgWnO+WVREtoZLerrqsD43hvYRoIoI7lgARFK/xdWv1TYfq9AmD6lns
-        ghbkldxj4bKTZZXMnQhNjE78ih6jNunK9TU+VsQDvM/PV6pQVj4TrG+wwn0sWefHAoePyfrw1YGzj
-        Qhmd0dMWr2eIzsmzS8gmUPwpJGDwmjs7y6lKY/EatyKQp2OGwOpsW6PE/Zj4NrSyr0dKhGa3pICBq
-        hOoPnJXLtzU+hFR8uAu7Pn/x9HFD5Nek+a98wOlZCmWexT52p27s2Ku4ANN/roaYiMUucylFOrtq3
-        V1kjmVpQ==;
-Received: from 108-223-40-66.lightspeed.sntcca.sbcglobal.net ([108.223.40.66]:40992 helo=localhost)
+        bh=Ma9SNEJKRKcEL3w9mUf3WVZyKUvisTLK9xTFAPqR6yE=; b=zOvCV+omlDOOeljNgIHaQlZmfB
+        l7npLiH9HBCVd5xY1R0U+EH8qeHQMquj0NUpSYFTZIA8VLn+7a21T/x+6jJHnJXW4YyRS38hGoaXs
+        56c9MQYanFKI1dwLXPYMlK/vHFvpOw53epzVF14PVrlk8Ns3cUbmjwiIdc+OMS7TRTogyZfXfcrF3
+        mjNB7ixyYXBF5qbQzMFdqcHILQWSxajwc69SSLJOSOo5jottummp+1g46bmoP2oDG8XbwUdjwe271
+        0Y2zbcN1oovUkdcXlSw+cO2dh0v+UPopHLRp4/MwM1VgLAX7sGzVtmUo+oaOLVtmMfktCMrwPyVMt
+        q5Mhzl2Q==;
+Received: from 108-223-40-66.lightspeed.sntcca.sbcglobal.net ([108.223.40.66]:40988 helo=localhost)
         by bh-25.webhostbox.net with esmtpa (Exim 4.93)
         (envelope-from <linux@roeck-us.net>)
-        id 1kgXxb-003CZP-AS; Sat, 21 Nov 2020 18:50:11 +0000
-Date:   Sat, 21 Nov 2020 10:50:10 -0800
+        id 1kgXxH-003CPv-QN; Sat, 21 Nov 2020 18:49:51 +0000
+Date:   Sat, 21 Nov 2020 10:49:51 -0800
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Marius Zachmann <mail@mariuszachmann.de>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 086/141] hwmon: (corsair-cpro) Fix fall-through warnings
- for Clang
-Message-ID: <20201121185010.GB114144@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 057/141] watchdog: Fix fall-through warnings for Clang
+Message-ID: <20201121184951.GA114144@roeck-us.net>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <be5c59f9bc4bac8c968bbd7443d08eaaf8a28ef8.1605896060.git.gustavoars@kernel.org>
+ <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <be5c59f9bc4bac8c968bbd7443d08eaaf8a28ef8.1605896060.git.gustavoars@kernel.org>
+In-Reply-To: <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - bh-25.webhostbox.net
@@ -76,44 +77,49 @@ X-AntiAbuse: Sender Address Domain - roeck-us.net
 X-BWhitelist: no
 X-Source-IP: 108.223.40.66
 X-Source-L: No
-X-Exim-ID: 1kgXxb-003CZP-AS
+X-Exim-ID: 1kgXxH-003CPv-QN
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 108-223-40-66.lightspeed.sntcca.sbcglobal.net (localhost) [108.223.40.66]:40992
+X-Source-Sender: 108-223-40-66.lightspeed.sntcca.sbcglobal.net (localhost) [108.223.40.66]:40988
 X-Source-Auth: guenter@roeck-us.net
-X-Email-Count: 60
+X-Email-Count: 55
 X-Source-Cap: cm9lY2s7YWN0aXZzdG07YmgtMjUud2ViaG9zdGJveC5uZXQ=
 X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 12:36:04PM -0600, Gustavo A. R. Silva wrote:
+On Fri, Nov 20, 2020 at 12:32:51PM -0600, Gustavo A. R. Silva wrote:
 > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of letting the code fall
-> through to the next case.
+> by explicitly adding a fallthrough pseudo-keyword instead of letting the
+> code fall through to the next case.
 > 
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/watchdog/machzwd.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
+> index 743377c5b173..73f2221f6222 100644
+> --- a/drivers/watchdog/machzwd.c
+> +++ b/drivers/watchdog/machzwd.c
+> @@ -174,6 +174,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
+>  		fallthrough;
+>  	case WD2:
+>  		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
+> +		fallthrough;
+
+fallthrough to return ? Oh well, this is an old style driver anyway,
+so I guess who cares.
 
 Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-> ---
->  drivers/hwmon/corsair-cpro.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-> index 591929ec217a..fa6aa4fc8b52 100644
-> --- a/drivers/hwmon/corsair-cpro.c
-> +++ b/drivers/hwmon/corsair-cpro.c
-> @@ -310,6 +310,7 @@ static int ccp_write(struct device *dev, enum hwmon_sensor_types type,
->  		default:
->  			break;
->  		}
-> +		break;
+Guenter
+
 >  	default:
->  		break;
+>  		return;
 >  	}
 > -- 
 > 2.27.0
