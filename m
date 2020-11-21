@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518AFC63697
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 08:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E42CC388F9
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 08:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2430A22252
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 08:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED76F22240
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Nov 2020 08:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgKUIaC (ORCPT
+        id S1727344AbgKUIaO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 21 Nov 2020 03:30:02 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36390 "EHLO mx2.suse.de"
+        Sat, 21 Nov 2020 03:30:14 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36518 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbgKUIaC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 21 Nov 2020 03:30:02 -0500
+        id S1727063AbgKUIaO (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 21 Nov 2020 03:30:14 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CB458AC2D;
-        Sat, 21 Nov 2020 08:30:00 +0000 (UTC)
-Date:   Sat, 21 Nov 2020 09:30:00 +0100
-Message-ID: <s5hr1ondsdz.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id D4824ABE4;
+        Sat, 21 Nov 2020 08:30:12 +0000 (UTC)
+Date:   Sat, 21 Nov 2020 09:30:12 +0100
+Message-ID: <s5hpn47dsdn.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 066/141] ALSA: hdspm: Fix fall-through warnings for Clang
-In-Reply-To: <3f70182b366fca7e085a3b57cb2eb193be04eed8.1605896059.git.gustavoars@kernel.org>
+Subject: Re: [PATCH 067/141] ALSA: pcsp: Fix fall-through warnings for Clang
+In-Reply-To: <9705120ac2310bb20035e375862410413359611d.1605896059.git.gustavoars@kernel.org>
 References: <cover.1605896059.git.gustavoars@kernel.org>
-        <3f70182b366fca7e085a3b57cb2eb193be04eed8.1605896059.git.gustavoars@kernel.org>
+        <9705120ac2310bb20035e375862410413359611d.1605896059.git.gustavoars@kernel.org>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -44,7 +44,7 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 20 Nov 2020 19:33:52 +0100,
+On Fri, 20 Nov 2020 19:34:01 +0100,
 Gustavo A. R. Silva wrote:
 > 
 > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
