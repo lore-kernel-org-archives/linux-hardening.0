@@ -2,78 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993F0C5519F
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211A0C56201
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD8420781
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5DA220789
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:31:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="IhzUIQDj"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhpH8IWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgKVQ2x (ORCPT
+        id S1727898AbgKVQbW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Nov 2020 11:28:53 -0500
-Received: from devianza.investici.org ([198.167.222.108]:22957 "EHLO
-        devianza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgKVQ2w (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 22 Nov 2020 11:28:52 -0500
-Received: from mx2.investici.org (unknown [127.0.0.1])
-        by devianza.investici.org (Postfix) with ESMTP id 4CfG1t72h3z6vQK;
-        Sun, 22 Nov 2020 16:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1606062530;
-        bh=XproVJPgCihpyQsL8MURq6gVaqDJXUK82PEKk0zVgWA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IhzUIQDj5fnGi1VFRi7qHBPHMXeWd63sjAO/ogsKKi7ez8IezHZPAwlYS0j7PzYck
-         VE4r3SQgvlCGB2UVQ9W3PEhdRaLr+h7tfg69ryh0crQN60WzEQAe4GC8ANlAld1/5O
-         QKJ0enFzuaQSMoo4uaLPQgQQU8IanYbfYlBBSdJM=
-Received: from [198.167.222.108] (mx2.investici.org [198.167.222.108]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CfG1t4NVdz6vQH;
-        Sun, 22 Nov 2020 16:28:50 +0000 (UTC)
-From:   Francis Laniel <laniel_francis@privacyrequired.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, dja@axtens.net
-Subject: Re: [PATCH v6 0/5] Fortify strscpy()
-Date:   Sun, 22 Nov 2020 17:28:44 +0100
-Message-ID: <4487519.2G65qjV9lv@machine>
-In-Reply-To: <202011201150.AE57F56EB@keescook>
-References: <20201119164915.10618-1-laniel_francis@privacyrequired.com> <5676804.6kI0aEeX2c@machine> <202011201150.AE57F56EB@keescook>
+        Sun, 22 Nov 2020 11:31:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727880AbgKVQbV (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 22 Nov 2020 11:31:21 -0500
+Received: from coco.lan (ip5f5ad5ca.dynamic.kabel-deutschland.de [95.90.213.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E67020781;
+        Sun, 22 Nov 2020 16:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606062680;
+        bh=9Cj3E50nEil4uOzfClUsz5XL2jZ6pmMtgCsvcOzbrdE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KhpH8IWCrG4fHm/aAYgA0oY0xk9jishBQUO/FEREVSuQy2XW8Dwl+p8SS03TJfP0p
+         nOFyfXkGnJqAKYp67syXa/l1Jzn2+VVj4TSeJY3+KcDpJaTZar6cjsvfCNikO+Dj7z
+         OMvHNRskj9KSKKqoX0TDSOXfI9/jfyIjiMyuH1XA=
+Date:   Sun, 22 Nov 2020 17:31:16 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jemma Denson <jdenson@gmail.com>,
+        Patrick Boettcher <patrick.boettcher@posteo.de>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 013/141] media: dvb-frontends: Fix fall-through warnings
+ for Clang
+Message-ID: <20201122173116.1eb9f195@coco.lan>
+In-Reply-To: <4e82e61c94f320aae692aaa0e55350049e17168f.1605896059.git.gustavoars@kernel.org>
+References: <cover.1605896059.git.gustavoars@kernel.org>
+        <4e82e61c94f320aae692aaa0e55350049e17168f.1605896059.git.gustavoars@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Le vendredi 20 novembre 2020, 20:52:07 CET Kees Cook a =E9crit :
-> On Fri, Nov 20, 2020 at 10:40:38AM +0100, Francis Laniel wrote:
-> > Le vendredi 20 novembre 2020, 02:35:43 CET Andrew Morton a =E9crit :
-> > > On Thu, 19 Nov 2020 17:49:10 +0100 laniel_francis@privacyrequired.com=
-=20
-wrote:
-> > > > This patch set answers to this issue:
-> > > > https://github.com/KSPP/linux/issues/46
-> > >=20
-> > > I fail to understand what this patchset has to do with that
-> > > one-element-array issue :(
-> >=20
-> > I think I linked another issue totally not related with that one...
->=20
-> This just looks like a typo. The URL should be:
-> https://github.com/KSPP/linux/issues/96
+Em Fri, 20 Nov 2020 12:26:09 -0600
+"Gustavo A. R. Silva" <gustavoars@kernel.org> escreveu:
 
-This is not a typo because my branch to work on this issue is called 46-
-fortifiy_strscpy.
-I just think I got mixed up!
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+> warnings by explicitly adding multiple break and a return statements
+> instead of just letting the code fall through to the next case.
 
-But I completely removed the link to this issue in the v7, so it does not=20
-matter a lot now.
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/media/dvb-frontends/cx24120.c   | 1 +
+>  drivers/media/dvb-frontends/dib0090.c   | 2 ++
+>  drivers/media/dvb-frontends/drxk_hard.c | 1 +
+>  drivers/media/dvb-frontends/m88rs2000.c | 1 +
+>  4 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/media/dvb-frontends/cx24120.c b/drivers/media/dvb-frontends/cx24120.c
+> index 2464b63fe0cf..d8acd582c711 100644
+> --- a/drivers/media/dvb-frontends/cx24120.c
+> +++ b/drivers/media/dvb-frontends/cx24120.c
+> @@ -363,6 +363,7 @@ static void cx24120_check_cmd(struct cx24120_state *state, u8 id)
+>  	case CMD_DISEQC_BURST:
+>  		cx24120_msg_mpeg_output_global_config(state, 0);
+>  		/* Old driver would do a msleep(100) here */
+> +		return;
+>  	default:
+>  		return;
+>  	}
+> diff --git a/drivers/media/dvb-frontends/dib0090.c b/drivers/media/dvb-frontends/dib0090.c
+> index 08a85831e917..903da33642df 100644
+> --- a/drivers/media/dvb-frontends/dib0090.c
+> +++ b/drivers/media/dvb-frontends/dib0090.c
+> @@ -1765,6 +1765,8 @@ static int dib0090_dc_offset_calibration(struct dib0090_state *state, enum front
+>  		dib0090_write_reg(state, 0x1f, 0x7);
+>  		*tune_state = CT_TUNER_START;	/* reset done -> real tuning can now begin */
+>  		state->calibrate &= ~DC_CAL;
+> +		break;
+> +
+>  	default:
+>  		break;
+>  	}
+> diff --git a/drivers/media/dvb-frontends/drxk_hard.c b/drivers/media/dvb-frontends/drxk_hard.c
+> index a57470bf71bf..d7fc2595f15b 100644
+> --- a/drivers/media/dvb-frontends/drxk_hard.c
+> +++ b/drivers/media/dvb-frontends/drxk_hard.c
+> @@ -3294,6 +3294,7 @@ static int dvbt_sc_command(struct drxk_state *state,
+>  	case OFDM_SC_RA_RAM_CMD_USER_IO:
+>  	case OFDM_SC_RA_RAM_CMD_GET_OP_PARAM:
+>  		status = read16(state, OFDM_SC_RA_RAM_PARAM0__A, &(param0));
+> +		break;
+>  		/* All commands yielding 0 results */
+>  	case OFDM_SC_RA_RAM_CMD_SET_ECHO_TIMING:
+>  	case OFDM_SC_RA_RAM_CMD_SET_TIMER:
+> diff --git a/drivers/media/dvb-frontends/m88rs2000.c b/drivers/media/dvb-frontends/m88rs2000.c
+> index 39cbb3ea1c9d..b294ba87e934 100644
+> --- a/drivers/media/dvb-frontends/m88rs2000.c
+> +++ b/drivers/media/dvb-frontends/m88rs2000.c
+> @@ -390,6 +390,7 @@ static int m88rs2000_tab_set(struct m88rs2000_state *state,
+>  		case 0xff:
+>  			if (tab[i].reg == 0xaa && tab[i].val == 0xff)
+>  				return 0;
+> +			break;
+>  		case 0x00:
+>  			break;
+>  		default:
 
 
+
+Thanks,
+Mauro
