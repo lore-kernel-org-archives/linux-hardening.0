@@ -2,115 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC033C5519F
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 08:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40480C63798
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 09:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4522075A
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 08:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D702084C
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 09:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+/oKz3o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVO6DSBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbgKVIgI (ORCPT
+        id S1727424AbgKVJ0V (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Nov 2020 03:36:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53034 "EHLO
+        Sun, 22 Nov 2020 04:26:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbgKVIgH (ORCPT
+        with ESMTP id S1727395AbgKVJ0U (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 22 Nov 2020 03:36:07 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07254C0613CF;
-        Sun, 22 Nov 2020 00:36:05 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id s25so18964608ejy.6;
-        Sun, 22 Nov 2020 00:36:05 -0800 (PST)
+        Sun, 22 Nov 2020 04:26:20 -0500
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CF9C0613D2
+        for <linux-hardening@vger.kernel.org>; Sun, 22 Nov 2020 01:26:20 -0800 (PST)
+Received: by mail-ot1-x342.google.com with SMTP id n12so9604161otk.0
+        for <linux-hardening@vger.kernel.org>; Sun, 22 Nov 2020 01:26:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KSBUEVa1x7/4PC/tS/TFqyMip0/VC+6jUS5QTF5o5IM=;
-        b=s+/oKz3oldIl1t5BYk68RHZ+d+pyjpZDzMF15rrugvaDNKM7IsCYxhreJ+gfX9T3Mf
-         ERwEHaUyT3Mxm6EsH7sx8lfGaNaXjprvDkfm5fXFlgG4btElOZxogoJoW8HK9glJP11D
-         MmflztiWl7tZcOD4MiwakyZuXyu+5qJHJuCb+S6yy8dLyePLrOzPRN/zn058KCxaZpdq
-         PNI0Ze+RX1wStPfYdhLkXoM/3YXx73MbaxTyvKiY5nZ/4UBiiFz+atauZXBCU8+fGgTo
-         UiSRogmLW92SoTanXB+tLX+xSQvCWxuC0mTdDfTcKy4r9fLUNcY/ZKIpanJIYKdNWPN6
-         zDgw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4cAfiTUIi51Zz1nSxKjmyN2eOu7EUD/alyMpW55bSe4=;
+        b=nVO6DSBoAw/G5phgnfeDSdFqoUccaAFQGv6ZWl8MNh3tLuDIcDxEOkatRdqudo03x0
+         xZehrlP83C7fSvTirhyj6tsvMI+UkhmMR2N+WHNR9ctdctG0Ez7y6DxNjndy0thYO5zu
+         LIN0tNGOXE3nYq7KGuJMiT3fSmVUqy0aHceQCbWAz1l/gDZsCENQUQkomyicMkYvGBo3
+         efaELh9etcDLIBVJg1QSKhu6YWNSJeuvpkeMAsyukqEVuZ0ReJqCTX7LzAsZr+Q/pLLt
+         mjf96x3DmJF9A6ur3Vf04oXbzsyv609cA8irt1MJLtCysgtV7zJK98Srsb+XAmZeRZ2Y
+         231Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KSBUEVa1x7/4PC/tS/TFqyMip0/VC+6jUS5QTF5o5IM=;
-        b=beB/YPP6JCeuDg0aOTHCzADLh4lvd3yav/9L9LKw9jtXfdbvDeCbQRi0O2wxiWBN8Q
-         4DTDYwNKLjnRoeAIzh9KYu0DPJwx/uLIEbpEXKIy3asow8uVLLf2oJaHcqgmjrdQg3nC
-         ac1VKE3eme38wuokTYtAYQFNpNSaR378nT0ArhLCQDPx29WvGxZipNhJNUXSKQFvlPA/
-         bPrlrh9cpY8hWGFE9Du1WPnZt13/XgxYijx5vsOK7G3TPpvZj6HusgrkSSj7qR+VDyTV
-         6QcEzgRIjo6JDOGBen4vzE1ZFnT1pb5tFYFtVzyRGs/I+1DJ5pWb3WxsMDXivijT/p3J
-         n/RQ==
-X-Gm-Message-State: AOAM5320F3u0Z2mKsRQkrRqIbppU3dFLGPDKx1IMT4Lje9zMEI4kLpvv
-        dBU3SO8P2hkVh8yRPxFaqjh5ZZdu7eA=
-X-Google-Smtp-Source: ABdhPJz+yvCpqHMjFz1ak9Nf4Hu9OI+si59vmxOEzFhW7SiCEq8T8FgmLg4BNFAaXrovUEAPxq7h5g==
-X-Received: by 2002:a17:907:7253:: with SMTP id ds19mr8344354ejc.166.1606034164513;
-        Sun, 22 Nov 2020 00:36:04 -0800 (PST)
-Received: from [192.168.0.110] ([77.127.85.120])
-        by smtp.gmail.com with ESMTPSA id p1sm3379016edx.4.2020.11.22.00.36.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Nov 2020 00:36:03 -0800 (PST)
-Subject: Re: [PATCH 044/141] net/mlx4: Fix fall-through warnings for Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <84cd69bc9b9768cf3bc032c0205ffe485b80ba03.1605896059.git.gustavoars@kernel.org>
-From:   Tariq Toukan <ttoukan.linux@gmail.com>
-Message-ID: <0ba92238-2e31-b7d8-5664-72933dc76a7b@gmail.com>
-Date:   Sun, 22 Nov 2020 10:36:01 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4cAfiTUIi51Zz1nSxKjmyN2eOu7EUD/alyMpW55bSe4=;
+        b=He2CUEmemkICn8sYUbOq9QUBDIfMBGNZHFYNJQrIfC2mBns9RC0M2I6upHjKuWgmN9
+         8ZhMReU0S2Oa+qaqwRMBaJgrtobe0TdWeMndUzhRW1DYDZ/5TrKf1rP5ibjBDSRIzRoG
+         drCl14kUEFvtmh/Xo9WTahNnx96NrtzZYNU+Cuh5vEGDFpnfzNnnd3092pDcJF9AuO5l
+         jBnF/fZq7v8rGZTAjHUGT4qykXY8CCFPB3o+KB7Jfc28VkfYE7Va5qCZXQAJhp6IAU1Y
+         qxUXE20p3FYjEvJA1vi7ZRc8kx4Zce0A2106p+31w9QeJc7UpcR4yBKPZlqvUnptmRPn
+         XJQw==
+X-Gm-Message-State: AOAM530hVvYFzWdjAE993It1SP+RuJLMLY5tBXPetEfGNIfOj+MU13I6
+        HtY4WSFsHD3mR4SJ9j9+N47t+AH0fPw4u3kGsTA3/g==
+X-Google-Smtp-Source: ABdhPJyAFibWOCLIaKkVKGwSOtGD6nI0mtsN1dU6rQR2CZXLXD5JnFVkiZxDBFr1vol4PHRP3TNJKH4IDX2AJyCZNUU=
+X-Received: by 2002:a05:6830:1c8:: with SMTP id r8mr19676586ota.324.1606037179862;
+ Sun, 22 Nov 2020 01:26:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <84cd69bc9b9768cf3bc032c0205ffe485b80ba03.1605896059.git.gustavoars@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1605896059.git.gustavoars@kernel.org> <c505109fe0c02f648e16caa83d8a9773afd696b1.1605896059.git.gustavoars@kernel.org>
+In-Reply-To: <c505109fe0c02f648e16caa83d8a9773afd696b1.1605896059.git.gustavoars@kernel.org>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Sun, 22 Nov 2020 10:26:09 +0100
+Message-ID: <CAHUa44G1B8_CSahTJ1uOUMLcDfpVKHUaoN+u87BywkVwyhjnRw@mail.gmail.com>
+Subject: Re: [PATCH 061/141] tee: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     op-tee@lists.trustedfirmware.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 11/20/2020 8:31 PM, Gustavo A. R. Silva wrote:
+On Fri, Nov 20, 2020 at 7:33 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
 > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of just letting the code
-> fall through to the next case.
-> 
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
+>
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->   drivers/net/ethernet/mellanox/mlx4/resource_tracker.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-> index 1187ef1375e2..e6b8b8dc7894 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-> +++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-> @@ -2660,6 +2660,7 @@ int mlx4_FREE_RES_wrapper(struct mlx4_dev *dev, int slave,
->   	case RES_XRCD:
->   		err = xrcdn_free_res(dev, slave, vhcr->op_modifier, alop,
->   				     vhcr->in_param, &vhcr->out_param);
-> +		break;
->   
->   	default:
->   		break;
-> 
+>  drivers/tee/tee_core.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
 
-Thanks for your patch.
+Thanks,
+Jens
