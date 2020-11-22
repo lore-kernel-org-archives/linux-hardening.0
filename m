@@ -2,162 +2,78 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87795C64E7C
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993F0C5519F
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 551AB2078D
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD8420781
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="jyf4vXhd"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="IhzUIQDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgKVQZJ (ORCPT
+        id S1728005AbgKVQ2x (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Nov 2020 11:25:09 -0500
-Received: from devianza.investici.org ([198.167.222.108]:48623 "EHLO
+        Sun, 22 Nov 2020 11:28:53 -0500
+Received: from devianza.investici.org ([198.167.222.108]:22957 "EHLO
         devianza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgKVQZI (ORCPT
+        with ESMTP id S1727930AbgKVQ2w (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 22 Nov 2020 11:25:08 -0500
+        Sun, 22 Nov 2020 11:28:52 -0500
 Received: from mx2.investici.org (unknown [127.0.0.1])
-        by devianza.investici.org (Postfix) with ESMTP id 4CfFxZ1NlGz6vND;
-        Sun, 22 Nov 2020 16:25:06 +0000 (UTC)
+        by devianza.investici.org (Postfix) with ESMTP id 4CfG1t72h3z6vQK;
+        Sun, 22 Nov 2020 16:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-        s=stigmate; t=1606062306;
-        bh=tLl/uzfwYxqhE8QlpZ9sQZTB5UpRr1BGc02f0wlobtw=;
+        s=stigmate; t=1606062530;
+        bh=XproVJPgCihpyQsL8MURq6gVaqDJXUK82PEKk0zVgWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyf4vXhd37DHJLlE6Irg7tOhTfpeYo4vOEruLVGNfRiExrE9Ng+K8ZhAQJiTbNNZu
-         2jJuKtxXS8f64CwlB9xV6cj50zKrBVOaPMNiaeOTstYwWNlHH0INJd+u9z2K9xhPjg
-         Nml2lI08x+ca/fgU7nk45Z6MY6tnACzeWCv52Y2M=
-Received: from [198.167.222.108] (mx2.investici.org [198.167.222.108]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CfFxY5G0Yz6vMg;
-        Sun, 22 Nov 2020 16:25:05 +0000 (UTC)
-From:   laniel_francis@privacyrequired.com
-To:     akpm@linux-foundation.org
-Cc:     linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, dja@axtens.net,
-        keescook@chromium.org,
-        Francis Laniel <laniel_francis@privacyrequired.com>
-Subject: [PATCH v7 2/5] lkdtm: tests for FORTIFY_SOURCE
-Date:   Sun, 22 Nov 2020 17:24:48 +0100
-Message-Id: <20201122162451.27551-3-laniel_francis@privacyrequired.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20201122162451.27551-1-laniel_francis@privacyrequired.com>
-References: <20201122162451.27551-1-laniel_francis@privacyrequired.com>
+        b=IhzUIQDj5fnGi1VFRi7qHBPHMXeWd63sjAO/ogsKKi7ez8IezHZPAwlYS0j7PzYck
+         VE4r3SQgvlCGB2UVQ9W3PEhdRaLr+h7tfg69ryh0crQN60WzEQAe4GC8ANlAld1/5O
+         QKJ0enFzuaQSMoo4uaLPQgQQU8IanYbfYlBBSdJM=
+Received: from [198.167.222.108] (mx2.investici.org [198.167.222.108]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4CfG1t4NVdz6vQH;
+        Sun, 22 Nov 2020 16:28:50 +0000 (UTC)
+From:   Francis Laniel <laniel_francis@privacyrequired.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, dja@axtens.net
+Subject: Re: [PATCH v6 0/5] Fortify strscpy()
+Date:   Sun, 22 Nov 2020 17:28:44 +0100
+Message-ID: <4487519.2G65qjV9lv@machine>
+In-Reply-To: <202011201150.AE57F56EB@keescook>
+References: <20201119164915.10618-1-laniel_francis@privacyrequired.com> <5676804.6kI0aEeX2c@machine> <202011201150.AE57F56EB@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+Le vendredi 20 novembre 2020, 20:52:07 CET Kees Cook a =E9crit :
+> On Fri, Nov 20, 2020 at 10:40:38AM +0100, Francis Laniel wrote:
+> > Le vendredi 20 novembre 2020, 02:35:43 CET Andrew Morton a =E9crit :
+> > > On Thu, 19 Nov 2020 17:49:10 +0100 laniel_francis@privacyrequired.com=
+=20
+wrote:
+> > > > This patch set answers to this issue:
+> > > > https://github.com/KSPP/linux/issues/46
+> > >=20
+> > > I fail to understand what this patchset has to do with that
+> > > one-element-array issue :(
+> >=20
+> > I think I linked another issue totally not related with that one...
+>=20
+> This just looks like a typo. The URL should be:
+> https://github.com/KSPP/linux/issues/96
 
-Add code to test both:
+This is not a typo because my branch to work on this issue is called 46-
+fortifiy_strscpy.
+I just think I got mixed up!
 
- - runtime detection of the overrun of a structure. This covers the
-   __builtin_object_size(x, 0) case. This test is called FORTIFY_OBJECT.
+But I completely removed the link to this issue in the v7, so it does not=20
+matter a lot now.
 
- - runtime detection of the overrun of a char array within a structure.
-   This covers the __builtin_object_size(x, 1) case which can be used
-   for some string functions. This test is called FORTIFY_SUBOBJECT.
-
-Suggested-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
----
- drivers/misc/lkdtm/bugs.c  | 50 ++++++++++++++++++++++++++++++++++++++
- drivers/misc/lkdtm/core.c  |  2 ++
- drivers/misc/lkdtm/lkdtm.h |  2 ++
- 3 files changed, 54 insertions(+)
-
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index a0675d4154d2..110f5a8538e9 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -482,3 +482,53 @@ noinline void lkdtm_CORRUPT_PAC(void)
- 	pr_err("XFAIL: this test is arm64-only\n");
- #endif
- }
-+
-+void lkdtm_FORTIFY_OBJECT(void)
-+{
-+	struct target {
-+		char a[10];
-+	} target[2] = {};
-+	int result;
-+
-+	/*
-+	 * Using volatile prevents the compiler from determining the value of
-+	 * 'size' at compile time. Without that, we would get a compile error
-+	 * rather than a runtime error.
-+	 */
-+	volatile int size = 11;
-+
-+	pr_info("trying to read past the end of a struct\n");
-+
-+	result = memcmp(&target[0], &target[1], size);
-+
-+	/* Print result to prevent the code from being eliminated */
-+	pr_err("FAIL: fortify did not catch an object overread!\n"
-+	       "\"%d\" was the memcmp result.\n", result);
-+}
-+
-+void lkdtm_FORTIFY_SUBOBJECT(void)
-+{
-+	struct target {
-+		char a[10];
-+		char b[10];
-+	} target;
-+	char *src;
-+
-+	src = kmalloc(20, GFP_KERNEL);
-+	strscpy(src, "over ten bytes", 20);
-+
-+	pr_info("trying to strcpy past the end of a member of a struct\n");
-+
-+	/*
-+	 * strncpy(target.a, src, 20); will hit a compile error because the
-+	 * compiler knows at build time that target.a < 20 bytes. Use strcpy()
-+	 * to force a runtime error.
-+	 */
-+	strcpy(target.a, src);
-+
-+	/* Use target.a to prevent the code from being eliminated */
-+	pr_err("FAIL: fortify did not catch an sub-object overrun!\n"
-+	       "\"%s\" was copied.\n", target.a);
-+
-+	kfree(src);
-+}
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index 97803f213d9d..b8c51a633fcc 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -117,6 +117,8 @@ static const struct crashtype crashtypes[] = {
- 	CRASHTYPE(UNSET_SMEP),
- 	CRASHTYPE(CORRUPT_PAC),
- 	CRASHTYPE(UNALIGNED_LOAD_STORE_WRITE),
-+	CRASHTYPE(FORTIFY_OBJECT),
-+	CRASHTYPE(FORTIFY_SUBOBJECT),
- 	CRASHTYPE(OVERWRITE_ALLOCATION),
- 	CRASHTYPE(WRITE_AFTER_FREE),
- 	CRASHTYPE(READ_AFTER_FREE),
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 6dec4c9b442f..49e6b945feb7 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -32,6 +32,8 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
- void lkdtm_UNSET_SMEP(void);
- void lkdtm_DOUBLE_FAULT(void);
- void lkdtm_CORRUPT_PAC(void);
-+void lkdtm_FORTIFY_OBJECT(void);
-+void lkdtm_FORTIFY_SUBOBJECT(void);
- 
- /* lkdtm_heap.c */
- void __init lkdtm_heap_init(void);
--- 
-2.20.1
 
