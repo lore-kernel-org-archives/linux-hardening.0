@@ -2,129 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DB9C56201
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 07:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC033C5519F
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 08:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67E14208C3
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 07:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4522075A
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 08:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="ED9ZI38G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+/oKz3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgKVHyo (ORCPT
+        id S1727334AbgKVIgI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Nov 2020 02:54:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46718 "EHLO
+        Sun, 22 Nov 2020 03:36:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbgKVHyn (ORCPT
+        with ESMTP id S1727330AbgKVIgH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 22 Nov 2020 02:54:43 -0500
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AD5BC0613D2
-        for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2020 23:54:41 -0800 (PST)
-Received: by mail-yb1-xb41.google.com with SMTP id o144so12940785ybg.7
-        for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2020 23:54:41 -0800 (PST)
+        Sun, 22 Nov 2020 03:36:07 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07254C0613CF;
+        Sun, 22 Nov 2020 00:36:05 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id s25so18964608ejy.6;
+        Sun, 22 Nov 2020 00:36:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cmv8Raua+1tSKqWDryWdApjoa82BkHH+3G4jECAsXHY=;
-        b=ED9ZI38GM/y7HDpqvSCnHe7tcnjJBEwtQEWHzA1E4fmp26kYAJuZCcY5loygQ0Vw2b
-         I9Rx1LfdG6Xzs/BUmw4dSQzNYuZyCyHbTb80hVACjZAIjlggQ33hjjYme4u/mFppXG/S
-         GLNGkZDk+VFlOnxLNi4l3NDKnrclj5eqhRD4z0GUs5dbLY136oaoVN4SKSdn4XD/zA7k
-         rMH44mXzrKDZboFuiwQHfpoeQEQe1jHsuNTXkJ3DJ+ArfjB5DA5TaPFzsPKhbI9G3d8s
-         Uyfs0bN2fbLADGO7/dV5W5rO/KMdyLcq6tuexmFsmTnyG7Ci2xHGPe1+o6A20d8jWB9X
-         q2iA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KSBUEVa1x7/4PC/tS/TFqyMip0/VC+6jUS5QTF5o5IM=;
+        b=s+/oKz3oldIl1t5BYk68RHZ+d+pyjpZDzMF15rrugvaDNKM7IsCYxhreJ+gfX9T3Mf
+         ERwEHaUyT3Mxm6EsH7sx8lfGaNaXjprvDkfm5fXFlgG4btElOZxogoJoW8HK9glJP11D
+         MmflztiWl7tZcOD4MiwakyZuXyu+5qJHJuCb+S6yy8dLyePLrOzPRN/zn058KCxaZpdq
+         PNI0Ze+RX1wStPfYdhLkXoM/3YXx73MbaxTyvKiY5nZ/4UBiiFz+atauZXBCU8+fGgTo
+         UiSRogmLW92SoTanXB+tLX+xSQvCWxuC0mTdDfTcKy4r9fLUNcY/ZKIpanJIYKdNWPN6
+         zDgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cmv8Raua+1tSKqWDryWdApjoa82BkHH+3G4jECAsXHY=;
-        b=RCfNyOnzPJN5Uo7zd5optglaqgSZVvAy+2o8/HI5vibCYXRsfvmYKMFLT1fQ9FbZS0
-         Mll82SM5i9so32F9ZtloI0GpN8vGuktzf+IMa7baKMZVNA7OAJAam+l/9vGsIFEP4dch
-         0Q/NMRZ6i9tXz4AeoEj+renZCyuMjr7LS6pWtjSIzxGpkPEKC31SRWJ1x5A483IxIp1t
-         E5PJXvYYBFAqI3zr0NJabRpXokjqXSpFuNKHMilAaj8Eeqx05M2b8u4o/5UJagoNnW/J
-         vgyGFa+6+lu6+T+f4tts6BkvneEFeUeGyYtfxhKBeZYp/POxBi8e+0Hv+JxrIdUM0Wsp
-         MO6Q==
-X-Gm-Message-State: AOAM532Bojm1Bfydom4r8QH03jzz87FManph6db7Rm+uSXo/wPTVST6D
-        496tgoV//7qAb8gX0dmOcGeUtjsRR94Ym+GhO03G2g==
-X-Google-Smtp-Source: ABdhPJyTrwkMPtEGxDAoEJwLclEl0SxjaSUTnkOaZ1BxWHJtYAl5yWfKV62ygcu2t61UEO4J7OTAcGncmare4c9rjuU=
-X-Received: by 2002:a25:2f51:: with SMTP id v78mr36598790ybv.235.1606031680454;
- Sat, 21 Nov 2020 23:54:40 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1605896059.git.gustavoars@kernel.org> <7c424191001cafdc7abd060790ecfcccdf3dd3ae.1605896059.git.gustavoars@kernel.org>
-In-Reply-To: <7c424191001cafdc7abd060790ecfcccdf3dd3ae.1605896059.git.gustavoars@kernel.org>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 22 Nov 2020 09:54:29 +0200
-Message-ID: <CAOtvUMeLZXChtoEUNyy=hwHQDqqncUX5V_=JSH3YaiVNLyTcHw@mail.gmail.com>
-Subject: Re: [PATCH 075/141] crypto: ccree - Fix fall-through warnings for Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KSBUEVa1x7/4PC/tS/TFqyMip0/VC+6jUS5QTF5o5IM=;
+        b=beB/YPP6JCeuDg0aOTHCzADLh4lvd3yav/9L9LKw9jtXfdbvDeCbQRi0O2wxiWBN8Q
+         4DTDYwNKLjnRoeAIzh9KYu0DPJwx/uLIEbpEXKIy3asow8uVLLf2oJaHcqgmjrdQg3nC
+         ac1VKE3eme38wuokTYtAYQFNpNSaR378nT0ArhLCQDPx29WvGxZipNhJNUXSKQFvlPA/
+         bPrlrh9cpY8hWGFE9Du1WPnZt13/XgxYijx5vsOK7G3TPpvZj6HusgrkSSj7qR+VDyTV
+         6QcEzgRIjo6JDOGBen4vzE1ZFnT1pb5tFYFtVzyRGs/I+1DJ5pWb3WxsMDXivijT/p3J
+         n/RQ==
+X-Gm-Message-State: AOAM5320F3u0Z2mKsRQkrRqIbppU3dFLGPDKx1IMT4Lje9zMEI4kLpvv
+        dBU3SO8P2hkVh8yRPxFaqjh5ZZdu7eA=
+X-Google-Smtp-Source: ABdhPJz+yvCpqHMjFz1ak9Nf4Hu9OI+si59vmxOEzFhW7SiCEq8T8FgmLg4BNFAaXrovUEAPxq7h5g==
+X-Received: by 2002:a17:907:7253:: with SMTP id ds19mr8344354ejc.166.1606034164513;
+        Sun, 22 Nov 2020 00:36:04 -0800 (PST)
+Received: from [192.168.0.110] ([77.127.85.120])
+        by smtp.gmail.com with ESMTPSA id p1sm3379016edx.4.2020.11.22.00.36.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Nov 2020 00:36:03 -0800 (PST)
+Subject: Re: [PATCH 044/141] net/mlx4: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tariq Toukan <tariqt@nvidia.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <84cd69bc9b9768cf3bc032c0205ffe485b80ba03.1605896059.git.gustavoars@kernel.org>
+From:   Tariq Toukan <ttoukan.linux@gmail.com>
+Message-ID: <0ba92238-2e31-b7d8-5664-72933dc76a7b@gmail.com>
+Date:   Sun, 22 Nov 2020 10:36:01 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
+MIME-Version: 1.0
+In-Reply-To: <84cd69bc9b9768cf3bc032c0205ffe485b80ba03.1605896059.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 8:34 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-> warnings by explicitly adding multiple break statements instead of
-> letting the code fall through to the next case.
->
+
+
+On 11/20/2020 8:31 PM, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of just letting the code
+> fall through to the next case.
+> 
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/crypto/ccree/cc_cipher.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_c=
-ipher.c
-> index dafa6577a845..cdfee501fbd9 100644
-> --- a/drivers/crypto/ccree/cc_cipher.c
-> +++ b/drivers/crypto/ccree/cc_cipher.c
-> @@ -97,6 +97,7 @@ static int validate_keys_sizes(struct cc_cipher_ctx *ct=
-x_p, u32 size)
->         case S_DIN_to_SM4:
->                 if (size =3D=3D SM4_KEY_SIZE)
->                         return 0;
-> +               break;
->         default:
->                 break;
->         }
-> @@ -139,9 +140,11 @@ static int validate_data_size(struct cc_cipher_ctx *=
-ctx_p,
->                 case DRV_CIPHER_CBC:
->                         if (IS_ALIGNED(size, SM4_BLOCK_SIZE))
->                                 return 0;
-> +                       break;
->                 default:
->                         break;
->                 }
-> +               break;
->         default:
->                 break;
->         }
-> --
-> 2.27.0
->
+>   drivers/net/ethernet/mellanox/mlx4/resource_tracker.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> index 1187ef1375e2..e6b8b8dc7894 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> @@ -2660,6 +2660,7 @@ int mlx4_FREE_RES_wrapper(struct mlx4_dev *dev, int slave,
+>   	case RES_XRCD:
+>   		err = xrcdn_free_res(dev, slave, vhcr->op_modifier, alop,
+>   				     vhcr->in_param, &vhcr->out_param);
+> +		break;
+>   
+>   	default:
+>   		break;
+> 
 
-Acked-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 
-Thanks,
-Gilad
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
+Thanks for your patch.
