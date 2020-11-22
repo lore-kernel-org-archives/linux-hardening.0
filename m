@@ -2,88 +2,172 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A24C63697
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2C4C83014
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 18:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8204720781
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 16:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1802072C
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Nov 2020 18:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="q55vGEyf"
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="rW4pDHaL";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="rW4pDHaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgKVQdR (ORCPT
+        id S1728005AbgKVSWF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Nov 2020 11:33:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728001AbgKVQdQ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 22 Nov 2020 11:33:16 -0500
-Received: from coco.lan (ip5f5ad5ca.dynamic.kabel-deutschland.de [95.90.213.202])
+        Sun, 22 Nov 2020 13:22:05 -0500
+Received: from bedivere.hansenpartnership.com ([96.44.175.130]:38562 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727795AbgKVSWF (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 22 Nov 2020 13:22:05 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 5724C128028B;
+        Sun, 22 Nov 2020 10:22:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=hansenpartnership.com; s=20151216; t=1606069324;
+        bh=h3sTlT+FA6NHXH38/foFLBJi59858PUlbpLzv2N/tQY=;
+        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+        b=rW4pDHaLDXSFZXr6Cvxz8pUU95XYbgWiZrc9VupyznX2uzr45WZkkmPcoVv7UQLC7
+         fsMPdBOfQk9ceeuIggpWHLoyVFttsPe9E/go/w8zBhamKaY37ALEH+1JPMFR7KYHwj
+         pjW3T1Eqz9YAkW2FP12UvIfqAj7a03n4eq2U3CyI=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tKkBL_hAklxm; Sun, 22 Nov 2020 10:22:04 -0800 (PST)
+Received: from jarvis.int.hansenpartnership.com (unknown [IPv6:2601:600:8280:66d1::527])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A4CD20781;
-        Sun, 22 Nov 2020 16:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606062796;
-        bh=KziRjoXHGWXfD1Ee+bXbjXK30Ug/6nzz4PerIjzcHLg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q55vGEyfugvsSM4of6dzek1crn1c7anEELYc8qBDIXKa5PeI+SZcEcRPpBhluPYOW
-         IJKqXzVAmemwPGy9H4tOyakfkrvc4/MJkcA4UXtZJ3zOLHX9Xc8gLbfIDDjVAvJu3K
-         5cC7JfZY+iewNIj7ZkpvGhTGe7T49I32rVy773+s=
-Date:   Sun, 22 Nov 2020 17:33:13 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 096/141] media: rcar_jpu: Fix fall-through warnings for
- Clang
-Message-ID: <20201122173313.0d507269@coco.lan>
-In-Reply-To: <55b0dd100f6c2799e0250ce479291fceb40bb462.1605896060.git.gustavoars@kernel.org>
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id DB46B1280287;
+        Sun, 22 Nov 2020 10:22:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=hansenpartnership.com; s=20151216; t=1606069324;
+        bh=h3sTlT+FA6NHXH38/foFLBJi59858PUlbpLzv2N/tQY=;
+        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+        b=rW4pDHaLDXSFZXr6Cvxz8pUU95XYbgWiZrc9VupyznX2uzr45WZkkmPcoVv7UQLC7
+         fsMPdBOfQk9ceeuIggpWHLoyVFttsPe9E/go/w8zBhamKaY37ALEH+1JPMFR7KYHwj
+         pjW3T1Eqz9YAkW2FP12UvIfqAj7a03n4eq2U3CyI=
+Message-ID: <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        amd-gfx@lists.freedesktop.org, bridge@lists.linux-foundation.org,
+        ceph-devel@vger.kernel.org, cluster-devel@redhat.com,
+        coreteam@netfilter.org, devel@driverdev.osuosl.org,
+        dm-devel@redhat.com, drbd-dev@lists.linbit.com,
+        dri-devel@lists.freedesktop.org, GR-everest-linux-l2@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, intel-gfx@lists.freedesktop.org,
+        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-ext4@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
+        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
+        selinux@vger.kernel.org, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        usb-storage@lists.one-eyed-alien.net,
+        virtualization@lists.linux-foundation.org,
+        wcn36xx@lists.infradead.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
+Date:   Sun, 22 Nov 2020 10:21:59 -0800
+In-Reply-To: <202011220816.8B6591A@keescook>
 References: <cover.1605896059.git.gustavoars@kernel.org>
-        <55b0dd100f6c2799e0250ce479291fceb40bb462.1605896060.git.gustavoars@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+         <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+         <202011201129.B13FDB3C@keescook>
+         <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+         <202011220816.8B6591A@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Em Fri, 20 Nov 2020 12:37:02 -0600
-"Gustavo A. R. Silva" <gustavoars@kernel.org> escreveu:
-
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of letting the code fall
-> through to the next case.
+On Sun, 2020-11-22 at 08:17 -0800, Kees Cook wrote:
+> On Fri, Nov 20, 2020 at 11:51:42AM -0800, Jakub Kicinski wrote:
+> > On Fri, 20 Nov 2020 11:30:40 -0800 Kees Cook wrote:
+> > > On Fri, Nov 20, 2020 at 10:53:44AM -0800, Jakub Kicinski wrote:
+> > > > On Fri, 20 Nov 2020 12:21:39 -0600 Gustavo A. R. Silva wrote:  
+> > > > > This series aims to fix almost all remaining fall-through
+> > > > > warnings in order to enable -Wimplicit-fallthrough for Clang.
+> > > > > 
+> > > > > In preparation to enable -Wimplicit-fallthrough for Clang,
+> > > > > explicitly add multiple break/goto/return/fallthrough
+> > > > > statements instead of just letting the code fall through to
+> > > > > the next case.
+> > > > > 
+> > > > > Notice that in order to enable -Wimplicit-fallthrough for
+> > > > > Clang, this change[1] is meant to be reverted at some point.
+> > > > > So, this patch helps to move in that direction.
+> > > > > 
+> > > > > Something important to mention is that there is currently a
+> > > > > discrepancy between GCC and Clang when dealing with switch
+> > > > > fall-through to empty case statements or to cases that only
+> > > > > contain a break/continue/return statement[2][3][4].  
+> > > > 
+> > > > Are we sure we want to make this change? Was it discussed
+> > > > before?
+> > > > 
+> > > > Are there any bugs Clangs puritanical definition of fallthrough
+> > > > helped find?
+> > > > 
+> > > > IMVHO compiler warnings are supposed to warn about issues that
+> > > > could be bugs. Falling through to default: break; can hardly be
+> > > > a bug?!  
+> > > 
+> > > It's certainly a place where the intent is not always clear. I
+> > > think this makes all the cases unambiguous, and doesn't impact
+> > > the machine code, since the compiler will happily optimize away
+> > > any behavioral redundancy.
+> > 
+> > If none of the 140 patches here fix a real bug, and there is no
+> > change to machine code then it sounds to me like a W=2 kind of a
+> > warning.
 > 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-> ---
->  drivers/media/platform/rcar_jpu.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/rcar_jpu.c b/drivers/media/platform/rcar_jpu.c
-> index 9b99ff368698..87466edf8a5e 100644
-> --- a/drivers/media/platform/rcar_jpu.c
-> +++ b/drivers/media/platform/rcar_jpu.c
-> @@ -648,6 +648,7 @@ static u8 jpu_parse_hdr(void *buffer, unsigned long size, unsigned int *width,
->  			if (get_word_be(&jpeg_buffer, &word))
->  				return 0;
->  			skip(&jpeg_buffer, (long)word - 2);
-> +			break;
->  		case 0:
->  			break;
->  		default:
+> FWIW, this series has found at least one bug so far:
+> https://lore.kernel.org/lkml/CAFCwf11izHF=g1mGry1fE5kvFFFrxzhPSM6qKAO8gxSp=Kr_CQ@mail.gmail.com/
 
 
+Well, it's a problem in an error leg, sure, but it's not a really
+compelling reason for a 141 patch series, is it?  All that fixing this
+error will do is get the driver to print "oh dear there's a problem"
+under four more conditions than it previously did.
 
-Thanks,
-Mauro
+We've been at this for three years now with nearly a thousand patches,
+firstly marking all the fall throughs with /* fall through */ and later
+changing it to fallthrough.  At some point we do have to ask if the
+effort is commensurate with the protection afforded.  Please tell me
+our reward for all this effort isn't a single missing error print.
+
+James
+
+
