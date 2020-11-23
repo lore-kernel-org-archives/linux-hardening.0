@@ -2,98 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-20.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A7CC63798
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 08:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C3EC63798
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 09:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86978207FF
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 08:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346AD2078E
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 09:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgKWIdx convert rfc822-to-8bit (ORCPT
+        id S1727073AbgKWJhL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 03:33:53 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:39627 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgKWIdw (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 03:33:52 -0500
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 98158240006;
-        Mon, 23 Nov 2020 08:33:48 +0000 (UTC)
-Date:   Mon, 23 Nov 2020 09:33:47 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
+        Mon, 23 Nov 2020 04:37:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41890 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgKWJhL (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 23 Nov 2020 04:37:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E6EB2AC24;
+        Mon, 23 Nov 2020 09:37:09 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id C2E041E130F; Mon, 23 Nov 2020 10:37:09 +0100 (CET)
+Date:   Mon, 23 Nov 2020 10:37:09 +0100
+From:   Jan Kara <jack@suse.cz>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-mtd@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 104/141] mtd: rawnand: stm32_fmc2: Fix fall-through
- warnings for Clang
-Message-ID: <20201123093347.719a77cf@xps13>
-In-Reply-To: <299d044a69b59eff2c733543b927aa608282a9a8.1605896060.git.gustavoars@kernel.org>
+Cc:     Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 030/141] ext2: Fix fall-through warnings for Clang
+Message-ID: <20201123093709.GB27294@quack2.suse.cz>
 References: <cover.1605896059.git.gustavoars@kernel.org>
-        <299d044a69b59eff2c733543b927aa608282a9a8.1605896060.git.gustavoars@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+ <73d8ae2d06d639815672ee9ee4550ea4bfa08489.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73d8ae2d06d639815672ee9ee4550ea4bfa08489.1605896059.git.gustavoars@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Gustavo,
-
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote on Fri, 20 Nov 2020
-12:37:48 -0600:
-
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a couple
-> of warnings by explicitly adding a couple of fallthrough pseudo-keywords
-> instead of letting the code fall through to the next case.
+On Fri 20-11-20 12:28:25, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of just letting the code
+> fall through to the next case.
 > 
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks. Applied.
+
+								Honza
+
 > ---
->  drivers/mtd/nand/raw/stm32_fmc2_nand.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  fs/ext2/inode.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> index 550bda4d1415..002fa521036f 100644
-> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> @@ -531,6 +531,7 @@ static int stm32_fmc2_nfc_ham_correct(struct nand_chip *chip, u8 *dat,
->  		switch (b % 4) {
->  		case 2:
->  			bit_position += shifting;
-> +			fallthrough;
-
-In patch 100, 101, 102, 103 you 'break' in this case (when the
-statement falls into the empty following statement which itself
-breaks). Please make it consistent and use break here, below, and in
-patch 132.
-
-LGTM otherwise.
-
->  		case 1:
->  			break;
->  		default:
-> @@ -546,6 +547,7 @@ static int stm32_fmc2_nfc_ham_correct(struct nand_chip *chip, u8 *dat,
->  		switch (b % 4) {
->  		case 2:
->  			byte_addr += shifting;
-> +			fallthrough;
->  		case 1:
->  			break;
->  		default:
-
-Thanks,
-Miquèl
+> diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+> index 11c5c6fe75bb..78c417d3c898 100644
+> --- a/fs/ext2/inode.c
+> +++ b/fs/ext2/inode.c
+> @@ -1256,6 +1256,7 @@ static void __ext2_truncate_blocks(struct inode *inode, loff_t offset)
+>  				mark_inode_dirty(inode);
+>  				ext2_free_branches(inode, &nr, &nr+1, 3);
+>  			}
+> +			break;
+>  		case EXT2_TIND_BLOCK:
+>  			;
+>  	}
+> -- 
+> 2.27.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
