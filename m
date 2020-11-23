@@ -2,94 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B31C2D0E4
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09ACCC63798
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD73D2071E
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34CB20721
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="skDnkEad"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hd8DEuKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbgKWWx2 (ORCPT
+        id S1730303AbgKWWxs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 17:53:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51672 "EHLO mail.kernel.org"
+        Mon, 23 Nov 2020 17:53:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730556AbgKWWx2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 17:53:28 -0500
-Received: from kernel.org (83-245-197-237.elisa-laajakaista.fi [83.245.197.237])
+        id S2387487AbgKWWxq (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 23 Nov 2020 17:53:46 -0500
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00000206D8;
-        Mon, 23 Nov 2020 22:53:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0DFC206D8;
+        Mon, 23 Nov 2020 22:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606172007;
-        bh=kbjhLtp/EKuPfjRxtVG5OYwX7dZxivwkHs7w7c5hfBc=;
+        s=default; t=1606172025;
+        bh=Y754Uxsb+oRdteJzxeLGJZ0Nr6qJ2w8yPhIjK1E9ygw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=skDnkEadr4gubBtKeAgxscRnKuhSBh8Hv/v2FoJBgqRWGOZMLrumrvyzplPd3Q/wU
-         rH1veKm/HK/oMZGwUds0YR7117bjyP43tIX+uWgZq38H3ep0Eo6NOurrB2VAMNAWpQ
-         WBWa+6OY88eFGsgWJ4wJ8wOLCADgJSQ5v/L8eZmc=
-Date:   Tue, 24 Nov 2020 00:53:22 +0200
-From:   Jarkko Sakkinen <jarkko@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        b=Hd8DEuKDlU/OBnXmphx1Bjt66POq5VZAkAJuwm05bXMWgCP0KNMsZhuX1pGccgVAQ
+         CuJqNVszqNMvfApMAr7ZRwkEnkR59sOEF5TtNw+vX34N/EMP+A/lHmONMXhkr1ttvy
+         rNUTWmbmeyjT6VfheHX8QTYB5CtlRKh4XbeKEb9c=
+Date:   Mon, 23 Nov 2020 16:53:59 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     boris.ostrovsky@oracle.com
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, xen-devel@lists.xenproject.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 131/141] tpm: Fix fall-through warnings for Clang
-Message-ID: <20201123225322.GA19839@kernel.org>
+Subject: Re: [PATCH 058/141] xen-blkfront: Fix fall-through warnings for Clang
+Message-ID: <20201123225359.GP21644@embeddedor>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <1804f48dac434541dc60ada5eefcb86f74905671.1605896060.git.gustavoars@kernel.org>
- <20201123225226.GA17124@kernel.org>
+ <33057688012c34dd60315ad765ff63f070e98c0c.1605896059.git.gustavoars@kernel.org>
+ <e8d67ea1-3d0d-509a-a2f1-cf1758bb373f@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201123225226.GA17124@kernel.org>
+In-Reply-To: <e8d67ea1-3d0d-509a-a2f1-cf1758bb373f@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 12:52:31AM +0200, Jarkko Sakkinen wrote:
-> On Fri, Nov 20, 2020 at 12:40:14PM -0600, Gustavo A. R. Silva wrote:
+On Fri, Nov 20, 2020 at 04:36:26PM -0500, boris.ostrovsky@oracle.com wrote:
+> 
+> On 11/20/20 1:32 PM, Gustavo A. R. Silva wrote:
 > > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
 > > by explicitly adding a break statement instead of letting the code fall
 > > through to the next case.
-> > 
+> >
 > > Link: https://github.com/KSPP/linux/issues/115
 > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > > ---
-> >  drivers/char/tpm/eventlog/tpm1.c | 1 +
+> >  drivers/block/xen-blkfront.c | 1 +
 > >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/char/tpm/eventlog/tpm1.c b/drivers/char/tpm/eventlog/tpm1.c
-> > index 2c96977ad080..8aa9057601d6 100644
-> > --- a/drivers/char/tpm/eventlog/tpm1.c
-> > +++ b/drivers/char/tpm/eventlog/tpm1.c
-> > @@ -210,6 +210,7 @@ static int get_event_name(char *dest, struct tcpa_event *event,
-> >  		default:
+> >
+> > diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+> > index 48629d3433b4..34b028be78ab 100644
+> > --- a/drivers/block/xen-blkfront.c
+> > +++ b/drivers/block/xen-blkfront.c
+> > @@ -2462,6 +2462,7 @@ static void blkback_changed(struct xenbus_device *dev,
 > >  			break;
-> >  		}
+> >  		if (talk_to_blkback(dev, info))
+> >  			break;
 > > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > -- 
-> > 2.27.0
-> > 
-> > 
+> >  	case XenbusStateInitialising:
+> >  	case XenbusStateInitialised:
+> >  	case XenbusStateReconfiguring:
 > 
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@iki.fi>
 > 
-> Who is picking these patches?
+> Reviewed-by Boris Ostrovsky <boris.ostrovsky@oracle.com>
 > 
-> /Jarkko
+> 
+> (for patch 138 as well)
 
-I mean
+Thank you for both reviews, Boris.
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> Although I thought using 'fallthrough' attribute was the more common approach.
 
-/Jarkko
+I've got it. I will consider that for a future patch.
+
+Thanks
+--
+Gustavo
