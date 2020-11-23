@@ -2,104 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456B4C64E69
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D863C63697
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE45520715
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1203020715
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDUoBNUF"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nqn63Gev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbgKWWsB (ORCPT
+        id S1728889AbgKWWsh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 17:48:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
+        Mon, 23 Nov 2020 17:48:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbgKWWsA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 17:48:00 -0500
+        id S1726325AbgKWWsh (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 23 Nov 2020 17:48:37 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08A8F206D8;
-        Mon, 23 Nov 2020 22:47:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33380206D8;
+        Mon, 23 Nov 2020 22:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606171679;
-        bh=3RMlvihFG6FapSYwsjGeZnlTVoLlN4a3ELNxdW2lrVg=;
+        s=default; t=1606171716;
+        bh=NHP7DeFuTriFmLmgIAMA3888uSWouW8p1oJNbPF8Ax8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UDUoBNUFrRJuTyYj/yyz2PkzOniIhadu3YsBI9aE3MUHwX0T8WBljrjYfBPN65SB9
-         CKNwWhmeMrtcc/uiwvXDHVsHiJWaKJBzStiLQ+bPyeC3nhlXn3l2x8ygUAcjbp3W4Q
-         mi9a+HKPy5dayL+rpd+KD+9o0U7MM8L4vPubgHZ8=
-Date:   Mon, 23 Nov 2020 16:48:13 -0600
+        b=Nqn63GevH1MwQQ0HpdIDNDSJrHpQKqwt6WH4RQcs+CD0/6/034vOOlsOUGlfBJ5p+
+         LjJgYgxV1ZjLU2iFDX1ts71IbtR0a2hLfkIZb9sCKlZ4lU7zrN1s1tTKKCarn59zpY
+         0nZEJ8q9aERlLOAkcmDOEZOFIJec0Dxb1I8jVm9A=
+Date:   Mon, 23 Nov 2020 16:48:50 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Michal Kalderon <mkalderon@marvell.com>
-Cc:     Ariel Elior <aelior@marvell.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [EXT] [PATCH 035/141] IB/qedr: Fix fall-through warnings for
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 037/141] Input: pcspkr - Fix fall-through warnings for
  Clang
-Message-ID: <20201123224813.GJ21644@embeddedor>
+Message-ID: <20201123224850.GK21644@embeddedor>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <8d7cf00ec3a4b27a895534e02077c2c9ed8a5f8e.1605896059.git.gustavoars@kernel.org>
- <MN2PR18MB3182F593C7A23B42A3961208A1FD0@MN2PR18MB3182.namprd18.prod.outlook.com>
+ <4b659e3e65f2fa3c8bb7ed153e2016c3fb395bbc.1605896059.git.gustavoars@kernel.org>
+ <20201123061555.GW2034289@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <MN2PR18MB3182F593C7A23B42A3961208A1FD0@MN2PR18MB3182.namprd18.prod.outlook.com>
+In-Reply-To: <20201123061555.GW2034289@dtor-ws>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Nov 22, 2020 at 08:12:15PM +0000, Michal Kalderon wrote:
-> > From: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > Sent: Friday, November 20, 2020 8:29 PM
+On Sun, Nov 22, 2020 at 10:15:55PM -0800, Dmitry Torokhov wrote:
+> On Fri, Nov 20, 2020 at 12:30:02PM -0600, Gustavo A. R. Silva wrote:
+> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> > by explicitly adding a break statement instead of just letting the code
+> > fall through to the next case.
 > > 
-> > ----------------------------------------------------------------------
-> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning by
-> > explicitly adding a break statement instead of just letting the code fall
-> > through to the next case.
-> > 
-> > Link: https://urldefense.proofpoint.com/v2/url?u=https-
-> > 3A__github.com_KSPP_linux_issues_115&d=DwIBAg&c=nKjWec2b6R0mOyP
-> > az7xtfQ&r=5_8rRZTDuAS-6X-cGRU9Fo4yjCnkS1t7T3-
-> > gjL4FQng&m=ZJjyam8OGRTmM8iCzOSDOL7dMn31Pmw3aA-
-> > QOVDY8eg&s=4rQYW1K3xAzeRV7SRkrvaivRWz2WwEuuk0ZnjnDTA1w&e=
+> > Link: https://github.com/KSPP/linux/issues/115
 > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/infiniband/hw/qedr/main.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/infiniband/hw/qedr/main.c
-> > b/drivers/infiniband/hw/qedr/main.c
-> > index 967641662b24..10707b451ab8 100644
-> > --- a/drivers/infiniband/hw/qedr/main.c
-> > +++ b/drivers/infiniband/hw/qedr/main.c
-> > @@ -796,6 +796,7 @@ static void qedr_affiliated_event(void *context, u8
-> > e_code, void *fw_handle)
-> >  		}
-> >  		xa_unlock_irqrestore(&dev->srqs, flags);
-> >  		DP_NOTICE(dev, "SRQ event %d on handle %p\n", e_code,
-> > srq);
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > --
-> > 2.27.0
 > 
-> Thanks, 
-> 
-> Acked-by: Michal Kalderon <michal.kalderon@marvell.com>
+> Applied, thank you.
 
-Thanks, Michal.
+Thanks, Dmitry.
 --
 Gustavo
