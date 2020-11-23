@@ -2,116 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B47C2D0E4
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A5CC63697
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 23:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F823206D8
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C5320781
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 23:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0VqMyAB"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="X2WSSnXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387690AbgKWW7Y (ORCPT
+        id S1727247AbgKWXcH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 17:59:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733069AbgKWW7W (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 17:59:22 -0500
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E16E1206D8;
-        Mon, 23 Nov 2020 22:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606172361;
-        bh=4xRskUD3FH91ASiM7f0FxIPbQTxm2r75mS4cvaZMGS8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D0VqMyABBGiegu2L6JrlLm6uIJTJSw05IddDRuuBJM0GK2z0gZVKcgBE2kgQUiNF1
-         1O+TtBOvBXmU1lXrPqtAPSEXVxDYRaerTxfASMLBNFbrypvVGvbz47WwPOqJpLaGeB
-         2RkMEqoJkMwNNZ1zsNnq/Vqsf0YFJIOeIP5fR3N8=
-Date:   Mon, 23 Nov 2020 16:59:35 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 098/141] mmc: sdhci-of-arasan: Fix fall-through warnings
- for Clang
-Message-ID: <20201123225935.GW21644@embeddedor>
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <387cab3a466038aa5d1fc34b8b6a7c4f693826ea.1605896060.git.gustavoars@kernel.org>
- <ae070e37-f631-d016-d436-92f59a0e59e1@xilinx.com>
+        Mon, 23 Nov 2020 18:32:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbgKWXcG (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 23 Nov 2020 18:32:06 -0500
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A565BC0613CF
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2020 15:32:04 -0800 (PST)
+Received: by mail-ed1-x544.google.com with SMTP id v22so18914059edt.9
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2020 15:32:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DvV+CzrApfNhYjd5pOCIdBGV95GxbIoem5LSJfCYLwU=;
+        b=X2WSSnXHH2rQD3YeJE8984RyiwASpwGBccF7jIbS/IhQvr7hOBKrtBnLPEzzjGKrUs
+         IElScjlTrTfM5OHSLBDD3DfwQlA9x/jqSt4wT8IVnscs4TLABxxvUaBRalU12Ry50ILV
+         qmKDi2iD8Sd5j6wUssME+p5UkhIs9k14iXEwMe2Ta7OEXI8mYuZ51VYfyyjMFOkPtEXc
+         DQNBIpy5uesOIB+lWwrHubYWY9xdL6iH7YpY9Jr5pKhatOxxUFU9BT9x1SEvhSlkhAsv
+         PksmQLp5FJeqhdrDjTWAE5aNHkrMgmRuUaH/oLOCPG/vZpiLsVIfmB9aemvifu6MclzO
+         zjrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DvV+CzrApfNhYjd5pOCIdBGV95GxbIoem5LSJfCYLwU=;
+        b=f2Ihl8k9MXlqeORiUzPXM24XxvQ+v+AQwICX7VVioDiBunbm3UeqNcGKnFT3bexBZz
+         YEebCcdN0qlzyhXBxikKdUOB4wyYaL4UrfrlMAzKy+JodQWfM8yz6wjc9HSIpgpPzDSl
+         MZ5LSWA+Tdzu13CiSgn1+3QLaaGYqzWn06HEVs1q6roIJlwG3aJGLGih6low7nQDzbGd
+         t16vC5W9DrFh2Cvu+rGjk+0ya1QLC96jhZYD3ypJiBelclW+pw8oOfWAVaSncu8SfAPz
+         RrRgvzs8BOnkt2q+hxFhIuFzgz2ipahOzy2i9EUQ37+xoo+9tmKvzF4dZqY4BQ4l+eEc
+         B5qA==
+X-Gm-Message-State: AOAM5329LbZ36v0PcYJJH+hxpktES9A+WvIYvUsSoR9V5Rk3Eva6RXGd
+        n2W9RjB0pd/4fJgHVOAKMxMpzKsQaPERp6meLjRf
+X-Google-Smtp-Source: ABdhPJwfgXk9K5k7Vqp2Mp/5WkRmckJ6VKgTtlEBpMUrzD0UCrCO7N45actD0P+MGIs0O7jidiVIWzNBe8F/lobK9pE=
+X-Received: by 2002:aa7:de01:: with SMTP id h1mr1462746edv.269.1606174323325;
+ Mon, 23 Nov 2020 15:32:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae070e37-f631-d016-d436-92f59a0e59e1@xilinx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1605896059.git.gustavoars@kernel.org> <c543804fee333ba315ddf4056ceed79f94e10d19.1605896059.git.gustavoars@kernel.org>
+In-Reply-To: <c543804fee333ba315ddf4056ceed79f94e10d19.1605896059.git.gustavoars@kernel.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 23 Nov 2020 18:31:52 -0500
+Message-ID: <CAHC9VhTFUmRrabTytCyXPtFwb-uVLTgWmgxSkhpy5zjFkcacrQ@mail.gmail.com>
+Subject: Re: [PATCH 053/141] selinux: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 08:00:35AM +0100, Michal Simek wrote:
-> 
-> 
-> On 20. 11. 20 19:37, Gustavo A. R. Silva wrote:
-> > In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-> > warnings by explicitly adding multiple break statements instead of
-> > letting the code fall through to the next case.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/115
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/mmc/host/sdhci-of-arasan.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> > index 829ccef87426..1f7e42b6ced5 100644
-> > --- a/drivers/mmc/host/sdhci-of-arasan.c
-> > +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> > @@ -627,6 +627,7 @@ static int sdhci_zynqmp_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
-> >  	case MMC_TIMING_MMC_HS200:
-> >  		/* For 200MHz clock, 8 Taps are available */
-> >  		tap_max = 8;
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > @@ -695,6 +696,7 @@ static int sdhci_zynqmp_sampleclk_set_phase(struct clk_hw *hw, int degrees)
-> >  	case MMC_TIMING_MMC_HS200:
-> >  		/* For 200MHz clock, 30 Taps are available */
-> >  		tap_max = 30;
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > @@ -760,6 +762,7 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
-> >  	case MMC_TIMING_MMC_HS200:
-> >  		/* For 200MHz clock, 8 Taps are available */
-> >  		tap_max = 8;
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > @@ -831,6 +834,7 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
-> >  	case MMC_TIMING_MMC_HS200:
-> >  		/* For 200MHz clock, 30 Taps are available */
-> >  		tap_max = 30;
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > 
-> 
-> No problem with it.
-> 
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
+On Fri, Nov 20, 2020 at 1:32 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
+>
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  security/selinux/hooks.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Thanks, Michal.
---
-Gustavo
+Merged into selinux/next, thanks.
+
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 6b1826fc3658..e57774367b3a 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -4029,6 +4029,7 @@ static int selinux_kernel_load_data(enum kernel_load_data_id id, bool contents)
+>         switch (id) {
+>         case LOADING_MODULE:
+>                 rc = selinux_kernel_module_from_file(NULL);
+> +               break;
+>         default:
+>                 break;
+>         }
+> --
+> 2.27.0
+
+-- 
+paul moore
+www.paul-moore.com
