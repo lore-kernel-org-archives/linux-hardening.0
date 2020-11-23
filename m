@@ -7,69 +7,82 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F13AC6379F
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9476DC388F9
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11599206D8
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B30220715
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="usF0T6Ew"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQmknOSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733044AbgKWWtz (ORCPT
+        id S1733210AbgKWWub (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 17:49:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50526 "EHLO mail.kernel.org"
+        Mon, 23 Nov 2020 17:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731246AbgKWWty (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 17:49:54 -0500
+        id S1733091AbgKWWu2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 23 Nov 2020 17:50:28 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F3B206D8;
-        Mon, 23 Nov 2020 22:49:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADCB5206D8;
+        Mon, 23 Nov 2020 22:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606171794;
-        bh=vAETzlCrj0FL/49B6d1jXGllqdttTDxM90vnCFzTjuo=;
+        s=default; t=1606171828;
+        bh=prSunxx9UrmHQV1SVpB7IiA7MCaL2aW33t5lBC+FXKA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=usF0T6EwoBHtax6w0roOcR7ufY9s9fNMSnSnW5i5DFiGYCg7c86Q3QaW1o5qKashs
-         w2v1Qn9K2CbCa5xuEg5r0bKOrddoxzV8ZGjPwmjlxdx7GVOfb/z/RfnMxEjSAQIoj+
-         Eta2mc2wHdwrcpJM4tNTIVygIQEYR78dhhZBms9I=
-Date:   Mon, 23 Nov 2020 16:50:08 -0600
+        b=BQmknOSHEmt7Rd0eMahtV4W/mur0u5SqAY0dhDc4wY9bPXlbOhaybje85M8jyi19U
+         gVbwMCmo1tzhA00+7O8fmx8Tjbj+s9maBHwdKgeO7wsRp0yFwAzUyuQKp+SlR+wlvD
+         sfgh/KB+sWv6XqgFI9nmfUab9/Cu4VU96a02xDSU=
+Date:   Mon, 23 Nov 2020 16:50:42 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 050/141] RDMA/mlx5: Fix fall-through warnings for Clang
-Message-ID: <20201123225008.GN21644@embeddedor>
+Subject: Re: [PATCH 057/141] watchdog: Fix fall-through warnings for Clang
+Message-ID: <20201123225042.GO21644@embeddedor>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <2b0c87362bc86f6adfe56a5a6685837b71022bbf.1605896059.git.gustavoars@kernel.org>
- <20201123083332.GC3159@unreal>
+ <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
+ <20201121184951.GA114144@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201123083332.GC3159@unreal>
+In-Reply-To: <20201121184951.GA114144@roeck-us.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 10:33:32AM +0200, Leon Romanovsky wrote:
-> On Fri, Nov 20, 2020 at 12:31:49PM -0600, Gustavo A. R. Silva wrote:
+On Sat, Nov 21, 2020 at 10:49:51AM -0800, Guenter Roeck wrote:
+> On Fri, Nov 20, 2020 at 12:32:51PM -0600, Gustavo A. R. Silva wrote:
 > > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> > by explicitly adding the new pseudo-keyword fallthrough; instead of
-> > letting the code fall through to the next case.
-> >
+> > by explicitly adding a fallthrough pseudo-keyword instead of letting the
+> > code fall through to the next case.
+> > 
 > > Link: https://github.com/KSPP/linux/issues/115
 > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > > ---
-> >  drivers/infiniband/hw/mlx5/qp.c | 1 +
+> >  drivers/watchdog/machzwd.c | 1 +
 > >  1 file changed, 1 insertion(+)
-> >
+> > 
+> > diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
+> > index 743377c5b173..73f2221f6222 100644
+> > --- a/drivers/watchdog/machzwd.c
+> > +++ b/drivers/watchdog/machzwd.c
+> > @@ -174,6 +174,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
+> >  		fallthrough;
+> >  	case WD2:
+> >  		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
+> > +		fallthrough;
 > 
-> Thanks,
-> Acked-by: Leon Romanovsky <leonro@nvidia.com>
+> fallthrough to return ? Oh well, this is an old style driver anyway,
+> so I guess who cares.
 
-Thanks, Leon.
+:)
+
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+Thanks, Guenter.
 --
 Gustavo
