@@ -2,140 +2,151 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D0C6379D
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 10:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E650C63798
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 13:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099E92075A
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 10:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE85820773
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 13:04:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ZvOX1EpK";
-	dkim=pass (1024-bit key) header.d=citrix.onmicrosoft.com header.i=@citrix.onmicrosoft.com header.b="qfnIhiBZ"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="huMDpxd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgKWKfs (ORCPT
+        id S2388376AbgKWNDr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 05:35:48 -0500
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:45785 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728266AbgKWKfs (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 05:35:48 -0500
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Nov 2020 05:35:47 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1606127747;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=JbFcyG1geXIbPfSiPoanX3UaC0NrUBzcTd5k+xwL+Jc=;
-  b=ZvOX1EpKPMxUEQaT+xUx2bmAPEZVZcXTaIcqzFE4W6BWJzabVGVXptCH
-   5iBCOzqM/zMbMnBOeQsLOZb2lipK/XxXQtS5TpLgXfS8LvW0P1wbR7MW1
-   xZochotOyRJkFgeVbF2Tt3ayxthOJSHLpkCSw+YVKxdBAvEn3aoglwDg3
-   c=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=pass (signature verified) header.i=@citrix.onmicrosoft.com
-IronPort-SDR: 1bRO8SMn5awFSZa2v6QL32ET6Q2hSNLaaaQojI3Z8n2HQPy1+E2JO8qtxlT0YcHIoS1Rle+H3H
- x3aMbeteU5UIRld8ky1VMyxRXqZ9r14Y0+bvjLcd7Z3S52FISkx/L7XIG19Yx2k3oy5RKq1E44
- EaqLEjR8GMJLBb5KFDxy0cIkpr5WjA8y9z6P1dZ+m89Y3eoFlKqRrKAG1pPNJHrUpVuzCpahsK
- zA8FiLmO87FVAAAQka8vL7BIb9Dy9LIO+yamSwXCFVF9l6LuNaND54rf14IH/sH2OAD7tx/Ui2
- uZc=
-X-SBRS: None
-X-MesageID: 31701223
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.78,363,1599537600"; 
-   d="scan'208";a="31701223"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RpiVSaRiGyZg21ibnRO0KSCIurVQM/clHyYxyuM89nNyeIrCwYA5ne/Vkg6lJ9M1s0q/DchPCgb19BzhRjerAclNmQc2j45wEmvHMecpS65lps9RBovFuWZI/y4mUox/oh0gMeYIy9dKl5YvzCUywz6NrbH8hk1XO9yyVWMzvfwGCyT7W7ZrhrUj0WPRZE+Ib0XGO3giKO24Z3JnqqleOqcGjCqUcuhoOoHzLFRpG6w1rcBVgzYOF7DOQeTlI9zjbcz0wK80zHzVOoPUgIzUfv2sGeKNskHovi5q1JWLrtFLf0WRZ20drKf0VoA1jbElBfo6cqitguwm6xOVoDwm0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SMyS7uxn/ezwxNaFplls4x7G6ok6YjvqFLqIhuFoSZ0=;
- b=cLaquo7TuvaRO9KJdOKnwk8V6l15TqjLdR5Hpe3/KkjgJNXf9mvdO8vEofIm1PndwwOLfWH+pUR7dzdZOkrhtWPmYinVGwGrkDlp4UdK4ZsmnI9NBHjEYs2rj5i5q9qxCY8Lk7zV869IcTzr1KcnfZC4gtqsFupM74UDR973P72CZ8evlheC3yUT05AN02ggl3AXsraFpEVn3/ugZ4GW+n7JBqKVQH6XvJL2/DPZ84eQyIOy8FVclSJh+RxjeM7OYUfbnD3DrhAD7u0dO1LwdFrG/RZ+qvCkEvpY22SRg3l7kB0dg1OFLR23Zap9plzCQflbiX/H4xZ/U32iv7Qlpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
- dkim=pass header.d=citrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SMyS7uxn/ezwxNaFplls4x7G6ok6YjvqFLqIhuFoSZ0=;
- b=qfnIhiBZtLPGBXfYvrQ6zAkmyttl3h6Zas4SVoTh7qwYfD5UsAMepioB7o9C1LF5TFq8ejyYuvyllIC65NnlTf7QW4JY15li5C/OgmIYthOSt9hwT9mmxq8VOSKhKdFzcfjQe+oGXJmc5+LBX2Qz3j80yxm3wMsbR1MJRevjJFw=
-Date:   Mon, 23 Nov 2020 11:28:32 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, <xen-devel@lists.xenproject.org>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH 058/141] xen-blkfront: Fix fall-through warnings for Clang
-Message-ID: <20201123102832.4f33hkwuaas4vs7m@Air-de-Roger>
+        Mon, 23 Nov 2020 08:03:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388335AbgKWNDp (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 23 Nov 2020 08:03:45 -0500
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 191D120758;
+        Mon, 23 Nov 2020 13:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606136621;
+        bh=J/TET3MqSRKQBkZDLmw3offBuTNq8xblR6VPj5c7KTQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=huMDpxd34lY8zl81VJt6WrkzA8VbZ3WZKfCc+01YUsnQkEm+dvBfrNL343ZTscxgS
+         4cn7RRAIuR/6lyK6TO0qxACy3TNrSBuTodAx+s4Q2YpvApK9inZpqsbsSdtJmbV9Zx
+         YwwBYqtSxUH9kHvWkiEz2t98c4vnYVnAJ6qqQTEg=
+Date:   Mon, 23 Nov 2020 07:03:48 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Joe Perches <joe@perches.com>, Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>, alsa-devel@alsa-project.org,
+        linux-atm-general@lists.sourceforge.net,
+        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-ide@vger.kernel.org, dm-devel@redhat.com,
+        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
+        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
+        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        usb-storage@lists.one-eyed-alien.net, drbd-dev@lists.linbit.com,
+        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
+        rds-devel@oss.oracle.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-scsi@vger.kernel.org, linux-rdma@vger.kernel.org,
+        oss-drivers@netronome.com, bridge@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
+        linux-acpi@vger.kernel.org, coreteam@netfilter.org,
+        intel-wired-lan@lists.osuosl.org, linux-input@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>,
+        tipc-discussion@lists.sourceforge.net, linux-ext4@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        selinux@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-geode@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-gpio@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
+        nouveau@lists.freedesktop.org, linux-hams@vger.kernel.org,
+        ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        x86@kernel.org, linux-nfs@vger.kernel.org,
+        GR-Linux-NIC-Dev@marvell.com, linux-mm@kvack.org,
+        netdev@vger.kernel.org, linux-decnet-user@lists.sourceforge.net,
+        linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-sctp@vger.kernel.org, linux-usb@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        patches@opensource.cirrus.com, linux-integrity@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [Intel-wired-lan] [PATCH 000/141] Fix fall-through warnings for
+ Clang
+Message-ID: <20201123130348.GA3119@embeddedor>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <33057688012c34dd60315ad765ff63f070e98c0c.1605896059.git.gustavoars@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <33057688012c34dd60315ad765ff63f070e98c0c.1605896059.git.gustavoars@kernel.org>
-X-ClientProxiedBy: LO2P265CA0054.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:60::18) To DS7PR03MB5608.namprd03.prod.outlook.com
- (2603:10b6:5:2c9::18)
+ <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011201129.B13FDB3C@keescook>
+ <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <202011220816.8B6591A@keescook>
+ <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
+ <ca071decb87cc7e905411423c05a48f9fd2f58d7.camel@perches.com>
+ <0147972a72bc13f3629de8a32dee6f1f308994b5.camel@HansenPartnership.com>
+ <d8d1e9add08cdd4158405e77762d4946037208f8.camel@perches.com>
+ <dbd2cb703ed9eefa7dde9281ea26ab0f7acc8afe.camel@HansenPartnership.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 26298a66-f6f2-4f2d-9a57-08d88f9a8996
-X-MS-TrafficTypeDiagnostic: DS7PR03MB5542:
-X-Microsoft-Antispam-PRVS: <DS7PR03MB5542198ED6A174566F6C72B98FFC0@DS7PR03MB5542.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dcI4qZkWGiVmqxcroJHhkO5UxXMu3vgvX8q6o3oT/oiYslGLgPWVUuJuLKbvqEBI14UXoXKt0mJslSvG6wlHl1NFtpcOPNbnA5sU2ZvUkm92yGvGiNr3xdOUCpfApac2QgVR2aKMku3dsPlLT/OeLboihv9HtHK12stqfdq1yJKNkUE6EQZ+ozB8oA/Jg+5XLYXm2MYrtZ68uSIb7fFKTNz9Gjs71nPKMXRy+2QLeOzexwCc1UPFbdmnBSEzEv6azd+PExaRyv9LRdiGpk9w3o9MUQtlHA9I54BxoIs3hA5Bnfko05DGSbish30ibNlzFui8brOh19pYP0JZGCMWNwtAn3n+NYxrzCro7RdCLg8ZqW1JMpo/Jo2FvaSYrU0K7YQhTntMR/sKYIsZf4oKmw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR03MB5608.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(4636009)(376002)(39860400002)(136003)(366004)(396003)(346002)(66476007)(66556008)(2906002)(1076003)(85182001)(54906003)(6486002)(9686003)(86362001)(33716001)(956004)(316002)(8676002)(83380400001)(4326008)(8936002)(66946007)(186003)(7416002)(6916009)(6666004)(966005)(16526019)(5660300002)(6496006)(26005)(478600001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: fdOccS6pzuN3DpyBkAd1oRENCi8q2xL81AvVXXkb6Xe9PqvOkYawaR6mS788hRZPOt08zzPfPL2Ze34HTMuUWqHiNntG3BgmXaXsUpXBbsC/w3q96YpuZ25wjxSHgmlcHoHSixLt/F1PQUuURJQt0jVGjtTqRmYiJ2etXg+W3pHgrUbM5E2+u3DdbwyxiaKk9+f2vTe80N6cV2n8TVVX3bT5XL4OgR69mUyHH0ly7HKJVnsHK8uOAOOojgVkiH0hBbJBOm0VjJsHUAUKCKVPUm6hnl9wrzoMpVig0V4cMr7K+Tgwldjkaz4LarFrVeXZJXaVcPLHTdxGp5PpWVuHBjA+jQmRlHQDeue9UGK5nHk3qPyIVcCPY0w9Rg5xcLLxcBbmMYuKo+8AvHnORp/kiMbhOzWW7gmz0AXRAPv+xO4r2dVRuMd/KqJd4Mb3yLr29Q1FJC+MeE/jcKKBuwzSDoIfTdD8rM1RbFmBlHQbEBHqwDQi45DRzZ7rzxPA2QenggNOvGBJXXP7GU91F2jyS7z/IURzY3aVoawTUxyMAZ22lROzqGJ/M13aTNDU2O0yCY5jkfGrVx5Bxv3ZNCySREpSQX6QUdFMAXaVvb46gW3Gazm1GVioYyrg11tIZj6HYyBGZIFel0OepC/smObiye3TsnCU1+6vy7UhmuQH7Y7N0m2fDZ7U2hwTEE7Rw8JwDRR5eeSaU6kHCLfspT+WZI0Bz7UH4EEymQ3RG8h0XhpdmdkFmTnp4YTDrzVCRrU/ZyJS6pQ/XAAAJ8gCcvE+ZSgpITJLnaj43b/afFwBJhC0d1X7gioL18ckzAj5nut/itGR1GeJ9hH6RyYWa6tRAreJGW1nkSJ/+Zw6NNqDEh5J+ELQoT6P4RZiwiMuanX/fdclF4w/DeEkC+2i+zFzPw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26298a66-f6f2-4f2d-9a57-08d88f9a8996
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR03MB5608.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2020 10:28:37.1129
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R9+ul0BdrXUu6zD/tKMdHexwz+V6N4izkJGWirzuawsbwQq0hBThA+b5fm6gWXiwwi6DI0o5OcoEoHpazSyL+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR03MB5542
-X-OriginatorOrg: citrix.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dbd2cb703ed9eefa7dde9281ea26ab0f7acc8afe.camel@HansenPartnership.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 12:32:58PM -0600, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of letting the code fall
-> through to the next case.
+On Sun, Nov 22, 2020 at 11:53:55AM -0800, James Bottomley wrote:
+> On Sun, 2020-11-22 at 11:22 -0800, Joe Perches wrote:
+> > On Sun, 2020-11-22 at 11:12 -0800, James Bottomley wrote:
+> > > On Sun, 2020-11-22 at 10:25 -0800, Joe Perches wrote:
+> > > > On Sun, 2020-11-22 at 10:21 -0800, James Bottomley wrote:
+> > > > > Please tell me our reward for all this effort isn't a single
+> > > > > missing error print.
+> > > > 
+> > > > There were quite literally dozens of logical defects found
+> > > > by the fallthrough additions.  Very few were logging only.
+> > > 
+> > > So can you give us the best examples (or indeed all of them if
+> > > someone is keeping score)?  hopefully this isn't a US election
+> > > situation ...
+> > 
+> > Gustavo?  Are you running for congress now?
+> > 
+> > https://lwn.net/Articles/794944/
 > 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/block/xen-blkfront.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-> index 48629d3433b4..34b028be78ab 100644
-> --- a/drivers/block/xen-blkfront.c
-> +++ b/drivers/block/xen-blkfront.c
-> @@ -2462,6 +2462,7 @@ static void blkback_changed(struct xenbus_device *dev,
->  			break;
->  		if (talk_to_blkback(dev, info))
->  			break;
-> +		break;
+> That's 21 reported fixes of which about 50% seem to produce no change
+> in code behaviour at all, a quarter seem to have no user visible effect
+> with the remaining quarter producing unexpected errors on obscure
+> configuration parameters, which is why no-one really noticed them
+> before.
 
-I would have added a fallthrough like it's done below in
-XenbusStateClosed.
+The really important point here is the number of bugs this has prevented
+and will prevent in the future. See an example of this, below:
 
-Also, FWIW, I think clang's fallthrough warnings are a bit too verbose.
-Falling through to a break like the case here shouldn't cause a
-warning IMO, falling through to anything != break should indeed cause
-those warnings to appear.
+https://lore.kernel.org/linux-iio/20190813135802.GB27392@kroah.com/
 
-Thanks, Roger.
+This work is still relevant, even if the total number of issues/bugs
+we find in the process is zero (which is not the case).
+
+"The sucky thing about doing hard work to deploy hardening is that the
+result is totally invisible by definition (things not happening) [..]"
+- Dmitry Vyukov
+
+Thanks
+--
+Gustavo
+
+
+
+
+
