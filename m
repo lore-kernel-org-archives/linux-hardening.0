@@ -4,78 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DB6C2D0E4
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E94C6379D
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B263E20708
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C9320781
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 22:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvoQhlt+"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="KoLFNm9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbgKWWqz (ORCPT
+        id S1731407AbgKWWrX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 17:46:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49858 "EHLO mail.kernel.org"
+        Mon, 23 Nov 2020 17:47:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387419AbgKWWqz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 17:46:55 -0500
+        id S1731007AbgKWWrW (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 23 Nov 2020 17:47:22 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3679206D8;
-        Mon, 23 Nov 2020 22:46:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A851206D8;
+        Mon, 23 Nov 2020 22:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606171614;
-        bh=/WEVdieGBFCx4qZKD2FUBdtDNT2T0D1Sm+x85x7P1ek=;
+        s=default; t=1606171641;
+        bh=Y5lt9Kfu9cKXMbpdvDEghaY1aFd4R/Dd0eWL+rbE+FQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qvoQhlt+pCN08nREhEj9uDSnMNJLM2KHWqC6HIbPbDHSSayMveWmpf3MKWmHkBbCC
-         xQKZcciv7WP6mbXcdAdzFbLc77LfTvq8Btxvwe1kW4uKtMvRLfFFyv2UmfXTi3VcPM
-         XK3oegEtQhNcFNpvl+MIeRf2bAuUBA48tWazPxh0=
-Date:   Mon, 23 Nov 2020 16:47:08 -0600
+        b=KoLFNm9bfa1SYP1O8PRDR3lgq/ZtI86PQbX/7yBT57co9xuKUuCfZ1UVGHkFQJzDr
+         GGuwxiNgaEuy12fPquXbCkB0O+2JNLGJ0jsJ/8pQ2e+gl1oSaNc2JmhTWvp6PSGMKL
+         NWKwPUnwUajDrxycax/olGUtII0+XixYeMj0yIwU=
+Date:   Mon, 23 Nov 2020 16:47:35 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-hardening@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 028/141] drm/amd/display: Fix fall-through warnings for
- Clang
-Message-ID: <20201123224708.GH21644@embeddedor>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 030/141] ext2: Fix fall-through warnings for Clang
+Message-ID: <20201123224735.GI21644@embeddedor>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <9ac81a4aab74e0b3317172e66a985fe6d1ae4e1b.1605896059.git.gustavoars@kernel.org>
- <CADnq5_Ow_b35AuCGO=LncniDDcwSeS9fSpUiJd+vZYfc29TM0g@mail.gmail.com>
+ <73d8ae2d06d639815672ee9ee4550ea4bfa08489.1605896059.git.gustavoars@kernel.org>
+ <20201123093709.GB27294@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADnq5_Ow_b35AuCGO=LncniDDcwSeS9fSpUiJd+vZYfc29TM0g@mail.gmail.com>
+In-Reply-To: <20201123093709.GB27294@quack2.suse.cz>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 05:45:07PM -0500, Alex Deucher wrote:
-> On Fri, Nov 20, 2020 at 1:28 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-> > warnings by explicitly adding multiple break statements instead of just
-> > letting the code fall through to the next case.
-> >
+On Mon, Nov 23, 2020 at 10:37:09AM +0100, Jan Kara wrote:
+> On Fri 20-11-20 12:28:25, Gustavo A. R. Silva wrote:
+> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> > by explicitly adding a break statement instead of just letting the code
+> > fall through to the next case.
+> > 
 > > Link: https://github.com/KSPP/linux/issues/115
 > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Applied.  Thanks!
+> Thanks. Applied.
 
-Thanks, Alex.
+Thanks, Jan.
 --
 Gustavo
