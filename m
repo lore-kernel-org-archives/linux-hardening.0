@@ -2,190 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD91C83013
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 15:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE46BC2D0E4
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 16:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB712078E
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 15:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96ACA2076E
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Nov 2020 16:11:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="tw2BKkTz";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="tw2BKkTz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PICnlhJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389781AbgKWP6N (ORCPT
+        id S2389633AbgKWQLC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 10:58:13 -0500
-Received: from bedivere.hansenpartnership.com ([96.44.175.130]:35000 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732564AbgKWP6L (ORCPT
+        Mon, 23 Nov 2020 11:11:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47201 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732681AbgKWQLC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 10:58:11 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 82CCB12803A5;
-        Mon, 23 Nov 2020 07:58:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=hansenpartnership.com; s=20151216; t=1606147090;
-        bh=lBjYTVUJkmNX+Ql1BcMOHCS5uLgrfuyir/PBRp4vAgY=;
-        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-        b=tw2BKkTzWzFWEQdrm6zgBKJtIh2PRfv5Mb0TfkjZKqSr5KeTmWZWgl8VEPx5No8bX
-         gdEQ1NYoCzrZ51ueWl3PIAwT19fSirwyiz4cqIKbNqhoqeMTMjHgs4jilQhkGLvH0x
-         +YA09wNIiuW9eCRS9chAzVTlxjJYgA69RXyn6sLU=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aM_gK-Y9XcvU; Mon, 23 Nov 2020 07:58:10 -0800 (PST)
-Received: from jarvis.int.hansenpartnership.com (unknown [IPv6:2601:600:8280:66d1::527])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 23 Nov 2020 11:11:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606147861;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/D/w3/Beq3jPbWwSJqZ+76GekUp50AARCEuAVbF/pa8=;
+        b=PICnlhJjV/oJvVISCHI1XwtYbA0K55/CIww1/psBp4qx5f/h3yoiQ3L2dZ2FXAlh5yKOAr
+        pEv42VT286q+P6o3RxIJetzUYuzT42TxdLYG19JZl3LIBrKQxCWe2Bd3OwneFN9wAw5uhA
+        fE0eLKSGjg2EBcfJrMZ2R0sb3GlnGi0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-LJ_CPGnSPw6aiicjtAC1Pg-1; Mon, 23 Nov 2020 11:10:58 -0500
+X-MC-Unique: LJ_CPGnSPw6aiicjtAC1Pg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1690C12802D9;
-        Mon, 23 Nov 2020 07:58:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=hansenpartnership.com; s=20151216; t=1606147090;
-        bh=lBjYTVUJkmNX+Ql1BcMOHCS5uLgrfuyir/PBRp4vAgY=;
-        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-        b=tw2BKkTzWzFWEQdrm6zgBKJtIh2PRfv5Mb0TfkjZKqSr5KeTmWZWgl8VEPx5No8bX
-         gdEQ1NYoCzrZ51ueWl3PIAwT19fSirwyiz4cqIKbNqhoqeMTMjHgs4jilQhkGLvH0x
-         +YA09wNIiuW9eCRS9chAzVTlxjJYgA69RXyn6sLU=
-Message-ID: <fc45750b6d0277c401015b7aa11e16cd15f32ab2.camel@HansenPartnership.com>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
-        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
-        cluster-devel@redhat.com, coreteam@netfilter.org,
-        devel@driverdev.osuosl.org, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
-        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
-        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input <linux-input@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
-        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
-        selinux@vger.kernel.org, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        usb-storage@lists.one-eyed-alien.net,
-        virtualization@lists.linux-foundation.org,
-        wcn36xx@lists.infradead.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>
-Date:   Mon, 23 Nov 2020 07:58:06 -0800
-In-Reply-To: <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
-References: <cover.1605896059.git.gustavoars@kernel.org>
-         <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-         <202011201129.B13FDB3C@keescook>
-         <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-         <202011220816.8B6591A@keescook>
-         <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
-         <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>
-         <1c7d7fde126bc0acf825766de64bf2f9b888f216.camel@HansenPartnership.com>
-         <CANiq72m22Jb5_+62NnwX8xds2iUdWDMAqD8PZw9cuxdHd95W0A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DEC98805BE0;
+        Mon, 23 Nov 2020 16:10:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-111.rdu2.redhat.com [10.10.112.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B4A93620DE;
+        Mon, 23 Nov 2020 16:10:54 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <5e9c1d953c6b6254a3288f1e797064666e82a79d.camel@perches.com>
+References: <5e9c1d953c6b6254a3288f1e797064666e82a79d.camel@perches.com> <cover.1605896059.git.gustavoars@kernel.org> <51150b54e0b0431a2c401cd54f2c4e7f50e94601.1605896059.git.gustavoars@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     dhowells@redhat.com, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 001/141] afs: Fix fall-through warnings for Clang
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 23 Nov 2020 16:10:53 +0000
+Message-ID: <748935.1606147853@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 2020-11-23 at 15:19 +0100, Miguel Ojeda wrote:
-> On Sun, Nov 22, 2020 at 11:36 PM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> > Well, it seems to be three years of someone's time plus the
-> > maintainer review time and series disruption of nearly a thousand
-> > patches.  Let's be conservative and assume the producer worked
-> > about 30% on the series and it takes about 5-10 minutes per patch
-> > to review, merge and for others to rework existing series.  So
-> > let's say it's cost a person year of a relatively junior engineer
-> > producing the patches and say 100h of review and application
-> > time.  The latter is likely the big ticket item because it's what
-> > we have in least supply in the kernel (even though it's 20x vs the
-> > producer time).
-> 
-> How are you arriving at such numbers? It is a total of ~200 trivial
-> lines.
+Joe Perches <joe@perches.com> wrote:
 
-Well, I used git.  It says that as of today in Linus' tree we have 889
-patches related to fall throughs and the first series went in in
-october 2017 ... ignoring a couple of outliers back to February.
+> > =C2=A0		call->unmarshall++;
+> > +
+> > +		fallthrough;
+>=20
+> My preference would be to change these to break and not fallthrough;
+>=20
+> > =C2=A0	case 5:
+> > =C2=A0		break;
+> > =C2=A0	}
 
-> > It's not about the risk of the changes it's about the cost of
-> > implementing them.  Even if you discount the producer time (which
-> > someone gets to pay for, and if I were the engineering manager, I'd
-> > be unhappy about), the review/merge/rework time is pretty
-> > significant in exchange for six minor bug fixes.  Fine, when a new
-> > compiler warning comes along it's certainly reasonable to see if we
-> > can benefit from it and the fact that the compiler people think
-> > it's worthwhile is enough evidence to assume this initially.  But
-> > at some point you have to ask whether that assumption is supported
-> > by the evidence we've accumulated over the time we've been using
-> > it.  And if the evidence doesn't support it perhaps it is time to
-> > stop the experiment.
-> 
-> Maintainers routinely review 1-line trivial patches, not to mention
-> internal API changes, etc.
+My preference would be to fall through.  The case number is the state machi=
+ne
+state, as indexed by call->unmarshall.  All the other cases in the switch f=
+all
+through.
 
-We're also complaining about the inability to recruit maintainers:
+I would also generally prefer that the fallthrough statement occur before t=
+he
+blank line, not after it, since it belongs with the previous clause, and not
+between a comment about a case statement and its associated case statement,
+i.e.:
 
-https://www.theregister.com/2020/06/30/hard_to_find_linux_maintainers_says_torvalds/
+		afs_extract_to_tmp(call);
+		call->unmarshall++;
 
-And burn out:
+		/* extract the callback array and its count in two steps */
+		fallthrough;
+	case 3:
 
-http://antirez.com/news/129
+would be better written as:
 
-The whole crux of your argument seems to be maintainers' time isn't
-important so we should accept all trivial patches ... I'm pushing back
-on that assumption in two places, firstly the valulessness of the time
-and secondly that all trivial patches are valuable.
+		afs_extract_to_tmp(call);
+		call->unmarshall++;
+		fallthrough;
 
-> If some company does not want to pay for that, that's fine, but they
-> don't get to be maintainers and claim `Supported`.
+		/* extract the callback array and its count in two steps */
+	case 3:
 
-What I'm actually trying to articulate is a way of measuring value of
-the patch vs cost ... it has nothing really to do with who foots the
-actual bill.
-
-One thesis I'm actually starting to formulate is that this continual
-devaluing of maintainers is why we have so much difficulty keeping and
-recruiting them.
-
-James
-
-
+David
 
