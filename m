@@ -2,113 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54990C6379F
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 02:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D8AC2D0E4
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 10:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2434920720
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 02:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E71D206F9
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 10:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o+OCt6pP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgKXCsm (ORCPT
+        id S1731759AbgKXKsH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Nov 2020 21:48:42 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:53350 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgKXCsl (ORCPT
+        Tue, 24 Nov 2020 05:48:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730434AbgKXKsH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Nov 2020 21:48:41 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id EF15F2AA0D;
-        Mon, 23 Nov 2020 21:48:35 -0500 (EST)
-Date:   Tue, 24 Nov 2020 13:48:34 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Joe Perches <joe@perches.com>
-cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        alsa-devel@alsa-project.org, amd-gfx@lists.freedesktop.org,
-        bridge@lists.linux-foundation.org, ceph-devel@vger.kernel.org,
-        cluster-devel@redhat.com, coreteam@netfilter.org,
-        devel@driverdev.osuosl.org, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
-        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
-        keyrings@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        linux-acpi@vger.kernel.org, linux-afs@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org, linux-geode@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input <linux-input@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        op-tee@lists.trustedfirmware.org, oss-drivers@netronome.com,
-        patches@opensource.cirrus.com, rds-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org, samba-technical@lists.samba.org,
-        selinux@vger.kernel.org, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        usb-storage@lists.one-eyed-alien.net,
-        virtualization@lists.linux-foundation.org,
-        wcn36xx@lists.infradead.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 000/141] Fix fall-through warnings for Clang
-In-Reply-To: <e72a1aaef8673553a3ee9dfa033d6e893e00abcd.camel@perches.com>
-Message-ID: <alpine.LNX.2.23.453.2011241210310.7@nippy.intranet>
-References: <cover.1605896059.git.gustavoars@kernel.org>  <20201120105344.4345c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>  <202011201129.B13FDB3C@keescook>  <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>  <202011220816.8B6591A@keescook>
-  <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>  <CANiq72nZrHWTA4_Msg6MP9snTyenC6-eGfD27CyfNSu7QoVZbw@mail.gmail.com>  <alpine.LNX.2.23.453.2011230938390.7@nippy.intranet>  <CANiq72=z+tmuey9wj3Kk7wX5s0hTHpsQdLhAqcOVNrHon6xn5Q@mail.gmail.com>
-  <alpine.LNX.2.23.453.2011241036520.7@nippy.intranet> <e72a1aaef8673553a3ee9dfa033d6e893e00abcd.camel@perches.com>
+        Tue, 24 Nov 2020 05:48:07 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F21AC0617A6
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Nov 2020 02:48:07 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id h21so2375151wmb.2
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Nov 2020 02:48:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EKUHQucYeb31HOoREAkeI7Xr3ONZ6GpyN2wdl6mhvTE=;
+        b=o+OCt6pPEtBp5sG9QBlJlxOlGwBf9AHPWZYEk4c7X6VYcrTixfHQQJ4Wu9kfNihKoD
+         6q/QauNDpLX48kzcTChcZJ9dQt/QMcRuoWv3xKg/Pkto2sbkNiAOUuA7ImAncN6Z1r/Z
+         Q0qGW2sLi8rYUnpPrXaLc8uV2UnpsRg3qhU6oushflRiEuJQX/+D4g8bpNEjxb7ViBQK
+         imQoXnExp88Bid1lhoSl5EQfYPnlkGp+nXSKCKH5roJ7eq2rwjyFZMA/8ApqCFhSJXok
+         V5I4qMlVt65Mnv89o1ATv1H6JF97Lv3/QZ82AUYYdZjVqgyvpbVVazFS4CfP/MSmw27t
+         BCww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EKUHQucYeb31HOoREAkeI7Xr3ONZ6GpyN2wdl6mhvTE=;
+        b=ka4O611jOexzwywT6DsQ/thxVw8aY9bMXMixZb6ss9QTtxptowT/DQuIcW1eHz6maT
+         uOzjP0EuP6WhIUwybQttZhiL/vv5L0GyEDjUaEPU2N0yr8Jf5bbjTPAAyLVPOFCBDdVx
+         vlGf6bbO+XnYkciIbN54QNlPfOaJGdToQloe0sm8xI29YnwGGzlPRjKdWZCkl8w82XYm
+         gxp/pzv9SLjJsYM41hDu6zsXQ1Sy4hPt6I1dYCM0QrPPGZNqNHYNU1BkcRtov4x9MThg
+         npcadjQVdoZwgOkIbkaYOjaueQHH6Rpg1pB1e95vx0z4baBNC/8oYf/rAwEyUPW3dSu/
+         M0xQ==
+X-Gm-Message-State: AOAM5311S+i4gPyxJEXLqZpUXcb8G/NH4M3nBE4q/enV1dppzLsT9JtP
+        JpBLASt2L0UhqrPwB9X0O0+8Eu2Q4w2oKNHM
+X-Google-Smtp-Source: ABdhPJxW9BitmnI8OPwhFe6AWn0n6S/KopfpYJQ+7H/0nejHyup9DFlc3ZwLIY+7GWtngQ1AqVs7lw==
+X-Received: by 2002:a05:600c:2886:: with SMTP id g6mr3790149wmd.110.1606214885516;
+        Tue, 24 Nov 2020 02:48:05 -0800 (PST)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id e6sm4810310wme.27.2020.11.24.02.48.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Nov 2020 02:48:04 -0800 (PST)
+Subject: Re: [PATCH 126/141] slimbus: messaging: Fix fall-through warnings for
+ Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <08a882fa7a3145bc33bc02392df8319e95092dcf.1605896060.git.gustavoars@kernel.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <794916c9-30fb-1202-ec26-9abf750886dc@linaro.org>
+Date:   Tue, 24 Nov 2020 10:48:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <08a882fa7a3145bc33bc02392df8319e95092dcf.1605896060.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-On Mon, 23 Nov 2020, Joe Perches wrote:
 
-> On Tue, 2020-11-24 at 11:58 +1100, Finn Thain wrote:
-> > it's not for me to prove that such patches don't affect code 
-> > generation. That's for the patch author and (unfortunately) for 
-> > reviewers.
+On 20/11/2020 18:39, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
 > 
-> Ideally, that proof would be provided by the compilation system itself 
-> and not patch authors nor reviewers nor maintainers.
-> 
-> Unfortunately gcc does not guarantee repeatability or deterministic 
-> output. To my knowledge, neither does clang.
-> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
 
-Yes, I've said the same thing myself. But having attempted it, I now think 
-this is a hard problem. YMMV.
 
-https://lore.kernel.org/linux-scsi/alpine.LNX.2.22.394.2004281017310.12@nippy.intranet/
-https://lore.kernel.org/linux-scsi/alpine.LNX.2.22.394.2005211358460.8@nippy.intranet/
+Applied thanks,
+
+srini
+
+>   drivers/slimbus/messaging.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/slimbus/messaging.c b/drivers/slimbus/messaging.c
+> index d5879142dbef..f2b5d347d227 100644
+> --- a/drivers/slimbus/messaging.c
+> +++ b/drivers/slimbus/messaging.c
+> @@ -258,6 +258,7 @@ int slim_xfer_msg(struct slim_device *sbdev, struct slim_val_inf *msg,
+>   	case SLIM_MSG_MC_REQUEST_CLEAR_INFORMATION:
+>   	case SLIM_MSG_MC_CLEAR_INFORMATION:
+>   		txn->rl += msg->num_bytes;
+> +		break;
+>   	default:
+>   		break;
+>   	}
+> 
