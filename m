@@ -5,90 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C588AC63798
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64499C2D0E4
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC2520674
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074942076E
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyrn05kV"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="1MQUUOxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387688AbgKXOaA (ORCPT
+        id S2388974AbgKXOa0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Nov 2020 09:30:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54910 "EHLO mail.kernel.org"
+        Tue, 24 Nov 2020 09:30:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388014AbgKXO37 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Nov 2020 09:29:59 -0500
+        id S2388911AbgKXOaZ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 24 Nov 2020 09:30:25 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B192076E;
-        Tue, 24 Nov 2020 14:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 836272076E;
+        Tue, 24 Nov 2020 14:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606228199;
-        bh=WVnMFGVgDwBYzrdi0QU1bU9tavRmGvM2q9lX3BwdRMQ=;
+        s=default; t=1606228225;
+        bh=uq59WG7ZPGDif8JA0kcD8nAYX1wkpEsRc/NNVO2uRBc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cyrn05kV9I3Ovr0jbD56E7qkiHgiFipxQB3vtHIO6UguzFxDsrtYBK6iy5NucPGDI
-         haAqgEbZRoGYcExkJ648Areu/FBuy0pQv6JzILwRSvy9PLfW5MA6o8+hcuRQOW0xPN
-         /k4l2rZ/zPaYiaSVt6OK2RBZCssHgRwslE89yHzk=
-Date:   Tue, 24 Nov 2020 08:30:14 -0600
+        b=1MQUUOxF1aaSXZ6/3Td8TtXcM2d0XKYPZpTSPQR2Cfaq5d1ny3sSG0ZGdVPN8J6Ka
+         cD4c3lghDP7BoAe69T4xnZGmawTzKKRlGcZenH1exqGYq3N/LHA7SO86q8faSq0vGs
+         opcWUrsgI8btZ0WBzNKTBLZdDJWhkkACaJsOEH6s=
+Date:   Tue, 24 Nov 2020 08:30:40 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jarkko Sakkinen <jarkko@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 052/141] security: keys: Fix fall-through warnings for
- Clang
-Message-ID: <20201124143014.GA16084@embeddedor>
+Subject: Re: [PATCH 053/141] selinux: Fix fall-through warnings for Clang
+Message-ID: <20201124143040.GB16084@embeddedor>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <412e11590b667712c03c1e4d4c7573fda3a4b1cb.1605896059.git.gustavoars@kernel.org>
- <20201123225402.GB19839@kernel.org>
+ <c543804fee333ba315ddf4056ceed79f94e10d19.1605896059.git.gustavoars@kernel.org>
+ <CAHC9VhTFUmRrabTytCyXPtFwb-uVLTgWmgxSkhpy5zjFkcacrQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201123225402.GB19839@kernel.org>
+In-Reply-To: <CAHC9VhTFUmRrabTytCyXPtFwb-uVLTgWmgxSkhpy5zjFkcacrQ@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 12:54:02AM +0200, Jarkko Sakkinen wrote:
-> On Fri, Nov 20, 2020 at 12:32:20PM -0600, Gustavo A. R. Silva wrote:
+On Mon, Nov 23, 2020 at 06:31:52PM -0500, Paul Moore wrote:
+> On Fri, Nov 20, 2020 at 1:32 PM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+> >
 > > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
 > > by explicitly adding a break statement instead of letting the code fall
 > > through to the next case.
-> > 
+> >
 > > Link: https://github.com/KSPP/linux/issues/115
 > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > > ---
-> >  security/keys/process_keys.c | 1 +
+> >  security/selinux/hooks.c | 1 +
 > >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
-> > index 1fe8b934f656..e3d79a7b6db6 100644
-> > --- a/security/keys/process_keys.c
-> > +++ b/security/keys/process_keys.c
-> > @@ -783,6 +783,7 @@ key_ref_t lookup_user_key(key_serial_t id, unsigned long lflags,
-> >  				if (need_perm != KEY_AUTHTOKEN_OVERRIDE &&
-> >  				    need_perm != KEY_DEFER_PERM_CHECK)
-> >  					goto invalid_key;
-> > +				break;
-> >  			case 0:
-> >  				break;
-> >  			}
-> > -- 
-> > 2.27.0
-> > 
-> > 
 > 
-> 
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> Merged into selinux/next, thanks.
 
-Thank you, Jarkko.
+Thanks, Paul.
 --
 Gustavo
