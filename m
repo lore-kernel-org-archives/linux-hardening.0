@@ -2,92 +2,134 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2EAC2D0E4
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 13:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7226C64E75
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5ED2076E
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 13:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E1020B1F
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:26:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YWQJtGPn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvzctcsD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387957AbgKXNVi (ORCPT
+        id S2388959AbgKXO0K (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Nov 2020 08:21:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59039 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387814AbgKXNVh (ORCPT
+        Tue, 24 Nov 2020 09:26:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388847AbgKXO0J (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Nov 2020 08:21:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606224095;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MY+7jcCufiMBlnAlm49EA25ZRhXVO7Dk5xiZ2I4LXFQ=;
-        b=YWQJtGPnlfh2nw8Genp0Jqk99fwiyVw0ZNkXnk04kJRQ5KFuE7GEbdNFPUSatvjXc5w/Fe
-        bVCnKYLzh607/Uipeet7NkFjavnlCKLv951doOGNN31YyFeF9EO6jQKmvzfMiwb++XnkEq
-        oIZ6irfdizv4DJrfUinrJbsqjkY8OGs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-107-wqreApeXPZqstMgo0BABzg-1; Tue, 24 Nov 2020 08:21:33 -0500
-X-MC-Unique: wqreApeXPZqstMgo0BABzg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2A831087D60;
-        Tue, 24 Nov 2020 13:21:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-111.rdu2.redhat.com [10.10.112.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76EE75D9CC;
-        Tue, 24 Nov 2020 13:21:31 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <276a532e28d290abaaf9cd5969cbacecd51cabc9.camel@perches.com>
-References: <276a532e28d290abaaf9cd5969cbacecd51cabc9.camel@perches.com> <5e9c1d953c6b6254a3288f1e797064666e82a79d.camel@perches.com> <cover.1605896059.git.gustavoars@kernel.org> <51150b54e0b0431a2c401cd54f2c4e7f50e94601.1605896059.git.gustavoars@kernel.org> <748935.1606147853@warthog.procyon.org.uk>
-To:     Joe Perches <joe@perches.com>
-Cc:     dhowells@redhat.com, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 001/141] afs: Fix fall-through warnings for Clang
+        Tue, 24 Nov 2020 09:26:09 -0500
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C817C0613D6
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Nov 2020 06:26:09 -0800 (PST)
+Received: by mail-vs1-xe41.google.com with SMTP id v6so11176235vsd.1
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Nov 2020 06:26:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m1U2wkaUC0f5IZsZZi8Kkk8TyQbT4OWSXn4hZYgJ55Y=;
+        b=CvzctcsDg3pnJEsZvrPD7+Iu/O5YYdvDGHnAX2dfJzvk2VrXj/NzRCEfAxuKUe5bK+
+         rlF4hxdmugezTaknWvwI3TdTHWBElgecI2bPuuCClqNXsKFV9DMyh1bbdGXzzDOV5TfU
+         Wqjzn5bWA4jwrgpqIN4EKbUkbf5Ym3aZsgYYRO1nm+FF1FfHbooafKdlxJhylF1FV059
+         wiX0TAp+PCzPepo99HE70utr6VRPxUXrqVMIr7qRDeEEWt3H7k33cmjtODyI7a/zmBNn
+         Mdzzd0WwcpfH086zf3LI56BeVigPgQjZK2C6mG2HNP9qupEG9/znwm0g3v7I7J6T5GHd
+         ygZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m1U2wkaUC0f5IZsZZi8Kkk8TyQbT4OWSXn4hZYgJ55Y=;
+        b=nelXYuGfv+FyyQRNgTvGl0rNl0p7a5jLMBr3339xNUVvSNc82XdW/zLY6Px6Zm1Aq7
+         ZjbYk2th58KXUzUTHox2MeM4pGj3joP9ly6ZZoRlIVBzHxlZmROt8q78N1mTTTN8MqCC
+         pp8/jpTB7n2tcJKUQzeFNbfK0K50KTssNwwnxjvKZpzOR7fwqBSisly9Fr/04H01Xaku
+         SZ8HSfRg1uFnYQUP7bQHDG30CmhCEa29icxKqZuWyiBFbeTNU+s3WPZkjw9+5XZMw4Xw
+         Msc0SpbdQYLZfLO83cu2KlgOKpWD4FkC+8SVZp6kTdUj9hvm/Umjnf/XGmAvGTxMr7Ot
+         CFaQ==
+X-Gm-Message-State: AOAM532yL/MGbNpFi5VV24KN8Yow7GZ9GHHvNzb9cW8an87KJJy7bdbp
+        y8y4RLpnGBW87dxD45xvdwDMIXZ59BFxiaMt7OzCwQ==
+X-Google-Smtp-Source: ABdhPJw/ERvoKk25DcbRx82AXlOgMkvACdtGdBV2dih2YSXMDeqqhB/n6E4pDzIryXosLG2RNaPoJdh2Myh7KD+v76c=
+X-Received: by 2002:a67:8c44:: with SMTP id o65mr3388053vsd.55.1606227968648;
+ Tue, 24 Nov 2020 06:26:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1277741.1606224090.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 24 Nov 2020 13:21:30 +0000
-Message-ID: <1277742.1606224090@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <cover.1605896059.git.gustavoars@kernel.org> <387cab3a466038aa5d1fc34b8b6a7c4f693826ea.1605896060.git.gustavoars@kernel.org>
+In-Reply-To: <387cab3a466038aa5d1fc34b8b6a7c4f693826ea.1605896060.git.gustavoars@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 24 Nov 2020 15:25:32 +0100
+Message-ID: <CAPDyKFpkQBzryACA3et_RGk2hcMUK=j_fiycykdjCNfur6h45g@mail.gmail.com>
+Subject: Re: [PATCH 098/141] mmc: sdhci-of-arasan: Fix fall-through warnings
+ for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Joe Perches <joe@perches.com> wrote:
+On Fri, 20 Nov 2020 at 19:37, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
+>
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+> warnings by explicitly adding multiple break statements instead of
+> letting the code fall through to the next case.
+>
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-> > My preference would be to fall through.  The case number is the state =
-machine
-> > state, as indexed by call->unmarshall.
-> =
+Applied for next, thanks!
 
-> Then ideally the state machine states should be enums and not numbers
-> and the compiler should use a default block for unhandled states right?
-> =
+Kind regards
+Uffe
 
-> Is code like call->marshall++ a common style for kernel state machines?
-> Perhaps not.
 
-How the value is interpreted is unique to each delivery function, of which
-there are a number, since it counts out the separate parts of the xdr enco=
-ding
-for that particular RPC request or reply block.
-
-Maybe "state machine" isn't the right term.
-
-David
-
+> ---
+>  drivers/mmc/host/sdhci-of-arasan.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 829ccef87426..1f7e42b6ced5 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -627,6 +627,7 @@ static int sdhci_zynqmp_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
+>         case MMC_TIMING_MMC_HS200:
+>                 /* For 200MHz clock, 8 Taps are available */
+>                 tap_max = 8;
+> +               break;
+>         default:
+>                 break;
+>         }
+> @@ -695,6 +696,7 @@ static int sdhci_zynqmp_sampleclk_set_phase(struct clk_hw *hw, int degrees)
+>         case MMC_TIMING_MMC_HS200:
+>                 /* For 200MHz clock, 30 Taps are available */
+>                 tap_max = 30;
+> +               break;
+>         default:
+>                 break;
+>         }
+> @@ -760,6 +762,7 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
+>         case MMC_TIMING_MMC_HS200:
+>                 /* For 200MHz clock, 8 Taps are available */
+>                 tap_max = 8;
+> +               break;
+>         default:
+>                 break;
+>         }
+> @@ -831,6 +834,7 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
+>         case MMC_TIMING_MMC_HS200:
+>                 /* For 200MHz clock, 30 Taps are available */
+>                 tap_max = 30;
+> +               break;
+>         default:
+>                 break;
+>         }
+> --
+> 2.27.0
+>
