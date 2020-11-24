@@ -2,103 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197DBC63798
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B2FC63798
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B048220738
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0743F20738
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Nov 2020 14:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWfBIFPm"
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLHFDVD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389010AbgKXOkJ (ORCPT
+        id S2389123AbgKXOnx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Nov 2020 09:40:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
+        Tue, 24 Nov 2020 09:43:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388014AbgKXOkJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Nov 2020 09:40:09 -0500
+        id S2388162AbgKXOnx (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 24 Nov 2020 09:43:53 -0500
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 990E3206E5;
-        Tue, 24 Nov 2020 14:40:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9105206F9;
+        Tue, 24 Nov 2020 14:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606228808;
-        bh=8cAsMW0jxkAcxLnMU27PtmCKLh9UoLHSExBwGavk3CM=;
+        s=default; t=1606229032;
+        bh=8+Oaa7bvZ05Y2HZFAnDkMV/oiZMjQ6zVl9gG9O4TVQo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FWfBIFPmZ0R2i7RCHQHaBZ8/6WRxggDrlntE4uMwJ+oU7Op241xy8MEa/A/MPv6JJ
-         3oZlg9Nm76YrmqkWSykwqf0amdIH1fk84bmRLMbQXJ57QGILd9Se5EWNJ0fn0rGgt/
-         XRVrh9vqQiyyZzerPTYZhYEB7h8Yis7PLIqIe7IE=
-Date:   Tue, 24 Nov 2020 08:40:23 -0600
+        b=DLHFDVD4JFe0wJJJZiyfsxPA1CLFdIASTlSh88sa2UbiYHnT/8FEfnQO8E6pPdS+h
+         jQJJFEzMeVLo6tIugMSFmH5vTL0uN8VVdS0ijgQNZWAEUuNszU2VtfHWeIvJP8BCo8
+         sMuhFc27D3S1mYjpR3XaPky0bFlWab50KWn6Esx0=
+Date:   Tue, 24 Nov 2020 08:44:07 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jarkko Sakkinen <jarkko@kernel.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Andres Salomon <dilinger@queued.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-geode@lists.infradead.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 131/141] tpm: Fix fall-through warnings for Clang
-Message-ID: <20201124144023.GH16084@embeddedor>
+Subject: Re: [PATCH 134/141] video: fbdev: lxfb_ops: Fix fall-through
+ warnings for Clang
+Message-ID: <20201124144407.GI16084@embeddedor>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <1804f48dac434541dc60ada5eefcb86f74905671.1605896060.git.gustavoars@kernel.org>
- <20201123225226.GA17124@kernel.org>
- <20201123225322.GA19839@kernel.org>
+ <9c1dcb12aae7c7ff0907ffb99ffd227656cbe444.1605896060.git.gustavoars@kernel.org>
+ <20201122220540.GC566387@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201123225322.GA19839@kernel.org>
+In-Reply-To: <20201122220540.GC566387@ravnborg.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 12:53:22AM +0200, Jarkko Sakkinen wrote:
-> On Tue, Nov 24, 2020 at 12:52:31AM +0200, Jarkko Sakkinen wrote:
-> > On Fri, Nov 20, 2020 at 12:40:14PM -0600, Gustavo A. R. Silva wrote:
-> > > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> > > by explicitly adding a break statement instead of letting the code fall
-> > > through to the next case.
-> > > 
-> > > Link: https://github.com/KSPP/linux/issues/115
-> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > ---
-> > >  drivers/char/tpm/eventlog/tpm1.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/drivers/char/tpm/eventlog/tpm1.c b/drivers/char/tpm/eventlog/tpm1.c
-> > > index 2c96977ad080..8aa9057601d6 100644
-> > > --- a/drivers/char/tpm/eventlog/tpm1.c
-> > > +++ b/drivers/char/tpm/eventlog/tpm1.c
-> > > @@ -210,6 +210,7 @@ static int get_event_name(char *dest, struct tcpa_event *event,
-> > >  		default:
-> > >  			break;
-> > >  		}
-> > > +		break;
-> > >  	default:
-> > >  		break;
-> > >  	}
-> > > -- 
-> > > 2.27.0
-> > > 
-> > > 
-> > 
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@iki.fi>
-> > 
-> > Who is picking these patches?
+Hi Sam,
 
-I can take it in my tree for 5.11 if people are OK with that. :)
-
+On Sun, Nov 22, 2020 at 11:05:40PM +0100, Sam Ravnborg wrote:
+> Hi Gustavo,
+> On Fri, Nov 20, 2020 at 12:40:32PM -0600, Gustavo A. R. Silva wrote:
+> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> > by explicitly adding a break statement instead of letting the code fall
+> > through to the next case.
 > > 
-> > /Jarkko
+> > Link: https://github.com/KSPP/linux/issues/115
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> I mean
+> Thanks, applied this and the following patch to drm-misc-next.
+> Looks forward to have this warning enabled.
 > 
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> One can only wonder how many hours will be saved by lettting the
+> compiler tell you a break is missing. This is the kind of bugs you can
+> stare you blind at.
 
-Thanks, Jarkko.
+Absolutely. We'll never know how many bugs this will catch in the
+future decades of kernel development, before the code is even
+committed/submitted. :)
+
+Thanks!
 --
 Gustavo
-
