@@ -2,169 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D7AC2D0E4
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Nov 2020 01:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A138C63777
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Nov 2020 04:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD0120BED
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Nov 2020 01:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C001A20B80
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Nov 2020 04:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLHqMkuV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u+gTAkG7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgKYBGC (ORCPT
+        id S1727785AbgKYEnQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Nov 2020 20:06:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57234 "EHLO
+        Tue, 24 Nov 2020 23:43:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgKYBGB (ORCPT
+        with ESMTP id S1725817AbgKYEnQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Nov 2020 20:06:01 -0500
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE61C0613D4;
-        Tue, 24 Nov 2020 17:06:01 -0800 (PST)
-Received: by mail-qk1-x744.google.com with SMTP id y18so1437133qki.11;
-        Tue, 24 Nov 2020 17:06:01 -0800 (PST)
+        Tue, 24 Nov 2020 23:43:16 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E737BC0613D4;
+        Tue, 24 Nov 2020 20:43:03 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id l17so1288723pgk.1;
+        Tue, 24 Nov 2020 20:43:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=44pFzPZOXy9WMyxuVZ4PJwmHwfPvC91GWhNSdpkVBXk=;
-        b=PLHqMkuVQ6uE1aGa3jPkk7oL0rd2+0aQGjbXwXCM1BqpOEf5R6gUmrb1tTrj75nDjD
-         aG6VHTDP2JdODJ/e29C1vfEMjWhTPlycM3mNfL2JW5BhFtstP0di/Kwb3XYGnsRoKRp5
-         7FVJzAE2cPEDrpLIYX3jwoIfPno8H9ArdOwpkc9HelZA+M7Eq52S4RmPBHauFrK9tfW3
-         8wrBLWN/Mq7Fl9GTodmgwwudDuqrVUSiSILvkeQCl7qFs3/IjbI7/AG3m5iLRdEEw+2H
-         RzsA5+EdKfz0DIt5iJKomdRqiV67cH8ZcnWPF2PnARf/ANxCrT7QZJCkY0VU2DrQ9d/L
-         oW2A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WgwvIE+SYJNhqADKQZurakSjkdWc52Z6zNoc9HGWK/E=;
+        b=u+gTAkG7TRnXQQyxFbV4O/o++vcK3Je5QsfaGcBDaaDf1H+hl1GwQhy8MMHAb3SPzq
+         H06w+2QpAjMOQR+6E+yK189WGcRtUQj7fUDFSm+SIqqENspIReOTxNAy0mflASfMfsK1
+         IH0Lqjo3GsJweS/gfEMGJn177FF6XlIhrI73BLExxDkvQjcs1ebYtklrKk9ueB5GSBZZ
+         soBOKjVvCp+iM32y0xjIM8OfwHLpwuEwxnJRfTBxs4h/S2KdLfM5NxavMldYPzHt/z/5
+         2NRtuONGmq3A1SgSE+F4Q8en3KPvpH7otic+cKDltC/gylbtEMTO4uFU//G+sedbHSPw
+         uvqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=44pFzPZOXy9WMyxuVZ4PJwmHwfPvC91GWhNSdpkVBXk=;
-        b=eY+T6ISwV8PSYKgRZXhUfKPBBviK5+s8MUb2iDceYwNfPso3hpWeHStPTfy65/XnQT
-         6r2077Z7M4rT4rY5jaD6Ft33EPbvMufy4bhfEZZ6cYUFHqcRqZ9GtEfSnPdzgsU5NGGE
-         xHYjDbyUJC11idHY+9OQvsOEi4o0PuA1hOvRgyAlPWGK0umpxwJ60pbq8DDF1pZtKU6U
-         8DDpRqkWpSNYq1lVxBhh2NTQhubRC1ttrehXPJGZeCb2WVnXNvglLFhlaCGV30NVNjRg
-         44OZDZjoIED9OVwR+XQ5Cc1tINFl0Jm0hV4WOPPEV9V64LOwp6RWBxQsiod1+XvV8+2R
-         28Uw==
-X-Gm-Message-State: AOAM530NiI4NlCm+/kfBcVWN5zL/C4dtTZ2doHrcD5Qy1qedmf1KKHg3
-        I/epaiA1O+GyfzX7BOhrFi58YQH6HaGD5tdCYU8=
-X-Google-Smtp-Source: ABdhPJxG2tW9FM1fAqThCcvqKAPI/OeE1R4V2//A8ePZuSketjr0yKUxoxj6t2hcKlYt9sKRSewQcSyhG/w+5cGdzqU=
-X-Received: by 2002:a25:aac5:: with SMTP id t63mr1046305ybi.22.1606266360499;
- Tue, 24 Nov 2020 17:06:00 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WgwvIE+SYJNhqADKQZurakSjkdWc52Z6zNoc9HGWK/E=;
+        b=cBUBiVJYw/z5y8A/9Q78DP6n5uRb1wq5UbcZ+Yu7zew/SDlKuzGcl4Cox9Spp72cri
+         JMGL3tqvKqYq+wveGHrKS7K8Rffglxoy6ywYiyjzFYi5AWviJ1RXYQZI+QEGS7tQWSgm
+         93eIWWe46zwq8DgMXOajIBmRUWAA8L7e/xTey7HzS6zQlQUGuKKVjYMpOLls+7x0J+G+
+         +beXspUjvpZW9YwQic8fZQkCo2oHu3Nv6USgZlbSC29p8kqsVBtyldjsTiCwA4a3mVL7
+         eoH3MFZE3vBR8GrtKG7Buif+NfaH9K6GCbM9rf7Br2TT3TkAK4sQ2vURcqKnUl9lNP0Y
+         lxIA==
+X-Gm-Message-State: AOAM532IqBUdkndrp4iQ3ptgJdZDW5GxeOzF8GXvyfaIRJT0n85EFd1J
+        Y9XfVotB3fTgyTb6M8170GM=
+X-Google-Smtp-Source: ABdhPJwpT35k8tzGkp7unYNbt9QDIr3R8n8s1F35Y7VWvmB6cP19Xflh8P7ICspTdg9F8JP2GuZ2uw==
+X-Received: by 2002:a62:864a:0:b029:197:ad58:4184 with SMTP id x71-20020a62864a0000b0290197ad584184mr932183pfd.55.1606279383324;
+        Tue, 24 Nov 2020 20:43:03 -0800 (PST)
+Received: from f3 (ag097173.dynamic.ppp.asahi-net.or.jp. [157.107.97.173])
+        by smtp.gmail.com with ESMTPSA id j10sm830146pji.29.2020.11.24.20.43.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Nov 2020 20:43:02 -0800 (PST)
+Date:   Wed, 25 Nov 2020 13:42:57 +0900
+From:   Benjamin Poirier <benjamin.poirier@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Manish Chopra <manishc@marvell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 127/141] staging: qlge: Fix fall-through warnings for
+ Clang
+Message-ID: <20201125044257.GA142382@f3>
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <673bd9f27bcc2df8c9d12be94f54001d8066d4ab.1605896060.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-References: <202011201129.B13FDB3C@keescook> <20201120115142.292999b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <202011220816.8B6591A@keescook> <9b57fd4914b46f38d54087d75e072d6e947cb56d.camel@HansenPartnership.com>
- <ca071decb87cc7e905411423c05a48f9fd2f58d7.camel@perches.com>
- <0147972a72bc13f3629de8a32dee6f1f308994b5.camel@HansenPartnership.com>
- <d8d1e9add08cdd4158405e77762d4946037208f8.camel@perches.com>
- <dbd2cb703ed9eefa7dde9281ea26ab0f7acc8afe.camel@HansenPartnership.com>
- <20201123130348.GA3119@embeddedor> <8f5611bb015e044fa1c0a48147293923c2d904e4.camel@HansenPartnership.com>
- <202011241327.BB28F12F6@keescook> <alpine.LNX.2.23.453.2011250859290.15@nippy.intranet>
- <CANiq72nUt57u5DG9rH=DB0DzQH7U6-QbG-2Ou+PyCY=p=_Ggag@mail.gmail.com> <alpine.LNX.2.23.453.2011251022550.14@nippy.intranet>
-In-Reply-To: <alpine.LNX.2.23.453.2011251022550.14@nippy.intranet>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 25 Nov 2020 02:05:49 +0100
-Message-ID: <CANiq72m2kGxSy2E9jgYE4_xRV6h9rFqiJP25KXs_5ObYnH_nmA@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH 000/141] Fix fall-through warnings for Clang
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Jakub Kicinski <kuba@kernel.org>, alsa-devel@alsa-project.org,
-        linux-atm-general@lists.sourceforge.net,
-        reiserfs-devel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-ide@vger.kernel.org, dm-devel@redhat.com,
-        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
-        GR-everest-linux-l2@marvell.com, wcn36xx@lists.infradead.org,
-        samba-technical@lists.samba.org, linux-i3c@lists.infradead.org,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        usb-storage@lists.one-eyed-alien.net, drbd-dev@lists.linbit.com,
-        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
-        rds-devel@oss.oracle.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-scsi@vger.kernel.org, linux-rdma@vger.kernel.org,
-        oss-drivers@netronome.com, bridge@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com, cluster-devel@redhat.com,
-        linux-acpi@vger.kernel.org, coreteam@netfilter.org,
-        intel-wired-lan@lists.osuosl.org,
-        linux-input <linux-input@vger.kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        tipc-discussion@lists.sourceforge.net,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, selinux@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-geode@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-gpio@vger.kernel.org,
-        op-tee@lists.trustedfirmware.org,
-        linux-mediatek@lists.infradead.org, xen-devel@lists.xenproject.org,
-        nouveau@lists.freedesktop.org, linux-hams@vger.kernel.org,
-        ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-nfs@vger.kernel.org, GR-Linux-NIC-Dev@marvell.com,
-        Linux-MM <linux-mm@kvack.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net, linux-mmc@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-usb@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        patches@opensource.cirrus.com, linux-integrity@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <673bd9f27bcc2df8c9d12be94f54001d8066d4ab.1605896060.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 25, 2020 at 12:53 AM Finn Thain <fthain@telegraphics.com.au> wrote:
->
-> I'm saying that supporting the official language spec makes more sense
-> than attempting to support a multitude of divergent interpretations of the
-> spec (i.e. gcc, clang, coverity etc.)
+On 2020-11-20 12:39 -0600, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
+> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/staging/qlge/qlge_main.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+> index 27da386f9d87..c41b1373dcf8 100644
+> --- a/drivers/staging/qlge/qlge_main.c
+> +++ b/drivers/staging/qlge/qlge_main.c
+> @@ -1385,6 +1385,7 @@ static void ql_categorize_rx_err(struct ql_adapter *qdev, u8 rx_err,
+>  		break;
+>  	case IB_MAC_IOCB_RSP_ERR_CRC:
+>  		stats->rx_crc_err++;
+> +		break;
+>  	default:
+>  		break;
+>  	}
 
-Making the kernel strictly conforming is a ship that sailed long ago,
-for several reasons. Anyway, supporting several compilers and other
-tools, regardless of extensions, is valuable.
-
-> I'm also saying that the reason why we use -std=gnu89 is that existing
-> code was written in that language, not in ad hoc languages comprised of
-> collections of extensions that change with every release.
-
-No, we aren't particularly tied to `gnu89` or anything like that. We
-could actually go for `gnu11` already, since the minimum GCC and Clang
-support it. Even if a bit of code needs fixing, that shouldn't be a
-problem if someone puts the work.
-
-In other words, the kernel code is not frozen, nor are the features it
-uses from compilers. They do, in fact, change from time to time.
-
-> Thank you for checking. I found a free version that's only 6 weeks old:
-
-You're welcome! There are quite a few new attributes coming, mostly
-following C++ ones.
-
-> It will be interesting to see whether 6.7.11.5 changes once the various
-> implementations reach agreement.
-
-Not sure what you mean. The standard does not evolve through
-implementations' agreement (although standardizing existing practice
-is one of the best arguments to back a change).
-
-Cheers,
-Miguel
+In this instance, it think it would be more appropriate to remove the
+"default" case.
