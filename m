@@ -2,67 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F13FC71156
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Nov 2020 16:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0454DC63777
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Nov 2020 17:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D379220825
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Nov 2020 16:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9188D2073C
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Nov 2020 17:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Zye/yjDq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rouCmimZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgK3Qvz (ORCPT
+        id S1728900AbgK3RPZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 30 Nov 2020 11:51:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41552 "EHLO
+        Mon, 30 Nov 2020 12:15:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgK3Qvy (ORCPT
+        with ESMTP id S1725955AbgK3RPY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 30 Nov 2020 11:51:54 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB68C0613D4
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Nov 2020 08:51:14 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id l5so17052631edq.11
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Nov 2020 08:51:14 -0800 (PST)
+        Mon, 30 Nov 2020 12:15:24 -0500
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF368C0613D2;
+        Mon, 30 Nov 2020 09:14:44 -0800 (PST)
+Received: by mail-pg1-x543.google.com with SMTP id t37so10455905pga.7;
+        Mon, 30 Nov 2020 09:14:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VyKkRZI14CL09cIKqCrg3tRF0u0hWmZ7H+6Vrc8e5Uo=;
-        b=Zye/yjDqWPYGyg/QE0koGvl0I2eHLXcxFBm4sXkIAKcAllxFfCM8VhOKsbeI3vqS5q
-         WJynbjNDVCg5tCp8TZzl46m0pdFE+emZQsOSzDR3n1Z9O0Z4KzEyprZ2N56f/VKa6qr5
-         FxAkySIInHUZpy3Si5S8ztkqnlIwnnl+7xiwCRvLeHgnaLPxJaYJ4vcca1DoiMXyqK/e
-         qhM+eiUXY5aMq6kr4DSF2ghhgxdJzkPPQLxsiONl3BEctySuXBtUjKggjYyyOimhxKRn
-         Li7SFb8adwSPzQ9upKTgl2WnnSLw93Bq7Z3az1xpjsh+zZ0Zb2d3xY18mLqPe+ZUtDFR
-         SMyw==
+        bh=AcjX8xJ/mzO5y/RwIA0/U8QFX9nWoqdtSQYRTJvpO4g=;
+        b=rouCmimZdLe0JMJoBrQrsENsu+VlOgnXXgexijD6wuH7yGEOYbLsGHB4C/h7atFcE+
+         Qc9JXfzYYRZwf83GXPHUA5Ij++71yGgPzIpnOS7I24m2pBLHNpvbSAd5qxXHjQmevsvE
+         nWziM2H/8E2xiIUcOI3K4w0rnlayMU1la/waO7LfuKa8tVxlOrh+Wmxlo9HxEuEJ2smV
+         mTtsmlRwszid1DmsRypz1NrxTYcFqyZ+q9qbUBnTdU77NpCBlYw8EDf7ZodLEDe1iVGt
+         dRkN95LP0Xkq3dNOSN77zvwLajQqWekolNvnH8QbDGzMS5VqouuniwYHe5sbDaHzg8TV
+         m1OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VyKkRZI14CL09cIKqCrg3tRF0u0hWmZ7H+6Vrc8e5Uo=;
-        b=DJLlHOcqvMWmVRRVqX/2V2uADs4+93wYEaLJ5vzDQ7uR52OvYHC+9dHH0JBnfADDJN
-         jfb5R03rhIiMLycSxVy0AiADp+XVwTOaby5O060LzeJehswiL3A2L6VQt0S538HL+KP7
-         Ojr8kUK6j1Nzah4Y8/DX/swK/gdHg4JILVi/Iy9E8Y8W47p2eFPfZwAB17dB88suXPfx
-         0tKEimnjkseJ2NNx6fr1K3K+FS2pOtcz2ziJqO84sbvozsYFgEV7UF8DKUEQFakcPQAO
-         AK+MR5m7eiWzMwbjRD4n8587geVOYep0s+T/w1U3QjCmHGhJqijnB/rrFW3PKkTdcaqi
-         6ypg==
-X-Gm-Message-State: AOAM531X5Bfrkw5/MhaTpcUeBD6X9IC/BX0WRpGWpmpvDS3lXB77mKMT
-        3/w42QWpYes4GlxWS//nEtTfYo3CcYOk+TZNo8TyeQ==
-X-Google-Smtp-Source: ABdhPJyOKnMrgBQxB4k8Qm92X/QZ93uux4mg7bXxBB+nV6g8s1tY4J8qFCSFmU/yEs/ngBHyxDuQrTMnx9skThFF/XI=
-X-Received: by 2002:a05:6402:16c8:: with SMTP id r8mr15528179edx.59.1606755073013;
- Mon, 30 Nov 2020 08:51:13 -0800 (PST)
+        bh=AcjX8xJ/mzO5y/RwIA0/U8QFX9nWoqdtSQYRTJvpO4g=;
+        b=eZy0Lk/qvPCqAqajb7X7ApuakY9IiOp67mNYlI43bJ9qe0QxZMjGFyZUEPL3MZp1Q5
+         +VZ6EUOkYIfwQMYwug50wtqG5DX50Uh+7Za2vX/1Q4Zf+4imrsT2pkakeOjVKJet1AWM
+         oiqk5tVg6KFrj7F9aT4PvBJacc+EkM6g53ALjeHHX9I0aG+5DiuwC5N3m5Pj90SP+u55
+         etkfc4KBg8PGBR43pDLRReLfLP0SMs0Gm3mzcaP7pzf0cCcWSwOT3UaEmJKORJaudIu6
+         zIhJN55nfhCenVwduw0W8ituQklbN1YQSbvpGQAllkjzayS/850FEteJ2fe/8elhoavY
+         4GUg==
+X-Gm-Message-State: AOAM5310wBivgJzsSCrwMMJxca1OYkJxb9efQIQy+nG9qMFe708SM/Nd
+        xPsUBPAhpOY9iNA/XwRjvxiYERT/wvR/rmI+HzU=
+X-Google-Smtp-Source: ABdhPJz60aDGNsmDuMTGO3Hot+tVcwa2ykVMGMRLJRhJoMk597SLELNvn9r5gFsgcCFLBodR6+8WfF9yFB3o3qMFB38=
+X-Received: by 2002:a62:7e4f:0:b029:18c:9322:739b with SMTP id
+ z76-20020a627e4f0000b029018c9322739bmr19543390pfc.7.1606756484369; Mon, 30
+ Nov 2020 09:14:44 -0800 (PST)
 MIME-Version: 1.0
 References: <20201119170739.GA22665@embeddedor> <CAHp75Ve2G25FBzMKAaTw-9mFAvwU2uBG+TZ0UdLW+c8zra=Fhg@mail.gmail.com>
-In-Reply-To: <CAHp75Ve2G25FBzMKAaTw-9mFAvwU2uBG+TZ0UdLW+c8zra=Fhg@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 30 Nov 2020 17:51:02 +0100
-Message-ID: <CAMpxmJWq0_ZXsPsWhgWC_93egDm9y2A5P3GiCQ4YTcdGrGTSZQ@mail.gmail.com>
+ <CAMpxmJWq0_ZXsPsWhgWC_93egDm9y2A5P3GiCQ4YTcdGrGTSZQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJWq0_ZXsPsWhgWC_93egDm9y2A5P3GiCQ4YTcdGrGTSZQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 30 Nov 2020 19:15:33 +0200
+Message-ID: <CAHp75Vec4zaYixJMkMf81+uJFcciGdOhECvTZJrPeQL=MZx39A@mail.gmail.com>
 Subject: Re: [PATCH][next] gpiolib: acpi: Fix fall-through warnings for Clang
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -76,45 +79,45 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 7:46 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Mon, Nov 30, 2020 at 6:51 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
 >
-> On Thu, Nov 19, 2020 at 7:08 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
+> On Thu, Nov 19, 2020 at 7:46 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
 > >
-> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> > by explicitly adding a break statement instead of letting the code fall
-> > through to the next case.
->
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
-> > Link: https://github.com/KSPP/linux/issues/115
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/gpio/gpiolib-acpi.c | 1 +
-> >  1 file changed, 1 insertion(+)
+> > On Thu, Nov 19, 2020 at 7:08 PM Gustavo A. R. Silva
+> > <gustavoars@kernel.org> wrote:
+> > >
+> > > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> > > by explicitly adding a break statement instead of letting the code fall
+> > > through to the next case.
 > >
-> > diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> > index 6cc5f91bfe2e..e37a57d0a2f0 100644
-> > --- a/drivers/gpio/gpiolib-acpi.c
-> > +++ b/drivers/gpio/gpiolib-acpi.c
-> > @@ -233,6 +233,7 @@ acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio, int polarity)
-> >                 default:
-> >                         break;
-> >                 }
-> > +               break;
-> >         default:
-> >                 break;
-> >         }
-> > --
-> > 2.27.0
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > >
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+> > > Link: https://github.com/KSPP/linux/issues/115
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > ---
+> > >  drivers/gpio/gpiolib-acpi.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> > > index 6cc5f91bfe2e..e37a57d0a2f0 100644
+> > > --- a/drivers/gpio/gpiolib-acpi.c
+> > > +++ b/drivers/gpio/gpiolib-acpi.c
+> > > @@ -233,6 +233,7 @@ acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio, int polarity)
+> > >                 default:
+> > >                         break;
+> > >                 }
+> > > +               break;
+> > >         default:
+> > >                 break;
+> > >         }
 
-Are you taking it through your tree?
+> Are you taking it through your tree?
 
-Bartosz
+I don't  have anything else, so please proceed directly. That's why I
+gave the tag.
+
+-- 
+With Best Regards,
+Andy Shevchenko
