@@ -2,106 +2,211 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EAFC64E7B
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Dec 2020 14:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DD6C64E7B
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Dec 2020 21:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 940EB204EA
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Dec 2020 14:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2192086A
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Dec 2020 21:47:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="M6aCuNhU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fkt8Z4qz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389802AbgLAOvO (ORCPT
+        id S2387480AbgLAVqv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Dec 2020 09:51:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49356 "EHLO
+        Tue, 1 Dec 2020 16:46:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389739AbgLAOvO (ORCPT
+        with ESMTP id S1726412AbgLAVqu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Dec 2020 09:51:14 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33D4C0613CF
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Dec 2020 06:50:24 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id g20so4051856ejb.1
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Dec 2020 06:50:24 -0800 (PST)
+        Tue, 1 Dec 2020 16:46:50 -0500
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B5F4C0613CF;
+        Tue,  1 Dec 2020 13:46:04 -0800 (PST)
+Received: by mail-lf1-x141.google.com with SMTP id z21so7562579lfe.12;
+        Tue, 01 Dec 2020 13:46:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u11hnNgXTS9zHw9F1VKspmTAQsvSEt7QVrPJBjDHu6g=;
-        b=M6aCuNhUcEkKmxd2/vopzwE3KJ+WxtGAgKPzeagXFjrrmNAkATleXsRB/oZM/db+dt
-         ls2r4BhXUW2CdPXcopCP75b6Lc8PeGrN6y2MV1V+OEikX1tCgtSTAaov149IlIMU1+P2
-         1umLDMyp5eZZm8FyqysZpP8Z0FIHWVGSg5twL6zjAVagJTQeo5pjd5YF9csMisiSVwTM
-         kTsWUlW2dgQ4h+H5/Y2oA5uQcayqKSuG+TVNxW2ltAM96/x4tHzSC86aFdA0ubYT4uXu
-         ehUSpDUW6w5aASkXX2LO6oFFKZ17FdtCaKdq3F959IqbAUMydq6RsktatxMoU3Q6hVXK
-         Qivg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NxeHTQJFJe0QHrIsWfxQ6Nd1Xqj4JEgCBCe5zjF9cHI=;
+        b=Fkt8Z4qzXccvJ/MZeY0SCQrX8Gv3n3FDzR1n2KMlfH2jyqKufMCCPGP0pCvOuffcb4
+         LczZsOQ7ksxf6TIkfnTEZc10H3sOJKkSXYJHEskkEIXKGV60np4WaTfiGm2UKni2UAVF
+         KO8xWu+a67mqq3QfhnhlHGfx0eaugjdAdCmc/aml8k/k6U+R8McoK68ey/+NCelk2Lt9
+         TxNnULZG1im0Wk3XEqeiGki/ylkqxSTE9V7Py2Np0eCeiNSzgGY3JsSfBTomZwdeNomy
+         ju/xjNzcDKq00TSQQXXMO+FSq4QVkk+E+S43g2YOSb8Aha1R4iXdoe57V2AbLiIu5CPw
+         g8RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u11hnNgXTS9zHw9F1VKspmTAQsvSEt7QVrPJBjDHu6g=;
-        b=Dl4illipBdEAnUgvizJNhfABJSIJinUe4i3Y6vcHhMuxqasMoWD4BZSVuS9T/YDqTe
-         9Xw4YYzE2jXAlNWg8At9cAJ+HCvPJvRAXtof+JeBi2HKX5c3cJtyxUvOXDcQQUU+IPOk
-         FehE4LzvIPS5Y9ANN4ZYzbfxBRe58Zjj2ife8fCaX0ot4jMg7tYSSO2LdR65lsHyGM7P
-         62hJciaVyJr2lFU8RNBSNFEX1fmaiVnP9ekEyIUl+GtLLLCUTgDXgmdT1zV99znlFx3h
-         7N668wVkzaE+TSSBS33C7rfw4VjyezXNLzymwuSj96m3Y0BLcPWq+7SQ8odFn7Hm2WFm
-         L2vQ==
-X-Gm-Message-State: AOAM532DXEY5ZC3mAlJNNrQjiDtFJ/729bKjmJDepvYxPd5NEo478Crm
-        T0gOP2+8UeuugSBrVWKB+878myy3kufUFUuIBf98fw==
-X-Google-Smtp-Source: ABdhPJwG0IqVrtCOsiapz9tOGvEqeMur8iwjMo+Odo3ubld5i/SHRYQZyOqybTSa9RuzGktyWVLOruBXRsHV2wJcHmo=
-X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr3193264ejd.363.1606834223625;
- Tue, 01 Dec 2020 06:50:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NxeHTQJFJe0QHrIsWfxQ6Nd1Xqj4JEgCBCe5zjF9cHI=;
+        b=kMlOGrLbtRVNhypncMn42QHjO+NhvX6UQu/G+S347orR8TOYU2qUC22ke+euEkFAR+
+         w9WZ1xPIYwbELA581CXNnLESjQhnNXczE8wWN5w7ugyQZhCtFFCZ1KqejRYnsuYSRdJI
+         ZW93qZGosl/hj53CV1xr8N1xJ20q0Y9RVBYBzZWVp2X1zuBOwJ7bIkYkwNyJZcCAfLU2
+         Wvo+fw+kjBQx7/qR+KPykoLK3r8uDNgyJah8dnlLvxfztwnMmDgADXlAx88r2E5KaH43
+         Rsh0ZDPrNzC2B0HsibP53HNaWl7M9abfqjBGd5o7gqQqMs9DT3EaVwOEtH1IDW6S/VF1
+         BgsQ==
+X-Gm-Message-State: AOAM531Dt5hx4s6/bdHfOiGD+/7mYKgqYwc2/8IkP9ar1p8xFLn0F6M8
+        fFhFQEGDe7a06G9yTI+GkKTutEuwzOE=
+X-Google-Smtp-Source: ABdhPJydL359UenriJ2nPalNvSazB1ofowx4GFjifmrY8csqj24rZPfAQfzMDV/AFP0g7WUQBWVjGw==
+X-Received: by 2002:ac2:4c8e:: with SMTP id d14mr2175175lfl.411.1606859162701;
+        Tue, 01 Dec 2020 13:46:02 -0800 (PST)
+Received: from localhost.localdomain (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
+        by smtp.gmail.com with ESMTPSA id c14sm111761lfr.105.2020.12.01.13.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Dec 2020 13:46:02 -0800 (PST)
+From:   Topi Miettinen <toiwoton@gmail.com>
+To:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Topi Miettinen <toiwoton@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: [PATCH] mm/vmalloc: randomize vmalloc() allocations
+Date:   Tue,  1 Dec 2020 23:45:47 +0200
+Message-Id: <20201201214547.9721-1-toiwoton@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <20201119170901.GA22703@embeddedor>
-In-Reply-To: <20201119170901.GA22703@embeddedor>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 1 Dec 2020 15:50:12 +0100
-Message-ID: <CAMpxmJXD+qiJLoEdFxmceVNyXPDfmvKPwG+SthOS8oHd2GqLuA@mail.gmail.com>
-Subject: Re: [PATCH][next] gpio: ath79: Fix fall-through warning for Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Alban Bedel <albeu@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 6:08 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a
-> warning by explicitly adding a fallthrough pseudo-keyword to indicate
-> that the code is intended to fall through to the next case.
->
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/gpio/gpio-ath79.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
-> index d5359341cc6b..678ddd375891 100644
-> --- a/drivers/gpio/gpio-ath79.c
-> +++ b/drivers/gpio/gpio-ath79.c
-> @@ -123,6 +123,7 @@ static int ath79_gpio_irq_set_type(struct irq_data *data,
->         switch (flow_type) {
->         case IRQ_TYPE_EDGE_RISING:
->                 polarity |= mask;
-> +               fallthrough;
->         case IRQ_TYPE_EDGE_FALLING:
->         case IRQ_TYPE_EDGE_BOTH:
->                 break;
-> --
-> 2.27.0
->
+Memory mappings inside kernel allocated with vmalloc() are in
+predictable order and packed tightly toward the low addresses. With
+new kernel boot parameter 'randomize_vmalloc=1', the entire area is
+used randomly to make the allocations less predictable and harder to
+guess for attackers.
 
-Applied, thanks!
+Without randomize_vmalloc=1:
+$ cat /proc/vmallocinfo
+0xffffc90000000000-0xffffc90000002000    8192 acpi_os_map_iomem+0x29e/0x2c0 phys=0x000000003ffe1000 ioremap
+0xffffc90000002000-0xffffc90000005000   12288 acpi_os_map_iomem+0x29e/0x2c0 phys=0x000000003ffe0000 ioremap
+0xffffc90000005000-0xffffc90000007000    8192 hpet_enable+0x36/0x4a9 phys=0x00000000fed00000 ioremap
+0xffffc90000007000-0xffffc90000009000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
+0xffffc90000009000-0xffffc9000000b000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
+0xffffc9000000b000-0xffffc9000000d000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
+0xffffc9000000d000-0xffffc9000000f000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
+0xffffc90000011000-0xffffc90000015000   16384 n_tty_open+0x16/0xe0 pages=3 vmalloc
+0xffffc900003de000-0xffffc900003e0000    8192 acpi_os_map_iomem+0x29e/0x2c0 phys=0x00000000fed00000 ioremap
+0xffffc900003e0000-0xffffc900003e2000    8192 memremap+0x1a1/0x280 phys=0x00000000000f5000 ioremap
+0xffffc900003e2000-0xffffc900003f3000   69632 pcpu_create_chunk+0x80/0x2c0 pages=16 vmalloc
+0xffffc900003f3000-0xffffc90000405000   73728 pcpu_create_chunk+0xb7/0x2c0 pages=17 vmalloc
+0xffffc90000405000-0xffffc9000040a000   20480 pcpu_create_chunk+0xed/0x2c0 pages=4 vmalloc
+0xffffe8ffffc00000-0xffffe8ffffe00000 2097152 pcpu_get_vm_areas+0x0/0x1a40 vmalloc
 
-Bartosz
+With randomize_vmalloc=1, the allocations are randomized:
+$ cat /proc/vmallocinfo
+0xffffca3a36442000-0xffffca3a36447000   20480 pcpu_create_chunk+0xed/0x2c0 pages=4 vmalloc
+0xffffca63034d6000-0xffffca63034d9000   12288 acpi_os_map_iomem+0x29e/0x2c0 phys=0x000000003ffe0000 ioremap
+0xffffcce23d32e000-0xffffcce23d330000    8192 memremap+0x1a1/0x280 phys=0x00000000000f5000 ioremap
+0xffffcfb9f0e22000-0xffffcfb9f0e24000    8192 hpet_enable+0x36/0x4a9 phys=0x00000000fed00000 ioremap
+0xffffd1df23e9e000-0xffffd1df23eb0000   73728 pcpu_create_chunk+0xb7/0x2c0 pages=17 vmalloc
+0xffffd690c2990000-0xffffd690c2992000    8192 acpi_os_map_iomem+0x29e/0x2c0 phys=0x000000003ffe1000 ioremap
+0xffffd8460c718000-0xffffd8460c71c000   16384 n_tty_open+0x16/0xe0 pages=3 vmalloc
+0xffffd89aba709000-0xffffd89aba70b000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
+0xffffe0ca3f2ed000-0xffffe0ca3f2ef000    8192 acpi_os_map_iomem+0x29e/0x2c0 phys=0x00000000fed00000 ioremap
+0xffffe3ba44802000-0xffffe3ba44804000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
+0xffffe4524b2a2000-0xffffe4524b2a4000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
+0xffffe61372b2e000-0xffffe61372b30000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
+0xffffe704d2f7c000-0xffffe704d2f8d000   69632 pcpu_create_chunk+0x80/0x2c0 pages=16 vmalloc
+0xffffe8ffffc00000-0xffffe8ffffe00000 2097152 pcpu_get_vm_areas+0x0/0x1a40 vmalloc
+
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Jann Horn <jannh@google.com>
+CC: Kees Cook <keescook@chromium.org>
+CC: Linux API <linux-api@vger.kernel.org>
+CC: Matthew Wilcox <willy@infradead.org>
+CC: Mike Rapoport <rppt@kernel.org>
+Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
+---
+ .../admin-guide/kernel-parameters.txt         |  2 ++
+ mm/vmalloc.c                                  | 25 +++++++++++++++++--
+ 2 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 44fde25bb221..a0242e31d2d8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4017,6 +4017,8 @@
+ 
+ 	ramdisk_start=	[RAM] RAM disk image start address
+ 
++	randomize_vmalloc= [KNL] Randomize vmalloc() allocations.
++
+ 	random.trust_cpu={on,off}
+ 			[KNL] Enable or disable trusting the use of the
+ 			CPU's random number generator (if available) to
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 6ae491a8b210..a5f7bb46ddf2 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -34,6 +34,7 @@
+ #include <linux/bitops.h>
+ #include <linux/rbtree_augmented.h>
+ #include <linux/overflow.h>
++#include <linux/random.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/tlbflush.h>
+@@ -1079,6 +1080,17 @@ adjust_va_to_fit_type(struct vmap_area *va,
+ 	return 0;
+ }
+ 
++static int randomize_vmalloc = 0;
++
++static int __init set_randomize_vmalloc(char *str)
++{
++	if (!str)
++		return 0;
++	randomize_vmalloc = simple_strtoul(str, &str, 0);
++	return 1;
++}
++__setup("randomize_vmalloc=", set_randomize_vmalloc);
++
+ /*
+  * Returns a start address of the newly allocated area, if success.
+  * Otherwise a vend is returned that indicates failure.
+@@ -1152,7 +1164,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 				int node, gfp_t gfp_mask)
+ {
+ 	struct vmap_area *va, *pva;
+-	unsigned long addr;
++	unsigned long addr, voffset;
+ 	int purged = 0;
+ 	int ret;
+ 
+@@ -1207,11 +1219,20 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	if (pva && __this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva))
+ 		kmem_cache_free(vmap_area_cachep, pva);
+ 
++	/* Randomize allocation */
++	if (randomize_vmalloc) {
++		voffset = get_random_long() & (roundup_pow_of_two(vend - vstart) - 1);
++		voffset = PAGE_ALIGN(voffset);
++		if (voffset + size > vend - vstart)
++			voffset = vend - vstart - size;
++	} else
++		voffset = 0;
++
+ 	/*
+ 	 * If an allocation fails, the "vend" address is
+ 	 * returned. Therefore trigger the overflow path.
+ 	 */
+-	addr = __alloc_vmap_area(size, align, vstart, vend);
++	addr = __alloc_vmap_area(size, align, vstart + voffset, vend);
+ 	spin_unlock(&free_vmap_area_lock);
+ 
+ 	if (unlikely(addr == vend))
+-- 
+2.29.2
+
