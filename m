@@ -2,86 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB27EC64E7C
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Dec 2020 19:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E206C6369E
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Dec 2020 21:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 691D82224A
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Dec 2020 19:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E3B208FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Dec 2020 21:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgLBTCQ (ORCPT
+        id S1726962AbgLBV3i (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Dec 2020 14:02:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        Wed, 2 Dec 2020 16:29:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgLBTCQ (ORCPT
+        with ESMTP id S1725900AbgLBV3i (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Dec 2020 14:02:16 -0500
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F24FC0613D6
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Dec 2020 11:01:36 -0800 (PST)
-Received: by mail-pf1-x442.google.com with SMTP id w6so1846799pfu.1
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Dec 2020 11:01:36 -0800 (PST)
+        Wed, 2 Dec 2020 16:29:38 -0500
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEBF7C0613D6;
+        Wed,  2 Dec 2020 13:28:57 -0800 (PST)
+Received: by mail-lj1-x242.google.com with SMTP id s9so69447ljo.11;
+        Wed, 02 Dec 2020 13:28:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xm4VGai40mVfU1KDiOQQ0ruatOar3xR8M6PEtESptL8=;
-        b=BOTDt7cxNAex0LeSeJ0Bd0epvVBMchFl+S3d5BAw4jBe6cs8DEJyHSf+DkFhiosw7s
-         lkaLbQ7Yt+dfQBgaizkChhWc0pKV3yes/+T/4oY/CzbjnpcXPIQF6n9TgnAor+JYXJXi
-         oN2RQYGGl9SmfzExNN0ok3gT3iXCUoUzwQ4Uc=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5XxPc3chLSDUNv3JWhSZI6yuRR4/U1OgJnqTGaagloE=;
+        b=D8/7JkieV7O7uvLtVcAzL+wIMniFiyKVdeCJY9CRDiOzumSNZJPXRHxgrn4EIXzTg8
+         MaPq5BmxvXx5Las/rLGgT6t5AIUC4LZphF5yniGht66nAVoacoc4a1G0Pkuo1BoVohWa
+         3Ab2/SIj5qN/U/7MJdND1QCQi/7h9fdK9Dbq2bSLIltGw368pbY8vmiGLW2mLlw1qglz
+         tbYtr5T/Zv3dx6k21rlazfL47g9JcgS1XBx5iC5FeTnNeIyk/HY0Tjo5XQ+rYF4/LXEk
+         kmatHvuGIsSRWXP0cJF5QIUw1J6w6jhQJickgKXMPWzq/M5rUX2z74KrlkJIeHDU2s3R
+         14ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xm4VGai40mVfU1KDiOQQ0ruatOar3xR8M6PEtESptL8=;
-        b=G+czrlDVakAL8/cSFsBIgo5EbE6YYKftp3tes3h45dJ9cEXi60f6LeJzZ1Q8BWYBD0
-         2y3yZa6IEkbvSRlji1hz/MHTXIkyMYXRhJo2ftNTYIZcK1aiQINo/3WSKexOJhGWsNaZ
-         E6peYAfFXx03W1sjQV70RgKsp5duWWx3cQHMh0QtKiWCDGWVuunJGac67Em3BhbT6o/v
-         BrdaLY+0CGXvWQAi+1WlPQFoC+1k40icidTVOpIH9oku4/Mw2mIF4lY9NruzoNubVfIH
-         SgycD0+VJg7oUrNNy5o14aHHQIDvXg5/Ma+Opt3do3fV16ZkU5lkfBe4eldHK0OC5/Hx
-         ViZw==
-X-Gm-Message-State: AOAM533SbqUVDiHfax3fKQjfkvl1S7GBq7iPr1BSbE7+pSTT5hrBod1b
-        IPO9wc53HWGqrVqkas5lEhbSDA==
-X-Google-Smtp-Source: ABdhPJx3VqSsGJkmnkbKOrKvM3mPguRPfGXpejwNXC3FxfcOsVcXUkpKD/QpYIAX3BR4LaEu03malw==
-X-Received: by 2002:a63:171b:: with SMTP id x27mr1199959pgl.70.1606935696197;
-        Wed, 02 Dec 2020 11:01:36 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j16sm448198pgl.50.2020.12.02.11.01.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Dec 2020 11:01:35 -0800 (PST)
-Date:   Wed, 2 Dec 2020 11:01:34 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Emese Revfy <re.emese@gmail.com>, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gcc-plugins: remove code for GCC versions older than 4.9
-Message-ID: <202012021101.E0BAFC3B@keescook>
-References: <20201202134929.99883-1-masahiroy@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5XxPc3chLSDUNv3JWhSZI6yuRR4/U1OgJnqTGaagloE=;
+        b=EDGVXQ9wOmNaEHTEW147AI4+SI7darEALVS5zQ5vdUxgMpgWMffWcOIVeovRIAD9h/
+         enS+qnaBEVrHNYzbWH8cQEjDOjTmtoUHQ2D843CsAIFSCxklwJIfY+BR8xD7CWdQey06
+         UcZZqrh8ZNylQXkW58tCo8ECLXlq6Ay/e2m+cKtgrD22dULuZWaMxFyEZNYo8JxfvAsy
+         j0Fu6dYt5zWAosJttXnINRtCj2C8l4le75wmnCYs4r3xft6rLqthZUp8crKTcPobmsq3
+         FWMzLtK5nwDV/jSptiOjx2L6j2qaSpmpL6eJ82Zeyf1QygWbj0Va5CYmaqUcOQJGdhbM
+         3KVQ==
+X-Gm-Message-State: AOAM533hqgYRgtX1qgRKbxpxF1qPozZRji+QX5mjqhXlXQrmA7WWHm93
+        9JDh3bfDY0anjsq2VGjqVUg=
+X-Google-Smtp-Source: ABdhPJxgyr4kAy1RMo17xWfFqHcx1e6XFhqRmcr1tNyKq+pGOsciL9vMgmoSwRX9ecNVe2j1TV7cRQ==
+X-Received: by 2002:a05:651c:2005:: with SMTP id s5mr2148512ljo.36.1606944535669;
+        Wed, 02 Dec 2020 13:28:55 -0800 (PST)
+Received: from [192.168.1.39] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
+        by smtp.gmail.com with ESMTPSA id y65sm844738lfa.289.2020.12.02.13.28.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Dec 2020 13:28:54 -0800 (PST)
+Subject: Re: [PATCH] mm/vmalloc: randomize vmalloc() allocations
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Mike Rapoport <rppt@kernel.org>
+References: <20201201214547.9721-1-toiwoton@gmail.com>
+ <20201202185334.GG11935@casper.infradead.org>
+From:   Topi Miettinen <toiwoton@gmail.com>
+Message-ID: <ddfe379a-915b-fca8-d191-e60e059e2dae@gmail.com>
+Date:   Wed, 2 Dec 2020 23:28:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201202134929.99883-1-masahiroy@kernel.org>
+In-Reply-To: <20201202185334.GG11935@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 02, 2020 at 10:49:29PM +0900, Masahiro Yamada wrote:
-> Documentation/process/changes.rst says the minimal GCC version is 4.9.
-> Hence, BUILDING_GCC_VERSION is greater than or equal to 4009.
+On 2.12.2020 20.53, Matthew Wilcox wrote:
+> On Tue, Dec 01, 2020 at 11:45:47PM +0200, Topi Miettinen wrote:
+>> +	/* Randomize allocation */
+>> +	if (randomize_vmalloc) {
+>> +		voffset = get_random_long() & (roundup_pow_of_two(vend - vstart) - 1);
+>> +		voffset = PAGE_ALIGN(voffset);
+>> +		if (voffset + size > vend - vstart)
+>> +			voffset = vend - vstart - size;
+>> +	} else
+>> +		voffset = 0;
+>> +
+>>   	/*
+>>   	 * If an allocation fails, the "vend" address is
+>>   	 * returned. Therefore trigger the overflow path.
+>>   	 */
+>> -	addr = __alloc_vmap_area(size, align, vstart, vend);
+>> +	addr = __alloc_vmap_area(size, align, vstart + voffset, vend);
+>>   	spin_unlock(&free_vmap_area_lock);
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> What if there isn't any free address space between vstart+voffset and
+> vend, but there is free address space between vstart and voffset?
+> Seems like we should add:
+> 
+> 	addr = __alloc_vmap_area(size, align, vstart + voffset, vend);
+> +	if (!addr)
+> +		addr = __alloc_vmap_area(size, align, vstart, vend);
+> 	spin_unlock(&free_vmap_area_lock);
+> 
 
-Acked-by: Kees Cook <keescook@chromium.org>
+How about:
 
-Do you want to carry this in the kbuild tree, or would you like me to
-pick it up?
+	addr = __alloc_vmap_area(size, align, vstart + voffset, vend);
++	if (!addr)
++		addr = __alloc_vmap_area(size, align, vstart, vstart + voffset + size);
+	spin_unlock(&free_vmap_area_lock);
 
-Thanks!
+That way the search would not be redone for the area that was already 
+checked and rejected.
 
--- 
-Kees Cook
+Perhaps my previous patch for mmap() etc. randomization could also 
+search towards higher addresses instead of trying random addresses five 
+times in case of clashes.
+
+-Topi
