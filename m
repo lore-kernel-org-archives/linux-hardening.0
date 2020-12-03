@@ -2,113 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAD7C4361B
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA5AC0018C
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5FE9207B0
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7481D207BD
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgLCRaf (ORCPT
+        id S1726875AbgLCRiI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Dec 2020 12:30:35 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45307 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726066AbgLCRae (ORCPT
+        Thu, 3 Dec 2020 12:38:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbgLCRiI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Dec 2020 12:30:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607016548;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nkos210NIFS1skhYbtLm+7Un9gIxTlS4wm4FQwNPr0c=;
-        b=iwrWj6FfElI5WHNQBEXkp8tLDk42JciCZP+1GbEpx9jGJ7MxNUUzt/U9tl/JUWWSVR6F6T
-        jDgKPL7gn7XXLTeuMW0e5IUVKLFqAlrl6e93c/JgAtECO5jkxm0S1f9u0nbxwDQ0WlSBf+
-        hWar3goXcHjRaFqO40aYeW7/4dQAo7E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-Cx-QqieHNP67GrLlF9BScA-1; Thu, 03 Dec 2020 12:29:03 -0500
-X-MC-Unique: Cx-QqieHNP67GrLlF9BScA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7124F107ACE6;
-        Thu,  3 Dec 2020 17:29:01 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-44.ams2.redhat.com [10.36.112.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 117121349A;
-        Thu,  3 Dec 2020 17:28:58 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Topi Miettinen <toiwoton@gmail.com>,
-        linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v5] mm: Optional full ASLR for mmap(), mremap(), vdso
- and stack
-References: <e8c458fe-073b-2c4d-4d80-3637041c1485@gmail.com>
-        <05D72EA3-4862-4D80-82F5-9369834C3461@amacapital.net>
-Date:   Thu, 03 Dec 2020 18:28:57 +0100
-In-Reply-To: <05D72EA3-4862-4D80-82F5-9369834C3461@amacapital.net> (Andy
-        Lutomirski's message of "Thu, 3 Dec 2020 09:10:32 -0800")
-Message-ID: <871rg6yf1i.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Thu, 3 Dec 2020 12:38:08 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02B3C061A51
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Dec 2020 09:37:21 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id s27so3926541lfp.5
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Dec 2020 09:37:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IAYzt5aWmV7k8rYu1oRqo0Iimqerq25dwLnLWK087IQ=;
+        b=g0RuxTC/9WXibSwY5+tIOu4MFx49cSGSc9R6BBeB0r2N/EwzO3l5hiz5zRhoRxTjkr
+         /6iZvATcu++ZOkyFOL9z5bNa8MptTxwO92Sq8SlrhC4i9hnYgcuER2QESiIS5hyddN64
+         7B+S6BMI/TOidGb4AUDbKQSxvIkDJJJ/NGFPY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IAYzt5aWmV7k8rYu1oRqo0Iimqerq25dwLnLWK087IQ=;
+        b=kJ2rk1HtgqKFGNf8cEyXG+Xq32FlJTPBCIqp8AhWFmrJrsmXuGzGPHhm1UDhgADuPx
+         5pnVLRL5KTFJQHbrpNRCUWsMBGMWfx2+L5HaxbGjdovbZQGztcmaWHfKsU+WhM3SYMC1
+         9BwJaf6lF3ZipEDSfIHrTszbHzlKuhZuz4S9SbSUy0VF8YpqAU9R/Dz+yscJW8oljMfn
+         vSJye36mfsyHDgtJvaq4KO+N0/N/qvvy+YF0GVkOruS6XitDf6AyWTTWeeTFcce11XX6
+         ryCcjoh9lCAKvJrcbWG0vsh+iLPdfDG3FQ8n0JbWfUsEnu76bKR7hv5BfyqHl0Xu2VMP
+         +XLw==
+X-Gm-Message-State: AOAM533pWAsXTXXGzlARd8uEGRiwkyiBq8BSTh6cxkiuhhVXo7vzHKC5
+        Gqil4rCkuZLEwkRfB5hvx05uE/YgNAc6eg==
+X-Google-Smtp-Source: ABdhPJzA4Oh+kNL3aDutV4YApopG9ounKhGijhEsHrmmpLScVl1Hwl1oBvMtSjGqibiR8RzWai4K2A==
+X-Received: by 2002:a19:4a41:: with SMTP id x62mr1920057lfa.398.1607017039696;
+        Thu, 03 Dec 2020 09:37:19 -0800 (PST)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id 131sm743567lfb.248.2020.12.03.09.37.18
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Dec 2020 09:37:18 -0800 (PST)
+Received: by mail-lj1-f170.google.com with SMTP id z1so3459969ljn.4
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Dec 2020 09:37:18 -0800 (PST)
+X-Received: by 2002:a2e:a543:: with SMTP id e3mr1691756ljn.421.1607017037787;
+ Thu, 03 Dec 2020 09:37:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20201203125700.161354-1-masahiroy@kernel.org>
+In-Reply-To: <20201203125700.161354-1-masahiroy@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 3 Dec 2020 09:37:01 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgRV9VHO2RVwn+iMfH_WFjQV1dsZtEQhgrUBQfM9QBPmQ@mail.gmail.com>
+Message-ID: <CAHk-=wgRV9VHO2RVwn+iMfH_WFjQV1dsZtEQhgrUBQfM9QBPmQ@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: simplify GCC plugin-dev capability test
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Emese Revfy <re.emese@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-* Andy Lutomirski:
+On Thu, Dec 3, 2020 at 5:03 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Checking the existence of plugin-version.h is still needed to ensure
+> the plugin-dev package is installed. The test code is now small enough
+> to be embedded in scripts/gcc-plugins/Kconfig.
 
-> If you want a 4GB allocation to succeed, you can only divide the
-> address space into 32k fragments.  Or, a little more precisely, if you
-> want a randomly selected 4GB region to be empty, any other allocation
-> has a 1/32k chance of being in the way.  (Rough numbers =E2=80=94 I=E2=80=
-=99m ignoring
-> effects of the beginning and end of the address space, and I=E2=80=99m
-> ignoring the size of a potential conflicting allocation.).
+Ack. I think the "plugin" directory name should be quoted, but that's
+a pre-existing bug.
 
-I think the probability distribution is way more advantageous than that
-because it is unlikely that 32K allocations are all exactly spaced 4 GB
-apart.  (And with 32K allocations, you are close to the VMA limit anyway.)
-
-My knowledge of probability theory is quite limited, so I have to rely
-on simulations.  But I think you would see a 40 GiB gap somewhere for a
-47-bit address space with 32K allocations, most of the time.  Which is
-not too bad.
-
-But even with a 47 bit address space and just 500 threads (each with at
-least a stack and local heap, randomized indepently), simulations
-suggestion that the largest gap is often just 850 GB.  At that point,
-you can't expect to map your NVDIMM (or whatever) in a single mapping
-anymore, and you have to code around that.
-
-Not randomizing large allocations and sacrificing one bit of randomness
-for small allocations would avoid this issue, though.
-
-(I still expect page walking performance to suffer drastically, with or
-without this tweak.  I assume page walking uses the CPU cache hierarchy
-today, and with full randomization, accessing page entry at each level
-after a TLB miss would result in a data cache miss.  But then, I'm
-firmly a software person.)
-
-Thanks,
-Florian
---=20
-Red Hat GmbH, https://de.redhat.com/ , Registered seat: Grasbrunn,
-Commercial register: Amtsgericht Muenchen, HRB 153243,
-Managing Directors: Charles Cachera, Brian Klemm, Laurie Krebs, Michael O'N=
-eill
-
+          Linus
