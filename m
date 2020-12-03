@@ -2,136 +2,136 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F170C83012
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 12:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 338BCC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3E122206
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 12:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA314207B0
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbgLCM7L (ORCPT
+        id S1729422AbgLCRLP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Dec 2020 07:59:11 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:53614 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730341AbgLCM7K (ORCPT
+        Thu, 3 Dec 2020 12:11:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgLCRLP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Dec 2020 07:59:10 -0500
-Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 0B3CvCTZ012509;
-        Thu, 3 Dec 2020 21:57:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0B3CvCTZ012509
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1607000233;
-        bh=4LEowQvA7xjRCrLhVDoyfxqY/ZOsWCHa7kvgy3K/tZY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=utJkJDnBRTSN6PtYSPJeDEwQcuM+VJnE2ke5PXJLGn+oit67fPC+R+iTazU3+/mY8
-         LVVGIq36ErkcoBzKccRygYST+r76vpn8O++gPQKATc0ad6iUlLTAF9gtEgKGtDNEkI
-         2701SeLnZIvuq/RL9J131MqK574AnldM40QNh1i0MERr7lrDQpNfYXzZSO5HuspLnF
-         C79Au3LXp3R5jaxZRHYgX0T2jV+4o69OIkrKw31LPlWAtk2aHAnkziKaU8BOrWvtjQ
-         9xl8kpOnPtjyENOnrIiBxaDhtwTQcZVZyEDQBhbyb19uzMn++eTI5+1xHEiubKYp7p
-         iyylJTo0/jRYw==
-X-Nifty-SrcIP: [126.90.211.135]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        linux-hardening@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] gcc-plugins: simplify GCC plugin-dev capability test
-Date:   Thu,  3 Dec 2020 21:57:00 +0900
-Message-Id: <20201203125700.161354-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 3 Dec 2020 12:11:15 -0500
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C79BC061A51
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Dec 2020 09:10:35 -0800 (PST)
+Received: by mail-pl1-x643.google.com with SMTP id x15so1502413pll.2
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Dec 2020 09:10:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=4wqJAr+3mpm/N6KJzqVQL+ect217rAtwLlAfBe3bNfU=;
+        b=RUpr5VZUHli+Ntwv2HIrEYZtLYBEEv6FNALrE6RP7YH8Rp64IWqY/Vt5nTVO9/Iym8
+         6UXCb8g35dfhhQFS8+DQ2eKMD8FGry9BPw9O3lYqILTj64tncHFMp5EcV8SaG6aFz49l
+         byMvlQXxbusISO7b71ScAE29NClhYK7CA122Q4v/QVVsMt4NR12xG8+4gZ/emDJmzaix
+         kFj4kUN38sJx0N5x4piMmqy3Yonk+pjZRyfppCtCkyz/ikxSHPNQYrE+RYDgsVSvQlaz
+         DtCKsv6LIBK9eiWignxuAGpCEiTdoaRqh3MejdDxZ4Z536dfz3uJIM/ldSdwQsO2RNcd
+         VaWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=4wqJAr+3mpm/N6KJzqVQL+ect217rAtwLlAfBe3bNfU=;
+        b=MNxyUDsqF1ONGP6vK4LO2Yqhji7VQlo2E7hRcvWNYTrgZ2YQSwrmKvNG5Xavtlt+p2
+         3zJvsp+qhoQx6Nx0M0GtFnrZc6U22r7xErlj2ciNrt9eZsB7BH0RUAM1+FASe9Ca+XkT
+         XopPML56VnW15m8NUQhwDByIIG9huweC0/4dOyD0yXkrwah1UIc3+IHC2TPXsrgvO/jS
+         aE82H+Qr7KhoC+5komUPnKToCHwJ8ftl2bTCcI1CBOWVQ3CQea9h5ULLFE9yT3oItfwl
+         Fq+1yIqjDTReE/sWQekm7kkJuTF6QN1Sl1h8xImnUn8b7hB1rJS2JTW0cj0FNsbaoRKd
+         BA/w==
+X-Gm-Message-State: AOAM533PjAIwRZUS4akMd98GhRx4+AOfENeNQxURWaEdsgko1IJKpbTf
+        6gjh+6Q1tnK/5CyXZN6NcZ7mHg==
+X-Google-Smtp-Source: ABdhPJzZH2GWI6Hb1FX9L3mqyG6e5XSBr1WrgxKkqVdZE4ZdV1mmD4gMFvPc+9loGtWXO9plcLzfHA==
+X-Received: by 2002:a17:90b:117:: with SMTP id p23mr71511pjz.111.1607015434516;
+        Thu, 03 Dec 2020 09:10:34 -0800 (PST)
+Received: from ?IPv6:2600:1010:b02c:6432:59d6:b4ed:32aa:4315? ([2600:1010:b02c:6432:59d6:b4ed:32aa:4315])
+        by smtp.gmail.com with ESMTPSA id n127sm2369930pfd.143.2020.12.03.09.10.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Dec 2020 09:10:33 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v5] mm: Optional full ASLR for mmap(), mremap(), vdso and stack
+Date:   Thu, 3 Dec 2020 09:10:32 -0800
+Message-Id: <05D72EA3-4862-4D80-82F5-9369834C3461@amacapital.net>
+References: <e8c458fe-073b-2c4d-4d80-3637041c1485@gmail.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+In-Reply-To: <e8c458fe-073b-2c4d-4d80-3637041c1485@gmail.com>
+To:     Topi Miettinen <toiwoton@gmail.com>
+X-Mailer: iPhone Mail (18B121)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Linus pointed out a third of the time in the Kconfig parse stage comes
-from the single invocation of cc1plus in scripts/gcc-plugin.sh [1],
-and directly testing plugin-version.h for existence cuts down the
-overhead a lot. [2]
 
-This commit takes one step further to kill the build test entirely.
+> On Dec 3, 2020, at 4:06 AM, Topi Miettinen <toiwoton@gmail.com> wrote:
+>=20
+> =EF=BB=BFOn 3.12.2020 11.47, Florian Weimer wrote:
+>> * Topi Miettinen:
+>>> +3   Additionally enable full randomization of memory mappings created
+>>> +    with mmap(NULL, ...). With 2, the base of the VMA used for such
+>>> +    mappings is random, but the mappings are created in predictable
+>>> +    places within the VMA and in sequential order. With 3, new VMAs
+>>> +    are created to fully randomize the mappings.
+>>> +
+>>> +    Also mremap(..., MREMAP_MAYMOVE) will move the mappings even if
+>>> +    not necessary and the location of stack and vdso are also
+>>> +    randomized.
+>>> +
+>>> +    On 32 bit systems this may cause problems due to increased VM
+>>> +    fragmentation if the address space gets crowded.
+>> Isn't this a bit of an understatement?  I think you'll have to restrict
+>> this randomization to a subregion of the entire address space, otherwise
+>> the reduction in maximum mapping size due to fragmentation will be a
+>> problem on 64-bit architectures as well (which generally do not support
+>> the full 64 bits for user-space addresses).
+>=20
+> Restricting randomization would reduce the address space layout randomizat=
+ion and make this less useful. There's 48 or 56 bits, which translate to 128=
+TB and 64PB of VM for user applications. Is it really possible to build toda=
+y (or in near future) a system, which would contain so much RAM that such fr=
+agmentation could realistically happen? Perhaps also in a special case where=
+ lots of 1GB huge pages are necessary? Maybe in those cases you shouldn't us=
+e randomize_va_space=3D3. Or perhaps there could be randomize_va_space=3D3 w=
+hich does something, and randomize_va_space=3D4 for those who want maximum r=
+andomization.
 
-The small piece of code was probably intended to test the C++ designated
-initializer, which was not supported until C++20.
+If you want a 4GB allocation to succeed, you can only divide the address spa=
+ce into 32k fragments.  Or, a little more precisely, if you want a randomly s=
+elected 4GB region to be empty, any other allocation has a 1/32k chance of b=
+eing in the way.  (Rough numbers =E2=80=94 I=E2=80=99m ignoring effects of t=
+he beginning and end of the address space, and I=E2=80=99m ignoring the size=
+ of a potential conflicting allocation.). This sounds good, except that a pr=
+ogram could easily make a whole bunch of tiny allocations that get merged in=
+ current kernels but wouldn=E2=80=99t with your scheme.
 
-In fact, with -pedantic option given, both GCC and Clang emit a warning.
+So maybe this is okay, but it=E2=80=99s not likely to be a good default.
 
-$ echo 'class test { public: int test; } test = { .test = 1 };' | g++ -x c++ -pedantic - -fsyntax-only
-<stdin>:1:43: warning: C++ designated initializers only available with '-std=c++2a' or '-std=gnu++2a' [-Wpedantic]
-$ echo 'class test { public: int test; } test = { .test = 1 };' | clang++ -x c++ -pedantic - -fsyntax-only
-<stdin>:1:43: warning: designated initializers are a C++20 extension [-Wc++20-designator]
-class test { public: int test; } test = { .test = 1 };
-                                          ^
-1 warning generated.
-
-Otherwise, modern C++ compilers should be able to build the code, and
-hopefully skipping this test should not make any practical problem.
-
-Checking the existence of plugin-version.h is still needed to ensure
-the plugin-dev package is installed. The test code is now small enough
-to be embedded in scripts/gcc-plugins/Kconfig.
-
-[1] https://lore.kernel.org/lkml/CAHk-=wjU4DCuwQ4pXshRbwDCUQB31ScaeuDo1tjoZ0_PjhLHzQ@mail.gmail.com/
-[2] https://lore.kernel.org/lkml/CAHk-=whK0aQxs6Q5ijJmYF1n2ch8cVFSUzU5yUM_HOjig=+vnw@mail.gmail.com/
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/gcc-plugin.sh       | 19 -------------------
- scripts/gcc-plugins/Kconfig |  2 +-
- 2 files changed, 1 insertion(+), 20 deletions(-)
- delete mode 100755 scripts/gcc-plugin.sh
-
-diff --git a/scripts/gcc-plugin.sh b/scripts/gcc-plugin.sh
-deleted file mode 100755
-index b79fd0bea838..000000000000
---- a/scripts/gcc-plugin.sh
-+++ /dev/null
-@@ -1,19 +0,0 @@
--#!/bin/sh
--# SPDX-License-Identifier: GPL-2.0
--
--set -e
--
--srctree=$(dirname "$0")
--
--gccplugins_dir=$($* -print-file-name=plugin)
--
--# we need a c++ compiler that supports the designated initializer GNU extension
--$HOSTCC -c -x c++ -std=gnu++98 - -fsyntax-only -I $srctree/gcc-plugins -I $gccplugins_dir/include 2>/dev/null <<EOF
--#include "gcc-common.h"
--class test {
--public:
--	int test;
--} test = {
--	.test = 1
--};
--EOF
-diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-index ae19fb0243b9..ab9eb4cbe33a 100644
---- a/scripts/gcc-plugins/Kconfig
-+++ b/scripts/gcc-plugins/Kconfig
-@@ -9,7 +9,7 @@ menuconfig GCC_PLUGINS
- 	bool "GCC plugins"
- 	depends on HAVE_GCC_PLUGINS
- 	depends on CC_IS_GCC
--	depends on $(success,$(srctree)/scripts/gcc-plugin.sh $(CC))
-+	depends on $(success,test -e $(shell,$(CC) -print-file-name=plugin)/include/plugin-version.h)
- 	default y
- 	help
- 	  GCC plugins are loadable modules that provide extra features to the
--- 
-2.27.0
-
+>=20
+>>> +    On all systems, it will reduce performance and increase memory
+>>> +    usage due to less efficient use of page tables and inability to
+>>> +    merge adjacent VMAs with compatible attributes. In the worst case,
+>>> +    additional page table entries of up to 4 pages are created for
+>>> +    each mapping, so with small mappings there's considerable penalty.
+>> The number 4 is architecture-specific, right?
+>=20
+> Yes, I only know x86_64. Actually it could have 5 level page tables. I'll f=
+ix this in next version.
+>=20
+> -Topi
