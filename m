@@ -2,69 +2,50 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338BCC433FE
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAD7C4361B
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA314207B0
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FE9207B0
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 17:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgLCRLP (ORCPT
+        id S1728855AbgLCRaf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Dec 2020 12:11:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgLCRLP (ORCPT
+        Thu, 3 Dec 2020 12:30:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45307 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726066AbgLCRae (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Dec 2020 12:11:15 -0500
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C79BC061A51
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Dec 2020 09:10:35 -0800 (PST)
-Received: by mail-pl1-x643.google.com with SMTP id x15so1502413pll.2
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Dec 2020 09:10:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=4wqJAr+3mpm/N6KJzqVQL+ect217rAtwLlAfBe3bNfU=;
-        b=RUpr5VZUHli+Ntwv2HIrEYZtLYBEEv6FNALrE6RP7YH8Rp64IWqY/Vt5nTVO9/Iym8
-         6UXCb8g35dfhhQFS8+DQ2eKMD8FGry9BPw9O3lYqILTj64tncHFMp5EcV8SaG6aFz49l
-         byMvlQXxbusISO7b71ScAE29NClhYK7CA122Q4v/QVVsMt4NR12xG8+4gZ/emDJmzaix
-         kFj4kUN38sJx0N5x4piMmqy3Yonk+pjZRyfppCtCkyz/ikxSHPNQYrE+RYDgsVSvQlaz
-         DtCKsv6LIBK9eiWignxuAGpCEiTdoaRqh3MejdDxZ4Z536dfz3uJIM/ldSdwQsO2RNcd
-         VaWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=4wqJAr+3mpm/N6KJzqVQL+ect217rAtwLlAfBe3bNfU=;
-        b=MNxyUDsqF1ONGP6vK4LO2Yqhji7VQlo2E7hRcvWNYTrgZ2YQSwrmKvNG5Xavtlt+p2
-         3zJvsp+qhoQx6Nx0M0GtFnrZc6U22r7xErlj2ciNrt9eZsB7BH0RUAM1+FASe9Ca+XkT
-         XopPML56VnW15m8NUQhwDByIIG9huweC0/4dOyD0yXkrwah1UIc3+IHC2TPXsrgvO/jS
-         aE82H+Qr7KhoC+5komUPnKToCHwJ8ftl2bTCcI1CBOWVQ3CQea9h5ULLFE9yT3oItfwl
-         Fq+1yIqjDTReE/sWQekm7kkJuTF6QN1Sl1h8xImnUn8b7hB1rJS2JTW0cj0FNsbaoRKd
-         BA/w==
-X-Gm-Message-State: AOAM533PjAIwRZUS4akMd98GhRx4+AOfENeNQxURWaEdsgko1IJKpbTf
-        6gjh+6Q1tnK/5CyXZN6NcZ7mHg==
-X-Google-Smtp-Source: ABdhPJzZH2GWI6Hb1FX9L3mqyG6e5XSBr1WrgxKkqVdZE4ZdV1mmD4gMFvPc+9loGtWXO9plcLzfHA==
-X-Received: by 2002:a17:90b:117:: with SMTP id p23mr71511pjz.111.1607015434516;
-        Thu, 03 Dec 2020 09:10:34 -0800 (PST)
-Received: from ?IPv6:2600:1010:b02c:6432:59d6:b4ed:32aa:4315? ([2600:1010:b02c:6432:59d6:b4ed:32aa:4315])
-        by smtp.gmail.com with ESMTPSA id n127sm2369930pfd.143.2020.12.03.09.10.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Dec 2020 09:10:33 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v5] mm: Optional full ASLR for mmap(), mremap(), vdso and stack
-Date:   Thu, 3 Dec 2020 09:10:32 -0800
-Message-Id: <05D72EA3-4862-4D80-82F5-9369834C3461@amacapital.net>
-References: <e8c458fe-073b-2c4d-4d80-3637041c1485@gmail.com>
-Cc:     Florian Weimer <fweimer@redhat.com>,
+        Thu, 3 Dec 2020 12:30:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607016548;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nkos210NIFS1skhYbtLm+7Un9gIxTlS4wm4FQwNPr0c=;
+        b=iwrWj6FfElI5WHNQBEXkp8tLDk42JciCZP+1GbEpx9jGJ7MxNUUzt/U9tl/JUWWSVR6F6T
+        jDgKPL7gn7XXLTeuMW0e5IUVKLFqAlrl6e93c/JgAtECO5jkxm0S1f9u0nbxwDQ0WlSBf+
+        hWar3goXcHjRaFqO40aYeW7/4dQAo7E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-Cx-QqieHNP67GrLlF9BScA-1; Thu, 03 Dec 2020 12:29:03 -0500
+X-MC-Unique: Cx-QqieHNP67GrLlF9BScA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7124F107ACE6;
+        Thu,  3 Dec 2020 17:29:01 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-44.ams2.redhat.com [10.36.112.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 117121349A;
+        Thu,  3 Dec 2020 17:28:58 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Topi Miettinen <toiwoton@gmail.com>,
         linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Jann Horn <jannh@google.com>,
@@ -72,66 +53,62 @@ Cc:     Florian Weimer <fweimer@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Mike Rapoport <rppt@kernel.org>,
         Linux API <linux-api@vger.kernel.org>
-In-Reply-To: <e8c458fe-073b-2c4d-4d80-3637041c1485@gmail.com>
-To:     Topi Miettinen <toiwoton@gmail.com>
-X-Mailer: iPhone Mail (18B121)
+Subject: Re: [PATCH v5] mm: Optional full ASLR for mmap(), mremap(), vdso
+ and stack
+References: <e8c458fe-073b-2c4d-4d80-3637041c1485@gmail.com>
+        <05D72EA3-4862-4D80-82F5-9369834C3461@amacapital.net>
+Date:   Thu, 03 Dec 2020 18:28:57 +0100
+In-Reply-To: <05D72EA3-4862-4D80-82F5-9369834C3461@amacapital.net> (Andy
+        Lutomirski's message of "Thu, 3 Dec 2020 09:10:32 -0800")
+Message-ID: <871rg6yf1i.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+* Andy Lutomirski:
 
-> On Dec 3, 2020, at 4:06 AM, Topi Miettinen <toiwoton@gmail.com> wrote:
->=20
-> =EF=BB=BFOn 3.12.2020 11.47, Florian Weimer wrote:
->> * Topi Miettinen:
->>> +3   Additionally enable full randomization of memory mappings created
->>> +    with mmap(NULL, ...). With 2, the base of the VMA used for such
->>> +    mappings is random, but the mappings are created in predictable
->>> +    places within the VMA and in sequential order. With 3, new VMAs
->>> +    are created to fully randomize the mappings.
->>> +
->>> +    Also mremap(..., MREMAP_MAYMOVE) will move the mappings even if
->>> +    not necessary and the location of stack and vdso are also
->>> +    randomized.
->>> +
->>> +    On 32 bit systems this may cause problems due to increased VM
->>> +    fragmentation if the address space gets crowded.
->> Isn't this a bit of an understatement?  I think you'll have to restrict
->> this randomization to a subregion of the entire address space, otherwise
->> the reduction in maximum mapping size due to fragmentation will be a
->> problem on 64-bit architectures as well (which generally do not support
->> the full 64 bits for user-space addresses).
->=20
-> Restricting randomization would reduce the address space layout randomizat=
-ion and make this less useful. There's 48 or 56 bits, which translate to 128=
-TB and 64PB of VM for user applications. Is it really possible to build toda=
-y (or in near future) a system, which would contain so much RAM that such fr=
-agmentation could realistically happen? Perhaps also in a special case where=
- lots of 1GB huge pages are necessary? Maybe in those cases you shouldn't us=
-e randomize_va_space=3D3. Or perhaps there could be randomize_va_space=3D3 w=
-hich does something, and randomize_va_space=3D4 for those who want maximum r=
-andomization.
+> If you want a 4GB allocation to succeed, you can only divide the
+> address space into 32k fragments.  Or, a little more precisely, if you
+> want a randomly selected 4GB region to be empty, any other allocation
+> has a 1/32k chance of being in the way.  (Rough numbers =E2=80=94 I=E2=80=
+=99m ignoring
+> effects of the beginning and end of the address space, and I=E2=80=99m
+> ignoring the size of a potential conflicting allocation.).
 
-If you want a 4GB allocation to succeed, you can only divide the address spa=
-ce into 32k fragments.  Or, a little more precisely, if you want a randomly s=
-elected 4GB region to be empty, any other allocation has a 1/32k chance of b=
-eing in the way.  (Rough numbers =E2=80=94 I=E2=80=99m ignoring effects of t=
-he beginning and end of the address space, and I=E2=80=99m ignoring the size=
- of a potential conflicting allocation.). This sounds good, except that a pr=
-ogram could easily make a whole bunch of tiny allocations that get merged in=
- current kernels but wouldn=E2=80=99t with your scheme.
+I think the probability distribution is way more advantageous than that
+because it is unlikely that 32K allocations are all exactly spaced 4 GB
+apart.  (And with 32K allocations, you are close to the VMA limit anyway.)
 
-So maybe this is okay, but it=E2=80=99s not likely to be a good default.
+My knowledge of probability theory is quite limited, so I have to rely
+on simulations.  But I think you would see a 40 GiB gap somewhere for a
+47-bit address space with 32K allocations, most of the time.  Which is
+not too bad.
 
->=20
->>> +    On all systems, it will reduce performance and increase memory
->>> +    usage due to less efficient use of page tables and inability to
->>> +    merge adjacent VMAs with compatible attributes. In the worst case,
->>> +    additional page table entries of up to 4 pages are created for
->>> +    each mapping, so with small mappings there's considerable penalty.
->> The number 4 is architecture-specific, right?
->=20
-> Yes, I only know x86_64. Actually it could have 5 level page tables. I'll f=
-ix this in next version.
->=20
-> -Topi
+But even with a 47 bit address space and just 500 threads (each with at
+least a stack and local heap, randomized indepently), simulations
+suggestion that the largest gap is often just 850 GB.  At that point,
+you can't expect to map your NVDIMM (or whatever) in a single mapping
+anymore, and you have to code around that.
+
+Not randomizing large allocations and sacrificing one bit of randomness
+for small allocations would avoid this issue, though.
+
+(I still expect page walking performance to suffer drastically, with or
+without this tweak.  I assume page walking uses the CPU cache hierarchy
+today, and with full randomization, accessing page entry at each level
+after a TLB miss would result in a data cache miss.  But then, I'm
+firmly a software person.)
+
+Thanks,
+Florian
+--=20
+Red Hat GmbH, https://de.redhat.com/ , Registered seat: Grasbrunn,
+Commercial register: Amtsgericht Muenchen, HRB 153243,
+Managing Directors: Charles Cachera, Brian Klemm, Laurie Krebs, Michael O'N=
+eill
+
