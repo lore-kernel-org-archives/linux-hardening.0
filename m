@@ -2,76 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BA8C64E7B
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 06:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6E2C63777
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 09:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED38620758
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 06:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437A22085B
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Dec 2020 09:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgLCG6u (ORCPT
+        id S2388594AbgLCJhI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Dec 2020 01:58:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgLCG6u (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Dec 2020 01:58:50 -0500
-Date:   Thu, 3 Dec 2020 08:58:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1606978689;
-        bh=TrahpHtUn6GtqyFBng48QBtZBmbO/ucz4YAA+WbUKig=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ghQbsZuCi9XwCdX3NAJgSxP/7c1XcmHf/kQRBOIXzOlRecfT6XSTYQYgl5tvlwx6D
-         R0SQ+Dw2FdGkfYaqbMk8zDkUTfAWezJfVeqpWK13vz/lge/dC0LiMiJkVnhGgTE0Ty
-         9dFdYrskZBgZZCqkgJxmSoPXJA0tvF5BoYCnE3i6d2j6hK/OOmhR8SYA6P928RvKF6
-         Ruo96i16CQ13dghMOmpBRz9ioP0mhCzH5OM5/IUJhmRz3oWA//FgYExkptVENDeWvt
-         9ZuN8MgMcCGsZx4pYWPD/AIQF1XKrLbtoIh7YggGewNqT45S5NeO60FA2sZmb++1Lz
-         yYIfGJawsZuUA==
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] mm/vmalloc: randomize vmalloc() allocations
-Message-ID: <20201203065801.GH751215@kernel.org>
-References: <20201201214547.9721-1-toiwoton@gmail.com>
- <9d34fb0a-7aba-1e84-6426-006ea7c3d9f5@gmail.com>
+        Thu, 3 Dec 2020 04:37:08 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:23442 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388316AbgLCJhI (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 3 Dec 2020 04:37:08 -0500
+X-Greylist: delayed 71147 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Dec 2020 04:37:07 EST
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0B39aFsh013571;
+        Thu, 3 Dec 2020 18:36:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0B39aFsh013571
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1606988176;
+        bh=x8OvcNutt5onFObxwnHYLXR/nGNhZQWM3+7oyhZlPgk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M9EsR0/DdWqYebefZu63RfnltxRdf7Q53JgbpqhKTEPaQpIlJ8qq2bv2BtKvXDrPp
+         9Pw0zsurlajLY44hFdqd6pY9lr+3kfCl2ZCyY96e/WhbdWCt1kRQ4QsSRYASghvAO1
+         tB/NkiSzksmoXIRYZTV1kARciV3Ceo3ie2Tf6jnjjh4Ph8DSr1S6ofdkGmeI2MMP2G
+         QEh1uh8u77X3T+5YrKHbNphBGhYDVxLFo/qGNSvy3MgzYKHIynoMRUnqSXea3ZimbJ
+         3GdKlLnufXX4/gzgr83BmMjqpQ1I1SJodYwuhMIOoUWFipTs1G9QUdHUd7RuB6/prK
+         pXSaZ0yT+3H4g==
+X-Nifty-SrcIP: [209.85.214.177]
+Received: by mail-pl1-f177.google.com with SMTP id bj5so834161plb.4;
+        Thu, 03 Dec 2020 01:36:16 -0800 (PST)
+X-Gm-Message-State: AOAM532LAT7ZSPLSkSB279DjnC4nYYR1RKRnD2/JlECQznZ3JiznCBiX
+        8M4kgY10AqKWcZsBibUpSAFe5N/hp0zYDp0DyWg=
+X-Google-Smtp-Source: ABdhPJzjV6Ook+YxcvOQmDYKJWFe+fPV8a/ozmjg9gCokwsVKGjwNd+FyJd9CUltEvQKzkJ1JkC0eS1XgqGAKJiVS4E=
+X-Received: by 2002:a17:90a:5905:: with SMTP id k5mr2276786pji.198.1606988175303;
+ Thu, 03 Dec 2020 01:36:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d34fb0a-7aba-1e84-6426-006ea7c3d9f5@gmail.com>
+References: <20201202134929.99883-1-masahiroy@kernel.org> <202012021101.E0BAFC3B@keescook>
+In-Reply-To: <202012021101.E0BAFC3B@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 3 Dec 2020 18:35:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQxS2Zn3O4Q0Ca5KgoyEwW5_5DtPDZoXAH+dxbki7dmLg@mail.gmail.com>
+Message-ID: <CAK7LNAQxS2Zn3O4Q0Ca5KgoyEwW5_5DtPDZoXAH+dxbki7dmLg@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: remove code for GCC versions older than 4.9
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Emese Revfy <re.emese@gmail.com>, linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 02, 2020 at 08:49:06PM +0200, Topi Miettinen wrote:
-> On 1.12.2020 23.45, Topi Miettinen wrote:
-> > Memory mappings inside kernel allocated with vmalloc() are in
-> > predictable order and packed tightly toward the low addresses. With
-> > new kernel boot parameter 'randomize_vmalloc=1', the entire area is
-> > used randomly to make the allocations less predictable and harder to
-> > guess for attackers.
-> > 
-> 
-> This also seems to randomize module addresses. I was going to check that
-> next, so nice surprise!
+On Thu, Dec 3, 2020 at 4:01 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Dec 02, 2020 at 10:49:29PM +0900, Masahiro Yamada wrote:
+> > Documentation/process/changes.rst says the minimal GCC version is 4.9.
+> > Hence, BUILDING_GCC_VERSION is greater than or equal to 4009.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> Acked-by: Kees Cook <keescook@chromium.org>
+>
+> Do you want to carry this in the kbuild tree, or would you like me to
+> pick it up?
+>
+> Thanks!
+>
+> --
+> Kees Cook
 
-Heh, that's because module_alloc() uses vmalloc() in that way or another :)
 
-> -Topi
-> 
-> >   	spin_unlock(&free_vmap_area_lock);
-> >   	if (unlikely(addr == vend))
-> > 
-> 
+Please pick it up.
+Thanks.
 
 -- 
-Sincerely yours,
-Mike.
+Best Regards
+Masahiro Yamada
