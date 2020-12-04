@@ -4,67 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA42C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21677C4167B
 	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 23:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8E8322D49
+	by mail.kernel.org (Postfix) with ESMTP id 000BA22D75
 	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 23:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgLDXrX (ORCPT
+        id S1727968AbgLDXrX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Fri, 4 Dec 2020 18:47:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39044 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbgLDXrX (ORCPT
+        with ESMTP id S1725847AbgLDXrX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 4 Dec 2020 18:47:23 -0500
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F21C0613D1
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Dec 2020 15:46:37 -0800 (PST)
-Received: by mail-pf1-x442.google.com with SMTP id d2so965523pfq.5
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Dec 2020 15:46:37 -0800 (PST)
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCD3C061A51
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Dec 2020 15:46:42 -0800 (PST)
+Received: by mail-pg1-x542.google.com with SMTP id w16so4490198pga.9
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Dec 2020 15:46:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ufpeo+Ar8Za9xIbYyf7Qe6TbN0AkwT1iWm/UoECGrZA=;
-        b=TYkK6NyVNCykb9rbz+YQzRPEUzg8zjjeFPcfjP5cX+fa3sHpSjzMGfE0/LZwYAZKdi
-         4cGUOX1Qj8JSIvS6qMYB+zJyQvHJBMm1MVAJMIEVnCwshsEBIJmolW5jU8MU8lAIDVVJ
-         cJqwHJ0Lev3dpRLpAu4MyGckMWm4RHold/2vA=
+        bh=LGD/RRlJ9qYcjJKn7WhBQr/iddBUcMbCKVBFUtvDryw=;
+        b=W8nYbzW29aK5BI9b3s/HSOzJYye5fofwtRGf/n08NAYFqTAnms5MDGLkVxvQuvia7+
+         8lYvKlc7hfU3yjVEqUwwHVXeutiagN4yzJLeVYiNWpjJHD0a/Nl9HfaHBtd3nxPp2lve
+         mQVzqhP3egC18W9DwiyAoc7E6BOq0rAXrJ0ek=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ufpeo+Ar8Za9xIbYyf7Qe6TbN0AkwT1iWm/UoECGrZA=;
-        b=YJLDFoNjUg0DnRxgic1ZEEvTCauXFUR7BkQk+GxIf8hrnsPCR/N4YnO2AZUdwjuvK7
-         hv1iQwPlgGUQiMvGxqkeHVKTQq8BV99sgAnXaGPVGOsFXsm4XzYfGlBsDW53jp4l9HzV
-         F3A1hZ/APeeYAp9PQF0/tKT0J8QMMNpCs/NVr4NBhO44ALaUSnvMmXR31mH76qU39ylF
-         20blw+Wae3KRYkM4aSi3m++3SM5f0pMDcNToAi6tnAEC88LSXw9zR9ln26/3T7jbbzN6
-         py0xbxTF8KTc60EBwUt8anvbxGcYlV+9j+IKT5rIoUG/23pHXjeBvwWp3YAyjJdwKAo9
-         qcIA==
-X-Gm-Message-State: AOAM5331WSUTEHZixPZLAe7BQ38QxKOiug3RyDk9NenwvMoPl+kGAsIc
-        WDQ/og804pIPYSQM/ItOTjOsRg==
-X-Google-Smtp-Source: ABdhPJyrmx54Y8Gw9t8+NsxSXrWAxpTu7YxMFRas1YixbGc6qfYGD//LUwtxevFl959Sjyk+dGJ7sg==
-X-Received: by 2002:a05:6a00:134d:b029:18b:2cde:d747 with SMTP id k13-20020a056a00134db029018b2cded747mr6141772pfu.60.1607125597090;
-        Fri, 04 Dec 2020 15:46:37 -0800 (PST)
+        bh=LGD/RRlJ9qYcjJKn7WhBQr/iddBUcMbCKVBFUtvDryw=;
+        b=tDl4N1/CcoKMwMzMPIp807hGvNUA0EY9+5ieY0yFXbJRvF3gnPYtdtlUJOatX2iW3/
+         y4Qjx2AoDKsz01RODWnMoNXYAQDfAqxkTBc0r2/MFk2V6YgUm5MuCt1sZ7i82EQHl3z3
+         lk94CLgmD1/vqglmapTxQfEB8+IB5rZ5tjJijxzoYmMRh6Y62aOa8NkgWxUFLBMB2EAR
+         egpiskDqhlc/5l8KlYGJDu31+9dMRtzt0BrnxBXjAnhrCl7kCrrxVNPZacVm8d5KjSjO
+         lUf/GinZ4Qupix+MI8a+GTgStyYsqFqI1KGIsInZuKEl0UjV5EeTrflYUHdv4VkGqmEz
+         mGNw==
+X-Gm-Message-State: AOAM530kqiKDaHpHd6nUaPp9iyu18vYRlcj+V1x8Vk0069sKNncW7R3j
+        5jNSroe9UoubV8kZmwccfMwCBw==
+X-Google-Smtp-Source: ABdhPJxst/88x4vpS1tQ3o1+yZeDoCO32pjKEs+qGoYQW6uKQW2SDAJq6pQ3PklTgGowiEbbpxN2MQ==
+X-Received: by 2002:aa7:8090:0:b029:198:39d9:23e6 with SMTP id v16-20020aa780900000b029019839d923e6mr5896075pff.45.1607125602602;
+        Fri, 04 Dec 2020 15:46:42 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s5sm3326278pju.9.2020.12.04.15.46.35
+        by smtp.gmail.com with ESMTPSA id q6sm5732915pfu.23.2020.12.04.15.46.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Dec 2020 15:46:36 -0800 (PST)
+        Fri, 04 Dec 2020 15:46:41 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gcc-plugins: remove code for GCC versions older than 4.9
-Date:   Fri,  4 Dec 2020 15:46:27 -0800
-Message-Id: <160712557571.2401125.13652516939205338481.b4-ty@chromium.org>
+To:     linux-kbuild@vger.kernel.org, Emese Revfy <re.emese@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] gcc-plugins: simplify GCC plugin-dev capability test
+Date:   Fri,  4 Dec 2020 15:46:29 -0800
+Message-Id: <160712557572.2401125.2412248759980660312.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201202134929.99883-1-masahiroy@kernel.org>
-References: <20201202134929.99883-1-masahiroy@kernel.org>
+In-Reply-To: <20201203125700.161354-1-masahiroy@kernel.org>
+References: <20201203125700.161354-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -72,14 +77,20 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 2 Dec 2020 22:49:29 +0900, Masahiro Yamada wrote:
-> Documentation/process/changes.rst says the minimal GCC version is 4.9.
-> Hence, BUILDING_GCC_VERSION is greater than or equal to 4009.
+On Thu, 3 Dec 2020 21:57:00 +0900, Masahiro Yamada wrote:
+> Linus pointed out a third of the time in the Kconfig parse stage comes
+> from the single invocation of cc1plus in scripts/gcc-plugin.sh [1],
+> and directly testing plugin-version.h for existence cuts down the
+> overhead a lot. [2]
+> 
+> This commit takes one step further to kill the build test entirely.
+> 
+> [...]
 
 Applied to for-next/gcc-plugins, thanks!
 
-[1/1] gcc-plugins: remove code for GCC versions older than 4.9
-      https://git.kernel.org/kees/c/af2d22254e8e
+[1/1] gcc-plugins: simplify GCC plugin-dev capability test
+      https://git.kernel.org/kees/c/1e860048c53e
 
 -- 
 Kees Cook
