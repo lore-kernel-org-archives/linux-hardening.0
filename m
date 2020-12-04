@@ -2,126 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA1AC433FE
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 16:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DD0C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 22:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C94C22B2A
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 16:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3E022CA0
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 22:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgLDQyc (ORCPT
+        id S1727363AbgLDWDI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Dec 2020 11:54:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59926 "EHLO
+        Fri, 4 Dec 2020 17:03:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgLDQyc (ORCPT
+        with ESMTP id S1726023AbgLDWDI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Dec 2020 11:54:32 -0500
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C36DC0613D1;
-        Fri,  4 Dec 2020 08:53:52 -0800 (PST)
-Received: by mail-lj1-x243.google.com with SMTP id y16so7382149ljk.1;
-        Fri, 04 Dec 2020 08:53:52 -0800 (PST)
+        Fri, 4 Dec 2020 17:03:08 -0500
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2146C061A4F
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Dec 2020 14:02:27 -0800 (PST)
+Received: by mail-pj1-x1043.google.com with SMTP id p21so4403123pjv.0
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Dec 2020 14:02:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=y/IbC3R3yHppHu57kqKA7zrXcN/DsD6GsCLQOq/2qUg=;
-        b=WjGUYSYMwE3yHVyPlEBheNQxqyu8hdd0DbFmZqMVoXlKWnalLQD6/Ib8vv3sZxWKqC
-         f80p1UIyW8uz1JyGnYkh2eX/XZoEMfEBwN3PxgeNiyDYjfsJdsMip4LHbR6+3/6fns41
-         BjfXQ2lhRVW8cAfaF8zc1t4vtpU/q5NVyyDQ9lUpwFpIBh4UEDxc5bng6SFzP08Raib0
-         VOrKpm6juleWQHLmR+K/FsGJLRxRz3Hdej35RSwAV5xriKFl7bZb9Iaek+xwxEs3clTc
-         UNwCZT6IjFJQUO5875ITREFXehJaGXDQAHMe5fksc0IWQ3MaFKIwgMw07lxVuWUKr4LB
-         7qxQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=enW7VRg0zeMyiDIIOokOnpbP5Go5lgWeBVKjANCM8QE=;
+        b=WSBivQGw0NWLYaFd2OPXxdWfo5/ZEqUNT+h7R43nqoDXNRmh7641AbBNX9GjdmhVaP
+         ovd+v6GiD5CTuIZenDiMSBDlxmYd6x6o7x8tQbNsw8CbHcRoBB6wz5dQbLh0Hrq4yA8c
+         RoGXszwIKaMlZbIQYlcz0HrYcstfZkVfTomvk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y/IbC3R3yHppHu57kqKA7zrXcN/DsD6GsCLQOq/2qUg=;
-        b=U3/nvD0qBT157KYrrJme2aA6dcmb8bP4OmS+uqUteCnbfvZZ2uAzAUk+iv00jmLv5d
-         To9wj91iMXsEfs3eZ65y6oz7on+jvUTo+pE8PstgM8vcErVcSz7Np3Fyk5ccTbWIXoBT
-         JVqbgX9sJLB8qvSlaDiwbB29DzLbKXCipq4VyztSqKzGk7Cv7L8QSjUf8OVLvPZFkZg2
-         LMeHe+XGnvt7AshJczX3VfHef7+i6vSuc0obhi2eI+js956N56Hni6Qgx2WRruvgs5At
-         qHem2kZiZLaNPs7+AN+SiE1+F/7qFfbW25SsIHYaasQJZYOd+rKzS83NAuYbmkt6vX+K
-         tt5Q==
-X-Gm-Message-State: AOAM530Ktb71IEMyPpQkaym22cD1nowhp9DQ5u765Bm8uv/72tEHtlHE
-        khWTnSHQzZEZMfdQr9ATZes=
-X-Google-Smtp-Source: ABdhPJwultFBOJgQT3ysP+9kgKzKO3u0wVsacD5/1hFIsJybo96kEFmu83YAbf3DKOUwg2Epaj3uXg==
-X-Received: by 2002:a05:651c:1067:: with SMTP id y7mr3938057ljm.357.1607100830612;
-        Fri, 04 Dec 2020 08:53:50 -0800 (PST)
-Received: from [192.168.1.40] (88-114-216-158.elisa-laajakaista.fi. [88.114.216.158])
-        by smtp.gmail.com with ESMTPSA id a16sm1856239lfg.16.2020.12.04.08.53.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Dec 2020 08:53:50 -0800 (PST)
-Subject: Re: [PATCH] mm/vmalloc: randomize vmalloc() allocations
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Mike Rapoport' <rppt@kernel.org>
-Cc:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20201201214547.9721-1-toiwoton@gmail.com>
- <9d34fb0a-7aba-1e84-6426-006ea7c3d9f5@gmail.com>
- <20201203065801.GH751215@kernel.org>
- <2a672ff3df0c47538ed7d1974c864f0b@AcuMS.aculab.com>
- <3d20f41c-6c8e-755b-33b4-964b5cc5ac71@gmail.com>
- <f2f19b0c0f4148a8aaa64fd7bdc821d1@AcuMS.aculab.com>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <dd8cf1b1-112c-3045-2b4c-bc6c1a6ee382@gmail.com>
-Date:   Fri, 4 Dec 2020 18:53:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=enW7VRg0zeMyiDIIOokOnpbP5Go5lgWeBVKjANCM8QE=;
+        b=EgmcJoDeuLjg3xesmllltm2XZ+n79PK7PPOMl6RgSHMZEzcdf3Z2ChAJYIQjgCbODb
+         YbntuuqkmjOeVxuHjtEagHjHLvzjRxXP28g151WZGKR+e+RNFRrmAt5RMqyBefnamd7a
+         6PqdbwgDi4Ht6+Beh2Z5rmywmkftIH8hpyzgN2o7gLMSXQvEWQ1qDComfzqMnoN0/PWq
+         gC4FHByQJVjuUG8M8D6XSpkfrjtYWP5j9WNPjaZFyW9hiKiNeTu6gQcKNVuuMYCzA7z1
+         XUsyHLM9BdysaOuioCRdQfycFhB1aknGnc1aLNhG/6aVt2cD3j3sbAugUTj/NegMmSvQ
+         hWag==
+X-Gm-Message-State: AOAM530PGWryo1wT7hl19tLnIoyXGCkPcoQvlfOBuCT5OJcHMH37c+Qm
+        EO0WQJrbf7z8o/cAC4zl5M4JQg==
+X-Google-Smtp-Source: ABdhPJwU6a9D2gVWjKe1CROF33gGSIaZEj8/GDUhF/uRcH+xF+acQH0ncmbYv1G3SVC4Cka04+puNw==
+X-Received: by 2002:a17:902:6b:b029:da:725b:fcea with SMTP id 98-20020a170902006bb02900da725bfceamr5727914pla.16.1607119347328;
+        Fri, 04 Dec 2020 14:02:27 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f92sm3353946pjk.54.2020.12.04.14.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Dec 2020 14:02:26 -0800 (PST)
+Date:   Fri, 4 Dec 2020 14:02:25 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Emese Revfy <re.emese@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins: simplify GCC plugin-dev capability test
+Message-ID: <202012041402.97F582B00C@keescook>
+References: <20201203125700.161354-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f2f19b0c0f4148a8aaa64fd7bdc821d1@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201203125700.161354-1-masahiroy@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 4.12.2020 15.33, David Laight wrote:
-> From: Topi Miettinen
->> Sent: 04 December 2020 10:58
->>
->> On 4.12.2020 1.15, David Laight wrote:
->>> From: Mike Rapoport
->>>> Sent: 03 December 2020 06:58
->>>>
->>>> On Wed, Dec 02, 2020 at 08:49:06PM +0200, Topi Miettinen wrote:
->>>>> On 1.12.2020 23.45, Topi Miettinen wrote:
->>>>>> Memory mappings inside kernel allocated with vmalloc() are in
->>>>>> predictable order and packed tightly toward the low addresses. With
->>>>>> new kernel boot parameter 'randomize_vmalloc=1', the entire area is
->>>>>> used randomly to make the allocations less predictable and harder to
->>>>>> guess for attackers.
->>>
->>> Isn't that going to horribly fragment the available address space
->>> and make even moderate sized allocation requests fail (or sleep).
->>
->> For 32 bit architecture this is a real issue, but I don't think for 64
->> bits it will be a problem. You can't fragment the virtual memory space
->> for small allocations because the resulting page tables will not fit in
->> RAM for existing or near future systems.
+On Thu, Dec 03, 2020 at 09:57:00PM +0900, Masahiro Yamada wrote:
+> Linus pointed out a third of the time in the Kconfig parse stage comes
+> from the single invocation of cc1plus in scripts/gcc-plugin.sh [1],
+> and directly testing plugin-version.h for existence cuts down the
+> overhead a lot. [2]
 > 
-> Hmmm truly random allocations are going to need 3 or 4 extra page tables
-> on 64bit systems. A bit overhead for 4k allocates.
-> While you won't run out of address space, you will run out of memory.
+> This commit takes one step further to kill the build test entirely.
+> 
+> The small piece of code was probably intended to test the C++ designated
+> initializer, which was not supported until C++20.
+> 
+> In fact, with -pedantic option given, both GCC and Clang emit a warning.
+> 
+> $ echo 'class test { public: int test; } test = { .test = 1 };' | g++ -x c++ -pedantic - -fsyntax-only
+> <stdin>:1:43: warning: C++ designated initializers only available with '-std=c++2a' or '-std=gnu++2a' [-Wpedantic]
+> $ echo 'class test { public: int test; } test = { .test = 1 };' | clang++ -x c++ -pedantic - -fsyntax-only
+> <stdin>:1:43: warning: designated initializers are a C++20 extension [-Wc++20-designator]
+> class test { public: int test; } test = { .test = 1 };
+>                                           ^
+> 1 warning generated.
+> 
+> Otherwise, modern C++ compilers should be able to build the code, and
+> hopefully skipping this test should not make any practical problem.
+> 
+> Checking the existence of plugin-version.h is still needed to ensure
+> the plugin-dev package is installed. The test code is now small enough
+> to be embedded in scripts/gcc-plugins/Kconfig.
+> 
+> [1] https://lore.kernel.org/lkml/CAHk-=wjU4DCuwQ4pXshRbwDCUQB31ScaeuDo1tjoZ0_PjhLHzQ@mail.gmail.com/
+> [2] https://lore.kernel.org/lkml/CAHk-=whK0aQxs6Q5ijJmYF1n2ch8cVFSUzU5yUM_HOjig=+vnw@mail.gmail.com/
+> 
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-There are 3500 entries in /proc/vmallocinfo on my system with lots of 
-BPF filters (which allocate 8kB blocks). The total memory used is 740MB. 
-Assuming that every entry needed additional 4 pages, it would mean 55MB, 
-or 7.4% extra. I don't think that's a problem and even if it would be in 
-some case, there's still the option of not using randomize_vmalloc.
+Acked-by: Kees Cook <keescook@chromium.org>
 
--Topi
+-- 
+Kees Cook
