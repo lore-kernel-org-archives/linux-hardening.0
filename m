@@ -2,66 +2,38 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7E8C4361B
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 10:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05788C4361B
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 13:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D124A22A85
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 10:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0C922AAC
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 13:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388068AbgLDK67 (ORCPT
+        id S1728103AbgLDNf1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Dec 2020 05:58:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387665AbgLDK66 (ORCPT
+        Fri, 4 Dec 2020 08:35:27 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:39705 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728722AbgLDNf1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Dec 2020 05:58:58 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E329C0613D1;
-        Fri,  4 Dec 2020 02:58:18 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id z21so7037931lfe.12;
-        Fri, 04 Dec 2020 02:58:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qtIAXOcxRabCMPvEwXMKiWTvZ88Jq+DkCvoV5zCNXL8=;
-        b=JFKq0FEFiPghTMWZ5ZinnRN8lTLvOfbUm7hU92RDXl09NwBQaBOMCk9mjOzbLwS1VG
-         w8rX14z+U4WKujCiPH35D0UhkRWjsqDDkF+HJpKbdMPPw2KqsTkQsF1dyzVciOg3pQ5l
-         0SchU/4U/S8aFHf+i/2UwpYUfhJ0cLgl3R4LkwvqsCQzIP3nfIet9gWYbrhRGv3lcDEj
-         ea57cwolFyAasYaSUW6dojp2m0i8TbLhJt8t3icQwho6/hZC+ApKEcmQfG7PuEI4Qknb
-         a0hYZB9VLZpxkrea3DhouOJU3dEkEk93W8xljJ8FqdfAWuwMwn161yTIuY8CYeu6MPS6
-         L+7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qtIAXOcxRabCMPvEwXMKiWTvZ88Jq+DkCvoV5zCNXL8=;
-        b=l1cqUn8bSQpbMOCy0UQjzkZTrGJy7KV1e2jDcDidcsd80twYY527fgMoBg2NOGwekZ
-         UePhD1jNnphMvVOEcXo8wV3/jSd2ZpCBXXqNbRIPYeTZF3DbWczacGdCXYSXSbmfb0zC
-         vzlMqjFwyYrsgKdzzn0geI1dCkJpsm6ePYaEn6aiHuakFPg/gN9vA+++aT/3071RS7Cg
-         6pvoZJsOBeKc5fc03AOoZ21lHsH5POMolwXMachMukS6UmJjrer/ZjK/AX2KVQp3ObfT
-         o3Vq2XeB8IfZCTdjoVrRnvCUnTxsQic6VSbDMaVtyMt9zIioIp3KTe/pZ9HklEuQIGjQ
-         saQw==
-X-Gm-Message-State: AOAM533vKK2r1ZC5aI//GJ62DA4MEEZ7AY8APN0LLEcZ5Gb0CkxnpFt/
-        NwAGYaJcp3vPaVz+5HN4r5s=
-X-Google-Smtp-Source: ABdhPJxlLXhd7wUbkedJWv9Ap4s+cr5UC/8/cWDCTbchAAUojNGs/af2FNxS8xQwagHGwOrF86oDcg==
-X-Received: by 2002:a05:6512:3fc:: with SMTP id n28mr1185605lfq.93.1607079496769;
-        Fri, 04 Dec 2020 02:58:16 -0800 (PST)
-Received: from [192.168.1.40] (88-114-216-158.elisa-laajakaista.fi. [88.114.216.158])
-        by smtp.gmail.com with ESMTPSA id u23sm1579640ljj.83.2020.12.04.02.58.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Dec 2020 02:58:15 -0800 (PST)
-Subject: Re: [PATCH] mm/vmalloc: randomize vmalloc() allocations
-To:     David Laight <David.Laight@ACULAB.COM>,
+        Fri, 4 Dec 2020 08:35:27 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-112-IjqBB8ewNq6TE9Oy5nRVtQ-1; Fri, 04 Dec 2020 13:33:48 +0000
+X-MC-Unique: IjqBB8ewNq6TE9Oy5nRVtQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 4 Dec 2020 13:33:47 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 4 Dec 2020 13:33:47 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Topi Miettinen' <toiwoton@gmail.com>,
         'Mike Rapoport' <rppt@kernel.org>
-Cc:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+CC:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
         "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
         "linux-mm@kvack.org" <linux-mm@kvack.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -70,99 +42,65 @@ Cc:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Linux API <linux-api@vger.kernel.org>,
         Matthew Wilcox <willy@infradead.org>
+Subject: RE: [PATCH] mm/vmalloc: randomize vmalloc() allocations
+Thread-Topic: [PATCH] mm/vmalloc: randomize vmalloc() allocations
+Thread-Index: AQHWyUIaOaq71c1O10ObeOeJDE6bhanmALEggADFggCAACeloA==
+Date:   Fri, 4 Dec 2020 13:33:47 +0000
+Message-ID: <f2f19b0c0f4148a8aaa64fd7bdc821d1@AcuMS.aculab.com>
 References: <20201201214547.9721-1-toiwoton@gmail.com>
  <9d34fb0a-7aba-1e84-6426-006ea7c3d9f5@gmail.com>
  <20201203065801.GH751215@kernel.org>
  <2a672ff3df0c47538ed7d1974c864f0b@AcuMS.aculab.com>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <3d20f41c-6c8e-755b-33b4-964b5cc5ac71@gmail.com>
-Date:   Fri, 4 Dec 2020 12:58:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+ <3d20f41c-6c8e-755b-33b4-964b5cc5ac71@gmail.com>
+In-Reply-To: <3d20f41c-6c8e-755b-33b4-964b5cc5ac71@gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <2a672ff3df0c47538ed7d1974c864f0b@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 4.12.2020 1.15, David Laight wrote:
-> From: Mike Rapoport
->> Sent: 03 December 2020 06:58
->>
->> On Wed, Dec 02, 2020 at 08:49:06PM +0200, Topi Miettinen wrote:
->>> On 1.12.2020 23.45, Topi Miettinen wrote:
->>>> Memory mappings inside kernel allocated with vmalloc() are in
->>>> predictable order and packed tightly toward the low addresses. With
->>>> new kernel boot parameter 'randomize_vmalloc=1', the entire area is
->>>> used randomly to make the allocations less predictable and harder to
->>>> guess for attackers.
-> 
-> Isn't that going to horribly fragment the available address space
-> and make even moderate sized allocation requests fail (or sleep).
-
-For 32 bit architecture this is a real issue, but I don't think for 64 
-bits it will be a problem. You can't fragment the virtual memory space 
-for small allocations because the resulting page tables will not fit in 
-RAM for existing or near future systems.
-
-For large allocations (directly mapping entire contents of TB sized NVME 
-drives or a special application which needs 1GB huge pages) this could 
-be a risk. Maybe this could be solved by reserving some space for them, 
-or perhaps in those cases you shouldn't use randomize_vmalloc=1.
-
-The method for reserving the large areas could something like below.
-
-First, consider a simple arrangement of reserving high addresses for 
-large allocations and low addresses for smaller allocations. The 
-allocator would start searching downwards from high addresses for a free 
-large block and upwards from low addresses for small blocks. Also the 
-address space would be semi-rigidly divided to priority areas: area 0 
-with priority for small allocations, area 1 with equal priority for both 
-small and large, and area 2 where small allocations would be placed only 
-as a last resort (which probably would never be the case).
-
-The linear way of dividing the allocations would of course be very much 
-non-random, so this could be improved with a pseudo-random scrambling 
-function to distribute the addresses in memory. A simple example would 
-be to randomly choose a value for one bit in the address for large 
-allocations (not necessarily the most significant available but also 
-large enough to align 1GB/TB sized allocations if needed), or a bit 
-pattern across several address bits for non-even distribution.
-
-The addresses would be also fully randomized inside each priority area.
-
-The division would mean some loss of randomization. A simple rigid 
-division of 50%/50% for small vs. large allocations would mean a loss of 
-one bit but the above methods could help this. Dividing the address 
-space less evenly would improve one side at the expense of the other. 
-Cracking the scrambling function would reveal the bit(s) used for the 
-division.
-
-It would be nice to remove the current rigid division of the kernel 
-address space (Documentation/x86/x86_64/mm.rst) and let the allocations 
-be placed more randomly in the entire 47 bit address space. Would the 
-above priority scheme (perhaps with a rigid priority for certain users) 
-be good enough to allow this?
-
-Even better would be to remove the use of highest bit for selecting 
-kernel/user addresses but I suppose it would be a lot of work for 
-gaining just one extra bit of randomness. There could be other effects 
-though (good or bad).
-
--Topi
-
-> I'm not even sure that you need to use 'best fit' rather than
-> 'first fit'.
-> 'best fit' is certainly a lot better for a simple linked list
-> user space malloc.
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+RnJvbTogVG9waSBNaWV0dGluZW4NCj4gU2VudDogMDQgRGVjZW1iZXIgMjAyMCAxMDo1OA0KPiAN
+Cj4gT24gNC4xMi4yMDIwIDEuMTUsIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiBGcm9tOiBNaWtl
+IFJhcG9wb3J0DQo+ID4+IFNlbnQ6IDAzIERlY2VtYmVyIDIwMjAgMDY6NTgNCj4gPj4NCj4gPj4g
+T24gV2VkLCBEZWMgMDIsIDIwMjAgYXQgMDg6NDk6MDZQTSArMDIwMCwgVG9waSBNaWV0dGluZW4g
+d3JvdGU6DQo+ID4+PiBPbiAxLjEyLjIwMjAgMjMuNDUsIFRvcGkgTWlldHRpbmVuIHdyb3RlOg0K
+PiA+Pj4+IE1lbW9yeSBtYXBwaW5ncyBpbnNpZGUga2VybmVsIGFsbG9jYXRlZCB3aXRoIHZtYWxs
+b2MoKSBhcmUgaW4NCj4gPj4+PiBwcmVkaWN0YWJsZSBvcmRlciBhbmQgcGFja2VkIHRpZ2h0bHkg
+dG93YXJkIHRoZSBsb3cgYWRkcmVzc2VzLiBXaXRoDQo+ID4+Pj4gbmV3IGtlcm5lbCBib290IHBh
+cmFtZXRlciAncmFuZG9taXplX3ZtYWxsb2M9MScsIHRoZSBlbnRpcmUgYXJlYSBpcw0KPiA+Pj4+
+IHVzZWQgcmFuZG9tbHkgdG8gbWFrZSB0aGUgYWxsb2NhdGlvbnMgbGVzcyBwcmVkaWN0YWJsZSBh
+bmQgaGFyZGVyIHRvDQo+ID4+Pj4gZ3Vlc3MgZm9yIGF0dGFja2Vycy4NCj4gPg0KPiA+IElzbid0
+IHRoYXQgZ29pbmcgdG8gaG9ycmlibHkgZnJhZ21lbnQgdGhlIGF2YWlsYWJsZSBhZGRyZXNzIHNw
+YWNlDQo+ID4gYW5kIG1ha2UgZXZlbiBtb2RlcmF0ZSBzaXplZCBhbGxvY2F0aW9uIHJlcXVlc3Rz
+IGZhaWwgKG9yIHNsZWVwKS4NCj4gDQo+IEZvciAzMiBiaXQgYXJjaGl0ZWN0dXJlIHRoaXMgaXMg
+YSByZWFsIGlzc3VlLCBidXQgSSBkb24ndCB0aGluayBmb3IgNjQNCj4gYml0cyBpdCB3aWxsIGJl
+IGEgcHJvYmxlbS4gWW91IGNhbid0IGZyYWdtZW50IHRoZSB2aXJ0dWFsIG1lbW9yeSBzcGFjZQ0K
+PiBmb3Igc21hbGwgYWxsb2NhdGlvbnMgYmVjYXVzZSB0aGUgcmVzdWx0aW5nIHBhZ2UgdGFibGVz
+IHdpbGwgbm90IGZpdCBpbg0KPiBSQU0gZm9yIGV4aXN0aW5nIG9yIG5lYXIgZnV0dXJlIHN5c3Rl
+bXMuDQoNCkhtbW0gdHJ1bHkgcmFuZG9tIGFsbG9jYXRpb25zIGFyZSBnb2luZyB0byBuZWVkIDMg
+b3IgNCBleHRyYSBwYWdlIHRhYmxlcw0Kb24gNjRiaXQgc3lzdGVtcy4gQSBiaXQgb3ZlcmhlYWQg
+Zm9yIDRrIGFsbG9jYXRlcy4NCldoaWxlIHlvdSB3b24ndCBydW4gb3V0IG9mIGFkZHJlc3Mgc3Bh
+Y2UsIHlvdSB3aWxsIHJ1biBvdXQgb2YgbWVtb3J5Lg0KDQpSYW5kb21pc2luZyB0aGUgYWxsb2Nh
+dGVkIGFkZHJlc3Mgd2l0aCB0aGUgYXJlYSB0aGF0IGFscmVhZHkNCmhhcyBwYWdlIHRhYmxlcyBh
+bGxvY2F0ZWQgbWlnaHQgbWFrZSBhIGJpdCBvZiBzZW5zZS4NClRoZW4gYWxsb2NhdGUgc2ltaWxh
+cihpc2gpIHNpemVkIGl0ZW1zIGZyb20gdGhlIHNhbWUgJ2xhcmdlJyBwYWdlcy4NCg0KSSB3YXMg
+d29uZGVyaW5nIGlmIGEgZmxhZyBpbmRpY2F0aW5nIHdoZXRoZXIgYW4gYWxsb2NhdGUgd2FzICds
+b25nIHRlcm0nDQpvciAnc2hvcnQgdGVybScgbWlnaHQgaGVscCB0aGUgcGxhY2VtZW50Lg0KU2hv
+cnQgdGVybSBzbWFsbCBpdGVtcyBjb3VsZCBiZSB1c2VkIHRvIGZpbGwgdGhlIHNwYWNlIGluICds
+YXJnZSBwYWdlcycgbGVmdA0KYnkgbm9uLWFsaWduZWQgbGVuZ3RoIGxhcmdlIGl0ZW1zLg0KDQpU
+cm91YmxlIGlzIHlvdSBuZWVkIGEgQ0JVIChDcnlzdGFsIEJhbGwgVW5pdCkgdG8gZ2V0IGl0IHJp
+Z2h0Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5
+IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRp
+b24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
