@@ -2,96 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21677C4167B
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 23:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4721DC1B0D9
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Dec 2020 04:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000BA22D75
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Dec 2020 23:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C2B23A5A
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Dec 2020 04:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgLDXrX (ORCPT
+        id S1727495AbgLHEyB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Dec 2020 18:47:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgLDXrX (ORCPT
+        Mon, 7 Dec 2020 23:54:01 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58180 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgLHEyB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Dec 2020 18:47:23 -0500
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCD3C061A51
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Dec 2020 15:46:42 -0800 (PST)
-Received: by mail-pg1-x542.google.com with SMTP id w16so4490198pga.9
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Dec 2020 15:46:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LGD/RRlJ9qYcjJKn7WhBQr/iddBUcMbCKVBFUtvDryw=;
-        b=W8nYbzW29aK5BI9b3s/HSOzJYye5fofwtRGf/n08NAYFqTAnms5MDGLkVxvQuvia7+
-         8lYvKlc7hfU3yjVEqUwwHVXeutiagN4yzJLeVYiNWpjJHD0a/Nl9HfaHBtd3nxPp2lve
-         mQVzqhP3egC18W9DwiyAoc7E6BOq0rAXrJ0ek=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LGD/RRlJ9qYcjJKn7WhBQr/iddBUcMbCKVBFUtvDryw=;
-        b=tDl4N1/CcoKMwMzMPIp807hGvNUA0EY9+5ieY0yFXbJRvF3gnPYtdtlUJOatX2iW3/
-         y4Qjx2AoDKsz01RODWnMoNXYAQDfAqxkTBc0r2/MFk2V6YgUm5MuCt1sZ7i82EQHl3z3
-         lk94CLgmD1/vqglmapTxQfEB8+IB5rZ5tjJijxzoYmMRh6Y62aOa8NkgWxUFLBMB2EAR
-         egpiskDqhlc/5l8KlYGJDu31+9dMRtzt0BrnxBXjAnhrCl7kCrrxVNPZacVm8d5KjSjO
-         lUf/GinZ4Qupix+MI8a+GTgStyYsqFqI1KGIsInZuKEl0UjV5EeTrflYUHdv4VkGqmEz
-         mGNw==
-X-Gm-Message-State: AOAM530kqiKDaHpHd6nUaPp9iyu18vYRlcj+V1x8Vk0069sKNncW7R3j
-        5jNSroe9UoubV8kZmwccfMwCBw==
-X-Google-Smtp-Source: ABdhPJxst/88x4vpS1tQ3o1+yZeDoCO32pjKEs+qGoYQW6uKQW2SDAJq6pQ3PklTgGowiEbbpxN2MQ==
-X-Received: by 2002:aa7:8090:0:b029:198:39d9:23e6 with SMTP id v16-20020aa780900000b029019839d923e6mr5896075pff.45.1607125602602;
-        Fri, 04 Dec 2020 15:46:42 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q6sm5732915pfu.23.2020.12.04.15.46.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Dec 2020 15:46:41 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kbuild@vger.kernel.org, Emese Revfy <re.emese@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        clang-built-linux@googlegroups.com,
+        Mon, 7 Dec 2020 23:54:01 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B84nxYX064111;
+        Tue, 8 Dec 2020 04:52:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=1e3cV7XKyt5cBPHNeWYhYMHu3W87CKppja6U1Jvw5F4=;
+ b=V+G180Fh0lHbcmydQJqS5i+cerb42SoRrRI9QCXlQMjyWKKfj0acXqExTQUiK+7OEtft
+ OuMy/8L57grCegXY4FPi2mfpdUD9NETOrjU6XyLEGnB6yCKU9e30d2WSgQTsYBxq/cMN
+ 5junVfgiRpfFB5rc1EfDtZHP43anCs3FIrUtz16u4yPsKG0NCInMT5yeMTaPCX1MMJeq
+ qZ1GHIcbwNatFRQ/tELhwJDJybfqjlIskC/pDoCLpTPJ2KTrod7PX9rst5aaRTC3xIQA
+ veh/+mbPHLjYXfePq5oiUCHv2+7Gowf8M2KKiHFzojpZKSSSQD2meZy2nTRpI8CVh6TQ Yg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 35825m0srp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 08 Dec 2020 04:52:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B84ocFe155422;
+        Tue, 8 Dec 2020 04:52:34 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 358kys9m8t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 08 Dec 2020 04:52:34 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B84qX4M159553;
+        Tue, 8 Dec 2020 04:52:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 358kys9m7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Dec 2020 04:52:33 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B84qDZf015901;
+        Tue, 8 Dec 2020 04:52:15 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 07 Dec 2020 20:52:13 -0800
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        coreteam@netfilter.org, selinux@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
+        linux-hardening@vger.kernel.org, reiserfs-devel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, patches@opensource.cirrus.com,
+        linux-fbdev@vger.kernel.org, keyrings@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org,
+        linux-geode@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-ext4@vger.kernel.org,
+        wcn36xx@lists.infradead.org, GR-everest-linux-l2@marvell.com,
+        x86@kernel.org, linux-watchdog@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-usb@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-wireless@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] gcc-plugins: simplify GCC plugin-dev capability test
-Date:   Fri,  4 Dec 2020 15:46:29 -0800
-Message-Id: <160712557572.2401125.2412248759980660312.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201203125700.161354-1-masahiroy@kernel.org>
-References: <20201203125700.161354-1-masahiroy@kernel.org>
+        netfilter-devel@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-mediatek@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        samba-technical@lists.samba.org, ceph-devel@vger.kernel.org,
+        drbd-dev@tron.linbit.com, intel-gfx@lists.freedesktop.org,
+        dm-devel@redhat.com, linux-acpi@vger.kernel.org,
+        linux-ide@vger.kernel.org, xen-devel@lists.xenproject.org,
+        op-tee@lists.trustedfirmware.org, linux-hwmon@vger.kernel.org,
+        linux-sctp@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-mtd@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-can@vger.kernel.org, rds-devel@oss.oracle.com,
+        oss-drivers@netronome.com, tipc-discussion@lists.sourceforge.net,
+        cluster-devel@redhat.com, linux-rdma@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux1394-devel@lists.sourceforge.net, alsa-devel@alsa-project.org,
+        linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-afs@lists.infradead.org, nouveau@lists.freedesktop.org,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, linux-mm@kvack.org,
+        intel-wired-lan@lists.osuosl.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: (subset) [PATCH 000/141] Fix fall-through warnings for Clang
+Date:   Mon,  7 Dec 2020 23:52:01 -0500
+Message-Id: <160740299787.710.4201881220590518200.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <cover.1605896059.git.gustavoars@kernel.org>
+References: <cover.1605896059.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9828 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=740 clxscore=1015 priorityscore=1501 mlxscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012080029
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 3 Dec 2020 21:57:00 +0900, Masahiro Yamada wrote:
-> Linus pointed out a third of the time in the Kconfig parse stage comes
-> from the single invocation of cc1plus in scripts/gcc-plugin.sh [1],
-> and directly testing plugin-version.h for existence cuts down the
-> overhead a lot. [2]
+On Fri, 20 Nov 2020 12:21:39 -0600, Gustavo A. R. Silva wrote:
+
+> This series aims to fix almost all remaining fall-through warnings in
+> order to enable -Wimplicit-fallthrough for Clang.
 > 
-> This commit takes one step further to kill the build test entirely.
+> In preparation to enable -Wimplicit-fallthrough for Clang, explicitly
+> add multiple break/goto/return/fallthrough statements instead of just
+> letting the code fall through to the next case.
 > 
 > [...]
 
-Applied to for-next/gcc-plugins, thanks!
+Applied to 5.11/scsi-queue, thanks!
 
-[1/1] gcc-plugins: simplify GCC plugin-dev capability test
-      https://git.kernel.org/kees/c/1e860048c53e
+[054/141] target: Fix fall-through warnings for Clang
+          https://git.kernel.org/mkp/scsi/c/492096ecfa39
 
 -- 
-Kees Cook
-
+Martin K. Petersen	Oracle Linux Engineering
