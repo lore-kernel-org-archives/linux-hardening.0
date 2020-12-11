@@ -7,54 +7,55 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7E3C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Dec 2020 19:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5CFC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Dec 2020 19:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A07024052
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Dec 2020 19:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2619023EF5
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Dec 2020 19:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404088AbgLKSWe (ORCPT
+        id S2404189AbgLKSXG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Dec 2020 13:22:34 -0500
-Received: from so254-31.mailgun.net ([198.61.254.31]:54511 "EHLO
-        so254-31.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403815AbgLKSWM (ORCPT
+        Fri, 11 Dec 2020 13:23:06 -0500
+Received: from m43-15.mailgun.net ([69.72.43.15]:64687 "EHLO
+        m43-15.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403815AbgLKSWm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Dec 2020 13:22:12 -0500
+        Fri, 11 Dec 2020 13:22:42 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1607710907; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1607710940; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=/tC9TObjIxxbca0gl9PAe4MKX/3LWJYFnrFjAUfzFoA=;
- b=TfJwL8GGi7ojHFyCwckXZrOIk7UR2G6AmVW4piyqWuOaFgaWibUrcCGYlphqH7dk+25COjuk
- 3GItPN+BC2oY17WuEETeCCuHAhjJHp5s++728h6lbEmPczlZ58XqSGSavyxm7MHYEY0TheX/
- fBXZkpny/83GHmCED9HeyELPY9A=
-X-Mailgun-Sending-Ip: 198.61.254.31
+ Content-Type: Sender; bh=APDP/xwk/rddrkFIAg8jpNKu7AWbc5PJ0qr13hZE6E8=;
+ b=OXRaQv2rKV40nWoAhvLzHsU/b7581hkzhvMTwcJBRNfrxa1nSzAmH5j2fumPGLWNov31xTOg
+ 5p7ZpY6o8OqLz74eGmMWTl3RLI9KQvUq44oHKeT7W5Taqm2GtKyuUoZJOt9+DSpnZoaJBlrB
+ IRqejxsXr81F049vm7W8bKsnRdg=
+X-Mailgun-Sending-Ip: 69.72.43.15
 X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5fd3b89a35a25d1b1608e8ae (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 11 Dec 2020 18:21:14
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5fd3b8d3f81e894c55a1e9bb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 11 Dec 2020 18:22:11
  GMT
 Sender: kvalo=codeaurora.org@mg.codeaurora.org
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8F76C43463; Fri, 11 Dec 2020 18:21:13 +0000 (UTC)
+        id 8A4A1C43463; Fri, 11 Dec 2020 18:22:10 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6DACC433C6;
-        Fri, 11 Dec 2020 18:21:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6DACC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8FAC4C433C6;
+        Fri, 11 Dec 2020 18:22:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8FAC4C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] iwlwifi: dvm: Fix fall-through warnings for Clang
+Subject: Re: [PATCH 091/141] iwlwifi: iwl-drv: Fix fall-through warnings for
+ Clang
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20201117155904.GA14551@embeddedor>
-References: <20201117155904.GA14551@embeddedor>
+In-Reply-To: <edd98d194bfc98b4be93a9bdc303630b719c0e66.1605896060.git.gustavoars@kernel.org>
+References: <edd98d194bfc98b4be93a9bdc303630b719c0e66.1605896060.git.gustavoars@kernel.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Johannes Berg <johannes.berg@intel.com>,
         Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
@@ -63,34 +64,34 @@ Cc:     Johannes Berg <johannes.berg@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20201211182113.D8F76C43463@smtp.codeaurora.org>
-Date:   Fri, 11 Dec 2020 18:21:13 +0000 (UTC)
+Message-Id: <20201211182210.8A4A1C43463@smtp.codeaurora.org>
+Date:   Fri, 11 Dec 2020 18:22:10 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-> warnings by explicitly using the fallthrough pseudo-keyword as a
-> replacement for a number of "fall through" markings.
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a
+> warning by replacing a /* fall through */ comment with the new
+> pseudo-keyword macro fallthrough; instead of letting the code fall
+> through to the next case.
 > 
-> Notice that Clang doesn't recognize "fall through" comments as
-> implicit fall-through.
+> Notice that Clang doesn't recognize /* fall through */ comments as
+> implicit fall-through markings.
 > 
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Patch applied to wireless-drivers-next.git, thanks.
 
-ff08b5368ce5 iwlwifi: dvm: Fix fall-through warnings for Clang
+10a0472d1850 iwlwifi: iwl-drv: Fix fall-through warnings for Clang
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20201117155904.GA14551@embeddedor/
+https://patchwork.kernel.org/project/linux-wireless/patch/edd98d194bfc98b4be93a9bdc303630b719c0e66.1605896060.git.gustavoars@kernel.org/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
