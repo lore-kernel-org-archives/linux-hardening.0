@@ -2,126 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD028C2BB48
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Dec 2020 19:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB7FC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Dec 2020 19:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1A122D5A
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Dec 2020 19:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A877B23EF5
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Dec 2020 19:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392429AbgLJT7d (ORCPT
+        id S2395340AbgLKSWC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Dec 2020 14:59:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390146AbgLJT7T (ORCPT
+        Fri, 11 Dec 2020 13:22:02 -0500
+Received: from m43-15.mailgun.net ([69.72.43.15]:64687 "EHLO
+        m43-15.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394272AbgLKSVg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Dec 2020 14:59:19 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48804C0613D6;
-        Thu, 10 Dec 2020 11:58:38 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id o17so7094735lfg.4;
-        Thu, 10 Dec 2020 11:58:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GC/XblOlRvC+qjSKhqvPWSHVmyf1S0klyHzoOlN2iQc=;
-        b=B5RF+oI/aEJk5oFliIENmOnUpk914JFiTNv0xNVgQe+zFhST94+JU5cbGP7hvBpD9v
-         grxe8oo1mX5tiYCWySi3nscdMci1ElaO8JweSiONVZk+k+nFZ+Kil9YPERX7lJIBwAp8
-         iy82acrzkeA+z40q3fstbj9Na9DxCUJBIJO4V8acsMMpNsuHaaCjX/6RpStSTLkStSlp
-         +wdaFCm1yjv/7n6d1uFK+yR9yzHEX3YPRZ3gE15T5vJKAoG0OHqFg4VUTXpMMDBpPYFN
-         litjpTzzUYBMug4zvP+YywyKEC/jnyuvyath1r6HNbRBTF3VG3syPj8iBwdgEZbiHgk+
-         rlpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GC/XblOlRvC+qjSKhqvPWSHVmyf1S0klyHzoOlN2iQc=;
-        b=t57opLBFFhpW9+EIFUOhjeCTe51ke4emR+JSWaNOSXjdhIZaIThjAkXoSbC6niEuls
-         9XSCbTnehFx9igE06uSvzd1tdl8FIjFLRc0AnUJ5+MDltH8u1/qcEy+DS3t3kk76zDR4
-         ostvuH1++0gZfi7bYo5VzUWAzejo3CAsbFIKJuvqdrQBvzw/9dhDwXKHcle1Kt7oW54A
-         viNJapX6Z+TmpsJPi3f9uH4D5a29hD7oLVs5cEiNbYhIROU7Jq5deqixa/9iSaWNj1+9
-         4S1q5IkvAaZIECwc7HvaaPXGhzqNNe/rA/rd6RN7auDYrb0es/uFOTxHVkvKrE+Jt98I
-         7YpA==
-X-Gm-Message-State: AOAM532oiAvAjCtuPw06mvXdv2NSdtmszajK2TsNe0N0oTzgAFmJGCCh
-        4n+vhXHKLAf059DGiBQpjv0=
-X-Google-Smtp-Source: ABdhPJxhUF+Yv2avD1Pj5n+dOKXAWNePLfrPOFYOF7WHhPIbi9+WEBCX4vmjJXJECzcEC8KHTOt0Jw==
-X-Received: by 2002:a19:8b55:: with SMTP id n82mr3398587lfd.485.1607630316854;
-        Thu, 10 Dec 2020 11:58:36 -0800 (PST)
-Received: from [192.168.1.33] (88-114-222-21.elisa-laajakaista.fi. [88.114.222.21])
-        by smtp.gmail.com with ESMTPSA id r16sm712488ljj.52.2020.12.10.11.58.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Dec 2020 11:58:36 -0800 (PST)
-Subject: Re: [PATCH] mm/vmalloc: randomize vmalloc() allocations
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20201201214547.9721-1-toiwoton@gmail.com>
- <9d34fb0a-7aba-1e84-6426-006ea7c3d9f5@gmail.com>
- <20201203065801.GH751215@kernel.org>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <37787c16-e188-89ae-a5fb-583fd97e6661@gmail.com>
-Date:   Thu, 10 Dec 2020 21:58:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Fri, 11 Dec 2020 13:21:36 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1607710877; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=/Y5lQBmNF6UHKYzEdIN/uavwxBVks5omuuJ3qovYSgA=;
+ b=fLqvBwVCbG35LldVhgDN2+vPW+Yp3RTt7vH+acjCCbT3/WQsbYSUTNU8zc9L8JZcdtiSnfvM
+ 7MLMo3UWou3KhS2w4YUDbtC5j2SPcn0UHuMfk/5ZdpdZ/r4qaDSKup5cY8biVOdWEEjiaRMo
+ tANSSbDA7qwqG8XY9fM851DYOJY=
+X-Mailgun-Sending-Ip: 69.72.43.15
+X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5fd3b87f35a25d1b16086da7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 11 Dec 2020 18:20:47
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76CC1C433CA; Fri, 11 Dec 2020 18:20:46 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 81EA8C433C6;
+        Fri, 11 Dec 2020 18:20:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81EA8C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20201203065801.GH751215@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] iwlwifi: mvm: Fix fall-through warnings for Clang
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20201117135053.GA13248@embeddedor>
+References: <20201117135053.GA13248@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20201211182046.76CC1C433CA@smtp.codeaurora.org>
+Date:   Fri, 11 Dec 2020 18:20:46 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 3.12.2020 8.58, Mike Rapoport wrote:
-> On Wed, Dec 02, 2020 at 08:49:06PM +0200, Topi Miettinen wrote:
->> On 1.12.2020 23.45, Topi Miettinen wrote:
->>> Memory mappings inside kernel allocated with vmalloc() are in
->>> predictable order and packed tightly toward the low addresses. With
->>> new kernel boot parameter 'randomize_vmalloc=1', the entire area is
->>> used randomly to make the allocations less predictable and harder to
->>> guess for attackers.
->>>
->>
->> This also seems to randomize module addresses. I was going to check that
->> next, so nice surprise!
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+> warnings by explicitly using the fallthrough pseudo-keyword as a
+> replacement for a number of "fall through" markings.
 > 
-> Heh, that's because module_alloc() uses vmalloc() in that way or another :)
+> Notice that Clang doesn't recognize "fall through" comments as
+> implicit fall-through.
+> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-I got a bit further with really using vmalloc with 
-[VMALLOC_START..VMALLOC_END] for modules, but then inserting a module 
-fails because of the relocations:
-[    9.202856] module: overflow in relocation type 11 val ffffe1950e27f080
+Patch applied to wireless-drivers-next.git, thanks.
 
-Type 11 is R_X86_64_32S expecting a 32 bits signed offset, so the loader 
-obviously can't fit the relocation from the highest 2GB to somewhere 32 
-TB lower.
+5a2abdcadc3b iwlwifi: mvm: Fix fall-through warnings for Clang
 
-The problem seems to be that the modules aren't really built as 
-position-independent shared objects with -fPIE/-fPIC, but instead 
-there's explicit -fno-PIE. I guess the modules also shouldn't use 
--mcmodel=kernel. Though tweaking the flags shows that some combinations 
-aren't well supported (like ’-mindirect-branch=thunk-extern’ and 
-‘-mcmodel=large’ are not compatible) and the handwritten assembly code 
-also assumes 32 bit offsets.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20201117135053.GA13248@embeddedor/
 
-A different approach could be to make the entire kernel relocatable to 
-lower addresses and then the modules could stay close nearby. I guess 
-the asm files aren't written with position independence in mind either.
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-But it seems that I'm finding and breaking lots of assumptions built in 
-to the system. What's the experts' opinion, is full module/kernel 
-randomization ever going to fly?
-
--Topi
