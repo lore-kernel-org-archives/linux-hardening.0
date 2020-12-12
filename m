@@ -2,261 +2,146 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF86C4361B
-	for <linux-hardening@archiver.kernel.org>; Sat, 12 Dec 2020 17:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9695FC4361B
+	for <linux-hardening@archiver.kernel.org>; Sat, 12 Dec 2020 20:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5359722262
-	for <linux-hardening@archiver.kernel.org>; Sat, 12 Dec 2020 17:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4CA207D0
+	for <linux-hardening@archiver.kernel.org>; Sat, 12 Dec 2020 20:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439621AbgLLR51 (ORCPT
+        id S2391254AbgLLUKI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 12 Dec 2020 12:57:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
+        Sat, 12 Dec 2020 15:10:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436464AbgLLR51 (ORCPT
+        with ESMTP id S1726472AbgLLUKI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 12 Dec 2020 12:57:27 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA2EC0613CF;
-        Sat, 12 Dec 2020 09:56:46 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id m25so19700927lfc.11;
-        Sat, 12 Dec 2020 09:56:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pK/TauEwOQxjwMKh9S4vhOg5BDCl+TEdAralgbPgXms=;
-        b=aukVNiw0MKku0nqBpuYaenetr6qzqZ2SZk7xS+AVbbG0DdWO6e9O7GAESr+p0RrhPW
-         Py6ZQYc6Ifj47A3Z1giRxjGfEqI1AI8dR5xkBzrVc908UOKrGN2YE66MH3lynSc5+5Bo
-         LL01huvcKfRfndHEi3xX9dK+0Em5+2m7Di0CyIbXVoTqzDfLrXFOuRG8dlH2H3VgCSgs
-         MaqqVnwf8+aMzO2b61SgjThqBsA8phFJE81uqp53cqe/IPcv9+UsgTxzqoLUVV40k+5a
-         OdTzUYORTvlld7Tj2+x1gQ+aKPUcZCI5G5slYVFACzx9Mve8JC0iaDR7N41Q62enF9gz
-         Cmrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pK/TauEwOQxjwMKh9S4vhOg5BDCl+TEdAralgbPgXms=;
-        b=neXCKPR2uMp7e6juoocghuJN6vUS0lufuGOCKYI5hZmcYqDixYp0sSgo9qbtX5/lDj
-         fTmtSYPVk5fdGymxG51Od0SqVBF8r9JLpF74oAJll+P0ZNDad5+QabT0j9GhsloPYls3
-         Nhp2cGMAnfcDVtMblFeDY0AZ+FVQWMACn1EpGFQVCqIhJ8i7DStUD0XK+uXNrJR7QnQv
-         iRNrbS/tGplwWu8iRXpKxY2mst4Y6kGPayJq/PXpOe/bv47wsZtuATRUz5PbZXKAfmr6
-         XgidD2jNvU4wjgNQktuwTP4Xo2rj9aLExQu30jO4ZZjV1eqM9FGUVaVugMboZygfgVnb
-         VoSA==
-X-Gm-Message-State: AOAM532zyQw+B7XfQtM20HSQvuYNzFzZmLBwQtiKCPN/pQ9y2da40HMa
-        W27blTQTl+IMI78ToQuaaJR9rYYUWa8=
-X-Google-Smtp-Source: ABdhPJyE+QJMmowLy3ikdGLmYMZmOGXu61IyfrtCPMiyLL18flvhK4t1ZPDRNRSbRqobFtId5YSVZA==
-X-Received: by 2002:a19:cb05:: with SMTP id b5mr6258564lfg.61.1607795804802;
-        Sat, 12 Dec 2020 09:56:44 -0800 (PST)
-Received: from localhost.localdomain (88-114-222-21.elisa-laajakaista.fi. [88.114.222.21])
-        by smtp.gmail.com with ESMTPSA id w12sm1325418lff.181.2020.12.12.09.56.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Dec 2020 09:56:44 -0800 (PST)
-From:   Topi Miettinen <toiwoton@gmail.com>
-To:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Topi Miettinen <toiwoton@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v2] mm/vmalloc: randomize vmalloc() allocations
-Date:   Sat, 12 Dec 2020 19:56:35 +0200
-Message-Id: <20201212175635.4217-1-toiwoton@gmail.com>
-X-Mailer: git-send-email 2.29.2
+        Sat, 12 Dec 2020 15:10:08 -0500
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [IPv6:2001:67c:2050::465:102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6096EC0613CF
+        for <linux-hardening@vger.kernel.org>; Sat, 12 Dec 2020 12:09:28 -0800 (PST)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Ctdyh1Sp9zQlY4;
+        Sat, 12 Dec 2020 21:09:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
+        content-disposition:content-type:content-type:mime-version
+        :message-id:subject:subject:from:from:date:date:received; s=
+        mail20150812; t=1607803737; bh=Xj1flQWDOxbxBnPikXPC/e8zX3XcIcAu5
+        aIzAelrwZ0=; b=vQpB9GcCnt1xiMvLTq8gEQWuc+MetgUjNp2TAXiBmpEt617C2
+        Pyoj9nHeRHSNEu371rnJWnLe6qAvFIF7c2cc9WIfjmJ9wRRm0iGMYnqBPVPajJlC
+        gM+DiwOhJaNRrmMfMXSh2mIWgP+AV5JPD8GYburFkL+vtRjL6ytG3vjIHJVO2MHW
+        ENCxA772AyFn3ncZ2baqkUnZx8L2ILrEAPY/sJk2qAaXKC79Y/Zxj4QEsXumlmk0
+        E7WysGbsboxfmtQAg9M/xHkfBREy10ArUa8asvrEiLPza+TJ2o4YqUG4sbuYmgrr
+        439lYpANzR0UKFrbpd4aosshixofHJCjSggAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+        t=1607803738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=KqOHX2iNaWVc1HNxhPsUJUeXa937LGzwzA/nNt4AW6A=;
+        b=b4bvEpnIhkP/Wxo5Px9TIAepoM5DVx79599hPVduaw0AXOw3ygyyw63Y7x5fQ+Pj5cV83o
+        S0X2PZ3vxK0ieEP0jJKOKEb3v0vcoCmCFWmhb58Hx0pgTDoeCTZ3EfLSwkKLKs+zdSrEPh
+        bpibBq+dm/NaAbkeNgyyl0R6spnwU8eOquOoCi1T/3lHZvgJXUOus9fFdd6vWDljEN0OR2
+        vwrVsV/zPHFDt826aSxHkpVsuJMppEsq95+VEFWkh9uBcuLe3B6T/bTAxhWfPjTlYtGoYX
+        o5rYAzihWN12ONKHD65dHp4b+8/Y3InhrxxnMGMOXEFsK3gQvgH+EYgzr+jy/g==
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id 5gyvm5ysB9gw; Sat, 12 Dec 2020 21:08:57 +0100 (CET)
+Date:   Sat, 12 Dec 2020 21:08:52 +0100
+From:   stefan.bavendiek@mailbox.org
+To:     kernel-hardening@lists.openwall.com
+Cc:     linux-hardening@vger.kernel.org
+Subject: Kernel complexity
+Message-ID: <X9UjVOuTgwuQwfFk@mailbox.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3r6ooBtApSUnPmvJ"
+Content-Disposition: inline
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -5.41 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 3E03D17F6
+X-Rspamd-UID: a6f645
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Memory mappings inside kernel allocated with vmalloc() are in
-predictable order and packed tightly toward the low addresses. With
-new kernel boot parameter 'randomize_vmalloc=1', the entire area is
-used randomly to make the allocations less predictable and harder to
-guess for attackers. Also module and BPF code locations get randomized
-(within their dedicated and rather small area though) and if
-CONFIG_VMAP_STACK is enabled, also kernel thread stack locations.
 
-On 32 bit systems this may cause problems due to increased VM
-fragmentation if the address space gets crowded.
+--3r6ooBtApSUnPmvJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On all systems, it will reduce performance and increase memory and
-cache usage due to less efficient use of page tables and inability to
-merge adjacent VMAs with compatible attributes. On x86_64 with 5 level
-page tables, in the worst case, additional page table entries of up to
-4 pages are created for each mapping, so with small mappings there's
-considerable penalty.
+Hi,
 
-Without randomize_vmalloc=1:
-$ cat /proc/vmallocinfo
-0xffffc90000000000-0xffffc90000002000    8192 acpi_os_map_iomem+0x29e/0x2c0 phys=0x000000003ffe1000 ioremap
-0xffffc90000002000-0xffffc90000005000   12288 acpi_os_map_iomem+0x29e/0x2c0 phys=0x000000003ffe0000 ioremap
-0xffffc90000005000-0xffffc90000007000    8192 hpet_enable+0x36/0x4a9 phys=0x00000000fed00000 ioremap
-0xffffc90000007000-0xffffc90000009000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
-0xffffc90000009000-0xffffc9000000b000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
-0xffffc9000000b000-0xffffc9000000d000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
-0xffffc9000000d000-0xffffc9000000f000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
-0xffffc90000011000-0xffffc90000015000   16384 n_tty_open+0x16/0xe0 pages=3 vmalloc
-0xffffc900003de000-0xffffc900003e0000    8192 acpi_os_map_iomem+0x29e/0x2c0 phys=0x00000000fed00000 ioremap
-0xffffc900003e0000-0xffffc900003e2000    8192 memremap+0x1a1/0x280 phys=0x00000000000f5000 ioremap
-0xffffc900003e2000-0xffffc900003f3000   69632 pcpu_create_chunk+0x80/0x2c0 pages=16 vmalloc
-0xffffc900003f3000-0xffffc90000405000   73728 pcpu_create_chunk+0xb7/0x2c0 pages=17 vmalloc
-0xffffc90000405000-0xffffc9000040a000   20480 pcpu_create_chunk+0xed/0x2c0 pages=4 vmalloc
-0xffffe8ffffc00000-0xffffe8ffffe00000 2097152 pcpu_get_vm_areas+0x0/0x1a40 vmalloc
+first of all, thanks to everyone here for this awesome project and the work=
+ you do.
 
-With randomize_vmalloc=1, the allocations are randomized:
-$ cat /proc/vmallocinfo
-0xffffca3a36442000-0xffffca3a36447000   20480 pcpu_create_chunk+0xed/0x2c0 pages=4 vmalloc
-0xffffca63034d6000-0xffffca63034d9000   12288 acpi_os_map_iomem+0x29e/0x2c0 phys=0x000000003ffe0000 ioremap
-0xffffcce23d32e000-0xffffcce23d330000    8192 memremap+0x1a1/0x280 phys=0x00000000000f5000 ioremap
-0xffffcfb9f0e22000-0xffffcfb9f0e24000    8192 hpet_enable+0x36/0x4a9 phys=0x00000000fed00000 ioremap
-0xffffd1df23e9e000-0xffffd1df23eb0000   73728 pcpu_create_chunk+0xb7/0x2c0 pages=17 vmalloc
-0xffffd690c2990000-0xffffd690c2992000    8192 acpi_os_map_iomem+0x29e/0x2c0 phys=0x000000003ffe1000 ioremap
-0xffffd8460c718000-0xffffd8460c71c000   16384 n_tty_open+0x16/0xe0 pages=3 vmalloc
-0xffffd89aba709000-0xffffd89aba70b000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
-0xffffe0ca3f2ed000-0xffffe0ca3f2ef000    8192 acpi_os_map_iomem+0x29e/0x2c0 phys=0x00000000fed00000 ioremap
-0xffffe3ba44802000-0xffffe3ba44804000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
-0xffffe4524b2a2000-0xffffe4524b2a4000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
-0xffffe61372b2e000-0xffffe61372b30000    8192 gen_pool_add_owner+0x49/0x130 pages=1 vmalloc
-0xffffe704d2f7c000-0xffffe704d2f8d000   69632 pcpu_create_chunk+0x80/0x2c0 pages=16 vmalloc
-0xffffe8ffffc00000-0xffffe8ffffe00000 2097152 pcpu_get_vm_areas+0x0/0x1a40 vmalloc
+Personally I am interested in Linux Kernel Security and especially features=
+ supporting attack surface reduction. In the past I did some work on sandbo=
+xing features like seccomp support in user space applications. I have been =
+rather hesitant to get involved here, since I am not a full time developer =
+and certainly not an expert in C programming.=20
 
-With CONFIG_VMAP_STACK, also kernel thread stacks are placed in
-vmalloc area and therefore they also get randomized (only one example
-line from /proc/vmallocinfo shown for brevity):
+However I am currently doing a research project that aims to identify risk =
+areas in the kernel by measuring code complexity metrics and assuming this =
+might help this project, I would like to ask for some feedback in case this=
+ work can actually help with this project.
 
-unrandomized:
-0xffffc90000018000-0xffffc90000021000   36864 kernel_clone+0xf9/0x560 pages=8 vmalloc
+My approach is basically to take a look at the different system calls and m=
+easure the complexity of the code involved in their execution. Since code c=
+omplexity has already been found to have a strong correlation with the prob=
+ability of existing vulnerabilities, this might indicate kernel areas that =
+need a closer look.
+Additionally the functionality of the syscall will also be considered for a=
+ final risk score, although most of the work for this part has already been=
+ done in [1].
+The objective is to create a risk score matrix for linux syscalls that cons=
+ists of the functionality risk according to [1], times the measured complex=
+ity.
+This will (hopefully) be helpful to identify risk areas in the kernel and p=
+rovide user space developers with an measurement that can help design secur=
+e software and sandboxing features.  =20
 
-randomized:
-0xffffcb57611a8000-0xffffcb57611b1000   36864 kernel_clone+0xf9/0x560 pages=8 vmalloc
 
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Jann Horn <jannh@google.com>
-CC: Kees Cook <keescook@chromium.org>
-CC: Linux API <linux-api@vger.kernel.org>
-CC: Matthew Wilcox <willy@infradead.org>
-CC: Mike Rapoport <rppt@kernel.org>
-Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
----
-v2: retry allocation from other end of vmalloc space in case of
-failure (Matthew Wilcox), improve commit message and documentation
----
- .../admin-guide/kernel-parameters.txt         | 23 +++++++++++++++
- mm/vmalloc.c                                  | 29 +++++++++++++++++--
- 2 files changed, 50 insertions(+), 2 deletions(-)
+One major aspect I am still not sure about is the challenges regarding the =
+dynamic measure of code path execution. While it is possible to measure the=
+ cyclomatic complexity of the kernel code with existing tools, I am not sur=
+e how much value the results would have, given that this does not include t=
+he dynamic code path behind each syscall. I was thinking of using ftrace to=
+ follow and measure the execution path. Any feedback and advise on this for=
+ this would be appreciated.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 44fde25bb221..9386b1b40a27 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4017,6 +4017,29 @@
- 
- 	ramdisk_start=	[RAM] RAM disk image start address
- 
-+	randomize_vmalloc= [KNL] Randomize vmalloc() allocations. With 1,
-+			the entire vmalloc() area is used randomly to
-+			make the allocations less predictable and
-+			harder to guess for attackers. Also module and
-+			BPF code locations get randomized (within
-+			their dedicated and rather small area though)
-+			and if CONFIG_VMAP_STACK is enabled, also
-+			kernel thread stack locations.
-+
-+			On 32 bit systems this may cause problems due
-+			to increased VM fragmentation if the address
-+			space gets crowded.
-+
-+			On all systems, it will reduce performance and
-+			increase memory and cache usage due to less
-+			efficient use of page tables and inability to
-+			merge adjacent VMAs with compatible
-+			attributes. On x86_64 with 5 level page
-+			tables, in the worst case, additional page
-+			table entries of up to 4 pages are created for
-+			each mapping, so with small mappings there's
-+			considerable penalty.
-+
- 	random.trust_cpu={on,off}
- 			[KNL] Enable or disable trusting the use of the
- 			CPU's random number generator (if available) to
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 6ae491a8b210..d78528af6316 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -34,6 +34,7 @@
- #include <linux/bitops.h>
- #include <linux/rbtree_augmented.h>
- #include <linux/overflow.h>
-+#include <linux/random.h>
- 
- #include <linux/uaccess.h>
- #include <asm/tlbflush.h>
-@@ -1079,6 +1080,17 @@ adjust_va_to_fit_type(struct vmap_area *va,
- 	return 0;
- }
- 
-+static int randomize_vmalloc = 0;
-+
-+static int __init set_randomize_vmalloc(char *str)
-+{
-+	if (!str)
-+		return 0;
-+	randomize_vmalloc = simple_strtoul(str, &str, 0);
-+	return 1;
-+}
-+__setup("randomize_vmalloc=", set_randomize_vmalloc);
-+
- /*
-  * Returns a start address of the newly allocated area, if success.
-  * Otherwise a vend is returned that indicates failure.
-@@ -1152,7 +1164,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
- 				int node, gfp_t gfp_mask)
- {
- 	struct vmap_area *va, *pva;
--	unsigned long addr;
-+	unsigned long addr, voffset;
- 	int purged = 0;
- 	int ret;
- 
-@@ -1207,11 +1219,24 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
- 	if (pva && __this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva))
- 		kmem_cache_free(vmap_area_cachep, pva);
- 
-+	/* Randomize allocation */
-+	if (randomize_vmalloc) {
-+		voffset = get_random_long() & (roundup_pow_of_two(vend - vstart) - 1);
-+		voffset = PAGE_ALIGN(voffset);
-+		if (voffset + size > vend - vstart)
-+			voffset = vend - vstart - size;
-+	} else
-+		voffset = 0;
-+
- 	/*
- 	 * If an allocation fails, the "vend" address is
- 	 * returned. Therefore trigger the overflow path.
- 	 */
--	addr = __alloc_vmap_area(size, align, vstart, vend);
-+	addr = __alloc_vmap_area(size, align, vstart + voffset, vend);
-+
-+	if (unlikely(addr == vend) && voffset)
-+		/* Retry randomization from other end */
-+		addr = __alloc_vmap_area(size, align, vstart, vstart + voffset + size);
- 	spin_unlock(&free_vmap_area_lock);
- 
- 	if (unlikely(addr == vend))
 
-base-commit: 7f376f1917d7461e05b648983e8d2aea9d0712b2
--- 
-2.29.2
+-- Stefan
 
+Ref.
+[1] Massimo Bernaschi, Emanuele Gabrielli, and Luigi Mancini. Remus: A secu=
+rity-enhanced Operating system (2002)
+
+--3r6ooBtApSUnPmvJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIyBAABCAAdFiEEjLwAv8xLYF1doyZLdIuckz2DLQMFAl/VI0QACgkQdIuckz2D
+LQPn8Q/1HuBDyaFgYUI8+JlTtSr7iSR8jOAKYrG3AE3KPeAgmBIHRtI/ygwREX1v
+KE+xqJcptnWMrRFUNY82wsCXVYmakNvLoiM0YTaBnFb1IKutN2HgtoRZtkr6RS0e
+/mPrnai4vTl4FCtrFWFv43wqXzbOyiq7FYbcI+RV6+rfZ5N9Gpu6IFDgQCdq4VWG
+DbybZILiktZ8sYQgskx2/gkXkx1kElbD1UltU4VsElUtPGih2Ax8nKynDAt+Z/XT
+Wb9mRVmH+nHkznh6VqYh9Ulh0Qpl0HIbOtFVL/ie8PDsBIYxjVx2V+yKacxx2kfO
+YENZBYFL0JVYfbi5hDlXVkGN/r3tpB+z6Zk5Sf/IagR5oQdAJVlsl+48JEAFwwVI
+U2V5bkyNAKDyzYJivPPyYVLsWME/L4D7sm7Fc/CbsG2J4hSbyHhkwilXaSRD9if+
+7hXwYHMkpnSKU3H3tV+cu9WIgxxuiBbovpUqGlAhRprc2it9rT8owlh5mSgc06ib
+kzr/1N1BPO8tAEJfstrUigkuIUwQDwTY9P1ZVhtdW3lE1Uamea0r9RXkxW8kqb18
+BXKfVA20tmi6nie5ZlHtxavZqPEJaixhi0BM3t8+wRgWKPgZvUF2cMnqmNuAJFUP
+hGflZw/1HLAm7+62Z9A3/I1zF5S+Rk4WmrbpJXFBxSRlVpHXAw==
+=236y
+-----END PGP SIGNATURE-----
+
+--3r6ooBtApSUnPmvJ--
