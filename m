@@ -2,113 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B719C4361B
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Dec 2020 20:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BBCC3526C
+	for <linux-hardening@archiver.kernel.org>; Sat, 19 Dec 2020 16:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE3423B54
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Dec 2020 20:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE9523A79
+	for <linux-hardening@archiver.kernel.org>; Sat, 19 Dec 2020 16:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731893AbgLRUeZ (ORCPT
+        id S1726832AbgLSQZq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Dec 2020 15:34:25 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2456 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727843AbgLRUeZ (ORCPT
+        Sat, 19 Dec 2020 11:25:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgLSQZp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Dec 2020 15:34:25 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fdd12280000>; Fri, 18 Dec 2020 12:33:44 -0800
-Received: from [10.26.73.104] (172.20.145.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Dec
- 2020 20:33:40 +0000
-Subject: Re: [PATCH] gcc-plugins: simplify GCC plugin-dev capability test
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Emese Revfy" <re.emese@gmail.com>,
-        <linux-hardening@vger.kernel.org>,
-        "Nathan Chancellor" <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <CGME20201218075758eucas1p1605768803a5c9edce4fbe54b3e3b859a@eucas1p1.samsung.com>
- <20201203125700.161354-1-masahiroy@kernel.org>
- <b9b17126-9af5-2f73-526e-91bb9fd27f71@samsung.com>
- <CAK7LNART2qQBY7Vc8rhMiXS_Fwty7qpWjwwfPrUegTb-gjy6sA@mail.gmail.com>
- <9f959875-1a30-b1a1-b626-3805e24a6df3@samsung.com>
- <e5b06d9a-9b24-2440-e0c2-8bf7095eccd9@nvidia.com>
- <25030057-86b1-5619-25fd-acfa0728b850@samsung.com>
- <4ab4f62f-8b37-01e1-f81c-270155b13a51@nvidia.com>
- <7e691a61-bf4b-0594-8d6d-36d62a5def0b@nvidia.com>
- <CAHk-=wjjiYjCp61gdAMpDOsUBU-A2hFFKJoVx5VAC7yV4K6WYg@mail.gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <95ce88c6-59bd-55b9-9299-51fa20aeb95c@nvidia.com>
-Date:   Fri, 18 Dec 2020 20:33:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjjiYjCp61gdAMpDOsUBU-A2hFFKJoVx5VAC7yV4K6WYg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1608323624; bh=Vkw+uLqloTF34H+X6XM+h7o523zkguJSKp2ANgZpfIM=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=Pok/cBh0wN8IAVvzeF5jEn57A5ob4lQ1P0qK2Bdc2cm6N1/z37Qv7pfizvNmSoPOh
-         zmWAyonWTbySw/djJhHH7OYkSRAQJqhYXqJizNSFs5P7zbFyIPWPVkodGEXhKNwC54
-         k0/10wuhaKlZ8mYM8E7wSbu2yx3tdnAnTlDAeiLQerZK192CPRJG02/nNWko2zHkb9
-         spqvrpQBWAdonaLDuNtUEyLSlj91WLKZbPGK4t+kB8TljXisxsoh6nAzclRnvHEqz5
-         I9+U5YlOOEFDyVDP4IY9LvX3A0+zc+eO9iX3NWBgaEeWgcj1E72ufVLx1XdCrU/zyr
-         Y6j+R7r179QTg==
+        Sat, 19 Dec 2020 11:25:45 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98329C0613CF;
+        Sat, 19 Dec 2020 08:25:05 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id w5so6289337wrm.11;
+        Sat, 19 Dec 2020 08:25:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=BqrM7vBnZgy1neZwerAnSu/Di9ko8MwnICVCM0MML0s=;
+        b=SF3r1Dqgf2Xq2f7jZP5sxFnYN1VU97vC3Azay9O0/xdoRRXSBer7I9hjnXzJbr0Bk3
+         ZLCcrvUMAQhwqs46kIseJymIxgRSktEheMIufz8e8zStaQrBEUaBOvzazQsXzzlddrAD
+         J7R6wzghJ2v5KzNDtlmhEocPsie+RY5fPpqwkzHqDuATIVppupzEPuhh79NGWJ3gveWb
+         yphXdyYAOnzkuIk7ySlWKUZ/yrT39eeNSbeakW3pcCjyHseddHTkFedSL6Z7mJAr9mTL
+         ojG/TIaTWQuCtxtvR4uGusnVgbDyNKfxW0H0AJrL6F7+5WHCy1/Vi9t2xtt8V4kII5Uo
+         n9gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BqrM7vBnZgy1neZwerAnSu/Di9ko8MwnICVCM0MML0s=;
+        b=hwCVGBI/ZvDGNRG8fchBZvOpeQLXMNAqoVNCmuxvTN5C8E3fWIgKzcFKdresDmm+tD
+         WAllEnBx3/QizH93fP46+uxKbG09yo/NSzT8TDkAlyQnRfCQls8G73iVxpO9FLzEy5v8
+         /rxKcPHggrhS1b6nPuot/Ejfuw6awYeQE50oBUvgjiHkS3uZvWK++WoIUf8eDtqOVRud
+         ZEb/e7s0e80Uiw73tJCJeLMFIbxcQ+3RUuGyEee6m0+9j5ILF6Wzm38bylTApJxn0rYb
+         xDSZ/1n8kj72I2TudIlLZ7Cbq2DdTVzNbrIL6/f9jMdGcKTuEs2o52oSucX3i3mRnVZD
+         /zWg==
+X-Gm-Message-State: AOAM530az3ExIi0AAuQYPEmKvtdrXbassKb9Ee+rbLcMIQjWON9agSSL
+        WhaZbDZgNyy+xZD6t/o1JMU=
+X-Google-Smtp-Source: ABdhPJygGQH8MdpcWrRp1zig5Kc7RNOQjILOjktzEY97h51iIwNQGLPslebtEGU3AfT3nrwMDdOA6g==
+X-Received: by 2002:a5d:6749:: with SMTP id l9mr10127199wrw.395.1608395104306;
+        Sat, 19 Dec 2020 08:25:04 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2dee:f900:595c:74f6:9319:8cea])
+        by smtp.gmail.com with ESMTPSA id z21sm15339063wmk.20.2020.12.19.08.25.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Dec 2020 08:25:03 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        Joe Perches <joe@perches.com>,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust GCC PLUGINS after gcc-plugin.sh removal
+Date:   Sat, 19 Dec 2020 17:24:56 +0100
+Message-Id: <20201219162456.19790-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Commit 1e860048c53e ("gcc-plugins: simplify GCC plugin-dev capability test")
+removed ./scripts/gcc-plugin.sh, but missed to adjust MAINTAINERS.
 
-On 18/12/2020 17:54, Linus Torvalds wrote:
-> On Fri, Dec 18, 2020 at 7:33 AM Jon Hunter <jonathanh@nvidia.com> wrote:
->>
->> However, if you are saying that this is a problem/bug with our builders,
->> then of course we will have to get this fixed.
-> 
-> This seems to be a package dependency problem with the gcc plugins -
-> they clearly want libgmp, but apparently the package hasn't specified
-> that dependency.
-> 
-> If this turns out to be a big problem, I guess we can't simplify the
-> plugin check after all.
-> 
-> We historically just disabled gcc-plugins if that header didn't build,
-> which obviously meant that it "worked" for people, but it also means
-> that clearly the coverage can't have been as good as it could/should
-> be.
-> 
-> So if it's as simple as just installing the GNU multiprecision
-> libraries ("gmp-devel" on most rpm-based systems, "libgmp-dev" on most
-> debian systems), then I think that's the right thing to do. You'll get
-> a working build again, and equally importantly, your build servers
-> will actually do a better job of covering the different build options.
+Hence, ./scripts/get_maintainers.pl --self-test=patterns warns:
 
+  warning: no file matches    F:    scripts/gcc-plugin.sh
 
-Thanks. I have reported this issue to the team that administers the
-builders. So hopefully, they will install the necessary packages for us
-now.
+Adjust entries in GGC PLUGINS section after this file removal.
 
-Cheers
-Jon
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+applies cleanly on next-20201218
 
+Masahiro-san, please pick this minor cleanup patch on your -next tree.
+
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f5eafee83bc6..fd3b06636c5b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7371,7 +7371,6 @@ L:	linux-hardening@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/kbuild/gcc-plugins.rst
+ F:	scripts/Makefile.gcc-plugins
+-F:	scripts/gcc-plugin.sh
+ F:	scripts/gcc-plugins/
+ 
+ GCOV BASED KERNEL PROFILING
 -- 
-nvpublic
+2.17.1
+
