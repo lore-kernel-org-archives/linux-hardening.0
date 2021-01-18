@@ -2,75 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8694EC433E0
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jan 2021 14:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68FBC433DB
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jan 2021 16:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4216022B40
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jan 2021 14:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F0820E65
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jan 2021 16:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404828AbhAROvk (ORCPT
+        id S2406196AbhARQE7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Jan 2021 09:51:40 -0500
-Received: from fallback16.mail.ru ([94.100.177.128]:46524 "EHLO
-        fallback16.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405044AbhAROvh (ORCPT
+        Mon, 18 Jan 2021 11:04:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406352AbhARQEs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Jan 2021 09:51:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=orpaltech.com; s=mailru;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To; bh=iJnsY9UMxWBf5o7NNzsTJbii9BvNEYk81c9aaI27M1U=;
-        b=By1zZW7Nte9EvC+wgtJ23u3rJF9tLhkLHAGiMKACREQtYaPtvkrOA9JXxUISHLk1h8Dp/s3QE5zntjZwJo2A3ffH8dGoszx5aA3digqw45pRSGFxob8oWj4orzw6xOUJOfdd9FIePnleUBdDZiTFLB3Yvw3hQDEOGLaerFArHtk=;
-Received: from [10.161.64.41] (port=57206 helo=smtp33.i.mail.ru)
-        by fallback16.i with esmtp (envelope-from <ssuloev@orpaltech.com>)
-        id 1l1Vrh-0005PW-B5; Mon, 18 Jan 2021 17:50:45 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=orpaltech.com; s=mailru;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=iJnsY9UMxWBf5o7NNzsTJbii9BvNEYk81c9aaI27M1U=;
-        b=g9BbLBmLbvtJUdxnaulIdeRRzX0nkIC+itvMfZc5E8VW5opjJrcPLZxsqXdOW8yU8uo7zGFz+nb17/ZiqR42EgMTCJ+K/yvSZQpuO5m4dmF9iqLaZjpueEoDuM0QJ6T+K4DetnHTs8DuGxbstbvn52FU5Il5hpdMkeycZr9Scnw=;
-Received: by smtp33.i.mail.ru with esmtpa (envelope-from <ssuloev@orpaltech.com>)
-        id 1l1Vqd-00050z-Rx; Mon, 18 Jan 2021 17:49:40 +0300
-To:     keescook@chromium.org
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-From:   Sergey Suloev <ssuloev@orpaltech.com>
-Organization: ORPALTECH
-Subject: Compilation issue with Linaro ARM toolchain
-Message-ID: <70249918-0081-aef4-0605-85db700aadc5@orpaltech.com>
-Date:   Mon, 18 Jan 2021 17:49:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD9D0E79FBC973162CD1269BAEF2517FA5CABD5EB3486AA6E7100894C459B0CD1B92728AF302333E311375A8ECBD95E307F1D6DFF15E5DD52311F641D77257F6382
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7A8325FA649D0A450EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637560334CFC131571A8638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FCC619A2B6F1F8E41467C010F612117BEAEF1CE1D4CC7261B5389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C0A3E989B1926288338941B15DA834481FCF19DD082D7633A0EF3E4896CB9E6436389733CBF5DBD5E9D5E8D9A59859A8B68424CA1AAF98A6958941B15DA834481F9449624AB7ADAF37BA3038C0950A5D3613377AFFFEAFD2690E30A4C9C8E338DA62F93A5AA462B21A7B076A6E789B0E97A8DF7F3B2552694A1E7802607F20496D49FD398EE364050FD1AC325EA934333D9100238FE36DC7A2B3661434B16C20AC78D18283394535A975ECD9A6C639B01BC09775C1D3CA48CF157867FB7BCEF6CC35872C767BF85DA22EF20D2F80756B5F40A5AABA2AD3711975ECD9A6C639B01B78DA827A17800CE7A7E83954A4B6CFF8731C566533BA786A40A5AABA2AD371193C9F3DD0FB1AF5EB82E77451A5C57BD33C9F3DD0FB1AF5EB4E70A05D1297E1BBCB5012B2E24CD356
-X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975C8F59B88ADF80E5C0AE9AF85B3864265DFAF7191F0D05C3C19C2B6934AE262D3EE7EAB7254005DCEDFE2E74F08947C4C21E0A4E2319210D9B64D260DF9561598F01A9E91200F654B01098AAFFB0A1231D8E8E86DC7131B365E7726E8460B7C23C
-X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D3435B1F14A93C4073FB2499844232EFBB8A086C59568B219A40F2BE57D6781AA52ED4EC9454B480C811D7E09C32AA3244CD312C6C42651EA000582FE35BC95910FF26BFA4C8A6946B8927AC6DF5659F194
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojbL9S8ysBdXjUXjcPyOeQtjfQ5j0QGGO5
-X-Mailru-Sender: C5364AD02485212F08C1E15139291EE92728AF302333E311375A8ECBD95E307F069BFC61DABEEB110841D3AAAB1726C63DDE9B364B0DF289264D2CD8C2503E8C22A194DADEED8EEDCA01A23BA9CD1BE7ED14614B50AE0675
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B40E5D90E44ABF6C6604BA033ECC7B62DE9EF73405D5275613049FFFDB7839CE9E3F38DD48A950245D6CF74C2B4E35422460725E2D57440B2AC0DFA3D5E16B17C4
-X-C1DE0DAB: C20DE7B7AB408E4181F030C43753B8186998911F362727C414F749A5E30D975C8F59B88ADF80E5C06296138B2EEA2AB25F6617B9889C83B89C2B6934AE262D3EE7EAB7254005DCED41309B721230A41A699F904B3F4130E343918A1A30D5E7FCCB5012B2E24CD356
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5xhPKz0ZEsZ5k6NOOPWz5QAiZSCXKGQRq3/7KxbCLSB2ESzQkaOXqCBFZPLWFrEGlV1shfWe2EVcxl5toh0c/aCGOghz/frdRhzMe95NxDFdlTFGVPAkz0Ikw+j/OJFlSg==
-X-Mailru-MI: 800
-X-Mras: Ok
+        Mon, 18 Jan 2021 11:04:48 -0500
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D467C061574
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Jan 2021 08:04:06 -0800 (PST)
+Received: by mail-lj1-x22a.google.com with SMTP id m13so18708389ljo.11
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Jan 2021 08:04:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CRVjXKKrBcqwznGwkqTzMqru1Q83Wf5kKWHY7eqB8zM=;
+        b=lbWZcFrp2/xw+8YB57Zf263+bZpNgoZ7EoISNDLdIhXY1lIpJ3pER18lYziEAhGzZt
+         k3Vy+kuDQ52eFj2/nSBqgI1Dzl/17VaiB072NC5dPTgG5h+DniV+PC/ASDYnAGnZdixj
+         m9l3MdV3f/QuJS67asRhuBCF82FyEAw2vfbo5w94pdSc4pwxaMSfXD9C3dd5IY7WXNR5
+         Vt41zbAu78xzxub//34cHf+ASxBcrXUjYu11iy/unGV0P/R3W15JKXODhM6o0iOGh3GY
+         Fm9Ier+d+Gx93110sQLSgc1L5RT0LGqEB7uEP4gXzBmdWf7Eds+qBBubBvXZ7kJS3I8q
+         5yhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CRVjXKKrBcqwznGwkqTzMqru1Q83Wf5kKWHY7eqB8zM=;
+        b=JgzRqSxCAtrvRjg/94YwFuJuiF3m4cj4PB9TaJrcCPVL/Wxw+2h4sXzF10aFicjyNl
+         GpQg8vH66wk7xKq3kZYSXjWADPppSYPWAlKQBRM3HouaP4WkX9G29dnY8Nksp/juIMoW
+         AJSVmQ8Iudz9fRaWxm+UQebQl/7napc2ubpzzSfuwPBDGPWINcX7lhHrvOwVASiXQZIE
+         mb9AMhRNFzBjbff82wl+aiH+uS6tLM0EQaPAS/pJYYD7V+2H4Yi9jP9wpL8lXUJT3OI7
+         w8rutGF7jmOJZ0t7GBsgV0jwyMeAYpsTvK8/BXld6WMt1+COi3DTq19xuM3lFmE+WYqI
+         vQKA==
+X-Gm-Message-State: AOAM532FEpLA8kHXmR9H+MSVrqF/b9GS84kQ2rGmYqvi2+r7ZY3jtELT
+        ER0lBwVaG/vxfBaHc+Uj9mVh
+X-Google-Smtp-Source: ABdhPJyhoURVwyFMMZQYjFq/YzVLjesKUyS4L8Y3IIHImbFP5hN46ZurI3143j9QemFLDSa+xuFSiw==
+X-Received: by 2002:a2e:898c:: with SMTP id c12mr147949lji.193.1610985844464;
+        Mon, 18 Jan 2021 08:04:04 -0800 (PST)
+Received: from ?IPv6:2a00:1370:8117:3ba7:1569:a6db:ab8:291f? ([2a00:1370:8117:3ba7:1569:a6db:ab8:291f])
+        by smtp.gmail.com with ESMTPSA id j17sm1946104lfb.145.2021.01.18.08.04.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Jan 2021 08:04:03 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: Compilation issue with Linaro ARM toolchain
+From:   Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>
+In-Reply-To: <20210118155921.GA462671@xps15>
+Date:   Mon, 18 Jan 2021 19:04:02 +0300
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linaro Toolchain Working Group 
+        <linaro-toolchain@lists.linaro.org>, keescook@chromium.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <061303A4-51F3-42E0-BCE3-BFAF416D7609@linaro.org>
+References: <70249918-0081-aef4-0605-85db700aadc5@orpaltech.com>
+ <20210118155921.GA462671@xps15>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sergey Suloev <ssuloev@orpaltech.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi, guys,
+> On 18 Jan 2021, at 18:59, Mathieu Poirier <mathieu.poirier@linaro.org> =
+wrote:
+>=20
+> Adding the Linaro toolchain group mailing list.
+>=20
+> On Mon, Jan 18, 2021 at 05:49:39PM +0300, Sergey Suloev wrote:
+>> Hi, guys,
+>>=20
+>> I am having an issue builduing kernel 5.11 (rc4) with Linaro ARM =
+toolchain.
+>> The issue seems to be related to CC plugins sources.
+>> Here is my build log: https://pastebin.com/DTn7Szax. I have never =
+seen this
+>> before with versions 5.10 and below.
 
-I am having an issue builduing kernel 5.11 (rc4) with Linaro ARM 
-toolchain. The issue seems to be related to CC plugins sources.
-Here is my build log: https://pastebin.com/DTn7Szax. I have never seen 
-this before with versions 5.10 and below.
+Thanks, Mathieu.
 
-Thank you,
-Sergey
+Hi Sergey,
+
+MPC (along with GMP and MPFR) are libraries that GCC and its plugins =
+depend on.  I think, installing libmpc-dev or equivalent should fix the =
+problem; installing an equivalent of =E2=80=9Capt build-dep gcc=E2=80=9D =
+might be more robust.
+
+Linux kernel has recently relaxed the way it detects support for =
+compiler plugins, so it=E2=80=99s now enabling them more often than =
+before.
+
+Hope this helps,
+
+--
+Maxim Kuvyrkov
+https://www.linaro.org
 
