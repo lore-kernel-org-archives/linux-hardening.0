@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2A8C43381
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 19:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C50C4332E
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 19:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C491233EB
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 19:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB3D23406
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 19:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390374AbhATSqo (ORCPT
+        id S2387403AbhATSqu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Jan 2021 13:46:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46748 "EHLO
+        Wed, 20 Jan 2021 13:46:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:26790 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387500AbhATRjk (ORCPT
+        by vger.kernel.org with ESMTP id S2387628AbhATRjo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Jan 2021 12:39:40 -0500
+        Wed, 20 Jan 2021 12:39:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611164293;
+        s=mimecast20190719; t=1611164295;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1YEVSMla8UOmgBC4LmzAJMeE/UB0SCvN1vHTnN1GioY=;
-        b=OUNLES38jeNuMBGpEzrT2JE15yEy/UPvd4WgvRo5jWsBP0Iv13JRNaYkpA4I26CXk8/h3x
-        3NHZyeaEhoiWgyHJOq9199Xfofql6Ii6OG9sJs5Ue4HF9JHbB1DjX5KUamF3QaEmqvUdX2
-        GMEEpnanLfjUv1m+Ck1NY5GiV56fWOE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-173-f6AjM-hyMq-I0f4eFxJmDQ-1; Wed, 20 Jan 2021 12:38:11 -0500
-X-MC-Unique: f6AjM-hyMq-I0f4eFxJmDQ-1
-Received: by mail-wr1-f71.google.com with SMTP id v5so11966599wrr.0
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:11 -0800 (PST)
+        bh=pZtUwFLGKmTk06Edz7BP1qawZG5Xl7GI1AIkrnSV6+8=;
+        b=VfpqVB7d9S0tQevD+/KMpcJneWZARsFL+YJLT2V7xLHkjTswq6i+Yo5UGDT/KXAQXdVN/j
+        GBvQknL0+g6nyoUBzKp8VyRVQLdrRXNmPJ5Cxiu80l6n7mSs2gZMAKFCSNLR86Ux4Qjh+9
+        5dB0CfFJ1eNAc9cGaqX0BFQBQqbzsIc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-538-XiZ0jgXhNh-bpllkuSybPA-1; Wed, 20 Jan 2021 12:38:14 -0500
+X-MC-Unique: XiZ0jgXhNh-bpllkuSybPA-1
+Received: by mail-wr1-f70.google.com with SMTP id v5so11966675wrr.0
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1YEVSMla8UOmgBC4LmzAJMeE/UB0SCvN1vHTnN1GioY=;
-        b=XEqN6WbFtsaKjYls01nQFjwC2IDuzrN6SisEIC9cogLCfKAh+mwU+uIzITkSgn3ETB
-         +O6uTZnOdOI958tDDtUXwoT9Z3/TPdm7/6TfeV7cuMxN6LSFnOBm3m9qN4+fCILsbOer
-         phQvnjzKFsq7/vCSlpQrA/LqU3BjTnzjdVwc3zHpxIXU8Fgl/SlgfQ/Qpmo/iM0Dp1So
-         qL/UOIKXTuzuXJsnplA1VZcQTjMiein1/csOiISkPMqBrtDagFMiO5VtQXUiNrFNyXyr
-         zaQiviSvqY1YI12j5LD5IlCpV/z9QBQkHked+B8/Hi/CAO41wozhyNMTcqhNz7BRYtfL
-         H00g==
-X-Gm-Message-State: AOAM530BsGVUvVOIVnpe4IBQlYDczXnTAKohCSe+gvVwgUhb9EUwm7YV
-        WbTLT3A778yfIB/rlaGJdePYFMqBx93BAiZfcP7iFBQVhhp8skTRDAOkKGx+ernXID8mtuwGQ9V
-        a+FFaXaEqnWnmE4wnvTIKIs8B9AAe
-X-Received: by 2002:adf:d238:: with SMTP id k24mr10316325wrh.414.1611164290573;
-        Wed, 20 Jan 2021 09:38:10 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxsXKBygCbH5ehSM3hv+i9wV2hjiG6FmiP83Wor2Wz+s8QTVOj8s3jD6nPK36EhOefk08Au5A==
-X-Received: by 2002:adf:d238:: with SMTP id k24mr10316310wrh.414.1611164290420;
-        Wed, 20 Jan 2021 09:38:10 -0800 (PST)
+        bh=pZtUwFLGKmTk06Edz7BP1qawZG5Xl7GI1AIkrnSV6+8=;
+        b=Ni3tZKOr00TFe1afHlS1DL/aMFTUycb2VHWU4lN/HPolrtjOSlO6G1fg1woyKXjt5N
+         XQ09UEYpCXhxQOLjrxevGI5jOjBevAnqPYCbRtDssY0pxuh/3Llt/mjVclhGCLbxjSnm
+         UUVKN0cvRK/jGM/yVst8mCvPlTmDHHgtixukjAYv1GpDVoo48R/b0VxkAJTFxBK78voJ
+         vCjmrkcoDhnruKdnBGxKG+PLqSIjYFT5RypIy/ZJb8PjzpLriBrLRPqrimpO4BiZlqML
+         ZxglVmWhwYnPoMUiBir+Se5GQWJwMckQYtsoAYVUjzIoBK5gVt4Cg04483gPF7JVqJq7
+         7JLQ==
+X-Gm-Message-State: AOAM530OiluVJHL8SkqfWW9iN8aix9teCYyX55ilSHh2o+2Qk9TDY/QQ
+        JxRQIdDHUfuYbz2O9oNxymeAV1e57/CS76O/dsJXOaI00ToGubJt74/FX33iuylPrcwSBK1iRCG
+        HDgsm+8u16aI5CyuTSU5eJvQAflcn
+X-Received: by 2002:adf:9e47:: with SMTP id v7mr10339907wre.185.1611164292796;
+        Wed, 20 Jan 2021 09:38:12 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwmMRPghUxsaTRcr7FJKWN0wZkptspY3JLpZpcYt8/LaAizFtPfNbXSDn+oQyq+nhU2NDK7sQ==
+X-Received: by 2002:adf:9e47:: with SMTP id v7mr10339890wre.185.1611164292653;
+        Wed, 20 Jan 2021 09:38:12 -0800 (PST)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.08
+        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 09:38:08 -0800 (PST)
+        Wed, 20 Jan 2021 09:38:12 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
@@ -68,9 +68,9 @@ Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
         mark.rutland@arm.com, broonie@kernel.org,
         linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [RFC PATCH 03/17] tools: bug: Remove duplicate definition
-Date:   Wed, 20 Jan 2021 18:37:46 +0100
-Message-Id: <20210120173800.1660730-4-jthierry@redhat.com>
+Subject: [RFC PATCH 04/17] objtool: arm64: Add base definition for arm64 backend
+Date:   Wed, 20 Jan 2021 18:37:47 +0100
+Message-Id: <20210120173800.1660730-5-jthierry@redhat.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20210120173800.1660730-1-jthierry@redhat.com>
 References: <20210120173800.1660730-1-jthierry@redhat.com>
@@ -85,33 +85,312 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Under tools, bug.h only defines BUILD_BUG_ON_ZERO() which is already
-defined in build_bug.h. This prevents a file to include both headers at
-the same time.
-
-Have bug.h include build_bug.h instead.
+Provide needed definitions for a new architecture instruction decoder.
+No proper decoding is done yet.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/include/linux/bug.h | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ tools/objtool/Makefile                        |   5 +
+ tools/objtool/arch/arm64/Build                |   8 ++
+ tools/objtool/arch/arm64/decode.c             | 130 ++++++++++++++++++
+ .../arch/arm64/include/arch/cfi_regs.h        |  14 ++
+ tools/objtool/arch/arm64/include/arch/elf.h   |   6 +
+ .../arch/arm64/include/arch/endianness.h      |   9 ++
+ .../objtool/arch/arm64/include/arch/special.h |  21 +++
+ tools/objtool/arch/arm64/special.c            |  21 +++
+ tools/objtool/sync-check.sh                   |   5 +
+ 9 files changed, 219 insertions(+)
+ create mode 100644 tools/objtool/arch/arm64/Build
+ create mode 100644 tools/objtool/arch/arm64/decode.c
+ create mode 100644 tools/objtool/arch/arm64/include/arch/cfi_regs.h
+ create mode 100644 tools/objtool/arch/arm64/include/arch/elf.h
+ create mode 100644 tools/objtool/arch/arm64/include/arch/endianness.h
+ create mode 100644 tools/objtool/arch/arm64/include/arch/special.h
+ create mode 100644 tools/objtool/arch/arm64/special.c
 
-diff --git a/tools/include/linux/bug.h b/tools/include/linux/bug.h
-index 85f80258a15f..548be7cffa8e 100644
---- a/tools/include/linux/bug.h
-+++ b/tools/include/linux/bug.h
-@@ -2,10 +2,6 @@
- #ifndef _TOOLS_PERF_LINUX_BUG_H
- #define _TOOLS_PERF_LINUX_BUG_H
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 92ce4fce7bc7..d5cfbec87c02 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -47,6 +47,11 @@ ifeq ($(SRCARCH),x86)
+ 	SUBCMD_ORC := y
+ endif
  
--/* Force a compilation error if condition is true, but also produce a
--   result (of value 0 and type size_t), so the expression can be used
--   e.g. in a structure initializer (or where-ever else comma expressions
--   aren't permitted). */
--#define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:-!!(e); }))
-+#include <linux/build_bug.h>
++ifeq ($(SRCARCH),arm64)
++	SUBCMD_CHECK := y
++	CFLAGS  += -Wno-nested-externs
++endif
++
+ export SUBCMD_CHECK SUBCMD_ORC
+ export srctree OUTPUT CFLAGS SRCARCH AWK
+ include $(srctree)/tools/build/Makefile.include
+diff --git a/tools/objtool/arch/arm64/Build b/tools/objtool/arch/arm64/Build
+new file mode 100644
+index 000000000000..f3de3a50d541
+--- /dev/null
++++ b/tools/objtool/arch/arm64/Build
+@@ -0,0 +1,8 @@
++objtool-y += special.o
++objtool-y += decode.o
++
++objtool-y += libhweight.o
++
++$(OUTPUT)arch/arm64/libhweight.o: ../lib/hweight.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
+diff --git a/tools/objtool/arch/arm64/decode.c b/tools/objtool/arch/arm64/decode.c
+new file mode 100644
+index 000000000000..8ae822f553ca
+--- /dev/null
++++ b/tools/objtool/arch/arm64/decode.c
+@@ -0,0 +1,130 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdint.h>
++
++/* Hack needed to avoid depending on brk-imm.h */
++#define FAULT_BRK_IMM	0x100
++
++#include <asm/aarch64-insn.h>
++
++#include <objtool/check.h>
++#include <objtool/arch.h>
++#include <objtool/elf.h>
++#include <objtool/warn.h>
++
++#include <arch/cfi_regs.h>
++
++/* Hack needed to avoid depending on kprobes.h */
++#ifndef __kprobes
++#define __kprobes
++#endif
++
++#include "../../../arch/arm64/lib/aarch64-insn.c"
++
++bool arch_callee_saved_reg(unsigned char reg)
++{
++	switch (reg) {
++	case AARCH64_INSN_REG_19:
++	case AARCH64_INSN_REG_20:
++	case AARCH64_INSN_REG_21:
++	case AARCH64_INSN_REG_22:
++	case AARCH64_INSN_REG_23:
++	case AARCH64_INSN_REG_24:
++	case AARCH64_INSN_REG_25:
++	case AARCH64_INSN_REG_26:
++	case AARCH64_INSN_REG_27:
++	case AARCH64_INSN_REG_28:
++	case AARCH64_INSN_REG_FP:
++	case AARCH64_INSN_REG_LR:
++		return true;
++	default:
++		return false;
++	}
++}
++
++void arch_initial_func_cfi_state(struct cfi_init_state *state)
++{
++	int i;
++
++	for (i = 0; i < CFI_NUM_REGS; i++) {
++		state->regs[i].base = CFI_UNDEFINED;
++		state->regs[i].offset = 0;
++	}
++
++	/* initial CFA (call frame address) */
++	state->cfa.base = CFI_SP;
++	state->cfa.offset = 0;
++}
++
++unsigned long arch_dest_reloc_offset(int addend)
++{
++	return addend;
++}
++
++unsigned long arch_jump_destination(struct instruction *insn)
++{
++	return insn->offset + insn->immediate;
++}
++
++const char *arch_nop_insn(int len)
++{
++	static u32 nop = 0;
++
++	if (len != AARCH64_INSN_SIZE)
++		WARN("invalid NOP size: %d\n", len);
++
++	if (!nop)
++		nop = aarch64_insn_gen_nop();
++
++	return (const char*)&nop;
++}
++
++static int is_arm64(const struct elf *elf)
++{
++	switch (elf->ehdr.e_machine) {
++	case EM_AARCH64: //0xB7
++		return 1;
++	default:
++		WARN("unexpected ELF machine type %x",
++		     elf->ehdr.e_machine);
++		return 0;
++	}
++}
++
++int arch_decode_hint_reg(struct instruction *insn, u8 sp_reg)
++{
++	return -1;
++}
++
++int arch_decode_instruction(const struct elf *elf, const struct section *sec,
++			    unsigned long offset, unsigned int maxlen,
++			    unsigned int *len, enum insn_type *type,
++			    unsigned long *immediate,
++			    struct list_head *ops_list)
++{
++	u32 insn;
++
++	if (!is_arm64(elf))
++		return -1;
++
++	if (maxlen < AARCH64_INSN_SIZE)
++		return 0;
++
++	*len = AARCH64_INSN_SIZE;
++	*immediate = 0;
++
++	insn = *(u32 *)(sec->data->d_buf + offset);
++
++	switch (aarch64_get_insn_class(insn)) {
++	case AARCH64_INSN_CLS_UNKNOWN:
++		WARN("can't decode instruction at %s:0x%lx", sec->name, offset);
++		return -1;
++	default:
++		*type = INSN_OTHER;
++		break;
++	}
++
++	return 0;
++}
+diff --git a/tools/objtool/arch/arm64/include/arch/cfi_regs.h b/tools/objtool/arch/arm64/include/arch/cfi_regs.h
+new file mode 100644
+index 000000000000..43ad56b6c3f9
+--- /dev/null
++++ b/tools/objtool/arch/arm64/include/arch/cfi_regs.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef _OBJTOOL_CFI_REGS_H
++#define _OBJTOOL_CFI_REGS_H
++
++#include <asm/aarch64-insn.h>
++
++#define CFI_BP			AARCH64_INSN_REG_FP
++#define CFI_RA			AARCH64_INSN_REG_LR
++#define CFI_SP			AARCH64_INSN_REG_SP
++
++#define CFI_NUM_REGS		32
++
++#endif /* _OBJTOOL_CFI_REGS_H */
+diff --git a/tools/objtool/arch/arm64/include/arch/elf.h b/tools/objtool/arch/arm64/include/arch/elf.h
+new file mode 100644
+index 000000000000..a31a29b1a386
+--- /dev/null
++++ b/tools/objtool/arch/arm64/include/arch/elf.h
+@@ -0,0 +1,6 @@
++#ifndef _OBJTOOL_ARCH_ELF
++#define _OBJTOOL_ARCH_ELF
++
++#define R_NONE R_AARCH64_NONE
++
++#endif /* _OBJTOOL_ARCH_ELF */
+diff --git a/tools/objtool/arch/arm64/include/arch/endianness.h b/tools/objtool/arch/arm64/include/arch/endianness.h
+new file mode 100644
+index 000000000000..7c362527da20
+--- /dev/null
++++ b/tools/objtool/arch/arm64/include/arch/endianness.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _ARCH_ENDIANNESS_H
++#define _ARCH_ENDIANNESS_H
++
++#include <endian.h>
++
++#define __TARGET_BYTE_ORDER __LITTLE_ENDIAN
++
++#endif /* _ARCH_ENDIANNESS_H */
+diff --git a/tools/objtool/arch/arm64/include/arch/special.h b/tools/objtool/arch/arm64/include/arch/special.h
+new file mode 100644
+index 000000000000..a82a9b3e51df
+--- /dev/null
++++ b/tools/objtool/arch/arm64/include/arch/special.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef _ARM64_ARCH_SPECIAL_H
++#define _ARM64_ARCH_SPECIAL_H
++
++#define EX_ENTRY_SIZE		8
++#define EX_ORIG_OFFSET		0
++#define EX_NEW_OFFSET		4
++
++#define JUMP_ENTRY_SIZE		16
++#define JUMP_ORIG_OFFSET	0
++#define JUMP_NEW_OFFSET		4
++
++#define ALT_ENTRY_SIZE		12
++#define ALT_ORIG_OFFSET		0
++#define ALT_NEW_OFFSET		4
++#define ALT_FEATURE_OFFSET	8
++#define ALT_ORIG_LEN_OFFSET	10
++#define ALT_NEW_LEN_OFFSET	11
++
++#endif /* _ARM64_ARCH_SPECIAL_H */
+diff --git a/tools/objtool/arch/arm64/special.c b/tools/objtool/arch/arm64/special.c
+new file mode 100644
+index 000000000000..45f283283091
+--- /dev/null
++++ b/tools/objtool/arch/arm64/special.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <objtool/special.h>
++
++void arch_handle_alternative(unsigned short feature, struct special_alt *alt)
++{
++}
++
++bool arch_support_alt_relocation(struct special_alt *special_alt,
++				 struct instruction *insn,
++				 struct reloc *reloc)
++{
++	return false;
++}
++
++
++struct reloc *arch_find_switch_table(struct objtool_file *file,
++				     struct instruction *insn)
++{
++	return NULL;
++}
+diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+index 606a4b5e929f..69e7ebe8911b 100755
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -21,6 +21,11 @@ arch/x86/include/asm/insn.h     -I '^#include [\"<]\(asm/\)*inat.h[\">]'
+ arch/x86/lib/inat.c             -I '^#include [\"<]\(../include/\)*asm/insn.h[\">]'
+ arch/x86/lib/insn.c             -I '^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]' -I '^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]'
+ "
++elif [ "$SRCARCH" = "arm64" ]; then
++FILES="$FILES
++arch/arm64/include/asm/aarch64-insn.h -I '^#include [\"<]\(asm/\)*brk-imm.h[\">]'
++arch/arm64/lib/aarch64-insn.c         -I '^#include [\"<]\(asm/\)*kprobes.h[\">]'
++"
+ fi
  
- #endif	/* _TOOLS_PERF_LINUX_BUG_H */
+ check_2 () {
 -- 
 2.25.4
 
