@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A07C4332E
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22F2C433E0
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61BE22473
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9333622473
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387744AbhATSrH (ORCPT
+        id S2388494AbhATSrJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Jan 2021 13:47:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35277 "EHLO
+        Wed, 20 Jan 2021 13:47:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25862 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388078AbhATRjy (ORCPT
+        by vger.kernel.org with ESMTP id S2389044AbhATRj7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Jan 2021 12:39:54 -0500
+        Wed, 20 Jan 2021 12:39:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611164307;
+        s=mimecast20190719; t=1611164313;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SLYnG2np6zR1YTUi6SYwuFsGaDYy69xYRKMeP5onVfI=;
-        b=VE6F6+5xNDL9vAr860YmbpnpOa3Q72fgEhwk3c1PpS378hLXikKxh1A0bA2XhxnGN4dtdH
-        +pZvO2RZxT8etxeKpkshJBeOQnIcGhkJEJTJfboDVMukrmdSK3Sg+dbVkgqjQA8+m+IDtI
-        qYW6i0g4G9fQQVmhkUzFgfCM6vbmL0U=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-579-JJq6W89NNtuw7L5OREFdng-1; Wed, 20 Jan 2021 12:38:26 -0500
-X-MC-Unique: JJq6W89NNtuw7L5OREFdng-1
-Received: by mail-wm1-f71.google.com with SMTP id x12so986349wmk.7
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:26 -0800 (PST)
+        bh=TunnN2Rmw/3iiIk96y5NqcKwVnXUUTnNVIzyUwYw5qc=;
+        b=hCwLJDptZta01c4AkW37P6ZZumalO6QPV+GKta5r/c0jrM0xqvBarEsPc8nkhwDomgwTxT
+        qSwyXVmlvWGcZWoXZzmQJjAstl9hBhYHHv76eMxb6IlG2VPoBDrkYeLSFD/LyySBMavXRn
+        r0QG2eb00JpEc+aDMzx+2oG64XAQE8I=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-D9royJcNPOOoa7sEqcx6bQ-1; Wed, 20 Jan 2021 12:38:30 -0500
+X-MC-Unique: D9royJcNPOOoa7sEqcx6bQ-1
+Received: by mail-wr1-f71.google.com with SMTP id x12so1005343wrw.21
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SLYnG2np6zR1YTUi6SYwuFsGaDYy69xYRKMeP5onVfI=;
-        b=oz87tdXAntPzAwT6OMmAx3b4OVlY9aSj6Pje4VIX+e7gDiIeWwvRXe+NMosRHk9JD3
-         D+FGnsfxuZdmKLjDONhPpypgPEKA2LAde6g3DbsTvbQQhRk/zNvZNJC8dn2HQbCtxj4S
-         x/gTCknue0QK2mnqnQEVT8HdS9O8eGD18+pSt8zmdv2iSS8dXQFqzhtPBYqgzidmAvMa
-         JI8H4J6DbWdrOkv9v1SKpMSbD57GggrLkpmZYEr6n3/bEH978iLVffLQl/RuefR3ilkR
-         AySoFHdrtDK9n4IlIrGduH7+LYKCC+5gvw7us9zqVXB7NbwQfihtGfuVwXaJBGpufQIs
-         YHxA==
-X-Gm-Message-State: AOAM530JHb0oCA9ETWdAxvsJS5HjdvJftQKVakzbPZ2OLx/R0omKTInP
-        OyR4yr8YFR1g+7aW6DF27HqTK1rrtsU2UDy/geqOOeB4uGLk6X3QakoDt1sSqBO1Rxkk5PXYcqw
-        e5SdNuVwU5kHXcKpSH1IloQPhIY7f
-X-Received: by 2002:adf:d187:: with SMTP id v7mr10468652wrc.50.1611164305260;
-        Wed, 20 Jan 2021 09:38:25 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwXI5rY8SF1/vD1xUKEd0IWosD2vQICkqK1CgWZpdLBSm0Mws61ej9sdam8XkbTpo9ZQuIaXQ==
-X-Received: by 2002:adf:d187:: with SMTP id v7mr10468627wrc.50.1611164305073;
-        Wed, 20 Jan 2021 09:38:25 -0800 (PST)
+        bh=TunnN2Rmw/3iiIk96y5NqcKwVnXUUTnNVIzyUwYw5qc=;
+        b=Nj7O1u5Qa1DdSZ7b90AA4R96XtpGEjAW4yApVHkMevmjV0fOK7AZ+hEwj379so6oyl
+         kZ/bpCSq+a2uPPg5iu1hD0oJ8yxU+8PrFC9y8iN3j26j1gpvxIu3R/M5+YJWQHbOdqDr
+         KExzaR5R2MyDHpkl7bc+3DLcfhRopSWNc/1QPObHiwKAPpBTCthHee2ST0mHzhf35PNe
+         A1W+s+HdMT2w7sbv+6hlCBHwc2qSQ21HqVMtqe5ym039kEc9VG066yR2lFfF2gg2w4Pf
+         ymbwr/SB4FIFCxcxgMZKtX3NVlTosgImcpBU3wyfzDfnrJA1MWhvW9KkHGGmD8+325c7
+         QH6w==
+X-Gm-Message-State: AOAM533p91w5tjl/AxqdWCV9Tflk/vL2oivMv1DNaDGCii/C0eGA4ZUe
+        vm1dwzp1mcK65gEGC+ZmsSsdGRdW31juQAF55dgdDMlLsO/Bo4YWE/LGBOEuRHd/WiAGdY7Rq0O
+        skFUJ2F0zMW72ZyqwyXKAMN+d8ASZ
+X-Received: by 2002:a1c:a501:: with SMTP id o1mr5442914wme.21.1611164309133;
+        Wed, 20 Jan 2021 09:38:29 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzdkiqIhQMa9qAcvB3y1xPRPRu1ifQGBBsVjTbJnRN8ssR5UHer5yLxDQqnoMtLa25rFV9xTQ==
+X-Received: by 2002:a1c:a501:: with SMTP id o1mr5442896wme.21.1611164308963;
+        Wed, 20 Jan 2021 09:38:28 -0800 (PST)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.23
+        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 09:38:24 -0800 (PST)
+        Wed, 20 Jan 2021 09:38:28 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
@@ -68,9 +68,9 @@ Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
         mark.rutland@arm.com, broonie@kernel.org,
         linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [RFC PATCH 09/17] objtool: arm64: Decode LDR instructions
-Date:   Wed, 20 Jan 2021 18:37:52 +0100
-Message-Id: <20210120173800.1660730-10-jthierry@redhat.com>
+Subject: [RFC PATCH 10/17] objtool: arm64: Accept padding in code sections
+Date:   Wed, 20 Jan 2021 18:37:53 +0100
+Message-Id: <20210120173800.1660730-11-jthierry@redhat.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20210120173800.1660730-1-jthierry@redhat.com>
 References: <20210120173800.1660730-1-jthierry@redhat.com>
@@ -85,173 +85,46 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Load literal instructions can generate constants inside code sections.
-Record the locations of the constants in order to be able to remove
-their corresponding "struct instruction".
+The compiler can introduce some '0' words in code sections to pad the
+end of functions.
+Similar to load literal functions, record these zero words to remove
+the "struct instruction" created for them.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/arch/arm64/decode.c    | 86 ++++++++++++++++++++++++++++
- tools/objtool/arch/x86/decode.c      |  5 ++
- tools/objtool/check.c                |  3 +
- tools/objtool/include/objtool/arch.h |  3 +
- 4 files changed, 97 insertions(+)
+ tools/objtool/arch/arm64/decode.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/tools/objtool/arch/arm64/decode.c b/tools/objtool/arch/arm64/decode.c
-index 1087ede67bcd..b4d4d5b051b0 100644
+index b4d4d5b051b0..ed5ef0b52bbe 100644
 --- a/tools/objtool/arch/arm64/decode.c
 +++ b/tools/objtool/arch/arm64/decode.c
-@@ -30,6 +30,73 @@ static unsigned long sign_extend(unsigned long x, int nbits)
- 	return ((~0UL + (sign_bit ^ 1)) << nbits) | x;
- }
+@@ -362,8 +362,23 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
  
-+struct insn_loc {
-+	const struct section *sec;
-+	unsigned long offset;
-+	struct hlist_node hnode;
-+	bool ignorable;
-+};
+ 	switch (aarch64_get_insn_class(insn)) {
+ 	case AARCH64_INSN_CLS_UNKNOWN:
+-		WARN("can't decode instruction at %s:0x%lx", sec->name, offset);
+-		return -1;
++	{
++		/*
++		 * There are a few reasons we might have non-valid opcodes in
++		 * code sections:
++		 * - For load literal, assembler can generate the data to be
++		 *   loaded in the code section
++		 * - Compiler/assembler can generate zeroes to pad function that
++		 *   do not end on 8-byte alignment
++		 */
++		/* Compiler might put zeroes as padding */
++		if (record_invalid_insn(sec, offset, insn == 0x0))
++			return -1;
 +
-+DEFINE_HASHTABLE(invalid_insns, 16);
++		*type = INSN_OTHER;
 +
-+static int record_invalid_insn(const struct section *sec,
-+			       unsigned long offset,
-+			       bool ignore)
-+{
-+	struct insn_loc *loc;
-+	struct hlist_head *l;
-+
-+	l = &invalid_insns[hash_min(offset, HASH_BITS(invalid_insns))];
-+	if (!hlist_empty(l)) {
-+		loc = hlist_entry(l->first, struct insn_loc, hnode);
-+		loc->ignorable |= ignore;
-+		return 0;
++		break;
 +	}
-+
-+	loc = malloc(sizeof(*loc));
-+	if (!loc) {
-+		WARN("malloc failed");
-+		return -1;
-+	}
-+
-+	loc->sec = sec;
-+	loc->offset = offset;
-+	loc->ignorable = ignore;
-+
-+	hash_add(invalid_insns, &loc->hnode, loc->offset);
-+
-+	return 0;
-+}
-+
-+int arch_post_process_instructions(struct objtool_file *file)
-+{
-+	struct hlist_node *tmp;
-+	struct insn_loc *loc;
-+	unsigned int bkt;
-+	int res = 0;
-+
-+	hash_for_each_safe(invalid_insns, bkt, tmp, loc, hnode) {
-+		struct instruction *insn;
-+
-+		insn = find_insn(file, (struct section *) loc->sec, loc->offset);
-+		if (insn) {
-+			if (loc->ignorable) {
-+				list_del(&insn->list);
-+				hash_del(&insn->hash);
-+				free(insn);
-+			} else {
-+				WARN_FUNC("can't decode instruction", insn->sec, insn->offset);
-+				return -1;
-+			}
-+		}
-+
-+		hash_del(&loc->hnode);
-+		free(loc);
-+	}
-+
-+	return res;
-+}
-+
- bool arch_callee_saved_reg(unsigned char reg)
- {
- 	switch (reg) {
-@@ -359,6 +426,25 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 	case AARCH64_INSN_CLS_LDST:
- 		if (arm_decode_load_store(insn, type, immediate, ops_list))
- 			break;
-+		if (aarch64_insn_is_ldr_lit(insn)) {
-+			long pc_offset;
-+
-+			pc_offset = insn & GENMASK(23, 5);
-+			/* Sign extend and multiply by 4 */
-+			pc_offset = (pc_offset << (64 - 23));
-+			pc_offset = ((pc_offset >> (64 - 23)) >> 5) << 2;
-+
-+			if (record_invalid_insn(sec, offset + pc_offset, true))
-+				return -1;
-+
-+			/* 64-bit literal */
-+			if (insn & BIT(30)) {
-+				if (record_invalid_insn(sec,
-+							offset + pc_offset + 4,
-+							true))
-+					return -1;
-+			}
-+		}
- 		*type = INSN_OTHER;
- 		break;
- 	default:
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index 6baa22732ca6..e76d987ce3c7 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -549,6 +549,11 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 	return 0;
- }
- 
-+int arch_post_process_instructions(struct objtool_file *file)
-+{
-+	return 0;
-+}
-+
- void arch_initial_func_cfi_state(struct cfi_init_state *state)
- {
- 	int i;
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 270b507e7098..d902697a388e 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -319,6 +319,9 @@ static int decode_instructions(struct objtool_file *file)
- 	if (stats)
- 		printf("nr_insns: %lu\n", nr_insns);
- 
-+	if (arch_post_process_instructions(file))
-+		return -1;
-+
- 	return 0;
- 
- err:
-diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
-index 6ff0685f5cc5..456d0465b676 100644
---- a/tools/objtool/include/objtool/arch.h
-+++ b/tools/objtool/include/objtool/arch.h
-@@ -66,6 +66,7 @@ struct stack_op {
- 	struct list_head list;
- };
- 
-+struct objtool_file;
- struct instruction;
- 
- void arch_initial_func_cfi_state(struct cfi_init_state *state);
-@@ -76,6 +77,8 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			    unsigned long *immediate,
- 			    struct list_head *ops_list);
- 
-+int arch_post_process_instructions(struct objtool_file *file);
-+
- bool arch_callee_saved_reg(unsigned char reg);
- 
- unsigned long arch_jump_destination(struct instruction *insn);
+ 	case AARCH64_INSN_CLS_DP_IMM:
+ 		/* Mov register to and from SP are aliases of add_imm */
+ 		if (aarch64_insn_is_add_imm(insn) ||
 -- 
 2.25.4
 
