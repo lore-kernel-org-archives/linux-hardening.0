@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DBDC433E6
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530EDC433DB
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 026AC20575
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BF322473
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391851AbhATSrt (ORCPT
+        id S2390112AbhATSrw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Jan 2021 13:47:49 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32415 "EHLO
+        Wed, 20 Jan 2021 13:47:52 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21824 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390254AbhATRkQ (ORCPT
+        by vger.kernel.org with ESMTP id S2390258AbhATRkR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Jan 2021 12:40:16 -0500
+        Wed, 20 Jan 2021 12:40:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611164328;
+        s=mimecast20190719; t=1611164329;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9GqcdDd08Zk15EP4JDTkI5z15oNQedvKunbBtce3hNY=;
-        b=jTFU+jEXfIAJTpCOQAE9vBsP78B6DJUHmJNIGJzoa74ItVa5X79gBypIFXgK9gm9DEHbWU
-        V9X6GWGXmuDjOtNQwU3stKj+PhWiHcAsf/jeAl/Yot7CdSIXvE8bijJ54500rDy/g/5iiE
-        bVIvjioJfxmUeF+3Sm4YO6BcDHdh65U=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-_n2uSHNQOEWt-Iugi5HXAw-1; Wed, 20 Jan 2021 12:38:45 -0500
-X-MC-Unique: _n2uSHNQOEWt-Iugi5HXAw-1
-Received: by mail-wr1-f69.google.com with SMTP id e12so3133078wrx.14
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:44 -0800 (PST)
+        bh=oYWTEQ/huFSMzsrpwj0azmoT19+DGoe9MjwOTg0OH5c=;
+        b=EQwnCL9N9z8dHRYllCZX3VOcqWCbOnp8J38u95Eb6bi/GTqhNZsTC4k9NJL52EiYOxnR8r
+        LC0B7rlcODVpeW3Upv20ItoURgXrB4FqbiBpK6lIP4/kGLaaSikQxcMUyL9+zThEDdPT/w
+        sxBzSvpnU3a1C3ZUT6uiwhEGjUZOH1I=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-534-DNvWAxM5NkO9yvX4Ega0hw-1; Wed, 20 Jan 2021 12:38:47 -0500
+X-MC-Unique: DNvWAxM5NkO9yvX4Ega0hw-1
+Received: by mail-wr1-f70.google.com with SMTP id c1so1124277wrx.2
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9GqcdDd08Zk15EP4JDTkI5z15oNQedvKunbBtce3hNY=;
-        b=SXJxR1PEpaGM93tX59fPenoaTYKhFlfFV2O0qO+fQ30ldPx/o0zum/pJ4AZfw+WBCG
-         Y1OhnDf+fZTSuwqrYMbJdvllQ8fR/AFnrN26J0Xf59CD16P1Jkk4BTPZYx+Nn7fP2ewQ
-         pYpq19FRqedCCckV6oI/+guLhpR+r5zsI7DhR2tdHWtGr37TyQVi9b+DhwL0VbPLKTu2
-         59j+hDFv5kszaRRPnjEKHhixRdXMEzwOkIiBFJAZbwFuy6piD1Fp3V+n0vOUzf0V90SL
-         sxYZXKNhEeeyA/VyTMnO+CQvuznW+IBv3LqDI7C4gYm0RaGf5dj4+WLlpcRyurXcvfYq
-         SuAw==
-X-Gm-Message-State: AOAM532nrsXEYxi7CpoOfu7WaodHs7/TYYvQvsZ4vy5DJi+HykZI9Guu
-        kSg/iFwfwtxAJralYyeNGtucUEncV6TmeTXJRo+4OF/NYp6ZokAoIIVvAqg4CDEdOpHLfZhYs8/
-        iTmKB8ybr5W5FALkvf0duZ267emIN
-X-Received: by 2002:a1c:6a02:: with SMTP id f2mr5525604wmc.36.1611164323970;
-        Wed, 20 Jan 2021 09:38:43 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz3m5zpvqhoSgn4NA796inwCeJU9v3FtPD1K/BYY6WVb/FI0tRzJHQ322lTzH3clEsPdXWdpg==
-X-Received: by 2002:a1c:6a02:: with SMTP id f2mr5525587wmc.36.1611164323845;
-        Wed, 20 Jan 2021 09:38:43 -0800 (PST)
+        bh=oYWTEQ/huFSMzsrpwj0azmoT19+DGoe9MjwOTg0OH5c=;
+        b=GxSZXpelYsBrL4NdNZpBeYghMaci6xyDCy+HFnyc7nL3JIUq4jZ5gNrRfgHTTA6N8N
+         yDst7PE5TsOOkc/jk0iF1Jg7Iyo8+k+Ukc9568aRsG9wd3Avy1GLc+oTfbFygwkAuS1W
+         jRuUfloaSrXaOLSp6TshJ2MrBLf4XQfYkKb/IUA4P5t0HQwNdrVei5WTWUBFuUtuWEiW
+         RSKW7K5qDjnF4t/c/9R/roi1f1VO8FeQeUru8B5ELPmb/U2WbBtQ7G7/l5/74VSqmeDl
+         mOsfADnHyroufHpJzUMkWwZGZQx1ZQ5h0tDyrqBJTH95cLMWWbK0b916bQFYRvNtNPjV
+         z4Tg==
+X-Gm-Message-State: AOAM5320zYaXhTajyRRAlrlS3z737X1L00p5ufgTMYzcsbWVXWj0brB6
+        aZQHvOiNKbbhqRckJiwD26u4ejIeC/QHptnPeZoLRGo0jDlRO5FgF2SrVlThEEn3qn9eKfH7YO0
+        MP6Sd/KhtG5IPaPGBXq2SaTXUz/Ww
+X-Received: by 2002:a1c:9dd5:: with SMTP id g204mr5387435wme.37.1611164326105;
+        Wed, 20 Jan 2021 09:38:46 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxTEEAVF5Wb5DvfyKAa6iIpcJZxKaj/uKR/NeIqD5Cr6bWjyZklj7zuAijYtvvTiqRBg2VXRA==
+X-Received: by 2002:a1c:9dd5:: with SMTP id g204mr5387418wme.37.1611164325951;
+        Wed, 20 Jan 2021 09:38:45 -0800 (PST)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.42
+        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 09:38:43 -0800 (PST)
+        Wed, 20 Jan 2021 09:38:45 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
@@ -67,10 +67,11 @@ Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
         michal.lkml@markovi.net, jpoimboe@redhat.com, peterz@infradead.org,
         mark.rutland@arm.com, broonie@kernel.org,
         linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Raphael Gault <raphael.gault@arm.com>,
         Julien Thierry <jthierry@redhat.com>
-Subject: [RFC PATCH 16/17] objtool: arm64: Ignore replacement section for alternative callback
-Date:   Wed, 20 Jan 2021 18:37:59 +0100
-Message-Id: <20210120173800.1660730-17-jthierry@redhat.com>
+Subject: [RFC PATCH 17/17] objtool: arm64: Enable stack validation for arm64
+Date:   Wed, 20 Jan 2021 18:38:00 +0100
+Message-Id: <20210120173800.1660730-18-jthierry@redhat.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20210120173800.1660730-1-jthierry@redhat.com>
 References: <20210120173800.1660730-1-jthierry@redhat.com>
@@ -85,52 +86,28 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-ARM64_CB_PATCH doesn't have static replacement instructions. Skip
-trying to validate the alternative section.
+From: Raphael Gault <raphael.gault@arm.com>
 
+Add build option to run stack validation at compile time.
+
+Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/arch/arm64/special.c | 12 ++++++++++++
- tools/objtool/check.c              |  3 +++
- 2 files changed, 15 insertions(+)
+ arch/arm64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/objtool/arch/arm64/special.c b/tools/objtool/arch/arm64/special.c
-index d47e5590ed60..aff8577e71e9 100644
---- a/tools/objtool/arch/arm64/special.c
-+++ b/tools/objtool/arch/arm64/special.c
-@@ -24,6 +24,18 @@ struct switch_table_info {
- 
- void arch_handle_alternative(unsigned short feature, struct special_alt *alt)
- {
-+	if (alt->orig_len && !alt->new_len) {
-+		/*
-+		 * ARM64_CB_PATCH has no alternative instruction.
-+		 * a callback is called at alternative replacement time
-+		 * to dynamically change the original instructions.
-+		 *
-+		 * ARM64_CB_PATCH is the last ARM64 feature, it's value changes
-+		 * every time a new feature is added. So the orig/alt region
-+		 * length are used to detect those alternatives
-+		 */
-+		alt->skip_alt = true;
-+	}
- }
- 
- bool arch_support_alt_relocation(struct special_alt *special_alt,
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index d902697a388e..8840af09f843 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1182,6 +1182,9 @@ static int add_special_section_alts(struct objtool_file *file)
- 				continue;
- 			}
- 
-+			if (special_alt->skip_alt && !special_alt->new_len)
-+				continue;
-+
- 			ret = handle_group_alt(file, special_alt, orig_insn,
- 					       &new_insn);
- 			if (ret)
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 93a320cc8e03..3f297d61b56b 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -185,6 +185,7 @@ config ARM64
+ 	select MMU_GATHER_RCU_TABLE_FREE
+ 	select HAVE_RSEQ
+ 	select HAVE_STACKPROTECTOR
++	select HAVE_STACK_VALIDATION if CC_IS_GCC
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_KPROBES
+ 	select HAVE_KRETPROBES
 -- 
 2.25.4
 
