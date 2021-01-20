@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08742C433E6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EEBC4332B
 	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4831233EB
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E26A22473
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390158AbhATSrO (ORCPT
+        id S2390085AbhATSrQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Jan 2021 13:47:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51772 "EHLO
+        Wed, 20 Jan 2021 13:47:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53650 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389952AbhATRkN (ORCPT
+        by vger.kernel.org with ESMTP id S2390160AbhATRkO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Jan 2021 12:40:13 -0500
+        Wed, 20 Jan 2021 12:40:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611164316;
+        s=mimecast20190719; t=1611164325;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oGGCmA0OrDAFQ859/Q0LnejciDnPGfHlYFyTyvifQtk=;
-        b=SdvcoaL9xGpZqU5uAkooZs4maGhL8HgONkM9y34yVuJfD3GrlKwEXFCQJuBBfP+ITM3HWh
-        BZShwe5JfC1bxLICpZDsaW5tFM9jlr02Q+fNxkAMmE80ZpvMNKMwRvOsOTI1gcLFskHhZk
-        oRJZwSOOetFPBhFUC7dG0vcG+VAiQ8E=
+        bh=yRnNjmYT/ZeNDPernGD7mn1nezFUsPnB2CCiwO9XXDo=;
+        b=LClsLoEQkI5Hp7hzhwZrezMg6wiALvgwOXsSgPGjVWYS3XceyGIZd7LAqVCYqWEo4oIMoL
+        KfFQiDXndrP4xvG13F1acXDb9ZPjcU4vEYWmEK83qD13X9+Ne0f1gN38i2fS9YDQzthpWD
+        9ye9xrZhKB3PVRPeVFZPBcbBHm/9h3M=
 Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
  [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-siLksifmPHWJFL9NN0yoDw-1; Wed, 20 Jan 2021 12:38:33 -0500
-X-MC-Unique: siLksifmPHWJFL9NN0yoDw-1
-Received: by mail-wm1-f70.google.com with SMTP id j133so1434176wma.4
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:32 -0800 (PST)
+ us-mta-537-wP52y3XRPWS9ET7Xl-oe9w-1; Wed, 20 Jan 2021 12:38:43 -0500
+X-MC-Unique: wP52y3XRPWS9ET7Xl-oe9w-1
+Received: by mail-wm1-f70.google.com with SMTP id z188so1886097wme.1
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oGGCmA0OrDAFQ859/Q0LnejciDnPGfHlYFyTyvifQtk=;
-        b=nRcEfW4OLRdhnASd0QVTpbCbA68kTfbCGpYcBSSlu4uxbLnTDzZQ385Moy9GK6rSXv
-         rAvagcQXSR874Z9qLd8moixBOx+yDOJquHacnSKVbmhG4Oku0mFE/7wqNz1Ks95O4Ak0
-         At3ombBVFjN4HP1kOV1zvY2oq+o9KrHyg4q8Kr05k8dbznDzOWtAJ1/cGTZWoXpZ0E6S
-         etwwA6/NbYEgOe4LbhOhoDSMbkV0QPj1RTRuOebX/X2wErbNQNnHSEEv2lDMF3EZ2TV1
-         t3QXYx7VE6YTcYSYa1ysE7G4bXjNtx+vf4zDwNkb6F2oXbxnbJBuFnhx3uVNydSC7wMP
-         GRVA==
-X-Gm-Message-State: AOAM532UAn5DmwYTwkYWvC8os7tSaqy9QXF981x+Ie0pP9PG8qFGDijP
-        ihHE03xGzwpFH8j8mzOcozIDGxxIFV5e43FXYIlXOj6dX10wr3L0nfGTVdbKtxMT4yVyKjP+Apu
-        2hyKGlH2fJHu/GXy5v49lIuZi8dJ3
-X-Received: by 2002:a5d:4a09:: with SMTP id m9mr10650931wrq.359.1611164311855;
-        Wed, 20 Jan 2021 09:38:31 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJykIx+mFRDz39bWZUr6EuNu+ftrUmcrlFbF3bvA/9HzFKbHf9ER+LSC2Ppw5dI+TMNMsSLSCQ==
-X-Received: by 2002:a5d:4a09:: with SMTP id m9mr10650911wrq.359.1611164311737;
-        Wed, 20 Jan 2021 09:38:31 -0800 (PST)
+        bh=yRnNjmYT/ZeNDPernGD7mn1nezFUsPnB2CCiwO9XXDo=;
+        b=Q5ARhslPm97Udf2+xF2jbDTJeUlQQ2ULnqRNIP8aTSmKqvVWE6XKWmn7Nic2lATc0L
+         aeabCJH/D8+8YNM5nKPjYQkab5WkR+J1oUcktJyZ4HbDU6jk77gWfayLUfUG9X46LRwC
+         H5uZmCunXxhf7eZNu/1Dm/RgI2axOD2qct/6OMH4u92WlwYYpgJ5zEOuWxPCgPyPE5sD
+         ZFmfyY774ceDPhoHum8q5lSEx3/4z2UEc1Js+5HBpaX0/K+1isyCiucUqqxPVGEBpach
+         dkRgs2mAPRk+ASGRcayt0FpA/5tbel5nnHR565v2NJvemjiZET1WUV9FRcl3pCMYQo07
+         Iqyw==
+X-Gm-Message-State: AOAM530xKJnFXvexuuku76h/hgDx+lhPoC8iUA/8DqQEvPK68m4pkWKc
+        bVNkJEOOQBfFl58VBoyj2sLRVoNsO82bXcFBQ7fjwBCzcSnWFROSykr6A//LzD3SbQgyBtD7bcX
+        H5ila1Aof16qOCKwyrg+Y/sFgagjn
+X-Received: by 2002:a05:6000:18a3:: with SMTP id b3mr10468157wri.373.1611164322333;
+        Wed, 20 Jan 2021 09:38:42 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxEuPLL/MUsHXrjcP2RWYCjypmma6HnlV61saf901CvvVF6JcK5tnGFyGuV8565mW/HkAJnQw==
+X-Received: by 2002:a05:6000:18a3:: with SMTP id b3mr10468144wri.373.1611164322230;
+        Wed, 20 Jan 2021 09:38:42 -0800 (PST)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.30
+        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 09:38:31 -0800 (PST)
+        Wed, 20 Jan 2021 09:38:41 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
@@ -68,9 +68,9 @@ Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
         mark.rutland@arm.com, broonie@kernel.org,
         linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [RFC PATCH 11/17] efi: libstub: Ignore relocations for .discard sections
-Date:   Wed, 20 Jan 2021 18:37:54 +0100
-Message-Id: <20210120173800.1660730-12-jthierry@redhat.com>
+Subject: [RFC PATCH 15/17] objtool: arm64: Handle supported relocations in alternatives
+Date:   Wed, 20 Jan 2021 18:37:58 +0100
+Message-Id: <20210120173800.1660730-16-jthierry@redhat.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20210120173800.1660730-1-jthierry@redhat.com>
 References: <20210120173800.1660730-1-jthierry@redhat.com>
@@ -85,30 +85,32 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-EFI stub cannot have absolute relocations in sections affecting the
-execution flow. However, for sections that get discarded at link time,
-it doesn't really matter if they have absolute relocations.
-
-Ignore the relocation associated with such sections.
+Based on get_alt_insn() in arch/arm64/kernel/alternative.c, arm64
+alternative code adapts offsets for static branches and adrp
+instructions.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- drivers/firmware/efi/libstub/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/arch/arm64/special.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 8a94388e38b3..70e9c7f45d30 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -133,7 +133,7 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
- #
- quiet_cmd_stubcopy = STUBCPY $@
-       cmd_stubcopy =							\
--	$(STRIP) --strip-debug -o $@ $<;				\
-+	$(STRIP) --strip-debug --remove-relocations=".discard.*" -o $@ $<;		\
- 	if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); then		\
- 		echo "$@: absolute symbol references not allowed in the EFI stub" >&2; \
- 		/bin/false;						\
+diff --git a/tools/objtool/arch/arm64/special.c b/tools/objtool/arch/arm64/special.c
+index c9c3e0bfd581..d47e5590ed60 100644
+--- a/tools/objtool/arch/arm64/special.c
++++ b/tools/objtool/arch/arm64/special.c
+@@ -30,7 +30,11 @@ bool arch_support_alt_relocation(struct special_alt *special_alt,
+ 				 struct instruction *insn,
+ 				 struct reloc *reloc)
+ {
+-	return false;
++	u32 opcode = *(u32 *)(insn->sec->data->d_buf + insn->offset);
++
++	return aarch64_insn_is_branch_imm(opcode) ||
++	       aarch64_insn_is_adrp(opcode) ||
++	       !aarch64_insn_uses_literal(opcode);
+ }
+ 
+ static struct section *get_switch_table_info_section(struct objtool_file *file)
 -- 
 2.25.4
 
