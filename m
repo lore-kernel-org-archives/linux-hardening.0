@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61081C433E6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2A8C43381
 	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 19:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE97233FE
+	by mail.kernel.org (Postfix) with ESMTP id 6C491233EB
 	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 19:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390895AbhATSqf (ORCPT
+        id S2390374AbhATSqo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Jan 2021 13:46:35 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42721 "EHLO
+        Wed, 20 Jan 2021 13:46:44 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46748 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733269AbhATRjh (ORCPT
+        by vger.kernel.org with ESMTP id S2387500AbhATRjk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Jan 2021 12:39:37 -0500
+        Wed, 20 Jan 2021 12:39:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611164288;
+        s=mimecast20190719; t=1611164293;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=veDG5mWnaW2Ixi8XXsaq9WVUVN6IJdn0R3qA8goBbxk=;
-        b=fvNuLuSrbYE2BRtAek0KXB1lCp44lmbH9Ue/7fv84kZHWIeq3Rp1uLdBDvgKhLoVdcJ6NG
-        SeYAlPITwPxL2k45kvBp+xR2+LBloCc9fEwiwhQk7/GSP9ZZj73LCnXVF9yTKDvdZvzuw3
-        y+id3f6Vujn4DPq3P61dDZzaw6h7vEI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227--R4jyomdMV6gNdXmKVxbtQ-1; Wed, 20 Jan 2021 12:38:06 -0500
-X-MC-Unique: -R4jyomdMV6gNdXmKVxbtQ-1
-Received: by mail-wr1-f70.google.com with SMTP id z8so11985132wrh.5
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:06 -0800 (PST)
+        bh=1YEVSMla8UOmgBC4LmzAJMeE/UB0SCvN1vHTnN1GioY=;
+        b=OUNLES38jeNuMBGpEzrT2JE15yEy/UPvd4WgvRo5jWsBP0Iv13JRNaYkpA4I26CXk8/h3x
+        3NHZyeaEhoiWgyHJOq9199Xfofql6Ii6OG9sJs5Ue4HF9JHbB1DjX5KUamF3QaEmqvUdX2
+        GMEEpnanLfjUv1m+Ck1NY5GiV56fWOE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-173-f6AjM-hyMq-I0f4eFxJmDQ-1; Wed, 20 Jan 2021 12:38:11 -0500
+X-MC-Unique: f6AjM-hyMq-I0f4eFxJmDQ-1
+Received: by mail-wr1-f71.google.com with SMTP id v5so11966599wrr.0
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=veDG5mWnaW2Ixi8XXsaq9WVUVN6IJdn0R3qA8goBbxk=;
-        b=puiydkYlVlyRESV+ZeQBR9B5Eiu6mhrDnULt/PCdVrji5SxWQxd0BnuFleHmPSQF7p
-         w/ru3U97IMftgN+JWAo8bAD0P2drGr2R1i0X2weoghXX4w4L7/WogVUQBOLI6Jl/suO9
-         2/PFOonUoI2HAMtq7NwtttZa9O/r1rZzY0RKU8lceYybYv9l6FkLQJ22M2tKwbXyg2zP
-         VfTHI5eCdUjb9opOhbukKlCWWYAQw/k5fFindQnG0a8eAQIxRGNLAi/M5B7xskbc+SpV
-         i4U+35NAluDYJOv9FXtxACdvVatKDx+7G5U+gd0sbNf2o40TIiz/WdgGSvySregfJFf7
-         CNTQ==
-X-Gm-Message-State: AOAM533gBp3gJgeYAEeZ8ISmbFR6hF+LRekEY4PcKmaAR9zzyS0FuLtu
-        Vhmo8f5k7i9+ru/tUaVnmujV0udJJoRSo893v60hxg2t8tGXypzpEI/x3QPEsQPjQekqeUTUv0b
-        lx3i7/n8x6bG6lnvw0idwJq6tGg1m
-X-Received: by 2002:adf:e8c5:: with SMTP id k5mr10771816wrn.242.1611164285589;
-        Wed, 20 Jan 2021 09:38:05 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJylft7yf7rgmFXUNRqNfNmGJKkqmx1XjdDH0fdpJqZZDyViFfZloLRO9kL6mc2iiU5PzrlGuw==
-X-Received: by 2002:adf:e8c5:: with SMTP id k5mr10771802wrn.242.1611164285463;
-        Wed, 20 Jan 2021 09:38:05 -0800 (PST)
+        bh=1YEVSMla8UOmgBC4LmzAJMeE/UB0SCvN1vHTnN1GioY=;
+        b=XEqN6WbFtsaKjYls01nQFjwC2IDuzrN6SisEIC9cogLCfKAh+mwU+uIzITkSgn3ETB
+         +O6uTZnOdOI958tDDtUXwoT9Z3/TPdm7/6TfeV7cuMxN6LSFnOBm3m9qN4+fCILsbOer
+         phQvnjzKFsq7/vCSlpQrA/LqU3BjTnzjdVwc3zHpxIXU8Fgl/SlgfQ/Qpmo/iM0Dp1So
+         qL/UOIKXTuzuXJsnplA1VZcQTjMiein1/csOiISkPMqBrtDagFMiO5VtQXUiNrFNyXyr
+         zaQiviSvqY1YI12j5LD5IlCpV/z9QBQkHked+B8/Hi/CAO41wozhyNMTcqhNz7BRYtfL
+         H00g==
+X-Gm-Message-State: AOAM530BsGVUvVOIVnpe4IBQlYDczXnTAKohCSe+gvVwgUhb9EUwm7YV
+        WbTLT3A778yfIB/rlaGJdePYFMqBx93BAiZfcP7iFBQVhhp8skTRDAOkKGx+ernXID8mtuwGQ9V
+        a+FFaXaEqnWnmE4wnvTIKIs8B9AAe
+X-Received: by 2002:adf:d238:: with SMTP id k24mr10316325wrh.414.1611164290573;
+        Wed, 20 Jan 2021 09:38:10 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxsXKBygCbH5ehSM3hv+i9wV2hjiG6FmiP83Wor2Wz+s8QTVOj8s3jD6nPK36EhOefk08Au5A==
+X-Received: by 2002:adf:d238:: with SMTP id k24mr10316310wrh.414.1611164290420;
+        Wed, 20 Jan 2021 09:38:10 -0800 (PST)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.04
+        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 09:38:05 -0800 (PST)
+        Wed, 20 Jan 2021 09:38:08 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
@@ -68,9 +68,9 @@ Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
         mark.rutland@arm.com, broonie@kernel.org,
         linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [RFC PATCH 01/17] tools: Add some generic functions and headers
-Date:   Wed, 20 Jan 2021 18:37:44 +0100
-Message-Id: <20210120173800.1660730-2-jthierry@redhat.com>
+Subject: [RFC PATCH 03/17] tools: bug: Remove duplicate definition
+Date:   Wed, 20 Jan 2021 18:37:46 +0100
+Message-Id: <20210120173800.1660730-4-jthierry@redhat.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20210120173800.1660730-1-jthierry@redhat.com>
 References: <20210120173800.1660730-1-jthierry@redhat.com>
@@ -85,115 +85,33 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-These will be needed to be able to use arm64 instruction decoder in
-userland tools.
+Under tools, bug.h only defines BUILD_BUG_ON_ZERO() which is already
+defined in build_bug.h. This prevents a file to include both headers at
+the same time.
+
+Have bug.h include build_bug.h instead.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/include/asm-generic/bitops/__ffs.h | 11 +++++++
- tools/include/linux/kernel.h             | 21 +++++++++++++
- tools/include/linux/printk.h             | 40 ++++++++++++++++++++++++
- 3 files changed, 72 insertions(+)
- create mode 100644 tools/include/linux/printk.h
+ tools/include/linux/bug.h | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/tools/include/asm-generic/bitops/__ffs.h b/tools/include/asm-generic/bitops/__ffs.h
-index 9d1310519497..963f8a22212f 100644
---- a/tools/include/asm-generic/bitops/__ffs.h
-+++ b/tools/include/asm-generic/bitops/__ffs.h
-@@ -42,4 +42,15 @@ static __always_inline unsigned long __ffs(unsigned long word)
- 	return num;
- }
+diff --git a/tools/include/linux/bug.h b/tools/include/linux/bug.h
+index 85f80258a15f..548be7cffa8e 100644
+--- a/tools/include/linux/bug.h
++++ b/tools/include/linux/bug.h
+@@ -2,10 +2,6 @@
+ #ifndef _TOOLS_PERF_LINUX_BUG_H
+ #define _TOOLS_PERF_LINUX_BUG_H
  
-+static inline unsigned long __ffs64(u64 word)
-+{
-+#if BITS_PER_LONG == 32
-+	if (((u32)word) == 0UL)
-+		return __ffs((u32)(word >> 32)) + 32;
-+#elif BITS_PER_LONG != 64
-+#error BITS_PER_LONG not 32 or 64
-+#endif
-+	return __ffs((unsigned long)word);
-+}
-+
- #endif /* _TOOLS_LINUX_ASM_GENERIC_BITOPS___FFS_H_ */
-diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
-index a7e54a08fb54..e748982ed5c1 100644
---- a/tools/include/linux/kernel.h
-+++ b/tools/include/linux/kernel.h
-@@ -114,6 +114,27 @@ int scnprintf_pad(char * buf, size_t size, const char * fmt, ...);
- #define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
- #define round_down(x, y) ((x) & ~__round_mask(x, y))
+-/* Force a compilation error if condition is true, but also produce a
+-   result (of value 0 and type size_t), so the expression can be used
+-   e.g. in a structure initializer (or where-ever else comma expressions
+-   aren't permitted). */
+-#define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:-!!(e); }))
++#include <linux/build_bug.h>
  
-+/**
-+ * upper_32_bits - return bits 32-63 of a number
-+ * @n: the number we're accessing
-+ *
-+ * A basic shift-right of a 64- or 32-bit quantity.  Use this to suppress
-+ * the "right shift count >= width of type" warning when that quantity is
-+ * 32-bits.
-+ */
-+#define upper_32_bits(n) ((u32)(((n) >> 16) >> 16))
-+
-+/**
-+ * lower_32_bits - return bits 0-31 of a number
-+ * @n: the number we're accessing
-+ */
-+#define lower_32_bits(n) ((u32)(n))
-+
-+/* Inspired from ALIGN_*_KERNEL */
-+#define __ALIGN_MASK(x, mask)	(((x) + (mask)) & ~(mask))
-+#define __ALIGN(x, a)		__ALIGN_MASK(x, (typeof(x))(a) - 1)
-+#define ALIGN_DOWN(x, a)	__ALIGN((x) - ((a) - 1), (a))
-+
- #define current_gfp_context(k) 0
- #define synchronize_rcu()
- 
-diff --git a/tools/include/linux/printk.h b/tools/include/linux/printk.h
-new file mode 100644
-index 000000000000..515ebdc47e6e
---- /dev/null
-+++ b/tools/include/linux/printk.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _TOOLS_LINUX_KERNEL_PRINTK_H_
-+#define _TOOLS_LINUX_KERNEL_PRINTK_H_
-+
-+#include <stdarg.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+
-+#define printk(fmt, ...) fprintf(stdout, fmt, ##__VA_ARGS__)
-+#define pr_info printk
-+#define pr_notice printk
-+#define pr_cont printk
-+
-+#define pr_warn(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
-+#define pr_err pr_warn
-+#define pr_alert pr_warn
-+#define pr_emerg pr_warn
-+#define pr_crit pr_warn
-+
-+/*
-+ * Dummy printk for disabled debugging statements to use whilst maintaining
-+ * gcc's format checking.
-+ */
-+#define no_printk(fmt, ...)				\
-+({							\
-+	if (0)						\
-+		printk(fmt, ##__VA_ARGS__);		\
-+	0;						\
-+})
-+
-+/* pr_devel() should produce zero code unless DEBUG is defined */
-+#ifdef DEBUG
-+#define pr_devel(fmt, ...) printk
-+#else
-+#define pr_devel(fmt, ...) no_printk
-+#endif
-+
-+#define pr_debug pr_devel
-+
-+#endif /* _TOOLS_LINUX_KERNEL_PRINTK_H_ */
+ #endif	/* _TOOLS_PERF_LINUX_BUG_H */
 -- 
 2.25.4
 
