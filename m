@@ -2,160 +2,187 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB21C4332B
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Jan 2021 20:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D0DC433E9
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9999B2310D
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Jan 2021 20:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CFD5206FA
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Jan 2021 18:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbhASSvj (ORCPT
+        id S1730924AbhATSqw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Jan 2021 13:51:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392086AbhASRzg (ORCPT
+        Wed, 20 Jan 2021 13:46:52 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24905 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387562AbhATRjo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Jan 2021 12:55:36 -0500
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D00C061793;
-        Tue, 19 Jan 2021 09:48:26 -0800 (PST)
-Received: by mail-qk1-x736.google.com with SMTP id d14so22629164qkc.13;
-        Tue, 19 Jan 2021 09:48:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f4E5ZdTb/c/05OV3aNGXqZyr3BVid89a31XNJo/J7Bs=;
-        b=B8bu++PF7PnHYPfUMUd8fXSpBcwFZt4PIJSmxKCtkivGyFeZUSzGzJX8RuymkJB/gb
-         fzbJeesBRuAacv3kFIZscSHswavMV/sVoWOcdPHv5BvPZM5oSRoMsCMJ91+jquM0atbd
-         UzjpOp9hK65Ai2DqY/LxfaTNOKoc/8NwJAhsmzzI42OZr0kzrZgl44Q6m8STPkavVKRi
-         /uu5KbbJZQueqYyuBAQjtOCtz5NRLvUEO5oxVGHDJT9R4UQQfNEYaS6xbccucFt3nDn7
-         kpqTzzo+aGL9m/XeWkMDPfOddGvAi75m8bTt15d5kO/bwd9tfZdbXVR/D161pQp08rOd
-         FXFw==
+        Wed, 20 Jan 2021 12:39:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611164295;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=A108kjHRUQdQY86++G1ojoBlN5bivr2NbhXvZVQXIjs=;
+        b=gJRgRgUVJa+wLBPT2NVV3MwcWDg0OXgNYc9vTZlkLTK9kGEh6ewPey6Mrif8cm41EL32mz
+        aGGLgmTF1mSNX33K6b/EwsT/dPgGhvpfCkieHRVa/dqVABtUftIbBUBgHtHILvK8dXvtTY
+        T1D+W9QdTrUz7MFpOPCNZP2phCTaB0s=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-279-75R6NxWbPfieX-MaxJ7cTA-1; Wed, 20 Jan 2021 12:38:04 -0500
+X-MC-Unique: 75R6NxWbPfieX-MaxJ7cTA-1
+Received: by mail-wr1-f69.google.com with SMTP id u14so11976988wrr.15
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Jan 2021 09:38:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f4E5ZdTb/c/05OV3aNGXqZyr3BVid89a31XNJo/J7Bs=;
-        b=h3ivrifVVYroMaWQUqX5ig2i3x0Mi4oV+Q+sFDTnn7ouoLgdbvYmLVH6qwm/Wd9s4l
-         GnyR1L/UZZXjw+IUp9tWa/FpWuMl23jipqU4ryHGUTIb2cek7McvdeWsQdzTSsYDJCC5
-         WJRecDxAOgSIrLqKmw1pXUdupwYICzLsRGhhdWJX+Bl8aOiFaHaChIVl9jCFmmjXa1Ei
-         RadYh42FVe7DfBnFApWYygVmAYL0h9G2V99uY2imVz4NX5Tq/3Gykp53rDh2S4vm3v8a
-         6qhcXoUmqEcTJbTTcCQVcKcsZgvO2VjNIbpk2Lm5gH6vjExExxWegqcZX8Yqup35Lq04
-         +K0Q==
-X-Gm-Message-State: AOAM5317JNvbj5tbd/JgTloWZ2rRnvBeTHPaHVgeyaX3oHU/Hyuodv9m
-        IrhLsp7SSsWSzcTqEQDlQxw=
-X-Google-Smtp-Source: ABdhPJzw8/RPKTyYutvWvfbgQUaf6yTfXT1jpFSgNSofmVVW0znNTQ7HAicj2KhgFkPFPHoeHINwAg==
-X-Received: by 2002:a37:9dd3:: with SMTP id g202mr5578423qke.488.1611078505338;
-        Tue, 19 Jan 2021 09:48:25 -0800 (PST)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id o5sm12769923qti.47.2021.01.19.09.48.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A108kjHRUQdQY86++G1ojoBlN5bivr2NbhXvZVQXIjs=;
+        b=f78tiZJsaDRmSYtuXrst8DfqZIMqsodW+I2AaVj6s9DhFnzrHBwb8SnuOMZ6tBfo1v
+         WbHGG6KoKn1fQbgKhcUh8mwzspq6aFAVk/c4v2dYO8zQxe9mYZRr+9ex6aaxl7uvT7YX
+         7eFi+94JiisQ6K6l8wz25ZrR5eEuS2QPFYc5uygBxj7fPiWUmALt+o0pgf5+bXWDQGN7
+         /fNGLrfslv3sDQZPB49QNbyd+1LyN4wxQG68z8SHFuf+qcOEo0/GBrhJ2DmpAO1+UUbY
+         8gzWNVPRiXgj2RFc/vjxGjX6HFuYinUD5+JmEZLi2qd8Fo+b2rw+vIhnJs9vEKuyIMiG
+         DysA==
+X-Gm-Message-State: AOAM533zndYkxpRcW6ER1stbKQaRfCOL5g0vac/qSxaIXzZUjfhqpKug
+        8QcHfZ01nIma232ijY8qe2D5MN0H4De/vEwU13FsHnIHV2c2L4shpNgqTvyZqMdkaQWyim1Yc47
+        aZDKoqJUoyngy5EET4AJyRbOa2+Ul
+X-Received: by 2002:a05:6000:1565:: with SMTP id 5mr10630095wrz.109.1611164283634;
+        Wed, 20 Jan 2021 09:38:03 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxHore5PrQor0sfd+uGXcmG2lRqPQ/wDMgFvw29tveC12LEpMiYbOmQdf62PWPDL7v7WxO8/w==
+X-Received: by 2002:a05:6000:1565:: with SMTP id 5mr10630076wrz.109.1611164283494;
+        Wed, 20 Jan 2021 09:38:03 -0800 (PST)
+Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id x11sm4948325wmi.4.2021.01.20.09.38.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Jan 2021 09:48:23 -0800 (PST)
-Date:   Tue, 19 Jan 2021 18:48:21 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH] gcc-plugins: simplify GCC plugin-dev capability test
-Message-ID: <YAcbZRViwlAwl62q@ulmo>
-References: <20201203125700.161354-1-masahiroy@kernel.org>
- <b9b17126-9af5-2f73-526e-91bb9fd27f71@samsung.com>
- <CAK7LNART2qQBY7Vc8rhMiXS_Fwty7qpWjwwfPrUegTb-gjy6sA@mail.gmail.com>
- <9f959875-1a30-b1a1-b626-3805e24a6df3@samsung.com>
- <e5b06d9a-9b24-2440-e0c2-8bf7095eccd9@nvidia.com>
- <25030057-86b1-5619-25fd-acfa0728b850@samsung.com>
- <4ab4f62f-8b37-01e1-f81c-270155b13a51@nvidia.com>
- <7e691a61-bf4b-0594-8d6d-36d62a5def0b@nvidia.com>
- <CAHk-=wjjiYjCp61gdAMpDOsUBU-A2hFFKJoVx5VAC7yV4K6WYg@mail.gmail.com>
- <95ce88c6-59bd-55b9-9299-51fa20aeb95c@nvidia.com>
+        Wed, 20 Jan 2021 09:38:03 -0800 (PST)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
+        masahiroy@kernel.org, keescook@chromium.org,
+        michal.lkml@markovi.net, jpoimboe@redhat.com, peterz@infradead.org,
+        mark.rutland@arm.com, broonie@kernel.org,
+        linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Julien Thierry <jthierry@redhat.com>
+Subject: [RFC PATCH 00/17] objtool: add base support for arm64
+Date:   Wed, 20 Jan 2021 18:37:43 +0100
+Message-Id: <20210120173800.1660730-1-jthierry@redhat.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7rm5qQeEd3jZvY1U"
-Content-Disposition: inline
-In-Reply-To: <95ce88c6-59bd-55b9-9299-51fa20aeb95c@nvidia.com>
-User-Agent: Mutt/2.0.4 (26f41dd1) (2020-12-30)
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jthierry@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hi,
 
---7rm5qQeEd3jZvY1U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series enables objtool to start doing stack validation on arm64
+kernel builds. It relies on the previous series I sent, refactoring
+the arm64 decoder [1].
 
-On Fri, Dec 18, 2020 at 08:33:37PM +0000, Jon Hunter wrote:
->=20
-> On 18/12/2020 17:54, Linus Torvalds wrote:
-> > On Fri, Dec 18, 2020 at 7:33 AM Jon Hunter <jonathanh@nvidia.com> wrote:
-> >>
-> >> However, if you are saying that this is a problem/bug with our builder=
-s,
-> >> then of course we will have to get this fixed.
-> >=20
-> > This seems to be a package dependency problem with the gcc plugins -
-> > they clearly want libgmp, but apparently the package hasn't specified
-> > that dependency.
-> >=20
-> > If this turns out to be a big problem, I guess we can't simplify the
-> > plugin check after all.
-> >=20
-> > We historically just disabled gcc-plugins if that header didn't build,
-> > which obviously meant that it "worked" for people, but it also means
-> > that clearly the coverage can't have been as good as it could/should
-> > be.
-> >=20
-> > So if it's as simple as just installing the GNU multiprecision
-> > libraries ("gmp-devel" on most rpm-based systems, "libgmp-dev" on most
-> > debian systems), then I think that's the right thing to do. You'll get
-> > a working build again, and equally importantly, your build servers
-> > will actually do a better job of covering the different build options.
->=20
->=20
-> Thanks. I have reported this issue to the team that administers the
-> builders. So hopefully, they will install the necessary packages for us
-> now.
+First, the aarch64 instruction decoder needed to be made available
+to code under tools/. This is done in a similar manner to x86
+instruction decoded. One limitation I encountered there is that most
+of aarch64 instruction decoder is __kprobe annotated. To bypass that
+it remove the kprobe include and had to add an empty __kprobe
+definition, but I'd welcome a proper solution to that.
 
-Just to close the loop on this, the builders now have libgmp-dev and
-libmpc-dev packages installed and the builds are passing without the
-workaround we had used.
+Then instruction semantics are progressively added so objtool can track
+the stack state through the execution flow.
+There are a few things that needed consideration:
+- Generation of constants within executable sections, these either
+  caused objtool to fail decoding or to wrongly decode constants
+  as jumps or other instructions affecting execution flow and
+  causing confusion. To solve this, tracking locations referenced
+  by instructions using literals was needed.
+- Jump tables from switch statements in aarch64 don't have enough
+  information to link branches with the branch instruction leading to
+  them. For this, we use a gcc plugin to add some information to establish
+  those missing links in a format that is already supported by objtool
 
-Thierry
+With this, there are still some errors when building with objtool. A
+number of cleanups/annotations are needed on the arm64, as well as
+handling SYM_DATA objects in objtool.
 
---7rm5qQeEd3jZvY1U
-Content-Type: application/pgp-signature; name="signature.asc"
+Those changes can be found on top of this branch here:
+git clone https://github.com/julien-thierry/linux.git -b objtoolxarm64-latest
 
------BEGIN PGP SIGNATURE-----
+But it would be nice to have some feedback on this before I start submitting everyting.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmAHG2IACgkQ3SOs138+
-s6Ht2xAAu0L1jit8d2ZxSzQyJH8jOz7gwm9N2twAnmXa51SkLH7/ZUnt7hkbnjcd
-M3XS33eXTd60Aj0IFpMwhUfzDRWmXVlIbhTfotdWp6655KxbThC513SdvEMQiTlO
-/bn97HxU/azt3xe7pGYEhyyx0UruX/jtYnC35gE5zqzujM3uVcvqh8q0O62dcKGM
-gZi5U0OYYpMXRTJRIWKAD/+ytrfJyWNvFFcO8SVoLg+cKtZ0S6Q4Xt5wNgHGFemL
-gRDqQZFrJDUCFBysQR1lN/9AUw/f0EmNmvqjc6HG3hTdwA18sOq0rpHdynaNa0RM
-vjKI+qQ8kkCBhZl4ZqC9KD7GEwxuspESTInrD3YQx9fcZwhCq9JDjE6y9KHwalbW
-C1JHgMr6ZL/vNC7/Q7CyALUzyaZBXU5eJgL9dN3SpCCjEzvUJmHaWaTe9CFGGYVx
-D9QRNgjhpkBweaF2+J9K3infuyFEZmg8/7JyuYW2QbZ9/iS7/pzw9wzw8OEZiSin
-txGU4UeWnSq7Fxmc5yaip4aTGGn8Rgv36MA8dQB8GQb2Ipvx5iJaBJuQGT5W4zPI
-7gQkWpWk8QUuXBFng3cj0+5kCR6tZao7J/at06iOyAtbpIYPekA956dTBUysW/qM
-108q895PsmRm7+jvd9ATrCUH7/sWlswwZOGHHjfM3tFNMg6GlUk=
-=bF1k
------END PGP SIGNATURE-----
+[1] https://lkml.org/lkml/2021/1/20/791
 
---7rm5qQeEd3jZvY1U--
+Thanks,
+
+Julien
+
+-->
+
+Julien Thierry (15):
+  tools: Add some generic functions and headers
+  tools: arm64: Make aarch64 instruction decoder available to tools
+  tools: bug: Remove duplicate definition
+  objtool: arm64: Add base definition for arm64 backend
+  objtool: arm64: Decode add/sub instructions
+  objtool: arm64: Decode jump and call related instructions
+  objtool: arm64: Decode other system instructions
+  objtool: arm64: Decode load/store instructions
+  objtool: arm64: Decode LDR instructions
+  objtool: arm64: Accept padding in code sections
+  efi: libstub: Ignore relocations for .discard sections
+  objtool: arm64: Implement functions to add switch tables alternatives
+  objtool: arm64: Cache section with switch table information
+  objtool: arm64: Handle supported relocations in alternatives
+  objtool: arm64: Ignore replacement section for alternative callback
+
+Raphael Gault (2):
+  gcc-plugins: objtool: Add plugin to detect switch table on arm64
+  objtool: arm64: Enable stack validation for arm64
+
+ arch/arm64/Kconfig                            |    2 +
+ drivers/firmware/efi/libstub/Makefile         |    2 +-
+ scripts/Makefile.gcc-plugins                  |    2 +
+ scripts/gcc-plugins/Kconfig                   |    4 +
+ .../arm64_switch_table_detection_plugin.c     |   85 +
+ tools/arch/arm64/include/asm/aarch64-insn.h   |  551 +++++++
+ tools/arch/arm64/lib/aarch64-insn.c           | 1425 +++++++++++++++++
+ tools/include/asm-generic/bitops/__ffs.h      |   11 +
+ tools/include/linux/bug.h                     |    6 +-
+ tools/include/linux/kernel.h                  |   21 +
+ tools/include/linux/printk.h                  |   40 +
+ tools/objtool/Makefile                        |    5 +
+ tools/objtool/arch/arm64/Build                |    8 +
+ tools/objtool/arch/arm64/decode.c             |  471 ++++++
+ .../arch/arm64/include/arch/cfi_regs.h        |   14 +
+ tools/objtool/arch/arm64/include/arch/elf.h   |    6 +
+ .../arch/arm64/include/arch/endianness.h      |    9 +
+ .../objtool/arch/arm64/include/arch/special.h |   23 +
+ tools/objtool/arch/arm64/special.c            |  134 ++
+ tools/objtool/arch/x86/decode.c               |    5 +
+ tools/objtool/check.c                         |    6 +
+ tools/objtool/include/objtool/arch.h          |    3 +
+ tools/objtool/sync-check.sh                   |    5 +
+ 23 files changed, 2832 insertions(+), 6 deletions(-)
+ create mode 100644 scripts/gcc-plugins/arm64_switch_table_detection_plugin.c
+ create mode 100644 tools/arch/arm64/include/asm/aarch64-insn.h
+ create mode 100644 tools/arch/arm64/lib/aarch64-insn.c
+ create mode 100644 tools/include/linux/printk.h
+ create mode 100644 tools/objtool/arch/arm64/Build
+ create mode 100644 tools/objtool/arch/arm64/decode.c
+ create mode 100644 tools/objtool/arch/arm64/include/arch/cfi_regs.h
+ create mode 100644 tools/objtool/arch/arm64/include/arch/elf.h
+ create mode 100644 tools/objtool/arch/arm64/include/arch/endianness.h
+ create mode 100644 tools/objtool/arch/arm64/include/arch/special.h
+ create mode 100644 tools/objtool/arch/arm64/special.c
+
+--
+2.25.4
+
