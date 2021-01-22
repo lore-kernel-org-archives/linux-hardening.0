@@ -2,87 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B940C433DB
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 19:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAD9C433E6
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 21:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5120C23AF8
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 19:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8644C23B1B
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 21:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbhAVTv2 (ORCPT
+        id S1730178AbhAVVSB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 22 Jan 2021 14:51:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730203AbhAVTYg (ORCPT
+        Fri, 22 Jan 2021 16:18:01 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:40154 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729865AbhAVVRL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 22 Jan 2021 14:24:36 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 899E2C061797
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Jan 2021 11:23:56 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id g15so4539123pjd.2
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Jan 2021 11:23:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7qLtZEw46MuUNIjgfTBmQVdFoDCzD4gSGophFRfdj9c=;
-        b=bGs9+RQfEZapH5a6I/1sAlxe6lblz17BbDMoY8hk8D51nuXTqTlFFPMyDuDfmy6gET
-         rfbZANKErdA7BepjLInotLIqN/JDkxzqGrIafLjzcoaHk8W1PBvXutMoCveAieUleL3Q
-         h5iVo1yVNFeoJpjXCmXq7wvFHfJyDRr7p0jiI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7qLtZEw46MuUNIjgfTBmQVdFoDCzD4gSGophFRfdj9c=;
-        b=V8yijfwpQnmNgGBZ/EOQS2YGdgKJJyqPSUsaLajP5ash1dSNGHpHyM6dawSy5AgdNz
-         K2Oz2BtxooJp4stQZPWB66vDbPek6043Msel4LEeFJ9YwIYnLW89ho4foS6CmE0itzHy
-         iP2zMs0dEz2IGxYmC+iA8iux71/oHXbYtzEbm0ftOpsD4yrD58XZtqu3VZnOnGnaLaIw
-         g9x9AxMO6S2eodlgPATzXcbLPPp1IBFXlWGgR+ICtKtuu36Fwfu3/7ByO6Lc009Iez/h
-         tRevWL/ll14+7RpgCrGtsRpfbsObB1N79rfjtTuNdJc4d9cbd4rtExFYxVqhRSzdAVAb
-         7lCw==
-X-Gm-Message-State: AOAM532IgqoXrauXPcfRrpZyaa3GzzYLx0jgqmkO+ZjD1ghGhyjHu0YF
-        7NH7I/mlGd3bksRPyiZJ+soV5Q==
-X-Google-Smtp-Source: ABdhPJwWPLudcsSrSLClh8DTzDJxX4J0dgf3E1K4QJTquK5uVVrb0Hfo9aMXXqcH+ClQbrHFJWsa0Q==
-X-Received: by 2002:a17:90a:9414:: with SMTP id r20mr6874931pjo.222.1611343436131;
-        Fri, 22 Jan 2021 11:23:56 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v1sm10639957pjd.26.2021.01.22.11.23.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Jan 2021 11:23:55 -0800 (PST)
-Date:   Fri, 22 Jan 2021 11:23:54 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Robert Karszniewicz <r.karszniewicz@phytec.de>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Fri, 22 Jan 2021 16:17:11 -0500
+Received: from [192.168.254.32] (unknown [47.187.219.45])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4884C20B6C40;
+        Fri, 22 Jan 2021 13:16:29 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4884C20B6C40
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1611350190;
+        bh=LmVa0B7QKVLtgYQ+R0kakMd+3Q+60r35qr0JwnFm7VU=;
+        h=From:Subject:To:Cc:References:Date:In-Reply-To:From;
+        b=FwpsQhKGbt6L+aq2cJ4Vst/Kqkhxev74xZv9rJNJo0ofXaqmQbSqGFApLbJxj3lDF
+         qHHygKBTPq/Lu1CF1HSa2kBg6c7GFsoOLW3AbJQZPI5dA4iEOFh1pV5HesqlHF6g26
+         vnmYb0GZw3479dSXUqrAZ+GmXjbEFoabQ1TdfXLg=
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Subject: Re: [RFC PATCH 00/17] objtool: add base support for arm64
+To:     Mark Brown <broonie@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-doc@vger.kernel.org, Robert Karszniewicz <avoidr@posteo.de>
-Subject: Re: [PATCH] Documentation/Kbuild: Remove references to gcc-plugin.sh
-Message-ID: <202101221123.23BA3181@keescook>
-References: <1611338653-175404-1-git-send-email-r.karszniewicz@phytec.de>
+        Julien Thierry <jthierry@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-hardening@vger.kernel.org, live-patching@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20210120173800.1660730-1-jthierry@redhat.com>
+ <CAMj1kXHO0wgcZ4ZDxj1vS9s7Szfpz8Nz=SAW_=Dnnjy+S9AtyQ@mail.gmail.com>
+ <186bb660-6e70-6bbf-4e96-1894799c79ce@redhat.com>
+ <CAMj1kXHznGnN2UEai1c2UgyKuTFCS5SZ+qGR6VJwyCuccViw_A@mail.gmail.com>
+ <YAlkOFwkb6/hFm1Q@hirez.programming.kicks-ass.net>
+ <CAMj1kXE+675mbS66kteKHNfcrco84WTaEL6ncVkkV7tQgbMpFw@mail.gmail.com>
+ <20210121185452.fxoz4ehqfv75bdzq@treble>
+ <20210122174342.GG6391@sirena.org.uk>
+Message-ID: <718f8021-f423-2fc8-da70-300b19942ea8@linux.microsoft.com>
+Date:   Fri, 22 Jan 2021 15:16:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1611338653-175404-1-git-send-email-r.karszniewicz@phytec.de>
+In-Reply-To: <20210122174342.GG6391@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 22, 2021 at 07:04:13PM +0100, Robert Karszniewicz wrote:
-> gcc-plugin.sh has been removed in commit
-> 1e860048c53e ("gcc-plugins: simplify GCC plugin-dev capability test").
+
+
+On 1/22/21 11:43 AM, Mark Brown wrote:
+> On Thu, Jan 21, 2021 at 12:54:52PM -0600, Josh Poimboeuf wrote:
 > 
-> Signed-off-by: Robert Karszniewicz <r.karszniewicz@phytec.de>
+>> 2) The shadow stack idea sounds promising -- how hard would it be to
+>>    make a prototype reliable unwinder?
+> 
+> In theory it doesn't look too hard and I can't see a particular reason
+> not to try doing this - there's going to be edge cases but hopefully for
+> reliable stack trace they're all in areas where we would be happy to
+> just decide the stack isn't reliable anyway, things like nesting which
+> allocates separate shadow stacks for each nested level for example.
+> I'll take a look.
+> 
 
-Thanks!
+I am a new comer to this discussion and I am learning. Just have some
+questions. Pardon me if they are obvious or if they have already been
+asked and answered.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Doesn't Clang already have support for a shadow stack implementation for ARM64?
+We could take a look at how Clang does it.
 
--- 
-Kees Cook
+Will there not be a significant performance hit? May be, some of it can be
+mitigated by using a parallel shadow stack rather than a compact one.
+
+Are there any longjmp style situations in the kernel where the stack is
+unwound by several frames? In these cases, the shadow stack must be unwound
+accordingly.
+
+Madhavan
+
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
