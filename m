@@ -2,127 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B0EC433DB
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 18:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B940C433DB
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 19:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED8C23AAC
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 18:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5120C23AF8
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 19:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbhAVS1N (ORCPT
+        id S1729171AbhAVTv2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 22 Jan 2021 13:27:13 -0500
-Received: from mickerik.phytec.de ([195.145.39.210]:53988 "EHLO
-        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbhAVSZ0 (ORCPT
+        Fri, 22 Jan 2021 14:51:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730203AbhAVTYg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 22 Jan 2021 13:25:26 -0500
-X-Greylist: delayed 963 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Jan 2021 13:21:18 EST
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
-        q=dns/txt; i=@phytec.de; t=1611338654; x=1613930654;
-        h=From:Sender:Reply-To:Subject:Date:Message-Id:To:Cc:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=b43XII4jJnJFqAsER8sZtwIeu6b8S9YogbUU4Zr4Dq4=;
-        b=bJGuVtlO7hPRsUj2xENhLS7uzQTVmLArQ8ElxXR9kKQIyRBpNedbSoNgG3fSI3Cq
-        mP3yNHD576Kgznm3tlvX/2WPvUZKTfGBmrcoaydSYPNPcqnZmxmsgV7DOM+WFs9r
-        nL+rNfi/FlcojgVhdgOXJlHUN8f0topnwRHo2oJ8vo8=;
-X-AuditID: c39127d2-0d3b770000001c86-f1-600b139dc3c9
-Received: from idefix.phytec.de (Unknown_Domain [172.16.0.10])
-        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 1F.B6.07302.D931B006; Fri, 22 Jan 2021 19:04:14 +0100 (CET)
-Received: from augenblix2.phytec.de ([172.16.0.56])
-          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
-          with ESMTP id 2021012219041356-181776 ;
-          Fri, 22 Jan 2021 19:04:13 +0100 
-From:   Robert Karszniewicz <r.karszniewicz@phytec.de>
-To:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+        Fri, 22 Jan 2021 14:24:36 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 899E2C061797
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Jan 2021 11:23:56 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id g15so4539123pjd.2
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Jan 2021 11:23:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7qLtZEw46MuUNIjgfTBmQVdFoDCzD4gSGophFRfdj9c=;
+        b=bGs9+RQfEZapH5a6I/1sAlxe6lblz17BbDMoY8hk8D51nuXTqTlFFPMyDuDfmy6gET
+         rfbZANKErdA7BepjLInotLIqN/JDkxzqGrIafLjzcoaHk8W1PBvXutMoCveAieUleL3Q
+         h5iVo1yVNFeoJpjXCmXq7wvFHfJyDRr7p0jiI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7qLtZEw46MuUNIjgfTBmQVdFoDCzD4gSGophFRfdj9c=;
+        b=V8yijfwpQnmNgGBZ/EOQS2YGdgKJJyqPSUsaLajP5ash1dSNGHpHyM6dawSy5AgdNz
+         K2Oz2BtxooJp4stQZPWB66vDbPek6043Msel4LEeFJ9YwIYnLW89ho4foS6CmE0itzHy
+         iP2zMs0dEz2IGxYmC+iA8iux71/oHXbYtzEbm0ftOpsD4yrD58XZtqu3VZnOnGnaLaIw
+         g9x9AxMO6S2eodlgPATzXcbLPPp1IBFXlWGgR+ICtKtuu36Fwfu3/7ByO6Lc009Iez/h
+         tRevWL/ll14+7RpgCrGtsRpfbsObB1N79rfjtTuNdJc4d9cbd4rtExFYxVqhRSzdAVAb
+         7lCw==
+X-Gm-Message-State: AOAM532IgqoXrauXPcfRrpZyaa3GzzYLx0jgqmkO+ZjD1ghGhyjHu0YF
+        7NH7I/mlGd3bksRPyiZJ+soV5Q==
+X-Google-Smtp-Source: ABdhPJwWPLudcsSrSLClh8DTzDJxX4J0dgf3E1K4QJTquK5uVVrb0Hfo9aMXXqcH+ClQbrHFJWsa0Q==
+X-Received: by 2002:a17:90a:9414:: with SMTP id r20mr6874931pjo.222.1611343436131;
+        Fri, 22 Jan 2021 11:23:56 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v1sm10639957pjd.26.2021.01.22.11.23.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Jan 2021 11:23:55 -0800 (PST)
+Date:   Fri, 22 Jan 2021 11:23:54 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Robert Karszniewicz <r.karszniewicz@phytec.de>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Philipp Rudo <prudo@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Philipp Rudo <prudo@linux.ibm.com>,
         linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Robert Karszniewicz <r.karszniewicz@phytec.de>,
-        Robert Karszniewicz <avoidr@posteo.de>
-Subject: [PATCH] Documentation/Kbuild: Remove references to gcc-plugin.sh
-Date:   Fri, 22 Jan 2021 19:04:13 +0100
-Message-Id: <1611338653-175404-1-git-send-email-r.karszniewicz@phytec.de>
-X-Mailer: git-send-email 2.7.4
-X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 22.01.2021 19:04:13,
-        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 22.01.2021 19:04:14,
-        Serialize complete at 22.01.2021 19:04:14
-X-TNEFEvaluated: 1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupiluLIzCtJLcpLzFFi42JZI8DApTtPmDvBoH0aq8XK0+vZLZ4caGe0
-        ONOda7GwbQmLxbz1Pxkt/uzawWTx8MENVouFZ6ItJk2fyOLA6TG74SKLx6ZVnWweExYdYPRY
-        3DeZ1eNum43Hr8OiHp83yQWwR3HZpKTmZJalFunbJXBl3L//gLlgE2/Fp+6f7A2MK7m7GDk5
-        JARMJE5d28raxcjFISSwlVFi6fvTzBDOeUaJg3+nM4NUsQFV7W6+BZYQEZjOKHFz5gGwFmaB
-        G4wS7Se6WECqhAU8JZZ8nQVmswioSvTNfc4OYvMCxd/umsYEsU9O4ua5TrBJEgKNTBLzvhxm
-        hUgISZxefJZ5AiPPAkaGVYxCuZnJ2alFmdl6BRmVJanJeimpmxiB4XV4ovqlHYx9czwOMTJx
-        MB5ilOBgVhLhfWTJkSDEm5JYWZValB9fVJqTWnyIUZqDRUmcdwNvSZiQQHpiSWp2ampBahFM
-        lomDU6qBMfveXt0Gvo6s7r8fVkydMy3e+oSw3nP1eZ+nJU/g2zvnvtrV9ctLlj7pCVn6i/lW
-        1y3ThLk1m1ewf16VH3v4o8NOT32Rzy7uja2R01dH3TtysaNB1vTMv7q1Mw9eaZPiSTodHvg8
-        RT3/2JOZ9j1PWQUXWWSvsN7xrs7w9Zmtzw82FGu8T/Dt5lRiKc5INNRiLipOBADd4Ds3HQIA
-        AA==
+        linux-doc@vger.kernel.org, Robert Karszniewicz <avoidr@posteo.de>
+Subject: Re: [PATCH] Documentation/Kbuild: Remove references to gcc-plugin.sh
+Message-ID: <202101221123.23BA3181@keescook>
+References: <1611338653-175404-1-git-send-email-r.karszniewicz@phytec.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1611338653-175404-1-git-send-email-r.karszniewicz@phytec.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-gcc-plugin.sh has been removed in commit
-1e860048c53e ("gcc-plugins: simplify GCC plugin-dev capability test").
+On Fri, Jan 22, 2021 at 07:04:13PM +0100, Robert Karszniewicz wrote:
+> gcc-plugin.sh has been removed in commit
+> 1e860048c53e ("gcc-plugins: simplify GCC plugin-dev capability test").
+> 
+> Signed-off-by: Robert Karszniewicz <r.karszniewicz@phytec.de>
 
-Signed-off-by: Robert Karszniewicz <r.karszniewicz@phytec.de>
----
- Documentation/kbuild/gcc-plugins.rst |  6 ------
- scripts/dummy-tools/gcc              | 15 ---------------
- 2 files changed, 21 deletions(-)
+Thanks!
 
-diff --git a/Documentation/kbuild/gcc-plugins.rst b/Documentation/kbuild/gcc-plugins.rst
-index 4b1c10f88e30..63379d0150e3 100644
---- a/Documentation/kbuild/gcc-plugins.rst
-+++ b/Documentation/kbuild/gcc-plugins.rst
-@@ -47,12 +47,6 @@ Files
- 	This is a compatibility header for GCC plugins.
- 	It should be always included instead of individual gcc headers.
- 
--**$(src)/scripts/gcc-plugin.sh**
--
--	This script checks the availability of the included headers in
--	gcc-common.h and chooses the proper host compiler to build the plugins
--	(gcc-4.7 can be built by either gcc or g++).
--
- **$(src)/scripts/gcc-plugins/gcc-generate-gimple-pass.h,
- $(src)/scripts/gcc-plugins/gcc-generate-ipa-pass.h,
- $(src)/scripts/gcc-plugins/gcc-generate-simple_ipa-pass.h,
-diff --git a/scripts/dummy-tools/gcc b/scripts/dummy-tools/gcc
-index 33487e99d83e..a484de576e6f 100755
---- a/scripts/dummy-tools/gcc
-+++ b/scripts/dummy-tools/gcc
-@@ -74,18 +74,3 @@ if arg_contain -S "$@"; then
- 		exit 0
- 	fi
- fi
--
--# For scripts/gcc-plugin.sh
--if arg_contain -print-file-name=plugin "$@"; then
--	plugin_dir=$(mktemp -d)
--
--	sed -n 's/.*#include "\(.*\)"/\1/p' $(dirname $0)/../gcc-plugins/gcc-common.h |
--	while read header
--	do
--		mkdir -p $plugin_dir/include/$(dirname $header)
--		touch $plugin_dir/include/$header
--	done
--
--	echo $plugin_dir
--	exit 0
--fi
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 -- 
-2.7.4
-
+Kees Cook
