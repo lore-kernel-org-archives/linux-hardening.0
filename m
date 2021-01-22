@@ -2,117 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008E7C433E0
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 21:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86132C433E9
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 23:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7E7123ACA
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 21:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6AB23B00
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 23:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbhAVVph (ORCPT
+        id S1728458AbhAVXRM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 22 Jan 2021 16:45:37 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:43716 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729322AbhAVVpR (ORCPT
+        Fri, 22 Jan 2021 18:17:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728511AbhAVTfF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 22 Jan 2021 16:45:17 -0500
-Received: from [192.168.254.32] (unknown [47.187.219.45])
-        by linux.microsoft.com (Postfix) with ESMTPSA id DBC8A20B7192;
-        Fri, 22 Jan 2021 13:44:35 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DBC8A20B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1611351876;
-        bh=geh+hCTtjutzehHxzhcv4bTi/qNORksnmBQi0+Nv/1s=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jBujqEnpeGP8xwMuai3OpICq6dba6Y6FnMrQX0k/3qGa1kEu9oXnQw7zaZA+Q7OYi
-         ONuz424856s5wNjf/3HgofM7gmBvyCAdU5uQ8jCtiSX/2EOTopOT68MKYePxgWNrpp
-         xkmbNj55Bn0rG95YgVF4+/0sUgWLxANIlK995gus=
-Subject: Re: [RFC PATCH 00/17] objtool: add base support for arm64
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Julien Thierry <jthierry@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Fri, 22 Jan 2021 14:35:05 -0500
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249DDC0613D6
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Jan 2021 11:33:44 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id 30so4489420pgr.6
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Jan 2021 11:33:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PRHYirbpaVjReacEED4lbaCE3EfoPDnBMgBWDqUdb1M=;
+        b=jcbK3Jb+1ldTw8xuHGcbe/WyAd9rzEWhNsbjwzL7GUFNO0kBbs7g9+lznqTJXv5guQ
+         ThmJrhp8cBtmrAw3PicbPDCzSDRMsMTXouV2Ed/Soxu0Aianbna8t6Eyn8vx3xOUitbj
+         /UrYMZXa4Z2WVDt0h6nszyYChGEcP/Gw8IFgQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PRHYirbpaVjReacEED4lbaCE3EfoPDnBMgBWDqUdb1M=;
+        b=fFlBDBURTh6/D6/8xRhwi9Apg8DcOASALS6hTqKYSXl1DvCAiNxycU5XMoUZdArGW4
+         ashfQkAscZ1uutqUFFnOOcMsaai3YSRftXW6wCGwkBo3yn3X3W1OABUm80/mgEFqv/hB
+         IhmH4TMa4Xx4CRfgNUylYL+FmiL0Rr0R3q54LNr9KQm0DOSUa9NAB4icpu291oAJnXwX
+         LTgIm8wEPsvat2/Rzy4D/SxGZnfrN6eSuHXgf0BAl2R9fRA3fkOF4rkdsHCVVSHxIQTJ
+         bbwJ4B74PlXGbc7OY82QhL86up6nlhyPflgP1pIhyx9q250YuuzqGMMk05S+DYoSSx4D
+         4Sqw==
+X-Gm-Message-State: AOAM530RUbdG+WIVssYmlIFvrG7d0EOMYka8i0hCZsuP6ePrPdpcRTpq
+        JjZWBCTKvPPIT7QsfP9pRio9ZQ==
+X-Google-Smtp-Source: ABdhPJzSZ+w9Sa36H0s07wBdXa3HqO3jCZJZAhirfObi0OICrHS6njgn1JnYamu9MMLKfJqtYJ237g==
+X-Received: by 2002:a63:1e1e:: with SMTP id e30mr1322451pge.156.1611344023652;
+        Fri, 22 Jan 2021 11:33:43 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 129sm9463735pfw.86.2021.01.22.11.33.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Jan 2021 11:33:42 -0800 (PST)
+Date:   Fri, 22 Jan 2021 11:33:41 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Lobakin <alobakin@pm.me>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-hardening@vger.kernel.org, live-patching@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kees Cook <keescook@chromium.org>
-References: <20210120173800.1660730-1-jthierry@redhat.com>
- <CAMj1kXHO0wgcZ4ZDxj1vS9s7Szfpz8Nz=SAW_=Dnnjy+S9AtyQ@mail.gmail.com>
- <186bb660-6e70-6bbf-4e96-1894799c79ce@redhat.com>
- <CAMj1kXHznGnN2UEai1c2UgyKuTFCS5SZ+qGR6VJwyCuccViw_A@mail.gmail.com>
- <YAlkOFwkb6/hFm1Q@hirez.programming.kicks-ass.net>
- <CAMj1kXE+675mbS66kteKHNfcrco84WTaEL6ncVkkV7tQgbMpFw@mail.gmail.com>
- <20210121185452.fxoz4ehqfv75bdzq@treble>
- <20210122174342.GG6391@sirena.org.uk>
- <bebccb15-1195-c004-923e-74d8444250e1@linux.microsoft.com>
- <CAMj1kXFr0wvx-hG6nBY4ibju9ww4x0CGhQber3MZQ2ZZn9LHWw@mail.gmail.com>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <c52dd4e2-2a9e-fdcd-1cca-4d6b237993b4@linux.microsoft.com>
-Date:   Fri, 22 Jan 2021 15:44:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Michal Marek <michal.lkml@markovi.net>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH kspp-next] kbuild: prevent CC_FLAGS_LTO self-bloating on
+ recursive rebuilds
+Message-ID: <202101221133.389539337D@keescook>
+References: <20210121184544.659998-1-alobakin@pm.me>
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXFr0wvx-hG6nBY4ibju9ww4x0CGhQber3MZQ2ZZn9LHWw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210121184544.659998-1-alobakin@pm.me>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 1/22/21 3:43 PM, Ard Biesheuvel wrote:
-> On Fri, 22 Jan 2021 at 22:15, Madhavan T. Venkataraman
-> <madvenka@linux.microsoft.com> wrote:
->>
->>
->>
->> On 1/22/21 11:43 AM, Mark Brown wrote:
->>> On Thu, Jan 21, 2021 at 12:54:52PM -0600, Josh Poimboeuf wrote:
->>>
->>>> 2) The shadow stack idea sounds promising -- how hard would it be to
->>>>    make a prototype reliable unwinder?
->>>
->>> In theory it doesn't look too hard and I can't see a particular reason
->>> not to try doing this - there's going to be edge cases but hopefully for
->>> reliable stack trace they're all in areas where we would be happy to
->>> just decide the stack isn't reliable anyway, things like nesting which
->>> allocates separate shadow stacks for each nested level for example.
->>> I'll take a look.
->>>
->>
->> I am a new comer to this discussion and I am learning. Just have some
->> questions. Pardon me if they are obvious or if they have already been
->> asked and answered.
->>
->> Doesn't Clang already have support for a shadow stack implementation for ARM64?
->> We could take a look at how Clang does it.
->>
->> Will there not be a significant performance hit? May be, some of it can be
->> mitigated by using a parallel shadow stack rather than a compact one.
->>
->> Are there any longjmp style situations in the kernel where the stack is
->> unwound by several frames? In these cases, the shadow stack must be unwound
->> accordingly.
->>
+On Thu, Jan 21, 2021 at 06:45:55PM +0000, Alexander Lobakin wrote:
+> CC_FLAGS_LTO gets initialized only via +=, never with := or =.
+> When building with CONFIG_TRIM_UNUSED_KSYMS, Kbuild may perform
+> several kernel rebuilds to satisfy symbol dependencies. In this
+> case, value of CC_FLAGS_LTO is concatenated each time, which
+> triggers a full rebuild.
+> Initialize it with := to fix this.
 > 
-> Hello Madhavan,
+> Fixes: dc5723b02e52 ("kbuild: add support for Clang LTO")
+> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+
+Ah-ha, good catch; thanks!
+
+I'll get this into the tree.
+
+-Kees
+
+> ---
+>  Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Let's discuss the details of shadow call stacks on a separate thread,
-> instead of further hijacking Julien's series.
+> diff --git a/Makefile b/Makefile
+> index 668909e7a460..2233951666f7 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -895,10 +895,10 @@ endif
+>  
+>  ifdef CONFIG_LTO_CLANG
+>  ifdef CONFIG_LTO_CLANG_THIN
+> -CC_FLAGS_LTO	+= -flto=thin -fsplit-lto-unit
+> +CC_FLAGS_LTO	:= -flto=thin -fsplit-lto-unit
+>  KBUILD_LDFLAGS	+= --thinlto-cache-dir=$(extmod-prefix).thinlto-cache
+>  else
+> -CC_FLAGS_LTO	+= -flto
+> +CC_FLAGS_LTO	:= -flto
+>  endif
+>  CC_FLAGS_LTO	+= -fvisibility=hidden
+>  
+> -- 
+> 2.30.0
+> 
 > 
 
-OK. Sounds good.
+-- 
+Kees Cook
