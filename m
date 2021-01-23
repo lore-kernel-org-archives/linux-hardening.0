@@ -2,121 +2,182 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86132C433E9
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 23:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84115C43381
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Jan 2021 13:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6AB23B00
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Jan 2021 23:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C37A230FC
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Jan 2021 13:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbhAVXRM (ORCPT
+        id S1725827AbhAWNOj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 22 Jan 2021 18:17:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728511AbhAVTfF (ORCPT
+        Sat, 23 Jan 2021 08:14:39 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:45761 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbhAWNOh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 22 Jan 2021 14:35:05 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249DDC0613D6
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Jan 2021 11:33:44 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id 30so4489420pgr.6
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Jan 2021 11:33:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PRHYirbpaVjReacEED4lbaCE3EfoPDnBMgBWDqUdb1M=;
-        b=jcbK3Jb+1ldTw8xuHGcbe/WyAd9rzEWhNsbjwzL7GUFNO0kBbs7g9+lznqTJXv5guQ
-         ThmJrhp8cBtmrAw3PicbPDCzSDRMsMTXouV2Ed/Soxu0Aianbna8t6Eyn8vx3xOUitbj
-         /UrYMZXa4Z2WVDt0h6nszyYChGEcP/Gw8IFgQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PRHYirbpaVjReacEED4lbaCE3EfoPDnBMgBWDqUdb1M=;
-        b=fFlBDBURTh6/D6/8xRhwi9Apg8DcOASALS6hTqKYSXl1DvCAiNxycU5XMoUZdArGW4
-         ashfQkAscZ1uutqUFFnOOcMsaai3YSRftXW6wCGwkBo3yn3X3W1OABUm80/mgEFqv/hB
-         IhmH4TMa4Xx4CRfgNUylYL+FmiL0Rr0R3q54LNr9KQm0DOSUa9NAB4icpu291oAJnXwX
-         LTgIm8wEPsvat2/Rzy4D/SxGZnfrN6eSuHXgf0BAl2R9fRA3fkOF4rkdsHCVVSHxIQTJ
-         bbwJ4B74PlXGbc7OY82QhL86up6nlhyPflgP1pIhyx9q250YuuzqGMMk05S+DYoSSx4D
-         4Sqw==
-X-Gm-Message-State: AOAM530RUbdG+WIVssYmlIFvrG7d0EOMYka8i0hCZsuP6ePrPdpcRTpq
-        JjZWBCTKvPPIT7QsfP9pRio9ZQ==
-X-Google-Smtp-Source: ABdhPJzSZ+w9Sa36H0s07wBdXa3HqO3jCZJZAhirfObi0OICrHS6njgn1JnYamu9MMLKfJqtYJ237g==
-X-Received: by 2002:a63:1e1e:: with SMTP id e30mr1322451pge.156.1611344023652;
-        Fri, 22 Jan 2021 11:33:43 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 129sm9463735pfw.86.2021.01.22.11.33.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Jan 2021 11:33:42 -0800 (PST)
-Date:   Fri, 22 Jan 2021 11:33:41 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Lobakin <alobakin@pm.me>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Sat, 23 Jan 2021 08:14:37 -0500
+Received: from localhost.localdomain (softbank126026094251.bbtec.net [126.26.94.251]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 10NDBvPP016300;
+        Sat, 23 Jan 2021 22:11:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 10NDBvPP016300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1611407519;
+        bh=Q7tcC4mt1Zp1/28EOjcXN8NS6DZeIM4iUSeIYyg4BP0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JBOL6/Ut1OXSMkNuqOkuP1mw3zKhyYpeOsl332jaZ2dhz6MaQF+1skS5IKyR0w3dX
+         sIggrNvWoGTSm6rD3ezdHYmpCLST+iBpJQ9NvPhEyGXCWSuw2Fet2mUJVsjX6v5a+h
+         eAQSQXm2nij2HCQhm6KCtdntWVb54GJBXngu7xr6d95uHe8bQ2xCMLuPyCgmssFVY/
+         3Lb1QDjBR8QLkbkiS3Er7V/eDG0BmkYk1euTzsw9GUPU6Txfot+YAIS2ujyU5BNQxG
+         DOJjOpP18RbwqOf0HgoVxoJ294CYSfJugE6ppoFBxZyLH6z4PJ5d7DxnICwXx1TqSq
+         6sJeFFc7dRxmw==
+X-Nifty-SrcIP: [126.26.94.251]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Robert Karszniewicz <r.karszniewicz@phytec.de>,
         Masahiro Yamada <masahiroy@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
         Michal Marek <michal.lkml@markovi.net>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH kspp-next] kbuild: prevent CC_FLAGS_LTO self-bloating on
- recursive rebuilds
-Message-ID: <202101221133.389539337D@keescook>
-References: <20210121184544.659998-1-alobakin@pm.me>
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: [PATCH] doc: gcc-plugins: drop more stale information
+Date:   Sat, 23 Jan 2021 22:11:52 +0900
+Message-Id: <20210123131152.734504-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210121184544.659998-1-alobakin@pm.me>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 06:45:55PM +0000, Alexander Lobakin wrote:
-> CC_FLAGS_LTO gets initialized only via +=, never with := or =.
-> When building with CONFIG_TRIM_UNUSED_KSYMS, Kbuild may perform
-> several kernel rebuilds to satisfy symbol dependencies. In this
-> case, value of CC_FLAGS_LTO is concatenated each time, which
-> triggers a full rebuild.
-> Initialize it with := to fix this.
-> 
-> Fixes: dc5723b02e52 ("kbuild: add support for Clang LTO")
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+[1] Drop the version information
 
-Ah-ha, good catch; thanks!
+The range of the supported GCC versions are always changing. The
+current minimal GCC version is 4.9, and commit 1e860048c53e
+("gcc-plugins: simplify GCC plugin-dev capability test") removed the
+old code accordingly. We do not mention specific version ranges like
+"all gcc versions from 4.5 to 6.0" since we often forget to update the
+documentation when the minimal compiler version is raised.
 
-I'll get this into the tree.
+[2] Drop the C compiler statements
 
--Kees
+Since commit 77342a02ff6e ("gcc-plugins: drop support for GCC <= 4.7")
+the GCC plugin infrastructure only supports g++.
 
-> ---
->  Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 668909e7a460..2233951666f7 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -895,10 +895,10 @@ endif
->  
->  ifdef CONFIG_LTO_CLANG
->  ifdef CONFIG_LTO_CLANG_THIN
-> -CC_FLAGS_LTO	+= -flto=thin -fsplit-lto-unit
-> +CC_FLAGS_LTO	:= -flto=thin -fsplit-lto-unit
->  KBUILD_LDFLAGS	+= --thinlto-cache-dir=$(extmod-prefix).thinlto-cache
->  else
-> -CC_FLAGS_LTO	+= -flto
-> +CC_FLAGS_LTO	:= -flto
->  endif
->  CC_FLAGS_LTO	+= -fvisibility=hidden
->  
-> -- 
-> 2.30.0
-> 
-> 
+[3] Drop supported architectures
 
+As of v5.11-rc4, the infrastructure supports more architectures;
+arm, arm64, mips, powerpc, riscv, s390, um, and x86. (just grep
+"select HAVE_GCC_PLUGINS") Again, we often forget to update this
+document when a new architecture is supported. Let's just say
+"only some architectures".
+
+[4] Update the apt-get example
+
+We are discussing to bump the minimal version to GCC 5. Change the
+package example to gcc-10-plugin-dev while we are here.
+
+[5] Update the build target
+
+Since commit ce2fd53a10c7 ("kbuild: descend into scripts/gcc-plugins/
+via scripts/Makefile"), "make gcc-plugins" is not supported.
+"make scripts" builds all the enabled plugins, including some other
+tools.
+
+[6] Update the steps for adding a new plugin
+
+At first, all CONFIG options for GCC plugins were located in arch/Kconfig.
+After commit 45332b1bdfdc ("gcc-plugins: split out Kconfig entries to
+scripts/gcc-plugins/Kconfig"), scripts/gcc-plugins/Kconfig became the
+central place to collect plugin CONFIG options. In my understanding,
+this requirement no longer exists because commit 9f671e58159a ("security:
+Create "kernel hardening" config area") moved some of plugin CONFIG
+options to another file. Find an appropriate place to add the new CONFIG.
+I do not understand what was intended by the $(src)/ prefix. Remove it.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Documentation/kbuild/gcc-plugins.rst | 30 ++++++++++++----------------
+ 1 file changed, 13 insertions(+), 17 deletions(-)
+
+diff --git a/Documentation/kbuild/gcc-plugins.rst b/Documentation/kbuild/gcc-plugins.rst
+index 63379d0150e3..7ea16f93db06 100644
+--- a/Documentation/kbuild/gcc-plugins.rst
++++ b/Documentation/kbuild/gcc-plugins.rst
+@@ -11,16 +11,13 @@ compiler [1]_. They are useful for runtime instrumentation and static analysis.
+ We can analyse, change and add further code during compilation via
+ callbacks [2]_, GIMPLE [3]_, IPA [4]_ and RTL passes [5]_.
+ 
+-The GCC plugin infrastructure of the kernel supports all gcc versions from
+-4.5 to 6.0, building out-of-tree modules, cross-compilation and building in a
+-separate directory.
+-Plugin source files have to be compilable by both a C and a C++ compiler as well
+-because gcc versions 4.5 and 4.6 are compiled by a C compiler,
+-gcc-4.7 can be compiled by a C or a C++ compiler,
+-and versions 4.8+ can only be compiled by a C++ compiler.
++The GCC plugin infrastructure of the kernel supports building out-of-tree
++modules, cross-compilation and building in a separate directory.
++Plugin source files have to be compilable by a C++ compiler.
+ 
+-Currently the GCC plugin infrastructure supports only the x86, arm, arm64 and
+-powerpc architectures.
++Currently the GCC plugin infrastructure supports only some architectures.
++Grep "select HAVE_GCC_PLUGINS" to find out which architectures support
++GCC plugins.
+ 
+ This infrastructure was ported from grsecurity [6]_ and PaX [7]_.
+ 
+@@ -53,8 +50,7 @@ $(src)/scripts/gcc-plugins/gcc-generate-simple_ipa-pass.h,
+ $(src)/scripts/gcc-plugins/gcc-generate-rtl-pass.h**
+ 
+ 	These headers automatically generate the registration structures for
+-	GIMPLE, SIMPLE_IPA, IPA and RTL passes. They support all gcc versions
+-	from 4.5 to 6.0.
++	GIMPLE, SIMPLE_IPA, IPA and RTL passes.
+ 	They should be preferred to creating the structures by hand.
+ 
+ 
+@@ -62,9 +58,9 @@ Usage
+ =====
+ 
+ You must install the gcc plugin headers for your gcc version,
+-e.g., on Ubuntu for gcc-4.9::
++e.g., on Ubuntu for gcc-10::
+ 
+-	apt-get install gcc-4.9-plugin-dev
++	apt-get install gcc-10-plugin-dev
+ 
+ Or on Fedora::
+ 
+@@ -76,7 +72,7 @@ Enable a GCC plugin based feature in the kernel config::
+ 
+ To compile only the plugin(s)::
+ 
+-	make gcc-plugins
++	make scripts
+ 
+ or just run the kernel make and compile the whole kernel with
+ the cyclomatic complexity GCC plugin.
+@@ -85,7 +81,7 @@ the cyclomatic complexity GCC plugin.
+ 4. How to add a new GCC plugin
+ ==============================
+ 
+-The GCC plugins are in $(src)/scripts/gcc-plugins/. You can use a file or a directory
+-here. It must be added to $(src)/scripts/gcc-plugins/Makefile,
+-$(src)/scripts/Makefile.gcc-plugins and $(src)/arch/Kconfig.
++The GCC plugins are in scripts/gcc-plugins/. You can use a file or a directory
++here. It must be added to /scripts/gcc-plugins/Makefile,
++scripts/Makefile.gcc-plugins and a relevant Kconfig file.
+ See the cyc_complexity_plugin.c (CONFIG_GCC_PLUGIN_CYC_COMPLEXITY) GCC plugin.
 -- 
-Kees Cook
+2.27.0
+
