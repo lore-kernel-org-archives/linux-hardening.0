@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B82DC433E6
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 05:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BC9C433DB
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 05:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC9992223D
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 05:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979FF2223D
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 05:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbhAZFvj (ORCPT
+        id S2388783AbhAZFvm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 26 Jan 2021 00:51:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
+        Tue, 26 Jan 2021 00:51:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728299AbhAYMqn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 25 Jan 2021 07:46:43 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6868222A84;
-        Mon, 25 Jan 2021 12:45:59 +0000 (UTC)
+        id S1728248AbhAYMq6 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 25 Jan 2021 07:46:58 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BE3B322AAC;
+        Mon, 25 Jan 2021 12:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611578761;
-        bh=c1ESZ1aS34pGoP4FODnuFV3EEuoDWPCSVbwlqLba+wM=;
+        s=k20201202; t=1611578774;
+        bh=ls2cUHUbFUJZ5qjE5yPv0cWaPnFNVfjXn2kCI4yqF5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJbNzV0PkXF7L4dtnJ3XXTVb5KqxyML1bOqWvfM18AFmy/942I+HDkwXp/+24n9Qp
-         k76W9D77JlVdn2f/9xG+hcC44mhHBungtffaSl173frfAjcelo9R6SeDr5XY2Q2rc9
-         KqLlfqUP/sb8ltt6+F4Kt/kjSFmo3nuO875DH8jwJqWI8gwEzO6/m9GACge0OI2izJ
-         L+MlIeZbKa426KistfPzlhYCwgWVctTXtFi3RBXskLO1R6Y61GrP1fBJgOB4+m3EFy
-         5xRW19AKq53J4TB7rzaSgKJE9yjU/O38UrK+CU1FY7jQ1kaZG0McdalkaTTUWQG1pd
-         XjW8pOXXRXx6g==
+        b=dbt1781s8CYoMRuC3iRVY6S4Q8wyRMTGTV/uVaSH7xGTA7Sq50aR1Da+j0THyPwEN
+         Lg/0vj9dgK/avaAqitMt7Qm3UQOBJe+fq8hL4781KwCvL0cW7we0f3l+LFO7hQ1MQ/
+         Z1nuF1wO4CSzefOqzW9XkBzBbo/NcEQ6DRit4gPwwM+evLGoJk5uys201GYs72UuX8
+         bOjzG5u/qjzWyf5WRdsybXJqkQ5QLrn5/8SByNFyiQ+VESNfqoNWsl04qhOXx1LKoW
+         MM8LtQuNmCYfsCfwuFq46hHJJQlDsHsCspe8R+3y+6PI7RoPQGC9mSCq4sHqy2DUT5
+         arOSNYiKNVM2A==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
@@ -43,10 +43,12 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Vitor Massaru Iha <vitor@massaru.org>,
         linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com
-Subject: [RFC 1/3] bitfield: build kunit tests without structleak plugin
-Date:   Mon, 25 Jan 2021 13:45:26 +0100
-Message-Id: <20210125124533.101339-2-arnd@kernel.org>
+        kunit-dev@googlegroups.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [RFC 2/3] drivers/base: build kunit tests without structleak plugin
+Date:   Mon, 25 Jan 2021 13:45:27 +0100
+Message-Id: <20210125124533.101339-3-arnd@kernel.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210125124533.101339-1-arnd@kernel.org>
 References: <20210125124533.101339-1-arnd@kernel.org>
@@ -60,28 +62,29 @@ From: Arnd Bergmann <arnd@arndb.de>
 
 The structleak plugin causes the stack frame size to grow immensely:
 
-lib/bitfield_kunit.c: In function 'test_bitfields_constants':
-lib/bitfield_kunit.c:93:1: error: the frame size of 7440 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+drivers/base/test/property-entry-test.c: In function 'pe_test_reference':
+drivers/base/test/property-entry-test.c:481:1: error: the frame size of 2640 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+  481 | }
+      | ^
+drivers/base/test/property-entry-test.c: In function 'pe_test_uints':
+drivers/base/test/property-entry-test.c:99:1: error: the frame size of 2592 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
 
 Turn it off in this file.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- lib/Makefile | 1 +
+ drivers/base/test/Makefile | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/lib/Makefile b/lib/Makefile
-index b5307d3eec1a..6a7300f0f02f 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -348,6 +348,7 @@ obj-$(CONFIG_PLDMFW) += pldmfw/
+diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
+index 3ca56367c84b..2f15fae8625f 100644
+--- a/drivers/base/test/Makefile
++++ b/drivers/base/test/Makefile
+@@ -2,3 +2,4 @@
+ obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
  
- # KUnit tests
- obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
-+CFLAGS_REMOVE_bitfield_kunit.o += -fplugin-arg-structleak_plugin-byref -fplugin-arg-structleak_plugin-byref-all
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
- obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
- obj-$(CONFIG_BITS_TEST) += test_bits.o
+ obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
++CFLAGS_REMOVE_property-entry-test.o += -fplugin-arg-structleak_plugin-byref -fplugin-arg-structleak_plugin-byref-all
 -- 
 2.29.2
 
