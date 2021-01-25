@@ -2,123 +2,141 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F175EC433DB
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 21:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31789C433DB
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 21:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCF742074B
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 21:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21342083E
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 21:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732671AbhAYVVR (ORCPT
+        id S1732541AbhAYVaO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 25 Jan 2021 16:21:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52157 "EHLO
+        Mon, 25 Jan 2021 16:30:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34317 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732596AbhAYVVI (ORCPT
+        by vger.kernel.org with ESMTP id S1726730AbhAYV3a (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 25 Jan 2021 16:21:08 -0500
+        Mon, 25 Jan 2021 16:29:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611609577;
+        s=mimecast20190719; t=1611610081;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=gfg/hxSYIFb+RC3VgIgWh3IEpOrZKtS57wEA5wqW8hY=;
-        b=SwrOybOEYPAvJyWi5Pq0PABaqgnKcCC6JQEZ8govD8xx30nstLKZbSqHLjcqvbW0zAEizW
-        CjjzWtpu1Amo4u5nipfn3YJScJFgEqY2LMj+6ka6tUo4dkzzOPmJ398R4OmafxRwdLiEJW
-        AJc2ygXWhPvF/gc+XEwmTBrAo1IHJS0=
+        bh=j5BAnkcKu0iXTsZM9+PxuOLyHl8DKz/n3Sg7EK2+zzU=;
+        b=Te3H9W+vVYEa36AC/0Rz3bGa1QsXR8JCD7qhhyGC2734gw06vfgQKI00X4j4UtCsv/78YK
+        la4R0qh6gVaXFK/ah3qPvw+yL414PMbMzvxXeCiMM60AU+liMChA60NF8zlmvft8KpVKGw
+        Zh67xuR5EqcqUWSHG3FpmfIWCuAdmro=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-7J9p8aPkNCeVG5QgMZHZjg-1; Mon, 25 Jan 2021 16:19:35 -0500
-X-MC-Unique: 7J9p8aPkNCeVG5QgMZHZjg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-400-ufg7fRfAMkqDK9Jy7oZDEQ-1; Mon, 25 Jan 2021 16:27:59 -0500
+X-MC-Unique: ufg7fRfAMkqDK9Jy7oZDEQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 133E710054FF;
-        Mon, 25 Jan 2021 21:19:33 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6649B18C89CF;
+        Mon, 25 Jan 2021 21:27:58 +0000 (UTC)
 Received: from treble (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 23F015D6AB;
-        Mon, 25 Jan 2021 21:19:31 +0000 (UTC)
-Date:   Mon, 25 Jan 2021 15:19:29 -0600
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 41BC260938;
+        Mon, 25 Jan 2021 21:27:57 +0000 (UTC)
+Date:   Mon, 25 Jan 2021 15:27:55 -0600
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Julien Thierry <jthierry@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-hardening@vger.kernel.org, live-patching@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [RFC PATCH 00/17] objtool: add base support for arm64
-Message-ID: <20210125211929.62e6gzvl54hpmwn2@treble>
-References: <20210120173800.1660730-1-jthierry@redhat.com>
- <CAMj1kXHO0wgcZ4ZDxj1vS9s7Szfpz8Nz=SAW_=Dnnjy+S9AtyQ@mail.gmail.com>
- <186bb660-6e70-6bbf-4e96-1894799c79ce@redhat.com>
- <CAMj1kXHznGnN2UEai1c2UgyKuTFCS5SZ+qGR6VJwyCuccViw_A@mail.gmail.com>
- <YAlkOFwkb6/hFm1Q@hirez.programming.kicks-ass.net>
- <CAMj1kXE+675mbS66kteKHNfcrco84WTaEL6ncVkkV7tQgbMpFw@mail.gmail.com>
- <20210121185452.fxoz4ehqfv75bdzq@treble>
- <20210122174342.GG6391@sirena.org.uk>
- <bebccb15-1195-c004-923e-74d8444250e1@linux.microsoft.com>
- <CAMj1kXFr0wvx-hG6nBY4ibju9ww4x0CGhQber3MZQ2ZZn9LHWw@mail.gmail.com>
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-hardening@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Justin Forbes <jforbes@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
+ modules
+Message-ID: <20210125212755.jfwlqogpcarmxdgt@treble>
+References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
+ <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXFr0wvx-hG6nBY4ibju9ww4x0CGhQber3MZQ2ZZn9LHWw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 22, 2021 at 10:43:09PM +0100, Ard Biesheuvel wrote:
-> On Fri, 22 Jan 2021 at 22:15, Madhavan T. Venkataraman <madvenka@linux.microsoft.com> wrote:
-> > On 1/22/21 11:43 AM, Mark Brown wrote:
-> > > On Thu, Jan 21, 2021 at 12:54:52PM -0600, Josh Poimboeuf wrote:
-> > >
-> > >> 2) The shadow stack idea sounds promising -- how hard would it be to
-> > >>    make a prototype reliable unwinder?
-> > >
-> > > In theory it doesn't look too hard and I can't see a particular reason
-> > > not to try doing this - there's going to be edge cases but hopefully for
-> > > reliable stack trace they're all in areas where we would be happy to
-> > > just decide the stack isn't reliable anyway, things like nesting which
-> > > allocates separate shadow stacks for each nested level for example.
-> > > I'll take a look.
-> > >
+On Tue, Jan 26, 2021 at 06:16:01AM +0900, Masahiro Yamada wrote:
+> On Tue, Jan 26, 2021 at 5:42 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 > >
-> > I am a new comer to this discussion and I am learning. Just have some
-> > questions. Pardon me if they are obvious or if they have already been
-> > asked and answered.
+> > When building out-of-tree kernel modules, the build system doesn't
+> > require the GCC version to match the version used to build the original
+> > kernel.  That's probably [1] fine.
 > >
-> > Doesn't Clang already have support for a shadow stack implementation for ARM64?
-> > We could take a look at how Clang does it.
+> > In fact, for many distros, the version of GCC used to build the latest
+> > kernel doesn't necessarily match the latest released GCC, so a GCC
+> > mismatch turns out to be pretty common.  And with CONFIG_MODVERSIONS
+> > it's probably more common.
 > >
-> > Will there not be a significant performance hit? May be, some of it can be
-> > mitigated by using a parallel shadow stack rather than a compact one.
+> > So a lot of users have come to rely on being able to use a different
+> > version of GCC when building OOT modules.
 > >
-> > Are there any longjmp style situations in the kernel where the stack is
-> > unwound by several frames? In these cases, the shadow stack must be unwound
-> > accordingly.
+> > But with GCC plugins enabled, that's no longer allowed:
 > >
+> >   cc1: error: incompatible gcc/plugin versions
+> >   cc1: error: failed to initialize plugin ./scripts/gcc-plugins/structleak_plugin.so
+> >
+> > That error comes from the plugin's call to
+> > plugin_default_version_check(), which strictly enforces the GCC version.
+> > The strict check makes sense, because there's nothing to prevent the GCC
+> > plugin ABI from changing -- and it often does.
+> >
+> > But failing the build isn't necessary.  For most plugins, OOT modules
+> > will otherwise work just fine without the plugin instrumentation.
+> >
+> > When a GCC version mismatch is detected, print a warning and disable the
+> > plugin.  The only exception is the RANDSTRUCT plugin which needs all
+> > code to see the same struct layouts.  In that case print an error.
+> >
+> > [1] Ignoring, for the moment, that the kernel now has
+> >     toolchain-dependent kconfig options, which can silently disable
+> >     features and cause havoc when compiler versions differ, or even when
+> >     certain libraries are missing.  This is a separate problem which
+> >     also needs to be addressed.
+> >
+> > Reported-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > ---
 > 
-> Hello Madhavan,
 > 
-> Let's discuss the details of shadow call stacks on a separate thread,
-> instead of further hijacking Julien's series.
+> We are based on the assumption that we use the same
+> compiler for in-tree and out-of-tree.
 
-It's quite relevant to this thread.  There's no need to consider merging
-Julien's patches if you have a better approach.  Why not discuss it
-here?  I'm also interested in the answers to Madhavan's questions.
+Sorry, but that assumption isn't based in reality.  And it's not
+enforced.
+
+> If people use a different compiler, they must be
+> prepared for any possible problem.
+>
+> Using different compiler flags for in-tree and out-of-tree
+> is even more dangerous.
+> 
+> For example, CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled
+> for in-tree build, and then disabled for out-of-tree modules,
+> the struct layout will mismatch, won't it?
+
+If you read the patch you'll notice that it handles that case, when it's
+caused by GCC mismatch.
+
+However, as alluded to in the [1] footnote, it doesn't handle the case
+where the OOT build system doesn't have gcc-plugin-devel installed.
+Then CONFIG_GCC_PLUGIN_RANDSTRUCT gets silently disabled and the build
+succeeds!  That happens even without a GCC mismatch.
+
+> This patch is ugly, and not doing the right thing.
+
+Maybe, but I doubt the solution is to make assumptions.
 
 -- 
 Josh
