@@ -2,190 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D08C433E6
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 23:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B82DC433E6
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 05:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 555FA22B37
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 23:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9992223D
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 05:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732089AbhAYVSr (ORCPT
+        id S1728827AbhAZFvj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 25 Jan 2021 16:18:47 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:64935 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732444AbhAYVR5 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 25 Jan 2021 16:17:57 -0500
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 10PLGee1021843;
-        Tue, 26 Jan 2021 06:16:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 10PLGee1021843
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1611609401;
-        bh=UBtSR4SngVZcF8xuMqiB6wAgmObrFSnj0hR3SZnjGx0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fW3IypG7DU0Sy2lJtuivc8NXYOkwYgV1o24luqg5jMlQ7htBZVHMwK1Bg+83r1pZX
-         XU1ojvBCOeiW6XLA8AUFPtvMILO1Zzy/w4jaYAuqh0sQD0bXQiXUArRl2jZ9uO0LA6
-         GwwHRaBChHy2gH7+l+cqefFpB3/kTTJbcTNwH/Hqpqo9d4m7fIRGGTap/fcXErVJoh
-         BKbTy/7Y8ztwNzH/aS0NLbVjcih88Gzwqxp+kl5XjU0MhCJj8olKks2xBqphOQRrlG
-         d8gJFMz7qLN396NBHwtMwuLwHjtVVbHN5bN6dv0gYLyG2Ih/kA4lB0VLlOb+IYvH4T
-         pjafarslnPZdQ==
-X-Nifty-SrcIP: [209.85.216.51]
-Received: by mail-pj1-f51.google.com with SMTP id l18so425615pji.3;
-        Mon, 25 Jan 2021 13:16:40 -0800 (PST)
-X-Gm-Message-State: AOAM531aIFflY0j4930lDxf+sxYAFpQIbvXlkL+p40BNs4wq6xLkpvgM
-        fA64PJiXkMvCQ9xOdDD2hStH4Z9dsDKGR6KFxFE=
-X-Google-Smtp-Source: ABdhPJwDImYxkIOjCoi/rm0VtnjdA+o6S7kwL7EOOzfsdixXundNyzEhU5nkidT+65Dzvl7m9J+3VoyUG6AYLNoHq1U=
-X-Received: by 2002:a17:90a:5403:: with SMTP id z3mr2231069pjh.198.1611609399736;
- Mon, 25 Jan 2021 13:16:39 -0800 (PST)
+        Tue, 26 Jan 2021 00:51:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728299AbhAYMqn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 25 Jan 2021 07:46:43 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6868222A84;
+        Mon, 25 Jan 2021 12:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611578761;
+        bh=c1ESZ1aS34pGoP4FODnuFV3EEuoDWPCSVbwlqLba+wM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UJbNzV0PkXF7L4dtnJ3XXTVb5KqxyML1bOqWvfM18AFmy/942I+HDkwXp/+24n9Qp
+         k76W9D77JlVdn2f/9xG+hcC44mhHBungtffaSl173frfAjcelo9R6SeDr5XY2Q2rc9
+         KqLlfqUP/sb8ltt6+F4Kt/kjSFmo3nuO875DH8jwJqWI8gwEzO6/m9GACge0OI2izJ
+         L+MlIeZbKa426KistfPzlhYCwgWVctTXtFi3RBXskLO1R6Y61GrP1fBJgOB4+m3EFy
+         5xRW19AKq53J4TB7rzaSgKJE9yjU/O38UrK+CU1FY7jQ1kaZG0McdalkaTTUWQG1pd
+         XjW8pOXXRXx6g==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com
+Subject: [RFC 1/3] bitfield: build kunit tests without structleak plugin
+Date:   Mon, 25 Jan 2021 13:45:26 +0100
+Message-Id: <20210125124533.101339-2-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20210125124533.101339-1-arnd@kernel.org>
+References: <20210125124533.101339-1-arnd@kernel.org>
 MIME-Version: 1.0
-References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
-In-Reply-To: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 26 Jan 2021 06:16:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
-Message-ID: <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
-Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT modules
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Justin Forbes <jforbes@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 5:42 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> When building out-of-tree kernel modules, the build system doesn't
-> require the GCC version to match the version used to build the original
-> kernel.  That's probably [1] fine.
->
-> In fact, for many distros, the version of GCC used to build the latest
-> kernel doesn't necessarily match the latest released GCC, so a GCC
-> mismatch turns out to be pretty common.  And with CONFIG_MODVERSIONS
-> it's probably more common.
->
-> So a lot of users have come to rely on being able to use a different
-> version of GCC when building OOT modules.
->
-> But with GCC plugins enabled, that's no longer allowed:
->
->   cc1: error: incompatible gcc/plugin versions
->   cc1: error: failed to initialize plugin ./scripts/gcc-plugins/structleak_plugin.so
->
-> That error comes from the plugin's call to
-> plugin_default_version_check(), which strictly enforces the GCC version.
-> The strict check makes sense, because there's nothing to prevent the GCC
-> plugin ABI from changing -- and it often does.
->
-> But failing the build isn't necessary.  For most plugins, OOT modules
-> will otherwise work just fine without the plugin instrumentation.
->
-> When a GCC version mismatch is detected, print a warning and disable the
-> plugin.  The only exception is the RANDSTRUCT plugin which needs all
-> code to see the same struct layouts.  In that case print an error.
->
-> [1] Ignoring, for the moment, that the kernel now has
->     toolchain-dependent kconfig options, which can silently disable
->     features and cause havoc when compiler versions differ, or even when
->     certain libraries are missing.  This is a separate problem which
->     also needs to be addressed.
->
-> Reported-by: Ondrej Mosnacek <omosnace@redhat.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
+From: Arnd Bergmann <arnd@arndb.de>
 
+The structleak plugin causes the stack frame size to grow immensely:
 
-We are based on the assumption that we use the same
-compiler for in-tree and out-of-tree.
+lib/bitfield_kunit.c: In function 'test_bitfields_constants':
+lib/bitfield_kunit.c:93:1: error: the frame size of 7440 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
 
-If people use a different compiler, they must be
-prepared for any possible problem.
+Turn it off in this file.
 
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ lib/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-Using different compiler flags for in-tree and out-of-tree
-is even more dangerous.
-
-For example, CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled
-for in-tree build, and then disabled for out-of-tree modules,
-the struct layout will mismatch, won't it?
-
-
-This patch is ugly, and not doing the right thing.
-
-
-
-
->  scripts/Makefile.gcc-plugins | 19 +++++++++++++++++++
->  scripts/Makefile.kcov        | 11 +++++++++++
->  2 files changed, 30 insertions(+)
->
-> diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-> index 952e46876329..7227692fba59 100644
-> --- a/scripts/Makefile.gcc-plugins
-> +++ b/scripts/Makefile.gcc-plugins
-> @@ -51,6 +51,25 @@ export DISABLE_ARM_SSP_PER_TASK_PLUGIN
->  GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
->  # The sancov_plugin.so is included via CFLAGS_KCOV, so it is removed here.
->  GCC_PLUGINS_CFLAGS := $(filter-out %/sancov_plugin.so, $(GCC_PLUGINS_CFLAGS))
-> +
-> +# Out-of-tree module check: If there's a GCC version mismatch, disable plugins
-> +# and print a warning.  Otherwise the OOT module build will fail due to
-> +# plugin_default_version_check().
-> +ifneq ($(GCC_PLUGINS_CFLAGS),)
-> +    ifneq ($(KBUILD_EXTMOD),)
-> +        ifneq ($(CONFIG_GCC_VERSION), $(shell $(srctree)/scripts/gcc-version.sh $(HOSTCXX)))
-> +
-> +            ifdef CONFIG_GCC_PLUGIN_RANDSTRUCT
-> +                $(error error: CONFIG_GCC_PLUGIN_RANDSTRUCT requires out-of-tree modules to be built using the same GCC version as the kernel.)
-> +            endif
-> +
-> +            $(warning warning: Disabling GCC plugins for out-of-tree modules due to GCC version mismatch.)
-> +            $(warning warning: The following plugins have been disabled: $(gcc-plugin-y))
-> +            GCC_PLUGINS_CFLAGS :=
-> +       endif
-> +    endif
-> +endif
-> +
->  export GCC_PLUGINS_CFLAGS
->
->  # Add the flags to the build!
-> diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
-> index 67e8cfe3474b..63a2bc2aabb2 100644
-> --- a/scripts/Makefile.kcov
-> +++ b/scripts/Makefile.kcov
-> @@ -3,4 +3,15 @@ kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)    += -fsanitize-coverage=trace-pc
->  kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)   += -fsanitize-coverage=trace-cmp
->  kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)         += -fplugin=$(objtree)/scripts/gcc-plugins/sancov_plugin.so
->
-> +# Out-of-tree module check for GCC version mismatch.
-> +# See the similar check in scripts/Makefile.gcc-plugins
-> +ifneq ($(CONFIG_GCC_PLUGIN_SANCOV),)
-> +    ifneq ($(KBUILD_EXTMOD),)
-> +        ifneq ($(CONFIG_GCC_VERSION), $(shell $(srctree)/scripts/gcc-version.sh $(HOSTCXX)))
-> +            $(warning warning: Disabling CONFIG_GCC_PLUGIN_SANCOV for out-of-tree modules due to GCC version mismatch.)
-> +            kcov-flags-y := $(filter-out %/sancov_plugin.so, $(kcov-flags-y))
-> +        endif
-> +    endif
-> +endif
-> +
->  export CFLAGS_KCOV := $(kcov-flags-y)
-> --
-> 2.29.2
->
-
-
+diff --git a/lib/Makefile b/lib/Makefile
+index b5307d3eec1a..6a7300f0f02f 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -348,6 +348,7 @@ obj-$(CONFIG_PLDMFW) += pldmfw/
+ 
+ # KUnit tests
+ obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
++CFLAGS_REMOVE_bitfield_kunit.o += -fplugin-arg-structleak_plugin-byref -fplugin-arg-structleak_plugin-byref-all
+ obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+ obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+ obj-$(CONFIG_BITS_TEST) += test_bits.o
 -- 
-Best Regards
-Masahiro Yamada
+2.29.2
+
