@@ -2,36 +2,36 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BB2C433DB
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 19:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D320CC433DB
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 19:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6CBF20770
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 19:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978F222228
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 19:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388822AbhAZFvq (ORCPT
+        id S1732017AbhAZFvg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 26 Jan 2021 00:51:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39732 "EHLO mail.kernel.org"
+        Tue, 26 Jan 2021 00:51:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbhAYMr1 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 25 Jan 2021 07:47:27 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B8EB622D04;
-        Mon, 25 Jan 2021 12:46:43 +0000 (UTC)
+        id S1728015AbhAYMqX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 25 Jan 2021 07:46:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 433DE229EF;
+        Mon, 25 Jan 2021 12:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611578806;
-        bh=kXFZkQ9+v70aH3YVPuA5/lu+eenOiEeGF4vdN+dLFXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXTCMseCI/Zpe+8B3NRpfNUmZER45GKnjtDKktN9SOa5UxRqf7GzeMm26nh7vHuzB
-         a1vxPTVpUEG3IS8mGE/i695PZBWod8q4jJKIcWH5d5wgIPBxbpGTJV/c8Gxh8k9oJR
-         lZGpFG2I1enjOqDI7LYKBuArgdxcJcuN/jhMLEN0qt6b3GVquUJEDWlwQhWxNwIvis
-         bubRTpFAdqO4LuM8OB2fmrZHyuOs4XhU4zCVbDYasw46qtiSq+2SEg3bMvH/5iCX8R
-         ReLQ+Li7judC1UxCNTvdGb97OGiO+bLO1RK4szwMpzgfJULqIM5mYRMY+wUy4YNLgG
-         EoeAvpQdDw+JA==
+        s=k20201202; t=1611578740;
+        bh=56tdACcGGHFZFmeBO08RKmJkzc4zo0dNrypPmbndIvE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ELK6YOHuJmo+Zj67jVaKWqSYNUu9XLe/QuKcN06FLPeeDWAVm/KtFxMcH3iXXgwh4
+         9cJVZp2/iBnjGto6GUvby/wMrYKlHbvazXwQEchiOcJ6WrRyVwiqzT1PAUlR+12F3c
+         cAKsjT5XPq4omzuUCtXLDy6mt98opSLzdPDlNfKuTMeBS9BNQmrnOPHlbXzBw/PxeQ
+         TQzQuWcFlAEFnlXDsVTD95oljHl1253XO0zMWfgnrK4+DpLKMdvw13/ctqyKxSIAk7
+         gxWnboyIFHrkbCkmSqJTLNj22GgmrAFA8nuRkiiuUaC9mtgKDOFiknfpO8xHnDRE6u
+         23ElbZ+qGaVig==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
@@ -43,15 +43,11 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Vitor Massaru Iha <vitor@massaru.org>,
         linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Andreas Noever <andreas.noever@gmail.com>,
-        linux-usb@vger.kernel.org
-Subject: [RFC 3/3] thunderbolt: build kunit tests without structleak plugin
-Date:   Mon, 25 Jan 2021 13:45:28 +0100
-Message-Id: <20210125124533.101339-4-arnd@kernel.org>
+        kunit-dev@googlegroups.com
+Subject: [RFC 0/3] kunit vs structleak
+Date:   Mon, 25 Jan 2021 13:45:25 +0100
+Message-Id: <20210125124533.101339-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210125124533.101339-1-arnd@kernel.org>
-References: <20210125124533.101339-1-arnd@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -60,29 +56,49 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The structleak plugin causes the stack frame size to grow immensely:
+I ran into a couple of problems with kunit tests taking too much stack
+space, sometimes dangerously so. These the the three instances that
+cause an increase over the warning limit of some architectures:
 
+lib/bitfield_kunit.c:93:1: error: the frame size of 7440 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+drivers/base/test/property-entry-test.c:481:1: error: the frame size of 2640 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
 drivers/thunderbolt/test.c:1529:1: error: the frame size of 1176 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
 
-Turn it off in this file.
+Ideally there should be a way to rewrite the kunit infrastructure
+that avoids the explosion of stack data when the structleak plugin
+is used.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
+A rather drastic measure would be to use Kconfig logic to make
+the two options mutually exclusive. This would clearly work, but
+is probably not needed.
+
+As a simpler workaround, this disables the plugin for the three
+files in which the excessive stack usage was observed.
+
+      Arnd
+
+Arnd Bergmann (3):
+  bitfield: build kunit tests without structleak plugin
+  drivers/base: build kunit tests without structleak plugin
+  thunderbolt: build kunit tests without structleak plugin
+
+ drivers/base/test/Makefile   | 1 +
  drivers/thunderbolt/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ lib/Makefile                 | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
-index 7aa48f6c41d9..e571c0495a84 100644
---- a/drivers/thunderbolt/Makefile
-+++ b/drivers/thunderbolt/Makefile
-@@ -7,6 +7,7 @@ thunderbolt-objs += nvm.o retimer.o quirks.o
- thunderbolt-${CONFIG_ACPI} += acpi.o
- thunderbolt-$(CONFIG_DEBUG_FS) += debugfs.o
- thunderbolt-${CONFIG_USB4_KUNIT_TEST} += test.o
-+CFLAGS_REMOVE_test.o += -fplugin-arg-structleak_plugin-byref -fplugin-arg-structleak_plugin-byref-all
- 
- thunderbolt_dma_test-${CONFIG_USB4_DMA_TEST} += dma_test.o
- obj-$(CONFIG_USB4_DMA_TEST) += thunderbolt_dma_test.o
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Alan Maguire <alan.maguire@oracle.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Vitor Massaru Iha <vitor@massaru.org>
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+Cc: linux-kernel@vger.kernel.org
 -- 
 2.29.2
 
