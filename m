@@ -2,252 +2,157 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_RED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B435DC433DB
-	for <linux-hardening@archiver.kernel.org>; Sun, 24 Jan 2021 12:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A47EC43381
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 20:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80ED722CB2
-	for <linux-hardening@archiver.kernel.org>; Sun, 24 Jan 2021 12:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B7822582
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 20:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbhAXMoA (ORCPT
+        id S1731893AbhAYUx2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 24 Jan 2021 07:44:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbhAXMnn (ORCPT
+        Mon, 25 Jan 2021 15:53:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28040 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726749AbhAYUnr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 24 Jan 2021 07:43:43 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1232C06174A;
-        Sun, 24 Jan 2021 04:43:02 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id a12so5763473lfb.1;
-        Sun, 24 Jan 2021 04:43:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z7teIBDKIhcgBPY/liVEk9zmA7Nx4bGejJjM0IUv55g=;
-        b=fqXxPtXlobtVpi6/B08a8S/K4Z6BblxpfILu/yHUBVC4AsIFULvIIePcVUT2uVLf+x
-         fNVo6jgITGjOYIODAuAIsqVV2NHhhIVSNagMfA+8XVRN2kRGLuQFx9iPJs8dQ7te+g69
-         uubrHayI6WqzAyvUqR3bARcmWkhocDPUI3kLDAz7Dtn1O365Dx9nHyZu58fdkHcF4ZX8
-         JupKLODY+KXwUmyQ4pKfPXdPDItqYmULsC/SWJSQTssohSWlUvWC/hGl/kxjM1aEDlR7
-         xCeLVaYcWYCjvSolkcFRm/sEcWkZ98hWEg6UUrA4fEuXtyBWHASycD4zTuZ5mRcgGlyx
-         hG+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z7teIBDKIhcgBPY/liVEk9zmA7Nx4bGejJjM0IUv55g=;
-        b=mzjBC4UDYDgPtpxdMc09uClf5FgNJyg+q+AVSw6cq1M0K9NPRscTt8avSfXd1UWrhp
-         5uK9ZIjq4bgCXx70LZcn9dj5cjmdTbTJq9EYrN3sQs3yfYho2NDBm9mS6GU9izLlUFH2
-         LYiwJMzY1UXZ/9IOPBi0HP5oGH32symhCwtLgYoUgo94wWk6rUg7HvMPwI3eH6JuyWbn
-         xHWSUyS0ByCV4BCQdJisd0mjB5V+5IZOvcl77kynFvbCHUR9Y2OkziaDn8qZ15Z9fgf2
-         Ipnt6U5hjo/HR8SWTdjVA393q5hhOFV1QygHYrElZgCQQpeXxL4MDvzjV2ISI5PpGzAL
-         S0fg==
-X-Gm-Message-State: AOAM531PzxC6nuiwhDfDX4+sVo5I/2vD0tUStJdOSuR+1tx43Am39+Is
-        RIlWxIidAu6O+Q1Uujtp9he5ftxNwTE=
-X-Google-Smtp-Source: ABdhPJyVor3VzWEfUE5wNYmJza3j7FdVBDUmVSsCrbF/z37ekHoGf7jotbezEuPkR091xfdN4rAKIQ==
-X-Received: by 2002:a19:5510:: with SMTP id n16mr37649lfe.543.1611492181102;
-        Sun, 24 Jan 2021 04:43:01 -0800 (PST)
-Received: from localhost.localdomain (88-114-221-222.elisa-laajakaista.fi. [88.114.221.222])
-        by smtp.gmail.com with ESMTPSA id o14sm928250lfi.257.2021.01.24.04.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Jan 2021 04:43:00 -0800 (PST)
-From:   Topi Miettinen <toiwoton@gmail.com>
-To:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Topi Miettinen <toiwoton@gmail.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: [PATCH v10 2/2] mm/mremap: optionally randomize mremap(..., MREMAP_MAYMOVE)
-Date:   Sun, 24 Jan 2021 14:42:46 +0200
-Message-Id: <20210124124246.19566-2-toiwoton@gmail.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210124124246.19566-1-toiwoton@gmail.com>
-References: <20210124124246.19566-1-toiwoton@gmail.com>
+        Mon, 25 Jan 2021 15:43:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611607341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZgDCZSeGhmRWWHT5vzy2jb80PxnR6l3Ybnpj6nBPRRM=;
+        b=Tspy7zkrs7mBKrZOOHw8cC/HRAeL4eFq40ciOPeYRyFFOSprOfSA3jtFpdHZ7SycgoOwWE
+        dlJkK3SZXqx2PW4DTHMWE5N+f77MNc2XLgvbs5/Ix8wqX2BtD1dvljsIm5WPYk5+Vc/qQI
+        FmlBzI+Gss283+bkZKTS1J6sAXG/0RQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-504-9rCtESvLMP-ekps1qOjHfQ-1; Mon, 25 Jan 2021 15:42:19 -0500
+X-MC-Unique: 9rCtESvLMP-ekps1qOjHfQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F3EB800592;
+        Mon, 25 Jan 2021 20:42:18 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F39576F44E;
+        Mon, 25 Jan 2021 20:42:16 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Justin Forbes <jforbes@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT modules
+Date:   Mon, 25 Jan 2021 14:42:10 -0600
+Message-Id: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-New sysctl kernel.randomize_mremap, when set, can be used to force
-mremap(..., MREMAP_MAYMOVE) to always move the mappings even if not
-necessary. In addition to improved address space layout randomization,
-this can expose bugs where the caller is not actually expecting a
-moved mapping, even though this may sometimes happen without this
-flag.
+When building out-of-tree kernel modules, the build system doesn't
+require the GCC version to match the version used to build the original
+kernel.  That's probably [1] fine.
 
-Example:
-$ cat mremap.c
- #define _GNU_SOURCE
- #include <stddef.h>
- #include <sys/mman.h>
+In fact, for many distros, the version of GCC used to build the latest
+kernel doesn't necessarily match the latest released GCC, so a GCC
+mismatch turns out to be pretty common.  And with CONFIG_MODVERSIONS
+it's probably more common.
 
-int main(void) {
-        void *addr = mmap(NULL, 4096, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-        addr = mremap(addr, 4096, 8192, MREMAP_MAYMOVE);
-        mremap(addr, 4096, 4096, MREMAP_MAYMOVE);
-        return 0;
-}
-$ gcc -o mremap mremap.c
-$ strace -e mmap,mremap ./mremap
-mmap(NULL, 4096, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x68a16298d000
-mremap(0x68a16298d000, 4096, 8192, MREMAP_MAYMOVE) = 0x68a16298d000
-mremap(0x68a16298d000, 4096, 4096, MREMAP_MAYMOVE) = 0x68a16298d000
+So a lot of users have come to rely on being able to use a different
+version of GCC when building OOT modules.
 
-Setting the sysctl enables randomization:
-$ sudo sysctl kernel.randomize_mremap=1
-$ strace -e mmap,mremap ./mremap
-mmap(NULL, 4096, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x6366429cf000
-mremap(0x6366429cf000, 4096, 8192, MREMAP_MAYMOVE) = 0x70aa47ad0000
-mremap(0x70aa47ad0000, 4096, 4096, MREMAP_MAYMOVE) = 0x5b37dc166000
+But with GCC plugins enabled, that's no longer allowed:
 
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Jann Horn <jannh@google.com>
-CC: Kees Cook <keescook@chromium.org>
-CC: Matthew Wilcox <willy@infradead.org>
-CC: Mike Rapoport <rppt@kernel.org>
-CC: Linux API <linux-api@vger.kernel.org>
-Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
+  cc1: error: incompatible gcc/plugin versions
+  cc1: error: failed to initialize plugin ./scripts/gcc-plugins/structleak_plugin.so
+
+That error comes from the plugin's call to
+plugin_default_version_check(), which strictly enforces the GCC version.
+The strict check makes sense, because there's nothing to prevent the GCC
+plugin ABI from changing -- and it often does.
+
+But failing the build isn't necessary.  For most plugins, OOT modules
+will otherwise work just fine without the plugin instrumentation.
+
+When a GCC version mismatch is detected, print a warning and disable the
+plugin.  The only exception is the RANDSTRUCT plugin which needs all
+code to see the same struct layouts.  In that case print an error.
+
+[1] Ignoring, for the moment, that the kernel now has
+    toolchain-dependent kconfig options, which can silently disable
+    features and cause havoc when compiler versions differ, or even when
+    certain libraries are missing.  This is a separate problem which
+    also needs to be addressed.
+
+Reported-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- Documentation/admin-guide/sysctl/kernel.rst |  9 +++++++
- include/linux/mm.h                          |  2 ++
- kernel/sysctl.c                             |  7 ++++++
- mm/mremap.c                                 | 26 +++++++++++++++++++--
- 4 files changed, 42 insertions(+), 2 deletions(-)
+ scripts/Makefile.gcc-plugins | 19 +++++++++++++++++++
+ scripts/Makefile.kcov        | 11 +++++++++++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index c13f865c806c..eeca8c8f96d0 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -1029,6 +1029,15 @@ defined, these additional entries are present:
-   number of cycles between interrupts used to feed the pool.
- 
- 
-+randomize_mremap
-+==================
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index 952e46876329..7227692fba59 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -51,6 +51,25 @@ export DISABLE_ARM_SSP_PER_TASK_PLUGIN
+ GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
+ # The sancov_plugin.so is included via CFLAGS_KCOV, so it is removed here.
+ GCC_PLUGINS_CFLAGS := $(filter-out %/sancov_plugin.so, $(GCC_PLUGINS_CFLAGS))
 +
-+This option, when set, can be used to force mremap(...,
-+MREMAP_MAYMOVE) to always move the mappings even if not necessary.
-+In addition to improved address space layout randomization, this can
-+expose bugs where the caller is not actually expecting a moved
-+mapping, even though this may sometimes happen without this flag.
++# Out-of-tree module check: If there's a GCC version mismatch, disable plugins
++# and print a warning.  Otherwise the OOT module build will fail due to
++# plugin_default_version_check().
++ifneq ($(GCC_PLUGINS_CFLAGS),)
++    ifneq ($(KBUILD_EXTMOD),)
++        ifneq ($(CONFIG_GCC_VERSION), $(shell $(srctree)/scripts/gcc-version.sh $(HOSTCXX)))
 +
- randomize_va_space
- ==================
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index b4915412abbe..98aa466c2901 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2990,6 +2990,8 @@ void drop_slab_node(int nid);
- extern int randomize_va_space;
- #endif
- 
-+extern int randomize_mremap;
++            ifdef CONFIG_GCC_PLUGIN_RANDSTRUCT
++                $(error error: CONFIG_GCC_PLUGIN_RANDSTRUCT requires out-of-tree modules to be built using the same GCC version as the kernel.)
++            endif
 +
- const char * arch_vma_name(struct vm_area_struct *vma);
- #ifdef CONFIG_MMU
- void print_vma_addr(char *prefix, unsigned long rip);
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index afad085960b8..02bd9ba89f27 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2429,6 +2429,13 @@ static struct ctl_table kern_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec,
- 	},
-+	{
-+		.procname	= "randomize_mremap",
-+		.data		= &randomize_mremap,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
- #endif
- #if defined(CONFIG_S390) && defined(CONFIG_SMP)
- 	{
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 138abbae4f75..386da905f39f 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -648,6 +648,14 @@ static int vma_expandable(struct vm_area_struct *vma, unsigned long delta)
- 	return 1;
- }
- 
-+/*
-+ * Force mremap(..., MREMAP_MAYMOVE) to always move the mappings even
-+ * if not necessary. This can expose bugs where the caller is not
-+ * actually expecting a moved mapping, even though this may sometimes
-+ * happen without this flag.
-+ */
-+int randomize_mremap __read_mostly = 0;
++            $(warning warning: Disabling GCC plugins for out-of-tree modules due to GCC version mismatch.)
++            $(warning warning: The following plugins have been disabled: $(gcc-plugin-y))
++            GCC_PLUGINS_CFLAGS :=
++	endif
++    endif
++endif
 +
- /*
-  * Expand (or shrink) an existing mapping, potentially moving it at the
-  * same time (controlled by the MREMAP_MAYMOVE flag and available VM space)
-@@ -665,6 +673,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 	unsigned long charged = 0;
- 	bool locked = false;
- 	bool downgraded = false;
-+	bool randomize = false;
- 	struct vm_userfaultfd_ctx uf = NULL_VM_UFFD_CTX;
- 	LIST_HEAD(uf_unmap_early);
- 	LIST_HEAD(uf_unmap);
-@@ -720,6 +729,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 		goto out;
- 	}
+ export GCC_PLUGINS_CFLAGS
  
-+	randomize = (flags & MREMAP_MAYMOVE) && randomize_mremap;
- 	/*
- 	 * Always allow a shrinking remap: that just unmaps
- 	 * the unnecessary pages..
-@@ -730,7 +740,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 		int retval;
+ # Add the flags to the build!
+diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
+index 67e8cfe3474b..63a2bc2aabb2 100644
+--- a/scripts/Makefile.kcov
++++ b/scripts/Makefile.kcov
+@@ -3,4 +3,15 @@ kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)	+= -fsanitize-coverage=trace-pc
+ kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)	+= -fsanitize-coverage=trace-cmp
+ kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)		+= -fplugin=$(objtree)/scripts/gcc-plugins/sancov_plugin.so
  
- 		retval = __do_munmap(mm, addr+new_len, old_len - new_len,
--				  &uf_unmap, true);
-+				     &uf_unmap, !randomize);
- 		if (retval < 0 && old_len != new_len) {
- 			ret = retval;
- 			goto out;
-@@ -738,6 +748,16 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 		} else if (retval == 1)
- 			downgraded = true;
- 		ret = addr;
++# Out-of-tree module check for GCC version mismatch.
++# See the similar check in scripts/Makefile.gcc-plugins
++ifneq ($(CONFIG_GCC_PLUGIN_SANCOV),)
++    ifneq ($(KBUILD_EXTMOD),)
++        ifneq ($(CONFIG_GCC_VERSION), $(shell $(srctree)/scripts/gcc-version.sh $(HOSTCXX)))
++            $(warning warning: Disabling CONFIG_GCC_PLUGIN_SANCOV for out-of-tree modules due to GCC version mismatch.)
++            kcov-flags-y := $(filter-out %/sancov_plugin.so, $(kcov-flags-y))
++        endif
++    endif
++endif
 +
-+		/*
-+		 * Caller is happy with a new address, so let's move
-+		 * even if not necessary
-+		 */
-+		if (randomize)
-+			ret = mremap_to(addr, new_len, 0, new_len,
-+					&locked, flags, &uf, &uf_unmap_early,
-+					&uf_unmap);
-+
- 		goto out;
- 	}
- 
-@@ -751,8 +771,10 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 	}
- 
- 	/* old_len exactly to the end of the area..
-+	 * But when randomizing, don't just expand the mapping if
-+	 * caller is happy with a moved and resized mapping
- 	 */
--	if (old_len == vma->vm_end - addr) {
-+	if (old_len == vma->vm_end - addr && !randomize) {
- 		/* can we just expand the current mapping? */
- 		if (vma_expandable(vma, new_len - old_len)) {
- 			int pages = (new_len - old_len) >> PAGE_SHIFT;
+ export CFLAGS_KCOV := $(kcov-flags-y)
 -- 
 2.29.2
 
