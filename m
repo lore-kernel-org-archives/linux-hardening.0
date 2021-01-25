@@ -7,107 +7,78 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708F8C433DB
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 22:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACA0C433E0
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 22:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42EF32067C
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 22:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE15216FD
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 22:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731731AbhAYWLj (ORCPT
+        id S1731606AbhAYWVm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 25 Jan 2021 17:11:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33867 "EHLO
+        Mon, 25 Jan 2021 17:21:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31733 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731681AbhAYWJb (ORCPT
+        by vger.kernel.org with ESMTP id S1732118AbhAYWV0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 25 Jan 2021 17:09:31 -0500
+        Mon, 25 Jan 2021 17:21:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611612485;
+        s=mimecast20190719; t=1611613200;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=YEfGCW9pOkAOxQjE9Kgiz1zr3syKfIZyR2H1zYGJuOs=;
-        b=Xycli50YhPe4pATq94uSlZegONdUOX79Nqy44Xg2jIc/8L6bLap654J7djZNkxB84XRwMH
-        x+9+0iVHa1c7bV5vrWff/0J4DIZn2uBopmoENO61aen38JeRCGu/BxEZ+yVDU7ynR6QNvz
-        WKZ3aKsa6d24331S2mnX/ut+ZwsoD8k=
+        bh=m3GTxAXy/n7abTboCl2AAMZcR1+hfsyo/eH4M6+Glow=;
+        b=IIcm8Y1TApBt0mBMfWYOFquB3xPHKHvynElJ/lK0nfC9aF1C+qPf88tWnkFpuIhAuwgXnb
+        Mb55wbkC1DPFAohIU6cq/goQInSLXKI7V1e+kr6PoGJAiBQpOdnls50N40Mhb+eLYJrQQl
+        Yl9xlE7UCc10vT1OzueNpGmszRVLfts=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-398-f-xxbEYqOyqco9IPcad1rA-1; Mon, 25 Jan 2021 17:08:03 -0500
-X-MC-Unique: f-xxbEYqOyqco9IPcad1rA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-577-_TXAzB81MEO-MvEgpRfhAA-1; Mon, 25 Jan 2021 17:19:59 -0500
+X-MC-Unique: _TXAzB81MEO-MvEgpRfhAA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C291218C8C00;
-        Mon, 25 Jan 2021 22:08:01 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C327AFA83;
+        Mon, 25 Jan 2021 22:19:57 +0000 (UTC)
 Received: from treble (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F2276F978;
-        Mon, 25 Jan 2021 22:08:00 +0000 (UTC)
-Date:   Mon, 25 Jan 2021 16:07:57 -0600
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74C7860C62;
+        Mon, 25 Jan 2021 22:19:55 +0000 (UTC)
+Date:   Mon, 25 Jan 2021 16:19:53 -0600
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
-        linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Justin Forbes <jforbes@redhat.com>,
         Ondrej Mosnacek <omosnace@redhat.com>
 Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
  modules
-Message-ID: <20210125220757.vxdsf6sttpy46cq7@treble>
+Message-ID: <20210125221953.wng3gk3qc32eahil@treble>
 References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
- <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
- <20210125212755.jfwlqogpcarmxdgt@treble>
- <CAK7LNAS+EG9doX3qUmu4M3=mRNmdybSv4180Xnuubiwmsq0Agw@mail.gmail.com>
+ <202101251401.F18409FDD1@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAS+EG9doX3qUmu4M3=mRNmdybSv4180Xnuubiwmsq0Agw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <202101251401.F18409FDD1@keescook>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 06:44:35AM +0900, Masahiro Yamada wrote:
-> > > If people use a different compiler, they must be
-> > > prepared for any possible problem.
-> > >
-> > > Using different compiler flags for in-tree and out-of-tree
-> > > is even more dangerous.
-> > >
-> > > For example, CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled
-> > > for in-tree build, and then disabled for out-of-tree modules,
-> > > the struct layout will mismatch, won't it?
-> >
-> > If you read the patch you'll notice that it handles that case, when it's
-> > caused by GCC mismatch.
-> >
-> > However, as alluded to in the [1] footnote, it doesn't handle the case
-> > where the OOT build system doesn't have gcc-plugin-devel installed.
-> > Then CONFIG_GCC_PLUGIN_RANDSTRUCT gets silently disabled and the build
-> > succeeds!  That happens even without a GCC mismatch.
+On Mon, Jan 25, 2021 at 02:03:07PM -0800, Kees Cook wrote:
+> On Mon, Jan 25, 2021 at 02:42:10PM -0600, Josh Poimboeuf wrote:
+> > When a GCC version mismatch is detected, print a warning and disable the
+> > plugin.  The only exception is the RANDSTRUCT plugin which needs all
+> > code to see the same struct layouts.  In that case print an error.
 > 
-> 
-> Ah, sorry.
-> 
-> I responded too early before reading the patch fully.
-> 
-> But, I do not like to make RANDSTRUCT a special case.
-> 
-> I'd rather want to stop building for any plugin.
+> I prefer this patch as-is: only randstruct needs a hard failure. The
+> others likely work (in fact, randstruct likely works too).
 
-Other than RANDSTRUCT there doesn't seem to be any problem with
-disabling them (and printing a warning) in the OOT build.  Why not give
-users that option?  It's harmless, and will make distro's (and their
-users') lives easier.
+I'm curious about this last statement, why would randstruct likely work?
 
-Either GCC mismatch is ok, or it's not.  Let's not half-enforce it.
-
-Also, how do you propose we solve the other problem, where a missing
-optional library (gcc-plugin-devel) causes the OOT module build to
-silently disable the plugin?  This is related to my earlier complaint
-about the dangers of toolchain-dependent kconfig options.
+Even struct module has '__randomize_layout', wouldn't basic module init
+go splat?
 
 -- 
 Josh
