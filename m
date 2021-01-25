@@ -2,214 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E402EC433E9
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 21:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FDBC433E9
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 22:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE2721D94
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 21:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC62B22582
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Jan 2021 22:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732774AbhAYV5p (ORCPT
+        id S1732803AbhAYWDw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 25 Jan 2021 16:57:45 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:37385 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733082AbhAYV5a (ORCPT
+        Mon, 25 Jan 2021 17:03:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733207AbhAYWDt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 25 Jan 2021 16:57:30 -0500
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 10PLu2PO005199;
-        Tue, 26 Jan 2021 06:56:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 10PLu2PO005199
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1611611762;
-        bh=k13xTgp4YHfTY2q/O6bg9I8kJdCvKuXvFQLmI3+RhI0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dK+2GFRbXjlPKnrgk8h81RgCsjUI9MVHCbCaBBuEVQjhvutSMBuEZXNBIWmWjKSdG
-         XiXo/6Mv9j7AFxAcohOluO0dJ0Ed5DUu86XQeptwtct8i9alY6b+PGo9Mmh+dOKBw2
-         7G1kNyOdVr+BTPCUuoinkmG23bwq5kxcqt2pK5epUH6NNIJpOIeVGQ5gtBNlEHNpPc
-         K5UwWWH2oEt3t60j54TwiN5r+kJjJGdFC40Ppuv3cH+p+NNxPRKoLmb8/Yy8+HlEzR
-         76zaYkHH8EZqBTfn/6Q9AnQFuMwQh7Rlr8f6CmfhJjFtkWO1cFlfijPsP3u0XGFY0B
-         acRIvx6RKTqRA==
-X-Nifty-SrcIP: [209.85.210.174]
-Received: by mail-pf1-f174.google.com with SMTP id q20so9185709pfu.8;
-        Mon, 25 Jan 2021 13:56:02 -0800 (PST)
-X-Gm-Message-State: AOAM532kAxYqbmUQKWe8VOBIEBKCjxlsNykuJA1C4WPRFDC2by/4qOQr
-        czUAzMiBDZqVkugmxDUfbaTgAhOQmRyOo3+Ynqs=
-X-Google-Smtp-Source: ABdhPJxdcIWBPAyh3WbuAUW/EWSOSODCsrlOwl2RnFKZ8jqnC8tLenx9emKykYOcLkOUSZ1xRTq+RAj98lrdZe1Yb2M=
-X-Received: by 2002:a63:1f1d:: with SMTP id f29mr2556604pgf.47.1611611761596;
- Mon, 25 Jan 2021 13:56:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20210123133333.736453-1-masahiroy@kernel.org>
-In-Reply-To: <20210123133333.736453-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 26 Jan 2021 06:55:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASV+JWG+1vuEqFUWUk=AW8TkwwSrEGaciOkJwQ8xU0+AQ@mail.gmail.com>
-Message-ID: <CAK7LNASV+JWG+1vuEqFUWUk=AW8TkwwSrEGaciOkJwQ8xU0+AQ@mail.gmail.com>
-Subject: Re: [PATCH v2] doc: gcc-plugins: drop more stale information
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Robert Karszniewicz <r.karszniewicz@phytec.de>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
+        Mon, 25 Jan 2021 17:03:49 -0500
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E8AC061573
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Jan 2021 14:03:09 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id m6so9205126pfm.6
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Jan 2021 14:03:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9uTkelnkgdH1/h1qSEC3+KB2ZZOMZMIqxRYnkoanZM4=;
+        b=e48pg2fnQuL945QN5H8Vqv7bjX7l4CQIY5iNiZMX75XZLI2m+HxbhLqfsgNifpr/SZ
+         qaR8nCtuU+N+h4snOkvPLNyDR8PxaMl8kXfvWPiXP/auSxLP+ru06vivV0yQ5r/mJqDh
+         Pq1GsRCAqqvXIL7IvnbcFpPZJMU3JssEpiHKo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9uTkelnkgdH1/h1qSEC3+KB2ZZOMZMIqxRYnkoanZM4=;
+        b=Kd2mU3uyAYnWkHWzuRqNFQzVrhTR+En762y4Fw8H0MLlHXj7ZYzm/r4DluXKLVpLls
+         KzJV3oeLrgkxfzS2Dx14S5DlvtgQ+osVwozOYlZf4+/Col2WpAg3yilV0G2isPVPh1kg
+         UuhhpWFee7szZtKEYzW5gUXgVpaLPM69iibKL9USB9VATK83oTqV80aLlOx2SDt1RCui
+         B+BPG9a6MeZMI+xdr2L/La2Pf0KFKEfPU1twQiz77xQ25vJHHA3ukWahMVE9DWsV9IUh
+         ickbNGxuCCaxy9E3D61xrM4vzE0OY/TLO3VAGxUr9IigackBt6JOus8YRgh2WE4nwdtr
+         ejTg==
+X-Gm-Message-State: AOAM530mQK/1YORY93L8G5C/R3+6utRWHPpjGNYMeX1UEHx7h4vOhZSC
+        cCnXjU6MirHJRpfxgLOZRMTNUQ==
+X-Google-Smtp-Source: ABdhPJxELKHojiOS5LE+ZaEcSNUqh2aAeWOTc0igtRFBcAtlACI3x+7qSajwJcaRvf2ETtq/yQ/s3A==
+X-Received: by 2002:a63:5d5f:: with SMTP id o31mr2597849pgm.295.1611612189024;
+        Mon, 25 Jan 2021 14:03:09 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a131sm18614270pfd.171.2021.01.25.14.03.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jan 2021 14:03:08 -0800 (PST)
+Date:   Mon, 25 Jan 2021 14:03:07 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Justin Forbes <jforbes@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
+ modules
+Message-ID: <202101251401.F18409FDD1@keescook>
+References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Jan 23, 2021 at 10:34 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> [1] Drop the version information
->
-> The range of the supported GCC versions are always changing. The
-> current minimal GCC version is 4.9, and commit 1e860048c53e
-> ("gcc-plugins: simplify GCC plugin-dev capability test") removed the
-> old code accordingly.
->
-> We do not need to mention specific version ranges like "all gcc versions
-> from 4.5 to 6.0" since we forget to update the documentation when we
-> raise the minimal compiler version.
->
-> [2] Drop the C compiler statements
->
-> Since commit 77342a02ff6e ("gcc-plugins: drop support for GCC <= 4.7")
-> the GCC plugin infrastructure only supports g++.
->
-> [3] Drop supported architectures
->
-> As of v5.11-rc4, the infrastructure supports more architectures;
-> arm, arm64, mips, powerpc, riscv, s390, um, and x86. (just grep
-> "select HAVE_GCC_PLUGINS") Again, we miss to update this document when a
-> new architecture is supported. Let's just say "only some architectures".
->
-> [4] Update the apt-get example
->
-> We are now discussing to bump the minimal version to GCC 5. The GCC 4.9
-> support will be removed sooner or later. Change the package example to
-> gcc-10-plugin-dev while we are here.
->
-> [5] Update the build target
->
-> Since commit ce2fd53a10c7 ("kbuild: descend into scripts/gcc-plugins/
-> via scripts/Makefile"), "make gcc-plugins" is not supported.
-> "make scripts" builds all the enabled plugins, including some other
-> tools.
->
-> [6] Update the steps for adding a new plugin
->
-> At first, all CONFIG options for GCC plugins were located in arch/Kconfig.
-> After commit 45332b1bdfdc ("gcc-plugins: split out Kconfig entries to
-> scripts/gcc-plugins/Kconfig"), scripts/gcc-plugins/Kconfig became the
-> central place to collect plugin CONFIG options. In my understanding,
-> this requirement no longer exists because commit 9f671e58159a ("security:
-> Create "kernel hardening" config area") moved some of plugin CONFIG
-> options to another file. Find an appropriate place to add the new CONFIG.
->
-> The sub-directory support was never used by anyone, and removed by
-> commit c17d6179ad5a ("gcc-plugins: remove unused GCC_PLUGIN_SUBDIR").
->
-> Remove the useless $(src)/ prefix.
+On Mon, Jan 25, 2021 at 02:42:10PM -0600, Josh Poimboeuf wrote:
+> When a GCC version mismatch is detected, print a warning and disable the
+> plugin.  The only exception is the RANDSTRUCT plugin which needs all
+> code to see the same struct layouts.  In that case print an error.
 
+I prefer this patch as-is: only randstruct needs a hard failure. The
+others likely work (in fact, randstruct likely works too).
 
-Applied to linux-kbuild.
-
-
-
-
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
-> Changes in v2:
->   - Remove the info about sub-directory support
->
->  Documentation/kbuild/gcc-plugins.rst | 31 +++++++++++++---------------
->  1 file changed, 14 insertions(+), 17 deletions(-)
->
-> diff --git a/Documentation/kbuild/gcc-plugins.rst b/Documentation/kbuild/gcc-plugins.rst
-> index 63379d0150e3..979887558e72 100644
-> --- a/Documentation/kbuild/gcc-plugins.rst
-> +++ b/Documentation/kbuild/gcc-plugins.rst
-> @@ -11,16 +11,13 @@ compiler [1]_. They are useful for runtime instrumentation and static analysis.
->  We can analyse, change and add further code during compilation via
->  callbacks [2]_, GIMPLE [3]_, IPA [4]_ and RTL passes [5]_.
->
-> -The GCC plugin infrastructure of the kernel supports all gcc versions from
-> -4.5 to 6.0, building out-of-tree modules, cross-compilation and building in a
-> -separate directory.
-> -Plugin source files have to be compilable by both a C and a C++ compiler as well
-> -because gcc versions 4.5 and 4.6 are compiled by a C compiler,
-> -gcc-4.7 can be compiled by a C or a C++ compiler,
-> -and versions 4.8+ can only be compiled by a C++ compiler.
-> +The GCC plugin infrastructure of the kernel supports building out-of-tree
-> +modules, cross-compilation and building in a separate directory.
-> +Plugin source files have to be compilable by a C++ compiler.
->
-> -Currently the GCC plugin infrastructure supports only the x86, arm, arm64 and
-> -powerpc architectures.
-> +Currently the GCC plugin infrastructure supports only some architectures.
-> +Grep "select HAVE_GCC_PLUGINS" to find out which architectures support
-> +GCC plugins.
->
->  This infrastructure was ported from grsecurity [6]_ and PaX [7]_.
->
-> @@ -53,8 +50,7 @@ $(src)/scripts/gcc-plugins/gcc-generate-simple_ipa-pass.h,
->  $(src)/scripts/gcc-plugins/gcc-generate-rtl-pass.h**
->
->         These headers automatically generate the registration structures for
-> -       GIMPLE, SIMPLE_IPA, IPA and RTL passes. They support all gcc versions
-> -       from 4.5 to 6.0.
-> +       GIMPLE, SIMPLE_IPA, IPA and RTL passes.
->         They should be preferred to creating the structures by hand.
->
->
-> @@ -62,9 +58,9 @@ Usage
->  =====
->
->  You must install the gcc plugin headers for your gcc version,
-> -e.g., on Ubuntu for gcc-4.9::
-> +e.g., on Ubuntu for gcc-10::
->
-> -       apt-get install gcc-4.9-plugin-dev
-> +       apt-get install gcc-10-plugin-dev
->
->  Or on Fedora::
->
-> @@ -76,7 +72,7 @@ Enable a GCC plugin based feature in the kernel config::
->
->  To compile only the plugin(s)::
->
-> -       make gcc-plugins
-> +       make scripts
->
->  or just run the kernel make and compile the whole kernel with
->  the cyclomatic complexity GCC plugin.
-> @@ -85,7 +81,8 @@ the cyclomatic complexity GCC plugin.
->  4. How to add a new GCC plugin
->  ==============================
->
-> -The GCC plugins are in $(src)/scripts/gcc-plugins/. You can use a file or a directory
-> -here. It must be added to $(src)/scripts/gcc-plugins/Makefile,
-> -$(src)/scripts/Makefile.gcc-plugins and $(src)/arch/Kconfig.
-> +The GCC plugins are in scripts/gcc-plugins/. You need to put plugin source files
-> +right under scripts/gcc-plugins/. Creating subdirectories is not supported.
-> +It must be added to scripts/gcc-plugins/Makefile, scripts/Makefile.gcc-plugins
-> +and a relevant Kconfig file.
->  See the cyc_complexity_plugin.c (CONFIG_GCC_PLUGIN_CYC_COMPLEXITY) GCC plugin.
-> --
-> 2.27.0
->
-
+Masahiro, are you suggesting to be a hard-failure for all plugins?
 
 -- 
-Best Regards
-Masahiro Yamada
+Kees Cook
