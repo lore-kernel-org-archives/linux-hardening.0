@@ -2,69 +2,35 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA0CC433E0
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 17:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D8AC433E6
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 18:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 542E7206E3
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 17:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1662223D
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 18:36:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbhAZRXJ (ORCPT
+        id S1729992AbhAZRXG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 26 Jan 2021 12:23:09 -0500
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:59803 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389729AbhAZIO1 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 26 Jan 2021 03:14:27 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 34A9ED30;
-        Tue, 26 Jan 2021 03:13:37 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 26 Jan 2021 03:13:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=z3CgsX2Q3UZcJEN+GpCQOg4Ir/z
-        7oA+6ArewKns30U4=; b=rDOx/6ZUI8TxCbWGJMIlD0dDFF+rn5534ywQhMzaZgo
-        wlTks+D+m1RZPuayaeTh/hZQKMRCBZavryl3wDlV/wlX1KPdTidi1u6PahE4YVwH
-        GUo+sEV4VRwKLh7qQX0kkhrRfwK5VkpTIwmhr05TiXguICe2axplJmwN8Gfn6o36
-        XH8vN55EEO8iTdqBnIQNzXgpDaJ7Oz+p5St4JaFbaNOmIddAAtqQWbTUIXo6cYxM
-        JMqAmxeOqZcppaZyOPOUSAnjiw5hxi17Rxq1KONgLQrWQmgg2rTz2Ver4cb3l8Ga
-        X8vSRk8Nt8tj1G3nicBmbSg6QRBif1A/PBy5Je6ja0A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=z3CgsX
-        2Q3UZcJEN+GpCQOg4Ir/z7oA+6ArewKns30U4=; b=G0oY0yN9dgNm73u2QNcNdi
-        kJdzcO+BDT9qJLU6GVcv8raPqZ1oejgrCvMLyaSuJlOcFSbkB6GkMOtYLBKfcMKi
-        66xQ8C+XxwfholykK+KT2yzbXj9gEnIrlIocNrOmha403OmEPAggFAgRL1oPdsnN
-        tPR+CN2Su0Pckmjup/TFEfAiU1shKHoyjvxm4YzDS80tTwxK3DAp8PguANIUxL03
-        UXTpGZZpJqHMWvhqlLt2BoTq+airlge5tPEBUOB+nZUWqZcXE489ah0i4li+bg/b
-        3Dcg+vxLFCTEf4rp7R4N7vzd5HQVhwxLekPkJ8yqsDH86FEVueXdbkU0lidqFysA
-        ==
-X-ME-Sender: <xms:MM8PYPzuJ03ON_420FBPtsMUHZ7cJcyB_HeGBogs2xY7IT1z4vu9QA>
-    <xme:MM8PYHRF_dogLECYepX7eTGZ_dInBPDqZO1LoIFqYWazR0JbaaVkRnpCgPcbjQqR6
-    0tMu-Kfu2sqgw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdeggdduudefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
-    rdekiedrjeegrdeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:MM8PYJUijWAi3Z-j74UZ6LAe1bGYGXbxyVzrlooUHuktt16f6vWbIQ>
-    <xmx:MM8PYJgDaUV_anrq6PVb05FHzqxWsGWRpP-Nv2wBsFtLSwo07rCRUA>
-    <xmx:MM8PYBDcVEN8yqndJ5_d6437iiQf06ypk_HKwQJnZLcIcG1qIIsJAQ>
-    <xmx:MM8PYLAU03_Rb3lEmc2-tgg7WwaD52WXhGYc7ibT5bnTwe4epaHx2A>
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 18DFA1080063;
-        Tue, 26 Jan 2021 03:13:35 -0500 (EST)
-Date:   Tue, 26 Jan 2021 09:13:33 +0100
-From:   Greg KH <greg@kroah.com>
+        Tue, 26 Jan 2021 12:23:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389720AbhAZIN7 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 26 Jan 2021 03:13:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0DE99206FB;
+        Tue, 26 Jan 2021 08:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1611648782;
+        bh=HQ0RvmxJxs52CqdTiUiI0CR2mcbWiihq3JryBJZLrgA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NQ1PUXcHuAWiJhA0GR+IcS5bWeIN22E/hpxGEqZ1t8QIXTk9jX9dbLsau/njWNbma
+         9fkSRxah2ekblIdZmUmbVWJhaKHX7cZOM8eBgPvXSv5jS7il/LiuLmhzyMQn7xjJNv
+         J4qlnwA2rfWlSjHbmM3YAIpwOrvx3RE/UvNFFsd8=
+Date:   Tue, 26 Jan 2021 09:12:59 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Josh Poimboeuf <jpoimboe@redhat.com>
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Kees Cook <keescook@chromium.org>,
@@ -77,57 +43,76 @@ Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Ondrej Mosnacek <omosnace@redhat.com>
 Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
  modules
-Message-ID: <YA/PLdX5m9f4v+Yl@kroah.com>
+Message-ID: <YA/PC/qAAmzfI2GE@kroah.com>
 References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
  <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
  <20210125212755.jfwlqogpcarmxdgt@treble>
- <CAK7LNAS+EG9doX3qUmu4M3=mRNmdybSv4180Xnuubiwmsq0Agw@mail.gmail.com>
- <20210125220757.vxdsf6sttpy46cq7@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210125220757.vxdsf6sttpy46cq7@treble>
+In-Reply-To: <20210125212755.jfwlqogpcarmxdgt@treble>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 04:07:57PM -0600, Josh Poimboeuf wrote:
-> On Tue, Jan 26, 2021 at 06:44:35AM +0900, Masahiro Yamada wrote:
-> > > > If people use a different compiler, they must be
-> > > > prepared for any possible problem.
-> > > >
-> > > > Using different compiler flags for in-tree and out-of-tree
-> > > > is even more dangerous.
-> > > >
-> > > > For example, CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled
-> > > > for in-tree build, and then disabled for out-of-tree modules,
-> > > > the struct layout will mismatch, won't it?
+On Mon, Jan 25, 2021 at 03:27:55PM -0600, Josh Poimboeuf wrote:
+> On Tue, Jan 26, 2021 at 06:16:01AM +0900, Masahiro Yamada wrote:
+> > On Tue, Jan 26, 2021 at 5:42 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 > > >
-> > > If you read the patch you'll notice that it handles that case, when it's
-> > > caused by GCC mismatch.
+> > > When building out-of-tree kernel modules, the build system doesn't
+> > > require the GCC version to match the version used to build the original
+> > > kernel.  That's probably [1] fine.
 > > >
-> > > However, as alluded to in the [1] footnote, it doesn't handle the case
-> > > where the OOT build system doesn't have gcc-plugin-devel installed.
-> > > Then CONFIG_GCC_PLUGIN_RANDSTRUCT gets silently disabled and the build
-> > > succeeds!  That happens even without a GCC mismatch.
+> > > In fact, for many distros, the version of GCC used to build the latest
+> > > kernel doesn't necessarily match the latest released GCC, so a GCC
+> > > mismatch turns out to be pretty common.  And with CONFIG_MODVERSIONS
+> > > it's probably more common.
+> > >
+> > > So a lot of users have come to rely on being able to use a different
+> > > version of GCC when building OOT modules.
+> > >
+> > > But with GCC plugins enabled, that's no longer allowed:
+> > >
+> > >   cc1: error: incompatible gcc/plugin versions
+> > >   cc1: error: failed to initialize plugin ./scripts/gcc-plugins/structleak_plugin.so
+> > >
+> > > That error comes from the plugin's call to
+> > > plugin_default_version_check(), which strictly enforces the GCC version.
+> > > The strict check makes sense, because there's nothing to prevent the GCC
+> > > plugin ABI from changing -- and it often does.
+> > >
+> > > But failing the build isn't necessary.  For most plugins, OOT modules
+> > > will otherwise work just fine without the plugin instrumentation.
+> > >
+> > > When a GCC version mismatch is detected, print a warning and disable the
+> > > plugin.  The only exception is the RANDSTRUCT plugin which needs all
+> > > code to see the same struct layouts.  In that case print an error.
+> > >
+> > > [1] Ignoring, for the moment, that the kernel now has
+> > >     toolchain-dependent kconfig options, which can silently disable
+> > >     features and cause havoc when compiler versions differ, or even when
+> > >     certain libraries are missing.  This is a separate problem which
+> > >     also needs to be addressed.
+> > >
+> > > Reported-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > ---
 > > 
 > > 
-> > Ah, sorry.
-> > 
-> > I responded too early before reading the patch fully.
-> > 
-> > But, I do not like to make RANDSTRUCT a special case.
-> > 
-> > I'd rather want to stop building for any plugin.
+> > We are based on the assumption that we use the same
+> > compiler for in-tree and out-of-tree.
 > 
-> Other than RANDSTRUCT there doesn't seem to be any problem with
-> disabling them (and printing a warning) in the OOT build.  Why not give
-> users that option?  It's harmless, and will make distro's (and their
-> users') lives easier.
-> 
-> Either GCC mismatch is ok, or it's not.  Let's not half-enforce it.
+> Sorry, but that assumption isn't based in reality.  And it's not
+> enforced.
 
-As I said earlier, it's not ok, we can not support it at all.
+It's "enforced" in that if something breaks because of this, no one will
+support it :)
+
+We have always said, "all kernel code must be built with the exact same
+compiler and with the same build options".  Anyone who does anything
+different, is on their own.  So please, let's not change things to make
+it as of this might work to hide real problems that are known to show up
+when people mix/match compilers with modules.
 
 thanks,
 
