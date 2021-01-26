@@ -2,49 +2,50 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0E4C433E0
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 15:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C9FC433DB
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 16:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 353662083E
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 15:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E22492082D
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 16:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392621AbhAZPtJ (ORCPT
+        id S2405045AbhAZQLj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 26 Jan 2021 10:49:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37761 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392664AbhAZPsa (ORCPT
+        Tue, 26 Jan 2021 11:11:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404642AbhAZQFy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 26 Jan 2021 10:48:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611676024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qzu8Yi9XdW/qKp/+NlwEE61olqGo5JkdqMwkmHc/Mx0=;
-        b=aylCOcwgYThNmg2ylebCmQFIKtqjSUReOii6/F9vFtixoavdaaPH/JdUuLzXm6wGkeBwwv
-        mnGR//FccTTb5C4WGabq9+ixkg9EZssEt6ppvbcwqVB+m6tKLMbfS96i+lOpmkq+3w4Hhb
-        y6I3a7+u6afDEix9HeZd6prNXNk0XDY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-538-segurc8MMgCOFb4JYAA6kg-1; Tue, 26 Jan 2021 10:47:03 -0500
-X-MC-Unique: segurc8MMgCOFb4JYAA6kg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF276107B45B;
-        Tue, 26 Jan 2021 15:47:00 +0000 (UTC)
-Received: from treble (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 27F447770E;
-        Tue, 26 Jan 2021 15:46:53 +0000 (UTC)
-Date:   Tue, 26 Jan 2021 09:46:51 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
+        Tue, 26 Jan 2021 11:05:54 -0500
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10B7C061A29;
+        Tue, 26 Jan 2021 08:05:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JH2sQI58od0xGBtZkjCcZFqHlgfaX4NaN7zGq9O0+9Y=; b=imOXpyr+CGs3ITzYf0b3iOjGMk
+        7+TVcmqZt2bp26YWSnfYjX+DbDjo9eZ43CB3OZrDEjyoVfCU4JoaD3ZA+MdQj0Ktm8URPnojsYVv1
+        +Fk5/H1h3hYHJTmeLtgHDxpegDiZ4vIBIaCjfpL7VoLlcfpLqGHBZpcpJ6+skN2jd9gHMKmvi5Usm
+        AeohIoZ39cmiHNmywfRUk9IMZbDp3PTGyY5AVNVc7fzcRDleSruFGtQxmAt295gN2t1goR4o4CCkv
+        6hhfuutOQj7P7btCVm1wj0cccPvZydX7jN3C6IH/9gvvt3ooJ0j3QBTT7Mpn9GzCoCzEQj43NW5Bw
+        Ty2GJlRA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1l4Qq2-0008JW-EJ; Tue, 26 Jan 2021 16:05:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1BFB23019CE;
+        Tue, 26 Jan 2021 17:05:04 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 086E92027D383; Tue, 26 Jan 2021 17:05:04 +0100 (CET)
+Date:   Tue, 26 Jan 2021 17:05:03 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
 Cc:     Greg KH <greg@kroah.com>, Justin Forbes <jforbes@redhat.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Kees Cook <keescook@chromium.org>,
@@ -55,9 +56,8 @@ Cc:     Greg KH <greg@kroah.com>, Justin Forbes <jforbes@redhat.com>,
         Ondrej Mosnacek <omosnace@redhat.com>
 Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
  modules
-Message-ID: <20210126154651.itfrnhwfistia3ss@treble>
-References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
- <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
+Message-ID: <YBA9r13+1uuyDYuR@hirez.programming.kicks-ass.net>
+References: <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
  <20210125212755.jfwlqogpcarmxdgt@treble>
  <CAK7LNAS+EG9doX3qUmu4M3=mRNmdybSv4180Xnuubiwmsq0Agw@mail.gmail.com>
  <20210125220757.vxdsf6sttpy46cq7@treble>
@@ -66,38 +66,40 @@ References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@re
  <YBAeYaDReAc9VscA@kroah.com>
  <20210126145155.kcfbnzfqg5qugvcl@treble>
  <YBAyGU7H8E98xKng@hirez.programming.kicks-ass.net>
+ <20210126154651.itfrnhwfistia3ss@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YBAyGU7H8E98xKng@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20210126154651.itfrnhwfistia3ss@treble>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 04:15:37PM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 26, 2021 at 08:51:55AM -0600, Josh Poimboeuf wrote:
-> > User space mixes compiler versions all the time.  The C ABI is stable.
+On Tue, Jan 26, 2021 at 09:46:51AM -0600, Josh Poimboeuf wrote:
+> On Tue, Jan 26, 2021 at 04:15:37PM +0100, Peter Zijlstra wrote:
+> > On Tue, Jan 26, 2021 at 08:51:55AM -0600, Josh Poimboeuf wrote:
+> > > User space mixes compiler versions all the time.  The C ABI is stable.
+> > > 
+> > > What specifically is the harder issue you're referring to?
 > > 
-> > What specifically is the harder issue you're referring to?
+> > I don't think the C ABI captures nearly enough. Imagine trying to mix a
+> > compiler with and without asm-goto support (ok, we fail to build without
+> > by now, but just imagine).
+> > 
+> > No C ABI violated, but having that GCC extention vs not having it
+> > radically changes the kernel ABI.
+> > 
+> > I think I'm with Greg here, just don't do it.
 > 
-> I don't think the C ABI captures nearly enough. Imagine trying to mix a
-> compiler with and without asm-goto support (ok, we fail to build without
-> by now, but just imagine).
+> Ok, thank you for an actual example.  asm goto is a good one.
 > 
-> No C ABI violated, but having that GCC extention vs not having it
-> radically changes the kernel ABI.
+> But it's not a cut-and-dry issue.  Otherwise how could modversions
+> possibly work?
 > 
-> I think I'm with Greg here, just don't do it.
+> So yes, we should enforce GCC versions, but I still haven't seen a
+> reason it should be more than just "same compiler and *major* version".
 
-Ok, thank you for an actual example.  asm goto is a good one.
+Why bother? rebuilding the kernel and all modules is a matter of 10
+minutes at most on a decently beefy build box.
 
-But it's not a cut-and-dry issue.  Otherwise how could modversions
-possibly work?
-
-So yes, we should enforce GCC versions, but I still haven't seen a
-reason it should be more than just "same compiler and *major* version".
-
--- 
-Josh
-
+What actual problem are we trying to solve here?
