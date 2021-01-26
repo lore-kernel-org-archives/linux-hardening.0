@@ -2,72 +2,50 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615F7C433E0
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 13:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4854BC433E0
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 14:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20DDD2223D
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 13:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD3A207FC
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Jan 2021 14:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405107AbhAZNwZ (ORCPT
+        id S2405753AbhAZOxz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 26 Jan 2021 08:52:25 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42721 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405000AbhAZNwV (ORCPT
+        Tue, 26 Jan 2021 09:53:55 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36541 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391465AbhAZOx3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 26 Jan 2021 08:52:21 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id BBD105C0114;
-        Tue, 26 Jan 2021 08:51:31 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 26 Jan 2021 08:51:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=VKiELK44/clfmPnkaIaZL4Nw3WJ
-        m8IoUYvNKtK5zkDM=; b=lxj2Iicf5HYw5jsMZHILmC1AdXAc8psIN6EGe49AINU
-        AkPzShEEOPU4dPsRYvHkTR12UIQ5C7/BSY5Asmv778Um34rNXkCTeB3ooEj4CVpJ
-        QXdusUrJunHKxaaViPKkFEaWOtw4ME/JSQyfydbmwUEFaj1+3Frn2G17rSv1kL3B
-        7vOTH/teNwHK+9OSez3qhvbcNv4CUhUthGZdfWyRUkvVUzvRrvvK4n9vuMr+Fo/x
-        hPQgPioyDUqe2SSzrkSBOxiA5y8jnpbAJRjp2lzx0Gnj7q0yv9QNCiamx02lGQzr
-        DLNv2IejI10E9wa15ol95Y1IwVdCTdBoi55hnklup2Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=VKiELK
-        44/clfmPnkaIaZL4Nw3WJm8IoUYvNKtK5zkDM=; b=NFrD6SIqFfPIwvf9YMFyQp
-        Mv9mubkf64Er0dqpA83l1j63Co2IaZOE8/864vEHE9Jbr3CziUp+vImv77VCZ/rC
-        akNGSCy/DnTGhvy8xWL/9wQga7ATsMzoRZ/xg0Qld1hXudjCKPxZtBuVkFG9PxuD
-        JWSlEOcZvzf7Zb87nqCeVRsKOeCZ72ALITQBr0Vk17HXx31KEFEGt+0a/T3mVf3g
-        sOgVhi91k3dKQEsPPZehVsE6zzj9xw6s2deSqpCWkjhW86RhNfKlcwdWvbQBfd1N
-        y3PnS4PB9RuqSiULqGpkus1W0DMmHjF3bkHiWFnFmNmxFvWxALZ2UI4iezrvm9nw
-        ==
-X-ME-Sender: <xms:Yh4QYDzmJ-0emHPEMq1-TYQJqCarpQvpZo467mQfGjA95EqriM_F1g>
-    <xme:Yh4QYLQLHWK2HrZs7pZT-ZtqmtcfNOoPXu_DwYcGmzBA-ar9f30CPVdeX7UdYd9xD
-    7O4UWoazYNTvQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdehgdehiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
-    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeekfedr
-    keeirdejgedrieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:Yx4QYNULMrijJqLEnXWG89WcCZjSK3yDD-REk6caGDYMehDOPc58VA>
-    <xmx:Yx4QYNjTL0dJkBzI6hSD3u4RnRt9sQYenes0U1LgFAIiZIOCMRzUXQ>
-    <xmx:Yx4QYFAHFR8oz23cWU1u2m5Yh3vNeDUj1A40U6-OnEUj6kriNGi4Xg>
-    <xmx:Yx4QYPDqcOMYpSAiFtNreykdH8M3fzvmxsAZkyXCImU3DPj8bb5uQA>
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8E0C31080057;
-        Tue, 26 Jan 2021 08:51:30 -0500 (EST)
-Date:   Tue, 26 Jan 2021 14:51:29 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Justin Forbes <jforbes@redhat.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tue, 26 Jan 2021 09:53:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611672722;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JYmGL08JF+gArRQ9p5k0wHfnv2GHvkk5CmReF6hsoP4=;
+        b=gLTsYT5tXl7cYR3lptw28rmQghstxPXNbKb6TxqKx4rX+6PeE7GaYPE1j4akkEB37bZ9nv
+        V/w19cxO6C4FyPS+k1NpIwTcrm1lxj/+gxyWXJOfteXNcXR4ZbWhr+1coV81VZBcfUOCya
+        DBiUM/vGmThwe7KO5eWLJAmPWN6nr/c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-118-Fy7Ek9dBP26p1I4vvyZkDg-1; Tue, 26 Jan 2021 09:52:00 -0500
+X-MC-Unique: Fy7Ek9dBP26p1I4vvyZkDg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B63A515722;
+        Tue, 26 Jan 2021 14:51:58 +0000 (UTC)
+Received: from treble (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 79B3260CD1;
+        Tue, 26 Jan 2021 14:51:57 +0000 (UTC)
+Date:   Tue, 26 Jan 2021 08:51:55 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     Justin Forbes <jforbes@redhat.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -78,7 +56,7 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Ondrej Mosnacek <omosnace@redhat.com>
 Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
  modules
-Message-ID: <YBAeYaDReAc9VscA@kroah.com>
+Message-ID: <20210126145155.kcfbnzfqg5qugvcl@treble>
 References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
  <CAK7LNAS=uOi=8xJU=NiKnXQW2iCazbErg_TX0gL9oayBiDffiA@mail.gmail.com>
  <20210125212755.jfwlqogpcarmxdgt@treble>
@@ -86,71 +64,74 @@ References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@re
  <20210125220757.vxdsf6sttpy46cq7@treble>
  <YA/PLdX5m9f4v+Yl@kroah.com>
  <CAFbkSA0m1pqmXh29j6wJ9fG05yC72T1kNC0QU3rF7Oh2NoMwYQ@mail.gmail.com>
+ <YBAeYaDReAc9VscA@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAFbkSA0m1pqmXh29j6wJ9fG05yC72T1kNC0QU3rF7Oh2NoMwYQ@mail.gmail.com>
+In-Reply-To: <YBAeYaDReAc9VscA@kroah.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 06:44:44AM -0600, Justin Forbes wrote:
-> On Tue, Jan 26, 2021 at 2:21 AM Greg KH <greg@kroah.com> wrote:
-> >
-> > On Mon, Jan 25, 2021 at 04:07:57PM -0600, Josh Poimboeuf wrote:
-> > > On Tue, Jan 26, 2021 at 06:44:35AM +0900, Masahiro Yamada wrote:
-> > > > > > If people use a different compiler, they must be
-> > > > > > prepared for any possible problem.
-> > > > > >
-> > > > > > Using different compiler flags for in-tree and out-of-tree
-> > > > > > is even more dangerous.
-> > > > > >
-> > > > > > For example, CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled
-> > > > > > for in-tree build, and then disabled for out-of-tree modules,
-> > > > > > the struct layout will mismatch, won't it?
-> > > > >
-> > > > > If you read the patch you'll notice that it handles that case, when it's
-> > > > > caused by GCC mismatch.
-> > > > >
-> > > > > However, as alluded to in the [1] footnote, it doesn't handle the case
-> > > > > where the OOT build system doesn't have gcc-plugin-devel installed.
-> > > > > Then CONFIG_GCC_PLUGIN_RANDSTRUCT gets silently disabled and the build
-> > > > > succeeds!  That happens even without a GCC mismatch.
-> > > >
-> > > >
-> > > > Ah, sorry.
-> > > >
-> > > > I responded too early before reading the patch fully.
-> > > >
-> > > > But, I do not like to make RANDSTRUCT a special case.
-> > > >
-> > > > I'd rather want to stop building for any plugin.
+On Tue, Jan 26, 2021 at 02:51:29PM +0100, Greg KH wrote:
+> On Tue, Jan 26, 2021 at 06:44:44AM -0600, Justin Forbes wrote:
+> > On Tue, Jan 26, 2021 at 2:21 AM Greg KH <greg@kroah.com> wrote:
 > > >
-> > > Other than RANDSTRUCT there doesn't seem to be any problem with
-> > > disabling them (and printing a warning) in the OOT build.  Why not give
-> > > users that option?  It's harmless, and will make distro's (and their
-> > > users') lives easier.
+> > > On Mon, Jan 25, 2021 at 04:07:57PM -0600, Josh Poimboeuf wrote:
+> > > > On Tue, Jan 26, 2021 at 06:44:35AM +0900, Masahiro Yamada wrote:
+> > > > > > > If people use a different compiler, they must be
+> > > > > > > prepared for any possible problem.
+> > > > > > >
+> > > > > > > Using different compiler flags for in-tree and out-of-tree
+> > > > > > > is even more dangerous.
+> > > > > > >
+> > > > > > > For example, CONFIG_GCC_PLUGIN_RANDSTRUCT is enabled
+> > > > > > > for in-tree build, and then disabled for out-of-tree modules,
+> > > > > > > the struct layout will mismatch, won't it?
+> > > > > >
+> > > > > > If you read the patch you'll notice that it handles that case, when it's
+> > > > > > caused by GCC mismatch.
+> > > > > >
+> > > > > > However, as alluded to in the [1] footnote, it doesn't handle the case
+> > > > > > where the OOT build system doesn't have gcc-plugin-devel installed.
+> > > > > > Then CONFIG_GCC_PLUGIN_RANDSTRUCT gets silently disabled and the build
+> > > > > > succeeds!  That happens even without a GCC mismatch.
+> > > > >
+> > > > >
+> > > > > Ah, sorry.
+> > > > >
+> > > > > I responded too early before reading the patch fully.
+> > > > >
+> > > > > But, I do not like to make RANDSTRUCT a special case.
+> > > > >
+> > > > > I'd rather want to stop building for any plugin.
+> > > >
+> > > > Other than RANDSTRUCT there doesn't seem to be any problem with
+> > > > disabling them (and printing a warning) in the OOT build.  Why not give
+> > > > users that option?  It's harmless, and will make distro's (and their
+> > > > users') lives easier.
+> > > >
+> > > > Either GCC mismatch is ok, or it's not.  Let's not half-enforce it.
 > > >
-> > > Either GCC mismatch is ok, or it's not.  Let's not half-enforce it.
-> >
-> > As I said earlier, it's not ok, we can not support it at all.
-> >
+> > > As I said earlier, it's not ok, we can not support it at all.
+> > >
+> > 
+> > Support and enforce are 2 completely different things.  To shed a bit
+> > more light on this, the real issue that prompted this was breaking CI
+> > systems.  As we enabled gcc plugins in Fedora, and the toolchain folks
+> > went through 3 different snapshots of gcc 11 in a week. Any CI process
+> > that built an out of tree module failed. I don't think this is nearly
+> > as much of a concern for stable distros, as it is for CI in
+> > development cycles.
 > 
-> Support and enforce are 2 completely different things.  To shed a bit
-> more light on this, the real issue that prompted this was breaking CI
-> systems.  As we enabled gcc plugins in Fedora, and the toolchain folks
-> went through 3 different snapshots of gcc 11 in a week. Any CI process
-> that built an out of tree module failed. I don't think this is nearly
-> as much of a concern for stable distros, as it is for CI in
-> development cycles.
+> It's better to have an obvious break like this than to silently accept
+> things and then have a much harder issue to debug at runtime, right?
 
-It's better to have an obvious break like this than to silently accept
-things and then have a much harder issue to debug at runtime, right?
+User space mixes compiler versions all the time.  The C ABI is stable.
 
-Don't allow things that we know we will not support, this sounds like an
-issue with your CI systems, not with the kernel build system, why not
-just fix that?  :)
+What specifically is the harder issue you're referring to?
 
-thnaks,
+-- 
+Josh
 
-greg k-h
