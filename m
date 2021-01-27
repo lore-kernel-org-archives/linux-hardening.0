@@ -2,81 +2,162 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E71C433E0
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jan 2021 12:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D804AC433DB
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jan 2021 18:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 021DA2079A
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jan 2021 12:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEFE64DAB
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jan 2021 18:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238071AbhA0M5F (ORCPT
+        id S1344349AbhA0SDi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Jan 2021 07:57:05 -0500
-Received: from mga02.intel.com ([134.134.136.20]:12258 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343568AbhA0MzA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Jan 2021 07:55:00 -0500
-IronPort-SDR: 55rxYQ9yPQ7HosBR2wjBXraUeYRiAMpZfJmbVJduSvsvmyPfS1UrLpAhvDKu2sAFy5ru+9bIFV
- 1pLNgYqZ9s5A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9876"; a="167158593"
-X-IronPort-AV: E=Sophos;i="5.79,379,1602572400"; 
-   d="scan'208";a="167158593"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2021 04:53:11 -0800
-IronPort-SDR: +i2HBJGefcGdDW+EOEFWb77dhcquM48zyyIVYH/t2GLZ1wO/34Qmu8PatSj386vXSBQvTCZ4Uy
- PLD8kAXT/IoQ==
-X-IronPort-AV: E=Sophos;i="5.79,379,1602572400"; 
-   d="scan'208";a="430090394"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2021 04:53:07 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 27 Jan 2021 14:53:04 +0200
-Date:   Wed, 27 Jan 2021 14:53:04 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Andreas Noever <andreas.noever@gmail.com>,
-        linux-usb@vger.kernel.org
-Subject: Re: [RFC 3/3] thunderbolt: build kunit tests without structleak
- plugin
-Message-ID: <20210127125304.GD2542@lahna.fi.intel.com>
-References: <20210125124533.101339-1-arnd@kernel.org>
- <20210125124533.101339-4-arnd@kernel.org>
+        Wed, 27 Jan 2021 13:03:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344148AbhA0SDZ (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 27 Jan 2021 13:03:25 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86490C061786;
+        Wed, 27 Jan 2021 10:02:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nmUx9B3ctDFuPF+9qyK11uP4F24HgbZFCLayZjdworI=; b=dGoevGX3QmkwspJI/OcjS4PdEB
+        otTuvRN8H2wmmLy428qul28x8SshGvG2iwX/XN+sQyreT+bV0IVptj4h0DXbxb9q6SK4TRzNL0pna
+        2a17Wzw/Qy0qI0jBMjNIW8/WMCHlCps/e8tlDuAZsoHnh1FFLVdV8t6ijdNuYj3Yboq6hpw4aUcsm
+        Lb+5HPxPzPGemJWzYSQy6lItWWrZ/o6kQyvRzVIUf2S3IomXyh43llg6KRmjNHUaQO/ly1KlUGtqP
+        qfJeYCRhp+7wu/qTlaq1peBp6dd5SNvnfVhgQnZ/oRxN7qVoELZG1/VcUUtq0agfeawqDCy9Pc0P2
+        mLgPh3Iw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l4p8x-007KFR-3d; Wed, 27 Jan 2021 18:02:19 +0000
+Date:   Wed, 27 Jan 2021 18:02:15 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Justin Forbes <jforbes@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
+ modules
+Message-ID: <20210127180215.GA1745339@infradead.org>
+References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210125124533.101339-4-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Arnd,
+Please don't add all this garbage.  We only add infrastructure to the
+kernel for what the kernel itself needs, not for weird out of tree
+infrastructure.
 
-On Mon, Jan 25, 2021 at 01:45:28PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Mon, Jan 25, 2021 at 02:42:10PM -0600, Josh Poimboeuf wrote:
+> When building out-of-tree kernel modules, the build system doesn't
+> require the GCC version to match the version used to build the original
+> kernel.  That's probably [1] fine.
 > 
-> The structleak plugin causes the stack frame size to grow immensely:
+> In fact, for many distros, the version of GCC used to build the latest
+> kernel doesn't necessarily match the latest released GCC, so a GCC
+> mismatch turns out to be pretty common.  And with CONFIG_MODVERSIONS
+> it's probably more common.
 > 
-> drivers/thunderbolt/test.c:1529:1: error: the frame size of 1176 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> So a lot of users have come to rely on being able to use a different
+> version of GCC when building OOT modules.
 > 
-> Turn it off in this file.
+> But with GCC plugins enabled, that's no longer allowed:
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-To me this is a reasonable work around so I can pick this up to
-Thunderbolt tree if no objections.
-
-Thanks BTW, for doing this. I got a report from buildbot some time ago
-about the this but did not have time to figure out how to fix it :)
+>   cc1: error: incompatible gcc/plugin versions
+>   cc1: error: failed to initialize plugin ./scripts/gcc-plugins/structleak_plugin.so
+> 
+> That error comes from the plugin's call to
+> plugin_default_version_check(), which strictly enforces the GCC version.
+> The strict check makes sense, because there's nothing to prevent the GCC
+> plugin ABI from changing -- and it often does.
+> 
+> But failing the build isn't necessary.  For most plugins, OOT modules
+> will otherwise work just fine without the plugin instrumentation.
+> 
+> When a GCC version mismatch is detected, print a warning and disable the
+> plugin.  The only exception is the RANDSTRUCT plugin which needs all
+> code to see the same struct layouts.  In that case print an error.
+> 
+> [1] Ignoring, for the moment, that the kernel now has
+>     toolchain-dependent kconfig options, which can silently disable
+>     features and cause havoc when compiler versions differ, or even when
+>     certain libraries are missing.  This is a separate problem which
+>     also needs to be addressed.
+> 
+> Reported-by: Ondrej Mosnacek <omosnace@redhat.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  scripts/Makefile.gcc-plugins | 19 +++++++++++++++++++
+>  scripts/Makefile.kcov        | 11 +++++++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+> index 952e46876329..7227692fba59 100644
+> --- a/scripts/Makefile.gcc-plugins
+> +++ b/scripts/Makefile.gcc-plugins
+> @@ -51,6 +51,25 @@ export DISABLE_ARM_SSP_PER_TASK_PLUGIN
+>  GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
+>  # The sancov_plugin.so is included via CFLAGS_KCOV, so it is removed here.
+>  GCC_PLUGINS_CFLAGS := $(filter-out %/sancov_plugin.so, $(GCC_PLUGINS_CFLAGS))
+> +
+> +# Out-of-tree module check: If there's a GCC version mismatch, disable plugins
+> +# and print a warning.  Otherwise the OOT module build will fail due to
+> +# plugin_default_version_check().
+> +ifneq ($(GCC_PLUGINS_CFLAGS),)
+> +    ifneq ($(KBUILD_EXTMOD),)
+> +        ifneq ($(CONFIG_GCC_VERSION), $(shell $(srctree)/scripts/gcc-version.sh $(HOSTCXX)))
+> +
+> +            ifdef CONFIG_GCC_PLUGIN_RANDSTRUCT
+> +                $(error error: CONFIG_GCC_PLUGIN_RANDSTRUCT requires out-of-tree modules to be built using the same GCC version as the kernel.)
+> +            endif
+> +
+> +            $(warning warning: Disabling GCC plugins for out-of-tree modules due to GCC version mismatch.)
+> +            $(warning warning: The following plugins have been disabled: $(gcc-plugin-y))
+> +            GCC_PLUGINS_CFLAGS :=
+> +	endif
+> +    endif
+> +endif
+> +
+>  export GCC_PLUGINS_CFLAGS
+>  
+>  # Add the flags to the build!
+> diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
+> index 67e8cfe3474b..63a2bc2aabb2 100644
+> --- a/scripts/Makefile.kcov
+> +++ b/scripts/Makefile.kcov
+> @@ -3,4 +3,15 @@ kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)	+= -fsanitize-coverage=trace-pc
+>  kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)	+= -fsanitize-coverage=trace-cmp
+>  kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)		+= -fplugin=$(objtree)/scripts/gcc-plugins/sancov_plugin.so
+>  
+> +# Out-of-tree module check for GCC version mismatch.
+> +# See the similar check in scripts/Makefile.gcc-plugins
+> +ifneq ($(CONFIG_GCC_PLUGIN_SANCOV),)
+> +    ifneq ($(KBUILD_EXTMOD),)
+> +        ifneq ($(CONFIG_GCC_VERSION), $(shell $(srctree)/scripts/gcc-version.sh $(HOSTCXX)))
+> +            $(warning warning: Disabling CONFIG_GCC_PLUGIN_SANCOV for out-of-tree modules due to GCC version mismatch.)
+> +            kcov-flags-y := $(filter-out %/sancov_plugin.so, $(kcov-flags-y))
+> +        endif
+> +    endif
+> +endif
+> +
+>  export CFLAGS_KCOV := $(kcov-flags-y)
+> -- 
+> 2.29.2
+> 
+---end quoted text---
