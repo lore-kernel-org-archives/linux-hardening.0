@@ -2,101 +2,102 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD3AC433E0
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jan 2021 22:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B29C433E0
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jan 2021 23:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8375C61601
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jan 2021 22:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A362A64D7F
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jan 2021 23:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236985AbhA0WQm (ORCPT
+        id S232753AbhA0X3j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Jan 2021 17:16:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235711AbhA0WQk (ORCPT
+        Wed, 27 Jan 2021 18:29:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54605 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233434AbhA0X21 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Jan 2021 17:16:40 -0500
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA31C061574
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Jan 2021 14:16:00 -0800 (PST)
-Received: by mail-qv1-xf49.google.com with SMTP id q37so1866200qvf.14
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Jan 2021 14:16:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=nMvW9sCogvCQk3Z+FvTaolhNqJWAlRopE1dL8mD/EfM=;
-        b=XabaZr51cxeVUNojdcIqjRe6bUepIDvJQtPM0wT7pGFP6YgPydkBjs45hRKKl6wAx2
-         f+R5m/9IWnpxCMiLjlprYlhVQFrC+5CKHwcjdip7Vkt/KLjJKkrkGbxg61UieoIiUILx
-         gmM3zOCAsPd+PQT5AzJHRnwSu4+GByKO4ea1z7p+wb0qhgrhCkIVp+0b0YjKYhyEsb6c
-         rFt6j2h6OqzGbC1f5rCGLaZOUom6GerytFMyK7S8VH2Arad07pUUgx8vWq2M+gOQdQt9
-         EJdwH76rsjIvforkattkvFzUHWRNXC15PDQDmrNzW8KVDodG6IGo5LGXLIFyvoKTijgS
-         JBuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=nMvW9sCogvCQk3Z+FvTaolhNqJWAlRopE1dL8mD/EfM=;
-        b=H8K28KmAgii6KOveT1oeUo2C5ndqthz9LZ/Daw+m1Id4s57A0SsLFMFV+EDG1/Dy4V
-         OH6WMUEPjOpnPXMye1FfIl7Gi1XHhBLHbyJbgd+vv9YozAf+vTno4RgFJ8nYwJdD6dYb
-         DZ8FCDTOLO7Bu2YuRFFUQmPWxjeUGxR3l+wDqH/0D6m+nDYnBV8wVpx6dbNJwuw7Ns3A
-         frmQOsPRrjxpSBPgMKTaGmXg3vVJf/xtYMUjgTY6XtnIsbHeQ23piAp+xzshf/gyBB+Z
-         Pn6SUD+bZ2n54gvamvreisp5E5ImwbwEzOLCdFKa7m4m7wRp2x0EHZdKVqsNsKlwK1co
-         G1/g==
-X-Gm-Message-State: AOAM530IonGBWIFp+p9llDe/ZvHwouRT0KFSkBeUcL1v2n4aDwg97XxR
-        PbVmzjrocAuC4eTpKohRKSCzknS3orlFjstcRfI=
-X-Google-Smtp-Source: ABdhPJz7J2G6u1AIImLhrSDhwzedx39UPabhVKQcdZxwaHSdva5MN+PnhrmVByfJP0/dWGSG5HSuKEXBRBBQU2+tB84=
-Sender: "ndesaulniers via sendgmr" 
-        <ndesaulniers@ndesaulniers1.mtv.corp.google.com>
-X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
- (user=ndesaulniers job=sendgmr) by 2002:a0c:fe0b:: with SMTP id
- x11mr12660475qvr.18.1611785759532; Wed, 27 Jan 2021 14:15:59 -0800 (PST)
-Date:   Wed, 27 Jan 2021 14:15:57 -0800
-In-Reply-To: <20210120173800.1660730-13-jthierry@redhat.com>
-Message-Id: <20210127221557.1119744-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20210120173800.1660730-13-jthierry@redhat.com>
-X-Mailer: git-send-email 2.30.0.365.g02bc693789-goog
-Subject: Re: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
- switch table on arm64
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     jthierry@redhat.com
-Cc:     ardb@kernel.org, broonie@kernel.org, catalin.marinas@arm.com,
-        jpoimboe@redhat.com, keescook@chromium.org,
+        Wed, 27 Jan 2021 18:28:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611790021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UmZtO9S6cUQ2CC3kIdExR5VZtUZQ7YeAA3zNA2d3Y68=;
+        b=O8J/zUNB/fjzK3kd4MdCE2T3SVeWcCiOE8HQtkuVJYZzlAwAFNOw3wbrnlNlPYBk7yB/97
+        kxr3UndrflIJSDiIa8+2CtG22dWzUGrMgJCtmwxinRuMtgitFNTe9RqZ/PnsTwAuM8aUcY
+        iB3QZj2ONRrZnQpXm+HWM6PTL98RjzE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-508-yX2crCwSMlywEzTRrvJlVw-1; Wed, 27 Jan 2021 18:27:00 -0500
+X-MC-Unique: yX2crCwSMlywEzTRrvJlVw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25DAC911E3;
+        Wed, 27 Jan 2021 23:26:57 +0000 (UTC)
+Received: from treble (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6681D10016FA;
+        Wed, 27 Jan 2021 23:26:53 +0000 (UTC)
+Date:   Wed, 27 Jan 2021 17:26:51 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     jthierry@redhat.com, ardb@kernel.org, broonie@kernel.org,
+        catalin.marinas@arm.com, keescook@chromium.org,
         linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         mark.rutland@arm.com, masahiroy@kernel.org,
         michal.lkml@markovi.net, peterz@infradead.org,
         raphael.gault@arm.com, will@kernel.org,
         clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
+ switch table on arm64
+Message-ID: <20210127232651.rj3mo7c2oqh4ytsr@treble>
+References: <20210120173800.1660730-13-jthierry@redhat.com>
+ <20210127221557.1119744-1-ndesaulniers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210127221557.1119744-1-ndesaulniers@google.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> From: Raphael Gault <raphael.gault@arm.com>
+On Wed, Jan 27, 2021 at 02:15:57PM -0800, Nick Desaulniers wrote:
+> > From: Raphael Gault <raphael.gault@arm.com>
+> > 
+> > This plugins comes into play before the final 2 RTL passes of GCC and
+> > detects switch-tables that are to be outputed in the ELF and writes
+> > information in an ".discard.switch_table_info" section which will be
+> > used by objtool.
+> > 
+> > Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> > [J.T.: Change section name to store switch table information,
+> >        Make plugin Kconfig be selected rather than opt-in by user,
+> >        Add a relocation in the switch_table_info that points to
+> >        the jump operation itself]
+> > Signed-off-by: Julien Thierry <jthierry@redhat.com>
 > 
-> This plugins comes into play before the final 2 RTL passes of GCC and
-> detects switch-tables that are to be outputed in the ELF and writes
-> information in an ".discard.switch_table_info" section which will be
-> used by objtool.
-> 
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-> [J.T.: Change section name to store switch table information,
->        Make plugin Kconfig be selected rather than opt-in by user,
->        Add a relocation in the switch_table_info that points to
->        the jump operation itself]
-> Signed-off-by: Julien Thierry <jthierry@redhat.com>
+> Rather than tightly couple this feature to a particular toolchain via
+> plugin, it might be nice to consider what features could be spec'ed out
+> for toolchains to implement (perhaps via a -f flag).
 
-Rather than tightly couple this feature to a particular toolchain via
-plugin, it might be nice to consider what features could be spec'ed out
-for toolchains to implement (perhaps via a -f flag).
+The problem is being able to detect switch statement jump table vectors.
 
-Distributions (like Android, CrOS) wont be able to use such a feature as
-is.
+For a given indirect branch (due to a switch statement), what are all
+the corresponding jump targets?
+
+We would need the compiler to annotate that information somehow.
+
+> Distributions (like Android, CrOS) wont be able to use such a feature as
+> is.
+
+Would a Clang plugin be out of the question?
+
+-- 
+Josh
+
