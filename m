@@ -2,96 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB86C433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Jan 2021 15:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8E6C433E0
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Jan 2021 20:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9CD64DF9
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Jan 2021 15:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921C064E01
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Jan 2021 20:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231724AbhA1Pq7 (ORCPT
+        id S231293AbhA1UNA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 28 Jan 2021 10:46:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30825 "EHLO
+        Thu, 28 Jan 2021 15:13:00 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39864 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231171AbhA1Pq5 (ORCPT
+        by vger.kernel.org with ESMTP id S231213AbhA1UJ6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 28 Jan 2021 10:46:57 -0500
+        Thu, 28 Jan 2021 15:09:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611848731;
+        s=mimecast20190719; t=1611864511;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=09LXds/Zxz5H0i6zfTq/PPnlg97L2PXNuCtxy/T8lJk=;
-        b=BaSocti5wC30MDCOW8V86QE9FS3LadgIiOTfRUlXrUpQeZ46N/VLvCcqaYu5FCkdY1BF7l
-        5yMBt20K+a9kl2Jwp6sYVNxC4tqc5zR/Z++ruSGseIpaESFBuSddo7gqfV/KAllpgoq0Ko
-        4SC2O/sb8QWxFvuq8GTPCkBdwJYPflE=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=xAaYmkPI3SgxXv9WICFqFagDyxX9PqaHRD1OB+S1ECg=;
+        b=fXbVGJo5X1O9G84f7NPPwWg3D9tRO5hM21E5ZXOxG5wak5MTzeED9R3yjtLouPUeDTDt8L
+        Meg+RZGH48m4XWPs9uWrYhSSBdkeU4JNzygcMdYI5N2bp2JAn6CEmIECYDXu64al9MVip3
+        m9D6YYS/ubJN4MzXq8iDKKfazW+YCYE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-gT9KizAzMAaOex-HWs0sKw-1; Thu, 28 Jan 2021 10:45:28 -0500
-X-MC-Unique: gT9KizAzMAaOex-HWs0sKw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-509-NR2Tp5ecMk2VgnEgGOS_mA-1; Thu, 28 Jan 2021 15:08:26 -0500
+X-MC-Unique: NR2Tp5ecMk2VgnEgGOS_mA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E2AD8143E5;
-        Thu, 28 Jan 2021 15:45:26 +0000 (UTC)
-Received: from treble (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6738319635;
-        Thu, 28 Jan 2021 15:45:25 +0000 (UTC)
-Date:   Thu, 28 Jan 2021 09:45:23 -0600
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EEE5803622;
+        Thu, 28 Jan 2021 20:08:24 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF98260C13;
+        Thu, 28 Jan 2021 20:08:22 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Justin Forbes <jforbes@redhat.com>,
         Ondrej Mosnacek <omosnace@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
- modules
-Message-ID: <20210128154523.7tdq4gop4tne5xhd@treble>
-References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
- <20210127180215.GA1745339@infradead.org>
- <20210127183856.moe3p5pxw6bbtunk@treble>
- <20210127184327.GA1755516@infradead.org>
- <20210127185113.c3est2vssf5tlyyq@treble>
- <20210128142952.GA2041496@infradead.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Jessica Yu <jeyu@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH RFC] kbuild: Prevent compiler mismatch with external modules
+Date:   Thu, 28 Jan 2021 14:08:02 -0600
+Message-Id: <fff056a7c9e6050c2d60910f70b6d99602f3bec4.1611863075.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210128142952.GA2041496@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 02:29:52PM +0000, Christoph Hellwig wrote:
-> On Wed, Jan 27, 2021 at 12:51:13PM -0600, Josh Poimboeuf wrote:
-> > Is this a joke?  I've never met anybody who builds OOT modules as a
-> > development aid...
-> 
-> I'm pretty sure you've met me before.
+When building an external module, if the compiler version differs from
+what the kernel was built with, bad things can happen.  Many kernel
+features change based on available compiler features.  Silently removing
+a compiler-dependent feature in the external module build can cause
+unpredictable behavior.  Right now there are no checks to help prevent
+such mismatches.
 
-Yes, but I don't recall this topic coming up :-)
+On the other hand, when a user is building an external module against a
+distro kernel, the exact compiler version may not be installed, or in
+some cases not even released yet.  In fact it's quite common for
+external modules to be built with a slightly different version of GCC
+than the kernel.
 
-> > On the other hand I know of several very popular distros (some paid,
-> > some not) who rely on allowing users/partners to build OOT modules as
-> > part of their ecosystem.  To say it's not supported is a farce.
-> 
-> This is not a farce.  The kernel only supports infrastructure for the
-> kernel itself, not for any external consumers.  If you have a business
-> model that relies on something else you should think hard if you are in
-> the right business.
+A minor version mismatch should be ok.  User space does it all the time.
+New compiler features aren't added within a major version.
 
-Thanks for letting me know.  I'll send the memo to the billions of
-affected devices.
+Add a check for compiler mismatch, but only check the major version.
 
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+This is related to the previous RFC I posted:
+
+  https://lkml.kernel.org/r/efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com
+
+The discussion revealed gaps between developer perceptions and distro
+realities with respect to external (out-of-tree) modules...
+
+Backing up a bit, let's please decide on what exactly is supported (or
+not supported) with respect to mismatched compiler versions.  Then let's
+try to enforce and/or document the decision.
+
+Please stick to technical arguments...
+
+
+ Makefile | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index b0e4767735dc..f281d2587fa5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1744,6 +1744,14 @@ help:
+ # no-op for external module builds
+ PHONY += prepare modules_prepare
+ 
++# External module compiler (major) version must match the kernel
++ifneq ($(shell echo $(CONFIG_GCC_VERSION) | cut -c-2), $(shell $(srctree)/scripts/gcc-version.sh $(CC) | cut -c-2))
++  $(error ERROR: Compiler version mismatch in external module build)
++endif
++ifneq ($(shell echo $(CONFIG_CLANG_VERSION) | cut -c-2), $(shell $(srctree)/scripts/clang-version.sh $(CC) | cut -c-2))
++  $(error ERROR: Compiler version mismatch in external module build)
++endif
++
+ endif # KBUILD_EXTMOD
+ 
+ # Single targets
 -- 
-Josh
+2.29.2
 
