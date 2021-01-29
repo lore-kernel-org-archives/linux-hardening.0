@@ -2,213 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA515C433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Jan 2021 23:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BF0C433E0
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Jan 2021 18:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F8F64DEF
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Jan 2021 23:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B915A64E08
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Jan 2021 18:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231310AbhA1XTa (ORCPT
+        id S232554AbhA2SK7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 28 Jan 2021 18:19:30 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:45827 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229757AbhA1XTa (ORCPT
+        Fri, 29 Jan 2021 13:10:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232245AbhA2SKx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 28 Jan 2021 18:19:30 -0500
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 10SNISG3015178;
-        Fri, 29 Jan 2021 08:18:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 10SNISG3015178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1611875909;
-        bh=gDOJYkuVycQhQHityvqx6lSAzcCjYfOTMUw5/5cFeLw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UF9DoPaF9gLy4gVSyPp/2lzmLQdkty1yvUULVY72Bk/oiywHPws24k8wmnWQok6Ir
-         UX13azFCGw23Yl1ZCTsSKrFx7n4eOTBMO1rvP6/xhOthUWhwQdzp5W1LoccIy1nmT5
-         mwk87F++gb8RKq7fPcfytbBhRoVGB9TUyRumuWkYyR009hFPkt3vZ8QDkbKldQHXAo
-         CD0iq7WQl7RYZXsuo1Nv/BCCU/zlrsH3Qc4fA7/zjAAsy5bKwj3Lu4iKfsHLij83QV
-         5NVk7GjS1qOcldab98M04i87qzSL4iL/IrFsqVwodZBnVEEFwsdopwsQBhYiiJpmOp
-         P2rCBbsYNL9zg==
-X-Nifty-SrcIP: [209.85.210.171]
-Received: by mail-pf1-f171.google.com with SMTP id w18so5011774pfu.9;
-        Thu, 28 Jan 2021 15:18:28 -0800 (PST)
-X-Gm-Message-State: AOAM533vYDN//aRCrgERFXIfwTLiouYVS2bD0H8tf+Wvaep3j7WjrZWe
-        gx2NrDVAodEFlP/THhz7/9dmovKNd6YUQuILTZE=
-X-Google-Smtp-Source: ABdhPJyLXvl2z9W5RHDaUqo/WioksPhE3dPxKUm63ezd2bWlEZnPmFaEaqyjpUk3kWp+nQ4l1xoDs3WpwN+8k3c1V7w=
-X-Received: by 2002:a63:ff09:: with SMTP id k9mr1674647pgi.175.1611875907921;
- Thu, 28 Jan 2021 15:18:27 -0800 (PST)
+        Fri, 29 Jan 2021 13:10:53 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E21C061574
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Jan 2021 10:10:12 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id d4so5666368plh.5
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Jan 2021 10:10:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X8bQLC4KTV3CkyE7ZwNAPVrk7LCX4mmpuoPxOJQrWiE=;
+        b=KvqRCWR7yYnMWqMPB85CIlQ9uuauY32Z1DzrJGBzcW0aqXSXWSL+GTldnhHkS6AKzM
+         Z+dKRERAy31Z5zbVPZRInzz7qitp8nuSvP4G6GBay3e5DDFmiNyfUZFJ7xH1bD6wSsEX
+         u7qSwj9pH6oMtqk64thV9cxPBWytlOGsF8nIsIynlNxnxsL3KJFG0t+6vpo8+vGyL6/N
+         u9GvbFypr9EN6ePRjWq0JE4N/ZnHMTnOGk4YRA2/T2ZVGF5ne2y00SPxYmNQiDSUHNbW
+         N7D4SxHDqYDmjHcyJq20+7BNR075rraIU/iNjmNN1SoTBzKFhI3DXt7QVsjxqczfDV6e
+         cTwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X8bQLC4KTV3CkyE7ZwNAPVrk7LCX4mmpuoPxOJQrWiE=;
+        b=Dl8/dApbfS1Wlf3n65qyCp289oaY1XvyspFYPUbaQzMjUpJebchybXcqmDmjxsu8Zq
+         feE/4XXflYO2VodpUKjg0z8QlCLqDBJmlRcS7RDeFh1g9BukWyVphicWxEsO4GwNTcLs
+         zBiLFKTcEb046xeKxULp4fC+UVPlq7eoQfvB7aKEjT2Z8FCA4tnmmbPvZSU/9F0rML76
+         N55YuC7KTrYGH2Vw4l1v5rArvbn5BbRQZATEHu9rDHOjVYce67Zm4gkGrt+GrGr9I/xo
+         qRsc+VyyFPvZgv10i3apmBdlIfwA6EbsrlkDOxYGPHmmGBHzGWzVHi9ov0zexeWo3Iam
+         Pbqg==
+X-Gm-Message-State: AOAM532I05MjHByOxlVjne2Y2Cz9NCBrvJOuGdVjbOAaYk+n8k9XK/X4
+        tWJBFW7FfeuEo4l41d02QnGf0hYu9enFavUx5tFJ59AcQHqN2Q==
+X-Google-Smtp-Source: ABdhPJzNOCqxQWJ9Oc6G5S88I6N7IbWrIQufk+V18JCZ1n4SuRaCwOpg3TVxWVz17PfOIZCgcQ1Gfy3YkqFIXZFD3bI=
+X-Received: by 2002:a17:902:26a:b029:da:af47:77c7 with SMTP id
+ 97-20020a170902026ab02900daaf4777c7mr5473562plc.10.1611943812360; Fri, 29 Jan
+ 2021 10:10:12 -0800 (PST)
 MIME-Version: 1.0
-References: <fff056a7c9e6050c2d60910f70b6d99602f3bec4.1611863075.git.jpoimboe@redhat.com>
- <CAHk-=wih0rLHsPXodpXJw_0F3bJqu=Pb_YNmPCSsYU_huoMwZA@mail.gmail.com>
- <20210128205207.awdbh4bmx56pxxjl@treble> <CAHk-=wgh4DaZvTcFfBcDMKc1QXkKjwny_Z0H5JfzdwMTNTBkSw@mail.gmail.com>
- <CAHk-=wh+3PWi2NuoQ0hbSyLpOHjaBWKcgX6N7+PfPkXzNAfMwA@mail.gmail.com>
- <20210128213409.qxnclchjyq6v23up@treble> <CAHk-=wgjwhDy-y4mQh34L+2aF=n6BjzHdqAW2=8wri5x7O04pA@mail.gmail.com>
- <20210128220803.fixcmuv4ceq5m7dy@treble>
-In-Reply-To: <20210128220803.fixcmuv4ceq5m7dy@treble>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 29 Jan 2021 08:17:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARE3KO-kqdsXAbt9d9+3EqqutYd6iNki_rU2-Q9GkakbA@mail.gmail.com>
-Message-ID: <CAK7LNARE3KO-kqdsXAbt9d9+3EqqutYd6iNki_rU2-Q9GkakbA@mail.gmail.com>
-Subject: Re: [PATCH RFC] kbuild: Prevent compiler mismatch with external modules
+References: <20210120173800.1660730-13-jthierry@redhat.com>
+ <20210127221557.1119744-1-ndesaulniers@google.com> <20210127232651.rj3mo7c2oqh4ytsr@treble>
+In-Reply-To: <20210127232651.rj3mo7c2oqh4ytsr@treble>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 29 Jan 2021 10:10:01 -0800
+Message-ID: <CAKwvOdkOeENcM5X7X926sv2Xmtko=_nOPeKZ2+51s13CW1QAjw@mail.gmail.com>
+Subject: Re: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
+ switch table on arm64
 To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Kees Cook <keescook@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
         linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Justin Forbes <jforbes@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Jessica Yu <jeyu@kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Peter Zijlstra <peterz@infradead.org>, raphael.gault@arm.com,
+        Will Deacon <will@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 29, 2021 at 7:08 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Wed, Jan 27, 2021 at 3:27 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 >
-> On Thu, Jan 28, 2021 at 01:45:51PM -0800, Linus Torvalds wrote:
-> > On Thu, Jan 28, 2021 at 1:34 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> On Wed, Jan 27, 2021 at 02:15:57PM -0800, Nick Desaulniers wrote:
+> > > From: Raphael Gault <raphael.gault@arm.com>
 > > >
-> > > On Thu, Jan 28, 2021 at 01:23:11PM -0800, Linus Torvalds wrote:
-> > > > THAT workaround is long gone, but I didn't check what other ones we
-> > > > might have now. But the gcc version checks we _do_ have are not
-> > > > necessarily about major versions at all (ie I trivially found checks
-> > > > for 4.9, 4.9.2, 5.1, 7.2 and 9.1).
+> > > This plugins comes into play before the final 2 RTL passes of GCC and
+> > > detects switch-tables that are to be outputed in the ELF and writes
+> > > information in an ".discard.switch_table_info" section which will be
+> > > used by objtool.
 > > >
-> > > Then maybe the check should be same major.minor?
+> > > Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> > > [J.T.: Change section name to store switch table information,
+> > >        Make plugin Kconfig be selected rather than opt-in by user,
+> > >        Add a relocation in the switch_table_info that points to
+> > >        the jump operation itself]
+> > > Signed-off-by: Julien Thierry <jthierry@redhat.com>
 > >
-> > Well, how many of them are actually about things that generate
-> > incompatible object code?
-> >
-> > The main one I can think of is the KASAN ABI version checks, but
-> > honestly, I think that's irrelevant. I really hope no distros enable
-> > KASAN in user kernels.
-> >
-> > Another version check I looked at was the one that just checks whether
-> > the compiler natively supports __builtin_mul_overflow() or not - it
-> > doesn't generate incompatible object code, it just takes advantage of
-> > a compiler feature if one exists. You can mix and match those kinds of
-> > things well enough.
-> >
-> > So I'd really like to hear actual hard technical reasons with
-> > examples, for why you'd want to add this test in the first place.
+> > Rather than tightly couple this feature to a particular toolchain via
+> > plugin, it might be nice to consider what features could be spec'ed out
+> > for toolchains to implement (perhaps via a -f flag).
 >
-> Unfortunately I don't have technical reasons beyond what we've already
-> discussed, found from code inspection.
+> The problem is being able to detect switch statement jump table vectors.
 >
-> This patch was born from a discussion where wildly different opinions
-> were expressed about whether such a mismatch scenario (or even external
-> modules in general!) would be supported at all.
+> For a given indirect branch (due to a switch statement), what are all
+> the corresponding jump targets?
 >
-> So I guess the goal is to clarify (in the code base) to what extent
-> compiler mismatches are supported/allowed/encouraged.  Because they
-> definitely happen in the real world, but a lot of people seem to be
-> sticking their head in the sand about it.
+> We would need the compiler to annotate that information somehow.
+
+Makes sense, the compiler should have this information.  How is this
+problem solved on x86?
+
 >
-> If we decide it's not a cut-and-dry makefile check, then the policy
-> should at least be documented.
+> > Distributions (like Android, CrOS) wont be able to use such a feature as
+> > is.
 >
-> I'd prefer the warning though, since nobody's going to read the docs.
->
-> > No hand-waving "different compiler versions don't work together".
-> > Because that's simply not true.
-> >
-> > > And convert it to a strongly worded warning/disclaimer?
-> >
-> > A warning might be better for the simple reason that it wouldn't cause
-> > people to just fix it with "make oldconfig".
-> >
-> > Maybe you haven't looked at people who compile external modules, but
-> > they always have various "this is how to work around issues with
-> > version XYZ". That "make oldconfig" would simply just become the
-> > workaround for any build errors.
-> >
-> > And a warning might be more palatable even if different compiler
-> > version work fine together. Just a heads up on "it looks like you
-> > might be mixing compiler versions" is a valid note, and isn't
-> > necessarily wrong. Even when they work well together, maybe you want
-> > to have people at least _aware_ of it.
->
-> Sounds reasonable.
->
-> --
-> Josh
->
+> Would a Clang plugin be out of the question?
 
-[1]
+Generally, we frown on out of tree kernel modules for a couple reasons.
 
-First, let me explain how Kbuild works w.r.t the compiler version
-check.
+Maintaining ABI compatibility when the core kernel changes is
+generally not instantaneous; someone has to notice the ABI has changed
+which will be more delayed than if the module was in tree.  Worse is
+when semantics subtly change.  While we must not break userspace, we
+provide no such guarantees within the kernel proper.
 
-When working on the kernel tree, Kbuild automatically detects
-the compiler upgrade (this is done by comparing the output
-of '$(CC) --version'), and invokes Kconfig to sync the configuration.
-So, the .config is updated even if you do not explicitly
-do "make oldconfig".
+Also, it's less likely that out of tree kernel modules have been
+reviewed by kernel developers.  They may not have the same quality,
+use the recommended interfaces, follow coding conventions, etc..
 
+Oh, did I say "out of tree kernel modules?"  I meant "compiler
+plugins."  But it's two different sides of the same coin to me.
 
-When working on external modules, in contrast,
-Kbuild does not attempt to update anything in the kernel tree.
-This makes sense since the build tree, /lib/modules/$(uname -r)/build/
-is read-only.
-You cannot manually run Kconfig either because the config targets
-are hidden for external modules.
-
-$ make M=../qemu-build/extmod  oldconfig
-make: *** No rule to make target 'oldconfig'.  Stop.
-
-
-
-[2]
-
-As for this patch, it is wrong to do this check in the Makefile
-parse stage.
-
-"make M=...  clean"
-"make M=...  help"
-
-etc. will fail.
-Such targets do not require the compiler in the first place.
-
-This check must be done before starting building something,
-
-
-Also, this patch is not applicable.
-gcc-version.sh and clang-version.sh do not exist.
-See linux-next.
-
-
-
-[3]
-Peterz already pointed out asm-goto as an example of ABI mismatch.
-
-I remember a trouble reported in the past due
-to the mismatch of -mstack-protector-guard-offset.
-
-https://bugzilla.kernel.org/show_bug.cgi?id=201891
-
-This has already been fixed,
-and it will no longer happen though.
-
-
-
-
-
---
-Best Regards
-
-
-
-
-Masahiro Yamada
+FWIW, I think the approach taken by -mstack-protector-guard-reg= is a
+useful case study.  It was prototyped as a GCC extension, then added
+to GCC proper, then added to LLVM (currently only x86, but most of the
+machinery is in place in the compiler to get it running on arm64).  My
+recommendation is to skip the plugin part and work on a standard
+interface for compilers to implement, with input from compiler
+developers.
+-- 
+Thanks,
+~Nick Desaulniers
