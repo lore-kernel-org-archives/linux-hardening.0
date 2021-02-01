@@ -4,152 +4,156 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BB4C433E0
-	for <linux-hardening@archiver.kernel.org>; Mon,  1 Feb 2021 21:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B68C433DB
+	for <linux-hardening@archiver.kernel.org>; Mon,  1 Feb 2021 21:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECE460232
-	for <linux-hardening@archiver.kernel.org>; Mon,  1 Feb 2021 21:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A7764DA8
+	for <linux-hardening@archiver.kernel.org>; Mon,  1 Feb 2021 21:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231226AbhBAVPB (ORCPT
+        id S229603AbhBAVqD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 1 Feb 2021 16:15:01 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42724 "EHLO
+        Mon, 1 Feb 2021 16:46:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48887 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229879AbhBAVPA (ORCPT
+        by vger.kernel.org with ESMTP id S229527AbhBAVqC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 1 Feb 2021 16:15:00 -0500
+        Mon, 1 Feb 2021 16:46:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612214013;
+        s=mimecast20190719; t=1612215875;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=MmWztmGR5QmsHu5+b9WkkQVWRHsWQU/iqLJE+kYPk+k=;
-        b=FQxg7qe752hONfMYUy/xn9tE+uE2QxaHeuZyptM4iuIwkYJfktR9UVygzts4sijR75uBq8
-        3basGuxJiCu/ROKdFW2diZ9WPKsKMgF7pgqBet1hYASzAZne6HazaEZs9sOZ+E4mCN6gEl
-        ENdyUT7F2oC6lr3PTEJooeWx1INNfYc=
+        bh=MSmYYJUxjx/txjv3Ym8eyrnxTI/eSH9db57IFYwcwok=;
+        b=ZHjf6r0okTKGJE+rd8C5s3NRksNjGxpWh69K9LpVENXe1C8EbwfN9z25zRjCprNJy8HqVL
+        A8jF/8GujXq4ddA1U3nTZGhxeX+KS8kqdRQN1abKr+w2lvoSQz87yhGy/TI9ukbLKyd0PQ
+        BOD/JJGTQsjMUe0IkVumxcd3CQeik6E=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-555-dKGUuVngP364zEE8h3y-2Q-1; Mon, 01 Feb 2021 16:13:29 -0500
-X-MC-Unique: dKGUuVngP364zEE8h3y-2Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-38-WO1Z_rXeMVGapiLOI2ZcNQ-1; Mon, 01 Feb 2021 16:44:30 -0500
+X-MC-Unique: WO1Z_rXeMVGapiLOI2ZcNQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00D2D1842140;
-        Mon,  1 Feb 2021 21:13:27 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F5401005513;
+        Mon,  1 Feb 2021 21:44:28 +0000 (UTC)
 Received: from treble (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 70D2560BF3;
-        Mon,  1 Feb 2021 21:13:24 +0000 (UTC)
-Date:   Mon, 1 Feb 2021 15:13:22 -0600
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0341739A50;
+        Mon,  1 Feb 2021 21:44:24 +0000 (UTC)
+Date:   Mon, 1 Feb 2021 15:44:23 -0600
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Kees Cook <keescook@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
         linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Justin Forbes <jforbes@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH RFC] kbuild: Prevent compiler mismatch with external
- modules
-Message-ID: <20210201211322.t2rxmvnrystc2ky7@treble>
-References: <fff056a7c9e6050c2d60910f70b6d99602f3bec4.1611863075.git.jpoimboe@redhat.com>
- <CAHk-=wih0rLHsPXodpXJw_0F3bJqu=Pb_YNmPCSsYU_huoMwZA@mail.gmail.com>
- <20210128205207.awdbh4bmx56pxxjl@treble>
- <CAHk-=wgh4DaZvTcFfBcDMKc1QXkKjwny_Z0H5JfzdwMTNTBkSw@mail.gmail.com>
- <CAHk-=wh+3PWi2NuoQ0hbSyLpOHjaBWKcgX6N7+PfPkXzNAfMwA@mail.gmail.com>
- <20210128213409.qxnclchjyq6v23up@treble>
- <CAHk-=wgjwhDy-y4mQh34L+2aF=n6BjzHdqAW2=8wri5x7O04pA@mail.gmail.com>
- <20210128220803.fixcmuv4ceq5m7dy@treble>
- <CAK7LNARE3KO-kqdsXAbt9d9+3EqqutYd6iNki_rU2-Q9GkakbA@mail.gmail.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Peter Zijlstra <peterz@infradead.org>, raphael.gault@arm.com,
+        Will Deacon <will@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
+ switch table on arm64
+Message-ID: <20210201214423.dhsma73k7ccscovm@treble>
+References: <20210120173800.1660730-13-jthierry@redhat.com>
+ <20210127221557.1119744-1-ndesaulniers@google.com>
+ <20210127232651.rj3mo7c2oqh4ytsr@treble>
+ <CAKwvOdkOeENcM5X7X926sv2Xmtko=_nOPeKZ2+51s13CW1QAjw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARE3KO-kqdsXAbt9d9+3EqqutYd6iNki_rU2-Q9GkakbA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <CAKwvOdkOeENcM5X7X926sv2Xmtko=_nOPeKZ2+51s13CW1QAjw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 29, 2021 at 08:17:51AM +0900, Masahiro Yamada wrote:
-> [3]
-> Peterz already pointed out asm-goto as an example of ABI mismatch.
+On Fri, Jan 29, 2021 at 10:10:01AM -0800, Nick Desaulniers wrote:
+> On Wed, Jan 27, 2021 at 3:27 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Wed, Jan 27, 2021 at 02:15:57PM -0800, Nick Desaulniers wrote:
+> > > > From: Raphael Gault <raphael.gault@arm.com>
+> > > >
+> > > > This plugins comes into play before the final 2 RTL passes of GCC and
+> > > > detects switch-tables that are to be outputed in the ELF and writes
+> > > > information in an ".discard.switch_table_info" section which will be
+> > > > used by objtool.
+> > > >
+> > > > Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> > > > [J.T.: Change section name to store switch table information,
+> > > >        Make plugin Kconfig be selected rather than opt-in by user,
+> > > >        Add a relocation in the switch_table_info that points to
+> > > >        the jump operation itself]
+> > > > Signed-off-by: Julien Thierry <jthierry@redhat.com>
+> > >
+> > > Rather than tightly couple this feature to a particular toolchain via
+> > > plugin, it might be nice to consider what features could be spec'ed out
+> > > for toolchains to implement (perhaps via a -f flag).
+> >
+> > The problem is being able to detect switch statement jump table vectors.
+> >
+> > For a given indirect branch (due to a switch statement), what are all
+> > the corresponding jump targets?
+> >
+> > We would need the compiler to annotate that information somehow.
 > 
-> I remember a trouble reported in the past due
-> to the mismatch of -mstack-protector-guard-offset.
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=201891
-> 
-> This has already been fixed,
-> and it will no longer happen though.
+> Makes sense, the compiler should have this information.  How is this
+> problem solved on x86?
 
-This is kind of concerning though.  It would be nice to somehow store
-KCLAGS in the config and warn if it changes unexpectedly.
+Thus far we've been able to successfully reverse engineer it on x86,
+though it hasn't been easy.
 
-This can be a problem not only for OOT modules, but for regular kernel
-builds which have a .config copied from somewhere.
+There were some particulars for arm64 which made doing so impossible.
+(I don't remember the details.)
 
-Because of the toolchain-dependent kconfig options, features can
-silently disappear if the toolchain doesn't support them, due to a
-different compiler version, or even a missing library.
 
-> [2]
+> > > Distributions (like Android, CrOS) wont be able to use such a feature as
+> > > is.
+> >
+> > Would a Clang plugin be out of the question?
 > 
-> As for this patch, it is wrong to do this check in the Makefile
-> parse stage.
+> Generally, we frown on out of tree kernel modules for a couple reasons.
 > 
-> "make M=...  clean"
-> "make M=...  help"
+> Maintaining ABI compatibility when the core kernel changes is
+> generally not instantaneous; someone has to notice the ABI has changed
+> which will be more delayed than if the module was in tree.  Worse is
+> when semantics subtly change.  While we must not break userspace, we
+> provide no such guarantees within the kernel proper.
 > 
-> etc. will fail.
-> Such targets do not require the compiler in the first place.
+> Also, it's less likely that out of tree kernel modules have been
+> reviewed by kernel developers.  They may not have the same quality,
+> use the recommended interfaces, follow coding conventions, etc..
 > 
-> This check must be done before starting building something,
->
-> Also, this patch is not applicable.
-> gcc-version.sh and clang-version.sh do not exist.
-> See linux-next.
+> Oh, did I say "out of tree kernel modules?"  I meant "compiler
+> plugins."  But it's two different sides of the same coin to me.
 
-Something like so?
+I thought Android already relied on OOT modules.
 
-diff --git a/Makefile b/Makefile
-index 95ab9856f357..10ca621369fb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1721,12 +1721,25 @@ KBUILD_MODULES := 1
- 
- build-dirs := $(KBUILD_EXTMOD)
- PHONY += modules
--modules: $(MODORDER)
-+modules: ext_compiler_check $(MODORDER)
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
- 
- $(MODORDER): descend
- 	@:
- 
-+orig_name   := $(if $(CONFIG_CC_IS_GCC),GCC,CLANG)
-+orig_minor  := $(shell expr $(if $(CONFIG_CC_IS_GCC),$(CONFIG_GCC_VERSION),$(CONFIG_CLANG_VERSION)) / 100)
-+cur_namever := $(shell $(srctree)/scripts/cc-version.sh $(CC))
-+cur_name    := $(word 1,$(cur_namever))
-+cur_minor   := $(shell expr $(word 2,$(cur_namever)) / 100)
-+PHONY += ext_compiler_check
-+ext_compiler_check:
-+	@if [ $(orig_name) != $(cur_name) ] || [ $(orig_minor) != $(cur_minor) ]; then \
-+		echo >&2 "warning: The compiler differs from the version which was used to build the kernel."; \
-+		echo >&2 "warning: Some kernel features are compiler-dependent."; \
-+		echo >&2 "warning: It's recommended that you change your compiler to match the version in the .config file."; \
-+	fi
-+
- PHONY += modules_install
- modules_install: _emodinst_ _emodinst_post
- 
+GCC plugins generally enforce the exact same GCC version for OOT
+modules.  So there's no ABI to worry about.  I assume Clang does the
+same?
+
+Or did I miss your point?
+
+> FWIW, I think the approach taken by -mstack-protector-guard-reg= is a
+> useful case study.  It was prototyped as a GCC extension, then added
+> to GCC proper, then added to LLVM (currently only x86, but most of the
+> machinery is in place in the compiler to get it running on arm64).  My
+> recommendation is to skip the plugin part and work on a standard
+> interface for compilers to implement, with input from compiler
+> developers.
+
+I like the idea.  Is there a recommended forum for such discussions?
+Just an email to GCC/Clang development lists?
+
+-- 
+Josh
 
