@@ -2,216 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A5BC433DB
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 08:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F514C433DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 11:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1C2F64DD6
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 08:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9EB64D87
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 11:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232200AbhBBI67 (ORCPT
+        id S231282AbhBBLgV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 2 Feb 2021 03:58:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47152 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230115AbhBBI65 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Feb 2021 03:58:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612256250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Si/dI5lNziAyVoRmOt6q5oX+Pb8j9QNnXS8AF/vdi/A=;
-        b=F6QniaO9pvvPoGycjt5q+69xVQC5gYdAWKcDFv7KLDsimPZOIMnlWQPQnCZkTqVc7vQR0P
-        RHHYuN4eQ/8V7A9B/OoeSay36rT42ebxat1w0G5Tb3VzaERQTkAm8IQ4eQ3p8j2CML+qPj
-        ry83KEIwBs0Ut82o8ypSn0J8YVarzoE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-FbV2bSV1Nuaxtbzn7dx-CQ-1; Tue, 02 Feb 2021 03:57:23 -0500
-X-MC-Unique: FbV2bSV1Nuaxtbzn7dx-CQ-1
-Received: by mail-wr1-f71.google.com with SMTP id u3so12108721wri.19
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Feb 2021 00:57:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Si/dI5lNziAyVoRmOt6q5oX+Pb8j9QNnXS8AF/vdi/A=;
-        b=W2qbhy6BjJLWFut2NEQ33dxdAY5BqqGQfuMIsZqSjZu2MeQINoVBQN1lp/mdrMaO72
-         M9M2kPv50smUZlqfOrPq1eWapablsHhN3Tmw0W3930YX0jFvIv1LlZwl8MCCNp1keEUu
-         8FKzpRrQfHjX2TI0dQO8KCElW8LtzaKnj8xHsTLPtO++grYyr7W6m/H/piqt6T6RReEZ
-         9kDBTI7+TDSmpwXD9ak41hxHrgIZ9dFmYqBrQY9RokD9BEFlRDXXiBnA1XgV5PQEe7nQ
-         T9/eJbdc5NEpMITRn7+kbBr+Ufr9y/W1dw5zXkjieCdy4TRDz/ptZ0wvyUB5on0WcGY5
-         ef7g==
-X-Gm-Message-State: AOAM531QyxNq3GV0wddg4KwjyMyCxQM+PDgdUy+yHmqKMEX4MX1B6Z0G
-        OK/GqBvVxpWbiMgo5gpRceYUVA1Mo1D6BXKNcrE9iG8JBC/vEXC7O7ZUN3E3WilynKPRS7k5CeG
-        gC1un2s25VPNKz0rK2UIiNecxrL2F
-X-Received: by 2002:a05:6000:192:: with SMTP id p18mr22178822wrx.69.1612256242135;
-        Tue, 02 Feb 2021 00:57:22 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwgPkiIX+L54pamL9Mka7GlGAiN10QTM7Wb7cXKG91/ROpxarDwNpZ+XfHCi6Y0Xzv6dxYUrw==
-X-Received: by 2002:a05:6000:192:: with SMTP id p18mr22178791wrx.69.1612256241890;
-        Tue, 02 Feb 2021 00:57:21 -0800 (PST)
-Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id i7sm2269412wmq.2.2021.02.02.00.57.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Feb 2021 00:57:21 -0800 (PST)
-Subject: Re: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
- switch table on arm64
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Peter Zijlstra <peterz@infradead.org>, raphael.gault@arm.com,
-        Will Deacon <will@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Bill Wendling <morbo@google.com>
-References: <20210120173800.1660730-13-jthierry@redhat.com>
- <20210127221557.1119744-1-ndesaulniers@google.com>
- <20210127232651.rj3mo7c2oqh4ytsr@treble>
- <CAKwvOdkOeENcM5X7X926sv2Xmtko=_nOPeKZ2+51s13CW1QAjw@mail.gmail.com>
- <20210201214423.dhsma73k7ccscovm@treble>
- <CAKwvOdmgNPSpY2oPHFr8EKGXYJbm7K9gySKFgyn4FERa9nTXmw@mail.gmail.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <671f1aa9-975e-1bda-6768-259adbdc24c8@redhat.com>
-Date:   Tue, 2 Feb 2021 09:57:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 2 Feb 2021 06:36:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230248AbhBBLfI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 2 Feb 2021 06:35:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CC32464E9B;
+        Tue,  2 Feb 2021 11:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612265666;
+        bh=iQZjdrytDnYe4+JE2zLjRm1WSmA5jVNSNUrdiPWQqaA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eA1YvFBH617s0j/ZHp9BrVaGBQse3Roq/akpIFgO8h4YK7KAtGXqfn+8F30qXEGn7
+         P3fVr3ENGAQ4m9QgKtpkUPG4jrbeBxRwk7RTtuxPmir9B4L60SU088ooeP6orMQHDu
+         Spuos6n/rMOJ8jJtTVDIgcik1eTfAqlgK9b0v8LRuK6tRytdQ4aUfUVyJ+18iaAhoh
+         FGJe5MlorJAi0JzgkEjW89Rh17W/sNrttGvuWEjyOLa8x+94QTjk8A/f3kJhKLkBt2
+         R3ftH5ewKRfAoHATLdIPutAS0p0/+FYXfweTB/hYQNJvVly/Qpi0aaRKGr5gaxG5zN
+         PN6NIwhGI3Lbw==
+Date:   Tue, 2 Feb 2021 05:34:23 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [REPORT][next] pinctrl: pinctrl-microchip-sgpio: out-of-bounds bug
+ in sgpio_clrsetbits()
+Message-ID: <20210202113423.GA277746@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdmgNPSpY2oPHFr8EKGXYJbm7K9gySKFgyn4FERa9nTXmw@mail.gmail.com>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jthierry@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hi,
 
+While addressing some out-of-bounds warnings, I found the following bug:
 
-On 2/2/21 12:17 AM, Nick Desaulniers wrote:
-> On Mon, Feb 1, 2021 at 1:44 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->>
->> On Fri, Jan 29, 2021 at 10:10:01AM -0800, Nick Desaulniers wrote:
->>> On Wed, Jan 27, 2021 at 3:27 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->>>>
->>>> On Wed, Jan 27, 2021 at 02:15:57PM -0800, Nick Desaulniers wrote:
->>>>>> From: Raphael Gault <raphael.gault@arm.com>
->>>>>>
->>>>>> This plugins comes into play before the final 2 RTL passes of GCC and
->>>>>> detects switch-tables that are to be outputed in the ELF and writes
->>>>>> information in an ".discard.switch_table_info" section which will be
->>>>>> used by objtool.
->>>>>>
->>>>>> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
->>>>>> [J.T.: Change section name to store switch table information,
->>>>>>         Make plugin Kconfig be selected rather than opt-in by user,
->>>>>>         Add a relocation in the switch_table_info that points to
->>>>>>         the jump operation itself]
->>>>>> Signed-off-by: Julien Thierry <jthierry@redhat.com>
->>>>>
->>>>> Rather than tightly couple this feature to a particular toolchain via
->>>>> plugin, it might be nice to consider what features could be spec'ed out
->>>>> for toolchains to implement (perhaps via a -f flag).
->>>>
->>>> The problem is being able to detect switch statement jump table vectors.
->>>>
->>>> For a given indirect branch (due to a switch statement), what are all
->>>> the corresponding jump targets?
->>>>
->>>> We would need the compiler to annotate that information somehow.
->>>
->>> Makes sense, the compiler should have this information.  How is this
->>> problem solved on x86?
->>
->> Thus far we've been able to successfully reverse engineer it on x86,
->> though it hasn't been easy.
->>
->> There were some particulars for arm64 which made doing so impossible.
->> (I don't remember the details.)
+drivers/pinctrl/pinctrl-microchip-sgpio.c:154:57: warning: array subscript 10 is above array bounds of ‘const u8[10]’ {aka ‘const unsigned char[10]’} [-Warray-bounds]
 
-The main issue is that the tables for arm64 have more indirection than x86.
+The bug was introduced by commit be2dc859abd4 ("pinctrl: pinctrl-microchip-sgpio: Add irq support (for sparx5)"):
 
-On x86, the dispatching jump instruction fetches the target address from 
-a contiguous array of addresses based on a given offset. So the list of 
-potential targets of the jump is neatly organized in a table (and sure, 
-before link time these are just relocation, but still processable).
+575         sgpio_clrsetbits(bank->priv, REG_INT_TRIGGER + SGPIO_MAX_BITS, addr.bit,
+576                          BIT(addr.port), (!!(type & 0x2)) << addr.port);
 
-On arm64 (with GCC at least), what is stored in a table is an array of 
-candidate offsets from the jump instruction. And because arm64 is 
-limited to 32bit instructions, the encoding often requires multiple 
-instructions to compute the target address:
+REG_INT_TRIGGER + SGPIO_MAX_BITS turns out to be 10, which is outside the boundaries
+of priv->properties->regoff[] at line 154:
 
-ldr<*>  x_offset, [x_offsets_table, x_index, ...]  // load offset
-adr     x_dest_base, <addr>          // load target branch for offset 0
-add     x_dest, x_target_base, x_offset, ...  // compute final address
-br      x_dest        // jump
+151 static inline void sgpio_clrsetbits(struct sgpio_priv *priv,                                        
+152                                     u32 rno, u32 off, u32 clear, u32 set)                           
+153 {                                                                                                   
+154         u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];                        
+155         u32 val = readl(reg);                                                                       
+156                                                                                                     
+157         val &= ~clear;                                                                              
+158         val |= set;                                                                                 
+159                                                                                                     
+160         writel(val, reg);                                                                           
+161 }
 
-Where this gets trickier is that (with GCC) the offsets stored in the 
-table might or might not be signed constants (and this can be seen in 
-GCC intermediate representations, but I do not believe this information 
-is output in the final object file). And on top of that, GCC might 
-decide to use offsets that are seen as unsigned during intermediate 
-representation as signed offset by sign extending them in the add 
-instruction.
+because priv->properties->regoff[] is an array of MAXREG elements, with MAXREG
+representing the value of 10 in the following enum:
 
-So, to handle this we'd have to track the different operation done with 
-the offset, from the load to the final jump, decoding the instructions
-and deducing the potential target instructions from the table of offsets.
+ 28 enum {                                                                                              
+ 29         REG_INPUT_DATA,                                                                             
+ 30         REG_PORT_CONFIG,                                                                            
+ 31         REG_PORT_ENABLE,                                                                            
+ 32         REG_SIO_CONFIG,                                                                             
+ 33         REG_SIO_CLOCK,                                                                              
+ 34         REG_INT_POLARITY,                                                                           
+ 35         REG_INT_TRIGGER,                                                                            
+ 36         REG_INT_ACK,                                                                                
+ 37         REG_INT_ENABLE,                                                                             
+ 38         REG_INT_IDENT,                                                                              
+ 39         MAXREG                                                                                      
+ 40 };
 
-But that is error prone as we don't really know how many instructions 
-can be between the ones doing the address computation, and I remember 
-some messy case of a jump table inside a jump table where tracking the 
-instruction touching one or the other offset would need a lot of corner 
-case handling.
+ 52 struct sgpio_properties {                                                                           
+ 53         int arch;                                                                                   
+ 54         int flags;                                                                                  
+ 55         u8 regoff[MAXREG];                                                                          
+ 56 };
 
-And this of course is just for GCC, I haven't looked at what it all 
-looks like on Clang's end.
-
-
-> 
-> I think the details are pertinent to finding a portable solution.  The
-> commit message of this commit in particular doesn't document such
-> details, such as why such an approach is necessary or how the data is
-> laid out for objtool to consume it.
-> 
-
-Sorry, I will need to make that clearer. The next patch explains it a 
-bit [1]
-
-Basically, for simplicity, the plugin creates a new section containing 
-tables (one per jump table) of references to the jump targets, similar 
-to what x86 has, except that in this case this table isn't actually used 
-by runtime code and is discarded at link time. I only chose this to 
-minimize what needed to be changed in objtool and because the format 
-seemed simple enough.
-
-But I'm open on some alternative, whether it's a -fjump-table-info 
-option added to compilers with a different format to do the links. The 
-important requirement is to be able to know all the candidate targets 
-for a "br <reg>" instruction.
-
-[1] https://lkml.org/lkml/2021/1/20/910
-
-Thanks,
-
--- 
-Julien Thierry
-
+Thanks
+--
+Gustavo
