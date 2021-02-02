@@ -2,71 +2,71 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D339C4332B
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 22:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E75FC433DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 23:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C35064F84
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 22:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E55601FB
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 23:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234042AbhBBWez (ORCPT
+        id S236098AbhBBXCO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 2 Feb 2021 17:34:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47444 "EHLO
+        Tue, 2 Feb 2021 18:02:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235871AbhBBWeb (ORCPT
+        with ESMTP id S236060AbhBBXCO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Feb 2021 17:34:31 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC5CC0613D6
-        for <linux-hardening@vger.kernel.org>; Tue,  2 Feb 2021 14:33:51 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id u11so13302455plg.13
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Feb 2021 14:33:51 -0800 (PST)
+        Tue, 2 Feb 2021 18:02:14 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0F1C061573
+        for <linux-hardening@vger.kernel.org>; Tue,  2 Feb 2021 15:01:33 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id a20so3250141pjs.1
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Feb 2021 15:01:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=df6pAHxeS3aJ78xgSJShNmAjNRSNKmi3Vx/fq6dvolA=;
-        b=gnJJdDK50DARFPRWBNm51TSoFhO57kc+DrnUpG13DWdTHH1+iPf9T+QMDk3wV3ASQS
-         MpZPNYRGCD0ose0Yd9/Ag5M1oX+z9jTh4mTSpKRD2nasbVV6/jbt3ilIdak1DY8f984l
-         uKOhU0R2fKpVQavisyhS2gAMVzW3miboP/hKYArH9tY4bmzbu5QwvwHcOoYxWwqAQhkh
-         MVLNCMWtE/Ef9D+Gx7IBvaK+qC7QEeMMsa8VQhM9oBXyV3adGu6hs8ZVhxW+aOr6riVA
-         rclRjfRnlVoBKi7XRg9lPTpVj54xXa3ncTRkqqaAVo4E2lz6ayb2DvrPu8ghPzKDS0Eo
-         BCyw==
+        bh=1B8aZfGV5m393mwd0q0yYkdjrdi3QZ7GO2sMeSzwIIY=;
+        b=VcnAFaQTekLWePwy0mWPSng4vT5t9aL1yEGNC/21FIOv2UMkvNlD3vKB9Xt4lJ04KM
+         IShGaCl5yZ47YgQD0nuS9z6p/56sQ7970gqLsIGe+ALuduGFvfMvOv+hscFOuKin4Zfc
+         Hk1knf3jcVJnZm9PvLZCgEuCra/qHu7JLiYdNJlscdKceAq67MqeaizMTS2K0C/WIhm7
+         Ot26cTpEPbHTGDPeoFiL3PhXIpCh5VvMvribVhV0J4a06H4204Jwt+qxxjbn/uGrOEJx
+         3uOs108IsSFkglbo4fbzX07P3MG3GKbGVn8vWA8fjvYSHuuRoGxRzVwee8dKC6dp+kDF
+         5ONQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=df6pAHxeS3aJ78xgSJShNmAjNRSNKmi3Vx/fq6dvolA=;
-        b=ISUThobsbiWq9nb/zJws1ys79+gtbwoV2E+HowOJkvJY6GS5F7YPIf2OnTPgc2yxVH
-         kmQniZqzeBxrpyuAKdcKUkTnbEM0fshxroA7Ou4grHKOGFjUZz846luY7xUIe4Ryz5UV
-         09QS9pNsTW5Q1goiGVvqqHF7l2SMwbg5bSSDaIyug3OonIrihXxCSKkIGYXGDiO/s07f
-         rnkKTaR75ZdpJTIbgoaEQNGBbWFqcpdclK2lkRdvJeRUJNDNxIOyW0q0ORVQRs/sF5Z2
-         ym8ixoSvl6DFIgdaJ0QXTvqRbxTnl1t6U+9j4sJ5Ot61g3dGzJypyD1IsQ8F/xM2dire
-         yvBA==
-X-Gm-Message-State: AOAM531rdUU0PJ6QhiECFw4Xw5ILXmFtZR2XhqZAvFPcf1vpHd4+vY/N
-        vgatSg0OZQL0Y4cpl2aXMI/8tJvgoGDh6S12OXO1Vg==
-X-Google-Smtp-Source: ABdhPJzqRv16XbBEO0J78A4aRxbg7WdzV/kblT06ucDtK18GH5NBPAMKWCFcydqjSknCTdCnGcfJi40WNs1RPXRtXIo=
-X-Received: by 2002:a17:90a:8b82:: with SMTP id z2mr10799pjn.25.1612305230632;
- Tue, 02 Feb 2021 14:33:50 -0800 (PST)
+        bh=1B8aZfGV5m393mwd0q0yYkdjrdi3QZ7GO2sMeSzwIIY=;
+        b=rtvjZtOqWhZefdJxuDjKaM2CRMVdO7j+gO89PO0sG0hLB+wZzuCl8QuhfiGAbcEaWu
+         theLta8WJEDBbd/tUv+6Wa46FmQzyM3sN9dOQpwol6HuWbrVKU6ZSU33LT4+kSZ0NsVF
+         cOKlaKLBXAO2SfkMSkEoCfwXZy7ogDvko3JIrFdGxpiPvqXKxYNjbhYuw5OmWXlR6Rpk
+         WkzppRIvX9/i2//IaXA71c9FceIxij0Af8pMluPI2havs/VDFvCRhfA4h4Yl8GYE78XU
+         7MwEiLlNVAYpqWnkybvLbWc24ywi7GvLsX1ZNGYoYZlJT0MVEjdwSfsHg9HRhSUwZnEE
+         rYgA==
+X-Gm-Message-State: AOAM532meeBZoMxeCy+5wp/Uw5dBeKMhQiocOJcLJyyLSbfCJR/ZVev6
+        m+L8okBRj8UmuwMcjkiWScUcISOMnUI5l/KYWGhfng==
+X-Google-Smtp-Source: ABdhPJzrcpH8eQPP5ECG7Rn/utCWyAkzeK6qw1rLuh95B7EjilL0QJGAA8pky6qVityb9F8rsEGSOpnYp6pTrWk3npc=
+X-Received: by 2002:a17:90a:bf10:: with SMTP id c16mr86751pjs.101.1612306893152;
+ Tue, 02 Feb 2021 15:01:33 -0800 (PST)
 MIME-Version: 1.0
 References: <20210120173800.1660730-13-jthierry@redhat.com>
  <20210127221557.1119744-1-ndesaulniers@google.com> <20210127232651.rj3mo7c2oqh4ytsr@treble>
  <CAKwvOdkOeENcM5X7X926sv2Xmtko=_nOPeKZ2+51s13CW1QAjw@mail.gmail.com>
  <20210201214423.dhsma73k7ccscovm@treble> <CAKwvOdmgNPSpY2oPHFr8EKGXYJbm7K9gySKFgyn4FERa9nTXmw@mail.gmail.com>
- <20210202000203.rk7lh5mx4aflgkwr@treble>
-In-Reply-To: <20210202000203.rk7lh5mx4aflgkwr@treble>
+ <671f1aa9-975e-1bda-6768-259adbdc24c8@redhat.com>
+In-Reply-To: <671f1aa9-975e-1bda-6768-259adbdc24c8@redhat.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 2 Feb 2021 14:33:38 -0800
-Message-ID: <CAKwvOd=R_ELec5Q3+oe9zuYXrwSGfLkqomAPOTr=UH=SZPtKUw@mail.gmail.com>
+Date:   Tue, 2 Feb 2021 15:01:22 -0800
+Message-ID: <CAKwvOdkqWyDbAvMJAd6gkc2QAEL7DiZg6_uRJ6NUE4tCip4Jvw@mail.gmail.com>
 Subject: Re: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
  switch table on arm64
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Julien Thierry <jthierry@redhat.com>,
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Ard Biesheuvel <ardb@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -88,98 +88,147 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 1, 2021 at 4:02 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Tue, Feb 2, 2021 at 12:57 AM Julien Thierry <jthierry@redhat.com> wrote:
 >
-> On Mon, Feb 01, 2021 at 03:17:40PM -0800, Nick Desaulniers wrote:
-> > On the earlier thread, Julien writes:
+>
+>
+> On 2/2/21 12:17 AM, Nick Desaulniers wrote:
+> > On Mon, Feb 1, 2021 at 1:44 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >>
+> >> On Fri, Jan 29, 2021 at 10:10:01AM -0800, Nick Desaulniers wrote:
+> >>> On Wed, Jan 27, 2021 at 3:27 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >>>>
+> >>>> On Wed, Jan 27, 2021 at 02:15:57PM -0800, Nick Desaulniers wrote:
+> >>>>>> From: Raphael Gault <raphael.gault@arm.com>
+> >>>>>>
+> >>>>>> This plugins comes into play before the final 2 RTL passes of GCC and
+> >>>>>> detects switch-tables that are to be outputed in the ELF and writes
+> >>>>>> information in an ".discard.switch_table_info" section which will be
+> >>>>>> used by objtool.
+> >>>>>>
+> >>>>>> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> >>>>>> [J.T.: Change section name to store switch table information,
+> >>>>>>         Make plugin Kconfig be selected rather than opt-in by user,
+> >>>>>>         Add a relocation in the switch_table_info that points to
+> >>>>>>         the jump operation itself]
+> >>>>>> Signed-off-by: Julien Thierry <jthierry@redhat.com>
+> >>>>>
+> >>>>> Rather than tightly couple this feature to a particular toolchain via
+> >>>>> plugin, it might be nice to consider what features could be spec'ed out
+> >>>>> for toolchains to implement (perhaps via a -f flag).
+> >>>>
+> >>>> The problem is being able to detect switch statement jump table vectors.
+> >>>>
+> >>>> For a given indirect branch (due to a switch statement), what are all
+> >>>> the corresponding jump targets?
+> >>>>
+> >>>> We would need the compiler to annotate that information somehow.
+> >>>
+> >>> Makes sense, the compiler should have this information.  How is this
+> >>> problem solved on x86?
+> >>
+> >> Thus far we've been able to successfully reverse engineer it on x86,
+> >> though it hasn't been easy.
+> >>
+> >> There were some particulars for arm64 which made doing so impossible.
+> >> (I don't remember the details.)
+>
+> The main issue is that the tables for arm64 have more indirection than x86.
+
+I wonder if PAC or BTI also make this slightly more complex?  PAC at
+least has implications for unwinders, IIUC.
+
+>
+> On x86, the dispatching jump instruction fetches the target address from
+> a contiguous array of addresses based on a given offset. So the list of
+> potential targets of the jump is neatly organized in a table (and sure,
+> before link time these are just relocation, but still processable).
+>
+> On arm64 (with GCC at least), what is stored in a table is an array of
+> candidate offsets from the jump instruction. And because arm64 is
+> limited to 32bit instructions, the encoding often requires multiple
+> instructions to compute the target address:
+>
+> ldr<*>  x_offset, [x_offsets_table, x_index, ...]  // load offset
+> adr     x_dest_base, <addr>          // load target branch for offset 0
+> add     x_dest, x_target_base, x_offset, ...  // compute final address
+> br      x_dest        // jump
+>
+> Where this gets trickier is that (with GCC) the offsets stored in the
+> table might or might not be signed constants (and this can be seen in
+> GCC intermediate representations, but I do not believe this information
+> is output in the final object file). And on top of that, GCC might
+> decide to use offsets that are seen as unsigned during intermediate
+> representation as signed offset by sign extending them in the add
+> instruction.
+>
+> So, to handle this we'd have to track the different operation done with
+> the offset, from the load to the final jump, decoding the instructions
+> and deducing the potential target instructions from the table of offsets.
+>
+> But that is error prone as we don't really know how many instructions
+> can be between the ones doing the address computation, and I remember
+> some messy case of a jump table inside a jump table where tracking the
+> instruction touching one or the other offset would need a lot of corner
+> case handling.
+>
+> And this of course is just for GCC, I haven't looked at what it all
+> looks like on Clang's end.
+
+Sure, but this is what production unwinders do, and they don't require
+compiler plugins, right?  I don't doubt unwinders can be made simpler
+with changes to toolchain output; please work with your compiler
+vendor on making such changes rather than relying on compiler plugins
+to do so.
+
+> > I think the details are pertinent to finding a portable solution.  The
+> > commit message of this commit in particular doesn't document such
+> > details, such as why such an approach is necessary or how the data is
+> > laid out for objtool to consume it.
 > >
-> > >> I think most people interested in livepatching are using GCC built
-> > >> kernels, but I could be mistaken (althought in the long run, both
-> > >> compilers should be supported, and yes, I realize the objtool solution
-> > >> currently only would support GCC).
-> >
-> > Google's production kernels are using livepatching and are built with
-> > Clang.  Getting similar functionality working for arm64 would be of
-> > interest.
 >
-> Well, that's cool.  I had no idea.
+> Sorry, I will need to make that clearer. The next patch explains it a
+> bit [1]
 >
-> I'm curious how they're generating livepatch modules?  Because
-> kpatch-build doesn't support Clang (AFAIK), and if they're not using
-> kpatch-build then there are some traps to look out for.
+> Basically, for simplicity, the plugin creates a new section containing
 
-Ok, I just met with a bunch of folks that are actively working on
-this.  Let me intro
-Yonghyun Hwang <yonghyun@google.com>
-Pete Swain <swine@google.com>
-who will be the folks on point for this from Google.
+Right, this takes a focus on simplicity, at the cost of alienating a toolchain.
 
-My understanding after some clarifications today is that Google is
-currently using a proprietary kernel patching mechanism that developed
-around a decade ago, "pre-ksplice Oracle acquisition."  But we are
-looking to transition to kpatch, and help towards supporting arm64.
-Live patching is important for deploying kernel fixes faster than
-predetermined scheduled draining of jobs in clusters.
+Ard's point about 3193c0836f20 relating to -fgcse is that when
+presented with tricky cases to unwind, the simplest approach is taken.
+There it was disabling a compiler specific compiler optimization, here
+it's either a compiler specific compiler plugin (or disabling another
+compiler optimization).  The pattern seems to be "Objtool isn't smart
+enough" ... "compiler optimization disabled" or "compiler plugin
+dependency."
 
-The first steps for kpatch transition is supporting builds with Clang.
-Yonghyun is working on that and my hope is he will have patches for
-you for that soon.
-
-Curiously, the proprietary mechanism doesn't rely on stack validation.
-I think that such dependency was questioned on the cover letter
-patch's thread as well.  Maybe there's "some traps to look out for"
-you're referring to there?  I'm not privy to the details, though I
-would guess it has to do with ensuring kernel threads aren't executing
-(or planning to return through) code regions that are trying to be
-patched/unpatched.  I am curious about frame pointers never being
-omitted for arm64; is frame pointer chasing is unreliable in certain
-contexts?
-
-The internal functionality has been used heavily in production for
-almost a decade, though without it being public or supporting arm64;
-I'm not sure precisely how they solve such issues (or how others might
-review such an approach).
-
-Either way, the dependencies for live patching are less important, so
-long as they are toolchain portable.  The ability to live patch kernel
-images is ___important___ to Google.
-
-> > Objtool support on arm64 is interesting to me though, because it has
-> > found bugs in LLVM codegen. That alone is extremely valuable.  But not
-> > it's not helpful if it's predicated or tightly coupled to GCC, as this
-> > series appears to do.
+> tables (one per jump table) of references to the jump targets, similar
+> to what x86 has, except that in this case this table isn't actually used
+> by runtime code and is discarded at link time. I only chose this to
+> minimize what needed to be changed in objtool and because the format
+> seemed simple enough.
 >
-> I agree 100%, if there are actual Clang livepatch users (which it sounds
-> like there are) then we should target both compilers.
+> But I'm open on some alternative, whether it's a -fjump-table-info
 
-Or will be. (Sorry, I didn't know we hadn't completed the transition
-to kpatch yet.  It is "the opposite side of the house" from where I
-work; I literally have 8 bosses, not kidding).
+Yes, I think we could spec out something like that.  But I would
+appreciate revisiting open questions around stack validation (frame
+pointers), preventing the generation of jump tables to begin with
+(-fno-jump-tables) in place of making objtool more robust, or
+generally the need to depend on compiler plugins.
 
-Though if kpatch moves to requiring GCC plugins for architectures we
-use extensively or would like to use more of, that's probably going to
-throw a wrench in multiple transition plans.  (The fleet's transition
-to Clang is done, I'm not worried about that).
-
-> And yes, objtool has been pretty good at finding compiler bugs, so the
-> more coverage the better.
-> > The idea of rebuilding control flow from binary analysis and using
-> > that to find codegen bugs is a really cool idea (novel, even? idk),
-> > and I wish we had some analog for userspace binaries that could
-> > perform similar checks.
+> option added to compilers with a different format to do the links. The
+> important requirement is to be able to know all the candidate targets
+> for a "br <reg>" instruction.
 >
-> Objtool is generic in many ways -- in fact I recently heard from a PhD
-> candidate who used it successfully on another kernel for an ORC
-> unwinder.
+> [1] https://lkml.org/lkml/2021/1/20/910
+>
+> Thanks,
+>
+> --
+> Julien Thierry
+>
 
-That's pretty cool!  Reuse outside the initial context is always a
-good sign that something was designed right.
 
-> It could probably be used on user space without much effort.  That was
-> an early original stated goal but I definitely don't have the bandwidth
-> or incentive to work on it.
-
-Heh.  I'm a big fan of game theory; carrot or stick, right?
 -- 
 Thanks,
 ~Nick Desaulniers
