@@ -2,107 +2,153 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B37EC433E0
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 02:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5866CC433DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 04:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13B9F64DC3
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 02:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FB464DCC
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 04:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbhBBChi (ORCPT
+        id S231687AbhBBEvd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 1 Feb 2021 21:37:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229822AbhBBChh (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 1 Feb 2021 21:37:37 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A93AE64DDC;
-        Tue,  2 Feb 2021 02:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612233417;
-        bh=aYaNKfCnYiSwQ0Jqq2pVkFBGnbFVGwDNv4yn576p31Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CfapMaxXNMeg8aiNbpOFcHczkEMgpE1MjlaviMKqweOtGZGP+Hj6zt7reHB51vSkT
-         197C10/3oRRuTSk95F3SY/7IK2ZIMRP0LUlUYQUE7R35yr/sSHDx3jxGpGwIGeYCJR
-         DGWzXc2L84ihlAuaMaITeYrbihax7s2houJ43nbpP1K6KQjee7kXWS5bTK6HFhWsmc
-         njPbh/wOvNwTpDKd/uMFgxlavoScyAlAGr6a+Q9f0iiQLa9YimlYDfBjhjt7VGnRzX
-         1oLhE16NBH6RtTnmwG7lJwtsuTXZIjTuSCK2uwQ3hN5oZ65u9bByKIH+g345+yeleg
-         1iNtvIPYu2anA==
-Date:   Mon, 1 Feb 2021 20:36:54 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Steve French <sfrench@samba.org>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] smb3: Fix out-of-bounds bug in SMB2_negotiate()
-Message-ID: <20210202023654.GA265921@embeddedor>
+        Mon, 1 Feb 2021 23:51:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231851AbhBBEtJ (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 1 Feb 2021 23:49:09 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA7DC061756;
+        Mon,  1 Feb 2021 20:48:28 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id v15so19442760ljk.13;
+        Mon, 01 Feb 2021 20:48:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5qo3Y6a156Muu9ZuNI0M6zIN06kI/WyI3S1KWgKiOfc=;
+        b=EimTH8opxE4otirrlt/TSvxUhZRa9z9/aUtylCHNFHzGsi4ZAowvODdzP2F2LMdtir
+         jDD70fiSqWj/+614G3Yn5VIG42mEoS7NYpdZ5ArGJrHQTsQFBGJ4n4ntIrcX0J8EHJ8g
+         DAecWboHmOgsxLx7zBYQI1hovNOKCvQ7Z8y4ll1oQyZWP5Jk68BSWRPMQ/RTbarV0Usr
+         ItU5DhNJsY+S4MVkk19Mb0/Q7RkegjrP5VGciyVnaFuGprXCiVgeMF0/Zw2ORet7jglm
+         7mgl0HaJO6JsEqBO5US8WFlm+Q686TgonfLuR11WNWOglV2F1FD9YZ1vhABuGCUXo3xR
+         9HGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5qo3Y6a156Muu9ZuNI0M6zIN06kI/WyI3S1KWgKiOfc=;
+        b=tyGUgrKZ9ARzqUb4gVlRMOREd/BzpYH46TFFL/B4HjFUGs8XtxuJpplMwMsdDBF/W8
+         0E6zvwwXnKGfHZeVz1w3W5uKtYTxQIHojnf6eAHANHglB/e72dAtd+MVTqPwm0LvtFpA
+         k0Fnv3vikwNQtcWRdDmRD+HlWeNo00/XijwwW44QwCCQmqYQsTdVBXVtFisfhMufakMI
+         1yRVYFheXlu4Glx4XcnH975bgFyYKs5urAkO8Ut+IOwoeyMi2Fqjfd3W5W/RCgu17ENu
+         64CRMSkuVFOKLdeUmOCKn0i8J0Juu/GXQnMTkJ46xiywCiRwq8A5Eu9pHIiOsNLQA3hL
+         qRew==
+X-Gm-Message-State: AOAM531hRnw2m8PLu6DpgANbdvZ8oLYIqOc6X+xYJ1ZEBDVHKwDdv4dr
+        KZxxkzHo+E7Xj/Qh6XOmxlPFefqojp/H76zgmcE=
+X-Google-Smtp-Source: ABdhPJyEI9a1hvqxYDAV9f3YF2bnd3NL5TOuX7qvSr9dcZDJgJ5nrN43iJXiZf9+wcfNLe9C15MWAJCrkCBZS5nIams=
+X-Received: by 2002:a2e:9d8c:: with SMTP id c12mr11881596ljj.6.1612241307146;
+ Mon, 01 Feb 2021 20:48:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20210202023654.GA265921@embeddedor>
+In-Reply-To: <20210202023654.GA265921@embeddedor>
+From:   Steve French <smfrench@gmail.com>
+Date:   Mon, 1 Feb 2021 22:48:16 -0600
+Message-ID: <CAH2r5msYsp4JxCcCRR1HY3y-Czh2UKJfV=DoKccG=Fcunc8hNQ@mail.gmail.com>
+Subject: Re: [PATCH] smb3: Fix out-of-bounds bug in SMB2_negotiate()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Steve French <sfrench@samba.org>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-While addressing some warnings generated by -Warray-bounds, I found this
-bug that was introduced back in 2017:
+merged into cifs-2.6.git for-next
 
-  CC [M]  fs/cifs/smb2pdu.o
-fs/cifs/smb2pdu.c: In function ‘SMB2_negotiate’:
-fs/cifs/smb2pdu.c:822:16: warning: array subscript 1 is above array bounds
-of ‘__le16[1]’ {aka ‘short unsigned int[1]’} [-Warray-bounds]
-  822 |   req->Dialects[1] = cpu_to_le16(SMB30_PROT_ID);
-      |   ~~~~~~~~~~~~~^~~
-fs/cifs/smb2pdu.c:823:16: warning: array subscript 2 is above array bounds
-of ‘__le16[1]’ {aka ‘short unsigned int[1]’} [-Warray-bounds]
-  823 |   req->Dialects[2] = cpu_to_le16(SMB302_PROT_ID);
-      |   ~~~~~~~~~~~~~^~~
-fs/cifs/smb2pdu.c:824:16: warning: array subscript 3 is above array bounds
-of ‘__le16[1]’ {aka ‘short unsigned int[1]’} [-Warray-bounds]
-  824 |   req->Dialects[3] = cpu_to_le16(SMB311_PROT_ID);
-      |   ~~~~~~~~~~~~~^~~
-fs/cifs/smb2pdu.c:816:16: warning: array subscript 1 is above array bounds
-of ‘__le16[1]’ {aka ‘short unsigned int[1]’} [-Warray-bounds]
-  816 |   req->Dialects[1] = cpu_to_le16(SMB302_PROT_ID);
-      |   ~~~~~~~~~~~~~^~~
+On Mon, Feb 1, 2021 at 8:38 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> While addressing some warnings generated by -Warray-bounds, I found this
+> bug that was introduced back in 2017:
+>
+>   CC [M]  fs/cifs/smb2pdu.o
+> fs/cifs/smb2pdu.c: In function =E2=80=98SMB2_negotiate=E2=80=99:
+> fs/cifs/smb2pdu.c:822:16: warning: array subscript 1 is above array bound=
+s
+> of =E2=80=98__le16[1]=E2=80=99 {aka =E2=80=98short unsigned int[1]=E2=80=
+=99} [-Warray-bounds]
+>   822 |   req->Dialects[1] =3D cpu_to_le16(SMB30_PROT_ID);
+>       |   ~~~~~~~~~~~~~^~~
+> fs/cifs/smb2pdu.c:823:16: warning: array subscript 2 is above array bound=
+s
+> of =E2=80=98__le16[1]=E2=80=99 {aka =E2=80=98short unsigned int[1]=E2=80=
+=99} [-Warray-bounds]
+>   823 |   req->Dialects[2] =3D cpu_to_le16(SMB302_PROT_ID);
+>       |   ~~~~~~~~~~~~~^~~
+> fs/cifs/smb2pdu.c:824:16: warning: array subscript 3 is above array bound=
+s
+> of =E2=80=98__le16[1]=E2=80=99 {aka =E2=80=98short unsigned int[1]=E2=80=
+=99} [-Warray-bounds]
+>   824 |   req->Dialects[3] =3D cpu_to_le16(SMB311_PROT_ID);
+>       |   ~~~~~~~~~~~~~^~~
+> fs/cifs/smb2pdu.c:816:16: warning: array subscript 1 is above array bound=
+s
+> of =E2=80=98__le16[1]=E2=80=99 {aka =E2=80=98short unsigned int[1]=E2=80=
+=99} [-Warray-bounds]
+>   816 |   req->Dialects[1] =3D cpu_to_le16(SMB302_PROT_ID);
+>       |   ~~~~~~~~~~~~~^~~
+>
+> At the time, the size of array _Dialects_ was changed from 1 to 3 in stru=
+ct
+> validate_negotiate_info_req, and then in 2019 it was changed from 3 to 4,
+> but those changes were never made in struct smb2_negotiate_req, which has
+> led to a 3 and a half years old out-of-bounds bug in function
+> SMB2_negotiate() (fs/cifs/smb2pdu.c).
+>
+> Fix this by increasing the size of array _Dialects_ in struct
+> smb2_negotiate_req to 4.
+>
+> Fixes: 9764c02fcbad ("SMB3: Add support for multidialect negotiate (SMB2.=
+1 and later)")
+> Fixes: d5c7076b772a ("smb3: add smb3.1.1 to default dialect list")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/cifs/smb2pdu.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/cifs/smb2pdu.h b/fs/cifs/smb2pdu.h
+> index d85edf5d1429..a5a9e33c0d73 100644
+> --- a/fs/cifs/smb2pdu.h
+> +++ b/fs/cifs/smb2pdu.h
+> @@ -286,7 +286,7 @@ struct smb2_negotiate_req {
+>         __le32 NegotiateContextOffset; /* SMB3.1.1 only. MBZ earlier */
+>         __le16 NegotiateContextCount;  /* SMB3.1.1 only. MBZ earlier */
+>         __le16 Reserved2;
+> -       __le16 Dialects[1]; /* One dialect (vers=3D) at a time for now */
+> +       __le16 Dialects[4]; /* BB expand this if autonegotiate > 4 dialec=
+ts */
+>  } __packed;
+>
+>  /* Dialects */
+> --
+> 2.27.0
+>
 
-At the time, the size of array _Dialects_ was changed from 1 to 3 in struct
-validate_negotiate_info_req, and then in 2019 it was changed from 3 to 4,
-but those changes were never made in struct smb2_negotiate_req, which has
-led to a 3 and a half years old out-of-bounds bug in function
-SMB2_negotiate() (fs/cifs/smb2pdu.c).
 
-Fix this by increasing the size of array _Dialects_ in struct
-smb2_negotiate_req to 4.
+--=20
+Thanks,
 
-Fixes: 9764c02fcbad ("SMB3: Add support for multidialect negotiate (SMB2.1 and later)")
-Fixes: d5c7076b772a ("smb3: add smb3.1.1 to default dialect list")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/cifs/smb2pdu.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/cifs/smb2pdu.h b/fs/cifs/smb2pdu.h
-index d85edf5d1429..a5a9e33c0d73 100644
---- a/fs/cifs/smb2pdu.h
-+++ b/fs/cifs/smb2pdu.h
-@@ -286,7 +286,7 @@ struct smb2_negotiate_req {
- 	__le32 NegotiateContextOffset; /* SMB3.1.1 only. MBZ earlier */
- 	__le16 NegotiateContextCount;  /* SMB3.1.1 only. MBZ earlier */
- 	__le16 Reserved2;
--	__le16 Dialects[1]; /* One dialect (vers=) at a time for now */
-+	__le16 Dialects[4]; /* BB expand this if autonegotiate > 4 dialects */
- } __packed;
- 
- /* Dialects */
--- 
-2.27.0
-
+Steve
