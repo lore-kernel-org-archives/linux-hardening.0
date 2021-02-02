@@ -2,103 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F514C433DB
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 11:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A41C433E0
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 14:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB9EB64D87
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 11:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8554264F4A
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Feb 2021 14:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231282AbhBBLgV (ORCPT
+        id S231862AbhBBO10 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 2 Feb 2021 06:36:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230248AbhBBLfI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Feb 2021 06:35:08 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC32464E9B;
-        Tue,  2 Feb 2021 11:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612265666;
-        bh=iQZjdrytDnYe4+JE2zLjRm1WSmA5jVNSNUrdiPWQqaA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eA1YvFBH617s0j/ZHp9BrVaGBQse3Roq/akpIFgO8h4YK7KAtGXqfn+8F30qXEGn7
-         P3fVr3ENGAQ4m9QgKtpkUPG4jrbeBxRwk7RTtuxPmir9B4L60SU088ooeP6orMQHDu
-         Spuos6n/rMOJ8jJtTVDIgcik1eTfAqlgK9b0v8LRuK6tRytdQ4aUfUVyJ+18iaAhoh
-         FGJe5MlorJAi0JzgkEjW89Rh17W/sNrttGvuWEjyOLa8x+94QTjk8A/f3kJhKLkBt2
-         R3ftH5ewKRfAoHATLdIPutAS0p0/+FYXfweTB/hYQNJvVly/Qpi0aaRKGr5gaxG5zN
-         PN6NIwhGI3Lbw==
-Date:   Tue, 2 Feb 2021 05:34:23 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [REPORT][next] pinctrl: pinctrl-microchip-sgpio: out-of-bounds bug
- in sgpio_clrsetbits()
-Message-ID: <20210202113423.GA277746@embeddedor>
+        Tue, 2 Feb 2021 09:27:26 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:37196 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234364AbhBBO03 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 2 Feb 2021 09:26:29 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-274-flNrt4sAPICkZEemnUm5Og-1; Tue, 02 Feb 2021 14:24:34 +0000
+X-MC-Unique: flNrt4sAPICkZEemnUm5Og-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 2 Feb 2021 14:24:32 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 2 Feb 2021 14:24:32 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Josh Poimboeuf' <jpoimboe@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+CC:     Julien Thierry <jthierry@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "raphael.gault@arm.com" <raphael.gault@arm.com>,
+        Will Deacon <will@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Bill Wendling <morbo@google.com>
+Subject: RE: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
+ switch table on arm64
+Thread-Topic: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
+ switch table on arm64
+Thread-Index: AQHW+Pb1TwqrTbfiDUONrIh7m3kiG6pE6I/Q
+Date:   Tue, 2 Feb 2021 14:24:32 +0000
+Message-ID: <7c14b5b8b11241cd8271ba5b3f785c51@AcuMS.aculab.com>
+References: <20210120173800.1660730-13-jthierry@redhat.com>
+ <20210127221557.1119744-1-ndesaulniers@google.com>
+ <20210127232651.rj3mo7c2oqh4ytsr@treble>
+ <CAKwvOdkOeENcM5X7X926sv2Xmtko=_nOPeKZ2+51s13CW1QAjw@mail.gmail.com>
+ <20210201214423.dhsma73k7ccscovm@treble>
+ <CAKwvOdmgNPSpY2oPHFr8EKGXYJbm7K9gySKFgyn4FERa9nTXmw@mail.gmail.com>
+ <20210202000203.rk7lh5mx4aflgkwr@treble>
+In-Reply-To: <20210202000203.rk7lh5mx4aflgkwr@treble>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+U3RpcnJpbmcgbW9yZSBnb29wIGludG8gdGhlIGhvbGUgLi4uLg0KDQpSZXF1aXJpbmcgZ2NjLXBs
+dWdpbnMsIG1hdGNoaW5nIGNvbXBpbGVyIHZlcnNpb25zIGFuZCB0aGUNCnNhbWUgJ2R3YXJmJyBm
+b3JtYXQgZm9yIE9PVCBtb2R1bGVzIGlzIHByb2JhYmx5IHZlcnkgcGFpbmZ1bC4NCg0KSW4gbWFu
+eSBjYXNlcyAoYW5kIHRoaXMgbWF5IGluY2x1ZGUgZHJpdmVycyByZWxlYXNlZCBieSBzb21lDQpk
+aXN0cmlidXRpb25zKSBhbiBPT1QgZHJpdmVyIGhhcyB0d28gc2VwYXJhdGUgcGFydHMuDQoNCk9u
+ZSBwYXJ0IGlzIEMgc291cmNlIHRoYXQgaXMgY29tcGlsZWQgd2hlbiB0aGUgbW9kdWxlIGlzIGJ1
+aWx0DQpvbiB0aGUgdGFyZ2V0IHN5c3RlbSBhbmQgYWdhaW5zdCB0aGUgaW5zdGFsbGVkIGtlcm5l
+bCBoZWFkZXJzLg0KR2V0dGluZyB0aGlzIHRvIG1hdGNoICdqdXN0JyByZWxpZXMgb24gaGF2aW5n
+IHRoZSBjb3JyZWN0DQpjb21waWxlciAoZXRjKSBpbnN0YWxsZWQgYW5kIGluICRQQVRILg0KDQpU
+aGUgc2Vjb25kIHBhcnQgaXMgbXVjaCBtb3JlIHByb2JsZW1hdGljLg0KVGhpcyBpcyBqdXN0IGFu
+IG9iamVjdCBmaWxlIGNvbXBpbGVkIGJ5IGEgdGhpcmQgcGFydHkuDQpJdCBkb2Vzbid0IGRpcmVj
+dGx5IGRlcGVuZCBvbiBhbnl0aGluZyBkZWZpbmVkIGluIHRoZQ0Ka2VybmVsIGhlYWRlcnMgLSBz
+byBjYW4gKGN1cnJlbnRseSkgYmUgbGlua2VkIGludG8gYW55DQprZXJuZWwgdmVyc2lvbi4NCg0K
+SW4gdGhlIHBhc3Qgc29tZSBncmFwaGljcyBkcml2ZXJzIGhhdmUgaGFkIGEgdGhpcmQgcGFydHkN
+Cm9iamVjdCBmaWxlLg0KSSB0aGluayBzb21lIG9mIHRoZSBsYXB0b3Agd2lmaSBkcml2ZXJzIG1p
+Z2h0IGFzIHdlbGwuDQoNCk5vdyBJIHNvbWUgcGVvcGxlIHRoaW5rIGV2ZXJ5dGhpbmcgc2hvdWxk
+IGJlIGZyZWUgc291cmNlLg0KQnV0IHRoZXJlIGFyZSB2YXJpb3VzIGNvbW1lcmNpYWwgYW5kIHBy
+YWN0aWNhbCByZWFzb25zDQpmb3IgYm90aCBPT1QgZHJpdmVycyBhbmQgb2JqZWN0IGZpbGUgJ2Js
+b2JzJyBpbiBPT1QgZHJpdmVycy4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBM
+YWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBU
+LCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-While addressing some out-of-bounds warnings, I found the following bug:
-
-drivers/pinctrl/pinctrl-microchip-sgpio.c:154:57: warning: array subscript 10 is above array bounds of ‘const u8[10]’ {aka ‘const unsigned char[10]’} [-Warray-bounds]
-
-The bug was introduced by commit be2dc859abd4 ("pinctrl: pinctrl-microchip-sgpio: Add irq support (for sparx5)"):
-
-575         sgpio_clrsetbits(bank->priv, REG_INT_TRIGGER + SGPIO_MAX_BITS, addr.bit,
-576                          BIT(addr.port), (!!(type & 0x2)) << addr.port);
-
-REG_INT_TRIGGER + SGPIO_MAX_BITS turns out to be 10, which is outside the boundaries
-of priv->properties->regoff[] at line 154:
-
-151 static inline void sgpio_clrsetbits(struct sgpio_priv *priv,                                        
-152                                     u32 rno, u32 off, u32 clear, u32 set)                           
-153 {                                                                                                   
-154         u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];                        
-155         u32 val = readl(reg);                                                                       
-156                                                                                                     
-157         val &= ~clear;                                                                              
-158         val |= set;                                                                                 
-159                                                                                                     
-160         writel(val, reg);                                                                           
-161 }
-
-because priv->properties->regoff[] is an array of MAXREG elements, with MAXREG
-representing the value of 10 in the following enum:
-
- 28 enum {                                                                                              
- 29         REG_INPUT_DATA,                                                                             
- 30         REG_PORT_CONFIG,                                                                            
- 31         REG_PORT_ENABLE,                                                                            
- 32         REG_SIO_CONFIG,                                                                             
- 33         REG_SIO_CLOCK,                                                                              
- 34         REG_INT_POLARITY,                                                                           
- 35         REG_INT_TRIGGER,                                                                            
- 36         REG_INT_ACK,                                                                                
- 37         REG_INT_ENABLE,                                                                             
- 38         REG_INT_IDENT,                                                                              
- 39         MAXREG                                                                                      
- 40 };
-
- 52 struct sgpio_properties {                                                                           
- 53         int arch;                                                                                   
- 54         int flags;                                                                                  
- 55         u8 regoff[MAXREG];                                                                          
- 56 };
-
-Thanks
---
-Gustavo
