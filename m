@@ -2,104 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CF7C433E0
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Feb 2021 11:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF17C433E0
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Feb 2021 12:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF46364F72
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Feb 2021 11:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9CA64F78
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Feb 2021 12:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234116AbhBCL6Z (ORCPT
+        id S234437AbhBCMCl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 3 Feb 2021 06:58:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233972AbhBCL6Y (ORCPT
+        Wed, 3 Feb 2021 07:02:41 -0500
+Received: from esa.microchip.iphmx.com ([68.232.153.233]:24662 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234334AbhBCMCR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 3 Feb 2021 06:58:24 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EACABC0613ED;
-        Wed,  3 Feb 2021 03:57:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qV09Im9zStsEDN3aK7Y5tK1FdFUYhtdI63Y+lrzaDhc=; b=oMNuAy5gx4vP9iN+v48oFdTUkz
-        Zd119CdRuTFGy4J6KaIHwrSvqGRhBCUXcw48dXLfprFp7AhMoGA7J8U/m6cL4eFUNV4KoF5qFu7m5
-        u0ByNkvAtdaPxi74AU0eX4aldWXbd29MVqbwM+o4jEqDd86uC86Pa3gcLnidkZ5MYpaUEGUbnwti+
-        rSoPd478W8MmCcAkXBm5+Tq2wUHdhd/VbJ5lD4NmQoyjs3a8FkbDDcE2Le4xNW+Ub9vTHVWYNH+Y5
-        yEL1PpTgyO8DmWyL8uJIhF4yhH50wNruWO9eYAZSrhTBtDoeyFuD50umDOLd23EcLthyyfxgxDrt8
-        o8CzFQeg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1l7Gml-00GmtO-US; Wed, 03 Feb 2021 11:57:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 412043003D8;
-        Wed,  3 Feb 2021 12:57:27 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2A5702364E363; Wed,  3 Feb 2021 12:57:27 +0100 (CET)
-Date:   Wed, 3 Feb 2021 12:57:27 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>, raphael.gault@arm.com,
-        Will Deacon <will@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Bill Wendling <morbo@google.com>, swine@google.com,
-        yonghyun@google.com
-Subject: Re: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
- switch table on arm64
-Message-ID: <YBqPp53EM/E+o5TA@hirez.programming.kicks-ass.net>
-References: <20210120173800.1660730-13-jthierry@redhat.com>
- <20210127221557.1119744-1-ndesaulniers@google.com>
- <20210127232651.rj3mo7c2oqh4ytsr@treble>
- <CAKwvOdkOeENcM5X7X926sv2Xmtko=_nOPeKZ2+51s13CW1QAjw@mail.gmail.com>
- <20210201214423.dhsma73k7ccscovm@treble>
- <CAKwvOdmgNPSpY2oPHFr8EKGXYJbm7K9gySKFgyn4FERa9nTXmw@mail.gmail.com>
- <671f1aa9-975e-1bda-6768-259adbdc24c8@redhat.com>
- <CAKwvOdkqWyDbAvMJAd6gkc2QAEL7DiZg6_uRJ6NUE4tCip4Jvw@mail.gmail.com>
- <20210203001414.idjrcrki7wmhndre@treble>
+        Wed, 3 Feb 2021 07:02:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1612353736; x=1643889736;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=OY3C0w/qB4gbjMLf0w66f9/0UFos7giSpFcEYMgKDd8=;
+  b=GMdUBdeWjOwW4UurIaEaPwEdl1OhAEnRmN+Nj09lLtXiFLPRiIxU8Y2n
+   lBWyOcSCZlSloO2QsrcOssnX2pNSiLhsvl7a/W7Rll/+3O5JOjy2hycru
+   ZxeEDKZZgJYij/Dp2WjkiqRSFEAfSVn/vCa9IEq0gYAv9CpVhY3p9FwRG
+   AcptsEvuwRVGhah0P1jCDcpgJTFoGE2ZDBgd/FtA4QIJ1AtUanI0LApCW
+   u527Po42ami7Gqmouwiwv607NyBWI3M9SLWSAIS4m6Sg9NWVMnF1R0eQR
+   U/rN7qRUPrmaM+5kpWFbhLniurOdTiVUTnUCJn5UQh2VlHw/AakveliUy
+   g==;
+IronPort-SDR: sBRoDZ0vfnhXEg0SYuX0KSo6U0/qX6+tboo9q9CYqw91vf0pAY1Ujff6RlofAbD87k1gEbDY4B
+ heHfViheRg9O/vWQJqhtQCC4FP0RlXGMJpD4h4Mjk4qGZxhprDkvY+bv1w75mrq2zCeI9YB4o8
+ pyYnDPSRuINy7BzPGuZpLE0bgvSiYBl1yxLCQxV1fErWtcgBCZynsumE+RFx6Chsnk9BSLImsY
+ 1WoZYe9MTfTQpiQDhMmJ+YHF0zqpaQB9p0Q1lyWN88ugt4b6XuWf8dhWJHkY7+14tBgO13Xh8I
+ yZw=
+X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
+   d="scan'208";a="108345529"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Feb 2021 05:00:56 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 3 Feb 2021 05:00:56 -0700
+Received: from soft-dev10.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Wed, 3 Feb 2021 05:00:54 -0700
+References: <20210202113423.GA277746@embeddedor>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        <UNGLinuxDriver@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+Subject: Re: [REPORT][next] pinctrl: pinctrl-microchip-sgpio: out-of-bounds bug in sgpio_clrsetbits()
+In-Reply-To: <20210202113423.GA277746@embeddedor>
+Date:   Wed, 3 Feb 2021 13:00:47 +0100
+Message-ID: <87o8h1uzrk.fsf@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210203001414.idjrcrki7wmhndre@treble>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 02, 2021 at 06:14:14PM -0600, Josh Poimboeuf wrote:
-> > Sure, but this is what production unwinders do, and they don't require
-> > compiler plugins, right?
-> 
-> What do you mean by "production unwinders"?  Generally unwinders rely on
-> either frame pointers or DWARF, but (without validation) those aren't
-> robust enough for live patching in the kernel, so I'm not sure how this
-> is relevant.
 
-Not to mention that DWARF and consequently it's unders are horribly
-large, complex and above all fragile things.
+Gustavo A. R. Silva writes:
 
-There's a reason ORC got invented, DWARF is simlpy unacceptable and
-inadequate.
+> Hi,
+>
+> While addressing some out-of-bounds warnings, I found the following bug:
+>
+> drivers/pinctrl/pinctrl-microchip-sgpio.c:154:57: warning: array subscrip=
+t 10 is above array bounds of =E2=80=98const u8[10]=E2=80=99 {aka =E2=80=98=
+const unsigned char[10]=E2=80=99} [-Warray-bounds]
+>
+> The bug was introduced by commit be2dc859abd4 ("pinctrl: pinctrl-microchi=
+p-sgpio: Add irq support (for sparx5)"):
+>
+> 575         sgpio_clrsetbits(bank->priv, REG_INT_TRIGGER + SGPIO_MAX_BITS=
+, addr.bit,
+> 576                          BIT(addr.port), (!!(type & 0x2)) << addr.por=
+t);
+>
+> REG_INT_TRIGGER + SGPIO_MAX_BITS turns out to be 10, which is outside the=
+ boundaries
+> of priv->properties->regoff[] at line 154:
 
-Now, one avenue that has been mentioned in the past, but I've not seen
-recently, is to have objtool use DWARF as input to help it understand
-the code. At least in userspace we can rely on DWARF libs. But I'm
-fairly sure people aren't jumping up and down for having to always build
-their kernel with DWARFs on, compile speed etc..
+Hi Gustavo!
+
+Thanks for spotting this - the "+" is misplaced. I will submit a patch
+asap.
+
+Cheers,
+
+---Lars
+
+>
+> 151 static inline void sgpio_clrsetbits(struct sgpio_priv *priv,
+> 152                                     u32 rno, u32 off, u32 clear, u32 =
+set)
+> 153 {
+> 154         u32 __iomem *reg =3D &priv->regs[priv->properties->regoff[rno=
+] + off];
+> 155         u32 val =3D readl(reg);
+> 156
+> 157         val &=3D ~clear;
+> 158         val |=3D set;
+> 159
+> 160         writel(val, reg);
+> 161 }
+>
+> because priv->properties->regoff[] is an array of MAXREG elements, with M=
+AXREG
+> representing the value of 10 in the following enum:
+>
+>  28 enum {
+>  29         REG_INPUT_DATA,
+>  30         REG_PORT_CONFIG,
+>  31         REG_PORT_ENABLE,
+>  32         REG_SIO_CONFIG,
+>  33         REG_SIO_CLOCK,
+>  34         REG_INT_POLARITY,
+>  35         REG_INT_TRIGGER,
+>  36         REG_INT_ACK,
+>  37         REG_INT_ENABLE,
+>  38         REG_INT_IDENT,
+>  39         MAXREG
+>  40 };
+>
+>  52 struct sgpio_properties {
+>  53         int arch;
+>  54         int flags;
+>  55         u8 regoff[MAXREG];
+>  56 };
+>
+> Thanks
+
+
+--=20
+Lars Povlsen,
+Microchip
