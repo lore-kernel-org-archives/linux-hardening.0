@@ -2,150 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF17C433E0
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Feb 2021 12:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B85C433DB
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Feb 2021 13:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9CA64F78
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Feb 2021 12:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F2064E38
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Feb 2021 13:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234437AbhBCMCl (ORCPT
+        id S229777AbhBCNGZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 3 Feb 2021 07:02:41 -0500
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:24662 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234334AbhBCMCR (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 3 Feb 2021 07:02:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1612353736; x=1643889736;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=OY3C0w/qB4gbjMLf0w66f9/0UFos7giSpFcEYMgKDd8=;
-  b=GMdUBdeWjOwW4UurIaEaPwEdl1OhAEnRmN+Nj09lLtXiFLPRiIxU8Y2n
-   lBWyOcSCZlSloO2QsrcOssnX2pNSiLhsvl7a/W7Rll/+3O5JOjy2hycru
-   ZxeEDKZZgJYij/Dp2WjkiqRSFEAfSVn/vCa9IEq0gYAv9CpVhY3p9FwRG
-   AcptsEvuwRVGhah0P1jCDcpgJTFoGE2ZDBgd/FtA4QIJ1AtUanI0LApCW
-   u527Po42ami7Gqmouwiwv607NyBWI3M9SLWSAIS4m6Sg9NWVMnF1R0eQR
-   U/rN7qRUPrmaM+5kpWFbhLniurOdTiVUTnUCJn5UQh2VlHw/AakveliUy
-   g==;
-IronPort-SDR: sBRoDZ0vfnhXEg0SYuX0KSo6U0/qX6+tboo9q9CYqw91vf0pAY1Ujff6RlofAbD87k1gEbDY4B
- heHfViheRg9O/vWQJqhtQCC4FP0RlXGMJpD4h4Mjk4qGZxhprDkvY+bv1w75mrq2zCeI9YB4o8
- pyYnDPSRuINy7BzPGuZpLE0bgvSiYBl1yxLCQxV1fErWtcgBCZynsumE+RFx6Chsnk9BSLImsY
- 1WoZYe9MTfTQpiQDhMmJ+YHF0zqpaQB9p0Q1lyWN88ugt4b6XuWf8dhWJHkY7+14tBgO13Xh8I
- yZw=
-X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
-   d="scan'208";a="108345529"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Feb 2021 05:00:56 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 3 Feb 2021 05:00:56 -0700
-Received: from soft-dev10.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Wed, 3 Feb 2021 05:00:54 -0700
-References: <20210202113423.GA277746@embeddedor>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        <UNGLinuxDriver@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [REPORT][next] pinctrl: pinctrl-microchip-sgpio: out-of-bounds bug in sgpio_clrsetbits()
-In-Reply-To: <20210202113423.GA277746@embeddedor>
-Date:   Wed, 3 Feb 2021 13:00:47 +0100
-Message-ID: <87o8h1uzrk.fsf@microchip.com>
+        Wed, 3 Feb 2021 08:06:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229500AbhBCNGY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 3 Feb 2021 08:06:24 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 89FE964E38;
+        Wed,  3 Feb 2021 13:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612357542;
+        bh=OSBHuUI8og5Vfp1FBOELDBA9lFmC6WOrg2hzohSc4Ko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bE3VV0lsArjMZgba11em/bAn62/vpuKCIk3rBNO0syg2HdcvQ7i/ApMC6sC5QKKCV
+         WDQE7DA5yWLZxF8/CTMufJKH9eifbJslYZ7ZRHtuY1y5m3WuoiW+AfmhJQKoUOlKRq
+         TSHLPkiWb1BPJxPlnX2BjP4m5ocPnsl2HsZGu/GSSQRtOU4SM4HflfziC8yYMeV6OO
+         yzvFKIaHdXMBIzrmWVJsAClnGAqh5wJqScIOKN1GeDC2cprQg9Ynw2sqzJ+CgN6XUn
+         aKS/0P//pyCfY/ymysil2/T1msQSjHlso2GZBNGlqp+mAEWEEII72CAcRf+sZlyyXH
+         DBUEofTmHtYfw==
+Date:   Wed, 3 Feb 2021 13:04:53 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Peter Zijlstra <peterz@infradead.org>, raphael.gault@arm.com,
+        Will Deacon <will@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Bill Wendling <morbo@google.com>, swine@google.com,
+        yonghyun@google.com
+Subject: Re: [RFC PATCH 12/17] gcc-plugins: objtool: Add plugin to detect
+ switch table on arm64
+Message-ID: <20210203130453.GB4880@sirena.org.uk>
+References: <20210120173800.1660730-13-jthierry@redhat.com>
+ <20210127221557.1119744-1-ndesaulniers@google.com>
+ <20210127232651.rj3mo7c2oqh4ytsr@treble>
+ <CAKwvOdkOeENcM5X7X926sv2Xmtko=_nOPeKZ2+51s13CW1QAjw@mail.gmail.com>
+ <20210201214423.dhsma73k7ccscovm@treble>
+ <CAKwvOdmgNPSpY2oPHFr8EKGXYJbm7K9gySKFgyn4FERa9nTXmw@mail.gmail.com>
+ <671f1aa9-975e-1bda-6768-259adbdc24c8@redhat.com>
+ <CAKwvOdkqWyDbAvMJAd6gkc2QAEL7DiZg6_uRJ6NUE4tCip4Jvw@mail.gmail.com>
+ <20210203001414.idjrcrki7wmhndre@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
+Content-Disposition: inline
+In-Reply-To: <20210203001414.idjrcrki7wmhndre@treble>
+X-Cookie: Who was that masked man?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-Gustavo A. R. Silva writes:
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Hi,
->
-> While addressing some out-of-bounds warnings, I found the following bug:
->
-> drivers/pinctrl/pinctrl-microchip-sgpio.c:154:57: warning: array subscrip=
-t 10 is above array bounds of =E2=80=98const u8[10]=E2=80=99 {aka =E2=80=98=
-const unsigned char[10]=E2=80=99} [-Warray-bounds]
->
-> The bug was introduced by commit be2dc859abd4 ("pinctrl: pinctrl-microchi=
-p-sgpio: Add irq support (for sparx5)"):
->
-> 575         sgpio_clrsetbits(bank->priv, REG_INT_TRIGGER + SGPIO_MAX_BITS=
-, addr.bit,
-> 576                          BIT(addr.port), (!!(type & 0x2)) << addr.por=
-t);
->
-> REG_INT_TRIGGER + SGPIO_MAX_BITS turns out to be 10, which is outside the=
- boundaries
-> of priv->properties->regoff[] at line 154:
+On Tue, Feb 02, 2021 at 06:14:14PM -0600, Josh Poimboeuf wrote:
+> On Tue, Feb 02, 2021 at 03:01:22PM -0800, Nick Desaulniers wrote:
 
-Hi Gustavo!
+> > I wonder if PAC or BTI also make this slightly more complex?  PAC at
+> > least has implications for unwinders, IIUC.
 
-Thanks for spotting this - the "+" is misplaced. I will submit a patch
-asap.
+> What is PAC/BTI?
 
-Cheers,
+PAC and BTI are ARM architecture extensions.  PAC uses a tag in pointers
+to sign and verify them, presenting a barrier to ROP, and when BTI is
+active only specific instructions can be branched to.  Since PAC
+modifies pointers when it is active the unwinder has to undo the tagging
+to understand what's being pointed to, that's already there.
 
----Lars
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> 151 static inline void sgpio_clrsetbits(struct sgpio_priv *priv,
-> 152                                     u32 rno, u32 off, u32 clear, u32 =
-set)
-> 153 {
-> 154         u32 __iomem *reg =3D &priv->regs[priv->properties->regoff[rno=
-] + off];
-> 155         u32 val =3D readl(reg);
-> 156
-> 157         val &=3D ~clear;
-> 158         val |=3D set;
-> 159
-> 160         writel(val, reg);
-> 161 }
->
-> because priv->properties->regoff[] is an array of MAXREG elements, with M=
-AXREG
-> representing the value of 10 in the following enum:
->
->  28 enum {
->  29         REG_INPUT_DATA,
->  30         REG_PORT_CONFIG,
->  31         REG_PORT_ENABLE,
->  32         REG_SIO_CONFIG,
->  33         REG_SIO_CLOCK,
->  34         REG_INT_POLARITY,
->  35         REG_INT_TRIGGER,
->  36         REG_INT_ACK,
->  37         REG_INT_ENABLE,
->  38         REG_INT_IDENT,
->  39         MAXREG
->  40 };
->
->  52 struct sgpio_properties {
->  53         int arch;
->  54         int flags;
->  55         u8 regoff[MAXREG];
->  56 };
->
-> Thanks
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmAan3UACgkQJNaLcl1U
+h9CR6Af/a+hTHn/OAxEoRg8U3FQ8sbGU1efy2c412xJU7ZqPnGW5l96P6lNt4mXY
+85GyLjKkQYBjZkC4t20+ug13zhghrfPoQt6sN+8nBjswZiOPqd/Zpwsznos8Eut/
+8On39npKp4ur2GziLiDkTXZT77zknCoDVtH/gpEhAURL7mDcnhmesHIqEKcgbM9S
+3WvuL6K8FFnXfECt09m1s6qP8jD9h/l4CV6dIhz/Ievk6hLOpX4ucTcJGVduTqjv
+qa5xuLBioxKOC5PHo0iob9HaJClu9F5vCyPj8RdTxsyJs0TO6pW299UemUoOj40T
+Dw4EtudvTIp662frrw8FTbvr930r3Q==
+=DA8Q
+-----END PGP SIGNATURE-----
 
---=20
-Lars Povlsen,
-Microchip
+--NMuMz9nt05w80d4+--
