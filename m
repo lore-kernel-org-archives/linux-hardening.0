@@ -7,35 +7,34 @@ X-Spam-Status: No, score=-21.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF85FC433E0
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 23:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20442C433E0
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 23:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A305064DF0
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 23:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCF964E0D
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 23:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234106AbhBJX1F (ORCPT
+        id S233989AbhBJXuS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 Feb 2021 18:27:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
+        Wed, 10 Feb 2021 18:50:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234140AbhBJX0o (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 Feb 2021 18:26:44 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B226264EBB;
-        Wed, 10 Feb 2021 23:26:02 +0000 (UTC)
+        id S233744AbhBJXuK (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 10 Feb 2021 18:50:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 660B764E0B;
+        Wed, 10 Feb 2021 23:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612999563;
-        bh=z8PK7lQxdEjakhT1mHS5xkJS/hPiBnY76N9BArEFwI4=;
+        s=k20201202; t=1613000970;
+        bh=DFd7DSXy7nWVxMi3ogNh04lyt3UKSNz0wPfFB3/Ikgk=;
         h=Date:From:To:Cc:Subject:From;
-        b=VHlMdkT+qJ2LMjznNTTzv1KOzBwgPGAT53rOQwZEt75wjMHB+z6g9eUm7YrFyNFXl
-         3+C7C+HhmgUJt/9n+dyLxhXE2xHxs8nWrkcXwnPQmM+LChfhsQgOiMmR6k6xqEVw9k
-         M3IAjSHXGqTqGw+Gc7mLOwZZmnzCJoA6s8j76wAa3xQsF+3oLi1xCzzF6ljjdJp8J9
-         7omyZpecO7i8WzMbd0oIQTGH5YNFbkc2n+XtzKN3SGgPYleAz0hTvKVAb3onmc2Pwu
-         g/RWjBSasGV/n7GjhUWUpf3AoY0PXmkDBFjD8DTDDtcGWqQZNQW7CtbsYD/V4aWS75
-         GFh0igzGmUaSA==
-Date:   Wed, 10 Feb 2021 17:26:00 -0600
+        b=RwE0EQrcXAXhRu1tEHQ5OhsgYK9JITPA5slwojL1+mXW77Z8/D7tRuDy1HrBeaNDi
+         VSoq6CR/wVeUFMyFlVpogSpN78LwdeH5XGoLpMSHKSsAS39OBexHYcGz7nUI3cSElf
+         pEhdAKrevf4lPyeCXeXC2xLVhsNo2ROTK8vxd6WVAJwem1bv+G36GDRLwJXdn7jQCA
+         6HG7oiRQ/xiXWpnelxJgLOzGhYUy0qDiZUPImb86cg+e57sZh1Z4tfOz3bTKymv2N8
+         Fq6+9zJNjKrznJWXV08nvgsPXEnSBZPFkS58LWHyMzO9Br/s54B6maQz3ZGArCPUPb
+         vCxAkBdkPgidQ==
+Date:   Wed, 10 Feb 2021 17:49:27 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+To:     Alex Deucher <alexander.deucher@amd.com>,
         Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
@@ -43,9 +42,9 @@ Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/amd/pm: Replace one-element array with
- flexible-array in struct _ATOM_Vega10_GFXCLK_Dependency_Table
-Message-ID: <20210210232600.GA66488@embeddedor>
+Subject: [PATCH][next] drm/radeon/nislands_smc.h: Replace one-element array
+ with flexible-array member in struct NISLANDS_SMC_SWSTATE
+Message-ID: <20210210234927.GA68137@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -59,16 +58,37 @@ a dynamically sized set of trailing elements in a structure. Kernel code
 should always use “flexible array members”[1] for these cases. The older
 style of one-element or zero-length arrays should no longer be used[2].
 
-Use flexible-array member in struct _ATOM_Vega10_GFXCLK_Dependency_Table,
-instead of one-element array.
+Use flexible-array member in struct NISLANDS_SMC_SWSTATE, instead of
+one-element array.
 
-Also, this helps with the ongoing efforts to enable -Warray-bounds and
-fix the following warning:
+Also, this helps with the ongoing efforts to enable -Warray-bounds by
+fixing the following warnings:
 
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_hwmgr.c: In function ‘vega10_get_pp_table_entry_callback_func’:
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_hwmgr.c:3113:30: warning: array subscript 4 is above array bounds of ‘ATOM_Vega10_GFXCLK_Dependency_Record[1]’ {aka ‘struct _ATOM_Vega10_GFXCLK_Dependency_Record[1]’} [-Warray-bounds]
- 3113 |     gfxclk_dep_table->entries[4].ulClk;
-      |     ~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+drivers/gpu/drm/radeon/ni_dpm.c: In function ‘ni_convert_power_state_to_smc’:
+drivers/gpu/drm/radeon/ni_dpm.c:2521:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
+ 2521 |   smc_state->levels[i].dpm2.MaxPS =
+      |   ~~~~~~~~~~~~~~~~~^~~
+drivers/gpu/drm/radeon/ni_dpm.c:2523:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
+ 2523 |   smc_state->levels[i].dpm2.NearTDPDec = NISLANDS_DPM2_NEAR_TDP_DEC;
+      |   ~~~~~~~~~~~~~~~~~^~~
+drivers/gpu/drm/radeon/ni_dpm.c:2524:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
+ 2524 |   smc_state->levels[i].dpm2.AboveSafeInc = NISLANDS_DPM2_ABOVE_SAFE_INC;
+      |   ~~~~~~~~~~~~~~~~~^~~
+drivers/gpu/drm/radeon/ni_dpm.c:2525:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
+ 2525 |   smc_state->levels[i].dpm2.BelowSafeInc = NISLANDS_DPM2_BELOW_SAFE_INC;
+      |   ~~~~~~~~~~~~~~~~~^~~
+drivers/gpu/drm/radeon/ni_dpm.c:2526:35: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
+ 2526 |   smc_state->levels[i].stateFlags |=
+      |                                   ^~
+drivers/gpu/drm/radeon/ni_dpm.c:2526:35: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
+ 2526 |   smc_state->levels[i].stateFlags |=
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+ 2527 |    ((i != (state->performance_level_count - 1)) && power_boost_limit) ?
+      |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 2528 |    PPSMC_STATEFLAG_POWERBOOST : 0;
+      |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/radeon/ni_dpm.c:2442:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
+ 2442 |   smc_state->levels[i + 1].aT = cpu_to_be32(a_t);
 
 [1] https://en.wikipedia.org/wiki/Flexible_array_member
 [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
@@ -76,29 +96,33 @@ drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_hwmgr.c:3113:30: warning
 Link: https://github.com/KSPP/linux/issues/79
 Link: https://github.com/KSPP/linux/issues/109
 Build-tested-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/6023ff3d.WY3sSCkGRQPdPlVo%25lkp@intel.com/
+Link: https://lore.kernel.org/lkml/6023ed54.BfIY+9Uz81I6nq19%25lkp@intel.com/
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/radeon/nislands_smc.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
-index c934e9612c1b..9c479bd9a786 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
-+++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
-@@ -161,9 +161,9 @@ typedef struct _ATOM_Vega10_MCLK_Dependency_Record {
- } ATOM_Vega10_MCLK_Dependency_Record;
+diff --git a/drivers/gpu/drm/radeon/nislands_smc.h b/drivers/gpu/drm/radeon/nislands_smc.h
+index 3cf8fc0d83f4..7395cb6b3cac 100644
+--- a/drivers/gpu/drm/radeon/nislands_smc.h
++++ b/drivers/gpu/drm/radeon/nislands_smc.h
+@@ -134,11 +134,11 @@ typedef struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL NISLANDS_SMC_HW_PERFORMANCE_LEV
  
- typedef struct _ATOM_Vega10_GFXCLK_Dependency_Table {
--    UCHAR ucRevId;
--    UCHAR ucNumEntries;                                         /* Number of entries. */
--    ATOM_Vega10_GFXCLK_Dependency_Record entries[1];            /* Dynamically allocate entries. */
-+	UCHAR ucRevId;
-+	UCHAR ucNumEntries;					/* Number of entries. */
-+	ATOM_Vega10_GFXCLK_Dependency_Record entries[];		/* Dynamically allocate entries. */
- } ATOM_Vega10_GFXCLK_Dependency_Table;
+ struct NISLANDS_SMC_SWSTATE
+ {
+-    uint8_t                             flags;
+-    uint8_t                             levelCount;
+-    uint8_t                             padding2;
+-    uint8_t                             padding3;
+-    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
++	uint8_t                             flags;
++	uint8_t                             levelCount;
++	uint8_t                             padding2;
++	uint8_t                             padding3;
++	NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+ };
  
- typedef struct _ATOM_Vega10_MCLK_Dependency_Table {
+ typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
 -- 
 2.27.0
 
