@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-21.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF9DC43381
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 22:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF85FC433E0
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 23:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E16D064EDC
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 22:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A305064DF0
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 23:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233716AbhBJW6F (ORCPT
+        id S234106AbhBJX1F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 Feb 2021 17:58:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51874 "EHLO mail.kernel.org"
+        Wed, 10 Feb 2021 18:27:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233741AbhBJW6D (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 Feb 2021 17:58:03 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D51F764EBB;
-        Wed, 10 Feb 2021 22:57:21 +0000 (UTC)
+        id S234140AbhBJX0o (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 10 Feb 2021 18:26:44 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B226264EBB;
+        Wed, 10 Feb 2021 23:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612997842;
-        bh=UJfsvvn0ix5B2B8amG6o871cR0JpZNABhACiEZxCNac=;
+        s=k20201202; t=1612999563;
+        bh=z8PK7lQxdEjakhT1mHS5xkJS/hPiBnY76N9BArEFwI4=;
         h=Date:From:To:Cc:Subject:From;
-        b=ufNE5DNDh1Nz18RJZvqyxD8pqzzCI4sLMwzCHcu7bd4gyZbGlSGs7hl1FGfbrLhCN
-         TTtlr0jUuqQoiHt2McjjzMx9UD+zdntHOEkwpDeHXgekdkKtEvrplPYebrNktNFrO7
-         t38XpKrUzE8xhGYENhtb7ByvdhqLzdpDCNSITuMfFrrquD3m8HIDOete+TTEXnKJpM
-         dLHzgQU5A4fpLVbxuoAmhTVJmSKpxq1Z5plbKZ60beAO4OW2i8GANro1lLM4530d48
-         xS1oTmKteX6WCMoBJSzTGGLuulB1ZYX+EISCVqdt6hzTMR6U9t7cDoll9in8HTKmVL
-         MJ+jlPlu0NbQQ==
-Date:   Wed, 10 Feb 2021 16:57:20 -0600
+        b=VHlMdkT+qJ2LMjznNTTzv1KOzBwgPGAT53rOQwZEt75wjMHB+z6g9eUm7YrFyNFXl
+         3+C7C+HhmgUJt/9n+dyLxhXE2xHxs8nWrkcXwnPQmM+LChfhsQgOiMmR6k6xqEVw9k
+         M3IAjSHXGqTqGw+Gc7mLOwZZmnzCJoA6s8j76wAa3xQsF+3oLi1xCzzF6ljjdJp8J9
+         7omyZpecO7i8WzMbd0oIQTGH5YNFbkc2n+XtzKN3SGgPYleAz0hTvKVAb3onmc2Pwu
+         g/RWjBSasGV/n7GjhUWUpf3AoY0PXmkDBFjD8DTDDtcGWqQZNQW7CtbsYD/V4aWS75
+         GFh0igzGmUaSA==
+Date:   Wed, 10 Feb 2021 17:26:00 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+To:     Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] media: venus: hfi_cmds.h: Replace one-element array
- with flexible-array member
-Message-ID: <20210210225720.GA13710@embeddedor>
+Subject: [PATCH][next] drm/amd/pm: Replace one-element array with
+ flexible-array in struct _ATOM_Vega10_GFXCLK_Dependency_Table
+Message-ID: <20210210232600.GA66488@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -58,16 +59,16 @@ a dynamically sized set of trailing elements in a structure. Kernel code
 should always use “flexible array members”[1] for these cases. The older
 style of one-element or zero-length arrays should no longer be used[2].
 
-Use flexible-array member in struct hfi_sys_set_property_pkt instead of
-one-element array.
+Use flexible-array member in struct _ATOM_Vega10_GFXCLK_Dependency_Table,
+instead of one-element array.
 
 Also, this helps with the ongoing efforts to enable -Warray-bounds and
-fix the following warnings:
+fix the following warning:
 
-drivers/media/platform/qcom/venus/hfi_cmds.c: In function ‘pkt_sys_coverage_config’:
-drivers/media/platform/qcom/venus/hfi_cmds.c:57:11: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
-   57 |  pkt->data[1] = mode;
-      |  ~~~~~~~~~^~~
+drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_hwmgr.c: In function ‘vega10_get_pp_table_entry_callback_func’:
+drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_hwmgr.c:3113:30: warning: array subscript 4 is above array bounds of ‘ATOM_Vega10_GFXCLK_Dependency_Record[1]’ {aka ‘struct _ATOM_Vega10_GFXCLK_Dependency_Record[1]’} [-Warray-bounds]
+ 3113 |     gfxclk_dep_table->entries[4].ulClk;
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~^~~
 
 [1] https://en.wikipedia.org/wiki/Flexible_array_member
 [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
@@ -75,25 +76,29 @@ drivers/media/platform/qcom/venus/hfi_cmds.c:57:11: warning: array subscript 1 i
 Link: https://github.com/KSPP/linux/issues/79
 Link: https://github.com/KSPP/linux/issues/109
 Build-tested-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/602416da.iZqae7Dbk7nyl6OY%25lkp@intel.com/
+Link: https://lore.kernel.org/lkml/6023ff3d.WY3sSCkGRQPdPlVo%25lkp@intel.com/
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-index 83705e237f1c..327ed90a2788 100644
---- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-+++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-@@ -68,7 +68,7 @@ struct hfi_sys_release_resource_pkt {
- struct hfi_sys_set_property_pkt {
- 	struct hfi_pkt_hdr hdr;
- 	u32 num_properties;
--	u32 data[1];
-+	u32 data[];
- };
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
+index c934e9612c1b..9c479bd9a786 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
+@@ -161,9 +161,9 @@ typedef struct _ATOM_Vega10_MCLK_Dependency_Record {
+ } ATOM_Vega10_MCLK_Dependency_Record;
  
- struct hfi_sys_get_property_pkt {
+ typedef struct _ATOM_Vega10_GFXCLK_Dependency_Table {
+-    UCHAR ucRevId;
+-    UCHAR ucNumEntries;                                         /* Number of entries. */
+-    ATOM_Vega10_GFXCLK_Dependency_Record entries[1];            /* Dynamically allocate entries. */
++	UCHAR ucRevId;
++	UCHAR ucNumEntries;					/* Number of entries. */
++	ATOM_Vega10_GFXCLK_Dependency_Record entries[];		/* Dynamically allocate entries. */
+ } ATOM_Vega10_GFXCLK_Dependency_Table;
+ 
+ typedef struct _ATOM_Vega10_MCLK_Dependency_Table {
 -- 
 2.27.0
 
