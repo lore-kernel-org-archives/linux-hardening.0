@@ -5,47 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-21.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAB7C433DB
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 22:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB22C433E6
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 22:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3CB64DDA
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 22:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB5764ED0
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 22:50:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232164AbhBJWlP (ORCPT
+        id S232212AbhBJWuV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 Feb 2021 17:41:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48704 "EHLO mail.kernel.org"
+        Wed, 10 Feb 2021 17:50:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232045AbhBJWlP (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 Feb 2021 17:41:15 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5898164E8A;
-        Wed, 10 Feb 2021 22:40:33 +0000 (UTC)
+        id S232164AbhBJWuU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 10 Feb 2021 17:50:20 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C3D4564EAC;
+        Wed, 10 Feb 2021 22:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612996834;
-        bh=fv/SaLX4OCbE+8LRP74tQIUI6aMJIwiNKHsef7saXqc=;
+        s=k20201202; t=1612997380;
+        bh=9GWrJH4D5kRgV/kzJAspNT1VfbR+T+Ol4bGBDgM0IRc=;
         h=Date:From:To:Cc:Subject:From;
-        b=FkYmsTOayGNs35h2mi4e3gHIin0mbtpK2ov/p/hu4m8hqbmEhw/0DqAIgEXpBoASj
-         KQeYDvQm1/rLMnskdVd+UI5fa1ALYJu+o8LAVNiqlTRqC+rDAU0bnBwUgTesuUdd2D
-         1lgRYeXqomTOCcsk7//NjPkKqhyjGqgROfv86HXmp2VZ3Ml4zVqweoMaoRkgGwL1UW
-         fTWSdj8qf7m93PrvcAmB9YlOrhzo9EHfG5UBqUeW3d6v4wEqyD1Cvp1mXyX3qD8kEY
-         IPwFcbcmzxz/OOCaRn/3nugCqG5Ebh7sLJJ0i1DPMn2kQMBREZ4EbgSSamz452Ugha
-         a5mbXO/6nUSgQ==
-Date:   Wed, 10 Feb 2021 16:40:31 -0600
+        b=Il60EIAoC2ATFfXoB1WHPMkFGbMkSGpRkdh6Zv7EoyIuFW0pUqEiABptrMOFVqRXY
+         d4Yz1B1z3ZDPwVERGoeQr+qzNKDNK8QtMZHYncWEaooR7tIUeOc5f7o4Mm6/wOx8R9
+         ne3dUOXMNOLT3O8pWsYE0GSOV1tOeYWwSzSTvA+1i6i2Nj8Q9+ducSP+XuFCo5P59D
+         PMsxsdr9fl7jqzROgs3mfHewaSPx7tcqt9LBObOp3nl5D+zwFobPdpRi0l8RJqiFeF
+         GhpH4P2rMq9otYRHDBl/Dn5ntdVYnzfr99c6bKzvtRAUOr7b9g0FY/vVoKGTzUktT4
+         qI3RsfdzFNpvQ==
+Date:   Wed, 10 Feb 2021 16:49:37 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/amd/pm: Replace one-element array with
- flexible-array in struct SISLANDS_SMC_SWSTATE
-Message-ID: <20210210224031.GA8795@embeddedor>
+Subject: [PATCH][next] staging: rtl8723bs: Replace one-element array with
+ flexible-array member in struct ndis_80211_var_ie
+Message-ID: <20210210224937.GA11922@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -60,30 +55,46 @@ should always use “flexible array members”[1] for these cases. The older
 style of one-element or zero-length arrays should no longer be used[2].
 
 Refactor the code according to the use of a flexible-array member in
-struct SISLANDS_SMC_SWSTATE, instead of a one-element array, and use
-the struct_size() helper to calculate the size for the allocation.
+struct ndis_80211_var_ie, instead of a one-element array.
 
 Also, this helps with the ongoing efforts to enable -Warray-bounds and
 fix the following warnings:
 
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2448:20: warning: array
-subscript 1 is above array bounds of ‘SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’
-{aka ‘struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2449:20: warning: array
-subscript 1 is above array bounds of ‘SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’
-{aka ‘struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2450:20: warning: array
-subscript 1 is above array bounds of ‘SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’
-{aka ‘struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2451:20: warning: array
-subscript 1 is above array bounds of ‘SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’
-{aka ‘struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2452:20: warning: array
-subscript 1 is above array bounds of ‘SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’
-{aka ‘struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:5570:20: warning: array
-subscript 1 is above array bounds of ‘SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’
-{aka ‘struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
+  CC [M]  drivers/staging/rtl8723bs/core/rtw_wlan_util.o
+In file included from ./drivers/staging/rtl8723bs/include/drv_types.h:20,
+                 from drivers/staging/rtl8723bs/core/rtw_wlan_util.c:9:
+drivers/staging/rtl8723bs/core/rtw_wlan_util.c: In function ‘HT_caps_handler’:
+./drivers/staging/rtl8723bs/include/basic_types.h:108:11: warning: array subscript 1 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
+  108 |  (EF1BYTE(*((u8 *)(__pstart))))
+      |           ^
+./drivers/staging/rtl8723bs/include/basic_types.h:42:8: note: in definition of macro ‘EF1BYTE’
+   42 |  ((u8)(_val))
+      |        ^~~~
+./drivers/staging/rtl8723bs/include/basic_types.h:127:4: note: in expansion of macro ‘LE_P1BYTE_TO_HOST_1BYTE’
+  127 |   (LE_P1BYTE_TO_HOST_1BYTE(__pstart) >> (__bitoffset)) & \
+      |    ^~~~~~~~~~~~~~~~~~~~~~~
+./drivers/staging/rtl8723bs/include/rtw_ht.h:97:55: note: in expansion of macro ‘LE_BITS_TO_1BYTE’
+   97 | #define GET_HT_CAPABILITY_ELE_RX_STBC(_pEleStart)     LE_BITS_TO_1BYTE((_pEleStart)+1, 0, 2)
+      |                                                       ^~~~~~~~~~~~~~~~
+drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1104:58: note: in expansion of macro ‘GET_HT_CAPABILITY_ELE_RX_STBC’
+ 1104 |   if (TEST_FLAG(phtpriv->stbc_cap, STBC_HT_ENABLE_TX) && GET_HT_CAPABILITY_ELE_RX_STBC(pIE->data)) {
+      |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1051:75: warning: array subscript 2 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
+ 1051 |    if ((pmlmeinfo->HT_caps.u.HT_cap_element.AMPDU_para & 0x3) > (pIE->data[i] & 0x3))
+      |                                                                  ~~~~~~~~~^~~
+drivers/staging/rtl8723bs/core/rtw_wlan_util.c: In function ‘check_assoc_AP’:
+drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1606:19: warning: array subscript 4 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
+ 1606 |      if (pIE->data[4] == 1)
+      |          ~~~~~~~~~^~~
+drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1609:20: warning: array subscript 5 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
+ 1609 |       if (pIE->data[5] & RT_HT_CAP_USE_92SE)
+      |           ~~~~~~~~~^~~
+drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1613:19: warning: array subscript 5 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
+ 1613 |      if (pIE->data[5] & RT_HT_CAP_USE_SOFTAP)
+      |          ~~~~~~~~~^~~
+drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1617:20: warning: array subscript 6 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
+ 1617 |       if (pIE->data[6] & RT_HT_CAP_USE_JAGUAR_BCUT) {
+      |           ~~~~~~~~~^~~
 
 [1] https://en.wikipedia.org/wiki/Flexible_array_member
 [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
@@ -91,52 +102,25 @@ subscript 1 is above array bounds of ‘SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’
 Link: https://github.com/KSPP/linux/issues/79
 Link: https://github.com/KSPP/linux/issues/109
 Build-tested-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/6023be58.sk66L%2FV4vuSJI5mI%25lkp@intel.com/ 
+Link: https://lore.kernel.org/lkml/602434b8.jc5DoXJ0bmHoxgIL%25lkp@intel.com/
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/amd/pm/powerplay/si_dpm.c       |  6 ++----
- drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h | 10 +++++-----
- 2 files changed, 7 insertions(+), 9 deletions(-)
+ drivers/staging/rtl8723bs/include/wlan_bssdef.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c b/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c
-index afa1711c9620..62291358fb1c 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c
-+++ b/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c
-@@ -5715,11 +5715,9 @@ static int si_upload_sw_state(struct amdgpu_device *adev,
- 	int ret;
- 	u32 address = si_pi->state_table_start +
- 		offsetof(SISLANDS_SMC_STATETABLE, driverState);
--	u32 state_size = sizeof(SISLANDS_SMC_SWSTATE) +
--		((new_state->performance_level_count - 1) *
--		 sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
- 	SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
--
-+	size_t state_size = struct_size(smc_state, levels,
-+					new_state->performance_level_count);
- 	memset(smc_state, 0, state_size);
- 
- 	ret = si_convert_power_state_to_smc(adev, amdgpu_new_state, smc_state);
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h b/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h
-index d2930eceaf3c..0f7554052c90 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h
-+++ b/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h
-@@ -182,11 +182,11 @@ typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SISLANDS_SMC_HW_PERFORMANCE_LEV
- 
- struct SISLANDS_SMC_SWSTATE
- {
--    uint8_t                             flags;
--    uint8_t                             levelCount;
--    uint8_t                             padding2;
--    uint8_t                             padding3;
--    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
-+	uint8_t                             flags;
-+	uint8_t                             levelCount;
-+	uint8_t                             padding2;
-+	uint8_t                             padding3;
-+	SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+diff --git a/drivers/staging/rtl8723bs/include/wlan_bssdef.h b/drivers/staging/rtl8723bs/include/wlan_bssdef.h
+index ea370b2bb8db..27cd2c5d90af 100644
+--- a/drivers/staging/rtl8723bs/include/wlan_bssdef.h
++++ b/drivers/staging/rtl8723bs/include/wlan_bssdef.h
+@@ -68,7 +68,7 @@ struct ndis_802_11_fix_ie {
+ struct ndis_80211_var_ie {
+ 	u8  ElementID;
+ 	u8  Length;
+-	u8  data[1];
++	u8  data[];
  };
  
- typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
+ /* Length is the 4 bytes multiples of the sum of
 -- 
 2.27.0
 
