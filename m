@@ -2,149 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B97FC433E6
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Feb 2021 11:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2B7C433E6
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Feb 2021 20:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5076064D73
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Feb 2021 11:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1076064DF2
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Feb 2021 20:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbhBKLJu (ORCPT
+        id S231148AbhBKUiB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 Feb 2021 06:09:50 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:53858 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231152AbhBKLHm (ORCPT
+        Thu, 11 Feb 2021 15:38:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229707AbhBKUh7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 Feb 2021 06:07:42 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11BB63cP128023;
-        Thu, 11 Feb 2021 11:06:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=GiTaMAbIRvqIBQ+RpjfDs/lcGV/8NbrZwq2WqxCkbzA=;
- b=myFWP82pozcA3AqWRl9lpiwiisN+dXkaviUQjJ1reVnjNIrcbzdkEHDVnoZZLFy5jCjY
- Pe0w0jWXi1TLpJiTcDuQzfkTLmcCPor3tNKIOmysMKNOI90WmR179yXs9cXv0jo3zi8L
- xiRyaARZnz0GfSByLxhqZfYBoQk0OdsbSdOrpBVKvU72eeChs0qE2grfz1oxWK+4oC5h
- X9E2uRPuCEzBhpdfiC0SG2WSv00lqf1X+GpeFvVs/5Mdtut48zSsQhArJdP00elcvpv5
- B4yA0bnBX4NlkPtmDjVZCt7tGEL5meDLvw56QuIx7EeJ1rJ4Cc8Gsc6TxtmxH6GUhU/u +A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 36m4upwjpk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Feb 2021 11:06:43 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11BB5XVQ033690;
-        Thu, 11 Feb 2021 11:06:42 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 36j513x5d7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Feb 2021 11:06:41 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 11BB6fSS024277;
-        Thu, 11 Feb 2021 11:06:41 GMT
-Received: from kadam (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Feb 2021 03:06:40 -0800
-Date:   Thu, 11 Feb 2021 14:06:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] staging: rtl8723bs: Replace one-element array with
- flexible-array member in struct ndis_80211_var_ie
-Message-ID: <20210211110630.GG2696@kadam>
-References: <20210210224937.GA11922@embeddedor>
+        Thu, 11 Feb 2021 15:37:59 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48FC5C061786
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Feb 2021 12:37:19 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id gb24so4101551pjb.4
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Feb 2021 12:37:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9BHuk3ZYMLLx5jkh2jfjNl/0+0DOqtjeK6vm2BoIWLM=;
+        b=LTxtqY4r6M08Z++xlLlEFgEpj9xnOLzNb2VDxxPGPfaXYDd3hebnYLucoMv+4K3gZf
+         b238WdzxH+CwSavS1QG1gSIset8fIziXAmNEGRm8WcBhHZIc8YqF4r0cySYF0UC91O71
+         jQ6RHwAtVQDykw7pe64D2Kdt4hNuWSgI8fziY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9BHuk3ZYMLLx5jkh2jfjNl/0+0DOqtjeK6vm2BoIWLM=;
+        b=jqx/ojC+YOfjPD+c2OymnJ9in8WEAFIhktxiw8aST+zo6SJf78JUOQx1hryfOlz1Aj
+         jvEDuvE4tg7GUgMyEqisVjfDQujsW4jPktOtDmFmPLgUtVE4euPRwrsLyda91ALIwoyZ
+         gD5bg7rxiBwsc6iTbUwWzv5gnyHuPeO2xYJkBY9KNSpIjm90Xj9641Xw16a/sPcnEgMn
+         QtlW/F1s0szezCaZ3EkEItBPeINbyl73jWmjfRtit0LoQkKyCwaLsG6YO85HHbJUUkzM
+         G4ZiC2UnjB8dAJmJUvjDVzTyI7nF+YmicC8Xxm5he3UHJqgt3TFtlw5jH7WV+dD83DpF
+         7ueg==
+X-Gm-Message-State: AOAM533Gc1MpTsyZ6CNwDSPhxKasQnIX72UqXm9RJjYoPfudgl/yaQLq
+        nq0deWEHNEq6DXKwwPnkaMmmyA==
+X-Google-Smtp-Source: ABdhPJy4mCUr+FLNqbadedEOQ4Ml0HfxCmiOE1ccQ8KAD7UIlNx/XTmTLlNpxAd6je8BoCjpBiIL3w==
+X-Received: by 2002:a17:90a:b26:: with SMTP id 35mr5576902pjq.104.1613075838848;
+        Thu, 11 Feb 2021 12:37:18 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s1sm6009223pjz.42.2021.02.11.12.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Feb 2021 12:37:18 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-spi@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] spi: dw: Avoid stack content exposure
+Date:   Thu, 11 Feb 2021 12:37:14 -0800
+Message-Id: <20210211203714.1929862-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Patch-Hashes: v=1; h=sha256; g=c096925a3c8985c42f6bdce7c1dc78eabf32a678; i=ACsCAAtHySWi4/GyQJ4FPUqzRVqKGJseolXprmVqVo0=; m=ssMcO9+CE4ZCEW+w5qXFX6Gk6yDhsXYySpOVbzwhQXs=; p=4UX3omQoBN9kpGxRRn7MGtHp0PfSA3+8vaFM2wXCPcs=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmAllXoACgkQiXL039xtwCb2nA/9ER3 P8/seL8bh2p+NxuRip48LLX1pasXUciBYzdnQ2gykRsTcWSc74DMtIfQkvibEQwjVS7Fdk6tHg+la pWJAiy9KxO3RYWZiq2Bc42Bv0kITcvQkn9NAxUzmBRMuJzbEFp7lOErLuuPy1GJw9cIFfYDFZo3Ow ky0whXUtjbzVpeSL16pg7pRdJhFvnGguV7Dz+sShfopgUpBVdIW+/hfxhiHiMKhjxzxWQd97+4S6x 4543Ba1XY9ij/P66g9In4Q0pBT+/0C9xCBF+0QrAcW43zPlgzcFjiOdlYu4cxvrwd4Oc1maRihxy/ d7YtuBRnmM/28hzvwG0SkFzKpnOWWBS4aR5A54lVrncQp8csikHnrRh/R4s4Wyrypuhxmcc62FPwX 7o86BzsAzi+0ESiivTyHkPcP3+p4MjEjt/EMpPSJ6xlDoUWGirhLt+380ZiaDpEsUACHMIzvoWATK Oq4gW8T9HNWbYEPlMaQ3MF0Sr9Sj+SfJ7yFspxveplbW1PhG9IgYMGN31pkUFlNgkhSf/jpBIjDZr Ymhc8WMK3axbWNX7rzYiz0VfPBUse30A85+WVfzP0Dwv2lb+UdjHEQl9+f95vZAyAKZ3GS0tRgVbi zebE19BkoKQEhrL6E9yYaWWT36/73azQfHCrWPw++0aJVtPFj0ip/y4BgCh6Xa8E=
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210210224937.GA11922@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-IMR: 1
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9891 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 suspectscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102110100
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9891 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 spamscore=0 impostorscore=0 malwarescore=0 clxscore=1011
- suspectscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102110100
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 10, 2021 at 04:49:37PM -0600, Gustavo A. R. Silva wrote:
-> There is a regular need in the kernel to provide a way to declare having
-> a dynamically sized set of trailing elements in a structure. Kernel code
-> should always use “flexible array members”[1] for these cases. The older
-> style of one-element or zero-length arrays should no longer be used[2].
-> 
-> Refactor the code according to the use of a flexible-array member in
-> struct ndis_80211_var_ie, instead of a one-element array.
-> 
-> Also, this helps with the ongoing efforts to enable -Warray-bounds and
-> fix the following warnings:
-> 
->   CC [M]  drivers/staging/rtl8723bs/core/rtw_wlan_util.o
-> In file included from ./drivers/staging/rtl8723bs/include/drv_types.h:20,
->                  from drivers/staging/rtl8723bs/core/rtw_wlan_util.c:9:
-> drivers/staging/rtl8723bs/core/rtw_wlan_util.c: In function ‘HT_caps_handler’:
-> ./drivers/staging/rtl8723bs/include/basic_types.h:108:11: warning: array subscript 1 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
->   108 |  (EF1BYTE(*((u8 *)(__pstart))))
->       |           ^
-> ./drivers/staging/rtl8723bs/include/basic_types.h:42:8: note: in definition of macro ‘EF1BYTE’
->    42 |  ((u8)(_val))
->       |        ^~~~
-> ./drivers/staging/rtl8723bs/include/basic_types.h:127:4: note: in expansion of macro ‘LE_P1BYTE_TO_HOST_1BYTE’
->   127 |   (LE_P1BYTE_TO_HOST_1BYTE(__pstart) >> (__bitoffset)) & \
->       |    ^~~~~~~~~~~~~~~~~~~~~~~
-> ./drivers/staging/rtl8723bs/include/rtw_ht.h:97:55: note: in expansion of macro ‘LE_BITS_TO_1BYTE’
->    97 | #define GET_HT_CAPABILITY_ELE_RX_STBC(_pEleStart)     LE_BITS_TO_1BYTE((_pEleStart)+1, 0, 2)
->       |                                                       ^~~~~~~~~~~~~~~~
-> drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1104:58: note: in expansion of macro ‘GET_HT_CAPABILITY_ELE_RX_STBC’
->  1104 |   if (TEST_FLAG(phtpriv->stbc_cap, STBC_HT_ENABLE_TX) && GET_HT_CAPABILITY_ELE_RX_STBC(pIE->data)) {
->       |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1051:75: warning: array subscript 2 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
->  1051 |    if ((pmlmeinfo->HT_caps.u.HT_cap_element.AMPDU_para & 0x3) > (pIE->data[i] & 0x3))
->       |                                                                  ~~~~~~~~~^~~
-> drivers/staging/rtl8723bs/core/rtw_wlan_util.c: In function ‘check_assoc_AP’:
-> drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1606:19: warning: array subscript 4 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
->  1606 |      if (pIE->data[4] == 1)
->       |          ~~~~~~~~~^~~
-> drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1609:20: warning: array subscript 5 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
->  1609 |       if (pIE->data[5] & RT_HT_CAP_USE_92SE)
->       |           ~~~~~~~~~^~~
-> drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1613:19: warning: array subscript 5 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
->  1613 |      if (pIE->data[5] & RT_HT_CAP_USE_SOFTAP)
->       |          ~~~~~~~~~^~~
-> drivers/staging/rtl8723bs/core/rtw_wlan_util.c:1617:20: warning: array subscript 6 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Warray-bounds]
->  1617 |       if (pIE->data[6] & RT_HT_CAP_USE_JAGUAR_BCUT) {
->       |           ~~~~~~~~~^~~
-> 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/109
-> Build-tested-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/602434b8.jc5DoXJ0bmHoxgIL%25lkp@intel.com/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Since "data" is u32, &data is a "u32 *" type, which means pointer math
+will move in u32-sized steps. This was meant to be a byte offset, so
+cast &data to "char *" to aim the copy into the correct location.
 
-Looks okay to me.  I looked for potential issues with changing the
-sizeof the struct but couldn't find any.
+Seen with -Warray-bounds (and found by Coverity):
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+In file included from ./include/linux/string.h:269,
+                 from ./arch/powerpc/include/asm/paca.h:15,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/mutex.h:14,
+                 from ./include/linux/notifier.h:14,
+                 from ./include/linux/clk.h:14,
+                 from drivers/spi/spi-dw-bt1.c:12:
+In function 'memcpy',
+    inlined from 'dw_spi_bt1_dirmap_copy_from_map' at drivers/spi/spi-dw-bt1.c:87:3:
+./include/linux/fortify-string.h:20:29: warning: '__builtin_memcpy' offset 4 is out of the bounds [0, 4] of object 'data' with type 'u32' {aka 'unsigned int'} [-Warray-bounds]
+   20 | #define __underlying_memcpy __builtin_memcpy
+      |                             ^
+./include/linux/fortify-string.h:191:9: note: in expansion of macro '__underlying_memcpy'
+  191 |  return __underlying_memcpy(p, q, size);
+      |         ^~~~~~~~~~~~~~~~~~~
+drivers/spi/spi-dw-bt1.c: In function 'dw_spi_bt1_dirmap_copy_from_map':
+drivers/spi/spi-dw-bt1.c:77:6: note: 'data' declared here
+   77 |  u32 data;
+      |      ^~~~
 
-regards,
-dan carpenter
+Addresses-Coverity: CID 1497771 Out-of-bounds access
+Fixes: abf00907538e ("spi: dw: Add Baikal-T1 SPI Controller glue driver")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/spi/spi-dw-bt1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-dw-bt1.c b/drivers/spi/spi-dw-bt1.c
+index 4aa8596fb1f2..5be6b7b80c21 100644
+--- a/drivers/spi/spi-dw-bt1.c
++++ b/drivers/spi/spi-dw-bt1.c
+@@ -84,7 +84,7 @@ static void dw_spi_bt1_dirmap_copy_from_map(void *to, void __iomem *from, size_t
+ 	if (shift) {
+ 		chunk = min_t(size_t, 4 - shift, len);
+ 		data = readl_relaxed(from - shift);
+-		memcpy(to, &data + shift, chunk);
++		memcpy(to, (char *)&data + shift, chunk);
+ 		from += chunk;
+ 		to += chunk;
+ 		len -= chunk;
+-- 
+2.25.1
 
