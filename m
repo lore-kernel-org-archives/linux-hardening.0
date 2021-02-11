@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-21.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20442C433E0
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 23:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731C7C433DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Feb 2021 00:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBCF964E0D
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Feb 2021 23:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C24F60201
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Feb 2021 00:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233989AbhBJXuS (ORCPT
+        id S233150AbhBKAL3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 Feb 2021 18:50:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33470 "EHLO mail.kernel.org"
+        Wed, 10 Feb 2021 19:11:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233744AbhBJXuK (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 Feb 2021 18:50:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 660B764E0B;
-        Wed, 10 Feb 2021 23:49:29 +0000 (UTC)
+        id S231897AbhBKAL2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 10 Feb 2021 19:11:28 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0039864E35;
+        Thu, 11 Feb 2021 00:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613000970;
-        bh=DFd7DSXy7nWVxMi3ogNh04lyt3UKSNz0wPfFB3/Ikgk=;
+        s=k20201202; t=1613002246;
+        bh=dLQjzQ03EvB2ORG0nxF/JD98DWS+RIWvKrK0cmVR4go=;
         h=Date:From:To:Cc:Subject:From;
-        b=RwE0EQrcXAXhRu1tEHQ5OhsgYK9JITPA5slwojL1+mXW77Z8/D7tRuDy1HrBeaNDi
-         VSoq6CR/wVeUFMyFlVpogSpN78LwdeH5XGoLpMSHKSsAS39OBexHYcGz7nUI3cSElf
-         pEhdAKrevf4lPyeCXeXC2xLVhsNo2ROTK8vxd6WVAJwem1bv+G36GDRLwJXdn7jQCA
-         6HG7oiRQ/xiXWpnelxJgLOzGhYUy0qDiZUPImb86cg+e57sZh1Z4tfOz3bTKymv2N8
-         Fq6+9zJNjKrznJWXV08nvgsPXEnSBZPFkS58LWHyMzO9Br/s54B6maQz3ZGArCPUPb
-         vCxAkBdkPgidQ==
-Date:   Wed, 10 Feb 2021 17:49:27 -0600
+        b=vMCvIdhiah8EigDMgriHrVIOpclaHSQyulIqVyjcZP2jajqx/6bo0akMWs9DBCVJj
+         g3J1/tuSVOjtlezAmPSUvnJUlsRRyxpziZZBSKKsZWC4EPgE3Id3XUqVagd7GYnl7b
+         /ksCtNJYWyU0rAA0IgnOY/edm4mcuUKbpuLNiBSDWHh2usOGQT7dnxsUWs7hWKIbJA
+         bgtgzd/UQv2lzXcYtIz4dRo1nOrFKjvgBjmlnMQc1C6ibWv1dQbqafVXPwoZTgX+sl
+         DDDDV+KZOhOWoBhIU9V0M45pjtSgwDVA48PzMKTaECg+V1BLqDQhJnI3F+1kYqiMFr
+         KRVftqitUlT6w==
+Date:   Wed, 10 Feb 2021 18:10:44 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/radeon/nislands_smc.h: Replace one-element array
- with flexible-array member in struct NISLANDS_SMC_SWSTATE
-Message-ID: <20210210234927.GA68137@embeddedor>
+Subject: [PATCH][next] media: venus: hfi_msgs.h: Replace one-element arrays
+ with flexible-array members
+Message-ID: <20210211001044.GA69612@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -58,71 +58,56 @@ a dynamically sized set of trailing elements in a structure. Kernel code
 should always use “flexible array members”[1] for these cases. The older
 style of one-element or zero-length arrays should no longer be used[2].
 
-Use flexible-array member in struct NISLANDS_SMC_SWSTATE, instead of
-one-element array.
+Use flexible-array members in struct hfi_msg_sys_property_info_pkt and
+hfi_msg_session_property_info_pkt instead of one-element arrays.
 
 Also, this helps with the ongoing efforts to enable -Warray-bounds by
 fixing the following warnings:
 
-drivers/gpu/drm/radeon/ni_dpm.c: In function ‘ni_convert_power_state_to_smc’:
-drivers/gpu/drm/radeon/ni_dpm.c:2521:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
- 2521 |   smc_state->levels[i].dpm2.MaxPS =
-      |   ~~~~~~~~~~~~~~~~~^~~
-drivers/gpu/drm/radeon/ni_dpm.c:2523:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
- 2523 |   smc_state->levels[i].dpm2.NearTDPDec = NISLANDS_DPM2_NEAR_TDP_DEC;
-      |   ~~~~~~~~~~~~~~~~~^~~
-drivers/gpu/drm/radeon/ni_dpm.c:2524:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
- 2524 |   smc_state->levels[i].dpm2.AboveSafeInc = NISLANDS_DPM2_ABOVE_SAFE_INC;
-      |   ~~~~~~~~~~~~~~~~~^~~
-drivers/gpu/drm/radeon/ni_dpm.c:2525:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
- 2525 |   smc_state->levels[i].dpm2.BelowSafeInc = NISLANDS_DPM2_BELOW_SAFE_INC;
-      |   ~~~~~~~~~~~~~~~~~^~~
-drivers/gpu/drm/radeon/ni_dpm.c:2526:35: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
- 2526 |   smc_state->levels[i].stateFlags |=
-      |                                   ^~
-drivers/gpu/drm/radeon/ni_dpm.c:2526:35: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
- 2526 |   smc_state->levels[i].stateFlags |=
-      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
- 2527 |    ((i != (state->performance_level_count - 1)) && power_boost_limit) ?
-      |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 2528 |    PPSMC_STATEFLAG_POWERBOOST : 0;
-      |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/radeon/ni_dpm.c:2442:20: warning: array subscript 1 is above array bounds of ‘NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’ {aka ‘struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]’} [-Warray-bounds]
- 2442 |   smc_state->levels[i + 1].aT = cpu_to_be32(a_t);
+  CC [M]  drivers/media/platform/qcom/venus/hfi_msgs.o
+drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_sys_property_info’:
+drivers/media/platform/qcom/venus/hfi_msgs.c:246:35: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+  246 |  if (req_bytes < 128 || !pkt->data[1] || pkt->num_properties > 1)
+      |                          ~~~~~~~~~^~~
+drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_session_prop_info’:
+drivers/media/platform/qcom/venus/hfi_msgs.c:342:62: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+  342 |  if (!req_bytes || req_bytes % sizeof(*buf_req) || !pkt->data[1])
+      |                                                     ~~~~~~~~~^~~
 
 [1] https://en.wikipedia.org/wiki/Flexible_array_member
 [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
 
 Link: https://github.com/KSPP/linux/issues/79
 Link: https://github.com/KSPP/linux/issues/109
-Build-tested-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/6023ed54.BfIY+9Uz81I6nq19%25lkp@intel.com/
+Build-tested-by: <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/6023dd80.MmTeFf8SzwX0iK7%2F%25lkp@intel.com/
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/radeon/nislands_smc.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/media/platform/qcom/venus/hfi_msgs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/nislands_smc.h b/drivers/gpu/drm/radeon/nislands_smc.h
-index 3cf8fc0d83f4..7395cb6b3cac 100644
---- a/drivers/gpu/drm/radeon/nislands_smc.h
-+++ b/drivers/gpu/drm/radeon/nislands_smc.h
-@@ -134,11 +134,11 @@ typedef struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL NISLANDS_SMC_HW_PERFORMANCE_LEV
- 
- struct NISLANDS_SMC_SWSTATE
- {
--    uint8_t                             flags;
--    uint8_t                             levelCount;
--    uint8_t                             padding2;
--    uint8_t                             padding3;
--    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
-+	uint8_t                             flags;
-+	uint8_t                             levelCount;
-+	uint8_t                             padding2;
-+	uint8_t                             padding3;
-+	NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
+index 526d9f5b487b..e2d2ccfbdd24 100644
+--- a/drivers/media/platform/qcom/venus/hfi_msgs.h
++++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
+@@ -113,7 +113,7 @@ struct hfi_msg_sys_ping_ack_pkt {
+ struct hfi_msg_sys_property_info_pkt {
+ 	struct hfi_pkt_hdr hdr;
+ 	u32 num_properties;
+-	u32 data[1];
++	u32 data[];
  };
  
- typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
+ struct hfi_msg_session_load_resources_done_pkt {
+@@ -233,7 +233,7 @@ struct hfi_msg_session_parse_sequence_header_done_pkt {
+ struct hfi_msg_session_property_info_pkt {
+ 	struct hfi_session_hdr_pkt shdr;
+ 	u32 num_properties;
+-	u32 data[1];
++	u32 data[];
+ };
+ 
+ struct hfi_msg_session_release_resources_done_pkt {
 -- 
 2.27.0
 
