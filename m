@@ -7,43 +7,47 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ED9C433E0
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 10:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E86C433E0
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 12:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5AE64E57
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 10:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDEF61493
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 12:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbhBLKmS (ORCPT
+        id S231437AbhBLMYs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 12 Feb 2021 05:42:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54028 "EHLO mail.kernel.org"
+        Fri, 12 Feb 2021 07:24:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230311AbhBLKlJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 12 Feb 2021 05:41:09 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5876864E6B;
-        Fri, 12 Feb 2021 10:40:24 +0000 (UTC)
+        id S230249AbhBLMXy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 12 Feb 2021 07:23:54 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D2E2464E13;
+        Fri, 12 Feb 2021 12:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613126425;
-        bh=xzoXFaoeYDTEMR3GxWVBJHXTFKlnfSz6FIU6JbD02kg=;
+        s=k20201202; t=1613132593;
+        bh=hcZRkQSjgnShWQZ1idUAkK6Rpsxk85/eOREJlPAgw9Y=;
         h=Date:From:To:Cc:Subject:From;
-        b=OdS1E/690pVqNSZvz1hzx9/9wmwurZzzpcY4AbVAjTN0P4zswcp6MDU2ezyVlqltY
-         vjY1YHqdStftk1JhFtRgM76uLU0EmIHPwNWtlEWYO3ndST1KJ3YsrPHdA+uvSTOEnx
-         I8elamVniEYZmov6Cw8uvECwV/WekrStAWPeAyriL/hGurbRCIG8LreOGUyAnpLAQV
-         RMGj0N6kl+/Gpl5L8M/h+OPtCTliU05lHFDlx9tIbAWGpXWB8QWj2eq1TxEO91LXIs
-         bUZ2rWMkjznQoAGv8nFgdRpj7J5F/D1XdqMHNJpdlRW+nd+ayjkScO1Bd3g2RW755h
-         +cuefkoNQrvrw==
-Date:   Fri, 12 Feb 2021 04:40:22 -0600
+        b=KBBPfYYPR2jxf/k+MfdxvacCYEV5z9Ds9nL5QZ6Mm7zqzGzflAdDqZ4bZD/L7ioCF
+         7bgFKHQXQqkWEdOme840w8fH1mkVN8oZzCpViPs9PH+y5QFb59PQmrBnAMheGRVwmu
+         BlJVSrtGfHNoQQmXhTsz5x6EsJ7r0rW0bo4+5XjWkP7KXrFWz5ORch09+a7up3ALVI
+         yR2d03SA0boHzMgPvImJ7rDHIzF9zJB1CKNa92ypU6tR8A36ihC/YYW2khEtVK/5VS
+         zJlg7Dmf2UQdk1If9G5zcVznxKYOZon5zY/MmQhjTnBy0iF/VPw2/gu0cyagIgkciT
+         Cr7J6100nlHaA==
+Date:   Fri, 12 Feb 2021 06:23:10 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+To:     Sunil Goutham <sgoutham@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>,
+        Subbaraya Sundeep <sbhatta@marvell.com>,
+        hariprasad <hkelam@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Christina Jacob <cjacob@marvell.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] mtd: physmap: physmap-bt1-rom: Fix unintentional stack access
-Message-ID: <20210212104022.GA242669@embeddedor>
+Subject: [PATCH][next] octeontx2-pf: Fix out-of-bounds read in
+ otx2_get_fecparam()
+Message-ID: <20210212122310.GA262609@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -51,34 +55,47 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Cast &data to (char *) in order to avoid unintentionally accessing
-the stack.
+Code at line 967 implies that rsp->fwdata.supported_fec may be up to 4:
 
-Notice that data is of type u32, so any increment to &data
-will be in the order of 4-byte chunks, and this piece of code
-is actually intended to be a byte offset.
+ 967: if (rsp->fwdata.supported_fec <= FEC_MAX_INDEX)
 
-Fixes: b3e79e7682e0 ("mtd: physmap: Add Baikal-T1 physically mapped ROM support")
-Addresses-Coverity-ID: 1497765 ("Out-of-bounds access")
-Cc: stable@vger.kernel.org
+If rsp->fwdata.supported_fec evaluates to 4, then there is an
+out-of-bounds read at line 971 because fec is an array with
+a maximum of 4 elements:
+
+ 954         const int fec[] = {
+ 955                 ETHTOOL_FEC_OFF,
+ 956                 ETHTOOL_FEC_BASER,
+ 957                 ETHTOOL_FEC_RS,
+ 958                 ETHTOOL_FEC_BASER | ETHTOOL_FEC_RS};
+ 959 #define FEC_MAX_INDEX 4
+
+ 971: fecparam->fec = fec[rsp->fwdata.supported_fec];
+
+Fix this by properly indexing fec[] with rsp->fwdata.supported_fec - 1.
+In this case the proper indexes 0 to 3 are used when
+rsp->fwdata.supported_fec evaluates to a range of 1 to 4, correspondingly.
+
+Fixes: d0cf9503e908 ("octeontx2-pf: ethtool fec mode support")
+Addresses-Coverity-ID: 1501722 ("Out-of-bounds read")
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/mtd/maps/physmap-bt1-rom.c | 2 +-
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/maps/physmap-bt1-rom.c b/drivers/mtd/maps/physmap-bt1-rom.c
-index a35450002284..58782cfaf71c 100644
---- a/drivers/mtd/maps/physmap-bt1-rom.c
-+++ b/drivers/mtd/maps/physmap-bt1-rom.c
-@@ -79,7 +79,7 @@ static void __xipram bt1_rom_map_copy_from(struct map_info *map,
- 	if (shift) {
- 		chunk = min_t(ssize_t, 4 - shift, len);
- 		data = readl_relaxed(src - shift);
--		memcpy(to, &data + shift, chunk);
-+		memcpy(to, (char *)&data + shift, chunk);
- 		src += chunk;
- 		to += chunk;
- 		len -= chunk;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
+index 237e5d3321d4..f7e8ada32a26 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
+@@ -968,7 +968,7 @@ static int otx2_get_fecparam(struct net_device *netdev,
+ 		if (!rsp->fwdata.supported_fec)
+ 			fecparam->fec = ETHTOOL_FEC_NONE;
+ 		else
+-			fecparam->fec = fec[rsp->fwdata.supported_fec];
++			fecparam->fec = fec[rsp->fwdata.supported_fec - 1];
+ 	}
+ 	return 0;
+ }
 -- 
 2.27.0
 
