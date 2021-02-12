@@ -2,100 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E86C433E0
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 12:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE145C433DB
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 14:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDEF61493
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 12:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925D360C41
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 14:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231437AbhBLMYs (ORCPT
+        id S231604AbhBLODg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 12 Feb 2021 07:24:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52392 "EHLO mail.kernel.org"
+        Fri, 12 Feb 2021 09:03:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230249AbhBLMXy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 12 Feb 2021 07:23:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D2E2464E13;
-        Fri, 12 Feb 2021 12:23:12 +0000 (UTC)
+        id S230090AbhBLODf (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 12 Feb 2021 09:03:35 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DC76664E36;
+        Fri, 12 Feb 2021 14:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613132593;
-        bh=hcZRkQSjgnShWQZ1idUAkK6Rpsxk85/eOREJlPAgw9Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KBBPfYYPR2jxf/k+MfdxvacCYEV5z9Ds9nL5QZ6Mm7zqzGzflAdDqZ4bZD/L7ioCF
-         7bgFKHQXQqkWEdOme840w8fH1mkVN8oZzCpViPs9PH+y5QFb59PQmrBnAMheGRVwmu
-         BlJVSrtGfHNoQQmXhTsz5x6EsJ7r0rW0bo4+5XjWkP7KXrFWz5ORch09+a7up3ALVI
-         yR2d03SA0boHzMgPvImJ7rDHIzF9zJB1CKNa92ypU6tR8A36ihC/YYW2khEtVK/5VS
-         zJlg7Dmf2UQdk1If9G5zcVznxKYOZon5zY/MmQhjTnBy0iF/VPw2/gu0cyagIgkciT
-         Cr7J6100nlHaA==
-Date:   Fri, 12 Feb 2021 06:23:10 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Sunil Goutham <sgoutham@marvell.com>,
-        Geetha sowjanya <gakula@marvell.com>,
-        Subbaraya Sundeep <sbhatta@marvell.com>,
-        hariprasad <hkelam@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Christina Jacob <cjacob@marvell.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] octeontx2-pf: Fix out-of-bounds read in
- otx2_get_fecparam()
-Message-ID: <20210212122310.GA262609@embeddedor>
+        s=k20201202; t=1613138574;
+        bh=kUwdJtqutN1Y8vivFBVWnaXW5KlfUyHYtKAdl9LJ8Z4=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=RDEgxOa7pGvR8TR468bOpzC6A9Adb+oDezAz+g+eFIV8LL4i4oluz1FTlRK++phsP
+         YM8fZQXKnWCAxkmYsJA5iZsa4jpEVxYR4PI75ErW0zqY2fOlQegscJtbKXegrojV4l
+         70BkGtBvylKzPIzS9nLKbnfKs0Fe4Ky+Q+fxFXzb9DtX+FPddjKOzH8YVL5sN9RmI8
+         hGCd1WeLLlEr63yO6xTegYJXxEvHP9R2pUFSNifIQUBJN5musT2m7Btzb+Z4JF646o
+         10G0xCWFSSEQdYKsSpIiYOKZGgCFF8mdMeGfHPCr/LFb1V71N8ycSNZOhrQ9fwyJCM
+         GrnhZW8n3jYQA==
+From:   Mark Brown <broonie@kernel.org>
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        linux-spi@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20210211203714.1929862-1-keescook@chromium.org>
+References: <20210211203714.1929862-1-keescook@chromium.org>
+Subject: Re: [PATCH] spi: dw: Avoid stack content exposure
+Message-Id: <161313851920.18278.11236023694636938013.b4-ty@kernel.org>
+Date:   Fri, 12 Feb 2021 14:01:59 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Code at line 967 implies that rsp->fwdata.supported_fec may be up to 4:
+On Thu, 11 Feb 2021 12:37:14 -0800, Kees Cook wrote:
+> Since "data" is u32, &data is a "u32 *" type, which means pointer math
+> will move in u32-sized steps. This was meant to be a byte offset, so
+> cast &data to "char *" to aim the copy into the correct location.
+> 
+> Seen with -Warray-bounds (and found by Coverity):
+> 
+> In file included from ./include/linux/string.h:269,
+>                  from ./arch/powerpc/include/asm/paca.h:15,
+>                  from ./arch/powerpc/include/asm/current.h:13,
+>                  from ./include/linux/mutex.h:14,
+>                  from ./include/linux/notifier.h:14,
+>                  from ./include/linux/clk.h:14,
+>                  from drivers/spi/spi-dw-bt1.c:12:
+> In function 'memcpy',
+>     inlined from 'dw_spi_bt1_dirmap_copy_from_map' at drivers/spi/spi-dw-bt1.c:87:3:
+> ./include/linux/fortify-string.h:20:29: warning: '__builtin_memcpy' offset 4 is out of the bounds [0, 4] of object 'data' with type 'u32' {aka 'unsigned int'} [-Warray-bounds]
+>    20 | #define __underlying_memcpy __builtin_memcpy
+>       |                             ^
+> ./include/linux/fortify-string.h:191:9: note: in expansion of macro '__underlying_memcpy'
+>   191 |  return __underlying_memcpy(p, q, size);
+>       |         ^~~~~~~~~~~~~~~~~~~
+> drivers/spi/spi-dw-bt1.c: In function 'dw_spi_bt1_dirmap_copy_from_map':
+> drivers/spi/spi-dw-bt1.c:77:6: note: 'data' declared here
+>    77 |  u32 data;
+>       |      ^~~~
 
- 967: if (rsp->fwdata.supported_fec <= FEC_MAX_INDEX)
+Applied to
 
-If rsp->fwdata.supported_fec evaluates to 4, then there is an
-out-of-bounds read at line 971 because fec is an array with
-a maximum of 4 elements:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
- 954         const int fec[] = {
- 955                 ETHTOOL_FEC_OFF,
- 956                 ETHTOOL_FEC_BASER,
- 957                 ETHTOOL_FEC_RS,
- 958                 ETHTOOL_FEC_BASER | ETHTOOL_FEC_RS};
- 959 #define FEC_MAX_INDEX 4
+Thanks!
 
- 971: fecparam->fec = fec[rsp->fwdata.supported_fec];
+[1/1] spi: dw: Avoid stack content exposure
+      commit: 386f771aad15dd535f2368b4adc9958c0160edd4
 
-Fix this by properly indexing fec[] with rsp->fwdata.supported_fec - 1.
-In this case the proper indexes 0 to 3 are used when
-rsp->fwdata.supported_fec evaluates to a range of 1 to 4, correspondingly.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Fixes: d0cf9503e908 ("octeontx2-pf: ethtool fec mode support")
-Addresses-Coverity-ID: 1501722 ("Out-of-bounds read")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-index 237e5d3321d4..f7e8ada32a26 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-@@ -968,7 +968,7 @@ static int otx2_get_fecparam(struct net_device *netdev,
- 		if (!rsp->fwdata.supported_fec)
- 			fecparam->fec = ETHTOOL_FEC_NONE;
- 		else
--			fecparam->fec = fec[rsp->fwdata.supported_fec];
-+			fecparam->fec = fec[rsp->fwdata.supported_fec - 1];
- 	}
- 	return 0;
- }
--- 
-2.27.0
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
