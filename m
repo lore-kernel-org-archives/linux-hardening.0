@@ -2,104 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE145C433DB
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 14:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC3EC433DB
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 14:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 925D360C41
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 14:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5666023B
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Feb 2021 14:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231604AbhBLODg (ORCPT
+        id S231718AbhBLONI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 12 Feb 2021 09:03:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230090AbhBLODf (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 12 Feb 2021 09:03:35 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DC76664E36;
-        Fri, 12 Feb 2021 14:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613138574;
-        bh=kUwdJtqutN1Y8vivFBVWnaXW5KlfUyHYtKAdl9LJ8Z4=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=RDEgxOa7pGvR8TR468bOpzC6A9Adb+oDezAz+g+eFIV8LL4i4oluz1FTlRK++phsP
-         YM8fZQXKnWCAxkmYsJA5iZsa4jpEVxYR4PI75ErW0zqY2fOlQegscJtbKXegrojV4l
-         70BkGtBvylKzPIzS9nLKbnfKs0Fe4Ky+Q+fxFXzb9DtX+FPddjKOzH8YVL5sN9RmI8
-         hGCd1WeLLlEr63yO6xTegYJXxEvHP9R2pUFSNifIQUBJN5musT2m7Btzb+Z4JF646o
-         10G0xCWFSSEQdYKsSpIiYOKZGgCFF8mdMeGfHPCr/LFb1V71N8ycSNZOhrQ9fwyJCM
-         GrnhZW8n3jYQA==
-From:   Mark Brown <broonie@kernel.org>
-To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        linux-spi@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20210211203714.1929862-1-keescook@chromium.org>
-References: <20210211203714.1929862-1-keescook@chromium.org>
-Subject: Re: [PATCH] spi: dw: Avoid stack content exposure
-Message-Id: <161313851920.18278.11236023694636938013.b4-ty@kernel.org>
-Date:   Fri, 12 Feb 2021 14:01:59 +0000
+        Fri, 12 Feb 2021 09:13:08 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57331 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231603AbhBLONC (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 12 Feb 2021 09:13:02 -0500
+X-Originating-IP: 90.89.99.36
+Received: from xps13 (lfbn-tou-1-1536-36.w90-89.abo.wanadoo.fr [90.89.99.36])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0E61420011;
+        Fri, 12 Feb 2021 14:12:17 +0000 (UTC)
+Date:   Fri, 12 Feb 2021 15:12:16 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mtd: physmap: physmap-bt1-rom: Fix unintentional stack
+ access
+Message-ID: <20210212151216.31a09ad1@xps13>
+In-Reply-To: <20210212104022.GA242669@embeddedor>
+References: <20210212104022.GA242669@embeddedor>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 11 Feb 2021 12:37:14 -0800, Kees Cook wrote:
-> Since "data" is u32, &data is a "u32 *" type, which means pointer math
-> will move in u32-sized steps. This was meant to be a byte offset, so
-> cast &data to "char *" to aim the copy into the correct location.
+Hi Gustavo,
+
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote on Fri, 12 Feb 2021
+04:40:22 -0600:
+
+> Cast &data to (char *) in order to avoid unintentionally accessing
+> the stack.
 > 
-> Seen with -Warray-bounds (and found by Coverity):
+> Notice that data is of type u32, so any increment to &data
+> will be in the order of 4-byte chunks, and this piece of code
+> is actually intended to be a byte offset.
+
+I don't have the same reading. I don't say that Coverity report is
+wrong, but let's discuss this a bit further.
+
+Given that &data is of type u32 *, you say that "&data + shift"
+produces increments of 4-bytes, ie. we would access "&data + 4 *
+shift"? Because I don't think this is the case (again, I may be wrong).
+
+I'm sure this would be the case if we dereferenced data like
+data[shift] though, but in this case I don't see what this cast is
+fixing. Can you enlighten me?
+
+Could the out-of-bounds warning come from the fact that shift
+might be bigger than the data array spread?
+
+> Fixes: b3e79e7682e0 ("mtd: physmap: Add Baikal-T1 physically mapped ROM support")
+> Addresses-Coverity-ID: 1497765 ("Out-of-bounds access")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/mtd/maps/physmap-bt1-rom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> In file included from ./include/linux/string.h:269,
->                  from ./arch/powerpc/include/asm/paca.h:15,
->                  from ./arch/powerpc/include/asm/current.h:13,
->                  from ./include/linux/mutex.h:14,
->                  from ./include/linux/notifier.h:14,
->                  from ./include/linux/clk.h:14,
->                  from drivers/spi/spi-dw-bt1.c:12:
-> In function 'memcpy',
->     inlined from 'dw_spi_bt1_dirmap_copy_from_map' at drivers/spi/spi-dw-bt1.c:87:3:
-> ./include/linux/fortify-string.h:20:29: warning: '__builtin_memcpy' offset 4 is out of the bounds [0, 4] of object 'data' with type 'u32' {aka 'unsigned int'} [-Warray-bounds]
->    20 | #define __underlying_memcpy __builtin_memcpy
->       |                             ^
-> ./include/linux/fortify-string.h:191:9: note: in expansion of macro '__underlying_memcpy'
->   191 |  return __underlying_memcpy(p, q, size);
->       |         ^~~~~~~~~~~~~~~~~~~
-> drivers/spi/spi-dw-bt1.c: In function 'dw_spi_bt1_dirmap_copy_from_map':
-> drivers/spi/spi-dw-bt1.c:77:6: note: 'data' declared here
->    77 |  u32 data;
->       |      ^~~~
-
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/1] spi: dw: Avoid stack content exposure
-      commit: 386f771aad15dd535f2368b4adc9958c0160edd4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> diff --git a/drivers/mtd/maps/physmap-bt1-rom.c b/drivers/mtd/maps/physmap-bt1-rom.c
+> index a35450002284..58782cfaf71c 100644
+> --- a/drivers/mtd/maps/physmap-bt1-rom.c
+> +++ b/drivers/mtd/maps/physmap-bt1-rom.c
+> @@ -79,7 +79,7 @@ static void __xipram bt1_rom_map_copy_from(struct map_info *map,
+>  	if (shift) {
+>  		chunk = min_t(ssize_t, 4 - shift, len);
+>  		data = readl_relaxed(src - shift);
+> -		memcpy(to, &data + shift, chunk);
+> +		memcpy(to, (char *)&data + shift, chunk);
+>  		src += chunk;
+>  		to += chunk;
+>  		len -= chunk;
 
 Thanks,
-Mark
+Miquèl
