@@ -2,204 +2,207 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E05C433DB
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Feb 2021 18:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4DFC433E6
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Feb 2021 18:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA8264DFF
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Feb 2021 18:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CC864E30
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Feb 2021 18:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbhBOSND (ORCPT
+        id S230368AbhBOS5D (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Feb 2021 13:13:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45252 "EHLO
+        Mon, 15 Feb 2021 13:57:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbhBOSNC (ORCPT
+        with ESMTP id S230080AbhBOS5C (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Feb 2021 13:13:02 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 077E4C061574;
-        Mon, 15 Feb 2021 10:12:22 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id h26so11909470lfm.1;
-        Mon, 15 Feb 2021 10:12:21 -0800 (PST)
+        Mon, 15 Feb 2021 13:57:02 -0500
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3AFC061756;
+        Mon, 15 Feb 2021 10:56:21 -0800 (PST)
+Received: by mail-oi1-x22b.google.com with SMTP id y199so8759034oia.4;
+        Mon, 15 Feb 2021 10:56:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0c98g3eufcJurfy0Y/YTjQsVsPETkx4NO8zQfg5IgbA=;
-        b=dbDOr6gsxDIzYBObdb47g92Fw0I8kZmiQZF5SxLFATwX7qHRR0Gneisep+6XbjU41p
-         K0PWrmNL9h28tGzOGBJuwy0ILkFUKXxKTFtOdiZfo8ECticWgoYdaiThIbv3CQY/Iz8L
-         sO9TNG/0kGx9W9PH83eQt+7FkOOOe+F/wplCb+03lowdKs9jDLRvOg2dm0ltoYHnmw8A
-         Nn86uRpxOLX+/Z2ou1YZU9oTTinSc8/vxQSOwulkXlttkMQQmJ/4Zy5HRZE0gkC/aAZd
-         uqdHJSr/E/BfGpdvnulpE0V8/sm+fcA99kJTARYaAuczENQZ9koCIAIJAFMKGOaCeZUj
-         xmhg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fXBT4xpZ44BWopiCzA5BdkSekv48SAWYnj4iW61mQF0=;
+        b=eJgS51jUdUles8PvvEPpAYZzFmm/tLLusqrLPgnqRR727XPOAnyZ25rbFljT37+k+Y
+         +opKtAStkmGcOEosBRVvZzmSvwyvemfAQKfML4f6nkxk2Jr96gxGMDCZSmraPyotkvzL
+         wP3DDtt2lqMEnbn6A5OxJU9+UlR0vQ80SdXhlgdf9JCTWbEyRqClHQRXPLlEocqKsx+O
+         s7Jakamssj57+2F88MTAg3o5KZ/faw8Y2uZLuhlszC3IvCpNclSIVckrqv3xu2gzgSBg
+         FZjWDEcaikSN4IAkOJrJfCJ5mB06lrUi/5sma/WFO9Ns46IMtygHDuZbraqxj4mCSlMI
+         UAaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0c98g3eufcJurfy0Y/YTjQsVsPETkx4NO8zQfg5IgbA=;
-        b=PHjvDUad+gsU3iJbDs2k2oOhBToK6FWE5Hs9KWkOFRyPXq8to0VSk2F63zIBtJ8rvu
-         Y4lqX/yk6ElG7GbguYaKDdqJjg+I6Dc9/m0mI6cMWo+TMX6WZvrAEOLLfOl1OpaQDxCH
-         JBfDok7b55r6AwpzNzaXDFfDZjqvD7Vw2SCpk/JCKjz9vzt2C6Aw7R6LnOh0Se2hcv52
-         pvi2WayTCuuzpkWKKHBSF9oM+xyDkt7kq0rh7zeTM9T+I1skhW5ZgH5Euj/BtuA5kdAq
-         4VRUpK7DlQhdZAaj9a0iYrauNU9ppHJmq7pBgC/eqSrIsUT65GoOOx/PmMkWp+Zg2ZXy
-         6XCA==
-X-Gm-Message-State: AOAM530UXXFpRcEjPr0OVT5KtEMz5kyQo3m76pGNYSHkVQvJ0c9QknOQ
-        XDI+/lbGWdeW2xPWsYHdxUA=
-X-Google-Smtp-Source: ABdhPJy8vOz1vhoROPpR1yZSbnTTkBTTB69R0qN0ld5f+xVn9u3aFZeRUYioGb9a53KYbiJLQtHvdg==
-X-Received: by 2002:a19:8006:: with SMTP id b6mr9029866lfd.625.1613412740471;
-        Mon, 15 Feb 2021 10:12:20 -0800 (PST)
-Received: from [192.168.1.39] (88-114-223-25.elisa-laajakaista.fi. [88.114.223.25])
-        by smtp.gmail.com with ESMTPSA id s4sm2841338lfp.281.2021.02.15.10.12.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Feb 2021 10:12:19 -0800 (PST)
-Subject: Re: [PATCH v2] mm/vmalloc: randomize vmalloc() allocations
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>
-References: <20201212175635.4217-1-toiwoton@gmail.com>
- <795016db-93fa-72ea-f5dd-16b9c56a62e9@gmail.com>
- <20210213115521.GA1907@pc638.lan>
- <8d60ba59-1d16-bb76-f3d3-f1b0c5a5b306@gmail.com>
- <20210215125154.GA2259@pc638.lan>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <325de13f-887f-4a13-df04-7db1ad6f9084@gmail.com>
-Date:   Mon, 15 Feb 2021 20:12:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fXBT4xpZ44BWopiCzA5BdkSekv48SAWYnj4iW61mQF0=;
+        b=CtYrtyoYQ3HUnV7BesiGGKedmWHJeG9tjtTmBraTNmDzyXXsfyQMlJ/+8x+yTsCYNo
+         clOzzojOuKW+9tyrgFNO0r4ZST9h4VL7stbhgp1hOzUX7pi08kmO3azrnYQi8v7QvOTQ
+         +5hw6zxyKCAbw7ByhOYgmqdEEG1YBNqhZBLGLnsuwgeaUTqFasQNR8a98aNWzSDuPSd8
+         uGK16SovtEzfX3C3MuKnMKx+CJaeimvcEGc4odF7lbwDhX7F+1abLQymBtp+oo0Cwfpq
+         UV64U+LU37txsffo86Cl2Ns+JXq+zi4Mp/3PFQjHjJ3L2XGqmlRIoPtN68LXtZE5PP0w
+         efow==
+X-Gm-Message-State: AOAM531yQ5ke30rGc14MV9rdgWeQhI1qBGrwi/CSZwLsXvUooKzgxyAe
+        ZcvnyhKq1qN0fVr4JmFPyHkaMr5/3PFIx8/DauFydhFP
+X-Google-Smtp-Source: ABdhPJwAcslDrIFamFjOx2UkgaG9PKUaghk0g+H6lzKFW3oWgJWZlWyGZ+fN+3cARHbKKz8K5MIAReI1IfDg8Jc/S7Y=
+X-Received: by 2002:aca:fc0c:: with SMTP id a12mr200788oii.5.1613415381226;
+ Mon, 15 Feb 2021 10:56:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210215125154.GA2259@pc638.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210210224031.GA8795@embeddedor>
+In-Reply-To: <20210210224031.GA8795@embeddedor>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 15 Feb 2021 13:56:10 -0500
+Message-ID: <CADnq5_M+dCHFDoOS3dSTMCTsk7mH=dFSss=u91VwwVuFA=9t6g@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/amd/pm: Replace one-element array with
+ flexible-array in struct SISLANDS_SMC_SWSTATE
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-hardening@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 15.2.2021 14.51, Uladzislau Rezki wrote:
-> On Sat, Feb 13, 2021 at 03:43:39PM +0200, Topi Miettinen wrote:
->> On 13.2.2021 13.55, Uladzislau Rezki wrote:
->>>> Hello,
->>>>
->>>> Is there a chance of getting this reviewed and maybe even merged, please?
->>>>
->>>> -Topi
->>>>
->>> I can review it and help with it. But before that i would like to
->>> clarify if such "randomization" is something that you can not leave?
->>
->> This happens to interest me and I don't mind the performance loss since I
->> think there's also an improvement in security. I suppose (perhaps wrongly)
->> that others may also be interested in such features. For example, also
->> `nosmt` can take away a big part of CPU processing capability.
->>
-> OK. I was thinking about if it is done for some production systems or
-> some specific projects where this is highly demanded.
-> 
->>
->> Does this
->> answer your question, I'm not sure what you mean with leaving? I hope you
->> would not want me to go away and leave?
->>
-> No-no, that was a type :) Sorry for that. I just wanted to figure out
-> who really needs it.
+On Wed, Feb 10, 2021 at 5:40 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> There is a regular need in the kernel to provide a way to declare having
+> a dynamically sized set of trailing elements in a structure. Kernel code
+> should always use =E2=80=9Cflexible array members=E2=80=9D[1] for these c=
+ases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
+>
+> Refactor the code according to the use of a flexible-array member in
+> struct SISLANDS_SMC_SWSTATE, instead of a one-element array, and use
+> the struct_size() helper to calculate the size for the allocation.
+>
+> Also, this helps with the ongoing efforts to enable -Warray-bounds and
+> fix the following warnings:
+>
+> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2448:20: warning: arr=
+ay
+> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
+_LEVEL[1]=E2=80=99
+> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
+ray-bounds]
+> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2449:20: warning: arr=
+ay
+> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
+_LEVEL[1]=E2=80=99
+> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
+ray-bounds]
+> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2450:20: warning: arr=
+ay
+> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
+_LEVEL[1]=E2=80=99
+> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
+ray-bounds]
+> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2451:20: warning: arr=
+ay
+> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
+_LEVEL[1]=E2=80=99
+> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
+ray-bounds]
+> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2452:20: warning: arr=
+ay
+> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
+_LEVEL[1]=E2=80=99
+> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
+ray-bounds]
+> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:5570:20: warning: arr=
+ay
+> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
+_LEVEL[1]=E2=80=99
+> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
+ray-bounds]
+>
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-len=
+gth-and-one-element-arrays
+>
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/109
+> Build-tested-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/6023be58.sk66L%2FV4vuSJI5mI%25lkp@inte=
+l.com/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-It's not needed. The goal is just to increase address space layout 
-randomization, to harden the system against attacks which depend on 
-predictable kernel memory layout. This should not be used when 
-performance is more important than hardening.
+Applied.  Thanks!
 
->>> For example on 32bit system vmalloc space is limited, such randomization
->>> can slow down it, also it will lead to failing of allocations much more,
->>> thus it will require repeating with different offset.
->>
->> I would not use `randomize_vmalloc=1` on a 32 bit systems, because in
->> addition to slow down, the address space could become so fragmented that
->> large allocations may not fit anymore. Perhaps the documentation should warn
->> about this more clearly. I haven't tried this on a 32 bit system though and
->> there the VM layout is very different.
->>
-> For 32-bit systems that would introduce many issues not limited to fragmentations.
-> 
->> __alloc_vm_area() scans the vmalloc space starting from a random address up
->> to end of the area. If this fails, the scan is restarted from the bottom of
->> the area up to this random address. Thus the entire area is scanned.
->>
->>> Second. There is a space or region for modules. Using various offsets
->>> can waste of that memory, thus can lead to failing of module loading.
->>
->> The allocations for modules (or BPF code) are also randomized within their
->> dedicated space. I don't think other allocations should affect module space.
->> Within this module space, fragmentation may also be possible because there's
->> only 1,5GB available. The largest allocation on my system seems to be 11M at
->> the moment, others are 1M or below and most are 8k. The possibility of an
->> allocation failing probably depends on the fill ratio. In practice haven't
->> seen problems with this.
->>
-> I think it depends on how many modules your system loads. If it is a big
-> system it might be that such fragmentation and wasting of module space
-> may lead to modules loading.
+Alex
 
-# echo 1 > /proc/sys/kernel/kptr_restrict
-# grep 0xffffffff /proc/vmallocinfo | awk '{s=s+$2;c++} END {print 
-"total\tcount\tavg\tof 1536MB";print s,c,s/c,s/1536/1024/1024}'
-total   count   avg     of 1536MB
-34201600 1022 33465.4 0.0212351
 
-I think that on my system fragmentation shouldn't be a danger since only 
-2% (34MB) of the 1536MB available is used for the 1022 module/BPF blocks.
-
->> It would be possible to have finer control, for example
->> `randomize_vmalloc=3` (1 = general vmalloc, 2 = modules, bitwise ORed) or
->> `randomize_vmalloc=general,modules`.
->>
->> I experimented by trying to change how the modules are compiled
->> (-mcmodel=medium or -mcmodel=large) so that they could be located in the
->> normal vmalloc space, but instead I found a bug in the compiler (-mfentry
->> produces incorrect code for -mcmodel=large, now fixed).
->>
->>> On the other side there is a per-cpu allocator. Interfering with it
->>> also will increase a rate of failing.
->>
->> I didn't notice the per-cpu allocator before. I'm probably missing
->> something, but it seems to be used for a different purpose (for allocating
->> the vmap_area structure objects instead of the address space range), so
->> where do you see interference?
->>
-> 
-> 
->     A                       B
->   ---->                   <----
-> <---------------------------><--------->
-> |   vmalloc address space    |
-> |<--------------------------->
-> 
-> 
-> A - is a vmalloc allocations;
-> B - is a percpu-allocator.
-
-OK, now I get it, thanks. These can be seen in /proc/vmallocinfo as 
-allocations done by pcpu_get_vm_areas(). The way of allocating very 
-predictably downwards of a fixed address is bad for ASLR, so I'll try to 
-randomize the location of these too. Other allocations by 
-pcpu_populate_chunk() and
-pcpu_create_chunk() seem to be randomized already.
-
--Topi
-
-> 
+> ---
+>  drivers/gpu/drm/amd/pm/powerplay/si_dpm.c       |  6 ++----
+>  drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h | 10 +++++-----
+>  2 files changed, 7 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c b/drivers/gpu/drm/=
+amd/pm/powerplay/si_dpm.c
+> index afa1711c9620..62291358fb1c 100644
+> --- a/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c
+> +++ b/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c
+> @@ -5715,11 +5715,9 @@ static int si_upload_sw_state(struct amdgpu_device=
+ *adev,
+>         int ret;
+>         u32 address =3D si_pi->state_table_start +
+>                 offsetof(SISLANDS_SMC_STATETABLE, driverState);
+> -       u32 state_size =3D sizeof(SISLANDS_SMC_SWSTATE) +
+> -               ((new_state->performance_level_count - 1) *
+> -                sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
+>         SISLANDS_SMC_SWSTATE *smc_state =3D &si_pi->smc_statetable.driver=
+State;
+> -
+> +       size_t state_size =3D struct_size(smc_state, levels,
+> +                                       new_state->performance_level_coun=
+t);
+>         memset(smc_state, 0, state_size);
+>
+>         ret =3D si_convert_power_state_to_smc(adev, amdgpu_new_state, smc=
+_state);
+> diff --git a/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h b/drivers/gp=
+u/drm/amd/pm/powerplay/sislands_smc.h
+> index d2930eceaf3c..0f7554052c90 100644
+> --- a/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h
+> +++ b/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h
+> @@ -182,11 +182,11 @@ typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SI=
+SLANDS_SMC_HW_PERFORMANCE_LEV
+>
+>  struct SISLANDS_SMC_SWSTATE
+>  {
+> -    uint8_t                             flags;
+> -    uint8_t                             levelCount;
+> -    uint8_t                             padding2;
+> -    uint8_t                             padding3;
+> -    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
+> +       uint8_t                             flags;
+> +       uint8_t                             levelCount;
+> +       uint8_t                             padding2;
+> +       uint8_t                             padding3;
+> +       SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+>  };
+>
+>  typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
 > --
-> Vlad Rezki
-> 
-
+> 2.27.0
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
