@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4DFC433E6
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Feb 2021 18:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265CC433E0
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Feb 2021 18:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62CC864E30
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Feb 2021 18:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6A764DE8
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Feb 2021 18:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230368AbhBOS5D (ORCPT
+        id S230288AbhBOS54 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Feb 2021 13:57:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
+        Mon, 15 Feb 2021 13:57:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbhBOS5C (ORCPT
+        with ESMTP id S230260AbhBOS5u (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Feb 2021 13:57:02 -0500
-Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3AFC061756;
-        Mon, 15 Feb 2021 10:56:21 -0800 (PST)
-Received: by mail-oi1-x22b.google.com with SMTP id y199so8759034oia.4;
-        Mon, 15 Feb 2021 10:56:21 -0800 (PST)
+        Mon, 15 Feb 2021 13:57:50 -0500
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93AAC061574;
+        Mon, 15 Feb 2021 10:57:09 -0800 (PST)
+Received: by mail-oi1-x234.google.com with SMTP id d20so8730754oiw.10;
+        Mon, 15 Feb 2021 10:57:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=fXBT4xpZ44BWopiCzA5BdkSekv48SAWYnj4iW61mQF0=;
-        b=eJgS51jUdUles8PvvEPpAYZzFmm/tLLusqrLPgnqRR727XPOAnyZ25rbFljT37+k+Y
-         +opKtAStkmGcOEosBRVvZzmSvwyvemfAQKfML4f6nkxk2Jr96gxGMDCZSmraPyotkvzL
-         wP3DDtt2lqMEnbn6A5OxJU9+UlR0vQ80SdXhlgdf9JCTWbEyRqClHQRXPLlEocqKsx+O
-         s7Jakamssj57+2F88MTAg3o5KZ/faw8Y2uZLuhlszC3IvCpNclSIVckrqv3xu2gzgSBg
-         FZjWDEcaikSN4IAkOJrJfCJ5mB06lrUi/5sma/WFO9Ns46IMtygHDuZbraqxj4mCSlMI
-         UAaA==
+        bh=0af+WuSCKKu/Gkao8Lc4ne4kj0xNUEww6DlbPnUDKhk=;
+        b=NMlT+kWg96hgUcvIJOoGgvLjN7FstIeFJZXWH4AdON1ltmrsIvqJtTblNzY+cDXA50
+         bMHOG80pUsuXUz/impsrJWKpD45Dpwkx8N5Ki2ecqOVPeZK/+Qw8vwpxKkw1C1DJEpld
+         zU85b/WZYSoDlIxkb3gVtx2X1f7VeCmA7t/oeOHjNfOxJ7d+zR8qNpIPsbJVEs0OzS9d
+         CQh35RePwBFPiloBxtmXYK0YQA9Dyn4BD9N5jZlDCbsZHsm/OE7oTSjU3p8gN/y9AbMf
+         tT5CAmSliQVpsukjSvD5crMVwqUEZUyqCBW6uKVSo4Sx8va53e3QFOiwGyrVvq2SXS9c
+         3z0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fXBT4xpZ44BWopiCzA5BdkSekv48SAWYnj4iW61mQF0=;
-        b=CtYrtyoYQ3HUnV7BesiGGKedmWHJeG9tjtTmBraTNmDzyXXsfyQMlJ/+8x+yTsCYNo
-         clOzzojOuKW+9tyrgFNO0r4ZST9h4VL7stbhgp1hOzUX7pi08kmO3azrnYQi8v7QvOTQ
-         +5hw6zxyKCAbw7ByhOYgmqdEEG1YBNqhZBLGLnsuwgeaUTqFasQNR8a98aNWzSDuPSd8
-         uGK16SovtEzfX3C3MuKnMKx+CJaeimvcEGc4odF7lbwDhX7F+1abLQymBtp+oo0Cwfpq
-         UV64U+LU37txsffo86Cl2Ns+JXq+zi4Mp/3PFQjHjJ3L2XGqmlRIoPtN68LXtZE5PP0w
-         efow==
-X-Gm-Message-State: AOAM531yQ5ke30rGc14MV9rdgWeQhI1qBGrwi/CSZwLsXvUooKzgxyAe
-        ZcvnyhKq1qN0fVr4JmFPyHkaMr5/3PFIx8/DauFydhFP
-X-Google-Smtp-Source: ABdhPJwAcslDrIFamFjOx2UkgaG9PKUaghk0g+H6lzKFW3oWgJWZlWyGZ+fN+3cARHbKKz8K5MIAReI1IfDg8Jc/S7Y=
-X-Received: by 2002:aca:fc0c:: with SMTP id a12mr200788oii.5.1613415381226;
- Mon, 15 Feb 2021 10:56:21 -0800 (PST)
+        bh=0af+WuSCKKu/Gkao8Lc4ne4kj0xNUEww6DlbPnUDKhk=;
+        b=khNyUzNHVnO5tWqNZGOMJl/OnBETBbKZaMo8iyNJ7d1p1mbYUuvptiqKS6ve+gufPj
+         Jg+9lDbhD5JmgWatKXl7xDQU8fQB5qv+excVd0hFnmKib3o4SXUC5zFSg1UqBaRFPnAy
+         KqrKWXKk6h92RX7+Wx34OJYw/fn+DW0BgmgmapJFcNdxmZx5ycbE/KC9X/JQp09f7//L
+         9QdBS/7YL4hiqzC0AAwN8g2wB+h8Os8QUcIEpHVWaxoKLoXbjYURMyqVfbnbnR4cwgPI
+         K0d+RasTDNCAbe7WHp93iS3rPIJKt931x234CoZpCpg+sipHCbTRHaLE0kRJWP/8Uu5f
+         CveQ==
+X-Gm-Message-State: AOAM533mogDMTJDNmkQpMoum9VUliQ1oN/shVY24pliGoKg59wGMnyMU
+        GYHJCxzCaJ0I+5fBrOrZkOrbWGwJKGNFWs5VLtKr0CJr
+X-Google-Smtp-Source: ABdhPJxL6zZIj+6kyNCLjENdlwv2Lhea/JfbdHl6sy5eSywH4TjKjHKdnOun7wD6LEYknuJ/MBbSTUuCPUJfG61bVN0=
+X-Received: by 2002:aca:5404:: with SMTP id i4mr190631oib.123.1613415429195;
+ Mon, 15 Feb 2021 10:57:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20210210224031.GA8795@embeddedor>
-In-Reply-To: <20210210224031.GA8795@embeddedor>
+References: <20210210232600.GA66488@embeddedor>
+In-Reply-To: <20210210232600.GA66488@embeddedor>
 From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 15 Feb 2021 13:56:10 -0500
-Message-ID: <CADnq5_M+dCHFDoOS3dSTMCTsk7mH=dFSss=u91VwwVuFA=9t6g@mail.gmail.com>
+Date:   Mon, 15 Feb 2021 13:56:58 -0500
+Message-ID: <CADnq5_MSZJYLRJ-A8jAzUWAaK-7N46wj4BQk=FWxrBkDgbojbg@mail.gmail.com>
 Subject: Re: [PATCH][next] drm/amd/pm: Replace one-element array with
- flexible-array in struct SISLANDS_SMC_SWSTATE
+ flexible-array in struct _ATOM_Vega10_GFXCLK_Dependency_Table
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Evan Quan <evan.quan@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
@@ -79,7 +79,7 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 10, 2021 at 5:40 PM Gustavo A. R. Silva
+On Wed, Feb 10, 2021 at 6:36 PM Gustavo A. R. Silva
 <gustavoars@kernel.org> wrote:
 >
 > There is a regular need in the kernel to provide a way to declare having
@@ -88,49 +88,20 @@ On Wed, Feb 10, 2021 at 5:40 PM Gustavo A. R. Silva
 ases. The older
 > style of one-element or zero-length arrays should no longer be used[2].
 >
-> Refactor the code according to the use of a flexible-array member in
-> struct SISLANDS_SMC_SWSTATE, instead of a one-element array, and use
-> the struct_size() helper to calculate the size for the allocation.
+> Use flexible-array member in struct _ATOM_Vega10_GFXCLK_Dependency_Table,
+> instead of one-element array.
 >
 > Also, this helps with the ongoing efforts to enable -Warray-bounds and
-> fix the following warnings:
+> fix the following warning:
 >
-> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2448:20: warning: arr=
-ay
-> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
-_LEVEL[1]=E2=80=99
-> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
-ray-bounds]
-> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2449:20: warning: arr=
-ay
-> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
-_LEVEL[1]=E2=80=99
-> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
-ray-bounds]
-> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2450:20: warning: arr=
-ay
-> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
-_LEVEL[1]=E2=80=99
-> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
-ray-bounds]
-> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2451:20: warning: arr=
-ay
-> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
-_LEVEL[1]=E2=80=99
-> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
-ray-bounds]
-> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:2452:20: warning: arr=
-ay
-> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
-_LEVEL[1]=E2=80=99
-> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
-ray-bounds]
-> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/si_dpm.c:5570:20: warning: arr=
-ay
-> subscript 1 is above array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE=
-_LEVEL[1]=E2=80=99
-> {aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-War=
-ray-bounds]
+> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_hwmgr.c: In funct=
+ion =E2=80=98vega10_get_pp_table_entry_callback_func=E2=80=99:
+> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_hwmgr.c:3113:30: =
+warning: array subscript 4 is above array bounds of =E2=80=98ATOM_Vega10_GF=
+XCLK_Dependency_Record[1]=E2=80=99 {aka =E2=80=98struct _ATOM_Vega10_GFXCLK=
+_Dependency_Record[1]=E2=80=99} [-Warray-bounds]
+>  3113 |     gfxclk_dep_table->entries[4].ulClk;
+>       |     ~~~~~~~~~~~~~~~~~~~~~~~~~^~~
 >
 > [1] https://en.wikipedia.org/wiki/Flexible_array_member
 > [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-len=
@@ -139,8 +110,8 @@ gth-and-one-element-arrays
 > Link: https://github.com/KSPP/linux/issues/79
 > Link: https://github.com/KSPP/linux/issues/109
 > Build-tested-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/6023be58.sk66L%2FV4vuSJI5mI%25lkp@inte=
-l.com/
+> Link: https://lore.kernel.org/lkml/6023ff3d.WY3sSCkGRQPdPlVo%25lkp@intel.=
+com/
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Applied.  Thanks!
@@ -149,60 +120,35 @@ Alex
 
 
 > ---
->  drivers/gpu/drm/amd/pm/powerplay/si_dpm.c       |  6 ++----
->  drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h | 10 +++++-----
->  2 files changed, 7 insertions(+), 9 deletions(-)
+>  drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c b/drivers/gpu/drm/=
-amd/pm/powerplay/si_dpm.c
-> index afa1711c9620..62291358fb1c 100644
-> --- a/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c
-> +++ b/drivers/gpu/drm/amd/pm/powerplay/si_dpm.c
-> @@ -5715,11 +5715,9 @@ static int si_upload_sw_state(struct amdgpu_device=
- *adev,
->         int ret;
->         u32 address =3D si_pi->state_table_start +
->                 offsetof(SISLANDS_SMC_STATETABLE, driverState);
-> -       u32 state_size =3D sizeof(SISLANDS_SMC_SWSTATE) +
-> -               ((new_state->performance_level_count - 1) *
-> -                sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
->         SISLANDS_SMC_SWSTATE *smc_state =3D &si_pi->smc_statetable.driver=
-State;
-> -
-> +       size_t state_size =3D struct_size(smc_state, levels,
-> +                                       new_state->performance_level_coun=
-t);
->         memset(smc_state, 0, state_size);
+> diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h b/dr=
+ivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
+> index c934e9612c1b..9c479bd9a786 100644
+> --- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
+> +++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_pptable.h
+> @@ -161,9 +161,9 @@ typedef struct _ATOM_Vega10_MCLK_Dependency_Record {
+>  } ATOM_Vega10_MCLK_Dependency_Record;
 >
->         ret =3D si_convert_power_state_to_smc(adev, amdgpu_new_state, smc=
-_state);
-> diff --git a/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h b/drivers/gp=
-u/drm/amd/pm/powerplay/sislands_smc.h
-> index d2930eceaf3c..0f7554052c90 100644
-> --- a/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h
-> +++ b/drivers/gpu/drm/amd/pm/powerplay/sislands_smc.h
-> @@ -182,11 +182,11 @@ typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SI=
-SLANDS_SMC_HW_PERFORMANCE_LEV
+>  typedef struct _ATOM_Vega10_GFXCLK_Dependency_Table {
+> -    UCHAR ucRevId;
+> -    UCHAR ucNumEntries;                                         /* Numbe=
+r of entries. */
+> -    ATOM_Vega10_GFXCLK_Dependency_Record entries[1];            /* Dynam=
+ically allocate entries. */
+> +       UCHAR ucRevId;
+> +       UCHAR ucNumEntries;                                     /* Number=
+ of entries. */
+> +       ATOM_Vega10_GFXCLK_Dependency_Record entries[];         /* Dynami=
+cally allocate entries. */
+>  } ATOM_Vega10_GFXCLK_Dependency_Table;
 >
->  struct SISLANDS_SMC_SWSTATE
->  {
-> -    uint8_t                             flags;
-> -    uint8_t                             levelCount;
-> -    uint8_t                             padding2;
-> -    uint8_t                             padding3;
-> -    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
-> +       uint8_t                             flags;
-> +       uint8_t                             levelCount;
-> +       uint8_t                             padding2;
-> +       uint8_t                             padding3;
-> +       SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->  };
->
->  typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
+>  typedef struct _ATOM_Vega10_MCLK_Dependency_Table {
 > --
 > 2.27.0
 >
 > _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
