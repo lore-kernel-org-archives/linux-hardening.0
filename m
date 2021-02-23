@@ -2,69 +2,68 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0B4C433E0
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 Feb 2021 18:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52885C433E0
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Feb 2021 18:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A172464DF3
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 Feb 2021 18:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BB664E24
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Feb 2021 18:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233005AbhBWSE4 (ORCPT
+        id S233930AbhBWSSE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 Feb 2021 13:04:56 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43300 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233011AbhBWSEz (ORCPT
+        Tue, 23 Feb 2021 13:18:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233927AbhBWSR5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 Feb 2021 13:04:55 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11NI3xlV164988;
-        Tue, 23 Feb 2021 13:04:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=CRJrQGBIMdvl8HDZ1wcqJa6CD1wYhFACnglRBNcyzLY=;
- b=DgCDU8dVV02CMzM5NJEDvClYIV2fq99ScIHFvizQr5DMwXbsAV9Ut3omI/RZvvFqdlmV
- 2Vz+P7x00wkA6YnX+UoHTbi6N1fGm04+vALEkAVos2b8cnKGrlwXwqHhjtjdyd/67pju
- IumRQ3KmRRLXxyhytBvGMSJKwFS4l1jaXcFxMzBzU3aZk4cCoVyThoV+Bh9xWFKN0Tnn
- h8j7AT6J3GxfszQtVCPT018aXA2aHx+rdlifm2G3DrxLb7Um8kl4PhzSioKSI8tLAOAl
- 7gcw0vtCBnJ9+fUdE4SK61Wf+4UpdQLQGefJF8Os+FnlpummUhwp+LyO+ZD6n8m4CC+5 hQ== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36vkft2pb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Feb 2021 13:04:01 -0500
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 11NI3mxJ018893;
-        Tue, 23 Feb 2021 18:03:51 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma01fra.de.ibm.com with ESMTP id 36tt289fwx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Feb 2021 18:03:51 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 11NI3nIC46006780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Feb 2021 18:03:49 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 01CCE11C04C;
-        Tue, 23 Feb 2021 18:03:49 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 996E511C064;
-        Tue, 23 Feb 2021 18:03:48 +0000 (GMT)
-Received: from osiris (unknown [9.171.75.226])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 23 Feb 2021 18:03:48 +0000 (GMT)
-Date:   Tue, 23 Feb 2021 19:03:47 +0100
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
+        Tue, 23 Feb 2021 13:17:57 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA45C06178A
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Feb 2021 10:17:16 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id kr16so2380348pjb.2
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Feb 2021 10:17:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Y+dGVUVowl982SXOXFEzMTklpUA2xojQW2q8oSyCS6I=;
+        b=hLlvm2pVK0Tz7gEpiQShUAvdZF/IEHfPu0Kiyd+yuYnxHe+j3lKQ6Hce/7/XunIp3A
+         q++MGoX5hbc/X8vmJr5bAihBTazw7Lk276BfU6lFRHFOumUJ/OlX1TtWXUN+VNN5tKBX
+         MaSB9/1KfbC1h4lcYuyqBfJ/CdYELcxsbBmVI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Y+dGVUVowl982SXOXFEzMTklpUA2xojQW2q8oSyCS6I=;
+        b=jAoHhkeO5soCws/n3ztEipSpdzSpgRgbEv3kHLGLySZPWlEQgQJeOKTmKFWjLEs0Rg
+         t88n6vvqWHUWZZekt/suf/YMs7hy6gjK2g/mrfP8szpeftJP8Yd8MCsrU0d0C6PPdvZx
+         yAsZ6giKtsv4jQMq5zwP07NbHwXwwt+Uj1YlqKNX8ymMhZ8gk7H9mJEsDCyxk8XN/KOZ
+         S1PGoQmStO623K8RmJXYWKqbeIu5iuMw0p78y0LOjYaAOUts2uZCP3sUjZZEEq98Gwfl
+         h7ujKJm4d1oXve92RmummR9uNj5psQ3uZfyi4spXEEiBWKJgTtHNTRlNSm+bDeUyFnuo
+         tMrw==
+X-Gm-Message-State: AOAM532+fR7lkipZjDqmoAnlBoWoTZlKMgQZQXQGjDHfy1x8QmQjoamn
+        LfVeIyQEqBaEJS5fES3Lq9Wl+g==
+X-Google-Smtp-Source: ABdhPJz8B/KxyGd7uKaiNrrvu7+6j8zBuQCllq2oJBJ+c5r7iIP18af71apeteJfXqcChixTyEc6ig==
+X-Received: by 2002:a17:90a:4882:: with SMTP id b2mr63805pjh.78.1614104235871;
+        Tue, 23 Feb 2021 10:17:15 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v26sm22964666pff.195.2021.02.23.10.17.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Feb 2021 10:17:15 -0800 (PST)
+Date:   Tue, 23 Feb 2021 10:17:14 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         linux-hardening@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Arnd Bergmann <arnd@kernel.org>
 Subject: Re: [PATCH] gcc-plugins: Disable GCC_PLUGIN_CYC_COMPLEXITY for s390
-Message-ID: <YDVDg/EZWjCZQn2v@osiris>
+Message-ID: <202102231016.F212B396@keescook>
 References: <20210221225650.33134-1-linux@roeck-us.net>
  <YDOeI5+1H3T1ocmQ@osiris>
  <f35196cc-969f-21ef-0c38-dc6e13831fb0@roeck-us.net>
@@ -72,57 +71,25 @@ References: <20210221225650.33134-1-linux@roeck-us.net>
  <8d3de6fc-0991-9cef-d5fd-032fdbe2e85e@roeck-us.net>
  <YDTs4vfjezu3j7rX@osiris>
  <20210223174140.GA159796@roeck-us.net>
+ <YDVDg/EZWjCZQn2v@osiris>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210223174140.GA159796@roeck-us.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-02-23_08:2021-02-23,2021-02-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- mlxlogscore=997 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 spamscore=0 adultscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102230152
+In-Reply-To: <YDVDg/EZWjCZQn2v@osiris>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 23, 2021 at 09:41:40AM -0800, Guenter Roeck wrote:
-> > I tried to explain why we don't want to set COMPILE_TEST for s390
-> > anymore. It overrides architecture dependencies in Kconfig, and lots
-> > of drivers do not set dependencies for HAS_IOMEM, HAS_DMA, and friends
-> > correctly.
-> > This generates constantly fallout which is irrelevant for s390 and
-> > also for other architectures. It generates just work with close to
-> > zero benefit. For drivers which matter for s390 we still see those
-> > errors.
-> > 
-> > > On the other side, if that flag would be set explicitly by
-> > > all{yes,mod}config, it would really beg for being misused. We
-> > > might then as well add a new flag that is explicitly associated
-> > > with all{yes,mod}config, but not with randconfig.
-> > 
-> > I think that makes most sense, probably also have a flag that is set
-> > for randconfig.
+On Tue, Feb 23, 2021 at 07:03:47PM +0100, Heiko Carstens wrote:
+> Well, if we would have e.g. RANDCONFIG, then we could probably revert
+> 334ef6ed06fa ("init/Kconfig: make COMPILE_TEST depend on !S390") and
+> instead let COMPILE_TEST depend on !RANDCONFIG.
+> I think this _could_ solve all common problems we currently see.
 > 
-> Not sure what value such an option would have, and how it would be used.
-> I would argue that randconfig should not set COMPILE_TEST to start with,
-> since its purpose should be to test random valid configurations and not
-> to compile test arbitrary (and in that case random) code. But that is
-> a different question, and just my personal opinion.
-> 
-> Overall, the question is what kind of additional option you would find
-> useful for s390. You make it clear that you don't want COMPILE_TEST.
-> At the same time, you still want all{mod,yes}config, but presumably
-> excluding options currently restricted by !COMPILE_TEST (such as
-> DEBUG_INFO, BPF_PRELOAD, UBSAN_TRAP, GCC_PLUGIN_CYC_COMPLEXITY,
-> and a few others). SUPPRESS_NOISY_TESTS would not cover that, but
-> neither would RANDCONFIG (or whatever it would be called).
+> And it would also do what you suggested.
 
-Well, if we would have e.g. RANDCONFIG, then we could probably revert
-334ef6ed06fa ("init/Kconfig: make COMPILE_TEST depend on !S390") and
-instead let COMPILE_TEST depend on !RANDCONFIG.
-I think this _could_ solve all common problems we currently see.
+I've wanted similar (e.g. for some UBSAN options that would go weird
+under RANDCONFIG). :)
 
-And it would also do what you suggested.
+-- 
+Kees Cook
