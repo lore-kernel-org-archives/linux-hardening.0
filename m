@@ -2,194 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AD2C433DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B3BC43381
 	for <linux-hardening@archiver.kernel.org>; Wed,  3 Mar 2021 07:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23C3B64EDC
+	by mail.kernel.org (Postfix) with ESMTP id 8BF7964EFE
 	for <linux-hardening@archiver.kernel.org>; Wed,  3 Mar 2021 07:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233567AbhCCHW1 (ORCPT
+        id S245484AbhCCHXD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 3 Mar 2021 02:22:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1377925AbhCBP3q (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Mar 2021 10:29:46 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1EAAD64F2E;
-        Tue,  2 Mar 2021 15:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614698838;
-        bh=Tf3fUpZ4UIvhlVxa3P2zLbuSWZokVhqvmiihdu8PF/g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Bv/q/ptmgFbQmUAyh4+aSnzDtAq9T4tBTrBAqfqYXe+bdMAs7A/PwqPQextlYYSCd
-         TvyXMBvshAtWAiozXOkFNAg1jHEBVV/6yLqhXrqJKhGNXi9RkCKNmeaxWguk6uZ+ko
-         i9iWeHJPHtJvNfxGdDvYIdGNVshEFBNwrWOOPVzbei6SB4wzxEWD0zd/speFCXNin7
-         HMGC9JhchHHZUZrsy2qT230UXgi0b0+9Ryx9mqmmzGSVwKhlHhKhHttCWBymMv44Su
-         UKuFKiU3aPsjTVs1y+3Yitto5CpsZXtG/U4Wh5sUCIMzijJduv48j4rtbyDXU7wjaz
-         wn3ZVHlhcRY2w==
-Date:   Tue, 2 Mar 2021 09:27:16 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net: fddi: skfp: smt: Replace one-element array with
- flexible-array member
-Message-ID: <20210302152716.GA200887@embeddedor>
+        Wed, 3 Mar 2021 02:23:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1448279AbhCBW5j (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 2 Mar 2021 17:57:39 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1B5C061793
+        for <linux-hardening@vger.kernel.org>; Tue,  2 Mar 2021 14:55:36 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id i14so2917178pjz.4
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Mar 2021 14:55:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pM6mjp7Djg5f4SfTpdFFbjFAr1aFF/cRYCS7fpxDU34=;
+        b=FC2EN+w/cXbE1L5iUZKDDMVf/ajqnUFTPcgwXMyPPNXEisxojZOeWN7kI0PcCrDfl6
+         DnmHKfwqg1mNdwfVn/hxeNTQzLD/KtbPCyYfuU3gsMwMd+bJEEnrDT3cwWIVHDzz1S2M
+         VLtUVgDXio9VHYft98UzqJuc3DyDrhGVuYI7s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pM6mjp7Djg5f4SfTpdFFbjFAr1aFF/cRYCS7fpxDU34=;
+        b=fWmKyzHBD2TxK8Z4BtcmsL+4id+VLr1AcVAg+hqsK+13PkSlRFyew4oORUvHsYUkrM
+         oq8JSZRN0LqcmR3IUSbE+HYYCAUbxg3fk3moQBI9ozS7NMjD+cYT6H3NE7tEeMbNIS5o
+         2ivYjv2apoJs8w6J1AoMP6dxOp501qxIC8WTYNgSL1XF10vGCGDljKwmAlREyr4j93un
+         iyTHDesKEd0e4PoXwo4LraI6q7PiEI3FhU4iOQ8UWb9on238qxhM2b/i5+4ggdNdm/67
+         30ij7mvuDlAXprGl+NKKhT/PgWbTpKNKv0cX91l/kZG1fvyPFVxglyD54WB6995vBoGi
+         PKJQ==
+X-Gm-Message-State: AOAM531CAl42JZaNnbfWKNG09sd6b4EEerzGmAm6Kj76YxzEJ4JLXjsc
+        Oe4mESg2vzYy7nKqzVpfOr1xeA==
+X-Google-Smtp-Source: ABdhPJzx1XXVtj2bqsB5LrqzwDcX+R2r7mCiMlPMpiva5NGwceFqxpHsSETbyRK9dWNkX3ZA3qqFnQ==
+X-Received: by 2002:a17:90a:8d84:: with SMTP id d4mr6628292pjo.56.1614725735845;
+        Tue, 02 Mar 2021 14:55:35 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p23sm21587294pfn.204.2021.03.02.14.55.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Mar 2021 14:55:35 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jason Yan <yanaijie@huawei.com>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] gcc-plugins: structleak: remove unneeded variable 'ret'
+Date:   Tue,  2 Mar 2021 14:54:20 -0800
+Message-Id: <161472564886.3871405.3468382493884029994.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200418070505.10715-1-yanaijie@huawei.com>
+References: <20200418070505.10715-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare having
-a dynamically sized set of trailing elements in a structure. Kernel code
-should always use “flexible array members”[1] for these cases. The older
-style of one-element or zero-length arrays should no longer be used[2].
+On Sat, 18 Apr 2020 15:05:05 +0800, Jason Yan wrote:
+> Fix the following coccicheck warning:
+> 
+> scripts/gcc-plugins/structleak_plugin.c:177:14-17: Unneeded variable:
+> "ret". Return "0" on line 207
 
-Refactor the code according to the use of flexible-array members in
-smt_sif_operation structure, instead of one-element arrays. Also, make
-use of the struct_size() helper instead of the open-coded version
-to calculate the size of the struct-with-flex-array. Additionally, make
-use of the typeof operator to properly determine the object type to be
-passed to macro smtod().
+Applied to for-next/gcc-plugins, thanks!
 
-Also, this helps the ongoing efforts to enable -Warray-bounds by fixing
-the following warnings:
+[1/1] gcc-plugins: structleak: remove unneeded variable 'ret'
+      https://git.kernel.org/kees/c/b924a8197ac7
 
-  CC [M]  drivers/net/fddi/skfp/smt.o
-drivers/net/fddi/skfp/smt.c: In function ‘smt_send_sif_operation’:
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-      |                   ^~~
-drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
- 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
-      |                      ~~~~~~~~^~~
-In file included from drivers/net/fddi/skfp/h/smc.h:42,
-                 from drivers/net/fddi/skfp/smt.c:15:
-drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
-  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
-
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
-
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/109
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/fddi/skfp/h/smt.h | 4 +---
- drivers/net/fddi/skfp/smt.c   | 4 ++--
- 2 files changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/fddi/skfp/h/smt.h b/drivers/net/fddi/skfp/h/smt.h
-index a0dbc0f57a55..751b5bb87a9d 100644
---- a/drivers/net/fddi/skfp/h/smt.h
-+++ b/drivers/net/fddi/skfp/h/smt.h
-@@ -764,10 +764,8 @@ struct smt_sif_operation {
- 	struct smt_p_setcount	setcount ;	 /* Set Count mandatory */
- #endif
- 	/* must be last */
--	struct smt_p_lem	lem[1] ;	/* phy lem status */
-+	struct smt_p_lem	lem[];		/* phy lem status */
- } ;
--#define SIZEOF_SMT_SIF_OPERATION	(sizeof(struct smt_sif_operation)- \
--					 sizeof(struct smt_p_lem))
- 
- /*
-  * ECF : echo frame
-diff --git a/drivers/net/fddi/skfp/smt.c b/drivers/net/fddi/skfp/smt.c
-index 774a6e3b0a67..6b68a53f1b38 100644
---- a/drivers/net/fddi/skfp/smt.c
-+++ b/drivers/net/fddi/skfp/smt.c
-@@ -1063,9 +1063,9 @@ static void smt_send_sif_operation(struct s_smc *smc, struct fddi_addr *dest,
- #endif
- 
- 	if (!(mb = smt_build_frame(smc,SMT_SIF_OPER,SMT_REPLY,
--		SIZEOF_SMT_SIF_OPERATION+ports*sizeof(struct smt_p_lem))))
-+				   struct_size(sif, lem, ports))))
- 		return ;
--	sif = smtod(mb, struct smt_sif_operation *) ;
-+	sif = smtod(mb, typeof(sif));
- 	smt_fill_timestamp(smc,&sif->ts) ;	/* set time stamp */
- 	smt_fill_mac_status(smc,&sif->status) ; /* set mac status */
- 	smt_fill_mac_counter(smc,&sif->mc) ; /* set mac counter field */
 -- 
-2.27.0
+Kees Cook
 
