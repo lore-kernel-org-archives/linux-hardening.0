@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687EFC433DB
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 00:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE547C433E9
+	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 00:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4231B64F27
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 00:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7AA64F51
+	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 00:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241398AbhCDAvi (ORCPT
+        id S236226AbhCDAv3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 3 Mar 2021 19:51:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59525 "EHLO
+        Wed, 3 Mar 2021 19:51:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43958 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1389801AbhCCVrP (ORCPT
+        by vger.kernel.org with ESMTP id S1376960AbhCCTnx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 3 Mar 2021 16:47:15 -0500
+        Wed, 3 Mar 2021 14:43:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614807943;
+        s=mimecast20190719; t=1614800547;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=/LUNLY/w0+Bzk+kXfX0uauiVFlX2RwNcK9iVLBJ9IPA=;
-        b=f579Zj3mB4jMdJlThoz54Z2ccesSfd+Vdgn6OJQxFeHyd6hu/32Hza6i1MsPHH1WmcMNhC
-        A3toBuBwwgI5P7KCMT1BWxJWTbyqmap/dz8L4i3ZMwSs9Fj7WBPCv4h4VH/kMcViHOYAzr
-        yjeZolOBSKsj14W9OFWZLrZPl9388Hs=
+        bh=bv5cAMYlaP5qwIgoi2PUPPqfWwaPF9ayOOCbDPpLsEY=;
+        b=fqD7u7+wmfT+AN7Wl2pXrorm+uHnyxesofi6AjCPBD6a0OrHRJj1EX3vU01eIvnRqBXlgx
+        +hstpnIOoSxtTxQCxKc/uynmkU55PWbM6ObrAM7G8tzADka3cteWjfhBV2s9EHA8ThW4+s
+        NTSE1R62yLtvCAxzLFm51pHE1K3EYn8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-xR35m5hIMDWHSE7CU3j2Fg-1; Wed, 03 Mar 2021 16:45:42 -0500
-X-MC-Unique: xR35m5hIMDWHSE7CU3j2Fg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-104-3zO5FGdEPoyNzMkrsb1f9Q-1; Wed, 03 Mar 2021 14:38:18 -0500
+X-MC-Unique: 3zO5FGdEPoyNzMkrsb1f9Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C6CB1E561;
-        Wed,  3 Mar 2021 21:45:40 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4457E10CE780;
+        Wed,  3 Mar 2021 19:38:17 +0000 (UTC)
 Received: from treble (ovpn-114-218.rdu2.redhat.com [10.10.114.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75A435D741;
-        Wed,  3 Mar 2021 21:45:37 +0000 (UTC)
-Date:   Wed, 3 Mar 2021 15:45:34 -0600
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EBD1518AD4;
+        Wed,  3 Mar 2021 19:38:14 +0000 (UTC)
+Date:   Wed, 3 Mar 2021 13:38:06 -0600
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
@@ -57,51 +57,61 @@ Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Kees Cook <keescook@chromium.org>
 Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
  modules
-Message-ID: <20210303214534.guyoxcwrgxgcqzy4@treble>
+Message-ID: <20210303193806.oovupl4ubtkkyiih@treble>
 References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
  <20210302232649.y2tutffhxsblwqlb@treble>
  <CAK7LNAReuB5zUq_7S8ZG25+tdQowECDOK1rApYvkPCpHhPjK5w@mail.gmail.com>
  <20210303191516.6ksxmng4pis7ue4p@treble>
  <CAHk-=wjR0CyaKU=6mXW9W+65L8h8DQuBdA2ZY2CfrPe6qurz3A@mail.gmail.com>
- <20210303193806.oovupl4ubtkkyiih@treble>
- <CAHk-=whA6zru0BaNm4uu5KyZe+aQpRScOnmc9hdOpO3W+xN9Xw@mail.gmail.com>
- <20210303202406.bxgdx5a25j6wc43b@treble>
- <CAHk-=wi9J3mM8y+aH9e=HRo95giK4BRyyasayAimB0gdvbvDsQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi9J3mM8y+aH9e=HRo95giK4BRyyasayAimB0gdvbvDsQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <CAHk-=wjR0CyaKU=6mXW9W+65L8h8DQuBdA2ZY2CfrPe6qurz3A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 03, 2021 at 12:56:52PM -0800, Linus Torvalds wrote:
-> On Wed, Mar 3, 2021 at 12:24 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Wed, Mar 03, 2021 at 11:25:34AM -0800, Linus Torvalds wrote:
+> On Wed, Mar 3, 2021 at 11:15 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 > >
-> > Your nack is for a different reason: GCC plugins are second-class
-> > citizens.  Fair enough...
+> > Adding Linus, who indicated in another thread that we shouldn't force
+> > exact GCC versions because there's no technical reason to do so.
 > 
-> MNo, I didn't NAK it. Quite the reverser.
+> I do not believe we should recompile everything just because the gcc
+> version changes.
 > 
-> I am ABSOLUTELY against rebuilding normal object files just because
-> gcc versions change. A compiler version change makes zero difference
-> for any normal object file.
+> But gcc _plugins_ certainly should depend on the kernel version.
 > 
-> But the gcc plugins are different. They very much _are_ tied to a
-> particular gcc version.
-> 
-> Now, they are tied to a particular gcc version because they are
-> horribly badly done, and bad technology, and I went off on a bit of a
-> rant about just how bad they are, but the point is that gcc plugins
-> depend on the exact gcc version in ways that normal object files do
-> _not_.
+> Very few people should be enabling the gcc plugins in the first place.
+> Honestly, most of them are bad, and the people who really care about
+> those things have already moved to clang which does the important
+> parts natively without the need for a plugin. I'm personally waiting
+> for the day when we can just say "let's remove them".
 
-Thanks, reading comprehension is hard.  I realized after re-reading that
-I interpreted your "plugins should depend on the kernel version"
-statement too broadly.
+You might be sad to learn that some of the plugins are useful for
+hardening of a production distro kernel, like stackleak and structleak.
 
-Masahiro, any idea how I can make the GCC version a build dependency?
+> But in the meantime, making the plugins depend on the gcc version some
+> way is certainly better than not doing so.
+
+So currently, the plugins already so that.  They require the GCC version
+to be exact.  If there's a mismatch, then it fails the OOT module build.
+
+But that's not usable for a distro.  When users build OOT modules with a
+slight GCC mismatch, it breaks the build, effectively requiring the
+exact same GCC version for *all* OOT builds going forward.
+
+So there have been a few proposals to better handle GCC version
+mismatches:
+
+1) disable the plugin - this works fine for most plugins except
+   randstruct
+
+2) rebuild the plugin whenever the GCC version changes
+
+3) fail the build, like today - effectively blocks distros from using
+   plugins
 
 -- 
 Josh
