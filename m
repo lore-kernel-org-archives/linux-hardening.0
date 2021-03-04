@@ -2,85 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806F5C433E0
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 23:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E014FC433E6
+	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 23:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D97C60230
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 23:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7E664DFF
+	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 23:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230140AbhCDXEI (ORCPT
+        id S232983AbhCDXUf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 4 Mar 2021 18:04:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229547AbhCDXEI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 4 Mar 2021 18:04:08 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EA6B264FF1;
-        Thu,  4 Mar 2021 23:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614899048;
-        bh=CijpqyykDmZtff1lsC55bZVXDNtVmDJMQ2LDEDPIWQE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CszncG+i//sn9HKT8ySiaR1+o5hn8d5cKlC7cKJ5QbqtL7b/Qhl7PmNpXFcgUQINc
-         iADOvGBSqW8ELQF8dqcU846WKfYgbrf4cpc0I5uuVVE04vvyXKBh98H9/LeqqDbHJv
-         O4PoZ0Kz8sSPUprLdNOu4U6UhJxu+SMFUnOgG2+JEknVZ88q0kFz9N3uvO7IkvIuT1
-         qv7iN+Wh3jnvGBj5qKg5dfDgOtqDoDGQ259XiLxguT0ZXgTIvZQDatG3V6lou2jzzx
-         BZNtKe1gBWhZDxGjEDWZtOZdlCGddhLJwpts+QSAI8RgbjfXkfDF1vwvzFXwa+EK4N
-         cuyqauJOTeZQg==
-Date:   Thu, 4 Mar 2021 17:04:06 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 057/141] watchdog: Fix fall-through warnings for Clang
-Message-ID: <20210304230406.GA106291@embeddedor>
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
+        Thu, 4 Mar 2021 18:20:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233135AbhCDXUd (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 4 Mar 2021 18:20:33 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD494C06175F
+        for <linux-hardening@vger.kernel.org>; Thu,  4 Mar 2021 15:20:32 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id m6so494161pfk.1
+        for <linux-hardening@vger.kernel.org>; Thu, 04 Mar 2021 15:20:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BmHuJ6EbKgv6oC/dKNN76FQAZcbaEkgGB9SgRX7z29E=;
+        b=AECHJZxSqvO+H4GKfRfbmYxEEWwhR68+5jgW+7sCDf7jwXzJXGnkkpow7w+vSypoOZ
+         mZxKl1Rxqm1dyKVqStc7s0lW7M5tgeNWs/QnZENt9tDvYo8kMmVqS8h+gl3jrVX8tO+A
+         /c/zigxHkh/9WkLw1nocQtHKi43PAANebC9vo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BmHuJ6EbKgv6oC/dKNN76FQAZcbaEkgGB9SgRX7z29E=;
+        b=Y9SsnwA5XnZlvTDMXDqv5/ck69Kpa0JAz6HyThXK+43Fa2KzLhWvd/91Vk2ja6TOQi
+         Y1dhQblDCpsy7+4q1jl3IkKgQYmlv7untVimTaO8pt4S2MBrc+BU/GxOm56Uu6a0tRkB
+         0XBjfUydvKa7Ve8EPYNeVi9NJDB4AkXXRCfbb/h1KR7KPqdKMSzW79a3Bhnl5ckH2Jns
+         eprHsYpOlG718pQHxkip7JdSVY2qi9NkIes+sAIsBdbx4avZQPz9ZQ959sJGU1OL4423
+         r86+HhRJvcrV+cjHq9eZtbJGxA64oAUoM2YOGLuWs/X0Yj3toIW8+hE0n7NuUUYu18Ok
+         Jezg==
+X-Gm-Message-State: AOAM530BOGO0tnFRwIFfnmD42HGneWvcSoV7XRqmQa/GpEp0YnvkNrJr
+        7GqxL7ADEKP+I6Jd03Og5fm1z1rLCBMIcw==
+X-Google-Smtp-Source: ABdhPJzL95WWM3jJYkOgx7odmGkUkJlPHvcnpsTZPqC6hZXjg6GSAgg8EYiRpn+3ZgM1ClMsY/c5zg==
+X-Received: by 2002:a65:6645:: with SMTP id z5mr5434570pgv.273.1614900032448;
+        Thu, 04 Mar 2021 15:20:32 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d11sm423311pfd.43.2021.03.04.15.20.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Mar 2021 15:20:31 -0800 (PST)
+Date:   Thu, 4 Mar 2021 15:20:29 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: rebuild GCC plugins when the compiler is upgraded
+Message-ID: <202103041518.22EB819E@keescook>
+References: <20210304113708.215121-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
+In-Reply-To: <20210304113708.215121-1-masahiroy@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
-
-It's been more than 3 months; who can take this, please? :)
-
-Thanks
---
-Gustavo
-
-On Fri, Nov 20, 2020 at 12:32:51PM -0600, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a fallthrough pseudo-keyword instead of letting the
-> code fall through to the next case.
+On Thu, Mar 04, 2021 at 08:37:08PM +0900, Masahiro Yamada wrote:
+> Linus reported a build error due to the GCC plugin incompatibility
+> when the compiler is upgraded. [1]
 > 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/watchdog/machzwd.c | 1 +
->  1 file changed, 1 insertion(+)
+>   cc1: error: incompatible gcc/plugin versions
+>   cc1: error: failed to initialize plugin ./scripts/gcc-plugins/stackleak_plugin.so
 > 
-> diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
-> index 743377c5b173..73f2221f6222 100644
-> --- a/drivers/watchdog/machzwd.c
-> +++ b/drivers/watchdog/machzwd.c
-> @@ -174,6 +174,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
->  		fallthrough;
->  	case WD2:
->  		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
-> +		fallthrough;
->  	default:
->  		return;
->  	}
-> -- 
-> 2.27.0
+> GCC plugins are tied to a particular GCC version. So, they must be
+> rebuilt when the compiler is upgraded.
 > 
+> This seems to be a long-standing flaw since the initial support of
+> GCC plugins.
+> 
+> Extend commit 8b59cd81dc5e ("kbuild: ensure full rebuild when the
+> compiler is updated"), so that GCC plugins are covered by the
+> compiler upgrade detection.
+> 
+> [1]: https://lore.kernel.org/lkml/CAHk-=wieoN5ttOy7SnsGwZv+Fni3R6m-Ut=oxih6bbZ28G+4dw@mail.gmail.com/
+> 
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+This seems fine to me, but I want to make sure Josh has somewhere to
+actually go with this. Josh, does this get you any closer? It sounds
+like the plugins need to move to another location for packaged kernels?
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
