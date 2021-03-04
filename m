@@ -2,107 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58567C43331
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 00:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B90DC433E0
+	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 01:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4133F64FCF
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 00:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95B165072
+	for <linux-hardening@archiver.kernel.org>; Thu,  4 Mar 2021 01:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241354AbhCDAvg (ORCPT
+        id S234196AbhCDBnQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 3 Mar 2021 19:51:36 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29214 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1388038AbhCCUd0 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 3 Mar 2021 15:33:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614803519;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rp8C696QhKx8WEsv8npjzvCJHKF8U4KwqfIW0LL6UTo=;
-        b=Pi6r3i72j7HR3ZrAoy9duVv3/4e57Br+IeG+iJZ+AzncZ3r7fK6xrP/rJl9H5m0i1/pyQF
-        zaxugn4zH/9CG0/EkPumQ6eKUPjmFJ9IbkBeXG2eq88VmzlhGyT0bFtLJh+VRPhinR8oF4
-        8eX66NvjcE0sg25Arz8xXVBR2dLmu4g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-549-ExOu-U9oO0eSbnF6gui41A-1; Wed, 03 Mar 2021 15:31:58 -0500
-X-MC-Unique: ExOu-U9oO0eSbnF6gui41A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42B5C514A;
-        Wed,  3 Mar 2021 20:31:56 +0000 (UTC)
-Received: from treble (ovpn-114-218.rdu2.redhat.com [10.10.114.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A645360BFA;
-        Wed,  3 Mar 2021 20:31:53 +0000 (UTC)
-Date:   Wed, 3 Mar 2021 14:31:50 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Justin Forbes <jforbes@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Frank Eigler <fche@redhat.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
- modules
-Message-ID: <20210303203150.jwupthv6siil6tn2@treble>
-References: <efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com>
- <20210302232649.y2tutffhxsblwqlb@treble>
- <CAK7LNAReuB5zUq_7S8ZG25+tdQowECDOK1rApYvkPCpHhPjK5w@mail.gmail.com>
- <20210303191516.6ksxmng4pis7ue4p@treble>
- <CAHk-=wjR0CyaKU=6mXW9W+65L8h8DQuBdA2ZY2CfrPe6qurz3A@mail.gmail.com>
- <20210303193806.oovupl4ubtkkyiih@treble>
- <CAHk-=whA6zru0BaNm4uu5KyZe+aQpRScOnmc9hdOpO3W+xN9Xw@mail.gmail.com>
- <20210303202406.bxgdx5a25j6wc43b@treble>
+        Wed, 3 Mar 2021 20:43:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233804AbhCDBmz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 3 Mar 2021 20:42:55 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B6C2265072;
+        Thu,  4 Mar 2021 01:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614822135;
+        bh=PWhqhd3JZP5YyenXrqX5M48LkYh1EtYwhFTaMI2Di7s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NkGZ754xeICF8FkTo4VNxeBlZ+6wvnQAL12ivvs7BCmsRg2BVsJrdJK/aulgO1r1q
+         jo3Ixoo/OZ6gGj+q2nhaCw2eq5etMQloArhNNRQAOsUXvWCV6QjmB9W7+jNDUwjEDa
+         Coi09rLVhFkoAjZ/ha9YmjatPH8z0ZxsqB05mlVSxTUZAIY7KEXv+WCbp8vjeIT5F5
+         YDcpW4rrYIcuKZ0RoTpdyZEc4+knfdxwxu7dtbQX4Yx7o64sIvO7i0Sog+5MQ6XVHI
+         Fzz35Gm72Pcarv68VMKUCRKzHu8HqIvAL2+P9S9Hk/kI5pIA4Qvp8AqY53rWW0lXth
+         Ua6p87YD/ZiFQ==
+Date:   Wed, 3 Mar 2021 19:42:12 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] media: venus: hfi_cmds.h: Replace one-element
+ array with flexible-array member
+Message-ID: <20210304014212.GA43221@embeddedor>
+References: <20210210225720.GA13710@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210303202406.bxgdx5a25j6wc43b@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210210225720.GA13710@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 03, 2021 at 02:24:12PM -0600, Josh Poimboeuf wrote:
-> On Wed, Mar 03, 2021 at 11:57:33AM -0800, Linus Torvalds wrote:
-> > On Wed, Mar 3, 2021 at 11:38 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > > But in the meantime, making the plugins depend on the gcc version some
-> > > > way is certainly better than not doing so.
-> > >
-> > > So currently, the plugins already so that.  They require the GCC version
-> > > to be exact.  If there's a mismatch, then it fails the OOT module build.
-> > 
-> > That's not my experience.
-> > 
-> > Yes, the build fails, but it fails not by _rebuilding_, but by failing
-> > with an error.
-> 
-> Um, that's what I said.  It does not rebuild.  It fails with an error.
-> 
-> The *proposal* is to rebuild the plugin -- which Masahiro nacked because
-> he claims GCC mismatches aren't supported for OOT builds (plugin or
-> not).
-> 
-> Your nack is for a different reason: GCC plugins are second-class
-> citizens.  Fair enough...
 
-Or was it a nack? :-)  Reading your message again, I may have
-misinterpreted.  Put simply, should we rebuild plugins when the GCC
-version changes?
+Hi all,
 
--- 
-Josh
+Friendly ping: who can take this, please?
 
+Thanks
+--
+Gustavo
+
+On Wed, Feb 10, 2021 at 04:57:20PM -0600, Gustavo A. R. Silva wrote:
+> There is a regular need in the kernel to provide a way to declare having
+> a dynamically sized set of trailing elements in a structure. Kernel code
+> should always use “flexible array members”[1] for these cases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
+> 
+> Use flexible-array member in struct hfi_sys_set_property_pkt instead of
+> one-element array.
+> 
+> Also, this helps with the ongoing efforts to enable -Warray-bounds and
+> fix the following warnings:
+> 
+> drivers/media/platform/qcom/venus/hfi_cmds.c: In function ‘pkt_sys_coverage_config’:
+> drivers/media/platform/qcom/venus/hfi_cmds.c:57:11: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+>    57 |  pkt->data[1] = mode;
+>       |  ~~~~~~~~~^~~
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/109
+> Build-tested-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/602416da.iZqae7Dbk7nyl6OY%25lkp@intel.com/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> index 83705e237f1c..327ed90a2788 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> @@ -68,7 +68,7 @@ struct hfi_sys_release_resource_pkt {
+>  struct hfi_sys_set_property_pkt {
+>  	struct hfi_pkt_hdr hdr;
+>  	u32 num_properties;
+> -	u32 data[1];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_sys_get_property_pkt {
+> -- 
+> 2.27.0
+> 
