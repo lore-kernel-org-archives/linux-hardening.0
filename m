@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA44C433E0
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C8BC433E0
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 098A865011
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DD264FFD
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbhCEHm1 (ORCPT
+        id S229464AbhCEHni (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 02:42:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37164 "EHLO mail.kernel.org"
+        Fri, 5 Mar 2021 02:43:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229446AbhCEHm1 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 02:42:27 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 506DC64F44;
-        Fri,  5 Mar 2021 07:42:26 +0000 (UTC)
+        id S229446AbhCEHnh (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 02:43:37 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6312564FFD;
+        Fri,  5 Mar 2021 07:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614930147;
-        bh=uTFqnv6qmEoQwDoOMs90+0OH/pwEDX4h2tr5/bq6uGo=;
+        s=k20201202; t=1614930217;
+        bh=c0d0xdnkz9rdqv7x58JjZeemTCwzuu8lYBizo3XXlX4=;
         h=Date:From:To:Cc:Subject:From;
-        b=SWFzHV5i5pQ/GvRpen6FZgdRQhi5jcuZssly8nU0K+h9elbOz0NjOhC7j7+g3QWAS
-         ZBUqUvaOZ6cq791A7TtWGqKkoOxCjhE3pMcicYe/VpNouxljqJxT/ifw4ifYocfy5V
-         0cgnB35f3OJxeGICkHuKzKNxrHSsmRILo2/gJKi0zm7GSrOx0MA38ThmWs4hoEeHW6
-         P9+hh8aX7t7X1tFRE5qS0luM0Q27HlC0JZWyF1FhcEEN5Q8pHCf1apzGO2gXQcM6vS
-         Mtw6mz0gXamM1n8hzYWiKYBT1REs5dmBoJjtcwWvqtAgMldvQ3hvGtpTwzJgfmcqQH
-         6Yy29atjh7j7A==
-Date:   Fri, 5 Mar 2021 01:42:23 -0600
+        b=oNcjvdnBwZY0Hum6a1gmDD7cjKw7XmG6uYdD1yyht4NakpJxI0B7edruvX7mc0dem
+         je4Nhol4O4RFmy01yqMUqQS2m01JvOJUng4wlLicznPqrLSb7KUfqvHDTPQaqzVSl5
+         gm9fFnhpCu2KPnQ27ZNKJDAc5Hz6VHUxdyDVZ5bgjxzRrcjSmiRSJNDtzBZG5a7B/6
+         1nD3K4TNUvRy1t6RzmikYhtOlAKaIPS/0P2MtlV+X7nFvPMYfYh44TQo0TdC+NT6CC
+         X52zgmbySLPICWjvuI5gIiWpiOF1fN51TIx6OYK3lgk2URHZLCI+NiOuBzjaSyTltj
+         Mro6Nt7EsI4AA==
+Date:   Fri, 5 Mar 2021 01:43:34 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] firewire: core: Fix fall-through warnings for Clang
-Message-ID: <20210305074223.GA123031@embeddedor>
+Subject: [PATCH][next] net: core: Fix fall-through warnings for Clang
+Message-ID: <20210305074334.GA123155@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -49,26 +49,27 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a fallthrough pseudo-keyword.
+by explicitly adding a break statement instead of letting the code fall
+through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/firewire/core-topology.c | 1 +
+ net/core/dev.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firewire/core-topology.c b/drivers/firewire/core-topology.c
-index ec68ed27b0a5..b63d55f5ebd3 100644
---- a/drivers/firewire/core-topology.c
-+++ b/drivers/firewire/core-topology.c
-@@ -58,6 +58,7 @@ static u32 *count_ports(u32 *sid, int *total_port_count, int *child_port_count)
- 		case SELFID_PORT_PARENT:
- 		case SELFID_PORT_NCONN:
- 			(*total_port_count)++;
-+			fallthrough;
- 		case SELFID_PORT_NONE:
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 6c5967e80132..2bfdd528c7c3 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5265,6 +5265,7 @@ static int __netif_receive_skb_core(struct sk_buff **pskb, bool pfmemalloc,
+ 			goto another_round;
+ 		case RX_HANDLER_EXACT:
+ 			deliver_exact = true;
++			break;
+ 		case RX_HANDLER_PASS:
  			break;
- 		}
+ 		default:
 -- 
 2.27.0
 
