@@ -2,209 +2,120 @@ Return-Path: <SRS0=3XZ1=ID=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7FDC433DB
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 19:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0AEC433DB
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 19:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30D2065074
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 19:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE8464F11
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 19:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbhCETLQ (ORCPT
+        id S229971AbhCETSz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 14:11:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbhCETK4 (ORCPT
+        Fri, 5 Mar 2021 14:18:55 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30649 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229674AbhCETSo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 14:10:56 -0500
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AEA4C061574;
-        Fri,  5 Mar 2021 11:10:56 -0800 (PST)
-Received: by mail-oi1-x233.google.com with SMTP id y131so763844oia.8;
-        Fri, 05 Mar 2021 11:10:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dDSLWCE55+Pw5C88tg6MoG/73HO+jB9/1ATUH2h3DFo=;
-        b=b/wnMNlg1kE1kTe6xtjkHGQc0wv4tg0R218ZnK/r2gZZCKqY86Zw0R94BEJIG7GIgB
-         EIGy8I2p9hWblWHShW5X+IFhZccqZq9u38PC548vgUBg4nIn9i2CNjE9igYCISTXmdy3
-         UXk4QlQlXN4CxvPH+yGwUz92us3i/1zwxkzfc5bEkgMGXitWD53fFPBVqtbEpZlP49xh
-         XQ33e0hI+20nBuC6n2Rxx5FJm+Q1pflPS6lnxHrH3SHc/cYbj6pqZs0u2qRW6Ka/RTsu
-         4iCXmnYEQkkpbGNArHpXAY1ol+9fwbo9avN8DsbaliNG8vmru6a4WL9GRYRAk0ayarK/
-         BfFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dDSLWCE55+Pw5C88tg6MoG/73HO+jB9/1ATUH2h3DFo=;
-        b=pi0RQu83E4UE4sZ7srQfk/GOGc2K39GdcYURI8+EybhuuJYW7pNS3DPGSRYROyskda
-         U8BWpPHZnLncte0zncUckuDmCcqobI3nY3UTFkUCi7u7pac5Rb9nvrGzF5k1lIHNiQLW
-         F+Pt18UkqsphLqaQi0oCi3Nj0nLGjFQRnZ0D8o1bvm0EyjTioFVE28SIdxG+ZSS2L+Or
-         Cp2e+OeE29s0gq74ZURm4rrs/i7UbUSc1RtTEB6ildXFsvnH/8ZDcKLiOgBfmEztoC4X
-         cluQqFYS8wgHi7WaARExNhuI1yU46fue3eXbdg1XV9oaFK2jig94NRLZ/jGFDFd4FwVk
-         mtWQ==
-X-Gm-Message-State: AOAM531xp+d4OTeXwB8Fab7WcYXoY946tuFpG31jnv3AXTxhA/dt5lCL
-        139+LEIFsngN52NJ7p1o1wsYPxnLs2AAjvVlsck=
-X-Google-Smtp-Source: ABdhPJxoP+oZnKsJUYZweRX5p0kIhz2DJw+2DIhPP8K8OKqRjR6cEux/6BbiSBjQJf2I6YSJsECrvJXlIFGwehAae2c=
-X-Received: by 2002:aca:fccb:: with SMTP id a194mr7895902oii.5.1614971455748;
- Fri, 05 Mar 2021 11:10:55 -0800 (PST)
-MIME-Version: 1.0
-References: <20210303190458.GA16321@embeddedor>
-In-Reply-To: <20210303190458.GA16321@embeddedor>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 5 Mar 2021 14:10:44 -0500
-Message-ID: <CADnq5_M3dSMnKQMRv3SVaK6-w5ebJxX6w2-oy8v7+2muw3S3vg@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/radeon/si_dpm: Replace one-element array with
- flexible-array in struct SISLANDS_SMC_SWSTATE
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Fri, 5 Mar 2021 14:18:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614971924;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wo3BPsLRoEcARqi/I2GE+yDj8s8Utt89EBG5Ym/er0o=;
+        b=FNWkDtKaIDeZedOig+LjwICewusz8YBlxUkqnImFuuCkyZ9HBDp600HHLx6MVvMtITGBXO
+        QVoE1OAUm36OnWeojNZhZAGUSx49zP+nONW1/yp+0grfyNuHImWGhyIUzED4ksCkVu1ig0
+        mSav5jFtk0YK0l+fSUsXTMV4bWxRaVQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-509-UJwHOQoCN-2BC7Rin_2KHg-1; Fri, 05 Mar 2021 14:18:42 -0500
+X-MC-Unique: UJwHOQoCN-2BC7Rin_2KHg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 08D4E800D53;
+        Fri,  5 Mar 2021 19:18:41 +0000 (UTC)
+Received: from treble (ovpn-116-51.rdu2.redhat.com [10.10.116.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3EE9A5D6B1;
+        Fri,  5 Mar 2021 19:18:38 +0000 (UTC)
+Date:   Fri, 5 Mar 2021 13:18:35 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
         linux-hardening@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Justin Forbes <jforbes@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Frank Eigler <fche@redhat.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
+ modules
+Message-ID: <20210305191835.4e54dei3dmslbo3a@treble>
+References: <CAHk-=whA6zru0BaNm4uu5KyZe+aQpRScOnmc9hdOpO3W+xN9Xw@mail.gmail.com>
+ <20210303202406.bxgdx5a25j6wc43b@treble>
+ <CAHk-=wi9J3mM8y+aH9e=HRo95giK4BRyyasayAimB0gdvbvDsQ@mail.gmail.com>
+ <20210303214534.guyoxcwrgxgcqzy4@treble>
+ <CAK7LNAQaAgg+mVSw_U3_FuuqcqJNnonyhVD1M-ezv71Y+dyAww@mail.gmail.com>
+ <20210304150812.rzya7ewmerwhe4m4@treble>
+ <CAK7LNAR0kNJ=DLuvRzRG+-rgMfcrSOZu8Mn6JBJ5do7TzJWLcA@mail.gmail.com>
+ <CAHk-=wiT3FGuKuqLniBN2T_PZwD0GH4kf3XNCzq2tfChqn0+SQ@mail.gmail.com>
+ <20210305024140.fv4i4ujreem2w7sw@treble>
+ <CAK7LNAR3FW8wQe6Zsbj86LQpY4=ASC7Zec-HN4D70FNZcQk0_Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAR3FW8wQe6Zsbj86LQpY4=ASC7Zec-HN4D70FNZcQk0_Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Applied.  Thanks!
+On Sat, Mar 06, 2021 at 01:03:32AM +0900, Masahiro Yamada wrote:
+> > Ok.  So it sounds like the best/easiest option is the original patch in
+> > this thread:  when building an external module with a GCC mismatch, just
+> > disable the GCC plugin, with a warning (or an error for randstruct).
+> 
+> Just for clarification,
+> I believe "the original patch" pointed to this one:
+> https://lore.kernel.org/lkml/efe6b039a544da8215d5e54aa7c4b6d1986fc2b0.1611607264.git.jpoimboe@redhat.com/
+> 
+> This is dead. Please do not come back to this.
 
-Alex
+Sorry, no.  The patch may have been crap, but that doesn't make the
+problem I'm trying to solve any less valid.
 
-On Wed, Mar 3, 2021 at 2:05 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> There is a regular need in the kernel to provide a way to declare having
-> a dynamically sized set of trailing elements in a structure. Kernel code
-> should always use =E2=80=9Cflexible array members=E2=80=9D[1] for these c=
-ases. The older
-> style of one-element or zero-length arrays should no longer be used[2].
->
-> Refactor the code according to the use of a flexible-array member in
-> struct SISLANDS_SMC_SWSTATE, instead of a one-element array, and use
-> the struct_size() helper to calculate the size for the allocation.
->
-> Also, this helps with the ongoing efforts to enable -Warray-bounds by
-> fixing the following warnings:
->
-> drivers/gpu/drm/radeon/si_dpm.c: In function =E2=80=98si_convert_power_st=
-ate_to_smc=E2=80=99:
-> drivers/gpu/drm/radeon/si_dpm.c:2350:20: warning: array subscript 1 is ab=
-ove array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99 =
-{aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-Warra=
-y-bounds]
->  2350 |   smc_state->levels[i].dpm2.MaxPS =3D (u8)((SISLANDS_DPM2_MAX_PUL=
-SE_SKIP * (max_sclk - min_sclk)) / max_sclk);
->       |   ~~~~~~~~~~~~~~~~~^~~
-> drivers/gpu/drm/radeon/si_dpm.c:2351:20: warning: array subscript 1 is ab=
-ove array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99 =
-{aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-Warra=
-y-bounds]
->  2351 |   smc_state->levels[i].dpm2.NearTDPDec =3D SISLANDS_DPM2_NEAR_TDP=
-_DEC;
->       |   ~~~~~~~~~~~~~~~~~^~~
-> drivers/gpu/drm/radeon/si_dpm.c:2352:20: warning: array subscript 1 is ab=
-ove array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99 =
-{aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-Warra=
-y-bounds]
->  2352 |   smc_state->levels[i].dpm2.AboveSafeInc =3D SISLANDS_DPM2_ABOVE_=
-SAFE_INC;
->       |   ~~~~~~~~~~~~~~~~~^~~
-> drivers/gpu/drm/radeon/si_dpm.c:2353:20: warning: array subscript 1 is ab=
-ove array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99 =
-{aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-Warra=
-y-bounds]
->  2353 |   smc_state->levels[i].dpm2.BelowSafeInc =3D SISLANDS_DPM2_BELOW_=
-SAFE_INC;
->       |   ~~~~~~~~~~~~~~~~~^~~
-> drivers/gpu/drm/radeon/si_dpm.c:2354:20: warning: array subscript 1 is ab=
-ove array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99 =
-{aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-Warra=
-y-bounds]
->  2354 |   smc_state->levels[i].dpm2.PwrEfficiencyRatio =3D cpu_to_be16(pw=
-r_efficiency_ratio);
->       |   ~~~~~~~~~~~~~~~~~^~~
-> drivers/gpu/drm/radeon/si_dpm.c:5105:20: warning: array subscript 1 is ab=
-ove array bounds of =E2=80=98SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99 =
-{aka =E2=80=98struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL[1]=E2=80=99} [-Warra=
-y-bounds]
->  5105 |   smc_state->levels[i + 1].aT =3D cpu_to_be32(a_t);
->       |   ~~~~~~~~~~~~~~~~~^~~~~~~
->
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-len=
-gth-and-one-element-arrays
->
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/109
-> Build-tested-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/603f9a8f.aDLrpMFzzSApzVYQ%25lkp@intel.=
-com/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/gpu/drm/radeon/si_dpm.c       |  5 ++---
->  drivers/gpu/drm/radeon/sislands_smc.h | 10 +++++-----
->  2 files changed, 7 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_=
-dpm.c
-> index 91bfc4762767..918609551804 100644
-> --- a/drivers/gpu/drm/radeon/si_dpm.c
-> +++ b/drivers/gpu/drm/radeon/si_dpm.c
-> @@ -5250,10 +5250,9 @@ static int si_upload_sw_state(struct radeon_device=
- *rdev,
->         int ret;
->         u32 address =3D si_pi->state_table_start +
->                 offsetof(SISLANDS_SMC_STATETABLE, driverState);
-> -       u32 state_size =3D sizeof(SISLANDS_SMC_SWSTATE) +
-> -               ((new_state->performance_level_count - 1) *
-> -                sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
->         SISLANDS_SMC_SWSTATE *smc_state =3D &si_pi->smc_statetable.driver=
-State;
-> +       size_t state_size =3D struct_size(smc_state, levels,
-> +                                       new_state->performance_level_coun=
-t);
->
->         memset(smc_state, 0, state_size);
->
-> diff --git a/drivers/gpu/drm/radeon/sislands_smc.h b/drivers/gpu/drm/rade=
-on/sislands_smc.h
-> index 966e3a556011..fbd6589bdab9 100644
-> --- a/drivers/gpu/drm/radeon/sislands_smc.h
-> +++ b/drivers/gpu/drm/radeon/sislands_smc.h
-> @@ -182,11 +182,11 @@ typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SI=
-SLANDS_SMC_HW_PERFORMANCE_LEV
->
->  struct SISLANDS_SMC_SWSTATE
->  {
-> -    uint8_t                             flags;
-> -    uint8_t                             levelCount;
-> -    uint8_t                             padding2;
-> -    uint8_t                             padding3;
-> -    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
-> +       uint8_t                             flags;
-> +       uint8_t                             levelCount;
-> +       uint8_t                             padding2;
-> +       uint8_t                             padding3;
-> +       SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->  };
->
->  typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
-> --
-> 2.27.0
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> See negative comments not only from me, but also from Greg, Peter,
+> Christoph.
+
+I responded to those.  Summarizing my replies once again...
+
+
+- "External modules aren't supported"
+
+  This doesn't even remotely match reality.  Are you honestly using this
+  "negative comment" as a reason to NAK the patch?
+
+
+- "External modules must be built with the same GCC version"
+
+  As has been stated repeatedly, by Linus and others, there's no
+  technical reason behind this claim.  It ignores the realities of how
+  distros release the kernel and compiler independently, with separate
+  cadences.  Minor variances in compiler version are ABI compatible.
+
+  Also, for features which are dependent on compiler version, many of
+  those are now enabled by kbuild.  As I suggested to you previously,
+  kbuild should warn when such features get disabled (which can happen
+  due to a compiler/toolchain change or due to a .config copied from
+  another system).
+
+-- 
+Josh
+
