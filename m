@@ -2,226 +2,117 @@ Return-Path: <SRS0=3XZ1=ID=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0800C433E0
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 16:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59197C433E0
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 17:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCF2A6508C
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 16:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D2F650A3
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 17:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230249AbhCEQaC (ORCPT
+        id S231354AbhCERKg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 11:30:02 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:60114 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbhCEQ3f (ORCPT
+        Fri, 5 Mar 2021 12:10:36 -0500
+Received: from gateway31.websitewelcome.com ([192.185.144.95]:21844 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231469AbhCERKK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 11:29:35 -0500
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 125GT0Im021926;
-        Sat, 6 Mar 2021 01:29:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 125GT0Im021926
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1614961742;
-        bh=L8QrSTF3pp8TOl8/M5jmpNsPkZZIsQBSgnHHOkolsOI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Rdx1vOY8EgNdlT9Aas5V3JYo9xbdUZ1by2VUKmjezBHMUGiXC3YQ1eiWJobKhB4GR
-         oHrhc5e3dMK6HlpUJ1ghS70cVmXqKYqAL43jSHY8WPDIIolNP2Rd03DE/BLuyg8/TL
-         ZPrFyIaiU1NhaRuKaiftvCP16dAfZDbDorUC0OA1NFUz7RsKej7xS7ZiAQaQL45PhM
-         nYQNWSkNr5sMN47BxKmp3t8Ri9qza3PBYKsLdfPfqQCwfavSXaA1GwqL6erw/b/3rd
-         RGzn9chdbzfNafKM3iFEV7LJJxAA/3KTduSdRFddbzhNLlmrhVhhT771/QM1ZRRJEv
-         4rceAfPXFSm3g==
-X-Nifty-SrcIP: [209.85.208.181]
-Received: by mail-lj1-f181.google.com with SMTP id 2so3514566ljr.5;
-        Fri, 05 Mar 2021 08:29:01 -0800 (PST)
-X-Gm-Message-State: AOAM530mjj64qKOX18hQmHxeeHeUWqsPVUb9COocJYzgYXZ/WYH13e1i
-        oEC66oTLhlmDsnosCijk6OCeMRhgvsvmFN3FRE4=
-X-Google-Smtp-Source: ABdhPJyQBzXH9SKMASpk3B+p01nX2acchmU+U52whGtv7N4BThjEfTcwbN+eQIbdLKQ3vPd78q5pNTu2UCgxJH+mPZY=
-X-Received: by 2002:a2e:b014:: with SMTP id y20mr1987257ljk.464.1614961739501;
- Fri, 05 Mar 2021 08:28:59 -0800 (PST)
+        Fri, 5 Mar 2021 12:10:10 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 9AC383E28C9
+        for <linux-hardening@vger.kernel.org>; Fri,  5 Mar 2021 10:49:56 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id IDeGlWL6CABzoIDeGleXdC; Fri, 05 Mar 2021 10:49:56 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xxm6vs574ulUJk2+2dsCPFn//qghqTGxbJvH0vJzGgk=; b=aMfNY8eoM19UyWCS1qqtPCIhLO
+        KwZphr7O6FJ5HOby6ab4G1cHNaj1hrB9KY3oXA+1PPWesypR7o/1vhn780tncN3+dFmL4PYqDUjcQ
+        JuyTAj1zimVKLeX4yQGKlAGUc/QQBaldbhiV4dhXOJgRK+hdQqFfzdh+qrV17ZfJ+3xFyrdzEThKR
+        6k/Q5pu8kmQ7fQhOdm0gdsDUnnfgFPrsBde5FKm9ARUKFGA3V7ACgaL7iVXdghh3yHHbdrkk/Wx/s
+        2VxtFSA4uZDQiK+e2IzYd+Q3DQp7rrYJ2Vw4i4vdp2e6nAYAJWs4lVdZEMR6TVYmwm/BwK4v9XsFX
+        +IQYrs9A==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:34376 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lIDeG-002J3r-67; Fri, 05 Mar 2021 10:49:56 -0600
+Subject: Re: [PATCH RESEND][next] rtl8xxxu: Fix fall-through warnings for
+ Clang
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jes Sorensen <Jes.Sorensen@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210305094850.GA141221@embeddedor>
+ <871rct67n2.fsf@codeaurora.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <a988a651-1233-0ac3-7018-4ea24096f167@embeddedor.com>
+Date:   Fri, 5 Mar 2021 10:49:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-References: <fff056a7c9e6050c2d60910f70b6d99602f3bec4.1611863075.git.jpoimboe@redhat.com>
- <CAHk-=wih0rLHsPXodpXJw_0F3bJqu=Pb_YNmPCSsYU_huoMwZA@mail.gmail.com>
- <20210128205207.awdbh4bmx56pxxjl@treble> <CAHk-=wgh4DaZvTcFfBcDMKc1QXkKjwny_Z0H5JfzdwMTNTBkSw@mail.gmail.com>
- <CAHk-=wh+3PWi2NuoQ0hbSyLpOHjaBWKcgX6N7+PfPkXzNAfMwA@mail.gmail.com>
- <20210128213409.qxnclchjyq6v23up@treble> <CAHk-=wgjwhDy-y4mQh34L+2aF=n6BjzHdqAW2=8wri5x7O04pA@mail.gmail.com>
- <20210128220803.fixcmuv4ceq5m7dy@treble> <CAK7LNARE3KO-kqdsXAbt9d9+3EqqutYd6iNki_rU2-Q9GkakbA@mail.gmail.com>
- <20210201211322.t2rxmvnrystc2ky7@treble>
-In-Reply-To: <20210201211322.t2rxmvnrystc2ky7@treble>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 6 Mar 2021 01:28:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARHoTnZ3gAvHgnYB4n-wYuboxC10A6zURh1ODGhxWd2yA@mail.gmail.com>
-Message-ID: <CAK7LNARHoTnZ3gAvHgnYB4n-wYuboxC10A6zURh1ODGhxWd2yA@mail.gmail.com>
-Subject: Re: [PATCH RFC] kbuild: Prevent compiler mismatch with external modules
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Justin Forbes <jforbes@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Jessica Yu <jeyu@kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000cf329c05bccc9487"
+In-Reply-To: <871rct67n2.fsf@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lIDeG-002J3r-67
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:34376
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---000000000000cf329c05bccc9487
-Content-Type: text/plain; charset="UTF-8"
-
-On Tue, Feb 2, 2021 at 6:13 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, Jan 29, 2021 at 08:17:51AM +0900, Masahiro Yamada wrote:
-> > [3]
-> > Peterz already pointed out asm-goto as an example of ABI mismatch.
-> >
-> > I remember a trouble reported in the past due
-> > to the mismatch of -mstack-protector-guard-offset.
-> >
-> > https://bugzilla.kernel.org/show_bug.cgi?id=201891
-> >
-> > This has already been fixed,
-> > and it will no longer happen though.
->
-> This is kind of concerning though.  It would be nice to somehow store
-> KCLAGS in the config and warn if it changes unexpectedly.
->
-> This can be a problem not only for OOT modules, but for regular kernel
-> builds which have a .config copied from somewhere.
->
-> Because of the toolchain-dependent kconfig options, features can
-> silently disappear if the toolchain doesn't support them, due to a
-> different compiler version, or even a missing library.
->
-> > [2]
-> >
-> > As for this patch, it is wrong to do this check in the Makefile
-> > parse stage.
-> >
-> > "make M=...  clean"
-> > "make M=...  help"
-> >
-> > etc. will fail.
-> > Such targets do not require the compiler in the first place.
-> >
-> > This check must be done before starting building something,
-> >
-> > Also, this patch is not applicable.
-> > gcc-version.sh and clang-version.sh do not exist.
-> > See linux-next.
->
-> Something like so?
-
-No, I do not think so.
 
 
->
-> diff --git a/Makefile b/Makefile
-> index 95ab9856f357..10ca621369fb 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1721,12 +1721,25 @@ KBUILD_MODULES := 1
->
->  build-dirs := $(KBUILD_EXTMOD)
->  PHONY += modules
-> -modules: $(MODORDER)
-> +modules: ext_compiler_check $(MODORDER)
+On 3/5/21 07:40, Kalle Valo wrote:
+> "Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
+> 
+>> In preparation to enable -Wimplicit-fallthrough for Clang, fix
+>> multiple warnings by replacing /* fall through */ comments with
+>> the new pseudo-keyword macro fallthrough; instead of letting the
+>> code fall through to the next case.
+>>
+>> Notice that Clang doesn't recognize /* fall through */ comments as
+>> implicit fall-through markings.
+>>
+>> Link: https://github.com/KSPP/linux/issues/115
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> It's not cool that you ignore the comments you got in [1], then after a
+> while mark the patch as "RESEND" and not even include a changelog why it
+> was resent.
 
-
-For the single thread build, yes
-GNU Make will run the targets from left to right,
-so ext_compiler_check is run before compiling
-any build artifact.
-
-If -j <N> option is given, there is no guarantee
-that ext_compiler_check finishes first.
-
-
-
->         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
->
->  $(MODORDER): descend
->         @:
->
-> +orig_name   := $(if $(CONFIG_CC_IS_GCC),GCC,CLANG)
-> +orig_minor  := $(shell expr $(if $(CONFIG_CC_IS_GCC),$(CONFIG_GCC_VERSION),$(CONFIG_CLANG_VERSION)) / 100)
-> +cur_namever := $(shell $(srctree)/scripts/cc-version.sh $(CC))
-> +cur_name    := $(word 1,$(cur_namever))
-> +cur_minor   := $(shell expr $(word 2,$(cur_namever)) / 100)
-
-These are still calculated by 'make M=... clean' or 'make M=... help'.
-Using '=' assignment solves it, but the code is still ugly.
-
-
-I attached my alternative implementation.
-
-
-> +PHONY += ext_compiler_check
-> +ext_compiler_check:
-> +       @if [ $(orig_name) != $(cur_name) ] || [ $(orig_minor) != $(cur_minor) ]; then \
-> +               echo >&2 "warning: The compiler differs from the version which was used to build the kernel."; \
-> +               echo >&2 "warning: Some kernel features are compiler-dependent."; \
-> +               echo >&2 "warning: It's recommended that you change your compiler to match the version in the .config file."; \
-> +       fi
-> +
->  PHONY += modules_install
->  modules_install: _emodinst_ _emodinst_post
->
->
+I'm a bit confused. I replied to the same thread at the time. You can see
+my response there. No one replied back. :/
 
 --
-Best Regards
-Masahiro Yamada
+Gustavo
 
---000000000000cf329c05bccc9487
-Content-Type: application/x-patch; 
-	name="0001-kbuild-show-notice-if-a-different-compiler-is-used-f.patch"
-Content-Disposition: attachment; 
-	filename="0001-kbuild-show-notice-if-a-different-compiler-is-used-f.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_klwif6ch0>
-X-Attachment-Id: f_klwif6ch0
-
-RnJvbSA4MTUyYzQ3ZDE5Y2FiNWFmMzYxZDA5N2ZjYjkzOWE0ZThlY2VmYTI4IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3Jn
-PgpEYXRlOiBGcmksIDUgTWFyIDIwMjEgMTQ6MTA6MjYgKzA5MDAKU3ViamVjdDogW1BBVENIXSBr
-YnVpbGQ6IHNob3cgbm90aWNlIGlmIGEgZGlmZmVyZW50IGNvbXBpbGVyIGlzIHVzZWQgZm9yCiBl
-eHRlcm5hbCBtb2R1bGUgYnVpbGQKClRoaXMgY29tbWl0IHNob3dzIGEgbm90aWNlIHVubGVzcyB0
-aGUgY29tcGlsZXIgaXMgZXhhY3RseSB0aGUgc2FtZS4KCm5vdGljZTogdGhlIGNvbXBpbGVyIGRp
-ZmZlcnMgZnJvbSB0aGUgb25lIHVzZWQgdG8gYnVpbGQgdGhlIGtlcm5lbAogIFRoZSBrZXJuZWwg
-d2FzIGJ1aWx0IGJ5OiBnY2MgKEdDQykgMTAuMC4xIDIwMjAwMzI4IChSZWQgSGF0IDEwLjAuMS0w
-LjExKQogIFlvdSBhcmUgdXNpbmc6ICAgICAgICAgICBnY2MgKEdDQykgMTAuMi4xIDIwMjAxMTI1
-IChSZWQgSGF0IDEwLjIuMS05KQoKQ2hlY2sgdGhlIGRpZmZlcmVuY2UsIGFuZCBkZXRlcm1pbmUg
-aWYgeW91IGFyZSBPSyB3aXRoIHRoYXQuIElmIHlvdQpiZWxpZXZlIG1peGluZyB0d28gY29tcGls
-ZXJzIGlzIE9LLCBwbGVhc2UgcHJvY2VlZCBhdCB5b3VyIHJpc2suCgpTaWduZWQtb2ZmLWJ5OiBN
-YXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3JnPgotLS0KIE1ha2VmaWxlIHwgMTIg
-KysrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
-bigtKQoKZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUKaW5kZXggYTMzMzZkOWI0YTIy
-Li5lNTkyNDU2NjczYTMgMTAwNjQ0Ci0tLSBhL01ha2VmaWxlCisrKyBiL01ha2VmaWxlCkBAIC0x
-Nzc5LDYgKzE3NzksMTYgQEAgY2xlYW4tZGlycyA6PSAkKEtCVUlMRF9FWFRNT0QpCiBjbGVhbjog
-cm0tZmlsZXMgOj0gJChLQlVJTERfRVhUTU9EKS9Nb2R1bGUuc3ltdmVycyAkKEtCVUlMRF9FWFRN
-T0QpL21vZHVsZXMubnNkZXBzIFwKIAkkKEtCVUlMRF9FWFRNT0QpL2NvbXBpbGVfY29tbWFuZHMu
-anNvbiAkKEtCVUlMRF9FWFRNT0QpLy50aGlubHRvLWNhY2hlCiAKK1BIT05ZICs9IHByZXBhcmUK
-KyMgbm93IGV4cGFuZCB0aGlzIGludG8gYSBzaW1wbGUgdmFyaWFibGUgdG8gcmVkdWNlIHRoZSBj
-b3N0IG9mIHNoZWxsIGV2YWx1YXRpb25zCitwcmVwYXJlOiBDQ19WRVJTSU9OX1RFWFQgOj0gJChD
-Q19WRVJTSU9OX1RFWFQpCitwcmVwYXJlOgorCUBpZiBbICIkKENDX1ZFUlNJT05fVEVYVCkiICE9
-ICQoQ09ORklHX0NDX1ZFUlNJT05fVEVYVCkgXTsgdGhlbiBcCisJCWVjaG8gIm5vdGljZTogdGhl
-IGNvbXBpbGVyIGRpZmZlcnMgZnJvbSB0aGUgb25lIHVzZWQgdG8gYnVpbGQgdGhlIGtlcm5lbCI7
-IFwKKwkJZWNobyAiICBUaGUga2VybmVsIHdhcyBidWlsdCBieTogIiQoQ09ORklHX0NDX1ZFUlNJ
-T05fVEVYVCk7IFwKKwkJZWNobyAiICBZb3UgYXJlIHVzaW5nOiAgICAgICAgICAgJChDQ19WRVJT
-SU9OX1RFWFQpIjsgXAorCWZpCisKIFBIT05ZICs9IGhlbHAKIGhlbHA6CiAJQGVjaG8gICcgIEJ1
-aWxkaW5nIGV4dGVybmFsIG1vZHVsZXMuJwpAQCAtMTc5MCw3ICsxODAwLDcgQEAgaGVscDoKIAlA
-ZWNobyAgJycKIAogIyBuby1vcCBmb3IgZXh0ZXJuYWwgbW9kdWxlIGJ1aWxkcwotUEhPTlkgKz0g
-cHJlcGFyZSBtb2R1bGVzX3ByZXBhcmUKK1BIT05ZICs9IG1vZHVsZXNfcHJlcGFyZQogCiBlbmRp
-ZiAjIEtCVUlMRF9FWFRNT0QKIAotLSAKMi4yNy4wCgo=
---000000000000cf329c05bccc9487--
+> 
+> [1] https://patchwork.kernel.org/project/linux-wireless/patch/d522f387b2d0dde774785c7169c1f25aa529989d.1605896060.git.gustavoars@kernel.org/
+> 
