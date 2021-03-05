@@ -2,75 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CA9C433E0
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 05:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92DDC433E0
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39DCE65017
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 05:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A6A64FE6
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229465AbhCEFVF (ORCPT
+        id S229464AbhCEHeI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 00:21:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38400 "EHLO mail.kernel.org"
+        Fri, 5 Mar 2021 02:34:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229446AbhCEFVE (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 00:21:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1FBF465015;
-        Fri,  5 Mar 2021 05:21:04 +0000 (UTC)
+        id S229446AbhCEHeH (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 02:34:07 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B173964F59;
+        Fri,  5 Mar 2021 07:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614921664;
-        bh=AJg1FGKznu9BtYd76Gqv/R51O41xFt8MvX0qOxmPt4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mste6ltr1wOLT1aouWjZN0lLBH7fxUaOtbK4v3UAttUy2K6NhaX+8vYnWAFevWZQd
-         2i3zEaU6D+HNKjci3QrbaduXfWwJwzPKBzSCba25vuRdLPNc/xnt6CzjLYer/BZ2OZ
-         E/P6Wc1oDx94pa8GVA4UoEhWb/FzK1CRMCOpvQ53mKGbkiS9C9DfV5x/M5p6J4XsYT
-         k43xe/7dp1jb0QUbrZrRtglsiXg49rxINXEvI0JG0WMVf0JBPtb+wLRQV6rKh97vDJ
-         AF0wIF74zGv7v1Lr5kAJB5EbSFFao+XH8Sb6zZWtPgG1h0VL5z2K5qhODXEC/aCXqY
-         v7mBQf2nyK11g==
-Date:   Thu, 4 Mar 2021 23:21:02 -0600
+        s=k20201202; t=1614929647;
+        bh=S2MMb6iAzEnkRQJZsxsHQCU5Dz1C7ovitVWgE5EloxQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=a0IXR79ZJaymLhmqN4IwpsNfUI+n1jvBglRlmKKAxwbLcmpK0sbGIN8+N28mFJa+O
+         lvfk+/r6L4RQh2jnnun3xxgaOiIy/PRq7Md2dx+I5+RhmgJjE8h6XAfSnM9Ju1bMGN
+         YaqoSaDNehwurRQ1vDmqM5YvSDGkTwIZAwQiQnbSoKGwsL/bWR8/azThA05RTfEgHW
+         SWqTNbwPal3HR+P5B009UNGpT+UGuspsc1nx41WnxpJOt+lcOYewE1Sj9WJbGI/ULh
+         ACND8fZaV8B8XE4Yhg7sVd0qe8RawFPQa6MBOcc6jNeC/IACkDW39i3I9Tyd8WPq4E
+         xRFHfec0pbanw==
+Date:   Fri, 5 Mar 2021 01:34:03 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 057/141] watchdog: Fix fall-through warnings for Clang
-Message-ID: <20210305052102.GA113683@embeddedor>
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
- <20210304230406.GA106291@embeddedor>
- <20210305041512.GA154288@roeck-us.net>
+Subject: [PATCH][next] net: mscc: ocelot: Fix fall-through warnings for Clang
+Message-ID: <20210305073403.GA122237@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210305041512.GA154288@roeck-us.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 04, 2021 at 08:15:12PM -0800, Guenter Roeck wrote:
-> On Thu, Mar 04, 2021 at 05:04:06PM -0600, Gustavo A. R. Silva wrote:
-> > Hi all,
-> > 
-> > It's been more than 3 months; who can take this, please? :)
-> > 
-> 
-> I am not in favor of cosmetic patches for old drivers,
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+by explicitly adding a break statement instead of just letting the code
+fall through to the next case.
 
-Me either. However, this is not a cosmetic patch[1].
+Link: https://github.com/KSPP/linux/issues/115
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ drivers/net/ethernet/mscc/ocelot_vcap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> and I am not going to provide tags for them anymore.
-> The driver should be converted to use the watchdog core,
-> or it should be dropped.
+diff --git a/drivers/net/ethernet/mscc/ocelot_vcap.c b/drivers/net/ethernet/mscc/ocelot_vcap.c
+index 37a232911395..7945393a0655 100644
+--- a/drivers/net/ethernet/mscc/ocelot_vcap.c
++++ b/drivers/net/ethernet/mscc/ocelot_vcap.c
+@@ -761,6 +761,7 @@ static void is1_entry_set(struct ocelot *ocelot, int ix,
+ 			vcap_key_bytes_set(vcap, &data, VCAP_IS1_HK_ETYPE,
+ 					   etype.value, etype.mask);
+ 		}
++		break;
+ 	}
+ 	default:
+ 		break;
+-- 
+2.27.0
 
-Is it OK with you if I carry this in my tree for a future pull-request
-to Linus?
-
-Thanks!
---
-Gustavo
-
-[1] https://github.com/KSPP/linux/issues/115
