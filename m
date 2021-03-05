@@ -7,43 +7,42 @@ X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0B2C433E6
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC797C433E0
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C083365016
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F43565018
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbhCEIX7 (ORCPT
+        id S229538AbhCEI0F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 03:23:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47012 "EHLO mail.kernel.org"
+        Fri, 5 Mar 2021 03:26:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229504AbhCEIX7 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 03:23:59 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3099E65017;
-        Fri,  5 Mar 2021 08:23:58 +0000 (UTC)
+        id S229528AbhCEI0C (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 03:26:02 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6C09165014;
+        Fri,  5 Mar 2021 08:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614932639;
-        bh=5dWhuUO/oHpV2V7fo9QOdb69sHzl2L5kSFQKxqFnL80=;
+        s=k20201202; t=1614932762;
+        bh=8kCER71SB1n8leoU2EokvztmF4jGpV7K4ZN1wSNRgdY=;
         h=Date:From:To:Cc:Subject:From;
-        b=VqlbfHag5aW6BbFYB9RTCZs0dAhUAafKuWXqSI4KMph4sX5i63ZkTaigItdgXCoPX
-         J97beKjQpQ1XMQze9mn0j5B2z74LWrAs81P1qQYwcZeErq2zO+bm16iRNLXNW9biO8
-         uc7i4uGT0hugxan5BHs4gQzNW33wLXO/z2HsfSFa5bqPmZOkWBZFN44CxqkRi1mf81
-         JFyX3YCqPcr3wNESLLQeV/SxaGRFelO5dQuTG28xNzFZbb70fGLF6VX+nlobI02BJ6
-         xjfbfeaukzTaZf2Acs7vZVaMkOJ9T3V+PZ/Ts2Z/B5LfYf0fENzlZ4guLnyFrqebl7
-         Kx3U9U7FRkEXA==
-Date:   Fri, 5 Mar 2021 02:23:56 -0600
+        b=jATUPn7IhyWdnarY212YsfhDcdb7T5CObxeJPOXvyC1quwn2QrzKatXWTeoyLh1Bo
+         1oXI+VqiVs/cNHaFRuZgwUHsvlRjOm+9efhQFV6HXLgf1kbD09mKeyUv0h4tI2As/D
+         5M41oqOi+RWWO6aiGgeuz3Pk5IPQbCsj2M3rnsULCrJvXmoaG/nyByH4NCZowJGu/F
+         C8SPoM7nM9PG/1esGPMcysWFF0HfN1mtXTWtKoV4z3tTwEzc5uJCTbsOF+QOM+uz1L
+         niCFLhYyAZAdmg4xSQ+tr8vhCyyM1vb1ZkZtIvlymwfVV3COF0Yq+anFOYo7GCgYVy
+         YBvh0OaxI2YCQ==
+Date:   Fri, 5 Mar 2021 02:25:59 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>
 Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH RESEND][next] mtd: onenand: Fix fall-through warnings for
- Clang
-Message-ID: <20210305082356.GA137489@embeddedor>
+Subject: [PATCH RESEND][next] mtd: rawnand: fsmc: Fix fall-through warnings
+ for Clang
+Message-ID: <20210305082559.GA137646@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -58,21 +57,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/mtd/nand/onenand/onenand_samsung.c | 1 +
+ drivers/mtd/nand/raw/fsmc_nand.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mtd/nand/onenand/onenand_samsung.c b/drivers/mtd/nand/onenand/onenand_samsung.c
-index 87b28e397d67..b64895573515 100644
---- a/drivers/mtd/nand/onenand/onenand_samsung.c
-+++ b/drivers/mtd/nand/onenand/onenand_samsung.c
-@@ -396,6 +396,7 @@ static int s3c_onenand_command(struct mtd_info *mtd, int cmd, loff_t addr,
- 	case ONENAND_CMD_READOOB:
- 	case ONENAND_CMD_BUFFERRAM:
- 		ONENAND_SET_NEXT_BUFFERRAM(this);
+diff --git a/drivers/mtd/nand/raw/fsmc_nand.c b/drivers/mtd/nand/raw/fsmc_nand.c
+index a24e2f57fa68..bf695255b43a 100644
+--- a/drivers/mtd/nand/raw/fsmc_nand.c
++++ b/drivers/mtd/nand/raw/fsmc_nand.c
+@@ -930,6 +930,7 @@ static int fsmc_nand_attach_chip(struct nand_chip *nand)
+ 				 "Using 4-bit SW BCH ECC scheme\n");
+ 			break;
+ 		}
 +		break;
- 	default:
+ 
+ 	case NAND_ECC_ENGINE_TYPE_ON_DIE:
  		break;
- 	}
 -- 
 2.27.0
 
