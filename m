@@ -4,47 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17A8C433E6
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E54EC433E0
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9A065011
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176B464DE8
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbhCEImd (ORCPT
+        id S229631AbhCEItH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 03:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
+        Fri, 5 Mar 2021 03:49:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229493AbhCEImN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 03:42:13 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DE2AE64F11;
-        Fri,  5 Mar 2021 08:42:11 +0000 (UTC)
+        id S229615AbhCEIsv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 03:48:51 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BF5C064DE8;
+        Fri,  5 Mar 2021 08:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614933733;
-        bh=mgxBLmLXHhIZquaeQklM8mANN4oNT1voBTTYJbZRqF4=;
+        s=k20201202; t=1614934130;
+        bh=DqeCSUwH6c0N0clX8uq/415p4ecGV26XXLYTS0utyyg=;
         h=Date:From:To:Cc:Subject:From;
-        b=Nsuz6zi9ZRmhDY6rbc7gE+6wo2JedEJwMFUpoBAmNFDgAxra49iHRWTky1ss2Z9mI
-         5CP3Rq/dbQbU6wXSLflPlwIhR+zq9s10j3tgnxbMbZ0IXhKlM9OqhaDvIytsM31Gtr
-         Me+NCGj8JvwREpWAWL75JAxBdEbYY18JEGKMl0JxmOUSVb2+Ow5+phytN0/E0RhP08
-         J8BLaCKwMTYVqnfUypGx43tV6GKZZyk8nHrvaoI1RNXFPcsmifmG1+HtTw+qSpkxrM
-         6eo8YVZW1kGX0WOpUSkioxumzAaE5SS4WndADMViejYN8v11NZuXSnqI6zmvFyF6R7
-         LYyIbc/4xJAGQ==
-Date:   Fri, 5 Mar 2021 02:42:09 -0600
+        b=IjG3eqC02GIFIi+xAKxBkFkAPMXgNbEhTiUzTvVgM1VtDmG5HhXBWzjGIyVHtrVx8
+         Y52g/18YYsSFAI+ttyN73GZwEoNYyVCIHAUGIFl3bSZYeNOXqnr9MPOfLdZ4ecbyZg
+         cWhJvKF1SMnEtJsoRjtcNVz0egAtP331ngGm1w7Si1ttY/YxFl+1zM+8wg6PeDatDX
+         b69qoMxrD+Zik8k1RWiT1DXb+wyWUshACHNWMPAeVsgb494EocZGf8O+Z65m2l3O2O
+         NbgiJm9Aj4RCi3AWGr5UxPu0K/eaYcKHEEQs5ZS10Zt0wfc14MT2wUh44AYjuGxigc
+         e/atl5SthC2gw==
+Date:   Fri, 5 Mar 2021 02:48:47 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
+To:     Tariq Toukan <tariqt@nvidia.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH RESEND][next] netfilter: Fix fall-through warnings for Clang
-Message-ID: <20210305084209.GA138063@embeddedor>
+Subject: [PATCH RESEND][next] net/mlx4: Fix fall-through warnings for Clang
+Message-ID: <20210305084847.GA138343@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -52,53 +50,27 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-warnings by explicitly adding multiple break statements instead of just
-letting the code fall through to the next case.
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+by explicitly adding a break statement instead of just letting the code
+fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
-Acked-by: Florian Westphal <fw@strlen.de>
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/netfilter/nf_conntrack_proto_dccp.c | 1 +
- net/netfilter/nf_tables_api.c           | 1 +
- net/netfilter/nft_ct.c                  | 1 +
- 3 files changed, 3 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nf_conntrack_proto_dccp.c b/net/netfilter/nf_conntrack_proto_dccp.c
-index db7479db8512..4f33307fa3cf 100644
---- a/net/netfilter/nf_conntrack_proto_dccp.c
-+++ b/net/netfilter/nf_conntrack_proto_dccp.c
-@@ -397,6 +397,7 @@ dccp_new(struct nf_conn *ct, const struct sk_buff *skb,
- 			msg = "not picking up existing connection ";
- 			goto out_invalid;
- 		}
+diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+index a99e71bc7b3c..771b92019af1 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -2660,6 +2660,7 @@ int mlx4_FREE_RES_wrapper(struct mlx4_dev *dev, int slave,
+ 	case RES_XRCD:
+ 		err = xrcdn_free_res(dev, slave, vhcr->op_modifier, alop,
+ 				     vhcr->in_param, &vhcr->out_param);
 +		break;
- 	case CT_DCCP_REQUEST:
- 		break;
- 	case CT_DCCP_INVALID:
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index b07703e19108..1f53459e30e9 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -8557,6 +8557,7 @@ static int nf_tables_check_loops(const struct nft_ctx *ctx,
- 							data->verdict.chain);
- 				if (err < 0)
- 					return err;
-+				break;
- 			default:
- 				break;
- 			}
-diff --git a/net/netfilter/nft_ct.c b/net/netfilter/nft_ct.c
-index 882fe8648653..0592a9456084 100644
---- a/net/netfilter/nft_ct.c
-+++ b/net/netfilter/nft_ct.c
-@@ -527,6 +527,7 @@ static void __nft_ct_set_destroy(const struct nft_ctx *ctx, struct nft_ct *priv)
- 	case NFT_CT_ZONE:
- 		if (--nft_ct_pcpu_template_refcnt == 0)
- 			nft_ct_tmpl_put_pcpu();
-+		break;
- #endif
+ 
  	default:
  		break;
 -- 
