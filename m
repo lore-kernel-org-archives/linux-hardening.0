@@ -1,112 +1,128 @@
-Return-Path: <linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=3XZ1=ID=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B5FC433E0
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 14:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6C6C433E0
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 15:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2C776501E
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 14:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A761F65017
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 15:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230208AbhCEOHl (ORCPT
+        id S229651AbhCEPdA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 09:07:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229562AbhCEOHT (ORCPT
+        Fri, 5 Mar 2021 10:33:00 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:60571 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229558AbhCEPcd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 09:07:19 -0500
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D52CC061574;
-        Fri,  5 Mar 2021 06:07:19 -0800 (PST)
-Received: by mail-io1-xd34.google.com with SMTP id o11so2146434iob.1;
-        Fri, 05 Mar 2021 06:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UODsAGsV/T+lomB07oDuRKsrOCpZBxRJM1Y3c8KG2Jw=;
-        b=q2LfV+yiXkB3d1c+Y7ylK+4p4h22FSUF1MWWKd+Vplm7kfp3Gdn1Aiybuox8gV/dPJ
-         JfFzlrgm1en745SzsCylqBGn38Z12L63Fxu7Y3HTT58zRiR5uOC5btka+JlDnk/AKwoi
-         RI7ZUNFE8M9zHW8dZbFHLPkovmUUEu/74Y7ZPgjCloD6Hs4/F717u1Rtk2I267xYPKDK
-         FURPxO/YdGp6x5kDq8f0KZvN0qGBhPsY68mG5tZMZ5sqddJKX3BA+Ruf1YLgjjVc1ALu
-         R5UIm5WcaYUrMrekrcmQDcnJwY2wl+jjouXtGRz6wXU2xWeRAORxy54XnIspZPZJoWWU
-         bPAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UODsAGsV/T+lomB07oDuRKsrOCpZBxRJM1Y3c8KG2Jw=;
-        b=NR1Q+VNaOgq/i66e+ancVgTnPsq3nGXv/bXR0y07m5aAvivn5gNRQIzsfhaLU/kmtj
-         Eq8Qf2wxfp+yhMSQMyUN8maLFFkE6vk6R+y/LlmQVzAoGL4e1Yhb9czH9RBiq/aAeeoQ
-         IoYSvSPGyyojgt30i9j7Q5C8x05iWOvCoubju4bZAprW7Yf/wC5yrCsskI9BA6VWSQLk
-         37HHXvGL975ECvIDunyl+PO8A+sWyJYW/vJZiWVV3F8ZZdGcKMZhrdfAUrSStnKwA9VF
-         w7/dfOIpLQgjSSNt8nIiJi7ia8oEAFMlJdR5020zMq3mX98+mC+96wA8p4/XCY7vsaGm
-         iubQ==
-X-Gm-Message-State: AOAM531UISRC3/DmsDWHmWTH15C3Bq4qBMcesSPBqHQyRNrPu00+4ySX
-        AQyuP8zQlZNKgL6AC163h9TKxeSYAv8v4aFcKiuW2McGI/M=
-X-Google-Smtp-Source: ABdhPJwGYDO38Ll6XtOXwqXQbE22dTy5p4sIkZv5Sjg3pt8l0RcuNOQUMuDli4y2Ti+TEhQHlDw5+FG+D+HSz1idYwk=
-X-Received: by 2002:a5d:8149:: with SMTP id f9mr8410386ioo.191.1614953238616;
- Fri, 05 Mar 2021 06:07:18 -0800 (PST)
+        Fri, 5 Mar 2021 10:32:33 -0500
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 125FWErB020473;
+        Sat, 6 Mar 2021 00:32:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 125FWErB020473
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1614958335;
+        bh=5HGUtSQp4zdfofgIfM14OVxH7gKujR8p0/j9RGJsnCE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EEiLqv6/y6o9ESbPto9zaOSNh1jjfx+NqK2WAcdewLH79v9Ld+TLvr6wcCKqz69Xn
+         E7eAQLaLxTEWMumF47EOCjRp+xJey01AsLL0MtAj5Y+YQ+/XILme1Ji6Q2D9Z/r70L
+         4iaW6R5pIYLCVVYBXjKGDRYwRfsZJ/Y0aUG2gfFEnyNIcUjYSyFX4TzgwwdI0wxnRL
+         ORt31NfFyfBNEHfL1JRzAlQtkNvKBzdoLX7rVDWeCRIdA7JtlEIea+X/Ou+OXU4YFq
+         vdIXoGHlXKtwDaxB0siL3oIqCFfl9bVtSb15U/eFi1WJHjz+5Ha01RSzzsf+RmDTX+
+         19xAcmMqJTEpw==
+X-Nifty-SrcIP: [209.85.216.48]
+Received: by mail-pj1-f48.google.com with SMTP id cl21-20020a17090af695b02900c61ac0f0e9so2274967pjb.1;
+        Fri, 05 Mar 2021 07:32:14 -0800 (PST)
+X-Gm-Message-State: AOAM53073at6tA+RRMxRv7JZn78KxQdf4vbzQJy7eDK42trXzuMCTl8O
+        gjBYwy3J5ZAJPXd3t2WAL1Q1JhwsOjTAasdxXNY=
+X-Google-Smtp-Source: ABdhPJxd+afZFPuXcwj0Tgmr4EKvTdwpPx2qhvoB1lpDpulv2q24xPM4wTn9c8WXyx0hMPDemrWFKElw/P1kq+aEyoQ=
+X-Received: by 2002:a17:90a:dc08:: with SMTP id i8mr10423104pjv.153.1614958333959;
+ Fri, 05 Mar 2021 07:32:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20210305095923.GA142236@embeddedor>
-In-Reply-To: <20210305095923.GA142236@embeddedor>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Fri, 5 Mar 2021 15:07:08 +0100
-Message-ID: <CAOi1vP8UFriFYzzkHs9HQFw=AjJyLayaMfZ2LGJuCoie+FeYaQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND][next] ceph: Fix fall-through warnings for Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
+References: <20210302232649.y2tutffhxsblwqlb@treble> <CAK7LNAReuB5zUq_7S8ZG25+tdQowECDOK1rApYvkPCpHhPjK5w@mail.gmail.com>
+ <20210303191516.6ksxmng4pis7ue4p@treble> <CAHk-=wjR0CyaKU=6mXW9W+65L8h8DQuBdA2ZY2CfrPe6qurz3A@mail.gmail.com>
+ <20210303193806.oovupl4ubtkkyiih@treble> <CAHk-=whA6zru0BaNm4uu5KyZe+aQpRScOnmc9hdOpO3W+xN9Xw@mail.gmail.com>
+ <20210303202406.bxgdx5a25j6wc43b@treble> <CAHk-=wi9J3mM8y+aH9e=HRo95giK4BRyyasayAimB0gdvbvDsQ@mail.gmail.com>
+ <20210303214534.guyoxcwrgxgcqzy4@treble> <CAK7LNAQaAgg+mVSw_U3_FuuqcqJNnonyhVD1M-ezv71Y+dyAww@mail.gmail.com>
+ <20210304150812.rzya7ewmerwhe4m4@treble> <CAK7LNAR0kNJ=DLuvRzRG+-rgMfcrSOZu8Mn6JBJ5do7TzJWLcA@mail.gmail.com>
+ <CAHk-=wiT3FGuKuqLniBN2T_PZwD0GH4kf3XNCzq2tfChqn0+SQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wiT3FGuKuqLniBN2T_PZwD0GH4kf3XNCzq2tfChqn0+SQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 6 Mar 2021 00:31:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARDEwyjDj3u=8Y176TehU9FD548LFTrqi3AmBR6jrnA_Q@mail.gmail.com>
+Message-ID: <CAK7LNARDEwyjDj3u=8Y176TehU9FD548LFTrqi3AmBR6jrnA_Q@mail.gmail.com>
+Subject: Re: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT modules
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-hardening@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Justin Forbes <jforbes@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Frank Eigler <fche@redhat.com>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Mar 5, 2021 at 10:59 AM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
+On Fri, Mar 5, 2021 at 4:13 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a couple
-> of warnings by explicitly adding a break and a goto statements instead
-> of just letting the code fall through to the next case.
+> On Thu, Mar 4, 2021 at 7:36 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > All the kernel-space objects are rebuilt
+> > when the compiler is upgraded.
 >
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  fs/ceph/dir.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
-> index 83d9358854fb..3e575656713e 100644
-> --- a/fs/ceph/dir.c
-> +++ b/fs/ceph/dir.c
-> @@ -631,10 +631,12 @@ static loff_t ceph_dir_llseek(struct file *file, loff_t offset, int whence)
->         switch (whence) {
->         case SEEK_CUR:
->                 offset += file->f_pos;
-> +               break;
->         case SEEK_SET:
->                 break;
->         case SEEK_END:
->                 retval = -EOPNOTSUPP;
-> +               goto out;
->         default:
->                 goto out;
->         }
-> --
-> 2.27.0
->
+> I very much NAK'ed that one. Why did that go in?
 
-Applied.
 
-Thanks,
+When the compiler is upgraded, all objects
+should be rebuilt by the new compiler,
+- this keeps Kbuild deterministic,
+irrespective of whether it is a fresh build,
+or incremental build.
 
-                Ilya
+
+If we do not force the full rebuild,
+the banner at boot time is no point.
+
+[    0.000000] Linux version 5.8.0-44-generic (buildd@lgw01-amd64-039)
+(gcc (Ubuntu 10.2.0-13ubuntu1) 10.2.0, GNU ld (GNU Binutils for
+Ubuntu) 2.35.1) #50-Ubuntu SMP Tue Feb 9 06:29:41 UTC 2021 (Ubuntu
+5.8.0-44.50-generic 5.8.18)
+
+
+It claims it was built by
+gcc (Ubuntu 10.2.0-13ubuntu1) 10.2.0
+but we would never know if it is true
+for whole objects.
+Some of them might have been compiled by
+an older compiler.
+
+
+
+
+> Or maybe I NAK'ed another version of it (I think the one I NAK'ed was
+> from Josh), and didn't realize that there were multiple ones.
+>
+> > Linus complaint about GCC plugins not being rebuilt.
+>
+> Yes, and that was a separate complaint and not at all tied to the other objects.
+>
+> Gcc plugins aren't kernel object files at all. They are very much like
+> dynamically loadable libraries to gcc itself.
+>
+>                Linus
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
