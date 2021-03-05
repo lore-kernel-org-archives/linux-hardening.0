@@ -2,90 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28FEC433E0
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 13:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B5FC433E0
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 14:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B301D64F56
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 13:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C776501E
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 14:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbhCENlC (ORCPT
+        id S230208AbhCEOHl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 08:41:02 -0500
-Received: from m42-2.mailgun.net ([69.72.42.2]:10568 "EHLO m42-2.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229723AbhCENkq (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 08:40:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1614951645; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=DmIWVPazE1ZGWAakc7cfMkZrozZnhscQVMNNwhF/Zw0=; b=SUbZLWtDloN3I+Qtkprr02tADf7NMZ9PenrnJ83W2EEp94i0TsZa+amQDJFlIQmenFWWagNz
- t3JhXShX+wmRyxPHwRUYPSH3GhlAI7Td1g4z0xruywORXfnD63OjwI8cvvTfqGaGzIguRfHT
- KbS2Yfhrh6pR4n9Gzh4aT8n9fRI=
-X-Mailgun-Sending-Ip: 69.72.42.2
-X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 604234d62a5e6d1bfa490c9f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Mar 2021 13:40:38
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BCE50C43464; Fri,  5 Mar 2021 13:40:38 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1EADCC433CA;
-        Fri,  5 Mar 2021 13:40:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1EADCC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jes Sorensen <Jes.Sorensen@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RESEND][next] rtl8xxxu: Fix fall-through warnings for Clang
-References: <20210305094850.GA141221@embeddedor>
-Date:   Fri, 05 Mar 2021 15:40:33 +0200
-In-Reply-To: <20210305094850.GA141221@embeddedor> (Gustavo A. R. Silva's
-        message of "Fri, 5 Mar 2021 03:48:50 -0600")
-Message-ID: <871rct67n2.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 5 Mar 2021 09:07:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229562AbhCEOHT (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 09:07:19 -0500
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D52CC061574;
+        Fri,  5 Mar 2021 06:07:19 -0800 (PST)
+Received: by mail-io1-xd34.google.com with SMTP id o11so2146434iob.1;
+        Fri, 05 Mar 2021 06:07:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UODsAGsV/T+lomB07oDuRKsrOCpZBxRJM1Y3c8KG2Jw=;
+        b=q2LfV+yiXkB3d1c+Y7ylK+4p4h22FSUF1MWWKd+Vplm7kfp3Gdn1Aiybuox8gV/dPJ
+         JfFzlrgm1en745SzsCylqBGn38Z12L63Fxu7Y3HTT58zRiR5uOC5btka+JlDnk/AKwoi
+         RI7ZUNFE8M9zHW8dZbFHLPkovmUUEu/74Y7ZPgjCloD6Hs4/F717u1Rtk2I267xYPKDK
+         FURPxO/YdGp6x5kDq8f0KZvN0qGBhPsY68mG5tZMZ5sqddJKX3BA+Ruf1YLgjjVc1ALu
+         R5UIm5WcaYUrMrekrcmQDcnJwY2wl+jjouXtGRz6wXU2xWeRAORxy54XnIspZPZJoWWU
+         bPAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UODsAGsV/T+lomB07oDuRKsrOCpZBxRJM1Y3c8KG2Jw=;
+        b=NR1Q+VNaOgq/i66e+ancVgTnPsq3nGXv/bXR0y07m5aAvivn5gNRQIzsfhaLU/kmtj
+         Eq8Qf2wxfp+yhMSQMyUN8maLFFkE6vk6R+y/LlmQVzAoGL4e1Yhb9czH9RBiq/aAeeoQ
+         IoYSvSPGyyojgt30i9j7Q5C8x05iWOvCoubju4bZAprW7Yf/wC5yrCsskI9BA6VWSQLk
+         37HHXvGL975ECvIDunyl+PO8A+sWyJYW/vJZiWVV3F8ZZdGcKMZhrdfAUrSStnKwA9VF
+         w7/dfOIpLQgjSSNt8nIiJi7ia8oEAFMlJdR5020zMq3mX98+mC+96wA8p4/XCY7vsaGm
+         iubQ==
+X-Gm-Message-State: AOAM531UISRC3/DmsDWHmWTH15C3Bq4qBMcesSPBqHQyRNrPu00+4ySX
+        AQyuP8zQlZNKgL6AC163h9TKxeSYAv8v4aFcKiuW2McGI/M=
+X-Google-Smtp-Source: ABdhPJwGYDO38Ll6XtOXwqXQbE22dTy5p4sIkZv5Sjg3pt8l0RcuNOQUMuDli4y2Ti+TEhQHlDw5+FG+D+HSz1idYwk=
+X-Received: by 2002:a5d:8149:: with SMTP id f9mr8410386ioo.191.1614953238616;
+ Fri, 05 Mar 2021 06:07:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20210305095923.GA142236@embeddedor>
+In-Reply-To: <20210305095923.GA142236@embeddedor>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Fri, 5 Mar 2021 15:07:08 +0100
+Message-ID: <CAOi1vP8UFriFYzzkHs9HQFw=AjJyLayaMfZ2LGJuCoie+FeYaQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND][next] ceph: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
-
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix
-> multiple warnings by replacing /* fall through */ comments with
-> the new pseudo-keyword macro fallthrough; instead of letting the
-> code fall through to the next case.
+On Fri, Mar 5, 2021 at 10:59 AM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
 >
-> Notice that Clang doesn't recognize /* fall through */ comments as
-> implicit fall-through markings.
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a couple
+> of warnings by explicitly adding a break and a goto statements instead
+> of just letting the code fall through to the next case.
 >
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/ceph/dir.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+> index 83d9358854fb..3e575656713e 100644
+> --- a/fs/ceph/dir.c
+> +++ b/fs/ceph/dir.c
+> @@ -631,10 +631,12 @@ static loff_t ceph_dir_llseek(struct file *file, loff_t offset, int whence)
+>         switch (whence) {
+>         case SEEK_CUR:
+>                 offset += file->f_pos;
+> +               break;
+>         case SEEK_SET:
+>                 break;
+>         case SEEK_END:
+>                 retval = -EOPNOTSUPP;
+> +               goto out;
+>         default:
+>                 goto out;
+>         }
+> --
+> 2.27.0
+>
 
-It's not cool that you ignore the comments you got in [1], then after a
-while mark the patch as "RESEND" and not even include a changelog why it
-was resent.
+Applied.
 
-[1] https://patchwork.kernel.org/project/linux-wireless/patch/d522f387b2d0dde774785c7169c1f25aa529989d.1605896060.git.gustavoars@kernel.org/
+Thanks,
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+                Ilya
