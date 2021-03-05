@@ -7,41 +7,43 @@ X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7D8C433DB
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF4CC433E0
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4F765015
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0F265016
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 07:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbhCEHiy (ORCPT
+        id S229494AbhCEHjo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 02:38:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36084 "EHLO mail.kernel.org"
+        Fri, 5 Mar 2021 02:39:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229446AbhCEHix (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 02:38:53 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 25CDB64F44;
-        Fri,  5 Mar 2021 07:38:52 +0000 (UTC)
+        id S229446AbhCEHjo (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 02:39:44 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AD95364F44;
+        Fri,  5 Mar 2021 07:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614929933;
-        bh=coqHJVKiOdwTzRmKkjxvxe6gkSwn9w9KuwMwJB7cM4I=;
+        s=k20201202; t=1614929984;
+        bh=oHCWpgfauurcAwVAR+BNJveAfh0IeEwBSn1ChD9wm2k=;
         h=Date:From:To:Cc:Subject:From;
-        b=BWPxntnfh0GNr3bekp1S375DyL4W920aZWKwkmjaopN0LYS3GzjCx23uQpKN82r3R
-         MD+1acFWAJLYZespAlhbki5hhMqHBpANr140XNkYxBdwZHl/IactW17wBYXOxhzw35
-         iQa8hNx8oYoCCMO8ely+nSw6HlnXqPYNq9N7BNvemrJmxxSObPkio+uKxniHX7jlgt
-         eKTQ2p27WOauM7td4l0bWU+9axY1j1pKhY//sJ3DK4g+wkL5nsGbPq59pRYbZL0upS
-         BudxDPEGsr8cmN+Rf+MVKF7yi2LQbei21ZRHQNZwMfCmprfI9LW5dEsS+qjszoWRZw
-         fL2eutjHee89Q==
-Date:   Fri, 5 Mar 2021 01:38:49 -0600
+        b=dDbc4Tjw6qHfF32EiUMWKcdAqqpKKN9yxFwNhNTUffyNhLUFe4Fgtf5tF2d7Q/1dL
+         oae9F5bD8Fxv/wQwkj/sSir0bzd355/D3d207SE6r6IqHQ7ZECIYiuTvlkvwKjCuKT
+         o74uEiKZPHXueprc8MXVLx0yIuBPfxQjJL1pvC1DPSSuKP9C5CzYKHszNTb8X6yqAx
+         jJC/RSzn3HQ3u8yxOqPEqeOfQh2ggqtTfaUhE0inkS2IE4cbxQYtCdKsRNWdCdelFQ
+         ZOYBACSn6j4c4JorVvkPHUDqqRyX/iw6wRQJWlQvIU04RBXOMwL450/PO4qDh7CAy8
+         +jtqUUh/1mSKA==
+Date:   Fri, 5 Mar 2021 01:39:40 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
+To:     Joerg Reuter <jreuter@yaina.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org,
+Cc:     linux-hams@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] decnet: Fix fall-through warnings for Clang
-Message-ID: <20210305073849.GA122638@embeddedor>
+Subject: [PATCH][next] net: ax25: Fix fall-through warnings for Clang
+Message-ID: <20210305073940.GA122747@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -56,22 +58,21 @@ through to the next case.
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/decnet/dn_route.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ax25/af_ax25.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/decnet/dn_route.c b/net/decnet/dn_route.c
-index 2193ae529e75..37c90c1fdc93 100644
---- a/net/decnet/dn_route.c
-+++ b/net/decnet/dn_route.c
-@@ -1407,7 +1407,7 @@ static int dn_route_input_slow(struct sk_buff *skb)
- 			flags |= RTCF_DOREDIRECT;
- 
- 		local_src = DN_FIB_RES_PREFSRC(res);
--
-+		break;
- 	case RTN_BLACKHOLE:
- 	case RTN_UNREACHABLE:
- 		break;
+diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
+index 269ee89d2c2b..2631efc6e359 100644
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -850,6 +850,7 @@ static int ax25_create(struct net *net, struct socket *sock, int protocol,
+ 		case AX25_P_ROSE:
+ 			if (ax25_protocol_is_registered(AX25_P_ROSE))
+ 				return -ESOCKTNOSUPPORT;
++			break;
+ #endif
+ 		default:
+ 			break;
 -- 
 2.27.0
 
