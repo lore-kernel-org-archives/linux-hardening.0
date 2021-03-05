@@ -7,46 +7,41 @@ X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F33C433DB
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8299BC433DB
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7F1565005
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4864C65011
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbhCEIJQ (ORCPT
+        id S229494AbhCEIQU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 03:09:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
+        Fri, 5 Mar 2021 03:16:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229475AbhCEIJJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 03:09:09 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7755964F4A;
-        Fri,  5 Mar 2021 08:09:07 +0000 (UTC)
+        id S229469AbhCEIQT (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 03:16:19 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C4FA965014;
+        Fri,  5 Mar 2021 08:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614931749;
-        bh=ByaE4K+EFQRpe4LB98+PQO4TPOClgjHWV54KDajmUqQ=;
+        s=k20201202; t=1614932179;
+        bh=t1cng2jl4iyc5DF35ZB4YuDSPYVo2bYVbHiZ7KKk+OQ=;
         h=Date:From:To:Cc:Subject:From;
-        b=J1PrYsHrRDMc6jpbXsjeXIRHSf4HRwUXPm3uezAzYs4tOx3kDH6pQqgYXHO19zo6I
-         jAqXQUAXl44TYNMJnRmeKDhYpoaH3Cfr9s9YUTYZgDGEFbtJzJpr9PdZOTC8GUfL2f
-         D94gF8Iyf1kQch+uYbhwEdh31KEbEKZQfelZKeE/2g+P8KL93UyDxrv5CovC6FnK7g
-         nKH7ZKtJysqp1f9o2gpmX9MVHDePeXgD6HBVMT1xRrCGXYquylyOX+OcUErxsFnrll
-         Jw0EeVVL80EzIeu4Vef/Vi9dhjVJtLzQj0oet4o2HieeeGRd1Gz4+fFH8GEhg1D5aR
-         n+V0xwaGG74hg==
-Date:   Fri, 5 Mar 2021 02:09:05 -0600
+        b=F/YKqPHxRMQ+1zHcBYGg0itcKDEpyLqAjcTMxv8MqjvZuBSCnAskyHmDWupKB1vqT
+         sERqXEvfZHRq5lAjySHIVDYrIOkmRWxHUoinujM/FF+KsZi6P9O38STrSTFT0veGkF
+         ThZPMVmDrfcdH4GT2ElxdTY/ARC3fe2cY9Zf2wBFBNH7Tew0ENZnqTkME9YqQMyUVx
+         S/Ev2A4OJG8XFiJ1WniSjOJejeXfVK0QlTf2Vj8Mte8kvJPA80ST2akU9imbXzjiPf
+         1GEMQvqmy67cjDBpU9I6csLRwUCuFVuInFDlY72lmSR27DU6K4rPx/BQU9T2J5e3/K
+         uoEsYnp57vgRQ==
+Date:   Fri, 5 Mar 2021 02:16:16 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     linux-mtd@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+To:     Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] mtd: rawnand: stm32_fmc2: Fix fall-through warnings
- for Clang
-Message-ID: <20210305080905.GA135306@embeddedor>
+Subject: [PATCH v2][next] ubi: Fix fall-through warnings for Clang
+Message-ID: <20210305081616.GA136956@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -54,40 +49,32 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a couple
-of warnings by explicitly adding a couple of fallthrough pseudo-keywords
-instead of letting the code fall through to the next case.
+In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+by explicitly adding a fallthrough pseudo-keyword instead of letting the
+code fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
 Changes in v2:
- Make use of a break statement instead of fallthrough for consistency.
+ Make use of a break statement instead of fallthrough, for consistency.
  Link: https://lore.kernel.org/lkml/20201123093347.719a77cf@xps13/
 
- drivers/mtd/nand/raw/stm32_fmc2_nand.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mtd/ubi/build.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-index 550bda4d1415..1c277fbb91f2 100644
---- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-+++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-@@ -531,6 +531,7 @@ static int stm32_fmc2_nfc_ham_correct(struct nand_chip *chip, u8 *dat,
- 		switch (b % 4) {
- 		case 2:
- 			bit_position += shifting;
-+			break;
- 		case 1:
- 			break;
- 		default:
-@@ -546,6 +547,7 @@ static int stm32_fmc2_nfc_ham_correct(struct nand_chip *chip, u8 *dat,
- 		switch (b % 4) {
- 		case 2:
- 			byte_addr += shifting;
-+			break;
- 		case 1:
- 			break;
- 		default:
+diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+index f399edc82191..a7e3eb9befb6 100644
+--- a/drivers/mtd/ubi/build.c
++++ b/drivers/mtd/ubi/build.c
+@@ -1350,6 +1350,7 @@ static int bytes_str_to_int(const char *str)
+ 		fallthrough;
+ 	case 'K':
+ 		result *= 1024;
++		break;
+ 	case '\0':
+ 		break;
+ 	default:
 -- 
 2.27.0
 
