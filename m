@@ -2,123 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD52C433E9
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17A8C433E6
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A50E065026
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9A065011
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 08:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbhCEIeW (ORCPT
+        id S229563AbhCEImd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 03:34:22 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:12060 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229642AbhCEIdv (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 03:33:51 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1258WELI002930;
-        Fri, 5 Mar 2021 09:33:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=J/LswseSQK9Z1SiYQbprQ/CvYEnximafUDZppa60bLA=;
- b=a7IgNkFBnfH3c0FFQlgVlU9jBFAfoPzqmiD6+hprrnke+Rz7f7UVMG2vFF0sjI0fAnwD
- 7M57o8DZxa6NinC5kNTuFgU92weFrlTeD3m5YSBxgJq9wACHnVAflub7fMdNowGpc0pv
- T5ZJrgm9dZd+IuJnVJvYGPwRk1lpLkI27O8XsiswOal32eYBSqyokZVcWIlSYB5a1wo9
- 4t4MKi+UOozimEhm6+QxKwSgFYZz0kt00KvbbwaIBOvk5owujv3V0kFPhW6hPpSAoZ30
- x1cdVu/FE0A9gNR/Zb3AGKieNn0WTyHfKNVUOAtkp1aas+Rq3EiQBr9g5/kbY2A75O0p /g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 36yfdymtra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Mar 2021 09:33:27 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 53B2B10002A;
-        Fri,  5 Mar 2021 09:33:26 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag2node3.st.com [10.75.127.6])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 31BBF22B9BC;
-        Fri,  5 Mar 2021 09:33:26 +0100 (CET)
-Received: from [10.48.0.224] (10.75.127.49) by SFHDAG2NODE3.st.com
- (10.75.127.6) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Mar
- 2021 09:33:25 +0100
-Subject: Re: [Linux-stm32] [PATCH v2][next] mtd: rawnand: stm32_fmc2: Fix
- fall-through warnings for Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "Vignesh Raghavendra" <vigneshr@ti.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20210305080905.GA135306@embeddedor>
-From:   Christophe Kerello <christophe.kerello@foss.st.com>
-Message-ID: <35bc7c3d-885a-f723-3849-45c0e46a8ef7@foss.st.com>
-Date:   Fri, 5 Mar 2021 09:33:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Mar 2021 03:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229493AbhCEImN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 03:42:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DE2AE64F11;
+        Fri,  5 Mar 2021 08:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614933733;
+        bh=mgxBLmLXHhIZquaeQklM8mANN4oNT1voBTTYJbZRqF4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Nsuz6zi9ZRmhDY6rbc7gE+6wo2JedEJwMFUpoBAmNFDgAxra49iHRWTky1ss2Z9mI
+         5CP3Rq/dbQbU6wXSLflPlwIhR+zq9s10j3tgnxbMbZ0IXhKlM9OqhaDvIytsM31Gtr
+         Me+NCGj8JvwREpWAWL75JAxBdEbYY18JEGKMl0JxmOUSVb2+Ow5+phytN0/E0RhP08
+         J8BLaCKwMTYVqnfUypGx43tV6GKZZyk8nHrvaoI1RNXFPcsmifmG1+HtTw+qSpkxrM
+         6eo8YVZW1kGX0WOpUSkioxumzAaE5SS4WndADMViejYN8v11NZuXSnqI6zmvFyF6R7
+         LYyIbc/4xJAGQ==
+Date:   Fri, 5 Mar 2021 02:42:09 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH RESEND][next] netfilter: Fix fall-through warnings for Clang
+Message-ID: <20210305084209.GA138063@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20210305080905.GA135306@embeddedor>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG2NODE3.st.com
- (10.75.127.6)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-05_04:2021-03-03,2021-03-05 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Gustavo,
+In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+warnings by explicitly adding multiple break statements instead of just
+letting the code fall through to the next case.
 
-On 3/5/21 9:09 AM, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a couple
-> of warnings by explicitly adding a couple of fallthrough pseudo-keywords
-> instead of letting the code fall through to the next case.
-> 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->   Make use of a break statement instead of fallthrough for consistency.
->   Link: https://lore.kernel.org/lkml/20201123093347.719a77cf@xps13/
-> 
->   drivers/mtd/nand/raw/stm32_fmc2_nand.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> index 550bda4d1415..1c277fbb91f2 100644
-> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> @@ -531,6 +531,7 @@ static int stm32_fmc2_nfc_ham_correct(struct nand_chip *chip, u8 *dat,
->   		switch (b % 4) {
->   		case 2:
->   			bit_position += shifting;
-> +			break;
->   		case 1:
->   			break;
->   		default:
-> @@ -546,6 +547,7 @@ static int stm32_fmc2_nfc_ham_correct(struct nand_chip *chip, u8 *dat,
->   		switch (b % 4) {
->   		case 2:
->   			byte_addr += shifting;
-> +			break;
->   		case 1:
->   			break;
->   		default:
-> 
+Link: https://github.com/KSPP/linux/issues/115
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ net/netfilter/nf_conntrack_proto_dccp.c | 1 +
+ net/netfilter/nf_tables_api.c           | 1 +
+ net/netfilter/nft_ct.c                  | 1 +
+ 3 files changed, 3 insertions(+)
 
-Reviewed-by: Christophe Kerello <christophe.kerello@foss.st.com>
+diff --git a/net/netfilter/nf_conntrack_proto_dccp.c b/net/netfilter/nf_conntrack_proto_dccp.c
+index db7479db8512..4f33307fa3cf 100644
+--- a/net/netfilter/nf_conntrack_proto_dccp.c
++++ b/net/netfilter/nf_conntrack_proto_dccp.c
+@@ -397,6 +397,7 @@ dccp_new(struct nf_conn *ct, const struct sk_buff *skb,
+ 			msg = "not picking up existing connection ";
+ 			goto out_invalid;
+ 		}
++		break;
+ 	case CT_DCCP_REQUEST:
+ 		break;
+ 	case CT_DCCP_INVALID:
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index b07703e19108..1f53459e30e9 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -8557,6 +8557,7 @@ static int nf_tables_check_loops(const struct nft_ctx *ctx,
+ 							data->verdict.chain);
+ 				if (err < 0)
+ 					return err;
++				break;
+ 			default:
+ 				break;
+ 			}
+diff --git a/net/netfilter/nft_ct.c b/net/netfilter/nft_ct.c
+index 882fe8648653..0592a9456084 100644
+--- a/net/netfilter/nft_ct.c
++++ b/net/netfilter/nft_ct.c
+@@ -527,6 +527,7 @@ static void __nft_ct_set_destroy(const struct nft_ctx *ctx, struct nft_ct *priv)
+ 	case NFT_CT_ZONE:
+ 		if (--nft_ct_pcpu_template_refcnt == 0)
+ 			nft_ct_tmpl_put_pcpu();
++		break;
+ #endif
+ 	default:
+ 		break;
+-- 
+2.27.0
 
-Regards,
-Christophe Kerello.
