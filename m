@@ -2,97 +2,127 @@ Return-Path: <SRS0=ZjEk=IE=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06C0C433E6
-	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 04:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED740C433E6
+	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 06:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E0065004
-	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 04:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B632465005
+	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 06:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229922AbhCFEy6 (ORCPT
+        id S229637AbhCFF5b (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 23:54:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229919AbhCFEym (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 23:54:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6459165004;
-        Sat,  6 Mar 2021 04:54:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615006481;
-        bh=Wa4Bw26HoIcAUd6ZQXNe09EtrI1nCHJH/RzeHCepf9I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T+GwdOmNNFxHZ9hWHvqkj5fS11o8kpPGKjXzfrWPMKdxUCl5fyz9O6jlXDlbRU42p
-         oSsJ+bIRcJS13KH3iSJdpAYGzZwWRL384hg9lWv5Eh0l8AoGT6P4ABK9n+s9hk9rxf
-         r8Ttggw/m+bTeJnEVxlsFuvy3P5e6AJjiqLdMgm8dWaHFCSDBgN79LxcY6sXHcHEXd
-         dXLdBSXpMJ+unfzLZg5hadmDYuYPBU7eqYxeIsxjTLcKtC4Oz3jhzeQsI8hVulILUS
-         Yf2VWo56OdGrYXoVfy/eSCkrgitFv4dJrOhBMYbyIMb2Q6XHGXoYStcp4v3ADUbu2T
-         Pz/tklQL58P2Q==
-Date:   Fri, 5 Mar 2021 22:54:39 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RESEND][next] hwmon: (max6621) Fix fall-through warnings
- for Clang
-Message-ID: <20210306045439.GA179425@embeddedor>
-References: <20210305095258.GA141583@embeddedor>
- <20210306031847.GA192807@roeck-us.net>
+        Sat, 6 Mar 2021 00:57:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229628AbhCFF5X (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 6 Mar 2021 00:57:23 -0500
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128A3C06175F;
+        Fri,  5 Mar 2021 21:57:23 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id 18so8779218lff.6;
+        Fri, 05 Mar 2021 21:57:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nwjJTyix+U1Kuczayf4pZyIBKt0xdJTJx53NO2UO06c=;
+        b=Wh379e/7Ed68GiFHDd0MHYS8RReUXNt8l6QoYwJZ4ulllg/NPnLGjwBzSyCqVvwlNi
+         TI1FTi3cgGzI0otAhZE7g7bngUVmwdm79W81CycG3OSP9KSiP9PLIzFVQ+9FcaDMvfBH
+         pYdIlCH00pbwmJzU4zuUjIq4qUAd3j+OBP6XL77dph2tZDIhrsQBA1aRlVDEpEpC3fAx
+         q9prNhsNZFr7qDLAB5kBvhAlqpHwCXKkMfazieoD8hq9bvH4DVBh/I5yNNxNkTI2MKtU
+         lHEH1AJz6ClSYLOUfgY+T+ztE9j3owXH0Hhuc8Tvj+5Rs2L0dmCF4phS4+zEu/hNRhGo
+         15Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nwjJTyix+U1Kuczayf4pZyIBKt0xdJTJx53NO2UO06c=;
+        b=tFw3d5TlPCCIKJIwevUw8tVaAnAv5PwYWTNRg2bz7vrmzk+kXixY5CGep5l7nN5vsf
+         0dNY9CxKrcwKytZzjoQ6FSkN7HPw17610dns7niwFEIkAaYGe5qi2F2nSLo1vgT8vLx0
+         Z31mdlVN+lNM8BiwvgqqyP8I4RinE5ook7Agg+M1ZClAq8ksAjbw9HXnzwCVSCwLtN2A
+         LNrzyZ46TrnnGOKqhzLinqC1/j6iX9oKzXok7cHNXPYDt5prRb9EwKHu3nc7ZAyLP2WP
+         xVgj/rSqsTjEuC5g/dtaUGZYAqukrS6R1XllcC/FwSU3sFoI8OPuP524bqGFtt79F/2H
+         5FUA==
+X-Gm-Message-State: AOAM530ndtPH3ckp75nhaBk8kA1cBXoZfLt97jwI5REj6ZzIYV5dVbO1
+        FUHZLHOBln6aJZ6YelZVGzE=
+X-Google-Smtp-Source: ABdhPJzpt9b5bh7+ljfymAumEWonaQN+8hHiD1qqEJGWWdDFZ+Jnopl1X0qUt6VH7zue4OrAPvCNDA==
+X-Received: by 2002:a19:2402:: with SMTP id k2mr8327660lfk.138.1615010241497;
+        Fri, 05 Mar 2021 21:57:21 -0800 (PST)
+Received: from [192.168.1.39] (88-114-223-25.elisa-laajakaista.fi. [88.114.223.25])
+        by smtp.gmail.com with ESMTPSA id o11sm555091lfu.157.2021.03.05.21.57.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Mar 2021 21:57:20 -0800 (PST)
+Subject: Re: [PATCH v3] mm/vmalloc: randomize vmalloc() allocations
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@kernel.org>, Vlad Rezki <urezki@gmail.com>,
+        Cristiano Giuffrida <c.giuffrida@vu.nl>
+References: <20210215202634.5121-1-toiwoton@gmail.com>
+ <20210305171331.2424b166ed4d2d9da73ac335@linux-foundation.org>
+From:   Topi Miettinen <toiwoton@gmail.com>
+Message-ID: <124b32de-2422-615c-90fe-ca5a6d64d179@gmail.com>
+Date:   Sat, 6 Mar 2021 07:57:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210306031847.GA192807@roeck-us.net>
+In-Reply-To: <20210305171331.2424b166ed4d2d9da73ac335@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Guenter,
-
-On Fri, Mar 05, 2021 at 07:18:47PM -0800, Guenter Roeck wrote:
-> On Fri, Mar 05, 2021 at 03:52:58AM -0600, Gustavo A. R. Silva wrote:
-> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> > by explicitly adding a break statement instead of letting the code fall
-> > through to the next case.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/115
-> > Acked-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
+On 6.3.2021 3.13, Andrew Morton wrote:
+> On Mon, 15 Feb 2021 22:26:34 +0200 Topi Miettinen <toiwoton@gmail.com> wrote:
 > 
-> I Acked those, thus assuming that they would be applied through some
-> other tree. If that is not the case, you'll need to let me know. The
-> resend only means to me that whatever tree was supposed to pick it up
-> did not do it, but it doesn't result in any action from my side.
+>> Memory mappings inside kernel allocated with vmalloc() are in
+>> predictable order and packed tightly toward the low addresses, except
+>> for per-cpu areas which start from top of the vmalloc area. With
+>> new kernel boot parameter 'randomize_vmalloc=1', the entire area is
+>> used randomly to make the allocations less predictable and harder to
+>> guess for attackers. Also module and BPF code locations get randomized
+>> (within their dedicated and rather small area though) and if
+>> CONFIG_VMAP_STACK is enabled, also kernel thread stack locations.
+>>
+>> On 32 bit systems this may cause problems due to increased VM
+>> fragmentation if the address space gets crowded.
+>>
+>> On all systems, it will reduce performance and increase memory and
+>> cache usage due to less efficient use of page tables and inability to
+>> merge adjacent VMAs with compatible attributes. On x86_64 with 5 level
+>> page tables, in the worst case, additional page table entries of up to
+>> 4 pages are created for each mapping, so with small mappings there's
+>> considerable penalty.
+>>
+>> ...
+>>
+> 
+> How useful is this expected to be?  What sort of attack scenarios will
+> this help to defend against?
 
-This was not directed at you, in particular. I'm resending this for
-the cosideration of whomever is in charge of this code. If this is
-not taken or ignored once again, I will consider adding this to
-my own tree.
+Since there's a clear trade-off between best performance and additional 
+address space randomization, this will not be useful for those who 
+prefer performance. That's also why this is not the default but has to 
+be enabled with a boot parameter.
 
-Thanks
---
-Gustavo
+For those who are willing to pay the price for additional hardening, the 
+purpose is to make attacks against KASLR (similar to TagBleed [1]) more 
+difficult since the targeted memory locations may reside anywhere in the 
+32 TB vmalloc region and knowing one address does not reveal the others.
 
-> >  drivers/hwmon/max6621.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/hwmon/max6621.c b/drivers/hwmon/max6621.c
-> > index 367855d5edae..7821132e17fa 100644
-> > --- a/drivers/hwmon/max6621.c
-> > +++ b/drivers/hwmon/max6621.c
-> > @@ -156,7 +156,7 @@ max6621_is_visible(const void *data, enum hwmon_sensor_types type, u32 attr,
-> >  		default:
-> >  			break;
-> >  		}
-> > -
-> > +		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > -- 
-> > 2.27.0
-> > 
+[1] https://download.vusec.net/papers/tagbleed_eurosp20.pdf
+
+-Topi
