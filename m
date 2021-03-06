@@ -1,62 +1,81 @@
-Return-Path: <SRS0=3XZ1=ID=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <SRS0=ZjEk=IE=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8EBC433DB
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 22:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35734C433DB
+	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 01:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943146509B
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 Mar 2021 22:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BE96509B
+	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 01:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbhCEWiL (ORCPT
+        id S229637AbhCFBNk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 17:38:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45794 "EHLO mail.kernel.org"
+        Fri, 5 Mar 2021 20:13:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230056AbhCEWhy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 17:37:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EFCA06509B;
-        Fri,  5 Mar 2021 22:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614983874;
-        bh=aF1Sv5Mz/HlsBB4kICXupI1pEOIhseODh5af/BC4Xks=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OyqgMgjcHLZE/9d/eXPWAUeshdSQPCCnaRxCz+5X4PmASXmBnHMWi26gyDbtOC9Qs
-         ygXooPDhWesEJCk4mh7bsCWu1mPEkfY1ZJpSYayX0SsfLmF24HnErtT2qtqACh66cf
-         AGAI9JdPtWeRGSRSDWwV3gOekmjLcBIUd/7g+nvirxLjQS3QSVeRxwXLk5ezJuk6bH
-         uHFPYQNQhboZ+9o7WSEqBK9lviZDgfwvEjgEv5Qq2wDBE5HnoBlhYPnETHGA7RZyuV
-         fjv2EBg+mrW33Z8wQI9ea6JfBesFJz3agX4vPw3rewj9rhcp86Pfqc4ZVlIETnomWA
-         SypHw5snEbBhw==
-Date:   Fri, 5 Mar 2021 16:37:52 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com,
-        alexandre.belloni@bootlin.com, kuba@kernel.org,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] net: mscc: ocelot: Fix fall-through warnings for
- Clang
-Message-ID: <20210305223752.GA156581@embeddedor>
-References: <20210305073403.GA122237@embeddedor>
- <20210305.124812.611998680216818380.davem@davemloft.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210305.124812.611998680216818380.davem@davemloft.net>
+        id S229576AbhCFBNe (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 20:13:34 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BB11065090;
+        Sat,  6 Mar 2021 01:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1614993212;
+        bh=Uw04knjc4xx7x3agCMeJqcaVgzDCRD/JHNyGNt2bGIo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rrlGcLV/iQuL/RnkUBIctgDo4IL+sqJKuHHI4vEq4GFnEbK3eyG1IqxAyw7/zgEz9
+         nU5nMBl4w1rrPU7gGUUlbEqAcdSs3F70xqpBKKXrWvsKNbDxNi14tl1Ox5rzZUNeMe
+         CQKDNhM+a6qFcgTMALZwXLbxY/DRWmlzQBksg1rU=
+Date:   Fri, 5 Mar 2021 17:13:31 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Topi Miettinen <toiwoton@gmail.com>
+Cc:     linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@kernel.org>, Vlad Rezki <urezki@gmail.com>
+Subject: Re: [PATCH v3] mm/vmalloc: randomize vmalloc() allocations
+Message-Id: <20210305171331.2424b166ed4d2d9da73ac335@linux-foundation.org>
+In-Reply-To: <20210215202634.5121-1-toiwoton@gmail.com>
+References: <20210215202634.5121-1-toiwoton@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Mar 05, 2021 at 12:48:12PM -0800, David Miller wrote:
+On Mon, 15 Feb 2021 22:26:34 +0200 Topi Miettinen <toiwoton@gmail.com> wrote:
+
+> Memory mappings inside kernel allocated with vmalloc() are in
+> predictable order and packed tightly toward the low addresses, except
+> for per-cpu areas which start from top of the vmalloc area. With
+> new kernel boot parameter 'randomize_vmalloc=1', the entire area is
+> used randomly to make the allocations less predictable and harder to
+> guess for attackers. Also module and BPF code locations get randomized
+> (within their dedicated and rather small area though) and if
+> CONFIG_VMAP_STACK is enabled, also kernel thread stack locations.
 > 
-> Please resubmit these again when net-next opens back up, thank you.
+> On 32 bit systems this may cause problems due to increased VM
+> fragmentation if the address space gets crowded.
+> 
+> On all systems, it will reduce performance and increase memory and
+> cache usage due to less efficient use of page tables and inability to
+> merge adjacent VMAs with compatible attributes. On x86_64 with 5 level
+> page tables, in the worst case, additional page table entries of up to
+> 4 pages are created for each mapping, so with small mappings there's
+> considerable penalty.
+>
+> ...
+>
 
-Sure thing.
+How useful is this expected to be?  What sort of attack scenarios will
+this help to defend against?
 
-Thanks
---
-Gustavo
+And what do others think of the proposal?
