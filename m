@@ -2,126 +2,113 @@ Return-Path: <SRS0=ZjEk=IE=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BF3C433E0
-	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 02:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8332C433E0
+	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 03:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E40D765013
-	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 02:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA57765014
+	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 03:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbhCFCve (ORCPT
+        id S229629AbhCFDTK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 21:51:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42410 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229669AbhCFCvO (ORCPT
+        Fri, 5 Mar 2021 22:19:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229701AbhCFDTB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 21:51:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614999071;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=++7DcKSf9hOj91f+XMYFeWkJNgQ9ogj9a8AP84qU87E=;
-        b=ibf2oKTU0QTbf1PULDJqTyYOMPpY2dydj7MFJjYZ2EfBFPChkuA1vsazVWlfRw8Q7k0yO8
-        hVL4yjn611K2seBbrBqbxFwd8yStQu6FM9N+HuW7DnMzRtGNsuPeWi+kte8Gd6RPvJ6l3Z
-        zmX3w6qKFDEg2CtJkvYkrtgRST1BlRo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-46-aqXXq4NYNOCCDIpKMWr2ag-1; Fri, 05 Mar 2021 21:51:07 -0500
-X-MC-Unique: aqXXq4NYNOCCDIpKMWr2ag-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8FA78015B7;
-        Sat,  6 Mar 2021 02:51:05 +0000 (UTC)
-Received: from treble (ovpn-112-85.rdu2.redhat.com [10.10.112.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6631D5C1C2;
-        Sat,  6 Mar 2021 02:51:02 +0000 (UTC)
-Date:   Fri, 5 Mar 2021 20:50:59 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frank Eigler <fche@redhat.com>,
-        Justin Forbes <jforbes@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Subject: Re: [PATCH] kbuild: rebuild GCC plugins when the compiler is upgraded
-Message-ID: <20210306025059.z6dn6mi7mxyufkr2@treble>
-References: <20210304113708.215121-1-masahiroy@kernel.org>
- <202103041518.22EB819E@keescook>
- <CAHk-=wj6t2i1BgmWP1Zb2WVF3zZzkHvsxsALJk7VpfKm6UgLcw@mail.gmail.com>
- <20210305022500.cyi3cfwgt2t6mona@treble>
- <20210306012815.nfmquoln65vq6yq7@treble>
- <CAK7LNAR7E4Ud9MPy3q5VOab4EFMumr5GMHqyv=H970+gPTBrFg@mail.gmail.com>
+        Fri, 5 Mar 2021 22:19:01 -0500
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903ADC06175F;
+        Fri,  5 Mar 2021 19:18:50 -0800 (PST)
+Received: by mail-oi1-x231.google.com with SMTP id w65so4791794oie.7;
+        Fri, 05 Mar 2021 19:18:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JCDq+uiwLZuYstNdKdn+4e8HqRfAw2eH/rMEXDRybbE=;
+        b=JTRFyxLsRecAMj8Q435NNZB4GoPigS+YpFm9a2PBges//gsP/f/x8nallCT8n3J9wb
+         IH9KAT1MrDZhjyYgPpyEQDLRIx7K8zm35o9viInXvt95WZn8/NWx5OVUHRnbQ3wiPY5Z
+         W/aV+RrGVU9JYhf4QNnJuW3kblSF5XYYPdpIyyWrlfiAhCvNGkxq1URo/+SMx75dSuDA
+         NEmAJORGFfz2Xi5yY1a/nYEvdzoQXc7LnAHaGlpuHBlTYSO5aCLk24xWiJEWN43CZvqr
+         /TQCMJpAWAIfttc7FtMgJSjLnD1FYiNnvZAJe8pZD9vz3jyOgIoTX2vZ5f2xJryHQ71Q
+         A6gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JCDq+uiwLZuYstNdKdn+4e8HqRfAw2eH/rMEXDRybbE=;
+        b=NbfM4NsuRQGLTP9vanVUNPJ55eu7Dmb9idX7//IzUYG5/IFIgQPSIzJWgA4jeryoSQ
+         zSDphyH43XI86apVI2zdgJkWC6ombQiXdCbTFNA75T2wj5BL3WI86RDqOCieViHUs1gz
+         aWUjeZEkyNQdJbqOkzrHCLVoRh8kr4pvS47w4AV2VWs/+Y46p+E4sCllY/rQCrOrIukd
+         mYzw6sODCskVtqCym4IN2V+1AYK6YstQaBrfx0AGO9JQAbOvmefYB5vrxzddU8dq9D5o
+         xhRTqEzrbU+R1XksyyxwMaSK9rkgg9iYBe5ecKHmqMSGuPcnKj/QLfJxRyjTxOaCR0tl
+         GDgw==
+X-Gm-Message-State: AOAM530N0BaWgJeli4IP6BSleptpoDfFDUIVDcFf7NrOBLIFnKDfHwhA
+        iUC+cK4E2/rhhkROb3V5hu9scu3BZyA=
+X-Google-Smtp-Source: ABdhPJy2uT+T8viNA0/5UJKBmZXkZdseYpUtXPUB0A1kEe+oXR+fJnvMJooG55/tsHvWBekNBpCCxg==
+X-Received: by 2002:a05:6808:128e:: with SMTP id a14mr9706357oiw.71.1615000729991;
+        Fri, 05 Mar 2021 19:18:49 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a6sm819970otq.79.2021.03.05.19.18.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Mar 2021 19:18:48 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Fri, 5 Mar 2021 19:18:47 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH RESEND][next] hwmon: (max6621) Fix fall-through warnings
+ for Clang
+Message-ID: <20210306031847.GA192807@roeck-us.net>
+References: <20210305095258.GA141583@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAR7E4Ud9MPy3q5VOab4EFMumr5GMHqyv=H970+gPTBrFg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20210305095258.GA141583@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Mar 06, 2021 at 11:18:31AM +0900, Masahiro Yamada wrote:
-> On Sat, Mar 6, 2021 at 10:28 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Thu, Mar 04, 2021 at 08:25:00PM -0600, Josh Poimboeuf wrote:
-> > > On Thu, Mar 04, 2021 at 03:37:14PM -0800, Linus Torvalds wrote:
-> > > > On Thu, Mar 4, 2021 at 3:20 PM Kees Cook <keescook@chromium.org> wrote:
-> > > > >
-> > > > > This seems fine to me, but I want to make sure Josh has somewhere to
-> > > > > actually go with this. Josh, does this get you any closer?
-> > >
-> > > No, this doesn't seem to help me at all.
-> > >
-> > > > > It sounds like the plugins need to move to another location for
-> > > > > packaged kernels?
-> > > >
-> > > > Well, it might be worth extending the stuff that gets installed with
-> > > > /lib/modules/<kernel-version>/ with enough information and
-> > > > infrastruvcture to then build any external modules.
-> > >
-> > > The gcc plugins live in scripts/, which get installed by "make
-> > > modules_install" already.  So the plugins' source and makefiles are in
-> > > /lib/modules/<kernel-version>/build/scripts/gcc-plugins.
-> > >
-> > > So everything needed for building the plugins is already there.  We just
-> > > need the kernel makefiles to rebuild the plugins locally, when building
-> > > an external module.
-> >
-> > This seems to work with very limited testing...  Based on top of
-> > Masahiro's recent patch:
-> >
-> >   https://lkml.kernel.org/r/CAK7LNARHoTnZ3gAvHgnYB4n-wYuboxC10A6zURh1ODGhxWd2yA@mail.gmail.com
+On Fri, Mar 05, 2021 at 03:52:58AM -0600, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
 > 
-> Is this a bad coding contest?
+> Link: https://github.com/KSPP/linux/issues/115
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+
+I Acked those, thus assuming that they would be applied through some
+other tree. If that is not the case, you'll need to let me know. The
+resend only means to me that whatever tree was supposed to pick it up
+did not do it, but it doesn't result in any action from my side.
+
+Guenter
+
+>  drivers/hwmon/max6621.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I am not asking you to add ugly ifeq or whatever
-> hacks to say "this worked for me".
+> diff --git a/drivers/hwmon/max6621.c b/drivers/hwmon/max6621.c
+> index 367855d5edae..7821132e17fa 100644
+> --- a/drivers/hwmon/max6621.c
+> +++ b/drivers/hwmon/max6621.c
+> @@ -156,7 +156,7 @@ max6621_is_visible(const void *data, enum hwmon_sensor_types type, u32 attr,
+>  		default:
+>  			break;
+>  		}
+> -
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> -- 
+> 2.27.0
 > 
-> Please feel free to do this in the fedora kernel,
-> but do not send it to upstream.
-> 
-> Sorry, I really do not want to see hacks like this any more.
-
-Geez, that's a bit harsh.  I never claimed to be a brilliant makefile
-coder.  Do you have any constructive feedback for improving the patch?
-
-> Remember, how badly objtool was integrated in the build system,
-> and you even blocked me from fixing that.
-
-I have no idea what you're talking about, nor how it would be relevant
-to this patch.
-
--- 
-Josh
-
