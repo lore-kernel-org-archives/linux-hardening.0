@@ -2,80 +2,180 @@ Return-Path: <SRS0=ZjEk=IE=vger.kernel.org=linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35734C433DB
-	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 01:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6F5C43381
+	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 01:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04BE96509B
-	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 01:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756BB64FEE
+	for <linux-hardening@archiver.kernel.org>; Sat,  6 Mar 2021 01:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbhCFBNk (ORCPT
+        id S229701AbhCFB26 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 Mar 2021 20:13:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229576AbhCFBNe (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 Mar 2021 20:13:34 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BB11065090;
-        Sat,  6 Mar 2021 01:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1614993212;
-        bh=Uw04knjc4xx7x3agCMeJqcaVgzDCRD/JHNyGNt2bGIo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rrlGcLV/iQuL/RnkUBIctgDo4IL+sqJKuHHI4vEq4GFnEbK3eyG1IqxAyw7/zgEz9
-         nU5nMBl4w1rrPU7gGUUlbEqAcdSs3F70xqpBKKXrWvsKNbDxNi14tl1Ox5rzZUNeMe
-         CQKDNhM+a6qFcgTMALZwXLbxY/DRWmlzQBksg1rU=
-Date:   Fri, 5 Mar 2021 17:13:31 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>, Vlad Rezki <urezki@gmail.com>
-Subject: Re: [PATCH v3] mm/vmalloc: randomize vmalloc() allocations
-Message-Id: <20210305171331.2424b166ed4d2d9da73ac335@linux-foundation.org>
-In-Reply-To: <20210215202634.5121-1-toiwoton@gmail.com>
-References: <20210215202634.5121-1-toiwoton@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 5 Mar 2021 20:28:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50996 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229597AbhCFB23 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 5 Mar 2021 20:28:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614994108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gGrmW3qBYljGIHORMy0R3bDiZuJrAvp+VicZLWP+YBc=;
+        b=fkSdOmvRmtW3Mc1HdAxYLECHyn8ObKyt2Lmm9/6Z1nFHNPp3EVa0cvYQfTr/1laOwwv7vx
+        Aqn/VY4txtBCzDVX9bIMK4b7AiTl0tj8oKeg5/V0ZvWf4LO4bGZ5nS71I5VUqspChVkLG4
+        FeEeSnGKpSdpBvrWPB59W/Zv2waZIDI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-515-9iJbQ8mVN06l5E2BQ72lFw-1; Fri, 05 Mar 2021 20:28:26 -0500
+X-MC-Unique: 9iJbQ8mVN06l5E2BQ72lFw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFF65107465E;
+        Sat,  6 Mar 2021 01:28:24 +0000 (UTC)
+Received: from treble (ovpn-112-85.rdu2.redhat.com [10.10.112.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A59D21412A;
+        Sat,  6 Mar 2021 01:28:18 +0000 (UTC)
+Date:   Fri, 5 Mar 2021 19:28:15 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Eigler <fche@redhat.com>,
+        Justin Forbes <jforbes@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: Re: [PATCH] kbuild: rebuild GCC plugins when the compiler is upgraded
+Message-ID: <20210306012815.nfmquoln65vq6yq7@treble>
+References: <20210304113708.215121-1-masahiroy@kernel.org>
+ <202103041518.22EB819E@keescook>
+ <CAHk-=wj6t2i1BgmWP1Zb2WVF3zZzkHvsxsALJk7VpfKm6UgLcw@mail.gmail.com>
+ <20210305022500.cyi3cfwgt2t6mona@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210305022500.cyi3cfwgt2t6mona@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 15 Feb 2021 22:26:34 +0200 Topi Miettinen <toiwoton@gmail.com> wrote:
-
-> Memory mappings inside kernel allocated with vmalloc() are in
-> predictable order and packed tightly toward the low addresses, except
-> for per-cpu areas which start from top of the vmalloc area. With
-> new kernel boot parameter 'randomize_vmalloc=1', the entire area is
-> used randomly to make the allocations less predictable and harder to
-> guess for attackers. Also module and BPF code locations get randomized
-> (within their dedicated and rather small area though) and if
-> CONFIG_VMAP_STACK is enabled, also kernel thread stack locations.
+On Thu, Mar 04, 2021 at 08:25:00PM -0600, Josh Poimboeuf wrote:
+> On Thu, Mar 04, 2021 at 03:37:14PM -0800, Linus Torvalds wrote:
+> > On Thu, Mar 4, 2021 at 3:20 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > This seems fine to me, but I want to make sure Josh has somewhere to
+> > > actually go with this. Josh, does this get you any closer?
 > 
-> On 32 bit systems this may cause problems due to increased VM
-> fragmentation if the address space gets crowded.
+> No, this doesn't seem to help me at all.
 > 
-> On all systems, it will reduce performance and increase memory and
-> cache usage due to less efficient use of page tables and inability to
-> merge adjacent VMAs with compatible attributes. On x86_64 with 5 level
-> page tables, in the worst case, additional page table entries of up to
-> 4 pages are created for each mapping, so with small mappings there's
-> considerable penalty.
->
-> ...
->
+> > > It sounds like the plugins need to move to another location for
+> > > packaged kernels?
+> > 
+> > Well, it might be worth extending the stuff that gets installed with
+> > /lib/modules/<kernel-version>/ with enough information and
+> > infrastruvcture to then build any external modules.
+> 
+> The gcc plugins live in scripts/, which get installed by "make
+> modules_install" already.  So the plugins' source and makefiles are in
+> /lib/modules/<kernel-version>/build/scripts/gcc-plugins.
+> 
+> So everything needed for building the plugins is already there.  We just
+> need the kernel makefiles to rebuild the plugins locally, when building
+> an external module.
 
-How useful is this expected to be?  What sort of attack scenarios will
-this help to defend against?
+This seems to work with very limited testing...  Based on top of
+Masahiro's recent patch:
 
-And what do others think of the proposal?
+  https://lkml.kernel.org/r/CAK7LNARHoTnZ3gAvHgnYB4n-wYuboxC10A6zURh1ODGhxWd2yA@mail.gmail.com
+
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] gcc-plugins: Rebuild plugins in external module directory
+
+When building external kernel modules, the build system doesn't require
+the GCC version to match the version used to build the original kernel.
+
+In fact, most distros release the compiler and the kernel in separate
+packages, with separate release cadences.  So it's not uncommon for
+mismatches to occur.
+
+But with GCC plugins enabled, that's no longer allowed:
+
+  cc1: error: incompatible gcc/plugin versions
+  cc1: error: failed to initialize plugin ./scripts/gcc-plugins/structleak_plugin.so
+
+That error comes from the plugin's call to
+plugin_default_version_check(), which strictly enforces the GCC version.
+The strict check makes sense, because there's nothing to prevent the GCC
+plugin ABI from changing, and it often does.
+
+Since plugins are tightly tied to the compiler version, just rebuild
+them locally in the external module directory, and then use the local
+version in the external module build.
+
+Reported-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ Makefile                     | 1 +
+ scripts/Makefile.gcc-plugins | 2 +-
+ scripts/gcc-plugins/Makefile | 8 ++++++--
+ 3 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index bc208886fcce..90c6656de224 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1784,6 +1784,7 @@ prepare:
+ 		echo "  The kernel was built by: "$(CONFIG_CC_VERSION_TEXT); \
+ 		echo "  You are using:           $(CC_VERSION_TEXT)"; \
+ 	fi
++	$(Q)$(MAKE) $(build)=scripts/gcc-plugins
+ 
+ PHONY += help
+ help:
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index 952e46876329..be4303678942 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -48,7 +48,7 @@ export DISABLE_ARM_SSP_PER_TASK_PLUGIN
+ 
+ # All the plugin CFLAGS are collected here in case a build target needs to
+ # filter them out of the KBUILD_CFLAGS.
+-GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
++GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD),$(objtree))/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
+ # The sancov_plugin.so is included via CFLAGS_KCOV, so it is removed here.
+ GCC_PLUGINS_CFLAGS := $(filter-out %/sancov_plugin.so, $(GCC_PLUGINS_CFLAGS))
+ export GCC_PLUGINS_CFLAGS
+diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+index b5487cce69e8..9f8e2ef3ab56 100644
+--- a/scripts/gcc-plugins/Makefile
++++ b/scripts/gcc-plugins/Makefile
+@@ -1,10 +1,14 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-$(obj)/randomize_layout_plugin.so: $(objtree)/$(obj)/randomize_layout_seed.h
++ifneq ($(KBUILD_EXTMOD),)
++override obj := $(KBUILD_EXTMOD)/$(obj)
++endif
++
++$(obj)/randomize_layout_plugin.so: $(objtree)/$(src)/randomize_layout_seed.h
+ quiet_cmd_create_randomize_layout_seed = GENSEED $@
+ cmd_create_randomize_layout_seed = \
+   $(CONFIG_SHELL) $(srctree)/$(src)/gen-random-seed.sh $@ $(objtree)/include/generated/randomize_layout_hash.h
+-$(objtree)/$(obj)/randomize_layout_seed.h: FORCE
++$(objtree)/$(src)/randomize_layout_seed.h: FORCE
+ 	$(call if_changed,create_randomize_layout_seed)
+ targets += randomize_layout_seed.h randomize_layout_hash.h
+ 
+-- 
+2.29.2
+
