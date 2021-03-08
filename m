@@ -1,103 +1,154 @@
-Return-Path: <SRS0=gv6h=IG=vger.kernel.org=linux-hardening-owner@kernel.org>
+Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B63C433E0
-	for <linux-hardening@archiver.kernel.org>; Mon,  8 Mar 2021 09:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03127C433E6
+	for <linux-hardening@archiver.kernel.org>; Mon,  8 Mar 2021 19:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450E865134
-	for <linux-hardening@archiver.kernel.org>; Mon,  8 Mar 2021 09:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57BB652B3
+	for <linux-hardening@archiver.kernel.org>; Mon,  8 Mar 2021 19:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbhCHJkJ (ORCPT
+        id S229730AbhCHTdB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 8 Mar 2021 04:40:09 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:38508 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230142AbhCHJjr (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 8 Mar 2021 04:39:47 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-93-tgbNLEpMPIWi_Wa1TbBvHA-1; Mon, 08 Mar 2021 09:39:44 +0000
-X-MC-Unique: tgbNLEpMPIWi_Wa1TbBvHA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 8 Mar 2021 09:39:42 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 8 Mar 2021 09:39:42 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Josh Poimboeuf' <jpoimboe@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "Linux Kbuild mailing list" <linux-kbuild@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Justin Forbes <jforbes@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Frank Eigler <fche@redhat.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: RE: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
- modules
-Thread-Topic: [PATCH RFC] gcc-plugins: Handle GCC version mismatch for OOT
- modules
-Thread-Index: AQHXEfRW9GGtVBDzukCnmow65VTEg6p51fTA
-Date:   Mon, 8 Mar 2021 09:39:42 +0000
-Message-ID: <bb60fe817f5144929a527d1f5768dd1a@AcuMS.aculab.com>
-References: <CAHk-=whA6zru0BaNm4uu5KyZe+aQpRScOnmc9hdOpO3W+xN9Xw@mail.gmail.com>
- <20210303202406.bxgdx5a25j6wc43b@treble>
- <CAHk-=wi9J3mM8y+aH9e=HRo95giK4BRyyasayAimB0gdvbvDsQ@mail.gmail.com>
- <20210303214534.guyoxcwrgxgcqzy4@treble>
- <CAK7LNAQaAgg+mVSw_U3_FuuqcqJNnonyhVD1M-ezv71Y+dyAww@mail.gmail.com>
- <20210304150812.rzya7ewmerwhe4m4@treble>
- <CAK7LNAR0kNJ=DLuvRzRG+-rgMfcrSOZu8Mn6JBJ5do7TzJWLcA@mail.gmail.com>
- <CAHk-=wiT3FGuKuqLniBN2T_PZwD0GH4kf3XNCzq2tfChqn0+SQ@mail.gmail.com>
- <20210305024140.fv4i4ujreem2w7sw@treble>
- <CAK7LNAR3FW8wQe6Zsbj86LQpY4=ASC7Zec-HN4D70FNZcQk0_Q@mail.gmail.com>
- <20210305191835.4e54dei3dmslbo3a@treble>
-In-Reply-To: <20210305191835.4e54dei3dmslbo3a@treble>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 8 Mar 2021 14:33:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231219AbhCHTck (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 8 Mar 2021 14:32:40 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C05F0652A8;
+        Mon,  8 Mar 2021 19:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615231960;
+        bh=pTZnKtJTe2m07YW60C6Y46vT7s8TcSgE3dn8DlEK4ZA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cTbCe6T3F+3ADUqxrHdZ5K7QXm3AgxEHrBcNKxxEf0G6weNYDeMyxY1zT1K6RGR2M
+         PY5rtwWg7Wzu4YSCG+KLmqghptQDrzlQRUt/UgSziJvJai8sUa9U1bgR/LCbs+JJM3
+         /qzwvDj2fHKEWOjZCUzvZ78xQuu+NgmZsxYusoMSWhAoQjLo89f6+zvSU9Bra0S/Iw
+         vCkJ44fQEXrbxb1xtQKjaR6o2Z2tZSAFNLTvTP00O8+N+vxQCwwFGkNxbajEUIEHTk
+         axNAWJHNUSvGLn6vSjOxsmkYh0INEx7HlGEdJkuciQtuuQkkOKVaQBLhs/cM2WZsNt
+         UDzQOyslAuEFQ==
+Date:   Mon, 8 Mar 2021 13:32:37 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] scsi: mpt3sas: Replace one-element array with
+ flexible-array in struct _MPI2_CONFIG_PAGE_IO_UNIT_3
+Message-ID: <20210308193237.GA212624@embeddedor>
+References: <20210202235118.GA314410@embeddedor>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210202235118.GA314410@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-PiAtICJFeHRlcm5hbCBtb2R1bGVzIG11c3QgYmUgYnVpbHQgd2l0aCB0aGUgc2FtZSBHQ0MgdmVy
-c2lvbiINCj4gDQo+ICAgQXMgaGFzIGJlZW4gc3RhdGVkIHJlcGVhdGVkbHksIGJ5IExpbnVzIGFu
-ZCBvdGhlcnMsIHRoZXJlJ3Mgbm8NCj4gICB0ZWNobmljYWwgcmVhc29uIGJlaGluZCB0aGlzIGNs
-YWltLiAgSXQgaWdub3JlcyB0aGUgcmVhbGl0aWVzIG9mIGhvdw0KPiAgIGRpc3Ryb3MgcmVsZWFz
-ZSB0aGUga2VybmVsIGFuZCBjb21waWxlciBpbmRlcGVuZGVudGx5LCB3aXRoIHNlcGFyYXRlDQo+
-ICAgY2FkZW5jZXMuICBNaW5vciB2YXJpYW5jZXMgaW4gY29tcGlsZXIgdmVyc2lvbiBhcmUgQUJJ
-IGNvbXBhdGlibGUuDQoNCkFyZW4ndCBtYWpvciB2ZXJzaW9ucyBBQkkgY29tcGF0aWJsZT8NCk90
-aGVyd2lzZSBpdCBpcyBhIGRpZmZlcmVudCBhcmNoaXRlY3R1cmUuDQoNCj4gICBBbHNvLCBmb3Ig
-ZmVhdHVyZXMgd2hpY2ggYXJlIGRlcGVuZGVudCBvbiBjb21waWxlciB2ZXJzaW9uLCBtYW55IG9m
-DQo+ICAgdGhvc2UgYXJlIG5vdyBlbmFibGVkIGJ5IGtidWlsZC4gIEFzIEkgc3VnZ2VzdGVkIHRv
-IHlvdSBwcmV2aW91c2x5LA0KPiAgIGtidWlsZCBzaG91bGQgd2FybiB3aGVuIHN1Y2ggZmVhdHVy
-ZXMgZ2V0IGRpc2FibGVkICh3aGljaCBjYW4gaGFwcGVuDQo+ICAgZHVlIHRvIGEgY29tcGlsZXIv
-dG9vbGNoYWluIGNoYW5nZSBvciBkdWUgdG8gYSAuY29uZmlnIGNvcGllZCBmcm9tDQo+ICAgYW5v
-dGhlciBzeXN0ZW0pLg0KDQpBbnl0aGluZyB0aGF0IGlzIGp1c3QgYW4gb3B0aW1pc2F0aW9uIChv
-ciBwZXNzaW1pc2F0aW9uKSByZWFsbHkNCmRvZXNuJ3QgbWF0dGVyLg0KQUZBSUNUIG1vc3Qgb2Yg
-dGhlc2Ugb3B0aW9ucyBhcmUgaW4gdGhlIGxhdHRlciBjYXRlZ29yeS4NCg0KT25lIHRoaW5rIHBl
-b3BsZSBtaWdodCBkbyBpcyBkb3dubG9hZCBhIGtlcm5lbCBmcm9tIGtlcm5lbC5vcmcNCmFuZCB0
-aGVuIGJ1aWxkIGFuIGV4dHJhIG1vZHVsZSBmb3IgaXQuDQpUaGUgY29tcGlsZXIgdGhleSBoYXZl
-IHdpbGwgYmUgY29tcGxldGVseSBkaWZmZXJlbnQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVk
-IEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5l
-cywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Hi all,
 
+Friendly ping: who can review/take this, please?
+
+Thanks!
+--
+Gustavo
+
+On Tue, Feb 02, 2021 at 05:51:18PM -0600, Gustavo A. R. Silva wrote:
+> There is a regular need in the kernel to provide a way to declare having
+> a dynamically sized set of trailing elements in a structure. Kernel code
+> should always use “flexible array members”[1] for these cases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
+> 
+> Refactor the code according to the use of a flexible-array member in
+> struct _MPI2_CONFIG_PAGE_IO_UNIT_3, instead of a one-element array,
+> and use the struct_size() helper to calculate the size for the
+> allocation.
+> 
+> Also, this helps the ongoing efforts to enable -Warray-bounds and fix the
+> following warnings:
+> 
+> drivers/scsi/mpt3sas/mpt3sas_ctl.c:3193:63: warning: array subscript 24
+> is above array bounds of ‘U16[1]’ {aka ‘short unsigned int[1]’}
+> [-Warray-bounds]
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/109
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v2:
+>  - Fix format specifier: use %zu for size_t type.
+> 
+>  drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h | 11 +----------
+>  drivers/scsi/mpt3sas/mpt3sas_ctl.c   |  6 +++---
+>  2 files changed, 4 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h b/drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h
+> index 43a3bf8ff428..908b0ca63204 100644
+> --- a/drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h
+> +++ b/drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h
+> @@ -987,21 +987,12 @@ typedef struct _MPI2_CONFIG_PAGE_IO_UNIT_1 {
+>  
+>  /*IO Unit Page 3 */
+>  
+> -/*
+> - *Host code (drivers, BIOS, utilities, etc.) should leave this define set to
+> - *one and check the value returned for GPIOCount at runtime.
+> - */
+> -#ifndef MPI2_IO_UNIT_PAGE_3_GPIO_VAL_MAX
+> -#define MPI2_IO_UNIT_PAGE_3_GPIO_VAL_MAX    (1)
+> -#endif
+> -
+>  typedef struct _MPI2_CONFIG_PAGE_IO_UNIT_3 {
+>  	MPI2_CONFIG_PAGE_HEADER Header;			 /*0x00 */
+>  	U8                      GPIOCount;		 /*0x04 */
+>  	U8                      Reserved1;		 /*0x05 */
+>  	U16                     Reserved2;		 /*0x06 */
+> -	U16
+> -		GPIOVal[MPI2_IO_UNIT_PAGE_3_GPIO_VAL_MAX];/*0x08 */
+> +	U16			GPIOVal[];		 /*0x08 */
+>  } MPI2_CONFIG_PAGE_IO_UNIT_3,
+>  	*PTR_MPI2_CONFIG_PAGE_IO_UNIT_3,
+>  	Mpi2IOUnitPage3_t, *pMpi2IOUnitPage3_t;
+> diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> index c8a0ce18f2c5..ffb21f873058 100644
+> --- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> +++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> @@ -3143,7 +3143,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+>  	Mpi2ConfigReply_t mpi_reply;
+>  	u16 backup_rail_monitor_status = 0;
+>  	u16 ioc_status;
+> -	int sz;
+> +	size_t sz;
+>  	ssize_t rc = 0;
+>  
+>  	if (!ioc->is_warpdrive) {
+> @@ -3157,11 +3157,11 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+>  		goto out;
+>  
+>  	/* allocate upto GPIOVal 36 entries */
+> -	sz = offsetof(Mpi2IOUnitPage3_t, GPIOVal) + (sizeof(u16) * 36);
+> +	sz = struct_size(io_unit_pg3, GPIOVal, 36);
+>  	io_unit_pg3 = kzalloc(sz, GFP_KERNEL);
+>  	if (!io_unit_pg3) {
+>  		rc = -ENOMEM;
+> -		ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%d) bytes\n",
+> +		ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%zu) bytes\n",
+>  			__func__, sz);
+>  		goto out;
+>  	}
+> -- 
+> 2.27.0
+> 
