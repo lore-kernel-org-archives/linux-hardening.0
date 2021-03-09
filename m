@@ -2,182 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B64DC43333
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 Mar 2021 21:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FB3C433E0
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 Mar 2021 22:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17B9F64ED6
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 Mar 2021 21:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A8A650AC
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 Mar 2021 22:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232159AbhCIVna (ORCPT
+        id S230075AbhCIW2Q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 9 Mar 2021 16:43:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232076AbhCIVnO (ORCPT
+        Tue, 9 Mar 2021 17:28:16 -0500
+Received: from gateway36.websitewelcome.com ([50.116.126.2]:21923 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230473AbhCIW14 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 9 Mar 2021 16:43:14 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5FDC06174A
-        for <linux-hardening@vger.kernel.org>; Tue,  9 Mar 2021 13:43:13 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id 16so3301033pgo.13
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Mar 2021 13:43:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yYr9wVtQr+Yv2YCxxAWFJhlutYOKWxR3zpP8Meqzwc0=;
-        b=QfuDisPe9e6LA5+G0OqhJOKbJhyOfYMgFYd71oYjyW/qjnQRskxH2DwSwWa+zduR8z
-         WQIq/CMZhY4sesmNBwH3ZsjovTqvPGWkSa5KYVH6qBsI8Qa7U87NKh3nubJFEJT8vq1A
-         thA54toHbJNY99F/Bh83DjOw1zoidC/seKkGg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yYr9wVtQr+Yv2YCxxAWFJhlutYOKWxR3zpP8Meqzwc0=;
-        b=pA7Ic5/7gIUmUZ+eUEPBUwXSlDqxsuI2ziWhj5SSM9Y+mANYuTnmtH/HyfaZ3lzyPS
-         EzLZPfXts4e/2o+bx8FMVaQfl1iuYtxG+OWXFteJR4d8zOt+NyCo3rJ7QqyAv/3EWIJ8
-         Y+JOdhEWMx0H+h6cU63FtsQHxFuWWAdYW59C2hBneBSsILbrxWh2WL8Zsq5zKkTO3lXI
-         t1D62M6r1NXYgVmjwky7dQt0KRJNIG0pJJIErzxoGJSkUhOOpt6/bUj5JgBmedUuElU6
-         yzv3Z7WV1ea/oB/SX5mlTFlXyzLUvw6syaruignyuIgunV8JV+XgynSNiaOtrpD20IKt
-         59Yg==
-X-Gm-Message-State: AOAM533Bt5N85HZfihp+EBOHIpAtQY8gBRmhDawovC32mdU/BN1eeQK9
-        eS7rdafU1ApKM34PyGfPwlU5LQ==
-X-Google-Smtp-Source: ABdhPJzTZix3DrfI3gS99XuookHZB6B8CC1mG7Unokf53d9LadNonom0utrVmg95TnKUZqX4fQ7VFg==
-X-Received: by 2002:aa7:8f31:0:b029:1f8:987a:53dc with SMTP id y17-20020aa78f310000b02901f8987a53dcmr183958pfr.58.1615326193543;
-        Tue, 09 Mar 2021 13:43:13 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v3sm13672130pff.217.2021.03.09.13.43.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Mar 2021 13:43:11 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v5 6/7] arm64: entry: Enable random_kstack_offset support
-Date:   Tue,  9 Mar 2021 13:43:00 -0800
-Message-Id: <20210309214301.678739-7-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210309214301.678739-1-keescook@chromium.org>
-References: <20210309214301.678739-1-keescook@chromium.org>
+        Tue, 9 Mar 2021 17:27:56 -0500
+X-Greylist: delayed 1437 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Mar 2021 17:27:56 EST
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id C4F88400DD707
+        for <linux-hardening@vger.kernel.org>; Tue,  9 Mar 2021 16:03:57 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id JkSLlvuLwABzoJkSLl0IiE; Tue, 09 Mar 2021 16:03:57 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=sFVC56Nr3h3444R3x8H8hPzvSqttuM8D3wbuXBin/jo=; b=PeJdk4VRD7mV8U9CDR6MEC2yi3
+        iFWD9tLrWs10yakUaZQJ/1bFEi1TcKKME+gZAKB78pwnXG8OY6UesQV4WNCBcQ9hROzZm59ZhyRiv
+        uUVO4J+WLc/zJD0pRWjaQD71iDzBQTkLB0YX+m6Q14ZnUXH/ey53Lyuhdm7dHvCi7WSdDacKCFDMF
+        +4anh9P8fTcBztYaeFTf5jdd3dR+e5RVy7Maw7LL7sSyRy++sv8IJVKxQ9aRgXq/sPeiGYBrkqTp7
+        tkyN1HWkB85f8CA9cNSWDpE+JqvJcsE1NqLHCJ2W+QDWB42SBtXVwOV8pZQ09zdh80eEEMLI+e2Bi
+        sd9K86pg==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49312 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lJkSL-000zzy-E3; Tue, 09 Mar 2021 16:03:57 -0600
+Subject: Re: [PATCH][next] xfs: Replace one-element arrays with flexible-array
+ members
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210302150558.GA198498@embeddedor>
+ <20210309174212.GV3419940@magnolia>
+ <8bf7e1d2-e2d4-c56f-cd04-0045dc4c7e2f@embeddedor.com>
+ <20210309212643.GZ3419940@magnolia>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <6cd7c00a-a49c-41f9-06cb-e3123bb32d6c@embeddedor.com>
+Date:   Tue, 9 Mar 2021 16:03:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=ab928f13a74b1e09ed2d4740c77a8520d58ab562; i=6FjHrMJQ1a03WxuPiMt8aIK5MW/T0bayLG0SuUm7Wt4=; m=DW/OKOjAEidoxl6ODEV6zN0c7U/uCvK1t/uZsIkKPaM=; p=MOQyOeWlIC4XP1YdIGtrtyC9k7Ng+ZO0cCzQ0e3ME/8=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBH6+QACgkQiXL039xtwCYAOg/+LgJ WgPJrpVY1ZhBup8fAF1iuohmC84qyEJf6H4fbXp63l60M3UxTJ/GNL23TdcEGxQ8swftFHFIkr6Nd xG8VuQNA3smCz7L5MqWyBsB2nf+SPSUYuC3mptJdGzraaD413rLhBOFojCAEDCWP7sYFRUtrV73am ZcSqH9n5FUVIbzACUtPaml/B7mEtFPB+lI6fJpLro72hGw6sjQJRkpiS5VhbWjJASeF47iChKcjBU l3m3qWTWSLt3SmZAaY+4XtHe1+TyOXw9RhR+erXEh6JmHpTQE6R4XRF9bkrRlUOboPGy502udXKds taG9ORm/JqzGUvKMUmgi1tjDPhPreYlYRNj4UaEIPLyPwfdbmatXCFyXM3YAkCKB74NE9rUI0W8pY w/dOS6d5U//pA346jb6D63ve1AMvz3boSI2IF0tm/BICqKURWY9oPV8h4wOM4FicJcBJNjRcwYK6x g0iwgAyle/C6bLnhgmWqApDv1NZ/boLi9Abl0qrQQxT7N1qfQOurTSsruSH0ZLauLKyQ7IGl6eELk HZ1Dxj2F1KBjPI2amq7hA7CrjogfXhsT5hqlw/f/By35OJk5gTSvOVGf5MY9LN4vd4o7O5FvboPlL XZvG0zwFnf+9JMrsXyGq0qjdoQuX9HtS1IQ7PM5EVEArilikYizdLC0wkQnHc5Cg=
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210309212643.GZ3419940@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lJkSL-000zzy-E3
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49312
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Allow for a randomized stack offset on a per-syscall basis, with roughly
-5 bits of entropy. (And include AAPCS rationale AAPCS thanks to Mark
-Rutland.)
 
-In order to avoid unconditional stack canaries on syscall entry (due to
-the use of alloca()), also disable stack protector to avoid triggering
-needless checks and slowing down the entry path. As there is no general
-way to control stack protector coverage with a function attribute[1],
-this must be disabled at the compilation unit level. This isn't a problem
-here, though, since stack protector was not triggered before: examining
-the resulting syscall.o, there are no changes in canary coverage (none
-before, none now).
 
-[1] a working __attribute__((no_stack_protector)) has been added to GCC
-and Clang but has not been released in any version yet:
-https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=346b302d09c1e6db56d9fe69048acb32fbb97845
-https://reviews.llvm.org/rG4fbf84c1732fca596ad1d6e96015e19760eb8a9b
+On 3/9/21 15:26, Darrick J. Wong wrote:
+>>> It seems to work all right for casted NULL pointers, and then we get all
+>>> the typechecking and multiplication overflow checking, e.g.:
+>>>
+>>> 	size_t len64 = struct_size((struct xfs_efi_log_format_32 *)NULL,
+>>> 				efi_extents src_efi_fmt->efi_nextents);
+>> Yeah; in that case, what do you think about casting 0, instead of NULL:
+>>
+>>        uint len32 = struct_size((xfs_efi_log_format_32_t *)0, efi_extents,
+>>                                 src_efi_fmt->efi_nextents);
+>>        uint len64 = struct_size((xfs_efi_log_format_64_t *)0, efi_extents,
+>>                                 src_efi_fmt->efi_nextents);
+> I don't have a preference either way, either here or for the half-dozen
+> more of these scattered elsewhere in the file.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/Kconfig          |  1 +
- arch/arm64/kernel/Makefile  |  5 +++++
- arch/arm64/kernel/syscall.c | 10 ++++++++++
- 3 files changed, 16 insertions(+)
+OK. I'll send v2, shortly
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1f212b47a48a..2d0e5f544429 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -146,6 +146,7 @@ config ARM64
- 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
- 	select HAVE_ARCH_PFN_VALID
- 	select HAVE_ARCH_PREL32_RELOCATIONS
-+	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_STACKLEAK
- 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index ed65576ce710..6cc97730790e 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -9,6 +9,11 @@ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_insn.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_return_address.o = $(CC_FLAGS_FTRACE)
- 
-+# Remove stack protector to avoid triggering unneeded stack canary
-+# checks due to randomize_kstack_offset.
-+CFLAGS_REMOVE_syscall.o	 = -fstack-protector -fstack-protector-strong
-+CFLAGS_syscall.o	+= -fno-stack-protector
-+
- # Object file lists.
- obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
- 			   entry-common.o entry-fpsimd.o process.o ptrace.o	\
-diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-index b9cf12b271d7..58227a1c207e 100644
---- a/arch/arm64/kernel/syscall.c
-+++ b/arch/arm64/kernel/syscall.c
-@@ -5,6 +5,7 @@
- #include <linux/errno.h>
- #include <linux/nospec.h>
- #include <linux/ptrace.h>
-+#include <linux/randomize_kstack.h>
- #include <linux/syscalls.h>
- 
- #include <asm/daifflags.h>
-@@ -43,6 +44,8 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
- {
- 	long ret;
- 
-+	add_random_kstack_offset();
-+
- 	if (scno < sc_nr) {
- 		syscall_fn_t syscall_fn;
- 		syscall_fn = syscall_table[array_index_nospec(scno, sc_nr)];
-@@ -55,6 +58,13 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
- 		ret = lower_32_bits(ret);
- 
- 	regs->regs[0] = ret;
-+
-+	/*
-+	 * The AAPCS mandates a 16-byte (i.e. 4-bit) aligned SP at
-+	 * function boundaries. We want at least 5 bits of entropy so we
-+	 * must randomize at least SP[8:4].
-+	 */
-+	choose_random_kstack_offset(get_random_int() & 0x1FF);
- }
- 
- static inline bool has_syscall_work(unsigned long flags)
--- 
-2.25.1
-
+Thanks for the feedback!
+--
+Gustavo
