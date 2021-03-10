@@ -5,43 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58E2C433DB
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 02:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94DAC433E0
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 05:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB12E65018
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 02:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E91064FE7
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 05:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231923AbhCJCBg (ORCPT
+        id S229476AbhCJFab (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 9 Mar 2021 21:01:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33944 "EHLO mail.kernel.org"
+        Wed, 10 Mar 2021 00:30:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230325AbhCJCBL (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 9 Mar 2021 21:01:11 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 59DFB65001;
-        Wed, 10 Mar 2021 02:01:10 +0000 (UTC)
+        id S229470AbhCJFaX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 10 Mar 2021 00:30:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E497A64FE7;
+        Wed, 10 Mar 2021 05:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615341670;
-        bh=e/f5pbdlpdy51v6r0k4x7Ru+LKGP72/UKu3syIUsLRI=;
+        s=k20201202; t=1615354223;
+        bh=Pec2Jjuy09XmF1pS9nRX8d5lHT7/lujDosVgXX5TB/0=;
         h=Date:From:To:Cc:Subject:From;
-        b=QrRAZu6MPpb9LA3jEEb4HLzk4NFZAp+nEMEH84xOVdeyIw4lDgKkW4ylXp54jdk6J
-         n1E43v/aECDoc8jM6yyHAvq2Ch+Tw/eQJOrjV7ofougYHN0+PyPcid/ZdHLBgH+giM
-         i8vHj/6wyyqFTfKipSgPo2I1byAAs8IFEIFOGbuOnk9IO8tPwYhU7hvN0FC64hA+7b
-         gpxPF9KvF4bV5ZMcyUirIpFCKXCPL/TapYB7abTOxrWF+DIDC/6dml/0t8HnPn6Jls
-         OaJ3fgKgwk9j2j79Hi6v3v0hGiAn5n1ohAiQ9fj5W9oIzq/SgIQGnSfczPgYd85EtL
-         7QLWJNUhBdvag==
-Date:   Tue, 9 Mar 2021 20:01:08 -0600
+        b=FZMK6LhKETniSwjjrxFgdevLH7Qe1g6eOfhG/As6hLyoJw7vXZxrao5KZUNBmc+bu
+         rlf6U/r/b07fkIio82Rn3NweGBsbFQCgOM8lOy1ZzAmC5jmZTx8geezOAfe+887a6h
+         CwHz9GybsADJw32OYcitSmvB5bKQMDNVV2mlFHH/WUuYAriIT2BYlWaG3VQuHv9R7P
+         duWQPdHpVUQGW5X8zCMatb1lFE6LJY8mt5005059cPewbM1rTJG74W5IwQG9guFN92
+         dzT2Ig2mLFkRjPdOv7R+LnpB+2jhTCFDSjOXN3zI4IOGsmd5DW4z0+j6+SH8+ZHn/G
+         s54l7rxMi2isg==
+Date:   Tue, 9 Mar 2021 23:30:20 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] xfs: Replace one-element arrays with flexible-array
- members
-Message-ID: <20210310020108.GA279881@embeddedor>
+Subject: [PATCH RESEND][next] net: fddi: skfp: smt: Replace one-element array
+ with flexible-array member
+Message-ID: <20210310053020.GA285050@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -56,499 +56,143 @@ should always use “flexible array members”[1] for these cases. The older
 style of one-element or zero-length arrays should no longer be used[2].
 
 Refactor the code according to the use of flexible-array members in
-multiple structures, instead of one-element arrays. Also, make use of
-the new flex_array_size() and struct_size() helpers to properly calculate
-the size of multiple structures that contain flexible-array members.
+smt_sif_operation structure, instead of one-element arrays. Also, make
+use of the struct_size() helper instead of the open-coded version
+to calculate the size of the struct-with-flex-array. Additionally, make
+use of the typeof operator to properly determine the object type to be
+passed to macro smtod().
 
-Below are the results of running xfstests for groups shutdown and log
-with the following configuration in local.config:
+Also, this helps the ongoing efforts to enable -Warray-bounds by fixing
+the following warnings:
 
-export TEST_DEV=/dev/sda3
-export TEST_DIR=/mnt/test
-export SCRATCH_DEV=/dev/sda4
-export SCRATCH_MNT=/mnt/scratch
-
-The size for both partitions /dev/sda3 and /dev/sda4 is 25GB.
-
-These are the results of running ./check -g shutdown and ./check -g
-log, respectively, on 5.12.0-rc2-next-20210309 kernel WITHOUT this patch
-applied:
-
-gustavo@beefy:~/git/xfstests$ time sudo ./check -g shutdown 2>&1 | tee xfs-shutdown-no-patch.out
-FSTYP         -- xfs (debug)
-PLATFORM      -- Linux/x86_64 beefy 5.12.0-rc2-next-20210309 #21 SMP Tue Mar 9 17:48:24 CST 2021
-MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda4
-MOUNT_OPTIONS -- /dev/sda4 /mnt/scratch
-
-generic/042 2s ...  2s
-generic/043 13s ...  13s
-generic/044 14s ...  15s
-generic/045 18s ...  17s
-generic/046 14s ...  14s
-generic/047 21s ...  20s
-generic/048 50s ...  51s
-generic/049 9s ...  9s
-generic/050 1s ...  1s
-generic/051 77s ...  76s
-generic/052 1s ...  1s
-generic/054 70s ...  31s
-generic/055 15s ...  18s
-generic/388 82s ...  80s
-generic/392 5s ...  4s
-generic/417 11s ...  12s
-generic/461 22s ...  21s
-generic/468 12s ...  3s
-generic/474 2s ...  1s
-generic/475 87s ...  97s
-generic/505 1s ...  1s
-generic/506 2s ...  2s
-generic/507     [not run] file system doesn't support chattr +AsSu
-generic/508 4s ...  5s
-generic/530 14s ...  14s
-generic/536 2s ...  2s
-generic/599 2s ...  1s
-generic/622 23s ...  24s
-xfs/051 18s ...  18s
-xfs/079 14s ...  14s
-xfs/121 6s ...  32s
-xfs/181 12s ...  12s
-xfs/212 2s ...  2s
-Ran: generic/042 generic/043 generic/044 generic/045 generic/046 generic/047 generic/048 generic/049 generic/050 generic/051 generic/052 generic/054 generic/055 generic/388 generic/392 generic/417 generic/461 generic/468 generic/474 generic/475 generic/505 generic/506 generic/507 generic/508 generic/530 generic/536 generic/599 generic/622 xfs/051 xfs/079 xfs/121 xfs/181 xfs/212
-Not run: generic/507
-Passed all 33 tests
-
-gustavo@beefy:~/git/xfstests$ time sudo ./check -g log 2>&1 | tee xfs-log-no-patch.out
-FSTYP         -- xfs (debug)
-PLATFORM      -- Linux/x86_64 beefy 5.12.0-rc2-next-20210309 #21 SMP Tue Mar 9 17:48:24 CST 2021
-MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda4
-MOUNT_OPTIONS -- /dev/sda4 /mnt/scratch
-
-generic/034 0s ...  1s
-generic/039 1s ...  1s
-generic/040 5s ...  5s
-generic/041 8s ...  7s
-generic/043 13s ...  13s
-generic/044 14s ...  15s
-generic/045 18s ...  17s
-generic/046 14s ...  15s
-generic/051 75s ...  76s
-generic/052 2s ...  1s
-generic/054 32s ...  31s
-generic/055 19s ...  23s
-generic/056 1s ...  2s
-generic/057 1s ...  1s
-generic/059 2s ...  2s
-generic/065 1s ...  1s
-generic/066 1s ...  1s
-generic/073 1s ...  1s
-generic/090 1s ...  1s
-generic/101 1s ...  1s
-generic/104 1s ...  1s
-generic/106 1s ...  1s
-generic/107 1s ...  1s
-generic/177 1s ...  1s
-generic/311 68s ...  66s
-generic/321 1s ...  2s
-generic/322 2s ...  1s
-generic/325 1s ...  1s
-generic/335 1s ...  2s
-generic/336 1s ...  1s
-generic/341 1s ...  1s
-generic/342 1s ...  1s
-generic/343 1s ...  1s
-generic/376 1s ...  1s
-generic/388 93s ...  81s
-generic/417 11s ...  12s
-generic/455     [not run] This test requires a valid $LOGWRITES_DEV
-generic/457     [not run] This test requires a valid $LOGWRITES_DEV
-generic/475 98s ...  81s
-generic/479 2s ...  2s
-generic/480 1s ...  1s
-generic/481 1s ...  1s
-generic/483 7s ...  7s
-generic/489 1s ...  1s
-generic/498 1s ...  1s
-generic/501 56s ...  57s
-generic/502 1s ...  1s
-generic/509 1s ...  1s
-generic/510 1s ...  1s
-generic/512 1s ...  1s
-generic/520 16s ...  16s
-generic/526 2s ...  1s
-generic/527 1s ...  1s
-generic/534 1s ...  1s
-generic/535 1s ...  1s
-generic/546 3s ...  3s
-generic/547 2s ...  2s
-generic/552 1s ...  1s
-generic/557 2s ...  2s
-generic/588 1s ...  1s
-shared/002 9s ...  9s
-xfs/011 18s ...  18s
-xfs/029 1s ...  1s
-xfs/051 17s ...  18s
-xfs/057 24s ...  24s
-xfs/079 14s ...  13s
-xfs/095 2s ...  2s
-xfs/119 2s ...  2s
-xfs/121 6s ...  7s
-xfs/141 16s ...  10s
-xfs/181 40s ...  12s
-xfs/216 2s ...  3s
-xfs/217 2s ...  2s
-xfs/439 [not run] test requires XFS bug_on_assert to be off, turn it off to run the test
-Ran: generic/034 generic/039 generic/040 generic/041 generic/043 generic/044 generic/045 generic/046 generic/051 generic/052 generic/054 generic/055 generic/056 generic/057 generic/059 generic/065 generic/066 generic/073 generic/090 generic/101 generic/104 generic/106 generic/107 generic/177 generic/311 generic/321 generic/322 generic/325 generic/335 generic/336 generic/341 generic/342 generic/343 generic/376 generic/388 generic/417 generic/455 generic/457 generic/475 generic/479 generic/480 generic/481 generic/483 generic/489 generic/498 generic/501 generic/502 generic/509 generic/510 generic/512 generic/520 generic/526 generic/527 generic/534 generic/535 generic/546 generic/547 generic/552 generic/557 generic/588 shared/002 xfs/011 xfs/029 xfs/051 xfs/057 xfs/079 xfs/095 xfs/119 xfs/121 xfs/141 xfs/181 xfs/216 xfs/217 xfs/439
-Not run: generic/455 generic/457 xfs/439
-Passed all 74 tests
-
-These are the results of running ./check -g shutdown and ./check -g
-log, respectively, on 5.12.0-rc2-xfstests-patched-next-20210309+ kernel
-WITH this patch applied on top:
-
-gustavo@beefy:~/git/xfstests$ time sudo ./check -g shutdown 2>&1 | tee xfs-shutdown-patched.out
-FSTYP         -- xfs (debug)
-PLATFORM      -- Linux/x86_64 beefy 5.12.0-rc2-xfstests-patched-next-20210309+ #20 SMP Tue Mar 9 17:02:09 CST 2021
-MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda4
-MOUNT_OPTIONS -- /dev/sda4 /mnt/scratch
-
-generic/042 2s ...  3s
-generic/043 13s ...  12s
-generic/044 14s ...  15s
-generic/045 18s ...  18s
-generic/046 14s ...  14s
-generic/047 21s ...  21s
-generic/048 51s ...  51s
-generic/049 8s ...  8s
-generic/050 1s ...  2s
-generic/051 76s ...  75s
-generic/052 1s ...  2s
-generic/054 35s ...  70s
-generic/055 16s ...  21s
-generic/388 77s ...  76s
-generic/392 29s ...  6s
-generic/417 12s ...  11s
-generic/461 21s ...  22s
-generic/468 3s ...  3s
-generic/474 1s ...  1s
-generic/475 99s ...  91s
-generic/505 2s ...  2s
-generic/506 1s ...  1s
-generic/507     [not run] file system doesn't support chattr +AsSu
-generic/508 2s ...  4s
-generic/530 12s ...  9s
-generic/536 2s ...  3s
-generic/599 1s ...  1s
-generic/622 24s ...  24s
-xfs/051 18s ...  19s
-xfs/079 16s ...  13s
-xfs/121 7s ...  7s
-xfs/181 11s ...  11s
-xfs/212 2s ...  2s
-Ran: generic/042 generic/043 generic/044 generic/045 generic/046 generic/047 generic/048 generic/049 generic/050 generic/051 generic/052 generic/054 generic/055 generic/388 generic/392 generic/417 generic/461 generic/468 generic/474 generic/475 generic/505 generic/506 generic/507 generic/508 generic/530 generic/536 generic/599 generic/622 xfs/051 xfs/079 xfs/121 xfs/181 xfs/212
-Not run: generic/507
-Passed all 33 tests
-
-gustavo@beefy:~/git/xfstests$ time sudo ./check -g log 2>&1 | tee xfs-log-patched.out
-FSTYP         -- xfs (debug)
-PLATFORM      -- Linux/x86_64 beefy 5.12.0-rc2-xfstests-patched-next-20210309+ #20 SMP Tue Mar 9 17:02:09 CST 2021
-MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda4
-MOUNT_OPTIONS -- /dev/sda4 /mnt/scratch
-
-generic/034 1s ...  0s
-generic/039 1s ...  1s
-generic/040 5s ...  5s
-generic/041 7s ...  8s
-generic/043 12s ...  12s
-generic/044 15s ...  15s
-generic/045 18s ...  18s
-generic/046 14s ...  14s
-generic/051 75s ...  76s
-generic/052 2s ...  5s
-generic/054 70s ...  32s
-generic/055 21s ...  15s
-generic/056 1s ...  1s
-generic/057 1s ...  1s
-generic/059 2s ...  2s
-generic/065 1s ...  1s
-generic/066 2s ...  1s
-generic/073 1s ...  1s
-generic/090 1s ...  1s
-generic/101 1s ...  1s
-generic/104 1s ...  1s
-generic/106 1s ...  1s
-generic/107 1s ...  1s
-generic/177 1s ...  1s
-generic/311 67s ...  68s
-generic/321 2s ...  1s
-generic/322 2s ...  2s
-generic/325 1s ...  1s
-generic/335 1s ...  1s
-generic/336 1s ...  1s
-generic/341 1s ...  1s
-generic/342 1s ...  1s
-generic/343 1s ...  1s
-generic/376 1s ...  1s
-generic/388 76s ...  79s
-generic/417 11s ...  12s
-generic/455     [not run] This test requires a valid $LOGWRITES_DEV
-generic/457     [not run] This test requires a valid $LOGWRITES_DEV
-generic/475 91s ...  98s
-generic/479 2s ...  2s
-generic/480 1s ...  1s
-generic/481 1s ...  1s
-generic/483 6s ...  7s
-generic/489 1s ...  1s
-generic/498 1s ...  1s
-generic/501 63s ...  56s
-generic/502 1s ...  1s
-generic/509 1s ...  1s
-generic/510 1s ...  1s
-generic/512 1s ...  1s
-generic/520 17s ...  16s
-generic/526 1s ...  2s
-generic/527 1s ...  1s
-generic/534 1s ...  1s
-generic/535 1s ...  1s
-generic/546 3s ...  3s
-generic/547 2s ...  2s
-generic/552 1s ...  1s
-generic/557 2s ...  2s
-generic/588 1s ...  1s
-shared/002 9s ...  9s
-xfs/011 18s ...  18s
-xfs/029 1s ...  1s
-xfs/051 19s ...  18s
-xfs/057 23s ...  24s
-xfs/079 13s ...  14s
-xfs/095 1s ...  2s
-xfs/119 3s ...  2s
-xfs/121 7s ...  10s
-xfs/141 26s ...  16s
-xfs/181 11s ...  11s
-xfs/216 2s ...  2s
-xfs/217 2s ...  2s
-xfs/439 [not run] test requires XFS bug_on_assert to be off, turn it off to run the test
-Ran: generic/034 generic/039 generic/040 generic/041 generic/043 generic/044 generic/045 generic/046 generic/051 generic/052 generic/054 generic/055 generic/056 generic/057 generic/059 generic/065 generic/066 generic/073 generic/090 generic/101 generic/104 generic/106 generic/107 generic/177 generic/311 generic/321 generic/322 generic/325 generic/335 generic/336 generic/341 generic/342 generic/343 generic/376 generic/388 generic/417 generic/455 generic/457 generic/475 generic/479 generic/480 generic/481 generic/483 generic/489 generic/498 generic/501 generic/502 generic/509 generic/510 generic/512 generic/520 generic/526 generic/527 generic/534 generic/535 generic/546 generic/547 generic/552 generic/557 generic/588 shared/002 xfs/011 xfs/029 xfs/051 xfs/057 xfs/079 xfs/095 xfs/119 xfs/121 xfs/141 xfs/181 xfs/216 xfs/217 xfs/439
-Not run: generic/455 generic/457 xfs/439
-Passed all 74 tests
-
-Notice that the test results before and after this patch is applied are
-identical and successful. Other tests might need to be run in order to
-verify everything is working as expected. For such tests, the intervention
-of the maintainers might be needed.
+  CC [M]  drivers/net/fddi/skfp/smt.o
+drivers/net/fddi/skfp/smt.c: In function ‘smt_send_sif_operation’:
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
+      |                   ^~~
+drivers/net/fddi/skfp/smt.c:1084:30: warning: array subscript 1 is above array bounds of ‘struct smt_p_lem[1]’ [-Warray-bounds]
+ 1084 |    smt_fill_lem(smc,&sif->lem[i],i) ;
+      |                      ~~~~~~~~^~~
+In file included from drivers/net/fddi/skfp/h/smc.h:42,
+                 from drivers/net/fddi/skfp/smt.c:15:
+drivers/net/fddi/skfp/h/smt.h:767:19: note: while referencing ‘lem’
+  767 |  struct smt_p_lem lem[1] ; /* phy lem status */
 
 [1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
+[2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
 
 Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/109
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Changes in v2:
- - Use struct_size() helper in more places.
- - Update changelog text with testing results on Linux 5.12.0-rc2.
- - Fix issue with use of struct_size() with the right struct object.
- - Use flex_array_size() helper.
+ Changes in RESEND:
+ - None. Resending now that net-next is open.
 
- fs/xfs/libxfs/xfs_log_format.h | 12 ++++----
- fs/xfs/xfs_extfree_item.c      | 56 ++++++++++++++++------------------
- fs/xfs/xfs_ondisk.h            |  8 ++---
- 3 files changed, 37 insertions(+), 39 deletions(-)
+ drivers/net/fddi/skfp/h/smt.h | 4 +---
+ drivers/net/fddi/skfp/smt.c   | 4 ++--
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
-index 8bd00da6d2a4..9934a465b441 100644
---- a/fs/xfs/libxfs/xfs_log_format.h
-+++ b/fs/xfs/libxfs/xfs_log_format.h
-@@ -574,7 +574,7 @@ typedef struct xfs_efi_log_format {
- 	uint16_t		efi_size;	/* size of this item */
- 	uint32_t		efi_nextents;	/* # extents to free */
- 	uint64_t		efi_id;		/* efi identifier */
--	xfs_extent_t		efi_extents[1];	/* array of extents to free */
-+	xfs_extent_t		efi_extents[];	/* array of extents to free */
- } xfs_efi_log_format_t;
- 
- typedef struct xfs_efi_log_format_32 {
-@@ -582,7 +582,7 @@ typedef struct xfs_efi_log_format_32 {
- 	uint16_t		efi_size;	/* size of this item */
- 	uint32_t		efi_nextents;	/* # extents to free */
- 	uint64_t		efi_id;		/* efi identifier */
--	xfs_extent_32_t		efi_extents[1];	/* array of extents to free */
-+	xfs_extent_32_t		efi_extents[];	/* array of extents to free */
- } __attribute__((packed)) xfs_efi_log_format_32_t;
- 
- typedef struct xfs_efi_log_format_64 {
-@@ -590,7 +590,7 @@ typedef struct xfs_efi_log_format_64 {
- 	uint16_t		efi_size;	/* size of this item */
- 	uint32_t		efi_nextents;	/* # extents to free */
- 	uint64_t		efi_id;		/* efi identifier */
--	xfs_extent_64_t		efi_extents[1];	/* array of extents to free */
-+	xfs_extent_64_t		efi_extents[];	/* array of extents to free */
- } xfs_efi_log_format_64_t;
+diff --git a/drivers/net/fddi/skfp/h/smt.h b/drivers/net/fddi/skfp/h/smt.h
+index a0dbc0f57a55..751b5bb87a9d 100644
+--- a/drivers/net/fddi/skfp/h/smt.h
++++ b/drivers/net/fddi/skfp/h/smt.h
+@@ -764,10 +764,8 @@ struct smt_sif_operation {
+ 	struct smt_p_setcount	setcount ;	 /* Set Count mandatory */
+ #endif
+ 	/* must be last */
+-	struct smt_p_lem	lem[1] ;	/* phy lem status */
++	struct smt_p_lem	lem[];		/* phy lem status */
+ } ;
+-#define SIZEOF_SMT_SIF_OPERATION	(sizeof(struct smt_sif_operation)- \
+-					 sizeof(struct smt_p_lem))
  
  /*
-@@ -603,7 +603,7 @@ typedef struct xfs_efd_log_format {
- 	uint16_t		efd_size;	/* size of this item */
- 	uint32_t		efd_nextents;	/* # of extents freed */
- 	uint64_t		efd_efi_id;	/* id of corresponding efi */
--	xfs_extent_t		efd_extents[1];	/* array of extents freed */
-+	xfs_extent_t		efd_extents[];	/* array of extents freed */
- } xfs_efd_log_format_t;
+  * ECF : echo frame
+diff --git a/drivers/net/fddi/skfp/smt.c b/drivers/net/fddi/skfp/smt.c
+index 774a6e3b0a67..6b68a53f1b38 100644
+--- a/drivers/net/fddi/skfp/smt.c
++++ b/drivers/net/fddi/skfp/smt.c
+@@ -1063,9 +1063,9 @@ static void smt_send_sif_operation(struct s_smc *smc, struct fddi_addr *dest,
+ #endif
  
- typedef struct xfs_efd_log_format_32 {
-@@ -611,7 +611,7 @@ typedef struct xfs_efd_log_format_32 {
- 	uint16_t		efd_size;	/* size of this item */
- 	uint32_t		efd_nextents;	/* # of extents freed */
- 	uint64_t		efd_efi_id;	/* id of corresponding efi */
--	xfs_extent_32_t		efd_extents[1];	/* array of extents freed */
-+	xfs_extent_32_t		efd_extents[];	/* array of extents freed */
- } __attribute__((packed)) xfs_efd_log_format_32_t;
- 
- typedef struct xfs_efd_log_format_64 {
-@@ -619,7 +619,7 @@ typedef struct xfs_efd_log_format_64 {
- 	uint16_t		efd_size;	/* size of this item */
- 	uint32_t		efd_nextents;	/* # of extents freed */
- 	uint64_t		efd_efi_id;	/* id of corresponding efi */
--	xfs_extent_64_t		efd_extents[1];	/* array of extents freed */
-+	xfs_extent_64_t		efd_extents[];	/* array of extents freed */
- } xfs_efd_log_format_64_t;
- 
- /*
-diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-index 93223ebb3372..939206483720 100644
---- a/fs/xfs/xfs_extfree_item.c
-+++ b/fs/xfs/xfs_extfree_item.c
-@@ -73,8 +73,8 @@ static inline int
- xfs_efi_item_sizeof(
- 	struct xfs_efi_log_item *efip)
- {
--	return sizeof(struct xfs_efi_log_format) +
--	       (efip->efi_format.efi_nextents - 1) * sizeof(xfs_extent_t);
-+	return struct_size(&efip->efi_format, efi_extents,
-+			   efip->efi_format.efi_nextents);
- }
- 
- STATIC void
-@@ -153,17 +153,14 @@ xfs_efi_init(
- 
- {
- 	struct xfs_efi_log_item	*efip;
--	uint			size;
- 
- 	ASSERT(nextents > 0);
--	if (nextents > XFS_EFI_MAX_FAST_EXTENTS) {
--		size = (uint)(sizeof(struct xfs_efi_log_item) +
--			((nextents - 1) * sizeof(xfs_extent_t)));
--		efip = kmem_zalloc(size, 0);
--	} else {
-+	if (nextents > XFS_EFI_MAX_FAST_EXTENTS)
-+		efip = kmem_zalloc(struct_size(efip, efi_format.efi_extents,
-+					       nextents), 0);
-+	else
- 		efip = kmem_cache_zalloc(xfs_efi_zone,
- 					 GFP_KERNEL | __GFP_NOFAIL);
--	}
- 
- 	xfs_log_item_init(mp, &efip->efi_item, XFS_LI_EFI, &xfs_efi_item_ops);
- 	efip->efi_format.efi_nextents = nextents;
-@@ -186,12 +183,12 @@ xfs_efi_copy_format(xfs_log_iovec_t *buf, xfs_efi_log_format_t *dst_efi_fmt)
- {
- 	xfs_efi_log_format_t *src_efi_fmt = buf->i_addr;
- 	uint i;
--	uint len = sizeof(xfs_efi_log_format_t) + 
--		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_t);  
--	uint len32 = sizeof(xfs_efi_log_format_32_t) + 
--		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_32_t);  
--	uint len64 = sizeof(xfs_efi_log_format_64_t) + 
--		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_64_t);  
-+	size_t len = struct_size(src_efi_fmt, efi_extents,
-+				 src_efi_fmt->efi_nextents);
-+	uint len32 = struct_size((xfs_efi_log_format_32_t *)0, efi_extents,
-+				 src_efi_fmt->efi_nextents);
-+	uint len64 = struct_size((xfs_efi_log_format_64_t *)0, efi_extents,
-+				 src_efi_fmt->efi_nextents);
- 
- 	if (buf->i_len == len) {
- 		memcpy((char *)dst_efi_fmt, (char*)src_efi_fmt, len);
-@@ -253,8 +250,8 @@ static inline int
- xfs_efd_item_sizeof(
- 	struct xfs_efd_log_item *efdp)
- {
--	return sizeof(xfs_efd_log_format_t) +
--	       (efdp->efd_format.efd_nextents - 1) * sizeof(xfs_extent_t);
-+	return struct_size(&efdp->efd_format, efd_extents,
-+			   efdp->efd_format.efd_nextents);
- }
- 
- STATIC void
-@@ -328,14 +325,12 @@ xfs_trans_get_efd(
- 
- 	ASSERT(nextents > 0);
- 
--	if (nextents > XFS_EFD_MAX_FAST_EXTENTS) {
--		efdp = kmem_zalloc(sizeof(struct xfs_efd_log_item) +
--				(nextents - 1) * sizeof(struct xfs_extent),
--				0);
--	} else {
-+	if (nextents > XFS_EFD_MAX_FAST_EXTENTS)
-+		efdp = kmem_zalloc(struct_size(efdp, efd_format.efd_extents,
-+					nextents), 0);
-+	else
- 		efdp = kmem_cache_zalloc(xfs_efd_zone,
- 					GFP_KERNEL | __GFP_NOFAIL);
--	}
- 
- 	xfs_log_item_init(tp->t_mountp, &efdp->efd_item, XFS_LI_EFD,
- 			  &xfs_efd_item_ops);
-@@ -666,11 +661,13 @@ xfs_efi_item_relog(
- 	tp->t_flags |= XFS_TRANS_DIRTY;
- 	efdp = xfs_trans_get_efd(tp, EFI_ITEM(intent), count);
- 	efdp->efd_next_extent = count;
--	memcpy(efdp->efd_format.efd_extents, extp, count * sizeof(*extp));
-+	memcpy(efdp->efd_format.efd_extents, extp,
-+	       flex_array_size(&efdp->efd_format, efd_extents, count));
- 	set_bit(XFS_LI_DIRTY, &efdp->efd_item.li_flags);
- 
- 	efip = xfs_efi_init(tp->t_mountp, count);
--	memcpy(efip->efi_format.efi_extents, extp, count * sizeof(*extp));
-+	memcpy(efip->efi_format.efi_extents, extp,
-+	       flex_array_size(&efip->efi_format, efi_extents, count));
- 	atomic_set(&efip->efi_next_extent, count);
- 	xfs_trans_add_item(tp, &efip->efi_item);
- 	set_bit(XFS_LI_DIRTY, &efip->efi_item.li_flags);
-@@ -746,10 +743,11 @@ xlog_recover_efd_commit_pass2(
- 	struct xfs_efd_log_format	*efd_formatp;
- 
- 	efd_formatp = item->ri_buf[0].i_addr;
--	ASSERT((item->ri_buf[0].i_len == (sizeof(xfs_efd_log_format_32_t) +
--		((efd_formatp->efd_nextents - 1) * sizeof(xfs_extent_32_t)))) ||
--	       (item->ri_buf[0].i_len == (sizeof(xfs_efd_log_format_64_t) +
--		((efd_formatp->efd_nextents - 1) * sizeof(xfs_extent_64_t)))));
-+	ASSERT((item->ri_buf[0].i_len ==
-+		struct_size((xfs_efd_log_format_32_t *)0, efd_extents,
-+		efd_formatp->efd_nextents)) || (item->ri_buf[0].i_len ==
-+		struct_size((xfs_efd_log_format_64_t *)0, efd_extents,
-+		efd_formatp->efd_nextents)));
- 
- 	xlog_recover_release_intent(log, XFS_LI_EFI, efd_formatp->efd_efi_id);
- 	return 0;
-diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-index 0aa87c210104..f58e0510385a 100644
---- a/fs/xfs/xfs_ondisk.h
-+++ b/fs/xfs/xfs_ondisk.h
-@@ -118,10 +118,10 @@ xfs_check_ondisk_structs(void)
- 	/* log structures */
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_buf_log_format,	88);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_dq_logformat,		24);
--	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_32,	28);
--	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_64,	32);
--	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_32,	28);
--	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_64,	32);
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_32,	16);
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_64,	16);
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_32,	16);
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_64,	16);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_extent_32,		12);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_extent_64,		16);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_log_dinode,		176);
+ 	if (!(mb = smt_build_frame(smc,SMT_SIF_OPER,SMT_REPLY,
+-		SIZEOF_SMT_SIF_OPERATION+ports*sizeof(struct smt_p_lem))))
++				   struct_size(sif, lem, ports))))
+ 		return ;
+-	sif = smtod(mb, struct smt_sif_operation *) ;
++	sif = smtod(mb, typeof(sif));
+ 	smt_fill_timestamp(smc,&sif->ts) ;	/* set time stamp */
+ 	smt_fill_mac_status(smc,&sif->status) ; /* set mac status */
+ 	smt_fill_mac_counter(smc,&sif->mc) ; /* set mac counter field */
 -- 
 2.27.0
 
