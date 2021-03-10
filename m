@@ -2,187 +2,553 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7A0C433E0
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 00:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58E2C433DB
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 02:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B9C65020
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 00:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB12E65018
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 02:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230320AbhCJABn (ORCPT
+        id S231923AbhCJCBg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 9 Mar 2021 19:01:43 -0500
-Received: from mga11.intel.com ([192.55.52.93]:12960 "EHLO mga11.intel.com"
+        Tue, 9 Mar 2021 21:01:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230122AbhCJABX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 9 Mar 2021 19:01:23 -0500
-IronPort-SDR: sY7KiZB3HAXm3kylVbsXleo+bweGSicSf69W5ZagBVwbupCHdFJHslvEP55Wz/IW4qwELXCadv
- 8sIFssJHz8OQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="184987669"
-X-IronPort-AV: E=Sophos;i="5.81,236,1610438400"; 
-   d="scan'208";a="184987669"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2021 16:01:12 -0800
-IronPort-SDR: vkW4GZP9kE1ATdCwxUJAy3s20phham5qAXPoNKv4zhQxlYtQBDpn0+WjW793cr+KsXrEP7N0S5
- lAV3gLUc/3TA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,236,1610438400"; 
-   d="scan'208";a="447693305"
-Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
-  by orsmga001.jf.intel.com with ESMTP; 09 Mar 2021 16:01:12 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Tue, 9 Mar 2021 16:01:11 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2
- via Frontend Transport; Tue, 9 Mar 2021 16:01:11 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2106.2; Tue, 9 Mar 2021 16:01:11 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=US1NHtHu+h1jYVq6YT6lzGpsFaJ4AHcm8uzsMGXolUdHdPCzaXAOQQqC8/oTC21vBLyFbIo5540g6T13eFUCm5fJgVqllPYaU1Xex8nuhLQikZj3uqZXeRL9xG77RCXggoUt2Ic0l7bzGY8ImKYoBWUOlVR6/vlCwPguwF8jjefCO6wWR5GVIorLghfGI2v+/THHq6s+z5QBl0YV8vozmSsNccIuN4YzFeLs+eecwFEIfgUIOUjO2CmR4E5js9FLUOJuNCQpDS07ueMfv0qqfdwtLQxHIQwkE+4uIF7AsgbYtTzzGBi/EoOqpNo8AZbpE6uiLLQg4WuYGSu90Mq/EA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RAkp33iPyeV/HfoU57NgCW3SMVG7HA4iIuIa0xFeY20=;
- b=OIQ10UgZXmaD9uleK/J2xIfWn30+VEpRYHg8ffPPgesbIrM/sjyFqZyNnpDpN/h+/tzgjYsF/Sw5UqIa5fP5ZpJN4MVV5VL8F3Nj4auPuC7R/5iE0GpOjttd4kp1gCXI8SY+tLSwrZY5IRrL+A83VdlcQTMu7NnyNyrQ/7h2fWRCDwY9Oqh4/hxRK7tDwG4sJALFVXyfyaVKXLMxoLNxIXB1aXydQipbdNSRUUEcKdia/tzZxeWyG1iOOJqFPNqK2MJeFhANrf82i1amI/5Jl2s+NLF+whdRaDaEuvjj5+yG13aMjpuzoWqX/XvdOWNwOwQL7DiPHGdRlTNi/7KeMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RAkp33iPyeV/HfoU57NgCW3SMVG7HA4iIuIa0xFeY20=;
- b=hctm+eyYJzyNIXuqaPlIVec4bg1mM9+11iWmjYpFjbEgnjBIXh1VUpWw6AcdidYOYD8t3Fj4J1XEYDHHElhijczM/M1lHtrYJheDhrF8mktGv9ny1GHU8dMUatOHg9b+peZmxsYv86tQErQ7FX1TLlLrQLfHbCgxdOtum46DT9s=
-Received: from CO1PR11MB5105.namprd11.prod.outlook.com (2603:10b6:303:9f::7)
- by MWHPR1101MB2141.namprd11.prod.outlook.com (2603:10b6:301:50::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.28; Wed, 10 Mar
- 2021 00:01:09 +0000
-Received: from CO1PR11MB5105.namprd11.prod.outlook.com
- ([fe80::fc78:a58:d862:c366]) by CO1PR11MB5105.namprd11.prod.outlook.com
- ([fe80::fc78:a58:d862:c366%3]) with mapi id 15.20.3912.027; Wed, 10 Mar 2021
- 00:01:09 +0000
-From:   "Brelinski, TonyX" <tonyx.brelinski@intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        id S230325AbhCJCBL (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 9 Mar 2021 21:01:11 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 59DFB65001;
+        Wed, 10 Mar 2021 02:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615341670;
+        bh=e/f5pbdlpdy51v6r0k4x7Ru+LKGP72/UKu3syIUsLRI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QrRAZu6MPpb9LA3jEEb4HLzk4NFZAp+nEMEH84xOVdeyIw4lDgKkW4ylXp54jdk6J
+         n1E43v/aECDoc8jM6yyHAvq2Ch+Tw/eQJOrjV7ofougYHN0+PyPcid/ZdHLBgH+giM
+         i8vHj/6wyyqFTfKipSgPo2I1byAAs8IFEIFOGbuOnk9IO8tPwYhU7hvN0FC64hA+7b
+         gpxPF9KvF4bV5ZMcyUirIpFCKXCPL/TapYB7abTOxrWF+DIDC/6dml/0t8HnPn6Jls
+         OaJ3fgKgwk9j2j79Hi6v3v0hGiAn5n1ohAiQ9fj5W9oIzq/SgIQGnSfczPgYd85EtL
+         7QLWJNUhBdvag==
+Date:   Tue, 9 Mar 2021 20:01:08 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Brandeburg, Jesse" <jesse.brandeburg@intel.com>,
-        "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH RESEND][next] ice: Fix fall-through
- warnings for Clang
-Thread-Topic: [Intel-wired-lan] [PATCH RESEND][next] ice: Fix fall-through
- warnings for Clang
-Thread-Index: AQHXEZ0GqwTMi5pfiE60a2gAsfPXVap1GbkAgAdDz6A=
-Date:   Wed, 10 Mar 2021 00:01:09 +0000
-Message-ID: <CO1PR11MB51052F33DA15B71D28E29993FA919@CO1PR11MB5105.namprd11.prod.outlook.com>
-References: <20210305085257.GA138498@embeddedor>
- <833549f5-a191-b532-50bf-4ec343c48dd0@molgen.mpg.de>
-In-Reply-To: <833549f5-a191-b532-50bf-4ec343c48dd0@molgen.mpg.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.6.0.76
-dlp-reaction: no-action
-authentication-results: molgen.mpg.de; dkim=none (message not signed)
- header.d=none;molgen.mpg.de; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [71.236.132.75]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 751d3390-a7c7-4530-5088-08d8e3579c72
-x-ms-traffictypediagnostic: MWHPR1101MB2141:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR1101MB2141BC314CA68FF09FAD6DA4FA919@MWHPR1101MB2141.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eO9/4guy+g1g8gdfssHFhlkoZhNsm1i8zVKnUlsYUWeMkpanPHTWC7M4K/OrMwzp+dS0DIPLwhLp0bm0kCJptgD9IjCwn86O/qKk+3pvjt44oBZeCQiYhrFW+jd4APUhxyWF2AfdCVmXDx4Vz4GBXqj12uE5/VMlJQ96WFHJYs99DJUOy7zn7kb7OkA5sv9Bc2zcsZ5uYz2PmHNj/chpGvM+3Zj0VTcNmTI1wlqK3zuFK3fbx9AVRjoi3eIPRkHMB0WtsTRfzG6E3/BmazIyjwjl3rAfN0A4wOnAb2nT4jppmi0IwdAWZa2mXOxkMvuUGUdHwE6PGZolWrNmzE89lCmCLgkjBm662K460Q4KBXUI7DquE8mbrESnsBv4omk1HvsuEM9F8kzaCpCmNSbZ/oEDMHxOfhVfmaLzKkfaPWfRabBMqefIlDoe02Xn0h8Eh/852fVrc8e8T32CH0u2ZzSCe09Zw81uTrzDReK3jZq/TwD41sPDymeTdiFTbiizewLDqZTRFrxubvrO6ZsGFlmQN848eoslbAsp1jCIDFu7pgFj/79OEC2KVlre5o6ZjHLNJCB1yVBkyWCDA4oRPQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5105.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(136003)(396003)(346002)(366004)(39860400002)(110136005)(6506007)(2906002)(64756008)(33656002)(316002)(53546011)(54906003)(478600001)(55016002)(52536014)(966005)(71200400001)(8676002)(86362001)(4326008)(5660300002)(8936002)(7696005)(66556008)(66946007)(83380400001)(66446008)(66476007)(9686003)(26005)(186003)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?L29mSmc4eTZya040TEhROE1Ca05Kc3BjVGY5ajBraVVuZHZMSENVbTAzaEc0?=
- =?utf-8?B?d0FZejNBd1lOYTNaUUtOK3FRc3FYT1R3L2l3L1N1cVk4RzhyTmVWbGRFdm1o?=
- =?utf-8?B?WDAwWVJicm1ienNkZ2JWWGwzcnZUbTVMK0NYNlh3emJyeHJRSm50MG90NWQ4?=
- =?utf-8?B?dHBlWEUvWjR0d2JYcnVEZWxUT1IxcjNJRXJ5VCt5SGZjakRTZm1pejJmT1NU?=
- =?utf-8?B?a2NPWE0xNS90dGsxRU4wWVRHanlOZ2NTb3l3SGFFdlU0R3JyT01wQnpNeTV4?=
- =?utf-8?B?NTR3WHVzRDNUR0o4VFZMUEVubnEzRUdadUk3d3NGVWROdVhmYm9YaWhHai9O?=
- =?utf-8?B?ZTVteVdDT0VVRURDaHdqVTJJMFNZOVZZR3ZXUzFjL1M0QXdSeEtmZGJ0Z3Fx?=
- =?utf-8?B?RW1QalVUcHdmUGlwTnovaUZkY0VkSHFpSE9LUHVuNC9XdWk2K2hIMDRKU240?=
- =?utf-8?B?U1IzVm5ZbjJWT3FyU3RyQzVoKzk2Ylh3UDJXRC9BNzMrcmlkN1U1Y3FESlBu?=
- =?utf-8?B?RnZybFV0WjhHODRMVkpiNlRwNmYwTzRwMmVqSGliQkN3UjRkUWRSTVF6VHli?=
- =?utf-8?B?ZzNMd0k0UjJ4bHlvQkJ1bGFtWkxGVTZTTkV4YTFzZ2phLzJWeUNDYVk2ekdv?=
- =?utf-8?B?NFdSUEpuQmFzNTg3OFMwV0kxdlJqYzJrN1N4RENRc2ErbzZpcFpKV0lTb3VR?=
- =?utf-8?B?SHlWbEVlN3huTW5LVWlrVFNsZnZPcWFreVk2MDhBTmJFb2xYSlZKRkxIdWdJ?=
- =?utf-8?B?emJQWDh6b3hTN3Z4Y3JYdHphMG56TXZzdzJOa21DczEvYncxNkdPUjdGV29E?=
- =?utf-8?B?NlJSemFGMEZFTGdTZThyQW5RZDRJb0orT1EwOVh5VzNXUm1GbUI5QktaU2Fk?=
- =?utf-8?B?N2Fmcm9idjhocFBNTTlyOFhIblhQZ1Z3UXdDazlKaEI3c25jaTl2MVdQN0pO?=
- =?utf-8?B?TWZhT0FjaWJvTlVCcjBvd3M5SHoxRTY3dXVTRHNKSThTNlJyR0F1cFkzWi9O?=
- =?utf-8?B?Y3JpZDVOZlg1cjhkQnl3NG5QZ1JXaWJZb1VCM1NhdXptTHg0VVlFb2VGS1E5?=
- =?utf-8?B?M1IxcVkxS0ZmbjdoVHhVWkVkVTBGMkxFTDMrQVFVaG1tUUY3TW51aHJCM2JR?=
- =?utf-8?B?eUQrWTJrUi9BS25qbjIxTEIvbFpFYU1tN3BkRzFlcjRNYTRSaitvV0lKR3FM?=
- =?utf-8?B?cjdOMG9NMEFZVnNtN0Uyakx3bXlsN0tMeVNiOU5xSUxvQjFOM3VSc1VtUWth?=
- =?utf-8?B?QWQ2Y1Z3Mk5DZXR0SjkrZjRsT0Z2aHhlaE9WSVBzL2FDRk1JR0VYMFFDem1v?=
- =?utf-8?B?Mkh5NXc0alM3Y2p2QUxHcEdTMVg4L0xiWjRkM3FCQVVyVk9HNU1PblBrWWxz?=
- =?utf-8?B?dnI5NGdDSnhWdkU1blZJUW5odTB2Y0x4eExLTjNod3JzaGhqbTJtaGFta0dM?=
- =?utf-8?B?VGJQaFlXdG9KMStPb2sxYS9HeTc0d2Fsc2JLMzFNZlNyWEZpOFVPZzI0aERw?=
- =?utf-8?B?NTltK2ROeXFqOTI0NE9ZTnRXcE5vUG9QN2w1a3BLQzZsMk82cXNoU3ZLM3cx?=
- =?utf-8?B?MXIrdDU0RU15OEVqZmEzNzgrWnJ1d083Rm1zUkNqTnpCdHM1N3d4alZ1SFlX?=
- =?utf-8?B?MGRqN1NEaTFjQ1c4eExzSmtPUHpRaXFzcTc2RmszWFRaOWtLYnlobUhZaHNF?=
- =?utf-8?B?eTN3L0Znakd4K3E4NmxTdzR5RVVSYXN6ZkE3YkcwaWxnK3RNMUVqd1Y5bHhR?=
- =?utf-8?Q?XiZ+MLNrRU6i2e6w655Xw23KEZVWNKBYaKbW2h9?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] xfs: Replace one-element arrays with flexible-array
+ members
+Message-ID: <20210310020108.GA279881@embeddedor>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5105.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 751d3390-a7c7-4530-5088-08d8e3579c72
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2021 00:01:09.8157
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wl2UWu7tIPvNKFJ4Ydwkej+/tCa+hja6PqmoLicD//MkYVWVf1h7/090l6pk/nsCP6haXSm3w7Fy+mRM4UVSPSoAMHftYkkwPLNGH7dXRho=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2141
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBJbnRlbC13aXJlZC1sYW4gPGlu
-dGVsLXdpcmVkLWxhbi1ib3VuY2VzQG9zdW9zbC5vcmc+IE9uIEJlaGFsZiBPZg0KPiBQYXVsIE1l
-bnplbA0KPiBTZW50OiBGcmlkYXksIE1hcmNoIDUsIDIwMjEgMTowNCBBTQ0KPiBUbzogR3VzdGF2
-byBBLiBSLiBTaWx2YSA8Z3VzdGF2b2Fyc0BrZXJuZWwub3JnPjsgQnJhbmRlYnVyZywgSmVzc2UN
-Cj4gPGplc3NlLmJyYW5kZWJ1cmdAaW50ZWwuY29tPjsgTmd1eWVuLCBBbnRob255IEwNCj4gPGFu
-dGhvbnkubC5uZ3V5ZW5AaW50ZWwuY29tPjsgRGF2aWQgUy4gTWlsbGVyIDxkYXZlbUBkYXZlbWxv
-ZnQubmV0PjsNCj4gSmFrdWIgS2ljaW5za2kgPGt1YmFAa2VybmVsLm9yZz4NCj4gQ2M6IG5ldGRl
-dkB2Z2VyLmtlcm5lbC5vcmc7IGludGVsLXdpcmVkLWxhbkBsaXN0cy5vc3Vvc2wub3JnOyBsaW51
-eC0NCj4gaGFyZGVuaW5nQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZw0KPiBTdWJqZWN0OiBSZTogW0ludGVsLXdpcmVkLWxhbl0gW1BBVENIIFJFU0VORF1bbmV4
-dF0gaWNlOiBGaXggZmFsbC10aHJvdWdoDQo+IHdhcm5pbmdzIGZvciBDbGFuZw0KPiANCj4gRGVh
-ciBHdXN0YXZvLA0KPiANCj4gDQo+IFRoYW5rIHlvdSBmb3Igd29ya2luZyBvbiB0aGF0Lg0KPiAN
-Cj4gQW0gMDUuMDMuMjEgdW0gMDk6NTIgc2NocmllYiBHdXN0YXZvIEEuIFIuIFNpbHZhOg0KPiA+
-IEluIHByZXBhcmF0aW9uIHRvIGVuYWJsZSAtV2ltcGxpY2l0LWZhbGx0aHJvdWdoIGZvciBDbGFu
-ZywgZml4IGENCj4gPiB3YXJuaW5nIGJ5IGV4cGxpY2l0bHkgYWRkaW5nIGEgYnJlYWsgc3RhdGVt
-ZW50IGluc3RlYWQgb2YganVzdCBsZXR0aW5nDQo+ID4gdGhlIGNvZGUgZmFsbCB0aHJvdWdoIHRv
-IHRoZSBuZXh0IGNhc2UuDQo+IA0KPiBJdCB3b3VsZCBiZSBuaWNlIHRvIGhhdmUgYSBzaG9ydCBz
-dW1tYXJ5IG9mIHRoZSBkaXNjcmVwYW5jeSBiZXR3ZWVuIEdDQw0KPiBhbmQgY2xhbmcsIGFuZCBp
-dCB3YXMgZGVjaWRlZCB0byBnbyB3aXRoIHRoZSDigJxjbGFuZyBkZWNpc2lvbuKAnSwgYW5kIG5v
-dCBoYXZlDQo+IGNsYW5nIGFkYXB0IHRvIEdDQy4NCj4gDQo+ID4gTGluazogaHR0cHM6Ly9naXRo
-dWIuY29tL0tTUFAvbGludXgvaXNzdWVzLzExNQ0KPiA+IFNpZ25lZC1vZmYtYnk6IEd1c3Rhdm8g
-QS4gUi4gU2lsdmEgPGd1c3Rhdm9hcnNAa2VybmVsLm9yZz4NCj4gPiAtLS0NCj4gPiAgIGRyaXZl
-cnMvbmV0L2V0aGVybmV0L2ludGVsL2ljZS9pY2VfdHhyeF9saWIuYyB8IDEgKw0KPiA+ICAgMSBm
-aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQoNClRlc3RlZC1ieTogVG9ueSBCcmVsaW5za2kg
-PHRvbnl4LmJyZWxpbnNraUBpbnRlbC5jb20+IEEgQ29udGluZ2VudCBXb3JrZXIgYXQgSW50ZWwN
-Cg0KDQo=
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
+
+Refactor the code according to the use of flexible-array members in
+multiple structures, instead of one-element arrays. Also, make use of
+the new flex_array_size() and struct_size() helpers to properly calculate
+the size of multiple structures that contain flexible-array members.
+
+Below are the results of running xfstests for groups shutdown and log
+with the following configuration in local.config:
+
+export TEST_DEV=/dev/sda3
+export TEST_DIR=/mnt/test
+export SCRATCH_DEV=/dev/sda4
+export SCRATCH_MNT=/mnt/scratch
+
+The size for both partitions /dev/sda3 and /dev/sda4 is 25GB.
+
+These are the results of running ./check -g shutdown and ./check -g
+log, respectively, on 5.12.0-rc2-next-20210309 kernel WITHOUT this patch
+applied:
+
+gustavo@beefy:~/git/xfstests$ time sudo ./check -g shutdown 2>&1 | tee xfs-shutdown-no-patch.out
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 beefy 5.12.0-rc2-next-20210309 #21 SMP Tue Mar 9 17:48:24 CST 2021
+MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda4
+MOUNT_OPTIONS -- /dev/sda4 /mnt/scratch
+
+generic/042 2s ...  2s
+generic/043 13s ...  13s
+generic/044 14s ...  15s
+generic/045 18s ...  17s
+generic/046 14s ...  14s
+generic/047 21s ...  20s
+generic/048 50s ...  51s
+generic/049 9s ...  9s
+generic/050 1s ...  1s
+generic/051 77s ...  76s
+generic/052 1s ...  1s
+generic/054 70s ...  31s
+generic/055 15s ...  18s
+generic/388 82s ...  80s
+generic/392 5s ...  4s
+generic/417 11s ...  12s
+generic/461 22s ...  21s
+generic/468 12s ...  3s
+generic/474 2s ...  1s
+generic/475 87s ...  97s
+generic/505 1s ...  1s
+generic/506 2s ...  2s
+generic/507     [not run] file system doesn't support chattr +AsSu
+generic/508 4s ...  5s
+generic/530 14s ...  14s
+generic/536 2s ...  2s
+generic/599 2s ...  1s
+generic/622 23s ...  24s
+xfs/051 18s ...  18s
+xfs/079 14s ...  14s
+xfs/121 6s ...  32s
+xfs/181 12s ...  12s
+xfs/212 2s ...  2s
+Ran: generic/042 generic/043 generic/044 generic/045 generic/046 generic/047 generic/048 generic/049 generic/050 generic/051 generic/052 generic/054 generic/055 generic/388 generic/392 generic/417 generic/461 generic/468 generic/474 generic/475 generic/505 generic/506 generic/507 generic/508 generic/530 generic/536 generic/599 generic/622 xfs/051 xfs/079 xfs/121 xfs/181 xfs/212
+Not run: generic/507
+Passed all 33 tests
+
+gustavo@beefy:~/git/xfstests$ time sudo ./check -g log 2>&1 | tee xfs-log-no-patch.out
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 beefy 5.12.0-rc2-next-20210309 #21 SMP Tue Mar 9 17:48:24 CST 2021
+MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda4
+MOUNT_OPTIONS -- /dev/sda4 /mnt/scratch
+
+generic/034 0s ...  1s
+generic/039 1s ...  1s
+generic/040 5s ...  5s
+generic/041 8s ...  7s
+generic/043 13s ...  13s
+generic/044 14s ...  15s
+generic/045 18s ...  17s
+generic/046 14s ...  15s
+generic/051 75s ...  76s
+generic/052 2s ...  1s
+generic/054 32s ...  31s
+generic/055 19s ...  23s
+generic/056 1s ...  2s
+generic/057 1s ...  1s
+generic/059 2s ...  2s
+generic/065 1s ...  1s
+generic/066 1s ...  1s
+generic/073 1s ...  1s
+generic/090 1s ...  1s
+generic/101 1s ...  1s
+generic/104 1s ...  1s
+generic/106 1s ...  1s
+generic/107 1s ...  1s
+generic/177 1s ...  1s
+generic/311 68s ...  66s
+generic/321 1s ...  2s
+generic/322 2s ...  1s
+generic/325 1s ...  1s
+generic/335 1s ...  2s
+generic/336 1s ...  1s
+generic/341 1s ...  1s
+generic/342 1s ...  1s
+generic/343 1s ...  1s
+generic/376 1s ...  1s
+generic/388 93s ...  81s
+generic/417 11s ...  12s
+generic/455     [not run] This test requires a valid $LOGWRITES_DEV
+generic/457     [not run] This test requires a valid $LOGWRITES_DEV
+generic/475 98s ...  81s
+generic/479 2s ...  2s
+generic/480 1s ...  1s
+generic/481 1s ...  1s
+generic/483 7s ...  7s
+generic/489 1s ...  1s
+generic/498 1s ...  1s
+generic/501 56s ...  57s
+generic/502 1s ...  1s
+generic/509 1s ...  1s
+generic/510 1s ...  1s
+generic/512 1s ...  1s
+generic/520 16s ...  16s
+generic/526 2s ...  1s
+generic/527 1s ...  1s
+generic/534 1s ...  1s
+generic/535 1s ...  1s
+generic/546 3s ...  3s
+generic/547 2s ...  2s
+generic/552 1s ...  1s
+generic/557 2s ...  2s
+generic/588 1s ...  1s
+shared/002 9s ...  9s
+xfs/011 18s ...  18s
+xfs/029 1s ...  1s
+xfs/051 17s ...  18s
+xfs/057 24s ...  24s
+xfs/079 14s ...  13s
+xfs/095 2s ...  2s
+xfs/119 2s ...  2s
+xfs/121 6s ...  7s
+xfs/141 16s ...  10s
+xfs/181 40s ...  12s
+xfs/216 2s ...  3s
+xfs/217 2s ...  2s
+xfs/439 [not run] test requires XFS bug_on_assert to be off, turn it off to run the test
+Ran: generic/034 generic/039 generic/040 generic/041 generic/043 generic/044 generic/045 generic/046 generic/051 generic/052 generic/054 generic/055 generic/056 generic/057 generic/059 generic/065 generic/066 generic/073 generic/090 generic/101 generic/104 generic/106 generic/107 generic/177 generic/311 generic/321 generic/322 generic/325 generic/335 generic/336 generic/341 generic/342 generic/343 generic/376 generic/388 generic/417 generic/455 generic/457 generic/475 generic/479 generic/480 generic/481 generic/483 generic/489 generic/498 generic/501 generic/502 generic/509 generic/510 generic/512 generic/520 generic/526 generic/527 generic/534 generic/535 generic/546 generic/547 generic/552 generic/557 generic/588 shared/002 xfs/011 xfs/029 xfs/051 xfs/057 xfs/079 xfs/095 xfs/119 xfs/121 xfs/141 xfs/181 xfs/216 xfs/217 xfs/439
+Not run: generic/455 generic/457 xfs/439
+Passed all 74 tests
+
+These are the results of running ./check -g shutdown and ./check -g
+log, respectively, on 5.12.0-rc2-xfstests-patched-next-20210309+ kernel
+WITH this patch applied on top:
+
+gustavo@beefy:~/git/xfstests$ time sudo ./check -g shutdown 2>&1 | tee xfs-shutdown-patched.out
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 beefy 5.12.0-rc2-xfstests-patched-next-20210309+ #20 SMP Tue Mar 9 17:02:09 CST 2021
+MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda4
+MOUNT_OPTIONS -- /dev/sda4 /mnt/scratch
+
+generic/042 2s ...  3s
+generic/043 13s ...  12s
+generic/044 14s ...  15s
+generic/045 18s ...  18s
+generic/046 14s ...  14s
+generic/047 21s ...  21s
+generic/048 51s ...  51s
+generic/049 8s ...  8s
+generic/050 1s ...  2s
+generic/051 76s ...  75s
+generic/052 1s ...  2s
+generic/054 35s ...  70s
+generic/055 16s ...  21s
+generic/388 77s ...  76s
+generic/392 29s ...  6s
+generic/417 12s ...  11s
+generic/461 21s ...  22s
+generic/468 3s ...  3s
+generic/474 1s ...  1s
+generic/475 99s ...  91s
+generic/505 2s ...  2s
+generic/506 1s ...  1s
+generic/507     [not run] file system doesn't support chattr +AsSu
+generic/508 2s ...  4s
+generic/530 12s ...  9s
+generic/536 2s ...  3s
+generic/599 1s ...  1s
+generic/622 24s ...  24s
+xfs/051 18s ...  19s
+xfs/079 16s ...  13s
+xfs/121 7s ...  7s
+xfs/181 11s ...  11s
+xfs/212 2s ...  2s
+Ran: generic/042 generic/043 generic/044 generic/045 generic/046 generic/047 generic/048 generic/049 generic/050 generic/051 generic/052 generic/054 generic/055 generic/388 generic/392 generic/417 generic/461 generic/468 generic/474 generic/475 generic/505 generic/506 generic/507 generic/508 generic/530 generic/536 generic/599 generic/622 xfs/051 xfs/079 xfs/121 xfs/181 xfs/212
+Not run: generic/507
+Passed all 33 tests
+
+gustavo@beefy:~/git/xfstests$ time sudo ./check -g log 2>&1 | tee xfs-log-patched.out
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 beefy 5.12.0-rc2-xfstests-patched-next-20210309+ #20 SMP Tue Mar 9 17:02:09 CST 2021
+MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda4
+MOUNT_OPTIONS -- /dev/sda4 /mnt/scratch
+
+generic/034 1s ...  0s
+generic/039 1s ...  1s
+generic/040 5s ...  5s
+generic/041 7s ...  8s
+generic/043 12s ...  12s
+generic/044 15s ...  15s
+generic/045 18s ...  18s
+generic/046 14s ...  14s
+generic/051 75s ...  76s
+generic/052 2s ...  5s
+generic/054 70s ...  32s
+generic/055 21s ...  15s
+generic/056 1s ...  1s
+generic/057 1s ...  1s
+generic/059 2s ...  2s
+generic/065 1s ...  1s
+generic/066 2s ...  1s
+generic/073 1s ...  1s
+generic/090 1s ...  1s
+generic/101 1s ...  1s
+generic/104 1s ...  1s
+generic/106 1s ...  1s
+generic/107 1s ...  1s
+generic/177 1s ...  1s
+generic/311 67s ...  68s
+generic/321 2s ...  1s
+generic/322 2s ...  2s
+generic/325 1s ...  1s
+generic/335 1s ...  1s
+generic/336 1s ...  1s
+generic/341 1s ...  1s
+generic/342 1s ...  1s
+generic/343 1s ...  1s
+generic/376 1s ...  1s
+generic/388 76s ...  79s
+generic/417 11s ...  12s
+generic/455     [not run] This test requires a valid $LOGWRITES_DEV
+generic/457     [not run] This test requires a valid $LOGWRITES_DEV
+generic/475 91s ...  98s
+generic/479 2s ...  2s
+generic/480 1s ...  1s
+generic/481 1s ...  1s
+generic/483 6s ...  7s
+generic/489 1s ...  1s
+generic/498 1s ...  1s
+generic/501 63s ...  56s
+generic/502 1s ...  1s
+generic/509 1s ...  1s
+generic/510 1s ...  1s
+generic/512 1s ...  1s
+generic/520 17s ...  16s
+generic/526 1s ...  2s
+generic/527 1s ...  1s
+generic/534 1s ...  1s
+generic/535 1s ...  1s
+generic/546 3s ...  3s
+generic/547 2s ...  2s
+generic/552 1s ...  1s
+generic/557 2s ...  2s
+generic/588 1s ...  1s
+shared/002 9s ...  9s
+xfs/011 18s ...  18s
+xfs/029 1s ...  1s
+xfs/051 19s ...  18s
+xfs/057 23s ...  24s
+xfs/079 13s ...  14s
+xfs/095 1s ...  2s
+xfs/119 3s ...  2s
+xfs/121 7s ...  10s
+xfs/141 26s ...  16s
+xfs/181 11s ...  11s
+xfs/216 2s ...  2s
+xfs/217 2s ...  2s
+xfs/439 [not run] test requires XFS bug_on_assert to be off, turn it off to run the test
+Ran: generic/034 generic/039 generic/040 generic/041 generic/043 generic/044 generic/045 generic/046 generic/051 generic/052 generic/054 generic/055 generic/056 generic/057 generic/059 generic/065 generic/066 generic/073 generic/090 generic/101 generic/104 generic/106 generic/107 generic/177 generic/311 generic/321 generic/322 generic/325 generic/335 generic/336 generic/341 generic/342 generic/343 generic/376 generic/388 generic/417 generic/455 generic/457 generic/475 generic/479 generic/480 generic/481 generic/483 generic/489 generic/498 generic/501 generic/502 generic/509 generic/510 generic/512 generic/520 generic/526 generic/527 generic/534 generic/535 generic/546 generic/547 generic/552 generic/557 generic/588 shared/002 xfs/011 xfs/029 xfs/051 xfs/057 xfs/079 xfs/095 xfs/119 xfs/121 xfs/141 xfs/181 xfs/216 xfs/217 xfs/439
+Not run: generic/455 generic/457 xfs/439
+Passed all 74 tests
+
+Notice that the test results before and after this patch is applied are
+identical and successful. Other tests might need to be run in order to
+verify everything is working as expected. For such tests, the intervention
+of the maintainers might be needed.
+
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
+
+Link: https://github.com/KSPP/linux/issues/79
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use struct_size() helper in more places.
+ - Update changelog text with testing results on Linux 5.12.0-rc2.
+ - Fix issue with use of struct_size() with the right struct object.
+ - Use flex_array_size() helper.
+
+ fs/xfs/libxfs/xfs_log_format.h | 12 ++++----
+ fs/xfs/xfs_extfree_item.c      | 56 ++++++++++++++++------------------
+ fs/xfs/xfs_ondisk.h            |  8 ++---
+ 3 files changed, 37 insertions(+), 39 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
+index 8bd00da6d2a4..9934a465b441 100644
+--- a/fs/xfs/libxfs/xfs_log_format.h
++++ b/fs/xfs/libxfs/xfs_log_format.h
+@@ -574,7 +574,7 @@ typedef struct xfs_efi_log_format {
+ 	uint16_t		efi_size;	/* size of this item */
+ 	uint32_t		efi_nextents;	/* # extents to free */
+ 	uint64_t		efi_id;		/* efi identifier */
+-	xfs_extent_t		efi_extents[1];	/* array of extents to free */
++	xfs_extent_t		efi_extents[];	/* array of extents to free */
+ } xfs_efi_log_format_t;
+ 
+ typedef struct xfs_efi_log_format_32 {
+@@ -582,7 +582,7 @@ typedef struct xfs_efi_log_format_32 {
+ 	uint16_t		efi_size;	/* size of this item */
+ 	uint32_t		efi_nextents;	/* # extents to free */
+ 	uint64_t		efi_id;		/* efi identifier */
+-	xfs_extent_32_t		efi_extents[1];	/* array of extents to free */
++	xfs_extent_32_t		efi_extents[];	/* array of extents to free */
+ } __attribute__((packed)) xfs_efi_log_format_32_t;
+ 
+ typedef struct xfs_efi_log_format_64 {
+@@ -590,7 +590,7 @@ typedef struct xfs_efi_log_format_64 {
+ 	uint16_t		efi_size;	/* size of this item */
+ 	uint32_t		efi_nextents;	/* # extents to free */
+ 	uint64_t		efi_id;		/* efi identifier */
+-	xfs_extent_64_t		efi_extents[1];	/* array of extents to free */
++	xfs_extent_64_t		efi_extents[];	/* array of extents to free */
+ } xfs_efi_log_format_64_t;
+ 
+ /*
+@@ -603,7 +603,7 @@ typedef struct xfs_efd_log_format {
+ 	uint16_t		efd_size;	/* size of this item */
+ 	uint32_t		efd_nextents;	/* # of extents freed */
+ 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+-	xfs_extent_t		efd_extents[1];	/* array of extents freed */
++	xfs_extent_t		efd_extents[];	/* array of extents freed */
+ } xfs_efd_log_format_t;
+ 
+ typedef struct xfs_efd_log_format_32 {
+@@ -611,7 +611,7 @@ typedef struct xfs_efd_log_format_32 {
+ 	uint16_t		efd_size;	/* size of this item */
+ 	uint32_t		efd_nextents;	/* # of extents freed */
+ 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+-	xfs_extent_32_t		efd_extents[1];	/* array of extents freed */
++	xfs_extent_32_t		efd_extents[];	/* array of extents freed */
+ } __attribute__((packed)) xfs_efd_log_format_32_t;
+ 
+ typedef struct xfs_efd_log_format_64 {
+@@ -619,7 +619,7 @@ typedef struct xfs_efd_log_format_64 {
+ 	uint16_t		efd_size;	/* size of this item */
+ 	uint32_t		efd_nextents;	/* # of extents freed */
+ 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+-	xfs_extent_64_t		efd_extents[1];	/* array of extents freed */
++	xfs_extent_64_t		efd_extents[];	/* array of extents freed */
+ } xfs_efd_log_format_64_t;
+ 
+ /*
+diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+index 93223ebb3372..939206483720 100644
+--- a/fs/xfs/xfs_extfree_item.c
++++ b/fs/xfs/xfs_extfree_item.c
+@@ -73,8 +73,8 @@ static inline int
+ xfs_efi_item_sizeof(
+ 	struct xfs_efi_log_item *efip)
+ {
+-	return sizeof(struct xfs_efi_log_format) +
+-	       (efip->efi_format.efi_nextents - 1) * sizeof(xfs_extent_t);
++	return struct_size(&efip->efi_format, efi_extents,
++			   efip->efi_format.efi_nextents);
+ }
+ 
+ STATIC void
+@@ -153,17 +153,14 @@ xfs_efi_init(
+ 
+ {
+ 	struct xfs_efi_log_item	*efip;
+-	uint			size;
+ 
+ 	ASSERT(nextents > 0);
+-	if (nextents > XFS_EFI_MAX_FAST_EXTENTS) {
+-		size = (uint)(sizeof(struct xfs_efi_log_item) +
+-			((nextents - 1) * sizeof(xfs_extent_t)));
+-		efip = kmem_zalloc(size, 0);
+-	} else {
++	if (nextents > XFS_EFI_MAX_FAST_EXTENTS)
++		efip = kmem_zalloc(struct_size(efip, efi_format.efi_extents,
++					       nextents), 0);
++	else
+ 		efip = kmem_cache_zalloc(xfs_efi_zone,
+ 					 GFP_KERNEL | __GFP_NOFAIL);
+-	}
+ 
+ 	xfs_log_item_init(mp, &efip->efi_item, XFS_LI_EFI, &xfs_efi_item_ops);
+ 	efip->efi_format.efi_nextents = nextents;
+@@ -186,12 +183,12 @@ xfs_efi_copy_format(xfs_log_iovec_t *buf, xfs_efi_log_format_t *dst_efi_fmt)
+ {
+ 	xfs_efi_log_format_t *src_efi_fmt = buf->i_addr;
+ 	uint i;
+-	uint len = sizeof(xfs_efi_log_format_t) + 
+-		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_t);  
+-	uint len32 = sizeof(xfs_efi_log_format_32_t) + 
+-		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_32_t);  
+-	uint len64 = sizeof(xfs_efi_log_format_64_t) + 
+-		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_64_t);  
++	size_t len = struct_size(src_efi_fmt, efi_extents,
++				 src_efi_fmt->efi_nextents);
++	uint len32 = struct_size((xfs_efi_log_format_32_t *)0, efi_extents,
++				 src_efi_fmt->efi_nextents);
++	uint len64 = struct_size((xfs_efi_log_format_64_t *)0, efi_extents,
++				 src_efi_fmt->efi_nextents);
+ 
+ 	if (buf->i_len == len) {
+ 		memcpy((char *)dst_efi_fmt, (char*)src_efi_fmt, len);
+@@ -253,8 +250,8 @@ static inline int
+ xfs_efd_item_sizeof(
+ 	struct xfs_efd_log_item *efdp)
+ {
+-	return sizeof(xfs_efd_log_format_t) +
+-	       (efdp->efd_format.efd_nextents - 1) * sizeof(xfs_extent_t);
++	return struct_size(&efdp->efd_format, efd_extents,
++			   efdp->efd_format.efd_nextents);
+ }
+ 
+ STATIC void
+@@ -328,14 +325,12 @@ xfs_trans_get_efd(
+ 
+ 	ASSERT(nextents > 0);
+ 
+-	if (nextents > XFS_EFD_MAX_FAST_EXTENTS) {
+-		efdp = kmem_zalloc(sizeof(struct xfs_efd_log_item) +
+-				(nextents - 1) * sizeof(struct xfs_extent),
+-				0);
+-	} else {
++	if (nextents > XFS_EFD_MAX_FAST_EXTENTS)
++		efdp = kmem_zalloc(struct_size(efdp, efd_format.efd_extents,
++					nextents), 0);
++	else
+ 		efdp = kmem_cache_zalloc(xfs_efd_zone,
+ 					GFP_KERNEL | __GFP_NOFAIL);
+-	}
+ 
+ 	xfs_log_item_init(tp->t_mountp, &efdp->efd_item, XFS_LI_EFD,
+ 			  &xfs_efd_item_ops);
+@@ -666,11 +661,13 @@ xfs_efi_item_relog(
+ 	tp->t_flags |= XFS_TRANS_DIRTY;
+ 	efdp = xfs_trans_get_efd(tp, EFI_ITEM(intent), count);
+ 	efdp->efd_next_extent = count;
+-	memcpy(efdp->efd_format.efd_extents, extp, count * sizeof(*extp));
++	memcpy(efdp->efd_format.efd_extents, extp,
++	       flex_array_size(&efdp->efd_format, efd_extents, count));
+ 	set_bit(XFS_LI_DIRTY, &efdp->efd_item.li_flags);
+ 
+ 	efip = xfs_efi_init(tp->t_mountp, count);
+-	memcpy(efip->efi_format.efi_extents, extp, count * sizeof(*extp));
++	memcpy(efip->efi_format.efi_extents, extp,
++	       flex_array_size(&efip->efi_format, efi_extents, count));
+ 	atomic_set(&efip->efi_next_extent, count);
+ 	xfs_trans_add_item(tp, &efip->efi_item);
+ 	set_bit(XFS_LI_DIRTY, &efip->efi_item.li_flags);
+@@ -746,10 +743,11 @@ xlog_recover_efd_commit_pass2(
+ 	struct xfs_efd_log_format	*efd_formatp;
+ 
+ 	efd_formatp = item->ri_buf[0].i_addr;
+-	ASSERT((item->ri_buf[0].i_len == (sizeof(xfs_efd_log_format_32_t) +
+-		((efd_formatp->efd_nextents - 1) * sizeof(xfs_extent_32_t)))) ||
+-	       (item->ri_buf[0].i_len == (sizeof(xfs_efd_log_format_64_t) +
+-		((efd_formatp->efd_nextents - 1) * sizeof(xfs_extent_64_t)))));
++	ASSERT((item->ri_buf[0].i_len ==
++		struct_size((xfs_efd_log_format_32_t *)0, efd_extents,
++		efd_formatp->efd_nextents)) || (item->ri_buf[0].i_len ==
++		struct_size((xfs_efd_log_format_64_t *)0, efd_extents,
++		efd_formatp->efd_nextents)));
+ 
+ 	xlog_recover_release_intent(log, XFS_LI_EFI, efd_formatp->efd_efi_id);
+ 	return 0;
+diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
+index 0aa87c210104..f58e0510385a 100644
+--- a/fs/xfs/xfs_ondisk.h
++++ b/fs/xfs/xfs_ondisk.h
+@@ -118,10 +118,10 @@ xfs_check_ondisk_structs(void)
+ 	/* log structures */
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_buf_log_format,	88);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_dq_logformat,		24);
+-	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_32,	28);
+-	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_64,	32);
+-	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_32,	28);
+-	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_64,	32);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_32,	16);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_64,	16);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_32,	16);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_64,	16);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_extent_32,		12);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_extent_64,		16);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_log_dinode,		176);
+-- 
+2.27.0
+
