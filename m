@@ -2,96 +2,197 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02897C433DB
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 13:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4985C433E6
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 19:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B367964FD9
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 13:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B61F964EAE
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 Mar 2021 19:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232808AbhCJNqF (ORCPT
+        id S233403AbhCJTH3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 Mar 2021 08:46:05 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:56080 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231327AbhCJNp6 (ORCPT
+        Wed, 10 Mar 2021 14:07:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233493AbhCJTHX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 Mar 2021 08:45:58 -0500
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 12ADjOFo020214;
-        Wed, 10 Mar 2021 22:45:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 12ADjOFo020214
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1615383924;
-        bh=sF/ZgTt5Ww+ewJwghY8bN3q4cx/d+CRW4phq1OirHpI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=l77dZs4mDGC3lthuQHEtp4T0lCMlfJ1ahLGN/ipLvOsfz2uvLYj/6RHqHL5NCQ1wZ
-         g9wcB4hAQFarSqmO1oh1xyvzgMRasJ95YUrBt/BYNTBA0SHuPS6VMcETdGUBpycRYR
-         SSOXNgFfRhlHIvpxRzmU79KgekVbbaFrE/eEYkpVGBGNummPiPSMOLRuTWXhamAmOK
-         4uSn/clPYKYvPP3E/1ERhQrpaa1fNKDdcLx4T2ZWQLE779DiC4zL/K/pxMXugSBjBO
-         4uf+shJmzRVvndotY0EVe5T8woRcaaRpEluw1EIIlKOAXrdQUiIwZwizMbOidTDMDU
-         pjUB0NwCgLvtA==
-X-Nifty-SrcIP: [209.85.214.173]
-Received: by mail-pl1-f173.google.com with SMTP id s7so8500850plg.5;
-        Wed, 10 Mar 2021 05:45:24 -0800 (PST)
-X-Gm-Message-State: AOAM5316oqjtWkNPKfb6jEX0IRe8/IpowrtYSwdPvxrAvqvFmSEDYdN7
-        jipjFS/64JTPZ0IqXEDzRuVOjZXWJjPDO2BjxfI=
-X-Google-Smtp-Source: ABdhPJwluJLsepqLdHQ7dFnEL3YAfgbBThIc/o3OtzGX+XCmpRMegRM7Enh3dtUrTsSQ9Cngjbz7lBn+2vk8+ESyzw8=
-X-Received: by 2002:a17:90a:dc08:: with SMTP id i8mr3495136pjv.153.1615383923597;
- Wed, 10 Mar 2021 05:45:23 -0800 (PST)
+        Wed, 10 Mar 2021 14:07:23 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7780C061760
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Mar 2021 11:07:23 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id ga23-20020a17090b0397b02900c0b81bbcd4so7764934pjb.0
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Mar 2021 11:07:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mtUh+1sY9yiSBBmzwlwbQ9ceAe2QJiHtCFrNBHA9JkU=;
+        b=dfzK2ZdoM7CRHVzNahJRTL2gabq/t2fh2XQNTX+IdHNBedVJ8pDkN/CB6se+t+8Zjk
+         uysy1+ksydCkiArtdKAKpNdClx28I1GgcakoKLUInDbte1w8hK6je9FjyDwh8MeVLELl
+         AHcGGmdIwZkE1POqdVWY02de/cMBL8oUtbya0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mtUh+1sY9yiSBBmzwlwbQ9ceAe2QJiHtCFrNBHA9JkU=;
+        b=OFYGINZ5PYCik8U0x9+i8wRgWDkum5/kUdzLSbsq2BGxAn1LR6sc2DqX/66eX+Etf/
+         sw9OkqBo3ia2Dmp++Bv1SD0E9z46h5EhJEkbqzsAKOHM7s0nuZBWvVzgzi8QGYa5NjyJ
+         xJTaIlkQpE8JBNLr6t6RmNVQ8oT1ICBkxhQmQD0cyO71VQIO31d0MKmI2839oQFzAaDS
+         AtgP4Y2WDBQ+IxudS7qzCf9XoIyz1meKzLE6uj4oJHjzgiV2xZujqF+LjdY0skJuEUMK
+         1frPw7+Qiya3fPYLBVGky6TTfre+fHfuSalBqNXIVpY91R0wHSgUfrvduEMOPpiPO68R
+         2vdA==
+X-Gm-Message-State: AOAM531hOdUQjKRAwdo4uaZm/PNfxU0HlxNNLVCc45QZVQZVnG0fPVdY
+        eeigZSU0pQwrx5K3OE7HdmmdFA==
+X-Google-Smtp-Source: ABdhPJxZ4NyurVBSdt6V1+osruyWQ7xqIYqDmUu36xzplEsA59nkcdEJpYMqs7xHkZIjNJl3hjvPfQ==
+X-Received: by 2002:a17:902:76c7:b029:e6:508a:7b8d with SMTP id j7-20020a17090276c7b02900e6508a7b8dmr4273688plt.18.1615403243199;
+        Wed, 10 Mar 2021 11:07:23 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q25sm241185pff.104.2021.03.10.11.07.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Mar 2021 11:07:22 -0800 (PST)
+Date:   Wed, 10 Mar 2021 11:07:21 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     James Bottomley <jejb@linux.ibm.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] scsi: mpt3sas: Replace one-element array with
+ flexible-array in struct _MPI2_CONFIG_PAGE_IO_UNIT_3
+Message-ID: <202103101058.16ED27BE3@keescook>
+References: <20210202235118.GA314410@embeddedor>
+ <20210308193237.GA212624@embeddedor>
+ <88d9dda39a70df25b48e72247b9752d3dc5e2e8d.camel@linux.ibm.com>
+ <20210308204129.GA214076@embeddedor>
 MIME-Version: 1.0
-References: <20210304113708.215121-1-masahiroy@kernel.org> <202103041518.22EB819E@keescook>
- <CAHk-=wj6t2i1BgmWP1Zb2WVF3zZzkHvsxsALJk7VpfKm6UgLcw@mail.gmail.com>
- <20210305022500.cyi3cfwgt2t6mona@treble> <20210306012815.nfmquoln65vq6yq7@treble>
- <CAK7LNAR7E4Ud9MPy3q5VOab4EFMumr5GMHqyv=H970+gPTBrFg@mail.gmail.com>
- <20210306025059.z6dn6mi7mxyufkr2@treble> <20210309203109.2fhyf5naazgjjnch@treble>
-In-Reply-To: <20210309203109.2fhyf5naazgjjnch@treble>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 10 Mar 2021 22:44:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQDbhzi5s8iaqVSV82v8n-+0a=XB3-8wg=Nu41XyRETvw@mail.gmail.com>
-Message-ID: <CAK7LNAQDbhzi5s8iaqVSV82v8n-+0a=XB3-8wg=Nu41XyRETvw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: rebuild GCC plugins when the compiler is upgraded
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frank Eigler <fche@redhat.com>,
-        Justin Forbes <jforbes@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210308204129.GA214076@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 5:31 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, Mar 05, 2021 at 08:50:59PM -0600, Josh Poimboeuf wrote:
-> > > Is this a bad coding contest?
-> > >
-> > > I am not asking you to add ugly ifeq or whatever
-> > > hacks to say "this worked for me".
-> > >
-> > > Please feel free to do this in the fedora kernel,
-> > > but do not send it to upstream.
-> > >
-> > > Sorry, I really do not want to see hacks like this any more.
->
-> Masahiro,
->
-> Ping.  Do you have a better approach for building GCC plugins in the
-> external module directory?
+On Mon, Mar 08, 2021 at 02:41:29PM -0600, Gustavo A. R. Silva wrote:
+> On Mon, Mar 08, 2021 at 12:12:59PM -0800, James Bottomley wrote:
+> > On Mon, 2021-03-08 at 13:32 -0600, Gustavo A. R. Silva wrote:
+> > > Hi all,
+> > > 
+> > > Friendly ping: who can review/take this, please?
+> > 
+> > Well, before embarking on a huge dynamic update, let's ask Broadcom the
+> > simpler question of why isn't MPI2_IO_UNIT_PAGE_3_GPIO_VAL_MAX simply
+> > set to 36?  There's no dynamic allocation of anything in the current
+> > code ... it's all hard coded to allocate 36 entries.  If there's no
+> > need for anything dynamic then the kzalloc could become 
+> 
+> Yeah; and if that is the case, then there is no even need for kzalloc()
+> at all, and it can be replaced by memset():
+> 
+> diff --git a/drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h b/drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h
+> index 43a3bf8ff428..d00431f553e1 100644
+> --- a/drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h
+> +++ b/drivers/scsi/mpt3sas/mpi/mpi2_cnfg.h
+> @@ -992,7 +992,7 @@ typedef struct _MPI2_CONFIG_PAGE_IO_UNIT_1 {
+>   *one and check the value returned for GPIOCount at runtime.
+>   */
+>  #ifndef MPI2_IO_UNIT_PAGE_3_GPIO_VAL_MAX
+> -#define MPI2_IO_UNIT_PAGE_3_GPIO_VAL_MAX    (1)
+> +#define MPI2_IO_UNIT_PAGE_3_GPIO_VAL_MAX    (36)
+>  #endif
+> 
+>  typedef struct _MPI2_CONFIG_PAGE_IO_UNIT_3 {
+> diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> index 44f9a05db94e..23fcf29bfd67 100644
+> --- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> +++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> @@ -3203,7 +3203,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+>  {
+>         struct Scsi_Host *shost = class_to_shost(cdev);
+>         struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+> -       Mpi2IOUnitPage3_t *io_unit_pg3 = NULL;
+> +       Mpi2IOUnitPage3_t io_unit_pg3;
+>         Mpi2ConfigReply_t mpi_reply;
+>         u16 backup_rail_monitor_status = 0;
+>         u16 ioc_status;
+> @@ -3221,16 +3221,10 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+>                 goto out;
+> 
+>         /* allocate upto GPIOVal 36 entries */
+> -       sz = offsetof(Mpi2IOUnitPage3_t, GPIOVal) + (sizeof(u16) * 36);
+> -       io_unit_pg3 = kzalloc(sz, GFP_KERNEL);
+> -       if (!io_unit_pg3) {
+> -               rc = -ENOMEM;
+> -               ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%d) bytes\n",
+> -                       __func__, sz);
+> -               goto out;
+> -       }
+> +       sz = sizeof(io_unit_pg3);
+> +       memset(&io_unit_pg3, 0, sz);
 
+I like this a lot. It makes the code way simpler.
 
-I am not sure if building GCC plugins in the external module directory
-is the right approach.
+Putting this on the stack makes it faster, and it's less than 100 bytes,
+which seems entirely reasonable.
 
+> 
+> -       if (mpt3sas_config_get_iounit_pg3(ioc, &mpi_reply, io_unit_pg3, sz) !=
+> +       if (mpt3sas_config_get_iounit_pg3(ioc, &mpi_reply, &io_unit_pg3, sz) !=
 
---
-Best Regards
-Masahiro Yamada
+The only thing I can imagine is if this ends up doing DMA, which isn't
+allowed on the stack. However, in looking down through the call path,
+it's _copied_ into DMA memory, so this appears entirely safe.
+ 
+Can you send this as a "normal" patch? Feel free to include:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Thanks!
+
+-Kees
+
+>             0) {
+>                 ioc_err(ioc, "%s: failed reading iounit_pg3\n",
+>                         __func__);
+> @@ -3246,19 +3240,18 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+>                 goto out;
+>         }
+> 
+> -       if (io_unit_pg3->GPIOCount < 25) {
+> -               ioc_err(ioc, "%s: iounit_pg3->GPIOCount less than 25 entries, detected (%d) entries\n",
+> -                       __func__, io_unit_pg3->GPIOCount);
+> +       if (io_unit_pg3.GPIOCount < 25) {
+> +               ioc_err(ioc, "%s: iounit_pg3.GPIOCount less than 25 entries, detected (%d) entries\n",
+> +                       __func__, io_unit_pg3.GPIOCount);
+>                 rc = -EINVAL;
+>                 goto out;
+>         }
+> 
+>         /* BRM status is in bit zero of GPIOVal[24] */
+> -       backup_rail_monitor_status = le16_to_cpu(io_unit_pg3->GPIOVal[24]);
+> +       backup_rail_monitor_status = le16_to_cpu(io_unit_pg3.GPIOVal[24]);
+>         rc = snprintf(buf, PAGE_SIZE, "%d\n", (backup_rail_monitor_status & 1));
+> 
+>   out:
+> -       kfree(io_unit_pg3);
+>         mutex_unlock(&ioc->pci_access_mutex);
+>         return rc;
+>  }
+> 
+> > 
+> > 	io_unit_pg3 = kzalloc(sizeof(*io_unit_pg3), GFP_KERNEL);
+> >
+> 
+> Thanks
+> --
+> Gustavo
+
+-- 
+Kees Cook
