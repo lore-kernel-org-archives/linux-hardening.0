@@ -2,130 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1714BC433E0
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 04:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FC1C433DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 07:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08FD64FA1
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 04:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5C364E46
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 07:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231244AbhCKEtd (ORCPT
+        id S231495AbhCKHAz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 Mar 2021 23:49:33 -0500
-Received: from gateway33.websitewelcome.com ([192.185.146.87]:20671 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231209AbhCKEtZ (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 Mar 2021 23:49:25 -0500
-X-Greylist: delayed 1261 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Mar 2021 23:49:25 EST
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id E57201CD9A
-        for <linux-hardening@vger.kernel.org>; Wed, 10 Mar 2021 22:28:22 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id KCvulbq69qvFOKCvulfveU; Wed, 10 Mar 2021 22:28:22 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hGlSvfVilRdyjcxlHigRVXBapy983SK4zTZ5DVkCG4s=; b=pft6ycncLKFmg0KMj3fsFIn7rW
-        bWnd+RboW3SxSz09J5brSDZRt3ED+qM0oso0DQ2dT8nqUI/LmGxYCYr7vf0ytPLWVNkQXGumc6+7K
-        zanca0/r5zIWmxLbGDiBRvExFoHO57tEO73lQ49e7aah/gQOIOmFjm/YKFkBLh/G/9V88VAByyizW
-        bsuVLvs99FDjzGGCeWho3U2j4qdYc5lQahuowwRAenezYBTHfvnYNdb5eKhJpSukrbOugrAQ8kngE
-        8P1NjGReJTpPCwbTVs8bzs7OaS/Q85OyKsWFkEGjBewCnheiNAwAF8Eb0MfHgWcygXU8/uzIPBrh9
-        gIIDHWhQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:44512 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lKCvu-003P6f-Ka; Wed, 10 Mar 2021 22:28:22 -0600
-Subject: Re: [PATCH v2][next] xfs: Replace one-element arrays with
- flexible-array members
-To:     "Darrick J. Wong" <djwong@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        Thu, 11 Mar 2021 02:00:55 -0500
+Received: from z11.mailgun.us ([104.130.96.11]:43330 "EHLO z11.mailgun.us"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231469AbhCKHAo (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 11 Mar 2021 02:00:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1615446044; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=3+uYjBQK4ORw94HoS3mEIbHBXvqWMu6fhtYX/73Hjuc=; b=oCO1GMaPzOLZE4XRCz5vqesuPt6sXYabDpIUqu/wpBdqXu1fm6smrsMQ8FThbrRCPFIMP6av
+ A4wZd7yd7XRSC1p12WQhs8Wcna/s15f6gVqp3nBF9+uofxCCURcoprhzhd1Ni+zVIAup6wa/
+ c5wj7kMoawgSrmS8c5kGnMQgStY=
+X-Mailgun-Sending-Ip: 104.130.96.11
+X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 6049bff9b86af9bf23f5b441 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Mar 2021 07:00:09
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 907F9C433CA; Thu, 11 Mar 2021 07:00:08 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 66F14C433CA;
+        Thu, 11 Mar 2021 07:00:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 66F14C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jes Sorensen <Jes.Sorensen@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210310020108.GA279881@embeddedor>
- <20210311031745.GT3419940@magnolia>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <b9e2c900-0852-fc5d-9696-835636b4219f@embeddedor.com>
-Date:   Wed, 10 Mar 2021 22:28:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+Subject: Re: [PATCH RESEND][next] rtl8xxxu: Fix fall-through warnings for Clang
+References: <20210305094850.GA141221@embeddedor>
+        <871rct67n2.fsf@codeaurora.org> <202103101107.BE8B6AF2@keescook>
+Date:   Thu, 11 Mar 2021 09:00:03 +0200
+In-Reply-To: <202103101107.BE8B6AF2@keescook> (Kees Cook's message of "Wed, 10
+        Mar 2021 11:14:56 -0800")
+Message-ID: <878s6uyy30.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20210311031745.GT3419940@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lKCvu-003P6f-Ka
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:44512
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Kees Cook <keescook@chromium.org> writes:
 
+> On Fri, Mar 05, 2021 at 03:40:33PM +0200, Kalle Valo wrote:
+>> "Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
+>> 
+>> > In preparation to enable -Wimplicit-fallthrough for Clang, fix
+>> > multiple warnings by replacing /* fall through */ comments with
+>> > the new pseudo-keyword macro fallthrough; instead of letting the
+>> > code fall through to the next case.
+>> >
+>> > Notice that Clang doesn't recognize /* fall through */ comments as
+>> > implicit fall-through markings.
+>> >
+>> > Link: https://github.com/KSPP/linux/issues/115
+>> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> 
+>> It's not cool that you ignore the comments you got in [1], then after a
+>> while mark the patch as "RESEND" and not even include a changelog why it
+>> was resent.
+>> 
+>> [1] https://patchwork.kernel.org/project/linux-wireless/patch/d522f387b2d0dde774785c7169c1f25aa529989d.1605896060.git.gustavoars@kernel.org/
+>
+> Hm, this conversation looks like a miscommunication, mainly? I see
+> Gustavo, as requested by many others[1], replacing the fallthrough
+> comments with the "fallthrough" statement. (This is more than just a
+> "Clang doesn't parse comments" issue.)
 
-On 3/10/21 21:17, Darrick J. Wong wrote:
+v1 was clearly rejected by Jes, so sending a new version without any
+changelog or comments is not the way to go. The changelog shoud at least
+have had "v1 was rejected but I'm resending this again because <insert
+reason here>" or something like that to make it clear what's happening.
 
-> Why not use size_t instead of uint?  You converted the @len declaration
-> above.
-> 
->> +				 src_efi_fmt->efi_nextents);
->> +	uint len64 = struct_size((xfs_efi_log_format_64_t *)0, efi_extents,
-> 
-> Also, please don't use the struct typedefs, we're trying to get rid of
-> those slowly.
-> 
-> TBH I wonder if these could just be turned into static inline helpers to
-> decrapify the code:
-> 
-> static inline size_t
-> sizeof_efi_log_format32(unsigned int nr)
-> {
-> 	return struct_size((xfs_efi_log_format_32_t *)0, efi_extents, nr);
-> }
-> 
-> Then you only need:
-> 
-> 	size_t len = sizeof_efi_log_format(src_efi_fmt->efi_nextents);
-> 	size_t len32 = sizeof_efi_log_format32(src_efi_fmt->efi_nextents);
-> 	size_t len64 = sizeof_efi_log_format64(src_efi_fmt->efi_nextents);
-> 
-> 	if (len == len32) ...
-> 	else if (len == len64) ...
-> 
-> And down below you can clean up the asserts a bit:
-> 
-> 	ASSERT(item->ri_buf[0].i_len ==
-> 			sizeof_efi_log_format32(efd_formatp->efd_nextents) ||
-> 	       item->ri_buf[0].i_len ==
-> 			sizeof_efi_log_format64(efd_formatp->efd_nextents));
-> 
+> This could be a tree-wide patch and not bother you, but Greg KH has
+> generally advised us to send these changes broken out. Anyway, this
+> change still needs to land, so what would be the preferred path? I think
+> Gustavo could just carry it for Linus to merge without bothering you if
+> that'd be preferred?
 
-Done: https://lore.kernel.org/lkml/20210311042302.GA137676@embeddedor/
+I agree with Greg. Please don't do cleanups like this via another tree
+as that just creates more work due to conflicts between the trees, which
+is a lot more annoying to deal with than applying few patches. But when
+submitting patches please follow the rules, don't cut corners.
 
-Thanks for the feedback!
---
-Gustavo
+Jes, I don't like 'fallthrough' either and prefer the original comment,
+but the ship has sailed on this one. Maybe we should just take it?
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
