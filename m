@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F9DC433E0
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 11:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6D4C433DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 11:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2213864FC9
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 11:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E837A65014
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 11:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232616AbhCKLin (ORCPT
+        id S232718AbhCKLjQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 Mar 2021 06:38:43 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:37413 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232676AbhCKLil (ORCPT
+        Thu, 11 Mar 2021 06:39:16 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:41619 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232777AbhCKLiw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 Mar 2021 06:38:41 -0500
+        Thu, 11 Mar 2021 06:38:52 -0500
+X-Originating-IP: 90.89.138.59
 Received: from xps13.home (lfbn-tou-1-1325-59.w90-89.abo.wanadoo.fr [90.89.138.59])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C61E7200006;
-        Thu, 11 Mar 2021 11:38:38 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 0AD111C0009;
+        Thu, 11 Mar 2021 11:38:49 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     linux-mtd@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3][next] mtd: rawnand: stm32_fmc2: Fix fall-through warnings for Clang
-Date:   Thu, 11 Mar 2021 12:38:38 +0100
-Message-Id: <20210311113838.305546-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH RESEND][next] mtd: onenand: Fix fall-through warnings for Clang
+Date:   Thu, 11 Mar 2021 12:38:49 +0100
+Message-Id: <20210311113849.305690-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210305082953.GA137771@embeddedor>
+In-Reply-To: <20210305082356.GA137489@embeddedor>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'3ba6d1ff041f07cfbbe1fdf0f25094590d7e543e'
+X-linux-mtd-patch-commit: b'36a016a572cad7e5626b13c98b414302d2b10929'
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2021-03-05 at 08:29:53 UTC, "Gustavo A. R. Silva" wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a couple
-> of warnings by explicitly adding a couple of break statements instead
-> of letting the code fall through to the next case.
+On Fri, 2021-03-05 at 08:23:56 UTC, "Gustavo A. R. Silva" wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
 > 
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
