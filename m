@@ -2,165 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8225FC433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 07:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFD5C433E0
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 11:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1A264FE0
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 07:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D36C64FD0
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 11:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbhCKHjG (ORCPT
+        id S232359AbhCKLGn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 Mar 2021 02:39:06 -0500
-Received: from gateway34.websitewelcome.com ([192.185.148.104]:46609 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231736AbhCKHic (ORCPT
+        Thu, 11 Mar 2021 06:06:43 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44226 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232571AbhCKLGQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 Mar 2021 02:38:32 -0500
-X-Greylist: delayed 1332 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Mar 2021 02:38:32 EST
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 274FD2886EB9
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 01:16:18 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id KFYQlBpiG5rKQKFYQlRgCF; Thu, 11 Mar 2021 01:16:18 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=P4Y38n76j62lvthTB0qszyWArTxZMSacXEcyaFhm0Ps=; b=nEEmjHx/6wNVcHPvj0mBJauBXh
-        mlfX6bQmPo5qB5ENedRT46pN4eCpVnY/cwL+kdkebtuhNjubEA26ySEvrjGAtl3AmC1G0SmK3Dk66
-        4iwYPBaPiDH+HLThkZ9Z65V1e7tyyl9Es0oZCKR/xwpyGlDJLjbrUuiCrP0bmzP8VtECXD7dZBRYH
-        EtRYN6Y6U89lFdENoDRQhp0t9HF0fsTKi19cGbtmtN6fY89k7lSRAQVcqqoKwDZYFmXZOb30tw3tO
-        gIemvgm1gVguNNGhCZTxbk9MNdEG3RdJcKlRjSNuS3Hgp+55ZmUiG2e/9d1mGTpJOvSNNN/0ar5GV
-        VrDltHng==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48552 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lKFYP-001Uab-MY; Thu, 11 Mar 2021 01:16:17 -0600
-Subject: Re: [PATCH RESEND][next] rtl8xxxu: Fix fall-through warnings for
+        Thu, 11 Mar 2021 06:06:16 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12BB5wZt054405;
+        Thu, 11 Mar 2021 05:05:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1615460758;
+        bh=LdUi8SVqpwGudFQodpNuw3WOuVJXt08p5H4MV67u4/0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yZv9FzRLVYgKp+Aa5UbVh/oPUlfv4MCL8Q0qOAxTmbF/dEMsGCRGcKCyOL3d9FrlX
+         rt8e5BePT3NV5Nxz7faPkv2Mcn5AytmPN6OaRCKdqf+uwdZ2b6/KY2A4OtrqUTd7Na
+         mcuxWYy+s468Fl4BpYuQwbhJkCSLt+utM7CvK1lk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12BB5wrV055378
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Mar 2021 05:05:58 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 11
+ Mar 2021 05:05:58 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Thu, 11 Mar 2021 05:05:58 -0600
+Received: from [10.250.234.120] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12BB5tHA053520;
+        Thu, 11 Mar 2021 05:05:56 -0600
+Subject: Re: [PATCH RESEND][next] mtd: cfi: Fix fall-through warnings for
  Clang
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jes Sorensen <Jes.Sorensen@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210305094850.GA141221@embeddedor>
- <871rct67n2.fsf@codeaurora.org> <202103101107.BE8B6AF2@keescook>
- <878s6uyy30.fsf@codeaurora.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <e10b2a6a-d91a-9783-ddbe-ea2c10a1539a@embeddedor.com>
-Date:   Thu, 11 Mar 2021 01:16:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20210305081933.GA137147@embeddedor>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <e6b57357-e491-a3d0-ada8-9590b2bb8817@ti.com>
+Date:   Thu, 11 Mar 2021 16:35:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <878s6uyy30.fsf@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20210305081933.GA137147@embeddedor>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lKFYP-001Uab-MY
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48552
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 3/11/21 01:00, Kalle Valo wrote:
-> Kees Cook <keescook@chromium.org> writes:
+On 3/5/21 1:49 PM, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+> warnings by explicitly adding multiple break statements and a return
+> instead of letting the code fall through to the next case.
 > 
->> On Fri, Mar 05, 2021 at 03:40:33PM +0200, Kalle Valo wrote:
->>> "Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
->>>
->>>> In preparation to enable -Wimplicit-fallthrough for Clang, fix
->>>> multiple warnings by replacing /* fall through */ comments with
->>>> the new pseudo-keyword macro fallthrough; instead of letting the
->>>> code fall through to the next case.
->>>>
->>>> Notice that Clang doesn't recognize /* fall through */ comments as
->>>> implicit fall-through markings.
->>>>
->>>> Link: https://github.com/KSPP/linux/issues/115
->>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>
->>> It's not cool that you ignore the comments you got in [1], then after a
->>> while mark the patch as "RESEND" and not even include a changelog why it
->>> was resent.
->>>
->>> [1] https://patchwork.kernel.org/project/linux-wireless/patch/d522f387b2d0dde774785c7169c1f25aa529989d.1605896060.git.gustavoars@kernel.org/
->>
->> Hm, this conversation looks like a miscommunication, mainly? I see
->> Gustavo, as requested by many others[1], replacing the fallthrough
->> comments with the "fallthrough" statement. (This is more than just a
->> "Clang doesn't parse comments" issue.)
-> 
-> v1 was clearly rejected by Jes, so sending a new version without any
-> changelog or comments is not the way to go. The changelog shoud at least
-> have had "v1 was rejected but I'm resending this again because <insert
-> reason here>" or something like that to make it clear what's happening.
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
 
-Why the fact that I replied to that original thread with the message
-below is being ignored?
+Acked-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-"Just notice that the idea behind this and the following patch is exactly
-the same:
+Miquel,
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next.git/commit/?id=3f95e92c8a8516b745594049dfccc8c5f8895eea
+Feel free to queue this via mtd/next
 
-I could resend this same patch with a different changelog text, but I
-don't think such a thing is necessary. However, if people prefer that
-approach, just let me know and I can do it.
+Regards
+Vignesh
 
-Thanks
---
-Gustavo"
-
-Why no one replied to what I was proposing at the time?
-
-It seems to me that the person that was ignored was actually me, and not the
-other way around. :/
-
---
-Gustavo
-
-> 
->> This could be a tree-wide patch and not bother you, but Greg KH has
->> generally advised us to send these changes broken out. Anyway, this
->> change still needs to land, so what would be the preferred path? I think
->> Gustavo could just carry it for Linus to merge without bothering you if
->> that'd be preferred?
-> 
-> I agree with Greg. Please don't do cleanups like this via another tree
-> as that just creates more work due to conflicts between the trees, which
-> is a lot more annoying to deal with than applying few patches. But when
-> submitting patches please follow the rules, don't cut corners.
-> 
-> Jes, I don't like 'fallthrough' either and prefer the original comment,
-> but the ship has sailed on this one. Maybe we should just take it?
-> 
+[...]
