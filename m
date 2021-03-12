@@ -2,62 +2,162 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A98C433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 11:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3595AC433E6
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 00:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE83164FBA
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 Mar 2021 11:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC3164F92
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 00:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232644AbhCKL4z (ORCPT
+        id S231510AbhCLAto (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 Mar 2021 06:56:55 -0500
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:40871 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232638AbhCKL4q (ORCPT
+        Thu, 11 Mar 2021 19:49:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230445AbhCLAtV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 Mar 2021 06:56:46 -0500
-Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 8D5D83A3F8E
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 11:39:07 +0000 (UTC)
-X-Originating-IP: 90.89.138.59
-Received: from xps13.home (lfbn-tou-1-1325-59.w90-89.abo.wanadoo.fr [90.89.138.59])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 92B31C0004;
-        Thu, 11 Mar 2021 11:38:44 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RESEND][next] mtd: rawnand: fsmc: Fix fall-through warnings for Clang
-Date:   Thu, 11 Mar 2021 12:38:44 +0100
-Message-Id: <20210311113844.305610-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210305082559.GA137646@embeddedor>
-References: 
-MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'fe1bc21f447289670c331d4826aea8f3ff38ae6e'
-Content-Transfer-Encoding: 8bit
+        Thu, 11 Mar 2021 19:49:21 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA704C061764
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 16:49:21 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id l10so27942494ybt.6
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 16:49:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=tdPCoglx2rEXEqBLmU0P2QxdgUDSrZlH5oMXt14Ies0=;
+        b=SAiryR+/1F4QR2Sh8/WAofpQOiQwcTfPu82zao4pCXa65lDYdqykBnXnKwFzTFtMK/
+         Q87M8HfYyHqw99Zdf118VxSCYvhYnQG+eORKppK6x+MBlf2oo3XoOt/Ohol2wSmQf/xp
+         wVB0nZ00nVc3+TPKKfTZbsjBNWzzFRvtYZXbIz4ACG5q8p5WvFqy7E2CFmi9Ajz+E04A
+         Uy8u/v8dN+bKkASP3R9AC07S2LEbbwjDZ5SaGCse/p2/gv+5lH2YYZ87b6g6SBBijhwA
+         347Gs/LWWReVAPqK6YJPcO1tmv+IQfOs/BpEy7EpcOK3zCcOayp6J+gmy+3OI53yFvzD
+         zZJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=tdPCoglx2rEXEqBLmU0P2QxdgUDSrZlH5oMXt14Ies0=;
+        b=a+fYknl5zuKGltkwl52Rx3eFc9iFjXV8BKveAi0aoPwIz2wQKOc2aAIWmAE+hCNRcp
+         d+DSp317hyR1sP0VkccWrAT4c/sZvpq8BXWSTTccxO1cHf7ObFaGRRrrJ8TrCeVStqvE
+         gg2OAXSwNNGfd9Q3JPcYUUziDeTH1z6ZGclKsynkJCD+jBEDl0p5bDmjWIynSIgWUSW3
+         qLZ8Gfq7tyForER2KiRHcFgy4PtJ+KJ5C61iw8oUKi4gSfA/4s72gD0kAVbR9Xe1XYtL
+         JhQJZ9+YOxLjXrudKrQ7bh472cG/lN3FrKUP9k61MZKGevmajOYVB9gO7NDh1rdAVAWq
+         S87w==
+X-Gm-Message-State: AOAM531t2rKTcC+HEimv95NszJKqs9GEaIZbqRv1zuiH6wPQVqjCKGHs
+        dxEW+XXp69DK5WkZYZaGZ5bUN+EaNErlANBfwaU=
+X-Google-Smtp-Source: ABdhPJzShn28s+halMR+vzT0zjcZemE7Ff5yb7+xlvVhoC/UuBoxjvMG/z2t2Y6cw7vtqzmvzKenzjBEbPWRbnPwaZo=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:c86b:8269:af92:55a])
+ (user=samitolvanen job=sendgmr) by 2002:a25:e785:: with SMTP id
+ e127mr15903182ybh.451.1615510160709; Thu, 11 Mar 2021 16:49:20 -0800 (PST)
+Date:   Thu, 11 Mar 2021 16:49:02 -0800
+Message-Id: <20210312004919.669614-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.31.0.rc2.261.g7f71774620-goog
+Subject: [PATCH 00/17] Add support for Clang CFI
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        bpf@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kbuild@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2021-03-05 at 08:25:59 UTC, "Gustavo A. R. Silva" wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of letting the code fall
-> through to the next case.
-> 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+This series adds support for Clang's Control-Flow Integrity (CFI)
+checking. With CFI, the compiler injects a runtime check before each
+indirect function call to ensure the target is a valid function with
+the correct static type. This restricts possible call targets and
+makes it more difficult for an attacker to exploit bugs that allow the
+modification of stored function pointers. For more details, see:
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next, thanks.
+  https://clang.llvm.org/docs/ControlFlowIntegrity.html
 
-Miquel
+The first patch contains build system changes and error handling,
+and implements support for cross-module indirect call checking. The
+remaining patches address issues caused by the compiler
+instrumentation. These include fixing known type mismatches, as well
+as issues with address space confusion and cross-module function
+address equality.
+
+These patches add support only for arm64, but I'll post patches also
+for x86_64 after we address the remaining issues there, including
+objtool support.
+
+You can also pull this series from
+
+  https://github.com/samitolvanen/linux.git cfi-v1
+
+
+Sami Tolvanen (17):
+  add support for Clang CFI
+  cfi: add __cficanonical
+  mm: add generic __va_function and __pa_function macros
+  module: cfi: ensure __cfi_check alignment
+  workqueue: cfi: disable callback pointer check with modules
+  kthread: cfi: disable callback pointer check with modules
+  kallsyms: cfi: strip hashes from static functions
+  bpf: disable CFI in dispatcher functions
+  lib/list_sort: fix function type mismatches
+  lkdtm: use __va_function
+  psci: use __pa_function for cpu_resume
+  arm64: implement __va_function
+  arm64: use __pa_function
+  arm64: add __nocfi to functions that jump to a physical address
+  arm64: add __nocfi to __apply_alternatives
+  KVM: arm64: Disable CFI for nVHE
+  arm64: allow CONFIG_CFI_CLANG to be selected
+
+ Makefile                                  |  17 ++
+ arch/Kconfig                              |  45 +++
+ arch/arm64/Kconfig                        |   1 +
+ arch/arm64/include/asm/memory.h           |  15 +
+ arch/arm64/include/asm/mmu_context.h      |   4 +-
+ arch/arm64/kernel/acpi_parking_protocol.c |   2 +-
+ arch/arm64/kernel/alternative.c           |   4 +-
+ arch/arm64/kernel/cpu-reset.h             |  10 +-
+ arch/arm64/kernel/cpufeature.c            |   4 +-
+ arch/arm64/kernel/psci.c                  |   3 +-
+ arch/arm64/kernel/smp_spin_table.c        |   2 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile          |   6 +-
+ drivers/firmware/psci/psci.c              |   4 +-
+ drivers/misc/lkdtm/usercopy.c             |   2 +-
+ include/asm-generic/vmlinux.lds.h         |  20 +-
+ include/linux/bpf.h                       |   4 +-
+ include/linux/cfi.h                       |  41 +++
+ include/linux/compiler-clang.h            |   3 +
+ include/linux/compiler_types.h            |   8 +
+ include/linux/init.h                      |   6 +-
+ include/linux/mm.h                        |   8 +
+ include/linux/module.h                    |  13 +-
+ include/linux/pci.h                       |   4 +-
+ init/Kconfig                              |   2 +-
+ kernel/Makefile                           |   4 +
+ kernel/cfi.c                              | 329 ++++++++++++++++++++++
+ kernel/kallsyms.c                         |  54 +++-
+ kernel/kthread.c                          |   8 +-
+ kernel/module.c                           |  43 +++
+ kernel/workqueue.c                        |   9 +-
+ lib/list_sort.c                           |   8 +-
+ scripts/Makefile.modfinal                 |   2 +-
+ scripts/module.lds.S                      |  14 +-
+ 33 files changed, 655 insertions(+), 44 deletions(-)
+ create mode 100644 include/linux/cfi.h
+ create mode 100644 kernel/cfi.c
+
+
+base-commit: 28806e4d9b97865b450d72156e9ad229f2067f0b
+-- 
+2.31.0.rc2.261.g7f71774620-goog
+
