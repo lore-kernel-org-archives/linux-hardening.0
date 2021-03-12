@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876E8C2BB4D
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 00:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFAFC41621
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 00:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6060864F90
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 00:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478DA64F82
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 00:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231598AbhCLAtr (ORCPT
+        id S230272AbhCLAuV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 Mar 2021 19:49:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52030 "EHLO
+        Thu, 11 Mar 2021 19:50:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231330AbhCLAta (ORCPT
+        with ESMTP id S231197AbhCLAtp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 Mar 2021 19:49:30 -0500
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 933E0C061763
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 16:49:30 -0800 (PST)
-Received: by mail-qv1-xf49.google.com with SMTP id h10so16460966qvf.19
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 16:49:30 -0800 (PST)
+        Thu, 11 Mar 2021 19:49:45 -0500
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB19BC061762
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 16:49:44 -0800 (PST)
+Received: by mail-qv1-xf4a.google.com with SMTP id k4so16498764qvf.8
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 16:49:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=2z/Ob1KBSYIAdbfAk0R8ty/tB7fYk5G7Uqr3Tkugs0A=;
-        b=HXPIDqa3ilGnJfXXoaPlqtVCFft699aj6X1ZgyB1edbMPQPGqWRvnSWZM4YgmX9SfS
-         3ai3WwuU9qOd0PYVJS9vjneegm7E54NnFeGwEOCUHbNdHvUn2KYwFAWWD7Pxy3fIn3E/
-         Xfc3wWCi1FV1pTsSPX5eZF1qhXdNrnpKo0UFrfSlSrezhbnHE7WrcLiWsJy6Z1imXMmE
-         pl1XcbcWcj4yrpQwP/dZH8xKo9yLMRnz8bwEcH3ft5LkLXj253WTgB0wfiVs3cKNmE17
-         K0+LGQopZnN8pk84JQhOYLnPPcleS7MhWgmP9inB9s0BQW9FAKFgH6iAODcOkHJeB8Ze
-         fIxA==
+        bh=ECTrvoO9KldCfD8hhCsvcspErQHIUuuHBqQ2YK+RGVo=;
+        b=wW+1hJj1hFqCk4rTpcwuBRw62x+A3vHis0Oz5tBAJYHzlXekVI5fCb4CRuFvioi1v8
+         Mh7hYB9AcKeYBbYe1goSlW2jh4jRNczZ50/cIvHXEQ7ZvYFUlJ2UW0wkI493Qhde1FYO
+         6pLN6ClfnYejsqp0oEwmGUo8DiPRFkt8XUU5nKtpWtewS9sJUGEekHLT4Tc4fNpo5Xjv
+         mpKtrgupIsEYAT+X4F4UKvy4K/AyDXWX4jIYTycY5aYcneVJLoUhiOAcvCtUoWt2ePSz
+         Q9zfzeGbLMmxYteDuFtsZTLdQWkZGVmJ6eMArA+j86MRORN5REegAy0i8e2HidZSQHB7
+         s7mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=2z/Ob1KBSYIAdbfAk0R8ty/tB7fYk5G7Uqr3Tkugs0A=;
-        b=n4/afmBo+xABr9S2nFlCSLEGssbULfetY1+U2CdM2XuaRKlX80MhqZlcwaeDCSOOIB
-         Q5aj0BJ/n1H1EoHzHf2DenwIN22ccHItqDKf+W7ekiCSML9hYVDrDe0utgAYMjQ+EuWv
-         2/HXUSBrnwlvNBQiBSR+lQVr8Ctf75r2N2nnDAj87QenKQ+iPp579HaQTtqBz7DjxZEV
-         f39m+QaTbpxx+ZcIgvoWQLK4gPjMMDzoHUgXn2OykrPgIr4MzYjyotiixfrcGrMbsO6p
-         osHRlkRKe97roudktm6LFZe0qp6z8e1hjFaWwywS/5LqZ57Tkl+8GbAgSQjW5sHJhyIA
-         n72Q==
-X-Gm-Message-State: AOAM532MEa0lk7aCRwGdnDBJcJ5I0mth2MAWghZ+n5cOzI4k/GZIL5yZ
-        JuE2qM2xGMKVbTpuwQOc3/Vq5RSPdK51n8bEeKo=
-X-Google-Smtp-Source: ABdhPJxHDKETbYeoueGPafrW3BI4Uh5lPSvgOdjIw/MXWNb4TTLYLuJccKyo+tYRBmtObEJFt+syMJh09rwfHBLme60=
+        bh=ECTrvoO9KldCfD8hhCsvcspErQHIUuuHBqQ2YK+RGVo=;
+        b=t8vtLa4ObJ7JktJMYNxWpUDlmxdHooypNhkwIJDMJ24+RhMHKLCxv00Fho4VbsZFlT
+         kNOLqsRFVEsVJ4kM4BCrMLHjEw4plLHHZIGFWwxynzRud13lmJl/GTXXKKzR4TkXPE4l
+         I/PRu+5IW7dnYbvKv5eCBKXZ1qlkNIlPNxvd69AEAg20tnf92tzctQZoUSlVy3N1BFxD
+         3Qko8vz4/GDrkxaKRlof74kXf4Rp+wkm2wHtLsEPsaiGGromzKOWNPUe03IgwzDfvATJ
+         e17ZhRL14DV2Obxnz5KWUth9R70AlRA2gDtv3w6jOivFhqcXIq+SUpdUN7IZ5Y8wYwk4
+         PCug==
+X-Gm-Message-State: AOAM532h+E5Usv41GIiPc4REC9xHypZY9kAicjwC9g+6QE7+cocjva8b
+        M/J6Yzw7cWgVRj/50AIId8nPmu5WoP4ptHy8HC4=
+X-Google-Smtp-Source: ABdhPJytXg5BTjwe45Q3r7eqpSZES0F+YXxX5W/l9U8XvamBe9sQnbAHhU6LdjW/F5/J+RERUpGWGLvVN/OI8YfDR1o=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:c86b:8269:af92:55a])
- (user=samitolvanen job=sendgmr) by 2002:ad4:5887:: with SMTP id
- dz7mr10214152qvb.12.1615510169805; Thu, 11 Mar 2021 16:49:29 -0800 (PST)
-Date:   Thu, 11 Mar 2021 16:49:07 -0800
+ (user=samitolvanen job=sendgmr) by 2002:a0c:b89a:: with SMTP id
+ y26mr10213572qvf.49.1615510184064; Thu, 11 Mar 2021 16:49:44 -0800 (PST)
+Date:   Thu, 11 Mar 2021 16:49:14 -0800
 In-Reply-To: <20210312004919.669614-1-samitolvanen@google.com>
-Message-Id: <20210312004919.669614-6-samitolvanen@google.com>
+Message-Id: <20210312004919.669614-13-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210312004919.669614-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.rc2.261.g7f71774620-goog
-Subject: [PATCH 05/17] workqueue: cfi: disable callback pointer check with modules
+Subject: [PATCH 12/17] arm64: implement __va_function
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -79,40 +79,42 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, a callback function passed to
-__queue_delayed_work from a module points to a jump table entry
-defined in the module instead of the one used in the core kernel,
-which breaks function address equality in this check:
-
-  WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
-
-Disable the warning when CFI and modules are enabled.
+With CONFIG_CFI_CLANG, the compiler replaces function addresses in
+instrumented C code with jump table addresses. This change implements
+the __va_function() macro, which returns the actual function address
+instead.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- kernel/workqueue.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/memory.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 0d150da252e8..4db267e5ad2d 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1630,7 +1630,14 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
- 	struct work_struct *work = &dwork->work;
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index c759faf7a1ff..4defa9dc3cc5 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -321,6 +321,21 @@ static inline void *phys_to_virt(phys_addr_t x)
+ #define virt_to_pfn(x)		__phys_to_pfn(__virt_to_phys((unsigned long)(x)))
+ #define sym_to_pfn(x)		__phys_to_pfn(__pa_symbol(x))
  
- 	WARN_ON_ONCE(!wq);
--	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
-+	/*
-+	 * With CFI, timer->function can point to a jump table entry in a module,
-+	 * which fails the comparison. Disable the warning if CFI and modules are
-+	 * both enabled.
-+	 */
-+	if (!IS_ENABLED(CONFIG_CFI_CLANG) || !IS_ENABLED(CONFIG_MODULES))
-+		WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
++#ifdef CONFIG_CFI_CLANG
++/*
++ * With CONFIG_CFI_CLANG, the compiler replaces function address
++ * references with the address of the function's CFI jump table
++ * entry. The __va_function macro always returns the address of the
++ * actual function instead.
++ */
++#define __va_function(x) ({						\
++	void *addr;							\
++	asm("adrp %0, " __stringify(x) "\n\t"				\
++	    "add  %0, %0, :lo12:" __stringify(x) : "=r" (addr));	\
++	addr;								\
++})
++#endif
 +
- 	WARN_ON_ONCE(timer_pending(timer));
- 	WARN_ON_ONCE(!list_empty(&work->entry));
- 
+ /*
+  *  virt_to_page(x)	convert a _valid_ virtual address to struct page *
+  *  virt_addr_valid(x)	indicates whether a virtual address is valid
 -- 
 2.31.0.rc2.261.g7f71774620-goog
 
