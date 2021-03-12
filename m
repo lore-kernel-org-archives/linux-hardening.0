@@ -2,68 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6F3C46461
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 00:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47C9C433E0
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 02:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD72F64FA8
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 00:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7780464F8E
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Mar 2021 02:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231674AbhCLAuZ (ORCPT
+        id S230494AbhCLCjh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 Mar 2021 19:50:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52254 "EHLO
+        Thu, 11 Mar 2021 21:39:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231697AbhCLAty (ORCPT
+        with ESMTP id S229530AbhCLCj0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 Mar 2021 19:49:54 -0500
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 367BBC061761
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 16:49:54 -0800 (PST)
-Received: by mail-qk1-x749.google.com with SMTP id h126so17003358qkd.4
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 16:49:54 -0800 (PST)
+        Thu, 11 Mar 2021 21:39:26 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1AC5C061574
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 18:39:25 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id f2-20020a17090a4a82b02900c67bf8dc69so10044616pjh.1
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Mar 2021 18:39:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Wy+IwcbFe5iyl37uDl+oXBLCNbLEHUQXvTEZYf7ymx8=;
-        b=TFaPttpAjNfe+2iixUj6bfpglHAqdyJonN+f/D/N4GxhYzufIVNkNGd52Z481IiXLa
-         J7zK9PmVKfZgaMXiBRQ+GQtnc7Vrgn9nMBlfx1v+5B/BOEhThUKYOHdycFINi66rsJ9n
-         k+rlStscftY35kfr5wg7QYXNcjmxPrl9goemzUQa08kgwYkcgPAmxhdD5RlWO5s5tIcf
-         2Qxw4fQhL1ORNIz5WRig2l6/Q8mJ6txwoQqqPLf970ALae7jjgaj4GvNENLYY1wAqFr7
-         2UZoruoI+cwg1gYH1874qrh6FP4ZiB0odU/ppmrbRZZrBthB+1LqWzxw8PqfRpKrDzFV
-         7Wvg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=djQZd3ysyoSutQHrswnBnuimUYSb59dZwog3T2MV0T0=;
+        b=mLI4wibQX2QDrTDp0g3oVwAnp8g8JH2ZHX3coY+tloIS7hQDHaHg7O3U0tqNyPkaXm
+         8rDqn7xBBo4XHsB+a2U3CBHCbqJ61M0ldpB/4IwR6Z3ug6eLs539FiVfed3DGaRV2ZTJ
+         k+65bJQ0eM8Sc9pNW/ZbuOFd1znR6iQPephC8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Wy+IwcbFe5iyl37uDl+oXBLCNbLEHUQXvTEZYf7ymx8=;
-        b=jCuYeLu9tCEYmXONYmtXL2yj15UxndF7Jien1KbCVGXtzZgmIq7YZZrtJ61pa63/yC
-         6L40+NGqrm/Eg2CjpCkGnqaAj4Dp0BwoC7WOGxv+HTfMqB6QWtXVgUa8WvmkKvpiNvzQ
-         z8EAl9BFowBJrUB4SRthifdLd02ygEKB6pbnA8sHI65p8NB7c+OmQtv2FydNqMt3kuAn
-         Qp4tA7decJGOOWb5/rV1jUbIZ4dIQ++4Jbs8cWq/V1zj8UUWM5RHjbR5YdRdfPG+uB+l
-         VTSevngcvU7DBgB11pz1elWZ642KeWksSejc2JcX5pz01ONnRvZXF9O+CfgVTRir1dUJ
-         Dy4w==
-X-Gm-Message-State: AOAM5339q1MxCcacYc3IZDMxs8rB36EBQKcFj0/fJL5YZ/fmHfFa8C3q
-        JIvK2GaXrrmZ+t6vqKfImdgwMhRsgkk1O9Uo4Zc=
-X-Google-Smtp-Source: ABdhPJznSvPJLG6qaFoP2kj2Ov4WrW1xkoR+hl4AeQuvmUyvA146uVMjKfz/DR0rMwbjq3TBrHrovQw5xd3PO2vJOjg=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:c86b:8269:af92:55a])
- (user=samitolvanen job=sendgmr) by 2002:ad4:50c7:: with SMTP id
- e7mr10016068qvq.58.1615510193452; Thu, 11 Mar 2021 16:49:53 -0800 (PST)
-Date:   Thu, 11 Mar 2021 16:49:19 -0800
-In-Reply-To: <20210312004919.669614-1-samitolvanen@google.com>
-Message-Id: <20210312004919.669614-18-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20210312004919.669614-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.31.0.rc2.261.g7f71774620-goog
-Subject: [PATCH 17/17] arm64: allow CONFIG_CFI_CLANG to be selected
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Kees Cook <keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=djQZd3ysyoSutQHrswnBnuimUYSb59dZwog3T2MV0T0=;
+        b=MkASEChkFDu09FTZ6Yc0Nf1TiW5tv3xFmbUC24afaUJtMc2uPExVC1N6bGLAR/Y73B
+         A41WFMPjgC3SUp1/kmZN8Z0Zw/bsr72ECrJDfOEPL8/Z7KoLVm8GatzLgWt1ErYewJwP
+         3quZ6K4CSiAfA6ENaJSJAGPWp/wDceKi1Z3/uAF4kzA6EIo2xGIN08FtYvzMbiK1AvyR
+         R3flvjcC10Y1Sy0IT2S75qZKRNZ6hNkOBxvV91ytwU/upL/5Ggit058L02Vhyeszem72
+         S9sfi5tBmgoKXL+eUeyX0dLeeJbxZfhBit2SejZW/snFjSMaWL6aUHPahkIojc7NyZrc
+         CI6g==
+X-Gm-Message-State: AOAM5305so/KUKTwgkjp0BglfkI/jNHJHJE7epZYMYRCmpiUqX8gClBv
+        O0me57hyV+FxKnK/L50VxxSMAg==
+X-Google-Smtp-Source: ABdhPJyXid/WhlRRi3IuEn/gj018RDIJnIysnt+MQKHLqWW7jwLJATluPmfQx4YLScgrHSTI05ABow==
+X-Received: by 2002:a17:902:344:b029:e4:a7ab:2e55 with SMTP id 62-20020a1709020344b02900e4a7ab2e55mr11594605pld.63.1615516765493;
+        Thu, 11 Mar 2021 18:39:25 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k127sm3858828pfd.63.2021.03.11.18.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Mar 2021 18:39:24 -0800 (PST)
+Date:   Thu, 11 Mar 2021 18:39:23 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
@@ -72,32 +65,95 @@ Cc:     Nathan Chancellor <nathan@kernel.org>,
         bpf@vger.kernel.org, linux-hardening@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kbuild@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/17] module: cfi: ensure __cfi_check alignment
+Message-ID: <202103111837.813997B4@keescook>
+References: <20210312004919.669614-1-samitolvanen@google.com>
+ <20210312004919.669614-5-samitolvanen@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210312004919.669614-5-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
+On Thu, Mar 11, 2021 at 04:49:06PM -0800, Sami Tolvanen wrote:
+> CONFIG_CFI_CLANG_SHADOW assumes the __cfi_check() function is page
+> aligned and at the beginning of the .text section. While Clang would
+> normally align the function correctly, it fails to do so for modules
+> with no executable code.
+> 
+> This change ensures the correct __cfi_check() location and
+> alignment. It also discards the .eh_frame section, which Clang can
+> generate with certain sanitizers, such as CFI.
+> 
+> Link: https://bugs.llvm.org/show_bug.cgi?id=46293
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  scripts/module.lds.S | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/module.lds.S b/scripts/module.lds.S
+> index 168cd27e6122..552ddb084f76 100644
+> --- a/scripts/module.lds.S
+> +++ b/scripts/module.lds.S
+> @@ -3,10 +3,13 @@
+>   * Archs are free to supply their own linker scripts.  ld will
+>   * combine them automatically.
+>   */
+> +#include <asm/page.h>
+> +
+>  SECTIONS {
+>  	/DISCARD/ : {
+>  		*(.discard)
+>  		*(.discard.*)
+> +		*(.eh_frame)
+>  	}
+>  
+>  	__ksymtab		0 : { *(SORT(___ksymtab+*)) }
+> @@ -40,7 +43,16 @@ SECTIONS {
+>  		*(.rodata..L*)
+>  	}
+>  
+> -	.text : { *(.text .text.[0-9a-zA-Z_]*) }
+> +#ifdef CONFIG_CFI_CLANG
+> +	/*
+> +	 * With CFI_CLANG, ensure __cfi_check is at the beginning of the
+> +	 * .text section, and that the section is aligned to page size.
+> +	 */
+> +	.text : ALIGN(PAGE_SIZE) {
+> +		*(.text.__cfi_check)
+> +		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
+> +	}
+> +#endif
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/arm64/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Whoops, I think this reverts to the default .text declaration when
+CONFIG_CFI_CLANG is unset.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1f212b47a48a..6be5b61a0f17 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -75,6 +75,7 @@ config ARM64
- 	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
- 	select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-+	select ARCH_SUPPORTS_CFI_CLANG
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
- 	select ARCH_SUPPORTS_NUMA_BALANCING
+I think the only thing that needs the ifdef is the ALIGN, yes? Perhaps
+something like this?
+
+#ifdef CONFIG_CFI_CLANG
+# define ALIGN_CFI ALIGN(PAGE_SIZE)
+#else
+# define ALIGN_CFI
+#endif
+
+	.text : ALIGN_CFI {
+		*(.text.__cfi_check)
+		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
+	}
+
+
+-Kees
+
+>  }
+>  
+>  /* bring in arch-specific sections */
+> -- 
+> 2.31.0.rc2.261.g7f71774620-goog
+> 
+
 -- 
-2.31.0.rc2.261.g7f71774620-goog
-
+Kees Cook
