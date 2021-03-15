@@ -2,179 +2,192 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3556C433E9
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 18:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DDCC43333
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 18:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D161B64F4A
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 18:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C52064F2B
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 18:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231651AbhCOSDA (ORCPT
+        id S232487AbhCOSDE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Mar 2021 14:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41484 "EHLO
+        Mon, 15 Mar 2021 14:03:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231740AbhCOSCg (ORCPT
+        with ESMTP id S229818AbhCOSCp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Mar 2021 14:02:36 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C55E8C061762
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 11:02:36 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id c16so15715510ply.0
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 11:02:36 -0700 (PDT)
+        Mon, 15 Mar 2021 14:02:45 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B7DC06174A;
+        Mon, 15 Mar 2021 11:02:42 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id x4so51599865lfu.7;
+        Mon, 15 Mar 2021 11:02:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K0uLi49Yx6Hs1kogqwqRCUz/Bpqh/dFOqLS4VRKyyBc=;
-        b=NpVfbBSkCMGMjvqUBvpnwYBUDLSg0t4mYOsEdbBvi2yZSriP+lLClj248lVLlV1mpf
-         nX/stjeHOgx3unJ6YY/jz4OctbXPuxLlEunQgCM/jxtNPHvbwL+KbU7nEMw6u8yj22PF
-         /M7fJIqZgumlNjIVXD5qiAhMakD1OX3Kq+TYw=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r+dvU73MJrRHuvPjWiuKmMrfLEr3LmmsYA54M4JMymY=;
+        b=LBcZko346yfuZRRJ5flhDptRBfmPepbuTKX7g98QkIjRbFR0J4wBaQKHXBGz9Lt0Tz
+         lCVwYdpL4m32mjEJZZVMmfMNcUVnvoTfM42MRAE9j5ds/ZI5XZuKpnL9k/EXEejjF8cK
+         MSmKQ5Q1wc7+9Iy4xvA7HFyAxsu5jbYIYuz33Rma4Mno7Xu2sBsGARgkGZFzCf6NIbLg
+         GzmyR+FW3zETCLQO+xmGTwiY77pLK87kLqIM2Yne99Sc9YBvy+lsaDKYjvXG5TfnVUqK
+         SitXXaXGqc8XzxVCA/1I4E1UQaKdoELELuyeIQ4P7kTObjhfgafy57+kpJDvQAvb8EUv
+         vYCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K0uLi49Yx6Hs1kogqwqRCUz/Bpqh/dFOqLS4VRKyyBc=;
-        b=ufDSlpx7xRVQL99OhVAZK/au52y7VXKwmCzYNfB15tM80AszuGMl0Cm1XOoW7Fht4N
-         +ILFWJ76WF2BFrl1u1jxlg7Vx9M+EpPuT509LULBYmV7esz1PnrfGx/FoYIDP9SGPb1F
-         eQ2KXXZZmw+imNHdRAyklNOCjHhDvk1XCdKkWmJiwCnxw5PYWSTLFpeJHK+IEOhzTUx3
-         411B+bdU7C0n2iN9mmOqaCl43JV//fBmPtMiCHADt4Ow0w6AnPHOyZoP+RY/ayfRZm6Q
-         4nKGCetFwI09H5unB6e5Mtd/J1my7qo5xdDjTH7tF4PelHB/Z/+cZIQDgpkFxxRfvRO5
-         fiUg==
-X-Gm-Message-State: AOAM532n2y7QpfZEYDX+U5A2aJ8zZwVund/v9qhWDh7L7cbFi1MBPAbn
-        ytUf51LpBpRzx1t7gTb0XRC5oA==
-X-Google-Smtp-Source: ABdhPJw3XuSiNT39U8lLpLBLKNJyfyNfidC2LZuwiQfSz+u6PVqNYpahOsQIoKSVW+ozDdUAE8Umjg==
-X-Received: by 2002:a17:90b:691:: with SMTP id m17mr276901pjz.191.1615831356378;
-        Mon, 15 Mar 2021 11:02:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s194sm14416197pfs.57.2021.03.15.11.02.35
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r+dvU73MJrRHuvPjWiuKmMrfLEr3LmmsYA54M4JMymY=;
+        b=Eyo6aEEUbAvpOi6g79Zs1lf/gorbADeDLNG6yf5eORMzKJLZgEaP9LTPZMBlZm10D1
+         95Y3kq8z85kc3XiH9ylzzCgxXkUR3Ya0q2F+a3LvhmXD8nqJcmB47+tQo7BgWFN3xaVm
+         +P+96JXY1ywJdvl3WigVDHa1KnC1pjeF1IPX6gbZYg3oh9LkU6OcNablRZIuonVhIfGE
+         ISu+nFBq1+KTuvvd3FfgciZZz6kaZ5Nq6KEcrPuqWkhSg3mbNrUePNNWkOzl10cX0TIz
+         m1OAYXP1OmAfofMd3/oVb/UPTSyagEa0+7z7IRyPjc/nyPsddZHR7GRySoJIxLb1Ykrr
+         xf8A==
+X-Gm-Message-State: AOAM533KDthI3B/NjeN9vJoGGJCQvI+DP4iCSzm8GACBdXxHmmpJtGds
+        1i6hDvXJS4iOTS26MSNqKh4=
+X-Google-Smtp-Source: ABdhPJx8G6kkZIFpEJZ+7W+HG25iWohcSZpPNIhK8kDzKCxOd6LJFSTB+eXgwl0Y8tVP3VYH1YPq7A==
+X-Received: by 2002:a05:6512:108c:: with SMTP id j12mr9089568lfg.431.1615831361357;
+        Mon, 15 Mar 2021 11:02:41 -0700 (PDT)
+Received: from pc638.lan (h5ef52e3d.seluork.dyn.perspektivbredband.net. [94.245.46.61])
+        by smtp.gmail.com with ESMTPSA id v80sm2784223lfa.229.2021.03.15.11.02.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Mar 2021 11:02:35 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
+        Mon, 15 Mar 2021 11:02:41 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
+Date:   Mon, 15 Mar 2021 19:02:39 +0100
+To:     Topi Miettinen <toiwoton@gmail.com>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/6] init_on_alloc: Optimize static branches
-Date:   Mon, 15 Mar 2021 11:02:25 -0700
-Message-Id: <20210315180229.1224655-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210315180229.1224655-1-keescook@chromium.org>
-References: <20210315180229.1224655-1-keescook@chromium.org>
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v4] mm/vmalloc: randomize vmalloc() allocations
+Message-ID: <20210315180239.GA2117@pc638.lan>
+References: <20210309135757.5406-1-toiwoton@gmail.com>
+ <20210314172312.GA2085@pc638.lan>
+ <ba975607-9493-c78c-bbd8-6a85573114d1@gmail.com>
+ <20210315153510.GA1865@pc638.lan>
+ <4649f69d-b7cd-d1a6-26e0-9b8bf3b17df5@gmail.com>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=d73e14f50f59a92ac8538519f3e1f53d503ab26d; i=7VrM8Pzr5MGi8vAaDOW4xeiDtVYbjHgJsdLlT/sxDXE=; m=9pRPoTwktIPBeIWxjZ3xtu7JAekgWFD5JAmIfxnzZpU=; p=kGv6Q+SMrU5E1IdQ/vRaEbpDt4x68fXZGP3gRBxoslM=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBPoTQACgkQiXL039xtwCYmkw//V/q 8YDIGvlrMf++Qpx3Y4F3jp6BV9YPPaIeh+7wAqmOGLpfhHGIggCuroF6Bx+Pb+rJbjJa63cbQizhi k+AxuhTsUnZpfHDR4Q1TIjsYJAN8XBXR1HGAaLwnq/D20E+EJsPOMDCisEsVPuvQbJdxaW7qb0oDK vmDWKOZCcN7VIYqpXnqB897l8P5RcLTtv4l3yUs1mVosqpb+CNXMSPI1Csr3e8nrZPM5SuoYZakj2 i3gfACSgTGgzqo5KZvY58pagDyHUK7lufPiP9kwsnmq6Jv8OvlbkNQwwC8vzmek5lJ9rpju01wlDr O4a7cCdjmm2CjDMAI1maK25DDY0MkNzViwrAtSJ0g28yVrPq8OTQINu4J/oKsu8DOeU8dk+34adFn 5fSkkgS3r20gMPIrsVPDewIJBmOzWQAUbaFhoUucmBcOAHLPnmmTyOzcBqBgksXuOckNOZcwIUvys Mtb04OUCS3Pxzl1b3XcOLInfxgqm88Bre7PgJv5HvexCmdLHKJ6aCNojW9UP4qngdA/HgFkL0LTwU PwcmH+LmUx5Ofpm8QT/VEoUhjsA3j9ZHX/R7vfwe9w6Sl42G6IXNZr9Ft79uOnYTfh3rkH8ksvs/U Xmq1KzeG9cpSvVSK3U4JH8tziH45YgiOwYUOazJKUTgYCIyV6QPse1xpMvnH/cXs=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4649f69d-b7cd-d1a6-26e0-9b8bf3b17df5@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The state of CONFIG_INIT_ON_ALLOC_DEFAULT_ON (and ...ON_FREE...) did not
-change the assembly ordering of the static branches: they were always out
-of line. Use the new jump_label macros to check the CONFIG settings to
-default to the "expected" state, which slightly optimizes the resulting
-assembly code.
+On Mon, Mar 15, 2021 at 06:23:37PM +0200, Topi Miettinen wrote:
+> On 15.3.2021 17.35, Uladzislau Rezki wrote:
+> > > On 14.3.2021 19.23, Uladzislau Rezki wrote:
+> > > > Also, using vmaloc test driver i can trigger a kernel BUG:
+> > > > 
+> > > > <snip>
+> > > > [   24.627577] kernel BUG at mm/vmalloc.c:1272!
+> > > 
+> > > It seems that most tests indeed fail. Perhaps the vmalloc subsystem isn't
+> > > very robust in face of fragmented virtual memory. What could be done to fix
+> > > that?
+> > > 
+> > Your patch is broken in context of checking "vend" when you try to
+> > allocate next time after first attempt. Passed "vend" is different
+> > there comparing what is checked later to figure out if an allocation
+> > failed or not:
+> > 
+> > <snip>
+> >      if (unlikely(addr == vend))
+> >          goto overflow;
+> > <snip>
+> 
+> 
+> Thanks, I'll fix that.
+> 
+> > 
+> > > 
+> > > In this patch, I could retry __alloc_vmap_area() with the whole region after
+> > > failure of both [random, vend] and [vstart, random] but I'm not sure that
+> > > would help much. Worth a try of course.
+> > > 
+> > There is no need in your second [vstart, random]. If a first bigger range
+> > has not been successful, the smaller one will never be success anyway. The
+> > best way to go here is to repeat with real [vsart:vend], if it still fails
+> > on a real range, then it will not be possible to accomplish an allocation
+> > request with given parameters.
+> > 
+> > > 
+> > > By the way, some of the tests in test_vmalloc.c don't check for vmalloc()
+> > > failure, for example in full_fit_alloc_test().
+> > > 
+> > Where?
+> 
+> Something like this:
+> 
+> diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
+> index 5cf2fe9aab9e..27e5db9a96b4 100644
+> --- a/lib/test_vmalloc.c
+> +++ b/lib/test_vmalloc.c
+> @@ -182,9 +182,14 @@ static int long_busy_list_alloc_test(void)
+>         if (!ptr)
+>                 return rv;
+> 
+> -       for (i = 0; i < 15000; i++)
+> +       for (i = 0; i < 15000; i++) {
+>                 ptr[i] = vmalloc(1 * PAGE_SIZE);
+> 
+> +               if (!ptr[i])
+> +                       goto leave;
+> +       }
+> +
+>
+Hmm. That is for creating a long list of allocated areas before running
+a test. For example if one allocation among 15 000 fails, some index will
+be set to NULL. Later on after "leave" label vfree() will bypass NULL freeing.
 
-Reviewed-by: Alexander Potapenko <glider@google.com>
-Link: https://lore.kernel.org/lkml/CAG_fn=X0DVwqLaHJTO6Jw7TGcMSm77GKHinrd0m_6y0SzWOrFA@mail.gmail.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/mm.h | 10 ++++++----
- mm/page_alloc.c    |  4 ++--
- mm/slab.h          |  6 ++++--
- 3 files changed, 12 insertions(+), 8 deletions(-)
+Either we have 15 000 extra elements or 10 000 does not really matter
+and is considered as a corner case that is probably never happens. Yes,
+you can simulate such precondition, but then a regular vmalloc()s will
+likely also fails, thus the final results will be screwed up.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 77e64e3eac80..2ccd856ac0d1 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2871,18 +2871,20 @@ static inline void kernel_poison_pages(struct page *page, int numpages) { }
- static inline void kernel_unpoison_pages(struct page *page, int numpages) { }
- #endif
- 
--DECLARE_STATIC_KEY_FALSE(init_on_alloc);
-+DECLARE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_ALLOC_DEFAULT_ON, init_on_alloc);
- static inline bool want_init_on_alloc(gfp_t flags)
- {
--	if (static_branch_unlikely(&init_on_alloc))
-+	if (static_branch_maybe(CONFIG_INIT_ON_ALLOC_DEFAULT_ON,
-+				&init_on_alloc))
- 		return true;
- 	return flags & __GFP_ZERO;
- }
- 
--DECLARE_STATIC_KEY_FALSE(init_on_free);
-+DECLARE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_FREE_DEFAULT_ON, init_on_free);
- static inline bool want_init_on_free(void)
- {
--	return static_branch_unlikely(&init_on_free);
-+	return static_branch_maybe(CONFIG_INIT_ON_FREE_DEFAULT_ON,
-+				   &init_on_free);
- }
- 
- extern bool _debug_pagealloc_enabled_early;
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3e4b29ee2b1e..267c04b8911d 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -167,10 +167,10 @@ unsigned long totalcma_pages __read_mostly;
- 
- int percpu_pagelist_fraction;
- gfp_t gfp_allowed_mask __read_mostly = GFP_BOOT_MASK;
--DEFINE_STATIC_KEY_FALSE(init_on_alloc);
-+DEFINE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_ALLOC_DEFAULT_ON, init_on_alloc);
- EXPORT_SYMBOL(init_on_alloc);
- 
--DEFINE_STATIC_KEY_FALSE(init_on_free);
-+DEFINE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_FREE_DEFAULT_ON, init_on_free);
- EXPORT_SYMBOL(init_on_free);
- 
- static bool _init_on_alloc_enabled_early __read_mostly
-diff --git a/mm/slab.h b/mm/slab.h
-index 076582f58f68..b0977d525c06 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -601,7 +601,8 @@ static inline void cache_random_seq_destroy(struct kmem_cache *cachep) { }
- 
- static inline bool slab_want_init_on_alloc(gfp_t flags, struct kmem_cache *c)
- {
--	if (static_branch_unlikely(&init_on_alloc)) {
-+	if (static_branch_maybe(CONFIG_INIT_ON_FREE_DEFAULT_ON,
-+				&init_on_alloc)) {
- 		if (c->ctor)
- 			return false;
- 		if (c->flags & (SLAB_TYPESAFE_BY_RCU | SLAB_POISON))
-@@ -613,7 +614,8 @@ static inline bool slab_want_init_on_alloc(gfp_t flags, struct kmem_cache *c)
- 
- static inline bool slab_want_init_on_free(struct kmem_cache *c)
- {
--	if (static_branch_unlikely(&init_on_free))
-+	if (static_branch_maybe(CONFIG_INIT_ON_FREE_DEFAULT_ON,
-+				&init_on_free))
- 		return !(c->ctor ||
- 			 (c->flags & (SLAB_TYPESAFE_BY_RCU | SLAB_POISON)));
- 	return false;
--- 
-2.25.1
+> +
+>         for (i = 0; i < test_loop_count; i++) {
+>                 ptr_1 = vmalloc(100 * PAGE_SIZE);
+>                 if (!ptr_1)
+> @@ -236,7 +241,11 @@ static int full_fit_alloc_test(void)
+> 
+>         for (i = 0; i < junk_length; i++) {
+>                 ptr[i] = vmalloc(1 * PAGE_SIZE);
+> +               if (!ptr[i])
+> +                       goto error;
+>                 junk_ptr[i] = vmalloc(1 * PAGE_SIZE);
+> +               if (!junk_ptr[i])
+> +                       goto error;
+>         }
+> 
+>         for (i = 0; i < junk_length; i++)
+> @@ -256,8 +265,10 @@ static int full_fit_alloc_test(void)
+>         rv = 0;
+> 
+>  error:
+> -       for (i = 0; i < junk_length; i++)
+> +       for (i = 0; i < junk_length; i++) {
+>                 vfree(ptr[i]);
+> +               vfree(junk_ptr[i]);
+> +       }
+> 
+>         vfree(ptr);
+>         vfree(junk_ptr);
+> 
+Same here.
 
+--
+Vlad Rezki
