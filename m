@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70826C43332
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548EDC4332E
 	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 18:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 488A164F58
+	by mail.kernel.org (Postfix) with ESMTP id 36D9264F67
 	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 18:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233071AbhCOSDC (ORCPT
+        id S233075AbhCOSDD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Mar 2021 14:03:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41518 "EHLO
+        Mon, 15 Mar 2021 14:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232619AbhCOSCk (ORCPT
+        with ESMTP id S232487AbhCOSCk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Mon, 15 Mar 2021 14:02:40 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E162C06174A
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03C5BC06174A
         for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 11:02:40 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id a188so7093297pfb.4
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 11:02:40 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id x7so7079223pfi.7
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 11:02:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uk0/1LocoDticB91SF6FsgWpOKPsEr1Pb6N+E6L28KI=;
-        b=IZStnNpq1/I+ApuVpBVeH4hTznoN9Pd5vpXdIm0izXjHtNEcMzEuAYg41LcLk9C0+C
-         4RaxVzekvwiR+yHdBedERs25Xriog5muJpUH5K6JdeX9j4F6uIxI1HnTzLwzXVy4GixD
-         yO68+I45kj3k99yhSaNpqzHD9Fp3KVDrGCmF0=
+        bh=yYr9wVtQr+Yv2YCxxAWFJhlutYOKWxR3zpP8Meqzwc0=;
+        b=PJ3T01c5ZmSw41q5MAxkemIUNEX541whNOtK/oVGkgDvEXke5s57A/1q9tzDzo+AEJ
+         17TwxsQhxMpKr12YLaf51slHhYzShk72wq3LA7Tf1jp2ZGhrKU21lUBPzS/02MQjUN4a
+         8BNS0yFQ9mNrfIeZXkahph53aQpbFJsZAfitI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uk0/1LocoDticB91SF6FsgWpOKPsEr1Pb6N+E6L28KI=;
-        b=jlgtKODvLmMM2d7vlIYCND5f+/VuGH7nEOmVGcldg6MUug8ZdxoZJArgW6bAP7Uiqb
-         /riDyNfG+BFKHdJCbOUWe95UMX3PTcRj0iVGa9V6RkOD00wQw/mkBxUWt3UHZaxj2/PY
-         e86CLPMu8M+iEtJEdAQVskIr2yLsDdDOHpzC7LR7qW41LM7IT9ltBGEBpuY9YKsczb7k
-         tp5lPmd6doRr56ceaXNnlbjXxuPdQoMdBFC/ABcyYb685vI1ABGexHAr0QxDhWqqUXr1
-         g8FFdd6dlONMiZfMYEApfgnDqSSRQA0kGI5F0ZPfdqotu4LobVN6ngsjmQDCWf/JnNBV
-         geFg==
-X-Gm-Message-State: AOAM53289ZS7jQkMpBDhV8Uxt6wURDQ1w2NKVof8aaKeuh6uqtqW/ICa
-        9Nk2rLHQlyGC3M6JF50F6Xj++g==
-X-Google-Smtp-Source: ABdhPJyQA+JEIQNoei+K1ch/V+Zx/sc+/gT6R6NcnBEpYJ9MDfdGQ4iDqBvG3w0PI692mwod3mWynw==
-X-Received: by 2002:aa7:9281:0:b029:1ec:48b2:811c with SMTP id j1-20020aa792810000b02901ec48b2811cmr11326584pfa.18.1615831360251;
-        Mon, 15 Mar 2021 11:02:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j26sm13898829pfa.35.2021.03.15.11.02.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=yYr9wVtQr+Yv2YCxxAWFJhlutYOKWxR3zpP8Meqzwc0=;
+        b=bMAGTh1fa8vLxh7HCu2zoEMUSU5h92qjHeiAvC+OZVNvRNHOxZ+yDVALZr4kcwmvHq
+         CjJCXviBVkfljMYcHEagvyVnOG8zWTyW24lR++9q5e+WOC6Pdz7OT0gejUgdGhAA1gX1
+         PbygQ3TojGAMBeEug/RCNSzv0ioXqmx5aPsFdiQFpYoZPfysO5JWbfEGFlvTda6rCZSH
+         ko792B8F+292QSQ234fwMOiP+tj9lkcJEgHy4fbum0mQOvxGV3WhyEA+FsycNOFNtQL0
+         Ou8OQzCLapwRTvnwmurMMyQvgsFfFqK9jrYepgVfZL/zmrToTGpK8qusCfQlY00Xtp+n
+         J8Iw==
+X-Gm-Message-State: AOAM532XgsSDHdW+M2e5p0Vpz7zSiKsDy+DObIbaDH+j3V6u5xr6bMxY
+        /LufOWI7v3mZqWVMDTH86WwF/A==
+X-Google-Smtp-Source: ABdhPJypLz3rt4xSDEfwAQI69keGjt8wki/cYUqoCZg01pG+rs+SU3iIC2Rhxqq4jRLey7oHOmrHHw==
+X-Received: by 2002:a65:6208:: with SMTP id d8mr260022pgv.365.1615831359582;
         Mon, 15 Mar 2021 11:02:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w188sm14531942pfw.177.2021.03.15.11.02.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Mar 2021 11:02:38 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -76,88 +76,108 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 6/6] lkdtm: Add REPORT_STACK for checking stack offsets
-Date:   Mon, 15 Mar 2021 11:02:29 -0700
-Message-Id: <20210315180229.1224655-7-keescook@chromium.org>
+Subject: [PATCH v6 5/6] arm64: entry: Enable random_kstack_offset support
+Date:   Mon, 15 Mar 2021 11:02:28 -0700
+Message-Id: <20210315180229.1224655-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210315180229.1224655-1-keescook@chromium.org>
 References: <20210315180229.1224655-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=fb815901a1ccc1d9c4ca5c3e3cd3729b7f382fe2; i=b69wRsxT78r/3tM1mGa7N6ME6+rlXyFg15giRWRwPAQ=; m=aFqgiEE+nAZdug79A1F+fVTg9ZceUb0WPE8cbHqssVg=; p=ZQ32/kILkW5AD3nBZHO0VMTp4prIPkm7+DdhCHX8KdA=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBPoTUACgkQiXL039xtwCaMtg//W3C jkHw9FCj0GjqFApbcxCL3jl2YwAAjXV58G4rDQYeWzbKEMXoLxCT/GGn17D3xXysAm9/dW2wqXTwB DG47+LfnvFEwMr8RG/1Z5TwURvUpKzo4uwvMAFeALrh34TQr8FiHicEsnh7Zae9vlUtfOkpjOA0vk oWbnFMRoe2jSxYPdZZWVAJAbGIfnrwvaALfb5oL+LyeL8u9+7EEUHGIVMp/HlXNDGQcTYwzqUwi/W IlCP4WjLrZDgvazHIfc7eY8ZGfvY6ZX7SGPb1u5ybkYUnEpCZrBY8RHqYDX244saxallSVPgEheQu 7q/IEyY2F5UKVUFi1R/O83XIrt6Jn35gkynezZltDe1PxA981dpO/TA3pJ2tTRW+p0F4kEIKWaCmM mF77WJRwHkMXTwKX1ML6GCELxA1bznMv4TRKyDgplEklsd4I2jZ40a2nFTBoucQzVW9f8zmYcjHT8 JEoRplIfyQytFfxYLXw6aP3v/1tYFd+I2VfHzz9c7J/e2nXELr/T2i7irF/iSqDAjeuyOLPbdiXgT sEzmOOw9gtVo6TZYCuVVUcf9tYRJPBKAe/ZMzrQRtkwaIoh2jdHhlIKiyROpgq1wfNdpT02SXsE8K FItAad3A/9tYuy56EOrjN/EilPKLKKCvHuOFdIOMXqVOAyqGJVMN2C1mhd7p+ziM=
+X-Patch-Hashes: v=1; h=sha256; g=ab928f13a74b1e09ed2d4740c77a8520d58ab562; i=6FjHrMJQ1a03WxuPiMt8aIK5MW/T0bayLG0SuUm7Wt4=; m=DW/OKOjAEidoxl6ODEV6zN0c7U/uCvK1t/uZsIkKPaM=; p=MOQyOeWlIC4XP1YdIGtrtyC9k7Ng+ZO0cCzQ0e3ME/8=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBPoTQACgkQiXL039xtwCZ8+hAAok1 EQH02pRdoiRp9m8tbYTx8Kv8urKXluNaNLKQ8VjvRmjYSBNnvpTWI/n09jSnhzsXmY3lP9KFBiiSR vTF18ZmisLjVh1++NAWmL4zJNQExvXHxdxXvrzs6I0wIm+3ULPb+9DxBwwzeFIOlTC0AHfkarOIvI JPzaUMXvv+p+TiFW12lULVfRIkjZeTY8diwqSzXhh0Z+sJFZt0H5C9CzgjNlKMnNDGj2r4ie5i14O 4pSTw5xa/wRNzIDemET+Cl6r5cxlzMmyUnwKxL8cQl2HF2ysqiZFcCqUrsFdHWMiO8p9js8+hJjdr DnVs/0zGx9OvIObQq8Cs6RXEWpOQT91MbY6iWdLYoP1I+4vwxcR7P2bIm8kvDtL/P+YEVghQCMAi/ Nbw7LFXshsWv4OkJT8XZvnuYTdN/6HIL6Pz1V74YC5b4+90rxYBfG6Di9MIxsJk6X3QQh6+yznoDJ YmtysrTNSPGMXjKDJfs3f3yKIpWSePYSb9w6LZMFUww5o0vdipqLGAv4onWHWsatjKjTN7Qi8Qy2v z/gu45senClYLMA4IqByUxpO7K0pVhkjIJ9bCuGqylQg37zdDD/h9fh1xGKCCzDeGBHjt88zBIQy0 1RmtN5iz/6GO6LViI+zmCV5RpDsDtBtZA7ZIuS5jlamNSIEmDoQBVdxK0QuCHdbw=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-For validating the stack offset behavior, report the offset from a given
-process's first seen stack address. A quick way to measure the entropy:
+Allow for a randomized stack offset on a per-syscall basis, with roughly
+5 bits of entropy. (And include AAPCS rationale AAPCS thanks to Mark
+Rutland.)
 
-for i in $(seq 1 1000); do
-	echo "REPORT_STACK" >/sys/kernel/debug/provoke-crash/DIRECT
-done
-offsets=$(dmesg | grep 'Stack offset' | cut -d: -f3 | sort | uniq -c | sort -n | wc -l)
-echo "$(uname -m) bits of stack entropy: $(echo "obase=2; $offsets" | bc | wc -L)"
+In order to avoid unconditional stack canaries on syscall entry (due to
+the use of alloca()), also disable stack protector to avoid triggering
+needless checks and slowing down the entry path. As there is no general
+way to control stack protector coverage with a function attribute[1],
+this must be disabled at the compilation unit level. This isn't a problem
+here, though, since stack protector was not triggered before: examining
+the resulting syscall.o, there are no changes in canary coverage (none
+before, none now).
+
+[1] a working __attribute__((no_stack_protector)) has been added to GCC
+and Clang but has not been released in any version yet:
+https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=346b302d09c1e6db56d9fe69048acb32fbb97845
+https://reviews.llvm.org/rG4fbf84c1732fca596ad1d6e96015e19760eb8a9b
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/misc/lkdtm/bugs.c  | 17 +++++++++++++++++
- drivers/misc/lkdtm/core.c  |  1 +
- drivers/misc/lkdtm/lkdtm.h |  1 +
- 3 files changed, 19 insertions(+)
+ arch/arm64/Kconfig          |  1 +
+ arch/arm64/kernel/Makefile  |  5 +++++
+ arch/arm64/kernel/syscall.c | 10 ++++++++++
+ 3 files changed, 16 insertions(+)
 
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index 110f5a8538e9..0e8254d0cf0b 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -134,6 +134,23 @@ noinline void lkdtm_CORRUPT_STACK_STRONG(void)
- 	__lkdtm_CORRUPT_STACK((void *)&data);
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 1f212b47a48a..2d0e5f544429 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -146,6 +146,7 @@ config ARM64
+ 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
+ 	select HAVE_ARCH_PFN_VALID
+ 	select HAVE_ARCH_PREL32_RELOCATIONS
++	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_STACKLEAK
+ 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index ed65576ce710..6cc97730790e 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -9,6 +9,11 @@ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_insn.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_return_address.o = $(CC_FLAGS_FTRACE)
+ 
++# Remove stack protector to avoid triggering unneeded stack canary
++# checks due to randomize_kstack_offset.
++CFLAGS_REMOVE_syscall.o	 = -fstack-protector -fstack-protector-strong
++CFLAGS_syscall.o	+= -fno-stack-protector
++
+ # Object file lists.
+ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
+ 			   entry-common.o entry-fpsimd.o process.o ptrace.o	\
+diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+index b9cf12b271d7..58227a1c207e 100644
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -5,6 +5,7 @@
+ #include <linux/errno.h>
+ #include <linux/nospec.h>
+ #include <linux/ptrace.h>
++#include <linux/randomize_kstack.h>
+ #include <linux/syscalls.h>
+ 
+ #include <asm/daifflags.h>
+@@ -43,6 +44,8 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+ {
+ 	long ret;
+ 
++	add_random_kstack_offset();
++
+ 	if (scno < sc_nr) {
+ 		syscall_fn_t syscall_fn;
+ 		syscall_fn = syscall_table[array_index_nospec(scno, sc_nr)];
+@@ -55,6 +58,13 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+ 		ret = lower_32_bits(ret);
+ 
+ 	regs->regs[0] = ret;
++
++	/*
++	 * The AAPCS mandates a 16-byte (i.e. 4-bit) aligned SP at
++	 * function boundaries. We want at least 5 bits of entropy so we
++	 * must randomize at least SP[8:4].
++	 */
++	choose_random_kstack_offset(get_random_int() & 0x1FF);
  }
  
-+static pid_t stack_pid;
-+static unsigned long stack_addr;
-+
-+void lkdtm_REPORT_STACK(void)
-+{
-+	volatile uintptr_t magic;
-+	pid_t pid = task_pid_nr(current);
-+
-+	if (pid != stack_pid) {
-+		pr_info("Starting stack offset tracking for pid %d\n", pid);
-+		stack_pid = pid;
-+		stack_addr = (uintptr_t)&magic;
-+	}
-+
-+	pr_info("Stack offset: %d\n", (int)(stack_addr - (uintptr_t)&magic));
-+}
-+
- void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void)
- {
- 	static u8 data[5] __attribute__((aligned(4))) = {1, 2, 3, 4, 5};
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index b2aff4d87c01..8024b6a5cc7f 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -110,6 +110,7 @@ static const struct crashtype crashtypes[] = {
- 	CRASHTYPE(EXHAUST_STACK),
- 	CRASHTYPE(CORRUPT_STACK),
- 	CRASHTYPE(CORRUPT_STACK_STRONG),
-+	CRASHTYPE(REPORT_STACK),
- 	CRASHTYPE(CORRUPT_LIST_ADD),
- 	CRASHTYPE(CORRUPT_LIST_DEL),
- 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 5ae48c64df24..99f90d3e5e9c 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -17,6 +17,7 @@ void lkdtm_LOOP(void);
- void lkdtm_EXHAUST_STACK(void);
- void lkdtm_CORRUPT_STACK(void);
- void lkdtm_CORRUPT_STACK_STRONG(void);
-+void lkdtm_REPORT_STACK(void);
- void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void);
- void lkdtm_SOFTLOCKUP(void);
- void lkdtm_HARDLOCKUP(void);
+ static inline bool has_syscall_work(unsigned long flags)
 -- 
 2.25.1
 
