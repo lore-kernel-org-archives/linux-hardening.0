@@ -2,192 +2,162 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DDCC43333
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70826C43332
 	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 18:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C52064F2B
+	by mail.kernel.org (Postfix) with ESMTP id 488A164F58
 	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 18:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232487AbhCOSDE (ORCPT
+        id S233071AbhCOSDC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Mar 2021 14:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41536 "EHLO
+        Mon, 15 Mar 2021 14:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229818AbhCOSCp (ORCPT
+        with ESMTP id S232619AbhCOSCk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Mar 2021 14:02:45 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B7DC06174A;
-        Mon, 15 Mar 2021 11:02:42 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id x4so51599865lfu.7;
-        Mon, 15 Mar 2021 11:02:42 -0700 (PDT)
+        Mon, 15 Mar 2021 14:02:40 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E162C06174A
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 11:02:40 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id a188so7093297pfb.4
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 11:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r+dvU73MJrRHuvPjWiuKmMrfLEr3LmmsYA54M4JMymY=;
-        b=LBcZko346yfuZRRJ5flhDptRBfmPepbuTKX7g98QkIjRbFR0J4wBaQKHXBGz9Lt0Tz
-         lCVwYdpL4m32mjEJZZVMmfMNcUVnvoTfM42MRAE9j5ds/ZI5XZuKpnL9k/EXEejjF8cK
-         MSmKQ5Q1wc7+9Iy4xvA7HFyAxsu5jbYIYuz33Rma4Mno7Xu2sBsGARgkGZFzCf6NIbLg
-         GzmyR+FW3zETCLQO+xmGTwiY77pLK87kLqIM2Yne99Sc9YBvy+lsaDKYjvXG5TfnVUqK
-         SitXXaXGqc8XzxVCA/1I4E1UQaKdoELELuyeIQ4P7kTObjhfgafy57+kpJDvQAvb8EUv
-         vYCw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uk0/1LocoDticB91SF6FsgWpOKPsEr1Pb6N+E6L28KI=;
+        b=IZStnNpq1/I+ApuVpBVeH4hTznoN9Pd5vpXdIm0izXjHtNEcMzEuAYg41LcLk9C0+C
+         4RaxVzekvwiR+yHdBedERs25Xriog5muJpUH5K6JdeX9j4F6uIxI1HnTzLwzXVy4GixD
+         yO68+I45kj3k99yhSaNpqzHD9Fp3KVDrGCmF0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r+dvU73MJrRHuvPjWiuKmMrfLEr3LmmsYA54M4JMymY=;
-        b=Eyo6aEEUbAvpOi6g79Zs1lf/gorbADeDLNG6yf5eORMzKJLZgEaP9LTPZMBlZm10D1
-         95Y3kq8z85kc3XiH9ylzzCgxXkUR3Ya0q2F+a3LvhmXD8nqJcmB47+tQo7BgWFN3xaVm
-         +P+96JXY1ywJdvl3WigVDHa1KnC1pjeF1IPX6gbZYg3oh9LkU6OcNablRZIuonVhIfGE
-         ISu+nFBq1+KTuvvd3FfgciZZz6kaZ5Nq6KEcrPuqWkhSg3mbNrUePNNWkOzl10cX0TIz
-         m1OAYXP1OmAfofMd3/oVb/UPTSyagEa0+7z7IRyPjc/nyPsddZHR7GRySoJIxLb1Ykrr
-         xf8A==
-X-Gm-Message-State: AOAM533KDthI3B/NjeN9vJoGGJCQvI+DP4iCSzm8GACBdXxHmmpJtGds
-        1i6hDvXJS4iOTS26MSNqKh4=
-X-Google-Smtp-Source: ABdhPJx8G6kkZIFpEJZ+7W+HG25iWohcSZpPNIhK8kDzKCxOd6LJFSTB+eXgwl0Y8tVP3VYH1YPq7A==
-X-Received: by 2002:a05:6512:108c:: with SMTP id j12mr9089568lfg.431.1615831361357;
-        Mon, 15 Mar 2021 11:02:41 -0700 (PDT)
-Received: from pc638.lan (h5ef52e3d.seluork.dyn.perspektivbredband.net. [94.245.46.61])
-        by smtp.gmail.com with ESMTPSA id v80sm2784223lfa.229.2021.03.15.11.02.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uk0/1LocoDticB91SF6FsgWpOKPsEr1Pb6N+E6L28KI=;
+        b=jlgtKODvLmMM2d7vlIYCND5f+/VuGH7nEOmVGcldg6MUug8ZdxoZJArgW6bAP7Uiqb
+         /riDyNfG+BFKHdJCbOUWe95UMX3PTcRj0iVGa9V6RkOD00wQw/mkBxUWt3UHZaxj2/PY
+         e86CLPMu8M+iEtJEdAQVskIr2yLsDdDOHpzC7LR7qW41LM7IT9ltBGEBpuY9YKsczb7k
+         tp5lPmd6doRr56ceaXNnlbjXxuPdQoMdBFC/ABcyYb685vI1ABGexHAr0QxDhWqqUXr1
+         g8FFdd6dlONMiZfMYEApfgnDqSSRQA0kGI5F0ZPfdqotu4LobVN6ngsjmQDCWf/JnNBV
+         geFg==
+X-Gm-Message-State: AOAM53289ZS7jQkMpBDhV8Uxt6wURDQ1w2NKVof8aaKeuh6uqtqW/ICa
+        9Nk2rLHQlyGC3M6JF50F6Xj++g==
+X-Google-Smtp-Source: ABdhPJyQA+JEIQNoei+K1ch/V+Zx/sc+/gT6R6NcnBEpYJ9MDfdGQ4iDqBvG3w0PI692mwod3mWynw==
+X-Received: by 2002:aa7:9281:0:b029:1ec:48b2:811c with SMTP id j1-20020aa792810000b02901ec48b2811cmr11326584pfa.18.1615831360251;
+        Mon, 15 Mar 2021 11:02:40 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j26sm13898829pfa.35.2021.03.15.11.02.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Mar 2021 11:02:41 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
-Date:   Mon, 15 Mar 2021 19:02:39 +0100
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Mon, 15 Mar 2021 11:02:39 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v4] mm/vmalloc: randomize vmalloc() allocations
-Message-ID: <20210315180239.GA2117@pc638.lan>
-References: <20210309135757.5406-1-toiwoton@gmail.com>
- <20210314172312.GA2085@pc638.lan>
- <ba975607-9493-c78c-bbd8-6a85573114d1@gmail.com>
- <20210315153510.GA1865@pc638.lan>
- <4649f69d-b7cd-d1a6-26e0-9b8bf3b17df5@gmail.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jann Horn <jannh@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 6/6] lkdtm: Add REPORT_STACK for checking stack offsets
+Date:   Mon, 15 Mar 2021 11:02:29 -0700
+Message-Id: <20210315180229.1224655-7-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210315180229.1224655-1-keescook@chromium.org>
+References: <20210315180229.1224655-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4649f69d-b7cd-d1a6-26e0-9b8bf3b17df5@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patch-Hashes: v=1; h=sha256; g=fb815901a1ccc1d9c4ca5c3e3cd3729b7f382fe2; i=b69wRsxT78r/3tM1mGa7N6ME6+rlXyFg15giRWRwPAQ=; m=aFqgiEE+nAZdug79A1F+fVTg9ZceUb0WPE8cbHqssVg=; p=ZQ32/kILkW5AD3nBZHO0VMTp4prIPkm7+DdhCHX8KdA=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBPoTUACgkQiXL039xtwCaMtg//W3C jkHw9FCj0GjqFApbcxCL3jl2YwAAjXV58G4rDQYeWzbKEMXoLxCT/GGn17D3xXysAm9/dW2wqXTwB DG47+LfnvFEwMr8RG/1Z5TwURvUpKzo4uwvMAFeALrh34TQr8FiHicEsnh7Zae9vlUtfOkpjOA0vk oWbnFMRoe2jSxYPdZZWVAJAbGIfnrwvaALfb5oL+LyeL8u9+7EEUHGIVMp/HlXNDGQcTYwzqUwi/W IlCP4WjLrZDgvazHIfc7eY8ZGfvY6ZX7SGPb1u5ybkYUnEpCZrBY8RHqYDX244saxallSVPgEheQu 7q/IEyY2F5UKVUFi1R/O83XIrt6Jn35gkynezZltDe1PxA981dpO/TA3pJ2tTRW+p0F4kEIKWaCmM mF77WJRwHkMXTwKX1ML6GCELxA1bznMv4TRKyDgplEklsd4I2jZ40a2nFTBoucQzVW9f8zmYcjHT8 JEoRplIfyQytFfxYLXw6aP3v/1tYFd+I2VfHzz9c7J/e2nXELr/T2i7irF/iSqDAjeuyOLPbdiXgT sEzmOOw9gtVo6TZYCuVVUcf9tYRJPBKAe/ZMzrQRtkwaIoh2jdHhlIKiyROpgq1wfNdpT02SXsE8K FItAad3A/9tYuy56EOrjN/EilPKLKKCvHuOFdIOMXqVOAyqGJVMN2C1mhd7p+ziM=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 06:23:37PM +0200, Topi Miettinen wrote:
-> On 15.3.2021 17.35, Uladzislau Rezki wrote:
-> > > On 14.3.2021 19.23, Uladzislau Rezki wrote:
-> > > > Also, using vmaloc test driver i can trigger a kernel BUG:
-> > > > 
-> > > > <snip>
-> > > > [   24.627577] kernel BUG at mm/vmalloc.c:1272!
-> > > 
-> > > It seems that most tests indeed fail. Perhaps the vmalloc subsystem isn't
-> > > very robust in face of fragmented virtual memory. What could be done to fix
-> > > that?
-> > > 
-> > Your patch is broken in context of checking "vend" when you try to
-> > allocate next time after first attempt. Passed "vend" is different
-> > there comparing what is checked later to figure out if an allocation
-> > failed or not:
-> > 
-> > <snip>
-> >      if (unlikely(addr == vend))
-> >          goto overflow;
-> > <snip>
-> 
-> 
-> Thanks, I'll fix that.
-> 
-> > 
-> > > 
-> > > In this patch, I could retry __alloc_vmap_area() with the whole region after
-> > > failure of both [random, vend] and [vstart, random] but I'm not sure that
-> > > would help much. Worth a try of course.
-> > > 
-> > There is no need in your second [vstart, random]. If a first bigger range
-> > has not been successful, the smaller one will never be success anyway. The
-> > best way to go here is to repeat with real [vsart:vend], if it still fails
-> > on a real range, then it will not be possible to accomplish an allocation
-> > request with given parameters.
-> > 
-> > > 
-> > > By the way, some of the tests in test_vmalloc.c don't check for vmalloc()
-> > > failure, for example in full_fit_alloc_test().
-> > > 
-> > Where?
-> 
-> Something like this:
-> 
-> diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-> index 5cf2fe9aab9e..27e5db9a96b4 100644
-> --- a/lib/test_vmalloc.c
-> +++ b/lib/test_vmalloc.c
-> @@ -182,9 +182,14 @@ static int long_busy_list_alloc_test(void)
->         if (!ptr)
->                 return rv;
-> 
-> -       for (i = 0; i < 15000; i++)
-> +       for (i = 0; i < 15000; i++) {
->                 ptr[i] = vmalloc(1 * PAGE_SIZE);
-> 
-> +               if (!ptr[i])
-> +                       goto leave;
-> +       }
-> +
->
-Hmm. That is for creating a long list of allocated areas before running
-a test. For example if one allocation among 15 000 fails, some index will
-be set to NULL. Later on after "leave" label vfree() will bypass NULL freeing.
+For validating the stack offset behavior, report the offset from a given
+process's first seen stack address. A quick way to measure the entropy:
 
-Either we have 15 000 extra elements or 10 000 does not really matter
-and is considered as a corner case that is probably never happens. Yes,
-you can simulate such precondition, but then a regular vmalloc()s will
-likely also fails, thus the final results will be screwed up.
+for i in $(seq 1 1000); do
+	echo "REPORT_STACK" >/sys/kernel/debug/provoke-crash/DIRECT
+done
+offsets=$(dmesg | grep 'Stack offset' | cut -d: -f3 | sort | uniq -c | sort -n | wc -l)
+echo "$(uname -m) bits of stack entropy: $(echo "obase=2; $offsets" | bc | wc -L)"
 
-> +
->         for (i = 0; i < test_loop_count; i++) {
->                 ptr_1 = vmalloc(100 * PAGE_SIZE);
->                 if (!ptr_1)
-> @@ -236,7 +241,11 @@ static int full_fit_alloc_test(void)
-> 
->         for (i = 0; i < junk_length; i++) {
->                 ptr[i] = vmalloc(1 * PAGE_SIZE);
-> +               if (!ptr[i])
-> +                       goto error;
->                 junk_ptr[i] = vmalloc(1 * PAGE_SIZE);
-> +               if (!junk_ptr[i])
-> +                       goto error;
->         }
-> 
->         for (i = 0; i < junk_length; i++)
-> @@ -256,8 +265,10 @@ static int full_fit_alloc_test(void)
->         rv = 0;
-> 
->  error:
-> -       for (i = 0; i < junk_length; i++)
-> +       for (i = 0; i < junk_length; i++) {
->                 vfree(ptr[i]);
-> +               vfree(junk_ptr[i]);
-> +       }
-> 
->         vfree(ptr);
->         vfree(junk_ptr);
-> 
-Same here.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/misc/lkdtm/bugs.c  | 17 +++++++++++++++++
+ drivers/misc/lkdtm/core.c  |  1 +
+ drivers/misc/lkdtm/lkdtm.h |  1 +
+ 3 files changed, 19 insertions(+)
 
---
-Vlad Rezki
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 110f5a8538e9..0e8254d0cf0b 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -134,6 +134,23 @@ noinline void lkdtm_CORRUPT_STACK_STRONG(void)
+ 	__lkdtm_CORRUPT_STACK((void *)&data);
+ }
+ 
++static pid_t stack_pid;
++static unsigned long stack_addr;
++
++void lkdtm_REPORT_STACK(void)
++{
++	volatile uintptr_t magic;
++	pid_t pid = task_pid_nr(current);
++
++	if (pid != stack_pid) {
++		pr_info("Starting stack offset tracking for pid %d\n", pid);
++		stack_pid = pid;
++		stack_addr = (uintptr_t)&magic;
++	}
++
++	pr_info("Stack offset: %d\n", (int)(stack_addr - (uintptr_t)&magic));
++}
++
+ void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void)
+ {
+ 	static u8 data[5] __attribute__((aligned(4))) = {1, 2, 3, 4, 5};
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index b2aff4d87c01..8024b6a5cc7f 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -110,6 +110,7 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(EXHAUST_STACK),
+ 	CRASHTYPE(CORRUPT_STACK),
+ 	CRASHTYPE(CORRUPT_STACK_STRONG),
++	CRASHTYPE(REPORT_STACK),
+ 	CRASHTYPE(CORRUPT_LIST_ADD),
+ 	CRASHTYPE(CORRUPT_LIST_DEL),
+ 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 5ae48c64df24..99f90d3e5e9c 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -17,6 +17,7 @@ void lkdtm_LOOP(void);
+ void lkdtm_EXHAUST_STACK(void);
+ void lkdtm_CORRUPT_STACK(void);
+ void lkdtm_CORRUPT_STACK_STRONG(void);
++void lkdtm_REPORT_STACK(void);
+ void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void);
+ void lkdtm_SOFTLOCKUP(void);
+ void lkdtm_HARDLOCKUP(void);
+-- 
+2.25.1
+
