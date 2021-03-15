@@ -2,61 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0922C433DB
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 10:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F79C433DB
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 11:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A525764E0F
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 10:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E4364E45
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 11:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbhCOK1i (ORCPT
+        id S229870AbhCOLp2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Mar 2021 06:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229900AbhCOK1T (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Mar 2021 06:27:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 725CA64E0F;
-        Mon, 15 Mar 2021 10:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615804039;
-        bh=AGwamD92u5AG9ynbGg86ThSmL6JsKPrR25OjmZjqN/A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sPq4qge3eoNxFFbYzw2zwdMkpY0+38CyOVqwY20gs7l3aMMi2aVu/wvdkTOcpFiZI
-         GEY1Xv2TvR5EtmzUB+mZivU640D3VBwD932VP59u1eQbsxP+ljiKQji7JJJ9dd/cGm
-         FGo8wHVxapOXjlLLGmR61BP1H7P4j7y7sASEAbYxzHyfOgQCmOP4nsILzmLeBNizMn
-         boUWWiJ3Thedjq54PSg4t21QAPzoZg5LspnTrGgdQuImuoiRSb+hQ9RMeoej2gXK6p
-         fugjLIltFvyLqb9sG97jY53C06jsONfyfKku8BftC+Cx0RAYgB9efGaPz28T28PxDK
-         KFj9y9a9SYKDA==
-Date:   Mon, 15 Mar 2021 15:57:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RESEND][next] phy: qcom-usb-hs: Fix fall-through warnings
- for Clang
-Message-ID: <YE82g5+07IOwRDzl@vkoul-mobl>
-References: <20210305100219.GA142595@embeddedor>
+        Mon, 15 Mar 2021 07:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229536AbhCOLpY (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 15 Mar 2021 07:45:24 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0F7C061574;
+        Mon, 15 Mar 2021 04:45:24 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id r20so15816490ljk.4;
+        Mon, 15 Mar 2021 04:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vjVaFcFS2KPU0GR3VSubynVn74gNiK4UAqEdkhZDP14=;
+        b=m/SSTTBPYiAAUBv4tnDpAOsgVB9MAKJ0KtUuCJ33y1G0NV4YdczLMiHsDwYJ0F7Ttq
+         hBGNJkA8oGO+WlO71tH3x2upyUBabG6oXORPmX5BW5ygwoTfX8eni+POPLsCPHWq2cio
+         CeNbvUHhkLmfj2iKPKwdAXqhDXdAfRL/A9CPmbYprGjcUgzlSn3hfuIXjQMGCR4e0x37
+         Y3ieN0o22uDL2F/fpgkr8r1xdccp+nkCCQwPlCvG7NQo5WpWPRJ+pl9QEDjQ6gDWfalZ
+         TCdw+LpvHpkIyuhpTgo1gS1IpB8BdLP7nr6V9UpN/LzrsjbO6jlkVDqaiV9nL3vjy13z
+         r2fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vjVaFcFS2KPU0GR3VSubynVn74gNiK4UAqEdkhZDP14=;
+        b=FrI09z/sQAsJRgB3yh4q91aGHHPLzgH5WqRuXWpfkOMsVkdmnxY0l1iYmKgP24qsAC
+         jeuS3ZaW4BxQOmC9bIPc4kaS5fgMbIh16Nzws2qZarly+g6tnP0cqCRWIuawn23QOyN0
+         fEeOZlt7AnkVH2p0vNT6KKEwLpFxI6BcPuhp9rky5zWuZrdjMgzEyyyJtMBHdG3vbdM/
+         xy8G0/MW+kFp3dCLhUOucVPOLRWXm9FN6w3M5zPWIfAyZoLYVYcSLvGOToCHzIRFZepG
+         vLPZClY6ldEZqqPKf+5xL2Ruskaey8URpYDjwE0X60fgvlAgpJcAmdtbsPYdFBuXDHwE
+         DZkA==
+X-Gm-Message-State: AOAM530IhJryVWRBDotSra72mTipgStM7+k7Gkp6uoKjI6Vn+NEE94Sn
+        NziQNmdPEcyl96w6EwrX2OI=
+X-Google-Smtp-Source: ABdhPJzx8iQDlbKxv1vTmHq7rJcQaw8hBkXgcXKtKQFUPZUqCq5P2Qjhu7gM3M5Ayc1XSfOljBum7g==
+X-Received: by 2002:a2e:95d6:: with SMTP id y22mr10256746ljh.361.1615808722604;
+        Mon, 15 Mar 2021 04:45:22 -0700 (PDT)
+Received: from [192.168.1.39] (88-114-223-25.elisa-laajakaista.fi. [88.114.223.25])
+        by smtp.gmail.com with ESMTPSA id i16sm2851508ljj.74.2021.03.15.04.45.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Mar 2021 04:45:22 -0700 (PDT)
+Subject: Re: [PATCH v4] mm/vmalloc: randomize vmalloc() allocations
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@kernel.org>
+References: <20210309135757.5406-1-toiwoton@gmail.com>
+ <20210314172312.GA2085@pc638.lan>
+From:   Topi Miettinen <toiwoton@gmail.com>
+Message-ID: <ba975607-9493-c78c-bbd8-6a85573114d1@gmail.com>
+Date:   Mon, 15 Mar 2021 13:45:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210305100219.GA142595@embeddedor>
+In-Reply-To: <20210314172312.GA2085@pc638.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 05-03-21, 04:02, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of letting the code fall
-> through to the next case.
+On 14.3.2021 19.23, Uladzislau Rezki wrote:
+> Also, using vmaloc test driver i can trigger a kernel BUG:
+> 
+> <snip>
+> [   24.627577] kernel BUG at mm/vmalloc.c:1272!
 
-Applied, thanks
+It seems that most tests indeed fail. Perhaps the vmalloc subsystem 
+isn't very robust in face of fragmented virtual memory. What could be 
+done to fix that?
 
--- 
-~Vinod
+In this patch, I could retry __alloc_vmap_area() with the whole region 
+after failure of both [random, vend] and [vstart, random] but I'm not 
+sure that would help much. Worth a try of course.
+
+By the way, some of the tests in test_vmalloc.c don't check for 
+vmalloc() failure, for example in full_fit_alloc_test().
+
+-Topi
+
