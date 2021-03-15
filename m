@@ -2,178 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6005CC433E6
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 16:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA36C433E0
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 17:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3181264F26
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 16:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D456564E98
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Mar 2021 17:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231266AbhCOQYC (ORCPT
+        id S234675AbhCOR2f (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Mar 2021 12:24:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
+        Mon, 15 Mar 2021 13:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232406AbhCOQXm (ORCPT
+        with ESMTP id S235949AbhCOR20 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Mar 2021 12:23:42 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5154C06174A;
-        Mon, 15 Mar 2021 09:23:41 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id e7so57857252lft.2;
-        Mon, 15 Mar 2021 09:23:41 -0700 (PDT)
+        Mon, 15 Mar 2021 13:28:26 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90B6C06174A
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 10:28:25 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id g4so20875233pgj.0
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Mar 2021 10:28:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qaNMP0alddEd7JtTl8zS7eqKdx15H1y0B//YrDmf5gY=;
-        b=LPWDZEv6rFVCaqvd1m66r/0dCJ9+wI1htfwLgUiweWo4tBsrQS/Clt/YfyYSgWds0j
-         pLF3RXqCPu7lfYFiAU4YcwGKr82Bko8tz48NmEpPJmKLzNAOXyxR3fcM2tuqVvTXnyL2
-         eraOHdXKq+S1rztoBhLn66mglA8ev18HI+HfueBneYeHL1Il/+ulzqVSeFfSOc3oykzW
-         voyajZhA03rPkzuV69doQwzdLCR5+1DUjaY5uSAaBsYYzm/U478f4hdLvz5HUcWgTbf+
-         PJOiv2cCiapdgcwqIOXeuJmKFamorucxMBNInCeMt+Fy1HZci6gfNYsJ6hkvf4VZ5g4o
-         lD9Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5VwZiNoaOawmugGkW3BliGlJHY74MeBZt4r2sMGeVQQ=;
+        b=l7HPfSehLhWpD22iEktgmCx0tfo9/0CXqzTE6AuX6c3/5225P6lXKuk1wJ6XO5mJGB
+         j9LyL7+uH01vGynQcMUX/DSW3aPwjvKsnHDabzLeL8nPJ7VF7NQPm1XuwiOMzrWuKnoG
+         LqkuIan1qCRQ55XWhGn9uzB0DXbKts3oUufc8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qaNMP0alddEd7JtTl8zS7eqKdx15H1y0B//YrDmf5gY=;
-        b=PuWzO7NuhVmhk2wjZLirQODYiq9H7Fiq5TJnabfsbi8cl5ujtodH4ybJCRm9SW2kUo
-         dX6dp6+wDWOi45qHvGfvuF8e401JPgTdT8w7GaKfkoZ1xh9HKcCCdFI1MzIDZrMnvMzQ
-         wOYNxP/MQuWk+LRAr3XPljVCSgssiaRKlbP8yGvWg/MUQcm+dr8KP0K2CtIbP3HHQZ9E
-         i9k/YPHWuVaWuS3/4DJq3Eb7cBabFwXUz+2duGpHzVWW/td28VIJo9sa+SD9nwTzX3jq
-         G6wEPC1RTvSzNlIRwJHvd6AnC8qwyZJtPcQGfVJlFZIzKR5PAOXXjuMdOcqENcx9YlrH
-         eyCA==
-X-Gm-Message-State: AOAM533WIGKwTB4gO/DGzznFKEJV3YlUlJ7zxb09Tt4m/bNleJTlISuI
-        H8hjvYQYbAAyNpLz9800PIo=
-X-Google-Smtp-Source: ABdhPJwrRgvcueCrrRfFRNvh6SNhQrQLTbWu4vNI/52vmnCHyrzJ41jNBtioVGBVOFSq1oTgBldG4A==
-X-Received: by 2002:ac2:43a3:: with SMTP id t3mr8229109lfl.340.1615825420417;
-        Mon, 15 Mar 2021 09:23:40 -0700 (PDT)
-Received: from [192.168.1.39] (88-114-223-25.elisa-laajakaista.fi. [88.114.223.25])
-        by smtp.gmail.com with ESMTPSA id e15sm2986504ljg.54.2021.03.15.09.23.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Mar 2021 09:23:39 -0700 (PDT)
-Subject: Re: [PATCH v4] mm/vmalloc: randomize vmalloc() allocations
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5VwZiNoaOawmugGkW3BliGlJHY74MeBZt4r2sMGeVQQ=;
+        b=pOnIfBz0Q/7MIuapzKniXu36KMX6H70yWvFxL1Wr0wjb+WktQcUmufpwBiN0FHtvm7
+         GQsvmZdPZoJQMJlg//0QQpmlF6tOJIdQyUQnGJ2vWtcsLTp6rFWugqmGGJhi8Wdi4VH9
+         EGnWnGqz0CFr9NxMDxRgGIjgAmBYGFY5926sJTuwgjMiq9UbHUk7tw3G2nZ2eD4paK5D
+         8ar60w99rlpPuI0uUfsnvj7tzCh0z3a1yxuDz7MzwExyyVd6ivGLI6SQks1/nckkKeog
+         qQJXVB5mfUN1QKpHqqNzr5XW93SWFt0JdTTjaw5bzQyV44MQGqnoqzq7qz6GgqqcxzTf
+         DtRg==
+X-Gm-Message-State: AOAM530npLJNqNOAI1PJXg1ou4uf2C69gxeczlkpMKymIJlm88ogVspV
+        utGjISpqrp8CIPez4LAX9Fu6DQ==
+X-Google-Smtp-Source: ABdhPJxjnHWrPSehNTyXbsunhO6js/f/y7LcLoTrzXtGC7Of1Nx7WsQ3+07t7nraq6yi5lTJdFnVmQ==
+X-Received: by 2002:a62:3847:0:b029:202:ad05:4476 with SMTP id f68-20020a6238470000b0290202ad054476mr10941066pfa.67.1615829305471;
+        Mon, 15 Mar 2021 10:28:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n9sm205492pjq.38.2021.03.15.10.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Mar 2021 10:28:24 -0700 (PDT)
+Date:   Mon, 15 Mar 2021 10:28:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@kernel.org>
-References: <20210309135757.5406-1-toiwoton@gmail.com>
- <20210314172312.GA2085@pc638.lan>
- <ba975607-9493-c78c-bbd8-6a85573114d1@gmail.com>
- <20210315153510.GA1865@pc638.lan>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <4649f69d-b7cd-d1a6-26e0-9b8bf3b17df5@gmail.com>
-Date:   Mon, 15 Mar 2021 18:23:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v5 1/7] mm: Restore init_on_* static branch defaults
+Message-ID: <202103151027.88B63D0@keescook>
+References: <20210309214301.678739-1-keescook@chromium.org>
+ <20210309214301.678739-2-keescook@chromium.org>
+ <20210310155602.e005171dbecbc0be442f8aad@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20210315153510.GA1865@pc638.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210310155602.e005171dbecbc0be442f8aad@linux-foundation.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 15.3.2021 17.35, Uladzislau Rezki wrote:
->> On 14.3.2021 19.23, Uladzislau Rezki wrote:
->>> Also, using vmaloc test driver i can trigger a kernel BUG:
->>>
->>> <snip>
->>> [   24.627577] kernel BUG at mm/vmalloc.c:1272!
->>
->> It seems that most tests indeed fail. Perhaps the vmalloc subsystem isn't
->> very robust in face of fragmented virtual memory. What could be done to fix
->> that?
->>
-> Your patch is broken in context of checking "vend" when you try to
-> allocate next time after first attempt. Passed "vend" is different
-> there comparing what is checked later to figure out if an allocation
-> failed or not:
+On Wed, Mar 10, 2021 at 03:56:02PM -0800, Andrew Morton wrote:
+> On Tue,  9 Mar 2021 13:42:55 -0800 Kees Cook <keescook@chromium.org> wrote:
 > 
-> <snip>
->      if (unlikely(addr == vend))
->          goto overflow;
-> <snip>
-
-
-Thanks, I'll fix that.
-
+> > Choosing the initial state of static branches changes the assembly layout
+> > (if the condition is expected to be likely, inline, or unlikely, out of
+> > line via a jump). The _TRUE/_FALSE defines for CONFIG_INIT_ON_*_DEFAULT_ON
+> > were accidentally removed. These need to stay so that the CONFIG controls
+> > the pessimization of the resulting static branch NOP/JMP locations.
 > 
->>
->> In this patch, I could retry __alloc_vmap_area() with the whole region after
->> failure of both [random, vend] and [vstart, random] but I'm not sure that
->> would help much. Worth a try of course.
->>
-> There is no need in your second [vstart, random]. If a first bigger range
-> has not been successful, the smaller one will never be success anyway. The
-> best way to go here is to repeat with real [vsart:vend], if it still fails
-> on a real range, then it will not be possible to accomplish an allocation
-> request with given parameters.
+> Changelog doesn't really explain why anyone would want to apply this
+> patch.  This is especially important for -stable patches.
 > 
->>
->> By the way, some of the tests in test_vmalloc.c don't check for vmalloc()
->> failure, for example in full_fit_alloc_test().
->>
-> Where?
+> IOW, what is the user visible effect of the bug?
 
-Something like this:
+Yeah, that's a good point, and in writing more details I decided this
+wasn't actually worth a stable patch, and should just get folded into
+later patches.
 
-diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-index 5cf2fe9aab9e..27e5db9a96b4 100644
---- a/lib/test_vmalloc.c
-+++ b/lib/test_vmalloc.c
-@@ -182,9 +182,14 @@ static int long_busy_list_alloc_test(void)
-         if (!ptr)
-                 return rv;
+Thanks for the sanity-check!
 
--       for (i = 0; i < 15000; i++)
-+       for (i = 0; i < 15000; i++) {
-                 ptr[i] = vmalloc(1 * PAGE_SIZE);
-
-+               if (!ptr[i])
-+                       goto leave;
-+       }
-+
-+
-         for (i = 0; i < test_loop_count; i++) {
-                 ptr_1 = vmalloc(100 * PAGE_SIZE);
-                 if (!ptr_1)
-@@ -236,7 +241,11 @@ static int full_fit_alloc_test(void)
-
-         for (i = 0; i < junk_length; i++) {
-                 ptr[i] = vmalloc(1 * PAGE_SIZE);
-+               if (!ptr[i])
-+                       goto error;
-                 junk_ptr[i] = vmalloc(1 * PAGE_SIZE);
-+               if (!junk_ptr[i])
-+                       goto error;
-         }
-
-         for (i = 0; i < junk_length; i++)
-@@ -256,8 +265,10 @@ static int full_fit_alloc_test(void)
-         rv = 0;
-
-  error:
--       for (i = 0; i < junk_length; i++)
-+       for (i = 0; i < junk_length; i++) {
-                 vfree(ptr[i]);
-+               vfree(junk_ptr[i]);
-+       }
-
-         vfree(ptr);
-         vfree(junk_ptr);
-
--Topi
+-- 
+Kees Cook
