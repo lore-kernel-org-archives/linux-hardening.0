@@ -2,66 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D39FC433DB
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCB4C433E9
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 23:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7094064F89
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A755764F4F
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 23:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232324AbhCPUrY (ORCPT
+        id S229529AbhCPXC7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Mar 2021 16:47:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48810 "EHLO
+        Tue, 16 Mar 2021 19:02:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232132AbhCPUou (ORCPT
+        with ESMTP id S229505AbhCPXC4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Mar 2021 16:44:50 -0400
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0EEC0613D8
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:44:46 -0700 (PDT)
-Received: by mail-vs1-xe32.google.com with SMTP id p24so18947528vsj.13
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:44:46 -0700 (PDT)
+        Tue, 16 Mar 2021 19:02:56 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B269C061764
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 16:02:56 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id n10so23622060pgl.10
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 16:02:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tLa3leTdMzh1rknpkLUWnm0PAOSso4HRgQA5K7IK6MM=;
-        b=e+TXEaCKvma4VGpnwpOaaFkLknHBGuDmEKybhDxTF83sGcUnhvMjnyd4FKoakznEV3
-         L+49y3mjg3y9zPjYOau5jDdMUzS1QeQc8EZHIuCnYCEvlu/U3MIphrqZ/uP5UmkwxxeL
-         +/myGc8pDphpzzZ7FTh/9hJKxPT9p26Ia2eDhTGk6iETFEiye/52lqU41RoUHrn74DWh
-         Z9MX2qar1Tdy5UlVzs8F5VgOHw+sA5zNyUhbhgEJg7yulcKmANZ/MdTHXU3HQZNR3/3z
-         jprq7sQ3GQvcxl+Y7QEUl59VHWT5WD2/UpeliEvsAr6IQyyxoheHA9cHYYw051xuDx5U
-         BC1w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kXkZPUcTv+BH4LFKsPIbe+jirsdRWJGrIqCSnte4+pk=;
+        b=n7z/7n8BAe+C7mTkXJHeaNKkrmAd3FDbaONpZvyNMxkhbVT0HhlGCasczqYzg9skM7
+         qBBK04FrNjFr5vEVg8tejTGS6nhlakf8ACj8v81qEm6NbXbdnWSH6RNFIfGot//y7tiV
+         m7X88W7uUbP5jCvFAuxcc3DEyOCGAo9oImDDk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tLa3leTdMzh1rknpkLUWnm0PAOSso4HRgQA5K7IK6MM=;
-        b=f9Id5HEcwNSlm0EGwKOiJ6mvcxDR8SRNUdbTXSbgEftBu5D9k9l122zG8ECcX80DL/
-         /efQdYlijXqgEgdy/tr7GZkft6fPDsqrFqxjNetsORJow68oN43O659i2qj58guohjlW
-         iwYjv49KGz5H+BGQYkrNSOqzdaO5+QB1o+sL/ocZBX3KN0uBT/C3udc4kC9p4tILLkGY
-         srQ9roPA4njI7bqb9CKfjulMHR5srbVk3WXg+gtk4V52+DYPCYahG3dZbmQyKpSGp9N6
-         AUYNL8TEBpYoOcaxZPVCA9ENDCUILOir51Zc0on0zu7hTzAJ0Fd/Vb5NXhO8PwcRowCG
-         5DRQ==
-X-Gm-Message-State: AOAM533+IGfml/Juw6fuFBjkMfDcqUyZgSXKgHZrGdiybR93oGZYin+C
-        98uqk7499eWlHP1OUGEXP1ttkqwfNPG8Jwwf87obdQ==
-X-Google-Smtp-Source: ABdhPJwQSd1vGWBZTCJlQRmCK62EXrLyrNMXIW37KTTCmpBtYEbzwPtXhGB1KcQUzWMwYntm7fopfaHU36IppUu0V+Q=
-X-Received: by 2002:a67:db98:: with SMTP id f24mr1241866vsk.13.1615927484959;
- Tue, 16 Mar 2021 13:44:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210312004919.669614-1-samitolvanen@google.com>
- <20210312004919.669614-18-samitolvanen@google.com> <202103111851.69AA6E59@keescook>
-In-Reply-To: <202103111851.69AA6E59@keescook>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 16 Mar 2021 13:44:33 -0700
-Message-ID: <CABCJKucpFHC-9rvT7uNF+E-Jh20fz69zdO49_4p8G_Sb634qmw@mail.gmail.com>
-Subject: Re: [PATCH 17/17] arm64: allow CONFIG_CFI_CLANG to be selected
-To:     Kees Cook <keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kXkZPUcTv+BH4LFKsPIbe+jirsdRWJGrIqCSnte4+pk=;
+        b=Gr4aLDC/2lSUG6ZXGK+Usy694Jg1YFVxO0VcGQ2mYqsew1PUaKHPcjLTHKu7pBV7Pd
+         FzwWR9tx3ti3quTVfDyLOU2UHXP6/whDfihRp3AbewkizKG+4bmLOVZAaX+eryH5sMVO
+         Zre202zjA20NlJExT7HkyKHB9vrQMp4BzZ559nror5bjW6TfUfxxNaxE0kt8zW3vlbdl
+         cEJKH+W0GQWPAlsij+mA5tbvkshb+wdEJIiM+bAQo8dmBGS2s4OLClgUcLelw78y5kD3
+         i/b3VxdOprDySaknIcEt5scG7N4d9KiCYrCvj27tgdXziQpnHNEaWQE7CMnzqv8IypWp
+         Vq2A==
+X-Gm-Message-State: AOAM531t16DOpMOvn0vDmLhwy+K7/lPLX8Ub9FkDCBzPhhI71Lm4YQQT
+        rzan7229HG6cVeGgD/dkrFcqCw==
+X-Google-Smtp-Source: ABdhPJxUsDSC7HTflCNgrlhXH8m0bkwMud4JF2D4um9D+38w6bFYcJnCSdxm5YlWmyN87vHVWtDfEA==
+X-Received: by 2002:a63:4652:: with SMTP id v18mr42886pgk.87.1615935775940;
+        Tue, 16 Mar 2021 16:02:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id mp1sm372749pjb.48.2021.03.16.16.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Mar 2021 16:02:54 -0700 (PDT)
+Date:   Tue, 16 Mar 2021 16:02:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
@@ -73,24 +68,37 @@ Cc:     Nathan Chancellor <nathan@kernel.org>,
         linux-kbuild <linux-kbuild@vger.kernel.org>,
         PCI <linux-pci@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 17/17] arm64: allow CONFIG_CFI_CLANG to be selected
+Message-ID: <202103161602.6DB8AC31FA@keescook>
+References: <20210312004919.669614-1-samitolvanen@google.com>
+ <20210312004919.669614-18-samitolvanen@google.com>
+ <202103111851.69AA6E59@keescook>
+ <CABCJKucpFHC-9rvT7uNF+E-Jh20fz69zdO49_4p8G_Sb634qmw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKucpFHC-9rvT7uNF+E-Jh20fz69zdO49_4p8G_Sb634qmw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 6:51 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Mar 11, 2021 at 04:49:19PM -0800, Sami Tolvanen wrote:
-> > Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
+On Tue, Mar 16, 2021 at 01:44:33PM -0700, Sami Tolvanen wrote:
+> On Thu, Mar 11, 2021 at 6:51 PM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> Random thought: the vDSO doesn't need special handling because it
-> doesn't make any indirect calls, yes?
+> > On Thu, Mar 11, 2021 at 04:49:19PM -0800, Sami Tolvanen wrote:
+> > > Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
+> > >
+> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> >
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> >
+> > Random thought: the vDSO doesn't need special handling because it
+> > doesn't make any indirect calls, yes?
+> 
+> That might be true, but we also filter out CC_FLAGS_LTO for the vDSO,
+> which disables CFI as well.
 
-That might be true, but we also filter out CC_FLAGS_LTO for the vDSO,
-which disables CFI as well.
+Oh right! That would do it. :)
 
-Sami
+-- 
+Kees Cook
