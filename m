@@ -5,62 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D9AC433DB
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D39FC433DB
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E72A64F7B
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7094064F89
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbhCPUei (ORCPT
+        id S232324AbhCPUrY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Mar 2021 16:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46420 "EHLO
+        Tue, 16 Mar 2021 16:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231324AbhCPUeG (ORCPT
+        with ESMTP id S232132AbhCPUou (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Mar 2021 16:34:06 -0400
-Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671D7C061763
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:34:05 -0700 (PDT)
-Received: by mail-vs1-xe33.google.com with SMTP id a15so18968571vsi.7
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:34:05 -0700 (PDT)
+        Tue, 16 Mar 2021 16:44:50 -0400
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0EEC0613D8
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:44:46 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id p24so18947528vsj.13
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Xrwjt/kZB1RxVC21J+b2Rv85znrbxBlQ2xQVtgXaL8Q=;
-        b=po1Ywby6SU2VWLEUyZ5fNbrtGcCnRgD8+IOMID+GlXWQNN/3aWjrKopHkVgecJy3yJ
-         khd4+NGMXkdhaRRLq7oIG7sqA93cOIbt85nnBMxjdoTTob9e2Am24an2yQVbG1o0V5H8
-         7GVzuReTWAlfbF1CAQXu39fgGvH5SXGbKyaDGdlbOZBsDb8/16qHOkbAClu4ucjVnnpq
-         puCa2KojBGupypPIcNHF88u0nBc0j5j5wmxJB5QqbuzbcGhuC3bdhL35d8XTmOmAH5Ze
-         Rv/YonPUJZL/28fPFwgGqtGza8PZ38b3S3xCK35A47xteLDq+UaKkUNMlUmMa3ohiIUa
-         It1A==
+        bh=tLa3leTdMzh1rknpkLUWnm0PAOSso4HRgQA5K7IK6MM=;
+        b=e+TXEaCKvma4VGpnwpOaaFkLknHBGuDmEKybhDxTF83sGcUnhvMjnyd4FKoakznEV3
+         L+49y3mjg3y9zPjYOau5jDdMUzS1QeQc8EZHIuCnYCEvlu/U3MIphrqZ/uP5UmkwxxeL
+         +/myGc8pDphpzzZ7FTh/9hJKxPT9p26Ia2eDhTGk6iETFEiye/52lqU41RoUHrn74DWh
+         Z9MX2qar1Tdy5UlVzs8F5VgOHw+sA5zNyUhbhgEJg7yulcKmANZ/MdTHXU3HQZNR3/3z
+         jprq7sQ3GQvcxl+Y7QEUl59VHWT5WD2/UpeliEvsAr6IQyyxoheHA9cHYYw051xuDx5U
+         BC1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Xrwjt/kZB1RxVC21J+b2Rv85znrbxBlQ2xQVtgXaL8Q=;
-        b=W3f2ZS+xqc2NVEHbiTgooG4G6hLJNHMl/gf89r3w4JEk/RvVLyvp2mNrHNkJrgyla2
-         Jb6/ZqYogrl0dmYnuAsx3f0yxLUU3oSmEndfS8f6bNeWZfYBBwqiCgmFuoqC+ZHgXSg+
-         ztIebBT/s5HOGyb4DNw3z7QmkbF/CDA0zgYwrkzU5td6oZVLbmDn6RubvjAdAI5pwN3g
-         FhImr4tisiaRLSKohYROdb5N0uSoGnVN9vZxTL7ZnRQ92QR+Aenn5CpnBfhotkb1/h7p
-         AnhjY6nLwwtCY4IxMpT/cKRz20YH109Eww9dbTK1wxzmwsOZg7nYcGM0j5oFCLPC5tmu
-         cs0w==
-X-Gm-Message-State: AOAM532TyOwkJMvC8vlLec89tPuZOO9HenCQ+mN1TFSxD88YpkDISNbl
-        +ZAnkJSUkxsq2ZDZjlbZD5QSo99h+fVhqBabul8PHg==
-X-Google-Smtp-Source: ABdhPJwadRPiAKyB9trsaH6fnnn3nCM/AdtJrbuHIQFIQoIMgPzfKSpazXNSL6neJgetXYxyVdUJ7AZv1KZY68p3ujw=
-X-Received: by 2002:a67:2803:: with SMTP id o3mr1486279vso.36.1615926844137;
- Tue, 16 Mar 2021 13:34:04 -0700 (PDT)
+        bh=tLa3leTdMzh1rknpkLUWnm0PAOSso4HRgQA5K7IK6MM=;
+        b=f9Id5HEcwNSlm0EGwKOiJ6mvcxDR8SRNUdbTXSbgEftBu5D9k9l122zG8ECcX80DL/
+         /efQdYlijXqgEgdy/tr7GZkft6fPDsqrFqxjNetsORJow68oN43O659i2qj58guohjlW
+         iwYjv49KGz5H+BGQYkrNSOqzdaO5+QB1o+sL/ocZBX3KN0uBT/C3udc4kC9p4tILLkGY
+         srQ9roPA4njI7bqb9CKfjulMHR5srbVk3WXg+gtk4V52+DYPCYahG3dZbmQyKpSGp9N6
+         AUYNL8TEBpYoOcaxZPVCA9ENDCUILOir51Zc0on0zu7hTzAJ0Fd/Vb5NXhO8PwcRowCG
+         5DRQ==
+X-Gm-Message-State: AOAM533+IGfml/Juw6fuFBjkMfDcqUyZgSXKgHZrGdiybR93oGZYin+C
+        98uqk7499eWlHP1OUGEXP1ttkqwfNPG8Jwwf87obdQ==
+X-Google-Smtp-Source: ABdhPJwQSd1vGWBZTCJlQRmCK62EXrLyrNMXIW37KTTCmpBtYEbzwPtXhGB1KcQUzWMwYntm7fopfaHU36IppUu0V+Q=
+X-Received: by 2002:a67:db98:: with SMTP id f24mr1241866vsk.13.1615927484959;
+ Tue, 16 Mar 2021 13:44:44 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210312004919.669614-1-samitolvanen@google.com>
- <20210312004919.669614-8-samitolvanen@google.com> <202103111843.008B935F8@keescook>
-In-Reply-To: <202103111843.008B935F8@keescook>
+ <20210312004919.669614-18-samitolvanen@google.com> <202103111851.69AA6E59@keescook>
+In-Reply-To: <202103111851.69AA6E59@keescook>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 16 Mar 2021 13:33:53 -0700
-Message-ID: <CABCJKufMb_VFwXLkxjdvN6Y92v-Nc4Z+kThbi7SOkVgGhdFz+g@mail.gmail.com>
-Subject: Re: [PATCH 07/17] kallsyms: cfi: strip hashes from static functions
+Date:   Tue, 16 Mar 2021 13:44:33 -0700
+Message-ID: <CABCJKucpFHC-9rvT7uNF+E-Jh20fz69zdO49_4p8G_Sb634qmw@mail.gmail.com>
+Subject: Re: [PATCH 17/17] arm64: allow CONFIG_CFI_CLANG to be selected
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
@@ -78,20 +78,19 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 6:45 PM Kees Cook <keescook@chromium.org> wrote:
+On Thu, Mar 11, 2021 at 6:51 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> On Thu, Mar 11, 2021 at 04:49:09PM -0800, Sami Tolvanen wrote:
-> > With CONFIG_CFI_CLANG and ThinLTO, Clang appends a hash to the names
-> > of all static functions not marked __used. This can break userspace
-> > tools that don't expect the function name to change, so strip out the
-> > hash from the output.
+> On Thu, Mar 11, 2021 at 04:49:19PM -0800, Sami Tolvanen wrote:
+> > Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
 > >
-> > Suggested-by: Jack Pham <jackp@codeaurora.org>
 > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 >
-> (Is it possible we could end up with symbol name collisions? ... though
-> I guess we would have had collisions before?)
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> Random thought: the vDSO doesn't need special handling because it
+> doesn't make any indirect calls, yes?
 
-Yes, these are static functions, so name collisions have always been possible.
+That might be true, but we also filter out CC_FLAGS_LTO for the vDSO,
+which disables CFI as well.
 
 Sami
