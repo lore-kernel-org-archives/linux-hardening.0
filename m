@@ -2,66 +2,65 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA6BC433DB
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D9AC433DB
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 499E464F6C
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E72A64F7B
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 20:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237804AbhCPUEZ (ORCPT
+        id S231250AbhCPUei (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Mar 2021 16:04:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39932 "EHLO
+        Tue, 16 Mar 2021 16:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240767AbhCPUEG (ORCPT
+        with ESMTP id S231324AbhCPUeG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Mar 2021 16:04:06 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6316EC061764
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:03:59 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id z65so18880567vsz.12
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:03:59 -0700 (PDT)
+        Tue, 16 Mar 2021 16:34:06 -0400
+Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671D7C061763
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:34:05 -0700 (PDT)
+Received: by mail-vs1-xe33.google.com with SMTP id a15so18968571vsi.7
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 13:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TPipVrGjrQxxmOVNuIBzPVnIBTu28PmDlzKg2GNjQ4w=;
-        b=jLKEmdBUcOmVx8BH5FH0Ob7hA8LYXzgzXgnZMFC8OWxGFK5gLNFUvYq5UBkcaV/n41
-         CSl9uXuZ7eDzrE2Fbe0XkoiYcR4AJrhOccfdB9QfenGbjAk0C9jdHjDf9BCcATIjVYYg
-         owlni7aiSYTIvNMMwzfTN9SnEW+uBh/c1uegSZD6E9XDNabL1D08DeDVknFjQIudReZw
-         C8dYJ63NTGSs0myOcXqDM3Y4Jfv73XY4JW683l+9vzY3GBTBtHxd1eG46i28rLBGgtdU
-         pBOZB91O8b9qyb+3Glvu8Usyw/QlArRStp0AN1ymV9JeSR2HCQ23dAeQdVkjzQCDqhMF
-         7org==
+        bh=Xrwjt/kZB1RxVC21J+b2Rv85znrbxBlQ2xQVtgXaL8Q=;
+        b=po1Ywby6SU2VWLEUyZ5fNbrtGcCnRgD8+IOMID+GlXWQNN/3aWjrKopHkVgecJy3yJ
+         khd4+NGMXkdhaRRLq7oIG7sqA93cOIbt85nnBMxjdoTTob9e2Am24an2yQVbG1o0V5H8
+         7GVzuReTWAlfbF1CAQXu39fgGvH5SXGbKyaDGdlbOZBsDb8/16qHOkbAClu4ucjVnnpq
+         puCa2KojBGupypPIcNHF88u0nBc0j5j5wmxJB5QqbuzbcGhuC3bdhL35d8XTmOmAH5Ze
+         Rv/YonPUJZL/28fPFwgGqtGza8PZ38b3S3xCK35A47xteLDq+UaKkUNMlUmMa3ohiIUa
+         It1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TPipVrGjrQxxmOVNuIBzPVnIBTu28PmDlzKg2GNjQ4w=;
-        b=e0R3+t8slGOzNFB+ZIBUg202syvCey6dM5tKNDmrgKJIwaC8L8F+NR9fR+Jrv9kac4
-         4/PitjYJXkSCo4odQSVktlkm/t287Ahz3hulWFZtadWGEeOBiPN6WHOwSHd1qKSdNMgE
-         enb0RKWMR2UUD74Jq5lNxSqdTMI10sZqg9XI+IF5TdFnQAbkRBl9yiJlUN4HwduNeLq8
-         HKVvOWUUdUvR43TsBqj3j7x1oSrht5X/DtV9i4n8UWaJUWXqX4w6vHPJtw5LL1O1UN7I
-         1pDufIlWoAN8GAiSo2HxOiW6QAmYN+60UeogwPglNuTTUjt4++OxtFYDkq/vwhTK8S6q
-         1fPQ==
-X-Gm-Message-State: AOAM531BsO4tIfioXxU2gqbzTgdhtIOo0VyPyRNnNxGWADsy3lYWI8+4
-        BaMIOh66Ffuj1nerJ45QrOXjhR/C2yag5b4zH8sBxA==
-X-Google-Smtp-Source: ABdhPJw6NBRUZ2FvsaUUCbc1zBpRsZS9KPX4N/MlU3I48neHaroJmlDX4wAt9eD3uv9HshZ02/cu3wPksGKViLa1RVs=
-X-Received: by 2002:a67:db98:: with SMTP id f24mr1041028vsk.13.1615925037456;
- Tue, 16 Mar 2021 13:03:57 -0700 (PDT)
+        bh=Xrwjt/kZB1RxVC21J+b2Rv85znrbxBlQ2xQVtgXaL8Q=;
+        b=W3f2ZS+xqc2NVEHbiTgooG4G6hLJNHMl/gf89r3w4JEk/RvVLyvp2mNrHNkJrgyla2
+         Jb6/ZqYogrl0dmYnuAsx3f0yxLUU3oSmEndfS8f6bNeWZfYBBwqiCgmFuoqC+ZHgXSg+
+         ztIebBT/s5HOGyb4DNw3z7QmkbF/CDA0zgYwrkzU5td6oZVLbmDn6RubvjAdAI5pwN3g
+         FhImr4tisiaRLSKohYROdb5N0uSoGnVN9vZxTL7ZnRQ92QR+Aenn5CpnBfhotkb1/h7p
+         AnhjY6nLwwtCY4IxMpT/cKRz20YH109Eww9dbTK1wxzmwsOZg7nYcGM0j5oFCLPC5tmu
+         cs0w==
+X-Gm-Message-State: AOAM532TyOwkJMvC8vlLec89tPuZOO9HenCQ+mN1TFSxD88YpkDISNbl
+        +ZAnkJSUkxsq2ZDZjlbZD5QSo99h+fVhqBabul8PHg==
+X-Google-Smtp-Source: ABdhPJwadRPiAKyB9trsaH6fnnn3nCM/AdtJrbuHIQFIQoIMgPzfKSpazXNSL6neJgetXYxyVdUJ7AZv1KZY68p3ujw=
+X-Received: by 2002:a67:2803:: with SMTP id o3mr1486279vso.36.1615926844137;
+ Tue, 16 Mar 2021 13:34:04 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210312004919.669614-1-samitolvanen@google.com>
- <20210312004919.669614-5-samitolvanen@google.com> <202103111837.813997B4@keescook>
-In-Reply-To: <202103111837.813997B4@keescook>
+ <20210312004919.669614-8-samitolvanen@google.com> <202103111843.008B935F8@keescook>
+In-Reply-To: <202103111843.008B935F8@keescook>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 16 Mar 2021 13:03:45 -0700
-Message-ID: <CABCJKucW8dwXzEK-NZEHyQzN1wu-sGOiOqXFfR=C-PHvsn1+Dg@mail.gmail.com>
-Subject: Re: [PATCH 04/17] module: cfi: ensure __cfi_check alignment
+Date:   Tue, 16 Mar 2021 13:33:53 -0700
+Message-ID: <CABCJKufMb_VFwXLkxjdvN6Y92v-Nc4Z+kThbi7SOkVgGhdFz+g@mail.gmail.com>
+Subject: Re: [PATCH 07/17] kallsyms: cfi: strip hashes from static functions
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
@@ -79,77 +78,20 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 6:39 PM Kees Cook <keescook@chromium.org> wrote:
+On Thu, Mar 11, 2021 at 6:45 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> On Thu, Mar 11, 2021 at 04:49:06PM -0800, Sami Tolvanen wrote:
-> > CONFIG_CFI_CLANG_SHADOW assumes the __cfi_check() function is page
-> > aligned and at the beginning of the .text section. While Clang would
-> > normally align the function correctly, it fails to do so for modules
-> > with no executable code.
+> On Thu, Mar 11, 2021 at 04:49:09PM -0800, Sami Tolvanen wrote:
+> > With CONFIG_CFI_CLANG and ThinLTO, Clang appends a hash to the names
+> > of all static functions not marked __used. This can break userspace
+> > tools that don't expect the function name to change, so strip out the
+> > hash from the output.
 > >
-> > This change ensures the correct __cfi_check() location and
-> > alignment. It also discards the .eh_frame section, which Clang can
-> > generate with certain sanitizers, such as CFI.
-> >
-> > Link: https://bugs.llvm.org/show_bug.cgi?id=46293
+> > Suggested-by: Jack Pham <jackp@codeaurora.org>
 > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > ---
-> >  scripts/module.lds.S | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/scripts/module.lds.S b/scripts/module.lds.S
-> > index 168cd27e6122..552ddb084f76 100644
-> > --- a/scripts/module.lds.S
-> > +++ b/scripts/module.lds.S
-> > @@ -3,10 +3,13 @@
-> >   * Archs are free to supply their own linker scripts.  ld will
-> >   * combine them automatically.
-> >   */
-> > +#include <asm/page.h>
-> > +
-> >  SECTIONS {
-> >       /DISCARD/ : {
-> >               *(.discard)
-> >               *(.discard.*)
-> > +             *(.eh_frame)
-> >       }
-> >
-> >       __ksymtab               0 : { *(SORT(___ksymtab+*)) }
-> > @@ -40,7 +43,16 @@ SECTIONS {
-> >               *(.rodata..L*)
-> >       }
-> >
-> > -     .text : { *(.text .text.[0-9a-zA-Z_]*) }
-> > +#ifdef CONFIG_CFI_CLANG
-> > +     /*
-> > +      * With CFI_CLANG, ensure __cfi_check is at the beginning of the
-> > +      * .text section, and that the section is aligned to page size.
-> > +      */
-> > +     .text : ALIGN(PAGE_SIZE) {
-> > +             *(.text.__cfi_check)
-> > +             *(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
-> > +     }
-> > +#endif
 >
-> Whoops, I think this reverts to the default .text declaration when
-> CONFIG_CFI_CLANG is unset.
+> (Is it possible we could end up with symbol name collisions? ... though
+> I guess we would have had collisions before?)
 
-Oops, thanks for pointing this out. I'll fix it in v2.
-
-> I think the only thing that needs the ifdef is the ALIGN, yes? Perhaps
-> something like this?
->
-> #ifdef CONFIG_CFI_CLANG
-> # define ALIGN_CFI ALIGN(PAGE_SIZE)
-> #else
-> # define ALIGN_CFI
-> #endif
->
->         .text : ALIGN_CFI {
->                 *(.text.__cfi_check)
->                 *(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
->         }
-
-Agreed, that looks better.
+Yes, these are static functions, so name collisions have always been possible.
 
 Sami
