@@ -2,119 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-28.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CCBC43381
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 16:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204BBC433E9
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 17:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052B964F45
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 16:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0E464F07
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 17:12:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232254AbhCQQG0 (ORCPT
+        id S230486AbhCQRMN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Mar 2021 12:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47716 "EHLO
+        Wed, 17 Mar 2021 13:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232206AbhCQQF5 (ORCPT
+        with ESMTP id S230202AbhCQRL6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Mar 2021 12:05:57 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC90C06174A
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 09:05:56 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id q1so1344197vsq.6
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 09:05:56 -0700 (PDT)
+        Wed, 17 Mar 2021 13:11:58 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17FD6C06175F
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 10:11:58 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id t18so4087809lfl.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 10:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v2KL8kozO5erdsP6tss56cJzIGTvQeUixy1fwBfyf9E=;
-        b=L+sKGzrqRGkayjrIbx3UhJgUwtMmmzJiP7xVkweSApuxYoYxI4LeRgqnM7E2cVNFT2
-         L45AC/pwNU1fz3kkRnhcRp5Khlan5/Osp695ao4Zeq1DMR4U7/JYz+4t7MEdHv1+9qwG
-         zwxXB5v4s7x+iSvmDyAA8j6J5F/LEkxHHfS2qwphtbLFYhEDWUv95/kvZL3Trdu79AyT
-         NNZbI9fnUQcz8+iyHBFSLC3Wa55Q+r5QDMMipTfIOHdnYaK4LSCdSwlrvXeW0lhZ4AF5
-         WXtzd1I3zdoC7C//HbblJCanoQNzLOyg1wur/OGHsKtTZ3gw78PQ17RnksLC/ossk+fU
-         fcmg==
+         :cc:content-transfer-encoding;
+        bh=Jzrcb4snjLsfCfgL7oJZ6fFGa4UZcs/jVCaFF495Y9I=;
+        b=jhsTx4u3bX6dnuVOods1QVHxDvDRiLqaGF+PGS54cjNTi9eg9MypoGpTSGldjNDPn4
+         WpwX3M8TKZuSW/TAGQkVP9BS/k6wwj2WpG5ssv7ZXigAiiLALXIWU/T8oLqh32ji2/ph
+         8/G/6m3jCydCfwIjD8/cBRg+tvtl67RTRYxHJcP6LqnTbVgq/JeFyGr0I4Oam0Mf24fB
+         d8JRTAbUa0HJOsPpSaomCtqmexfQZUBd30in19OoWMB44of9N6YcEIZ/Iz6CrDL4Q7ba
+         kPCaUhZ69478SbyyCqVG5sRGOWAzYWe3ayXkl0fe5uDUJngVJmExKdU3bcAzmOM75kIs
+         xR+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v2KL8kozO5erdsP6tss56cJzIGTvQeUixy1fwBfyf9E=;
-        b=NMrN/6bOBaUpKV9j2CchVxK1TWmlQ0oq1EgYvd3tzxCqUTSBPrZOfjMODImlHcshz9
-         CuXfq1qi0kTaYPzPSSpzf+SSFhU79OMr2vSkgSZK58lwEC1ooMXVpaZfwvGbKlKgKmaL
-         ZnNQ/ah/MYx/DU2ofubbr8EDZRaXWv6GZ1Bbv6CcqXKOCnkpf3mDNBqd+SSWjz5JfJyW
-         uPk3VFgHw+kyKiGgHge9HAWHvj+E/H/8JZK300fGyv1doaxD3/3bjTJeG7zwFE0j7q+h
-         tGe41IRP5WQ0alLXPfIjBh3w29wf1bujJCxOcrmg8jEAaT7yHby0PkpJAc0Tqho3aU9I
-         6pQA==
-X-Gm-Message-State: AOAM533o11I2pXzAYCsSRNcPLBBCnc1VzxUJXWWkT8XfD6sZA3unwWZJ
-        bNns5Y+BUEmwNR+gnFohVTsHIgx+PQYOMgUydD3qNA==
-X-Google-Smtp-Source: ABdhPJxaHsoJ+bz7hvftL5zgwqX9DbDHuTiz3ir8dA5jWQPZop9wwdoJTujQjPIzJwP11rynhQBtRWijCPDqibIFRy4=
-X-Received: by 2002:a67:db98:: with SMTP id f24mr4264884vsk.13.1615997155510;
- Wed, 17 Mar 2021 09:05:55 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Jzrcb4snjLsfCfgL7oJZ6fFGa4UZcs/jVCaFF495Y9I=;
+        b=UjT3BOTa+qTbnZmopeqgO07Z471ou24BT+HEyrxg/ov2zjGfnK9f730GENA2GCQ9F4
+         8pYPrPc8AJZp9AldAG6LkDUJ2xq04vlxv9T1dRjyiLncK73XXDuGmB7ctSMrajSX9GTf
+         eO40W3Z7LblVkmHLDucsEdvRQmOI8p+vApLnSPOsMXyiJ1PUu6NurwjhrJlKY0EOHX7B
+         QRRDSIND442f2vWKG/z9uqOvqrKQhoh986RWjKk2QIjmQCgVvAgkLNp59jtdx0HWmAVq
+         J+5fsQ+Zps2drrw+ofHHL2gceCR2JgyT3zNk3kcLPhic/XtgyIXFeWx4EjvmZL5Iprda
+         2Xgw==
+X-Gm-Message-State: AOAM531VFFNYr7db1p/pnYTHIpfKQt6f3iB9yq3KpPbrZyRm0VBZksmf
+        kyebn0plT9ujgo2cFCLoCngezTOdj+pPO0+ZD89Udw==
+X-Google-Smtp-Source: ABdhPJwy1vfNQZQDVVE72SA1/HppIJ+ANP8e2YQaMqPQRoEHa1oHuTdWoG9xh3SZl2KCgAetkOywA6CCUAUxOlAF/5U=
+X-Received: by 2002:a05:6512:3481:: with SMTP id v1mr2853789lfr.193.1616001116260;
+ Wed, 17 Mar 2021 10:11:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210312004919.669614-1-samitolvanen@google.com>
- <20210312004919.669614-7-samitolvanen@google.com> <20210312061304.GA2321497@infradead.org>
-In-Reply-To: <20210312061304.GA2321497@infradead.org>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 17 Mar 2021 09:05:44 -0700
-Message-ID: <CABCJKud-wRfmRLFv71QQ6etUMFX6KXsErmL6u0dPH4SU8HS-BQ@mail.gmail.com>
-Subject: Re: [PATCH 06/17] kthread: cfi: disable callback pointer check with modules
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        bpf@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20210317064148.GA55123@embeddedor>
+In-Reply-To: <20210317064148.GA55123@embeddedor>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 17 Mar 2021 18:11:29 +0100
+Message-ID: <CAG48ez2RDqKwx=umOHjo_1mYyNQgzvcP=KOw1HgSo4Prs_VQDw@mail.gmail.com>
+Subject: Re: [PATCH][next] ixgbe: Fix out-of-bounds warning in ixgbe_host_interface_command()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        intel-wired-lan@lists.osuosl.org,
+        Network Development <netdev@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 10:13 PM Christoph Hellwig <hch@infradead.org> wrote:
+On Wed, Mar 17, 2021 at 8:43 AM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+> Fix the following out-of-bounds warning by replacing the one-element
+> array in an anonymous union with a pointer:
 >
-> On Thu, Mar 11, 2021 at 04:49:08PM -0800, Sami Tolvanen wrote:
-> > With CONFIG_CFI_CLANG, a callback function passed to
-> > __kthread_queue_delayed_work from a module points to a jump table
-> > entry defined in the module instead of the one used in the core
-> > kernel, which breaks function address equality in this check:
-> >
-> >   WARN_ON_ONCE(timer->function != kthread_delayed_work_timer_fn);
-> >
-> > Disable the warning when CFI and modules are enabled.
-> >
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > ---
-> >  kernel/kthread.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/kthread.c b/kernel/kthread.c
-> > index 1578973c5740..af5fee350586 100644
-> > --- a/kernel/kthread.c
-> > +++ b/kernel/kthread.c
-> > @@ -963,7 +963,13 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
-> >       struct timer_list *timer = &dwork->timer;
-> >       struct kthread_work *work = &dwork->work;
-> >
-> > -     WARN_ON_ONCE(timer->function != kthread_delayed_work_timer_fn);
-> > +     /*
-> > +      * With CFI, timer->function can point to a jump table entry in a module,
+>   CC [M]  drivers/net/ethernet/intel/ixgbe/ixgbe_common.o
+> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c: In function =E2=80=98ixg=
+be_host_interface_command=E2=80=99:
+> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:3729:13: warning: array s=
+ubscript 1 is above array bounds of =E2=80=98u32[1]=E2=80=99 {aka =E2=80=98=
+unsigned int[1]=E2=80=99} [-Warray-bounds]
+>  3729 |   bp->u32arr[bi] =3D IXGBE_READ_REG_ARRAY(hw, IXGBE_FLEX_MNG, bi)=
+;
+>       |   ~~~~~~~~~~^~~~
+> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:3682:7: note: while refer=
+encing =E2=80=98u32arr=E2=80=99
+>  3682 |   u32 u32arr[1];
+>       |       ^~~~~~
 >
-> you keep spewing this comment line that has exactly 81 characters and
-> thus badly messes up read it with a normal termina everywhere.
+> This helps with the ongoing efforts to globally enable -Warray-bounds.
 >
-> Maybe instead of fixing that in ever duplication hide the whole check in
-> a well documented helper (which would have to be a macro due to the
-> typing involved).
+> Notice that, the usual approach to fix these sorts of issues is to
+> replace the one-element array with a flexible-array member. However,
+> flexible arrays should not be used in unions. That, together with the
+> fact that the array notation is not being affected in any ways, is why
+> the pointer approach was chosen in this case.
+>
+> Link: https://github.com/KSPP/linux/issues/109
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/ne=
+t/ethernet/intel/ixgbe/ixgbe_common.c
+> index 62ddb452f862..bff3dc1af702 100644
+> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+> @@ -3679,7 +3679,7 @@ s32 ixgbe_host_interface_command(struct ixgbe_hw *h=
+w, void *buffer,
+>         u32 hdr_size =3D sizeof(struct ixgbe_hic_hdr);
+>         union {
+>                 struct ixgbe_hic_hdr hdr;
+> -               u32 u32arr[1];
+> +               u32 *u32arr;
+>         } *bp =3D buffer;
+>         u16 buf_len, dword_len;
+>         s32 status;
 
-Sure, that sounds cleaner. I'll add a helper macro in v2.
-
-Sami
+This looks bogus. An array is inline, a pointer points elsewhere -
+they're not interchangeable.
