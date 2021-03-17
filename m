@@ -2,132 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA075C433E0
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 20:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30F1C433DB
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 21:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C01864E90
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 20:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F6C64F07
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 21:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233406AbhCQUyp (ORCPT
+        id S230084AbhCQVbF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Mar 2021 16:54:45 -0400
-Received: from gateway23.websitewelcome.com ([192.185.48.71]:23254 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233269AbhCQUyH (ORCPT
+        Wed, 17 Mar 2021 17:31:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230406AbhCQVau (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Mar 2021 16:54:07 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 8EF4598A3
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 15:04:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id McOvlKD2rPkftMcOvl0YhN; Wed, 17 Mar 2021 15:04:17 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=D8jlraIWCpRmgNot1k3zhHVL68RtL3nZfNp9Ci7QXGc=; b=wT9iZ75rdYBI8q0oAJMJJ921tV
-        X0EyaqaeXNl6TqwJMi1jrUMMOrtW3DhSF/uGyfy3/jhSMgZitmrYjomKVxIO5FK3kLObYWJAegVyt
-        5SLq1nuTvl06FylCEIphqedo3Bq1aRhyQR7utbMXIyuCL5ll0r4H6Z//FxcVHp8FGJjbreapk4lbQ
-        LQggvdpZJm1f7H22S2tI055at3tf5h9Ydkml9VMFK10L5YuQhAp6lC3yt0zvv9au9+fE2mXz6fn9D
-        OyZAMSmJ9rumg0aApRXQGIPYBdss2ta4nCobrcGWmw9i7ce9i+3xhPq/qqEU0ZED1qAFoZoJK8aMC
-        QNfpSzdw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:59896 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lMcOu-003Fbj-P8; Wed, 17 Mar 2021 15:04:16 -0500
-Subject: Re: [Intel-wired-lan] [PATCH][next] ixgbe: Fix out-of-bounds warning
- in ixgbe_host_interface_command()
-To:     Jann Horn <jannh@google.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, linux-hardening@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20210317064148.GA55123@embeddedor>
- <CAG48ez2RDqKwx=umOHjo_1mYyNQgzvcP=KOw1HgSo4Prs_VQDw@mail.gmail.com>
- <3bd8d009-2ad2-c24d-5c34-5970c52502de@embeddedor.com>
- <CAG48ez2jr_8MbY_sNXfwvs7WsF-5f9j=U4-66dTcgXd2msr39A@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <03c013b8-4ddb-8e9f-af86-3c43cd746dbb@embeddedor.com>
-Date:   Wed, 17 Mar 2021 14:04:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Wed, 17 Mar 2021 17:30:50 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B7AC06174A
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 14:30:50 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id o11so65131pgs.4
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 14:30:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JcYcWHGmVNPGMhsAQmoPEgDMVOP5uAD1xio0p93SpaM=;
+        b=F2SGL0ebm1WN1AAXVrYPAflE0RRGNbDqRh5zWT6E/VDAvVhncHQW9rlh7inOf5XErV
+         eT01CBORU4s/hPImJxaRVOnYWJURa/EpWjUwCeBqyX1w70HMPLVFmoVGwzzKxMu/dyNs
+         /XSl3en+t+yMb+Vh+lIsSzolMrZwLO+UCWLC0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JcYcWHGmVNPGMhsAQmoPEgDMVOP5uAD1xio0p93SpaM=;
+        b=LNC3gndeUVAOYV5VXwPd6ORERbRrF393bj8zOCzJOkEiuD1LJ3MBVWumXelcOeSL7d
+         OlxUugWcHucGsBo7S/yzhL0WvASRI83Wp/xw+LXuqO+5JWkl6woZwWJiV/q+kovP6QjW
+         OG05snOAM0Own1G0MR+2V97FtcR3Sx//GQkPKTOCrYVRvxJba6IiRMXesowixxv0+Dxk
+         VugjhQXTuDkRi0bS0P/Z5Z/xe9YP2Gm0KexMbVWqCVYbQQ0cbXcMqidRZ+RJUPi4Kuib
+         g/2nQimHU1TXcJtWWzcnDkhiiEaFzJA5BZZ3c6O/ilIl7rhNfYeUecPbb+2JT97PA74v
+         lQBw==
+X-Gm-Message-State: AOAM532y3NtCyPsAugXJ6CzVf2v/5md2q1iq8zWzC+TdjQd71zEL+C4V
+        1HCblQr7t9vA/XBRTYkT8GMpLw==
+X-Google-Smtp-Source: ABdhPJxMlmgNJs/pSay3PORwaQblP+ABwko4SMVjMmgn6A+Fl8jjpE6/b/waFyC28qknA4CB+JWDTw==
+X-Received: by 2002:a05:6a00:78c:b029:1f5:d587:1701 with SMTP id g12-20020a056a00078cb02901f5d5871701mr889400pfu.59.1616016649608;
+        Wed, 17 Mar 2021 14:30:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x190sm42856pfx.166.2021.03.17.14.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Mar 2021 14:30:48 -0700 (PDT)
+Date:   Wed, 17 Mar 2021 14:30:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Adam Nichols <adam@grimm-co.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH v2] seq_file: Unconditionally use vmalloc for buffer
+Message-ID: <202103171425.CB0F4619A8@keescook>
+References: <20210315174851.622228-1-keescook@chromium.org>
+ <YFBs202BqG9uqify@dhcp22.suse.cz>
+ <202103161205.B2181BDE38@keescook>
+ <YFHxNT1Pwoslmhxq@dhcp22.suse.cz>
+ <YFIFY7mj65sStba1@kroah.com>
+ <YFIVwPWTo48ITkHs@dhcp22.suse.cz>
+ <YFIYrMVTC42boZ/Z@kroah.com>
+ <YFIeVLDsfBMa7fHW@dhcp22.suse.cz>
+ <YFIikaNixD57o3pk@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez2jr_8MbY_sNXfwvs7WsF-5f9j=U4-66dTcgXd2msr39A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lMcOu-003Fbj-P8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:59896
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YFIikaNixD57o3pk@kroah.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 3/17/21 13:57, Jann Horn wrote:
-
->>>> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
->>>> index 62ddb452f862..bff3dc1af702 100644
->>>> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
->>>> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
->>>> @@ -3679,7 +3679,7 @@ s32 ixgbe_host_interface_command(struct ixgbe_hw *hw, void *buffer,
->>>>         u32 hdr_size = sizeof(struct ixgbe_hic_hdr);
->>>>         union {
->>>>                 struct ixgbe_hic_hdr hdr;
->>>> -               u32 u32arr[1];
->>>> +               u32 *u32arr;
->>>>         } *bp = buffer;
->>>>         u16 buf_len, dword_len;
->>>>         s32 status;
->>>
->>> This looks bogus. An array is inline, a pointer points elsewhere -
->>> they're not interchangeable.
->>
->> Yep; but in this case these are the only places in the code where _u32arr_ is
->> being used:
->>
->> 3707         /* first pull in the header so we know the buffer length */
->> 3708         for (bi = 0; bi < dword_len; bi++) {
->> 3709                 bp->u32arr[bi] = IXGBE_READ_REG_ARRAY(hw, IXGBE_FLEX_MNG, bi);
->> 3710                 le32_to_cpus(&bp->u32arr[bi]);
->> 3711         }
+On Wed, Mar 17, 2021 at 04:38:57PM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Mar 17, 2021 at 04:20:52PM +0100, Michal Hocko wrote:
+> > On Wed 17-03-21 15:56:44, Greg KH wrote:
+> > > On Wed, Mar 17, 2021 at 03:44:16PM +0100, Michal Hocko wrote:
+> > > > On Wed 17-03-21 14:34:27, Greg KH wrote:
+> > > > > On Wed, Mar 17, 2021 at 01:08:21PM +0100, Michal Hocko wrote:
+> > > > > > Btw. I still have problems with the approach. seq_file is intended to
+> > > > > > provide safe way to dump values to the userspace. Sacrificing
+> > > > > > performance just because of some abuser seems like a wrong way to go as
+> > > > > > Al pointed out earlier. Can we simply stop the abuse and disallow to
+> > > > > > manipulate the buffer directly? I do realize this might be more tricky
+> > > > > > for reasons mentioned in other emails but this is definitely worth
+> > > > > > doing.
+> > > > > 
+> > > > > We have to provide a buffer to "write into" somehow, so what is the best
+> > > > > way to stop "abuse" like this?
+> > > > 
+> > > > What is wrong about using seq_* interface directly?
+> > > 
+> > > Right now every show() callback of sysfs would have to be changed :(
+> > 
+> > Is this really the case? Would it be too ugly to have an intermediate
+> > buffer and then seq_puts it into the seq file inside sysfs_kf_seq_show.
 > 
-> So now line 3709 means: Read a pointer from bp->u32arr (the value
-> being read from there is not actually a valid pointer), and write to
-> that pointer at offset `bi`. I don't see how that line could execute
-> without crashing.
+> Oh, good idea.
+> 
+> > Sure one copy more than necessary but it this shouldn't be a hot path or
+> > even visible on small strings. So that might be worth destroying an
+> > inherently dangerous seq API (seq_get_buf).
+> 
+> I'm all for that, let me see if I can carve out some time tomorrow to
+> try this out.
 
-Yeah; you're right. I see my confusion now. Apparently, there is no escape
-from allocating heap memory to fix this issue, as I was proposing in my
-last email.
+The trouble has been that C string APIs are just so impossibly fragile.
+We just get too many bugs with it, so we really do need to rewrite the
+callbacks to use seq_file, since it has a safe API.
 
-I really appreciate the feedback. Thanks!
---
-Gustavo
+I've been trying to write coccinelle scripts to do some of this
+refactoring, but I have not found a silver bullet. (This is why I've
+suggested adding the temporary "seq_show" and "seq_store" functions, so
+we can transition all the callbacks without a flag day.)
+
+> But, you don't get rid of the "ability" to have a driver write more than
+> a PAGE_SIZE into the buffer passed to it.  I guess I could be paranoid
+> and do some internal checks (allocate a bunch of memory and check for
+> overflow by hand), if this is something to really be concerned about...
+
+Besides the CFI prototype enforcement changes (which I can build into
+the new seq_show/seq_store callbacks), the buffer management is the
+primary issue: we just can't hand drivers a string (even with a length)
+because the C functions are terrible. e.g. just look at the snprintf vs
+scnprintf -- we constantly have to just build completely new API when
+what we need is a safe way (i.e. obfuscated away from the caller) to
+build a string. Luckily seq_file does this already, so leaning into that
+is good here.
+
+-- 
+Kees Cook
