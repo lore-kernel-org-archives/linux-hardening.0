@@ -2,96 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DBDC433DB
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 07:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E98FC433E0
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 10:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5479E64F8C
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 07:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE1964F38
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 10:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbhCQHmP (ORCPT
+        id S230080AbhCQKpD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Mar 2021 03:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
+        Wed, 17 Mar 2021 06:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229508AbhCQHmA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Mar 2021 03:42:00 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC80264F7E;
-        Wed, 17 Mar 2021 07:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615966920;
-        bh=EYGJXau039RZLyL38UOfqfxwXxGxY0dFocwb73Hllnk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=opVdpcE6BozNAt187Nv5guzqHXXdZIL/CO9KsOCPP+dnYbXVBfkRio46QrzoRNN5I
-         ff2B13XPhWGhGBU+y/1Mze5xfFUtQ0xX6GqdEJ9kz6C0j3Uzs/kXpX4aCQyAQ7UAQA
-         +JA3gCpKajN50U1WUNyxpZQPBQo4wElcoI1WDUUJEuRv6U0CnK71rEAnCEaAGD+Mz9
-         dTzMhpkf+mV+9FTbTvnGZ39gZTorw6uxRKTNzFQLmYtwDjslvjRgBe0C8C23nKT19r
-         LTOcCn/Ku7OnvZ5+akmumHxLLF+H+7HYAxEy7pIW8nf+ha442kF1gbTACRyb6RFCGr
-         mMRYGrWLP5APg==
-Date:   Wed, 17 Mar 2021 01:41:48 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ixgbe: Fix out-of-bounds warning in
- ixgbe_host_interface_command()
-Message-ID: <20210317064148.GA55123@embeddedor>
+        id S229897AbhCQKof (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 17 Mar 2021 06:44:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 10B8F64F21;
+        Wed, 17 Mar 2021 10:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1615977874;
+        bh=ULh+I95lTl58eRFoikqOwheMexlwTAUFAS3ah2duRCc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iaju3pJvbW1Yp5JJrfVdlqY/+2HojAOyx7dBjT730LNyaWYjoRiYoOwvcRLuOsumb
+         2OjMwM5e6Np6YPOnkM5wHXOnaU0MpDZRv6Y4whWQnJaqzvnb30zWn8EZcbLN5+hfNV
+         HJDC3B7MZAq3EA3f1E+g4QN3R/YPwq1oHFXJ3QjQ=
+Date:   Wed, 17 Mar 2021 11:44:31 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Adam Nichols <adam@grimm-co.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] seq_file: Unconditionally use vmalloc for buffer
+Message-ID: <YFHdj+/65XO78J06@kroah.com>
+References: <20210315174851.622228-1-keescook@chromium.org>
+ <YE+oZkSVNyaONMd9@zeniv-ca.linux.org.uk>
+ <202103151336.78360DB34D@keescook>
+ <YFBdQmT64c+2uBRI@kroah.com>
+ <YFCn4ERBMGoqxvUU@zeniv-ca.linux.org.uk>
+ <202103161208.22FC78C8C@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <202103161208.22FC78C8C@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the following out-of-bounds warning by replacing the one-element
-array in an anonymous union with a pointer:
+On Tue, Mar 16, 2021 at 12:18:33PM -0700, Kees Cook wrote:
+> On Tue, Mar 16, 2021 at 12:43:12PM +0000, Al Viro wrote:
+> > On Tue, Mar 16, 2021 at 08:24:50AM +0100, Greg Kroah-Hartman wrote:
+> > 
+> > > > Completely agreed. seq_get_buf() should be totally ripped out.
+> > > > Unfortunately, this is going to be a long road because of sysfs's ATTR
+> > > > stuff, there are something like 5000 callers, and the entire API was
+> > > > designed to avoid refactoring all those callers from
+> > > > sysfs_kf_seq_show().
+> > > 
+> > > What is wrong with the sysfs ATTR stuff?  That should make it so that we
+> > > do not have to change any caller for any specific change like this, why
+> > > can't sysfs or kernfs handle it automatically?
+> > 
+> > Hard to tell, since that would require _finding_ the sodding ->show()
+> > instances first.  Good luck with that, seeing that most of those appear
+> > to come from templates-done-with-cpp...
+> 
+> I *think* I can get coccinelle to find them all, but my brute-force
+> approach was to just do a debug build changing the ATTR macro to be
+> typed, and changing the name of "show" and "store" in kobj_attribute
+> (to make the compiler find them all).
+> 
+> > AFAICS, Kees wants to protect against ->show() instances stomping beyond
+> > the page size.  What I don't get is what do you get from using seq_file
+> > if you insist on doing raw access to the buffer rather than using
+> > seq_printf() and friends.  What's the point?
+> 
+> To me, it looks like the kernfs/sysfs API happened around the time
+> "container_of" was gaining ground. It's trying to do the same thing
+> the "modern" callbacks do with finding a pointer from another, but it
+> did so by making sure everything had a 0 offset and an identical
+> beginning structure layout _but changed prototypes_.
+> 
+> It's the changed prototypes that freaks out CFI.
+> 
+> My current plan consists of these steps:
+> 
+> - add two new callbacks to the kobj_attribute struct (and its clones):
+>   "seq_show" and "seq_store", which will pass in the seq_file.
 
-  CC [M]  drivers/net/ethernet/intel/ixgbe/ixgbe_common.o
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c: In function ‘ixgbe_host_interface_command’:
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:3729:13: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
- 3729 |   bp->u32arr[bi] = IXGBE_READ_REG_ARRAY(hw, IXGBE_FLEX_MNG, bi);
-      |   ~~~~~~~~~~^~~~
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:3682:7: note: while referencing ‘u32arr’
- 3682 |   u32 u32arr[1];
-      |       ^~~~~~
+Ick, why?  Why should the callback care about seq_file?  Shouldn't any
+wrapper logic in the kobject code be able to handle this automatically?
 
-This helps with the ongoing efforts to globally enable -Warray-bounds.
+> - convert all callbacks to kobject/kboj_attribute and use container_of()
+>   to find their respective pointers.
 
-Notice that, the usual approach to fix these sorts of issues is to
-replace the one-element array with a flexible-array member. However,
-flexible arrays should not be used in unions. That, together with the
-fact that the array notation is not being affected in any ways, is why
-the pointer approach was chosen in this case.
+Which callbacks are you talking about here?
 
-Link: https://github.com/KSPP/linux/issues/109
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> - remove "show" and "store"
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-index 62ddb452f862..bff3dc1af702 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
-@@ -3679,7 +3679,7 @@ s32 ixgbe_host_interface_command(struct ixgbe_hw *hw, void *buffer,
- 	u32 hdr_size = sizeof(struct ixgbe_hic_hdr);
- 	union {
- 		struct ixgbe_hic_hdr hdr;
--		u32 u32arr[1];
-+		u32 *u32arr;
- 	} *bp = buffer;
- 	u16 buf_len, dword_len;
- 	s32 status;
--- 
-2.27.0
+Hah!
 
+> - remove external use of seq_get_buf().
+
+So is this the main goal?  I still don't understand the sequence file
+problem here, what am I missing (becides the CFI stuff that is)?
+
+> The first two steps require thousands of lines of code changed, so
+> I'm going to try to minimize it by trying to do as many conversions as
+> possible to the appropriate helpers first. e.g. DEVICE_ATTR_INT exists,
+> but there are only 2 users, yet there appears to be something like 500
+> DEVICE_ATTR callers that have an open-coded '%d':
+> 
+> $ git grep -B10 '\bDEVICE_ATTR' | grep '%d' | wc -l
+> 530
+
+That's going to be hard, and a pain, and I really doubt all that useful
+as I still can't figure out why this is needed...
+
+thanks,
+
+greg k-h
