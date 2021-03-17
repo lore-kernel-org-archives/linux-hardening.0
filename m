@@ -2,107 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259D9C433E6
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 15:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CCBC43381
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 16:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E180A64F8B
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 15:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052B964F45
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 16:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232133AbhCQPyF (ORCPT
+        id S232254AbhCQQG0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Mar 2021 11:54:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232185AbhCQPxm (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Mar 2021 11:53:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AAAD264F6E;
-        Wed, 17 Mar 2021 14:56:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1615993007;
-        bh=gDQD75TMDCBqwGcS8/6DWiM6ZUznIP9nwwkyyF+j8Rg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LOygU8AGnawuGblKbYnL84HONQ4oOWp27ZbL+v/iwlI+fVmNe/sneHFNCpdp02Vt7
-         yNkau1/uydbSwxRVEj950IpuMoX6LPbdLK+sgqHolhjCUEwIONczarsdFyimlllvQr
-         ZLKe0Olm2ALbYRhoaL4WN++JvYdgGlofrUvwI88U=
-Date:   Wed, 17 Mar 2021 15:56:44 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Adam Nichols <adam@grimm-co.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH v2] seq_file: Unconditionally use vmalloc for buffer
-Message-ID: <YFIYrMVTC42boZ/Z@kroah.com>
-References: <20210315174851.622228-1-keescook@chromium.org>
- <YFBs202BqG9uqify@dhcp22.suse.cz>
- <202103161205.B2181BDE38@keescook>
- <YFHxNT1Pwoslmhxq@dhcp22.suse.cz>
- <YFIFY7mj65sStba1@kroah.com>
- <YFIVwPWTo48ITkHs@dhcp22.suse.cz>
+        Wed, 17 Mar 2021 12:06:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232206AbhCQQF5 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 17 Mar 2021 12:05:57 -0400
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC90C06174A
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 09:05:56 -0700 (PDT)
+Received: by mail-vs1-xe34.google.com with SMTP id q1so1344197vsq.6
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Mar 2021 09:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v2KL8kozO5erdsP6tss56cJzIGTvQeUixy1fwBfyf9E=;
+        b=L+sKGzrqRGkayjrIbx3UhJgUwtMmmzJiP7xVkweSApuxYoYxI4LeRgqnM7E2cVNFT2
+         L45AC/pwNU1fz3kkRnhcRp5Khlan5/Osp695ao4Zeq1DMR4U7/JYz+4t7MEdHv1+9qwG
+         zwxXB5v4s7x+iSvmDyAA8j6J5F/LEkxHHfS2qwphtbLFYhEDWUv95/kvZL3Trdu79AyT
+         NNZbI9fnUQcz8+iyHBFSLC3Wa55Q+r5QDMMipTfIOHdnYaK4LSCdSwlrvXeW0lhZ4AF5
+         WXtzd1I3zdoC7C//HbblJCanoQNzLOyg1wur/OGHsKtTZ3gw78PQ17RnksLC/ossk+fU
+         fcmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v2KL8kozO5erdsP6tss56cJzIGTvQeUixy1fwBfyf9E=;
+        b=NMrN/6bOBaUpKV9j2CchVxK1TWmlQ0oq1EgYvd3tzxCqUTSBPrZOfjMODImlHcshz9
+         CuXfq1qi0kTaYPzPSSpzf+SSFhU79OMr2vSkgSZK58lwEC1ooMXVpaZfwvGbKlKgKmaL
+         ZnNQ/ah/MYx/DU2ofubbr8EDZRaXWv6GZ1Bbv6CcqXKOCnkpf3mDNBqd+SSWjz5JfJyW
+         uPk3VFgHw+kyKiGgHge9HAWHvj+E/H/8JZK300fGyv1doaxD3/3bjTJeG7zwFE0j7q+h
+         tGe41IRP5WQ0alLXPfIjBh3w29wf1bujJCxOcrmg8jEAaT7yHby0PkpJAc0Tqho3aU9I
+         6pQA==
+X-Gm-Message-State: AOAM533o11I2pXzAYCsSRNcPLBBCnc1VzxUJXWWkT8XfD6sZA3unwWZJ
+        bNns5Y+BUEmwNR+gnFohVTsHIgx+PQYOMgUydD3qNA==
+X-Google-Smtp-Source: ABdhPJxaHsoJ+bz7hvftL5zgwqX9DbDHuTiz3ir8dA5jWQPZop9wwdoJTujQjPIzJwP11rynhQBtRWijCPDqibIFRy4=
+X-Received: by 2002:a67:db98:: with SMTP id f24mr4264884vsk.13.1615997155510;
+ Wed, 17 Mar 2021 09:05:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YFIVwPWTo48ITkHs@dhcp22.suse.cz>
+References: <20210312004919.669614-1-samitolvanen@google.com>
+ <20210312004919.669614-7-samitolvanen@google.com> <20210312061304.GA2321497@infradead.org>
+In-Reply-To: <20210312061304.GA2321497@infradead.org>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Wed, 17 Mar 2021 09:05:44 -0700
+Message-ID: <CABCJKud-wRfmRLFv71QQ6etUMFX6KXsErmL6u0dPH4SU8HS-BQ@mail.gmail.com>
+Subject: Re: [PATCH 06/17] kthread: cfi: disable callback pointer check with modules
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        bpf@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 03:44:16PM +0100, Michal Hocko wrote:
-> On Wed 17-03-21 14:34:27, Greg KH wrote:
-> > On Wed, Mar 17, 2021 at 01:08:21PM +0100, Michal Hocko wrote:
-> > > Btw. I still have problems with the approach. seq_file is intended to
-> > > provide safe way to dump values to the userspace. Sacrificing
-> > > performance just because of some abuser seems like a wrong way to go as
-> > > Al pointed out earlier. Can we simply stop the abuse and disallow to
-> > > manipulate the buffer directly? I do realize this might be more tricky
-> > > for reasons mentioned in other emails but this is definitely worth
-> > > doing.
-> > 
-> > We have to provide a buffer to "write into" somehow, so what is the best
-> > way to stop "abuse" like this?
-> 
-> What is wrong about using seq_* interface directly?
+On Thu, Mar 11, 2021 at 10:13 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Thu, Mar 11, 2021 at 04:49:08PM -0800, Sami Tolvanen wrote:
+> > With CONFIG_CFI_CLANG, a callback function passed to
+> > __kthread_queue_delayed_work from a module points to a jump table
+> > entry defined in the module instead of the one used in the core
+> > kernel, which breaks function address equality in this check:
+> >
+> >   WARN_ON_ONCE(timer->function != kthread_delayed_work_timer_fn);
+> >
+> > Disable the warning when CFI and modules are enabled.
+> >
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  kernel/kthread.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/kthread.c b/kernel/kthread.c
+> > index 1578973c5740..af5fee350586 100644
+> > --- a/kernel/kthread.c
+> > +++ b/kernel/kthread.c
+> > @@ -963,7 +963,13 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
+> >       struct timer_list *timer = &dwork->timer;
+> >       struct kthread_work *work = &dwork->work;
+> >
+> > -     WARN_ON_ONCE(timer->function != kthread_delayed_work_timer_fn);
+> > +     /*
+> > +      * With CFI, timer->function can point to a jump table entry in a module,
+>
+> you keep spewing this comment line that has exactly 81 characters and
+> thus badly messes up read it with a normal termina everywhere.
+>
+> Maybe instead of fixing that in ever duplication hide the whole check in
+> a well documented helper (which would have to be a macro due to the
+> typing involved).
 
-Right now every show() callback of sysfs would have to be changed :(
+Sure, that sounds cleaner. I'll add a helper macro in v2.
 
-> > Right now, we do have helper functions, sysfs_emit(), that know to stop
-> > the overflow of the buffer size, but porting the whole kernel to them is
-> > going to take a bunch of churn, for almost no real benefit except a
-> > potential random driver that might be doing bad things here that we have
-> > not noticed yet.
-> 
-> I am not familiar with sysfs, I just got lost in all the indirection but
-> replacing buffer by the seq_file and operate on that should be possible,
-> no?
-
-sysfs files should be very simple and easy, and have a single value
-being written to userspace.  I guess seq_printf() does handle the issue
-of "big buffers", but there should not be a big buffer here to worry
-about in the first place (yes, there was a bug where a driver took
-unchecked data and sent it to userspace overflowing the buffer which
-started this whole thread...)
-
-I guess Kees wants to change all show functions to use the seq_ api,
-which now makes a bit more sense, but still seems like a huge overkill.
-But I now understand the idea here, the buffer management is handled by
-the core kernel and overflows are impossible.
-
-A "simpler" fix is to keep the api the same today, and just "force"
-everyone to use sysfs_emit() which does the length checking
-automatically.
-
-I don't know, it all depends on how much effort we want to put into the
-"drivers can not do stupid things because we prevent them from it"
-type of work here...
-
-thanks,
-
-greg k-h
+Sami
