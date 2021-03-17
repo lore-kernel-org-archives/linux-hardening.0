@@ -2,103 +2,167 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCB4C433E9
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 23:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E94C433E0
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 03:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A755764F4F
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Mar 2021 23:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F3864F97
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Mar 2021 03:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbhCPXC7 (ORCPT
+        id S229806AbhCQDdA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Mar 2021 19:02:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbhCPXC4 (ORCPT
+        Tue, 16 Mar 2021 23:33:00 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53188 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229791AbhCQDcx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Mar 2021 19:02:56 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B269C061764
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 16:02:56 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id n10so23622060pgl.10
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Mar 2021 16:02:56 -0700 (PDT)
+        Tue, 16 Mar 2021 23:32:53 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12H3NpNh008154;
+        Wed, 17 Mar 2021 03:32:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2020-01-29;
+ bh=pnydDBza8X3smmQxQKi4tvZMNbnaLWQf0mPegi7E7z8=;
+ b=les5RsrN1tfJpbuvgeoTIZMixANNfLetBPA8+934sICoeVHU6FJHMuKMIFzh1HuiXyz7
+ tyPG07FpbyjpNLa3obssgEQz+tUD67LienAlMTxXupERTbXxwxZ6fLLHGfnKH1YaSaeH
+ L6aprmL5HEFAcwMVhHbuTR464/9ivA1Xb/gwe/Eotk1S0KUDuPHRQMC/otdEOyFC0MUQ
+ PFXBpaZ6Vj3bXBOFdL0HYeHP3Hk4kahR4nisL1qi/lDvmdO8cqoqFertv1TOySrBnSfI
+ h7MJAjzhM9ztOMuoqnaVH3ffk9J1KSmTS2/Y9v20RnUhLGiXfC04C4PL1vn0KVqVytzo aA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 378p1ntms8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Mar 2021 03:32:49 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12H3QBGP195576;
+        Wed, 17 Mar 2021 03:32:49 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
+        by userp3030.oracle.com with ESMTP id 3797b0xrrj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Mar 2021 03:32:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VPKVVWttgraPg+pG5IOM16IPeqClXNLuxqJC8k6cVd2di+M3BIG3vjXANgywTi/fFCm1Q1TlR6O26J7fSVwOWtc/jpG1pCtUDH59Qz4cuGhuD0jZx2+9RytWAKAD1r3fszmLdCFmgCOgZ9aorgp95sLcUzUGPJEWbnlBmjS3sIDgJkohBR87tMcizxwsmcw+/BJGmJGRJ8UhCdaXhgJVWNfKxX9UFgO5cHgyaL+eyOF/xmlD4SOjIUKYQ+pmbJnSAU/BcOcBaQA6GZ4l0fjYKrxUJX0u9H5sgh4IxBUER5WhdVH96MxvlH+KCjjlOmGys5JobRv2E2CbuW/DXvAE2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pnydDBza8X3smmQxQKi4tvZMNbnaLWQf0mPegi7E7z8=;
+ b=itnruLHYH29N+0WJscwggK1+gZzfMt7EpcfNgbM1vdCPBU3ebIk36UFUHjjKIpyvFcxzCGe7luA4S1H3PngTpDycSuKHjFAIpo7bzeGFcINToFWE9luGzacQTSSNcryKZAWcAjm97W5wzxoio4ggUsxvx2M3Mu8IQyeQup71KGJ2WCnFw/I/4Mz7snReUn4sIi69MEcFgxIIexHgwvDf8syFNlZ+vi96c7dPMHomgrBztexnqQp42FuWyQvkh9+GgUnRRkPgPVvjlKsH2gqZsihDCyJW2NX4vOzWWilLWjX0kQypogVrqHySzWpOw9XM5PW2U05yqvlF+BqJCf0Avw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kXkZPUcTv+BH4LFKsPIbe+jirsdRWJGrIqCSnte4+pk=;
-        b=n7z/7n8BAe+C7mTkXJHeaNKkrmAd3FDbaONpZvyNMxkhbVT0HhlGCasczqYzg9skM7
-         qBBK04FrNjFr5vEVg8tejTGS6nhlakf8ACj8v81qEm6NbXbdnWSH6RNFIfGot//y7tiV
-         m7X88W7uUbP5jCvFAuxcc3DEyOCGAo9oImDDk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kXkZPUcTv+BH4LFKsPIbe+jirsdRWJGrIqCSnte4+pk=;
-        b=Gr4aLDC/2lSUG6ZXGK+Usy694Jg1YFVxO0VcGQ2mYqsew1PUaKHPcjLTHKu7pBV7Pd
-         FzwWR9tx3ti3quTVfDyLOU2UHXP6/whDfihRp3AbewkizKG+4bmLOVZAaX+eryH5sMVO
-         Zre202zjA20NlJExT7HkyKHB9vrQMp4BzZ559nror5bjW6TfUfxxNaxE0kt8zW3vlbdl
-         cEJKH+W0GQWPAlsij+mA5tbvkshb+wdEJIiM+bAQo8dmBGS2s4OLClgUcLelw78y5kD3
-         i/b3VxdOprDySaknIcEt5scG7N4d9KiCYrCvj27tgdXziQpnHNEaWQE7CMnzqv8IypWp
-         Vq2A==
-X-Gm-Message-State: AOAM531t16DOpMOvn0vDmLhwy+K7/lPLX8Ub9FkDCBzPhhI71Lm4YQQT
-        rzan7229HG6cVeGgD/dkrFcqCw==
-X-Google-Smtp-Source: ABdhPJxUsDSC7HTflCNgrlhXH8m0bkwMud4JF2D4um9D+38w6bFYcJnCSdxm5YlWmyN87vHVWtDfEA==
-X-Received: by 2002:a63:4652:: with SMTP id v18mr42886pgk.87.1615935775940;
-        Tue, 16 Mar 2021 16:02:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id mp1sm372749pjb.48.2021.03.16.16.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Mar 2021 16:02:54 -0700 (PDT)
-Date:   Tue, 16 Mar 2021 16:02:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        bpf@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 17/17] arm64: allow CONFIG_CFI_CLANG to be selected
-Message-ID: <202103161602.6DB8AC31FA@keescook>
-References: <20210312004919.669614-1-samitolvanen@google.com>
- <20210312004919.669614-18-samitolvanen@google.com>
- <202103111851.69AA6E59@keescook>
- <CABCJKucpFHC-9rvT7uNF+E-Jh20fz69zdO49_4p8G_Sb634qmw@mail.gmail.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pnydDBza8X3smmQxQKi4tvZMNbnaLWQf0mPegi7E7z8=;
+ b=dVEeSXsOhqFIHjyGSLTxRMMUriSvWIxYzJd2lM7xbATHItpSWP3+Ndh+QbrcsHvviVQ/tm/ScbKNwOWwSQN8/OPnhiK6epVAalwo1wZpZ13PhIdeHYPoj2JVItYyRTUIQWUdQW73qVyVavtDcGRCozZaZm1+gy4PgPzsV8bC3TM=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oracle.com;
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by PH0PR10MB4726.namprd10.prod.outlook.com (2603:10b6:510:3d::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Wed, 17 Mar
+ 2021 03:32:46 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::dc39:c9fa:7365:8c8e]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::dc39:c9fa:7365:8c8e%5]) with mapi id 15.20.3933.032; Wed, 17 Mar 2021
+ 03:32:46 +0000
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: mpt3sas: Replace unnecessary dynamic
+ allocation with a static one
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1eege1mlt.fsf@ca-mkp.ca.oracle.com>
+References: <20210310235951.GA108661@embeddedor>
+Date:   Tue, 16 Mar 2021 23:32:41 -0400
+In-Reply-To: <20210310235951.GA108661@embeddedor> (Gustavo A. R. Silva's
+        message of "Wed, 10 Mar 2021 17:59:51 -0600")
+Content-Type: text/plain
+X-Originating-IP: [138.3.200.58]
+X-ClientProxiedBy: CH2PR12CA0020.namprd12.prod.outlook.com
+ (2603:10b6:610:57::30) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABCJKucpFHC-9rvT7uNF+E-Jh20fz69zdO49_4p8G_Sb634qmw@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ca-mkp.ca.oracle.com (138.3.200.58) by CH2PR12CA0020.namprd12.prod.outlook.com (2603:10b6:610:57::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.32 via Frontend Transport; Wed, 17 Mar 2021 03:32:45 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7aacd207-01e9-4533-56ca-08d8e8f554cd
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4726:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <PH0PR10MB4726EA53DED7F66061B95B7C8E6A9@PH0PR10MB4726.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /4ZI6HsXegd0Mrqs8e+QHvA9KUyQ8o7JsFu2uRKvWINM62TABXf2sJbqbAVgaOcwcbe+VgGTnZSBsop2QrKQ2BM1PH1JZuEg1USOCptIdjyLEOtM2pB0rL7idqJnfGRl05Cu70JMe6PG/e9/FgKpTX5WNDXSXCvm3i2L56xoOTzkLzeqQnQ9qyNwLWrDa5AqBw9GgQf4rxlUu4xHJsDy1UP4DX5Ex+E9tQI3h4FJPAoDQ+qbO1KF8sAMwtNIDL8H1oO28B2Welne3hG9wXuWz+0+OREYIfG5Ia3rheqWVUahB6iClc6kjK2rGMvPzKkhiSGUmkG0ygcCc9XLqq8rXmAPx7+LCUD8NltdVeaCN5FWsXDWhJw/XaMVd30WNLodySWr/xT/ehfPGSWQTem+ivj/d4J0m87BLAE0iMxRn5JcwVv/AHQ+3JH+dj+TH9kqM3QsMHxZ+SUyI++2QBGd//y08HFtseI1cEgNer5x+jndI0A6Jy/QXVbZrdm1J9RzTV+YEuvaS9O3S6KhDihkk3p/abWTdyF9hwml3khmWFLHoIIWPkn3oYvABrQs+8cPI0APR5LNbwE8KciLCRzGMSqyG3uLHZqbALPy1X4X/0o=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(39860400002)(396003)(376002)(366004)(316002)(6666004)(54906003)(5660300002)(478600001)(66946007)(4326008)(66556008)(66476007)(26005)(2906002)(7696005)(6916009)(8936002)(558084003)(52116002)(956004)(186003)(16526019)(55016002)(86362001)(8676002)(36916002)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?2MR2BQBzjBe3PvpSX8Vqj8GneHDNlEzPS+5r3EQDHwgqV1FG0/y3AaOJT+lv?=
+ =?us-ascii?Q?bp/X5vXM76mzeNnk4fIDQ03NlAEMrCFTza2qtHaO6hbvXIIpWOQZR+0xhlPr?=
+ =?us-ascii?Q?awJxs5jVOjWnft2cIqVrISpRTn5mIuzs0vqFp51xZj57hUcLwgYAzkNNbAXd?=
+ =?us-ascii?Q?lrBJCalZhG0t2EzqG1kMhpRf8DLwnc49M0Rdm3MicsWh7vxscbzG2DsJ/AtV?=
+ =?us-ascii?Q?m6LJ/rwRT2yC8tt6f88/+jP/TdOzFOwFL82wpkc3DNUmMqGvGmZbbcepltiZ?=
+ =?us-ascii?Q?LUDAO7/1nlilqpXO1R8CS8If9e3zWpvdXW1AmLEa+lceyFTq5CvDyUgZqS7v?=
+ =?us-ascii?Q?t9PRo+YO5tC8s20V+IsZWxrkLYIMRQNneb5rVBrLRegfdRyBJjHBLf7HVJOS?=
+ =?us-ascii?Q?7Li5Cp2j8VRWFY8bNCY0IYz3whSx9J0KzFZ+AS//U5Vpu3/LGJmYlpg1UlH/?=
+ =?us-ascii?Q?iXeiagqSdUXxFDnNYRRivFuyEXAWhKWZhip6Pbq6h+WnGyty+WtGjmQbaivd?=
+ =?us-ascii?Q?H4MPyzFuQRtPmhdwrQ5nS1xNCmhZgoGCrtxDOL5Iv6FlBB01/ci4GlFTTAq0?=
+ =?us-ascii?Q?PnIvhx/iIHjuylvVBqSh+fQ99NHwbpT8t1mv2JDOiGIWcF7884KOkWLdJjjb?=
+ =?us-ascii?Q?cL7JsjTHESmdPd40E81CkHA5KZ9gxP0AJABntmcCC8v+MqecLNkGlYq6u03E?=
+ =?us-ascii?Q?0fQC8e9Gy3SEWYOe2Z5MjNtCdVxJbI6smmAyQ7s0A2GSk7IWwpZOaH0XI515?=
+ =?us-ascii?Q?V5q7S/09s73FLksUMN5K9Kf2ZKLGbd2IA5u7AsWQFe8HXQITLi4weIyM1u6P?=
+ =?us-ascii?Q?1QsIRk+m27U21Xknos0s3pMHEZ1yMfWNIEPN91Oj+tf+CauaTSLbB6kRb7j9?=
+ =?us-ascii?Q?0lTvRZsqITWpWV8ZSQgSmdpCdQgNA7/KF+N20PeH4yBvBnniFqaltZ3ImF/v?=
+ =?us-ascii?Q?PgsyPrSyBMszzHst03DIg+goTT9EbxjVMglAbFFHjgrLsjWxfNjxAT7BhcDG?=
+ =?us-ascii?Q?YP/94bOI0xB6g2OJjapHNt2sC8UVJU+zBtdvAHejJfRhdabQbkl+AqDasr24?=
+ =?us-ascii?Q?CAThhdAsHOqzVwLSH1RRk3Wv4d8RYHCr+HXeg1svU0XY3HfBtgGTpFLmxAAx?=
+ =?us-ascii?Q?6ejfPn/6tOIfWMHPBwt/JRHEbM13a+Eennq0G/jBmk5dPDWKPj4OnYwhnBPO?=
+ =?us-ascii?Q?hH+yrb59/caqzZJ4zDJ3qCY6Yb9uDoO8wdCwCPXHt975e7n8oUx2P+OTMB+P?=
+ =?us-ascii?Q?I4kEUpCxBXU+hVFpcT32URzg7SEKV5v3gUmAnboIw+yrcCYYOkFuCKPabaBI?=
+ =?us-ascii?Q?vyGtgIgc3585L3hGkcSrQg/9?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7aacd207-01e9-4533-56ca-08d8e8f554cd
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2021 03:32:46.1444
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aiSJYLuXwytUjFo4P6vOsi+zonzJl43l6WBfIdJwkSxGBpXs9mTNmnppvbcFpfE1+dVa8AEAekgcJZkf/kpcPQEtXKRmOxDM46rWX0rYb40=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4726
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9925 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 bulkscore=0
+ malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103170025
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9925 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0 adultscore=0
+ spamscore=0 clxscore=1011 phishscore=0 malwarescore=0 priorityscore=1501
+ bulkscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103170025
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Mar 16, 2021 at 01:44:33PM -0700, Sami Tolvanen wrote:
-> On Thu, Mar 11, 2021 at 6:51 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Thu, Mar 11, 2021 at 04:49:19PM -0800, Sami Tolvanen wrote:
-> > > Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
-> > >
-> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> >
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> >
-> > Random thought: the vDSO doesn't need special handling because it
-> > doesn't make any indirect calls, yes?
-> 
-> That might be true, but we also filter out CC_FLAGS_LTO for the vDSO,
-> which disables CFI as well.
 
-Oh right! That would do it. :)
+Gustavo,
+
+> Dynamic memory allocation isn't actually needed and it can be replaced
+> by statically allocating memory for struct object io_unit_pg3 with 36
+> hardcoded entries for its GPIOVal array.
+
+Applied to 5.13/scsi-staging, thanks!
 
 -- 
-Kees Cook
+Martin K. Petersen	Oracle Linux Engineering
