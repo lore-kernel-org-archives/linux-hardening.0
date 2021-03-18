@@ -2,191 +2,176 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C65C433E0
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C120C433DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0EB64F2B
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F4064F2A
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232344AbhCRRu2 (ORCPT
+        id S229734AbhCRR45 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Mar 2021 13:50:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232307AbhCRRuE (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Mar 2021 13:50:04 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0690FC061763
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 10:50:03 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id q29so5893403lfb.4
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 10:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rnxu0Htej1H516ep79Wgi7n3VX+5maU9JLJNzsCgiUM=;
-        b=Ni7pji1XH63Bsx+pQeydcoFnVFUKTo4EK8YEo+eRY0n8Z2OlAnJtkVrPBHxbEsi1+R
-         +o0D2M9JZb3tGqGl8p3T5U+v1MyYLTUUMRcgkL4iuhrlTfi3bi87ds7MxG2e3n0KlK6i
-         3dJiohcmgFoCgox4RNZsf0OK7goEnUFKbgGqAAdLekm/+D9U6DNU7jqJvakwMwfDAFa4
-         v8f//XFUMtHrMKaTRuIfAgjuRPu2++XBnBmKfeuHtrLLgiyJIOsF+rgRl3qxfjWKRupz
-         HuO8O/BYYDPWXJdD72MiPYs06QEHnux8aIOk5Nz61Niw4ufVgh0Hi+g9U0GNCsttzUhd
-         wMtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rnxu0Htej1H516ep79Wgi7n3VX+5maU9JLJNzsCgiUM=;
-        b=oFkVirspgibKf0906GnOyM0WjhxCURERWmkBJ5SWrSzGBDYHm1fzBl2Dt5ZsRaculm
-         N6GdHO31cT6Usyxm7A+UuvKYVCeh1WpaYXOB3yJkzvCkLOiDEIiVb/6Ey5JKpATVY6qv
-         5QKBaj24Gh0QC3j9k5akUhAKTgbp1qgbd5KURhjBa6akKlGb2ym0moPmgd2PlllwKjXB
-         fRRfuKmEy3dl3TNVuw9Yd3/r6AjE2jVTzOTdmGM3T+LcLrKaHr5ObZkZNnoGy+Wg6GD6
-         +sy6JQAZ6PfL/d76jUvGxSkao1IqdFz0ZjTLdNKA7jyfJAZasxZx4SWA4pmGiIWd8z4A
-         PX7A==
-X-Gm-Message-State: AOAM532UpVXoHIXn8hKv+qDwNiAL0Mu7jaCeTohzgbr5KMJ8WeMwMO/M
-        1zsv4QNiDcVhN3Lit3cOxUy+zeG/CsKcDlKH21UXxQ==
-X-Google-Smtp-Source: ABdhPJwKRBRM7MAUZwFeZ179486WWfFrS/ksEmFI/VqMTZ8H+kaaJb/iKuGQiKzYL2s45rV0vHLFMREgPO6HFTWGKDo=
-X-Received: by 2002:a05:6512:985:: with SMTP id w5mr5887489lft.122.1616089801932;
- Thu, 18 Mar 2021 10:50:01 -0700 (PDT)
+        Thu, 18 Mar 2021 13:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232528AbhCRR4c (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 18 Mar 2021 13:56:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 31CB864EB9;
+        Thu, 18 Mar 2021 17:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1616090191;
+        bh=91CBiOpPhQrvtql7RJ4YcUONV5kBe3BIlrXYYMJBM/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uZWuHLYNVsqR/9Hp1z0vF3yYqWTMF7vZBCBgVmygn+9DPdYW+ueKZ0p15LMdLgiqV
+         1OL6NjIWyxESgiPT58+BgdgwOqEM2dFkxZ+X3wKBVnhgV0kBYWsDBr3PA390J3fxpf
+         +AxU3XcJvcGtMVeHgguNiYnzOuMevjUb/QW7ndWY=
+Date:   Thu, 18 Mar 2021 18:56:29 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Adam Nichols <adam@grimm-co.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH v2] seq_file: Unconditionally use vmalloc for buffer
+Message-ID: <YFOUTZNeeIbq3cSw@kroah.com>
+References: <202103161205.B2181BDE38@keescook>
+ <YFHxNT1Pwoslmhxq@dhcp22.suse.cz>
+ <YFIFY7mj65sStba1@kroah.com>
+ <YFIVwPWTo48ITkHs@dhcp22.suse.cz>
+ <YFIYrMVTC42boZ/Z@kroah.com>
+ <YFIeVLDsfBMa7fHW@dhcp22.suse.cz>
+ <YFIikaNixD57o3pk@kroah.com>
+ <202103171425.CB0F4619A8@keescook>
+ <YFMKUZ5p1QbqkabY@kroah.com>
+ <202103180847.53EB96C@keescook>
 MIME-Version: 1.0
-References: <20210318171111.706303-1-samitolvanen@google.com> <20210318171111.706303-3-samitolvanen@google.com>
-In-Reply-To: <20210318171111.706303-3-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 18 Mar 2021 10:49:50 -0700
-Message-ID: <CAKwvOd=CfNmVT0RNsXw=vhTee40xpA-LjmyfagAQesS6VdAkXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/17] cfi: add __cficanonical
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202103180847.53EB96C@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 10:11 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> With CONFIG_CFI_CLANG, the compiler replaces a function address taken
-> in C code with the address of a local jump table entry, which passes
-> runtime indirect call checks. However, the compiler won't replace
-> addresses taken in assembly code, which will result in a CFI failure
-> if we later jump to such an address in instrumented C code. The code
-> generated for the non-canonical jump table looks this:
->
->   <noncanonical.cfi_jt>: /* In C, &noncanonical points here */
->         jmp noncanonical
->   ...
->   <noncanonical>:        /* function body */
->         ...
->
-> This change adds the __cficanonical attribute, which tells the
-> compiler to use a canonical jump table for the function instead. This
-> means the compiler will rename the actual function to <function>.cfi
-> and points the original symbol to the jump table entry instead:
->
->   <canonical>:           /* jump table entry */
->         jmp canonical.cfi
->   ...
->   <canonical.cfi>:       /* function body */
->         ...
->
-> As a result, the address taken in assembly, or other non-instrumented
-> code always points to the jump table and therefore, can be used for
-> indirect calls in instrumented code without tripping CFI checks.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # pci.h
+On Thu, Mar 18, 2021 at 08:51:45AM -0700, Kees Cook wrote:
+> On Thu, Mar 18, 2021 at 09:07:45AM +0100, Greg Kroah-Hartman wrote:
+> > On Wed, Mar 17, 2021 at 02:30:47PM -0700, Kees Cook wrote:
+> > > On Wed, Mar 17, 2021 at 04:38:57PM +0100, Greg Kroah-Hartman wrote:
+> > > > On Wed, Mar 17, 2021 at 04:20:52PM +0100, Michal Hocko wrote:
+> > > > > On Wed 17-03-21 15:56:44, Greg KH wrote:
+> > > > > > On Wed, Mar 17, 2021 at 03:44:16PM +0100, Michal Hocko wrote:
+> > > > > > > On Wed 17-03-21 14:34:27, Greg KH wrote:
+> > > > > > > > On Wed, Mar 17, 2021 at 01:08:21PM +0100, Michal Hocko wrote:
+> > > > > > > > > Btw. I still have problems with the approach. seq_file is intended to
+> > > > > > > > > provide safe way to dump values to the userspace. Sacrificing
+> > > > > > > > > performance just because of some abuser seems like a wrong way to go as
+> > > > > > > > > Al pointed out earlier. Can we simply stop the abuse and disallow to
+> > > > > > > > > manipulate the buffer directly? I do realize this might be more tricky
+> > > > > > > > > for reasons mentioned in other emails but this is definitely worth
+> > > > > > > > > doing.
+> > > > > > > > 
+> > > > > > > > We have to provide a buffer to "write into" somehow, so what is the best
+> > > > > > > > way to stop "abuse" like this?
+> > > > > > > 
+> > > > > > > What is wrong about using seq_* interface directly?
+> > > > > > 
+> > > > > > Right now every show() callback of sysfs would have to be changed :(
+> > > > > 
+> > > > > Is this really the case? Would it be too ugly to have an intermediate
+> > > > > buffer and then seq_puts it into the seq file inside sysfs_kf_seq_show.
+> > > > 
+> > > > Oh, good idea.
+> > > > 
+> > > > > Sure one copy more than necessary but it this shouldn't be a hot path or
+> > > > > even visible on small strings. So that might be worth destroying an
+> > > > > inherently dangerous seq API (seq_get_buf).
+> > > > 
+> > > > I'm all for that, let me see if I can carve out some time tomorrow to
+> > > > try this out.
+> > > 
+> > > The trouble has been that C string APIs are just so impossibly fragile.
+> > > We just get too many bugs with it, so we really do need to rewrite the
+> > > callbacks to use seq_file, since it has a safe API.
+> > > 
+> > > I've been trying to write coccinelle scripts to do some of this
+> > > refactoring, but I have not found a silver bullet. (This is why I've
+> > > suggested adding the temporary "seq_show" and "seq_store" functions, so
+> > > we can transition all the callbacks without a flag day.)
+> > > 
+> > > > But, you don't get rid of the "ability" to have a driver write more than
+> > > > a PAGE_SIZE into the buffer passed to it.  I guess I could be paranoid
+> > > > and do some internal checks (allocate a bunch of memory and check for
+> > > > overflow by hand), if this is something to really be concerned about...
+> > > 
+> > > Besides the CFI prototype enforcement changes (which I can build into
+> > > the new seq_show/seq_store callbacks), the buffer management is the
+> > > primary issue: we just can't hand drivers a string (even with a length)
+> > > because the C functions are terrible. e.g. just look at the snprintf vs
+> > > scnprintf -- we constantly have to just build completely new API when
+> > > what we need is a safe way (i.e. obfuscated away from the caller) to
+> > > build a string. Luckily seq_file does this already, so leaning into that
+> > > is good here.
+> > 
+> > But, is it really worth the churn here?
+> > 
+> > Yes, strings in C is "hard", but this _should_ be a simple thing for any
+> > driver to handle:
+> > 	return sysfs_emit(buffer, "%d\n", my_dev->value);
+> > 
+> > To change that to:
+> > 	return seq_printf(seq, "%d\n", my_dev->value);
+> > feels very much "don't we have other more valuable things we could be
+> > doing?"
+> > 
+> > So far we have found 1 driver that messed up and overflowed the buffer
+> > that I know of.  While reworking apis to make it "hard to get wrong" is
+> > a great goal, the work involved here vs. any "protection" feels very
+> > low.
+> 
+> I haven't been keeping a list, but it's not the only one. The _other_
+> reason we need seq_file is so we can perform checks against f_cred for
+> things like %p obfuscation (as was needed for modules that I hacked
+> around) and is needed a proper bug fix for the kernel pointer exposure
+> bug from the same batch. So now I'm up to 3 distinct reasons that the
+> sysfs API is lacking -- I think it's worth the churn and time.
 
-Irrelevant to this series, but I checked when the FN attr was first
-available in clang; clang-10. (That's the minimum supported version of
-clang for the kernel, and this series depends on LTO which depends on
-clang-12, so no additional guards are necessary).
+Ok, if you think so.
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+But if we do this, can we not do a "raw" seqfile api?  I would like to
+see only 1 function that works like sysfs_emit() does.  Perhaps:
+	void sysfs_printf(struct attribute *attr, const char *fmt, ...);
 
-> ---
->  include/linux/compiler-clang.h | 1 +
->  include/linux/compiler_types.h | 4 ++++
->  include/linux/init.h           | 4 ++--
->  include/linux/pci.h            | 4 ++--
->  4 files changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-> index 6de9d0c9377e..adbe76b203e2 100644
-> --- a/include/linux/compiler-clang.h
-> +++ b/include/linux/compiler-clang.h
-> @@ -63,3 +63,4 @@
->  #endif
->
->  #define __nocfi                __attribute__((__no_sanitize__("cfi")))
-> +#define __cficanonical __attribute__((__cfi_canonical_jump_table__))
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 796935a37e37..d29bda7f6ebd 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -246,6 +246,10 @@ struct ftrace_likely_data {
->  # define __nocfi
->  #endif
->
-> +#ifndef __cficanonical
-> +# define __cficanonical
-> +#endif
-> +
->  #ifndef asm_volatile_goto
->  #define asm_volatile_goto(x...) asm goto(x)
->  #endif
-> diff --git a/include/linux/init.h b/include/linux/init.h
-> index b3ea15348fbd..045ad1650ed1 100644
-> --- a/include/linux/init.h
-> +++ b/include/linux/init.h
-> @@ -220,8 +220,8 @@ extern bool initcall_debug;
->         __initcall_name(initstub, __iid, id)
->
->  #define __define_initcall_stub(__stub, fn)                     \
-> -       int __init __stub(void);                                \
-> -       int __init __stub(void)                                 \
-> +       int __init __cficanonical __stub(void);                 \
-> +       int __init __cficanonical __stub(void)                  \
->         {                                                       \
->                 return fn();                                    \
->         }                                                       \
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 86c799c97b77..39684b72db91 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1944,8 +1944,8 @@ enum pci_fixup_pass {
->  #ifdef CONFIG_LTO_CLANG
->  #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,  \
->                                   class_shift, hook, stub)              \
-> -       void stub(struct pci_dev *dev);                                 \
-> -       void stub(struct pci_dev *dev)                                  \
-> +       void __cficanonical stub(struct pci_dev *dev);                  \
-> +       void __cficanonical stub(struct pci_dev *dev)                   \
->         {                                                               \
->                 hook(dev);                                              \
->         }                                                               \
-> --
-> 2.31.0.291.g576ba9dcdaf-goog
->
+and then from there we can "derive" things like:
+	void device_printf(struct device_attribute *attr, const char *fmt, ...);
 
+You can "hide" the needed seq_file structure in the attribute structure
+for the buffer management, but I don't think we need the crazy multiple
+ways that seq_printf() has morphed into over the years, right?
 
--- 
-Thanks,
-~Nick Desaulniers
+seq_path() anyone?
+
+binary attribute files are a totally different thing, and probably can
+just be left alone for now.
+
+> > How about moving everyone to sysfs_emit() first?  That way it becomes
+> > much more "obvious" when drivers are doing stupid things with their
+> > sysfs buffer.  But even then, it would not have caught the iscsi issue
+> > as that was printing a user-provided string so maybe I'm just feeling
+> > grumpy about the potential churn here...
+> 
+> I need to fix the prototypes for CFI sanity too. Switching to seq_file
+> solves 2 problems, and if we have to change the prototype once for that,
+> we can include the prototype fixes for CFI at the same time to avoid
+> double the churn.
+
+Yes, let's not go through this twice...
+
+thanks,
+
+greg k-h
