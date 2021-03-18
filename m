@@ -7,171 +7,86 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C120C433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BDEC433E0
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31F4064F2A
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6B264F10
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbhCRR45 (ORCPT
+        id S231701AbhCRR6B (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Mar 2021 13:56:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232528AbhCRR4c (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Mar 2021 13:56:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 31CB864EB9;
-        Thu, 18 Mar 2021 17:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1616090191;
-        bh=91CBiOpPhQrvtql7RJ4YcUONV5kBe3BIlrXYYMJBM/c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uZWuHLYNVsqR/9Hp1z0vF3yYqWTMF7vZBCBgVmygn+9DPdYW+ueKZ0p15LMdLgiqV
-         1OL6NjIWyxESgiPT58+BgdgwOqEM2dFkxZ+X3wKBVnhgV0kBYWsDBr3PA390J3fxpf
-         +AxU3XcJvcGtMVeHgguNiYnzOuMevjUb/QW7ndWY=
-Date:   Thu, 18 Mar 2021 18:56:29 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Adam Nichols <adam@grimm-co.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH v2] seq_file: Unconditionally use vmalloc for buffer
-Message-ID: <YFOUTZNeeIbq3cSw@kroah.com>
-References: <202103161205.B2181BDE38@keescook>
- <YFHxNT1Pwoslmhxq@dhcp22.suse.cz>
- <YFIFY7mj65sStba1@kroah.com>
- <YFIVwPWTo48ITkHs@dhcp22.suse.cz>
- <YFIYrMVTC42boZ/Z@kroah.com>
- <YFIeVLDsfBMa7fHW@dhcp22.suse.cz>
- <YFIikaNixD57o3pk@kroah.com>
- <202103171425.CB0F4619A8@keescook>
- <YFMKUZ5p1QbqkabY@kroah.com>
- <202103180847.53EB96C@keescook>
+        Thu, 18 Mar 2021 13:58:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43018 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230164AbhCRR5a (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 18 Mar 2021 13:57:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616090249;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=W0q5WdWmdiO1vxhUtqzchuFaJDrkVXDNMZnS+MwXgTY=;
+        b=GQ9bf4lF7U3VT/6xwTQQD1Dik3JeuVhIS/a/F8Hn/MnqNo+XgdATGkDOAbDwzyPOcOLICB
+        TTNOAUvP8NXn7qKCYxtiFWsGVZmHcy/cjidtnjFSytjqyd0AokACTiQ7RCIaTuESsBFKD1
+        KRfT4Dzcpb3mfC4HfON6c9rN8aHYKhQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-pp2toMmBOMieT5Z5SFgnrw-1; Thu, 18 Mar 2021 13:57:28 -0400
+X-MC-Unique: pp2toMmBOMieT5Z5SFgnrw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F9C8190A7AB;
+        Thu, 18 Mar 2021 17:57:26 +0000 (UTC)
+Received: from treble (ovpn-120-92.rdu2.redhat.com [10.10.120.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B5A825B4A6;
+        Thu, 18 Mar 2021 17:57:23 +0000 (UTC)
+Date:   Thu, 18 Mar 2021 12:57:21 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Eigler <fche@redhat.com>,
+        Justin Forbes <jforbes@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: Re: [PATCH] kbuild: rebuild GCC plugins when the compiler is upgraded
+Message-ID: <20210318175721.basitauxxboywjsx@treble>
+References: <20210304113708.215121-1-masahiroy@kernel.org>
+ <202103041518.22EB819E@keescook>
+ <CAHk-=wj6t2i1BgmWP1Zb2WVF3zZzkHvsxsALJk7VpfKm6UgLcw@mail.gmail.com>
+ <20210305022500.cyi3cfwgt2t6mona@treble>
+ <20210306012815.nfmquoln65vq6yq7@treble>
+ <CAK7LNAR7E4Ud9MPy3q5VOab4EFMumr5GMHqyv=H970+gPTBrFg@mail.gmail.com>
+ <20210306025059.z6dn6mi7mxyufkr2@treble>
+ <20210309203109.2fhyf5naazgjjnch@treble>
+ <CAK7LNAQDbhzi5s8iaqVSV82v8n-+0a=XB3-8wg=Nu41XyRETvw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202103180847.53EB96C@keescook>
+In-Reply-To: <CAK7LNAQDbhzi5s8iaqVSV82v8n-+0a=XB3-8wg=Nu41XyRETvw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 08:51:45AM -0700, Kees Cook wrote:
-> On Thu, Mar 18, 2021 at 09:07:45AM +0100, Greg Kroah-Hartman wrote:
-> > On Wed, Mar 17, 2021 at 02:30:47PM -0700, Kees Cook wrote:
-> > > On Wed, Mar 17, 2021 at 04:38:57PM +0100, Greg Kroah-Hartman wrote:
-> > > > On Wed, Mar 17, 2021 at 04:20:52PM +0100, Michal Hocko wrote:
-> > > > > On Wed 17-03-21 15:56:44, Greg KH wrote:
-> > > > > > On Wed, Mar 17, 2021 at 03:44:16PM +0100, Michal Hocko wrote:
-> > > > > > > On Wed 17-03-21 14:34:27, Greg KH wrote:
-> > > > > > > > On Wed, Mar 17, 2021 at 01:08:21PM +0100, Michal Hocko wrote:
-> > > > > > > > > Btw. I still have problems with the approach. seq_file is intended to
-> > > > > > > > > provide safe way to dump values to the userspace. Sacrificing
-> > > > > > > > > performance just because of some abuser seems like a wrong way to go as
-> > > > > > > > > Al pointed out earlier. Can we simply stop the abuse and disallow to
-> > > > > > > > > manipulate the buffer directly? I do realize this might be more tricky
-> > > > > > > > > for reasons mentioned in other emails but this is definitely worth
-> > > > > > > > > doing.
-> > > > > > > > 
-> > > > > > > > We have to provide a buffer to "write into" somehow, so what is the best
-> > > > > > > > way to stop "abuse" like this?
-> > > > > > > 
-> > > > > > > What is wrong about using seq_* interface directly?
-> > > > > > 
-> > > > > > Right now every show() callback of sysfs would have to be changed :(
-> > > > > 
-> > > > > Is this really the case? Would it be too ugly to have an intermediate
-> > > > > buffer and then seq_puts it into the seq file inside sysfs_kf_seq_show.
-> > > > 
-> > > > Oh, good idea.
-> > > > 
-> > > > > Sure one copy more than necessary but it this shouldn't be a hot path or
-> > > > > even visible on small strings. So that might be worth destroying an
-> > > > > inherently dangerous seq API (seq_get_buf).
-> > > > 
-> > > > I'm all for that, let me see if I can carve out some time tomorrow to
-> > > > try this out.
-> > > 
-> > > The trouble has been that C string APIs are just so impossibly fragile.
-> > > We just get too many bugs with it, so we really do need to rewrite the
-> > > callbacks to use seq_file, since it has a safe API.
-> > > 
-> > > I've been trying to write coccinelle scripts to do some of this
-> > > refactoring, but I have not found a silver bullet. (This is why I've
-> > > suggested adding the temporary "seq_show" and "seq_store" functions, so
-> > > we can transition all the callbacks without a flag day.)
-> > > 
-> > > > But, you don't get rid of the "ability" to have a driver write more than
-> > > > a PAGE_SIZE into the buffer passed to it.  I guess I could be paranoid
-> > > > and do some internal checks (allocate a bunch of memory and check for
-> > > > overflow by hand), if this is something to really be concerned about...
-> > > 
-> > > Besides the CFI prototype enforcement changes (which I can build into
-> > > the new seq_show/seq_store callbacks), the buffer management is the
-> > > primary issue: we just can't hand drivers a string (even with a length)
-> > > because the C functions are terrible. e.g. just look at the snprintf vs
-> > > scnprintf -- we constantly have to just build completely new API when
-> > > what we need is a safe way (i.e. obfuscated away from the caller) to
-> > > build a string. Luckily seq_file does this already, so leaning into that
-> > > is good here.
-> > 
-> > But, is it really worth the churn here?
-> > 
-> > Yes, strings in C is "hard", but this _should_ be a simple thing for any
-> > driver to handle:
-> > 	return sysfs_emit(buffer, "%d\n", my_dev->value);
-> > 
-> > To change that to:
-> > 	return seq_printf(seq, "%d\n", my_dev->value);
-> > feels very much "don't we have other more valuable things we could be
-> > doing?"
-> > 
-> > So far we have found 1 driver that messed up and overflowed the buffer
-> > that I know of.  While reworking apis to make it "hard to get wrong" is
-> > a great goal, the work involved here vs. any "protection" feels very
-> > low.
+On Wed, Mar 10, 2021 at 10:44:46PM +0900, Masahiro Yamada wrote:
+> > Masahiro,
+> >
+> > Ping.  Do you have a better approach for building GCC plugins in the
+> > external module directory?
 > 
-> I haven't been keeping a list, but it's not the only one. The _other_
-> reason we need seq_file is so we can perform checks against f_cred for
-> things like %p obfuscation (as was needed for modules that I hacked
-> around) and is needed a proper bug fix for the kernel pointer exposure
-> bug from the same batch. So now I'm up to 3 distinct reasons that the
-> sysfs API is lacking -- I think it's worth the churn and time.
-
-Ok, if you think so.
-
-But if we do this, can we not do a "raw" seqfile api?  I would like to
-see only 1 function that works like sysfs_emit() does.  Perhaps:
-	void sysfs_printf(struct attribute *attr, const char *fmt, ...);
-
-and then from there we can "derive" things like:
-	void device_printf(struct device_attribute *attr, const char *fmt, ...);
-
-You can "hide" the needed seq_file structure in the attribute structure
-for the buffer management, but I don't think we need the crazy multiple
-ways that seq_printf() has morphed into over the years, right?
-
-seq_path() anyone?
-
-binary attribute files are a totally different thing, and probably can
-just be left alone for now.
-
-> > How about moving everyone to sysfs_emit() first?  That way it becomes
-> > much more "obvious" when drivers are doing stupid things with their
-> > sysfs buffer.  But even then, it would not have caught the iscsi issue
-> > as that was printing a user-provided string so maybe I'm just feeling
-> > grumpy about the potential churn here...
 > 
-> I need to fix the prototypes for CFI sanity too. Switching to seq_file
-> solves 2 problems, and if we have to change the prototype once for that,
-> we can include the prototype fixes for CFI at the same time to avoid
-> double the churn.
+> I am not sure if building GCC plugins in the external module directory
+> is the right approach.
 
-Yes, let's not go through this twice...
+I'm certainly open to any better ideas that would allow GCC plugins to
+be enabled in distro kernel builds.
 
-thanks,
+-- 
+Josh
 
-greg k-h
