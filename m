@@ -2,100 +2,179 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA10C433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 13:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D76C433E0
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 15:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A6060249
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 13:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ABFF64F18
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 15:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229951AbhCRNjF convert rfc822-to-8bit (ORCPT
+        id S231800AbhCRPwT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Mar 2021 09:39:05 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:46483 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230419AbhCRNir (ORCPT
+        Thu, 18 Mar 2021 11:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230374AbhCRPvt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Mar 2021 09:38:47 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-273-x16uHSOPMHCv6f1vzDCVPQ-1; Thu, 18 Mar 2021 13:38:42 +0000
-X-MC-Unique: x16uHSOPMHCv6f1vzDCVPQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Thu, 18 Mar 2021 13:38:41 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.012; Thu, 18 Mar 2021 13:38:41 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     =?windows-1257?Q?=27Valdis_Kl=E7tnieks=27?= 
-        <valdis.kletnieks@vt.edu>
-CC:     Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH RESEND] gcc-plugins: avoid errors with -std=gnu++11 on old
- gcc
-Thread-Topic: [PATCH RESEND] gcc-plugins: avoid errors with -std=gnu++11 on
- old gcc
-Thread-Index: AQHXG7xcElVT0YEvr0m/P+UnKynj6KqJn0dQgAAEdYCAABwbwA==
-Date:   Thu, 18 Mar 2021 13:38:41 +0000
-Message-ID: <602d6d53962c4567bc1363e58b49c757@AcuMS.aculab.com>
-References: <279558.1615192821@turing-police> <202103172251.F9D770D@keescook>
- <282490.1616047333@turing-police>
- <279b22592f1e43a48beeecd34e50b385@AcuMS.aculab.com>
- <300176.1616068535@turing-police>
-In-Reply-To: <300176.1616068535@turing-police>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 18 Mar 2021 11:51:49 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042D0C06175F
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 08:51:48 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id k24so1705085pgl.6
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 08:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yb9yuGXl93jA+r4r8J4NpNyfEbIYopOSDI5mea++BXA=;
+        b=fylJFEz8bK0PHffKlC5yh2HwrtfoPT4Vs6IO+tpq7kux6YyjhOBdxm4PY8llDiYfbe
+         EzVWYJxO26pPIW0HpBw1jsGzMd6hTL9EBNVkRHv9Ngc8K5qNmlWqpHZdJGSD59tqxvzu
+         ljDNdouQ6SQo2Np8l38dZZewXqvc3WWat8wlY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yb9yuGXl93jA+r4r8J4NpNyfEbIYopOSDI5mea++BXA=;
+        b=BFYQyda281JcYaCjpum5GvodswI/zklEs4JKMmCoV7n6jYp6fxoEyZu9hBkQMPwLjL
+         xZpOrBAk/g7wpiZ2jLavRIJnkXG8jBbqo+sWcUs0/KyzdcsfaFKsyDD44eTBA/CfNNir
+         0O86aLE7bwxFhPfCYnPxBAAu2M85pguP/E3BRELTTSZyBJohoubfDpfhzO4leiBxPBwp
+         zGDhPl+3+dAe2u4eZdJCJWasCaLqdkmcTnCOGgYFPfzJAom6J/5nIloM9GILZ+TXtjgR
+         DXe1t0x73nK2UaPi7KtMzr8cHKE7mp5ZC+oBLpphWf3LrVDFwF5NjpbAmi5okhRVO9iu
+         84IA==
+X-Gm-Message-State: AOAM533g/yOKV742Ts2VYg4mC5tQVacpk7fV9/Lg2GzaWJ7m3HZgt7X6
+        8ooro0EopIHSBgnhTaLHsiWSyrKqq91UwQ==
+X-Google-Smtp-Source: ABdhPJxAU61y3bf4qItCJFeadYoy9Gw0mNjr5YdvJAnRRRSIiEcEU4Qb6jgdClz7yF0VMfDq7iG70A==
+X-Received: by 2002:a05:6a00:b86:b029:205:c773:5c69 with SMTP id g6-20020a056a000b86b0290205c7735c69mr4708373pfj.60.1616082708430;
+        Thu, 18 Mar 2021 08:51:48 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v7sm2860717pfv.93.2021.03.18.08.51.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Mar 2021 08:51:47 -0700 (PDT)
+Date:   Thu, 18 Mar 2021 08:51:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Adam Nichols <adam@grimm-co.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH v2] seq_file: Unconditionally use vmalloc for buffer
+Message-ID: <202103180847.53EB96C@keescook>
+References: <YFBs202BqG9uqify@dhcp22.suse.cz>
+ <202103161205.B2181BDE38@keescook>
+ <YFHxNT1Pwoslmhxq@dhcp22.suse.cz>
+ <YFIFY7mj65sStba1@kroah.com>
+ <YFIVwPWTo48ITkHs@dhcp22.suse.cz>
+ <YFIYrMVTC42boZ/Z@kroah.com>
+ <YFIeVLDsfBMa7fHW@dhcp22.suse.cz>
+ <YFIikaNixD57o3pk@kroah.com>
+ <202103171425.CB0F4619A8@keescook>
+ <YFMKUZ5p1QbqkabY@kroah.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YFMKUZ5p1QbqkabY@kroah.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Valdis Kletnieks
-> Sent: 18 March 2021 11:56
+On Thu, Mar 18, 2021 at 09:07:45AM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Mar 17, 2021 at 02:30:47PM -0700, Kees Cook wrote:
+> > On Wed, Mar 17, 2021 at 04:38:57PM +0100, Greg Kroah-Hartman wrote:
+> > > On Wed, Mar 17, 2021 at 04:20:52PM +0100, Michal Hocko wrote:
+> > > > On Wed 17-03-21 15:56:44, Greg KH wrote:
+> > > > > On Wed, Mar 17, 2021 at 03:44:16PM +0100, Michal Hocko wrote:
+> > > > > > On Wed 17-03-21 14:34:27, Greg KH wrote:
+> > > > > > > On Wed, Mar 17, 2021 at 01:08:21PM +0100, Michal Hocko wrote:
+> > > > > > > > Btw. I still have problems with the approach. seq_file is intended to
+> > > > > > > > provide safe way to dump values to the userspace. Sacrificing
+> > > > > > > > performance just because of some abuser seems like a wrong way to go as
+> > > > > > > > Al pointed out earlier. Can we simply stop the abuse and disallow to
+> > > > > > > > manipulate the buffer directly? I do realize this might be more tricky
+> > > > > > > > for reasons mentioned in other emails but this is definitely worth
+> > > > > > > > doing.
+> > > > > > > 
+> > > > > > > We have to provide a buffer to "write into" somehow, so what is the best
+> > > > > > > way to stop "abuse" like this?
+> > > > > > 
+> > > > > > What is wrong about using seq_* interface directly?
+> > > > > 
+> > > > > Right now every show() callback of sysfs would have to be changed :(
+> > > > 
+> > > > Is this really the case? Would it be too ugly to have an intermediate
+> > > > buffer and then seq_puts it into the seq file inside sysfs_kf_seq_show.
+> > > 
+> > > Oh, good idea.
+> > > 
+> > > > Sure one copy more than necessary but it this shouldn't be a hot path or
+> > > > even visible on small strings. So that might be worth destroying an
+> > > > inherently dangerous seq API (seq_get_buf).
+> > > 
+> > > I'm all for that, let me see if I can carve out some time tomorrow to
+> > > try this out.
+> > 
+> > The trouble has been that C string APIs are just so impossibly fragile.
+> > We just get too many bugs with it, so we really do need to rewrite the
+> > callbacks to use seq_file, since it has a safe API.
+> > 
+> > I've been trying to write coccinelle scripts to do some of this
+> > refactoring, but I have not found a silver bullet. (This is why I've
+> > suggested adding the temporary "seq_show" and "seq_store" functions, so
+> > we can transition all the callbacks without a flag day.)
+> > 
+> > > But, you don't get rid of the "ability" to have a driver write more than
+> > > a PAGE_SIZE into the buffer passed to it.  I guess I could be paranoid
+> > > and do some internal checks (allocate a bunch of memory and check for
+> > > overflow by hand), if this is something to really be concerned about...
+> > 
+> > Besides the CFI prototype enforcement changes (which I can build into
+> > the new seq_show/seq_store callbacks), the buffer management is the
+> > primary issue: we just can't hand drivers a string (even with a length)
+> > because the C functions are terrible. e.g. just look at the snprintf vs
+> > scnprintf -- we constantly have to just build completely new API when
+> > what we need is a safe way (i.e. obfuscated away from the caller) to
+> > build a string. Luckily seq_file does this already, so leaning into that
+> > is good here.
 > 
-> On Thu, 18 Mar 2021 11:41:29 -0000, David Laight said:
+> But, is it really worth the churn here?
 > 
-> > That gcc bug just implies you need a space after "xxx".
-> > That is easily fixable in the sources.
+> Yes, strings in C is "hard", but this _should_ be a simple thing for any
+> driver to handle:
+> 	return sysfs_emit(buffer, "%d\n", my_dev->value);
 > 
-> It's not quite that simple.
+> To change that to:
+> 	return seq_printf(seq, "%d\n", my_dev->value);
+> feels very much "don't we have other more valuable things we could be
+> doing?"
 > 
->    In file included from /usr/lib/gcc/x86_64-linux-gnu/5/plugin/include/tm.h:27,
->                     from /usr/lib/gcc/x86_64-linux-gnu/5/plugin/include/gcc-plugin.h:31,
->                     from /usr/lib/gcc/x86_64-linux-gnu/5/plugin/include/plugin.h:23,
->                     from scripts/gcc-plugins/gcc-common.h:9,
->                     from scripts/gcc-plugins/latent_entropy_plugin.c:78:
-> >> /usr/lib/gcc/x86_64-linux-gnu/5/plugin/include/config/elfos.h:102:21: warning: invalid suffix on
-> literal; C++11 requires a space between literal and string macro [-Wliteral-suffix]
->        fprintf ((FILE), "%s"HOST_WIDE_INT_PRINT_UNSIGNED"\n",\
-> 
-> The problem isn't in a kernel source file...  
-...
+> So far we have found 1 driver that messed up and overflowed the buffer
+> that I know of.  While reworking apis to make it "hard to get wrong" is
+> a great goal, the work involved here vs. any "protection" feels very
+> low.
 
-Could you pass -Wno-literal-suffix on plugin builds?
+I haven't been keeping a list, but it's not the only one. The _other_
+reason we need seq_file is so we can perform checks against f_cred for
+things like %p obfuscation (as was needed for modules that I hacked
+around) and is needed a proper bug fix for the kernel pointer exposure
+bug from the same batch. So now I'm up to 3 distinct reasons that the
+sysfs API is lacking -- I think it's worth the churn and time.
 
-Might be less faff than changing the -std=xxx' parameter.
+> How about moving everyone to sysfs_emit() first?  That way it becomes
+> much more "obvious" when drivers are doing stupid things with their
+> sysfs buffer.  But even then, it would not have caught the iscsi issue
+> as that was printing a user-provided string so maybe I'm just feeling
+> grumpy about the potential churn here...
 
-	David
+I need to fix the prototypes for CFI sanity too. Switching to seq_file
+solves 2 problems, and if we have to change the prototype once for that,
+we can include the prototype fixes for CFI at the same time to avoid
+double the churn.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+Kees Cook
