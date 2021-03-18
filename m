@@ -2,77 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520E7C433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 12:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA10C433DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 13:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2163864F69
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 12:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A6060249
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 13:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbhCRMrD (ORCPT
+        id S229951AbhCRNjF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Mar 2021 08:47:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37456 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231327AbhCRMqq (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Mar 2021 08:46:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6FC7FAEFB;
-        Thu, 18 Mar 2021 12:46:44 +0000 (UTC)
-Subject: Re: [PATCH v6 2/6] init_on_alloc: Optimize static branches
-To:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20210315180229.1224655-1-keescook@chromium.org>
- <20210315180229.1224655-3-keescook@chromium.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <5d626b9b-5355-be94-e8e2-1be47f880f30@suse.cz>
-Date:   Thu, 18 Mar 2021 13:46:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        Thu, 18 Mar 2021 09:39:05 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:46483 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230419AbhCRNir (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 18 Mar 2021 09:38:47 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-273-x16uHSOPMHCv6f1vzDCVPQ-1; Thu, 18 Mar 2021 13:38:42 +0000
+X-MC-Unique: x16uHSOPMHCv6f1vzDCVPQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Thu, 18 Mar 2021 13:38:41 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Thu, 18 Mar 2021 13:38:41 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     =?windows-1257?Q?=27Valdis_Kl=E7tnieks=27?= 
+        <valdis.kletnieks@vt.edu>
+CC:     Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH RESEND] gcc-plugins: avoid errors with -std=gnu++11 on old
+ gcc
+Thread-Topic: [PATCH RESEND] gcc-plugins: avoid errors with -std=gnu++11 on
+ old gcc
+Thread-Index: AQHXG7xcElVT0YEvr0m/P+UnKynj6KqJn0dQgAAEdYCAABwbwA==
+Date:   Thu, 18 Mar 2021 13:38:41 +0000
+Message-ID: <602d6d53962c4567bc1363e58b49c757@AcuMS.aculab.com>
+References: <279558.1615192821@turing-police> <202103172251.F9D770D@keescook>
+ <282490.1616047333@turing-police>
+ <279b22592f1e43a48beeecd34e50b385@AcuMS.aculab.com>
+ <300176.1616068535@turing-police>
+In-Reply-To: <300176.1616068535@turing-police>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <20210315180229.1224655-3-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 3/15/21 7:02 PM, Kees Cook wrote:
-> The state of CONFIG_INIT_ON_ALLOC_DEFAULT_ON (and ...ON_FREE...) did not
-> change the assembly ordering of the static branches: they were always out
-> of line. Use the new jump_label macros to check the CONFIG settings to
-> default to the "expected" state, which slightly optimizes the resulting
-> assembly code.
+From: Valdis Kletnieks
+> Sent: 18 March 2021 11:56
 > 
-> Reviewed-by: Alexander Potapenko <glider@google.com>
-> Link: https://lore.kernel.org/lkml/CAG_fn=X0DVwqLaHJTO6Jw7TGcMSm77GKHinrd0m_6y0SzWOrFA@mail.gmail.com/
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> On Thu, 18 Mar 2021 11:41:29 -0000, David Laight said:
+> 
+> > That gcc bug just implies you need a space after "xxx".
+> > That is easily fixable in the sources.
+> 
+> It's not quite that simple.
+> 
+>    In file included from /usr/lib/gcc/x86_64-linux-gnu/5/plugin/include/tm.h:27,
+>                     from /usr/lib/gcc/x86_64-linux-gnu/5/plugin/include/gcc-plugin.h:31,
+>                     from /usr/lib/gcc/x86_64-linux-gnu/5/plugin/include/plugin.h:23,
+>                     from scripts/gcc-plugins/gcc-common.h:9,
+>                     from scripts/gcc-plugins/latent_entropy_plugin.c:78:
+> >> /usr/lib/gcc/x86_64-linux-gnu/5/plugin/include/config/elfos.h:102:21: warning: invalid suffix on
+> literal; C++11 requires a space between literal and string macro [-Wliteral-suffix]
+>        fprintf ((FILE), "%s"HOST_WIDE_INT_PRINT_UNSIGNED"\n",\
+> 
+> The problem isn't in a kernel source file...  
+...
 
-For the fixed version
+Could you pass -Wno-literal-suffix on plugin builds?
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Might be less faff than changing the -std=xxx' parameter.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
