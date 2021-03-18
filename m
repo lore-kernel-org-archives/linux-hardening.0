@@ -2,90 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8668C433E0
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 06:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC445C433E0
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 08:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82FC864F04
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 06:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BECC264F2A
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 08:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbhCRG0x (ORCPT
+        id S229638AbhCRIH6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Mar 2021 02:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbhCRG0e (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Mar 2021 02:26:34 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F88C06174A;
-        Wed, 17 Mar 2021 23:26:33 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id h82so1367507ybc.13;
-        Wed, 17 Mar 2021 23:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=g4jcVy0dq4D6dkbuTYCxEhsvgRcoFBgu9ucC7LjDGtY=;
-        b=anfgqyjmTFQehzgUa8eJsjaCE3q5mOrfE4piuRxkviFKdxQpUYasboBZZSiiCnqE1U
-         qPj3m/2/W3krZElD36V6c8MPA8N68yUEhn/fbYgrVRjqM/6NGa/r8HcryVKnX+29K3dX
-         VM4rah52VPyj2QpfDvSI8Q3YORCi3siDnyrEkphPKXM47DA85aBkm6uZlkJQCJZNy/JG
-         g+5QZDQct9Mv9hligBYeVct2roPpGDKDavw/oeuMr8k2B8Vk+r4rZgW1lT2ljH6BN/lf
-         0QmXbiLa/46Enprh3PJBHFecNxLQtBjDwCK5MbkeDLh/N57Ry78RWMunFZKksAHRwAaf
-         ffsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=g4jcVy0dq4D6dkbuTYCxEhsvgRcoFBgu9ucC7LjDGtY=;
-        b=asaXcTytY/yUO/J8LGZ1qSz34uc+c+ead+brimBIbbSkHVtdu4wU/gIdGdQ57HKo35
-         kevTcBOVAMRP46yoEygMwLkGabn8NqyP5JOUx/R96L+Q12oVyBBmCqVwchp9v3DWd0UY
-         UxDr0iYN+zX+L4VGuYezsU9Wzf6jYMMiy9MYMIDYAP1xlykwszF2C1u2Qp177RMNvEk0
-         yl2pZvOF9P+JLdDfe4efr0pbKaYxYbKiAbYbxy1WnAwdMZX3NQ/dzlm+m1lc6LLPzdIn
-         wwjVfsys0TFHmqBUAbwzgPTlDfUuGDQaLpzkIAaVNQCRiAu45Tt0egLRcE13+vLG1s7k
-         cuOQ==
-X-Gm-Message-State: AOAM531DVWg1Ay6QOjutcKYFA1p74QWZrrSviJrsBqos7X885j9uHR+H
-        IugbHTVkuM0NNQY/E1e2RNzMHz0EK1HlQhj+IKOaSxRx+H4S8Q==
-X-Google-Smtp-Source: ABdhPJw2UgQtZm/ksPlg9wSMLE9HrhTK2V0Gci5LHv9rMUYVF8eW3LpHhOL+zKV4V1RqPB6cCwLEhRSfbaBfmH+ktac=
-X-Received: by 2002:a25:844a:: with SMTP id r10mr3632810ybm.26.1616048793316;
- Wed, 17 Mar 2021 23:26:33 -0700 (PDT)
+        Thu, 18 Mar 2021 04:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229600AbhCRIHs (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 18 Mar 2021 04:07:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EB4896186A;
+        Thu, 18 Mar 2021 08:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1616054868;
+        bh=xhFK7pf4ZvBe3zs5vAGSF6YW4d9H8T91UK5ubH1jH6I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S107w3Ekc/ywg/vb7Jnf4XXKL93WP8ZHx13XCckoJeancgXzlc5z1Ft2PIOeKpgXq
+         bBdsEEYxzqvshJhuGeXWTlvtjnGW46eCudxEDDZcg34hm5XX6Y4Slh+TernhhD3A9e
+         gIbE5qW+nrvuzOujQO8NG3H9fpAtv9vPg914vOHU=
+Date:   Thu, 18 Mar 2021 09:07:45 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Adam Nichols <adam@grimm-co.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH v2] seq_file: Unconditionally use vmalloc for buffer
+Message-ID: <YFMKUZ5p1QbqkabY@kroah.com>
+References: <20210315174851.622228-1-keescook@chromium.org>
+ <YFBs202BqG9uqify@dhcp22.suse.cz>
+ <202103161205.B2181BDE38@keescook>
+ <YFHxNT1Pwoslmhxq@dhcp22.suse.cz>
+ <YFIFY7mj65sStba1@kroah.com>
+ <YFIVwPWTo48ITkHs@dhcp22.suse.cz>
+ <YFIYrMVTC42boZ/Z@kroah.com>
+ <YFIeVLDsfBMa7fHW@dhcp22.suse.cz>
+ <YFIikaNixD57o3pk@kroah.com>
+ <202103171425.CB0F4619A8@keescook>
 MIME-Version: 1.0
-References: <279558.1615192821@turing-police> <202103172251.F9D770D@keescook> <282490.1616047333@turing-police>
-In-Reply-To: <282490.1616047333@turing-police>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 18 Mar 2021 07:26:22 +0100
-Message-ID: <CANiq72nyNSgrM6bhmM7ymdtYYKoDLfUXfwgTwLOmhLFc=c0U-w@mail.gmail.com>
-Subject: Re: [PATCH RESEND] gcc-plugins: avoid errors with -std=gnu++11 on old gcc
-To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202103171425.CB0F4619A8@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 7:03 AM Valdis Kl=C4=93tnieks
-<valdis.kletnieks@vt.edu> wrote:
->
-> Or declare that gcc6 is the minimum for building the kernel.
+On Wed, Mar 17, 2021 at 02:30:47PM -0700, Kees Cook wrote:
+> On Wed, Mar 17, 2021 at 04:38:57PM +0100, Greg Kroah-Hartman wrote:
+> > On Wed, Mar 17, 2021 at 04:20:52PM +0100, Michal Hocko wrote:
+> > > On Wed 17-03-21 15:56:44, Greg KH wrote:
+> > > > On Wed, Mar 17, 2021 at 03:44:16PM +0100, Michal Hocko wrote:
+> > > > > On Wed 17-03-21 14:34:27, Greg KH wrote:
+> > > > > > On Wed, Mar 17, 2021 at 01:08:21PM +0100, Michal Hocko wrote:
+> > > > > > > Btw. I still have problems with the approach. seq_file is intended to
+> > > > > > > provide safe way to dump values to the userspace. Sacrificing
+> > > > > > > performance just because of some abuser seems like a wrong way to go as
+> > > > > > > Al pointed out earlier. Can we simply stop the abuse and disallow to
+> > > > > > > manipulate the buffer directly? I do realize this might be more tricky
+> > > > > > > for reasons mentioned in other emails but this is definitely worth
+> > > > > > > doing.
+> > > > > > 
+> > > > > > We have to provide a buffer to "write into" somehow, so what is the best
+> > > > > > way to stop "abuse" like this?
+> > > > > 
+> > > > > What is wrong about using seq_* interface directly?
+> > > > 
+> > > > Right now every show() callback of sysfs would have to be changed :(
+> > > 
+> > > Is this really the case? Would it be too ugly to have an intermediate
+> > > buffer and then seq_puts it into the seq file inside sysfs_kf_seq_show.
+> > 
+> > Oh, good idea.
+> > 
+> > > Sure one copy more than necessary but it this shouldn't be a hot path or
+> > > even visible on small strings. So that might be worth destroying an
+> > > inherently dangerous seq API (seq_get_buf).
+> > 
+> > I'm all for that, let me see if I can carve out some time tomorrow to
+> > try this out.
+> 
+> The trouble has been that C string APIs are just so impossibly fragile.
+> We just get too many bugs with it, so we really do need to rewrite the
+> callbacks to use seq_file, since it has a safe API.
+> 
+> I've been trying to write coccinelle scripts to do some of this
+> refactoring, but I have not found a silver bullet. (This is why I've
+> suggested adding the temporary "seq_show" and "seq_store" functions, so
+> we can transition all the callbacks without a flag day.)
+> 
+> > But, you don't get rid of the "ability" to have a driver write more than
+> > a PAGE_SIZE into the buffer passed to it.  I guess I could be paranoid
+> > and do some internal checks (allocate a bunch of memory and check for
+> > overflow by hand), if this is something to really be concerned about...
+> 
+> Besides the CFI prototype enforcement changes (which I can build into
+> the new seq_show/seq_store callbacks), the buffer management is the
+> primary issue: we just can't hand drivers a string (even with a length)
+> because the C functions are terrible. e.g. just look at the snprintf vs
+> scnprintf -- we constantly have to just build completely new API when
+> what we need is a safe way (i.e. obfuscated away from the caller) to
+> build a string. Luckily seq_file does this already, so leaning into that
+> is good here.
 
-Cc'ing some interested people in raising GCC's version for one reason
-or another, so that we put this as another one in the pile of reasons
-:-)
+But, is it really worth the churn here?
 
-https://lore.kernel.org/lkml/CAHk-=3Dwjgvt1Ei72BTrEH5fgfqykVH-AYt56-7yBT8Lc=
-prj7bEg@mail.gmail.com/
+Yes, strings in C is "hard", but this _should_ be a simple thing for any
+driver to handle:
+	return sysfs_emit(buffer, "%d\n", my_dev->value);
 
-Cheers,
-Miguel
+To change that to:
+	return seq_printf(seq, "%d\n", my_dev->value);
+feels very much "don't we have other more valuable things we could be
+doing?"
+
+So far we have found 1 driver that messed up and overflowed the buffer
+that I know of.  While reworking apis to make it "hard to get wrong" is
+a great goal, the work involved here vs. any "protection" feels very
+low.
+
+How about moving everyone to sysfs_emit() first?  That way it becomes
+much more "obvious" when drivers are doing stupid things with their
+sysfs buffer.  But even then, it would not have caught the iscsi issue
+as that was printing a user-provided string so maybe I'm just feeling
+grumpy about the potential churn here...
+
+I don't know...
+
+greg k-h
