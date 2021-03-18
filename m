@@ -2,50 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1532FC433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 22:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFDFC43381
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 23:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FD864EBD
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 22:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB2364F6C
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 23:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232503AbhCRWa3 (ORCPT
+        id S232281AbhCRXtN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Mar 2021 18:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46572 "EHLO
+        Thu, 18 Mar 2021 19:49:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231886AbhCRW36 (ORCPT
+        with ESMTP id S232273AbhCRXs4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Mar 2021 18:29:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1A1C06174A;
-        Thu, 18 Mar 2021 15:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Cn4bXM9HxhAlrOZ3Mbplt0GOUw7Lo+j1yUk2kct+Irs=; b=tNw6kldUBrU7pqrjsLTuiJ45wH
-        J5nqlqtTWC4KIeNEZkXHhn7telPcGKx2sM6vLzM9FRRkkUjUnUh7ci/PfRjLF2U5J7BdGzfEagJ3i
-        re9fr2El7gw5HNl6tyYb7sz+jXmRJBfRlNTC6ruofJxKCVB91r/5bx3e/1voUzC8pyuUOdDvigLyA
-        1SfSXKG5C4RyzVgUyV+QTy+3a4aTLA/8LFQ1+bpSQlPbIYwiAcHsl/wyBGaqmz7EFiYPA3a/Oot43
-        XhLv2bRb9esgYJZp1Yp2glHHmY/vLgmxgE2id4a3WqU/Aqeyd6bOcjDD2JjmIBiZLdMGLnY7M7Uml
-        09ZyGx3Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lN18i-003Z72-Lm; Thu, 18 Mar 2021 22:29:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5A1EF3006E0;
-        Thu, 18 Mar 2021 23:29:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 353FC23D18406; Thu, 18 Mar 2021 23:29:11 +0100 (CET)
-Date:   Thu, 18 Mar 2021 23:29:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
+        Thu, 18 Mar 2021 19:48:56 -0400
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B94C061763
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 16:48:55 -0700 (PDT)
+Received: by mail-vs1-xe35.google.com with SMTP id e5so2525170vse.4
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 16:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w4SsUNnog1rCkxnTwPGBzmgfbYVmtvLwFsZIIDtRJ+0=;
+        b=tODKum7fYlaP1p1/wInlRZv3OQMdfXJCpiBT7MtQvTeiTInxAIccKNZwbuStHykgX3
+         pRr40h9mudP1dFh48XCe0B1EMgnJcSgbjagFRqIbPF47JfIw3hqWAW02qmqzw4JIXudz
+         snxbbOtqclC4Lv3msvK7EpgiJaio9ooDeRrV7xs3WxxWoANXDrrh620DCmhwBCkpz9VV
+         DbB0XB7ayvEMnQzN/DRg2GCM/4XFWT7sKKJO07hT4K2b0cRrMSrUUreDquUusRAW5V4O
+         NMWrcZjLq44F3N7hMmnke7yr9/YdGfdRQ9JD6SCye+TXaalPNgyyWzK8ZktScxsbGGoi
+         /Mhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w4SsUNnog1rCkxnTwPGBzmgfbYVmtvLwFsZIIDtRJ+0=;
+        b=UOBCKYQOB70iRWHOgYfEQjYf0MOZJLTo5n7WnZMK+0jFiFPB4Hb92+S3Uib7gJOH3N
+         HZEUpsviv8R0/MMktAmoXEwkYCIyXmo6TRFNmIUf9Lrh85dLJ+BLGkoFJs/l6HCsiR9x
+         P0Bhgdv+VKqYIoHLTnhQ+qur4ye34RdF9JCxQ9OwdlJ16qB2Gll65ghql0uP83yaqf6f
+         Qi+MebfuPgp1KmpBFIzkNh4gby83hFKG1euTu/r3Pt43hQ7ZQHWKSBkRAbI+Xh6Ttli0
+         ltGs6F5/FGD27QBZE/nPx34e8A5JjqGzP8t+Hznere4zHxVzVQxFXkJG+oyCurfthB+k
+         4HRg==
+X-Gm-Message-State: AOAM532LQ2SZ7/soqmktwd0bJ5y4aWQElZMVBZ/pXrHt7553KPudeO+c
+        BSshJYrRj3Lnc6FfFiHSZ8b5UZHNn0znY1UOiMyEUw==
+X-Google-Smtp-Source: ABdhPJzbqtERqnP82xx5uHkisRqkk8CIF+77aYgiFY0OIofKP/nQ8IPXRpr1qeG2yOzhWdw89ZfJnXTYr43XinbZUe8=
+X-Received: by 2002:a05:6102:124e:: with SMTP id p14mr1245907vsg.14.1616111334467;
+ Thu, 18 Mar 2021 16:48:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210318171111.706303-1-samitolvanen@google.com>
+ <20210318171111.706303-2-samitolvanen@google.com> <YFPUNlOomp173o5B@hirez.programming.kicks-ass.net>
+In-Reply-To: <YFPUNlOomp173o5B@hirez.programming.kicks-ass.net>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 18 Mar 2021 16:48:43 -0700
+Message-ID: <CABCJKufkQay5Fk5mZspn4PY2+mBC0CqC5t9QGkKafX4vUQv6Lg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/17] add support for Clang CFI
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Kees Cook <keescook@chromium.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
@@ -53,57 +69,57 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/17] add support for Clang CFI
-Message-ID: <YFPUNlOomp173o5B@hirez.programming.kicks-ass.net>
-References: <20210318171111.706303-1-samitolvanen@google.com>
- <20210318171111.706303-2-samitolvanen@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210318171111.706303-2-samitolvanen@google.com>
+        Christoph Hellwig <hch@infradead.org>,
+        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 10:10:55AM -0700, Sami Tolvanen wrote:
-> +static void update_shadow(struct module *mod, unsigned long base_addr,
-> +		update_shadow_fn fn)
-> +{
-> +	struct cfi_shadow *prev;
-> +	struct cfi_shadow *next;
-> +	unsigned long min_addr, max_addr;
-> +
-> +	next = vmalloc(SHADOW_SIZE);
-> +
-> +	mutex_lock(&shadow_update_lock);
-> +	prev = rcu_dereference_protected(cfi_shadow,
-> +					 mutex_is_locked(&shadow_update_lock));
-> +
-> +	if (next) {
-> +		next->base = base_addr >> PAGE_SHIFT;
-> +		prepare_next_shadow(prev, next);
-> +
-> +		min_addr = (unsigned long)mod->core_layout.base;
-> +		max_addr = min_addr + mod->core_layout.text_size;
-> +		fn(next, mod, min_addr & PAGE_MASK, max_addr & PAGE_MASK);
-> +
-> +		set_memory_ro((unsigned long)next, SHADOW_PAGES);
-> +	}
-> +
-> +	rcu_assign_pointer(cfi_shadow, next);
-> +	mutex_unlock(&shadow_update_lock);
-> +	synchronize_rcu_expedited();
+On Thu, Mar 18, 2021 at 3:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Mar 18, 2021 at 10:10:55AM -0700, Sami Tolvanen wrote:
+> > +static void update_shadow(struct module *mod, unsigned long base_addr,
+> > +             update_shadow_fn fn)
+> > +{
+> > +     struct cfi_shadow *prev;
+> > +     struct cfi_shadow *next;
+> > +     unsigned long min_addr, max_addr;
+> > +
+> > +     next = vmalloc(SHADOW_SIZE);
+> > +
+> > +     mutex_lock(&shadow_update_lock);
+> > +     prev = rcu_dereference_protected(cfi_shadow,
+> > +                                      mutex_is_locked(&shadow_update_lock));
+> > +
+> > +     if (next) {
+> > +             next->base = base_addr >> PAGE_SHIFT;
+> > +             prepare_next_shadow(prev, next);
+> > +
+> > +             min_addr = (unsigned long)mod->core_layout.base;
+> > +             max_addr = min_addr + mod->core_layout.text_size;
+> > +             fn(next, mod, min_addr & PAGE_MASK, max_addr & PAGE_MASK);
+> > +
+> > +             set_memory_ro((unsigned long)next, SHADOW_PAGES);
+> > +     }
+> > +
+> > +     rcu_assign_pointer(cfi_shadow, next);
+> > +     mutex_unlock(&shadow_update_lock);
+> > +     synchronize_rcu_expedited();
+>
+> expedited is BAD(tm), why is it required and why doesn't it have a
+> comment?
 
-expedited is BAD(tm), why is it required and why doesn't it have a
-comment?
+Ah, this uses synchronize_rcu_expedited() because we have a case where
+synchronize_rcu() hangs here with a specific SoC family after the
+vendor's cpu_pm driver powers down CPU cores. Would you say expedited
+is bad enough that we should avoid it here? The function is called
+only when kernel modules are loaded or unloaded, so not very
+frequently.
 
-> +
-> +	if (prev) {
-> +		set_memory_rw((unsigned long)prev, SHADOW_PAGES);
-> +		vfree(prev);
-> +	}
-> +}
+Sami
