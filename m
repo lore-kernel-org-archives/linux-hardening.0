@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F16C43332
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06993C4361B
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2BB64F24
+	by mail.kernel.org (Postfix) with ESMTP id E76A164F40
 	for <linux-hardening@archiver.kernel.org>; Thu, 18 Mar 2021 17:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232280AbhCRRLg (ORCPT
+        id S232296AbhCRRLi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Mar 2021 13:11:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33148 "EHLO
+        Thu, 18 Mar 2021 13:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232273AbhCRRLU (ORCPT
+        with ESMTP id S232305AbhCRRL1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Mar 2021 13:11:20 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A798EC06175F
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 10:11:20 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id b15so30323983qvz.15
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 10:11:20 -0700 (PDT)
+        Thu, 18 Mar 2021 13:11:27 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A32C061762
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 10:11:27 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id t24so14796156qkg.3
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Mar 2021 10:11:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=bTCEWvQMjkTW/eVBx3Fi28gIb6vhFXkJKuQZd7egWL4=;
-        b=QM8OLA42Fm+EJhSNbxgSxVvavuc0ct1+LtSBad1ujRa/OzI2Sowpd5cVK5d0O16hO8
-         uC2iMD4ZsB/rqG1ibhH0g8xsGLCFm9x2/25I+DF+OQl1Tp4Zg0L0mp971oSaCRNAfmOw
-         7T/2advDlbtcf9VqAEsJxAvqR/ynMYkjAIGf9g/WeJetJJtkJK54+yUsHEq1VvoRePUJ
-         WjqokvZG+GIY9pOOXNtMIiqWaWTnZHTrE+mpb6S+aGII/qO6ro0/KVVDvaitknQFsCyD
-         Gjv7qk0Hj97HRxdkYp4vKMy9MbiCmotBT002R6BVFJdzDdPQXIQZkv9qEh7QBRt4tywX
-         RLHw==
+        bh=EKy6eSpRty5bSmZbwR30NkKAGzsTESRLoXrAS0NLKzs=;
+        b=eNY2GRuACJ4olOGkjStJnYo4+tvS1eI09T9df2gayih2kTUfZntYqA2LC07oyFHHKx
+         LoRKGFl7PNJPDMcGsA8HHxwkyKD6TQ3Wyj2RgmLIE+s/HvtuXPx+5I6hrckpZS+oErY5
+         ogDFVfGdaqDnTuF18CVV+DDQ8LdUflseecN9bGTeT6a8+SxjHM098eZm7PBLmXf4op3n
+         1t24cup0GDg+RjbPgKZcdfUEVEtSdq/swYay65YLQskI16wdRli58LFrBk46rbgMuGYq
+         R1K0+s+6Qx3mqwk/4Tw3ukG0C8TFEkEBMu8Kfwp5nFQHghNI828VgANtKDjrPt40E0UW
+         Zliw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=bTCEWvQMjkTW/eVBx3Fi28gIb6vhFXkJKuQZd7egWL4=;
-        b=kj8vIdnaEugOJwcPKuf4PvBDd5fflplHNgm9wLnRjAoMUGQKoEc3HCpuvp7WOz0/Cg
-         vbreTxromVGUrbM/W4K8Vq0aZzEbeN15BSrE9R5HpG/erdShOAygzGiO2y6zuId8AIv9
-         CMgV8mG6YOCaK3oCcTT+KULypi6GQc2Yx79eLl8vXDd7icrkVhTxOTh8t+1svpjFcIwQ
-         /fGF2NOg57IkHFNdmnn2/lnOQS9rJ18RI5qz8yPhRuFAmgCT3mUpog27+I6bLpXvYFOF
-         u3lKMvGomKWYQDTrfUwbRtZHxkp1v0r2zTZ8vCymGP5RF8huGmywZV1ra7q6IT/OVbZI
-         8H1Q==
-X-Gm-Message-State: AOAM5323sRPTL+pVrvXcE+8OMHApMg7MHQSfZw8/U6mLYrgkyit7Vs5X
-        Kse0rFF3lYasCvue2lT75wJpDSc+9tWeQcZkiiM=
-X-Google-Smtp-Source: ABdhPJwKwcToOfhCBTwXzQOiIF7vT2J3y29SKQntX1XhREjSGT+g+sCTqRnigKZhWgl0MUUC1k4zzyQm6rc2YIEytFI=
+        bh=EKy6eSpRty5bSmZbwR30NkKAGzsTESRLoXrAS0NLKzs=;
+        b=bkRHV/o4J1KwcPhlm4Wr4ABZTbS7gu5uwHz/4fmYa5ZIL/Ocf//32pFop6pfWnu66k
+         jCbK4IKyXYwdFZ5fwHuIcS+VYZFCS0g0xnPU/wrQ59yjHkhonMrj0fvfjuPepFooWJWz
+         xHllElgxwafCC7r35akX5xe9xdu6g3RUHMVn4YH/tyzKpATtnNyBmDea/CNJYGOQQq8t
+         XuWLhEIuaNUI8Bt4mVEmI2Kiu4Q7tii07R1VKBN5imIxDf9xheWUiTTsGP0YQ481f2gW
+         Gf1kt8XwV8TCgXc+PBzz8/PVrIjZs/deyy12Yi8i6DS0uZGHeTRLpexPKgeZ75Jb1h1o
+         6/Rg==
+X-Gm-Message-State: AOAM531Y7KbvDxuZMbRSqZDGSXr0oJCI15KWzfjfySeZwqb6pgc7xkuI
+        5N7xS7r5vKbvIQ00m7Do3SDb0ho8wlWwd9xYShg=
+X-Google-Smtp-Source: ABdhPJwiIw/nT2sORQEJv0I4VRlDkF+rVz6Bmu3Ni9Zp0LOjbRn8BFtuq/bsl/qFKL5zfw7XxQ6J44Hw6n3oVZm4Gio=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:c0d7:a7ba:fb41:a35a])
- (user=samitolvanen job=sendgmr) by 2002:ad4:5bc9:: with SMTP id
- t9mr5270737qvt.61.1616087479813; Thu, 18 Mar 2021 10:11:19 -0700 (PDT)
-Date:   Thu, 18 Mar 2021 10:10:56 -0700
+ (user=samitolvanen job=sendgmr) by 2002:ad4:4ae9:: with SMTP id
+ cp9mr5359453qvb.20.1616087486617; Thu, 18 Mar 2021 10:11:26 -0700 (PDT)
+Date:   Thu, 18 Mar 2021 10:10:59 -0700
 In-Reply-To: <20210318171111.706303-1-samitolvanen@google.com>
-Message-Id: <20210318171111.706303-3-samitolvanen@google.com>
+Message-Id: <20210318171111.706303-6-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210318171111.706303-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v2 02/17] cfi: add __cficanonical
+Subject: [PATCH v2 05/17] workqueue: use WARN_ON_FUNCTION_MISMATCH
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -80,98 +80,34 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, the compiler replaces a function address taken
-in C code with the address of a local jump table entry, which passes
-runtime indirect call checks. However, the compiler won't replace
-addresses taken in assembly code, which will result in a CFI failure
-if we later jump to such an address in instrumented C code. The code
-generated for the non-canonical jump table looks this:
+With CONFIG_CFI_CLANG, a callback function passed to
+__queue_delayed_work from a module points to a jump table entry
+defined in the module instead of the one used in the core kernel,
+which breaks function address equality in this check:
 
-  <noncanonical.cfi_jt>: /* In C, &noncanonical points here */
-	jmp noncanonical
-  ...
-  <noncanonical>:        /* function body */
-	...
+  WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
 
-This change adds the __cficanonical attribute, which tells the
-compiler to use a canonical jump table for the function instead. This
-means the compiler will rename the actual function to <function>.cfi
-and points the original symbol to the jump table entry instead:
-
-  <canonical>:           /* jump table entry */
-	jmp canonical.cfi
-  ...
-  <canonical.cfi>:       /* function body */
-	...
-
-As a result, the address taken in assembly, or other non-instrumented
-code always points to the jump table and therefore, can be used for
-indirect calls in instrumented code without tripping CFI checks.
+Use WARN_ON_FUNCTION_MISMATCH() instead to disable the warning
+when CFI and modules are both enabled.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # pci.h
 ---
- include/linux/compiler-clang.h | 1 +
- include/linux/compiler_types.h | 4 ++++
- include/linux/init.h           | 4 ++--
- include/linux/pci.h            | 4 ++--
- 4 files changed, 9 insertions(+), 4 deletions(-)
+ kernel/workqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-index 6de9d0c9377e..adbe76b203e2 100644
---- a/include/linux/compiler-clang.h
-+++ b/include/linux/compiler-clang.h
-@@ -63,3 +63,4 @@
- #endif
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 0d150da252e8..03fe07d2f39f 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1630,7 +1630,7 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
+ 	struct work_struct *work = &dwork->work;
  
- #define __nocfi		__attribute__((__no_sanitize__("cfi")))
-+#define __cficanonical	__attribute__((__cfi_canonical_jump_table__))
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 796935a37e37..d29bda7f6ebd 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -246,6 +246,10 @@ struct ftrace_likely_data {
- # define __nocfi
- #endif
+ 	WARN_ON_ONCE(!wq);
+-	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
++	WARN_ON_FUNCTION_MISMATCH(timer->function, delayed_work_timer_fn);
+ 	WARN_ON_ONCE(timer_pending(timer));
+ 	WARN_ON_ONCE(!list_empty(&work->entry));
  
-+#ifndef __cficanonical
-+# define __cficanonical
-+#endif
-+
- #ifndef asm_volatile_goto
- #define asm_volatile_goto(x...) asm goto(x)
- #endif
-diff --git a/include/linux/init.h b/include/linux/init.h
-index b3ea15348fbd..045ad1650ed1 100644
---- a/include/linux/init.h
-+++ b/include/linux/init.h
-@@ -220,8 +220,8 @@ extern bool initcall_debug;
- 	__initcall_name(initstub, __iid, id)
- 
- #define __define_initcall_stub(__stub, fn)			\
--	int __init __stub(void);				\
--	int __init __stub(void)					\
-+	int __init __cficanonical __stub(void);			\
-+	int __init __cficanonical __stub(void)			\
- 	{ 							\
- 		return fn();					\
- 	}							\
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 86c799c97b77..39684b72db91 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1944,8 +1944,8 @@ enum pci_fixup_pass {
- #ifdef CONFIG_LTO_CLANG
- #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
- 				  class_shift, hook, stub)		\
--	void stub(struct pci_dev *dev);					\
--	void stub(struct pci_dev *dev)					\
-+	void __cficanonical stub(struct pci_dev *dev);			\
-+	void __cficanonical stub(struct pci_dev *dev)			\
- 	{ 								\
- 		hook(dev); 						\
- 	}								\
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
