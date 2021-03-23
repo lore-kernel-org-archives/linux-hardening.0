@@ -2,149 +2,169 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E225AC433E1
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 21:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8EFC433E4
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 23:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5B4619A3
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 21:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC020619EB
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 23:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233504AbhCWV2x (ORCPT
+        id S229900AbhCWXtO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 Mar 2021 17:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233461AbhCWV21 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 Mar 2021 17:28:27 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D30C061574
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 14:28:26 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id n138so28795806lfa.3
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 14:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oE8Re7U2eiRTAh9p3PAj7D06IDZ16XlxhTmOYb89s/8=;
-        b=FJMeWXH+SaUw1EE94VwNSxeUROOX72sUs1KyGDlEqEifmVqm6Nm3+EZZBosnRVkNGA
-         DwxLHCyqmfawP6Noi2RmaV7umcSzUA11e/grp81xPwUhI1/iUNw/31OWqPVezUi91wPY
-         utRanRrza0bGC2bDni7GFzhhO8qr0A+tJ0WoLmYS03HJlVuW9rKonI4L+EpSvQFYjHz9
-         bx+e6/Rti7mbXHAHS4ixI/leP99NIwuDcxTcvOG3aXffNhVOM7g7cM+FEvnwPm4H6KYn
-         FURJXnuQWRaVS4qInf/SKXxXGqlhptU8V21fgmbumrv01osdiuNJB+olA1xskDVq/+2Q
-         LP1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oE8Re7U2eiRTAh9p3PAj7D06IDZ16XlxhTmOYb89s/8=;
-        b=XlsYjpbdMUoml1ZBbBw6XxBA7Yu5eHLffTMcFy9tL+xxdg5W2/E9TPSlvYV9nWu+5c
-         xP3dNuvrp0td/o52OEuNkeZ/4eg0TkV/60wxIoY/mj+paXlK0+S3Md7DlyiUbrR5/XON
-         sspgjkZj3uS4yArmhcexdTOhy9C6ZrRN/VkVzqLUlzVeFvLXttMiAFJmfSSFoImDF0Mz
-         OknoYA1RZlmNGFjzno1ICF32UOSlzOC572KgGp36rkdXs08TgIrl5qZlW1hpqa/tR2OU
-         qBtGqRO+0fvck3qr0qIoh9tWYidk3Zvh0mFRIRhvvZnXXLmWosq7Z8XjjT1v5R5IH7g5
-         1ztA==
-X-Gm-Message-State: AOAM532nZVw74dLvsOkObtmkMAIUrSLLQBJan1YFiQFMgZB3VkSbMlbQ
-        8oXRAERITV1GcPdg5PaeKJWVSgYPodU3y0kp1xsvMw==
-X-Google-Smtp-Source: ABdhPJyQ7qsEvILqWPc3g5iRiytFJpTt4UTAmMg5r+eaD3LvYwwXBwdUjRC4U6ywX5x/yBprcY72YeaBiQ3jH5EanL4=
-X-Received: by 2002:a19:8c19:: with SMTP id o25mr1333lfd.547.1616534904876;
- Tue, 23 Mar 2021 14:28:24 -0700 (PDT)
+        Tue, 23 Mar 2021 19:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231202AbhCWXtH (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 23 Mar 2021 19:49:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F7DF619C2;
+        Tue, 23 Mar 2021 23:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616543343;
+        bh=73IUD1ex775GRIOLkVkhFhRaIXgVYqgtUbryJLv3RBw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GnFKBWJxIKnz95O+xW2aV0ZoO+k4AppcoqQoxYdGISN46/avmkjUr1OJ+PvHv0j+2
+         uWgNXseJrkWz5+3fcH3U20pHkOk1r2rvKM0otZMCqoJb55HRO0QPHywCp4DurK9KLO
+         E8z1w8rszrCzPrmmi9/9bxVbqtb34N+ygZmKqLRNFYTcbnl7vZOGPJBnxHEs6cnWN/
+         FAaFR/NPi5BEYFPt/0lj8UfVHj5BqqUV795/9cfo//R7e3vXLV/+wnPqIo+mpHuEUy
+         dOoYrYuq+CVhVLtM1sQG9Va+lD2sL+s80irx22HvpKfoemVnosCu51bWGRDIxVrFt2
+         vFVXdAo0v8e0w==
+Date:   Tue, 23 Mar 2021 17:48:58 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
+ flexible-array member
+Message-ID: <20210323224858.GA293698@embeddedor>
 MIME-Version: 1.0
-References: <20210323203946.2159693-1-samitolvanen@google.com> <20210323203946.2159693-10-samitolvanen@google.com>
-In-Reply-To: <20210323203946.2159693-10-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 23 Mar 2021 14:28:13 -0700
-Message-ID: <CAKwvOdnZwMKjJKd5Fbx5hH1Ute1ZkMZGP=Kn0tJq=rxF2P3eNw@mail.gmail.com>
-Subject: Re: [PATCH v3 09/17] treewide: Change list_sort to use const pointers
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 1:40 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> list_sort() internally casts the comparison function passed to it
-> to a different type with constant struct list_head pointers, and
-> uses this pointer to call the functions, which trips indirect call
-> Control-Flow Integrity (CFI) checking.
->
-> Instead of removing the consts, this change defines the
-> list_cmp_func_t type and changes the comparison function types of
-> all list_sort() callers to use const pointers, thus avoiding type
-> mismatches.
->
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  arch/arm64/kvm/vgic/vgic-its.c                  |  8 ++++----
->  arch/arm64/kvm/vgic/vgic.c                      |  3 ++-
->  block/blk-mq-sched.c                            |  3 ++-
->  block/blk-mq.c                                  |  3 ++-
->  drivers/acpi/nfit/core.c                        |  3 ++-
->  drivers/acpi/numa/hmat.c                        |  3 ++-
->  drivers/clk/keystone/sci-clk.c                  |  4 ++--
->  drivers/gpu/drm/drm_modes.c                     |  3 ++-
->  drivers/gpu/drm/i915/gt/intel_engine_user.c     |  3 ++-
->  drivers/gpu/drm/i915/gvt/debugfs.c              |  2 +-
->  drivers/gpu/drm/i915/selftests/i915_gem_gtt.c   |  3 ++-
->  drivers/gpu/drm/radeon/radeon_cs.c              |  4 ++--
->  .../hw/usnic/usnic_uiom_interval_tree.c         |  3 ++-
->  drivers/interconnect/qcom/bcm-voter.c           |  2 +-
->  drivers/md/raid5.c                              |  3 ++-
->  drivers/misc/sram.c                             |  4 ++--
->  drivers/nvme/host/core.c                        |  3 ++-
->  .../pci/controller/cadence/pcie-cadence-host.c  |  3 ++-
->  drivers/spi/spi-loopback-test.c                 |  3 ++-
->  fs/btrfs/raid56.c                               |  3 ++-
->  fs/btrfs/tree-log.c                             |  3 ++-
->  fs/btrfs/volumes.c                              |  3 ++-
->  fs/ext4/fsmap.c                                 |  4 ++--
->  fs/gfs2/glock.c                                 |  3 ++-
->  fs/gfs2/log.c                                   |  2 +-
->  fs/gfs2/lops.c                                  |  3 ++-
->  fs/iomap/buffered-io.c                          |  3 ++-
->  fs/ubifs/gc.c                                   |  7 ++++---
->  fs/ubifs/replay.c                               |  4 ++--
->  fs/xfs/scrub/bitmap.c                           |  4 ++--
->  fs/xfs/xfs_bmap_item.c                          |  4 ++--
->  fs/xfs/xfs_buf.c                                |  6 +++---
->  fs/xfs/xfs_extent_busy.c                        |  4 ++--
->  fs/xfs/xfs_extent_busy.h                        |  3 ++-
->  fs/xfs/xfs_extfree_item.c                       |  4 ++--
->  fs/xfs/xfs_refcount_item.c                      |  4 ++--
->  fs/xfs/xfs_rmap_item.c                          |  4 ++--
->  include/linux/list_sort.h                       |  7 ++++---
->  lib/list_sort.c                                 | 17 ++++++-----------
->  lib/test_list_sort.c                            |  3 ++-
->  net/tipc/name_table.c                           |  4 ++--
->  41 files changed, 90 insertions(+), 72 deletions(-)
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-This looks like all of the call sites I could find.  Yes, this looks
-much better, thank you for taking the time to fix all of these. I ran
-this through some build tests of ARCH=arm64 defconfig, allyesconfig,
-and same for my host (x86_64). All LGTM.
+Use an anonymous union with a couple of anonymous structs in order to
+keep userspace unchanged:
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+$ pahole -C nfs_fhbase_new fs/nfsd/nfsfh.o
+struct nfs_fhbase_new {
+        union {
+                struct {
+                        __u8       fb_version_aux;       /*     0     1 */
+                        __u8       fb_auth_type_aux;     /*     1     1 */
+                        __u8       fb_fsid_type_aux;     /*     2     1 */
+                        __u8       fb_fileid_type_aux;   /*     3     1 */
+                        __u32      fb_auth[1];           /*     4     4 */
+                };                                       /*     0     8 */
+                struct {
+                        __u8       fb_version;           /*     0     1 */
+                        __u8       fb_auth_type;         /*     1     1 */
+                        __u8       fb_fsid_type;         /*     2     1 */
+                        __u8       fb_fileid_type;       /*     3     1 */
+                        __u32      fb_auth_flex[0];      /*     4     0 */
+                };                                       /*     0     4 */
+        };                                               /*     0     8 */
+
+        /* size: 8, cachelines: 1, members: 1 */
+        /* last cacheline: 8 bytes */
+};
+
+Also, this helps with the ongoing efforts to enable -Warray-bounds by
+fixing the following warnings:
+
+fs/nfsd/nfsfh.c: In function ‘nfsd_set_fh_dentry’:
+fs/nfsd/nfsfh.c:191:41: warning: array subscript 1 is above array bounds of ‘__u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+  191 |        ntohl((__force __be32)fh->fh_fsid[1])));
+      |                              ~~~~~~~~~~~^~~
+./include/linux/kdev_t.h:12:46: note: in definition of macro ‘MKDEV’
+   12 | #define MKDEV(ma,mi) (((ma) << MINORBITS) | (mi))
+      |                                              ^~
+./include/uapi/linux/byteorder/little_endian.h:40:26: note: in expansion of macro ‘__swab32’
+   40 | #define __be32_to_cpu(x) __swab32((__force __u32)(__be32)(x))
+      |                          ^~~~~~~~
+./include/linux/byteorder/generic.h:136:21: note: in expansion of macro ‘__be32_to_cpu’
+  136 | #define ___ntohl(x) __be32_to_cpu(x)
+      |                     ^~~~~~~~~~~~~
+./include/linux/byteorder/generic.h:140:18: note: in expansion of macro ‘___ntohl’
+  140 | #define ntohl(x) ___ntohl(x)
+      |                  ^~~~~~~~
+fs/nfsd/nfsfh.c:191:8: note: in expansion of macro ‘ntohl’
+  191 |        ntohl((__force __be32)fh->fh_fsid[1])));
+      |        ^~~~~
+fs/nfsd/nfsfh.c:192:32: warning: array subscript 2 is above array bounds of ‘__u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+  192 |    fh->fh_fsid[1] = fh->fh_fsid[2];
+      |                     ~~~~~~~~~~~^~~
+fs/nfsd/nfsfh.c:192:15: warning: array subscript 1 is above array bounds of ‘__u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+  192 |    fh->fh_fsid[1] = fh->fh_fsid[2];
+      |    ~~~~~~~~~~~^~~
+
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/109
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/uapi/linux/nfsd/nfsfh.h | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
+
+diff --git a/include/uapi/linux/nfsd/nfsfh.h b/include/uapi/linux/nfsd/nfsfh.h
+index ff0ca88b1c8f..427294dd56a1 100644
+--- a/include/uapi/linux/nfsd/nfsfh.h
++++ b/include/uapi/linux/nfsd/nfsfh.h
+@@ -64,13 +64,24 @@ struct nfs_fhbase_old {
+  *   in include/linux/exportfs.h for currently registered values.
+  */
+ struct nfs_fhbase_new {
+-	__u8		fb_version;	/* == 1, even => nfs_fhbase_old */
+-	__u8		fb_auth_type;
+-	__u8		fb_fsid_type;
+-	__u8		fb_fileid_type;
+-	__u32		fb_auth[1];
+-/*	__u32		fb_fsid[0]; floating */
+-/*	__u32		fb_fileid[0]; floating */
++	union {
++		struct {
++			__u8		fb_version_aux;	/* == 1, even => nfs_fhbase_old */
++			__u8		fb_auth_type_aux;
++			__u8		fb_fsid_type_aux;
++			__u8		fb_fileid_type_aux;
++			__u32		fb_auth[1];
++			/*	__u32		fb_fsid[0]; floating */
++			/*	__u32		fb_fileid[0]; floating */
++		};
++		struct {
++			__u8		fb_version;	/* == 1, even => nfs_fhbase_old */
++			__u8		fb_auth_type;
++			__u8		fb_fsid_type;
++			__u8		fb_fileid_type;
++			__u32		fb_auth_flex[]; /* flexible-array member */
++		};
++	};
+ };
+ 
+ struct knfsd_fh {
+@@ -97,7 +108,7 @@ struct knfsd_fh {
+ #define	fh_fsid_type		fh_base.fh_new.fb_fsid_type
+ #define	fh_auth_type		fh_base.fh_new.fb_auth_type
+ #define	fh_fileid_type		fh_base.fh_new.fb_fileid_type
+-#define	fh_fsid			fh_base.fh_new.fb_auth
++#define	fh_fsid			fh_base.fh_new.fb_auth_flex
+ 
+ /* Do not use, provided for userspace compatiblity. */
+ #define	fh_auth			fh_base.fh_new.fb_auth
 -- 
-Thanks,
-~Nick Desaulniers
+2.27.0
+
