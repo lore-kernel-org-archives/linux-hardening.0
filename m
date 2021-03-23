@@ -8,60 +8,61 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D452EC04FFB
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A387C41621
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF4FE619EE
+	by mail.kernel.org (Postfix) with ESMTP id F0FAE619CE
 	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233494AbhCWUk4 (ORCPT
+        id S233539AbhCWUkz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 Mar 2021 16:40:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
+        Tue, 23 Mar 2021 16:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233578AbhCWUkW (ORCPT
+        with ESMTP id S233552AbhCWUkP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 Mar 2021 16:40:22 -0400
+        Tue, 23 Mar 2021 16:40:15 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A393C0613E2
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:19 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id l83so3779442ybf.22
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68001C0613D8
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:15 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id v6so3813702ybk.9
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=tNWRsiiEAfetheYG6qtDYdd6Zu2YM8DJGmENfE26Aac=;
-        b=QwtFzkNZ0ArdJ22uiNb1llxuSobP5aVQNzwPksMPm+yXD4iJErHZlbeYgNVneIsCaV
-         eWzSIifLKq9OeR/urLV+kBUy5t9Lj6BMjZqFICzYH6wVYLJimy4yOQuD7NgKMnmibW9S
-         zG50zFIIhTS3dotn12D1Zy6qsSjg8WUhwZTAAq2J7W9gn7luxZShIQYCTr+CZA3deHb8
-         U3jjpaLWT8ZiETFcnxTTPxy7Im1JnVTxQxGpi3yBHzfY2Dfw3S61ouZ35+FlKNnKAFPT
-         AeZpguEmKCpHpboafyAslh+3UWQD/2MhlgpX4aQM7wK4y4d9OGGiM9NT5wh5PIZuoCtX
-         4HRQ==
+        bh=qy/qpaQcjeJGAGSX/SJfdvrV6+xztRS9WV/l31kV3fo=;
+        b=p9ojVOb7QdO7JLZj9S/1SqPGP8MeifFmkf1e6TNJokU+4X+mDo0s3TIOhU1rmJD0gQ
+         C3q3EV251sFO4e//IgvNjn6P29FqOur3szQsT80WVJVAgcgLC/L4gp8LF+fgzMkzOMdQ
+         qK0XZckG24gPmdHwXF6V6z62Qj29O8AjeBevFbC/8BXBEoj5BXdSL0u6CL6w5E92BGE7
+         +vtDECL4yMlxuZ35+QWL2+CnrRi7FlCo5jHCQ87YudtBBhNKSZWNcK4Kl6XHbFJXUSPL
+         qDxp8oIjW07ybSAxf6LQQ6rDchJmoirsp7IIZbdM6z6gMba2BAhKKUVuDpzy54UcfqSt
+         3+kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=tNWRsiiEAfetheYG6qtDYdd6Zu2YM8DJGmENfE26Aac=;
-        b=qzey+UeYgCJVYAluMcC1YKAwpDCKsDS2mCYTfSYsyLh2916/QrwGfSt5xQ6R4T19Vg
-         urLQqfPeWqnjIKNKTI4rERfnGF8mQ896Jcsa0KxC2vf2c8DF+OjD0DRTZsycIzZvYV9l
-         yxVBY/eoBwd5vbBUQ0wfB1zek0YLE1kq2i1W8ub4vQFW9x9S/ej+Z4FVP/XcbIrNYk10
-         VvrPa+xocEP7jkY+XMcWR3qwLNT6BsK16QDPmGcwPt6VGySsSZNFmWK27uqT9aQhIFpJ
-         XBLADYlreT7hSjM0Iu8qocp03yp7PTW+vbcjlsnQkSgDpjuO9X3Bw4p0eTemTdOd8cTX
-         kqxQ==
-X-Gm-Message-State: AOAM530Q3TVu+yMO3PH67BeqiWzBcszUp/u7o+z5dxq3By6bKve6vdT6
-        T6SntOQBNUDETV7yJgNNfOHlzVyumosXSMjmVrI=
-X-Google-Smtp-Source: ABdhPJxEi3pQM02XMd23fjMyS1SetL4sDZHHMo2+iWEzXbz9tuF1eS1XAan8eMOnDTZL5Cre89JVC9ou2IlB88zz+ZI=
+        bh=qy/qpaQcjeJGAGSX/SJfdvrV6+xztRS9WV/l31kV3fo=;
+        b=iIME+YI60Dpy618LRPaYosw1zImhsn6ZgRjnJg0VY6XksYHWL7M76YTaXjxKcDy7c6
+         PPu2oFRtM2aN08mpHQ4gLq+NfplVYW6VM8wgr6sFzb2mBaRVdLsoMz/erZ+W6cAZY9gn
+         +aUAN16Zdt7noV6DK4T6JHgi4K/3BoEnqPDQI5mY3ySR80eUTBjfuW23pGz/GLtRUuk7
+         BaWitznfNPygvOvvOOzeJ71iDzXGdEuMXVhc7pr1PpLgvkZgJ8ZwPU7v7SncMv9DFNa+
+         W1wNxyR1ehAFtn2O1OkUgLYAi0vU4GF8azb6LhG/ZkhnNhheqMJg3ddUfQzycDERlAbO
+         Ap5g==
+X-Gm-Message-State: AOAM533Q8Fuzf0zAoPrW2wCaxAhAqoeXAOBodgTB0mQmVq8VshxdEGEy
+        FLIIXt0Bxz8IBXrJLTXXs2Ir1M2QhE4C+QwOGUk=
+X-Google-Smtp-Source: ABdhPJynHOWSO11EeejwuL7BmZY2Zs5wB2dBb0RO3vU6HGkp4hd57n5miL7y+94vuamNMAUwpzA/HtJp7Bz7P8/50B8=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e9a3:260d:763b:67dc])
- (user=samitolvanen job=sendgmr) by 2002:a25:686:: with SMTP id
- 128mr110596ybg.258.1616532018575; Tue, 23 Mar 2021 13:40:18 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 13:39:45 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:da48:: with SMTP id
+ n69mr74886ybf.47.1616532014644; Tue, 23 Mar 2021 13:40:14 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 13:39:43 -0700
 In-Reply-To: <20210323203946.2159693-1-samitolvanen@google.com>
-Message-Id: <20210323203946.2159693-17-samitolvanen@google.com>
+Message-Id: <20210323203946.2159693-15-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210323203946.2159693-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v3 16/17] KVM: arm64: Disable CFI for nVHE
+Subject: [PATCH v3 14/17] arm64: add __nocfi to functions that jump to a
+ physical address
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -81,31 +82,64 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Disable CFI for the nVHE code to avoid address space confusion.
+Disable CFI checking for functions that switch to linear mapping and
+make an indirect call to a physical address, since the compiler only
+understands virtual addresses and the CFI check for such indirect calls
+would always fail.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/kvm/hyp/nvhe/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/mmu_context.h | 2 +-
+ arch/arm64/kernel/cpu-reset.h        | 8 ++++----
+ arch/arm64/kernel/cpufeature.c       | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-index a6707df4f6c0..fb24a0f022ad 100644
---- a/arch/arm64/kvm/hyp/nvhe/Makefile
-+++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-@@ -75,9 +75,9 @@ quiet_cmd_hyprel = HYPREL  $@
- quiet_cmd_hypcopy = HYPCOPY $@
-       cmd_hypcopy = $(OBJCOPY) --prefix-symbols=__kvm_nvhe_ $< $@
+diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+index 16cc9a694bb2..270ba8761a23 100644
+--- a/arch/arm64/include/asm/mmu_context.h
++++ b/arch/arm64/include/asm/mmu_context.h
+@@ -119,7 +119,7 @@ static inline void cpu_install_idmap(void)
+  * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
+  * avoiding the possibility of conflicting TLB entries being allocated.
+  */
+-static inline void cpu_replace_ttbr1(pgd_t *pgdp)
++static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
+ {
+ 	typedef void (ttbr_replace_func)(phys_addr_t);
+ 	extern ttbr_replace_func idmap_cpu_replace_ttbr1;
+diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+index dfba8cf921e5..a05bda363272 100644
+--- a/arch/arm64/kernel/cpu-reset.h
++++ b/arch/arm64/kernel/cpu-reset.h
+@@ -13,10 +13,10 @@
+ void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
+ 	unsigned long arg0, unsigned long arg1, unsigned long arg2);
  
--# Remove ftrace and Shadow Call Stack CFLAGS.
--# This is equivalent to the 'notrace' and '__noscs' annotations.
--KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
-+# Remove ftrace, Shadow Call Stack, and CFI CFLAGS.
-+# This is equivalent to the 'notrace', '__noscs', and '__nocfi' annotations.
-+KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS) $(CC_FLAGS_CFI), $(KBUILD_CFLAGS))
+-static inline void __noreturn cpu_soft_restart(unsigned long entry,
+-					       unsigned long arg0,
+-					       unsigned long arg1,
+-					       unsigned long arg2)
++static inline void __noreturn __nocfi cpu_soft_restart(unsigned long entry,
++						       unsigned long arg0,
++						       unsigned long arg1,
++						       unsigned long arg2)
+ {
+ 	typeof(__cpu_soft_restart) *restart;
  
- # KVM nVHE code is run at a different exception code with a different map, so
- # compiler instrumentation that inserts callbacks or checks into the code may
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 7ec1c2ccdc0b..473212ff4d70 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1443,7 +1443,7 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ }
+ 
+ #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+-static void
++static void __nocfi
+ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+ {
+ 	typedef void (kpti_remap_fn)(int, int, phys_addr_t);
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
