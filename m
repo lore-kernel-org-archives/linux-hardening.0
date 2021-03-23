@@ -2,248 +2,219 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9920C433DB
-	for <linux-hardening@archiver.kernel.org>; Sun, 21 Mar 2021 17:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BE9C433E0
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926B161920
-	for <linux-hardening@archiver.kernel.org>; Sun, 21 Mar 2021 17:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F30B61574
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbhCURET (ORCPT
+        id S233429AbhCWUkA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 21 Mar 2021 13:04:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53802 "EHLO
+        Tue, 23 Mar 2021 16:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230134AbhCURDz (ORCPT
+        with ESMTP id S233442AbhCWUjt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 21 Mar 2021 13:03:55 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8593DC061574
-        for <linux-hardening@vger.kernel.org>; Sun, 21 Mar 2021 10:03:55 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id c204so9378339pfc.4
-        for <linux-hardening@vger.kernel.org>; Sun, 21 Mar 2021 10:03:55 -0700 (PDT)
+        Tue, 23 Mar 2021 16:39:49 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A69EC061763
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:39:49 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id x10so3829825ybr.11
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=t6QjqKPe2nTK/PNzThmSOWe7GdZqbg6jHmNdZttH5JY=;
-        b=kS0l+gnw6EHePRjrc1IKP71VOtAYgrJ/DvSJI87MecLBwpXsLwucas1kVL44njHOJD
-         Khoo0uVVUFRXCYmj4hVz4zS64uDP+RLLOH01d0sBCMXWt/rX8Ya9tRjKEiNqtQRBPi0x
-         wkZZ6b6gOyBIeboYXlFaaOlvX2/Ui7wcSKz8s=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=WCFGTI2MzQSIA8TA7+0NNDS7r3FMw1zz4PI7vRl6tz8=;
+        b=L8ISBtfVqQC1eYGzosYom8Yam4Fe6VlMONouaFNd/YHRoKYHe1m+fYaD4rhMjD4TA8
+         AM3Tsm5hGrsyh9yYIl54rZGH/XXhPCGDx12B/2/Lw8VB9yEGLhABM04Jrthk5p+igMKE
+         FQtAcHPrTYnmp0ve2ntMLsef6hA5RwvpREqpDE8sAP/ULFRUvmDiqVv6ZPeZVsX4uG7a
+         6rHMM+sECywBkU5Figcf/kSMze4goqu7iEqiFWU+5VTPdyX1tZsGJ6J4ipJApbyR9Sh6
+         mzaDp969NaXlEKbb56wgl2pNCrRZR7zNRQa5H/gSqP+1Hd/sGjho3HuTvsQdGrIZ+Wkn
+         jcZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t6QjqKPe2nTK/PNzThmSOWe7GdZqbg6jHmNdZttH5JY=;
-        b=W91RZricBpMlEoJGT8C0d7GGRXCTejhCHOglZbDqnYT7KWbXeFUWBeOXyF5hT1YEKH
-         i4bjG8731kxQPaFsnaICGieyqdJ/9GqyrdqKPhkJG/9wvLjNMqGGfg5O4OVVuhnt1/K6
-         fbz9GrRPTS4Yc9oPeCpAPNR51Rs0ycZyYkQegDB4Cxi5L5nk+YkWSk+L4tVITCJmBEoa
-         qP/1GiJnFi5KyYtdEXY+DzyAuMR9S3CbEPXZC9FX28VBc7LfAxwZAuZjjt4UG7wPMJfW
-         4GEMTaHbB9k8M5300GzEj7j5Cdx5Chd+ZKEYszobFqO8VW+4BQwkkKo6DmMlHB/F5L+q
-         Nfxg==
-X-Gm-Message-State: AOAM531e6bpFzHgPBfQcjHDJsYnOirKMD36zUnvG61M2eqGjj5b7bCVT
-        85TwgvH1cLl50vn1jSBkmS8pSA==
-X-Google-Smtp-Source: ABdhPJwYdOzaG5EX8VfuaSd/pv73OKX7Gdj5qaTHa4vBEGnBqdu/yXDr+Yzf5Pmcf6GbAWD8fFNpIQ==
-X-Received: by 2002:a63:d17:: with SMTP id c23mr19993736pgl.251.1616346234415;
-        Sun, 21 Mar 2021 10:03:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i7sm11386721pfq.184.2021.03.21.10.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Mar 2021 10:03:53 -0700 (PDT)
-Date:   Sun, 21 Mar 2021 10:03:52 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v7 4/6] x86/entry: Enable random_kstack_offset support
-Message-ID: <202103210944.6EA6C80@keescook>
-References: <20210319212835.3928492-1-keescook@chromium.org>
- <20210319212835.3928492-5-keescook@chromium.org>
- <20210320115820.GA4151166@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210320115820.GA4151166@gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=WCFGTI2MzQSIA8TA7+0NNDS7r3FMw1zz4PI7vRl6tz8=;
+        b=feCG0n0WcuETU/Q8xyhfLOFVTw6cMsqdXLl15qwTO8heM9Hn/Tu0VJQ/+QscPQaYKD
+         L8cdr8HG4CtIAF6W26Iu2b38pRgWrgeMEy5zEQuHlM0lh7Lh73bPQKNFzFKeT1LhCTmV
+         SO5OYcj+oZEl8fnVtnkNCNgINvWxEgjUbayUkJDxcCn1dwdmylNsx07S2mQ5WHyopRgR
+         H0GJvfoz8NY5wNu/pav/3rhN/XOP5NqtXQwhSMPt7t0Bh+uc4ntY2512ST3Uvn7UYaXB
+         B/zpZfOogFzSiyP/DbdUQ47CMOKvDWSYBDT6nEFQ9Xsb776+ww+LWVmYGIZftAsa9PeX
+         XVnA==
+X-Gm-Message-State: AOAM530V6smby5DBSQi7+HZUAp3uLTxSNuR7rpj2/EECLc5HHeTYJkVW
+        YST0Itr/KWoWdQHcpFynGcq0ARm2wpkGwBR76Yw=
+X-Google-Smtp-Source: ABdhPJypNxMQPGcrvIUiNtiewpRG4S5rvp+CN7WrRUDRG8x0unI1VBhT3RaBBZmMcMEJjVZj4B32NowbtE9isxFNPjw=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e9a3:260d:763b:67dc])
+ (user=samitolvanen job=sendgmr) by 2002:a25:868c:: with SMTP id
+ z12mr43352ybk.389.1616531988566; Tue, 23 Mar 2021 13:39:48 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 13:39:29 -0700
+Message-Id: <20210323203946.2159693-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
+Subject: [PATCH v3 00/17] Add support for Clang CFI
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Mar 20, 2021 at 12:58:20PM +0100, Ingo Molnar wrote:
-> 
-> * Kees Cook <keescook@chromium.org> wrote:
-> 
-> > Allow for a randomized stack offset on a per-syscall basis, with roughly
-> > 5-6 bits of entropy, depending on compiler and word size. Since the
-> > method of offsetting uses macros, this cannot live in the common entry
-> > code (the stack offset needs to be retained for the life of the syscall,
-> > which means it needs to happen at the actual entry point).
-> 
-> >  __visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-> >  {
-> > +	add_random_kstack_offset();
-> >  	nr = syscall_enter_from_user_mode(regs, nr);
-> 
-> > @@ -83,6 +84,7 @@ __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
-> >  {
-> >  	unsigned int nr = syscall_32_enter(regs);
-> >  
-> > +	add_random_kstack_offset();
-> 
-> >  	unsigned int nr = syscall_32_enter(regs);
-> >  	int res;
-> >  
-> > +	add_random_kstack_offset();
-> 
-> > @@ -70,6 +71,13 @@ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
-> >  	 */
-> >  	current_thread_info()->status &= ~(TS_COMPAT | TS_I386_REGS_POKED);
-> >  #endif
-> > +
-> > +	/*
-> > +	 * x86_64 stack alignment means 3 bits are ignored, so keep
-> > +	 * the top 5 bits. x86_32 needs only 2 bits of alignment, so
-> > +	 * the top 6 bits will be used.
-> > +	 */
-> > +	choose_random_kstack_offset(rdtsc() & 0xFF);
-> >  }
-> 
-> 1)
-> 
-> Wondering why the calculation of the kstack offset (which happens in 
-> every syscall) is separated from the entry-time logic and happens 
-> during return to user-space?
-> 
-> The two methods:
-> 
-> +#define add_random_kstack_offset() do {                                        \
-> +       if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
-> +                               &randomize_kstack_offset)) {            \
-> +               u32 offset = this_cpu_read(kstack_offset);              \
-> +               u8 *ptr = __builtin_alloca(offset & 0x3FF);             \
-> +               asm volatile("" : "=m"(*ptr) :: "memory");              \
-> +       }                                                               \
-> +} while (0)
-> +
-> +#define choose_random_kstack_offset(rand) do {                         \
-> +       if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
-> +                               &randomize_kstack_offset)) {            \
-> +               u32 offset = this_cpu_read(kstack_offset);              \
-> +               offset ^= (rand);                                       \
-> +               this_cpu_write(kstack_offset, offset);                  \
-> +       }                                                               \
-> +} while (0)
-> 
-> choose_random_kstack_offset() basically calculates the offset and 
-> stores it in a percpu variable (mixing it with the previous offset 
-> value), add_random_kstack_offset() uses it in an alloca() dynamic 
-> stack allocation.
-> 
-> Wouldn't it be (slightly) lower combined overhead to just do it in a 
-> single step? There would be duplication along the 3 syscall entry 
-> points, but this should be marginal as this looks small, and the entry 
-> points would probably be cache-hot.
+This series adds support for Clang's Control-Flow Integrity (CFI)
+checking. With CFI, the compiler injects a runtime check before each
+indirect function call to ensure the target is a valid function with
+the correct static type. This restricts possible call targets and
+makes it more difficult for an attacker to exploit bugs that allow the
+modification of stored function pointers. For more details, see:
 
-In earlier threads it was pointed out that one way to make things less
-predictable was to do the calculation at the end of a syscall so that it
-was more distant from entering userspace (with the thinking that things
-like rdtsc were more predictable by userspace if it was always happening
-X cycles after entering a syscall). Additionally, the idea of using
-percpu meant that the chosen values wouldn't be tied to a process,
-making even "short" syscalls (i.e. getpid) less predictable because an
-attacker would need to have pinned the process to a single CPU, etc.
+  https://clang.llvm.org/docs/ControlFlowIntegrity.html
 
-I can include these details more explicitly in the next change log, if
-you think that makes sense?
+The first patch contains build system changes and error handling,
+and implements support for cross-module indirect call checking. The
+remaining patches address issues caused by the compiler
+instrumentation. These include fixing known type mismatches, as well
+as issues with address space confusion and cross-module function
+address equality.
 
-> 2)
-> 
-> Another detail I noticed: add_random_kstack_offset() limits the offset 
-> to 0x3ff, or 1k - 10 bits.
-> 
-> But the RDTSC mask is 0xff, 8 bits:
-> 
-> +       /*
-> +        * x86_64 stack alignment means 3 bits are ignored, so keep
-> +        * the top 5 bits. x86_32 needs only 2 bits of alignment, so
-> +        * the top 6 bits will be used.
-> +        */
-> +       choose_random_kstack_offset(rdtsc() & 0xFF);
-> 
-> alloca() itself works in byte units and will round the allocation to 8 
-> bytes on x86-64, to 4 bytes on x86-32, this is what the 'ignored bits' 
-> reference in the comment is to, right?
-> 
-> Why is there a 0x3ff mask for the alloca() call and a 0xff mask to the 
-> RDTSC randomizing value? Shouldn't the two be synced up? Or was the 
-> intention to shift the RDTSC value to the left by 3 bits?
+These patches add support only for arm64, but I'll post patches also
+for x86_64 after we address the remaining issues there, including
+objtool support.
 
-Yes, it's intentional -- the 0x3ff limit is there to make sure the
-alloca has a distinct upper bound, and the 8 bits is there to let the
-compiler choose how much of those 8 bits it wants to throw away to stack
-alignment. The limit to "at most 8 bits" (really 5) is chosen as a
-middle ground between raising unpredictability without shrinking the
-available stack space too much. (Note that arm64's alignment has to
-tweak this by 1 more bit, so it is masking with 0x1ff.
+You can also pull this series from
 
-I could attempt to adjust the comments to reflect these considerations.
+  https://github.com/samitolvanen/linux.git cfi-v3
 
-> 3)
-> 
-> Finally, kstack_offset is a percpu variable:
-> 
->   #ifdef CONFIG_HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->   ...
->   DEFINE_PER_CPU(u32, kstack_offset);
-> 
-> This is inherited across tasks on scheduling, and new syscalls will 
-> mix in new RDTSC values to continue to randomize the offset.
-> 
-> Wouldn't it make sense to further mix values into this across context 
-> switching boundaries? A really inexpensive way would be to take the 
-> kernel stack value and mix it into the offset, and maybe even the 
-> randomized t->stack_canary value?
-> 
-> This would further isolate the syscall kernel stack offsets of 
-> separate execution contexts from each other, should an attacker find a 
-> way to estimate or influence likely RDTSC values.
+---
+Changes in v3:
+ - Added a patch to change list_sort() callers treewide to use
+   const pointers instead of simply removing the internal casts.
+ - Changed cleanup_symbol_name() to return bool.
+ - Changed module.lds.S to drop the .eh_frame section only with
+   CONFIG_CFI_CLANG.
+ - Switched to synchronize_rcu() in update_shadow().
 
-I think this was discussed at some point too, though my search-foo is
-failing me. I'm open to adding this to the mix, though care is needed
-for both stack address and stack canary values, since they both have
-specific structure (i.e. high and low bits of address are "known", and
-low bits of canary are always zero) and we don't want to run the risk
-of entangling secret values: if one can be exposed, does the entangling
-expose the others?
+Changes in v2:
+ - Fixed .text merging in module.lds.S.
+ - Added WARN_ON_FUNCTION_MISMATCH() and changed kernel/thread.c
+   and kernel/workqueue.c to use the macro instead.
 
-I've had to deal with both of these issues with the slab freelist pointer
-obfuscation, so my instinct here is to avoid mixing the other values in.
-I'm open to improving it, of course, but I think rdtsc is a good first
-step.
 
+Sami Tolvanen (17):
+  add support for Clang CFI
+  cfi: add __cficanonical
+  mm: add generic __va_function and __pa_function macros
+  module: ensure __cfi_check alignment
+  workqueue: use WARN_ON_FUNCTION_MISMATCH
+  kthread: use WARN_ON_FUNCTION_MISMATCH
+  kallsyms: strip ThinLTO hashes from static functions
+  bpf: disable CFI in dispatcher functions
+  treewide: Change list_sort to use const pointers
+  lkdtm: use __va_function
+  psci: use __pa_function for cpu_resume
+  arm64: implement __va_function
+  arm64: use __pa_function
+  arm64: add __nocfi to functions that jump to a physical address
+  arm64: add __nocfi to __apply_alternatives
+  KVM: arm64: Disable CFI for nVHE
+  arm64: allow CONFIG_CFI_CLANG to be selected
+
+ Makefile                                      |  17 +
+ arch/Kconfig                                  |  45 +++
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/include/asm/memory.h               |  15 +
+ arch/arm64/include/asm/mmu_context.h          |   4 +-
+ arch/arm64/kernel/acpi_parking_protocol.c     |   2 +-
+ arch/arm64/kernel/alternative.c               |   4 +-
+ arch/arm64/kernel/cpu-reset.h                 |  10 +-
+ arch/arm64/kernel/cpufeature.c                |   4 +-
+ arch/arm64/kernel/psci.c                      |   3 +-
+ arch/arm64/kernel/smp_spin_table.c            |   2 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile              |   6 +-
+ arch/arm64/kvm/vgic/vgic-its.c                |   8 +-
+ arch/arm64/kvm/vgic/vgic.c                    |   3 +-
+ block/blk-mq-sched.c                          |   3 +-
+ block/blk-mq.c                                |   3 +-
+ drivers/acpi/nfit/core.c                      |   3 +-
+ drivers/acpi/numa/hmat.c                      |   3 +-
+ drivers/clk/keystone/sci-clk.c                |   4 +-
+ drivers/firmware/psci/psci.c                  |   4 +-
+ drivers/gpu/drm/drm_modes.c                   |   3 +-
+ drivers/gpu/drm/i915/gt/intel_engine_user.c   |   3 +-
+ drivers/gpu/drm/i915/gvt/debugfs.c            |   2 +-
+ drivers/gpu/drm/i915/selftests/i915_gem_gtt.c |   3 +-
+ drivers/gpu/drm/radeon/radeon_cs.c            |   4 +-
+ .../hw/usnic/usnic_uiom_interval_tree.c       |   3 +-
+ drivers/interconnect/qcom/bcm-voter.c         |   2 +-
+ drivers/md/raid5.c                            |   3 +-
+ drivers/misc/lkdtm/usercopy.c                 |   2 +-
+ drivers/misc/sram.c                           |   4 +-
+ drivers/nvme/host/core.c                      |   3 +-
+ .../controller/cadence/pcie-cadence-host.c    |   3 +-
+ drivers/spi/spi-loopback-test.c               |   3 +-
+ fs/btrfs/raid56.c                             |   3 +-
+ fs/btrfs/tree-log.c                           |   3 +-
+ fs/btrfs/volumes.c                            |   3 +-
+ fs/ext4/fsmap.c                               |   4 +-
+ fs/gfs2/glock.c                               |   3 +-
+ fs/gfs2/log.c                                 |   2 +-
+ fs/gfs2/lops.c                                |   3 +-
+ fs/iomap/buffered-io.c                        |   3 +-
+ fs/ubifs/gc.c                                 |   7 +-
+ fs/ubifs/replay.c                             |   4 +-
+ fs/xfs/scrub/bitmap.c                         |   4 +-
+ fs/xfs/xfs_bmap_item.c                        |   4 +-
+ fs/xfs/xfs_buf.c                              |   6 +-
+ fs/xfs/xfs_extent_busy.c                      |   4 +-
+ fs/xfs/xfs_extent_busy.h                      |   3 +-
+ fs/xfs/xfs_extfree_item.c                     |   4 +-
+ fs/xfs/xfs_refcount_item.c                    |   4 +-
+ fs/xfs/xfs_rmap_item.c                        |   4 +-
+ include/asm-generic/bug.h                     |  16 +
+ include/asm-generic/vmlinux.lds.h             |  20 +-
+ include/linux/bpf.h                           |   4 +-
+ include/linux/cfi.h                           |  41 +++
+ include/linux/compiler-clang.h                |   3 +
+ include/linux/compiler_types.h                |   8 +
+ include/linux/init.h                          |   6 +-
+ include/linux/list_sort.h                     |   7 +-
+ include/linux/mm.h                            |   8 +
+ include/linux/module.h                        |  13 +-
+ include/linux/pci.h                           |   4 +-
+ init/Kconfig                                  |   2 +-
+ kernel/Makefile                               |   4 +
+ kernel/cfi.c                                  | 329 ++++++++++++++++++
+ kernel/kallsyms.c                             |  55 ++-
+ kernel/kthread.c                              |   3 +-
+ kernel/module.c                               |  43 +++
+ kernel/workqueue.c                            |   2 +-
+ lib/list_sort.c                               |  17 +-
+ lib/test_list_sort.c                          |   3 +-
+ net/tipc/name_table.c                         |   4 +-
+ scripts/Makefile.modfinal                     |   2 +-
+ scripts/module.lds.S                          |  20 +-
+ 74 files changed, 752 insertions(+), 112 deletions(-)
+ create mode 100644 include/linux/cfi.h
+ create mode 100644 kernel/cfi.c
+
+
+base-commit: 7acac4b3196caee5e21fb5ea53f8bc124e6a16fc
 -- 
-Kees Cook
+2.31.0.291.g576ba9dcdaf-goog
+
