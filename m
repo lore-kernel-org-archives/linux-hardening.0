@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC68C05022
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4870AC04FFF
 	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB10619CB
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A4B619D6
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233473AbhCWUks (ORCPT
+        id S233695AbhCWUk5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 Mar 2021 16:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44918 "EHLO
+        Tue, 23 Mar 2021 16:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233437AbhCWUkB (ORCPT
+        with ESMTP id S233583AbhCWUkY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 Mar 2021 16:40:01 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 961C9C061763
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:00 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id k189so3819330ybb.17
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:00 -0700 (PDT)
+        Tue, 23 Mar 2021 16:40:24 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C26CC0613E9
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:21 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id s16so27299qvw.3
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=kAxWBGQQ6gb1U0MwyH2aGrnOUTzFGjVGvgXGkxVH/cc=;
-        b=obb/St0ECVpiVYPjl0tFmSeAu+nwHW6a+FyVf5Y93kL0zciJ7OpXo5pz5/5qK+sMFf
-         HVCB7lPNLLCcgrreAMPMIq89DUCTawBOwNPUPSIBya5VRwan8cbfXQx100+5xN/Qkd+t
-         DrRy/pbSThpGxZ1QzI4eyYQAJqKt5nt14oxKeAqxjwjAb66eROjyJZpq+iXVKnIt1UeO
-         qE3Het9/jgbk33l/79gSOA0M2UKmfHun8/qcQ5XwaA/WAB2nFQGlLlfTzyIcIhj7o/5V
-         IAm35WHoPPYpvmYzDW1CTc/YgvwTLIfoZ+x6jtjFf4U8j7x1w0Jt0fXDFRfY/dN/7g6Y
-         zgEA==
+        bh=WZ2fsTX5FLJhX01BulIdj9aVU+u+1SaaqVDcWrlk7vo=;
+        b=ec/02RNqMxC3NtjfEqCKWLv4qwmQTmHrkXsCeNO2KBn8qSqKzTE24FKGqfuKH+TVkK
+         X/VKFkbL4vsRYCrPeFIrZP8DeiwqKS96n7WGnqpK5r2/VAz0Iab+2cnLr9ixgbVx3i2+
+         bJO7ki2MVhZqoAWHQEzmE5B7oTVS3IIOSVMH6lZh48SF/0j7bgW6jHNwPIk8gKuBLJqR
+         4qQ5N4v6mKVofR2cSUqiTSphpJlczKzRN+vOPaGMsYJ3GFsS6r9eXFPtqA3WSVhoq05F
+         zPIbSYNFmagSwu4VxL+cE8EfslHOGZyTYBOn5X3fzMMM4mw38aQ1r1FrLS9fBfhCQ2tj
+         1law==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=kAxWBGQQ6gb1U0MwyH2aGrnOUTzFGjVGvgXGkxVH/cc=;
-        b=ZstxFhPQkOSiSLspCxHKyhDQrramFWcw8pEIskTIegX4+0Bm3It0kOkkRCgJ3AQfw6
-         T8xNJ+P7YdVr6nv70WLbfA/hQ8pq4j1QDsNPPn8UO18m/iO/T3dgrVcLKdGR1OhzrPb2
-         dss5o3L+SOwMC1lfxa3LzI6NmtWSstq4ummHffaur53Q6OG8w5XcuVfBVS7UzhegoPkP
-         C1hwVH2Ag16f/5Fi+mFBCutgoxxqiklGm2T8sbRrqSSqsYP4I78+Y05cl7uK8nyVRs6m
-         DUoUsRU3blro/x00JZZo/GTFlwCtfaXgYR8nkSG+f+H5Ps9LwJIFO2F8CUK0ovS6nen+
-         W8WQ==
-X-Gm-Message-State: AOAM531II0qwr3T7U1rJhnXS0yYFPWzreI25ufD0B3uTwJmXZszkRL//
-        hE9R4YmJ9y+wDWZNRqstBrx2enE7QAAtd6qrlWs=
-X-Google-Smtp-Source: ABdhPJy06lzastyLa7rjZrqrKe8Kw6vypE8VYVF9BzE0zOiJRLohmqAfcSnsVJk7XWpS4yGsr/w/V3cRXxwJCIzEtGs=
+        bh=WZ2fsTX5FLJhX01BulIdj9aVU+u+1SaaqVDcWrlk7vo=;
+        b=d8w5GoG7yVU3jKguP5bhcN9rl8RJa9azLwv8OiWemuTq/cbE4fZ1wQgDpQ5Gz9Gin5
+         SBpL/OW569mU0ztg4YmhSv/ibNUlRMapUACIavrboemkndWSi1gSsZ2jfBv8xLcoYgde
+         4ST9bYIa5Cvb5xAWiW+z2h9hIHQw3iQiHG5i0kWGLRDBBzoiBpT1rluHYK8ar2QdAHZC
+         Iqg1e8LumwF4mG+5PMAidZx4IOv22dQeFm/ZF03FFb+UF0n9KdUnep1JmdbxGM3BqAuh
+         g8FslsMLrFSIFAsE/q8b1Ut9mQ/7pF5ZgnouM0oJnvUXf9ak3ah5L+BagtE2fzIdl6FC
+         tDWg==
+X-Gm-Message-State: AOAM533B2ucm9gDAepAgB//sH5Zz6RNrHgyYfbUXtXmSxjdlPJ3rH/Cc
+        B7VQ3lkw+u9VZIkI6CYiHEkV+BaAO/+iBhxDdis=
+X-Google-Smtp-Source: ABdhPJyxpPvs3kGL5X0rhxaceHJDwoHelX5/WOAlmnNB1fMlzzx1j3iwVr8PFhB1zHKJQ3nkMRVGiRyWH5xdyb6dFU8=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e9a3:260d:763b:67dc])
- (user=samitolvanen job=sendgmr) by 2002:a25:e008:: with SMTP id
- x8mr147121ybg.90.1616531999835; Tue, 23 Mar 2021 13:39:59 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 13:39:35 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:bec3:: with SMTP id
+ f3mr6577376qvj.49.1616532020445; Tue, 23 Mar 2021 13:40:20 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 13:39:46 -0700
 In-Reply-To: <20210323203946.2159693-1-samitolvanen@google.com>
-Message-Id: <20210323203946.2159693-7-samitolvanen@google.com>
+Message-Id: <20210323203946.2159693-18-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210323203946.2159693-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v3 06/17] kthread: use WARN_ON_FUNCTION_MISMATCH
+Subject: [PATCH v3 17/17] arm64: allow CONFIG_CFI_CLANG to be selected
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -81,35 +81,26 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, a callback function passed to
-__kthread_queue_delayed_work from a module points to a jump table
-entry defined in the module instead of the one used in the core
-kernel, which breaks function address equality in this check:
-
-  WARN_ON_ONCE(timer->function != ktead_delayed_work_timer_fn);
-
-Use WARN_ON_FUNCTION_MISMATCH() instead to disable the warning
-when CFI and modules are both enabled.
+Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- kernel/kthread.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 1578973c5740..a1972eba2917 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -963,7 +963,8 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
- 	struct timer_list *timer = &dwork->timer;
- 	struct kthread_work *work = &dwork->work;
- 
--	WARN_ON_ONCE(timer->function != kthread_delayed_work_timer_fn);
-+	WARN_ON_FUNCTION_MISMATCH(timer->function,
-+				  kthread_delayed_work_timer_fn);
- 
- 	/*
- 	 * If @delay is 0, queue @dwork->work immediately.  This is for
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 5656e7aacd69..2eefdbc3e3c9 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -75,6 +75,7 @@ config ARM64
+ 	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
+ 	select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
++	select ARCH_SUPPORTS_CFI_CLANG
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
