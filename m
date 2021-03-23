@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E0FC433E1
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C4FC4361B
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCE1F619D7
+	by mail.kernel.org (Postfix) with ESMTP id 8D015619CB
 	for <linux-hardening@archiver.kernel.org>; Tue, 23 Mar 2021 20:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233445AbhCWUkw (ORCPT
+        id S233581AbhCWUkr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 Mar 2021 16:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
+        Tue, 23 Mar 2021 16:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233486AbhCWUkF (ORCPT
+        with ESMTP id S233472AbhCWUj6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 Mar 2021 16:40:05 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53A0FC0613DE
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:04 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id m35so1964309qtd.11
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:40:04 -0700 (PDT)
+        Tue, 23 Mar 2021 16:39:58 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069E8C0613E2
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:39:57 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id h12so16964qvm.9
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Mar 2021 13:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=hHyY7qre9OXEm5PJ4BWXLYwsH5KdHQkHk/skTedwvAs=;
-        b=XrXpk80QpW18uEoFzgTskAcjmvDwp4KkI6czCZLCI2LllpcLlxdrxTo1ItDmNHN8O3
-         bTKrEPYdAX8nqjUwEIjMGeZsRGCVSfDL1H2a3iHP2ngOiAKHMzDoZoN0zJI6U4uE7k4F
-         VmweQXHEF/+JfAZFlAnZ8tr59hnNtlg0Zu2hks4+H3cinnrhxWtfOBc/gs/UrtgKxOLm
-         BhVL1pP08EBbqj7+0X2iUTjwgv413Vz8hEc3BGPp0zOsqaAbAJtmiERhqTuyjM44Skll
-         xAU/PM/Gg5Aoxn2Inc/k5V8U3wmSxVTzMEVnRHN2lA+v/IcNPy7/8t7fb9X4R/xp1aHQ
-         xZhg==
+        bh=2eJKl2P+mphx8MXuY5eZ3j0r297zj+fSj+T5WKlAy0E=;
+        b=F7DyYoTINGuplDxZdhovljaDSjsbsbsHDaccNJNpVFG1uHl0pH2Jb8ZGxI9pRViGzn
+         P9bXGOaY4DL6wqzXTQkCjWG3FbAPFgW9yZwRM/QptFOt0nz84XtEbqR1NLBkEGidZJa3
+         CrJkw9qpHdhwZrMFRZHgVsRqmb2+bUfA3erzvVzdp42rL0vgo1/PfyIuO8eBVtII3M96
+         zF220AVy6U0HEFNIfOCZZan85P2t79rpIjJGqHqbbixIsFbkx3V9i1GVLeV4Nyw/Kyqe
+         1GNwZ/VIvbro/fYpjQY24QiS/HC8Qnb62x6xeycl0QxRVHSbtfzTj1X67bnIdj4QhdeH
+         nwSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=hHyY7qre9OXEm5PJ4BWXLYwsH5KdHQkHk/skTedwvAs=;
-        b=qTRglh3RW5YWMcQCV2yEVwk2sVKzsRmvO/SsnSZkMpIpfzd3Ln+u1lYFDweFQsiyBs
-         CgWWqVbffyjDHxj5n2lzEErM3CxLUqn5zsvgepO0T12WF2S13LuN8yOZ1/Jj5Tw9D6kA
-         QChiJQva4c9mR2CHp8myGfwzqTCXpwFfT9KjMOJZ3kGqkL7DDrq2MX72xUUIg4yO3EkL
-         XSe/84SjOPF7WIQPUGLp4YPD+pzwMhfgy+L9nuhrCLJBIWSuMYdVtZcKIhWK6Imw2b4l
-         VUdZm68vjFfscqRcXjhMubbkxxqwFYkWMsuC5t0gGt+BylKQMBDltsqUeXYQkWxvXPiP
-         hmYQ==
-X-Gm-Message-State: AOAM530k3IwKfaxVyxuBEqRRhNYMC46HuI9gOgvwrV67kFpl38AXsS/4
-        5lj2zXhbu26CtUHyUFqLsSH3roiLsl6FtLXWYGA=
-X-Google-Smtp-Source: ABdhPJzK5aKSbLwoPjOa/fZ+4wQdl/i/PHvrBqs1DnRZn9DH8KD/9yfcQQbrZv/qBxwpr5GT4qC2fq5WQsc1rIzUeMY=
+        bh=2eJKl2P+mphx8MXuY5eZ3j0r297zj+fSj+T5WKlAy0E=;
+        b=Mo+VOWS4S6prg3B8vKAr17FdiK5SZvLW/VTe/C6L3t9dxCscnjTm/NqB0mFIuaATru
+         B+cec8uVY/t49ZAcq+8tz5pAGpeYl30002hNYYPnCuhWXE2YJ89BZoibtXlJYaTzTKyN
+         SbvP0N0+UPq5B8omypi4yIAekGh3sJgiHMdlmiapNaVf3pIoUHel9Nk2CRRFs8Ud45Cq
+         shERhh9zmwN2YMDT9/vv88UefM3eDSu3040ZelVDUq5bsEtgTDTtEt/ygfkFzryEV9bi
+         5iOHM4ILqwzawU6priYfH7+CwkkR4QjlBRd19J9jmzLs21PvxiDA5cZ438sZhDFs8dni
+         kCng==
+X-Gm-Message-State: AOAM5315lP59DYy1iThAAtHT1VGiY5Lr/Lgc8dziTjLI2lB5OVKr6rps
+        bKxR47VlU+xvC08+0JFMUplDZmpr6u6uBQaGyyg=
+X-Google-Smtp-Source: ABdhPJxkrzfmdWRBTsfApsBgU0/vtdyh9mzsMw1+qzCVhW8+YL7dn0iZkK/RRt+cwJ1LZa5E4YW9O+Nm9AJq6lZMkTQ=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e9a3:260d:763b:67dc])
- (user=samitolvanen job=sendgmr) by 2002:ad4:542b:: with SMTP id
- g11mr7093888qvt.47.1616532003425; Tue, 23 Mar 2021 13:40:03 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 13:39:37 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:ea4b:: with SMTP id
+ u11mr129682qvp.43.1616531996172; Tue, 23 Mar 2021 13:39:56 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 13:39:33 -0700
 In-Reply-To: <20210323203946.2159693-1-samitolvanen@google.com>
-Message-Id: <20210323203946.2159693-9-samitolvanen@google.com>
+Message-Id: <20210323203946.2159693-5-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210323203946.2159693-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v3 08/17] bpf: disable CFI in dispatcher functions
+Subject: [PATCH v3 04/17] module: ensure __cfi_check alignment
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -81,38 +81,63 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-BPF dispatcher functions are patched at runtime to perform direct
-instead of indirect calls. Disable CFI for the dispatcher functions to
-avoid conflicts.
+CONFIG_CFI_CLANG_SHADOW assumes the __cfi_check() function is page
+aligned and at the beginning of the .text section. While Clang would
+normally align the function correctly, it fails to do so for modules
+with no executable code.
 
+This change ensures the correct __cfi_check() location and
+alignment. It also discards the .eh_frame section, which Clang can
+generate with certain sanitizers, such as CFI.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=46293
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/bpf.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/module.lds.S | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index cccaef1088ea..9acdca574527 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -635,7 +635,7 @@ struct bpf_dispatcher {
- 	struct bpf_ksym ksym;
- };
+diff --git a/scripts/module.lds.S b/scripts/module.lds.S
+index 168cd27e6122..2ba9e5ce71df 100644
+--- a/scripts/module.lds.S
++++ b/scripts/module.lds.S
+@@ -3,10 +3,21 @@
+  * Archs are free to supply their own linker scripts.  ld will
+  * combine them automatically.
+  */
++#include <asm/page.h>
++
++#ifdef CONFIG_CFI_CLANG
++# define ALIGN_CFI 		ALIGN(PAGE_SIZE)
++# define SANITIZER_DISCARDS	*(.eh_frame)
++#else
++# define ALIGN_CFI
++# define SANITIZER_DISCARDS
++#endif
++
+ SECTIONS {
+ 	/DISCARD/ : {
+ 		*(.discard)
+ 		*(.discard.*)
++		SANITIZER_DISCARDS
+ 	}
  
--static __always_inline unsigned int bpf_dispatcher_nop_func(
-+static __always_inline __nocfi unsigned int bpf_dispatcher_nop_func(
- 	const void *ctx,
- 	const struct bpf_insn *insnsi,
- 	unsigned int (*bpf_func)(const void *,
-@@ -663,7 +663,7 @@ void bpf_trampoline_put(struct bpf_trampoline *tr);
+ 	__ksymtab		0 : { *(SORT(___ksymtab+*)) }
+@@ -40,7 +51,14 @@ SECTIONS {
+ 		*(.rodata..L*)
+ 	}
+ 
+-	.text : { *(.text .text.[0-9a-zA-Z_]*) }
++	/*
++	 * With CONFIG_CFI_CLANG, we assume __cfi_check is at the beginning
++	 * of the .text section, and is aligned to PAGE_SIZE.
++	 */
++	.text : ALIGN_CFI {
++		*(.text.__cfi_check)
++		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
++	}
  }
  
- #define DEFINE_BPF_DISPATCHER(name)					\
--	noinline unsigned int bpf_dispatcher_##name##_func(		\
-+	noinline __nocfi unsigned int bpf_dispatcher_##name##_func(	\
- 		const void *ctx,					\
- 		const struct bpf_insn *insnsi,				\
- 		unsigned int (*bpf_func)(const void *,			\
+ /* bring in arch-specific sections */
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
