@@ -2,109 +2,145 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5B7C433E1
-	for <linux-hardening@archiver.kernel.org>; Thu, 25 Mar 2021 13:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABABC433C1
+	for <linux-hardening@archiver.kernel.org>; Thu, 25 Mar 2021 15:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16D7361A26
-	for <linux-hardening@archiver.kernel.org>; Thu, 25 Mar 2021 13:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7A561A12
+	for <linux-hardening@archiver.kernel.org>; Thu, 25 Mar 2021 15:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230078AbhCYNvz (ORCPT
+        id S230242AbhCYPGp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 25 Mar 2021 09:51:55 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:39429 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230140AbhCYNvg (ORCPT
+        Thu, 25 Mar 2021 11:06:45 -0400
+Received: from gateway20.websitewelcome.com ([192.185.60.19]:41189 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230298AbhCYPGN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 25 Mar 2021 09:51:36 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-172-SGVHtB3kMiW7IbuAL5VZgw-1; Thu, 25 Mar 2021 13:45:17 +0000
-X-MC-Unique: SGVHtB3kMiW7IbuAL5VZgw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Thu, 25 Mar 2021 13:45:16 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.012; Thu, 25 Mar 2021 13:45:16 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
+        Thu, 25 Mar 2021 11:06:13 -0400
+X-Greylist: delayed 1499 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Mar 2021 11:06:12 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 07EDA403139E8
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Mar 2021 09:08:40 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id PQoWl2OkVb8LyPQoWlOnMa; Thu, 25 Mar 2021 09:18:20 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ftWEDx8v476hGOZEcPFPchsIBVQcBxVefriypsWkOc8=; b=kD/h5OHFeyxFsVx3dDayCG9hzk
+        aE2yU+0QElXNw+W4f29/uEglzeoqZyJNjWrcmWlaZujl6IzVIdfgYyzYjBAWdgZUPRGo3LTiSzvtQ
+        Au5XKzQJGTpmQ91qKWm0Fv9tX5XFGg1TCiYzSJKreVaeeDxvfa+AxEchFrD26Iy9YYxGqaU0u9p6j
+        UvIVOF14+OAO2tWGRKfaJzl72SM+aeszkSOw7VIlvUzm7rYvxlrhRikDKd7xW876xsGVD5zChhgkk
+        kKp09cNAczXKzsaggpL9DFtFvjvK+VroFpKHoOKeKl3HG+tHtntCcSChIZtRR1+23/jmNvG20yRqe
+        HVn34eNg==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:45782 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lPQoW-004LKQ-EH; Thu, 25 Mar 2021 09:18:20 -0500
+Subject: Re: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
+ flexible-array member
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
         "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
- flexible-array member
-Thread-Topic: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
- flexible-array member
-Thread-Index: AQHXID829xNnc1F6eUqUVWy7MwUgYKqUt3Ig
-Date:   Thu, 25 Mar 2021 13:45:16 +0000
-Message-ID: <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
 References: <20210323224858.GA293698@embeddedor>
-In-Reply-To: <20210323224858.GA293698@embeddedor>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+ <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <5331b4e2-eeef-1c27-5efe-bf3986fd6683@embeddedor.com>
+Date:   Thu, 25 Mar 2021 08:18:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+In-Reply-To: <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lPQoW-004LKQ-EH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:45782
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogR3VzdGF2byBBLiBSLiBTaWx2YQ0KPiBTZW50OiAyMyBNYXJjaCAyMDIxIDIyOjQ5DQo+
-IA0KPiBUaGVyZSBpcyBhIHJlZ3VsYXIgbmVlZCBpbiB0aGUga2VybmVsIHRvIHByb3ZpZGUgYSB3
-YXkgdG8gZGVjbGFyZSBoYXZpbmcNCj4gYSBkeW5hbWljYWxseSBzaXplZCBzZXQgb2YgdHJhaWxp
-bmcgZWxlbWVudHMgaW4gYSBzdHJ1Y3R1cmUuIEtlcm5lbCBjb2RlDQo+IHNob3VsZCBhbHdheXMg
-dXNlIOKAnGZsZXhpYmxlIGFycmF5IG1lbWJlcnPigJ1bMV0gZm9yIHRoZXNlIGNhc2VzLiBUaGUg
-b2xkZXINCj4gc3R5bGUgb2Ygb25lLWVsZW1lbnQgb3IgemVyby1sZW5ndGggYXJyYXlzIHNob3Vs
-ZCBubyBsb25nZXIgYmUgdXNlZFsyXS4NCj4gDQo+IFVzZSBhbiBhbm9ueW1vdXMgdW5pb24gd2l0
-aCBhIGNvdXBsZSBvZiBhbm9ueW1vdXMgc3RydWN0cyBpbiBvcmRlciB0bw0KPiBrZWVwIHVzZXJz
-cGFjZSB1bmNoYW5nZWQ6DQo+IA0KPiAkIHBhaG9sZSAtQyBuZnNfZmhiYXNlX25ldyBmcy9uZnNk
-L25mc2ZoLm8NCj4gc3RydWN0IG5mc19maGJhc2VfbmV3IHsNCj4gICAgICAgICB1bmlvbiB7DQo+
-ICAgICAgICAgICAgICAgICBzdHJ1Y3Qgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICBfX3U4
-ICAgICAgIGZiX3ZlcnNpb25fYXV4OyAgICAgICAvKiAgICAgMCAgICAgMSAqLw0KPiAgICAgICAg
-ICAgICAgICAgICAgICAgICBfX3U4ICAgICAgIGZiX2F1dGhfdHlwZV9hdXg7ICAgICAvKiAgICAg
-MSAgICAgMSAqLw0KPiAgICAgICAgICAgICAgICAgICAgICAgICBfX3U4ICAgICAgIGZiX2ZzaWRf
-dHlwZV9hdXg7ICAgICAvKiAgICAgMiAgICAgMSAqLw0KPiAgICAgICAgICAgICAgICAgICAgICAg
-ICBfX3U4ICAgICAgIGZiX2ZpbGVpZF90eXBlX2F1eDsgICAvKiAgICAgMyAgICAgMSAqLw0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICBfX3UzMiAgICAgIGZiX2F1dGhbMV07ICAgICAgICAgICAv
-KiAgICAgNCAgICAgNCAqLw0KPiAgICAgICAgICAgICAgICAgfTsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAvKiAgICAgMCAgICAgOCAqLw0KPiAgICAgICAgICAgICAgICAg
-c3RydWN0IHsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgX191OCAgICAgICBmYl92ZXJzaW9u
-OyAgICAgICAgICAgLyogICAgIDAgICAgIDEgKi8NCj4gICAgICAgICAgICAgICAgICAgICAgICAg
-X191OCAgICAgICBmYl9hdXRoX3R5cGU7ICAgICAgICAgLyogICAgIDEgICAgIDEgKi8NCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgX191OCAgICAgICBmYl9mc2lkX3R5cGU7ICAgICAgICAgLyog
-ICAgIDIgICAgIDEgKi8NCj4gICAgICAgICAgICAgICAgICAgICAgICAgX191OCAgICAgICBmYl9m
-aWxlaWRfdHlwZTsgICAgICAgLyogICAgIDMgICAgIDEgKi8NCj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgX191MzIgICAgICBmYl9hdXRoX2ZsZXhbMF07ICAgICAgLyogICAgIDQgICAgIDAgKi8N
-Cj4gICAgICAgICAgICAgICAgIH07ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgLyogICAgIDAgICAgIDQgKi8NCj4gICAgICAgICB9OyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgLyogICAgIDAgICAgIDggKi8NCj4gDQo+ICAgICAgICAg
-Lyogc2l6ZTogOCwgY2FjaGVsaW5lczogMSwgbWVtYmVyczogMSAqLw0KPiAgICAgICAgIC8qIGxh
-c3QgY2FjaGVsaW5lOiA4IGJ5dGVzICovDQo+IH07DQoNCkNvdWxkIHlvdSB1c2UgdGhlIHNpbXBs
-ZXI6DQo+IHN0cnVjdCBuZnNfZmhiYXNlX25ldyB7DQo+ICAgICAgICAgIF9fdTggICAgICAgZmJf
-dmVyc2lvbjsNCj4gICAgICAgICAgX191OCAgICAgICBmYl9hdXRoX3R5cGU7DQo+ICAgICAgICAg
-IF9fdTggICAgICAgZmJfZnNpZF90eXBlOw0KPiAgICAgICAgICBfX3U4ICAgICAgIGZiX2ZpbGVp
-ZF90eXBlOw0KPiAgICAgICAgICB1bmlvbiB7DQo+ICAgICAgICAgICAgICAgICBfX3UzMiAgICAg
-IGZiX2F1dGhbMV07DQo+ICAgICAgICAgICAgICAgICBfX3UzMiAgICAgIGZiX2F1dGhfZmxleFsw
-XTsNCj4gICAgICAgICAgfTsNCj4gfTsNCg0KQWx0aG91Z2ggSSdtIG5vdCBjZXJ0YWluIGZsZXhp
-YmxlIGFycmF5cyBhcmUgc3VwcG9ydGVkDQphcyB0aGUgbGFzdCBlbGVtZW50IG9mIGEgdW5pb24u
-DQpZb3UgbWlnaHQgbmVlZCB0byB1c2UgYSBuYW1lZCBhbm9ueW1vdXMgc3RydWN0dXJlIGZvciB0
-aGUNCmZvdXIgX191OCBmaWVsZHMgYW5kIGNyZWF0ZSB0d28gZGlmZmVyZW50IHN0cnVjdHVyZXMg
-dGhhdA0KaW5jbHVkZSB0aGUgZXh0cmEgZmllbGQgb24gdGhlIGVuZC4NCg0KCURhdmlkDQoNCi0N
-ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
-aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
-cykNCg==
 
+
+On 3/25/21 08:45, David Laight wrote:
+> From: Gustavo A. R. Silva
+>> Sent: 23 March 2021 22:49
+>>
+>> There is a regular need in the kernel to provide a way to declare having
+>> a dynamically sized set of trailing elements in a structure. Kernel code
+>> should always use “flexible array members”[1] for these cases. The older
+>> style of one-element or zero-length arrays should no longer be used[2].
+>>
+>> Use an anonymous union with a couple of anonymous structs in order to
+>> keep userspace unchanged:
+>>
+>> $ pahole -C nfs_fhbase_new fs/nfsd/nfsfh.o
+>> struct nfs_fhbase_new {
+>>         union {
+>>                 struct {
+>>                         __u8       fb_version_aux;       /*     0     1 */
+>>                         __u8       fb_auth_type_aux;     /*     1     1 */
+>>                         __u8       fb_fsid_type_aux;     /*     2     1 */
+>>                         __u8       fb_fileid_type_aux;   /*     3     1 */
+>>                         __u32      fb_auth[1];           /*     4     4 */
+>>                 };                                       /*     0     8 */
+>>                 struct {
+>>                         __u8       fb_version;           /*     0     1 */
+>>                         __u8       fb_auth_type;         /*     1     1 */
+>>                         __u8       fb_fsid_type;         /*     2     1 */
+>>                         __u8       fb_fileid_type;       /*     3     1 */
+>>                         __u32      fb_auth_flex[0];      /*     4     0 */
+>>                 };                                       /*     0     4 */
+>>         };                                               /*     0     8 */
+>>
+>>         /* size: 8, cachelines: 1, members: 1 */
+>>         /* last cacheline: 8 bytes */
+>> };
+> 
+> Could you use the simpler:
+>> struct nfs_fhbase_new {
+>>          __u8       fb_version;
+>>          __u8       fb_auth_type;
+>>          __u8       fb_fsid_type;
+>>          __u8       fb_fileid_type;
+>>          union {
+>>                 __u32      fb_auth[1];
+>>                 __u32      fb_auth_flex[0];
+>>          };
+>> };
+> 
+> Although I'm not certain flexible arrays are supported
+> as the last element of a union.
+
+Nope; this is not allowed: https://godbolt.org/z/14vd4o8na
+
+--
+Gustavo
