@@ -2,120 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7FBC433DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 25 Mar 2021 22:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAEAC433E0
+	for <linux-hardening@archiver.kernel.org>; Thu, 25 Mar 2021 23:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65F8961A2A
-	for <linux-hardening@archiver.kernel.org>; Thu, 25 Mar 2021 22:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C139C61A27
+	for <linux-hardening@archiver.kernel.org>; Thu, 25 Mar 2021 23:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230453AbhCYWMy (ORCPT
+        id S231354AbhCYXSS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 25 Mar 2021 18:12:54 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.107]:47280 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230341AbhCYWMb (ORCPT
+        Thu, 25 Mar 2021 19:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231319AbhCYXSQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 25 Mar 2021 18:12:31 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 6A4E5137AD
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Mar 2021 17:12:30 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id PYDOl8d0z1cHePYDOlaQC0; Thu, 25 Mar 2021 17:12:30 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7TQTeKIn3sX0KsX2Mb0uRTUpgZvCak4GKsqbc414Wao=; b=pM3ggMFhvLF1rSSPG2yQdv1Gf1
-        NxC1t9XwOXj0/2/YYBi+vEA/Ev2EUruApSVMDory3nxcvUjnf8jds2BGwgkqXkDNRRnThzGZX9H/W
-        K0PThy6C9tomaK5gJ0yQ8IgIT956p7vP0qQJO7eHH1BXeJmbRbVdDcspBqtxoCskps4+j2Rk5NHdw
-        tCdz7LWXpsW8HVYHbKIdRkMVB0HafwSazDaJfsxgD9cZTh6m+wMABD0hldJFHg9ABOcTbjSzKJp+S
-        xYApizT15wf8vdktx8+BOO9uJCQ7vMOZBdoV/+pQF2gLCjKhMYwo/ufi73PKmsOwVJg9NVr8qkY0X
-        PwBFs7QA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49220 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lPYDO-003hVs-2j; Thu, 25 Mar 2021 17:12:30 -0500
-Subject: Re: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
- flexible-array member
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-References: <20210323224858.GA293698@embeddedor>
- <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
- <5331b4e2-eeef-1c27-5efe-bf3986fd6683@embeddedor.com>
- <1efa90cc6bc24cfb860084e0b888cd4b@AcuMS.aculab.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <e2e93993-e64b-ce7d-88cf-4c367b747e40@embeddedor.com>
-Date:   Thu, 25 Mar 2021 16:12:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Thu, 25 Mar 2021 19:18:16 -0400
+Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53ED6C061760
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Mar 2021 16:18:12 -0700 (PDT)
+Received: by mail-ua1-x934.google.com with SMTP id h5so1065137uaw.0
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Mar 2021 16:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Yk9NlOmGKofkdfMA6+3ywtQqOEAPVMOAz3hdr7uXvE=;
+        b=vA7OWbbKWkumvZyucEZbcqeuCLfEdVpEWrKxOGx3P4tN9R3u/6w/09xaucaXo3fP1z
+         MQIYpOTb4zLWU/hQWjL9CBjSTPJO+KxQfG7Dx96rt5gAiLXhhKoC7ABFmLukh4KXeZ9Z
+         aRhWqpdYN7r23J9Vzze5A3lqpbSCfVHcu6YBrOLJtfWDQkdTihrZonOMBhhW48YWR/dn
+         IhljM1ItzoydJs5ao4S1mTCZ7s+gfiMgil1ViPnShV6stP0PH7QJBHHaKatW8sJcx0wz
+         u0NvJkbimko9Onpbq3gHaKn863Ymdx5cM9MeIfPQ4d7sEby86nkv+ILpbiaNaR5znvcq
+         qbrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Yk9NlOmGKofkdfMA6+3ywtQqOEAPVMOAz3hdr7uXvE=;
+        b=YLLGLOlSW5gaPMsYfbylJRqL28M5o7Go6dZz/GN5sMX6KL+0TrMhfj8V2/L73b3ph2
+         R3NtVvMzrUXZSjc1nCI5RiZTJfGWeipY/BaCwNbFglofoMyJTFdcyNbTpwz8pr878Cmi
+         PplXKzHuHksizsjPQFkHNe0bIy1Pixj9ZPxviDGq5/YbDYblKYFVtGle3FS/GzhEt8Hl
+         f1nYNLEayP4k+Hlo7SoNwPeP3IhGqsTcFBFS3nD4DGgrDRzsme6yqTatgduisw2RtGDo
+         poD/wCuAZTF9K8vt4QtYfeBvitw5NGDn1vE3KIPRGwldcCM69Fweny171w6uku5DVW+K
+         EO+g==
+X-Gm-Message-State: AOAM530xEezcinJ1/jkQ8264GdoxX/1EvefB5WWhqzSdbTOLar/4Obrr
+        QN4FTF9ALleCPej17wxfEehSPh67k3chDw9lNVcI2w==
+X-Google-Smtp-Source: ABdhPJz3XLagVW8QroqFjxvACNVUH9zZ8ltjPZndhuIyfpInOl3OzeWY/yBVOo6wjOyV8x+RouyyGoOtWVCwXW8GueI=
+X-Received: by 2002:ab0:b14:: with SMTP id b20mr6273790uak.52.1616714291094;
+ Thu, 25 Mar 2021 16:18:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1efa90cc6bc24cfb860084e0b888cd4b@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lPYDO-003hVs-2j
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49220
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20210323203946.2159693-1-samitolvanen@google.com>
+ <20210323203946.2159693-4-samitolvanen@google.com> <20210324071357.GB2639075@infradead.org>
+ <CABCJKufRHCb0sjr1tMGCoVMzV-5dKPPn-t8=+ihNFAgTr2k0DA@mail.gmail.com> <20210325101655.GB36570@C02TD0UTHF1T.local>
+In-Reply-To: <20210325101655.GB36570@C02TD0UTHF1T.local>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 25 Mar 2021 16:17:59 -0700
+Message-ID: <CABCJKuf+TxeDsy9B9DM2g-U7uwNu-yxSjARfPe_oeCY2fySvTA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/17] mm: add generic __va_function and __pa_function macros
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Thu, Mar 25, 2021 at 3:17 AM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Wed, Mar 24, 2021 at 08:54:18AM -0700, Sami Tolvanen wrote:
+> > On Wed, Mar 24, 2021 at 12:14 AM Christoph Hellwig <hch@infradead.org> wrote:
+> > >
+> > > On Tue, Mar 23, 2021 at 01:39:32PM -0700, Sami Tolvanen wrote:
+> > > > With CONFIG_CFI_CLANG, the compiler replaces function addresses
+> > > > in instrumented C code with jump table addresses. This means that
+> > > > __pa_symbol(function) returns the physical address of the jump table
+> > > > entry instead of the actual function, which may not work as the jump
+> > > > table code will immediately jump to a virtual address that may not be
+> > > > mapped.
+> > > >
+> > > > To avoid this address space confusion, this change adds generic
+> > > > definitions for __va_function and __pa_function, which architectures
+> > > > that support CFI can override. The typical implementation of the
+> > > > __va_function macro would use inline assembly to take the function
+> > > > address, which avoids compiler instrumentation.
+> > >
+> > > I think these helper are sensible, but shouldn't they have somewhat
+> > > less arcane names and proper documentation?
+> >
+> > Good point, I'll add comments in the next version. I thought
+> > __pa_function would be a fairly straightforward replacement for
+> > __pa_symbol, but I'm fine with renaming these. Any suggestions for
+> > less arcane names?
+>
+> I think dropping 'nocfi' into the name would be clear enough. I think
+> that given the usual fun with {symbol,module,virt}->phys conversions
+> it's not worth having the __pa_* form, and we can leave the phys
+> conversion to the caller that knows where the function lives.
+>
+> How about we just add `function_nocfi()` ?
+>
+> Callers can then do `__pa_symbol(function_nocfi(foo))` and similar.
 
+Sounds reasonable. I'll drop __pa_function() and rename
+__va_function() to function_nocfi() in the next version.
 
-On 3/25/21 10:29, David Laight wrote:
-
->>>
->>> Could you use the simpler:
->>>> struct nfs_fhbase_new {
->>>>          __u8       fb_version;
->>>>          __u8       fb_auth_type;
->>>>          __u8       fb_fsid_type;
->>>>          __u8       fb_fileid_type;
->>>>          union {
->>>>                 __u32      fb_auth[1];
->>>>                 __u32      fb_auth_flex[0];
->>>>          };
->>>> };
->>>
->>> Although I'm not certain flexible arrays are supported
->>> as the last element of a union.
->>
->> Nope; this is not allowed: https://godbolt.org/z/14vd4o8na
-> 
-> Nothing an extra 'struct {__u32 fb_auth_flex[0]; }'; won't solve.
-
-We don't want to introduce zero-length arrays [1].
-
---
-Gustavo
-
-[1] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+Sami
