@@ -2,124 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90D8C433E2
-	for <linux-hardening@archiver.kernel.org>; Fri, 26 Mar 2021 00:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C665CC433C1
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 Mar 2021 02:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4AB961A3E
-	for <linux-hardening@archiver.kernel.org>; Fri, 26 Mar 2021 00:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9913D61A2B
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 Mar 2021 02:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbhCZADz (ORCPT
+        id S230415AbhCZCLb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 25 Mar 2021 20:03:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230023AbhCZADW (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 25 Mar 2021 20:03:22 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 114B3C061763
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Mar 2021 17:03:21 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id d2so3623875ilm.10
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Mar 2021 17:03:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nAYo0kerZLUN7BkJOSM9MDyMbtqlP2Ebf5RZ2YCWYvE=;
-        b=qn2P1c8qwafkNgsglrLTaTm7bLzpkRkiTLfJLGK8xTN4luzvlgNlv3PnwABJDfQ0NQ
-         0MhNPSvMVr/plOe7Ep+dLmsOihehu2nGgPeyN2RbdvbPnZIvwEVVJSD7Nqa3+VU1CMVY
-         o0FIODwO5enxaMXKwVTKlaroVBH0Jd861DVZ+KwZREziKZ3yaXyPNMBRw9A0ISQLY71R
-         Pf8Dh4rEOPxN5r4WJCLgXkn7/y7WaU61B7NFXh3k6r4x5m2glFuCmtObmLcXH3tWXWOo
-         wGSDfwu16SSwuzkoCrSQNFJxIa/kJ+sWs/QkDY0ZXFD1my/Q9T6i/h0IveTFSozVTfeM
-         J7jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nAYo0kerZLUN7BkJOSM9MDyMbtqlP2Ebf5RZ2YCWYvE=;
-        b=npkbxx/0RoQje014HuDP5Mmiar/ovSGsYWHVzDr5671LWHRn0yngL55xzKDpMMkyT4
-         K7LlQWxPFvQjLQYBw6o6eZbPCSnhTfg/rr1CoycRuIZEhOEwu4kZBnYR+cITGHqhpN2E
-         402eXRM/AHEXXlRcN5vYd6/UTdCbnEQkp95Ot/YLKKxn4Yl6UeZT4rNIHR5KTW3DuzBz
-         VX8pdDUmMpaIPOKankSzZr+2Sf9GGFBdRHU5CQZC4Epk58mhij+adSfMcHfR/JAE4Pc+
-         6PLYezxDqBuscet6INYBcX/d+snr26gjTSh2n6oDxetQkDmxNEN8Tjdd+P0aFpXlaFLd
-         NBMQ==
-X-Gm-Message-State: AOAM533MakqhrA3HLAtOZtT10zoocNZeFF8LucUt1rN2R3L2rWowING/
-        +eP1nYJ1bpAOgsjMjOumr5HYr2wApWnp3Fgeg01Fqw==
-X-Google-Smtp-Source: ABdhPJycYy1zKxJCALDiO9Ar9NLQb0Bxbm3WLrp/be6z8zC2ySSZc6pZUvOHR+zeKlLowgV0ewAnXJs41sU7Cs8VIoE=
-X-Received: by 2002:a05:6e02:1b86:: with SMTP id h6mr8191233ili.145.1616717000105;
- Thu, 25 Mar 2021 17:03:20 -0700 (PDT)
+        Thu, 25 Mar 2021 22:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230411AbhCZCLU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 25 Mar 2021 22:11:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7E9B061A2B;
+        Fri, 26 Mar 2021 02:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616724680;
+        bh=L6FNDAlxyI+VHb0dFbN2zoboHKOrSkFgt+OL1GNZULo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CnmC9DqHLIpTf98be4JX/MPM+4bjm017hCZHneBvSFHKlpaGbAezWbaUwXIK+BjAC
+         sHMjN0F9CjQoFCuHEO1bXq+hrzguZIGUi2sG7gvePwxb5gcx2NcEnW1JzZWKirOBym
+         S2Z5Aa5IN6rQaUi7cZtc+ZvT+5b11jXbAunTlg+tjDqQatl2g5LVSM8HYt0p1NB0RG
+         An3VqW1a6fKYiPKj+IAwMV545AETIxqRZ64ljlKReJ6YBjM4sAmau2r9Liqu6n6Gb/
+         E+gmUw5b86zx4PMmXYLdovFbatYcqll0wLV5qiFkFG/PPyHPc3ZOIBWw1o8DCw6DU8
+         PLwdD052wu1SQ==
+Date:   Thu, 25 Mar 2021 20:11:17 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Steve French <sfrench@samba.org>
+Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] cifs: cifspdu.h: Replace one-element array with
+ flexible-array member
+Message-ID: <20210326011117.GA46303@embeddedor>
 MIME-Version: 1.0
-References: <20210323203946.2159693-1-samitolvanen@google.com>
- <20210323203946.2159693-13-samitolvanen@google.com> <20210325103757.GD36570@C02TD0UTHF1T.local>
- <CABCJKud_VC_vAn_7PdZzDja0gpk5ych0CBJpBw45pvivFoePgQ@mail.gmail.com>
-In-Reply-To: <CABCJKud_VC_vAn_7PdZzDja0gpk5ych0CBJpBw45pvivFoePgQ@mail.gmail.com>
-From:   Peter Collingbourne <pcc@google.com>
-Date:   Thu, 25 Mar 2021 17:03:08 -0700
-Message-ID: <CAMn1gO6EvzG0WtTyoARjuYhuPxPokVAMbqX-756XLOgRD6audw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/17] arm64: implement __va_function
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 4:28 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> On Thu, Mar 25, 2021 at 3:38 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Tue, Mar 23, 2021 at 01:39:41PM -0700, Sami Tolvanen wrote:
-> > > With CONFIG_CFI_CLANG, the compiler replaces function addresses in
-> > > instrumented C code with jump table addresses. This change implements
-> > > the __va_function() macro, which returns the actual function address
-> > > instead.
-> > >
-> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> >
-> > Is there really no attribute or builtin that can be used to do this
-> > without assembly?
->
-> I don't think the compiler currently offers anything that could help
-> us here. Peter, can you think of another way to avoid the function
-> address to jump table address conversion with
-> -fno-sanitize-cfi-canonical-jump-tables?
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-No, the assembly seems like the best way at the moment.
+Also, this helps with the ongoing efforts to enable -Warray-bounds by
+fixing the following warning:
 
-> > IIUC from other patches the symbol tables will contain the "real"
-> > non-cfi entry points (unless we explciitly asked to make the jump table
-> > address canonical), so AFAICT here the compiler should have all the
-> > necessary information to generate either the CFI or non-CFI entry point
-> > addresses, even if it doesn't expose an interface for that today.
-> >
-> > It'd be a lot nicer if we could get the compiler to do this for us.
->
-> I agree, that would be quite useful in the kernel.
+  CC [M]  fs/cifs/cifssmb.o
+fs/cifs/cifssmb.c: In function ‘CIFSFindNext’:
+fs/cifs/cifssmb.c:4636:23: warning: array subscript 1 is above array bounds of ‘char[1]’ [-Warray-bounds]
+ 4636 |   pSMB->ResumeFileName[name_len+1] = 0;
+      |   ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
 
-Maybe. The kernel's requirements seem quite specialized here though. A
-normal C or C++ program has little need for the actual entry point, so
-if you need it you are probably doing something low level enough to
-require assembly anyway.
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
 
-Peter
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/109
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/cifs/cifspdu.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/cifs/cifspdu.h b/fs/cifs/cifspdu.h
+index 64fe5a47b5e8..475a517360e5 100644
+--- a/fs/cifs/cifspdu.h
++++ b/fs/cifs/cifspdu.h
+@@ -1898,7 +1898,7 @@ typedef struct smb_com_transaction2_fnext_req {
+ 	__le16 InformationLevel;
+ 	__u32 ResumeKey;
+ 	__le16 SearchFlags;
+-	char ResumeFileName[1];
++	char ResumeFileName[];
+ } __attribute__((packed)) TRANSACTION2_FNEXT_REQ;
+ 
+ typedef struct smb_com_transaction2_fnext_rsp {
+-- 
+2.27.0
+
