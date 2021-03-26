@@ -2,136 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CA3C433DB
-	for <linux-hardening@archiver.kernel.org>; Fri, 26 Mar 2021 04:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5105C433C1
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 Mar 2021 08:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8304C61A42
-	for <linux-hardening@archiver.kernel.org>; Fri, 26 Mar 2021 04:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744C961A38
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 Mar 2021 08:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbhCZEyT (ORCPT
+        id S229733AbhCZIRq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 26 Mar 2021 00:54:19 -0400
-Received: from gateway30.websitewelcome.com ([192.185.198.26]:22128 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229446AbhCZEyE (ORCPT
+        Fri, 26 Mar 2021 04:17:46 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:53709 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229624AbhCZIRU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 26 Mar 2021 00:54:04 -0400
-X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Mar 2021 00:54:04 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id A008C4102
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Mar 2021 23:07:19 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id PdkllyEDRMGeEPdklleI2C; Thu, 25 Mar 2021 23:07:19 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BabjA7K6Rd4GbMEOPxHc3o+Eu2YyL/Dtp8lkz/vVHUc=; b=DDPetxrWqLa80enjnpAuxTSSBj
-        ZGVMZsEaBiBHxQI7jQ5AAMrk0KTPuGaRqQkmsmTOLTQi3Ksyf2Rn2uiVMt15l9TWI4HkDzZsF3vto
-        ghD5Hkdb2Ly9Av9BVnXWykCja6MFp7zxjZqAIFsq3dCJ+8blURFVCZnLyj9IGCxgb4Q/yQSa/7vlR
-        7bg5e7qo9yM4T1iYwgMF1YvOSJ4Tuh9ZUKQA0g04+uwHV5qIUnDPgS+ARhB3bT3l82UZGPFKG1H6k
-        iihigTYAMcSyU3p5Ifmf0072orwtuM/vIMXhcrOgfO4vXheFJuJSVZYs/vP7r8FRsHcbiiUdLkd0m
-        87/owZGw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:58534 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lPdkk-0002mT-N0; Thu, 25 Mar 2021 23:07:19 -0500
-Subject: Re: [PATCH][next] scsi: aacraid: Replace one-element array with
+        Fri, 26 Mar 2021 04:17:20 -0400
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-244-6e-02qyoPCq7M0etr-m45Q-1; Fri, 26 Mar 2021 08:17:14 +0000
+X-MC-Unique: 6e-02qyoPCq7M0etr-m45Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Fri, 26 Mar 2021 08:17:13 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Fri, 26 Mar 2021 08:17:13 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Gustavo A. R. Silva'" <gustavo@embeddedor.com>,
+        "'Gustavo A. R. Silva'" <gustavoars@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        "Chuck Lever" <chuck.lever@oracle.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
  flexible-array member
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210304203822.GA102218@embeddedor>
- <yq135wkm410.fsf@ca-mkp.ca.oracle.com>
- <668e3f30-1ffb-31e3-231b-705489993885@embeddedor.com>
- <yq1a6qqk68h.fsf@ca-mkp.ca.oracle.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <d79bde59-16c5-e006-0e31-c33c17f0ce3d@embeddedor.com>
-Date:   Thu, 25 Mar 2021 22:07:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+Thread-Topic: [PATCH][next] UAPI: nfsfh.h: Replace one-element array with
+ flexible-array member
+Thread-Index: AQHXID829xNnc1F6eUqUVWy7MwUgYKqUt3Ig///6swCAACQV0IAAYGYAgAC28xA=
+Date:   Fri, 26 Mar 2021 08:17:13 +0000
+Message-ID: <e516146427db45439c02afe57ce06e97@AcuMS.aculab.com>
+References: <20210323224858.GA293698@embeddedor>
+ <629154ce566b4c9c9b7f4124b3260fc3@AcuMS.aculab.com>
+ <5331b4e2-eeef-1c27-5efe-bf3986fd6683@embeddedor.com>
+ <1efa90cc6bc24cfb860084e0b888cd4b@AcuMS.aculab.com>
+ <e2e93993-e64b-ce7d-88cf-4c367b747e40@embeddedor.com>
+In-Reply-To: <e2e93993-e64b-ce7d-88cf-4c367b747e40@embeddedor.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <yq1a6qqk68h.fsf@ca-mkp.ca.oracle.com>
-Content-Type: text/plain; charset=utf-8
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lPdkk-0002mT-N0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:58534
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Martin,
+RnJvbTogR3VzdGF2byBBLiBSLiBTaWx2YQ0KPiBTZW50OiAyNSBNYXJjaCAyMDIxIDIxOjEyDQo+
+IA0KPiBPbiAzLzI1LzIxIDEwOjI5LCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+IA0KPiA+Pj4NCj4g
+Pj4+IENvdWxkIHlvdSB1c2UgdGhlIHNpbXBsZXI6DQo+ID4+Pj4gc3RydWN0IG5mc19maGJhc2Vf
+bmV3IHsNCj4gPj4+PiAgICAgICAgICBfX3U4ICAgICAgIGZiX3ZlcnNpb247DQo+ID4+Pj4gICAg
+ICAgICAgX191OCAgICAgICBmYl9hdXRoX3R5cGU7DQo+ID4+Pj4gICAgICAgICAgX191OCAgICAg
+ICBmYl9mc2lkX3R5cGU7DQo+ID4+Pj4gICAgICAgICAgX191OCAgICAgICBmYl9maWxlaWRfdHlw
+ZTsNCj4gPj4+PiAgICAgICAgICB1bmlvbiB7DQo+ID4+Pj4gICAgICAgICAgICAgICAgIF9fdTMy
+ICAgICAgZmJfYXV0aFsxXTsNCj4gPj4+PiAgICAgICAgICAgICAgICAgX191MzIgICAgICBmYl9h
+dXRoX2ZsZXhbMF07DQo+ID4+Pj4gICAgICAgICAgfTsNCj4gPj4+PiB9Ow0KPiA+Pj4NCj4gPj4+
+IEFsdGhvdWdoIEknbSBub3QgY2VydGFpbiBmbGV4aWJsZSBhcnJheXMgYXJlIHN1cHBvcnRlZA0K
+PiA+Pj4gYXMgdGhlIGxhc3QgZWxlbWVudCBvZiBhIHVuaW9uLg0KPiA+Pg0KPiA+PiBOb3BlOyB0
+aGlzIGlzIG5vdCBhbGxvd2VkOiBodHRwczovL2dvZGJvbHQub3JnL3ovMTR2ZDRvOG5hDQo+ID4N
+Cj4gPiBOb3RoaW5nIGFuIGV4dHJhICdzdHJ1Y3Qge19fdTMyIGZiX2F1dGhfZmxleFswXTsgfSc7
+IHdvbid0IHNvbHZlLg0KPiANCj4gV2UgZG9uJ3Qgd2FudCB0byBpbnRyb2R1Y2UgemVyby1sZW5n
+dGggYXJyYXlzIFsxXS4NCg0KSSBwcm9iYWJseSBtZWFudCB0byB3cml0ZSBbXSBub3QgWzBdIC0g
+ZG9lc24ndCBhZmZlY3QgdGhlIGlkZWEuDQoNClRoZSByZWFsIHByb2JsZW0gaXMgdGhhdCB0aGUg
+Y29tcGlsZXIgaXMgbGlrZWx5IHRvIHN0YXJ0IHJlamVjdGluZw0KcmVmZXJlbmNlcyB0byBhIGZs
+ZXggYXJyYXkgdGhhdCBnbyBiZXlvbmQgdGhlIGVuZCBvZiB0aGUgb3V0ZXINCnN0cnVjdHVyZS4N
+Cg0KVGhpbmtpbmcgYmFjaywgaXNuJ3QgZmJfYXV0aFtdIGF0IGxlYXN0IG9uZSBlbnRyeSBsb25n
+Pw0KU28gaXQgY291bGQgYmU6DQoNCnN0cnVjdCBuZnNfZmhiYXNlX25ldyB7DQogICAgICAgICBf
+X3U4ICAgICAgIGZiX3ZlcnNpb247DQogICAgICAgICBfX3U4ICAgICAgIGZiX2F1dGhfdHlwZTsN
+CiAgICAgICAgIF9fdTggICAgICAgZmJfZnNpZF90eXBlOw0KICAgICAgICAgX191OCAgICAgICBm
+Yl9maWxlaWRfdHlwZTsNCiAgICAgICAgIF9fdTMyICAgICAgZmJfYXV0aFsxXTsNCiAgICAgICAg
+IF9fdTMyICAgICAgZmJfYXV0aF9leHRyYVtdOw0KfTsNCg0KKEkndmUgbWlzc2VkIHRoZSAwIG91
+dCB0aGlzIHRpbWUuLi4pDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNp
+ZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsN
+ClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-
-On 3/25/21 22:34, Martin K. Petersen wrote:
-> 
-> Gustavo,
-> 
->> Precisely this sort of confusion is one of the things we want to avoid
->> by using flexible-array members instead of one-element arrays.
-> 
-> Ah, you're right!
-> 
-> Now that I look at it again I also don't think that was the issue that
-> originally caused concern.
-> 
-> @@ -4020,7 +4020,8 @@ static int aac_convert_sgraw2(struct aac_raw_io2 *rio2, int pages, int nseg, int
->  		}
->  	}
->  	sge[pos] = rio2->sge[nseg-1];
-> -	memcpy(&rio2->sge[1], &sge[1], (nseg_new-1)*sizeof(struct sge_ieee1212));
-> +	memcpy(&rio2->sge[1], &sge[1],
-> +	       flex_array_size(rio2, sge, nseg_new - 1));
->  
->  	kfree(sge);
->  	rio2->sgeCnt = cpu_to_le32(nseg_new);
-> 
-> I find it counter-intuitive to use the type of the destination array to
-> size the amount of source data to copy. "Are source and destination same
-
-The destination and source arrays are of the same type. :)
-
-drivers/scsi/aacraid/aachba.c:
-3999         struct sge_ieee1212 *sge;
-
-> type? Does flex_array_size() do the right thing given the ->sge[1]
-> destination offset?". It wasn't immediately obvious. To me, "copy this
-> many scatterlist entries" in the original is much more readable.
-
-Yeah; it does the right thing because flex_array_size() doesn't know about
-offsets. It just calculates the amount of bytes to be copied based on the
-type of the object passed as second argument and a "count" passed as third
-argument. So, in this case, the "count" is "nseg_new - 1", which in some
-way is already taking care of that sge[1] offset.
-
---
-Gustavo
