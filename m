@@ -2,112 +2,235 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2290C433C1
-	for <linux-hardening@archiver.kernel.org>; Mon, 29 Mar 2021 18:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A863C433C1
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 Mar 2021 15:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4FE560249
-	for <linux-hardening@archiver.kernel.org>; Mon, 29 Mar 2021 18:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AEB61996
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 Mar 2021 15:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231442AbhC2Snh (ORCPT
+        id S231808AbhC3Pwx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 29 Mar 2021 14:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231468AbhC2SnZ (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 29 Mar 2021 14:43:25 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28819C061756
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Mar 2021 11:43:25 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id e14so4834164plj.2
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Mar 2021 11:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LlNrP/9Ut5sXN3pkzKNi+WSrlgUBYs/IFekoNMyL2Jw=;
-        b=T+DpvsxQed12BAoexlkki+09jZcOH2cjiPTOOafDyn6acCeGPxIcFenrtcJ3zGGa8+
-         mSk7Iu22+Txx0wacKigEu3+FnKaFEgH82nuqdasm4GN0gQoF+hpT3m52TrAsh9p0Gnkv
-         ME2leGRxC72wu2uxStmg0L9ey3ygUFNqHk0V4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LlNrP/9Ut5sXN3pkzKNi+WSrlgUBYs/IFekoNMyL2Jw=;
-        b=TsuCuqa3tWJgim7vy37TSZB8imVvWwq6RE4e4WIX+ff/lwAQQOcb7Jaomy5PtV8eCW
-         U5Hq5/Jwg7Ob0AMn5oAimC76H0l8n9pwQYOfM7ZhuK4NmexLLmYHO2BzKSMSR9/9GLUa
-         Dmpd5hOuNjlFXUMaJ9z5K21ZS2qWq6nOL8cJWoUT2Q0LhxcjgI9wr1rCMTTZUxSS2iIj
-         cxuk1OK7KecTZgQwwnsyVIVOhbkkHPnl5m0/A5kWRoKJpoetamKMDcfqrnPKDO7MhhD6
-         pkNXUhAXddJW0gR0c4VF7pEyHdHV0z4Q4Y9DoywgY1UngEhTRQrjBqGcObGr0XuptQuX
-         IT5Q==
-X-Gm-Message-State: AOAM530zXAR6mEypfswGx81CSo3hamck1rWoCVymjdS8UAmGHBgH9h6w
-        I8aIITMs9YwdQq4KZIa1ZhLoyQ==
-X-Google-Smtp-Source: ABdhPJxToxGXO0GwIsEriJuM+yDUQVqjN+yq+LJpGrMhEoXh9Okut5BCawWoS9xITNbBK4nDieDGBg==
-X-Received: by 2002:a17:90a:bd09:: with SMTP id y9mr458540pjr.179.1617043404655;
-        Mon, 29 Mar 2021 11:43:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u9sm17260832pgc.59.2021.03.29.11.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Mar 2021 11:43:23 -0700 (PDT)
-Date:   Mon, 29 Mar 2021 11:43:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/6] x86/entry: Enable random_kstack_offset support
-Message-ID: <202103291141.EC2A77731@keescook>
-References: <20210319212835.3928492-1-keescook@chromium.org>
- <20210319212835.3928492-5-keescook@chromium.org>
- <87h7kvcqen.ffs@nanos.tec.linutronix.de>
+        Tue, 30 Mar 2021 11:52:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231752AbhC3Pw0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 30 Mar 2021 11:52:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2A654619C0;
+        Tue, 30 Mar 2021 15:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617119545;
+        bh=ZMEkBm8vB1lsE3KyqReVRJtHNT43kqFsrOF2nrVUUQs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LI1IcAsQZpe3oe5fzDC/q551qNbP6cUOTJ20sE7pGru3HKjWk6gE7EmNPETkliZ6Y
+         51jaVG2eYPCL7WcDBJFJsED+48tdMIotUj2Ilgs5E/13EpVw5+XHSdniqMXWLrfbv2
+         6TpvmVkdrsj4HHCC6tRJcJwCCC78jZLtpWlM2JhXNXymqloZGIewwpe4vCsjQLmvB/
+         cZoVejpPh1TtYqt6kDiq4slJZh76pAH0qtJq2t7CSZz3O9mScRGso55t0Z1PZ7RvRY
+         +dKWrjO43qgrldS3V7jl3uxjHfNZ0Ei3wpZHpxBKK5Oqgss4EizHR2JkzAur25EvUx
+         FmfgctxOYfuFg==
+Date:   Tue, 30 Mar 2021 09:52:26 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] hfsplus: Fix out-of-bounds warnings in
+ __hfsplus_setxattr
+Message-ID: <20210330145226.GA207011@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h7kvcqen.ffs@nanos.tec.linutronix.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Mar 28, 2021 at 04:18:56PM +0200, Thomas Gleixner wrote:
-> On Fri, Mar 19 2021 at 14:28, Kees Cook wrote:
-> > +
-> > +	/*
-> > +	 * x86_64 stack alignment means 3 bits are ignored, so keep
-> > +	 * the top 5 bits. x86_32 needs only 2 bits of alignment, so
-> > +	 * the top 6 bits will be used.
-> > +	 */
-> > +	choose_random_kstack_offset(rdtsc() & 0xFF);
-> 
-> Comment mumbles about 5/6 bits and the TSC value is masked with 0xFF and
-> then the applied offset is itself limited with 0x3FF.
-> 
-> Too many moving parts for someone who does not have the details of all
-> this memorized.
+Fix the following out-of-bounds warnings by enclosing
+structure members file and finder into new struct info:
 
-Each piece is intentional -- I will improve the comments to explain
-each level of masking happening (implicit compiler stack alignment mask,
-explicit per-arch mask, and the VLA upper-bound protection mask).
+fs/hfsplus/xattr.c:300:5: warning: 'memcpy' offset [65, 80] from the object at 'entry' is out of the bounds of referenced subobject 'user_info' with type 'struct DInfo' at offset 48 [-Warray-bounds]
+fs/hfsplus/xattr.c:313:5: warning: 'memcpy' offset [65, 80] from the object at 'entry' is out of the bounds of referenced subobject 'user_info' with type 'struct FInfo' at offset 48 [-Warray-bounds]
 
+Refactor the code by making it more "structured."
+
+Also, this helps with the ongoing efforts to enable -Warray-bounds and
+makes the code clearer and avoid confusing the compiler.
+
+Link: https://github.com/KSPP/linux/issues/109
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/hfsplus/catalog.c     | 16 ++++++++--------
+ fs/hfsplus/dir.c         |  4 ++--
+ fs/hfsplus/hfsplus_raw.h | 12 ++++++++----
+ fs/hfsplus/xattr.c       | 18 ++++++++----------
+ 4 files changed, 26 insertions(+), 24 deletions(-)
+
+diff --git a/fs/hfsplus/catalog.c b/fs/hfsplus/catalog.c
+index 35472cba750e..9cdc6550b468 100644
+--- a/fs/hfsplus/catalog.c
++++ b/fs/hfsplus/catalog.c
+@@ -124,7 +124,7 @@ static int hfsplus_cat_build_record(hfsplus_cat_entry *entry,
+ 		hfsplus_cat_set_perms(inode, &folder->permissions);
+ 		if (inode == sbi->hidden_dir)
+ 			/* invisible and namelocked */
+-			folder->user_info.frFlags = cpu_to_be16(0x5000);
++			folder->info.user.frFlags = cpu_to_be16(0x5000);
+ 		return sizeof(*folder);
+ 	} else {
+ 		struct hfsplus_cat_file *file;
+@@ -142,14 +142,14 @@ static int hfsplus_cat_build_record(hfsplus_cat_entry *entry,
+ 		if (cnid == inode->i_ino) {
+ 			hfsplus_cat_set_perms(inode, &file->permissions);
+ 			if (S_ISLNK(inode->i_mode)) {
+-				file->user_info.fdType =
++				file->info.user.fdType =
+ 					cpu_to_be32(HFSP_SYMLINK_TYPE);
+-				file->user_info.fdCreator =
++				file->info.user.fdCreator =
+ 					cpu_to_be32(HFSP_SYMLINK_CREATOR);
+ 			} else {
+-				file->user_info.fdType =
++				file->info.user.fdType =
+ 					cpu_to_be32(sbi->type);
+-				file->user_info.fdCreator =
++				file->info.user.fdCreator =
+ 					cpu_to_be32(sbi->creator);
+ 			}
+ 			if (HFSPLUS_FLG_IMMUTABLE &
+@@ -158,11 +158,11 @@ static int hfsplus_cat_build_record(hfsplus_cat_entry *entry,
+ 				file->flags |=
+ 					cpu_to_be16(HFSPLUS_FILE_LOCKED);
+ 		} else {
+-			file->user_info.fdType =
++			file->info.user.fdType =
+ 				cpu_to_be32(HFSP_HARDLINK_TYPE);
+-			file->user_info.fdCreator =
++			file->info.user.fdCreator =
+ 				cpu_to_be32(HFSP_HFSPLUS_CREATOR);
+-			file->user_info.fdFlags =
++			file->info.user.fdFlags =
+ 				cpu_to_be16(0x100);
+ 			file->create_date =
+ 				HFSPLUS_I(sbi->hidden_dir)->create_date;
+diff --git a/fs/hfsplus/dir.c b/fs/hfsplus/dir.c
+index 03e6c046faf4..0ae8f797d7f3 100644
+--- a/fs/hfsplus/dir.c
++++ b/fs/hfsplus/dir.c
+@@ -73,9 +73,9 @@ static struct dentry *hfsplus_lookup(struct inode *dir, struct dentry *dentry,
+ 			goto fail;
+ 		}
+ 		cnid = be32_to_cpu(entry.file.id);
+-		if (entry.file.user_info.fdType ==
++		if (entry.file.info.user.fdType ==
+ 				cpu_to_be32(HFSP_HARDLINK_TYPE) &&
+-				entry.file.user_info.fdCreator ==
++				entry.file.info.user.fdCreator ==
+ 				cpu_to_be32(HFSP_HFSPLUS_CREATOR) &&
+ 				HFSPLUS_SB(sb)->hidden_dir &&
+ 				(entry.file.create_date ==
+diff --git a/fs/hfsplus/hfsplus_raw.h b/fs/hfsplus/hfsplus_raw.h
+index 456e87aec7fd..005a043bc7ee 100644
+--- a/fs/hfsplus/hfsplus_raw.h
++++ b/fs/hfsplus/hfsplus_raw.h
+@@ -260,8 +260,10 @@ struct hfsplus_cat_folder {
+ 	__be32 access_date;
+ 	__be32 backup_date;
+ 	struct hfsplus_perm permissions;
+-	struct DInfo user_info;
+-	struct DXInfo finder_info;
++	struct {
++		struct DInfo user;
++		struct DXInfo finder;
++	} info;
+ 	__be32 text_encoding;
+ 	__be32 subfolders;	/* Subfolder count in HFSX. Reserved in HFS+. */
+ } __packed;
+@@ -294,8 +296,10 @@ struct hfsplus_cat_file {
+ 	__be32 access_date;
+ 	__be32 backup_date;
+ 	struct hfsplus_perm permissions;
+-	struct FInfo user_info;
+-	struct FXInfo finder_info;
++	struct {
++		struct FInfo user;
++		struct FXInfo finder;
++	} info;
+ 	__be32 text_encoding;
+ 	u32 reserved2;
+ 
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index 4d169c5a2673..e18a472ac937 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -262,10 +262,8 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
+ 	struct hfs_find_data cat_fd;
+ 	hfsplus_cat_entry entry;
+ 	u16 cat_entry_flags, cat_entry_type;
+-	u16 folder_finderinfo_len = sizeof(struct DInfo) +
+-					sizeof(struct DXInfo);
+-	u16 file_finderinfo_len = sizeof(struct FInfo) +
+-					sizeof(struct FXInfo);
++	u16 folder_finderinfo_len = sizeof(entry.folder.info);
++	u16 file_finderinfo_len = sizeof(entry.file.info);
+ 
+ 	if ((!S_ISREG(inode->i_mode) &&
+ 			!S_ISDIR(inode->i_mode)) ||
+@@ -297,7 +295,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
+ 					sizeof(hfsplus_cat_entry));
+ 		if (be16_to_cpu(entry.type) == HFSPLUS_FOLDER) {
+ 			if (size == folder_finderinfo_len) {
+-				memcpy(&entry.folder.user_info, value,
++				memcpy(&entry.folder.info, value,
+ 						folder_finderinfo_len);
+ 				hfs_bnode_write(cat_fd.bnode, &entry,
+ 					cat_fd.entryoffset,
+@@ -310,7 +308,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
+ 			}
+ 		} else if (be16_to_cpu(entry.type) == HFSPLUS_FILE) {
+ 			if (size == file_finderinfo_len) {
+-				memcpy(&entry.file.user_info, value,
++				memcpy(&entry.file.info, value,
+ 						file_finderinfo_len);
+ 				hfs_bnode_write(cat_fd.bnode, &entry,
+ 					cat_fd.entryoffset,
+@@ -463,14 +461,14 @@ static ssize_t hfsplus_getxattr_finder_info(struct inode *inode,
+ 		if (entry_type == HFSPLUS_FOLDER) {
+ 			hfs_bnode_read(fd.bnode, folder_finder_info,
+ 				fd.entryoffset +
+-				offsetof(struct hfsplus_cat_folder, user_info),
++				offsetof(struct hfsplus_cat_folder, info.user),
+ 				folder_rec_len);
+ 			memcpy(value, folder_finder_info, folder_rec_len);
+ 			res = folder_rec_len;
+ 		} else if (entry_type == HFSPLUS_FILE) {
+ 			hfs_bnode_read(fd.bnode, file_finder_info,
+ 				fd.entryoffset +
+-				offsetof(struct hfsplus_cat_file, user_info),
++				offsetof(struct hfsplus_cat_file, info.user),
+ 				file_rec_len);
+ 			memcpy(value, file_finder_info, file_rec_len);
+ 			res = file_rec_len;
+@@ -631,14 +629,14 @@ static ssize_t hfsplus_listxattr_finder_info(struct dentry *dentry,
+ 		len = sizeof(struct DInfo) + sizeof(struct DXInfo);
+ 		hfs_bnode_read(fd.bnode, folder_finder_info,
+ 				fd.entryoffset +
+-				offsetof(struct hfsplus_cat_folder, user_info),
++				offsetof(struct hfsplus_cat_folder, info.user),
+ 				len);
+ 		found_bit = find_first_bit((void *)folder_finder_info, len*8);
+ 	} else if (entry_type == HFSPLUS_FILE) {
+ 		len = sizeof(struct FInfo) + sizeof(struct FXInfo);
+ 		hfs_bnode_read(fd.bnode, file_finder_info,
+ 				fd.entryoffset +
+-				offsetof(struct hfsplus_cat_file, user_info),
++				offsetof(struct hfsplus_cat_file, info.user),
+ 				len);
+ 		found_bit = find_first_bit((void *)file_finder_info, len*8);
+ 	} else {
 -- 
-Kees Cook
+2.27.0
+
