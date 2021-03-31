@@ -2,125 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3340C433ED
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 22:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57CAC433ED
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 22:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9321660FEF
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 22:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A459761008
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 22:39:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbhCaWY2 (ORCPT
+        id S229812AbhCaWis (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 Mar 2021 18:24:28 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.21]:20281 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229812AbhCaWX6 (ORCPT
+        Wed, 31 Mar 2021 18:38:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54054 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232207AbhCaWid (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 Mar 2021 18:23:58 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id B861D57783E
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 17:21:41 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id RjDZlnPF4mJLsRjDZlP8MR; Wed, 31 Mar 2021 17:21:41 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YojvDQ3EVOB0i+R+aoTOGVliEyEdWdfUxsBrA9b3YJY=; b=uqW4o/SQjZe6HtQmsZzdOzRPK0
-        pSPdwToqdS8sMt91UZdSz1IrfQ7EZTux2Ii5f6pm07i4UBfzGY6+SWRkXrprxlNYYjRLfnl87JLpf
-        /6XQyZ5LfhG3QRGeh8fSRddHgieVZPRWqIMaO8X6mxY0AdHJ0CHPISB2wIwsEkr3+m5qGvDlws2BJ
-        V/QCGQsr2YgkuI0dO8hXm7zuGz+DNBW8evNYMOxD5nROxMSZsKWZYqvGVcqoe6prPH5/rfZli5u19
-        J4wuAt0iyD+u2WnqOOPOpzcChZFS0uAP2zsi92q3/BUQCsITKT3iv1egE6s+0zRblMNm76hCiwPhB
-        73/0Kmbw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:51022 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lRjDZ-000iqw-CV; Wed, 31 Mar 2021 17:21:41 -0500
-Subject: Re: [PATCH][next] hfsplus: Fix out-of-bounds warnings in
- __hfsplus_setxattr
-To:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210330145226.GA207011@embeddedor>
- <20210330214320.93600506530f1ab18338b467@linux-foundation.org>
- <20210331045357.GV351017@casper.infradead.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <2693ab27-64b6-9088-e172-83e7f8b4e95b@embeddedor.com>
-Date:   Wed, 31 Mar 2021 16:21:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Wed, 31 Mar 2021 18:38:33 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1617230311;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MTAca8jamyiv4OQC/0ehNmkUzrYgK82+B2gnABlfuE4=;
+        b=wLJuSNRlSVF/PkDm3fuzha7lpECmwuVqtA03/nXyQDXDAWvBirH+/fYTNYqrnlItwtLK39
+        ueabTGEjWfDwJRWajmljjDlBBRKb1e4iWShFRNEaFV/o2ysNaExtYxnlKlAmRe3XZMJnKG
+        bNQvUoKtTg4fdrC48N52k6UMO9iR3DD92508uibjdl9Mmhw/WkzMQdF6Rjwqo7Q7jvmbj+
+        WxukKQ1OuTjvMmPRlRVQVfC0Htd3LczE5FTUIDbv/T8HXjwy0JEUrOjh1ErBC+f7z6rUNc
+        jP8Y+MbOuHb2pyR7nVtU21KL+1pc2hsRU+1ZQlaM5d6XOuJe6UKGsmHaYhzSQA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1617230311;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MTAca8jamyiv4OQC/0ehNmkUzrYgK82+B2gnABlfuE4=;
+        b=yTpBUljzXJtrMhJ2lcQnuH9tBbKROS0ovJE/lzzYE7vrNqhZtLuA5E4XjbMAeCAsuBkJfi
+        LNLwWc3mHTWDTwBw==
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jann Horn <jannh@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/6] stack: Optionally randomize kernel stack offset each syscall
+In-Reply-To: <202103311453.A840B7FC5@keescook>
+References: <20210330205750.428816-1-keescook@chromium.org> <20210330205750.428816-4-keescook@chromium.org> <87im5769op.ffs@nanos.tec.linutronix.de> <202103311453.A840B7FC5@keescook>
+Date:   Thu, 01 Apr 2021 00:38:31 +0200
+Message-ID: <87v9973q54.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20210331045357.GV351017@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lRjDZ-000iqw-CV
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:51022
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Wed, Mar 31 2021 at 14:54, Kees Cook wrote:
+> On Wed, Mar 31, 2021 at 09:53:26AM +0200, Thomas Gleixner wrote:
+>> On Tue, Mar 30 2021 at 13:57, Kees Cook wrote:
+>> > +/*
+>> > + * Do not use this anywhere else in the kernel. This is used here because
+>> > + * it provides an arch-agnostic way to grow the stack with correct
+>> > + * alignment. Also, since this use is being explicitly masked to a max of
+>> > + * 10 bits, stack-clash style attacks are unlikely. For more details see
+>> > + * "VLAs" in Documentation/process/deprecated.rst
+>> > + * The asm statement is designed to convince the compiler to keep the
+>> > + * allocation around even after "ptr" goes out of scope.
+>> 
+>> Nit. That explanation of "ptr" might be better placed right at the
+>> add_random...() macro.
+>
+> Ah, yes! Fixed in v9.
 
+Hmm, looking at V9 the "ptr" thing got lost ....
 
-On 3/30/21 23:53, Matthew Wilcox wrote:
-> On Tue, Mar 30, 2021 at 09:43:20PM -0700, Andrew Morton wrote:
->> On Tue, 30 Mar 2021 09:52:26 -0500 "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
->>
->>> Fix the following out-of-bounds warnings by enclosing
->>> structure members file and finder into new struct info:
->>>
->>> fs/hfsplus/xattr.c:300:5: warning: 'memcpy' offset [65, 80] from the object at 'entry' is out of the bounds of referenced subobject 'user_info' with type 'struct DInfo' at offset 48 [-Warray-bounds]
->>> fs/hfsplus/xattr.c:313:5: warning: 'memcpy' offset [65, 80] from the object at 'entry' is out of the bounds of referenced subobject 'user_info' with type 'struct FInfo' at offset 48 [-Warray-bounds]
->>>
->>> Refactor the code by making it more "structured."
->>>
->>> Also, this helps with the ongoing efforts to enable -Warray-bounds and
->>> makes the code clearer and avoid confusing the compiler.
->>
->> Confused.  What was wrong with the old code?  Was this warning
->> legitimate and if so, why?  Or is this patch a workaround for a
->> compiler shortcoming?
-> 
-> The offending line is this:
-> 
-> -                               memcpy(&entry.file.user_info, value,
-> +                               memcpy(&entry.file.info, value,
->                                                 file_finderinfo_len);
-> 
-> what it's trying to do is copy two structs which are adjacent to each
-> other in a single call to memcpy().  gcc legitimately complains that the
-> memcpy to this struct overruns the bounds of the struct.  What Gustavo
-> has done here is introduce a new struct that contains the two structs,
-> and now gcc is happy that the memcpy doesn't overrun the length of this
-> containing struct.
+> +/*
+> + * Do not use this anywhere else in the kernel. This is used here because
+> + * it provides an arch-agnostic way to grow the stack with correct
+> + * alignment. Also, since this use is being explicitly masked to a max of
+> + * 10 bits, stack-clash style attacks are unlikely. For more details see
+> + * "VLAs" in Documentation/process/deprecated.rst
+> + */
+> +void *__builtin_alloca(size_t size);
+> +/*
+> + * Use, at most, 10 bits of entropy. We explicitly cap this to keep the
+> + * "VLA" from being unbounded (see above). 10 bits leaves enough room for
+> + * per-arch offset masks to reduce entropy (by removing higher bits, since
+> + * high entropy may overly constrain usable stack space), and for
+> + * compiler/arch-specific stack alignment to remove the lower bits.
+> + */
+> +#define KSTACK_OFFSET_MAX(x)	((x) & 0x3FF)
+> +
+> +/*
+> + * These macros must be used during syscall entry when interrupts and
+> + * preempt are disabled, and after user registers have been stored to
+> + * the stack.
+> + */
+> +#define add_random_kstack_offset() do {					\
 
-Thanks for this, Matthew. :)
+> Do you want to take this via -tip (and leave off the arm64 patch until
+> it is acked), or would you rather it go via arm64? (I've sent v9 now...)
 
---
-Gustavo
+Either way is fine.
+
+Thanks,
+
+        tglx
