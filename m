@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE18C43603
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA94C001E7
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9F7D61075
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345066109D
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232816AbhCaV2U (ORCPT
+        id S232917AbhCaV2X (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 Mar 2021 17:28:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51880 "EHLO
+        Wed, 31 Mar 2021 17:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232855AbhCaV1u (ORCPT
+        with ESMTP id S232915AbhCaV16 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 Mar 2021 17:27:50 -0400
+        Wed, 31 Mar 2021 17:27:58 -0400
 Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711D8C06174A
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:50 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id da16so2110893qvb.2
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6CCC061760
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:57 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id p2so2108192qvi.6
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=o64BOrDovMhhQ8PDB1l0LcOi9/iKBCLRb9E2FXFROjI=;
-        b=ab418U9t+zO8emXNBH+5SJoSatco1/BYXVKCp5kR9oJ4dCv4FBJ0DOAzFZKeLUfkKl
-         fUgBhHFjNoA5jCgHMBVfISQPsfcV4tkglm8aql2tpBWv1K2SMJ8MWoOGLzJPhln2pjXI
-         eI+Ck2AwY62ZFKL8TjPFZCLps9vUFzJCE+ArU7q1Fo9x7ck10a0C6NDV6lTmVy3ixwTP
-         j1cIlkUHSzwrbxv1RSH3dhf3h2++UXcP0MsAZZuh8hj5TBYXvM2vkFDpZuKWR9E72a/m
-         dvx4zQ1yue18RyXHSDL196mNCqIFEk3eJZZCew9nQBGiqOzbz27VX+tJlmmN3ytfTX8r
-         O0ZQ==
+        bh=tNWRsiiEAfetheYG6qtDYdd6Zu2YM8DJGmENfE26Aac=;
+        b=ubXheP2brktumzheoRlwOGBaDAhJZCw5NjiWWseiWXm7uPGHPIEhQNkw1vclDXilyC
+         T58HwhxWmupp1FHmmbm/one9xjzW1zyEIjkTSSxxlsem3MjSEZyOYyr2rhKeCFRUkd1c
+         yGspf/krXoZV1aO23JrXpEBnl0Y82WLgsZPob752XnnEkvdLJpCAqDdeG+QPej4XPSZi
+         CCDXPydG6+7wL9MGmLynGahaXHCtSa4TMIRQo0YgQK5KW48jFUEOkg9RmceaiJf2wbgY
+         lIMNbUBaPlDMhK4s8fFJq1GcJptaYswx+mQ1VL7I/WglifRbnqfcOPmIuT0hvWr13KAr
+         jjYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=o64BOrDovMhhQ8PDB1l0LcOi9/iKBCLRb9E2FXFROjI=;
-        b=Bxw4Ipe1VUDNLTQWQouB2Y3s2NNVCtks0+YIhq30uDOAI54cg/WkM2kzk5s1ONtg5M
-         DbGpjzzRfbMpx0mH8MyaUGZ3woYRuS3asZWHQmj0QrMvcBMUOo0EKH8LSF2lCZCsl/IM
-         fUdMSm1WALf8n3xCmuKG1hdKS1K9fLYwS1+50Fr8Cvz4YhRtxIBfR6fAE10+VXymRBnu
-         l28JYhqywNnFUZU9I0IHjini3lWsB9wtdtdrnS/QqxuhvsaOOiF3yAXexNt3zr0NxwXZ
-         G5ojUhylJ3xdJJUWIBuuQeajEpAec5ziU7tPx87kHKrIEHum41JfqW7qzjWh+ngqE+0u
-         cbOA==
-X-Gm-Message-State: AOAM531x4JyVXK90/lKrMQtXNpXJ1+dARdKd7f+JzXCFMLaFMwC6ua1U
-        pytIpaJrqxc2zeIVqpqBO7U+/i12GnHQ6XHZoPk=
-X-Google-Smtp-Source: ABdhPJxPk8zktx7csSixwhB9+NXChBwJxthJyO98xdq2NpEvdMcuq8rD1w1wRNUqI7dcjJv+2zZININi7HzUKUAKx3Y=
+        bh=tNWRsiiEAfetheYG6qtDYdd6Zu2YM8DJGmENfE26Aac=;
+        b=elIe0QEGDTugzOwrR/uAfZFIimiry0sbJhz3blQWKo2zmXKXiTKg/GwQU5SoCKQHrn
+         re4wHEJkfZcWVOV31I7dM+nnHbNkJLlKUiDOJbi+ttqaynUiyze+LOpnbDdAsw65uP3k
+         SthNHQJa3nWZkr8g7CRb73CCDPeEI5mrJ+Yd9x/gpWbcmzM8UTA1FqLaR0FreowFom0n
+         mMVGqAze6NjYY2kIr7qfqixTa1MXzZnkt0tHsPBdJhOySUD4ySIlVQWiCcb3qqJyUF4y
+         idq+CnqVi6d8tG8JQlGuugGDZJmSm3iSGXROxfIWCnln4T9piu4QzAOz/1pN9zfWNsAr
+         Qsjg==
+X-Gm-Message-State: AOAM530QNqfAdfZ/bvQrNJoMCyekAivN77i9TONCtJNnfImOLRuYWe5m
+        LYCd5Rn1zBy/JsdX7HalRhDeVl+w5OdRDNFggEk=
+X-Google-Smtp-Source: ABdhPJzZWP60rNMcikFQnnnMLQ3nIFchg+3t6XyAeYS/TMwgF+id2xc8kKag8yrH4KJDKMnacT9UMf7IYNlFmwHArxk=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:7933:7015:a5d5:3835])
- (user=samitolvanen job=sendgmr) by 2002:a0c:a5a5:: with SMTP id
- z34mr5299257qvz.4.1617226069635; Wed, 31 Mar 2021 14:27:49 -0700 (PDT)
-Date:   Wed, 31 Mar 2021 14:27:17 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:f349:: with SMTP id
+ e9mr4952920qvm.59.1617226076143; Wed, 31 Mar 2021 14:27:56 -0700 (PDT)
+Date:   Wed, 31 Mar 2021 14:27:20 -0700
 In-Reply-To: <20210331212722.2746212-1-samitolvanen@google.com>
-Message-Id: <20210331212722.2746212-14-samitolvanen@google.com>
+Message-Id: <20210331212722.2746212-17-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210331212722.2746212-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v4 13/17] arm64: use function_nocfi with __pa_symbol
+Subject: [PATCH v4 16/17] KVM: arm64: Disable CFI for nVHE
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -83,106 +83,31 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, the compiler replaces function address
-references with the address of the function's CFI jump table
-entry. This means that __pa_symbol(function) returns the physical
-address of the jump table entry, which can lead to address space
-confusion as the jump table points to the function's virtual
-address. Therefore, use the function_nocfi() macro to ensure we are
-always taking the address of the actual function instead.
+Disable CFI for the nVHE code to avoid address space confusion.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/include/asm/mmu_context.h      | 2 +-
- arch/arm64/kernel/acpi_parking_protocol.c | 3 ++-
- arch/arm64/kernel/cpu-reset.h             | 2 +-
- arch/arm64/kernel/cpufeature.c            | 2 +-
- arch/arm64/kernel/psci.c                  | 3 ++-
- arch/arm64/kernel/smp_spin_table.c        | 3 ++-
- 6 files changed, 9 insertions(+), 6 deletions(-)
+ arch/arm64/kvm/hyp/nvhe/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-index bd02e99b1a4c..386b96400a57 100644
---- a/arch/arm64/include/asm/mmu_context.h
-+++ b/arch/arm64/include/asm/mmu_context.h
-@@ -140,7 +140,7 @@ static inline void cpu_replace_ttbr1(pgd_t *pgdp)
- 		ttbr1 |= TTBR_CNP_BIT;
- 	}
+diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
+index a6707df4f6c0..fb24a0f022ad 100644
+--- a/arch/arm64/kvm/hyp/nvhe/Makefile
++++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+@@ -75,9 +75,9 @@ quiet_cmd_hyprel = HYPREL  $@
+ quiet_cmd_hypcopy = HYPCOPY $@
+       cmd_hypcopy = $(OBJCOPY) --prefix-symbols=__kvm_nvhe_ $< $@
  
--	replace_phys = (void *)__pa_symbol(idmap_cpu_replace_ttbr1);
-+	replace_phys = (void *)__pa_symbol(function_nocfi(idmap_cpu_replace_ttbr1));
+-# Remove ftrace and Shadow Call Stack CFLAGS.
+-# This is equivalent to the 'notrace' and '__noscs' annotations.
+-KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
++# Remove ftrace, Shadow Call Stack, and CFI CFLAGS.
++# This is equivalent to the 'notrace', '__noscs', and '__nocfi' annotations.
++KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS) $(CC_FLAGS_CFI), $(KBUILD_CFLAGS))
  
- 	cpu_install_idmap();
- 	replace_phys(ttbr1);
-diff --git a/arch/arm64/kernel/acpi_parking_protocol.c b/arch/arm64/kernel/acpi_parking_protocol.c
-index e7c941d8340d..bfeeb5319abf 100644
---- a/arch/arm64/kernel/acpi_parking_protocol.c
-+++ b/arch/arm64/kernel/acpi_parking_protocol.c
-@@ -99,7 +99,8 @@ static int acpi_parking_protocol_cpu_boot(unsigned int cpu)
- 	 * that read this address need to convert this address to the
- 	 * Boot-Loader's endianness before jumping.
- 	 */
--	writeq_relaxed(__pa_symbol(secondary_entry), &mailbox->entry_point);
-+	writeq_relaxed(__pa_symbol(function_nocfi(secondary_entry)),
-+		       &mailbox->entry_point);
- 	writel_relaxed(cpu_entry->gic_cpu_id, &mailbox->cpu_id);
- 
- 	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
-diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-index ed50e9587ad8..f3adc574f969 100644
---- a/arch/arm64/kernel/cpu-reset.h
-+++ b/arch/arm64/kernel/cpu-reset.h
-@@ -22,7 +22,7 @@ static inline void __noreturn cpu_soft_restart(unsigned long entry,
- 
- 	unsigned long el2_switch = !is_kernel_in_hyp_mode() &&
- 		is_hyp_mode_available();
--	restart = (void *)__pa_symbol(__cpu_soft_restart);
-+	restart = (void *)__pa_symbol(function_nocfi(__cpu_soft_restart));
- 
- 	cpu_install_idmap();
- 	restart(el2_switch, entry, arg0, arg1, arg2);
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 2a5d9854d664..ac616c59ae92 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1463,7 +1463,7 @@ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
- 	if (arm64_use_ng_mappings)
- 		return;
- 
--	remap_fn = (void *)__pa_symbol(idmap_kpti_install_ng_mappings);
-+	remap_fn = (void *)__pa_symbol(function_nocfi(idmap_kpti_install_ng_mappings));
- 
- 	cpu_install_idmap();
- 	remap_fn(cpu, num_online_cpus(), __pa_symbol(swapper_pg_dir));
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index 62d2bda7adb8..e74bcb57559b 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -38,7 +38,8 @@ static int __init cpu_psci_cpu_prepare(unsigned int cpu)
- 
- static int cpu_psci_cpu_boot(unsigned int cpu)
- {
--	int err = psci_ops.cpu_on(cpu_logical_map(cpu), __pa_symbol(secondary_entry));
-+	int err = psci_ops.cpu_on(cpu_logical_map(cpu),
-+			__pa_symbol(function_nocfi(secondary_entry)));
- 	if (err)
- 		pr_err("failed to boot CPU%d (%d)\n", cpu, err);
- 
-diff --git a/arch/arm64/kernel/smp_spin_table.c b/arch/arm64/kernel/smp_spin_table.c
-index 056772c26098..4c4e36ded4aa 100644
---- a/arch/arm64/kernel/smp_spin_table.c
-+++ b/arch/arm64/kernel/smp_spin_table.c
-@@ -88,7 +88,8 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
- 	 * boot-loader's endianness before jumping. This is mandated by
- 	 * the boot protocol.
- 	 */
--	writeq_relaxed(__pa_symbol(secondary_holding_pen), release_addr);
-+	writeq_relaxed(__pa_symbol(function_nocfi(secondary_holding_pen)),
-+		       release_addr);
- 	__flush_dcache_area((__force void *)release_addr,
- 			    sizeof(*release_addr));
- 
+ # KVM nVHE code is run at a different exception code with a different map, so
+ # compiler instrumentation that inserts callbacks or checks into the code may
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
