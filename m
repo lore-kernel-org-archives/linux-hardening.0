@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082C0C001BA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F71CC43470
 	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC0D96109E
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653AD6105A
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232746AbhCaV2R (ORCPT
+        id S232813AbhCaV2T (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 Mar 2021 17:28:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51826 "EHLO
+        Wed, 31 Mar 2021 17:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbhCaV1o (ORCPT
+        with ESMTP id S232827AbhCaV1q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 Mar 2021 17:27:44 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01172C06174A
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:44 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id y13so3611860ybk.20
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:43 -0700 (PDT)
+        Wed, 31 Mar 2021 17:27:46 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F349BC061760
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:45 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id f26so1925093qtq.17
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=LhQny/aeJmeAJ3bCETNM8gy3/qff2yzp1+GBUrzrBDs=;
-        b=km1dlNMsZVD+nYKyhmf8suslG6lRpTXA9bXfPOZq3XJD2bh9lwyHlyugNqkc/9xIHZ
-         pvZZvVE7uTiP4xcSdTYcIUDfgVzPvR8B7rp/SUuIegT/xhp5Kgp8M2Jfv/MMMGMErURD
-         D9lFaSTH90mT4zzz7CkOxbEyPbFaLhhQWqZx9kshO8db8Eo6StC3w+wbFjJuHk4jG3HN
-         ucAsImNaXJzMhnj+fyaph3WhubhiwK8ZKwoWXX0hwNzxpHCWqtnmqIC8+kn65eGYZQAL
-         IxDudopx6hMfpUdyShz//HZdprJ0b8BJcZVh1a1jajI/rhbjlvcxdscLYnc6MfVzw/7Z
-         xOcw==
+        bh=u3sb7mCURY4VtmyE6zoVQ18sx7nW16pIZYxJrlMzk+o=;
+        b=eMFe9houa2XuN05SOLsaOm1Hewi7pJ9LNis+2l70Pybgv0BDjfh3Tdjx0LeKuDts/8
+         5TrWVPttIn2hlb4FWOkPJvsI+3pl4WmXqShOicHoGuBx+x06lTjU0PYmzEkX1eUIZZYm
+         2UbSefvKGG4w1T/hAXOi65BNTP7V932xjjIwsFszWbETMcndQAgg2J1lQsmkLEDmJ1uu
+         1cOK+xgl4cg4yXyncFGUWYT9T4R4JW24KVZEyJFf3MUxdM4Swj6k/74eJaTzZZDQWuQc
+         XORxfZubOGWv8Du+0NlGMiued0fd4ATF8owIEc3jR7W1F5csKMraVh8dIC3NwYQXtmwR
+         qYrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=LhQny/aeJmeAJ3bCETNM8gy3/qff2yzp1+GBUrzrBDs=;
-        b=MNlmppXkUZjrnvasnLaHTtidF+iesa5s0ppJDTp3H5fU7lziXR0SqwVvQFl3xysDyb
-         H/06vHcUvq0YoHqkKOchK+7AY7qiDgDLfC0qPquIxrXc+IvD2kL8i2PLfQEacxkgh/KG
-         VpDxG0KufXJVGNAMFgIE+PebLTHu7HMDxOkT5ivFFb/z92zbBCMqEj2sbHBRdMzkDISG
-         uAXidWKzIk9E9536HmnTUKWHZ6RM9KCOj6SWwtg0u5VGHOzaSQcs9Am8D0apLq1FNo2X
-         cZhXDTEdoHNMhhbw8GEjPKnEX5u0iVwFjou+T28Z2xMFiGMFasWqqRT5jaT7RCwB8lBr
-         aacw==
-X-Gm-Message-State: AOAM531gNcuaWXhtGH6iD2MD8ICDUvgcWlb872tEGUgXaHrCSWUaRT6p
-        j6CNuTD28kd9bvXG3k1AblWBeaRqTXOUqvGJZRo=
-X-Google-Smtp-Source: ABdhPJwLju6B+haVkuwTRD6OTE7Kj+Fskb9zJBbkaGFlIanyE03asSCx14sDc0Ys7LCvhLw3MkN686iAQEZQHDgH42E=
+        bh=u3sb7mCURY4VtmyE6zoVQ18sx7nW16pIZYxJrlMzk+o=;
+        b=TpqgRgGQJwwMWCd71qQnj5AjZl6eU1ksSciN3aoEWQgTHcPqOz5s0hG7675hKr5UQW
+         aiLRrn8E6DIAve59In6GiaA7fC67BzvnGXQY+F0bG0lhDlzc172F6QHb2U/pV98v0PCE
+         9r+oIKX+u4Of8+Y2A+Hytpg+1Xcpy0eWBlfZx2OFrCZVnbPpsfl+qjfFSO6IbIuCHOME
+         kPgZF+I29ytATbE8wf9ag1K9N7QknYTZz38m0LQtlOdANGSheGo7yodwfrDLCwj2kX4d
+         skSyigm0kCikUlrCoIZwXry2dWqPJZwMO3KtQSJQz2mCAwsYdO6vlWfsKgl8yzdxr867
+         aoEw==
+X-Gm-Message-State: AOAM531ntFgOlxt9yGnDLglujN6SyQK5zaq2LxJtCLDX2Mzq8nFg2+3/
+        /WhGzNUA6BiS9yl2ATnkDy6mT6qCLXkLa7BvicM=
+X-Google-Smtp-Source: ABdhPJzrA9aIb2BbE0lWagI3+XE0XKAg7qn3gSUlNS0HnH2/8JbM1k1enyP7wLr7bRTJVSNLjEIoy9fiEcRhnF0cjM8=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:7933:7015:a5d5:3835])
- (user=samitolvanen job=sendgmr) by 2002:a25:38c6:: with SMTP id
- f189mr7492638yba.183.1617226063121; Wed, 31 Mar 2021 14:27:43 -0700 (PDT)
-Date:   Wed, 31 Mar 2021 14:27:14 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6214:945:: with SMTP id
+ dn5mr4904341qvb.3.1617226065111; Wed, 31 Mar 2021 14:27:45 -0700 (PDT)
+Date:   Wed, 31 Mar 2021 14:27:15 -0700
 In-Reply-To: <20210331212722.2746212-1-samitolvanen@google.com>
-Message-Id: <20210331212722.2746212-11-samitolvanen@google.com>
+Message-Id: <20210331212722.2746212-12-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210331212722.2746212-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v4 10/17] lkdtm: use function_nocfi
+Subject: [PATCH v4 11/17] psci: use function_nocfi for cpu_resume
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -83,30 +83,46 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To ensure we take the actual address of a function in kernel text,
-use function_nocfi. Otherwise, with CONFIG_CFI_CLANG, the compiler
-replaces the address with a pointer to the CFI jump table, which is
-actually in the module when compiled with CONFIG_LKDTM=m.
+With CONFIG_CFI_CLANG, the compiler replaces function pointers with
+jump table addresses, which results in __pa_symbol returning the
+physical address of the jump table entry. As the jump table contains
+an immediate jump to an EL1 virtual address, this typically won't
+work as intended. Use function_nocfi to get the actual address of
+cpu_resume.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/misc/lkdtm/usercopy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/psci/psci.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
-index 109e8d4302c1..15d220ef35a5 100644
---- a/drivers/misc/lkdtm/usercopy.c
-+++ b/drivers/misc/lkdtm/usercopy.c
-@@ -314,7 +314,7 @@ void lkdtm_USERCOPY_KERNEL(void)
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index f5fc429cae3f..64344e84bd63 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -325,8 +325,9 @@ static int __init psci_features(u32 psci_func_id)
+ static int psci_suspend_finisher(unsigned long state)
+ {
+ 	u32 power_state = state;
++	phys_addr_t pa_cpu_resume = __pa_symbol(function_nocfi(cpu_resume));
  
- 	pr_info("attempting bad copy_to_user from kernel text: %px\n",
- 		vm_mmap);
--	if (copy_to_user((void __user *)user_addr, vm_mmap,
-+	if (copy_to_user((void __user *)user_addr, function_nocfi(vm_mmap),
- 			 unconst + PAGE_SIZE)) {
- 		pr_warn("copy_to_user failed, but lacked Oops\n");
- 		goto free_user;
+-	return psci_ops.cpu_suspend(power_state, __pa_symbol(cpu_resume));
++	return psci_ops.cpu_suspend(power_state, pa_cpu_resume);
+ }
+ 
+ int psci_cpu_suspend_enter(u32 state)
+@@ -344,8 +345,10 @@ int psci_cpu_suspend_enter(u32 state)
+ 
+ static int psci_system_suspend(unsigned long unused)
+ {
++	phys_addr_t pa_cpu_resume = __pa_symbol(function_nocfi(cpu_resume));
++
+ 	return invoke_psci_fn(PSCI_FN_NATIVE(1_0, SYSTEM_SUSPEND),
+-			      __pa_symbol(cpu_resume), 0, 0);
++			      pa_cpu_resume, 0, 0);
+ }
+ 
+ static int psci_system_suspend_enter(suspend_state_t state)
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
