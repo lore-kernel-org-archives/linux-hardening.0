@@ -2,68 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15556C00303
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E647C433ED
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05876109D
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8C961076
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Mar 2021 21:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232981AbhCaV2W (ORCPT
+        id S231676AbhCaVqV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 Mar 2021 17:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51914 "EHLO
+        Wed, 31 Mar 2021 17:46:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232893AbhCaV1z (ORCPT
+        with ESMTP id S231579AbhCaVqK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 Mar 2021 17:27:55 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB202C061574
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:54 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id l11so1945385qtk.2
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:27:54 -0700 (PDT)
+        Wed, 31 Mar 2021 17:46:10 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4AEC06174A
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:46:10 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id h20so8606494plr.4
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Mar 2021 14:46:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=qAbADIQAzXUoq/ElYpa9rjjQHxphEP8wPywcql//gEU=;
-        b=BIwBbz27li9nhzZOJpPItRxIEwjbJxKUY6UbYU5CqvzA6WV2OyusxpPuP2GbqEKsF4
-         wPUN1Q4or2K+m1thBQd2qBYnnhno/+HEhUjZP6mN++bKuXujnCF7ElDczhg5KqD0DiHQ
-         hAtx85mO6qIZNWn2hkAtwUeoT/7iOQYyLpsYMn5GkmPZR/+IClF4QAklOY48jwFmIUYr
-         aQsEWMT4TYApAtAL/gjYcoyIEfUpYswWr1684dszxQxu7VwcvcTCnnc8GPEf+Ef5ZYIf
-         aeqjPvWk/ub/50LBqjLxSVw1zYmdKi8DPaVfSVN+0mUmPWgG8aIRBCTvTk4SH2B+EppC
-         /dgg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=esAh+eFc7x1e4muSLkstj3Ic+kmZW4D/uno+GAwyPqg=;
+        b=NzeLyJir6d1KwpiZ3RmekcvSne/weQo4YA0Uu7Q89IkbPP0+5tkV6E7R5TuBWawoMg
+         idGZp8zqhG+5HVjnv+msYLiZQ9S7h9tCa6GvjbE5b83fycdA9pvVk1tDXnlDajKP2SLi
+         74sdgQx/uoB7+AwHV0v7j226PbBND6y7yHvDI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=qAbADIQAzXUoq/ElYpa9rjjQHxphEP8wPywcql//gEU=;
-        b=ZjeLVTUP4cFP20A32dbYkeBfMgptERkRB38lbpymmsf92HK9oWBrRO6iV2kkvvKoXE
-         Jlsdh6pAhoucX3eA/N6ADWcIrnTRPtx9PmUEDSq1r2CnS4fjnjNYcyfQDLSRBVQF9mwi
-         uEyyyxzIGDbDwoy6InR0WuhsUEv0e8DDUVjPaSQo33bDpgUzI3t1D3J8WhTzPhenuWJW
-         vGUZWsZhMb5+Y7pFqXK/RRJHOJeX0pWXeAIndBUwl+gDwq+B+FdLgvGjuTAmlfNP0sEN
-         5ZaVRNUIHn58qWfAsKbjRnkm+QttEa2eEhlyPMmOEaL8hT/eETJZm7F4TK8VmboDM8wH
-         J30g==
-X-Gm-Message-State: AOAM533zeulokAHXmMlyPDWdSLPc1f8F34OrVEZJyWopaY7WkqdJdcd2
-        uWVjmwlUznFEbU+Z0vvTEuKUMCkcD6a3FIQDnpE=
-X-Google-Smtp-Source: ABdhPJwBmNvm14+TDBMdxtVUmeFtuXceFyrO8XCaMzs+ImrOy+72TpNn3ja8CYb7Rf87hbMIOM4aIfmuWPGKh8vvqRQ=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:7933:7015:a5d5:3835])
- (user=samitolvanen job=sendgmr) by 2002:ad4:5614:: with SMTP id
- ca20mr4929242qvb.37.1617226074055; Wed, 31 Mar 2021 14:27:54 -0700 (PDT)
-Date:   Wed, 31 Mar 2021 14:27:19 -0700
-In-Reply-To: <20210331212722.2746212-1-samitolvanen@google.com>
-Message-Id: <20210331212722.2746212-16-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20210331212722.2746212-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v4 15/17] arm64: add __nocfi to __apply_alternatives
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Kees Cook <keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=esAh+eFc7x1e4muSLkstj3Ic+kmZW4D/uno+GAwyPqg=;
+        b=j76vUZ+OfEg5sVvnrb9x02qdbhcLp1WJ7gU6fsQ+Dq0zkP3xtkwYYzFuHCSYsTgGtV
+         0CkWbq5icRlnMvtutenbdcSgKlThW5UQ2g66q6zTFAPyd30q4trAojpzQDIehAfLRvjp
+         7tpSnUi2XDG+xwCmPdL4hsyqPAMLczW1S0heMmpXRMbhlSROY54wk4+JcNtkE+u4cXR4
+         if9wdZJMnp9oPGwDK0GpRcywpY0AmQw/Oc1HuFkEkK7dM1r/ymmihMmgAx6bXk0E+6JW
+         9DX1Oiv4oigDHbnMiUDO6FhDV7rfCEq3Kdb8CFTkHMQHF5VWiCBnZdKuDsi716P2L3Rj
+         jwkg==
+X-Gm-Message-State: AOAM531fFxk+IleC3IG5fultfAqg8jrRTkMlPyEC6ta/XLgbM/K3GLML
+        3FWTftMRYoHfkkK4N57iiwXtGg==
+X-Google-Smtp-Source: ABdhPJyc6xYrPp/zlyE7RCl/S1V/S62i7LtVAPCykyeZ+e4UWpT04Q1Ln+T2FDOVuAGVX7rqBciSng==
+X-Received: by 2002:a17:90a:be0e:: with SMTP id a14mr5187306pjs.131.1617227170242;
+        Wed, 31 Mar 2021 14:46:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id iq6sm3106930pjb.31.2021.03.31.14.46.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Mar 2021 14:46:09 -0700 (PDT)
+Date:   Wed, 31 Mar 2021 14:46:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
@@ -77,39 +70,175 @@ Cc:     Nathan Chancellor <nathan@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 00/17] Add support for Clang CFI
+Message-ID: <202103311442.FDB6E8223@keescook>
+References: <20210331212722.2746212-1-samitolvanen@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210331212722.2746212-1-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-__apply_alternatives makes indirect calls to functions whose address
-is taken in assembly code using the alternative_cb macro. With
-non-canonical CFI, the compiler won't replace these function
-references with the jump table addresses, which trips CFI. Disable CFI
-checking in the function to work around the issue.
+On Wed, Mar 31, 2021 at 02:27:04PM -0700, Sami Tolvanen wrote:
+> This series adds support for Clang's Control-Flow Integrity (CFI)
+> checking. With CFI, the compiler injects a runtime check before each
+> indirect function call to ensure the target is a valid function with
+> the correct static type. This restricts possible call targets and
+> makes it more difficult for an attacker to exploit bugs that allow the
+> modification of stored function pointers. For more details, see:
+> 
+>   https://clang.llvm.org/docs/ControlFlowIntegrity.html
+> 
+> The first patch contains build system changes and error handling,
+> and implements support for cross-module indirect call checking. The
+> remaining patches address issues caused by the compiler
+> instrumentation. These include fixing known type mismatches, as well
+> as issues with address space confusion and cross-module function
+> address equality.
+> 
+> These patches add support only for arm64, but I'll post patches also
+> for x86_64 after we address the remaining issues there, including
+> objtool support.
+> 
+> You can also pull this series from
+> 
+>   https://github.com/samitolvanen/linux.git cfi-v4
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/kernel/alternative.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks for the updates! I think this is ready to land in -next.
 
-diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
-index 1184c44ea2c7..abc84636af07 100644
---- a/arch/arm64/kernel/alternative.c
-+++ b/arch/arm64/kernel/alternative.c
-@@ -133,8 +133,8 @@ static void clean_dcache_range_nopatch(u64 start, u64 end)
- 	} while (cur += d_size, cur < end);
- }
- 
--static void __apply_alternatives(void *alt_region,  bool is_module,
--				 unsigned long *feature_mask)
-+static void __nocfi __apply_alternatives(void *alt_region,  bool is_module,
-+					 unsigned long *feature_mask)
- {
- 	struct alt_instr *alt;
- 	struct alt_region *region = alt_region;
+Will, Mark, Catalin: would you prefer this go via arm64 or via my LTO
+tree? (Or does anyone see other stuff they'd like fixed first?)
+
+-Kees
+
+> ---
+> Changes in v4:
+>  - Per Mark's suggestion, dropped __pa_function() and renamed
+>    __va_function() to function_nocfi().
+>  - Added a comment to function_nocfi() to explain what it does.
+>  - Updated the psci patch to use an intermediate variable for
+>    the physical address for clarity.
+> 
+> Changes in v3:
+>  - Added a patch to change list_sort() callers treewide to use
+>    const pointers instead of simply removing the internal casts.
+>  - Changed cleanup_symbol_name() to return bool.
+>  - Changed module.lds.S to drop the .eh_frame section only with
+>    CONFIG_CFI_CLANG.
+>  - Switched to synchronize_rcu() in update_shadow().
+> 
+> Changes in v2:
+>  - Fixed .text merging in module.lds.S.
+>  - Added WARN_ON_FUNCTION_MISMATCH() and changed kernel/thread.c
+>    and kernel/workqueue.c to use the macro instead.
+> 
+> 
+> Sami Tolvanen (17):
+>   add support for Clang CFI
+>   cfi: add __cficanonical
+>   mm: add generic function_nocfi macro
+>   module: ensure __cfi_check alignment
+>   workqueue: use WARN_ON_FUNCTION_MISMATCH
+>   kthread: use WARN_ON_FUNCTION_MISMATCH
+>   kallsyms: strip ThinLTO hashes from static functions
+>   bpf: disable CFI in dispatcher functions
+>   treewide: Change list_sort to use const pointers
+>   lkdtm: use function_nocfi
+>   psci: use function_nocfi for cpu_resume
+>   arm64: implement function_nocfi
+>   arm64: use function_nocfi with __pa_symbol
+>   arm64: add __nocfi to functions that jump to a physical address
+>   arm64: add __nocfi to __apply_alternatives
+>   KVM: arm64: Disable CFI for nVHE
+>   arm64: allow CONFIG_CFI_CLANG to be selected
+> 
+>  Makefile                                      |  17 +
+>  arch/Kconfig                                  |  45 +++
+>  arch/arm64/Kconfig                            |   1 +
+>  arch/arm64/include/asm/memory.h               |  15 +
+>  arch/arm64/include/asm/mmu_context.h          |   4 +-
+>  arch/arm64/kernel/acpi_parking_protocol.c     |   3 +-
+>  arch/arm64/kernel/alternative.c               |   4 +-
+>  arch/arm64/kernel/cpu-reset.h                 |  10 +-
+>  arch/arm64/kernel/cpufeature.c                |   4 +-
+>  arch/arm64/kernel/psci.c                      |   3 +-
+>  arch/arm64/kernel/smp_spin_table.c            |   3 +-
+>  arch/arm64/kvm/hyp/nvhe/Makefile              |   6 +-
+>  arch/arm64/kvm/vgic/vgic-its.c                |   8 +-
+>  arch/arm64/kvm/vgic/vgic.c                    |   3 +-
+>  block/blk-mq-sched.c                          |   3 +-
+>  block/blk-mq.c                                |   3 +-
+>  drivers/acpi/nfit/core.c                      |   3 +-
+>  drivers/acpi/numa/hmat.c                      |   3 +-
+>  drivers/clk/keystone/sci-clk.c                |   4 +-
+>  drivers/firmware/psci/psci.c                  |   7 +-
+>  drivers/gpu/drm/drm_modes.c                   |   3 +-
+>  drivers/gpu/drm/i915/gt/intel_engine_user.c   |   3 +-
+>  drivers/gpu/drm/i915/gvt/debugfs.c            |   2 +-
+>  drivers/gpu/drm/i915/selftests/i915_gem_gtt.c |   3 +-
+>  drivers/gpu/drm/radeon/radeon_cs.c            |   4 +-
+>  .../hw/usnic/usnic_uiom_interval_tree.c       |   3 +-
+>  drivers/interconnect/qcom/bcm-voter.c         |   2 +-
+>  drivers/md/raid5.c                            |   3 +-
+>  drivers/misc/lkdtm/usercopy.c                 |   2 +-
+>  drivers/misc/sram.c                           |   4 +-
+>  drivers/nvme/host/core.c                      |   3 +-
+>  .../controller/cadence/pcie-cadence-host.c    |   3 +-
+>  drivers/spi/spi-loopback-test.c               |   3 +-
+>  fs/btrfs/raid56.c                             |   3 +-
+>  fs/btrfs/tree-log.c                           |   3 +-
+>  fs/btrfs/volumes.c                            |   3 +-
+>  fs/ext4/fsmap.c                               |   4 +-
+>  fs/gfs2/glock.c                               |   3 +-
+>  fs/gfs2/log.c                                 |   2 +-
+>  fs/gfs2/lops.c                                |   3 +-
+>  fs/iomap/buffered-io.c                        |   3 +-
+>  fs/ubifs/gc.c                                 |   7 +-
+>  fs/ubifs/replay.c                             |   4 +-
+>  fs/xfs/scrub/bitmap.c                         |   4 +-
+>  fs/xfs/xfs_bmap_item.c                        |   4 +-
+>  fs/xfs/xfs_buf.c                              |   6 +-
+>  fs/xfs/xfs_extent_busy.c                      |   4 +-
+>  fs/xfs/xfs_extent_busy.h                      |   3 +-
+>  fs/xfs/xfs_extfree_item.c                     |   4 +-
+>  fs/xfs/xfs_refcount_item.c                    |   4 +-
+>  fs/xfs/xfs_rmap_item.c                        |   4 +-
+>  include/asm-generic/bug.h                     |  16 +
+>  include/asm-generic/vmlinux.lds.h             |  20 +-
+>  include/linux/bpf.h                           |   4 +-
+>  include/linux/cfi.h                           |  41 +++
+>  include/linux/compiler-clang.h                |   3 +
+>  include/linux/compiler_types.h                |   8 +
+>  include/linux/init.h                          |   6 +-
+>  include/linux/list_sort.h                     |   7 +-
+>  include/linux/mm.h                            |  10 +
+>  include/linux/module.h                        |  13 +-
+>  include/linux/pci.h                           |   4 +-
+>  init/Kconfig                                  |   2 +-
+>  kernel/Makefile                               |   4 +
+>  kernel/cfi.c                                  | 329 ++++++++++++++++++
+>  kernel/kallsyms.c                             |  55 ++-
+>  kernel/kthread.c                              |   3 +-
+>  kernel/module.c                               |  43 +++
+>  kernel/workqueue.c                            |   2 +-
+>  lib/list_sort.c                               |  17 +-
+>  lib/test_list_sort.c                          |   3 +-
+>  net/tipc/name_table.c                         |   4 +-
+>  scripts/Makefile.modfinal                     |   2 +-
+>  scripts/module.lds.S                          |  20 +-
+>  74 files changed, 759 insertions(+), 112 deletions(-)
+>  create mode 100644 include/linux/cfi.h
+>  create mode 100644 kernel/cfi.c
+> 
+> 
+> base-commit: d19cc4bfbff1ae72c3505a00fb8ce0d3fa519e6c
+> -- 
+> 2.31.0.291.g576ba9dcdaf-goog
+> 
+
 -- 
-2.31.0.291.g576ba9dcdaf-goog
-
+Kees Cook
