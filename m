@@ -2,65 +2,64 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA3FC43470
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCB6C43603
 	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9A361106
+	by mail.kernel.org (Postfix) with ESMTP id CCE5B61105
 	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235535AbhDAXXz (ORCPT
+        id S235741AbhDAXX4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 19:23:55 -0400
+        Thu, 1 Apr 2021 19:23:56 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235741AbhDAXXy (ORCPT
+        with ESMTP id S235812AbhDAXXz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 19:23:54 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7B8C0613E6
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 16:23:52 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id l123so996204pfl.8
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 16:23:52 -0700 (PDT)
+        Thu, 1 Apr 2021 19:23:55 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BD4C0613E6
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 16:23:55 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id q10so2551966pgj.2
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 16:23:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9ijlYcKqhmRnIjh3GfaZu6VzSGgGwccaBk76YZfh88U=;
-        b=WKcAnIleO2ypEZLKdHh37aVTO4tnIydkC5OCyMTVr+JpikHZ2/ZMU3FugvxEly10iU
-         XSYN4IoCMfmYa9AiUhoVcjinurr136nmz9lf7q3gbfnnfDCOVEDSAGVTeituYbklhN9Y
-         yq+0k7ScK7oeFnBPFOBIMf0UvJV0M6vj4GtgI=
+        bh=dHwr6OVFfk7s7Yw8a90FyZmnLv02IEGSs6EhbG8UN8M=;
+        b=apoCPv6eRxC+65o8Yfokym7TMqmTLua+kwS5uawMkAr+K8bzn0V6/+UNB+E8jjMTT9
+         kqBvLjd/Y8r/2j+FcF251klrukr4C2g4wEp9/G2iZwIGl2vQVJKEhV3vbmAeJ9arWHcM
+         k8t+ERXme2Uowb4UveF5DKhHLDGzwVc27v6PY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9ijlYcKqhmRnIjh3GfaZu6VzSGgGwccaBk76YZfh88U=;
-        b=CwCCnc/qd7ItCuuk9ulIfQ8hNjyhc/S5WpoihLGULAfqz86d5XhUcX766vhE+i6BnI
-         JUDt/ACZ9s+EAi8/hg6Igax9oF1pjGWW3KoP+ISsgpI49Uln+HhytOSqhJ5Alsks/yzM
-         CRXIJxh0LE153gviaWItuqNeK83CAk7Vfzwh+auJjtoqPcuAFkIo69en2Y6jxgCIdb7d
-         szOBvytKxZTpb1LX6+r4n1QFDPWxhj/uXNfhazMVvE1K284fxj9kdpJ+CA/+XHBjiVJ/
-         Wrm5WzKxIVa61pOW3Zqidus8hvqtUFjyUAhTP/hiOSWM+lgbtghjMNlgONDUkybhnihI
-         WyNA==
-X-Gm-Message-State: AOAM533JntRkmUnt/QbdOqGhGOnAfw6/W7/UfYVeXSLNIUch3RMg90nO
-        OTYBna3fWWoo05qEiWbEn+uYGg==
-X-Google-Smtp-Source: ABdhPJwcYRMQryh7JJASN23+Q3HQF6uWuabr3WsRHjWCDIRpgK6DJhS0r2tl16IIlvy5t61K9IC1DA==
-X-Received: by 2002:a62:7b83:0:b029:1f1:5ef3:b4d9 with SMTP id w125-20020a627b830000b02901f15ef3b4d9mr9608204pfc.65.1617319432493;
-        Thu, 01 Apr 2021 16:23:52 -0700 (PDT)
+        bh=dHwr6OVFfk7s7Yw8a90FyZmnLv02IEGSs6EhbG8UN8M=;
+        b=IeIREcP0sGdkLx2k2SB6yexciD/JWvwPYsIfKwC808Gwutu83EhFeSkpN/TdORTgl8
+         AQByuo919UVkMxecEqSIoWGjzLjbsZXZLefZ/yGvXJl/HJBocaQah/wblLD2gfWX0s1x
+         Hp2mw/CZpVOz0aVhAAo1DjbwXLBus/QAbtqi5g3Y5zgVN25Egz03DWtkasATTKNhU7zN
+         2ktB5spEswQvPWSaBop1n7Sh26IaQBeqygu0IUy7yr0kyqETkQuzwRZdDb62xee4FM0d
+         vKBtugKnHN6ieITVZSTY1ryl1UZuDyrHgbDjhulmCUbChUSH0Bnr5cQVGOxPxQTkZ9nD
+         Z4fw==
+X-Gm-Message-State: AOAM532Z3mSWrbA4k6Z8B8oIg24eAjgY73Km+V9QJdi1X4NpoYnjH7EE
+        stwR3h0l5you1BegVPs2jZJAkA==
+X-Google-Smtp-Source: ABdhPJy0JI+h7arv5jEq6paI9Bu5w08cDNSCg/uQ/t7RP6xwDr38VSpWxgu747yOW+trYuYmyvFaZA==
+X-Received: by 2002:a62:b412:0:b029:21f:6b06:7bdd with SMTP id h18-20020a62b4120000b029021f6b067bddmr9677058pfn.51.1617319434704;
+        Thu, 01 Apr 2021 16:23:54 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k64sm6606207pgk.23.2021.04.01.16.23.50
+        by smtp.gmail.com with ESMTPSA id z4sm6790276pgv.73.2021.04.01.16.23.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 16:23:51 -0700 (PDT)
+        Thu, 01 Apr 2021 16:23:54 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
         Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -77,73 +76,114 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v10 1/6] jump_label: Provide CONFIG-driven build state defaults
-Date:   Thu,  1 Apr 2021 16:23:42 -0700
-Message-Id: <20210401232347.2791257-2-keescook@chromium.org>
+Subject: [PATCH v10 5/6] arm64: entry: Enable random_kstack_offset support
+Date:   Thu,  1 Apr 2021 16:23:46 -0700
+Message-Id: <20210401232347.2791257-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210401232347.2791257-1-keescook@chromium.org>
 References: <20210401232347.2791257-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=aa54c44d1d71b9550d6015efc734f667917094a1; i=Vishx6UyAXwYzcnoSyP+eBB3iQyx+/i5smsbQfc0cnA=; m=vc4sSYlf+uaSlLSFP5TpbQv56VaSRpBLpRuMltXaB4Q=; p=mNH2Bo/K9vrGz9sBtTDV8UFO0eJ8yv8BbR/DeIaO1es=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBmVgEACgkQiXL039xtwCbiEBAArOm /EtpeLQvJQ16Bi0gBHOl/CblUQyhrscVrs8xNm/lKfSaeaGIDJaNfx0EZ4L7n2IVkpGYSodLxZlwj ve4GueMybGaAPJWYFy3L+jAe9eYTp3zyYwvQsSRg55iW5msvqK3ZUeJqC/CxPrDdwT05noLV9mDub lAzrVY/pLiXE0HTK9ogAdyiNFQY2yA44UmGTIkmgZ30jl0d4aSVtwsViZeMS8pCrK22xkiccq/bRY 72ASLPxyOBOL00UWKeUmbmdUfNW+BkNlK7IaN+w5QBfiKuQWTf/WdZ+8c5tQWjLE3kJ4DRx8mrBcy 1vYJ1m1ZKfAOe8uV8waSURiUMzfgB/uL5on3W1e6s8SkChf0KGAZMyDGuIflDnvFUy8OIfM8Ak/fg hoYQ2dUXkKa50EdvadntVka+XmxokcSERzN0e9tOQlYfeLiL5TINkkDQFAallIMnHy6ImGd9Yd23F zSvCmvv0683j96kJXsEcfl0wH3LYYCyRS0fIK1ssPxPAViuN0vY1jlIeDn734NiR4+itDg8pTepIM h8ozYc9GPgYBTzXQPG29KmXRHc4es7o4enMoBQ1Gj0PZ5f9c0fr6AUpoe7c1jVtsL4wJD6tUuC9do T40yZwF6fDGX1jsVc/mbC1ug6gurwbG+Xo1xiQ2I1YUyr1MimqrfE4LvelISHwZM=
+X-Patch-Hashes: v=1; h=sha256; g=248270d6e87ad6ffcee20e448a3bbf6614f92c8d; i=6FjHrMJQ1a03WxuPiMt8aIK5MW/T0bayLG0SuUm7Wt4=; m=DW/OKOjAEidoxl6ODEV6zN0c7U/uCvK1t/uZsIkKPaM=; p=nb+ZCQAESoMtgqRKEEjn/wowCv7zZGeRTSUAEFbjSEQ=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBmVgIACgkQiXL039xtwCZDLw//WsN q3e+PfWfPV1g3MMiPrlRGvZeP5grL9TtxqK1tGNvEy6dp+ulJLVcVDUgjKq6d2+6/ZtpF/CXp1Djm YjJGAOaElG7IEw7D5rWkdaIDh/+dJB9i4OG7OQStbX2RdOTztew9FhzttIrvtz9CdY/62YtNZwfSM MMJuDLR6sDqH/hCS9vInn5lqd459ACg1MQxu5GoytTWRNX8WWvf5JQzZhQjfEc8krX0rpOsQzDr5t mO5emz5pHZsbxfKob6wQsl+exwaKhfwPphM0Tn5RCDnVvf9bTDJVhQnNwIT2+Q378sZ5hcpwvz8Yx 3mhh09xaCK/zQ3/kmN1gqG6pPlCtoxRBbEFTzbhj16pX65K+bS5BZ5XWM3ugP8EXfXyWrpo52dSr5 /t6uVKyB16iSTt7H9rEcp1wXS1076HCT6M8Wde/qn1X2QK1ZLA0cesEWm/X4sk/w1Ve1TWe6PmQpW Nk6T3IyLa/fkxj14KMiTNTz2sMFoeqV/i4d24nIL+3TQG5LqAqG/9iT56DYYHkYs11nmeEHf4qbLV bn/R7twlh65mDdXZ/L6iFluiC+fm1yLrDq4JIwtrmQJbUqE0m9f8KUCzMgXfYFSY8lb5Wo0OxNxOr uzdIl+VgJ/ySASy1+o5Q6GjAhge97rgSd/h8Isb33l3zzjkc6/vquWyNirJA8dIg=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As shown in jump_label.h[1], choosing the initial state of static
-branches changes the assembly layout. If the condition is expected to
-be likely it's inline, and if unlikely it is out of line via a jump. A
-few places in the kernel use (or could be using) a CONFIG to choose the
-default state, which would give a small performance benefit to their
-compile-time declared default. Provide the infrastructure to do this.
+Allow for a randomized stack offset on a per-syscall basis, with roughly
+5 bits of entropy. (And include AAPCS rationale AAPCS thanks to Mark
+Rutland.)
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/jump_label.h?h=v5.11#n398
+In order to avoid unconditional stack canaries on syscall entry (due to
+the use of alloca()), also disable stack protector to avoid triggering
+needless checks and slowing down the entry path. As there is no general
+way to control stack protector coverage with a function attribute[1],
+this must be disabled at the compilation unit level. This isn't a problem
+here, though, since stack protector was not triggered before: examining
+the resulting syscall.o, there are no changes in canary coverage (none
+before, none now).
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/lkml/20200324220641.GT2452@worktop.programming.kicks-ass.net/
+[1] a working __attribute__((no_stack_protector)) has been added to GCC
+and Clang but has not been released in any version yet:
+https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=346b302d09c1e6db56d9fe69048acb32fbb97845
+https://reviews.llvm.org/rG4fbf84c1732fca596ad1d6e96015e19760eb8a9b
+
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/jump_label.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm64/Kconfig          |  1 +
+ arch/arm64/kernel/Makefile  |  5 +++++
+ arch/arm64/kernel/syscall.c | 16 ++++++++++++++++
+ 3 files changed, 22 insertions(+)
 
-diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-index d92691262f51..05f5554d860f 100644
---- a/include/linux/jump_label.h
-+++ b/include/linux/jump_label.h
-@@ -382,6 +382,21 @@ struct static_key_false {
- 		[0 ... (count) - 1] = STATIC_KEY_FALSE_INIT,	\
- 	}
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 1f212b47a48a..2d0e5f544429 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -146,6 +146,7 @@ config ARM64
+ 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
+ 	select HAVE_ARCH_PFN_VALID
+ 	select HAVE_ARCH_PREL32_RELOCATIONS
++	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_STACKLEAK
+ 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index ed65576ce710..6cc97730790e 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -9,6 +9,11 @@ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_insn.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_return_address.o = $(CC_FLAGS_FTRACE)
  
-+#define _DEFINE_STATIC_KEY_1(name)	DEFINE_STATIC_KEY_TRUE(name)
-+#define _DEFINE_STATIC_KEY_0(name)	DEFINE_STATIC_KEY_FALSE(name)
-+#define DEFINE_STATIC_KEY_MAYBE(cfg, name)			\
-+	__PASTE(_DEFINE_STATIC_KEY_, IS_ENABLED(cfg))(name)
++# Remove stack protector to avoid triggering unneeded stack canary
++# checks due to randomize_kstack_offset.
++CFLAGS_REMOVE_syscall.o	 = -fstack-protector -fstack-protector-strong
++CFLAGS_syscall.o	+= -fno-stack-protector
 +
-+#define _DEFINE_STATIC_KEY_RO_1(name)	DEFINE_STATIC_KEY_TRUE_RO(name)
-+#define _DEFINE_STATIC_KEY_RO_0(name)	DEFINE_STATIC_KEY_FALSE_RO(name)
-+#define DEFINE_STATIC_KEY_MAYBE_RO(cfg, name)			\
-+	__PASTE(_DEFINE_STATIC_KEY_RO_, IS_ENABLED(cfg))(name)
-+
-+#define _DECLARE_STATIC_KEY_1(name)	DECLARE_STATIC_KEY_TRUE(name)
-+#define _DECLARE_STATIC_KEY_0(name)	DECLARE_STATIC_KEY_FALSE(name)
-+#define DECLARE_STATIC_KEY_MAYBE(cfg, name)			\
-+	__PASTE(_DECLARE_STATIC_KEY_, IS_ENABLED(cfg))(name)
-+
- extern bool ____wrong_branch_error(void);
+ # Object file lists.
+ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
+ 			   entry-common.o entry-fpsimd.o process.o ptrace.o	\
+diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+index b9cf12b271d7..263d6c1a525f 100644
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -5,6 +5,7 @@
+ #include <linux/errno.h>
+ #include <linux/nospec.h>
+ #include <linux/ptrace.h>
++#include <linux/randomize_kstack.h>
+ #include <linux/syscalls.h>
  
- #define static_key_enabled(x)							\
-@@ -482,6 +497,10 @@ extern bool ____wrong_branch_error(void);
+ #include <asm/daifflags.h>
+@@ -43,6 +44,8 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+ {
+ 	long ret;
  
- #endif /* CONFIG_JUMP_LABEL */
- 
-+#define static_branch_maybe(config, x)					\
-+	(IS_ENABLED(config) ? static_branch_likely(x)			\
-+			    : static_branch_unlikely(x))
++	add_random_kstack_offset();
 +
- /*
-  * Advanced usage; refcount, branch is enabled when: count != 0
-  */
+ 	if (scno < sc_nr) {
+ 		syscall_fn_t syscall_fn;
+ 		syscall_fn = syscall_table[array_index_nospec(scno, sc_nr)];
+@@ -55,6 +58,19 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+ 		ret = lower_32_bits(ret);
+ 
+ 	regs->regs[0] = ret;
++
++	/*
++	 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
++	 * but not enough for arm64 stack utilization comfort. To keep
++	 * reasonable stack head room, reduce the maximum offset to 9 bits.
++	 *
++	 * The actual entropy will be further reduced by the compiler when
++	 * applying stack alignment constraints: the AAPCS mandates a
++	 * 16-byte (i.e. 4-bit) aligned SP at function boundaries.
++	 *
++	 * The resulting 5 bits of entropy is seen in SP[8:4].
++	 */
++	choose_random_kstack_offset(get_random_int() & 0x1FF);
+ }
+ 
+ static inline bool has_syscall_work(unsigned long flags)
 -- 
 2.25.1
 
