@@ -2,68 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C43AC433ED
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 22:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29441C43460
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4706B610F8
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 22:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF5A061105
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233919AbhDAWmM (ORCPT
+        id S234814AbhDAXXw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 18:42:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39202 "EHLO
+        Thu, 1 Apr 2021 19:23:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231160AbhDAWmL (ORCPT
+        with ESMTP id S233677AbhDAXXw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 18:42:11 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C21D8C061788
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 15:42:11 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id p12so172826pgj.10
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 15:42:11 -0700 (PDT)
+        Thu, 1 Apr 2021 19:23:52 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69198C0613E6
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 16:23:52 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id c204so2520756pfc.4
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 16:23:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XHU/CSlbR0tXIQ7skc+D9M4sQ8Nf+DFxpytkWh85RTc=;
-        b=Cdeb4TJryjuUvq0PZ22+p9aZ80XrqpLOQqZBbyxQf2b3KNvemF9hZdYHkWk2rvgvr9
-         +SpPIdq+JMo2g9UMPmRHYMNVYDXvm5KREo94cbMizN1C/uol3pIjbIlmE2pjHUirEook
-         l3tfPMZVPC0JP0fRuhcSZ92o1n77ukI4HC3SY=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WvZ4JPpQqHS2L+8HlT+daZ1S1BgsSu5178qEy4RCC4Y=;
+        b=YZ2XpfpKoroyGz71W+msLoD8z0VD52kPmSJv459/I/wuG/2XcHz3JsBZ/c6p6L2Nn8
+         8H5NsdPVJ6DSqLb594nllbPXtbErOCzCubBserjfdkJSKnhsSr95MVfacSGa+37MzJRK
+         bF/Hk303mqASYIyN0wawBGfZ7oFpoTYBaqvCQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XHU/CSlbR0tXIQ7skc+D9M4sQ8Nf+DFxpytkWh85RTc=;
-        b=mB96nhkPbONgoJSG7sQ+0Zglea4HUjQaLi+9B8vqL5IPR5rcCqpQKdxMMRnoPtpA1X
-         i7KwIOft5CE6XEj7ZNiQuV6V/UFHoWWFefRYPyxMoO7GL1rCa+a8j8TxUG3Frwv6Kc6H
-         3C+8pj8NNM0alse264ET/lGmbfOVMxnxB6MJqPzp7R6gWlPh3OBenXk9xIXko9YAZa+n
-         dBBZ41CmKTQtBUr0aKwel2127vIrnwHLw8aZ1kzovrZY4z8sqW/1ashc0CL5THyGv5Lw
-         4Y0uSr5c5xHYjja/m+PhbxPRpc4B5v8V3JiS6uFH0Fsq9Jxwli9bJMUT9T8qb9zouywE
-         E+5w==
-X-Gm-Message-State: AOAM533tFGV60ui02938bZdeoJZgV+gXYd8mWRBHA7bHVUY5vLHWUBcZ
-        2Z8q/OwBCDodU8TfRMs1Xutx9w==
-X-Google-Smtp-Source: ABdhPJy5OYaYtgibg+iSJ6TbNgMEMp0Li4wFRje6LCbJMZHyUSADLtOfsJcpWv8pBVkoh3+T2eGIQA==
-X-Received: by 2002:a65:56cc:: with SMTP id w12mr9470880pgs.354.1617316931239;
-        Thu, 01 Apr 2021 15:42:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WvZ4JPpQqHS2L+8HlT+daZ1S1BgsSu5178qEy4RCC4Y=;
+        b=AetEujKuN5LhJLf1qFIc8KSv+3Kp5khUfcLirpLz/nHL2NDUnO5hsLsOXUVvMCtS5v
+         dMpMdI/xPOSki8IuIF9CTfkJn+KvMQuVqqVT/3Eg1h1zHtVaoz5GAlWJLorJbSLtXF+i
+         6Ks14RXwPX7fwAgzjwKcdOq3Qrp1vbelgu1WrwUbRU2B5oStZ2y5il8bsDtk+9wkyXBZ
+         vG4MYfepHlVD710xLpLKonIm720D8cyxXi0A/dp/jjDThgv4e1t/3gMSaLjliddMSU38
+         iOCfRShYwT8Wv0ZFp/zn2Bhoi0mn2kTiZkUSn6a+ZOnmSYO2PAblEDCXvDsrVDHqmJ81
+         h8Cg==
+X-Gm-Message-State: AOAM531P+MeBDGx9iuNmUFO60XXwMR1y9wMsidfjvuYs8xNJv0FGk+jA
+        Gnneh50o4snVAIgJpb/+NyGFoQ==
+X-Google-Smtp-Source: ABdhPJxPVVyaaPVouPZCxZu9UN0Ld9Gm94Y/m3EFLAj4GgnjzyBntyxwYP5GLB2Jp9HjhO9Kt5fUBQ==
+X-Received: by 2002:a05:6a00:22c8:b029:222:7cf7:7f5c with SMTP id f8-20020a056a0022c8b02902227cf77f5cmr9512290pfj.8.1617319431829;
+        Thu, 01 Apr 2021 16:23:51 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a7sm6246426pfo.105.2021.04.01.15.42.10
+        by smtp.gmail.com with ESMTPSA id k17sm6265013pfa.68.2021.04.01.16.23.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 15:42:10 -0700 (PDT)
-Date:   Thu, 1 Apr 2021 15:42:08 -0700
+        Thu, 01 Apr 2021 16:23:51 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Will Deacon' <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Potapenko <glider@google.com>,
         Alexander Popov <alex.popov@linux.com>,
@@ -74,71 +72,100 @@ Cc:     'Will Deacon' <will@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Randy Dunlap <rdunlap@infradead.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 3/6] stack: Optionally randomize kernel stack offset
- each syscall
-Message-ID: <202104011447.2E7F543@keescook>
-References: <20210330205750.428816-1-keescook@chromium.org>
- <20210330205750.428816-4-keescook@chromium.org>
- <20210401083034.GA8554@willie-the-truck>
- <61ae9398a03d4fe7868b68c9026d5998@AcuMS.aculab.com>
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v10 0/6] Optionally randomize kernel stack offset each syscall
+Date:   Thu,  1 Apr 2021 16:23:41 -0700
+Message-Id: <20210401232347.2791257-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <61ae9398a03d4fe7868b68c9026d5998@AcuMS.aculab.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 11:15:43AM +0000, David Laight wrote:
-> From: Will Deacon
-> > Sent: 01 April 2021 09:31
-> ...
-> > > +/*
-> > > + * These macros must be used during syscall entry when interrupts and
-> > > + * preempt are disabled, and after user registers have been stored to
-> > > + * the stack.
-> > > + */
-> > > +#define add_random_kstack_offset() do {					\
-> > > +	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
-> > > +				&randomize_kstack_offset)) {		\
-> > > +		u32 offset = __this_cpu_read(kstack_offset);		\
-> > > +		u8 *ptr = __builtin_alloca(KSTACK_OFFSET_MAX(offset));	\
-> > > +		asm volatile("" : "=m"(*ptr) :: "memory");		\
-> > 
-> > Using the "m" constraint here is dangerous if you don't actually evaluate it
-> > inside the asm. For example, if the compiler decides to generate an
-> > addressing mode relative to the stack but with writeback (autodecrement), then
-> > the stack pointer will be off by 8 bytes. Can you use "o" instead?
+Hi!
 
-I see other examples of empty asm, but it's true, none are using "=m" read
-constraints. But, yes, using "o" appears to work happily.
+This should be good to go now. :)
 
-> Is it allowed to use such a mode?
-> It would have to know that the "m" was substituted exactly once.
-> I think there are quite a few examples with 'strange' uses of memory
-> asm arguments.
-> 
-> However, in this case, isn't it enough to ensure the address is 'saved'?
-> So:
-> 	asm volatile("" : "=r"(ptr) );
-> should be enough.
+v10:
+- switch from "m" to "o" constraint (will)
+- switch to raw_cpu_*() (tglx)
+- hooked LKDTM test up to kselftest
+v9: https://lore.kernel.org/lkml/20210331205458.1871746-1-keescook@chromium.org/
+v8: https://lore.kernel.org/lkml/20210330205750.428816-1-keescook@chromium.org/
+v7: https://lore.kernel.org/lkml/20210319212835.3928492-1-keescook@chromium.org/
+v6: https://lore.kernel.org/lkml/20210315180229.1224655-1-keescook@chromium.org/
+v5: https://lore.kernel.org/lkml/20210309214301.678739-1-keescook@chromium.org/
+v4: https://lore.kernel.org/lkml/20200622193146.2985288-1-keescook@chromium.org/
+v3: https://lore.kernel.org/lkml/20200406231606.37619-1-keescook@chromium.org/
+v2: https://lore.kernel.org/lkml/20200324203231.64324-1-keescook@chromium.org/
+rfc: https://lore.kernel.org/kernel-hardening/20190329081358.30497-1-elena.reshetova@intel.com/
 
-It isn't, it seems.
+This is a continuation and refactoring of Elena's earlier effort to add
+kernel stack base offset randomization. In the time since the earlier
+discussions, two attacks[1][2] were made public that depended on stack
+determinism, so we're no longer in the position of "this is a good idea
+but we have no examples of attacks". :)
 
-Here's a comparison:
+Earlier discussions also devolved into debates on entropy sources, which
+is mostly a red herring, given the already low entropy available due
+to stack size. Regardless, entropy can be changed/improved separately
+from this series as needed.
 
-https://godbolt.org/z/xYGn9GfGY
+Earlier discussions also got stuck debating how much syscall overhead
+was too much, but this is also a red herring since the feature itself
+needs to be selectable at boot with no cost for those that don't want it:
+this is solved here with static branches.
 
-So, I'll resend with "o", and with raw_cpu_*().
+So, here is the latest improved version, made as arch-agnostic as
+possible, with usage added for x86 and arm64. It also includes some small
+static branch clean ups, and addresses some surprise performance issues
+due to the stack canary[3].
 
 Thanks!
 
+-Kees
+
+[1] https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+[2] https://repositorio-aberto.up.pt/bitstream/10216/125357/2/374717.pdf
+[3] https://lore.kernel.org/lkml/202003281520.A9BFF461@keescook/
+
+Kees Cook (6):
+  jump_label: Provide CONFIG-driven build state defaults
+  init_on_alloc: Optimize static branches
+  stack: Optionally randomize kernel stack offset each syscall
+  x86/entry: Enable random_kstack_offset support
+  arm64: entry: Enable random_kstack_offset support
+  lkdtm: Add REPORT_STACK for checking stack offsets
+
+ .../admin-guide/kernel-parameters.txt         | 11 ++++
+ Makefile                                      |  4 ++
+ arch/Kconfig                                  | 23 ++++++++
+ arch/arm64/Kconfig                            |  1 +
+ arch/arm64/kernel/Makefile                    |  5 ++
+ arch/arm64/kernel/syscall.c                   | 16 ++++++
+ arch/x86/Kconfig                              |  1 +
+ arch/x86/entry/common.c                       |  3 ++
+ arch/x86/include/asm/entry-common.h           | 16 ++++++
+ drivers/misc/lkdtm/bugs.c                     | 17 ++++++
+ drivers/misc/lkdtm/core.c                     |  1 +
+ drivers/misc/lkdtm/lkdtm.h                    |  1 +
+ include/linux/jump_label.h                    | 19 +++++++
+ include/linux/mm.h                            | 10 ++--
+ include/linux/randomize_kstack.h              | 54 +++++++++++++++++++
+ init/main.c                                   | 23 ++++++++
+ mm/page_alloc.c                               |  4 +-
+ mm/slab.h                                     |  6 ++-
+ tools/testing/selftests/lkdtm/.gitignore      |  1 +
+ tools/testing/selftests/lkdtm/Makefile        |  1 +
+ .../testing/selftests/lkdtm/stack-entropy.sh  | 36 +++++++++++++
+ 21 files changed, 245 insertions(+), 8 deletions(-)
+ create mode 100644 include/linux/randomize_kstack.h
+ create mode 100755 tools/testing/selftests/lkdtm/stack-entropy.sh
+
 -- 
-Kees Cook
+2.25.1
+
