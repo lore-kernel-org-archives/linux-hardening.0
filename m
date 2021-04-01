@@ -2,102 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBDEC433B4
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 21:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F0DC433ED
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 22:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA240610CE
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 21:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEFB6105A
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 22:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234433AbhDAVqZ (ORCPT
+        id S235113AbhDAWNt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 17:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55304 "EHLO
+        Thu, 1 Apr 2021 18:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234724AbhDAVqY (ORCPT
+        with ESMTP id S235734AbhDAWNb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 17:46:24 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D025C061788
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 14:46:25 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id h3so2356951pfr.12
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 14:46:25 -0700 (PDT)
+        Thu, 1 Apr 2021 18:13:31 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13414C0617AA
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 15:13:30 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id y32so2428067pga.11
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 15:13:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=usJD8QXCUUQ3yDD19nRhcfJUMWYiKf+EiZNOMzSngU8=;
-        b=G4ChGKwb73jivZgOdREGW7Jl/xK+07gkogP9+1kyu2QispNTwwRqLKZMdl/YtU/+Lt
-         /6pS84xtYTduYfABsJSoN4e+N+/d5AQAGm1DhERFMawsMiwP/sKWF3z+8kShjCvWc2Xx
-         J1qo99Tg1cz6t80SOTCoCClKVew6dbnE2D8Wo=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qOIPmpuTpYu/DgWdR2yqBo3+vizrBGynByA8gUlCbew=;
+        b=cQExDcxo3OoK2mxwYeUFka8uI9xHUTKkU8RyEKfqZ1RZN/sSFJE+2N5pbNgm/YFQ61
+         6cj6rbkFPYePaSDv3GdRZpz3odVN2y73i4lw2JOJsdHtIlztHidaHZv+6srccig5fpHH
+         4h0d7C3pV7Jy4Hjoc3pPCqU98NbNAjzBuZDiY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=usJD8QXCUUQ3yDD19nRhcfJUMWYiKf+EiZNOMzSngU8=;
-        b=XTnqvcp8z9pnZU2oH6EX5xTaXp0NcSR6DMluWEbg7RtlpBaKyckfSydL8i5YwbDTM9
-         3POqscvYjgITq54yBfx3f246txzMM/fTJCAZER1jNJ3UKGmWxePZKVBwKAoXI9fMy+97
-         zbuOf8opP22e6GcKfZC4sdd//a0vROvp4xiSn3sMDztb4005PGN6XtSe4R5YkhyOCdPb
-         ivQ+tYK+DnU90P+5c5VoP7t/l4kNyCIsAZNJlDoNYDKu02jsLamZhbkwC/1hsvNPAVOK
-         FxKLLNH0tgQWOWStvtkCBlpm1WsFgGery0eiWzDOLpZYReGsji674+9VnMvaYd0IB3wz
-         6buw==
-X-Gm-Message-State: AOAM5333ISKlTmXJiM0Frku+4rokg0dq9F7cBXJoWh9+shBg7KAJC3Lw
-        xYNBhtrZjRLQP7mhgGIHWwQJFw==
-X-Google-Smtp-Source: ABdhPJw2Igjg2dUPUc361qNdAsnz5koMvMjgAifwUOU3txfIVOmKgYERtvxS6R3TbAJ8ajqzLbNIRQ==
-X-Received: by 2002:a63:2f03:: with SMTP id v3mr9286709pgv.408.1617313584551;
-        Thu, 01 Apr 2021 14:46:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qOIPmpuTpYu/DgWdR2yqBo3+vizrBGynByA8gUlCbew=;
+        b=EU7GrnYWPP3lrZ6D8M11B32bzisDXjbMXYnzKAc4l8sYrbZQyT8qbtpE00+8BASS8m
+         KVqZooOG2AMbaWRQ0fArz1gyYZJpkc3h9P8ouIC0ngTjK4zamXYEDcTflNq02xdiCi42
+         8j8Djf6A3HxIM8VXkvdz2P99mjLCU0kNm4lfFug4Gb6XjtMKoq5ffuv6okKICp5kOHi+
+         GzC/WCWwLYtpFVVrGJYmhTOwKgddt/K2aZTOc6cz8qqhJ8YP0tlhz3Xjf28vQg5zekx5
+         jNZBkPILJfz/Hm/1NtwMhC1f+dLGToDk73hlaVZUdccSkMEejD5VxPv1Ml8/MbBwGD1d
+         IrIA==
+X-Gm-Message-State: AOAM531VaKTO93EopZ2oymxhtri9ehzQk2fOGV/cuqfywOLAqMRu84+w
+        OfiWCLnJauZe5IH20ux3X1xo1w==
+X-Google-Smtp-Source: ABdhPJzqcC4ByIZFeQrIwo8KNlFb2Y/g6f2p3afwwogKHitzzyYi+ntwY6nHe5d5rZF1Se1DYCo+pw==
+X-Received: by 2002:a65:41c7:: with SMTP id b7mr9147045pgq.237.1617315209553;
+        Thu, 01 Apr 2021 15:13:29 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x186sm6325466pfc.65.2021.04.01.14.46.23
+        by smtp.gmail.com with ESMTPSA id b140sm6508328pfb.98.2021.04.01.15.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 14:46:23 -0700 (PDT)
-Date:   Thu, 1 Apr 2021 14:46:23 -0700
+        Thu, 01 Apr 2021 15:13:28 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Roy Yang <royyang@google.com>
-Cc:     akpm@linux-foundation.org, alex.popov@linux.com,
-        ard.biesheuvel@linaro.org, catalin.marinas@arm.com, corbet@lwn.net,
-        david@redhat.com, elena.reshetova@intel.com, glider@google.com,
-        jannh@google.com, kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com,
-        peterz@infradead.org, rdunlap@infradead.org, rppt@linux.ibm.com,
-        tglx@linutronix.de, vbabka@suse.cz, will@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v8 0/6] Optionally randomize kernel stack offset each
- syscall
-Message-ID: <202104011442.B20F2BAFC@keescook>
-References: <20210330205750.428816-1-keescook@chromium.org>
- <20210401191744.1685896-1-royyang@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Adam Nichols <adam@grimm-co.com>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v4 0/3] sysfs: Unconditionally use vmalloc for buffer
+Date:   Thu,  1 Apr 2021 15:13:17 -0700
+Message-Id: <20210401221320.2717732-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210401191744.1685896-1-royyang@google.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 12:17:44PM -0700, Roy Yang wrote:
-> Both Android and Chrome OS really want this feature; For Container-Optimized OS, we have customers
-> interested in the defense too.
+This series improves the defensive posture of sysfs's use of seq_file
+to gain the vmap guard pages at the end of vmalloc buffers to stop a
+class of recurring flaw[1]. The long-term goal is to switch sysfs from
+a buffer to using seq_file directly, but this will take time to refactor.
 
-It's pretty close! There are a couple recent comments that need to be
-addressed, but hopefully it can land if x86 and arm64 maintainers are
-happy v10.
+Included is also a Clang fix for NULL arithmetic and an LKDTM test to
+validate vmalloc guard pages.
 
-> Change-Id: I1eb1b726007aa8f9c374b934cc1c690fb4924aa3
-> -- 
-> 2.31.0.208.g409f899ff0-goog
+v4:
+- fix NULL arithmetic (Arnd)
+- add lkdtm test
+- reword commit message
+v3: https://lore.kernel.org/lkml/20210401022145.2019422-1-keescook@chromium.org/
+v2: https://lore.kernel.org/lkml/20210315174851.622228-1-keescook@chromium.org/
+v1: https://lore.kernel.org/lkml/20210312205558.2947488-1-keescook@chromium.org/
 
-And to let other folks know, I'm guessing this email got sent with git
-send-email to try to get a valid In-Reply-To header, but I guess git
-trashed the Subject and ran hooks to generate a Change-Id UUID.
+Thanks!
 
-I assume it's from following the "Reply instructions" at the bottom of:
-https://lore.kernel.org/lkml/20210330205750.428816-1-keescook@chromium.org/
-(It seems those need clarification about Subject handling.)
+-Kees
+
+Arnd Bergmann (1):
+  seq_file: Fix clang warning for NULL pointer arithmetic
+
+Kees Cook (2):
+  lkdtm/heap: Add vmalloc linear overflow test
+  sysfs: Unconditionally use vmalloc for buffer
+
+ drivers/misc/lkdtm/core.c               |  3 ++-
+ drivers/misc/lkdtm/heap.c               | 21 +++++++++++++++++-
+ drivers/misc/lkdtm/lkdtm.h              |  3 ++-
+ fs/kernfs/file.c                        |  9 +++++---
+ fs/seq_file.c                           |  5 ++++-
+ fs/sysfs/file.c                         | 29 +++++++++++++++++++++++++
+ include/linux/seq_file.h                |  6 +++++
+ tools/testing/selftests/lkdtm/tests.txt |  3 ++-
+ 8 files changed, 71 insertions(+), 8 deletions(-)
 
 -- 
-Kees Cook
+2.25.1
+
