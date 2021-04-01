@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE9EC433B4
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 22:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B06C43461
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 22:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D96D60724
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 22:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296EF60724
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 22:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235492AbhDAWNu (ORCPT
+        id S235931AbhDAWNv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 18:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32986 "EHLO
+        Thu, 1 Apr 2021 18:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235998AbhDAWNb (ORCPT
+        with ESMTP id S234170AbhDAWNc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 18:13:31 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141A1C0613AB
+        Thu, 1 Apr 2021 18:13:32 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5181DC0613A5
         for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 15:13:30 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id w11so1686112ply.6
+Received: by mail-pj1-x102b.google.com with SMTP id ot17-20020a17090b3b51b0290109c9ac3c34so3768064pjb.4
         for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 15:13:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zMK0dD8EUOpMnQqN+YrkNT1KRoH/Rg1BtnXVKHHSQEw=;
-        b=FEec6d8j783rUOlGRor6Ix55R/XeyADTFdyGebVpwODs8v1VbT6NPeGTU2Qx0NfqO1
-         cqoQ61LHpuaCaEhG9PjflLvPT65ZFGaHAGbsh5qoS7O1Myj2BzX6ZJ5cjjdjdDLHsiUW
-         1gTCOMrrPCvEjDpAdKV0c4o5xE1uVaitI2elI=
+        bh=Gl97oxPIVXZYcwzInna88mJV+71EBUvsRwHZJgUDTHE=;
+        b=cjEHKO3ZTN3Ma1U7kUNTQIY3BEyXWR5Oiq3b1Ab399l4RaoR1D9Xfj7jh6gn8uHBc5
+         QKViE6iqhBpPP2P5EXXz7dFbfY3p8MmA7Jm5AlM8/D9y/MsBQcFarAjVOYPx0vfWbuj1
+         wk6jz/SWx7LmdwRz1IcgUz/6sRonpSFR7ttts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zMK0dD8EUOpMnQqN+YrkNT1KRoH/Rg1BtnXVKHHSQEw=;
-        b=JBId8P1OtmEbf2xJOwDm4Qh6qRrKG9Yaxw62euDcXDGaN/AssNsw8C8EnF1ZiEdKzW
-         rGFIS5vm54kr/fD+v9vuGUNE6XMr8g8cTN7AkDciHsFBB2XCNGDtgHTGZn+iZFOlGMUB
-         vXZxYkESC5qbiOOM12zYM14+6Zwzevvgiok+59S3GJlFgTwRNIM0HxUpHnhJ+WNfeqZi
-         AsKwBE7fvGxj1T83XbOBv+9g6Tv+pCPf+XwjmVN7TJaPMGuE+TFXe0ax/IC5XaUTHjKE
-         No/Y3GZ7SXspHDideYQLofZTCbHcMbAL7jBn1VN3vOr7QoNu3d53lULl65aC6JYGTAqr
-         5Wuw==
-X-Gm-Message-State: AOAM530XGGTNwJVNsDZ1Rdu8MwCLcvdneFEuSPb2BpbGl8+zM3I6XfVc
-        mH24GyO3zvh4NS7x0pwr7G+b1A==
-X-Google-Smtp-Source: ABdhPJz+He35I/mX8zgLQgen2hel8CVQVyy/0OetIdnt55DRJtYU9oNFtDNxLJhw0IJRLu0nNB5p8Q==
-X-Received: by 2002:a17:902:aa0c:b029:e5:da5f:5f66 with SMTP id be12-20020a170902aa0cb02900e5da5f5f66mr9806341plb.81.1617315210147;
-        Thu, 01 Apr 2021 15:13:30 -0700 (PDT)
+        bh=Gl97oxPIVXZYcwzInna88mJV+71EBUvsRwHZJgUDTHE=;
+        b=DZmJqlZuE2xb9wKSy81Gkm6sEPhnH68qxt1USNq/yLrG03uAWH9pr4NpzvvlCCFnH9
+         jhuyRV+qqdEg2E1FqG3Hqcy0ZW+OShu92j4PvyILUaPSRnCYnADeVJYncYOt6XIkAKBJ
+         9E4hSxQcp7qtAeTuRSIPn2osZF3J5KIVieIWkqRNcCJBMDaXLWg1icEP/vuxs7Y7UUPH
+         z03aDpm0ekZHzIpifrLDqO60AseCVpXvJqiqSf+sX2DmOnVWfGLjsqfPRD4bAl0nl6FH
+         k6Zw3hR3a6Bg3+lA3R7eTiaLPSdw0Ho4UT8X1CXnQk8lZbQnCV+LOO8yFF6SOhrmbIty
+         JxXA==
+X-Gm-Message-State: AOAM531kk49WOjRS24A7TCPAPvrrv2V5rsnGD0ZeowUlZyeEmbunfRjm
+        CdElJ7rKdTDgFThxlDnJXYFxow==
+X-Google-Smtp-Source: ABdhPJy9ADuU0excc/0DZGu3CanfDu/XK6zyd+laHOepTuQ25LQdKdnPsZqD7XioexndWEgyKYLoXw==
+X-Received: by 2002:a17:902:8f8d:b029:e7:4a2f:1950 with SMTP id z13-20020a1709028f8db02900e74a2f1950mr9634785plo.77.1617315209867;
+        Thu, 01 Apr 2021 15:13:29 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 186sm6655069pfb.143.2021.04.01.15.13.28
+        by smtp.gmail.com with ESMTPSA id y68sm7022290pgy.5.2021.04.01.15.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 01 Apr 2021 15:13:28 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -74,101 +74,116 @@ Cc:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
         Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
         Adam Nichols <adam@grimm-co.com>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v4 3/3] sysfs: Unconditionally use vmalloc for buffer
-Date:   Thu,  1 Apr 2021 15:13:20 -0700
-Message-Id: <20210401221320.2717732-4-keescook@chromium.org>
+Subject: [PATCH v4 1/3] lkdtm/heap: Add vmalloc linear overflow test
+Date:   Thu,  1 Apr 2021 15:13:18 -0700
+Message-Id: <20210401221320.2717732-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210401221320.2717732-1-keescook@chromium.org>
 References: <20210401221320.2717732-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=c5db4de46e2fb011df00756d4f9e98c350db4340; i=MEvu9Y2iWCN6KW+GL93HEcZTxkhRtLohrU2GVi3yOA0=; m=B8J2zz7Y7XtsJeOjLQdM8fQ2tr4ToEl/kdZtP2sPkVo=; p=RMI7dJzQuU2ORbbN3pLYdhsh2IhVTz/8JKubIRzXcE8=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBmRX8ACgkQiXL039xtwCaYSQ/9G7W veN/zfdOwGX1mTnL3JETf/YN7qmk/i17DV9sk+90V2GFpMrZd4mCP6IiejJO+oHNidVLOyjw+hhdV LWoHb0juROgtSbTzsrqPznUuHE/GHS0aWOvILlgPzg6Y2vsQ9sPnqj5ruWOAtS9gbjBXMAwBRlB6d B6U+uKHoFdHCaTn0hfpomgwBg3N4kiII1j7f31c+FdTUO7mFieVPd50b226QL2dTL1b3VcL3FCa1J 5xz4HXGQt0Wzw8P8DMhGwD7CLQUISRHWF609rjSb7vP4KYphXWoeX1ZGlVmdrVyfh/bpFeO9JsQsG usToUcnz5T8NZ8BCG9g0rgd3b2Ak0Fz+gTku/iq92DPM9mUc3Jc+Yz7IQ4RX7nL0qFbeXqglFXeVv bBieHV4e9dqZdA26C4Igx8WQX5FVjsgl9E9BLCqCi6esSsh3jZo02n91jqp1btE+h9LIk4rM4PE9H ZA+twsg5g4XMMN3kGZpyhTFXJO5/mt6KhJBwa/wEfyTtIJ5N/UXeRppIgmCYAvboPy00dgEYKXeUn LFk0mJDoqePbN+6cD2FUkRMIWXR/scEVHBhHL/uMrU2+H4RvoWQe2WXFGZCkLM+2uzgaJ/YszJdKJ GR/n8w5O/RdeJj5rUfT6cvTvZPH4pD7UjkH47rzTgenq3C+zBqPAkrihofQBMzYc=
+X-Patch-Hashes: v=1; h=sha256; g=970fea1dfc54675cf92960ed316cdea27f2a2b55; i=zAev4cjW2dHa2AXn2sZrbiZj58xWVMf9s1WNriwUPTo=; m=qJGeBnIdFmEfwvhoT9HcMsaZ+R0eVHz0QfuZfXAAVFA=; p=jblLmhd9kg9taPt5qJwEBeZbhf2U5OVB9wDFfWdvEwc=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmBmRX4ACgkQiXL039xtwCZE+hAAnIT uar89s8tk5F3KllVHos+dD9cu+MxDd8FCSDc61glKeq3AnFikTxoWcqrMRrZ/9bWse2ECMyXcUr2G ysUtjKS1/0RP3B2HvYQGOIaO/wQlNkz+55Tmpg/LjiUClRc1uHo27W/0Eo+MeSq54RpUE068a/df/ KIfZpK5b2kv9CZaIk75ZoMiaZ7v+gXmHhijoDN1CrE0K9OfopKWNCLA3f1bkPoStdaA+NHn6PK9Mo mYXcaOEMWLEtcte1ycFNdGEbsSt5O0uMsWUJRI5/fH6NDdWAReHY4CVTImbMDE7S3a+WkYU/nl5wk //eufaod6uCp7vYgXHvnI1DvVOpP7S7uzvDjvx4rL7r7aAWU3vPdbdntw6NXEchs8JnjAZ4BTLXz4 rEC6x4CcxYx6qoT9wgAgHTWSfhMsjCI13Crr4RLZzGLw9oToL60IEoS/2mlwG/+8DgJpKpdwbZqS4 Ka1j23mSyZksyTlOHM6HifEw1QX9rlB41FXJsVAjQIL/lyx/YAW/sUDccJKR3wqmZuesnTD+RbFZ0 4hlR0Q3INkv8RBBg/+lPd8hb9QwftkOxkGMQV0xqsYC81lN3IS+kAxNdgurRWeQzsOTMML37DD60G P9zP81gb39t43FvyY/LDuT2RKBAHd3ffyG2pbPP3v95Y1LhDRICP60gpJ/j+FQ6I=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The sysfs interface to seq_file continues to be rather fragile
-(seq_get_buf() should not be used outside of seq_file), as seen with
-some recent exploits[1]. Move the seq_file buffer to the vmap area
-(while retaining the accounting flag), since it has guard pages that will
-catch and stop linear overflows. This seems justified given that sysfs's
-use of seq_file almost always already uses PAGE_SIZE allocations, has
-normally short-lived allocations, and is not normally on a performance
-critical path.
-
-Once seq_get_buf() has been removed (and all sysfs callbacks using
-seq_file directly), this change can also be removed.
-
-[1] https://blog.grimm-co.com/2021/03/new-old-bugs-in-linux-kernel.html
+Similar to the existing slab overflow and stack exhaustion tests, add
+VMALLOC_LINEAR_OVERFLOW (and rename the slab test SLAB_LINEAR_OVERFLOW).
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/sysfs/file.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/misc/lkdtm/core.c               |  3 ++-
+ drivers/misc/lkdtm/heap.c               | 21 ++++++++++++++++++++-
+ drivers/misc/lkdtm/lkdtm.h              |  3 ++-
+ tools/testing/selftests/lkdtm/tests.txt |  3 ++-
+ 4 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index 9aefa7779b29..351ff75a97b1 100644
---- a/fs/sysfs/file.c
-+++ b/fs/sysfs/file.c
-@@ -16,6 +16,7 @@
- #include <linux/mutex.h>
- #include <linux/seq_file.h>
- #include <linux/mm.h>
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index b2aff4d87c01..c3a5ad21b3d2 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -119,7 +119,8 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(UNALIGNED_LOAD_STORE_WRITE),
+ 	CRASHTYPE(FORTIFY_OBJECT),
+ 	CRASHTYPE(FORTIFY_SUBOBJECT),
+-	CRASHTYPE(OVERWRITE_ALLOCATION),
++	CRASHTYPE(SLAB_LINEAR_OVERFLOW),
++	CRASHTYPE(VMALLOC_LINEAR_OVERFLOW),
+ 	CRASHTYPE(WRITE_AFTER_FREE),
+ 	CRASHTYPE(READ_AFTER_FREE),
+ 	CRASHTYPE(WRITE_BUDDY_AFTER_FREE),
+diff --git a/drivers/misc/lkdtm/heap.c b/drivers/misc/lkdtm/heap.c
+index 1323bc16f113..5d491c22e09a 100644
+--- a/drivers/misc/lkdtm/heap.c
++++ b/drivers/misc/lkdtm/heap.c
+@@ -5,18 +5,37 @@
+  */
+ #include "lkdtm.h"
+ #include <linux/slab.h>
 +#include <linux/vmalloc.h>
+ #include <linux/sched.h>
  
- #include "sysfs.h"
- 
-@@ -32,6 +33,31 @@ static const struct sysfs_ops *sysfs_file_ops(struct kernfs_node *kn)
- 	return kobj->ktype ? kobj->ktype->sysfs_ops : NULL;
- }
+ static struct kmem_cache *double_free_cache;
+ static struct kmem_cache *a_cache;
+ static struct kmem_cache *b_cache;
  
 +/*
-+ * To be proactively defensive against sysfs show() handlers that do not
-+ * correctly stay within their PAGE_SIZE buffer, use the vmap area to gain
-+ * the trailing guard page which will stop linear buffer overflows.
++ * If there aren't guard pages, it's likely that a consecutive allocation will
++ * let us overflow into the second allocation without overwriting something real.
 + */
-+static void *sysfs_kf_seq_start(struct seq_file *sf, loff_t *ppos)
++void lkdtm_VMALLOC_LINEAR_OVERFLOW(void)
 +{
-+	struct kernfs_open_file *of = sf->private;
-+	struct kernfs_node *kn = of->kn;
++	char *one, *two;
 +
-+	WARN_ON_ONCE(sf->buf);
-+	sf->buf = __vmalloc(kn->attr.size, GFP_KERNEL_ACCOUNT);
-+	if (!sf->buf)
-+		return ERR_PTR(-ENOMEM);
-+	sf->size = kn->attr.size;
++	one = vzalloc(PAGE_SIZE);
++	two = vzalloc(PAGE_SIZE);
 +
-+	/*
-+	 * Use the same behavior and code as single_open(): continue
-+	 * if pos is at the beginning; otherwise, NULL.
-+	 */
-+	if (*ppos)
-+		return NULL;
-+	return SEQ_OPEN_SINGLE;
++	pr_info("Attempting vmalloc linear overflow ...\n");
++	memset(one, 0xAA, PAGE_SIZE + 1);
++
++	vfree(two);
++	vfree(one);
 +}
 +
  /*
-  * Reads on sysfs are handled through seq_file, which takes care of hairy
-  * details like buffering and seeking.  The following function pipes
-@@ -206,14 +232,17 @@ static const struct kernfs_ops sysfs_file_kfops_empty = {
- };
- 
- static const struct kernfs_ops sysfs_file_kfops_ro = {
-+	.seq_start	= sysfs_kf_seq_start,
- 	.seq_show	= sysfs_kf_seq_show,
- };
- 
- static const struct kernfs_ops sysfs_file_kfops_wo = {
-+	.seq_start	= sysfs_kf_seq_start,
- 	.write		= sysfs_kf_write,
- };
- 
- static const struct kernfs_ops sysfs_file_kfops_rw = {
-+	.seq_start	= sysfs_kf_seq_start,
- 	.seq_show	= sysfs_kf_seq_show,
- 	.write		= sysfs_kf_write,
- };
+  * This tries to stay within the next largest power-of-2 kmalloc cache
+  * to avoid actually overwriting anything important if it's not detected
+  * correctly.
+  */
+-void lkdtm_OVERWRITE_ALLOCATION(void)
++void lkdtm_SLAB_LINEAR_OVERFLOW(void)
+ {
+ 	size_t len = 1020;
+ 	u32 *data = kmalloc(len, GFP_KERNEL);
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 5ae48c64df24..5a852d0beee0 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -38,7 +38,8 @@ void lkdtm_FORTIFY_SUBOBJECT(void);
+ /* heap.c */
+ void __init lkdtm_heap_init(void);
+ void __exit lkdtm_heap_exit(void);
+-void lkdtm_OVERWRITE_ALLOCATION(void);
++void lkdtm_VMALLOC_LINEAR_OVERFLOW(void);
++void lkdtm_SLAB_LINEAR_OVERFLOW(void);
+ void lkdtm_WRITE_AFTER_FREE(void);
+ void lkdtm_READ_AFTER_FREE(void);
+ void lkdtm_WRITE_BUDDY_AFTER_FREE(void);
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+index 11ef159be0fd..322a1d2439e3 100644
+--- a/tools/testing/selftests/lkdtm/tests.txt
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -15,7 +15,8 @@ UNSET_SMEP CR4 bits went missing
+ DOUBLE_FAULT
+ CORRUPT_PAC
+ UNALIGNED_LOAD_STORE_WRITE
+-#OVERWRITE_ALLOCATION Corrupts memory on failure
++VMALLOC_LINEAR_OVERFLOW
++SLAB_LINEAR_OVERFLOW
+ #WRITE_AFTER_FREE Corrupts memory on failure
+ READ_AFTER_FREE
+ #WRITE_BUDDY_AFTER_FREE Corrupts memory on failure
 -- 
 2.25.1
 
