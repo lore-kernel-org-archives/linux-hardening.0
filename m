@@ -2,192 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABBEC433ED
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 07:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCBDC433B4
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 08:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F7560FEE
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 07:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D94F61001
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 08:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233450AbhDAHhj (ORCPT
+        id S232565AbhDAIap (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 03:37:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233394AbhDAHhL (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 03:37:11 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B8FC06178A
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 00:37:11 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id nh23-20020a17090b3657b02900c0d5e235a8so583654pjb.0
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 00:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Aud+dIcxPCJT/CZT/Avgbz5emttFAGl7iLysJkmv9HQ=;
-        b=GIu6cSr7gEi7kr1eVD0E/FKPEHv2+ntW/buQZ2B8W7aBHsJypdoxS/0saK/383DCmU
-         esv3wPdXsB6Q9hgwBt72cKTfpEqzyGcF+81O5TkRZvBvzaigTBUcTKBSQkXpcsd4tVkg
-         UbWcqPKyK4KdqVevgR/Lc1sKz6fn6NfG/t6IQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Aud+dIcxPCJT/CZT/Avgbz5emttFAGl7iLysJkmv9HQ=;
-        b=ccLxURPFiXIRvrkuXdFlEtA5YR8VTtt9HX1QhKr3BIxwzywab9rEjA3SzpcAeS+DAy
-         RU0swHuV+E+wYDSlA8IUXLuVnhorMRbeVpXDQFKy/KczgWZdL3+bjF7scyUBXpo5oPSF
-         t/c6qzv1PZlAbRKprWHlKlJrwGN8sQkKtwKxPEqNi6yJLQYpPK/DApwmMhSDvdDLJ7N+
-         JGszX6FMCZw5RXk4UNwv6wMw0Sik6hrH/aIRGeLVz3XfyODFdVtQANwGPRnwSkzp+VLI
-         Wp6ZHj5ySmDB3PiWZfWgS9xfKblcv3DwMYPIThoLbFnZ0r4u0bA2/rQ/WfK2k9g/JiEj
-         j2mg==
-X-Gm-Message-State: AOAM531WNwtDGo2uCg9kHDha/QdkPTN5w9dBndUbnDlzbFQBt5cY5GmT
-        Zi8pKQ/N3fl9b5usn7ywMJjpfQ==
-X-Google-Smtp-Source: ABdhPJwLCcrVg7CiJnE1FLkm7Zxzfm66PC6qjKPyS9K94ekCn1cm2DTfRkS5WAGVsuUhQUtVPEm//A==
-X-Received: by 2002:a17:90a:f298:: with SMTP id fs24mr7717612pjb.57.1617262630639;
-        Thu, 01 Apr 2021 00:37:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 15sm4289460pfx.167.2021.04.01.00.37.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 00:37:10 -0700 (PDT)
-Date:   Thu, 1 Apr 2021 00:37:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 1 Apr 2021 04:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233024AbhDAIan (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 1 Apr 2021 04:30:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C2F5B6100A;
+        Thu,  1 Apr 2021 08:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617265842;
+        bh=4Rz7Nq21QOn+cCeGiTdZAPi0H+35CYkw2WOtrh7X8SM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RxNB5z4cr3tbGV4VzlRuXgPZbjB8VSeyCqsWPoq97a20sSU37b9Q0eR3jvWw4E6Ys
+         VyucRP2l3G0/tpLuJdqu2zu5tQe8ei4HLGgvLHdQSog9c4m07/Z2fZkwEgGbU7PD7Q
+         nEgSfHkNoTizg6f/ZPpk7Rl8dHnvA5eeMrksAivrGAjZEY7obLUljOd9WOdpN/yHt8
+         hKggM97UadPbpZ5eqF/36LjiD5p9vNq86oQlUZOnuaB6awEgRwGB0zM+rPe3kc18LO
+         +dNWUng2mYYQOrw6EDbCAD415KDpvQhT9hucpKzuAh1ypODzTsNzJcD2Inr7r4HzN0
+         kP1gBv0XcdeEA==
+Date:   Thu, 1 Apr 2021 09:30:35 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jann Horn <jannh@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Adam Nichols <adam@grimm-co.com>,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] sysfs: Unconditionally use vmalloc for buffer
-Message-ID: <202104010030.42B460AB12@keescook>
-References: <20210401022145.2019422-1-keescook@chromium.org>
- <YGVy0WUG1OEFfjhx@dhcp22.suse.cz>
+Subject: Re: [PATCH v8 3/6] stack: Optionally randomize kernel stack offset
+ each syscall
+Message-ID: <20210401083034.GA8554@willie-the-truck>
+References: <20210330205750.428816-1-keescook@chromium.org>
+ <20210330205750.428816-4-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YGVy0WUG1OEFfjhx@dhcp22.suse.cz>
+In-Reply-To: <20210330205750.428816-4-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 09:14:25AM +0200, Michal Hocko wrote:
-> On Wed 31-03-21 19:21:45, Kees Cook wrote:
-> > The sysfs interface to seq_file continues to be rather fragile
-> > (seq_get_buf() should not be used outside of seq_file), as seen with
-> > some recent exploits[1]. Move the seq_file buffer to the vmap area
-> > (while retaining the accounting flag), since it has guard pages that
-> > will catch and stop linear overflows.
-> 
-> I thought the previous discussion has led to a conclusion that the
-> preferred way is to disallow direct seq_file buffer usage. But this is
-> obviously up to sysfs maintainers. I am happy you do not want to spread
-> this out to all seq_file users anymore.
+On Tue, Mar 30, 2021 at 01:57:47PM -0700, Kees Cook wrote:
+> diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+> new file mode 100644
+> index 000000000000..351520803006
+> --- /dev/null
+> +++ b/include/linux/randomize_kstack.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef _LINUX_RANDOMIZE_KSTACK_H
+> +#define _LINUX_RANDOMIZE_KSTACK_H
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/jump_label.h>
+> +#include <linux/percpu-defs.h>
+> +
+> +DECLARE_STATIC_KEY_MAYBE(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
+> +			 randomize_kstack_offset);
+> +DECLARE_PER_CPU(u32, kstack_offset);
+> +
+> +/*
+> + * Do not use this anywhere else in the kernel. This is used here because
+> + * it provides an arch-agnostic way to grow the stack with correct
+> + * alignment. Also, since this use is being explicitly masked to a max of
+> + * 10 bits, stack-clash style attacks are unlikely. For more details see
+> + * "VLAs" in Documentation/process/deprecated.rst
+> + * The asm statement is designed to convince the compiler to keep the
+> + * allocation around even after "ptr" goes out of scope.
+> + */
+> +void *__builtin_alloca(size_t size);
+> +/*
+> + * Use, at most, 10 bits of entropy. We explicitly cap this to keep the
+> + * "VLA" from being unbounded (see above). 10 bits leaves enough room for
+> + * per-arch offset masks to reduce entropy (by removing higher bits, since
+> + * high entropy may overly constrain usable stack space), and for
+> + * compiler/arch-specific stack alignment to remove the lower bits.
+> + */
+> +#define KSTACK_OFFSET_MAX(x)	((x) & 0x3FF)
+> +
+> +/*
+> + * These macros must be used during syscall entry when interrupts and
+> + * preempt are disabled, and after user registers have been stored to
+> + * the stack.
+> + */
+> +#define add_random_kstack_offset() do {					\
+> +	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+> +				&randomize_kstack_offset)) {		\
+> +		u32 offset = __this_cpu_read(kstack_offset);		\
+> +		u8 *ptr = __builtin_alloca(KSTACK_OFFSET_MAX(offset));	\
+> +		asm volatile("" : "=m"(*ptr) :: "memory");		\
 
-Yeah; I still want to remove external seq_get_buf(), but that'll take
-time. I'll be doing the work, though, since I still need access to
-f_cred for show() access control checks.
+Using the "m" constraint here is dangerous if you don't actually evaluate it
+inside the asm. For example, if the compiler decides to generate an
+addressing mode relative to the stack but with writeback (autodecrement), then
+the stack pointer will be off by 8 bytes. Can you use "o" instead?
 
-> > This seems justified given that
-> > sysfs's use of seq_file already uses kvmalloc(), is almost always using
-> > a PAGE_SIZE or larger allocation, has normally short-lived allocations,
-> > and is not normally on a performance critical path.
-> 
-> Let me clarify on this, because this is not quite right. kvmalloc vs
-> vmalloc (both with GFP_KERNEL) on PAGE_SIZE are two different beasts.
-> The first one is almost always going to use kmalloc because the page
-> allocator almost never fails those requests.
-
-Yes, good point. I will adjust my changelog.
-
-Thanks!
-
--Kees
-
-> 
-> > Once seq_get_buf() has been removed (and all sysfs callbacks using
-> > seq_file directly), this change can also be removed.
-> > 
-> > [1] https://blog.grimm-co.com/2021/03/new-old-bugs-in-linux-kernel.html
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > v3:
-> > - Limit to only sysfs (instead of all of seq_file).
-> > v2: https://lore.kernel.org/lkml/20210315174851.622228-1-keescook@chromium.org/
-> > v1: https://lore.kernel.org/lkml/20210312205558.2947488-1-keescook@chromium.org/
-> > ---
-> >  fs/sysfs/file.c | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> > 
-> > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-> > index 9aefa7779b29..70e7a450e5d1 100644
-> > --- a/fs/sysfs/file.c
-> > +++ b/fs/sysfs/file.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/mutex.h>
-> >  #include <linux/seq_file.h>
-> >  #include <linux/mm.h>
-> > +#include <linux/vmalloc.h>
-> >  
-> >  #include "sysfs.h"
-> >  
-> > @@ -32,6 +33,25 @@ static const struct sysfs_ops *sysfs_file_ops(struct kernfs_node *kn)
-> >  	return kobj->ktype ? kobj->ktype->sysfs_ops : NULL;
-> >  }
-> >  
-> > +/*
-> > + * To be proactively defensive against sysfs show() handlers that do not
-> > + * correctly stay within their PAGE_SIZE buffer, use the vmap area to gain
-> > + * the trailing guard page which will stop linear buffer overflows.
-> > + */
-> > +static void *sysfs_kf_seq_start(struct seq_file *sf, loff_t *ppos)
-> > +{
-> > +	struct kernfs_open_file *of = sf->private;
-> > +	struct kernfs_node *kn = of->kn;
-> > +
-> > +	WARN_ON_ONCE(sf->buf);
-> > +	sf->buf = __vmalloc(kn->attr.size, GFP_KERNEL_ACCOUNT);
-> > +	if (!sf->buf)
-> > +		return ERR_PTR(-ENOMEM);
-> > +	sf->size = kn->attr.size;
-> > +
-> > +	return NULL + !*ppos;
-> > +}
-> > +
-> >  /*
-> >   * Reads on sysfs are handled through seq_file, which takes care of hairy
-> >   * details like buffering and seeking.  The following function pipes
-> > @@ -206,14 +226,17 @@ static const struct kernfs_ops sysfs_file_kfops_empty = {
-> >  };
-> >  
-> >  static const struct kernfs_ops sysfs_file_kfops_ro = {
-> > +	.seq_start	= sysfs_kf_seq_start,
-> >  	.seq_show	= sysfs_kf_seq_show,
-> >  };
-> >  
-> >  static const struct kernfs_ops sysfs_file_kfops_wo = {
-> > +	.seq_start	= sysfs_kf_seq_start,
-> >  	.write		= sysfs_kf_write,
-> >  };
-> >  
-> >  static const struct kernfs_ops sysfs_file_kfops_rw = {
-> > +	.seq_start	= sysfs_kf_seq_start,
-> >  	.seq_show	= sysfs_kf_seq_show,
-> >  	.write		= sysfs_kf_write,
-> >  };
-> > -- 
-> > 2.25.1
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
-
--- 
-Kees Cook
+Will
