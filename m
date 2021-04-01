@@ -2,101 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7C4C43460
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 18:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01503C433ED
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 19:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC12601FC
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 18:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A958360241
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 19:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236741AbhDAS1m (ORCPT
+        id S235096AbhDAT2u (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 14:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37130 "EHLO
+        Thu, 1 Apr 2021 15:28:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239198AbhDASPm (ORCPT
+        with ESMTP id S234170AbhDAT2p (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 14:15:42 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187F9C08EADB;
-        Thu,  1 Apr 2021 06:33:04 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1617283982;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HZjvyKpt+QXry8euYSSyT/r99M7FJN1MQXh9qXC4Ovc=;
-        b=OH/CF4HibPXVGkUdfGd2pL1pUjUIF436O4FRK6nP0rQgDA27/0DbpRpklUSnYW6qo7N47Z
-        bwGU896e+og2wjEMgi8YAD/XxNXlGeeySxLnCVqTq2swbV/WvxqlCDTQsnAFsIEuqKFjzE
-        WcINh7uptDUpKxjulazD79npSLL2TFYdlt9Pdqf8pKMSwHfWPX/H1e0RdOnL4nH93SurQI
-        nDy8RSI+Ffr8J1Jx0Cx2jYbd9ysbf4324yA1V8OKnDMRrn/NoZspWKlGuh2P+n/jco5yYQ
-        OpJS6Bcofv4VluIdc8RKCDyT/Gu+YI3XTIRRnOKANzysJq+uW1E8m+Q7qGsd2A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1617283982;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HZjvyKpt+QXry8euYSSyT/r99M7FJN1MQXh9qXC4Ovc=;
-        b=yG7k2QB1PDjKcVufvbc8qoQOxN5QwFy6nxDd8786TOEt1taaumoojXztjePOcCOmuF4672
-        o8XO9neOntE3BqBw==
-To:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 0/6] Optionally randomize kernel stack offset each syscall
-In-Reply-To: <20210401083758.GA8745@willie-the-truck>
-References: <20210331205458.1871746-1-keescook@chromium.org> <20210401083758.GA8745@willie-the-truck>
-Date:   Thu, 01 Apr 2021 15:33:02 +0200
-Message-ID: <87sg4a3zap.ffs@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 1 Apr 2021 15:28:45 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504E3C0465C0
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 12:17:50 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id cl17-20020a17090af691b02900da5fe25f0eso4965734pjb.1
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 12:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=nlEty8FbrPXfEuiwzU9OVAHqfrb/3joIbwaJdu5fO44=;
+        b=QSntTpECX8es2vOgpgsVQixFbafEesFafN4Bzaq4712xl6Lp68jJHZTkl1YI177619
+         QEKerfpHXNaHIDUo4BJsh5aj285zB/9VcoH1lBKIIiJneIq2vX5upBnfgQa2X+IZK9bQ
+         ut9PpEQaCNQgfDmNUQ3EygQyX0QErvgOBAFzNoPBbRSTXozlbZ0sWDOP9h7TMEPZP+MG
+         3jehI4bc4N7gPWyM5smNvhfx0L6UfgJMoPMZY6Bo0dsmMTINhiqu/x3MTUinFMBJOqFH
+         LfsNqz1HkMyLVX6nLomMGzSoWbqeTscnmuH0A6FqFsxK17PjTMojKJMZ4zdHseqE1krr
+         6L8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=nlEty8FbrPXfEuiwzU9OVAHqfrb/3joIbwaJdu5fO44=;
+        b=f8DF0307RxpRYjRq6n59j/H0Gx9HJcmYMtTlKK7QnvZhPG8+MXVnUiSAyuGZsoAzHt
+         yfVlEoC7Q8QNXXTiQvj2QFjxT0/QewHjW8aLJsy7Q4EpXpYDRhZKnQf9SpDApZr+fS/9
+         KmSn420m9MmHJGWx44eoCoHaF1e3JHIDkEnwdxNpcWP05hOjWsjYNmJJM7+Z7+hqocaW
+         TzuikCa09dPoGqgXdodwXB/RzSuqyQqdm0VcOCWob1gmNrjScvi9tf7H5GMImvC6yobT
+         dF/U4fIR/QUoxODPExBr9NB7UBHaxA9sixv6kSPOEjxyQzJSEfcVskIgHWouDhGlfBM6
+         /z5w==
+X-Gm-Message-State: AOAM530hQzP1/Kk04TK+zEn8ZUI6in9hBEbRvsixgkoO1MnLPGA35bW0
+        MS/hQuT0I1FEcdR6HOqafMNGaT6Dmcsq
+X-Google-Smtp-Source: ABdhPJz+iVbbW+Al8L02mPKFb3osxiJwm1KiVsG7416KcEaTmWJ3FCuEaDnnEeHvkJrncERy0gmFN5EuygRJ
+X-Received: from royyang.svl.corp.google.com ([2620:15c:2cd:202:a838:37b3:5242:e2c3])
+ (user=royyang job=sendgmr) by 2002:a62:7c17:0:b029:1f1:9ef7:163a with SMTP id
+ x23-20020a627c170000b02901f19ef7163amr8859557pfc.51.1617304669075; Thu, 01
+ Apr 2021 12:17:49 -0700 (PDT)
+Date:   Thu,  1 Apr 2021 12:17:44 -0700
+In-Reply-To: <20210330205750.428816-1-keescook@chromium.org>
+Message-Id: <20210401191744.1685896-1-royyang@google.com>
+Mime-Version: 1.0
+References: <20210330205750.428816-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.31.0.208.g409f899ff0-goog
+Subject: [PATCH] Where we are for this patch?
+From:   Roy Yang <royyang@google.com>
+To:     keescook@chromium.org
+Cc:     akpm@linux-foundation.org, alex.popov@linux.com,
+        ard.biesheuvel@linaro.org, catalin.marinas@arm.com, corbet@lwn.net,
+        david@redhat.com, elena.reshetova@intel.com, glider@google.com,
+        jannh@google.com, kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com,
+        peterz@infradead.org, rdunlap@infradead.org, rppt@linux.ibm.com,
+        tglx@linutronix.de, vbabka@suse.cz, will@kernel.org,
+        x86@kernel.org, Roy Yang <royyang@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 01 2021 at 09:37, Will Deacon wrote:
-> On Wed, Mar 31, 2021 at 01:54:52PM -0700, Kees Cook wrote:
->> Hi Will (and Mark and Catalin),
->> 
->> Can you take this via the arm64 tree for v5.13 please? Thomas has added
->> his Reviewed-by, so it only leaves arm64's. :)
->
-> Sorry, these got mixed up in my inbox so I just replied to v7 and v8 and
-> then noticed v9. Argh!
->
-> However, I think the comments still apply: namely that the dummy "=m" looks
-> dangerous to me
+Both Android and Chrome OS really want this feature; For Container-Optimized OS, we have customers
+interested in the defense too.
 
-> https://lore.kernel.org/r/20210401083034.GA8554@willie-the-truck
+Thank you very much.
 
-Hrmpf, didn't think about that.
+Change-Id: I1eb1b726007aa8f9c374b934cc1c690fb4924aa3
+-- 
+2.31.0.208.g409f899ff0-goog
 
-> and I think you're accessing pcpu variables with preemption enabled
-> for the arm64 part:
-
-That's my fault. On x86 this is invoked right after coming up into C
-code and _before_ enabling interrupts, which I why I suggested not to
-use the wrapped one. raw_cpu_read() should be fine everywhere.
-
-Thanks,
-
-        tglx
