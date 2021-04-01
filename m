@@ -2,152 +2,154 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D934BC433ED
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 07:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471C3C433ED
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 07:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C3F61057
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 07:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 088666105A
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 07:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233460AbhDAHKf (ORCPT
+        id S233371AbhDAHOu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 03:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50088 "EHLO mail.kernel.org"
+        Thu, 1 Apr 2021 03:14:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35080 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229850AbhDAHKI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 03:10:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 55F3660FEF;
-        Thu,  1 Apr 2021 07:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1617261008;
-        bh=QIf5mgQ42j36vldjH9A5iJlCOIvsFsU9/pGT+bmlJzQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GCUgT57uil/6iDaWEF9gZ7ILDB953G7uePa86DPIggwvl5sOVAoGMaZW9QwK7DxHT
-         +eAufu4LcqCgTMPwKjX0QQpOvXFExuW/EryaPExD5Fu56JbhNxGZ7wzXAXo0dOn2Xo
-         WzOAqfVSjnHV+2ckvUCVPC0r5h1VoeOx3j7vwbkA=
-Date:   Thu, 1 Apr 2021 09:10:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        id S233179AbhDAHO1 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 1 Apr 2021 03:14:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1617261266; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EdG19ICQsbKOwlsiDe5wakN2BrS2LIAGNa7VKGcjnVQ=;
+        b=fv8kcptpBLAQc0tJiNubXbf0ugKJ2hvWgVLLMJZ/0LAHZ/H7hmdcW6UwavgsRRuc8UxgRK
+        uVOojLtyIhxNKuBsOGYqMKNXgag1BwBpmIwahMUC+Gy8wFkQmmFCaBhr0G2p/Uf6VRWUZI
+        jXwMtTfR7cz/IFgxCLmpSKRX8t+hfs8=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 61E08AF4F;
+        Thu,  1 Apr 2021 07:14:26 +0000 (UTC)
+Date:   Thu, 1 Apr 2021 09:14:25 +0200
+From:   Michal Hocko <mhocko@suse.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
         Adam Nichols <adam@grimm-co.com>,
         linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3] sysfs: Unconditionally use vmalloc for buffer
-Message-ID: <YGVxzSH8fV9MwBDM@kroah.com>
+Message-ID: <YGVy0WUG1OEFfjhx@dhcp22.suse.cz>
 References: <20210401022145.2019422-1-keescook@chromium.org>
- <YGVXSFMlvX4RQI8n@kroah.com>
- <202103312335.25EA9650@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202103312335.25EA9650@keescook>
+In-Reply-To: <20210401022145.2019422-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 31, 2021 at 11:52:20PM -0700, Kees Cook wrote:
-> On Thu, Apr 01, 2021 at 07:16:56AM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, Mar 31, 2021 at 07:21:45PM -0700, Kees Cook wrote:
-> > > The sysfs interface to seq_file continues to be rather fragile
-> > > (seq_get_buf() should not be used outside of seq_file), as seen with
-> > > some recent exploits[1]. Move the seq_file buffer to the vmap area
-> > > (while retaining the accounting flag), since it has guard pages that
-> > > will catch and stop linear overflows. This seems justified given that
-> > > sysfs's use of seq_file already uses kvmalloc(), is almost always using
-> > > a PAGE_SIZE or larger allocation, has normally short-lived allocations,
-> > > and is not normally on a performance critical path.
-> > > 
-> > > Once seq_get_buf() has been removed (and all sysfs callbacks using
-> > > seq_file directly), this change can also be removed.
-> > > 
-> > > [1] https://blog.grimm-co.com/2021/03/new-old-bugs-in-linux-kernel.html
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > v3:
-> > > - Limit to only sysfs (instead of all of seq_file).
-> > > v2: https://lore.kernel.org/lkml/20210315174851.622228-1-keescook@chromium.org/
-> > > v1: https://lore.kernel.org/lkml/20210312205558.2947488-1-keescook@chromium.org/
-> > > ---
-> > >  fs/sysfs/file.c | 23 +++++++++++++++++++++++
-> > >  1 file changed, 23 insertions(+)
-> > > 
-> > > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-> > > index 9aefa7779b29..70e7a450e5d1 100644
-> > > --- a/fs/sysfs/file.c
-> > > +++ b/fs/sysfs/file.c
-> > > @@ -16,6 +16,7 @@
-> > >  #include <linux/mutex.h>
-> > >  #include <linux/seq_file.h>
-> > >  #include <linux/mm.h>
-> > > +#include <linux/vmalloc.h>
-> > >  
-> > >  #include "sysfs.h"
-> > >  
-> > > @@ -32,6 +33,25 @@ static const struct sysfs_ops *sysfs_file_ops(struct kernfs_node *kn)
-> > >  	return kobj->ktype ? kobj->ktype->sysfs_ops : NULL;
-> > >  }
-> > >  
-> > > +/*
-> > > + * To be proactively defensive against sysfs show() handlers that do not
-> > > + * correctly stay within their PAGE_SIZE buffer, use the vmap area to gain
-> > > + * the trailing guard page which will stop linear buffer overflows.
-> > > + */
-> > > +static void *sysfs_kf_seq_start(struct seq_file *sf, loff_t *ppos)
-> > > +{
-> > > +	struct kernfs_open_file *of = sf->private;
-> > > +	struct kernfs_node *kn = of->kn;
-> > > +
-> > > +	WARN_ON_ONCE(sf->buf);
-> > 
-> > How can buf ever not be NULL?  And if it is, we will leak memory in the
-> > next line so we shouldn't have _ONCE, we should always know, but not
-> > rebooting the machine would be nice.
+On Wed 31-03-21 19:21:45, Kees Cook wrote:
+> The sysfs interface to seq_file continues to be rather fragile
+> (seq_get_buf() should not be used outside of seq_file), as seen with
+> some recent exploits[1]. Move the seq_file buffer to the vmap area
+> (while retaining the accounting flag), since it has guard pages that
+> will catch and stop linear overflows.
+
+I thought the previous discussion has led to a conclusion that the
+preferred way is to disallow direct seq_file buffer usage. But this is
+obviously up to sysfs maintainers. I am happy you do not want to spread
+this out to all seq_file users anymore.
+
+> This seems justified given that
+> sysfs's use of seq_file already uses kvmalloc(), is almost always using
+> a PAGE_SIZE or larger allocation, has normally short-lived allocations,
+> and is not normally on a performance critical path.
+
+Let me clarify on this, because this is not quite right. kvmalloc vs
+vmalloc (both with GFP_KERNEL) on PAGE_SIZE are two different beasts.
+The first one is almost always going to use kmalloc because the page
+allocator almost never fails those requests.
+
+> Once seq_get_buf() has been removed (and all sysfs callbacks using
+> seq_file directly), this change can also be removed.
 > 
-> It should never be possible. I did this because seq_file has some
-> unusual buf allocation patterns in the kernel, and I liked the cheap
-> leak check. I use _ONCE because spewing endlessly doesn't help most
-> cases. And if you want to trigger it again, you don't have to reboot:
-> https://www.kernel.org/doc/html/latest/admin-guide/clearing-warn-once.html
-
-True, I was thinking of the panic-on-warn people, and the hesitation of
-adding new WARN_ON() to the kernel code.  If this really can happen,
-shouldn't we handle it properly?
-
-> > > +	sf->buf = __vmalloc(kn->attr.size, GFP_KERNEL_ACCOUNT);
-> > > +	if (!sf->buf)
-> > > +		return ERR_PTR(-ENOMEM);
-> > > +	sf->size = kn->attr.size;
-> > > +
-> > > +	return NULL + !*ppos;
-> > > +}
-> > 
-> > Will this also cause the vmalloc fragmentation/abuse that others have
-> > mentioned as userspace can trigger this?
+> [1] https://blog.grimm-co.com/2021/03/new-old-bugs-in-linux-kernel.html
 > 
-> If I understood the concern correctly, it was about it being a risk for
-> doing it for all seq_file uses. This version confines the changes to only
-> sysfs seq_file uses.
-
-There are a few sysfs files that userspace can read from out there :)
-
-> > And what code frees it?
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v3:
+> - Limit to only sysfs (instead of all of seq_file).
+> v2: https://lore.kernel.org/lkml/20210315174851.622228-1-keescook@chromium.org/
+> v1: https://lore.kernel.org/lkml/20210312205558.2947488-1-keescook@chromium.org/
+> ---
+>  fs/sysfs/file.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
-> The existing hooks to seq_release() handle this already. This kind of
-> "preallocation" of the seq_file buffer is done in a few places already
-> (hence my desire for the sanity checking WARN lest future seq_file
-> semantics change).
+> diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> index 9aefa7779b29..70e7a450e5d1 100644
+> --- a/fs/sysfs/file.c
+> +++ b/fs/sysfs/file.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/mm.h>
+> +#include <linux/vmalloc.h>
+>  
+>  #include "sysfs.h"
+>  
+> @@ -32,6 +33,25 @@ static const struct sysfs_ops *sysfs_file_ops(struct kernfs_node *kn)
+>  	return kobj->ktype ? kobj->ktype->sysfs_ops : NULL;
+>  }
+>  
+> +/*
+> + * To be proactively defensive against sysfs show() handlers that do not
+> + * correctly stay within their PAGE_SIZE buffer, use the vmap area to gain
+> + * the trailing guard page which will stop linear buffer overflows.
+> + */
+> +static void *sysfs_kf_seq_start(struct seq_file *sf, loff_t *ppos)
+> +{
+> +	struct kernfs_open_file *of = sf->private;
+> +	struct kernfs_node *kn = of->kn;
+> +
+> +	WARN_ON_ONCE(sf->buf);
+> +	sf->buf = __vmalloc(kn->attr.size, GFP_KERNEL_ACCOUNT);
+> +	if (!sf->buf)
+> +		return ERR_PTR(-ENOMEM);
+> +	sf->size = kn->attr.size;
+> +
+> +	return NULL + !*ppos;
+> +}
+> +
+>  /*
+>   * Reads on sysfs are handled through seq_file, which takes care of hairy
+>   * details like buffering and seeking.  The following function pipes
+> @@ -206,14 +226,17 @@ static const struct kernfs_ops sysfs_file_kfops_empty = {
+>  };
+>  
+>  static const struct kernfs_ops sysfs_file_kfops_ro = {
+> +	.seq_start	= sysfs_kf_seq_start,
+>  	.seq_show	= sysfs_kf_seq_show,
+>  };
+>  
+>  static const struct kernfs_ops sysfs_file_kfops_wo = {
+> +	.seq_start	= sysfs_kf_seq_start,
+>  	.write		= sysfs_kf_write,
+>  };
+>  
+>  static const struct kernfs_ops sysfs_file_kfops_rw = {
+> +	.seq_start	= sysfs_kf_seq_start,
+>  	.seq_show	= sysfs_kf_seq_show,
+>  	.write		= sysfs_kf_write,
+>  };
+> -- 
+> 2.25.1
 
-Ah, "magic", gotta love it...
-
-thanks,
-
-greg k-h
+-- 
+Michal Hocko
+SUSE Labs
