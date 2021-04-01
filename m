@@ -8,61 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEEEC43461
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936EBC433B4
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F5C61106
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7630161106
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236448AbhDAXdy (ORCPT
+        id S236547AbhDAXeC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 19:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50122 "EHLO
+        Thu, 1 Apr 2021 19:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236458AbhDAXdi (ORCPT
+        with ESMTP id S236494AbhDAXdq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 19:33:38 -0400
+        Thu, 1 Apr 2021 19:33:46 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8317C05BD43
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 16:32:48 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id f75so7410666yba.8
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 16:32:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA2FC05BD16
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 16:32:53 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id i6so7484297ybk.2
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 16:32:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=37WXlWpJE/MH2/fTLXwSTxqjd9/AH96OFcukUiyJmR0=;
-        b=MUQr6v2A7LCBmGGXinKbAauiWDZhchJOpufB06vPc+y89Shk0A0npRr/9pi/BMnqsB
-         YGYxOoOiR3PrdY8ZvOt3qRolktkxmVSz3ty9GU49sjcOVoOvAMpyI+Ym5JD2voui9ciR
-         JDoFs1ykTMsPlDGAgu+Bm8m691JtKnEnsA7+jISAWcEE4cW3JV2MHZho27EcQA/kuCau
-         VXHlisP8AHfL1MQKDwgviz2t0wRX58nf0mMrORxHPTAzQYVrbXDCVawyEvB4IkXkQbBZ
-         Jm4KgKNJEYjjwWfViZj9dmkUZDckfv04mz1AgpKxpkTAfwcF9/HjIbATeU6V1dfNJ4d0
-         DsYg==
+        bh=4zmDXsca0ECrWDzVS194BszWB+2fKXJW5Au7Imi/uhE=;
+        b=PH3FtJBGBsmgrkbZDVz3BXtOomtM40isF73uxHHdcAgWFlI0hQzmJ+Yiu0Nbk36AiS
+         oIUF/OouhVLXAHv5lePfztQEQCdoF3WKPYY1A6g21bn1QVawFocJ0FQMqW+JvkyRMXC0
+         7MlgKTeKlTukJdkvN/08vCaQdhh5X+mvr2muSbV3dFgjINzTMQPZYmQpEcNiuXE8tNMf
+         3VgtV0lRhBFCEGG3XpYQc/aLht2YKd/8ej+EsbM8UOkPXsBBShbt6fFkrZnQbYbNFDMD
+         JSw7hOAw7svmOppJvJC33a/bIukeU+OjfUKoipleTgiaIG9tnHBTD0G84ol+6TIFQPCe
+         UDkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=37WXlWpJE/MH2/fTLXwSTxqjd9/AH96OFcukUiyJmR0=;
-        b=G4N4Xrlf9y5o/5ou7JzHyE6CthEvB6AtGEVUtByhyOlPuZvrDi2hCejv8ez9dyueV4
-         tIWi5a9chB0rD9F2SgEaN0iKcFZ+fUPWKUp2LTXnW2+S/Nk2SDnVPzw8ojdDZg/u+EER
-         503VkN2XHCgN0ENxwOZ5YZwHf0Z2pMdH8suxMwfKGbZaH/YqRj5I0/M3cr1gc3E2sI5k
-         4XAnZWyS6mSfA53n/S5TcusgZW+rDJPFLF1y5sntSSgyBAwyxRMD0W37/L3wBPCG6/jy
-         pQWu2S1C04HPqLIkbOjJdS/hg+XQAXFK6IlbmsSz6p1j98XC+xFkgXgdeqlR81p7X+Zk
-         5t0Q==
-X-Gm-Message-State: AOAM53343XAp+Wqs1688SArN+6LkEbi4TkfKuzRKA42QPtON7h/r9xS+
-        dshtKRItnBxtXCeZdkQQpKUc0A7MfPryMB0sa2s=
-X-Google-Smtp-Source: ABdhPJyacKdTlF1o2JuZj83r2EZ9uWCYLJKXhYnoqbWWXjMYOdLghpkywDwL6B11A1p+0Vayoc5nWlpe10PZfvZrig0=
+        bh=4zmDXsca0ECrWDzVS194BszWB+2fKXJW5Au7Imi/uhE=;
+        b=UA7UU30MHRGhs5FnkadeOgyD8RE9egzhXjGYlBXg6bB/gNN7e7qy8NVe31ePE5FfTo
+         M5yxJoC2VroF7hycKMg0uxBf4LGCvM9H3xs0VWByDuKN6F4/IiB+SuSHAmzuYlgTZwcd
+         9jVYe0yYgXUInVb5rmd3Ls/lYWTWZjnshm5Lkv679bhcEXA4wfxb1V8ebKAaxJ7+XKzo
+         tw6TzLzaBZz0wg/BcPRJMkVwwMMfNQY985hPjreBxSMnBmhjHD3V8jfYWMz42vQBYXXn
+         Duof9B7RfYsTWnKG/OLlR8XYZSVP16veq8vSS8lBT7FeuOrMcLGhsu6XLuVB1TYx+efx
+         zJzA==
+X-Gm-Message-State: AOAM530I7ykTRAcoUREqehDH/gvmiRnDwY7C3Q/cdvoDhH0H/VnG/dvv
+        rF1i3D1V/cIf6GmniI5UmtHzwKK9jshrPCrkvqM=
+X-Google-Smtp-Source: ABdhPJxZF9glk9+ZtBirKYDEGjQrdMhhNWgdR3tCZ5JLBfUCEc7h35+3XPVRFL47JJ5bGJZvKS8N/Lhi8ZZQtRsAJC4=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:4cd1:da86:e91b:70b4])
- (user=samitolvanen job=sendgmr) by 2002:a5b:98d:: with SMTP id
- c13mr14426086ybq.463.1617319968075; Thu, 01 Apr 2021 16:32:48 -0700 (PDT)
-Date:   Thu,  1 Apr 2021 16:32:12 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:880c:: with SMTP id
+ c12mr15159486ybl.399.1617319972614; Thu, 01 Apr 2021 16:32:52 -0700 (PDT)
+Date:   Thu,  1 Apr 2021 16:32:14 -0700
 In-Reply-To: <20210401233216.2540591-1-samitolvanen@google.com>
-Message-Id: <20210401233216.2540591-15-samitolvanen@google.com>
+Message-Id: <20210401233216.2540591-17-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210401233216.2540591-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.208.g409f899ff0-goog
-Subject: [PATCH v5 14/18] arm64: add __nocfi to functions that jump to a
- physical address
+Subject: [PATCH v5 16/18] arm64: ftrace: use function_nocfi for ftrace_call
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -86,64 +85,30 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Disable CFI checking for functions that switch to linear mapping and
-make an indirect call to a physical address, since the compiler only
-understands virtual addresses and the CFI check for such indirect calls
-would always fail.
+With CONFIG_CFI_CLANG, the compiler replaces function pointers with
+jump table addresses, which breaks dynamic ftrace as the address of
+ftrace_call is replaced with the address of ftrace_call.cfi_jt. Use
+function_nocfi() to get the address of the actual function instead.
 
+Suggested-by: Ben Dai <ben.dai@unisoc.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/include/asm/mmu_context.h | 2 +-
- arch/arm64/kernel/cpu-reset.h        | 8 ++++----
- arch/arm64/kernel/cpufeature.c       | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/kernel/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-index 386b96400a57..d3cef9133539 100644
---- a/arch/arm64/include/asm/mmu_context.h
-+++ b/arch/arm64/include/asm/mmu_context.h
-@@ -119,7 +119,7 @@ static inline void cpu_install_idmap(void)
-  * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
-  * avoiding the possibility of conflicting TLB entries being allocated.
-  */
--static inline void cpu_replace_ttbr1(pgd_t *pgdp)
-+static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
- {
- 	typedef void (ttbr_replace_func)(phys_addr_t);
- 	extern ttbr_replace_func idmap_cpu_replace_ttbr1;
-diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-index f3adc574f969..9a7b1262ef17 100644
---- a/arch/arm64/kernel/cpu-reset.h
-+++ b/arch/arm64/kernel/cpu-reset.h
-@@ -13,10 +13,10 @@
- void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
- 	unsigned long arg0, unsigned long arg1, unsigned long arg2);
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 86a5cf9bc19a..b5d3ddaf69d9 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -55,7 +55,7 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
+ 	unsigned long pc;
+ 	u32 new;
  
--static inline void __noreturn cpu_soft_restart(unsigned long entry,
--					       unsigned long arg0,
--					       unsigned long arg1,
--					       unsigned long arg2)
-+static inline void __noreturn __nocfi cpu_soft_restart(unsigned long entry,
-+						       unsigned long arg0,
-+						       unsigned long arg1,
-+						       unsigned long arg2)
- {
- 	typeof(__cpu_soft_restart) *restart;
+-	pc = (unsigned long)&ftrace_call;
++	pc = (unsigned long)function_nocfi(ftrace_call);
+ 	new = aarch64_insn_gen_branch_imm(pc, (unsigned long)func,
+ 					  AARCH64_INSN_BRANCH_LINK);
  
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 0b2e0d7b13ec..c2f94a5206e0 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1445,7 +1445,7 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
- }
- 
- #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
--static void
-+static void __nocfi
- kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
- {
- 	typedef void (kpti_remap_fn)(int, int, phys_addr_t);
 -- 
 2.31.0.208.g409f899ff0-goog
 
