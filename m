@@ -2,77 +2,72 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAF2C433B4
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Apr 2021 06:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FA3C433ED
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Apr 2021 06:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8506610E7
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Apr 2021 06:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828D0610E7
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Apr 2021 06:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229742AbhDBGc0 (ORCPT
+        id S229722AbhDBGh6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Apr 2021 02:32:26 -0400
-Received: from verein.lst.de ([213.95.11.211]:42642 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229522AbhDBGc0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Apr 2021 02:32:26 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C98B968BFE; Fri,  2 Apr 2021 08:32:21 +0200 (CEST)
-Date:   Fri, 2 Apr 2021 08:32:21 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
+        Fri, 2 Apr 2021 02:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229522AbhDBGh5 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 2 Apr 2021 02:37:57 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF20C0613E6;
+        Thu,  1 Apr 2021 23:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=23JVev1P6hfZn75YYKAeRgCkKkBm6a8rfr6nXZM/23Y=; b=DidHl2sJes5CZndoc3Jq3dcebg
+        mHIG2+4LZPraKak5HEMoK0y5J2IN+LGspSYgcrDWzNKlc2hELMTpEx/cRtXNSteFzQC58hDAl/Zf7
+        FnMIDAJJhvKvxesv3o0OwP/BzOHYMsJyft0tWmRNf3lx4Lnyk1AquB6H2AutP63hjsWxrxBEumlcb
+        2rC3O68k8xLzsESDaHWYMzu3vLCyoQAMZNMXEUIEeRl6vkT8pgZBNaHnhTsDAG4+NgJGZOIlFY9Ky
+        bnP3x4iu02ItVcHPk1+J4B68TLe+1IqUgzG8yVAGE2P8dQQe9sbqQQ6wDpJxGuR2URuUn8LGWri3a
+        KUpOgXeA==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lSDR6-007IGD-Qr; Fri, 02 Apr 2021 06:37:42 +0000
+Date:   Fri, 2 Apr 2021 07:37:40 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Adam Nichols <adam@grimm-co.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] sysfs: Unconditionally use vmalloc for buffer
-Message-ID: <20210402063221.GA5260@lst.de>
-References: <20210401221320.2717732-1-keescook@chromium.org> <20210401221320.2717732-4-keescook@chromium.org>
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v5 03/18] mm: add generic function_nocfi macro
+Message-ID: <20210402063740.GA1738362@infradead.org>
+References: <20210401233216.2540591-1-samitolvanen@google.com>
+ <20210401233216.2540591-4-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210401221320.2717732-4-keescook@chromium.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20210401233216.2540591-4-samitolvanen@google.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 03:13:20PM -0700, Kees Cook wrote:
-> The sysfs interface to seq_file continues to be rather fragile
-> (seq_get_buf() should not be used outside of seq_file), as seen with
-> some recent exploits[1]. Move the seq_file buffer to the vmap area
-> (while retaining the accounting flag), since it has guard pages that will
-> catch and stop linear overflows. This seems justified given that sysfs's
-> use of seq_file almost always already uses PAGE_SIZE allocations, has
-> normally short-lived allocations, and is not normally on a performance
-> critical path.
+Thanks, this looks much better than the earlier naming:
 
-This looks completely weird to me.  In the end sysfs uses nothing
-of the seq_file infrastructure, so why do we even pretend to use it?
-Just switch sysfs_file_kfops_ro and sysfs_file_kfops_rw from using
-->seq_show to ->read and do the vmalloc there instead of pretending
-this is a seq_file.
-
-> Once seq_get_buf() has been removed (and all sysfs callbacks using
-> seq_file directly), this change can also be removed.
-
-And with sysfs out of the way I think kiling off the other few users
-should be pretty easy as well.
+Acked-by: Christoph Hellwig <hch@lst.de>
