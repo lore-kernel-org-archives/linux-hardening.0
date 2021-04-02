@@ -2,110 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0077C433B4
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAF2C433B4
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Apr 2021 06:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8C16113B
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Apr 2021 23:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8506610E7
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Apr 2021 06:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236506AbhDAXeJ (ORCPT
+        id S229742AbhDBGc0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Apr 2021 19:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236443AbhDAXdy (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Apr 2021 19:33:54 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFCA2C05BD1C
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Apr 2021 16:32:57 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id a16so3659405plm.17
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Apr 2021 16:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Z8NWn4jVbToJav0h5JmVWRAqRYl6h2XMv8WXZ63o+ic=;
-        b=sWQZYrnybic/Guuvi4FLa32pcaoh1lAqAMERMtk/3AuG1Snas/3tmCJ9HTS8KD0KZ2
-         DIyS6n2azDelH2lWTJyz9wybfQaWqBpe11BGARLCpeQggnLYl/XP3Uj2cZa4+SKz8VAj
-         p/n4GcFQfdHxAybtZn/J3po7/veQAWAlQ2mjHxxTyIclKOPD91Aizuo/JF+Ek1nZGDY9
-         kP6kMCtYS0ikKI7mEz2VJvvBuMrXxK7XSAz05VZV8iRsy0FnY7iO/NYieB2Y9ImEF2Rs
-         33dX8T00jNHrkpZ0goIKWVOkD5UvlkwqOmlx9stTgcls1OksOdYC6jX0eL53aBEnGzNo
-         zx4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Z8NWn4jVbToJav0h5JmVWRAqRYl6h2XMv8WXZ63o+ic=;
-        b=jfwjeaN06D5/DadX6/d/6cR601/YMMFBvDHtkwGyNCdqRapjA44fWXCVlDp6NLv/GO
-         Z/9NBsEH6lXfIBbEda9zd7bjW1KipUehZfyjIA+la4pGxp5MX8pW/SZMvCcZx2/g8v5D
-         SNRaBRBr6tlzDoswkvy/ASU8gvt+dvdQpawu2NPap1NX+uGBUxz+8zsKL0Yb0RFags7W
-         WLginulsaeHGb2P27qW54E5jnnDA5M3CMGBMFniAn2BA0gSgNFz+nmH08kyGPekUDW8P
-         pRfueUza60ZwFxLY2hh2y9m1J72E3WmKrdI985n2jTqjz9raTUuuuJfXB2qeMcU6IWzS
-         5kXw==
-X-Gm-Message-State: AOAM533alO5I4c3bskfksIUef8900aPS55wMpXs7cGwB4IfmroRjNgda
-        zN3uAsJz8wYuVWdCAKKJuMT9JWlKeAxq2ly3H8A=
-X-Google-Smtp-Source: ABdhPJwiZbq9c4iXijVEYKsvmSZncty9LqawpPJhjxnXl2iNWMREeFwCFILyiiZ0pCK1rOKFlzrry48vXGoQ9XxlZv4=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:4cd1:da86:e91b:70b4])
- (user=samitolvanen job=sendgmr) by 2002:a17:902:c711:b029:e7:3d4e:8149 with
- SMTP id p17-20020a170902c711b02900e73d4e8149mr10140878plp.38.1617319977301;
- Thu, 01 Apr 2021 16:32:57 -0700 (PDT)
-Date:   Thu,  1 Apr 2021 16:32:16 -0700
-In-Reply-To: <20210401233216.2540591-1-samitolvanen@google.com>
-Message-Id: <20210401233216.2540591-19-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20210401233216.2540591-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.31.0.208.g409f899ff0-goog
-Subject: [PATCH v5 18/18] arm64: allow CONFIG_CFI_CLANG to be selected
-From:   Sami Tolvanen <samitolvanen@google.com>
+        Fri, 2 Apr 2021 02:32:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:42642 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229522AbhDBGc0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 2 Apr 2021 02:32:26 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C98B968BFE; Fri,  2 Apr 2021 08:32:21 +0200 (CEST)
+Date:   Fri, 2 Apr 2021 08:32:21 +0200
+From:   Christoph Hellwig <hch@lst.de>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Adam Nichols <adam@grimm-co.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] sysfs: Unconditionally use vmalloc for buffer
+Message-ID: <20210402063221.GA5260@lst.de>
+References: <20210401221320.2717732-1-keescook@chromium.org> <20210401221320.2717732-4-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210401221320.2717732-4-keescook@chromium.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
+On Thu, Apr 01, 2021 at 03:13:20PM -0700, Kees Cook wrote:
+> The sysfs interface to seq_file continues to be rather fragile
+> (seq_get_buf() should not be used outside of seq_file), as seen with
+> some recent exploits[1]. Move the seq_file buffer to the vmap area
+> (while retaining the accounting flag), since it has guard pages that will
+> catch and stop linear overflows. This seems justified given that sysfs's
+> use of seq_file almost always already uses PAGE_SIZE allocations, has
+> normally short-lived allocations, and is not normally on a performance
+> critical path.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+This looks completely weird to me.  In the end sysfs uses nothing
+of the seq_file infrastructure, so why do we even pretend to use it?
+Just switch sysfs_file_kfops_ro and sysfs_file_kfops_rw from using
+->seq_show to ->read and do the vmalloc there instead of pretending
+this is a seq_file.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index e4e1b6550115..d7395772b6b8 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -75,6 +75,7 @@ config ARM64
- 	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
- 	select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-+	select ARCH_SUPPORTS_CFI_CLANG
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
- 	select ARCH_SUPPORTS_NUMA_BALANCING
--- 
-2.31.0.208.g409f899ff0-goog
+> Once seq_get_buf() has been removed (and all sysfs callbacks using
+> seq_file directly), this change can also be removed.
 
+And with sysfs out of the way I think kiling off the other few users
+should be pretty easy as well.
