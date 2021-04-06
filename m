@@ -5,64 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E594C433ED
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 17:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA43C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 17:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA2561041
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 17:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB2F613C4
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 17:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237515AbhDFRDR (ORCPT
+        id S244876AbhDFRoN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Apr 2021 13:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49128 "EHLO
+        Tue, 6 Apr 2021 13:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233312AbhDFRDQ (ORCPT
+        with ESMTP id S230167AbhDFRoL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Apr 2021 13:03:16 -0400
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCBCC061756
-        for <linux-hardening@vger.kernel.org>; Tue,  6 Apr 2021 10:03:08 -0700 (PDT)
-Received: by mail-vs1-xe2e.google.com with SMTP id t12so8159086vsj.11
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Apr 2021 10:03:08 -0700 (PDT)
+        Tue, 6 Apr 2021 13:44:11 -0400
+Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46416C061762
+        for <linux-hardening@vger.kernel.org>; Tue,  6 Apr 2021 10:44:03 -0700 (PDT)
+Received: by mail-vk1-xa30.google.com with SMTP id a62so156122vki.0
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Apr 2021 10:44:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aSGe0bQ5V3W50ybbudz7bPErfQLcHAnbU3s+nR3236o=;
-        b=NC4Z5tuEQPH56mSVdL6re/GYvhMXmcZBBZJAe0K5oARYXXzfmQy/y1gj01ihWMSmli
-         1Lb/UGbC8aKZb1zPEG9o6M9ucnwbSG6WIoA+FHAPLLbQ01uPDRIuyTwZIpAHLwOG+yq1
-         kkZI+8JMwHOnnEn+lyCTAlWm8etMOLtVCp3S1q3K3aO4yA/23/eH2gEXX6vdFz0CJGwN
-         VF7c5vQJUcdiwYPAChJeB0X1E472u2faiMpy7Ui5DpvqvQTq4h26rGokMp0GpoEMI+P1
-         LV6JUbpNRzT8/BwmE+OHq/ZwSd4sY0JKeDMdURpYfRd1bJM30/6AX5SE7dZl6ySWo0EK
-         KluA==
+        bh=EtQUUFH1idf1LCKyK4bnY5JsWaSl6wulsAadPAZ7yAY=;
+        b=k44fY36vdgSsXvuMKXVH2LPUy3SZsyFWOTycUHNSmOyjQKKd2jYRXyVswoQDx+BXc/
+         qbXVT6sU8A/aog8FxFGQmnA5OqijC8l7d4uKXWgAcKoYSY0f87EdOMdUKGccXRucONjM
+         kQuT9XA70rCkKLQps0fdWPpH+vpwXbGFnuA1rBrLaowSoqzpHxTPvmWAgZWPwrwjiRCP
+         EDsJHhTiPdQdRAMcx1879N1yM38qIuq7ue+gjrpg0ULB7XtmuX4WlsmNRC6gF7c8Oero
+         5G+Qe4AzXmDuJRsj/DVfwuCngDmnz4A5oZH11YIIOMykr0JDwT+RxONPGTfNr6cno1SG
+         C/9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aSGe0bQ5V3W50ybbudz7bPErfQLcHAnbU3s+nR3236o=;
-        b=hGfwAz8VN5lXUps55QdOMbo0Otmd0lkXvbiHwapOGJHiR+swkHejYKPz7DJ/1k7jOi
-         +HQzhba2hjDzk7YUY+NsBG0PIMTjEN65DAO46PLAVW57ogtLmpwQzNd1+BI69/jsiNqZ
-         98Oglvah5DPEJZavnRzpwPyhH2nlScG4VTx//edYDh110vvtMTMOyZuvMzzRjocLVkcO
-         g7IuYnhuN9KAoq0YMEkp7V1fcZDUHM5x3sTunZdGxNUr0QBB9aAtAOlslbTNwGKX0Epj
-         cP/UNuCzOSMjhH38K9CmJv07c3Se1TVkMqqfl5qmT+Ytzzc0Iqqjz3/+Cc2Vy1G+7skh
-         QDEA==
-X-Gm-Message-State: AOAM533yh6Owd7HvJ86IDURjKcA+lF7kH7Jq1yKsPRBzU9jrstLUk5Di
-        DrzEv/wCJ6DSWOUZts8jKsbQBpg6Y+Yates5YLjx6A==
-X-Google-Smtp-Source: ABdhPJxQSX0S7k4FzbEyhTnhHluxlT34cEUaV5NL9+ccGUPUJJazSLwY0K1+rikJtvM1UuMR3n/GOvlAUPSV1eX6hZs=
-X-Received: by 2002:a05:6102:2423:: with SMTP id l3mr16985008vsi.54.1617728587679;
- Tue, 06 Apr 2021 10:03:07 -0700 (PDT)
+        bh=EtQUUFH1idf1LCKyK4bnY5JsWaSl6wulsAadPAZ7yAY=;
+        b=RJe4pAxuGSOMS5rqJbDhwjyZmMAwIWWA+h0obo2dImYPXP9Me468ri7X38TJwGV9aw
+         k65fdRAHwERwxCePMfmKb9JGRhSi51EgrXOzs9DoDqDOAP7sHId477GMCXN3eN1C7SCc
+         F6zEQMV1zMlRAQ84GbM7HjdhUkuYBKmsGL6aTlVv44xZ6X+R4B6EO2t+gkFzcLMXGcio
+         YPl/2/k6tUBHvOzXSXQuccZMKEN9aGj2vAG16mDlItQtRztNOr+7X/a0r01Ihzy3ZDhg
+         NhRU2IanvwXS7qSQ1r99R2IU6FDOUY77D0LD/P929li86EYH8z35O7oUoYDcNtlJ6Fli
+         6bhQ==
+X-Gm-Message-State: AOAM530v79riMmrFyZLG1gz40RwxpGMF5AaPs5IqMaGU3YYkVIyI4+bI
+        NavXvMM0Xfb6tepvDJbnzRPOuFAbFid/5e0CykeP5A==
+X-Google-Smtp-Source: ABdhPJw/vL1B1lwxMga5y/GzF9RJd38fkIy6KReE2RxFlfigxn9W8Lc55czyHQX2OxWT1+hnyyz72VsWoaRuC/f5D4k=
+X-Received: by 2002:a1f:9345:: with SMTP id v66mr18088483vkd.22.1617731041913;
+ Tue, 06 Apr 2021 10:44:01 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210401233216.2540591-1-samitolvanen@google.com>
- <20210401233216.2540591-13-samitolvanen@google.com> <20210406113657.GC96480@C02TD0UTHF1T.local>
-In-Reply-To: <20210406113657.GC96480@C02TD0UTHF1T.local>
+ <20210401233216.2540591-15-samitolvanen@google.com> <20210406115357.GE96480@C02TD0UTHF1T.local>
+In-Reply-To: <20210406115357.GE96480@C02TD0UTHF1T.local>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 6 Apr 2021 10:02:56 -0700
-Message-ID: <CABCJKueabmkC3OXSGHKMKS9wJEeRGHBd3b1hK6fM=mMKkj3b1A@mail.gmail.com>
-Subject: Re: [PATCH v5 12/18] arm64: implement function_nocfi
+Date:   Tue, 6 Apr 2021 10:43:50 -0700
+Message-ID: <CABCJKuchDg74Md_He1nKgXKUf=pVEmiaVr_yJXB_yX+tKNhByA@mail.gmail.com>
+Subject: Re: [PATCH v5 14/18] arm64: add __nocfi to functions that jump to a
+ physical address
 To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
@@ -85,55 +87,59 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 4:37 AM Mark Rutland <mark.rutland@arm.com> wrote:
+On Tue, Apr 6, 2021 at 4:54 AM Mark Rutland <mark.rutland@arm.com> wrote:
 >
-> On Thu, Apr 01, 2021 at 04:32:10PM -0700, Sami Tolvanen wrote:
-> > With CONFIG_CFI_CLANG, the compiler replaces function addresses in
-> > instrumented C code with jump table addresses. This change implements
-> > the function_nocfi() macro, which returns the actual function address
-> > instead.
-> >
+> [adding Ard for EFI runtime services bits]
+>
+> On Thu, Apr 01, 2021 at 04:32:12PM -0700, Sami Tolvanen wrote:
+> > Disable CFI checking for functions that switch to linear mapping and
+> > make an indirect call to a physical address, since the compiler only
+> > understands virtual addresses and the CFI check for such indirect calls
+> > would always fail.
+>
+> What does physical vs virtual have to do with this? Does the address
+> actually matter, or is this just a general thing that when calling an
+> assembly function we won't have a trampoline that the caller expects?
+
+No, this is about the actual address. The compiler-generated runtime
+checks only know about EL1 virtual addresses, so if we switch to a
+different address space, all indirect calls will trip CFI.
+
+> I wonder if we need to do something with asmlinkage here, perhaps?
+>
+> I didn't spot anything in the seriues handling EFI runtime services
+> calls, and I strongly suspect we need to do something for those, unless
+> they're handled implicitly by something else.
+>
 > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 > > Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> I think that it's unfortunate that we have to drop to assembly here, but
-> given this is infrequent I agree it's not the end of the world, so:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->
 > > ---
-> >  arch/arm64/include/asm/memory.h | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-> > index 0aabc3be9a75..b55410afd3d1 100644
-> > --- a/arch/arm64/include/asm/memory.h
-> > +++ b/arch/arm64/include/asm/memory.h
-> > @@ -321,6 +321,21 @@ static inline void *phys_to_virt(phys_addr_t x)
-> >  #define virt_to_pfn(x)               __phys_to_pfn(__virt_to_phys((unsigned long)(x)))
-> >  #define sym_to_pfn(x)                __phys_to_pfn(__pa_symbol(x))
-> >
-> > +#ifdef CONFIG_CFI_CLANG
-> > +/*
-> > + * With CONFIG_CFI_CLANG, the compiler replaces function address
-> > + * references with the address of the function's CFI jump table
-> > + * entry. The function_nocfi macro always returns the address of the
-> > + * actual function instead.
-> > + */
-> > +#define function_nocfi(x) ({                                         \
-> > +     void *addr;                                                     \
-> > +     asm("adrp %0, " __stringify(x) "\n\t"                           \
-> > +         "add  %0, %0, :lo12:" __stringify(x) : "=r" (addr));        \
+> >  arch/arm64/include/asm/mmu_context.h | 2 +-
+> >  arch/arm64/kernel/cpu-reset.h        | 8 ++++----
+> >  arch/arm64/kernel/cpufeature.c       | 2 +-
+> >  3 files changed, 6 insertions(+), 6 deletions(-)
+> >https://www.cnbc.com/2021/04/06/donald-trump-save-america-pac-has-85-million-on-hand-ahead-of-midterms.html
+> > diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+> > index 386b96400a57..d3cef9133539 100644
+> > --- a/arch/arm64/include/asm/mmu_context.h
+> > +++ b/arch/arm64/include/asm/mmu_context.h
+> > @@ -119,7 +119,7 @@ static inline void cpu_install_idmap(void)
+> >   * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
+> >   * avoiding the possibility of conflicting TLB entries being allocated.
+> >   */
+> > -static inline void cpu_replace_ttbr1(pgd_t *pgdp)
+> > +static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
 >
-> If it's not too painful, could we please move the asm constrain onto its
-> own line? That makes it slightly easier to read, and aligns with what
-> we've (mostly) done elsewhere in arm64.
+> Given these are inlines, what's the effect when these are inlined into a
+> function that would normally use CFI? Does CFI get supressed for the
+> whole function, or just the bit that got inlined?
 
-Sure, I'll change this in the next version.
+Just for the bit that gets inlined.
 
-> Not a big deal either way, and the ack stands regardless.
->
-> Thanks,
-> Mark.
+> Is there an attribute that we could place on a function pointer to tell
+> the compiler to not check calls via that pointer? If that existed we'd
+> be able to scope this much more tightly.
+
+There isn't, but I do agree that this would be a useful feature.
 
 Sami
