@@ -2,121 +2,107 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB0CC433B4
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 10:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D913C43460
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 11:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C56613C9
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 10:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFE861380
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 11:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242793AbhDFKV4 (ORCPT
+        id S245495AbhDFL1a (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Apr 2021 06:21:56 -0400
-Received: from gateway36.websitewelcome.com ([192.185.196.23]:34820 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237654AbhDFKV4 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Apr 2021 06:21:56 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id DCF39400DDBB2
-        for <linux-hardening@vger.kernel.org>; Tue,  6 Apr 2021 04:58:21 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id TiTVlFbWWL7DmTiTVlZVwy; Tue, 06 Apr 2021 04:58:21 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=IzX4cfcD3Tvkceqwxmn15aHQjEVS0LM4NuODycgrcRc=; b=CfuDp3DThsr1ONZhKaEbg5gMUV
-        POcXAFzPlHfMbaky6nNSQoi5IhqTFz2EpvJphGf04kifcK/rAQmbv9tHGX+yIop4DExpqcvnRsIMh
-        ca4XAHWdeouVltU/t5rmvBpeqaxbuDP9q/zwoDZt1ro0vffGScxvMNUHpVLbUyb/9g96+cdK/46QR
-        o+za4txpmLA4k+SS8uLovSWV5QX5uKx21jbcEgRAhsi3X6sUzt9K8+WEECTAIMFTDMB6Uwvs7AwN1
-        bz0JtUp85sXn3Kn83F2H8BsOn7+6kED17a8RpIhX+9ccLFL6hXJmDGqR+TGsLMlIFqvxWWPsXdfc2
-        fYdpvQIw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:43894 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lTiTU-000uuI-Rb; Tue, 06 Apr 2021 04:58:21 -0500
-Subject: Re: [PATCH][next] scsi: mptlan: Replace one-element array with
- flexible-array member
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com
-References: <20210324233344.GA99059@embeddedor>
- <161768454092.32082.2593948568576658600.b4-ty@oracle.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <b1354342-e9c9-5fea-ab50-e996fb790a5f@embeddedor.com>
-Date:   Tue, 6 Apr 2021 04:58:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Tue, 6 Apr 2021 07:27:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:41182 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245477AbhDFL13 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 6 Apr 2021 07:27:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43D8E31B;
+        Tue,  6 Apr 2021 04:27:20 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C66723F73D;
+        Tue,  6 Apr 2021 04:27:15 -0700 (PDT)
+Date:   Tue, 6 Apr 2021 12:27:06 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v5 03/18] mm: add generic function_nocfi macro
+Message-ID: <20210406112656.GA96480@C02TD0UTHF1T.local>
+References: <20210401233216.2540591-1-samitolvanen@google.com>
+ <20210401233216.2540591-4-samitolvanen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <161768454092.32082.2593948568576658600.b4-ty@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lTiTU-000uuI-Rb
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:43894
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210401233216.2540591-4-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Martin,
-
-On 4/5/21 23:53, Martin K. Petersen wrote:
-> On Wed, 24 Mar 2021 18:33:44 -0500, Gustavo A. R. Silva wrote:
+On Thu, Apr 01, 2021 at 04:32:01PM -0700, Sami Tolvanen wrote:
+> With CONFIG_CFI_CLANG, the compiler replaces function addresses
+> in instrumented C code with jump table addresses. This means that
+> __pa_symbol(function) returns the physical address of the jump table
+> entry instead of the actual function, which may not work as the jump
+> table code will immediately jump to a virtual address that may not be
+> mapped.
 > 
->> There is a regular need in the kernel to provide a way to declare having
->> a dynamically sized set of trailing elements in a structure. Kernel code
->> should always use “flexible array members”[1] for these cases. The older
->> style of one-element or zero-length arrays should no longer be used[2].
->>
->> Refactor the code according to the use of a flexible-array member in
->> struct _SGE_TRANSACTION32 instead of one-element array.
->>
->> [...]
+> To avoid this address space confusion, this change adds a generic
+> definition for function_nocfi(), which architectures that support CFI
+> can override. The typical implementation of would use inline assembly
+> to take the function address, which avoids compiler instrumentation.
 > 
-> Applied to 5.13/scsi-queue, thanks!
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+
+FWIW:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> ---
+>  include/linux/mm.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> [1/1] scsi: mptlan: Replace one-element array with flexible-array member
->       https://git.kernel.org/mkp/scsi/c/4e2e619f3c9e
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 8ba434287387..22cce9c7dd05 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -124,6 +124,16 @@ extern int mmap_rnd_compat_bits __read_mostly;
+>  #define lm_alias(x)	__va(__pa_symbol(x))
+>  #endif
+>  
+> +/*
+> + * With CONFIG_CFI_CLANG, the compiler replaces function addresses in
+> + * instrumented C code with jump table addresses. Architectures that
+> + * support CFI can define this macro to return the actual function address
+> + * when needed.
+> + */
+> +#ifndef function_nocfi
+> +#define function_nocfi(x) (x)
+> +#endif
+> +
+>  /*
+>   * To prevent common memory management code establishing
+>   * a zero page mapping on a read fault.
+> -- 
+> 2.31.0.208.g409f899ff0-goog
 > 
-
-Thanks for this.
-
-Could you apply this one, too:
-https://lore.kernel.org/lkml/20210304203822.GA102218@embeddedor/
-
-This was my last reply to the thread:
-https://lore.kernel.org/lkml/d79bde59-16c5-e006-0e31-c33c17f0ce3d@embeddedor.com/
-
-Thanks!
---
-Gustavo
