@@ -2,80 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819D4C43460
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 14:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E594C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 17:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6344B613BC
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 14:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA2561041
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Apr 2021 17:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345265AbhDFOmm (ORCPT
+        id S237515AbhDFRDR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Apr 2021 10:42:42 -0400
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:39966 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345092AbhDFOmj (ORCPT
+        Tue, 6 Apr 2021 13:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233312AbhDFRDQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Apr 2021 10:42:39 -0400
-Date:   Tue, 06 Apr 2021 14:42:27 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1617720149; bh=oJpZdJdRCbGDRnUwga5oT056lLMZteop8NZbFOdEXdE=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=LhDCuK2TaPMHBvK0ZdULyzsJMyTCHi6w/6LZRO1wZgu15z7RYuMLl18o6dWHe8kVq
-         WL6SrEz9no1GSQLwOiQYZlPnkRLvZ94+jpco1XCDmxbtAzTeSfd6+PL1Nsi1NXSKI6
-         /Pehtfs++C1q51sOQAQ+0thQQFVhuebHhH6vbk+GidCHeendFIazfyP3o4cHuh5lyK
-         lbaI2eumHvcKUHcnxRdGS4hqhOAyGOWf+X7iyyPnBZsdcc81NlgOQkDVm/bqWs8jpI
-         riU79Fnm8z/LaYMXtnyhOwzQTqJZFnuxSQh/NK6d8DvUD3HOJ9NU5x/JL/zNbVgymZ
-         Gv3ftphgHz+Uw==
-To:     Sami Tolvanen <samitolvanen@google.com>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: Re: [PATCH] kbuild: merge module sections under CONFIG_LD_DEAD_CODE_DATA_ELIMINATION too
-Message-ID: <Gt4--xIFQdFQbd97OwKvRwelvfikSSv3Vkc_KKzAeGgp6c2fe8SPW6v_njp0xvwepPwC_UcWdyWeAjSdFEXpheJWlnmWNY-mVsaMEnJV56A=@pm.me>
-In-Reply-To: <CABCJKufH262ki4FCQJxSO-v+gQzPBsVntQWnNZY7h-cvt1KYTA@mail.gmail.com>
-References: <20210402123959.5143-1-alobakin@pm.me> <CABCJKufH262ki4FCQJxSO-v+gQzPBsVntQWnNZY7h-cvt1KYTA@mail.gmail.com>
+        Tue, 6 Apr 2021 13:03:16 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCBCC061756
+        for <linux-hardening@vger.kernel.org>; Tue,  6 Apr 2021 10:03:08 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id t12so8159086vsj.11
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Apr 2021 10:03:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aSGe0bQ5V3W50ybbudz7bPErfQLcHAnbU3s+nR3236o=;
+        b=NC4Z5tuEQPH56mSVdL6re/GYvhMXmcZBBZJAe0K5oARYXXzfmQy/y1gj01ihWMSmli
+         1Lb/UGbC8aKZb1zPEG9o6M9ucnwbSG6WIoA+FHAPLLbQ01uPDRIuyTwZIpAHLwOG+yq1
+         kkZI+8JMwHOnnEn+lyCTAlWm8etMOLtVCp3S1q3K3aO4yA/23/eH2gEXX6vdFz0CJGwN
+         VF7c5vQJUcdiwYPAChJeB0X1E472u2faiMpy7Ui5DpvqvQTq4h26rGokMp0GpoEMI+P1
+         LV6JUbpNRzT8/BwmE+OHq/ZwSd4sY0JKeDMdURpYfRd1bJM30/6AX5SE7dZl6ySWo0EK
+         KluA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aSGe0bQ5V3W50ybbudz7bPErfQLcHAnbU3s+nR3236o=;
+        b=hGfwAz8VN5lXUps55QdOMbo0Otmd0lkXvbiHwapOGJHiR+swkHejYKPz7DJ/1k7jOi
+         +HQzhba2hjDzk7YUY+NsBG0PIMTjEN65DAO46PLAVW57ogtLmpwQzNd1+BI69/jsiNqZ
+         98Oglvah5DPEJZavnRzpwPyhH2nlScG4VTx//edYDh110vvtMTMOyZuvMzzRjocLVkcO
+         g7IuYnhuN9KAoq0YMEkp7V1fcZDUHM5x3sTunZdGxNUr0QBB9aAtAOlslbTNwGKX0Epj
+         cP/UNuCzOSMjhH38K9CmJv07c3Se1TVkMqqfl5qmT+Ytzzc0Iqqjz3/+Cc2Vy1G+7skh
+         QDEA==
+X-Gm-Message-State: AOAM533yh6Owd7HvJ86IDURjKcA+lF7kH7Jq1yKsPRBzU9jrstLUk5Di
+        DrzEv/wCJ6DSWOUZts8jKsbQBpg6Y+Yates5YLjx6A==
+X-Google-Smtp-Source: ABdhPJxQSX0S7k4FzbEyhTnhHluxlT34cEUaV5NL9+ccGUPUJJazSLwY0K1+rikJtvM1UuMR3n/GOvlAUPSV1eX6hZs=
+X-Received: by 2002:a05:6102:2423:: with SMTP id l3mr16985008vsi.54.1617728587679;
+ Tue, 06 Apr 2021 10:03:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20210401233216.2540591-1-samitolvanen@google.com>
+ <20210401233216.2540591-13-samitolvanen@google.com> <20210406113657.GC96480@C02TD0UTHF1T.local>
+In-Reply-To: <20210406113657.GC96480@C02TD0UTHF1T.local>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Tue, 6 Apr 2021 10:02:56 -0700
+Message-ID: <CABCJKueabmkC3OXSGHKMKS9wJEeRGHBd3b1hK6fM=mMKkj3b1A@mail.gmail.com>
+Subject: Re: [PATCH v5 12/18] arm64: implement function_nocfi
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Friday, 2 April 2021, 18:09, Sami
-Tolvanen <samitolvanen@google.com> wrote:
-
-> On Fri, Apr 2, 2021 at 5:40 AM Alexander Lobakin alobakin@pm.me wrote:
+On Tue, Apr 6, 2021 at 4:37 AM Mark Rutland <mark.rutland@arm.com> wrote:
 >
-> > When building with CONFIG_LD_DEAD_CODE_DATA_ELIMINATION,
-> > -fdata-sections and -ffunction-sections are being enabled by the
-> > top-level Makefile, and module section merging is also needed.
-> > Expand the ifdef (and the comment block) to cover that case too.
-> > Fixes: 6a3193cdd5e5 ("kbuild: lto: Merge module sections if and only if=
- CONFIG_LTO_CLANG is enabled")
+> On Thu, Apr 01, 2021 at 04:32:10PM -0700, Sami Tolvanen wrote:
+> > With CONFIG_CFI_CLANG, the compiler replaces function addresses in
+> > instrumented C code with jump table addresses. This change implements
+> > the function_nocfi() macro, which returns the actual function address
+> > instead.
+> >
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
 >
-> Wouldn't this trigger the ld.bfd bug described in the commit message
-> when LD_DEAD_CODE_DATA_ELIMINATION is enabled? LTO_CLANG always uses
-> LLD, so it won't have this issue.
+> I think that it's unfortunate that we have to drop to assembly here, but
+> given this is infrequent I agree it's not the end of the world, so:
+>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>
+> > ---
+> >  arch/arm64/include/asm/memory.h | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+> > index 0aabc3be9a75..b55410afd3d1 100644
+> > --- a/arch/arm64/include/asm/memory.h
+> > +++ b/arch/arm64/include/asm/memory.h
+> > @@ -321,6 +321,21 @@ static inline void *phys_to_virt(phys_addr_t x)
+> >  #define virt_to_pfn(x)               __phys_to_pfn(__virt_to_phys((unsigned long)(x)))
+> >  #define sym_to_pfn(x)                __phys_to_pfn(__pa_symbol(x))
+> >
+> > +#ifdef CONFIG_CFI_CLANG
+> > +/*
+> > + * With CONFIG_CFI_CLANG, the compiler replaces function address
+> > + * references with the address of the function's CFI jump table
+> > + * entry. The function_nocfi macro always returns the address of the
+> > + * actual function instead.
+> > + */
+> > +#define function_nocfi(x) ({                                         \
+> > +     void *addr;                                                     \
+> > +     asm("adrp %0, " __stringify(x) "\n\t"                           \
+> > +         "add  %0, %0, :lo12:" __stringify(x) : "=r" (addr));        \
+>
+> If it's not too painful, could we please move the asm constrain onto its
+> own line? That makes it slightly easier to read, and aligns with what
+> we've (mostly) done elsewhere in arm64.
 
-LD_DEAD_CODE_DATA_ELIMINATION is marked
-=E2=80=9CEXPERIMENTAL=E2=80=9C in the config prompt, and
-arches have to opt-in
-HAS_LD_DEAD_CODE_DATA_ELIMINATION to give
-an access to it (only a few does). This
-should be relatively safe.
+Sure, I'll change this in the next version.
 
-> Sami
+> Not a big deal either way, and the ack stands regardless.
+>
+> Thanks,
+> Mark.
 
-Thanks,
-Al
+Sami
