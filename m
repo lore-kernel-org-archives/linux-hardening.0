@@ -5,231 +5,211 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3062AC433B4
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Apr 2021 19:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B35C433ED
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Apr 2021 19:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 015C261205
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Apr 2021 19:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4EC61153
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Apr 2021 19:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348664AbhDGTCO (ORCPT
+        id S1355604AbhDGTXE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Apr 2021 15:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
+        Wed, 7 Apr 2021 15:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345131AbhDGTCN (ORCPT
+        with ESMTP id S1355601AbhDGTXE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Apr 2021 15:02:13 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E60A0C06175F
-        for <linux-hardening@vger.kernel.org>; Wed,  7 Apr 2021 12:02:02 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id z22-20020a17090a0156b029014d4056663fso19353pje.0
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Apr 2021 12:02:02 -0700 (PDT)
+        Wed, 7 Apr 2021 15:23:04 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60880C061760
+        for <linux-hardening@vger.kernel.org>; Wed,  7 Apr 2021 12:22:54 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d124so9100pfa.13
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Apr 2021 12:22:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8q0QHq9l4LF9PHx0etSU7nJSKEAb9gzaAE8xuzl5E8k=;
-        b=Vg46FhLEi9cn5jYSsZNA7SRRcJq634l6s+jrMmkoqB8xEbtmmZ3wO0+i1v/Jo9fjn3
-         oG4viB354PfuNOXJ8vqJe/WHaqlQzkM0LicWuKOMjK4f91/1AhJt4dYFNN/BS0308Fod
-         5wfSG+iCSyUKclk/Z05Y4mSX2SkUtUPcPReto=
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Ke0rc9XfMf9BcEhOIRjBDFSOHCSu8Insw4la98udkfI=;
+        b=dkn2z9paIb5VYx0wtP5aKvdI23w7VMZ1O7ju3Ca/pZzlkns43wwtyfBWl5DKnfcUpz
+         wr7X5Hf/BjaaCgvjQwbIqLRWndt+MItgIzOGEZhpnX70qcFNN6audlLSe8gS6z1DADdf
+         iU11sqKHX1CtZ6PY/r6enXrWbZVVhr/GAfoYU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8q0QHq9l4LF9PHx0etSU7nJSKEAb9gzaAE8xuzl5E8k=;
-        b=Msgn40QS2tJPcEOQcfYECgvecnui6NIopZLDy4YB5ck8qaVsE5Q9kg1sk53I0oT4bu
-         Io/olcZNys1zJMxabRHXFgh2Ikr0859SRKuyXgJrnhhSvmycfxVb0ZvFvTBS2ZafLsAT
-         CSuXaOkzmYgThp4o0hj9R1SNGDtIR9P+vWbKhxDHqQLIxYpcAw4y7gPOPRv+DuCG72FA
-         V3bpmQMd/61/o3iZxKYH2+0Eg/fUQmU5f8mhk6ZPF4ERwriCK0VGFyVyLd5q659WURJ5
-         YSiS/ua4EFqS+560zfshlb/eZJlvOnzaAIF98xJigfjj9KUR2jIlUDqqEWG7k2CN5Hw0
-         zfUQ==
-X-Gm-Message-State: AOAM530n5Rl9nzaicXrc1FNwTZ7DW0hyCBQa84EUlEg6BaPC6kUQlMbb
-        Y8BnrNRSe2r+giDsXEBVpvZtWA==
-X-Google-Smtp-Source: ABdhPJz4ys47YHIOPJKyCBVOUB1raDUBV8qm1x+U7bt/dMyiob+58CCl5Yya5TA7z1nvNhyYeF4uKg==
-X-Received: by 2002:a17:902:c411:b029:e9:3d37:afc with SMTP id k17-20020a170902c411b02900e93d370afcmr4402507plk.17.1617822122466;
-        Wed, 07 Apr 2021 12:02:02 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Ke0rc9XfMf9BcEhOIRjBDFSOHCSu8Insw4la98udkfI=;
+        b=e6ueEQINMf2zPtJrGiEugIzPsUJNzC4Jlp2+YbGybGujcRPH2H1S6Hl+VKZk1zjVrA
+         cTjndfUT8YzgZLeVlMVOfAfuS32tdem3NWn66zyL0W+8TgOCn1BppxwG9Q3EYjnt5kkF
+         6Nds1LhQRArjWD3zVizDGSE7m+GbVxsBwaIyFzvSA1FU62j9lJ4rKy1V4040Y9GvvCE8
+         4+NPTs2kvmBxHP2CGTrhHVV1Vk78vAHN+kz/nbQBFDoAaLF7LvGqomM+FgRA1iYUznny
+         DZY8vxyxtGxIpOx3cMObZwyf/XlFtFjSSEiBfH86kqRq9QwT+1Rb2a4G8n9Cp6iGPZzW
+         mXqA==
+X-Gm-Message-State: AOAM530QDgBnfexJUJUWDO1obnXNCHEEnvA53ZXbTiZSoHav18yHwUk1
+        9JYwf4ND8kZErVd7Z9VrdzxJhQ==
+X-Google-Smtp-Source: ABdhPJw3gwG8i+ZTCLIXPStASuu7D+EAq3vNs4JWpjSG/O34E4hVG4WXQ3XIWlQKIJJlCyJnmouMKw==
+X-Received: by 2002:aa7:96bc:0:b029:1f6:9937:fe43 with SMTP id g28-20020aa796bc0000b02901f69937fe43mr4376117pfk.68.1617823373801;
+        Wed, 07 Apr 2021 12:22:53 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t8sm5840623pjj.0.2021.04.07.12.02.01
+        by smtp.gmail.com with ESMTPSA id h16sm21556115pfc.194.2021.04.07.12.22.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Apr 2021 12:02:01 -0700 (PDT)
-Date:   Wed, 7 Apr 2021 12:02:00 -0700
+        Wed, 07 Apr 2021 12:22:53 -0700 (PDT)
+Date:   Wed, 7 Apr 2021 12:22:52 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+Cc:     Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/2][next] wl3501_cs: Fix out-of-bounds warning in
- wl3501_mgmt_join
-Message-ID: <202104071158.B4FA1956@keescook>
-References: <cover.1617226663.git.gustavoars@kernel.org>
- <83b0388403a61c01fad8d638db40b4245666ff53.1617226664.git.gustavoars@kernel.org>
+Subject: Re: [PATCH][next] scsi: aacraid: Replace one-element array with
+ flexible-array member
+Message-ID: <202104071216.5BEA350@keescook>
+References: <20210304203822.GA102218@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <83b0388403a61c01fad8d638db40b4245666ff53.1617226664.git.gustavoars@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210304203822.GA102218@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 31, 2021 at 04:45:34PM -0500, Gustavo A. R. Silva wrote:
-> Fix the following out-of-bounds warning by enclosing
-> some structure members into new struct req:
+On Thu, Mar 04, 2021 at 02:38:22PM -0600, Gustavo A. R. Silva wrote:
+> There is a regular need in the kernel to provide a way to declare having
+> a dynamically sized set of trailing elements in a structure. Kernel code
+> should always use “flexible array members”[1] for these cases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
 > 
-> arch/x86/include/asm/string_32.h:182:25: warning: '__builtin_memcpy' offset [39, 108] from the object at 'sig' is out of the bounds of referenced subobject 'beacon_period' with type 'short unsigned int' at offset 36 [-Warray-bounds]
+> Refactor the code according to the use of a flexible-array member in
+> struct aac_raw_io2 instead of one-element array, and use the
+> struct_size() and flex_array_size() helpers.
 > 
-> Refactor the code, accordingly:
+> Also, this helps with the ongoing efforts to enable -Warray-bounds by
+> fixing the following warnings:
 > 
-> $ pahole -C wl3501_join_req drivers/net/wireless/wl3501_cs.o
-> struct wl3501_join_req {
-> 	u16                        next_blk;             /*     0     2 */
-> 	u8                         sig_id;               /*     2     1 */
-> 	u8                         reserved;             /*     3     1 */
-> 	struct iw_mgmt_data_rset   operational_rset;     /*     4    10 */
-> 	u16                        reserved2;            /*    14     2 */
-> 	u16                        timeout;              /*    16     2 */
-> 	u16                        probe_delay;          /*    18     2 */
-> 	u8                         timestamp[8];         /*    20     8 */
-> 	u8                         local_time[8];        /*    28     8 */
-> 	struct {
-> 		u16                beacon_period;        /*    36     2 */
-> 		u16                dtim_period;          /*    38     2 */
-> 		u16                cap_info;             /*    40     2 */
-> 		u8                 bss_type;             /*    42     1 */
-> 		u8                 bssid[6];             /*    43     6 */
-> 		struct iw_mgmt_essid_pset ssid;          /*    49    34 */
-> 		/* --- cacheline 1 boundary (64 bytes) was 19 bytes ago --- */
-> 		struct iw_mgmt_ds_pset ds_pset;          /*    83     3 */
-> 		struct iw_mgmt_cf_pset cf_pset;          /*    86     8 */
-> 		struct iw_mgmt_ibss_pset ibss_pset;      /*    94     4 */
-> 		struct iw_mgmt_data_rset bss_basic_rset; /*    98    10 */
-> 	} req;                                           /*    36    72 */
-
-This section is the same as a large portion of struct wl3501_scan_confirm:
-
-struct wl3501_scan_confirm {
-        u16                         next_blk;
-        u8                          sig_id;
-        u8                          reserved;
-        u16                         status;
-        char                        timestamp[8];
-        char                        localtime[8];
-
-from here
-        u16                         beacon_period;
-        u16                         dtim_period;
-        u16                         cap_info;
-        u8                          bss_type;
-        u8                          bssid[ETH_ALEN];
-        struct iw_mgmt_essid_pset   ssid;
-        struct iw_mgmt_ds_pset      ds_pset;
-        struct iw_mgmt_cf_pset      cf_pset;
-        struct iw_mgmt_ibss_pset    ibss_pset;
-        struct iw_mgmt_data_rset    bss_basic_rset;
-through here
-
-        u8                          rssi;
-};
-
-It seems like maybe extracting that and using it in both structures
-would make more sense?
-
+> drivers/scsi/aacraid/aachba.c: In function ‘aac_build_sgraw2’:
+> drivers/scsi/aacraid/aachba.c:3970:18: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  3970 |     if (rio2->sge[j].length % (i*PAGE_SIZE)) {
+>       |         ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:3974:27: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  3974 |     nseg_new += (rio2->sge[j].length / (i*PAGE_SIZE));
+>       |                  ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:4011:28: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  4011 |   for (j = 0; j < rio2->sge[i].length / (pages * PAGE_SIZE); ++j) {
+>       |                   ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:4012:24: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  4012 |    addr_low = rio2->sge[i].addrLow + j * pages * PAGE_SIZE;
+>       |               ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:4014:33: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  4014 |    sge[pos].addrHigh = rio2->sge[i].addrHigh;
+>       |                        ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:4015:28: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  4015 |    if (addr_low < rio2->sge[i].addrLow)
+>       |                   ~~~~~~~~~^~~
 > 
-> 	/* size: 108, cachelines: 2, members: 10 */
-> 	/* last cacheline: 44 bytes */
-> };
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
 > 
-> The problem is that the original code is trying to copy data into a
-> bunch of struct members adjacent to each other in a single call to
-> memcpy(). Now that a new struct _req_ enclosing all those adjacent
-> members is introduced, memcpy() doesn't overrun the length of
-> &sig.beacon_period, because the address of the new struct object
-> _req_ is used as the destination, instead.
-> 
-> Also, this helps with the ongoing efforts to enable -Warray-bounds and
-> avoid confusing the compiler.
-> 
+> Link: https://github.com/KSPP/linux/issues/79
 > Link: https://github.com/KSPP/linux/issues/109
-> Reported-by: kernel test robot <lkp@intel.com>
 > Build-tested-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/60641d9b.2eNLedOGSdcSoAV2%25lkp@intel.com/
+> Link: https://lore.kernel.org/lkml/60414244.ur4%2FkI+fBF1ohKZs%25lkp@intel.com/
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> Changes in v2:
->  - None.
+>  drivers/scsi/aacraid/aachba.c  | 13 +++++++------
+>  drivers/scsi/aacraid/aacraid.h |  2 +-
+>  2 files changed, 8 insertions(+), 7 deletions(-)
 > 
->  drivers/net/wireless/wl3501.h    | 22 ++++++++++++----------
->  drivers/net/wireless/wl3501_cs.c |  4 ++--
->  2 files changed, 14 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/wl3501.h b/drivers/net/wireless/wl3501.h
-> index ef9d605d8c88..774d8cac046d 100644
-> --- a/drivers/net/wireless/wl3501.h
-> +++ b/drivers/net/wireless/wl3501.h
-> @@ -389,16 +389,18 @@ struct wl3501_join_req {
->  	u16			    probe_delay;
->  	u8			    timestamp[8];
->  	u8			    local_time[8];
-> -	u16			    beacon_period;
-> -	u16			    dtim_period;
-> -	u16			    cap_info;
-> -	u8			    bss_type;
-> -	u8			    bssid[ETH_ALEN];
-> -	struct iw_mgmt_essid_pset   ssid;
-> -	struct iw_mgmt_ds_pset	    ds_pset;
-> -	struct iw_mgmt_cf_pset	    cf_pset;
-> -	struct iw_mgmt_ibss_pset    ibss_pset;
-> -	struct iw_mgmt_data_rset    bss_basic_rset;
-> +	struct {
-> +		u16			    beacon_period;
-> +		u16			    dtim_period;
-> +		u16			    cap_info;
-> +		u8			    bss_type;
-> +		u8			    bssid[ETH_ALEN];
-> +		struct iw_mgmt_essid_pset   ssid;
-> +		struct iw_mgmt_ds_pset	    ds_pset;
-> +		struct iw_mgmt_cf_pset	    cf_pset;
-> +		struct iw_mgmt_ibss_pset    ibss_pset;
-> +		struct iw_mgmt_data_rset    bss_basic_rset;
-> +	} req;
+> diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+> index 4ca5e13a26a6..0f5617e40b94 100644
+> --- a/drivers/scsi/aacraid/aachba.c
+> +++ b/drivers/scsi/aacraid/aachba.c
+> @@ -1235,8 +1235,8 @@ static int aac_read_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
+>  		if (ret < 0)
+>  			return ret;
+>  		command = ContainerRawIo2;
+> -		fibsize = sizeof(struct aac_raw_io2) +
+> -			((le32_to_cpu(readcmd2->sgeCnt)-1) * sizeof(struct sge_ieee1212));
+> +		fibsize = struct_size(readcmd2, sge,
+> +				     le32_to_cpu(readcmd2->sgeCnt));
+
+readcmd2 is struct aac_raw_io2, and sge is the struct sge_ieee1212
+array, so this looks correct to me with the change to struct
+aac_raw_io2..
+
+>  	} else {
+>  		struct aac_raw_io *readcmd;
+>  		readcmd = (struct aac_raw_io *) fib_data(fib);
+> @@ -1366,8 +1366,8 @@ static int aac_write_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
+>  		if (ret < 0)
+>  			return ret;
+>  		command = ContainerRawIo2;
+> -		fibsize = sizeof(struct aac_raw_io2) +
+> -			((le32_to_cpu(writecmd2->sgeCnt)-1) * sizeof(struct sge_ieee1212));
+> +		fibsize = struct_size(writecmd2, sge,
+> +				      le32_to_cpu(writecmd2->sgeCnt));
+
+writecmd2 is struct aac_raw_io2, and sge is the struct sge_ieee1212
+array, so this looks correct to me with the change to struct
+aac_raw_io2.
+
+>  	} else {
+>  		struct aac_raw_io *writecmd;
+>  		writecmd = (struct aac_raw_io *) fib_data(fib);
+> @@ -4003,7 +4003,7 @@ static int aac_convert_sgraw2(struct aac_raw_io2 *rio2, int pages, int nseg, int
+>  	if (aac_convert_sgl == 0)
+>  		return 0;
+>  
+> -	sge = kmalloc_array(nseg_new, sizeof(struct sge_ieee1212), GFP_ATOMIC);
+> +	sge = kmalloc_array(nseg_new, sizeof(*sge), GFP_ATOMIC);
+
+Technically, this is unrelated (struct sge_ieee1212 has not changed),
+but sge is a struct sge_ieee1212 pointer, so this is good robustness
+change, IMO.
+
+>  	if (sge == NULL)
+>  		return -ENOMEM;
+>  
+> @@ -4020,7 +4020,8 @@ static int aac_convert_sgraw2(struct aac_raw_io2 *rio2, int pages, int nseg, int
+>  		}
+>  	}
+>  	sge[pos] = rio2->sge[nseg-1];
+> -	memcpy(&rio2->sge[1], &sge[1], (nseg_new-1)*sizeof(struct sge_ieee1212));
+> +	memcpy(&rio2->sge[1], &sge[1],
+> +	       flex_array_size(rio2, sge, nseg_new - 1));
+
+This was hard to validate, but looks correct to me. The flex array
+helper here is the same as the prior code (but now tied to the
+variables, which is more robust IMO). The use of seg[1] here appears to
+be just how this code works -- the loop above is rewriting the 1 through
+nseg_new - 1 array entries, and then this copies back the results.
+
+>  
+>  	kfree(sge);
+>  	rio2->sgeCnt = cpu_to_le32(nseg_new);
+> diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
+> index e3e4ecbea726..3733df77bc65 100644
+> --- a/drivers/scsi/aacraid/aacraid.h
+> +++ b/drivers/scsi/aacraid/aacraid.h
+> @@ -1929,7 +1929,7 @@ struct aac_raw_io2 {
+>  	u8		bpComplete;	/* reserved for F/W use */
+>  	u8		sgeFirstIndex;	/* reserved for F/W use */
+>  	u8		unused[4];
+> -	struct sge_ieee1212	sge[1];
+> +	struct sge_ieee1212	sge[];
 >  };
 >  
->  struct wl3501_join_confirm {
-> diff --git a/drivers/net/wireless/wl3501_cs.c b/drivers/net/wireless/wl3501_cs.c
-> index e149ef81d6cc..399d3bd2ae76 100644
-> --- a/drivers/net/wireless/wl3501_cs.c
-> +++ b/drivers/net/wireless/wl3501_cs.c
-> @@ -590,7 +590,7 @@ static int wl3501_mgmt_join(struct wl3501_card *this, u16 stas)
->  	struct wl3501_join_req sig = {
->  		.sig_id		  = WL3501_SIG_JOIN_REQ,
->  		.timeout	  = 10,
-> -		.ds_pset = {
-> +		.req.ds_pset = {
->  			.el = {
->  				.id  = IW_MGMT_INFO_ELEMENT_DS_PARAMETER_SET,
->  				.len = 1,
-> @@ -599,7 +599,7 @@ static int wl3501_mgmt_join(struct wl3501_card *this, u16 stas)
->  		},
->  	};
->  
-> -	memcpy(&sig.beacon_period, &this->bss_set[stas].beacon_period, 72);
-> +	memcpy(&sig.req, &this->bss_set[stas].beacon_period, sizeof(sig.req));
-
-If not, then probably something like this should be added to make sure
-nothing unexpected happens to change structure sizes:
-
-BUILD_BUG_ON(sizeof(sig.req) != 72);
-
->  	return wl3501_esbq_exec(this, &sig, sizeof(sig));
->  }
->  
+>  #define CT_FLUSH_CACHE 129
 > -- 
 > 2.27.0
 > 
+
+Thanks!
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
