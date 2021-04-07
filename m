@@ -2,130 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC74CC433B4
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Apr 2021 14:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FF8C433B4
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Apr 2021 18:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1BD611C1
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Apr 2021 14:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52EEE6121E
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Apr 2021 18:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235609AbhDGOZi (ORCPT
+        id S1355470AbhDGS4T (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Apr 2021 10:25:38 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:17347 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232376AbhDGOZi (ORCPT
+        Wed, 7 Apr 2021 14:56:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1355468AbhDGS4S (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Apr 2021 10:25:38 -0400
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 137EP7aH022263;
-        Wed, 7 Apr 2021 23:25:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 137EP7aH022263
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1617805508;
-        bh=kkn3m/BCSxf2wWzhn6Nistuursiw20cEhHeA63xRAuE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MlzMMEXQEYrfYLb50tmTehRfqFTJ/gDi99r8VznhkQcun5Xdbe9HpoKSawmondCKr
-         BI9R75umLMQyBhHG835MOCRH7jOWZc8slDhI9kzspKkKtNjacBZ8xZgaOvUG7TusKM
-         lpkxPn6wppMbKzHZbXjww2VeOjLfPEmPIFGI271wrfN3AKtAw6GfdFzvWZtr+JVjV+
-         Z3QQZG7PQc7NJLCrn7nGTNcmR2Mh2mbVXC8vDIljdoMiru9QLdG37iYCTQlOHUPI+u
-         gHSiX2DXXCD6Zcvseczplc/5Auj5EBSfKEYhRwcBkwrXwtLOj7xM+BOOXWKJ2UahKy
-         YiOa30rNaGEDQ==
-X-Nifty-SrcIP: [209.85.214.176]
-Received: by mail-pl1-f176.google.com with SMTP id y2so9427199plg.5;
-        Wed, 07 Apr 2021 07:25:08 -0700 (PDT)
-X-Gm-Message-State: AOAM532G7dEJa3kEVCkvMyVuTr7zzsvbV4PUKzxFGzjX+37gMBFziYCn
-        XBry+UMEmdnmleYfDXE/sOdj3OQi/xkqGALyCjQ=
-X-Google-Smtp-Source: ABdhPJz5uhq8IDSf3S/3h7p8BMiaz6Akfdns4mQYFnNyvxGlA0ujmo7PLCgt78eyUaRA8ndd8CZgmTXl1yaWdyMAUmY=
-X-Received: by 2002:a17:90a:f68a:: with SMTP id cl10mr3532498pjb.87.1617805507406;
- Wed, 07 Apr 2021 07:25:07 -0700 (PDT)
+        Wed, 7 Apr 2021 14:56:18 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A372C06175F
+        for <linux-hardening@vger.kernel.org>; Wed,  7 Apr 2021 11:56:08 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id 7so1378111plb.7
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Apr 2021 11:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bUFX8OZjFldaYb/6zcLiSui0pTc7lp3Q3DWh7esaF8g=;
+        b=a1xRCOqlDFc7fMaWuNejJHG4Uwf7By9zy2OKAtPQ27xGklMzMvChcENop0/v+mOMEx
+         MW6+86rti2fEGc6b+oX4cnfwPSqf7GbCQ41o+BKscycaOnSgArho8f9BO6FrTo4gYnow
+         aM5rfU2N378Fjx1Amj6OkdpP5/Dtb0+r7QDOA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bUFX8OZjFldaYb/6zcLiSui0pTc7lp3Q3DWh7esaF8g=;
+        b=nHERPTQkqFnrhR0V3GY+2Dm56Imm9LDUEPlgUexsMsRaiY+/7vyAb2gdip4kR7tQZj
+         c6MKlx/SHxLe7ilp9/ynVva1StsZ/Hl8mAxlnNdMe//3AtXEHGBzY7rddQ2V/oj4lvFI
+         rX2KXA3xntItSy6txGqzm6PgJFql2E7cJVgkGwje7w3vVsvfnU+cuj4h6djg+l5V/pqW
+         euA3VGM78bj74C7AlOf48C3osOyrMF6NY/iKws9eG/va+QASnkfE5HVfq3cZchatvezq
+         1uQ5Z6a/R7j/FRdZ9P993900TrsatSDX41k7s/HOrL4CdTabgm5x4004H6RWoPPGnhsu
+         0bwQ==
+X-Gm-Message-State: AOAM5301UTv7pN9p+AIIruJbO64TsWIC/ZsM+vLOmYlmIXhlcKbO1ScZ
+        EZdgo56S5cPD/pEKjVBqp3qfoQ==
+X-Google-Smtp-Source: ABdhPJyqOjE2YRcwObcLLiGu2bq48+Q2tF9rRkC6ywJ1L+rDrieu6AYwkNRmg39F3ypuOEZU45TvvA==
+X-Received: by 2002:a17:90a:a389:: with SMTP id x9mr3803993pjp.232.1617821767869;
+        Wed, 07 Apr 2021 11:56:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h19sm22438097pfc.172.2021.04.07.11.56.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Apr 2021 11:56:07 -0700 (PDT)
+Date:   Wed, 7 Apr 2021 11:56:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2][next] wl3501_cs: Fix out-of-bounds warning in
+ wl3501_send_pkt
+Message-ID: <202104071154.49B15A3AB4@keescook>
+References: <cover.1617226663.git.gustavoars@kernel.org>
+ <e03d36114bcbcf814ad13deb7812b0b5c196dadb.1617226663.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-References: <20210402123959.5143-1-alobakin@pm.me> <CABCJKufH262ki4FCQJxSO-v+gQzPBsVntQWnNZY7h-cvt1KYTA@mail.gmail.com>
- <Gt4--xIFQdFQbd97OwKvRwelvfikSSv3Vkc_KKzAeGgp6c2fe8SPW6v_njp0xvwepPwC_UcWdyWeAjSdFEXpheJWlnmWNY-mVsaMEnJV56A=@pm.me>
-In-Reply-To: <Gt4--xIFQdFQbd97OwKvRwelvfikSSv3Vkc_KKzAeGgp6c2fe8SPW6v_njp0xvwepPwC_UcWdyWeAjSdFEXpheJWlnmWNY-mVsaMEnJV56A=@pm.me>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 7 Apr 2021 23:24:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQBYxZ4s4Eg2TPMoLA+NDWXsNrnq2ch1ZQsBgcCXPk7Sw@mail.gmail.com>
-Message-ID: <CAK7LNAQBYxZ4s4Eg2TPMoLA+NDWXsNrnq2ch1ZQsBgcCXPk7Sw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: merge module sections under CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
- too
-To:     Alexander Lobakin <alobakin@pm.me>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e03d36114bcbcf814ad13deb7812b0b5c196dadb.1617226663.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 11:42 PM Alexander Lobakin <alobakin@pm.me> wrote:
->
-> On Friday, 2 April 2021, 18:09, Sami
-> Tolvanen <samitolvanen@google.com> wrote:
->
-> > On Fri, Apr 2, 2021 at 5:40 AM Alexander Lobakin alobakin@pm.me wrote:
-> >
-> > > When building with CONFIG_LD_DEAD_CODE_DATA_ELIMINATION,
-> > > -fdata-sections and -ffunction-sections are being enabled by the
-> > > top-level Makefile, and module section merging is also needed.
-> > > Expand the ifdef (and the comment block) to cover that case too.
-> > > Fixes: 6a3193cdd5e5 ("kbuild: lto: Merge module sections if and only =
-if CONFIG_LTO_CLANG is enabled")
+On Wed, Mar 31, 2021 at 04:44:29PM -0500, Gustavo A. R. Silva wrote:
+> Fix the following out-of-bounds warning by enclosing
+> structure members daddr and saddr into new struct addr:
+> 
+> arch/x86/include/asm/string_32.h:182:25: warning: '__builtin_memcpy' offset [18, 23] from the object at 'sig' is out of the bounds of referenced subobject 'daddr' with type 'u8[6]' {aka 'unsigned char[6]'} at offset 11 [-Warray-bounds]
+> 
+> Refactor the code, accordingly:
+> 
+> $ pahole -C wl3501_md_req drivers/net/wireless/wl3501_cs.o
+> struct wl3501_md_req {
+> 	u16                        next_blk;             /*     0     2 */
+> 	u8                         sig_id;               /*     2     1 */
+> 	u8                         routing;              /*     3     1 */
+> 	u16                        data;                 /*     4     2 */
+> 	u16                        size;                 /*     6     2 */
+> 	u8                         pri;                  /*     8     1 */
+> 	u8                         service_class;        /*     9     1 */
+> 	struct {
+> 		u8                 daddr[6];             /*    10     6 */
+> 		u8                 saddr[6];             /*    16     6 */
+> 	} addr;                                          /*    10    12 */
+> 
+> 	/* size: 22, cachelines: 1, members: 8 */
+> 	/* last cacheline: 22 bytes */
+> };
+> 
+> The problem is that the original code is trying to copy data into a
+> couple of arrays adjacent to each other in a single call to memcpy().
+> Now that a new struct _addr_ enclosing those two adjacent arrays
+> is introduced, memcpy() doesn't overrun the length of &sig.daddr[0],
+> because the address of the new struct object _addr_ is used as
+> destination, instead.
+> 
+> Also, this helps with the ongoing efforts to enable -Warray-bounds and
+> avoid confusing the compiler.
+> 
+> Link: https://github.com/KSPP/linux/issues/109
+> Reported-by: kernel test robot <lkp@intel.com>
+> Build-tested-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/60641d9b.2eNLedOGSdcSoAV2%25lkp@intel.com/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks, this makes the code much easier for the compiler to validate
+at compile time. These cross-field memcpy()s are weird. I like the
+solution here.
 
-Did you test this patch before submission?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-
-See the top Makefile closely:
-
-ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
-KBUILD_CFLAGS_KERNEL +=3D -ffunction-sections -fdata-sections
-LDFLAGS_vmlinux +=3D --gc-sections
-endif
-
-
--ffunction-sections -fdata-sections are passed to only
-built-in objects, but not to module objects in the
-first place.
-
-KBUILD_CFLAGS_KERNEL is only passed to built-in objects.
-
-
-The situation you claimed never happens.
-
-
-
-
-
-
-
-> > Wouldn't this trigger the ld.bfd bug described in the commit message
-> > when LD_DEAD_CODE_DATA_ELIMINATION is enabled? LTO_CLANG always uses
-> > LLD, so it won't have this issue.
->
-> LD_DEAD_CODE_DATA_ELIMINATION is marked
-> =E2=80=9CEXPERIMENTAL=E2=80=9C in the config prompt, and
-> arches have to opt-in
-> HAS_LD_DEAD_CODE_DATA_ELIMINATION to give
-> an access to it (only a few does). This
-> should be relatively safe.
->
-> > Sami
->
-> Thanks,
-> Al
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+-- 
+Kees Cook
