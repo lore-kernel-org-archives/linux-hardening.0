@@ -2,110 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6E7C433B4
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 18:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8002BC43460
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 20:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 659DF61108
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 18:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0B2610FC
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 20:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232981AbhDHSbX (ORCPT
+        id S232273AbhDHUXW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Apr 2021 14:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48672 "EHLO
+        Thu, 8 Apr 2021 16:23:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232663AbhDHSaz (ORCPT
+        with ESMTP id S231451AbhDHUXV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Apr 2021 14:30:55 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158D5C0610D4
-        for <linux-hardening@vger.kernel.org>; Thu,  8 Apr 2021 11:29:21 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id i2so2850947ybl.21
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Apr 2021 11:29:21 -0700 (PDT)
+        Thu, 8 Apr 2021 16:23:21 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF09C061761
+        for <linux-hardening@vger.kernel.org>; Thu,  8 Apr 2021 13:23:08 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id g35so2192955pgg.9
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Apr 2021 13:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=wpJei33p36j3KjjMHxyiKmG4dj3y1cwd0hIxQebiEdM=;
-        b=a3nRPCcLgUjC8+dAsZsjnXIQNP/rwy/DDjL0mVaRLZUSJLKjLCe23/7r3jufcOURP2
-         YfreigpdbzFmBPynu7ev4x2f9hGuOwXl1gQNFI+p2gMnNBATgfM6aNqo8eWkwib0f/8F
-         EUNhOz40NxYK4iX4IsYefTQK+m8Ly9vO79flGB3PdZreeWclK/3HsvQa2Eu+zlw9dkH7
-         6qm5k1CF4uhU9Fd39Czmkl971aNRY+2JAKOGLjLe1yvMJopP7gW/T36sDYdpLNjW4pel
-         /nYjwa7lv0PuEkaqdQpGCQ8z4533FqqU8pmp1ExKErObiCmjnfRuj5TuEngXRWPRbWkv
-         GPuA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Z3faoKTmut0b+H791nuk4RfV65azdQNFfXkzkcIwqc0=;
+        b=WRM0NK6ahXYlnABx14y7wNAK3ARCzvs0N/LziWW63jFcLOiDNLmHoTPnoSvXx0213d
+         pR3G6T0GwBHwUs6TmBDWUgy5YbuWK4Bs00EXAk4qPHrn5x+53iHoJebQDf/qydGaOuy4
+         r/2+W3hXp0YpWxEGMPVQb+PgZJIRZiSUSgZWw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=wpJei33p36j3KjjMHxyiKmG4dj3y1cwd0hIxQebiEdM=;
-        b=EByLEEa89y5QqsUK2LW3GhpPwCp4RT5mLu6FrcH/1zo3VvPJWu3T3cUJf8Gp90gzEV
-         2fkiSg3dMBRwaQkMXzy/YCPmQJHKDIK4JybZW+4ZPo5Y3QCG3ns1pBxqECeZ4RvbLRHD
-         jQZCxDxae9wGKdxOwL8U+AxTJE8Ajjj0d6Lv2qrsxI7zVJceXHPZzpydMZIqm/QAYHx2
-         VjpOtBsgOu+//Aj3vOa6Gkebb26bImoiaouotjfQ+A0LyFqzTfN1TGVecVw7RfE7CiXL
-         GczMvCiPcYAm6vBjKZ3wVrFG5P2x3UXSqlhBycpMtihcdyqTunGoN+hjZBjq+rof35D4
-         wsKg==
-X-Gm-Message-State: AOAM532Ew0BA/qDqR9++8GKhAye79PLoQ/9uTf5Wrp0xmq5iVGX66pwO
-        ApoD+UpbPLXZKab1ELiJBhkzOHtEZPoZjTrGxWg=
-X-Google-Smtp-Source: ABdhPJy+nIguXtNRexvJIjrSyuROKE2OJGFq0G34E3vTRN1y9bOJbuovRIfl9/FQBpeHGk7p24GDKVlYncDOiGe0FU8=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:3560:8505:40a2:e021])
- (user=samitolvanen job=sendgmr) by 2002:a25:cf16:: with SMTP id
- f22mr13542667ybg.342.1617906560306; Thu, 08 Apr 2021 11:29:20 -0700 (PDT)
-Date:   Thu,  8 Apr 2021 11:28:43 -0700
-In-Reply-To: <20210408182843.1754385-1-samitolvanen@google.com>
-Message-Id: <20210408182843.1754385-19-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20210408182843.1754385-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.31.1.295.g9ea45b61b8-goog
-Subject: [PATCH v6 18/18] arm64: allow CONFIG_CFI_CLANG to be selected
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Z3faoKTmut0b+H791nuk4RfV65azdQNFfXkzkcIwqc0=;
+        b=DkqIORr+XYez6pwTBcUojOCNZmRKDG1WY7RLbkEmm+qwL3SXm8EnTSskhvs/YRiVmS
+         /GBmEvznA2Bi0wicEqrjQuF6t/1KLjEqOAwmrslsPHVV5duRRUCsJNZtibA9ANND8psE
+         rZAssAVxLRbniJpBYMvJhx+4QMnSEHGi72qcOgjl7Hsaxxmj0ZcK37dP/Q+bt+RWUjSG
+         AS+tY3rvl5psx0cwJg8wCWnIkB2it96jDCi0sisXvXrqHJ8m6ilTIfuB0chKhDZSm4CG
+         guZT5heW/nNB/pJDishOeFpFJSYidhOlejqgm6obT5Lkre/CsxQUCoUqrKUDBYeyKIrV
+         JAAA==
+X-Gm-Message-State: AOAM532aCUPjZ9JVzoj7HEFvJgj86haHV2abUnxXu9E64YSHnESe1H48
+        bJyK2ReYP1v6XPWMLU/6Y8wFyg==
+X-Google-Smtp-Source: ABdhPJwikjY5mYNumVBeOvl9nb1vrSmCejkIvfWzfM9oyVhjxY6mmboeM4PRRBSUW/bImmTkznfG1Q==
+X-Received: by 2002:a63:3244:: with SMTP id y65mr10002081pgy.197.1617913388148;
+        Thu, 08 Apr 2021 13:23:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h19sm283747pfc.172.2021.04.08.13.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Apr 2021 13:23:07 -0700 (PDT)
+Date:   Thu, 8 Apr 2021 13:23:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Singh, Balbir" <sblbir@amazon.com>, tglx@linutronix.de
+Cc:     "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] Next revision of the L1D flush patches
+Message-ID: <202104081319.DAB1D817@keescook>
+References: <20210108121056.21940-1-sblbir@amazon.com>
+ <cf89f0389379daaaff0cbce9c5f1550866e55e91.camel@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf89f0389379daaaff0cbce9c5f1550866e55e91.camel@amazon.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
+*thread necromancy*
+https://lore.kernel.org/lkml/20210108121056.21940-1-sblbir@amazon.com/
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
----
- arch/arm64/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, Jan 25, 2021 at 09:27:38AM +0000, Singh, Balbir wrote:
+> On Fri, 2021-01-08 at 23:10 +1100, Balbir Singh wrote:
+> > Implement a mechanism that allows tasks to conditionally flush
+> > their L1D cache (mitigation mechanism suggested in [2]). The previous
+> > posts of these patches were sent for inclusion (see [3]) and were not
+> > included due to the concern for the need for additional checks,
+> > those checks were:
+> > 
+> > 1. Implement this mechanism only for CPUs affected by the L1TF bug
+> > 2. Disable the software fallback
+> > 3. Provide an override to enable this mechanism
+> > 4. Be SMT aware in the implementation
+> > [...]
+> Ping on any review comments? Suggested refactoring?
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index e4e1b6550115..d7395772b6b8 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -75,6 +75,7 @@ config ARM64
- 	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
- 	select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-+	select ARCH_SUPPORTS_CFI_CLANG
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
- 	select ARCH_SUPPORTS_NUMA_BALANCING
+Hi!
+
+I'd still really like to see this -- it's a big hammer, but that's the
+point for cases where some new flaw appears and we can point to the
+toolbox and say "you can mitigate it with this while you wait for new
+kernel/CPU."
+
+Any further thoughts from x86 maintainers? This seems like it addressed
+all of tglx's review comments.
+
 -- 
-2.31.1.295.g9ea45b61b8-goog
-
+Kees Cook
