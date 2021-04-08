@@ -2,111 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8002BC43460
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 20:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF36C433ED
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 22:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0B2610FC
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 20:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9D661106
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 22:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232273AbhDHUXW (ORCPT
+        id S232930AbhDHXAH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Apr 2021 16:23:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45350 "EHLO
+        Thu, 8 Apr 2021 19:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231451AbhDHUXV (ORCPT
+        with ESMTP id S232898AbhDHXAG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Apr 2021 16:23:21 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF09C061761
-        for <linux-hardening@vger.kernel.org>; Thu,  8 Apr 2021 13:23:08 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id g35so2192955pgg.9
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Apr 2021 13:23:08 -0700 (PDT)
+        Thu, 8 Apr 2021 19:00:06 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3381EC061762
+        for <linux-hardening@vger.kernel.org>; Thu,  8 Apr 2021 15:59:55 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id l1so1786781plg.12
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Apr 2021 15:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Z3faoKTmut0b+H791nuk4RfV65azdQNFfXkzkcIwqc0=;
-        b=WRM0NK6ahXYlnABx14y7wNAK3ARCzvs0N/LziWW63jFcLOiDNLmHoTPnoSvXx0213d
-         pR3G6T0GwBHwUs6TmBDWUgy5YbuWK4Bs00EXAk4qPHrn5x+53iHoJebQDf/qydGaOuy4
-         r/2+W3hXp0YpWxEGMPVQb+PgZJIRZiSUSgZWw=
+        bh=60tuWIbUjG0iyC8nYrQdXxsGuNpmQhEiUDZqyLR6c1Y=;
+        b=mTnrJmw6Pc4S3mQP2I8SdRxPl0N5UkqJYhxgb56iNBXgYefgG11RdYQzPa/MB/dvPV
+         jbLIhoH9o0hDGMLI5J3taqG+MEIgRNkMDDkUxbyMT5US7eZygaGqQIpeNB+TgGrghMRI
+         gHQzdPXo0gJXu2PRuODNsA4Gmr8eePdCipd+c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Z3faoKTmut0b+H791nuk4RfV65azdQNFfXkzkcIwqc0=;
-        b=DkqIORr+XYez6pwTBcUojOCNZmRKDG1WY7RLbkEmm+qwL3SXm8EnTSskhvs/YRiVmS
-         /GBmEvznA2Bi0wicEqrjQuF6t/1KLjEqOAwmrslsPHVV5duRRUCsJNZtibA9ANND8psE
-         rZAssAVxLRbniJpBYMvJhx+4QMnSEHGi72qcOgjl7Hsaxxmj0ZcK37dP/Q+bt+RWUjSG
-         AS+tY3rvl5psx0cwJg8wCWnIkB2it96jDCi0sisXvXrqHJ8m6ilTIfuB0chKhDZSm4CG
-         guZT5heW/nNB/pJDishOeFpFJSYidhOlejqgm6obT5Lkre/CsxQUCoUqrKUDBYeyKIrV
-         JAAA==
-X-Gm-Message-State: AOAM532aCUPjZ9JVzoj7HEFvJgj86haHV2abUnxXu9E64YSHnESe1H48
-        bJyK2ReYP1v6XPWMLU/6Y8wFyg==
-X-Google-Smtp-Source: ABdhPJwikjY5mYNumVBeOvl9nb1vrSmCejkIvfWzfM9oyVhjxY6mmboeM4PRRBSUW/bImmTkznfG1Q==
-X-Received: by 2002:a63:3244:: with SMTP id y65mr10002081pgy.197.1617913388148;
-        Thu, 08 Apr 2021 13:23:08 -0700 (PDT)
+        bh=60tuWIbUjG0iyC8nYrQdXxsGuNpmQhEiUDZqyLR6c1Y=;
+        b=ogE1Xr4GAK+r3MRwn19504a8rd2vtyJgRnFCgenOslPCRsHbhZbN1YrGAal5tERrwF
+         NS3xqokxwjdWqeRcjy1ndkj4PfrFp2H+HpMF/Yo54OCEnlFLKT9TXFOaK6cjjZyY4NO+
+         emCV4CqSa+D/SvXtV2JeyqVxOOBkx/cwgyY6Rdq2TcFSrYJsfH7ZSbRH7JVUNDtrY/D7
+         sw7fkyti8v0T1NSZt2d8Ap0nTe5rPCTmgPIWrb72TvUWdboS2MY1yeJCIhCdA0eF/nKB
+         IuyCFayzbNKHZs+vN6eH3b+nlUxjIfeHL5UOVJlQxU83m5lnQ+bDomMiHKroCS+fkWoA
+         SrLw==
+X-Gm-Message-State: AOAM531H+1Za5rdK+CXHf2JNdKjJBhifBIwC4XTsA4u+s2IaG5LMLpqg
+        VwJsFzU+NIw/KFwJdRnno+UlFw==
+X-Google-Smtp-Source: ABdhPJxpI62oGhUH5bf1MYiaJE6hoG/InXmCoxk2tAKn9J92fdY9RsD06VJoBDcDoxV3vya9jT2KOA==
+X-Received: by 2002:a17:902:7c83:b029:e8:c368:543 with SMTP id y3-20020a1709027c83b02900e8c3680543mr9895464pll.58.1617922794624;
+        Thu, 08 Apr 2021 15:59:54 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h19sm283747pfc.172.2021.04.08.13.23.07
+        by smtp.gmail.com with ESMTPSA id q95sm368117pjq.20.2021.04.08.15.59.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Apr 2021 13:23:07 -0700 (PDT)
-Date:   Thu, 8 Apr 2021 13:23:06 -0700
+        Thu, 08 Apr 2021 15:59:54 -0700 (PDT)
+Date:   Thu, 8 Apr 2021 15:59:53 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "Singh, Balbir" <sblbir@amazon.com>, tglx@linutronix.de
-Cc:     "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Next revision of the L1D flush patches
-Message-ID: <202104081319.DAB1D817@keescook>
-References: <20210108121056.21940-1-sblbir@amazon.com>
- <cf89f0389379daaaff0cbce9c5f1550866e55e91.camel@amazon.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v6 00/18] Add support for Clang CFI
+Message-ID: <202104081558.9A5FE3A@keescook>
+References: <20210408182843.1754385-1-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cf89f0389379daaaff0cbce9c5f1550866e55e91.camel@amazon.com>
+In-Reply-To: <20210408182843.1754385-1-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-*thread necromancy*
-https://lore.kernel.org/lkml/20210108121056.21940-1-sblbir@amazon.com/
+On Thu, Apr 08, 2021 at 11:28:25AM -0700, Sami Tolvanen wrote:
+> This series adds support for Clang's Control-Flow Integrity (CFI)
+> checking. With CFI, the compiler injects a runtime check before each
+> indirect function call to ensure the target is a valid function with
+> the correct static type. This restricts possible call targets and
+> makes it more difficult for an attacker to exploit bugs that allow the
+> modification of stored function pointers. For more details, see:
+> 
+>   https://clang.llvm.org/docs/ControlFlowIntegrity.html
+> 
+> The first patch contains build system changes and error handling,
+> and implements support for cross-module indirect call checking. The
+> remaining patches address issues caused by the compiler
+> instrumentation. These include fixing known type mismatches, as well
+> as issues with address space confusion and cross-module function
+> address equality.
+> 
+> These patches add support only for arm64, but I'll post patches also
+> for x86_64 after we address the remaining issues there, including
+> objtool support.
+> 
+> You can also pull this series from
+> 
+>   https://github.com/samitolvanen/linux.git cfi-v6
 
-On Mon, Jan 25, 2021 at 09:27:38AM +0000, Singh, Balbir wrote:
-> On Fri, 2021-01-08 at 23:10 +1100, Balbir Singh wrote:
-> > Implement a mechanism that allows tasks to conditionally flush
-> > their L1D cache (mitigation mechanism suggested in [2]). The previous
-> > posts of these patches were sent for inclusion (see [3]) and were not
-> > included due to the concern for the need for additional checks,
-> > those checks were:
-> > 
-> > 1. Implement this mechanism only for CPUs affected by the L1TF bug
-> > 2. Disable the software fallback
-> > 3. Provide an override to enable this mechanism
-> > 4. Be SMT aware in the implementation
-> > [...]
-> Ping on any review comments? Suggested refactoring?
+This is working quite well for me and it looks like there are
+good reviews. I'm going to toss it in linux-next unless anyone has
+objections. I'm very excited to start using this. :)
 
-Hi!
-
-I'd still really like to see this -- it's a big hammer, but that's the
-point for cases where some new flaw appears and we can point to the
-toolbox and say "you can mitigate it with this while you wait for new
-kernel/CPU."
-
-Any further thoughts from x86 maintainers? This seems like it addressed
-all of tglx's review comments.
+-Kees
 
 -- 
 Kees Cook
