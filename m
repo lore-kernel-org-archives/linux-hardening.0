@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FD8C43461
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 18:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3048FC43462
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 18:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 293B360C3E
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 18:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C44B610FC
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 18:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232953AbhDHS3a (ORCPT
+        id S232854AbhDHS3j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Apr 2021 14:29:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48708 "EHLO
+        Thu, 8 Apr 2021 14:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232898AbhDHS3L (ORCPT
+        with ESMTP id S232870AbhDHS3W (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Apr 2021 14:29:11 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B96C0613E3
-        for <linux-hardening@vger.kernel.org>; Thu,  8 Apr 2021 11:28:56 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id w9so2894943ybw.7
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Apr 2021 11:28:56 -0700 (PDT)
+        Thu, 8 Apr 2021 14:29:22 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BDE4C0613E8
+        for <linux-hardening@vger.kernel.org>; Thu,  8 Apr 2021 11:28:58 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z39so2799799ybh.23
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Apr 2021 11:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=LAbK6LGasIRIE7Lniqz15wrZXmrTUww5+Blou7CAxY4=;
-        b=QALHFILqs4GT9aNrYaVc5cwsS2O3moVbeFoKzOyeEX5T8gKLkqRck/QOpiZz8Xgy6u
-         GHtVNUofOR12IrpxyVNLzh3Fm3luiteO+R0LhFXlpqeRo+tjHTcvyNfsF9MHRpthossc
-         Wg97cyUbCitctKczgbE5+WCVvBcaK6Cgpj4Wc+rVPe/2DaGB2rUJAG0m1VBSG7Fh/M1m
-         roMFGI/64bI4JmKbBL1CkGn8Jk3OiOz0zV6tR0qNGANde5gC5dqklluOdFXuiL4Z0XAd
-         tWewvUx6Wqo2mymkJ68/Ko5qbJi4ovkyw6hG9G2+2lVCKJZ+ew7I+xyb8aUSlHCu3d9X
-         9k9g==
+        bh=XFW9qholLJYCDGcPvjKxLTh4yh23AN7VnxadLfVAIAk=;
+        b=W7hV9mrblZmrwi9KsES41PXGzLvMgVDFfTIcMVF3q6gtiQ/o3QEJ+5+xML4ri4RlnP
+         YAE11csD2Nkom6m6I0y5v3LjqQhzUd93l2pfiWw5fUTCHSqUHS6TSelFFC3w/jGuFhcQ
+         d6tNqZL51YbPm7Ri6SBgAW0e7qXBVf0IAVO97LLF5rs6UKu0WXrVId0DaDL1XL/gU8Bx
+         WG5Ezaen4l8AI+oNjoTDTAisG2+vW2KB5rDCwzvnU50FwmsR3zNpcOscJZfvcmSuLJUP
+         zIFNnB730D0q3yL2ScU2b9X1VZytTiCgmRAGFn0NDaR0fHtpwA8TZKeVWurwNgQevhXF
+         OxOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=LAbK6LGasIRIE7Lniqz15wrZXmrTUww5+Blou7CAxY4=;
-        b=ujNl4Ic8FhNCIMXdEyJYyU2Kx8DJo/XM0PY8zzm8HLkw90hI3K0lU9jky6UJWgzrTm
-         qkhdhRBr+fcA2Quc+6LFoNS7LRddmwGDliIM2cHI4+knt8ohW1khvXweMBQbzKV5XfGA
-         VU10+/xTawBOdhXEj1lYEYcYWrRz40if1ac9lqfi8PPI3CkTA4D015NwgcXBTXx66o7m
-         QOci07p467rKtk66BqxbkkwfF5jua4AxR5P9l/E+/N/JFE445mujXHZA0MVkx8b868oE
-         SB4xYrTlIIaTY3r8OVEfWN2NdKW99+umfdzsRw+/mAl54wY8F6Jj2drbgMyf22k+AcS7
-         tPXA==
-X-Gm-Message-State: AOAM533aqjBFwrkMXFnWIWn+q0pnkVi9A8uT9s7+nnG5163SLKm9Maoe
-        Y75FNj19V4/dHOHhdj7CEixVG6wNNPh0EuB77d0=
-X-Google-Smtp-Source: ABdhPJw87AxiqrYpD69IN1mX1v9G5eaNQRMwJPV7w2K9v99iKIA1elCFwP6HzCX6OhW3J4LcJzLgOKik1/QfdcH3TF0=
+        bh=XFW9qholLJYCDGcPvjKxLTh4yh23AN7VnxadLfVAIAk=;
+        b=IPijOyCD0dhqFC3nRU8KcSQPtD7DqY40byWSKOPfJY+Fs0Z/FCDwIt48xqqOESuGIo
+         6f0UcKOC4Nz6RK2/El6EkSxYpHY7x4VCRIgnjM6gP9dBELQ50dxq4UykrfzQS6il6zLT
+         O/8eDM7gYojd/thq4VJBVZMIpINtlRe5PqnEukAs3Eej5w75GQu+nb2RvAM43WcIVRkh
+         k6IpXzc/Hu+MbexdzTvwIm5iWAu7Qubu+SoaTf8hR+FN85d556PLin8OSnowgnwt7lKP
+         owTSVN9X9XAzGqjuknBxuROQL4F9vEkIVPMeTA4dzYP2jFalZUVera1N4anwwSJ5DNUG
+         csPA==
+X-Gm-Message-State: AOAM530dpRmzLec9/3Ck6ul00mN3RZQqLaKEN0LCrlNZIXDLDjxA2uRA
+        uNSBnsGSkWQu24211oNZ0WCDWpnZRABdwYkl4N8=
+X-Google-Smtp-Source: ABdhPJy7ksTXDyXgVRFCS8wPoe5BOfA/cFt4wKucNqs3gOI61ZzsQG9rvvWETXTeYmtmmNK12rXYVPUJyObbOk1yBQY=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:3560:8505:40a2:e021])
- (user=samitolvanen job=sendgmr) by 2002:a25:f608:: with SMTP id
- t8mr14077162ybd.496.1617906535437; Thu, 08 Apr 2021 11:28:55 -0700 (PDT)
-Date:   Thu,  8 Apr 2021 11:28:30 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:c750:: with SMTP id
+ w77mr12752632ybe.340.1617906537243; Thu, 08 Apr 2021 11:28:57 -0700 (PDT)
+Date:   Thu,  8 Apr 2021 11:28:31 -0700
 In-Reply-To: <20210408182843.1754385-1-samitolvanen@google.com>
-Message-Id: <20210408182843.1754385-6-samitolvanen@google.com>
+Message-Id: <20210408182843.1754385-7-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210408182843.1754385-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.1.295.g9ea45b61b8-goog
-Subject: [PATCH v6 05/18] workqueue: use WARN_ON_FUNCTION_MISMATCH
+Subject: [PATCH v6 06/18] kthread: use WARN_ON_FUNCTION_MISMATCH
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -86,11 +86,11 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 With CONFIG_CFI_CLANG, a callback function passed to
-__queue_delayed_work from a module points to a jump table entry
-defined in the module instead of the one used in the core kernel,
-which breaks function address equality in this check:
+__kthread_queue_delayed_work from a module points to a jump table
+entry defined in the module instead of the one used in the core
+kernel, which breaks function address equality in this check:
 
-  WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
+  WARN_ON_ONCE(timer->function != ktead_delayed_work_timer_fn);
 
 Use WARN_ON_FUNCTION_MISMATCH() instead to disable the warning
 when CFI and modules are both enabled.
@@ -99,22 +99,23 @@ Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Tested-by: Nathan Chancellor <nathan@kernel.org>
 ---
- kernel/workqueue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/kthread.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 79f2319543ce..b19d759e55a5 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1630,7 +1630,7 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
- 	struct work_struct *work = &dwork->work;
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index 1578973c5740..a1972eba2917 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -963,7 +963,8 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
+ 	struct timer_list *timer = &dwork->timer;
+ 	struct kthread_work *work = &dwork->work;
  
- 	WARN_ON_ONCE(!wq);
--	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
-+	WARN_ON_FUNCTION_MISMATCH(timer->function, delayed_work_timer_fn);
- 	WARN_ON_ONCE(timer_pending(timer));
- 	WARN_ON_ONCE(!list_empty(&work->entry));
+-	WARN_ON_ONCE(timer->function != kthread_delayed_work_timer_fn);
++	WARN_ON_FUNCTION_MISMATCH(timer->function,
++				  kthread_delayed_work_timer_fn);
  
+ 	/*
+ 	 * If @delay is 0, queue @dwork->work immediately.  This is for
 -- 
 2.31.1.295.g9ea45b61b8-goog
 
