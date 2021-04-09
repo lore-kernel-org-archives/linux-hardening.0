@@ -2,117 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF36C433ED
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 22:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2B2C43460
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Apr 2021 04:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9D661106
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Apr 2021 22:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EDD7610D0
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Apr 2021 04:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232930AbhDHXAH (ORCPT
+        id S230312AbhDIEYM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Apr 2021 19:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51120 "EHLO
+        Fri, 9 Apr 2021 00:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232898AbhDHXAG (ORCPT
+        with ESMTP id S229498AbhDIEYH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Apr 2021 19:00:06 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3381EC061762
-        for <linux-hardening@vger.kernel.org>; Thu,  8 Apr 2021 15:59:55 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id l1so1786781plg.12
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Apr 2021 15:59:55 -0700 (PDT)
+        Fri, 9 Apr 2021 00:24:07 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E879C061760;
+        Thu,  8 Apr 2021 21:23:19 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id v140so7590335lfa.4;
+        Thu, 08 Apr 2021 21:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=60tuWIbUjG0iyC8nYrQdXxsGuNpmQhEiUDZqyLR6c1Y=;
-        b=mTnrJmw6Pc4S3mQP2I8SdRxPl0N5UkqJYhxgb56iNBXgYefgG11RdYQzPa/MB/dvPV
-         jbLIhoH9o0hDGMLI5J3taqG+MEIgRNkMDDkUxbyMT5US7eZygaGqQIpeNB+TgGrghMRI
-         gHQzdPXo0gJXu2PRuODNsA4Gmr8eePdCipd+c=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bX3oaJ8LOdDLHPl6Ky49TEfmBDk/aP5kfaNiD1lV2Bs=;
+        b=e2uOKIHVS4Io8+rzZfRjbyH4lqsjSTjcIj0ltd00TmX/Y08bCY3klGQ51GceAyOp70
+         FItNxZTUVejbaztCS3LLd7g3QBaTD3mTZdvmCvtWtMruYkiUr9pe4eC4w2z8PGkMfJfh
+         d8AaiZnksq/aWJwB8qL5YCSYuWdQeGP6Ydufr570uY/MxFF1wywfkfTB+7KXbPeqbtSo
+         DFZL/e6VH8AkcYIU5vwO+Edq7HSjTzj/qCsGIzoSJqKY0aGxi0Dm/XLhbKmzF+/Kgiod
+         3HopKWzVbsNdOSkCTDek78Tg8rgPqgwK4AqOR+ROtyNYbQjUchPE62+F6ye4pVg1+wgs
+         w3Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=60tuWIbUjG0iyC8nYrQdXxsGuNpmQhEiUDZqyLR6c1Y=;
-        b=ogE1Xr4GAK+r3MRwn19504a8rd2vtyJgRnFCgenOslPCRsHbhZbN1YrGAal5tERrwF
-         NS3xqokxwjdWqeRcjy1ndkj4PfrFp2H+HpMF/Yo54OCEnlFLKT9TXFOaK6cjjZyY4NO+
-         emCV4CqSa+D/SvXtV2JeyqVxOOBkx/cwgyY6Rdq2TcFSrYJsfH7ZSbRH7JVUNDtrY/D7
-         sw7fkyti8v0T1NSZt2d8Ap0nTe5rPCTmgPIWrb72TvUWdboS2MY1yeJCIhCdA0eF/nKB
-         IuyCFayzbNKHZs+vN6eH3b+nlUxjIfeHL5UOVJlQxU83m5lnQ+bDomMiHKroCS+fkWoA
-         SrLw==
-X-Gm-Message-State: AOAM531H+1Za5rdK+CXHf2JNdKjJBhifBIwC4XTsA4u+s2IaG5LMLpqg
-        VwJsFzU+NIw/KFwJdRnno+UlFw==
-X-Google-Smtp-Source: ABdhPJxpI62oGhUH5bf1MYiaJE6hoG/InXmCoxk2tAKn9J92fdY9RsD06VJoBDcDoxV3vya9jT2KOA==
-X-Received: by 2002:a17:902:7c83:b029:e8:c368:543 with SMTP id y3-20020a1709027c83b02900e8c3680543mr9895464pll.58.1617922794624;
-        Thu, 08 Apr 2021 15:59:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q95sm368117pjq.20.2021.04.08.15.59.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Apr 2021 15:59:54 -0700 (PDT)
-Date:   Thu, 8 Apr 2021 15:59:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v6 00/18] Add support for Clang CFI
-Message-ID: <202104081558.9A5FE3A@keescook>
-References: <20210408182843.1754385-1-samitolvanen@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bX3oaJ8LOdDLHPl6Ky49TEfmBDk/aP5kfaNiD1lV2Bs=;
+        b=tzD7wdZFo15V6pWzAFnf+T+4kguOMiDvKIjTFSUGKSpOpj7eUv3A0G5mpRGkFxEW/e
+         NGBWVqbxVskxAgnVnwzNe5L1sWuqfQql4EeO76bF0gVQ/krZy9UopPiQu4qDvWUmUuRB
+         ptGgjMJ1HeQvRdeNwp/U+n7FNUGlgSAyWYwJj1WRcPquaGE9XD7MXDms4YEOFv8Di8XX
+         vkjDaGydoiU7xw4O6rixPFmBQds8knan4K8qeSI05lMoKNd/mCaWyNI1m4p3eRLEfwv2
+         FOargkppFZbC/VoLtxzFxMbTNO2ONu5MCaCNcP1ysdl6ydkauLmwV8OYnvFzPamrXFUM
+         x8XA==
+X-Gm-Message-State: AOAM531r9z6v4synteIswHRbPu2qRnpDn6vx5mzv2Efa6qOZGEnNQa11
+        tW93Gp7fqU+29D0bwT8wZGq2DT4/P+PNTqKKWJw=
+X-Google-Smtp-Source: ABdhPJzERF9ruKl1jj/2gVjN0YXKkA1XPOF7uGD4teqtgIyApxGL2BzysvXQzVtdMvRcI98GidIgJPfjUL+DmVBaKDM=
+X-Received: by 2002:a05:6512:1322:: with SMTP id x34mr8827582lfu.133.1617942197748;
+ Thu, 08 Apr 2021 21:23:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210408182843.1754385-1-samitolvanen@google.com>
+References: <20210326011117.GA46303@embeddedor> <877dltrjue.fsf@suse.com> <4def044f-4529-9e73-6d01-1a9751f6b09a@embeddedor.com>
+In-Reply-To: <4def044f-4529-9e73-6d01-1a9751f6b09a@embeddedor.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 8 Apr 2021 23:23:06 -0500
+Message-ID: <CAH2r5muf-y5XDyickz9mEw7kTVSjKvK+4AspSPsySbY9ucix8w@mail.gmail.com>
+Subject: Re: [PATCH][next] cifs: cifspdu.h: Replace one-element array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     =?UTF-8?Q?Aur=C3=A9lien_Aptel?= <aaptel@suse.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 11:28:25AM -0700, Sami Tolvanen wrote:
-> This series adds support for Clang's Control-Flow Integrity (CFI)
-> checking. With CFI, the compiler injects a runtime check before each
-> indirect function call to ensure the target is a valid function with
-> the correct static type. This restricts possible call targets and
-> makes it more difficult for an attacker to exploit bugs that allow the
-> modification of stored function pointers. For more details, see:
-> 
->   https://clang.llvm.org/docs/ControlFlowIntegrity.html
-> 
-> The first patch contains build system changes and error handling,
-> and implements support for cross-module indirect call checking. The
-> remaining patches address issues caused by the compiler
-> instrumentation. These include fixing known type mismatches, as well
-> as issues with address space confusion and cross-module function
-> address equality.
-> 
-> These patches add support only for arm64, but I'll post patches also
-> for x86_64 after we address the remaining issues there, including
-> objtool support.
-> 
-> You can also pull this series from
-> 
->   https://github.com/samitolvanen/linux.git cfi-v6
+merged into cifs-2.6.git for-next
 
-This is working quite well for me and it looks like there are
-good reviews. I'm going to toss it in linux-next unless anyone has
-objections. I'm very excited to start using this. :)
+On Fri, Mar 26, 2021 at 12:02 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+>
+>
+> On 3/26/21 10:54, Aur=C3=A9lien Aptel wrote:
+> > "Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
+> >> There is a regular need in the kernel to provide a way to declare havi=
+ng
+> >> a dynamically sized set of trailing elements in a structure. Kernel co=
+de
+> >> should always use =E2=80=9Cflexible array members=E2=80=9D[1] for thes=
+e cases. The older
+> >> style of one-element or zero-length arrays should no longer be used[2]=
+.
+> >
+> > I've checked the usages of the struct, looks OK (we don't allocate it
+> > directly, we use memory from the small/big buff pools).
+>
+> Awesome. :)
+>
+> > Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+>
+> Thank you, Aurelien.
+> --
+> Gustavo
 
--Kees
 
--- 
-Kees Cook
+
+--=20
+Thanks,
+
+Steve
