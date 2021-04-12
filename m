@@ -2,1256 +2,1646 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478CEC433ED
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Apr 2021 00:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A29C433B4
+	for <linux-hardening@archiver.kernel.org>; Mon, 12 Apr 2021 13:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07ABC61041
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Apr 2021 00:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF3661355
+	for <linux-hardening@archiver.kernel.org>; Mon, 12 Apr 2021 13:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235302AbhDJAyC (ORCPT
+        id S241992AbhDLN4V (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Apr 2021 20:54:02 -0400
-Received: from gateway20.websitewelcome.com ([192.185.54.2]:21518 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235215AbhDJAyB (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Apr 2021 20:54:01 -0400
-X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Apr 2021 20:54:01 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 26C6A400DC310
-        for <linux-hardening@vger.kernel.org>; Fri,  9 Apr 2021 18:58:12 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id V1B1lWoD5w11MV1B1lB6MX; Fri, 09 Apr 2021 19:08:39 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ewx7eCV7voBdt/6tgm8R41S3pKpMi0vx9KC6Fn5lN9c=; b=jo4nqkLAYEH2cviOMrtqrQuCWW
-        ew5f8broNVCkgFC29F3qrezHSoFVApl2GapQsW9iHe+uZ66u72+Cd1faVO7ru0P29+C0Ji6uzEhah
-        Pqsa8ufyzxWoD2iSPljqUeUhngk9a3cahS4s4Ub2ZCN/6xrrGJG6B+aw++p17AFZ5oY7sb4li2aGu
-        HG/C6myjjWnI2ywiBrOnxc4GByGvZn+9xvU/xHbN9zaYeuZx0ejmoS26AwmhbMk2IcnpsvwEv9Dti
-        MVrYUSjjhBk6yF/GAkDxL91JgEkbJuI43TQBDpBpPqo/6vJYXUWitafkcIRAOCfp861hO1HIj1ih7
-        Wr8Vlf/w==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:47294 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lV1B1-001Ga2-F3; Fri, 09 Apr 2021 19:08:39 -0500
-Subject: Re: [PATCH v3][next] xfs: Replace one-element arrays with
- flexible-array members
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        Mon, 12 Apr 2021 09:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238999AbhDLN4V (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 12 Apr 2021 09:56:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E99F6134F;
+        Mon, 12 Apr 2021 13:56:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618235763;
+        bh=QehX3LmcBycLdCoRnQbKS1YynLf1YvTjCdoqGx/+87Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=un1bgcHE/q3Jqmetj/tms6OCKEQjKiSnlx3hs8DhL4BpVIT0KXu5l/1AzJkYAgCAS
+         DPNiblFZbTaKK7H1WtExq4CYBdP1WuMKBv1L5PUzAEP52OCqawnwocTY7klRgC8tA5
+         Z8Nlv699Bxuv85PFjcPrAK22DOye8QWSnmS2mfgdnuzr7Z5hzRo32kas8uic2nWURb
+         cfL+ggPUfBT+2dgCYuiEY7+mMhvw6ORizrjmlrJXgkNV5Au/kQWg5hESCht6P4nRZA
+         bY529PkY3FrBdC9XUnDScmTsUgYgv0QcewOUPBw3xcVRHdTP+O+pYSKtYDIMGkwHdP
+         6d5eOhIhOTBFw==
+Date:   Mon, 12 Apr 2021 08:56:11 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210311042302.GA137676@embeddedor>
- <20210311044700.GU3419940@magnolia>
- <96be7032-a95c-e8d2-a7f8-64b96686ea42@embeddedor.com>
- <20210320201711.GY22100@magnolia>
- <d5a9046e-e204-c854-34fe-2a39e58faea4@embeddedor.com>
- <20210320214831.GA22100@magnolia>
- <b9973292-efe6-5f95-a3a5-5d86e4081803@embeddedor.com>
-Message-ID: <8d143f48-8cec-c36a-7c96-443445d44cd2@embeddedor.com>
-Date:   Fri, 9 Apr 2021 19:08:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v4][next] xfs: Replace one-element arrays with flexible-array
+ members
+Message-ID: <20210412135611.GA183224@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <b9973292-efe6-5f95-a3a5-5d86e4081803@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lV1B1-001Ga2-F3
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:47294
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi!
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-On 4/9/21 01:54, Gustavo A. R. Silva wrote:
-> 
-> Hi!
-> 
-> I think I might have caught the issue:
-> 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index e5e0713bebcd8..9231457371100 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -1937,17 +1937,17 @@ xfs_init_zones(void)
->  		goto out_destroy_trans_zone;
-> 
->  	xfs_efd_zone = kmem_cache_create("xfs_efd_item",
-> -					(sizeof(struct xfs_efd_log_item) +
-> -					(XFS_EFD_MAX_FAST_EXTENTS - 1) *
-> -					sizeof(struct xfs_extent)),
-> -					0, 0, NULL);
-> +					 struct_size((struct xfs_efd_log_item *)0,
-> +					 efd_format.efd_extents,
-> +					 XFS_EFD_MAX_FAST_EXTENTS),
-> +					 0, 0, NULL);
->  	if (!xfs_efd_zone)
->  		goto out_destroy_buf_item_zone;
-> 
->  	xfs_efi_zone = kmem_cache_create("xfs_efi_item",
-> -					 (sizeof(struct xfs_efi_log_item) +
-> -					 (XFS_EFI_MAX_FAST_EXTENTS - 1) *
-> -					 sizeof(struct xfs_extent)),
-> +					 struct_size((struct xfs_efi_log_item *)0,
-> +					 efi_format.efi_extents,
-> +					 XFS_EFI_MAX_FAST_EXTENTS),
->  					 0, 0, NULL);
->  	if (!xfs_efi_zone)
->  		goto out_destroy_efd_zone;
-> 
-> I'm currently testing the patch with the fix above:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=testing/xfs-fixed
+Refactor the code according to the use of flexible-array members in
+multiple structures, instead of one-element arrays. Also, make use of
+the new struct_size() helper to properly calculate the size of multiple
+structures that contain flexible-array members. Additionally, wrap
+some calls to the struct_size() helper in multiple inline functions.
 
-I'm running my tests again and, when I run ./check -g all on 5.12-rc2 without this patch, I see
-the following error when the test reaches xfs/350:
+Below are the results of running xfstests for "all" with the following
+configuration in local.config:
 
-[10630.458176] run fstests xfs/350 at 2021-04-09 18:33:25
-[10630.808989] XFS (sdb1): Mounting V5 Filesystem
-[10630.823642] XFS (sdb1): Ending clean mount
-[10630.828252] xfs filesystem being mounted at /mnt/test supports timestamps until 2038 (0x7fffffff)
-[10635.431857] [U] + Fuzz magicnum = zeroes
-[10635.484247] XFS (sdb2): Invalid superblock magic number
-[10635.998259] XFS (sdb2): Mounting V5 Filesystem
-[10636.011306] XFS (sdb2): Ending clean mount
-[10636.012740] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10636.013378] [U] ++ Try to write filesystem again
-[10636.792921] XFS (sdb2): Unmounting Filesystem
-[10639.071979] [U] + Fuzz magicnum = ones
-[10639.124929] XFS (sdb2): Invalid superblock magic number
-[10639.632516] XFS (sdb2): Mounting V5 Filesystem
-[10639.642474] XFS (sdb2): Ending clean mount
-[10639.645799] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10639.647805] [U] ++ Try to write filesystem again
-[10640.487553] XFS (sdb2): Unmounting Filesystem
-[10642.817589] [U] + Fuzz magicnum = firstbit
-[10642.865363] XFS (sdb2): Invalid superblock magic number
-[10643.323356] XFS (sdb2): Mounting V5 Filesystem
-[10643.334475] XFS (sdb2): Ending clean mount
-[10643.336493] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10643.337066] [U] ++ Try to write filesystem again
-[10644.155821] XFS (sdb2): Unmounting Filesystem
-[10646.503018] [U] + Fuzz magicnum = middlebit
-[10646.549272] XFS (sdb2): Invalid superblock magic number
-[10647.025628] XFS (sdb2): Mounting V5 Filesystem
-[10647.036045] XFS (sdb2): Ending clean mount
-[10647.037678] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10647.038222] [U] ++ Try to write filesystem again
-[10647.889433] XFS (sdb2): Unmounting Filesystem
-[10649.884045] [U] + Fuzz magicnum = lastbit
-[10649.933139] XFS (sdb2): Invalid superblock magic number
-[10650.410012] XFS (sdb2): Mounting V5 Filesystem
-[10650.422481] XFS (sdb2): Ending clean mount
-[10650.424557] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10650.425303] [U] ++ Try to write filesystem again
-[10651.266636] XFS (sdb2): Unmounting Filesystem
-[10653.273883] [U] + Fuzz magicnum = add
-[10653.326476] XFS (sdb2): Invalid superblock magic number
-[10653.822121] XFS (sdb2): Mounting V5 Filesystem
-[10653.833971] XFS (sdb2): Ending clean mount
-[10653.835387] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10653.835938] [U] ++ Try to write filesystem again
-[10654.679518] XFS (sdb2): Unmounting Filesystem
-[10656.896480] [U] + Fuzz magicnum = sub
-[10656.944458] XFS (sdb2): Invalid superblock magic number
-[10657.438870] XFS (sdb2): Mounting V5 Filesystem
-[10657.446758] XFS (sdb2): Ending clean mount
-[10657.450836] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10657.451545] [U] ++ Try to write filesystem again
-[10658.295882] XFS (sdb2): Unmounting Filesystem
-[10660.841168] [U] + Fuzz magicnum = random
-[10660.894445] XFS (sdb2): Invalid superblock magic number
-[10661.430426] XFS (sdb2): Mounting V5 Filesystem
-[10661.455074] XFS (sdb2): Ending clean mount
-[10661.456945] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10661.457397] [U] ++ Try to write filesystem again
-[10662.279028] XFS (sdb2): Unmounting Filesystem
-[10664.671702] [U] + Fuzz blocksize = zeroes
-[10664.737855] XFS (sdb2): SB sanity check failed
-[10664.737863] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10664.737877] XFS (sdb2): Unmount and run xfs_repair
-[10664.737880] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10664.737884] 00000000: 58 46 53 42 00 00 00 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10664.737887] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10664.737889] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10664.737891] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10664.737893] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10664.737895] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10664.737897] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10664.737898] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10664.737922] XFS (sdb2): SB validate failed with error -117.
-[10665.265433] XFS (sdb2): Mounting V5 Filesystem
-[10665.279294] XFS (sdb2): Ending clean mount
-[10665.283785] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10665.284524] [U] ++ Try to write filesystem again
-[10666.058035] XFS (sdb2): Unmounting Filesystem
-[10668.396404] [U] + Fuzz blocksize = ones
-[10668.445747] XFS (sdb2): SB sanity check failed
-[10668.445755] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10668.445776] XFS (sdb2): Unmount and run xfs_repair
-[10668.445778] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10668.445781] 00000000: 58 46 53 42 ff ff ff ff 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10668.445784] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10668.445786] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10668.445789] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10668.445791] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10668.445793] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10668.445795] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10668.445796] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10668.445857] XFS (sdb2): SB validate failed with error -117.
-[10669.059881] XFS (sdb2): Mounting V5 Filesystem
-[10669.071515] XFS (sdb2): Ending clean mount
-[10669.076272] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10669.076830] [U] ++ Try to write filesystem again
-[10669.893290] XFS (sdb2): Unmounting Filesystem
-[10672.389639] [U] + Fuzz blocksize = firstbit
-[10672.446162] XFS (sdb2): SB sanity check failed
-[10672.446170] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10672.446199] XFS (sdb2): Unmount and run xfs_repair
-[10672.446201] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10672.446206] 00000000: 58 46 53 42 80 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10672.446210] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10672.446212] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10672.446215] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10672.446217] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10672.446219] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10672.446222] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10672.446224] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10672.446282] XFS (sdb2): SB validate failed with error -117.
-[10673.028803] XFS (sdb2): Mounting V5 Filesystem
-[10673.037324] XFS (sdb2): Ending clean mount
-[10673.039541] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10673.040261] [U] ++ Try to write filesystem again
-[10673.842546] XFS (sdb2): Unmounting Filesystem
-[10676.127514] [U] + Fuzz blocksize = middlebit
-[10676.184578] XFS (sdb2): SB sanity check failed
-[10676.184586] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10676.184608] XFS (sdb2): Unmount and run xfs_repair
-[10676.184611] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10676.184614] 00000000: 58 46 53 42 00 00 90 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10676.184617] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10676.184619] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10676.184621] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10676.184623] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10676.184626] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10676.184627] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10676.184629] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10676.184653] XFS (sdb2): SB validate failed with error -117.
-[10676.735429] XFS (sdb2): Mounting V5 Filesystem
-[10676.748376] XFS (sdb2): Ending clean mount
-[10676.752533] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10676.753118] [U] ++ Try to write filesystem again
-[10677.573686] XFS (sdb2): Unmounting Filesystem
-[10679.567988] [U] + Fuzz blocksize = lastbit
-[10679.619327] XFS (sdb2): SB sanity check failed
-[10679.619334] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10679.619346] XFS (sdb2): Unmount and run xfs_repair
-[10679.619348] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10679.619350] 00000000: 58 46 53 42 00 00 10 01 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10679.619352] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10679.619354] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10679.619356] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10679.619357] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10679.619359] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10679.619360] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10679.619361] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10679.619388] XFS (sdb2): SB validate failed with error -117.
-[10680.210463] XFS (sdb2): Mounting V5 Filesystem
-[10680.223957] XFS (sdb2): Ending clean mount
-[10680.225661] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10680.226234] [U] ++ Try to write filesystem again
-[10681.023494] XFS (sdb2): Unmounting Filesystem
-[10683.038014] [U] + Fuzz blocksize = add
-[10683.094403] XFS (sdb2): SB sanity check failed
-[10683.094411] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10683.094423] XFS (sdb2): Unmount and run xfs_repair
-[10683.094425] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10683.094427] 00000000: 58 46 53 42 00 00 17 e1 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10683.094430] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10683.094431] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10683.094433] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10683.094434] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10683.094435] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10683.094437] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10683.094438] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10683.094461] XFS (sdb2): SB validate failed with error -117.
-[10683.646268] XFS (sdb2): Mounting V5 Filesystem
-[10683.660136] XFS (sdb2): Ending clean mount
-[10683.665474] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10683.666205] [U] ++ Try to write filesystem again
-[10684.486387] XFS (sdb2): Unmounting Filesystem
-[10686.932456] [U] + Fuzz blocksize = sub
-[10686.988112] XFS (sdb2): SB sanity check failed
-[10686.988121] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10686.988135] XFS (sdb2): Unmount and run xfs_repair
-[10686.988137] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10686.988140] 00000000: 58 46 53 42 00 00 08 1f 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10686.988142] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10686.988151] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10686.988152] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10686.988154] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10686.988155] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10686.988157] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10686.988158] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10686.988179] XFS (sdb2): SB validate failed with error -117.
-[10687.523945] XFS (sdb2): Mounting V5 Filesystem
-[10687.536046] XFS (sdb2): Ending clean mount
-[10687.540926] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10687.541539] [U] ++ Try to write filesystem again
-[10688.393080] XFS (sdb2): Unmounting Filesystem
-[10690.697969] [U] + Fuzz blocksize = random
-[10690.758213] XFS (sdb2): SB sanity check failed
-[10690.758222] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10690.758235] XFS (sdb2): Unmount and run xfs_repair
-[10690.758237] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10690.758241] 00000000: 58 46 53 42 b9 e6 02 f2 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10690.758244] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10690.758246] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10690.758248] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10690.758251] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10690.758252] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10690.758254] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10690.758256] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10690.758285] XFS (sdb2): SB validate failed with error -117.
-[10691.308337] XFS (sdb2): Mounting V5 Filesystem
-[10691.320023] XFS (sdb2): Ending clean mount
-[10691.325664] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10691.326227] [U] ++ Try to write filesystem again
-[10692.142125] XFS (sdb2): Unmounting Filesystem
-[10694.540331] [U] + Fuzz dblocks = zeroes
-[10694.605376] XFS (sdb2): SB sanity check failed
-[10694.605385] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10694.605399] XFS (sdb2): Unmount and run xfs_repair
-[10694.605401] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10694.605404] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 00 00 00  XFSB............
-[10694.605407] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10694.605409] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10694.605411] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10694.605413] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10694.605415] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10694.605417] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10694.605418] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10694.605458] XFS (sdb2): SB validate failed with error -117.
-[10695.113752] XFS (sdb2): Mounting V5 Filesystem
-[10695.142912] XFS (sdb2): Ending clean mount
-[10695.144758] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10695.145194] [U] ++ Try to write filesystem again
-[10695.954221] XFS (sdb2): Unmounting Filesystem
-[10698.373692] [U] + Fuzz dblocks = ones
-[10698.429619] XFS (sdb2): SB sanity check failed
-[10698.429627] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10698.429638] XFS (sdb2): Unmount and run xfs_repair
-[10698.429640] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10698.429650] 00000000: 58 46 53 42 00 00 10 00 ff ff ff ff ff ff ff ff  XFSB............
-[10698.429652] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10698.429654] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10698.429655] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10698.429656] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10698.429658] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10698.429659] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10698.429661] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10698.429682] XFS (sdb2): SB validate failed with error -117.
-[10699.024410] XFS (sdb2): Mounting V5 Filesystem
-[10699.036038] XFS (sdb2): Ending clean mount
-[10699.038327] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10699.039900] [U] ++ Try to write filesystem again
-[10699.842797] XFS (sdb2): Unmounting Filesystem
-[10702.260024] [U] + Fuzz dblocks = firstbit
-[10702.317263] XFS (sdb2): SB sanity check failed
-[10702.317272] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10702.317286] XFS (sdb2): Unmount and run xfs_repair
-[10702.317289] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10702.317292] 00000000: 58 46 53 42 00 00 10 00 80 00 00 00 00 67 e7 00  XFSB.........g..
-[10702.317295] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10702.317298] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10702.317300] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10702.317302] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10702.317304] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10702.317306] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10702.317307] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10702.317331] XFS (sdb2): SB validate failed with error -117.
-[10702.872877] XFS (sdb2): Mounting V5 Filesystem
-[10702.884348] XFS (sdb2): Ending clean mount
-[10702.890077] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10702.890585] [U] ++ Try to write filesystem again
-[10703.620773] XFS (sdb2): Unmounting Filesystem
-[10705.931044] [U] + Fuzz dblocks = middlebit
-[10705.985735] XFS (sdb2): SB sanity check failed
-[10705.985743] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10705.985761] XFS (sdb2): Unmount and run xfs_repair
-[10705.985762] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10705.985765] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 80 67 e7 00  XFSB.........g..
-[10705.985768] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10705.985769] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10705.985771] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10705.985772] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10705.985774] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10705.985775] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10705.985776] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10705.985796] XFS (sdb2): SB validate failed with error -117.
-[10706.533315] XFS (sdb2): Mounting V5 Filesystem
-[10706.544082] XFS (sdb2): Ending clean mount
-[10706.548414] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10706.549104] [U] ++ Try to write filesystem again
-[10707.339557] XFS (sdb2): Unmounting Filesystem
-[10709.594864] [U] + Fuzz dblocks = lastbit
-[10709.640075] XFS (sdb2): SB sanity check failed
-[10709.640080] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10709.640089] XFS (sdb2): Unmount and run xfs_repair
-[10709.640090] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10709.640093] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 01  XFSB.........g..
-[10709.640094] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10709.640095] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10709.640097] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10709.640097] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10709.640103] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10709.640104] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10709.640105] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10709.640125] XFS (sdb2): SB validate failed with error -117.
-[10710.173515] XFS (sdb2): Mounting V5 Filesystem
-[10710.183729] XFS (sdb2): Ending clean mount
-[10710.190875] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10710.191442] [U] ++ Try to write filesystem again
-[10710.999385] XFS (sdb2): Unmounting Filesystem
-[10713.403251] [U] + Fuzz dblocks = add
-[10713.452168] XFS (sdb2): SB sanity check failed
-[10713.452179] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10713.452191] XFS (sdb2): Unmount and run xfs_repair
-[10713.452193] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10713.452195] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 ee e1  XFSB.........g..
-[10713.452198] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10713.452199] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10713.452201] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10713.452202] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10713.452204] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10713.452205] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10713.452206] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10713.452227] XFS (sdb2): SB validate failed with error -117.
-[10713.997789] XFS (sdb2): Mounting V5 Filesystem
-[10714.010231] XFS (sdb2): Ending clean mount
-[10714.015371] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10714.015883] [U] ++ Try to write filesystem again
-[10714.771935] XFS (sdb2): Unmounting Filesystem
-[10717.259459] [U] + Fuzz dblocks = sub
-[10717.310086] XFS (sdb2): Mounting V5 Filesystem
-[10717.322283] XFS (sdb2): resetting quota flags
-[10717.322297] XFS (sdb2): Ending clean mount
-[10717.327963] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10717.336408] XFS (sdb2): Unmounting Filesystem
-[10718.044923] XFS (sdb2): Mounting V5 Filesystem
-[10718.055794] XFS (sdb2): Ending clean mount
-[10718.061024] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10718.061490] [U] ++ Try to write filesystem again
-[10718.798068] XFS (sdb2): Unmounting Filesystem
-[10721.235766] [U] + Fuzz dblocks = random
-[10721.291746] XFS (sdb2): SB sanity check failed
-[10721.291753] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10721.291767] XFS (sdb2): Unmount and run xfs_repair
-[10721.291769] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10721.291772] 00000000: 58 46 53 42 00 00 10 00 f3 98 cc f4 2e c2 c3 ca  XFSB............
-[10721.291775] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10721.291777] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10721.291779] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10721.291781] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10721.291783] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10721.291785] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10721.291786] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10721.291811] XFS (sdb2): SB validate failed with error -117.
-[10721.843894] XFS (sdb2): Mounting V5 Filesystem
-[10721.855953] XFS (sdb2): Ending clean mount
-[10721.860526] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10721.861078] [U] ++ Try to write filesystem again
-[10722.739885] XFS (sdb2): Unmounting Filesystem
-[10725.256338] [U] + Fuzz rblocks = zeroes
-[10727.014484] [U] + Fuzz rblocks = ones
-[10727.072182] XFS (sdb2): realtime geometry sanity check failed
-[10727.072189] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10727.072199] XFS (sdb2): Unmount and run xfs_repair
-[10727.072201] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10727.072203] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10727.072205] 00000010: ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00  ................
-[10727.072206] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10727.072207] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10727.072208] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10727.072210] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10727.072211] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10727.072211] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10727.072237] XFS (sdb2): SB validate failed with error -117.
-[10727.605794] XFS (sdb2): Mounting V5 Filesystem
-[10727.618453] XFS (sdb2): Ending clean mount
-[10727.623406] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10727.623952] [U] ++ Try to write filesystem again
-[10728.439124] XFS (sdb2): Unmounting Filesystem
-[10730.546383] [U] + Fuzz rblocks = firstbit
-[10730.601126] XFS (sdb2): realtime geometry sanity check failed
-[10730.601132] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10730.601142] XFS (sdb2): Unmount and run xfs_repair
-[10730.601143] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10730.601145] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10730.601147] 00000010: 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[10730.601148] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10730.601149] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10730.601150] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10730.601151] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10730.601152] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10730.601153] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10730.601175] XFS (sdb2): SB validate failed with error -117.
-[10731.192351] XFS (sdb2): Mounting V5 Filesystem
-[10731.201281] XFS (sdb2): Ending clean mount
-[10731.206869] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10731.207335] [U] ++ Try to write filesystem again
-[10732.016884] XFS (sdb2): Unmounting Filesystem
-[10734.413773] [U] + Fuzz rblocks = middlebit
-[10734.468546] XFS (sdb2): realtime geometry sanity check failed
-[10734.468561] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10734.468575] XFS (sdb2): Unmount and run xfs_repair
-[10734.468577] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10734.468581] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10734.468584] 00000010: 00 00 00 00 80 00 00 00 00 00 00 00 00 00 00 00  ................
-[10734.468587] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10734.468589] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10734.468591] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10734.468593] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10734.468595] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10734.468597] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10734.468619] XFS (sdb2): SB validate failed with error -117.
-[10735.044488] XFS (sdb2): Mounting V5 Filesystem
-[10735.060124] XFS (sdb2): Ending clean mount
-[10735.065015] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10735.065683] [U] ++ Try to write filesystem again
-[10735.894924] XFS (sdb2): Unmounting Filesystem
-[10738.382618] [U] + Fuzz rblocks = lastbit
-[10738.436639] XFS (sdb2): realtime geometry sanity check failed
-[10738.436647] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10738.436668] XFS (sdb2): Unmount and run xfs_repair
-[10738.436670] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10738.436674] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10738.436676] 00000010: 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
-[10738.436679] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10738.436680] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10738.436683] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10738.436684] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10738.436686] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10738.436688] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10738.436710] XFS (sdb2): SB validate failed with error -117.
-[10739.029629] XFS (sdb2): Mounting V5 Filesystem
-[10739.039773] XFS (sdb2): Ending clean mount
-[10739.045296] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10739.045798] [U] ++ Try to write filesystem again
-[10739.842740] XFS (sdb2): Unmounting Filesystem
-[10742.135548] [U] + Fuzz rblocks = add
-[10742.184957] XFS (sdb2): realtime geometry sanity check failed
-[10742.184965] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10742.184977] XFS (sdb2): Unmount and run xfs_repair
-[10742.184978] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10742.184980] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10742.184982] 00000010: 00 00 00 00 00 00 07 e1 00 00 00 00 00 00 00 00  ................
-[10742.184983] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10742.184985] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10742.184986] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10742.184987] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10742.184988] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10742.184989] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10742.185009] XFS (sdb2): SB validate failed with error -117.
-[10742.690555] XFS (sdb2): Mounting V5 Filesystem
-[10742.703404] XFS (sdb2): Ending clean mount
-[10742.707055] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10742.707705] [U] ++ Try to write filesystem again
-[10743.525638] XFS (sdb2): Unmounting Filesystem
-[10745.955268] [U] + Fuzz rblocks = sub
-[10746.005392] XFS (sdb2): realtime geometry sanity check failed
-[10746.005402] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10746.005428] XFS (sdb2): Unmount and run xfs_repair
-[10746.005431] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10746.005436] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10746.005441] 00000010: ff ff ff ff ff ff f8 1f 00 00 00 00 00 00 00 00  ................
-[10746.005444] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10746.005447] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10746.005450] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10746.005453] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10746.005455] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10746.005458] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10746.005484] XFS (sdb2): SB validate failed with error -117.
-[10746.545012] XFS (sdb2): Mounting V5 Filesystem
-[10746.556238] XFS (sdb2): Ending clean mount
-[10746.560079] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10746.560635] [U] ++ Try to write filesystem again
-[10747.341796] XFS (sdb2): Unmounting Filesystem
-[10749.801228] [U] + Fuzz rblocks = random
-[10749.856250] XFS (sdb2): realtime geometry sanity check failed
-[10749.856259] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10749.856274] XFS (sdb2): Unmount and run xfs_repair
-[10749.856276] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10749.856280] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10749.856284] 00000010: e3 c8 3c a4 1e f2 33 7a 00 00 00 00 00 00 00 00  ..<...3z........
-[10749.856286] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10749.856288] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10749.856290] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10749.856292] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10749.856294] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10749.856295] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10749.856318] XFS (sdb2): SB validate failed with error -117.
-[10750.413254] XFS (sdb2): Mounting V5 Filesystem
-[10750.427798] XFS (sdb2): Ending clean mount
-[10750.432992] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10750.433695] [U] ++ Try to write filesystem again
-[10751.220188] XFS (sdb2): Unmounting Filesystem
-[10753.791752] [U] + Fuzz rextents = zeroes
-[10755.888633] [U] + Fuzz rextents = ones
-[10755.938975] XFS (sdb2): realtime zeroed geometry check failed
-[10755.938984] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10755.938998] XFS (sdb2): Unmount and run xfs_repair
-[10755.939001] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10755.939004] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10755.939008] 00000010: 00 00 00 00 00 00 00 00 ff ff ff ff ff ff ff ff  ................
-[10755.939019] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10755.939021] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10755.939023] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10755.939024] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10755.939026] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10755.939028] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10755.939051] XFS (sdb2): SB validate failed with error -117.
-[10756.526169] XFS (sdb2): Mounting V5 Filesystem
-[10756.539710] XFS (sdb2): Ending clean mount
-[10756.544658] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10756.545324] [U] ++ Try to write filesystem again
-[10757.368372] XFS (sdb2): Unmounting Filesystem
-[10759.940901] [U] + Fuzz rextents = firstbit
-[10759.996834] XFS (sdb2): realtime zeroed geometry check failed
-[10759.996843] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10759.996858] XFS (sdb2): Unmount and run xfs_repair
-[10759.996860] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10759.996864] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10759.996867] 00000010: 00 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00  ................
-[10759.996869] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10759.996871] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10759.996873] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10759.996875] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10759.996876] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10759.996878] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10759.996923] XFS (sdb2): SB validate failed with error -117.
-[10760.577789] XFS (sdb2): Mounting V5 Filesystem
-[10760.592190] XFS (sdb2): Ending clean mount
-[10760.596915] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10760.597569] [U] ++ Try to write filesystem again
-[10761.360357] XFS (sdb2): Unmounting Filesystem
-[10763.803816] [U] + Fuzz rextents = middlebit
-[10763.859839] XFS (sdb2): realtime zeroed geometry check failed
-[10763.859849] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10763.859865] XFS (sdb2): Unmount and run xfs_repair
-[10763.859867] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10763.859872] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10763.859875] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00  ................
-[10763.859877] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10763.859880] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10763.859881] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10763.859883] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10763.859885] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10763.859887] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10763.860039] XFS (sdb2): SB validate failed with error -117.
-[10764.393977] XFS (sdb2): Mounting V5 Filesystem
-[10764.405934] XFS (sdb2): Ending clean mount
-[10764.408291] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10764.408753] [U] ++ Try to write filesystem again
-[10765.194953] XFS (sdb2): Unmounting Filesystem
-[10767.642061] [U] + Fuzz rextents = lastbit
-[10767.696794] XFS (sdb2): realtime zeroed geometry check failed
-[10767.696802] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10767.696815] XFS (sdb2): Unmount and run xfs_repair
-[10767.696817] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10767.696820] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10767.696824] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01  ................
-[10767.696833] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10767.696835] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10767.696837] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10767.696838] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10767.696840] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10767.696842] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10767.696877] XFS (sdb2): SB validate failed with error -117.
-[10768.170474] XFS (sdb2): Mounting V5 Filesystem
-[10768.197459] XFS (sdb2): Ending clean mount
-[10768.202226] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10768.203362] [U] ++ Try to write filesystem again
-[10768.996498] XFS (sdb2): Unmounting Filesystem
-[10771.044799] [U] + Fuzz rextents = add
-[10771.104269] XFS (sdb2): realtime zeroed geometry check failed
-[10771.104280] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10771.104292] XFS (sdb2): Unmount and run xfs_repair
-[10771.104293] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10771.104295] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10771.104297] 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 07 e1  ................
-[10771.104299] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10771.104300] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10771.104301] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10771.104302] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10771.104303] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10771.104304] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10771.104326] XFS (sdb2): SB validate failed with error -117.
-[10771.648698] XFS (sdb2): Mounting V5 Filesystem
-[10771.660387] XFS (sdb2): Ending clean mount
-[10771.664679] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10771.665276] [U] ++ Try to write filesystem again
-[10772.456567] XFS (sdb2): Unmounting Filesystem
-[10774.873437] [U] + Fuzz rextents = sub
-[10774.925617] XFS (sdb2): realtime zeroed geometry check failed
-[10774.925623] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10774.925634] XFS (sdb2): Unmount and run xfs_repair
-[10774.925636] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10774.925638] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10774.925640] 00000010: 00 00 00 00 00 00 00 00 ff ff ff ff ff ff f8 1f  ................
-[10774.925641] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10774.925647] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10774.925648] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10774.925650] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10774.925651] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10774.925652] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10774.925672] XFS (sdb2): SB validate failed with error -117.
-[10775.520734] XFS (sdb2): Mounting V5 Filesystem
-[10775.530877] XFS (sdb2): Ending clean mount
-[10775.533210] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10775.533785] [U] ++ Try to write filesystem again
-[10776.327506] XFS (sdb2): Unmounting Filesystem
-[10778.672500] [U] + Fuzz rextents = random
-[10778.724176] XFS (sdb2): realtime zeroed geometry check failed
-[10778.724190] XFS (sdb2): Metadata corruption detected at xfs_sb_read_verify+0x157/0x170, xfs_sb block 0xffffffffffffffff
-[10778.724205] XFS (sdb2): Unmount and run xfs_repair
-[10778.724207] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10778.724210] 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 67 e7 00  XFSB.........g..
-[10778.724213] 00000010: 00 00 00 00 00 00 00 00 c6 38 22 c9 a8 ea 01 66  .........8"....f
-[10778.724215] 00000020: 9c c0 7d f5 0c 35 4b 1b 9e 2d 97 9a e7 37 36 58  ..}..5K..-...76X
-[10778.724217] 00000030: 00 00 00 00 00 40 00 06 00 00 00 00 00 00 00 80  .....@..........
-[10778.724219] 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-[10778.724221] 00000050: 00 00 00 01 00 19 f9 c0 00 00 00 04 00 00 00 00  ................
-[10778.724223] 00000060: 00 00 0c fc b4 f5 02 00 02 00 00 08 00 00 00 00  ................
-[10778.724225] 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 15 00 00 19  ................
-[10778.724247] XFS (sdb2): SB validate failed with error -117.
-[10779.245765] XFS (sdb2): Mounting V5 Filesystem
-[10779.261000] XFS (sdb2): Ending clean mount
-[10779.265305] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10779.265865] [U] ++ Try to write filesystem again
-[10780.115143] XFS (sdb2): Unmounting Filesystem
-[10782.513178] [U] + Fuzz uuid = zeroes
-[10782.568917] XFS (sdb2): Filesystem has null UUID - can't mount
-[10785.533550] XFS (sdb2): Mounting V5 Filesystem
-[10785.543855] XFS (sdb2): Metadata corruption detected at xfs_agi_verify+0xee/0x1a0, xfs_agi block 0x2
-[10785.543873] XFS (sdb2): Unmount and run xfs_repair
-[10785.543877] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10785.543880] 00000000: 58 41 47 49 00 00 00 01 00 00 00 00 00 19 f9 c0  XAGI............
-[10785.543883] 00000010: 00 00 00 40 00 00 00 01 00 00 00 01 00 00 00 3d  ...@...........=
-[10785.543886] 00000020: 00 00 00 80 ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10785.543888] 00000030: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10785.543889] 00000040: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10785.543891] 00000050: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10785.543893] 00000060: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10785.543895] 00000070: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10785.543918] XFS (sdb2): metadata I/O error in "xfs_read_agi+0xa1/0x150" at daddr 0x2 len 1 error 117
-[10785.543936] XFS (sdb2): xfs_imap_lookup: xfs_ialloc_read_agi() returned error -117, agno 0
-[10785.543949] XFS (sdb2): Failed to read root inode 0x80, error 117
-[10787.619103] [U] + Fuzz uuid = ones
-[10787.675976] XFS (sdb2): Mounting V5 Filesystem
-[10787.684134] XFS (sdb2): Internal error !uuid_equal(&mp->m_sb.sb_uuid, &head->h_fs_uuid) at line 259 of file fs/xfs/xfs_log_recover.c.  Caller
-xlog_header_check_mount+0x4e/0x110
-[10787.684158] CPU: 9 PID: 1146409 Comm: mount Tainted: G           OE     5.12.0-rc2 #13
-[10787.684162] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[10787.684165] Call Trace:
-[10787.684169]  dump_stack+0x7d/0x9c
-[10787.684175]  xfs_corruption_error+0x81/0x90
-[10787.684179]  ? xlog_header_check_mount+0x4e/0x110
-[10787.684182]  xlog_header_check_mount+0x78/0x110
-[10787.684185]  ? xlog_header_check_mount+0x4e/0x110
-[10787.684187]  xlog_find_verify_log_record+0x127/0x2a0
-[10787.684190]  xlog_find_head+0x1c4/0x470
-[10787.684194]  xlog_find_tail+0x43/0x370
-[10787.684196]  ? try_to_wake_up+0x257/0x5c0
-[10787.684208]  xlog_recover+0x2f/0x160
-[10787.684210]  ? xfs_trans_ail_init+0xbc/0xf0
-[10787.684213]  xfs_log_mount+0x181/0x310
-[10787.684216]  xfs_mountfs+0x468/0x940
-[10787.684220]  xfs_fs_fill_super+0x3ac/0x760
-[10787.684223]  get_tree_bdev+0x171/0x270
-[10787.684227]  ? suffix_kstrtoint.constprop.0+0xf0/0xf0
-[10787.684230]  xfs_fs_get_tree+0x15/0x20
-[10787.684233]  vfs_get_tree+0x2a/0xc0
-[10787.684237]  path_mount+0x484/0xac0
-[10787.684241]  __x64_sys_mount+0x108/0x140
-[10787.684244]  do_syscall_64+0x38/0x90
-[10787.684248]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[10787.684252] RIP: 0033:0x7f39ff2e3efe
-[10787.684256] Code: 48 8b 0d 6d 8f 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0
-ff ff 73 01 c3 48 8b 0d 3a 8f 0c 00 f7 d8 64 89 01 48
-[10787.684258] RSP: 002b:00007ffddd32a748 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-[10787.684269] RAX: ffffffffffffffda RBX: 00007f39ff411264 RCX: 00007f39ff2e3efe
-[10787.684271] RDX: 000055ae51fffb90 RSI: 000055ae51fffbd0 RDI: 000055ae51fffbb0
-[10787.684273] RBP: 000055ae51fff960 R08: 0000000000000000 R09: 000055ae520028e0
-[10787.684274] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[10787.684275] R13: 000055ae51fffbb0 R14: 000055ae51fffb90 R15: 000055ae51fff960
-[10787.684278] XFS (sdb2): Corruption detected. Unmount and run xfs_repair
-[10787.684281] XFS (sdb2): log has mismatched uuid - can't recover
-[10787.684283] XFS (sdb2): xlog_header_check_dump:  SB : uuid = ffffffff-ffff-ffff-ffff-ffffffffffff, fmt = 1
-[10787.684286] XFS (sdb2):     log : uuid = 9cc07df5-0c35-4b1b-9e2d-979ae7373658, fmt = 1
-[10787.684289] XFS (sdb2): failed to find log head
-[10787.684291] XFS (sdb2): log mount/recovery failed: error -117
-[10787.684464] XFS (sdb2): log mount failed
-[10790.606097] XFS (sdb2): Mounting V5 Filesystem
-[10790.622711] XFS (sdb2): Metadata corruption detected at xfs_agi_verify+0xee/0x1a0, xfs_agi block 0x2
-[10790.622727] XFS (sdb2): Unmount and run xfs_repair
-[10790.622729] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10790.622731] 00000000: 58 41 47 49 00 00 00 01 00 00 00 00 00 19 f9 c0  XAGI............
-[10790.622733] 00000010: 00 00 00 40 00 00 00 01 00 00 00 01 00 00 00 3d  ...@...........=
-[10790.622734] 00000020: 00 00 00 80 ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10790.622735] 00000030: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10790.622736] 00000040: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10790.622737] 00000050: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10790.622738] 00000060: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10790.622739] 00000070: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10790.622888] XFS (sdb2): metadata I/O error in "xfs_read_agi+0xa1/0x150" at daddr 0x2 len 1 error 117
-[10790.622904] XFS (sdb2): xfs_imap_lookup: xfs_ialloc_read_agi() returned error -117, agno 0
-[10790.622909] XFS (sdb2): Failed to read root inode 0x80, error 117
-[10792.608945] [U] + Fuzz uuid = firstbit
-[10792.660503] XFS (sdb2): Mounting V5 Filesystem
-[10792.669649] XFS (sdb2): Internal error !uuid_equal(&mp->m_sb.sb_uuid, &head->h_fs_uuid) at line 259 of file fs/xfs/xfs_log_recover.c.  Caller
-xlog_header_check_mount+0x4e/0x110
-[10792.669667] CPU: 19 PID: 1147272 Comm: mount Tainted: G           OE     5.12.0-rc2 #13
-[10792.669671] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[10792.669673] Call Trace:
-[10792.669678]  dump_stack+0x7d/0x9c
-[10792.669684]  xfs_corruption_error+0x81/0x90
-[10792.669688]  ? xlog_header_check_mount+0x4e/0x110
-[10792.669691]  xlog_header_check_mount+0x78/0x110
-[10792.669694]  ? xlog_header_check_mount+0x4e/0x110
-[10792.669696]  xlog_find_verify_log_record+0x127/0x2a0
-[10792.669699]  xlog_find_head+0x1c4/0x470
-[10792.669710]  xlog_find_tail+0x43/0x370
-[10792.669712]  ? try_to_wake_up+0x257/0x5c0
-[10792.669717]  xlog_recover+0x2f/0x160
-[10792.669719]  ? xfs_trans_ail_init+0xbc/0xf0
-[10792.669722]  xfs_log_mount+0x181/0x310
-[10792.669725]  xfs_mountfs+0x468/0x940
-[10792.669729]  xfs_fs_fill_super+0x3ac/0x760
-[10792.669732]  get_tree_bdev+0x171/0x270
-[10792.669736]  ? suffix_kstrtoint.constprop.0+0xf0/0xf0
-[10792.669738]  xfs_fs_get_tree+0x15/0x20
-[10792.669742]  vfs_get_tree+0x2a/0xc0
-[10792.669745]  path_mount+0x484/0xac0
-[10792.669749]  __x64_sys_mount+0x108/0x140
-[10792.669753]  do_syscall_64+0x38/0x90
-[10792.669758]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[10792.669768] RIP: 0033:0x7fec49dedefe
-[10792.669771] Code: 48 8b 0d 6d 8f 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0
-ff ff 73 01 c3 48 8b 0d 3a 8f 0c 00 f7 d8 64 89 01 48
-[10792.669774] RSP: 002b:00007ffd39030558 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-[10792.669777] RAX: ffffffffffffffda RBX: 00007fec49f1b264 RCX: 00007fec49dedefe
-[10792.669779] RDX: 0000564fcc4ecb90 RSI: 0000564fcc4ecbd0 RDI: 0000564fcc4ecbb0
-[10792.669781] RBP: 0000564fcc4ec960 R08: 0000000000000000 R09: 0000564fcc4ef8e0
-[10792.669782] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[10792.669784] R13: 0000564fcc4ecbb0 R14: 0000564fcc4ecb90 R15: 0000564fcc4ec960
-[10792.669786] XFS (sdb2): Corruption detected. Unmount and run xfs_repair
-[10792.669789] XFS (sdb2): log has mismatched uuid - can't recover
-[10792.669791] XFS (sdb2): xlog_header_check_dump:  SB : uuid = 1cc07df5-0c35-4b1b-9e2d-979ae7373658, fmt = 1
-[10792.669794] XFS (sdb2):     log : uuid = 9cc07df5-0c35-4b1b-9e2d-979ae7373658, fmt = 1
-[10792.669797] XFS (sdb2): failed to find log head
-[10792.669798] XFS (sdb2): log mount/recovery failed: error -117
-[10792.671055] XFS (sdb2): log mount failed
-[10794.621029] XFS (sdb2): Mounting V5 Filesystem
-[10794.632631] XFS (sdb2): Metadata corruption detected at xfs_agi_verify+0xee/0x1a0, xfs_agi block 0x2
-[10794.632648] XFS (sdb2): Unmount and run xfs_repair
-[10794.632650] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10794.632653] 00000000: 58 41 47 49 00 00 00 01 00 00 00 00 00 19 f9 c0  XAGI............
-[10794.632655] 00000010: 00 00 00 40 00 00 00 01 00 00 00 01 00 00 00 3d  ...@...........=
-[10794.632656] 00000020: 00 00 00 80 ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10794.632657] 00000030: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10794.632658] 00000040: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10794.632660] 00000050: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10794.632661] 00000060: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10794.632662] 00000070: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10794.632687] XFS (sdb2): metadata I/O error in "xfs_read_agi+0xa1/0x150" at daddr 0x2 len 1 error 117
-[10794.632712] XFS (sdb2): xfs_imap_lookup: xfs_ialloc_read_agi() returned error -117, agno 0
-[10794.632719] XFS (sdb2): Failed to read root inode 0x80, error 117
-[10796.443868] [U] + Fuzz uuid = middlebit
-[10796.494240] XFS (sdb2): Mounting V5 Filesystem
-[10796.504661] XFS (sdb2): Internal error !uuid_equal(&mp->m_sb.sb_uuid, &head->h_fs_uuid) at line 259 of file fs/xfs/xfs_log_recover.c.  Caller
-xlog_header_check_mount+0x4e/0x110
-[10796.504678] CPU: 15 PID: 1148135 Comm: mount Tainted: G           OE     5.12.0-rc2 #13
-[10796.504682] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[10796.504684] Call Trace:
-[10796.504689]  dump_stack+0x7d/0x9c
-[10796.504695]  xfs_corruption_error+0x81/0x90
-[10796.504699]  ? xlog_header_check_mount+0x4e/0x110
-[10796.504702]  xlog_header_check_mount+0x78/0x110
-[10796.504704]  ? xlog_header_check_mount+0x4e/0x110
-[10796.504707]  xlog_find_verify_log_record+0x127/0x2a0
-[10796.504710]  xlog_find_head+0x1c4/0x470
-[10796.504714]  xlog_find_tail+0x43/0x370
-[10796.504722]  ? try_to_wake_up+0x257/0x5c0
-[10796.504727]  xlog_recover+0x2f/0x160
-[10796.504729]  ? xfs_trans_ail_init+0xbc/0xf0
-[10796.504732]  xfs_log_mount+0x181/0x310
-[10796.504735]  xfs_mountfs+0x468/0x940
-[10796.504739]  xfs_fs_fill_super+0x3ac/0x760
-[10796.504742]  get_tree_bdev+0x171/0x270
-[10796.504747]  ? suffix_kstrtoint.constprop.0+0xf0/0xf0
-[10796.504749]  xfs_fs_get_tree+0x15/0x20
-[10796.504753]  vfs_get_tree+0x2a/0xc0
-[10796.504756]  path_mount+0x484/0xac0
-[10796.504761]  __x64_sys_mount+0x108/0x140
-[10796.504764]  do_syscall_64+0x38/0x90
-[10796.504769]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[10796.504773] RIP: 0033:0x7f145313befe
-[10796.504783] Code: 48 8b 0d 6d 8f 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0
-ff ff 73 01 c3 48 8b 0d 3a 8f 0c 00 f7 d8 64 89 01 48
-[10796.504785] RSP: 002b:00007fff336b18d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-[10796.504789] RAX: ffffffffffffffda RBX: 00007f1453269264 RCX: 00007f145313befe
-[10796.504791] RDX: 0000559e689ecb90 RSI: 0000559e689ecbd0 RDI: 0000559e689ecbb0
-[10796.504792] RBP: 0000559e689ec960 R08: 0000000000000000 R09: 0000559e689ef8e0
-[10796.504794] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[10796.504795] R13: 0000559e689ecbb0 R14: 0000559e689ecb90 R15: 0000559e689ec960
-[10796.504798] XFS (sdb2): Corruption detected. Unmount and run xfs_repair
-[10796.504800] XFS (sdb2): log has mismatched uuid - can't recover
-[10796.504802] XFS (sdb2): xlog_header_check_dump:  SB : uuid = 9cc07df5-0c35-4b1b-1e2d-979ae7373658, fmt = 1
-[10796.504805] XFS (sdb2):     log : uuid = 9cc07df5-0c35-4b1b-9e2d-979ae7373658, fmt = 1
-[10796.504808] XFS (sdb2): failed to find log head
-[10796.504809] XFS (sdb2): log mount/recovery failed: error -117
-[10796.504956] XFS (sdb2): log mount failed
-[10798.573228] XFS (sdb2): Mounting V5 Filesystem
-[10798.583441] XFS (sdb2): Metadata corruption detected at xfs_agi_verify+0xee/0x1a0, xfs_agi block 0x2
-[10798.583467] XFS (sdb2): Unmount and run xfs_repair
-[10798.583469] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10798.583473] 00000000: 58 41 47 49 00 00 00 01 00 00 00 00 00 19 f9 c0  XAGI............
-[10798.583475] 00000010: 00 00 00 40 00 00 00 01 00 00 00 01 00 00 00 3d  ...@...........=
-[10798.583477] 00000020: 00 00 00 80 ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10798.583479] 00000030: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10798.583480] 00000040: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10798.583482] 00000050: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10798.583483] 00000060: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10798.583484] 00000070: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10798.583506] XFS (sdb2): metadata I/O error in "xfs_read_agi+0xa1/0x150" at daddr 0x2 len 1 error 117
-[10798.583524] XFS (sdb2): xfs_imap_lookup: xfs_ialloc_read_agi() returned error -117, agno 0
-[10798.583530] XFS (sdb2): Failed to read root inode 0x80, error 117
-[10800.642436] [U] + Fuzz uuid = lastbit
-[10800.696698] XFS (sdb2): Mounting V5 Filesystem
-[10800.704113] XFS (sdb2): Internal error !uuid_equal(&mp->m_sb.sb_uuid, &head->h_fs_uuid) at line 259 of file fs/xfs/xfs_log_recover.c.  Caller
-xlog_header_check_mount+0x4e/0x110
-[10800.704131] CPU: 25 PID: 1148998 Comm: mount Tainted: G           OE     5.12.0-rc2 #13
-[10800.704136] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[10800.704138] Call Trace:
-[10800.704143]  dump_stack+0x7d/0x9c
-[10800.704149]  xfs_corruption_error+0x81/0x90
-[10800.704153]  ? xlog_header_check_mount+0x4e/0x110
-[10800.704156]  xlog_header_check_mount+0x78/0x110
-[10800.704159]  ? xlog_header_check_mount+0x4e/0x110
-[10800.704161]  xlog_find_verify_log_record+0x127/0x2a0
-[10800.704172]  xlog_find_head+0x1c4/0x470
-[10800.704176]  xlog_find_tail+0x43/0x370
-[10800.704178]  ? try_to_wake_up+0x257/0x5c0
-[10800.704184]  xlog_recover+0x2f/0x160
-[10800.704187]  ? xfs_trans_ail_init+0xbc/0xf0
-[10800.704190]  xfs_log_mount+0x181/0x310
-[10800.704194]  xfs_mountfs+0x468/0x940
-[10800.704198]  xfs_fs_fill_super+0x3ac/0x760
-[10800.704201]  get_tree_bdev+0x171/0x270
-[10800.704206]  ? suffix_kstrtoint.constprop.0+0xf0/0xf0
-[10800.704209]  xfs_fs_get_tree+0x15/0x20
-[10800.704212]  vfs_get_tree+0x2a/0xc0
-[10800.704215]  path_mount+0x484/0xac0
-[10800.704220]  __x64_sys_mount+0x108/0x140
-[10800.704224]  do_syscall_64+0x38/0x90
-[10800.704236]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[10800.704240] RIP: 0033:0x7fa92ce7fefe
-[10800.704244] Code: 48 8b 0d 6d 8f 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0
-ff ff 73 01 c3 48 8b 0d 3a 8f 0c 00 f7 d8 64 89 01 48
-[10800.704247] RSP: 002b:00007ffcfd0a7228 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-[10800.704251] RAX: ffffffffffffffda RBX: 00007fa92cfad264 RCX: 00007fa92ce7fefe
-[10800.704254] RDX: 00005652d0e41b90 RSI: 00005652d0e41bd0 RDI: 00005652d0e41bb0
-[10800.704255] RBP: 00005652d0e41960 R08: 0000000000000000 R09: 00005652d0e448e0
-[10800.704257] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[10800.704258] R13: 00005652d0e41bb0 R14: 00005652d0e41b90 R15: 00005652d0e41960
-[10800.704261] XFS (sdb2): Corruption detected. Unmount and run xfs_repair
-[10800.704264] XFS (sdb2): log has mismatched uuid - can't recover
-[10800.704266] XFS (sdb2): xlog_header_check_dump:  SB : uuid = 9cc07df5-0c35-4b1b-9e2d-979ae7373659, fmt = 1
-[10800.704269] XFS (sdb2):     log : uuid = 9cc07df5-0c35-4b1b-9e2d-979ae7373658, fmt = 1
-[10800.704272] XFS (sdb2): failed to find log head
-[10800.704273] XFS (sdb2): log mount/recovery failed: error -117
-[10800.704423] XFS (sdb2): log mount failed
-[10803.749443] XFS (sdb2): Mounting V5 Filesystem
-[10803.761133] XFS (sdb2): Metadata corruption detected at xfs_agi_verify+0xee/0x1a0, xfs_agi block 0x2
-[10803.761144] XFS (sdb2): Unmount and run xfs_repair
-[10803.761146] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10803.761148] 00000000: 58 41 47 49 00 00 00 01 00 00 00 00 00 19 f9 c0  XAGI............
-[10803.761150] 00000010: 00 00 00 40 00 00 00 01 00 00 00 01 00 00 00 3d  ...@...........=
-[10803.761152] 00000020: 00 00 00 80 ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10803.761153] 00000030: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10803.761154] 00000040: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10803.761156] 00000050: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10803.761157] 00000060: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10803.761158] 00000070: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10803.761179] XFS (sdb2): metadata I/O error in "xfs_read_agi+0xa1/0x150" at daddr 0x2 len 1 error 117
-[10803.761197] XFS (sdb2): xfs_imap_lookup: xfs_ialloc_read_agi() returned error -117, agno 0
-[10803.761202] XFS (sdb2): Failed to read root inode 0x80, error 117
-[10805.782390] [U] + Fuzz uuid = add
-[10807.691230] [U] + Fuzz uuid = sub
-[10809.780039] [U] + Fuzz uuid = random
-[10809.839465] XFS (sdb2): Mounting V5 Filesystem
-[10809.845372] XFS (sdb2): Internal error !uuid_equal(&mp->m_sb.sb_uuid, &head->h_fs_uuid) at line 259 of file fs/xfs/xfs_log_recover.c.  Caller
-xlog_header_check_mount+0x4e/0x110
-[10809.845392] CPU: 31 PID: 1149906 Comm: mount Tainted: G           OE     5.12.0-rc2 #13
-[10809.845396] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[10809.845398] Call Trace:
-[10809.845410]  dump_stack+0x7d/0x9c
-[10809.845417]  xfs_corruption_error+0x81/0x90
-[10809.845422]  ? xlog_header_check_mount+0x4e/0x110
-[10809.845425]  xlog_header_check_mount+0x78/0x110
-[10809.845428]  ? xlog_header_check_mount+0x4e/0x110
-[10809.845431]  xlog_find_verify_log_record+0x127/0x2a0
-[10809.845434]  xlog_find_head+0x1c4/0x470
-[10809.845439]  xlog_find_tail+0x43/0x370
-[10809.845442]  ? try_to_wake_up+0x257/0x5c0
-[10809.845447]  xlog_recover+0x2f/0x160
-[10809.845449]  ? xfs_trans_ail_init+0xbc/0xf0
-[10809.845453]  xfs_log_mount+0x181/0x310
-[10809.845456]  xfs_mountfs+0x468/0x940
-[10809.845467]  xfs_fs_fill_super+0x3ac/0x760
-[10809.845470]  get_tree_bdev+0x171/0x270
-[10809.845476]  ? suffix_kstrtoint.constprop.0+0xf0/0xf0
-[10809.845479]  xfs_fs_get_tree+0x15/0x20
-[10809.845482]  vfs_get_tree+0x2a/0xc0
-[10809.845486]  path_mount+0x484/0xac0
-[10809.845491]  __x64_sys_mount+0x108/0x140
-[10809.845495]  do_syscall_64+0x38/0x90
-[10809.845500]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[10809.845505] RIP: 0033:0x7f278606cefe
-[10809.845509] Code: 48 8b 0d 6d 8f 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0
-ff ff 73 01 c3 48 8b 0d 3a 8f 0c 00 f7 d8 64 89 01 48
-[10809.845512] RSP: 002b:00007ffc5b8b6d98 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-[10809.845516] RAX: ffffffffffffffda RBX: 00007f278619a264 RCX: 00007f278606cefe
-[10809.845519] RDX: 000055fb61a47b90 RSI: 000055fb61a47bd0 RDI: 000055fb61a47bb0
-[10809.845520] RBP: 000055fb61a47960 R08: 0000000000000000 R09: 000055fb61a4a8e0
-[10809.845529] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[10809.845530] R13: 000055fb61a47bb0 R14: 000055fb61a47b90 R15: 000055fb61a47960
-[10809.845534] XFS (sdb2): Corruption detected. Unmount and run xfs_repair
-[10809.845537] XFS (sdb2): log has mismatched uuid - can't recover
-[10809.845538] XFS (sdb2): xlog_header_check_dump:  SB : uuid = c0e1e1e5-cb9b-28cb-dd64-6ea0d694f892, fmt = 1
-[10809.845542] XFS (sdb2):     log : uuid = 9cc07df5-0c35-4b1b-9e2d-979ae7373658, fmt = 1
-[10809.845546] XFS (sdb2): failed to find log head
-[10809.845547] XFS (sdb2): log mount/recovery failed: error -117
-[10809.845700] XFS (sdb2): log mount failed
-[10812.810123] XFS (sdb2): Mounting V5 Filesystem
-[10812.818920] XFS (sdb2): Metadata corruption detected at xfs_agi_verify+0xee/0x1a0, xfs_agi block 0x2
-[10812.818940] XFS (sdb2): Unmount and run xfs_repair
-[10812.818943] XFS (sdb2): First 128 bytes of corrupted metadata buffer:
-[10812.818946] 00000000: 58 41 47 49 00 00 00 01 00 00 00 00 00 19 f9 c0  XAGI............
-[10812.818956] 00000010: 00 00 00 40 00 00 00 01 00 00 00 01 00 00 00 3d  ...@...........=
-[10812.818959] 00000020: 00 00 00 80 ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10812.818961] 00000030: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10812.818963] 00000040: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10812.818965] 00000050: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10812.818967] 00000060: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10812.818969] 00000070: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-[10812.818991] XFS (sdb2): metadata I/O error in "xfs_read_agi+0xa1/0x150" at daddr 0x2 len 1 error 117
-[10812.819008] XFS (sdb2): xfs_imap_lookup: xfs_ialloc_read_agi() returned error -117, agno 0
-[10812.819021] XFS (sdb2): Failed to read root inode 0x80, error 117
-[10815.029962] [U] + Fuzz logstart = zeroes
-[10815.088293] XFS (sdb2): filesystem is marked as having an external log; specify logdev on the mount command line.
-[10815.088326] XFS (sdb2): SB validate failed with error -22.
-[10815.613735] XFS (sdb2): Mounting V5 Filesystem
-[10815.627429] XFS (sdb2): Ending clean mount
-[10815.629459] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10815.630051] [U] ++ Try to write filesystem again
-[10816.384228] XFS (sdb2): Unmounting Filesystem
-[10818.978187] [U] + Fuzz logstart = ones
-[10819.032752] XFS (sdb2): Mounting V5 Filesystem
-[10819.033157] attempt to access beyond end of device
-               sdb2: rw=6144, want=58491819577586169, limit=54474752
-[10819.033162] XFS (sdb2): log recovery read I/O error at daddr 0x0 len 1 error -5
-[10819.033176] XFS (sdb2): empty log check failed
-[10819.033178] XFS (sdb2): log mount/recovery failed: error -5
-[10819.033325] XFS (sdb2): log mount failed
-[10819.550932] XFS (sdb2): Mounting V5 Filesystem
-[10819.561480] XFS (sdb2): Ending clean mount
-[10819.565601] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10819.566107] [U] ++ Try to write filesystem again
-[10820.341495] XFS (sdb2): Unmounting Filesystem
-[10822.637888] [U] + Fuzz logstart = firstbit
-[10822.686002] XFS (sdb2): Mounting V5 Filesystem
-[10822.697651] XFS (sdb2): resetting quota flags
-[10822.697664] XFS (sdb2): Ending clean mount
-[10822.702308] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10822.710365] XFS (sdb2): Unmounting Filesystem
-[10823.373870] XFS (sdb2): Mounting V5 Filesystem
-[10823.382313] XFS (sdb2): Ending clean mount
-[10823.387357] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10823.387835] [U] ++ Try to write filesystem again
-[10824.156907] XFS (sdb2): Unmounting Filesystem
-[10826.780461] [U] + Fuzz logstart = middlebit
-[10826.834444] XFS (sdb2): Mounting V5 Filesystem
-[10826.836224] attempt to access beyond end of device
-               sdb2: rw=6144, want=13972773937, limit=54474752
-[10826.836230] XFS (sdb2): log recovery read I/O error at daddr 0x0 len 1 error -5
-[10826.836238] XFS (sdb2): empty log check failed
-[10826.836240] XFS (sdb2): log mount/recovery failed: error -5
-[10826.836365] XFS (sdb2): log mount failed
-[10827.376596] XFS (sdb2): Mounting V5 Filesystem
-[10827.388235] XFS (sdb2): Ending clean mount
-[10827.392379] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10827.392890] [U] ++ Try to write filesystem again
-[10828.168312] XFS (sdb2): Unmounting Filesystem
-[10830.498435] [U] + Fuzz logstart = lastbit
-[10830.550299] XFS (sdb2): Mounting V5 Filesystem
-[10830.665039] XFS (sdb2): Internal error hlen <= 0 || hlen > bufsize at line 2909 of file fs/xfs/xfs_log_recover.c.  Caller xlog_valid_rec_header+0x126/0x160
-[10830.665056] CPU: 23 PID: 1156261 Comm: mount Tainted: G           OE     5.12.0-rc2 #13
-[10830.665060] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[10830.665071] Call Trace:
-[10830.665076]  dump_stack+0x7d/0x9c
-[10830.665082]  xfs_corruption_error+0x81/0x90
-[10830.665087]  ? xlog_valid_rec_header+0x126/0x160
-[10830.665090]  xlog_valid_rec_header+0x151/0x160
-[10830.665092]  ? xlog_valid_rec_header+0x126/0x160
-[10830.665094]  xlog_do_recovery_pass+0x39f/0x7b0
-[10830.665097]  ? xlog_alloc_buffer+0xd1/0xe0
-[10830.665101]  xlog_verify_tail+0xa1/0x1a0
-[10830.665104]  xlog_verify_head+0xcd/0x1a0
-[10830.665107]  xlog_find_tail+0x2aa/0x370
-[10830.665110]  xlog_recover+0x2f/0x160
-[10830.665112]  xfs_log_mount+0x181/0x310
-[10830.665116]  xfs_mountfs+0x468/0x940
-[10830.665120]  xfs_fs_fill_super+0x3ac/0x760
-[10830.665131]  get_tree_bdev+0x171/0x270
-[10830.665137]  ? suffix_kstrtoint.constprop.0+0xf0/0xf0
-[10830.665139]  xfs_fs_get_tree+0x15/0x20
-[10830.665142]  vfs_get_tree+0x2a/0xc0
-[10830.665146]  path_mount+0x484/0xac0
-[10830.665151]  __x64_sys_mount+0x108/0x140
-[10830.665154]  do_syscall_64+0x38/0x90
-[10830.665159]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[10830.665163] RIP: 0033:0x7fd937888efe
-[10830.665166] Code: 48 8b 0d 6d 8f 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0
-ff ff 73 01 c3 48 8b 0d 3a 8f 0c 00 f7 d8 64 89 01 48
-[10830.665169] RSP: 002b:00007ffc21d766a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-[10830.665172] RAX: ffffffffffffffda RBX: 00007fd9379b6264 RCX: 00007fd937888efe
-[10830.665174] RDX: 000055b073c4bb90 RSI: 000055b073c4bbd0 RDI: 000055b073c4bbb0
-[10830.665176] RBP: 000055b073c4b960 R08: 0000000000000000 R09: 000055b073c4e8e0
-[10830.665177] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[10830.665179] R13: 000055b073c4bbb0 R14: 000055b073c4bb90 R15: 000055b073c4b960
-[10830.665182] XFS (sdb2): Corruption detected. Unmount and run xfs_repair
-[10830.665194] XFS (sdb2): failed to locate log tail
-[10830.665196] XFS (sdb2): log mount/recovery failed: error -117
-[10830.665374] XFS (sdb2): log mount failed
-[10831.192081] XFS (sdb2): Mounting V5 Filesystem
-[10831.204794] XFS (sdb2): Ending clean mount
-[10831.209854] xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
-[10831.210452] [U] ++ Try to write filesystem again
-[10832.074468] XFS (sdb2): Unmounting Filesystem
-[10834.336322] [U] + Fuzz logstart = add
-[10834.385491] XFS (sdb2): Mounting V5 Filesystem
-[10834.394175] XFS (sdb2): Log inconsistent (didn't find previous header)
-[10834.394180] XFS: Assertion failed: 0, file: fs/xfs/xfs_log_recover.c, line: 435
-[10834.394201] ------------[ cut here ]------------
-[10834.394202] kernel BUG at fs/xfs/xfs_message.c:110!
-[10834.394210] invalid opcode: 0000 [#1] SMP NOPTI
-[10834.394214] CPU: 0 PID: 1157634 Comm: mount Tainted: G           OE     5.12.0-rc2 #13
-[10834.394218] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[10834.394220] RIP: 0010:assfail+0x27/0x2d
-[10834.394233] Code: 0b 5d c3 0f 1f 44 00 00 55 41 89 c8 48 89 d1 48 89 f2 48 c7 c6 d0 36 01 87 48 89 e5 e8 79 f9 ff ff 80 3d 2c 68 3b 01 00 74 02 <0f> 0b 0f 0b
-5d c3 48 8d 45 10 48 89 e2 4c 89 e6 48 89 1c 24 48 89
-[10834.394236] RSP: 0018:ffffb588d735bbc0 EFLAGS: 00010202
-[10834.394240] RAX: 0000000000000000 RBX: 00000000000065b0 RCX: 0000000000000000
-[10834.394242] RDX: 00000000ffffffc0 RSI: 0000000000000000 RDI: ffffffff86fa8dcf
-[10834.394244] RBP: ffffb588d735bbc0 R08: 0000000000000000 R09: 000000000000000a
-[10834.394246] R10: 000000000000000a R11: f000000000000000 R12: ffff9c7feb33fe00
-[10834.394248] R13: ffff9c7e7a7f6800 R14: ffff9c7feb340000 R15: 00000000ffffff8b
-[10834.394250] FS:  00007f7dc1152800(0000) GS:ffff9c853f600000(0000) knlGS:0000000000000000
-[10834.394253] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[10834.394255] CR2: 00007ffd2ebebfc8 CR3: 0000000189e12000 CR4: 00000000000506f0
-[10834.394260] Call Trace:
-[10834.394264]  xlog_find_verify_log_record+0x21d/0x2a0
-[10834.394270]  xlog_find_head+0x1c4/0x470
-[10834.394275]  xlog_find_tail+0x43/0x370
-[10834.394278]  ? try_to_wake_up+0x257/0x5c0
-[10834.394283]  xlog_recover+0x2f/0x160
-[10834.394292]  ? xfs_trans_ail_init+0xbc/0xf0
-[10834.394295]  xfs_log_mount+0x181/0x310
-[10834.394299]  xfs_mountfs+0x468/0x940
-[10834.394303]  xfs_fs_fill_super+0x3ac/0x760
-[10834.394306]  get_tree_bdev+0x171/0x270
-[10834.394311]  ? suffix_kstrtoint.constprop.0+0xf0/0xf0
-[10834.394314]  xfs_fs_get_tree+0x15/0x20
-[10834.394318]  vfs_get_tree+0x2a/0xc0
-[10834.394322]  path_mount+0x484/0xac0
-[10834.394326]  __x64_sys_mount+0x108/0x140
-[10834.394330]  do_syscall_64+0x38/0x90
-[10834.394335]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[10834.394338] RIP: 0033:0x7f7dc13a6efe
-[10834.394342] Code: 48 8b 0d 6d 8f 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0
-ff ff 73 01 c3 48 8b 0d 3a 8f 0c 00 f7 d8 64 89 01 48
-[10834.394350] RSP: 002b:00007ffd2ebed0a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-[10834.394353] RAX: ffffffffffffffda RBX: 00007f7dc14d4264 RCX: 00007f7dc13a6efe
-[10834.394355] RDX: 0000561878e65b90 RSI: 0000561878e65bd0 RDI: 0000561878e65bb0
-[10834.394357] RBP: 0000561878e65960 R08: 0000000000000000 R09: 0000561878e688e0
-[10834.394358] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[10834.394360] R13: 0000561878e65bb0 R14: 0000561878e65b90 R15: 0000561878e65960
-[10834.394363] Modules linked in: dm_delay dm_zero dm_thin_pool dm_persistent_data dm_bio_prison dm_snapshot dm_bufio dm_flakey vboxvideo drm_vram_helper
-drm_ttm_helper intel_rapl_msr intel_rapl_common binfmt_misc nls_iso8859_1 amd_energy crct10dif_pclmul ghash_clmulni_intel snd_intel8x0 aesni_intel
-snd_ac97_codec crypto_simd cryptd ac97_bus snd_pcm nfsd snd_seq_midi snd_seq_midi_event snd_rawmidi sch_fq_codel snd_seq joydev snd_seq_device snd_timer snd
-vmwgfx auth_rpcgss input_leds mac_hid vboxguest(OE) serio_raw soundcore nfs_acl lockd ttm drm_kms_helper grace cec rc_core sunrpc drm fb_sys_fops syscopyarea
-sysfillrect sysimgblt parport_pc ppdev lp parport ip_tables x_tables autofs4 hid_generic usbhid hid ahci psmouse e1000 crc32_pclmul libahci i2c_piix4 video
-pata_acpi [last unloaded: scsi_debug]
-[10834.394441] ---[ end trace 48baa14fc702f45b ]---
-[10834.394443] RIP: 0010:assfail+0x27/0x2d
-[10834.394447] Code: 0b 5d c3 0f 1f 44 00 00 55 41 89 c8 48 89 d1 48 89 f2 48 c7 c6 d0 36 01 87 48 89 e5 e8 79 f9 ff ff 80 3d 2c 68 3b 01 00 74 02 <0f> 0b 0f 0b
-5d c3 48 8d 45 10 48 89 e2 4c 89 e6 48 89 1c 24 48 89
-[10834.394449] RSP: 0018:ffffb588d735bbc0 EFLAGS: 00010202
-[10834.394451] RAX: 0000000000000000 RBX: 00000000000065b0 RCX: 0000000000000000
-[10834.394453] RDX: 00000000ffffffc0 RSI: 0000000000000000 RDI: ffffffff86fa8dcf
-[10834.394455] RBP: ffffb588d735bbc0 R08: 0000000000000000 R09: 000000000000000a
-[10834.394457] R10: 000000000000000a R11: f000000000000000 R12: ffff9c7feb33fe00
-[10834.394458] R13: ffff9c7e7a7f6800 R14: ffff9c7feb340000 R15: 00000000ffffff8b
-[10834.394461] FS:  00007f7dc1152800(0000) GS:ffff9c853f600000(0000) knlGS:0000000000000000
-[10834.394463] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[10834.394465] CR2: 00007ffd2ebebfc8 CR3: 0000000189e12000 CR4: 00000000000506f0
+export TEST_DEV=/dev/sdb1
+export TEST_DIR=/mnt/test
+export SCRATCH_DEV=/dev/sdb2
+export SCRATCH_MNT=/mnt/scratch
 
-Darrick,
+The size for both partitions /dev/sdb1 and /dev/sdb2 is 25GB.
 
-Is this the same error you are seeing?
+These are the results of running ./check -g all on 5.12.0-rc6 kernel:
 
-Here is the latest version of this patch, with a couple of fixes (I found a couple of bugs yesterday):
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 machine 5.12.0-rc6-xfs-fixed+ #16 SMP Fri Apr 9 22:42:49 CDT 2021
+MKFS_OPTIONS  -- -f -bsize=4096 /dev/sdb2
+MOUNT_OPTIONS -- /dev/sdb2 /mnt/scratch
 
-https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=testing/xfs-fixed
+generic/001 3s ...  4s
+generic/002 0s ...  2s
+generic/003 10s ...  10s
+generic/004 1s ...  2s
+generic/005 1s ...  1s
+generic/006 1s ...  2s
+generic/007 2s ...  2s
+generic/008 1s ...  1s
+generic/009 2s ...  1s
+generic/010	[not run] /home/test/git/xfstests/src/dbtest not built
+generic/011 2s ...  1s
+generic/012 2s ...  1s
+generic/013 8s ...  7s
+generic/014 1s ...  1s
+generic/015 1s ...  1s
+generic/016 1s ...  1s
+generic/017 56s ...  54s
+generic/018 2s ...  2s
+generic/019	[not run] /sys/kernel/debug/fail_make_request  not found. Seems that CONFIG_FAULT_INJECTION_DEBUG_FS kernel config option not enabled
+generic/020 3s ...  4s
+generic/021 1s ...  1s
+generic/022 1s ...  1s
+generic/023 1s ...  1s
+generic/024 1s ...  1s
+generic/025 1s ...  1s
+generic/026 3s ...  4s
+generic/027 30s ...  29s
+generic/028 6s ...  6s
+generic/029 0s ...  1s
+generic/030 1s ...  1s
+generic/031 1s ...  0s
+generic/032 9s ...  8s
+generic/033 0s ...  1s
+generic/034 1s ...  1s
+generic/035 1s ...  1s
+generic/036 11s ...  11s
+generic/037 6s ...  5s
+generic/038	[not run] FITRIM not supported on /mnt/scratch
+generic/039 1s ...  1s
+generic/040 5s ...  6s
+generic/041 9s ...  8s
+generic/042 2s ...  2s
+generic/043 14s ...  14s
+generic/044 17s ...  17s
+generic/045 23s ...  23s
+generic/046 16s ...  17s
+generic/047 22s ...  21s
+generic/048 22s ...  22s
+generic/049 14s ...  14s
+generic/050 1s ...  0s
+generic/051 75s ...  75s
+generic/052 1s ...  1s
+generic/053 1s ...  1s
+generic/054 19s ...  18s
+generic/055 9s ...  10s
+generic/056 1s ...  1s
+generic/057 1s ...  1s
+generic/058 1s ...  1s
+generic/059 2s ...  2s
+generic/060 1s ...  1s
+generic/061 1s ...  1s
+generic/062 2s ...  1s
+generic/063 1s ...  1s
+generic/064 1s ...  2s
+generic/065 1s ...  1s
+generic/066 1s ...  1s
+generic/067 1s ...  1s
+generic/068 43s ...  43s
+generic/069 4s ...  3s
+generic/070 2s ...  3s
+generic/071 1s ...  0s
+generic/072 13s ...  14s
+generic/073 1s ...  0s
+generic/074 11s ...  11s
+generic/075 15s ...  15s
+generic/076 2s ...  2s
+generic/077 6s ...  5s
+generic/078 1s ...  2s
+generic/079 1s ...  0s
+generic/080 3s ...  3s
+generic/081	[not run] lvm utility required, skipped this test
+generic/082 1s ...  1s
+generic/083 7s ...  6s
+generic/084 5s ...  6s
+generic/085 5s ...  5s
+generic/086 1s ...  1s
+generic/087 1s ...  1s
+generic/088 1s ...  1s
+generic/089 7s ...  8s
+generic/090 2s ...  1s
+generic/091 6s ...  7s
+generic/092 0s ...  0s
+generic/093 1s ...  1s
+generic/094 8s ...  9s
+generic/095 4s ...  3s
+generic/096 1s ...  0s
+generic/097 1s ...  1s
+generic/098 1s ...  1s
+generic/099 1s ...  1s
+generic/100 18s ...  17s
+generic/101 0s ...  1s
+generic/102 3s ...  3s
+generic/103 2s ...  1s
+generic/104 1s ...  1s
+generic/105 1s ...  1s
+generic/106 1s ...  1s
+generic/107 1s ...  1s
+generic/108	[not run] lvm utility required, skipped this test
+generic/109 2s ...  1s
+generic/110 2s ...  1s
+generic/111 1s ...  1s
+generic/112 16s ...  16s
+generic/113 13s ...  13s
+generic/114 3s ...  2s
+generic/115 1s ...  1s
+generic/116 1s ...  1s
+generic/117 2s ...  2s
+generic/118 1s ...  1s
+generic/119 1s ...  1s
+generic/120 16s ...  16s
+generic/121 1s ...  1s
+generic/122 1s ...  1s
+generic/123 1s ...  1s
+generic/124 3s ...  3s
+generic/125 62s ...  62s
+generic/126 0s ...  1s
+generic/127 210s ...  216s
+generic/128 1s ...  1s
+generic/129 2s ...  2s
+generic/130 3s ...  3s
+generic/131 2s ...  2s
+generic/132 12s ...  12s
+generic/133 11s ...  12s
+generic/134 1s ...  1s
+generic/135 1s ...  1s
+generic/136 1s ...  1s
+generic/137 23s ...  22s
+generic/138 1s ...  1s
+generic/139 1s ...  1s
+generic/140 1s ...  1s
+generic/141 1s ...  1s
+generic/142 2s ...  1s
+generic/143 5s ...  5s
+generic/144 3s ...  2s
+generic/145 2s ...  2s
+generic/146 3s ...  2s
+generic/147 2s ...  1s
+generic/148 1s ...  1s
+generic/149 2s ...  1s
+generic/150 2s ...  1s
+generic/151 3s ...  1s
+generic/152 2s ...  1s
+generic/153 3s ...  1s
+generic/154 3s ...  1s
+generic/155 3s ...  2s
+generic/156 3s ...  2s
+generic/157 1s ...  2s
+generic/158 2s ...  1s
+generic/159 1s ...  1s
+generic/160 1s ...  1s
+generic/161 1s ...  1s
+generic/162 8s ...  8s
+generic/163 10s ...  9s
+generic/164 10s ...  11s
+generic/165 10s ...  10s
+generic/166 9s ...  10s
+generic/167 7s ...  7s
+generic/168 41s ...  41s
+generic/169 1s ...  1s
+generic/170 47s ...  48s
+generic/171 1s ...  1s
+generic/172 2s ...  2s
+generic/173 2s ...  2s
+generic/174 1s ...  1s
+generic/175 21s ...  20s
+generic/176 45s ...  44s
+generic/177 1s ...  1s
+generic/178 1s ...  1s
+generic/179 1s ...  1s
+generic/180 1s ...  1s
+generic/181 1s ...  1s
+generic/182 2s ...  1s
+generic/183 1s ...  2s
+generic/184 1s ...  1s
+generic/185 1s ...  1s
+generic/186 21s ...  20s
+generic/187 21s ...  20s
+generic/188 1s ...  2s
+generic/189 1s ...  1s
+generic/190 2s ...  1s
+generic/191 1s ...  1s
+generic/192 6s ...  5s
+generic/193 1s ...  2s
+generic/194 2s ...  1s
+generic/195 1s ...  2s
+generic/196 2s ...  1s
+generic/197 1s ...  1s
+generic/198 1s ...  1s
+generic/199 1s ...  2s
+generic/200 2s ...  1s
+generic/201 1s ...  2s
+generic/202 1s ...  1s
+generic/203 1s ... [failed, exit status 1]- output mismatch (see /home/test/git/xfstests/results//generic/203.out.bad)
+    --- tests/generic/203.out	2021-02-28 21:47:48.606582461 -0600
+    +++ /home/test/git/xfstests/results//generic/203.out.bad	2021-04-11 22:48:59.977013978 -0500
+    __ -1,12 +1,7 __
+     QA output created by 203
+     Format and mount
+     Create the original files
+    -Compare files
+    -75f550706b7d54e6ae59a8220b532285  SCRATCH_MNT/test-203/file1
+    -75f550706b7d54e6ae59a8220b532285  SCRATCH_MNT/test-203/file2
+    -75f550706b7d54e6ae59a8220b532285  SCRATCH_MNT/test-203/file2.chk
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/generic/203.out /home/test/git/xfstests/results//generic/203.out.bad'  to see the entire diff)
+generic/204 23s ...  22s
+generic/205	[not run] Failed to format with small blocksize.
+generic/206	[not run] Failed to format with small blocksize.
+generic/207 1s ...  2s
+generic/208 201s ...  200s
+generic/209 32s ...  31s
+generic/210 1s ...  1s
+generic/211 1s ...  1s
+generic/212 1s ...  0s
+generic/213 0s ...  1s
+generic/214 1s ...  1s
+generic/215 3s ...  3s
+generic/216	[not run] Failed to format with small blocksize.
+generic/217	[not run] Failed to format with small blocksize.
+generic/218	[not run] Failed to format with small blocksize.
+generic/219 1s ...  1s
+generic/220	[not run] Failed to format with small blocksize.
+generic/221 1s ...  2s
+generic/222	[not run] Failed to format with small blocksize.
+generic/223 3s ...  3s
+generic/224 8s ...  7s
+generic/225 9s ...  8s
+generic/226 2s ...  2s
+generic/227	[not run] Failed to format with small blocksize.
+generic/228 1s ...  1s
+generic/229	[not run] Failed to format with small blocksize.
+generic/230 13s ...  13s
+generic/231 73s ...  74s
+generic/232 4s ...  5s
+generic/233 4s ...  4s
+generic/234 8s ...  8s
+generic/235 1s ...  1s
+generic/236 2s ...  2s
+generic/237 0s ...  0s
+generic/238	[not run] Failed to format with small blocksize.
+generic/239 25s ...  20s
+generic/240 1s ...  1s
+generic/241 74s ...  73s
+generic/242 7s ...  8s
+generic/243 7s ...  7s
+generic/244 4s ...  3s
+generic/245 0s ...  1s
+generic/246 1s ...  1s
+generic/247 5s ...  5s
+generic/248 1s ...  1s
+generic/249 1s ...  1s
+generic/250 2s ...  2s
+generic/251	[not run] FITRIM not supported on /mnt/scratch
+generic/252 2s ...  2s
+generic/253 1s ... [failed, exit status 1]- output mismatch (see /home/test/git/xfstests/results//generic/253.out.bad)
+    --- tests/generic/253.out	2021-02-28 21:47:48.606582461 -0600
+    +++ /home/test/git/xfstests/results//generic/253.out.bad	2021-04-11 22:57:45.916411410 -0500
+    __ -6,7 +6,7 __
+     c946b71bb69c07daf25470742c967e7c  SCRATCH_MNT/test-253/file2
+     c946b71bb69c07daf25470742c967e7c  SCRATCH_MNT/test-253/file2.chk
+     CoW and unmount
+    -Compare files
+    -c946b71bb69c07daf25470742c967e7c  SCRATCH_MNT/test-253/file1
+    -b5fc98f04b19fa7b2085ec1358c78760  SCRATCH_MNT/test-253/file2
+    -b5fc98f04b19fa7b2085ec1358c78760  SCRATCH_MNT/test-253/file2.chk
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/generic/253.out /home/test/git/xfstests/results//generic/253.out.bad'  to see the entire diff)
+generic/254 1s ...  1s
+generic/255 1s ...  2s
+generic/256 51s ...  53s
+generic/257 1s ...  1s
+generic/258 1s ...  1s
+generic/259 1s ...  1s
+generic/260	[not run] FITRIM not supported on /mnt/scratch
+generic/261 1s ...  1s
+generic/262 1s ...  1s
+generic/263 12s ...  12s
+generic/264 1s ...  1s
+generic/265 2s ...  2s
+generic/266 2s ...  2s
+generic/267 1s ...  2s
+generic/268 2s ...  2s
+generic/269 22s ...  24s
+generic/270 39s ...  38s
+generic/271 2s ...  3s
+generic/272 1s ...  2s
+generic/273 8s ...  9s
+generic/274 7s ...  7s
+generic/275 2s ...  3s
+generic/276 2s ...  2s
+generic/277 2s ...  2s
+generic/278 2s ...  2s
+generic/279 1s ...  2s
+generic/280 2s ...  2s
+generic/281 2s ...  2s
+generic/282 2s ...  1s
+generic/283 3s ...  4s
+generic/284 1s ...  1s
+generic/285 1s ...  3s
+generic/286 2s ...  2s
+generic/287 1s ...  2s
+generic/288	[not run] FITRIM not supported on /mnt/scratch
+generic/289 1s ...  2s
+generic/290 2s ...  1s
+generic/291 1s ...  2s
+generic/292 1s ...  2s
+generic/293 1s ...  2s
+generic/294 1s ...  1s
+generic/295 1s ...  2s
+generic/296 2s ...  1s
+generic/297 41s ...  42s
+generic/298 42s ...  42s
+generic/299 108s ...  112s
+generic/300 5s ...  4s
+generic/301 2s ...  1s
+generic/302 3s ...  4s
+generic/303 1s ...  2s
+generic/304 1s ...  2s
+generic/305 1s ...  1s
+generic/306 1s ...  2s
+generic/307 2s ...  2s
+generic/308 1s ...  1s
+generic/309 2s ...  2s
+generic/310 64s ...  65s
+generic/311 46s ...  45s
+generic/312 1s ...  1s
+generic/313 5s ...  5s
+generic/314 1s ...  2s
+generic/315 1s ...  2s
+generic/316 1s ...  2s
+generic/317 3s ...  1s
+generic/318 0s ...  1s
+generic/319 0s ...  0s
+generic/320 16s ...  14s
+generic/321 2s ...  2s
+generic/322 1s ...  1s
+generic/323 122s ...  122s
+generic/324 13s ...  13s
+generic/325 1s ...  1s
+generic/326 1s ...  1s
+generic/327 1s ...  1s
+generic/328 2s ...  2s
+generic/329 2s ...  1s
+generic/330 1s ...  1s
+generic/331 2s ...  2s
+generic/332 2s ...  2s
+generic/333 75s ...  73s
+generic/334 69s ...  67s
+generic/335 1s ...  1s
+generic/336 1s ...  1s
+generic/337 1s ...  0s
+generic/338 1s ...  1s
+generic/339 2s ...  3s
+generic/340 2s ...  1s
+generic/341 1s ...  1s
+generic/342 1s ...  1s
+generic/343 1s ...  1s
+generic/344 2s ...  2s
+generic/345 2s ...  3s
+generic/346 2s ...  1s
+generic/347 70s ...  71s
+generic/348 1s ...  1s
+generic/349 2s ...  2s
+generic/350 2s ...  2s
+generic/351 4s ...  3s
+generic/352 26s ...  24s
+generic/353 1s ...  1s
+generic/354 2s ...  2s
+generic/355 1s ...  1s
+generic/356 1s ...  1s
+generic/357 2s ...  1s
+generic/358 7s ...  7s
+generic/359 1s ...  1s
+generic/360 1s ...  1s
+generic/361 1s ...  1s
+generic/362	[not run] mkfs.xfs doesn't have richacl feature
+generic/363	[not run] mkfs.xfs doesn't have richacl feature
+generic/364	[not run] mkfs.xfs doesn't have richacl feature
+generic/365	[not run] mkfs.xfs doesn't have richacl feature
+generic/366	[not run] mkfs.xfs doesn't have richacl feature
+generic/367	[not run] mkfs.xfs doesn't have richacl feature
+generic/368	[not run] mkfs.xfs doesn't have richacl feature
+generic/369	[not run] mkfs.xfs doesn't have richacl feature
+generic/370	[not run] mkfs.xfs doesn't have richacl feature
+generic/371 5s ...  5s
+generic/372 1s ...  1s
+generic/373 1s ...  1s
+generic/374 1s ...  1s
+generic/375 1s ...  1s
+generic/376 1s ...  1s
+generic/377 1s ...  1s
+generic/378 1s ...  1s
+generic/379 1s ...  1s
+generic/380 3s ...  3s
+generic/381 1s ...  1s
+generic/382 6s ...  3s
+generic/383 0s ...  0s
+generic/384 1s ...  1s
+generic/385 2s ...  2s
+generic/386 1s ...  0s
+generic/387 50s ...  49s
+generic/388 78s ... [failed, exit status 1]- output mismatch (see /home/test/git/xfstests/results//generic/388.out.bad)
+    --- tests/generic/388.out	2021-02-28 21:47:48.614581906 -0600
+    +++ /home/test/git/xfstests/results//generic/388.out.bad	2021-04-11 23:16:57.210310505 -0500
+    __ -1,2 +1,6 __
+     QA output created by 388
+     Silence is golden.
+    +umount: /mnt/scratch: target is busy.
+    +mount: /mnt/scratch: /dev/sdb2 already mounted on /mnt/scratch.
+    +cycle mount failed
+    +(see /home/test/git/xfstests/results//generic/388.full for details)
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/generic/388.out /home/test/git/xfstests/results//generic/388.out.bad'  to see the entire diff)
+generic/389 1s ...  1s
+generic/390 15s ...  15s
+generic/391 3s ...  4s
+generic/392 4s ...  3s
+generic/393 1s ...  1s
+generic/394 1s ...  1s
+generic/395	[not run] No encryption support for xfs
+generic/396	[not run] No encryption support for xfs
+generic/397	[not run] No encryption support for xfs
+generic/398	[not run] No encryption support for xfs
+generic/399	[not run] No encryption support for xfs
+generic/400 0s ...  0s
+generic/401 1s ...  0s
+generic/402 1s ...  1s
+generic/403 1s ...  1s
+generic/404 11s ...  10s
+generic/405 62s ...  63s
+generic/406 1s ...  1s
+generic/407 2s ...  2s
+generic/408 2s ...  2s
+generic/409 7s ...  6s
+generic/410 13s ... umount: /mnt/test: target is busy.
+_check_xfs_filesystem: filesystem on /dev/sdb1 has dirty log
+(see /home/test/git/xfstests/results//generic/410.full for details)
+xfs_check: /dev/sdb1 contains a mounted and writable filesystem
 
-I have run it on 5.12-rc2 and I see the same error with xfs/350 (the same error as on 5.12-rc2
-without my changes). So, I'm not sure if this is somehow expected.
+fatal error -- couldn't initialize XFS library
+_check_xfs_filesystem: filesystem on /dev/sdb1 is inconsistent (r)
+(see /home/test/git/xfstests/results//generic/410.full for details)
+- output mismatch (see /home/test/git/xfstests/results//generic/410.out.bad)
+    --- tests/generic/410.out	2021-02-28 21:47:48.618581629 -0600
+    +++ /home/test/git/xfstests/results//generic/410.out.bad	2021-04-11 23:19:03.934425780 -0500
+    __ -207,6 +207,8 __
+     mpC SCRATCH_DEV
+     mpC/dir SCRATCH_DEV
+     ======
+    +umount: /mnt/test/410: target is busy.
+    +mount: /mnt/test/410: /dev/sdb2 already mounted on /mnt/test/410.
+     make-shared a unbindable mount
+     before make-shared run on unbindable
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/generic/410.out /home/test/git/xfstests/results//generic/410.out.bad'  to see the entire diff)
+generic/411 1s ...  2s
+generic/412 1s ...  0s
+generic/413	[not run] mount /dev/sdb2 with dax failed
+generic/414 1s ...  1s
+generic/415 48s ...  49s
+generic/416 107s ...  104s
+generic/417 11s ...  12s
+generic/418 20s ...  19s
+generic/419	[not run] No encryption support for xfs
+generic/420 1s ...  1s
+generic/421	[not run] No encryption support for xfs
+generic/422 1s ...  1s
+generic/423 1s ...  1s
+generic/424 1s ...  1s
+generic/425 2s ...  2s
+generic/426 2s ...  1s
+generic/427 3s ...  3s
+generic/428 2s ...  1s
+generic/429	[not run] No encryption support for xfs
+generic/430 1s ...  1s
+generic/431 1s ...  0s
+generic/432 2s ...  1s
+generic/433 1s ...  1s
+generic/434 1s ...  1s
+generic/435	[not run] No encryption support for xfs
+generic/436 0s ...  1s
+generic/437 29s ...  6s
+generic/438 91s ...  92s
+generic/439 2s ...  2s
+generic/440	[not run] No encryption support for xfs
+generic/441 2s ...  2s
+generic/442 1s ...  1s
+generic/443 2s ...  1s
+generic/444 1s ...  0s
+generic/445 1s ...  1s
+generic/446 8s ...  9s
+generic/447 29s ...  29s
+generic/448 2s ...  1s
+generic/449 20s ...  21s
+generic/450 1s ...  1s
+generic/451 31s ...  31s
+generic/452 1s ...  1s
+generic/453 1s ...  0s
+generic/454 1s ...  1s
+generic/455	[not run] This test requires a valid $LOGWRITES_DEV
+generic/456 1s ...  1s
+generic/457	[not run] This test requires a valid $LOGWRITES_DEV
+generic/458 1s ...  0s
+generic/459	[not run] lvm utility required, skipped this test
+generic/460 2s ...  1s
+generic/461 21s ...  21s
+generic/462	[not run] mount /dev/sdb2 with dax failed
+generic/463 2s ...  1s
+generic/464 55s ...  54s
+generic/465 6s ...  5s
+generic/466 2s ... [failed, exit status 1]- output mismatch (see /home/test/git/xfstests/results//generic/466.out.bad)
+    --- tests/generic/466.out	2021-02-28 21:47:48.618581629 -0600
+    +++ /home/test/git/xfstests/results//generic/466.out.bad	2021-04-11 23:27:16.513071107 -0500
+    __ -1,2 +1,6 __
+     QA output created by 466
+     Silence is golden
+    +umount: /mnt/scratch: target is busy.
+    +mount: /mnt/scratch: /dev/sdb2 already mounted on /mnt/scratch.
+    +cycle mount failed
+    +(see /home/test/git/xfstests/results//generic/466.full for details)
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/generic/466.out /home/test/git/xfstests/results//generic/466.out.bad'  to see the entire diff)
+generic/467 2s ...  1s
+generic/468 1s ...  2s
+generic/469 2s ...  1s
+generic/470	[not run] This test requires a valid $LOGWRITES_DEV
+generic/471 2s ...  1s
+generic/472 1s ...  1s
+generic/473	- output mismatch (see /home/test/git/xfstests/results//generic/473.out.bad)
+    --- tests/generic/473.out	2021-02-28 21:47:48.618581629 -0600
+    +++ /home/test/git/xfstests/results//generic/473.out.bad	2021-04-11 23:27:24.941312327 -0500
+    __ -6,7 +6,7 __
+     1: [256..287]: hole
+     Hole + Data
+     0: [0..127]: hole
+    -1: [128..255]: data
+    +1: [128..135]: data
+     Hole + Data + Hole
+     0: [0..127]: hole
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/generic/473.out /home/test/git/xfstests/results//generic/473.out.bad'  to see the entire diff)
+generic/474 0s ...  1s
+generic/475 98s ...  81s
+generic/476 179s ...  174s
+generic/477 4s ...  2s
+generic/478 8s ...  8s
+generic/479 2s ...  2s
+generic/480 2s ...  1s
+generic/481 1s ...  1s
+generic/482	[not run] This test requires a valid $LOGWRITES_DEV
+generic/483 5s ...  5s
+generic/484 2s ...  1s
+generic/485 2s ...  1s
+generic/486 1s ...  1s
+generic/487	[not run] This test requires a valid $SCRATCH_LOGDEV
+generic/488 2s ...  1s
+generic/489 1s ...  0s
+generic/490 2s ...  0s
+generic/491 1s ...  1s
+generic/492 1s ...  1s
+generic/493 2s ...  1s
+generic/494 2s ...  1s
+generic/495 1s ...  1s
+generic/496 3s ...  2s
+generic/497 1s ...  1s
+generic/498 1s ...  1s
+generic/499 1s ...  1s
+generic/500	[not run] FITRIM not supported on /mnt/scratch
+generic/501 33s ...  33s
+generic/502 1s ...  1s
+generic/503 7s ...  6s
+generic/504 1s ...  0s
+generic/505 1s ...  1s
+generic/506 2s ...  1s
+generic/507	[not run] file system doesn't support chattr +AsSu
+generic/508 1s ...  1s
+generic/509 1s ...  1s
+generic/510 1s ...  0s
+generic/511 2s ...  1s
+generic/512 1s ...  0s
+generic/513 2s ...  2s
+generic/514 2s ...  2s
+generic/515 1s ...  1s
+generic/516 1s ...  1s
+generic/517 1s ...  1s
+generic/518 1s ...  1s
+generic/519 1s ...  1s
+generic/520 12s ...  12s
+generic/521 549s ...  560s
+generic/522 606s ...  616s
+generic/523 0s ...  1s
+generic/524 2s ...  3s
+generic/525 1s ...  0s
+generic/526 1s ...  0s
+generic/527 1s ...  1s
+generic/528 1s ...  1s
+generic/529 1s ...  1s
+generic/530 3s ...  4s
+generic/531 284s ...  269s
+generic/532 1s ...  1s
+generic/533 0s ...  1s
+generic/534 0s ...  1s
+generic/535 1s ...  1s
+generic/536 1s ...  1s
+generic/537	[not run] FSTRIM not supported
+generic/538 2s ...  1s
+generic/539 1s ...  1s
+generic/540 1s ...  2s
+generic/541 2s ...  1s
+generic/542 1s ...  1s
+generic/543 2s ...  2s
+generic/544 2s ...  2s
+generic/545 1s ...  1s
+generic/546 2s ...  1s
+generic/547 1s ...  2s
+generic/548	[not run] No encryption support for xfs
+generic/549	[not run] No encryption support for xfs
+generic/550	[not run] No encryption support for xfs
+generic/551 57s ...  58s
+generic/552 1s ...  1s
+generic/553 1s ...  1s
+generic/554 1s ...  1s
+generic/555 1s ...  1s
+generic/556	[not run] xfs does not support casefold feature
+generic/557 1s ...  2s
+generic/558 69s ...  69s
+generic/559	[not run] duperemove utility required, skipped this test
+generic/560	[not run] duperemove utility required, skipped this test
+generic/561	[not run] duperemove utility required, skipped this test
+generic/562 94s ...  92s
+generic/563	[not run] cgroup2 not mounted on /sys/fs/cgroup
+generic/564 1s ...  1s
+generic/565 1s ...  1s
+generic/566 9s ...  7s
+generic/567 0s ...  1s
+generic/568 1s ...  1s
+generic/569 1s ...  1s
+generic/570	[not run] userspace hibernation to swap is enabled
+generic/571 7s ...  7s
+generic/572	[not run] fsverity utility required, skipped this test
+generic/573	[not run] fsverity utility required, skipped this test
+generic/574	[not run] fsverity utility required, skipped this test
+generic/575	[not run] fsverity utility required, skipped this test
+generic/576	[not run] fsverity utility required, skipped this test
+generic/577	[not run] fsverity utility required, skipped this test
+generic/578 1s ...  1s
+generic/579	[not run] fsverity utility required, skipped this test
+generic/580	[not run] No encryption support for xfs
+generic/581	[not run] No encryption support for xfs
+generic/582	[not run] No encryption support for xfs
+generic/583	[not run] No encryption support for xfs
+generic/584	[not run] No encryption support for xfs
+generic/585 2s ...  1s
+generic/586 7s ...  5s
+generic/587 2s ...  1s
+generic/588 2s ...  2s
+generic/589 8s ...  7s
+generic/590 19s ...  23s
+generic/591 1s ...  1s
+generic/592	[not run] No encryption support for xfs
+generic/593	[not run] No encryption support for xfs
+generic/594	- output mismatch (see /home/test/git/xfstests/results//generic/594.out.bad)
+    --- tests/generic/594.out	2021-02-28 21:47:48.622581352 -0600
+    +++ /home/test/git/xfstests/results//generic/594.out.bad	2021-04-12 00:02:58.035667398 -0500
+    __ -5,31 +5,31 __
+     *** Report for group quotas on device SCRATCH_DEV
+     Block grace time: DEF_TIME; Inode grace time: DEF_TIME
+     *** Report for project quotas on device SCRATCH_DEV
+    -Block grace time: 00:10; Inode grace time: 00:20
+    +Block grace time: DEF_TIME; Inode grace time: DEF_TIME
+     
+     2. set group quota timer
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/generic/594.out /home/test/git/xfstests/results//generic/594.out.bad'  to see the entire diff)
+generic/595	[not run] No encryption support for xfs
+generic/596	[not run] accton utility required, skipped this test
+generic/597 23s ...  2s
+generic/598 1s ...  1s
+generic/599 1s ...  1s
+generic/600	- output mismatch (see /home/test/git/xfstests/results//generic/600.out.bad)
+    --- tests/generic/600.out	2021-02-28 21:47:48.622581352 -0600
+    +++ /home/test/git/xfstests/results//generic/600.out.bad	2021-04-12 00:03:10.805194828 -0500
+    __ -1,2 +1,3 __
+     QA output created by 600
+     Silence is golden
+    +set grace to 1618203890 but got grace 1618203788
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/generic/600.out /home/test/git/xfstests/results//generic/600.out.bad'  to see the entire diff)
+generic/601	[not run] xfs_quota does not support individual grace extension
+generic/602	[not run] No encryption support for xfs
+generic/603 61s ...  56s
+generic/604 2s ...  2s
+generic/605	[not run] mount /dev/sdb2 with dax=always failed
+generic/606	[not run] mount /dev/sdb2 with dax=always failed
+generic/607 1s ...  1s
+generic/608	[not run] mount /dev/sdb2 with dax=always failed
+generic/609 0s ...  1s
+generic/610 4s ...  5s
+generic/611 1s ...  1s
+generic/612 1s ...  1s
+generic/613	[not run] No encryption support for xfs
+generic/614 1s ...  1s
+generic/615 26s ...  24s
+generic/616 62s ...  63s
+generic/617 12s ...  12s
+generic/618	[not run] test requires XFS bug_on_assert to be off, turn it off to run the test
+generic/619 14s ...  14s
+generic/620 2s ...  2s
+generic/621	[not run] No encryption support for xfs
+generic/622 23s ...  23s
+shared/002 13s ...  12s
+shared/032 54s ...  57s
+shared/298 12s ...  12s
+xfs/001 2s ...  2s
+xfs/002 1s ...  1s
+xfs/003 4s ...  5s
+xfs/004 1s ...  0s
+xfs/005 1s ...  1s
+xfs/006 2s ...  3s
+xfs/007 1s ...  1s
+xfs/008 1s ...  1s
+xfs/009 1s ...  1s
+xfs/010 2s ...  2s
+xfs/011 18s ...  17s
+xfs/012 1s ...  1s
+xfs/013 129s ...  125s
+xfs/014 3s ...  2s
+xfs/015 3s ...  3s
+xfs/016 32s ...  32s
+xfs/017 3s ...  3s
+xfs/018	- output mismatch (see /home/test/git/xfstests/results//xfs/018.out.bad)
+    --- tests/xfs/018.out	2021-02-28 21:47:48.634580518 -0600
+    +++ /home/test/git/xfstests/results//xfs/018.out.bad	2021-04-12 00:11:44.651612557 -0500
+    __ -1,17 +1,9 __
+     QA output created by 018
+     *** init FS
+    -*** compare logprint: 018.op with 018.fulldir/op.mnt-onoalign,logbsize=32k.mkfs-lsize=2000b-llazy-count=1-lversion=1.filtered
+    -*** compare logprint: 018.trans_inode with 018.fulldir/trans_inode.mnt-onoalign,logbsize=32k.mkfs-lsize=2000b-llazy-count=1-lversion=1.filtered
+    -*** compare logprint: 018.trans_buf with 018.fulldir/trans_buf.mnt-onoalign,logbsize=32k.mkfs-lsize=2000b-llazy-count=1-lversion=1.filtered
+    -*** compare logprint: 018.op with 018.fulldir/op.mnt-onoalign,logbsize=32k.mkfs-lsize=2000b-llazy-count=1-lversion=2.filtered
+    -*** compare logprint: 018.trans_inode with 018.fulldir/trans_inode.mnt-onoalign,logbsize=32k.mkfs-lsize=2000b-llazy-count=1-lversion=2.filtered
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/018.out /home/test/git/xfstests/results//xfs/018.out.bad'  to see the entire diff)
+xfs/019 1s ...  1s
+xfs/020 1s ...  1s
+xfs/021 0s ...  1s
+xfs/022	[not run] xfsdump not found
+xfs/023	[not run] xfsdump not found
+xfs/024	[not run] xfsdump not found
+xfs/025	[not run] xfsdump not found
+xfs/026	[not run] xfsdump not found
+xfs/027	[not run] xfsdump not found
+xfs/028	[not run] xfsdump not found
+xfs/029 0s ...  1s
+xfs/030	- output mismatch (see /home/test/git/xfstests/results//xfs/030.out.bad)
+    --- tests/xfs/030.out	2021-02-28 21:47:48.634580518 -0600
+    +++ /home/test/git/xfstests/results//xfs/030.out.bad	2021-04-12 00:11:53.808251452 -0500
+    __ -105,7 +105,6 __
+     Phase 2 - using <TYPEOF> log
+             - zero log...
+             - scan filesystem freespace and inode maps...
+    -bad agbno AGBNO in agfl, agno 0
+             - found root inode chunk
+     Phase 3 - for each AG...
+             - scan and clear agi unlinked lists...
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/030.out /home/test/git/xfstests/results//xfs/030.out.bad'  to see the entire diff)
+xfs/031 3s ...  4s
+xfs/032 4s ...  5s
+xfs/033 3s ...  2s
+xfs/034 1s ...  0s
+xfs/035	[not run] xfsdump not found
+xfs/036	[not run] xfsdump not found
+xfs/037	[not run] xfsdump not found
+xfs/038	[not run] xfsdump not found
+xfs/039	[not run] xfsdump not found
+xfs/040	[not run] Can't run libxfs-diff without KWORKAREA set
+xfs/041 12s ...  12s
+xfs/042 13s ...  14s
+xfs/043	[not run] xfsdump not found
+xfs/044	[not run] This test requires a valid $SCRATCH_LOGDEV
+xfs/045 1s ...  1s
+xfs/046	[not run] xfsdump not found
+xfs/047	[not run] xfsdump not found
+xfs/048 0s ...  1s
+xfs/049 2s ...  2s
+xfs/050 4s ...  4s
+xfs/051 17s ...  18s
+xfs/052 1s ...  1s
+xfs/053 0s ...  0s
+xfs/054 1s ...  1s
+xfs/055	[not run] xfsdump not found
+xfs/056	[not run] xfsdump not found
+xfs/057 17s ...  17s
+xfs/058 1s ...  1s
+xfs/059	[not run] xfsdump not found
+xfs/060	[not run] xfsdump not found
+xfs/061	[not run] xfsdump not found
+xfs/062 4s ...  4s
+xfs/063	[not run] xfsdump not found
+xfs/064	[not run] xfsdump not found
+xfs/065	[not run] xfsdump not found
+xfs/066	[not run] xfsdump not found
+xfs/067 0s ...  1s
+xfs/068	[not run] xfsdump not found
+xfs/069 1s ...  2s
+xfs/070 1s ...  1s
+xfs/071 1s ...  1s
+xfs/072 1s ...  1s
+xfs/073	- output mismatch (see /home/test/git/xfstests/results//xfs/073.out.bad)
+    --- tests/xfs/073.out	2021-02-28 21:47:48.638580241 -0600
+    +++ /home/test/git/xfstests/results//xfs/073.out.bad	2021-04-12 00:13:43.063547248 -0500
+    __ -14,6 +14,14 __
+     comparing new image files to old
+     comparing new image directories to old
+     comparing new image geometry to old
+    +--- /tmp/2751531.geometry1	2021-04-12 00:13:38.127229711 -0500
+    ++++ /tmp/2751531.geometry2	2021-04-12 00:13:38.135230226 -0500
+    +__ -1,4 +1,4 __
+    +-meta-data=<DEVIMAGE> isize=512 agcount=2, agsize=5248 blks
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/073.out /home/test/git/xfstests/results//xfs/073.out.bad'  to see the entire diff)
+xfs/074 3s ...  2s
+xfs/075 0s ...  1s
+xfs/076 34s ...  34s
+xfs/077 3s ...  3s
+xfs/078 5s ...  4s
+xfs/079 12s ...  12s
+xfs/080 2s ...  2s
+xfs/081	[failed, exit status 1]- output mismatch (see /home/test/git/xfstests/results//xfs/081.out.bad)
+    --- tests/xfs/081.out	2021-02-28 21:47:48.638580241 -0600
+    +++ /home/test/git/xfstests/results//xfs/081.out.bad	2021-04-12 00:14:42.615297160 -0500
+    __ -1,4 +1,10 __
+     QA output created by 081
+     *** init FS
+    -*** compare logprint: 081.ugquota.trans_inode with 081.fulldir/trans_inode.mnt-oquota,gquota.mkfs-lsize=2000b-llazy-count=1-lversion=1.filtered
+    +
+    +*** Cannot mkfs for this test using option specified: -l size=2000b -l lazy-count=1 -l version=1 ***
+    +
+    +*** compare logprint: 081.ugquota.trans_inode with /home/test/git/xfstests/results//xfs/081.fulldir/trans_inode.mnt-oquota,gquota.mkfs-lsize=2000b-llazy-count=1-lversion=1.filtered
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/081.out /home/test/git/xfstests/results//xfs/081.out.bad'  to see the entire diff)
+xfs/082	- output mismatch (see /home/test/git/xfstests/results//xfs/082.out.bad)
+    --- tests/xfs/082.out	2021-02-28 21:47:48.638580241 -0600
+    +++ /home/test/git/xfstests/results//xfs/082.out.bad	2021-04-12 00:14:44.655423093 -0500
+    __ -1,39 +1,11 __
+     QA output created by 082
+     *** init FS
+     --- mkfs=version=2, mnt=logbsize=32k, sync=sync ---
+    -*** compare logprint: 082.trans_inode with 082.fulldir/trans_inode.mnt-ologbsize=32k.mkfs-lsize=2000b-llazy-count=1-lversion=2.sync.filtered
+    -*** compare logprint: 082.trans_buf with 082.fulldir/trans_buf.mnt-ologbsize=32k.mkfs-lsize=2000b-llazy-count=1-lversion=2.sync.filtered
+    ---- mkfs=version=2,su=4096, mnt=logbsize=32k, sync=sync ---
+    -*** compare logprint: 082.trans_inode with 082.fulldir/trans_inode.mnt-ologbsize=32k.mkfs-lsize=2000b-llazy-count=1-lversion=2,su=4096.sync.filtered
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/082.out /home/test/git/xfstests/results//xfs/082.out.bad'  to see the entire diff)
+xfs/083 394s ...  382s
+xfs/084 60s ...  62s
+xfs/085 3s ...  3s
+xfs/086 4s ...  3s
+xfs/087 3s ...  3s
+xfs/088 3s ...  4s
+xfs/089 4s ...  4s
+xfs/090	[not run] External volumes not in use, skipped this test
+xfs/091 3s ...  3s
+xfs/092 1s ...  1s
+xfs/093 3s ...  4s
+xfs/094	[not run] External volumes not in use, skipped this test
+xfs/095 1s ...  1s
+xfs/096	[not run] Requires older mkfs without strict input checks: the last supported version of xfsprogs is 4.5.
+xfs/097 3s ...  3s
+xfs/098	[not run] test requires XFS bug_on_assert to be off, turn it off to run the test
+xfs/099 1s ...  1s
+xfs/100 3s ...  2s
+xfs/101 2s ...  3s
+xfs/102 8s ...  7s
+xfs/103 1s ...  0s
+xfs/104 13s ...  12s
+xfs/105 7s ...  7s
+xfs/106 17s ...  16s
+xfs/107	- output mismatch (see /home/test/git/xfstests/results//xfs/107.out.bad)
+    --- tests/xfs/107.out	2021-02-28 21:47:48.638580241 -0600
+    +++ /home/test/git/xfstests/results//xfs/107.out.bad	2021-04-12 00:23:49.084870953 -0500
+    __ -9,6 +9,32 __
+     ### populate filesystem
+     ### initial report
+     [SCR_DEV] ([SCR_MNT]) Project:
+    +   96532    #0      
+    +    5004    #3      
+    +    4356    #1      
+    +    3876    #2      
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/107.out /home/test/git/xfstests/results//xfs/107.out.bad'  to see the entire diff)
+xfs/108 1s ...  1s
+xfs/109 21s ...  24s
+xfs/110 3s ...  3s
+xfs/111 4s ...  4s
+xfs/112 7s ...  6s
+xfs/113 44s ...  47s
+xfs/114	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/115	[not run] test requires XFS bug_on_assert to be off, turn it off to run the test
+xfs/116 1s ...  1s
+xfs/117 4s ...  3s
+xfs/118 10s ...  9s
+xfs/119 3s ...  3s
+xfs/120 3s ...  3s
+xfs/121 6s ...  6s
+xfs/122	[not run] indent utility required, skipped this test
+xfs/123 2s ... [failed, exit status 1]- output mismatch (see /home/test/git/xfstests/results//xfs/123.out.bad)
+    --- tests/xfs/123.out	2021-02-28 21:47:48.642579963 -0600
+    +++ /home/test/git/xfstests/results//xfs/123.out.bad	2021-04-12 00:25:41.274261417 -0500
+    __ -3,9 +3,7 __
+     + mount fs image
+     + make some files
+     file contents: moo
+    +umount: /mnt/scratch: target is busy.
+     + check fs
+    -+ corrupt image
+    -+ mount image
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/123.out /home/test/git/xfstests/results//xfs/123.out.bad'  to see the entire diff)
+xfs/124 2s ...  1s
+xfs/125 4s ...  4s
+xfs/126 4s ...  3s
+xfs/127 2s ...  2s
+xfs/128 8s ...  9s
+xfs/129 4s ...  3s
+xfs/130 2s ...  1s
+xfs/131	[not run] External volumes not in use, skipped this test
+xfs/132 0s ...  1s
+xfs/133 1s ...  1s
+xfs/134 1s ...  0s
+xfs/135 2s ...  2s
+xfs/136	- output mismatch (see /home/test/git/xfstests/results//xfs/136.out.bad)
+    --- tests/xfs/136.out	2021-02-28 21:47:48.642579963 -0600
+    +++ /home/test/git/xfstests/results//xfs/136.out.bad	2021-04-12 00:48:25.823406767 -0500
+    __ -1,5 +1,5 __
+     QA output created by 136
+    -inum=67
+    +inum=131
+     core.format = 2 (extents)
+     core.size = 0
+     core.extsize = 0
+    __ -7,6 +7,7 __
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/136.out /home/test/git/xfstests/results//xfs/136.out.bad'  to see the entire diff)
+xfs/137 4s ...  4s
+xfs/138 3s ...  3s
+xfs/139 6s ...  5s
+xfs/140 47s ...  45s
+xfs/141 9s ...  12s
+xfs/142	[not run] Assuming DMAPI modules are not loaded
+xfs/143	[not run] Assuming DMAPI modules are not loaded
+xfs/144	[not run] Assuming DMAPI modules are not loaded
+xfs/145	[not run] Assuming DMAPI modules are not loaded
+xfs/146	[not run] Assuming DMAPI modules are not loaded
+xfs/147	[not run] Assuming DMAPI modules are not loaded
+xfs/148 3s ...  1s
+xfs/149 2s ...  1s
+xfs/150	[not run] Assuming DMAPI modules are not loaded
+xfs/151	[not run] Assuming DMAPI modules are not loaded
+xfs/152	[not run] Assuming DMAPI modules are not loaded
+xfs/153	[not run] Assuming DMAPI modules are not loaded
+xfs/154	[not run] Assuming DMAPI modules are not loaded
+xfs/155	[not run] Assuming DMAPI modules are not loaded
+xfs/156	[not run] Assuming DMAPI modules are not loaded
+xfs/157	[not run] Assuming DMAPI modules are not loaded
+xfs/158	[not run] Assuming DMAPI modules are not loaded
+xfs/159	[not run] Assuming DMAPI modules are not loaded
+xfs/160	[not run] Assuming DMAPI modules are not loaded
+xfs/161	[not run] Assuming DMAPI modules are not loaded
+xfs/162	[not run] Assuming DMAPI modules are not loaded
+xfs/163	[not run] Assuming DMAPI modules are not loaded
+xfs/164 1s ...  1s
+xfs/165 1s ...  1s
+xfs/166 1s ...  0s
+xfs/167 62s ...  61s
+xfs/168	[not run] Assuming DMAPI modules are not loaded
+xfs/169 15s ...  16s
+xfs/170 3s ...  2s
+xfs/171 17s ...  18s
+xfs/172	[failed, exit status 1]- output mismatch (see /home/test/git/xfstests/results//xfs/172.out.bad)
+    --- tests/xfs/172.out	2021-02-28 21:47:48.642579963 -0600
+    +++ /home/test/git/xfstests/results//xfs/172.out.bad	2021-04-12 00:51:27.328872669 -0500
+    __ -3,9 +3,5 __
+     # streaming
+     # sync AGs...
+     # checking stream AGs...
+    -+ expected failure, matching AGs
+    -# testing 64 16 20 10 1 0 1 ....
+    -# streaming
+    -# sync AGs...
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/172.out /home/test/git/xfstests/results//xfs/172.out.bad'  to see the entire diff)
+xfs/173 8s ...  8s
+xfs/174 4s ...  3s
+xfs/175	[not run] Assuming DMAPI modules are not loaded
+xfs/176	[not run] Assuming DMAPI modules are not loaded
+xfs/177	[not run] Assuming DMAPI modules are not loaded
+xfs/178 1s ...  1s
+xfs/179 1s ...  1s
+xfs/180 1s ...  1s
+xfs/181 11s ...  11s
+xfs/182 2s ...  2s
+xfs/183 3s ...  3s
+xfs/184 2s ...  2s
+xfs/185	[not run] Assuming DMAPI modules are not loaded
+xfs/186	[not run] attr v1 not supported on /dev/sdb2
+xfs/187	[not run] attr v1 not supported on /dev/sdb2
+xfs/188 10s ...  9s
+xfs/189	[not run] noattr2 mount option not supported on /dev/sdb2
+xfs/190 1s ...  1s
+xfs/191-input-validation 6s ...  4s
+xfs/192 2s ...  2s
+xfs/193 2s ...  1s
+xfs/194 1s ...  1s
+xfs/195	[not run] xfsdump utility required, skipped this test
+xfs/196 1s ...  1s
+xfs/197	[not run] This test is only valid on 32 bit machines
+xfs/198 2s ...  1s
+xfs/199 1s ...  1s
+xfs/200 2s ...  2s
+xfs/201 1s ...  1s
+xfs/202 1s ...  1s
+xfs/203 2s ...  1s
+xfs/204 2s ...  2s
+xfs/205 2s ...  2s
+xfs/206 2s ...  1s
+xfs/207 2s ...  1s
+xfs/208 2s ...  2s
+xfs/209 1s ...  1s
+xfs/210 2s ...  1s
+xfs/211 217s ...  228s
+xfs/212 2s ...  1s
+xfs/213 3s ...  4s
+xfs/214 6s ...  3s
+xfs/215 1s ...  2s
+xfs/216 2s ...  2s
+xfs/217 1s ...  1s
+xfs/218 2s ...  2s
+xfs/219 2s ...  1s
+xfs/220 1s ...  1s
+xfs/221 2s ...  2s
+xfs/222 3s ...  1s
+xfs/223 2s ...  2s
+xfs/224 2s ...  1s
+xfs/225 2s ...  2s
+xfs/226 1s ...  1s
+xfs/227 299s ...  294s
+xfs/228 2s ...  1s
+xfs/229 9s ...  8s
+xfs/230 2s ...  2s
+xfs/231 4s ...  5s
+xfs/232 4s ...  4s
+xfs/233	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/234	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/235	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/236	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/237 2s ...  2s
+xfs/238 2s ...  1s
+xfs/239 1s ...  2s
+xfs/240 3s ...  2s
+xfs/241 1s ...  2s
+xfs/242 2s ...  1s
+xfs/243 1s ...  1s
+xfs/244	[not run] 16 bit project IDs not supported on /dev/sdb2
+xfs/245 1s ...  1s
+xfs/246 0s ...  1s
+xfs/247 1s ...  0s
+xfs/248 2s ...  2s
+xfs/249 1s ...  1s
+xfs/250 8s ...  7s
+xfs/251 2s ...  2s
+xfs/252 2s ...  2s
+xfs/253 2s ...  2s
+xfs/254 1s ...  1s
+xfs/255 2s ...  2s
+xfs/256 1s ...  1s
+xfs/257 2s ...  2s
+xfs/258 2s ...  2s
+xfs/259 3s ...  3s
+xfs/260 1s ...  1s
+xfs/261 1s ...  0s
+xfs/262	- output mismatch (see /home/test/git/xfstests/results//xfs/262.out.bad)
+    --- tests/xfs/262.out	2021-02-28 21:47:48.650579408 -0600
+    +++ /home/test/git/xfstests/results//xfs/262.out.bad	2021-04-12 01:03:02.923150108 -0500
+    __ -1,3 +1,5 __
+     QA output created by 262
+     Format and populate
+     Force online repairs
+    +Error: /mnt/scratch: Kernel metadata scrubbing facility is not available. (phase1.c line 147)
+    +/mnt/scratch: operational errors found: 1
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/262.out /home/test/git/xfstests/results//xfs/262.out.bad'  to see the entire diff)
+xfs/263 1s ...  2s
+xfs/264 6s ...  5s
+xfs/265 8s ...  7s
+xfs/266	[not run] xfsdump not found
+xfs/267	[not run] xfsdump not found
+xfs/268	[not run] xfsdump not found
+xfs/269 1s ...  1s
+xfs/270 1s ...  1s
+xfs/271	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/272	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/273 4s ...  116s
+xfs/274	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/275	[not run] This test requires a valid $SCRATCH_LOGDEV
+xfs/276	[not run] External volumes not in use, skipped this test
+xfs/277	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/278 1s ...  1s
+xfs/279 10s ...  9s
+xfs/280 1s ...  2s
+xfs/281	[not run] xfsdump not found
+xfs/282	[not run] xfsdump not found
+xfs/283	[not run] xfsdump not found
+xfs/284 1s ...  1s
+xfs/285	- output mismatch (see /home/test/git/xfstests/results//xfs/285.out.bad)
+    --- tests/xfs/285.out	2021-02-28 21:47:48.650579408 -0600
+    +++ /home/test/git/xfstests/results//xfs/285.out.bad	2021-04-12 01:06:37.689415191 -0500
+    __ -1,4 +1,6 __
+     QA output created by 285
+     Format and populate
+    +Error: /mnt/scratch: Kernel metadata scrubbing facility is not available. (phase1.c line 147)
+    +/mnt/scratch: operational errors found: 1
+     Concurrent scrub
+     Test done
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/285.out /home/test/git/xfstests/results//xfs/285.out.bad'  to see the entire diff)
+xfs/286	- output mismatch (see /home/test/git/xfstests/results//xfs/286.out.bad)
+    --- tests/xfs/286.out	2021-02-28 21:47:48.650579408 -0600
+    +++ /home/test/git/xfstests/results//xfs/286.out.bad	2021-04-12 01:07:41.784464380 -0500
+    __ -1,4 +1,132 __
+     QA output created by 286
+     Format and populate
+    +Error: /mnt/scratch: Kernel metadata scrubbing facility is not available. (phase1.c line 147)
+    +/mnt/scratch: operational errors found: 1
+     Concurrent repair
+    +Error: /mnt/scratch: Kernel metadata scrubbing facility is not available. (phase1.c line 147)
+    +/mnt/scratch: operational errors found: 1
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/286.out /home/test/git/xfstests/results//xfs/286.out.bad'  to see the entire diff)
+xfs/287	[not run] xfsdump not found
+xfs/288 0s ...  1s
+xfs/289 1s ...  1s
+xfs/290 0s ...  1s
+xfs/291 45s ...  49s
+xfs/292 1s ...  1s
+xfs/293 0s ...  0s
+xfs/294 17s ...  16s
+xfs/295 8s ...  10s
+xfs/296	[not run] xfsdump not found
+xfs/297 38s ...  43s
+xfs/298 3s ...  3s
+xfs/299 4s ...  4s
+xfs/300	[not run] SELinux not enabled
+xfs/301	[not run] xfsdump not found
+xfs/302	[not run] xfsdump not found
+xfs/303 1s ...  0s
+xfs/304 1s ... - output mismatch (see /home/test/git/xfstests/results//xfs/304.out.bad)
+    --- tests/xfs/304.out	2021-02-28 21:47:48.650579408 -0600
+    +++ /home/test/git/xfstests/results//xfs/304.out.bad	2021-04-12 01:09:55.442806556 -0500
+    __ -3,5 +3,6 __
+     *** umount
+     *** turn off project quotas
+     *** umount
+    +umount: /mnt/scratch: target is busy.
+     *** turn off group/project quotas
+     *** umount
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/304.out /home/test/git/xfstests/results//xfs/304.out.bad'  to see the entire diff)
+xfs/305 65s ...  65s
+xfs/306 12s ...  12s
+xfs/307 2s ...  2s
+xfs/308 1s ...  1s
+xfs/309 8s ...  8s
+xfs/310	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/311 21s ...  22s
+xfs/312 2s ...  1s
+xfs/313 1s ...  1s
+xfs/314	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/315 1s ...  1s
+xfs/316 1s ...  1s
+xfs/317	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/318 0s ...  1s
+xfs/319 2s ...  1s
+xfs/320 1s ...  1s
+xfs/321 1s ...  1s
+xfs/322	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/323 1s ...  1s
+xfs/324 1s ...  1s
+xfs/325 1s ...  1s
+xfs/326 2s ...  1s
+xfs/327 1s ...  2s
+xfs/328 30s ...  28s
+xfs/329	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/330 1s ...  1s
+xfs/331	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/332	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/333	[not run] rmapbt not supported by scratch filesystem type: xfs
+xfs/334	[not run] External volumes not in use, skipped this test
+xfs/335	[not run] External volumes not in use, skipped this test
+xfs/336	[not run] External volumes not in use, skipped this test
+xfs/337	[not run] External volumes not in use, skipped this test
+xfs/338	[not run] External volumes not in use, skipped this test
+xfs/339	[not run] External volumes not in use, skipped this test
+xfs/340	[not run] External volumes not in use, skipped this test
+xfs/341	[not run] External volumes not in use, skipped this test
+xfs/342	[not run] External volumes not in use, skipped this test
+xfs/343	[not run] External volumes not in use, skipped this test
+xfs/344 1s ...  1s
+xfs/345 2s ...  2s
+xfs/346 5s ...  6s
+xfs/347	- output mismatch (see /home/test/git/xfstests/results//xfs/347.out.bad)
+    --- tests/xfs/347.out	2021-02-28 21:47:48.654579130 -0600
+    +++ /home/test/git/xfstests/results//xfs/347.out.bad	2021-04-12 01:12:50.420814520 -0500
+    __ -5,6 +5,10 __
+     2909feb63a37b0e95fe5cfb7f274f7b1  SCRATCH_MNT/test-347/file1
+     2909feb63a37b0e95fe5cfb7f274f7b1  SCRATCH_MNT/test-347/file2
+     CoW and unmount
+    +umount: /mnt/scratch: target is busy.
+    +mount: /mnt/scratch: /dev/sdb2 already mounted on /mnt/scratch.
+    +cycle mount failed
+    +(see /home/test/git/xfstests/results//xfs/347.full for details)
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/347.out /home/test/git/xfstests/results//xfs/347.out.bad'  to see the entire diff)
+xfs/348 7s ...  7s
+xfs/349	- output mismatch (see /home/test/git/xfstests/results//xfs/349.out.bad)
+    --- tests/xfs/349.out	2021-02-28 21:47:48.654579130 -0600
+    +++ /home/test/git/xfstests/results//xfs/349.out.bad	2021-04-12 01:13:00.413385104 -0500
+    __ -1,3 +1,5 __
+     QA output created by 349
+     Format and populate
+     Scrub
+    +Error: /mnt/scratch: Kernel metadata scrubbing facility is not available. (phase1.c line 147)
+    +/mnt/scratch: operational errors found: 1
+    ...
+    (Run 'diff -u /home/test/git/xfstests/tests/xfs/349.out /home/test/git/xfstests/results//xfs/349.out.bad'  to see the entire diff)
+xfs/350	
 
-I'm running my tests on virtualbox with two partitions (test and scratch) of 25gb each.
+Other tests might need to be run in order to verify everything is working
+as expected. For such tests, the intervention of the maintainers might be
+needed.
 
-I'm now going to run the fstests on 5.12-rc6. I'll send my results later.
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
 
-Thanks
---
-Gustavo
+Link: https://github.com/KSPP/linux/issues/79
+Build-tested-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/6070a809.7QaU2ofU9h9VwFeh%25lkp@intel.com/
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v4:
+ - Fix size for kmem_cache_create() in fs/xfs/xfs_super.c:xfs_init_zones().
+ - Update changelog text with test results on Linux 5.12-rc6.
+
+Changes in v3:
+ - Add multiple inline functions as wrappers for struct_size(), as
+   per Darrick's request.
+ - Use type size_t instead of uint for a couple of objects.
+
+Changes in v2:
+ - Use struct_size() helper in more places.
+ - Update changelog text with testing results on Linux 5.12.0-rc2.
+ - Fix issue with use of struct_size() with the right struct object.
+ - Use flex_array_size() helper.
+
+ fs/xfs/libxfs/xfs_log_format.h |  12 ++--
+ fs/xfs/xfs_extfree_item.c      | 102 +++++++++++++++++++++++----------
+ fs/xfs/xfs_ondisk.h            |   8 +--
+ fs/xfs/xfs_super.c             |  14 ++---
+ 4 files changed, 90 insertions(+), 46 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
+index 8bd00da6d2a4..9934a465b441 100644
+--- a/fs/xfs/libxfs/xfs_log_format.h
++++ b/fs/xfs/libxfs/xfs_log_format.h
+@@ -574,7 +574,7 @@ typedef struct xfs_efi_log_format {
+ 	uint16_t		efi_size;	/* size of this item */
+ 	uint32_t		efi_nextents;	/* # extents to free */
+ 	uint64_t		efi_id;		/* efi identifier */
+-	xfs_extent_t		efi_extents[1];	/* array of extents to free */
++	xfs_extent_t		efi_extents[];	/* array of extents to free */
+ } xfs_efi_log_format_t;
+ 
+ typedef struct xfs_efi_log_format_32 {
+@@ -582,7 +582,7 @@ typedef struct xfs_efi_log_format_32 {
+ 	uint16_t		efi_size;	/* size of this item */
+ 	uint32_t		efi_nextents;	/* # extents to free */
+ 	uint64_t		efi_id;		/* efi identifier */
+-	xfs_extent_32_t		efi_extents[1];	/* array of extents to free */
++	xfs_extent_32_t		efi_extents[];	/* array of extents to free */
+ } __attribute__((packed)) xfs_efi_log_format_32_t;
+ 
+ typedef struct xfs_efi_log_format_64 {
+@@ -590,7 +590,7 @@ typedef struct xfs_efi_log_format_64 {
+ 	uint16_t		efi_size;	/* size of this item */
+ 	uint32_t		efi_nextents;	/* # extents to free */
+ 	uint64_t		efi_id;		/* efi identifier */
+-	xfs_extent_64_t		efi_extents[1];	/* array of extents to free */
++	xfs_extent_64_t		efi_extents[];	/* array of extents to free */
+ } xfs_efi_log_format_64_t;
+ 
+ /*
+@@ -603,7 +603,7 @@ typedef struct xfs_efd_log_format {
+ 	uint16_t		efd_size;	/* size of this item */
+ 	uint32_t		efd_nextents;	/* # of extents freed */
+ 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+-	xfs_extent_t		efd_extents[1];	/* array of extents freed */
++	xfs_extent_t		efd_extents[];	/* array of extents freed */
+ } xfs_efd_log_format_t;
+ 
+ typedef struct xfs_efd_log_format_32 {
+@@ -611,7 +611,7 @@ typedef struct xfs_efd_log_format_32 {
+ 	uint16_t		efd_size;	/* size of this item */
+ 	uint32_t		efd_nextents;	/* # of extents freed */
+ 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+-	xfs_extent_32_t		efd_extents[1];	/* array of extents freed */
++	xfs_extent_32_t		efd_extents[];	/* array of extents freed */
+ } __attribute__((packed)) xfs_efd_log_format_32_t;
+ 
+ typedef struct xfs_efd_log_format_64 {
+@@ -619,7 +619,7 @@ typedef struct xfs_efd_log_format_64 {
+ 	uint16_t		efd_size;	/* size of this item */
+ 	uint32_t		efd_nextents;	/* # of extents freed */
+ 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+-	xfs_extent_64_t		efd_extents[1];	/* array of extents freed */
++	xfs_extent_64_t		efd_extents[];	/* array of extents freed */
+ } xfs_efd_log_format_64_t;
+ 
+ /*
+diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+index 93223ebb3372..17b3ff8ce05f 100644
+--- a/fs/xfs/xfs_extfree_item.c
++++ b/fs/xfs/xfs_extfree_item.c
+@@ -73,8 +73,8 @@ static inline int
+ xfs_efi_item_sizeof(
+ 	struct xfs_efi_log_item *efip)
+ {
+-	return sizeof(struct xfs_efi_log_format) +
+-	       (efip->efi_format.efi_nextents - 1) * sizeof(xfs_extent_t);
++	return struct_size(&efip->efi_format, efi_extents,
++			   efip->efi_format.efi_nextents);
+ }
+ 
+ STATIC void
+@@ -153,17 +153,14 @@ xfs_efi_init(
+ 
+ {
+ 	struct xfs_efi_log_item	*efip;
+-	uint			size;
+ 
+ 	ASSERT(nextents > 0);
+-	if (nextents > XFS_EFI_MAX_FAST_EXTENTS) {
+-		size = (uint)(sizeof(struct xfs_efi_log_item) +
+-			((nextents - 1) * sizeof(xfs_extent_t)));
+-		efip = kmem_zalloc(size, 0);
+-	} else {
++	if (nextents > XFS_EFI_MAX_FAST_EXTENTS)
++		efip = kmem_zalloc(struct_size(efip, efi_format.efi_extents,
++					       nextents), 0);
++	else
+ 		efip = kmem_cache_zalloc(xfs_efi_zone,
+ 					 GFP_KERNEL | __GFP_NOFAIL);
+-	}
+ 
+ 	xfs_log_item_init(mp, &efip->efi_item, XFS_LI_EFI, &xfs_efi_item_ops);
+ 	efip->efi_format.efi_nextents = nextents;
+@@ -174,6 +171,36 @@ xfs_efi_init(
+ 	return efip;
+ }
+ 
++/*
++ * Calculates the size of structure xfs_efi_log_format followed by an
++ * array of n number of efi_extents elements.
++ */
++static inline size_t
++sizeof_efi_log_format(size_t n)
++{
++	return struct_size((struct xfs_efi_log_format *)0, efi_extents, n);
++}
++
++/*
++ * Calculates the size of structure xfs_efi_log_format_32 followed by an
++ * array of n number of efi_extents elements.
++ */
++static inline size_t
++sizeof_efi_log_format_32(size_t n)
++{
++	return struct_size((struct xfs_efi_log_format_32 *)0, efi_extents, n);
++}
++
++/*
++ * Calculates the size of structure xfs_efi_log_format_64 followed by an
++ * array of n number of efi_extents elements.
++ */
++static inline size_t
++sizeof_efi_log_format_64(size_t n)
++{
++	return struct_size((struct xfs_efi_log_format_64 *)0, efi_extents, n);
++}
++
+ /*
+  * Copy an EFI format buffer from the given buf, and into the destination
+  * EFI format structure.
+@@ -186,12 +213,9 @@ xfs_efi_copy_format(xfs_log_iovec_t *buf, xfs_efi_log_format_t *dst_efi_fmt)
+ {
+ 	xfs_efi_log_format_t *src_efi_fmt = buf->i_addr;
+ 	uint i;
+-	uint len = sizeof(xfs_efi_log_format_t) + 
+-		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_t);  
+-	uint len32 = sizeof(xfs_efi_log_format_32_t) + 
+-		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_32_t);  
+-	uint len64 = sizeof(xfs_efi_log_format_64_t) + 
+-		(src_efi_fmt->efi_nextents - 1) * sizeof(xfs_extent_64_t);  
++	size_t len = sizeof_efi_log_format(src_efi_fmt->efi_nextents);
++	size_t len32 = sizeof_efi_log_format_32(src_efi_fmt->efi_nextents);
++	size_t len64 = sizeof_efi_log_format_64(src_efi_fmt->efi_nextents);
+ 
+ 	if (buf->i_len == len) {
+ 		memcpy((char *)dst_efi_fmt, (char*)src_efi_fmt, len);
+@@ -253,8 +277,8 @@ static inline int
+ xfs_efd_item_sizeof(
+ 	struct xfs_efd_log_item *efdp)
+ {
+-	return sizeof(xfs_efd_log_format_t) +
+-	       (efdp->efd_format.efd_nextents - 1) * sizeof(xfs_extent_t);
++	return struct_size(&efdp->efd_format, efd_extents,
++			   efdp->efd_format.efd_nextents);
+ }
+ 
+ STATIC void
+@@ -328,14 +352,12 @@ xfs_trans_get_efd(
+ 
+ 	ASSERT(nextents > 0);
+ 
+-	if (nextents > XFS_EFD_MAX_FAST_EXTENTS) {
+-		efdp = kmem_zalloc(sizeof(struct xfs_efd_log_item) +
+-				(nextents - 1) * sizeof(struct xfs_extent),
+-				0);
+-	} else {
++	if (nextents > XFS_EFD_MAX_FAST_EXTENTS)
++		efdp = kmem_zalloc(struct_size(efdp, efd_format.efd_extents,
++					nextents), 0);
++	else
+ 		efdp = kmem_cache_zalloc(xfs_efd_zone,
+ 					GFP_KERNEL | __GFP_NOFAIL);
+-	}
+ 
+ 	xfs_log_item_init(tp->t_mountp, &efdp->efd_item, XFS_LI_EFD,
+ 			  &xfs_efd_item_ops);
+@@ -666,11 +688,13 @@ xfs_efi_item_relog(
+ 	tp->t_flags |= XFS_TRANS_DIRTY;
+ 	efdp = xfs_trans_get_efd(tp, EFI_ITEM(intent), count);
+ 	efdp->efd_next_extent = count;
+-	memcpy(efdp->efd_format.efd_extents, extp, count * sizeof(*extp));
++	memcpy(efdp->efd_format.efd_extents, extp,
++	       flex_array_size(&efdp->efd_format, efd_extents, count));
+ 	set_bit(XFS_LI_DIRTY, &efdp->efd_item.li_flags);
+ 
+ 	efip = xfs_efi_init(tp->t_mountp, count);
+-	memcpy(efip->efi_format.efi_extents, extp, count * sizeof(*extp));
++	memcpy(efip->efi_format.efi_extents, extp,
++	       flex_array_size(&efip->efi_format, efi_extents, count));
+ 	atomic_set(&efip->efi_next_extent, count);
+ 	xfs_trans_add_item(tp, &efip->efi_item);
+ 	set_bit(XFS_LI_DIRTY, &efip->efi_item.li_flags);
+@@ -729,6 +753,26 @@ const struct xlog_recover_item_ops xlog_efi_item_ops = {
+ 	.commit_pass2		= xlog_recover_efi_commit_pass2,
+ };
+ 
++/*
++ * Calculates the size of structure xfs_efd_log_format_32 followed by an
++ * array of n number of efd_extents elements.
++ */
++static inline size_t
++sizeof_efd_log_format_32(size_t n)
++{
++	return struct_size((struct xfs_efd_log_format_32 *)0, efd_extents, n);
++}
++
++/*
++ * Calculates the size of structure xfs_efd_log_format_64 followed by an
++ * array of n number of efd_extents elements.
++ */
++static inline size_t
++sizeof_efd_log_format_64(size_t n)
++{
++	return struct_size((struct xfs_efd_log_format_64 *)0, efd_extents, n);
++}
++
+ /*
+  * This routine is called when an EFD format structure is found in a committed
+  * transaction in the log. Its purpose is to cancel the corresponding EFI if it
+@@ -746,10 +790,10 @@ xlog_recover_efd_commit_pass2(
+ 	struct xfs_efd_log_format	*efd_formatp;
+ 
+ 	efd_formatp = item->ri_buf[0].i_addr;
+-	ASSERT((item->ri_buf[0].i_len == (sizeof(xfs_efd_log_format_32_t) +
+-		((efd_formatp->efd_nextents - 1) * sizeof(xfs_extent_32_t)))) ||
+-	       (item->ri_buf[0].i_len == (sizeof(xfs_efd_log_format_64_t) +
+-		((efd_formatp->efd_nextents - 1) * sizeof(xfs_extent_64_t)))));
++	ASSERT(item->ri_buf[0].i_len ==
++			sizeof_efd_log_format_32(efd_formatp->efd_nextents) ||
++	       item->ri_buf[0].i_len ==
++			sizeof_efd_log_format_64(efd_formatp->efd_nextents));
+ 
+ 	xlog_recover_release_intent(log, XFS_LI_EFI, efd_formatp->efd_efi_id);
+ 	return 0;
+diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
+index 0aa87c210104..f58e0510385a 100644
+--- a/fs/xfs/xfs_ondisk.h
++++ b/fs/xfs/xfs_ondisk.h
+@@ -118,10 +118,10 @@ xfs_check_ondisk_structs(void)
+ 	/* log structures */
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_buf_log_format,	88);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_dq_logformat,		24);
+-	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_32,	28);
+-	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_64,	32);
+-	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_32,	28);
+-	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_64,	32);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_32,	16);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_64,	16);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_32,	16);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_efi_log_format_64,	16);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_extent_32,		12);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_extent_64,		16);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_log_dinode,		176);
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index e5e0713bebcd..923145737110 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1937,17 +1937,17 @@ xfs_init_zones(void)
+ 		goto out_destroy_trans_zone;
+ 
+ 	xfs_efd_zone = kmem_cache_create("xfs_efd_item",
+-					(sizeof(struct xfs_efd_log_item) +
+-					(XFS_EFD_MAX_FAST_EXTENTS - 1) *
+-					sizeof(struct xfs_extent)),
+-					0, 0, NULL);
++					 struct_size((struct xfs_efd_log_item *)0,
++					 efd_format.efd_extents,
++					 XFS_EFD_MAX_FAST_EXTENTS),
++					 0, 0, NULL);
+ 	if (!xfs_efd_zone)
+ 		goto out_destroy_buf_item_zone;
+ 
+ 	xfs_efi_zone = kmem_cache_create("xfs_efi_item",
+-					 (sizeof(struct xfs_efi_log_item) +
+-					 (XFS_EFI_MAX_FAST_EXTENTS - 1) *
+-					 sizeof(struct xfs_extent)),
++					 struct_size((struct xfs_efi_log_item *)0,
++					 efi_format.efi_extents,
++					 XFS_EFI_MAX_FAST_EXTENTS),
+ 					 0, 0, NULL);
+ 	if (!xfs_efi_zone)
+ 		goto out_destroy_efd_zone;
+-- 
+2.27.0
+
