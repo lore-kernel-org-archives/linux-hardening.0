@@ -2,99 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FUZZY_SECURITY,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14A7C433B4
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 22:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CACC433B4
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 22:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3076137D
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 22:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56EBD6137D
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 22:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233822AbhDPW1Y (ORCPT
+        id S233976AbhDPW2n (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Apr 2021 18:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36786 "EHLO
+        Fri, 16 Apr 2021 18:28:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233514AbhDPW1X (ORCPT
+        with ESMTP id S230056AbhDPW2n (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Apr 2021 18:27:23 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC3BC061574;
-        Fri, 16 Apr 2021 15:26:58 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1618612016;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oIMPFgWu4IqnP0nhiSA/nCdAulGUPJoqWG9L6Or5pk0=;
-        b=bqRX0z1gwdEJaXLPYjJxyNOSYSnzHEMlXmiunIMoL64R0UBM6BjjRR8AThpNU31INBvWUA
-        7V/zcmny4sDB9wwAzU8+IeUU7GsMAJTHYi2Q3Ewg1Y9fSmxokd4CjBrgGbR0A7pQrF5NUB
-        dFSooyr6tL5EScMowSPzhc1LVnjedtZH4bytgcPb0Q59GfTjp/blR8Ic4mGOD7R5I7qM3S
-        Psfhs0pZ6IbkiY0Wwp52kWF/zTLv7OpY2AURJZbcVQwHTPtsJmj4cyZlNe/xfr4rB/7xG9
-        QRup/zOHKX5pvLqy0BWFNNLEDaxxzU5/hPHVyQBy+6AiDlqSSCCiV44h9ahQ5Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1618612016;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oIMPFgWu4IqnP0nhiSA/nCdAulGUPJoqWG9L6Or5pk0=;
-        b=A2StUduRfI+iimoCoHtRfwRfQKrj+FbVYD64CdnovAT2R/5kNqRRfERaW6P1hRq15092Fz
-        bS87wCWSDscU0ZDQ==
-To:     Sami Tolvanen <samitolvanen@google.com>, x86@kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Fri, 16 Apr 2021 18:28:43 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57549C061756
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 15:28:18 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id n10so3578913plc.0
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 15:28:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vx07AciKHM2KmcmsePok7O1V53X9SAytSNn10SMyMJk=;
+        b=l57DSci8MV+qNfiHzwsyPIfmK94N1iGdmn7rFxhcTCHFfWJepKZeC5MyTm74+sYQUp
+         bd8NBpssO4NaB3CvhmzvlVHemG3yTxFdQxDjFJttrtsiswwdoKFiMj/u2FmZRFp0wQer
+         KbwBnnj+EQik/vtjEjsUfxUGXh/q9lee701dQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vx07AciKHM2KmcmsePok7O1V53X9SAytSNn10SMyMJk=;
+        b=F0ZT/Xw9ur0dTCjgvydBTM1/SCK7yzcEDG4Vz19/gyc9+lghFjzpqNpnVBkW19QSXH
+         6r7uAboJL2B6lVgv/7A5lqf4+d4rOfs+b0XCXyUiTZTQCQPpuL3NuJiB7o5hccBZc8xx
+         f5/I/54YAE877Ialpo0dFYSvUg/ulO4i+P4OrR4sRjPwULC59S4w9RM16QZLTqQg168s
+         ZWUgU6xwerLNRjbB5Ep6dqFnNfR9mmm7Mpf0y40qIVNKofMI2shz0Z5OC/5pf/hv6rNK
+         7LuCQ9TkK5XskRHcKlwTYaXMgnKLfQeGO/pWlD1uytSL6lteZO/DgsufJ46B+wAImT3m
+         w4Lg==
+X-Gm-Message-State: AOAM532gn6+ck0U14kWV5G+7VbogmDLigeY9AUyMdrrEdaGQtVyEp7M3
+        C02/N//m67Bfzptf685lIPo1xw==
+X-Google-Smtp-Source: ABdhPJz51MxDNCIklE4hX5vuxVgkliAtJTxlvk2sD4P3kNceF/lTiaWxEGcqhqfQ5kbeJgyEbOfzUg==
+X-Received: by 2002:a17:902:8604:b029:e6:60ad:6921 with SMTP id f4-20020a1709028604b02900e660ad6921mr11836011plo.15.1618612097925;
+        Fri, 16 Apr 2021 15:28:17 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x17sm1763643pjr.0.2021.04.16.15.28.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Apr 2021 15:28:17 -0700 (PDT)
+Date:   Fri, 16 Apr 2021 15:28:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH 06/15] x86: Avoid CFI jump tables in IDT and entry points
-In-Reply-To: <20210416203844.3803177-7-samitolvanen@google.com>
-References: <20210416203844.3803177-1-samitolvanen@google.com> <20210416203844.3803177-7-samitolvanen@google.com>
-Date:   Sat, 17 Apr 2021 00:26:56 +0200
-Message-ID: <87im4luaq7.ffs@nanos.tec.linutronix.de>
+        linux-hardening@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 05/15] x86: Implement function_nocfi
+Message-ID: <202104161519.1D37B6D26@keescook>
+References: <20210416203844.3803177-1-samitolvanen@google.com>
+ <20210416203844.3803177-6-samitolvanen@google.com>
+ <20210416211855.GD22348@zn.tnic>
+ <CABCJKud8TvzhcjHCpsrtCJ4B50ZUfaL48F42EhZ2zWKLteAc0Q@mail.gmail.com>
+ <20210416220251.GE22348@zn.tnic>
+ <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 16 2021 at 13:38, Sami Tolvanen wrote:
-> With CONFIG_CFI_CLANG, the compiler replaces function addresses in C
-> code with jump table addresses.
+On Fri, Apr 16, 2021 at 03:06:17PM -0700, Andy Lutomirski wrote:
+> On Fri, Apr 16, 2021 at 3:03 PM Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Fri, Apr 16, 2021 at 02:49:23PM -0700, Sami Tolvanen wrote:
+> > > __nocfi only disables CFI checking in a function, the compiler still
+> > > changes function addresses to point to the CFI jump table, which is
+> > > why we need function_nocfi().
+> >
+> > So call it __func_addr() or get_function_addr() or so, so that at least
+> > it is clear what this does.
+> >
+> 
+> This seems backwards to me.  If I do:
+> 
+> extern void foo(some signature);
+> 
+> then I would, perhaps naively, expect foo to be the actual symbol that
+> gets called
 
-Fine.
+Yes.
 
-> To avoid referring to jump tables in entry code with PTI,
+> and for the ABI to be changed to do the CFI checks.
 
-What has this to do with PTI?
+Uh, no? There's no ABI change -- indirect calls are changed to do the
+checking.
 
-> disable CFI for IDT and paravirt code, and use function_nocfi() to
-> prevent jump table addresses from being added to the IDT or system
-> call entry points.
+> The
+> foo symbol would point to whatever magic is needed.
 
-How does this changelog make sense for anyone not familiar with the
-matter at hand?
+No, the symbol points to the jump table entry. Direct calls get minimal
+overhead and indirect calls can add the "is this function in the right
+table" checking.
 
-Where is the analysis why excluding 
+> I assume I'm
+> missing something.
 
-> +CFLAGS_REMOVE_idt.o		:= $(CC_FLAGS_CFI)
-> +CFLAGS_REMOVE_paravirt.o	:= $(CC_FLAGS_CFI)
+Further symbol vs address stuff is discussed here:
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/cfi&id=ff301ceb5299551c3650d0e07ba879b766da4cc0
 
-all of idt.c and paravirt.c is correct and how that is going to be
-correct in the future?
+But note that this shouldn't turn into a discussion of "maybe Clang could
+do CFI differently"; this is what Clang has.
 
-These files are excluded from CFI, so I can add whatever I want to them
-and circumvent the purpose of CFI, right?
+https://clang.llvm.org/docs/ControlFlowIntegrity.html
 
-Brilliant plan that. But I know, sekurity ...
-
-Thanks,
-
-        tglx
+-- 
+Kees Cook
