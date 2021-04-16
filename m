@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDC2C43462
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 20:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E0DC433B4
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 20:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB45060FEA
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 20:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DADC60FEA
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 20:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344030AbhDPUj7 (ORCPT
+        id S1343979AbhDPUkB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Apr 2021 16:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41356 "EHLO
+        Fri, 16 Apr 2021 16:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343968AbhDPUjl (ORCPT
+        with ESMTP id S1343987AbhDPUjp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Apr 2021 16:39:41 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB49CC06138D
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 13:39:12 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id w21-20020ac871950000b02901b1a8294c46so2774956qto.7
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 13:39:12 -0700 (PDT)
+        Fri, 16 Apr 2021 16:39:45 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF246C061756
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 13:39:14 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id x7-20020a05622a0007b029019d73c63053so6763251qtw.16
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 13:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=L00sBSj1ELLX/Krj/tO4geuDmUwEKOoDhO2GtbyEzGY=;
-        b=tQpc8LYT+nLLdKLnwAODeiwTmYEi1/jJ0aNEkLBltpaGbhdVWc0+KaaXi8k3HcarW+
-         GdRqkLdtkXIlYhizJYvLuf0lzKsKhdhV1Ae+Qfyw90OvKhnSG7xB+p6X9VDFFOkgQSZp
-         mHEGXW+hiHjirCI7ibaMRiLYFKqhLm9u4JAdjORGQ8yUbI/F5tTnTpLOQuayPAMDMXtq
-         +6K5lugx7vpSFe07/YiaPPWqWKauJjeoW3rPM7SnBHq7hw3Ahmtz688DjELw6KRPccMy
-         uXQXH805Yn26oCHIDRw1bddHahzkmEWEYK0vdu9d0ZMj0cJPd5qgql652R7uTp17TZ+D
-         qAsA==
+        bh=FPDsGN9VxUr9HuESYx96922vymwwzjs8QWYi8GhO73I=;
+        b=NTYpXeosNimRBGGmucRjoE00W8NM0Y5fsJHRXZQ2FQwcxJabVh3LDoPD8NbPRSXsQe
+         +XIZw3ebF6vfwAHwaUz1pwLY7KbMlcVILybOnArv0MRqzZ74UeaLk6AV/wCjzfbun0hm
+         S44xFa9RyuptHOgznNTCr+cI3BSxBoMQyk0Zo7orsLdLFsYGBRJCAwd57qULlZnzii6i
+         AUgRhhN3hgRuRfGLpEEhYm2OUUvv6vdBNk5icg0znV2/GZwZ9kUUC0jEFDqVKIbwa/QX
+         dd6wxcIZKNZ63/v3+WisYQEl2Ar2rFyrjD+HMswTMc1pM5HJAtTlXX7LZqep5l5iEweD
+         7nqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=L00sBSj1ELLX/Krj/tO4geuDmUwEKOoDhO2GtbyEzGY=;
-        b=HAEccWmd/vKlBAIAPqaCKtuwafBs7bGCAy+5kSvhyUzPOicbPmzkD8wK4YGlpmYGQH
-         H64NkBMW59UYxRz4hzl7lJq+ApbBUxPbg6XKeWH7oaJIv9rjkn/R+mYLjPHezW9WrnNZ
-         TmYPMh4/LjL2+VQP8Zi8jDLRa+iDP/891fXHKzN5kw8AfgWi64DP7jILqPvWJ8sV02kC
-         9D54+GJuLXupAMX+wmaPjxtgkQABF4t83yfyzdwet0ynVoDRSmBLLtWlMTjkKInlx6AQ
-         g5yIxoj+UhUC21Y35HlpSHYXdaKt9acJvBU1OPPKCricxVhBkjezUtmSk6UQYSnJSv3S
-         cwaw==
-X-Gm-Message-State: AOAM530MvsH0/faAcOyrdkmtGu72YSHWVhLggvB1HTbMDeMtLMUy9+Vh
-        5mRbIWfdZPoYX1rl1Rk5x0M0rHNdrU+rHtn7fQ8=
-X-Google-Smtp-Source: ABdhPJyV6aw2CRxX5Ka4nkDEUs0zr6DNTz7zFBmr5kr8bNdUja0e+FxUztdUP/+nH7or7ogmyaJPg0f4LpP4gJiAOPs=
+        bh=FPDsGN9VxUr9HuESYx96922vymwwzjs8QWYi8GhO73I=;
+        b=cDc06cM7wVC4xTGlsnKnG25ncO2I6ZDs4S5HR4uZFhapgKf1Ji0mUXoj2WzaKYPYXR
+         rm0nT00BZucH3PxiPPwTdAzy9poE10LHtIan94+f1l+iMhALA+WQ7Jc1U/rQtjAQdThp
+         FLgiIGnhgxYwKmyBmT35Yrwu756GQejnwEnIb5FP59H+29NgAa4dqcBYFd5pw6unAKIV
+         zHkkLcx6x19QwEnCFCgbDpZhl5F1G8JIGmIfPOyJuUGo86a842b0P17tRxWuvgCDv7em
+         9Fb6mahCkEFvCh5/oBadBLv7hJHuMYHjfnMTDjU7B+1GfA7TsAulhxYmYW3mf3C1FLin
+         PTog==
+X-Gm-Message-State: AOAM533IPfFVaTyr/J0FtKXAujAsq8K0BRtFvhTcvxlnS2XecG+Th9mF
+        Kix9CyDXyrIaruPDlgRN5OlJBR1KgfuvreRC/w4=
+X-Google-Smtp-Source: ABdhPJy2b1+yl10yJE5fG8RWtCYAtcoZXXH3wjGdxTjWEEgcZSrEnAK7qHMwYiCcuiK1dRZgW1J8K1qp6q+4EcdFP3c=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e262:3d8e:cbf:6164])
- (user=samitolvanen job=sendgmr) by 2002:a05:6214:13c2:: with SMTP id
- cg2mr10524752qvb.4.1618605551808; Fri, 16 Apr 2021 13:39:11 -0700 (PDT)
-Date:   Fri, 16 Apr 2021 13:38:42 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6214:19e7:: with SMTP id
+ q7mr10609949qvc.34.1618605553952; Fri, 16 Apr 2021 13:39:13 -0700 (PDT)
+Date:   Fri, 16 Apr 2021 13:38:43 -0700
 In-Reply-To: <20210416203844.3803177-1-samitolvanen@google.com>
-Message-Id: <20210416203844.3803177-14-samitolvanen@google.com>
+Message-Id: <20210416203844.3803177-15-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210416203844.3803177-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.1.368.gbe11c130af-goog
-Subject: [PATCH 13/15] x86, cpu: Use LTO for cpu.c with CFI
+Subject: [PATCH 14/15] x86, kprobes: Fix optprobe_template_func type mismatch
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,31 +78,46 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Allow LTO to be used for cpu.c when CONFIG_CFI_CLANG is enabled to avoid
-indirect call failures. CFI requires Clang >= 12, which doesn't have the
-stack protector inlining bug.
+The optprobe_template_func symbol is defined in inline assembly,
+but it's not marked global, which conflicts with the C declaration
+needed for STACK_FRAME_NON_STANDARD and confuses the compiler when
+CONFIG_CFI_CLANG is enabled.
+
+Marking the symbol global would make the compiler happy, but as the
+compiler also generates a CFI jump table entry for all address-taken
+functions, the jump table ends up containing a jump to the .rodata
+section where optprobe_template_func resides, which results in an
+objtool warning.
+
+Use ASM_STACK_FRAME_NON_STANDARD instead to avoid both issues.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/power/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/kprobes/opt.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/x86/power/Makefile b/arch/x86/power/Makefile
-index 379777572bc9..a0532851fed7 100644
---- a/arch/x86/power/Makefile
-+++ b/arch/x86/power/Makefile
-@@ -4,9 +4,11 @@
- # itself be stack-protected
- CFLAGS_cpu.o	:= -fno-stack-protector
+diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
+index 71425ebba98a..95375ef5deee 100644
+--- a/arch/x86/kernel/kprobes/opt.c
++++ b/arch/x86/kernel/kprobes/opt.c
+@@ -103,6 +103,7 @@ static void synthesize_set_arg1(kprobe_opcode_t *addr, unsigned long val)
+ asm (
+ 			".pushsection .rodata\n"
+ 			"optprobe_template_func:\n"
++			ASM_STACK_FRAME_NON_STANDARD(optprobe_template_func)
+ 			".global optprobe_template_entry\n"
+ 			"optprobe_template_entry:\n"
+ #ifdef CONFIG_X86_64
+@@ -154,9 +155,6 @@ asm (
+ 			"optprobe_template_end:\n"
+ 			".popsection\n");
  
-+ifndef CONFIG_CFI_CLANG
- # Clang may incorrectly inline functions with stack protector enabled into
- # __restore_processor_state(): https://bugs.llvm.org/show_bug.cgi?id=47479
- CFLAGS_REMOVE_cpu.o := $(CC_FLAGS_LTO)
-+endif
- 
- obj-$(CONFIG_PM_SLEEP)		+= cpu.o
- obj-$(CONFIG_HIBERNATION)	+= hibernate_$(BITS).o hibernate_asm_$(BITS).o hibernate.o
+-void optprobe_template_func(void);
+-STACK_FRAME_NON_STANDARD(optprobe_template_func);
+-
+ #define TMPL_CLAC_IDX \
+ 	((long)optprobe_template_clac - (long)optprobe_template_entry)
+ #define TMPL_MOVE_IDX \
 -- 
 2.31.1.368.gbe11c130af-goog
 
