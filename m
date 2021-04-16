@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E0DC433B4
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 20:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EA5C433ED
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 20:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DADC60FEA
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 20:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08036613CF
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 20:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343979AbhDPUkB (ORCPT
+        id S1344076AbhDPUkF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Apr 2021 16:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41384 "EHLO
+        Fri, 16 Apr 2021 16:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343987AbhDPUjp (ORCPT
+        with ESMTP id S1343964AbhDPUj6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Apr 2021 16:39:45 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF246C061756
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 13:39:14 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id x7-20020a05622a0007b029019d73c63053so6763251qtw.16
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 13:39:14 -0700 (PDT)
+        Fri, 16 Apr 2021 16:39:58 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B07B6C061342
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 13:39:16 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id c4so7538345ybp.6
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 13:39:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=FPDsGN9VxUr9HuESYx96922vymwwzjs8QWYi8GhO73I=;
-        b=NTYpXeosNimRBGGmucRjoE00W8NM0Y5fsJHRXZQ2FQwcxJabVh3LDoPD8NbPRSXsQe
-         +XIZw3ebF6vfwAHwaUz1pwLY7KbMlcVILybOnArv0MRqzZ74UeaLk6AV/wCjzfbun0hm
-         S44xFa9RyuptHOgznNTCr+cI3BSxBoMQyk0Zo7orsLdLFsYGBRJCAwd57qULlZnzii6i
-         AUgRhhN3hgRuRfGLpEEhYm2OUUvv6vdBNk5icg0znV2/GZwZ9kUUC0jEFDqVKIbwa/QX
-         dd6wxcIZKNZ63/v3+WisYQEl2Ar2rFyrjD+HMswTMc1pM5HJAtTlXX7LZqep5l5iEweD
-         7nqw==
+        bh=ZVSi0+WBJd8cK80BxQ4Osd57SVpFSIT5lMOEx2WBOew=;
+        b=b41bDVDJUgY/qmasSTsJuDALMyRKA0DquCDzT5YifV4psrwpRjIE5VqspQws2ol5jn
+         mrX51iabMpAK3R8k61X0UplwjTLmDu6yT5/7dmJSNcMpoAeBzwgWl28wQzjmDKk1E7IP
+         x1vcjYAP3urux/XhJ6MXq38mVThhrHqGeOlnQ/EaPIny+LP6TdRu1EC/j+CcDLbnokCA
+         n5cz5zYxFWJEE6xxZij4vS0empLBUFmEy8aXeEolzwVa0Mz3ntE2Ox0NEstpix12KO6R
+         BW1Dz6PBLKNJ+bPORL3EVHS1ggmEfMJ0ilQ/c/pNHTkPumDF625dTGsEJFL6vm647Dgr
+         EOEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=FPDsGN9VxUr9HuESYx96922vymwwzjs8QWYi8GhO73I=;
-        b=cDc06cM7wVC4xTGlsnKnG25ncO2I6ZDs4S5HR4uZFhapgKf1Ji0mUXoj2WzaKYPYXR
-         rm0nT00BZucH3PxiPPwTdAzy9poE10LHtIan94+f1l+iMhALA+WQ7Jc1U/rQtjAQdThp
-         FLgiIGnhgxYwKmyBmT35Yrwu756GQejnwEnIb5FP59H+29NgAa4dqcBYFd5pw6unAKIV
-         zHkkLcx6x19QwEnCFCgbDpZhl5F1G8JIGmIfPOyJuUGo86a842b0P17tRxWuvgCDv7em
-         9Fb6mahCkEFvCh5/oBadBLv7hJHuMYHjfnMTDjU7B+1GfA7TsAulhxYmYW3mf3C1FLin
-         PTog==
-X-Gm-Message-State: AOAM533IPfFVaTyr/J0FtKXAujAsq8K0BRtFvhTcvxlnS2XecG+Th9mF
-        Kix9CyDXyrIaruPDlgRN5OlJBR1KgfuvreRC/w4=
-X-Google-Smtp-Source: ABdhPJy2b1+yl10yJE5fG8RWtCYAtcoZXXH3wjGdxTjWEEgcZSrEnAK7qHMwYiCcuiK1dRZgW1J8K1qp6q+4EcdFP3c=
+        bh=ZVSi0+WBJd8cK80BxQ4Osd57SVpFSIT5lMOEx2WBOew=;
+        b=H5/RGae51UplmjeuOXWRupgvWNwrBUQl3x2J7c7O5d6uoftDV9Vvs8vLVPZ0sBChIr
+         +3UxGyl3t5d+vNxN2p5Qa1JshDm6YCcSYTMUlF600Y7+w2uNTPlJY5o1BZXpZLjwqHhu
+         iN+fprkiXfnh6uWxHwSAZrhlm476fD8E8UWPiU9dNSKcWcLeP0i6nlVQipoDwEODq1SX
+         PZvMJ3TA93IvyCskcrZV0MnH8rEKQUhW/r90yksnmJ+Emx6AuyLlK6JAUpWdIPikX1H5
+         hA4ZZLrz0hn8AtGyEGfykkZQJAGUSRuOo/Q0buWhhlbb5Z/6wJISeIO3sNn+xoyuqbsL
+         oyJw==
+X-Gm-Message-State: AOAM531u5UzwQl7gslH3cQlXPxxfIhUyOrU+kUqAtt0Vrlx3RPT7E8Ww
+        Emt6GbTq62ibSeQ7scFTKQJSIkYNOV1QXPynFNA=
+X-Google-Smtp-Source: ABdhPJwp4jV6Uc3XHwPdhaTYb8BA7WByxBbaC9LJGrPzkVX6yoMku4z3I0Vqt531iRR6rqD41CVsz7MEVhSflzBTG8Q=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e262:3d8e:cbf:6164])
- (user=samitolvanen job=sendgmr) by 2002:a05:6214:19e7:: with SMTP id
- q7mr10609949qvc.34.1618605553952; Fri, 16 Apr 2021 13:39:13 -0700 (PDT)
-Date:   Fri, 16 Apr 2021 13:38:43 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:6885:: with SMTP id
+ d127mr1406777ybc.378.1618605555941; Fri, 16 Apr 2021 13:39:15 -0700 (PDT)
+Date:   Fri, 16 Apr 2021 13:38:44 -0700
 In-Reply-To: <20210416203844.3803177-1-samitolvanen@google.com>
-Message-Id: <20210416203844.3803177-15-samitolvanen@google.com>
+Message-Id: <20210416203844.3803177-16-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210416203844.3803177-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.1.368.gbe11c130af-goog
-Subject: [PATCH 14/15] x86, kprobes: Fix optprobe_template_func type mismatch
+Subject: [PATCH 15/15] x86, build: Allow CONFIG_CFI_CLANG to be selected
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,46 +78,25 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The optprobe_template_func symbol is defined in inline assembly,
-but it's not marked global, which conflicts with the C declaration
-needed for STACK_FRAME_NON_STANDARD and confuses the compiler when
-CONFIG_CFI_CLANG is enabled.
-
-Marking the symbol global would make the compiler happy, but as the
-compiler also generates a CFI jump table entry for all address-taken
-functions, the jump table ends up containing a jump to the .rodata
-section where optprobe_template_func resides, which results in an
-objtool warning.
-
-Use ASM_STACK_FRAME_NON_STANDARD instead to avoid both issues.
+Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/kernel/kprobes/opt.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index 71425ebba98a..95375ef5deee 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -103,6 +103,7 @@ static void synthesize_set_arg1(kprobe_opcode_t *addr, unsigned long val)
- asm (
- 			".pushsection .rodata\n"
- 			"optprobe_template_func:\n"
-+			ASM_STACK_FRAME_NON_STANDARD(optprobe_template_func)
- 			".global optprobe_template_entry\n"
- 			"optprobe_template_entry:\n"
- #ifdef CONFIG_X86_64
-@@ -154,9 +155,6 @@ asm (
- 			"optprobe_template_end:\n"
- 			".popsection\n");
- 
--void optprobe_template_func(void);
--STACK_FRAME_NON_STANDARD(optprobe_template_func);
--
- #define TMPL_CLAC_IDX \
- 	((long)optprobe_template_clac - (long)optprobe_template_entry)
- #define TMPL_MOVE_IDX \
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index bf69d07e46b8..81d2dc568e56 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -106,6 +106,7 @@ config X86
+ 	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <= 4096
+ 	select ARCH_SUPPORTS_LTO_CLANG		if X86_64
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN	if X86_64
++	select ARCH_SUPPORTS_CFI_CLANG		if X86_64
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
 -- 
 2.31.1.368.gbe11c130af-goog
 
