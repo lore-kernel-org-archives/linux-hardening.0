@@ -2,146 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FUZZY_SECURITY,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F32BC433B4
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 22:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14A7C433B4
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 22:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22123613C1
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 22:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3076137D
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Apr 2021 22:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235138AbhDPWU4 (ORCPT
+        id S233822AbhDPW1Y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Apr 2021 18:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232618AbhDPWUy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Apr 2021 18:20:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9DF4F613C1
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 22:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618611629;
-        bh=cw+o8cfEuCo6PQdHXEsdN0LoqovEdVoWI1b2P0UF/Og=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jxKsP0Fr9kLKdD37KZFr2gu8uqJ4eMaAup4AizAaAIdv9BKvzqPDEgdgbRBqum7zC
-         lWKQeigSIzxGjTJHEiwDs9xOo/IJUbEib4DA3B84aEQ5lLth2jUfE9lUj4h8QdAD1E
-         9Z2obm0iE+pEWoFyv7etI8gGBQtinezT/unZfPuCAuFvRIfPS4bKZ7yN9BeXLOXjNl
-         lVBK12qMeYLlfofHvBxBmpPC1+zZX59BpJkWseUTGLjyQuWLncZGNvRiMC4y2Qys4I
-         lhxVTpq9Aa87Zkp9Jcnq1KIFqAcjpNd7gurH56WiNZd/0MotMjImyhskUQyILS3pOl
-         CQiDJVampjCng==
-Received: by mail-ed1-f49.google.com with SMTP id o20so7735460edc.7
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Apr 2021 15:20:29 -0700 (PDT)
-X-Gm-Message-State: AOAM531K/++fDLKcGYhlCMkN3vRSJ9MAEEcT4TNca7Vx5hOyisNZjwqt
-        QyiK3186UUO+INJi0dmn7ZBGEcw11YAAjhHX5bnhFw==
-X-Google-Smtp-Source: ABdhPJwrhXiYlU+qO4b6VCJY/F1yFSIFXZAHioVtpExmGxj4TZL8vcEumj5aGB0McOtELfNfByc/+fwJgoYDXb5XsJs=
-X-Received: by 2002:a50:f395:: with SMTP id g21mr12764633edm.238.1618611628139;
- Fri, 16 Apr 2021 15:20:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210416203844.3803177-1-samitolvanen@google.com>
- <20210416203844.3803177-6-samitolvanen@google.com> <20210416211855.GD22348@zn.tnic>
- <CABCJKud8TvzhcjHCpsrtCJ4B50ZUfaL48F42EhZ2zWKLteAc0Q@mail.gmail.com>
- <20210416220251.GE22348@zn.tnic> <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com>
- <20210416221414.GF22348@zn.tnic>
-In-Reply-To: <20210416221414.GF22348@zn.tnic>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 16 Apr 2021 15:20:17 -0700
-X-Gmail-Original-Message-ID: <CALCETrUo+tR+YmfoBPWV9z_7QhU74=7tmCBD_zsfa24ZxNvfxg@mail.gmail.com>
-Message-ID: <CALCETrUo+tR+YmfoBPWV9z_7QhU74=7tmCBD_zsfa24ZxNvfxg@mail.gmail.com>
-Subject: Re: [PATCH 05/15] x86: Implement function_nocfi
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Fri, 16 Apr 2021 18:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233514AbhDPW1X (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 16 Apr 2021 18:27:23 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC3BC061574;
+        Fri, 16 Apr 2021 15:26:58 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1618612016;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oIMPFgWu4IqnP0nhiSA/nCdAulGUPJoqWG9L6Or5pk0=;
+        b=bqRX0z1gwdEJaXLPYjJxyNOSYSnzHEMlXmiunIMoL64R0UBM6BjjRR8AThpNU31INBvWUA
+        7V/zcmny4sDB9wwAzU8+IeUU7GsMAJTHYi2Q3Ewg1Y9fSmxokd4CjBrgGbR0A7pQrF5NUB
+        dFSooyr6tL5EScMowSPzhc1LVnjedtZH4bytgcPb0Q59GfTjp/blR8Ic4mGOD7R5I7qM3S
+        Psfhs0pZ6IbkiY0Wwp52kWF/zTLv7OpY2AURJZbcVQwHTPtsJmj4cyZlNe/xfr4rB/7xG9
+        QRup/zOHKX5pvLqy0BWFNNLEDaxxzU5/hPHVyQBy+6AiDlqSSCCiV44h9ahQ5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1618612016;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oIMPFgWu4IqnP0nhiSA/nCdAulGUPJoqWG9L6Or5pk0=;
+        b=A2StUduRfI+iimoCoHtRfwRfQKrj+FbVYD64CdnovAT2R/5kNqRRfERaW6P1hRq15092Fz
+        bS87wCWSDscU0ZDQ==
+To:     Sami Tolvanen <samitolvanen@google.com>, x86@kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH 06/15] x86: Avoid CFI jump tables in IDT and entry points
+In-Reply-To: <20210416203844.3803177-7-samitolvanen@google.com>
+References: <20210416203844.3803177-1-samitolvanen@google.com> <20210416203844.3803177-7-samitolvanen@google.com>
+Date:   Sat, 17 Apr 2021 00:26:56 +0200
+Message-ID: <87im4luaq7.ffs@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 16, 2021 at 3:14 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Apr 16, 2021 at 03:06:17PM -0700, Andy Lutomirski wrote:
-> > On Fri, Apr 16, 2021 at 3:03 PM Borislav Petkov <bp@alien8.de> wrote:
-> > >
-> > > On Fri, Apr 16, 2021 at 02:49:23PM -0700, Sami Tolvanen wrote:
-> > > > __nocfi only disables CFI checking in a function, the compiler still
-> > > > changes function addresses to point to the CFI jump table, which is
-> > > > why we need function_nocfi().
-> > >
-> > > So call it __func_addr() or get_function_addr() or so, so that at least
-> > > it is clear what this does.
-> > >
-> >
-> > This seems backwards to me.  If I do:
-> >
-> > extern void foo(some signature);
-> >
-> > then I would, perhaps naively, expect foo to be the actual symbol that
->
-> I'm just reading the patch:
->
-> ... The function_nocfi macro always returns the address of the
-> + * actual function instead.
-> + */
-> +#define function_nocfi(x) ({                                           \
-> +       void *addr;                                                     \
-> +       asm("leaq " __stringify(x) "(%%rip), %0\n\t" : "=r" (addr));    \
-> +       addr;
->
-> so it does a rip-relative load into a reg which ends up with the function
-> address.
+On Fri, Apr 16 2021 at 13:38, Sami Tolvanen wrote:
+> With CONFIG_CFI_CLANG, the compiler replaces function addresses in C
+> code with jump table addresses.
 
-This is horrible.
+Fine.
 
-We made a mistake adapting the kernel to GCC's nonsensical stack
-protector ABI, especially on 32-bit, instead of making GCC fix it.
-Let's not repeat this with clang please.
+> To avoid referring to jump tables in entry code with PTI,
 
-Sami, I'm assuming that:
+What has this to do with PTI?
 
-extern void func(void);
+> disable CFI for IDT and paravirt code, and use function_nocfi() to
+> prevent jump table addresses from being added to the IDT or system
+> call entry points.
 
-results in anything that takes a pointer to func getting a pointer to
-some special magic descriptor instead of to func, so that:
+How does this changelog make sense for anyone not familiar with the
+matter at hand?
 
-void (*ptr)(void);
-ptr = func;
-ptr();
+Where is the analysis why excluding 
 
-does the right thing.  Then void (*)(void) is no longer a raw pointer.  Fine.
+> +CFLAGS_REMOVE_idt.o		:= $(CC_FLAGS_CFI)
+> +CFLAGS_REMOVE_paravirt.o	:= $(CC_FLAGS_CFI)
 
-But obviously there is code that needs real function pointers.  How
-about making this a first-class feature, or at least hacking around it
-more cleanly.  For example, what does this do:
+all of idt.c and paravirt.c is correct and how that is going to be
+correct in the future?
 
-char entry_whatever[];
-wrmsrl(..., (unsigned long)entry_whatever);
+These files are excluded from CFI, so I can add whatever I want to them
+and circumvent the purpose of CFI, right?
 
-or, alternatively,
+Brilliant plan that. But I know, sekurity ...
 
-extern void func() __attribute__((nocfi));
+Thanks,
 
-void (*ptr)(void);
-ptr = func;  /* probably fails to compile -- invalid conversion */
-
-(unsigned long)func /* returns the actual pointer */
-
-func();  /* works like normal */
-
-And maybe allow this too:
-
-void (*ptr)(void) __attribute__((nocfi);
-ptr = func;
-ptr();  /* emits an unchecked call.  maybe warns, too.  anyone who
-does this needs to be extremely careful. */
-
---Andy
+        tglx
