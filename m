@@ -2,93 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271CAC433B4
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 17:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9A5C433ED
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 18:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFD9361245
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 17:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC1C61354
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 18:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236806AbhDQRw3 (ORCPT
+        id S236835AbhDQSaU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 17 Apr 2021 13:52:29 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:47153 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236760AbhDQRw2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 17 Apr 2021 13:52:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1618681921; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=Ta9UOrBNX6nF/ayPWAdJWmH7jGA1eFoW7NL2pCPKvxc=;
- b=AGhiJt8q0Sq6nhO2pB5HEVJhLuH7OTGU2ykCOPwtDJZR6o03pXpuOH87W23GwELcALRp4BjW
- NmuGuLS0Hp458VZ+w9f6GbtXT0S51LtRIi8wfRjmboS2Cj1RwkHK1DsW6qlVqLMH+1KVdMQg
- QKcwBtM2wYfkRu3oOq7qNSJYUQM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 607b2041febcffa80f340da9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 17 Apr 2021 17:52:01
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D865C4338A; Sat, 17 Apr 2021 17:52:01 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1A1DC433D3;
-        Sat, 17 Apr 2021 17:51:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1A1DC433D3
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 17 Apr 2021 14:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236785AbhDQSaU (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 17 Apr 2021 14:30:20 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DBB1C061574;
+        Sat, 17 Apr 2021 11:29:53 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id d15so19193334qkc.9;
+        Sat, 17 Apr 2021 11:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n55pdEuyvRot9EGscePhvs8MONc424RNPjUKuPjJvuk=;
+        b=Tl3TeJOTi7czS6J/XHJFRBhWWjaulDh8YRiXbtjYKsDQURZUtdKha+NU8ahIZ6KnWj
+         nYoQsGq/ToCX2i9NttTbVir/rqB5t5A9nSbxTnPliuZSnqEpabnOz68QIIpppzoXHVab
+         SOxKS6b5xV8YG7q+tchfWo+5AAytrI1tWrYmoDRLTRQyCe1N94br+Vr8IyDVd9nA4qz3
+         WxAtV4aNuIBLtIJ1v1Q96xwcyuiOYM/I6R1IkaigJi3DrJrZyw/kG0ke8E7Nvq0xQpvZ
+         aLkPm0KXotlGLG/Rc+YulMw7zOXa/gfBW+hP4hoKVM+DldzPHPgeTaQbQmdD06zpgUQQ
+         iVOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n55pdEuyvRot9EGscePhvs8MONc424RNPjUKuPjJvuk=;
+        b=GblngnwyjeYoPMXKCDN04YzV7b/X+WK/BFgm3OkCE3NKv5lya7pq5IUfRPVy5ztT8J
+         d20ufbqZgvyoV1nMG9N84N8fXugFgSSUIKMsSnet57Za07GACGq9xaYDhdC2lcGGPchj
+         u/fQASVLNi6u/xTXFxPRqSF+d4jTMVZlrVLIn+MlHW9B6DnEkcI0gLGMook2GsFJ0Afq
+         qYKJI3BGS5tuPd2M+PyoY6MyS27yZ8zEHPy2CG0ZvW/Mo/l/dVa3pdElK+kdAiIxMC8M
+         08Iy3QQE4e9Ay6sfuKd8flUzrU+yPP2cv+cm+H3SaZXAeqzdVGbFCn+lpXEBtlQ8YLEJ
+         zizg==
+X-Gm-Message-State: AOAM532wIwT5/SQdJA/7X7mOWCC3+jbYo1unAakTX6TJEuTBLnxs2TOH
+        +Cyf1Cs1eQmqbn7wP4JaPRJI7atNGGA=
+X-Google-Smtp-Source: ABdhPJw7fWkDQOkH38Di0oMGWac3KVXW3r0HtLirWNDl1SRn4stESdbRJgPBoY4F0jcnE78gHNB1cQ==
+X-Received: by 2002:a37:45c7:: with SMTP id s190mr4950487qka.111.1618684192734;
+        Sat, 17 Apr 2021 11:29:52 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:1102::1844? ([2620:10d:c091:480::1:1b53])
+        by smtp.gmail.com with ESMTPSA id f185sm6614506qke.61.2021.04.17.11.29.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 Apr 2021 11:29:52 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
 Subject: Re: [PATCH RESEND][next] rtl8xxxu: Fix fall-through warnings for
  Clang
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20210305094850.GA141221@embeddedor>
-References: <20210305094850.GA141221@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jes Sorensen <Jes.Sorensen@gmail.com>,
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20210417175201.4D865C4338A@smtp.codeaurora.org>
-Date:   Sat, 17 Apr 2021 17:52:01 +0000 (UTC)
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210305094850.GA141221@embeddedor>
+ <871rct67n2.fsf@codeaurora.org> <202103101107.BE8B6AF2@keescook>
+ <2e425bd8-2722-b8a8-3745-4a3f77771906@gmail.com>
+ <202103101141.92165AE@keescook>
+ <90baba5d-53a1-c7b1-495d-5902e9b04a72@gmail.com>
+ <202103101254.1DBEE1082@keescook>
+Message-ID: <4eb49b08-09bb-d1d2-d2bc-efcd5f7406fe@gmail.com>
+Date:   Sat, 17 Apr 2021 14:29:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
+MIME-Version: 1.0
+In-Reply-To: <202103101254.1DBEE1082@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix
-> multiple warnings by replacing /* fall through */ comments with
-> the new pseudo-keyword macro fallthrough; instead of letting the
-> code fall through to the next case.
+On 3/10/21 3:59 PM, Kees Cook wrote:
+> On Wed, Mar 10, 2021 at 02:51:24PM -0500, Jes Sorensen wrote:
+>> On 3/10/21 2:45 PM, Kees Cook wrote:
+>>> On Wed, Mar 10, 2021 at 02:31:57PM -0500, Jes Sorensen wrote:
+>>>> On 3/10/21 2:14 PM, Kees Cook wrote:
+>>>>> Hm, this conversation looks like a miscommunication, mainly? I see
+>>>>> Gustavo, as requested by many others[1], replacing the fallthrough
+>>>>> comments with the "fallthrough" statement. (This is more than just a
+>>>>> "Clang doesn't parse comments" issue.)
+>>>>>
+>>>>> This could be a tree-wide patch and not bother you, but Greg KH has
+>>>>> generally advised us to send these changes broken out. Anyway, this
+>>>>> change still needs to land, so what would be the preferred path? I think
+>>>>> Gustavo could just carry it for Linus to merge without bothering you if
+>>>>> that'd be preferred?
+>>>>
+>>>> I'll respond with the same I did last time, fallthrough is not C and
+>>>> it's ugly.
+>>>
+>>> I understand your point of view, but this is not the consensus[1] of
+>>> the community. "fallthrough" is a macro, using the GCC fallthrough
+>>> attribute, with the expectation that we can move to the C17/C18
+>>> "[[fallthrough]]" statement once it is finalized by the C standards
+>>> body.
+>>
+>> I don't know who decided on that, but I still disagree. It's an ugly and
+>> pointless change that serves little purpose. We shouldn't have allowed
+>> the ugly /* fall-through */ comments in either, but at least they didn't
+>> mess with the code. I guess when you give someone an inch, they take a mile.
+>>
+>> Last time this came up, the discussion was that clang refused to fix
+>> their brokenness and therefore this nonsense was being pushed into the
+>> kernel. It's still a pointless argument, if clang can't fix it's crap,
+>> then stop using it.
+>>
+>> As Kalle correctly pointed out, none of the previous comments to this
+>> were addressed, the patches were just reposted as fact. Not exactly a
+>> nice way to go about it either.
 > 
-> Notice that Clang doesn't recognize /* fall through */ comments as
-> implicit fall-through markings.
-> 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Do you mean changing the commit log to re-justify these changes? I
+> guess that could be done, but based on the thread, it didn't seem to
+> be needed. The change is happening to match the coding style consensus
+> reached to give the kernel the flexibility to move from a gcc extension
+> to the final C standards committee results without having to do treewide
+> commits again (i.e. via the macro).
 
-Patch applied to wireless-drivers-next.git, thanks.
+No, I am questioning why Gustavo continues to push this nonsense that
+serves no purpose whatsoever. In addition he has consistently ignored
+comments and just keep reposting it. But I guess that is how it works,
+ignore feedback, repost junk, repeat.
 
-bf3365a856a1 rtl8xxxu: Fix fall-through warnings for Clang
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20210305094850.GA141221@embeddedor/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Jes
 
