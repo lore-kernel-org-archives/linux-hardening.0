@@ -2,160 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A39EC433B4
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 19:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3352C433ED
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 23:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED22360FEF
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 19:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B208F6121D
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 23:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237053AbhDQTrG (ORCPT
+        id S230339AbhDQXT5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 17 Apr 2021 15:47:06 -0400
-Received: from gateway36.websitewelcome.com ([192.185.194.2]:19105 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236779AbhDQTrG (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 17 Apr 2021 15:47:06 -0400
-X-Greylist: delayed 1299 seconds by postgrey-1.27 at vger.kernel.org; Sat, 17 Apr 2021 15:47:05 EDT
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 49B90400F8C94
-        for <linux-hardening@vger.kernel.org>; Sat, 17 Apr 2021 14:24:46 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id XqYglMWZhmJLsXqYglmoQT; Sat, 17 Apr 2021 14:24:46 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nLSkpOd3XZR5r0muN1xJlaF3Fg92tAYTugf+ZrPQVoY=; b=Z5epnxU9ICDFvitytMG2lKf3Y4
-        p+b/tVrNwo1UlSAunOo78zK+k4Vdf7JadbNPgxps+8hrhLYjbeNBalWprQ2OMp6tpmtjpmQOYhh96
-        9y/9YjzjLPbHCZ/e/CMrAQvGh+SffkRvZTbKkob00i+JaEyeUZMPmjHfFVsshxhcc1pTQx1727enL
-        o1OChDoxsaDDSV3r7N6wrC/vT9M3nLL7ClD6PFBzY8dZ67tb/gbp9x1IfxZSG/8AG4SuTza4gEkrb
-        mS45FCNO4iLpvvIWgYRibk1CeYMgGVW1QU0VJNprPEW6T0EZiTApHCL1jWvWuy1lt8lU8Ncsi7eG5
-        K9Qen0+A==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49852 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lXqYc-000FWD-Ll; Sat, 17 Apr 2021 14:24:42 -0500
-Subject: Re: [PATCH RESEND][next] rtl8xxxu: Fix fall-through warnings for
- Clang
-To:     Jes Sorensen <jes.sorensen@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210305094850.GA141221@embeddedor>
- <871rct67n2.fsf@codeaurora.org> <202103101107.BE8B6AF2@keescook>
- <2e425bd8-2722-b8a8-3745-4a3f77771906@gmail.com>
- <202103101141.92165AE@keescook>
- <90baba5d-53a1-c7b1-495d-5902e9b04a72@gmail.com>
- <202103101254.1DBEE1082@keescook>
- <4eb49b08-09bb-d1d2-d2bc-efcd5f7406fe@gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <dc53ec8c-76e1-e487-26ae-6b34afde9ca2@embeddedor.com>
-Date:   Sat, 17 Apr 2021 14:24:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Sat, 17 Apr 2021 19:19:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230031AbhDQXTy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 17 Apr 2021 19:19:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2F47460FEF
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Apr 2021 23:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618701567;
+        bh=wbpeHFstXghdORuec36q9wY79cgW73LxBcnaZ3Ao/bY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GFpv32NXVTGVK0XzUJMjF/SYKO6+t4+HJpPTPtcEJLW9ggxU7MJhsRPLkGGkNsS12
+         NGzgrzMcFCgMVYO9XuldqrLPw9iVZVwiSVHTMAoB6mDdI1z6GeH724nrD3vc1UxalD
+         +osBHCpePmTZJAGJOac+2vSK1rGt7r8I8oI/rUt0v2+wSyWCrTfEF2sf0GvkMDiqgg
+         p5wi/aCKsDjXJrKhUj4a6Ap8gztneY2+5C3Qa2ouQ8R+7cDLel/SZvxjvY9Sc3TfxH
+         d2YRouKRUr1PeVZXxy1zeBfbc0wjN4XxoZWPrKX0DtOfPhl4MCAXDuyZk4uuH/alxX
+         c7XLhFPOUW1jQ==
+Received: by mail-ej1-f48.google.com with SMTP id r9so47361658ejj.3
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Apr 2021 16:19:27 -0700 (PDT)
+X-Gm-Message-State: AOAM533jZaeGWBhDrs3tPBsnxeDNJ33b7xvJ5MBaM37oppRLZ9hruxXd
+        GPu0Hm5WglaU8rRAtQcfOVFIi0uxHT81sJYO9ql9Fw==
+X-Google-Smtp-Source: ABdhPJyCju/ENHhOLYbSm0xjxP6udpuBOmnjQOCOs6DiiJMHKJS+NWtRkWIPl+6dgPgbfHxVS0ro+PT58YwRMGfaiZQ=
+X-Received: by 2002:a17:906:7104:: with SMTP id x4mr14824074ejj.101.1618701565496;
+ Sat, 17 Apr 2021 16:19:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4eb49b08-09bb-d1d2-d2bc-efcd5f7406fe@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lXqYc-000FWD-Ll
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49852
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20210416203844.3803177-1-samitolvanen@google.com>
+ <20210416203844.3803177-6-samitolvanen@google.com> <20210416211855.GD22348@zn.tnic>
+ <CABCJKud8TvzhcjHCpsrtCJ4B50ZUfaL48F42EhZ2zWKLteAc0Q@mail.gmail.com>
+ <20210416220251.GE22348@zn.tnic> <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com>
+ <202104161519.1D37B6D26@keescook> <CALCETrV6WYx7dt56aCuUYsrrFya==zYR+p-YZnaATptnaO7w2A@mail.gmail.com>
+ <202104161601.CFB2CCF84F@keescook>
+In-Reply-To: <202104161601.CFB2CCF84F@keescook>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 17 Apr 2021 16:19:14 -0700
+X-Gmail-Original-Message-ID: <CALCETrWUS52tzLNiWL5sAVVB5-ko1EW73-TEiO=eZ5jF_QyGPQ@mail.gmail.com>
+Message-ID: <CALCETrWUS52tzLNiWL5sAVVB5-ko1EW73-TEiO=eZ5jF_QyGPQ@mail.gmail.com>
+Subject: Re: [PATCH 05/15] x86: Implement function_nocfi
+To:     Kees Cook <keescook@chromium.org>,
+        David Laight <David.Laight@aculab.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, Apr 16, 2021 at 4:40 PM Kees Cook <keescook@chromium.org> wrote:
+>
 
+> > 1. I defined a function in asm.  I want to tell clang that this
+> > function is defined in asm, and for clang to behave accordingly:
+> >
+> > .globl func
+> > func:
+> >  ; do stuff
+> >
+> > later:
+> >
+> > extern void func(void) [something here];
+> >
+> > There really should be a way to write this correctly such that it
+> > works regardless of the setting of
+> > -fsanitize-cfi-canonical-jump-tables.  This should not bypass CFI.  It
+> > should *work*, with CFI enforced.  If I read all the various things
+> > you linked correctly, this would be something like __cfi_noncanonical,
+> > and I reserve the right to think that this is a horrible name.
+>
+> Yes, I find the name confusing too. Without noncanonical, we'd need
+> C call wrappers for every single .S function that had its address
+> taken. This is very common in crypto, for example. That level of extra
+> code seemed like a total non-starter. Instead, we just get a few places
+> we have to mark.
 
-On 4/17/21 13:29, Jes Sorensen wrote:
-> On 3/10/21 3:59 PM, Kees Cook wrote:
->> On Wed, Mar 10, 2021 at 02:51:24PM -0500, Jes Sorensen wrote:
->>> On 3/10/21 2:45 PM, Kees Cook wrote:
->>>> On Wed, Mar 10, 2021 at 02:31:57PM -0500, Jes Sorensen wrote:
->>>>> On 3/10/21 2:14 PM, Kees Cook wrote:
->>>>>> Hm, this conversation looks like a miscommunication, mainly? I see
->>>>>> Gustavo, as requested by many others[1], replacing the fallthrough
->>>>>> comments with the "fallthrough" statement. (This is more than just a
->>>>>> "Clang doesn't parse comments" issue.)
->>>>>>
->>>>>> This could be a tree-wide patch and not bother you, but Greg KH has
->>>>>> generally advised us to send these changes broken out. Anyway, this
->>>>>> change still needs to land, so what would be the preferred path? I think
->>>>>> Gustavo could just carry it for Linus to merge without bothering you if
->>>>>> that'd be preferred?
->>>>>
->>>>> I'll respond with the same I did last time, fallthrough is not C and
->>>>> it's ugly.
->>>>
->>>> I understand your point of view, but this is not the consensus[1] of
->>>> the community. "fallthrough" is a macro, using the GCC fallthrough
->>>> attribute, with the expectation that we can move to the C17/C18
->>>> "[[fallthrough]]" statement once it is finalized by the C standards
->>>> body.
->>>
->>> I don't know who decided on that, but I still disagree. It's an ugly and
->>> pointless change that serves little purpose. We shouldn't have allowed
->>> the ugly /* fall-through */ comments in either, but at least they didn't
->>> mess with the code. I guess when you give someone an inch, they take a mile.
->>>
->>> Last time this came up, the discussion was that clang refused to fix
->>> their brokenness and therefore this nonsense was being pushed into the
->>> kernel. It's still a pointless argument, if clang can't fix it's crap,
->>> then stop using it.
->>>
->>> As Kalle correctly pointed out, none of the previous comments to this
->>> were addressed, the patches were just reposted as fact. Not exactly a
->>> nice way to go about it either.
->>
->> Do you mean changing the commit log to re-justify these changes? I
->> guess that could be done, but based on the thread, it didn't seem to
->> be needed. The change is happening to match the coding style consensus
->> reached to give the kernel the flexibility to move from a gcc extension
->> to the final C standards committee results without having to do treewide
->> commits again (i.e. via the macro).
-> 
-> No, I am questioning why Gustavo continues to push this nonsense that
-> serves no purpose whatsoever. In addition he has consistently ignored
-> comments and just keep reposting it. But I guess that is how it works,
-> ignore feedback, repost junk, repeat.
+The patch you linked doesn't have a noncanonical attribute, though.
+So I'm not sure how to reliably call into asm from C.
 
-I was asking for feedback here[1] and here[2] after people (you and Kalle)
-commented on this patch. How is that ignoring people? And -again- why
-people ignored my requests for feedback in this conversation? It's a mystery
-to me, honestly.
+(The more I think about it, the less I like "canonical".  What is
+"canonical"?  The symbol?  The function body?  Something else?)
 
-Thanks
---
-Gustavo
+>
+> > 2. I need a raw function pointer, thank you very much.  I would like
+> > to be honest about it, and I don't really want to bypass CFI, but I
+> > need the actual bits in the actual symbol.
+> >
+> > translation unit 1 defines func.  Maybe it's C with
+> > -fsanitize-cfi-canonical-jump-tables, maybe it's C with
+> > -fno-sanitize-cfi-canonical-jump-tables or however it's spelled, and
+> > maybe it's plain asm.  Now translation unit 2 does:
+> >
+> > 2a. Uses a literal symbol, because it's going to modify function text
+> > or poke an MSR or whatever:
+> >
+> > wrmsrl(MSR_WHATEVER, func);
+> >
+> > clang needs to give us *some* way to have a correct declaration of
+> > func such that we can, without resorting to inline asm kludges, get
+> > the actual bit pattern of the actual symbol.
+>
+> We don't want version of a global symbol alias of func that points to
+> the function body, though; it's only very specific cases where this
+> should be stripped (MSR, ftrace, etc).
+>
+> So, if there were some Clang-specific syntax for this, it would still be
+> used on a case-by-case basis. It would still be something like:
+>
+> wrmsrl(MSR_WAT, __builtin_gimme_body_p(func));
+>
 
-[1] https://lore.kernel.org/lkml/20201124160906.GB17735@embeddedor/
-[2] https://lore.kernel.org/lkml/e10b2a6a-d91a-9783-ddbe-ea2c10a1539a@embeddedor.com/
+> Okay, you're saying you want __builtin_gimme_body_p() to be a constant
+> expression for the compiler, not inline asm?
+
+Yes.
+
+I admit that, in the trivial case where the asm code is *not* a
+C-ABI-compliant function, giving a type that doesn't fool the compiler
+into thinking that it might be is probably the best fix.  Maybe we
+should standardize something, e.g.:
+
+struct raw_symbol;  /* not defined anywhere */
+#define DECLARE_RAW_SYMBOL(x) struct raw_symbol x[]
+
+and then we write this:
+
+DECLARE_RAW_SYMBOL(entry_SYSCALL_64);
+
+wrmsrl(..., (unsigned long)entry_SYSCALL_64);
+
+It would be a bit nifty if we didn't need a forward declaration, but
+I'm not immediately seeing a way to do this without hacks that we'll
+probably regret;
+
+But this doesn't help the case in which the symbol is an actual
+C-callable function and we want to be able to call it, too.
