@@ -2,56 +2,47 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3352C433ED
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 23:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE1FC433B4
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 23:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B208F6121D
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 23:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862BB610CE
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Apr 2021 23:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230339AbhDQXT5 (ORCPT
+        id S230216AbhDQXxd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 17 Apr 2021 19:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230031AbhDQXTy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 17 Apr 2021 19:19:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2F47460FEF
-        for <linux-hardening@vger.kernel.org>; Sat, 17 Apr 2021 23:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618701567;
-        bh=wbpeHFstXghdORuec36q9wY79cgW73LxBcnaZ3Ao/bY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GFpv32NXVTGVK0XzUJMjF/SYKO6+t4+HJpPTPtcEJLW9ggxU7MJhsRPLkGGkNsS12
-         NGzgrzMcFCgMVYO9XuldqrLPw9iVZVwiSVHTMAoB6mDdI1z6GeH724nrD3vc1UxalD
-         +osBHCpePmTZJAGJOac+2vSK1rGt7r8I8oI/rUt0v2+wSyWCrTfEF2sf0GvkMDiqgg
-         p5wi/aCKsDjXJrKhUj4a6Ap8gztneY2+5C3Qa2ouQ8R+7cDLel/SZvxjvY9Sc3TfxH
-         d2YRouKRUr1PeVZXxy1zeBfbc0wjN4XxoZWPrKX0DtOfPhl4MCAXDuyZk4uuH/alxX
-         c7XLhFPOUW1jQ==
-Received: by mail-ej1-f48.google.com with SMTP id r9so47361658ejj.3
-        for <linux-hardening@vger.kernel.org>; Sat, 17 Apr 2021 16:19:27 -0700 (PDT)
-X-Gm-Message-State: AOAM533jZaeGWBhDrs3tPBsnxeDNJ33b7xvJ5MBaM37oppRLZ9hruxXd
-        GPu0Hm5WglaU8rRAtQcfOVFIi0uxHT81sJYO9ql9Fw==
-X-Google-Smtp-Source: ABdhPJyCju/ENHhOLYbSm0xjxP6udpuBOmnjQOCOs6DiiJMHKJS+NWtRkWIPl+6dgPgbfHxVS0ro+PT58YwRMGfaiZQ=
-X-Received: by 2002:a17:906:7104:: with SMTP id x4mr14824074ejj.101.1618701565496;
- Sat, 17 Apr 2021 16:19:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210416203844.3803177-1-samitolvanen@google.com>
- <20210416203844.3803177-6-samitolvanen@google.com> <20210416211855.GD22348@zn.tnic>
- <CABCJKud8TvzhcjHCpsrtCJ4B50ZUfaL48F42EhZ2zWKLteAc0Q@mail.gmail.com>
- <20210416220251.GE22348@zn.tnic> <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com>
- <202104161519.1D37B6D26@keescook> <CALCETrV6WYx7dt56aCuUYsrrFya==zYR+p-YZnaATptnaO7w2A@mail.gmail.com>
- <202104161601.CFB2CCF84F@keescook>
-In-Reply-To: <202104161601.CFB2CCF84F@keescook>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 17 Apr 2021 16:19:14 -0700
-X-Gmail-Original-Message-ID: <CALCETrWUS52tzLNiWL5sAVVB5-ko1EW73-TEiO=eZ5jF_QyGPQ@mail.gmail.com>
-Message-ID: <CALCETrWUS52tzLNiWL5sAVVB5-ko1EW73-TEiO=eZ5jF_QyGPQ@mail.gmail.com>
-Subject: Re: [PATCH 05/15] x86: Implement function_nocfi
-To:     Kees Cook <keescook@chromium.org>,
+        Sat, 17 Apr 2021 19:53:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37532 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230031AbhDQXxd (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 17 Apr 2021 19:53:33 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1618703585;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=C7Maz4mAaNbdh6Ve2gjfbQ91hhlq7K86k/cKBnBKj+o=;
+        b=JL1VKzqbrIa3SYfPGHkP301KVkKx9iseYHaE147CV1T99SWZRu9M2xrlejpo+7+id7X6hE
+        xU994hSS7pS+5vaHzabhxnBSzi7WeTDUgvKifckC5vOh8gVZ8cHvo/xkx6hhDDfUnHcl5S
+        bm3TQp5BrtEExphqWcvcHiWnyyRl9Le5qxGPwy5mjNNd5obEbatAvU9AwHi/jlipgGFl7O
+        DvEYZ3870Mp6klLWpcw80tcGKJgS+tZYC0wSdbhj4o83cmf4bGeTWZfhgskZQkUx8SfxOa
+        MLWQzOuIDEZCdKl9d8A8RpkVZMF2XmSNjeE2j+G9kEKivmnWSa498TktT31zKw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1618703585;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=C7Maz4mAaNbdh6Ve2gjfbQ91hhlq7K86k/cKBnBKj+o=;
+        b=2k5HzHcHvjwxNHzQGyVxfekEzoHigrWN6JBN2/crbtZzWYKhTbil2dKtjrfLjpP8XiVd6Y
+        ShR7AaM9h8O6iEBA==
+To:     Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
         David Laight <David.Laight@aculab.com>
 Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
         Sami Tolvanen <samitolvanen@google.com>,
@@ -63,95 +54,74 @@ Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-hardening@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 05/15] x86: Implement function_nocfi
+In-Reply-To: <CALCETrWUS52tzLNiWL5sAVVB5-ko1EW73-TEiO=eZ5jF_QyGPQ@mail.gmail.com>
+References: <20210416203844.3803177-1-samitolvanen@google.com> <20210416203844.3803177-6-samitolvanen@google.com> <20210416211855.GD22348@zn.tnic> <CABCJKud8TvzhcjHCpsrtCJ4B50ZUfaL48F42EhZ2zWKLteAc0Q@mail.gmail.com> <20210416220251.GE22348@zn.tnic> <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com> <202104161519.1D37B6D26@keescook> <CALCETrV6WYx7dt56aCuUYsrrFya==zYR+p-YZnaATptnaO7w2A@mail.gmail.com> <202104161601.CFB2CCF84F@keescook> <CALCETrWUS52tzLNiWL5sAVVB5-ko1EW73-TEiO=eZ5jF_QyGPQ@mail.gmail.com>
+Date:   Sun, 18 Apr 2021 01:53:05 +0200
+Message-ID: <877dl0sc2m.ffs@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 16, 2021 at 4:40 PM Kees Cook <keescook@chromium.org> wrote:
+On Sat, Apr 17 2021 at 16:19, Andy Lutomirski wrote:
+> On Fri, Apr 16, 2021 at 4:40 PM Kees Cook <keescook@chromium.org> wrote:
+>> Okay, you're saying you want __builtin_gimme_body_p() to be a constant
+>> expression for the compiler, not inline asm?
 >
-
-> > 1. I defined a function in asm.  I want to tell clang that this
-> > function is defined in asm, and for clang to behave accordingly:
-> >
-> > .globl func
-> > func:
-> >  ; do stuff
-> >
-> > later:
-> >
-> > extern void func(void) [something here];
-> >
-> > There really should be a way to write this correctly such that it
-> > works regardless of the setting of
-> > -fsanitize-cfi-canonical-jump-tables.  This should not bypass CFI.  It
-> > should *work*, with CFI enforced.  If I read all the various things
-> > you linked correctly, this would be something like __cfi_noncanonical,
-> > and I reserve the right to think that this is a horrible name.
+> Yes.
 >
-> Yes, I find the name confusing too. Without noncanonical, we'd need
-> C call wrappers for every single .S function that had its address
-> taken. This is very common in crypto, for example. That level of extra
-> code seemed like a total non-starter. Instead, we just get a few places
-> we have to mark.
-
-The patch you linked doesn't have a noncanonical attribute, though.
-So I'm not sure how to reliably call into asm from C.
-
-(The more I think about it, the less I like "canonical".  What is
-"canonical"?  The symbol?  The function body?  Something else?)
-
+> I admit that, in the trivial case where the asm code is *not* a
+> C-ABI-compliant function, giving a type that doesn't fool the compiler
+> into thinking that it might be is probably the best fix.  Maybe we
+> should standardize something, e.g.:
 >
-> > 2. I need a raw function pointer, thank you very much.  I would like
-> > to be honest about it, and I don't really want to bypass CFI, but I
-> > need the actual bits in the actual symbol.
-> >
-> > translation unit 1 defines func.  Maybe it's C with
-> > -fsanitize-cfi-canonical-jump-tables, maybe it's C with
-> > -fno-sanitize-cfi-canonical-jump-tables or however it's spelled, and
-> > maybe it's plain asm.  Now translation unit 2 does:
-> >
-> > 2a. Uses a literal symbol, because it's going to modify function text
-> > or poke an MSR or whatever:
-> >
-> > wrmsrl(MSR_WHATEVER, func);
-> >
-> > clang needs to give us *some* way to have a correct declaration of
-> > func such that we can, without resorting to inline asm kludges, get
-> > the actual bit pattern of the actual symbol.
+> struct raw_symbol;  /* not defined anywhere */
+> #define DECLARE_RAW_SYMBOL(x) struct raw_symbol x[]
 >
-> We don't want version of a global symbol alias of func that points to
-> the function body, though; it's only very specific cases where this
-> should be stripped (MSR, ftrace, etc).
+> and then we write this:
 >
-> So, if there were some Clang-specific syntax for this, it would still be
-> used on a case-by-case basis. It would still be something like:
+> DECLARE_RAW_SYMBOL(entry_SYSCALL_64);
 >
-> wrmsrl(MSR_WAT, __builtin_gimme_body_p(func));
+> wrmsrl(..., (unsigned long)entry_SYSCALL_64);
 >
+> It would be a bit nifty if we didn't need a forward declaration, but
+> I'm not immediately seeing a way to do this without hacks that we'll
+> probably regret;
+>
+> But this doesn't help the case in which the symbol is an actual
+> C-callable function and we want to be able to call it, too.
 
-> Okay, you're saying you want __builtin_gimme_body_p() to be a constant
-> expression for the compiler, not inline asm?
+The right way to solve this is that the compiler provides a builtin
 
-Yes.
+ function_nocfi() +/- the naming bikeshed
 
-I admit that, in the trivial case where the asm code is *not* a
-C-ABI-compliant function, giving a type that doesn't fool the compiler
-into thinking that it might be is probably the best fix.  Maybe we
-should standardize something, e.g.:
+which works for
 
-struct raw_symbol;  /* not defined anywhere */
-#define DECLARE_RAW_SYMBOL(x) struct raw_symbol x[]
+      foo = function_nocfi(bar);
 
-and then we write this:
+and
 
-DECLARE_RAW_SYMBOL(entry_SYSCALL_64);
+static unsigned long foo[] = {
+       function_nocfi(bar1),
+       function_nocfi(bar2),
+};
 
-wrmsrl(..., (unsigned long)entry_SYSCALL_64);
+which are pretty much the only possible 2 usecases. If the compiler
+wants to have function_nocfi_in_code() and function_nocfi_const()
+because it can't figure it out on it's own, then I can live with that,
+but that's still several orders of magnitudes better than having to work
+around it by whatever nasty macro/struct magic.
 
-It would be a bit nifty if we didn't need a forward declaration, but
-I'm not immediately seeing a way to do this without hacks that we'll
-probably regret;
+I don't care about the slightly more unreadable code, but if that
+builtin has a descriptive name, then it's even useful for documentary
+purposes. And it can be easily grepped for which makes it subject to
+static code analysers which can help to detect abuse.
 
-But this doesn't help the case in which the symbol is an actual
-C-callable function and we want to be able to call it, too.
+Anything which requires to come up with half baken constructs to work
+around the shortcomings of the compiler are wrong to begin with.
+
+Thanks,
+
+        tglx
