@@ -2,62 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA61C433ED
-	for <linux-hardening@archiver.kernel.org>; Sun, 18 Apr 2021 22:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA87C433B4
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 08:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30C9A610CB
-	for <linux-hardening@archiver.kernel.org>; Sun, 18 Apr 2021 22:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E6D61107
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 08:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232530AbhDRW6C (ORCPT
+        id S233438AbhDSIko (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 18 Apr 2021 18:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232023AbhDRW6B (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 18 Apr 2021 18:58:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A33A0610CD
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Apr 2021 22:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618786652;
-        bh=non+ChVWeE8XORlG2mTT2LEpY5Qi0iPeHnx5+TIBOnw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Hml6Xi8KIi3GG76p+sp/UYLXjyd5n9xus2Nld3dn9AZOiPUUC7YQtYfbkvhZ2NPd9
-         KKAce5/1qzzEdSiqtF+FuV7QQo71ndLV5NuUOzRavunj00JJHi9C+pG94dXg5u7Mg1
-         l4QTze+jxICEGftn8k3QUrJjF6XgAZYMrESpGBg9uo7xj8vKrGratd2qWckhTwA+lt
-         WTvOrjQQD0iNmuoel3s9t1FEOWVpN+bO8I54sVCgilCu1B9+LELCh2wttNgVfa4Dg8
-         Fn77mJFeXQt63d46so30tiTzRCo1b9tJ57hBFkF5qXHXs7auJa4VXC8cyYktPWXuIO
-         FknZA9CPLXqOw==
-Received: by mail-ej1-f42.google.com with SMTP id v6so48744695ejo.6
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Apr 2021 15:57:32 -0700 (PDT)
-X-Gm-Message-State: AOAM530+ne2yQ8NKPSATE3LJPWJLoW2EqFJjyukiBaDuJ19ohIdJyD5Z
-        1rI27FK7cukR+gy9m54FkrIBPY2zwnmOLDyDEs/vXg==
-X-Google-Smtp-Source: ABdhPJxjNgfCFwVfPW9erl7ko9OHr6TFa02NZqnJKoE0yQbljqbGrNrNCwrifT6UMfhnIbV3pQj9DjxiaVPI/gTyu0I=
-X-Received: by 2002:a17:906:4f91:: with SMTP id o17mr18987993eju.503.1618786651236;
- Sun, 18 Apr 2021 15:57:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210416203844.3803177-1-samitolvanen@google.com>
- <20210416203844.3803177-6-samitolvanen@google.com> <20210416211855.GD22348@zn.tnic>
- <CABCJKud8TvzhcjHCpsrtCJ4B50ZUfaL48F42EhZ2zWKLteAc0Q@mail.gmail.com>
- <20210416220251.GE22348@zn.tnic> <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com>
- <202104161519.1D37B6D26@keescook> <CALCETrV6WYx7dt56aCuUYsrrFya==zYR+p-YZnaATptnaO7w2A@mail.gmail.com>
- <202104161601.CFB2CCF84F@keescook> <CALCETrWUS52tzLNiWL5sAVVB5-ko1EW73-TEiO=eZ5jF_QyGPQ@mail.gmail.com>
- <877dl0sc2m.ffs@nanos.tec.linutronix.de> <CALCETrVEhL9N_DEM8=rbAzp8Nb2pDitRCZGRAVcE288MBrJ4ug@mail.gmail.com>
- <871rb7sh31.ffs@nanos.tec.linutronix.de>
-In-Reply-To: <871rb7sh31.ffs@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 18 Apr 2021 15:57:19 -0700
-X-Gmail-Original-Message-ID: <CALCETrXRHhEivNK0hqEdRz+gN8c9jhdsjJC=4EQKMWB1roYw3A@mail.gmail.com>
-Message-ID: <CALCETrXRHhEivNK0hqEdRz+gN8c9jhdsjJC=4EQKMWB1roYw3A@mail.gmail.com>
+        Mon, 19 Apr 2021 04:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229635AbhDSIkn (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 19 Apr 2021 04:40:43 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB99C061760
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 01:40:12 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id bx20so38499430edb.12
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 01:40:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2y82BOAFsYacLRhgXdKaCVbYWGAg9sRe0z+BWidh9M8=;
+        b=RuAKp33JwqA4uUuvSOxz5bzndUVRHVm28Evd6lhy4OS8gYEFa07ke/qKYY6oELuHDc
+         Hu6aORWYDRm5ZPS6jKNYIFuWCwuno1B7q1obZwbGdLV846soI0Reid0v2uwvVfXtigTB
+         StB8XGea3ax1CIhGwCYmKQcY3kOJwe0jKtfCc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2y82BOAFsYacLRhgXdKaCVbYWGAg9sRe0z+BWidh9M8=;
+        b=J++YL2at839T8HYsZ6X4oBxGW4Vj1RWMmt0JRNUE17Te9grgAHGa8SBNQcInXI0kJw
+         ureYciTZiixg7p+yjccNcf/MTU2kJ/LvYXs0j8CJyXm9Drbbq6ZBkTDYzr58u2IpKOb1
+         31u6V5r9J7mXOOC9sHiisGSk9FXFIxO/dCosjnZMdGyo8kiZnCl3/l8SA9MdghoUvvTa
+         kp9g3z0F3Psm4qXbrw8k6RXFJesFyytadBkCt4g1Kr3KPrRSp3Morgjeog8VHiCIpNj5
+         c4VtmPhyWlSjXrpKaQd9oUVeZI6NN838RwZ/YlUq8V5pqLGu06fVMPFkUi74h8PvB3XH
+         o2NA==
+X-Gm-Message-State: AOAM533JDlMnBal8qqFarVUPs3K+UV1cVK9oCaglcIKY7aQI6o0B1QNQ
+        IDKh5EMu+/QpvLvDYmxqpnrCwA==
+X-Google-Smtp-Source: ABdhPJxs44vPkGIH9EacQU3mJFMXHnnfTHgbSde2kzcZShH9lzWk8kMkx2nFwBpxfQbgb7z0G0ROUg==
+X-Received: by 2002:a05:6402:51c6:: with SMTP id r6mr5493822edd.258.1618821611041;
+        Mon, 19 Apr 2021 01:40:11 -0700 (PDT)
+Received: from [192.168.1.149] ([80.208.71.248])
+        by smtp.gmail.com with ESMTPSA id gz10sm5353737ejc.25.2021.04.19.01.40.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Apr 2021 01:40:10 -0700 (PDT)
 Subject: Re: [PATCH 05/15] x86: Implement function_nocfi
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        David Laight <David.Laight@aculab.com>,
-        Borislav Petkov <bp@alien8.de>,
+To:     Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
         Sami Tolvanen <samitolvanen@google.com>,
         X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -67,43 +68,70 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         linux-hardening@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20210416203844.3803177-1-samitolvanen@google.com>
+ <20210416203844.3803177-6-samitolvanen@google.com>
+ <20210416211855.GD22348@zn.tnic>
+ <CABCJKud8TvzhcjHCpsrtCJ4B50ZUfaL48F42EhZ2zWKLteAc0Q@mail.gmail.com>
+ <20210416220251.GE22348@zn.tnic>
+ <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com>
+ <202104161519.1D37B6D26@keescook>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <2812c98b-3b5a-7be5-9fd9-2a6260406a45@rasmusvillemoes.dk>
+Date:   Mon, 19 Apr 2021 10:40:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
+MIME-Version: 1.0
+In-Reply-To: <202104161519.1D37B6D26@keescook>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Apr 18, 2021 at 9:17 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Sat, Apr 17 2021 at 17:11, Andy Lutomirski wrote:
-> > On Sat, Apr 17, 2021 at 4:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> which works for
-> >>
-> >>       foo = function_nocfi(bar);
-> >
-> > I agree in general.  But right now, we have, in asm/proto.h:
-> >
-> > void entry_SYSCALL_64(void);
-> >
-> > and that's pure nonsense.  Depending on your point of view,
-> > entry_SYSCALL_64 is a symbol that resolves to an integer or it's an
-> > array of bytes containing instructions, but it is most definitely not
-> > a function void (void).  So, regardless of any CFI stuff, I propose
-> > that we standardize our handling of prototypes of symbols that are
-> > opaque to the C compiler.  Here are a couple of choices:
-> >
-> > Easy one:
-> >
-> > extern u8 entry_SYSCALL_64[];
-> >
-> > Slightly more complicated:
-> >
-> > struct opaque_symbol;
-> > extern struct opaque_symbol entry_SYSCALL_64;
-> >
-> > The opaque_symbol variant avoids any possible confusion over the weird
-> > status of arrays in C, and it's hard to misuse, since struct
-> > opaque_symbol is an incomplete type.
->
-> Makes sense.
+On 17/04/2021 00.28, Kees Cook wrote:
+> On Fri, Apr 16, 2021 at 03:06:17PM -0700, Andy Lutomirski wrote:
 
-Sami, do you want to do this as part of your series or should I write a patch?
+>> The
+>> foo symbol would point to whatever magic is needed.
+> 
+> No, the symbol points to the jump table entry. Direct calls get minimal
+> overhead and indirect calls can add the "is this function in the right
+> table" checking.
+> 
+> 
+> But note that this shouldn't turn into a discussion of "maybe Clang could
+> do CFI differently"; this is what Clang has.
+
+Why not? In particular, I'd really like somebody to answer the question
+"why not just store a cookie before each address-taken or
+external-linkage function?".
+
+(1) direct calls get _no_ overhead, not just "minimal".
+(2) address comparison, intra- or inter-module, Just Works, no need to
+disable one sanity check to get others.
+(3) The overhead and implementation of the signature check is the same
+for inter- and intra- module calls.
+(4) passing (unsigned long)sym into asm code or stashing it in a table
+Just Works.
+
+How much code would be needed on the clang side to provide a
+--cfi-mode=inline ?
+
+The only issue, AFAICT, which is also a problem being handled in the
+current proposal, is indirect calls to asm code from C. They either have
+to be instrumented to not do any checking (which requires callers to
+know that the pointer they have might point to an asm-implementation),
+or the asm code could be taught to emit those cookies as well - which
+would provide even better coverage. Something like
+
+CFI_COOKIE(foo)
+foo:
+  ...
+
+with CFI_COOKIE expanding to nothing when !CONFIG_CFI, and otherwise to
+(something like) ".quad cfi_cookie__foo" ; with some appropriate Kbuild
+and compiler magic to generate a table of cfi_cookie__* defines from a
+header file with the prototypes.
+
+Rasmus
