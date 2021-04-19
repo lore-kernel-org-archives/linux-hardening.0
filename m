@@ -7,67 +7,70 @@ X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF93C433B4
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 15:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAF0C433ED
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 15:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF1E061007
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 15:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A563F61007
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 15:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235665AbhDSPOa (ORCPT
+        id S239254AbhDSPUv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Apr 2021 11:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56306 "EHLO
+        Mon, 19 Apr 2021 11:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230213AbhDSPOa (ORCPT
+        with ESMTP id S238909AbhDSPUv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Apr 2021 11:14:30 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C753C061761
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 08:13:59 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id p3so18500777ybk.0
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 08:13:59 -0700 (PDT)
+        Mon, 19 Apr 2021 11:20:51 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDCAEC061761
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 08:20:21 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id g38so39170822ybi.12
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 08:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=36vwzvQKHGNtNCW2ZUnMCMtobdyASLNJa9tZKeMvkEQ=;
-        b=czTjya+URdUiMwXGnHagZwTFuPInlRrTc3wRPHOQw5l93EMk3BWr3PTm6Qb2J+tiMc
-         58cs6nPNphdDoVxv+Hkgbr21HhD3zEoZa4Xl7Mhd53JshzbevB0YxVeFFpSZHZ2mi7zO
-         lER3lLDVLxfBRy9Ee0nGVzowhPXLnhRjRTKtZVjLCniQ5G80oGGtpVbVcp0LE1AVb/gN
-         N3c1ewRFeTJh8qI3+8pGgAWjJQfQmh9X7HYlXYfvJ39RjjJrMXwtE0ljmLA5SkctCOfr
-         M92Uh3HtEOaywf5vNGwsfIVeVmJQmTDYbKXPDnUaRwhMwUmMhby9KM4eFfaxLGcRowpL
-         uFvw==
+        bh=5AB0J56DB0+rKOzeKwffFNSyBpKCgRBJJxrIGM5WtAQ=;
+        b=G2vOdpjGyGGoTTBP2Ko6rtwtVn2X7zBQXijVTXkDMjKRzqZehI5NA0MG2JrCGqqrBM
+         MlTaOO5RuWm9QAiUmE2N3deT2aT3LxDbmwCj0o4+H38Fy5FqxqBeCJue32x8JN62MaQg
+         fvwvWSpd1VlNVGBp1Bw+fCAbziP1Jz8pGtWRRoEtfmC5vGwHKk5xf9LoZ0gqYyyFH2kZ
+         kglMik63OFcPc5A7Q4aExNrv4mBq0tIxWyN3n1LjteifwSPV9cxt88urjEqQFs2gA6X8
+         AgQt0RJkoU+I+FuVmh8KkYIGArZKAQlCm61MhFJG+QWS/jHxiIyzOMNBuMnyYcFr6zTH
+         J5Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=36vwzvQKHGNtNCW2ZUnMCMtobdyASLNJa9tZKeMvkEQ=;
-        b=bLZanufcrqvp/5fwOXSDd8izNYVmeeE5gJ+sAuF3/kwqeqNKXLxpLI16My8CdobTDj
-         EBMAUppYkfs16coixvOsKZs3jDi3W35LSnSl+PhS4xtxBMRQ1xE0f3PVR4gboPGP0PUw
-         kBcvwAI6O0Swgji7vPMa15vy2SvNAq/VW8REgdS8rIlq22rvhthaB67acJcjWc9+QjW9
-         fKixJeNhZmvrto+dBevb/dTI+Nw0GomFnfGFt9gCSR0WRQooY2yKLT0KCUGT6drJ9lkV
-         cijUKa867ibHThyOILb2FREK8ME1lRIDbSx87eMsss891YINJ5pNVREJDznAHz4lfeSn
-         5V0g==
-X-Gm-Message-State: AOAM5306N2dTcHzIE73bjQ2DEnCDW2oTauLzzc7UPGrV+f/YCLTKXi2R
-        b7/F+z3Q3duATQAqDL14mlqhgZs0FXcSe3Vg5G31vA==
-X-Google-Smtp-Source: ABdhPJxAU6EK+Ci3bFffn6VjCF6gBAVpg/AidJqINewRXOSkH344Bvq6EHCF/rHnRbglHa41rdgJiMpUL1ULY2xRrz8=
-X-Received: by 2002:a5b:48c:: with SMTP id n12mr18798826ybp.273.1618845238403;
- Mon, 19 Apr 2021 08:13:58 -0700 (PDT)
+        bh=5AB0J56DB0+rKOzeKwffFNSyBpKCgRBJJxrIGM5WtAQ=;
+        b=qVCDg4bOfhwXPpqTSol1KVfePqdCh8A2sDOjd9MG1ruayGJIZieJ59GlIXHCzH4Rsm
+         DlDRc4dU72pYSBuLQcYrVfX+nwpvc8WQcXZa+eV8fh8HKQXb6KJzsUlKJ7ay5wZ3qSfA
+         GGqLVJuP0BLTzFbD2mu4VxP4PmknTdV4b16DtcglCAV3v0RSZrS69f/ZMg7V4vugmuqh
+         RvWjFwSDlHjOyd9KyHcWiT07X2kt4sGvXnopCOe6hPZfXr6xRPMtbvbcUaXs0HesW6mu
+         RPtWAoK7iuB2yJvXdpIKysQATAMtN5//eyPokHpjWoRHogqqnqDeISJpDVKt2s4cPl2n
+         TWpQ==
+X-Gm-Message-State: AOAM53189TReNHNxxZjB44KfF4XvcluYaBhfeehIGBSfw4A1qQ2XKyTQ
+        qeMsfxj6UlBTR030oCas9F92S43uAvR1Mo15FPBlCw==
+X-Google-Smtp-Source: ABdhPJwo5knAYBVE+scoHvT1tW2evDZf/Kc8N06WPxDzLsBETelFrQAEB70IA2UV2Fala91XL032+2ANwH6P5Sv6CEU=
+X-Received: by 2002:a25:7085:: with SMTP id l127mr18347488ybc.293.1618845620724;
+ Mon, 19 Apr 2021 08:20:20 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210416203844.3803177-1-samitolvanen@google.com>
  <20210416203844.3803177-6-samitolvanen@google.com> <20210416211855.GD22348@zn.tnic>
  <CABCJKud8TvzhcjHCpsrtCJ4B50ZUfaL48F42EhZ2zWKLteAc0Q@mail.gmail.com>
  <20210416220251.GE22348@zn.tnic> <CALCETrVTtKqD6fonUmT_qr0HJ0X9TWzLGq-wpm+A7XKyjn3W5g@mail.gmail.com>
- <20210416221414.GF22348@zn.tnic> <CALCETrUo+tR+YmfoBPWV9z_7QhU74=7tmCBD_zsfa24ZxNvfxg@mail.gmail.com>
- <202104161529.D9F98DA994@keescook> <87fszpu92e.ffs@nanos.tec.linutronix.de> <875z0ltdv8.ffs@nanos.tec.linutronix.de>
-In-Reply-To: <875z0ltdv8.ffs@nanos.tec.linutronix.de>
+ <202104161519.1D37B6D26@keescook> <CALCETrV6WYx7dt56aCuUYsrrFya==zYR+p-YZnaATptnaO7w2A@mail.gmail.com>
+ <202104161601.CFB2CCF84F@keescook> <CALCETrWUS52tzLNiWL5sAVVB5-ko1EW73-TEiO=eZ5jF_QyGPQ@mail.gmail.com>
+ <877dl0sc2m.ffs@nanos.tec.linutronix.de> <CALCETrVEhL9N_DEM8=rbAzp8Nb2pDitRCZGRAVcE288MBrJ4ug@mail.gmail.com>
+ <871rb7sh31.ffs@nanos.tec.linutronix.de> <CALCETrXRHhEivNK0hqEdRz+gN8c9jhdsjJC=4EQKMWB1roYw3A@mail.gmail.com>
+In-Reply-To: <CALCETrXRHhEivNK0hqEdRz+gN8c9jhdsjJC=4EQKMWB1roYw3A@mail.gmail.com>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 19 Apr 2021 08:13:47 -0700
-Message-ID: <CABCJKueKDX+6DJnoVns1K35B9htRXRHLdYUckJ25dDhbWUezFw@mail.gmail.com>
+Date:   Mon, 19 Apr 2021 08:20:09 -0700
+Message-ID: <CABCJKufQqhXsP0Nv1hu60YoH=Tetp35=yENS_9LWZvzptFvjDQ@mail.gmail.com>
 Subject: Re: [PATCH 05/15] x86: Implement function_nocfi
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        David Laight <David.Laight@aculab.com>,
         Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -82,54 +85,46 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Apr 17, 2021 at 3:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Sun, Apr 18, 2021 at 3:57 PM Andy Lutomirski <luto@kernel.org> wrote:
 >
-> On Sat, Apr 17 2021 at 01:02, Thomas Gleixner wrote:
-> > On Fri, Apr 16 2021 at 15:37, Kees Cook wrote:
+> On Sun, Apr 18, 2021 at 9:17 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 > >
-> >> On Fri, Apr 16, 2021 at 03:20:17PM -0700, Andy Lutomirski wrote:
-> >>> But obviously there is code that needs real function pointers.  How
-> >>> about making this a first-class feature, or at least hacking around it
-> >>> more cleanly.  For example, what does this do:
-> >>>
-> >>> char entry_whatever[];
-> >>> wrmsrl(..., (unsigned long)entry_whatever);
-> >>
-> >> This is just casting. It'll still resolve to the jump table entry.
-> >>
-> >>> or, alternatively,
-> >>>
-> >>> extern void func() __attribute__((nocfi));
-> >>
-> >> __nocfi says func() should not perform checking of correct jump table
-> >> membership for indirect calls.
-> >>
-> >> But we don't want a global marking for a function to be ignored by CFI;
-> >> we don't want functions to escape CFI -- we want specific _users_ to
-> >> either not check CFI for indirect calls (__nocfi) or we want specific
-> >> passed addresses to avoid going through the jump table
-> >> (function_nocfi()).
+> > On Sat, Apr 17 2021 at 17:11, Andy Lutomirski wrote:
+> > > On Sat, Apr 17, 2021 at 4:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >> which works for
+> > >>
+> > >>       foo = function_nocfi(bar);
+> > >
+> > > I agree in general.  But right now, we have, in asm/proto.h:
+> > >
+> > > void entry_SYSCALL_64(void);
+> > >
+> > > and that's pure nonsense.  Depending on your point of view,
+> > > entry_SYSCALL_64 is a symbol that resolves to an integer or it's an
+> > > array of bytes containing instructions, but it is most definitely not
+> > > a function void (void).  So, regardless of any CFI stuff, I propose
+> > > that we standardize our handling of prototypes of symbols that are
+> > > opaque to the C compiler.  Here are a couple of choices:
+> > >
+> > > Easy one:
+> > >
+> > > extern u8 entry_SYSCALL_64[];
+> > >
+> > > Slightly more complicated:
+> > >
+> > > struct opaque_symbol;
+> > > extern struct opaque_symbol entry_SYSCALL_64;
+> > >
+> > > The opaque_symbol variant avoids any possible confusion over the weird
+> > > status of arrays in C, and it's hard to misuse, since struct
+> > > opaque_symbol is an incomplete type.
 > >
-> > And that's why you mark entire files to be exempt without any rationale
-> > why it makes sense.
+> > Makes sense.
 >
-> The reason why you have to do that is because function_nocfi() is not
-> provided by the compiler.
->
-> So you need to hack around that with that macro which fails to work
-> e.g. for the idt data arrays.
->
-> Is there any fundamental reason why the compiler does not provide that
-> in a form which allows to use it everywhere?
+> Sami, do you want to do this as part of your series or should I write a patch?
 
-I'm not aware of a fundamental reason why the compiler couldn't
-provide a built-in here. This series attempts to work with what's
-available at the moment, and admittedly that's not quite ideal on x86.
-
-> It's not too much asked from a tool which provides new functionality to
-> provide it in a way which is usable.
-
-Sure, that's reasonable. I'll talk to our compiler folks and see how
-we can proceed here.
+I can certainly include this in the next version, but that might have
+to wait a bit for compiler changes, so if you want this done sooner,
+please go ahead.
 
 Sami
