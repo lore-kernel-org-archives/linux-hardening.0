@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29D8C433ED
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 22:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA63C433B4
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 22:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC4A611F2
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 22:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DEB6108B
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 22:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbhDSWkG (ORCPT
+        id S232788AbhDSW7O (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Apr 2021 18:40:06 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.101]:35007 "EHLO
+        Mon, 19 Apr 2021 18:59:14 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.101]:32137 "EHLO
         gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229597AbhDSWkF (ORCPT
+        by vger.kernel.org with ESMTP id S233331AbhDSW7E (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Apr 2021 18:40:05 -0400
+        Mon, 19 Apr 2021 18:59:04 -0400
 Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id B5165C8966
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 17:39:33 -0500 (CDT)
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 48ED71309A
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 17:58:33 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id YcYHlHNoE1cHeYcYHlQGpw; Mon, 19 Apr 2021 17:39:33 -0500
+        id YcqflHeEc1cHeYcqflQWqq; Mon, 19 Apr 2021 17:58:33 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,36 +34,36 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=88m1MQb2nNveKjfeKb79bNGZ2voroxXvoMgEm6bgprw=; b=g7pKP/aSBbJKOVhGvPUSDYGt1z
-        x5CIfc9MDd5mpy6v+e0dpvHUQQy0wgjRHci109PAkczmw/ScGX1iMmWZt6ebPRwVh9OizeWTEwPdA
-        RdcHlCxVz1g8/ymsKi9eclXhKgrOxhQweysiGG8vCqW4Io4llgCaHT/MdC2BVCmx4Y70TJICPpAW2
-        KhwnaU4u9dvoeYG3d7MW02Np9yiOYnvDpVXjgFma8531A3oIB72QIXgCpickWBokWYFdqKWw1UKSi
-        vhnjCptciG7OfBf9E1I+DZ/DkVnELinyLaCWWmpCREeaqDYb4WFUhToF/lWeYlFwfWD1hU6AD56Op
-        U/S8MNAQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:46944 helo=[192.168.15.8])
+        bh=HSwcUpoOJnXwy9FUWCUDqISxnv3zkq1DVf8wvqzFEr0=; b=BvljQjnbdpu8RmeO4AFnQNsFrG
+        NidTTAVI57LZ/J2KDjmbAu7FNej4A6OqWy0McVvbePr1On80nZDp5d6dSdFLLtoXvfqalwR/mtox5
+        vfu7kaWx0KLLVyZ/PosuE8v8JjIOtytLvU7MbVb5zSrPu91Ph1caCNssqaZp9zcJJQj2y/er+2PFS
+        hX+Y47e2dakcdxmAf8/3vpInY9DiLqH+HVOPB5utF++XyeO8IPnAuFGdjfvZAxGS8gP2O8LTQzmc1
+        kr6oXcd1YuK5Wf82wKLg29FuGD2Y5sVty7f79O2n+sZseztgxiE2hoN7uym6RNvrUTRrccEHd11ge
+        jChUgS+g==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48156 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lYcYD-003azP-5Z; Mon, 19 Apr 2021 17:39:29 -0500
-Subject: Re: [PATCH][next] sctp: Fix out-of-bounds warning in
- sctp_process_asconf_param()
-To:     David Miller <davem@davemloft.net>
-Cc:     patchwork-bot+netdevbpf@kernel.org, gustavoars@kernel.org,
-        vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, kuba@kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210416191236.GA589296@embeddedor>
- <161861761155.26880.11889736067176146088.git-patchwork-notify@kernel.org>
- <8f37be96-04dd-f948-4913-54da6c4ae9b2@embeddedor.com>
- <20210419.153405.1531590596849653615.davem@davemloft.net>
+        id 1lYcqb-0044Xd-ON; Mon, 19 Apr 2021 17:58:29 -0500
+Subject: Re: [PATCH RESEND][next] rtl8xxxu: Fix fall-through warnings for
+ Clang
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jes Sorensen <Jes.Sorensen@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20210305094850.GA141221@embeddedor>
+ <20210417175201.280F9C4338A@smtp.codeaurora.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <db839548-0715-51b0-f9ba-5405a201567f@embeddedor.com>
-Date:   Mon, 19 Apr 2021 17:39:41 -0500
+Message-ID: <0b096033-7daf-fae7-9ea9-37038b979616@embeddedor.com>
+Date:   Mon, 19 Apr 2021 17:58:42 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <20210419.153405.1531590596849653615.davem@davemloft.net>
+In-Reply-To: <20210417175201.280F9C4338A@smtp.codeaurora.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,13 +75,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lYcYD-003azP-5Z
+X-Exim-ID: 1lYcqb-0044Xd-ON
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:46944
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48156
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
+X-Email-Count: 21
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -90,17 +90,31 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 4/19/21 17:34, David Miller wrote:
-
->> Thanks for this. Can you take these other two, as well, please?
->>
->> https://lore.kernel.org/linux-hardening/20210416201540.GA593906@embeddedor/
->> https://lore.kernel.org/linux-hardening/20210416193151.GA591935@embeddedor/
->>
+On 4/17/21 12:52, Kalle Valo wrote:
+> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 > 
-> Done.
+>> In preparation to enable -Wimplicit-fallthrough for Clang, fix
+>> multiple warnings by replacing /* fall through */ comments with
+>> the new pseudo-keyword macro fallthrough; instead of letting the
+>> code fall through to the next case.
+>>
+>> Notice that Clang doesn't recognize /* fall through */ comments as
+>> implicit fall-through markings.
+>>
+>> Link: https://github.com/KSPP/linux/issues/115
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Patch applied to wireless-drivers-next.git, thanks.
+> 
+> bf3365a856a1 rtl8xxxu: Fix fall-through warnings for Clang
 
-Thanks, Dave!
+Thanks for this, Kalle.
 
+Could you take this series too, please?
+
+https://lore.kernel.org/lkml/cover.1618442265.git.gustavoars@kernel.org/
+
+Thanks
 --
 Gustavo
+
