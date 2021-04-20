@@ -2,147 +2,118 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD14AC433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 19:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED32C433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96E9C613EB
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 19:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675CD613D5
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233541AbhDTTs3 (ORCPT
+        id S233548AbhDTUIo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 15:48:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28629 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233776AbhDTTs3 (ORCPT
+        Tue, 20 Apr 2021 16:08:44 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.140]:46674 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233544AbhDTUIn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 15:48:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618948077;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SiFW4cLK3dCh2r8aGQaiYzHAG/F7jfTRpzCXN26gydY=;
-        b=X3GK8uqjKCcRUDkBa+Sgh8ztaz5ZTFRXKFqDtlNoNCn/i1BXJ8jL+1rLB45Xzdyqj80sYr
-        owlnpZ24rBiMBHD9a6BW+vo1pM1nLUs9FScMtTLCxdvJs7JkHnDmdd6YRq16Yk1uwGkidn
-        opx+NacVAlbp++R9A/xiGQXHZbHGG/M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-QlukleblN5-y3fJuwxPo2Q-1; Tue, 20 Apr 2021 15:47:53 -0400
-X-MC-Unique: QlukleblN5-y3fJuwxPo2Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B2F01006C83;
-        Tue, 20 Apr 2021 19:47:50 +0000 (UTC)
-Received: from treble (ovpn-115-229.rdu2.redhat.com [10.10.115.229])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 798B65D9CA;
-        Tue, 20 Apr 2021 19:47:49 +0000 (UTC)
-Date:   Tue, 20 Apr 2021 14:47:47 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 02/15] objtool: Add CONFIG_CFI_CLANG support
-Message-ID: <20210420194747.3snxvaaa4amfnbah@treble>
-References: <20210416203844.3803177-1-samitolvanen@google.com>
- <20210416203844.3803177-3-samitolvanen@google.com>
+        Tue, 20 Apr 2021 16:08:43 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 7A4223B0C6
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:08:10 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id YwfKlddQH1cHeYwfKllRUK; Tue, 20 Apr 2021 15:08:10 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QweV4LAY1Y5ifNq4hmSERLYrcoN2XaYQxMKBb1YLCJk=; b=MoT8313qf85Zf+sLYOEs+txXr0
+        Z+Wn8c0+v6ZD38Pvt/JMVbORKxQRj9PD0kq4cFYNF5yEGEOmQ4yC/hSY1Q4NdS6Md0NYRCcNlE4/h
+        RZ2sE740v7E5WAQ8D6otGMXXFJ6YQrEld5KKf21LUZQ09j6mNl55nq3ceczR3uZ9Ow/mOEPVIA47F
+        VejjAAzqLjJIxqIXzgqdu9liEWs0rDv0rHrnStuUqsChECcLgBdhvWueeMLPmJy9YAGe9BRI0saKY
+        MRRPz0lafJ57WzUX4/9+peskvSlOh1kyybkMvcLXZ0oiFMLOHE33A3v8PIQtO+nWdqM6C0afDSiru
+        wSCE7ftQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48926 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lYwfH-002aYu-00; Tue, 20 Apr 2021 15:08:07 -0500
+Subject: Re: [PATCH RESEND][next] xfrm: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20210305092319.GA139967@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <fbe896ed-860d-4a92-f92b-bce83ba413ee@embeddedor.com>
+Date:   Tue, 20 Apr 2021 15:08:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
+In-Reply-To: <20210305092319.GA139967@embeddedor>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210416203844.3803177-3-samitolvanen@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lYwfH-002aYu-00
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48926
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 18
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 16, 2021 at 01:38:31PM -0700, Sami Tolvanen wrote:
-> +static int fix_cfi_relocs(const struct elf *elf)
-> +{
-> +	struct section *sec, *tmpsec;
-> +	struct reloc *reloc, *tmpreloc;
-> +
-> +	list_for_each_entry_safe(sec, tmpsec, &elf->sections, list) {
-> +		list_for_each_entry_safe(reloc, tmpreloc, &sec->reloc_list, list) {
+Hi all,
 
-These loops don't remove structs from the lists, so are the "safe"
-iterators really needed?
+Friendly ping: who can take this, please?
 
-> +			struct symbol *sym;
-> +			struct reloc *func_reloc;
-> +
-> +			/*
-> +			 * CONFIG_CFI_CLANG replaces function relocations to refer
-> +			 * to an intermediate jump table. Undo the conversion so
-> +			 * objtool can make sense of things.
-> +			 */
+Thanks
+--
+Gustavo
 
-I think this comment could be clearer if it were placed above the
-function.
-
-> +			if (!reloc->sym->sec->cfi_jt)
-> +				continue;
-> +
-> +			if (reloc->sym->type == STT_SECTION)
-> +				sym = find_func_by_offset(reloc->sym->sec,
-> +							  reloc->addend);
-> +			else
-> +				sym = reloc->sym;
-> +
-> +			if (!sym || !sym->sec)
-> +				continue;
-
-This should be a fatal error, it probably means something's gone wrong
-with the reading of the jump table.
-
-> +
-> +			/*
-> +			 * The jump table immediately jumps to the actual function,
-> +			 * so look up the relocation there.
-> +			 */
-> +			func_reloc = find_reloc_by_dest_range(elf, sym->sec, sym->offset, 5);
-
-The jump instruction's reloc is always at offset 1, so this can maybe be
-optimized to:
-
-			func_reloc = find_reloc_by_dest(elf, sym->sec, sym->offset+1);
-
-though of course that will probably break (future) arm64 objtool.  Maybe
-an arch-specific offset from the start of the insn would be good.
-
-> +			if (!func_reloc || !func_reloc->sym)
-> +				continue;
-
-This should also be an error.
-
-> +
-> +			reloc->sym = func_reloc->sym;
-
-I think we should also do 'reloc->addend = 0', because of the
-STT_SECTION case:
-
-  0000000000000025  0000259e0000000b R_X86_64_32S           0000000000000000 .text..L.cfi.jumptable.8047 + 8
-
-which then translates to
-
-  0000000000000009  0000063200000004 R_X86_64_PLT32         0000000000000000 x2apic_prepare_cpu - 4
-
-so the original addend of '8' is no longer valid.  Copying the '-4'
-wouldn't be right either, because that only applies to a PLT32 text
-reloc.  A '0' should be appropriate for the 32S data reloc.
-
-This addend might not actually be read by any code, so it may not
-currently be an actual bug, but better safe than sorry.
-
--- 
-Josh
-
+On 3/5/21 03:23, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of letting the code fall
+> through to the next case.
+> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  net/xfrm/xfrm_interface.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
+> index 8831f5a9e992..41de46b5ffa9 100644
+> --- a/net/xfrm/xfrm_interface.c
+> +++ b/net/xfrm/xfrm_interface.c
+> @@ -432,6 +432,7 @@ static int xfrmi4_err(struct sk_buff *skb, u32 info)
+>  	case ICMP_DEST_UNREACH:
+>  		if (icmp_hdr(skb)->code != ICMP_FRAG_NEEDED)
+>  			return 0;
+> +		break;
+>  	case ICMP_REDIRECT:
+>  		break;
+>  	default:
+> 
