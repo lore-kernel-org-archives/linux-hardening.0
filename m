@@ -2,159 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC3FC433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C34C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A92A613D8
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AE6613EE
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233898AbhDTUqQ (ORCPT
+        id S233992AbhDTUs1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 16:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233882AbhDTUqO (ORCPT
+        Tue, 20 Apr 2021 16:48:27 -0400
+Received: from gateway20.websitewelcome.com ([192.185.65.13]:36755 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233939AbhDTUs1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 16:46:14 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B64C06138A
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 13:45:40 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id p3so23961344ybk.0
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 13:45:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PNWJnV/ujY0AN1/v5JQQqbaoBjz2BczeakSAfc9G65g=;
-        b=JmEmQ1D+ODdrwKrwWj0YOP+LdHOd9roC5YmCZ8iKaY3ySqcDx0cyMmAqAhs/BIRer6
-         BIQmhHuLIogDg6jE8hRR5+acsut5b7DmJpk+M5Qin+dohrtDco+FYLHIEkwizYIH/VFy
-         7D4d5O+++U+8bGRQyY5k43091qfq5t52c8+9ZTvJDCLpnV8ustet3YMp9JlpLMzGbOnS
-         6GnulHbJ/xDnCAqs384JsNg8cWUSggU16lLY4ZRORY1CP3y6YJR0W8IBvdIkXyI4yzdh
-         zB2aeQokQEWsIdHTTscKaUGSuRDZKZXeNygQU37BPp3OYOjI9bxeSioqZBOa6FN9hyKi
-         8/lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PNWJnV/ujY0AN1/v5JQQqbaoBjz2BczeakSAfc9G65g=;
-        b=IRgpoASNM/K0gKpcozGrGwc8t/KWSMU0H83iqnj2Q3C11HjK/wZFkwiaw2nnvkBcVA
-         mWtDSEyO1Bh/u3WTP0sW52jC1L3BlFxcsy1G8pOzMN7BeFNJ0xGndwM0ubWITzUGjpgU
-         JBht8G7oKX3AsCAfxwHxgBP4mJI+ImmvNEaAhofAFDfAeq+HuTjDT2fYl2N05yfzIskQ
-         fmYiWqCBQdIPhSWw/lOp4nzz25WJzHuRvuPN2qo9gfBCr0IICAxzfHCNNQxg+AjHGqHH
-         4vR2l0o/QJrdr2QFEWOqJmnyCoiY3hL1bf0EIOizrNE57duuPuDmFEKotQr3m9xLJuSB
-         1D3A==
-X-Gm-Message-State: AOAM532tzK2zfoXkVMT4ZwZCeYezSXF6Fae5jdYseTp40Vj+RSsJpYFi
-        SMqgPZbpro0jldrR5qIRNG2HIow5wmYpEpXCq1q6xg==
-X-Google-Smtp-Source: ABdhPJxvErDAeKN7gNVUK8lP+l8e8YgAeqaZVPcPX0mn5e8XJ3uublln/uslQceWPqApgq7S+ag3pSG/4f3jJ0cavaA=
-X-Received: by 2002:a25:7085:: with SMTP id l127mr27992640ybc.293.1618951539670;
- Tue, 20 Apr 2021 13:45:39 -0700 (PDT)
+        Tue, 20 Apr 2021 16:48:27 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 967FB40175415
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:13:13 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id YwuslOYz1MGeEYwusllBeJ; Tue, 20 Apr 2021 15:24:14 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9YUTPA5Ok3BrBYNC0Dh7n9d5iaJCdFrQ2Xsk4P+rUY4=; b=AF9vOvKsFc70HxWbjBMc8iBvUR
+        9W3NKtHd28oZAs8Z/D9ESAUgAyHDZWklzlZdN+89dclI86/ec7yK8dzU02GdJfnAk0LiB6ox1i4uQ
+        7yqN3fPdgMW7AODlUekCHWqxyTtGuTwxZ3EVGoTqjNFyBLINHDy8YkMvb96Y1Aqrnmu/J/V1xJkiE
+        hp4Gq4ctsLihrrce6fU/KXDoRgPlNuew+0x+aU0TJSpxdC1NITkuXKCftRzG1SjrdIlOgn09LV1/y
+        croRnyDr15vj0L1B8//Vh55tUf48eNazsrMT45UGZFW9fjJbO7QXy2LvjBNmUMGtx/J9Qke/eUP1W
+        3flgBZgQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49032 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lYwuo-0031M1-8m; Tue, 20 Apr 2021 15:24:10 -0500
+Subject: Re: [PATCH RESEND][next] net/mlx4: Fix fall-through warnings for
+ Clang
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210305084847.GA138343@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <808373f4-25d0-9e7e-fe16-f8b279d1ebab@embeddedor.com>
+Date:   Tue, 20 Apr 2021 15:24:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-References: <20210416203844.3803177-1-samitolvanen@google.com>
- <20210416203844.3803177-3-samitolvanen@google.com> <20210420194747.3snxvaaa4amfnbah@treble>
-In-Reply-To: <20210420194747.3snxvaaa4amfnbah@treble>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 20 Apr 2021 13:45:28 -0700
-Message-ID: <CABCJKufE2_z0SGhsbgu-Wu+L5TRhOktQO4wHgJg04RYcvoxAAA@mail.gmail.com>
-Subject: Re: [PATCH 02/15] objtool: Add CONFIG_CFI_CLANG support
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210305084847.GA138343@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lYwuo-0031M1-8m
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49032
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 167
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 20, 2021 at 12:48 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, Apr 16, 2021 at 01:38:31PM -0700, Sami Tolvanen wrote:
-> > +static int fix_cfi_relocs(const struct elf *elf)
-> > +{
-> > +     struct section *sec, *tmpsec;
-> > +     struct reloc *reloc, *tmpreloc;
-> > +
-> > +     list_for_each_entry_safe(sec, tmpsec, &elf->sections, list) {
-> > +             list_for_each_entry_safe(reloc, tmpreloc, &sec->reloc_list, list) {
->
-> These loops don't remove structs from the lists, so are the "safe"
-> iterators really needed?
->
-> > +                     struct symbol *sym;
-> > +                     struct reloc *func_reloc;
-> > +
-> > +                     /*
-> > +                      * CONFIG_CFI_CLANG replaces function relocations to refer
-> > +                      * to an intermediate jump table. Undo the conversion so
-> > +                      * objtool can make sense of things.
-> > +                      */
->
-> I think this comment could be clearer if it were placed above the
-> function.
->
-> > +                     if (!reloc->sym->sec->cfi_jt)
-> > +                             continue;
-> > +
-> > +                     if (reloc->sym->type == STT_SECTION)
-> > +                             sym = find_func_by_offset(reloc->sym->sec,
-> > +                                                       reloc->addend);
-> > +                     else
-> > +                             sym = reloc->sym;
-> > +
-> > +                     if (!sym || !sym->sec)
-> > +                             continue;
->
-> This should be a fatal error, it probably means something's gone wrong
-> with the reading of the jump table.
->
-> > +
-> > +                     /*
-> > +                      * The jump table immediately jumps to the actual function,
-> > +                      * so look up the relocation there.
-> > +                      */
-> > +                     func_reloc = find_reloc_by_dest_range(elf, sym->sec, sym->offset, 5);
->
-> The jump instruction's reloc is always at offset 1, so this can maybe be
-> optimized to:
->
->                         func_reloc = find_reloc_by_dest(elf, sym->sec, sym->offset+1);
->
-> though of course that will probably break (future) arm64 objtool.  Maybe
-> an arch-specific offset from the start of the insn would be good.
->
-> > +                     if (!func_reloc || !func_reloc->sym)
-> > +                             continue;
->
-> This should also be an error.
->
-> > +
-> > +                     reloc->sym = func_reloc->sym;
->
-> I think we should also do 'reloc->addend = 0', because of the
-> STT_SECTION case:
->
->   0000000000000025  0000259e0000000b R_X86_64_32S           0000000000000000 .text..L.cfi.jumptable.8047 + 8
->
-> which then translates to
->
->   0000000000000009  0000063200000004 R_X86_64_PLT32         0000000000000000 x2apic_prepare_cpu - 4
->
-> so the original addend of '8' is no longer valid.  Copying the '-4'
-> wouldn't be right either, because that only applies to a PLT32 text
-> reloc.  A '0' should be appropriate for the 32S data reloc.
->
-> This addend might not actually be read by any code, so it may not
-> currently be an actual bug, but better safe than sorry.
+Hi all,
 
-Thank you for taking a look, Josh!  I'll fix these in the next version.
+Friendly ping: who can take this, please?
 
-Sami
+Thanks
+--
+Gustavo
+
+On 3/5/21 02:48, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> by explicitly adding a break statement instead of just letting the code
+> fall through to the next case.
+> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/ethernet/mellanox/mlx4/resource_tracker.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> index a99e71bc7b3c..771b92019af1 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> @@ -2660,6 +2660,7 @@ int mlx4_FREE_RES_wrapper(struct mlx4_dev *dev, int slave,
+>  	case RES_XRCD:
+>  		err = xrcdn_free_res(dev, slave, vhcr->op_modifier, alop,
+>  				     vhcr->in_param, &vhcr->out_param);
+> +		break;
+>  
+>  	default:
+>  		break;
+> 
