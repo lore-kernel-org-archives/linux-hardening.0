@@ -2,63 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF5C433ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA63C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7B2613D5
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D91613D8
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233951AbhDTUh4 (ORCPT
+        id S233988AbhDTUiS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 16:37:56 -0400
-Received: from gateway30.websitewelcome.com ([192.185.184.48]:18211 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233986AbhDTUhz (ORCPT
+        Tue, 20 Apr 2021 16:38:18 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.79]:38748 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233961AbhDTUiS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 16:37:55 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id EDC5E1485D
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:16:21 -0500 (CDT)
+        Tue, 20 Apr 2021 16:38:18 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 853AC23CE2
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:37:44 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id YwnFlhaLlb8LyYwnFljTtd; Tue, 20 Apr 2021 15:16:21 -0500
+        id Yx7wlQDVfmJLsYx7wlnDjw; Tue, 20 Apr 2021 15:37:44 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dO192Ur5dBsN1rnDcOwr4ME0frgDG8HEFMRgM8bBOG8=; b=phM8fOXcn16yNvjEmnPbVG9Ejb
-        mYBqe/giIHvV7r+/Ki3Rcj9+W6S7KTjG+qL3r3KlXNhqlngzG9H40lTDDSbg0dBoy1bWCtCVz1zIT
-        mQ2RDBQ8Q497kuqc0ggCQOkEZhwGrPsLCM/sKj/sHxYN8Nt5GVrK/zHOVWzvUQN5CkGLV8hMFPvuy
-        0zaKRzffGcDlQicoYcnkgxZ8qscUdKO3ndrTk6QPW8B7ZHDhPvKPUmJvWuyafxYwlWRZ48T8Ian3N
-        xpnVFfoYk42WIYnhdj6uOu8Yh95uwPCIyV2HxveButSpDEAvDqHFVAZNiHwXYyM4/yGh57KQ5QalD
-        QjmOpTRQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48996 helo=[192.168.15.8])
+        bh=l6vahtvgtZ1p4am0RjK2z2rakl6hM2z1m9+8qYMYvp8=; b=eodyvHTbYl7syCTL6dvpNCWXBh
+        8xCPKyo4MRPzNso1FkQWqVoxm8xWj2gs7jWPyY03oK4uaNBu6M7mbGap7HXQ43Lqn0T+CEb9SkKgt
+        +ItgSiuhOfxiUqcLAN0GXx4N0045JSP0zwQvMZyvqDfwnbHviZWxpSkSHtO7UaZ8FuoByHIrk8FZB
+        b4IK3ELYtx83hrK3ylza3Fi6Ut3zJcT8/5Ro2yZOLaRLck+SzWMPoh7fg5QeZQxmTWxos5uQ5TIqv
+        B/+Xdciz7Q64O9d1bATS//5Evemnccx1s0utSqgReTMWV2kDGGgLRHBnwAxErGMCEURuFz6G4sJGp
+        QzLGPd1g==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49098 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lYwnE-002pkK-M2; Tue, 20 Apr 2021 15:16:20 -0500
-Subject: Re: [PATCH 071/141] braille_console: Fix fall-through warnings for
- Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
+        id 1lYx7u-003RAy-32; Tue, 20 Apr 2021 15:37:42 -0500
+Subject: Re: [PATCH 032/141] floppy: Fix fall-through warnings for Clang
+To:     Jens Axboe <axboe@kernel.dk>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Denis Efremov <efremov@linux.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <a0be16871b77956d75ea2f877da2fa5fba3e64ac.1605896059.git.gustavoars@kernel.org>
+ <ede7ffddba64f621150f8f5c5f2b8f080b560903.1605896059.git.gustavoars@kernel.org>
+ <2599e39d-faec-01fc-e835-16a5c96082d6@embeddedor.com>
+ <47bcd36a-6524-348b-e802-0691d1b3c429@kernel.dk>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <f7e58552-309f-ef96-7ac8-3cb692c979d1@embeddedor.com>
-Date:   Tue, 20 Apr 2021 15:16:37 -0500
+Message-ID: <ba8c33c1-ccd9-0c99-c45c-1b1301f3e130@embeddedor.com>
+Date:   Tue, 20 Apr 2021 15:37:59 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <a0be16871b77956d75ea2f877da2fa5fba3e64ac.1605896059.git.gustavoars@kernel.org>
+In-Reply-To: <47bcd36a-6524-348b-e802-0691d1b3c429@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,48 +73,49 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lYwnE-002pkK-M2
+X-Exim-ID: 1lYx7u-003RAy-32
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48996
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49098
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 116
+X-Email-Count: 234
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
 
-Friendly ping: who can take this, please?
 
-Thanks
+On 4/20/21 15:30, Jens Axboe wrote:
+
+>>>
+>>> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+>>> index 7df79ae6b0a1..21a2a7becba0 100644
+>>> --- a/drivers/block/floppy.c
+>>> +++ b/drivers/block/floppy.c
+>>> @@ -2124,6 +2124,7 @@ static void format_interrupt(void)
+>>>  	switch (interpret_errors()) {
+>>>  	case 1:
+>>>  		cont->error();
+>>> +		fallthrough;
+>>>  	case 2:
+>>>  		break;
+>>>  	case 0:
+> 
+> I wonder about the consistency of the patches. The one I just applied
+> for libata adds a break, this one annotates fallthrough. But the cases
+> are really 100% the same. Why aren't the changes consistent? Both are
+> obviously fine, but for identical cases it seems odd that they differ.
+> 
+> IMHO, adding a break makes more sense. Annotate the fallthrough if the
+> two cases share work that needs to be done, as then that solution makes
+> sense.
+> 
+
+Yeah; I'll resend this with a break, instead.
+
+Thanks for the feedback.
 --
 Gustavo
-
-On 11/20/20 12:34, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a break statement instead of letting the code fall
-> through to the next case.
-> 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/accessibility/braille/braille_console.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/accessibility/braille/braille_console.c b/drivers/accessibility/braille/braille_console.c
-> index 9861302cc7db..359bead4b280 100644
-> --- a/drivers/accessibility/braille/braille_console.c
-> +++ b/drivers/accessibility/braille/braille_console.c
-> @@ -246,6 +246,7 @@ static int keyboard_notifier_call(struct notifier_block *blk,
->  				beep(440);
->  		}
->  	}
-> +		break;
->  	case KBD_UNBOUND_KEYCODE:
->  	case KBD_UNICODE:
->  	case KBD_KEYSYM:
-> 
