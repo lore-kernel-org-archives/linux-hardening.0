@@ -5,28 +5,28 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70520C433ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5ECC433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39CA6613DE
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3271C613D5
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233750AbhDTU2E (ORCPT
+        id S233832AbhDTU2N (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 16:28:04 -0400
-Received: from gateway24.websitewelcome.com ([192.185.50.66]:49297 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233619AbhDTU2D (ORCPT
+        Tue, 20 Apr 2021 16:28:13 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.130]:42803 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233769AbhDTU2M (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 16:28:03 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id ABBCC60F2
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:05:19 -0500 (CDT)
+        Tue, 20 Apr 2021 16:28:12 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 676AA380BC9
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:27:39 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id YwcZlO62jMGeEYwcZlknfG; Tue, 20 Apr 2021 15:05:19 -0500
+        id YwyBlhpXnb8LyYwyBljgng; Tue, 20 Apr 2021 15:27:39 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,35 +34,33 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uvJy4av23Scx/8w1MGTm9f6+b9FqV28bLS31Q0G/3KY=; b=i9X9nUUm10QLC6LQcmxJTAFmLo
-        KJ9T/PVn/Tb7BHfJvSfWKKAcf+YvmJRCOdijLDNlAQoIbvvGtZTKE4qA7MiKuhq2d4NdrX1UUINa9
-        L6qUWajUVdmD6b8WpByQFTzXy3b/DDvJLNV8382lfzyxdemliI6pfU4nhjmyGQOJb51pdBk9MEk3P
-        BcuVzQmImlhIDVI1CwAI/zhbbLuNX/aU9mCzt2TByncHw462LAMklPa+9dz/GHzO0e4KNW/6DXzvo
-        dJApuUwc+OyzdnSx15nyoMsxhZMLeP0EX3s9RvRKD7fbya+RN7J79WtgypcG8MekNM8nNRaZdoOof
-        HjXGm7LA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48912 helo=[192.168.15.8])
+        bh=tx5snhU3r7ZxxPo+QKrbHdn/tSplnVEsmvWKh2OnMcE=; b=jIjFNaMX9gnup8YvgCoemgSlT5
+        U/Mt1F0O0qCWC2Q+L+avKAEdl87qXCoJiQf+UwxhUtcLqTljyhM5ihhb6f89oLrsSWLkYySeD/85S
+        kjZXzqcgbMEooDCtyUhsPlltcQ4MSuA9ZNG5L1yCjViD5aWLOK2hiICIdLTtonnnUMJVVqWqlYPLT
+        3N2RndHYZYfqLD7L3jC170bC/k1xmcDvAz0vZ7agDtZ2DtfWLFPaI4SlwEfOWrnIodVtJqQ84+4Yw
+        q1XAXum0+Xd2M96QAyvXEwtN88VeYVBCsbbJbtga78sHTdkbyMkGeLaChLYDqqLf+Lefn3hoa+3H0
+        /RJsCTuQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49060 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lYwcV-002VCy-0C; Tue, 20 Apr 2021 15:05:15 -0500
-Subject: Re: [PATCH RESEND][next] ipv4: Fix fall-through warnings for Clang
+        id 1lYwy7-0038Rn-QV; Tue, 20 Apr 2021 15:27:35 -0500
+Subject: Re: [PATCH RESEND][next] qlcnic: Fix fall-through warnings for Clang
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Shahed Shaikh <shshaikh@marvell.com>,
+        Manish Chopra <manishc@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210305090205.GA139036@embeddedor>
+Cc:     GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210305091735.GA139591@embeddedor>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <ef931d13-896f-0b9c-bb8c-1b710b0164af@embeddedor.com>
-Date:   Tue, 20 Apr 2021 15:05:22 -0500
+Message-ID: <9502f47c-4e5c-2406-9cc7-708c90899c9d@embeddedor.com>
+Date:   Tue, 20 Apr 2021 15:27:51 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <20210305090205.GA139036@embeddedor>
+In-Reply-To: <20210305091735.GA139591@embeddedor>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -74,13 +72,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lYwcV-002VCy-0C
+X-Exim-ID: 1lYwy7-0038Rn-QV
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48912
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49060
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
+X-Email-Count: 201
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -95,79 +93,40 @@ Thanks
 --
 Gustavo
 
-On 3/5/21 03:02, Gustavo A. R. Silva wrote:
+On 3/5/21 03:17, Gustavo A. R. Silva wrote:
 > In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-> warnings by explicitly adding multiple break statements instead of just
-> letting the code fall through to the next case.
+> warnings by explicitly adding a break and a goto statements instead of
+> just letting the code fall through to the next case.
 > 
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  net/ipv4/ah4.c           | 1 +
->  net/ipv4/esp4.c          | 1 +
->  net/ipv4/fib_semantics.c | 1 +
->  net/ipv4/ip_vti.c        | 1 +
->  net/ipv4/ipcomp.c        | 1 +
->  5 files changed, 5 insertions(+)
+>  drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c   | 1 +
+>  drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c | 1 +
+>  2 files changed, 2 insertions(+)
 > 
-> diff --git a/net/ipv4/ah4.c b/net/ipv4/ah4.c
-> index 36ed85bf2ad5..fab0958c41be 100644
-> --- a/net/ipv4/ah4.c
-> +++ b/net/ipv4/ah4.c
-> @@ -450,6 +450,7 @@ static int ah4_err(struct sk_buff *skb, u32 info)
->  	case ICMP_DEST_UNREACH:
->  		if (icmp_hdr(skb)->code != ICMP_FRAG_NEEDED)
->  			return 0;
+> diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
+> index bdf15d2a6431..af4c516a9e7c 100644
+> --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
+> +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
+> @@ -1390,6 +1390,7 @@ static int qlcnic_process_rcv_ring(struct qlcnic_host_sds_ring *sds_ring, int ma
+>  			break;
+>  		case QLCNIC_RESPONSE_DESC:
+>  			qlcnic_handle_fw_message(desc_cnt, consumer, sds_ring);
+> +			goto skip;
+>  		default:
+>  			goto skip;
+>  		}
+> diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
+> index 96b947fde646..8966f1bcda77 100644
+> --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
+> +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
+> @@ -3455,6 +3455,7 @@ qlcnic_fwinit_work(struct work_struct *work)
+>  			adapter->fw_wait_cnt = 0;
+>  			return;
+>  		}
 > +		break;
->  	case ICMP_REDIRECT:
->  		break;
->  	default:
-> diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-> index 4b834bbf95e0..6cb3ecad04b8 100644
-> --- a/net/ipv4/esp4.c
-> +++ b/net/ipv4/esp4.c
-> @@ -982,6 +982,7 @@ static int esp4_err(struct sk_buff *skb, u32 info)
->  	case ICMP_DEST_UNREACH:
->  		if (icmp_hdr(skb)->code != ICMP_FRAG_NEEDED)
->  			return 0;
-> +		break;
->  	case ICMP_REDIRECT:
->  		break;
->  	default:
-> diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
-> index a632b66bc13a..4c0c33e4710d 100644
-> --- a/net/ipv4/fib_semantics.c
-> +++ b/net/ipv4/fib_semantics.c
-> @@ -1874,6 +1874,7 @@ static int call_fib_nh_notifiers(struct fib_nh *nh,
->  		    (nh->fib_nh_flags & RTNH_F_DEAD))
->  			return call_fib4_notifiers(dev_net(nh->fib_nh_dev),
->  						   event_type, &info.info);
-> +		break;
->  	default:
->  		break;
->  	}
-> diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-> index 31c6c6d99d5e..eb560eecee08 100644
-> --- a/net/ipv4/ip_vti.c
-> +++ b/net/ipv4/ip_vti.c
-> @@ -351,6 +351,7 @@ static int vti4_err(struct sk_buff *skb, u32 info)
->  	case ICMP_DEST_UNREACH:
->  		if (icmp_hdr(skb)->code != ICMP_FRAG_NEEDED)
->  			return 0;
-> +		break;
->  	case ICMP_REDIRECT:
->  		break;
->  	default:
-> diff --git a/net/ipv4/ipcomp.c b/net/ipv4/ipcomp.c
-> index b42683212c65..bbb56f5e06dd 100644
-> --- a/net/ipv4/ipcomp.c
-> +++ b/net/ipv4/ipcomp.c
-> @@ -31,6 +31,7 @@ static int ipcomp4_err(struct sk_buff *skb, u32 info)
->  	case ICMP_DEST_UNREACH:
->  		if (icmp_hdr(skb)->code != ICMP_FRAG_NEEDED)
->  			return 0;
-> +		break;
->  	case ICMP_REDIRECT:
+>  	case QLCNIC_DEV_FAILED:
 >  		break;
 >  	default:
 > 
