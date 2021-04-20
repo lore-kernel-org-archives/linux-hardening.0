@@ -2,84 +2,76 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBAAC433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 07:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9407C433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 18:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42E5F61154
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 07:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8037B613C8
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 18:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbhDTHVA (ORCPT
+        id S233513AbhDTSO7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 03:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbhDTHU7 (ORCPT
+        Tue, 20 Apr 2021 14:14:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42046 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232879AbhDTSO4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 03:20:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42128C06174A;
-        Tue, 20 Apr 2021 00:20:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PheP7FkRkfVSr8ZX7xF4EBpL6tBzEmE1WwGIjQKRjck=; b=MlFnyvGuYfRB5voeWZclqd8+WZ
-        QMJj4O47xyDn97sTMf4JV8dTagTauHTEYf03SYqb8BzcOVdwPydVPg5aH0Xz2qs008Pwgu0gyLU5F
-        tfL83ZWpkkDNcnD5xj3cS/+tN1vomc7N+0fvzczOyEQY7CAO46wS3SiHOmRfWExWTparZGFyOdu1K
-        NYsKIm9/e2E3DiRqUB1sYRLkBzdmVSCNPZSGWShVExYuolTUbSkD4HVyIizyuuJWvm9lWWzjxmC30
-        1N+8muIWbJUjgIjz5GcmbXILZ0ABZ5WPn06aYl8k9W4VzSXbW54yWyV1Sdjrawq1sPt6qCPoWqemi
-        HMtFiIAw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lYkf4-00EqqF-Fo; Tue, 20 Apr 2021 07:19:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BA93F30013E;
-        Tue, 20 Apr 2021 09:19:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A5BAF2CEB52BC; Tue, 20 Apr 2021 09:19:04 +0200 (CEST)
-Date:   Tue, 20 Apr 2021 09:19:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+        Tue, 20 Apr 2021 14:14:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1618942464;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xVywtcdWzkrND0c18LWsccBuX85KB1TX7A+WSDqF8ww=;
+        b=dtBkfNcmBGHJlgb/+53UFJeqGKsPEiNrYFezw23pvZIey+cUQt6sFrE9MRcjJfWhV2Ak/e
+        +iUcBE0P1A2usfoQvR6RGZfXAPGl+QR+IwOh4T3mPlZeJOQoMAQQfpVLA3GUVqq5V3zHNy
+        xTyhDcUoJxXFWmkIrr+dMVju/N/2+mg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-gZ-L1CbPNe6IEJoEIVvKAg-1; Tue, 20 Apr 2021 14:14:17 -0400
+X-MC-Unique: gZ-L1CbPNe6IEJoEIVvKAg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 989E9802B56;
+        Tue, 20 Apr 2021 18:14:15 +0000 (UTC)
+Received: from treble (ovpn-115-229.rdu2.redhat.com [10.10.115.229])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B9C560C5F;
+        Tue, 20 Apr 2021 18:14:14 +0000 (UTC)
+Date:   Tue, 20 Apr 2021 13:14:12 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH 09/15] x86/alternatives: Use C int3 selftest but disable
- KASAN
-Message-ID: <YH6AaBY5A+x2pmqI@hirez.programming.kicks-ass.net>
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 01/15] objtool: Find a destination for jumps beyond the
+ section end
+Message-ID: <20210420181412.3g5dsyhggxnvif7k@treble>
 References: <20210416203844.3803177-1-samitolvanen@google.com>
- <20210416203844.3803177-10-samitolvanen@google.com>
- <YHrIc0L5AQukw525@hirez.programming.kicks-ass.net>
- <CABCJKuevfuVbKZPtLrFacXZLk+VtbFgebbyLeK8Xxe7Z3YmwQA@mail.gmail.com>
+ <20210416203844.3803177-2-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABCJKuevfuVbKZPtLrFacXZLk+VtbFgebbyLeK8Xxe7Z3YmwQA@mail.gmail.com>
+In-Reply-To: <20210416203844.3803177-2-samitolvanen@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Apr 19, 2021 at 08:26:36AM -0700, Sami Tolvanen wrote:
-> On Sat, Apr 17, 2021 at 4:37 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Apr 16, 2021 at 01:38:30PM -0700, Sami Tolvanen wrote:
+> With -ffunction-sections, Clang can generate a jump beyond the end of
+> a section when the section ends in an unreachable instruction.
 
-> > The problem is that the call-site does not respect the regular calling
-> > convention, so calling a regular C function is just asking for trouble,
-> > which is why it ended up being asm, then we fully control the calling
-> > convention.
-> 
-> Ack. The problem here is that we can't declare an extern static
-> function in C. How would you feel about making int3_magic a global
-> instead to match the C declaration?
+Why?  Can you show an example?
 
-Works for me.
+-- 
+Josh
+
