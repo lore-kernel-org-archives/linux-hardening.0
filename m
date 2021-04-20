@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED32C433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CD5C433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675CD613D5
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25AA610CC
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233548AbhDTUIo (ORCPT
+        id S233825AbhDTUJQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 16:08:44 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.140]:46674 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233544AbhDTUIn (ORCPT
+        Tue, 20 Apr 2021 16:09:16 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.129]:34421 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233541AbhDTUJK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 16:08:43 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 7A4223B0C6
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:08:10 -0500 (CDT)
+        Tue, 20 Apr 2021 16:09:10 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 157B7F71C
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:08:37 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id YwfKlddQH1cHeYwfKllRUK; Tue, 20 Apr 2021 15:08:10 -0500
+        id YwfllDyaIw11MYwfllhxXY; Tue, 20 Apr 2021 15:08:37 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,33 +34,33 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QweV4LAY1Y5ifNq4hmSERLYrcoN2XaYQxMKBb1YLCJk=; b=MoT8313qf85Zf+sLYOEs+txXr0
-        Z+Wn8c0+v6ZD38Pvt/JMVbORKxQRj9PD0kq4cFYNF5yEGEOmQ4yC/hSY1Q4NdS6Md0NYRCcNlE4/h
-        RZ2sE740v7E5WAQ8D6otGMXXFJ6YQrEld5KKf21LUZQ09j6mNl55nq3ceczR3uZ9Ow/mOEPVIA47F
-        VejjAAzqLjJIxqIXzgqdu9liEWs0rDv0rHrnStuUqsChECcLgBdhvWueeMLPmJy9YAGe9BRI0saKY
-        MRRPz0lafJ57WzUX4/9+peskvSlOh1kyybkMvcLXZ0oiFMLOHE33A3v8PIQtO+nWdqM6C0afDSiru
-        wSCE7ftQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48926 helo=[192.168.15.8])
+        bh=V90Tj6Wd5nMF3N/WKL/1v+/wiuT404oIfpEQA/lhaYA=; b=QiEM0THmYnxbYX0Ca1F1Sb+5ML
+        riyRBu3ggxV9vVFecNrkKj1eaSOl11gwr2DzwwoJDVKUpfX7OK1drBc5dPQSRHyfFbwJgRRVmB2Fj
+        5z0eBF0+BpR2Euwszowsq2cxttKpQM/69kJi8qoBK6F9aI6o3NNEYb+XftGKK6lk//UlrBjl0QuUK
+        GmCY7RCwmyAaA1Sat7fULdGZYZJbLcrwnEDG70RGjW9wzgoq/BPrOFI/abvAxAYNbJlVaiMx6Wzyr
+        eyUF5ebqbkjcb774UEIH/ZpLulIhxwOVU0tNJBUYTg7lEJiULQXjkXd8y9RmBTb9y1KGX8oQBsfQ3
+        +NY0FfLw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48932 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lYwfH-002aYu-00; Tue, 20 Apr 2021 15:08:07 -0500
-Subject: Re: [PATCH RESEND][next] xfrm: Fix fall-through warnings for Clang
+        id 1lYwfh-002bTT-JJ; Tue, 20 Apr 2021 15:08:33 -0500
+Subject: Re: [PATCH RESEND][next] tipc: Fix fall-through warnings for Clang
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210305092319.GA139967@embeddedor>
+Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210305092504.GA140204@embeddedor>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <fbe896ed-860d-4a92-f92b-bce83ba413ee@embeddedor.com>
-Date:   Tue, 20 Apr 2021 15:08:22 -0500
+Message-ID: <4739167e-676b-998c-4565-8aa32a66706f@embeddedor.com>
+Date:   Tue, 20 Apr 2021 15:08:49 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <20210305092319.GA139967@embeddedor>
+In-Reply-To: <20210305092504.GA140204@embeddedor>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,13 +72,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lYwfH-002aYu-00
+X-Exim-ID: 1lYwfh-002bTT-JJ
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48926
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48932
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
+X-Email-Count: 27
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -93,7 +93,7 @@ Thanks
 --
 Gustavo
 
-On 3/5/21 03:23, Gustavo A. R. Silva wrote:
+On 3/5/21 03:25, Gustavo A. R. Silva wrote:
 > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
 > by explicitly adding a break statement instead of letting the code fall
 > through to the next case.
@@ -101,19 +101,19 @@ On 3/5/21 03:23, Gustavo A. R. Silva wrote:
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  net/xfrm/xfrm_interface.c | 1 +
+>  net/tipc/link.c | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-> index 8831f5a9e992..41de46b5ffa9 100644
-> --- a/net/xfrm/xfrm_interface.c
-> +++ b/net/xfrm/xfrm_interface.c
-> @@ -432,6 +432,7 @@ static int xfrmi4_err(struct sk_buff *skb, u32 info)
->  	case ICMP_DEST_UNREACH:
->  		if (icmp_hdr(skb)->code != ICMP_FRAG_NEEDED)
->  			return 0;
-> +		break;
->  	case ICMP_REDIRECT:
->  		break;
->  	default:
+> diff --git a/net/tipc/link.c b/net/tipc/link.c
+> index 115109259430..bcc426e16725 100644
+> --- a/net/tipc/link.c
+> +++ b/net/tipc/link.c
+> @@ -649,6 +649,7 @@ int tipc_link_fsm_evt(struct tipc_link *l, int evt)
+>  			break;
+>  		case LINK_FAILOVER_BEGIN_EVT:
+>  			l->state = LINK_FAILINGOVER;
+> +			break;
+>  		case LINK_FAILURE_EVT:
+>  		case LINK_RESET_EVT:
+>  		case LINK_ESTABLISH_EVT:
 > 
