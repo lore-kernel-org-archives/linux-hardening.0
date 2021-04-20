@@ -2,128 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDBDC433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064DEC433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49787613C8
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C601F613C0
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233865AbhDTUYA (ORCPT
+        id S233912AbhDTUYb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 16:24:00 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.79]:44936 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233824AbhDTUX7 (ORCPT
+        Tue, 20 Apr 2021 16:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233910AbhDTUYb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 16:23:59 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id D0EE11976B
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:23:26 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Ywu6lPxvvmJLsYwu6lmyQP; Tue, 20 Apr 2021 15:23:26 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nKsGWZKmz5l1HXMaU8LILLT9LIU27G49jkyG+Xsurs4=; b=HgiFk4IdwutBybeef14/asu0P6
-        a+vyVbBKOH1OOonccuOf42EiiMFdoH6J7j6mTRcl8N7FHs1XMRAdrB4dE0Po6tMVQq1FG9WkGzxUX
-        doZuBIwidnlSL9ZycPDa0H9iv1VfCJ71lEGrhNwYvpDH9z3nftPZgTJpe27AJsLv27izc7bW/MsqS
-        TgZaFvgX5gACQ6guam2wyharEPMF5W1hxIUwApD6lzyMV4J/gG+yMq67Hz3uT9aEyyu68bzBFFRx0
-        ePF2lTCN2Ay4BWBSDvbZwA2Y7zsVeWIXbGvzHDcptXkX3dolSz5+CAIZ1bOq1psqLI0HYrkEeNVhL
-        bueT8Vxw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49024 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lYwu3-0030Jp-9x; Tue, 20 Apr 2021 15:23:23 -0500
-Subject: Re: [PATCH RESEND][next] nfp: Fix fall-through warnings for Clang
-To:     Simon Horman <simon.horman@netronome.com>,
+        Tue, 20 Apr 2021 16:24:31 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548A8C06138B
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 13:23:59 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id g16so13138593pfq.5
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 13:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WRZXjE4aK1HQxoLEc8jiHuo+pQW3WFAMQ4pM5BS+HIE=;
+        b=i7NhxbFFUtsIx33i/FDG8VCTFQK25b4tHT+SFTrHcJTz73Km74+clEBbSLeVqZ8HDJ
+         6WoTt4cIE9mpgqrflsao9s/pdE65Tt1amzudx8m58AbzPsn37iqob8Vbc2I+LzA1IvJa
+         y7a9NUJ/Y7gU/BYaFc3HgJX3ez+o5+/yJOs8J0G7JOdIAZyEY9ZxHedLfnextU+paIqk
+         BsCu1vJe1102KqNIRoQuj2jcVFL3h+uMr5wHcNEkbC5ZeanEMVkHeGBarGnOqi2zV00O
+         mklwh9Nh1/4sr4RPsMC0vs/fmDG8OKsToiBqpzOGlCo+JjH28aXDT4ticgGWYA4QIjG4
+         HjlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WRZXjE4aK1HQxoLEc8jiHuo+pQW3WFAMQ4pM5BS+HIE=;
+        b=H9A7RVdFQGA6uUoaHuHUdeqOllCUQKwJKBr4fbdDZsLrihQhQh7olh5uf2pbGhrvs1
+         C3ZL/tJNYMQUuvUWBKaXmV1VFcHbxH7Fi5SaBrnEdnk92JnRYf1DrMjywR0qEYhzTQQk
+         kDvEoH13/U7Wg+t2IKMsOEQxU1nbU30NkeIW2fMTDMZGUvh98jGyKzqvkMBHzAhZyL0c
+         jVdOffj91yJhJaRbT56xb7z/vmPXnLaJZPXOpmDjwCKGQk0UnM0gQJINQnl4OwA9TBQm
+         VdQOsgezcLgQWw7nsWVP/DhmF0Ra5R5zoD4JUzHaE4/GYWDshJNCLbj9nE72PWDNm8b+
+         +uDw==
+X-Gm-Message-State: AOAM533ZQSwuG48oN/EZ78yf7ofkL0SrnGbUL+ZLy/8yUnrmc1+36/EL
+        uwMMGAwvI1+ZCnuDGOwLhj8lIQxQyQ3z4Q==
+X-Google-Smtp-Source: ABdhPJwh9ZPPndH2NPXK2stdybN9bF8jCj7nLnvQhAQB2Rz/jX8y2GZ9xbzE/3HN6LsNQUbUKItmgw==
+X-Received: by 2002:a05:6a00:170c:b029:225:8851:5b3c with SMTP id h12-20020a056a00170cb029022588515b3cmr26662434pfc.0.1618950238524;
+        Tue, 20 Apr 2021 13:23:58 -0700 (PDT)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id a20sm6941312pfi.138.2021.04.20.13.23.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Apr 2021 13:23:58 -0700 (PDT)
+Subject: Re: [PATCH 092/141] libata: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, oss-drivers@netronome.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-References: <20210305094937.GA141307@embeddedor>
- <20210305121949.GF8899@netronome.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <b4fd4c37-ccd6-3cbb-a127-3b2ad9516871@embeddedor.com>
-Date:   Tue, 20 Apr 2021 15:23:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+References: <cover.1605896059.git.gustavoars@kernel.org>
+ <e3498b34cae37d0f93db5824e5f61b183a7293f1.1605896060.git.gustavoars@kernel.org>
+ <07757a90-7682-47e4-f6ab-a07b1658280c@embeddedor.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2cb77fac-21c3-6ba9-2f8f-0ff154ad4459@kernel.dk>
+Date:   Tue, 20 Apr 2021 14:23:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210305121949.GF8899@netronome.com>
+In-Reply-To: <07757a90-7682-47e4-f6ab-a07b1658280c@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lYwu3-0030Jp-9x
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49024
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 150
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
+On 4/20/21 2:11 PM, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping: who can take this, please?
 
-Friendly ping: who can take this, please?
+Applied for 5.13.
 
-Thanks
---
-Gustavo
+-- 
+Jens Axboe
 
-On 3/5/21 06:19, Simon Horman wrote:
-> On Fri, Mar 05, 2021 at 03:49:37AM -0600, Gustavo A. R. Silva wrote:
->> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
->> by explicitly adding a break statement instead of letting the code fall
->> through to the next case.
->>
->> Link: https://github.com/KSPP/linux/issues/115
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Thanks Gustavo,
-> 
-> this looks good to me.
-> 
-> Acked-by: Simon Horman <simon.horman@netronome.com>
-> 
->> ---
->>  drivers/net/ethernet/netronome/nfp/nfp_net_repr.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
->> index b3cabc274121..3b8e675087de 100644
->> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
->> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
->> @@ -103,6 +103,7 @@ nfp_repr_get_stats64(struct net_device *netdev, struct rtnl_link_stats64 *stats)
->>  	case NFP_PORT_PF_PORT:
->>  	case NFP_PORT_VF_PORT:
->>  		nfp_repr_vnic_get_stats64(repr->port, stats);
->> +		break;
->>  	default:
->>  		break;
->>  	}
->> -- 
->> 2.27.0
->>
