@@ -2,99 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD85AC433ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 22:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECE0C433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 22:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7423A613EC
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 22:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782356140A
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 22:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234266AbhDTWR7 (ORCPT
+        id S234240AbhDTW5f (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 18:17:59 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.210]:19841 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233961AbhDTWR7 (ORCPT
+        Tue, 20 Apr 2021 18:57:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55411 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233964AbhDTW5f (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 18:17:59 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 15092400D125B
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 17:17:27 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id YygRlJCT6L7DmYygRlRAp2; Tue, 20 Apr 2021 17:17:27 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=IqU1MVnkdAvu7/gdvMsvZ0UoM0R9qMbLSGUvD8bDyo0=; b=t25+aD0FWGgg1MTsiBu8RqM+6u
-        XuNDC1IGpHeaMXQ/FDcbBb9MwHAKKXpa2IIp5FdKlC8j7gx/qpEGLOMJaAQ9IIh1dRTeNIL+GHg5D
-        z/LOitlLpayD8MIOy43peMioMdQ10hUNqBoUve7nB1PQk4caMZgHhiTu6EM+It4TtfBZrdwh/qAVd
-        vXLfSVS8p6F3dZAD8VJinwbA200XXf0hQj8m+ydrEL1gZpK4uFCZSy2fkuxIsjIn8Bs0DcPyemfjT
-        Cg+K5Mm5OUI7GORV80LtOux+35CHIg2z9zqZP4h8lIsThqBNdGAg3INIlQfcj+4jFFEE7UJy7QBEA
-        ScAJRZBQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:50542 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lYygN-001kpE-J7; Tue, 20 Apr 2021 17:17:23 -0500
-Subject: Re: [PATCH 027/141] drbd: Fix fall-through warnings for Clang
-To:     Jens Axboe <axboe@kernel.dk>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>
-Cc:     drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <44663f18fb12e39c53b0e69039c98505b7c6d5da.1605896059.git.gustavoars@kernel.org>
- <ba77fcbe-8770-d234-509b-7dc5ac079319@embeddedor.com>
- <2c942833-ae0f-bda5-b023-e2a1860be50f@kernel.dk>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <6610a212-6095-0527-c260-49bb2637b7f4@embeddedor.com>
-Date:   Tue, 20 Apr 2021 17:17:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Tue, 20 Apr 2021 18:57:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1618959422;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LnQ53sg5fwiQMRw1Pm3HtTObLBLrjcyC95xl1vP82O8=;
+        b=aGuxYAxwyFdRQr/7z05TfwnPSVMa/gQpPXEBOi+OG34+veqdissTFaZ5wzkNRXZ2DsFtbA
+        rVOkCIqaP0TrYbpnJ78VG1n9wPsV67j9RMV68cBLLNBCR5nMoOLCIrLuY4l/eP7HMrK7j5
+        Y59qmwNIiozoSV+uSvExGxCySNX5P8Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-477-vzBdi_YsOOSuKZd02ektjw-1; Tue, 20 Apr 2021 18:56:21 -0400
+X-MC-Unique: vzBdi_YsOOSuKZd02ektjw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A72E80D6A8;
+        Tue, 20 Apr 2021 22:55:54 +0000 (UTC)
+Received: from treble (ovpn-114-107.rdu2.redhat.com [10.10.114.107])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DBF9D5D9C0;
+        Tue, 20 Apr 2021 22:55:52 +0000 (UTC)
+Date:   Tue, 20 Apr 2021 17:55:50 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 01/15] objtool: Find a destination for jumps beyond the
+ section end
+Message-ID: <20210420225550.szbmrpwv6awd7tp5@treble>
+References: <20210416203844.3803177-1-samitolvanen@google.com>
+ <20210416203844.3803177-2-samitolvanen@google.com>
+ <20210420181412.3g5dsyhggxnvif7k@treble>
+ <CABCJKudO9Ovuih3ieQ70w8y744Cg3tPnciVBhCuuBPuhq4i3Xg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <2c942833-ae0f-bda5-b023-e2a1860be50f@kernel.dk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lYygN-001kpE-J7
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:50542
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 26
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Disposition: inline
+In-Reply-To: <CABCJKudO9Ovuih3ieQ70w8y744Cg3tPnciVBhCuuBPuhq4i3Xg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, Apr 20, 2021 at 01:25:43PM -0700, Sami Tolvanen wrote:
+> On Tue, Apr 20, 2021 at 11:14 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Fri, Apr 16, 2021 at 01:38:30PM -0700, Sami Tolvanen wrote:
+> > > With -ffunction-sections, Clang can generate a jump beyond the end of
+> > > a section when the section ends in an unreachable instruction.
+> >
+> > Why?  Can you show an example?
+> 
+> Here's the warning I'm seeing when building allyesconfig + CFI:
+> 
+> vmlinux.o: warning: objtool:
+> rockchip_spi_transfer_one.f088382d97b74759d70e27e891fe8f1c()+0x149:
+> can't find jump dest instruction at
+> .text.rockchip_spi_transfer_one.f088382d97b74759d70e27e891fe8f1c+0x7dc
+> 
+> $ objdump -d -r -j
+> .text.rockchip_spi_transfer_one.f088382d97b74759d70e27e891fe8f1c
+> vmlinux.o
+> 0000000000000000 <rockchip_spi_transfer_one.f088382d97b74759d70e27e891fe8f1c>:
+>   ...
+>  149:   0f 85 8d 06 00 00       jne    7dc <.compoundliteral.4>
+>   ...
+>  7d7:   e8 00 00 00 00          callq  7dc <.compoundliteral.4>
+>                         7d8: R_X86_64_PLT32     __stack_chk_fail-0x4
 
+Instead of silencing the warning by faking the jump destination, I'd
+rather improve the warning to something like
 
-On 4/20/21 16:23, Jens Axboe wrote:
+  "warning: rockchip_spi_transfer_one() falls through to the next function"
 
-> Applied, thanks.
+which is what we normally do in this type of situation.
 
-Awesome. :)
+It may be caused by UB, or a compiler bug, but either way we should
+figure out the root cause.
 
-Thanks
---
-Gustavo
+-- 
+Josh
+
