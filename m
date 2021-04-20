@@ -2,120 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA63C433ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE40C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D91613D8
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7D6613E7
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233988AbhDTUiS (ORCPT
+        id S233747AbhDTUk7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 16:38:18 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.79]:38748 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233961AbhDTUiS (ORCPT
+        Tue, 20 Apr 2021 16:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233660AbhDTUk6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 16:38:18 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 853AC23CE2
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:37:44 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Yx7wlQDVfmJLsYx7wlnDjw; Tue, 20 Apr 2021 15:37:44 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=l6vahtvgtZ1p4am0RjK2z2rakl6hM2z1m9+8qYMYvp8=; b=eodyvHTbYl7syCTL6dvpNCWXBh
-        8xCPKyo4MRPzNso1FkQWqVoxm8xWj2gs7jWPyY03oK4uaNBu6M7mbGap7HXQ43Lqn0T+CEb9SkKgt
-        +ItgSiuhOfxiUqcLAN0GXx4N0045JSP0zwQvMZyvqDfwnbHviZWxpSkSHtO7UaZ8FuoByHIrk8FZB
-        b4IK3ELYtx83hrK3ylza3Fi6Ut3zJcT8/5Ro2yZOLaRLck+SzWMPoh7fg5QeZQxmTWxos5uQ5TIqv
-        B/+Xdciz7Q64O9d1bATS//5Evemnccx1s0utSqgReTMWV2kDGGgLRHBnwAxErGMCEURuFz6G4sJGp
-        QzLGPd1g==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49098 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lYx7u-003RAy-32; Tue, 20 Apr 2021 15:37:42 -0500
-Subject: Re: [PATCH 032/141] floppy: Fix fall-through warnings for Clang
-To:     Jens Axboe <axboe@kernel.dk>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Denis Efremov <efremov@linux.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <ede7ffddba64f621150f8f5c5f2b8f080b560903.1605896059.git.gustavoars@kernel.org>
- <2599e39d-faec-01fc-e835-16a5c96082d6@embeddedor.com>
- <47bcd36a-6524-348b-e802-0691d1b3c429@kernel.dk>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <ba8c33c1-ccd9-0c99-c45c-1b1301f3e130@embeddedor.com>
-Date:   Tue, 20 Apr 2021 15:37:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Tue, 20 Apr 2021 16:40:58 -0400
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C13C06174A;
+        Tue, 20 Apr 2021 13:40:23 -0700 (PDT)
+Received: by mail-il1-x131.google.com with SMTP id i22so28456354ila.11;
+        Tue, 20 Apr 2021 13:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kry+U86OyspoO4d2pLMc68TiRp5ZV9OLSFUVCrELgSU=;
+        b=rwTN51EXkz1bm7UeWKxWcaGqFffyWM1mTU7nlEuvy0TdV3U4uhj4JzdpzOCXEoVc/s
+         WlG+kTdLreAvAC02nHPVarjd8pTqbOD5JtQaotSaX7FgrSFOjvv2/H7lxIzEa1mp0ssF
+         0ibOzUiUtDsWQ6bbSrDdjbbIBeUWX/sLvFiVtb6at5D1XUgTeQsbwyIBdJRdU3jHI2/Q
+         U1T2Yzbl2CsFn/LCRf8pPD1qJ39As6RrfDpA7LXELqEMjH4EF/9CQ05KplUk0p1VhBn3
+         cccSV6eW8SyTvV2zmFMu9SZi3kG0alOF3+cJWHoEcD8lqpuWlTRWRCuqhNs2eFMqVw/h
+         C7Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kry+U86OyspoO4d2pLMc68TiRp5ZV9OLSFUVCrELgSU=;
+        b=kzE/lG4/bkj9GVlIfX6xWNUH4aytRsdABs/QTaUA2+lCr0YmscD7306S9S+7ijJrYT
+         XnHju9aF6dO9gnbIYwMnkzZABWVY3AIerJNBXzPgdCmRPpw8vOcDagcyQY0kCpjdOwhH
+         OoYx0tJjbxocLKIgbOD5SDrJSW4HB7S+N67sFtffJ/Atrb0MQ+CZt+3NLgLF8FDQG+AB
+         9cUa+wcYzzByCWKcuS2X1U0ii3jOz3m2ibnlCvSKIs9DZ1c0YIeMyt8mwuXvtKeXmnuk
+         4T1yiBJe7OpeSq4PyGS5Yqu/4XO+pBP1Fjl4KOfJx8EsmQZl0Ea2MrKAbZXaKYf1EuT4
+         45gw==
+X-Gm-Message-State: AOAM5320tYT202RR6q0xbM/sAQvsNnJsw/cs9ViwTiVk+ohJgAiUZf2b
+        KFkpP0uSAPU3r2af6bjcKhQxH12sBDsrT46Z+fs=
+X-Google-Smtp-Source: ABdhPJwGjq+vOzjCw4CMNmbVY9D9Ly31mSZioAiKDoC+oHgxFpI2lcukUnc//qdkpnI6dVWmYArAPy+8wghI9SLOozM=
+X-Received: by 2002:a92:1910:: with SMTP id 16mr22995124ilz.201.1618951223190;
+ Tue, 20 Apr 2021 13:40:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <47bcd36a-6524-348b-e802-0691d1b3c429@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lYx7u-003RAy-32
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49098
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 234
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <cover.1605896059.git.gustavoars@kernel.org> <84d07c8510abf95c9e656454961c09b14485b856.1605896059.git.gustavoars@kernel.org>
+ <5adf738a-315b-a80e-46ff-06822441a789@embeddedor.com>
+In-Reply-To: <5adf738a-315b-a80e-46ff-06822441a789@embeddedor.com>
+From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
+Date:   Tue, 20 Apr 2021 22:40:11 +0200
+Message-ID: <CAHpGcM+FKd9PPcW-X-FzkOmp62RgNzqZYbkMUPahabFO3ETKaw@mail.gmail.com>
+Subject: Re: [PATCH 006/141] gfs2: Fix fall-through warnings for Clang
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        cluster-devel <cluster-devel@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Am Di., 20. Apr. 2021 um 22:29 Uhr schrieb Gustavo A. R. Silva
+<gustavo@embeddedor.com>:
+> Friendly ping: who can take this, please?
 
+Oops, that got lost. I've added it to for-next now.
 
-On 4/20/21 15:30, Jens Axboe wrote:
-
->>>
->>> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
->>> index 7df79ae6b0a1..21a2a7becba0 100644
->>> --- a/drivers/block/floppy.c
->>> +++ b/drivers/block/floppy.c
->>> @@ -2124,6 +2124,7 @@ static void format_interrupt(void)
->>>  	switch (interpret_errors()) {
->>>  	case 1:
->>>  		cont->error();
->>> +		fallthrough;
->>>  	case 2:
->>>  		break;
->>>  	case 0:
-> 
-> I wonder about the consistency of the patches. The one I just applied
-> for libata adds a break, this one annotates fallthrough. But the cases
-> are really 100% the same. Why aren't the changes consistent? Both are
-> obviously fine, but for identical cases it seems odd that they differ.
-> 
-> IMHO, adding a break makes more sense. Annotate the fallthrough if the
-> two cases share work that needs to be done, as then that solution makes
-> sense.
-> 
-
-Yeah; I'll resend this with a break, instead.
-
-Thanks for the feedback.
---
-Gustavo
+Thanks,
+Andreas
