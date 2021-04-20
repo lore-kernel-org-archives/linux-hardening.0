@@ -2,93 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5DBC43460
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 21:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D61C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 21:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F57A613FB
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 21:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7D0613EE
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 21:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234153AbhDTVYc (ORCPT
+        id S233769AbhDTVdh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 17:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233682AbhDTVYc (ORCPT
+        Tue, 20 Apr 2021 17:33:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29508 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233724AbhDTVdg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 17:24:32 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E284C06174A
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 14:23:59 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id d10so27648809pgf.12
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 14:23:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=glVvR85xdfrE67R3CZjbgLnxmue59x0PtY9S4kH+sec=;
-        b=r2gWKL7qzxRD5QAnD4hmvrIzR4IMnDbputgSsVU9mX7I2N/lzAT+uMHlGDBQzk1NFf
-         yJ5vt5b8+5BY2SgydAZ86nwTu1dYMkMFGJ93a9STfiIMQHV5kPKIr6JDPzREHeTigwnw
-         72Eu3fZO2SWgEo9lOxYUfE+5uK40kA//DRMiv3k3OIHEDn/dCdLetufNccjLPZn+7L3C
-         Ft/HQavN299Tfa2ExWAijhQLwRwkk9S5iY9AkGq5QKb3zRwjSyOh9FZyaW6IEdUuGcDX
-         5VzQ3L+pZCgtMkk9J0smXpAVh5eNjCJqk9n6lcrLy12qzygqhq3nxyQwLp8ex08s7QD7
-         m9yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=glVvR85xdfrE67R3CZjbgLnxmue59x0PtY9S4kH+sec=;
-        b=jAeJ0rx2O4ZCaunC9gENA7+hSnPshWR52d7ggx6Yylyulis0oHotpNMvhhJR5+7C+e
-         6jBR3IYOVRdJy9dIQIM7sHYGp+nzAwFgVVT771FK/PNt9KBH8dL4QAmRipfmbC/t61AZ
-         vW0+M9YBc6D6S9KgcNlFcxot3E4IHR3eSumBuX6zwN1fEx2lW87VXi45WfzhPmjrvCdh
-         NEMUABA/A5X+U+TiC4f+XoTSLocHukCs40ddy/zQVXYtdmAjplBZASO5j1ioUtYUa7RY
-         V3HoRIywTG/e9tOd2xOqoTaH/DpnmrcBLeyZwXuvln/O23pwcr6rM9hF6iK765sxrl22
-         SmaQ==
-X-Gm-Message-State: AOAM5338L6nnOUSEb0OuHO+BEXSZdti0Wow4wJRc3zLGw/YWev7OHbT+
-        BCSLjZ7fPVbH2dJGJvaMNBjgF45a5SKx2w==
-X-Google-Smtp-Source: ABdhPJz2TSHFrEWzD1FcGQP6T82U0X2bs7+O5FlMOXsznfPp/4/EuhhtJb07WaktlcO+jxEFzhgW3w==
-X-Received: by 2002:a63:ed12:: with SMTP id d18mr18929494pgi.20.1618953838079;
-        Tue, 20 Apr 2021 14:23:58 -0700 (PDT)
-Received: from [192.168.1.134] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id d6sm45603pji.43.2021.04.20.14.23.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Apr 2021 14:23:57 -0700 (PDT)
-Subject: Re: [PATCH 027/141] drbd: Fix fall-through warnings for Clang
+        Tue, 20 Apr 2021 17:33:36 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13KL3YH9056808;
+        Tue, 20 Apr 2021 17:32:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=mt9sy6k0dtVEyWThU2tyxcLEqeiSQ9M65Pmrr4XgxOM=;
+ b=CCJCw6ZvBV/YoNW6PpR9r4GIU6LpOJB+25LrXib10Mv84caSCDYXOR6C1khn0OfHygT1
+ LBHAWk3LCP8AdiozQlFj3SY3y9fOcU9VgaHBDZh+IW14EQ94sBoeq5eXpc4Bn170NEBp
+ F1uyVpF4xSsCyJGPXRot9nFjz5RzuIaNPpJtq1r9Qh5JI2DGTWR8PXKwJ1qLfEHnpkRi
+ 9r1d80jlQ+uB4suX/BTY1vYvOq/ei+uboOE0Dl0jtrP6IopM89O2kEvNeJ7Yq2ABYsOz
+ Hz6bU9YL9xpCeB/F9orcTP791APVG3J5XC2renAtVMqOPV/5Ms/DlNB6OfiMBX3YwHOe 3g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3823qgn7wj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Apr 2021 17:32:42 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 13KL3qMN058089;
+        Tue, 20 Apr 2021 17:32:41 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3823qgn7w3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Apr 2021 17:32:41 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13KLSx42022245;
+        Tue, 20 Apr 2021 21:32:39 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06fra.de.ibm.com with ESMTP id 37ypxh92nn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Apr 2021 21:32:39 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13KLWbdN27722158
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Apr 2021 21:32:37 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C92AA404D;
+        Tue, 20 Apr 2021 21:32:37 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A047CA4040;
+        Tue, 20 Apr 2021 21:32:34 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.211.121.1])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Apr 2021 21:32:34 +0000 (GMT)
+Message-ID: <079454b4147b6ca054129490cd256c948ea08cc1.camel@linux.ibm.com>
+Subject: Re: [PATCH 010/141] ima: Fix fall-through warnings for Clang
+From:   Mimi Zohar <zohar@linux.ibm.com>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>
-Cc:     drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date:   Tue, 20 Apr 2021 17:32:33 -0400
+In-Reply-To: <77650781-7088-21b7-aa8e-8e5fbf81920e@embeddedor.com>
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <44663f18fb12e39c53b0e69039c98505b7c6d5da.1605896059.git.gustavoars@kernel.org>
- <ba77fcbe-8770-d234-509b-7dc5ac079319@embeddedor.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2c942833-ae0f-bda5-b023-e2a1860be50f@kernel.dk>
-Date:   Tue, 20 Apr 2021 15:23:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <ba77fcbe-8770-d234-509b-7dc5ac079319@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+         <ae416f97079da13568026228d930e9e59118cc4c.1605896059.git.gustavoars@kernel.org>
+         <77650781-7088-21b7-aa8e-8e5fbf81920e@embeddedor.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-14.el8) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: AfdWPR04Znax-0yFUCd8E65glb8rgAtG
+X-Proofpoint-GUID: H9__Ijr0eubhGQoZwle13wsIgSOTA68_
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-20_11:2021-04-20,2021-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0 bulkscore=0
+ adultscore=0 malwarescore=0 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104200146
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 4/20/21 2:25 PM, Gustavo A. R. Silva wrote:
+Hi Gustavo,
+
+On Tue, 2021-04-20 at 15:28 -0500, Gustavo A. R. Silva wrote:
 > Hi all,
 > 
 > Friendly ping: who can take this, please?
 
-Applied, thanks.
+Thank you for the reminder.
 
--- 
-Jens Axboe
+> 
+> On 11/20/20 12:25, Gustavo A. R. Silva wrote:
+> > In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+> > warnings by explicitly adding multiple break statements instead of just
+> > letting the code fall through to the next case.
+> > 
+> > Link: https://github.com/KSPP/linux/issues/115
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Applied to 
+git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git 
+next-integrity
+
+thanks,
+
+Mimi
 
