@@ -2,106 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0837C433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 22:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A406CC433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 22:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A87F61400
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 22:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56885613FD
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 22:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234225AbhDTWOC (ORCPT
+        id S234186AbhDTWRM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 18:14:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32964 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234203AbhDTWOC (ORCPT
+        Tue, 20 Apr 2021 18:17:12 -0400
+Received: from gateway30.websitewelcome.com ([192.185.148.2]:32479 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233961AbhDTWRL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 18:14:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618956809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QHpVgVIqlHGDvRlPmlmnlx8k/YvIdZkYRQ1Z0QDjGXc=;
-        b=MSt5uXSh9TNrrFPs8+czcFVLDysoaHqmjiBLXhXY6afni/qndaC16CD4zN7X+YcI8LB6iU
-        SwWVbeXtPu090n7E52eTN7Lz3AbqB9l4wIsVkJrgEXnpn6fqSVewYOyfmS+/K4jG7h6l5h
-        g9ZEYAK6CqiKnOxtyda5vGod1f0h2Z4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-JaoNB8FAPZm9Kx7iOtOj5g-1; Tue, 20 Apr 2021 18:13:24 -0400
-X-MC-Unique: JaoNB8FAPZm9Kx7iOtOj5g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3AF983DAA3;
-        Tue, 20 Apr 2021 22:13:23 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFEF519D9B;
-        Tue, 20 Apr 2021 22:13:23 +0000 (UTC)
-Date:   Tue, 20 Apr 2021 18:13:23 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        Tue, 20 Apr 2021 18:17:11 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 422268986
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 17:16:38 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Yyfelo2SSPkftYyfel1oXf; Tue, 20 Apr 2021 17:16:38 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0JXMoyKqnypcp3tv+OUhmcTnA/JRDheSNH3fXOVDZ2k=; b=y/d59vj69GYm6cGv3hSddsiv3+
+        muzYePvidICiN4IACqwisBvELhnRXyeq0Knx4C9CoPm7pDnGhGBAla0GtQv2DHzd+H74x1XFehGhS
+        pfHk53NScq3qFl1cpogKO7f8P+wm5eitjb2A6LvZDZjSJkyZiOcUU69KHK2L75FRK6xcHwBWJxorj
+        vJLttibske92kuScDm4mZbj4PpDMY/rTtJtIXgs+mkgTuuUkNM5S+w2BxGI1A5boGEiVSbo+oxriq
+        9hw9cK0Gvqz3LoJP8NFIjPo+bUifnvRjQRgnzgOHr+4ZJVkpC51Nf/6i9IOWkUFfqr6rnKX45ShTy
+        dneDqf7g==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:50532 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lYyfb-001ji5-RM; Tue, 20 Apr 2021 17:16:35 -0500
+Subject: Re: [PATCH 077/141] dm raid: Fix fall-through warnings for Clang
+To:     Mike Snitzer <snitzer@redhat.com>
 Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 077/141] dm raid: Fix fall-through warnings for Clang
-Message-ID: <20210420221322.GA16676@redhat.com>
 References: <cover.1605896059.git.gustavoars@kernel.org>
  <d17978db8a2bae019d2c858a51e9f6abf8ea8947.1605896059.git.gustavoars@kernel.org>
  <02133499-e619-77e6-7ec0-79a238258f81@embeddedor.com>
+ <20210420221322.GA16676@redhat.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <1b8d7b06-7573-b1cb-e8fd-89462264f705@embeddedor.com>
+Date:   Tue, 20 Apr 2021 17:16:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02133499-e619-77e6-7ec0-79a238258f81@embeddedor.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20210420221322.GA16676@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lYyfb-001ji5-RM
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:50532
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 20 2021 at  4:15pm -0400,
-Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
 
-> Hi all,
-> 
-> Friendly ping: who can take this, please?
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> On 11/20/20 12:35, Gustavo A. R. Silva wrote:
-> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> > by explicitly adding a break statement instead of letting the code fall
-> > through to the next case.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/115
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/md/dm-raid.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-> > index 9c1f7c4de65b..e98af0b9d00c 100644
-> > --- a/drivers/md/dm-raid.c
-> > +++ b/drivers/md/dm-raid.c
-> > @@ -1854,6 +1854,7 @@ static int rs_check_takeover(struct raid_set *rs)
-> >  		    ((mddev->layout == ALGORITHM_PARITY_N && mddev->new_layout == ALGORITHM_PARITY_N) ||
-> >  		     __within_range(mddev->new_layout, ALGORITHM_LEFT_ASYMMETRIC, ALGORITHM_RIGHT_SYMMETRIC)))
-> >  			return 0;
-> > +		break;
-> >  
-> >  	default:
-> >  		break;
-> > 
-> 
 
-I've picked it up for 5.13, thanks.
+On 4/20/21 17:13, Mike Snitzer wrote:
 
-Mike
+> I've picked it up for 5.13, thanks.
+
+Thanks, Mike.
+
+--
+Gustavo
 
