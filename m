@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000AAC433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87C5C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5FAA613C4
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83A5613B6
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 20:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233865AbhDTU2b (ORCPT
+        id S233660AbhDTU25 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 16:28:31 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.130]:46651 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233619AbhDTU2a (ORCPT
+        Tue, 20 Apr 2021 16:28:57 -0400
+Received: from gateway24.websitewelcome.com ([192.185.50.66]:49662 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233931AbhDTU25 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 16:28:30 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 92A6B3FFC33
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:27:58 -0500 (CDT)
+        Tue, 20 Apr 2021 16:28:57 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 451E744A0
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Apr 2021 15:28:24 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id YwyUlhprub8LyYwyUljh7d; Tue, 20 Apr 2021 15:27:58 -0500
+        id Ywyule2Lq1cHeYwyullpD8; Tue, 20 Apr 2021 15:28:24 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,35 +34,35 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oX7kcc6oTUH4hCr9MNRS/mgNqZEzNoA6YEngI4lAQ3w=; b=m3evWBu/v+Ol3BZL0pPhDfRsyy
-        QhunriesClaCHCzAI3i+vONHutIjnv0OCufI9cnPrjUTpPV8+N26xJGthktTICwiSNmE7PlRVoKOr
-        lSOi9fDV7KCG+kSP+Mh/V9qK2khk9SCeMsB5nDRAhtPgS8EX1FHFJ1ul736Il7Ph/AuHL4+GuQaIe
-        Sj2kE5aCFyoUvyiGIpXuxlpY0QFtTPjvFmEdTOpjXrO//vmUkxgxT3OeYh3pf2SeMii8xxfAWMB06
-        aefJkysCWf4rbCXgW9PLcSYgiAO6vWac8Me3TN4mWz4O60JZbtU1ase5ozztnt4orVIcpDtpsJuiV
-        h1rdocAQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49070 helo=[192.168.15.8])
+        bh=iAn70tR/fd1yZfaAabH+Y/BPcV703Uz3rtYuuggVBZs=; b=jF3UcFo7Dhq7RqiPQ4Jq1xsO1n
+        kPff+Yzqk0rWnJqLut/DI+R7kd3gUPa0814W+JmABs4vHrHMCxukQMcL/BOGxRxeYLvETjcTan7Na
+        kco1MwcKAjiSAU4ZC0LkTUqabv4jzTHOhmGmiOaZpLQFGFvnNT6ci2xm1M6biPvBzVJ4rg+eUtdc3
+        DtFVRKkCUBQVLV20muE9JYfw2Pho/pDcmtnc/9Zw8XwYLZt6YUdMZJg79HjjprR06SoLmYs3Y/suh
+        RjDL90g5SR4tcg/31JjU5P0Qt4cuOtK/kkL7hIP/RnsA6ZCQqnsjBcNVdiqqQ/Az8oWeKDjZ2zuIj
+        4GRQLrqw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:49074 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lYwyS-00397i-70; Tue, 20 Apr 2021 15:27:56 -0500
-Subject: Re: [PATCH 016/141] nfsd: Fix fall-through warnings for Clang
+        id 1lYwyq-0039sF-PK; Tue, 20 Apr 2021 15:28:20 -0500
+Subject: Re: [PATCH 010/141] ima: Fix fall-through warnings for Clang
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <cover.1605896059.git.gustavoars@kernel.org>
- <0669408377bdc6ee87b214b2756465a6edc354fc.1605896059.git.gustavoars@kernel.org>
- <BF1128CE-4339-4145-9766-4EE7A5F58B5F@oracle.com>
- <20201123224605.GF21644@embeddedor>
+ <ae416f97079da13568026228d930e9e59118cc4c.1605896059.git.gustavoars@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <eb3be82d-1930-673d-22e6-e76a5bc210b8@embeddedor.com>
-Date:   Tue, 20 Apr 2021 15:28:13 -0500
+Message-ID: <77650781-7088-21b7-aa8e-8e5fbf81920e@embeddedor.com>
+Date:   Tue, 20 Apr 2021 15:28:36 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <20201123224605.GF21644@embeddedor>
+In-Reply-To: <ae416f97079da13568026228d930e9e59118cc4c.1605896059.git.gustavoars@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -74,13 +74,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lYwyS-00397i-70
+X-Exim-ID: 1lYwyq-0039sF-PK
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49070
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:49074
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 207
+X-Email-Count: 217
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -95,54 +95,48 @@ Thanks
 --
 Gustavo
 
-On 11/23/20 16:46, Gustavo A. R. Silva wrote:
-> On Fri, Nov 20, 2020 at 01:27:51PM -0500, Chuck Lever wrote:
->>
->>
->>> On Nov 20, 2020, at 1:26 PM, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
->>>
->>> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
->>> warnings by explicitly adding a couple of break statements instead of
->>> just letting the code fall through to the next case.
->>>
->>> Link: https://github.com/KSPP/linux/issues/115
->>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>> ---
->>> fs/nfsd/nfs4state.c | 1 +
->>> fs/nfsd/nfsctl.c    | 1 +
->>> 2 files changed, 2 insertions(+)
->>>
->>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->>> index d7f27ed6b794..cdab0d5be186 100644
->>> --- a/fs/nfsd/nfs4state.c
->>> +++ b/fs/nfsd/nfs4state.c
->>> @@ -3113,6 +3113,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->>> 			goto out_nolock;
->>> 		}
->>> 		new->cl_mach_cred = true;
->>> +		break;
->>> 	case SP4_NONE:
->>> 		break;
->>> 	default:				/* checked by xdr code */
->>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
->>> index f6d5d783f4a4..9a3bb1e217f9 100644
->>> --- a/fs/nfsd/nfsctl.c
->>> +++ b/fs/nfsd/nfsctl.c
->>> @@ -1165,6 +1165,7 @@ static struct inode *nfsd_get_inode(struct super_block *sb, umode_t mode)
->>> 		inode->i_fop = &simple_dir_operations;
->>> 		inode->i_op = &simple_dir_inode_operations;
->>> 		inc_nlink(inode);
->>> +		break;
->>> 	default:
->>> 		break;
->>> 	}
->>> -- 
->>> 2.27.0
->>>
->>
->> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+On 11/20/20 12:25, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+> warnings by explicitly adding multiple break statements instead of just
+> letting the code fall through to the next case.
 > 
-> Thanks, Chuck.
-> --
-> Gustavo
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  security/integrity/ima/ima_main.c   | 1 +
+>  security/integrity/ima/ima_policy.c | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 2d1af8899cab..600b97677085 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -743,6 +743,7 @@ int ima_load_data(enum kernel_load_data_id id, bool contents)
+>  			pr_err("impossible to appraise a module without a file descriptor. sig_enforce kernel parameter might help\n");
+>  			return -EACCES;	/* INTEGRITY_UNKNOWN */
+>  		}
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 9b5adeaa47fc..ea634fc3b82f 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -566,6 +566,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+>  			rc = ima_filter_rule_match(secid, rule->lsm[i].type,
+>  						   Audit_equal,
+>  						   rule->lsm[i].rule);
+> +			break;
+>  		default:
+>  			break;
+>  		}
+> @@ -802,6 +803,7 @@ void __init ima_init_policy(void)
+>  		add_rules(default_measurement_rules,
+>  			  ARRAY_SIZE(default_measurement_rules),
+>  			  IMA_DEFAULT_POLICY);
+> +		break;
+>  	default:
+>  		break;
+>  	}
 > 
