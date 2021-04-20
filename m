@@ -2,119 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA63C433B4
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 22:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48EEC433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 00:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86DEB6108B
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Apr 2021 22:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C0E613AE
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Apr 2021 00:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232788AbhDSW7O (ORCPT
+        id S229913AbhDTAQr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Apr 2021 18:59:14 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.101]:32137 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233331AbhDSW7E (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Apr 2021 18:59:04 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 48ED71309A
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Apr 2021 17:58:33 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id YcqflHeEc1cHeYcqflQWqq; Mon, 19 Apr 2021 17:58:33 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HSwcUpoOJnXwy9FUWCUDqISxnv3zkq1DVf8wvqzFEr0=; b=BvljQjnbdpu8RmeO4AFnQNsFrG
-        NidTTAVI57LZ/J2KDjmbAu7FNej4A6OqWy0McVvbePr1On80nZDp5d6dSdFLLtoXvfqalwR/mtox5
-        vfu7kaWx0KLLVyZ/PosuE8v8JjIOtytLvU7MbVb5zSrPu91Ph1caCNssqaZp9zcJJQj2y/er+2PFS
-        hX+Y47e2dakcdxmAf8/3vpInY9DiLqH+HVOPB5utF++XyeO8IPnAuFGdjfvZAxGS8gP2O8LTQzmc1
-        kr6oXcd1YuK5Wf82wKLg29FuGD2Y5sVty7f79O2n+sZseztgxiE2hoN7uym6RNvrUTRrccEHd11ge
-        jChUgS+g==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48156 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lYcqb-0044Xd-ON; Mon, 19 Apr 2021 17:58:29 -0500
-Subject: Re: [PATCH RESEND][next] rtl8xxxu: Fix fall-through warnings for
- Clang
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jes Sorensen <Jes.Sorensen@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20210305094850.GA141221@embeddedor>
- <20210417175201.280F9C4338A@smtp.codeaurora.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <0b096033-7daf-fae7-9ea9-37038b979616@embeddedor.com>
-Date:   Mon, 19 Apr 2021 17:58:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Mon, 19 Apr 2021 20:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229839AbhDTAQq (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 19 Apr 2021 20:16:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D0BFE6109E;
+        Tue, 20 Apr 2021 00:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618877775;
+        bh=RuGZCj+sX5ZTL28y992V3ayzipRD8egJRGrwzm9ZpZ4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bidhB3aQPkctWPKgxS8fzdGp9Dk84PrJWl2pA3v/8CgnjtvRwlPRZxh02VWbFV+83
+         vyBidcnXeBtEEFoKzRFO+7nm+/WAYbseplJRCkmwpJGPYREYfH+w3+bD02ZbBoaeZt
+         w20w52QnIWRpv+VL0E3dI9WBRp3weUM8r4iHKe6LusR8RyC+5j7i/8ajPbSE1c9xDU
+         XnRYGWKx9FS57qriQjNJ+WpQ8oYUzktw9jq+b85eGPzBYXjsBAd9e/n5QHQyq1ZpHI
+         Smeeah7bRtTiA6GnNyDQycKCJjy8rw9qgmahN7zbhtJOSfmThtr0tTWPScwpRw1DAQ
+         vvl5ruQlVbEkA==
+Date:   Mon, 19 Apr 2021 19:16:31 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ralph Metzler <rjkm@metzlerbros.de>,
+        Matthias Benesch <twoof7@freenet.de>,
+        Oliver Endriss <o.endriss@gmx.de>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH] media: ngene: Fix out-of-bounds bug in
+ ngene_command_config_free_buf()
+Message-ID: <20210420001631.GA45456@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20210417175201.280F9C4338A@smtp.codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lYcqb-0044Xd-ON
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48156
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Fix an 11-year old bug in ngene_command_config_free_buf() while
+addressing the following warnings caught with -Warray-bounds:
 
+arch/alpha/include/asm/string.h:22:16: warning: '__builtin_memcpy' offset [12, 16] from the object at 'com' is out of the bounds of referenced subobject 'config' with type 'unsigned char' at offset 10 [-Warray-bounds]
+arch/x86/include/asm/string_32.h:182:25: warning: '__builtin_memcpy' offset [12, 16] from the object at 'com' is out of the bounds of referenced subobject 'config' with type 'unsigned char' at offset 10 [-Warray-bounds]
 
-On 4/17/21 12:52, Kalle Valo wrote:
-> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-> 
->> In preparation to enable -Wimplicit-fallthrough for Clang, fix
->> multiple warnings by replacing /* fall through */ comments with
->> the new pseudo-keyword macro fallthrough; instead of letting the
->> code fall through to the next case.
->>
->> Notice that Clang doesn't recognize /* fall through */ comments as
->> implicit fall-through markings.
->>
->> Link: https://github.com/KSPP/linux/issues/115
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Patch applied to wireless-drivers-next.git, thanks.
-> 
-> bf3365a856a1 rtl8xxxu: Fix fall-through warnings for Clang
+The problem is that the original code is trying to copy 6 bytes of
+data into a one-byte size member _config_ of the wrong structue
+FW_CONFIGURE_BUFFERS, in a single call to memcpy(). This causes a
+legitimate compiler warning because memcpy() overruns the length
+of &com.cmd.ConfigureBuffers.config. It seems that the right
+structure is FW_CONFIGURE_FREE_BUFFERS, instead, because it contains
+6 more members apart from the header _hdr_. Also, the name of
+the function ngene_command_config_free_buf() suggests that the actual
+intention is to ConfigureFreeBuffers, instead of ConfigureBuffers
+(which configuration takes place in the function ngene_command_config_buf(),
+above).
 
-Thanks for this, Kalle.
+Fix this by enclosing those 6 members of struct FW_CONFIGURE_FREE_BUFFERS
+into new struct config, and use &com.cmd.ConfigureFreeBuffers.config as
+the destination address, instead of &com.cmd.ConfigureBuffers.config,
+when calling memcpy().
 
-Could you take this series too, please?
+This also helps with the ongoing efforts to globally enable
+-Warray-bounds and get us closer to being able to tighten the
+FORTIFY_SOURCE routines on memcpy().
 
-https://lore.kernel.org/lkml/cover.1618442265.git.gustavoars@kernel.org/
+Link: https://github.com/KSPP/linux/issues/109
+Fixes: dae52d009fc9 ("V4L/DVB: ngene: Initial check-in")
+Cc: stable@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/media/pci/ngene/ngene-core.c |  2 +-
+ drivers/media/pci/ngene/ngene.h      | 14 ++++++++------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
-Thanks
---
-Gustavo
+diff --git a/drivers/media/pci/ngene/ngene-core.c b/drivers/media/pci/ngene/ngene-core.c
+index 07f342db6701..7481f553f959 100644
+--- a/drivers/media/pci/ngene/ngene-core.c
++++ b/drivers/media/pci/ngene/ngene-core.c
+@@ -385,7 +385,7 @@ static int ngene_command_config_free_buf(struct ngene *dev, u8 *config)
+ 
+ 	com.cmd.hdr.Opcode = CMD_CONFIGURE_FREE_BUFFER;
+ 	com.cmd.hdr.Length = 6;
+-	memcpy(&com.cmd.ConfigureBuffers.config, config, 6);
++	memcpy(&com.cmd.ConfigureFreeBuffers.config, config, 6);
+ 	com.in_len = 6;
+ 	com.out_len = 0;
+ 
+diff --git a/drivers/media/pci/ngene/ngene.h b/drivers/media/pci/ngene/ngene.h
+index 84f04e0e0cb9..3d296f1998a1 100644
+--- a/drivers/media/pci/ngene/ngene.h
++++ b/drivers/media/pci/ngene/ngene.h
+@@ -407,12 +407,14 @@ enum _BUFFER_CONFIGS {
+ 
+ struct FW_CONFIGURE_FREE_BUFFERS {
+ 	struct FW_HEADER hdr;
+-	u8   UVI1_BufferLength;
+-	u8   UVI2_BufferLength;
+-	u8   TVO_BufferLength;
+-	u8   AUD1_BufferLength;
+-	u8   AUD2_BufferLength;
+-	u8   TVA_BufferLength;
++	struct {
++		u8   UVI1_BufferLength;
++		u8   UVI2_BufferLength;
++		u8   TVO_BufferLength;
++		u8   AUD1_BufferLength;
++		u8   AUD2_BufferLength;
++		u8   TVA_BufferLength;
++	} __packed config;
+ } __attribute__ ((__packed__));
+ 
+ struct FW_CONFIGURE_UART {
+-- 
+2.27.0
 
