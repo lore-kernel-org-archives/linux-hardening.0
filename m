@@ -2,70 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE2FC433B4
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 03:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA67C433B4
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 05:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1393961405
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 03:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA5B613D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 05:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234841AbhDUDLi (ORCPT
+        id S235208AbhDUFXx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Apr 2021 23:11:38 -0400
-Received: from smtprelay0006.hostedemail.com ([216.40.44.6]:58010 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S233982AbhDUDLi (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Apr 2021 23:11:38 -0400
-Received: from omf01.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id E606A180A4C06;
-        Wed, 21 Apr 2021 03:11:04 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf01.hostedemail.com (Postfix) with ESMTPA id E390A1727B;
-        Wed, 21 Apr 2021 03:11:03 +0000 (UTC)
-Message-ID: <0d799df884ec9088501d6699c6ed97728eebad53.camel@perches.com>
-Subject: Re: [PATCH][next] xfs: Fix fall-through warnings for Clang
-From:   Joe Perches <joe@perches.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wed, 21 Apr 2021 01:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235199AbhDUFXu (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 21 Apr 2021 01:23:50 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E3E6F61182;
+        Wed, 21 Apr 2021 05:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618982597;
+        bh=sR6Vvp0DRmKaF47VkWpSGNUetTMoFcXTnaUl1zJsCDg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B0suTRT7RG67h/eYTHWt63hImbZfhewvAoStWXByZ1mFL6Fm/oY71R/E22DVX5QsO
+         w9uUKUpIzK2t++VNt5ZFMdqWKq3h1qYXnkNmWyWKz8a2BJ1Q+V8bqhW20RB3eM7cDf
+         l6SpDZuOm2Hmnhdi6+Np0sLMiwg3O5hVBWh2Bh/Eq7u5TjG+hZQsQL4wkFzEb27x3b
+         SL87z8aQTBM7EtqS0JGuGyAQN17vrOOvPWIdeAdwWxK+GIJmH8Ra/J8zhZpehk/bk4
+         x4eu+2KjxwjGAhA3i5m6O04I/Oes/RQJVtlA4cWxzMbBUITBF10E0eRTvewyk/OP5e
+         NSeKPpV86kC7w==
+Date:   Wed, 21 Apr 2021 08:23:13 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Date:   Tue, 20 Apr 2021 20:11:02 -0700
-In-Reply-To: <20210420233850.GQ3122264@magnolia>
-References: <20210420230652.GA70650@embeddedor>
-         <20210420233850.GQ3122264@magnolia>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+Subject: Re: [PATCH RESEND][next] net/mlx4: Fix fall-through warnings for
+ Clang
+Message-ID: <YH+2wRRzBsSI/NM2@unreal>
+References: <20210305084847.GA138343@embeddedor>
+ <808373f4-25d0-9e7e-fe16-f8b279d1ebab@embeddedor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: n8q5t1jinm7iudrkas9iyu5kh5yn19cp
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: E390A1727B
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18TDD6CZMrsoSDQXol/66jarNtjAfzvFAs=
-X-HE-Tag: 1618974663-505523
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <808373f4-25d0-9e7e-fe16-f8b279d1ebab@embeddedor.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2021-04-20 at 16:38 -0700, Darrick J. Wong wrote:
-> On Tue, Apr 20, 2021 at 06:06:52PM -0500, Gustavo A. R. Silva wrote:
-> > In preparation to enable -Wimplicit-fallthrough for Clang, fix
-> > the following warnings by replacing /* fall through */ comments,
-> > and its variants, with the new pseudo-keyword macro fallthrough:
-[]
-> > Notice that Clang doesn't recognize /* fall through */ comments as
-> > implicit fall-through markings, so in order to globally enable
-> > -Wimplicit-fallthrough for Clang, these comments need to be
-> > replaced with fallthrough; in the whole codebase.
+On Tue, Apr 20, 2021 at 03:24:19PM -0500, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping: who can take this, please?
+
+Why don't you fix Clang instead?
+Why do we have this churn for something that correct?
+
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> On 3/5/21 02:48, Gustavo A. R. Silva wrote:
+> > In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+> > by explicitly adding a break statement instead of just letting the code
+> > fall through to the next case.
 > > 
 > > Link: https://github.com/KSPP/linux/issues/115
+> > Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> I've already NAKd this twice, so I guess I'll NAK it a third time.
-
-Sorry, I've must have missed it before.  Why did you NAK this?
-
+> > ---
+> >  drivers/net/ethernet/mellanox/mlx4/resource_tracker.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> > index a99e71bc7b3c..771b92019af1 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+> > @@ -2660,6 +2660,7 @@ int mlx4_FREE_RES_wrapper(struct mlx4_dev *dev, int slave,
+> >  	case RES_XRCD:
+> >  		err = xrcdn_free_res(dev, slave, vhcr->op_modifier, alop,
+> >  				     vhcr->in_param, &vhcr->out_param);
+> > +		break;
+> >  
+> >  	default:
+> >  		break;
+> > 
