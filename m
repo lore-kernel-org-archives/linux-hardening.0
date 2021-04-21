@@ -4,115 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AF4C433ED
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 23:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9E4C433ED
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 23:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A469C61404
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 23:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415186142B
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 23:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343652AbhDUXJd (ORCPT
+        id S244170AbhDUXmk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Apr 2021 19:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59608 "EHLO
+        Wed, 21 Apr 2021 19:42:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343639AbhDUXJc (ORCPT
+        with ESMTP id S244150AbhDUXmj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Apr 2021 19:09:32 -0400
-X-Greylist: delayed 298 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 21 Apr 2021 16:08:58 PDT
+        Wed, 21 Apr 2021 19:42:39 -0400
 Received: from sequoia-grove.ad.secure-endpoints.com (sequoia-grove.secure-endpoints.com [IPv6:2001:470:1f07:f77:70f5:c082:a96a:5685])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8617C06174A
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Apr 2021 16:08:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF20C06174A
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Apr 2021 16:42:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
-        d=auristor.com; s=MDaemon; r=y; t=1619046237; x=1619651037;
+        d=auristor.com; s=MDaemon; r=y; t=1619048522; x=1619653322;
         i=jaltman@auristor.com; q=dns/txt; h=Subject:To:Cc:References:
         From:Organization:Message-ID:Date:User-Agent:MIME-Version:
-        In-Reply-To:Content-Type; bh=svaA56JyCVBMA4sH8+QhPKmyZQzC30F8uYq
-        c8IJtzS4=; b=twFeLca/2kdXVieHYAGoPhLu2xtqdOhAmqbT4Av+ppVP1t2jVtY
-        /tXlcPxOOJJ+nG/SvV2arzIfubt3QYSIVXRlxRfvB4tpdfUYS0qiClalvid/UHvU
-        mhCk5J9vCttua5HpMJYDkQqCTJR8cSk4hPm3fvCdlEGn0f0hnC5lHeWQ=
+        In-Reply-To:Content-Type; bh=siwg87SXJYiTWdziVpoZ1/WZRB5wq4B9NwI
+        qCSHRR8g=; b=rw7OjJ/vGqPAxymRRG7lpzeJ7Lc9a9NulEyrry5On/2FylijJtR
+        /dn70eT/e+HAdoDRhxXOZqoax+1HUmHJ3IMVPWTwvUGJ1+LXw7MmiYGwU4I6/uT0
+        v661PU/IkTzkOD6gDwsWqxpgMduj1ZEq1uwKzGPMxtU1GFOn8pIgM7s0=
 X-MDAV-Result: clean
-X-MDAV-Processed: sequoia-grove.ad.secure-endpoints.com, Wed, 21 Apr 2021 19:03:57 -0400
+X-MDAV-Processed: sequoia-grove.ad.secure-endpoints.com, Wed, 21 Apr 2021 19:42:02 -0400
 Received: from [IPv6:2603:7000:73d:4f22:a130:f9e2:913b:3942] by auristor.com (IPv6:2001:470:1f07:f77:28d9:68fb:855d:c2a5) (MDaemon PRO v21.0.1) 
-        with ESMTPSA id md5001002923289.msg; Wed, 21 Apr 2021 19:03:56 -0400
+        with ESMTPSA id md5001002923297.msg; Wed, 21 Apr 2021 19:42:02 -0400
 X-MDRemoteIP: 2603:7000:73d:4f22:a130:f9e2:913b:3942
 X-MDHelo: [IPv6:2603:7000:73d:4f22:a130:f9e2:913b:3942]
-X-MDArrival-Date: Wed, 21 Apr 2021 19:03:56 -0400
+X-MDArrival-Date: Wed, 21 Apr 2021 19:42:02 -0400
 X-MDOrigin-Country: United States, North America
 X-Authenticated-Sender: jaltman@auristor.com
 X-Return-Path: prvs=1745ad0e69=jaltman@auristor.com
 X-Envelope-From: jaltman@auristor.com
 X-MDaemon-Deliver-To: linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] afs: Fix fall-through warnings for Clang
+Subject: Re: [PATCH RESEND][next] rxrpc: Fix fall-through warnings for Clang
 To:     "Gustavo A. R. Silva (gustavoars@kernel.org)" <gustavoars@kernel.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210420211615.GA51432@embeddedor>
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210305091900.GA139713@embeddedor>
 From:   Jeffrey E Altman <jaltman@auristor.com>
 Organization: AuriStor, Inc.
-Message-ID: <45926d81-cfae-8465-84e6-af76d668c1ef@auristor.com>
-Date:   Wed, 21 Apr 2021 19:03:47 -0400
+Message-ID: <f843303f-435f-7b37-a717-0026492d5342@auristor.com>
+Date:   Wed, 21 Apr 2021 19:41:56 -0400
 User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210420211615.GA51432@embeddedor>
+In-Reply-To: <20210305091900.GA139713@embeddedor>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="X0jWOGGYxsMP3iN5tfoIEdjkPxZix9kpE"
+ boundary="vZGXR53gPZweKfBp9WjYp9mam63MimH4v"
 X-MDCFSigsAdded: auristor.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---X0jWOGGYxsMP3iN5tfoIEdjkPxZix9kpE
-Content-Type: multipart/mixed; boundary="gRcyHZ2wmjW9ayFyvkpfEJhKRdynUjywo";
+--vZGXR53gPZweKfBp9WjYp9mam63MimH4v
+Content-Type: multipart/mixed; boundary="wFwjbYYuEXESC2Po1enD2cAyA32wXLtF6";
  protected-headers="v1"
 From: Jeffrey E Altman <jaltman@auristor.com>
 To: "Gustavo A. R. Silva (gustavoars@kernel.org)" <gustavoars@kernel.org>,
- David Howells <dhowells@redhat.com>
-Cc: linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Message-ID: <45926d81-cfae-8465-84e6-af76d668c1ef@auristor.com>
-Subject: Re: [PATCH v2][next] afs: Fix fall-through warnings for Clang
-References: <20210420211615.GA51432@embeddedor>
-In-Reply-To: <20210420211615.GA51432@embeddedor>
+ David Howells <dhowells@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>
+Cc: linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Message-ID: <f843303f-435f-7b37-a717-0026492d5342@auristor.com>
+Subject: Re: [PATCH RESEND][next] rxrpc: Fix fall-through warnings for Clang
+References: <20210305091900.GA139713@embeddedor>
+In-Reply-To: <20210305091900.GA139713@embeddedor>
 
---gRcyHZ2wmjW9ayFyvkpfEJhKRdynUjywo
+--wFwjbYYuEXESC2Po1enD2cAyA32wXLtF6
 Content-Type: multipart/mixed;
- boundary="------------92303E2F8BC9BFB02BE72ECD"
+ boundary="------------BB28084041891EC2EF6E9249"
 Content-Language: en-US
 
 This is a multi-part message in MIME format.
---------------92303E2F8BC9BFB02BE72ECD
+--------------BB28084041891EC2EF6E9249
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 
-On 4/20/2021 5:16 PM, Gustavo A. R. Silva (gustavoars@kernel.org) wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple=
+On 3/5/2021 4:19 AM, Gustavo A. R. Silva (gustavoars@kernel.org) wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warnin=
+g
+> by explicitly adding a break statement instead of letting the code fall=
 
-> warnings by explicitly adding multiple fallthrough pseudo-keywords
-> in places where the code is intended to fall through to the next
-> case.
+> through to the next case.
 >=20
 > Link: https://github.com/KSPP/linux/issues/115
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->   - Place blank line after the fallthrough markings, not before.
->     Link: https://lore.kernel.org/linux-hardening/748935.1606147853@war=
-thog.procyon.org.uk/
 
-This change looks good to me.
+This change looks good to me.  Although I would also be happy with a=20
+fallthrough statement being added instead.
 
 Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
 
 
-
---------------92303E2F8BC9BFB02BE72ECD
+--------------BB28084041891EC2EF6E9249
 Content-Type: text/x-vcard; charset=utf-8;
  name="jaltman.vcf"
 Content-Transfer-Encoding: quoted-printable
@@ -132,30 +129,30 @@ version:2.1
 end:vcard
 
 
---------------92303E2F8BC9BFB02BE72ECD--
+--------------BB28084041891EC2EF6E9249--
 
---gRcyHZ2wmjW9ayFyvkpfEJhKRdynUjywo--
+--wFwjbYYuEXESC2Po1enD2cAyA32wXLtF6--
 
---X0jWOGGYxsMP3iN5tfoIEdjkPxZix9kpE
+--vZGXR53gPZweKfBp9WjYp9mam63MimH4v
 Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="OpenPGP_signature"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsF5BAABCAAjFiEE+kRK8Zf0SbJM8+aZ93pzVZK2mgQFAmCAr1MFAwAAAAAACgkQ93pzVZK2mgRB
-Jw/9EWFZCGZiOd3lYfyWJL2CYtAJTNp62QgG7NLp6zgMsDGPDRc8GzE54EcvhdKoCJSRm069RaC8
-kSRxs8gQ0+pbdb26a8jkKSCIU1sOAqXXXju/aRLGHmFyRx5DkAj2gZW5cpV6KopnWky19B9LwuOV
-O15ZY2iANiPlee/iRva4fSBkhFXVYLaFDhYxgP3zGn10U9U88NSZ/OVqGoEicBkeqyRY8V99Ahy2
-u00Y5kSNURTRlQvZonw7qqASPIX+R/30weOY5OklrP2VDcm2G9S9VEqqlWb6k/LI4XaHgijR1t4A
-ZEHQKc65LVO7IMS4ufwCmf0TYtAdjLFwoBQPGU/QSJCJcg63rjtYi4nSMwyFW5m0JUfON7fGgze7
-IzN6YnU95yTSei2Nbq1t3zJ0QCjqANH1BDmpSWOS8x1+rzuSik7BaF7nSF32+xpa4LyOfbfy3vkH
-Dqbk7v0H0XRbG5cKOt9cADakcDT/vjauMR3Yuwu6oE0yG6KymaazOD+nHmJA5zPYpX++0memWV7v
-00CQai0opoJKKREXN9ttDhDDKFJMxvER6prP5U+QZ/mSFaKaPRy8SHlZFwIx/4v3DX8dbARp6/MT
-U0aokm1ILIatLoxkanB4jrzGOsVbiDSR7DmkWZx6xtnFGpv7J8rCyHA1zY6nQTUiVgcpeyZT9net
-TGc=
-=4w1V
+wsF5BAABCAAjFiEE+kRK8Zf0SbJM8+aZ93pzVZK2mgQFAmCAuEQFAwAAAAAACgkQ93pzVZK2mgQ6
+vxAAnvRRrMO46SO6sEIk7UdNXwggTg09B+Gs5/g2WX+GFeJyhi/Ap2a5C0sx9phaGC2a31dTqsXQ
+dwRXt/8V0l+Lx1tlnyhUY/D2z0YMA2vHxfYo+ksmGcoNbzXg0imuCiCd7EUrp5GEaVmSziFzdQxq
+P/Di8xePJymwRKXwm9FRWGQOe0zxExFWDqEjQm2NIvowzCxVOdotC8+pC/m3fIkW6wGygSvkeVCf
+ZX620oebCBOym56oI/QPm/HOpm+i4GWxpHIwbAmbYzEmxsG7grFJQK2Eu4CGt/Vw1tZCskzvY/8p
+Q9UMATgg/i5jpvNphQZ74BzfWuhS5qowJF0NMjFwbZ7BDHo68iOX2cKhOahi/rqys1I9IgcX13K3
+NZ2BmJrgGOAgyUl1kr/8pXFjRkLTDZ2f4vhIDiiq69l6drOMET6GyLbZmXrvxYo0FvrE5WzkARgO
+BWZFDFkNUJpWAwgTC4mnbY11vsL0Jar+36tuMrbDn5M9/bkzDl+TojKwbpyNb8mdHZNZ6nBq16rC
+hvBfrf/Tq/GRcVG2kWdaEeu0aazSPL4/MwhoiqvyXc+y++iJb4KV39x16iMSDScMQtnnez/GmrJB
+dVXd+zeK9r4Gww4appSWeLVMZTawBgJtJm5V/tfbm/wulW/pjNLdPOg3BIGiEi/ST2d9RuiaPMaA
+Em8=
+=JlT8
 -----END PGP SIGNATURE-----
 
---X0jWOGGYxsMP3iN5tfoIEdjkPxZix9kpE--
+--vZGXR53gPZweKfBp9WjYp9mam63MimH4v--
 
