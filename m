@@ -2,159 +2,166 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,PDS_BAD_THREAD_QP_64,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1629C433B4
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 14:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA24C433B4
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 17:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86B41613CE
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 14:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FC36113B
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Apr 2021 17:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243639AbhDUOwJ (ORCPT
+        id S242322AbhDURlF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Apr 2021 10:52:09 -0400
-Received: from mail-co1nam11on2059.outbound.protection.outlook.com ([40.107.220.59]:57024
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234550AbhDUOwJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Apr 2021 10:52:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ann57bPZoqe0sH/q3qSUG67qBZtgLVrHZuIxkyoMdctnEYsCetA6g/NPmi06Em37gUEgVlfwtbA//MW74MQmCTqojujuQ9GuYGncyM4JNMOGXzz/kS3+vMsI2rOshBQ0eCX0/pkLuLgqKPy1VjfPqUh7htUi2UFqvKVFhmDsBe9+bDaj1AIF5bTrEL6Ve/uv93tvjC5cOGKvJdDcEa3l5j36zBm/DUpfXh+iNjIYodgdrLn4TAijytKzZe4BQxqHSuJD6btLb4AhyerkP4oAjwoSagCYva3uP6sO0UmHftgBQfYs5yQtqTW7b6D4gEaqpehPAuevS7Mng0E+Esl1Cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+11aCm1e3T6/R2EyORgdqBbNjlehDeHsJ14E4eXm1Sw=;
- b=lVTvwt9Iul3ad+79LKekCSL2qgtwym1Dy4hQwQflQ2MG5fD5FGZX46Fn2P4jQRd4A/4D3fuh5LSIJ58U8TONy9+z63uAgSy7uDhZKuhFKwTyhtJHKKmPS8lDW3xsQG68KpfCOZ+giI0RyW4UgtXzqqNQbS56Nq6MfN2E/AGx1GSKpblFI8nPTkBT2XaaL13H/qWjVYCBjoUMHuVsLZDVLsvRQbKHb2SMkeSgL9cTdGW5Sodow5EYKjcWCOUHscSIjF+K3cJplms0fITbyfdkkeJ0Wak/JzCBQU+MGudsIIj6G9MtDDMC5YFrxnl2HAFVLzO1nL6oQfdI2O6eNely6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+        Wed, 21 Apr 2021 13:41:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241869AbhDURlA (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 21 Apr 2021 13:41:00 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10039C06138A
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Apr 2021 10:40:27 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id p2so15126325pgh.4
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Apr 2021 10:40:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+11aCm1e3T6/R2EyORgdqBbNjlehDeHsJ14E4eXm1Sw=;
- b=kicKopLknSm5WI2s/fkvGewDFFoN6FhDfUvI+mFtkzXH2nMy4/Z08o2mnQqlNCpbIGi1rtt5pVauK8lDKTCoDxBHHAhjpQFXTMvuT71dkRuznWGAb6+EE5LpFhrZiCGBXeEdtOrJEkAf4ur3JiptFyBV+s45buZmOU/niAfV9Eg=
-Received: from DM6PR11MB3964.namprd11.prod.outlook.com (2603:10b6:5:19c::28)
- by DM5PR1101MB2121.namprd11.prod.outlook.com (2603:10b6:4:50::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.19; Wed, 21 Apr
- 2021 14:51:34 +0000
-Received: from DM6PR11MB3964.namprd11.prod.outlook.com
- ([fe80::3156:d3e2:eb8e:d82d]) by DM6PR11MB3964.namprd11.prod.outlook.com
- ([fe80::3156:d3e2:eb8e:d82d%6]) with mapi id 15.20.4042.024; Wed, 21 Apr 2021
- 14:51:34 +0000
-From:   "Xue, Ying" <Ying.Xue@windriver.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jon Maloy <jmaloy@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH RESEND][next] tipc: Fix fall-through warnings for Clang
-Thread-Topic: [PATCH RESEND][next] tipc: Fix fall-through warnings for Clang
-Thread-Index: AQHXEaFxo2BHz0QaeEKXUNd+t+OJ3aq/VSvA
-Date:   Wed, 21 Apr 2021 14:51:33 +0000
-Message-ID: <DM6PR11MB3964D94D53B98CBA9A25892484479@DM6PR11MB3964.namprd11.prod.outlook.com>
-References: <20210305092504.GA140204@embeddedor>
-In-Reply-To: <20210305092504.GA140204@embeddedor>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=windriver.com;
-x-originating-ip: [147.11.252.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 372355a6-f2b8-42df-94d8-08d904d4f546
-x-ms-traffictypediagnostic: DM5PR1101MB2121:
-x-microsoft-antispam-prvs: <DM5PR1101MB21215349813CBAAEF3F0CC5084479@DM5PR1101MB2121.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rPkMIKsPC+8vCcguz/cwxl5FYr9j3tFej6Spk6JJ6LZgjP0ouf4YNzfAyH6j6lwGIAInWv+yul9tNSJHANn9/LMJ0fsJKJn9adPm+b1Gb5tI32ioLVem98wL2YRZegWRvpFn+4Wna4aYXPBtLxZex9ZPPcYVMY90QqOPUsCAglHyuJVIzUA9E44M0cMIFjLa9de9HwMIPhNs1wcDSAb9UrNauWHhH85eKaZodtXSDfCjMXF4cbnlviKWP4cXO+99EIkZVccWBlo1NriLrkKY7Z/FrYlTSe8jK7tywy86Hi+pZfSz2XnARrOUhFpzr6VBaMsQYNQYIO8jbukrK8sseArUXsyocURIBwiAS0Ko/sp4gOUFLLZPNA++cWrhsEahKYtdu2KLGuXJbX+7m5nzdSi5Mu5ITJVDMP+AE+q/QlSSxCp1q51fLrg6gsdBYLF93Mj2IDFZXXVEN6G9aFjxh8PuIXZy4RVja8UOtyBYVZKm0SGE85R9uytW5oeA1cnHKJPMYro8MCfr2UZUTYFKUB6NlgCdiCiM4RlkZBsmWps55Jey5Y5VnSoSSYTrV4ep+2UVOrAoCC5LMvRsmHSNDPeBMYm2drcaGAtepsqvSxhuJ359TUytPvPwRq5eFG1lQa7HbErBzeWXtMHOm9kLvJCIZJJ0SSxT7MbX01KDdU4PmBVw7vfjgksXXEoFYxTz
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3964.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(136003)(396003)(366004)(39830400003)(8676002)(64756008)(55016002)(478600001)(5660300002)(186003)(66476007)(2906002)(6506007)(66446008)(54906003)(33656002)(53546011)(316002)(66556008)(83380400001)(26005)(8936002)(66946007)(71200400001)(4326008)(122000001)(9686003)(7696005)(86362001)(966005)(110136005)(76116006)(52536014)(38100700002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?7rRmJRFFGBgwyeKOoxoKTbZ6oofm5w5M082OPWUyM0jQOo41Ah7C3BvAI6sD?=
- =?us-ascii?Q?MPpegZgX3i5pICQ2gJeGV9YoKX7tJPtFC/Hr/qQGpJ64taUMZesRNgowYdxM?=
- =?us-ascii?Q?e+IopjxkcH+yUH/1RMJP3vMyzOToRmIykooxPc+R8OzdOs0Yy92h10wKF9iC?=
- =?us-ascii?Q?Im9gX/wVHOZle6k9pc2zThddxBazJsjN8x2BNfyJ4EOcylNb369vmaVLXM+S?=
- =?us-ascii?Q?3XlLR1EaAvQuWCgsyQ3z3gPsJFgTCXCvfTOJFbzEyxlqr0+qawQomUrtxdQK?=
- =?us-ascii?Q?3rqwE9Q6E/9vtshDwk8dmdwdYD34GMzL+qZ1ICM0Xk7eoROpef1ZL/vC4QxJ?=
- =?us-ascii?Q?BPizhU5j9tZzML9hGEPqeBIDBKpOYR8cKRTBuogfnjoDtz+Y2Gll1rbC2w5S?=
- =?us-ascii?Q?Qjt8ChCntq0nJJpYQlHU1ti6tnAxZECdsaMliRfLQ4l8GhkW3Fo7NmrfiLSB?=
- =?us-ascii?Q?qVmeRn0f4RzVN85iG1NPHkeuJL6Nh53wdrGKRpe8JMIJuE0KlU1JdoQ+DdKu?=
- =?us-ascii?Q?RwhUBvJ/ZJneG1Lb8DY5KYhbJIHz2yCo3nD6OeXrL85Oon7n4vJfIkqGtlIy?=
- =?us-ascii?Q?xKOczKyKWigSyxweMn2+eovMAlMR/o+NGrap3nxyiStr6ssQL4wVRtnzEDSL?=
- =?us-ascii?Q?14MkwfqQv4d9eRUvYej+T+ZIYcoJWQ15GkYLOL4birCffad3opvCmH+2LBGm?=
- =?us-ascii?Q?AQsHE42LQO0jDwpJe0qyGvQDggm8dcQZz30s2mTmFU15jjT6qbmie3OoxRqw?=
- =?us-ascii?Q?O0qUoCaWaLlJtG1U8WimN2HctZbBL0Zz8DJwcrtwmcKx3Ilg/UD2ccB6leGQ?=
- =?us-ascii?Q?bKNO/+Z5oUcvEI0vb0GxZdMxQ/v5Kt+l01tYTxoDGBszTzbGJK2k94E1n7Fu?=
- =?us-ascii?Q?Z1CigvXqNPn6Yr6fnFasg95GK9jrHwkfYbBSgrcG9NkdcMvE1zOxuMARs4c9?=
- =?us-ascii?Q?5QKJON/K8RGS4TtTYE4KgGR+cjb2lx4mwV1QWiSVDetiP2KhQxu2T238nDS1?=
- =?us-ascii?Q?JaHJ8Ca4zWJ6xZRu9PXmAoG5zWtM/SVSqryScFT7vNYmSjKD5FI9UQx8BH+d?=
- =?us-ascii?Q?X3FHrr2CNY2h+Souxo2J0/i08ZvERqzxHsUeqMRWLd9fqOzsEmj0euV2e5PT?=
- =?us-ascii?Q?x2NsI96X8iyOQH3VOz12kouH89oWAtYDVNCBP9Lz+334CNw2HNCxR7fbF1+q?=
- =?us-ascii?Q?WWjrxewjPqaWB2/G3nBjOm54/PouXyXJqs3MyeHm9bv2wSlOD4TUKBtaF83C?=
- =?us-ascii?Q?QOEYcQKD+F262Apx+G3NPpyrwxAyvf5Yh48Bhvw/L2D6WpLexdHZtTtEutF4?=
- =?us-ascii?Q?dDkcURZlNVhHTTjCNW8OACRF?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=h/beBkqWPWtq3+yl17G4GLEbQfDSlnnJp5RXRR66KYE=;
+        b=cE0ORofprgoov158xmxjlX5mEid/m5laCX19wY+7OZffLWMAyu4RXrrYeIEa7iS9mW
+         zSNDddWAs9KTix7ZcMvjMulSqHoNTB3r6cgSok/jUsVlVoYId3I8bcU4kfTnDPzWnXIU
+         QbgdAPoqeRzIEGzsjsCiO8HMSyRXKLHi4ZBag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=h/beBkqWPWtq3+yl17G4GLEbQfDSlnnJp5RXRR66KYE=;
+        b=U3scjyvs5aZmnmYjuway4xQZKrghADfDQFsgHGD9CFZgCox9rwCDRQfGOcdh+oX/rz
+         FpBUWLRukCzxAsTHxsOmm0aXaimVBMhB94b7ryd8e5lpizjl79nCsCQJVUEcK6SmPOiq
+         zbJu4Nme/kONuOD3oYweF+E7/rHTFSSAX4HCcVe/qxQaK6p6fEmta5hxvz2uYaqV453n
+         EO/XLREyijsoKdSqkKh9P16oN73UlbiDMAtk7tNAuIyrhq6v2wpYpbEWtyHbYzTcKJuA
+         GCa1g6YdL6FfzbKG0q5oXQb3gXJ7pNrYtLNakuDfaNn2l5vk9PWOI3UaSxn1AIcqwoO+
+         p6dQ==
+X-Gm-Message-State: AOAM530vj7pHsANPx7o2rtHSGJUi6pcVonCRXrG5+mM72jwNj7IRyQZI
+        Y+ZgkOHpswp0OBysKB5eYErJ0Q==
+X-Google-Smtp-Source: ABdhPJw2VsFXVVPmA45ixsygoh7TW76jWkUpmaK+0w/xbWIpwp9qQGUbnQTlZg9rcsnkVLbLcnJhXQ==
+X-Received: by 2002:a63:5b5c:: with SMTP id l28mr22480973pgm.363.1619026826588;
+        Wed, 21 Apr 2021 10:40:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m9sm58735pgt.65.2021.04.21.10.40.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Apr 2021 10:40:25 -0700 (PDT)
+Date:   Wed, 21 Apr 2021 10:40:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ralph Metzler <rjkm@metzlerbros.de>,
+        Matthias Benesch <twoof7@freenet.de>,
+        Oliver Endriss <o.endriss@gmx.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] media: ngene: Fix out-of-bounds bug in
+ ngene_command_config_free_buf()
+Message-ID: <202104211039.31E9785@keescook>
+References: <20210420001631.GA45456@embeddedor>
 MIME-Version: 1.0
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3964.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 372355a6-f2b8-42df-94d8-08d904d4f546
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2021 14:51:34.3467
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QwPKEaSC9ZdmLHqGHzkWlovsl0Xq72UDKlpxwdWmAugjPbQoZwWL4rJF/1SUjef1JqwrILBmtuRHdElCEB8HDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210420001631.GA45456@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This patch looks good to me.
+On Mon, Apr 19, 2021 at 07:16:31PM -0500, Gustavo A. R. Silva wrote:
+> Fix an 11-year old bug in ngene_command_config_free_buf() while
+> addressing the following warnings caught with -Warray-bounds:
+> 
+> arch/alpha/include/asm/string.h:22:16: warning: '__builtin_memcpy' offset [12, 16] from the object at 'com' is out of the bounds of referenced subobject 'config' with type 'unsigned char' at offset 10 [-Warray-bounds]
+> arch/x86/include/asm/string_32.h:182:25: warning: '__builtin_memcpy' offset [12, 16] from the object at 'com' is out of the bounds of referenced subobject 'config' with type 'unsigned char' at offset 10 [-Warray-bounds]
+> 
+> The problem is that the original code is trying to copy 6 bytes of
+> data into a one-byte size member _config_ of the wrong structue
+> FW_CONFIGURE_BUFFERS, in a single call to memcpy(). This causes a
+> legitimate compiler warning because memcpy() overruns the length
+> of &com.cmd.ConfigureBuffers.config. It seems that the right
+> structure is FW_CONFIGURE_FREE_BUFFERS, instead, because it contains
+> 6 more members apart from the header _hdr_. Also, the name of
+> the function ngene_command_config_free_buf() suggests that the actual
+> intention is to ConfigureFreeBuffers, instead of ConfigureBuffers
+> (which configuration takes place in the function ngene_command_config_buf(),
+> above).
+> 
+> Fix this by enclosing those 6 members of struct FW_CONFIGURE_FREE_BUFFERS
+> into new struct config, and use &com.cmd.ConfigureFreeBuffers.config as
+> the destination address, instead of &com.cmd.ConfigureBuffers.config,
+> when calling memcpy().
+> 
+> This also helps with the ongoing efforts to globally enable
+> -Warray-bounds and get us closer to being able to tighten the
+> FORTIFY_SOURCE routines on memcpy().
+> 
+> Link: https://github.com/KSPP/linux/issues/109
+> Fixes: dae52d009fc9 ("V4L/DVB: ngene: Initial check-in")
+> Cc: stable@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
------Original Message-----
-From: Gustavo A. R. Silva <gustavoars@kernel.org>=20
-Sent: Friday, March 5, 2021 5:25 PM
-To: Jon Maloy <jmaloy@redhat.com>; Xue, Ying <Ying.Xue@windriver.com>; Davi=
-d S. Miller <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org; tipc-discussion@lists.sourceforge.net; linux-ke=
-rnel@vger.kernel.org; Gustavo A. R. Silva <gustavoars@kernel.org>; linux-ha=
-rdening@vger.kernel.org
-Subject: [PATCH RESEND][next] tipc: Fix fall-through warnings for Clang
+Nice find! Yeah, this looks like a copy/paste bug but it went unnoticed
+because it's occupying the same memory via the union. Heh.
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning by=
- explicitly adding a break statement instead of letting the code fall throu=
-gh to the next case.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Link: https://github.com/KSPP/linux/issues/115
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- net/tipc/link.c | 1 +
- 1 file changed, 1 insertion(+)
+-Kees
 
-diff --git a/net/tipc/link.c b/net/tipc/link.c index 115109259430..bcc426e1=
-6725 100644
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -649,6 +649,7 @@ int tipc_link_fsm_evt(struct tipc_link *l, int evt)
- 			break;
- 		case LINK_FAILOVER_BEGIN_EVT:
- 			l->state =3D LINK_FAILINGOVER;
-+			break;
- 		case LINK_FAILURE_EVT:
- 		case LINK_RESET_EVT:
- 		case LINK_ESTABLISH_EVT:
---
-2.27.0
+> ---
+>  drivers/media/pci/ngene/ngene-core.c |  2 +-
+>  drivers/media/pci/ngene/ngene.h      | 14 ++++++++------
+>  2 files changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/media/pci/ngene/ngene-core.c b/drivers/media/pci/ngene/ngene-core.c
+> index 07f342db6701..7481f553f959 100644
+> --- a/drivers/media/pci/ngene/ngene-core.c
+> +++ b/drivers/media/pci/ngene/ngene-core.c
+> @@ -385,7 +385,7 @@ static int ngene_command_config_free_buf(struct ngene *dev, u8 *config)
+>  
+>  	com.cmd.hdr.Opcode = CMD_CONFIGURE_FREE_BUFFER;
+>  	com.cmd.hdr.Length = 6;
+> -	memcpy(&com.cmd.ConfigureBuffers.config, config, 6);
+> +	memcpy(&com.cmd.ConfigureFreeBuffers.config, config, 6);
+>  	com.in_len = 6;
+>  	com.out_len = 0;
+>  
+> diff --git a/drivers/media/pci/ngene/ngene.h b/drivers/media/pci/ngene/ngene.h
+> index 84f04e0e0cb9..3d296f1998a1 100644
+> --- a/drivers/media/pci/ngene/ngene.h
+> +++ b/drivers/media/pci/ngene/ngene.h
+> @@ -407,12 +407,14 @@ enum _BUFFER_CONFIGS {
+>  
+>  struct FW_CONFIGURE_FREE_BUFFERS {
+>  	struct FW_HEADER hdr;
+> -	u8   UVI1_BufferLength;
+> -	u8   UVI2_BufferLength;
+> -	u8   TVO_BufferLength;
+> -	u8   AUD1_BufferLength;
+> -	u8   AUD2_BufferLength;
+> -	u8   TVA_BufferLength;
+> +	struct {
+> +		u8   UVI1_BufferLength;
+> +		u8   UVI2_BufferLength;
+> +		u8   TVO_BufferLength;
+> +		u8   AUD1_BufferLength;
+> +		u8   AUD2_BufferLength;
+> +		u8   TVA_BufferLength;
+> +	} __packed config;
+>  } __attribute__ ((__packed__));
+>  
+>  struct FW_CONFIGURE_UART {
+> -- 
+> 2.27.0
+> 
 
+-- 
+Kees Cook
