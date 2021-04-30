@@ -2,209 +2,394 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38086C43461
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Apr 2021 07:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D3DC433B4
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Apr 2021 02:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F04C561458
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Apr 2021 07:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4951D6113D
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Apr 2021 02:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239259AbhD2HcD (ORCPT
+        id S229609AbhD3CGk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Apr 2021 03:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231465AbhD2HcC (ORCPT
+        Thu, 29 Apr 2021 22:06:40 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:48865 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229577AbhD3CGk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Apr 2021 03:32:02 -0400
-Received: from mout-y-111.mailbox.org (mout-y-111.mailbox.org [IPv6:2001:67c:2050:1::465:111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC39CC06138B
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Apr 2021 00:31:15 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-y-111.mailbox.org (Postfix) with ESMTPS id 4FW6PV1TFHzQjp4;
-        Thu, 29 Apr 2021 09:21:34 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id wUODJZPqggbl; Thu, 29 Apr 2021 09:21:31 +0200 (CEST)
-From:   "Christopher M. Riedl" <cmr@bluescreens.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
-        tglx@linutronix.de, keescook@chromium.org
-Subject: [PATCH v4 05/11] powerpc/64s: Add ability to skip SLB preload
-Date:   Thu, 29 Apr 2021 02:20:51 -0500
-Message-Id: <20210429072057.8870-6-cmr@bluescreens.de>
-In-Reply-To: <20210429072057.8870-1-cmr@bluescreens.de>
-References: <20210429072057.8870-1-cmr@bluescreens.de>
+        Thu, 29 Apr 2021 22:06:40 -0400
+Received: from localhost.localdomain (133-32-232-101.west.xps.vectant.ne.jp [133.32.232.101]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 13U23Dpm021584;
+        Fri, 30 Apr 2021 11:03:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 13U23Dpm021584
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1619748196;
+        bh=gbda8k1gb5QKS5gh8B4B++CHlzzHQAOwdbtFLQCvdLk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Orr5vE45Xt9/3ihl6udKavMFU8B0yC8PfRCPS77DbaTQQFSrrT7E78T7ShFNzASEN
+         YIpzxwW6Yyklep/hYCuQm8MzIdE9HA8sOC/KC9vnzFesHX0H6Kmv9SLt+IwTkg3gd7
+         BlOLD5KrX9EZvhz22hhkivGM9w8EFyt3SjVNoSOVzbOtMGg/AQbh986225wsqj0EAD
+         3ORBPvk3OvzFyNIjqEbMrgfyZ5gdwBQpGiZtF8V5Zvgw0tUJa/T3kQnZ4q5LAwRsAv
+         BAFZWLFCpNjn4sVhrdxp8C5t0mFQMLeFt1hqQwlWu0TfTONUi25KD3aVShb2gFbUKT
+         KPICiVelmpKiA==
+X-Nifty-SrcIP: [133.32.232.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andra Paraschiv <andraprs@amazon.com>,
+        Alexandru Ciobotaru <alcioa@amazon.com>,
+        Alexandru Vasile <lexnv@amazon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        devicetree@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v2] .gitignore: prefix local generated files with a slash
+Date:   Fri, 30 Apr 2021 11:03:08 +0900
+Message-Id: <20210430020308.66792-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: *
-X-Rspamd-Score: 0.57 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 418D917F6
-X-Rspamd-UID: ea0d8a
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Switching to a different mm with Hash translation causes SLB entries to
-be preloaded from the current thread_info. This reduces SLB faults, for
-example when threads share a common mm but operate on different address
-ranges.
+The pattern prefixed with '/' matches files in the same directory,
+but not ones in sub-directories.
 
-Preloading entries from the thread_info struct may not always be
-appropriate - such as when switching to a temporary mm. Introduce a new
-boolean in mm_context_t to skip the SLB preload entirely. Also move the
-SLB preload code into a separate function since switch_slb() is already
-quite long. The default behavior (preloading SLB entries from the
-current thread_info struct) remains unchanged.
-
-Signed-off-by: Christopher M. Riedl <cmr@bluescreens.de>
-
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Andra Paraschiv <andraprs@amazon.com>
 ---
 
-v4:  * New to series.
----
- arch/powerpc/include/asm/book3s/64/mmu.h |  3 ++
- arch/powerpc/include/asm/mmu_context.h   | 13 ++++++
- arch/powerpc/mm/book3s64/mmu_context.c   |  2 +
- arch/powerpc/mm/book3s64/slb.c           | 56 ++++++++++++++----------
- 4 files changed, 50 insertions(+), 24 deletions(-)
+Changes in v2:
+  - rebase
 
-diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
-index eace8c3f7b0a1..b23a9dcdee5af 100644
---- a/arch/powerpc/include/asm/book3s/64/mmu.h
-+++ b/arch/powerpc/include/asm/book3s/64/mmu.h
-@@ -130,6 +130,9 @@ typedef struct {
- 	u32 pkey_allocation_map;
- 	s16 execute_only_pkey; /* key holding execute-only protection */
- #endif
-+
-+	/* Do not preload SLB entries from thread_info during switch_slb() */
-+	bool skip_slb_preload;
- } mm_context_t;
- 
- static inline u16 mm_ctx_user_psize(mm_context_t *ctx)
-diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
-index 4bc45d3ed8b0e..264787e90b1a1 100644
---- a/arch/powerpc/include/asm/mmu_context.h
-+++ b/arch/powerpc/include/asm/mmu_context.h
-@@ -298,6 +298,19 @@ static inline int arch_dup_mmap(struct mm_struct *oldmm,
- 	return 0;
- }
- 
-+#ifdef CONFIG_PPC_BOOK3S_64
-+
-+static inline void skip_slb_preload_mm(struct mm_struct *mm)
-+{
-+	mm->context.skip_slb_preload = true;
-+}
-+
-+#else
-+
-+static inline void skip_slb_preload_mm(struct mm_struct *mm) {}
-+
-+#endif /* CONFIG_PPC_BOOK3S_64 */
-+
- #include <asm-generic/mmu_context.h>
- 
- #endif /* __KERNEL__ */
-diff --git a/arch/powerpc/mm/book3s64/mmu_context.c b/arch/powerpc/mm/book3s64/mmu_context.c
-index c10fc8a72fb37..3479910264c59 100644
---- a/arch/powerpc/mm/book3s64/mmu_context.c
-+++ b/arch/powerpc/mm/book3s64/mmu_context.c
-@@ -202,6 +202,8 @@ int init_new_context(struct task_struct *tsk, struct mm_struct *mm)
- 	atomic_set(&mm->context.active_cpus, 0);
- 	atomic_set(&mm->context.copros, 0);
- 
-+	mm->context.skip_slb_preload = false;
-+
- 	return 0;
- }
- 
-diff --git a/arch/powerpc/mm/book3s64/slb.c b/arch/powerpc/mm/book3s64/slb.c
-index c91bd85eb90e3..da0836cb855af 100644
---- a/arch/powerpc/mm/book3s64/slb.c
-+++ b/arch/powerpc/mm/book3s64/slb.c
-@@ -441,10 +441,39 @@ static void slb_cache_slbie_user(unsigned int index)
- 	asm volatile("slbie %0" : : "r" (slbie_data));
- }
- 
-+static void preload_slb_entries(struct task_struct *tsk, struct mm_struct *mm)
-+{
-+	struct thread_info *ti = task_thread_info(tsk);
-+	unsigned char i;
-+
-+	/*
-+	 * We gradually age out SLBs after a number of context switches to
-+	 * reduce reload overhead of unused entries (like we do with FP/VEC
-+	 * reload). Each time we wrap 256 switches, take an entry out of the
-+	 * SLB preload cache.
-+	 */
-+	tsk->thread.load_slb++;
-+	if (!tsk->thread.load_slb) {
-+		unsigned long pc = KSTK_EIP(tsk);
-+
-+		preload_age(ti);
-+		preload_add(ti, pc);
-+	}
-+
-+	for (i = 0; i < ti->slb_preload_nr; i++) {
-+		unsigned char idx;
-+		unsigned long ea;
-+
-+		idx = (ti->slb_preload_tail + i) % SLB_PRELOAD_NR;
-+		ea = (unsigned long)ti->slb_preload_esid[idx] << SID_SHIFT;
-+
-+		slb_allocate_user(mm, ea);
-+	}
-+}
-+
- /* Flush all user entries from the segment table of the current processor. */
- void switch_slb(struct task_struct *tsk, struct mm_struct *mm)
- {
--	struct thread_info *ti = task_thread_info(tsk);
- 	unsigned char i;
- 
- 	/*
-@@ -502,29 +531,8 @@ void switch_slb(struct task_struct *tsk, struct mm_struct *mm)
- 
- 	copy_mm_to_paca(mm);
- 
--	/*
--	 * We gradually age out SLBs after a number of context switches to
--	 * reduce reload overhead of unused entries (like we do with FP/VEC
--	 * reload). Each time we wrap 256 switches, take an entry out of the
--	 * SLB preload cache.
--	 */
--	tsk->thread.load_slb++;
--	if (!tsk->thread.load_slb) {
--		unsigned long pc = KSTK_EIP(tsk);
--
--		preload_age(ti);
--		preload_add(ti, pc);
--	}
--
--	for (i = 0; i < ti->slb_preload_nr; i++) {
--		unsigned char idx;
--		unsigned long ea;
--
--		idx = (ti->slb_preload_tail + i) % SLB_PRELOAD_NR;
--		ea = (unsigned long)ti->slb_preload_esid[idx] << SID_SHIFT;
--
--		slb_allocate_user(mm, ea);
--	}
-+	if (!mm->context.skip_slb_preload)
-+		preload_slb_entries(tsk, mm);
- 
- 	/*
- 	 * Synchronize slbmte preloads with possible subsequent user memory
+ Documentation/devicetree/bindings/.gitignore |  4 ++--
+ arch/.gitignore                              |  4 ++--
+ certs/.gitignore                             |  4 ++--
+ drivers/memory/.gitignore                    |  2 +-
+ drivers/tty/vt/.gitignore                    |  6 +++---
+ fs/unicode/.gitignore                        |  4 ++--
+ kernel/.gitignore                            |  2 +-
+ lib/.gitignore                               | 10 +++++-----
+ samples/auxdisplay/.gitignore                |  2 +-
+ samples/binderfs/.gitignore                  |  3 ++-
+ samples/connector/.gitignore                 |  2 +-
+ samples/hidraw/.gitignore                    |  2 +-
+ samples/mei/.gitignore                       |  2 +-
+ samples/nitro_enclaves/.gitignore            |  2 +-
+ samples/pidfd/.gitignore                     |  2 +-
+ samples/seccomp/.gitignore                   |  8 ++++----
+ samples/timers/.gitignore                    |  2 +-
+ samples/vfs/.gitignore                       |  4 ++--
+ samples/watch_queue/.gitignore               |  3 ++-
+ samples/watchdog/.gitignore                  |  2 +-
+ scripts/.gitignore                           | 18 +++++++++---------
+ scripts/basic/.gitignore                     |  2 +-
+ scripts/dtc/.gitignore                       |  4 ++--
+ scripts/gcc-plugins/.gitignore               |  2 +-
+ scripts/genksyms/.gitignore                  |  2 +-
+ scripts/mod/.gitignore                       |  8 ++++----
+ usr/.gitignore                               |  4 ++--
+ 27 files changed, 56 insertions(+), 54 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
+index 3a05b99bfa26..a77719968a7e 100644
+--- a/Documentation/devicetree/bindings/.gitignore
++++ b/Documentation/devicetree/bindings/.gitignore
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ *.example.dts
+-processed-schema*.yaml
+-processed-schema*.json
++/processed-schema*.yaml
++/processed-schema*.json
+diff --git a/arch/.gitignore b/arch/.gitignore
+index 4191da401dbb..756c19c34f99 100644
+--- a/arch/.gitignore
++++ b/arch/.gitignore
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-i386
+-x86_64
++/i386/
++/x86_64/
+diff --git a/certs/.gitignore b/certs/.gitignore
+index 6cbd1f1a5837..8c3763f80be3 100644
+--- a/certs/.gitignore
++++ b/certs/.gitignore
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-x509_certificate_list
+-x509_revocation_list
++/x509_certificate_list
++/x509_revocation_list
+diff --git a/drivers/memory/.gitignore b/drivers/memory/.gitignore
+index caedc4c7d2db..5e84bee05ef8 100644
+--- a/drivers/memory/.gitignore
++++ b/drivers/memory/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ti-emif-asm-offsets.h
++/ti-emif-asm-offsets.h
+diff --git a/drivers/tty/vt/.gitignore b/drivers/tty/vt/.gitignore
+index 3ecf42234d89..0221709b177d 100644
+--- a/drivers/tty/vt/.gitignore
++++ b/drivers/tty/vt/.gitignore
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-conmakehash
+-consolemap_deftbl.c
+-defkeymap.c
++/conmakehash
++/consolemap_deftbl.c
++/defkeymap.c
+diff --git a/fs/unicode/.gitignore b/fs/unicode/.gitignore
+index 9b2467e77b2d..361294571ab0 100644
+--- a/fs/unicode/.gitignore
++++ b/fs/unicode/.gitignore
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-mkutf8data
+-utf8data.h
++/mkutf8data
++/utf8data.h
+diff --git a/kernel/.gitignore b/kernel/.gitignore
+index 4abc4e033ed8..4dc1ffe9770b 100644
+--- a/kernel/.gitignore
++++ b/kernel/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-kheaders.md5
++/kheaders.md5
+diff --git a/lib/.gitignore b/lib/.gitignore
+index 327cb2c7f2c9..5e7fa54c4536 100644
+--- a/lib/.gitignore
++++ b/lib/.gitignore
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-gen_crc32table
+-gen_crc64table
+-crc32table.h
+-crc64table.h
+-oid_registry_data.c
++/crc32table.h
++/crc64table.h
++/gen_crc32table
++/gen_crc64table
++/oid_registry_data.c
+diff --git a/samples/auxdisplay/.gitignore b/samples/auxdisplay/.gitignore
+index 2ed744c0e741..d023816849bd 100644
+--- a/samples/auxdisplay/.gitignore
++++ b/samples/auxdisplay/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-cfag12864b-example
++/cfag12864b-example
+diff --git a/samples/binderfs/.gitignore b/samples/binderfs/.gitignore
+index eb60241e8087..8fa415a3640b 100644
+--- a/samples/binderfs/.gitignore
++++ b/samples/binderfs/.gitignore
+@@ -1 +1,2 @@
+-binderfs_example
++# SPDX-License-Identifier: GPL-2.0
++/binderfs_example
+diff --git a/samples/connector/.gitignore b/samples/connector/.gitignore
+index d86f2ff9c947..0e26039f39b5 100644
+--- a/samples/connector/.gitignore
++++ b/samples/connector/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ucon
++/ucon
+diff --git a/samples/hidraw/.gitignore b/samples/hidraw/.gitignore
+index d7a6074ebcf9..5233ab63262e 100644
+--- a/samples/hidraw/.gitignore
++++ b/samples/hidraw/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-hid-example
++/hid-example
+diff --git a/samples/mei/.gitignore b/samples/mei/.gitignore
+index db5e802f041e..fe894bcb6a62 100644
+--- a/samples/mei/.gitignore
++++ b/samples/mei/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-mei-amt-version
++/mei-amt-version
+diff --git a/samples/nitro_enclaves/.gitignore b/samples/nitro_enclaves/.gitignore
+index 827934129c90..6a718eec71f4 100644
+--- a/samples/nitro_enclaves/.gitignore
++++ b/samples/nitro_enclaves/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ne_ioctl_sample
++/ne_ioctl_sample
+diff --git a/samples/pidfd/.gitignore b/samples/pidfd/.gitignore
+index eea857fca736..d4cfa3176b1b 100644
+--- a/samples/pidfd/.gitignore
++++ b/samples/pidfd/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-pidfd-metadata
++/pidfd-metadata
+diff --git a/samples/seccomp/.gitignore b/samples/seccomp/.gitignore
+index 4a5a5b7db30b..a6df0da77c5d 100644
+--- a/samples/seccomp/.gitignore
++++ b/samples/seccomp/.gitignore
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-bpf-direct
+-bpf-fancy
+-dropper
+-user-trap
++/bpf-direct
++/bpf-fancy
++/dropper
++/user-trap
+diff --git a/samples/timers/.gitignore b/samples/timers/.gitignore
+index 40510c33cf08..cd9ff7b95383 100644
+--- a/samples/timers/.gitignore
++++ b/samples/timers/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-hpet_example
++/hpet_example
+diff --git a/samples/vfs/.gitignore b/samples/vfs/.gitignore
+index 8fdabf7e5373..79212d91285b 100644
+--- a/samples/vfs/.gitignore
++++ b/samples/vfs/.gitignore
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-test-fsmount
+-test-statx
++/test-fsmount
++/test-statx
+diff --git a/samples/watch_queue/.gitignore b/samples/watch_queue/.gitignore
+index 2aa3c7e56a1a..823b351d3db9 100644
+--- a/samples/watch_queue/.gitignore
++++ b/samples/watch_queue/.gitignore
+@@ -1 +1,2 @@
+-watch_test
++# SPDX-License-Identifier: GPL-2.0-only
++/watch_test
+diff --git a/samples/watchdog/.gitignore b/samples/watchdog/.gitignore
+index 74153b831244..a70a0150ed9f 100644
+--- a/samples/watchdog/.gitignore
++++ b/samples/watchdog/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-watchdog-simple
++/watchdog-simple
+diff --git a/scripts/.gitignore b/scripts/.gitignore
+index a6c11316c969..e83c620ef52c 100644
+--- a/scripts/.gitignore
++++ b/scripts/.gitignore
+@@ -1,11 +1,11 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-bin2c
+-kallsyms
+-unifdef
+-recordmcount
+-sorttable
+-asn1_compiler
+-extract-cert
+-sign-file
+-insert-sys-cert
++/asn1_compiler
++/bin2c
++/extract-cert
++/insert-sys-cert
++/kallsyms
+ /module.lds
++/recordmcount
++/sign-file
++/sorttable
++/unifdef
+diff --git a/scripts/basic/.gitignore b/scripts/basic/.gitignore
+index 98ae1f509592..961c91c8a884 100644
+--- a/scripts/basic/.gitignore
++++ b/scripts/basic/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-fixdep
++/fixdep
+diff --git a/scripts/dtc/.gitignore b/scripts/dtc/.gitignore
+index 8a8b62bf3d3c..e0b5c1d2464a 100644
+--- a/scripts/dtc/.gitignore
++++ b/scripts/dtc/.gitignore
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-dtc
+-fdtoverlay
++/dtc
++/fdtoverlay
+diff --git a/scripts/gcc-plugins/.gitignore b/scripts/gcc-plugins/.gitignore
+index b04e0f0f033e..5cc385b9eb97 100644
+--- a/scripts/gcc-plugins/.gitignore
++++ b/scripts/gcc-plugins/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-randomize_layout_seed.h
++/randomize_layout_seed.h
+diff --git a/scripts/genksyms/.gitignore b/scripts/genksyms/.gitignore
+index 999af710f83d..0b275abf9405 100644
+--- a/scripts/genksyms/.gitignore
++++ b/scripts/genksyms/.gitignore
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-genksyms
++/genksyms
+diff --git a/scripts/mod/.gitignore b/scripts/mod/.gitignore
+index 07e4a39f90a6..ed2e13b708ce 100644
+--- a/scripts/mod/.gitignore
++++ b/scripts/mod/.gitignore
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-elfconfig.h
+-mk_elfconfig
+-modpost
+-devicetable-offsets.h
++/elfconfig.h
++/mk_elfconfig
++/modpost
++/devicetable-offsets.h
+diff --git a/usr/.gitignore b/usr/.gitignore
+index 935442ed1eb2..8996e7a88902 100644
+--- a/usr/.gitignore
++++ b/usr/.gitignore
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-gen_init_cpio
+-initramfs_data.cpio
++/gen_init_cpio
++/initramfs_data.cpio
+ /initramfs_inc_data
 -- 
-2.26.1
+2.27.0
 
