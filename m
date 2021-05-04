@@ -2,390 +2,197 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D4AC433B4
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Apr 2021 18:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F206C433B4
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 May 2021 00:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0F3561468
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Apr 2021 18:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34145611AD
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 May 2021 00:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231232AbhD3SmI (ORCPT
+        id S229650AbhEDAUk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Apr 2021 14:42:08 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52608 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbhD3SmF (ORCPT
+        Mon, 3 May 2021 20:20:40 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.80]:28760 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229602AbhEDAUk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Apr 2021 14:42:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id 7EAB51F43B85
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Andra Paraschiv <andraprs@amazon.com>,
-        Alexandru Ciobotaru <alcioa@amazon.com>,
-        Alexandru Vasile <lexnv@amazon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        devicetree@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2] .gitignore: prefix local generated files with a slash
-Organization: Collabora
-References: <20210430020308.66792-1-masahiroy@kernel.org>
-Date:   Fri, 30 Apr 2021 14:41:08 -0400
-In-Reply-To: <20210430020308.66792-1-masahiroy@kernel.org> (Masahiro Yamada's
-        message of "Fri, 30 Apr 2021 11:03:08 +0900")
-Message-ID: <87wnsj4nuj.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Mon, 3 May 2021 20:20:40 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 86597429E
+        for <linux-hardening@vger.kernel.org>; Mon,  3 May 2021 19:19:26 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id dimclvnjxmJLsdimcl7p63; Mon, 03 May 2021 19:19:26 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Ig3CIZ/xmFOthwSo8EhRMfGFFJSSDrU9KPABQLO3bKw=; b=aCCPuf0rrTzuThkDJZ/b5GIA2p
+        s3MQoip/HAnHcpu36zFanRHfJXuAHeS6aNB9xrUMOK5rgw8MyAPB201Dr3d06X7pXcBM9Q9hy7ZI7
+        xKxTWvkiZMVPuBDthn4XqnCAaLAJ6+Z9DVE5wzUlBr1qANp3JTjQzVS8JkxlbH/gcZ08vasjhcG8K
+        A3CHwZX3Jf5f+UERSOTEUEIfNWsyNJQeSv9EvDRIPmGtzNimjj1p5B/wkZndMaD32Bf2EPnHFT+bu
+        avcZ8lyKUB/a94W4ZbnUq6GExQIBu0eYQPLzmVEn1Kr9/huDBUhkoMdgqL8l+LjrBNxNYD1/x+C3d
+        9VFynPOA==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48728 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1ldimZ-001mFB-0t; Mon, 03 May 2021 19:19:23 -0500
+Subject: Re: [PATCH v3][next] scsi: aacraid: Replace one-element array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20210421185611.GA105224@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <d26823dd-5248-4965-cc30-f9e6294536ee@embeddedor.com>
+Date:   Mon, 3 May 2021 19:19:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20210421185611.GA105224@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1ldimZ-001mFB-0t
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:48728
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Masahiro Yamada <masahiroy@kernel.org> writes:
+Hi Martin,
 
-> The pattern prefixed with '/' matches files in the same directory,
-> but not ones in sub-directories.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Acked-by: Miguel Ojeda <ojeda@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Andra Paraschiv <andraprs@amazon.com>
+Friendly ping: could you take this patch, please? :)
 
-Acked-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Thanks!
+--
+Gustavo
 
+On 4/21/21 13:56, Gustavo A. R. Silva wrote:
+> There is a regular need in the kernel to provide a way to declare having
+> a dynamically sized set of trailing elements in a structure. Kernel code
+> should always use “flexible array members”[1] for these cases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
+> 
+> Refactor the code according to the use of a flexible-array member in
+> struct aac_raw_io2 instead of one-element array, and use the
+> struct_size() helper.
+> 
+> Also, this helps with the ongoing efforts to enable -Warray-bounds by
+> fixing the following warnings:
+> 
+> drivers/scsi/aacraid/aachba.c: In function ‘aac_build_sgraw2’:
+> drivers/scsi/aacraid/aachba.c:3970:18: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  3970 |     if (rio2->sge[j].length % (i*PAGE_SIZE)) {
+>       |         ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:3974:27: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  3974 |     nseg_new += (rio2->sge[j].length / (i*PAGE_SIZE));
+>       |                  ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:4011:28: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  4011 |   for (j = 0; j < rio2->sge[i].length / (pages * PAGE_SIZE); ++j) {
+>       |                   ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:4012:24: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  4012 |    addr_low = rio2->sge[i].addrLow + j * pages * PAGE_SIZE;
+>       |               ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:4014:33: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  4014 |    sge[pos].addrHigh = rio2->sge[i].addrHigh;
+>       |                        ~~~~~~~~~^~~
+> drivers/scsi/aacraid/aachba.c:4015:28: warning: array subscript 1 is above array bounds of ‘struct sge_ieee1212[1]’ [-Warray-bounds]
+>  4015 |    if (addr_low < rio2->sge[i].addrLow)
+>       |                   ~~~~~~~~~^~~
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/109
+> Build-tested-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/60414244.ur4%2FkI+fBF1ohKZs%25lkp@intel.com/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->
+> Changes in v3:
+>  - Use (nseg_new-1)*sizeof(struct sge_ieee1212) to calculate
+>    size in call to memcpy() in order to avoid any confusion.
+> 
 > Changes in v2:
->   - rebase
->
->  Documentation/devicetree/bindings/.gitignore |  4 ++--
->  arch/.gitignore                              |  4 ++--
->  certs/.gitignore                             |  4 ++--
->  drivers/memory/.gitignore                    |  2 +-
->  drivers/tty/vt/.gitignore                    |  6 +++---
->  fs/unicode/.gitignore                        |  4 ++--
->  kernel/.gitignore                            |  2 +-
->  lib/.gitignore                               | 10 +++++-----
->  samples/auxdisplay/.gitignore                |  2 +-
->  samples/binderfs/.gitignore                  |  3 ++-
->  samples/connector/.gitignore                 |  2 +-
->  samples/hidraw/.gitignore                    |  2 +-
->  samples/mei/.gitignore                       |  2 +-
->  samples/nitro_enclaves/.gitignore            |  2 +-
->  samples/pidfd/.gitignore                     |  2 +-
->  samples/seccomp/.gitignore                   |  8 ++++----
->  samples/timers/.gitignore                    |  2 +-
->  samples/vfs/.gitignore                       |  4 ++--
->  samples/watch_queue/.gitignore               |  3 ++-
->  samples/watchdog/.gitignore                  |  2 +-
->  scripts/.gitignore                           | 18 +++++++++---------
->  scripts/basic/.gitignore                     |  2 +-
->  scripts/dtc/.gitignore                       |  4 ++--
->  scripts/gcc-plugins/.gitignore               |  2 +-
->  scripts/genksyms/.gitignore                  |  2 +-
->  scripts/mod/.gitignore                       |  8 ++++----
->  usr/.gitignore                               |  4 ++--
->  27 files changed, 56 insertions(+), 54 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
-> index 3a05b99bfa26..a77719968a7e 100644
-> --- a/Documentation/devicetree/bindings/.gitignore
-> +++ b/Documentation/devicetree/bindings/.gitignore
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  *.example.dts
-> -processed-schema*.yaml
-> -processed-schema*.json
-> +/processed-schema*.yaml
-> +/processed-schema*.json
-> diff --git a/arch/.gitignore b/arch/.gitignore
-> index 4191da401dbb..756c19c34f99 100644
-> --- a/arch/.gitignore
-> +++ b/arch/.gitignore
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -i386
-> -x86_64
-> +/i386/
-> +/x86_64/
-> diff --git a/certs/.gitignore b/certs/.gitignore
-> index 6cbd1f1a5837..8c3763f80be3 100644
-> --- a/certs/.gitignore
-> +++ b/certs/.gitignore
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -x509_certificate_list
-> -x509_revocation_list
-> +/x509_certificate_list
-> +/x509_revocation_list
-> diff --git a/drivers/memory/.gitignore b/drivers/memory/.gitignore
-> index caedc4c7d2db..5e84bee05ef8 100644
-> --- a/drivers/memory/.gitignore
-> +++ b/drivers/memory/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ti-emif-asm-offsets.h
-> +/ti-emif-asm-offsets.h
-> diff --git a/drivers/tty/vt/.gitignore b/drivers/tty/vt/.gitignore
-> index 3ecf42234d89..0221709b177d 100644
-> --- a/drivers/tty/vt/.gitignore
-> +++ b/drivers/tty/vt/.gitignore
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -conmakehash
-> -consolemap_deftbl.c
-> -defkeymap.c
-> +/conmakehash
-> +/consolemap_deftbl.c
-> +/defkeymap.c
-> diff --git a/fs/unicode/.gitignore b/fs/unicode/.gitignore
-> index 9b2467e77b2d..361294571ab0 100644
-> --- a/fs/unicode/.gitignore
-> +++ b/fs/unicode/.gitignore
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -mkutf8data
-> -utf8data.h
-> +/mkutf8data
-> +/utf8data.h
-> diff --git a/kernel/.gitignore b/kernel/.gitignore
-> index 4abc4e033ed8..4dc1ffe9770b 100644
-> --- a/kernel/.gitignore
-> +++ b/kernel/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -kheaders.md5
-> +/kheaders.md5
-> diff --git a/lib/.gitignore b/lib/.gitignore
-> index 327cb2c7f2c9..5e7fa54c4536 100644
-> --- a/lib/.gitignore
-> +++ b/lib/.gitignore
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -gen_crc32table
-> -gen_crc64table
-> -crc32table.h
-> -crc64table.h
-> -oid_registry_data.c
-> +/crc32table.h
-> +/crc64table.h
-> +/gen_crc32table
-> +/gen_crc64table
-> +/oid_registry_data.c
-> diff --git a/samples/auxdisplay/.gitignore b/samples/auxdisplay/.gitignore
-> index 2ed744c0e741..d023816849bd 100644
-> --- a/samples/auxdisplay/.gitignore
-> +++ b/samples/auxdisplay/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -cfag12864b-example
-> +/cfag12864b-example
-> diff --git a/samples/binderfs/.gitignore b/samples/binderfs/.gitignore
-> index eb60241e8087..8fa415a3640b 100644
-> --- a/samples/binderfs/.gitignore
-> +++ b/samples/binderfs/.gitignore
-> @@ -1 +1,2 @@
-> -binderfs_example
-> +# SPDX-License-Identifier: GPL-2.0
-> +/binderfs_example
-> diff --git a/samples/connector/.gitignore b/samples/connector/.gitignore
-> index d86f2ff9c947..0e26039f39b5 100644
-> --- a/samples/connector/.gitignore
-> +++ b/samples/connector/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -ucon
-> +/ucon
-> diff --git a/samples/hidraw/.gitignore b/samples/hidraw/.gitignore
-> index d7a6074ebcf9..5233ab63262e 100644
-> --- a/samples/hidraw/.gitignore
-> +++ b/samples/hidraw/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -hid-example
-> +/hid-example
-> diff --git a/samples/mei/.gitignore b/samples/mei/.gitignore
-> index db5e802f041e..fe894bcb6a62 100644
-> --- a/samples/mei/.gitignore
-> +++ b/samples/mei/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -mei-amt-version
-> +/mei-amt-version
-> diff --git a/samples/nitro_enclaves/.gitignore b/samples/nitro_enclaves/.gitignore
-> index 827934129c90..6a718eec71f4 100644
-> --- a/samples/nitro_enclaves/.gitignore
-> +++ b/samples/nitro_enclaves/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -ne_ioctl_sample
-> +/ne_ioctl_sample
-> diff --git a/samples/pidfd/.gitignore b/samples/pidfd/.gitignore
-> index eea857fca736..d4cfa3176b1b 100644
-> --- a/samples/pidfd/.gitignore
-> +++ b/samples/pidfd/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -pidfd-metadata
-> +/pidfd-metadata
-> diff --git a/samples/seccomp/.gitignore b/samples/seccomp/.gitignore
-> index 4a5a5b7db30b..a6df0da77c5d 100644
-> --- a/samples/seccomp/.gitignore
-> +++ b/samples/seccomp/.gitignore
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -bpf-direct
-> -bpf-fancy
-> -dropper
-> -user-trap
-> +/bpf-direct
-> +/bpf-fancy
-> +/dropper
-> +/user-trap
-> diff --git a/samples/timers/.gitignore b/samples/timers/.gitignore
-> index 40510c33cf08..cd9ff7b95383 100644
-> --- a/samples/timers/.gitignore
-> +++ b/samples/timers/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -hpet_example
-> +/hpet_example
-> diff --git a/samples/vfs/.gitignore b/samples/vfs/.gitignore
-> index 8fdabf7e5373..79212d91285b 100644
-> --- a/samples/vfs/.gitignore
-> +++ b/samples/vfs/.gitignore
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -test-fsmount
-> -test-statx
-> +/test-fsmount
-> +/test-statx
-> diff --git a/samples/watch_queue/.gitignore b/samples/watch_queue/.gitignore
-> index 2aa3c7e56a1a..823b351d3db9 100644
-> --- a/samples/watch_queue/.gitignore
-> +++ b/samples/watch_queue/.gitignore
-> @@ -1 +1,2 @@
-> -watch_test
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +/watch_test
-> diff --git a/samples/watchdog/.gitignore b/samples/watchdog/.gitignore
-> index 74153b831244..a70a0150ed9f 100644
-> --- a/samples/watchdog/.gitignore
-> +++ b/samples/watchdog/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -watchdog-simple
-> +/watchdog-simple
-> diff --git a/scripts/.gitignore b/scripts/.gitignore
-> index a6c11316c969..e83c620ef52c 100644
-> --- a/scripts/.gitignore
-> +++ b/scripts/.gitignore
-> @@ -1,11 +1,11 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -bin2c
-> -kallsyms
-> -unifdef
-> -recordmcount
-> -sorttable
-> -asn1_compiler
-> -extract-cert
-> -sign-file
-> -insert-sys-cert
-> +/asn1_compiler
-> +/bin2c
-> +/extract-cert
-> +/insert-sys-cert
-> +/kallsyms
->  /module.lds
-> +/recordmcount
-> +/sign-file
-> +/sorttable
-> +/unifdef
-> diff --git a/scripts/basic/.gitignore b/scripts/basic/.gitignore
-> index 98ae1f509592..961c91c8a884 100644
-> --- a/scripts/basic/.gitignore
-> +++ b/scripts/basic/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -fixdep
-> +/fixdep
-> diff --git a/scripts/dtc/.gitignore b/scripts/dtc/.gitignore
-> index 8a8b62bf3d3c..e0b5c1d2464a 100644
-> --- a/scripts/dtc/.gitignore
-> +++ b/scripts/dtc/.gitignore
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -dtc
-> -fdtoverlay
-> +/dtc
-> +/fdtoverlay
-> diff --git a/scripts/gcc-plugins/.gitignore b/scripts/gcc-plugins/.gitignore
-> index b04e0f0f033e..5cc385b9eb97 100644
-> --- a/scripts/gcc-plugins/.gitignore
-> +++ b/scripts/gcc-plugins/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -randomize_layout_seed.h
-> +/randomize_layout_seed.h
-> diff --git a/scripts/genksyms/.gitignore b/scripts/genksyms/.gitignore
-> index 999af710f83d..0b275abf9405 100644
-> --- a/scripts/genksyms/.gitignore
-> +++ b/scripts/genksyms/.gitignore
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -genksyms
-> +/genksyms
-> diff --git a/scripts/mod/.gitignore b/scripts/mod/.gitignore
-> index 07e4a39f90a6..ed2e13b708ce 100644
-> --- a/scripts/mod/.gitignore
-> +++ b/scripts/mod/.gitignore
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -elfconfig.h
-> -mk_elfconfig
-> -modpost
-> -devicetable-offsets.h
-> +/elfconfig.h
-> +/mk_elfconfig
-> +/modpost
-> +/devicetable-offsets.h
-> diff --git a/usr/.gitignore b/usr/.gitignore
-> index 935442ed1eb2..8996e7a88902 100644
-> --- a/usr/.gitignore
-> +++ b/usr/.gitignore
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -gen_init_cpio
-> -initramfs_data.cpio
-> +/gen_init_cpio
-> +/initramfs_data.cpio
->  /initramfs_inc_data
-
--- 
-Gabriel Krisman Bertazi
+>  - Add code comment for clarification.
+> 
+>  drivers/scsi/aacraid/aachba.c  | 10 +++++-----
+>  drivers/scsi/aacraid/aacraid.h |  2 +-
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+> index f1f62b5da8b7..46b8dffce2dd 100644
+> --- a/drivers/scsi/aacraid/aachba.c
+> +++ b/drivers/scsi/aacraid/aachba.c
+> @@ -1235,8 +1235,8 @@ static int aac_read_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
+>  		if (ret < 0)
+>  			return ret;
+>  		command = ContainerRawIo2;
+> -		fibsize = sizeof(struct aac_raw_io2) +
+> -			((le32_to_cpu(readcmd2->sgeCnt)-1) * sizeof(struct sge_ieee1212));
+> +		fibsize = struct_size(readcmd2, sge,
+> +				     le32_to_cpu(readcmd2->sgeCnt));
+>  	} else {
+>  		struct aac_raw_io *readcmd;
+>  		readcmd = (struct aac_raw_io *) fib_data(fib);
+> @@ -1366,8 +1366,8 @@ static int aac_write_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
+>  		if (ret < 0)
+>  			return ret;
+>  		command = ContainerRawIo2;
+> -		fibsize = sizeof(struct aac_raw_io2) +
+> -			((le32_to_cpu(writecmd2->sgeCnt)-1) * sizeof(struct sge_ieee1212));
+> +		fibsize = struct_size(writecmd2, sge,
+> +				      le32_to_cpu(writecmd2->sgeCnt));
+>  	} else {
+>  		struct aac_raw_io *writecmd;
+>  		writecmd = (struct aac_raw_io *) fib_data(fib);
+> @@ -3998,7 +3998,7 @@ static int aac_convert_sgraw2(struct aac_raw_io2 *rio2, int pages, int nseg, int
+>  	if (aac_convert_sgl == 0)
+>  		return 0;
+>  
+> -	sge = kmalloc_array(nseg_new, sizeof(struct sge_ieee1212), GFP_ATOMIC);
+> +	sge = kmalloc_array(nseg_new, sizeof(*sge), GFP_ATOMIC);
+>  	if (sge == NULL)
+>  		return -ENOMEM;
+>  
+> diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
+> index e3e4ecbea726..3733df77bc65 100644
+> --- a/drivers/scsi/aacraid/aacraid.h
+> +++ b/drivers/scsi/aacraid/aacraid.h
+> @@ -1929,7 +1929,7 @@ struct aac_raw_io2 {
+>  	u8		bpComplete;	/* reserved for F/W use */
+>  	u8		sgeFirstIndex;	/* reserved for F/W use */
+>  	u8		unused[4];
+> -	struct sge_ieee1212	sge[1];
+> +	struct sge_ieee1212	sge[];
+>  };
+>  
+>  #define CT_FLUSH_CACHE 129
+> 
