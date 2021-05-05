@@ -2,94 +2,185 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20447C43460
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 18:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85204C433ED
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 19:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0232F613C3
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 18:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444C761166
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 19:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234553AbhEESqf (ORCPT
+        id S235434AbhEETTK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 May 2021 14:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234475AbhEESqe (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 May 2021 14:46:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 74B9F6105A;
-        Wed,  5 May 2021 18:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620240337;
-        bh=tr9FqTMNy8Aj06BcquW7hrOWHRk5sO0oNB/v3F7fSGA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U4h+XW2JoDzusBFB9PItP8owvyEeRbEBjS7C+MbTIM0pm8gW1/7Sgm3uiTnhr4l0q
-         YkH7+NKvTuQC45/hUyhq5biEIbq09EV+IPth0gS+98hzzwncgLiZHExMu8vukCqhY3
-         PNztdmE9l2g3ophWibUn6lvKlOJe/C/11NDC6/DcaH6qcq3PN4eQP12imHVas1+rXJ
-         gj0NfbuQ99F/T76cFFCGYkgDWsv7R4T6SZYqCncokXbBtSfHkxCpgq8repwdM9lSF8
-         TJJw3WF5R5H594VU3jmwl3NLWXutN9y1bHlSMTi+09MYV1ciHXSB8vuy7FJnvX+PPq
-         LdPR40kMTc13A==
-Date:   Wed, 5 May 2021 21:45:28 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Rick Edgecombe <rick.p.edgecombe@intel.com>, dave.hansen@intel.com,
-        luto@kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, ira.weiny@intel.com,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/9] x86/mm/cpa: Add grouped page allocations
-Message-ID: <YJLnyJP755XAPZNX@kernel.org>
-References: <20210505003032.489164-1-rick.p.edgecombe@intel.com>
- <20210505003032.489164-4-rick.p.edgecombe@intel.com>
- <YJKKu7kMCtCuel2L@kernel.org>
- <YJKY+Ccxfe9wD0iP@hirez.programming.kicks-ass.net>
+        Wed, 5 May 2021 15:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235294AbhEETTF (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 5 May 2021 15:19:05 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D51D0C061761
+        for <linux-hardening@vger.kernel.org>; Wed,  5 May 2021 12:18:07 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id s22so2474845pgk.6
+        for <linux-hardening@vger.kernel.org>; Wed, 05 May 2021 12:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4WYSC4vZQjtev2oFzlx0FGKTMmYzxEnnQo/e/yAZ4w8=;
+        b=kPvQemPtSPOW/yzBzeEYb+M1Ag2ysITcVCD+EG4obVHyhN8ONYEUXUYUBJXh7XznIt
+         Zvxxx93f26qcHTzi1BL9KKkw5rMICh0K5dySFfjUYcgol62ZlD3TOLX4E6JapDAaKFFV
+         D3z7bkHVbiJZOxV5aY+rcYfJMQwjTEcwXnxOg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4WYSC4vZQjtev2oFzlx0FGKTMmYzxEnnQo/e/yAZ4w8=;
+        b=mCE9t5wQpAAcpF3BDnOQohlw6yG9JqHfms6VFUQutpzs+3ka+W+z/3vJB/PX2cVCnX
+         PIzo0c9lskyNcj4eJDddWvyy2+k0hPtk33yXUOgtNc8kGTkArADogn6IOkUmmEwed2eV
+         Vmf8uqycsnRkNEvlxCdZu3bS+HCAq43Xf8uyJlG1nSwSqdTpytWUbnIxmqi0NaCrCRIX
+         fSHpgYQr7fpK7lemUk1oZWjyW4e9AZFutst2vZ4OPfINu0nw5qiEkGgVETP2ljXgYdTY
+         efebbEFo4rLDUJSJD4+eJd41pCb7CgovGOlmiyC3S+tBqjt0KI50Znbn/GIOecE+5HHX
+         GkIg==
+X-Gm-Message-State: AOAM531vfhnlDXC9vdullPM2Hinx+mhR20ljO+lxuJnU72VoTqggjAH+
+        73ClnkyBaqkdZt87tWzobc7sLg==
+X-Google-Smtp-Source: ABdhPJysdlxx7Lr0SIayibsfBEnnNF5N67lBnTfNjc9vFhiqdhpxd/izyt4dW9Lm8k/+21BMTSrUeQ==
+X-Received: by 2002:a63:465b:: with SMTP id v27mr414257pgk.445.1620242287430;
+        Wed, 05 May 2021 12:18:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b21sm26163pfl.82.2021.05.05.12.18.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 May 2021 12:18:06 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Qing Zhao <qing.zhao@oracle.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH] Makefile: Introduce CONFIG_ZERO_CALL_USED_REGS
+Date:   Wed,  5 May 2021 12:18:04 -0700
+Message-Id: <20210505191804.4015873-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YJKY+Ccxfe9wD0iP@hirez.programming.kicks-ass.net>
+X-Patch-Hashes: v=1; h=sha256; g=486ae8ef11ec6ce07be8f36f937bc84f12b212d7; i=INxa/4VCLBovtkxgk4v6PayUOJQvpGeFUZovolpEDWo=; m=6hofzkFzCVIzIaBPLx/ZSwUq1VzuU3BvCXxnAGa5Moo=; p=yiFCvg8shZIMIJrM4uWz6P8G93GPjOZ7K1K592eVyGA=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmCS72sACgkQiXL039xtwCZG5g/+J1o l9p/R17NzyztXLl2VsbdCf3h4tXYkMbK+K6TpUi19k92VY2sbrGJN1i5uXLSAXyVaQIvyChiqoCCM gWv+amkmus6B4aCuie6xRnnqqYfxUGICtTys9T60XMCuqbMawGDuXd/5r0kIwYN4JitjJv9WR1kTt z4mdwwlb3bp6vKn1YxcvVgE45rGJNN8tgth0B7gqy4llri/agllSLgkRvU9PUu0x7dBwYWIdiz2/V yfbBRBhn1Wthc+Quz372wiYylx1O3/QfggDxabhE8j+gYlCi7NtgWpkkL4OpAn8+3kOGng+VVK1/K Ht10W/Ikjcwx99XlgyTMmj28FK4FDec838v125bjsnV/aRhiNOffmYTIFfR2xV+xY6ddkG66xMAAG cP5ng83+VpYV+vEcZ4zkIKv4KbYs4siOmi0YlqpcTwp0QhWbhEWQ34YCe/1PCgyvkiYTJ1NpMnPIP PNNCNJjBO95lr3lIVu4+XrTTrG3zoirjq5SO1u1gyS+6Z3lHeAHAAp7k0JtKoZ8a0GaFFj5r2mh6l VihdtWY3ysqlHCVPqlTcTbrCxxHv5fdJnPjUOdEaPPx3gvBsbW8T1yyYn67/4DCTSoPRguS1j5bGT uaui+WGG8Xbe42gGc3dJrAjPcxzXML6vVGa0e6kswXg4VuCiHHXCHNrhS2aI6JoA=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 05, 2021 at 03:09:12PM +0200, Peter Zijlstra wrote:
-> On Wed, May 05, 2021 at 03:08:27PM +0300, Mike Rapoport wrote:
-> > On Tue, May 04, 2021 at 05:30:26PM -0700, Rick Edgecombe wrote:
-> > > For x86, setting memory permissions on the direct map results in fracturing
-> > > large pages. Direct map fracturing can be reduced by locating pages that
-> > > will have their permissions set close together.
-> > > 
-> > > Create a simple page cache that allocates pages from huge page size
-> > > blocks. Don't guarantee that a page will come from a huge page grouping,
-> > > instead fallback to non-grouped pages to fulfill the allocation if
-> > > needed. Also, register a shrinker such that the system can ask for the
-> > > pages back if needed. Since this is only needed when there is a direct
-> > > map, compile it out on highmem systems.
-> > 
-> > I only had time to skim through the patches, I like the idea of having a
-> > simple cache that allocates larger pages with a fallback to basic page
-> > size.
-> > 
-> > I just think it should be more generic and closer to the page allocator.
-> > I was thinking about adding a GFP flag that will tell that the allocated
-> > pages should be removed from the direct map. Then alloc_pages() could use
-> > such cache whenever this GFP flag is specified with a fallback for lower
-> > order allocations.
-> 
-> That doesn't provide enough information I think. Removing from direct
-> map isn't the only consideration, you also want to group them by the
-> target protection bits such that we don't get to use 4k pages quite so
-> much.
+When CONFIG_ZERO_CALL_USED_REGS is enabled, build the kernel with
+"-fzero-call-used-regs=used-gpr" (in GCC 11). This option will zero any
+caller-used register contents just before returning from a function,
+ensuring that temporary values are not leaked beyond the function
+boundary. This means that register contents are less likely to be
+available for side channel attacks and information exposures.
 
-Unless I'm missing something we anyway hand out 4k pages from the cache and
-the neighbouring 4k may end up with different protections.
+Additionally this helps reduce the number of useful ROP gadgets in the
+kernel image by about 20%:
 
-This is also similar to what happens in the set Rick posted a while ago to
-support grouped vmalloc allocations:
+$ ROPgadget.py --nosys --nojop --binary vmlinux.stock | tail -n1
+Unique gadgets found: 337245
 
-[1] https://lore.kernel.org/lkml/20210405203711.1095940-1-rick.p.edgecombe@intel.com/
+$ ROPgadget.py --nosys --nojop --binary vmlinux.zero-call-regs | tail -n1
+Unique gadgets found: 267175
 
+and more notably removes simple "write-what-where" gadgets:
+
+$ ROPgadget.py --ropchain --binary vmlinux.stock | sed -n '/Step 1/,/Step 2/p'
+- Step 1 -- Write-what-where gadgets
+
+        [+] Gadget found: 0xffffffff8102d76c mov qword ptr [rsi], rdx ; ret
+        [+] Gadget found: 0xffffffff81000cf5 pop rsi ; ret
+        [+] Gadget found: 0xffffffff8104d7c8 pop rdx ; ret
+        [-] Can't find the 'xor rdx, rdx' gadget. Try with another 'mov [reg], reg'
+
+        [+] Gadget found: 0xffffffff814c2b4c mov qword ptr [rsi], rdi ; ret
+        [+] Gadget found: 0xffffffff81000cf5 pop rsi ; ret
+        [+] Gadget found: 0xffffffff81001e51 pop rdi ; ret
+        [-] Can't find the 'xor rdi, rdi' gadget. Try with another 'mov [reg], reg'
+
+        [+] Gadget found: 0xffffffff81540d61 mov qword ptr [rsi], rdi ; pop rbx ; pop rbp ; ret
+        [+] Gadget found: 0xffffffff81000cf5 pop rsi ; ret
+        [+] Gadget found: 0xffffffff81001e51 pop rdi ; ret
+        [-] Can't find the 'xor rdi, rdi' gadget. Try with another 'mov [reg], reg'
+
+        [+] Gadget found: 0xffffffff8105341e mov qword ptr [rsi], rax ; ret
+        [+] Gadget found: 0xffffffff81000cf5 pop rsi ; ret
+        [+] Gadget found: 0xffffffff81029a11 pop rax ; ret
+        [+] Gadget found: 0xffffffff811f1c3b xor rax, rax ; ret
+
+- Step 2 -- Init syscall number gadgets
+
+$ ROPgadget.py --ropchain --binary vmlinux.zero* | sed -n '/Step 1/,/Step 2/p'
+- Step 1 -- Write-what-where gadgets
+
+        [-] Can't find the 'mov qword ptr [r64], r64' gadget
+
+In parallel build tests, this has a less than 1% performance impact,
+and grows the image size less than 1%:
+
+$ size vmlinux.stock vmlinux.zero-call-regs
+   text    data     bss     dec     hex filename
+22437676   8559152 14127340 45124168 2b08a48 vmlinux.stock
+22453184   8563248 14110956 45127388 2b096dc vmlinux.zero-call-regs
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Makefile                   |  5 +++++
+ security/Kconfig.hardening | 17 +++++++++++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index 31dcdb3d61fa..810600618490 100644
+--- a/Makefile
++++ b/Makefile
+@@ -811,6 +811,11 @@ KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero
+ KBUILD_CFLAGS	+= -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
+ endif
+ 
++# Clear used registers at func exit (to reduce data lifetime and ROP gadgets).
++ifdef CONFIG_ZERO_CALL_USED_REGS
++KBUILD_CFLAGS	+= -fzero-call-used-regs=used-gpr
++endif
++
+ DEBUG_CFLAGS	:=
+ 
+ # Workaround for GCC versions < 5.0
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index 269967c4fc1b..85f7f2036725 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -217,6 +217,23 @@ config INIT_ON_FREE_DEFAULT_ON
+ 	  touching "cold" memory areas. Most cases see 3-5% impact. Some
+ 	  synthetic workloads have measured as high as 8%.
+ 
++config CC_HAS_ZERO_CALL_USED_REGS
++	def_bool $(cc-option,-fzero-call-used-regs=used-gpr)
++
++config ZERO_CALL_USED_REGS
++	bool "Enable register zeroing on function exit"
++	depends on CC_HAS_ZERO_CALL_USED_REGS
++	help
++	  At the end of functions, always zero any caller-used register
++	  contents. This helps ensure that temporary values are not
++	  leaked beyond the function boundary. This means that register
++	  contents are less likely to be available for side channels
++	  and information exposures. Additionally, this helps reduce the
++	  number of useful ROP gadgets by about 20% (and removes compiler
++	  generated "write-what-where" gadgets) in the resulting kernel
++	  image. This has a less than 1% performance impact on most
++	  workloads, and grows the image size less than 1%.
++
+ endmenu
+ 
+ endmenu
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
