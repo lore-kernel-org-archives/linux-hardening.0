@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96119C43462
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 00:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5087C43462
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 00:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B40C6112D
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 00:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE415613CB
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 00:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231430AbhEEAdX (ORCPT
+        id S231177AbhEEAd0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 May 2021 20:33:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:19816 "EHLO mga04.intel.com"
+        Tue, 4 May 2021 20:33:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:19823 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231350AbhEEAdW (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 May 2021 20:33:22 -0400
-IronPort-SDR: 5vvVEuizHfW9Vbt7TqucmD2O+IXMkZFkcACQtzgpcYLOY9N3QZcc2r8h8xQeoKUrzNCnYy86g6
- +LCZ7zfRQSpw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9974"; a="196058591"
+        id S231434AbhEEAdY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 4 May 2021 20:33:24 -0400
+IronPort-SDR: 20e8/Z0r6pkHX0iePIST/DjV5043mXkAuSbsYawupxvlhR+KZFxtKGXl/OcuiXQVtujKBybkF1
+ b9duMSsPduYQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9974"; a="196058596"
 X-IronPort-AV: E=Sophos;i="5.82,273,1613462400"; 
-   d="scan'208";a="196058591"
+   d="scan'208";a="196058596"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 17:32:27 -0700
-IronPort-SDR: Qqa/foM0GySgOOlFhGHAxlMC+r64sCbCcfkREouyUfA0fkoq5KrlRm0fs13S9pF2I66o4T9VQ4
- ApIzAmJWkXrA==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 17:32:28 -0700
+IronPort-SDR: n5FzI0DMWtZHqm16cE4XyBakjUGMbHRvOPkqq/nUBUeuUE55IKsspO+Ry/oUXbnS89HIhFAU9T
+ vS+Sne504Erw==
 X-IronPort-AV: E=Sophos;i="5.82,273,1613462400"; 
-   d="scan'208";a="429490773"
+   d="scan'208";a="429490799"
 Received: from rpedgeco-mobl3.amr.corp.intel.com (HELO localhost.intel.com) ([10.209.26.68])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 17:32:26 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 17:32:27 -0700
 From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
 To:     dave.hansen@intel.com, luto@kernel.org, peterz@infradead.org,
         linux-mm@kvack.org, x86@kernel.org, akpm@linux-foundation.org,
@@ -41,9 +41,9 @@ To:     dave.hansen@intel.com, luto@kernel.org, peterz@infradead.org,
 Cc:     ira.weiny@intel.com, rppt@kernel.org, dan.j.williams@intel.com,
         linux-kernel@vger.kernel.org,
         Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: [PATCH RFC 3/9] x86/mm/cpa: Add grouped page allocations
-Date:   Tue,  4 May 2021 17:30:26 -0700
-Message-Id: <20210505003032.489164-4-rick.p.edgecombe@intel.com>
+Subject: [PATCH RFC 5/9] x86, mm: Use cache of page tables
+Date:   Tue,  4 May 2021 17:30:28 -0700
+Message-Id: <20210505003032.489164-6-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210505003032.489164-1-rick.p.edgecombe@intel.com>
 References: <20210505003032.489164-1-rick.p.edgecombe@intel.com>
@@ -53,221 +53,374 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-For x86, setting memory permissions on the direct map results in fracturing
-large pages. Direct map fracturing can be reduced by locating pages that
-will have their permissions set close together.
+Change the page table allocation functions defined in pgalloc.h to use
+a cache of physically grouped pages. This will let the page tables to be
+set with PKS permissions later.
 
-Create a simple page cache that allocates pages from huge page size
-blocks. Don't guarantee that a page will come from a huge page grouping,
-instead fallback to non-grouped pages to fulfill the allocation if
-needed. Also, register a shrinker such that the system can ask for the
-pages back if needed. Since this is only needed when there is a direct
-map, compile it out on highmem systems.
+For userspace page tables, they are gathered up using mmu gather, and
+freed along with other types of pages in swap.c. Reuse the PageTable
+page flag to communicate that swap needs to return this page to the
+cache of page tables, and not free it to the page allocator. Set this flag
+in the free_tlb() family of functions called by mmu gather.
 
-Free pages in the cache are kept track of in per-node list inside a
-list_lru. NUMA_NO_NODE requests are serviced by checking each per-node
-list in a round robin fashion. If pages are requested for a certain node
-but the cache is empty for that node, a whole additional huge page size
-page is allocated.
+Do not set PKS permissions on the page tables, because the page table
+setting functions cannot handle it yet. This will be done in later
+patches.
 
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/include/asm/set_memory.h |  14 +++
- arch/x86/mm/pat/set_memory.c      | 151 ++++++++++++++++++++++++++++++
- 2 files changed, 165 insertions(+)
+ arch/x86/include/asm/pgalloc.h |  4 ++
+ arch/x86/mm/pgtable.c          | 75 ++++++++++++++++++++++++++++++++++
+ include/asm-generic/pgalloc.h  | 42 +++++++++++++++----
+ include/linux/mm.h             |  7 ++++
+ mm/swap.c                      |  7 ++++
+ mm/swap_state.c                |  6 +++
+ 6 files changed, 132 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 4352f08bfbb5..b63f09cc282a 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -4,6 +4,9 @@
+diff --git a/arch/x86/include/asm/pgalloc.h b/arch/x86/include/asm/pgalloc.h
+index 62ad61d6fefc..e38b54853a51 100644
+--- a/arch/x86/include/asm/pgalloc.h
++++ b/arch/x86/include/asm/pgalloc.h
+@@ -7,6 +7,10 @@
+ #include <linux/pagemap.h>
  
- #include <asm/page.h>
- #include <asm-generic/set_memory.h>
-+#include <linux/gfp.h>
-+#include <linux/list_lru.h>
-+#include <linux/shrinker.h>
+ #define __HAVE_ARCH_PTE_ALLOC_ONE
++#ifdef CONFIG_PKS_PG_TABLES
++#define __HAVE_ARCH_FREE_TABLE
++#define __HAVE_ARCH_ALLOC_TABLE
++#endif
+ #define __HAVE_ARCH_PGD_FREE
+ #include <asm-generic/pgalloc.h>
  
- /*
-  * The set_memory_* API can be used to change various attributes of a virtual
-@@ -135,4 +138,15 @@ static inline int clear_mce_nospec(unsigned long pfn)
-  */
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index f6a9e2e36642..7ccd031d2384 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -6,12 +6,16 @@
+ #include <asm/tlb.h>
+ #include <asm/fixmap.h>
+ #include <asm/mtrr.h>
++#include <asm/set_memory.h>
++#include <linux/page-flags.h>
+ 
+ #ifdef CONFIG_DYNAMIC_PHYSICAL_MASK
+ phys_addr_t physical_mask __ro_after_init = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+ EXPORT_SYMBOL(physical_mask);
  #endif
  
-+struct grouped_page_cache {
-+	struct shrinker shrinker;
-+	struct list_lru lru;
-+	gfp_t gfp;
-+	atomic_t nid_round_robin;
-+};
-+
-+int init_grouped_page_cache(struct grouped_page_cache *gpc, gfp_t gfp);
-+struct page *get_grouped_page(int node, struct grouped_page_cache *gpc);
-+void free_grouped_page(struct grouped_page_cache *gpc, struct page *page);
-+
- #endif /* _ASM_X86_SET_MEMORY_H */
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 16f878c26667..6877ef66793b 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2306,6 +2306,157 @@ int __init kernel_unmap_pages_in_pgd(pgd_t *pgd, unsigned long address,
- 	return retval;
++static struct grouped_page_cache gpc_pks;
++static bool pks_page_en;
+ #ifdef CONFIG_HIGHPTE
+ #define PGTABLE_HIGHMEM __GFP_HIGHMEM
+ #else
+@@ -33,6 +37,46 @@ pgtable_t pte_alloc_one(struct mm_struct *mm)
+ 	return __pte_alloc_one(mm, __userpte_alloc_gfp);
  }
  
-+#ifndef HIGHMEM
-+static struct page *__alloc_page_order(int node, gfp_t gfp_mask, int order)
++#ifdef CONFIG_PKS_PG_TABLES
++struct page *alloc_table(gfp_t gfp)
 +{
-+	if (node == NUMA_NO_NODE)
-+		return alloc_pages(gfp_mask, order);
++	struct page *table;
 +
-+	return alloc_pages_node(node, gfp_mask, order);
-+}
++	if (!pks_page_en)
++		return alloc_page(gfp);
 +
-+static struct grouped_page_cache *__get_gpc_from_sc(struct shrinker *shrinker)
-+{
-+	return container_of(shrinker, struct grouped_page_cache, shrinker);
-+}
-+
-+static unsigned long grouped_shrink_count(struct shrinker *shrinker,
-+					  struct shrink_control *sc)
-+{
-+	struct grouped_page_cache *gpc = __get_gpc_from_sc(shrinker);
-+	unsigned long page_cnt = list_lru_shrink_count(&gpc->lru, sc);
-+
-+	return page_cnt ? page_cnt : SHRINK_EMPTY;
-+}
-+
-+static enum lru_status grouped_isolate(struct list_head *item,
-+				       struct list_lru_one *list,
-+				       spinlock_t *lock, void *cb_arg)
-+{
-+	struct list_head *dispose = cb_arg;
-+
-+	list_lru_isolate_move(list, item, dispose);
-+
-+	return LRU_REMOVED;
-+}
-+
-+static void __dispose_pages(struct grouped_page_cache *gpc, struct list_head *head)
-+{
-+	struct list_head *cur, *next;
-+
-+	list_for_each_safe(cur, next, head) {
-+		struct page *page = list_entry(head, struct page, lru);
-+
-+		list_del(cur);
-+
-+		__free_pages(page, 0);
-+	}
-+}
-+
-+static unsigned long grouped_shrink_scan(struct shrinker *shrinker,
-+					 struct shrink_control *sc)
-+{
-+	struct grouped_page_cache *gpc = __get_gpc_from_sc(shrinker);
-+	unsigned long isolated;
-+	LIST_HEAD(freeable);
-+
-+	if (!(sc->gfp_mask & gpc->gfp))
-+		return SHRINK_STOP;
-+
-+	isolated = list_lru_shrink_walk(&gpc->lru, sc, grouped_isolate,
-+					&freeable);
-+	__dispose_pages(gpc, &freeable);
-+
-+	/* Every item walked gets isolated */
-+	sc->nr_scanned += isolated;
-+
-+	return isolated;
-+}
-+
-+static struct page *__remove_first_page(struct grouped_page_cache *gpc, int node)
-+{
-+	unsigned int start_nid, i;
-+	struct list_head *head;
-+
-+	if (node != NUMA_NO_NODE) {
-+		head = list_lru_get_mru(&gpc->lru, node);
-+		if (head)
-+			return list_entry(head, struct page, lru);
++	table = get_grouped_page(numa_node_id(), &gpc_pks);
++	if (!table)
 +		return NULL;
++
++	if (gfp & __GFP_ZERO)
++		memset(page_address(table), 0, PAGE_SIZE);
++
++	if (memcg_kmem_enabled() &&
++	    gfp & __GFP_ACCOUNT &&
++	    !__memcg_kmem_charge_page(table, gfp, 0)) {
++		free_table(table);
++		table = NULL;
 +	}
 +
-+	/* If NUMA_NO_NODE, search the nodes in round robin for a page */
-+	start_nid = (unsigned int)atomic_fetch_inc(&gpc->nid_round_robin) % nr_node_ids;
-+	for (i = 0; i < nr_node_ids; i++) {
-+		int cur_nid = (start_nid + i) % nr_node_ids;
++	VM_BUG_ON_PAGE(*(unsigned long *)&table->ptl, table);
 +
-+		head = list_lru_get_mru(&gpc->lru, cur_nid);
-+		if (head)
-+			return list_entry(head, struct page, lru);
++	return table;
++}
++
++void free_table(struct page *table_page)
++{
++	if (!pks_page_en) {
++		__free_pages(table_page, 0);
++		return;
 +	}
 +
-+	return NULL;
++	if (memcg_kmem_enabled() && PageMemcgKmem(table_page))
++		__memcg_kmem_uncharge_page(table_page, 0);
++	free_grouped_page(&gpc_pks, table_page);
 +}
++#endif /* CONFIG_PKS_PG_TABLES */
 +
-+/* Get and add some new pages to the cache to be used by VM_GROUP_PAGES */
-+static struct page *__replenish_grouped_pages(struct grouped_page_cache *gpc, int node)
+ static int __init setup_userpte(char *arg)
+ {
+ 	if (!arg)
+@@ -54,6 +98,8 @@ void ___pte_free_tlb(struct mmu_gather *tlb, struct page *pte)
+ {
+ 	pgtable_pte_page_dtor(pte);
+ 	paravirt_release_pte(page_to_pfn(pte));
++	/* Set Page Table so swap knows how to free it */
++	__SetPageTable(pte);
+ 	paravirt_tlb_remove_table(tlb, pte);
+ }
+ 
+@@ -70,12 +116,16 @@ void ___pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd)
+ 	tlb->need_flush_all = 1;
+ #endif
+ 	pgtable_pmd_page_dtor(page);
++	/* Set Page Table so swap nows how to free it */
++	__SetPageTable(virt_to_page(pmd));
+ 	paravirt_tlb_remove_table(tlb, page);
+ }
+ 
+ #if CONFIG_PGTABLE_LEVELS > 3
+ void ___pud_free_tlb(struct mmu_gather *tlb, pud_t *pud)
+ {
++	/* Set Page Table so swap nows how to free it */
++	__SetPageTable(virt_to_page(pud));
+ 	paravirt_release_pud(__pa(pud) >> PAGE_SHIFT);
+ 	paravirt_tlb_remove_table(tlb, virt_to_page(pud));
+ }
+@@ -83,6 +133,8 @@ void ___pud_free_tlb(struct mmu_gather *tlb, pud_t *pud)
+ #if CONFIG_PGTABLE_LEVELS > 4
+ void ___p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d)
+ {
++	/* Set Page Table so swap nows how to free it */
++	__SetPageTable(virt_to_page(p4d));
+ 	paravirt_release_p4d(__pa(p4d) >> PAGE_SHIFT);
+ 	paravirt_tlb_remove_table(tlb, virt_to_page(p4d));
+ }
+@@ -411,12 +463,24 @@ static inline void _pgd_free(pgd_t *pgd)
+ 
+ static inline pgd_t *_pgd_alloc(void)
+ {
++	if (pks_page_en) {
++		struct page *page = alloc_table(GFP_PGTABLE_USER);
++
++		if (!page)
++			return NULL;
++		return page_address(page);
++	}
++
+ 	return (pgd_t *)__get_free_pages(GFP_PGTABLE_USER,
+ 					 PGD_ALLOCATION_ORDER);
+ }
+ 
+ static inline void _pgd_free(pgd_t *pgd)
+ {
++	if (pks_page_en) {
++		free_table(virt_to_page(pgd));
++		return;
++	}
+ 	free_pages((unsigned long)pgd, PGD_ALLOCATION_ORDER);
+ }
+ #endif /* CONFIG_X86_PAE */
+@@ -859,6 +923,17 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+ 	return 1;
+ }
+ 
++#ifdef CONFIG_PKS_PG_TABLES
++static int __init pks_page_init(void)
 +{
-+	const unsigned int hpage_cnt = HPAGE_SIZE >> PAGE_SHIFT;
-+	struct page *page;
-+	int i;
-+
-+	page = __alloc_page_order(node, gpc->gfp, HUGETLB_PAGE_ORDER);
-+	if (!page)
-+		return __alloc_page_order(node, gpc->gfp, 0);
-+
-+	split_page(page, HUGETLB_PAGE_ORDER);
-+
-+	for (i = 1; i < hpage_cnt; i++)
-+		free_grouped_page(gpc, &page[i]);
-+
-+	return &page[0];
-+}
-+
-+int init_grouped_page_cache(struct grouped_page_cache *gpc, gfp_t gfp)
-+{
-+	int err = 0;
-+
-+	memset(gpc, 0, sizeof(struct grouped_page_cache));
-+
-+	if (list_lru_init(&gpc->lru))
-+		goto out;
-+
-+	gpc->shrinker.count_objects = grouped_shrink_count;
-+	gpc->shrinker.scan_objects = grouped_shrink_scan;
-+	gpc->shrinker.seeks = DEFAULT_SEEKS;
-+	gpc->shrinker.flags = SHRINKER_NUMA_AWARE;
-+
-+	err = register_shrinker(&gpc->shrinker);
-+	if (err)
-+		list_lru_destroy(&gpc->lru);
++	pks_page_en = !init_grouped_page_cache(&gpc_pks, GFP_KERNEL | PGTABLE_HIGHMEM);
 +
 +out:
-+	return err;
++	return !pks_page_en;
 +}
 +
-+struct page *get_grouped_page(int node, struct grouped_page_cache *gpc)
++device_initcall(pks_page_init);
++#endif /* CONFIG_PKS_PG_TABLES */
+ #else /* !CONFIG_X86_64 */
+ 
+ int pud_free_pmd_page(pud_t *pud, unsigned long addr)
+diff --git a/include/asm-generic/pgalloc.h b/include/asm-generic/pgalloc.h
+index 02932efad3ab..3437db2a2740 100644
+--- a/include/asm-generic/pgalloc.h
++++ b/include/asm-generic/pgalloc.h
+@@ -2,11 +2,26 @@
+ #ifndef __ASM_GENERIC_PGALLOC_H
+ #define __ASM_GENERIC_PGALLOC_H
+ 
++#include <linux/mm.h>
++
+ #ifdef CONFIG_MMU
+ 
+ #define GFP_PGTABLE_KERNEL	(GFP_KERNEL | __GFP_ZERO)
+ #define GFP_PGTABLE_USER	(GFP_PGTABLE_KERNEL | __GFP_ACCOUNT)
+ 
++#ifndef __HAVE_ARCH_ALLOC_TABLE
++static inline struct page *alloc_table(gfp_t gfp)
 +{
-+	struct page *page;
-+
-+	page = __remove_first_page(gpc, node);
-+
-+	if (page)
-+		return page;
-+
-+	return __replenish_grouped_pages(gpc, node);
++	return alloc_page(gfp);
 +}
++#else /* __HAVE_ARCH_ALLOC_TABLE */
++extern struct page *alloc_table(gfp_t gfp);
++#endif /* __HAVE_ARCH_ALLOC_TABLE */
 +
-+void free_grouped_page(struct grouped_page_cache *gpc, struct page *page)
++#ifdef __HAVE_ARCH_FREE_TABLE
++extern void free_table(struct page *);
++#endif /* __HAVE_ARCH_FREE_TABLE */
++
+ /**
+  * __pte_alloc_one_kernel - allocate a page for PTE-level kernel page table
+  * @mm: the mm_struct of the current context
+@@ -18,7 +33,12 @@
+  */
+ static inline pte_t *__pte_alloc_one_kernel(struct mm_struct *mm)
+ {
+-	return (pte_t *)__get_free_page(GFP_PGTABLE_KERNEL);
++	struct page *page = alloc_table(GFP_PGTABLE_KERNEL);
++
++	if (!page)
++		return NULL;
++
++	return (pte_t *)page_address(page);
+ }
+ 
+ #ifndef __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
+@@ -41,7 +61,7 @@ static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+  */
+ static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+ {
+-	free_page((unsigned long)pte);
++	free_table(virt_to_page(pte));
+ }
+ 
+ /**
+@@ -60,11 +80,11 @@ static inline pgtable_t __pte_alloc_one(struct mm_struct *mm, gfp_t gfp)
+ {
+ 	struct page *pte;
+ 
+-	pte = alloc_page(gfp);
++	pte = alloc_table(gfp);
+ 	if (!pte)
+ 		return NULL;
+ 	if (!pgtable_pte_page_ctor(pte)) {
+-		__free_page(pte);
++		free_table(pte);
+ 		return NULL;
+ 	}
+ 
+@@ -99,7 +119,7 @@ static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+ static inline void pte_free(struct mm_struct *mm, struct page *pte_page)
+ {
+ 	pgtable_pte_page_dtor(pte_page);
+-	__free_page(pte_page);
++	free_table(pte_page);
+ }
+ 
+ 
+@@ -123,11 +143,11 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
+ 
+ 	if (mm == &init_mm)
+ 		gfp = GFP_PGTABLE_KERNEL;
+-	page = alloc_pages(gfp, 0);
++	page = alloc_table(gfp);
+ 	if (!page)
+ 		return NULL;
+ 	if (!pgtable_pmd_page_ctor(page)) {
+-		__free_pages(page, 0);
++		free_table(page);
+ 		return NULL;
+ 	}
+ 	return (pmd_t *)page_address(page);
+@@ -139,7 +159,7 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+ {
+ 	BUG_ON((unsigned long)pmd & (PAGE_SIZE-1));
+ 	pgtable_pmd_page_dtor(virt_to_page(pmd));
+-	free_page((unsigned long)pmd);
++	free_table(virt_to_page(pmd));
+ }
+ #endif
+ 
+@@ -160,10 +180,14 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
+ {
+ 	gfp_t gfp = GFP_PGTABLE_USER;
++	struct page *table;
+ 
+ 	if (mm == &init_mm)
+ 		gfp = GFP_PGTABLE_KERNEL;
+-	return (pud_t *)get_zeroed_page(gfp);
++	table = alloc_table(gfp);
++	if (!table)
++		return NULL;
++	return (pud_t *)page_address(table);
+ }
+ #endif
+ 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 64a71bf20536..d6dedfc02aab 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2185,6 +2185,13 @@ static inline bool ptlock_init(struct page *page) { return true; }
+ static inline void ptlock_free(struct page *page) {}
+ #endif /* USE_SPLIT_PTE_PTLOCKS */
+ 
++#ifndef CONFIG_PKS_PG_TABLES
++static inline void free_table(struct page *table_page)
 +{
-+	INIT_LIST_HEAD(&page->lru);
-+	list_lru_add_node(&gpc->lru, &page->lru, page_to_nid(page));
++	__free_pages(table_page, 0);
 +}
-+#endif /* !HIGHMEM */
++#endif /* CONFIG_PKS_PG_TABLES */
++
+ static inline void pgtable_init(void)
+ {
+ 	ptlock_cache_init();
+diff --git a/mm/swap.c b/mm/swap.c
+index 31b844d4ed94..d6ff697be28e 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -36,6 +36,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/page_idle.h>
+ #include <linux/local_lock.h>
++#include <asm/pgalloc.h>
+ 
+ #include "internal.h"
+ 
+@@ -888,6 +889,12 @@ void release_pages(struct page **pages, int nr)
+ 			continue;
+ 		}
+ 
++		if (PageTable(page)) {
++			__ClearPageTable(page);
++			free_table(page);
++			continue;
++		}
++
+ 		if (!put_page_testzero(page))
+ 			continue;
+ 
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index 3cdee7b11da9..a60ec3d4ab21 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -22,6 +22,7 @@
+ #include <linux/swap_slots.h>
+ #include <linux/huge_mm.h>
+ #include <linux/shmem_fs.h>
++#include <asm/pgalloc.h>
+ #include "internal.h"
+ 
  /*
-  * The testcases use internal knowledge of the implementation that shouldn't
-  * be exposed to the rest of the kernel. Include these directly here.
+@@ -310,6 +311,11 @@ static inline void free_swap_cache(struct page *page)
+ void free_page_and_swap_cache(struct page *page)
+ {
+ 	free_swap_cache(page);
++	if (PageTable(page)) {
++		__ClearPageTable(page);
++		free_table(page);
++		return;
++	}
+ 	if (!is_huge_zero_page(page))
+ 		put_page(page);
+ }
 -- 
 2.30.2
 
