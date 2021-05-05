@@ -2,84 +2,286 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FDCC433B4
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 11:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35ABC43460
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 12:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B634261157
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 11:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA66461222
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 May 2021 12:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232231AbhEEL65 (ORCPT
+        id S233116AbhEEMKe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 May 2021 07:58:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231678AbhEEL65 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 May 2021 07:58:57 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF149C061574;
-        Wed,  5 May 2021 04:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FJVYW0nVvzqzV0WuVSs2TE+406TDgUZdxaAg4wu6QtQ=; b=nJLzibjO7NeYl3c8yjFLSafo+H
-        nPW9d5mpe6/UtkdfbkiY8dlbuJiyUAJVhUDchJ0hrxMm6YWssSXl8nm8yx1w6e6SD8ASz+bx15rJX
-        lNU2/cH5dLiCzBV/LtxSgGkrZeoL5kizOm5brfC1OOfnmvue+nHegEoUBa+gk3hKb1pRGZNob7b/H
-        ECFF+QqD6WpyPg7PPCh3pPs70ro2wTZBa2OgYya5a0j4wDd/ue8jYhDtmZrpOQoUSP4PkFRDrds5m
-        rU07lsDHCE3TGxxbc86eji6Ptn1c4tWQ/Vn2zzzOlRFOZIh+ar/V+ZaKq9VGyC2tigC9Vjs2c5pSy
-        u5NjT/4Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1leG8X-000HUJ-AN; Wed, 05 May 2021 11:56:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 970023001CD;
-        Wed,  5 May 2021 13:56:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 238D92B73EFF8; Wed,  5 May 2021 13:56:16 +0200 (CEST)
-Date:   Wed, 5 May 2021 13:56:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Rick Edgecombe <rick.p.edgecombe@intel.com>, dave.hansen@intel.com,
-        luto@kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
+        Wed, 5 May 2021 08:10:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233569AbhEEMJv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 5 May 2021 08:09:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F045A61157;
+        Wed,  5 May 2021 12:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620216516;
+        bh=dM4xD7b/mynWlGakcF1uA9Zbsm4TJNc8N5AP7gQzHoQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mMsBs0VQQEhzmv7wcf9rNPaQvIO9QQUHxDjE492vUIP2Dvjdd+495pl+42NV1EsXB
+         ZUuy8/XWQtsxayIoLVKJcuXTIEjQlskVZX/5DSd4vEoRHegah/qcCdsDcuSjLOciBd
+         WQPiGhecWsUkNkYNHi3QndzM4X704+ZP82CuqIPvqTJ7Rg+0VpB7oIw4n4v9kw8tJ2
+         SDi8frkUUX+cQIaOuuj54dnPApfiPYd5Twzr/dLew5P1oy/BDnIbe7wqDowNGEQKo6
+         XZ8Mwf3LcA47CIa40eeIqJVf4mMHaqv+u6RmhEwBw5kSQfiF1g9IvjxFe4ccFowSY/
+         iY3jJfaCdHxWw==
+Date:   Wed, 5 May 2021 15:08:27 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc:     dave.hansen@intel.com, luto@kernel.org, peterz@infradead.org,
+        linux-mm@kvack.org, x86@kernel.org, akpm@linux-foundation.org,
+        linux-hardening@vger.kernel.org,
         kernel-hardening@lists.openwall.com, ira.weiny@intel.com,
-        rppt@kernel.org, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/9] PKS write protected page tables
-Message-ID: <YJKH4HDuCGLArdmp@hirez.programming.kicks-ass.net>
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/9] x86/mm/cpa: Add grouped page allocations
+Message-ID: <YJKKu7kMCtCuel2L@kernel.org>
 References: <20210505003032.489164-1-rick.p.edgecombe@intel.com>
- <d01c7845-6f9c-6770-c861-e624c3e2bfc5@suse.cz>
+ <20210505003032.489164-4-rick.p.edgecombe@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d01c7845-6f9c-6770-c861-e624c3e2bfc5@suse.cz>
+In-Reply-To: <20210505003032.489164-4-rick.p.edgecombe@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 05, 2021 at 01:08:35PM +0200, Vlastimil Babka wrote:
-> On 5/5/21 2:30 AM, Rick Edgecombe wrote:
-
-> > Why use PKS for this?
-> > =====================
-> > PKS is an upcoming CPU feature that allows supervisor virtual memory 
-> > permissions to be changed without flushing the TLB, like PKU does for user 
-> > memory. Protecting page tables would normally be really expensive because you 
-> > would have to do it with paging itself. PKS helps by providing a way to toggle 
-> > the writability of the page tables with just a per-cpu MSR.
+On Tue, May 04, 2021 at 05:30:26PM -0700, Rick Edgecombe wrote:
+> For x86, setting memory permissions on the direct map results in fracturing
+> large pages. Direct map fracturing can be reduced by locating pages that
+> will have their permissions set close together.
 > 
-> I can see in patch 8/9 that you are flipping the MSR around individual
-> operations on page table entries. In my patch I hooked making the page table
-> writable to obtaining the page table lock (IIRC I had only the PTE level fully
-> handled though). Wonder if that would be better tradeoff even for your MSR approach?
+> Create a simple page cache that allocates pages from huge page size
+> blocks. Don't guarantee that a page will come from a huge page grouping,
+> instead fallback to non-grouped pages to fulfill the allocation if
+> needed. Also, register a shrinker such that the system can ask for the
+> pages back if needed. Since this is only needed when there is a direct
+> map, compile it out on highmem systems.
 
-There's also the HIGHPTE code we could abuse to kmap an alias while
-we're at it.
+I only had time to skim through the patches, I like the idea of having a
+simple cache that allocates larger pages with a fallback to basic page
+size.
+
+I just think it should be more generic and closer to the page allocator.
+I was thinking about adding a GFP flag that will tell that the allocated
+pages should be removed from the direct map. Then alloc_pages() could use
+such cache whenever this GFP flag is specified with a fallback for lower
+order allocations.
+ 
+> Free pages in the cache are kept track of in per-node list inside a
+> list_lru. NUMA_NO_NODE requests are serviced by checking each per-node
+> list in a round robin fashion. If pages are requested for a certain node
+> but the cache is empty for that node, a whole additional huge page size
+> page is allocated.
+> 
+> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> ---
+>  arch/x86/include/asm/set_memory.h |  14 +++
+>  arch/x86/mm/pat/set_memory.c      | 151 ++++++++++++++++++++++++++++++
+>  2 files changed, 165 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+> index 4352f08bfbb5..b63f09cc282a 100644
+> --- a/arch/x86/include/asm/set_memory.h
+> +++ b/arch/x86/include/asm/set_memory.h
+> @@ -4,6 +4,9 @@
+>  
+>  #include <asm/page.h>
+>  #include <asm-generic/set_memory.h>
+> +#include <linux/gfp.h>
+> +#include <linux/list_lru.h>
+> +#include <linux/shrinker.h>
+>  
+>  /*
+>   * The set_memory_* API can be used to change various attributes of a virtual
+> @@ -135,4 +138,15 @@ static inline int clear_mce_nospec(unsigned long pfn)
+>   */
+>  #endif
+>  
+> +struct grouped_page_cache {
+> +	struct shrinker shrinker;
+> +	struct list_lru lru;
+> +	gfp_t gfp;
+> +	atomic_t nid_round_robin;
+> +};
+> +
+> +int init_grouped_page_cache(struct grouped_page_cache *gpc, gfp_t gfp);
+> +struct page *get_grouped_page(int node, struct grouped_page_cache *gpc);
+> +void free_grouped_page(struct grouped_page_cache *gpc, struct page *page);
+> +
+>  #endif /* _ASM_X86_SET_MEMORY_H */
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index 16f878c26667..6877ef66793b 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -2306,6 +2306,157 @@ int __init kernel_unmap_pages_in_pgd(pgd_t *pgd, unsigned long address,
+>  	return retval;
+>  }
+>  
+> +#ifndef HIGHMEM
+> +static struct page *__alloc_page_order(int node, gfp_t gfp_mask, int order)
+> +{
+> +	if (node == NUMA_NO_NODE)
+> +		return alloc_pages(gfp_mask, order);
+> +
+> +	return alloc_pages_node(node, gfp_mask, order);
+> +}
+> +
+> +static struct grouped_page_cache *__get_gpc_from_sc(struct shrinker *shrinker)
+> +{
+> +	return container_of(shrinker, struct grouped_page_cache, shrinker);
+> +}
+> +
+> +static unsigned long grouped_shrink_count(struct shrinker *shrinker,
+> +					  struct shrink_control *sc)
+> +{
+> +	struct grouped_page_cache *gpc = __get_gpc_from_sc(shrinker);
+> +	unsigned long page_cnt = list_lru_shrink_count(&gpc->lru, sc);
+> +
+> +	return page_cnt ? page_cnt : SHRINK_EMPTY;
+> +}
+> +
+> +static enum lru_status grouped_isolate(struct list_head *item,
+> +				       struct list_lru_one *list,
+> +				       spinlock_t *lock, void *cb_arg)
+> +{
+> +	struct list_head *dispose = cb_arg;
+> +
+> +	list_lru_isolate_move(list, item, dispose);
+> +
+> +	return LRU_REMOVED;
+> +}
+> +
+> +static void __dispose_pages(struct grouped_page_cache *gpc, struct list_head *head)
+> +{
+> +	struct list_head *cur, *next;
+> +
+> +	list_for_each_safe(cur, next, head) {
+> +		struct page *page = list_entry(head, struct page, lru);
+> +
+> +		list_del(cur);
+> +
+> +		__free_pages(page, 0);
+> +	}
+> +}
+> +
+> +static unsigned long grouped_shrink_scan(struct shrinker *shrinker,
+> +					 struct shrink_control *sc)
+> +{
+> +	struct grouped_page_cache *gpc = __get_gpc_from_sc(shrinker);
+> +	unsigned long isolated;
+> +	LIST_HEAD(freeable);
+> +
+> +	if (!(sc->gfp_mask & gpc->gfp))
+> +		return SHRINK_STOP;
+> +
+> +	isolated = list_lru_shrink_walk(&gpc->lru, sc, grouped_isolate,
+> +					&freeable);
+> +	__dispose_pages(gpc, &freeable);
+> +
+> +	/* Every item walked gets isolated */
+> +	sc->nr_scanned += isolated;
+> +
+> +	return isolated;
+> +}
+> +
+> +static struct page *__remove_first_page(struct grouped_page_cache *gpc, int node)
+> +{
+> +	unsigned int start_nid, i;
+> +	struct list_head *head;
+> +
+> +	if (node != NUMA_NO_NODE) {
+> +		head = list_lru_get_mru(&gpc->lru, node);
+> +		if (head)
+> +			return list_entry(head, struct page, lru);
+> +		return NULL;
+> +	}
+> +
+> +	/* If NUMA_NO_NODE, search the nodes in round robin for a page */
+> +	start_nid = (unsigned int)atomic_fetch_inc(&gpc->nid_round_robin) % nr_node_ids;
+> +	for (i = 0; i < nr_node_ids; i++) {
+> +		int cur_nid = (start_nid + i) % nr_node_ids;
+> +
+> +		head = list_lru_get_mru(&gpc->lru, cur_nid);
+> +		if (head)
+> +			return list_entry(head, struct page, lru);
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +/* Get and add some new pages to the cache to be used by VM_GROUP_PAGES */
+> +static struct page *__replenish_grouped_pages(struct grouped_page_cache *gpc, int node)
+> +{
+> +	const unsigned int hpage_cnt = HPAGE_SIZE >> PAGE_SHIFT;
+> +	struct page *page;
+> +	int i;
+> +
+> +	page = __alloc_page_order(node, gpc->gfp, HUGETLB_PAGE_ORDER);
+> +	if (!page)
+> +		return __alloc_page_order(node, gpc->gfp, 0);
+> +
+> +	split_page(page, HUGETLB_PAGE_ORDER);
+> +
+> +	for (i = 1; i < hpage_cnt; i++)
+> +		free_grouped_page(gpc, &page[i]);
+> +
+> +	return &page[0];
+> +}
+> +
+> +int init_grouped_page_cache(struct grouped_page_cache *gpc, gfp_t gfp)
+> +{
+> +	int err = 0;
+> +
+> +	memset(gpc, 0, sizeof(struct grouped_page_cache));
+> +
+> +	if (list_lru_init(&gpc->lru))
+> +		goto out;
+> +
+> +	gpc->shrinker.count_objects = grouped_shrink_count;
+> +	gpc->shrinker.scan_objects = grouped_shrink_scan;
+> +	gpc->shrinker.seeks = DEFAULT_SEEKS;
+> +	gpc->shrinker.flags = SHRINKER_NUMA_AWARE;
+> +
+> +	err = register_shrinker(&gpc->shrinker);
+> +	if (err)
+> +		list_lru_destroy(&gpc->lru);
+> +
+> +out:
+> +	return err;
+> +}
+> +
+> +struct page *get_grouped_page(int node, struct grouped_page_cache *gpc)
+> +{
+> +	struct page *page;
+> +
+> +	page = __remove_first_page(gpc, node);
+> +
+> +	if (page)
+> +		return page;
+> +
+> +	return __replenish_grouped_pages(gpc, node);
+> +}
+> +
+> +void free_grouped_page(struct grouped_page_cache *gpc, struct page *page)
+> +{
+> +	INIT_LIST_HEAD(&page->lru);
+> +	list_lru_add_node(&gpc->lru, &page->lru, page_to_nid(page));
+> +}
+> +#endif /* !HIGHMEM */
+>  /*
+>   * The testcases use internal knowledge of the implementation that shouldn't
+>   * be exposed to the rest of the kernel. Include these directly here.
+> -- 
+> 2.30.2
+> 
+
+-- 
+Sincerely yours,
+Mike.
