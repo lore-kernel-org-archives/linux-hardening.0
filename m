@@ -2,66 +2,71 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2429AC433ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 May 2021 15:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F36C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 May 2021 15:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A7461260
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 May 2021 15:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4AC616EA
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 May 2021 15:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231955AbhEKPsa (ORCPT
+        id S231908AbhEKPuj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 May 2021 11:48:30 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.107]:37506 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231769AbhEKPsa (ORCPT
+        Tue, 11 May 2021 11:50:39 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.36]:45552 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231561AbhEKPuj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 May 2021 11:48:30 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 246E75246
-        for <linux-hardening@vger.kernel.org>; Tue, 11 May 2021 10:47:21 -0500 (CDT)
+        Tue, 11 May 2021 11:50:39 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 5C954400D5C94
+        for <linux-hardening@vger.kernel.org>; Tue, 11 May 2021 10:49:31 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id gUbRlEaBjAEP6gUbRlErkU; Tue, 11 May 2021 10:47:21 -0500
+        id gUdXlTZ8gMGeEgUdXlZEzW; Tue, 11 May 2021 10:49:31 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yrKbsil82zCAxQuZY1OThc7wmAtbltQ61jU84SGfZXQ=; b=WEvR8kT1FCLBV+5H+YlDRzcbvV
-        RI+K8QsFpjKASN7BLxRiFHGT1bahl9kVNBMBmAwGmfdbXptsfc14blEOBMC40nDbWdlKUckmE+6G2
-        5W98vTlftaSqwddSmwCepePNtak6u9sHP+/64and8cZWvzpHXQB1B/oiucsoD02kn9lh5mvSQN1Mb
-        7ttdUjSI3HGyXyQZG83cOVY6tWcC7wFIq3+KHd0hgd1bS65qm9squMwjrVqI1TnDo+qa0oR63r+WZ
-        mmk6m4GiaEnoBFKZf9oXXAfmUSPQFy5dNBfISy4lSnnVck6gONm8RKgGLwOIL/Xn7fjUrr8Bjy6hy
-        4r3hHWKQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:59008 helo=[192.168.15.8])
+        bh=du7TLirKJwuRndTVgzHHBCMXvT6lZMGk+j6j2JK4ikk=; b=jVO4W/UG3fiHMDSm9xE8Ra87k3
+        +cgQgqzxJVZdYJVsdqhpoh0FUWz2VDu+NJczDnC8WrpoxH++yGLWMSWG3vY3L4TwcEYXqt/VYGwfS
+        Iq31krhyN9/zwtnmsYa6hR2l5qrGI5RbO2Mobfbn1y34LKFCKc6D5eLAQx35mV97uY/wAYMkfgXsp
+        VBABL308IUxeJpnKvlfvfqVxAxxg9F58lw2s/1Y7rEoPe1aUmq+ePxI3C45k6ughER11G8y7I7zE2
+        mWTQsmaxiHyhKmUDzHzrf4wrxEimMLhzUQ83BNifaZvm0BwlnDyKzNINSGViHnLXpKpL1nFECJa15
+        lAWA6ndQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:59016 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lgUbO-000TAh-Nm; Tue, 11 May 2021 10:47:18 -0500
-Subject: Re: [PATCH][next] media: siano: Fix multiple out-of-bounds warnings
- in smscore_load_firmware_family2()
+        id 1lgUdS-000VgQ-Ji; Tue, 11 May 2021 10:49:26 -0500
+Subject: Re: [Intel-wired-lan] [PATCH][next] ixgbe: Fix out-bounds warning in
+ ixgbe_host_interface_command()
+To:     "Switzer, David" <david.switzer@intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Brandeburg, Jesse" <jesse.brandeburg@intel.com>,
+        "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+References: <20210413190345.GA304933@embeddedor>
+ <MW3PR11MB47483A28574E9F2C5517D3C5EB589@MW3PR11MB4748.namprd11.prod.outlook.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210311021947.GA129388@embeddedor>
- <b0e46b46-db9a-7e3d-cadb-e3855c68373e@embeddedor.com>
- <3936c005-0b53-bdae-d5ba-07f68eac628d@embeddedor.com>
-Message-ID: <63338f6d-f21f-e249-ac0f-02cb5d4f68c6@embeddedor.com>
-Date:   Tue, 11 May 2021 10:47:50 -0500
+Message-ID: <b0749fb9-ff4e-3237-e2f7-b97255545eb0@embeddedor.com>
+Date:   Tue, 11 May 2021 10:49:55 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <3936c005-0b53-bdae-d5ba-07f68eac628d@embeddedor.com>
+In-Reply-To: <MW3PR11MB47483A28574E9F2C5517D3C5EB589@MW3PR11MB4748.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -73,194 +78,69 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lgUbO-000TAh-Nm
+X-Exim-ID: 1lgUdS-000VgQ-Ji
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:59008
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:59016
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 30
+X-Email-Count: 41
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hi all,
+
+On 5/6/21 02:25, Switzer, David wrote:
+> 
+>> -----Original Message-----
+>> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
+>> Gustavo A. R. Silva
+>> Sent: Tuesday, April 13, 2021 12:04 PM
+>> To: Brandeburg, Jesse <jesse.brandeburg@intel.com>; Nguyen, Anthony L
+>> <anthony.l.nguyen@intel.com>; David S. Miller <davem@davemloft.net>; Jakub
+>> Kicinski <kuba@kernel.org>
+>> Cc: Kees Cook <keescook@chromium.org>; netdev@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; Gustavo A. R. Silva <gustavoars@kernel.org>; intel-
+>> wired-lan@lists.osuosl.org; linux-hardening@vger.kernel.org
+>> Subject: [Intel-wired-lan] [PATCH][next] ixgbe: Fix out-bounds warning in
+>> ixgbe_host_interface_command()
+>>
+>> Replace union with a couple of pointers in order to fix the following out-of-
+>> bounds warning:
+>>
+>>  CC [M]  drivers/net/ethernet/intel/ixgbe/ixgbe_common.o
+>> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c: In function
+>> ‘ixgbe_host_interface_command’:
+>> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:3729:13: warning: array
+>> subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-
+>> bounds]
+>> 3729 |   bp->u32arr[bi] = IXGBE_READ_REG_ARRAY(hw, IXGBE_FLEX_MNG, bi);
+>>      |   ~~~~~~~~~~^~~~
+>> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:3682:7: note: while
+>> referencing ‘u32arr’
+>> 3682 |   u32 u32arr[1];
+>>      |       ^~~~~~
+>>
+>> This helps with the ongoing efforts to globally enable -Warray-bounds.
+>>
+>> Link: https://github.com/KSPP/linux/issues/109
+>> Co-developed-by: Kees Cook <keescook@chromium.org>
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 16 +++++++---------
+>> 1 file changed, 7 insertions(+), 9 deletions(-)
+>>
+> Tested-by: Dave Switzer <david.switzer@intel.com>
+
+Thanks for this, Dave. :)
 
 By the way, we are about to be able to globally enable -Warray-bounds and,
-these are the last out-of-bounds warnings in linux-next.
+this is one of the last out-of-bounds warnings in linux-next.
 
 Thanks
 --
 Gustavo
-
-On 5/11/21 10:18, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> Friendly ping (second one): who can take this, please?
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> On 3/26/21 11:30, Gustavo A. R. Silva wrote:
->> Hi all,
->>
->> Friendly ping: who can take this, please?
->>
->> Thanks
->> --
->> Gustavo
->>
->> On 3/10/21 20:19, Gustavo A. R. Silva wrote:
->>> Rename struct sms_msg_data4 to sms_msg_data5 and increase the size of
->>> its msg_data array from 4 to 5 elements. Notice that at some point
->>> the 5th element of msg_data is being accessed in function
->>> smscore_load_firmware_family2():
->>>
->>> 1006                 trigger_msg->msg_data[4] = 4; /* Task ID */
->>>
->>> Also, there is no need for the object _trigger_msg_ of type struct
->>> sms_msg_data *, when _msg_ can be used, directly. Notice that msg_data
->>> in struct sms_msg_data is a one-element array, which causes multiple
->>> out-of-bounds warnings when accessing beyond its first element
->>> in function smscore_load_firmware_family2():
->>>
->>>  992                 struct sms_msg_data *trigger_msg =                                                  
->>>  993                         (struct sms_msg_data *) msg;                                                
->>>  994                                                                                                     
->>>  995                 pr_debug("sending MSG_SMS_SWDOWNLOAD_TRIGGER_REQ\n");                               
->>>  996                 SMS_INIT_MSG(&msg->x_msg_header,                                                    
->>>  997                                 MSG_SMS_SWDOWNLOAD_TRIGGER_REQ,                                     
->>>  998                                 sizeof(struct sms_msg_hdr) +                                        
->>>  999                                 sizeof(u32) * 5);                                                   
->>> 1000                                                                                                     
->>> 1001                 trigger_msg->msg_data[0] = firmware->start_address;                                 
->>> 1002                                         /* Entry point */                                           
->>> 1003                 trigger_msg->msg_data[1] = 6; /* Priority */                                        
->>> 1004                 trigger_msg->msg_data[2] = 0x200; /* Stack size */                                  
->>> 1005                 trigger_msg->msg_data[3] = 0; /* Parameter */                                       
->>> 1006                 trigger_msg->msg_data[4] = 4; /* Task ID */ 
->>>
->>> even when enough dynamic memory is allocated for _msg_:
->>>
->>>  929         /* PAGE_SIZE buffer shall be enough and dma aligned */
->>>  930         msg = kmalloc(PAGE_SIZE, GFP_KERNEL | coredev->gfp_buf_flags);
->>>
->>> but as _msg_ is casted to (struct sms_msg_data *):
->>>
->>>  992                 struct sms_msg_data *trigger_msg =
->>>  993                         (struct sms_msg_data *) msg;
->>>
->>> the out-of-bounds warnings are actually valid and should be addressed.
->>>
->>> Fix this by declaring object _msg_ of type struct sms_msg_data5 *,
->>> which contains a 5-elements array, instead of just 4. And use
->>> _msg_ directly, instead of creating object trigger_msg.
->>>
->>> This helps with the ongoing efforts to enable -Warray-bounds by fixing
->>> the following warnings:
->>>
->>>   CC [M]  drivers/media/common/siano/smscoreapi.o
->>> drivers/media/common/siano/smscoreapi.c: In function ‘smscore_load_firmware_family2’:
->>> drivers/media/common/siano/smscoreapi.c:1003:24: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
->>>  1003 |   trigger_msg->msg_data[1] = 6; /* Priority */
->>>       |   ~~~~~~~~~~~~~~~~~~~~~^~~
->>> In file included from drivers/media/common/siano/smscoreapi.c:12:
->>> drivers/media/common/siano/smscoreapi.h:619:6: note: while referencing ‘msg_data’
->>>   619 |  u32 msg_data[1];
->>>       |      ^~~~~~~~
->>> drivers/media/common/siano/smscoreapi.c:1004:24: warning: array subscript 2 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
->>>  1004 |   trigger_msg->msg_data[2] = 0x200; /* Stack size */
->>>       |   ~~~~~~~~~~~~~~~~~~~~~^~~
->>> In file included from drivers/media/common/siano/smscoreapi.c:12:
->>> drivers/media/common/siano/smscoreapi.h:619:6: note: while referencing ‘msg_data’
->>>   619 |  u32 msg_data[1];
->>>       |      ^~~~~~~~
->>> drivers/media/common/siano/smscoreapi.c:1005:24: warning: array subscript 3 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
->>>  1005 |   trigger_msg->msg_data[3] = 0; /* Parameter */
->>>       |   ~~~~~~~~~~~~~~~~~~~~~^~~
->>> In file included from drivers/media/common/siano/smscoreapi.c:12:
->>> drivers/media/common/siano/smscoreapi.h:619:6: note: while referencing ‘msg_data’
->>>   619 |  u32 msg_data[1];
->>>       |      ^~~~~~~~
->>> drivers/media/common/siano/smscoreapi.c:1006:24: warning: array subscript 4 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
->>>  1006 |   trigger_msg->msg_data[4] = 4; /* Task ID */
->>>       |   ~~~~~~~~~~~~~~~~~~~~~^~~
->>> In file included from drivers/media/common/siano/smscoreapi.c:12:
->>> drivers/media/common/siano/smscoreapi.h:619:6: note: while referencing ‘msg_data’
->>>   619 |  u32 msg_data[1];
->>>       |      ^~~~~~~~
->>>
->>> Fixes: 018b0c6f8acb ("[media] siano: make load firmware logic to work with newer firmwares")
->>> Co-developed-by: Kees Cook <keescook@chromium.org>
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>> ---
->>>  drivers/media/common/siano/smscoreapi.c | 22 +++++++++-------------
->>>  drivers/media/common/siano/smscoreapi.h |  4 ++--
->>>  2 files changed, 11 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/drivers/media/common/siano/smscoreapi.c b/drivers/media/common/siano/smscoreapi.c
->>> index 410cc3ac6f94..bceaf91faa15 100644
->>> --- a/drivers/media/common/siano/smscoreapi.c
->>> +++ b/drivers/media/common/siano/smscoreapi.c
->>> @@ -908,7 +908,7 @@ static int smscore_load_firmware_family2(struct smscore_device_t *coredev,
->>>  					 void *buffer, size_t size)
->>>  {
->>>  	struct sms_firmware *firmware = (struct sms_firmware *) buffer;
->>> -	struct sms_msg_data4 *msg;
->>> +	struct sms_msg_data5 *msg;
->>>  	u32 mem_address,  calc_checksum = 0;
->>>  	u32 i, *ptr;
->>>  	u8 *payload = firmware->payload;
->>> @@ -989,24 +989,20 @@ static int smscore_load_firmware_family2(struct smscore_device_t *coredev,
->>>  		goto exit_fw_download;
->>>  
->>>  	if (coredev->mode == DEVICE_MODE_NONE) {
->>> -		struct sms_msg_data *trigger_msg =
->>> -			(struct sms_msg_data *) msg;
->>> -
->>>  		pr_debug("sending MSG_SMS_SWDOWNLOAD_TRIGGER_REQ\n");
->>>  		SMS_INIT_MSG(&msg->x_msg_header,
->>>  				MSG_SMS_SWDOWNLOAD_TRIGGER_REQ,
->>> -				sizeof(struct sms_msg_hdr) +
->>> -				sizeof(u32) * 5);
->>> +				sizeof(*msg));
->>>  
->>> -		trigger_msg->msg_data[0] = firmware->start_address;
->>> +		msg->msg_data[0] = firmware->start_address;
->>>  					/* Entry point */
->>> -		trigger_msg->msg_data[1] = 6; /* Priority */
->>> -		trigger_msg->msg_data[2] = 0x200; /* Stack size */
->>> -		trigger_msg->msg_data[3] = 0; /* Parameter */
->>> -		trigger_msg->msg_data[4] = 4; /* Task ID */
->>> +		msg->msg_data[1] = 6; /* Priority */
->>> +		msg->msg_data[2] = 0x200; /* Stack size */
->>> +		msg->msg_data[3] = 0; /* Parameter */
->>> +		msg->msg_data[4] = 4; /* Task ID */
->>>  
->>> -		rc = smscore_sendrequest_and_wait(coredev, trigger_msg,
->>> -					trigger_msg->x_msg_header.msg_length,
->>> +		rc = smscore_sendrequest_and_wait(coredev, msg,
->>> +					msg->x_msg_header.msg_length,
->>>  					&coredev->trigger_done);
->>>  	} else {
->>>  		SMS_INIT_MSG(&msg->x_msg_header, MSG_SW_RELOAD_EXEC_REQ,
->>> diff --git a/drivers/media/common/siano/smscoreapi.h b/drivers/media/common/siano/smscoreapi.h
->>> index 4a6b9f4c44ac..f8789ee0d554 100644
->>> --- a/drivers/media/common/siano/smscoreapi.h
->>> +++ b/drivers/media/common/siano/smscoreapi.h
->>> @@ -624,9 +624,9 @@ struct sms_msg_data2 {
->>>  	u32 msg_data[2];
->>>  };
->>>  
->>> -struct sms_msg_data4 {
->>> +struct sms_msg_data5 {
->>>  	struct sms_msg_hdr x_msg_header;
->>> -	u32 msg_data[4];
->>> +	u32 msg_data[5];
->>>  };
->>>  
->>>  struct sms_data_download {
->>>
