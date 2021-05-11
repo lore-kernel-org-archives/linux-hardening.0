@@ -5,28 +5,29 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F36C433ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 May 2021 15:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8542C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 May 2021 17:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4AC616EA
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 May 2021 15:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6CE61176
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 May 2021 17:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231908AbhEKPuj (ORCPT
+        id S231304AbhEKROV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 May 2021 11:50:39 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.36]:45552 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231561AbhEKPuj (ORCPT
+        Tue, 11 May 2021 13:14:21 -0400
+Received: from gateway30.websitewelcome.com ([192.185.148.2]:27605 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231230AbhEKROV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 May 2021 11:50:39 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 5C954400D5C94
-        for <linux-hardening@vger.kernel.org>; Tue, 11 May 2021 10:49:31 -0500 (CDT)
+        Tue, 11 May 2021 13:14:21 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 32C591116E;
+        Tue, 11 May 2021 12:13:14 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id gUdXlTZ8gMGeEgUdXlZEzW; Tue, 11 May 2021 10:49:31 -0500
+        id gVwYli7YL8uM0gVwYl31A0; Tue, 11 May 2021 12:13:14 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,39 +35,34 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=du7TLirKJwuRndTVgzHHBCMXvT6lZMGk+j6j2JK4ikk=; b=jVO4W/UG3fiHMDSm9xE8Ra87k3
-        +cgQgqzxJVZdYJVsdqhpoh0FUWz2VDu+NJczDnC8WrpoxH++yGLWMSWG3vY3L4TwcEYXqt/VYGwfS
-        Iq31krhyN9/zwtnmsYa6hR2l5qrGI5RbO2Mobfbn1y34LKFCKc6D5eLAQx35mV97uY/wAYMkfgXsp
-        VBABL308IUxeJpnKvlfvfqVxAxxg9F58lw2s/1Y7rEoPe1aUmq+ePxI3C45k6ughER11G8y7I7zE2
-        mWTQsmaxiHyhKmUDzHzrf4wrxEimMLhzUQ83BNifaZvm0BwlnDyKzNINSGViHnLXpKpL1nFECJa15
-        lAWA6ndQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:59016 helo=[192.168.15.8])
+        bh=tmFUjvyLjHNNWd54VOt/C+CgPE1E8GgZos/1KIo2bTQ=; b=TCJoBI3DFaFtUFUneJOq+bMesr
+        zXO+uNceXFPo3XtCljhPcs4qLxn91tcJL1SiB0fDThrrwpqO03RWnanv+IZy2CAiJp45SvGtI+JKe
+        BTosuWla2fDJE6DXw+qB+8kPHfpD9J/1zFHlL7FEBqhM/Qp1wGHeMxZo0Zp62NNvacJTOcTrVI5iO
+        KY3+ycYyTnvxXfuxV5HM2M9c07K3X5fsFlhS1JmHSxgw/WF1lL9HdQcJeL2k3V9InvAgc6JKT9ye0
+        cjusBwIA7NVVuRFQ24MeswCbWwQXusJrporo23lV412s4e4r5DweZkyN2OBmny0X82c19iDE/2FOf
+        d/QHvLWA==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:58998 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lgUdS-000VgQ-Ji; Tue, 11 May 2021 10:49:26 -0500
-Subject: Re: [Intel-wired-lan] [PATCH][next] ixgbe: Fix out-bounds warning in
- ixgbe_host_interface_command()
-To:     "Switzer, David" <david.switzer@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Brandeburg, Jesse" <jesse.brandeburg@intel.com>,
-        "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-References: <20210413190345.GA304933@embeddedor>
- <MW3PR11MB47483A28574E9F2C5517D3C5EB589@MW3PR11MB4748.namprd11.prod.outlook.com>
+        id 1lgUa5-000RYq-Tc; Tue, 11 May 2021 10:45:57 -0500
+Subject: Re: [PATCH][next] media: venus: hfi_msgs.h: Replace one-element
+ arrays with flexible-array members
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210211001044.GA69612@embeddedor>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <b0749fb9-ff4e-3237-e2f7-b97255545eb0@embeddedor.com>
-Date:   Tue, 11 May 2021 10:49:55 -0500
+Message-ID: <bf31beab-dc36-23e9-757f-9729be59f7b2@embeddedor.com>
+Date:   Tue, 11 May 2021 10:46:29 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <MW3PR11MB47483A28574E9F2C5517D3C5EB589@MW3PR11MB4748.namprd11.prod.outlook.com>
+In-Reply-To: <20210211001044.GA69612@embeddedor>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -78,13 +74,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lgUdS-000VgQ-Ji
+X-Exim-ID: 1lgUa5-000RYq-Tc
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:59016
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:58998
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 41
+X-Email-Count: 0
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -93,54 +89,71 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 Hi all,
 
-On 5/6/21 02:25, Switzer, David wrote:
-> 
->> -----Original Message-----
->> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
->> Gustavo A. R. Silva
->> Sent: Tuesday, April 13, 2021 12:04 PM
->> To: Brandeburg, Jesse <jesse.brandeburg@intel.com>; Nguyen, Anthony L
->> <anthony.l.nguyen@intel.com>; David S. Miller <davem@davemloft.net>; Jakub
->> Kicinski <kuba@kernel.org>
->> Cc: Kees Cook <keescook@chromium.org>; netdev@vger.kernel.org; linux-
->> kernel@vger.kernel.org; Gustavo A. R. Silva <gustavoars@kernel.org>; intel-
->> wired-lan@lists.osuosl.org; linux-hardening@vger.kernel.org
->> Subject: [Intel-wired-lan] [PATCH][next] ixgbe: Fix out-bounds warning in
->> ixgbe_host_interface_command()
->>
->> Replace union with a couple of pointers in order to fix the following out-of-
->> bounds warning:
->>
->>  CC [M]  drivers/net/ethernet/intel/ixgbe/ixgbe_common.o
->> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c: In function
->> ‘ixgbe_host_interface_command’:
->> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:3729:13: warning: array
->> subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-
->> bounds]
->> 3729 |   bp->u32arr[bi] = IXGBE_READ_REG_ARRAY(hw, IXGBE_FLEX_MNG, bi);
->>      |   ~~~~~~~~~~^~~~
->> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:3682:7: note: while
->> referencing ‘u32arr’
->> 3682 |   u32 u32arr[1];
->>      |       ^~~~~~
->>
->> This helps with the ongoing efforts to globally enable -Warray-bounds.
->>
->> Link: https://github.com/KSPP/linux/issues/109
->> Co-developed-by: Kees Cook <keescook@chromium.org>
->> Signed-off-by: Kees Cook <keescook@chromium.org>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->> drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 16 +++++++---------
->> 1 file changed, 7 insertions(+), 9 deletions(-)
->>
-> Tested-by: Dave Switzer <david.switzer@intel.com>
+Friendly ping:
 
-Thanks for this, Dave. :)
+We are about to be able to globally enable -Warray-bounds and, these are one of
+the last out-of-bounds warnings in linux-next.
 
-By the way, we are about to be able to globally enable -Warray-bounds and,
-this is one of the last out-of-bounds warnings in linux-next.
+Could someone take this, please?
 
 Thanks
 --
 Gustavo
+
+On 2/10/21 18:10, Gustavo A. R. Silva wrote:
+> There is a regular need in the kernel to provide a way to declare having
+> a dynamically sized set of trailing elements in a structure. Kernel code
+> should always use “flexible array members”[1] for these cases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
+> 
+> Use flexible-array members in struct hfi_msg_sys_property_info_pkt and
+> hfi_msg_session_property_info_pkt instead of one-element arrays.
+> 
+> Also, this helps with the ongoing efforts to enable -Warray-bounds by
+> fixing the following warnings:
+> 
+>   CC [M]  drivers/media/platform/qcom/venus/hfi_msgs.o
+> drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_sys_property_info’:
+> drivers/media/platform/qcom/venus/hfi_msgs.c:246:35: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+>   246 |  if (req_bytes < 128 || !pkt->data[1] || pkt->num_properties > 1)
+>       |                          ~~~~~~~~~^~~
+> drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_session_prop_info’:
+> drivers/media/platform/qcom/venus/hfi_msgs.c:342:62: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+>   342 |  if (!req_bytes || req_bytes % sizeof(*buf_req) || !pkt->data[1])
+>       |                                                     ~~~~~~~~~^~~
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/109
+> Build-tested-by: <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/6023dd80.MmTeFf8SzwX0iK7%2F%25lkp@intel.com/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/media/platform/qcom/venus/hfi_msgs.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
+> index 526d9f5b487b..e2d2ccfbdd24 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_msgs.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
+> @@ -113,7 +113,7 @@ struct hfi_msg_sys_ping_ack_pkt {
+>  struct hfi_msg_sys_property_info_pkt {
+>  	struct hfi_pkt_hdr hdr;
+>  	u32 num_properties;
+> -	u32 data[1];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_msg_session_load_resources_done_pkt {
+> @@ -233,7 +233,7 @@ struct hfi_msg_session_parse_sequence_header_done_pkt {
+>  struct hfi_msg_session_property_info_pkt {
+>  	struct hfi_session_hdr_pkt shdr;
+>  	u32 num_properties;
+> -	u32 data[1];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_msg_session_release_resources_done_pkt {
+> 
