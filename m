@@ -2,77 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692B9C433B4
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 23:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5E8C433B4
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 23:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 253E56143E
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 23:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29D661185
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 23:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231341AbhEMXCb (ORCPT
+        id S230523AbhEMXHR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 May 2021 19:02:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231278AbhEMXC2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 May 2021 19:02:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1742261363;
-        Thu, 13 May 2021 23:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620946878;
-        bh=uN3yahKzBwkB+gvkdxWGKQOVS3XTusPU7ZhMIZnGDxg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VhIteCOOz2hyzdB7KWnX31mJ/jwWRmgYODHNwr12yHXS7kFIq2eqOChX8N240WNJ9
-         315412YAXRjUnOd+u6iJY3ZOFOe3sDRi3Er3CwHVDs/IjSay7rMU5RbWGhCI6RvioC
-         k4bo1L2jS79wlkwd3hYKOohsE0B0BDhoj3HiRw75dAmJi0PjsNPMZVjti1crtUhETB
-         MpJmv/8bbH7uMBVnvJC7wcso+wyu2meCdShKfHI0AIHMyGZQXDFcs1Mm7UOcGyWwV9
-         MRfscd9E8SyuOMwV1hCCwaWb4vviuJQNcP725m3tod75sLU3QSJRABZoYZmWGK8g1N
-         kuAKYNp6vkOww==
-Date:   Thu, 13 May 2021 18:01:55 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] vfio/iommu_type1: Use struct_size() for kzalloc()
-Message-ID: <20210513230155.GA217517@embeddedor>
+        Thu, 13 May 2021 19:07:17 -0400
+Received: from gateway22.websitewelcome.com ([192.185.46.152]:25753 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229984AbhEMXHQ (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 13 May 2021 19:07:16 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 5BF90F1FF
+        for <linux-hardening@vger.kernel.org>; Thu, 13 May 2021 18:06:04 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id hKP6lTKdpMGeEhKP6lXbTB; Thu, 13 May 2021 18:06:04 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=P/DOzPKGp6J3WJCwGHyjpqer5CmLgvUAudqD0ateSBw=; b=x9c5/ZCt1KdADTYIlOge0eVWZ+
+        HX9ICIrVZTe50m/NQeax/gIV5mvFhlO0Ze6Inhq27CJFpCCEoPBlC043pQVvnt6td4TV7Bv9eajon
+        PP4ux726262s5A7khx7hsTKwvzea3bD7/VvKgz7ajvg6SvQPuNz0+Rbd48HufhUEaiyr2/LNIkJwy
+        Zq8YE1BbQtjdB0Hg1O2IGpCsLyOdx4qFVjdBCNlk4TGW8zWpG6+IL/eqczFhWNCvZJGGQhso979kF
+        aICgyBsoxdlRDfCE6SjiRyhmGRQDOA2wWRV/kDqzrB2H9CUdTaQJXa0K/hB2x4Pmm9rtcaSk9QxjL
+        6pD/Zk9w==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:35730 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lhKOz-004AGP-CY; Thu, 13 May 2021 18:05:57 -0500
+Subject: Re: [PATCH][next] bpf: Use struct_size() in kzalloc()
+To:     patchwork-bot+netdevbpf@kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
+        kpsingh@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210513215049.GA215271@embeddedor>
+ <162094681128.5074.13510794749219416919.git-patchwork-notify@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <481dc1e0-4313-7b77-2456-ebcebed296d9@embeddedor.com>
+Date:   Thu, 13 May 2021 18:06:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <162094681128.5074.13510794749219416919.git-patchwork-notify@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lhKOz-004AGP-CY
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:35730
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version,
-in order to avoid any potential type mistakes or integer overflows
-that, in the worst scenario, could lead to heap overflows.
 
-This code was detected with the help of Coccinelle and, audited and
-fixed manually.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/vfio/vfio_iommu_type1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 5/13/21 18:00, patchwork-bot+netdevbpf@kernel.org wrote:
+> Hello:
+> 
+> This patch was applied to netdev/net-next.git (refs/heads/master):
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index a0747c35a778..a3e925a41b0d 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -2795,7 +2795,7 @@ static int vfio_iommu_iova_build_caps(struct vfio_iommu *iommu,
- 		return 0;
- 	}
- 
--	size = sizeof(*cap_iovas) + (iovas * sizeof(*cap_iovas->iova_ranges));
-+	size = struct_size(cap_iovas, iova_ranges, iovas);
- 
- 	cap_iovas = kzalloc(size, GFP_KERNEL);
- 	if (!cap_iovas)
--- 
-2.27.0
+[..]
 
+> Here is the summary with links:
+>   - [next] bpf: Use struct_size() in kzalloc()
+>     https://git.kernel.org/netdev/net-next/c/fe0bdaec8dea
+
+Awesome. :)
+
+Thanks, Dave.
+--
+Gustavo
