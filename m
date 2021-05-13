@@ -4,48 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB6BC433B4
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 22:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692B9C433B4
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 23:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B36661435
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 22:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253E56143E
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 23:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230183AbhEMWts (ORCPT
+        id S231341AbhEMXCb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 May 2021 18:49:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47260 "EHLO mail.kernel.org"
+        Thu, 13 May 2021 19:02:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230168AbhEMWts (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 May 2021 18:49:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 38FD9613CD;
-        Thu, 13 May 2021 22:48:37 +0000 (UTC)
+        id S231278AbhEMXC2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 13 May 2021 19:02:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1742261363;
+        Thu, 13 May 2021 23:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620946118;
-        bh=zjDn79+oCEcXN7/ywRSvtSC+DVZKzNYOS/1XNPve5xk=;
+        s=k20201202; t=1620946878;
+        bh=uN3yahKzBwkB+gvkdxWGKQOVS3XTusPU7ZhMIZnGDxg=;
         h=Date:From:To:Cc:Subject:From;
-        b=UlNmGjy+Sr9KgC8Jul/5pxK7lQ0Ewhr04wTCFE0VpWtnTelzSfXWoUgoSVRCCmtf+
-         FjcJtomzJWOJbRL22GadqACRdFcahUhlPtcKwiCNkkwACllCMz9xEf30u8ErqooM+q
-         21Pl8jDgT1Bk2cOt9uN65TeS/rT9b3jFdRDUDDMBkLSnuXC7szI4G4/KOcnNANi4cj
-         f4fPvbmR6/DvXLj1Bkl3lHknyRh3lmABpt8/Dmbzx4OUPXNB8XNkGL+hiRuWTbHTnR
-         R4FTbTtGyhyfw9bw5aC8yxC+xgItBG81ASwRWWdHMDO8o0sTICpllveNuKPTaj33YU
-         MSK2RiJYBFMLg==
-Date:   Thu, 13 May 2021 17:49:14 -0500
+        b=VhIteCOOz2hyzdB7KWnX31mJ/jwWRmgYODHNwr12yHXS7kFIq2eqOChX8N240WNJ9
+         315412YAXRjUnOd+u6iJY3ZOFOe3sDRi3Er3CwHVDs/IjSay7rMU5RbWGhCI6RvioC
+         k4bo1L2jS79wlkwd3hYKOohsE0B0BDhoj3HiRw75dAmJi0PjsNPMZVjti1crtUhETB
+         MpJmv/8bbH7uMBVnvJC7wcso+wyu2meCdShKfHI0AIHMyGZQXDFcs1Mm7UOcGyWwV9
+         MRfscd9E8SyuOMwV1hCCwaWb4vviuJQNcP725m3tod75sLU3QSJRABZoYZmWGK8g1N
+         kuAKYNp6vkOww==
+Date:   Thu, 13 May 2021 18:01:55 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net: mana: Use struct_size() in kzalloc()
-Message-ID: <20210513224914.GA216478@embeddedor>
+Subject: [PATCH][next] vfio/iommu_type1: Use struct_size() for kzalloc()
+Message-ID: <20210513230155.GA217517@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -62,23 +57,22 @@ fixed manually.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 04d067243457..46aee2c49f1b 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1387,8 +1387,7 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index a0747c35a778..a3e925a41b0d 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -2795,7 +2795,7 @@ static int vfio_iommu_iova_build_caps(struct vfio_iommu *iommu,
+ 		return 0;
+ 	}
  
- 	gc = gd->gdma_context;
+-	size = sizeof(*cap_iovas) + (iovas * sizeof(*cap_iovas->iova_ranges));
++	size = struct_size(cap_iovas, iova_ranges, iovas);
  
--	rxq = kzalloc(sizeof(*rxq) +
--		      RX_BUFFERS_PER_QUEUE * sizeof(struct mana_recv_buf_oob),
-+	rxq = kzalloc(struct_size(rxq, rx_oobs, RX_BUFFERS_PER_QUEUE),
- 		      GFP_KERNEL);
- 	if (!rxq)
- 		return NULL;
+ 	cap_iovas = kzalloc(size, GFP_KERNEL);
+ 	if (!cap_iovas)
 -- 
 2.27.0
 
