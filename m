@@ -2,180 +2,132 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A445C433B4
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 May 2021 17:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DED8C433ED
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 01:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D001C613E9
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 May 2021 17:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC24C61264
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 01:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237146AbhELRXe (ORCPT
+        id S234788AbhEMBH2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 May 2021 13:23:34 -0400
-Received: from gateway30.websitewelcome.com ([192.185.149.4]:45468 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237851AbhELQiv (ORCPT
+        Wed, 12 May 2021 21:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234765AbhEMBH2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 May 2021 12:38:51 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 5A3AC15D6C
-        for <linux-hardening@vger.kernel.org>; Wed, 12 May 2021 11:37:25 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id grrRlmROZDedfgrrRl2Gjl; Wed, 12 May 2021 11:37:25 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Kyq9KuIG2zdCKlIloTSlN2gRTDBH/PRFSECmIEkdnb8=; b=uIijnBcYYSjbO3LEu5TWaSRHNf
-        4FvxoJSrD2IeDRCmFaFhY717HPT7GnS3cIVs8BgycE23xI1ztnDwX+3KLZRyTiTcsNGUV+LFGb1/m
-        +RGJK8bF/7lvliMuV1xuwB0SASlEXYG/H7uwfqqeXFN3/yBUyfVV79lzP91ydnujlDjfjOedwiENe
-        UviQHapORxa6CFHOni3fDtXLZc2e+sWqDxZmkmIi/2FqOSwdT5596P0gTqW/2eSrbNtRorJo8bAe/
-        emsRSbsTRFr6ZUsfHqsvH0Bl6SIENTJ/NHzpOyXvvF60sDJ/UQC5oZ03AQtLJCiiyM+0sE/llYSAQ
-        PH8BuUWQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:52952 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lgrrN-003Xfo-Rz; Wed, 12 May 2021 11:37:21 -0500
-Subject: Re: [PATCH][next] media: venus: hfi_msgs.h: Replace one-element
- arrays with flexible-array members
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210211001044.GA69612@embeddedor>
- <bf31beab-dc36-23e9-757f-9729be59f7b2@embeddedor.com>
- <de8538ad-48d8-7a3c-af4f-ab31ee2da761@linaro.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <f63824ee-fc8b-25cf-f3c2-c7b3947b8076@embeddedor.com>
-Date:   Wed, 12 May 2021 11:37:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Wed, 12 May 2021 21:07:28 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9EBC061574;
+        Wed, 12 May 2021 18:06:19 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id n3so1352646plf.7;
+        Wed, 12 May 2021 18:06:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JdjLenGm8qjHYQsyQoKVaW3PTpEveC22o5czLzfvk6Y=;
+        b=loq1VJUyP3/kDLOrzwSNufspWWWMh0fp2SKxkcsSBhXkowmGIIe77TWUY9162Gw0PX
+         ORNhAADve2zXOpzqO3CA8NZHZdYMxO/gGRNmz01q2c6tWBEB/KZiJe+c31focjlL0Jst
+         9CHZOLVuvsuevl8pZ4MJT8/DrxVugQ1lNDdulks8XQU5cLN32VHNTWBJrtZoChrgGB1p
+         7kWPFmp/5oSbX5T3lm5SxBKfeFyewPToZuAeEgLznzYjMNyHkgxcLoRQ/nPV8P781Khz
+         L9Z1xrEngA4cQcMcGeZF+Qvy1UvyT5l1ghSN237qfLb+BpT+DNkWy3L3z1sT6LYJ/EIG
+         Tmhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JdjLenGm8qjHYQsyQoKVaW3PTpEveC22o5czLzfvk6Y=;
+        b=Lo6+0kCBAEkx5qnRIvJdr8aaWxEirlVQT6DG9xCUOdD55j9PDtUqiskzfCL/XebC8T
+         Qh4Th3GuK1TPbxxEgPal2EH1Y569kccK1RKaY/m6S5p/zQudNPfiKKgHSOvmYusF7I5g
+         XMxe6ClEO9IVAsSepTKu13shcXQLOpANs0v7o5dYgGfrJMsQqEaVUX30V9W2BLhzxFVj
+         JUHkVWk6b85dPfoh62Z5Ot7uOK2BGIu2JmK5n/RKA5Hu64VtWOYm/1/oAHAW9LqKyQLf
+         R5CMxIlJLlV1Ml5yHZpuIYRazObKdAgLW4jmWBH4mAyH1z+YRjS7Ht0pC1k/jYoLztAz
+         imlA==
+X-Gm-Message-State: AOAM533T6O6iQ7r0nbOmpQ2g8OiR8oZStEf7kVBtVLwJJ7Rxp8GP0TUl
+        z7v84c7n99mMA3roR6+MKXs=
+X-Google-Smtp-Source: ABdhPJzRlb5fpSedqGJZ1QVc911yW3TBNyDU55CHyi1sTZiBC+SzxoJ5Z0IGJ9dj6BjoJpxN4QQK0w==
+X-Received: by 2002:a17:902:7c91:b029:ed:5748:901e with SMTP id y17-20020a1709027c91b02900ed5748901emr37788961pll.27.1620867978613;
+        Wed, 12 May 2021 18:06:18 -0700 (PDT)
+Received: from localhost ([203.87.99.126])
+        by smtp.gmail.com with ESMTPSA id d3sm792225pfn.141.2021.05.12.18.06.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 May 2021 18:06:17 -0700 (PDT)
+Date:   Thu, 13 May 2021 11:06:14 +1000
+From:   Balbir Singh <bsingharora@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] Next revision of the L1D flush patches
+Message-ID: <20210513010614.GH4236@balbir-desktop>
+References: <20210108121056.21940-1-sblbir@amazon.com>
+ <cf89f0389379daaaff0cbce9c5f1550866e55e91.camel@amazon.com>
+ <202104081319.DAB1D817@keescook>
+ <87y2d5tpjh.ffs@nanos.tec.linutronix.de>
+ <87tunsofan.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <de8538ad-48d8-7a3c-af4f-ab31ee2da761@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lgrrN-003Xfo-Rz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:52952
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tunsofan.ffs@nanos.tec.linutronix.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 5/12/21 06:39, Stanimir Varbanov wrote:
-> Hi,
+On Tue, Apr 27, 2021 at 12:24:16AM +0200, Thomas Gleixner wrote:
+> On Mon, Apr 26 2021 at 10:31, Thomas Gleixner wrote:
+> > On Thu, Apr 08 2021 at 13:23, Kees Cook wrote:
+> >>
+> >> I'd still really like to see this -- it's a big hammer, but that's the
+> >> point for cases where some new flaw appears and we can point to the
+> >> toolbox and say "you can mitigate it with this while you wait for new
+> >> kernel/CPU."
+> >>
+> >> Any further thoughts from x86 maintainers? This seems like it addressed
+> >> all of tglx's review comments.
+> >
+> > Sorry for dropping the ball on this. It's in my list of things to deal
+> > with. Starting to look at it now.
 > 
-> On 5/11/21 6:46 PM, Gustavo A. R. Silva wrote:
->> Hi all,
->>
->> Friendly ping:
->>
->> We are about to be able to globally enable -Warray-bounds and, these are one of
->> the last out-of-bounds warnings in linux-next.
->>
->> Could someone take this, please?
+> So I went through the pile and for remorse I sat down and made the
+> tweaks I think are necessary myself.
 > 
-> This one introduces regressions, so I cannot take it. It needs some more
-> work.
-
-Please, share with me the errors or warnings you see with this. So, I can
-have an idea of what is going on. Unfortunately, I don't have access to the
-test suite or hardware to test this.
-
-Thanks!
---
-Gustavo
-
-
-
->>
->> Thanks
->> --
->> Gustavo
->>
->> On 2/10/21 18:10, Gustavo A. R. Silva wrote:
->>> There is a regular need in the kernel to provide a way to declare having
->>> a dynamically sized set of trailing elements in a structure. Kernel code
->>> should always use “flexible array members”[1] for these cases. The older
->>> style of one-element or zero-length arrays should no longer be used[2].
->>>
->>> Use flexible-array members in struct hfi_msg_sys_property_info_pkt and
->>> hfi_msg_session_property_info_pkt instead of one-element arrays.
->>>
->>> Also, this helps with the ongoing efforts to enable -Warray-bounds by
->>> fixing the following warnings:
->>>
->>>   CC [M]  drivers/media/platform/qcom/venus/hfi_msgs.o
->>> drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_sys_property_info’:
->>> drivers/media/platform/qcom/venus/hfi_msgs.c:246:35: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
->>>   246 |  if (req_bytes < 128 || !pkt->data[1] || pkt->num_properties > 1)
->>>       |                          ~~~~~~~~~^~~
->>> drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_session_prop_info’:
->>> drivers/media/platform/qcom/venus/hfi_msgs.c:342:62: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
->>>   342 |  if (!req_bytes || req_bytes % sizeof(*buf_req) || !pkt->data[1])
->>>       |                                                     ~~~~~~~~~^~~
->>>
->>> [1] https://en.wikipedia.org/wiki/Flexible_array_member
->>> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
->>>
->>> Link: https://github.com/KSPP/linux/issues/79
->>> Link: https://github.com/KSPP/linux/issues/109
->>> Build-tested-by: <lkp@intel.com>
->>> Link: https://lore.kernel.org/lkml/6023dd80.MmTeFf8SzwX0iK7%2F%25lkp@intel.com/
->>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>> ---
->>>  drivers/media/platform/qcom/venus/hfi_msgs.h | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
->>> index 526d9f5b487b..e2d2ccfbdd24 100644
->>> --- a/drivers/media/platform/qcom/venus/hfi_msgs.h
->>> +++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
->>> @@ -113,7 +113,7 @@ struct hfi_msg_sys_ping_ack_pkt {
->>>  struct hfi_msg_sys_property_info_pkt {
->>>  	struct hfi_pkt_hdr hdr;
->>>  	u32 num_properties;
->>> -	u32 data[1];
->>> +	u32 data[];
->>>  };
->>>  
->>>  struct hfi_msg_session_load_resources_done_pkt {
->>> @@ -233,7 +233,7 @@ struct hfi_msg_session_parse_sequence_header_done_pkt {
->>>  struct hfi_msg_session_property_info_pkt {
->>>  	struct hfi_session_hdr_pkt shdr;
->>>  	u32 num_properties;
->>> -	u32 data[1];
->>> +	u32 data[];
->>>  };
->>>  
->>>  struct hfi_msg_session_release_resources_done_pkt {
->>>
+> I've pushed out the result to
 > 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/l1dflush
+>
+
+Thank you I'll take a look and test it.
+ 
+> The only thing I did not address yet is that the documentation lacks any
+> mentioning of the SIGBUS mechanism which is invoked when a task which
+> asked for L1D flush protection ends up on a SMT sibling for whatever
+> reason. That's essential to have because it's part of the contract of
+> that prctl.
+
+IIRC I documented it, I'll double check.
+
+> 
+> Balbir, can you please double check the result and prepare an updated
+> version from there?
+> 
+> If you don't have cycles, please let me know.
+>
+
+I might have some cycles for testing and re-review. Thanks for all the
+hard work on this
+
+Balbir Singh. 
