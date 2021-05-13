@@ -2,132 +2,81 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DED8C433ED
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 01:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AF2C433B4
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 19:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC24C61264
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 01:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E129F61404
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 19:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234788AbhEMBH2 (ORCPT
+        id S230176AbhEMTea (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 May 2021 21:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234765AbhEMBH2 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 May 2021 21:07:28 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9EBC061574;
-        Wed, 12 May 2021 18:06:19 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id n3so1352646plf.7;
-        Wed, 12 May 2021 18:06:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JdjLenGm8qjHYQsyQoKVaW3PTpEveC22o5czLzfvk6Y=;
-        b=loq1VJUyP3/kDLOrzwSNufspWWWMh0fp2SKxkcsSBhXkowmGIIe77TWUY9162Gw0PX
-         ORNhAADve2zXOpzqO3CA8NZHZdYMxO/gGRNmz01q2c6tWBEB/KZiJe+c31focjlL0Jst
-         9CHZOLVuvsuevl8pZ4MJT8/DrxVugQ1lNDdulks8XQU5cLN32VHNTWBJrtZoChrgGB1p
-         7kWPFmp/5oSbX5T3lm5SxBKfeFyewPToZuAeEgLznzYjMNyHkgxcLoRQ/nPV8P781Khz
-         L9Z1xrEngA4cQcMcGeZF+Qvy1UvyT5l1ghSN237qfLb+BpT+DNkWy3L3z1sT6LYJ/EIG
-         Tmhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JdjLenGm8qjHYQsyQoKVaW3PTpEveC22o5czLzfvk6Y=;
-        b=Lo6+0kCBAEkx5qnRIvJdr8aaWxEirlVQT6DG9xCUOdD55j9PDtUqiskzfCL/XebC8T
-         Qh4Th3GuK1TPbxxEgPal2EH1Y569kccK1RKaY/m6S5p/zQudNPfiKKgHSOvmYusF7I5g
-         XMxe6ClEO9IVAsSepTKu13shcXQLOpANs0v7o5dYgGfrJMsQqEaVUX30V9W2BLhzxFVj
-         JUHkVWk6b85dPfoh62Z5Ot7uOK2BGIu2JmK5n/RKA5Hu64VtWOYm/1/oAHAW9LqKyQLf
-         R5CMxIlJLlV1Ml5yHZpuIYRazObKdAgLW4jmWBH4mAyH1z+YRjS7Ht0pC1k/jYoLztAz
-         imlA==
-X-Gm-Message-State: AOAM533T6O6iQ7r0nbOmpQ2g8OiR8oZStEf7kVBtVLwJJ7Rxp8GP0TUl
-        z7v84c7n99mMA3roR6+MKXs=
-X-Google-Smtp-Source: ABdhPJzRlb5fpSedqGJZ1QVc911yW3TBNyDU55CHyi1sTZiBC+SzxoJ5Z0IGJ9dj6BjoJpxN4QQK0w==
-X-Received: by 2002:a17:902:7c91:b029:ed:5748:901e with SMTP id y17-20020a1709027c91b02900ed5748901emr37788961pll.27.1620867978613;
-        Wed, 12 May 2021 18:06:18 -0700 (PDT)
-Received: from localhost ([203.87.99.126])
-        by smtp.gmail.com with ESMTPSA id d3sm792225pfn.141.2021.05.12.18.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 May 2021 18:06:17 -0700 (PDT)
-Date:   Thu, 13 May 2021 11:06:14 +1000
-From:   Balbir Singh <bsingharora@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Thu, 13 May 2021 15:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229854AbhEMTe3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 13 May 2021 15:34:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4E0F161408;
+        Thu, 13 May 2021 19:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620934396;
+        bh=HmOeK1hNNFR134NlruI1h+LOfJJnvZEyFJJQ8JsA/Xo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KsljFerXmta0Fh9boGxGKLWZmdE4+ETQ7UZDgjS4wEKc0pZMsC97GZp3CZ/Hs1ORK
+         MfGk3j5ZPmblGxHu5IIbuCHc6+/SoXVNXHCTY4TRFp3kIVXBYNLqs5DjmojZ1ZNBf2
+         QIn+5B0Rc8ZxIA3/s05vwy/xtBnYzkK76rcOaW4fRxaSJrppTLQmtfE0h6MUZiedYH
+         0gJrsQkuTUnbWfdmSvE9ZslgehYQqmZKRwpLn+UVFmPMwHICaDPOrrs6gAzjzHPmii
+         v2iVD2mr6orGX3DLw7q38Vtc/j3NvMqOIrp5gyHBQR/URIdtlD3SHHnMfvCr5Nn/B7
+         t9ac13qzUntjg==
+Date:   Thu, 13 May 2021 14:33:53 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Next revision of the L1D flush patches
-Message-ID: <20210513010614.GH4236@balbir-desktop>
-References: <20210108121056.21940-1-sblbir@amazon.com>
- <cf89f0389379daaaff0cbce9c5f1550866e55e91.camel@amazon.com>
- <202104081319.DAB1D817@keescook>
- <87y2d5tpjh.ffs@nanos.tec.linutronix.de>
- <87tunsofan.ffs@nanos.tec.linutronix.de>
+Subject: [PATCH][next] usb: gadget: s3c-hsudc: Use struct_size() in
+ devm_kzalloc()
+Message-ID: <20210513193353.GA196565@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87tunsofan.ffs@nanos.tec.linutronix.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 27, 2021 at 12:24:16AM +0200, Thomas Gleixner wrote:
-> On Mon, Apr 26 2021 at 10:31, Thomas Gleixner wrote:
-> > On Thu, Apr 08 2021 at 13:23, Kees Cook wrote:
-> >>
-> >> I'd still really like to see this -- it's a big hammer, but that's the
-> >> point for cases where some new flaw appears and we can point to the
-> >> toolbox and say "you can mitigate it with this while you wait for new
-> >> kernel/CPU."
-> >>
-> >> Any further thoughts from x86 maintainers? This seems like it addressed
-> >> all of tglx's review comments.
-> >
-> > Sorry for dropping the ball on this. It's in my list of things to deal
-> > with. Starting to look at it now.
-> 
-> So I went through the pile and for remorse I sat down and made the
-> tweaks I think are necessary myself.
-> 
-> I've pushed out the result to
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/l1dflush
->
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows
+that, in the worse scenario, could lead to heap overflows.
 
-Thank you I'll take a look and test it.
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/usb/gadget/udc/s3c-hsudc.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/gadget/udc/s3c-hsudc.c b/drivers/usb/gadget/udc/s3c-hsudc.c
+index 7bd5182ce3ef..89f1f8c9f02e 100644
+--- a/drivers/usb/gadget/udc/s3c-hsudc.c
++++ b/drivers/usb/gadget/udc/s3c-hsudc.c
+@@ -1220,9 +1220,8 @@ static int s3c_hsudc_probe(struct platform_device *pdev)
+ 	struct s3c24xx_hsudc_platdata *pd = dev_get_platdata(&pdev->dev);
+ 	int ret, i;
  
-> The only thing I did not address yet is that the documentation lacks any
-> mentioning of the SIGBUS mechanism which is invoked when a task which
-> asked for L1D flush protection ends up on a SMT sibling for whatever
-> reason. That's essential to have because it's part of the contract of
-> that prctl.
+-	hsudc = devm_kzalloc(&pdev->dev, sizeof(struct s3c_hsudc) +
+-			sizeof(struct s3c_hsudc_ep) * pd->epnum,
+-			GFP_KERNEL);
++	hsudc = devm_kzalloc(&pdev->dev, struct_size(hsudc, ep, pd->epnum),
++			     GFP_KERNEL);
+ 	if (!hsudc)
+ 		return -ENOMEM;
+ 
+-- 
+2.27.0
 
-IIRC I documented it, I'll double check.
-
-> 
-> Balbir, can you please double check the result and prepare an updated
-> version from there?
-> 
-> If you don't have cycles, please let me know.
->
-
-I might have some cycles for testing and re-review. Thanks for all the
-hard work on this
-
-Balbir Singh. 
