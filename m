@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AF2C433B4
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 19:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DBBC433B4
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 20:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E129F61404
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 19:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D93A61287
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 20:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230176AbhEMTea (ORCPT
+        id S233094AbhEMUiF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 May 2021 15:34:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60216 "EHLO mail.kernel.org"
+        Thu, 13 May 2021 16:38:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229854AbhEMTe3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 May 2021 15:34:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4E0F161408;
-        Thu, 13 May 2021 19:33:16 +0000 (UTC)
+        id S232887AbhEMUiE (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 13 May 2021 16:38:04 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E0F95611CA;
+        Thu, 13 May 2021 20:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620934396;
-        bh=HmOeK1hNNFR134NlruI1h+LOfJJnvZEyFJJQ8JsA/Xo=;
+        s=k20201202; t=1620938214;
+        bh=VlAuVRbSl70RsF+Hbd+PeL96a/23cRPU8oynfp6C+jk=;
         h=Date:From:To:Cc:Subject:From;
-        b=KsljFerXmta0Fh9boGxGKLWZmdE4+ETQ7UZDgjS4wEKc0pZMsC97GZp3CZ/Hs1ORK
-         MfGk3j5ZPmblGxHu5IIbuCHc6+/SoXVNXHCTY4TRFp3kIVXBYNLqs5DjmojZ1ZNBf2
-         QIn+5B0Rc8ZxIA3/s05vwy/xtBnYzkK76rcOaW4fRxaSJrppTLQmtfE0h6MUZiedYH
-         0gJrsQkuTUnbWfdmSvE9ZslgehYQqmZKRwpLn+UVFmPMwHICaDPOrrs6gAzjzHPmii
-         v2iVD2mr6orGX3DLw7q38Vtc/j3NvMqOIrp5gyHBQR/URIdtlD3SHHnMfvCr5Nn/B7
-         t9ac13qzUntjg==
-Date:   Thu, 13 May 2021 14:33:53 -0500
+        b=rYc4vO9DB9mIHeAO/V6CPrg5l1FJJsoPI/4KYQK5Soy8oNu+zH4fDeCExIGbZZovh
+         DJmsVOjFG8wIbD20jd2/Nw1MeD18st4GdDfMQA7gruaibtyVj9r88oz3NVdkIfoQr3
+         QJ1hBWvkaGgp5EtRMxrxTS0B/pG2oazqTuyKV9LIbTIRUPEx0jfcnBqTgxIwjfTDLV
+         IgTANytJcDMaVGuslvTdffeguorK8moe0zhg0stK5iQuSlGhlWxJ3lPu55WMA18/9w
+         34+hwdkTr0IDDZhk429dYAP0VtpRupkf744Jf6jXzvLG1GQL2qisiRRnnSXhDEQOLe
+         XYvm/do+LI/9A==
+Date:   Thu, 13 May 2021 15:37:30 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] usb: gadget: s3c-hsudc: Use struct_size() in
- devm_kzalloc()
-Message-ID: <20210513193353.GA196565@embeddedor>
+Subject: [PATCH][next] rsxx: Use struct_size() in vmalloc()
+Message-ID: <20210513203730.GA212128@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -51,30 +51,38 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 Make use of the struct_size() helper instead of an open-coded version,
 in order to avoid any potential type mistakes or integer overflows
-that, in the worse scenario, could lead to heap overflows.
+that, in the worst scenario, could lead to heap overflows.
 
 This code was detected with the help of Coccinelle and, audited and
 fixed manually.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/usb/gadget/udc/s3c-hsudc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/block/rsxx/dma.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/s3c-hsudc.c b/drivers/usb/gadget/udc/s3c-hsudc.c
-index 7bd5182ce3ef..89f1f8c9f02e 100644
---- a/drivers/usb/gadget/udc/s3c-hsudc.c
-+++ b/drivers/usb/gadget/udc/s3c-hsudc.c
-@@ -1220,9 +1220,8 @@ static int s3c_hsudc_probe(struct platform_device *pdev)
- 	struct s3c24xx_hsudc_platdata *pd = dev_get_platdata(&pdev->dev);
- 	int ret, i;
+diff --git a/drivers/block/rsxx/dma.c b/drivers/block/rsxx/dma.c
+index 0574f4495755..ed182f3dd054 100644
+--- a/drivers/block/rsxx/dma.c
++++ b/drivers/block/rsxx/dma.c
+@@ -74,9 +74,6 @@ struct dma_tracker {
+ 	struct rsxx_dma	*dma;
+ };
  
--	hsudc = devm_kzalloc(&pdev->dev, sizeof(struct s3c_hsudc) +
--			sizeof(struct s3c_hsudc_ep) * pd->epnum,
--			GFP_KERNEL);
-+	hsudc = devm_kzalloc(&pdev->dev, struct_size(hsudc, ep, pd->epnum),
-+			     GFP_KERNEL);
- 	if (!hsudc)
+-#define DMA_TRACKER_LIST_SIZE8 (sizeof(struct dma_tracker_list) + \
+-		(sizeof(struct dma_tracker) * RSXX_MAX_OUTSTANDING_CMDS))
+-
+ struct dma_tracker_list {
+ 	spinlock_t		lock;
+ 	int			head;
+@@ -808,7 +805,8 @@ static int rsxx_dma_ctrl_init(struct pci_dev *dev,
+ 
+ 	memset(&ctrl->stats, 0, sizeof(ctrl->stats));
+ 
+-	ctrl->trackers = vmalloc(DMA_TRACKER_LIST_SIZE8);
++	ctrl->trackers = vmalloc(struct_size(ctrl->trackers, list,
++					     RSXX_MAX_OUTSTANDING_CMDS));
+ 	if (!ctrl->trackers)
  		return -ENOMEM;
  
 -- 
