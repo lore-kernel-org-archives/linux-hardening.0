@@ -2,105 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5E8C433B4
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 23:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D68C433ED
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 May 2021 07:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F29D661185
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 May 2021 23:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822BC6144A
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 May 2021 07:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbhEMXHR (ORCPT
+        id S231331AbhENH0L (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 May 2021 19:07:17 -0400
-Received: from gateway22.websitewelcome.com ([192.185.46.152]:25753 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229984AbhEMXHQ (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 May 2021 19:07:16 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 5BF90F1FF
-        for <linux-hardening@vger.kernel.org>; Thu, 13 May 2021 18:06:04 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id hKP6lTKdpMGeEhKP6lXbTB; Thu, 13 May 2021 18:06:04 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=P/DOzPKGp6J3WJCwGHyjpqer5CmLgvUAudqD0ateSBw=; b=x9c5/ZCt1KdADTYIlOge0eVWZ+
-        HX9ICIrVZTe50m/NQeax/gIV5mvFhlO0Ze6Inhq27CJFpCCEoPBlC043pQVvnt6td4TV7Bv9eajon
-        PP4ux726262s5A7khx7hsTKwvzea3bD7/VvKgz7ajvg6SvQPuNz0+Rbd48HufhUEaiyr2/LNIkJwy
-        Zq8YE1BbQtjdB0Hg1O2IGpCsLyOdx4qFVjdBCNlk4TGW8zWpG6+IL/eqczFhWNCvZJGGQhso979kF
-        aICgyBsoxdlRDfCE6SjiRyhmGRQDOA2wWRV/kDqzrB2H9CUdTaQJXa0K/hB2x4Pmm9rtcaSk9QxjL
-        6pD/Zk9w==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:35730 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lhKOz-004AGP-CY; Thu, 13 May 2021 18:05:57 -0500
-Subject: Re: [PATCH][next] bpf: Use struct_size() in kzalloc()
-To:     patchwork-bot+netdevbpf@kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-        kpsingh@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210513215049.GA215271@embeddedor>
- <162094681128.5074.13510794749219416919.git-patchwork-notify@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <481dc1e0-4313-7b77-2456-ebcebed296d9@embeddedor.com>
-Date:   Thu, 13 May 2021 18:06:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Fri, 14 May 2021 03:26:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230326AbhENH0L (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 14 May 2021 03:26:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A436561446;
+        Fri, 14 May 2021 07:24:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620977100;
+        bh=15ezUcoX2Tp5onmLNEbYjA7IRAW1s32VZAsjPbUMDow=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ZygTqMk0DJgrTsghfeYNhwDq/A2Re2zuZq73koYZX9dSAxSTJGNGMewoHynPWP9OK
+         tyjXLV8feLl1cQW7K51qvI9gaDAbyNLf9fsuTC8GWNcUmQAcQNrYeRo3LvWOKusKfC
+         u+dFSPgr6AQVUmiLbYGM5XiFxmqTNDSdHardsgZLnDDWVwRHUbfFSYWUhozMLl3NWu
+         xKWI0tvuk0bqyn1cax0UPNkX8M479xy960BvU8QwGFa+tjs5+SITjval+q4fvNUGs2
+         g5WWMQ1p6q+srbokCw8B3UuBQAfG2MFcaSnOX3XyFlgQHZY2zzs/48wy52snIqq3QT
+         g24j/t25VVGDQ==
+From:   Felipe Balbi <balbi@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] usb: gadget: s3c-hsudc: Use struct_size() in
+ devm_kzalloc()
+In-Reply-To: <20210513193353.GA196565@embeddedor>
+References: <20210513193353.GA196565@embeddedor>
+Date:   Fri, 14 May 2021 10:24:50 +0300
+Message-ID: <87k0o17p6l.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <162094681128.5074.13510794749219416919.git-patchwork-notify@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lhKOz-004AGP-CY
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:35730
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
+"Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
 
-On 5/13/21 18:00, patchwork-bot+netdevbpf@kernel.org wrote:
-> Hello:
-> 
-> This patch was applied to netdev/net-next.git (refs/heads/master):
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows
+> that, in the worse scenario, could lead to heap overflows.
+>
+> This code was detected with the help of Coccinelle and, audited and
+> fixed manually.
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-[..]
+Acked-by: Felipe Balbi <balbi@kernel.org>
 
-> Here is the summary with links:
->   - [next] bpf: Use struct_size() in kzalloc()
->     https://git.kernel.org/netdev/net-next/c/fe0bdaec8dea
+=2D-=20
+balbi
 
-Awesome. :)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks, Dave.
---
-Gustavo
+-----BEGIN PGP SIGNATURE-----
+
+iQFFBAEBCAAvFiEE9DumQ60WEZ09LIErzlfNM9wDzUgFAmCeJcIRHGJhbGJpQGtl
+cm5lbC5vcmcACgkQzlfNM9wDzUh9UQgAoHsTFS64PtkTiiLe9txwadAGZu1jUqWd
+rifBnWCjW0qkcPu6k74kykvO743iZ8S1NBFifgaARaSmiPvH3v6hIYbiN+co+QWR
+dvkErw3FeTn5FqhAJdamv4nXcRecdmiutseGRUBExLA+vjbDKrCAp+3MNzf9emws
+cTyBJaRgp0GCshhHyGKzvxRLRDt3USNBvN67vIxJMNgC0C2gg1D8Kp6qok5PzJCq
+ppiCSPMw6ytSbKUGh5XBATPcgxE64jRoFFNObtPxByKlmvqTKC6rYQ0I9y48un+c
+/Lo/5hc2yiepHWuwx6LE+LSSCkoFDQnhZt28yDELxP7Tl0bXqDnK3g==
+=3cIq
+-----END PGP SIGNATURE-----
+--=-=-=--
