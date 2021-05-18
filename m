@@ -2,130 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-20.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893F2C433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FABC433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69980613B5
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9DA613B9
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345491AbhERBMW (ORCPT
+        id S1346099AbhERBpA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 May 2021 21:12:22 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.9]:28823 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345712AbhERBMR (ORCPT
+        Mon, 17 May 2021 21:45:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238761AbhERBpA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 May 2021 21:12:17 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 4517544E062
-        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 20:10:59 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ioGBl3wUnAEP6ioGBlgCGC; Mon, 17 May 2021 20:10:59 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SHU+3vvN64BDQu7qZYD0FXs6TjeRwBgIv9Xx2RD6kic=; b=I10VJN4wv1oMd7EwHRtVWpEL86
-        ZCAz6TOfWkfFcMq3oeUvIhR2PdziCAsXFOdWAH+uW3dj/AraVnlyg0wb6tw2JL+ruy/FqwKNpZT8e
-        m+XAfBjWqe7rYDCZZD60hJXo9jmHAds0yEMxDqFqugcRGEvYqCRgQv3FfwA6H08j8t6MonvlDJB1R
-        L9VWx4qRqwCkDmUnWDxl4Joe03PHvQbanjhxje1XvGEzZpeAJTwaIQDg/bGc8jJwZElsE8T/N3JCk
-        37ChBdq36F0u8JexojxfmEYIadymoIEjMX9A7MaypC4/OgreakfQLmxzi72o4DVyTWFBv2+uvns40
-        3CSEe7tw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53628 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lioG7-003E5c-PS; Mon, 17 May 2021 20:10:55 -0500
-Subject: Re: [PATCH RESEND][next] xfrm: Fix fall-through warnings for Clang
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210305092319.GA139967@embeddedor>
- <fbe896ed-860d-4a92-f92b-bce83ba413ee@embeddedor.com>
-Message-ID: <12e41d98-5cab-d4af-424d-228c664d5be7@embeddedor.com>
-Date:   Mon, 17 May 2021 20:11:37 -0500
+        Mon, 17 May 2021 21:45:00 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18039C061573;
+        Mon, 17 May 2021 18:43:42 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id f8so6383001qth.6;
+        Mon, 17 May 2021 18:43:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VDEfHlmjhOJt3nhxPPEyRnbv69jWXQnDs7QGgGPn30I=;
+        b=HxLWjbf4YnmukKbdgbNfuTL3hy2jd5drR5Nix7BP7A/0n6ypJ1Yh4Id38fpB4Ub9Hs
+         VbUd5Ala73cfnGBHmsoPFuI+W3hlcOcSOQ56VvA6wPCtGB9aF6lD2n8k0idrzcDUMi7y
+         tikxgNZMTNE9L2q/oJq70aib3HtrKmdnP2jytIHm/L0o+ebdkcj9kTF1Yr+hf9mCJLQL
+         vg3fKdhYGkGNrhME5YzVvLW9QcohT21zGcE9g6dB6C3If/Va4Nt1b1B87KQYbKOuRCAi
+         OJDPhWxUEAU2cJtsG+inZMvgsr6Z0IReFOCl7I7Ua16+5UBEyYVG8/SdUW5Xs3r8RlGy
+         vGig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VDEfHlmjhOJt3nhxPPEyRnbv69jWXQnDs7QGgGPn30I=;
+        b=orbnU+1L8atpwKC/VjoltVLE4MhbfSFzr8nocanOqBt2TDuiUyNqjd+KHqqidfL3/R
+         uRzdg0y+kItXBfIeOBgrwVK7Gmny7nGkb+9yPo/oqNEVSk5RO/01qJj8dAXtTjrOzEAV
+         fvqMKpqxxCHZaRcuoiZMuFyM9nsdsYppSC3WZElc8uwsM2CBYZTTDZ+P/8a0RgNht16F
+         TUiSduHLGdriM0k+WOFGWDjSxCyrGwu6z9MDGme4Su+8yL51bqfVBaxfhVe4xEIUdID5
+         BLe8SbGShHnfa6nXLX6l/n97icRR4XJw/T7zkH8AtVVFaJHijj5s6pMlm4Axx0iHwvys
+         67kw==
+X-Gm-Message-State: AOAM533WdDRF3BhsmqzTCBmGBjn0OfSOvzSZ+XMXXTXk5B3K+cc892bb
+        wAHwCX5G03RL98ZK9VLOHrA32PAOaew=
+X-Google-Smtp-Source: ABdhPJzeA021cDl4Llgxn5JSeqjsknucA9KObWeuK3ZsLLaJaQruUsiV4EeF8e+SWn0FUowV/Tet9A==
+X-Received: by 2002:ac8:5a4c:: with SMTP id o12mr2376485qta.121.1621302221018;
+        Mon, 17 May 2021 18:43:41 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m4sm12539041qtg.21.2021.05.17.18.43.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 May 2021 18:43:40 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH RESEND][next] hwmon: (max6621) Fix fall-through warnings
+ for Clang
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210305095258.GA141583@embeddedor>
+ <20210306031847.GA192807@roeck-us.net>
+ <1bd99c46-730e-ee56-96e4-c87f69488f49@embeddedor.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <563d33b6-981b-8297-fb70-97de738d1688@roeck-us.net>
+Date:   Mon, 17 May 2021 18:43:38 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <fbe896ed-860d-4a92-f92b-bce83ba413ee@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1bd99c46-730e-ee56-96e4-c87f69488f49@embeddedor.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lioG7-003E5c-PS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53628
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 37
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
-
-If you don't mind, I'm taking this in my -next[1] branch for v5.14.
-
-Thanks
---
-Gustavo
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
-
-On 4/20/21 15:08, Gustavo A. R. Silva wrote:
-> Hi all,
+On 5/17/21 5:45 PM, Gustavo A. R. Silva wrote:
+> Hi Guenter,
 > 
-> Friendly ping: who can take this, please?
+> On 3/5/21 21:18, Guenter Roeck wrote:
+>> On Fri, Mar 05, 2021 at 03:52:58AM -0600, Gustavo A. R. Silva wrote:
+>>> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+>>> by explicitly adding a break statement instead of letting the code fall
+>>> through to the next case.
+>>>
+>>> Link: https://github.com/KSPP/linux/issues/115
+>>> Acked-by: Guenter Roeck <linux@roeck-us.net>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>
+>> I Acked those, thus assuming that they would be applied through some
+>> other tree. If that is not the case, you'll need to let me know. The
+>> resend only means to me that whatever tree was supposed to pick it up
+>> did not do it, but it doesn't result in any action from my side.
 > 
+> If you don't mind, I'm taking this in my -next[1] branch for v5.14.
+> 
+
+Ok with me for all.
+
+Guenter
+
 > Thanks
 > --
 > Gustavo
 > 
-> On 3/5/21 03:23, Gustavo A. R. Silva wrote:
->> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
->> by explicitly adding a break statement instead of letting the code fall
->> through to the next case.
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
+> 
 >>
->> Link: https://github.com/KSPP/linux/issues/115
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>  net/xfrm/xfrm_interface.c | 1 +
->>  1 file changed, 1 insertion(+)
+>> Guenter
 >>
->> diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
->> index 8831f5a9e992..41de46b5ffa9 100644
->> --- a/net/xfrm/xfrm_interface.c
->> +++ b/net/xfrm/xfrm_interface.c
->> @@ -432,6 +432,7 @@ static int xfrmi4_err(struct sk_buff *skb, u32 info)
->>  	case ICMP_DEST_UNREACH:
->>  		if (icmp_hdr(skb)->code != ICMP_FRAG_NEEDED)
->>  			return 0;
->> +		break;
->>  	case ICMP_REDIRECT:
->>  		break;
->>  	default:
->>
+>>>   drivers/hwmon/max6621.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/hwmon/max6621.c b/drivers/hwmon/max6621.c
+>>> index 367855d5edae..7821132e17fa 100644
+>>> --- a/drivers/hwmon/max6621.c
+>>> +++ b/drivers/hwmon/max6621.c
+>>> @@ -156,7 +156,7 @@ max6621_is_visible(const void *data, enum hwmon_sensor_types type, u32 attr,
+>>>   		default:
+>>>   			break;
+>>>   		}
+>>> -
+>>> +		break;
+>>>   	default:
+>>>   		break;
+>>>   	}
+>>> -- 
+>>> 2.27.0
+>>>
+
