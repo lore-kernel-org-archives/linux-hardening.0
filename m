@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C424C433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC65C433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE73861378
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839CA61370
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241307AbhERAYi (ORCPT
+        id S237517AbhERA0Y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 May 2021 20:24:38 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.80]:19167 "EHLO
+        Mon, 17 May 2021 20:26:24 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.80]:48950 "EHLO
         gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238196AbhERAYh (ORCPT
+        by vger.kernel.org with ESMTP id S234389AbhERA0X (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 May 2021 20:24:37 -0400
+        Mon, 17 May 2021 20:26:23 -0400
 Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 5A5DA5EFA28
-        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 19:23:19 -0500 (CDT)
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 2F88CACE3DB
+        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 19:25:06 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id inW3lpH1YDedfinW3l2jPj; Mon, 17 May 2021 19:23:19 -0500
+        id inXmlpIp8DedfinXml2lCE; Mon, 17 May 2021 19:25:06 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,33 +34,34 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=46ceAfOlKNCtdInhOwoc6rqVFSQAE0W1FJ5BWeIJpvc=; b=Y873GH19+6ShMohch0MS2z6QgQ
-        9Og4YFjFYOEYAKxN456HOZBKwnewIbcBm7SuDN8RF+U4oe7eFzIV89vo1hPCVj3c3JMRLQwPPjcpq
-        1lhit41HgYuq3rNxCHBo1IDTo9UYaAC4frjrnNSlPgOS9a9xIGIKHo//NbyqNDYtWIMVeeYw928yT
-        ygvtZvnvwgtHdslHeF1oz/aOGvLtd3vSpW2VwOC1HAwc1DR8NSEVxx0gnsh2DS1ir83RvGy4I4/ZB
-        nKBqlhxs2ljAkFqUdAfXtk/nC2Gns6L3Bvd+pp3VZyNTn4SIf/ic8CV7WKISkr+tZ3seYCEZ5SLwb
-        Fj1KmFZQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53440 helo=[192.168.15.8])
+        bh=17jgeobkFVa1lONgCh3PHoiuxiQYySp4r1X7ZA320/I=; b=gCqIuJE/aNf9EAT1kuQWxDSRs6
+        8apFAREr2OInbd6d8QRxxv3wk/YF0ewMrfEQcALPiGL9XtWK2wacq4JY/XsWfAjcHxUIgCj+eeWEe
+        hcLo1ihouocgkNEIeIUhTo9QT/YENk2OapkB0iXEmhR9VcQ99cV5BHdyi8ynBWyIcsuFzK9Ux/kmA
+        iXP2nLVABM7DlCytE+lqQ+oF9i7qR2eAcHC4NsFSaiGk6ak4krf9B6QLkanKORZZJhCk6bhkPXzMv
+        wXgNdSBguSC9JJMzG+EqfKq79Y74/qbvWD1TDBnAl/wOxgwRNLReyY5WNhQqqSw/RHLzLWHWShSFm
+        m+XBN6aw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53444 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1linW0-002RhE-Vh; Mon, 17 May 2021 19:23:17 -0500
-Subject: Re: [PATCH RESEND][next] bnxt_en: Fix fall-through warnings for Clang
+        id 1linXh-002TFl-KX; Mon, 17 May 2021 19:25:01 -0500
+Subject: Re: [PATCH RESEND][next] qlcnic: Fix fall-through warnings for Clang
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Michael Chan <michael.chan@broadcom.com>,
+        Shahed Shaikh <shshaikh@marvell.com>,
+        Manish Chopra <manishc@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210305095024.GA141398@embeddedor>
- <55348913-84be-5149-e43f-7982ecd73c40@embeddedor.com>
-Message-ID: <eae04cb3-cf5e-6508-dccf-574a03254c31@embeddedor.com>
-Date:   Mon, 17 May 2021 19:23:59 -0500
+Cc:     GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210305091735.GA139591@embeddedor>
+ <9502f47c-4e5c-2406-9cc7-708c90899c9d@embeddedor.com>
+Message-ID: <fccf5380-7898-8a96-be52-a4f6efc64e76@embeddedor.com>
+Date:   Mon, 17 May 2021 19:25:43 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <55348913-84be-5149-e43f-7982ecd73c40@embeddedor.com>
+In-Reply-To: <9502f47c-4e5c-2406-9cc7-708c90899c9d@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,13 +73,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1linW0-002RhE-Vh
+X-Exim-ID: 1linXh-002TFl-KX
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53440
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53444
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 29
+X-Email-Count: 38
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -104,27 +105,40 @@ On 4/20/21 15:27, Gustavo A. R. Silva wrote:
 > --
 > Gustavo
 > 
-> On 3/5/21 03:50, Gustavo A. R. Silva wrote:
->> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
->> by explicitly adding a break statement instead of just letting the code
->> fall through to the next case.
+> On 3/5/21 03:17, Gustavo A. R. Silva wrote:
+>> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+>> warnings by explicitly adding a break and a goto statements instead of
+>> just letting the code fall through to the next case.
 >>
 >> Link: https://github.com/KSPP/linux/issues/115
 >> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 >> ---
->>  drivers/net/ethernet/broadcom/bnxt/bnxt.c | 1 +
->>  1 file changed, 1 insertion(+)
+>>  drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c   | 1 +
+>>  drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c | 1 +
+>>  2 files changed, 2 insertions(+)
 >>
->> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
->> index b53a0d87371a..a34810750058 100644
->> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
->> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
->> @@ -2158,6 +2158,7 @@ static int bnxt_hwrm_handler(struct bnxt *bp, struct tx_cmp *txcmp)
->>  	case CMPL_BASE_TYPE_HWRM_ASYNC_EVENT:
->>  		bnxt_async_event_process(bp,
->>  					 (struct hwrm_async_event_cmpl *)txcmp);
+>> diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
+>> index bdf15d2a6431..af4c516a9e7c 100644
+>> --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
+>> +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
+>> @@ -1390,6 +1390,7 @@ static int qlcnic_process_rcv_ring(struct qlcnic_host_sds_ring *sds_ring, int ma
+>>  			break;
+>>  		case QLCNIC_RESPONSE_DESC:
+>>  			qlcnic_handle_fw_message(desc_cnt, consumer, sds_ring);
+>> +			goto skip;
+>>  		default:
+>>  			goto skip;
+>>  		}
+>> diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
+>> index 96b947fde646..8966f1bcda77 100644
+>> --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
+>> +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
+>> @@ -3455,6 +3455,7 @@ qlcnic_fwinit_work(struct work_struct *work)
+>>  			adapter->fw_wait_cnt = 0;
+>>  			return;
+>>  		}
 >> +		break;
->>  
->>  	default:
+>>  	case QLCNIC_DEV_FAILED:
 >>  		break;
+>>  	default:
 >>
