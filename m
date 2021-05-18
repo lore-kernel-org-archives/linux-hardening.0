@@ -7,59 +7,63 @@ X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DFEC433ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4965CC433B4
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E2B61184
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201C8611ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237520AbhERADo (ORCPT
+        id S237491AbhERAHr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 May 2021 20:03:44 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.82]:44017 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239063AbhERADo (ORCPT
+        Mon, 17 May 2021 20:07:47 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.250]:24570 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1343495AbhERAHr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 May 2021 20:03:44 -0400
+        Mon, 17 May 2021 20:07:47 -0400
 Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id E2E828284
-        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 19:02:26 -0500 (CDT)
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id B8BD4400CFD0B
+        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 19:06:28 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id inBqlwxsqMGeEinBqlzPFN; Mon, 17 May 2021 19:02:26 -0500
+        id inFklx31XMGeEinFklzUNB; Mon, 17 May 2021 19:06:28 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:To:From:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rGr6+qMMJocwMXuMLsw5MiXm4TZdt9GYUPCcl+Bo3Sg=; b=YZr3b7rSqOBpWX0yMK9DXiPpGQ
-        3E+JvH/qrCKrT8hJGrxJhIfU96peRVHG3ZK8avDiXVXy0XnhBS4QoYS0xy4dZDKDa23PMy8uVBijP
-        XqdcS8FgAGh38r7xsD/aRym4Jehq0pDqi7efLTxWXM/AJNdNjZvV75xo5syxaxiXp8tZ22zkW5zdh
-        qrtad2cw2EODRM1kse5M3wpCMm1A2wk8hB2y/yzFPdeHnNIP+MwUPsBh94Oi/dYI24zHm1z3vKrX0
-        gnxE2lrYkuU7wACMbkfESxItjHeXGdIzYt3ITV8lT4xgnlNh3zYUu2HXeW05NA1fKjbPn9Ux9IAqx
-        BmXJP0Ng==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53362 helo=[192.168.15.8])
+        bh=k4sEVLknnruDHNpvaSM+w0j2lvZwEiQryRCoSyKzAtU=; b=EUHY6myuyr28THoBW+A8QZ9WrE
+        zwLvASFA/r9a4pD9OF0Mp8ZUXxRer1beCcK7nCD1OPIfv1Dc9ZvvFvxnYUBHwpHNex9xtxZviSZfg
+        8fKZlzcIdRMu+yfkR6Hvb15SjVj/eYw3w+ApkrBesr11i1XF5c6sHK3dJ+68prRnA2ekWkqcQBnfy
+        xNawyp6G7n07NwtPi/Er//wTLw2C8izlOm7yf1k34xZREK517KR/J2mg51EiYaHs4GlDMq2vfAyyu
+        6XbMtgynGXws3QA2IliXreIYxsHF2a8SNSc4A+e4ZPbQ9fbwyIjBohfZy4CW4Du9cogxpdmPotUL2
+        +mLWfhNw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53386 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1linBo-0022dd-Jd; Mon, 17 May 2021 19:02:24 -0500
-Subject: Re: [PATCH 051/141] reiserfs: Fix fall-through warnings for Clang
+        id 1linFh-0028jA-89; Mon, 17 May 2021 19:06:25 -0500
+Subject: Re: [oss-drivers] Re: [PATCH RESEND][next] nfp: Fix fall-through
+ warnings for Clang
+To:     Simon Horman <simon.horman@netronome.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, oss-drivers@netronome.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20210305094937.GA141307@embeddedor>
+ <20210305121949.GF8899@netronome.com>
+ <b4fd4c37-ccd6-3cbb-a127-3b2ad9516871@embeddedor.com>
+ <20210421093911.GA15091@netronome.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <6859fecccd96f79612f9650fdba7a66bbff70560.1605896059.git.gustavoars@kernel.org>
- <7229aa6e-9943-9568-faf2-7c8cd81e6890@embeddedor.com>
-Message-ID: <cb6bd498-9864-c884-f844-838796443531@embeddedor.com>
-Date:   Mon, 17 May 2021 19:03:07 -0500
+Message-ID: <3c89dd75-64a9-d60b-164c-598cdb4ab2b8@embeddedor.com>
+Date:   Mon, 17 May 2021 19:07:07 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <7229aa6e-9943-9568-faf2-7c8cd81e6890@embeddedor.com>
+In-Reply-To: <20210421093911.GA15091@netronome.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,20 +75,20 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1linBo-0022dd-Jd
+X-Exim-ID: 1linFh-0028jA-89
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53362
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53386
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
+X-Email-Count: 13
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Hi all,
 
 I'm taking this in my -next[1] branch for v5.14.
 
@@ -94,36 +98,47 @@ Gustavo
 
 [1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
 
-On 4/20/21 15:23, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> Friendly ping: who can take this, please?
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> On 11/20/20 12:32, Gustavo A. R. Silva wrote:
->> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
->> by explicitly adding a break statement instead of letting the code fall
->> through to the next case.
+On 4/21/21 04:39, Simon Horman wrote:
+> On Tue, Apr 20, 2021 at 03:23:39PM -0500, Gustavo A. R. Silva wrote:
+>> On 3/5/21 06:19, Simon Horman wrote:
+>>> On Fri, Mar 05, 2021 at 03:49:37AM -0600, Gustavo A. R. Silva wrote:
+>>>> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+>>>> by explicitly adding a break statement instead of letting the code fall
+>>>> through to the next case.
+>>>>
+>>>> Link: https://github.com/KSPP/linux/issues/115
+>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>
+>>> Thanks Gustavo,
+>>>
+>>> this looks good to me.
+>>>
+>>> Acked-by: Simon Horman <simon.horman@netronome.com>
 >>
->> Link: https://github.com/KSPP/linux/issues/115
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>  fs/reiserfs/namei.c | 1 +
->>  1 file changed, 1 insertion(+)
+>> Hi all,
 >>
->> diff --git a/fs/reiserfs/namei.c b/fs/reiserfs/namei.c
->> index 1594687582f0..90bb49bfdba0 100644
->> --- a/fs/reiserfs/namei.c
->> +++ b/fs/reiserfs/namei.c
->> @@ -132,6 +132,7 @@ int search_by_entry_key(struct super_block *sb, const struct cpu_key *key,
->>  			return IO_ERROR;
->>  		}
->>  		PATH_LAST_POSITION(path)--;
->> +		break;
->>  
->>  	case ITEM_FOUND:
->>  		break;
->>
+>> Friendly ping: who can take this, please?
+> 
+> Hi Jakub, Hi David,
+> 
+> I'm happy to repost this patch if it would help with your processes.
+> 
+>>>> ---
+>>>>  drivers/net/ethernet/netronome/nfp/nfp_net_repr.c | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+>>>> index b3cabc274121..3b8e675087de 100644
+>>>> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+>>>> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+>>>> @@ -103,6 +103,7 @@ nfp_repr_get_stats64(struct net_device *netdev, struct rtnl_link_stats64 *stats)
+>>>>  	case NFP_PORT_PF_PORT:
+>>>>  	case NFP_PORT_VF_PORT:
+>>>>  		nfp_repr_vnic_get_stats64(repr->port, stats);
+>>>> +		break;
+>>>>  	default:
+>>>>  		break;
+>>>>  	}
+>>>> -- 
+>>>> 2.27.0
+>>>>
