@@ -5,28 +5,28 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F77EC433ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB27C433ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF9B613AC
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C423A61090
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 00:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240008AbhERAzZ (ORCPT
+        id S237260AbhERA64 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 May 2021 20:55:25 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.9]:36544 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238143AbhERAzY (ORCPT
+        Mon, 17 May 2021 20:58:56 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.80]:39070 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235379AbhERA64 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 May 2021 20:55:24 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id B0ACB2453E
-        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 19:54:06 -0500 (CDT)
+        Mon, 17 May 2021 20:58:56 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 9BD8B45C14A
+        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 19:57:38 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id inzql29yE8ElSinzqlWIcX; Mon, 17 May 2021 19:54:06 -0500
+        id io3GlaCJonrr4io3GlXz0N; Mon, 17 May 2021 19:57:38 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,31 +34,33 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MGyMIu9GQK22jkoAICUtVJrFSqP2zGDq8EEVOwKTVFM=; b=lDBimvrWO1VsltFvaCP7MVpO6I
-        h1ZQaFZdivF7q4G67nWKhxfzOldliwYv825wZDY+7KWgNk7zIcUmCQM0uCfoJvPGP7UN92oweVHDn
-        EowAsUNmE0wvQcHR5bhs5yA4dwXRivbjSZzn59/fc9tsU+OaHHrKGvrBgQ0mStjiuf6ZyVHYPGeXJ
-        8YxDlxbRjdM8paPHdczV63n1Q1n4WKlV/iUmzQRM2f9DZvVLy9MjgE8i+ibZb+lew5Cqis5npoXDB
-        tIQLoD6PMPcMaQzFxQJIAymVR9NPDnzCtb3PdJz++yCsQF8hM4+6tYn2ZBwTKQE+d14o/nUdgHF15
-        +PE4i8eQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53574 helo=[192.168.15.8])
+        bh=4qoXiH1bPb97Rx+HBNH6AfkgBR3DdCR+uaCQfEgud1k=; b=NMOGlwjSVwidQTCvP4TmTwmH5G
+        BWUDznGSVUv15nt9WWemv93EcJ4CiLd3lR1+vnssruGyiYH0X8p4NZfVHIXUiICO262ufB1xzCDFs
+        i+i6YbKnXPduWBtiPPxdbIECglYpYqT1O5Y96LT5cFmPJdPwaAFdyH73Bi7rRLC3XlEXlSvDuA39V
+        HApyZ5XEPXLN+Zd3gEVGGTroz1nDxbsd+4ii441b7O2clQOOYciWMejj3tRO3P3pMcMMjl8LUFCSD
+        7eqhJKEJHxIsDKdvq3I226cwB4lEeO5zwvV3egbB1KR65Sin+yYfkvVgBk8NwZYWybiIW2qT0XdwD
+        kfBR0FLw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53582 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1linzo-002sXK-78; Mon, 17 May 2021 19:54:04 -0500
-Subject: Re: [PATCH RESEND][next] ide: Fix fall-through warnings for Clang
+        id 1lio3E-002vds-8a; Mon, 17 May 2021 19:57:36 -0500
+Subject: Re: [PATCH RESEND][next] net/packet: Fix fall-through warnings for
+ Clang
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-References: <20210305100012.GA142349@embeddedor>
- <b09a2a2c-5a82-3c80-7f8a-868349a1efee@embeddedor.com>
-Message-ID: <f6dc7620-d43a-a889-946d-6bd31c6bf413@embeddedor.com>
-Date:   Mon, 17 May 2021 19:54:45 -0500
+References: <20210305094429.GA140795@embeddedor>
+ <895bef99-a483-1d20-8b4c-2eea3c0d341f@embeddedor.com>
+Message-ID: <89aa0c11-4f6a-e196-f5a1-89b886a61a4e@embeddedor.com>
+Date:   Mon, 17 May 2021 19:58:19 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <b09a2a2c-5a82-3c80-7f8a-868349a1efee@embeddedor.com>
+In-Reply-To: <895bef99-a483-1d20-8b4c-2eea3c0d341f@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,13 +72,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1linzo-002sXK-78
+X-Exim-ID: 1lio3E-002vds-8a
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53574
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53582
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 81
+X-Email-Count: 87
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -93,7 +95,7 @@ Gustavo
 
 [1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
 
-On 4/20/21 15:11, Gustavo A. R. Silva wrote:
+On 4/20/21 15:10, Gustavo A. R. Silva wrote:
 > Hi all,
 > 
 > Friendly ping: who can take this, please?
@@ -102,7 +104,7 @@ On 4/20/21 15:11, Gustavo A. R. Silva wrote:
 > --
 > Gustavo
 > 
-> On 3/5/21 04:00, Gustavo A. R. Silva wrote:
+> On 3/5/21 03:44, Gustavo A. R. Silva wrote:
 >> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
 >> by explicitly adding a break statement instead of letting the code fall
 >> through to the next case.
@@ -110,19 +112,19 @@ On 4/20/21 15:11, Gustavo A. R. Silva wrote:
 >> Link: https://github.com/KSPP/linux/issues/115
 >> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 >> ---
->>  drivers/ide/siimage.c | 1 +
+>>  net/packet/af_packet.c | 1 +
 >>  1 file changed, 1 insertion(+)
 >>
->> diff --git a/drivers/ide/siimage.c b/drivers/ide/siimage.c
->> index 198847488cc6..c190dc6dfb50 100644
->> --- a/drivers/ide/siimage.c
->> +++ b/drivers/ide/siimage.c
->> @@ -493,6 +493,7 @@ static int init_chipset_siimage(struct pci_dev *dev)
->>  	case 0x30:
->>  		/* Clocking is disabled, attempt to force 133MHz clocking. */
->>  		sil_iowrite8(dev, tmp & ~0x20, scsc_addr);
+>> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+>> index e24b2841c643..880a1ab9a305 100644
+>> --- a/net/packet/af_packet.c
+>> +++ b/net/packet/af_packet.c
+>> @@ -1652,6 +1652,7 @@ static int fanout_add(struct sock *sk, struct fanout_args *args)
+>>  	case PACKET_FANOUT_ROLLOVER:
+>>  		if (type_flags & PACKET_FANOUT_FLAG_ROLLOVER)
+>>  			return -EINVAL;
 >> +		break;
->>  	case 0x10:
->>  		/* On 133Mhz clocking. */
->>  		break;
+>>  	case PACKET_FANOUT_HASH:
+>>  	case PACKET_FANOUT_LB:
+>>  	case PACKET_FANOUT_CPU:
 >>
