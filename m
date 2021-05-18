@@ -4,62 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50C9C433ED
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 May 2021 23:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495BBC433B4
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 May 2021 23:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13CC6113C
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 May 2021 23:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5596112D
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 May 2021 23:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239404AbhEQXzN (ORCPT
+        id S239179AbhERAAx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 May 2021 19:55:13 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.82]:32780 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238819AbhEQXzN (ORCPT
+        Mon, 17 May 2021 20:00:53 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.36]:23282 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236954AbhERAAw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 May 2021 19:55:13 -0400
+        Mon, 17 May 2021 20:00:52 -0400
 Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 9E1CF5D32A
-        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 18:53:54 -0500 (CDT)
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 7389617C59
+        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 18:59:34 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id in3al39AovAWvin3alD82M; Mon, 17 May 2021 18:53:54 -0500
+        id in94l3DWfvAWvin94lDCKp; Mon, 17 May 2021 18:59:34 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KaZSgQ5AwwL1G4KSoPBBVOyY8ngU6DX5pQRS+K4Gsp8=; b=LXF5j1v8WL1XOaR/22XEPW0FO2
-        sfvoBZirqQhtHjUdNK+prxqKNQNulcOptOMZ14ko798RBwi60avG/wUFWjmFyoBLD8KdmUSvX5Mk+
-        atqBqFXTlae2cb3O9iUwvDrHzyExVIbeKdvnfwDO+TOvUYBsvleDoyK13yDw9Mjp7Pefe57COxB2D
-        oBe0C7bYTeyPaZFf3TXPhBoL/IRqtmwPMGT9E7WUpcMtXy4Q2CjhB3OzPoL/CgCahjpPhJK981rP7
-        rwN/yYrq6x940ofwtq1e4LFAg05fZevh7cJF6zAfVyEaFhcWUJ8aP7X3TDk4LnASfaIljeBNycQnD
-        8bhTS5UA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53332 helo=[192.168.15.8])
+        bh=WP8OErJcmlKelJqczvCkV0X7DlzM/cT7AhezC/cjhUo=; b=moKGY195TE1gv/tS9z7buZ3Ac2
+        jd7wq+MnQHUnASatBfxg6jtc9t3OjG8BiseeU1D0WUwRzFpU60JGFXlNvnA9zWRGMnvCYoU/6SVP7
+        tsiGluyeOb2IRvgmksmyQLxUg4YmHwlABhrpo3yeIXCCpWnigmlUI56xGBlypqm92dIwcnbDf28/D
+        Kz0bYfrsge0a1/Elr7Q09iZ5New631ZdpQ+Z1FKYe/v0qB7jdbIpMrREtBcVrFjio2FOitahrrT9s
+        3gN/nkHK3BiI0cnX4HrClSQVEBi+an1PJ61GVM7VcqZds8ilTTNvcCLTbQEUi6TgHkF1RY6onsjEC
+        YDf6bykQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53352 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lin3Y-001qui-5i; Mon, 17 May 2021 18:53:52 -0500
-Subject: Re: [PATCH 057/141] watchdog: Fix fall-through warnings for Clang
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <cover.1605896059.git.gustavoars@kernel.org>
- <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
+        id 1lin91-001x2Z-FY; Mon, 17 May 2021 18:59:32 -0500
+Subject: Re: [PATCH RESEND][next] vxge: Fix fall-through warnings for Clang
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <66f87bbf-3693-3dda-7bf4-12becb16bf31@embeddedor.com>
-Date:   Mon, 17 May 2021 18:54:35 -0500
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20210305094735.GA141111@embeddedor>
+ <e5591c90-1a12-febf-1aca-257895f24d26@embeddedor.com>
+Message-ID: <33df60cb-2122-730b-bff6-dddce39795ac@embeddedor.com>
+Date:   Mon, 17 May 2021 19:00:10 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <713aa26be06d50dd3bb582a3cb71f04787ad5d5b.1605896059.git.gustavoars@kernel.org>
+In-Reply-To: <e5591c90-1a12-febf-1aca-257895f24d26@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,13 +72,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lin3Y-001qui-5i
+X-Exim-ID: 1lin91-001x2Z-FY
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53332
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53352
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 19
+X-Email-Count: 26
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -94,27 +95,36 @@ Gustavo
 
 [1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
 
-On 11/20/20 12:32, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-> by explicitly adding a fallthrough pseudo-keyword instead of letting the
-> code fall through to the next case.
+On 4/20/21 15:22, Gustavo A. R. Silva wrote:
+> Hi all,
 > 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/watchdog/machzwd.c | 1 +
->  1 file changed, 1 insertion(+)
+> Friendly ping: who can take this, please?
 > 
-> diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
-> index 743377c5b173..73f2221f6222 100644
-> --- a/drivers/watchdog/machzwd.c
-> +++ b/drivers/watchdog/machzwd.c
-> @@ -174,6 +174,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
->  		fallthrough;
->  	case WD2:
->  		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
-> +		fallthrough;
->  	default:
->  		return;
->  	}
+> Thanks
+> --
+> Gustavo
 > 
+> On 3/5/21 03:47, Gustavo A. R. Silva wrote:
+>> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
+>> by explicitly adding a return statement instead of letting the code fall
+>> through to the next case.
+>>
+>> Link: https://github.com/KSPP/linux/issues/115
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>  drivers/net/ethernet/neterion/vxge/vxge-config.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.c b/drivers/net/ethernet/neterion/vxge/vxge-config.c
+>> index 5162b938a1ac..b47d74743f5a 100644
+>> --- a/drivers/net/ethernet/neterion/vxge/vxge-config.c
+>> +++ b/drivers/net/ethernet/neterion/vxge/vxge-config.c
+>> @@ -3784,6 +3784,7 @@ vxge_hw_rts_rth_data0_data1_get(u32 j, u64 *data0, u64 *data1,
+>>  			VXGE_HW_RTS_ACCESS_STEER_DATA1_RTH_ITEM1_ENTRY_EN |
+>>  			VXGE_HW_RTS_ACCESS_STEER_DATA1_RTH_ITEM1_BUCKET_DATA(
+>>  			itable[j]);
+>> +		return;
+>>  	default:
+>>  		return;
+>>  	}
+>>
