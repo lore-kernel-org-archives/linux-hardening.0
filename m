@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43E4C433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E968C43461
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA636135F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8399961354
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345316AbhERBCc (ORCPT
+        id S232520AbhERBIM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 May 2021 21:02:32 -0400
-Received: from gateway24.websitewelcome.com ([192.185.50.66]:14124 "EHLO
+        Mon, 17 May 2021 21:08:12 -0400
+Received: from gateway24.websitewelcome.com ([192.185.50.66]:39033 "EHLO
         gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345303AbhERBCb (ORCPT
+        by vger.kernel.org with ESMTP id S239795AbhERBIM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 May 2021 21:02:31 -0400
+        Mon, 17 May 2021 21:08:12 -0400
 Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id BEB74174A0
-        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 20:01:12 -0500 (CDT)
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id F12A25F75
+        for <linux-hardening@vger.kernel.org>; Mon, 17 May 2021 20:06:53 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id io6ilaFtlnrr4io6ilY2YA; Mon, 17 May 2021 20:01:12 -0500
+        id ioCDlaMDXnrr4ioCDlY8nA; Mon, 17 May 2021 20:06:53 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,41 +34,39 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=g9aBbdlWEIXLQ91l3oXZPVNVSDcfsWGvnZBY5r44FHw=; b=phC7PcKu2EfF/L0ObDfrRVu57u
-        NmUUFnmFNKyhKdBOCpZQ2d4Byb7bZ20uGqYRChDe6Y2gt3GHIf7dWd53OgQJG9qP9oPVVGZ80duIy
-        33ShssOmlZK5WKi+MYOy75ni/bN5BgETuQna3tZatlMfKMUdv7xodXn7KNrTGK8UkSbQ5XIfV0SVU
-        Hi573Frstn5Couafpa48R8giz5RzXLVcwmWbS9oOHW8zj0sXM+4iwDJCLjTHk4lwtHX3DIddeQ3KM
-        4E8WjeLqNkizaH2V17E3zIQyg6MQhGErcarrH1Zp5VvMLnMi3CEiOblrlE5OL7OPQH4W9THSjtW+m
-        i87XNBnQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53596 helo=[192.168.15.8])
+        bh=4jO4QIVBW/kvv+vPdher+98IyRZOp0HseicLcBinFUg=; b=PAUn55/gRUTa5zNOp/cSe31JAK
+        DDwzmeAH+uV3j9PNPEJIHfiPuD1muz6oDn+rYchEY14J54851og6blRkkBL62n31gV9ObmhNjnlab
+        zODPEwiJAputNTq8xYO8R4Y3RmkGRTUcDHt7dA5+76XvFpAEht+sfYC19u7GrquZZXDbdX5ezZx9T
+        B24g6VqKpQ6kfgySKtNqYucpKDmW3p2yd+aVTgUTKTfmh2DtaIIIqdEMA6je73j7B/PJr1UMoeZ6K
+        /+fycDj/pRrVCzg32ajaOL3lSyFMhuNF2prWVatFkJhZEqZWbbQ6Yf58+GKW4ef1jczP3DHbg2Whq
+        bwutR+1A==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:53610 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lio6f-002yw1-5y; Mon, 17 May 2021 20:01:09 -0500
-Subject: Re: [PATCH RESEND][next] rds: Fix fall-through warnings for Clang
-To:     Haakon Bugge <haakon.bugge@oracle.com>
+        id 1lioCA-0038PH-Ef; Mon, 17 May 2021 20:06:50 -0500
+Subject: Re: [PATCH RESEND][next] sctp: Fix fall-through warnings for Clang
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        OFED mailing list <linux-rdma@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-References: <20210305090612.GA139288@embeddedor>
- <cd935ba5-a072-5b5a-d455-e06ef87a3a34@embeddedor.com>
- <6AB78D3D-C73D-4633-A6FD-9452DD8E4751@oracle.com>
+        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20210305090717.GA139387@embeddedor>
+ <91fcca0d-c986-f88e-4a0d-4590de6a5985@embeddedor.com>
+ <YH83PToOAiYfHPH3@horizon.localdomain>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <480ab028-5de9-85ea-3dc1-275eba61f544@embeddedor.com>
-Date:   Mon, 17 May 2021 20:01:48 -0500
+Message-ID: <8abc977a-05f9-dc56-fe98-ee274621172b@embeddedor.com>
+Date:   Mon, 17 May 2021 20:07:32 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <6AB78D3D-C73D-4633-A6FD-9452DD8E4751@oracle.com>
+In-Reply-To: <YH83PToOAiYfHPH3@horizon.localdomain>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
 X-AntiAbuse: Original Domain - vger.kernel.org
@@ -77,22 +75,23 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lio6f-002yw1-5y
+X-Exim-ID: 1lioCA-0038PH-Ef
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53596
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:53610
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
+X-Email-Count: 20
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
 
-If you don't mind, I'm taking this in my -next[1] branch for v5.14.
+Thanks, Marcelo.
+
+I'm taking this in my -next[1] branch for v5.14.
 
 Thanks
 --
@@ -100,70 +99,22 @@ Gustavo
 
 [1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
 
-On 5/6/21 01:50, Haakon Bugge wrote:
-> Sorry for the delay.
-> 
-> 
->> On 20 Apr 2021, at 22:10, Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
->>
+On 4/20/21 15:19, Marcelo Ricardo Leitner wrote:
+> On Tue, Apr 20, 2021 at 03:09:24PM -0500, Gustavo A. R. Silva wrote:
 >> Hi all,
 >>
 >> Friendly ping: who can take this, please?
->>
->> Thanks
->> --
->> Gustavo
->>
->> On 3/5/21 03:06, Gustavo A. R. Silva wrote:
->>> In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
->>> warnings by explicitly adding multiple break statements instead of
->>> letting the code fall through to the next case.
->>>
->>> Link: https://github.com/KSPP/linux/issues/115
->>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Reviewed-by: Håkon Bugge <haakon.bugge@oracle.com>
+> It would go via net/net-next tree, but I can't find this one on
+> patchwork. Just the previous version.
 > 
+> http://patchwork.ozlabs.org/project/netdev/list/?series=&submitter=&state=*&q=sctp%3A+Fix+fall-through+warnings+for+Clang&archive=both&delegate=
 > 
-> Thxs, Håkon
+> I can, however, find it in the archives.
 > 
+> https://lore.kernel.org/netdev/20210305090717.GA139387%40embeddedor/T/
 > 
->>> ---
->>> net/rds/tcp_connect.c | 1 +
->>> net/rds/threads.c     | 2 ++
->>> 2 files changed, 3 insertions(+)
->>>
->>> diff --git a/net/rds/tcp_connect.c b/net/rds/tcp_connect.c
->>> index 4e64598176b0..5461d77fff4f 100644
->>> --- a/net/rds/tcp_connect.c
->>> +++ b/net/rds/tcp_connect.c
->>> @@ -78,6 +78,7 @@ void rds_tcp_state_change(struct sock *sk)
->>> 	case TCP_CLOSE_WAIT:
->>> 	case TCP_CLOSE:
->>> 		rds_conn_path_drop(cp, false);
->>> +		break;
->>> 	default:
->>> 		break;
->>> 	}
->>> diff --git a/net/rds/threads.c b/net/rds/threads.c
->>> index 32dc50f0a303..1f424cbfcbb4 100644
->>> --- a/net/rds/threads.c
->>> +++ b/net/rds/threads.c
->>> @@ -208,6 +208,7 @@ void rds_send_worker(struct work_struct *work)
->>> 		case -ENOMEM:
->>> 			rds_stats_inc(s_send_delayed_retry);
->>> 			queue_delayed_work(rds_wq, &cp->cp_send_w, 2);
->>> +			break;
->>> 		default:
->>> 			break;
->>> 		}
->>> @@ -232,6 +233,7 @@ void rds_recv_worker(struct work_struct *work)
->>> 		case -ENOMEM:
->>> 			rds_stats_inc(s_recv_delayed_retry);
->>> 			queue_delayed_work(rds_wq, &cp->cp_recv_w, 2);
->>> +			break;
->>> 		default:
->>> 			break;
->>> 		}
->>>
+> Dave and Jakub will know better.
+> 
+>   Marcelo
 > 
