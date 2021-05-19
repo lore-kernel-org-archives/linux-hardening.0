@@ -2,138 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FABC433B4
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9EEC43460
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 May 2021 16:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB9DA613B9
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 May 2021 01:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC696135C
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 May 2021 16:14:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346099AbhERBpA (ORCPT
+        id S1347245AbhESQP7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 May 2021 21:45:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238761AbhERBpA (ORCPT
+        Wed, 19 May 2021 12:15:59 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.119]:49560 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240333AbhESQP7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 May 2021 21:45:00 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18039C061573;
-        Mon, 17 May 2021 18:43:42 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id f8so6383001qth.6;
-        Mon, 17 May 2021 18:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VDEfHlmjhOJt3nhxPPEyRnbv69jWXQnDs7QGgGPn30I=;
-        b=HxLWjbf4YnmukKbdgbNfuTL3hy2jd5drR5Nix7BP7A/0n6ypJ1Yh4Id38fpB4Ub9Hs
-         VbUd5Ala73cfnGBHmsoPFuI+W3hlcOcSOQ56VvA6wPCtGB9aF6lD2n8k0idrzcDUMi7y
-         tikxgNZMTNE9L2q/oJq70aib3HtrKmdnP2jytIHm/L0o+ebdkcj9kTF1Yr+hf9mCJLQL
-         vg3fKdhYGkGNrhME5YzVvLW9QcohT21zGcE9g6dB6C3If/Va4Nt1b1B87KQYbKOuRCAi
-         OJDPhWxUEAU2cJtsG+inZMvgsr6Z0IReFOCl7I7Ua16+5UBEyYVG8/SdUW5Xs3r8RlGy
-         vGig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VDEfHlmjhOJt3nhxPPEyRnbv69jWXQnDs7QGgGPn30I=;
-        b=orbnU+1L8atpwKC/VjoltVLE4MhbfSFzr8nocanOqBt2TDuiUyNqjd+KHqqidfL3/R
-         uRzdg0y+kItXBfIeOBgrwVK7Gmny7nGkb+9yPo/oqNEVSk5RO/01qJj8dAXtTjrOzEAV
-         fvqMKpqxxCHZaRcuoiZMuFyM9nsdsYppSC3WZElc8uwsM2CBYZTTDZ+P/8a0RgNht16F
-         TUiSduHLGdriM0k+WOFGWDjSxCyrGwu6z9MDGme4Su+8yL51bqfVBaxfhVe4xEIUdID5
-         BLe8SbGShHnfa6nXLX6l/n97icRR4XJw/T7zkH8AtVVFaJHijj5s6pMlm4Axx0iHwvys
-         67kw==
-X-Gm-Message-State: AOAM533WdDRF3BhsmqzTCBmGBjn0OfSOvzSZ+XMXXTXk5B3K+cc892bb
-        wAHwCX5G03RL98ZK9VLOHrA32PAOaew=
-X-Google-Smtp-Source: ABdhPJzeA021cDl4Llgxn5JSeqjsknucA9KObWeuK3ZsLLaJaQruUsiV4EeF8e+SWn0FUowV/Tet9A==
-X-Received: by 2002:ac8:5a4c:: with SMTP id o12mr2376485qta.121.1621302221018;
-        Mon, 17 May 2021 18:43:41 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m4sm12539041qtg.21.2021.05.17.18.43.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 May 2021 18:43:40 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH RESEND][next] hwmon: (max6621) Fix fall-through warnings
- for Clang
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        Wed, 19 May 2021 12:15:59 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id BA59A29D28
+        for <linux-hardening@vger.kernel.org>; Wed, 19 May 2021 11:14:36 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id jOqClm5jP8ElSjOqClEsJL; Wed, 19 May 2021 11:14:36 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=bvCWAHbH8eGnG7CPvvzIAg7IGUzCsPOMwFSTobGjWiU=; b=Rx84nMv42tFkR3Co7w5iE2qvMj
+        wAGTqUuD0Uy+NuAohCnoVYVdF/yZ3WcjfQch3T9Qt6/Fsa9YPOmDI1/3IqFNQ856Q3/FzAeb40K9a
+        pcKpyWPJnY6Xmrp9qje9aoSmZ6bfYQOJqr2xdgoP9hNhNOYiKm7RO6EI4fTFWtzDqqANkaJRmo1QC
+        5BAToZa/2UfWG3frC6xu4BQacGxrdyDcG6h+r+VkbEfno7NqzNfxurK0qLC7SDf57WmxEVFsLMLfT
+        JnKtcshN1Hjnt1mKPoyF8I97NNh6k69k/DRyYxY7WSZr9APy11ObGsOvPJmbHcDt4iSQ/nb4sAt+R
+        mwPiIxZQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:60144 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1ljOq9-000Ug6-83; Wed, 19 May 2021 11:14:33 -0500
+Subject: Re: [PATCH][next] media: venus: hfi_msgs.h: Replace one-element
+ arrays with flexible-array members
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210305095258.GA141583@embeddedor>
- <20210306031847.GA192807@roeck-us.net>
- <1bd99c46-730e-ee56-96e4-c87f69488f49@embeddedor.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <563d33b6-981b-8297-fb70-97de738d1688@roeck-us.net>
-Date:   Mon, 17 May 2021 18:43:38 -0700
+References: <20210211001044.GA69612@embeddedor>
+ <bf31beab-dc36-23e9-757f-9729be59f7b2@embeddedor.com>
+ <de8538ad-48d8-7a3c-af4f-ab31ee2da761@linaro.org>
+ <f63824ee-fc8b-25cf-f3c2-c7b3947b8076@embeddedor.com>
+ <64aa38bc-62b2-79d9-156f-74a09f11f871@linaro.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <d4c57054-5708-fcd3-dd9d-fb26c40f6355@embeddedor.com>
+Date:   Wed, 19 May 2021 11:15:05 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <1bd99c46-730e-ee56-96e4-c87f69488f49@embeddedor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <64aa38bc-62b2-79d9-156f-74a09f11f871@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1ljOq9-000Ug6-83
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:60144
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 5/17/21 5:45 PM, Gustavo A. R. Silva wrote:
-> Hi Guenter,
-> 
-> On 3/5/21 21:18, Guenter Roeck wrote:
->> On Fri, Mar 05, 2021 at 03:52:58AM -0600, Gustavo A. R. Silva wrote:
->>> In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
->>> by explicitly adding a break statement instead of letting the code fall
->>> through to the next case.
->>>
->>> Link: https://github.com/KSPP/linux/issues/115
->>> Acked-by: Guenter Roeck <linux@roeck-us.net>
->>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>> ---
+Hi Stanimir,
+
+On 5/17/21 06:01, Stanimir Varbanov wrote:
+
+>>> This one introduces regressions, so I cannot take it. It needs some more
+>>> work.
 >>
->> I Acked those, thus assuming that they would be applied through some
->> other tree. If that is not the case, you'll need to let me know. The
->> resend only means to me that whatever tree was supposed to pick it up
->> did not do it, but it doesn't result in any action from my side.
+>> Please, share with me the errors or warnings you see with this. So, I can
+>> have an idea of what is going on. Unfortunately, I don't have access to the
+>> test suite or hardware to test this.
 > 
-> If you don't mind, I'm taking this in my -next[1] branch for v5.14.
-> 
+> I guess it needs more debugging, but the simple answer is that the
+> driver refuse to start streaming with this patch.
 
-Ok with me for all.
+I see. Please, share with me the details about your test setup. Are you using
+qemu or actual hardware for this?
 
-Guenter
+Please, also help me by sending me your .config file and dmesg output, as well.
+So, I can try to debug this.
 
-> Thanks
-> --
-> Gustavo
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
-> 
->>
->> Guenter
->>
->>>   drivers/hwmon/max6621.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/hwmon/max6621.c b/drivers/hwmon/max6621.c
->>> index 367855d5edae..7821132e17fa 100644
->>> --- a/drivers/hwmon/max6621.c
->>> +++ b/drivers/hwmon/max6621.c
->>> @@ -156,7 +156,7 @@ max6621_is_visible(const void *data, enum hwmon_sensor_types type, u32 attr,
->>>   		default:
->>>   			break;
->>>   		}
->>> -
->>> +		break;
->>>   	default:
->>>   		break;
->>>   	}
->>> -- 
->>> 2.27.0
->>>
-
+Thanks!
+--
+Gustavo
