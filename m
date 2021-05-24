@@ -2,138 +2,96 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369F0C47080
-	for <linux-hardening@archiver.kernel.org>; Sun, 23 May 2021 15:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2729FC04FF3
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 May 2021 19:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5492E6128A
-	for <linux-hardening@archiver.kernel.org>; Sun, 23 May 2021 15:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEEA6109F
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 May 2021 19:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231817AbhEWPu3 (ORCPT
+        id S232662AbhEXTte (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 23 May 2021 11:50:29 -0400
-Received: from mout.gmx.net ([212.227.15.18]:49693 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231789AbhEWPu3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 23 May 2021 11:50:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1621784884;
-        bh=FrWraqxqE5YYa+m3D7qRmF+oGA519cjiJkwpYd5Z2+4=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=MlAGITup6S74CPUyUk7DrKXMFyKxhwmYjNVvZxacdvzyJnqweDEjwR10Uehfrq14V
-         qNrqXwa0NC8gwyd1h6akEGEOFnys6LzF/WWLOknzdPYudg4UI6DkYARAGJVvIdCxVH
-         KQ3ZVbulhSh7knPpHzoewt1P59a1mdE2NFpgSgWo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.228.41]) by mail.gmx.net (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MAfUo-1lZnhs0rQ8-00B7XB; Sun, 23
- May 2021 17:48:04 +0200
-Date:   Sun, 23 May 2021 17:47:49 +0200
-From:   John Wood <john.wood@gmx.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     John Wood <john.wood@gmx.com>, Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>, valdis.kletnieks@vt.edu,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v7 0/7] Fork brute force attack mitigation
-Message-ID: <20210523154749.GA3762@ubuntu>
-References: <20210521172414.69456-1-john.wood@gmx.com>
- <19903478-52e0-3829-0515-3e17669108f7@linux.intel.com>
- <20210523073124.GA3762@ubuntu>
- <3d4ddd55-4f42-3ef7-dd68-a9f2bc33ba4b@linux.intel.com>
+        Mon, 24 May 2021 15:49:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47993 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232107AbhEXTte (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 24 May 2021 15:49:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621885685;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zfxZbd43HV5BQck0fhkJc4tszzGku44t8kIMaje1IsQ=;
+        b=Re6lMqpYq99AE3Yl1/kIXhL++2IxjYIVDjnwRx4gRb1BwCNAJS00OPfF8r7N9ZB5JZ6fyN
+        9IP2O7k9fif6pra+IbSw6vAb0HIQfFmZkHS7lI6KR+JNzrEYCRbR7hHc2hd+d5L1zB88iH
+        ufoN6KVfRtC5WA5VWkI2/QPlS71hCvw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-570-pD1I8wdkO_2yhId0Ep0XBA-1; Mon, 24 May 2021 15:48:03 -0400
+X-MC-Unique: pD1I8wdkO_2yhId0Ep0XBA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D015180FD65;
+        Mon, 24 May 2021 19:48:02 +0000 (UTC)
+Received: from x1.home.shazbot.org (ovpn-113-225.phx2.redhat.com [10.3.113.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A6641001281;
+        Mon, 24 May 2021 19:48:02 +0000 (UTC)
+Date:   Mon, 24 May 2021 13:48:01 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] vfio/iommu_type1: Use struct_size() for kzalloc()
+Message-ID: <20210524134801.406bc4bf@x1.home.shazbot.org>
+In-Reply-To: <20210513230155.GA217517@embeddedor>
+References: <20210513230155.GA217517@embeddedor>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3d4ddd55-4f42-3ef7-dd68-a9f2bc33ba4b@linux.intel.com>
-X-Provags-ID: V03:K1:YICGuZJa+XoC4UrRWY3G49f7Hh4z2qD02D0EnqYde0YwRyk9D5j
- Wi36QkvxyTc6zY4wywHFAUwaQ1T3kaxiU1axjO/iEG64lDNTsijLIp3jAAXP3TdsrJjI1JO
- DCtClcBdN6YqFvOlSJKBPLCjYzqW9K9ZYe4fB6b3v2dCemUVnRAXQGi2k3CWene6CaCzesp
- TKgy3Qcj7xt+rcaEUIorA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uq0tE3o5F/Y=:1AswCfz2hpV+ocgmC9DNmk
- /kz64yOiY4gO1DnokRMAGVeJRQS/yTyKZy/NE472elXysojfgXyWIOlY4L0UY5S5IcDu6x/HX
- CRt09XC3r/Fm2nWKYJOjKLSohgd7xbjtd7C7R5f8MZWA971cLJ6vASeWBjnIWjwTThvZhzXIs
- taCDiwYzm5tClKLMvV4Xvi/QPOsErKYD1emaEo0yfK8UdtRofpl77Jo3NXJbGvJaKUW+9dZFQ
- 3cFCplMX5ObbZRjk5w1tV6MwsA6IfEgfXln16uzePSMME7mZ4y1aIsAiZDb7sP6joSS5j4IUF
- WhOuRhLcFjXOUA/L1JT5rCznwrZZHbOcvhj9bYZQIDKSNA+fUhMZF+nW7z0djPQB/TKe646nO
- 3y+CBp9DpND9EMK4xoe73jH1+mRmrFqjnaLFqu3tsRFx35QIQxo/9DX4MuxdEKhh6M4Fj6Vkc
- h2/J2b2ZA6erVioFDegM+i7AMyN7aA+7CL510SwijdrMCCuBp74pdz85pzU3lL1qt86aNRGMw
- W6B1STzAvoUfw//O+KT+jbmmbE3GE4F9pBFCH4gmxIgbREIeOrRG3JlR1Df6h2raiP8ngxGnm
- o4ps/wXTboUNZjIJfQs/sA0dYCNSTlNz5U4c3eQRXCPpb1xBeVsnAtfuXXt7LZhpb6fkuwMLN
- NzqUy0rHbaQzO7JKVhPRE/txaH8rtR894k/yE1u5J4n2dGdSTO2f6IXScTUa/sYBNiSkwbtdB
- tKTw4lBIc1Vvr288fFESsrjWvo1/hbN5YRPE4Va5tYJ5Mq5oUd+SsdTKPnVbH+kGtlBQsLVXB
- 7vOEAPXDgkTjo8K7GMMVpHewriuji3cAGh/+pqIqekH1jRSd6o9D1WyQJGaUEBGxJ+wCeI338
- VkYlj7coGmjjn1yI+5rABltlGVtdr+XqodNbK7rDCJfKVX36txXOpNH9rJ5O8hgVaGH6c1P2n
- 6MqnZ4n1z/9N/YdkMXFxAtnOlx4mbMWcK6iibM9erFrw1kqQJL/oogW4tez+1dNej096IbvI4
- ShmJS801cDSZVHM19J3BCKUEUvUk4vkGMh5xZAfHcPK38VnJcBcSYreHe/9oMFZGRCMk+IDPx
- QItNaiPbOVAxKGckD0t4sdEbuuRQl+9NAyQ
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, May 23, 2021 at 07:43:16AM -0700, Andi Kleen wrote:
->
-> On 5/23/2021 12:31 AM, John Wood wrote:
-> > Hi,
-> >
-> > On Fri, May 21, 2021 at 11:02:14AM -0700, Andi Kleen wrote:
-> > > > Moreover, I think this solves another problem pointed out by Andi =
-Kleen
-> > > > during the v5 review [2] related to the possibility that a supervi=
-sor
-> > > > respawns processes killed by the Brute LSM. He suggested adding so=
-me way so
-> > > > a supervisor can know that a process has been killed by Brute and =
-then
-> > > > decide to respawn or not. So, now, the supervisor can read the bru=
-te xattr
-> > > > of one executable and know if it is blocked by Brute and why (usin=
-g the
-> > > > statistical data).
-> > > It looks better now, Thank.
-> > >
-> > > One potential problem is that the supervisor might see the executabl=
-e
-> > > directly, but run it through some wrapper. In fact I suspect that wi=
-ll be
-> > > fairly common with complex daemons. So it couldn't directly look at =
-the
-> > > xattr. Might be useful to also pass this information through the wai=
-t*
-> > > chain, so that the supervisor can directly collect it. That would ne=
-ed some
-> > > extension to these system calls.
-> > >
-> > Could something like this help? (not tested)
->
-> This works even when someone further down the chain died?
+On Thu, 13 May 2021 18:01:55 -0500
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-Yes, this is the idea. (but now is a work in progress :) )
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows
+> that, in the worst scenario, could lead to heap overflows.
+> 
+> This code was detected with the help of Coccinelle and, audited and
+> fixed manually.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index a0747c35a778..a3e925a41b0d 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -2795,7 +2795,7 @@ static int vfio_iommu_iova_build_caps(struct vfio_iommu *iommu,
+>  		return 0;
+>  	}
+>  
+> -	size = sizeof(*cap_iovas) + (iovas * sizeof(*cap_iovas->iova_ranges));
+> +	size = struct_size(cap_iovas, iova_ranges, iovas);
+>  
+>  	cap_iovas = kzalloc(size, GFP_KERNEL);
+>  	if (!cap_iovas)
 
-> Assuming it does, for SIGCHLD it seems reasonable.
 
-So, if there are no objections I will work on it for the next version.
+Looks good, applied to vfio for-linus branch for v5.13.  Thanks,
 
->
-> I'm not fully sure how it will interact with cgroup release tracking tho=
-ugh,
-> that might need more research (my understanding is that modern superviso=
-rs
-> often use cgroups)
+Alex
 
-Yeah, a new topic to learn: cgroups. I will try to work on this too if the=
-re are
-no objections.
-
-Thanks for the feedback.
-John Wood
