@@ -7,41 +7,44 @@ X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAFFC4707F
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 23:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03EBC4707F
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 23:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB12A613F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 23:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4166128B
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 23:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbhEYXRc (ORCPT
+        id S230272AbhEYXTY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 May 2021 19:17:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36410 "EHLO mail.kernel.org"
+        Tue, 25 May 2021 19:19:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230145AbhEYXRc (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 May 2021 19:17:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 798A96128B;
-        Tue, 25 May 2021 23:16:01 +0000 (UTC)
+        id S230145AbhEYXTY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 25 May 2021 19:19:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B5DE86128B;
+        Tue, 25 May 2021 23:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621984562;
-        bh=udTOOSMfJAcXktS3DMEoxFOhpDun8Q7Rx/ntvDo0avw=;
+        s=k20201202; t=1621984674;
+        bh=bJ4XAZH21tHtmuVTr98seVj7Q79bHvG/8rOCPJR+Jr4=;
         h=Date:From:To:Cc:Subject:From;
-        b=gQeIbFm1KUwviw4anAa3NkYIGfFPZoIuWRxKQnf1yu7UXL9a8lsoYnNcQEfO7ufyD
-         l1/3NW7dycXQvXZf3zNV+HbYVyuCifzV6wpfJydb4JwZh4i9K8CIdpE4w5sbkwQgtD
-         6yvziORankOno1bXr3dybdZ9vPQ88Yq4mCEzCZvmIstBBI3yEMm1t8yPbpm+sdLcbN
-         bD1e5robcYs74VpV2cS9XBZTJ6Xkj6A4y/nzqlAwCpCX7ExapWQBuaw4IpAtPcENBF
-         pwmUmxzlEb2KFKwjJRdqcbt6F+TZ2sMfSZCjQtwOdFy2KIj4L24L2xVgeb5YmGEGKw
-         Ueaaumt97s7PA==
-Date:   Tue, 25 May 2021 18:16:58 -0500
+        b=bi8dANLjd9cpoUMHMwE1r58G5yZizrELQGJ3PmqOwl9TzPAWFGovmDwLHbhMOwrvW
+         nLJvPSVdgAgXTXLIJ1B64RIdXbG1JAZbDyog61i+05nfGWtXA7FxgYv8jCIPKN3gAq
+         zZ7tUuhW7d2a/EvDqQN4j6Aq9E5c2iL3SAvYSAtLyzSBlqHmxK7XDMqWBJ7ESnN2CS
+         5NrK+F6zvFdnKBRYj61dkLLjcuMWPodJCkd21aJvNJor3j//wHZBL/VSKA2TkCFoQ4
+         UOQB8OVfBwyR6LUQRFamAwU7cChB/Ax8GDm3pwp/hCE9wl5OxZpCreIrQnn+zQ+xlh
+         Kh25vmgaMDGjg==
+Date:   Tue, 25 May 2021 18:18:51 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc:     intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] virtchnl: Replace one-element array in struct
- virtchnl_vsi_queue_config_info
-Message-ID: <20210525231658.GA176466@embeddedor>
+Subject: [PATCH][next] iavf: Replace one-element array in struct
+ virtchnl_rss_key
+Message-ID: <20210525231851.GA176647@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -56,8 +59,8 @@ should always use “flexible array members”[1] for these cases. The older
 style of one-element or zero-length arrays should no longer be used[2].
 
 Refactor the code according to the use of a flexible-array member in struct
-virtchnl_vsi_queue_config_info instead of one-element array, and use the
-flex_array_size() helper.
+virtchnl_rss_key instead of one-element array, and use the struct_size()
+helper.
 
 [1] https://en.wikipedia.org/wiki/Flexible_array_member
 [2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
@@ -65,38 +68,59 @@ flex_array_size() helper.
 Link: https://github.com/KSPP/linux/issues/79
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/avf/virtchnl.h | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/iavf/iavf_virtchnl.c | 5 ++---
+ include/linux/avf/virtchnl.h                    | 6 +++---
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
+index 167955094170..6f2a4c8beb0b 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
+@@ -799,7 +799,7 @@ void iavf_set_hena(struct iavf_adapter *adapter)
+ void iavf_set_rss_key(struct iavf_adapter *adapter)
+ {
+ 	struct virtchnl_rss_key *vrk;
+-	int len;
++	size_t len;
+ 
+ 	if (adapter->current_op != VIRTCHNL_OP_UNKNOWN) {
+ 		/* bail because we already have a command pending */
+@@ -807,8 +807,7 @@ void iavf_set_rss_key(struct iavf_adapter *adapter)
+ 			adapter->current_op);
+ 		return;
+ 	}
+-	len = sizeof(struct virtchnl_rss_key) +
+-	      (adapter->rss_key_size * sizeof(u8)) - 1;
++	len = struct_size(vrk, key, adapter->rss_key_size);
+ 	vrk = kzalloc(len, GFP_KERNEL);
+ 	if (!vrk)
+ 		return;
 diff --git a/include/linux/avf/virtchnl.h b/include/linux/avf/virtchnl.h
-index b554913804bd..ed9c4998f8ac 100644
+index 9b9d79c270b1..d2fd847a3880 100644
 --- a/include/linux/avf/virtchnl.h
 +++ b/include/linux/avf/virtchnl.h
-@@ -338,10 +338,10 @@ struct virtchnl_vsi_queue_config_info {
+@@ -484,10 +484,10 @@ VIRTCHNL_CHECK_STRUCT_LEN(4, virtchnl_promisc_info);
+ struct virtchnl_rss_key {
  	u16 vsi_id;
- 	u16 num_queue_pairs;
- 	u32 pad;
--	struct virtchnl_queue_pair_info qpair[1];
-+	struct virtchnl_queue_pair_info qpair[];
+ 	u16 key_len;
+-	u8 key[1];         /* RSS hash key, packed bytes */
++	u8 key[];         /* RSS hash key, packed bytes */
  };
  
--VIRTCHNL_CHECK_STRUCT_LEN(72, virtchnl_vsi_queue_config_info);
-+VIRTCHNL_CHECK_STRUCT_LEN(8, virtchnl_vsi_queue_config_info);
+-VIRTCHNL_CHECK_STRUCT_LEN(6, virtchnl_rss_key);
++VIRTCHNL_CHECK_STRUCT_LEN(4, virtchnl_rss_key);
  
- /* VIRTCHNL_OP_REQUEST_QUEUES
-  * VF sends this message to request the PF to allocate additional queues to
-@@ -997,9 +997,8 @@ virtchnl_vc_validate_vf_msg(struct virtchnl_version_info *ver, u32 v_opcode,
+ struct virtchnl_rss_lut {
+ 	u16 vsi_id;
+@@ -1079,7 +1079,7 @@ virtchnl_vc_validate_vf_msg(struct virtchnl_version_info *ver, u32 v_opcode,
  		if (msglen >= valid_len) {
- 			struct virtchnl_vsi_queue_config_info *vqc =
- 			    (struct virtchnl_vsi_queue_config_info *)msg;
--			valid_len += (vqc->num_queue_pairs *
--				      sizeof(struct
--					     virtchnl_queue_pair_info));
-+			valid_len += flex_array_size(vqc, qpair,
-+						     vqc->num_queue_pairs);
- 			if (vqc->num_queue_pairs == 0)
- 				err_msg_format = true;
+ 			struct virtchnl_rss_key *vrk =
+ 				(struct virtchnl_rss_key *)msg;
+-			valid_len += vrk->key_len - 1;
++			valid_len += vrk->key_len;
  		}
+ 		break;
+ 	case VIRTCHNL_OP_CONFIG_RSS_LUT:
 -- 
 2.27.0
 
