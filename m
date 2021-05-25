@@ -2,95 +2,175 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-21.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D85C2B9F7
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 May 2021 20:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF527C2B9F8
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 14:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A426613CC
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 May 2021 20:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9259561284
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 14:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233117AbhEXUYG (ORCPT
+        id S233998AbhEYOmG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 May 2021 16:24:06 -0400
-Received: from gateway20.websitewelcome.com ([192.185.4.169]:15421 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232900AbhEXUYF (ORCPT
+        Tue, 25 May 2021 10:42:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48458 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233982AbhEYOmG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 May 2021 16:24:05 -0400
-X-Greylist: delayed 1400 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 May 2021 16:24:05 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 20536400CEA33
-        for <linux-hardening@vger.kernel.org>; Mon, 24 May 2021 14:46:30 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id lGjKlmD9OFRe9lGjKlhu2C; Mon, 24 May 2021 14:59:14 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CiA82PE7hVTPaKelOYSFnTkobrNKOhOAioZP6OhsoYo=; b=Af/e7v/Waf5X6+OHmRb88tNB8V
-        Oq+uMhguLC3ocU21j3Q+TkVYY0Z4GwkGH5zFiF47qrW2J4z1o7Nk3KvXt4uyTUoias1gz6okCrSHD
-        eHDL+McVLpNQ31+cZS+iW6UqFPeXl60FfsekYl2cI/WtxfFNZYhGRUyudZgdCVw9elSnwr88j0NN5
-        uOZiSVfFjXL0u9eJy9E/T+FbwONvGC3lZx1DO9/FD4QmRS7eSV00e58yTjKiz4Bbg4Rhnvh0DP7rj
-        O4alG/6IOwlICJfICrKZlodw8tynHKCGYoLwG+80yxech/z1BySyfd7EV21vTzSJSdW6ZmPGHks9E
-        rrWyeNhw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:33224 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1llGjI-00135M-CO; Mon, 24 May 2021 14:59:12 -0500
-Subject: Re: [PATCH][next] vfio/iommu_type1: Use struct_size() for kzalloc()
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210513230155.GA217517@embeddedor>
- <20210524134801.406bc4bf@x1.home.shazbot.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <cb4eac12-dfe3-09a0-8b55-17e62f47a47d@embeddedor.com>
-Date:   Mon, 24 May 2021 14:59:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Tue, 25 May 2021 10:42:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621953635;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=njoB89ftAHN7n/O/lGgRgd4/0s+fvP1HkvXPNe11cV8=;
+        b=NMwvaXIgUP7HoTzJTrVFdm6Zmjtw644vut7QuMiM0MGh1FKQzcf1jiYXJHDkKnN6mmD+ZW
+        NEDaCxcEaEZHorxsq6uKX+nQQPjJz4BDV8xBKA5m1hiN5Rl3SRPIIrEHk6EP+FfjSyXUGM
+        UoaTo7t405oirW371GJ/A6ySM4RWct0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-e7mfoCAQPNuClKFKU0Mv3A-1; Tue, 25 May 2021 10:40:30 -0400
+X-MC-Unique: e7mfoCAQPNuClKFKU0Mv3A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 247061926DA1;
+        Tue, 25 May 2021 14:40:29 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-24.rdu2.redhat.com [10.10.112.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 112AA2BFE6;
+        Tue, 25 May 2021 14:40:22 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] afs: Fix fall-through warnings for Clang
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jeffrey Altman <jaltman@auristor.com>,
+        linux-afs@lists.infradead.org, linux-hardening@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 25 May 2021 15:40:22 +0100
+Message-ID: <162195362220.4082674.5166981803589803097.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-In-Reply-To: <20210524134801.406bc4bf@x1.home.shazbot.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1llGjI-00135M-CO
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:33224
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+From: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
+warnings by explicitly adding multiple fallthrough pseudo-keywords
+in places where the code is intended to fall through to the next
+case.
+
+Link: https://github.com/KSPP/linux/issues/115
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+cc: linux-afs@lists.infradead.org
+cc: linux-hardening@vger.kernel.org
+Link: https://lore.kernel.org/r/51150b54e0b0431a2c401cd54f2c4e7f50e94601.1605896059.git.gustavoars@kernel.org/ # v1
+Link: https://lore.kernel.org/r/20210420211615.GA51432@embeddedor/ # v2
+---
+
+ fs/afs/cmservice.c |    5 +++++
+ fs/afs/fsclient.c  |    4 ++++
+ fs/afs/vlclient.c  |    1 +
+ 3 files changed, 10 insertions(+)
+
+diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
+index a4e9e6e07e93..d3c6bb22c5f4 100644
+--- a/fs/afs/cmservice.c
++++ b/fs/afs/cmservice.c
+@@ -322,6 +322,8 @@ static int afs_deliver_cb_callback(struct afs_call *call)
+ 			return ret;
+ 
+ 		call->unmarshall++;
++		fallthrough;
++
+ 	case 5:
+ 		break;
+ 	}
+@@ -418,6 +420,7 @@ static int afs_deliver_cb_init_call_back_state3(struct afs_call *call)
+ 			r->node[loop] = ntohl(b[loop + 5]);
+ 
+ 		call->unmarshall++;
++		fallthrough;
+ 
+ 	case 2:
+ 		break;
+@@ -530,6 +533,7 @@ static int afs_deliver_cb_probe_uuid(struct afs_call *call)
+ 			r->node[loop] = ntohl(b[loop + 5]);
+ 
+ 		call->unmarshall++;
++		fallthrough;
+ 
+ 	case 2:
+ 		break;
+@@ -663,6 +667,7 @@ static int afs_deliver_yfs_cb_callback(struct afs_call *call)
+ 
+ 		afs_extract_to_tmp(call);
+ 		call->unmarshall++;
++		fallthrough;
+ 
+ 	case 3:
+ 		break;
+diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
+index 2f695a260442..dd3f45d906d2 100644
+--- a/fs/afs/fsclient.c
++++ b/fs/afs/fsclient.c
+@@ -388,6 +388,7 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
+ 		req->file_size = vp->scb.status.size;
+ 
+ 		call->unmarshall++;
++		fallthrough;
+ 
+ 	case 5:
+ 		break;
+@@ -1408,6 +1409,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
+ 		_debug("motd '%s'", p);
+ 
+ 		call->unmarshall++;
++		fallthrough;
+ 
+ 	case 8:
+ 		break;
+@@ -1845,6 +1847,7 @@ static int afs_deliver_fs_inline_bulk_status(struct afs_call *call)
+ 		xdr_decode_AFSVolSync(&bp, &op->volsync);
+ 
+ 		call->unmarshall++;
++		fallthrough;
+ 
+ 	case 6:
+ 		break;
+@@ -1979,6 +1982,7 @@ static int afs_deliver_fs_fetch_acl(struct afs_call *call)
+ 		xdr_decode_AFSVolSync(&bp, &op->volsync);
+ 
+ 		call->unmarshall++;
++		fallthrough;
+ 
+ 	case 4:
+ 		break;
+diff --git a/fs/afs/vlclient.c b/fs/afs/vlclient.c
+index dc9327332f06..00fca3c66ba6 100644
+--- a/fs/afs/vlclient.c
++++ b/fs/afs/vlclient.c
+@@ -593,6 +593,7 @@ static int afs_deliver_yfsvl_get_endpoints(struct afs_call *call)
+ 		if (ret < 0)
+ 			return ret;
+ 		call->unmarshall = 6;
++		fallthrough;
+ 
+ 	case 6:
+ 		break;
 
 
-On 5/24/21 14:48, Alex Williamson wrote:
-
-> Looks good, applied to vfio for-linus branch for v5.13.  Thanks,
-
-Thanks, Alex. :)
-
---
-Gustavo
