@@ -2,175 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF527C2B9F8
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 14:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27460C4707F
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 22:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9259561284
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 14:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F08613D8
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 22:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233998AbhEYOmG (ORCPT
+        id S231189AbhEYXBM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 May 2021 10:42:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48458 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233982AbhEYOmG (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 May 2021 10:42:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621953635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=njoB89ftAHN7n/O/lGgRgd4/0s+fvP1HkvXPNe11cV8=;
-        b=NMwvaXIgUP7HoTzJTrVFdm6Zmjtw644vut7QuMiM0MGh1FKQzcf1jiYXJHDkKnN6mmD+ZW
-        NEDaCxcEaEZHorxsq6uKX+nQQPjJz4BDV8xBKA5m1hiN5Rl3SRPIIrEHk6EP+FfjSyXUGM
-        UoaTo7t405oirW371GJ/A6ySM4RWct0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-e7mfoCAQPNuClKFKU0Mv3A-1; Tue, 25 May 2021 10:40:30 -0400
-X-MC-Unique: e7mfoCAQPNuClKFKU0Mv3A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 247061926DA1;
-        Tue, 25 May 2021 14:40:29 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-24.rdu2.redhat.com [10.10.112.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 112AA2BFE6;
-        Tue, 25 May 2021 14:40:22 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix fall-through warnings for Clang
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jeffrey Altman <jaltman@auristor.com>,
-        linux-afs@lists.infradead.org, linux-hardening@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 25 May 2021 15:40:22 +0100
-Message-ID: <162195362220.4082674.5166981803589803097.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        Tue, 25 May 2021 19:01:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230097AbhEYXBM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 25 May 2021 19:01:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E8BD1613D5;
+        Tue, 25 May 2021 22:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621983581;
+        bh=gTZAgrzB4+T/6N1sAeSXHaiO0/ElpJNF7LZZgYhlfYQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PipcE7xDG+yf/31f2wV1b8p7s8c0CmOAE+z4YUwdAaSwQ5QJp5XOhxU3s18vGKm0b
+         bheC0DmbiAyIshUQbGdb00isAsklfM7saJNNl+LqnF6TAtQPrRG4O7qPeU5gkqTO7o
+         u9lsT3FlXOK1DrVC7takFogdo6P/s9DSWGxy1wyMdhceKXJWJsk7/lx5rMVyiLLjII
+         bDPtNjvD+i3BxO4Reu5+FqHeF0KfYKFjz/qcmiNLKe6tsy1GF98LJ35s9fxdxSCKfd
+         dr0C+86CkWhy2E+gA9aDXW/6WM2JkpwGrhfsQ0PiyWgZm+zd2P8sjx8PRJ8uszXIo0
+         y9/M/ZOqbF7zA==
+Date:   Tue, 25 May 2021 18:00:38 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] i40e: Replace one-element array with flexible-array
+ member
+Message-ID: <20210525230038.GA175516@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavoars@kernel.org>
+There is a regular need in the kernel to provide a way to declare having a
+dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix multiple
-warnings by explicitly adding multiple fallthrough pseudo-keywords
-in places where the code is intended to fall through to the next
-case.
+Refactor the code according to the use of a flexible-array member in struct
+i40e_qvlist_info instead of one-element array, and use the struct_size()
+helper.
 
-Link: https://github.com/KSPP/linux/issues/115
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+
+Link: https://github.com/KSPP/linux/issues/79
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
-cc: linux-afs@lists.infradead.org
-cc: linux-hardening@vger.kernel.org
-Link: https://lore.kernel.org/r/51150b54e0b0431a2c401cd54f2c4e7f50e94601.1605896059.git.gustavoars@kernel.org/ # v1
-Link: https://lore.kernel.org/r/20210420211615.GA51432@embeddedor/ # v2
 ---
+ drivers/infiniband/hw/i40iw/i40iw_main.c      | 5 ++---
+ drivers/net/ethernet/intel/i40e/i40e_client.c | 2 +-
+ include/linux/net/intel/i40e_client.h         | 2 +-
+ 3 files changed, 4 insertions(+), 5 deletions(-)
 
- fs/afs/cmservice.c |    5 +++++
- fs/afs/fsclient.c  |    4 ++++
- fs/afs/vlclient.c  |    1 +
- 3 files changed, 10 insertions(+)
-
-diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
-index a4e9e6e07e93..d3c6bb22c5f4 100644
---- a/fs/afs/cmservice.c
-+++ b/fs/afs/cmservice.c
-@@ -322,6 +322,8 @@ static int afs_deliver_cb_callback(struct afs_call *call)
- 			return ret;
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
+index b496f30ce066..364f69cd620f 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_main.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
+@@ -1423,7 +1423,7 @@ static enum i40iw_status_code i40iw_save_msix_info(struct i40iw_device *iwdev,
+ 	struct i40e_qv_info *iw_qvinfo;
+ 	u32 ceq_idx;
+ 	u32 i;
+-	u32 size;
++	size_t size;
  
- 		call->unmarshall++;
-+		fallthrough;
-+
- 	case 5:
- 		break;
- 	}
-@@ -418,6 +420,7 @@ static int afs_deliver_cb_init_call_back_state3(struct afs_call *call)
- 			r->node[loop] = ntohl(b[loop + 5]);
+ 	if (!ldev->msix_count) {
+ 		i40iw_pr_err("No MSI-X vectors\n");
+@@ -1433,8 +1433,7 @@ static enum i40iw_status_code i40iw_save_msix_info(struct i40iw_device *iwdev,
+ 	iwdev->msix_count = ldev->msix_count;
  
- 		call->unmarshall++;
-+		fallthrough;
+ 	size = sizeof(struct i40iw_msix_vector) * iwdev->msix_count;
+-	size += sizeof(struct i40e_qvlist_info);
+-	size +=  sizeof(struct i40e_qv_info) * iwdev->msix_count - 1;
++	size += struct_size(iw_qvlist, qv_info, iwdev->msix_count);
+ 	iwdev->iw_msixtbl = kzalloc(size, GFP_KERNEL);
  
- 	case 2:
- 		break;
-@@ -530,6 +533,7 @@ static int afs_deliver_cb_probe_uuid(struct afs_call *call)
- 			r->node[loop] = ntohl(b[loop + 5]);
+ 	if (!iwdev->iw_msixtbl)
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_client.c b/drivers/net/ethernet/intel/i40e/i40e_client.c
+index 32f3facbed1a..63eab14a26df 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_client.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_client.c
+@@ -579,7 +579,7 @@ static int i40e_client_setup_qvlist(struct i40e_info *ldev,
+ 	u32 v_idx, i, reg_idx, reg;
  
- 		call->unmarshall++;
-+		fallthrough;
+ 	ldev->qvlist_info = kzalloc(struct_size(ldev->qvlist_info, qv_info,
+-				    qvlist_info->num_vectors - 1), GFP_KERNEL);
++				    qvlist_info->num_vectors), GFP_KERNEL);
+ 	if (!ldev->qvlist_info)
+ 		return -ENOMEM;
+ 	ldev->qvlist_info->num_vectors = qvlist_info->num_vectors;
+diff --git a/include/linux/net/intel/i40e_client.h b/include/linux/net/intel/i40e_client.h
+index f41387a8969f..fd7bc860a241 100644
+--- a/include/linux/net/intel/i40e_client.h
++++ b/include/linux/net/intel/i40e_client.h
+@@ -48,7 +48,7 @@ struct i40e_qv_info {
  
- 	case 2:
- 		break;
-@@ -663,6 +667,7 @@ static int afs_deliver_yfs_cb_callback(struct afs_call *call)
+ struct i40e_qvlist_info {
+ 	u32 num_vectors;
+-	struct i40e_qv_info qv_info[1];
++	struct i40e_qv_info qv_info[];
+ };
  
- 		afs_extract_to_tmp(call);
- 		call->unmarshall++;
-+		fallthrough;
  
- 	case 3:
- 		break;
-diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-index 2f695a260442..dd3f45d906d2 100644
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -388,6 +388,7 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 		req->file_size = vp->scb.status.size;
- 
- 		call->unmarshall++;
-+		fallthrough;
- 
- 	case 5:
- 		break;
-@@ -1408,6 +1409,7 @@ static int afs_deliver_fs_get_volume_status(struct afs_call *call)
- 		_debug("motd '%s'", p);
- 
- 		call->unmarshall++;
-+		fallthrough;
- 
- 	case 8:
- 		break;
-@@ -1845,6 +1847,7 @@ static int afs_deliver_fs_inline_bulk_status(struct afs_call *call)
- 		xdr_decode_AFSVolSync(&bp, &op->volsync);
- 
- 		call->unmarshall++;
-+		fallthrough;
- 
- 	case 6:
- 		break;
-@@ -1979,6 +1982,7 @@ static int afs_deliver_fs_fetch_acl(struct afs_call *call)
- 		xdr_decode_AFSVolSync(&bp, &op->volsync);
- 
- 		call->unmarshall++;
-+		fallthrough;
- 
- 	case 4:
- 		break;
-diff --git a/fs/afs/vlclient.c b/fs/afs/vlclient.c
-index dc9327332f06..00fca3c66ba6 100644
---- a/fs/afs/vlclient.c
-+++ b/fs/afs/vlclient.c
-@@ -593,6 +593,7 @@ static int afs_deliver_yfsvl_get_endpoints(struct afs_call *call)
- 		if (ret < 0)
- 			return ret;
- 		call->unmarshall = 6;
-+		fallthrough;
- 
- 	case 6:
- 		break;
-
+-- 
+2.27.0
 
