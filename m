@@ -2,125 +2,154 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03EBC4707F
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 23:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4D3C47082
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 May 2021 18:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4166128B
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 May 2021 23:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF83613DE
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 May 2021 18:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230272AbhEYXTY (ORCPT
+        id S232229AbhEZSVw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 May 2021 19:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230145AbhEYXTY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 May 2021 19:19:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B5DE86128B;
-        Tue, 25 May 2021 23:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621984674;
-        bh=bJ4XAZH21tHtmuVTr98seVj7Q79bHvG/8rOCPJR+Jr4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bi8dANLjd9cpoUMHMwE1r58G5yZizrELQGJ3PmqOwl9TzPAWFGovmDwLHbhMOwrvW
-         nLJvPSVdgAgXTXLIJ1B64RIdXbG1JAZbDyog61i+05nfGWtXA7FxgYv8jCIPKN3gAq
-         zZ7tUuhW7d2a/EvDqQN4j6Aq9E5c2iL3SAvYSAtLyzSBlqHmxK7XDMqWBJ7ESnN2CS
-         5NrK+F6zvFdnKBRYj61dkLLjcuMWPodJCkd21aJvNJor3j//wHZBL/VSKA2TkCFoQ4
-         UOQB8OVfBwyR6LUQRFamAwU7cChB/Ax8GDm3pwp/hCE9wl5OxZpCreIrQnn+zQ+xlh
-         Kh25vmgaMDGjg==
-Date:   Tue, 25 May 2021 18:18:51 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] iavf: Replace one-element array in struct
- virtchnl_rss_key
-Message-ID: <20210525231851.GA176647@embeddedor>
+        Wed, 26 May 2021 14:21:52 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.204]:21031 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233305AbhEZSVw (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 26 May 2021 14:21:52 -0400
+Received: from cm10.websitewelcome.com (unknown [100.42.49.4])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 34C3D2784C7
+        for <linux-hardening@vger.kernel.org>; Wed, 26 May 2021 13:20:18 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id ly8glc7ca8uM0ly8gloB7T; Wed, 26 May 2021 13:20:18 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HDHHVDIABje6bABsXVUlN331Ep4noo+DQ9eLJRToQC4=; b=fkI2TXjBxKC91M9xJGgzChXoeB
+        86+oMYnOFtHXnoNMPEJp6ro4Sb3SlFFYdK7aqFoJ4nLNGt/ZNCnkhWvWTqRUWSHQmD8ZB+WIOGL/d
+        p9TDzoB9NYqFYbI0d0JYEVrES5QqF4TMLpBK9V2gAFYyG2ejhtq/eEVP+9KK6yIdmYwZ7OQD1DMaT
+        2xarFCv1JnpIRutt2M/Pe2Hm9dwhPKYLap31HY8qXIw9M9rvXQ3uGDjY9mSuYDGAQ8qVshe7e2caJ
+        wf+2khl4bC1Q27xG57jIbRkR123ezsDrN/w/dnfKMF/PNl55J3ue537s0jluqbi6Pmwm0ODVQIBEa
+        YVb9zydw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:46184 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lly8d-0049sR-OZ; Wed, 26 May 2021 13:20:15 -0500
+Subject: Re: [PATCH][next] xfs: Fix fall-through warnings for Clang
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20210420230652.GA70650@embeddedor>
+ <20210420233850.GQ3122264@magnolia>
+ <62895e8c-800d-fa7b-15f6-480179d552be@embeddedor.com>
+Message-ID: <bcae9d46-644c-d6f6-3df5-e8f7c50a673d@embeddedor.com>
+Date:   Wed, 26 May 2021 13:21:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
+In-Reply-To: <62895e8c-800d-fa7b-15f6-480179d552be@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lly8d-0049sR-OZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:46184
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare having a
-dynamically sized set of trailing elements in a structure. Kernel code
-should always use “flexible array members”[1] for these cases. The older
-style of one-element or zero-length arrays should no longer be used[2].
 
-Refactor the code according to the use of a flexible-array member in struct
-virtchnl_rss_key instead of one-element array, and use the struct_size()
-helper.
 
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+On 4/20/21 18:56, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 4/20/21 18:38, Darrick J. Wong wrote:
+>> On Tue, Apr 20, 2021 at 06:06:52PM -0500, Gustavo A. R. Silva wrote:
+>>> In preparation to enable -Wimplicit-fallthrough for Clang, fix
+>>> the following warnings by replacing /* fall through */ comments,
+>>> and its variants, with the new pseudo-keyword macro fallthrough:
+>>>
+>>> fs/xfs/libxfs/xfs_alloc.c:3167:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/libxfs/xfs_da_btree.c:286:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/libxfs/xfs_ag_resv.c:346:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/libxfs/xfs_ag_resv.c:388:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_bmap_util.c:246:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_export.c:88:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_export.c:96:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_file.c:867:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_ioctl.c:562:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_ioctl.c:1548:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_iomap.c:1040:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_inode.c:852:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_log.c:2627:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/xfs_trans_buf.c:298:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/scrub/bmap.c:275:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/scrub/btree.c:48:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/scrub/common.c:85:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/scrub/common.c:138:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/scrub/common.c:698:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/scrub/dabtree.c:51:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>> fs/xfs/scrub/repair.c:951:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>>>
+>>> Notice that Clang doesn't recognize /* fall through */ comments as
+>>> implicit fall-through markings, so in order to globally enable
+>>> -Wimplicit-fallthrough for Clang, these comments need to be
+>>> replaced with fallthrough; in the whole codebase.
+>>>
+>>> Link: https://github.com/KSPP/linux/issues/115
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>
+>> I've already NAKd this twice, so I guess I'll NAK it a third time.
+> 
+> Darrick,
+> 
+> The adoption of fallthrough; has been already accepted and in use since Linux v5.7:
+> 
+> https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> This change is needed, and I would really prefer if this goes upstream through your tree.
+> 
+> Linus has taken these patches directly for a while, now.
+> 
+> Could you consider taking it this time? :)
+> 
 
-Link: https://github.com/KSPP/linux/issues/79
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/intel/iavf/iavf_virtchnl.c | 5 ++---
- include/linux/avf/virtchnl.h                    | 6 +++---
- 2 files changed, 5 insertions(+), 6 deletions(-)
+Hi Darrick,
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-index 167955094170..6f2a4c8beb0b 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-@@ -799,7 +799,7 @@ void iavf_set_hena(struct iavf_adapter *adapter)
- void iavf_set_rss_key(struct iavf_adapter *adapter)
- {
- 	struct virtchnl_rss_key *vrk;
--	int len;
-+	size_t len;
- 
- 	if (adapter->current_op != VIRTCHNL_OP_UNKNOWN) {
- 		/* bail because we already have a command pending */
-@@ -807,8 +807,7 @@ void iavf_set_rss_key(struct iavf_adapter *adapter)
- 			adapter->current_op);
- 		return;
- 	}
--	len = sizeof(struct virtchnl_rss_key) +
--	      (adapter->rss_key_size * sizeof(u8)) - 1;
-+	len = struct_size(vrk, key, adapter->rss_key_size);
- 	vrk = kzalloc(len, GFP_KERNEL);
- 	if (!vrk)
- 		return;
-diff --git a/include/linux/avf/virtchnl.h b/include/linux/avf/virtchnl.h
-index 9b9d79c270b1..d2fd847a3880 100644
---- a/include/linux/avf/virtchnl.h
-+++ b/include/linux/avf/virtchnl.h
-@@ -484,10 +484,10 @@ VIRTCHNL_CHECK_STRUCT_LEN(4, virtchnl_promisc_info);
- struct virtchnl_rss_key {
- 	u16 vsi_id;
- 	u16 key_len;
--	u8 key[1];         /* RSS hash key, packed bytes */
-+	u8 key[];         /* RSS hash key, packed bytes */
- };
- 
--VIRTCHNL_CHECK_STRUCT_LEN(6, virtchnl_rss_key);
-+VIRTCHNL_CHECK_STRUCT_LEN(4, virtchnl_rss_key);
- 
- struct virtchnl_rss_lut {
- 	u16 vsi_id;
-@@ -1079,7 +1079,7 @@ virtchnl_vc_validate_vf_msg(struct virtchnl_version_info *ver, u32 v_opcode,
- 		if (msglen >= valid_len) {
- 			struct virtchnl_rss_key *vrk =
- 				(struct virtchnl_rss_key *)msg;
--			valid_len += vrk->key_len - 1;
-+			valid_len += vrk->key_len;
- 		}
- 		break;
- 	case VIRTCHNL_OP_CONFIG_RSS_LUT:
--- 
-2.27.0
+If you don't mind, I will take this in my -next[1] branch for v5.14, so we can globally enable
+-Wimplicit-fallthrough for Clang in that release.
 
+We had thousands of these warnings and now we are down to 47 in next-20210526,
+22 of which are fixed with this patch.
+
+Thanks
+--
+Gustavo
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
