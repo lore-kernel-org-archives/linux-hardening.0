@@ -2,203 +2,201 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2316CC47088
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 May 2021 22:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9CEC4707F
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 May 2021 21:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8069613B6
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 May 2021 22:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1FA613E2
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 May 2021 21:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229956AbhEZWVh (ORCPT
+        id S234653AbhE0Vcs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 May 2021 18:21:37 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.196]:38368 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229624AbhEZWVg (ORCPT
+        Thu, 27 May 2021 17:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234646AbhE0Vcs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 May 2021 18:21:36 -0400
-X-Greylist: delayed 2734 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 May 2021 18:21:36 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 0CCBD3E4A3
-        for <linux-hardening@vger.kernel.org>; Wed, 26 May 2021 16:34:27 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id m1AYl5mxUnrr4m1AZlyGXh; Wed, 26 May 2021 16:34:27 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AVftKSHQScIRK8be+dU0JJK0i8MExIzulGIQ7Lt68hQ=; b=hXXj4RoQgzHnVE78yp975cleDa
-        HrxSn9+oN9PI8XKXdFnJ3DoO4tePmCGV/jcjaCOvVOYnbbnUhnBL+NUNpo3Q6QFGObmNDdfjexIK8
-        7LJtxOzqIlq1UlZgn/YVpbSf1gJYJTyy26aWjZNDDi4Mh9y1tAMy5FOSPlg4O57uGjfHJOZG/ifCc
-        STvK0PHs3PcUQDE2ZgL31kpHRveisbF6w0iq2ri1Jbr2/2VLqBpQJZiaa8QOpNWjrJNWxkJG9Fm98
-        8AFk+KailfXWtTWPyOg8G7fCp/OV/dMIH1qkxqIVKiNOsLFxUAuHRVb+WJC/b1ht4kWvKhc99ptca
-        FvGIcXwA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:46830 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lm1AT-003fxT-AA; Wed, 26 May 2021 16:34:21 -0500
-Subject: Re: [Intel-wired-lan] [PATCH][next] i40e: Replace one-element array
- with flexible-array member
-To:     "Saleem, Shiraz" <shiraz.saleem@intel.com>,
+        Thu, 27 May 2021 17:32:48 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC7AC061761
+        for <linux-hardening@vger.kernel.org>; Thu, 27 May 2021 14:31:14 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id h20-20020a17090aa894b029015db8f3969eso1251730pjq.3
+        for <linux-hardening@vger.kernel.org>; Thu, 27 May 2021 14:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ggxXu6khFzuHqhI0ulwwbMYsWS89137XDyToRCuLR6Y=;
+        b=dZ+XUsedmo86h4NhBMsgswFCTPlxr3liApdTFu+31HaTfDmWsBUULBS4+NAXxo95f9
+         1ORhr+Nb9eiOqs3M1fMfwySr/Lh2N8IRUndewhoIRakj+vjdn+eV4SZk38wSebLH2dI/
+         FbGaPq2YWUdTN7HT1Zx7F7bdsQnM2nSG7OnOc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ggxXu6khFzuHqhI0ulwwbMYsWS89137XDyToRCuLR6Y=;
+        b=QbVbhSpfBqBGboZP5gpbwMFoKzhOq4yyhnb2DG9GTEg6VnfTFgEERxjiR9G9g1jzKt
+         9xKbEuCqejV+K9NCZBleu5k58Y3zOmGhZzsGfO1mmyCKoFDITi2xUMdC434oKu/+8KWk
+         64ydiB3RTfLwwT9eP1Mh08gqxV1+wrZg+4BL8hogsZvmVjBLU8TROTyCGTjuejpDfLgM
+         5iCzy92kcDfoG5YVNUq59erOnaE/2I59I+7qRwS6pH+Kf71VKXE+YunR4FB3zmrlzDJ0
+         YU1SLeKry3PViyK9E8QfQxgOQbwLVhUwUPd4vJSyQCMcRE1rfLss+3QV3GNN9JKOAd9T
+         oZPw==
+X-Gm-Message-State: AOAM531DNqzJ/DeM1QnkMj5O0HPXi4nL/2MJRkJknt2Do7m7ydp9adm0
+        nM3X/PsivzGWLtHorO0dSKNvu/Qy8uniQQ==
+X-Google-Smtp-Source: ABdhPJzwu8ym8ft0mEUJfJozHYnglV77DSgsagFBD/Q4TMQwQdy9KB3lKermhhPFy/AQ7tte+s40xQ==
+X-Received: by 2002:a17:90a:390d:: with SMTP id y13mr568949pjb.133.1622151074440;
+        Thu, 27 May 2021 14:31:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a12sm2952946pfg.102.2021.05.27.14.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 May 2021 14:31:13 -0700 (PDT)
+Date:   Thu, 27 May 2021 14:31:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Latif, Faisal" <faisal.latif@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Brandeburg, Jesse" <jesse.brandeburg@intel.com>,
-        "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-References: <20210525230038.GA175516@embeddedor>
- <bf46b428deef4e9e89b0ea1704b1f0e5@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <79c3c00d-c364-9db1-b8de-7ed0686ca8dc@embeddedor.com>
-Date:   Wed, 26 May 2021 16:35:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, joe@perches.com
+Subject: Re: [PATCH][next] xfs: Fix fall-through warnings for Clang
+Message-ID: <202105271358.22E0E2BFD@keescook>
+References: <20210420230652.GA70650@embeddedor>
+ <20210420233850.GQ3122264@magnolia>
+ <62895e8c-800d-fa7b-15f6-480179d552be@embeddedor.com>
+ <bcae9d46-644c-d6f6-3df5-e8f7c50a673d@embeddedor.com>
+ <20210526211624.GB202121@locust>
 MIME-Version: 1.0
-In-Reply-To: <bf46b428deef4e9e89b0ea1704b1f0e5@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lm1AT-003fxT-AA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:46830
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210526211624.GB202121@locust>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 5/26/21 16:29, Saleem, Shiraz wrote:
->> Subject: [PATCH][next] i40e: Replace one-element array with flexible-array member
->>
->> There is a regular need in the kernel to provide a way to declare having a
->> dynamically sized set of trailing elements in a structure. Kernel code should always
->> use “flexible array members”[1] for these cases. The older style of one-element or
->> zero-length arrays should no longer be used[2].
->>
->> Refactor the code according to the use of a flexible-array member in struct
->> i40e_qvlist_info instead of one-element array, and use the struct_size() helper.
->>
->> [1] https://en.wikipedia.org/wiki/Flexible_array_member
->> [2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-
->> and-one-element-arrays
->>
->> Link: https://github.com/KSPP/linux/issues/79
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Wed, May 26, 2021 at 02:16:24PM -0700, Darrick J. Wong wrote:
+> On Wed, May 26, 2021 at 01:21:06PM -0500, Gustavo A. R. Silva wrote:
+> > 
+> > 
+> > On 4/20/21 18:56, Gustavo A. R. Silva wrote:
+> > > 
+> > > 
+> > > On 4/20/21 18:38, Darrick J. Wong wrote:
+> > >> On Tue, Apr 20, 2021 at 06:06:52PM -0500, Gustavo A. R. Silva wrote:
+> > >>> In preparation to enable -Wimplicit-fallthrough for Clang, fix
+> > >>> the following warnings by replacing /* fall through */ comments,
+> > >>> and its variants, with the new pseudo-keyword macro fallthrough:
+> > >>>
+> > >>> fs/xfs/libxfs/xfs_alloc.c:3167:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/libxfs/xfs_da_btree.c:286:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/libxfs/xfs_ag_resv.c:346:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/libxfs/xfs_ag_resv.c:388:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_bmap_util.c:246:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_export.c:88:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_export.c:96:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_file.c:867:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_ioctl.c:562:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_ioctl.c:1548:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_iomap.c:1040:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_inode.c:852:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_log.c:2627:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/xfs_trans_buf.c:298:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/scrub/bmap.c:275:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/scrub/btree.c:48:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/scrub/common.c:85:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/scrub/common.c:138:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/scrub/common.c:698:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/scrub/dabtree.c:51:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>> fs/xfs/scrub/repair.c:951:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> > >>>
+> > >>> Notice that Clang doesn't recognize /* fall through */ comments as
+> > >>> implicit fall-through markings, so in order to globally enable
+> > >>> -Wimplicit-fallthrough for Clang, these comments need to be
+> > >>> replaced with fallthrough; in the whole codebase.
+> > >>>
+> > >>> Link: https://github.com/KSPP/linux/issues/115
+> > >>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > >>
+> > >> I've already NAKd this twice, so I guess I'll NAK it a third time.
+> > > 
+> > > Darrick,
+> > > 
+> > > The adoption of fallthrough; has been already accepted and in use since Linux v5.7:
+> > > 
+> > > https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> > > 
+> > > This change is needed, and I would really prefer if this goes upstream through your tree.
+> > > 
+> > > Linus has taken these patches directly for a while, now.
+> > > 
+> > > Could you consider taking it this time? :)
+> > > 
+> > 
+> > Hi Darrick,
+> > 
+> > If you don't mind, I will take this in my -next[1] branch for v5.14, so we can globally enable
+> > -Wimplicit-fallthrough for Clang in that release.
+> > 
+> > We had thousands of these warnings and now we are down to 47 in next-20210526,
+> > 22 of which are fixed with this patch.
 > 
-> This looks ok to me.
-> Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
+> I guess we're all required to kowtow to a bunch of effing bots now.
+> Hooray for having to have a macro to code-switch for the sake of
+> stupid compiler writers who refuse to give the rest of us a single
+> workable way to signal "this switch code block should not end here":
 > 
-> It seems we should add this to the new irdma driver submission as well which replaces i40iw.
-> I will fold it into v7 of the rdma portion of the series
-> https://lore.kernel.org/linux-rdma/20210520200326.GX1096940@ziepe.ca/
+> /* fall through */
+> __attribute__((fallthrough));
+> do { } while (0) /* fall through */
+> 
+> and soon the ISO geniuses will make it worse by adding to C2x:
+> 
+> [[fallthrough]];
+> 
+> Hooray!  Macros to abstractify stupidity!!!!
+> 
+> Dave and I have told you and Miaohe several[1] times[2] to fix[3] the
+> compiler, but clearly you don't care what we think and have decided to
+> ram this in through Linus anyway.
 
-OK. Just please, when you fold it, add my Signed-off-by tag like this:
+To clarify, we certainly _do_ care what you think. It's just that
+when faced with the difficulties of the compiler's implementations of
+handling this, the kernel had to get creative and pick the least-bad of
+many bad choices. We're trying to make the kernel safer for everyone,
+and this particular C language weakness has caused us a significant
+number of bugs. Eradicating it is worth the effort.
 
-[flexible array transformation]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+All that said, as you pointed out, you _have_ asked before[1] to just
+have Linus take it without bothering you directly, so okay, that can be
+done. Generally maintainers have wanted these changes to go through their
+trees so it doesn't cause them merge pain, but it seems you'd prefer it
+the other way around.
 
-Thanks
---
-Gustavo
+-Kees
 
-> Additionally we will add this patch when we resend this PR on iwl-next.
-> https://lore.kernel.org/linux-rdma/62555c6de641e10cb4169653731389a51d086345.camel@intel.com/
+[1] https://lore.kernel.org/linux-xfs/20200820191237.GK6096@magnolia/
+"If you feel really passionate about ramming a bunch of pointless churn
+ into the kernel tree to make my life more painful, send this to Linus
+ and let him make the change."
+
+> Since that is what you choose, do not send me email again.
 > 
+> NAKed-by: Darrick J. Wong <djwong@kernel.org>
 > 
->> ---
->>  drivers/infiniband/hw/i40iw/i40iw_main.c      | 5 ++---
->>  drivers/net/ethernet/intel/i40e/i40e_client.c | 2 +-
->>  include/linux/net/intel/i40e_client.h         | 2 +-
->>  3 files changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c
->> b/drivers/infiniband/hw/i40iw/i40iw_main.c
->> index b496f30ce066..364f69cd620f 100644
->> --- a/drivers/infiniband/hw/i40iw/i40iw_main.c
->> +++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
->> @@ -1423,7 +1423,7 @@ static enum i40iw_status_code
->> i40iw_save_msix_info(struct i40iw_device *iwdev,
->>  	struct i40e_qv_info *iw_qvinfo;
->>  	u32 ceq_idx;
->>  	u32 i;
->> -	u32 size;
->> +	size_t size;
->>
->>  	if (!ldev->msix_count) {
->>  		i40iw_pr_err("No MSI-X vectors\n");
->> @@ -1433,8 +1433,7 @@ static enum i40iw_status_code
->> i40iw_save_msix_info(struct i40iw_device *iwdev,
->>  	iwdev->msix_count = ldev->msix_count;
->>
->>  	size = sizeof(struct i40iw_msix_vector) * iwdev->msix_count;
->> -	size += sizeof(struct i40e_qvlist_info);
->> -	size +=  sizeof(struct i40e_qv_info) * iwdev->msix_count - 1;
->> +	size += struct_size(iw_qvlist, qv_info, iwdev->msix_count);
->>  	iwdev->iw_msixtbl = kzalloc(size, GFP_KERNEL);
->>
->>  	if (!iwdev->iw_msixtbl)
->> diff --git a/drivers/net/ethernet/intel/i40e/i40e_client.c
->> b/drivers/net/ethernet/intel/i40e/i40e_client.c
->> index 32f3facbed1a..63eab14a26df 100644
->> --- a/drivers/net/ethernet/intel/i40e/i40e_client.c
->> +++ b/drivers/net/ethernet/intel/i40e/i40e_client.c
->> @@ -579,7 +579,7 @@ static int i40e_client_setup_qvlist(struct i40e_info *ldev,
->>  	u32 v_idx, i, reg_idx, reg;
->>
->>  	ldev->qvlist_info = kzalloc(struct_size(ldev->qvlist_info, qv_info,
->> -				    qvlist_info->num_vectors - 1), GFP_KERNEL);
->> +				    qvlist_info->num_vectors), GFP_KERNEL);
->>  	if (!ldev->qvlist_info)
->>  		return -ENOMEM;
->>  	ldev->qvlist_info->num_vectors = qvlist_info->num_vectors; diff --git
->> a/include/linux/net/intel/i40e_client.h b/include/linux/net/intel/i40e_client.h
->> index f41387a8969f..fd7bc860a241 100644
->> --- a/include/linux/net/intel/i40e_client.h
->> +++ b/include/linux/net/intel/i40e_client.h
->> @@ -48,7 +48,7 @@ struct i40e_qv_info {
->>
->>  struct i40e_qvlist_info {
->>  	u32 num_vectors;
->> -	struct i40e_qv_info qv_info[1];
->> +	struct i40e_qv_info qv_info[];
->>  };
->>
->>
->> --
->> 2.27.0
+> --D
 > 
-> _______________________________________________
-> Intel-wired-lan mailing list
-> Intel-wired-lan@osuosl.org
-> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
+> [1] https://lore.kernel.org/linux-xfs/20200820191237.GK6096@magnolia/
+> [2] https://lore.kernel.org/linux-xfs/20210420230652.GA70650@embeddedor/
+> [3] https://lore.kernel.org/linux-xfs/20200708065512.GN2005@dread.disaster.area/
 > 
+> > 
+> > Thanks
+> > --
+> > Gustavo
+> > 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
+
+-- 
+Kees Cook
