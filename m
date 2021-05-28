@@ -2,80 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAAEC4708C
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39410C4708C
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 716E8613B5
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B081613E3
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbhE1UYD (ORCPT
+        id S229493AbhE1Uab (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 May 2021 16:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229482AbhE1UYD (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 May 2021 16:24:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A3C7D6139A;
-        Fri, 28 May 2021 20:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622233348;
-        bh=5re2MKgn5nTgc6z6Y4UjVE6+Qn8hJ/F2jLPD8BSqhYY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fITFSG+lMurpbDMmhbtvoMlncj90plNSX9yBQoU+A0R/5nZGRnU52eIA7mqeJNyFh
-         /8DPlHOD3xtGq/TmYbVA8KedyqfuCUD8y9OQUU+HNS0bMcty3OgmUF1vNqValBxx4l
-         mbEMZQUaZVOiFau6hPVfFNT+lmD3Q0IQGJjV1hp43PCL4ElazyqTHeiY9pi1P7/cfF
-         tMU5nn3rpCo0RoISWet7IazqILa0U557eisibZIY4J660xJYGmVrg7S51o0F96uMii
-         hfAv83BzogFtBkPYoIet4u+9/8NcFYDpxzdAmZcsQgSjiXm3F5Fur1lHnSFof+kWfC
-         iGxJdVkcwf5pw==
-Date:   Fri, 28 May 2021 15:23:27 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     nic_swsd@realtek.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        Fri, 28 May 2021 16:30:31 -0400
+Received: from gateway33.websitewelcome.com ([192.185.145.87]:43824 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229482AbhE1Uab (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 28 May 2021 16:30:31 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 9DB8035352
+        for <linux-hardening@vger.kernel.org>; Fri, 28 May 2021 15:28:54 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id mj6ElJQWLMGeEmj6ElFbGO; Fri, 28 May 2021 15:28:54 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=L3zwx02/a4qpuCrv9Ng4KVesaQf7X0hbM+48SL7llOw=; b=BXiFY5HalugiWU9BTfssC7wnet
+        kLkPs6B0zXCSMe5NRtPgkGtGzAk1YnInlYGzLbgWUZIQdRv161BcZJxn85KtCVRuK4J0l5z26e7VB
+        6jfy7MlnGhyhPzFH0R6qUkGqWcllxR7/Je5vqmVw/sQ0EKVdRk/WBgwuxedo8ngYHZaNfM2pc4n7u
+        O6B4cNG/QgZ9UpQLnzu5MPAYEhKsXwkSY6d4LKVf90acuNJPu3TUk9inxU0lmN3lQgrq/f1GsuzNx
+        8wYoRRsFGbcM4aJEy9AzE5ldF09UryO6pcWHo15B85Z27agBNorK5+w233Wbwo/5Ns1jgbXeELtSG
+        SzEXm2yA==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:38342 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1lmj6A-003lbU-Ig; Fri, 28 May 2021 15:28:50 -0500
+Subject: Re: [PATCH 3/3] scsi: isci: Use correctly sized target buffer for
+ memcpy()
+To:     Kees Cook <keescook@chromium.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] r8169: Fix fall-through warning for Clang
-Message-ID: <20210528202327.GA39994@embeddedor>
+References: <20210528181337.792268-1-keescook@chromium.org>
+ <20210528181337.792268-4-keescook@chromium.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <5741ac53-81ef-5106-0b58-51ddf5f65851@embeddedor.com>
+Date:   Fri, 28 May 2021 15:29:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20210528181337.792268-4-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1lmj6A-003lbU-Ig
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:38342
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 25
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to enable -Wimplicit-fallthrough for Clang, fix a warning
-by explicitly adding a break statement instead of letting the code fall
-through to the next case.
 
-Link: https://github.com/KSPP/linux/issues/115
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-JFYI: We had thousands of these sorts of warnings and now we are down
-      to just 25 in linux-next. This is one of those last remaining
-      warnings.
 
- drivers/net/ethernet/realtek/r8169_main.c | 1 +
- 1 file changed, 1 insertion(+)
+On 5/28/21 13:13, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), avoid intentionally writing across
+> neighboring array fields.
+> 
+> Switch from rsp_ui to resp_buf, since resp_ui isn't SSP_RESP_IU_MAX_SIZE
+> bytes in length. This avoids future compile-time warnings.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 1663e0486496..64f94a3fe646 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -4115,6 +4115,7 @@ static unsigned int rtl_quirk_packet_padto(struct rtl8169_private *tp,
- 	case RTL_GIGA_MAC_VER_61:
- 	case RTL_GIGA_MAC_VER_63:
- 		padto = max_t(unsigned int, padto, ETH_ZLEN);
-+		break;
- 	default:
- 		break;
- 	}
--- 
-2.27.0
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks
+--
+Gustavo
+
+> ---
+>  drivers/scsi/isci/task.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/isci/task.c b/drivers/scsi/isci/task.c
+> index 62062ed6cd9a..eeaec26ac324 100644
+> --- a/drivers/scsi/isci/task.c
+> +++ b/drivers/scsi/isci/task.c
+> @@ -709,8 +709,8 @@ isci_task_request_complete(struct isci_host *ihost,
+>  		tmf->status = completion_status;
+>  
+>  		if (tmf->proto == SAS_PROTOCOL_SSP) {
+> -			memcpy(&tmf->resp.resp_iu,
+> -			       &ireq->ssp.rsp,
+> +			memcpy(tmf->resp.rsp_buf,
+> +			       ireq->ssp.rsp_buf,
+>  			       SSP_RESP_IU_MAX_SIZE);
+>  		} else if (tmf->proto == SAS_PROTOCOL_SATA) {
+>  			memcpy(&tmf->resp.d2h_fis,
+> 
