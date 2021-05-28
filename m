@@ -3,30 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9969DC47087
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F081C47087
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 21:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8CD61278
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D76D16127C
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 21:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbhE1Uu3 (ORCPT
+        id S229482AbhE1VEC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 May 2021 16:50:29 -0400
-Received: from gateway20.websitewelcome.com ([192.185.50.28]:49041 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229482AbhE1Uu2 (ORCPT
+        Fri, 28 May 2021 17:04:02 -0400
+Received: from gateway23.websitewelcome.com ([192.185.49.60]:13273 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229481AbhE1VEB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 May 2021 16:50:28 -0400
+        Fri, 28 May 2021 17:04:01 -0400
+X-Greylist: delayed 1503 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 May 2021 17:04:01 EDT
 Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id AFD49400E1437
-        for <linux-hardening@vger.kernel.org>; Fri, 28 May 2021 15:12:28 -0500 (CDT)
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 6B19C181E7
+        for <linux-hardening@vger.kernel.org>; Fri, 28 May 2021 15:13:07 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id mj2rlBK3bDedfmj2rlIXro; Fri, 28 May 2021 15:25:25 -0500
+        id miqxlB6SrDedfmiqxlIKXB; Fri, 28 May 2021 15:13:07 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,36 +35,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rq70nIWsmoQ2YZEIR9/oT6C24kx+FJeD2kfZR6jODaE=; b=DRFqCW0Hsul78XaW39HA9Gviu5
-        bEkO/lDjLxUt5F9gH8w52Iw+pwrSrlqroO2RswZ7bELqwI/OTBUJRXtLbqu4/fImECv7XQrYlCflW
-        653fUi5h04xYitH+V77aO3J4jcPwPgKlRlynF1KGNGgKHsFP2zIshZVQiOUJNgBoufHBs8VWEoW2F
-        qsoPy3nqvVnM+j/d0Yycih543jmpv0ZI/LanPp/XSSDOTJgKAxBI67THE4/bHn7uU5lhnKaqijUPr
-        4OjBVXLpFuJwuXp7LLKo4nX/8xy+egY2LANn8ml2Gd9QW3hsCoCb5NYalp218a/Ud1MBvZFRxVFVN
-        RdnzImTQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:38336 helo=[192.168.15.8])
+        bh=b4RggtcWr10kE7KQSbvkFrlP2HqZbnYXFSkESTT5YzU=; b=jDhCpVBDQPiR6pSO/44S+ji/65
+        zw/rNxeXFgQl+RDXlIeWnjHkLw9BufEyUT44CjqyUPZguiWGsXmo9x+G2WPGwcjOeaZCd+aYs6DOf
+        5H06UkXLE5pUICjMxIWRTKnWeTugzL6stOZW8lnnsKk6vgh819QA1MN81jv6aAFtCNPhvG7bYnEYJ
+        QO2AoBwfu0wz5vbYbDTtLffnodoyinVoHYS0DlfCnmhhmBpDrOFscnpc85i2ruM6sSxBkkIKa1Uei
+        jJljBqw4j8wiz3V8/u+vv08wl9S0Vvr9gKoYiPaNL+1Q4Rg/4CG27t1r/JyYxsQ1nCjs0/H/M6hNs
+        F5e38Hyw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:38312 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1lmj2n-003gin-Ht; Fri, 28 May 2021 15:25:21 -0500
-Subject: Re: [PATCH 2/3] scsi: esas2r: Switch to flexible array member
-To:     Kees Cook <keescook@chromium.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Hannes Reinecke <hare@suse.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        id 1lmiqv-003PAP-29; Fri, 28 May 2021 15:13:05 -0500
+Subject: Re: [PATCH][next] ring-buffer: Fix fall-through warning for Clang
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-References: <20210528181337.792268-1-keescook@chromium.org>
- <20210528181337.792268-3-keescook@chromium.org>
+References: <20210528195942.GA39174@embeddedor>
+ <20210528160858.287e33ac@gandalf.local.home>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <d35acc33-bade-ffac-3f00-ed2ecb451316@embeddedor.com>
-Date:   Fri, 28 May 2021 15:26:18 -0500
+Message-ID: <b8f5aef0-ea0b-07b3-c46f-302e456f9a24@embeddedor.com>
+Date:   Fri, 28 May 2021 15:13:54 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210528181337.792268-3-keescook@chromium.org>
+In-Reply-To: <20210528160858.287e33ac@gandalf.local.home>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,13 +71,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1lmj2n-003gin-Ht
+X-Exim-ID: 1lmiqv-003PAP-29
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:38336
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:38312
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
+X-Email-Count: 5
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -90,58 +86,35 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 5/28/21 13:13, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), avoid intentionally writing across
-> neighboring array fields.
+On 5/28/21 15:08, Steven Rostedt wrote:
+> On Fri, 28 May 2021 14:59:42 -0500
+> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 > 
-> Remove old-style 1-byte array in favor of a flexible array[1] to avoid
-> future false-positive cross-field memcpy() warning in:
+>> In preparation to enable -Wimplicit-fallthrough for Clang, fix
+>> a fall-through warning by replacing a /* fall through */ comment
+>> with the new pseudo-keyword macro fallthrough;
+>>
+>> Notice that Clang doesn't recognize /* fall through */ comments as
+>> implicit fall-through markings, so in order to globally enable
+>> -Wimplicit-fallthrough for Clang, these comments need to be
+>> replaced with fallthrough; in the whole codebase.
+>>
+>> Link: https://github.com/KSPP/linux/issues/115
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>> JFYI: We had thousands of these sorts of warnings and now we are down
+>>       to just 25 in linux-next. This is one of those last remaining
+>>       warnings.
 > 
-> esas2r_vda.c:
-> 	memcpy(vi->cmd.gsv.version_info, esas2r_vdaioctl_versions, ...)
+> And I have it fixed locally already.
 > 
-> The change in struct size doesn't change other structure sizes (it is
-> already maxed out to 256 bytes, for example here:
+>   https://lore.kernel.org/lkml/20210511140246.18868-1-jj251510319013@gmail.com/
 > 
->         union {
->                 struct atto_ioctl_vda_scsi_cmd scsi;
->                 struct atto_ioctl_vda_flash_cmd flash;
->                 struct atto_ioctl_vda_diag_cmd diag;
->                 struct atto_ioctl_vda_cli_cmd cli;
->                 struct atto_ioctl_vda_smp_cmd smp;
->                 struct atto_ioctl_vda_cfg_cmd cfg;
->                 struct atto_ioctl_vda_mgt_cmd mgt;
->                 struct atto_ioctl_vda_gsv_cmd gsv;
->                 u8 cmd_info[256];
->         } cmd;
-> 
-> No sizes are calculated using the enclosing structure, so no other
-> updates are needed.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> I've just been on vacation and haven't pushed it to next yet. It's still in
+> the "to be tested" queue.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Awesome! :)
 
-Thanks
+Thanks, Steven.
 --
 Gustavo
-
-> ---
->  drivers/scsi/esas2r/atioctl.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/esas2r/atioctl.h b/drivers/scsi/esas2r/atioctl.h
-> index 4aca3d52c851..ff2ad9b38575 100644
-> --- a/drivers/scsi/esas2r/atioctl.h
-> +++ b/drivers/scsi/esas2r/atioctl.h
-> @@ -1141,7 +1141,7 @@ struct __packed atto_ioctl_vda_gsv_cmd {
->  
->  	u8 rsp_len;
->  	u8 reserved[7];
-> -	u8 version_info[1];
-> +	u8 version_info[];
->  	#define ATTO_VDA_VER_UNSUPPORTED 0xFF
->  
->  };
-> 
