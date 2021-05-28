@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5770FC4708C
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FCBC4708C
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34E366102A
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697ED613B6
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 May 2021 20:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbhE1UId (ORCPT
+        id S229522AbhE1UJP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 May 2021 16:08:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38560 "EHLO mail.kernel.org"
+        Fri, 28 May 2021 16:09:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229608AbhE1UIc (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 May 2021 16:08:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7EEA66139A;
-        Fri, 28 May 2021 20:06:56 +0000 (UTC)
+        id S229492AbhE1UJF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 28 May 2021 16:09:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 44A1E613B5;
+        Fri, 28 May 2021 20:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622232417;
-        bh=ZV1SeuPvDYe6GKbtbIb0+ApRzqPbNzxh5Kl5WTNpluU=;
+        s=k20201202; t=1622232449;
+        bh=lqdDlotOcp/TOALDyK7jkrg3rREQUCM6i45sWq1gsdQ=;
         h=Date:From:To:Cc:Subject:From;
-        b=VxmEw93MsPS0xdknwmzQPvfz7ky8qPJs1+sggEaujPxUwBziQv2KXTkgkXPD82CzJ
-         wf7bV/oBZTUbSVgE/Rw/LPYnCI+MfjHnlvkZcU0G0wwdFCbm/MFxVJwtsC4x7ha9F6
-         79QrI62QXrLA4bScfp69WW8Yo3ep8j/yAQ2xhoLNx+k9LVKt/V/KpT8Ei+wYlBmqKg
-         mp5lTAzYSR0fjTh46oFAlFf/haw/2LYBh0EIIdUbSitfnJbzfOug3JKq2hY9Bl2UYO
-         1sgWNBVpVsbNqENJzoU0MJyfb1wfcbmb0RRHlvuUFNcoQk//qacC4zdY774Gf3GZEA
-         zx8yt6XPD9Fgg==
-Date:   Fri, 28 May 2021 15:07:56 -0500
+        b=XWAnPblHFKmH+dBiYVHNg+xxpAisItgi2GSJfyNCPJPp+ecDc4dy/9lwWV6qL4NRh
+         Xse25J0owud0SMXjXsumF+30V80s2WOaqtOzBtllY7+ByZLKmmWguTL9YCHZFprtlq
+         mZ2rGEbZZQU30cF1G7jKJReOJThzxfzIFZ8mvObBz9bLy7RIoCILB4nVesiUsoDorq
+         7KwxKVm7ixUTwZC79FONUUFCJdztmkfrjvRA4QsGTM0QLzfkJSRpqAt9OfV9UEQDD+
+         EG7Q+DMJQP60PMeCsvhhQpdXgqptDx6BJ/VhjG887Lo8MmeCGHGBG3EjBULIngIyU2
+         weq+ccAJbdzIg==
+Date:   Fri, 28 May 2021 15:08:28 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] KVM: x86: Fix fall-through warnings for Clang
-Message-ID: <20210528200756.GA39320@embeddedor>
+Subject: [PATCH][next] scsi: mpt3sas: Fix fall-through warnings for Clang
+Message-ID: <20210528200828.GA39349@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -66,34 +64,34 @@ JFYI: We had thousands of these sorts of warnings and now we are down
       to just 25 in linux-next. These are some of those last remaining
       warnings.
 
- arch/x86/kvm/cpuid.c   | 1 +
- arch/x86/kvm/vmx/vmx.c | 1 +
+ drivers/scsi/mpt3sas/mpt3sas_base.c  | 1 +
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 1 +
  2 files changed, 2 insertions(+)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 9a48f138832d..b4da665bb892 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -655,6 +655,7 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
- 		if (kvm_cpu_cap_has(X86_FEATURE_RDTSCP))
- 			entry->ecx = F(RDPID);
- 		++array->nent;
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 68fde055b02f..969c0d676ae2 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -4435,6 +4435,7 @@ _base_display_OEMs_branding(struct MPT3SAS_ADAPTER *ioc)
+ 				 ioc->pdev->subsystem_device);
+ 			break;
+ 		}
 +		break;
  	default:
  		break;
  	}
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 4bceb5ca3a89..e7d98c3d398e 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6248,6 +6248,7 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
- 	switch (kvm_get_apic_mode(vcpu)) {
- 	case LAPIC_MODE_INVALID:
- 		WARN_ONCE(true, "Invalid local APIC state");
-+		break;
- 	case LAPIC_MODE_DISABLED:
- 		break;
- 	case LAPIC_MODE_XAPIC:
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index d00aca3c77ce..d9d5e9c0e110 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -11932,6 +11932,7 @@ _scsih_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 				ioc->multipath_on_hba = 1;
+ 			else
+ 				ioc->multipath_on_hba = 0;
++			break;
+ 		default:
+ 			break;
+ 		}
 -- 
 2.27.0
 
