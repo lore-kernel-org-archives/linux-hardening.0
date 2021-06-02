@@ -7,142 +7,120 @@ X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7BEC47083
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Jun 2021 20:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687B5C47083
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Jun 2021 20:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6624260FF0
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Jun 2021 20:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F60460C3F
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Jun 2021 20:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbhFBU3r (ORCPT
+        id S229558AbhFBUd0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Jun 2021 16:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34694 "EHLO
+        Wed, 2 Jun 2021 16:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbhFBU3p (ORCPT
+        with ESMTP id S229552AbhFBUdZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Jun 2021 16:29:45 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8E7C06175F
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Jun 2021 13:27:46 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id z26so3113688pfj.5
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Jun 2021 13:27:46 -0700 (PDT)
+        Wed, 2 Jun 2021 16:33:25 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96303C06174A
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Jun 2021 13:31:42 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id o9so416638pgd.2
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Jun 2021 13:31:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GIZNwarF6dxowAlJnu/euGWQJ/DCZEKi8RX1cLE3XwY=;
-        b=Z29cQUT1u4Ruq2SmaNGdbhoTrg5E1p9PRbg1JPKW4xbPOEDsM4XXkQZ5kbNnxuBW5D
-         2E+DiTHf5lbtsSPPQ62UgMiz3bd9ETPPxAP9nCUi3uONdQB7SxblJHfyIAMrpb4p62hH
-         tDZ3EuzVPa+ougVa3uJXMXi25ocfLBS9TKC98=
+        bh=bSLR915keJcdTviRaDzw8PP4+JBptlr8rMLWUQhfRuo=;
+        b=Sb/s5Ta+iWJ5VwUoH6Abdz1NLrs8aMm55RMVQ67D7La3FWEIqrHgfSBfa8W9bx5cAZ
+         Zg1zqJkllqfjVy7sOZx5DrIvRS+EOU7CVDLSmqE3oI8EsH/w3nQVF/bdQFxntxPabOHH
+         ff4aOrt12y6LQLBvevJNH6p4ITV3poo70Yj1I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GIZNwarF6dxowAlJnu/euGWQJ/DCZEKi8RX1cLE3XwY=;
-        b=qLrm9iaUysO6ZEwy2OehHGKhyE/5VzU28D0MnPnV5NjmApDiM7L4KWCRrkA6aLms0R
-         E5fG10aTdnH2kHVGSrShHwH6k0d49CuI+IVc4eACrJ8TMGhLxVgjFCEjzxTQaZYbZ46o
-         optEmEWem+wiYfzBINl5M8DhDgrATljCovrylgfwMCE5SBQpqbvr9IbZ3mCSqqkbotM6
-         ajMtmO5et73LY3kUO98fJZ1W8FGBS6L8rQSHOyI5rAvTGy7ESkOibd4cHbNB7iDbsFFA
-         oAjx+365SQkq/jGhX+bdQcxfbYbf7u6i1up8233evUrcQ8xy4VN9dvBPN8/bIQ6+FYDy
-         bs3Q==
-X-Gm-Message-State: AOAM530BUmOTgbIb5P3Adcqj2mDQJjKuFs6FthLEk+D69rcVM1Tk5wX7
-        k7BsdVil+BIBDcyOPitpgmwOKw==
-X-Google-Smtp-Source: ABdhPJx4kdIDojs7PJXi3sg5skx6t7uFGam5IAIWurMMhyZ8wNgAgppAdKXTkt8F9XvtkOcyJDN9og==
-X-Received: by 2002:a63:cd11:: with SMTP id i17mr11533244pgg.348.1622665665582;
-        Wed, 02 Jun 2021 13:27:45 -0700 (PDT)
+        bh=bSLR915keJcdTviRaDzw8PP4+JBptlr8rMLWUQhfRuo=;
+        b=BQSN1zaduM4RJK2s5YgG344BRYmAYO3KY05Wg54N3ALKGqgAt8XdY6J4MpPcC9NghT
+         edavNdPrDjhiPVUxdETa2IFmTgSHH4xE3j9PGSXZtRcD2HHVm+tdhhNnuGODtDiIDmgS
+         3PdyEPG48kO7kIozrA4TMKLvDYlvkEDSD3V5vlKn1FEG4olUPp4T2oS72W+u/MbkwIv6
+         2Qv+4H6cJOxPrbm1BWY3JFx4HNAkrY6abUsBCwzFgPa8ukMdwvN6YbxK3IzrDiovql0m
+         00kzhpyXYptBLVXLDW1K42luTgZISBFoyDYEuPGSKxKQYJRZ98Mb+yjpB7DldhFMKlGY
+         xhXg==
+X-Gm-Message-State: AOAM533xInPmd/BPW9EzjS8KRFhWY4eNPeamf2ozZ8L5vwVtLIzbKuYX
+        PJyLbiyK/3UfmS2IE8402TXd5A==
+X-Google-Smtp-Source: ABdhPJwkeG+5ULmlupCWiLWWBtxNfWEoWmRN5lTAgQJBBL8sKP395AQjhB6kTa9TliCZh2v4p5ivbQ==
+X-Received: by 2002:aa7:8a12:0:b029:2ea:2690:7d66 with SMTP id m18-20020aa78a120000b02902ea26907d66mr3778613pfa.8.1622665902194;
+        Wed, 02 Jun 2021 13:31:42 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l128sm585740pgl.18.2021.06.02.13.27.44
+        by smtp.gmail.com with ESMTPSA id p6sm378047pfh.166.2021.06.02.13.31.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 13:27:44 -0700 (PDT)
+        Wed, 02 Jun 2021 13:31:41 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "David S. Miller" <davem@davemloft.net>
+To:     Jay Vosburgh <j.vosburgh@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Di Zhu <zhudi21@huawei.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>,
-        Eran Ben Elisha <eranbe@nvidia.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] net: vlan: Avoid using strncpy()
-Date:   Wed,  2 Jun 2021 13:27:41 -0700
-Message-Id: <20210602202741.4078789-1-keescook@chromium.org>
+        kernel test robot <lkp@intel.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] net: bonding: Use strscpy() instead of manually-truncated strncpy()
+Date:   Wed,  2 Jun 2021 13:31:38 -0700
+Message-Id: <20210602203138.4082470-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=88816f8807de23dfa0b0dd3e00a4510275a736b2; i=E6vyLUaKYvlfizHY96CoIZkTnxuv3thEHFef0cl9Wew=; m=qgZWEVcHV6EOQQGK82kq1AwupK+IS9seUUAKn+Svxnk=; p=Vau8YbH5AGuE9RMmHWWxXTFxNJzGEGEyDbqLpLODzzE=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmC36b0ACgkQiXL039xtwCY27RAAlUK AybI2ga1SMQVVI05kppeQdyQdJGd1fiHoKTIkxE02jQ60jDyZ+x4EHQtLQKXXvnz0O50BKglH7YuF LbBWPeHxxqdL4bqbCqbmO5XT+AiJ8PVcWRXBV9QMO8Ejct5BmzmQ50M9O//qVzXh/ogDMc+pWS9fG VMijkpEjvQQ+ID5wGgGPbIehjIbiyRdKINNf6674FsRCnkonFsmE24Ls+hhc+tT4uO+ndb1a+xuha 0hscBZLYVBR1DRHwZNCHUpJIsdUQ5UgSoUFeOx86wcAQZiEAMP0uS0OBs5MdHTG5qle+KOpFCnrw9 9vJQMFFmtyG028U1kxCg3N4nO27JiJ6fx8LO1BAOICxSQjysPH+isJAdWZoDVSdxQgoCDI2PAkDWb 4+YU3xcgcixf6H672T2Pbz8NrRNX6tT1SgeHmkbPHG1GiP7tis3Z1QEe3fWtC3VDUAAB2U91t2Oyd xfTN9FEKuH/q5Ji+4Ui/rHVQWvni2hBMtrSKtcB69jieuq5BS2HwGFgx7XwlOD8VocoZ9hKBvLAhN itw7/v9bOSLzjpGhmjowlmSOq8wytMhxnCJvBTfITrWQWl8OxOMdZ8pACFsecZGmCCpiTX1ikUtvH d4MZsbvKABfmZLxMxgzMqWkPgtbONMO83uf336pEsFLuhTXCA0v8/oQo6KnZ5F9M=
+X-Patch-Hashes: v=1; h=sha256; g=a8037d5f76b0c6b374a5a7856a0340dda096eca9; i=+jq1hjyNarBiZF1iCP+ld51I3zySb92TJIxasbU5Dvg=; m=EBWMWbArZClnv/4HRsZOTu5Fjt37QDxBNb2o2f6hgzg=; p=cV40uWr3yIccruWHZ5/NoNE/0PYjMA+rbgzhfh1qkcQ=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmC36qoACgkQiXL039xtwCasChAAqty 3o0rpXgX99jLLZM6+nDi1Y4rVnaI/j8VHgpBnSTmV48Io6oefI1DQnbiCCKMgzDMbpKypc3ut3532 lGKnU06nhaWIVv4vnrRTIZ1kRWAqp2EasUmIDSRzFhZEc3U5KN7wVNFpPnoTzntll0XNAiXHSdY1X xp8g1i32h4JtjWc+81pX6qm6rr1FuMIEjNnOnQdSGpa8J/l4f+i8aXyOYOltGLur417CDm4DOf6Ev 7pao129MpTIFuFb7mxM6NrKTeZsSb3U2BuHcyg3dyHGw3N6FcqZS0WKLFKp4jnGMrNh/QiwOEqN2G oGqxaahWJriHjfV4Tjop4SFVvd0sOVCfVxFyBHquV3n9NohQPFwUov5uQ/weW/cmgNskKyLqnUvbw 1gMF0wvTIvYHrlIas9bhnLNQNWFt5QwTDX5DZm8boZQJjPbBjib8+iDXAb2nTxQUeztOM9imtCTo8 KzYFRtMvA4ENZhJHX8IotRzSc5HF/HJwINvfhBpGxYugYYy3l50OoCLITqBEKhHEM5pBtOX5zxLKg i5zNhjLTEZFVttGz8yprauY8dx+DR6xsv4U88Q3n14tu7hMCYM3DnYQAZoQD6hspcMdtVznldecbM QonsnJ6ReUixWzQxDyAsJztvOGVIeP70m4VyDVZ5Esfq86hE0IIaPPCBV15zudto=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use strscpy_pad() instead of strncpy() which is considered deprecated:
+Silence this warning by just using strscpy_pad() directly:
+
+>> drivers/net/bonding/bond_main.c:4877:3: warning: 'strncpy' specified bound 16 equals destination size [-Wstringop-truncation]
+    4877 |   strncpy(params->primary, primary, IFNAMSIZ);
+         |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Additionally replace other strncpy() uses, as it is considered deprecated:
 https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
 
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/202102150705.fdR6obB0-lkp@intel.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- net/8021q/vlan.c     | 3 ++-
- net/8021q/vlan.h     | 3 ++-
- net/8021q/vlan_dev.c | 6 +++---
- 3 files changed, 7 insertions(+), 5 deletions(-)
+v2:
+ - switch to strscpy_pad() and replace earlier strncpy() too
+v1: https://lore.kernel.org/lkml/20210602181133.3326856-1-keescook@chromium.org
+---
+ drivers/net/bonding/bond_main.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/net/8021q/vlan.c b/net/8021q/vlan.c
-index fb3d3262dc1a..4cdf8416869d 100644
---- a/net/8021q/vlan.c
-+++ b/net/8021q/vlan.c
-@@ -638,7 +638,8 @@ static int vlan_ioctl_handler(struct net *net, void __user *arg)
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index c5a646d06102..e9cb716ad849 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -620,7 +620,7 @@ static int bond_check_dev_link(struct bonding *bond,
+ 		 */
  
- 	case GET_VLAN_REALDEV_NAME_CMD:
- 		err = 0;
--		vlan_dev_get_realdev_name(dev, args.u.device2);
-+		vlan_dev_get_realdev_name(dev, args.u.device2,
-+					  sizeof(args.u.device2));
- 		if (copy_to_user(arg, &args,
- 				 sizeof(struct vlan_ioctl_args)))
- 			err = -EFAULT;
-diff --git a/net/8021q/vlan.h b/net/8021q/vlan.h
-index fa3ad3d4d58c..e3f6ff05a528 100644
---- a/net/8021q/vlan.h
-+++ b/net/8021q/vlan.h
-@@ -129,7 +129,8 @@ void vlan_dev_set_ingress_priority(const struct net_device *dev,
- int vlan_dev_set_egress_priority(const struct net_device *dev,
- 				 u32 skb_prio, u16 vlan_prio);
- int vlan_dev_change_flags(const struct net_device *dev, u32 flag, u32 mask);
--void vlan_dev_get_realdev_name(const struct net_device *dev, char *result);
-+void vlan_dev_get_realdev_name(const struct net_device *dev, char *result,
-+			       size_t size);
+ 		/* Yes, the mii is overlaid on the ifreq.ifr_ifru */
+-		strncpy(ifr.ifr_name, slave_dev->name, IFNAMSIZ);
++		strscpy_pad(ifr.ifr_name, slave_dev->name, IFNAMSIZ);
+ 		mii = if_mii(&ifr);
+ 		if (ioctl(slave_dev, &ifr, SIOCGMIIPHY) == 0) {
+ 			mii->reg_num = MII_BMSR;
+@@ -5329,10 +5329,8 @@ static int bond_check_params(struct bond_params *params)
+ 			(struct reciprocal_value) { 0 };
+ 	}
  
- int vlan_check_real_dev(struct net_device *real_dev,
- 			__be16 protocol, u16 vlan_id,
-diff --git a/net/8021q/vlan_dev.c b/net/8021q/vlan_dev.c
-index 4db3f0621959..a0367b37512d 100644
---- a/net/8021q/vlan_dev.c
-+++ b/net/8021q/vlan_dev.c
-@@ -239,9 +239,9 @@ int vlan_dev_change_flags(const struct net_device *dev, u32 flags, u32 mask)
- 	return 0;
- }
+-	if (primary) {
+-		strncpy(params->primary, primary, IFNAMSIZ);
+-		params->primary[IFNAMSIZ - 1] = 0;
+-	}
++	if (primary)
++		strscpy_pad(params->primary, primary, sizeof(params->primary));
  
--void vlan_dev_get_realdev_name(const struct net_device *dev, char *result)
-+void vlan_dev_get_realdev_name(const struct net_device *dev, char *result, size_t size)
- {
--	strncpy(result, vlan_dev_priv(dev)->real_dev->name, 23);
-+	strscpy_pad(result, vlan_dev_priv(dev)->real_dev->name, size);
- }
+ 	memcpy(params->arp_targets, arp_target, sizeof(arp_target));
  
- bool vlan_dev_inherit_address(struct net_device *dev,
-@@ -360,7 +360,7 @@ static int vlan_dev_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
- 	struct ifreq ifrr;
- 	int err = -EOPNOTSUPP;
- 
--	strncpy(ifrr.ifr_name, real_dev->name, IFNAMSIZ);
-+	strscpy_pad(ifrr.ifr_name, real_dev->name, IFNAMSIZ);
- 	ifrr.ifr_ifru = ifr->ifr_ifru;
- 
- 	switch (cmd) {
 -- 
 2.25.1
 
