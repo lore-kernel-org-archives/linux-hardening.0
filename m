@@ -4,151 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D514EC47083
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Jun 2021 19:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59FCC4708F
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Jun 2021 20:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD8A613E9
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Jun 2021 19:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C153A613B1
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Jun 2021 20:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229962AbhFBT5p (ORCPT
+        id S229752AbhFBUFC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Jun 2021 15:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbhFBT5p (ORCPT
+        Wed, 2 Jun 2021 16:05:02 -0400
+Received: from mail-pj1-f53.google.com ([209.85.216.53]:55903 "EHLO
+        mail-pj1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229489AbhFBUFB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Jun 2021 15:57:45 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D9FC06174A
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Jun 2021 12:55:46 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 6so3162874pgk.5
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Jun 2021 12:55:46 -0700 (PDT)
+        Wed, 2 Jun 2021 16:05:01 -0400
+Received: by mail-pj1-f53.google.com with SMTP id k7so2259651pjf.5
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Jun 2021 13:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=lKbsKx/CwwAJJJ3AtTHNwIW7e/uQT1ru3Qvh7qWozN4=;
-        b=C36W36k/YR2ljUGOFpoAKJFu5nQRxby9kwvSxtfLb/imsjGhqUGlv3F7O+9oJ1ptCn
-         qp96ZY07ns1fQnEsEV2LkXkYfcb7fBVAZaySltRccEhLmzqDFQ2Sia+DJX697iwh685q
-         XSqIR3hZ7Vl4SEUNGZlCvM0oRpLKSGJYyzqWU=
+        bh=s1sjAr9ezsvGRMG5Tl2f4lo3BdOtvxz+ZJuUyICioUA=;
+        b=X7wS/R9XOO9moLEPu26T44hWfELyEpcKpGf4ejcI6KxP/IHbZzHWm3DrAIIOfjRmMm
+         Hdm5llNjoEWnuOfGRe2+V7O7IxW+pFJj8OPQeUxwVF8268PEctI2ASL8t8M2U59NnRwX
+         N9vxlFaoQV9dpUAA1POoaSmpbc13E3SOXDofg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lKbsKx/CwwAJJJ3AtTHNwIW7e/uQT1ru3Qvh7qWozN4=;
-        b=gIsZNkQwXIxOdo2X67/TV+35B4rVCqLK146504HsX1OgRaR2RwiAjnBmeyxt1gC6Ng
-         82DOTZH1XvIXw62VjO4fkMq7munmByv7RYCMLW1a6Ni5b8MxknoFUih8/hbJ5EsxTYrl
-         NTgJhltMEpYzOEVq4atHugxjFGkM+RY4VjNQ+VlYexx29FDz8c3uxY81vYALcqdJWoX8
-         LsFVYK9/TU3iWHowbW6WgbI0ysvnkDOWLkM9LZFtfklkIiQcB/iWBaTdTq1E5iSuxgUM
-         xhezmBEiBLR3eTabhItCLdm3HuH04IC+0I3oI49GvlU5HFd4uzJWWrwKMCnUdMTOkBcW
-         wzzg==
-X-Gm-Message-State: AOAM530EuFMFHV8fBhL2njtVHu3COOkaJ91vWuoS02thQuHaMRL/jSvu
-        vkc5c8NDCMJRyyOpJhQp0VVpxA==
-X-Google-Smtp-Source: ABdhPJzIPKjT1TLLgSWyjmNLfEFggACWHy09QcHyBfeSTF7lHho5w9YuPL/W/+D2tvDivWu+TScb3Q==
-X-Received: by 2002:a05:6a00:d41:b029:2db:1549:219e with SMTP id n1-20020a056a000d41b02902db1549219emr28795898pfv.71.1622663745490;
-        Wed, 02 Jun 2021 12:55:45 -0700 (PDT)
+        bh=s1sjAr9ezsvGRMG5Tl2f4lo3BdOtvxz+ZJuUyICioUA=;
+        b=rKl0w05qB/bue1LmkYWedCdQE49UUplxOgDj6K01QfOyqysGW/VCHJf3ADnznCIP8O
+         RGyFXPXTJr2F+dTbhUUKFaixtfSPG3y9BphXmy/JtkXUOnGmQx8s7mnayeYkPq5CBzQA
+         U1aZ86lVazsOvzNkILm6zMNMK4G5bfPJLJ4q1GZ6pechr7iVnyRXC7LQjg/ybq1a8mK+
+         EuEKyp61mg7XaxaQws4EZE2hup1pbigqsd9Kz8jXRB8bXoP7hvkCojS3WLF5r46IelUT
+         QETchZbDDCJFYD/L2IZRQecxrsGNFC/rXTqj3jvK6hnJN4pyXO66boWDcB9kIFjgtqKu
+         nM/Q==
+X-Gm-Message-State: AOAM531epcdU19Omv8D44qlsPTxJRa+GWEp2A5brLLW5yY8GQQqGuuGF
+        pDvpQ41imA5USmgNFOzOHQkP4g==
+X-Google-Smtp-Source: ABdhPJwHwskbW0yeyMWaiBjFpL1jphLGqrKFs+hGNBQi+9mFNK0gn2FFWmraiEy5k6AHFpHCD4ViZA==
+X-Received: by 2002:a17:90a:1588:: with SMTP id m8mr7410756pja.226.1622664124481;
+        Wed, 02 Jun 2021 13:02:04 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r135sm355480pfc.184.2021.06.02.12.55.44
+        by smtp.gmail.com with ESMTPSA id l20sm256386pjq.38.2021.06.02.13.02.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 12:55:44 -0700 (PDT)
-Date:   Wed, 2 Jun 2021 12:55:43 -0700
+        Wed, 02 Jun 2021 13:02:03 -0700 (PDT)
+Date:   Wed, 2 Jun 2021 13:02:02 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][venus-for-next-v5.14] media: venus: hfi_cmds: Fix packet
- size calculation
-Message-ID: <202106021254.39A1561075@keescook>
-References: <20210601184616.GA23488@embeddedor>
+To:     Rao Shoaib <rao.shoaib@oracle.com>
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        kernel test robot <lkp@intel.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: bonding: Use strscpy() instead of
+ manually-truncated strncpy()
+Message-ID: <202106021257.F0DFED3@keescook>
+References: <20210602181133.3326856-1-keescook@chromium.org>
+ <b53fc81b-2348-54f1-72ca-d143d34bf780@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210601184616.GA23488@embeddedor>
+In-Reply-To: <b53fc81b-2348-54f1-72ca-d143d34bf780@oracle.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 01, 2021 at 01:46:16PM -0500, Gustavo A. R. Silva wrote:
-> Now that a one-element array was replaced with a flexible-array member
-> in struct hfi_sys_set_property_pkt, use the struct_size() helper to
-> correctly calculate the packet size.
+On Wed, Jun 02, 2021 at 12:46:46PM -0700, Rao Shoaib wrote:
+> Would it make sense to also replace the other strncpy in the same file.
+
+                strncpy(ifr.ifr_name, slave_dev->name, IFNAMSIZ);
+
+I couldn't tell if this was a non-string, if it needed padding, etc. The
+one I fixed below appears to be null-terminated? (Though now that I look
+at it, perhaps it should be using strscpy_pad().)
+
+And there are a bunch of other manual truncations in the kernel on
+ifr_name:
+
+$ git grep ifr_name | grep 'IFNAMSIZ.*=.*0'
+drivers/net/tun.c:              ifr.ifr_name[IFNAMSIZ-1] = '\0';
+net/core/dev_ioctl.c:   ifr->ifr_name[IFNAMSIZ-1] = 0;
+net/core/dev_ioctl.c:   ifr->ifr_name[IFNAMSIZ-1] = 0;
+net/decnet/dn_dev.c:    ifr->ifr_name[IFNAMSIZ-1] = 0;
+net/ieee802154/socket.c:        ifr.ifr_name[IFNAMSIZ-1] = 0;
+net/ipv4/devinet.c:     ifr->ifr_name[IFNAMSIZ - 1] = 0;
+net/wireless/wext-core.c:       iwr.ifr_name[IFNAMSIZ-1] = 0;
+tools/lib/bpf/xsk.c:    ifr.ifr_name[IFNAMSIZ - 1] = '\0';
+
+And given the copy_to_user() that might happen, I think this should
+absolutely be strscpy_pad(). I will send a v2...
+
+-Kees
+
 > 
-> Fixes: 701e10b3fd9f ("media: venus: hfi_cmds.h: Replace one-element array with flexible-array member")
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> BTW... it seems that a similar problem is present in
-> https://lore.kernel.org/linux-hardening/20210211001044.GA69612@embeddedor/ 
-> and that is what is causing the regression. I will send v2 of that
-> patch, shortly. Thanks.
+> Shoaib
 > 
->  drivers/media/platform/qcom/venus/hfi_cmds.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
-> index 11a8347e5f5c..c86279e5d6e8 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_cmds.c
-> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
-> @@ -27,7 +27,7 @@ void pkt_sys_idle_indicator(struct hfi_sys_set_property_pkt *pkt, u32 enable)
->  {
->  	struct hfi_enable *hfi = (struct hfi_enable *)&pkt->data[1];
->  
-> -	pkt->hdr.size = sizeof(*pkt) + sizeof(*hfi) + sizeof(u32);
-> +	pkt->hdr.size = struct_size(pkt, data, 2) + sizeof(*hfi);
-
-I think this should be "1" not "2".
-
-(i.e. there is a single "data" item, followed by an entire *hfi (which
-starts immediate after data[0]).
-
->  	pkt->hdr.pkt_type = HFI_CMD_SYS_SET_PROPERTY;
->  	pkt->num_properties = 1;
->  	pkt->data[0] = HFI_PROPERTY_SYS_IDLE_INDICATOR;
-> @@ -39,7 +39,7 @@ void pkt_sys_debug_config(struct hfi_sys_set_property_pkt *pkt, u32 mode,
->  {
->  	struct hfi_debug_config *hfi;
->  
-> -	pkt->hdr.size = sizeof(*pkt) + sizeof(*hfi) + sizeof(u32);
-> +	pkt->hdr.size = struct_size(pkt, data, 2) + sizeof(*hfi);
-
-Same here.
-
->  	pkt->hdr.pkt_type = HFI_CMD_SYS_SET_PROPERTY;
->  	pkt->num_properties = 1;
->  	pkt->data[0] = HFI_PROPERTY_SYS_DEBUG_CONFIG;
-> @@ -50,7 +50,7 @@ void pkt_sys_debug_config(struct hfi_sys_set_property_pkt *pkt, u32 mode,
->  
->  void pkt_sys_coverage_config(struct hfi_sys_set_property_pkt *pkt, u32 mode)
->  {
-> -	pkt->hdr.size = sizeof(*pkt) + sizeof(u32);
-> +	pkt->hdr.size = struct_size(pkt, data, 2);
-
-This looks correct.
-
->  	pkt->hdr.pkt_type = HFI_CMD_SYS_SET_PROPERTY;
->  	pkt->num_properties = 1;
->  	pkt->data[0] = HFI_PROPERTY_SYS_CONFIG_COVERAGE;
-> @@ -116,7 +116,7 @@ void pkt_sys_power_control(struct hfi_sys_set_property_pkt *pkt, u32 enable)
->  {
->  	struct hfi_enable *hfi = (struct hfi_enable *)&pkt->data[1];
->  
-> -	pkt->hdr.size = sizeof(*pkt) + sizeof(*hfi) + sizeof(u32);
-> +	pkt->hdr.size = struct_size(pkt, data, 2) + sizeof(*hfi);
-
-Also 1.
-
->  	pkt->hdr.pkt_type = HFI_CMD_SYS_SET_PROPERTY;
->  	pkt->num_properties = 1;
->  	pkt->data[0] = HFI_PROPERTY_SYS_CODEC_POWER_PLANE_CTRL;
-> -- 
-> 2.27.0
-> 
+> On 6/2/21 11:11 AM, Kees Cook wrote:
+> > Silence this warning by just using strscpy() directly:
+> > 
+> > drivers/net/bonding/bond_main.c:4877:3: warning: 'strncpy' specified bound 16 equals destination size [-Wstringop-truncation]
+> >      4877 |   strncpy(params->primary, primary, IFNAMSIZ);
+> >           |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Link: https://lore.kernel.org/lkml/202102150705.fdR6obB0-lkp@intel.com
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >   drivers/net/bonding/bond_main.c | 6 ++----
+> >   1 file changed, 2 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+> > index c5a646d06102..ecfc48f2d0d0 100644
+> > --- a/drivers/net/bonding/bond_main.c
+> > +++ b/drivers/net/bonding/bond_main.c
+> > @@ -5329,10 +5329,8 @@ static int bond_check_params(struct bond_params *params)
+> >   			(struct reciprocal_value) { 0 };
+> >   	}
+> > -	if (primary) {
+> > -		strncpy(params->primary, primary, IFNAMSIZ);
+> > -		params->primary[IFNAMSIZ - 1] = 0;
+> > -	}
+> > +	if (primary)
+> > +		strscpy(params->primary, primary, sizeof(params->primary));
+> >   	memcpy(params->arp_targets, arp_target, sizeof(arp_target));
 
 -- 
 Kees Cook
