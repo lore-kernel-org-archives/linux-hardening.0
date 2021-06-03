@@ -2,123 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0A0C47083
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Jun 2021 00:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD26C47082
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Jun 2021 21:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4B96100A
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Jun 2021 00:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A851613F9
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Jun 2021 21:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbhFCARo (ORCPT
+        id S230155AbhFCVbx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Jun 2021 20:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50366 "EHLO mail.kernel.org"
+        Thu, 3 Jun 2021 17:31:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229541AbhFCARo (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Jun 2021 20:17:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D65AA6100A;
-        Thu,  3 Jun 2021 00:15:59 +0000 (UTC)
+        id S229963AbhFCVbw (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 3 Jun 2021 17:31:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 645C4613F9;
+        Thu,  3 Jun 2021 21:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622679360;
-        bh=yEdkcwuAhilPBcLbUWO28NG4GTX7d4iKHu4aVHEwMBE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uu9+1ZBQo/EZmWv5FGp1qdyQb2TwPdVMUd8Gai0Lzd076/EBqKLci9m3hKubk0xuE
-         uS3cEkN6UgTpNA4mA1QTke4r2EIl6gRgDkchsERpkEbZvPhr0mcrMm7dTuxX80mjAm
-         SeAybvHtyu1siOVw/IWuhYVEOjBS4YLV9oPxB6IPRaIj533yA1Z/gditQfHWpFqWzw
-         r7W8o/40j7TpPH8K8udH4G+lIX+kPDg3E6gWFuwe6rhylHRPH/TD1t24shUYbmUanD
-         li7WTp24O6Qogx8sgCREjrM47vfsDsOW3sZi5YSLLh6ddChslNiy1TUmgCEMaHPh9N
-         gKnazDIguyOQQ==
-Date:   Wed, 2 Jun 2021 19:17:08 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3][venus-for-next-v5.14] media: venus: hfi_cmds: Fix packet
- size calculation
-Message-ID: <20210603001708.GA55239@embeddedor>
+        s=k20201202; t=1622755807;
+        bh=9ZW1bmzV6h5W7yp3MKPtM4rE53pVvzC/kouhzRQX8Jk=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=oDZOWEm4EsRPcl19vi1KL5iM94ifxgkeuPZfWw2W8NXZo6dH8Egn2GcBcOxjRuPvW
+         Oj7nLt8pAjApujZwb4QbZbQojnS2cWDvRceeVH2Nc7ijEaV+9pwPECyv7ff8lfJ3J3
+         /T+OrFtgNLj6eKmO0TZezH73Zdu9NdPqAq26hu4/pnQLoDWMFb0fB24xdtKUSFoplS
+         ygP6RMV7FwFLBblBypqvDkkBjz9kmIfEyrOkE8X0UEdlAKi9x+r0jwqdDaAajlfcES
+         DeIpcpbq7dGzxv90oQjlTmn0YyIX2kSgEwnCIPihCanqagEx0HYY5BPWAeTvrFIuGO
+         P+yCer0u8H+Sw==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] net: bonding: Use strscpy_pad() instead of
+ manually-truncated strncpy()
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <162275580733.14468.13433184773362130626.git-patchwork-notify@kernel.org>
+Date:   Thu, 03 Jun 2021 21:30:07 +0000
+References: <20210602205820.361846-1-keescook@chromium.org>
+In-Reply-To: <20210602205820.361846-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     jay.vosburgh@canonical.com, lkp@intel.com, j.vosburgh@gmail.com,
+        vfalico@gmail.com, andy@greyhouse.net, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Now that a one-element array was replaced with a flexible-array member
-in struct hfi_sys_set_property_pkt, use the struct_size() helper to
-correctly calculate the packet size.
+Hello:
 
-Fixes: 701e10b3fd9f ("media: venus: hfi_cmds.h: Replace one-element array with flexible-array member")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - Fix size calculation in call to struct_size().
-   Link: https://lore.kernel.org/linux-hardening/202106021254.39A1561075@keescook/
-   Link: https://lore.kernel.org/linux-hardening/113fd896-464c-6aef-215a-a53ac6103a62@embeddedor.com/
+This patch was applied to netdev/net-next.git (refs/heads/master):
 
-Changes in v2:
- - Include linux/overflow.h for struct_size().
+On Wed,  2 Jun 2021 13:58:20 -0700 you wrote:
+> Silence this warning by using strscpy_pad() directly:
+> 
+> drivers/net/bonding/bond_main.c:4877:3: warning: 'strncpy' specified bound 16 equals destination size [-Wstringop-truncation]
+>     4877 |   strncpy(params->primary, primary, IFNAMSIZ);
+>          |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Additionally replace other strncpy() uses, as it is considered deprecated:
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+> 
+> [...]
 
- drivers/media/platform/qcom/venus/hfi_cmds.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Here is the summary with links:
+  - [v3] net: bonding: Use strscpy_pad() instead of manually-truncated strncpy()
+    https://git.kernel.org/netdev/net-next/c/43902070fb7b
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
-index 4b9dea7f6940..f51024786991 100644
---- a/drivers/media/platform/qcom/venus/hfi_cmds.c
-+++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
-  * Copyright (C) 2017 Linaro Ltd.
-  */
-+#include <linux/overflow.h>
- #include <linux/errno.h>
- #include <linux/hash.h>
- 
-@@ -27,7 +28,7 @@ void pkt_sys_idle_indicator(struct hfi_sys_set_property_pkt *pkt, u32 enable)
- {
- 	struct hfi_enable *hfi = (struct hfi_enable *)&pkt->data[1];
- 
--	pkt->hdr.size = sizeof(*pkt) + sizeof(*hfi) + sizeof(u32);
-+	pkt->hdr.size = struct_size(pkt, data, 1) + sizeof(*hfi);
- 	pkt->hdr.pkt_type = HFI_CMD_SYS_SET_PROPERTY;
- 	pkt->num_properties = 1;
- 	pkt->data[0] = HFI_PROPERTY_SYS_IDLE_INDICATOR;
-@@ -39,7 +40,7 @@ void pkt_sys_debug_config(struct hfi_sys_set_property_pkt *pkt, u32 mode,
- {
- 	struct hfi_debug_config *hfi;
- 
--	pkt->hdr.size = sizeof(*pkt) + sizeof(*hfi) + sizeof(u32);
-+	pkt->hdr.size = struct_size(pkt, data, 1) + sizeof(*hfi);
- 	pkt->hdr.pkt_type = HFI_CMD_SYS_SET_PROPERTY;
- 	pkt->num_properties = 1;
- 	pkt->data[0] = HFI_PROPERTY_SYS_DEBUG_CONFIG;
-@@ -50,7 +51,7 @@ void pkt_sys_debug_config(struct hfi_sys_set_property_pkt *pkt, u32 mode,
- 
- void pkt_sys_coverage_config(struct hfi_sys_set_property_pkt *pkt, u32 mode)
- {
--	pkt->hdr.size = sizeof(*pkt) + sizeof(u32);
-+	pkt->hdr.size = struct_size(pkt, data, 2);
- 	pkt->hdr.pkt_type = HFI_CMD_SYS_SET_PROPERTY;
- 	pkt->num_properties = 1;
- 	pkt->data[0] = HFI_PROPERTY_SYS_CONFIG_COVERAGE;
-@@ -116,7 +117,7 @@ void pkt_sys_power_control(struct hfi_sys_set_property_pkt *pkt, u32 enable)
- {
- 	struct hfi_enable *hfi = (struct hfi_enable *)&pkt->data[1];
- 
--	pkt->hdr.size = sizeof(*pkt) + sizeof(*hfi) + sizeof(u32);
-+	pkt->hdr.size = struct_size(pkt, data, 1) + sizeof(*hfi);
- 	pkt->hdr.pkt_type = HFI_CMD_SYS_SET_PROPERTY;
- 	pkt->num_properties = 1;
- 	pkt->data[0] = HFI_PROPERTY_SYS_CODEC_POWER_PLANE_CTRL;
--- 
-2.27.0
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
