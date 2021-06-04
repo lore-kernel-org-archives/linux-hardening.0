@@ -2,206 +2,81 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D82C47082
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Jun 2021 01:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84F3C47082
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Jun 2021 02:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1C44613F6
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Jun 2021 01:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF16961406
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Jun 2021 02:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbhFDBLm (ORCPT
+        id S229772AbhFDC22 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Jun 2021 21:11:42 -0400
-Received: from gateway20.websitewelcome.com ([192.185.63.14]:43684 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229576AbhFDBLm (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Jun 2021 21:11:42 -0400
-X-Greylist: delayed 1430 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Jun 2021 21:11:42 EDT
-Received: from cm15.websitewelcome.com (cm15.websitewelcome.com [100.42.49.9])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 29E58400C4C16
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Jun 2021 19:32:49 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id oxyPlzapYHFifoxyPlpAsl; Thu, 03 Jun 2021 19:46:05 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8MZ6QMJp18jNvCBuEt+8EXH4IwtikkXnl4EIXVb4e2c=; b=MYUX0zASYWu+jrRJ8OXVlP43kK
-        D7ag4jS6eiYT1BRBDJmyfntmL4IbzMsdnYFmE5bRSJf57X8CRp3kEVxaJ+FY+0BIq9l4pzfoc0fRR
-        KAT6B5pnZtfNRikRgGm0oJ/8RWFJB4Iy0yJ8zZKc4wxsShJ3vbXYUFyqN0ml2CQ+VqE4pzNNGRkBB
-        wnyVKGFSDO3bCKrItkx+9t+UOU968CRHofUUVkioY8HqWDMoZ/LyKM2a1uAlcb/RsJUQ8TwSlwEUq
-        Wi6GzwnMTuVDXXBKkjyD1eKxoV+4nmcARtq5YqY1xPSZ8NMeZTWM+KDKJVycxuuB2k8WxHXssZIkG
-        XIPP/vyQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:33262 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1loxyJ-001HnV-Su; Thu, 03 Jun 2021 19:45:59 -0500
-Subject: Re: [PATCH][next] media: venus: hfi_msgs.h: Replace one-element
- arrays with flexible-array members
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Thu, 3 Jun 2021 22:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229576AbhFDC22 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 3 Jun 2021 22:28:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2D533610A8;
+        Fri,  4 Jun 2021 02:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622773602;
+        bh=acDwWtEoCKvilUayeWvf1cy0VgeYKf2X7ilmeSX1lz8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ow8FHUlcFRFhIYt0rj3oaTyb7IZmmpkJzwxZoHgdp1SZVG+z5lBtNO/jOGJpf/bVk
+         amIIJlTtCxqTL+RpiqmtS9w9I6Bjonj/Zzcs28w1eR0DiZ8DrOoD+tM/TYlxhp1Pi4
+         hGM4/MDb8AC0DETFFWovXzYIEahXvKKURVFjNNBjD6eh9g9aobgoKMu0Q5Wu1Jh4Ks
+         HtrtEyjITdP0m0fXLK1U5+KrmmnWhx+Xhr4fE/OikEi+je22FWGZZqQnVnBIu4xZjz
+         +jGlw6K+6VKKqq4qwu0TncNzT5skORaQ+hKYldbUXpMr1oqqYwsDqcF1EJeNYPOKm0
+         xtZsSj0GgCZqQ==
+Date:   Thu, 3 Jun 2021 21:27:52 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Finn Thain <fthain@linux-m68k.org>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210211001044.GA69612@embeddedor>
- <bf31beab-dc36-23e9-757f-9729be59f7b2@embeddedor.com>
- <de8538ad-48d8-7a3c-af4f-ab31ee2da761@linaro.org>
- <f63824ee-fc8b-25cf-f3c2-c7b3947b8076@embeddedor.com>
- <64aa38bc-62b2-79d9-156f-74a09f11f871@linaro.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <0436d974-f17b-10f3-8b05-f8505524a6f5@embeddedor.com>
-Date:   Thu, 3 Jun 2021 19:47:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH][next] scsi: NCR5380: Fix fall-through warning for Clang
+Message-ID: <20210604022752.GA168289@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <64aa38bc-62b2-79d9-156f-74a09f11f871@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1loxyJ-001HnV-Su
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:33262
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Stanimir,
+In preparation to enable -Wimplicit-fallthrough for Clang, fix
+a fall-through warning by replacing a /* fallthrough */ comment
+with the new pseudo-keyword macro fallthrough;
 
-On 5/17/21 06:01, Stanimir Varbanov wrote:
-> Hi,
-> 
-> On 5/12/21 7:37 PM, Gustavo A. R. Silva wrote:
->>
->>
->> On 5/12/21 06:39, Stanimir Varbanov wrote:
->>> Hi,
->>>
->>> On 5/11/21 6:46 PM, Gustavo A. R. Silva wrote:
->>>> Hi all,
->>>>
->>>> Friendly ping:
->>>>
->>>> We are about to be able to globally enable -Warray-bounds and, these are one of
->>>> the last out-of-bounds warnings in linux-next.
->>>>
->>>> Could someone take this, please?
->>>
->>> This one introduces regressions, so I cannot take it. It needs some more
->>> work.
->>
->> Please, share with me the errors or warnings you see with this. So, I can
->> have an idea of what is going on. Unfortunately, I don't have access to the
->> test suite or hardware to test this.
-> 
-> I guess it needs more debugging, but the simple answer is that the
-> driver refuse to start streaming with this patch.
+Link: https://github.com/KSPP/linux/issues/115
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+JFYI: We had thousands of these sorts of warnings and now we are down
+      to just 22 in linux-next. This is one of those last remaining
+      warnings.
 
-This patch should fix the problems you are seeing:
+ drivers/scsi/NCR5380.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://lore.kernel.org/linux-hardening/20210604004338.GA140710@embeddedor/
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 8aa964cd54df..3baadd068768 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -1816,7 +1816,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+ 				switch (tmp) {
+ 				case ABORT:
+ 					set_host_byte(cmd, DID_ABORT);
+-					/* fallthrough */
++					fallthrough;
+ 				case COMMAND_COMPLETE:
+ 					/* Accept message by clearing ACK */
+ 					sink = 1;
+-- 
+2.27.0
 
-Could you please help me to test it?
-
-Thanks!
---
-Gustavo
-
-> 
->>
->> Thanks!
->> --
->> Gustavo
->>
->>
->>
->>>>
->>>> Thanks
->>>> --
->>>> Gustavo
->>>>
->>>> On 2/10/21 18:10, Gustavo A. R. Silva wrote:
->>>>> There is a regular need in the kernel to provide a way to declare having
->>>>> a dynamically sized set of trailing elements in a structure. Kernel code
->>>>> should always use “flexible array members”[1] for these cases. The older
->>>>> style of one-element or zero-length arrays should no longer be used[2].
->>>>>
->>>>> Use flexible-array members in struct hfi_msg_sys_property_info_pkt and
->>>>> hfi_msg_session_property_info_pkt instead of one-element arrays.
->>>>>
->>>>> Also, this helps with the ongoing efforts to enable -Warray-bounds by
->>>>> fixing the following warnings:
->>>>>
->>>>>   CC [M]  drivers/media/platform/qcom/venus/hfi_msgs.o
->>>>> drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_sys_property_info’:
->>>>> drivers/media/platform/qcom/venus/hfi_msgs.c:246:35: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
->>>>>   246 |  if (req_bytes < 128 || !pkt->data[1] || pkt->num_properties > 1)
->>>>>       |                          ~~~~~~~~~^~~
->>>>> drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_session_prop_info’:
->>>>> drivers/media/platform/qcom/venus/hfi_msgs.c:342:62: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
->>>>>   342 |  if (!req_bytes || req_bytes % sizeof(*buf_req) || !pkt->data[1])
->>>>>       |                                                     ~~~~~~~~~^~~
->>>>>
->>>>> [1] https://en.wikipedia.org/wiki/Flexible_array_member
->>>>> [2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
->>>>>
->>>>> Link: https://github.com/KSPP/linux/issues/79
->>>>> Link: https://github.com/KSPP/linux/issues/109
->>>>> Build-tested-by: <lkp@intel.com>
->>>>> Link: https://lore.kernel.org/lkml/6023dd80.MmTeFf8SzwX0iK7%2F%25lkp@intel.com/
->>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>>> ---
->>>>>  drivers/media/platform/qcom/venus/hfi_msgs.h | 4 ++--
->>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
->>>>> index 526d9f5b487b..e2d2ccfbdd24 100644
->>>>> --- a/drivers/media/platform/qcom/venus/hfi_msgs.h
->>>>> +++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
->>>>> @@ -113,7 +113,7 @@ struct hfi_msg_sys_ping_ack_pkt {
->>>>>  struct hfi_msg_sys_property_info_pkt {
->>>>>  	struct hfi_pkt_hdr hdr;
->>>>>  	u32 num_properties;
->>>>> -	u32 data[1];
->>>>> +	u32 data[];
->>>>>  };
->>>>>  
->>>>>  struct hfi_msg_session_load_resources_done_pkt {
->>>>> @@ -233,7 +233,7 @@ struct hfi_msg_session_parse_sequence_header_done_pkt {
->>>>>  struct hfi_msg_session_property_info_pkt {
->>>>>  	struct hfi_session_hdr_pkt shdr;
->>>>>  	u32 num_properties;
->>>>> -	u32 data[1];
->>>>> +	u32 data[];
->>>>>  };
->>>>>  
->>>>>  struct hfi_msg_session_release_resources_done_pkt {
->>>>>
->>>
-> 
