@@ -2,90 +2,193 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8DFC47096
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Jun 2021 22:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CE5C47096
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Jun 2021 00:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2894661401
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Jun 2021 22:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36B8613F3
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Jun 2021 00:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230405AbhFCWRQ (ORCPT
+        id S229884AbhFDAoO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Jun 2021 18:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230300AbhFCWRQ (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Jun 2021 18:17:16 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70EFC06175F
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Jun 2021 15:15:15 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d16so5943952pfn.12
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Jun 2021 15:15:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Xlh/oNiO3TZl/popVg/iq16H/seu6puB9V0a6+PnUTA=;
-        b=ii2flrQzSCfBbiKjmatRgjNHRcy4XbdREu4axA/t8CDmXw7J+p7pAHClIv19jO0kjq
-         +scvaH0csxFb6xSmioqJuWkhfeE+B9h5NzZqFeQYUhDFPT9bVbXHUMr31H/9MaDFXX+8
-         oDM9ZLmBLYKXZDlu7Se7l2D+oAWPTtQP2h3kI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Xlh/oNiO3TZl/popVg/iq16H/seu6puB9V0a6+PnUTA=;
-        b=qsYONXehZ+esdapE/BiHUv1U+lBZlvfbiZhbejxZa4K7ohyJ9cQBXPaVzj+G7yHIXO
-         P/pgXHxU52SC4t29yqjzNjtY3TBMd21kI8y72dMiuaHi25sRQ6XOWdyfHO11DKqE7JhL
-         6Bf0AXvHc9x4XPlMLLlpXOaC5ucJutTVJ4ow9CjiOetI9yino907uNPXO9K7fYt/rZvE
-         MaxqOHiEiLVBRvfg6bryOG0QJV6+y330Lrw6IuiVpQRCStatumluBuzH4/AFiRNKuoNu
-         X/Md9M4FOiZG9JmEQdEakkGVjW/qMCfXaJdtor6J01PqqaIay+Xenr+BZskKNFp3U6DV
-         Aozw==
-X-Gm-Message-State: AOAM531TkIfGjNlUB4Uas2KHJOiDwAfcHj3Xjg/LMXejlmuQm2itinTI
-        f7UNhaG03xWFVUIQpkgT3rZpPw==
-X-Google-Smtp-Source: ABdhPJz3UbVmJ50yQ1P/8llEFze5hkwDfxdoPLS+Dr46FFuRdBotkg/2pP/9HTXF3ybsg51Jw2fW3A==
-X-Received: by 2002:a63:d754:: with SMTP id w20mr1648264pgi.5.1622758511958;
-        Thu, 03 Jun 2021 15:15:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j3sm66799pfe.98.2021.06.03.15.15.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jun 2021 15:15:11 -0700 (PDT)
-Date:   Thu, 3 Jun 2021 15:15:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Thu, 3 Jun 2021 20:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229576AbhFDAoO (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 3 Jun 2021 20:44:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1379E613F3;
+        Fri,  4 Jun 2021 00:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622767348;
+        bh=s1rtVTHyXwvAr6F8HGorT4iDlSpFIZ24kdWlERtgjew=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P6dgPKsj2sREfUBkwGL5hIpSpbV+cTTeM7z2OUANyGkTsRq/tiikTfjL9kHnxldPX
+         Sjzy6xLe7pEh5r+ldlyva77/vsglEjerFJ7zhborgKr1kj8EfXF5UtEFkZ95dfiwOP
+         YQXjSrDmBrtFTmPeSBJjrAJTEoT0tY3Nuf50NqxNd0svVPTrnE1eCGqH2Vkxg62j1K
+         ecKckWqLGVcjuSniDyEPe7aScGQeha44vNxyfxG356zfcNqJibA99o7+9IGlcEd3Ak
+         vWCzACZ/ZCc2zk60XJwC2OPQFavkvxn6YxdI/cf4Y7AQ4WPHuKBc767me4zSDTbeji
+         nxNCJcC85n48Q==
+Date:   Thu, 3 Jun 2021 19:43:38 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3][venus-for-next-v5.14] media: venus: hfi_cmds: Fix
- packet size calculation
-Message-ID: <202106031514.BA827D5@keescook>
-References: <20210603001708.GA55239@embeddedor>
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2][next] media: venus: hfi_msgs.h: Replace one-element
+ arrays with flexible-array members
+Message-ID: <20210604004338.GA140710@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210603001708.GA55239@embeddedor>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 07:17:08PM -0500, Gustavo A. R. Silva wrote:
-> Now that a one-element array was replaced with a flexible-array member
-> in struct hfi_sys_set_property_pkt, use the struct_size() helper to
-> correctly calculate the packet size.
-> 
-> Fixes: 701e10b3fd9f ("media: venus: hfi_cmds.h: Replace one-element array with flexible-array member")
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-Thanks for the update!
+Use flexible-array members in struct hfi_msg_sys_property_info_pkt and
+hfi_msg_session_property_info_pkt instead of one-element arrays, and
+refactor the code accordingly.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Also, this helps with the ongoing efforts to enable -Warray-bounds by
+fixing the following warnings:
 
+  CC [M]  drivers/media/platform/qcom/venus/hfi_msgs.o
+drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_sys_property_info’:
+drivers/media/platform/qcom/venus/hfi_msgs.c:246:35: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+  246 |  if (req_bytes < 128 || !pkt->data[1] || pkt->num_properties > 1)
+      |                          ~~~~~~~~~^~~
+drivers/media/platform/qcom/venus/hfi_msgs.c: In function ‘hfi_session_prop_info’:
+drivers/media/platform/qcom/venus/hfi_msgs.c:342:62: warning: array subscript 1 is above array bounds of ‘u32[1]’ {aka ‘unsigned int[1]’} [-Warray-bounds]
+  342 |  if (!req_bytes || req_bytes % sizeof(*buf_req) || !pkt->data[1])
+      |                                                     ~~~~~~~~~^~~
+
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.9/process/deprecated.html#zero-length-and-one-element-arrays
+
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/109
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Fix packet size calculation by adding member _property_ to
+   both structutures hfi_msg_sys_property_info_pkt and
+   hfi_msg_session_property_info_pkt, and refactor the code
+   accordingly.
+
+JFYI: We are about to be able to globally enable -Warray-bounds and,
+these are pretty much the last out-of-bounds warnings in linux-next. :)
+
+ drivers/media/platform/qcom/venus/hfi_msgs.c | 16 ++++++++--------
+ drivers/media/platform/qcom/venus/hfi_msgs.h |  6 ++++--
+ 2 files changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.c b/drivers/media/platform/qcom/venus/hfi_msgs.c
+index a2d436d407b2..d9fde66f6fa8 100644
+--- a/drivers/media/platform/qcom/venus/hfi_msgs.c
++++ b/drivers/media/platform/qcom/venus/hfi_msgs.c
+@@ -251,11 +251,11 @@ sys_get_prop_image_version(struct device *dev,
+ 
+ 	req_bytes = pkt->hdr.size - sizeof(*pkt);
+ 
+-	if (req_bytes < VER_STR_SZ || !pkt->data[1] || pkt->num_properties > 1)
++	if (req_bytes < VER_STR_SZ || !pkt->data[0] || pkt->num_properties > 1)
+ 		/* bad packet */
+ 		return;
+ 
+-	img_ver = (u8 *)&pkt->data[1];
++	img_ver = pkt->data;
+ 
+ 	dev_dbg(dev, VDBGL "F/W version: %s\n", img_ver);
+ 
+@@ -277,7 +277,7 @@ static void hfi_sys_property_info(struct venus_core *core,
+ 		return;
+ 	}
+ 
+-	switch (pkt->data[0]) {
++	switch (pkt->property) {
+ 	case HFI_PROPERTY_SYS_IMAGE_VERSION:
+ 		sys_get_prop_image_version(dev, pkt);
+ 		break;
+@@ -338,7 +338,7 @@ session_get_prop_profile_level(struct hfi_msg_session_property_info_pkt *pkt,
+ 		/* bad packet */
+ 		return HFI_ERR_SESSION_INVALID_PARAMETER;
+ 
+-	hfi = (struct hfi_profile_level *)&pkt->data[1];
++	hfi = (struct hfi_profile_level *)&pkt->data[0];
+ 	profile_level->profile = hfi->profile;
+ 	profile_level->level = hfi->level;
+ 
+@@ -355,11 +355,11 @@ session_get_prop_buf_req(struct hfi_msg_session_property_info_pkt *pkt,
+ 
+ 	req_bytes = pkt->shdr.hdr.size - sizeof(*pkt);
+ 
+-	if (!req_bytes || req_bytes % sizeof(*buf_req) || !pkt->data[1])
++	if (!req_bytes || req_bytes % sizeof(*buf_req) || !pkt->data[0])
+ 		/* bad packet */
+ 		return HFI_ERR_SESSION_INVALID_PARAMETER;
+ 
+-	buf_req = (struct hfi_buffer_requirements *)&pkt->data[1];
++	buf_req = (struct hfi_buffer_requirements *)&pkt->data[0];
+ 	if (!buf_req)
+ 		return HFI_ERR_SESSION_INVALID_PARAMETER;
+ 
+@@ -391,7 +391,7 @@ static void hfi_session_prop_info(struct venus_core *core,
+ 		goto done;
+ 	}
+ 
+-	switch (pkt->data[0]) {
++	switch (pkt->property) {
+ 	case HFI_PROPERTY_CONFIG_BUFFER_REQUIREMENTS:
+ 		memset(hprop->bufreq, 0, sizeof(hprop->bufreq));
+ 		error = session_get_prop_buf_req(pkt, hprop->bufreq);
+@@ -404,7 +404,7 @@ static void hfi_session_prop_info(struct venus_core *core,
+ 	case HFI_PROPERTY_CONFIG_VDEC_ENTROPY:
+ 		break;
+ 	default:
+-		dev_dbg(dev, VDBGM "unknown property id:%x\n", pkt->data[0]);
++		dev_dbg(dev, VDBGM "unknown property id:%x\n", pkt->property);
+ 		return;
+ 	}
+ 
+diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
+index 526d9f5b487b..510513697335 100644
+--- a/drivers/media/platform/qcom/venus/hfi_msgs.h
++++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
+@@ -113,7 +113,8 @@ struct hfi_msg_sys_ping_ack_pkt {
+ struct hfi_msg_sys_property_info_pkt {
+ 	struct hfi_pkt_hdr hdr;
+ 	u32 num_properties;
+-	u32 data[1];
++	u32 property;
++	u8 data[];
+ };
+ 
+ struct hfi_msg_session_load_resources_done_pkt {
+@@ -233,7 +234,8 @@ struct hfi_msg_session_parse_sequence_header_done_pkt {
+ struct hfi_msg_session_property_info_pkt {
+ 	struct hfi_session_hdr_pkt shdr;
+ 	u32 num_properties;
+-	u32 data[1];
++	u32 property;
++	u8 data[];
+ };
+ 
+ struct hfi_msg_session_release_resources_done_pkt {
 -- 
-Kees Cook
+2.27.0
+
