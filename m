@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70597C47082
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Jun 2021 20:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDE5C47082
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Jun 2021 20:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F0A61153
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Jun 2021 20:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6F061185
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Jun 2021 20:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230422AbhFGUdF (ORCPT
+        id S230299AbhFGUuJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Jun 2021 16:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51894 "EHLO mail.kernel.org"
+        Mon, 7 Jun 2021 16:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230251AbhFGUdE (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Jun 2021 16:33:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2AF6D61139;
-        Mon,  7 Jun 2021 20:31:12 +0000 (UTC)
+        id S230209AbhFGUuJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 7 Jun 2021 16:50:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DF14E61139;
+        Mon,  7 Jun 2021 20:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623097872;
-        bh=pPJBqBlQGXvfAld1PUvVv5IJNwFjE/rO5W6JlS1cXrU=;
+        s=k20201202; t=1623098897;
+        bh=0Uu85hNllNvsWDHLgq688UcbjPL6TiTRY2bV7a76cWU=;
         h=Date:From:To:Cc:Subject:From;
-        b=kODygim17HTj9MZtf/1L5Umw+L256UX+5IukHOU8+Imp1NX53aO03JrJSGiruIBKN
-         jHjTGGJ97JPUg9Zojj4T8J1O/yo4QKhjqDLJY0chP71mjYCm1LwJzGxgGp9okUq2pM
-         TVVnIPzZig4viPX2cNfav+KGBs74T84oR4jNdF75Yg35V5/CRkgGfW6Eu8RdF4Bs9p
-         1xrcA6TyrFX2YPj/Z7i8XWoZm4ed+I34rjgVeI/pB3Fabp/M6w2mBnMWm7yw0soHVf
-         VIt0gRAPF9M+zNenNQaXXn4gr7TGaR5VBb5t1hH3/3GAAfK8+eIxS1Ry0hu2QZ4hR1
-         oah4RLjVBy4Ng==
-Date:   Mon, 7 Jun 2021 15:32:29 -0500
+        b=KVK5+llGnjv9NuHyJne9Bor9u8aK/MI8MXgKCySUCnnNo69xjXI1hzlnaJwgV+9fM
+         ZxA8qt9/mGcHQ6eyvJsnFyHFWdriCsUw6hV6pc4t1cpmtMVUI6hgcfsop9GYtIh+AF
+         +pDj49cdbmsCrKKO7k0s13Wk63vnRW22hWEyBEsNVS6klpr6LS/gULtlLcCxU1FCbj
+         1cv1wCESkXy+poh0o77cvcqCIH3skj42YwkKkROZWD0BIm6sWl1By11sa72a8PQ7Jt
+         Zk5KgkkgusQw9OVFqVsfIRXYMMyhnIxUdHP5yeCBiNt1jPbwK3kkT8AzP7DWwMKH4l
+         o7TjqjO7LqDXA==
+Date:   Mon, 7 Jun 2021 15:49:34 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH][next] drm/i915/gem: Fix fall-through warning for Clang
-Message-ID: <20210607203229.GA60476@embeddedor>
+Subject: [PATCH][next] ima: Fix fall-through warning for Clang
+Message-ID: <20210607204934.GA63263@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -53,7 +53,8 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation to enable -Wimplicit-fallthrough for Clang, fix a
-warning by explicitly adding a fallthrough; statement.
+fall-through warning by explicitly adding a break statement instead
+of just letting the code fall through to the next case.
 
 Link: https://github.com/KSPP/linux/issues/115
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -62,20 +63,20 @@ JFYI: We had thousands of these sorts of warnings and now we are down
       to just 13 in linux-next(20210607). This is one of those last
       remaining warnings. :)
 
- drivers/gpu/drm/i915/gem/i915_gem_shrinker.c | 1 +
+ security/integrity/ima/ima_template_lib.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shrinker.c b/drivers/gpu/drm/i915/gem/i915_gem_shrinker.c
-index f4fb68e8955a..17714da24033 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_shrinker.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_shrinker.c
-@@ -62,6 +62,7 @@ static void try_to_writeback(struct drm_i915_gem_object *obj,
- 	switch (obj->mm.madv) {
- 	case I915_MADV_DONTNEED:
- 		i915_gem_object_truncate(obj);
-+		fallthrough;
- 	case __I915_MADV_PURGED:
- 		return;
+diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+index 518fd50ea48a..8f96247b4a5c 100644
+--- a/security/integrity/ima/ima_template_lib.c
++++ b/security/integrity/ima/ima_template_lib.c
+@@ -119,6 +119,7 @@ static void ima_show_template_data_ascii(struct seq_file *m,
+ 		default:
+ 			break;
+ 		}
++		break;
+ 	default:
+ 		break;
  	}
 -- 
 2.27.0
