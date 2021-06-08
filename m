@@ -2,70 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E71C47082
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 16:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0591BC4743E
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 17:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3BF6127A
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 16:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF2D6127A
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 17:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbhFHQ7f (ORCPT
+        id S233606AbhFHREr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Jun 2021 12:59:35 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:57276 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231503AbhFHQ7f (ORCPT
+        Tue, 8 Jun 2021 13:04:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232971AbhFHREq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Jun 2021 12:59:35 -0400
-X-Greylist: delayed 321 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Jun 2021 12:59:34 EDT
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.2.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 2237F20002B;
-        Tue,  8 Jun 2021 16:52:20 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 64253210DA; Tue,  8 Jun 2021 18:50:56 +0200 (CEST)
-Date:   Tue, 8 Jun 2021 18:50:56 +0200
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     keescook@chromium.org, andreyknvl@google.com
-Cc:     linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        tglx@linutronix.de, glider@google.com, vbabka@suse.cz
-Subject: regresion v5.13-rc1+ - page_poison broken since 51cba1ebc60d
-Message-ID: <YL+f8LKmLOb4iSeq@light.dominikbrodowski.net>
+        Tue, 8 Jun 2021 13:04:46 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA029C061789
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Jun 2021 10:02:38 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id g4so2819453pjk.0
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Jun 2021 10:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4usFl7sIsVthQj7CAaTLNOirYn+9w5CcbbsPb6gzTZs=;
+        b=JlUf729Lw0qh8gpM+lacYrwI/BZHfR8iaIh6HWob68cqLRbEOcHJt9U9t2YgpQU93j
+         5p+//oTnvpy2Z43uQrbn65F8sQfCvpsHOcdByFr2F9G3lB39uVlA7OfOv5iL0bwRwVfq
+         YTTgYWPVApdUTu3XoW2nGATAhWdVzSTq61Bg8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4usFl7sIsVthQj7CAaTLNOirYn+9w5CcbbsPb6gzTZs=;
+        b=Ub29LkppA9KkptYs91GqUXDXYEN0iLc7N69qDDovhnoox/zPr8mzik9rQ4ljawR/DX
+         DXl1WCjyz+AufG6Xcq0JX7i/swAjgBUMMB1Ri7iZ01x765U1MgKokTcvflgWzfFujdLU
+         AESggjUMGXg2GTBwYeHPPJ80srYvnUTVN5f9X9QkTyEs9Rbl5Iv47Fhs88rrxYSOx7JW
+         zuj6XZki6cMQxOKroX1OqWwRNbm/d+XiLZ6rnN6cLQcp4c81Vgzj7/547+MbNZmgyPe7
+         t3zXs/dHc928FRQuhpyK+OkhksgL8seIs2qunOKYuc2fLj0CUs13dIoq/4+BZDoQvFxi
+         UMkA==
+X-Gm-Message-State: AOAM530sT7iwZvjplgGF6dLOwCxcypRxDEPSU13RKcYJmJ+ckE+Iqjg9
+        nLLLgQGWM/b2cVZedfFfAeoyPA==
+X-Google-Smtp-Source: ABdhPJxaSatIHX/sZrfjfZA+xFPKOXe2WFUxGqcRbH4r+NdC1vX/iNz1cah9e+xIGvpANxz9gqGpmQ==
+X-Received: by 2002:a17:90a:b28d:: with SMTP id c13mr5823656pjr.80.1623171757403;
+        Tue, 08 Jun 2021 10:02:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w2sm11476540pfc.126.2021.06.08.10.02.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Jun 2021 10:02:36 -0700 (PDT)
+Date:   Tue, 8 Jun 2021 10:02:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ima: Fix fall-through warning for Clang
+Message-ID: <202106081002.252C11321F@keescook>
+References: <20210607204934.GA63263@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20210607204934.GA63263@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees, Andrey,
+On Mon, Jun 07, 2021 at 03:49:34PM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a
+> fall-through warning by explicitly adding a break statement instead
+> of just letting the code fall through to the next case.
+> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> JFYI: We had thousands of these sorts of warnings and now we are down
+>       to just 13 in linux-next(20210607). This is one of those last
+>       remaining warnings. :)
 
-a "git bisect" points to commit 51cba1ebc60d ("init_on_alloc: Optimize
-static branches") as breaking page poisoning ("page_poison=on"). Starting
-with this commit, booting -- with this option enabled on the kernel command
-line -- hangs quite early, before anything meaningful is printed. Booting
-51cba1ebc60d without this option proceeds just fine.
+Looks right to me; thanks!
 
-Since 1bb5eab30d68 ("kasan, mm: integrate page_alloc init with HW_TAGS") the
-behaviour becomes different: Since that commit, booting with
-"page_poison=on" and "slub_debug=P" continues up to the initramfs
-stage, but then fails quite spectacularly with a large number of page
-poisonings being reported.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-While "page_poision=on slub_debug=P" doesn't seem to be necessary any longer
-if CONFIG_INIT_ON_ALLOC_DEFAULT_ON and CONFIG_INIT_ON_FREE_DEFAULT_ON are
-enabled[*], this still looks like a regression.
+> 
+>  security/integrity/ima/ima_template_lib.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+> index 518fd50ea48a..8f96247b4a5c 100644
+> --- a/security/integrity/ima/ima_template_lib.c
+> +++ b/security/integrity/ima/ima_template_lib.c
+> @@ -119,6 +119,7 @@ static void ima_show_template_data_ascii(struct seq_file *m,
+>  		default:
+>  			break;
+>  		}
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> -- 
+> 2.27.0
+> 
 
-Thanks,
-	Dominik
-
-[*] https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
+-- 
+Kees Cook
