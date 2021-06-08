@@ -2,115 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0591BC4743E
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 17:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB246C47082
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 23:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAF2D6127A
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 17:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B694A61178
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 23:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233606AbhFHREr (ORCPT
+        id S231830AbhFHXVj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Jun 2021 13:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
+        Tue, 8 Jun 2021 19:21:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232971AbhFHREq (ORCPT
+        with ESMTP id S234389AbhFHXVj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Jun 2021 13:04:46 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA029C061789
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Jun 2021 10:02:38 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id g4so2819453pjk.0
-        for <linux-hardening@vger.kernel.org>; Tue, 08 Jun 2021 10:02:38 -0700 (PDT)
+        Tue, 8 Jun 2021 19:21:39 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F724C061574
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Jun 2021 16:19:34 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id u126so12939048pfu.13
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Jun 2021 16:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=4usFl7sIsVthQj7CAaTLNOirYn+9w5CcbbsPb6gzTZs=;
-        b=JlUf729Lw0qh8gpM+lacYrwI/BZHfR8iaIh6HWob68cqLRbEOcHJt9U9t2YgpQU93j
-         5p+//oTnvpy2Z43uQrbn65F8sQfCvpsHOcdByFr2F9G3lB39uVlA7OfOv5iL0bwRwVfq
-         YTTgYWPVApdUTu3XoW2nGATAhWdVzSTq61Bg8=
+        bh=UYnHXpjkxY6uN8Q/wAdT4oZuTb3kldbBA0o55ZnXLbI=;
+        b=VDGAYt9zeOJIjafEo+B67uPbBGKQhrSGnf7Qo9Ch6H/mTASRST0oDv92Nf7ui6OeS8
+         iB3NOQV0MMtCh2uBcA+Npibc6zFdC9xeu4KT1yRo8M0w7oGssOjX8MMlaVOz2EjWKrbi
+         wCpTzbJv8yEONP8oFpas7EKEl1l7Ccqy2QOmo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=4usFl7sIsVthQj7CAaTLNOirYn+9w5CcbbsPb6gzTZs=;
-        b=Ub29LkppA9KkptYs91GqUXDXYEN0iLc7N69qDDovhnoox/zPr8mzik9rQ4ljawR/DX
-         DXl1WCjyz+AufG6Xcq0JX7i/swAjgBUMMB1Ri7iZ01x765U1MgKokTcvflgWzfFujdLU
-         AESggjUMGXg2GTBwYeHPPJ80srYvnUTVN5f9X9QkTyEs9Rbl5Iv47Fhs88rrxYSOx7JW
-         zuj6XZki6cMQxOKroX1OqWwRNbm/d+XiLZ6rnN6cLQcp4c81Vgzj7/547+MbNZmgyPe7
-         t3zXs/dHc928FRQuhpyK+OkhksgL8seIs2qunOKYuc2fLj0CUs13dIoq/4+BZDoQvFxi
-         UMkA==
-X-Gm-Message-State: AOAM530sT7iwZvjplgGF6dLOwCxcypRxDEPSU13RKcYJmJ+ckE+Iqjg9
-        nLLLgQGWM/b2cVZedfFfAeoyPA==
-X-Google-Smtp-Source: ABdhPJxaSatIHX/sZrfjfZA+xFPKOXe2WFUxGqcRbH4r+NdC1vX/iNz1cah9e+xIGvpANxz9gqGpmQ==
-X-Received: by 2002:a17:90a:b28d:: with SMTP id c13mr5823656pjr.80.1623171757403;
-        Tue, 08 Jun 2021 10:02:37 -0700 (PDT)
+        bh=UYnHXpjkxY6uN8Q/wAdT4oZuTb3kldbBA0o55ZnXLbI=;
+        b=EJP++yXUhhE0sABOR8ootpw8PinLLkkQeEs6xDjixyu8YED66z1Um/QJyQTYBQDtXJ
+         G5hhtTM5m8X3Gv3GWTUw+IqCxKFZoUvf0mfFxDzH0n8xywBZNU29e1DYkH/k9eQKCheh
+         Q4xSaBhxj4IEteCZ5reJI2qxRnT0Tzz27HFLvdyScv9I0VIOmoAzQyAWErCYJBBNS10g
+         FypoVLGnT81EhtWcNuANgtWSEGbXdfmYDZV7aLXl3HDUu63O+preBrAY1bUwbbQa2pqd
+         PoUaCuCutcIappYTpoa1WX9xzMQ6JLO+rNer84P6lY8C8tnIIBama5LZsDiTwNa9l8c7
+         I8Kg==
+X-Gm-Message-State: AOAM530moTyLHE4PnIBFu7hTihi/LhkqsRTlJy3cDXkjb5GRo031iC9T
+        jGG74tRwwubVg0rigUpIO3KvYQ==
+X-Google-Smtp-Source: ABdhPJy13j1j0ODNi7LI1+2LKQunbW8Wx/i0jcdBN55+DupC2NcBqv+Cq0yP0XhoUlI386xpojybKg==
+X-Received: by 2002:a62:be03:0:b029:2e9:fe8c:effe with SMTP id l3-20020a62be030000b02902e9fe8ceffemr2325280pff.34.1623194373956;
+        Tue, 08 Jun 2021 16:19:33 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w2sm11476540pfc.126.2021.06.08.10.02.36
+        by smtp.gmail.com with ESMTPSA id m2sm16400257pjf.24.2021.06.08.16.19.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 10:02:36 -0700 (PDT)
-Date:   Tue, 8 Jun 2021 10:02:35 -0700
+        Tue, 08 Jun 2021 16:19:32 -0700 (PDT)
+Date:   Tue, 8 Jun 2021 16:19:31 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+To:     John Wood <john.wood@gmx.com>
+Cc:     Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
         James Morris <jmorris@namei.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-integrity@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>, Andi Kleen <ak@linux.intel.com>,
+        valdis.kletnieks@vt.edu,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ima: Fix fall-through warning for Clang
-Message-ID: <202106081002.252C11321F@keescook>
-References: <20210607204934.GA63263@embeddedor>
+        linux-kselftest@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v8 0/8] Fork brute force attack mitigation
+Message-ID: <202106081616.EC17DC1D0D@keescook>
+References: <20210605150405.6936-1-john.wood@gmx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210607204934.GA63263@embeddedor>
+In-Reply-To: <20210605150405.6936-1-john.wood@gmx.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jun 07, 2021 at 03:49:34PM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a
-> fall-through warning by explicitly adding a break statement instead
-> of just letting the code fall through to the next case.
-> 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> JFYI: We had thousands of these sorts of warnings and now we are down
->       to just 13 in linux-next(20210607). This is one of those last
->       remaining warnings. :)
+On Sat, Jun 05, 2021 at 05:03:57PM +0200, John Wood wrote:
+> [...]
+> the kselftest to avoid the detection ;) ). So, in this version, to track
+> all the statistical data (info related with application crashes), the
+> extended attributes feature for the executable files are used. The xattr is
+> also used to mark the executables as "not allowed" when an attack is
+> detected. Then, the execve system call rely on this flag to avoid following
+> executions of this file.
 
-Looks right to me; thanks!
+I have some concerns about this being actually usable and not creating
+DoS situations. For example, let's say an attacker had found a hard-to-hit
+bug in "sudo", and starts brute forcing it. When the brute LSM notices,
+it'll make "sudo" unusable for the entire system, yes?
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+And a reboot won't fix it, either, IIUC.
 
-> 
->  security/integrity/ima/ima_template_lib.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-> index 518fd50ea48a..8f96247b4a5c 100644
-> --- a/security/integrity/ima/ima_template_lib.c
-> +++ b/security/integrity/ima/ima_template_lib.c
-> @@ -119,6 +119,7 @@ static void ima_show_template_data_ascii(struct seq_file *m,
->  		default:
->  			break;
->  		}
-> +		break;
->  	default:
->  		break;
->  	}
-> -- 
-> 2.27.0
-> 
+It seems like there is a need to track "user" running "prog", and have
+that be timed out. Are there use-cases here where that wouldn't be
+sufficient?
+
+-Kees
 
 -- 
 Kees Cook
