@@ -2,61 +2,38 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB246C47082
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 23:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB549C4743F
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 23:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B694A61178
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 23:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D37E61185
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Jun 2021 23:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231830AbhFHXVj (ORCPT
+        id S235069AbhFHXkN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Jun 2021 19:21:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234389AbhFHXVj (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Jun 2021 19:21:39 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F724C061574
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Jun 2021 16:19:34 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id u126so12939048pfu.13
-        for <linux-hardening@vger.kernel.org>; Tue, 08 Jun 2021 16:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UYnHXpjkxY6uN8Q/wAdT4oZuTb3kldbBA0o55ZnXLbI=;
-        b=VDGAYt9zeOJIjafEo+B67uPbBGKQhrSGnf7Qo9Ch6H/mTASRST0oDv92Nf7ui6OeS8
-         iB3NOQV0MMtCh2uBcA+Npibc6zFdC9xeu4KT1yRo8M0w7oGssOjX8MMlaVOz2EjWKrbi
-         wCpTzbJv8yEONP8oFpas7EKEl1l7Ccqy2QOmo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UYnHXpjkxY6uN8Q/wAdT4oZuTb3kldbBA0o55ZnXLbI=;
-        b=EJP++yXUhhE0sABOR8ootpw8PinLLkkQeEs6xDjixyu8YED66z1Um/QJyQTYBQDtXJ
-         G5hhtTM5m8X3Gv3GWTUw+IqCxKFZoUvf0mfFxDzH0n8xywBZNU29e1DYkH/k9eQKCheh
-         Q4xSaBhxj4IEteCZ5reJI2qxRnT0Tzz27HFLvdyScv9I0VIOmoAzQyAWErCYJBBNS10g
-         FypoVLGnT81EhtWcNuANgtWSEGbXdfmYDZV7aLXl3HDUu63O+preBrAY1bUwbbQa2pqd
-         PoUaCuCutcIappYTpoa1WX9xzMQ6JLO+rNer84P6lY8C8tnIIBama5LZsDiTwNa9l8c7
-         I8Kg==
-X-Gm-Message-State: AOAM530moTyLHE4PnIBFu7hTihi/LhkqsRTlJy3cDXkjb5GRo031iC9T
-        jGG74tRwwubVg0rigUpIO3KvYQ==
-X-Google-Smtp-Source: ABdhPJy13j1j0ODNi7LI1+2LKQunbW8Wx/i0jcdBN55+DupC2NcBqv+Cq0yP0XhoUlI386xpojybKg==
-X-Received: by 2002:a62:be03:0:b029:2e9:fe8c:effe with SMTP id l3-20020a62be030000b02902e9fe8ceffemr2325280pff.34.1623194373956;
-        Tue, 08 Jun 2021 16:19:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m2sm16400257pjf.24.2021.06.08.16.19.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 16:19:32 -0700 (PDT)
-Date:   Tue, 8 Jun 2021 16:19:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     John Wood <john.wood@gmx.com>
+        Tue, 8 Jun 2021 19:40:13 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25117 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234187AbhFHXkM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 8 Jun 2021 19:40:12 -0400
+IronPort-SDR: PhVfYU3yM+kKGfCbOtWah/c4y+TTHybZCU1QC/l4xGNJS9Tsdqv4F+Y9vh4yf7pt76JsfAyJ2U
+ O3AYQrc9uweQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10009"; a="203113719"
+X-IronPort-AV: E=Sophos;i="5.83,259,1616482800"; 
+   d="scan'208";a="203113719"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2021 16:38:16 -0700
+IronPort-SDR: pE4bdvjF0J9Yr2v3Y5b0EYAhXyF61Gs96zOXtSka7ND8veuaNykb0Auifm2a4kdYM6xKQUkwk/
+ irwRg3JJ0msA==
+X-IronPort-AV: E=Sophos;i="5.83,259,1616482800"; 
+   d="scan'208";a="551784529"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.209.24.11]) ([10.209.24.11])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2021 16:38:15 -0700
+Subject: Re: [PATCH v8 0/8] Fork brute force attack mitigation
+To:     Kees Cook <keescook@chromium.org>, John Wood <john.wood@gmx.com>
 Cc:     Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
         James Morris <jmorris@namei.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
@@ -64,8 +41,7 @@ Cc:     Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>, Andi Kleen <ak@linux.intel.com>,
-        valdis.kletnieks@vt.edu,
+        Arnd Bergmann <arnd@arndb.de>, valdis.kletnieks@vt.edu,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -74,38 +50,44 @@ Cc:     Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
         linux-kselftest@vger.kernel.org, linux-arch@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v8 0/8] Fork brute force attack mitigation
-Message-ID: <202106081616.EC17DC1D0D@keescook>
 References: <20210605150405.6936-1-john.wood@gmx.com>
+ <202106081616.EC17DC1D0D@keescook>
+From:   Andi Kleen <ak@linux.intel.com>
+Message-ID: <cbfd306b-6e37-a697-ebdb-4a5029d36583@linux.intel.com>
+Date:   Tue, 8 Jun 2021 16:38:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210605150405.6936-1-john.wood@gmx.com>
+In-Reply-To: <202106081616.EC17DC1D0D@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Jun 05, 2021 at 05:03:57PM +0200, John Wood wrote:
-> [...]
-> the kselftest to avoid the detection ;) ). So, in this version, to track
-> all the statistical data (info related with application crashes), the
-> extended attributes feature for the executable files are used. The xattr is
-> also used to mark the executables as "not allowed" when an attack is
-> detected. Then, the execve system call rely on this flag to avoid following
-> executions of this file.
 
-I have some concerns about this being actually usable and not creating
-DoS situations. For example, let's say an attacker had found a hard-to-hit
-bug in "sudo", and starts brute forcing it. When the brute LSM notices,
-it'll make "sudo" unusable for the entire system, yes?
+On 6/8/2021 4:19 PM, Kees Cook wrote:
+> On Sat, Jun 05, 2021 at 05:03:57PM +0200, John Wood wrote:
+>> [...]
+>> the kselftest to avoid the detection ;) ). So, in this version, to track
+>> all the statistical data (info related with application crashes), the
+>> extended attributes feature for the executable files are used. The xattr is
+>> also used to mark the executables as "not allowed" when an attack is
+>> detected. Then, the execve system call rely on this flag to avoid following
+>> executions of this file.
+> I have some concerns about this being actually usable and not creating
+> DoS situations. For example, let's say an attacker had found a hard-to-hit
+> bug in "sudo", and starts brute forcing it. When the brute LSM notices,
+> it'll make "sudo" unusable for the entire system, yes?
+>
+> And a reboot won't fix it, either, IIUC.
+>
+The whole point of the mitigation is to trade potential attacks against DOS.
 
-And a reboot won't fix it, either, IIUC.
+If you're worried about DOS the whole thing is not for you.
 
-It seems like there is a need to track "user" running "prog", and have
-that be timed out. Are there use-cases here where that wouldn't be
-sufficient?
+-Andi
 
--Kees
 
--- 
-Kees Cook
+
