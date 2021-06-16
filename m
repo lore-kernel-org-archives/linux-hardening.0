@@ -2,92 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4933C48BE5
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6D8C48BE6
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980CE613C7
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3D060FF4
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233112AbhFPUNK (ORCPT
+        id S233266AbhFPUUf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Jun 2021 16:13:10 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41348 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231547AbhFPUM4 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Jun 2021 16:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=BfYsI7z39PAUGQ/stOp0Qiw8/9pQyWAMWRq2/aFB2ak=; b=L4sF/Wno662v7Y6vzpw+7OVeV2
-        vMP6R4N/JxVgUL0oWg1IWFiirSCJ2Ug27prlBC5YEDbupnb1MGqUiHg4EZNC2edR3QKSMK4lH4qo0
-        gRtHhPBBRgaJBhqN7mP85MJX/A33HCRi4ZVmVL9lx7uO+41JFYN9CZ6nSg2D/5jEQlTY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ltbs0-009m1A-A9; Wed, 16 Jun 2021 22:10:40 +0200
-Date:   Wed, 16 Jun 2021 22:10:40 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hayes Wang <hayeswang@realtek.com>,
-        Lee Jones <lee.jones@linaro.org>, EJ Hsu <ejh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Wed, 16 Jun 2021 16:20:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233255AbhFPUUe (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 16 Jun 2021 16:20:34 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A228FC061760
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 13:18:26 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id s14so3112835pfd.9
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 13:18:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ENcTAx1+EcPab9VvytuBkxLny+10kPvSLUe64LidxdQ=;
+        b=WiJb+wIGnlurv+4H8fQ+LNqceh747H/iS8/ddDHb8RXs0QrPh64CvyuhKeDIdbSZpV
+         bOT+gLasC9PAqK6XbSRIaDJ9Y7PxN4oXKdKFuJmy4vjX+ziiSkuXtP6/+hO4GRuudVCH
+         EDZixhsEtKuwCb81WXNcHQPfDxz/FgeyUQXo4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ENcTAx1+EcPab9VvytuBkxLny+10kPvSLUe64LidxdQ=;
+        b=sHbtr1K80BHC75tiG9bSNphGJfngoyjuT11YTZy0lBq2EIjSsLD4AuEdzzX3raE+JX
+         qvGImgv4qO2ZZdCoZmLCSV2a8YKJ2IG9bd1Xpp0XivQp1+SJnxhDfxDDmtA9ue0glCB+
+         AF5c1zMwUYalOchJ/8QhJ6gahnjHYGNpq5UYM42J9+C5iPqzvaMwblgy43tBCoRnGoXN
+         dGDKdvoK8NDPgYsXwahFlExKaMDbPYMwog0hnWBhbmbiQNccUZk9xcc+RanFTWf+V4Ex
+         XSv0uj97+VBTChySKrTT4S2vRK/iSt15lEeB9b0t0i+B39fPU7Q0QC0CCXoT5lQVJxqD
+         ygOg==
+X-Gm-Message-State: AOAM5313O7BGwQPWqR1M7lXRSBvmAdDuoRqRWseIZ0FYilz1z4YutzFN
+        NQS4ALm+lhHUQptYOHmPcS8dDw==
+X-Google-Smtp-Source: ABdhPJxJXoNLJNPVD/BDos5tH8MG8XXv2KfMC8Gw7X3jsaO48fFygMTufgOap4HYcAorEZqiwVSTUg==
+X-Received: by 2002:aa7:9a50:0:b029:2e9:a536:c4f0 with SMTP id x16-20020aa79a500000b02902e9a536c4f0mr1486497pfj.5.1623874706170;
+        Wed, 16 Jun 2021 13:18:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l12sm2811933pff.105.2021.06.16.13.18.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Jun 2021 13:18:25 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] r8152: Avoid memcpy() over-reading of ETH_SS_STATS
-Message-ID: <YMpawKzzect5nqs9@lunn.ch>
-References: <20210616195303.1231429-1-keescook@chromium.org>
- <YMpY49PLAyObVxC4@lunn.ch>
+Subject: [PATCH] s390/speculation: Use statically initialized const for instructions
+Date:   Wed, 16 Jun 2021 13:18:23 -0700
+Message-Id: <20210616201823.1245603-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YMpY49PLAyObVxC4@lunn.ch>
+X-Patch-Hashes: v=1; h=sha256; g=a7efa10bf74410da3d723823c01a21cb7719ac72; i=0EJdiCO/sZbZCBfXSQAnM+hJ3BSDIu+0E7SNvnsr1Uw=; m=5FhAIifPI+dYPrslVAUOeGdnxZTyWY2lqLeWsSo/HBg=; p=pzb0+IfaYNnb577lCHX4XoK00ch1a0s2NZRs99V638o=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDKXI4ACgkQiXL039xtwCbagBAAjg+ 2FPDcEj+98as41P97H8JzfPrDikMwwmT9fIza8v1hc5o/MoU7LMRBDYfN7hxPAecO1FI+g81xscyE 0+4M+nfN11I78iH/RVuXJPG01xutEahxwzplV2phTKv/EipRvUwtD32BALG6c/p9IZpluCFuw8t4U iaF1bGdBwFlRgvUM0OhKgLbQ4Qa7jDdPJbj2N2X8gQiCDm6HWn7vIVtHRZmE6QZRl36KD+DmPxlJD GtxKQMfQ5Crk34O1Dneyk8xNYwxLAzllBtFHf2fM7Bz3QahNqYVwq0MtQRZaPJHGpi152wnArP4Ab jko4+W3/y0FmzFDyQCRMPocr0opF5vAc75zzpw1N/wAOrN6qKaiuBCeUzy4wGWAiXZy9cyuqbfRkC 6Lra/zcvwchjeGkDkb+Ljr4mFqxPQuvi3vpZy0YRtrZG0GmKpLcfP/Kzc1/e9letFMIZ8FsGGoZit lh04A5WbfQGcRCxcEAO/tyF6M3qpAS4A8UF1Sak6XHMSU03FmHLUChgcBR4qNO17tehsGkFKa2RUl enuHuUUz9VethESRmN9Zi+grMhDPQ6efbk2VTDgIUBQvT+mnPjIg6kGn1qQrGeLsBgJx09yAs1Asx +k6L4NCoVoo0hRyn1jpCr/IdVMImeHDj3TRzxUW5G1NjVDaGXfIXb4m9d/OsNGGA=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 10:02:43PM +0200, Andrew Lunn wrote:
-> On Wed, Jun 16, 2021 at 12:53:03PM -0700, Kees Cook wrote:
-> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > field bounds checking for memcpy(), memmove(), and memset(), avoid
-> > intentionally reading across neighboring array fields.
-> > 
-> > The memcpy() is copying the entire structure, not just the first array.
-> > Adjust the source argument so the compiler can do appropriate bounds
-> > checking.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  drivers/net/usb/r8152.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> > index 85039e17f4cd..5f08720bf1c9 100644
-> > --- a/drivers/net/usb/r8152.c
-> > +++ b/drivers/net/usb/r8152.c
-> > @@ -8678,7 +8678,7 @@ static void rtl8152_get_strings(struct net_device *dev, u32 stringset, u8 *data)
-> >  {
-> >  	switch (stringset) {
-> >  	case ETH_SS_STATS:
-> > -		memcpy(data, *rtl8152_gstrings, sizeof(rtl8152_gstrings));
-> > +		memcpy(data, rtl8152_gstrings, sizeof(rtl8152_gstrings));
-> >  		break;
-> 
-> Is this correct? The call is supposed to return all the statistic
-> strings, which would be the entire structure.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+confusing the checks when using a static const source.
 
-Ah! now i think i get it.
+Move the static const array into a variable so the compiler can perform
+appropriate bounds checking.
 
-Although *rtl8152_gstrings == rtl8152_gstrings in terms of addresses,
-the compiler sees that *rtl8152_gstrings is sizeof(ETH_GSTRING_LEN),
-but we are copying sizeof(rtl8152_gstrings), so it will issue a
-warning. So you remove the * to indicate we are interesting in the
-whole structure of arrays.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/s390/kernel/nospec-branch.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-      Andrew
+diff --git a/arch/s390/kernel/nospec-branch.c b/arch/s390/kernel/nospec-branch.c
+index 2c5c3756644b..250e4dbf653c 100644
+--- a/arch/s390/kernel/nospec-branch.c
++++ b/arch/s390/kernel/nospec-branch.c
+@@ -99,6 +99,7 @@ early_param("spectre_v2", spectre_v2_setup_early);
+ static void __init_or_module __nospec_revert(s32 *start, s32 *end)
+ {
+ 	enum { BRCL_EXPOLINE, BRASL_EXPOLINE } type;
++	static const u8 branch[] = { 0x47, 0x00, 0x07, 0x00 };
+ 	u8 *instr, *thunk, *br;
+ 	u8 insnbuf[6];
+ 	s32 *epo;
+@@ -128,7 +129,7 @@ static void __init_or_module __nospec_revert(s32 *start, s32 *end)
+ 		if ((br[0] & 0xbf) != 0x07 || (br[1] & 0xf0) != 0xf0)
+ 			continue;
+ 
+-		memcpy(insnbuf + 2, (char[]) { 0x47, 0x00, 0x07, 0x00 }, 4);
++		memcpy(insnbuf + 2, branch, sizeof(branch));
+ 		switch (type) {
+ 		case BRCL_EXPOLINE:
+ 			insnbuf[0] = br[0];
+-- 
+2.25.1
+
