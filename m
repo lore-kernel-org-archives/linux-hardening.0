@@ -2,162 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-21.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A633BC48BE8
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE80C48BE6
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E55961076
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA996128C
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233620AbhFPUmC (ORCPT
+        id S233713AbhFPUwo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Jun 2021 16:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233608AbhFPUmB (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Jun 2021 16:42:01 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51F09C061574
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 13:39:55 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id p4-20020a17090a9304b029016f3020d867so416584pjo.3
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 13:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SmhdhmsA0X75weRybbZNoVh+EvQd+Iz0Fl+AidPXRmE=;
-        b=Vh7QJ+xnoo0RqR0VyML2hyVWCrhNzuAsvU1JJgd7G8QEQltjCNvn+cChGunibWPm6J
-         6owMLGuymcCRj8MsFtQn+PgGer4z3Er9UtFUsuNBe7FqlMxDIMoSJiMwACAOEg1ufilL
-         8IcOd3EzsrnBef974H6rlM6Iq1UcxiBBF0x8I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SmhdhmsA0X75weRybbZNoVh+EvQd+Iz0Fl+AidPXRmE=;
-        b=EbtwA8Za+CYzDfCcpMrFHi1zJVLPJ6YnfIWf4ZYNz0075JXY9MFsxGC9ZdtzkzLYRn
-         ZlPeUavqnFRDHsvyOX0xAmi7DXDCZy/i0+kJg7hcdS4616RM6plNrZnpEG0So1i/wCfI
-         3/0x/5aXdb793m5qNjyjoG3Qi8caKuarojGeP4FgBRabipjtJL1zUHaeub2RJZadbY6j
-         JFzDDCqkg5IfIfVoloZKSSfZxTxwrJvz1c8ceEmCHBIE5oPfQTqxSiCWoVReMC0OTAf5
-         tULBG3uRGWYdydNvAy8uM6dav1N+c3+l2XgVzrtHVVjxS/1QdI9cEReHyDUv8pI7jon9
-         MT3A==
-X-Gm-Message-State: AOAM5330S9OI0APnBDyzZ+6CLmO0ezwWbMDLZbRoLxHK7ywW9VY37ZML
-        aIV/Z317uIBd2u54NB4uUEKLNkf7hia+Nw==
-X-Google-Smtp-Source: ABdhPJzrVDeH8lypdMacFxkxdycYjzThxIc72HqgLirIbDGhLTUlwbwroCrVf81eN8/yxl8nHgx/eg==
-X-Received: by 2002:a17:90a:b284:: with SMTP id c4mr1722095pjr.213.1623875994939;
-        Wed, 16 Jun 2021 13:39:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j7sm7866009pjf.0.2021.06.16.13.39.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 13:39:54 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Wed, 16 Jun 2021 16:52:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233711AbhFPUwn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 16 Jun 2021 16:52:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 79C5461076;
+        Wed, 16 Jun 2021 20:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623876637;
+        bh=KkBcxHtMW6CBQsdymw0nRgRZKWfSKaSXE49m9JbgpYE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qXnPj6G3RKf7L2+/RLuinTQjlA3QWCDZ554IK6ZPFRQppgKgKFSUClx1VVOmgjlsr
+         WaghoO6kQ91hnYp5qeFWWb5b/i5K5a4Q5SySnJTccORLZqWyM4IINHEGLm+Y2zWs5K
+         5cK5pKrVrsg5TS7DBFpnT/bggwlweazVrWsnUdflGJnuJlc7RZ+T8COCNbRAPOUyQj
+         nNI1idYlTTck2lq0ivA9mS/41skVbtGrD7dXdViemS7MTC0r4rH39A3tf+TQdRGy0f
+         tV89BKnLTOXUpo4CWo3nYPhzECd26PG5He23JiYZtwW6vKJ0dMqJi5ZaPaDJ+OMI9D
+         WxvQpE731ufJQ==
+Date:   Wed, 16 Jun 2021 15:52:06 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] orinoco: Avoid field-overflowing memcpy()
-Date:   Wed, 16 Jun 2021 13:39:51 -0700
-Message-Id: <20210616203952.1248910-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
+Subject: [PATCH][next] drm/amd/display: Fix fall-through warning for Clang
+Message-ID: <20210616205206.GA17547@embeddedor>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=89de090dea0239b1bd78c9c46e85fd796dd40c70; i=pw9pIO5cSvehAPXOYHpT36oPIsjxZgLBBPkjzgwo04A=; m=ULgPUYgopMLRjuXTD0/UgUsfNvLp6QV22Z7i5a71D2c=; p=8N134GX410DnBkaZCpurE9BNvmX2qXrE1f/VxCDCm1I=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDKYZcACgkQiXL039xtwCYpqBAAhNs iU92ddJ1SHdKbx0as+XPYDkLjrDbdPDcjvyPC2KeBTMXSHBRa0hLjgR3gmd4oJrA9ekBvvmsM5yVE NfQmh9veoO7YKYRDSQ7xMZa380xYT52+y0DrJIy45ibUIpPU8Z4+17QxyTDZ4oqtTNLs63FuRJch+ DsFzi9E1qVcRrGKk/R3UbNn+K4ejXMOdMQrfoAFPKXG6NkESileQv7IV/eo4UUmYjpPhDH9kEqJW8 8bNmZ6lTUao3iWvnFvqE6UwDdojEIOnFiYtVRwnvqB0gb/m5wDjAndT/BvBROmmXMm75SdcvTeWDy tzsUtRMKsX72qOebrUwNOY+eiFUwXnjxrKjTNeOnLyV8GmoSevoHdcSIFgKTjRuv0qdZq2iZL683z /VhWjP9OZKSGq/P8hAsKd8hetXzYdHMGmCOv6stE6eGdSlHUHQNYmfgdwH+fDKmzFjtquuXvfjCix F6kGTxgdjd5lLKRuKFbiHU5Uf0lj5HMbTaiyX1E4oOj0amSlbenbYfyb72TqMj5dJa17INcVNLTGR /XKWMdZJ/hRZ9rtJjA5ShkBN9YUSP3XQx5MC4JZxIKZ+/2eIUashdw10+xek7Y4dlCACP7Xq7vo9l ENwkwBPSuoYm48jBkGTeII20I/hZ5ogLPIu/chTReK7tDmipf7NGjfh/7XWNA7c8=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring array fields.
+In preparation to enable -Wimplicit-fallthrough for Clang, fix
+the following warning by replacing a /* fall through */ comment
+with the new pseudo-keyword macro fallthrough:
 
-Validate the expected key size and introduce a wrapping structure
-to use as the multi-field memcpy() destination so that overflows
-can be correctly detected.
+rivers/gpu/drm/amd/amdgpu/../display/dc/dce/dce_aux.c:672:4: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+                        case AUX_TRANSACTION_REPLY_I2C_OVER_AUX_DEFER:
+                        ^
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Notice that Clang doesn't recognize /* fall through */ comments as
+implicit fall-through markings, so in order to globally enable
+-Wimplicit-fallthrough for Clang, these comments need to be
+replaced with fallthrough; in the whole codebase.
+
+Link: https://github.com/KSPP/linux/issues/115
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/intersil/orinoco/hw.c   | 18 +++++++++++-------
- drivers/net/wireless/intersil/orinoco/hw.h   |  5 +++--
- drivers/net/wireless/intersil/orinoco/wext.c |  2 +-
- 3 files changed, 15 insertions(+), 10 deletions(-)
+JFYI: We had thousands of these sorts of warnings and now we are down
+      to just 15 in linux-next. This is one of those last remaining
+      warnings.
 
-diff --git a/drivers/net/wireless/intersil/orinoco/hw.c b/drivers/net/wireless/intersil/orinoco/hw.c
-index 2c7adb4be100..0aea35c9c11c 100644
---- a/drivers/net/wireless/intersil/orinoco/hw.c
-+++ b/drivers/net/wireless/intersil/orinoco/hw.c
-@@ -988,15 +988,18 @@ int __orinoco_hw_setup_enc(struct orinoco_private *priv)
-  * tsc must be NULL or up to 8 bytes
-  */
- int __orinoco_hw_set_tkip_key(struct orinoco_private *priv, int key_idx,
--			      int set_tx, const u8 *key, const u8 *rsc,
--			      size_t rsc_len, const u8 *tsc, size_t tsc_len)
-+			      int set_tx, const u8 *key, size_t key_len,
-+			      const u8 *rsc, size_t rsc_len,
-+			      const u8 *tsc, size_t tsc_len)
- {
- 	struct {
- 		__le16 idx;
- 		u8 rsc[ORINOCO_SEQ_LEN];
--		u8 key[TKIP_KEYLEN];
--		u8 tx_mic[MIC_KEYLEN];
--		u8 rx_mic[MIC_KEYLEN];
-+		struct {
-+			u8 key[TKIP_KEYLEN];
-+			u8 tx_mic[MIC_KEYLEN];
-+			u8 rx_mic[MIC_KEYLEN];
-+		} tkip;
- 		u8 tsc[ORINOCO_SEQ_LEN];
- 	} __packed buf;
- 	struct hermes *hw = &priv->hw;
-@@ -1011,8 +1014,9 @@ int __orinoco_hw_set_tkip_key(struct orinoco_private *priv, int key_idx,
- 		key_idx |= 0x8000;
- 
- 	buf.idx = cpu_to_le16(key_idx);
--	memcpy(buf.key, key,
--	       sizeof(buf.key) + sizeof(buf.tx_mic) + sizeof(buf.rx_mic));
-+	if (key_len != sizeof(buf.tkip))
-+		return -EINVAL;
-+	memcpy(&buf.tkip, key, sizeof(buf.tkip));
- 
- 	if (rsc_len > sizeof(buf.rsc))
- 		rsc_len = sizeof(buf.rsc);
-diff --git a/drivers/net/wireless/intersil/orinoco/hw.h b/drivers/net/wireless/intersil/orinoco/hw.h
-index 466d1ede76f1..da5804dbdf34 100644
---- a/drivers/net/wireless/intersil/orinoco/hw.h
-+++ b/drivers/net/wireless/intersil/orinoco/hw.h
-@@ -38,8 +38,9 @@ int __orinoco_hw_set_wap(struct orinoco_private *priv);
- int __orinoco_hw_setup_wepkeys(struct orinoco_private *priv);
- int __orinoco_hw_setup_enc(struct orinoco_private *priv);
- int __orinoco_hw_set_tkip_key(struct orinoco_private *priv, int key_idx,
--			      int set_tx, const u8 *key, const u8 *rsc,
--			      size_t rsc_len, const u8 *tsc, size_t tsc_len);
-+			      int set_tx, const u8 *key, size_t key_len,
-+			      const u8 *rsc, size_t rsc_len,
-+			      const u8 *tsc, size_t tsc_len);
- int orinoco_clear_tkip_key(struct orinoco_private *priv, int key_idx);
- int __orinoco_hw_set_multicast_list(struct orinoco_private *priv,
- 				    struct net_device *dev,
-diff --git a/drivers/net/wireless/intersil/orinoco/wext.c b/drivers/net/wireless/intersil/orinoco/wext.c
-index 7b6c4ae8ddb3..4a01260027bc 100644
---- a/drivers/net/wireless/intersil/orinoco/wext.c
-+++ b/drivers/net/wireless/intersil/orinoco/wext.c
-@@ -791,7 +791,7 @@ static int orinoco_ioctl_set_encodeext(struct net_device *dev,
- 
- 			err = __orinoco_hw_set_tkip_key(priv, idx,
- 				 ext->ext_flags & IW_ENCODE_EXT_SET_TX_KEY,
--				 priv->keys[idx].key,
-+				 priv->keys[idx].key, priv->keys[idx].key_len,
- 				 tkip_iv, ORINOCO_SEQ_LEN, NULL, 0);
- 			if (err)
- 				printk(KERN_ERR "%s: Error %d setting TKIP key"
+ drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+index 28631714f697..2fb88e54a4bf 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+@@ -668,7 +668,7 @@ bool dce_aux_transfer_with_retries(struct ddc_service *ddc,
+ 				/* polling_timeout_period is in us */
+ 				defer_time_in_ms += aux110->polling_timeout_period / 1000;
+ 				++aux_defer_retries;
+-				/* fall through */
++				fallthrough;
+ 			case AUX_TRANSACTION_REPLY_I2C_OVER_AUX_DEFER:
+ 				retry_on_defer = true;
+ 				fallthrough;
 -- 
-2.25.1
+2.27.0
 
