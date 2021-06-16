@@ -2,78 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF10BC48BE6
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4933C48BE5
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EBD613BF
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980CE613C7
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233076AbhFPUML (ORCPT
+        id S233112AbhFPUNK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Jun 2021 16:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58310 "EHLO mail.kernel.org"
+        Wed, 16 Jun 2021 16:13:10 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41348 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232484AbhFPUMK (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Jun 2021 16:12:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 8CCFF613C7;
-        Wed, 16 Jun 2021 20:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623874203;
-        bh=RUAftpE1yfV3/vOjbCN0Vb+WN2jMJap5J6BQ+NAaWno=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=uY+JmW7/cAxHMJ/Etr3VxpM8EiI3fjvSRvVg8H7zPYjLFmUfWPHCn7lG0WmWSOWZ6
-         orwJ/qBVhVbIPdHbkK+5JkJZ9Ngt4NyzHAH/ONUn81aBbXwcxYxaDEELwo/DBVGZZZ
-         tB/ucqcsyqasDeRYtkpFg6ZHs/4cL5AGWYFvZVdPr4lngUEjyQXyc5YjSdMnOGRVqn
-         gA7Bg/htFRMDTDLpDbZhTaIWhr6GLPkpAB92rNWm0jsVJFF4hAbzPMgLmQ+eMcWAol
-         xLAW4V6Dk0cItxQVg0bDrYfenmXCDTLlvKLSC9T0zClbjY0wXjYlDjpeJy2YH22oHw
-         xU/7Ae7xnfPwA==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] sh_eth: Avoid memcpy() over-reading of ETH_SS_STATS
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <162387420350.22643.17300640381882901139.git-patchwork-notify@kernel.org>
-Date:   Wed, 16 Jun 2021 20:10:03 +0000
-References: <20210616195333.1231715-1-keescook@chromium.org>
-In-Reply-To: <20210616195333.1231715-1-keescook@chromium.org>
+        id S231547AbhFPUM4 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 16 Jun 2021 16:12:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=BfYsI7z39PAUGQ/stOp0Qiw8/9pQyWAMWRq2/aFB2ak=; b=L4sF/Wno662v7Y6vzpw+7OVeV2
+        vMP6R4N/JxVgUL0oWg1IWFiirSCJ2Ug27prlBC5YEDbupnb1MGqUiHg4EZNC2edR3QKSMK4lH4qo0
+        gRtHhPBBRgaJBhqN7mP85MJX/A33HCRi4ZVmVL9lx7uO+41JFYN9CZ6nSg2D/5jEQlTY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ltbs0-009m1A-A9; Wed, 16 Jun 2021 22:10:40 +0200
+Date:   Wed, 16 Jun 2021 22:10:40 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     netdev@vger.kernel.org, sergei.shtylyov@gmail.com,
-        davem@davemloft.net, kuba@kernel.org, s.shtylyov@omprussia.ru,
-        andrew@lunn.ch, wsa+renesas@sang-engineering.com,
-        geert+renesas@glider.be, jesse.brandeburg@intel.com,
-        michael@walle.cc, yangyingliang@huawei.com,
-        rikard.falkeborn@gmail.com, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hayes Wang <hayeswang@realtek.com>,
+        Lee Jones <lee.jones@linaro.org>, EJ Hsu <ejh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] r8152: Avoid memcpy() over-reading of ETH_SS_STATS
+Message-ID: <YMpawKzzect5nqs9@lunn.ch>
+References: <20210616195303.1231429-1-keescook@chromium.org>
+ <YMpY49PLAyObVxC4@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YMpY49PLAyObVxC4@lunn.ch>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
-
-This patch was applied to netdev/net.git (refs/heads/master):
-
-On Wed, 16 Jun 2021 12:53:33 -0700 you wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), memmove(), and memset(), avoid
-> intentionally reading across neighboring array fields.
+On Wed, Jun 16, 2021 at 10:02:43PM +0200, Andrew Lunn wrote:
+> On Wed, Jun 16, 2021 at 12:53:03PM -0700, Kees Cook wrote:
+> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > field bounds checking for memcpy(), memmove(), and memset(), avoid
+> > intentionally reading across neighboring array fields.
+> > 
+> > The memcpy() is copying the entire structure, not just the first array.
+> > Adjust the source argument so the compiler can do appropriate bounds
+> > checking.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/net/usb/r8152.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+> > index 85039e17f4cd..5f08720bf1c9 100644
+> > --- a/drivers/net/usb/r8152.c
+> > +++ b/drivers/net/usb/r8152.c
+> > @@ -8678,7 +8678,7 @@ static void rtl8152_get_strings(struct net_device *dev, u32 stringset, u8 *data)
+> >  {
+> >  	switch (stringset) {
+> >  	case ETH_SS_STATS:
+> > -		memcpy(data, *rtl8152_gstrings, sizeof(rtl8152_gstrings));
+> > +		memcpy(data, rtl8152_gstrings, sizeof(rtl8152_gstrings));
+> >  		break;
 > 
-> The memcpy() is copying the entire structure, not just the first array.
-> Adjust the source argument so the compiler can do appropriate bounds
-> checking.
-> 
-> [...]
+> Is this correct? The call is supposed to return all the statistic
+> strings, which would be the entire structure.
 
-Here is the summary with links:
-  - sh_eth: Avoid memcpy() over-reading of ETH_SS_STATS
-    https://git.kernel.org/netdev/net/c/224004fbb033
+Ah! now i think i get it.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Although *rtl8152_gstrings == rtl8152_gstrings in terms of addresses,
+the compiler sees that *rtl8152_gstrings is sizeof(ETH_GSTRING_LEN),
+but we are copying sizeof(rtl8152_gstrings), so it will issue a
+warning. So you remove the * to indicate we are interesting in the
+whole structure of arrays.
 
-
+      Andrew
