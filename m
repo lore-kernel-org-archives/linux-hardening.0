@@ -6,45 +6,44 @@ X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA58BC48BE5
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841FCC49EA2
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACDD613CB
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B64613B9
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232862AbhFPUML (ORCPT
+        id S233032AbhFPUML (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Wed, 16 Jun 2021 16:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:58304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232586AbhFPUMK (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        id S230381AbhFPUMK (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
         Wed, 16 Jun 2021 16:12:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 94B1D613CD;
+Received: by mail.kernel.org (Postfix) with ESMTPS id 7D2DD613B9;
         Wed, 16 Jun 2021 20:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1623874203;
-        bh=4Gt/aoI3FNo6u7V9Lxpm3MdaYQU+NTOW+paRxy40gyY=;
+        bh=ZMaIBBUk6M+gm4RQYGwmZ23VrtkipS82VYP3V7YOoXA=;
         h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=Amxym1gDYBqP1qzPAel24TXflq6JFkmZ/YLnxTSQYTRI2nBvcmM3L1vtfsqC2SdrK
-         xw2cJ11aby/LloHWOj6a3+J5ZvFL2Ijrfhb1HZHBuzSzykZ4Pgv4kWTJlnwpKow0Sq
-         kkVuF3ur/quRFHpQqa0yarcBQEtP3n3KLTEb8zpLSHbDX0OeJ6ewsQFPQQGHrzOTmW
-         wnT3SYw8KfgVtadI6AD5qYAHOOMPSLnz0A3ht+n4f/nLu129avANwuAwRcb85PpItk
-         4uLkkfrFuLUT0c8umBn0zpoCmtBkg+3qMZ6Ii7OH6vVVtdXFUd9+YK9L5uHdU1hQhH
-         qncwTVXsFdcIg==
+        b=gBmUkMA65KVdkxKS90bTEwJFq6oprmIftFXeaeLSzRMUplL0f738tWTCh9nHqeLa6
+         pSocMqjDH2a3D+6eK6n25ZqYAsemgNaup1hO95F0o7yD8AsPLs1nG6klLXNl1Bs/G4
+         EJP4Vun0ts2qMktEHWjlq9MstoWAFG1ECvwQBS06iP0yAcS288OHyMmDCfTJV4DNVU
+         IM6naLRA+pt27pUcHvWI+A3+0TTfmzGREKOQa5mefHnML/xm4QhYhZ061yByFlZpbJ
+         UY7ZV9ScJZnKFBilEYS6Nr/6ZEOkNFujiIFuP0+2EJoAJfNcLNmgGQr8i0KQr6GXZj
+         F/ZcZXAPEgt+g==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] r8152: Avoid memcpy() over-reading of ETH_SS_STATS
+Subject: Re: [PATCH] r8169: Avoid memcpy() over-reading of ETH_SS_STATS
 From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <162387420355.22643.16457529126274171882.git-patchwork-notify@kernel.org>
+Message-Id: <162387420345.22643.12233311377174591672.git-patchwork-notify@kernel.org>
 Date:   Wed, 16 Jun 2021 20:10:03 +0000
-References: <20210616195303.1231429-1-keescook@chromium.org>
-In-Reply-To: <20210616195303.1231429-1-keescook@chromium.org>
+References: <20210616195359.1231984-1-keescook@chromium.org>
+In-Reply-To: <20210616195359.1231984-1-keescook@chromium.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
-        hayeswang@realtek.com, lee.jones@linaro.org, ejh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+Cc:     netdev@vger.kernel.org, hkallweit1@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        nic_swsd@realtek.com, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -53,7 +52,7 @@ Hello:
 
 This patch was applied to netdev/net.git (refs/heads/master):
 
-On Wed, 16 Jun 2021 12:53:03 -0700 you wrote:
+On Wed, 16 Jun 2021 12:53:59 -0700 you wrote:
 > In preparation for FORTIFY_SOURCE performing compile-time and run-time
 > field bounds checking for memcpy(), memmove(), and memset(), avoid
 > intentionally reading across neighboring array fields.
@@ -65,8 +64,8 @@ On Wed, 16 Jun 2021 12:53:03 -0700 you wrote:
 > [...]
 
 Here is the summary with links:
-  - r8152: Avoid memcpy() over-reading of ETH_SS_STATS
-    https://git.kernel.org/netdev/net/c/99718abdc00e
+  - r8169: Avoid memcpy() over-reading of ETH_SS_STATS
+    https://git.kernel.org/netdev/net/c/da5ac772cfe2
 
 You are awesome, thank you!
 --
