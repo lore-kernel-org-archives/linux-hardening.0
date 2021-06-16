@@ -8,68 +8,65 @@ X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3705DC48BE8
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44EBC48BE8
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A6E60FF4
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF481613CD
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Jun 2021 20:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233328AbhFPUVv (ORCPT
+        id S233487AbhFPU2b (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Jun 2021 16:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47642 "EHLO
+        Wed, 16 Jun 2021 16:28:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233319AbhFPUVv (ORCPT
+        with ESMTP id S233475AbhFPU21 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Jun 2021 16:21:51 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C88C061760
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 13:19:44 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id 69so1716518plc.5
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 13:19:44 -0700 (PDT)
+        Wed, 16 Jun 2021 16:28:27 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A086FC061767
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 13:26:18 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id e7so1721043plj.7
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 13:26:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+KfHfR5+t0EnVDipxN8Cyuc0KkUY5m0xDUxbL/YVUKI=;
-        b=M2M05GwAjHTM0WwuFWCLIJBXc7Mhmzduj5N8rkDWyWW7Bq+aM40Y5v6k5+kPQ4tecA
-         YePfJMATp4pNXHeVunU8k8CCS3tNkZLexRP4nVx82umJkEDmIeIbwfBAqljx4nnxwFrE
-         /9uTkaEqkwVn++hUMZzVnQ30+9Uy7Qe5wo0A0=
+        bh=Zi6CxSdFzJAU/uJ8a5qyyg176z2pYarS7df6bpLiqLs=;
+        b=aX6jc6zprHZ43mJUwdioAb6eOdkAIYSqiTwpLB5yQlKOZb8kCeR+jE9eiVkmuWrC60
+         QO8dHZWrF7WXUZWH8/XJA4w1lzkhnNwIXfiNQOTzcCzTu0hhoOANqj+koouM4YDRHPf4
+         pC5yvVDdpWU2AgDlGZc430Qjitj+SeiTil6eU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+KfHfR5+t0EnVDipxN8Cyuc0KkUY5m0xDUxbL/YVUKI=;
-        b=S/yK+exMtjMnX3dBC2DMYgHmdePszUd4lesm1fqNlknDc1iEV5J92DZBDkePPkakFV
-         HhtwlJUnraDnB4DLN+mUC7PUGM050FhYn2JSZVwg0/u3s7v7Sno0VWcb9Qb5yP+VJgR3
-         pJKlhQlD0lxuXHGjhcff/EmLqsaycn7zyOAzfmH7tMzknTiclYyLwiWQtaR6xpDUqu0E
-         da1p6KyGAOPa9O+wARiJWmLRdshI4mKA609l2LqWfcim06LcRUZsFwEkQm1cR8DxFhKH
-         jzChM/fn5Q/uRo0IDLKLypt22qiKphmeiYEfbSG2qZsc5ntFM0ZKmoy0k+MbRoeynbNK
-         lYDQ==
-X-Gm-Message-State: AOAM5305LtMdD6flKnXvOIlmOVnRR6PfleVFbgxo8rJGLb+N96yNtQAN
-        PLzoR6Ibi1DbOlpKkkb6lyBtog==
-X-Google-Smtp-Source: ABdhPJxpXazaGEOtfXB0QagaHQxcdZPLoAGZ+6NYzn4yC2kbuf+G6USVmDjKV6ANQyL87954djWnVg==
-X-Received: by 2002:a17:90a:aa8e:: with SMTP id l14mr1206561pjq.27.1623874784217;
-        Wed, 16 Jun 2021 13:19:44 -0700 (PDT)
+        bh=Zi6CxSdFzJAU/uJ8a5qyyg176z2pYarS7df6bpLiqLs=;
+        b=CbpuprmcotfDKPugkYa9nxMyKydvzx7sQqfIXKY+k1W9kI5sDHg6dUjS10BqH1OymZ
+         q0iuztEd0krrb1LUlAVIM16vl++QQrhSY5ykzyS/2OaEHXivIODIrWZ2Dsis8WIUpXTf
+         R5UAekRR9fGrlS4ulcHhRhXG/v68vPseH2wcIwsDIAN9gqXpYx+EBJZ9GiKVoTEZitiM
+         EfJPw23DLmxTaHuTMwFqkVjcxu1YVcixUjsz8WUPL7xCG+0GCKdQ0cis3zetCOZXM0Ro
+         /apdW9e8s3Z1tcqo69q19OmV2JI4SvsK3ia/8fmgIkIK+gvBU79ylgJje3RYM+z4aZyL
+         EhkQ==
+X-Gm-Message-State: AOAM5306/Co/rqHC2P4erXAzAXn8OksfraaFgHChYJrJNhN8A8hU0Zde
+        Ds5FZuqJVJAag8VwXvb10K9nlg==
+X-Google-Smtp-Source: ABdhPJy70PETPLLA7ZceudoYAyvQR2YlLTVuaYUK00rS4eyaJVS5ue1+YPGv2YPyNzVPyQQhBjucSA==
+X-Received: by 2002:a17:902:b94c:b029:117:9c88:7744 with SMTP id h12-20020a170902b94cb02901179c887744mr1243178pls.20.1623875178044;
+        Wed, 16 Jun 2021 13:26:18 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c5sm3111954pfn.144.2021.06.16.13.19.43
+        by smtp.gmail.com with ESMTPSA id f15sm3044037pgg.23.2021.06.16.13.26.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 13:19:43 -0700 (PDT)
+        Wed, 16 Jun 2021 13:26:17 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] s390: iucv: Avoid field over-reading memcpy()
-Date:   Wed, 16 Jun 2021 13:19:42 -0700
-Message-Id: <20210616201942.1246211-1-keescook@chromium.org>
+To:     Doug Ledford <dledford@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] RDMA/core: Use flexible array for mad data
+Date:   Wed, 16 Jun 2021 13:26:15 -0700
+Message-Id: <20210616202615.1247242-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=0981c4eb75dd427d7d91cd99c36bf53addbcfc5d; i=YZOtmOq/sZVNbtRsnkBMD2Kw6M6DcNHBXTl6zJRUyvI=; m=CVqI9jG6YZ9jf8f1ED3Ps1ANOEjrAU1kS6Hl4wF6mU4=; p=5tZ5+WKosX4UV7nN9rSQBm46PiXYBFh/e0B4ynthelY=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDKXN0ACgkQiXL039xtwCaSnA/+Pcj H3UWanMJVaOTGAEIdXDCjPackgZXSABrZgBCld484XkzWVdo8GRuckbZCt4017+wGCvmoBES96pze OOJzXiG14jyAgv/c7zi6Q6Pdt8zVC+J9syB8vpovW/BYd3WRWbJWet+vyiVwXCFwLteMypdVQjSbD vPqlwtEIhLRIgQJWi7apUcKznj8cupOGcY6fDHrMXjqvk7Ef9nvM5D5I2mfZSjhxvQ6kSciJFTE90 3JNIuLnTh2L4FHQzf2aCR+6uzC6sveKa7LECGTT89TPiGvD0BqBRXfEvhz/gj5gS9iOKVPyUweUhk jV/Ix7tV7MrNl80eNRBtE1wGiGMRkMxckSrp4rWCyPYMLGvV3KszaQY7kwfRh6hOryEGqQifabHUR coGMga1jVG13xKwmqEpcgGJu6+RJ/MWXsw9uMWaV1NZefjZGmqd6x9zOv1SItCyqRceMSoPEQZeC0 VOlihXZ65qlXyXPdJDDWoe0sYlTTxZqhBSgJpnARCCwopTkG5ULwvaR5rXl/W+MUSlVOU/V4/SDn0 Yoo1ryNQjEIdhP7FsUcFA4ywbxOHPfqSW4AiFx3AlhJVDXnaMJtCopNV5jyCFsKSF0xJ45I61WG8L 3cVbIqTzvgqJ4IJcEwrYPdoVeKxae24fWQxBzwGeyIDrzrpSdHxqHSUGFesVyUP4=
+X-Patch-Hashes: v=1; h=sha256; g=0f6e0b848f8b2a913015c9c030e5ea98deef9dd8; i=SiK2ULITvZfMNXmqRkr+ofG4gpql69b9o2o0ISRPW4c=; m=fvxiQzqzCA9QcgKSJbJ11pTGymCFRvYOOBlP5e4hgLU=; p=CQ7QTMm85lc4Pgf70Hbu6eKIHRL8Wkals6mfT8l9lfE=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDKXmYACgkQiXL039xtwCZUIhAAmbc fSd5myhlaGN/jMAAF00rs3BZucrXnarQz+pUo4jMYg3H74eGHZXTEIxZuzz31LVqKNnVaPwn9Dulf 6vfBC6R7xgVa2itbSGgmKjZqc9PjipIbq5OZXqsNQSFhnrNF2yM2vnW2THPE7t0P+AgQi3L0+71ti xAi4P0F3wm0KGBbLwZjJ5uzQGQxafo/WmTOs+aNBdvtjaphiR01jOzRgkEL2YCa0WbkkKJlosEX3p tYDCV737ekukksTWBcvWTHfYFZYwKtGd/EBy53H/5RO5znlByzucnRl+pT08UZZPJw6mi91+7X3MR 7RsFCOvVGDQ8tPNpVBl85pokbb3CczKwEjk0qI12yU6MnUpLzwOsgBPEQZf3pTxo+8gkl69PC4hLH Aj03+EaHaduP0I3dOUyt4EZqqyihu/vbziilz8Ts51LwZyTF3zi8NJC+JdP7ODUVQ/QyIyIATexQV SMBJPh42E2LMe/5mZNrL4kgMBZokPbxtnpqvpl5kbGOdkzOAGaG60yz+Aj4bhbwNsvmzP/zKTiIBD ++4wpvw/6iON4fXoQZNdCCa6PTNLasiZo/h0+9Zc4xB2wTRraDJmn8P7SBGDuqwhdRt0Mjc7YWG07 1Y68hnZdy6m+30X2JglzbTwkWgUjb67Esa9MNoUo+Nz0dYu37W5el+hGnhPBd9FY=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
@@ -77,62 +74,35 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally reading across neighboring array fields.
+intentionally read across neighboring array fields.
 
-Add a wrapping struct to serve as the memcpy() source so the compiler
-can perform appropriate bounds checking, avoiding this future warning:
+Without a flexible array, this looks like an attempt to perform a
+memcpy() read beyond the end of the packet->mad.data array:
 
-In function '__fortify_memcpy',
-    inlined from 'iucv_message_pending' at net/iucv/iucv.c:1663:4:
-./include/linux/fortify-string.h:246:4: error: call to '__read_overflow2_field' declared with attribute error: detected read beyond size of field (2nd parameter)
+drivers/infiniband/core/user_mad.c:
+	memcpy(packet->msg->mad, packet->mad.data, IB_MGMT_MAD_HDR);
+
+Switch from [0] to [] to use the appropriately handled type for trailing
+bytes.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- net/iucv/iucv.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ include/uapi/rdma/ib_user_mad.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
-index 349c6ac3313f..e6795d5a546a 100644
---- a/net/iucv/iucv.c
-+++ b/net/iucv/iucv.c
-@@ -1635,14 +1635,16 @@ struct iucv_message_pending {
- 	u8  iptype;
- 	u32 ipmsgid;
- 	u32 iptrgcls;
--	union {
--		u32 iprmmsg1_u32;
--		u8  iprmmsg1[4];
--	} ln1msg1;
--	union {
--		u32 ipbfln1f;
--		u8  iprmmsg2[4];
--	} ln1msg2;
-+	struct {
-+		union {
-+			u32 iprmmsg1_u32;
-+			u8  iprmmsg1[4];
-+		} ln1msg1;
-+		union {
-+			u32 ipbfln1f;
-+			u8  iprmmsg2[4];
-+		} ln1msg2;
-+	} rmmsg;
- 	u32 res1[3];
- 	u32 ipbfln2f;
- 	u8  ippollfg;
-@@ -1660,10 +1662,10 @@ static void iucv_message_pending(struct iucv_irq_data *data)
- 		msg.id = imp->ipmsgid;
- 		msg.class = imp->iptrgcls;
- 		if (imp->ipflags1 & IUCV_IPRMDATA) {
--			memcpy(msg.rmmsg, imp->ln1msg1.iprmmsg1, 8);
-+			memcpy(msg.rmmsg, &imp->rmmsg, 8);
- 			msg.length = 8;
- 		} else
--			msg.length = imp->ln1msg2.ipbfln1f;
-+			msg.length = imp->rmmsg.ln1msg2.ipbfln1f;
- 		msg.reply_size = imp->ipbfln2f;
- 		path->handler->message_pending(path, &msg);
- 	}
+diff --git a/include/uapi/rdma/ib_user_mad.h b/include/uapi/rdma/ib_user_mad.h
+index 90c0cf228020..10b5f6a4c677 100644
+--- a/include/uapi/rdma/ib_user_mad.h
++++ b/include/uapi/rdma/ib_user_mad.h
+@@ -143,7 +143,7 @@ struct ib_user_mad_hdr {
+  */
+ struct ib_user_mad {
+ 	struct ib_user_mad_hdr hdr;
+-	__aligned_u64	data[0];
++	__aligned_u64	data[];
+ };
+ 
+ /*
 -- 
 2.25.1
 
