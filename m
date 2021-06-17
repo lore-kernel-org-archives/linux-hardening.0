@@ -5,117 +5,123 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B01AC48BE8
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 03:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909CBC48BE5
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 03:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F05613D5
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 03:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B078613E4
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 03:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbhFQDXN (ORCPT
+        id S229616AbhFQDZD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Jun 2021 23:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
+        Wed, 16 Jun 2021 23:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbhFQDXG (ORCPT
+        with ESMTP id S230052AbhFQDZC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Jun 2021 23:23:06 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381D1C06175F
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 20:20:59 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id z26so3841550pfj.5
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 20:20:59 -0700 (PDT)
+        Wed, 16 Jun 2021 23:25:02 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A962C061760
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 20:22:54 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id x10so2188889plg.3
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 20:22:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=OnNyegzcueNAVVexywZOaMaHFg4WpSSkzCiod7o42Dw=;
-        b=X4jZcnOKMcGtW3MJdkyIoX+CzIYRM/Anl6+iAu7QSt3jvNHJMu43Dkk+hAgWIUcCst
-         ndm+uK6nRboo4qUc0BCbXYWxGu7gpsdgHVr6tFKVJSidFH3IcydomGfeyEjolf2fqITK
-         a3BzuIX36GlEjFePCt5CY/SNmx29mz7Mj7WvU=
+        bh=/r5ooZDhhLfZ1DxAdI7xi00/b7gD8uPD95BirZhzfSQ=;
+        b=AypfzAPR3T++kLN1GaQh9r4/38MyZkb9oatGyAOxCNc/26PN4VAYQdfqPB3KqOzuKH
+         2NG0EmfmIcx5anEsj/C4exw4GXZo+EdyfFFYa0ex7IL0EsQFkBIRFNuDNCAIWtLDFBh3
+         mQIxC8agWgwYY+SqQkrUJ/3QAwUGwlkmd9RQg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=OnNyegzcueNAVVexywZOaMaHFg4WpSSkzCiod7o42Dw=;
-        b=UCln5OKBA2O+zJUsDDD7l5rrQ00qm8IaFKrNkDHRzQPbwwn5iyznRHsfxSBGR1AbFw
-         uYivN1zH9RU7Z3IOgw594pECEn95IWkSYMAZIAj6MOFp3j7uUDBDWqzs1lOae0OWU1Pq
-         NvTHkNXeqCxX0g33m0misLXUftXsmIR4Fz+RrX3jqid4zqZjgCX+sYtwUr4FshcgaYSi
-         DfSst360TDaVzdx1ZRkwSsHvyvDqqxhkTZ77FOyV/nK86q6CL82evm5vPCbscLij0jkh
-         C+dwy7Cp3e4oiMoRGUxZRo+E1SsWRNFCeeSqDHEqukFm0GmkKsON7sjEzwTZR8hIBaXs
-         CTCQ==
-X-Gm-Message-State: AOAM530rnZNAJ2U8nDoGBmMV60kL8644XEIBzkfNgAm3DccsbM7ENgH5
-        mhD9KWlG6f67tvVZ6nzlnMTtWg==
-X-Google-Smtp-Source: ABdhPJy21XBJfsZ+mRRvCXJv9m/hG8tXl5m6mgoLNXP50a3Mp2SvmLki85os/6/tjXabH+u8SYV4Sg==
-X-Received: by 2002:aa7:8186:0:b029:2f7:f70a:b7be with SMTP id g6-20020aa781860000b02902f7f70ab7bemr3104165pfi.64.1623900058822;
-        Wed, 16 Jun 2021 20:20:58 -0700 (PDT)
+        bh=/r5ooZDhhLfZ1DxAdI7xi00/b7gD8uPD95BirZhzfSQ=;
+        b=VHbgvWIBGaqOZasVGLQdpsZFUBw/lLdNlrbrEWcxLaXNf5eBH35/cwf1rc5wWxvIWK
+         FJ41Z7BvOVrOU7lK75dWeho5KgaBpQd73zJZCPj8yz8nOdDc68mwjIAiHRp8+dMWj2S+
+         Wgx4CzKMjg9QYU+tXHByk6eJMR94ixnRK6kqyy7zf3+ZFUR5F4AhNHlQDFuoe5odI0xK
+         3kb3pCPB6WLKn97IW1Qlf3wRRLtgb0hP3JNUIGNvJ/+SVBJzQxJet980qUzaUw3lMNCs
+         MlmJkwd5mmU4OLUKiJWAFSRwGzm4w8NC46IFHmkDH5bMtSQDKMvptl0vVa8lhKR0xFQF
+         1x7g==
+X-Gm-Message-State: AOAM530NrfFr/dvVhLk25c7uGirPzf4400f4XLm9wHtUZwykHsLJ4Xmw
+        4pKXs/72qo/Bo5cBpPg2Kz8sDw==
+X-Google-Smtp-Source: ABdhPJzftp1MjNvohc+8a9WaJdSvhhUhW1bNaRZeFamEiS7UH+ZEG0G5QwymN2cpVOI2wWfCn2ISMg==
+X-Received: by 2002:a17:90a:fa10:: with SMTP id cm16mr14664353pjb.175.1623900173863;
+        Wed, 16 Jun 2021 20:22:53 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d3sm3528629pfn.141.2021.06.16.20.20.58
+        by smtp.gmail.com with ESMTPSA id d5sm3436533pfd.115.2021.06.16.20.22.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 20:20:58 -0700 (PDT)
-Date:   Wed, 16 Jun 2021 20:20:57 -0700
+        Wed, 16 Jun 2021 20:22:53 -0700 (PDT)
+Date:   Wed, 16 Jun 2021 20:22:52 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+Cc:     netdev@vger.kernel.org, Lennert Buytenhek <buytenh@wantstofly.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Hayes Wang <hayeswang@realtek.com>,
-        Lee Jones <lee.jones@linaro.org>, EJ Hsu <ejh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Romain Perier <romain.perier@gmail.com>,
+        Allen Pais <allen.lkml@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        wengjianfeng <wengjianfeng@yulong.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Lv Yunlong <lyl2019@mail.ustc.edu.cn>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] r8152: Avoid memcpy() over-reading of ETH_SS_STATS
-Message-ID: <202106162020.A7E55AC6@keescook>
-References: <20210616195303.1231429-1-keescook@chromium.org>
- <YMpY49PLAyObVxC4@lunn.ch>
- <YMpawKzzect5nqs9@lunn.ch>
+Subject: Re: [PATCH] mwl8k: Avoid memcpy() over-reading of ETH_SS_STATS
+Message-ID: <202106162022.F3DABCEDD@keescook>
+References: <20210616195242.1231287-1-keescook@chromium.org>
+ <YMpX0S/Xeis0kKoP@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YMpawKzzect5nqs9@lunn.ch>
+In-Reply-To: <YMpX0S/Xeis0kKoP@lunn.ch>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 10:10:40PM +0200, Andrew Lunn wrote:
-> On Wed, Jun 16, 2021 at 10:02:43PM +0200, Andrew Lunn wrote:
-> > On Wed, Jun 16, 2021 at 12:53:03PM -0700, Kees Cook wrote:
-> > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > > field bounds checking for memcpy(), memmove(), and memset(), avoid
-> > > intentionally reading across neighboring array fields.
-> > > 
-> > > The memcpy() is copying the entire structure, not just the first array.
-> > > Adjust the source argument so the compiler can do appropriate bounds
-> > > checking.
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  drivers/net/usb/r8152.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> > > index 85039e17f4cd..5f08720bf1c9 100644
-> > > --- a/drivers/net/usb/r8152.c
-> > > +++ b/drivers/net/usb/r8152.c
-> > > @@ -8678,7 +8678,7 @@ static void rtl8152_get_strings(struct net_device *dev, u32 stringset, u8 *data)
-> > >  {
-> > >  	switch (stringset) {
-> > >  	case ETH_SS_STATS:
-> > > -		memcpy(data, *rtl8152_gstrings, sizeof(rtl8152_gstrings));
-> > > +		memcpy(data, rtl8152_gstrings, sizeof(rtl8152_gstrings));
-> > >  		break;
+On Wed, Jun 16, 2021 at 09:58:09PM +0200, Andrew Lunn wrote:
+> On Wed, Jun 16, 2021 at 12:52:42PM -0700, Kees Cook wrote:
+> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > field bounds checking for memcpy(), memmove(), and memset(), avoid
+> > intentionally reading across neighboring array fields. Use the
+> > sub-structure address directly.
 > > 
-> > Is this correct? The call is supposed to return all the statistic
-> > strings, which would be the entire structure.
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/net/wireless/marvell/mwl8k.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
+> > index 84b32a5f01ee..3bf6571f4149 100644
+> > --- a/drivers/net/wireless/marvell/mwl8k.c
+> > +++ b/drivers/net/wireless/marvell/mwl8k.c
+> > @@ -4552,7 +4552,7 @@ static int mwl8k_cmd_update_stadb_add(struct ieee80211_hw *hw,
+> >  	else
+> >  		rates = sta->supp_rates[NL80211_BAND_5GHZ] << 5;
+> >  	legacy_rate_mask_to_array(p->legacy_rates, rates);
+> > -	memcpy(p->ht_rates, sta->ht_cap.mcs.rx_mask, 16);
+> > +	memcpy(p->ht_rates, &sta->ht_cap.mcs, 16);
+> >  	p->interop = 1;
+> >  	p->amsdu_enabled = 0;
+> >  
+> > @@ -5034,7 +5034,7 @@ mwl8k_bss_info_changed_sta(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+> >  			ap_legacy_rates =
+> >  				ap->supp_rates[NL80211_BAND_5GHZ] << 5;
+> >  		}
+> > -		memcpy(ap_mcs_rates, ap->ht_cap.mcs.rx_mask, 16);
+> > +		memcpy(ap_mcs_rates, &ap->ht_cap.mcs, 16);
+> >  
+> >  		rcu_read_unlock();
 > 
-> Ah! now i think i get it.
-> 
-> Although *rtl8152_gstrings == rtl8152_gstrings in terms of addresses,
-> the compiler sees that *rtl8152_gstrings is sizeof(ETH_GSTRING_LEN),
-> but we are copying sizeof(rtl8152_gstrings), so it will issue a
-> warning. So you remove the * to indicate we are interesting in the
-> whole structure of arrays.
+> This does not appear to have anything to do with ETH_SS_STATS which is
+> what the Subject: says.
 
-Right! Sorry if that wasn't more clear. :)
+Whoops! I was off-by-one in my Subject edits. I will respin.
+
+-Kees
 
 -- 
 Kees Cook
