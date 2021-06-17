@@ -2,103 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02051C49361
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 06:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1517EC2B9F4
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 07:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E00DD61019
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 06:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F29613CA
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 07:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbhFQGKb (ORCPT
+        id S229872AbhFQH1J (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Jun 2021 02:10:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbhFQGKa (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Jun 2021 02:10:30 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8F5C061574;
-        Wed, 16 Jun 2021 23:08:22 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4G5BSJ40jBz9sSn;
-        Thu, 17 Jun 2021 16:08:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1623910098;
-        bh=hVSqDU1BBeAnmrNw6zEidn4Sen3Yd1tIwA02D0sarGQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=oZZoiBeVQr61j2bwMuugaKP9gv5ITKpktufP160mgBAmaarcFH8bPXbdJ5s5ZAoT7
-         68SUZpMPCycXQb4uZ+AqRADj/OQdoSYJqDG4hYoefgWjS0qZPtMny18lrv1bnWbnGs
-         KBOE5Mko05q8bQdSFjqPAZizL+y7tz+XE6RsTtBK58oVtL0mWznrq5K0szKgbLprNl
-         Z2mnxDi277OL/yq/XSkTEPwus9+Y6U5LpWAEUvgYl5ngSjQplmDenWM0kYCDcyyNHl
-         F+wAZD7749u+k4C1USPD+m0b5eb8oHPeBRu1X7PoJNLikR6YONWawdwD8yIVLS7tIK
-         85QrKv0/sir6g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
+        Thu, 17 Jun 2021 03:27:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229683AbhFQH1I (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 17 Jun 2021 03:27:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 105A26135C;
+        Thu, 17 Jun 2021 07:25:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623914701;
+        bh=Sbblh3hwD2BaQ81tKBnnpgdkyDBrz2PvnAvQk8AMWOQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l3g3Bluo1oqyuRFLWlXlY+tODWOWwaJ7jImdeom9lhnH9mt8qCNBbmiBvr80gJF5v
+         QYY543gKEU4+23C8LpRKqnpRrV6+zzEtyB41DjZ8LxEuasAjzMpDU4gcXWPtUpLYsq
+         rQ3UBVgY6p2EMQcqkoKb3vfbJlMlzSOQg8+5Kj4sWSd8suQTfaT1esUoCh/X8Qcc8k
+         QpYtFi+xef8VbqTGGD9/gkz+PSI0RT+jA61Xs44wu8nj2Rd+vNL46iKFDgvfzKDigJ
+         yL9QsmDPZvP23TvSTb2FQ+/jom+oaEWteFYHlPFTrZs1Xn7VSBkm+aF75jd1+B/DMW
+         l7ocP0qTSa22A==
+Date:   Thu, 17 Jun 2021 10:24:58 +0300
+From:   Leon Romanovsky <leon@kernel.org>
 To:     Kees Cook <keescook@chromium.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
-        Breno =?utf-8?Q?Leit=C3=A3o?= <leitao@debian.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: nx: Fix memcpy() over-reading in nonce
-In-Reply-To: <20210616203459.1248036-1-keescook@chromium.org>
-References: <20210616203459.1248036-1-keescook@chromium.org>
-Date:   Thu, 17 Jun 2021 16:08:15 +1000
-Message-ID: <87zgvpqb00.fsf@mpe.ellerman.id.au>
+        Jack Morgenstein <jackm@nvidia.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>,
+        Doug Ledford <dledford@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] IB/mlx4: Avoid field-overflowing memcpy()
+Message-ID: <YMr4ypsh7D3q1R5+@unreal>
+References: <20210616203744.1248551-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210616203744.1248551-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-> Fix typo in memcpy() where size should be CTR_RFC3686_NONCE_SIZE.
->
-> Fixes: 030f4e968741 ("crypto: nx - Fix reentrancy bugs")
-> Cc: stable@vger.kernel.org
+On Wed, Jun 16, 2021 at 01:37:44PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring array fields.
+> 
+> Use the ether_addr_copy() helper instead, as already done for smac.
+> 
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Thanks.
-
 > ---
->  drivers/crypto/nx/nx-aes-ctr.c | 2 +-
+>  drivers/infiniband/hw/mlx4/qp.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/crypto/nx/nx-aes-ctr.c b/drivers/crypto/nx/nx-aes-ctr.c
-> index 13f518802343..6120e350ff71 100644
-> --- a/drivers/crypto/nx/nx-aes-ctr.c
-> +++ b/drivers/crypto/nx/nx-aes-ctr.c
-> @@ -118,7 +118,7 @@ static int ctr3686_aes_nx_crypt(struct skcipher_request *req)
->  	struct nx_crypto_ctx *nx_ctx = crypto_skcipher_ctx(tfm);
->  	u8 iv[16];
+> 
+> diff --git a/drivers/infiniband/hw/mlx4/qp.c b/drivers/infiniband/hw/mlx4/qp.c
+> index 2ae22bf50016..4a2ef7daaded 100644
+> --- a/drivers/infiniband/hw/mlx4/qp.c
+> +++ b/drivers/infiniband/hw/mlx4/qp.c
+> @@ -3144,7 +3144,7 @@ static int build_mlx_header(struct mlx4_ib_qp *qp, const struct ib_ud_wr *wr,
+>  		mlx->sched_prio = cpu_to_be16(pcp);
 >  
-> -	memcpy(iv, nx_ctx->priv.ctr.nonce, CTR_RFC3686_IV_SIZE);
-> +	memcpy(iv, nx_ctx->priv.ctr.nonce, CTR_RFC3686_NONCE_SIZE);
->  	memcpy(iv + CTR_RFC3686_NONCE_SIZE, req->iv, CTR_RFC3686_IV_SIZE);
->  	iv[12] = iv[13] = iv[14] = 0;
->  	iv[15] = 1;
+>  		ether_addr_copy(sqp->ud_header.eth.smac_h, ah->av.eth.s_mac);
+> -		memcpy(sqp->ud_header.eth.dmac_h, ah->av.eth.mac, 6);
+> +		ether_addr_copy(sqp->ud_header.eth.dmac_h, ah->av.eth.mac);
+>  		memcpy(&ctrl->srcrb_flags16[0], ah->av.eth.mac, 2);
+>  		memcpy(&ctrl->imm, ah->av.eth.mac + 2, 4);
 
-Where IV_SIZE is 8 and NONCE_SIZE is 4.
+I don't understand the last three lines. We are copying 6 bytes to
+ah->av.eth.mac and immediately after that overwriting them.
 
-And iv is 16 bytes, so it's not a buffer overflow.
+Jack, 
 
-But priv.ctr.nonce is 4 bytes, and at the end of the struct, so it reads
-4 bytes past the end of the nx_crypto_ctx, which is not good.
+Do you remember what you wanted to achieve in commit
+6ee51a4e866b ("mlx4: Adjust QP1 multiplexing for RoCE/SRIOV")
 
-But then immediately overwrites whatever it read with req->iv.
+Thanks
 
-So seems pretty harmless in practice?
-
-cheers
+>  
+> -- 
+> 2.25.1
+> 
