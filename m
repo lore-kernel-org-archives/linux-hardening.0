@@ -2,154 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7121C2B9F4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 17:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA048C2B9F4
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 18:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 905FE608FC
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 17:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC5F26112D
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 18:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232156AbhFQRRe (ORCPT
+        id S232664AbhFQSSW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Jun 2021 13:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45542 "EHLO
+        Thu, 17 Jun 2021 14:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232148AbhFQRRd (ORCPT
+        with ESMTP id S231162AbhFQSSV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Jun 2021 13:17:33 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB84C061760
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 10:15:25 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id a127so5521543pfa.10
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 10:15:25 -0700 (PDT)
+        Thu, 17 Jun 2021 14:18:21 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A6AC061574;
+        Thu, 17 Jun 2021 11:16:14 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id w127so7478168oig.12;
+        Thu, 17 Jun 2021 11:16:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1zD+T81jZZgZpyjFh0xFUsdQjL/HhqmGe6jBuS5LlYM=;
-        b=VNTKhE5cST2J0ZnjsR5r3QutKIJAPxdYyKrH0WhAhImj92y8rywVUrDhn5E6UvCEVs
-         jnF1hD2ZBj/+9soV3yLKupEXB/gCaqaptyKZ21N5+glwJDNV3wZyO1x4mJqmk61zA06g
-         7ijTYSH+TXIBumKzmNqYu2FWwdSDsDboZTmT0=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lDrvv4SjpRGkcXHTZ4eLR8O6nHpZy/vmSgaV/fvgZQc=;
+        b=dDS7K0yryIVcseJxuPdmMMFGGB0HEZPSwv85uGF5IKpvHrqKoQZXn5+Z4dnhycn4dV
+         5N3FucpSvxP0B7GWK0i4ztJsX3onaM2qj1pb1/AUwF2HecmpdFHwtHk22XHBFRw7nlwB
+         o28/1g/B60d5U9bNdn1hpJuGWnXKHFcTg15AMUtX0HHlLYiIM06JQMAaXQbQbv0V/9jD
+         SfPhb9hqWJY96njZ+xFpQYXfpI6U/QgXDc725PtljX3BOBS18wpprrVSMU/OfLHeJoVJ
+         gy4t0CCiDhE7bUHyn7zlLmL88NEJlnVcIwpsZH+IsSIjrAUw8b9Rmmlp3SkV96l14vWi
+         jDUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=1zD+T81jZZgZpyjFh0xFUsdQjL/HhqmGe6jBuS5LlYM=;
-        b=nqQjmAZ6E1UTq73Cg4h/qqeyaE4WkjBV9tWZFh4R4h1/kk5/BeGNDT5Lp0Tr3BL82s
-         Sus/hb0Wsbjq270Y220ZhNx3aXsCLn96AaRLvTgSMDNte5ik2b2yN7iMnE5R9Kb+UY44
-         wSo+kuMgzDcU5rzExV19mPj0fwh7bMnBq6DetQIkmt86lLJvxporf5eToRh5QN/jPzls
-         cGHO5i1JTiZMW83ThsJVyhcjixaYplcjFQUyuApH+z2Rmfb53SgVb3rm7nheWw6HXEgh
-         +95RCogWurav9ki6vEXlP3Bn2VjJFIn4bDlanORwW8bjw+WPxIr14v1lDqIjjXWKKoBO
-         nU4w==
-X-Gm-Message-State: AOAM530R/7T+aKhuxLQ3GmmRNjzk0UisW/6EQcFbuIotjs79r1fDNaTJ
-        0cTBJvwxbs5YVutwBvqrrYIl1A==
-X-Google-Smtp-Source: ABdhPJz+2jMCBEzFuT+7hJ4eMDlrWtKm4cUhhJRiazj6nJ5uWZLUBTK9YaUYt7u9fLzPz5cyGpDL8g==
-X-Received: by 2002:a63:c112:: with SMTP id w18mr5792064pgf.375.1623950124830;
-        Thu, 17 Jun 2021 10:15:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q21sm6146371pfn.81.2021.06.17.10.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jun 2021 10:15:24 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
+        bh=lDrvv4SjpRGkcXHTZ4eLR8O6nHpZy/vmSgaV/fvgZQc=;
+        b=NfrW8diJNLfl15zfoAebA6KhMLVzTWz/XS46sRILPaA70BMitUNwVe+a2lqveab9MZ
+         BxDeekVIvAftvvnscScpm7fIgPR51kV34WoX38smFWSZOvoS6SOTc9o01GISOqIROQNi
+         123Uf4/qmw04qJ7fLa5Xag2YB2PM2rDjM7BS+ccyPckw4qp+WyXh6XcAm1DBXKjX0GG1
+         eiAULtK1iPJAwBLA/yrZsERPwjYM0bLREwE71RrDvAkQM2BnUkCh7Mlpo46gp7VxxLRy
+         yeOABTdKnG9wjIg09AQpxKcXdNl4bG5Wb+PMzTSk4opjHsHXSO1GvI40m90eceZSNOqs
+         8g0A==
+X-Gm-Message-State: AOAM5327qtiZ7ReRd16AFVnqy1V9c/MHNyA+TVV5VF7GxKX7Wud7HJX9
+        cOnlqV0l5dwc1z0CFnkfGJ8z7WUMmvk=
+X-Google-Smtp-Source: ABdhPJzL4f3FCY/yfEYFwYetlXRUTOfrxQ09K6/SCwmy1h9jq+scI9PwkZczubIUdPL2JypV+NXXsQ==
+X-Received: by 2002:aca:4a46:: with SMTP id x67mr11539185oia.59.1623953771779;
+        Thu, 17 Jun 2021 11:16:11 -0700 (PDT)
+Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id v82sm1275328oia.27.2021.06.17.11.16.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Jun 2021 11:16:10 -0700 (PDT)
+Sender: Larry Finger <larry.finger@gmail.com>
+Subject: Re: [PATCH] rtlwifi: rtl8192de: Fully initialize curvecount_val
+To:     Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kaixu Xia <kaixuxia@tencent.com>, linux-kernel@vger.kernel.org,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] mwifiex: Avoid memset() over-write of WEP key_material
-Date:   Thu, 17 Jun 2021 10:15:22 -0700
-Message-Id: <20210617171522.3410951-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
+References: <20210617171317.3410722-1-keescook@chromium.org>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <92f5a610-a623-b17d-40ba-963e3e84c622@lwfinger.net>
+Date:   Thu, 17 Jun 2021 13:16:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=8ee66baceadd27f658a8dfa2fe3397021a28ad22; i=BArkIcxklEnQKmH2E0CxJuEpf2GPz0bKINbIuaIaeGg=; m=QhaE3cdmOtrz4D6MWzL5ksVjqyQuqa6XFh/VF/68Fns=; p=0XEJ9f86jVziXDyuQV+SK180J33uce0FHTOpZ2MXGNU=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDLgykACgkQiXL039xtwCZAaQ//VPH Acw4YzlV6FoySvgPI2F9hIrqIUecqEJLuZXlKbEO/+XVh/E+asMJRVYfC8aixmaMj6xJGj+PKKpZL Qrk94z5tRQ12XIVKK+5/EOykBXLcclyyn+JsVbXH51ofvofhAHUw6MldFBCNgWVH0NIJe9zWdpwdx DORMsA2AjLkCAjNXBaiWktvfyy+PWhR7bqZwYK8Bhhz76nmlRsWR1tDb8lQUfD5Kpk9ohIBpuXMpj cey5gKDWIc+ri9vCGuF6P/Vq+3/jSvmB0mn0BdiWeito+OxIETfM4rOjwTBCKRmgT93Mn56Qg5S+h wWM+thXDZ78dKqiFlhgzeMjHM5k7nrMaMb5sLB00j9Pvu289BTmS8I8Nl4UJDQpMwGNmqgcqkkAKv c52rJ7yMm3w6VW7e1J3AEGNT8G2WH+VmebmyIGkJgjkZErnFrS4GgAqwZT3IdrHfcTTehxJ1gPOa7 1oL6gBBsos0Qx0bi9/dz7WNFYo6XCL52zVjGtJ8bZ7jHbnwmZ41fwJ/Bfi+GYTPJDTKKz5/vXh1gf 8q+hJIBNOd7tM6eY+BM9zwrD0GZVuDRHZvk+Dkt/rQe5RJ7gGnHWFmJJ/E4MxuBetyxVM4LORtedk 71BXhfbgPNN1AMJeYNwRTL4T6u2r7FgjFMUFbo3wY+ezV1dW71gAD/NSOyez5KcM=
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210617171317.3410722-1-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memset(), avoid intentionally writing across
-neighboring array fields.
+On 6/17/21 12:13 PM, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring array fields.
+> 
+> The size argument to memset() is bytes, but the array element size
+> of curvecount_val is u32, so "CV_CURVE_CNT * 2" was only 1/4th of the
+> contents of curvecount_val. Adjust memset() to wipe full buffer size.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
+> index 68ec009ea157..76dd881ef9bb 100644
+> --- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
+> +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
+> @@ -2574,7 +2574,7 @@ static void _rtl92d_phy_lc_calibrate_sw(struct ieee80211_hw *hw, bool is2t)
+>   			RTPRINT(rtlpriv, FINIT, INIT_IQK,
+>   				"path-B / 2.4G LCK\n");
+>   		}
+> -		memset(&curvecount_val[0], 0, CV_CURVE_CNT * 2);
+> +		memset(curvecount_val, 0, sizeof(curvecount_val));
+>   		/* Set LC calibration off */
+>   		rtl_set_rfreg(hw, (enum radio_path)index, RF_CHNLBW,
+>   			      0x08000, 0x0);
+> 
 
-When preparing to call mwifiex_set_keyparamset_wep(), key_material is
-treated very differently from its structure layout (which has only a
-single struct mwifiex_ie_type_key_param_set). Instead, add a new type to
-the union so memset() can correctly reason about the size of the
-structure.
-
-Note that the union ("params", 196 bytes) containing key_material was
-not large enough to hold the target of this memset(): sizeof(struct
-mwifiex_ie_type_key_param_set) == 60, NUM_WEP_KEYS = 4, so 240
-bytes, or 44 bytes past the end of "params". The good news is that
-it appears that the command buffer, as allocated, is 2048 bytes
-(MWIFIEX_SIZE_OF_CMD_BUFFER), so no neighboring memory appears to be
-getting clobbered.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/marvell/mwifiex/fw.h      |  6 ++++++
- drivers/net/wireless/marvell/mwifiex/sta_cmd.c | 11 ++++++-----
- 2 files changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-index 470d669c7f14..2ff23ab259ab 100644
---- a/drivers/net/wireless/marvell/mwifiex/fw.h
-+++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-@@ -995,6 +995,11 @@ struct host_cmd_ds_802_11_key_material {
- 	struct mwifiex_ie_type_key_param_set key_param_set;
- } __packed;
- 
-+struct host_cmd_ds_802_11_key_material_wep {
-+	__le16 action;
-+	struct mwifiex_ie_type_key_param_set key_param_set[NUM_WEP_KEYS];
-+} __packed;
-+
- struct host_cmd_ds_gen {
- 	__le16 command;
- 	__le16 size;
-@@ -2347,6 +2352,7 @@ struct host_cmd_ds_command {
- 		struct host_cmd_ds_wmm_get_status get_wmm_status;
- 		struct host_cmd_ds_802_11_key_material key_material;
- 		struct host_cmd_ds_802_11_key_material_v2 key_material_v2;
-+		struct host_cmd_ds_802_11_key_material_wep key_material_wep;
- 		struct host_cmd_ds_version_ext verext;
- 		struct host_cmd_ds_mgmt_frame_reg reg_mask;
- 		struct host_cmd_ds_remain_on_chan roc_cfg;
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-index d3a968ef21ef..48ea00da1fc9 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-@@ -840,14 +840,15 @@ mwifiex_cmd_802_11_key_material_v1(struct mwifiex_private *priv,
- 	}
- 
- 	if (!enc_key) {
--		memset(&key_material->key_param_set, 0,
--		       (NUM_WEP_KEYS *
--			sizeof(struct mwifiex_ie_type_key_param_set)));
-+		struct host_cmd_ds_802_11_key_material_wep *key_material_wep =
-+			(struct host_cmd_ds_802_11_key_material_wep *)key_material;
-+		memset(key_material_wep->key_param_set, 0,
-+		       sizeof(key_material_wep->key_param_set));
- 		ret = mwifiex_set_keyparamset_wep(priv,
--						  &key_material->key_param_set,
-+						  &key_material_wep->key_param_set[0],
- 						  &key_param_len);
- 		cmd->size = cpu_to_le16(key_param_len +
--				    sizeof(key_material->action) + S_DS_GEN);
-+				    sizeof(key_material_wep->action) + S_DS_GEN);
- 		return ret;
- 	} else
- 		memset(&key_material->key_param_set, 0,
--- 
-2.25.1
-
+Reviewed-by: Larry Finger <Larry.Finger@lwfinger.net>
