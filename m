@@ -2,91 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1517EC2B9F4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 07:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D4FC2B9F4
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 10:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5F29613CA
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 07:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7500A613F1
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 10:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbhFQH1J (ORCPT
+        id S231328AbhFQKMa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Jun 2021 03:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229683AbhFQH1I (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Jun 2021 03:27:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 105A26135C;
-        Thu, 17 Jun 2021 07:25:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623914701;
-        bh=Sbblh3hwD2BaQ81tKBnnpgdkyDBrz2PvnAvQk8AMWOQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l3g3Bluo1oqyuRFLWlXlY+tODWOWwaJ7jImdeom9lhnH9mt8qCNBbmiBvr80gJF5v
-         QYY543gKEU4+23C8LpRKqnpRrV6+zzEtyB41DjZ8LxEuasAjzMpDU4gcXWPtUpLYsq
-         rQ3UBVgY6p2EMQcqkoKb3vfbJlMlzSOQg8+5Kj4sWSd8suQTfaT1esUoCh/X8Qcc8k
-         QpYtFi+xef8VbqTGGD9/gkz+PSI0RT+jA61Xs44wu8nj2Rd+vNL46iKFDgvfzKDigJ
-         yL9QsmDPZvP23TvSTb2FQ+/jom+oaEWteFYHlPFTrZs1Xn7VSBkm+aF75jd1+B/DMW
-         l7ocP0qTSa22A==
-Date:   Thu, 17 Jun 2021 10:24:58 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Kees Cook <keescook@chromium.org>,
-        Jack Morgenstein <jackm@nvidia.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>,
-        Doug Ledford <dledford@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Thu, 17 Jun 2021 06:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229846AbhFQKM3 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 17 Jun 2021 06:12:29 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A225C061574
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 03:10:21 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id i94so6089630wri.4
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 03:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=E56FkjuuXNFtVViqYy8TeoNuBVG48wVdRyq4qMxFT7Q=;
+        b=cc92lm3cqq/4WRpp0rUpFPx8Z+kvoT4Tx9ZXfF2YT8NU5TfFQc7Wu7KIUgsllEZhTt
+         tTVl8t/ihrCA/UUKO+40t+HDheJxpctblabfjHtnjOgN7mokTL4QSRrLIED9HWgr+ueK
+         FgcOs3X7/WZliyyHXF1GjikreFMAMfG1X+/aq7MmYZ6TPdltTIB6jEP2sE8gUjjWouio
+         kQX19Iw+5lWapWejeVYiQv3dVdEg3ir2b2fu7OGHYwN/QcGXsGUOtquXcjpdVQCBNJNE
+         ofJggyrxvf+OhJYLkkQIzDrdKReoFVgooZWf6d7BShiHhauhTvXx+AKuZFDAh1Wf83XD
+         +LDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E56FkjuuXNFtVViqYy8TeoNuBVG48wVdRyq4qMxFT7Q=;
+        b=jHYe5KCtKEq1w4LnIyaDwR7e6LsCUdT4V9Q+ZUF44anhztk9D7OU+InfRA/4fbc5Qh
+         Vd1jxqJhpkwEYTm6BVccBQQRogyx7+4C8tTMHP9Tbp8hV1slOHI61kMGOz7aWF0FlJn1
+         i+ejtxnbjzNKwHVhUSyRDCrYM7qeIzSmETeDrv7egyl2FAwTWOwIwlk4tH9LZK2ggIkK
+         y5E+374xix2dpdf///vYryI8vQfljHK842sUMQUBIuMdge1brGXpcuoitbuK2SaB9H4b
+         pLZ/a2TfDbWZHyKpYcMxsWpcGCP9DI2oIYkd5ZL1OTuHzrlj+NFNMVxGovMjcmU3lPs9
+         SqzA==
+X-Gm-Message-State: AOAM5310SP6BHTFSq0WfM5E3NNTPTVIwjpkNnBxRISDYgI3PRtNuO5dP
+        +SUDCCkSmYF1f2vnaoffHJ6aSg==
+X-Google-Smtp-Source: ABdhPJzZueI2euycUe9mgA6BJPJridBC6QGjBnvNomu7DIPEiFbFNp6XB+4L70zQGY3jU7Qc4Ta1kA==
+X-Received: by 2002:a5d:6e0d:: with SMTP id h13mr4833617wrz.118.1623924620141;
+        Thu, 17 Jun 2021 03:10:20 -0700 (PDT)
+Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
+        by smtp.gmail.com with ESMTPSA id o18sm7707395wmq.23.2021.06.17.03.10.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Jun 2021 03:10:19 -0700 (PDT)
+Date:   Thu, 17 Jun 2021 11:10:18 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] IB/mlx4: Avoid field-overflowing memcpy()
-Message-ID: <YMr4ypsh7D3q1R5+@unreal>
-References: <20210616203744.1248551-1-keescook@chromium.org>
+Subject: Re: [PATCH][next] kgdb: Fix fall-through warning for Clang
+Message-ID: <20210617101018.6st3dshblabvdok2@maple.lan>
+References: <20210528200222.GA39201@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210616203744.1248551-1-keescook@chromium.org>
+In-Reply-To: <20210528200222.GA39201@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 01:37:44PM -0700, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), memmove(), and memset(), avoid
-> intentionally writing across neighboring array fields.
+On Fri, May 28, 2021 at 03:02:22PM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a
+> fall-through warning by explicitly adding a goto statement instead
+> of letting the code fall through to the next case.
 > 
-> Use the ether_addr_copy() helper instead, as already done for smac.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Applied, thanks.
+
+
 > ---
->  drivers/infiniband/hw/mlx4/qp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> JFYI: We had thousands of these sorts of warnings and now we are down
+>       to just 25 in linux-next. This is one of those last remaining
+>       warnings.
 > 
-> diff --git a/drivers/infiniband/hw/mlx4/qp.c b/drivers/infiniband/hw/mlx4/qp.c
-> index 2ae22bf50016..4a2ef7daaded 100644
-> --- a/drivers/infiniband/hw/mlx4/qp.c
-> +++ b/drivers/infiniband/hw/mlx4/qp.c
-> @@ -3144,7 +3144,7 @@ static int build_mlx_header(struct mlx4_ib_qp *qp, const struct ib_ud_wr *wr,
->  		mlx->sched_prio = cpu_to_be16(pcp);
->  
->  		ether_addr_copy(sqp->ud_header.eth.smac_h, ah->av.eth.s_mac);
-> -		memcpy(sqp->ud_header.eth.dmac_h, ah->av.eth.mac, 6);
-> +		ether_addr_copy(sqp->ud_header.eth.dmac_h, ah->av.eth.mac);
->  		memcpy(&ctrl->srcrb_flags16[0], ah->av.eth.mac, 2);
->  		memcpy(&ctrl->imm, ah->av.eth.mac + 2, 4);
-
-I don't understand the last three lines. We are copying 6 bytes to
-ah->av.eth.mac and immediately after that overwriting them.
-
-Jack, 
-
-Do you remember what you wanted to achieve in commit
-6ee51a4e866b ("mlx4: Adjust QP1 multiplexing for RoCE/SRIOV")
-
-Thanks
-
->  
+>  kernel/debug/debug_core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+> index 4708aec492df..431749dd9ab6 100644
+> --- a/kernel/debug/debug_core.c
+> +++ b/kernel/debug/debug_core.c
+> @@ -1038,6 +1038,7 @@ dbg_notify_reboot(struct notifier_block *this, unsigned long code, void *x)
+>  	switch (kgdbreboot) {
+>  	case 1:
+>  		kgdb_breakpoint();
+> +		goto done;
+>  	case -1:
+>  		goto done;
+>  	}
 > -- 
-> 2.25.1
-> 
+> 2.27.0
