@@ -2,146 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620D0C2B9F4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 04:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F525C48BE5
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 05:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37BF461159
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 04:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D3A6135C
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 05:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbhFQE3T (ORCPT
+        id S229845AbhFQFwW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Jun 2021 00:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbhFQE3T (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Jun 2021 00:29:19 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528C3C061767
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 21:27:12 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id t9so3872857pgn.4
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Jun 2021 21:27:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zuAYjQFtuIQCmO1rMjR+p21Q0Trj1l5ASgWxbkTK9wA=;
-        b=Uv2fCei424Ypp83aUrHk1FNQtzrzzxcWjmyFu4H68+GAxcC1lRAOT9+abTyzD1hADw
-         NnfALb++pBhrvBW3H4jOX8zOzTkl9Yxam50FmCouTDs6gjvDglX4qj2JdER3MQ55UScC
-         hYzydqWeqWBFbhr0clBEm5KZTNf/PvyhIp1aY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zuAYjQFtuIQCmO1rMjR+p21Q0Trj1l5ASgWxbkTK9wA=;
-        b=HSIvPkJbhj16VgKuXmydVoguXkUZajhJwnyZYlt4/XC2KZCAEXvVuzBjq5gcbTOO4f
-         nheV4v2+Oturi/soKu995VVwSXG+1YhyvoBpktFJxVsn7cqBZEMlLX3zmbnbP5DCkkeH
-         7NNxO0NWdawR8n1oOs5g6rRHDg7dKSOwXUiciQxgS3qbgH54NHDEikgD++L9kr+la1ez
-         ppd8wTVidn2JmJUcvqIE1/VwSjxABe2MlE5ll+bip96usBigSeYI7YI7INxj0x0f80sd
-         DrFdpd4oEd0aTrq7okVxZFUMskxC7+mQ07/G2lTCMOcq4fGa55/TBdM4mhp7xEdrnEhQ
-         9tMg==
-X-Gm-Message-State: AOAM530Vzy9NRCKbif6umh4EOgNX8MikNKkzRtoKSRNbGOqbfE4XPuqb
-        Rf2OpdVyppFk4q/cV2KYzajIfdXCQJi6Ow==
-X-Google-Smtp-Source: ABdhPJzYMo1gT6vK0OEtP2ovZPyiyZaomQF4VL+8aJfBArMS2v9RGhR8Iqqd8U5ML6xgegxmo2943w==
-X-Received: by 2002:a63:3d82:: with SMTP id k124mr3049823pga.401.1623904031759;
-        Wed, 16 Jun 2021 21:27:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p6sm4473754pjh.24.2021.06.16.21.27.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 21:27:11 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     netdev@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
+        Thu, 17 Jun 2021 01:52:22 -0400
+Received: from www.zeus03.de ([194.117.254.33]:43666 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229783AbhFQFwV (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 17 Jun 2021 01:52:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=txV8Finzg7rGGU0YURmRHYvLobGc
+        EfiaKSowZNWDJVY=; b=HjNWC/Evgt4kqDKXfI5VamHFThUEmLCRh7Y2yPlH73TP
+        K7opLL7qwa2VR5I9SQRq15TdsaJDrJEdPMaTXgdldKz7RAnQyvZSwhMJEr6ELNFj
+        DtoEfnRUwXYKhA/OCmoDlPnxkkStBczp0vFas8gDwMwqt+DThYbbF4dIsAFHGkQ=
+Received: (qmail 212463 invoked from network); 17 Jun 2021 07:50:11 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Jun 2021 07:50:11 +0200
+X-UD-Smtp-Session: l3s3148p1@I0PDx+/EVM4gAwDPXxG6AGBCCTPRmR7s
+Date:   Thu, 17 Jun 2021 07:50:11 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     netdev@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] mac80211: Recast pointer for trailing memcpy()
-Date:   Wed, 16 Jun 2021 21:27:09 -0700
-Message-Id: <20210617042709.2170111-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
+        Jakub Kicinski <kuba@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omprussia.ru>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Michael Walle <michael@walle.cc>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] sh_eth: Avoid memcpy() over-reading of ETH_SS_STATS
+Message-ID: <YMrik9LBVYvu3Xkw@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omprussia.ru>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Michael Walle <michael@walle.cc>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20210616195333.1231715-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=a59972a95d22e6cba17e8ca1ef339d3a3ef1b4e5; i=P4B4b65qJuhqVi5i2irgu0AhoblNfL65fECGIen2RpA=; m=ye9VNM2/KkSGCD7iU041Afv+zNGB2BR/2/Lf1/HGmmk=; p=jmhDm1u21oAA6abJCLcWjlq9egIRuBdVv23WaQ1b954=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDKzxwACgkQiXL039xtwCZKsQ/+KRk qClgQaevJdpMV/HrC1/U+leuhMDzRHQ+71fiVOPofuqUOQVTtWE+ofVrBg5T6/rY7R3yAsr+M6jIl NJ5qwODjOmqe2eIHOtMdAd4junJjRi6O+8K7pH2Y8x7WLob4RubcXcogaPRTWlrcYGQiWAD14hyv2 mOkbE6mK0UWHeNnACpdecukYVYk5r3MTX0P/OlUO/FwEfnEhrM+DaXP/HWV9EbIQNqbEwsDmcTKY8 VtIggri22AUecFKn4TZKZJ7BIr1R7gMabDODg5vQRdnavOQ2LTaYprz+LO34lEaAsxfPU2onkBVet QIQBQS0Ti8XB+PcQuFsuIdTbu/qxP0yTqvwDq+C1bcSDkzsRMkDu/jGJfbA79rAt16c380/hh9eqP T78RVtzSJBOX+FpOA+/cQR5oZPQzKJpOjAIbdfbyazFb/+qaVakoDq6X0lmtF4MQgo0hrbhJg83Nc nQ4xKK6c6WN1Sno8eGF/JZl5GNKNNdolU2hEmyBJc46P/1CWCOqkhxON0XWPJWJVtqvea1i+WUYDn 7e9lU3+RyC8m/7yaBWVHyolrF+zityHQGiJKD0C6HZmACMw9nA/v5du3fLhtjD68HH8PhAdM8IEjt caIQX7Cm+K9rpWZB/2N/l5dXOIMPjx8g9R8DJtnr2znfH5CD4wW1DFjnlLen/Cco=
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OZ12UJaMUBfcACI+"
+Content-Disposition: inline
+In-Reply-To: <20210616195333.1231715-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring array fields.
 
-Give memcpy() a specific source pointer type so it can correctly
-calculate the bounds of the copy.
+--OZ12UJaMUBfcACI+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- net/mac80211/rx.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+On Wed, Jun 16, 2021 at 12:53:33PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally reading across neighboring array fields.
+>=20
+> The memcpy() is copying the entire structure, not just the first array.
+> Adjust the source argument so the compiler can do appropriate bounds
+> checking.
+>=20
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index af0ef456eb0f..cb141bb788a8 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -559,6 +559,8 @@ ieee80211_add_rx_radiotap_header(struct ieee80211_local *local,
- 
- 	if (status->encoding == RX_ENC_HE &&
- 	    status->flag & RX_FLAG_RADIOTAP_HE) {
-+		struct ieee80211_radiotap_he *he_ptr;
-+
- #define HE_PREP(f, val)	le16_encode_bits(val, IEEE80211_RADIOTAP_HE_##f)
- 
- 		if (status->enc_flags & RX_ENC_FLAG_STBC_MASK) {
-@@ -626,18 +628,22 @@ ieee80211_add_rx_radiotap_header(struct ieee80211_local *local,
- 		while ((pos - (u8 *)rthdr) & 1)
- 			pos++;
- 		rthdr->it_present |= cpu_to_le32(1 << IEEE80211_RADIOTAP_HE);
--		memcpy(pos, &he, sizeof(he));
--		pos += sizeof(he);
-+		he_ptr = (void *)pos;
-+		memcpy(he_ptr, &he, sizeof(he));
-+		pos += sizeof(*he_ptr);
- 	}
- 
- 	if (status->encoding == RX_ENC_HE &&
- 	    status->flag & RX_FLAG_RADIOTAP_HE_MU) {
-+		struct ieee80211_radiotap_he_mu *he_mu_ptr;
-+
- 		/* ensure 2 byte alignment */
- 		while ((pos - (u8 *)rthdr) & 1)
- 			pos++;
- 		rthdr->it_present |= cpu_to_le32(1 << IEEE80211_RADIOTAP_HE_MU);
--		memcpy(pos, &he_mu, sizeof(he_mu));
--		pos += sizeof(he_mu);
-+		he_mu_ptr = (void *)pos;
-+		memcpy(he_mu_ptr, &he_mu, sizeof(he_mu));
-+		pos += sizeof(*he_mu_ptr);
- 	}
- 
- 	if (status->flag & RX_FLAG_NO_PSDU) {
-@@ -647,12 +653,14 @@ ieee80211_add_rx_radiotap_header(struct ieee80211_local *local,
- 	}
- 
- 	if (status->flag & RX_FLAG_RADIOTAP_LSIG) {
-+		struct ieee80211_radiotap_lsig *lsig_ptr;
- 		/* ensure 2 byte alignment */
- 		while ((pos - (u8 *)rthdr) & 1)
- 			pos++;
- 		rthdr->it_present |= cpu_to_le32(1 << IEEE80211_RADIOTAP_LSIG);
--		memcpy(pos, &lsig, sizeof(lsig));
--		pos += sizeof(lsig);
-+		lsig_ptr = (void *)pos;
-+		memcpy(lsig_ptr, &lsig, sizeof(lsig));
-+		pos += sizeof(*lsig_ptr);
- 	}
- 
- 	for_each_set_bit(chain, &chains, IEEE80211_MAX_CHAINS) {
--- 
-2.25.1
+For the record:
 
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+
+--OZ12UJaMUBfcACI+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmDK4pIACgkQFA3kzBSg
+KbYVvg//dtV8RU8D/hpGH2BEQIDcYy8gwypQ8GJLk2kiWH1H9M2CjnQciapF/8l0
+WeMMCSD70iVw9nTNT0DMv64M8LxpPTYS9fEMmbtfEn45Yb25ax3TPyiAT4FxA3yB
+iQN+m7Q9FbdZfEQzH7itu9AMtCqZZPB5BeWLM8NLDrPgkZEV4wCKxDk3f49Gx8mD
+3K0pvPEbn5yiqrmhkADYND75RT9cJX4pzLdQuRnSFRd8WLvOJCaze+zGrwdVsa22
+kgWuXT9U8IxuXPUaW2JbV/DzjTHbin5kmmWl3jcJgjSWDeNJ8F0l4W3Ydp3UMLtW
+mBmohFQZMfxM6414ZPg4GTmq/rUIMc2tePgqPWmFMzGE/EA7ShsXXwbuhAtO3WH3
+VpL3QvmIqG1zZW7IXGBQ/xbyjjIwvS7LKVGv9KovEcfikJ4VjCQhoDmJ9YvPttsp
+8ZujPnk6cQMAAvdQFzNKSxHhwaLynu4eKpUS1h8H31Hg0CY3P1IdLLuZ1Qfvm+ZY
+HVdp1JUSbzhCnkkiUaIC6QgzxcAGIOqY3yORuWJ+IDMeBKf/KmRUEofkkxN1ZCht
+0Cqcvep3wJHZjBetRgLAonjmIaApw6nMzH09oy6NAhqYB4LM0LJdbmaDnR4UMRwH
+FxmptOJGqgzguBOjKYsQblJs1dFWvcBfc6CoIwrORAw344klKjs=
+=GZHy
+-----END PGP SIGNATURE-----
+
+--OZ12UJaMUBfcACI+--
