@@ -2,109 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D4FC2B9F4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 10:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264C1C48BE5
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 17:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7500A613F1
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 10:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9696102A
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 17:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231328AbhFQKMa (ORCPT
+        id S231617AbhFQRMH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Jun 2021 06:12:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34220 "EHLO
+        Thu, 17 Jun 2021 13:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229846AbhFQKM3 (ORCPT
+        with ESMTP id S231565AbhFQRMG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Jun 2021 06:12:29 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A225C061574
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 03:10:21 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id i94so6089630wri.4
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 03:10:21 -0700 (PDT)
+        Thu, 17 Jun 2021 13:12:06 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EED36C061760
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 10:09:57 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id v7so5486478pgl.2
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 10:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=E56FkjuuXNFtVViqYy8TeoNuBVG48wVdRyq4qMxFT7Q=;
-        b=cc92lm3cqq/4WRpp0rUpFPx8Z+kvoT4Tx9ZXfF2YT8NU5TfFQc7Wu7KIUgsllEZhTt
-         tTVl8t/ihrCA/UUKO+40t+HDheJxpctblabfjHtnjOgN7mokTL4QSRrLIED9HWgr+ueK
-         FgcOs3X7/WZliyyHXF1GjikreFMAMfG1X+/aq7MmYZ6TPdltTIB6jEP2sE8gUjjWouio
-         kQX19Iw+5lWapWejeVYiQv3dVdEg3ir2b2fu7OGHYwN/QcGXsGUOtquXcjpdVQCBNJNE
-         ofJggyrxvf+OhJYLkkQIzDrdKReoFVgooZWf6d7BShiHhauhTvXx+AKuZFDAh1Wf83XD
-         +LDQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W/S32u3ekjPeReAIcSVPK84B3McfcY02qau4OC949Fo=;
+        b=IgBimoOgYkL5HrKYTQgnDtuqkUgHEAELBT8PhXEEbGPQV3ZILOOxH6uqp64AzPyQ2X
+         L/4CEMA5zwqvjlsbdhNLPR2cL0rk08cu5TFNds7PVrz5UMVqPyiCHnot3r+39vCeOX89
+         8hVNW/j3mhGRLTHhXTiog5Qz5L1ykBrnaSqj0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=E56FkjuuXNFtVViqYy8TeoNuBVG48wVdRyq4qMxFT7Q=;
-        b=jHYe5KCtKEq1w4LnIyaDwR7e6LsCUdT4V9Q+ZUF44anhztk9D7OU+InfRA/4fbc5Qh
-         Vd1jxqJhpkwEYTm6BVccBQQRogyx7+4C8tTMHP9Tbp8hV1slOHI61kMGOz7aWF0FlJn1
-         i+ejtxnbjzNKwHVhUSyRDCrYM7qeIzSmETeDrv7egyl2FAwTWOwIwlk4tH9LZK2ggIkK
-         y5E+374xix2dpdf///vYryI8vQfljHK842sUMQUBIuMdge1brGXpcuoitbuK2SaB9H4b
-         pLZ/a2TfDbWZHyKpYcMxsWpcGCP9DI2oIYkd5ZL1OTuHzrlj+NFNMVxGovMjcmU3lPs9
-         SqzA==
-X-Gm-Message-State: AOAM5310SP6BHTFSq0WfM5E3NNTPTVIwjpkNnBxRISDYgI3PRtNuO5dP
-        +SUDCCkSmYF1f2vnaoffHJ6aSg==
-X-Google-Smtp-Source: ABdhPJzZueI2euycUe9mgA6BJPJridBC6QGjBnvNomu7DIPEiFbFNp6XB+4L70zQGY3jU7Qc4Ta1kA==
-X-Received: by 2002:a5d:6e0d:: with SMTP id h13mr4833617wrz.118.1623924620141;
-        Thu, 17 Jun 2021 03:10:20 -0700 (PDT)
-Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id o18sm7707395wmq.23.2021.06.17.03.10.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W/S32u3ekjPeReAIcSVPK84B3McfcY02qau4OC949Fo=;
+        b=WXMj6+Srz0/V54p50/G29OsvSGLe6tjV2HJyqhXaqZybNIPkNhEoVSE+Cvnkx+IkXZ
+         CDH/wFGfgWGTUpUoyFU1VIn5zTdj9F3UWIAW+/KQW1oi/UbxgkpDRWmMBLUb1jDSkCp+
+         zY5ew8Wm0AIneDBdrCi55F4NIX//i88m9az0SXK7MpAXNegLEc7v/ED10bmqnuscTKFh
+         j2fU973miIQ8UGrQq/zIwc6SkH/wB6vgg3+2VtXuuyEO6jwt7E/+Xry1xgDM5WN+6cFh
+         +3l+xhkF2glH9d0QHgAvnYiTB3xGiTWzA389X/1Aq4STy+qb3Ee/1y+Zk5sFOvEeukV2
+         sDRg==
+X-Gm-Message-State: AOAM531RB2DPomMXlq2CdEqryrUjQibELOJuXqIbe6xuigggrOpTnhlI
+        af8NixNmRFqAeLvhfbyIU9LuLg==
+X-Google-Smtp-Source: ABdhPJzfVVxxl4/obG5AKUZMNwwQGXdHf6ZfEgj/rA3dG8YJz6YKHXafcOT6QkyYzgFsV8lcWYA1Og==
+X-Received: by 2002:a62:1b91:0:b029:2fd:2904:938a with SMTP id b139-20020a621b910000b02902fd2904938amr733177pfb.18.1623949797155;
+        Thu, 17 Jun 2021 10:09:57 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n5sm2589727pgf.35.2021.06.17.10.09.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jun 2021 03:10:19 -0700 (PDT)
-Date:   Thu, 17 Jun 2021 11:10:18 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Thu, 17 Jun 2021 10:09:56 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Lobakin <alobakin@pm.me>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] kgdb: Fix fall-through warning for Clang
-Message-ID: <20210617101018.6st3dshblabvdok2@maple.lan>
-References: <20210528200222.GA39201@embeddedor>
+Subject: [PATCH] net: qed: Fix memcpy() overflow of qed_dcbx_params()
+Date:   Thu, 17 Jun 2021 10:09:53 -0700
+Message-Id: <20210617170953.3410334-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210528200222.GA39201@embeddedor>
+X-Patch-Hashes: v=1; h=sha256; g=7ee16d0c85b43265f1b056049a01025c7810232c; i=7UynV2bzrbyVcxIExxwAR2qPDHrjOVlt1/0kMWRdngo=; m=2tWE1O18O7/RX9jY2E+cZNsP6H6Af9JdA55eVc/s3NQ=; p=h9rajczpeiIMkXn0tERvoj5tzIpf9alLTkjRcrTfInk=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDLgeAACgkQiXL039xtwCaa7w/+MUC Jj9Che+mSHBlh+Ij5I0hZF4uNeub1HtZ/Nj23qSxIJ1tgPUpZItnEW+cgd8fW7QW+oAV9TCACXYlo 19vn/7m1UAR8oa3pEc2Wdl/zxCJHbrIHH2FF+4Rv1G0Z50pWCZAMsH+o+V+h9t2pOn8/yOp7Am6Ng 4TYQT6wLcffX4W+Hy3a6xtJ3+55r/5Ogd0AfdBKgAUIbHS/DQQv26HMshKHYgfmRMX1MCgUR9he84 kt6Eu1cY8ecJBnlzcF3vjdIIqc8Gs5pLLCVfo1fJ0taHEdQEc3JFmq1UUOMD7bGzcw+rcbWQFNH1r OWRzajC+s1YGUUuhv6Cf47xDFrgvxsODGf+qm6FHsQ+pIYv2iGyrh7unpaVjdZNGJqm3hHZ4AIw1g h7z83PMBsdRlk/kaJZ/D/bA4nC5u+FgGcVljfhbAKddUzsnLF1kzS1F5HXY6HM/uQOKOYYk09Zhvf OKAOdWu62fIPaKDvXjlENb557CaH3/qV0DwV82EMVGhkOY9VxoWhEWaKaVZcenVIOP6bDH/WQTbyq 5BMbcJXhP0RpaNqrbJoXQxtIM3m49YRr0zc4dANKxzpWSlBZCtWlbAwaWvr2x3L48xg5iCgmOXkHV F/olOjqrMYtTy7dS0d76YDEJUtJXVKgRW43aLOhN79hMfPyU4DaGbDV+9ygASAas=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 28, 2021 at 03:02:22PM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enable -Wimplicit-fallthrough for Clang, fix a
-> fall-through warning by explicitly adding a goto statement instead
-> of letting the code fall through to the next case.
-> 
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+The source (&dcbx_info->operational.params) and dest
+(&p_hwfn->p_dcbx_info->set.config.params) are both struct qed_dcbx_params
+(560 bytes), not struct qed_dcbx_admin_params (564 bytes), which is used
+as the memcpy() size.
 
-Applied, thanks.
+However it seems that struct qed_dcbx_operational_params
+(dcbx_info->operational)'s layout matches struct qed_dcbx_admin_params
+(p_hwfn->p_dcbx_info->set.config)'s 4 byte difference (3 padding, 1 byte
+for "valid").
 
+On the assumption that the size is wrong (rather than the source structure
+type), adjust the memcpy() size argument to be 4 bytes smaller and add
+a BUILD_BUG_ON() to validate any changes to the structure sizes.
 
-> ---
-> JFYI: We had thousands of these sorts of warnings and now we are down
->       to just 25 in linux-next. This is one of those last remaining
->       warnings.
-> 
->  kernel/debug/debug_core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> index 4708aec492df..431749dd9ab6 100644
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -1038,6 +1038,7 @@ dbg_notify_reboot(struct notifier_block *this, unsigned long code, void *x)
->  	switch (kgdbreboot) {
->  	case 1:
->  		kgdb_breakpoint();
-> +		goto done;
->  	case -1:
->  		goto done;
->  	}
-> -- 
-> 2.27.0
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/qlogic/qed/qed_dcbx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dcbx.c b/drivers/net/ethernet/qlogic/qed/qed_dcbx.c
+index 17d5b649eb36..e81dd34a3cac 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dcbx.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dcbx.c
+@@ -1266,9 +1266,11 @@ int qed_dcbx_get_config_params(struct qed_hwfn *p_hwfn,
+ 		p_hwfn->p_dcbx_info->set.ver_num |= DCBX_CONFIG_VERSION_STATIC;
+ 
+ 	p_hwfn->p_dcbx_info->set.enabled = dcbx_info->operational.enabled;
++	BUILD_BUG_ON(sizeof(dcbx_info->operational.params) !=
++		     sizeof(p_hwfn->p_dcbx_info->set.config.params));
+ 	memcpy(&p_hwfn->p_dcbx_info->set.config.params,
+ 	       &dcbx_info->operational.params,
+-	       sizeof(struct qed_dcbx_admin_params));
++	       sizeof(p_hwfn->p_dcbx_info->set.config.params));
+ 	p_hwfn->p_dcbx_info->set.config.valid = true;
+ 
+ 	memcpy(params, &p_hwfn->p_dcbx_info->set, sizeof(struct qed_dcbx_set));
+-- 
+2.25.1
+
