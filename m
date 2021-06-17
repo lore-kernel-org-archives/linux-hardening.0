@@ -5,103 +5,151 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94000C2B9F4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 17:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7121C2B9F4
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 17:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 767B0613BF
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 17:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905FE608FC
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 17:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbhFQRPa (ORCPT
+        id S232156AbhFQRRe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Jun 2021 13:15:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45006 "EHLO
+        Thu, 17 Jun 2021 13:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231908AbhFQRP3 (ORCPT
+        with ESMTP id S232148AbhFQRRd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Jun 2021 13:15:29 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C886C06175F
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 10:13:20 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id 11so3270460plk.12
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 10:13:20 -0700 (PDT)
+        Thu, 17 Jun 2021 13:17:33 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB84C061760
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 10:15:25 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id a127so5521543pfa.10
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Jun 2021 10:15:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RwrF+pnbkNf/qjoCdMQCOFlfbqT0rVKgXWLbQyXYamg=;
-        b=P/WRkHUBfJdT59+t0H+g3ZYXtCV76z76WRyN1S196khpyBZkajbdGWnbVcz86fJgMt
-         dWMpwlJJ/T8JnuQfAcZnc50FkBvJ9VhpPwk6d4eMM3mxiIlUNfFBFzXavq7NJLkRx41b
-         GoiX8WP7XeMZbFcvKz6QNUqyHrqZo8ORWWZ4o=
+        bh=1zD+T81jZZgZpyjFh0xFUsdQjL/HhqmGe6jBuS5LlYM=;
+        b=VNTKhE5cST2J0ZnjsR5r3QutKIJAPxdYyKrH0WhAhImj92y8rywVUrDhn5E6UvCEVs
+         jnF1hD2ZBj/+9soV3yLKupEXB/gCaqaptyKZ21N5+glwJDNV3wZyO1x4mJqmk61zA06g
+         7ijTYSH+TXIBumKzmNqYu2FWwdSDsDboZTmT0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RwrF+pnbkNf/qjoCdMQCOFlfbqT0rVKgXWLbQyXYamg=;
-        b=UrANVtkUlLoTxJMFFH2wXLlQroWpJW3i4kPp8tVoFybYcip2Rb21qK1eh8KlmKDb+C
-         TDdo3VuOB7QJ9Lozb6JeUpLe5zOqiYjxXLyAEJgMEU5TYkj0CHD6vjQbKqyM0am8aCzF
-         41ZW1ab8245dWxbhAnfX3VQg1czxFBr006nFzu1t4fqgsr9BWGFSdvNMpDF0V4JLYuHk
-         2/S9BOezQ3lCIpxdR5oI266QU4JrR2goqSBaorQ8jA8RP8IRoVNT1MKprloCqnqhCzRs
-         fc1+u9Zsq2CCyW903bxrFxZOc66wDx0rk76J0jgzKWkO+FOWUvXT1/E6lGCFPRxeY1xC
-         SrFQ==
-X-Gm-Message-State: AOAM531uT0SIpDM33lU/eOYvDopLxyKVBV1Hq6e9jNDchb4leUkf+SZg
-        U6yYbWe6UTo7JiuXEJawg2BZ4w==
-X-Google-Smtp-Source: ABdhPJxw4pWvq9M9vSGmYbe4PQOcVW8uzQA2U2vP4ifPT9snrMW2XJ+40Gz+YfUBpaA9aacy/sSIzQ==
-X-Received: by 2002:a17:90a:a607:: with SMTP id c7mr6485761pjq.199.1623949999827;
-        Thu, 17 Jun 2021 10:13:19 -0700 (PDT)
+        bh=1zD+T81jZZgZpyjFh0xFUsdQjL/HhqmGe6jBuS5LlYM=;
+        b=nqQjmAZ6E1UTq73Cg4h/qqeyaE4WkjBV9tWZFh4R4h1/kk5/BeGNDT5Lp0Tr3BL82s
+         Sus/hb0Wsbjq270Y220ZhNx3aXsCLn96AaRLvTgSMDNte5ik2b2yN7iMnE5R9Kb+UY44
+         wSo+kuMgzDcU5rzExV19mPj0fwh7bMnBq6DetQIkmt86lLJvxporf5eToRh5QN/jPzls
+         cGHO5i1JTiZMW83ThsJVyhcjixaYplcjFQUyuApH+z2Rmfb53SgVb3rm7nheWw6HXEgh
+         +95RCogWurav9ki6vEXlP3Bn2VjJFIn4bDlanORwW8bjw+WPxIr14v1lDqIjjXWKKoBO
+         nU4w==
+X-Gm-Message-State: AOAM530R/7T+aKhuxLQ3GmmRNjzk0UisW/6EQcFbuIotjs79r1fDNaTJ
+        0cTBJvwxbs5YVutwBvqrrYIl1A==
+X-Google-Smtp-Source: ABdhPJz+2jMCBEzFuT+7hJ4eMDlrWtKm4cUhhJRiazj6nJ5uWZLUBTK9YaUYt7u9fLzPz5cyGpDL8g==
+X-Received: by 2002:a63:c112:: with SMTP id w18mr5792064pgf.375.1623950124830;
+        Thu, 17 Jun 2021 10:15:24 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o14sm2580236pjj.6.2021.06.17.10.13.19
+        by smtp.gmail.com with ESMTPSA id q21sm6146371pfn.81.2021.06.17.10.15.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jun 2021 10:13:19 -0700 (PDT)
+        Thu, 17 Jun 2021 10:15:24 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Kalle Valo <kvalo@codeaurora.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Ping-Ke Shih <pkshih@realtek.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kaixu Xia <kaixuxia@tencent.com>, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] rtlwifi: rtl8192de: Fully initialize curvecount_val
-Date:   Thu, 17 Jun 2021 10:13:17 -0700
-Message-Id: <20210617171317.3410722-1-keescook@chromium.org>
+Subject: [PATCH] mwifiex: Avoid memset() over-write of WEP key_material
+Date:   Thu, 17 Jun 2021 10:15:22 -0700
+Message-Id: <20210617171522.3410951-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=ad19d92695e58ee1a3610c1c93b1215aa0b454ab; i=8Mjgo7nwZa2B1T2pbFU78xkknAoUC7gygPgmoHcS04s=; m=Q+QcMAuMZQjhqnPxtv9+5wQ0q2weIg7NstC3dFeLQcw=; p=k6vO4+RMbTJEd7/3zKfAdx4+Y+A7g9G5Bir9iEa2vSY=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDLgqwACgkQiXL039xtwCaHwg//RkP 6Vu5YljWonyECSbJPtdj5WIHHyZq6nBqsa9wOtb1WPJVjyfJ/p3RI+y8fLo7SCMeDLaJ3bNDWrDf9 AacrqhLgalwDP/A3PcBviaAbGlsW8OdtW0LSU0sqOZ5Vv9fMUlS4rVxk5/YcfGkS8JzwB9q+gSRi0 MsrXYuOGDq9DsbpIntRHzKmgKZdgDULimtw/fQyrnL+tPslnKUX/KTYaZRZGuZaWcA+WrmCN+ERu5 XsKRaTnLNBpFubJRUfnnOgUixWks1Hd7Rr2SjgmoqQS1RXQ6tqAUx31EnJOwSijrGulXqiTiN8hA0 7BqKM8nk+XlzS0YthRAutxkrtTUuFGDez28JzvAOiDPs/S/U7lLiItSFZgp1ufk68tLIjaop3h2/W uQdA1lJh2A22I8q0+lWiUhMNnnEqhDJcquGCqAaJxuoVdaoCxOL/5er5jn+lPb8hi+DN0Syx1aA0Z EbHuoFS+77OcePhHe0qR6VFKVJeGsoJEmkjuNh//2nQwflUHabvYztHvEmgVtXYYPc8GWEFeI/mHR ADcHdxwVlRzSLo/TImkzQiu7YwvHbWibnQLSQkkMTJlz8/rUxkORUv3Pbc2ctYHqzUH1oyuExYqsD 4pzqWdAFQXQiYXDP7qzMb5SNCSgUyA6BCbU7YphrTitfep7zkuC2R78tCX5x/YLs=
+X-Patch-Hashes: v=1; h=sha256; g=8ee66baceadd27f658a8dfa2fe3397021a28ad22; i=BArkIcxklEnQKmH2E0CxJuEpf2GPz0bKINbIuaIaeGg=; m=QhaE3cdmOtrz4D6MWzL5ksVjqyQuqa6XFh/VF/68Fns=; p=0XEJ9f86jVziXDyuQV+SK180J33uce0FHTOpZ2MXGNU=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDLgykACgkQiXL039xtwCZAaQ//VPH Acw4YzlV6FoySvgPI2F9hIrqIUecqEJLuZXlKbEO/+XVh/E+asMJRVYfC8aixmaMj6xJGj+PKKpZL Qrk94z5tRQ12XIVKK+5/EOykBXLcclyyn+JsVbXH51ofvofhAHUw6MldFBCNgWVH0NIJe9zWdpwdx DORMsA2AjLkCAjNXBaiWktvfyy+PWhR7bqZwYK8Bhhz76nmlRsWR1tDb8lQUfD5Kpk9ohIBpuXMpj cey5gKDWIc+ri9vCGuF6P/Vq+3/jSvmB0mn0BdiWeito+OxIETfM4rOjwTBCKRmgT93Mn56Qg5S+h wWM+thXDZ78dKqiFlhgzeMjHM5k7nrMaMb5sLB00j9Pvu289BTmS8I8Nl4UJDQpMwGNmqgcqkkAKv c52rJ7yMm3w6VW7e1J3AEGNT8G2WH+VmebmyIGkJgjkZErnFrS4GgAqwZT3IdrHfcTTehxJ1gPOa7 1oL6gBBsos0Qx0bi9/dz7WNFYo6XCL52zVjGtJ8bZ7jHbnwmZ41fwJ/Bfi+GYTPJDTKKz5/vXh1gf 8q+hJIBNOd7tM6eY+BM9zwrD0GZVuDRHZvk+Dkt/rQe5RJ7gGnHWFmJJ/E4MxuBetyxVM4LORtedk 71BXhfbgPNN1AMJeYNwRTL4T6u2r7FgjFMUFbo3wY+ezV1dW71gAD/NSOyez5KcM=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring array fields.
+field bounds checking for memset(), avoid intentionally writing across
+neighboring array fields.
 
-The size argument to memset() is bytes, but the array element size
-of curvecount_val is u32, so "CV_CURVE_CNT * 2" was only 1/4th of the
-contents of curvecount_val. Adjust memset() to wipe full buffer size.
+When preparing to call mwifiex_set_keyparamset_wep(), key_material is
+treated very differently from its structure layout (which has only a
+single struct mwifiex_ie_type_key_param_set). Instead, add a new type to
+the union so memset() can correctly reason about the size of the
+structure.
+
+Note that the union ("params", 196 bytes) containing key_material was
+not large enough to hold the target of this memset(): sizeof(struct
+mwifiex_ie_type_key_param_set) == 60, NUM_WEP_KEYS = 4, so 240
+bytes, or 44 bytes past the end of "params". The good news is that
+it appears that the command buffer, as allocated, is 2048 bytes
+(MWIFIEX_SIZE_OF_CMD_BUFFER), so no neighboring memory appears to be
+getting clobbered.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/fw.h      |  6 ++++++
+ drivers/net/wireless/marvell/mwifiex/sta_cmd.c | 11 ++++++-----
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-index 68ec009ea157..76dd881ef9bb 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-@@ -2574,7 +2574,7 @@ static void _rtl92d_phy_lc_calibrate_sw(struct ieee80211_hw *hw, bool is2t)
- 			RTPRINT(rtlpriv, FINIT, INIT_IQK,
- 				"path-B / 2.4G LCK\n");
- 		}
--		memset(&curvecount_val[0], 0, CV_CURVE_CNT * 2);
-+		memset(curvecount_val, 0, sizeof(curvecount_val));
- 		/* Set LC calibration off */
- 		rtl_set_rfreg(hw, (enum radio_path)index, RF_CHNLBW,
- 			      0x08000, 0x0);
+diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+index 470d669c7f14..2ff23ab259ab 100644
+--- a/drivers/net/wireless/marvell/mwifiex/fw.h
++++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+@@ -995,6 +995,11 @@ struct host_cmd_ds_802_11_key_material {
+ 	struct mwifiex_ie_type_key_param_set key_param_set;
+ } __packed;
+ 
++struct host_cmd_ds_802_11_key_material_wep {
++	__le16 action;
++	struct mwifiex_ie_type_key_param_set key_param_set[NUM_WEP_KEYS];
++} __packed;
++
+ struct host_cmd_ds_gen {
+ 	__le16 command;
+ 	__le16 size;
+@@ -2347,6 +2352,7 @@ struct host_cmd_ds_command {
+ 		struct host_cmd_ds_wmm_get_status get_wmm_status;
+ 		struct host_cmd_ds_802_11_key_material key_material;
+ 		struct host_cmd_ds_802_11_key_material_v2 key_material_v2;
++		struct host_cmd_ds_802_11_key_material_wep key_material_wep;
+ 		struct host_cmd_ds_version_ext verext;
+ 		struct host_cmd_ds_mgmt_frame_reg reg_mask;
+ 		struct host_cmd_ds_remain_on_chan roc_cfg;
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+index d3a968ef21ef..48ea00da1fc9 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+@@ -840,14 +840,15 @@ mwifiex_cmd_802_11_key_material_v1(struct mwifiex_private *priv,
+ 	}
+ 
+ 	if (!enc_key) {
+-		memset(&key_material->key_param_set, 0,
+-		       (NUM_WEP_KEYS *
+-			sizeof(struct mwifiex_ie_type_key_param_set)));
++		struct host_cmd_ds_802_11_key_material_wep *key_material_wep =
++			(struct host_cmd_ds_802_11_key_material_wep *)key_material;
++		memset(key_material_wep->key_param_set, 0,
++		       sizeof(key_material_wep->key_param_set));
+ 		ret = mwifiex_set_keyparamset_wep(priv,
+-						  &key_material->key_param_set,
++						  &key_material_wep->key_param_set[0],
+ 						  &key_param_len);
+ 		cmd->size = cpu_to_le16(key_param_len +
+-				    sizeof(key_material->action) + S_DS_GEN);
++				    sizeof(key_material_wep->action) + S_DS_GEN);
+ 		return ret;
+ 	} else
+ 		memset(&key_material->key_param_set, 0,
 -- 
 2.25.1
 
