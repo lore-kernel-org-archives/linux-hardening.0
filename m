@@ -2,115 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F525C48BE5
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 05:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02051C49361
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 06:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57D3A6135C
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 05:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00DD61019
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Jun 2021 06:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbhFQFwW (ORCPT
+        id S229887AbhFQGKb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Jun 2021 01:52:22 -0400
-Received: from www.zeus03.de ([194.117.254.33]:43666 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229783AbhFQFwV (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Jun 2021 01:52:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=txV8Finzg7rGGU0YURmRHYvLobGc
-        EfiaKSowZNWDJVY=; b=HjNWC/Evgt4kqDKXfI5VamHFThUEmLCRh7Y2yPlH73TP
-        K7opLL7qwa2VR5I9SQRq15TdsaJDrJEdPMaTXgdldKz7RAnQyvZSwhMJEr6ELNFj
-        DtoEfnRUwXYKhA/OCmoDlPnxkkStBczp0vFas8gDwMwqt+DThYbbF4dIsAFHGkQ=
-Received: (qmail 212463 invoked from network); 17 Jun 2021 07:50:11 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Jun 2021 07:50:11 +0200
-X-UD-Smtp-Session: l3s3148p1@I0PDx+/EVM4gAwDPXxG6AGBCCTPRmR7s
-Date:   Thu, 17 Jun 2021 07:50:11 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     netdev@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        Thu, 17 Jun 2021 02:10:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229683AbhFQGKa (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 17 Jun 2021 02:10:30 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8F5C061574;
+        Wed, 16 Jun 2021 23:08:22 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4G5BSJ40jBz9sSn;
+        Thu, 17 Jun 2021 16:08:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1623910098;
+        bh=hVSqDU1BBeAnmrNw6zEidn4Sen3Yd1tIwA02D0sarGQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=oZZoiBeVQr61j2bwMuugaKP9gv5ITKpktufP160mgBAmaarcFH8bPXbdJ5s5ZAoT7
+         68SUZpMPCycXQb4uZ+AqRADj/OQdoSYJqDG4hYoefgWjS0qZPtMny18lrv1bnWbnGs
+         KBOE5Mko05q8bQdSFjqPAZizL+y7tz+XE6RsTtBK58oVtL0mWznrq5K0szKgbLprNl
+         Z2mnxDi277OL/yq/XSkTEPwus9+Y6U5LpWAEUvgYl5ngSjQplmDenWM0kYCDcyyNHl
+         F+wAZD7749u+k4C1USPD+m0b5eb8oHPeBRu1X7PoJNLikR6YONWawdwD8yIVLS7tIK
+         85QrKv0/sir6g==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Kees Cook <keescook@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
+        Breno =?utf-8?Q?Leit=C3=A3o?= <leitao@debian.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omprussia.ru>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Michael Walle <michael@walle.cc>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sh_eth: Avoid memcpy() over-reading of ETH_SS_STATS
-Message-ID: <YMrik9LBVYvu3Xkw@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omprussia.ru>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Michael Walle <michael@walle.cc>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210616195333.1231715-1-keescook@chromium.org>
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] crypto: nx: Fix memcpy() over-reading in nonce
+In-Reply-To: <20210616203459.1248036-1-keescook@chromium.org>
+References: <20210616203459.1248036-1-keescook@chromium.org>
+Date:   Thu, 17 Jun 2021 16:08:15 +1000
+Message-ID: <87zgvpqb00.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OZ12UJaMUBfcACI+"
-Content-Disposition: inline
-In-Reply-To: <20210616195333.1231715-1-keescook@chromium.org>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
---OZ12UJaMUBfcACI+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 16, 2021 at 12:53:33PM -0700, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), memmove(), and memset(), avoid
-> intentionally reading across neighboring array fields.
->=20
-> The memcpy() is copying the entire structure, not just the first array.
-> Adjust the source argument so the compiler can do appropriate bounds
-> checking.
->=20
+Kees Cook <keescook@chromium.org> writes:
+> Fix typo in memcpy() where size should be CTR_RFC3686_NONCE_SIZE.
+>
+> Fixes: 030f4e968741 ("crypto: nx - Fix reentrancy bugs")
+> Cc: stable@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-For the record:
+Thanks.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/crypto/nx/nx-aes-ctr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/crypto/nx/nx-aes-ctr.c b/drivers/crypto/nx/nx-aes-ctr.c
+> index 13f518802343..6120e350ff71 100644
+> --- a/drivers/crypto/nx/nx-aes-ctr.c
+> +++ b/drivers/crypto/nx/nx-aes-ctr.c
+> @@ -118,7 +118,7 @@ static int ctr3686_aes_nx_crypt(struct skcipher_request *req)
+>  	struct nx_crypto_ctx *nx_ctx = crypto_skcipher_ctx(tfm);
+>  	u8 iv[16];
+>  
+> -	memcpy(iv, nx_ctx->priv.ctr.nonce, CTR_RFC3686_IV_SIZE);
+> +	memcpy(iv, nx_ctx->priv.ctr.nonce, CTR_RFC3686_NONCE_SIZE);
+>  	memcpy(iv + CTR_RFC3686_NONCE_SIZE, req->iv, CTR_RFC3686_IV_SIZE);
+>  	iv[12] = iv[13] = iv[14] = 0;
+>  	iv[15] = 1;
 
+Where IV_SIZE is 8 and NONCE_SIZE is 4.
 
---OZ12UJaMUBfcACI+
-Content-Type: application/pgp-signature; name="signature.asc"
+And iv is 16 bytes, so it's not a buffer overflow.
 
------BEGIN PGP SIGNATURE-----
+But priv.ctr.nonce is 4 bytes, and at the end of the struct, so it reads
+4 bytes past the end of the nx_crypto_ctx, which is not good.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmDK4pIACgkQFA3kzBSg
-KbYVvg//dtV8RU8D/hpGH2BEQIDcYy8gwypQ8GJLk2kiWH1H9M2CjnQciapF/8l0
-WeMMCSD70iVw9nTNT0DMv64M8LxpPTYS9fEMmbtfEn45Yb25ax3TPyiAT4FxA3yB
-iQN+m7Q9FbdZfEQzH7itu9AMtCqZZPB5BeWLM8NLDrPgkZEV4wCKxDk3f49Gx8mD
-3K0pvPEbn5yiqrmhkADYND75RT9cJX4pzLdQuRnSFRd8WLvOJCaze+zGrwdVsa22
-kgWuXT9U8IxuXPUaW2JbV/DzjTHbin5kmmWl3jcJgjSWDeNJ8F0l4W3Ydp3UMLtW
-mBmohFQZMfxM6414ZPg4GTmq/rUIMc2tePgqPWmFMzGE/EA7ShsXXwbuhAtO3WH3
-VpL3QvmIqG1zZW7IXGBQ/xbyjjIwvS7LKVGv9KovEcfikJ4VjCQhoDmJ9YvPttsp
-8ZujPnk6cQMAAvdQFzNKSxHhwaLynu4eKpUS1h8H31Hg0CY3P1IdLLuZ1Qfvm+ZY
-HVdp1JUSbzhCnkkiUaIC6QgzxcAGIOqY3yORuWJ+IDMeBKf/KmRUEofkkxN1ZCht
-0Cqcvep3wJHZjBetRgLAonjmIaApw6nMzH09oy6NAhqYB4LM0LJdbmaDnR4UMRwH
-FxmptOJGqgzguBOjKYsQblJs1dFWvcBfc6CoIwrORAw344klKjs=
-=GZHy
------END PGP SIGNATURE-----
+But then immediately overwrites whatever it read with req->iv.
 
---OZ12UJaMUBfcACI+--
+So seems pretty harmless in practice?
+
+cheers
