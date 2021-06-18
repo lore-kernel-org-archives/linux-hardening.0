@@ -2,132 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931F0C49361
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Jun 2021 20:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56479C48BE8
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Jun 2021 23:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FB6613C2
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Jun 2021 20:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFE260FEE
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Jun 2021 23:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233798AbhFRUiZ (ORCPT
+        id S235200AbhFRXqD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Jun 2021 16:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43744 "EHLO
+        Fri, 18 Jun 2021 19:46:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232426AbhFRUiX (ORCPT
+        with ESMTP id S233940AbhFRXqC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Jun 2021 16:38:23 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B1F7C061574;
-        Fri, 18 Jun 2021 13:36:14 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id o17-20020a9d76510000b02903eabfc221a9so10999344otl.0;
-        Fri, 18 Jun 2021 13:36:14 -0700 (PDT)
+        Fri, 18 Jun 2021 19:46:02 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A91C06175F
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Jun 2021 16:43:51 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id m17so2321904plx.7
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Jun 2021 16:43:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FwzvVbuJlgu6DBRUWFo9BEm/hzQ+wY0U0PlSZsQGHWY=;
-        b=WdnhFyyu6n7P6JsoopbACwoe7AOK+QOg+3/Ko1PmYCVdMIS9EvhxqPe0fqh4xbv28G
-         KQFDPBb7TRq7Fgk2W4R7099i+F1aW8MPrZwKy+1LSEYUzzEuodod0s6kK3yNfs8rlb3e
-         sgPgI+EEWNOuaE/XLVE3Sb8oehkfPQxQuebacQnQ3s3wsVwZoFmR5/Kw+KU7zrADZyDK
-         qeyEC4D8QyUHfcJsUtKp1JbWcaFW1YCI1HvXIDHw2gljF+Yd4flqBwhj8xsLMHYeXyTH
-         IJbq8gN4BgMZVAqLoRwYa0/ZyR2pQLD7tiJ3Kn3cSE/E/0UYO3mTAZJsfM4Qyg22Zb69
-         ioMw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VaxeR6kq1TatKHxRpRVY2RGQ7tO/m+vKgd0wWV7OHFE=;
+        b=oKpBYtD2pXCHjq5y/Nt8YG3X6Hc+aprbg2b9ZkAsrU+kH2cTN5vRzPu4dhgdPq/BMg
+         YXfowyn9ZKcrfjQU2uBOSxrSmWRwg+rw+35xxmHk+/WEnlFCFefwGdPe+yGDw18U+/v5
+         fpDCZe8f7Xg4iY29vtdBl9/pA7c436jM7zKjE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FwzvVbuJlgu6DBRUWFo9BEm/hzQ+wY0U0PlSZsQGHWY=;
-        b=qP6I0lsy6SlPPxSYBsjOHTb3shqO4WW5TLNtd/7GESrqxbAgTzIYLqdXJ7svzdQZq/
-         z/vAqvgwWB/jqov2a+GkzPjOaxAVSwVqyZaGkLiqjLFDLkvWTNvucMEX0xtnVxh9CxF1
-         euMlyqCyKc1S4vGx5km6bGpdTtdmIGLN6ENNhwPdeHok71wBB9xl7hWxX2kTv/Z9egvC
-         uI9fKKCs/kydoRUhFf4EinF1yCD7E816V7MyAJwFhfCkqx5quaz5Xu6tj9EqBCxYJ/aY
-         2fehK/F9twM9y8WOG4xpEiVTt9mn7CydJWTkXs2gBdEMUUtw5Bb59PMUtzFMEy9d4qJO
-         0mlA==
-X-Gm-Message-State: AOAM533tHSe7ZqiHb09kpMhCS9I1nvHDeGxZA+DM5puwUITYLWHgXXMb
-        hKfnABL7fEJvqV2yowqhgvBdDHI/EcVi4qJeLSE=
-X-Google-Smtp-Source: ABdhPJzF78KAFsqPc87SewWRBrPw3zNm1t0kg3ndekO4Ac022ElkbsuZKs6pwn6DG0+gmaEZzECQIoIb8XCyvEaP2MI=
-X-Received: by 2002:a05:6830:33ef:: with SMTP id i15mr11036214otu.311.1624048573626;
- Fri, 18 Jun 2021 13:36:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VaxeR6kq1TatKHxRpRVY2RGQ7tO/m+vKgd0wWV7OHFE=;
+        b=sIOWz4+cGlGnWhXKDqaFkA5R3vf/l+/nKd4pDlgU1RCerYgm6h6ynalfZFwA2zfyvs
+         TNzyU0g/2wk7WNaLVJ+mY2fchF/tVBEW+v87Phae/Sc5JkfDXgoS9zXPBVgREpPZOIZA
+         6SOWYRb/6+GSJaz8HklVRUolHchEUXBLiXCNh8pVjS0z3UdeKn92J8lA6/h6xMAaoROs
+         kuZ8uWAxAbobaAoCtdg8QZV9bf8xUX0JchceWWUf5BFYJ0qN36CmAe+u4gHHkLrm8Fo3
+         j8Kw87yAW+yvxiYWTxpqa6HN3DinAZe/x821+6eKFggZfyzXSYPqpZJ7YZjSMjLJsrKF
+         e+Vg==
+X-Gm-Message-State: AOAM533yen1axTnbD45DggDvSLAHdl4Nra8hNRxwAIQiAMUej9s5qmax
+        uxgpazi8fotJGJEbAjW0jcLJNg==
+X-Google-Smtp-Source: ABdhPJxCYWIunQzevcI7fFjpJx4ABhcng0aYoYnWLpsnKsb7BHY1Kizbat1j8IK9uKd7lLwjs1tOIg==
+X-Received: by 2002:a17:902:aa4a:b029:10e:f98c:2b83 with SMTP id c10-20020a170902aa4ab029010ef98c2b83mr6883721plr.62.1624059831217;
+        Fri, 18 Jun 2021 16:43:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n23sm9178485pff.93.2021.06.18.16.43.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Jun 2021 16:43:50 -0700 (PDT)
+Date:   Fri, 18 Jun 2021 16:43:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] xfs: Fix multiple fall-through warnings for Clang
+Message-ID: <202106181643.99B75165@keescook>
+References: <20210616191714.GA104231@embeddedor>
 MIME-Version: 1.0
-References: <20210616205206.GA17547@embeddedor> <3e68b60f-a9af-1f58-076d-1d348e3bf892@amd.com>
-In-Reply-To: <3e68b60f-a9af-1f58-076d-1d348e3bf892@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 18 Jun 2021 16:36:02 -0400
-Message-ID: <CADnq5_MZ7vTxH6aB-rsZqSLGaffi6OwgVBDAFcT=16RRNw+UKA@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/amd/display: Fix fall-through warning for Clang
-To:     Harry Wentland <harry.wentland@amd.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-hardening@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210616191714.GA104231@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Applied.  Thanks!
+On Wed, Jun 16, 2021 at 02:17:14PM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix
+> the following warnings by replacing /* fallthrough */ comments,
+> and its variants, with the new pseudo-keyword macro fallthrough:
+> 
+> fs/xfs/libxfs/xfs_attr.c:487:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> fs/xfs/libxfs/xfs_attr.c:500:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> fs/xfs/libxfs/xfs_attr.c:532:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> fs/xfs/libxfs/xfs_attr.c:594:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> fs/xfs/libxfs/xfs_attr.c:607:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> fs/xfs/libxfs/xfs_attr.c:1410:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> fs/xfs/libxfs/xfs_attr.c:1445:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> fs/xfs/libxfs/xfs_attr.c:1473:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> 
+> Notice that Clang doesn't recognize /* fallthrough */ comments as
+> implicit fall-through markings, so in order to globally enable
+> -Wimplicit-fallthrough for Clang, these comments need to be
+> replaced with fallthrough; in the whole codebase.
+> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Alex
+Thanks for carrying these!
 
-On Thu, Jun 17, 2021 at 3:20 PM Harry Wentland <harry.wentland@amd.com> wrote:
->
->
->
-> On 2021-06-16 4:52 p.m., Gustavo A. R. Silva wrote:
-> > In preparation to enable -Wimplicit-fallthrough for Clang, fix
-> > the following warning by replacing a /* fall through */ comment
-> > with the new pseudo-keyword macro fallthrough:
-> >
-> > rivers/gpu/drm/amd/amdgpu/../display/dc/dce/dce_aux.c:672:4: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-> >                         case AUX_TRANSACTION_REPLY_I2C_OVER_AUX_DEFER:
-> >                         ^
-> >
-> > Notice that Clang doesn't recognize /* fall through */ comments as
-> > implicit fall-through markings, so in order to globally enable
-> > -Wimplicit-fallthrough for Clang, these comments need to be
-> > replaced with fallthrough; in the whole codebase.
-> >
-> > Link: https://github.com/KSPP/linux/issues/115
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->
-> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
->
-> Harry
->
-> > ---
-> > JFYI: We had thousands of these sorts of warnings and now we are down
-> >       to just 15 in linux-next. This is one of those last remaining
-> >       warnings.
-> >
-> >  drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-> > index 28631714f697..2fb88e54a4bf 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-> > @@ -668,7 +668,7 @@ bool dce_aux_transfer_with_retries(struct ddc_service *ddc,
-> >                               /* polling_timeout_period is in us */
-> >                               defer_time_in_ms += aux110->polling_timeout_period / 1000;
-> >                               ++aux_defer_retries;
-> > -                             /* fall through */
-> > +                             fallthrough;
-> >                       case AUX_TRANSACTION_REPLY_I2C_OVER_AUX_DEFER:
-> >                               retry_on_defer = true;
-> >                               fallthrough;
-> >
->
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
