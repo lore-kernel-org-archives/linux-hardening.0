@@ -2,75 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95B8C4743C
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 22:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FFDC4743C
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 22:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 906C6611C1
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 22:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D511C611CE
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 22:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231953AbhFUWCW (ORCPT
+        id S231715AbhFUWXb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Jun 2021 18:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231715AbhFUWCS (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Jun 2021 18:02:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id EA40C6128C;
-        Mon, 21 Jun 2021 22:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624312804;
-        bh=vX+RaGheyY1gsEhdZsoG6F0qs/k+AUQKs69sAR768xE=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=jTff1tasDIgFelIUw1rB8efd+bqGw/zY7+j2UEW3aBeabY0c6j22pYpcoSgW0/CC5
-         wZ1hGkVDpm7gr8zaCCiqsDtrWQ7mT+YhkEgMq3okp4yaNZsMMz0NJ4K3NG1K9rIlHD
-         EuKyAt655iNB0YkzW1dsHEQJ/KMFk+BJMAyXQUqaMd2g7KCPuaM2aT4ExIVX8Sq1mp
-         S/f9ZiQ1MZ/cF6ixTN6d18VDj1neaqd/0WtWSmJ/8TV7xGUyaeF1C16qv4wryZpRV5
-         sPy9u+s9AsVsVyHP9ShZjHg9u55SRAZTWfn76/SlCxECF5lzbvTXtO3waAWbZd0/0S
-         dLa3OZpb2+tVw==
-Content-Type: text/plain; charset="utf-8"
+        Mon, 21 Jun 2021 18:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230423AbhFUWXb (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 21 Jun 2021 18:23:31 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2448C061574
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id bb10-20020a17090b008ab029016eef083425so404431pjb.5
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k4IdIX/nvtQeyieT57jvq6pJDqXEf5OX6FjN268bVeg=;
+        b=nkVTSIbARbqWX9bwAlW18qOcFR8S/hkqL5a1OVaKjTFtwfRmIlcf1FB8IBt7484nNv
+         B/iwvYo5pXp4OAPYa9GF5uI+2nWwc25NjLHtB0z99es5AL03f+esGPsU08SB4Cb9Y+1W
+         vtykXOIbgR7n7kvpkf3/Wv4O7FOsStJDEaoIc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k4IdIX/nvtQeyieT57jvq6pJDqXEf5OX6FjN268bVeg=;
+        b=UPZCIsfgL9UQ1yejTnR08xmEMyq67597sMjRSARUcunEZ9iVBTN21Wr6Avw+Gp9SrX
+         L/NDBXoNgYaJAKSGtcxdGzSlD8rwZlm/DydvxTgpQiERp0AphFuxgz4/6NZEGt0Z+Qpx
+         WD59qzDDcgvNy1ojMp84YE8u6GmdR+4uMqHKzZFvMq6Dxh4xf1qEP5WT94KvwFusPYQ7
+         1DTYY71yv5x3Ye1kw3pnS6zD0tcfiror1K1kNJtk9G718oB7/WeoHXw0IDRQ98sI8AfY
+         +yZZcEZ+AF8VqkL52YM6hZukeKspoKfhgTRxO+/9L8wNHpU/1/AQ8MpXJpeq0VZYLTXM
+         JIMg==
+X-Gm-Message-State: AOAM532q/vMmDQQG8b0qpfsUifjNmGN4AhL3veCn77Uvc3HVxu5OpvM6
+        LbVvqKgoMa9WFiDb8M1CJNM0pA==
+X-Google-Smtp-Source: ABdhPJy0UEQTxmiMj8p2NA6jXxmy5M54nD943ClM6WPkwJ+CKmoQhJbhjtM8O2hcOqIBwKLJXKwQiw==
+X-Received: by 2002:a17:90a:dac1:: with SMTP id g1mr427917pjx.199.1624314074326;
+        Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 73sm4536385pfy.83.2021.06.21.15.21.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jun 2021 15:21:13 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] hv_netvsc: Avoid field-overflowing memcpy()
+Date:   Mon, 21 Jun 2021 15:21:12 -0700
+Message-Id: <20210621222112.1749650-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
+X-Patch-Hashes: v=1; h=sha256; g=52ca9d3ef6fdb378f4fb4390eb0f8bf4545fb2f0; i=KB/gBOM4hXq43bzNgE68y/CtxkQywhn1/IWky57D5OI=; m=5mFF/t04SK2neGS9/cim9EhIl8hHaSNFLWMm4iAy2p8=; p=viZ5h7L2XoQprZaaybqKRBXaA6Do0vJQSm4gKjZyktE=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDRENcACgkQiXL039xtwCYneg/+O3l CHaMID0zQGdHzOpjdP/XRCBkbVhaJywyHQ8z6b7qmEv3f20zSEpANEIFxybZanrdt/CdTEEfq3rfp MnxIdOpQzllckLVio4CTSZVeSkhV5fW6cGgy6cGBfmmwo5L7lZPsQT99c7qkBCTuz/yX8s+yrRj5J JPoUt6IMHmYzT8V9qhdFBrY4Mj1yOWqTjTf5vrKQXkzRVEAIrAnmw6vQQqaNOQj8casITz+Bas2r9 1BnbHRha8kDtuvxErUrhSvElGt1QJBLTEbNJFaseHV1+hk/wYjf+IEDa7cTWDJv/MEzw14vLQ5lJ7 TpdODkKAEPK+ifpliTgNz5o0Z3WZvDkiS4mSCPmLfBxnZ4F2ckzR42tFpFT/6XUNWaba/O3Rdf96d YUzWdRdWnqrxJrZGAu1dgk/U76yd2ydcikd/yky9RmLEFMvosTJ2UUh344i3i6Jo3KrpJjLgYEmll N0SJ5HiAxLF8j052YiXUO/MNSDP8XVIScErnxTg/ah6x7Yq8PD5SPxkt1pGjJtC1MkMIcIw+XKK4H Prj0rfPvjCUvMXkjq82cEBgAMFwaMqO2wu0jaXbv6fZ+Ynxo3TZoYw53z2Eam0ohGAsszkNbZUdi6 4MvZ8f4iLqqz3cs5bnyFAomq2bEcQ2qM9HAd8Hk8LHIXIiQPe56MYO+diaNYmMDg=
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] ibmvnic: Use strscpy() instead of strncpy()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <162431280392.22265.13378585860049565329.git-patchwork-notify@kernel.org>
-Date:   Mon, 21 Jun 2021 22:00:03 +0000
-References: <20210621213509.1404256-1-keescook@chromium.org>
-In-Reply-To: <20210621213509.1404256-1-keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     davem@davemloft.net, drt@linux.ibm.com, sukadev@linux.ibm.com,
-        tlfalcon@linux.ibm.com, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-This patch was applied to netdev/net-next.git (refs/heads/master):
+Add flexible array to represent start of buf_info, improving readability
+and avoid future warning where memcpy() thinks it is writing past the
+end of the structure.
 
-On Mon, 21 Jun 2021 14:35:09 -0700 you wrote:
-> Since these strings are expected to be NUL-terminated and the buffers
-> are exactly sized (in vnic_client_data_len()) with no padding, strncpy()
-> can be safely replaced with strscpy() here, as strncpy() on
-> NUL-terminated string is considered deprecated[1]. This has the
-> side-effect of silencing a -Warray-bounds warning due to the compiler
-> being confused about the vlcd incrementing:
-> 
-> [...]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/hyperv/hyperv_net.h   | 1 +
+ drivers/net/hyperv/rndis_filter.c | 6 ++----
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-Here is the summary with links:
-  - ibmvnic: Use strscpy() instead of strncpy()
-    https://git.kernel.org/netdev/net-next/c/ef2c3ddaa4ed
-
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index b11aa68b44ec..bc48855dff10 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -1170,6 +1170,7 @@ struct rndis_set_request {
+ 	u32 info_buflen;
+ 	u32 info_buf_offset;
+ 	u32 dev_vc_handle;
++	u8  info_buf[];
+ };
+ 
+ /* Response to NdisSetRequest */
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index 983bf362466a..f6c9c2a670f9 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1051,10 +1051,8 @@ static int rndis_filter_set_packet_filter(struct rndis_device *dev,
+ 	set = &request->request_msg.msg.set_req;
+ 	set->oid = RNDIS_OID_GEN_CURRENT_PACKET_FILTER;
+ 	set->info_buflen = sizeof(u32);
+-	set->info_buf_offset = sizeof(struct rndis_set_request);
+-
+-	memcpy((void *)(unsigned long)set + sizeof(struct rndis_set_request),
+-	       &new_filter, sizeof(u32));
++	set->info_buf_offset = offsetof(typeof(*set), info_buf);
++	memcpy(set->info_buf, &new_filter, sizeof(u32));
+ 
+ 	ret = rndis_filter_send_request(dev, request);
+ 	if (ret == 0) {
+-- 
+2.30.2
 
