@@ -7,118 +7,217 @@ X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FFDC4743C
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 22:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1058C4743C
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 23:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D511C611CE
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 22:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912DC6102A
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 23:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231715AbhFUWXb (ORCPT
+        id S230438AbhFUXZk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Jun 2021 18:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52652 "EHLO
+        Mon, 21 Jun 2021 19:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230423AbhFUWXb (ORCPT
+        with ESMTP id S231788AbhFUXZk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Jun 2021 18:23:31 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2448C061574
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id bb10-20020a17090b008ab029016eef083425so404431pjb.5
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
+        Mon, 21 Jun 2021 19:25:40 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A69C061574
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 16:23:25 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id y14so3979334pgs.12
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 16:23:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=k4IdIX/nvtQeyieT57jvq6pJDqXEf5OX6FjN268bVeg=;
-        b=nkVTSIbARbqWX9bwAlW18qOcFR8S/hkqL5a1OVaKjTFtwfRmIlcf1FB8IBt7484nNv
-         B/iwvYo5pXp4OAPYa9GF5uI+2nWwc25NjLHtB0z99es5AL03f+esGPsU08SB4Cb9Y+1W
-         vtykXOIbgR7n7kvpkf3/Wv4O7FOsStJDEaoIc=
+        bh=Nqw3RDJ+DTyT+o1frNSrU6yxZhY99eAuItIbguQEWVc=;
+        b=GrhNXMS0SWzU6iw+vXo9GCtOePd1pNW+VTpDK0ncZ8i6wGmF9Gm1mIOHxZot9Ed0su
+         hm3kwe7tpUymfqEo3zFiFnVHGDtwBQOJWOwXeEy4nYzAveRHsd/eAhpsHnOJEwSqGjH3
+         SCGxqFrI1h3ZNdTp2aH25aLDTgE85/a6eKq+0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=k4IdIX/nvtQeyieT57jvq6pJDqXEf5OX6FjN268bVeg=;
-        b=UPZCIsfgL9UQ1yejTnR08xmEMyq67597sMjRSARUcunEZ9iVBTN21Wr6Avw+Gp9SrX
-         L/NDBXoNgYaJAKSGtcxdGzSlD8rwZlm/DydvxTgpQiERp0AphFuxgz4/6NZEGt0Z+Qpx
-         WD59qzDDcgvNy1ojMp84YE8u6GmdR+4uMqHKzZFvMq6Dxh4xf1qEP5WT94KvwFusPYQ7
-         1DTYY71yv5x3Ye1kw3pnS6zD0tcfiror1K1kNJtk9G718oB7/WeoHXw0IDRQ98sI8AfY
-         +yZZcEZ+AF8VqkL52YM6hZukeKspoKfhgTRxO+/9L8wNHpU/1/AQ8MpXJpeq0VZYLTXM
-         JIMg==
-X-Gm-Message-State: AOAM532q/vMmDQQG8b0qpfsUifjNmGN4AhL3veCn77Uvc3HVxu5OpvM6
-        LbVvqKgoMa9WFiDb8M1CJNM0pA==
-X-Google-Smtp-Source: ABdhPJy0UEQTxmiMj8p2NA6jXxmy5M54nD943ClM6WPkwJ+CKmoQhJbhjtM8O2hcOqIBwKLJXKwQiw==
-X-Received: by 2002:a17:90a:dac1:: with SMTP id g1mr427917pjx.199.1624314074326;
-        Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
+        bh=Nqw3RDJ+DTyT+o1frNSrU6yxZhY99eAuItIbguQEWVc=;
+        b=ldxZUQWi75SUgwFmSiP7FE6lgy0Y8RvSm6nYqgEIASDrW2lVu7gct9k1eo2a8TNBQg
+         +IbGA6k1prdGZOQBxsMr8Fz9FwQKHCQ6haZo/+VX+eFuH5mvvHvcVzqffjuPCEPMnRm7
+         Wy/5fKOamjApsyyeJu4K+4agVdLyiOLsNorkM6Ry1pwkQhdts/BhH/M6CDDJFcvAU+8J
+         +8BFOhw/bGKuDjbEWECStbSjqbOl1kyetwRCRhKww/4o+gRJcq6bOaD5Wug4tzUgvHCb
+         H/Y+QbN9plwYt6+Uw4Y+vQYcrRkdlhNutb3tW8FFWXamDovZFcE6Q4Mg6JfaW//EGU40
+         MOFQ==
+X-Gm-Message-State: AOAM533AWIFTDzGouIGPJ80jZyb8xnfb16frBD+dSjn9tYfANSEsDJAb
+        pxHsLGPr+9BfOP5wQW5f8U/JDQ==
+X-Google-Smtp-Source: ABdhPJzw3RkUA3AzHbb59oK1W8ShH20Pt5+AZqtVwv2ZzkiD4zsX6N5Q6sbE9jkDPg0nZ3S3LPnYAw==
+X-Received: by 2002:a62:53c1:0:b029:2ef:25e8:d9e5 with SMTP id h184-20020a6253c10000b02902ef25e8d9e5mr614646pfb.74.1624317805166;
+        Mon, 21 Jun 2021 16:23:25 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 73sm4536385pfy.83.2021.06.21.15.21.13
+        by smtp.gmail.com with ESMTPSA id g29sm17578166pgm.11.2021.06.21.16.23.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jun 2021 15:21:13 -0700 (PDT)
+        Mon, 21 Jun 2021 16:23:24 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+To:     Dave Kleikamp <shaggy@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        jfs-discussion@lists.sourceforge.net,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] hv_netvsc: Avoid field-overflowing memcpy()
-Date:   Mon, 21 Jun 2021 15:21:12 -0700
-Message-Id: <20210621222112.1749650-1-keescook@chromium.org>
+Subject: [PATCH] jfs: Avoid field-overflowing memcpy()
+Date:   Mon, 21 Jun 2021 16:23:22 -0700
+Message-Id: <20210621232322.1871799-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=52ca9d3ef6fdb378f4fb4390eb0f8bf4545fb2f0; i=KB/gBOM4hXq43bzNgE68y/CtxkQywhn1/IWky57D5OI=; m=5mFF/t04SK2neGS9/cim9EhIl8hHaSNFLWMm4iAy2p8=; p=viZ5h7L2XoQprZaaybqKRBXaA6Do0vJQSm4gKjZyktE=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDRENcACgkQiXL039xtwCYneg/+O3l CHaMID0zQGdHzOpjdP/XRCBkbVhaJywyHQ8z6b7qmEv3f20zSEpANEIFxybZanrdt/CdTEEfq3rfp MnxIdOpQzllckLVio4CTSZVeSkhV5fW6cGgy6cGBfmmwo5L7lZPsQT99c7qkBCTuz/yX8s+yrRj5J JPoUt6IMHmYzT8V9qhdFBrY4Mj1yOWqTjTf5vrKQXkzRVEAIrAnmw6vQQqaNOQj8casITz+Bas2r9 1BnbHRha8kDtuvxErUrhSvElGt1QJBLTEbNJFaseHV1+hk/wYjf+IEDa7cTWDJv/MEzw14vLQ5lJ7 TpdODkKAEPK+ifpliTgNz5o0Z3WZvDkiS4mSCPmLfBxnZ4F2ckzR42tFpFT/6XUNWaba/O3Rdf96d YUzWdRdWnqrxJrZGAu1dgk/U76yd2ydcikd/yky9RmLEFMvosTJ2UUh344i3i6Jo3KrpJjLgYEmll N0SJ5HiAxLF8j052YiXUO/MNSDP8XVIScErnxTg/ah6x7Yq8PD5SPxkt1pGjJtC1MkMIcIw+XKK4H Prj0rfPvjCUvMXkjq82cEBgAMFwaMqO2wu0jaXbv6fZ+Ynxo3TZoYw53z2Eam0ohGAsszkNbZUdi6 4MvZ8f4iLqqz3cs5bnyFAomq2bEcQ2qM9HAd8Hk8LHIXIiQPe56MYO+diaNYmMDg=
+X-Patch-Hashes: v=1; h=sha256; g=b11510bc7e50860adb5724ba145e9eb45c6c55f8; i=dF8ixb+THfuF0nlsv1dQ2ZPKzBL7OPmaRy5zMjzXzkQ=; m=dZhpAKqgH3qyGhCqzRZONrY9E1fP0G347jf3KEe/AJc=; p=ZB+jylUfBmb3AKcK6RN2EtlbnZH0790JymJLoekV5EE=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDRH2oACgkQiXL039xtwCY1Lg/+Lq6 Wzj3j9XEvWvRtm7sY906hIOMjW0Bmr8KDM0B8AZgdttldYYWkqZcCaIXx3cwmjdA0oPtvoAUiymjK DgRCTVH0l3FisDsQBCs/Cwgz03XI9D9F5CyrrjOZrqQC0N8BpdV8bFbmLcUKXqtXgLLOYjRx+iCd5 ksArwzkRr109ZIpdukzOxvEh1nbyvDW1s/4CunG/7DXlV2MGvdIjI7KyFn2DpGJCkwtQtwfq9lN3X LscLUySz82lDe/qpKoz/WsxInScnazXptKXn4baTVtvYM8OuLyoXbJjn1+DOGphofM3siWSI7LM5I b3ID4UXB8cNlxVwLdR/zuz21bwO7g/Lh6Ijai9fz0ktMkHUpWowjR99ymYmbfrqOCISUHziokRPfO cYlKzXUBeCLRMtKAfhRoEY9Hcg2rzlJw4xrzSWT3yoCvy/otfOw09IJje1S/wJS6ghQMqGuqI3wZn JcqrZIs6VQJu2blQzp7RL6hSuannlJXtDLoJiD0oMFvSrlQ2GyVsXkzMJ/6Y006Lzz/4WLkwjogaZ 3/ty5ylzn08K59xlixLsJ8CKP+LVrzcBp4QZYDYvWy+6w/ILkAILuW34QAHobrdGIigbRpKz61zAc YSxG567tej3H5UuFd08yAdDO2oGLAo01//x1fRmW9MbFxAJrYcsFS44tythT+i5k=
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+field array bounds checking for memcpy(), memmove(), and memset(),
+avoid intentionally writing across neighboring fields.
 
-Add flexible array to represent start of buf_info, improving readability
-and avoid future warning where memcpy() thinks it is writing past the
-end of the structure.
+Introduce more unions to cover the full inline data section, so that the
+entire 256 bytes can be addressed by memcpy() without thinking it is
+crossing field boundaries. Additionally adjusts dir memcpy() to use
+existing union names to get the same coverage.
+
+diffoscope shows there are no binary differences before/after excepting
+the name of the initcall, which is line number based:
+
+$ diffoscope --exclude-directory-metadata yes before/fs after/fs
+--- before/fs
++++ after/fs
+│   --- before/fs/jfs
+├── +++ after/fs/jfs
+│ │   --- before/fs/jfs/super.o
+│ ├── +++ after/fs/jfs/super.o
+│ │ ├── readelf --wide --symbols {}
+│ │ │ @@ -2,15 +2,15 @@
+│ │ │  Symbol table '.symtab' contains 158 entries:
+│ │ │     Num:    Value          Size Type    Bind   Vis      Ndx Name
+...
+│ │ │ -     5: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT    6 __initcall__kmod_jfs__319_1049_ini
+t_jfs_fs6
+│ │ │ +     5: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT    6 __initcall__kmod_jfs__319_1050_ini
+t_jfs_fs6
+...
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/hyperv/hyperv_net.h   | 1 +
- drivers/net/hyperv/rndis_filter.c | 6 ++----
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ fs/jfs/jfs_dinode.h | 14 ++++++++++----
+ fs/jfs/jfs_imap.c   |  4 ++--
+ fs/jfs/jfs_incore.h | 12 ++++++++++--
+ fs/jfs/super.c      |  3 ++-
+ 4 files changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index b11aa68b44ec..bc48855dff10 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -1170,6 +1170,7 @@ struct rndis_set_request {
- 	u32 info_buflen;
- 	u32 info_buf_offset;
- 	u32 dev_vc_handle;
-+	u8  info_buf[];
+diff --git a/fs/jfs/jfs_dinode.h b/fs/jfs/jfs_dinode.h
+index d6af79e94263..6b231d0d0071 100644
+--- a/fs/jfs/jfs_dinode.h
++++ b/fs/jfs/jfs_dinode.h
+@@ -101,7 +101,6 @@ struct dinode {
+ 					u8 unused[16];	/* 16: */
+ 					dxd_t _dxd;	/* 16: */
+ 					union {
+-						__le32 _rdev;	/* 4: */
+ 						/*
+ 						 * The fast symlink area
+ 						 * is expected to overflow
+@@ -109,9 +108,15 @@ struct dinode {
+ 						 * needed (which will clear
+ 						 * INLINEEA).
+ 						 */
+-						u8 _fastsymlink[128];
+-					} _u;
+-					u8 _inlineea[128];
++						struct {
++							union {
++								__le32 _rdev;	/* 4: */
++								u8 _fastsymlink[128];
++							} _u;
++							u8 _inlineea[128];
++						};
++						u8 _inline_all[256];
++					};
+ 				} _special;
+ 			} _u2;
+ 		} _file;
+@@ -122,6 +127,7 @@ struct dinode {
+ #define di_rdev		u._file._u2._special._u._rdev
+ #define di_fastsymlink	u._file._u2._special._u._fastsymlink
+ #define di_inlineea	u._file._u2._special._inlineea
++#define di_inline_all	u._file._u2._special._inline_all
+ 	} u;
  };
  
- /* Response to NdisSetRequest */
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index 983bf362466a..f6c9c2a670f9 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1051,10 +1051,8 @@ static int rndis_filter_set_packet_filter(struct rndis_device *dev,
- 	set = &request->request_msg.msg.set_req;
- 	set->oid = RNDIS_OID_GEN_CURRENT_PACKET_FILTER;
- 	set->info_buflen = sizeof(u32);
--	set->info_buf_offset = sizeof(struct rndis_set_request);
--
--	memcpy((void *)(unsigned long)set + sizeof(struct rndis_set_request),
--	       &new_filter, sizeof(u32));
-+	set->info_buf_offset = offsetof(typeof(*set), info_buf);
-+	memcpy(set->info_buf, &new_filter, sizeof(u32));
+diff --git a/fs/jfs/jfs_imap.c b/fs/jfs/jfs_imap.c
+index 937ca07b58b1..4df3f222c35c 100644
+--- a/fs/jfs/jfs_imap.c
++++ b/fs/jfs/jfs_imap.c
+@@ -763,7 +763,7 @@ int diWrite(tid_t tid, struct inode *ip)
+ 		lv = & dilinelock->lv[dilinelock->index];
+ 		lv->offset = (dioffset + 2 * 128) >> L2INODESLOTSIZE;
+ 		lv->length = 2;
+-		memcpy(&dp->di_fastsymlink, jfs_ip->i_inline, IDATASIZE);
++		memcpy(&dp->di_inline_all, jfs_ip->i_inline_all, IDATASIZE);
+ 		dilinelock->index++;
+ 	}
+ 	/*
+@@ -3084,7 +3084,7 @@ static int copy_from_dinode(struct dinode * dip, struct inode *ip)
+ 	}
  
- 	ret = rndis_filter_send_request(dev, request);
- 	if (ret == 0) {
+ 	if (S_ISDIR(ip->i_mode)) {
+-		memcpy(&jfs_ip->i_dirtable, &dip->di_dirtable, 384);
++		memcpy(&jfs_ip->u.dir, &dip->u._dir, 384);
+ 	} else if (S_ISREG(ip->i_mode) || S_ISLNK(ip->i_mode)) {
+ 		memcpy(&jfs_ip->i_xtroot, &dip->di_xtroot, 288);
+ 	} else
+diff --git a/fs/jfs/jfs_incore.h b/fs/jfs/jfs_incore.h
+index a466ec41cfbb..721def69e732 100644
+--- a/fs/jfs/jfs_incore.h
++++ b/fs/jfs/jfs_incore.h
+@@ -77,11 +77,18 @@ struct jfs_inode_info {
+ 			unchar _unused[16];	/* 16: */
+ 			dxd_t _dxd;		/* 16: */
+ 			/* _inline may overflow into _inline_ea when needed */
+-			unchar _inline[128];	/* 128: inline symlink */
+ 			/* _inline_ea may overlay the last part of
+ 			 * file._xtroot if maxentry = XTROOTINITSLOT
+ 			 */
+-			unchar _inline_ea[128];	/* 128: inline extended attr */
++			union {
++				struct {
++					/* 128: inline symlink */
++					unchar _inline[128];
++					/* 128: inline extended attr */
++					unchar _inline_ea[128];
++				};
++				unchar _inline_all[256];
++			};
+ 		} link;
+ 	} u;
+ #ifdef CONFIG_QUOTA
+@@ -96,6 +103,7 @@ struct jfs_inode_info {
+ #define i_dtroot u.dir._dtroot
+ #define i_inline u.link._inline
+ #define i_inline_ea u.link._inline_ea
++#define i_inline_all u.link._inline_all
+ 
+ #define IREAD_LOCK(ip, subclass) \
+ 	down_read_nested(&JFS_IP(ip)->rdwrlock, subclass)
+diff --git a/fs/jfs/super.c b/fs/jfs/super.c
+index 1f0ffabbde56..9030aeaf0f88 100644
+--- a/fs/jfs/super.c
++++ b/fs/jfs/super.c
+@@ -939,7 +939,8 @@ static int __init init_jfs_fs(void)
+ 	jfs_inode_cachep =
+ 	    kmem_cache_create_usercopy("jfs_ip", sizeof(struct jfs_inode_info),
+ 			0, SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD|SLAB_ACCOUNT,
+-			offsetof(struct jfs_inode_info, i_inline), IDATASIZE,
++			offsetof(struct jfs_inode_info, i_inline_all),
++			sizeof_field(struct jfs_inode_info, i_inline_all),
+ 			init_once);
+ 	if (jfs_inode_cachep == NULL)
+ 		return -ENOMEM;
 -- 
 2.30.2
 
