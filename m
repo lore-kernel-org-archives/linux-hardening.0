@@ -7,65 +7,71 @@ X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C1EC4743C
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 21:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF84C48BE5
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 21:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10526601FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 21:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F2A61042
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 21:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231516AbhFUVrE (ORCPT
+        id S232012AbhFUV4j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Jun 2021 17:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44332 "EHLO
+        Mon, 21 Jun 2021 17:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230263AbhFUVrD (ORCPT
+        with ESMTP id S231948AbhFUV4i (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Jun 2021 17:47:03 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C53C061756
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 14:44:48 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id p9so896998pgb.1
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 14:44:48 -0700 (PDT)
+        Mon, 21 Jun 2021 17:56:38 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C9FC061756
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 14:54:22 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id s17-20020a17090a8811b029016e89654f93so386994pjn.1
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 14:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5SQkML+us/TzTvjNIUpTTZK1LcWvPmhVJh6s0rRl9Qk=;
-        b=UzZcLSqTmHn9LZBav80swfVHG2/jblmUTnekXNiK7ceuCkj0abzDMDndwp+Ld4OqUV
-         41Hql9ComICSBqnWmm5gEi0WTe/BHG12NCvqhsHLOCgCJzBQbLV1rhDjSE6EkdO/HISo
-         UnQjzjH1bkfy23XkK8BDDE+IcOVPF14ToJBeM=
+        bh=APrF3kvRTyjTvlbhavoz/NkerS2/l6ATaVJxi4ziIkE=;
+        b=c/iQ6N1/0xiTEXFHfm3yDb5q2rZQvjSZGTECVNdCQoc1vKa7GpPnDDA656In2fgnJ7
+         wxVTQTIZq1F4m8rBegWJvFNY+u9DKwKmI6Z4ALPnsSdhpwtt2yTsYR3qsr5WGtBlh6Tl
+         FFN7C52IIJbWFmbWgQXpfQ1BcYGX0GTB6Nero=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5SQkML+us/TzTvjNIUpTTZK1LcWvPmhVJh6s0rRl9Qk=;
-        b=LFtVsgjch6PMQqQIfPWsTD43hN7XXu0eaXrFIaAsXr9pQLwJzHBmIdlfu2VojqQmys
-         DFaUneBIvke/jLkKn+rC3KUTeY24vHWto9I/oKWlLpwgYPonddAaAt9jU2/BktfRrX3b
-         8bG49c7wvXp4+QzWzm0IpHeRkrHifkBFDBU3ERkj3VUyA3oPzIZq3yqGJETs52K0SzIY
-         3y7rEJ+o0nOzsXQFCuhtwAixenA4cW1pQmuFOlHASAvTop5Sbi32iLZLx1qty/g+5iCX
-         J462MG23MF1XEe0yUHcULaR7S7YGOLIPz+IZi1hNdw5VftansmhdJgsY7XfdoV+ljPGO
-         8UXw==
-X-Gm-Message-State: AOAM5319ploSM8EefkE18VqdGp75ZZ2pAlr+fH6SuEhM1nOzRpfjFZ7H
-        5qlrvqiA5xtjUGptmRTOZLDm9w==
-X-Google-Smtp-Source: ABdhPJzz1K6S0azoxavM8zBd3FzUas7iHfXieyJ/64wJfnuk5oRfGU2oMlhigbghP7JxgPgA66efDw==
-X-Received: by 2002:aa7:808b:0:b029:2ef:cdd4:8297 with SMTP id v11-20020aa7808b0000b02902efcdd48297mr269068pff.27.1624311888484;
-        Mon, 21 Jun 2021 14:44:48 -0700 (PDT)
+        bh=APrF3kvRTyjTvlbhavoz/NkerS2/l6ATaVJxi4ziIkE=;
+        b=a05FGxYZ2CBE43vjium/xYc76SYGbQNfe9AWHb/OPf9mmsza4FqrpuR3VLWERz85lk
+         S76mDN37cmg4gNs6HKrqhm56oh7/n7ikgmnokbo64j+zrcF8ei/DsX2EMJDjoDNbo9P4
+         x4pCEn2Uur+33nRpu7XtVhlY4IEE3GFAZvfr5ecBtfsQj9yoB/VG0WoQZ6Ezi51odQOw
+         M8anjsKsKzHA4HcjtDMkNAN11E8RFFfJKoX7/Xq/Ch/NJgpjYJdJ10PkKCT6H0xmjxWM
+         IGAYVfdSA30RiqkbgeXIYxWR1yxUKsoJD5f7r1CkNFQrZBDpb7jka9DvHpzU4sBfoJnQ
+         EB4Q==
+X-Gm-Message-State: AOAM531dPthmMoWoG6I63zwGqaCUa816AcKL0oQElchwcOAEK3t2jBDN
+        vC55i1FhHcdFkqQQKXL2PNwj8w==
+X-Google-Smtp-Source: ABdhPJwL6RAoEZ6YFjBRXK/2kBquU1M6qjK79nhcn7Pkp8heQObszg3SzvqzImjSE8Zvmh9cGvOwkw==
+X-Received: by 2002:a17:902:b409:b029:114:afa6:7f4a with SMTP id x9-20020a170902b409b0290114afa67f4amr19787048plr.56.1624312462342;
+        Mon, 21 Jun 2021 14:54:22 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y34sm15722960pfa.181.2021.06.21.14.44.47
+        by smtp.gmail.com with ESMTPSA id v129sm7166195pfc.71.2021.06.21.14.54.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jun 2021 14:44:47 -0700 (PDT)
+        Mon, 21 Jun 2021 14:54:21 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Steve French <stfrench@microsoft.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] cifs: Avoid field over-reading memcpy()
-Date:   Mon, 21 Jun 2021 14:44:46 -0700
-Message-Id: <20210621214446.1406159-1-keescook@chromium.org>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>,
+        Jerin Jacob <jerinj@marvell.com>,
+        hariprasad <hkelam@marvell.com>,
+        Subbaraya Sundeep <sbhatta@marvell.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] octeontx2-af: Avoid field-overflowing memcpy()
+Date:   Mon, 21 Jun 2021 14:54:19 -0700
+Message-Id: <20210621215419.1407886-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=e5cadb56c3e7514cb994ed54287fb706e50000e7; i=lOfZOHXQfQA4AvwHsS+g6pzIoRRUmxml/Q0Cvo8KZSY=; m=zkKCsU1v75EihiOwQ8Ntag9WswPCcnp82PKmei5UNOM=; p=zOANoTiXhOGaMHs/B1FA5Z7/pOmXr16srI44FQ2R2hs=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDRCE0ACgkQiXL039xtwCZeThAAkm8 Ibpq7BRnzvOr7DbcYSl91e4mhil+ltMX7OPs/Nz+5ueKoW27hIDKK6d1GLs68V+4qYzzu6V0GKwC/ KanQm7Y2y9MzjSMXNAbHnSTUOVvNhzrgNbmk/jfieZM3RTtexTl8Pfp2BSrLhOm7scyA/AMy+PHW5 83M8hrv4iCKSG6884R6txHIh8Krm9i2U5rU2u2zK1TQbUnIaNO2LLBw/eqb+qdvNiwzPiXI4+Heqv PcDK9edtrbLeIr7xvrsQRWJmDprxUAzJYGSknqhxKnPDFMDJM91jrhapIhaIWB6A8bQ8KvbkhFoOv PO9I0u2ncu/Qr+q6SmwQGHiWlmrMwYIDQAipYDiurdO8mQin36W/z3s9o5cDCJeFqXwZgQDC83/Sr 06mEueHkHrQx6QL2SMZLfNngeQ/XjghIcOq5ERZazU/uWlqAyl+fV0YA7oGnQ2OPZC7C0tkfA2PA+ cRZoWIPA9psiurFiDBhxZIhQugBR6dzEgcy0Yt9AhzxX0SyMdSvab481VUrxjAab2jeOZtFw8lEPI 1EoI8pDr5+0Bcjkgntbh3u0oDKZoJpx0aDS+AzKgS2OrZgK9M0LPjTREc7ub2Zqwb0a8XrkPMpeL4 fOrj4XnPY864J7vUN9b01QffAJ1XCOTkpMu+ngnzxjsylwQ5sZcgcKC0GP5LGSBk=
+X-Patch-Hashes: v=1; h=sha256; g=b17b800f29ea6e6ad1b30b0c2ecbb7df53d261dd; i=11l6vH6fAxI3yJ0jzd3eaE2f+yyEs0bXJk1UH8s59xw=; m=9pzQoBWf6cgaZyB52H8V+Tt7PyeU+Nsu+QkJXmVQ/Sk=; p=6bBIi/RIyCcdYNjz3LFf9VU0AE7+w5vEKRR5cY+Qht0=
+X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDRCosACgkQiXL039xtwCbRrg/+OrW nyJ8YIB/UpRzbZHxWA1oSiqwjP9z2JIe4sFxhNYEzQrqrhKzi1Wduovg6z6UoQ98al9pa8mfMwkjS 2gQ9lxesJzFgYTdsOB7UVXQyu+r0s17xVgeYeDvWX0/0yjvfpNTUf1PA4kSp1lqTF7CSqWwK5yIwu +zJSgDk0l3HdCKPHtTo7t0lwVho45jKnsdJEBs8CBQO9zaD2hBEOawGopmQas7Xn80Bz+fb99wkwx UqwqrtYkDzUO11LGmRMcDa8ivU0hxVOBWC4wfrfU6Bev4vJPBTPPzdygjjTuFWGkf9Xjs7GQt8BRC YTu6aeWcfIvy2ESE1PRimwwnf/G+8o5EsbxNtmqdXeklc/oEecB9MjOChPz9dGoSxRbTzr2BlNsBI mXH6BKETE3e+qY5tSJ9pouJcuCMafSgsCjUXkzHgDeNJ/y+SJYBuoBRgvrihhPBkC7SFmo6/+24M8 rnBLcakwmw5wOZ5XU+z1B5gOxvtX1nTCEnDLjmaof1Mu6k1CDAtG5cAIKKQlx10VImJ4MZpEXFPho MOFmBdH6eADBk1Jla7W281yJqT/oc/ZpPU54sMbEja+sH9zhfciaDszw7cnxOKEUNfSXPTgL+8bk+ wX63AgUI+31sLhulhNQ/GrfbI0qhxRKTqCseaEDKuOhiXPxnf8Odo/5UMnzbeGes=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
@@ -73,32 +79,57 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally reading across neighboring fields.
+intentionally writing across neighboring fields.
 
-Instead of using memcpy to read across multiple struct members, just
-perform per-member assignments as already done for other members.
+To avoid having memcpy() think a u64 "prof" is being written beyond,
+adjust the prof member type by adding struct nix_bandprof_s to the union
+to match the other structs. This silences the following future warning:
+
+In file included from ./include/linux/string.h:253,
+                 from ./include/linux/bitmap.h:10,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+                 from ./arch/x86/include/asm/processor.h:22,
+                 from ./arch/x86/include/asm/timex.h:5,
+                 from ./include/linux/timex.h:65,
+                 from ./include/linux/time32.h:13,
+                 from ./include/linux/time.h:60,
+                 from ./include/linux/stat.h:19,
+                 from ./include/linux/module.h:13,
+                 from drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c:11:
+In function '__fortify_memcpy_chk',
+    inlined from '__fortify_memcpy' at ./include/linux/fortify-string.h:310:2,
+    inlined from 'rvu_nix_blk_aq_enq_inst' at drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c:910:5:
+./include/linux/fortify-string.h:268:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); please use struct_group() [-Wattribute-warning]
+  268 |    __write_overflow_field();
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~
+
+drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c:
+...
+                        else if (req->ctype == NIX_AQ_CTYPE_BANDPROF)
+                                memcpy(&rsp->prof, ctx,
+                                       sizeof(struct nix_bandprof_s));
+...
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/cifs/smb2pdu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/octeontx2/af/mbox.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index 31784e3fa96f..962826dc3316 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -2892,7 +2892,10 @@ SMB2_open(const unsigned int xid, struct cifs_open_parms *oparms, __le16 *path,
- #endif /* CIFS_DEBUG2 */
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
+index 7d7dfa8d8a3f..770d86262838 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
+@@ -746,7 +746,7 @@ struct nix_aq_enq_rsp {
+ 		struct nix_cq_ctx_s cq;
+ 		struct nix_rsse_s   rss;
+ 		struct nix_rx_mce_s mce;
+-		u64 prof;
++		struct nix_bandprof_s prof;
+ 	};
+ };
  
- 	if (buf) {
--		memcpy(buf, &rsp->CreationTime, 32);
-+		buf->CreationTime = rsp->CreationTime;
-+		buf->LastAccessTime = rsp->LastAccessTime;
-+		buf->LastWriteTime = rsp->LastWriteTime;
-+		buf->ChangeTime = rsp->ChangeTime;
- 		buf->AllocationSize = rsp->AllocationSize;
- 		buf->EndOfFile = rsp->EndofFile;
- 		buf->Attributes = rsp->FileAttributes;
 -- 
 2.30.2
 
