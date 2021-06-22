@@ -2,222 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1058C4743C
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 23:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550DFC4743C
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Jun 2021 00:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 912DC6102A
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Jun 2021 23:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B2660230
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Jun 2021 00:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbhFUXZk (ORCPT
+        id S229918AbhFVAII (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Jun 2021 19:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231788AbhFUXZk (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Jun 2021 19:25:40 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A69C061574
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 16:23:25 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id y14so3979334pgs.12
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Jun 2021 16:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Nqw3RDJ+DTyT+o1frNSrU6yxZhY99eAuItIbguQEWVc=;
-        b=GrhNXMS0SWzU6iw+vXo9GCtOePd1pNW+VTpDK0ncZ8i6wGmF9Gm1mIOHxZot9Ed0su
-         hm3kwe7tpUymfqEo3zFiFnVHGDtwBQOJWOwXeEy4nYzAveRHsd/eAhpsHnOJEwSqGjH3
-         SCGxqFrI1h3ZNdTp2aH25aLDTgE85/a6eKq+0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Nqw3RDJ+DTyT+o1frNSrU6yxZhY99eAuItIbguQEWVc=;
-        b=ldxZUQWi75SUgwFmSiP7FE6lgy0Y8RvSm6nYqgEIASDrW2lVu7gct9k1eo2a8TNBQg
-         +IbGA6k1prdGZOQBxsMr8Fz9FwQKHCQ6haZo/+VX+eFuH5mvvHvcVzqffjuPCEPMnRm7
-         Wy/5fKOamjApsyyeJu4K+4agVdLyiOLsNorkM6Ry1pwkQhdts/BhH/M6CDDJFcvAU+8J
-         +8BFOhw/bGKuDjbEWECStbSjqbOl1kyetwRCRhKww/4o+gRJcq6bOaD5Wug4tzUgvHCb
-         H/Y+QbN9plwYt6+Uw4Y+vQYcrRkdlhNutb3tW8FFWXamDovZFcE6Q4Mg6JfaW//EGU40
-         MOFQ==
-X-Gm-Message-State: AOAM533AWIFTDzGouIGPJ80jZyb8xnfb16frBD+dSjn9tYfANSEsDJAb
-        pxHsLGPr+9BfOP5wQW5f8U/JDQ==
-X-Google-Smtp-Source: ABdhPJzw3RkUA3AzHbb59oK1W8ShH20Pt5+AZqtVwv2ZzkiD4zsX6N5Q6sbE9jkDPg0nZ3S3LPnYAw==
-X-Received: by 2002:a62:53c1:0:b029:2ef:25e8:d9e5 with SMTP id h184-20020a6253c10000b02902ef25e8d9e5mr614646pfb.74.1624317805166;
-        Mon, 21 Jun 2021 16:23:25 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g29sm17578166pgm.11.2021.06.21.16.23.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jun 2021 16:23:24 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Dave Kleikamp <shaggy@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        jfs-discussion@lists.sourceforge.net,
+        Mon, 21 Jun 2021 20:08:08 -0400
+Received: from mail-mw2nam12on2087.outbound.protection.outlook.com ([40.107.244.87]:33184
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229640AbhFVAIH (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 21 Jun 2021 20:08:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hKWGPvagRn3y3tvFJKYwnJ1vOCL2Gg52l8NDKls3jdDcmAQkSjt6xS9Nn6M3d5yBuAMTUQkNozlX758HaJZiPTGHMmZhifSyZ0P8clLzhmKb88T6nnfKg6T0sBQ4jiav+n97jR3ARPp7zOgvJFDvayWEIHmD4I1efLOA47YhMYszL3T+euu1hVic+kK6XrV51J/pS8xYyL++r0xVTAzEPMXmdqQSrjzsnvtqZyhfwxdfDl5OULCmEXU6o9TTjmvUd5SZzjV0RsbvrmHjB8HTVpqu5lVJoPbqYeRXEIfY+z6vlfwgVzD2ND57EWenbkmLi9rq/6T2u115F37EbIIDVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ekkyWx9uQB7OmbovIxEOPXniEIJYK31tBFJaBySj+Dc=;
+ b=Dmb8zbzACHEPsC1CrfyxdT20asHSC/XQn0y/ltjgNznVMH3D5PcNjx/kxz7x7MitoMd3Dt2M4JGL4lufA0LIbkFl75Ez8FQ5Cb7zWMN9t0h0tBXIYiHrad7XDPPYRS8beAboT86AIMw+AcQD/dqSpyqU2KnQD5+FS9CzmIOOsMlLG61pS4M68CXNikt1X4YCVRxgZWZPg1vrqlx/5vOyv4sMQwsX4ocznqnNtCmei6NEms0zFERwih/5CwQlTYzo1WRRtNKmxlkmxPtBs3II44BymKu10EBLnbSEzWpuT6WQ6lRNHaHhvo/LFNzRp/QzVHYcDnfXohXEOptVyHenTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ekkyWx9uQB7OmbovIxEOPXniEIJYK31tBFJaBySj+Dc=;
+ b=O3vSgyiuP00/9fsZz0RodTUgTBvD4jcA7pgYdUrZW818JRzIhOTeZynYcL0xWCHVsV1jEIaM6q/GVAbzYJGljrmdN2rd+B8V2vlAQN7MLSGrzcUzjJSCC/Kcj86GAe2kew7T+Xi/VjM1AhPGNyiY2Yj4w+wmIFfRTCpA7eLIxZeNBhn+gR0w2Uac7c/HtjlnLqlDhxSphNi/0SBIpdewr8DpMTPXEnYe8OWrNgdtAJNU1JmMKD0wiHoM3p+Ee45Q74bKMNz+7PbkTY10TmMOwc1i2HOJ1HHcCXKHqL0UUn2tW9BycM2+sD6DGmKbegdr1MRFK8CtROKT8gpnQGFNmQ==
+Authentication-Results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5095.namprd12.prod.outlook.com (2603:10b6:208:31b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.15; Tue, 22 Jun
+ 2021 00:05:51 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::3d51:a3b9:8611:684e]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::3d51:a3b9:8611:684e%8]) with mapi id 15.20.4242.023; Tue, 22 Jun 2021
+ 00:05:51 +0000
+Date:   Mon, 21 Jun 2021 21:05:49 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Yishai Hadas <yishaih@nvidia.com>,
+        Doug Ledford <dledford@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] jfs: Avoid field-overflowing memcpy()
-Date:   Mon, 21 Jun 2021 16:23:22 -0700
-Message-Id: <20210621232322.1871799-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+Subject: Re: [PATCH] IB/mlx4: Avoid field-overflowing memcpy()
+Message-ID: <20210622000549.GA2384990@nvidia.com>
+References: <20210616203744.1248551-1-keescook@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210616203744.1248551-1-keescook@chromium.org>
+X-Originating-IP: [47.55.113.94]
+X-ClientProxiedBy: MN2PR10CA0006.namprd10.prod.outlook.com
+ (2603:10b6:208:120::19) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=b11510bc7e50860adb5724ba145e9eb45c6c55f8; i=dF8ixb+THfuF0nlsv1dQ2ZPKzBL7OPmaRy5zMjzXzkQ=; m=dZhpAKqgH3qyGhCqzRZONrY9E1fP0G347jf3KEe/AJc=; p=ZB+jylUfBmb3AKcK6RN2EtlbnZH0790JymJLoekV5EE=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDRH2oACgkQiXL039xtwCY1Lg/+Lq6 Wzj3j9XEvWvRtm7sY906hIOMjW0Bmr8KDM0B8AZgdttldYYWkqZcCaIXx3cwmjdA0oPtvoAUiymjK DgRCTVH0l3FisDsQBCs/Cwgz03XI9D9F5CyrrjOZrqQC0N8BpdV8bFbmLcUKXqtXgLLOYjRx+iCd5 ksArwzkRr109ZIpdukzOxvEh1nbyvDW1s/4CunG/7DXlV2MGvdIjI7KyFn2DpGJCkwtQtwfq9lN3X LscLUySz82lDe/qpKoz/WsxInScnazXptKXn4baTVtvYM8OuLyoXbJjn1+DOGphofM3siWSI7LM5I b3ID4UXB8cNlxVwLdR/zuz21bwO7g/Lh6Ijai9fz0ktMkHUpWowjR99ymYmbfrqOCISUHziokRPfO cYlKzXUBeCLRMtKAfhRoEY9Hcg2rzlJw4xrzSWT3yoCvy/otfOw09IJje1S/wJS6ghQMqGuqI3wZn JcqrZIs6VQJu2blQzp7RL6hSuannlJXtDLoJiD0oMFvSrlQ2GyVsXkzMJ/6Y006Lzz/4WLkwjogaZ 3/ty5ylzn08K59xlixLsJ8CKP+LVrzcBp4QZYDYvWy+6w/ILkAILuW34QAHobrdGIigbRpKz61zAc YSxG567tej3H5UuFd08yAdDO2oGLAo01//x1fRmW9MbFxAJrYcsFS44tythT+i5k=
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (47.55.113.94) by MN2PR10CA0006.namprd10.prod.outlook.com (2603:10b6:208:120::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.15 via Frontend Transport; Tue, 22 Jun 2021 00:05:51 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lvTvJ-00A0S5-Kj; Mon, 21 Jun 2021 21:05:49 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6d6c89f4-11b9-4659-d8b1-08d935117ef4
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5095:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL1PR12MB5095315CB3BF1C2E31BBE2AEC2099@BL1PR12MB5095.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dZcUgBWVkADvDUIYLuBwqA+JVsHVD5G3uVU3i3RUOiA0gGXkTaEWW5f8/WixtI35tmSO30eQ2/l57zZn7EZDAYbiOMhKaSGSQL+S8liM9cb3RYKkAh8ieFtwWADmWjFteEvncr4tAzhWnDmgOCK4026dp492/GFYFYvu741Bg0Pn0Kdrl7bujxbAbQpuXSu7wd3o4gAynQqgP0/bzCcP1XfmDYHUR38ZvFqdN8WmwYZ889YTurS+yOwHNrLvHTtK0H9AlQACgJssia8yR41C9Grb1KRWL5StHdFAKHuYum9Nbf1xdBVL0gR+wPjQ+8pR7v3Zz1mYt7THqqyYaOGMWoiPk7sN7/u7Gs4vMr79LdDRp6pVXrAlY2pzqSeOcS11ppz0V2+9nbzKwkTa4k2yr/l0c5GpNEbk1/2Dp3Y5mZG3IO6Aol28YAdl83aBjc3WeSx61T/u4m5sxsbJ+VKp1XJcdjauUVEoWL0ivft+Zz0lCeRMA3SuQ+y+YR8cFEmcwaB704w2ZmnaSNT5115sZdZshxnLfp3Hbv3yFvnri8CFja99o7cWmT97zSu9//flKy2RAXFkU4z6KIBcPRP1XtBIQ7iT9ckPMjURb+w/tbw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(1076003)(8676002)(26005)(4744005)(6916009)(2906002)(66556008)(2616005)(4326008)(316002)(478600001)(9786002)(36756003)(33656002)(66476007)(66946007)(8936002)(38100700002)(186003)(426003)(54906003)(9746002)(83380400001)(5660300002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?oIM4ITu5M5CKbV9mWSsfVO3E0V3181DMgyfLdWVeVYfjbdMTB5QKQAao+BNj?=
+ =?us-ascii?Q?gQ/eb0dd12+yWM58MErBEef+L1uR9TBi0Q4zkHto3awLwefi5/ZbiobmoBK7?=
+ =?us-ascii?Q?kZDERBFux44o3I+1C12jDMYyhsIXCGNkl4Y1WoVvN1ef3myTkbjj/isEsx0n?=
+ =?us-ascii?Q?c2VqnWdoGUMaxpQmFiJAP9wSzBumd3seXsKhutmPW20C3zVQfASQvFoeHsjk?=
+ =?us-ascii?Q?Fu3JDyFWTwZuy6rSA97h5D6L3alb83tyhZDzzOT2UrFTXXVWvwfbZaIbQFaR?=
+ =?us-ascii?Q?gvy3QRW4SP+KwGH6TFrG1XH8zQ6WPPr2BWLtmsSE9zBosia9NuXjSya41T+G?=
+ =?us-ascii?Q?Bb9dBbkbykxpCkXc6gYMzUHaQej8DX8Ft1z8/KoIOrPq9GqepCPBx+shxZ0S?=
+ =?us-ascii?Q?HiItcLQ5wcaAs9dtnZxiTuzzJplQbCJLfDEwBI6b3YuCdmbUdR5bK6CBpsD1?=
+ =?us-ascii?Q?McRmxIcE8d68gi0DbnVaJAgYeW7uj3syt+sEuApDSu4qcia6d+56QN+Vtrqn?=
+ =?us-ascii?Q?62f9eD9819Xf0qb0Tp06+ycb0LI0EyRH7BQeIU+iskvQxMxev/KV1oMvpbYG?=
+ =?us-ascii?Q?C7Mt6eyabnC3yc+1dYSyITBGyg8kEmDviqIL64DsAgaJmTvzUyZHerMDOVqA?=
+ =?us-ascii?Q?C06fsUVqjQOsBLeXFar3QeedqvLqzfd+ZnJfGR+h5ACBLZsNjXuvQQofqzV/?=
+ =?us-ascii?Q?2jfen2i8q+6HVKaSqYObi/PWBEnZSHV4PYSg5A28hUTribAwTf/pCSBNyxsR?=
+ =?us-ascii?Q?3plXGonRu7tbWl/Lu0w/vH2UvX8o9VAMzHllJJ03C37awc+9V9QO5s/rc69z?=
+ =?us-ascii?Q?GgzskYqHkGpPrnH5601Z72xVYMxdcs9K8iSxH9TIz0t++rj78lVubbmja1Vy?=
+ =?us-ascii?Q?2Lm8bpP7qPFn7yVyhRlHHqQokBBr5YCt6r3v96xq65B05ML844nHkk1k1pUu?=
+ =?us-ascii?Q?yCG4l5m/mmiYj/23/iOcO3kZFqnxqyShDKjx6M84+AyntGLbAY3jfJtxNPOM?=
+ =?us-ascii?Q?qpzQt8/eOK2BY1XkNKCpc9+sVj4I5hkZmLd7XyHo5F1dHx/cIJ5YbUPyxL7X?=
+ =?us-ascii?Q?9cH+PcxZ46DFfpZim63aFCL7gva3WNTeHAEyeMCmhkjrvKEDF7XsbcDRm29M?=
+ =?us-ascii?Q?BUjXgYbrJZlbIJ0daNEHE/lI2q2ISBptsqZAv9ZAN0n8x2sCdQO0iAFEFGbs?=
+ =?us-ascii?Q?jvUTpGS+SOx2kw7y5hQ1hhrjav9y+LgCcyY4sbdMKAuG9keKN+I5ZzYMxnb5?=
+ =?us-ascii?Q?+NYjYc7pOBvqu5xNmYVObiO2c1AwFJRjjDceAMPbDUrc4x8a0YDC+hLpbGPN?=
+ =?us-ascii?Q?gB0+X587bz/bv9SSWpWSbURM?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d6c89f4-11b9-4659-d8b1-08d935117ef4
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2021 00:05:51.1522
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SKah0a6kNKj5lJtlJgjQRr23PMh+oh0jdY6q0YBpbR8bdOzUk6adRjULJWaO3vDr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5095
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field array bounds checking for memcpy(), memmove(), and memset(),
-avoid intentionally writing across neighboring fields.
+On Wed, Jun 16, 2021 at 01:37:44PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring array fields.
+> 
+> Use the ether_addr_copy() helper instead, as already done for smac.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  drivers/infiniband/hw/mlx4/qp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Introduce more unions to cover the full inline data section, so that the
-entire 256 bytes can be addressed by memcpy() without thinking it is
-crossing field boundaries. Additionally adjusts dir memcpy() to use
-existing union names to get the same coverage.
+Applied to for-next, thanks
 
-diffoscope shows there are no binary differences before/after excepting
-the name of the initcall, which is line number based:
-
-$ diffoscope --exclude-directory-metadata yes before/fs after/fs
---- before/fs
-+++ after/fs
-│   --- before/fs/jfs
-├── +++ after/fs/jfs
-│ │   --- before/fs/jfs/super.o
-│ ├── +++ after/fs/jfs/super.o
-│ │ ├── readelf --wide --symbols {}
-│ │ │ @@ -2,15 +2,15 @@
-│ │ │  Symbol table '.symtab' contains 158 entries:
-│ │ │     Num:    Value          Size Type    Bind   Vis      Ndx Name
-...
-│ │ │ -     5: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT    6 __initcall__kmod_jfs__319_1049_ini
-t_jfs_fs6
-│ │ │ +     5: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT    6 __initcall__kmod_jfs__319_1050_ini
-t_jfs_fs6
-...
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/jfs/jfs_dinode.h | 14 ++++++++++----
- fs/jfs/jfs_imap.c   |  4 ++--
- fs/jfs/jfs_incore.h | 12 ++++++++++--
- fs/jfs/super.c      |  3 ++-
- 4 files changed, 24 insertions(+), 9 deletions(-)
-
-diff --git a/fs/jfs/jfs_dinode.h b/fs/jfs/jfs_dinode.h
-index d6af79e94263..6b231d0d0071 100644
---- a/fs/jfs/jfs_dinode.h
-+++ b/fs/jfs/jfs_dinode.h
-@@ -101,7 +101,6 @@ struct dinode {
- 					u8 unused[16];	/* 16: */
- 					dxd_t _dxd;	/* 16: */
- 					union {
--						__le32 _rdev;	/* 4: */
- 						/*
- 						 * The fast symlink area
- 						 * is expected to overflow
-@@ -109,9 +108,15 @@ struct dinode {
- 						 * needed (which will clear
- 						 * INLINEEA).
- 						 */
--						u8 _fastsymlink[128];
--					} _u;
--					u8 _inlineea[128];
-+						struct {
-+							union {
-+								__le32 _rdev;	/* 4: */
-+								u8 _fastsymlink[128];
-+							} _u;
-+							u8 _inlineea[128];
-+						};
-+						u8 _inline_all[256];
-+					};
- 				} _special;
- 			} _u2;
- 		} _file;
-@@ -122,6 +127,7 @@ struct dinode {
- #define di_rdev		u._file._u2._special._u._rdev
- #define di_fastsymlink	u._file._u2._special._u._fastsymlink
- #define di_inlineea	u._file._u2._special._inlineea
-+#define di_inline_all	u._file._u2._special._inline_all
- 	} u;
- };
- 
-diff --git a/fs/jfs/jfs_imap.c b/fs/jfs/jfs_imap.c
-index 937ca07b58b1..4df3f222c35c 100644
---- a/fs/jfs/jfs_imap.c
-+++ b/fs/jfs/jfs_imap.c
-@@ -763,7 +763,7 @@ int diWrite(tid_t tid, struct inode *ip)
- 		lv = & dilinelock->lv[dilinelock->index];
- 		lv->offset = (dioffset + 2 * 128) >> L2INODESLOTSIZE;
- 		lv->length = 2;
--		memcpy(&dp->di_fastsymlink, jfs_ip->i_inline, IDATASIZE);
-+		memcpy(&dp->di_inline_all, jfs_ip->i_inline_all, IDATASIZE);
- 		dilinelock->index++;
- 	}
- 	/*
-@@ -3084,7 +3084,7 @@ static int copy_from_dinode(struct dinode * dip, struct inode *ip)
- 	}
- 
- 	if (S_ISDIR(ip->i_mode)) {
--		memcpy(&jfs_ip->i_dirtable, &dip->di_dirtable, 384);
-+		memcpy(&jfs_ip->u.dir, &dip->u._dir, 384);
- 	} else if (S_ISREG(ip->i_mode) || S_ISLNK(ip->i_mode)) {
- 		memcpy(&jfs_ip->i_xtroot, &dip->di_xtroot, 288);
- 	} else
-diff --git a/fs/jfs/jfs_incore.h b/fs/jfs/jfs_incore.h
-index a466ec41cfbb..721def69e732 100644
---- a/fs/jfs/jfs_incore.h
-+++ b/fs/jfs/jfs_incore.h
-@@ -77,11 +77,18 @@ struct jfs_inode_info {
- 			unchar _unused[16];	/* 16: */
- 			dxd_t _dxd;		/* 16: */
- 			/* _inline may overflow into _inline_ea when needed */
--			unchar _inline[128];	/* 128: inline symlink */
- 			/* _inline_ea may overlay the last part of
- 			 * file._xtroot if maxentry = XTROOTINITSLOT
- 			 */
--			unchar _inline_ea[128];	/* 128: inline extended attr */
-+			union {
-+				struct {
-+					/* 128: inline symlink */
-+					unchar _inline[128];
-+					/* 128: inline extended attr */
-+					unchar _inline_ea[128];
-+				};
-+				unchar _inline_all[256];
-+			};
- 		} link;
- 	} u;
- #ifdef CONFIG_QUOTA
-@@ -96,6 +103,7 @@ struct jfs_inode_info {
- #define i_dtroot u.dir._dtroot
- #define i_inline u.link._inline
- #define i_inline_ea u.link._inline_ea
-+#define i_inline_all u.link._inline_all
- 
- #define IREAD_LOCK(ip, subclass) \
- 	down_read_nested(&JFS_IP(ip)->rdwrlock, subclass)
-diff --git a/fs/jfs/super.c b/fs/jfs/super.c
-index 1f0ffabbde56..9030aeaf0f88 100644
---- a/fs/jfs/super.c
-+++ b/fs/jfs/super.c
-@@ -939,7 +939,8 @@ static int __init init_jfs_fs(void)
- 	jfs_inode_cachep =
- 	    kmem_cache_create_usercopy("jfs_ip", sizeof(struct jfs_inode_info),
- 			0, SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD|SLAB_ACCOUNT,
--			offsetof(struct jfs_inode_info, i_inline), IDATASIZE,
-+			offsetof(struct jfs_inode_info, i_inline_all),
-+			sizeof_field(struct jfs_inode_info, i_inline_all),
- 			init_once);
- 	if (jfs_inode_cachep == NULL)
- 		return -ENOMEM;
--- 
-2.30.2
-
+Jason
