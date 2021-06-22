@@ -4,47 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E545DC2B9F4
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Jun 2021 17:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77E5C48BE5
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Jun 2021 17:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C96CA61353
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Jun 2021 17:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61D561370
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Jun 2021 17:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232058AbhFVRWX (ORCPT
+        id S231549AbhFVRcU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Jun 2021 13:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40170 "EHLO mail.kernel.org"
+        Tue, 22 Jun 2021 13:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232001AbhFVRWW (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Jun 2021 13:22:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id A763361055;
-        Tue, 22 Jun 2021 17:20:06 +0000 (UTC)
+        id S230330AbhFVRcU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 22 Jun 2021 13:32:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 5E9DA610C7;
+        Tue, 22 Jun 2021 17:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624382406;
-        bh=kaIOMJMfpBlno7xuIPblma4VBSHdfTRBs+Y+WW4jsTA=;
+        s=k20201202; t=1624383004;
+        bh=E6qiPxwz91u/GZp7zdFKvscmtYO1klejZ1g4ju8yOrw=;
         h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=B1vE80XUHVPZfSCMor1Fpe9XqbS6EAxCAa9U6wOLz/K7szCnjBO6HHeoLcOjH6uN/
-         pWJUNM4lxCUdlC1c161qe/IB+0Idy2lHuuebgHeh/mMOMhXKTvFiYgug5X260hjCBQ
-         fKQy2Xf8ubLOGdLLXWe1F3eOmJJ4X5FZ7WN/DMdkYb6Tq1O76kM4Z7p7g37E7qgTLX
-         4N0jfz3kukOo32ih8vGOpLxE8AtE1qrB2JfPYWlQnEbhW9/bjJf94HodRjo8boPbSk
-         d3dFe9MPbLH0bPV195uMqLhh6RJOg+8IYLtIKOIwEkWGSrrCGcWKjHPNiq6RnqR0vh
-         MT9aq8ww4yPrA==
+        b=s/SajBxFdh6yyitZ4+jt+L3CPxN/bCaFjNCXIXWoiG51gzYDtjHBNIMsEEFQc/NfK
+         EaiBxWudnoVPPAnJ9JcAFliPjTm8Hb5T31TCwG9YTD2GUHDAjLZM5wRz3AbZhOPIqr
+         r9i7eGCmVXxNckmHHW7ZL6+vJgoDyG3PTVPj4rw4rF0WMD1hFy3NCF5BfNEch6KpZT
+         jP/MW0eRL6Fc/3AAqDUx5hoFFDP1yjBFt2oIx1QXAldhfBDhUO+RgA4pd0o0MD1Ayv
+         g0kqTG+6P+u58THmeEhboEmkMLqCPDpGP9MlY+7snfOubI23NtlwIah4utjJyoZgUT
+         KW/M6rGamEzkw==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] octeontx2-af: Avoid field-overflowing memcpy()
+Subject: Re: [PATCH] hv_netvsc: Avoid field-overflowing memcpy()
 From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <162438240662.16834.16023435112374895219.git-patchwork-notify@kernel.org>
-Date:   Tue, 22 Jun 2021 17:20:06 +0000
-References: <20210621215419.1407886-1-keescook@chromium.org>
-In-Reply-To: <20210621215419.1407886-1-keescook@chromium.org>
+Message-Id: <162438300432.21657.18268821954591671920.git-patchwork-notify@kernel.org>
+Date:   Tue, 22 Jun 2021 17:30:04 +0000
+References: <20210621222112.1749650-1-keescook@chromium.org>
+In-Reply-To: <20210621222112.1749650-1-keescook@chromium.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     davem@davemloft.net, sgoutham@marvell.com, lcherian@marvell.com,
-        gakula@marvell.com, jerinj@marvell.com, hkelam@marvell.com,
-        sbhatta@marvell.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -53,20 +54,20 @@ Hello:
 
 This patch was applied to netdev/net-next.git (refs/heads/master):
 
-On Mon, 21 Jun 2021 14:54:19 -0700 you wrote:
+On Mon, 21 Jun 2021 15:21:12 -0700 you wrote:
 > In preparation for FORTIFY_SOURCE performing compile-time and run-time
 > field bounds checking for memcpy(), memmove(), and memset(), avoid
 > intentionally writing across neighboring fields.
 > 
-> To avoid having memcpy() think a u64 "prof" is being written beyond,
-> adjust the prof member type by adding struct nix_bandprof_s to the union
-> to match the other structs. This silences the following future warning:
+> Add flexible array to represent start of buf_info, improving readability
+> and avoid future warning where memcpy() thinks it is writing past the
+> end of the structure.
 > 
 > [...]
 
 Here is the summary with links:
-  - octeontx2-af: Avoid field-overflowing memcpy()
-    https://git.kernel.org/netdev/net-next/c/ee8e7622e09a
+  - hv_netvsc: Avoid field-overflowing memcpy()
+    https://git.kernel.org/netdev/net-next/c/f2fcffe392c1
 
 You are awesome, thank you!
 --
