@@ -2,59 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518AEC49EA5
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Jun 2021 13:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0D2C2B9F4
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Jun 2021 06:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36BB2613DC
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Jun 2021 13:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B9160FE3
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Jun 2021 06:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229940AbhFXNfF (ORCPT
+        id S233162AbhFYGY0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Jun 2021 09:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229878AbhFXNfF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Jun 2021 09:35:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CB18160FD9;
-        Thu, 24 Jun 2021 13:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1624541565;
-        bh=oI7RBYCu19BujLvtx3xIAdptc4lZUQyYBAY3znUi5zM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hia2WkyLxva1Y/Nlt3HoxS2CqTuPLLmHoo4p8BbX/zVP1Ch0NJghjWG5KegOsV23O
-         ZhkzsJCv8EWpJCBmemORpsdXefZc/v2yi7Y05om//I37+WXN9QtpUikbDM2klSkHm0
-         u+N32jXwusUKG4QsAvqfJMQ1rG0+6nfFnjsdEu2o=
-Date:   Thu, 24 Jun 2021 15:32:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        David Laight <David.Laight@aculab.com>,
+        Fri, 25 Jun 2021 02:24:26 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52022 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233143AbhFYGY0 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 25 Jun 2021 02:24:26 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 538731F442C0
+Subject: Re: [PATCH 0/9] LKDTM: Improvements for kernelci.org
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
         Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
         kernelci@groups.io, linux-kselftest@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/9] LKDTM: Improvements for kernelci.org
-Message-ID: <YNSJZ0h3oITHA/tW@kroah.com>
+        linux-hardening@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>
 References: <20210623203936.3151093-1-keescook@chromium.org>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <030c022b-985a-16eb-b9d7-73b6fed2d5a9@collabora.com>
+Date:   Fri, 25 Jun 2021 07:22:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20210623203936.3151093-1-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 23, 2021 at 01:39:27PM -0700, Kees Cook wrote:
+On 23/06/2021 21:39, Kees Cook wrote:
 > This is a bunch of LKDTM clean-ups to improve and expand testing,
 > given feedback from testing at kernelci.org. Adds a few new tests as
 > well.
 > 
 > (If a pull-request is preferred, please let me know.)
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> Kees Cook (9):
+>   selftests/lkdtm: Avoid needing explicit sub-shell
+>   selftests/lkdtm: Fix expected text for CR4 pinning
+>   selftests/lkdtm: Fix expected text for free poison
+>   lkdtm/bugs: XFAIL UNALIGNED_LOAD_STORE_WRITE
+>   lkdtm/heap: Add vmalloc linear overflow test
+>   lkdtm: Enable DOUBLE_FAULT on all architectures
+>   lkdtm: Add CONFIG hints in errors where possible
+>   selftests/lkdtm: Enable various testable CONFIGs
+>   lkdtm/heap: Add init_on_alloc tests
 
-This works, thanks!
+Tested-by: "kernelci.org bot" <bot@kernelci.org>
 
-greg k-h
+
+This whole series was tested on top of next-20210623, here are a
+couple of sample results from KernelCI staging:
+
+Clang 13 on AMD x86_64:
+https://staging.kernelci.org/test/plan/id/60d4a5ce3d2bc535d924bf25/
+
+GCC 8 on Intel x86_64:
+https://staging.kernelci.org/test/plan/id/60d570711a3d6beefe24bf26/
+
+And this is where the series was applied:
+https://github.com/kernelci/linux/commits/a9f4387015268e426c77fd51ed846c9756938828
+
+
+Thanks,
+Guillaume
