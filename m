@@ -2,129 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCCFC11F66
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Jun 2021 14:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D9AC11F66
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Jun 2021 14:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71DB361DBC
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Jun 2021 14:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CC761DB4
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Jun 2021 14:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231791AbhF2OGD (ORCPT
+        id S234309AbhF2O0g (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 29 Jun 2021 10:06:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229510AbhF2OGC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 29 Jun 2021 10:06:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AC84561DBC;
-        Tue, 29 Jun 2021 14:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624975415;
-        bh=AOf1hLbhW8ExMxmDRBQFjznQog2wDILxU65eq6cY/QM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fuzMYFmPIQtg4+mUaELuVt0DYOhFp6lZ8vZZc/m61WUVMee5+6WEHUdo6pVk0mbIF
-         Pije2vvBU4y7IFtpZKeBphPrG4vxCjVUO8qHzobb63lTEVHUrqGTcLvt2lH2FVA51P
-         RgLzyRDx/z0dElEI3KkouNdPrH9G5UMI2rQgYbrSoTJ6qUmFtZnp6rZt9vNrEmEfqx
-         c4ax7fDaw5nNhUZgF9v1gyMx4MDINQAezUxnxiZL++TkPwVbqjyf6Vu+R3tD6LX098
-         6A9kwO7nYjQaMnhx9VpaWzp99WOdqEmjZbwEC/wZj2GjGA5EmpkgNoHfY2NXJL6edF
-         Rias1XxwBG0Sw==
-Date:   Tue, 29 Jun 2021 09:05:25 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Joe Perches <joe@perches.com>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH][next] Input: Fix fall-through warning for Clang
-Message-ID: <20210629140525.GA65130@embeddedor>
-References: <20210607214852.GA65141@embeddedor>
- <91eef5ab3143ae8fadb8eb2969aecba5f3e7ad98.camel@perches.com>
- <YMfUT7pvBWreiR1K@google.com>
+        Tue, 29 Jun 2021 10:26:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27034 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234300AbhF2O0g (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 29 Jun 2021 10:26:36 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15TE4JhQ078971;
+        Tue, 29 Jun 2021 10:24:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=9H/pQ04FCs/tQ0avegBXhMmlE+E+8CGDVZnid+F/UX0=;
+ b=EyYgyu1u3lSzNqjxXV7HPXd/IlxdktxE3sFp6FNwl8ku1B2FfAKFQM8CawEmdTlAOpR2
+ YPWdx6FRrizyYy2Pc0kTuWbXNNuWgT9zrvS55KclB8XnzYlfQipYUnZoZMzV9VCNEZrj
+ fcBCEJXsE0st1l7QoxwrpN3QuPO01h7Yd8raOZ6B8mTGLydj4KmE4Dhgh9gOjmQHMXGj
+ X9Rw0E01smzOdIrzbafPEXY9w5NxOjzvzx/oBjna7ccvQAh47ebbzs+bqULEJg+4/MyH
+ zzhlpGSB0kczvoOtkJHbZuBn2U9ynVhY0BmNetWZ5j05Dhbz6+2gpy1s24u4iaOmM2/L Cg== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39g4e3spa4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Jun 2021 10:24:07 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15TEF5or000800;
+        Tue, 29 Jun 2021 14:24:05 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 39duv8gpqk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Jun 2021 14:24:04 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15TEO1dv22020582
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Jun 2021 14:24:01 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA8A2A4D76;
+        Tue, 29 Jun 2021 14:24:01 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6AB46A4D67;
+        Tue, 29 Jun 2021 14:24:01 +0000 (GMT)
+Received: from osiris (unknown [9.145.27.87])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 29 Jun 2021 14:24:01 +0000 (GMT)
+Date:   Tue, 29 Jun 2021 16:24:00 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] s390/dasd: Avoid field over-reading memcpy()
+Message-ID: <YNstANuJWSprSefl@osiris>
+References: <20210616201917.1246079-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YMfUT7pvBWreiR1K@google.com>
+In-Reply-To: <20210616201917.1246079-1-keescook@chromium.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tsp18nn4WU_Zg5zCKmyk3cC-XCkPbsY2
+X-Proofpoint-ORIG-GUID: tsp18nn4WU_Zg5zCKmyk3cC-XCkPbsY2
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-06-29_06:2021-06-28,2021-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ bulkscore=0 spamscore=0 adultscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=735 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106290095
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jun 14, 2021 at 03:12:31PM -0700, Dmitry Torokhov wrote:
-> Hi Joe,
+On Wed, Jun 16, 2021 at 01:19:17PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field array bounds checking for memcpy(), memmove(), and memset(),
+> avoid intentionally reading across neighboring array fields.
 > 
-> On Mon, Jun 07, 2021 at 03:02:40PM -0700, Joe Perches wrote:
-> > On Mon, 2021-06-07 at 16:48 -0500, Gustavo A. R. Silva wrote:
-> > > In preparation to enable -Wimplicit-fallthrough for Clang, fix a
-> > > warning by explicitly adding a fallthrough; statement.
-> > []
-> > > diff --git a/drivers/input/joystick/sidewinder.c b/drivers/input/joystick/sidewinder.c
-> > []
-> > > @@ -660,6 +660,7 @@ static int sw_connect(struct gameport *gameport, struct gameport_driver *drv)
-> > >  					fallthrough;
-> > >  				case 45:				/* Ambiguous packet length */
-> > >  					if (j <= 40) {			/* ID length less or eq 40 -> FSP */
-> > > +					fallthrough;
-> > >  				case 43:
-> > >  						sw->type = SW_ID_FSP;
-> > >  						break;
-> > 
-> > Yuck.  Super ugly.  There's no need to play games with indentation.
+> Add a wrapping structure to serve as the memcpy() source, so the compiler
+> can do appropriate bounds checking, avoiding this future warning:
 > 
-> Yeah, the original code is not pretty :(
-
-Isn't this a Duff device for performance[1]?
-
-In which case it might be better not to modify it and just go
-with the fallthrough marking?
-
-Another similar case can be found at
-drivers/scsi/aic94xx/aic94xx_sds.c:714:
-
- 714 static void *asd_find_ll_by_id(void * const start, const u8 id0, const u8 id1)
- 715 {
- 716         struct asd_ll_el *el = start;
- 717
- 718         do {
- 719                 switch (id1) {
- 720                 default:
- 721                         if (el->id1 == id1)
- 722                 case 0xFF:
- 723                                 if (el->id0 == id0)
- 724                                         return el;
- 725                 }
- 726                 el = start + le16_to_cpu(el->next);
- 727         } while (el != start);
- 728
- 729         return NULL;
- 730 }
-
---
-Gustavo
-
-[1] https://www.drdobbs.com/a-reusable-duff-device/184406208
-
+> In function '__fortify_memcpy',
+>     inlined from 'create_uid' at drivers/s390/block/dasd_eckd.c:749:2:
+> ./include/linux/fortify-string.h:246:4: error: call to '__read_overflow2_field' declared with attribute error: detected read beyond size of field (2nd parameter)
 > 
-> > 
-> > Perhaps the simpler:
-> > 
-> > 				case 43:
-> > 					sw->type = SW_ID_FSP;
-> > 					break;
-> > 				case 45:				/* Ambiguous packet length */
-> > 					if (j <= 40) {			/* ID length less or eq 40 -> FSP */
-> > 						sw->type = SW_ID_FSP;
-> > 						break;
-> > 					}
-> > 					sw->number++;
-> > 					fallthrough;
-> > 
-> > 
-> 
-> Could you resubmit this version properly formatted?
-> 
-> Thanks.
->  
-> -- 
-> Dmitry
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/s390/block/dasd_eckd.c | 2 +-
+>  drivers/s390/block/dasd_eckd.h | 6 ++++--
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+
+I'll leave it up to Stefan Haberland and Jan Hoeppner to handle this one.
