@@ -2,118 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A5FC49EA6
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Jun 2021 06:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCCFC11F66
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Jun 2021 14:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A921A6193D
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Jun 2021 06:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71DB361DBC
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Jun 2021 14:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbhFZGPM (ORCPT
+        id S231791AbhF2OGD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 26 Jun 2021 02:15:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbhFZGPM (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 26 Jun 2021 02:15:12 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715F5C061766
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Jun 2021 23:12:49 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id pf4-20020a17090b1d84b029016f6699c3f2so9278986pjb.0
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Jun 2021 23:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Z3D1KelqTQqcByU+iX/g4zMb1AQ1QyzDSkN4oTccG6E=;
-        b=dPYF37dHsGEYSEl9eqOPnMnSYV23hgoNW6zFFCEdWj5Q1w4OSIZ374aV2gk9AR51sH
-         4QhogOUV0JirtFhghh4Sx4J7XwTYVMRFXKsFzP6gdNmxkPDTn6w8BfKYRi8dFTN6JbSf
-         hBlzTMo6KZE2D3sg78jc5Rf9MdUxh59Adb2yQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z3D1KelqTQqcByU+iX/g4zMb1AQ1QyzDSkN4oTccG6E=;
-        b=ZSPcL3NvJifwOv9SAsL8gQKFOcicbMDAsYcKOCU6v3pVh7F/mdLzFS5eseihviGifV
-         FqDUCCBzIgZ8YVxVFPJ1mne918KMY5oIlI1ysJutP44SY0pU/abj3LrLi5DmYR2qtU3r
-         FiGDBwQseaxXqGTV7y1EC1jhnjT/YfSnW/m5I6Zrz+yNKmgtSuEKGUNwPyZR5+7DNm3u
-         RsTA802ZvTvF6RjQESWDOKLzQwC2cNdRWTiI2+eY2xIS8jw0FgNCWpIKTPTz9bUg6Q6O
-         fHfFj+VNWHBtg+01uxu3kQ30MvW8y3vdizpkVtmgKeGlWQ0MR5LAm5JTvjOZ+Ap1+f/t
-         NxWw==
-X-Gm-Message-State: AOAM532Jbssv3ZAT8lA2nkxY/jE8NLCLApAoLt7WJ8QQCO/SsFkjY+8d
-        FY8mFe1vEJRZ4AnSLmI73KdJjOxH6kmwhg==
-X-Google-Smtp-Source: ABdhPJyf87SbQDubTJ9J8aMC+55dXrh4eLcutSx+3zpg0JmnRltlhc687c4pmI8apq44mFLXSlbVNQ==
-X-Received: by 2002:a17:90a:194a:: with SMTP id 10mr24743998pjh.188.1624687968729;
-        Fri, 25 Jun 2021 23:12:48 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c24sm7895781pgj.11.2021.06.25.23.12.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Jun 2021 23:12:47 -0700 (PDT)
-Date:   Fri, 25 Jun 2021 23:12:46 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        kernelci@groups.io, linux-kselftest@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>
-Subject: Re: [PATCH 0/9] LKDTM: Improvements for kernelci.org
-Message-ID: <202106252311.14501F2F@keescook>
-References: <20210623203936.3151093-1-keescook@chromium.org>
- <030c022b-985a-16eb-b9d7-73b6fed2d5a9@collabora.com>
+        Tue, 29 Jun 2021 10:06:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229510AbhF2OGC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 29 Jun 2021 10:06:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AC84561DBC;
+        Tue, 29 Jun 2021 14:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624975415;
+        bh=AOf1hLbhW8ExMxmDRBQFjznQog2wDILxU65eq6cY/QM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fuzMYFmPIQtg4+mUaELuVt0DYOhFp6lZ8vZZc/m61WUVMee5+6WEHUdo6pVk0mbIF
+         Pije2vvBU4y7IFtpZKeBphPrG4vxCjVUO8qHzobb63lTEVHUrqGTcLvt2lH2FVA51P
+         RgLzyRDx/z0dElEI3KkouNdPrH9G5UMI2rQgYbrSoTJ6qUmFtZnp6rZt9vNrEmEfqx
+         c4ax7fDaw5nNhUZgF9v1gyMx4MDINQAezUxnxiZL++TkPwVbqjyf6Vu+R3tD6LX098
+         6A9kwO7nYjQaMnhx9VpaWzp99WOdqEmjZbwEC/wZj2GjGA5EmpkgNoHfY2NXJL6edF
+         Rias1XxwBG0Sw==
+Date:   Tue, 29 Jun 2021 09:05:25 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Joe Perches <joe@perches.com>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH][next] Input: Fix fall-through warning for Clang
+Message-ID: <20210629140525.GA65130@embeddedor>
+References: <20210607214852.GA65141@embeddedor>
+ <91eef5ab3143ae8fadb8eb2969aecba5f3e7ad98.camel@perches.com>
+ <YMfUT7pvBWreiR1K@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <030c022b-985a-16eb-b9d7-73b6fed2d5a9@collabora.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YMfUT7pvBWreiR1K@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 07:22:01AM +0100, Guillaume Tucker wrote:
-> On 23/06/2021 21:39, Kees Cook wrote:
-> > This is a bunch of LKDTM clean-ups to improve and expand testing,
-> > given feedback from testing at kernelci.org. Adds a few new tests as
-> > well.
+On Mon, Jun 14, 2021 at 03:12:31PM -0700, Dmitry Torokhov wrote:
+> Hi Joe,
+> 
+> On Mon, Jun 07, 2021 at 03:02:40PM -0700, Joe Perches wrote:
+> > On Mon, 2021-06-07 at 16:48 -0500, Gustavo A. R. Silva wrote:
+> > > In preparation to enable -Wimplicit-fallthrough for Clang, fix a
+> > > warning by explicitly adding a fallthrough; statement.
+> > []
+> > > diff --git a/drivers/input/joystick/sidewinder.c b/drivers/input/joystick/sidewinder.c
+> > []
+> > > @@ -660,6 +660,7 @@ static int sw_connect(struct gameport *gameport, struct gameport_driver *drv)
+> > >  					fallthrough;
+> > >  				case 45:				/* Ambiguous packet length */
+> > >  					if (j <= 40) {			/* ID length less or eq 40 -> FSP */
+> > > +					fallthrough;
+> > >  				case 43:
+> > >  						sw->type = SW_ID_FSP;
+> > >  						break;
 > > 
-> > (If a pull-request is preferred, please let me know.)
-> > 
-> > Thanks!
-> > 
-> > -Kees
-> > 
-> > Kees Cook (9):
-> >   selftests/lkdtm: Avoid needing explicit sub-shell
-> >   selftests/lkdtm: Fix expected text for CR4 pinning
-> >   selftests/lkdtm: Fix expected text for free poison
-> >   lkdtm/bugs: XFAIL UNALIGNED_LOAD_STORE_WRITE
-> >   lkdtm/heap: Add vmalloc linear overflow test
-> >   lkdtm: Enable DOUBLE_FAULT on all architectures
-> >   lkdtm: Add CONFIG hints in errors where possible
-> >   selftests/lkdtm: Enable various testable CONFIGs
-> >   lkdtm/heap: Add init_on_alloc tests
+> > Yuck.  Super ugly.  There's no need to play games with indentation.
 > 
-> Tested-by: "kernelci.org bot" <bot@kernelci.org>
-> 
-> 
-> This whole series was tested on top of next-20210623, here are a
-> couple of sample results from KernelCI staging:
-> 
-> Clang 13 on AMD x86_64:
-> https://staging.kernelci.org/test/plan/id/60d4a5ce3d2bc535d924bf25/
-> 
-> GCC 8 on Intel x86_64:
-> https://staging.kernelci.org/test/plan/id/60d570711a3d6beefe24bf26/
-> 
-> And this is where the series was applied:
-> https://github.com/kernelci/linux/commits/a9f4387015268e426c77fd51ed846c9756938828
+> Yeah, the original code is not pretty :(
 
-Fantastic! Thanks; this looks great. :)
+Isn't this a Duff device for performance[1]?
 
--- 
-Kees Cook
+In which case it might be better not to modify it and just go
+with the fallthrough marking?
+
+Another similar case can be found at
+drivers/scsi/aic94xx/aic94xx_sds.c:714:
+
+ 714 static void *asd_find_ll_by_id(void * const start, const u8 id0, const u8 id1)
+ 715 {
+ 716         struct asd_ll_el *el = start;
+ 717
+ 718         do {
+ 719                 switch (id1) {
+ 720                 default:
+ 721                         if (el->id1 == id1)
+ 722                 case 0xFF:
+ 723                                 if (el->id0 == id0)
+ 724                                         return el;
+ 725                 }
+ 726                 el = start + le16_to_cpu(el->next);
+ 727         } while (el != start);
+ 728
+ 729         return NULL;
+ 730 }
+
+--
+Gustavo
+
+[1] https://www.drdobbs.com/a-reusable-duff-device/184406208
+
+> 
+> > 
+> > Perhaps the simpler:
+> > 
+> > 				case 43:
+> > 					sw->type = SW_ID_FSP;
+> > 					break;
+> > 				case 45:				/* Ambiguous packet length */
+> > 					if (j <= 40) {			/* ID length less or eq 40 -> FSP */
+> > 						sw->type = SW_ID_FSP;
+> > 						break;
+> > 					}
+> > 					sw->number++;
+> > 					fallthrough;
+> > 
+> > 
+> 
+> Could you resubmit this version properly formatted?
+> 
+> Thanks.
+>  
+> -- 
+> Dmitry
