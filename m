@@ -2,398 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44BCC11F64
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jul 2021 11:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE06C11F64
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jul 2021 16:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E7361467
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jul 2021 11:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20F3613D9
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jul 2021 16:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236173AbhGALdE (ORCPT
+        id S229948AbhGAQnb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Jul 2021 07:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236130AbhGALdE (ORCPT
+        Thu, 1 Jul 2021 12:43:31 -0400
+Received: from smtprelay0194.hostedemail.com ([216.40.44.194]:57082 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229764AbhGAQnb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Jul 2021 07:33:04 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC76AC061756
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Jul 2021 04:30:32 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id b1so3480242pls.5
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Jul 2021 04:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=FWYMeCrA8a3SZtEwTurSCHZzPq1Ldj75mQlitbwPIds=;
-        b=Xzr8zb2zr3GneS+T3P+kYmwaSBqNPoUa+IiaQC9RmAUtGRYj7SodqfqfIvoT+oiV+2
-         d6kBAXeB42dyRXxMCS728zwjENFe1zYTf3hkI9YOYlNXh0ByjD7RE5hlrOzjNEOoGW0X
-         sG2whOuIrPKYji7CumBK262Kd8r40GY463di0AE/J9SwYmnY8kw4uZuy4cQI9muI1Sr5
-         zFrkMXQvjo9GZJDCrbohV7HYVzcg1qgzpKnMNu/AYjmKncLm+ismbnGOOIwlZOY0Ea64
-         L1zcCq5jvp5ZlfjbbYbISkuj5GTCiLdHf3F27OlOgG95YLNtoxDVs2MliihNcf5wMCX0
-         6b6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=FWYMeCrA8a3SZtEwTurSCHZzPq1Ldj75mQlitbwPIds=;
-        b=rBMc0J4fRXQsrB88No7HB0TGX3+OWrZWKo2hX6ZeJGcdco63Bub54pKp5OVgi6jDDu
-         GD1O0QUYhdfyQ8yfzOeVABN4uCiFcQWLLrrLETjvJI17wMr0BENv/Zx16UxgNgIYl7KS
-         2F1dl+kRlDqYnMobgF8bUqmudMeX2wlHBXnyIdewz/z/9uvHYbNgftzEM96H4o1Rn1wX
-         lFUqX98tK8MnpPqXZD9Q7ux4s9s74/8VAa6aVv2+cDkOQwfGMycCZUjjk/WyChKu/hNO
-         vtQKdR9wWn8rZycAwXlfRyJlxk89bQx00CrKQGEyTSoOYtR6/Grl7Ys4PBOb3wJkYHbP
-         yTRA==
-X-Gm-Message-State: AOAM530yaAfOTos12e0JQHRbwzh3XftzGV6waa4Ctt/0iE+QHX27YKNs
-        MzuqTvsu91w/1mlxy/UrUkp5qmHZH6478Q==
-X-Google-Smtp-Source: ABdhPJwJl9kjrKBUCU8Zl/2OJHQbWY8/1Bi0LY7eJg+9i/uksUrG5PAsoJ+rMV0+M2j+0wrzWW/s6A==
-X-Received: by 2002:a17:90b:3581:: with SMTP id mm1mr9274222pjb.98.1625139032292;
-        Thu, 01 Jul 2021 04:30:32 -0700 (PDT)
-Received: from localhost ([118.209.250.144])
-        by smtp.gmail.com with ESMTPSA id l12sm24333867pff.105.2021.07.01.04.30.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jul 2021 04:30:31 -0700 (PDT)
-Date:   Thu, 01 Jul 2021 21:30:25 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RESEND PATCH v4 05/11] powerpc/64s: Add ability to skip SLB
- preload
-To:     "Christopher M. Riedl" <cmr@linux.ibm.com>,
-        Daniel Axtens <dja@axtens.net>, linuxppc-dev@lists.ozlabs.org
-Cc:     keescook@chromium.org, linux-hardening@vger.kernel.org,
-        tglx@linutronix.de, x86@kernel.org
-References: <20210506043452.9674-1-cmr@linux.ibm.com>
-        <20210506043452.9674-6-cmr@linux.ibm.com>
-        <87sg1bj4ex.fsf@dja-thinkpad.axtens.net>
-        <CCHHVUNV216M.1825LSMNZ1XG7@oc8246131445.ibm.com>
-        <1625112841.77uceah4w9.astroid@bobo.none>
-        <CCHK05L5IMIU.2P6V21JLTU3E5@oc8246131445.ibm.com>
-        <1625119343.ozhm53mipc.astroid@bobo.none>
-        <CCHLT13VBZR8.3S2BSB3TXT3CJ@oc8246131445.ibm.com>
-        <1625124601.4ahxocq4e6.astroid@bobo.none>
-In-Reply-To: <1625124601.4ahxocq4e6.astroid@bobo.none>
+        Thu, 1 Jul 2021 12:43:31 -0400
+Received: from omf05.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 6A3B5100E472A;
+        Thu,  1 Jul 2021 16:40:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf05.hostedemail.com (Postfix) with ESMTPA id 37C34B2793;
+        Thu,  1 Jul 2021 16:40:58 +0000 (UTC)
+Message-ID: <6ddc71efad6cd45e45991028a7656eab203df12d.camel@perches.com>
+Subject: Re: [PATCH] scsi: aic94xx: Fix fall-through warning for Clang
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Date:   Thu, 01 Jul 2021 09:40:56 -0700
+In-Reply-To: <20210701010433.GA57746@embeddedor>
+References: <20210701010433.GA57746@embeddedor>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-Message-Id: <1625138588.ghd7fktvnl.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 37C34B2793
+X-Stat-Signature: gznc799dteu3m8s9wumnqrhepq5map57
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19DwiLC1MjWGtvuepLMBtmJQwGEjJXxw9w=
+X-HE-Tag: 1625157658-948689
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Excerpts from Nicholas Piggin's message of July 1, 2021 5:37 pm:
-> Excerpts from Christopher M. Riedl's message of July 1, 2021 4:53 pm:
->> On Thu Jul 1, 2021 at 1:04 AM CDT, Nicholas Piggin wrote:
->>> Excerpts from Christopher M. Riedl's message of July 1, 2021 3:28 pm:
->>> > On Wed Jun 30, 2021 at 11:15 PM CDT, Nicholas Piggin wrote:
->>> >> Excerpts from Christopher M. Riedl's message of July 1, 2021 1:48 pm=
-:
->>> >> > On Sun Jun 20, 2021 at 10:13 PM CDT, Daniel Axtens wrote:
->>> >> >> "Christopher M. Riedl" <cmr@linux.ibm.com> writes:
->>> >> >>
->>> >> >> > Switching to a different mm with Hash translation causes SLB en=
-tries to
->>> >> >> > be preloaded from the current thread_info. This reduces SLB fau=
-lts, for
->>> >> >> > example when threads share a common mm but operate on different=
- address
->>> >> >> > ranges.
->>> >> >> >
->>> >> >> > Preloading entries from the thread_info struct may not always b=
-e
->>> >> >> > appropriate - such as when switching to a temporary mm. Introdu=
-ce a new
->>> >> >> > boolean in mm_context_t to skip the SLB preload entirely. Also =
-move the
->>> >> >> > SLB preload code into a separate function since switch_slb() is=
- already
->>> >> >> > quite long. The default behavior (preloading SLB entries from t=
-he
->>> >> >> > current thread_info struct) remains unchanged.
->>> >> >> >
->>> >> >> > Signed-off-by: Christopher M. Riedl <cmr@linux.ibm.com>
->>> >> >> >
->>> >> >> > ---
->>> >> >> >
->>> >> >> > v4:  * New to series.
->>> >> >> > ---
->>> >> >> >  arch/powerpc/include/asm/book3s/64/mmu.h |  3 ++
->>> >> >> >  arch/powerpc/include/asm/mmu_context.h   | 13 ++++++
->>> >> >> >  arch/powerpc/mm/book3s64/mmu_context.c   |  2 +
->>> >> >> >  arch/powerpc/mm/book3s64/slb.c           | 56 ++++++++++++++--=
---------
->>> >> >> >  4 files changed, 50 insertions(+), 24 deletions(-)
->>> >> >> >
->>> >> >> > diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/po=
-werpc/include/asm/book3s/64/mmu.h
->>> >> >> > index eace8c3f7b0a1..b23a9dcdee5af 100644
->>> >> >> > --- a/arch/powerpc/include/asm/book3s/64/mmu.h
->>> >> >> > +++ b/arch/powerpc/include/asm/book3s/64/mmu.h
->>> >> >> > @@ -130,6 +130,9 @@ typedef struct {
->>> >> >> >  	u32 pkey_allocation_map;
->>> >> >> >  	s16 execute_only_pkey; /* key holding execute-only protection=
- */
->>> >> >> >  #endif
->>> >> >> > +
->>> >> >> > +	/* Do not preload SLB entries from thread_info during switch_=
-slb() */
->>> >> >> > +	bool skip_slb_preload;
->>> >> >> >  } mm_context_t;
->>> >> >> > =20
->>> >> >> >  static inline u16 mm_ctx_user_psize(mm_context_t *ctx)
->>> >> >> > diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powe=
-rpc/include/asm/mmu_context.h
->>> >> >> > index 4bc45d3ed8b0e..264787e90b1a1 100644
->>> >> >> > --- a/arch/powerpc/include/asm/mmu_context.h
->>> >> >> > +++ b/arch/powerpc/include/asm/mmu_context.h
->>> >> >> > @@ -298,6 +298,19 @@ static inline int arch_dup_mmap(struct mm_=
-struct *oldmm,
->>> >> >> >  	return 0;
->>> >> >> >  }
->>> >> >> > =20
->>> >> >> > +#ifdef CONFIG_PPC_BOOK3S_64
->>> >> >> > +
->>> >> >> > +static inline void skip_slb_preload_mm(struct mm_struct *mm)
->>> >> >> > +{
->>> >> >> > +	mm->context.skip_slb_preload =3D true;
->>> >> >> > +}
->>> >> >> > +
->>> >> >> > +#else
->>> >> >> > +
->>> >> >> > +static inline void skip_slb_preload_mm(struct mm_struct *mm) {=
-}
->>> >> >> > +
->>> >> >> > +#endif /* CONFIG_PPC_BOOK3S_64 */
->>> >> >> > +
->>> >> >> >  #include <asm-generic/mmu_context.h>
->>> >> >> > =20
->>> >> >> >  #endif /* __KERNEL__ */
->>> >> >> > diff --git a/arch/powerpc/mm/book3s64/mmu_context.c b/arch/powe=
-rpc/mm/book3s64/mmu_context.c
->>> >> >> > index c10fc8a72fb37..3479910264c59 100644
->>> >> >> > --- a/arch/powerpc/mm/book3s64/mmu_context.c
->>> >> >> > +++ b/arch/powerpc/mm/book3s64/mmu_context.c
->>> >> >> > @@ -202,6 +202,8 @@ int init_new_context(struct task_struct *ts=
-k, struct mm_struct *mm)
->>> >> >> >  	atomic_set(&mm->context.active_cpus, 0);
->>> >> >> >  	atomic_set(&mm->context.copros, 0);
->>> >> >> > =20
->>> >> >> > +	mm->context.skip_slb_preload =3D false;
->>> >> >> > +
->>> >> >> >  	return 0;
->>> >> >> >  }
->>> >> >> > =20
->>> >> >> > diff --git a/arch/powerpc/mm/book3s64/slb.c b/arch/powerpc/mm/b=
-ook3s64/slb.c
->>> >> >> > index c91bd85eb90e3..da0836cb855af 100644
->>> >> >> > --- a/arch/powerpc/mm/book3s64/slb.c
->>> >> >> > +++ b/arch/powerpc/mm/book3s64/slb.c
->>> >> >> > @@ -441,10 +441,39 @@ static void slb_cache_slbie_user(unsigned=
- int index)
->>> >> >> >  	asm volatile("slbie %0" : : "r" (slbie_data));
->>> >> >> >  }
->>> >> >> > =20
->>> >> >> > +static void preload_slb_entries(struct task_struct *tsk, struc=
-t mm_struct *mm)
->>> >> >> Should this be explicitly inline or even __always_inline? I'm thi=
-nking
->>> >> >> switch_slb is probably a fairly hot path on hash?
->>> >> >=20
->>> >> > Yes absolutely. I'll make this change in v5.
->>> >> >=20
->>> >> >>
->>> >> >> > +{
->>> >> >> > +	struct thread_info *ti =3D task_thread_info(tsk);
->>> >> >> > +	unsigned char i;
->>> >> >> > +
->>> >> >> > +	/*
->>> >> >> > +	 * We gradually age out SLBs after a number of context switch=
-es to
->>> >> >> > +	 * reduce reload overhead of unused entries (like we do with =
-FP/VEC
->>> >> >> > +	 * reload). Each time we wrap 256 switches, take an entry out=
- of the
->>> >> >> > +	 * SLB preload cache.
->>> >> >> > +	 */
->>> >> >> > +	tsk->thread.load_slb++;
->>> >> >> > +	if (!tsk->thread.load_slb) {
->>> >> >> > +		unsigned long pc =3D KSTK_EIP(tsk);
->>> >> >> > +
->>> >> >> > +		preload_age(ti);
->>> >> >> > +		preload_add(ti, pc);
->>> >> >> > +	}
->>> >> >> > +
->>> >> >> > +	for (i =3D 0; i < ti->slb_preload_nr; i++) {
->>> >> >> > +		unsigned char idx;
->>> >> >> > +		unsigned long ea;
->>> >> >> > +
->>> >> >> > +		idx =3D (ti->slb_preload_tail + i) % SLB_PRELOAD_NR;
->>> >> >> > +		ea =3D (unsigned long)ti->slb_preload_esid[idx] << SID_SHIFT=
-;
->>> >> >> > +
->>> >> >> > +		slb_allocate_user(mm, ea);
->>> >> >> > +	}
->>> >> >> > +}
->>> >> >> > +
->>> >> >> >  /* Flush all user entries from the segment table of the curren=
-t processor. */
->>> >> >> >  void switch_slb(struct task_struct *tsk, struct mm_struct *mm)
->>> >> >> >  {
->>> >> >> > -	struct thread_info *ti =3D task_thread_info(tsk);
->>> >> >> >  	unsigned char i;
->>> >> >> > =20
->>> >> >> >  	/*
->>> >> >> > @@ -502,29 +531,8 @@ void switch_slb(struct task_struct *tsk, s=
-truct mm_struct *mm)
->>> >> >> > =20
->>> >> >> >  	copy_mm_to_paca(mm);
->>> >> >> > =20
->>> >> >> > -	/*
->>> >> >> > -	 * We gradually age out SLBs after a number of context switch=
-es to
->>> >> >> > -	 * reduce reload overhead of unused entries (like we do with =
-FP/VEC
->>> >> >> > -	 * reload). Each time we wrap 256 switches, take an entry out=
- of the
->>> >> >> > -	 * SLB preload cache.
->>> >> >> > -	 */
->>> >> >> > -	tsk->thread.load_slb++;
->>> >> >> > -	if (!tsk->thread.load_slb) {
->>> >> >> > -		unsigned long pc =3D KSTK_EIP(tsk);
->>> >> >> > -
->>> >> >> > -		preload_age(ti);
->>> >> >> > -		preload_add(ti, pc);
->>> >> >> > -	}
->>> >> >> > -
->>> >> >> > -	for (i =3D 0; i < ti->slb_preload_nr; i++) {
->>> >> >> > -		unsigned char idx;
->>> >> >> > -		unsigned long ea;
->>> >> >> > -
->>> >> >> > -		idx =3D (ti->slb_preload_tail + i) % SLB_PRELOAD_NR;
->>> >> >> > -		ea =3D (unsigned long)ti->slb_preload_esid[idx] << SID_SHIFT=
-;
->>> >> >> > -
->>> >> >> > -		slb_allocate_user(mm, ea);
->>> >> >> > -	}
->>> >> >> > +	if (!mm->context.skip_slb_preload)
->>> >> >> > +		preload_slb_entries(tsk, mm);
->>> >> >>
->>> >> >> Should this be wrapped in likely()?
->>> >> >=20
->>> >> > Seems like a good idea - yes.
->>> >> >=20
->>> >> >>
->>> >> >> > =20
->>> >> >> >  	/*
->>> >> >> >  	 * Synchronize slbmte preloads with possible subsequent user =
-memory
->>> >> >>
->>> >> >> Right below this comment is the isync. It seems to be specificall=
-y
->>> >> >> concerned with synchronising preloaded slbs. Do you need it if yo=
-u are
->>> >> >> skipping SLB preloads?
->>> >> >>
->>> >> >> It's probably not a big deal to have an extra isync in the fairly=
- rare
->>> >> >> path when we're skipping preloads, but I thought I'd check.
->>> >> >=20
->>> >> > I don't _think_ we need the `isync` if we are skipping the SLB pre=
-loads,
->>> >> > but then again it was always in the code-path before. If someone c=
-an
->>> >> > make a compelling argument to drop it when not preloading SLBs I w=
-ill,
->>> >> > otherwise (considering some of the other non-obvious things I step=
-ped
->>> >> > into with the Hash code) I will keep it here for now.
->>> >>
->>> >> The ISA says slbia wants an isync afterward, so we probably should k=
-eep
->>> >> it. The comment is a bit misleading in that case.
->>> >>
->>> >> Why isn't preloading appropriate for a temporary mm?
->>> >=20
->>> > The preloaded entries come from the thread_info struct which isn't
->>> > necessarily related to the temporary mm at all. I saw SLB multihits
->>> > while testing this series with my LKDTM test where the "patching
->>> > address" (userspace address for the temporary mapping w/
->>> > write-permissions) ends up in a thread's preload list and then we
->>> > explicitly insert it again in map_patch() when trying to patch. At th=
-at
->>> > point the SLB multihit triggers.
->>>
->>> Hmm, so what if we use a mm, take some SLB faults then unuse it and
->>> use a different one? I wonder if kthread_use_mm has existing problems
->>> with this incorrect SLB preloading. Quite possibly. We should clear
->>> the preload whenever mm changes I think. That should cover this as
->>> well.
->>=20
->> I actually did this initially but thought it was a bit too intrusive to
->> include as part of this series and hurt performance. I agree that
->> preloading the SLB from the thread may be a problem in general when
->> switching in/out an mm.
->>=20
->> kthread_use_mm may not be affected unless we explicitly insert some SLB
->> entries which could collide with an existing preload (which I don't
->> think we do anywhere until this series).
->=20
-> kthread_use_mm(mm1);
-> *ea =3D blah; /* slb preload[n++][ea] =3D va */
-> kthread_unuse_mm(mm1);
->=20
-> kthread_use_mm(mm2);
->   switch_slb();
-> schedule();
->   /* preload ea=3Dva? */
-> x =3D *ea;
-> kthread_unuse_mm(mm2);
->=20
-> ? I'm sure we'd have a bug in existing code if you're hitting a bug=20
-> there.
+On Wed, 2021-06-30 at 20:04 -0500, Gustavo A. R. Silva wrote:
+> In preparation to enable -Wimplicit-fallthrough for Clang, fix a
+> warning by explicitly adding a fallthrough; statement.
+> 
+> Notice that this seems to be a Duff device for performance[1]. So,
+> although the code looks a bit _funny_, I didn't want to refactor
+> or modify it beyond merely adding a fallthrough marking, which
+> might be the least disruptive way to fix this issue.
 
-Something like this I think should prevent it. I thought there was a=20
-better arch hook for it, but doesn't seem so. I have an unexplained
-SLB crash bug somewhere too, better check if it matches...
+If you read the surrounding calling code, it appears it's
+not performant.
 
-Thanks,
-Nick
+ * @start has to be the _base_ element start, since the
+ * linked list entries's offset is from this pointer.
+ * Some linked list entries use only the first id, in which case
+ * you can pass 0xFF for the second.
 
-diff --git a/arch/powerpc/mm/book3s64/slb.c b/arch/powerpc/mm/book3s64/slb.=
-c
-index c91bd85eb90e..cb8c8a5d861e 100644
---- a/arch/powerpc/mm/book3s64/slb.c
-+++ b/arch/powerpc/mm/book3s64/slb.c
-@@ -502,6 +502,9 @@ void switch_slb(struct task_struct *tsk, struct mm_stru=
-ct *mm)
-=20
-        copy_mm_to_paca(mm);
-=20
-+       if (unlikely(tsk->flags & PF_KTHREAD))
-+               goto no_preload;
-+
-        /*
-         * We gradually age out SLBs after a number of context switches to
-         * reduce reload overhead of unused entries (like we do with FP/VEC
-@@ -526,10 +529,11 @@ void switch_slb(struct task_struct *tsk, struct mm_st=
-ruct *mm)
-                slb_allocate_user(mm, ea);
-        }
-=20
-+no_preload:
-        /*
--        * Synchronize slbmte preloads with possible subsequent user memory
--        * address accesses by the kernel (user mode won't happen until
--        * rfid, which is safe).
-+        * Synchronize slbias and slbmte preloads with possible subsequent =
-user
-+        * memory address accesses by the kernel (user mode won't happen un=
-til
-+        * rfid, which is synchronizing).
-         */
-        isync();
- }
+> diff --git a/drivers/scsi/aic94xx/aic94xx_sds.c b/drivers/scsi/aic94xx/aic94xx_sds.c
+[]
+> @@ -718,10 +718,12 @@ static void *asd_find_ll_by_id(void * const start, const u8 id0, const u8 id1)
+>  	do {
+>  		switch (id1) {
+>  		default:
+> -			if (el->id1 == id1)
+> +			if (el->id1 == id1) {
+> +			fallthrough;
+>  		case 0xFF:
+>  				if (el->id0 == id0)
+>  					return el;
+> +			}
+>  		}
+>  		el = start + le16_to_cpu(el->next);
+>  	} while (el != start);
+
+And this is still horrible code to read.
+
+I think the below is rather more sensible and it doesn't change
+the defconfig with aic94xx object size.
+
+$ size drivers/scsi/aic94xx/aic94xx_sds.o*
+   text	   data	    bss	    dec	    hex	filename
+  10010	    192	      0	  10202	   27da	drivers/scsi/aic94xx/aic94xx_sds.o.new
+  10010	    192	      0	  10202	   27da	drivers/scsi/aic94xx/aic94xx_sds.o.old
+---
+ drivers/scsi/aic94xx/aic94xx_sds.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/aic94xx/aic94xx_sds.c b/drivers/scsi/aic94xx/aic94xx_sds.c
+index 297a66770260c..069278f6d6cea 100644
+--- a/drivers/scsi/aic94xx/aic94xx_sds.c
++++ b/drivers/scsi/aic94xx/aic94xx_sds.c
+@@ -717,11 +717,14 @@ static void *asd_find_ll_by_id(void * const start, const u8 id0, const u8 id1)
+ 
+ 	do {
+ 		switch (id1) {
+-		default:
+-			if (el->id1 == id1)
+ 		case 0xFF:
+-				if (el->id0 == id0)
+-					return el;
++			if (el->id0 == id0)
++				return el;
++			break;
++		default:
++			if (el->id0 == id0 && el->id1 == id1)
++				return el;
++			break;
+ 		}
+ 		el = start + le16_to_cpu(el->next);
+ 	} while (el != start);
 
