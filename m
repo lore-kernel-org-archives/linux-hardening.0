@@ -2,124 +2,153 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77713C11F6A
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jul 2021 11:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E70C11F68
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jul 2021 15:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8DE61423
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jul 2021 11:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BDB613E9
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jul 2021 15:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231445AbhGBLWw (ORCPT
+        id S232391AbhGBPEN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Jul 2021 07:22:52 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:55922 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230424AbhGBLWw (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Jul 2021 07:22:52 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 1A59D22985;
-        Fri,  2 Jul 2021 11:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1625224819;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=badF2A4qEOZ32Uu+PhlD0CDqgloiQf4kfcO0SCCAJdM=;
-        b=mmG8zpRixprVY2svVvl2d+F7FbvbS7Cjl72YOi2Y/QLzJRoV47UJ1/7XTYskXXMvMxlHsj
-        ZYV9bD4Jb4VEn5Qp8No1LLypLmbjJ1MY6RHxNAfqTKthzQVYcRTvoH9ICaSCo237/cdSnB
-        krqp2+4fq9Ur/txsJxkD+1o5Tuk33Sw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1625224819;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=badF2A4qEOZ32Uu+PhlD0CDqgloiQf4kfcO0SCCAJdM=;
-        b=HGKLej9Ipsp5dwAm5vXLy5+ZP3P41NISkuD3pmUqIdW1nanFgZmqUlftgSylKLnQroLLrA
-        jJ9wtD1v7ONhHJAA==
-Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
-        by relay2.suse.de (Postfix) with ESMTP id E582EA3B87;
-        Fri,  2 Jul 2021 11:20:18 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id E9721DA6FD; Fri,  2 Jul 2021 13:17:47 +0200 (CEST)
-Date:   Fri, 2 Jul 2021 13:17:47 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] btrfs: Fix multiple out-of-bounds warnings
-Message-ID: <20210702111747.GF2610@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210702010653.GA84106@embeddedor>
- <ba89916a-f141-2962-2526-89bd43e75a42@gmx.com>
+        Fri, 2 Jul 2021 11:04:13 -0400
+Received: from mout.gmx.net ([212.227.17.22]:45667 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231991AbhGBPEM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 2 Jul 2021 11:04:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1625238017;
+        bh=zidR5285gxvu2arbyxmhDqg6e5LTCzi9fQLp50nBsWk=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=DuwxOwI7319Lhx+I9Dc37PZMe6AbuRiW2QGky5FKmFl1Xg9YxF2MVb5pznrGmPGSG
+         jDEfrCCNH/5D0owzJ+rQfsut4w+8PVHn04RN3vsa/vy15PQMMDwtv0vo+XZM4BbQRQ
+         BbuJ3M+fhEcG2fy8ysO3Su1QGNK3ABFykt/t90p8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.228.41]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MxDkm-1l29Sj2INE-00xaUC; Fri, 02
+ Jul 2021 17:00:17 +0200
+Date:   Fri, 2 Jul 2021 16:59:54 +0200
+From:   John Wood <john.wood@gmx.com>
+To:     Alexander Lobakin <alobakin@pm.me>
+Cc:     John Wood <john.wood@gmx.com>, Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>, Andi Kleen <ak@linux.intel.com>,
+        valdis.kletnieks@vt.edu,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v8 3/8] security/brute: Detect a brute force attack
+Message-ID: <20210702145954.GA4513@ubuntu>
+References: <20210701234807.50453-1-alobakin@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ba89916a-f141-2962-2526-89bd43e75a42@gmx.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20210701234807.50453-1-alobakin@pm.me>
+X-Provags-ID: V03:K1:dlN1ofh6LpaEb5MwTI60oBZZOzpxRydjUFLx8+d3q3xlDqOLQ/g
+ AseUQcRVOSgw+y90S5R3RUUGkX4oXSPdXODz7muskTdGNG4XTvD+dI31GrvERxszJqmj3O+
+ NGR5HMBSM0ueD0/qczK9UGA5RkFsMcK72AJTDElYA0GJzeW/4Rjit8KMkEtMMq+A508WvZ1
+ 9CbOiefkEzVVJqbrQIGyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9i/ZvK/cQjw=:a39Z0eLmluy9VDDGJKeaLg
+ TvSqt9FDYwL9BX/25PlbGRXeBfVdd3fgvyeCfs3Cp+XW92EKF2euJ/2+8TNV7UogXY/OPVI6H
+ FiS43ZCv15Ssd8V0eSkpzvQ5M7jHPHu341L84wtUpSzP0G21MSQnvItwJXbGogBsXNar813oT
+ SUjE4WB1mmj64Lhvz5tEcgxk09x+e3yVDtMStATKQafRV93kysgYntaYek7y+rvnVs+Jz9cho
+ 6ftPnQa7oB+fiBrMlvv18UPBM7FYSf5xmj0eyeAcUEngS6J9NnI7vje+YtPv01oFwp53wRMo7
+ Ui1yNLxR6D8tkXq4NAl9MqRVsX0/VbkYgti+7sEL7SXbC8sVtjhNTkCafaP8hGK6fDHserJxV
+ 6MwKbHRunfIlcT6k/5PukZ7cCcG/lwCBLu1BsGz7mJ/H2qiTr9btN92/xs1280gM/u4bTToHc
+ NugNiuR3cZ786M2B2/Qgy6SkwwlRn5b8nIZhWGt30TwI+FU2acVkPZZMqBL7krRB2ftGc32yg
+ 7qv+UruXZ9hYUEi9NSWXhlv0enDJDSEaFoMuU3WCSKx/hmRDlhI66InBaQMe0FQa8svHAzLFb
+ MK7kCn3InBuncnfy+7rF6WUovWzYH51ZqwRXwND50Rbd2KoPpM1AxqVEgql8erI+4ixdfGjSE
+ PrB7w+qQCOLJoT6NtZm5wi7RwlrDounjK5jV1+HzoIXxDcJhS1wpkpT6Bjl1YwB0mrvrtJykq
+ yc1ExbKWcfNOpVAOiDjblN+wy5gHGKO/aFv+OsZ+RKgENsFFnR/QsUU3bqkuvHtb7u+UEIJxd
+ 2HQJgnYxNvMR42G6Q8uozh9FR4jXey86VfhsQO/grEelJeTnD+rtyRXSvQxEysyvT1sSqvDKq
+ lG1OOsPrGn5mwDQHGHrbZWaqXGfVuCM2SqplAnLo0N2FVoAWq8XZEBa0dW5WNW33PEheDT9L1
+ J04TS0Npus+qiII4tcAjQEdRAVaaxJAvqNL9m5HkkZd57G3s8GNl7Wx73D26baD632LFja3Z+
+ Ou5+ote2Rp99OhcFduh5OZLItt1JTTby/dwq6pvw7wAYOSQTUoAtVx4/cNM6tHxSm40iEhx/B
+ CPtyjW63bPVQErsJmi9gsJiBsN5L7c5lBy1
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 02, 2021 at 06:20:33PM +0800, Qu Wenruo wrote:
-> 
-> 
-> On 2021/7/2 上午9:06, Gustavo A. R. Silva wrote:
-> > Fix the following out-of-bounds warnings by using a flexible-array
-> > member *pages[] at the bottom of struct extent_buffer:
-> >
-> > fs/btrfs/disk-io.c:225:34: warning: array subscript 1 is above array bounds of ‘struct page *[1]’ [-Warray-bounds]
-> 
-> The involved code looks like:
-> 
-> static void csum_tree_block(struct extent_buffer *buf, u8 *result)
-> {
->          struct btrfs_fs_info *fs_info = buf->fs_info;
->          const int num_pages = fs_info->nodesize >> PAGE_SHIFT;
-> 	...
->          for (i = 1; i < num_pages; i++) {
->                  kaddr = page_address(buf->pages[i]);
->                  crypto_shash_update(shash, kaddr, PAGE_SIZE);
->          }
-> 
-> For Power case, the page size is 64K and nodesize is at most 64K for
-> btrfs, thus num_pages will either be 0 or 1.
-> 
-> In that case, the for loop should never get reached, thus it's not
-> possible to really get beyond the boundary.
-> 
-> To me, the real problem is we have no way to tell compiler that
-> fs_info->nodesize is ensured to be no larger than 64K.
-> 
-> 
-> Although using flex array can mask the problem, but it's really masking
-> the problem as now compiler has no idea how large the array can really be.
+Hi,
 
-Agreed, that's the problem, we'd be switching compile-time static
-information about the array with dynamic.
+On Thu, Jul 01, 2021 at 11:55:14PM +0000, Alexander Lobakin wrote:
+> Hi,
+>
+> From: John Wood <john.wood@gmx.com>
+> Date: Sat, 5 Jun 2021 17:04:00 +0200
+>
+> > +static int brute_task_execve(struct linux_binprm *bprm, struct file *=
+file)
+> > +{
+> > +	struct dentry *dentry =3D file_dentry(bprm->file);
+> > +	struct inode *inode =3D file_inode(bprm->file);
+> > +	struct brute_stats stats;
+> > +	int rc;
+> > +
+> > +	inode_lock(inode);
+> > +	rc =3D brute_get_xattr_stats(dentry, inode, &stats);
+> > +	if (WARN_ON_ONCE(rc && rc !=3D -ENODATA))
+> > +		goto unlock;
+>
+> I think I caught a problem here. Have you tested this with
+> initramfs?
 
-> David still has the final say on how to fix it, but I'm really wondering
-> is there any way to give compiler some hint about the possible value
-> range for things like fs_info->nodesize?
+No, it has not been tested with initramfs :(
 
-We can add some macros that are also page size dependent and evaluate to
-a constant that can be in turn used to optimize the loop to a single
-call of the loop body.
+> According to init/do_mount.c's
+> init_rootfs()/rootfs_init_fs_context(), when `root=3D` cmdline
+> parameter is not empty, kernel creates rootfs of type ramfs
+> (tmpfs otherwise).
+> The thing about ramfs is that it doesn't support xattrs.
 
-Looking at csum_tree_block we should really use the num_extent_pages
-helper that does the same thing but handles when nodesize >> PAGE_SIZE
-is zero (and returns 1).
+It is a known issue that systems without xattr support are not
+suitable for Brute (there are a note in the documentation).
+However, the purpose is not to panic the system :(
+
+> I'm running this v8 on a regular PC with initramfs and having
+> `root=3D` in cmdline, and Brute doesn't allow the kernel to run
+> any init processes (/init, /sbin/init, ...) with err =3D=3D -95
+> (-EOPNOTSUPP) -- I'm getting a
+>
+> WARNING: CPU: 0 PID: 173 at brute_task_execve+0x15d/0x200
+> <snip>
+> Failed to execute /init (error -95)
+>
+> and so on (and a panic at the end).
+>
+> If I omit `root=3D` from cmdline, then the kernel runs init process
+> just fine -- I guess because initramfs is then placed inside tmpfs
+> with xattr support.
+>
+> As for me, this ramfs/tmpfs selection based on `root=3D` presence
+> is ridiculous and I don't see or know any reasons behind that.
+> But that's another story, and ramfs might be not the only one
+> system without xattr support.
+> I think Brute should have a fallback here, e.g. it could simply
+> ignore files from xattr-incapable filesystems instead of such
+> WARNING splats and stuff.
+
+Ok, it seems reasonable to me: if the file system doesn't support
+xattr, but Brute is enabled, Brute will do nothing and the system
+will work normally.
+
+I will work on it for the next version.
+Thanks for the feedback.
+
+John Wood
