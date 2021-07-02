@@ -2,226 +2,120 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DAFC11F69
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jul 2021 23:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B227C11F67
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jul 2021 01:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851A961409
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jul 2021 23:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4160161410
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jul 2021 01:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234071AbhGAX6f (ORCPT
+        id S234652AbhGBBHd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Jul 2021 19:58:35 -0400
-Received: from mail-0201.mail-europe.com ([51.77.79.158]:41754 "EHLO
-        mail-0201.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234063AbhGAX6f (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Jul 2021 19:58:35 -0400
-Date:   Thu, 01 Jul 2021 23:55:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1625183728; bh=vHKTUFhjrBhE16qbi5KjG4YoGMyuu2TJDAhJMIvSDHc=;
-        h=Date:To:From:Cc:Reply-To:Subject:From;
-        b=ZWl1K/duuR6AkGbFqdy6cxxNtf7pKljObHGE4X/oR6EYdDyUwWCwF2Ff/bEdjc9nX
-         ef/FbVZ++YU88xuXpiILi13tx+OleonACFBno8YKNjjiKfNTD0zGi/qFQzQvSjRHyJ
-         4ZWqP8fqn77rZH37BgnXHbwSt20DAWMhVpdgLvjTOQhfS9WlQ6UZmhaeYxxxmLJZP9
-         rHo2jA5qUmZnHl6/dCDgriCLD8rKyIsu1vFt8y2qlUhsd/OgtjpZ2oaMhsJRzv1aO+
-         vzPRrkg/9OdFkwIV2Pk3+FSTQ1/RAtbrOfbUMHwDRlq54u89NrK8RoJsrvDeWwfvIO
-         ewHvePbW8p0tQ==
-To:     John Wood <john.wood@gmx.com>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>, Andi Kleen <ak@linux.intel.com>,
-        valdis.kletnieks@vt.edu,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: Re: [PATCH v8 3/8] security/brute: Detect a brute force attack
-Message-ID: <20210701234807.50453-1-alobakin@pm.me>
+        Thu, 1 Jul 2021 21:07:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234579AbhGBBHc (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 1 Jul 2021 21:07:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B98A6613ED;
+        Fri,  2 Jul 2021 01:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625187901;
+        bh=CDRCL93h23besIz9vEppCvGLJhL5F3wj+8t2oHCgt6Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RAk/AmyxJW90Ab+sgsDz26SOhBhK79ciwO9dZ6jtAK1bU3LsBw0xnUnlch5WFP+ft
+         izOcAKXg8BXTQuiMBCbJXFY3gGo8j62Ig9LSAPU8tjlr7MJGXGta2v3FHbIA3z4EfP
+         fTwt9v4z7IpN4bSAe3P9NjW3ZUkEjQX1sxPZok8wrJ/5GEPZh9fXOsLyMpk5hPtt1e
+         qm8Yn/aOIEJelQuSwTAf3QtsXg8t07nSUq85D66XPddAEEJc1k4hXUgYJ4fCDtFhYG
+         YGifuTbzWxjNwIBsfbMudPdh92LiO33JzPf7bLHTB4y0UD/QxDP0CK1PlCe41KPep/
+         OGx1PsOuARBMg==
+Date:   Thu, 1 Jul 2021 20:06:53 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] btrfs: Fix multiple out-of-bounds warnings
+Message-ID: <20210702010653.GA84106@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Fix the following out-of-bounds warnings by using a flexible-array
+member *pages[] at the bottom of struct extent_buffer:
 
-From: John Wood <john.wood@gmx.com>
-Date: Sat, 5 Jun 2021 17:04:00 +0200
+fs/btrfs/disk-io.c:225:34: warning: array subscript 1 is above array bounds of ‘struct page *[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:80:46: warning: array subscript 1 is above array bounds of ‘struct page *[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:101:32: warning: array subscript 1 is above array bounds of ‘struct page * const[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:133:46: warning: array subscript 1 is above array bounds of ‘struct page *[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:156:32: warning: array subscript 1 is above array bounds of ‘struct page * const[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:80:46: warning: array subscript 1 is above array bounds of ‘struct page *[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:101:32: warning: array subscript 1 is above array bounds of ‘struct page * const[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:133:46: warning: array subscript 1 is above array bounds of ‘struct page *[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:156:32: warning: array subscript 1 is above array bounds of ‘struct page * const[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:80:46: warning: array subscript 1 is above array bounds of ‘struct page *[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:101:32: warning: array subscript 1 is above array bounds of ‘struct page * const[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:133:46: warning: array subscript 1 is above array bounds of ‘struct page *[1]’ [-Warray-bounds]
+fs/btrfs/struct-funcs.c:156:32: warning: array subscript 1 is above array bounds of ‘struct page * const[1]’ [-Warray-bounds]
 
-> For a correct management of a fork brute force attack it is necessary to
-> track all the information related to the application crashes. To do so,
-> use the extended attributes (xattr) of the executable files and define a
-> statistical data structure to hold all the necessary information shared
-> by all the fork hierarchy processes. This info is the number of crashes,
-> the last crash timestamp and the crash period's moving average.
->
-> The same can be achieved using a pointer to the fork hierarchy
-> statistical data held by the task_struct structure. But this has an
-> important drawback: a brute force attack that happens through the execve
-> system call losts the faults info since these statistics are freed when
-> the fork hierarchy disappears. Using this method makes not possible to
-> manage this attack type that can be successfully treated using extended
-> attributes.
->
-> Also, to avoid false positives during the attack detection it is
-> necessary to narrow the possible cases. So, only the following scenarios
-> are taken into account:
->
-> 1.- Launching (fork()/exec()) a setuid/setgid process repeatedly until a
->     desirable memory layout is got (e.g. Stack Clash).
-> 2.- Connecting to an exec()ing network daemon (e.g. xinetd) repeatedly
->     until a desirable memory layout is got (e.g. what CTFs do for simple
->     network service).
-> 3.- Launching processes without exec() (e.g. Android Zygote) and
->     exposing state to attack a sibling.
-> 4.- Connecting to a fork()ing network daemon (e.g. apache) repeatedly
->     until the previously shared memory layout of all the other children
->     is exposed (e.g. kind of related to HeartBleed).
->
-> In each case, a privilege boundary has been crossed:
->
-> Case 1: setuid/setgid process
-> Case 2: network to local
-> Case 3: privilege changes
-> Case 4: network to local
->
-> To mark that a privilege boundary has been crossed it is only necessary
-> to create a new stats for the executable file via the extended attribute
-> and only if it has no previous statistical data. This is done using four
-> different LSM hooks, one per privilege boundary:
->
-> setuid/setgid process --> bprm_creds_from_file hook (based on secureexec
->                           flag).
-> network to local -------> socket_accept hook (taking into account only
->                           external connections).
-> privilege changes ------> task_fix_setuid and task_fix_setgid hooks.
->
-> To detect a brute force attack it is necessary that the executable file
-> statistics be updated in every fatal crash and the most important data
-> to update is the application crash period. To do so, use the new
-> "task_fatal_signal" LSM hook added in a previous step.
->
-> The application crash period must be a value that is not prone to change
-> due to spurious data and follows the real crash period. So, to compute
-> it, the exponential moving average (EMA) is used.
->
-> Based on the updated statistics two different attacks can be handled. A
-> slow brute force attack that is detected if the maximum number of faults
-> per fork hierarchy is reached and a fast brute force attack that is
-> detected if the application crash period falls below a certain
-> threshold.
->
-> Moreover, only the signals delivered by the kernel are taken into
-> account with the exception of the SIGABRT signal since the latter is
-> used by glibc for stack canary, malloc, etc failures, which may indicate
-> that a mitigation has been triggered.
->
-> Signed-off-by: John Wood <john.wood@gmx.com>
->
-> <snip>
->
-> +static int brute_get_xattr_stats(struct dentry *dentry, struct inode *in=
-ode,
-> +=09=09=09=09 struct brute_stats *stats)
-> +{
-> +=09int rc;
-> +=09struct brute_raw_stats raw_stats;
-> +
-> +=09rc =3D __vfs_getxattr(dentry, inode, XATTR_NAME_BRUTE, &raw_stats,
-> +=09=09=09    sizeof(raw_stats));
-> +=09if (rc < 0)
-> +=09=09return rc;
-> +
-> +=09stats->faults =3D le32_to_cpu(raw_stats.faults);
-> +=09stats->nsecs =3D le64_to_cpu(raw_stats.nsecs);
-> +=09stats->period =3D le64_to_cpu(raw_stats.period);
-> +=09stats->flags =3D raw_stats.flags;
-> +=09return 0;
-> +}
->
-> <snip>
->
-> +static int brute_task_execve(struct linux_binprm *bprm, struct file *fil=
-e)
-> +{
-> +=09struct dentry *dentry =3D file_dentry(bprm->file);
-> +=09struct inode *inode =3D file_inode(bprm->file);
-> +=09struct brute_stats stats;
-> +=09int rc;
-> +
-> +=09inode_lock(inode);
-> +=09rc =3D brute_get_xattr_stats(dentry, inode, &stats);
-> +=09if (WARN_ON_ONCE(rc && rc !=3D -ENODATA))
-> +=09=09goto unlock;
+Also, make use of the struct_size() helper to properly calculate the
+total size of struct extent_buffer for the kmem cache allocation.
 
-I think I caught a problem here. Have you tested this with
-initramfs?
+This is part of the ongoing efforts to globally enable -Warray-bounds.
 
-According to init/do_mount.c's
-init_rootfs()/rootfs_init_fs_context(), when `root=3D` cmdline
-parameter is not empty, kernel creates rootfs of type ramfs
-(tmpfs otherwise).
-The thing about ramfs is that it doesn't support xattrs.
+The code was built with ppc64_defconfig and -Warray-bounds enabled by
+default in the main Makefile.
 
-I'm running this v8 on a regular PC with initramfs and having
-`root=3D` in cmdline, and Brute doesn't allow the kernel to run
-any init processes (/init, /sbin/init, ...) with err =3D=3D -95
-(-EOPNOTSUPP) -- I'm getting a
+Link: https://github.com/KSPP/linux/issues/109
+Cc: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc: David Sterba <dsterba@suse.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/btrfs/extent_io.c | 5 +++--
+ fs/btrfs/extent_io.h | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-WARNING: CPU: 0 PID: 173 at brute_task_execve+0x15d/0x200
-<snip>
-Failed to execute /init (error -95)
-
-and so on (and a panic at the end).
-
-If I omit `root=3D` from cmdline, then the kernel runs init process
-just fine -- I guess because initramfs is then placed inside tmpfs
-with xattr support.
-
-As for me, this ramfs/tmpfs selection based on `root=3D` presence
-is ridiculous and I don't see or know any reasons behind that.
-But that's another story, and ramfs might be not the only one
-system without xattr support.
-I think Brute should have a fallback here, e.g. it could simply
-ignore files from xattr-incapable filesystems instead of such
-WARNING splats and stuff.
-
-> +
-> +=09if (rc =3D=3D -ENODATA && bprm->secureexec) {
-> +=09=09brute_reset_stats(&stats);
-> +=09=09rc =3D brute_set_xattr_stats(dentry, inode, &stats);
-> +=09=09if (WARN_ON_ONCE(rc))
-> +=09=09=09goto unlock;
-> +=09}
-> +
-> +=09rc =3D 0;
-> +unlock:
-> +=09inode_unlock(inode);
-> +=09return rc;
-> +}
-> +
->
-> <snip>
-
-Thanks,
-Al
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 9e81d25dea70..4cf0b72fdd9f 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -232,8 +232,9 @@ int __init extent_state_cache_init(void)
+ int __init extent_io_init(void)
+ {
+ 	extent_buffer_cache = kmem_cache_create("btrfs_extent_buffer",
+-			sizeof(struct extent_buffer), 0,
+-			SLAB_MEM_SPREAD, NULL);
++			struct_size((struct extent_buffer *)0, pages,
++				    INLINE_EXTENT_BUFFER_PAGES),
++			0, SLAB_MEM_SPREAD, NULL);
+ 	if (!extent_buffer_cache)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
+index 62027f551b44..b82e8b694a3b 100644
+--- a/fs/btrfs/extent_io.h
++++ b/fs/btrfs/extent_io.h
+@@ -94,11 +94,11 @@ struct extent_buffer {
+ 
+ 	struct rw_semaphore lock;
+ 
+-	struct page *pages[INLINE_EXTENT_BUFFER_PAGES];
+ 	struct list_head release_list;
+ #ifdef CONFIG_BTRFS_DEBUG
+ 	struct list_head leak_list;
+ #endif
++	struct page *pages[];
+ };
+ 
+ /*
+-- 
+2.27.0
 
