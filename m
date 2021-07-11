@@ -7,111 +7,110 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEE2C07E96
-	for <linux-hardening@archiver.kernel.org>; Sun, 11 Jul 2021 14:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E73C07E96
+	for <linux-hardening@archiver.kernel.org>; Sun, 11 Jul 2021 14:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87802611C1
-	for <linux-hardening@archiver.kernel.org>; Sun, 11 Jul 2021 14:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C70611AF
+	for <linux-hardening@archiver.kernel.org>; Sun, 11 Jul 2021 14:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233655AbhGKOxx (ORCPT
+        id S233956AbhGKO6I (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 11 Jul 2021 10:53:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47090 "EHLO
+        Sun, 11 Jul 2021 10:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233654AbhGKOxx (ORCPT
+        with ESMTP id S233952AbhGKO6I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 11 Jul 2021 10:53:53 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5702C0613E5
-        for <linux-hardening@vger.kernel.org>; Sun, 11 Jul 2021 07:51:05 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id cu14so3229592pjb.0
-        for <linux-hardening@vger.kernel.org>; Sun, 11 Jul 2021 07:51:05 -0700 (PDT)
+        Sun, 11 Jul 2021 10:58:08 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84997C0613DD
+        for <linux-hardening@vger.kernel.org>; Sun, 11 Jul 2021 07:55:21 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id bt15so3454137pjb.2
+        for <linux-hardening@vger.kernel.org>; Sun, 11 Jul 2021 07:55:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/vpgaPPFyrg9nlDBUNWdH0dfzxJn7NXxIxEVudtT+sg=;
-        b=aB+cdnh1bFq39V7aUK8l3DRBos92jtsdOczZOk1m/pH90O4rjC95MhxfWIxSKOGrl7
-         tV/rRqAWXCG4eYPMssKCCLQ5O+Im2eqbGot1ttIoo3bDcS24w0kua4MzbHO9HlnKG65P
-         3IlcAMwhqsCCXlY9MrZl+m2r5UyOtOjUP2uVg=
+        bh=c3ykowIwDTRKsInbKYf/ek7DP95JkPgh9oE6DtLLi+A=;
+        b=f8oRiz7tCeeeXv/MqXq5OZOEzZswGECCi/HKTpvgEkbG0cllAp+VR+0I4HSYLIxAB+
+         24hZbfG6kZ/VSWsE/If4A/XA+e82SHh49PTD47WSoB6zeJWqaPwHUE7eU4Y9Fwj0mgIh
+         YmQF1alZ3ON6hCFsBykpcyyGmu8zyYbilzDJk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/vpgaPPFyrg9nlDBUNWdH0dfzxJn7NXxIxEVudtT+sg=;
-        b=JBs5TqtnTx6cBkGriTOp7qNyPlA0Fc0TibAfiaC9waHano6XlnQM7vtaCY6JXbJAuK
-         VsSLaAz8zKSi4AJUYZxnJNcuD6Qes/bRg4QXFnl9ILjPL3qUlZzoltaYdcAdF2J2rOMd
-         ibcoCLQpR1aIf7zJJRwtcMtGxYCuCYWEbUCEVdq2DivzERIK4RCuzEzKTODyiYrUiDfP
-         U2STQvi9VhLo0U0ur8yJE8sdOYwDREdRdxXfo27UAEueG8mC5TXxeaC10Rux2w+DW8d9
-         uAuKAY2vhRn25rwi/o+lClywkexR9nCwXbq1FvX2np6RlO5g+PgXescmWeXfRJaQ7nem
-         ZTxg==
-X-Gm-Message-State: AOAM531GA62irdTwyLo/bWMHZDDj3sJNdR7IrMC7VJpNXH8/kf1sYzun
-        rA9/KNY5a35uN1lh3CaiZBUCQMkjvepuaJSG
-X-Google-Smtp-Source: ABdhPJzLLi5PPahoH/aqG1DhTVyY9bDlpg0jHiTx0WpgyLjBZIgabPuuySFimf/VDdou/O30SWyzTw==
-X-Received: by 2002:a17:90a:9ac:: with SMTP id 41mr3536213pjo.97.1626015065445;
-        Sun, 11 Jul 2021 07:51:05 -0700 (PDT)
+        bh=c3ykowIwDTRKsInbKYf/ek7DP95JkPgh9oE6DtLLi+A=;
+        b=r1z251rLXnP1nfqv5i2pYxxuuLKUqAjyrq4YfViKoZDfs1uu8A/16qWuquQ+LgyCUG
+         CcfnXDoboZ4v9h5MNc1GNpB+1GMh9JNKKebr9l/dviRzF2/DcH0IziTzCGj4NULaEr/p
+         +reI97lz3M/K8BQ0DrOT+2wgn1lCdVPMYsHZjuHzY+b2LT3zpRspqGObP9CjNvCRKng7
+         IQ49TDweTgbD7joT9c753o22rjasbUH1iot0gS6I60geerYJxWpazNwem0nO0mKg+vU6
+         Uq1A/tS67j2XGH9hJU4vbNM1RW874NSyOP9lcQwPLwFUfb7LFPXghToUI7+grV9ePqlD
+         eBOg==
+X-Gm-Message-State: AOAM530aOkXXoKni/b567nZPqQqrft650hEwi6FJHiz9UbHsn3zOWy5f
+        THjpswU1Nwc42L61n98xOwGXKA==
+X-Google-Smtp-Source: ABdhPJzWwSuvGf7jsorlyDuYO0Lb3IQ103oXQCwHaS7V5m6oxgrlvvImbzsl+aKWkIQc8R8vXy4oVw==
+X-Received: by 2002:a17:90b:4b52:: with SMTP id mi18mr31807452pjb.37.1626015320918;
+        Sun, 11 Jul 2021 07:55:20 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w16sm9990929pgi.41.2021.07.11.07.51.04
+        by smtp.gmail.com with ESMTPSA id b4sm10932548pji.52.2021.07.11.07.55.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jul 2021 07:51:04 -0700 (PDT)
+        Sun, 11 Jul 2021 07:55:20 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martiros Shakhzadyan <vrzh@vrzh.net>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] media: atomisp: Perform a single memset() for union
-Date:   Sun, 11 Jul 2021 07:51:01 -0700
-Message-Id: <20210711145101.1434065-1-keescook@chromium.org>
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] rpmsg: glink: Replace strncpy() with strscpy_pad()
+Date:   Sun, 11 Jul 2021 07:55:17 -0700
+Message-Id: <20210711145517.1434486-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1777; h=from:subject; bh=ZYOr/7quVv3PTWRowMkP6bGJ9jsJBYx1pOuir518dfs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBg6wVUe9y/ux8ndFvNwvWGdgeEiOYMeKHWK2ih9JpS iRa93cCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYOsFVAAKCRCJcvTf3G3AJsaVD/ 9jndF94KICIw6tf5JvSWups/Rnaxy5DkmX8sBcE34k8cqZ6+8trMGvH5ujG4KUIW7ZY3vbZYc5GEmq aW+w12zDZH0uq86YNoVNWQfTskt4XelszEM6kjo/iCwiBW0CwAk1dssNJW4z3WOT070f9h5XWef1pi +cEtgAH8ciYGPbh4jIqIEUXvem6VJGhLILf4n9oRNt2SV9YgLEDpPOfNDAgRuulDePw70Ug06GejKH onSsk9ZshQb+5MvqzzXPPiYLuRsSd5WdTclIRwKQxrLuCHQ1N/LGZNtCa2O+YmD0EjzzXqlXsGQR9D jv+M/6EaqvvIfGGZj7wySLt1k81mWTPcCxW+cDDbrvUEpqD39d7TYC/U9kdM7rhrfk0IYUHZuraghG Hln2AXd/lTuYMz3CXxH3q0sdKQQIS8O85ZUlpSysb6seZzEFbuGIj70mLg86KmpyrriaPKTLdvTKiV WJX3r4Bz19XEF57RvjVz5wJoC51fijGxnn83KjwiG5VrNBxWiw+hImacjw+z0/ZWLRezFB/S8mrero dMgF7Jwhg8vyvvE/hi4zNiZea6tW0N5esydPDtnWsR47S8Zdj8C5P5eWfOwp7Ty1yR86F7mfLj9Ypi T+OtHvNH5YRCKdcj4BNbNyVXykfp3Oka9/O38uI21GQtoFi93ah2VFrKgmlQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1814; h=from:subject; bh=CGejJDIBWoCTMrdLfdYOlKTt2khst8/bmsGsqzGrjiA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBg6wZVj+vEe7YcbCfgSji3keoTaHrI/ZHofnZ1HVRt kwNnps2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYOsGVQAKCRCJcvTf3G3AJjp7D/ 4xOOjTrRSPqTRBymI1eoBS8GYyPpRa2EVxvB8ZW9jVsORyPMd+qrSptl1PBlgEtLrz91zlFDHigp3M Cl4XecxDPkow1jRbAEfCks39EzVxzHMY9gV7fpYG5qIPKFeKciIn4Ou6vwXPFl6E9iPBqm4F8t6yo+ IkCfBrhLyVYo4u4B1Ri8wj6ztXeIIzQNVxEmzxWzh5UcNp4l7IAkoru3ZgFHoE3yfbABsX4Qitw+cz LELsLx3KrcqETDczzGGSdZKT83iChx4H4B/y1xGvK7azhx/1PnCisiui7W8V0D/LswCl8qeTrj3XFB TZfCKs/qRQe60vO6/Se8gJkLnzovkODC9RxeVAkqGpq78fD6QoDryD8F8QoS2xn3AoJz2SiMBV0pPs CoQfmYM4IKYxecE1UxDmzwdup5vtSvb0xVobHYXQt+i9sbpferpFh2pjYPn6I43Gpju1PfUSyXQ2ZD 1NcASe91/pxA/1TD0+ccRSdz3olzulteWAdzMPKVEyU9X5/PEjJ2VZ+diHDzcN0EEPc64XCwBDyrfe ZKGvs1VDZT9hwo4Gy3N8hdikkUEOyjpvJWA+97P1iu0BOdnlCFIS5TwnOnY1zKvkfAMt5rRnKsWVdP MXSFMMpvhblVW8gDISa8TsXX5a7UVzuihmcw5yXT/PxOqiJn51exkx9Tl2SQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is no need to memset() both dvs_grid_info and dvs_stat_grid_info
-separately: they are part of the same union. Instead, just zero the
-union itself. This additionally avoids a false positive (due to a
-gcc optimization bug[1]) when building with the coming FORTIFY_SOURCE
-improvements:
+The use of strncpy() is considered deprecated for NUL-terminated
+strings[1]. Replace strncpy() with strscpy_pad() (as it seems this case
+expects the NUL padding to fill the allocation following the flexible
+array). This additionally silences a warning seen when building under
+-Warray-bounds:
 
-In function 'fortify_memset_chk',
-    inlined from 'sh_css_pipe_get_grid_info' at drivers/staging/media/atomisp/pci/sh_css.c:5186:3,
-    inlined from 'ia_css_stream_create' at drivers/staging/media/atomisp/pci/sh_css.c:9442:10:
-./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-  199 |    __write_overflow_field();
-      |    ^~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/fortify-string.h:38:30: warning: '__builtin_strncpy' offset 24 from the object at '__mptr' is out of the bounds of referenced subobject 'data' with type 'u8[]' {aka 'unsigned char[]'} at offset 24 [-Warray-bounds]
+   38 | #define __underlying_strncpy __builtin_strncpy
+      |                              ^
+./include/linux/fortify-string.h:50:9: note: in expansion of macro '__underlying_strncpy'
+   50 |  return __underlying_strncpy(p, q, size);
+      |         ^~~~~~~~~~~~~~~~~~~~
+drivers/rpmsg/qcom_glink_native.c: In function 'qcom_glink_work':
+drivers/rpmsg/qcom_glink_native.c:36:5: note: subobject 'data' declared here
+   36 |  u8 data[];
+      |     ^~~~
 
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101419
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/staging/media/atomisp/pci/sh_css.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/rpmsg/qcom_glink_native.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-index d26b1301eeb7..ffa7f8a88a70 100644
---- a/drivers/staging/media/atomisp/pci/sh_css.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css.c
-@@ -5181,10 +5181,7 @@ sh_css_pipe_get_grid_info(struct ia_css_pipe *pipe,
- 		ia_css_binary_dvs_grid_info(binary, info, pipe);
- 		ia_css_binary_dvs_stat_grid_info(binary, info, pipe);
- 	} else {
--		memset(&info->dvs_grid.dvs_grid_info, 0,
--		       sizeof(info->dvs_grid.dvs_grid_info));
--		memset(&info->dvs_grid.dvs_stat_grid_info, 0,
--		       sizeof(info->dvs_grid.dvs_stat_grid_info));
-+		memset(&info->dvs_grid, 0, sizeof(info->dvs_grid));
- 	}
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index 05533c71b10e..c7b9de655080 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -1440,7 +1440,7 @@ static int qcom_glink_rx_open(struct qcom_glink *glink, unsigned int rcid,
+ 		}
  
- 	if (binary) {
+ 		rpdev->ept = &channel->ept;
+-		strncpy(rpdev->id.name, name, RPMSG_NAME_SIZE);
++		strscpy_pad(rpdev->id.name, name, RPMSG_NAME_SIZE);
+ 		rpdev->src = RPMSG_ADDR_ANY;
+ 		rpdev->dst = RPMSG_ADDR_ANY;
+ 		rpdev->ops = &glink_device_ops;
 -- 
 2.30.2
 
