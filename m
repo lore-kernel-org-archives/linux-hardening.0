@@ -2,255 +2,116 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B88BC07E99
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Jul 2021 05:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEE2C07E96
+	for <linux-hardening@archiver.kernel.org>; Sun, 11 Jul 2021 14:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBC361435
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Jul 2021 05:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87802611C1
+	for <linux-hardening@archiver.kernel.org>; Sun, 11 Jul 2021 14:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231152AbhGIFGM (ORCPT
+        id S233655AbhGKOxx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Jul 2021 01:06:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39096 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230497AbhGIFGM (ORCPT
+        Sun, 11 Jul 2021 10:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233654AbhGKOxx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Jul 2021 01:06:12 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1694XjEw070478;
-        Fri, 9 Jul 2021 01:03:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=mime-version :
- content-transfer-encoding : content-type : date : message-id : subject :
- from : to : cc : references : in-reply-to; s=pp1;
- bh=AMW7vvMa83iSUDo12nFgoC07huWNXPeFga9jLssQadE=;
- b=Ykwuec6OmyKEy963KrvmyPoKTx4/OgUQ/ckQB1uAq0Kxdnk4i0mgEmk1pJufWXv3jMMm
- QgYBK48F0I4rKF+gHT6TplWsfW7yWcOggn/iRj7ugzhrje4InYmKqRLuevzcc4a+yctH
- QJSyV8DMlALlPdAWPw1Lfdz+76pMwjIGT0H5JU23onnobhXgHejcrzmShoPWIiCDTP5F
- ta/ucuX/fshCFVXj9JEaDy51T8I8uvuck+KjS9bGzQVAns1R2pN7HGWNsdP7J1xrInco
- Mv9T7RuM+jijKxzfNgntVXl0RNF+FKFyh3RBMg6JqsFyj4Zo9WSTT+fygaS3lchHvZEm zg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39pcsam48t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Jul 2021 01:03:22 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1694h6nS098835;
-        Fri, 9 Jul 2021 01:03:22 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39pcsam485-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Jul 2021 01:03:22 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1694wBwh018523;
-        Fri, 9 Jul 2021 05:03:21 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02wdc.us.ibm.com with ESMTP id 39jfhddv6a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Jul 2021 05:03:20 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 16953KW134865656
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 9 Jul 2021 05:03:20 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 666AF12405E;
-        Fri,  9 Jul 2021 05:03:20 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B979A124052;
-        Fri,  9 Jul 2021 05:03:19 +0000 (GMT)
-Received: from oc8246131445.ibm.com (unknown [9.163.19.100])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with SMTP;
-        Fri,  9 Jul 2021 05:03:19 +0000 (GMT)
-Received: from localhost (localhost6 [IPv6:::1])
-        by oc8246131445.ibm.com (Postfix) with ESMTP id 1688EBC0B0E;
-        Fri,  9 Jul 2021 00:03:17 -0500 (CDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 09 Jul 2021 00:03:17 -0500
-Message-Id: <CCOCHBK9FCOF.1KLFA4IL2AJNE@oc8246131445.ibm.com>
-Subject: Re: [RESEND PATCH v4 08/11] powerpc: Initialize and use a temporary
- mm for patching
-From:   "Christopher M. Riedl" <cmr@linux.ibm.com>
-To:     "Nicholas Piggin" <npiggin@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>
-Cc:     <tglx@linutronix.de>, <x86@kernel.org>, <keescook@chromium.org>,
-        <linux-hardening@vger.kernel.org>
-References: <20210506043452.9674-1-cmr@linux.ibm.com>
- <20210506043452.9674-9-cmr@linux.ibm.com>
- <1625119517.e6kkvfphsh.astroid@bobo.none>
- <CCHLZVOEHBYN.JEOBW598P7K5@oc8246131445.ibm.com>
- <1625125043.re5l9zg4kg.astroid@bobo.none>
-In-Reply-To: <1625125043.re5l9zg4kg.astroid@bobo.none>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Z9jiV9ZOQ55sniEJDspJ7dhpuUpULyRa
-X-Proofpoint-GUID: I33Y9yXz3CD29QBdevJJEdWLcce9sL72
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-09_01:2021-07-09,2021-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- phishscore=0 priorityscore=1501 lowpriorityscore=0 mlxlogscore=999
- clxscore=1015 impostorscore=0 spamscore=0 adultscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2107090020
+        Sun, 11 Jul 2021 10:53:53 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5702C0613E5
+        for <linux-hardening@vger.kernel.org>; Sun, 11 Jul 2021 07:51:05 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id cu14so3229592pjb.0
+        for <linux-hardening@vger.kernel.org>; Sun, 11 Jul 2021 07:51:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/vpgaPPFyrg9nlDBUNWdH0dfzxJn7NXxIxEVudtT+sg=;
+        b=aB+cdnh1bFq39V7aUK8l3DRBos92jtsdOczZOk1m/pH90O4rjC95MhxfWIxSKOGrl7
+         tV/rRqAWXCG4eYPMssKCCLQ5O+Im2eqbGot1ttIoo3bDcS24w0kua4MzbHO9HlnKG65P
+         3IlcAMwhqsCCXlY9MrZl+m2r5UyOtOjUP2uVg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/vpgaPPFyrg9nlDBUNWdH0dfzxJn7NXxIxEVudtT+sg=;
+        b=JBs5TqtnTx6cBkGriTOp7qNyPlA0Fc0TibAfiaC9waHano6XlnQM7vtaCY6JXbJAuK
+         VsSLaAz8zKSi4AJUYZxnJNcuD6Qes/bRg4QXFnl9ILjPL3qUlZzoltaYdcAdF2J2rOMd
+         ibcoCLQpR1aIf7zJJRwtcMtGxYCuCYWEbUCEVdq2DivzERIK4RCuzEzKTODyiYrUiDfP
+         U2STQvi9VhLo0U0ur8yJE8sdOYwDREdRdxXfo27UAEueG8mC5TXxeaC10Rux2w+DW8d9
+         uAuKAY2vhRn25rwi/o+lClywkexR9nCwXbq1FvX2np6RlO5g+PgXescmWeXfRJaQ7nem
+         ZTxg==
+X-Gm-Message-State: AOAM531GA62irdTwyLo/bWMHZDDj3sJNdR7IrMC7VJpNXH8/kf1sYzun
+        rA9/KNY5a35uN1lh3CaiZBUCQMkjvepuaJSG
+X-Google-Smtp-Source: ABdhPJzLLi5PPahoH/aqG1DhTVyY9bDlpg0jHiTx0WpgyLjBZIgabPuuySFimf/VDdou/O30SWyzTw==
+X-Received: by 2002:a17:90a:9ac:: with SMTP id 41mr3536213pjo.97.1626015065445;
+        Sun, 11 Jul 2021 07:51:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w16sm9990929pgi.41.2021.07.11.07.51.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Jul 2021 07:51:04 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martiros Shakhzadyan <vrzh@vrzh.net>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: [PATCH] media: atomisp: Perform a single memset() for union
+Date:   Sun, 11 Jul 2021 07:51:01 -0700
+Message-Id: <20210711145101.1434065-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1777; h=from:subject; bh=ZYOr/7quVv3PTWRowMkP6bGJ9jsJBYx1pOuir518dfs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBg6wVUe9y/ux8ndFvNwvWGdgeEiOYMeKHWK2ih9JpS iRa93cCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYOsFVAAKCRCJcvTf3G3AJsaVD/ 9jndF94KICIw6tf5JvSWups/Rnaxy5DkmX8sBcE34k8cqZ6+8trMGvH5ujG4KUIW7ZY3vbZYc5GEmq aW+w12zDZH0uq86YNoVNWQfTskt4XelszEM6kjo/iCwiBW0CwAk1dssNJW4z3WOT070f9h5XWef1pi +cEtgAH8ciYGPbh4jIqIEUXvem6VJGhLILf4n9oRNt2SV9YgLEDpPOfNDAgRuulDePw70Ug06GejKH onSsk9ZshQb+5MvqzzXPPiYLuRsSd5WdTclIRwKQxrLuCHQ1N/LGZNtCa2O+YmD0EjzzXqlXsGQR9D jv+M/6EaqvvIfGGZj7wySLt1k81mWTPcCxW+cDDbrvUEpqD39d7TYC/U9kdM7rhrfk0IYUHZuraghG Hln2AXd/lTuYMz3CXxH3q0sdKQQIS8O85ZUlpSysb6seZzEFbuGIj70mLg86KmpyrriaPKTLdvTKiV WJX3r4Bz19XEF57RvjVz5wJoC51fijGxnn83KjwiG5VrNBxWiw+hImacjw+z0/ZWLRezFB/S8mrero dMgF7Jwhg8vyvvE/hi4zNiZea6tW0N5esydPDtnWsR47S8Zdj8C5P5eWfOwp7Ty1yR86F7mfLj9Ypi T+OtHvNH5YRCKdcj4BNbNyVXykfp3Oka9/O38uI21GQtoFi93ah2VFrKgmlQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu Jul 1, 2021 at 2:51 AM CDT, Nicholas Piggin wrote:
-> Excerpts from Christopher M. Riedl's message of July 1, 2021 5:02 pm:
-> > On Thu Jul 1, 2021 at 1:12 AM CDT, Nicholas Piggin wrote:
-> >> Excerpts from Christopher M. Riedl's message of May 6, 2021 2:34 pm:
-> >> > When code patching a STRICT_KERNEL_RWX kernel the page containing th=
-e
-> >> > address to be patched is temporarily mapped as writeable. Currently,=
- a
-> >> > per-cpu vmalloc patch area is used for this purpose. While the patch
-> >> > area is per-cpu, the temporary page mapping is inserted into the ker=
-nel
-> >> > page tables for the duration of patching. The mapping is exposed to =
-CPUs
-> >> > other than the patching CPU - this is undesirable from a hardening
-> >> > perspective. Use a temporary mm instead which keeps the mapping loca=
-l to
-> >> > the CPU doing the patching.
-> >> >=20
-> >> > Use the `poking_init` init hook to prepare a temporary mm and patchi=
-ng
-> >> > address. Initialize the temporary mm by copying the init mm. Choose =
-a
-> >> > randomized patching address inside the temporary mm userspace addres=
-s
-> >> > space. The patching address is randomized between PAGE_SIZE and
-> >> > DEFAULT_MAP_WINDOW-PAGE_SIZE. The upper limit is necessary due to ho=
-w
-> >> > the Book3s64 Hash MMU operates - by default the space above
-> >> > DEFAULT_MAP_WINDOW is not available. For now, the patching address f=
-or
-> >> > all platforms/MMUs is randomized inside this range.  The number of
-> >> > possible random addresses is dependent on PAGE_SIZE and limited by
-> >> > DEFAULT_MAP_WINDOW.
-> >> >=20
-> >> > Bits of entropy with 64K page size on BOOK3S_64:
-> >> >=20
-> >> >         bits of entropy =3D log2(DEFAULT_MAP_WINDOW_USER64 / PAGE_SI=
-ZE)
-> >> >=20
-> >> >         PAGE_SIZE=3D64K, DEFAULT_MAP_WINDOW_USER64=3D128TB
-> >> >         bits of entropy =3D log2(128TB / 64K) bits of entropy =3D 31
-> >> >=20
-> >> > Randomization occurs only once during initialization at boot.
-> >> >=20
-> >> > Introduce two new functions, map_patch() and unmap_patch(), to
-> >> > respectively create and remove the temporary mapping with write
-> >> > permissions at patching_addr. The Hash MMU on Book3s64 requires mapp=
-ing
-> >> > the page for patching with PAGE_SHARED since the kernel cannot acces=
-s
-> >> > userspace pages with the PAGE_PRIVILEGED (PAGE_KERNEL) bit set.
-> >> >=20
-> >> > Also introduce hash_prefault_mapping() to preload the SLB entry and =
-HPTE
-> >> > for the patching_addr when using the Hash MMU on Book3s64 to avoid
-> >> > taking an SLB and Hash fault during patching.
-> >>
-> >> What prevents the SLBE or HPTE from being removed before the last
-> >> access?
-> >=20
-> > This code runs with local IRQs disabled - we also don't access anything
-> > else in userspace so I'm not sure what else could cause the entries to
-> > be removed TBH.
-> >=20
-> >>
-> >>
-> >> > +#ifdef CONFIG_PPC_BOOK3S_64
-> >> > +
-> >> > +static inline int hash_prefault_mapping(pgprot_t pgprot)
-> >> >  {
-> >> > -	struct vm_struct *area;
-> >> > +	int err;
-> >> > =20
-> >> > -	area =3D get_vm_area(PAGE_SIZE, VM_ALLOC);
-> >> > -	if (!area) {
-> >> > -		WARN_ONCE(1, "Failed to create text area for cpu %d\n",
-> >> > -			cpu);
-> >> > -		return -1;
-> >> > -	}
-> >> > -	this_cpu_write(text_poke_area, area);
-> >> > +	if (radix_enabled())
-> >> > +		return 0;
-> >> > =20
-> >> > -	return 0;
-> >> > -}
-> >> > +	err =3D slb_allocate_user(patching_mm, patching_addr);
-> >> > +	if (err)
-> >> > +		pr_warn("map patch: failed to allocate slb entry\n");
-> >> > =20
-> >> > -static int text_area_cpu_down(unsigned int cpu)
-> >> > -{
-> >> > -	free_vm_area(this_cpu_read(text_poke_area));
-> >> > -	return 0;
-> >> > +	err =3D hash_page_mm(patching_mm, patching_addr, pgprot_val(pgprot=
-), 0,
-> >> > +			   HPTE_USE_KERNEL_KEY);
-> >> > +	if (err)
-> >> > +		pr_warn("map patch: failed to insert hashed page\n");
-> >> > +
-> >> > +	/* See comment in switch_slb() in mm/book3s64/slb.c */
-> >> > +	isync();
-> >>
-> >> I'm not sure if this is enough. Could we context switch here? You've
-> >> got the PTL so no with a normal kernel but maybe yes with an RT kernel
-> >> How about taking an machine check that clears the SLB? Could the HPTE
-> >> get removed by something else here?
-> >=20
-> > All of this happens after a local_irq_save() which should at least
-> > prevent context switches IIUC.
->
-> Ah yeah I didn't look that far back. A machine check can take out SLB
-> entries.
->
-> > I am not sure what else could cause the
-> > HPTE to get removed here.
->
-> Other CPUs?
->
+There is no need to memset() both dvs_grid_info and dvs_stat_grid_info
+separately: they are part of the same union. Instead, just zero the
+union itself. This additionally avoids a false positive (due to a
+gcc optimization bug[1]) when building with the coming FORTIFY_SOURCE
+improvements:
 
-Right because the HPTEs are "global".
+In function 'fortify_memset_chk',
+    inlined from 'sh_css_pipe_get_grid_info' at drivers/staging/media/atomisp/pci/sh_css.c:5186:3,
+    inlined from 'ia_css_stream_create' at drivers/staging/media/atomisp/pci/sh_css.c:9442:10:
+./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+  199 |    __write_overflow_field();
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~
 
-> >> You want to prevent faults because you might be patching a fault
-> >> handler?
-> >=20
-> > In a more general sense: I don't think we want to take page faults ever=
-y
-> > time we patch an instruction with a STRICT_RWX kernel. The Hash MMU pag=
-e
-> > fault handler codepath also checks `current->mm` in some places which
-> > won't match the temporary mm. Also `current->mm` can be NULL which
-> > caused problems in my earlier revisions of this series.
->
-> Hmm, that's a bit of a hack then. Maybe doing an actual mm switch and
-> setting current->mm properly would explode too much. Maybe that's
-> okayish.
-> But I can't see how the HPT code is up to the job of this in general
-> (even if that current->mm issue was fixed).
->
-> To do it without holes you would either have to get the SLB MCE handler
-> to restore that particular SLB if it flushed it, or restart the patch
-> code from a fixup location if it took an MCE after installing the SLB.
-> And bolt a hash table entry.
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101419
 
-We discussed this a bit off list and decided that it's not worth the
-trouble implementing percpu temp mm support for Hash at this time.
-Instead, I will post a new version of this series where we drop into
-realmode to patch with the Hash MMU. This avoids the W+X mapping
-altogether and so doesn't expose anything to other CPUs during patching.
-We will keep the Radix support for a percpu temp mm since 1) it doesn't
-require hacks like Hash and 2) it's overall preferable to dropping into
-realmode.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/staging/media/atomisp/pci/sh_css.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
->
-> Thanks,
-> Nick
+diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
+index d26b1301eeb7..ffa7f8a88a70 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css.c
++++ b/drivers/staging/media/atomisp/pci/sh_css.c
+@@ -5181,10 +5181,7 @@ sh_css_pipe_get_grid_info(struct ia_css_pipe *pipe,
+ 		ia_css_binary_dvs_grid_info(binary, info, pipe);
+ 		ia_css_binary_dvs_stat_grid_info(binary, info, pipe);
+ 	} else {
+-		memset(&info->dvs_grid.dvs_grid_info, 0,
+-		       sizeof(info->dvs_grid.dvs_grid_info));
+-		memset(&info->dvs_grid.dvs_stat_grid_info, 0,
+-		       sizeof(info->dvs_grid.dvs_stat_grid_info));
++		memset(&info->dvs_grid, 0, sizeof(info->dvs_grid));
+ 	}
+ 
+ 	if (binary) {
+-- 
+2.30.2
 
