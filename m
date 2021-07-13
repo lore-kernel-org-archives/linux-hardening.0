@@ -3,233 +3,264 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B714C11F66
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jul 2021 05:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32089C11F68
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jul 2021 05:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A823611CB
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jul 2021 05:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D370601FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jul 2021 05:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230477AbhGMFe2 (ORCPT
+        id S231373AbhGMFed (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Jul 2021 01:34:28 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50008 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230374AbhGMFeY (ORCPT
+        Tue, 13 Jul 2021 01:34:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22756 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232344AbhGMFec (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Jul 2021 01:34:24 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16D53Xcs119592;
-        Tue, 13 Jul 2021 01:31:19 -0400
+        Tue, 13 Jul 2021 01:34:32 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16D54E49178685;
+        Tue, 13 Jul 2021 01:31:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=Lf9D+3VqKK3yQhoMeH46CzO12HlEy2F6BDlCX9G5ZlA=;
- b=PPS/JH2wCw7ahqe1Nz8RStHYv2jPF4bAdF68DV3RsijwU+XKc8br8eNsHMH5e501askG
- g/A7d6qUwFPJSq166Lfy4pgwXyxSJnJo75lk9Lqmq6QpKNzW+nz6v96GNsfmdEqgZG7n
- 4bvLTP3j8Ped/CJfOSgX6n15vD7YyiGAf/S7waFaMU66h25nhM5/zqqyea5GNxzAINat
- MrcAzq2uu3ngbmf167lgwxuTOB4/vlljin3eae+JyRtCgvGRIvW1AhwzSMPl12WMANIl
- AhEMS7QYMPVZ2IQXlvnMSSOCyJlKlFrneZBs2sVPMmCWyurjlmvG3HdOzX6EcQN2Gdml EQ== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=vKEraZT2DcYWGa20e9X3P6pRaCJ9BM1O7v7BGAxdmZo=;
+ b=dISpVQdcjwwxmh08uEOjp/XvitclPJfCR28CW6ywYF86t6ODU3ZofoC2H+URToWpDe8E
+ 830Jhrj32tNBqfNTE8XtfvA0PRPbAHA9WPKayAVFmGkVpvl3pZv/C6NFTJy745k5Gi/a
+ WYermjpNKOpXhhcPC4KfKeB9RcMzYdE0ioBbD33QKkhfr6rMmhPDAcLzfubg5XN49U3h
+ Et3I0+nbJWQ0BrRNxi6Rkxr2ZGlylTb7wrDYSqzlohaQ1DQTqDnho63/wKIiiWAl/rm8
+ TDMAtHsnGU+g6OUyHKiejbAmBzUz4Cmz/6CB11ObIE2AbxcZ8mm8ezbYflaMzQEon4gR VA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39qrud7rvc-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39qrkwem7y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jul 2021 01:31:19 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 16D54TZ8122661;
-        Tue, 13 Jul 2021 01:31:19 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39qrud7rv3-1
+        Tue, 13 Jul 2021 01:31:23 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 16D5BmLj191832;
+        Tue, 13 Jul 2021 01:31:22 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39qrkwem7g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jul 2021 01:31:19 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 16D5SQhB018314;
-        Tue, 13 Jul 2021 05:31:18 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04wdc.us.ibm.com with ESMTP id 39q36aythj-1
+        Tue, 13 Jul 2021 01:31:22 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 16D5SMIu005687;
+        Tue, 13 Jul 2021 05:31:21 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02wdc.us.ibm.com with ESMTP id 39q36aqrn4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jul 2021 05:31:18 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 16D5VH8e17105288
+        Tue, 13 Jul 2021 05:31:21 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 16D5VKXE37355784
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Jul 2021 05:31:17 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C57F6A05A;
-        Tue, 13 Jul 2021 05:31:17 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 452BB6A05D;
-        Tue, 13 Jul 2021 05:31:17 +0000 (GMT)
+        Tue, 13 Jul 2021 05:31:21 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CBC06AE060;
+        Tue, 13 Jul 2021 05:31:20 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D5E8AE071;
+        Tue, 13 Jul 2021 05:31:20 +0000 (GMT)
 Received: from oc8246131445.ibm.com (unknown [9.163.19.100])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with SMTP;
-        Tue, 13 Jul 2021 05:31:17 +0000 (GMT)
+        by b01ledav005.gho.pok.ibm.com (Postfix) with SMTP;
+        Tue, 13 Jul 2021 05:31:19 +0000 (GMT)
 Received: from oc8246131445.ibm.com (localhost.localdomain [127.0.0.1])
-        by oc8246131445.ibm.com (Postfix) with ESMTP id D328EBC01E8;
-        Tue, 13 Jul 2021 00:31:14 -0500 (CDT)
+        by oc8246131445.ibm.com (Postfix) with ESMTP id 2F3C7BC0B42;
+        Tue, 13 Jul 2021 00:31:15 -0500 (CDT)
 From:   "Christopher M. Riedl" <cmr@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     tglx@linutronix.de, x86@kernel.org,
         linux-hardening@vger.kernel.org, keescook@chromium.org,
         npiggin@gmail.com, dja@axtens.net, peterz@infradead.org
-Subject: [PATCH v5 0/8] Use per-CPU temporary mappings for patching on Radix MMU
-Date:   Tue, 13 Jul 2021 00:31:05 -0500
-Message-Id: <20210713053113.4632-1-cmr@linux.ibm.com>
+Subject: [PATCH v5 6/8] powerpc: Rework and improve STRICT_KERNEL_RWX patching
+Date:   Tue, 13 Jul 2021 00:31:11 -0500
+Message-Id: <20210713053113.4632-7-cmr@linux.ibm.com>
 X-Mailer: git-send-email 2.26.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: BH6e7bgZnFUeI6o9A10KastAAs-J5xjd
-X-Proofpoint-ORIG-GUID: QoiMYoLjfRd8kw1j4S0zW1nZeym6GneZ
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+In-Reply-To: <20210713053113.4632-1-cmr@linux.ibm.com>
+References: <20210713053113.4632-1-cmr@linux.ibm.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ECjsolDe6qEUnWRzIsgM-nmy61gmL3Uw
+X-Proofpoint-ORIG-GUID: B9H47KRkzfDhVNM7R0btHcTPLGaYrbsW
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
  definitions=2021-07-13_03:2021-07-13,2021-07-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 impostorscore=0 bulkscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2107130022
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=853 bulkscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2107130022
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When compiled with CONFIG_STRICT_KERNEL_RWX, the kernel must create
-temporary mappings when patching itself. These mappings temporarily
-override the strict RWX text protections to permit a write. Currently,
-powerpc allocates a per-CPU VM area for patching. Patching occurs as
-follows:
+Rework code-patching with STRICT_KERNEL_RWX to prepare for the next
+patch which uses a temporary mm for patching under the Book3s64 Radix
+MMU. Make improvements by adding a WARN_ON when the patchsite doesn't
+match after patching and return the error from __patch_instruction()
+properly.
 
-	1. Map page in per-CPU VM area w/ PAGE_KERNEL protection
-	2. Patch text
-	3. Remove the temporary mapping
+Signed-off-by: Christopher M. Riedl <cmr@linux.ibm.com>
 
-While the VM area is per-CPU, the mapping is actually inserted into the
-kernel page tables. Presumably, this could allow another CPU to access
-the normally write-protected text - either malicously or accidentally -
-via this same mapping if the address of the VM area is known. Ideally,
-the mapping should be kept local to the CPU doing the patching [0].
+---
 
-x86 introduced "temporary mm" structs which allow the creation of mappings
-local to a particular CPU [1]. This series intends to bring the notion of a
-temporary mm to powerpc's Book3s64 Radix MMU and harden it by using such a
-mapping for patching a kernel with strict RWX permissions.
+v5:  * New to series.
+---
+ arch/powerpc/lib/code-patching.c | 51 +++++++++++++++++---------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
 
-The first four patches implement an LKDTM test "proof-of-concept" which
-exploits the potential vulnerability (ie. the temporary mapping during patc=
-hing
-is exposed in the kernel page tables and accessible by other CPUs) using a
-simple brute-force approach. This test is implemented for both powerpc and
-x86_64. The test passes on powerpc Radix with this new series, fails on
-upstream powerpc, passes on upstream x86_64, and fails on an older (ancient)
-x86_64 tree without the x86_64 temporary mm patches. The remaining patches =
-add
-support for and use a temporary mm for code patching on powerpc with the Ra=
-dix
-MMU.
-
-Tested boot, ftrace, and repeated LKDTM "hijack":
-	- QEMU+KVM (host: POWER9 Blackbird): Radix MMU w/ KUAP
-	- QEMU+KVM (host: POWER9 Blackbird): Hash MMU
-
-Tested repeated LKDTM "hijack":
-	- QEMU+KVM (host: AMD desktop): x86_64 upstream
-	- QEMU+KVM (host: AMD desktop): x86_64 w/o percpu temp mm to
-	  verify the LKDTM "hijack" test fails
-
-Tested boot and ftrace:
-	- QEMU+TCG: ppc44x (bamboo)
-	- QEMU+TCG: g5 (mac99)
-
-I also tested with various extra config options enabled as suggested in
-section 12) in Documentation/process/submit-checklist.rst.
-
-v5:	* Only support Book3s64 Radix MMU for now. There are some issues with
-	  the previous implementation on the Hash MMU as pointed out by Nick
-	  Piggin. Fixing these is not trivial so we only support the Radix MMU
-	  for now. I tried using realmode (no data translation) to patch with
-	  Hash to at least avoid exposing the patch mapping to other CPUs but
-	  this doesn't reliably work either since we cannot access vmalloc'd
-	  space in realmode.
-	* Use percpu variables for the patching_mm and patching_addr. This
-	  avoids the need for synchronization mechanisms entirely. Thanks to
-	  Peter Zijlstra for pointing out text_mutex which unfortunately didn't
-	  work out without larger code changes in powerpc. Also thanks to Daniel
-	  Axtens for comments about using percpu variables for the *percpu* temp
-	  mm things off list.
-
-v4:	* It's time to revisit this series again since @jpn and @mpe fixed
-	  our known STRICT_*_RWX bugs on powerpc/64s.
-	* Rebase on linuxppc/next:
-          commit ee1bc694fbaec ("powerpc/kvm: Fix build error when PPC_MEM_=
-KEYS/PPC_PSERIES=3Dn")
-	* Completely rework how map_patch() works on book3s64 Hash MMU
-	* Split the LKDTM x86_64 and powerpc bits into separate patches
-	* Annotate commit messages with changes from v3 instead of
-	  listing them here completely out-of context...
-
-v3:	* Rebase on linuxppc/next: commit 9123e3a74ec7 ("Linux 5.9-rc1")
-	* Move temporary mm implementation into code-patching.c where it
-	  belongs
-	* Implement LKDTM hijacker test on x86_64 (on IBM time oof) Do
-	* not use address zero for the patching address in the
-	  temporary mm (thanks @dja for pointing this out!)
-	* Wrap the LKDTM test w/ CONFIG_SMP as suggested by Christophe
-	  Leroy
-	* Comments to clarify PTE pre-allocation and patching addr
-	  selection
-
-v2:	* Rebase on linuxppc/next:
-	  commit 105fb38124a4 ("powerpc/8xx: Modify ptep_get()")
-	* Always dirty pte when mapping patch
-	* Use `ppc_inst_len` instead of `sizeof` on instructions
-	* Declare LKDTM patching addr accessor in header where it belongs=09
-
-v1:	* Rebase on linuxppc/next (4336b9337824)
-	* Save and restore second hw watchpoint
-	* Use new ppc_inst_* functions for patching check and in LKDTM test
-
-rfc-v2:	* Many fixes and improvements mostly based on extensive feedback
-          and testing by Christophe Leroy (thanks!).
-	* Make patching_mm and patching_addr static and move
-	  '__ro_after_init' to after the variable name (more common in
-	  other parts of the kernel)
-	* Use 'asm/debug.h' header instead of 'asm/hw_breakpoint.h' to
-	  fix PPC64e compile
-	* Add comment explaining why we use BUG_ON() during the init
-	  call to setup for patching later
-	* Move ptep into patch_mapping to avoid walking page tables a
-	  second time when unmapping the temporary mapping
-	* Use KUAP under non-radix, also manually dirty the PTE for patch
-	  mapping on non-BOOK3S_64 platforms
-	* Properly return any error from __patch_instruction
-        * Do not use 'memcmp' where a simple comparison is appropriate
-	* Simplify expression for patch address by removing pointer maths
-	* Add LKDTM test
-
-[0]: https://github.com/linuxppc/issues/issues/224
-[1]: https://lore.kernel.org/kernel-hardening/20190426232303.28381-1-nadav.=
-amit@gmail.com/
-
-Christopher M. Riedl (8):
-  powerpc: Add LKDTM accessor for patching addr
-  lkdtm/powerpc: Add test to hijack a patch mapping
-  x86_64: Add LKDTM accessor for patching addr
-  lkdtm/x86_64: Add test to hijack a patch mapping
-  powerpc/64s: Introduce temporary mm for Radix MMU
-  powerpc: Rework and improve STRICT_KERNEL_RWX patching
-  powerpc/64s: Initialize and use a temporary mm for patching on Radix
-  lkdtm/powerpc: Fix code patching hijack test
-
- arch/powerpc/include/asm/code-patching.h |   4 +
- arch/powerpc/include/asm/debug.h         |   1 +
- arch/powerpc/kernel/process.c            |   5 +
- arch/powerpc/lib/code-patching.c         | 240 ++++++++++++++++++++---
- arch/x86/include/asm/text-patching.h     |   4 +
- arch/x86/kernel/alternative.c            |   7 +
- drivers/misc/lkdtm/core.c                |   1 +
- drivers/misc/lkdtm/lkdtm.h               |   1 +
- drivers/misc/lkdtm/perms.c               | 143 ++++++++++++++
- 9 files changed, 378 insertions(+), 28 deletions(-)
-
+diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-pat=
+ching.c
+index 3122d8e4cc013..9f2eba9b70ee4 100644
+--- a/arch/powerpc/lib/code-patching.c
++++ b/arch/powerpc/lib/code-patching.c
+@@ -102,11 +102,12 @@ static inline void unuse_temporary_mm(struct temp_m=
+m *temp_mm)
+ }
+=20
+ static DEFINE_PER_CPU(struct vm_struct *, text_poke_area);
++static DEFINE_PER_CPU(unsigned long, cpu_patching_addr);
+=20
+ #if IS_BUILTIN(CONFIG_LKDTM)
+ unsigned long read_cpu_patching_addr(unsigned int cpu)
+ {
+-	return (unsigned long)(per_cpu(text_poke_area, cpu))->addr;
++	return per_cpu(cpu_patching_addr, cpu);
+ }
+ #endif
+=20
+@@ -121,6 +122,7 @@ static int text_area_cpu_up(unsigned int cpu)
+ 		return -1;
+ 	}
+ 	this_cpu_write(text_poke_area, area);
++	this_cpu_write(cpu_patching_addr, (unsigned long)area->addr);
+=20
+ 	return 0;
+ }
+@@ -146,7 +148,7 @@ void __init poking_init(void)
+ /*
+  * This can be called for kernel text or a module.
+  */
+-static int map_patch_area(void *addr, unsigned long text_poke_addr)
++static int map_patch_area(void *addr)
+ {
+ 	unsigned long pfn;
+ 	int err;
+@@ -156,17 +158,20 @@ static int map_patch_area(void *addr, unsigned long=
+ text_poke_addr)
+ 	else
+ 		pfn =3D __pa_symbol(addr) >> PAGE_SHIFT;
+=20
+-	err =3D map_kernel_page(text_poke_addr, (pfn << PAGE_SHIFT), PAGE_KERNE=
+L);
++	err =3D map_kernel_page(__this_cpu_read(cpu_patching_addr),
++			      (pfn << PAGE_SHIFT), PAGE_KERNEL);
+=20
+-	pr_devel("Mapped addr %lx with pfn %lx:%d\n", text_poke_addr, pfn, err)=
+;
++	pr_devel("Mapped addr %lx with pfn %lx:%d\n",
++		 __this_cpu_read(cpu_patching_addr), pfn, err);
+ 	if (err)
+ 		return -1;
+=20
+ 	return 0;
+ }
+=20
+-static inline int unmap_patch_area(unsigned long addr)
++static inline int unmap_patch_area(void)
+ {
++	unsigned long addr =3D __this_cpu_read(cpu_patching_addr);
+ 	pte_t *ptep;
+ 	pmd_t *pmdp;
+ 	pud_t *pudp;
+@@ -175,23 +180,23 @@ static inline int unmap_patch_area(unsigned long ad=
+dr)
+=20
+ 	pgdp =3D pgd_offset_k(addr);
+ 	if (unlikely(!pgdp))
+-		return -EINVAL;
++		goto out_err;
+=20
+ 	p4dp =3D p4d_offset(pgdp, addr);
+ 	if (unlikely(!p4dp))
+-		return -EINVAL;
++		goto out_err;
+=20
+ 	pudp =3D pud_offset(p4dp, addr);
+ 	if (unlikely(!pudp))
+-		return -EINVAL;
++		goto out_err;
+=20
+ 	pmdp =3D pmd_offset(pudp, addr);
+ 	if (unlikely(!pmdp))
+-		return -EINVAL;
++		goto out_err;
+=20
+ 	ptep =3D pte_offset_kernel(pmdp, addr);
+ 	if (unlikely(!ptep))
+-		return -EINVAL;
++		goto out_err;
+=20
+ 	pr_devel("clearing mm %p, pte %p, addr %lx\n", &init_mm, ptep, addr);
+=20
+@@ -202,15 +207,17 @@ static inline int unmap_patch_area(unsigned long ad=
+dr)
+ 	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+=20
+ 	return 0;
++
++out_err:
++	pr_warn("failed to unmap %lx\n", addr);
++	return -EINVAL;
+ }
+=20
+ static int do_patch_instruction(u32 *addr, struct ppc_inst instr)
+ {
+-	int err;
++	int err, rc =3D 0;
+ 	u32 *patch_addr =3D NULL;
+ 	unsigned long flags;
+-	unsigned long text_poke_addr;
+-	unsigned long kaddr =3D (unsigned long)addr;
+=20
+ 	/*
+ 	 * During early early boot patch_instruction is called
+@@ -222,24 +229,20 @@ static int do_patch_instruction(u32 *addr, struct p=
+pc_inst instr)
+=20
+ 	local_irq_save(flags);
+=20
+-	text_poke_addr =3D (unsigned long)__this_cpu_read(text_poke_area)->addr=
+;
+-	if (map_patch_area(addr, text_poke_addr)) {
+-		err =3D -1;
++	err =3D map_patch_area(addr);
++	if (err)
+ 		goto out;
+-	}
+-
+-	patch_addr =3D (u32 *)(text_poke_addr + (kaddr & ~PAGE_MASK));
+=20
+-	__patch_instruction(addr, instr, patch_addr);
++	patch_addr =3D (u32 *)(__this_cpu_read(cpu_patching_addr) | offset_in_p=
+age(addr));
++	rc =3D __patch_instruction(addr, instr, patch_addr);
+=20
+-	err =3D unmap_patch_area(text_poke_addr);
+-	if (err)
+-		pr_warn("failed to unmap %lx\n", text_poke_addr);
++	err =3D unmap_patch_area();
+=20
+ out:
+ 	local_irq_restore(flags);
++	WARN_ON(!ppc_inst_equal(ppc_inst_read(addr), instr));
+=20
+-	return err;
++	return rc ? rc : err;
+ }
+ #else /* !CONFIG_STRICT_KERNEL_RWX */
+=20
 --=20
 2.26.1
 
