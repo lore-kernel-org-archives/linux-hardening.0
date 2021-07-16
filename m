@@ -2,62 +2,48 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3674DC636C9
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jul 2021 18:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879A1C07E95
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Jul 2021 10:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFB161396
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jul 2021 18:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA2E613F2
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Jul 2021 10:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbhGOS2t (ORCPT
+        id S238173AbhGPKas (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Jul 2021 14:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbhGOS2t (ORCPT
+        Fri, 16 Jul 2021 06:30:48 -0400
+Received: from smtp-fw-9103.amazon.com ([207.171.188.200]:62888 "EHLO
+        smtp-fw-9103.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230287AbhGPKar (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Jul 2021 14:28:49 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F9FC06175F
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Jul 2021 11:25:55 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id w15so7362735pgk.13
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Jul 2021 11:25:55 -0700 (PDT)
+        Fri, 16 Jul 2021 06:30:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=it0wdzOj5IOf4QH7awHQpXVwdxQtB+2DZ5D9rw+J8+A=;
-        b=KNEtXbHsVy1VxaBx0diFafYW39PiFiwtOvaPudBbwBX1x1F1RGhN9H3y+M3kvY13c/
-         TjDB61M0ArN0y0BGAgECWa/U7NlraEur05FNliHpxMolK6nHFuMhZ8lAHrHchVqsJKOk
-         Ngh3WS4lAMnruM1NEaesb/9oASnqPQ1JKUghg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=it0wdzOj5IOf4QH7awHQpXVwdxQtB+2DZ5D9rw+J8+A=;
-        b=U0Bu9Qm2mAumGTnOv6PcHn9Vj/hViKXgjO8wlcrwBXCyafLYSneOLsmzF0Ijhab6T6
-         9+N+5ss3BYHW9+txs+OlfqeZnF1/jG0uClDxZzb1UHsjuHbJQAdL8DynyiWhsfkp3pI2
-         fjRQClR8m0xZOLMw7lutlfW9mXjpm9l1cR4/qMMnPDHJcTKiLFSRqiabV+6i5jrtwzpC
-         V2K08tvnFowPCQ5nQp5SFLoR3eePq7Kf0+m23Yu6JvtyXWKZBr/DiKvjqwNcCx2Pdp3c
-         Fnz4a9McIWvxQYcbvSE06Yl+znIuSvwvvCAMqwRP0dnkckVAXhT42LNdl2jkJf8G57z5
-         G5Og==
-X-Gm-Message-State: AOAM530p2UvqeKLKLPj5+2D3BdCwtQ4iwes/B5isp2V/RYs3IaUI2EIH
-        kSDXTDUC1wP0tVBUqMOTMESzrQ==
-X-Google-Smtp-Source: ABdhPJzXFzshYruvYYTzwIuSs+pn6BJM+kBI7K/SePQFd7oT6PQXIEquZif2kyinXBqHC36PaJYW7Q==
-X-Received: by 2002:a05:6a00:1508:b029:332:3aab:d842 with SMTP id q8-20020a056a001508b02903323aabd842mr5791036pfu.59.1626373554817;
-        Thu, 15 Jul 2021 11:25:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q18sm8281196pgj.8.2021.07.15.11.25.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 11:25:54 -0700 (PDT)
-Date:   Thu, 15 Jul 2021 11:25:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Norbert Manthey <nmanthey@amazon.de>
-Cc:     Kroah-Hartman <greg@kroah.com>,
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1626431273; x=1657967273;
+  h=to:cc:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=QO0HV+dU7B/r2B65Dj8aQeD05OEFYAF1mdMcbVoqJA4=;
+  b=aubX9DZ7AuLV59b25lz7RSMPJNGO0DAoo/j+ZUbPlKNa1cA3Vc8f0kOn
+   bwqmt5IqYRRzl27iVyni0IqAa3yjtV8oTTObk9vYhWyEAtTAFjUmG0F/n
+   Im29ZsJQnt5T0hnmtE4ojpTWC5iwiVNmm7oq2xdnCv+D609UMaOrmm6bX
+   g=;
+X-IronPort-AV: E=Sophos;i="5.84,244,1620691200"; 
+   d="scan'208";a="944029449"
+Subject: Re: Coverity Scan model file, license, public access
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-1e-c7f73527.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 16 Jul 2021 10:26:36 +0000
+Received: from EX13D02EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7f73527.us-east-1.amazon.com (Postfix) with ESMTPS id 2FC74C016E;
+        Fri, 16 Jul 2021 10:26:36 +0000 (UTC)
+Received: from u6fc700a6f3c650.ant.amazon.com (10.43.161.69) by
+ EX13D02EUB001.ant.amazon.com (10.43.166.150) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.23; Fri, 16 Jul 2021 10:26:30 +0000
+To:     Kees Cook <keescook@chromium.org>
+CC:     Kroah-Hartman <greg@kroah.com>,
         LKML <linux-kernel@vger.kernel.org>,
         "Woodhouse, David" <dwmw@amazon.co.uk>,
         "foersleo@amazon.de" <foersleo@amazon.de>,
@@ -66,50 +52,58 @@ Cc:     Kroah-Hartman <greg@kroah.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Colin Ian King <colin.king@canonical.com>,
         Dave Jones <davej@codemonkey.org.uk>,
-        linux-hardening@vger.kernel.org
-Subject: Re: Coverity Scan model file, license, public access
-Message-ID: <202107151111.23BA48F99@keescook>
+        <linux-hardening@vger.kernel.org>
 References: <d7f096ee-7a9b-684e-433a-f8f3f0e6288d@amazon.de>
- <YOSKuEcPoy/dw0st@kroah.com>
- <a41221c8-86e5-494d-68fd-0a0b87c99e83@amazon.de>
+ <YOSKuEcPoy/dw0st@kroah.com> <a41221c8-86e5-494d-68fd-0a0b87c99e83@amazon.de>
+ <202107151111.23BA48F99@keescook>
+From:   Norbert Manthey <nmanthey@amazon.de>
+Message-ID: <0b18769a-dd84-8e39-b3a0-385a712381cd@amazon.de>
+Date:   Fri, 16 Jul 2021 12:26:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a41221c8-86e5-494d-68fd-0a0b87c99e83@amazon.de>
+In-Reply-To: <202107151111.23BA48F99@keescook>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+X-Originating-IP: [10.43.161.69]
+X-ClientProxiedBy: EX13D11UWC001.ant.amazon.com (10.43.162.151) To
+ EX13D02EUB001.ant.amazon.com (10.43.166.150)
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jul 15, 2021 at 03:12:04PM +0200, Norbert Manthey wrote:
-> On 7/6/21 6:54 PM, Kroah-Hartman wrote:
-> > 
-> > 
-> > On Tue, Jul 06, 2021 at 09:45:47AM +0200, Norbert Manthey wrote:
-> >> Dear all,
-> >>
-> >> I would like to work with code analysis on the Linux kernel. The
-> >> currently used Coverity setup already uses a model file [1] to improve
-> >> the precision of the analysis. To the best of my knowledge, this model
-> >> file is currently not publicly accessible. I did not find a license
-> >> attached to  [1], nor any information about licensing.
-> > 
-> > I have no idea who wrote that thing, sorry.
-> 
-> Is there anybody else who knows more about the history of the used
-> Coverity model? Thanks.
+T24gNy8xNS8yMSA4OjI1IFBNLCBLZWVzIENvb2sgd3JvdGU6Cj4gQ0FVVElPTjogVGhpcyBlbWFp
+bCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5pemF0aW9uLiBEbyBub3QgY2xp
+Y2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGNhbiBjb25maXJtIHRoZSBz
+ZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4KPiAKPiAKPiAKPiBPbiBUaHUsIEp1
+bCAxNSwgMjAyMSBhdCAwMzoxMjowNFBNICswMjAwLCBOb3JiZXJ0IE1hbnRoZXkgd3JvdGU6Cj4+
+IE9uIDcvNi8yMSA2OjU0IFBNLCBLcm9haC1IYXJ0bWFuIHdyb3RlOgo+Pj4KPj4+Cj4+PiBPbiBU
+dWUsIEp1bCAwNiwgMjAyMSBhdCAwOTo0NTo0N0FNICswMjAwLCBOb3JiZXJ0IE1hbnRoZXkgd3Jv
+dGU6Cj4+Pj4gRGVhciBhbGwsCj4+Pj4KPj4+PiBJIHdvdWxkIGxpa2UgdG8gd29yayB3aXRoIGNv
+ZGUgYW5hbHlzaXMgb24gdGhlIExpbnV4IGtlcm5lbC4gVGhlCj4+Pj4gY3VycmVudGx5IHVzZWQg
+Q292ZXJpdHkgc2V0dXAgYWxyZWFkeSB1c2VzIGEgbW9kZWwgZmlsZSBbMV0gdG8gaW1wcm92ZQo+
+Pj4+IHRoZSBwcmVjaXNpb24gb2YgdGhlIGFuYWx5c2lzLiBUbyB0aGUgYmVzdCBvZiBteSBrbm93
+bGVkZ2UsIHRoaXMgbW9kZWwKPj4+PiBmaWxlIGlzIGN1cnJlbnRseSBub3QgcHVibGljbHkgYWNj
+ZXNzaWJsZS4gSSBkaWQgbm90IGZpbmQgYSBsaWNlbnNlCj4+Pj4gYXR0YWNoZWQgdG8gIFsxXSwg
+bm9yIGFueSBpbmZvcm1hdGlvbiBhYm91dCBsaWNlbnNpbmcuCj4+Pgo+Pj4gSSBoYXZlIG5vIGlk
+ZWEgd2hvIHdyb3RlIHRoYXQgdGhpbmcsIHNvcnJ5Lgo+Pgo+PiBJcyB0aGVyZSBhbnlib2R5IGVs
+c2Ugd2hvIGtub3dzIG1vcmUgYWJvdXQgdGhlIGhpc3Rvcnkgb2YgdGhlIHVzZWQKPj4gQ292ZXJp
+dHkgbW9kZWw/IFRoYW5rcy4KPiAKPiBBcyBmYXIgYXMgSSBrbm93LCB0aGUgbW9kZWwgd2FzIHdy
+aXR0ZW4gb3JpZ2luYWxseSBieSBEYXZlIEpvbmVzLCB3aXRoCj4gZnVydGhlciBjaGFuZ2VzIGZy
+b20gbXlzZWxmIGFuZCwgSSB0aGluaywgQ29saW4gSWFuIEtpbmcuCj4gCj4gSSB0aG91Z2h0IGl0
+IHdhcyB2aXNpYmxlIHRocm91Z2ggdGhlIENvdmVyaXR5IGRhc2hib2FyZCwgb25jZSB5b3UncmUK
+PiBsb2dnZWQgaW46Cj4gaHR0cHM6Ly9zY2FuLmNvdmVyaXR5LmNvbS9wcm9qZWN0cy9saW51eC1u
+ZXh0LXdlZWtseS1zY2FuP3RhYj1hbmFseXNpc19zZXR0aW5ncwo+IChTZWUgJ01vZGVsaW5nIGZp
+bGUgbG9hZGVkIFtWaWV3XScpCj4gCj4gUmVnYXJkbGVzcywgSSBrZWVwIGEgY29weSBpbiBnaXQg
+c2luY2UgSSdkIGJlZW4gdHdlYWtpbmcgaXQgKG1vc3RseSB0bwo+IG5vIG1lYW5pbmdmdWwgYmVu
+ZWZpdDogdGhlIG1vZGVsIGZpbGUgZG9lc24ndCB3b3JrIHdpdGggbWFjcm9zLCB3aGljaCBpcwo+
+IHdoZXJlIHRoZSBidWxrIG9mIHRoZSBmYWxzZSBwb3NpdGl2ZXMgaW4gQ292ZXJpdHkgY29tZSBm
+cm9tKToKPiBodHRwczovL2dpdGh1Yi5jb20va2Vlcy9jb3Zlcml0eS1saW51eAoKVGhhbmtzISBU
+aGlzIHJlcG8gY29tZXMgd2l0aCBhIGxpY2Vuc2UsIHNvIEkgY2FuIHN0YXJ0IGZyb20gdGhlcmUu
+CgpCZXN0LApOb3JiZXJ0CgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJI
+CktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlh
+biBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENo
+YXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAy
+ODkgMjM3IDg3OQoKCg==
 
-As far as I know, the model was written originally by Dave Jones, with
-further changes from myself and, I think, Colin Ian King.
-
-I thought it was visible through the Coverity dashboard, once you're
-logged in:
-https://scan.coverity.com/projects/linux-next-weekly-scan?tab=analysis_settings
-(See 'Modeling file loaded [View]')
-
-Regardless, I keep a copy in git since I'd been tweaking it (mostly to
-no meaningful benefit: the model file doesn't work with macros, which is
-where the bulk of the false positives in Coverity come from):
-https://github.com/kees/coverity-linux
-
--- 
-Kees Cook
