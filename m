@@ -2,108 +2,136 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879A1C07E95
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Jul 2021 10:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B49C636C8
+	for <linux-hardening@archiver.kernel.org>; Sun, 18 Jul 2021 15:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA2E613F2
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Jul 2021 10:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDCD610A2
+	for <linux-hardening@archiver.kernel.org>; Sun, 18 Jul 2021 15:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238173AbhGPKas (ORCPT
+        id S232895AbhGRPjo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Jul 2021 06:30:48 -0400
-Received: from smtp-fw-9103.amazon.com ([207.171.188.200]:62888 "EHLO
-        smtp-fw-9103.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230287AbhGPKar (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Jul 2021 06:30:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1626431273; x=1657967273;
-  h=to:cc:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=QO0HV+dU7B/r2B65Dj8aQeD05OEFYAF1mdMcbVoqJA4=;
-  b=aubX9DZ7AuLV59b25lz7RSMPJNGO0DAoo/j+ZUbPlKNa1cA3Vc8f0kOn
-   bwqmt5IqYRRzl27iVyni0IqAa3yjtV8oTTObk9vYhWyEAtTAFjUmG0F/n
-   Im29ZsJQnt5T0hnmtE4ojpTWC5iwiVNmm7oq2xdnCv+D609UMaOrmm6bX
-   g=;
-X-IronPort-AV: E=Sophos;i="5.84,244,1620691200"; 
-   d="scan'208";a="944029449"
-Subject: Re: Coverity Scan model file, license, public access
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-1e-c7f73527.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 16 Jul 2021 10:26:36 +0000
-Received: from EX13D02EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7f73527.us-east-1.amazon.com (Postfix) with ESMTPS id 2FC74C016E;
-        Fri, 16 Jul 2021 10:26:36 +0000 (UTC)
-Received: from u6fc700a6f3c650.ant.amazon.com (10.43.161.69) by
- EX13D02EUB001.ant.amazon.com (10.43.166.150) with Microsoft SMTP Server (TLS)
- id 15.0.1497.23; Fri, 16 Jul 2021 10:26:30 +0000
-To:     Kees Cook <keescook@chromium.org>
-CC:     Kroah-Hartman <greg@kroah.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "foersleo@amazon.de" <foersleo@amazon.de>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        "Gustavo A. R. Silva" <garsilva@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        <linux-hardening@vger.kernel.org>
-References: <d7f096ee-7a9b-684e-433a-f8f3f0e6288d@amazon.de>
- <YOSKuEcPoy/dw0st@kroah.com> <a41221c8-86e5-494d-68fd-0a0b87c99e83@amazon.de>
- <202107151111.23BA48F99@keescook>
-From:   Norbert Manthey <nmanthey@amazon.de>
-Message-ID: <0b18769a-dd84-8e39-b3a0-385a712381cd@amazon.de>
-Date:   Fri, 16 Jul 2021 12:26:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Sun, 18 Jul 2021 11:39:44 -0400
+Received: from mout.gmx.net ([212.227.15.19]:51383 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233869AbhGRPjn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 18 Jul 2021 11:39:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1626622602;
+        bh=BgmVAD6kQePhUvQNif1bc8lY91CsAoONyYzXjsFONis=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Gt7yH71jOitZgFlDaeBbpkSPi1vS8fapl3iLlNLWetohQnCsLrDaN0CI6aFwVZBoA
+         73dyMYkS+MoLIoCb4DrylVUw/GkA0psmGdcNuQfmqr9umBlPQN0w5YVLv7QwMZLv/I
+         vHZKWgVG7pfku/rgBc++jYyeQTzsWV5q7VODul4Q=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.228.41]) by mail.gmx.net
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1Mof5H-1lLOuR2fwP-00p3CF; Sun, 18 Jul 2021 17:36:42 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc:     Len Baker <len.baker@gmx.com>, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] drivers/bluetooth: Remove all strcpy() uses
+Date:   Sun, 18 Jul 2021 17:36:26 +0200
+Message-Id: <20210718153626.18382-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <202107151111.23BA48F99@keescook>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-X-Originating-IP: [10.43.161.69]
-X-ClientProxiedBy: EX13D11UWC001.ant.amazon.com (10.43.162.151) To
- EX13D02EUB001.ant.amazon.com (10.43.166.150)
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pnlRtIpPSD8E8+0dK8xsXGYaM6qJq363xXDdVrNqbI/2gQ+DNM/
+ R3/kIeJ2sr+jnUSftacP5xgOlparNV6mXNLnPWRGBxzYuHpGh9n6PpLn8+BETRLbOB++xF7
+ gY8Fonr+BBkdR06JNXLhbvxXassiKLAgRQaMmzJ7+bn1traPAzNR+HyQM0gMLzSheyU2rMs
+ YpErU+yeG+ptbrFNTsSZg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tyTsSvmv35o=:WVSUZkX3DlAOfVYr2CJKM5
+ 0qWeKBKVjW/UYrTlWpM+d4UPuRo4UxZ4ho5StsWBCjW7nz++0/UCJfdaQsuzG3/3HE5Uyo0vV
+ UDJMip3E7tIz3pimGSWu8k6Qd/7qTotowAyV154F3SDwcH4JJSU60UT4ikHH9QEBiuuY+wcnw
+ NKgqiEsQWafhUxntF+SG/GkMIBmGuoY3K83U4oKvyjdL7gF3LjI7TanLaMQLrjMGvsn+KpEpx
+ dUqN5uOzvs1nrmrHzeYc07JlFFfIcg5071+NSk3R0G7unWiwCp2kcLZhUxmQVIwQIvVnGBjfK
+ P6xYt4FWyGh2yqx8fvhSOYwdHEx+vpmWTeyveq06v6F9MV6M9Aj+wyuCrdtHWdroMfJ7GoAPH
+ JKoHR4krXK2cSrQYY9VNhfXOZhW1HpiNQgIm+PyaHJhtKFnB4Ew4k+Q6xDKjWbsHHsgtZct5Y
+ 50CGrMY3MZevcAZg9E/NhfuZcRfbZ9OZNWZxVjdgWZL39K0AhWrwRLV13W00gevQmjl/BQiDs
+ Ie5IAcCKqeqJ9dY8H0OUtbMXzeFN1gw82nL5g+6OG1DxdUxRdgN3GBK0S2iUfwQBISrDIcvLI
+ xYCnWOA0HiRf5KmUHXn8cFNPw9ey01e9cIH000BgGjF2G636xyFZunLod9R0rpamjH+7h3SbV
+ FJ8r76V+tMS+jpoZMAgpS3VGuusaYmer128u2ydLZY9CZF1gVlPps3bFA57s9ZL6CKZCMz193
+ GMgXiaUUQX6UdGmzGMkdQtoEAbDwLlDMkV/EwzG7tZ1l8blD1hab8+hnU+6S0fKj4cKVY7ron
+ VcFaUI2DQdB7Ol47CSe88jHkDsR8cJrNWKpZKwNX0VXwlWpXxuxBuxGpnZwBp/swfO6A8sbnZ
+ d/8ZRAtPOZooL83tJAtXDceqFKObK9X0NRMmMpMmLVQptDd9u95gApHk26Kr7raa+WjicZi1h
+ XLfYKRPAN82U5OhEqpn4DuMvAGX1qMk2S/mMcPAwujvccP0zYhKstuYhzjncPuMHWEbttzbfD
+ jiMdfFxxhQ6SHGG+NbnfVuC/Fe7bH7HN0fPTf1UJgz1MmPpTlAFTH2v6k0lDUCbNgeHB97j6F
+ R0mveSze4IMd9NgFLNcAKTT6kUYUetG48rO
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-T24gNy8xNS8yMSA4OjI1IFBNLCBLZWVzIENvb2sgd3JvdGU6Cj4gQ0FVVElPTjogVGhpcyBlbWFp
-bCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5pemF0aW9uLiBEbyBub3QgY2xp
-Y2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGNhbiBjb25maXJtIHRoZSBz
-ZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4KPiAKPiAKPiAKPiBPbiBUaHUsIEp1
-bCAxNSwgMjAyMSBhdCAwMzoxMjowNFBNICswMjAwLCBOb3JiZXJ0IE1hbnRoZXkgd3JvdGU6Cj4+
-IE9uIDcvNi8yMSA2OjU0IFBNLCBLcm9haC1IYXJ0bWFuIHdyb3RlOgo+Pj4KPj4+Cj4+PiBPbiBU
-dWUsIEp1bCAwNiwgMjAyMSBhdCAwOTo0NTo0N0FNICswMjAwLCBOb3JiZXJ0IE1hbnRoZXkgd3Jv
-dGU6Cj4+Pj4gRGVhciBhbGwsCj4+Pj4KPj4+PiBJIHdvdWxkIGxpa2UgdG8gd29yayB3aXRoIGNv
-ZGUgYW5hbHlzaXMgb24gdGhlIExpbnV4IGtlcm5lbC4gVGhlCj4+Pj4gY3VycmVudGx5IHVzZWQg
-Q292ZXJpdHkgc2V0dXAgYWxyZWFkeSB1c2VzIGEgbW9kZWwgZmlsZSBbMV0gdG8gaW1wcm92ZQo+
-Pj4+IHRoZSBwcmVjaXNpb24gb2YgdGhlIGFuYWx5c2lzLiBUbyB0aGUgYmVzdCBvZiBteSBrbm93
-bGVkZ2UsIHRoaXMgbW9kZWwKPj4+PiBmaWxlIGlzIGN1cnJlbnRseSBub3QgcHVibGljbHkgYWNj
-ZXNzaWJsZS4gSSBkaWQgbm90IGZpbmQgYSBsaWNlbnNlCj4+Pj4gYXR0YWNoZWQgdG8gIFsxXSwg
-bm9yIGFueSBpbmZvcm1hdGlvbiBhYm91dCBsaWNlbnNpbmcuCj4+Pgo+Pj4gSSBoYXZlIG5vIGlk
-ZWEgd2hvIHdyb3RlIHRoYXQgdGhpbmcsIHNvcnJ5Lgo+Pgo+PiBJcyB0aGVyZSBhbnlib2R5IGVs
-c2Ugd2hvIGtub3dzIG1vcmUgYWJvdXQgdGhlIGhpc3Rvcnkgb2YgdGhlIHVzZWQKPj4gQ292ZXJp
-dHkgbW9kZWw/IFRoYW5rcy4KPiAKPiBBcyBmYXIgYXMgSSBrbm93LCB0aGUgbW9kZWwgd2FzIHdy
-aXR0ZW4gb3JpZ2luYWxseSBieSBEYXZlIEpvbmVzLCB3aXRoCj4gZnVydGhlciBjaGFuZ2VzIGZy
-b20gbXlzZWxmIGFuZCwgSSB0aGluaywgQ29saW4gSWFuIEtpbmcuCj4gCj4gSSB0aG91Z2h0IGl0
-IHdhcyB2aXNpYmxlIHRocm91Z2ggdGhlIENvdmVyaXR5IGRhc2hib2FyZCwgb25jZSB5b3UncmUK
-PiBsb2dnZWQgaW46Cj4gaHR0cHM6Ly9zY2FuLmNvdmVyaXR5LmNvbS9wcm9qZWN0cy9saW51eC1u
-ZXh0LXdlZWtseS1zY2FuP3RhYj1hbmFseXNpc19zZXR0aW5ncwo+IChTZWUgJ01vZGVsaW5nIGZp
-bGUgbG9hZGVkIFtWaWV3XScpCj4gCj4gUmVnYXJkbGVzcywgSSBrZWVwIGEgY29weSBpbiBnaXQg
-c2luY2UgSSdkIGJlZW4gdHdlYWtpbmcgaXQgKG1vc3RseSB0bwo+IG5vIG1lYW5pbmdmdWwgYmVu
-ZWZpdDogdGhlIG1vZGVsIGZpbGUgZG9lc24ndCB3b3JrIHdpdGggbWFjcm9zLCB3aGljaCBpcwo+
-IHdoZXJlIHRoZSBidWxrIG9mIHRoZSBmYWxzZSBwb3NpdGl2ZXMgaW4gQ292ZXJpdHkgY29tZSBm
-cm9tKToKPiBodHRwczovL2dpdGh1Yi5jb20va2Vlcy9jb3Zlcml0eS1saW51eAoKVGhhbmtzISBU
-aGlzIHJlcG8gY29tZXMgd2l0aCBhIGxpY2Vuc2UsIHNvIEkgY2FuIHN0YXJ0IGZyb20gdGhlcmUu
-CgpCZXN0LApOb3JiZXJ0CgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJI
-CktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlh
-biBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENo
-YXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAy
-ODkgMjM3IDg3OQoKCg==
+strcpy() performs no bounds checking on the destination buffer. This
+could result in linear overflows beyond the end of the buffer, leading
+to all kinds of misbehaviors. The safe replacement is strscpy() but in
+this case it is better to use the scnprintf to simplify the arithmetic.
+
+This is a previous step in the path to remove the strcpy() function
+entirely from the kernel.
+
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ drivers/bluetooth/btmrvl_sdio.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sd=
+io.c
+index cddd350beba3..d6674b367e05 100644
+=2D-- a/drivers/bluetooth/btmrvl_sdio.c
++++ b/drivers/bluetooth/btmrvl_sdio.c
+@@ -1350,6 +1350,7 @@ static void btmrvl_sdio_coredump(struct device *dev)
+ 	u8 *dbg_ptr, *end_ptr, *fw_dump_data, *fw_dump_ptr;
+ 	u8 dump_num =3D 0, idx, i, read_reg, doneflag =3D 0;
+ 	u32 memory_size, fw_dump_len =3D 0;
++	int size =3D 0;
+
+ 	card =3D sdio_get_drvdata(func);
+ 	priv =3D card->priv;
+@@ -1493,20 +1494,18 @@ static void btmrvl_sdio_coredump(struct device *de=
+v)
+ 		struct memory_type_mapping *entry =3D &mem_type_mapping_tbl[idx];
+
+ 		if (entry->mem_ptr) {
+-			strcpy(fw_dump_ptr, "=3D=3D=3D=3D=3D=3D=3D=3DStart dump ");
+-			fw_dump_ptr +=3D strlen("=3D=3D=3D=3D=3D=3D=3D=3DStart dump ");
+-
+-			strcpy(fw_dump_ptr, entry->mem_name);
+-			fw_dump_ptr +=3D strlen(entry->mem_name);
+-
+-			strcpy(fw_dump_ptr, "=3D=3D=3D=3D=3D=3D=3D=3D\n");
+-			fw_dump_ptr +=3D strlen("=3D=3D=3D=3D=3D=3D=3D=3D\n");
+-
+-			memcpy(fw_dump_ptr, entry->mem_ptr, entry->mem_size);
+-			fw_dump_ptr +=3D entry->mem_size;
+-
+-			strcpy(fw_dump_ptr, "\n=3D=3D=3D=3D=3D=3D=3D=3DEnd dump=3D=3D=3D=3D=3D=
+=3D=3D=3D\n");
+-			fw_dump_ptr +=3D strlen("\n=3D=3D=3D=3D=3D=3D=3D=3DEnd dump=3D=3D=3D=
+=3D=3D=3D=3D=3D\n");
++			size +=3D scnprintf(fw_dump_ptr + size,
++					  sizeof(fw_dump_ptr) - size,
++					  "=3D=3D=3D=3D=3D=3D=3D=3DStart dump %s=3D=3D=3D=3D=3D=3D=3D=3D\n",
++					  entry->mem_name);
++
++			memcpy(fw_dump_ptr + size, entry->mem_ptr,
++			       entry->mem_size);
++			size +=3D entry->mem_size;
++
++			size +=3D scnprintf(fw_dump_ptr + size,
++					  sizeof(fw_dump_ptr) - size,
++					  "\n=3D=3D=3D=3D=3D=3D=3D=3DEnd dump=3D=3D=3D=3D=3D=3D=3D=3D\n");
+
+ 			vfree(mem_type_mapping_tbl[idx].mem_ptr);
+ 			mem_type_mapping_tbl[idx].mem_ptr =3D NULL;
+=2D-
+2.25.1
 
