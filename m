@@ -2,189 +2,184 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-20.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D6CC12002
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jul 2021 01:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56289C07E95
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jul 2021 22:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB178611ED
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jul 2021 01:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CE06113A
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jul 2021 22:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237406AbhGTAwX (ORCPT
+        id S229903AbhGTVT2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Jul 2021 20:52:23 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.110]:23262 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231562AbhGTAPI (ORCPT
+        Tue, 20 Jul 2021 17:19:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229795AbhGTVTZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Jul 2021 20:15:08 -0400
-X-Greylist: delayed 1263 seconds by postgrey-1.27 at vger.kernel.org; Mon, 19 Jul 2021 20:15:07 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id AB97995AF
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Jul 2021 19:34:29 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 5diPmXIrJUcVP5diPmbSpp; Mon, 19 Jul 2021 19:34:29 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nW0eV1Ts9Idn1vqEBQVZi/l1xO20XSwEQFJm3xKZUSk=; b=OWST1RtCmqW2E+qNpLEcXgKHPn
-        2nQ3Jj6ZkOiJ0pnImB633q+ECV+aJGoEnYPUpIPP3z9U4AvLwEvMparH+Ei2blHjythXiK3hLcXHj
-        8u+QA5EkvY/K7rRDCZL3sDzVkvXQUS4S03TjBe3sJwZqVi2DzFl1ATHvJh2l/RCaJKjYcTHIPqqMv
-        Lkz2Au0fNxfWLOlotGgbnBSzSGk3NoOieRquLnaU3W6aEUSykoEmmPR0Ye9V/VmHi2dd+1KlYGgfI
-        k4QNOl1X16vHYwPyNMjODjAw+9A8JrS/BLv8o/IlTAgMI7b5sY7Xoj7b9L6MzQj090kKMbKJlaUru
-        BQdFllBA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:50338 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1m5diM-0017RG-68; Mon, 19 Jul 2021 19:34:26 -0500
-Subject: Re: [PATCH] media: ngene: Fix out-of-bounds bug in
- ngene_command_config_free_buf()
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ralph Metzler <rjkm@metzlerbros.de>,
-        Matthias Benesch <twoof7@freenet.de>,
-        Oliver Endriss <o.endriss@gmx.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210420001631.GA45456@embeddedor>
- <202104211039.31E9785@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <70836714-f419-8d85-a490-190bc91ba5ae@embeddedor.com>
-Date:   Mon, 19 Jul 2021 19:36:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Tue, 20 Jul 2021 17:19:25 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A666C061574
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jul 2021 15:00:02 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id p17so12094782plf.12
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jul 2021 15:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WyxGUW8l0i1+27gVKNpxMIuSdpPKu6kJDnkVFPaL1B8=;
+        b=CvGYL7R+ixxU/JIlmN6/TJdMXXXXBl4WApNx0WZ/sQ60gmly7rRjWn5rEs/7RcgL8+
+         48a66pvoeTtIOcO4Yj/ISKAz00K3YYrzUYzvTtWhiQMdzEx0SMkmZvjNddi27ZygyNgz
+         VF3+NsdsEEmtRvjR7ZOmSMnN7Cylp8rFHYI5U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WyxGUW8l0i1+27gVKNpxMIuSdpPKu6kJDnkVFPaL1B8=;
+        b=YWMVDu6YQ1d/HmTD0ock+TCi/v02/FlR2J1KzxYP9bLniGpgE58xDrglgqegWGL0Qb
+         zQ/6tjIn09/oQlEIfChV92P7z0FdRNzoKJjistGqIbhAr0tzRgeaJdQFD+7qgWdi5yPm
+         UXGD6ANvdakqfQ33y54lSUkXQ6K2h8BZW+6l54MksZyQtQPRbuS1y9nj3fJlFQLTb7ZP
+         d/wJaJbnJgNKCfe4U6sMnTRn8quDdCqj/OcisM5Y3YD59F+gViKImWiElZYf1X2T/MmF
+         KavHH+FXQe0ohaSvQpEp7CrRTO3vYZlJ7V4mh1IGYYC/OJdzKIPLAbnrO8TXG46aUWfp
+         lImA==
+X-Gm-Message-State: AOAM532KS9f1LOUlKB2lkMZ4PvlRXKZtaIbXXOtiCzNN9Tq20EnqQYyy
+        KFd5Rixt4DaynbAsU2U9s5Ri6w==
+X-Google-Smtp-Source: ABdhPJwZLJrQEIugeNEH1We9YX0Ow3bcRiVxxx12v0TxyrOgmHcmdg1t2SI0sqWzHQWp/tQIRiaZ4g==
+X-Received: by 2002:a17:90a:c8b:: with SMTP id v11mr505781pja.114.1626818401485;
+        Tue, 20 Jul 2021 15:00:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e16sm28694557pgl.54.2021.07.20.15.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jul 2021 15:00:00 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, glider@google.com,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] hardening: Clarify Kconfig text for auto-var-init
+Date:   Tue, 20 Jul 2021 14:59:57 -0700
+Message-Id: <20210720215957.3446719-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <202104211039.31E9785@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1m5diM-0017RG-68
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:50338
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4689; h=from:subject; bh=Z2jIdIqSWFjGjbsnH0q1H4OQWdcOHIzxX0E/vHpuz2Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBg90dclov0B+zGzREFyMibbwv9l5oqr9QJrpcMBRsN hb++VKyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYPdHXAAKCRCJcvTf3G3AJvpfD/ 48Gq6fxhiEccbjQyQe+7IJXzIsYGWv+awOpA5DqwDe5ctfyYW5icxUSVx+Clzkn60bS8MOF5HK64Zs zu2EN8WIVWI53o/I7n8yieURnaJhOWRaodHPfz6sO8dvn3ddQAG2LF18ckn+L532AKdvPnDGhGHFDR Ez7EcJQoM2jNCTffA+Z7joyraqV4sL590QVJ6mB6CWtxsy2rB8JRIv73xRyHtajtELy3TJ9fExNdDZ ZIA26rgLKetjgMSKtz45O4khEwF0biQzfJw/pev0HXIzTOs5LZ+oxWMKyMM5dU9/77VKgTx6FDd9OE /Un9lPGCZKWTkGdyOUTXo4LNX2DYldun1e7zJ6Y73mo0HY//kluFhjJx/A84aNfge+v8JufRdH7ymD woQcwoMBkyRAWQFy4Jd/S91LPhyp1NA1uXoc4M8ZXvePbBtG201Awb2fCaYEAuXm7TiR18GmAtRqsB XR3rfGyHFvi/qRNpjBfAnvgOL2UY/r9TYrKZhNBEsMcIWpGLKjT6Jtlqf8MmXHsuNVElcnIPRCgom9 wdrabjtlA41UUFPBGhgsEF76FSR3UPI2v3gL/T+jL7RjJp++1nTkK5M38G1RKo8Zfda0wK3qcLIaVU vs2ym4j9tzZ8qvAreuqUY7R+rhMNrO4+Iyo4eQ8M6ZhUT9i1aYIRpPQ0uhQw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
+Clarify the details around the automatic variable initialization modes
+available. Specifically this details the values used for pattern init
+and expands on the rationale for zero init safety. Additionally makes
+zero init the default when available.
 
-I'm taking this in my tree[1] for 5.14-rc3.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ security/Kconfig.hardening | 52 +++++++++++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 20 deletions(-)
 
-Thanks
---
-Gustavo
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index 023aea5e117c..90cbaff86e13 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -29,6 +29,7 @@ choice
+ 	prompt "Initialize kernel stack variables at function entry"
+ 	default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
+ 	default INIT_STACK_ALL_PATTERN if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT_PATTERN
++	default INIT_STACK_ALL_ZERO if CC_HAS_AUTO_VAR_INIT_PATTERN
+ 	default INIT_STACK_NONE
+ 	help
+ 	  This option enables initialization of stack variables at
+@@ -39,11 +40,11 @@ choice
+ 	  syscalls.
+ 
+ 	  This chooses the level of coverage over classes of potentially
+-	  uninitialized variables. The selected class will be
++	  uninitialized variables. The selected class of variable will be
+ 	  initialized before use in a function.
+ 
+ 	config INIT_STACK_NONE
+-		bool "no automatic initialization (weakest)"
++		bool "no automatic stack variable initialization (weakest)"
+ 		help
+ 		  Disable automatic stack variable initialization.
+ 		  This leaves the kernel vulnerable to the standard
+@@ -80,7 +81,7 @@ choice
+ 		  and is disallowed.
+ 
+ 	config GCC_PLUGIN_STRUCTLEAK_BYREF_ALL
+-		bool "zero-init anything passed by reference (very strong)"
++		bool "zero-init everything passed by reference (very strong)"
+ 		depends on GCC_PLUGINS
+ 		depends on !(KASAN && KASAN_STACK)
+ 		select GCC_PLUGIN_STRUCTLEAK
+@@ -91,33 +92,44 @@ choice
+ 		  of uninitialized stack variable exploits and information
+ 		  exposures.
+ 
++		  As a side-effect, this keeps a lot of variables on the
++		  stack that can otherwise be optimized out, so combining
++		  this with CONFIG_KASAN_STACK can lead to a stack overflow
++		  and is disallowed.
++
+ 	config INIT_STACK_ALL_PATTERN
+-		bool "0xAA-init everything on the stack (strongest)"
++		bool "pattern-init everything (strongest)"
+ 		depends on CC_HAS_AUTO_VAR_INIT_PATTERN
+ 		help
+-		  Initializes everything on the stack with a 0xAA
+-		  pattern. This is intended to eliminate all classes
+-		  of uninitialized stack variable exploits and information
+-		  exposures, even variables that were warned to have been
+-		  left uninitialized.
++		  Initializes everything on the stack (including padding)
++		  with a specific debug value. This is intended to eliminate
++		  all classes of uninitialized stack variable exploits and
++		  information exposures, even variables that were warned about
++		  having been left uninitialized.
+ 
+ 		  Pattern initialization is known to provoke many existing bugs
+ 		  related to uninitialized locals, e.g. pointers receive
+-		  non-NULL values, buffer sizes and indices are very big.
++		  non-NULL values, buffer sizes and indices are very big. The
++		  pattern is situation-specific; Clang on 64-bit uses 0xAA
++		  repeating for all types and padding except float and double
++		  which use 0xFF repeating (-NaN). Clang on 32-bit uses 0xFF
++		  repeating for all types and padding.
+ 
+ 	config INIT_STACK_ALL_ZERO
+-		bool "zero-init everything on the stack (strongest and safest)"
++		bool "zero-init everything (strongest and safest)"
+ 		depends on CC_HAS_AUTO_VAR_INIT_ZERO
+ 		help
+-		  Initializes everything on the stack with a zero
+-		  value. This is intended to eliminate all classes
+-		  of uninitialized stack variable exploits and information
+-		  exposures, even variables that were warned to have been
+-		  left uninitialized.
+-
+-		  Zero initialization provides safe defaults for strings,
+-		  pointers, indices and sizes, and is therefore
+-		  more suitable as a security mitigation measure.
++		  Initializes everything on the stack (including padding)
++		  with a zero value. This is intended to eliminate all
++		  classes of uninitialized stack variable exploits and
++		  information exposures, even variables that were warned
++		  about having been left uninitialized.
++
++		  Zero initialization provides safe defaults for strings
++		  (immediately NUL-terminated), pointers (NULL), indices
++		  (index 0), and sizes (0 length), so it is therefore more
++		  suitable as a production security mitigation than pattern
++		  initialization.
+ 
+ endchoice
+ 
+-- 
+2.30.2
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/array-bounds
-
-On 4/21/21 12:40, Kees Cook wrote:
-> On Mon, Apr 19, 2021 at 07:16:31PM -0500, Gustavo A. R. Silva wrote:
->> Fix an 11-year old bug in ngene_command_config_free_buf() while
->> addressing the following warnings caught with -Warray-bounds:
->>
->> arch/alpha/include/asm/string.h:22:16: warning: '__builtin_memcpy' offset [12, 16] from the object at 'com' is out of the bounds of referenced subobject 'config' with type 'unsigned char' at offset 10 [-Warray-bounds]
->> arch/x86/include/asm/string_32.h:182:25: warning: '__builtin_memcpy' offset [12, 16] from the object at 'com' is out of the bounds of referenced subobject 'config' with type 'unsigned char' at offset 10 [-Warray-bounds]
->>
->> The problem is that the original code is trying to copy 6 bytes of
->> data into a one-byte size member _config_ of the wrong structue
->> FW_CONFIGURE_BUFFERS, in a single call to memcpy(). This causes a
->> legitimate compiler warning because memcpy() overruns the length
->> of &com.cmd.ConfigureBuffers.config. It seems that the right
->> structure is FW_CONFIGURE_FREE_BUFFERS, instead, because it contains
->> 6 more members apart from the header _hdr_. Also, the name of
->> the function ngene_command_config_free_buf() suggests that the actual
->> intention is to ConfigureFreeBuffers, instead of ConfigureBuffers
->> (which configuration takes place in the function ngene_command_config_buf(),
->> above).
->>
->> Fix this by enclosing those 6 members of struct FW_CONFIGURE_FREE_BUFFERS
->> into new struct config, and use &com.cmd.ConfigureFreeBuffers.config as
->> the destination address, instead of &com.cmd.ConfigureBuffers.config,
->> when calling memcpy().
->>
->> This also helps with the ongoing efforts to globally enable
->> -Warray-bounds and get us closer to being able to tighten the
->> FORTIFY_SOURCE routines on memcpy().
->>
->> Link: https://github.com/KSPP/linux/issues/109
->> Fixes: dae52d009fc9 ("V4L/DVB: ngene: Initial check-in")
->> Cc: stable@vger.kernel.org
->> Reported-by: kernel test robot <lkp@intel.com>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Nice find! Yeah, this looks like a copy/paste bug but it went unnoticed
-> because it's occupying the same memory via the union. Heh.
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> -Kees
-> 
->> ---
->>  drivers/media/pci/ngene/ngene-core.c |  2 +-
->>  drivers/media/pci/ngene/ngene.h      | 14 ++++++++------
->>  2 files changed, 9 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/media/pci/ngene/ngene-core.c b/drivers/media/pci/ngene/ngene-core.c
->> index 07f342db6701..7481f553f959 100644
->> --- a/drivers/media/pci/ngene/ngene-core.c
->> +++ b/drivers/media/pci/ngene/ngene-core.c
->> @@ -385,7 +385,7 @@ static int ngene_command_config_free_buf(struct ngene *dev, u8 *config)
->>  
->>  	com.cmd.hdr.Opcode = CMD_CONFIGURE_FREE_BUFFER;
->>  	com.cmd.hdr.Length = 6;
->> -	memcpy(&com.cmd.ConfigureBuffers.config, config, 6);
->> +	memcpy(&com.cmd.ConfigureFreeBuffers.config, config, 6);
->>  	com.in_len = 6;
->>  	com.out_len = 0;
->>  
->> diff --git a/drivers/media/pci/ngene/ngene.h b/drivers/media/pci/ngene/ngene.h
->> index 84f04e0e0cb9..3d296f1998a1 100644
->> --- a/drivers/media/pci/ngene/ngene.h
->> +++ b/drivers/media/pci/ngene/ngene.h
->> @@ -407,12 +407,14 @@ enum _BUFFER_CONFIGS {
->>  
->>  struct FW_CONFIGURE_FREE_BUFFERS {
->>  	struct FW_HEADER hdr;
->> -	u8   UVI1_BufferLength;
->> -	u8   UVI2_BufferLength;
->> -	u8   TVO_BufferLength;
->> -	u8   AUD1_BufferLength;
->> -	u8   AUD2_BufferLength;
->> -	u8   TVA_BufferLength;
->> +	struct {
->> +		u8   UVI1_BufferLength;
->> +		u8   UVI2_BufferLength;
->> +		u8   TVO_BufferLength;
->> +		u8   AUD1_BufferLength;
->> +		u8   AUD2_BufferLength;
->> +		u8   TVA_BufferLength;
->> +	} __packed config;
->>  } __attribute__ ((__packed__));
->>  
->>  struct FW_CONFIGURE_UART {
->> -- 
->> 2.27.0
->>
-> 
