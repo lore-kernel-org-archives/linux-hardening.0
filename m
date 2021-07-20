@@ -2,90 +2,189 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E6AC636C8
-	for <linux-hardening@archiver.kernel.org>; Sun, 18 Jul 2021 16:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D6CC12002
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jul 2021 01:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAF6161166
-	for <linux-hardening@archiver.kernel.org>; Sun, 18 Jul 2021 16:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB178611ED
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jul 2021 01:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230225AbhGRQyb (ORCPT
+        id S237406AbhGTAwX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 18 Jul 2021 12:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229474AbhGRQya (ORCPT
+        Mon, 19 Jul 2021 20:52:23 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.110]:23262 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231562AbhGTAPI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 18 Jul 2021 12:54:30 -0400
-X-Greylist: delayed 2311 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 18 Jul 2021 09:51:32 PDT
-Received: from authenticated.a-painless.mh.aa.net.uk (painless-a.thn.aa.net.uk [IPv6:2001:8b0:0:62::26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92674C061762;
-        Sun, 18 Jul 2021 09:51:32 -0700 (PDT)
-Received: from cartman.offog.org ([2001:8b0:83b:b53f::a])
-        by painless-a.thn.aa.net.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ats@offog.org>)
-        id 1m59Pf-0005OO-RQ; Sun, 18 Jul 2021 17:13:07 +0100
-Received: from ats by cartman.offog.org with local (Exim 4.94.2)
-        (envelope-from <ats@offog.org>)
-        id 1m59PT-0003ss-W7; Sun, 18 Jul 2021 17:12:55 +0100
-From:   Adam Sampson <ats@offog.org>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drivers/bluetooth: Remove all strcpy() uses
-References: <20210718153626.18382-1-len.baker@gmx.com>
-Date:   Sun, 18 Jul 2021 17:12:55 +0100
-In-Reply-To: <20210718153626.18382-1-len.baker@gmx.com> (Len Baker's message
-        of "Sun, 18 Jul 2021 17:36:26 +0200")
-Message-ID: <y2awnpnfvnc.fsf@offog.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+        Mon, 19 Jul 2021 20:15:08 -0400
+X-Greylist: delayed 1263 seconds by postgrey-1.27 at vger.kernel.org; Mon, 19 Jul 2021 20:15:07 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id AB97995AF
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Jul 2021 19:34:29 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 5diPmXIrJUcVP5diPmbSpp; Mon, 19 Jul 2021 19:34:29 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nW0eV1Ts9Idn1vqEBQVZi/l1xO20XSwEQFJm3xKZUSk=; b=OWST1RtCmqW2E+qNpLEcXgKHPn
+        2nQ3Jj6ZkOiJ0pnImB633q+ECV+aJGoEnYPUpIPP3z9U4AvLwEvMparH+Ei2blHjythXiK3hLcXHj
+        8u+QA5EkvY/K7rRDCZL3sDzVkvXQUS4S03TjBe3sJwZqVi2DzFl1ATHvJh2l/RCaJKjYcTHIPqqMv
+        Lkz2Au0fNxfWLOlotGgbnBSzSGk3NoOieRquLnaU3W6aEUSykoEmmPR0Ye9V/VmHi2dd+1KlYGgfI
+        k4QNOl1X16vHYwPyNMjODjAw+9A8JrS/BLv8o/IlTAgMI7b5sY7Xoj7b9L6MzQj090kKMbKJlaUru
+        BQdFllBA==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:50338 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1m5diM-0017RG-68; Mon, 19 Jul 2021 19:34:26 -0500
+Subject: Re: [PATCH] media: ngene: Fix out-of-bounds bug in
+ ngene_command_config_free_buf()
+To:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ralph Metzler <rjkm@metzlerbros.de>,
+        Matthias Benesch <twoof7@freenet.de>,
+        Oliver Endriss <o.endriss@gmx.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210420001631.GA45456@embeddedor>
+ <202104211039.31E9785@keescook>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <70836714-f419-8d85-a490-190bc91ba5ae@embeddedor.com>
+Date:   Mon, 19 Jul 2021 19:36:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <202104211039.31E9785@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1m5diM-0017RG-68
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:50338
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Len Baker <len.baker@gmx.com> writes:
+Hi all,
 
-> strcpy() performs no bounds checking on the destination buffer. This
-> could result in linear overflows beyond the end of the buffer, leading
-> to all kinds of misbehaviors. The safe replacement is strscpy() but in
-> this case it is better to use the scnprintf to simplify the arithmetic.
->
-> This is a previous step in the path to remove the strcpy() function
-> entirely from the kernel.
->
-> Signed-off-by: Len Baker <len.baker@gmx.com>
-> ---
->  drivers/bluetooth/btmrvl_sdio.c | 27 +++++++++++++--------------
->  1 file changed, 13 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
-> index cddd350beba3..d6674b367e05 100644
-> --- a/drivers/bluetooth/btmrvl_sdio.c
-> +++ b/drivers/bluetooth/btmrvl_sdio.c
-> @@ -1350,6 +1350,7 @@ static void btmrvl_sdio_coredump(struct device *dev)
->  	u8 *dbg_ptr, *end_ptr, *fw_dump_data, *fw_dump_ptr;
-[...]
-> +			size += scnprintf(fw_dump_ptr + size,
-> +					  sizeof(fw_dump_ptr) - size,
-[...]
-> +			size += scnprintf(fw_dump_ptr + size,
-> +					  sizeof(fw_dump_ptr) - size,
+I'm taking this in my tree[1] for 5.14-rc3.
 
-sizeof(fw_dump_ptr) there looks wrong -- you want the size of the buffer
-it points to (fw_dump_len + 1)?
+Thanks
+--
+Gustavo
 
-Thanks,
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/array-bounds
 
--- 
-Adam Sampson <ats@offog.org>                         <http://offog.org/>
+On 4/21/21 12:40, Kees Cook wrote:
+> On Mon, Apr 19, 2021 at 07:16:31PM -0500, Gustavo A. R. Silva wrote:
+>> Fix an 11-year old bug in ngene_command_config_free_buf() while
+>> addressing the following warnings caught with -Warray-bounds:
+>>
+>> arch/alpha/include/asm/string.h:22:16: warning: '__builtin_memcpy' offset [12, 16] from the object at 'com' is out of the bounds of referenced subobject 'config' with type 'unsigned char' at offset 10 [-Warray-bounds]
+>> arch/x86/include/asm/string_32.h:182:25: warning: '__builtin_memcpy' offset [12, 16] from the object at 'com' is out of the bounds of referenced subobject 'config' with type 'unsigned char' at offset 10 [-Warray-bounds]
+>>
+>> The problem is that the original code is trying to copy 6 bytes of
+>> data into a one-byte size member _config_ of the wrong structue
+>> FW_CONFIGURE_BUFFERS, in a single call to memcpy(). This causes a
+>> legitimate compiler warning because memcpy() overruns the length
+>> of &com.cmd.ConfigureBuffers.config. It seems that the right
+>> structure is FW_CONFIGURE_FREE_BUFFERS, instead, because it contains
+>> 6 more members apart from the header _hdr_. Also, the name of
+>> the function ngene_command_config_free_buf() suggests that the actual
+>> intention is to ConfigureFreeBuffers, instead of ConfigureBuffers
+>> (which configuration takes place in the function ngene_command_config_buf(),
+>> above).
+>>
+>> Fix this by enclosing those 6 members of struct FW_CONFIGURE_FREE_BUFFERS
+>> into new struct config, and use &com.cmd.ConfigureFreeBuffers.config as
+>> the destination address, instead of &com.cmd.ConfigureBuffers.config,
+>> when calling memcpy().
+>>
+>> This also helps with the ongoing efforts to globally enable
+>> -Warray-bounds and get us closer to being able to tighten the
+>> FORTIFY_SOURCE routines on memcpy().
+>>
+>> Link: https://github.com/KSPP/linux/issues/109
+>> Fixes: dae52d009fc9 ("V4L/DVB: ngene: Initial check-in")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Nice find! Yeah, this looks like a copy/paste bug but it went unnoticed
+> because it's occupying the same memory via the union. Heh.
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> -Kees
+> 
+>> ---
+>>  drivers/media/pci/ngene/ngene-core.c |  2 +-
+>>  drivers/media/pci/ngene/ngene.h      | 14 ++++++++------
+>>  2 files changed, 9 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/media/pci/ngene/ngene-core.c b/drivers/media/pci/ngene/ngene-core.c
+>> index 07f342db6701..7481f553f959 100644
+>> --- a/drivers/media/pci/ngene/ngene-core.c
+>> +++ b/drivers/media/pci/ngene/ngene-core.c
+>> @@ -385,7 +385,7 @@ static int ngene_command_config_free_buf(struct ngene *dev, u8 *config)
+>>  
+>>  	com.cmd.hdr.Opcode = CMD_CONFIGURE_FREE_BUFFER;
+>>  	com.cmd.hdr.Length = 6;
+>> -	memcpy(&com.cmd.ConfigureBuffers.config, config, 6);
+>> +	memcpy(&com.cmd.ConfigureFreeBuffers.config, config, 6);
+>>  	com.in_len = 6;
+>>  	com.out_len = 0;
+>>  
+>> diff --git a/drivers/media/pci/ngene/ngene.h b/drivers/media/pci/ngene/ngene.h
+>> index 84f04e0e0cb9..3d296f1998a1 100644
+>> --- a/drivers/media/pci/ngene/ngene.h
+>> +++ b/drivers/media/pci/ngene/ngene.h
+>> @@ -407,12 +407,14 @@ enum _BUFFER_CONFIGS {
+>>  
+>>  struct FW_CONFIGURE_FREE_BUFFERS {
+>>  	struct FW_HEADER hdr;
+>> -	u8   UVI1_BufferLength;
+>> -	u8   UVI2_BufferLength;
+>> -	u8   TVO_BufferLength;
+>> -	u8   AUD1_BufferLength;
+>> -	u8   AUD2_BufferLength;
+>> -	u8   TVA_BufferLength;
+>> +	struct {
+>> +		u8   UVI1_BufferLength;
+>> +		u8   UVI2_BufferLength;
+>> +		u8   TVO_BufferLength;
+>> +		u8   AUD1_BufferLength;
+>> +		u8   AUD2_BufferLength;
+>> +		u8   TVA_BufferLength;
+>> +	} __packed config;
+>>  } __attribute__ ((__packed__));
+>>  
+>>  struct FW_CONFIGURE_UART {
+>> -- 
+>> 2.27.0
+>>
+> 
