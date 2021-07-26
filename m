@@ -2,81 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4268EC4320A
-	for <linux-hardening@archiver.kernel.org>; Sun, 25 Jul 2021 20:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FC2C4320E
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jul 2021 08:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28B0B606A5
-	for <linux-hardening@archiver.kernel.org>; Sun, 25 Jul 2021 20:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE9160F9E
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jul 2021 08:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230272AbhGYTvr (ORCPT
+        id S232776AbhGZHXC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 25 Jul 2021 15:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbhGYTvq (ORCPT
+        Mon, 26 Jul 2021 03:23:02 -0400
+Received: from mail-vs1-f53.google.com ([209.85.217.53]:38487 "EHLO
+        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232684AbhGZHXC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 25 Jul 2021 15:51:46 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A92C061757
-        for <linux-hardening@vger.kernel.org>; Sun, 25 Jul 2021 13:32:16 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:104d::5f6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 3B73C2E5;
-        Sun, 25 Jul 2021 20:32:14 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3B73C2E5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1627245134; bh=7QhT/J297QJT6Cpdjm8wSVongOzafPvd1mgJJWRPlIo=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=aVUV6GVJiw1fuLB9GXqhwGSohd4wOM1cQ4qbk2AhFsvNf2xdQkFZd4RYduwjNp6LJ
-         Iqk8JXcoVJhckFgIK1YgRlGTRjDN9rIvSKuXGIquOfQXO8CIzzo4bTu4HGPGZs+eJO
-         gTQ4Qz+11ftYdzoQI+Opfih0HjccQAUyvn/WKo/sWsJMxy4xoI1RG8i2qsSXTEZqce
-         Yjkq7CpPTQZ6zdyXOnhlqZtCd7NIqlXkMahFYdz5mj307M/sUVcH0sd3rqntdKQxi3
-         huTO/fR/pZrPWMn/djvyW6vZ5hJlL7OTfxYEF1Xl4NImKAK2bRAOIp2ZHcM/H50WO/
-         dUR9rW1NiTV2A==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] deprecated.rst: Include details on "no_hash_pointers"
-In-Reply-To: <20210723200526.3424128-1-keescook@chromium.org>
-References: <20210723200526.3424128-1-keescook@chromium.org>
-Date:   Sun, 25 Jul 2021 14:32:13 -0600
-Message-ID: <87o8aquoc2.fsf@meer.lwn.net>
+        Mon, 26 Jul 2021 03:23:02 -0400
+Received: by mail-vs1-f53.google.com with SMTP id x21so4768195vsx.5;
+        Mon, 26 Jul 2021 01:03:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/noyZVTkaQHv6vOLUtBghVzxTPdSaltUw4+X2m/ShNY=;
+        b=celWk8qjEwrLbUP2WGsqMakjwfggMHGp8XXZun+4hgKfAFXPVIM7aDjwWDCirzecfz
+         55KhmHyZAh8/GFNV7iiaD3TPy2xn3LTsvBaO4T1nsF2iveFq0osFJNZXNLyqxj6w18Cx
+         /NGObxKW4GQkARMVLG1TeD001WGwNivWyBgl5lmiquRd1I9tThXm++IIPf3zCwe/J85B
+         6E4h2/uyBZYTfXnBpgPj0V/7mMJjDi3MwjPU7C4Z2RzqDxiA0kIVoOxRMhVok0XJjQkC
+         oeWRhQulDMgYI6RinUAotZXWqMGNbMj9exwE0aLKb+K63Ons9MugZHj7D5IBk74RYjLb
+         yTnA==
+X-Gm-Message-State: AOAM5309qKR53cWCXVWHiUQUt1ROw3bxkHGqvLf9Trm2leePORcEpS/5
+        cachTVuampAYtkUhOVy6K3NUPJpvodpxVemMFz4=
+X-Google-Smtp-Source: ABdhPJzf+Z6S4cuujdybUhVIxuK2plpAsbI4m9JBxyuIUXfPLjSJnu6lZhHstcUseJO/BJfLNFr8+CQuFiThWHDaX5M=
+X-Received: by 2002:a67:7789:: with SMTP id s131mr8212743vsc.40.1627286609931;
+ Mon, 26 Jul 2021 01:03:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20210725151434.7122-1-len.baker@gmx.com>
+In-Reply-To: <20210725151434.7122-1-len.baker@gmx.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 26 Jul 2021 10:03:18 +0200
+Message-ID: <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
+Subject: Re: [PATCH] drivers/soc: Remove all strcpy() uses in favor of strscpy()
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-hardening@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+Hi Len,
 
-> Linus decided a debug toggle for %p was tolerable, so update the
-> %p deprecation documentation.
+On Sun, Jul 25, 2021 at 5:15 PM Len Baker <len.baker@gmx.com> wrote:
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors. The safe replacement is strscpy().
 >
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Len Baker <len.baker@gmx.com>
+
+Thanks for your patch!
+
 > ---
->  Documentation/process/deprecated.rst | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> This is a task of the KSPP [1]
 >
-> diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-> index 9d83b8db8874..8ced754a5a0f 100644
-> --- a/Documentation/process/deprecated.rst
-> +++ b/Documentation/process/deprecated.rst
-> @@ -164,7 +164,9 @@ Paraphrasing Linus's current `guidance <https://lore.kernel.org/lkml/CA+55aFwQEd
->    up to Linus's scrutiny, maybe you can use "%px", along with making sure
->    you have sensible permissions.
->  
-> -And finally, know that a toggle for "%p" hashing will `not be accepted <https://lore.kernel.org/lkml/CA+55aFwieC1-nAs+NFq9RTwaR8ef9hWa4MjNBWL41F-8wM49eA@mail.gmail.com/>`_.
-> +If you are debugging something where "%p" hashing is causing problems,
-> +you can temporarily boot with the debug flag "`no_hash_pointers
-> +<https://git.kernel.org/linus/5ead723a20e0447bc7db33dc3070b420e5f80aa6>`_".
+> [1] https://github.com/KSPP/linux/issues/88
 
-Applied, thanks.
+Any chance the almost one year old question in that ticket can be
+answered?
 
-jon
+>  drivers/soc/renesas/rcar-sysc.c     |  6 ++++--
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+But please see my comments below...
+
+> --- a/drivers/soc/renesas/r8a779a0-sysc.c
+> +++ b/drivers/soc/renesas/r8a779a0-sysc.c
+> @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
+>         for (i = 0; i < info->num_areas; i++) {
+>                 const struct r8a779a0_sysc_area *area = &info->areas[i];
+>                 struct r8a779a0_sysc_pd *pd;
+> +               size_t area_name_size;
+
+I wouldn't mind a shorter name, like "n".
+
+>
+>                 if (!area->name) {
+>                         /* Skip NULLified area */
+>                         continue;
+>                 }
+>
+> -               pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
+> +               area_name_size = strlen(area->name) + 1;
+> +               pd = kzalloc(sizeof(*pd) + area_name_size, GFP_KERNEL);
+>                 if (!pd) {
+>                         error = -ENOMEM;
+>                         goto out_put;
+>                 }
+>
+> -               strcpy(pd->name, area->name);
+> +               strscpy(pd->name, area->name, area_name_size);
+>                 pd->genpd.name = pd->name;
+>                 pd->pdr = area->pdr;
+>                 pd->flags = area->flags;
+> diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
+> index 53387a72ca00..0eae5ce0eeb0 100644
+> --- a/drivers/soc/renesas/rcar-sysc.c
+> +++ b/drivers/soc/renesas/rcar-sysc.c
+> @@ -396,19 +396,21 @@ static int __init rcar_sysc_pd_init(void)
+>         for (i = 0; i < info->num_areas; i++) {
+>                 const struct rcar_sysc_area *area = &info->areas[i];
+>                 struct rcar_sysc_pd *pd;
+> +               size_t area_name_size;
+
+Likewise.
+
+>
+>                 if (!area->name) {
+>                         /* Skip NULLified area */
+>                         continue;
+>                 }
+>
+> -               pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
+> +               area_name_size = strlen(area->name) + 1;
+> +               pd = kzalloc(sizeof(*pd) + area_name_size, GFP_KERNEL);
+>                 if (!pd) {
+>                         error = -ENOMEM;
+>                         goto out_put;
+>                 }
+>
+> -               strcpy(pd->name, area->name);
+> +               strscpy(pd->name, area->name, area_name_size);
+>                 pd->genpd.name = pd->name;
+>                 pd->ch.chan_offs = area->chan_offs;
+>                 pd->ch.chan_bit = area->chan_bit;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
