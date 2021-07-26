@@ -2,158 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FC2C4320E
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jul 2021 08:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A976C4338F
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jul 2021 19:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE9160F9E
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jul 2021 08:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D65160E08
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jul 2021 19:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232776AbhGZHXC (ORCPT
+        id S229680AbhGZSmQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Jul 2021 03:23:02 -0400
-Received: from mail-vs1-f53.google.com ([209.85.217.53]:38487 "EHLO
-        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232684AbhGZHXC (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Jul 2021 03:23:02 -0400
-Received: by mail-vs1-f53.google.com with SMTP id x21so4768195vsx.5;
-        Mon, 26 Jul 2021 01:03:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/noyZVTkaQHv6vOLUtBghVzxTPdSaltUw4+X2m/ShNY=;
-        b=celWk8qjEwrLbUP2WGsqMakjwfggMHGp8XXZun+4hgKfAFXPVIM7aDjwWDCirzecfz
-         55KhmHyZAh8/GFNV7iiaD3TPy2xn3LTsvBaO4T1nsF2iveFq0osFJNZXNLyqxj6w18Cx
-         /NGObxKW4GQkARMVLG1TeD001WGwNivWyBgl5lmiquRd1I9tThXm++IIPf3zCwe/J85B
-         6E4h2/uyBZYTfXnBpgPj0V/7mMJjDi3MwjPU7C4Z2RzqDxiA0kIVoOxRMhVok0XJjQkC
-         oeWRhQulDMgYI6RinUAotZXWqMGNbMj9exwE0aLKb+K63Ons9MugZHj7D5IBk74RYjLb
-         yTnA==
-X-Gm-Message-State: AOAM5309qKR53cWCXVWHiUQUt1ROw3bxkHGqvLf9Trm2leePORcEpS/5
-        cachTVuampAYtkUhOVy6K3NUPJpvodpxVemMFz4=
-X-Google-Smtp-Source: ABdhPJzf+Z6S4cuujdybUhVIxuK2plpAsbI4m9JBxyuIUXfPLjSJnu6lZhHstcUseJO/BJfLNFr8+CQuFiThWHDaX5M=
-X-Received: by 2002:a67:7789:: with SMTP id s131mr8212743vsc.40.1627286609931;
- Mon, 26 Jul 2021 01:03:29 -0700 (PDT)
+        Mon, 26 Jul 2021 14:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229593AbhGZSmP (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 26 Jul 2021 14:42:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BF3B660F6D;
+        Mon, 26 Jul 2021 19:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627327364;
+        bh=GPp3eOsZSKAJOPnpQxw6ScV5mylXbFIUk8/qVauEq04=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sRQJKN5+ZZ7b4hR/K333Ba3M6ic9UDQDg2eQV5d6mQmKk3gmhDUR16tZJsYcpchyz
+         DEgFHNgFgrItMv6oJm6fa9yciQEgJwxL7/5z9lu75g9YgazCTu8oUp5oVfM1KIcxxd
+         WV1ortnk1ktp03LG9/503rtEoFKkLSQHIcZXt8pHbuVwuNtIrMCJ42L49yTFbp2nPY
+         JVKlhRvnTlBjDiZrHQ3NZgPzcOH7U3v6E1TXu7lCZ04s3Xw+NEss/RTPjrWPQ4BnSd
+         8iM4bHKaKx6ZkWf36Sz0vHEYfP2k45BRtEROXDy5F7WPuccgJormqbmwIUF7S1C9OL
+         uuDB4feGyFw+g==
+Date:   Mon, 26 Jul 2021 14:25:11 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] flow_dissector: Fix out-of-bounds warnings
+Message-ID: <20210726192511.GA23259@embeddedor>
 MIME-Version: 1.0
-References: <20210725151434.7122-1-len.baker@gmx.com>
-In-Reply-To: <20210725151434.7122-1-len.baker@gmx.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 26 Jul 2021 10:03:18 +0200
-Message-ID: <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
-Subject: Re: [PATCH] drivers/soc: Remove all strcpy() uses in favor of strscpy()
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Len,
+Fix the following out-of-bounds warnings:
 
-On Sun, Jul 25, 2021 at 5:15 PM Len Baker <len.baker@gmx.com> wrote:
-> strcpy() performs no bounds checking on the destination buffer. This
-> could result in linear overflows beyond the end of the buffer, leading
-> to all kinds of misbehaviors. The safe replacement is strscpy().
->
-> Signed-off-by: Len Baker <len.baker@gmx.com>
+    net/core/flow_dissector.c: In function '__skb_flow_dissect':
+>> net/core/flow_dissector.c:1104:4: warning: 'memcpy' offset [24, 39] from the object at '<unknown>' is out of the bounds of referenced subobject 'saddr' with type 'struct in6_addr' at offset 8 [-Warray-bounds]
+     1104 |    memcpy(&key_addrs->v6addrs, &iph->saddr,
+          |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     1105 |           sizeof(key_addrs->v6addrs));
+          |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    In file included from include/linux/ipv6.h:5,
+                     from net/core/flow_dissector.c:6:
+    include/uapi/linux/ipv6.h:133:18: note: subobject 'saddr' declared here
+      133 |  struct in6_addr saddr;
+          |                  ^~~~~
+>> net/core/flow_dissector.c:1059:4: warning: 'memcpy' offset [16, 19] from the object at '<unknown>' is out of the bounds of referenced subobject 'saddr' with type 'unsigned int' at offset 12 [-Warray-bounds]
+     1059 |    memcpy(&key_addrs->v4addrs, &iph->saddr,
+          |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     1060 |           sizeof(key_addrs->v4addrs));
+          |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    In file included from include/linux/ip.h:17,
+                     from net/core/flow_dissector.c:5:
+    include/uapi/linux/ip.h:103:9: note: subobject 'saddr' declared here
+      103 |  __be32 saddr;
+          |         ^~~~~
 
-Thanks for your patch!
+The problem is that the original code is trying to copy data into a
+couple of struct members adjacent to each other in a single call to
+memcpy().  So, the compiler legitimately complains about it. As these
+are just a couple of members, fix this by copying each one of them in
+separate calls to memcpy().
 
-> ---
-> This is a task of the KSPP [1]
->
-> [1] https://github.com/KSPP/linux/issues/88
+This helps with the ongoing efforts to globally enable -Warray-bounds
+and get us closer to being able to tighten the FORTIFY_SOURCE routines
+on memcpy().
 
-Any chance the almost one year old question in that ticket can be
-answered?
+Link: https://github.com/KSPP/linux/issues/109
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/d5ae2e65-1f18-2577-246f-bada7eee6ccd@intel.com/
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ net/core/flow_dissector.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
->  drivers/soc/renesas/rcar-sysc.c     |  6 ++++--
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-But please see my comments below...
-
-> --- a/drivers/soc/renesas/r8a779a0-sysc.c
-> +++ b/drivers/soc/renesas/r8a779a0-sysc.c
-> @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
->         for (i = 0; i < info->num_areas; i++) {
->                 const struct r8a779a0_sysc_area *area = &info->areas[i];
->                 struct r8a779a0_sysc_pd *pd;
-> +               size_t area_name_size;
-
-I wouldn't mind a shorter name, like "n".
-
->
->                 if (!area->name) {
->                         /* Skip NULLified area */
->                         continue;
->                 }
->
-> -               pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
-> +               area_name_size = strlen(area->name) + 1;
-> +               pd = kzalloc(sizeof(*pd) + area_name_size, GFP_KERNEL);
->                 if (!pd) {
->                         error = -ENOMEM;
->                         goto out_put;
->                 }
->
-> -               strcpy(pd->name, area->name);
-> +               strscpy(pd->name, area->name, area_name_size);
->                 pd->genpd.name = pd->name;
->                 pd->pdr = area->pdr;
->                 pd->flags = area->flags;
-> diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
-> index 53387a72ca00..0eae5ce0eeb0 100644
-> --- a/drivers/soc/renesas/rcar-sysc.c
-> +++ b/drivers/soc/renesas/rcar-sysc.c
-> @@ -396,19 +396,21 @@ static int __init rcar_sysc_pd_init(void)
->         for (i = 0; i < info->num_areas; i++) {
->                 const struct rcar_sysc_area *area = &info->areas[i];
->                 struct rcar_sysc_pd *pd;
-> +               size_t area_name_size;
-
-Likewise.
-
->
->                 if (!area->name) {
->                         /* Skip NULLified area */
->                         continue;
->                 }
->
-> -               pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
-> +               area_name_size = strlen(area->name) + 1;
-> +               pd = kzalloc(sizeof(*pd) + area_name_size, GFP_KERNEL);
->                 if (!pd) {
->                         error = -ENOMEM;
->                         goto out_put;
->                 }
->
-> -               strcpy(pd->name, area->name);
-> +               strscpy(pd->name, area->name, area_name_size);
->                 pd->genpd.name = pd->name;
->                 pd->ch.chan_offs = area->chan_offs;
->                 pd->ch.chan_bit = area->chan_bit;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+index 2aadbfc5193b..39d7be03e568 100644
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -1056,8 +1056,10 @@ bool __skb_flow_dissect(const struct net *net,
+ 							      FLOW_DISSECTOR_KEY_IPV4_ADDRS,
+ 							      target_container);
+ 
+-			memcpy(&key_addrs->v4addrs, &iph->saddr,
+-			       sizeof(key_addrs->v4addrs));
++			memcpy(&key_addrs->v4addrs.src, &iph->saddr,
++			       sizeof(key_addrs->v4addrs.src));
++			memcpy(&key_addrs->v4addrs.dst, &iph->daddr,
++			       sizeof(key_addrs->v4addrs.dst));
+ 			key_control->addr_type = FLOW_DISSECTOR_KEY_IPV4_ADDRS;
+ 		}
+ 
+@@ -1101,8 +1103,10 @@ bool __skb_flow_dissect(const struct net *net,
+ 							      FLOW_DISSECTOR_KEY_IPV6_ADDRS,
+ 							      target_container);
+ 
+-			memcpy(&key_addrs->v6addrs, &iph->saddr,
+-			       sizeof(key_addrs->v6addrs));
++			memcpy(&key_addrs->v6addrs.src, &iph->saddr,
++			       sizeof(key_addrs->v6addrs.src));
++			memcpy(&key_addrs->v6addrs.dst, &iph->daddr,
++			       sizeof(key_addrs->v6addrs.dst));
+ 			key_control->addr_type = FLOW_DISSECTOR_KEY_IPV6_ADDRS;
+ 		}
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.27.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
