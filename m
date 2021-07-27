@@ -2,100 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEDEC43214
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jul 2021 19:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350FFC4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 10:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B29C160F91
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jul 2021 19:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEB46187C
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 10:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232518AbhGZTJ6 (ORCPT
+        id S236325AbhG0KZV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Jul 2021 15:09:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232200AbhGZTJ4 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Jul 2021 15:09:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8EF7C60F6E;
-        Mon, 26 Jul 2021 19:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627329024;
-        bh=OY4QHbKMFUdP8AA3keGNsfiUB0HzHJXPhbrB/wfhUnQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PDpVaBD9Ja1vZ44gj1HH0vWN0oFgCmbSgQyL5auSzbQ6IiKHGVAw9hJ4s1zSqcyOO
-         ziEYPB9Z1Y52tN09psPnUNdHQPQx50rcEKBjh7RWdIdkfx2mQeafyj6+rRXi3jMS9z
-         bhHS/mQW6uw+BoC3I9iSj8n9uPT4rDxsa0a0IZSEJbV/GT81rBA46OGbL/X5Qi+LGC
-         6Ll/VNHyzgjVNZ0BGsZOo324Z8I0TQ/nepFKN3XGbVJp7wcPsHFOLFPfjebloSK0MC
-         LveG3l9MVHQ9tM0a+3dfAq9gL9yFj5XUEUm+cSXNRYZkFCW8HvfD82nttRbgvWYucL
-         OkE9kCAJEBEHA==
-Date:   Mon, 26 Jul 2021 14:52:51 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ipv4: ip_output.c: Fix out-of-bounds warning in
- ip_copy_addrs()
-Message-ID: <20210726195251.GA25209@embeddedor>
+        Tue, 27 Jul 2021 06:25:21 -0400
+Received: from smtpbg704.qq.com ([203.205.195.105]:54207 "EHLO
+        smtpproxy21.qq.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S236306AbhG0KZS (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 27 Jul 2021 06:25:18 -0400
+X-Greylist: delayed 2697 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Jul 2021 06:25:17 EDT
+X-QQ-mid: bizesmtp43t1627381514tkilclko
+Received: from wangzc-pc.nju.edu.cn (unknown [114.212.83.250])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Tue, 27 Jul 2021 18:25:13 +0800 (CST)
+X-QQ-SSF: 01400000001000B0P000000D0000000
+X-QQ-FEAT: Sadz36CpCaRuYdH8OuHlNdPiWAH4dnF82LN6fr7IdSRKU4EEmQkhe0KfIIG+P
+        U5yKBlaho1YoATB6EIi+ziZKGxKwSRlQyJhYtIDO2rgJm9D2DN96jCxUzE22DJMgXN2xGjT
+        Qlx1bxYL8Td4aUf/zC9bReXDwNiYEbX4fe2xIabSJPGy3y7af5kThUbj4QLj0Zw6qSi6pU2
+        /0XOf+hPdFmkx586ASdR4hgvrlwwloAH43/o+g9jky75M1qxZyZpovycsxxI/OAK/67Yasa
+        pWzoGbR7FiAutx5Yz5dOE8tBtccwwIzy5kPVz9n/THIajGIvnxcv0rkudpsXOZrhvkFK5y1
+        4v8Rembcb8/84c8xOfrxdTVRYTdDSzBWhSObXRA
+X-QQ-GoodBg: 2
+From:   Wang Zi-cheng <wzc@smail.nju.edu.cn>
+To:     linux-hardening@vger.kernel.org
+Cc:     Wang Zi-cheng <wzc@smail.nju.edu.cn>
+Subject: [PATCH] RFC struct const ops pointer member hardening
+Date:   Tue, 27 Jul 2021 18:26:02 +0800
+Message-Id: <20210727102602.259038-1-wzc@smail.nju.edu.cn>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:smail.nju.edu.cn:qybgforeign:qybgforeign5
+X-QQ-Bgrelay: 1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the following out-of-bounds warning:
+Signed-off-by: Wang Zi-cheng <wzc@smail.nju.edu.cn>
+----------------------
+RFC struct const ops pointer member hardening
 
-    In function 'ip_copy_addrs',
-        inlined from '__ip_queue_xmit' at net/ipv4/ip_output.c:517:2:
-net/ipv4/ip_output.c:449:2: warning: 'memcpy' offset [40, 43] from the object at 'fl' is out of the bounds of referenced subobject 'saddr' with type 'unsigned int' at offset 36 [-Warray-bounds]
-      449 |  memcpy(&iph->saddr, &fl4->saddr,
-          |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      450 |         sizeof(fl4->saddr) + sizeof(fl4->daddr));
-          |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+some security sensitive kernel objects, i.e. inode, file, use 'const' to declare operations pointers, 
+and these pointers reference to the static global variables in read only data segment.
 
-The problem is that the original code is trying to copy data into a
-couple of struct members adjacent to each other in a single call to
-memcpy(). This causes a legitimate compiler warning because memcpy()
-overruns the length of &iph->saddr and &fl4->saddr. As these are just
-a couple of struct members, fix this by using direct assignments,
-instead of memcpy().
+```
+struct file {
+  ...
+	const struct file_operations	*f_op;
 
-This helps with the ongoing efforts to globally enable -Warray-bounds
-and get us closer to being able to tighten the FORTIFY_SOURCE routines
-on memcpy().
+const struct file_operations ext4_file_operations = {
+```
 
-Link: https://github.com/KSPP/linux/issues/109
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/d5ae2e65-1f18-2577-246f-bada7eee6ccd@intel.com/
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+However, const pointers are just compile hints with no hardware restrictions and prone to be modified by attakers at runtime.
+
+It would be safer to make sure struct const pointer members are not pointing to malicious payload in the slab objects(direct mapping region).
+
+we only need to check "open" syscall, because most file-related operations start with "open".
+
+On the other side, kernel uses `kmem_cache_create` to alloc file/inode rather than `kmalloc`, 
+which makes it hard to exploit through heap overflow or UAF, so maybe this is not a "must" update.
+----------------------
 ---
- net/ipv4/ip_output.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/pgtable_64_types.h |  3 +++
+ fs/open.c                               |  4 ++++
+ include/linux/mm.h                      | 11 +++++++++++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index 8d8a8da3ae7e..a202dcec0dc2 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -446,8 +446,9 @@ static void ip_copy_addrs(struct iphdr *iph, const struct flowi4 *fl4)
- {
- 	BUILD_BUG_ON(offsetof(typeof(*fl4), daddr) !=
- 		     offsetof(typeof(*fl4), saddr) + sizeof(fl4->saddr));
--	memcpy(&iph->saddr, &fl4->saddr,
--	       sizeof(fl4->saddr) + sizeof(fl4->daddr));
-+
-+	iph->saddr = fl4->saddr;
-+	iph->daddr = fl4->daddr;
+diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+index 91ac10654570..ec6ce27dd3a3 100644
+--- a/arch/x86/include/asm/pgtable_64_types.h
++++ b/arch/x86/include/asm/pgtable_64_types.h
+@@ -133,13 +133,16 @@ extern unsigned int ptrs_per_p4d;
+ # define VMALLOC_START		vmalloc_base
+ # define VMALLOC_SIZE_TB	(pgtable_l5_enabled() ? VMALLOC_SIZE_TB_L5 : VMALLOC_SIZE_TB_L4)
+ # define VMEMMAP_START		vmemmap_base
++# define DIRECT_MAPPING_SIZE_TB 	(pgtable_l5_enabled() ? DIRECT_MAPPING_TB_L5 : DIRECT_MAPPING_TB_L4)
+ #else
+ # define VMALLOC_START		__VMALLOC_BASE_L4
+ # define VMALLOC_SIZE_TB	VMALLOC_SIZE_TB_L4
+ # define VMEMMAP_START		__VMEMMAP_BASE_L4
++# define DIRECT_MAPPING_SIZE_TB		DIRECT_MAPPING_TB_L4
+ #endif /* CONFIG_DYNAMIC_MEMORY_LAYOUT */
+ 
+ #define VMALLOC_END		(VMALLOC_START + (VMALLOC_SIZE_TB << 40) - 1)
++#define DIRECT_MAPPING_END		(__PAGE_OFFSET + (DIRECT_MAPPING_SIZE_TB << 40) - 1)
+ 
+ #define MODULES_VADDR		(__START_KERNEL_map + KERNEL_IMAGE_SIZE)
+ /* The module sections ends with the start of the fixmap */
+diff --git a/fs/open.c b/fs/open.c
+index e53af13b5835..930cbd75e1e2 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -820,6 +820,10 @@ static int do_dentry_open(struct file *f,
+ 
+ 	/* normally all 3 are set; ->open() can clear them if needed */
+ 	f->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
++	/* check if f_op point to malicious payload */
++	WARN_ON (!check_valid_ops_pointer((unsigned long) f->f_op));
++	WARN_ON (!check_valid_ops_pointer((unsigned long) f->f_inode->i_op));
++	
+ 	if (!open)
+ 		open = f->f_op->open;
+ 	if (open) {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 8ae31622deef..75336676006b 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3251,5 +3251,16 @@ static inline int seal_check_future_write(int seals, struct vm_area_struct *vma)
+ 	return 0;
  }
  
- /* Note: skb->sk can be different from sk, in case of tunnels */
++static inline bool check_valid_ops_pointer(unsigned long addr)
++{
++#ifdef CONFIG_X86_64
++	if (addr >= __PAGE_OFFSET && addr <= DIRECT_MAPPING_END) 
++		return false;
++	else
++		return true;
++#endif
++	return true;
++}
++
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
 -- 
-2.27.0
+2.32.0
+
+
 
