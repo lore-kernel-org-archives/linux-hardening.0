@@ -2,143 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350FFC4338F
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 10:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D34C4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 12:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DEB46187C
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 10:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DCE61A3F
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 12:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236325AbhG0KZV (ORCPT
+        id S236284AbhG0Miw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 06:25:21 -0400
-Received: from smtpbg704.qq.com ([203.205.195.105]:54207 "EHLO
-        smtpproxy21.qq.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S236306AbhG0KZS (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jul 2021 06:25:18 -0400
-X-Greylist: delayed 2697 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Jul 2021 06:25:17 EDT
-X-QQ-mid: bizesmtp43t1627381514tkilclko
-Received: from wangzc-pc.nju.edu.cn (unknown [114.212.83.250])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Tue, 27 Jul 2021 18:25:13 +0800 (CST)
-X-QQ-SSF: 01400000001000B0P000000D0000000
-X-QQ-FEAT: Sadz36CpCaRuYdH8OuHlNdPiWAH4dnF82LN6fr7IdSRKU4EEmQkhe0KfIIG+P
-        U5yKBlaho1YoATB6EIi+ziZKGxKwSRlQyJhYtIDO2rgJm9D2DN96jCxUzE22DJMgXN2xGjT
-        Qlx1bxYL8Td4aUf/zC9bReXDwNiYEbX4fe2xIabSJPGy3y7af5kThUbj4QLj0Zw6qSi6pU2
-        /0XOf+hPdFmkx586ASdR4hgvrlwwloAH43/o+g9jky75M1qxZyZpovycsxxI/OAK/67Yasa
-        pWzoGbR7FiAutx5Yz5dOE8tBtccwwIzy5kPVz9n/THIajGIvnxcv0rkudpsXOZrhvkFK5y1
-        4v8Rembcb8/84c8xOfrxdTVRYTdDSzBWhSObXRA
-X-QQ-GoodBg: 2
-From:   Wang Zi-cheng <wzc@smail.nju.edu.cn>
-To:     linux-hardening@vger.kernel.org
-Cc:     Wang Zi-cheng <wzc@smail.nju.edu.cn>
-Subject: [PATCH] RFC struct const ops pointer member hardening
-Date:   Tue, 27 Jul 2021 18:26:02 +0800
-Message-Id: <20210727102602.259038-1-wzc@smail.nju.edu.cn>
-X-Mailer: git-send-email 2.32.0
+        Tue, 27 Jul 2021 08:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231971AbhG0Miw (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 27 Jul 2021 08:38:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7FAC360F51;
+        Tue, 27 Jul 2021 12:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627389532;
+        bh=AD5ouT9mvfsgZly5z4aHDSb6lt2hRORpdoAEEVzrNJI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X9Az5WbEXmubiisPgGnKHk6YCaXrl7wTE5leoHtHKsDEDVi/+frp1wTvRDwTGZJYo
+         mWldMMacFsfG72w/YqxNgd96jO02R7xUY1Vnzi2VPrRTRU4gkCs9mCirOmRStAA95j
+         Z/CXrkZxXF+vsLwKDjVX9EkwbdFjr4kCI8raU7EjmARXsNjZtqHaRaYh+MhKNhVuVq
+         4eFRa0hbNMvlPjItvWCzsQnV7SqxpDizc1ORTkMx9C3ByuuUGCiGdAnOrpniivsQty
+         LeWL/6ORtbfOHQrL5B8EtS74pPv2gZOUkR1C6M/QbjSrcCmT9uuUF92XD0joSVpY7R
+         S4/eQ1mgWeR+w==
+Date:   Tue, 27 Jul 2021 14:38:47 +0200
+From:   Robert Richter <rric@kernel.org>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/edac/edac_mc: Remove all strcpy() uses
+Message-ID: <YP/+V90D6zyxnSyU@rric.localdomain>
+References: <20210725162954.9861-1-len.baker@gmx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:smail.nju.edu.cn:qybgforeign:qybgforeign5
-X-QQ-Bgrelay: 1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210725162954.9861-1-len.baker@gmx.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Signed-off-by: Wang Zi-cheng <wzc@smail.nju.edu.cn>
-----------------------
-RFC struct const ops pointer member hardening
+On 25.07.21 18:29:54, Len Baker wrote:
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors. The safe replacement is strscpy().
+> 
+> However, to add labels is better to use the scnprintf to simplify the
+> arithmetic.
+> 
+> This is a previous step in the path to remove the strcpy() function
+> entirely from the kernel.
+> 
+> Signed-off-by: Len Baker <len.baker@gmx.com>
+> ---
+> This is a task of the KSPP [1]
+> 
+> [1] https://github.com/KSPP/linux/issues/88
+> 
+>  drivers/edac/edac_mc.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index f6d462d0be2d..1286364f0e48 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -1027,6 +1027,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  {
+>  	struct dimm_info *dimm;
+>  	char *p;
+> +	size_t p_size = 0;
 
-some security sensitive kernel objects, i.e. inode, file, use 'const' to declare operations pointers, 
-and these pointers reference to the static global variables in read only data segment.
+I would rather use a 'left' variable which is initialized with
+sizeof(e->label) close to there p = e->label is.
 
-```
-struct file {
-  ...
-	const struct file_operations	*f_op;
+>  	int row = -1, chan = -1;
+>  	int pos[EDAC_MAX_LAYERS] = { top_layer, mid_layer, low_layer };
+>  	int i, n_labels = 0;
+> @@ -1113,12 +1114,11 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			p = e->label;
+>  			*p = '\0';
+>  		} else {
+> -			if (p != e->label) {
+> -				strcpy(p, OTHER_LABEL);
+> -				p += strlen(OTHER_LABEL);
+> -			}
+> -			strcpy(p, dimm->label);
+> -			p += strlen(p);
+> +			const char *or = (p != e->label) ? OTHER_LABEL : "";
+> +
+> +			p_size += scnprintf(p + p_size,
+> +					    sizeof(e->label) - p_size,
+> +					    "%s%s", or, dimm->label);
 
-const struct file_operations ext4_file_operations = {
-```
+My preference is to advance p here (and decrement 'left'). This is the
+pattern how p is used throughout the code. I also don't see a benefit
+of using scnprintf() here compared to the previous implementation.
 
-However, const pointers are just compile hints with no hardware restrictions and prone to be modified by attakers at runtime.
+Thanks,
 
-It would be safer to make sure struct const pointer members are not pointing to malicious payload in the slab objects(direct mapping region).
+-Robert
 
-we only need to check "open" syscall, because most file-related operations start with "open".
-
-On the other side, kernel uses `kmem_cache_create` to alloc file/inode rather than `kmalloc`, 
-which makes it hard to exploit through heap overflow or UAF, so maybe this is not a "must" update.
-----------------------
----
- arch/x86/include/asm/pgtable_64_types.h |  3 +++
- fs/open.c                               |  4 ++++
- include/linux/mm.h                      | 11 +++++++++++
- 3 files changed, 18 insertions(+)
-
-diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index 91ac10654570..ec6ce27dd3a3 100644
---- a/arch/x86/include/asm/pgtable_64_types.h
-+++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -133,13 +133,16 @@ extern unsigned int ptrs_per_p4d;
- # define VMALLOC_START		vmalloc_base
- # define VMALLOC_SIZE_TB	(pgtable_l5_enabled() ? VMALLOC_SIZE_TB_L5 : VMALLOC_SIZE_TB_L4)
- # define VMEMMAP_START		vmemmap_base
-+# define DIRECT_MAPPING_SIZE_TB 	(pgtable_l5_enabled() ? DIRECT_MAPPING_TB_L5 : DIRECT_MAPPING_TB_L4)
- #else
- # define VMALLOC_START		__VMALLOC_BASE_L4
- # define VMALLOC_SIZE_TB	VMALLOC_SIZE_TB_L4
- # define VMEMMAP_START		__VMEMMAP_BASE_L4
-+# define DIRECT_MAPPING_SIZE_TB		DIRECT_MAPPING_TB_L4
- #endif /* CONFIG_DYNAMIC_MEMORY_LAYOUT */
- 
- #define VMALLOC_END		(VMALLOC_START + (VMALLOC_SIZE_TB << 40) - 1)
-+#define DIRECT_MAPPING_END		(__PAGE_OFFSET + (DIRECT_MAPPING_SIZE_TB << 40) - 1)
- 
- #define MODULES_VADDR		(__START_KERNEL_map + KERNEL_IMAGE_SIZE)
- /* The module sections ends with the start of the fixmap */
-diff --git a/fs/open.c b/fs/open.c
-index e53af13b5835..930cbd75e1e2 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -820,6 +820,10 @@ static int do_dentry_open(struct file *f,
- 
- 	/* normally all 3 are set; ->open() can clear them if needed */
- 	f->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
-+	/* check if f_op point to malicious payload */
-+	WARN_ON (!check_valid_ops_pointer((unsigned long) f->f_op));
-+	WARN_ON (!check_valid_ops_pointer((unsigned long) f->f_inode->i_op));
-+	
- 	if (!open)
- 		open = f->f_op->open;
- 	if (open) {
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 8ae31622deef..75336676006b 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3251,5 +3251,16 @@ static inline int seal_check_future_write(int seals, struct vm_area_struct *vma)
- 	return 0;
- }
- 
-+static inline bool check_valid_ops_pointer(unsigned long addr)
-+{
-+#ifdef CONFIG_X86_64
-+	if (addr >= __PAGE_OFFSET && addr <= DIRECT_MAPPING_END) 
-+		return false;
-+	else
-+		return true;
-+#endif
-+	return true;
-+}
-+
- #endif /* __KERNEL__ */
- #endif /* _LINUX_MM_H */
--- 
-2.32.0
-
-
-
+>  		}
+> 
+>  		/*
+> @@ -1140,9 +1140,9 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  	}
+> 
+>  	if (any_memory)
+> -		strcpy(e->label, "any memory");
+> +		strscpy(e->label, "any memory", sizeof(e->label));
+>  	else if (!*e->label)
+> -		strcpy(e->label, "unknown memory");
+> +		strscpy(e->label, "unknown memory", sizeof(e->label));
+> 
+>  	edac_inc_csrow(e, row, chan);
+> 
+> --
+> 2.25.1
+> 
