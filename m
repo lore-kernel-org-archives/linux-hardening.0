@@ -5,55 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2151C19F38
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E75C19F37
 	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 20:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5375761038
+	by mail.kernel.org (Postfix) with ESMTP id 489FA61006
 	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 20:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232985AbhG0U7T (ORCPT
+        id S232888AbhG0U7Q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 16:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54098 "EHLO
+        Tue, 27 Jul 2021 16:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232670AbhG0U7K (ORCPT
+        with ESMTP id S232588AbhG0U7J (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jul 2021 16:59:10 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE769C0617A3
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:09 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id g23-20020a17090a5797b02901765d605e14so996987pji.5
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:09 -0700 (PDT)
+        Tue, 27 Jul 2021 16:59:09 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1415C0617A0
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:08 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id ds11-20020a17090b08cbb0290172f971883bso6643359pjb.1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bokzvyrG/U6aqJMcplPprkAXMLOtluQLvxu28yduQ3I=;
-        b=BRJ6YXZFlzjubx3iY+P/cRdBsRsX9+VYLhU8PHg2kq/i8EQRUyFiRWx/kjBN2fHZ57
-         Rbvn2BG0HVn8p+mlpPeMBNL1FomMRZkRcy6dAl/Lz52OpvlFYUdeYvXs1q7RrMdf5wMe
-         Wym2Ven54uHKxbOOcmPeVL9UTM7qkeunpAHmw=
+        bh=hAtUXOqdIbIKgIXF67i6edRxNnI31C05ADltnD47YVA=;
+        b=KjyaAeWacqkMvH9zZm+BBzMkjACC5HUxdXv9tgcqmihQriCrMtd/DFnnW7F/YrD/ZY
+         Ukevt5iMkwkus4GIj0BPscD7xfNb9o1NPLdX8zvYUy6Vws2evRXwUJ9SqM3iq4seKTMQ
+         0scT3SXeeEgeJXutbDZfzTUKfHAc3euSilyDg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bokzvyrG/U6aqJMcplPprkAXMLOtluQLvxu28yduQ3I=;
-        b=QLGRSKOx+r43rN0oIM398EoWnUYo9vGxhiF1rSFQ4s7MPGpWSDdNtFl8+JiglC3wud
-         SZS3jJcUGXHGCafEL4kWQ+NN9FtPInIWqOMlqazu0O6lLzthNx4869XCdwSYFeOrXi1F
-         iXViDYw3JQ3Qe7nbIfckC5Uft8roJcO6Rn55Bt6vBrZqCKgLioVKudH2HfS2kxXgJbH1
-         W3rQDOG8m9n2xPphNia1B2OvYBTuUrKhDQOeH8r3KA9kpf2P/yZcEv0H61dPjmgdelUh
-         QijjSKtaXCnjf78yjcSnkaeLryxOflDXOnrk1TYj+mO9pymrJpnrztM2gAHzoDwKlplY
-         wyBA==
-X-Gm-Message-State: AOAM533BkXijWINuc6KFz0fp3hkbbRBsKu5pjNpo7CoMBwaYl73hRwj1
-        IggsFn3ICdN6EV7gkcd8eOwBmw==
-X-Google-Smtp-Source: ABdhPJxFkKX2Cb+2kct+lBvPCB88+g8EFFUo2+jlZ/mx9XAKU9M3E91dz4xBGj+tCH29yt2HnGdwfQ==
-X-Received: by 2002:aa7:80d3:0:b029:347:820c:fbf with SMTP id a19-20020aa780d30000b0290347820c0fbfmr25091421pfn.73.1627419549404;
-        Tue, 27 Jul 2021 13:59:09 -0700 (PDT)
+        bh=hAtUXOqdIbIKgIXF67i6edRxNnI31C05ADltnD47YVA=;
+        b=dmKGdTnGDobdspCiyJ9eVSSXgkIaxkr8eh60gbBDU4Rjm1sfpTQF5NsUGEnLFzYZjN
+         2JgAmcWgjuOPrV/NPkYiiDov2PWju9LrSHGHV0y1koCoW6z6C1ktpfLDjCtANvQKtOiQ
+         9cqrJkijKeaTqy7VuYC6q2yNLK1ImoDiseqVojhjirXJMT8qdDa+FRpwpQ//SIIczilV
+         RycG4cv96qmuPwOOZS/2aFpqH8NyceI50apkuxcgTCCMyCv2OEh7i0KKcMbbJtLWxcOo
+         1Cy+g5KP9r9zMwta3R9wj4MSJHziuCFBJWVyEFbLjdWlEDJqr+csm/LAbwU5/T3eAYrg
+         KOkg==
+X-Gm-Message-State: AOAM531GdQDEwlizhsxofPnY5tKTBsVsjTMvTL00y6+y3ESMAegglU+w
+        8Ho85yYlTKHujOneM3TYxknyjw==
+X-Google-Smtp-Source: ABdhPJwKVVacR07W565BalKjkQLpWp2QT/TsDZexTOWZktzaVimKCn1vRk5Czb/MD//fHQXIbyCEWw==
+X-Received: by 2002:a17:90b:3581:: with SMTP id mm1mr5913025pjb.98.1627419548265;
+        Tue, 27 Jul 2021 13:59:08 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b7sm4526752pfl.195.2021.07.27.13.59.08
+        by smtp.gmail.com with ESMTPSA id a23sm4591110pff.43.2021.07.27.13.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 13:59:09 -0700 (PDT)
+        Tue, 27 Jul 2021 13:59:05 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -65,14 +66,14 @@ Cc:     Kees Cook <keescook@chromium.org>,
         netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH 22/64] bnx2x: Use struct_group() for memcpy() region
-Date:   Tue, 27 Jul 2021 13:58:13 -0700
-Message-Id: <20210727205855.411487-23-keescook@chromium.org>
+Subject: [PATCH 10/64] lib80211: Use struct_group() for memcpy() region
+Date:   Tue, 27 Jul 2021 13:58:01 -0700
+Message-Id: <20210727205855.411487-11-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210727205855.411487-1-keescook@chromium.org>
 References: <20210727205855.411487-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3598; h=from:subject; bh=A1ElP4tjKK6Dp0sFHqCrYLWenZcmBSW5YxsW0evE5y8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOFm863HXtOc8ZeFmq+4wnVfKZlM+JRATLTvRzZ tF2gptuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzhQAKCRCJcvTf3G3AJg5IEA CxuS8kVvtGTeWwaE8ktJ8PBB1PQTvGy+LqQckpDdbfcwdWpfpfUaRcWDUYeyxQViauxQkjKX+WtpGq hyus00PTGVEQ+WIyIaFXYIjua1ivJAE+8+FSub7TLXSsMnwjQ+LHHUYqIonTydXZVNbnI26vGNsNW7 ZiV9OdkeutbHuBOgoqWEev1HlbW4+SZ11/dsn9f2pkkzB8YIhMzFPMi81NohsNTWNaJi74eoKX6qCr e5hNPHv43bf04K61+a0YVVBBpstRQLsnB1CKmBSNAfoc0edgbIAlA0OMq9CdvWO82lwYn6tk73H1Th 7fuTfssESoKBnqznYLIApEuQg37xDIDAdFz4SIssl7up5lwyunQcndQRrMZj1Y0tXkcj5w6CCUCWPw lmJrQWyWwVSqc682o6B1DYKJ4oZqFDaiMvdanoCeHEjy6x8afQF7duJMQRMS14TygWN8NoWnEQuqEI a0XvMB5J/4Z8eLg8jRrtFzwMiR9aIWjrHcHSQ+Co9sVbkxRgedeTJXK3HctCj2xHW68hdTNWPREow9 XuwAmRn6yMPi0xBwSZ1DDYkz8HIa5o6cUScE4nvrwcxz17OQhpwTybWpV3OxK3O2n9Oi/oLBwMKtNZ ogeLRK3dAHlvMOQzHJDjzkWma5VuOaPCqM5XgIHjiRuhS4PU0czJaG8Sd63Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3842; h=from:subject; bh=LxMwWIiVXxCqRjC5BkCQhCAsNp5uK9myZ2a4Qy1ipzQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOCS1cmBCRtXI7M3opQcsNvUfw7QHdDVtTF33mg z+crDrWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzggAKCRCJcvTf3G3AJn8DD/ 0T8GLHAQTW4lQjhfBYcVN4KkQX84OyCKR/kM+6CyPh6kkSz3omcb5syI1kQjZZfi9AQMmXGm27pqXs Pfzoata/9c4TApOgEv263SYMjRV3AKeFaFCN+M+Tbki7UCpUotJm9dnRg/YZOUqcEJ2jnQpyukE/h5 WjTdoxGr75vnhyjqxtCW3aafwRG0iXBck5QQofWTgn8C998AMoFRs6Tj6WLGt00Byih284TbE5zULP NoahBowuHSS4qSopyrtMF5eCvftM06BTwO2pAHfSDoGwCRneDXaPTK82hxwFjKQowdrTh4iICk8J6z Jh8Cy9g9/qrCwlclWJxjLE11hOD2f4KFeZpANKSuUdLgh2gQH0XSCj9eew20UORocfAqHkT/RzbRTF SJY0WkjJuqFW0W0eO4eaZyUsWJHuNBEL3OEenTA/cKGL5oil0bnf+evfjR6n7xJYUez++9bbUL8NyK mwpGoz6NjtaMd6T6SdpdeK3SjBHnQVR7cnuN787a4kSO0UGQ/qiXd510dvC35+ROc9KccdBJQ9O8UG j59WtvEuYIf3wGvX7Gxat7V2DjodwzEvDiy+CyhMLXhp2kdRYaftK+hlMfdh3hvdX9HK1wsHqnZZNW 2jIB6Lm8e5R4+zKVC9MC8ZxvWDlXi8uYXm03gL2lKA5E1/cQXWrwqyFnfZrw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -83,91 +84,88 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memcpy(), memmove(), and memset(), avoid
 intentionally writing across neighboring fields.
 
-Use struct_group() in struct nig_stats around members egress_mac_pkt0_lo,
-egress_mac_pkt0_hi, egress_mac_pkt1_lo, and egress_mac_pkt1_hi (and the
-respective members in struct bnx2x_eth_stats), so they can be referenced
-together. This will allow memcpy() and sizeof() to more easily reason
-about sizes, improve readability, and avoid future warnings about writing
-beyond the end of struct bnx2x_eth_stats's rx_stat_ifhcinbadoctets_hi.
+Use struct_group() around members addr1, addr2, and addr3 in struct
+ieee80211_hdr so they can be referenced together. This will allow memcpy()
+and sizeof() to more easily reason about sizes, improve readability,
+and avoid future warnings about writing beyond the end of addr1.
 
-"pahole" shows no size nor member offset changes to either struct.
+"pahole" shows no size nor member offset changes to struct ieee80211_hdr.
 "objdump -d" shows no meaningful object code changes (i.e. only source
 line number induced differences and optimizations).
 
-Additionally adds BUILD_BUG_ON() to compare the separate struct group
-sizes.
-
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.c |  7 ++++---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h | 14 ++++++++++----
- 2 files changed, 14 insertions(+), 7 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_security.c | 5 +++--
+ drivers/staging/rtl8723bs/core/rtw_xmit.c     | 5 +++--
+ include/linux/ieee80211.h                     | 8 +++++---
+ net/wireless/lib80211_crypt_ccmp.c            | 3 ++-
+ 4 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.c
-index 0b193edb73b8..2bb133ae61c3 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.c
-@@ -849,7 +849,8 @@ static int bnx2x_hw_stats_update(struct bnx2x *bp)
+diff --git a/drivers/staging/rtl8723bs/core/rtw_security.c b/drivers/staging/rtl8723bs/core/rtw_security.c
+index a99f439328f1..be7cf42855a1 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_security.c
++++ b/drivers/staging/rtl8723bs/core/rtw_security.c
+@@ -1421,8 +1421,9 @@ u32 rtw_BIP_verify(struct adapter *padapter, u8 *precvframe)
+ 		ClearRetry(BIP_AAD);
+ 		ClearPwrMgt(BIP_AAD);
+ 		ClearMData(BIP_AAD);
+-		/* conscruct AAD, copy address 1 to address 3 */
+-		memcpy(BIP_AAD+2, pwlanhdr->addr1, 18);
++		/* conscruct AAD, copy address 1 through address 3 */
++		BUILD_BUG_ON(sizeof(pwlanhdr->addrs) != 3 * ETH_ALEN);
++		memcpy(BIP_AAD + 2, &pwlanhdr->addrs, 3 * ETH_ALEN);
  
- 	memcpy(old, new, sizeof(struct nig_stats));
- 
--	memcpy(&(estats->rx_stat_ifhcinbadoctets_hi), &(pstats->mac_stx[1]),
-+	BUILD_BUG_ON(sizeof(estats->shared) != sizeof(pstats->mac_stx[1]));
-+	memcpy(&(estats->shared), &(pstats->mac_stx[1]),
- 	       sizeof(struct mac_stx));
- 	estats->brb_drop_hi = pstats->brb_drop_hi;
- 	estats->brb_drop_lo = pstats->brb_drop_lo;
-@@ -1634,9 +1635,9 @@ void bnx2x_stats_init(struct bnx2x *bp)
- 			REG_RD(bp, NIG_REG_STAT0_BRB_TRUNCATE + port*0x38);
- 	if (!CHIP_IS_E3(bp)) {
- 		REG_RD_DMAE(bp, NIG_REG_STAT0_EGRESS_MAC_PKT0 + port*0x50,
--			    &(bp->port.old_nig_stats.egress_mac_pkt0_lo), 2);
-+			    &(bp->port.old_nig_stats.egress_mac_pkt0), 2);
- 		REG_RD_DMAE(bp, NIG_REG_STAT0_EGRESS_MAC_PKT1 + port*0x50,
--			    &(bp->port.old_nig_stats.egress_mac_pkt1_lo), 2);
-+			    &(bp->port.old_nig_stats.egress_mac_pkt1), 2);
- 	}
- 
- 	/* Prepare statistics ramrod data */
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
-index d55e63692cf3..ae93c078707b 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
-@@ -36,10 +36,14 @@ struct nig_stats {
- 	u32 pbf_octets;
- 	u32 pbf_packet;
- 	u32 safc_inp;
--	u32 egress_mac_pkt0_lo;
--	u32 egress_mac_pkt0_hi;
--	u32 egress_mac_pkt1_lo;
--	u32 egress_mac_pkt1_hi;
-+	struct_group(egress_mac_pkt0,
-+		u32 egress_mac_pkt0_lo;
-+		u32 egress_mac_pkt0_hi;
+ 		if (omac1_aes_128(padapter->securitypriv.dot11wBIPKey[padapter->securitypriv.dot11wBIPKeyid].skey
+ 			, BIP_AAD, ori_len, mic))
+diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+index 79e4d7df1ef5..cb47db784130 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
++++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+@@ -1198,8 +1198,9 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, struct sk_buff *pkt, s
+ 		ClearRetry(BIP_AAD);
+ 		ClearPwrMgt(BIP_AAD);
+ 		ClearMData(BIP_AAD);
+-		/* conscruct AAD, copy address 1 to address 3 */
+-		memcpy(BIP_AAD+2, pwlanhdr->addr1, 18);
++		/* conscruct AAD, copy address 1 through address 3 */
++		BUILD_BUG_ON(sizeof(pwlanhdr->addrs) != 3 * ETH_ALEN);
++		memcpy(BIP_AAD + 2, &pwlanhdr->addrs, 3 * ETH_ALEN);
+ 		/* copy management fram body */
+ 		memcpy(BIP_AAD+BIP_AAD_SIZE, MGMT_body, frame_body_len);
+ 		/* calculate mic */
+diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
+index a6730072d13a..d7932b520aaf 100644
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -297,9 +297,11 @@ static inline u16 ieee80211_sn_sub(u16 sn1, u16 sn2)
+ struct ieee80211_hdr {
+ 	__le16 frame_control;
+ 	__le16 duration_id;
+-	u8 addr1[ETH_ALEN];
+-	u8 addr2[ETH_ALEN];
+-	u8 addr3[ETH_ALEN];
++	struct_group(addrs,
++		u8 addr1[ETH_ALEN];
++		u8 addr2[ETH_ALEN];
++		u8 addr3[ETH_ALEN];
 +	);
-+	struct_group(egress_mac_pkt1,
-+		u32 egress_mac_pkt1_lo;
-+		u32 egress_mac_pkt1_hi;
-+	);
- };
- 
- enum bnx2x_stats_event {
-@@ -83,6 +87,7 @@ struct bnx2x_eth_stats {
- 	u32 no_buff_discard_hi;
- 	u32 no_buff_discard_lo;
- 
-+	struct_group(shared,
- 	u32 rx_stat_ifhcinbadoctets_hi;
- 	u32 rx_stat_ifhcinbadoctets_lo;
- 	u32 tx_stat_ifhcoutbadoctets_hi;
-@@ -159,6 +164,7 @@ struct bnx2x_eth_stats {
- 	u32 tx_stat_dot3statsinternalmactransmiterrors_lo;
- 	u32 tx_stat_bmac_ufl_hi;
- 	u32 tx_stat_bmac_ufl_lo;
-+	);
- 
- 	u32 pause_frames_received_hi;
- 	u32 pause_frames_received_lo;
+ 	__le16 seq_ctrl;
+ 	u8 addr4[ETH_ALEN];
+ } __packed __aligned(2);
+diff --git a/net/wireless/lib80211_crypt_ccmp.c b/net/wireless/lib80211_crypt_ccmp.c
+index 6a5f08f7491e..21d7c39bb394 100644
+--- a/net/wireless/lib80211_crypt_ccmp.c
++++ b/net/wireless/lib80211_crypt_ccmp.c
+@@ -136,7 +136,8 @@ static int ccmp_init_iv_and_aad(const struct ieee80211_hdr *hdr,
+ 	pos = (u8 *) hdr;
+ 	aad[0] = pos[0] & 0x8f;
+ 	aad[1] = pos[1] & 0xc7;
+-	memcpy(aad + 2, hdr->addr1, 3 * ETH_ALEN);
++	BUILD_BUG_ON(sizeof(hdr->addrs) != 3 * ETH_ALEN);
++	memcpy(aad + 2, &hdr->addrs, ETH_ALEN);
+ 	pos = (u8 *) & hdr->seq_ctrl;
+ 	aad[20] = pos[0] & 0x0f;
+ 	aad[21] = 0;		/* all bits masked */
 -- 
 2.30.2
 
