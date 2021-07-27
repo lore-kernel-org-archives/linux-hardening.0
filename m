@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6F1C4338F
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE2CC4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39CAB60F6C
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D2360F6C
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234161AbhG0VHj (ORCPT
+        id S232465AbhG0VHt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 17:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55870 "EHLO
+        Tue, 27 Jul 2021 17:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232923AbhG0VG6 (ORCPT
+        with ESMTP id S233843AbhG0VHO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jul 2021 17:06:58 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B49C06179C
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 14:06:55 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id ca5so1790415pjb.5
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 14:06:55 -0700 (PDT)
+        Tue, 27 Jul 2021 17:07:14 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81054C0617BF
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 14:07:01 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id i1so2522plr.9
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 14:07:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KNJkxRbTZjBfSAYGR3816TShm8Emkoyf8ZdfkqPS+FQ=;
-        b=TTGjFuoejzZ4UcURjJ4pPdNPDe9Jn5SyFBfglcq90IykesIiOVEkCdbcD/m3+qhdva
-         slQ4ePKQ6iwR++JiczF3JHBNNuTp4LyRmWMRuqTcdz+fw6qszodvFvFG5Ibp5X/LllWc
-         +fRyxKvk7rn5leQezWTlqBpgyuWYKt8lRuKMI=
+        bh=MXKHRxMVkVHDhZ+T8UiWjZTM6Vum4iJmblaVt4bfwFs=;
+        b=QpC9SEfvlX7NSN3JfA2BC35zgCfrRNM89W+45O2qaetJB35LhamFXcVq9sw1mHkTeW
+         /rqrtm+yHWSsc0IMWxYyPILgag6o+lXtAWSh9S38wjvoh0M06iGGbo4ZAdR2u94jE/Bx
+         ERMjdPmbTbLpNm0w77EfMtJW7fsMMDFF057oc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KNJkxRbTZjBfSAYGR3816TShm8Emkoyf8ZdfkqPS+FQ=;
-        b=GoJ4uKadEh+z2iWSrTB9XHitwZnsJ30whnlxLb/ECC86fJEHzpGukvolPXMnJnyh/H
-         YrKV7XKZLcJLFtE75PwqPWFcQ6ErmZcQHVZPsl0oItVXlTgEEzcEgqlCT62lOkNeiqEr
-         HKStUdl9kPuOxY0t+yc/I1ULeUo2QJYI/NdooicXgrNbW4CCBcxAMtXhtDEsxw6Tj+1E
-         lnR88JMv/qTgm7U4WinM+nDfaoCPu4wGQGhxSGlcMgusCJfN+gVL5GBTmEAbhu/5YPMs
-         HBda6w0nqmrcDAOaLEUHgyosNNBzmtDuYP85P8JICri+GuTDZy7l2lcpRxKe3iNQiGqd
-         0pZg==
-X-Gm-Message-State: AOAM532O62uf1q3cPnw5vUPcx5XhgKermg6OKPA2dZuOLsocfw6kMC+Q
-        1CYDtgrGum+qBPBEE9hX4AhNTQ==
-X-Google-Smtp-Source: ABdhPJz8+E+SDb3LoAbaQEcUj/nENGUTPsEXTKFEfKJ+U87AixQ7X8CbyjH9KY5gO+50OJnIiipy2w==
-X-Received: by 2002:a17:90a:5a4c:: with SMTP id m12mr6207285pji.15.1627420014655;
-        Tue, 27 Jul 2021 14:06:54 -0700 (PDT)
+        bh=MXKHRxMVkVHDhZ+T8UiWjZTM6Vum4iJmblaVt4bfwFs=;
+        b=cu+LYybh5UzMZAc9qh1DZAZE4x853JWxKroy1dOZotCUxm2F0kw/qILyvJKikGQeKH
+         GqNkyybCvnMs43tWTjXwGwGac8c4MHZzNfPT6Yj4yT2K4Nbh7J+CjlMGdzmRAOLsH3kU
+         QIdzyfS0oXIL443o9x5i9MUpHbZZPfqtpRJ6ahIg/YFb9gTrf1W+RcOpU8cy81VvQ48G
+         zClwjrdYKvGwWX2sTHCFw6dQlzn1Uaa5tuk56kQ+3SOaQX8XFzbiqXTa5tlSDsUHA0mj
+         wbKDUKwnkkeooUv5YmL30YmV03v1zqpQJ01V3CyCGDhhIKTikN42orFLi9RQ1F+s1qyV
+         ux+Q==
+X-Gm-Message-State: AOAM532IE7t11Gg4OMhLmdbDlhQBK9JcSoy2suoQ+9QhsyKmEXrhJFSj
+        HhYohRYRtCgkaDW9ZbLc6aAfrA==
+X-Google-Smtp-Source: ABdhPJyuaoJo7hoFf8hTjNgbyLAts3NdgvoF/5uezLGJPhXywqIjaeGrS9UFbajj1vPPHXYDl+4KUQ==
+X-Received: by 2002:a05:6a00:1582:b029:332:67bf:c196 with SMTP id u2-20020a056a001582b029033267bfc196mr25270650pfk.52.1627420021064;
+        Tue, 27 Jul 2021 14:07:01 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g8sm4556875pfu.30.2021.07.27.14.06.50
+        by smtp.gmail.com with ESMTPSA id h9sm3809707pjk.56.2021.07.27.14.06.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 14:06:50 -0700 (PDT)
+        Tue, 27 Jul 2021 14:06:55 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -66,14 +66,14 @@ Cc:     Kees Cook <keescook@chromium.org>,
         netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH 44/64] iw_cxgb4: Use memset_after() for cpl_t5_pass_accept_rpl
-Date:   Tue, 27 Jul 2021 13:58:35 -0700
-Message-Id: <20210727205855.411487-45-keescook@chromium.org>
+Subject: [PATCH 39/64] mac80211: Use memset_after() to clear tx status
+Date:   Tue, 27 Jul 2021 13:58:30 -0700
+Message-Id: <20210727205855.411487-40-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210727205855.411487-1-keescook@chromium.org>
 References: <20210727205855.411487-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2100; h=from:subject; bh=gV9IZTM5qU7jcRGph/XDG3+fKRJKxoN9HOMcsfOyL0A=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOK/UN78x/osAzwgMKupSwSrhwjEeLTXqK++CZi 7CH6/zyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzigAKCRCJcvTf3G3AJi+aD/ 9wSoxGLjbf3nMxhdx0FTNoLb7tUlFlGp+wsA1eq4h8eLG5OlOTzsA8IwsIgBPWp2/c4lh/3h8Wej9u tFFoUjbe3EwfDLU01dywIYam3R6J6s+TD7jpKeWz0MWD2NFKTvNmK/r5nlDA+crVlsHLnuBl7ozHdp Uoh/Bz4xC9nN82aPUAif26+yocqytHa2sw58nHCezNegk9sqBcHUCoNnFodMubFs/UgzD7hGOsd+1B aOhnYDdb2QaqaHaKTplZpcofR90e0xKWhk0CRSg83IE3RApySZo8s2Q4xTS1Ma3eB82/7z+gvwQXWY hia/xw+mpgLBcAZ0jCu/itWg4QCogWD2bkotmQJEfjL9TXjZCGUa2NGLC/CnEfFKcyutnljBecv1EH 0Q9xXQNOo4tw2JZcb6z7NV4dR0L+tjj3BeFNlPgNbG4VgwmG7uKubRriMRe5NSZBE38cW0fSq5rQ3Y T/5J6pZ+p6FMSSVheYF8tjScBuAHu1NRrxeGGj9Wx4M222kdbmFmeXqMdbCPWOgSfuuCWozDcs7p7z +9BLk6YAP2L0i/Fh9KBLAPtQ43onOWXv77p4r/RE/gXudIT6F++lAYSdbKOI9/3skSabDHdxRbQYhk 1gswdeOGaLRaDVm2CSKXSrfli04Bjbp+JUMycYvzS0p20FUxvYZuh3eQYepg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2852; h=from:subject; bh=zkH2Je2qGKqyQkSiaJEoBpiopw/INo+50iT5U6QcyXI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOJovWFhW+3LgOdJB6YTmyNLx9mPkMh18BW/VNJ BOSsU16JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBziQAKCRCJcvTf3G3AJj8qD/ 9f25pzpuHDI7d5bSyGKts0iDOiz738IV/yhdknEcL4rC+JiQ/OTrFsGvAMK4zbyT6SQdRvwS0HsQtW FYEY3eOTO0eTLsnAGwNaxw3v5PWM7YYyFygBYMhIhpCgVOighF6YCT2xPnQ7LTyYdpD6L907wxXQ8j oXJcLb9fiEh1t6mn0/dicUHKyTwKkM3fIt2Gx4jCa1Ahv5gyWFd8/4Lv2Yd8KCGn/qxkTG1noBJf5C 2f2h93mKKljmD+CJrJzh/ZYUKpdAY63NSAR4QmZHT60LwkIYj0Fml9G4YK2meArKeNsA1MmJjOiSI6 VkDc7dPKwda9+aKjazu66ex6TqkUbOA0oaukDd2Rq6affQhlkFzRMDK6xCOTPFSye9KgRo0AGn0Klz ni+fmXKvOFIQYweU5qyOYDeL9tYUxQqUBJ6xchOdLgNXFSn5zy34UvmTQoqrVdOTKt+ImUcuGG23jI EEF20MHn/CZclwSMToQj+7lt9iWIQlJAvkfgdTS5zOajot+7oVFGJNYCGUneXC6jvsB+pZPMryc6uu HiwAJXVMsA04PW1mZDRt3xVTJJXADFBiu1CYcDhtJQH//Kmpo9Ydh7kPS4mFHHztPd+qOEZ0St7xxf dvAPnwZQNjibJgICAOUq6/ISKZEK5Qq848MAz7EEKrmQeFoCi4Q4SxSehYJw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -86,53 +86,66 @@ neighboring fields.
 
 Use memset_after() so memset() doesn't get confused about writing
 beyond the destination member that is intended to be the starting point
-of zeroing through the end of the struct. Additionally, since everything
-appears to perform a roundup (including allocation), just change the
-size of the struct itself and add a build-time check to validate the
-expected size.
+of zeroing through the end of the struct.
+
+Note that the common helper, ieee80211_tx_info_clear_status(), does NOT
+clear ack_signal, but the open-coded versions do. All three perform
+checks that the ack_signal position hasn't changed, though.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c            | 5 +++--
- drivers/net/ethernet/chelsio/cxgb4/t4_msg.h | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Should these each be clearing the same region? Because they're currently not.
+---
+ drivers/net/wireless/ath/carl9170/tx.c   | 4 +---
+ drivers/net/wireless/intersil/p54/txrx.c | 4 +---
+ include/net/mac80211.h                   | 4 +---
+ 3 files changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index 291471d12197..7129ae025b2d 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -2471,7 +2471,8 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
- 	skb_get(skb);
- 	rpl = cplhdr(skb);
- 	if (!is_t4(adapter_type)) {
--		skb_trim(skb, roundup(sizeof(*rpl5), 16));
-+		BUILD_BUG_ON(sizeof(*rpl5) != roundup(sizeof(*rpl5), 16));
-+		skb_trim(skb, sizeof(*rpl5));
- 		rpl5 = (void *)rpl;
- 		INIT_TP_WR(rpl5, ep->hwtid);
- 	} else {
-@@ -2487,7 +2488,7 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
- 		opt2 |= CONG_CNTRL_V(CONG_ALG_TAHOE);
- 		opt2 |= T5_ISS_F;
- 		rpl5 = (void *)rpl;
--		memset(&rpl5->iss, 0, roundup(sizeof(*rpl5)-sizeof(*rpl), 16));
-+		memset_after(rpl5, 0, opt0);
- 		if (peer2peer)
- 			isn += 4;
- 		rpl5->iss = cpu_to_be32(isn);
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h b/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
-index fed5f93bf620..26433a62d7f0 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
-@@ -497,7 +497,7 @@ struct cpl_t5_pass_accept_rpl {
- 	__be32 opt2;
- 	__be64 opt0;
- 	__be32 iss;
--	__be32 rsvd;
-+	__be32 rsvd[3];
- };
+diff --git a/drivers/net/wireless/ath/carl9170/tx.c b/drivers/net/wireless/ath/carl9170/tx.c
+index 88444fe6d1c6..6d2115639434 100644
+--- a/drivers/net/wireless/ath/carl9170/tx.c
++++ b/drivers/net/wireless/ath/carl9170/tx.c
+@@ -278,9 +278,7 @@ static void carl9170_tx_release(struct kref *ref)
+ 	BUILD_BUG_ON(
+ 	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
  
- struct cpl_act_open_req {
+-	memset(&txinfo->status.ack_signal, 0,
+-	       sizeof(struct ieee80211_tx_info) -
+-	       offsetof(struct ieee80211_tx_info, status.ack_signal));
++	memset_after(&txinfo->status, 0, rates);
+ 
+ 	if (atomic_read(&ar->tx_total_queued))
+ 		ar->tx_schedule = true;
+diff --git a/drivers/net/wireless/intersil/p54/txrx.c b/drivers/net/wireless/intersil/p54/txrx.c
+index 873fea59894f..f71b355f8583 100644
+--- a/drivers/net/wireless/intersil/p54/txrx.c
++++ b/drivers/net/wireless/intersil/p54/txrx.c
+@@ -431,9 +431,7 @@ static void p54_rx_frame_sent(struct p54_common *priv, struct sk_buff *skb)
+ 	 * Clear manually, ieee80211_tx_info_clear_status would
+ 	 * clear the counts too and we need them.
+ 	 */
+-	memset(&info->status.ack_signal, 0,
+-	       sizeof(struct ieee80211_tx_info) -
+-	       offsetof(struct ieee80211_tx_info, status.ack_signal));
++	memset_after(&info->status, 0, rates);
+ 	BUILD_BUG_ON(offsetof(struct ieee80211_tx_info,
+ 			      status.ack_signal) != 20);
+ 
+diff --git a/include/net/mac80211.h b/include/net/mac80211.h
+index d8a1d09a2141..7abc1427aa8c 100644
+--- a/include/net/mac80211.h
++++ b/include/net/mac80211.h
+@@ -1200,9 +1200,7 @@ ieee80211_tx_info_clear_status(struct ieee80211_tx_info *info)
+ 
+ 	BUILD_BUG_ON(
+ 	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
+-	memset(&info->status.ampdu_ack_len, 0,
+-	       sizeof(struct ieee80211_tx_info) -
+-	       offsetof(struct ieee80211_tx_info, status.ampdu_ack_len));
++	memset_after(&info->status, 0, ack_signal);
+ }
+ 
+ 
 -- 
 2.30.2
 
