@@ -2,62 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-24.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ACFC4338F
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732B6C4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31FE860FA0
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E2260F6D
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233739AbhG0VAk (ORCPT
+        id S232719AbhG0VAr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 17:00:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
+        Tue, 27 Jul 2021 17:00:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233697AbhG0U7o (ORCPT
+        with ESMTP id S232714AbhG0U7o (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Tue, 27 Jul 2021 16:59:44 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF60C0619D7
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66378C0619D3
         for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:13 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id e14so17701880plh.8
+Received: by mail-pj1-x102d.google.com with SMTP id m1so1827894pjv.2
         for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vRBStJlDhZm0d9eTtG5cRn3WlrdJwJNmuGhxV2K5EZo=;
-        b=Nsz8DWljVaxUV6IjBgBUCk1PKkbZhxU5GBCfudGyn6bedsv1Ex+WBSMOLSEz7G7MgN
-         WAOh3b8WcpvZHC/rIjR95hnJWlWBQ/sOSeDYDJSdrWGDY1nyNgJogzpPcbea8ng/yF2+
-         b7TY+b4L/qmqRTkRVDoo5D5RnEKDBdQLyajYo=
+        bh=VM7uWZbkUfYnHDd5ZNIAVnDbZvywZy43PN6h2gF7C7c=;
+        b=oBkhd6x8PpRaO8QoO+UEqARpklYQ85EbQwaaqZSpUTzsIkrs1pGiuH526VcUurLUkS
+         +gkvSbxFz3vGB1BF1YQeauyWi9ev8hnzhng3t5uiTcBEZberDOU2lSJPBM+aa6yDkfTe
+         HmjxMNfk6GT/foIn5FNaX7+ENNmF5UhcQ22mM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vRBStJlDhZm0d9eTtG5cRn3WlrdJwJNmuGhxV2K5EZo=;
-        b=SL6mRFGzrAUUavIu8TFseefd+sdhL3OCckwjw/bKCr9cRB+7JUj9mUZijZZNohNnrZ
-         K79ctJSvkMO0CM5MoF5rL7gs+qYer7yKjhKDiOAE/cFZi0g04E1iHvPdTd4SRJ7vwcmk
-         +DDjD2WAoi4kTR+P/uD071rOEe6QRkHbWr6jmPECnWJJWPr/zPckBBZtHnuw2N2Gw/Ff
-         N/cWdOvysPaau4+yCREWHiPsQk2hFgumbJZ0y/+qBpRi2isDXPrPSscH299Y1qOKq4ln
-         5MntfL5kYRctsHompDCrK73Smwa0LpAwFUe+Zh6MK19b9Xjgek9Rbs6C4VwzviwV49oH
-         CUmg==
-X-Gm-Message-State: AOAM530lJp2PsdNly6lDJEYUosVAHj8kkRxRN/2M/8SpUa+K1zOTtnhU
-        18fcwq8dKX2eMk6fHF5FKx8e+w==
-X-Google-Smtp-Source: ABdhPJyhWTh26zwaflmu8tgo3ARiqPdvOo/hYrckDCizLtD3AW+7DzGVFSehDuB/fG3mAAGw3NVedw==
-X-Received: by 2002:a63:67c5:: with SMTP id b188mr25442155pgc.333.1627419553101;
-        Tue, 27 Jul 2021 13:59:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f4sm5114945pgi.68.2021.07.27.13.59.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=VM7uWZbkUfYnHDd5ZNIAVnDbZvywZy43PN6h2gF7C7c=;
+        b=QAM69UT195ZkPBGgtoQhghRBYTpHniYoBEfLwA2OmIgm3vBcuEKadATuTExl+FXwQl
+         UKKjF1IT9i4EG+mxsfr7caNbQn+IrWeItKUZO13/7gCLLrXc7gslXQrEwG/XPkooG3xh
+         jGqCVtiDOgfw87hwNZLFSApJPY3/DAxTRH/7ZD0dwZZptdXXvkDHloJoBcKeIHwyxKuh
+         Y++Pv7VLDBQvPCo7naTmqGrCm+CJsNldcON2QzBNnqHkiX+YfEJN2XIWaualLGvLP1kS
+         6Wwcd6oVGiFnRqwld60tgJOEahD4MX0jUdGC7+Kewld2IR9BFfWobmYIDoyM7SKcSkOx
+         mV/w==
+X-Gm-Message-State: AOAM5334J7RC1SjIemy3h+hyTGvPFqB4pwOQfdDlBiSei2rPFxk/hBhE
+        tpgcUmxu98pdMV1ZmQU2N+4ipA==
+X-Google-Smtp-Source: ABdhPJzvwIujwX2h82eYkbdvoMbJ+ZJVnzoCXczVsCM4H67j0yiuDjVnUU+OKLLA11yr/7OVmcSq6g==
+X-Received: by 2002:a63:b4d:: with SMTP id a13mr22272005pgl.404.1627419552873;
         Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e23sm3796816pjt.8.2021.07.27.13.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jul 2021 13:59:09 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Keith Packard <keithpac@amazon.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -66,56 +67,74 @@ Cc:     Kees Cook <keescook@chromium.org>,
         netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH 31/64] fortify: Explicitly disable Clang support
-Date:   Tue, 27 Jul 2021 13:58:22 -0700
-Message-Id: <20210727205855.411487-32-keescook@chromium.org>
+Subject: [PATCH 28/64] compiler_types.h: Remove __compiletime_object_size()
+Date:   Tue, 27 Jul 2021 13:58:19 -0700
+Message-Id: <20210727205855.411487-29-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210727205855.411487-1-keescook@chromium.org>
 References: <20210727205855.411487-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1434; h=from:subject; bh=OZRSNCCQRK4SI9xKythqbv7zK3vuXtwb3QhiwmK2e2s=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOHwCOrXdjKPaQWQTp+uW9oUvftBkVWr8r2JNok P/qAaYqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzhwAKCRCJcvTf3G3AJoCzD/ 4rXCWl0wg4txaWiFFhdg/2zB4GZpYJQfc3gKG+4JFGMNSSyMqsjR7wvIcQ9gEw3+cnobZIiaO8b8Ts 4y0sNy+ntUvilrHAnRZtWZQVZ7Z0bphyaYuQgnGELUkyMmslVUhPTzSDaughNmfUsvkEFM+na0EDon 9JJonN1vAou+/HN62VbGE5PteJlTDw2ARwNaB/UDzOa8CrMfLABC2YCMWBQuW/UqXG+bpRn/qLi5tt MCnGh7OYAK68OrH12PTZeNI0ZH3K0pon9xoKCGRcbv4RNDpmHve1klM4hflJJRVdZs1aIaNJguaJTr 6HzvMH1IlLaBIYA4lMHcv39fbSr1Z24Y78ZwSdi26YFWkGiIV/xASK0JKJFtw2FqAGh322XFPKawrG jQORn0cKmpkW9asI32mQRS70BV/yIqqzFwVau7oE8B1pGVFNOb3v7tHQ1pe2FZlG3aDgzaXiZQvgvE BV8eE10/S2h2Ma/rMjBUEOjYcpqfCji2YQ9KXUQ9H8bATOOhL+MA0kKSq2drNbUrOiob2qLfmjcBrM 9FB51isfS+QH+Q88vYo6UjSXdNUljwv7UMKGBHm5ndrT3nefrnbGQCZFQt+GVMpwNv9zz9cx59pBu/ EGTrabicSmfTon6Nxko75RGn3EwP6RSQtf7jrirENHsTFm5z7IgfJKZI28iQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2278; h=from:subject; bh=26+UkQF9u4QR73rE2ugmnkAtGgRJVqdRH0gVQ+miGJI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOGx79zwuZNTkBGJbxUTLtc6LvVjffViSXdghqh ZCh8w1mJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzhgAKCRCJcvTf3G3AJoOuD/ 9QhIBj8Ac1dYCQqsKDnl8+GV1Fmwz5NE+vrrmgysyx4iAIh5Hi9gSJVcciJHuWfxsYbsfjbgYy0kX1 fb3zQvUIkMQIB2igKikLexaw/u/aMZvCk9Z5omDCckYav5xDMDxop57SAnRwDmI5ma37g307rYAPXK 3MKhIW4uQWUEg9VD//gprsbS2OpIiwxkghySrauZU6lUWDXOFDxi3e7AnfeRnLBMm5P9R7uYb1c63i CCLVixc36sEWt5n1A3nVhugbXoR7XhzcCKsn6dHqVUwhOr0WC1NiDHg09PcpuJ/iyIKZftDHqUPqg6 5qiwdJ4fNBuagx0+hD1UYhVyC4D8uCcU5JbpSaMhqA5ruisKG07SgLC2mW64QD5KC1l5vxwssi27Ef 7z6+Z9XE9eAIUfHNMPoPePEDUngERmhsvmWGVOt9xejvTsuIr7a0dLku55mNRDgPOr3kKzwatg+19w b9l9CzMUNItXijvnyBQc/Vqy1SAb0lYpmUGz8MBzs95DcaaAGbaZmpWiUWaHQ5s823F8qG3r/1SSM/ zjI2/ycPgCzFufboCXRAyrLfLL7g8dxi7bDg8lAiPKcigIIGX0UbyaLeH8fulCViw1XPIwojOh5Gqh 6Oqz9uM0LoNmL8ecwuaSepH7hTO/bHW05UdooSY1mofMkUQTUBDoMmiCWncw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Clang has never correctly compiled the FORTIFY_SOURCE defenses due to
-a couple bugs:
+Since all compilers support __builtin_object_size(), and there is only
+one user of __compiletime_object_size, remove it to avoid the needless
+indirection. This lets Clang reason about check_copy_size() correctly.
 
-	Eliding inlines with matching __builtin_* names
-	https://bugs.llvm.org/show_bug.cgi?id=50322
-
-	Incorrect __builtin_constant_p() of some globals
-	https://bugs.llvm.org/show_bug.cgi?id=41459
-
-In the process of making improvements to the FORTIFY_SOURCE defenses, the
-first (silent) bug (coincidentally) becomes worked around, but exposes
-the latter which breaks the build. As such, Clang must not be used with
-CONFIG_FORTIFY_SOURCE until at least latter bug is fixed (in Clang 13),
-and the fortify routines have been rearranged.
-
-Update the Kconfig to reflect the reality of the current situation.
-
+Link: https://github.com/ClangBuiltLinux/linux/issues/1179
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- security/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/compiler-gcc.h   | 2 --
+ include/linux/compiler_types.h | 4 ----
+ include/linux/thread_info.h    | 2 +-
+ 3 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/security/Kconfig b/security/Kconfig
-index 0ced7fd33e4d..8f0e675e70a4 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -191,6 +191,9 @@ config HARDENED_USERCOPY_PAGESPAN
- config FORTIFY_SOURCE
- 	bool "Harden common str/mem functions against buffer overflows"
- 	depends on ARCH_HAS_FORTIFY_SOURCE
-+	# https://bugs.llvm.org/show_bug.cgi?id=50322
-+	# https://bugs.llvm.org/show_bug.cgi?id=41459
-+	depends on !CONFIG_CC_IS_CLANG
- 	help
- 	  Detect overflows of buffers in common string and memory functions
- 	  where the compiler can determine and validate the buffer sizes.
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index cb9217fc60af..01985821944b 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -41,8 +41,6 @@
+ 
+ #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
+ 
+-#define __compiletime_object_size(obj) __builtin_object_size(obj, 0)
+-
+ #define __compiletime_warning(message) __attribute__((__warning__(message)))
+ #define __compiletime_error(message) __attribute__((__error__(message)))
+ 
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index e4ea86fc584d..c43308b0a9a9 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -290,10 +290,6 @@ struct ftrace_likely_data {
+ 	(sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
+ 	 sizeof(t) == sizeof(int) || sizeof(t) == sizeof(long))
+ 
+-/* Compile time object size, -1 for unknown */
+-#ifndef __compiletime_object_size
+-# define __compiletime_object_size(obj) -1
+-#endif
+ #ifndef __compiletime_warning
+ # define __compiletime_warning(message)
+ #endif
+diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
+index 0999f6317978..ad0c4e041030 100644
+--- a/include/linux/thread_info.h
++++ b/include/linux/thread_info.h
+@@ -203,7 +203,7 @@ static inline void copy_overflow(int size, unsigned long count)
+ static __always_inline __must_check bool
+ check_copy_size(const void *addr, size_t bytes, bool is_source)
+ {
+-	int sz = __compiletime_object_size(addr);
++	int sz = __builtin_object_size(addr, 0);
+ 	if (unlikely(sz >= 0 && sz < bytes)) {
+ 		if (!__builtin_constant_p(bytes))
+ 			copy_overflow(sz, bytes);
 -- 
 2.30.2
 
