@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC222C4320A
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39D0C432BE
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D839460FC2
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF3B60F9D
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232944AbhG0VQy (ORCPT
+        id S233023AbhG0VQz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 17:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58280 "EHLO
+        Tue, 27 Jul 2021 17:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232356AbhG0VQx (ORCPT
+        with ESMTP id S232922AbhG0VQy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jul 2021 17:16:53 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC3EDC0613CF
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 14:16:52 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id c16so45612plh.7
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 14:16:52 -0700 (PDT)
+        Tue, 27 Jul 2021 17:16:54 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1801AC0613C1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 14:16:54 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id m2-20020a17090a71c2b0290175cf22899cso1174700pjs.2
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 14:16:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QuYl5+rTP/+R/3rDjAm0Jnl1lTT65zBH39RH5WLEAR0=;
-        b=bRfqHarnmPtbXc99uxZdsY9MdvKd7uoSqaqt1wLCu/SnB5hUsRQWrev8b/IdeSWVBf
-         zS4Zn6K2vFy+movGd0fhaQNE+NIQdFZmFCDXR3gze9QBxEp0uVz4CDxUCOwITpRdomYG
-         6sypVj5k4QzD9dhhAk7Jvl/jrcTzj2mToflF0=
+        bh=HP4OyANmlGcmztFWqw/dgo2DQckUAHhybqKwZBENvis=;
+        b=LCA95eGQPuDryGp7EbL19tEBN1vZX/DV2Ru999TrrBIWyGTxCgkLiQwMnWVaK3dqpk
+         60QOsc5jmDPjJIsota7QsQXAPPxE36dJdfR+Ydl1pbfvgmM6HMxLTyilm0vGV2trPRqk
+         qPStf78RsWs4Jdx6SvJZesYZLDr/2M1lshLlo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QuYl5+rTP/+R/3rDjAm0Jnl1lTT65zBH39RH5WLEAR0=;
-        b=UlgPbilb5mUuhO6rZ7uBMVz5R8mLix7lFyknV2eJhthy1Oixx8O8ArWa2kU2A7JtjQ
-         O4PxzGuJ3hFF+BcYBFBEBuetg4ohV5Par/Gg+tyA/pd7FKVETsFL3nEFep6kNU5PfXh9
-         aEog22wCm6iB1Fz2wSoV0oZec7RQRgSeDFlYgQ74f+WcgN40k8bjscLDocOrbMROHaXf
-         2bcA7bvHCcfY/sbNku30YHHYllG2AvSxhn0ZqudclKqMwQPg2n6MMrmsuvDQfErTCqH8
-         BJt352jI0pztwGahbMxpEtqcqUUGmZXDyiEmlxdrVO0kKDg6pbjpRGCwU5z8gHP183Gx
-         D2+g==
-X-Gm-Message-State: AOAM532qnrdn9aepvgZk5trMBeEnO6r3CnoqSiLXO4sxtu0jdkkRTfZn
-        ixTW4LtgdeUAd+3xuT3NNb7AD/7FyKlvYbnl
-X-Google-Smtp-Source: ABdhPJwEiKDql2p5UPYuPWyvuzD1+aLXfJp0O+mcTJHzcnlDiJH7IYgZlBI2bLoSa3DFZocqXKWiZA==
-X-Received: by 2002:a63:134e:: with SMTP id 14mr25120786pgt.312.1627420612398;
-        Tue, 27 Jul 2021 14:16:52 -0700 (PDT)
+        bh=HP4OyANmlGcmztFWqw/dgo2DQckUAHhybqKwZBENvis=;
+        b=Fs9J1OsETt03r0XVeh1toTEG2H2xpRZNFu5Qbc48k66metk9sppeaN7VHD7ZfjZfDB
+         pxq8VdoUV4OtMYT7RsEJMQRXwesEoTQNqC156XHYJ+oIKxBm7YC88fIOSadrRLYN03Un
+         NJsbmFS8sts5KrWtoVqZd56AEHihogSCt9zUOIMEKMlRp2EDKNRoYjJNinCwt6cXJtga
+         mxcf08ZCoJUCrJepyxJHDlLybDGzTQqXedfE9CmPfFIpe+2oLmRRYwH5gkT3YKySXc4w
+         9+V+Z6lqDbc08699cpXX2VGZMgh5Ot46bJn/2wcpCfbu+Pjsna+U+N02CyCSKmNZRy3O
+         V2dw==
+X-Gm-Message-State: AOAM5338/nGud/FwPsoooMc+RIza+COHYTXDXX6xy1vlDEfDncufVJDy
+        +B1Ekj3EgWTSfYC8MPEUtP0Tew==
+X-Google-Smtp-Source: ABdhPJxnDJcYqdBzy28fe0pM7iN+zbksS85dJ1SqWH/meLyEzdRT3xN+44Z+ArcWYMJYdepJ2zZ1uQ==
+X-Received: by 2002:a17:90a:c902:: with SMTP id v2mr6116581pjt.136.1627420613728;
+        Tue, 27 Jul 2021 14:16:53 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y9sm5034698pgr.10.2021.07.27.14.16.49
+        by smtp.gmail.com with ESMTPSA id m6sm4511294pfc.151.2021.07.27.14.16.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 27 Jul 2021 14:16:50 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -65,14 +65,14 @@ Cc:     Kees Cook <keescook@chromium.org>,
         netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH 36/64] scsi: ibmvscsi: Avoid multi-field memset() overflow by aiming at srp
-Date:   Tue, 27 Jul 2021 13:58:27 -0700
-Message-Id: <20210727205855.411487-37-keescook@chromium.org>
+Subject: [PATCH 62/64] netlink: Avoid false-positive memcpy() warning
+Date:   Tue, 27 Jul 2021 13:58:53 -0700
+Message-Id: <20210727205855.411487-63-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210727205855.411487-1-keescook@chromium.org>
 References: <20210727205855.411487-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1097; h=from:subject; bh=Nq1NUVDlF5HB2sL3wLI4PgmWfjw6IdyQL7mY1ITGnck=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOI21reOQg8BrkfHddEuElFGDIapR2heYw3xo22 cpdsHDuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBziAAKCRCJcvTf3G3AJvhsD/ 9f+BKlmaFnyRZQcn1rlNDY2vh+rNTRxOLWqPkDfUPDZZ97wHv4DBEpdLaXiuhCZf608S+816myOXX+ nT5UFOcdgLS8KSNQsCYAiZ8y6i6Tg4+eSRQunUnuVzVL3O98L0xqB46WaeeYx70RA6j5DnKbLOchNN AjaSeeQx0pnsg9cSycqn8lvZyqETRhU90TKbfnJtqIX4NEONgrTzdm8ZKbhe4RYUabvOxhjbiw7+j9 yYitnuR8to7ti1pifqARyJJrmpvyFicfspMm+frwRLM1W6LA/s7nG8iAQ5sTn/uzoB9cCj+SweTPkR m+AsViv0F1qTlCBahXchUqn2qo8JD0BZvitJ3EW1JR1OuFzTXkm4GT0+sh7Nv+hcTpQyriLzuTKuzz 4K32VkFr/Ngh4JofcvGrq47NeW+rPy+OefZwviXvKsNZmypkxuWROPihUMZHdjHbE7DCVwLoKFC64l rmccyM+XL5CwKYV01CmnjIZnKBVjuCh5PKcGpt7afr5ogG6tc2TUnvcY8lifwBGzsgS0nVOPT47wjG me8YQ4+eL1qJGzSl6NZ2krfvFMNxWRLa1UuLhO6PDmXxr8+1VYVWWQltkkcbKYEWarHuOvOxN+DOaB KeSbdbqc2xxk6w2cz+t6Eez7On01QP+vgWhE9arlnKCLSEH75mw7tmX/ZlrA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1678; h=from:subject; bh=vs/nNFIrJxwpI5nY+xgEPX6hqzmriBWLvM3b/eZbMbo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOOsotWr+xLgDAagynSwACfihlJOnm7qN9/Mu92 bGzCtbGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzjgAKCRCJcvTf3G3AJj/ZD/ 9ntjJhpq8fBwkjGH+dUg05xTxsNzIOuiH2+WA92AhYmbos7FaDGTm1g+GjbS9tYtH4WO2HSlLQe7LQ FBHmUbu6aiUm0Adb7gUZE3muL85N91x3mnnmxIoo2J/A/2tV0zkQyLUOckCj8VK+SR9BfW61OwCULU 7dXUvxZG2bCfldSz9FFpeTg6B3n38v7ZsFzE0Z+OKqNG5B6gy6nq9hQDiK5eWY7jsHwu6TaCX2KdWP ox3h/ObmvzejD4r5bqMjjhvU16eLjApW1M3mdaJGfxBeiC7Hn4U7R0R/a57zPmDRTbz/MhdWbOOFDp ABNXWuprZfW5V1fn74AOyo4Qdi0fWAhH4ttZZuPFnGp39cUNy/oe1zMgHhD+XjhBS0RMucpc7gNElk gk4SaMhbgnC4Ou6wBhA+yQfDvMUjqtRWUuRYmsFZ5Llmrlr/jWnsbjlt39vSdTBC9vTKSqnxgt1omQ fQi/9qcta+kyf71Lx1H+c1m8ve+vz4yBPxEJ5ztsLmSYk+J3LMojiNObOTsmlTFbCj4ZoDBFSpnQga mYRnTFbLCAQHQtPXM2pa7+qmWPgSz70szWlbF1IDWFBmyv8JppWdlZQu+0ThYGXTdnhi+QLNwm/WxH Zw293JAH5hVEyNiT/+/fkkV4VjclpW+bzGJvvMPBwvfpxzJKDGLjwSx2fyMw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -80,31 +80,47 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memset(), avoid intentionally writing across
-neighboring fields.
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-Instead of writing beyond the end of evt_struct->iu.srp.cmd, target the
-upper union (evt_struct->iu.srp) instead, as that's what is being wiped.
+Add a flexible array member to mark the end of struct nlmsghdr, and
+split the memcpy() to avoid false positive memcpy() warning:
+
+memcpy: detected field-spanning write (size 32) of single field (size 16)
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/uapi/linux/netlink.h | 1 +
+ net/netlink/af_netlink.c     | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index e6a3eaaa57d9..7e8beb42d2d3 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -1055,8 +1055,8 @@ static int ibmvscsi_queuecommand_lck(struct scsi_cmnd *cmnd,
- 		return SCSI_MLQUEUE_HOST_BUSY;
+diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
+index 4c0cde075c27..ddeaa748df5e 100644
+--- a/include/uapi/linux/netlink.h
++++ b/include/uapi/linux/netlink.h
+@@ -47,6 +47,7 @@ struct nlmsghdr {
+ 	__u16		nlmsg_flags;	/* Additional flags */
+ 	__u32		nlmsg_seq;	/* Sequence number */
+ 	__u32		nlmsg_pid;	/* Sending process port ID */
++	__u8		contents[];
+ };
  
- 	/* Set up the actual SRP IU */
-+	memset(&evt_struct->iu.srp, 0x00, SRP_MAX_IU_LEN);
- 	srp_cmd = &evt_struct->iu.srp.cmd;
--	memset(srp_cmd, 0x00, SRP_MAX_IU_LEN);
- 	srp_cmd->opcode = SRP_CMD;
- 	memcpy(srp_cmd->cdb, cmnd->cmnd, sizeof(srp_cmd->cdb));
- 	int_to_scsilun(lun, &srp_cmd->lun);
+ /* Flags values */
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index 24b7cf447bc5..f2dd99e96822 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -2447,7 +2447,9 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+ 			  NLMSG_ERROR, payload, flags);
+ 	errmsg = nlmsg_data(rep);
+ 	errmsg->error = err;
+-	memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg) ? nlh->nlmsg_len : sizeof(*nlh));
++	memcpy(&errmsg->msg, nlh, sizeof(*nlh));
++	if (payload > sizeof(*errmsg))
++		memcpy(errmsg->msg.contents, nlh->contents, nlh->nlmsg_len - sizeof(*nlh));
+ 
+ 	if (nlk_has_extack && extack) {
+ 		if (extack->_msg) {
 -- 
 2.30.2
 
