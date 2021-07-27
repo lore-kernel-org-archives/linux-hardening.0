@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDB3C43214
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C21C41537
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8BBC60F6D
+	by mail.kernel.org (Postfix) with ESMTP id 02CB360FEA
 	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233927AbhG0VAJ (ORCPT
+        id S233871AbhG0VAF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 17:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54064 "EHLO
+        Tue, 27 Jul 2021 17:00:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232537AbhG0U7I (ORCPT
+        with ESMTP id S233249AbhG0U70 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jul 2021 16:59:08 -0400
+        Tue, 27 Jul 2021 16:59:26 -0400
 Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5F1C061757
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:07 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id mt6so1832683pjb.1
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1C7C0619C5
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id pf12-20020a17090b1d8cb0290175c085e7a5so6659181pjb.0
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2339k4b0c5OWODNkIvToUoNb0tla173APtop2g87yK0=;
-        b=iEi8m5VvnHSI7PFGMBkWP99DR9/hasEmGaHMmQ/hAQvXWolvYn1ZqWUISR9yx86HKe
-         271G4W/Ncz7bw1+gj01x3c+6WGGDOH9Vwl/Z+aiHCXNR+A9GI+MIw4zbZztpHvcFA5pK
-         3bJY25UolqjG5yrPadDsyTKAutRNBCjMgVGtE=
+        bh=siRAEsrzVlt9ucK6wXbx7gprBvPU1KNnXc5tokHkqwA=;
+        b=jOYGss8jVrPhLdtzPZO0ka53DS3EL2t6yN9FdJhWvSggA+/r3A2IbCss40cFO7n/2Q
+         spLM/Hggx35P3erp7stVOVXKhQclCsYzBx5ggNWy5bFqJCt4e2RjkcmLYwjoeCG08QqR
+         9o3L6zH7N6jgNQlPlhWWsdJ03/mYomS7UyKoU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2339k4b0c5OWODNkIvToUoNb0tla173APtop2g87yK0=;
-        b=Eft1ujkss66fj0XNQPRJu2cqn/94VAsN9O1xGcM/OVqMF/hC8Ij1e/rb7vXCu/LeKA
-         SWGf4Q3CjL/7H9jZk+7YrwJy/cSlqodwSIbEeZe2NOUeJ/DeLbTU4s3var1ua9mkx/pI
-         eNs4g1wiaUTQUcs/LCvCiDUf810OQ2E11ZiEXlb3EiRMqjstpRVny8r3fqHzDenxbdQG
-         NdKnHIr7iVydcN0wrlHcLT6XC9di08soMzBXnv+7eUMhntP9qb0ijtNBbrxELUP9dAJA
-         NXVfIjkp47bmu8XJ6y20TnjxLy15JS87hay7qdq1ShNksDpLQJyOGrJBEpOxuEXkbABt
-         4I0Q==
-X-Gm-Message-State: AOAM530/ghhsFrOgsmiItKP4lfMIQZ2Ss2by+1b12YWr5V5zWxLTuQyE
-        XYHdbstWhdxJrWoGHTh0DFycqg==
-X-Google-Smtp-Source: ABdhPJyJWxUGA3LrJs4BG51/vLWpJYAHbkWL9HNsMr9tG1fy6upd+bj3BEBNQksVHaNDSvFaiNMgng==
-X-Received: by 2002:a63:5610:: with SMTP id k16mr25193869pgb.439.1627419546981;
-        Tue, 27 Jul 2021 13:59:06 -0700 (PDT)
+        bh=siRAEsrzVlt9ucK6wXbx7gprBvPU1KNnXc5tokHkqwA=;
+        b=Fw9HqFzE2f7rKXaXMRaHqTdg5kRA47mHXWqF5eDSUHFwECYO2f/mvv34pkif1yjqRi
+         dUdr1Azuj0ZJZCVQxj7Kk3/2zoo3cNdR5e6taxMumJKolJOkugE+h5U3IDL1mDnKmQq4
+         GYcU5KYzNwV6eL2WOar3ioCLm8WZDpeob5M3U0ehlSYvY3rZH/xN6sJwhjFZVypmFAxr
+         4ZYPGeg+etLiOgWSHbiMgCidd/9P5msXuBrl3v6jj+eIRhH7A7Vxhh4/bWaOmyMxjvbV
+         dPDmRN+orYIcrNu93ePQ1uSYKdUb+gcaHZaZDRxXgDmCHmFCPQV0cZtNpCyJBP+cY87+
+         l//A==
+X-Gm-Message-State: AOAM533Q/LwWLA+Enbn3fcEBP43IvNK3i0C3NWN9B20QTaFQTR74JzQG
+        ZZsOI2rEsFqwe7rjcQ8zJ3EKHw==
+X-Google-Smtp-Source: ABdhPJxcIDmVZ5nPEAkDsJLKerbXDHgogxNbJCx3ZtX0xM3wU3njxXgPWzNdCs2a3BpXrJ8CbQKtPw==
+X-Received: by 2002:a17:902:b48b:b029:12c:59b:dc44 with SMTP id y11-20020a170902b48bb029012c059bdc44mr13599469plr.47.1627419552529;
+        Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j20sm4672710pfc.203.2021.07.27.13.59.03
+        by smtp.gmail.com with ESMTPSA id d29sm4694011pfq.193.2021.07.27.13.59.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 13:59:05 -0700 (PDT)
+        Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -66,82 +66,88 @@ Cc:     Kees Cook <keescook@chromium.org>,
         netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH 06/64] bnxt_en: Use struct_group_attr() for memcpy() region
-Date:   Tue, 27 Jul 2021 13:57:57 -0700
-Message-Id: <20210727205855.411487-7-keescook@chromium.org>
+Subject: [PATCH 30/64] fortify: Move remaining fortify helpers into fortify-string.h
+Date:   Tue, 27 Jul 2021 13:58:21 -0700
+Message-Id: <20210727205855.411487-31-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210727205855.411487-1-keescook@chromium.org>
 References: <20210727205855.411487-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2358; h=from:subject; bh=urnr1c0HuSr0zcemksTCEth1t70QAfbHaEcP+c1mXUA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOBqioJQ+1gy1GQQan/jf7RJ1/WXH5A0qXVd7xV vq5+5hOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzgQAKCRCJcvTf3G3AJiWREA CNm4WJeCn47J5obmfhInAVhQHs+WaRodzYXqYlwhYZwqztfgNWLmnuTFB7WixSIet+ogzFMJ1r7fzU QnWXAsLuJ3BX98gUGzvKpmV42J3D2bYmtlrZs7Eyhzqsf8YU/1DgzM/cyzoMB1MkY7QVnFyA9ECldc n4XuqAu3QiaIe+5lzEXU3cW0wy5VDaO3U89VhsX3c6FWjMhQ0FF71U5yZVlZ7s8QMcwjgGQ/rSZ5HS tHMaYMmuprGsc0WRWDxssLMce4AZIdKRwnQBGxYX56oM9u/26JaL77KjZeahVv+n4nC+KkXfWFoSls jO+qT1zevLJBtQfWAqBgbtl6mxUkW3D/0aBPlL7o63ss885dcW9pWjj8sVkqG2AOPVUcl+mMOp+VQm 5qmqUeZbnxJVtXjSRXpvzpBMjNj47QiFJaRRu++FQ9+TJ9TwFws9C31mCXsNjIBK/xzNCc0OuY/J2T Fuuz5AL5SsvRzztZGGQvpjWG2xGgfilhJucEqfeyaJrFQIvjGMIAVFYzMGX4dwwIpBMhxVU4spof3f TLNENoSRR30/sOaQWASgjwj8RqwZ3WioWr4/ALRyqYdHD8j5usq3wgrSpYlAC1AQpefx1uLVDOyes3 1j+4vL+JqxKC93LWdqu/2gVD/VBJnBjDTcrSW3GQTmYSKuzKxca2WKziYSew==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3145; h=from:subject; bh=12T5m5DUCmUyeamBVCK0X9eqcX/3MZ+nSw3lqvb6DZM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOGsI5uu4BBDAJak9w31PhY/56QIHQY9qYASnaR 5iXUW6WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzhgAKCRCJcvTf3G3AJnzWD/ 9zeRHN60Hh1cQdFdjudukv1XfFs+XvKe8NvV9QEHftgDf2iwskre+nLxfXPqwh1hMt9zDWXWY5oRPL 5VdwOf+Yp9IHA0ZzvWzN9d58Qs8EypT2ZK/kY3cBfJ3yHut4U6ddUMH/lIca2buFlaScq15XFNg1Im rQzpN5e0CppW/K6Uh74IxLf9omIWV4GRZ6idGpyfpYdUfI7PbfKfCohrObRQ1ABLMmT/sPmKk2zaCX Cmi2zrNghZVgHMU+Pg0pdsixXI9Do5CVE2nIJ1WB0MlsV/DWz5dRZUn+TU0+YvLwlJdIMOPa2ai6UY SUSovgWePofTVKoTMd6kPo4TNS3nEp5IECkkfec1TThvwuBJW4pgk6u/B5Rit/+OtAqwgemzwWJr5n RkUHACvdcXL6tFqPzDreUzCsCPDvyKJtmR+KPFY2YXCdZH/M0+jWsWVdpvwGHwsmlrw05Cdc2k0oD5 wJcl6Bbk1cUNmBEXi4KHLsRXhnJ1lIP/ctdobCyCAvEq6TKILCsxY+qy0FrM64KtV992CwhdYlkFbq t4KAGEnA4K8jVSm8FgMRrRNGTsLfVRxhyemcFixXRjlPWoj+SO5oJ/TB7kkRUhfleRU7MprwtYNIlk DAYfW1/LZPaRs0Qt9/nWQtdTDdNHUPM7txeSEdhZJMmGBl/8AspkFYgPJZDQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
-
-Use struct_group() around members queue_id, min_bw, max_bw, tsa, pri_lvl,
-and bw_weight so they can be referenced together. This will allow memcpy()
-and sizeof() to more easily reason about sizes, improve readability,
-and avoid future warnings about writing beyond the end of queue_id.
-
-"pahole" shows no size nor member offset changes to struct bnxt_cos2bw_cfg.
-"objdump -d" shows no meaningful object code changes (i.e. only source
-line number induced differences and optimizations).
+When commit a28a6e860c6c ("string.h: move fortified functions definitions
+in a dedicated header.") moved the fortify-specific code, some helpers
+were left behind. Moves the remaining fortify-specific helpers into
+fortify-string.h so they're together where they're used. This requires
+that any FORTIFY helper function prototypes be conditionally built to
+avoid "no prototype" warnings. Additionally removes unused helpers.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c |  4 ++--
- drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.h | 14 ++++++++------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ include/linux/fortify-string.h | 7 +++++++
+ include/linux/string.h         | 9 ---------
+ lib/string_helpers.c           | 2 ++
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
-index 8a68df4d9e59..95c636f89329 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
-@@ -148,10 +148,10 @@ static int bnxt_hwrm_queue_cos2bw_qcfg(struct bnxt *bp, struct ieee_ets *ets)
- 	}
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index c1be37437e77..7e67d02764db 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -2,6 +2,13 @@
+ #ifndef _LINUX_FORTIFY_STRING_H_
+ #define _LINUX_FORTIFY_STRING_H_
  
- 	data = &resp->queue_id0 + offsetof(struct bnxt_cos2bw_cfg, queue_id);
--	for (i = 0; i < bp->max_tc; i++, data += sizeof(cos2bw) - 4) {
-+	for (i = 0; i < bp->max_tc; i++, data += sizeof(cos2bw.cfg)) {
- 		int tc;
++#define __FORTIFY_INLINE extern __always_inline __attribute__((gnu_inline))
++#define __RENAME(x) __asm__(#x)
++
++void fortify_panic(const char *name) __noreturn __cold;
++void __read_overflow(void) __compiletime_error("detected read beyond size of object (1st parameter)");
++void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
++void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
  
--		memcpy(&cos2bw.queue_id, data, sizeof(cos2bw) - 4);
-+		memcpy(&cos2bw.cfg, data, sizeof(cos2bw.cfg));
- 		if (i == 0)
- 			cos2bw.queue_id = resp->queue_id0;
+ #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+ extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
+diff --git a/include/linux/string.h b/include/linux/string.h
+index b48d2d28e0b1..9473f81b9db2 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -249,15 +249,6 @@ static inline const char *kbasename(const char *path)
+ 	return tail ? tail + 1 : path;
+ }
  
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.h
-index 6eed231de565..716742522161 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.h
-@@ -23,13 +23,15 @@ struct bnxt_dcb {
+-#define __FORTIFY_INLINE extern __always_inline __attribute__((gnu_inline))
+-#define __RENAME(x) __asm__(#x)
+-
+-void fortify_panic(const char *name) __noreturn __cold;
+-void __read_overflow(void) __compiletime_error("detected read beyond size of object passed as 1st parameter");
+-void __read_overflow2(void) __compiletime_error("detected read beyond size of object passed as 2nd parameter");
+-void __read_overflow3(void) __compiletime_error("detected read beyond size of object passed as 3rd parameter");
+-void __write_overflow(void) __compiletime_error("detected write beyond size of object passed as 1st parameter");
+-
+ #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+ #include <linux/fortify-string.h>
+ #endif
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index bde13612c25d..faa9d8e4e2c5 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -883,9 +883,11 @@ char *strreplace(char *s, char old, char new)
+ }
+ EXPORT_SYMBOL(strreplace);
  
- struct bnxt_cos2bw_cfg {
- 	u8			pad[3];
--	u8			queue_id;
--	__le32			min_bw;
--	__le32			max_bw;
-+	struct_group_attr(cfg, __packed,
-+		u8		queue_id;
-+		__le32		min_bw;
-+		__le32		max_bw;
- #define BW_VALUE_UNIT_PERCENT1_100		(0x1UL << 29)
--	u8			tsa;
--	u8			pri_lvl;
--	u8			bw_weight;
-+		u8		tsa;
-+		u8		pri_lvl;
-+		u8		bw_weight;
-+	);
- 	u8			unused;
- };
- 
++#ifdef CONFIG_FORTIFY_SOURCE
+ void fortify_panic(const char *name)
+ {
+ 	pr_emerg("detected buffer overflow in %s\n", name);
+ 	BUG();
+ }
+ EXPORT_SYMBOL(fortify_panic);
++#endif /* CONFIG_FORTIFY_SOURCE */
 -- 
 2.30.2
 
