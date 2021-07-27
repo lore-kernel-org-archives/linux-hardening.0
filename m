@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C21C41537
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBABC00143
 	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02CB360FEA
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4C060FEA
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jul 2021 21:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233871AbhG0VAF (ORCPT
+        id S232547AbhG0VAN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 17:00:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
+        Tue, 27 Jul 2021 17:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233249AbhG0U70 (ORCPT
+        with ESMTP id S232532AbhG0U7I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jul 2021 16:59:26 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1C7C0619C5
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id pf12-20020a17090b1d8cb0290175c085e7a5so6659181pjb.0
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
+        Tue, 27 Jul 2021 16:59:08 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13366C0613D3
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:08 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id mt6so1832710pjb.1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 13:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=siRAEsrzVlt9ucK6wXbx7gprBvPU1KNnXc5tokHkqwA=;
-        b=jOYGss8jVrPhLdtzPZO0ka53DS3EL2t6yN9FdJhWvSggA+/r3A2IbCss40cFO7n/2Q
-         spLM/Hggx35P3erp7stVOVXKhQclCsYzBx5ggNWy5bFqJCt4e2RjkcmLYwjoeCG08QqR
-         9o3L6zH7N6jgNQlPlhWWsdJ03/mYomS7UyKoU=
+        bh=A3PAzWLU246y1XAJJGWj+zmXxgq3vu+t3uT7F7ts2iM=;
+        b=IYhfsWGlsw3iSzV/PshzqWyl6YBx5L4bzzAy1O/DivhJOOn5XnSEfDfbmKq3pZ+0Vk
+         uh7GiUZL5niXHON0wQ0k5rOANeYvbqA7jpbTdKzVDWyXzIPUHuwdFvuQCZlNfXL/s5xy
+         EIQ0LWDe7jO3cVQe1/FSgbqBokHxmE/gnetDA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=siRAEsrzVlt9ucK6wXbx7gprBvPU1KNnXc5tokHkqwA=;
-        b=Fw9HqFzE2f7rKXaXMRaHqTdg5kRA47mHXWqF5eDSUHFwECYO2f/mvv34pkif1yjqRi
-         dUdr1Azuj0ZJZCVQxj7Kk3/2zoo3cNdR5e6taxMumJKolJOkugE+h5U3IDL1mDnKmQq4
-         GYcU5KYzNwV6eL2WOar3ioCLm8WZDpeob5M3U0ehlSYvY3rZH/xN6sJwhjFZVypmFAxr
-         4ZYPGeg+etLiOgWSHbiMgCidd/9P5msXuBrl3v6jj+eIRhH7A7Vxhh4/bWaOmyMxjvbV
-         dPDmRN+orYIcrNu93ePQ1uSYKdUb+gcaHZaZDRxXgDmCHmFCPQV0cZtNpCyJBP+cY87+
-         l//A==
-X-Gm-Message-State: AOAM533Q/LwWLA+Enbn3fcEBP43IvNK3i0C3NWN9B20QTaFQTR74JzQG
-        ZZsOI2rEsFqwe7rjcQ8zJ3EKHw==
-X-Google-Smtp-Source: ABdhPJxcIDmVZ5nPEAkDsJLKerbXDHgogxNbJCx3ZtX0xM3wU3njxXgPWzNdCs2a3BpXrJ8CbQKtPw==
-X-Received: by 2002:a17:902:b48b:b029:12c:59b:dc44 with SMTP id y11-20020a170902b48bb029012c059bdc44mr13599469plr.47.1627419552529;
-        Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
+        bh=A3PAzWLU246y1XAJJGWj+zmXxgq3vu+t3uT7F7ts2iM=;
+        b=nLpkJ/+a/YNYO7T3gkXq6CmBpwcABBxCsXowScrcSi+hgGQZLVE2vorlLqT9wZiR3S
+         6Jt0BCTC464rWh4V9BsFg5uETLa4hVDh+qHylQ3SRAUJcpsmftFEgDa1eR0vNjPdHvKz
+         zn7ju/NCXVFWkYuIZQuBj0D7V6YU4JUSJQUOqW0/kF4PbF5AYlEojzZuu3rXvlApTDo+
+         AFj2MowIe4rXSPQOwBDzyFPw365IFEudyiey0MENq0q/BiLVJ17Y0piCKL/w/dpEZs0q
+         0PuQGJlf+g9On693n9BvAjXxblyefY2eYPp8d1hyuw5jeEvAxBpOebgCSdoMzKi5lORw
+         s6+w==
+X-Gm-Message-State: AOAM533vAgFFxYF+Ql/QKdOJccfY/W8JHeX1HZ6sIhpqLE0t2XWO8k0U
+        qktJq/KYtaUft1UKaNu69XMMRg==
+X-Google-Smtp-Source: ABdhPJztdkoXWjXT5QD/exKWw9kw2lZC8KEgnSRSe5hUXoJqgzkXvN7Kc2Da1tooBWFUMhMM+5Yl+Q==
+X-Received: by 2002:a63:4206:: with SMTP id p6mr25847081pga.285.1627419547538;
+        Tue, 27 Jul 2021 13:59:07 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d29sm4694011pfq.193.2021.07.27.13.59.09
+        by smtp.gmail.com with ESMTPSA id nm19sm3750853pjb.27.2021.07.27.13.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 13:59:12 -0700 (PDT)
+        Tue, 27 Jul 2021 13:59:05 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -66,88 +66,152 @@ Cc:     Kees Cook <keescook@chromium.org>,
         netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH 30/64] fortify: Move remaining fortify helpers into fortify-string.h
-Date:   Tue, 27 Jul 2021 13:58:21 -0700
-Message-Id: <20210727205855.411487-31-keescook@chromium.org>
+Subject: [PATCH 08/64] staging: rtl8192u: Use struct_group() for memcpy() region
+Date:   Tue, 27 Jul 2021 13:57:59 -0700
+Message-Id: <20210727205855.411487-9-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210727205855.411487-1-keescook@chromium.org>
 References: <20210727205855.411487-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3145; h=from:subject; bh=12T5m5DUCmUyeamBVCK0X9eqcX/3MZ+nSw3lqvb6DZM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOGsI5uu4BBDAJak9w31PhY/56QIHQY9qYASnaR 5iXUW6WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzhgAKCRCJcvTf3G3AJnzWD/ 9zeRHN60Hh1cQdFdjudukv1XfFs+XvKe8NvV9QEHftgDf2iwskre+nLxfXPqwh1hMt9zDWXWY5oRPL 5VdwOf+Yp9IHA0ZzvWzN9d58Qs8EypT2ZK/kY3cBfJ3yHut4U6ddUMH/lIca2buFlaScq15XFNg1Im rQzpN5e0CppW/K6Uh74IxLf9omIWV4GRZ6idGpyfpYdUfI7PbfKfCohrObRQ1ABLMmT/sPmKk2zaCX Cmi2zrNghZVgHMU+Pg0pdsixXI9Do5CVE2nIJ1WB0MlsV/DWz5dRZUn+TU0+YvLwlJdIMOPa2ai6UY SUSovgWePofTVKoTMd6kPo4TNS3nEp5IECkkfec1TThvwuBJW4pgk6u/B5Rit/+OtAqwgemzwWJr5n RkUHACvdcXL6tFqPzDreUzCsCPDvyKJtmR+KPFY2YXCdZH/M0+jWsWVdpvwGHwsmlrw05Cdc2k0oD5 wJcl6Bbk1cUNmBEXi4KHLsRXhnJ1lIP/ctdobCyCAvEq6TKILCsxY+qy0FrM64KtV992CwhdYlkFbq t4KAGEnA4K8jVSm8FgMRrRNGTsLfVRxhyemcFixXRjlPWoj+SO5oJ/TB7kkRUhfleRU7MprwtYNIlk DAYfW1/LZPaRs0Qt9/nWQtdTDdNHUPM7txeSEdhZJMmGBl/8AspkFYgPJZDQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4950; h=from:subject; bh=Auxw1wcSuXLG5PZpqLVm+ToYm1BZgRegEEtY4+3pHw8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhAHOBQir91mVsM70reKpFOtfagOnSNOBMkJbr7LeF cLNYV1eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQBzgQAKCRCJcvTf3G3AJo2aD/ 4h/gem/XLyVOoZV8fQb32viUj7rAyg4aQwHNkuWJUlBL82B2X54xsC7DFKlCa8N29O8H+qPnwHWT4K 6ICv9SY/cbNJmcNDaVRxa1zStMzYOl04p6xD9WCnFFjK4B+q9LeGI2YR5rnKXwMRVRN62lGGb2tbDG n+B7S4A3Lzj7gnCvw8H/Jh9jykK5MtMYCK3XaA8cM136SS6m+/Mz2jQkeWtGxivZP3JfUY99slNEkG 0LZ6JrK7U2HhCqW+GBrJFottbbgKHmwow4xCoIvuKHVrRe+pSDHtQkB9J3CO3kRk/B4+UUgR29S3N1 WGzHQkQOdCogIIKKhl+dGtRJkzv1E6H3AfsfHn9mRX+rlRVMuWdY7OOtWt09v9kOhJi9TJuYsCUhXd bb2iFWqiDbfnzl1cMyIJwIcRmKPa8iWe3+q44A9MO1491pridbSlGKpf8eOQJKQrrofq4o2cm2VKmy VObV/m/b4dpWYSDq+ecjCOAwd9Q2lNy5lWiCgPg/UTP9q/ZJuT+DhU92dfstVyX0UZsLQY2XjsDTcY +kcirjK4bujmk/nhABsxK1FigYwqICkmpUKU2Nw2NqvaMQuz7GFb/MwXE0F6PrttZzKLnIcWQt2RMg S0RnPStAbsoJy+Iytt3EPyIdRveCUUfgivtpUg6QthiMPmFTasWv4patQHMQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When commit a28a6e860c6c ("string.h: move fortified functions definitions
-in a dedicated header.") moved the fortify-specific code, some helpers
-were left behind. Moves the remaining fortify-specific helpers into
-fortify-string.h so they're together where they're used. This requires
-that any FORTIFY helper function prototypes be conditionally built to
-avoid "no prototype" warnings. Additionally removes unused helpers.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
+
+Use struct_group() around members addr1, addr2, and addr3 in struct
+rtl_80211_hdr_4addr, and members qui, qui_type, qui_subtype, version,
+and ac_info in struct ieee80211_qos_information_element, so they can be
+referenced together. This will allow memcpy() and sizeof() to more easily
+reason about sizes, improve readability, and avoid future warnings about
+writing beyond the end of addr1 and qui. Additionally replace zero sized
+arrays with flexible arrays in struct ieee_param.
+
+"pahole" shows no size nor member offset changes to struct
+rtl_80211_hdr_4addr nor struct ieee80211_qos_information_element. "objdump
+-d" shows no meaningful object code changes (i.e. only source line number
+induced differences and optimizations).
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/fortify-string.h | 7 +++++++
- include/linux/string.h         | 9 ---------
- lib/string_helpers.c           | 2 ++
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ .../staging/rtl8192u/ieee80211/ieee80211.h    | 24 +++++++++++--------
+ .../rtl8192u/ieee80211/ieee80211_crypt_ccmp.c |  3 ++-
+ .../staging/rtl8192u/ieee80211/ieee80211_rx.c |  8 +++----
+ 3 files changed, 20 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index c1be37437e77..7e67d02764db 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -2,6 +2,13 @@
- #ifndef _LINUX_FORTIFY_STRING_H_
- #define _LINUX_FORTIFY_STRING_H_
+diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211.h b/drivers/staging/rtl8192u/ieee80211/ieee80211.h
+index 7903c777a417..6ae8d7504558 100644
+--- a/drivers/staging/rtl8192u/ieee80211/ieee80211.h
++++ b/drivers/staging/rtl8192u/ieee80211/ieee80211.h
+@@ -303,7 +303,7 @@ struct ieee_param {
+ 		struct {
+ 			u32 len;
+ 			u8 reserved[32];
+-			u8 data[0];
++			u8 data[];
+ 		} wpa_ie;
+ 		struct{
+ 			int command;
+@@ -316,7 +316,7 @@ struct ieee_param {
+ 			u8 idx;
+ 			u8 seq[8]; /* sequence counter (set: RX, get: TX) */
+ 			u16 key_len;
+-			u8 key[0];
++			u8 key[];
+ 		} crypt;
+ 	} u;
+ };
+@@ -917,9 +917,11 @@ struct rtl_80211_hdr_3addr {
+ struct rtl_80211_hdr_4addr {
+ 	__le16 frame_ctl;
+ 	__le16 duration_id;
+-	u8 addr1[ETH_ALEN];
+-	u8 addr2[ETH_ALEN];
+-	u8 addr3[ETH_ALEN];
++	struct_group(addrs,
++		u8 addr1[ETH_ALEN];
++		u8 addr2[ETH_ALEN];
++		u8 addr3[ETH_ALEN];
++	);
+ 	__le16 seq_ctl;
+ 	u8 addr4[ETH_ALEN];
+ 	u8 payload[];
+@@ -1100,11 +1102,13 @@ typedef union _frameqos {
+ struct ieee80211_qos_information_element {
+ 	u8 elementID;
+ 	u8 length;
+-	u8 qui[QOS_OUI_LEN];
+-	u8 qui_type;
+-	u8 qui_subtype;
+-	u8 version;
+-	u8 ac_info;
++	struct_group(data,
++		u8 qui[QOS_OUI_LEN];
++		u8 qui_type;
++		u8 qui_subtype;
++		u8 version;
++		u8 ac_info;
++	);
+ } __packed;
  
-+#define __FORTIFY_INLINE extern __always_inline __attribute__((gnu_inline))
-+#define __RENAME(x) __asm__(#x)
-+
-+void fortify_panic(const char *name) __noreturn __cold;
-+void __read_overflow(void) __compiletime_error("detected read beyond size of object (1st parameter)");
-+void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
-+void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
- 
- #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
- extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
-diff --git a/include/linux/string.h b/include/linux/string.h
-index b48d2d28e0b1..9473f81b9db2 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -249,15 +249,6 @@ static inline const char *kbasename(const char *path)
- 	return tail ? tail + 1 : path;
- }
- 
--#define __FORTIFY_INLINE extern __always_inline __attribute__((gnu_inline))
--#define __RENAME(x) __asm__(#x)
--
--void fortify_panic(const char *name) __noreturn __cold;
--void __read_overflow(void) __compiletime_error("detected read beyond size of object passed as 1st parameter");
--void __read_overflow2(void) __compiletime_error("detected read beyond size of object passed as 2nd parameter");
--void __read_overflow3(void) __compiletime_error("detected read beyond size of object passed as 3rd parameter");
--void __write_overflow(void) __compiletime_error("detected write beyond size of object passed as 1st parameter");
--
- #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
- #include <linux/fortify-string.h>
- #endif
-diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-index bde13612c25d..faa9d8e4e2c5 100644
---- a/lib/string_helpers.c
-+++ b/lib/string_helpers.c
-@@ -883,9 +883,11 @@ char *strreplace(char *s, char old, char new)
- }
- EXPORT_SYMBOL(strreplace);
- 
-+#ifdef CONFIG_FORTIFY_SOURCE
- void fortify_panic(const char *name)
+ struct ieee80211_qos_ac_parameter {
+diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_crypt_ccmp.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_crypt_ccmp.c
+index c241cf484023..61f9a189c90c 100644
+--- a/drivers/staging/rtl8192u/ieee80211/ieee80211_crypt_ccmp.c
++++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_crypt_ccmp.c
+@@ -141,7 +141,8 @@ static int ccmp_init_iv_and_aad(struct rtl_80211_hdr_4addr *hdr,
+ 	pos = (u8 *)hdr;
+ 	aad[0] = pos[0] & 0x8f;
+ 	aad[1] = pos[1] & 0xc7;
+-	memcpy(aad + 2, hdr->addr1, 3 * ETH_ALEN);
++	BUILD_BUG_ON(sizeof(hdr->addrs) != 3 * ETH_ALEN);
++	memcpy(aad + 2, &hdr->addrs, 3 * ETH_ALEN);
+ 	pos = (u8 *)&hdr->seq_ctl;
+ 	aad[20] = pos[0] & 0x0f;
+ 	aad[21] = 0; /* all bits masked */
+diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
+index b0e01ee65f7f..d5557ee0a3b7 100644
+--- a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
++++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
+@@ -1332,13 +1332,13 @@ static int ieee80211_read_qos_param_element(struct ieee80211_qos_parameter_info
+ 					    *info_element)
  {
- 	pr_emerg("detected buffer overflow in %s\n", name);
- 	BUG();
- }
- EXPORT_SYMBOL(fortify_panic);
-+#endif /* CONFIG_FORTIFY_SOURCE */
+ 	int ret = 0;
+-	u16 size = sizeof(struct ieee80211_qos_parameter_info) - 2;
++	u16 size = sizeof(element_param->info_element.data);
+ 
+ 	if (!info_element || !element_param)
+ 		return -1;
+ 
+ 	if (info_element->id == QOS_ELEMENT_ID && info_element->len == size) {
+-		memcpy(element_param->info_element.qui, info_element->data,
++		memcpy(&element_param->info_element.data, info_element->data,
+ 		       info_element->len);
+ 		element_param->info_element.elementID = info_element->id;
+ 		element_param->info_element.length = info_element->len;
+@@ -1358,7 +1358,7 @@ static int ieee80211_read_qos_info_element(
+ 		struct ieee80211_info_element *info_element)
+ {
+ 	int ret = 0;
+-	u16 size = sizeof(struct ieee80211_qos_information_element) - 2;
++	u16 size = sizeof(element_info->data);
+ 
+ 	if (!element_info)
+ 		return -1;
+@@ -1366,7 +1366,7 @@ static int ieee80211_read_qos_info_element(
+ 		return -1;
+ 
+ 	if ((info_element->id == QOS_ELEMENT_ID) && (info_element->len == size)) {
+-		memcpy(element_info->qui, info_element->data,
++		memcpy(&element_info->data, info_element->data,
+ 		       info_element->len);
+ 		element_info->elementID = info_element->id;
+ 		element_info->length = info_element->len;
 -- 
 2.30.2
 
