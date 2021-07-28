@@ -2,82 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE6AC4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 20:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81022C432BE
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 21:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6FC16103A
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 20:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D7C6101B
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 21:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231716AbhG1UlJ (ORCPT
+        id S231835AbhG1VBa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jul 2021 16:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231359AbhG1UlI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jul 2021 16:41:08 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95C5460F9B;
-        Wed, 28 Jul 2021 20:41:05 +0000 (UTC)
-Date:   Wed, 28 Jul 2021 16:41:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jann Horn <jannh@google.com>, Ingo Molnar <mingo@kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Qitao Xu <qitao.xu@bytedance.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: tracepoints and %p [was: Re: [Patch net-next resend v2] net:
- use %px to print skb address in trace_netif_receive_skb]
-Message-ID: <20210728164103.245c9db4@oasis.local.home>
-In-Reply-To: <202107281146.B2160202D@keescook>
-References: <20210715055923.43126-1-xiyou.wangcong@gmail.com>
-        <202107230000.B52B102@keescook>
-        <CAG48ez0b-t_kJXVeFixYMoqRa-g1VRPUhFVknttiBYnf-cjTyg@mail.gmail.com>
-        <20210728115633.614e9bd9@oasis.local.home>
-        <202107281146.B2160202D@keescook>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 28 Jul 2021 17:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231700AbhG1VB3 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 28 Jul 2021 17:01:29 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E55EFC0613D5
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jul 2021 14:01:26 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id e2-20020a17090a4a02b029016f3020d867so5972581pjh.3
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jul 2021 14:01:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=v4TsexyUVtPmnWQp8z0vQybdqGDFJ+IKH3X3D8imsE4=;
+        b=hg+gKirQh4CStWcllp3dCMDGaMydMxkrfDz7dI28grfxRHealC37a8xJDfYI0FVrQZ
+         2tYUG05gAJbnL7ZSiMGxXN0BbgqYaSHUyURFCYtvwZV0Mx+omFId8CJj1UovnV0ee9cA
+         66wsvWC92AbI6ez9cGn13eYUvZ7XhoUJQlPzE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v4TsexyUVtPmnWQp8z0vQybdqGDFJ+IKH3X3D8imsE4=;
+        b=DfVDwT7SpPdYcwMmcEcWj32DvtDVr+YU8x+3IKuWskOIyZRC38Q1SeyAdd8ahwrfgB
+         jTjGLI60gBUJP3LaEqpco415OXbygfxuE9HgV3DfiKDUq//GydAcCJqpiN7JhZkA368P
+         8NpPe/+S3MzKRpXo26m/6D0gr5O3qfxCKUR8GRaOpZs0vVNKaatE4m21pIU66N76VtN8
+         EfMuBkG7yBPq2C7hEc13jqzNPpHP0FM9uDDPeqqK0/jadth7vnHIQoilZ+K1HB3n3rP5
+         Gdr26ot4ILkBNlIBW64dc1BV9X422k6lHL0RzVM6nrkPHAAP12yQOx856J8K4xGo1w3C
+         wf1g==
+X-Gm-Message-State: AOAM533XD+9NsQ9LMNBQN/6Hs+Zc7C84icvdLeLT5SDG++UaupXNb8wM
+        ED0qB6NKs+Ixj2IL9JQpu3DYIA==
+X-Google-Smtp-Source: ABdhPJzkF5cilzb73BCpcxICFq3XUeRAJh6fZICuqCaVMVL6bCDUAwLUBtlkfh9/lXbLB+5T11D9+w==
+X-Received: by 2002:a17:902:d717:b029:12c:1653:d611 with SMTP id w23-20020a170902d717b029012c1653d611mr1508273ply.51.1627506086388;
+        Wed, 28 Jul 2021 14:01:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t3sm932392pfd.153.2021.07.28.14.01.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jul 2021 14:01:25 -0700 (PDT)
+Date:   Wed, 28 Jul 2021 14:01:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 19/64] ip: Use struct_group() for memcpy() regions
+Message-ID: <202107281358.8E12638@keescook>
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-20-keescook@chromium.org>
+ <YQDxaYrHu0PeBIuX@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YQDxaYrHu0PeBIuX@kroah.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 28 Jul 2021 11:48:11 -0700
-Kees Cook <keescook@chromium.org> wrote:
-
-> > That is exactly what is happening. I wrote the following to the replied
-> > text up at the top, then noticed you basically stated the same thing
-> > here ;-)  
+On Wed, Jul 28, 2021 at 07:55:53AM +0200, Greg Kroah-Hartman wrote:
+> >  struct ethhdr {
+> > -	unsigned char	h_dest[ETH_ALEN];	/* destination eth addr	*/
+> > -	unsigned char	h_source[ETH_ALEN];	/* source ether addr	*/
+> > +	union {
+> > +		struct {
+> > +			unsigned char h_dest[ETH_ALEN];	  /* destination eth addr */
+> > +			unsigned char h_source[ETH_ALEN]; /* source ether addr	  */
+> > +		};
+> > +		struct {
+> > +			unsigned char h_dest[ETH_ALEN];	  /* destination eth addr */
+> > +			unsigned char h_source[ETH_ALEN]; /* source ether addr	  */
+> > +		} addrs;
 > 
-> Where is the %px being formatted then? If it's the kernel itself (which
-> is the only thing that does %px), then it doesn't need to be %px, since
-> the raw data is separate. i.e. leave it %p for whatever logs will get
-> spilled out to who knows where.
-
-The trace events shown by tracefs/trace are formatted via the kernel
-sprintf() and friends, which will hash "%p".
-
-But the raw data read to trace-cmd (and other tools), uses
-libtraceevent, that parses the printf-fmt of a trace event just like
-the kernel does. But since we are already in user space, it is pretty
-pointless to implement "%p" with hashing. But it does understand what
-"%px" is.
-
+> A union of the same fields in the same structure in the same way?
 > 
-> How does ftrace interact with lockdown's confidentiality mode?
-> 
+> Ah, because struct_group() can not be used here?  Still feels odd to see
+> in a userspace-visible header.
 
-as Jann replied. If you enable "LOCKDOWN_TRACEFS" you lose all access
-to the tracing interface.
+Yeah, there is some inconsistency here. I will clean this up for v2.
 
--- Steve
+Is there a place we can put kernel-specific macros for use in UAPI
+headers? (I need to figure out where things like __kernel_size_t get
+defined...)
+
+-- 
+Kees Cook
