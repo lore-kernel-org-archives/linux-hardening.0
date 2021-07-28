@@ -2,109 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEC5C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 08:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10694C4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8196F60F46
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 08:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC22460F91
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234836AbhG1Igu (ORCPT
+        id S235350AbhG1JCK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jul 2021 04:36:50 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:20798 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234419AbhG1Igu (ORCPT
+        Wed, 28 Jul 2021 05:02:10 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:42376 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234163AbhG1JCJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jul 2021 04:36:50 -0400
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-175-gJF64QSnPY6TlszXg-ZCaA-1; Wed, 28 Jul 2021 09:36:46 +0100
-X-MC-Unique: gJF64QSnPY6TlszXg-ZCaA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.23; Wed, 28 Jul 2021 09:36:44 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.023; Wed, 28 Jul 2021 09:36:44 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Geert Uytterhoeven' <geert@linux-m68k.org>,
-        Len Baker <len.baker@gmx.com>
-CC:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
-        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH] drivers/soc: Remove all strcpy() uses in favor of
- strscpy()
-Thread-Topic: [PATCH] drivers/soc: Remove all strcpy() uses in favor of
- strscpy()
-Thread-Index: AQHXgfS6PeASd7OmzkqPc7xYqoccEatYEvhA
-Date:   Wed, 28 Jul 2021 08:36:44 +0000
-Message-ID: <80f4574c9f6c4c6780735b0fffd83363@AcuMS.aculab.com>
-References: <20210725151434.7122-1-len.baker@gmx.com>
- <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
-In-Reply-To: <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 28 Jul 2021 05:02:09 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 2DF0A22262;
+        Wed, 28 Jul 2021 09:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1627462927;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sp2fXaO4+VkU0ewmSUxyDBIfoqxWZ/YmzoRuKp72TwU=;
+        b=QJtqaRDeD/r+6BS2RpMLHsBckRf2sr1w3iN33pezOooEqpnn8T7DqSapcRxyMPIZfjRSjm
+        7J+1lee9yCSAoX/yXx5qOnlJlNQlP5/7ZOeqDMcdtfzJJyxwr5G3M0hN/eM3VNhe4zl7mM
+        ShgAu0K7CLyKCgHUkgVaDq862Mit+3M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1627462927;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sp2fXaO4+VkU0ewmSUxyDBIfoqxWZ/YmzoRuKp72TwU=;
+        b=pmBfIB2QkmA3xf4kSvM/Kul+M1rkY2xpWB6cH5WhgISANis+5+m+8zDuM/QuNvL/ktFiFp
+        tiOqD9YAirWKVzAw==
+Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
+        by relay2.suse.de (Postfix) with ESMTP id 15362A3B8B;
+        Wed, 28 Jul 2021 09:02:07 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 4CA03DA8A7; Wed, 28 Jul 2021 10:59:22 +0200 (CEST)
+Date:   Wed, 28 Jul 2021 10:59:22 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        nborisov@suse.com
+Subject: Re: [PATCH 01/64] media: omap3isp: Extract struct group for memcpy()
+ region
+Message-ID: <20210728085921.GV5047@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        nborisov@suse.com
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-2-keescook@chromium.org>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210727205855.411487-2-keescook@chromium.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuDQo+IFNlbnQ6IDI2IEp1bHkgMjAyMSAwOTowMw0KPiAN
-Cj4gSGkgTGVuLA0KPiANCj4gT24gU3VuLCBKdWwgMjUsIDIwMjEgYXQgNToxNSBQTSBMZW4gQmFr
-ZXIgPGxlbi5iYWtlckBnbXguY29tPiB3cm90ZToNCj4gPiBzdHJjcHkoKSBwZXJmb3JtcyBubyBi
-b3VuZHMgY2hlY2tpbmcgb24gdGhlIGRlc3RpbmF0aW9uIGJ1ZmZlci4gVGhpcw0KPiA+IGNvdWxk
-IHJlc3VsdCBpbiBsaW5lYXIgb3ZlcmZsb3dzIGJleW9uZCB0aGUgZW5kIG9mIHRoZSBidWZmZXIs
-IGxlYWRpbmcNCj4gPiB0byBhbGwga2luZHMgb2YgbWlzYmVoYXZpb3JzLiBUaGUgc2FmZSByZXBs
-YWNlbWVudCBpcyBzdHJzY3B5KCkuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMZW4gQmFrZXIg
-PGxlbi5iYWtlckBnbXguY29tPg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPiANCj4g
-PiAtLS0NCj4gPiBUaGlzIGlzIGEgdGFzayBvZiB0aGUgS1NQUCBbMV0NCj4gPg0KPiA+IFsxXSBo
-dHRwczovL2dpdGh1Yi5jb20vS1NQUC9saW51eC9pc3N1ZXMvODgNCj4gDQo+IEFueSBjaGFuY2Ug
-dGhlIGFsbW9zdCBvbmUgeWVhciBvbGQgcXVlc3Rpb24gaW4gdGhhdCB0aWNrZXQgY2FuIGJlDQo+
-IGFuc3dlcmVkPw0KPiANCj4gPiAgZHJpdmVycy9zb2MvcmVuZXNhcy9yY2FyLXN5c2MuYyAgICAg
-fCAgNiArKysrLS0NCj4gDQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0
-K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPiANCj4gQnV0IHBsZWFzZSBzZWUgbXkgY29tbWVudHMgYmVs
-b3cuLi4NCj4gDQo+ID4gLS0tIGEvZHJpdmVycy9zb2MvcmVuZXNhcy9yOGE3NzlhMC1zeXNjLmMN
-Cj4gPiArKysgYi9kcml2ZXJzL3NvYy9yZW5lc2FzL3I4YTc3OWEwLXN5c2MuYw0KPiA+IEBAIC00
-MDQsMTkgKzQwNCwyMSBAQCBzdGF0aWMgaW50IF9faW5pdCByOGE3NzlhMF9zeXNjX3BkX2luaXQo
-dm9pZCkNCj4gPiAgICAgICAgIGZvciAoaSA9IDA7IGkgPCBpbmZvLT5udW1fYXJlYXM7IGkrKykg
-ew0KPiA+ICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgcjhhNzc5YTBfc3lzY19hcmVhICph
-cmVhID0gJmluZm8tPmFyZWFzW2ldOw0KPiA+ICAgICAgICAgICAgICAgICBzdHJ1Y3QgcjhhNzc5
-YTBfc3lzY19wZCAqcGQ7DQo+ID4gKyAgICAgICAgICAgICAgIHNpemVfdCBhcmVhX25hbWVfc2l6
-ZTsNCj4gDQo+IEkgd291bGRuJ3QgbWluZCBhIHNob3J0ZXIgbmFtZSwgbGlrZSAibiIuDQo+IA0K
-PiA+DQo+ID4gICAgICAgICAgICAgICAgIGlmICghYXJlYS0+bmFtZSkgew0KPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIC8qIFNraXAgTlVMTGlmaWVkIGFyZWEgKi8NCj4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgICBjb250aW51ZTsNCj4gPiAgICAgICAgICAgICAgICAgfQ0KPiA+DQo+ID4g
-LSAgICAgICAgICAgICAgIHBkID0ga3phbGxvYyhzaXplb2YoKnBkKSArIHN0cmxlbihhcmVhLT5u
-YW1lKSArIDEsIEdGUF9LRVJORUwpOw0KPiA+ICsgICAgICAgICAgICAgICBhcmVhX25hbWVfc2l6
-ZSA9IHN0cmxlbihhcmVhLT5uYW1lKSArIDE7DQo+ID4gKyAgICAgICAgICAgICAgIHBkID0ga3ph
-bGxvYyhzaXplb2YoKnBkKSArIGFyZWFfbmFtZV9zaXplLCBHRlBfS0VSTkVMKTsNCj4gPiAgICAg
-ICAgICAgICAgICAgaWYgKCFwZCkgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGVycm9y
-ID0gLUVOT01FTTsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBnb3RvIG91dF9wdXQ7DQo+
-ID4gICAgICAgICAgICAgICAgIH0NCj4gPg0KPiA+IC0gICAgICAgICAgICAgICBzdHJjcHkocGQt
-Pm5hbWUsIGFyZWEtPm5hbWUpOw0KPiA+ICsgICAgICAgICAgICAgICBzdHJzY3B5KHBkLT5uYW1l
-LCBhcmVhLT5uYW1lLCBhcmVhX25hbWVfc2l6ZSk7DQoNCllvdSBjYW4ganVzdCB1c2UgbWVtY3B5
-KCkuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
-Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
-biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Tue, Jul 27, 2021 at 01:57:52PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.  Wrap the target region
+> in a common named structure. This additionally fixes a theoretical
+> misalignment of the copy (since the size of "buf" changes between 64-bit
+> and 32-bit, but this is likely never built for 64-bit).
+> 
+> FWIW, I think this code is totally broken on 64-bit (which appears to
+> not be a "real" build configuration): it would either always fail (with
+> an uninitialized data->buf_size) or would cause corruption in userspace
+> due to the copy_to_user() in the call path against an uninitialized
+> data->buf value:
+> 
+> omap3isp_stat_request_statistics_time32(...)
+>     struct omap3isp_stat_data data64;
+>     ...
+>     omap3isp_stat_request_statistics(stat, &data64);
+> 
+> int omap3isp_stat_request_statistics(struct ispstat *stat,
+>                                      struct omap3isp_stat_data *data)
+>     ...
+>     buf = isp_stat_buf_get(stat, data);
+> 
+> static struct ispstat_buffer *isp_stat_buf_get(struct ispstat *stat,
+>                                                struct omap3isp_stat_data *data)
+> ...
+>     if (buf->buf_size > data->buf_size) {
+>             ...
+>             return ERR_PTR(-EINVAL);
+>     }
+>     ...
+>     rval = copy_to_user(data->buf,
+>                         buf->virt_addr,
+>                         buf->buf_size);
+> 
+> Regardless, additionally initialize data64 to be zero-filled to avoid
+> undefined behavior.
+> 
+> Fixes: 378e3f81cb56 ("media: omap3isp: support 64-bit version of omap3isp_stat_data")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/media/platform/omap3isp/ispstat.c |  5 +--
+>  include/uapi/linux/omap3isp.h             | 44 +++++++++++++++++------
+>  2 files changed, 36 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
+> index 5b9b57f4d9bf..ea8222fed38e 100644
+> --- a/drivers/media/platform/omap3isp/ispstat.c
+> +++ b/drivers/media/platform/omap3isp/ispstat.c
+> @@ -512,7 +512,7 @@ int omap3isp_stat_request_statistics(struct ispstat *stat,
+>  int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
+>  					struct omap3isp_stat_data_time32 *data)
+>  {
+> -	struct omap3isp_stat_data data64;
+> +	struct omap3isp_stat_data data64 = { };
 
+Should this be { 0 } ?
+
+We've seen patches trying to switch from { 0 } to {  } but the answer
+was that { 0 } is supposed to be used,
+http://www.ex-parrot.com/~chris/random/initialise.html
+
+(from https://lore.kernel.org/lkml/fbddb15a-6e46-3f21-23ba-b18f66e3448a@suse.com/)
