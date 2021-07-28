@@ -2,136 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46841C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 01:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49314C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 01:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2284560F91
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 01:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFE360F41
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 01:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233200AbhG1BWJ (ORCPT
+        id S234074AbhG1BaO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 21:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
+        Tue, 27 Jul 2021 21:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233008AbhG1BWJ (ORCPT
+        with ESMTP id S233634AbhG1BaO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jul 2021 21:22:09 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC915C061757;
-        Tue, 27 Jul 2021 18:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=j5GutQxzHEwJUpvD+PoxPI7xCYldNc9Co9wCdAd7+DY=; b=aJ5OQrFrVT0TyHsJE26cfHOC8M
-        mwn70MgmW1akXnWiL6397E4oDjB7HNT01RRKDF6LA2k7hIC4kL370GfIjdQbd7+LDtM0l/0YZwc0y
-        XAh4RE2kq5vJRbq8YKKNCQXu4qDUMeTtQzJx9CKGssWvxq4raEq0o7r7D+//fDfBKY/QVCIRQeRu+
-        v8BUlzXDLgYBAAenvopb80y5MnBrQLAuuk24enxKnx011RtSFLB95mPZvOxWxmL8FE+noCdDQi+Lq
-        gnxnu8PXnjIWk+gewSa0P4XN3HCyp2lKvCUmIh8qBQSM65HW9AOxVDi5bmxTiT2wLx1IFELXvJ8DL
-        g6/+BcWw==;
-Received: from [2601:1c0:6280:3f0::aefb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1m8YGt-00GmwT-21; Wed, 28 Jul 2021 01:22:07 +0000
-Subject: Re: [PATCH] scripts: make some scripts executable
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Wan Jiabing <wanjiabing@vivo.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20210727153924.79473-1-masahiroy@kernel.org>
- <YQAsth0TA3AwtxvK@kroah.com>
- <CAK7LNAQM2WzfHdJhukiaeq=qYtJ7U8UbMZdFWSuAJG86bBVHnA@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <508c6a7a-0de1-a102-4a48-d29eae188511@infradead.org>
-Date:   Tue, 27 Jul 2021 18:22:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Tue, 27 Jul 2021 21:30:14 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9959EC0613CF
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 18:30:13 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id i1so717377plr.9
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jul 2021 18:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=F/W78E3w8bd3psxYX0IIxref8Eo+wzHY8m4KRkXjPMs=;
+        b=fSpVrx2KFTwbTxZxaxYBjKJ9a3HRRpiHfBG8wD07VjuWC7mdbYEQ/7GkiPoSY+/g36
+         +TtB+dCcoMKG1TPpgjH+W/O2nqputas/NPxb5d/iKCDtXteeWA5Muau5Hiw7k0rZrmBp
+         XaotHXeRLZbN2gC+C3tJaqkKc+t5iWRCRbObY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F/W78E3w8bd3psxYX0IIxref8Eo+wzHY8m4KRkXjPMs=;
+        b=Oh1LBmofzFizs7lfm3Q2aKkWb1Ocmh0iScJknpdIR5tBYFy+4lr2lEIVEZgUh9/EcI
+         /2xW5hqw5HEzSbtaVusOnPUQOKqTsS4mE2kxluTwgxFtzIRu6Su/ub+B5GMM9iSaJUv4
+         8sRf6lTPonZNiKGdpm8ghhxzJ+M1PoV+DnJEuR+lUBP9jTSCBitC8bPpnKgAMOn+ja1n
+         g7OeB3cis1Lndjc9BAdhDrMmNLwY3OvxW4PmtsbI9afKfdB7Qwnoc9AgbwzMCNgBfBJz
+         W0DACWdu0QewxzcjsCdy1zdjjikJafitYW9fdnKXatrMhM3fwartcG2ytbQdrdwIaS6B
+         7bpg==
+X-Gm-Message-State: AOAM531AIW3SXFlbsuJYZPuwvoAhK1OhQFiXUhvVgoRHx48bPb+vslz4
+        F2Sje3kp8/I5MgzFY5185kr6xQ==
+X-Google-Smtp-Source: ABdhPJwJtaC/+3L1bVkg9P8zv+anpCg9BvvGSgBVtWnX3lLVWENuhM7S6jL/vTi/ew8TMCXVE//XxA==
+X-Received: by 2002:a17:90a:ca93:: with SMTP id y19mr7226022pjt.142.1627435813032;
+        Tue, 27 Jul 2021 18:30:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r13sm5628761pgi.78.2021.07.27.18.30.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jul 2021 18:30:12 -0700 (PDT)
+Date:   Tue, 27 Jul 2021 18:30:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 33/64] lib: Introduce CONFIG_TEST_MEMCPY
+Message-ID: <202107271829.CE9BADDB@keescook>
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-34-keescook@chromium.org>
+ <9827144a-dacf-61dc-d554-6c69434708de@acm.org>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAQM2WzfHdJhukiaeq=qYtJ7U8UbMZdFWSuAJG86bBVHnA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9827144a-dacf-61dc-d554-6c69434708de@acm.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 7/27/21 6:03 PM, Masahiro Yamada wrote:
-> On Wed, Jul 28, 2021 at 12:56 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->>
->> On Wed, Jul 28, 2021 at 12:39:24AM +0900, Masahiro Yamada wrote:
->>> Set the x bit to some scripts to make them directly executable.
->>>
->>> Especially, scripts/checkdeclares.pl is not hooked by anyone.
->>> It should be executable since it is tedious to type
->>> 'perl scripts/checkdeclares.pl'.>>>
->>> The original patch [1] set the x bit properly, but it was lost when
->>> it was merged as commit 21917bded72c ("scripts: a new script for
->>> checking duplicate struct declaration").
->>>
->>> [1] https://lore.kernel.org/lkml/20210401110943.1010796-1-wanjiabing@vivo.com/
->>>
->>> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->>> ---
->>>
->>>  scripts/checkdeclares.pl               | 0
->>>  scripts/gcc-plugins/gen-random-seed.sh | 0
->>>  scripts/syscallnr.sh                   | 0
->>>  scripts/xen-hypercalls.sh              | 0
->>>  4 files changed, 0 insertions(+), 0 deletions(-)
->>>  mode change 100644 => 100755 scripts/checkdeclares.pl
->>>  mode change 100644 => 100755 scripts/gcc-plugins/gen-random-seed.sh
->>>  mode change 100644 => 100755 scripts/syscallnr.sh
->>>  mode change 100644 => 100755 scripts/xen-hypercalls.sh
->>
->> Please no, as other tools (i.e. patch), can not set mode bits, and some
->> people still rely on patch in places.
->>
->> If these need to be called by other parts of the build, we should
->> execute them properly, not rely on the mode settings.
->>
->> thanks,
->>
->> greg k-h
+On Tue, Jul 27, 2021 at 04:31:03PM -0700, Bart Van Assche wrote:
+> On 7/27/21 1:58 PM, Kees Cook wrote:
+> > +static int __init test_memcpy_init(void)
+> > +{
+> > +	int err = 0;
+> > +
+> > +	err |= test_memcpy();
+> > +	err |= test_memmove();
+> > +	err |= test_memset();
+> > +
+> > +	if (err) {
+> > +		pr_warn("FAIL!\n");
+> > +		err = -EINVAL;
+> > +	} else {
+> > +		pr_info("all tests passed\n");
+> > +	}
+> > +
+> > +	return err;
+> > +}
+> > +
+> > +static void __exit test_memcpy_exit(void)
+> > +{ }
+> > +
+> > +module_init(test_memcpy_init);
+> > +module_exit(test_memcpy_exit);
+> > +MODULE_LICENSE("GPL");
 > 
-> 
-> I believe tools should be executable.
-> 
-> If the x bit were missing in scripts/checkpatch.pl
-> for example, we would need to run 'perl scripts/checkpatch.pl'
-> instead of 'scripts/checkpatch.pl'. That is annoying.
-> 
-> 
-> Most of the scripts under the scripts/ directory
-> are already executable, and we rely on that fact.
-> Some of them are run directly, and I do not hear
-> from anyone who complains about that.
-> 
-> 
-...
-> 
-> 
-> Even if it did not work on somebody's tools,
-> the diff files are provided for bug-fix
-> releases (for example, 5.13.x), not the entire source.
-> 
-> Developers (except Andrew Morton) use git
-> to merge patches like this, so I see no issue
-> on changing the mode.
+> Has it been considered to implement this test using the Kunit framework?
 
-Sure, once the changes are in a git tree, it's not an
-issue, so I don't see a problem with it.
-Someone may have to go a few weeks without such a change,
-but that's not a big deal.
-
+Good point! I will see if that works here; it would make sense to make
+this KUnit from the start.
 
 -- 
-~Randy
-
+Kees Cook
