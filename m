@@ -2,237 +2,184 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D21FC4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 06:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A78C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 06:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E647560EB2
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 06:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E48A60C3F
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 06:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234892AbhG1GuQ (ORCPT
+        id S232892AbhG1GwH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jul 2021 02:50:16 -0400
-Received: from gateway36.websitewelcome.com ([192.185.192.36]:31366 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231484AbhG1Gt7 (ORCPT
+        Wed, 28 Jul 2021 02:52:07 -0400
+Received: from smtpbg511.qq.com ([203.205.250.109]:53922 "EHLO
+        smtpbg511.qq.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229560AbhG1GwG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jul 2021 02:49:59 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id ED24340A67EF8
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jul 2021 01:28:47 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8d3fmlwwXjSwz8d3fmWdFM; Wed, 28 Jul 2021 01:28:47 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PByFd2qeq/2ftWrrzQXYKD+9AqEh75xYa8NQ7nHf9Jg=; b=xWCSVCo5rpt31TLlsry/YUFajz
-        3jA2mTLH4KNhe9tI4XkYLKH0Xy21oqpA5P6w/Hwo/OcuoqKAXGFZf2G6+6KKiYg2U+aWtrrV9w+ML
-        ApF9qrFmxonjwBRtuuEVSY7bc0Jokt/psPrr/ZHtbnAqHtnjZKzLZthWhSuUihdf2niFgsXWm2HSF
-        Unvkjsr3dhsaSdMUrDx/7+A3BJKmlMCmHl+LGrHCrUnwaU5QVdXc9IqcmgBcb+kOsNp8bVhSDimG8
-        6bMVBYBFra3XQQn5NT/BaDR1PfSNheKjyXXpQf0+fPK2zlnoWClN40rqV6WLCNHkAbgUOHdGDkF0W
-        bUURrNIA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:44898 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1m8d3e-003ign-Vl; Wed, 28 Jul 2021 01:28:47 -0500
-Subject: Re: [PATCH 19/64] ip: Use struct_group() for memcpy() regions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20210727205855.411487-1-keescook@chromium.org>
- <20210727205855.411487-20-keescook@chromium.org> <YQDxaYrHu0PeBIuX@kroah.com>
- <baead202-569f-775f-348c-aa64e69f03ed@embeddedor.com>
- <YQD2/CA7zJU7MW6M@kroah.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <e3193698-86d5-d529-e095-e09b4d52927b@embeddedor.com>
-Date:   Wed, 28 Jul 2021 01:31:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Wed, 28 Jul 2021 02:52:06 -0400
+X-Greylist: delayed 76286 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Jul 2021 02:52:06 EDT
+X-QQ-mid: bizesmtp46t1627455117t6ikcf1d
+Received: from wangzc-pc.nju.edu.cn (unknown [36.154.209.16])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Wed, 28 Jul 2021 14:51:56 +0800 (CST)
+X-QQ-SSF: 01400000001000B0P000000B0000000
+X-QQ-FEAT: L8+aRVORnLn4M1XtRZoWtZXse1fZAwNShPZ7DWyvP+ZQ69w+CWng3U7S2zuvA
+        vpbi3D7n/46+qCbk3t27iFxT3H/JKj7NfOKxY47c+2lgXQYS5bhrxH53S5BAuM73605ZGFc
+        MS34Vnax1WPaefO1+AxSoOVhBMkm+ul9y1o4pwpIhbGheGhS9N0++xROqSVds50RcoV0h9i
+        cyGPfDi34zlEcMiqDxP+ge7IxoYPOdD8c6jnLnE2aPrjID7jRNLcpqM7bNPmPZP15Yma1oO
+        78l7894ZY/0ARayhzn8tsm/teqt6ibL1X7kUvXN8yIqONXlBr8J1zSpY+dGDRtpxUTTICVY
+        5epWvCnWZf4Jg3AB9BrheaTZQEA1lV/AMX3W5w0Hu3i5Vjcxi8=
+X-QQ-GoodBg: 2
+From:   Wang Zi-cheng <wzc@smail.nju.edu.cn>
+To:     keescook@chromium.org, tycho@tycho.pizza,
+        linux-hardening@vger.kernel.org
+Cc:     Wang Zi-cheng <wzc@smail.nju.edu.cn>
+Subject: [PATCH] RFC v2 struct const ops pointers member hardening
+Date:   Wed, 28 Jul 2021 14:52:40 +0800
+Message-Id: <20210728065239.472464-1-wzc@smail.nju.edu.cn>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-In-Reply-To: <YQD2/CA7zJU7MW6M@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1m8d3e-003ign-Vl
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:44898
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 17
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:smail.nju.edu.cn:qybgforeign:qybgforeign7
+X-QQ-Bgrelay: 1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Signed-off-by: Wang Zi-cheng <wzc@smail.nju.edu.cn>
+--------------------
+RFC v2 struct const ops pointers member hardening
 
+I apologize for making mistakes in my previous submission, I fix the previous problems,
+ add compile options and make tests(compile and lmbench).
 
-On 7/28/21 01:19, Greg Kroah-Hartman wrote:
-> On Wed, Jul 28, 2021 at 01:14:33AM -0500, Gustavo A. R. Silva wrote:
->>
->>
->> On 7/28/21 00:55, Greg Kroah-Hartman wrote:
->>> On Tue, Jul 27, 2021 at 01:58:10PM -0700, Kees Cook wrote:
->>>> In preparation for FORTIFY_SOURCE performing compile-time and run-time
->>>> field bounds checking for memcpy(), memmove(), and memset(), avoid
->>>> intentionally writing across neighboring fields.
->>>>
->>>> Use struct_group() in struct flowi4, struct ipv4hdr, and struct ipv6hdr
->>>> around members saddr and daddr, so they can be referenced together. This
->>>> will allow memcpy() and sizeof() to more easily reason about sizes,
->>>> improve readability, and avoid future warnings about writing beyond the
->>>> end of saddr.
->>>>
->>>> "pahole" shows no size nor member offset changes to struct flowi4.
->>>> "objdump -d" shows no meaningful object code changes (i.e. only source
->>>> line number induced differences.)
->>>>
->>>> Note that since this is a UAPI header, struct_group() has been open
->>>> coded.
->>>>
->>>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>>> ---
->>>>  include/net/flow.h            |  6 ++++--
->>>>  include/uapi/linux/if_ether.h | 12 ++++++++++--
->>>>  include/uapi/linux/ip.h       | 12 ++++++++++--
->>>>  include/uapi/linux/ipv6.h     | 12 ++++++++++--
->>>>  net/core/flow_dissector.c     | 10 ++++++----
->>>>  net/ipv4/ip_output.c          |  6 ++----
->>>>  6 files changed, 42 insertions(+), 16 deletions(-)
->>>>
->>>> diff --git a/include/net/flow.h b/include/net/flow.h
->>>> index 6f5e70240071..f1a3b6c8eae2 100644
->>>> --- a/include/net/flow.h
->>>> +++ b/include/net/flow.h
->>>> @@ -81,8 +81,10 @@ struct flowi4 {
->>>>  #define flowi4_multipath_hash	__fl_common.flowic_multipath_hash
->>>>  
->>>>  	/* (saddr,daddr) must be grouped, same order as in IP header */
->>>> -	__be32			saddr;
->>>> -	__be32			daddr;
->>>> +	struct_group(addrs,
->>>> +		__be32			saddr;
->>>> +		__be32			daddr;
->>>> +	);
->>>>  
->>>>  	union flowi_uli		uli;
->>>>  #define fl4_sport		uli.ports.sport
->>>> diff --git a/include/uapi/linux/if_ether.h b/include/uapi/linux/if_ether.h
->>>> index a0b637911d3c..8f5667b2ea92 100644
->>>> --- a/include/uapi/linux/if_ether.h
->>>> +++ b/include/uapi/linux/if_ether.h
->>>> @@ -163,8 +163,16 @@
->>>>  
->>>>  #if __UAPI_DEF_ETHHDR
->>>>  struct ethhdr {
->>>> -	unsigned char	h_dest[ETH_ALEN];	/* destination eth addr	*/
->>>> -	unsigned char	h_source[ETH_ALEN];	/* source ether addr	*/
->>>> +	union {
->>>> +		struct {
->>>> +			unsigned char h_dest[ETH_ALEN];	  /* destination eth addr */
->>>> +			unsigned char h_source[ETH_ALEN]; /* source ether addr	  */
->>>> +		};
->>>> +		struct {
->>>> +			unsigned char h_dest[ETH_ALEN];	  /* destination eth addr */
->>>> +			unsigned char h_source[ETH_ALEN]; /* source ether addr	  */
->>>> +		} addrs;
->>>
->>> A union of the same fields in the same structure in the same way?
->>>
->>> Ah, because struct_group() can not be used here?  Still feels odd to see
->>> in a userspace-visible header.
->>>
->>>> +	};
->>>>  	__be16		h_proto;		/* packet type ID field	*/
->>>>  } __attribute__((packed));
->>>>  #endif
->>>> diff --git a/include/uapi/linux/ip.h b/include/uapi/linux/ip.h
->>>> index e42d13b55cf3..33647a37e56b 100644
->>>> --- a/include/uapi/linux/ip.h
->>>> +++ b/include/uapi/linux/ip.h
->>>> @@ -100,8 +100,16 @@ struct iphdr {
->>>>  	__u8	ttl;
->>>>  	__u8	protocol;
->>>>  	__sum16	check;
->>>> -	__be32	saddr;
->>>> -	__be32	daddr;
->>>> +	union {
->>>> +		struct {
->>>> +			__be32	saddr;
->>>> +			__be32	daddr;
->>>> +		} addrs;
->>>> +		struct {
->>>> +			__be32	saddr;
->>>> +			__be32	daddr;
->>>> +		};
->>>
->>> Same here (except you named the first struct addrs, not the second,
->>> unlike above).
->>>
->>>
->>>> +	};
->>>>  	/*The options start here. */
->>>>  };
->>>>  
->>>> diff --git a/include/uapi/linux/ipv6.h b/include/uapi/linux/ipv6.h
->>>> index b243a53fa985..1c26d32e733b 100644
->>>> --- a/include/uapi/linux/ipv6.h
->>>> +++ b/include/uapi/linux/ipv6.h
->>>> @@ -130,8 +130,16 @@ struct ipv6hdr {
->>>>  	__u8			nexthdr;
->>>>  	__u8			hop_limit;
->>>>  
->>>> -	struct	in6_addr	saddr;
->>>> -	struct	in6_addr	daddr;
->>>> +	union {
->>>> +		struct {
->>>> +			struct	in6_addr	saddr;
->>>> +			struct	in6_addr	daddr;
->>>> +		} addrs;
->>>> +		struct {
->>>> +			struct	in6_addr	saddr;
->>>> +			struct	in6_addr	daddr;
->>>> +		};
->>>
->>> addrs first?  Consistancy is key :)
->>
->> I think addrs should be second. In general, I think all newly added
->> non-anonymous structures should be second.
+1. this is a useful hardening, my opinion was wrong in the previous patch, 
+because the attacker may overwrite a struct with an "struct file*" pointer,
+ which point to a manufactured file struct with malicious f_op.
+Hardening operation pointers CAN help.
+> On the other side, kernel uses `kmem_cache_create` to alloc file/inode rather than `kmalloc`, 
+> which makes it hard to exploit through heap overflow or UAF, so maybe this is not a "must" update.
+
+2. V2 add compile option 'STRUCT_CONST_OPS_POINTER_HARDENING' in 
+'Security options -> Kernel hardening options -> Struct const operation pointers hardening'
+
+> PATCH v1
+> some security sensitive kernel objects, i.e. inode, file, use 'const' to declare operations pointers, 
+> and these pointers reference to the static global variables in read only data segment.
+
+> ```
+> struct file {
+>   ...
+> 	const struct file_operations	*f_op;
 > 
-> Why not use a local version of the macro like was done in the DRM header
-> file, to make it always work the same and more obvious what is
-> happening?  If I were a userspace developer and saw the above, I would
-> think that the kernel developers have lost it :)
+> const struct file_operations ext4_file_operations = {
+> ```
 
-Then don't take a look at this[1]. :p
+> However, const pointers are just compile hints with no hardware restrictions and prone to be modified by attakers at runtime.
+> It would be safer to make sure struct const pointer members are not pointing to malicious payload in the slab objects(direct mapping region).
+> we only need to check "open" syscall, because most file-related operations start with "open".
 
---
-Gustavo
 
-[1] https://git.kernel.org/linus/c0a744dcaa29e9537e8607ae9c965ad936124a4d
+---
+ arch/x86/include/asm/pgtable_64_types.h |  5 +++++
+ fs/open.c                               |  5 +++++
+ include/linux/mm.h                      |  9 +++++++++
+ security/Kconfig.hardening              | 13 +++++++++++++
+ 4 files changed, 32 insertions(+)
+
+diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+index 91ac10654570..869ef3dfaf29 100644
+--- a/arch/x86/include/asm/pgtable_64_types.h
++++ b/arch/x86/include/asm/pgtable_64_types.h
+@@ -128,18 +128,23 @@ extern unsigned int ptrs_per_p4d;
+ 
+ #define __VMEMMAP_BASE_L4	0xffffea0000000000UL
+ #define __VMEMMAP_BASE_L5	0xffd4000000000000UL
++#define DIRECT_MAPPING_TB_L4 64UL
++#define DIRECT_MAPPING_TB_L5 32000UL
+ 
+ #ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
+ # define VMALLOC_START		vmalloc_base
+ # define VMALLOC_SIZE_TB	(pgtable_l5_enabled() ? VMALLOC_SIZE_TB_L5 : VMALLOC_SIZE_TB_L4)
+ # define VMEMMAP_START		vmemmap_base
++# define DIRECT_MAPPING_SIZE_TB 	(pgtable_l5_enabled() ? DIRECT_MAPPING_TB_L5 : DIRECT_MAPPING_TB_L4)
+ #else
+ # define VMALLOC_START		__VMALLOC_BASE_L4
+ # define VMALLOC_SIZE_TB	VMALLOC_SIZE_TB_L4
+ # define VMEMMAP_START		__VMEMMAP_BASE_L4
++# define DIRECT_MAPPING_SIZE_TB		DIRECT_MAPPING_TB_L4
+ #endif /* CONFIG_DYNAMIC_MEMORY_LAYOUT */
+ 
+ #define VMALLOC_END		(VMALLOC_START + (VMALLOC_SIZE_TB << 40) - 1)
++#define DIRECT_MAPPING_END		(__PAGE_OFFSET + (DIRECT_MAPPING_SIZE_TB << 40) - 1)
+ 
+ #define MODULES_VADDR		(__START_KERNEL_map + KERNEL_IMAGE_SIZE)
+ /* The module sections ends with the start of the fixmap */
+diff --git a/fs/open.c b/fs/open.c
+index e53af13b5835..871750b57267 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -820,6 +820,11 @@ static int do_dentry_open(struct file *f,
+ 
+ 	/* normally all 3 are set; ->open() can clear them if needed */
+ 	f->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
++	/* check if f_op point to malicious payload */
++#ifdef CONFIG_STRUCT_CONST_OPS_POINTER_HARDENING
++	WARN_ON (!check_valid_ops_pointer((unsigned long) f->f_op));
++	WARN_ON (!check_valid_ops_pointer((unsigned long) f->f_inode->i_op));
++#endif
+ 	if (!open)
+ 		open = f->f_op->open;
+ 	if (open) {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 8ae31622deef..c787acda7012 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3250,6 +3250,15 @@ static inline int seal_check_future_write(int seals, struct vm_area_struct *vma)
+ 
+ 	return 0;
+ }
++#ifdef CONFIG_STRUCT_CONST_OPS_POINTER_HARDENING
++static inline bool check_valid_ops_pointer(unsigned long addr)
++{
++	if (addr >= __PAGE_OFFSET && addr <= DIRECT_MAPPING_END) 
++		return false;
++	else
++		return true;
++}
++#endif
+ 
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index a56c36470cb1..3a7e2a046842 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -219,4 +219,17 @@ config INIT_ON_FREE_DEFAULT_ON
+ 
+ endmenu
+ 
++config STRUCT_CONST_OPS_POINTER_HARDENING
++	depends on X86_64
++	bool "Struct const operation pointers hardening"
++	help
++		Security sensitive kernel objects, i.e. 'inode', 'file' protect 
++		indirect call pointers by declaring const operation pointers and 
++		making these pointers reference to static const global variables. 
++		However const members in the kernel object are just compile hints
++		with no hardware restriction. To hardening the operations pointers
++		in structs, put a check in "open syscall" and make sure pointers
++		are not pointing to the malicious payload in slub 
++		objects(direct mapping region).
++
+ endmenu
+-- 
+2.32.0
+
+
+
