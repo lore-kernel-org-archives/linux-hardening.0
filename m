@@ -2,171 +2,167 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC0EC4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 03:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47954C432BE
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 03:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1705660F51
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 03:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA8160F9C
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 03:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233537AbhG1DR6 (ORCPT
+        id S233574AbhG1Dri (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jul 2021 23:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233437AbhG1DR5 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jul 2021 23:17:57 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E9EC061757;
-        Tue, 27 Jul 2021 20:17:57 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id e2-20020a17090a4a02b029016f3020d867so2210560pjh.3;
-        Tue, 27 Jul 2021 20:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dsf2sGa5jV2kjDjS35k1g7HufVmqs15n/JN/JKFWpGc=;
-        b=OBzTcRUKWDdskdvj6UWxZXcPANCb4hsjnev6nV+DaMluvUGdtHuyH0m+ix1Wq3SvVs
-         GStjN8cTWb+wYZ6hexIrprXWt1K1I8XO+P33JhbkHxQ3nAknaE1A8kc/lCe0pyrobX7B
-         fl6g3rYHXkVgw5iGNxUFtFbjGxKeQMKIp2QU6j3Dh6GazJBTUGOXC+LF5bzj0Ps4vNHT
-         bSXn9Quh52Oz2/ld4lj8BDKXiiIbgKMEe7BmpVUVrbo+UPdM1DAvi8QvdX7DlqDYPI+r
-         XL9t2Y44OlsKT7JyIr/Xo69Jz31UJpYFzAa45v2Zu3eLMEQqtiVcLF57yZwKcRq4CkI1
-         FEuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dsf2sGa5jV2kjDjS35k1g7HufVmqs15n/JN/JKFWpGc=;
-        b=ZG8+SVzJSdn+G+PijzVB5l8hMgmj0G8JFkc0Tlw27fCyTvG7xoWC8GF03Pnr8oLdUh
-         YHs8rxFIkHbCxJyYrB1iKbOZWMvq4R08yLYayuF6z+RNB716aUWVoL1LSUh1m/o2SfHY
-         hKT8zChWQnSEefTpyTWO0RCtaqPXNThJqV3O5PNfjOAFFndYtyEVazJokEoCxBBu5lF1
-         Q48UkDX2qLJ6ZoyYah17JOVBD2JnxCrzw7gF8UMlsjPz/IXR0HUwz9UuJbKw1acvx80b
-         4GG77EELEjiJAVSkUPjH9FNrt3pRUeRMUi1bNpHi16wMkn7vq25FHFawj+IlwGiDEPHj
-         poyA==
-X-Gm-Message-State: AOAM533hiuYwvpIRvpUa4wXYVmyI6ed3pm1miMvGxqtPOtXh6azVpE3w
-        icLqze4diA9yqM1dCyZfmY7K0rhGHINa6x13xrA=
-X-Google-Smtp-Source: ABdhPJyLAHiJQhIHgjAibpUxV/lgyqUQp0vfdLmMXbYjqlfERTXlN9UpptmSiLL8O5RCbACmq5O1GBxqCKYgUQhnQA8=
-X-Received: by 2002:a63:dd4a:: with SMTP id g10mr26923790pgj.179.1627442276573;
- Tue, 27 Jul 2021 20:17:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210715055923.43126-1-xiyou.wangcong@gmail.com> <202107230000.B52B102@keescook>
-In-Reply-To: <202107230000.B52B102@keescook>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 27 Jul 2021 20:17:45 -0700
-Message-ID: <CAM_iQpV3Qm_GTfCX1E_OC0PXu+diT9QHtPt4OYcJdyGRcA37Sw@mail.gmail.com>
-Subject: Re: [Patch net-next resend v2] net: use %px to print skb address in trace_netif_receive_skb
+        Tue, 27 Jul 2021 23:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233500AbhG1Drh (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 27 Jul 2021 23:47:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 16CCB60F9B;
+        Wed, 28 Jul 2021 03:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627444057;
+        bh=4OcC31ijvQFCJDYltPlZwhp8vwmKYtXpweFEQIPqsRw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M1wliU3vNkORLmrti8+u3OFBvg+3EcwasLg1sjUy7y4GZYIlgJ705tPXiyGDxhD/j
+         +UJginm8OAB8EevB+W3Ivggw5D1PzKIg0znOPHxpL6W2LKlhhDJ+ouQuYPKsYmj9Sw
+         b5abboJKh3rB1N+HJsQitUYApuAGvj722sED3Ntip2TuBvdz9mlQGMXDOLdJXG9/LH
+         JujcaRcHuFRCH4jta6B1EVeyzNhy8Tujo/qYkuknqsT/OP1qupm2FM+hYYrO5Ax0B1
+         NgHhG+OzGvaU0KU9sjMfGU2rL9MttPoEG2eqK8d0WDwgK9XC6rw4xy0+ETGWxsAhiW
+         k9LV+SUABg4pA==
+Date:   Tue, 27 Jul 2021 22:50:06 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Qitao Xu <qitao.xu@bytedance.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-hardening@vger.kernel.org,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 05/64] skbuff: Switch structure bounds to struct_group()
+Message-ID: <20210728035006.GD35706@embeddedor>
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-6-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210727205855.411487-6-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 12:09 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Jul 14, 2021 at 10:59:23PM -0700, Cong Wang wrote:
-> > From: Qitao Xu <qitao.xu@bytedance.com>
-> >
-> > The print format of skb adress in tracepoint class net_dev_template
-> > is changed to %px from %p, because we want to use skb address
-> > as a quick way to identify a packet.
->
-> No; %p was already hashed to uniquely identify unique addresses. This
-> is needlessly exposing kernel addresses with no change in utility. See
-> [1] for full details on when %px is justified (almost never).
+On Tue, Jul 27, 2021 at 01:57:56PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.
+> 
+> Replace the existing empty member position markers "headers_start" and
+> "headers_end" with a struct_group(). This will allow memcpy() and sizeof()
+> to more easily reason about sizes, and improve readability.
+> 
+> "pahole" shows no size nor member offset changes to struct sk_buff.
+> "objdump -d" shows no no meaningful object code changes (i.e. only source
+> line number induced differences and optimizations.)
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This is clearly not true. Trust us, we _did_ use %p in the beginning,
-it does not work at all. See the trace below captured with %p:
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-<idle>-0 [012] ..s. 385.248024: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=56 <idle>-0 [012] ..s. 385.261602:
-netif_receive_skb: dev=eth0 skbaddr=000000003fa575fb len=38 <idle>-0
-[012] ..s. 387.245617: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=38 <idle>-0 [012] ..s. 389.293621:
-netif_receive_skb: dev=eth0 skbaddr=000000003fa575fb len=38 <idle>-0
-[012] ..s. 391.277637: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=38 <idle>-0 [012] ..s. 392.939159:
-netif_receive_skb: dev=eth0 skbaddr=000000003fa575fb len=60 <idle>-0
-[012] .Ns. 392.939197: ip_rcv: skbaddr=000000003fa575fb <idle>-0 [012]
-.Ns. 392.939286: ip_local_deliver_finish: skbaddr=000000003fa575fb
-kworker/12:1-122 [012] ..s. 392.939369: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=52 kworker/12:1-122 [012] ..s.
-392.939371: ip_rcv: skbaddr=000000003fa575fb kworker/12:1-122 [012]
-..s. 392.939409: ip_local_deliver_finish: skbaddr=000000003fa575fb
-<idle>-0 [012] ..s. 393.261605: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=38 <idle>-0 [012] ..s. 395.174268:
-netif_receive_skb: dev=eth0 skbaddr=000000003fa575fb len=56 <idle>-0
-[012] ..s. 395.174275: ip_rcv: skbaddr=000000003fa575fb <idle>-0 [012]
-..s. 395.174284: sk_data_ready: skaddr=0000000049f7d0d9,
-skbaddr=000000003fa575fb <idle>-0 [012] .Ns. 395.174337: tcp_v4_rcv:
-sport=8801 dport=15884 saddr=192.168.122.139 daddr=192.168.122.1
-saddrv6=::ffff:192.168.122.139 daddrv6=::ffff:192.168.122.1
-state=TCP_ESTABLISHED skbaddr=000000003fa575fb <idle>-0 [012] .Ns.
-395.174338: ip_local_deliver_finish: skbaddr=000000003fa575fb <idle>-0
-[012] ..s. 395.245605: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=38 <idle>-0 [012] ..s. 397.293632:
-netif_receive_skb: dev=eth0 skbaddr=000000003fa575fb len=38 <idle>-0
-[012] ..s. 397.352766: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=56 <idle>-0 [012] ..s. 397.352771:
-ip_rcv: skbaddr=000000003fa575fb <idle>-0 [012] ..s. 397.352813:
-sk_data_ready: skaddr=0000000049f7d0d9, skbaddr=000000003fa575fb
-<idle>-0 [012] .Ns. 397.352819: tcp_v4_rcv: sport=8801 dport=15884
-saddr=192.168.122.139 daddr=192.168.122.1
-saddrv6=::ffff:192.168.122.139 daddrv6=::ffff:192.168.122.1
-state=TCP_ESTABLISHED skbaddr=000000003fa575fb <idle>-0 [012] .Ns.
-397.352819: ip_local_deliver_finish: skbaddr=000000003fa575fb <idle>-0
-[012] ..s. 399.277623: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=38 <idle>-0 [012] ..s. 401.261640:
-netif_receive_skb: dev=eth0 skbaddr=000000003fa575fb len=38 <idle>-0
-[012] ..s. 402.671285: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=56 <idle>-0 [012] ..s. 402.671294:
-ip_rcv: skbaddr=000000003fa575fb <idle>-0 [012] ..s. 402.671344:
-sk_data_ready: skaddr=0000000049f7d0d9, skbaddr=000000003fa575fb
-<idle>-0 [012] .Ns. 402.671355: tcp_v4_rcv: sport=8801 dport=15884
-saddr=192.168.122.139 daddr=192.168.122.1
-saddrv6=::ffff:192.168.122.139 daddrv6=::ffff:192.168.122.1
-state=TCP_ESTABLISHED skbaddr=000000003fa575fb <idle>-0 [012] .Ns.
-402.671356: ip_local_deliver_finish: skbaddr=000000003fa575fb <idle>-0
-[012] ..s. 403.245617: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=38 <idle>-0 [012] ..s. 403.688075:
-netif_receive_skb: dev=eth0 skbaddr=000000003fa575fb len=52 <idle>-0
-[012] ..s. 403.688080: ip_rcv: skbaddr=000000003fa575fb <idle>-0 [012]
-.Ns. 403.688092: sk_data_ready: skaddr=0000000049f7d0d9,
-skbaddr=000000003fa575fb <idle>-0 [012] .Ns. 403.688094: tcp_v4_rcv:
-sport=8801 dport=15884 saddr=192.168.122.139 daddr=192.168.122.1
-saddrv6=::ffff:192.168.122.139 daddrv6=::ffff:192.168.122.1
-state=TCP_CLOSE_WAIT skbaddr=000000003fa575fb <idle>-0 [012] .Ns.
-403.688095: ip_local_deliver_finish: skbaddr=000000003fa575fb nc-1044
-[012] ..s. 403.688222: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=52 nc-1044 [012] ..s. 403.688222: ip_rcv:
-skbaddr=000000003fa575fb nc-1044 [012] ..s. 403.688237: tcp_v4_rcv:
-sport=8801 dport=15884 saddr=192.168.122.139 daddr=192.168.122.1
-saddrv6=::ffff:192.168.122.139 daddrv6=::ffff:192.168.122.1
-state=TCP_CLOSE skbaddr=000000003fa575fb nc-1044 [012] ..s.
-403.688246: ip_local_deliver_finish: skbaddr=000000003fa575fb <idle>-0
-[012] ..s. 405.293625: netif_receive_skb: dev=eth0
-skbaddr=000000003fa575fb len=38 <idle>-0 [012] ..s. 407.137723:
-netif_receive_skb: dev=eth0 skbaddr=000000003fa575fb len=222
+Thanks
+--
+Gustavo
 
-
->
-> > Note, trace ring buffer is only accessible to privileged users,
-> > it is safe to use a real kernel address here.
->
-> That's not accurate either; there is a difference between uid 0 and
-> kernel mode privilege levels.
-
-Not sure how accurate we can be just to make you happy. Please
-give us a pointer on the accuracy.
-
-Thanks.
+> ---
+>  drivers/net/wireguard/queueing.h |  4 +---
+>  include/linux/skbuff.h           |  9 ++++-----
+>  net/core/skbuff.c                | 14 +++++---------
+>  3 files changed, 10 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
+> index 4ef2944a68bc..52da5e963003 100644
+> --- a/drivers/net/wireguard/queueing.h
+> +++ b/drivers/net/wireguard/queueing.h
+> @@ -79,9 +79,7 @@ static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
+>  	u8 sw_hash = skb->sw_hash;
+>  	u32 hash = skb->hash;
+>  	skb_scrub_packet(skb, true);
+> -	memset(&skb->headers_start, 0,
+> -	       offsetof(struct sk_buff, headers_end) -
+> -		       offsetof(struct sk_buff, headers_start));
+> +	memset(&skb->headers, 0, sizeof(skb->headers));
+>  	if (encapsulating) {
+>  		skb->l4_hash = l4_hash;
+>  		skb->sw_hash = sw_hash;
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index f19190820e63..b4032e9b130e 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -800,11 +800,10 @@ struct sk_buff {
+>  	__u8			active_extensions;
+>  #endif
+>  
+> -	/* fields enclosed in headers_start/headers_end are copied
+> +	/* Fields enclosed in headers group are copied
+>  	 * using a single memcpy() in __copy_skb_header()
+>  	 */
+> -	/* private: */
+> -	__u32			headers_start[0];
+> +	struct_group(headers,
+>  	/* public: */
+>  
+>  /* if you move pkt_type around you also must adapt those constants */
+> @@ -920,8 +919,8 @@ struct sk_buff {
+>  	u64			kcov_handle;
+>  #endif
+>  
+> -	/* private: */
+> -	__u32			headers_end[0];
+> +	); /* end headers group */
+> +
+>  	/* public: */
+>  
+>  	/* These elements must be at the end, see alloc_skb() for details.  */
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index fc7942c0dddc..5f29c65507e0 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -987,12 +987,10 @@ void napi_consume_skb(struct sk_buff *skb, int budget)
+>  }
+>  EXPORT_SYMBOL(napi_consume_skb);
+>  
+> -/* Make sure a field is enclosed inside headers_start/headers_end section */
+> +/* Make sure a field is contained by headers group */
+>  #define CHECK_SKB_FIELD(field) \
+> -	BUILD_BUG_ON(offsetof(struct sk_buff, field) <		\
+> -		     offsetof(struct sk_buff, headers_start));	\
+> -	BUILD_BUG_ON(offsetof(struct sk_buff, field) >		\
+> -		     offsetof(struct sk_buff, headers_end));	\
+> +	BUILD_BUG_ON(offsetof(struct sk_buff, field) !=		\
+> +		     offsetof(struct sk_buff, headers.field));	\
+>  
+>  static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
+>  {
+> @@ -1004,14 +1002,12 @@ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
+>  	__skb_ext_copy(new, old);
+>  	__nf_copy(new, old, false);
+>  
+> -	/* Note : this field could be in headers_start/headers_end section
+> +	/* Note : this field could be in the headers group.
+>  	 * It is not yet because we do not want to have a 16 bit hole
+>  	 */
+>  	new->queue_mapping = old->queue_mapping;
+>  
+> -	memcpy(&new->headers_start, &old->headers_start,
+> -	       offsetof(struct sk_buff, headers_end) -
+> -	       offsetof(struct sk_buff, headers_start));
+> +	memcpy(&new->headers, &old->headers, sizeof(new->headers));
+>  	CHECK_SKB_FIELD(protocol);
+>  	CHECK_SKB_FIELD(csum);
+>  	CHECK_SKB_FIELD(hash);
+> -- 
+> 2.30.2
+> 
