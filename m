@@ -2,149 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97833C43214
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 18:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3DEC4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 18:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE216101B
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 18:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCE360F9B
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 18:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbhG1S5U (ORCPT
+        id S231334AbhG1S50 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jul 2021 14:57:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45134 "EHLO
+        Wed, 28 Jul 2021 14:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231222AbhG1S5T (ORCPT
+        with ESMTP id S231231AbhG1S5Z (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jul 2021 14:57:19 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096CAC061765
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jul 2021 11:57:17 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id t21so3792987plr.13
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jul 2021 11:57:17 -0700 (PDT)
+        Wed, 28 Jul 2021 14:57:25 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42543C061765
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jul 2021 11:57:23 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id m9so4287029ljp.7
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jul 2021 11:57:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=127Od1Z5L5mrPERJlQTktPz34XXJuvOrvHqT3KKh12Q=;
-        b=CT/CUy6V11s/6KhYMzSsdsMDErLudpJAHUqNC0Rpu9F7Ero2CNsiQemV80Kh7YxA18
-         O09bddDAkQD5N79FTWd2JhufucZWJdvUnGQK4C3MDdI6o+fliBhy2PpoYHcWAEFN4pot
-         mlS6O/Te+d+/T7xLqqDiIN6UOLBL2XxRO5jCQ=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wz3zSkFzjQntghr6ZqIZrO9ooDQ8NkXIW4sIoKf9LII=;
+        b=erh9WZmKaNqQHnCbDmc/UVs3PMxojFdDOnh2teaK7xiadq49gjo61tfLnlD89XfG5M
+         bkj9NDS9bdOTyv47cYV1oKYWM7mTogJCf2sLZ7aruoxXpg/bXq+8ZX4UAWWoy8hBb0qD
+         kkfEqNi0r/geKhsh/ofHJskphQg6DBJp2cq+571fOPH4De6pRgYcyuSXIzi4boCT2JyK
+         rEc3zTIUhFoIYcQkW4wgTtR1FDOpTilTlFoOk0zGZGSO+edUVpxnw/kcahOaiU9WaWsg
+         hzSREd9n5DgchC5LT3CoqasYvaWNLWTfMI/MsW12AI+ZV4GWp+ZfdayXl9MCteyw2MH7
+         /RIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=127Od1Z5L5mrPERJlQTktPz34XXJuvOrvHqT3KKh12Q=;
-        b=as/vXwXmGQQcisJip9rwSKLxFXxpbu28cAKsAx6Eji7EdPXZxasfdgn2xTdhNzVt4n
-         8kE1IfpLFGovZ3PIhnrqvLmEHk4Fa0MYJeM+pdbyXdl0R0sn9FO/xX7xJSfBkZUp2sC3
-         ZhzNxI2jNaqqcxyts1dCPE4VhVzT30rSC5Z0ZkR3H2PbARHksbxBMyXDJsUSKwDp4/Ux
-         UKbuSjlqwRpTpwJR64UW6V+b83IdDWcD0HD6Vo6w/PSCkDhT6q6YDFn+s3V78iC4OBQo
-         IBlhgfvrYoY0QrV0Xn4t6XyXBAgZhSXyar6xmfMDeiNa7vCLs+v3K5ZgTN0kNkswRSyK
-         +3+g==
-X-Gm-Message-State: AOAM531HaCW39lH1ZmQqSKOA436XqX9cj77EFqBbOFLNBhrMmJrL4Pmr
-        eA9rORN3wJ7jVGh1hjuATJZ92w==
-X-Google-Smtp-Source: ABdhPJznHpu/gslPhcK+chR4/yRixyO0Zt/1nxlU5ZOnQ6g7gqNYFE0PSpANagAqHnwDfuJHc+ddvw==
-X-Received: by 2002:a63:4c26:: with SMTP id z38mr313058pga.376.1627498636621;
-        Wed, 28 Jul 2021 11:57:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d14sm5792859pjc.0.2021.07.28.11.57.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jul 2021 11:57:16 -0700 (PDT)
-Date:   Wed, 28 Jul 2021 11:57:15 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH 36/64] scsi: ibmvscsi: Avoid multi-field memset()
- overflow by aiming at srp
-Message-ID: <202107281152.515A3BA@keescook>
-References: <20210727205855.411487-1-keescook@chromium.org>
- <20210727205855.411487-37-keescook@chromium.org>
- <yq135rzp79c.fsf@ca-mkp.ca.oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wz3zSkFzjQntghr6ZqIZrO9ooDQ8NkXIW4sIoKf9LII=;
+        b=DL+Dk2P94ObqA2Hsuk6VmLww/SoNBys50npUZtdaw4JhJN2gBF0xrUTFt8r0UP9zcA
+         E7052ENeTSf2T+Ny16D15vzHdgZiTDbrPjCxrScT/wvAzg9ee3qs+fRxJoD8QFjsw9q4
+         B85Br2EM5voaEOtQVfNtzCD9/P4KH2oiBy6jx03ktZH21Bv+SrOAwG/86t26BiSy0TPw
+         pymLdmPY9fr4LhwuSMxS7ViaxVENFxX520JbHdtrVfukG7vbOLnlCaGt01JKL8ojwdB6
+         j1BAhTVQJlb4Nj3R0Pzbu/AcpI8FZmR8wDQ0sc0xA1wjqtE9WTgiRj1M/wa2Rnv3nJFI
+         mnzQ==
+X-Gm-Message-State: AOAM531aEZtDLVVw7Zw0F1m3jGe8fOexKt6X8Yyciur+LJG6KffNLW56
+        REARh55R5Bdhff4xovN9/+LjJsTYMg1vYmVu4ZN9uw==
+X-Google-Smtp-Source: ABdhPJzmD03VSAkTiDzk+W1Cgj85XGNlk2DPLdChRVx0hZZjmdQyZoM+U7EvgM2sc2Yr0a1ObQMzPP1l5SAUXRd4k2c=
+X-Received: by 2002:a2e:8887:: with SMTP id k7mr735557lji.226.1627498641274;
+ Wed, 28 Jul 2021 11:57:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq135rzp79c.fsf@ca-mkp.ca.oracle.com>
+References: <20210715055923.43126-1-xiyou.wangcong@gmail.com>
+ <202107230000.B52B102@keescook> <CAG48ez0b-t_kJXVeFixYMoqRa-g1VRPUhFVknttiBYnf-cjTyg@mail.gmail.com>
+ <20210728115633.614e9bd9@oasis.local.home> <202107281146.B2160202D@keescook>
+In-Reply-To: <202107281146.B2160202D@keescook>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 28 Jul 2021 20:56:54 +0200
+Message-ID: <CAG48ez358qhf2m3=WY-ngtQT9SOLkGTGMqeb7seFpNaSiqvtSQ@mail.gmail.com>
+Subject: Re: tracepoints and %p [was: Re: [Patch net-next resend v2] net: use
+ %px to print skb address in trace_netif_receive_skb]
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Qitao Xu <qitao.xu@bytedance.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jul 27, 2021 at 09:39:39PM -0400, Martin K. Petersen wrote:
-> 
-> Kees,
-> 
-> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > field bounds checking for memset(), avoid intentionally writing across
-> > neighboring fields.
-> >
-> > Instead of writing beyond the end of evt_struct->iu.srp.cmd, target the
-> > upper union (evt_struct->iu.srp) instead, as that's what is being wiped.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Orthogonal to your change, it wasn't immediately obvious to me that
-> SRP_MAX_IU_LEN was the correct length to use for an srp_cmd. However, I
-> traversed the nested unions and it does look OK.
+On Wed, Jul 28, 2021 at 8:48 PM Kees Cook <keescook@chromium.org> wrote:
+> How does ftrace interact with lockdown's confidentiality mode?
 
-Yeah, I had the same fun. Maybe I should add a BUILD_BUG_ON() here to
-help illustrate the relationship? I did that in a few other places where
-the equalities weren't very clear.
-
-For example, change it to:
-
-+	BUILD_BUG_ON(sizeof(evt_struct->iu.srp) != SRP_MAX_IU_LEN);
-+	memset(&evt_struct->iu.srp, 0x00, sizeof(evt_struct->iu.srp));
- 	srp_cmd = &evt_struct->iu.srp.cmd;
--	memset(srp_cmd, 0x00, SRP_MAX_IU_LEN);
-
-> 
-> For good measure I copied Tyrel and Brian.
-> 
-> Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-
-For the moment, I'll leave the patch as-is unless you prefer having
-the BUILD_BUG_ON(). :)
-
-Thanks!
-
--Kees
-
-> 
-> > ---
-> >  drivers/scsi/ibmvscsi/ibmvscsi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-> > index e6a3eaaa57d9..7e8beb42d2d3 100644
-> > --- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-> > +++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-> > @@ -1055,8 +1055,8 @@ static int ibmvscsi_queuecommand_lck(struct scsi_cmnd *cmnd,
-> >  		return SCSI_MLQUEUE_HOST_BUSY;
-> >  
-> >  	/* Set up the actual SRP IU */
-> > +	memset(&evt_struct->iu.srp, 0x00, SRP_MAX_IU_LEN);
-> >  	srp_cmd = &evt_struct->iu.srp.cmd;
-> > -	memset(srp_cmd, 0x00, SRP_MAX_IU_LEN);
-> >  	srp_cmd->opcode = SRP_CMD;
-> >  	memcpy(srp_cmd->cdb, cmnd->cmnd, sizeof(srp_cmd->cdb));
-> >  	int_to_scsilun(lun, &srp_cmd->lun);
-> 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
-
-
--- 
-Kees Cook
+Should be LOCKDOWN_TRACEFS ?
