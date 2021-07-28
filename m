@@ -2,124 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF075C4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5062C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C474560FC0
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DD960F9C
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231408AbhG1JgT (ORCPT
+        id S235396AbhG1JpE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jul 2021 05:36:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:53920 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231322AbhG1JgT (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jul 2021 05:36:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B8701FB;
-        Wed, 28 Jul 2021 02:36:17 -0700 (PDT)
-Received: from [10.57.36.146] (unknown [10.57.36.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85CD53F73D;
-        Wed, 28 Jul 2021 02:36:15 -0700 (PDT)
-Subject: Re: [PATCH] drivers/soc: Remove all strcpy() uses in favor of
- strscpy()
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Geert Uytterhoeven' <geert@linux-m68k.org>,
-        Len Baker <len.baker@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20210725151434.7122-1-len.baker@gmx.com>
- <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
- <80f4574c9f6c4c6780735b0fffd83363@AcuMS.aculab.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <fa2fd44d-8cd7-b700-2e7b-d88c9c52507d@arm.com>
-Date:   Wed, 28 Jul 2021 10:36:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Wed, 28 Jul 2021 05:45:04 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:39346 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231408AbhG1JpD (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 28 Jul 2021 05:45:03 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id D0A3220192;
+        Wed, 28 Jul 2021 09:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1627465500;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2V2BZGwQx38O4MS3PRn5zsVNMTv9yCXn2m+qCzLq9X8=;
+        b=qISOv7ZY9hulXEAWirIGv076VG+Fy6/bFjd1f4ypkccP1xm9nEv8+TAb68zuXNUPMQy0cU
+        /rfLtmn9f3OAEwizZKY+rLIPDTqNf5cyvxLkj5zm0TqSvqnoOA8NGUWehu0f8+QJqJceZe
+        oGP2ijInSIdmaUrT8lpYfEcXl7p/oUo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1627465500;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2V2BZGwQx38O4MS3PRn5zsVNMTv9yCXn2m+qCzLq9X8=;
+        b=Ha0E1f8zdnFNiVa3aeBcp0nZudDEJp4IhJRHzPeiXA+AIOODgJaOEUN3U5kyeT8py1qjno
+        mgxJ85JZdbFf0eDA==
+Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
+        by relay2.suse.de (Postfix) with ESMTP id BC57DA3B81;
+        Wed, 28 Jul 2021 09:45:00 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id F10E9DA952; Wed, 28 Jul 2021 11:42:15 +0200 (CEST)
+Date:   Wed, 28 Jul 2021 11:42:15 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 47/64] btrfs: Use memset_after() to clear end of struct
+Message-ID: <20210728094215.GX5047@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-48-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <80f4574c9f6c4c6780735b0fffd83363@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210727205855.411487-48-keescook@chromium.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2021-07-28 09:36, David Laight wrote:
-> From: Geert Uytterhoeven
->> Sent: 26 July 2021 09:03
->>
->> Hi Len,
->>
->> On Sun, Jul 25, 2021 at 5:15 PM Len Baker <len.baker@gmx.com> wrote:
->>> strcpy() performs no bounds checking on the destination buffer. This
->>> could result in linear overflows beyond the end of the buffer, leading
->>> to all kinds of misbehaviors. The safe replacement is strscpy().
->>>
->>> Signed-off-by: Len Baker <len.baker@gmx.com>
->>
->> Thanks for your patch!
->>
->>> ---
->>> This is a task of the KSPP [1]
->>>
->>> [1] https://github.com/KSPP/linux/issues/88
->>
->> Any chance the almost one year old question in that ticket can be
->> answered?
->>
->>>   drivers/soc/renesas/rcar-sysc.c     |  6 ++++--
->>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->> But please see my comments below...
->>
->>> --- a/drivers/soc/renesas/r8a779a0-sysc.c
->>> +++ b/drivers/soc/renesas/r8a779a0-sysc.c
->>> @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
->>>          for (i = 0; i < info->num_areas; i++) {
->>>                  const struct r8a779a0_sysc_area *area = &info->areas[i];
->>>                  struct r8a779a0_sysc_pd *pd;
->>> +               size_t area_name_size;
->>
->> I wouldn't mind a shorter name, like "n".
->>
->>>
->>>                  if (!area->name) {
->>>                          /* Skip NULLified area */
->>>                          continue;
->>>                  }
->>>
->>> -               pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
->>> +               area_name_size = strlen(area->name) + 1;
->>> +               pd = kzalloc(sizeof(*pd) + area_name_size, GFP_KERNEL);
->>>                  if (!pd) {
->>>                          error = -ENOMEM;
->>>                          goto out_put;
->>>                  }
->>>
->>> -               strcpy(pd->name, area->name);
->>> +               strscpy(pd->name, area->name, area_name_size);
+On Tue, Jul 27, 2021 at 01:58:38PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 > 
-> You can just use memcpy().
+> Use memset_after() so memset() doesn't get confused about writing
+> beyond the destination member that is intended to be the starting point
+> of zeroing through the end of the struct.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  fs/btrfs/root-tree.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
+> index 702dc5441f03..ec9e78f65fca 100644
+> --- a/fs/btrfs/root-tree.c
+> +++ b/fs/btrfs/root-tree.c
+> @@ -39,10 +39,7 @@ static void btrfs_read_root_item(struct extent_buffer *eb, int slot,
+>  		need_reset = 1;
+>  	}
+>  	if (need_reset) {
+> -		memset(&item->generation_v2, 0,
+> -			sizeof(*item) - offsetof(struct btrfs_root_item,
+> -					generation_v2));
+> -
 
-Indeed. In fact I'd go as far as saying that it might be worth teaching 
-static checkers to recognise patterns that boil down to strscpy(dst, 
-src, strlen(src) + 1) and flag them as suspect, because AFAICS that 
-would always represent either an unnecessarily elaborate memcpy(), or 
-far worse just an obfuscated strcpy().
+Please add
+		/* Clear all members from generation_v2 onwards */
 
-Robin.
+> +		memset_after(item, 0, level);
+>  		generate_random_guid(item->uuid);
+
+Acked-by: David Sterba <dsterba@suse.com>
