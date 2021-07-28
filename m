@@ -2,106 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF66C4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF075C4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7702360FC0
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C474560FC0
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jul 2021 09:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235450AbhG1J0L (ORCPT
+        id S231408AbhG1JgT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jul 2021 05:26:11 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:46536 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231482AbhG1J0L (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jul 2021 05:26:11 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 9CE3A222EA;
-        Wed, 28 Jul 2021 09:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1627464368;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5viwOi0Ex8EMpcyt5fZAmdaE8zZE3JenBgOEfHjTO8U=;
-        b=s2tZ7LKmgkhy+ZcYKXY0OMBdF6rgfEncaTSZK7ZE/m30LIKZxGFisayoitYrPoUKgQFilK
-        JvtrvqLBc81t+lTUPqdiALN99CIl4lL5iiGoJzH4SmvIp9lTCLyWsuBMqJ5PpfanZxmV/N
-        Ro/wN4dr9AdUz3PKRKyK9FUdOlBL5bs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1627464368;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5viwOi0Ex8EMpcyt5fZAmdaE8zZE3JenBgOEfHjTO8U=;
-        b=XqnccbRI7Ba90MUmDKttFQTuMWonwuyX1swzv/h7m5E54hesuDgaFK/aI8UPg+OaZi/FOS
-        XAEigI499ra4OLDQ==
-Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
-        by relay2.suse.de (Postfix) with ESMTP id 8903AA3B8C;
-        Wed, 28 Jul 2021 09:26:08 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id C207DDA8CC; Wed, 28 Jul 2021 11:23:23 +0200 (CEST)
-Date:   Wed, 28 Jul 2021 11:23:23 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 02/64] mac80211: Use flex-array for radiotap header bitmap
-Message-ID: <20210728092323.GW5047@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20210727205855.411487-1-keescook@chromium.org>
- <20210727205855.411487-3-keescook@chromium.org>
- <20210728073556.GP1931@kadam>
+        Wed, 28 Jul 2021 05:36:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:53920 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231322AbhG1JgT (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 28 Jul 2021 05:36:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B8701FB;
+        Wed, 28 Jul 2021 02:36:17 -0700 (PDT)
+Received: from [10.57.36.146] (unknown [10.57.36.146])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85CD53F73D;
+        Wed, 28 Jul 2021 02:36:15 -0700 (PDT)
+Subject: Re: [PATCH] drivers/soc: Remove all strcpy() uses in favor of
+ strscpy()
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Geert Uytterhoeven' <geert@linux-m68k.org>,
+        Len Baker <len.baker@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20210725151434.7122-1-len.baker@gmx.com>
+ <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
+ <80f4574c9f6c4c6780735b0fffd83363@AcuMS.aculab.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <fa2fd44d-8cd7-b700-2e7b-d88c9c52507d@arm.com>
+Date:   Wed, 28 Jul 2021 10:36:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210728073556.GP1931@kadam>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <80f4574c9f6c4c6780735b0fffd83363@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 10:35:56AM +0300, Dan Carpenter wrote:
-> @@ -372,7 +372,7 @@ ieee80211_add_rx_radiotap_header(struct ieee80211_local *local,
->  			ieee80211_calculate_rx_timestamp(local, status,
->  							 mpdulen, 0),
->  			pos);
-> -		rthdr->it_present |= cpu_to_le32(1 << IEEE80211_RADIOTAP_TSFT);
-> +		rthdr->data.it_present |= cpu_to_le32(1 << IEEE80211_RADIOTAP_TSFT);
+On 2021-07-28 09:36, David Laight wrote:
+> From: Geert Uytterhoeven
+>> Sent: 26 July 2021 09:03
+>>
+>> Hi Len,
+>>
+>> On Sun, Jul 25, 2021 at 5:15 PM Len Baker <len.baker@gmx.com> wrote:
+>>> strcpy() performs no bounds checking on the destination buffer. This
+>>> could result in linear overflows beyond the end of the buffer, leading
+>>> to all kinds of misbehaviors. The safe replacement is strscpy().
+>>>
+>>> Signed-off-by: Len Baker <len.baker@gmx.com>
+>>
+>> Thanks for your patch!
+>>
+>>> ---
+>>> This is a task of the KSPP [1]
+>>>
+>>> [1] https://github.com/KSPP/linux/issues/88
+>>
+>> Any chance the almost one year old question in that ticket can be
+>> answered?
+>>
+>>>   drivers/soc/renesas/rcar-sysc.c     |  6 ++++--
+>>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>> But please see my comments below...
+>>
+>>> --- a/drivers/soc/renesas/r8a779a0-sysc.c
+>>> +++ b/drivers/soc/renesas/r8a779a0-sysc.c
+>>> @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
+>>>          for (i = 0; i < info->num_areas; i++) {
+>>>                  const struct r8a779a0_sysc_area *area = &info->areas[i];
+>>>                  struct r8a779a0_sysc_pd *pd;
+>>> +               size_t area_name_size;
+>>
+>> I wouldn't mind a shorter name, like "n".
+>>
+>>>
+>>>                  if (!area->name) {
+>>>                          /* Skip NULLified area */
+>>>                          continue;
+>>>                  }
+>>>
+>>> -               pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
+>>> +               area_name_size = strlen(area->name) + 1;
+>>> +               pd = kzalloc(sizeof(*pd) + area_name_size, GFP_KERNEL);
+>>>                  if (!pd) {
+>>>                          error = -ENOMEM;
+>>>                          goto out_put;
+>>>                  }
+>>>
+>>> -               strcpy(pd->name, area->name);
+>>> +               strscpy(pd->name, area->name, area_name_size);
+> 
+> You can just use memcpy().
 
-A drive-by comment, not related to the patchset, but rather the
-ieee80211 driver itself.
+Indeed. In fact I'd go as far as saying that it might be worth teaching 
+static checkers to recognise patterns that boil down to strscpy(dst, 
+src, strlen(src) + 1) and flag them as suspect, because AFAICS that 
+would always represent either an unnecessarily elaborate memcpy(), or 
+far worse just an obfuscated strcpy().
 
-Shift expressions with (1 << NUMBER) can be subtly broken once the
-NUMBER is 31 and the value gets silently cast to a 64bit type. It will
-become 0xfffffffff80000000.
-
-I've checked the IEEE80211_RADIOTAP_* defintions if this is even remotely
-possible and yes, IEEE80211_RADIOTAP_EXT == 31. Fortunatelly it seems to
-be used with used with a 32bit types (eg. _bitmap_shifter) so there are
-no surprises.
-
-The recommended practice is to always use unsigned types for shifts, so
-"1U << ..." at least.
+Robin.
