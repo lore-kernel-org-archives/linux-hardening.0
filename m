@@ -2,255 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAEEC4320A
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 12:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A843C4338F
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 18:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A51E3603E7
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 12:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F0960F46
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 18:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235169AbhG2MLh (ORCPT
+        id S229906AbhG2S67 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jul 2021 08:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235919AbhG2MLf (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jul 2021 08:11:35 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA44C061796
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Jul 2021 05:11:31 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id l18so6663312wrv.5
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Jul 2021 05:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8Nz6vB9p8A0wBJs6kkDYFIrrTzDZDT+uS9XB0IAUyko=;
-        b=IX9QYptYV6st0L1XmOo2+ZVTD1czWMC0yv2A0wEKs5uhoKxyG1M8hYGFid/Rc9caoJ
-         g3s8uihSolFDNGNVDmh/KcSkUnjuvxHUSlZem764aZk2d9p45qyVKzkwnR65zmpbIjwe
-         oixk5YiEQMSk6egRcnGh8U5DvdkvMLdRPa8MA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=8Nz6vB9p8A0wBJs6kkDYFIrrTzDZDT+uS9XB0IAUyko=;
-        b=I9ilvYEC6TDXHypozxvBSqKLn54ucEVcQk36VupvXyANY2060E3Am/5hMPTxT8jEHA
-         N69SzZgE5L1s/Iq8yAZi543tQowTPkb2z/97iiR2SgG5dQvu5447lCuOHIhOHPQY8lIL
-         PIhWz6OavVXVswad/V8u3HzvAiFq+A8FK4B2LMq24VvaMm/rtdvlUhupugMrGEtLTi/j
-         A12AmXsCIc74X02WY7mT6Rg4LJBO0GYtM8TjpCzYWaPMDUFNfCnSiNdtFqGQ/R/znY6R
-         Iw3VUubYrJUoJvhzjP0wbFUn/GiWNQPTfK6XVoS+bvoWcQiZDItjrpQLsJKGOcT0nvLJ
-         IYPA==
-X-Gm-Message-State: AOAM533+R9mvH8tbqQRcWCSmmMq2D6/5W5Cig6uCosMNftFz+9Vfm942
-        bnIC9xfyAGygvweo/1Z0MvU/ZQ==
-X-Google-Smtp-Source: ABdhPJyxNFOOp917FBlh8xg1Ee/DiYPVZ7Er8zzOKotZZKyVJ/yUFb4NW2JEu0Us3Suihgl1chkn3Q==
-X-Received: by 2002:a5d:4e91:: with SMTP id e17mr4462754wru.7.1627560689971;
-        Thu, 29 Jul 2021 05:11:29 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id a14sm3323850wrf.97.2021.07.29.05.11.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jul 2021 05:11:29 -0700 (PDT)
-Date:   Thu, 29 Jul 2021 14:11:27 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kbuild@vger.kernel.org,
-        netdev@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
+        Thu, 29 Jul 2021 14:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229713AbhG2S66 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 29 Jul 2021 14:58:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D1F9600D4;
+        Thu, 29 Jul 2021 18:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627585135;
+        bh=NY+6KsF6TgwvjW8V2qdlD2zqaxdlHCFW8WbLHI1uw44=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QwbKTXNKGQlFHhv+nWwVAGS0y7dhrRo4QVZVXmOtNRN5nEqtsizCnwgYVL71jdemC
+         NN4LRUz2GWMm7y5nxjYEDLhzAkGKRRgwxxSk0RtIMXokH62NJ6mpGF6A4PMG9LR/dk
+         TFkkqH24xr7RZti78Lg43eSuDbQW/o4UTfuxqASt48qIZ7hGRVSrrGAHfGoGqApQr4
+         fe/qqMg9s0eu93lcxSA+fP7WwiK2Zm7316Nw0lTenmESdj7Qq2k4auX+VlqVjOzIyH
+         tJgu8hsfbG/DoN1PkOib/PnMN36fOPMKqtasZoBoWlwaNtiGVNPNof0RnW7kK1gS1x
+         /NEEryLj0coQw==
+Date:   Thu, 29 Jul 2021 11:58:50 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-block@vger.kernel.org, clang-built-linux@googlegroups.com,
         Keith Packard <keithpac@amazon.com>,
-        linux-hardening@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 25/64] drm/mga/mga_ioc32: Use struct_group() for memcpy()
- region
-Message-ID: <YQKa76A6XuFqgM03@phenom.ffwll.local>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>, linux-kbuild@vger.kernel.org,
-        netdev@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-block@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Keith Packard <keithpac@amazon.com>,
-        linux-hardening@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 54/64] ipv6: Use struct_group() to zero rt6_info
+Message-ID: <20210729115850.7f913c73@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20210727205855.411487-55-keescook@chromium.org>
 References: <20210727205855.411487-1-keescook@chromium.org>
- <20210727205855.411487-26-keescook@chromium.org>
- <YQDxmEYfppJ4wAmD@kroah.com>
+        <20210727205855.411487-55-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YQDxmEYfppJ4wAmD@kroah.com>
-X-Operating-System: Linux phenom 5.10.0-7-amd64 
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 07:56:40AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jul 27, 2021 at 01:58:16PM -0700, Kees Cook wrote:
-> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > field bounds checking for memcpy(), memmove(), and memset(), avoid
-> > intentionally writing across neighboring fields.
-> > 
-> > Use struct_group() in struct drm32_mga_init around members chipset, sgram,
-> > maccess, fb_cpp, front_offset, front_pitch, back_offset, back_pitch,
-> > depth_cpp, depth_offset, depth_pitch, texture_offset, and texture_size,
-> > so they can be referenced together. This will allow memcpy() and sizeof()
-> > to more easily reason about sizes, improve readability, and avoid future
-> > warnings about writing beyond the end of chipset.
-> > 
-> > "pahole" shows no size nor member offset changes to struct drm32_mga_init.
-> > "objdump -d" shows no meaningful object code changes (i.e. only source
-> > line number induced differences and optimizations).
-> > 
-> > Note that since this includes a UAPI header, struct_group() has been
-> > explicitly redefined local to the header.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  drivers/gpu/drm/mga/mga_ioc32.c | 30 ++++++++++++++------------
-> >  include/uapi/drm/mga_drm.h      | 37 ++++++++++++++++++++++++---------
-> >  2 files changed, 44 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/mga/mga_ioc32.c b/drivers/gpu/drm/mga/mga_ioc32.c
-> > index 4fd4de16cd32..fbd0329dbd4f 100644
-> > --- a/drivers/gpu/drm/mga/mga_ioc32.c
-> > +++ b/drivers/gpu/drm/mga/mga_ioc32.c
-> > @@ -38,16 +38,21 @@
-> >  typedef struct drm32_mga_init {
-> >  	int func;
-> >  	u32 sarea_priv_offset;
-> > -	int chipset;
-> > -	int sgram;
-> > -	unsigned int maccess;
-> > -	unsigned int fb_cpp;
-> > -	unsigned int front_offset, front_pitch;
-> > -	unsigned int back_offset, back_pitch;
-> > -	unsigned int depth_cpp;
-> > -	unsigned int depth_offset, depth_pitch;
-> > -	unsigned int texture_offset[MGA_NR_TEX_HEAPS];
-> > -	unsigned int texture_size[MGA_NR_TEX_HEAPS];
-> > +	struct_group(always32bit,
-> > +		int chipset;
-> > +		int sgram;
-> > +		unsigned int maccess;
-> > +		unsigned int fb_cpp;
-> > +		unsigned int front_offset;
-> > +		unsigned int front_pitch;
-> > +		unsigned int back_offset;
-> > +		unsigned int back_pitch;
-> > +		unsigned int depth_cpp;
-> > +		unsigned int depth_offset;
-> > +		unsigned int depth_pitch;
-> > +		unsigned int texture_offset[MGA_NR_TEX_HEAPS];
-> > +		unsigned int texture_size[MGA_NR_TEX_HEAPS];
-> > +	);
-> >  	u32 fb_offset;
-> >  	u32 mmio_offset;
-> >  	u32 status_offset;
-> > @@ -67,9 +72,8 @@ static int compat_mga_init(struct file *file, unsigned int cmd,
-> >  
-> >  	init.func = init32.func;
-> >  	init.sarea_priv_offset = init32.sarea_priv_offset;
-> > -	memcpy(&init.chipset, &init32.chipset,
-> > -		offsetof(drm_mga_init_t, fb_offset) -
-> > -		offsetof(drm_mga_init_t, chipset));
-> > +	memcpy(&init.always32bit, &init32.always32bit,
-> > +	       sizeof(init32.always32bit));
-> >  	init.fb_offset = init32.fb_offset;
-> >  	init.mmio_offset = init32.mmio_offset;
-> >  	init.status_offset = init32.status_offset;
-> > diff --git a/include/uapi/drm/mga_drm.h b/include/uapi/drm/mga_drm.h
-> > index 8c4337548ab5..61612e5ecab2 100644
-> > --- a/include/uapi/drm/mga_drm.h
-> > +++ b/include/uapi/drm/mga_drm.h
-> > @@ -265,6 +265,16 @@ typedef struct _drm_mga_sarea {
-> >  #define DRM_IOCTL_MGA_WAIT_FENCE    DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_WAIT_FENCE, __u32)
-> >  #define DRM_IOCTL_MGA_DMA_BOOTSTRAP DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_DMA_BOOTSTRAP, drm_mga_dma_bootstrap_t)
-> >  
-> > +#define __struct_group(name, fields) \
-> > +	union { \
-> > +		struct { \
-> > +			fields \
-> > +		}; \
-> > +		struct { \
-> > +			fields \
-> > +		} name; \
-> > +	}
-> > +
-> >  typedef struct _drm_mga_warp_index {
-> >  	int installed;
-> >  	unsigned long phys_addr;
-> > @@ -279,20 +289,25 @@ typedef struct drm_mga_init {
-> >  
-> >  	unsigned long sarea_priv_offset;
-> >  
-> > -	int chipset;
-> > -	int sgram;
-> > +	__struct_group(always32bit,
-> > +		int chipset;
-> > +		int sgram;
-> >  
-> > -	unsigned int maccess;
-> > +		unsigned int maccess;
-> >  
-> > -	unsigned int fb_cpp;
-> > -	unsigned int front_offset, front_pitch;
-> > -	unsigned int back_offset, back_pitch;
-> > +		unsigned int fb_cpp;
-> > +		unsigned int front_offset;
-> > +		unsigned int front_pitch;
-> > +		unsigned int back_offset;
-> > +		unsigned int back_pitch;
-> >  
-> > -	unsigned int depth_cpp;
-> > -	unsigned int depth_offset, depth_pitch;
-> > +		unsigned int depth_cpp;
-> > +		unsigned int depth_offset;
-> > +		unsigned int depth_pitch;
-> >  
-> > -	unsigned int texture_offset[MGA_NR_TEX_HEAPS];
-> > -	unsigned int texture_size[MGA_NR_TEX_HEAPS];
-> > +		unsigned int texture_offset[MGA_NR_TEX_HEAPS];
-> > +		unsigned int texture_size[MGA_NR_TEX_HEAPS];
-> > +	);
-> >  
-> >  	unsigned long fb_offset;
-> >  	unsigned long mmio_offset;
-> > @@ -302,6 +317,8 @@ typedef struct drm_mga_init {
-> >  	unsigned long buffers_offset;
-> >  } drm_mga_init_t;
-> >  
-> > +#undef __struct_group
-> > +
+On Tue, 27 Jul 2021 13:58:45 -0700 Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 > 
-> Why can you use __struct_group in this uapi header, but not the
-> networking one?
+> Add struct_group() to mark region of struct rt6_info that should be
+> initialized to zero.
 
-If there's others, maybe we can stuff the uapi __struct_group into
-linux/types.h where all the other __ uapi types hang out?
+memset_after() ?
 
-Anyway mga is very dead, I don't anyone cares.
+> diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
+> index 15b7fbe6b15c..9816e7444918 100644
+> --- a/include/net/ip6_fib.h
+> +++ b/include/net/ip6_fib.h
+> @@ -205,20 +205,22 @@ struct fib6_info {
+>  
+>  struct rt6_info {
+>  	struct dst_entry		dst;
+> -	struct fib6_info __rcu		*from;
+> -	int				sernum;
+> -
+> -	struct rt6key			rt6i_dst;
+> -	struct rt6key			rt6i_src;
+> -	struct in6_addr			rt6i_gateway;
+> -	struct inet6_dev		*rt6i_idev;
+> -	u32				rt6i_flags;
+> -
+> -	struct list_head		rt6i_uncached;
+> -	struct uncached_list		*rt6i_uncached_list;
+> -
+> -	/* more non-fragment space at head required */
+> -	unsigned short			rt6i_nfheader_len;
+> +	struct_group(init,
+> +		struct fib6_info __rcu		*from;
+> +		int				sernum;
+> +
+> +		struct rt6key			rt6i_dst;
+> +		struct rt6key			rt6i_src;
+> +		struct in6_addr			rt6i_gateway;
+> +		struct inet6_dev		*rt6i_idev;
+> +		u32				rt6i_flags;
+> +
+> +		struct list_head		rt6i_uncached;
+> +		struct uncached_list		*rt6i_uncached_list;
+> +
+> +		/* more non-fragment space at head required */
+> +		unsigned short			rt6i_nfheader_len;
+> +	);
+>  };
+>  
+>  struct fib6_result {
+> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+> index 6b8051106aba..bbcc605bab57 100644
+> --- a/net/ipv6/route.c
+> +++ b/net/ipv6/route.c
+> @@ -327,9 +327,7 @@ static const struct rt6_info ip6_blk_hole_entry_template = {
+>  
+>  static void rt6_info_init(struct rt6_info *rt)
+>  {
+> -	struct dst_entry *dst = &rt->dst;
+> -
+> -	memset(dst + 1, 0, sizeof(*rt) - sizeof(*dst));
+> +	memset(&rt->init, 0, sizeof(rt->init));
+>  	INIT_LIST_HEAD(&rt->rt6i_uncached);
+>  }
+>  
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-I'm assuming this goes in through a topic pull from you?
-
-I'll leave the drm/amd one to figure out between you and Alex.
--Daniel
-
-> 
-> thanks,
-> 
-> greg k-h
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
