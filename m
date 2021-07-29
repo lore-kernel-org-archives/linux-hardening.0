@@ -6,119 +6,68 @@ X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A843C4338F
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 18:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F177C4338F
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 23:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35F0960F46
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 18:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E6160F46
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 23:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229906AbhG2S67 (ORCPT
+        id S233413AbhG2XRC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jul 2021 14:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54186 "EHLO mail.kernel.org"
+        Thu, 29 Jul 2021 19:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229713AbhG2S66 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jul 2021 14:58:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D1F9600D4;
-        Thu, 29 Jul 2021 18:58:52 +0000 (UTC)
+        id S229991AbhG2XRC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 29 Jul 2021 19:17:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E48160C40;
+        Thu, 29 Jul 2021 23:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627585135;
-        bh=NY+6KsF6TgwvjW8V2qdlD2zqaxdlHCFW8WbLHI1uw44=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QwbKTXNKGQlFHhv+nWwVAGS0y7dhrRo4QVZVXmOtNRN5nEqtsizCnwgYVL71jdemC
-         NN4LRUz2GWMm7y5nxjYEDLhzAkGKRRgwxxSk0RtIMXokH62NJ6mpGF6A4PMG9LR/dk
-         TFkkqH24xr7RZti78Lg43eSuDbQW/o4UTfuxqASt48qIZ7hGRVSrrGAHfGoGqApQr4
-         fe/qqMg9s0eu93lcxSA+fP7WwiK2Zm7316Nw0lTenmESdj7Qq2k4auX+VlqVjOzIyH
-         tJgu8hsfbG/DoN1PkOib/PnMN36fOPMKqtasZoBoWlwaNtiGVNPNof0RnW7kK1gS1x
-         /NEEryLj0coQw==
-Date:   Thu, 29 Jul 2021 11:58:50 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
+        s=k20201202; t=1627600618;
+        bh=AeJb8ws1+grV1uclZOuKoENMD/aorVJeTxf9oyZxFKI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MJqXKhFKb3k+knDvn6pMgb1ZZ+8VMtnVmAE37b9xYGv0JWmOyU+03dcLtjdMp86Qk
+         jqjgUF3ysvJg00VmQfk0HACBYrLduuh5gEOeTTiC2crYFimYkpENTD5k7o/MWkwKtW
+         pqhirs1uq9uVpeeCUvnUWYbrCWNOQVxWGGd1FtWa3nLGsrm8M552kzrtKZObhraIsO
+         RNzQTJIs97LfHYuWHSYUm62SW+Y0NI9Tt5AZqktqKzVHctquzFzwMfyMMML4NM9F4q
+         hJ1lAt3RRj9bP+H1XuBorNybiuYySgpj49KoMMt23UreKj4XuP0REp1aBy+OyUkp1q
+         SET81GeLZ8p8g==
+Date:   Thu, 29 Jul 2021 18:19:30 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Yong Zhi <yong.zhi@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Tianshu Qiu <tian.shu.qiu@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 54/64] ipv6: Use struct_group() to zero rt6_info
-Message-ID: <20210729115850.7f913c73@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20210727205855.411487-55-keescook@chromium.org>
-References: <20210727205855.411487-1-keescook@chromium.org>
-        <20210727205855.411487-55-keescook@chromium.org>
+        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH 0/2][next] Fix size comparison bug and use flexible array
+Message-ID: <cover.1627600430.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 27 Jul 2021 13:58:45 -0700 Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memset(), avoid intentionally writing across
-> neighboring fields.
-> 
-> Add struct_group() to mark region of struct rt6_info that should be
-> initialized to zero.
+Hi all,
 
-memset_after() ?
+This small series aims to fix a size comparison bug and replace a
+one-element array with a flexible-array member.
 
-> diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
-> index 15b7fbe6b15c..9816e7444918 100644
-> --- a/include/net/ip6_fib.h
-> +++ b/include/net/ip6_fib.h
-> @@ -205,20 +205,22 @@ struct fib6_info {
->  
->  struct rt6_info {
->  	struct dst_entry		dst;
-> -	struct fib6_info __rcu		*from;
-> -	int				sernum;
-> -
-> -	struct rt6key			rt6i_dst;
-> -	struct rt6key			rt6i_src;
-> -	struct in6_addr			rt6i_gateway;
-> -	struct inet6_dev		*rt6i_idev;
-> -	u32				rt6i_flags;
-> -
-> -	struct list_head		rt6i_uncached;
-> -	struct uncached_list		*rt6i_uncached_list;
-> -
-> -	/* more non-fragment space at head required */
-> -	unsigned short			rt6i_nfheader_len;
-> +	struct_group(init,
-> +		struct fib6_info __rcu		*from;
-> +		int				sernum;
-> +
-> +		struct rt6key			rt6i_dst;
-> +		struct rt6key			rt6i_src;
-> +		struct in6_addr			rt6i_gateway;
-> +		struct inet6_dev		*rt6i_idev;
-> +		u32				rt6i_flags;
-> +
-> +		struct list_head		rt6i_uncached;
-> +		struct uncached_list		*rt6i_uncached_list;
-> +
-> +		/* more non-fragment space at head required */
-> +		unsigned short			rt6i_nfheader_len;
-> +	);
->  };
->  
->  struct fib6_result {
-> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-> index 6b8051106aba..bbcc605bab57 100644
-> --- a/net/ipv6/route.c
-> +++ b/net/ipv6/route.c
-> @@ -327,9 +327,7 @@ static const struct rt6_info ip6_blk_hole_entry_template = {
->  
->  static void rt6_info_init(struct rt6_info *rt)
->  {
-> -	struct dst_entry *dst = &rt->dst;
-> -
-> -	memset(dst + 1, 0, sizeof(*rt) - sizeof(*dst));
-> +	memset(&rt->init, 0, sizeof(rt->init));
->  	INIT_LIST_HEAD(&rt->rt6i_uncached);
->  }
->  
+Thanks
+
+Gustavo A. R. Silva (2):
+  media: staging/intel-ipu3: css: Fix wrong size comparison
+  media: staging/intel-ipu3: css: Replace one-element array and use
+    struct_size() helper
+
+ drivers/staging/media/ipu3/ipu3-css-fw.c | 7 +++----
+ drivers/staging/media/ipu3/ipu3-css-fw.h | 2 +-
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+-- 
+2.27.0
 
