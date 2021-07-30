@@ -2,112 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD18C4338F
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 23:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A92C432BE
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jul 2021 01:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91AA960F46
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jul 2021 23:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D6261040
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jul 2021 01:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233341AbhG2XUM (ORCPT
+        id S233918AbhG3Bjb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jul 2021 19:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229975AbhG2XUM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jul 2021 19:20:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9056760C40;
-        Thu, 29 Jul 2021 23:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627600808;
-        bh=pMtsokc+ndNjg/6npoelU7EHgkJ/JVkmNGh9tksS8JQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RCS8dMSRS4V+z71xOZGTagLPGbWPl+X7H1jAnCV6OqgV4ytNGIqoMpurT8rWTJ7Ic
-         PCb406pHtI2x8GOnFf87s0yKbaqyuYmr6VtveamlPCc50gCJjZfNAQnzFnuzW4MTPt
-         S39QB3HwzElypgvekkfQEGjsQOYdp6HNgIlT5R+ltHVXshM18KnHrBllNxBuG58tq3
-         qrLDEecXbR+ickmqt8c+hAfnAXDS5rU+tFU/M/ILX9YWZ+3+8jO3Ra1byjgJRl0bFH
-         KZvaMV4FzNaVBKk0kyrpXqee8uGlfc2DXwHjikg6xqGgEZcsaEVI2JMHEM0ya7rmAA
-         v4VncQ/4o3kow==
-Date:   Thu, 29 Jul 2021 18:22:40 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Yong Zhi <yong.zhi@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        Thu, 29 Jul 2021 21:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234812AbhG3Bja (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 29 Jul 2021 21:39:30 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B57C061796
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jul 2021 18:39:24 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id j1so12842811pjv.3
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jul 2021 18:39:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vPAHzrcSpfKuQzB1lrV/ttkpcnRRhB/aWzazYKPR4LA=;
+        b=Nkis4e8105uAbCge9aO+StXNkXelrJqOpF7xNsIBtcoe+D0iGfGrhXWOijeKDfFQS8
+         tcGIefv5L6ODB7FGlHuoK3nhQNiRzvNAcTkGvlhjpZKPls5MD5zfBf1pJ7Ll8rA8iZ5f
+         LTaEoFLk38qAHkDnPefiooUaNHcHv32+03LBo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vPAHzrcSpfKuQzB1lrV/ttkpcnRRhB/aWzazYKPR4LA=;
+        b=bnnCaiV1fYJQfgbQEon7AqheQ9koq4T3L9r3Dy7SYy5pjZCsByO7p9SKDjrqWZSnR5
+         2RM0ZGtdmWgWJ0sYu85vB1MN89ykmaeT71SU8cHfOZ16TAcVogkq1sKXiiLgfCQc6qGb
+         ZCTZvT88Mnqs2fAObscrEWzpf8GI+foH+HR/cBVX4kBc3KYlTt2gWfneaYgQDouhxfpP
+         iZOkDrulLdqZUW0EcLhWw5sieoJjiEFtuqgnx+ylHLZXBu0brXRBTeFJaKNadoL4OxaU
+         7dSP+AyHwIE51te1tiB4mHusKvCDyNoD0FNHGY0FMUIEscAJX8XsC3/W2pHSLQoIgbwF
+         D8sA==
+X-Gm-Message-State: AOAM533OkJpuOOHnXlpKauJXfgX/jVo8v4ZxK8hDGnl0puUTGBTBuWVj
+        0tYacHLQUwFwKC/679ByGW0WNw==
+X-Google-Smtp-Source: ABdhPJzbwo1FmDrFDbiWZ8BWT3TYMS+pXDsYeTk5gfATiaIbAKAeZ3H6gw+DeJERV+7PZzePv9GaaQ==
+X-Received: by 2002:a63:1053:: with SMTP id 19mr5768pgq.395.1627609164105;
+        Thu, 29 Jul 2021 18:39:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z5sm97349pgz.77.2021.07.29.18.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jul 2021 18:39:23 -0700 (PDT)
+Date:   Thu, 29 Jul 2021 18:39:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 2/2][next] media: staging/intel-ipu3: css: Replace
- one-element array and use struct_size() helper
-Message-ID: <8db90c8f5124bbeab20af9c1314439da8f033184.1627600430.git.gustavoars@kernel.org>
-References: <cover.1627600430.git.gustavoars@kernel.org>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 62/64] netlink: Avoid false-positive memcpy() warning
+Message-ID: <202107291838.25D1F118C@keescook>
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-63-keescook@chromium.org>
+ <YQDv+oG7ok0T1L+r@kroah.com>
+ <d7251d92-150b-5346-6237-52afc154bb00@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1627600430.git.gustavoars@kernel.org>
+In-Reply-To: <d7251d92-150b-5346-6237-52afc154bb00@rasmusvillemoes.dk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare having
-a dynamically sized set of trailing elements in a structure. Kernel code
-should always use “flexible array members”[1] for these cases. The older
-style of one-element or zero-length arrays should no longer be used[2].
+On Wed, Jul 28, 2021 at 01:24:01PM +0200, Rasmus Villemoes wrote:
+> On 28/07/2021 07.49, Greg Kroah-Hartman wrote:
+> > On Tue, Jul 27, 2021 at 01:58:53PM -0700, Kees Cook wrote:
+> >> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> >> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> >> intentionally writing across neighboring fields.
+> >>
+> >> Add a flexible array member to mark the end of struct nlmsghdr, and
+> >> split the memcpy() to avoid false positive memcpy() warning:
+> >>
+> >> memcpy: detected field-spanning write (size 32) of single field (size 16)
+> >>
+> >> Signed-off-by: Kees Cook <keescook@chromium.org>
+> >> ---
+> >>  include/uapi/linux/netlink.h | 1 +
+> >>  net/netlink/af_netlink.c     | 4 +++-
+> >>  2 files changed, 4 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
+> >> index 4c0cde075c27..ddeaa748df5e 100644
+> >> --- a/include/uapi/linux/netlink.h
+> >> +++ b/include/uapi/linux/netlink.h
+> >> @@ -47,6 +47,7 @@ struct nlmsghdr {
+> >>  	__u16		nlmsg_flags;	/* Additional flags */
+> >>  	__u32		nlmsg_seq;	/* Sequence number */
+> >>  	__u32		nlmsg_pid;	/* Sending process port ID */
+> >> +	__u8		contents[];
+> > 
+> > Is this ok to change a public, userspace visable, structure?
+> 
+> At least it should keep using a nlmsg_ prefix for consistency and reduce
+> risk of collision with somebody having defined an object-like contents
+> macro. But there's no guarantees in any case, of course.
 
-Replace a one-element array with a flexible-array member in struct
-imgu_fw_header and use the struct_size() helper.
+Ah, good call. I've adjusted this and added a comment.
 
-This also helps with the ongoing efforts to globally enable
--Warray-bounds and get us closer to being able to tighten the
-FORTIFY_SOURCE routines on memcpy().
+Thanks!
 
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+-Kees
 
-Link: https://github.com/KSPP/linux/issues/79
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/staging/media/ipu3/ipu3-css-fw.c | 5 ++---
- drivers/staging/media/ipu3/ipu3-css-fw.h | 2 +-
- 2 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/staging/media/ipu3/ipu3-css-fw.c b/drivers/staging/media/ipu3/ipu3-css-fw.c
-index ab021afff954..3b7df1128840 100644
---- a/drivers/staging/media/ipu3/ipu3-css-fw.c
-+++ b/drivers/staging/media/ipu3/ipu3-css-fw.c
-@@ -127,9 +127,8 @@ int imgu_css_fw_init(struct imgu_css *css)
- 	if (css->fw->size < sizeof(struct imgu_fw_header) ||
- 	    css->fwp->file_header.h_size != sizeof(struct imgu_fw_bi_file_h))
- 		goto bad_fw;
--	if (sizeof(struct imgu_fw_bi_file_h) +
--	    css->fwp->file_header.binary_nr * sizeof(struct imgu_fw_info) >
--	    css->fw->size)
-+	if (struct_size(css->fwp, binary_header,
-+			css->fwp->file_header.binary_nr) > css->fw->size)
- 		goto bad_fw;
- 
- 	dev_info(dev, "loaded firmware version %.64s, %u binaries, %zu bytes\n",
-diff --git a/drivers/staging/media/ipu3/ipu3-css-fw.h b/drivers/staging/media/ipu3/ipu3-css-fw.h
-index 3c078f15a295..c0bc57fd678a 100644
---- a/drivers/staging/media/ipu3/ipu3-css-fw.h
-+++ b/drivers/staging/media/ipu3/ipu3-css-fw.h
-@@ -171,7 +171,7 @@ struct imgu_fw_bi_file_h {
- 
- struct imgu_fw_header {
- 	struct imgu_fw_bi_file_h file_header;
--	struct imgu_fw_info binary_header[1];	/* binary_nr items */
-+	struct imgu_fw_info binary_header[];	/* binary_nr items */
- };
- 
- /******************* Firmware functions *******************/
 -- 
-2.27.0
-
+Kees Cook
