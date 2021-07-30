@@ -2,89 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80069C432BE
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jul 2021 12:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF35C4338F
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jul 2021 15:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C7360F00
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jul 2021 12:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E5160F4A
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jul 2021 15:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238745AbhG3MHR (ORCPT
+        id S239248AbhG3PcV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Jul 2021 08:07:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238804AbhG3MHQ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Jul 2021 08:07:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3307360C41;
-        Fri, 30 Jul 2021 12:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627646832;
-        bh=ApOBTQ8PTH21zHn50z+zaDwWcp2TaGB8koeuLY0/XmQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZOMFHIzw16y3LhPxjoI628FhsyujZuwy1W5sb2TfHXzH1OzKQxMdkilJC9H/ypm6X
-         EYicGdiL54rEhMXwHZRHxWL+lcetOVuHThiN3fWwA/m30FLa3WMLr8ozVqOYYc4ynC
-         dJxDFyQhMS2z2wXTpFYx87kCjW891z0o3aZrWSGT5fGInv2xzsU1lzkvBJYkGMpu5w
-         rVb47DNwU1KWoNbZt6IVyvWpYhLzVgPjSaKi4prKkD0F2GshNkXFXikbEKRq/Db87x
-         AGUcr8bN89Uzdn8afEevKlckiI5nwEGWIAccMLNCWbO8ab9c0AIa9zaGajhSifVpoN
-         3fp/RgwaMw3vQ==
-Date:   Fri, 30 Jul 2021 07:09:44 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Yong Zhi <yong.zhi@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        Fri, 30 Jul 2021 11:32:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231394AbhG3PcV (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 30 Jul 2021 11:32:21 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529B4C0613C1
+        for <linux-hardening@vger.kernel.org>; Fri, 30 Jul 2021 08:32:16 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id r23so12905110lji.3
+        for <linux-hardening@vger.kernel.org>; Fri, 30 Jul 2021 08:32:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cuMBivazXPSSSnLg5TVHL25KvD4e4AyXmAdQoyFf5fI=;
+        b=V0takgq4CkvNar1Q60JxHbTt1cqvFsAT2Ql1xCcWDlliF/9fK1Tk6u2NKjLJFi2NsP
+         OtAUbjW/Hk6YTr3ZTfouOa43d0DCv4/nxXOIFvMh2o9s/LUtXhmtgHgxqNBlfkoO+0Ox
+         d1GAjEOyAM0plTITbZ2w6WFa49Z5MRcmaq85CbQLNYZrVs9T1wQ8UUGFYid/G6OviM1d
+         OMFu6dCu79GrtbGkEZtfmLAS5L0sYxR0jmS86rEcpL2kD9pJaHk0tbVbZ7ZyxkbmW+U+
+         QcVQ4cI0n7yRxCSYVdO9PPaLX284Bky+u6/vpPnImSqzkgKcHLw7rJHQ0RyOSVMQVUfP
+         ZxKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cuMBivazXPSSSnLg5TVHL25KvD4e4AyXmAdQoyFf5fI=;
+        b=PRHJ60UPqcvw6UyuKgQjfu04HZge68nj7/lasaJCiPVCXsVNjI8u1yMMa/PKRaua8Q
+         /J9ZCLMARr6kayg+PQGPCzm3Y0W1fEfPAr7zdh0lPEW3A3pipbUgRz1VqYSmIctrMqwY
+         reaMeZyOhtp2SCPjYb42lMca7mAAK2gl3cf+7FK9YE6EmlX/sfajni+Je24FPSwqVecY
+         ufurPgAFj8PtcYQ3zYZIFceSh0zyRaELL4WKvz+9u45Npun6dynep935MNUww3xKf2eu
+         ACUGSw7o/aRuR9upvtW7uB6DyYwZBvCpoNzI6bcwxHbHynJ5yjzqB3lBfC40Dt212O/u
+         zmwg==
+X-Gm-Message-State: AOAM530AX+GcRBU7blgMKn5NBO9p7j+3wRuqXFNDkeN2oIG3qi6YhwA7
+        w2wVY766Qf6R9t1TdJzzoHAxOwJbNhz8avGYCwDlFA==
+X-Google-Smtp-Source: ABdhPJzhoAUM4a6+aRW2w5iC66nC+BulVEtoEK+XmW3hkTpBTQktpdSzzUsKFLM2RILR3UqcvgdkDUL260mhYjHoyJw=
+X-Received: by 2002:a2e:a911:: with SMTP id j17mr2005145ljq.341.1627659134322;
+ Fri, 30 Jul 2021 08:32:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-49-keescook@chromium.org> <1cc74e5e-8d28-6da4-244e-861eac075ca2@acm.org>
+ <202107291845.1E1528D@keescook>
+In-Reply-To: <202107291845.1E1528D@keescook>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 30 Jul 2021 08:32:03 -0700
+Message-ID: <CAKwvOdn+G6y3_=YZgp51cL64XW=VGgt7C0Vt0ARZOkezPTn5WQ@mail.gmail.com>
+Subject: Re: [PATCH 48/64] drbd: Use struct_group() to zero algs
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v2 2/2] media: staging/intel-ipu3: css: Use the struct_size()
- helper
-Message-ID: <4da2e05ea7b19a729859d2c34aa2b17a970422e8.1627646101.git.gustavoars@kernel.org>
-References: <cover.1627646101.git.gustavoars@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1627646101.git.gustavoars@kernel.org>
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version.
+On Thu, Jul 29, 2021 at 7:31 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Jul 28, 2021 at 02:45:55PM -0700, Bart Van Assche wrote:
+> > On 7/27/21 1:58 PM, Kees Cook wrote:
+> > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > > field bounds checking for memset(), avoid intentionally writing across
+> > > neighboring fields.
+> > >
+> > > Add a struct_group() for the algs so that memset() can correctly reason
+> > > about the size.
+> > >
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >   drivers/block/drbd/drbd_main.c     | 3 ++-
+> > >   drivers/block/drbd/drbd_protocol.h | 6 ++++--
+> > >   drivers/block/drbd/drbd_receiver.c | 3 ++-
+> > >   3 files changed, 8 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+> > > index 55234a558e98..b824679cfcb2 100644
+> > > --- a/drivers/block/drbd/drbd_main.c
+> > > +++ b/drivers/block/drbd/drbd_main.c
+> > > @@ -729,7 +729,8 @@ int drbd_send_sync_param(struct drbd_peer_device *peer_device)
+> > >     cmd = apv >= 89 ? P_SYNC_PARAM89 : P_SYNC_PARAM;
+> > >     /* initialize verify_alg and csums_alg */
+> > > -   memset(p->verify_alg, 0, 2 * SHARED_SECRET_MAX);
+> > > +   BUILD_BUG_ON(sizeof(p->algs) != 2 * SHARED_SECRET_MAX);
+> > > +   memset(&p->algs, 0, sizeof(p->algs));
+> > >     if (get_ldev(peer_device->device)) {
+> > >             dc = rcu_dereference(peer_device->device->ldev->disk_conf);
+> > > diff --git a/drivers/block/drbd/drbd_protocol.h b/drivers/block/drbd/drbd_protocol.h
+> > > index dea59c92ecc1..a882b65ab5d2 100644
+> > > --- a/drivers/block/drbd/drbd_protocol.h
+> > > +++ b/drivers/block/drbd/drbd_protocol.h
+> > > @@ -283,8 +283,10 @@ struct p_rs_param_89 {
+> > >   struct p_rs_param_95 {
+> > >     u32 resync_rate;
+> > > -   char verify_alg[SHARED_SECRET_MAX];
+> > > -   char csums_alg[SHARED_SECRET_MAX];
+> > > +   struct_group(algs,
+> > > +           char verify_alg[SHARED_SECRET_MAX];
+> > > +           char csums_alg[SHARED_SECRET_MAX];
+> > > +   );
+> > >     u32 c_plan_ahead;
+> > >     u32 c_delay_target;
+> > >     u32 c_fill_target;
+> > > diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+> > > index 1f740e42e457..6df2539e215b 100644
+> > > --- a/drivers/block/drbd/drbd_receiver.c
+> > > +++ b/drivers/block/drbd/drbd_receiver.c
+> > > @@ -3921,7 +3921,8 @@ static int receive_SyncParam(struct drbd_connection *connection, struct packet_i
+> > >     /* initialize verify_alg and csums_alg */
+> > >     p = pi->data;
+> > > -   memset(p->verify_alg, 0, 2 * SHARED_SECRET_MAX);
+> > > +   BUILD_BUG_ON(sizeof(p->algs) != 2 * SHARED_SECRET_MAX);
+> > > +   memset(&p->algs, 0, sizeof(p->algs));
+> >
+> > Using struct_group() introduces complexity. Has it been considered not to
+> > modify struct p_rs_param_95 and instead to use two memset() calls instead of
+> > one (one memset() call per member)?
+>
+> I went this direction because using two memset()s (or memcpy()s in other
+> patches) changes the machine code. It's not much of a change, but it
+> seems easier to justify "no binary changes" via the use of struct_group().
+>
+> If splitting the memset() is preferred, I can totally do that instead.
+> :)
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Move the replacement of one-element array with a flexible-array
-   member to patch 1 of the series and update changelog text,
-   accordingly.
+I'm not sure that compilers can fold memsets of adjacent members. It
+might not matter, but you could wrap these members in a _named_ struct
+then simply use assignment for optimal codegen.
 
- drivers/staging/media/ipu3/ipu3-css-fw.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3-css-fw.c b/drivers/staging/media/ipu3/ipu3-css-fw.c
-index 630cb5186b48..b9c850fc9fe4 100644
---- a/drivers/staging/media/ipu3/ipu3-css-fw.c
-+++ b/drivers/staging/media/ipu3/ipu3-css-fw.c
-@@ -127,9 +127,8 @@ int imgu_css_fw_init(struct imgu_css *css)
- 	if (css->fw->size <= sizeof(struct imgu_fw_header) ||
- 	    css->fwp->file_header.h_size != sizeof(struct imgu_fw_bi_file_h))
- 		goto bad_fw;
--	if (sizeof(struct imgu_fw_bi_file_h) +
--	    css->fwp->file_header.binary_nr * sizeof(struct imgu_fw_info) >
--	    css->fw->size)
-+	if (struct_size(css->fwp, binary_header,
-+			css->fwp->file_header.binary_nr) > css->fw->size)
- 		goto bad_fw;
- 
- 	dev_info(dev, "loaded firmware version %.64s, %u binaries, %zu bytes\n",
 -- 
-2.27.0
-
+Thanks,
+~Nick Desaulniers
