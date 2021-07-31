@@ -2,123 +2,169 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09949C4320A
-	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 04:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8B3C4338F
+	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 14:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E01AB61019
-	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 04:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3327760295
+	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 14:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbhGaEUl (ORCPT
+        id S233103AbhGaOAX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 31 Jul 2021 00:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbhGaEUk (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 31 Jul 2021 00:20:40 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44315C06175F
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Jul 2021 21:20:34 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id k1so13382143plt.12
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Jul 2021 21:20:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2rZ9kzapSn9AYE0eMMnwGkMNI7xYc/vEgm+TA1Yc3wc=;
-        b=kzkctvvNb0ShS1nE2Wqqqn7Z+lkc9IkqCaSxgDE+W4cNa7ElmV6eqi/hsxBTgUGOT7
-         yT40vj00aRlu1HRv6Mtup3+uZulpZ8P1kroGaDVwv4G3QErDjEpyR+stG1AW6mrMBIrR
-         OJ3iwnlXAm7Yt6bm3VvVwhqzyglWUXeDjxPZ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2rZ9kzapSn9AYE0eMMnwGkMNI7xYc/vEgm+TA1Yc3wc=;
-        b=eF442k0iEdkCbBDByuDA7OPd2zDaPyDZobUqtOQres8JPVNbbzLOnvDyOfUICaOy24
-         ICW9FsYijG17y/mavMKc9+P8rT3ww+U6JSiOSgwII+UlHa3imdKYRq2nNHc6YyRfvYQk
-         J7sH5sGiD6Hc3E5n2/y2ur2ntmCBuguTCiqMFL9JW7h2GmDyDNNrpukMw+bKPAliili7
-         QZA5cMDL38maZUA8iZ1b1jlz/RmDgF5iDigt0A3j1QnheKM2T/RX8aQ9QuzPlLeXrsSp
-         2bHD+CHE+z1PdUxx3Zv7FsPV0+gipx3XxrsjvZv5+KMgk5L9VS4GhoxQwdxhy0Ry1HWw
-         7y/Q==
-X-Gm-Message-State: AOAM531tou1nQd3RpwVC52HgJuNoKaCBXuf4oyBPdOqwiDFXo+gzqfRP
-        H5vlsEnkb8a7J/IYbuu7n2bsfA==
-X-Google-Smtp-Source: ABdhPJzZaza126Vv3WlcT6KBKm6/ibQnq8c34Xqn2AoVgq2DTgH6cZz+KdKXk9j+VMHkrcs62jXe1w==
-X-Received: by 2002:a17:90b:110c:: with SMTP id gi12mr6515447pjb.163.1627705233841;
-        Fri, 30 Jul 2021 21:20:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w18sm4094035pjg.50.2021.07.30.21.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jul 2021 21:20:32 -0700 (PDT)
-Date:   Fri, 30 Jul 2021 21:20:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-block@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Keith Packard <keithpac@amazon.com>,
+        Sat, 31 Jul 2021 10:00:23 -0400
+Received: from mout.gmx.net ([212.227.15.18]:49629 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232770AbhGaOAX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 31 Jul 2021 10:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1627740000;
+        bh=QdHwj+IsnJi5IzMwqUW3TfO7oP0yxI2OFU1E0J2+TGU=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=BJqMD7+9OX8NQ377fjRaZhE30oQgrpitGIE39GvNzFykzIbgNbZ+d/q7v2aYqLmiE
+         Sv3+GGtXEKMWMzeON/xMzV1bLSEUEpQGWXTdUIy4E5eP7baJ3PbrqvPOzUm39eN2Vb
+         xCCfmDwIZSlX73xw4BdlYquAiz8iAytx1ICTGeZU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MnaoZ-1mqcSb1xW1-00jXgJ; Sat, 31
+ Jul 2021 16:00:00 +0200
+Date:   Sat, 31 Jul 2021 15:59:57 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Len Baker <len.baker@gmx.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
         linux-hardening@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 25/64] drm/mga/mga_ioc32: Use struct_group() for memcpy()
- region
-Message-ID: <202107302118.C0B84E521@keescook>
-References: <20210727205855.411487-1-keescook@chromium.org>
- <20210727205855.411487-26-keescook@chromium.org>
- <YQDxmEYfppJ4wAmD@kroah.com>
- <YQKa76A6XuFqgM03@phenom.ffwll.local>
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] drivers/soc: Remove all strcpy() uses in favor of
+ strscpy()
+Message-ID: <20210731135957.GB1979@titan>
+References: <20210725151434.7122-1-len.baker@gmx.com>
+ <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YQKa76A6XuFqgM03@phenom.ffwll.local>
+In-Reply-To: <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
+X-Provags-ID: V03:K1:qUm0FH1ghq6WNJ/Rmut5+r4u5WV6r8/bAeCUshozt5VKgCN225P
+ OrVDNggsXY8F74K9umWT8oOQrNm0KSB2wA12pRezKPZnQnkuzv0Pa8ag8DMzxfPkUuCrsHF
+ Cw2zbRkmLkAvWdT9xxVsNpcMqvixb9+W3fiiykkbJvnFd+9h2rSHPeidV1grwyrPVU0dzml
+ m71/ks9fqkCC4/ih+1/tQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:I5zIChcrHao=:PP4ua8BnhiZfYhDBqkXX+e
+ pfVAy5oA9TszZrsLtBsAuiLyWziOyegSVk7fXycC/G/PNCXkkahPJmZZ9jL3J6t2xbFG6mpXk
+ V4n4bt2lEifysR0pQ0NDyf301ZskZeF2EMj0EhRh9ivMR70oPAXr9ZWjkjHYLdlZZ6dogoC2h
+ I1I8T4ZMaH6r9FcTJWNTwouRKWzVTr5PlDkSFlRTFDxSWrKgz8cRu2MSetZBxzbth04RRvUfr
+ 5J0h2Zymz9RSDo0bwrfqwYfuTGWqRRUDLzYvuwVi5UwC7AqE3DSx0d+HsNKwNCV6JxdI0jTtc
+ kw3gMvG2uCjIeNQfJxT43LWhJqtcP4CW74mfZNNEmKcz86YOV+Q4Awry+jbJ8nsaIaPqZg0le
+ Vp91poTztx+SclUEo4Y2yuiVVTxaUX+p9YoU19nzDZgbObwbxa8IUMWL0gslizXle1XfadKf6
+ 5CA68ILlgTbOrW6CHPOEXFwiBh8h73N6Zn5mw3CImyfanxnMyiF+ps4FMjHL1LGA0tO3nz9yx
+ jj1ObyopWBSSMmtk/ClwAbC3jxqRu6Tv0An+1VrnOAp82MlB93Pj63EISyVUN18d2CTw3ZgxO
+ Ohi3FTJ70/NdNGTd53U7/xQlhe+jbiYG0brDkw1oxPA2Z0M/4F41lxyZ1HudAcvJ3+J+qbZ96
+ Ur3VX6j2c5LXtN9eOp2x+7DmSX//9q84boaeN+zFaHzwP93tA6LXm2JOFK8C56vzyiZQ3kcNG
+ +OkOtic2hLYVFUmGJjlJRZb6Kkpq/YU6j1GyapKkoVVtzBf0UlwyApqVGICGqGgciYTpTZmAF
+ KHeFmnwhN+OTkLtNXdsgfLpcBNG4fMMprBAGGKAWMajMHWmSrvYGY34nJK9S2tw5mqa8l4/Fk
+ jnFAma31GosDQfVq6kVrv/JgZo5aLSaBpRGXE6GuHibVGWilvphm2m1eFodAVPMpVZmzIQnOt
+ Rd0T28sbzvy7MKwYrReIPYCwyNGvtDCH8dcGMyHNF1y/qCvr/y2Y56NHOtGPTYe8okkpxgwSs
+ bgHGeQdyXWujp94IdM3w5/IA4vQg3jTwFuN7vcNedePvsuRKTzPiHIlErLMI0hiRDMaBQed64
+ uOYSgM/0OQq5Nf2utI/l0gBW4GiTFrHZTS0
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 02:11:27PM +0200, Daniel Vetter wrote:
-> On Wed, Jul 28, 2021 at 07:56:40AM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Jul 27, 2021 at 01:58:16PM -0700, Kees Cook wrote:
-> > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > > field bounds checking for memcpy(), memmove(), and memset(), avoid
-> > > intentionally writing across neighboring fields.
-> > > 
-> > > Use struct_group() in struct drm32_mga_init around members chipset, sgram,
-> > > maccess, fb_cpp, front_offset, front_pitch, back_offset, back_pitch,
-> > > depth_cpp, depth_offset, depth_pitch, texture_offset, and texture_size,
-> > > so they can be referenced together. This will allow memcpy() and sizeof()
-> > > to more easily reason about sizes, improve readability, and avoid future
-> > > warnings about writing beyond the end of chipset.
-> > > 
-> > > "pahole" shows no size nor member offset changes to struct drm32_mga_init.
-> > > "objdump -d" shows no meaningful object code changes (i.e. only source
-> > > line number induced differences and optimizations).
-> > > 
-> > > Note that since this includes a UAPI header, struct_group() has been
-> > > explicitly redefined local to the header.
-> > > [...]
-> > 
-> > Why can you use __struct_group in this uapi header, but not the
-> > networking one?
-> 
-> If there's others, maybe we can stuff the uapi __struct_group into
-> linux/types.h where all the other __ uapi types hang out?
+Hi,
 
-Ah yeah; it looks like include/uapi/linux/stddef.h is the place for it.
+On Mon, Jul 26, 2021 at 10:03:18AM +0200, Geert Uytterhoeven wrote:
+> Hi Len,
+>
+> On Sun, Jul 25, 2021 at 5:15 PM Len Baker <len.baker@gmx.com> wrote:
+> > strcpy() performs no bounds checking on the destination buffer. This
+> > could result in linear overflows beyond the end of the buffer, leading
+> > to all kinds of misbehaviors. The safe replacement is strscpy().
+> >
+> > Signed-off-by: Len Baker <len.baker@gmx.com>
+>
+> Thanks for your patch!
+>
+> > ---
+> > This is a task of the KSPP [1]
+> >
+> > [1] https://github.com/KSPP/linux/issues/88
+>
+> Any chance the almost one year old question in that ticket can be
+> answered?
 
-> Anyway mga is very dead, I don't anyone cares.
-> 
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> 
-> I'm assuming this goes in through a topic pull from you?
+I'm a kernel newbie and I have chosen this task as a starting point. So,
+I think that someone with more experience could answer this question.
 
-Thanks! Yeah, my intention is to carry this as topic branch for Linus.
+Kees: Any comments?
 
--Kees
+>
+> >  drivers/soc/renesas/rcar-sysc.c     |  6 ++++--
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> But please see my comments below...
+>
+> > --- a/drivers/soc/renesas/r8a779a0-sysc.c
+> > +++ b/drivers/soc/renesas/r8a779a0-sysc.c
+> > @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
+> >         for (i =3D 0; i < info->num_areas; i++) {
+> >                 const struct r8a779a0_sysc_area *area =3D &info->areas=
+[i];
+> >                 struct r8a779a0_sysc_pd *pd;
+> > +               size_t area_name_size;
+>
+> I wouldn't mind a shorter name, like "n".
 
--- 
-Kees Cook
+Ok, I will change this for the next version.
+
+> >
+> >                 if (!area->name) {
+> >                         /* Skip NULLified area */
+> >                         continue;
+> >                 }
+> >
+> > -               pd =3D kzalloc(sizeof(*pd) + strlen(area->name) + 1, G=
+FP_KERNEL);
+> > +               area_name_size =3D strlen(area->name) + 1;
+> > +               pd =3D kzalloc(sizeof(*pd) + area_name_size, GFP_KERNE=
+L);
+> >                 if (!pd) {
+> >                         error =3D -ENOMEM;
+> >                         goto out_put;
+> >                 }
+> >
+> > -               strcpy(pd->name, area->name);
+> > +               strscpy(pd->name, area->name, area_name_size);
+> >                 pd->genpd.name =3D pd->name;
+> >                 pd->pdr =3D area->pdr;
+> >                 pd->flags =3D area->flags;
+> > diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rca=
+r-sysc.c
+> > index 53387a72ca00..0eae5ce0eeb0 100644
+> > --- a/drivers/soc/renesas/rcar-sysc.c
+> > +++ b/drivers/soc/renesas/rcar-sysc.c
+> > @@ -396,19 +396,21 @@ static int __init rcar_sysc_pd_init(void)
+> >         for (i =3D 0; i < info->num_areas; i++) {
+> >                 const struct rcar_sysc_area *area =3D &info->areas[i];
+> >                 struct rcar_sysc_pd *pd;
+> > +               size_t area_name_size;
+>
+> Likewise.
+
+Ok, understood.
+
+Regards,
+Len
