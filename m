@@ -2,111 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF913C432BE
-	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 14:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD42C4320A
+	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 15:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B227560FE7
-	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 14:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEED60F56
+	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 15:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233161AbhGaOy0 (ORCPT
+        id S233320AbhGaPCI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 31 Jul 2021 10:54:26 -0400
-Received: from mout.gmx.net ([212.227.15.19]:33831 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233228AbhGaOyZ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 31 Jul 2021 10:54:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1627743243;
-        bh=zY96gBywycZ3DkNeGCbLFMqyecwq4irLjId53UZ4Zf8=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Ganr3Z8MpqDXwLQU1ajZQdu1jXzt1nzmNe7rSSrq26cKszyGo5a8Ip/m0nQHQA9I4
-         7zOz9eeAaB9UA6ET3eZRakKZAb71Jpo35ILPw6dAfYS5+YQsnpDe2tkyxweGpT3Wkt
-         EhE/mTTRJlwvgMsMs8AAkSiDeMfjRX5PIP0TOnD8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1N0FxV-1n4IiS04Rz-00xOSP; Sat, 31
- Jul 2021 16:54:03 +0200
-Date:   Sat, 31 Jul 2021 16:53:59 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        'Geert Uytterhoeven' <geert@linux-m68k.org>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] drivers/soc: Remove all strcpy() uses in favor of
- strscpy()
-Message-ID: <20210731140620.GC1979@titan>
-References: <20210725151434.7122-1-len.baker@gmx.com>
- <CAMuHMdUdmv+YmdtjGJV2Lp_Rvar4kN4uSgSTYqXX9CtCJ+qoRw@mail.gmail.com>
- <80f4574c9f6c4c6780735b0fffd83363@AcuMS.aculab.com>
- <fa2fd44d-8cd7-b700-2e7b-d88c9c52507d@arm.com>
+        Sat, 31 Jul 2021 11:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233271AbhGaPCH (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 31 Jul 2021 11:02:07 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F83C061796
+        for <linux-hardening@vger.kernel.org>; Sat, 31 Jul 2021 08:01:59 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id j1so19382757pjv.3
+        for <linux-hardening@vger.kernel.org>; Sat, 31 Jul 2021 08:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6NzNWl7LhGEt5gulXFub5aIXRWGd7b+RfXfHU7IL/eI=;
+        b=Jx/NovSJ2alFyoaVfse4LYGuhNMlBcAWv6JTiM3YSwvodvaXCAulhewOn2HF0FC+nz
+         N7t2fd02SxFeFS/jAywZfBDu3dF82py23YxGadXmxU6FsZZNwFLKknaPYZ73JtAAQWAr
+         FgjDEpjlNdXTBhWlUNhxTGhy3p9i8wqoga8qo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6NzNWl7LhGEt5gulXFub5aIXRWGd7b+RfXfHU7IL/eI=;
+        b=W5wbnGl9GAAI3AVuMP+m5tlNBV+obALZ8WRpSRyWLUo2NXSf7djbdBfLnbirbGrJZJ
+         6pVSF1xrnf+noOw/0t4WQMkdGnwMFB7f4PLihAP+Fv3sU4nHEuAZ4akYrtmMt0vnsguu
+         iXlawbsJw3c4IBVBw5/T833D/J4w+2qnWkpAKJuXJ0o48J2ZXp895lGhtyHsym+9nTNk
+         kM8Kb0Y4NKk8CVDpAKnbsVlguGP+SLgHO4Ykzb8bkQAhvhSbXX6fV1jfrwKLkD5e5k5H
+         v19Q8xszS7wqA6HHntVR96spNU3bjnBC95oQJDMbDVUymVusmmfqL5bh162lZaRNahBK
+         TKHg==
+X-Gm-Message-State: AOAM530QswwO+gK72bxFustSXegyjKDIxoehqt7mxsVr49Im4Aza8y/m
+        Hr1LlUe9JUblvQSvedaY40FKXA==
+X-Google-Smtp-Source: ABdhPJxldKFq/Rzqofqxn4rJbNcLhr5hYJ4ZeyAVRbwaYS9Cd10PchwbLiRXEC7+1Qe+4tL2UtPocg==
+X-Received: by 2002:a65:53ce:: with SMTP id z14mr2617394pgr.275.1627743719538;
+        Sat, 31 Jul 2021 08:01:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id jz24sm1857832pjb.9.2021.07.31.08.01.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Jul 2021 08:01:58 -0700 (PDT)
+Date:   Sat, 31 Jul 2021 08:01:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 54/64] ipv6: Use struct_group() to zero rt6_info
+Message-ID: <202107310801.D50070F@keescook>
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-55-keescook@chromium.org>
+ <20210729115850.7f913c73@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa2fd44d-8cd7-b700-2e7b-d88c9c52507d@arm.com>
-X-Provags-ID: V03:K1:CPIGMjcOPSVTZO7Gzwh9hg7OmO3+oHEOG/0hwDtVK02HC8v0C/H
- VZtjWWWA7ZfqdoNIu89W/7fLWalj2kCOTQKhAxS6lFF7AoLoeM0lcDEuqjYIj+iDuALWlr/
- e3w2i4JYbm+getruIVMJJX4rXzTrv9aobAHUAs0KWlJnXuZM0dUDqdXEBq34FlTZeIDneQi
- IY/Xc6Mh+O9qwxxy5/a2A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KDOOqXKprFU=:aKLa3NCS3Zzhe89gSTB7xm
- S5gbutCNag4xoaxDSSedPJyiapV+RHqXoXWOVHnzxjYUqTVPUWOOwNtWAZU+fJzeJORs/1SIP
- 1OoRhLNgfQkGczk6bUZdlH2HOoIntYsgaEo2I8dYaa315q5tymP0d6v35fBmn7r0rqi3yyIvD
- fnRyTbhf4CpNTGkwzqL/GNynOwbwPOCiYepKBmYGjoPs5/OWOi2DkB4eniekMTX939uyE5FRp
- hb9igUS8h0EzaDJBHtT3jvgRo7I814KSRArIfYkr8PKUi3CPx+7nz1GV3dDJQzfDEyW2tvDVN
- 16j6laKhMmY7HJot8t8/3fuO9pjJ1Uqv3vAeB4m63iki7BcSqAVZdICPm4qDzsypfDOifWsZn
- njKRzbVxf/DJz4SSXxTLG7NvKG6q9luBbLuLMTqb68BAhuTStnCXPHLMOQ6Anb/hTqux8TBgK
- 5zyLmFxWrVW/fym5geK0gR/HmPJKyPb5iPV7aPv35WRqzIMOHYBtm1j4Usow5DIc74U+cPtBu
- LPyYMZv2bmFdTN1UhsPfjWzqioQbqIp02W53VhzsGLXFptkIATwTRZybyrRVgC0UaEjjrRvY8
- RJm8jUx8q5cRCc7SZ0ez8w/CbjUUfmQs37vC91tRCE2uleFh6I7kadGtttDvyzSQpMAmoiEBo
- YhgqS68ZYcpBfcNPhkj7ExTUx27Gg9Z3KUa5MHb5UveIjFTToZgINcXiAoY7pRUTppTMIp+eV
- T1sVwKiIbd0jCO6TN5v8Pp4bIXTimprkGOY7BCcIzux04RKjoeUBx+sOeiUt74TVKVccLK/Fm
- Oy3VJzdCuUUUpC2cxwxs2XODerg1L/8q6rQ4oLM068fqyfqi0tZ1b4JFNUryfZF6oUkS6ivwc
- aBTvLmQDpJmvInRrFoyusUI4JicfOQhGX+/MzBxDIZfAJ5m19UtUJNpB9rL4DZaVne0g+Il+g
- WChV2VUBnwM4CkHcXL+dTdeopZoSeqRb6qH53Ym39g/HAdOYTnQxxVgwLgYppTc31pupCyI2l
- 8xy18lw1WuX4wUCFHbzoEX2h7WPeQh3USpSqNvD49Kl1SZpuHlKajG1pzSniqADZDtCgHFQMs
- 65fiqzh7iwOd1lv68wDU0pl4hVOG9CnvXln
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210729115850.7f913c73@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Thu, Jul 29, 2021 at 11:58:50AM -0700, Jakub Kicinski wrote:
+> On Tue, 27 Jul 2021 13:58:45 -0700 Kees Cook wrote:
+> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > field bounds checking for memset(), avoid intentionally writing across
+> > neighboring fields.
+> > 
+> > Add struct_group() to mark region of struct rt6_info that should be
+> > initialized to zero.
+> 
+> memset_after() ?
 
-On Wed, Jul 28, 2021 at 10:36:09AM +0100, Robin Murphy wrote:
-> On 2021-07-28 09:36, David Laight wrote:
+Oh, hah. Yes. I will adjust for v2.
 
-> > > > -               strcpy(pd->name, area->name);
-> > > > +               strscpy(pd->name, area->name, area_name_size);
-> >
-> > You can just use memcpy().
->
-> Indeed. In fact I'd go as far as saying that it might be worth teaching
-> static checkers to recognise patterns that boil down to strscpy(dst, src=
-,
-> strlen(src) + 1) and flag them as suspect, because AFAICS that would alw=
-ays
-> represent either an unnecessarily elaborate memcpy(), or far worse just =
-an
-> obfuscated strcpy().
-
-Ok, I will use the memcpy function instead of strscpy. Thanks for the
-feedback.
-
->
-> Robin.
-
-Regards,
-Len
+-- 
+Kees Cook
