@@ -2,158 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC00C4338F
-	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 15:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311CDC432BE
+	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 15:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F2A61042
-	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 15:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1485B61040
+	for <linux-hardening@archiver.kernel.org>; Sat, 31 Jul 2021 15:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232674AbhGaPzg (ORCPT
+        id S231792AbhGaP6D (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 31 Jul 2021 11:55:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233186AbhGaPzX (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 31 Jul 2021 11:55:23 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D20C06175F
-        for <linux-hardening@vger.kernel.org>; Sat, 31 Jul 2021 08:55:17 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id o44-20020a17090a0a2fb0290176ca3e5a2fso18711021pjo.1
-        for <linux-hardening@vger.kernel.org>; Sat, 31 Jul 2021 08:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CWAr3/vvX8dR98nIuJoFiA3TzHrbFffRdXMXWBKex/w=;
-        b=SfXfxxX2N+/kKWmDWeCG1npjUOirhBLaUYkGuCwcQPwpoN0nwD15k4hMwoiQA+Zeg2
-         IKrqFe0+x44S++4Yn4DMg2yE6iTlKGkc+6+5+ks30UF3+KpqzYAwTHKdakIoKNtz0aj0
-         81ajOKEdPN0fO1YSVRfKq8GqE3V76OXv/xCy8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CWAr3/vvX8dR98nIuJoFiA3TzHrbFffRdXMXWBKex/w=;
-        b=SuDhrdjMh3ncoh+P24TsO0pSZy/wS7W17BgXHvfvQ6LCUOW9/+Eaf/Zz2RAx/rWzd/
-         4UwAriB+1Kq8XJ7UEtbiya6Vae+FmhisMKaSwXwvhr6DN4tCl1/m8Rx309l0aZp6E+O5
-         WFGuriqtn752vFItmGjX1+SHBmPTl/hOjjO+4k91j2PSbTtjryoNyBGtgR+sS+VxoNLU
-         pNDT8Ewo9OrhK/+3KslwHMvWUBv+6mav0lK2SMXQnIJD5wN949UMjzF4lZ/ih71Pd6yr
-         AT0lLG291ilVzgz+00yiQtz+yUG+e61dqfXa4ZwQedkD0SpoNCrKrBoz5zfacolRoLXk
-         J3AQ==
-X-Gm-Message-State: AOAM533Tf8pu+VUD/5Xoi/iFTyY96j1VWGJMKIRkEey1cz3sMpfERFjG
-        FskYYczPhxXmDGTCG9P502ARJQ==
-X-Google-Smtp-Source: ABdhPJzUOR8h4Qlji5guXgZz2vvMrumJrjQKL2oCCx5MemVrRz6QjCyNPdKOcI8nIcntwFJ9MVNCdw==
-X-Received: by 2002:a63:1e57:: with SMTP id p23mr5970986pgm.41.1627746916773;
-        Sat, 31 Jul 2021 08:55:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v10sm5574092pjd.29.2021.07.31.08.55.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Jul 2021 08:55:15 -0700 (PDT)
-Date:   Sat, 31 Jul 2021 08:55:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 39/64] mac80211: Use memset_after() to clear tx status
-Message-ID: <202107310852.551B66EE32@keescook>
-References: <20210727205855.411487-1-keescook@chromium.org>
- <20210727205855.411487-40-keescook@chromium.org>
+        Sat, 31 Jul 2021 11:58:03 -0400
+Received: from mout.gmx.net ([212.227.17.22]:49647 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231620AbhGaP6D (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 31 Jul 2021 11:58:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1627747062;
+        bh=Xm1amlEG94SkmNEYoJRd4JlIQcoNXkSXteU6QuLhcqQ=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=cNyw8xjmmavs83IBAh15l5L6hwjM2f9YueREuAZj9XG4wJlmO7vh+gJZ10T71f79c
+         2I/tcR84g4GM2I9EvTVLTQPZ15/dA+IvFhLVA2aU0EUmSivMgFb1xhKFXTxi3+44Ac
+         2zHumL0zZ6tV8zQVUSWkYL9r8rBhNkcxvkoUUTg8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1M9Fnj-1mDQ8H0YAZ-006Qrl; Sat, 31
+ Jul 2021 17:57:42 +0200
+Date:   Sat, 31 Jul 2021 17:57:39 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Robert Richter <rric@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/edac/edac_mc: Remove all strcpy() uses
+Message-ID: <20210731142759.GD1979@titan>
+References: <20210725162954.9861-1-len.baker@gmx.com>
+ <YP/+V90D6zyxnSyU@rric.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210727205855.411487-40-keescook@chromium.org>
+In-Reply-To: <YP/+V90D6zyxnSyU@rric.localdomain>
+X-Provags-ID: V03:K1:Qpi75xzmAtgkmrWhNS1dJD9XjDmoFDcxAxkGpQBIRTDgbDYAok7
+ teoX1lFZmgl5o0oMP04MmMQo7rc5aHcjaEQmxKNb+dpJAjkUGcIZGszs+/PCM7S1RdtJS9x
+ Se7Ffqb2dY3E4T5is9iD2CYbfwiihcwE1oRGpGOmj/msSfaubEpjLwnv8JOJrS53B8zR5v2
+ j07pAedb8fxbj+++D0rEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LLgS095QqEc=:xCHgX6ywc78hpi4aAqFiDj
+ BbfTXbV6x6O9UZrXD8A29RLfstTg1RgkZPk3BDc+Pqboq3AYGeO0eE65puKfYJGLmObfh1uwn
+ bAWRml0po5SDV099r3BtYXHSjqcjuu6tvNA4qdqIzm33MaWcq5eIySoOcDJOhR6EQDYmigsNN
+ DOaeTtAjT5vdAGADXxoYiH1zWDpLi49z2XsaQZWkZd1BxeT30fLzDK006FBzZ5ZsOnrBy3594
+ 3hJl3WC0GbveJqJC10nejsVNYfDKKMbcldOkpQ/8pBCWTKEPO3/xKram9qqBgB/8SFFjt6PC3
+ 3PA4wtoBXOGeRX3NiNLopT7lYI0eNDZFPj825bRgcR1gUD36nrOdKkpvv9BdBWFfcXtzA6se0
+ 6Si5Kz/vFP0Hgvwp7G7Yhf0MnUkN3zwpmyYz+QE/FADAmPnYuDSgf6d8c23nDr4mvhcv4YQNO
+ pff0W6HEPQyDmQaqgZ6v7kGGq6ugfGDJOnnhgZ4diCZAN89/bjVJmQhCpdYwllp5Sm38XfZ5V
+ tyJuqFvz0BM/E5c2TCcDMxxtxx7SBJWsPGjszw6FvPfpYAVkg4X7re8zltEMrBmh/gW9dgAp/
+ sSb5X/y/TP6cyKJlKEJFdcJeUmPmmZ+BghaBvLTpp+tNwhIPPshH8P5gOZmI/G3tUvSxfSG1C
+ bVxCInOS3tFDTUjcdC0R5/I1Uqa2zC3sr/R9sDDq+Tkb6v1lQGNThyaFCygPdNPfsb4o0Htik
+ dyezNn2BBToyfySORz2+BuVpWWAlEY87UpVRZzlJVTxKB0kHok+jbFIDbRv/oIQxk5/ZpjREN
+ TyAz6PIWPy8tgxYh296PveuYvJQFd8E990Vxh+5cGeUKGDrtPmOUA9jZA/QowCg2STSKM2hSP
+ vYO/sfVLFqzLblw7oZs1mUod1MXTt0Cp7+C6OgE2LxupQdfj149buSFegM0D4J2Eri/o1t3o/
+ 23yVXZTX/A3B/OhMs66RZ/eTG5q0qMv9a55zC/uk4sjwR3u5QucHsIYZ6nnoZOeelCcDRh0o6
+ ymSjqjwwl0o4DTTlTEs5XJiHG9Q2hD9RIXy8ZhKdvz9SUKt2Gkx5JMIDoDHwkXf8lReF4BSpp
+ UoD8Kf4iH9Qqv32eqXsMlmeBuc1mOaepUpt
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jul 27, 2021 at 01:58:30PM -0700, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memset(), avoid intentionally writing across
-> neighboring fields.
-> 
-> Use memset_after() so memset() doesn't get confused about writing
-> beyond the destination member that is intended to be the starting point
-> of zeroing through the end of the struct.
-> 
-> Note that the common helper, ieee80211_tx_info_clear_status(), does NOT
-> clear ack_signal, but the open-coded versions do. All three perform
-> checks that the ack_signal position hasn't changed, though.
+Hi,
 
-Quick ping on this question: there is a mismatch between the common
-helper and the other places that do this. Is there a bug here?
+On Tue, Jul 27, 2021 at 02:38:47PM +0200, Robert Richter wrote:
+> On 25.07.21 18:29:54, Len Baker wrote:
+> >  drivers/edac/edac_mc.c | 16 ++++++++--------
+> >  1 file changed, 8 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> > index f6d462d0be2d..1286364f0e48 100644
+> > --- a/drivers/edac/edac_mc.c
+> > +++ b/drivers/edac/edac_mc.c
+> > @@ -1027,6 +1027,7 @@ void edac_mc_handle_error(const enum hw_event_mc=
+_err_type type,
+> >  {
+> >  	struct dimm_info *dimm;
+> >  	char *p;
+> > +	size_t p_size =3D 0;
+>
+> I would rather use a 'left' variable which is initialized with
+> sizeof(e->label) close to there p =3D e->label is.
 
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Should these each be clearing the same region? Because they're currently not.
-> ---
->  drivers/net/wireless/ath/carl9170/tx.c   | 4 +---
->  drivers/net/wireless/intersil/p54/txrx.c | 4 +---
->  include/net/mac80211.h                   | 4 +---
->  3 files changed, 3 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/carl9170/tx.c b/drivers/net/wireless/ath/carl9170/tx.c
-> index 88444fe6d1c6..6d2115639434 100644
-> --- a/drivers/net/wireless/ath/carl9170/tx.c
-> +++ b/drivers/net/wireless/ath/carl9170/tx.c
-> @@ -278,9 +278,7 @@ static void carl9170_tx_release(struct kref *ref)
->  	BUILD_BUG_ON(
->  	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
->  
-> -	memset(&txinfo->status.ack_signal, 0,
-> -	       sizeof(struct ieee80211_tx_info) -
-> -	       offsetof(struct ieee80211_tx_info, status.ack_signal));
-> +	memset_after(&txinfo->status, 0, rates);
->  
->  	if (atomic_read(&ar->tx_total_queued))
->  		ar->tx_schedule = true;
-> diff --git a/drivers/net/wireless/intersil/p54/txrx.c b/drivers/net/wireless/intersil/p54/txrx.c
-> index 873fea59894f..f71b355f8583 100644
-> --- a/drivers/net/wireless/intersil/p54/txrx.c
-> +++ b/drivers/net/wireless/intersil/p54/txrx.c
-> @@ -431,9 +431,7 @@ static void p54_rx_frame_sent(struct p54_common *priv, struct sk_buff *skb)
->  	 * Clear manually, ieee80211_tx_info_clear_status would
->  	 * clear the counts too and we need them.
->  	 */
-> -	memset(&info->status.ack_signal, 0,
-> -	       sizeof(struct ieee80211_tx_info) -
-> -	       offsetof(struct ieee80211_tx_info, status.ack_signal));
-> +	memset_after(&info->status, 0, rates);
->  	BUILD_BUG_ON(offsetof(struct ieee80211_tx_info,
->  			      status.ack_signal) != 20);
->  
-> diff --git a/include/net/mac80211.h b/include/net/mac80211.h
-> index d8a1d09a2141..7abc1427aa8c 100644
-> --- a/include/net/mac80211.h
-> +++ b/include/net/mac80211.h
-> @@ -1200,9 +1200,7 @@ ieee80211_tx_info_clear_status(struct ieee80211_tx_info *info)
->  
->  	BUILD_BUG_ON(
->  	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
-> -	memset(&info->status.ampdu_ack_len, 0,
-> -	       sizeof(struct ieee80211_tx_info) -
-> -	       offsetof(struct ieee80211_tx_info, status.ampdu_ack_len));
-> +	memset_after(&info->status, 0, ack_signal);
->  }
->  
->  
-> -- 
-> 2.30.2
-> 
+Ok.
 
--- 
-Kees Cook
+> >  	int row =3D -1, chan =3D -1;
+> >  	int pos[EDAC_MAX_LAYERS] =3D { top_layer, mid_layer, low_layer };
+> >  	int i, n_labels =3D 0;
+> > @@ -1113,12 +1114,11 @@ void edac_mc_handle_error(const enum hw_event_=
+mc_err_type type,
+> >  			p =3D e->label;
+> >  			*p =3D '\0';
+> >  		} else {
+> > -			if (p !=3D e->label) {
+> > -				strcpy(p, OTHER_LABEL);
+> > -				p +=3D strlen(OTHER_LABEL);
+> > -			}
+> > -			strcpy(p, dimm->label);
+> > -			p +=3D strlen(p);
+> > +			const char *or =3D (p !=3D e->label) ? OTHER_LABEL : "";
+> > +
+> > +			p_size +=3D scnprintf(p + p_size,
+> > +					    sizeof(e->label) - p_size,
+> > +					    "%s%s", or, dimm->label);
+>
+> My preference is to advance p here (and decrement 'left'). This is the
+> pattern how p is used throughout the code. I also don't see a benefit
+> of using scnprintf() here compared to the previous implementation.
+
+Ok, no problem. I will send a new version more close to the original. The
+scnprintf() returns the number of bytes writes to the buffer, so it is not
+necessary to use the strlen() function. But if you prefer the current
+pattern I will have no objection.
+
+Regards,
+Len
