@@ -2,135 +2,176 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972CBC4338F
-	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F24DC4338F
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7694760EEA
-	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAFA60EEA
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229959AbhHARNB (ORCPT
+        id S229596AbhHARTV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 1 Aug 2021 13:13:01 -0400
-Received: from mout.gmx.net ([212.227.15.19]:50781 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229680AbhHARNA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 1 Aug 2021 13:13:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1627837961;
-        bh=xtUEr+ekAW0WAiuNsLNrEiRPpwS+f47iJkTrheQXOVM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=Op97yEQA2weqmNoErqEAF+rCg9pYtKEDJdET5VzRiFxIJIbha5eZg9ag5/scZhldC
-         KZXlsJJa0iv4X+scnxsXTFpSSCPKONA3ggVgqaLU9jFQOgNLyxp871U8pmP00R7OAh
-         HTNtp5tSEOnmPU9jrBYc4hmSrE0rk1VzHKH/Q5gQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MOA3P-1mYdeq2whN-00ObJ5; Sun, 01 Aug 2021 19:12:41 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Oliver Neukum <oneukum@suse.com>
+        Sun, 1 Aug 2021 13:19:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229592AbhHARTU (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 1 Aug 2021 13:19:20 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD07C06175F;
+        Sun,  1 Aug 2021 10:19:11 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id u2so8676274plg.10;
+        Sun, 01 Aug 2021 10:19:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6x3QWVYNzA8oWY+P2CnHY/LSOtwPRNB5RDZ9JILj+eY=;
+        b=ky/IPsSGP1pgCJX+7tKzpqQbcF8UtDmxisvlH8DgENnL54BDKicV0UV3XIICgvK8TL
+         ymkgV8EfwN/3pa/Xu0smcU3oNqgJKjpZATBK1MtbKGJqvhAHS5r+6QjAvT/IVkVcOvF2
+         bZNxmk5pBUL4KfRtTJluK/fN6Lab9+r0UvO3ejwmoHaKuA9MKTe32GgIl3mMTEr/tEXb
+         9dtKwdLJpROQgbjLVWASLPGeMoubl9qow4ZlmaL4m3GmpJ2wgXi8A4tzw04clOqixFeq
+         TOIsv4xcmLTU6N70ZrIoT+F8IFan3zTXC+EBtrUdr0rgJ+s2jvhZrIIkzXexwCJULET4
+         5tqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6x3QWVYNzA8oWY+P2CnHY/LSOtwPRNB5RDZ9JILj+eY=;
+        b=BJP6wUKUY4zYYgt26MHakNQmdC6dieqeYe79Kh23e5+RBPgzAhfm1BmxhGPCsjgLHf
+         0cvwoKQ1+sUn03qj0rFoZukhtCGGmAAJE8IyJACzocxmGcU1CI+GiU2EfR6PyXT6L83V
+         UH6Es8crAhmVzgoo29nSlYfh1uBHNpcfSPjHWNS551HK7iTOGcnkb7FLYbZp8qau3opS
+         V0Y58Ko5OrySDySBCPH1hFFqRBZZ6W5ew0/0UPNJMMKysleBIdPtsExzC80EZG8DIF6Y
+         OCnMISise6ixZGLqYP4z5ltDnMrYcoPk9LYg4IPSPtj9oMB+cT7r4CFDvU4+7IJPEx4S
+         bGHQ==
+X-Gm-Message-State: AOAM531lRq0dNF88jb6jsJh5YKapBikjsQn90vD7hzSCjWq0ysP6FS7j
+        B2S8A5RxmWc1iujJoTOScUg=
+X-Google-Smtp-Source: ABdhPJzxn/JWAy+XyIIVy1nAD4L2hpuDqJ97xmYG3WaNsA8mgiRLU83yOqyqEohRIdrB2g8Y1Wno/g==
+X-Received: by 2002:a17:902:7d82:b029:12c:5930:98c7 with SMTP id a2-20020a1709027d82b029012c593098c7mr11080561plm.46.1627838350958;
+        Sun, 01 Aug 2021 10:19:10 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:f80c:7a7e:9e46:8cee])
+        by smtp.gmail.com with ESMTPSA id p17sm8613878pfh.33.2021.08.01.10.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Aug 2021 10:19:09 -0700 (PDT)
+Date:   Sun, 1 Aug 2021 10:19:07 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Len Baker <len.baker@gmx.com>,
-        Yves-Alexis Perez <corsac@corsac.net>,
-        linux-hardening@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/net/usb: Remove all strcpy() uses
-Date:   Sun,  1 Aug 2021 19:12:26 +0200
-Message-Id: <20210801171226.17917-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Lee Jones <lee.jones@linaro.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-hardening@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] drivers/input: Remove all strcpy() uses in favor of
+ strscpy()
+Message-ID: <YQbXiwie4YPzPWKK@google.com>
+References: <20210801144316.12841-1-len.baker@gmx.com>
+ <20210801145959.GI22278@shell.armlinux.org.uk>
+ <20210801155732.GA16547@titan>
+ <202108010934.FA668DEB28@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aNEQxA0ncX6BkzImAoKubQRd2aRGPwbNk6UwMdO1UGBgXm4JR/q
- s7jZaI5ya4z3C8KMGVy16qTHerJs8h5tJNbdqnKnVzsdX2Q3eRoB2y6/cOaOzfNvVO95JXF
- zB/a+PcJZzOlBWbItmqkWolUWOkezhcHEbmJQcJHzei5qv6sh8khP0kaVBHpFampgts5mgH
- Y89YuxNdWXU52hqJ3IBFA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:i2ZRFUa/4II=:xASLozsIXLy0ysItC9gDuV
- cKYL8mwceJg1AnoTtgpb1W/cUsQq8g0bX9/6FYl8r1IxR52w/z4cRGRGVDgg74usvpw2SfM5I
- 3k3p/pxohD00oMBmcKvkiBE794GfkaeeyDEGlX4mN6adZN4dgfyywn3KVPI3/rGl6nVrI77i8
- PuSRQNN88tZTBQe9qTsayFAWwiZFtMj2bynfZu0n/CI5fNCRu9Bn9M7aViogfMIPs1xRW9ITv
- FWPEdohjWB3s1uDxhzbBYSsHDIXFAfWjWozBxAah1qWMs34/5mhwQNOKNxBbfbsCS2esMFLTf
- btcJpzVGoelMO5jUHTS4X2GpofBqkcEjqeXpDbBXK2UsyHyw1lupD4q83AV/Hzg4EgxmX96Sd
- iJP/Fsbl4UTsKYCMjKZAWavVCEYUd8KgiifSCfONKkruTrdtuRHh8qt7Mi82j70Eye32+ZEgz
- odHnvpO/zMXroHfiBVPcOe1WzJUBT3+vr/YqE87v2QGfteaczhDM665asqTC5ECyB+GsSqvek
- OBIVfuCXgevT9ctdcAEMWzTON9Og/+o91HIlhkP8w0x1MEsOJjOLckBqAn5D2Xso3mEchVkXS
- rgo/0elfuGnS8XJQy3QFJzErwMQxRInqlYsewNCJVLTS28DdCYkxyd4mD2pCOA46RZdfGtv4G
- Sa2K4gxjBrsG3jQ0kgmugH5kDQtBr5hjmK9+XAh4zAgd8LhOF2VQVboyb+ylKbtzVN68bk1YZ
- u1q0ao7lOpQJJnrWVinq7yuYyX8cZyJLdzges90bZTfCzBhClY5xOYyCPB3Wn1aEO8EtI0fmO
- Cs930I4izqh1nW4doeol1jrgDHGe7Bf0HvvNRE2XD+QXhz7zod0a3xJJ1m+hE/p+oLTMdGxgd
- p+wZue4iscbHXnAKMmWUF74NxPfpTnioUPs4+wfurBrHKlXzBAQgcRi6TlhDu3NHDH8tl1b5z
- SGA7rdZuSxJdJXNeWRv4QXjFdWO5bG39CjXKiELZk9h44IqGAGG9RWkeWvbH57gHZi+aPolCZ
- SoIp7zRFFbCQl10u9Rs9F/fQrAcYvgJVng/AYM5mLFHRQlpgEFKFu6/3Eho77zFKM7wL6yOTH
- gA0YSu+C1slrvDNNIa8lwHG8dTRc0hqEb5N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202108010934.FA668DEB28@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strcpy() performs no bounds checking on the destination buffer. This
-could result in linear overflows beyond the end of the buffer, leading
-to all kinds of misbehaviors. The safe replacement is strscpy().
+On Sun, Aug 01, 2021 at 09:44:33AM -0700, Kees Cook wrote:
+> On Sun, Aug 01, 2021 at 05:57:32PM +0200, Len Baker wrote:
+> > Hi,
+> > 
+> > On Sun, Aug 01, 2021 at 04:00:00PM +0100, Russell King (Oracle) wrote:
+> > > On Sun, Aug 01, 2021 at 04:43:16PM +0200, Len Baker wrote:
+> > > > strcpy() performs no bounds checking on the destination buffer. This
+> > > > could result in linear overflows beyond the end of the buffer, leading
+> > > > to all kinds of misbehaviors. The safe replacement is strscpy().
+> > > >
+> > > > Signed-off-by: Len Baker <len.baker@gmx.com>
+> > > > ---
+> > > > This is a task of the KSPP [1]
+> > > >
+> > > > [1] https://github.com/KSPP/linux/issues/88
+> > > >
+> > > >  drivers/input/keyboard/locomokbd.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/input/keyboard/locomokbd.c b/drivers/input/keyboard/locomokbd.c
+> > > > index dae053596572..dbb3dc48df12 100644
+> > > > --- a/drivers/input/keyboard/locomokbd.c
+> > > > +++ b/drivers/input/keyboard/locomokbd.c
+> > > > @@ -254,7 +254,7 @@ static int locomokbd_probe(struct locomo_dev *dev)
+> > > >  	locomokbd->suspend_jiffies = jiffies;
+> > > >
+> > > >  	locomokbd->input = input_dev;
+> > > > -	strcpy(locomokbd->phys, "locomokbd/input0");
+> > > > +	strscpy(locomokbd->phys, "locomokbd/input0", sizeof(locomokbd->phys));
+> > >
+> > > So if the string doesn't fit, it's fine to silently truncate it?
+> > 
+> > I think it is better than overflow :)
+> > 
+> > > Rather than converting every single strcpy() in the kernel to
+> > > strscpy(), maybe there should be some consideration given to how the
+> > > issue of a strcpy() that overflows the buffer should be handled.
+> > > E.g. in the case of a known string such as the above, if it's longer
+> > > than the destination, should we find a way to make the compiler issue
+> > > a warning at compile time?
+> > 
+> > Good point. I am a kernel newbie and have no experience. So this
+> > question should be answered by some kernel hacker :) But I agree
+> > with your proposals.
+> > 
+> > Kees and folks: Any comments?
+> > 
+> > Note: Kees is asked the same question in [2]
+> > 
+> > [2] https://lore.kernel.org/lkml/20210731135957.GB1979@titan/
+> 
+> Hi!
+> 
+> Sorry for the delay at looking into this. It didn't use to be a problem
+> (there would always have been a compile-time warning generated for
+> known-too-small cases), but that appears to have regressed when,
+> ironically, strscpy() coverage was added. I've detailed it in the bug
+> report:
+> https://github.com/KSPP/linux/issues/88
+> 
+> So, bottom line: we need to fix the missing compile-time warnings for
+> strcpy() and strscpy() under CONFIG_FORTIFY_SOURCE=y.
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
-This is a task of the KSPP [1]
+Is it possible to have them warn always? Or that would be too many false
+positives?
 
-[1] https://github.com/KSPP/linux/issues/88
+> 
+> In the past we'd tried to add a stracpy()[1] that would only work with
+> const string sources. Linus got angry[2] about API explosion, though,
+> so we're mostly faced with doing the strscpy() replacements.
 
- drivers/net/usb/ipheth.c | 2 +-
- drivers/net/usb/usbnet.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+I would like to have an API that would do compile-time checks and
+BUILD_BUG_ON() for a few places in input drivers where we copy constant
+strings. There is no reason to encumber the code with runtime checks,
+and bombing out on compile instead of truncating would be nice.
 
-diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
-index 207e59e74935..06e2181e5810 100644
-=2D-- a/drivers/net/usb/ipheth.c
-+++ b/drivers/net/usb/ipheth.c
-@@ -443,7 +443,7 @@ static int ipheth_probe(struct usb_interface *intf,
+> 
+> Another idea might be to have strcpy() do the "constant strings only"
+> thing, leaving strscpy() for the dynamic lengths.
+> 
+> One thing is clear: replacing strlcpy() with strscpy() is probably the
+> easiest and best first step to cleaning up the proliferation of str*()
+> functions.
 
- 	netdev->netdev_ops =3D &ipheth_netdev_ops;
- 	netdev->watchdog_timeo =3D IPHETH_TX_TIMEOUT;
--	strcpy(netdev->name, "eth%d");
-+	strscpy(netdev->name, "eth%d", sizeof(netdev->name));
+OK, so the consensus is that we set this patch aside as it does not
+really fix any issues (the strcpy() destination is 32 bytes and is big
+enough to hold the string being copied)?
 
- 	dev =3D netdev_priv(netdev);
- 	dev->udev =3D udev;
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 470e1c1e6353..840c1c2ab16a 100644
-=2D-- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -1725,7 +1725,7 @@ usbnet_probe (struct usb_interface *udev, const stru=
-ct usb_device_id *prod)
- 	dev->interrupt_count =3D 0;
+Thanks.
 
- 	dev->net =3D net;
--	strcpy (net->name, "usb%d");
-+	strscpy(net->name, "usb%d", sizeof(net->name));
- 	memcpy (net->dev_addr, node_id, sizeof node_id);
-
- 	/* rx and tx sides can use different message sizes;
-@@ -1752,13 +1752,13 @@ usbnet_probe (struct usb_interface *udev, const st=
-ruct usb_device_id *prod)
- 		if ((dev->driver_info->flags & FLAG_ETHER) !=3D 0 &&
- 		    ((dev->driver_info->flags & FLAG_POINTTOPOINT) =3D=3D 0 ||
- 		     (net->dev_addr [0] & 0x02) =3D=3D 0))
--			strcpy (net->name, "eth%d");
-+			strscpy(net->name, "eth%d", sizeof(net->name));
- 		/* WLAN devices should always be named "wlan%d" */
- 		if ((dev->driver_info->flags & FLAG_WLAN) !=3D 0)
--			strcpy(net->name, "wlan%d");
-+			strscpy(net->name, "wlan%d", sizeof(net->name));
- 		/* WWAN devices should always be named "wwan%d" */
- 		if ((dev->driver_info->flags & FLAG_WWAN) !=3D 0)
--			strcpy(net->name, "wwan%d");
-+			strscpy(net->name, "wwan%d", sizeof(net->name));
-
- 		/* devices that cannot do ARP */
- 		if ((dev->driver_info->flags & FLAG_NOARP) !=3D 0)
-=2D-
-2.25.1
-
+-- 
+Dmitry
