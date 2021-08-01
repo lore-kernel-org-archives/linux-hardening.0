@@ -2,115 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FB4C4320A
-	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 16:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D495C4320A
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5099E60F36
-	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 16:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B4C60EEA
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229668AbhHAQzl (ORCPT
+        id S229712AbhHARMb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 1 Aug 2021 12:55:41 -0400
-Received: from smtprelay0078.hostedemail.com ([216.40.44.78]:42006 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229646AbhHAQzl (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 1 Aug 2021 12:55:41 -0400
-Received: from omf01.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id B1D1F180210D1;
-        Sun,  1 Aug 2021 16:55:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf01.hostedemail.com (Postfix) with ESMTPA id 57CFE17275;
-        Sun,  1 Aug 2021 16:55:30 +0000 (UTC)
-Message-ID: <4962ac72a94bc5826960dab855b5e2f47a4d1b9a.camel@perches.com>
-Subject: Re: [PATCH] drivers/input: Remove all strcpy() uses in favor of
- strscpy()
-From:   Joe Perches <joe@perches.com>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Len Baker <len.baker@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-hardening@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 01 Aug 2021 09:55:28 -0700
-In-Reply-To: <922b0d99b6397adc44761abaed12c019dc0b9e88.camel@perches.com>
-References: <20210801144316.12841-1-len.baker@gmx.com>
-         <20210801145959.GI22278@shell.armlinux.org.uk>
-         <922b0d99b6397adc44761abaed12c019dc0b9e88.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.0-1 
+        Sun, 1 Aug 2021 13:12:31 -0400
+Received: from mout.gmx.net ([212.227.15.15]:42587 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229680AbhHARMb (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 1 Aug 2021 13:12:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1627837931;
+        bh=fMjtxvQOIw1SnIwi4nyIOF/OnCL2DunPqIBE+G3CAQM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=lv68nNY7VyrmSlDpjwfqvCjEJRqKEkwAnOZics5nPZufrdor9jr0j9CpLj2OWKdL/
+         cD5tND8X52aYLw3VAmP8kvvRBAV0Z0ZjrWc6s2Ozt3xw2bDLvOg5/1MZVW+o+ugBxT
+         9rv/yBQdRdwppqaJPzSzyB/2AlTPIB3dB4lvxc0g=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MAfUo-1mLHcI33c0-00B1h3; Sun, 01 Aug 2021 19:12:10 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>
+Cc:     Len Baker <len.baker@gmx.com>, linux-hardening@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers/iio: Remove all strcpy() uses in favor of strscpy()
+Date:   Sun,  1 Aug 2021 19:11:57 +0200
+Message-Id: <20210801171157.17858-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 57CFE17275
-X-Stat-Signature: 343965z1p64ouzhaqchggbnj5ymsxi3k
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX19SCwlsX+nYsG+afP45pp+eXwmzf+OErF4=
-X-HE-Tag: 1627836930-174082
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:sANA7hqjWDJu1bKLfHEzEjh3NiMEYjyWglhBJmmkMx8uX8jnK6/
+ gkfz5XJMkK6TxNhKlOkSEdnAHoX/t2JSU8FQsLgVNfyzqVA4+HxtGCXwBMdCbDWSOnF6I0f
+ 4f1j3hRT1DbLnm42TqofQhr04QVK8KtJF+9IsyMpfMjlOsli3PXs8haw6vAMYMmBzZ2biFZ
+ j9rR8bFDNWcyAZ/zpjOTQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GCBi1IHlMR8=:h5g2/+mr+7iOI9tAUL3Kw9
+ bIAWeRkCylDZH/miQTUhEb8m7x5cGRbQqWFV4x495wVT0AzZLHoszS4bFuBAfVUB4PwYIrm3o
+ OXMsq4W/x4sopv0g0uRX4jsEmQpi7cDQ6HUsiG5jDhMuRc6uJpZXLcXuUSBX8xLUxUXQWioHK
+ sSXPNu3LoHm31OBgFmywCO0QSfV/HDr0WRHkgRVS2lh/kJgJVfzw7+ZBI3Av1GsM8vTfhzGMH
+ w4kHfFRVM7eFwEu8mYsJWs8lluRoTP4erhAa++i8xRyFhLMrWTC6hvrdUiVce62CGxYxa/Bro
+ FBHzWXAHA3nHwix5DvNMrMaTRGAd5Ffwbsf1vBSc4hwHZvwgthWQ13/n4JFl50hbwSVz38IA6
+ qKGeE2R3v6ME/N++inkp7hXVUyTZFdTG1gcWYhH/C+JgKYZiyY6PuWVpVcj5nn8otGcbJTBJI
+ mzb4eOWA0oqSobFHvw6jdMdSaPig7pM9x8H0O52IbuM++9eHytXEw36AkPs+KnkR5FH4ydZp1
+ Wk3WBf59JCJKCbLKkjPHUACh/xJdlc1OjUXtc9sHLzjH+DUHXe3LW4+1y8uEjhwtIMnZNDEu8
+ jw7JdbXmA3SSjX5melX7SYjupxMagftDodvEi/rGgeOrSiPLXOtMPBcBPQVTzoUxtA8gLReeR
+ m63kRrclC1fTojr1SgoCyECNYgQ+CDFW6uRZLwM2rQggQ2NwRdnOKEdLnUO9KdAPp65gzLMfx
+ U4sAGoxz8DT1YZoZVUgy3BDcY8E8kajFSyBD9Y/WJ2NIZ5871GhmmNA9kgywlvzfeyH6hYxoj
+ WRzLTiXU+NNRlRRkc9/QgYm7oDGSFXBe1t7LipKqBaRpvVxQZk1+TXPcHZ0YIUkBl2sa/5MZM
+ jyGZ8xySTYFGa5ZDxAnUkNsKGEMslgOWCa3IBoLmQJ9TYqoVIGEgCBQH1EhCE/VpZ1GHuYsjM
+ O9CjLhwBcM3WRIxadbjMs30SPEJC9zYvI3FWXeWu4F/I6TO7U6jCBWy0841MqkWOepATz80tG
+ wN5UH2Or16fbmEORigSfFK1f4hveUsyjN1rcLnIIFLuju7V4Y7+i7+Bhn+U0ei9e+DiIxwEwt
+ sMWlfZAMmi8X04lo10TOKY6966rMfkm6IvX
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, 2021-08-01 at 09:39 -0700, Joe Perches wrote:
-> On Sun, 2021-08-01 at 16:00 +0100, Russell King (Oracle) wrote:
-> > On Sun, Aug 01, 2021 at 04:43:16PM +0200, Len Baker wrote:
-> > > strcpy() performs no bounds checking on the destination buffer. This
-> > > could result in linear overflows beyond the end of the buffer, leading
-> > > to all kinds of misbehaviors. The safe replacement is strscpy().
-[]
-> > So if the string doesn't fit, it's fine to silently truncate it?
-> > 
-> > Rather than converting every single strcpy() in the kernel to
-> > strscpy(), maybe there should be some consideration given to how the
-> > issue of a strcpy() that overflows the buffer should be handled.
-> > E.g. in the case of a known string such as the above, if it's longer
-> > than the destination, should we find a way to make the compiler issue
-> > a warning at compile time?
+strcpy() performs no bounds checking on the destination buffer. This
+could result in linear overflows beyond the end of the buffer, leading
+to all kinds of misbehaviors. The safe replacement is strscpy().
 
-(apologies for the earlier blank reply, sometimes I dislike my email client)
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+This is a task of the KSPP [1]
 
-stracpy could do that with a trivial addition like below:
+[1] https://github.com/KSPP/linux/issues/88
 
-Old lkml references:
+ drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-https://lore.kernel.org/lkml/cover.1563889130.git.joe@perches.com/
-and
-https://lore.kernel.org/lkml/56dc4de7e0db153cb10954ac251cb6c27c33da4a.camel@perches.com/
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/=
+inv_mpu6050/inv_mpu_magn.c
+index f282e9cc34c5..3a6aa1c4bf6c 100644
+=2D-- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+@@ -264,6 +264,7 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *=
+st)
+ 	const char *orient;
+ 	char *str;
+ 	int i;
++	size_t n;
 
-But Linus T wants a copy_string mechanism instead:
-https://lore.kernel.org/lkml/CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com/
-
-/**
- * stracpy - Copy a C-string into an array of char/u8/s8 or equivalent
- * @dest: Where to copy the string, must be an array of char and not a pointer
- * @src: String to copy, may be a pointer or const char array
- *
- * Helper for strscpy().
- * Copies a maximum of sizeof(@dest) bytes of @src with %NUL termination.
- *
- * A BUILD_BUG_ON is used for cases where @dest is not a char array or
- * @src is a char array and is larger than @dest.
- *
- * Returns:
- * * The number of characters copied (not including the trailing %NUL)
- * * -E2BIG if @dest is a zero size array or @src was truncated.
- */
-#define stracpy(dest, src)						\
-({									\
-	BUILD_BUG_ON(!(__same_type(dest, char[]) ||			\
-		       __same_type(dest, unsigned char[]) ||		\
-		       __same_type(dest, signed char[])));		\
-	BUILD_BUG_ON((__same_type(src, char[]) ||			\
-		      __same_type(src, unsigned char[]) ||		\
-		      __same_type(src, signed char[])) &&		\
-		     ARRAY_SIZE(src) > ARRAY_SIZE(dest));		\
-									\
-	strscpy(dest, src, ARRAY_SIZE(dest));				\
-})
-
+ 	/* fill magnetometer orientation */
+ 	switch (st->chip_type) {
+@@ -282,17 +283,18 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state=
+ *st)
+ 		for (i =3D 0; i < 3; ++i) {
+ 			orient =3D st->orientation.rotation[6 + i];
+ 			/* use length + 2 for adding minus sign if needed */
+-			str =3D devm_kzalloc(regmap_get_device(st->map),
+-					   strlen(orient) + 2, GFP_KERNEL);
++			n =3D strlen(orient) + 2;
++			str =3D devm_kzalloc(regmap_get_device(st->map), n,
++					   GFP_KERNEL);
+ 			if (str =3D=3D NULL)
+ 				return -ENOMEM;
+ 			if (strcmp(orient, "0") =3D=3D 0) {
+-				strcpy(str, orient);
++				strscpy(str, orient, n);
+ 			} else if (orient[0] =3D=3D '-') {
+-				strcpy(str, &orient[1]);
++				strscpy(str, &orient[1], n);
+ 			} else {
+ 				str[0] =3D '-';
+-				strcpy(&str[1], orient);
++				strscpy(&str[1], orient, n - 1);
+ 			}
+ 			st->magn_orient.rotation[6 + i] =3D str;
+ 		}
+=2D-
+2.25.1
 
