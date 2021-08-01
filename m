@@ -6,65 +6,68 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D495C4320A
-	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972CBC4338F
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3B4C60EEA
-	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7694760EEA
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 17:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbhHARMb (ORCPT
+        id S229959AbhHARNB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 1 Aug 2021 13:12:31 -0400
-Received: from mout.gmx.net ([212.227.15.15]:42587 "EHLO mout.gmx.net"
+        Sun, 1 Aug 2021 13:13:01 -0400
+Received: from mout.gmx.net ([212.227.15.19]:50781 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229680AbhHARMb (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 1 Aug 2021 13:12:31 -0400
+        id S229680AbhHARNA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 1 Aug 2021 13:13:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1627837931;
-        bh=fMjtxvQOIw1SnIwi4nyIOF/OnCL2DunPqIBE+G3CAQM=;
+        s=badeba3b8450; t=1627837961;
+        bh=xtUEr+ekAW0WAiuNsLNrEiRPpwS+f47iJkTrheQXOVM=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=lv68nNY7VyrmSlDpjwfqvCjEJRqKEkwAnOZics5nPZufrdor9jr0j9CpLj2OWKdL/
-         cD5tND8X52aYLw3VAmP8kvvRBAV0Z0ZjrWc6s2Ozt3xw2bDLvOg5/1MZVW+o+ugBxT
-         9rv/yBQdRdwppqaJPzSzyB/2AlTPIB3dB4lvxc0g=
+        b=Op97yEQA2weqmNoErqEAF+rCg9pYtKEDJdET5VzRiFxIJIbha5eZg9ag5/scZhldC
+         KZXlsJJa0iv4X+scnxsXTFpSSCPKONA3ggVgqaLU9jFQOgNLyxp871U8pmP00R7OAh
+         HTNtp5tSEOnmPU9jrBYc4hmSrE0rk1VzHKH/Q5gQ=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
  (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MAfUo-1mLHcI33c0-00B1h3; Sun, 01 Aug 2021 19:12:10 +0200
+ 1MOA3P-1mYdeq2whN-00ObJ5; Sun, 01 Aug 2021 19:12:41 +0200
 From:   Len Baker <len.baker@gmx.com>
 To:     Kees Cook <keescook@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Len Baker <len.baker@gmx.com>, linux-hardening@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/iio: Remove all strcpy() uses in favor of strscpy()
-Date:   Sun,  1 Aug 2021 19:11:57 +0200
-Message-Id: <20210801171157.17858-1-len.baker@gmx.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>
+Cc:     Len Baker <len.baker@gmx.com>,
+        Yves-Alexis Perez <corsac@corsac.net>,
+        linux-hardening@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers/net/usb: Remove all strcpy() uses
+Date:   Sun,  1 Aug 2021 19:12:26 +0200
+Message-Id: <20210801171226.17917-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sANA7hqjWDJu1bKLfHEzEjh3NiMEYjyWglhBJmmkMx8uX8jnK6/
- gkfz5XJMkK6TxNhKlOkSEdnAHoX/t2JSU8FQsLgVNfyzqVA4+HxtGCXwBMdCbDWSOnF6I0f
- 4f1j3hRT1DbLnm42TqofQhr04QVK8KtJF+9IsyMpfMjlOsli3PXs8haw6vAMYMmBzZ2biFZ
- j9rR8bFDNWcyAZ/zpjOTQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GCBi1IHlMR8=:h5g2/+mr+7iOI9tAUL3Kw9
- bIAWeRkCylDZH/miQTUhEb8m7x5cGRbQqWFV4x495wVT0AzZLHoszS4bFuBAfVUB4PwYIrm3o
- OXMsq4W/x4sopv0g0uRX4jsEmQpi7cDQ6HUsiG5jDhMuRc6uJpZXLcXuUSBX8xLUxUXQWioHK
- sSXPNu3LoHm31OBgFmywCO0QSfV/HDr0WRHkgRVS2lh/kJgJVfzw7+ZBI3Av1GsM8vTfhzGMH
- w4kHfFRVM7eFwEu8mYsJWs8lluRoTP4erhAa++i8xRyFhLMrWTC6hvrdUiVce62CGxYxa/Bro
- FBHzWXAHA3nHwix5DvNMrMaTRGAd5Ffwbsf1vBSc4hwHZvwgthWQ13/n4JFl50hbwSVz38IA6
- qKGeE2R3v6ME/N++inkp7hXVUyTZFdTG1gcWYhH/C+JgKYZiyY6PuWVpVcj5nn8otGcbJTBJI
- mzb4eOWA0oqSobFHvw6jdMdSaPig7pM9x8H0O52IbuM++9eHytXEw36AkPs+KnkR5FH4ydZp1
- Wk3WBf59JCJKCbLKkjPHUACh/xJdlc1OjUXtc9sHLzjH+DUHXe3LW4+1y8uEjhwtIMnZNDEu8
- jw7JdbXmA3SSjX5melX7SYjupxMagftDodvEi/rGgeOrSiPLXOtMPBcBPQVTzoUxtA8gLReeR
- m63kRrclC1fTojr1SgoCyECNYgQ+CDFW6uRZLwM2rQggQ2NwRdnOKEdLnUO9KdAPp65gzLMfx
- U4sAGoxz8DT1YZoZVUgy3BDcY8E8kajFSyBD9Y/WJ2NIZ5871GhmmNA9kgywlvzfeyH6hYxoj
- WRzLTiXU+NNRlRRkc9/QgYm7oDGSFXBe1t7LipKqBaRpvVxQZk1+TXPcHZ0YIUkBl2sa/5MZM
- jyGZ8xySTYFGa5ZDxAnUkNsKGEMslgOWCa3IBoLmQJ9TYqoVIGEgCBQH1EhCE/VpZ1GHuYsjM
- O9CjLhwBcM3WRIxadbjMs30SPEJC9zYvI3FWXeWu4F/I6TO7U6jCBWy0841MqkWOepATz80tG
- wN5UH2Or16fbmEORigSfFK1f4hveUsyjN1rcLnIIFLuju7V4Y7+i7+Bhn+U0ei9e+DiIxwEwt
- sMWlfZAMmi8X04lo10TOKY6966rMfkm6IvX
+X-Provags-ID: V03:K1:aNEQxA0ncX6BkzImAoKubQRd2aRGPwbNk6UwMdO1UGBgXm4JR/q
+ s7jZaI5ya4z3C8KMGVy16qTHerJs8h5tJNbdqnKnVzsdX2Q3eRoB2y6/cOaOzfNvVO95JXF
+ zB/a+PcJZzOlBWbItmqkWolUWOkezhcHEbmJQcJHzei5qv6sh8khP0kaVBHpFampgts5mgH
+ Y89YuxNdWXU52hqJ3IBFA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:i2ZRFUa/4II=:xASLozsIXLy0ysItC9gDuV
+ cKYL8mwceJg1AnoTtgpb1W/cUsQq8g0bX9/6FYl8r1IxR52w/z4cRGRGVDgg74usvpw2SfM5I
+ 3k3p/pxohD00oMBmcKvkiBE794GfkaeeyDEGlX4mN6adZN4dgfyywn3KVPI3/rGl6nVrI77i8
+ PuSRQNN88tZTBQe9qTsayFAWwiZFtMj2bynfZu0n/CI5fNCRu9Bn9M7aViogfMIPs1xRW9ITv
+ FWPEdohjWB3s1uDxhzbBYSsHDIXFAfWjWozBxAah1qWMs34/5mhwQNOKNxBbfbsCS2esMFLTf
+ btcJpzVGoelMO5jUHTS4X2GpofBqkcEjqeXpDbBXK2UsyHyw1lupD4q83AV/Hzg4EgxmX96Sd
+ iJP/Fsbl4UTsKYCMjKZAWavVCEYUd8KgiifSCfONKkruTrdtuRHh8qt7Mi82j70Eye32+ZEgz
+ odHnvpO/zMXroHfiBVPcOe1WzJUBT3+vr/YqE87v2QGfteaczhDM665asqTC5ECyB+GsSqvek
+ OBIVfuCXgevT9ctdcAEMWzTON9Og/+o91HIlhkP8w0x1MEsOJjOLckBqAn5D2Xso3mEchVkXS
+ rgo/0elfuGnS8XJQy3QFJzErwMQxRInqlYsewNCJVLTS28DdCYkxyd4mD2pCOA46RZdfGtv4G
+ Sa2K4gxjBrsG3jQ0kgmugH5kDQtBr5hjmK9+XAh4zAgd8LhOF2VQVboyb+ylKbtzVN68bk1YZ
+ u1q0ao7lOpQJJnrWVinq7yuYyX8cZyJLdzges90bZTfCzBhClY5xOYyCPB3Wn1aEO8EtI0fmO
+ Cs930I4izqh1nW4doeol1jrgDHGe7Bf0HvvNRE2XD+QXhz7zod0a3xJJ1m+hE/p+oLTMdGxgd
+ p+wZue4iscbHXnAKMmWUF74NxPfpTnioUPs4+wfurBrHKlXzBAQgcRi6TlhDu3NHDH8tl1b5z
+ SGA7rdZuSxJdJXNeWRv4QXjFdWO5bG39CjXKiELZk9h44IqGAGG9RWkeWvbH57gHZi+aPolCZ
+ SoIp7zRFFbCQl10u9Rs9F/fQrAcYvgJVng/AYM5mLFHRQlpgEFKFu6/3Eho77zFKM7wL6yOTH
+ gA0YSu+C1slrvDNNIa8lwHG8dTRc0hqEb5N
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -79,48 +82,55 @@ This is a task of the KSPP [1]
 
 [1] https://github.com/KSPP/linux/issues/88
 
- drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/net/usb/ipheth.c | 2 +-
+ drivers/net/usb/usbnet.c | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/=
-inv_mpu6050/inv_mpu_magn.c
-index f282e9cc34c5..3a6aa1c4bf6c 100644
-=2D-- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-@@ -264,6 +264,7 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *=
-st)
- 	const char *orient;
- 	char *str;
- 	int i;
-+	size_t n;
+diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
+index 207e59e74935..06e2181e5810 100644
+=2D-- a/drivers/net/usb/ipheth.c
++++ b/drivers/net/usb/ipheth.c
+@@ -443,7 +443,7 @@ static int ipheth_probe(struct usb_interface *intf,
 
- 	/* fill magnetometer orientation */
- 	switch (st->chip_type) {
-@@ -282,17 +283,18 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state=
- *st)
- 		for (i =3D 0; i < 3; ++i) {
- 			orient =3D st->orientation.rotation[6 + i];
- 			/* use length + 2 for adding minus sign if needed */
--			str =3D devm_kzalloc(regmap_get_device(st->map),
--					   strlen(orient) + 2, GFP_KERNEL);
-+			n =3D strlen(orient) + 2;
-+			str =3D devm_kzalloc(regmap_get_device(st->map), n,
-+					   GFP_KERNEL);
- 			if (str =3D=3D NULL)
- 				return -ENOMEM;
- 			if (strcmp(orient, "0") =3D=3D 0) {
--				strcpy(str, orient);
-+				strscpy(str, orient, n);
- 			} else if (orient[0] =3D=3D '-') {
--				strcpy(str, &orient[1]);
-+				strscpy(str, &orient[1], n);
- 			} else {
- 				str[0] =3D '-';
--				strcpy(&str[1], orient);
-+				strscpy(&str[1], orient, n - 1);
- 			}
- 			st->magn_orient.rotation[6 + i] =3D str;
- 		}
+ 	netdev->netdev_ops =3D &ipheth_netdev_ops;
+ 	netdev->watchdog_timeo =3D IPHETH_TX_TIMEOUT;
+-	strcpy(netdev->name, "eth%d");
++	strscpy(netdev->name, "eth%d", sizeof(netdev->name));
+
+ 	dev =3D netdev_priv(netdev);
+ 	dev->udev =3D udev;
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 470e1c1e6353..840c1c2ab16a 100644
+=2D-- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -1725,7 +1725,7 @@ usbnet_probe (struct usb_interface *udev, const stru=
+ct usb_device_id *prod)
+ 	dev->interrupt_count =3D 0;
+
+ 	dev->net =3D net;
+-	strcpy (net->name, "usb%d");
++	strscpy(net->name, "usb%d", sizeof(net->name));
+ 	memcpy (net->dev_addr, node_id, sizeof node_id);
+
+ 	/* rx and tx sides can use different message sizes;
+@@ -1752,13 +1752,13 @@ usbnet_probe (struct usb_interface *udev, const st=
+ruct usb_device_id *prod)
+ 		if ((dev->driver_info->flags & FLAG_ETHER) !=3D 0 &&
+ 		    ((dev->driver_info->flags & FLAG_POINTTOPOINT) =3D=3D 0 ||
+ 		     (net->dev_addr [0] & 0x02) =3D=3D 0))
+-			strcpy (net->name, "eth%d");
++			strscpy(net->name, "eth%d", sizeof(net->name));
+ 		/* WLAN devices should always be named "wlan%d" */
+ 		if ((dev->driver_info->flags & FLAG_WLAN) !=3D 0)
+-			strcpy(net->name, "wlan%d");
++			strscpy(net->name, "wlan%d", sizeof(net->name));
+ 		/* WWAN devices should always be named "wwan%d" */
+ 		if ((dev->driver_info->flags & FLAG_WWAN) !=3D 0)
+-			strcpy(net->name, "wwan%d");
++			strscpy(net->name, "wwan%d", sizeof(net->name));
+
+ 		/* devices that cannot do ARP */
+ 		if ((dev->driver_info->flags & FLAG_NOARP) !=3D 0)
 =2D-
 2.25.1
 
