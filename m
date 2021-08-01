@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C272C4338F
-	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 14:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA38C4338F
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 14:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF4F560F48
-	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 14:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8127610A1
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Aug 2021 14:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231940AbhHAOgk (ORCPT
+        id S231975AbhHAOoC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 1 Aug 2021 10:36:40 -0400
-Received: from mout.gmx.net ([212.227.17.21]:40843 "EHLO mout.gmx.net"
+        Sun, 1 Aug 2021 10:44:02 -0400
+Received: from mout.gmx.net ([212.227.15.15]:50505 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231791AbhHAOgk (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 1 Aug 2021 10:36:40 -0400
+        id S231940AbhHAOoB (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 1 Aug 2021 10:44:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1627828577;
-        bh=VXqJ8QWlpEx1RDMRJ5UNDvGpm6vOyDvjBgb3xy3rciI=;
+        s=badeba3b8450; t=1627829027;
+        bh=klt86JV7wMteD/UIiHSWBT8y4jnTNfeS3Qqd0niWM4M=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=TDsdu7i15oIiHMvOtnbziIoTMVyTfDzk/DGhQ31uScjTfDqHfGW8ep+qf4Z9uqPPA
-         Ip3bqkfVZdH0p+skJqN93hpMYEHEdqkUpAcWd4Hrwq1X0pNMSfH1RIcGEyBgps9qkz
-         /Vv6mqBp/s6mn+1awqhtzAsAN4VDv2MaGDeA2O+E=
+        b=gnNAXN7EUbPAt3K0GHl7Ab+qlC/eyVjncpxkjdKOBWROtJaZcVNFuJS/yLTE7N90a
+         q/3/ph5mDGt+lwt48MOI5CYFoJ+Ihu5KyF+b49/YjAkkT8gxqtuL3J/Yfk69GSTaoT
+         zNwNdk4rNaAUQQ/Y/KrZ4t0gRx5rSvMP4IhV17Mo=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MGQnF-1mOjhV3de9-00Grca; Sun, 01 Aug 2021 16:36:17 +0200
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MZktZ-1mde4L39E7-00WnVA; Sun, 01 Aug 2021 16:43:46 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, linux-hardening@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drivers/edac/edac_mc: Remove all strcpy() uses
-Date:   Sun,  1 Aug 2021 16:35:58 +0200
-Message-Id: <20210801143558.12674-1-len.baker@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Len Baker <len.baker@gmx.com>, Lee Jones <lee.jones@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-hardening@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers/input: Remove all strcpy() uses in favor of strscpy()
+Date:   Sun,  1 Aug 2021 16:43:16 +0200
+Message-Id: <20210801144316.12841-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6rhhofEREEauhZ46iiRDsPO1exN6r792lyPoEBYXJIH25KKvIub
- W2wyBAJ7a4AFdHyNTA+2xHyWOSboVjHKCxfgAQ4HnKDxtuwj4lLiyJ4/NBblN6rMeMlyAHK
- 0koorX3tEcsiZmH5pZDRpZje/T8XJvJdkIT7Rx79NiS8m+CF0EPpvQPFU9mGQDCpk3E6q9t
- rGCWKF/ORctMnNvkq9k/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IdVG9JmztP0=:l5Od/NNE8OUJczdPns7iZN
- t/V8gjsvRVT64XKMjtbuX34lYAMDG2twiTzjLMeXWSZ2GBnTiMyd+cRvIipQksNG8vn5QZPTX
- pG/81fNwhLGnTQtKWfgZ7iD+U/x7C44V2bRUfFyUF3o810GxKwGeUT2M96x39m+af2h+HD29S
- iD1YrAqPx5PRvhU42HX9cKI6316tgmR942WyV2m3YkTCx/uPXd9k+ouQoiraFVzpFJtR7niKa
- qGsZxVHU1wPDSGKqWBSUgPMwfM+ra3HOGSJVH0ZE/Ci11iKQaf2boIgn6K8slJT9MXIMd3Grz
- U0y6caHWB8x9ibRldjwOQD+uF61RcWO/7KZeCBfcHyQGv3poaawDZnpwyuepfdlbNsrgCXMQs
- Nc4nmT83jJDDTttpCW3CKNzVA8x/vxVAMBJZDPFZSsrW+b5bwRYqhaIJsJsfSjUylSdU6Nkga
- MBcCh3K458q4r6ani4H5kElUYY63YDeduClbAL2eG2gx3T3ro/nmG7wHxwR2oZG5V9vCl4MDm
- Y4dJz3CYyrvIWCvB0Emp/v3OhRSYR+F1JQsNCLO38CaNI+bcy2CAMKT6FYTdP57oIhYAUYa7L
- PE9lITdWHDhJ8EylkjXWD8AV1pEB9xWJEFh2e1hjHX5a2Zr3/F6hGE8mvXb7Eghk9lqGG3YKY
- NEq0ivj8qU5HiZY2nN8xxU0jJY2duhj81CD1v6Dzh1nII2sYwxmzgpHnFqQXDwwVgQn1ejf+i
- ysBd0LR1nYwPguNrNKcLnAggIK9aFNnOOn8wFd+konPjNFvhSoGX9adG8/BBVHhUSHZhLmLx8
- Ex4wdoHHi1MstCxuTdefzGQDhfKlSYWkjRzR4D455CgrQwKKmk3H2xqFv1X6l72aF93Jv0j2K
- 0HCr0SJRcefKlKgn3JYPGRR/7VV9FjIrS+gYafAKm6KuKVNtlQfcovtyNUxBPA0HNZrXe8n3J
- 1fCbfXq12LQDbBHXax710VgMvbAmKlON6vrSczsAnbMs/aGW4yZrgIH+aq4ArCJk9x/Jnc0rq
- Kumzv3Hn95XPFLlN9pRPES4cGNsIqi537tqYq7O7AAnuiZ5DJ1qiqO/KVPMMya2nE2+VpEj/o
- YvMgIh4eZ+CbM5PCweYEmhyjVyecMHqIkA0
+X-Provags-ID: V03:K1:dXGu540LziWus88Pw77iOUvFvazpmIoNZsFoVoEqrQuIOiOmjeZ
+ B+gFU2Wt6DHdTZgdZHzs42kbV7Ed13wQBwgZZgOGN/eNk6+LFA3aNJ0uEShjRWTAmQ+NxA2
+ YLsn3ceaMhXlx7QqmVVNjYougcO4vXcvtKl1wnbFBvxb5IKGwQaYzxawnRiIaBSGvDx50yc
+ AnjlsDTFxo1qBhwoOcovA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Gk8rBXZWuOc=:RIWVpVBj4frqLgZLTamcGO
+ p95bYD3J2cJsQHIrh6rol5Ej36v+CldKhmwG0Sv4Hx/a5AoNY/b1fOqMAu//fmC8YLTgiwRQC
+ pR8kwuYCemmvAhsmw7c2Hl5p/KhGjYItnHSeMEFsbyoDyxbfveOCDe54ci2Gf/uvyUYcbNnTq
+ UqknHfBfVqL3jYamNFZSoLNB9g3UxiZq2A4SL5uqOWRYGPTZurxYjf5Yxw2Vua2CD2gwfoYvq
+ dxvc0w70XL8pE8nr063u1lmzsLG97WuwhbFZ239tkhRWXiOnwZs1oLarG1Y2JlOOtbzwayxpr
+ S1pejZVE0HQaBVdjCG1o96Oy17G+PvP6KXJ6J2pzUDL4wn1Wwfwavv8SFP85yPF/qgoi+d8RK
+ loeAuiQGaF5f4oWgoOZIY59MSfULi704c+wtYYIk9HJ3gdVhw+J90oSH2eSUH0Icn0EkoYUqI
+ 5rUm5UplGz0xO9GvQCc5SpeG9jP+6rLqPlTs7kmEUFEiQdzUBnhwu8dlV9SUUNRz117/5yVKh
+ a4iDLq/H8HxF3Bkv5QNpe9Pfw+/k9sklOqF4YSGqDv4bCIekRo5LT7DKYzSdKC05os5exDRdO
+ Qazr5gnQjQAaQLVYLVADBcdgXZ+nQqulgzttYeQhvVruOUSBuAJW484lyJaRq98X1/HHgGGU1
+ C3CNxmKvft/uVv54ThNRGy4egclT/3MHITGNiyAUzDnrYQMDAP925F0ry8uFKnBtJyhxOpwmk
+ V7Dngl2J7tqtHMNXMZm/84N4W+7DgugucU8Xg9Fy80OZFuX72y9rYhE5kNIFHUPkcQ72KLPoK
+ VTJ7lGF9LQ+ut9EnlfTj3nNWjn+KZ6fobYG/bUTTbLqOcdO26fT4VnU/WldsaWknoIT7i+iAs
+ hoB6B3LrDRBJpMk7Ha0q8dvSsKPH4my3tCCWEPVlDRtI3Hmclot2U+XdwWUnR1suOTJrmUrPD
+ l8pqm3IZj26AwAF3CXGCJDgkAXVxaybLb16x+eM94Zlo9fzCynxZMyDfh26zx7yCMTG8IcsBk
+ Br2RYMN10BYjiV0iULCVy8VtxjVkMuSIDj/5dOaCb/ySNst8pO5RcvA4Nmce/jRvubbYrT8SV
+ 4a2PPhv/JxMVIprX+G6Q4fCsbBZoAfMwK1j
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -75,74 +75,29 @@ strcpy() performs no bounds checking on the destination buffer. This
 could result in linear overflows beyond the end of the buffer, leading
 to all kinds of misbehaviors. The safe replacement is strscpy().
 
-This is a previous step in the path to remove the strcpy() function
-entirely from the kernel.
-
 Signed-off-by: Len Baker <len.baker@gmx.com>
 =2D--
 This is a task of the KSPP [1]
 
 [1] https://github.com/KSPP/linux/issues/88
 
-Changelog v1 -> v2
-- Use the strscpy() instead of scnprintf() to add labels and follow a
-  code pattern more similar to the current one (advance "p" and
-  decrement "left") (Robert Richter).
+ drivers/input/keyboard/locomokbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/edac/edac_mc.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+diff --git a/drivers/input/keyboard/locomokbd.c b/drivers/input/keyboard/l=
+ocomokbd.c
+index dae053596572..dbb3dc48df12 100644
+=2D-- a/drivers/input/keyboard/locomokbd.c
++++ b/drivers/input/keyboard/locomokbd.c
+@@ -254,7 +254,7 @@ static int locomokbd_probe(struct locomo_dev *dev)
+ 	locomokbd->suspend_jiffies =3D jiffies;
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index f6d462d0be2d..13b50be22ba6 100644
-=2D-- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -1032,6 +1032,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
-_type type,
- 	int i, n_labels =3D 0;
- 	struct edac_raw_error_desc *e =3D &mci->error_desc;
- 	bool any_memory =3D true;
-+	size_t left;
+ 	locomokbd->input =3D input_dev;
+-	strcpy(locomokbd->phys, "locomokbd/input0");
++	strscpy(locomokbd->phys, "locomokbd/input0", sizeof(locomokbd->phys));
 
- 	edac_dbg(3, "MC%d\n", mci->mc_idx);
-
-@@ -1086,6 +1087,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
-_type type,
- 	 */
- 	p =3D e->label;
- 	*p =3D '\0';
-+	left =3D sizeof(e->label);
-
- 	mci_for_each_dimm(mci, dimm) {
- 		if (top_layer >=3D 0 && top_layer !=3D dimm->location[0])
-@@ -1114,10 +1116,12 @@ void edac_mc_handle_error(const enum hw_event_mc_e=
-rr_type type,
- 			*p =3D '\0';
- 		} else {
- 			if (p !=3D e->label) {
--				strcpy(p, OTHER_LABEL);
-+				strscpy(p, OTHER_LABEL, left);
-+				left -=3D strlen(OTHER_LABEL);
- 				p +=3D strlen(OTHER_LABEL);
- 			}
--			strcpy(p, dimm->label);
-+			strscpy(p, dimm->label, left);
-+			left -=3D strlen(p);
- 			p +=3D strlen(p);
- 		}
-
-@@ -1140,9 +1144,9 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
-_type type,
- 	}
-
- 	if (any_memory)
--		strcpy(e->label, "any memory");
-+		strscpy(e->label, "any memory", sizeof(e->label));
- 	else if (!*e->label)
--		strcpy(e->label, "unknown memory");
-+		strscpy(e->label, "unknown memory", sizeof(e->label));
-
- 	edac_inc_csrow(e, row, chan);
-
+ 	input_dev->name =3D "LoCoMo keyboard";
+ 	input_dev->phys =3D locomokbd->phys;
 =2D-
 2.25.1
 
