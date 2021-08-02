@@ -2,190 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA8DC4320A
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 16:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09C7C4338F
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 16:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E27860F9E
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 16:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4D060FC1
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 16:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232268AbhHBQRf (ORCPT
+        id S232521AbhHBQXg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 2 Aug 2021 12:17:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
+        Mon, 2 Aug 2021 12:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232215AbhHBQRe (ORCPT
+        with ESMTP id S232390AbhHBQXg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 2 Aug 2021 12:17:34 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2211C06175F
-        for <linux-hardening@vger.kernel.org>; Mon,  2 Aug 2021 09:17:23 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id e5so20196966pld.6
-        for <linux-hardening@vger.kernel.org>; Mon, 02 Aug 2021 09:17:23 -0700 (PDT)
+        Mon, 2 Aug 2021 12:23:36 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9472FC061760
+        for <linux-hardening@vger.kernel.org>; Mon,  2 Aug 2021 09:23:26 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id o44-20020a17090a0a2fb0290176ca3e5a2fso727633pjo.1
+        for <linux-hardening@vger.kernel.org>; Mon, 02 Aug 2021 09:23:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=LJj2P5o2cKeLKuYjXi+czGF513yMyMUQ9HYrVL8TL84=;
-        b=SQ22Ul4TppIXopyLdTekgOvhFKVew15BJDLJwUUyXUQRK0tANvQYq8bbWLHRP8KoSb
-         4zoS4Oqecr4M6tThv+4s/klsyd28FfD3c5RX3kQpzCQPuhItFvutStScryZU/kA1rww2
-         1p+XNbS3JtELAs7/T1zVNRJhbJ0JS+r+mNxo0=
+        bh=JaILGVZ5ZfAh5yd44e+vxSRLCop37r4sy9cxjRO/kVU=;
+        b=aw1kgIMmRz0YMmD8jXYt7yhGZxHLHmcNQFLrG40MdDJ4dxtp5Dp6z04FghrmAgWxls
+         ibbc21J6Lj1o0KA7GwJpBkMxWoCQKSfGPfoyBryQnP/vDd6QBrsp3tbdnfeGJcBe4xv4
+         fS1shEaQqJCHHvIk5MIu8rA0hZEvPYJj50Zzs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=LJj2P5o2cKeLKuYjXi+czGF513yMyMUQ9HYrVL8TL84=;
-        b=BFwHNZUOIBLjG+u6IXynEMKwBThD0We1JcTVArMl07Aj4VgLAW9q6iIpodpRdDT+kX
-         pJWw811ZIsPF3EPBZtT0MXGTCRcXVvAp7xFYN0NnjCJr7WaqDfV0Zzd+r0qitPL2psmX
-         KQHFVn7nfU92/TZlKwqfpouRJKdADpJd6q0NmqIoaEJPG9L6h3TmNUgFbQQ5X43gskkp
-         b0JAtf6tKnfj4OeJfnf1MnnYEIRMuNgYCHnz1XFZAoHIjhGs58dLfMd9qzHMElEIdtRA
-         Uael0Z8zL+J+nza53sgQZMiSwT+U8LwyUQ7QMmj6yJ2UNdbp5PqoMcPpi8jn+XIkUvzI
-         goag==
-X-Gm-Message-State: AOAM533ZEF18nI+AGA3I8/JsP3HSH5mirGqSTfp/fI0V+k5oA5tvGCKG
-        ewIJDRb6s4UvMhQAag1ppyTibVZdxpIVKg==
-X-Google-Smtp-Source: ABdhPJx0B/YwU5dyCtUO2xD8jnUHhQGTg6uR41kMgVBypegibDOXaPPnHyP9y3EwFcz1z7SAxlsN7A==
-X-Received: by 2002:aa7:854a:0:b029:332:330e:1387 with SMTP id y10-20020aa7854a0000b0290332330e1387mr17244524pfn.67.1627921043292;
-        Mon, 02 Aug 2021 09:17:23 -0700 (PDT)
+        bh=JaILGVZ5ZfAh5yd44e+vxSRLCop37r4sy9cxjRO/kVU=;
+        b=KXasLlUNHjEyHKbODOdsBTQNzSsbEcBtdgpTujbBdA/QnUlaFPO4KFhov+/SY6fX7S
+         OCRDkIdYE5UI9EvBc1IeZFWDtcOTvZJzJlBosCRM/eFZina9RMTUSXC+do7vOsvTZucz
+         1wI7mSlvaWcLaaRH65v91Xm3gRSOSL0P8y63pu8pt8aNZRsdAF8NHjobD4ZwG2m42h46
+         Jctnu5TLfWNXfESaKy0Pbr2DHoI80C//sr7Z++urn8rJVXg7EK8H1SNErcNeq2BeFfHh
+         J9az2ocGWLsbzgYF1Ja0ZacECL10FEPlIE6bxnNK0h/hRdZFLuXBs+G9FtLunsdS4SEe
+         1lDA==
+X-Gm-Message-State: AOAM5317o9eLuGuYIHUrudNo4IuZfVmaCcPRbbhEWgZPmEsSDMrkm7GS
+        sShKA7ORsXfP2lBjZial6q0yZQ==
+X-Google-Smtp-Source: ABdhPJyna/JEEPlWGNR2S+ZqJqCzOPLMMoqPYs8YB21x4PV9XLYXx00eTM9yttg27rSVI2z426vQLw==
+X-Received: by 2002:a63:4a49:: with SMTP id j9mr2250552pgl.20.1627921406097;
+        Mon, 02 Aug 2021 09:23:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y7sm11589670pfi.204.2021.08.02.09.17.22
+        by smtp.gmail.com with ESMTPSA id s193sm13206950pfc.183.2021.08.02.09.23.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Aug 2021 09:17:22 -0700 (PDT)
-Date:   Mon, 2 Aug 2021 09:17:21 -0700
+        Mon, 02 Aug 2021 09:23:25 -0700 (PDT)
+Date:   Mon, 2 Aug 2021 09:23:24 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Len Baker <len.baker@gmx.com>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Lee Jones <lee.jones@linaro.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-hardening@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] drivers/input: Remove all strcpy() uses in favor of
- strscpy()
-Message-ID: <202108020913.2FB270539C@keescook>
-References: <20210801144316.12841-1-len.baker@gmx.com>
- <20210801145959.GI22278@shell.armlinux.org.uk>
- <20210801155732.GA16547@titan>
- <202108010934.FA668DEB28@keescook>
- <YQbXiwie4YPzPWKK@google.com>
+To:     Shai Malin <smalin@marvell.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        Ariel Elior <aelior@marvell.com>
+Subject: Re: [PATCH 42/64] net: qede: Use memset_after() for counters
+Message-ID: <202108020922.FE8A35C854@keescook>
+References: <SJ0PR18MB3882DC88DB04C9DE68678CEDCCEF9@SJ0PR18MB3882.namprd18.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YQbXiwie4YPzPWKK@google.com>
+In-Reply-To: <SJ0PR18MB3882DC88DB04C9DE68678CEDCCEF9@SJ0PR18MB3882.namprd18.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Aug 01, 2021 at 10:19:07AM -0700, Dmitry Torokhov wrote:
-> On Sun, Aug 01, 2021 at 09:44:33AM -0700, Kees Cook wrote:
-> > On Sun, Aug 01, 2021 at 05:57:32PM +0200, Len Baker wrote:
-> > > Hi,
-> > > 
-> > > On Sun, Aug 01, 2021 at 04:00:00PM +0100, Russell King (Oracle) wrote:
-> > > > On Sun, Aug 01, 2021 at 04:43:16PM +0200, Len Baker wrote:
-> > > > > strcpy() performs no bounds checking on the destination buffer. This
-> > > > > could result in linear overflows beyond the end of the buffer, leading
-> > > > > to all kinds of misbehaviors. The safe replacement is strscpy().
-> > > > >
-> > > > > Signed-off-by: Len Baker <len.baker@gmx.com>
-> > > > > ---
-> > > > > This is a task of the KSPP [1]
-> > > > >
-> > > > > [1] https://github.com/KSPP/linux/issues/88
-> > > > >
-> > > > >  drivers/input/keyboard/locomokbd.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/input/keyboard/locomokbd.c b/drivers/input/keyboard/locomokbd.c
-> > > > > index dae053596572..dbb3dc48df12 100644
-> > > > > --- a/drivers/input/keyboard/locomokbd.c
-> > > > > +++ b/drivers/input/keyboard/locomokbd.c
-> > > > > @@ -254,7 +254,7 @@ static int locomokbd_probe(struct locomo_dev *dev)
-> > > > >  	locomokbd->suspend_jiffies = jiffies;
-> > > > >
-> > > > >  	locomokbd->input = input_dev;
-> > > > > -	strcpy(locomokbd->phys, "locomokbd/input0");
-> > > > > +	strscpy(locomokbd->phys, "locomokbd/input0", sizeof(locomokbd->phys));
-> > > >
-> > > > So if the string doesn't fit, it's fine to silently truncate it?
-> > > 
-> > > I think it is better than overflow :)
-> > > 
-> > > > Rather than converting every single strcpy() in the kernel to
-> > > > strscpy(), maybe there should be some consideration given to how the
-> > > > issue of a strcpy() that overflows the buffer should be handled.
-> > > > E.g. in the case of a known string such as the above, if it's longer
-> > > > than the destination, should we find a way to make the compiler issue
-> > > > a warning at compile time?
-> > > 
-> > > Good point. I am a kernel newbie and have no experience. So this
-> > > question should be answered by some kernel hacker :) But I agree
-> > > with your proposals.
-> > > 
-> > > Kees and folks: Any comments?
-> > > 
-> > > Note: Kees is asked the same question in [2]
-> > > 
-> > > [2] https://lore.kernel.org/lkml/20210731135957.GB1979@titan/
-> > 
-> > Hi!
-> > 
-> > Sorry for the delay at looking into this. It didn't use to be a problem
-> > (there would always have been a compile-time warning generated for
-> > known-too-small cases), but that appears to have regressed when,
-> > ironically, strscpy() coverage was added. I've detailed it in the bug
-> > report:
-> > https://github.com/KSPP/linux/issues/88
-> > 
-> > So, bottom line: we need to fix the missing compile-time warnings for
-> > strcpy() and strscpy() under CONFIG_FORTIFY_SOURCE=y.
+On Mon, Aug 02, 2021 at 02:29:28PM +0000, Shai Malin wrote:
 > 
-> Is it possible to have them warn always? Or that would be too many false
-> positives?
-
-There are actually no false positives right now (they were all fixed
-before FORTIFY_SOURCE landed). Enabling it by default would likely mean
-splitting compile-time checks from run-time checks... I'm kind of
-already doing this in the recent memcpy() strictness series[1], so ...
-maybe?
-
-I think I'd like to land the memcpy() series first, then we can revisit
-making it always warn.
-
-> > In the past we'd tried to add a stracpy()[1] that would only work with
-> > const string sources. Linus got angry[2] about API explosion, though,
-> > so we're mostly faced with doing the strscpy() replacements.
-> 
-> I would like to have an API that would do compile-time checks and
-> BUILD_BUG_ON() for a few places in input drivers where we copy constant
-> strings. There is no reason to encumber the code with runtime checks,
-> and bombing out on compile instead of truncating would be nice.
-
-In theory, this is provided by CONFIG_FORTIFY_SOURCE, though a recent
-change broke a specific instance. I've added tests for this now to the
-memcpy() series, and will get it fixed in there too.
-
-> > Another idea might be to have strcpy() do the "constant strings only"
-> > thing, leaving strscpy() for the dynamic lengths.
+> On Tue, Jul 31, 2021 at 07:07:00PM -0300, Kees Cook wrote:
+> > On Tue, Jul 27, 2021 at 01:58:33PM -0700, Kees Cook wrote:
+> > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > > field bounds checking for memset(), avoid intentionally writing across
+> > > neighboring fields.
+> > >
+> > > Use memset_after() so memset() doesn't get confused about writing
+> > > beyond the destination member that is intended to be the starting point
+> > > of zeroing through the end of the struct.
+> > >
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > The old code seems to be doing the wrong thing: starting from not the
+> > > first member, but sized for the whole struct. Which is correct?
 > > 
-> > One thing is clear: replacing strlcpy() with strscpy() is probably the
-> > easiest and best first step to cleaning up the proliferation of str*()
-> > functions.
+> > Quick ping on this question.
+> > 
+> > The old code seems to be doing the wrong thing: it starts from the second
+> > member and writes beyond int_info, clobbering qede_lock:
 > 
-> OK, so the consensus is that we set this patch aside as it does not
-> really fix any issues (the strcpy() destination is 32 bytes and is big
-> enough to hold the string being copied)?
+> Thanks for highlighting the problem, but actually, the memset is redundant.
+> We will remove it so the change will not be needed.
+> 
+> > 
+> > struct qede_dev {
+> >         ...
+> >         struct qed_int_info             int_info;
+> > 
+> >         /* Smaller private variant of the RTNL lock */
+> >         struct mutex                    qede_lock;
+> >         ...
+> > 
+> > 
+> > struct qed_int_info {
+> >         struct msix_entry       *msix;
+> >         u8                      msix_cnt;
+> > 
+> >         /* This should be updated by the protocol driver */
+> >         u8                      used_cnt;
+> > };
+> > 
+> > Should this also clear the "msix" member, or should this not write
+> > beyond int_info? This patch does the latter.
+> 
+> It should clear only the msix_cnt, no need to clear the entire 
+> qed_int_info structure.
 
-I think that's fair.
+Should used_cnt be cleared too? It is currently. Better yet, what patch
+do you suggest I replace this proposed one with? :)
+
+Thanks for looking at this!
 
 -Kees
-
-[1] https://lore.kernel.org/lkml/20210727205855.411487-1-keescook@chromium.org/
 
 -- 
 Kees Cook
