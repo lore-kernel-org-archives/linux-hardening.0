@@ -2,85 +2,209 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4988BC4338F
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 09:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29534C4338F
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 14:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3586A610CC
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 09:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CDC160E09
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 14:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233176AbhHBJwU (ORCPT
+        id S236487AbhHBONJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 2 Aug 2021 05:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233081AbhHBJwU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 2 Aug 2021 05:52:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1CAF760F58;
-        Mon,  2 Aug 2021 09:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627897930;
-        bh=zptMS4fel5KD7SXlEYuE6VYDne/g+jcVh1jlBH3XsIM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uly2ZZOHomVUxvxd4dtL3RHiqyBuFngfFJP5WtyCMZ9sZmFe3E2SxD4AVGxe/Npun
-         VEZvvoOpQwuY77mjdqPC21GXK97TED11iXTaGT5BmNObZac9RjhkKuwsH012QNTSq7
-         bie4+LZHo0MvqKxmD4LBG3NTbU7ZmQjvCrMVIesIToDvQDF22ZDmK1qCueBRbkTaD0
-         VEWwvzV76H4ldtNCyPTpXoKohpkol+Q+Z4PMkv5+TJeTv2VywGdOR/LhGAgEQ81d0x
-         Svg5JFxGV4m77MDo9JcqTp5RL04Ih1taHe71wLE6/PnRFgyUGo6SJvx6bA6gJNepRG
-         jtET/j5QcQbTg==
-Date:   Mon, 2 Aug 2021 11:52:06 +0200
-From:   Robert Richter <rric@kernel.org>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>,
+        Mon, 2 Aug 2021 10:13:09 -0400
+Received: from gateway20.websitewelcome.com ([192.185.47.18]:33135 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235282AbhHBOHr (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 2 Aug 2021 10:07:47 -0400
+X-Greylist: delayed 1425 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Aug 2021 10:07:47 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 5396D400D9217
+        for <linux-hardening@vger.kernel.org>; Mon,  2 Aug 2021 08:27:28 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id AYENmvRsmK61iAYENm3JQg; Mon, 02 Aug 2021 08:43:47 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ofCX79+Rdf3KA3ygQd5aThXKKbcOK34wLcXaAGModx0=; b=Rw0CtDE1sjh2NVCk9V6FIHr2ha
+        fm459NwtYD/fFi5HNqYS7vFodXN3cuSisRlKnLm4Tdffp66F/Il285vyvcvIJ4qFA+frcMr9mezf4
+        +hqngJI5USHqj+hxTyx8uxCXuMHDZ2rg+T6sMnUkqMUSgGS2OT3QPnUN8u8Rp6vs9NcBVAjZUoW2V
+        GGHqg1FDzFn1qFj7zUea+eNNphWNYuhOtiLMNqLYnqCgwB3saNkSgmwfUnZoGz0Ly4Lpfy+SD0GQG
+        2AYe5Knt9xfNY2w5TULaJGjUEmK9VTH7/Io3W1z4rzObmbJOsZ2xy39aiNWTCypZ7WGsbHrv06uqb
+        hdjeKb1w==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:56648 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1mAYEM-001O0n-Lf; Mon, 02 Aug 2021 08:43:46 -0500
+Subject: Re: [PATCH v2 1/2] media: staging/intel-ipu3: css: Fix wrong size
+ comparison
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Tianshu Qiu <tian.shu.qiu@intel.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drivers/edac/edac_mc: Remove all strcpy() uses
-Message-ID: <YQfARq44bAIR/HEi@rric.localdomain>
-References: <20210801143558.12674-1-len.baker@gmx.com>
- <YQe4n5H00g3xhSbQ@rric.localdomain>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-hardening@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <cover.1627646101.git.gustavoars@kernel.org>
+ <184d96f95d6261b1a91704eb68adbd0a2e1c2cc2.1627646101.git.gustavoars@kernel.org>
+ <20210802060546.GL3@paasikivi.fi.intel.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <3c9ac43d-09ca-e5d5-83a8-7b6d23928763@embeddedor.com>
+Date:   Mon, 2 Aug 2021 08:46:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YQe4n5H00g3xhSbQ@rric.localdomain>
+In-Reply-To: <20210802060546.GL3@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1mAYEM-001O0n-Lf
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:56648
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 02.08.21 11:19:33, Robert Richter wrote:
-> On 01.08.21 16:35:58, Len Baker wrote:
-> 
-> > @@ -1114,10 +1116,12 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
-> >  			*p = '\0';
-> >  		} else {
-> >  			if (p != e->label) {
-> > -				strcpy(p, OTHER_LABEL);
-> > +				strscpy(p, OTHER_LABEL, left);
-> > +				left -= strlen(OTHER_LABEL);
+Hi Sakari,
 
-Another note: Other parts of the code use 'len' instead of 'left', so
-if you could change that too?
-
-Thanks,
-
--Robert
-
-> >  				p += strlen(OTHER_LABEL);
+On 8/2/21 01:05, Sakari Ailus wrote:
+> Hi Gustavo,
 > 
-> Those both must be strlen(p) now as otherwise 'left' could underflow
-> (and p overflow).
+> I missed you already had sent v2...
 > 
-> -Robert
+> On Fri, Jul 30, 2021 at 07:08:13AM -0500, Gustavo A. R. Silva wrote:
+>> There is a wrong comparison of the total size of the loaded firmware
+>> css->fw->size with the size of a pointer to struct imgu_fw_header.
+>>
+>> Fix this by using the right operand 'struct imgu_fw_header' for
+>> sizeof, instead of 'struct imgu_fw_header *' and turn binary_header
+>> into a flexible-array member. Also, adjust the relational operator
+>> to be '<=' instead of '<', as it seems that the intention of the
+>> comparison is to determine if the loaded firmware contains any
+>> 'struct imgu_fw_info' items in the binary_header[] array than merely
+>> the file_header (struct imgu_fw_bi_file_h).
+>>
+>> The replacement of the one-element array with a flexible-array member
+>> also help with the ongoing efforts to globally enable -Warray-bounds
+>> and get us closer to being able to tighten the FORTIFY_SOURCE routines
+>> on memcpy().
+>>
+>> Link: https://github.com/KSPP/linux/issues/79
+>> Link: https://github.com/KSPP/linux/issues/109
+>> Fixes: 09d290f0ba21 ("media: staging/intel-ipu3: css: Add support for firmware management")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>
+>> It'd be just great if someone that knows this code better can confirm
+>> these changes are correct. In particular the adjustment of the
+>> relational operator. Thanks!
+>>
+>> Changes in v2:
+>>  - Use flexible array and adjust relational operator, accordingly.
 > 
-> >  			}
-> > -			strcpy(p, dimm->label);
-> > +			strscpy(p, dimm->label, left);
-> > +			left -= strlen(p);
-> >  			p += strlen(p);
-> >  		}
-> > 
+> The operator was just correct. The check is just there to see the firmware
+> is at least as large as the struct as which it is being accessed.
+
+I'm a bit confused, so based on your reply to v1 of this series, this patch
+is now correct, right?
+
+The operator in v1 _was_ correct as long as the one-element array wasn't
+transformed into a flexible array, right?
+
+Notice that generally speaking flexible-array members don't occupy space in the
+containing structure:
+
+$ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
+struct imgu_fw_header {
+	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
+	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+	struct imgu_fw_info        binary_header[] __attribute__((__aligned__(8))); /*    72     0 */
+
+	/* size: 72, cachelines: 2, members: 2 */
+	/* forced alignments: 1 */
+	/* last cacheline: 8 bytes */
+} __attribute__((__aligned__(8)));
+
+$ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
+struct imgu_fw_header {
+	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
+	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+	struct imgu_fw_info        binary_header[1] __attribute__((__aligned__(8))); /*    72  1200 */
+
+	/* size: 1272, cachelines: 20, members: 2 */
+	/* forced alignments: 1 */
+	/* last cacheline: 56 bytes */
+} __attribute__((__aligned__(8)));
+
+So, now that the flexible array transformation is included in the same patch as the
+bugfix, the operator is changed from '<' to '<='
+
+Can you please confirm if this v2 is now correct? if so, it'd be great to have your
+Reviewed-by tag. :)
+
+Thanks!
+--
+Gustavo
+
+> 
+>>  - Update changelog text.
+>>
+>>  drivers/staging/media/ipu3/ipu3-css-fw.c | 2 +-
+>>  drivers/staging/media/ipu3/ipu3-css-fw.h | 2 +-
+>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/staging/media/ipu3/ipu3-css-fw.c b/drivers/staging/media/ipu3/ipu3-css-fw.c
+>> index 45aff76198e2..630cb5186b48 100644
+>> --- a/drivers/staging/media/ipu3/ipu3-css-fw.c
+>> +++ b/drivers/staging/media/ipu3/ipu3-css-fw.c
+>> @@ -124,7 +124,7 @@ int imgu_css_fw_init(struct imgu_css *css)
+>>  	/* Check and display fw header info */
+>>  
+>>  	css->fwp = (struct imgu_fw_header *)css->fw->data;
+>> -	if (css->fw->size < sizeof(struct imgu_fw_header *) ||
+>> +	if (css->fw->size <= sizeof(struct imgu_fw_header) ||
+>>  	    css->fwp->file_header.h_size != sizeof(struct imgu_fw_bi_file_h))
+>>  		goto bad_fw;
+>>  	if (sizeof(struct imgu_fw_bi_file_h) +
+>> diff --git a/drivers/staging/media/ipu3/ipu3-css-fw.h b/drivers/staging/media/ipu3/ipu3-css-fw.h
+>> index 3c078f15a295..c0bc57fd678a 100644
+>> --- a/drivers/staging/media/ipu3/ipu3-css-fw.h
+>> +++ b/drivers/staging/media/ipu3/ipu3-css-fw.h
+>> @@ -171,7 +171,7 @@ struct imgu_fw_bi_file_h {
+>>  
+>>  struct imgu_fw_header {
+>>  	struct imgu_fw_bi_file_h file_header;
+>> -	struct imgu_fw_info binary_header[1];	/* binary_nr items */
+>> +	struct imgu_fw_info binary_header[];	/* binary_nr items */
+>>  };
+>>  
+>>  /******************* Firmware functions *******************/
+> 
