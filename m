@@ -2,209 +2,219 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29534C4338F
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 14:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1901C4338F
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 14:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDC160E09
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 14:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5D660F41
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 14:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236487AbhHBONJ (ORCPT
+        id S233907AbhHBO3y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 2 Aug 2021 10:13:09 -0400
-Received: from gateway20.websitewelcome.com ([192.185.47.18]:33135 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235282AbhHBOHr (ORCPT
+        Mon, 2 Aug 2021 10:29:54 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:24046 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S233985AbhHBO3x (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 2 Aug 2021 10:07:47 -0400
-X-Greylist: delayed 1425 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Aug 2021 10:07:47 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 5396D400D9217
-        for <linux-hardening@vger.kernel.org>; Mon,  2 Aug 2021 08:27:28 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id AYENmvRsmK61iAYENm3JQg; Mon, 02 Aug 2021 08:43:47 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ofCX79+Rdf3KA3ygQd5aThXKKbcOK34wLcXaAGModx0=; b=Rw0CtDE1sjh2NVCk9V6FIHr2ha
-        fm459NwtYD/fFi5HNqYS7vFodXN3cuSisRlKnLm4Tdffp66F/Il285vyvcvIJ4qFA+frcMr9mezf4
-        +hqngJI5USHqj+hxTyx8uxCXuMHDZ2rg+T6sMnUkqMUSgGS2OT3QPnUN8u8Rp6vs9NcBVAjZUoW2V
-        GGHqg1FDzFn1qFj7zUea+eNNphWNYuhOtiLMNqLYnqCgwB3saNkSgmwfUnZoGz0Ly4Lpfy+SD0GQG
-        2AYe5Knt9xfNY2w5TULaJGjUEmK9VTH7/Io3W1z4rzObmbJOsZ2xy39aiNWTCypZ7WGsbHrv06uqb
-        hdjeKb1w==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:56648 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1mAYEM-001O0n-Lf; Mon, 02 Aug 2021 08:43:46 -0500
-Subject: Re: [PATCH v2 1/2] media: staging/intel-ipu3: css: Fix wrong size
- comparison
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mon, 2 Aug 2021 10:29:53 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 172EEpSM014248;
+        Mon, 2 Aug 2021 07:29:31 -0700
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2040.outbound.protection.outlook.com [104.47.56.40])
+        by mx0a-0016f401.pphosted.com with ESMTP id 3a62652mjc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Aug 2021 07:29:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mn6GWmTojoMuVXU2IVVuglIkNfodbqfo7/2YQVSZCCrGjK9fCWKhh3czlQYGaq7Ij0RCEfX/cb84CqkXxMOEMyaX70OCAkZWzWBdwTJaFmTcSzTqg8Vt4Shr401WfEID40BzYkFhxglaLCmQX3mIpqUvAPMtmOe0QlBP+MgLeDJLEX+YQ5bZfLwZujaY3dkOakqajIIqpK91uS+Q10X7vTMuR52fcXAK21t3Zb/VMKc6XqT18AOXQlY8CxlK7l0wScaSEAtAp6oMuVCOKTx8gjaAqRs6GlL3lVoDhms7chJ5HUqlH8zAlHJi5Q9rRF7q8m/QXJT4VLnBuR9iaxYELg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IfrCdvSUqJjQfxX/HuRzUq8L2pDt+t2GaIByIu/qAwk=;
+ b=EeMofercIk02dAaq4ppE66b6ZGn/vNjpha32T9DGHFB0YkVDcT76zGV75KytXG77DUO4C0N0N6zUWmFbQpmEn1tGb1aa2okWv5VHh1pVzgU6CTChtV12LuZdLSByHnEFatEvzNmkM7R8yrI8vEJVdLLcaSHXgAr75jrVUd1QToGwXl+2/QtjGPYovIiwoO8DTO7mLSFr5t6sKnUOl2a6YP2xDkx9xJZ5HA8SmDwY8QGfwrGFoBLkG8VhHjEdUkWiYHrkGeFAaXO/lw648GkPAZlQ1NezvBc1UDHD3uAsUM7sUvv4j9BG/ToLCTlknmZIjy3XZf2rcGrFOOfRAbsYWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IfrCdvSUqJjQfxX/HuRzUq8L2pDt+t2GaIByIu/qAwk=;
+ b=V1zZWIAfjA5906sO9M1X9KAcKdIa+a2RnGPdcohArsru7HpXKAtDtSy9irGfgN7z3O/u1gwUyDo5sVvJRa5jUhPHtPL3VXhXSmbmjAK/NPLovhyS5gwJ06v8DwWnBk2XnsvXx2EwzipKX31eaUdVzhPqAHNAEBSlQzhmuhTQ/RM=
+Received: from SJ0PR18MB3882.namprd18.prod.outlook.com (2603:10b6:a03:2c8::13)
+ by BYAPR18MB2550.namprd18.prod.outlook.com (2603:10b6:a03:138::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.26; Mon, 2 Aug
+ 2021 14:29:29 +0000
+Received: from SJ0PR18MB3882.namprd18.prod.outlook.com
+ ([fe80::6513:d2ca:d44a:537c]) by SJ0PR18MB3882.namprd18.prod.outlook.com
+ ([fe80::6513:d2ca:d44a:537c%9]) with mapi id 15.20.4373.026; Mon, 2 Aug 2021
+ 14:29:29 +0000
+From:   Shai Malin <smalin@marvell.com>
+To:     Kees Cook <keescook@chromium.org>
+CC:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-hardening@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <cover.1627646101.git.gustavoars@kernel.org>
- <184d96f95d6261b1a91704eb68adbd0a2e1c2cc2.1627646101.git.gustavoars@kernel.org>
- <20210802060546.GL3@paasikivi.fi.intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <3c9ac43d-09ca-e5d5-83a8-7b6d23928763@embeddedor.com>
-Date:   Mon, 2 Aug 2021 08:46:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <20210802060546.GL3@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        Ariel Elior <aelior@marvell.com>
+Subject: Re: [PATCH 42/64] net: qede: Use memset_after() for counters
+Thread-Topic: [PATCH 42/64] net: qede: Use memset_after() for counters
+Thread-Index: AdeGtkLsSvL2o+KDTzKodUmtpqlAUA==
+Date:   Mon, 2 Aug 2021 14:29:28 +0000
+Message-ID: <SJ0PR18MB3882DC88DB04C9DE68678CEDCCEF9@SJ0PR18MB3882.namprd18.prod.outlook.com>
+Accept-Language: he-IL, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1mAYEM-001O0n-Lf
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:56648
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=marvell.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4671518c-feb1-4064-8873-08d955c1efd4
+x-ms-traffictypediagnostic: BYAPR18MB2550:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR18MB25500E156F81C2FEE992AC5FCCEF9@BYAPR18MB2550.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4nKMtFfm6q75L022wx5/+fODlplahXWLRHW1OAyZ860p70iUbShyJ2thZvaSMBEufN8s/OWfKH+RKSoExCqJemQB4jPD+GLDMu9npwQIWGlbZFUfG7Of1CptJgx0Sin25jTfbFQaL20za672esZKSoH1KJKim3rvzo2kg7UHYqn6NaJ3UOuTfEfvUAgV/1UH2YhvC6UWIpoftVPCXFWmhcqrBluu7yQfo9p2/Wsed50faUNYWvOPb7qjro3hrYosgGFOSXZT6MLerLWAxvbUyNDtTBxLjjvg8dAmZjDojWXVrnHvwP+NZbmQnykyhhbYknq9l5GEMdtZFrzS/p3cDCr555PlG1ZL++NQHnWz7pKF3GiypwCVl4BbPARfW1C7gN/8dS/Rk+pKkVHstthZJxalew9MVxxFSZAqrH1Lbtk9Rd5ebd08Z9QrZ1760jK04UQLjNtYW88L5TbW6KHnqA3e/Qh5V4EU/BjNgNuft9a+yF4LUtrGz85V5j65psGOMLAkOb5LNWQvckP97QN+8NdILhRPo91VwKVlSO+ZmH/C1YqNwqYtAHn8APFXk99Y68xQW2up8C+5iTMyyKJk6zwirNE8mSa5Pc2W04PcrhArFCKW+WqdtKyG/xv7HQc0tIWnquXFaGD0zoFqrNU7b7ppqKWgKNsikzv/UkqSL0Yh8MCnVsh5ISGu6k6fHub442pf4vGzcw2Wmdmj2Cbg5g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR18MB3882.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(39860400002)(136003)(366004)(186003)(83380400001)(86362001)(6916009)(38070700005)(26005)(7696005)(52536014)(7416002)(6506007)(107886003)(316002)(122000001)(38100700002)(8676002)(478600001)(8936002)(2906002)(71200400001)(64756008)(54906003)(55016002)(33656002)(76116006)(5660300002)(66476007)(66446008)(66556008)(9686003)(4326008)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?r36pt96gPfq2TWMhN6i6otGo9BCYDdrX9XhTdJ14F9NS9hNULE9dbz/8YvGM?=
+ =?us-ascii?Q?CfkP8eb7K6I22nAVfkrYUSQnUanOfd0ynfbWSn7tscEEM36YOzF20ov9csij?=
+ =?us-ascii?Q?jS/9msypDCduALT1mINwKviq4w4ESLIN0Jho2+rtdHA4J7wRWC7tvYHcLvUd?=
+ =?us-ascii?Q?iKfGD0tYfs8nvZIJYesWdb2Ds4xnkYVLLaIHzaLEBJ7UaPnPl0rh5nE5rzi3?=
+ =?us-ascii?Q?9AkMImGiw2m9WJyMNeS7EC7uhb0hHYcmCCIMVsokRFYOJFASUhVMYtsXOV56?=
+ =?us-ascii?Q?MSq7yRjlH9zvSXwdkehG7pQOQ+MIBxqJlZrxD4HqTOfUMVs4G8kurQYykUQ1?=
+ =?us-ascii?Q?rjVIE2dhc44GhX4XEoHsP08Tg2woJ0B2YgHkGP92NbQKn/+rCBzBAwNWP89D?=
+ =?us-ascii?Q?vXrDklHctzsbF71MFQiLKGCMpWUlWHZX3rZZdDzJCMWJsBWWcUWm+4M1NXix?=
+ =?us-ascii?Q?OAsCUGKp/0JtbYtDKoAFUm4KmR+jfdzKlzn7ujOv5k6DiOoeAFl3lDzYyy7i?=
+ =?us-ascii?Q?4XM3f0CdlibPaYjnSSjk8oxLpdlVl0h4iU2qM4rjHyuSDIsWeCMKO213kGAm?=
+ =?us-ascii?Q?FbIZRo+4iaqqVOGhz4HGVQsWVohjG9MuagXtCxbFuW1/9ixwNgCVz2i9GLok?=
+ =?us-ascii?Q?ivKulGa7F6OhKzCbikzuI1vGROYzOmB84JsYDx9/mSVQG6iE6qeFSxEtsuYg?=
+ =?us-ascii?Q?UHgj5bDXetEdpvR8InJmwzLr1b18bKETlbP7queg9t92uqRLNryzC6q9wrLc?=
+ =?us-ascii?Q?3xAivZ6WiftIva94sin1LJZ7paPjGKDVKAgcZDFZdPVndaTe6e7GV7+AiX2r?=
+ =?us-ascii?Q?KppxfVVX3Sc8J570A2Cc4YEAu3Slvw3V1JSNbcqxUZcxjxZ5mKXVxDw48VOW?=
+ =?us-ascii?Q?Kcg1lLRLRgDJ2hzEo/iF/ZEqJ0nk1IReSOuOrdG/aetVu6VL9rOxAaCeu+BT?=
+ =?us-ascii?Q?iCXA8DI/PHrdr1vNlZgpo7XhLBe/jhZeibydKQOex0/4IdpMZAmI8F8aUBYi?=
+ =?us-ascii?Q?jz4pHanP5XJGbehc5x6gE9B88F4s7n8I/UsvKqcBbpxbkUyh3dXKgkvpu7Ax?=
+ =?us-ascii?Q?s2BhhpC8/v0rPAn8Vr6PDmByofl3I2i6thbRpeicmL7n22LWWlDs6Lto/TZV?=
+ =?us-ascii?Q?w688OiRi90CQlPXQCUsa+5C6NnT7GFFIf0N0M8Fjks3h147O/gwVsXeMWCQO?=
+ =?us-ascii?Q?2XyArz6SoOia0ubB5JF1FovWD9OE8oUJxewNgeus9mws8DgKxcHK3l51/aUU?=
+ =?us-ascii?Q?v3Ax+1GTD5H/WuxDse/+B2FFfHh8yaoWaW5bGSZJHGndnqWctef6/P+E1iis?=
+ =?us-ascii?Q?ia4fDZKrCCoLttkdtJMvvTUa?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR18MB3882.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4671518c-feb1-4064-8873-08d955c1efd4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2021 14:29:28.8058
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ivd18q5DnoheZEfOxS0dSHg0KLsScH+1yRYI2vpqQlJG9hz5rOnxqrwQhh01VneSHF1PPzRHa4nGDZUIPrICyw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2550
+X-Proofpoint-ORIG-GUID: ox9cV0OtkKJSABP7NaYpoBN3ml4Voeoj
+X-Proofpoint-GUID: ox9cV0OtkKJSABP7NaYpoBN3ml4Voeoj
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-08-02_05:2021-08-02,2021-08-02 signatures=0
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Sakari,
 
-On 8/2/21 01:05, Sakari Ailus wrote:
-> Hi Gustavo,
-> 
-> I missed you already had sent v2...
-> 
-> On Fri, Jul 30, 2021 at 07:08:13AM -0500, Gustavo A. R. Silva wrote:
->> There is a wrong comparison of the total size of the loaded firmware
->> css->fw->size with the size of a pointer to struct imgu_fw_header.
->>
->> Fix this by using the right operand 'struct imgu_fw_header' for
->> sizeof, instead of 'struct imgu_fw_header *' and turn binary_header
->> into a flexible-array member. Also, adjust the relational operator
->> to be '<=' instead of '<', as it seems that the intention of the
->> comparison is to determine if the loaded firmware contains any
->> 'struct imgu_fw_info' items in the binary_header[] array than merely
->> the file_header (struct imgu_fw_bi_file_h).
->>
->> The replacement of the one-element array with a flexible-array member
->> also help with the ongoing efforts to globally enable -Warray-bounds
->> and get us closer to being able to tighten the FORTIFY_SOURCE routines
->> on memcpy().
->>
->> Link: https://github.com/KSPP/linux/issues/79
->> Link: https://github.com/KSPP/linux/issues/109
->> Fixes: 09d290f0ba21 ("media: staging/intel-ipu3: css: Add support for firmware management")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>
->> It'd be just great if someone that knows this code better can confirm
->> these changes are correct. In particular the adjustment of the
->> relational operator. Thanks!
->>
->> Changes in v2:
->>  - Use flexible array and adjust relational operator, accordingly.
-> 
-> The operator was just correct. The check is just there to see the firmware
-> is at least as large as the struct as which it is being accessed.
+On Tue, Jul 31, 2021 at 07:07:00PM -0300, Kees Cook wrote:
+> On Tue, Jul 27, 2021 at 01:58:33PM -0700, Kees Cook wrote:
+> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > field bounds checking for memset(), avoid intentionally writing across
+> > neighboring fields.
+> >
+> > Use memset_after() so memset() doesn't get confused about writing
+> > beyond the destination member that is intended to be the starting point
+> > of zeroing through the end of the struct.
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > The old code seems to be doing the wrong thing: starting from not the
+> > first member, but sized for the whole struct. Which is correct?
+>=20
+> Quick ping on this question.
+>=20
+> The old code seems to be doing the wrong thing: it starts from the second
+> member and writes beyond int_info, clobbering qede_lock:
 
-I'm a bit confused, so based on your reply to v1 of this series, this patch
-is now correct, right?
+Thanks for highlighting the problem, but actually, the memset is redundant.
+We will remove it so the change will not be needed.
 
-The operator in v1 _was_ correct as long as the one-element array wasn't
-transformed into a flexible array, right?
+>=20
+> struct qede_dev {
+>         ...
+>         struct qed_int_info             int_info;
+>=20
+>         /* Smaller private variant of the RTNL lock */
+>         struct mutex                    qede_lock;
+>         ...
+>=20
+>=20
+> struct qed_int_info {
+>         struct msix_entry       *msix;
+>         u8                      msix_cnt;
+>=20
+>         /* This should be updated by the protocol driver */
+>         u8                      used_cnt;
+> };
+>=20
+> Should this also clear the "msix" member, or should this not write
+> beyond int_info? This patch does the latter.
 
-Notice that generally speaking flexible-array members don't occupy space in the
-containing structure:
+It should clear only the msix_cnt, no need to clear the entire=20
+qed_int_info structure.
 
-$ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
-struct imgu_fw_header {
-	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
-	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
-	struct imgu_fw_info        binary_header[] __attribute__((__aligned__(8))); /*    72     0 */
+>=20
+> -Kees
+>=20
+> > ---
+> >  drivers/net/ethernet/qlogic/qede/qede_main.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c
+> b/drivers/net/ethernet/qlogic/qede/qede_main.c
+> > index 01ac1e93d27a..309dfe8c94fb 100644
+> > --- a/drivers/net/ethernet/qlogic/qede/qede_main.c
+> > +++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+> > @@ -2419,7 +2419,7 @@ static int qede_load(struct qede_dev *edev, enum
+> qede_load_mode mode,
+> >  	goto out;
+> >  err4:
+> >  	qede_sync_free_irqs(edev);
+> > -	memset(&edev->int_info.msix_cnt, 0, sizeof(struct qed_int_info));
+> > +	memset_after(&edev->int_info, 0, msix);
 
-	/* size: 72, cachelines: 2, members: 2 */
-	/* forced alignments: 1 */
-	/* last cacheline: 8 bytes */
-} __attribute__((__aligned__(8)));
+We will replace the redundant memset with:
+edev->int_info.msix_cnt =3D 0;=20
 
-$ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
-struct imgu_fw_header {
-	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
-	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
-	struct imgu_fw_info        binary_header[1] __attribute__((__aligned__(8))); /*    72  1200 */
-
-	/* size: 1272, cachelines: 20, members: 2 */
-	/* forced alignments: 1 */
-	/* last cacheline: 56 bytes */
-} __attribute__((__aligned__(8)));
-
-So, now that the flexible array transformation is included in the same patch as the
-bugfix, the operator is changed from '<' to '<='
-
-Can you please confirm if this v2 is now correct? if so, it'd be great to have your
-Reviewed-by tag. :)
-
-Thanks!
---
-Gustavo
-
-> 
->>  - Update changelog text.
->>
->>  drivers/staging/media/ipu3/ipu3-css-fw.c | 2 +-
->>  drivers/staging/media/ipu3/ipu3-css-fw.h | 2 +-
->>  2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/staging/media/ipu3/ipu3-css-fw.c b/drivers/staging/media/ipu3/ipu3-css-fw.c
->> index 45aff76198e2..630cb5186b48 100644
->> --- a/drivers/staging/media/ipu3/ipu3-css-fw.c
->> +++ b/drivers/staging/media/ipu3/ipu3-css-fw.c
->> @@ -124,7 +124,7 @@ int imgu_css_fw_init(struct imgu_css *css)
->>  	/* Check and display fw header info */
->>  
->>  	css->fwp = (struct imgu_fw_header *)css->fw->data;
->> -	if (css->fw->size < sizeof(struct imgu_fw_header *) ||
->> +	if (css->fw->size <= sizeof(struct imgu_fw_header) ||
->>  	    css->fwp->file_header.h_size != sizeof(struct imgu_fw_bi_file_h))
->>  		goto bad_fw;
->>  	if (sizeof(struct imgu_fw_bi_file_h) +
->> diff --git a/drivers/staging/media/ipu3/ipu3-css-fw.h b/drivers/staging/media/ipu3/ipu3-css-fw.h
->> index 3c078f15a295..c0bc57fd678a 100644
->> --- a/drivers/staging/media/ipu3/ipu3-css-fw.h
->> +++ b/drivers/staging/media/ipu3/ipu3-css-fw.h
->> @@ -171,7 +171,7 @@ struct imgu_fw_bi_file_h {
->>  
->>  struct imgu_fw_header {
->>  	struct imgu_fw_bi_file_h file_header;
->> -	struct imgu_fw_info binary_header[1];	/* binary_nr items */
->> +	struct imgu_fw_info binary_header[];	/* binary_nr items */
->>  };
->>  
->>  /******************* Firmware functions *******************/
-> 
+> >  err3:
+> >  	qede_napi_disable_remove(edev);
+> >  err2:
+> > --
+> > 2.30.2
+> >
+>=20
+> --
+> Kees Cook
