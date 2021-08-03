@@ -2,156 +2,200 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA52C432BE
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 19:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A952CC4338F
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 Aug 2021 07:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92DB60F93
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 Aug 2021 19:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE3960EFF
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 Aug 2021 07:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbhHBTPf (ORCPT
+        id S234114AbhHCHIG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 2 Aug 2021 15:15:35 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.48]:11083 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229716AbhHBTPe (ORCPT
+        Tue, 3 Aug 2021 03:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233677AbhHCHIG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 2 Aug 2021 15:15:34 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id D44BD2D7D4
-        for <linux-hardening@vger.kernel.org>; Mon,  2 Aug 2021 14:15:03 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id AdN0m483G7sOiAdN0mgWPS; Mon, 02 Aug 2021 14:13:02 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DJIS+a5HsMmnfIxc2Pzhsn+S1rqEqCOqgc6RlnNWJ6o=; b=EBYUsbVyp+HjHZwcH9ALnmg6Fi
-        uqEN3Dltc7+UHmEwSBAJhyMK9ZKspqWrC8PHilc2jJro+1UWv1pWzRS1uW+kbZ16KM6ewHjGHIPi3
-        gIVHwcI5+GU0K5HQwLswTkbVNGeWWfWU3F2JvH+b8+fs/pT19NRPP8sd1HF4iKNAEAXmBxftqUvgt
-        XDJC7lHqzTRCj7WxZAthwVGTn6YaaidkZb56AK+i9VuRjBDcwucB+jRT8DjP7+tCkc4//pUvk5Mcq
-        FkPYAjy7URIh/9jGAB3X5QXrT7c4AMnpvN3vNJ19LzKgK0J48BoTWug6ec+dACL9Z469kbuyXgUX3
-        /zl0ZXnw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:57696 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1mAdMy-0042EB-Mo; Mon, 02 Aug 2021 14:13:00 -0500
-Subject: Re: [PATCH][next] net/ipv4: Replace one-element array with
- flexible-array member
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     patchwork-bot+netdevbpf@kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, yoshfuji@linux-ipv6.org,
-        dsahern@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210731170830.GA48844@embeddedor>
- <162791400741.18419.5941105433257893840.git-patchwork-notify@kernel.org>
- <6d3c2ba1-ea01-dbc1-1e18-1ba9c7a15181@embeddedor.com>
-Message-ID: <4a9987c1-1f7a-35af-af6a-01b96292d2ee@embeddedor.com>
-Date:   Mon, 2 Aug 2021 14:15:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Tue, 3 Aug 2021 03:08:06 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D951C061764
+        for <linux-hardening@vger.kernel.org>; Tue,  3 Aug 2021 00:07:55 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id e2-20020a17090a4a02b029016f3020d867so3444293pjh.3
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Aug 2021 00:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WN6UWlQHlJrqX7fWKP3w+a4gz17W1v3husZzZ4lYdZs=;
+        b=FG0BxQgTNclREe9wLVv4qS4z2N2sM3E8tcxJy7sG5CSbcRPTBPLmmzNBD++56n1i0Y
+         iAlp6ISBOSnkdYxdVe/Zu8i/Zkxikk3+SUwgoKONvFraMu/GvvzYdYTtcdIyhpEuRhHy
+         dvyre83Eg6GNEFlItaCRt9/Z7jox9BnAyajaE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WN6UWlQHlJrqX7fWKP3w+a4gz17W1v3husZzZ4lYdZs=;
+        b=lrM5rkcSTspzP7a+wpKFEQJR2pM9s1FvHQEu3a0J7K5AJyBep4wkqHWe3Wjbx7Tgre
+         La3P1c7OihwwcQ/0hQU+Xfr+u0ZGpD1s7+s5C7V7uoGr799/b0x/Ar6vO1cOG4yx3uys
+         eE+f0sdVVXsfMiLSgdFcTIGTy86XCeiSwUpK5Zj6gpU+zepo2cQtnLRNKhtLfyLtUEch
+         R15qf21WfPPjFUTbhN9UJFpcnIXNnhLFxen9V1tFuEkj0h9j2uFRKphPdTULHWgpW+wJ
+         JTiwa7zA31Sd37lFt+ePU1pDQ4DgEKOfNcApPldB9jFzGLkPRV6wvXhh9s4zPJ3BzgUQ
+         d7Zg==
+X-Gm-Message-State: AOAM530DJqO8hbYdLQ+mf3wfqw+t4LXoWF9YeBF9rHJX95yHNmVRuIXR
+        2Ti6duRP3sctBkj6lh0domIrTA==
+X-Google-Smtp-Source: ABdhPJzwY/O8zGrmytB0XZTu4NI3puVLQ4qTvp0bifc+rcCa4MZIaf+qz4BUpXKkmLFaMBheKpJfSg==
+X-Received: by 2002:a65:63cf:: with SMTP id n15mr189772pgv.392.1627974475115;
+        Tue, 03 Aug 2021 00:07:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c14sm15852676pgv.86.2021.08.03.00.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Aug 2021 00:07:54 -0700 (PDT)
+Date:   Tue, 3 Aug 2021 00:07:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-hardening@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joe Perches <joe@perches.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] drivers/input: Remove all strcpy() uses in favor of
+ strscpy()
+Message-ID: <202108022354.49612943B7@keescook>
+References: <20210801144316.12841-1-len.baker@gmx.com>
+ <20210801145959.GI22278@shell.armlinux.org.uk>
+ <20210801155732.GA16547@titan>
+ <202108010934.FA668DEB28@keescook>
 MIME-Version: 1.0
-In-Reply-To: <6d3c2ba1-ea01-dbc1-1e18-1ba9c7a15181@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1mAdMy-0042EB-Mo
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:57696
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202108010934.FA668DEB28@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 8/2/21 13:46, Gustavo A. R. Silva wrote:
+On Sun, Aug 01, 2021 at 09:44:33AM -0700, Kees Cook wrote:
+> On Sun, Aug 01, 2021 at 05:57:32PM +0200, Len Baker wrote:
+> > Hi,
+> > 
+> > On Sun, Aug 01, 2021 at 04:00:00PM +0100, Russell King (Oracle) wrote:
+> > > On Sun, Aug 01, 2021 at 04:43:16PM +0200, Len Baker wrote:
+> > > > strcpy() performs no bounds checking on the destination buffer. This
+> > > > could result in linear overflows beyond the end of the buffer, leading
+> > > > to all kinds of misbehaviors. The safe replacement is strscpy().
+> > > >
+> > > > Signed-off-by: Len Baker <len.baker@gmx.com>
+> > > > ---
+> > > > This is a task of the KSPP [1]
+> > > >
+> > > > [1] https://github.com/KSPP/linux/issues/88
+> > > >
+> > > >  drivers/input/keyboard/locomokbd.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/input/keyboard/locomokbd.c b/drivers/input/keyboard/locomokbd.c
+> > > > index dae053596572..dbb3dc48df12 100644
+> > > > --- a/drivers/input/keyboard/locomokbd.c
+> > > > +++ b/drivers/input/keyboard/locomokbd.c
+> > > > @@ -254,7 +254,7 @@ static int locomokbd_probe(struct locomo_dev *dev)
+> > > >  	locomokbd->suspend_jiffies = jiffies;
+> > > >
+> > > >  	locomokbd->input = input_dev;
+> > > > -	strcpy(locomokbd->phys, "locomokbd/input0");
+> > > > +	strscpy(locomokbd->phys, "locomokbd/input0", sizeof(locomokbd->phys));
+> > >
+> > > So if the string doesn't fit, it's fine to silently truncate it?
+> > 
+> > I think it is better than overflow :)
+> > 
+> > > Rather than converting every single strcpy() in the kernel to
+> > > strscpy(), maybe there should be some consideration given to how the
+> > > issue of a strcpy() that overflows the buffer should be handled.
+> > > E.g. in the case of a known string such as the above, if it's longer
+> > > than the destination, should we find a way to make the compiler issue
+> > > a warning at compile time?
+> > 
+> > Good point. I am a kernel newbie and have no experience. So this
+> > question should be answered by some kernel hacker :) But I agree
+> > with your proposals.
+> > 
+> > Kees and folks: Any comments?
+> > 
+> > Note: Kees is asked the same question in [2]
+> > 
+> > [2] https://lore.kernel.org/lkml/20210731135957.GB1979@titan/
 > 
+> Hi!
 > 
-> On 8/2/21 09:20, patchwork-bot+netdevbpf@kernel.org wrote:
->> Hello:
->>
->> This patch was applied to netdev/net-next.git (refs/heads/master):
->>
->> On Sat, 31 Jul 2021 12:08:30 -0500 you wrote:
->>> There is a regular need in the kernel to provide a way to declare having
->>> a dynamically sized set of trailing elements in a structure. Kernel code
->>> should always use “flexible array members”[1] for these cases. The older
->>> style of one-element or zero-length arrays should no longer be used[2].
->>>
->>> Use an anonymous union with a couple of anonymous structs in order to
->>> keep userspace unchanged:
->>>
->>> [...]
->>
->> Here is the summary with links:
->>   - [next] net/ipv4: Replace one-element array with flexible-array member
->>     https://git.kernel.org/netdev/net-next/c/2d3e5caf96b9
+> Sorry for the delay at looking into this. It didn't use to be a problem
+> (there would always have been a compile-time warning generated for
+> known-too-small cases), but that appears to have regressed when,
+> ironically, strscpy() coverage was added. I've detailed it in the bug
+> report:
+> https://github.com/KSPP/linux/issues/88
 > 
-> arghh... this has a bug. Sorry, Dave. I will send a fix for this, shortly.
-> 
+> So, bottom line: we need to fix the missing compile-time warnings for
+> strcpy() and strscpy() under CONFIG_FORTIFY_SOURCE=y.
 
-BTW... can we expect msf->imsf_numsrc to be zero at some point in the following
-pieces of code?
+I've got these fixed now, and will send them out likely tomorrow, but I
+did, in fact, find 4 cases of truncation, all in v4l, and all appear to
+have been truncated since introduction:
 
-net/ipv4/igmp.c:
-2553         copycount = count < msf->imsf_numsrc ? count : msf->imsf_numsrc;
-2554         len = copycount * sizeof(psl->sl_addr[0]);
-2555         msf->imsf_numsrc = count;
-2556         if (put_user(IP_MSFILTER_SIZE(copycount), optlen) ||
-2557             copy_to_user(optval, msf, IP_MSFILTER_SIZE(0))) {
-2558                 return -EFAULT;
-2559         }
+struct v4l2_capability {
+...
+        __u8    card[32];
+(stores 31 characters)
 
-net/ipv4/ip_sockglue.c:
-1228         case IP_MSFILTER:
-1229         {
-1230                 struct ip_msfilter *msf;
-1231
-1232                 if (optlen < IP_MSFILTER_SIZE(0))
-1233                         goto e_inval;
-1234                 if (optlen > sysctl_optmem_max) {
-1235                         err = -ENOBUFS;
-1236                         break;
-1237                 }
-1238                 msf = memdup_sockptr(optval, optlen);
-1239                 if (IS_ERR(msf)) {
+drivers/media/radio/radio-wl1273.c:1282
+wl1273_fm_vidioc_querycap()
+            strscpy(capability->card, "Texas Instruments Wl1273 FM Radio",
+                    sizeof(capability->card));
+33 characters, getting truncated to:
+Texas Instruments Wl1273 FM Rad
+87d1a50ce45168cbaec10397e876286a398052c1
 
-			...
+drivers/media/radio/si470x/radio-si470x-usb.c:514
+si470x_vidioc_querycap()
+#define DRIVER_CARD "Silicon Labs Si470x FM Radio Receiver"
+            strscpy(capability->card, DRIVER_CARD,
+sizeof(capability->card));
+37 characters, getting truncated to:
+Silicon Labs Si470x FM Radio Re
+78656acdcf4852547a29e929a1b7a98d5ac65f17
 
-1250                 if (IP_MSFILTER_SIZE(msf->imsf_numsrc) > optlen) {
-1251                         kfree(msf);
-1252                         err = -EINVAL;
-1253                         break;
-1254                 }
-1255                 err = ip_mc_msfilter(sk, msf, 0);
-1256                 kfree(msf);
-1257                 break;
-1258         }
+drivers/media/radio/si470x/radio-si470x-i2c.c:225
+si470x_vidioc_querycap()
+#define DRIVER_CARD "Silicon Labs Si470x FM Radio Receiver"
+            strscpy(capability->card, DRIVER_CARD,
+sizeof(capability->card));
+37 characters, getting truncated to:
+Silicon Labs Si470x FM Radio Re
+cc35bbddfe10f77d949f0190764b252cd2b70c3c
 
-Thanks
---
-Gustavo
+drivers/media/usb/tm6000/tm6000-video.c:855
+vidioc_querycap()
+            strscpy(cap->card, "Trident TVMaster TM5600/6000/6010",
+                    sizeof(cap->card));
+33 characters, getting truncated to:
+Trident TVMaster TM5600/6000/60
+e28f49b0b2a8e678af62745ffdc4e4f36d7283a6
+
+How should these be handled? I assume v4l2_capability::card can't be
+resized since it's part of IOCTL response, so likely all the string just
+need to be shortened in some way? Seems like dropping the manufacturer
+name makes the most sense, since manufacturer can be kind of derived
+from the driver names.
+
+Thoughts?
+
+-Kees
+
+-- 
+Kees Cook
