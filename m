@@ -2,132 +2,378 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C53C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 18:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75778C4320A
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 20:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8D761002
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 18:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0E061073
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 20:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238785AbhHDSU7 (ORCPT
+        id S240988AbhHDUnO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 Aug 2021 14:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52688 "EHLO mail.kernel.org"
+        Wed, 4 Aug 2021 16:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238755AbhHDSU6 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 Aug 2021 14:20:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 30A3A60F94;
-        Wed,  4 Aug 2021 18:20:45 +0000 (UTC)
+        id S240980AbhHDUnJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 4 Aug 2021 16:43:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8DF2D60F10;
+        Wed,  4 Aug 2021 20:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628101245;
-        bh=7e9VthFDgj2TLGdYUTdWlqA7YJoPwfJ6cIu1tk2mhkU=;
+        s=k20201202; t=1628109776;
+        bh=V8FQrr/pOQD/jpb+JD9qUKf1+X451XE2zUJ4yVXzaaM=;
         h=Date:From:To:Cc:Subject:From;
-        b=UG6KL8imFGrl/yQtt+/Yb9Bk+RGlr1K9H/xsQgVXUaLdjo4Jxlj8RAzAuBJ6bRFLO
-         eleu/UP7iywxcQ8yAtPNFfUy1UYiXDzd8Wm9szr8FlxJ6MKqc2JhVw+H3ioKa002IP
-         GTqFwwuZHIlFPho5VV/QllPon+vh8zHkF0Uk4M/2yfslaKVEZ2TRYVQQRJu8f1QeZC
-         FYrEwQWxBFluiGEZKURPeKylVDncpmJBXiw3HxAHJWoZOK5UYmMakwed4bU8eYaGwY
-         9TIihRFPa2aNIakr8+5n1qpN+kCKvSkeT3OmEUFesO94u9Sp2iAH67hgkbNSQUXEW+
-         oPTPBDEiZesWw==
-Date:   Wed, 4 Aug 2021 13:23:25 -0500
+        b=eTDPxngbu35dnjX3TnsltuccH+12lNGgbsOEMTdB0lm5JFQJnB3WW6crFfBbq1eWP
+         sjjKNbWzItWyHXbh6CU+E2BEHkwPBPjjCG1hoJmPbNZU189YpDAeKxrh569gfiXdv/
+         nCeZ1350MJjLM+A6glVxI0VQIiuWf91pGmbyphW5rqTqjVyDegC+hPXaWXpy6oMjXZ
+         7lCNgHGKThq0OFwi5GyXjh6hWAlv6YHuxpJgB90Z9oPWC2sg+eS0GixP23AtGfbWmu
+         gn20fOj/CeqQ9aUqyVnZW2ld/jNA2mbyfCKAguBxCiMhTnJ18fYuTR5sAOgoZJm65s
+         /13N8Cv2RM/pA==
+Date:   Wed, 4 Aug 2021 15:45:36 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
+        David Ahern <dsahern@kernel.org>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net/ipv4: Revert use of struct_size() helper
-Message-ID: <20210804182325.GA11752@embeddedor>
+Subject: [PATCH][next] net/ipv4/ipv6: Replace one-element arraya with
+ flexible-array members
+Message-ID: <20210804204536.GA22727@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Revert the use of structr_size() and stay with IP_MSFILTER_SIZE() for
-now, as in this case, the size of struct ip_msfilter didn't change with
-the addition of the flexible array imsf_slist_flex[]. So, if we use
-struct_size() we will be allocating and calculating the size of
-struct ip_msfilter with one too many items for imsf_slist_flex[].
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-We might use struct_size() in the future, but for now let's stay
-with IP_MSFILTER_SIZE().
+Use an anonymous union with a couple of anonymous structs in order to
+keep userspace unchanged and refactor the related code accordingly:
 
-Fixes: 	2d3e5caf96b9 ("net/ipv4: Replace one-element array with flexible-array member")
+$ pahole -C group_filter net/ipv4/ip_sockglue.o
+struct group_filter {
+	union {
+		struct {
+			__u32      gf_interface_aux;     /*     0     4 */
+
+			/* XXX 4 bytes hole, try to pack */
+
+			struct __kernel_sockaddr_storage gf_group_aux; /*     8   128 */
+			/* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+			__u32      gf_fmode_aux;         /*   136     4 */
+			__u32      gf_numsrc_aux;        /*   140     4 */
+			struct __kernel_sockaddr_storage gf_slist[1]; /*   144   128 */
+		};                                       /*     0   272 */
+		struct {
+			__u32      gf_interface;         /*     0     4 */
+
+			/* XXX 4 bytes hole, try to pack */
+
+			struct __kernel_sockaddr_storage gf_group; /*     8   128 */
+			/* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+			__u32      gf_fmode;             /*   136     4 */
+			__u32      gf_numsrc;            /*   140     4 */
+			struct __kernel_sockaddr_storage gf_slist_flex[0]; /*   144     0 */
+		};                                       /*     0   144 */
+	};                                               /*     0   272 */
+
+	/* size: 272, cachelines: 5, members: 1 */
+	/* last cacheline: 16 bytes */
+};
+
+$ pahole -C compat_group_filter net/ipv4/ip_sockglue.o
+struct compat_group_filter {
+	union {
+		struct {
+			__u32      gf_interface_aux;     /*     0     4 */
+			struct __kernel_sockaddr_storage gf_group_aux __attribute__((__aligned__(4))); /*     4   128 */
+			/* --- cacheline 2 boundary (128 bytes) was 4 bytes ago --- */
+			__u32      gf_fmode_aux;         /*   132     4 */
+			__u32      gf_numsrc_aux;        /*   136     4 */
+			struct __kernel_sockaddr_storage gf_slist[1] __attribute__((__aligned__(4))); /*   140   128 */
+		} __attribute__((__packed__)) __attribute__((__aligned__(4)));                     /*     0   268 */
+		struct {
+			__u32      gf_interface;         /*     0     4 */
+			struct __kernel_sockaddr_storage gf_group __attribute__((__aligned__(4))); /*     4   128 */
+			/* --- cacheline 2 boundary (128 bytes) was 4 bytes ago --- */
+			__u32      gf_fmode;             /*   132     4 */
+			__u32      gf_numsrc;            /*   136     4 */
+			struct __kernel_sockaddr_storage gf_slist_flex[0] __attribute__((__aligned__(4))); /*   140     0 */
+		} __attribute__((__packed__)) __attribute__((__aligned__(4)));                     /*     0   140 */
+	} __attribute__((__aligned__(1)));               /*     0   268 */
+
+	/* size: 268, cachelines: 5, members: 1 */
+	/* forced alignments: 1 */
+	/* last cacheline: 12 bytes */
+} __attribute__((__packed__));
+
+This helps with the ongoing efforts to globally enable -Warray-bounds
+and get us closer to being able to tighten the FORTIFY_SOURCE routines
+on memcpy().
+
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/109
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/ipv4/igmp.c        |  4 ++--
- net/ipv4/ip_sockglue.c | 12 +++++-------
- 2 files changed, 7 insertions(+), 9 deletions(-)
+ include/net/compat.h     | 27 ++++++++++++++++++++-------
+ include/uapi/linux/in.h  | 21 ++++++++++++++++-----
+ net/ipv4/ip_sockglue.c   | 19 ++++++++++---------
+ net/ipv6/ipv6_sockglue.c | 18 +++++++++---------
+ 4 files changed, 55 insertions(+), 30 deletions(-)
 
-diff --git a/net/ipv4/igmp.c b/net/ipv4/igmp.c
-index a5f4ecb02e97..c2d477eb6825 100644
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -2553,8 +2553,8 @@ int ip_mc_msfget(struct sock *sk, struct ip_msfilter *msf,
- 	copycount = count < msf->imsf_numsrc ? count : msf->imsf_numsrc;
- 	len = flex_array_size(psl, sl_addr, copycount);
- 	msf->imsf_numsrc = count;
--	if (put_user(struct_size(optval, imsf_slist_flex, copycount), optlen) ||
--	    copy_to_user(optval, msf, struct_size(optval, imsf_slist_flex, 0))) {
-+	if (put_user(IP_MSFILTER_SIZE(copycount), optlen) ||
-+	    copy_to_user(optval, msf, IP_MSFILTER_SIZE(0))) {
- 		return -EFAULT;
- 	}
- 	if (len &&
+diff --git a/include/net/compat.h b/include/net/compat.h
+index 84805bdc4435..595fee069b82 100644
+--- a/include/net/compat.h
++++ b/include/net/compat.h
+@@ -71,13 +71,26 @@ struct compat_group_source_req {
+ } __packed;
+ 
+ struct compat_group_filter {
+-	__u32				 gf_interface;
+-	struct __kernel_sockaddr_storage gf_group
+-		__aligned(4);
+-	__u32				 gf_fmode;
+-	__u32				 gf_numsrc;
+-	struct __kernel_sockaddr_storage gf_slist[1]
+-		__aligned(4);
++	union {
++		struct {
++			__u32				 gf_interface_aux;
++			struct __kernel_sockaddr_storage gf_group_aux
++				__aligned(4);
++			__u32				 gf_fmode_aux;
++			__u32				 gf_numsrc_aux;
++			struct __kernel_sockaddr_storage gf_slist[1]
++				__aligned(4);
++		} __packed;
++		struct {
++			__u32				 gf_interface;
++			struct __kernel_sockaddr_storage gf_group
++				__aligned(4);
++			__u32				 gf_fmode;
++			__u32				 gf_numsrc;
++			struct __kernel_sockaddr_storage gf_slist_flex[]
++				__aligned(4);
++		} __packed;
++	};
+ } __packed;
+ 
+ #endif /* NET_COMPAT_H */
+diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
+index d1b327036ae4..d8bd07215770 100644
+--- a/include/uapi/linux/in.h
++++ b/include/uapi/linux/in.h
+@@ -211,11 +211,22 @@ struct group_source_req {
+ };
+ 
+ struct group_filter {
+-	__u32				 gf_interface;	/* interface index */
+-	struct __kernel_sockaddr_storage gf_group;	/* multicast address */
+-	__u32				 gf_fmode;	/* filter mode */
+-	__u32				 gf_numsrc;	/* number of sources */
+-	struct __kernel_sockaddr_storage gf_slist[1];	/* interface index */
++	union {
++		struct {
++			__u32				 gf_interface_aux; /* interface index */
++			struct __kernel_sockaddr_storage gf_group_aux;	   /* multicast address */
++			__u32				 gf_fmode_aux;	   /* filter mode */
++			__u32				 gf_numsrc_aux;	   /* number of sources */
++			struct __kernel_sockaddr_storage gf_slist[1];	   /* interface index */
++		};
++		struct {
++			__u32				 gf_interface;	  /* interface index */
++			struct __kernel_sockaddr_storage gf_group;	  /* multicast address */
++			__u32				 gf_fmode;	  /* filter mode */
++			__u32				 gf_numsrc;	  /* number of sources */
++			struct __kernel_sockaddr_storage gf_slist_flex[]; /* interface index */
++		};
++	};
+ };
+ 
+ #define GROUP_FILTER_SIZE(numsrc) \
 diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index bbe660b84a91..468969c75708 100644
+index ec6036713e2c..6ac6e4aec29f 100644
 --- a/net/ipv4/ip_sockglue.c
 +++ b/net/ipv4/ip_sockglue.c
-@@ -667,7 +667,7 @@ static int set_mcast_msfilter(struct sock *sk, int ifindex,
- 	struct sockaddr_in *psin;
- 	int err, i;
+@@ -791,7 +791,8 @@ static int ip_set_mcast_msfilter(struct sock *sk, sockptr_t optval, int optlen)
+ 		goto out_free_gsf;
  
--	msf = kmalloc(struct_size(msf, imsf_slist_flex, numsrc), GFP_KERNEL);
-+	msf = kmalloc(IP_MSFILTER_SIZE(numsrc), GFP_KERNEL);
- 	if (!msf)
- 		return -ENOBUFS;
+ 	err = set_mcast_msfilter(sk, gsf->gf_interface, gsf->gf_numsrc,
+-				 gsf->gf_fmode, &gsf->gf_group, gsf->gf_slist);
++				 gsf->gf_fmode, &gsf->gf_group,
++				 gsf->gf_slist_flex);
+ out_free_gsf:
+ 	kfree(gsf);
+ 	return err;
+@@ -800,7 +801,7 @@ static int ip_set_mcast_msfilter(struct sock *sk, sockptr_t optval, int optlen)
+ static int compat_ip_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 		int optlen)
+ {
+-	const int size0 = offsetof(struct compat_group_filter, gf_slist);
++	const int size0 = offsetof(struct compat_group_filter, gf_slist_flex);
+ 	struct compat_group_filter *gf32;
+ 	unsigned int n;
+ 	void *p;
+@@ -814,7 +815,7 @@ static int compat_ip_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 	p = kmalloc(optlen + 4, GFP_KERNEL);
+ 	if (!p)
+ 		return -ENOMEM;
+-	gf32 = p + 4; /* we want ->gf_group and ->gf_slist aligned */
++	gf32 = p + 4; /* we want ->gf_group and ->gf_slist_flex aligned */
  
-@@ -1228,7 +1228,7 @@ static int do_ip_setsockopt(struct sock *sk, int level, int optname,
- 	{
- 		struct ip_msfilter *msf;
+ 	err = -EFAULT;
+ 	if (copy_from_sockptr(gf32, optval, optlen))
+@@ -827,7 +828,7 @@ static int compat_ip_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 		goto out_free_gsf;
  
--		if (optlen < struct_size(msf, imsf_slist_flex, 0))
-+		if (optlen < IP_MSFILTER_SIZE(0))
- 			goto e_inval;
- 		if (optlen > sysctl_optmem_max) {
- 			err = -ENOBUFS;
-@@ -1246,8 +1246,7 @@ static int do_ip_setsockopt(struct sock *sk, int level, int optname,
- 			err = -ENOBUFS;
- 			break;
- 		}
--		if (struct_size(msf, imsf_slist_flex, msf->imsf_numsrc) >
--		    optlen) {
-+		if (IP_MSFILTER_SIZE(msf->imsf_numsrc) > optlen) {
- 			kfree(msf);
- 			err = -EINVAL;
- 			break;
-@@ -1660,12 +1659,11 @@ static int do_ip_getsockopt(struct sock *sk, int level, int optname,
- 	{
- 		struct ip_msfilter msf;
+ 	err = -EINVAL;
+-	if (offsetof(struct compat_group_filter, gf_slist[n]) > optlen)
++	if (offsetof(struct compat_group_filter, gf_slist_flex[n]) > optlen)
+ 		goto out_free_gsf;
  
--		if (len < struct_size(&msf, imsf_slist_flex, 0)) {
-+		if (len < IP_MSFILTER_SIZE(0)) {
- 			err = -EINVAL;
- 			goto out;
- 		}
--		if (copy_from_user(&msf, optval,
--				   struct_size(&msf, imsf_slist_flex, 0))) {
-+		if (copy_from_user(&msf, optval, IP_MSFILTER_SIZE(0))) {
- 			err = -EFAULT;
- 			goto out;
- 		}
+ 	/* numsrc >= (4G-140)/128 overflow in 32 bits */
+@@ -835,7 +836,7 @@ static int compat_ip_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 	if (n > sock_net(sk)->ipv4.sysctl_igmp_max_msf)
+ 		goto out_free_gsf;
+ 	err = set_mcast_msfilter(sk, gf32->gf_interface, n, gf32->gf_fmode,
+-				 &gf32->gf_group, gf32->gf_slist);
++				 &gf32->gf_group, gf32->gf_slist_flex);
+ out_free_gsf:
+ 	kfree(p);
+ 	return err;
+@@ -1456,7 +1457,7 @@ static bool getsockopt_needs_rtnl(int optname)
+ static int ip_get_mcast_msfilter(struct sock *sk, void __user *optval,
+ 		int __user *optlen, int len)
+ {
+-	const int size0 = offsetof(struct group_filter, gf_slist);
++	const int size0 = offsetof(struct group_filter, gf_slist_flex);
+ 	struct group_filter __user *p = optval;
+ 	struct group_filter gsf;
+ 	int num;
+@@ -1468,7 +1469,7 @@ static int ip_get_mcast_msfilter(struct sock *sk, void __user *optval,
+ 		return -EFAULT;
+ 
+ 	num = gsf.gf_numsrc;
+-	err = ip_mc_gsfget(sk, &gsf, p->gf_slist);
++	err = ip_mc_gsfget(sk, &gsf, p->gf_slist_flex);
+ 	if (err)
+ 		return err;
+ 	if (gsf.gf_numsrc < num)
+@@ -1482,7 +1483,7 @@ static int ip_get_mcast_msfilter(struct sock *sk, void __user *optval,
+ static int compat_ip_get_mcast_msfilter(struct sock *sk, void __user *optval,
+ 		int __user *optlen, int len)
+ {
+-	const int size0 = offsetof(struct compat_group_filter, gf_slist);
++	const int size0 = offsetof(struct compat_group_filter, gf_slist_flex);
+ 	struct compat_group_filter __user *p = optval;
+ 	struct compat_group_filter gf32;
+ 	struct group_filter gf;
+@@ -1499,7 +1500,7 @@ static int compat_ip_get_mcast_msfilter(struct sock *sk, void __user *optval,
+ 	num = gf.gf_numsrc = gf32.gf_numsrc;
+ 	gf.gf_group = gf32.gf_group;
+ 
+-	err = ip_mc_gsfget(sk, &gf, p->gf_slist);
++	err = ip_mc_gsfget(sk, &gf, p->gf_slist_flex);
+ 	if (err)
+ 		return err;
+ 	if (gf.gf_numsrc < num)
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index a6804a7e34c1..e4bdb09c5586 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -225,7 +225,7 @@ static int ipv6_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 	if (GROUP_FILTER_SIZE(gsf->gf_numsrc) > optlen)
+ 		goto out_free_gsf;
+ 
+-	ret = ip6_mc_msfilter(sk, gsf, gsf->gf_slist);
++	ret = ip6_mc_msfilter(sk, gsf, gsf->gf_slist_flex);
+ out_free_gsf:
+ 	kfree(gsf);
+ 	return ret;
+@@ -234,7 +234,7 @@ static int ipv6_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ static int compat_ipv6_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 		int optlen)
+ {
+-	const int size0 = offsetof(struct compat_group_filter, gf_slist);
++	const int size0 = offsetof(struct compat_group_filter, gf_slist_flex);
+ 	struct compat_group_filter *gf32;
+ 	void *p;
+ 	int ret;
+@@ -249,7 +249,7 @@ static int compat_ipv6_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 	if (!p)
+ 		return -ENOMEM;
+ 
+-	gf32 = p + 4; /* we want ->gf_group and ->gf_slist aligned */
++	gf32 = p + 4; /* we want ->gf_group and ->gf_slist_flex aligned */
+ 	ret = -EFAULT;
+ 	if (copy_from_sockptr(gf32, optval, optlen))
+ 		goto out_free_p;
+@@ -261,14 +261,14 @@ static int compat_ipv6_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 		goto out_free_p;
+ 
+ 	ret = -EINVAL;
+-	if (offsetof(struct compat_group_filter, gf_slist[n]) > optlen)
++	if (offsetof(struct compat_group_filter, gf_slist_flex[n]) > optlen)
+ 		goto out_free_p;
+ 
+ 	ret = ip6_mc_msfilter(sk, &(struct group_filter){
+ 			.gf_interface = gf32->gf_interface,
+ 			.gf_group = gf32->gf_group,
+ 			.gf_fmode = gf32->gf_fmode,
+-			.gf_numsrc = gf32->gf_numsrc}, gf32->gf_slist);
++			.gf_numsrc = gf32->gf_numsrc}, gf32->gf_slist_flex);
+ 
+ out_free_p:
+ 	kfree(p);
+@@ -1048,7 +1048,7 @@ static int ipv6_getsockopt_sticky(struct sock *sk, struct ipv6_txoptions *opt,
+ static int ipv6_get_msfilter(struct sock *sk, void __user *optval,
+ 		int __user *optlen, int len)
+ {
+-	const int size0 = offsetof(struct group_filter, gf_slist);
++	const int size0 = offsetof(struct group_filter, gf_slist_flex);
+ 	struct group_filter __user *p = optval;
+ 	struct group_filter gsf;
+ 	int num;
+@@ -1062,7 +1062,7 @@ static int ipv6_get_msfilter(struct sock *sk, void __user *optval,
+ 		return -EADDRNOTAVAIL;
+ 	num = gsf.gf_numsrc;
+ 	lock_sock(sk);
+-	err = ip6_mc_msfget(sk, &gsf, p->gf_slist);
++	err = ip6_mc_msfget(sk, &gsf, p->gf_slist_flex);
+ 	if (!err) {
+ 		if (num > gsf.gf_numsrc)
+ 			num = gsf.gf_numsrc;
+@@ -1077,7 +1077,7 @@ static int ipv6_get_msfilter(struct sock *sk, void __user *optval,
+ static int compat_ipv6_get_msfilter(struct sock *sk, void __user *optval,
+ 		int __user *optlen)
+ {
+-	const int size0 = offsetof(struct compat_group_filter, gf_slist);
++	const int size0 = offsetof(struct compat_group_filter, gf_slist_flex);
+ 	struct compat_group_filter __user *p = optval;
+ 	struct compat_group_filter gf32;
+ 	struct group_filter gf;
+@@ -1100,7 +1100,7 @@ static int compat_ipv6_get_msfilter(struct sock *sk, void __user *optval,
+ 		return -EADDRNOTAVAIL;
+ 
+ 	lock_sock(sk);
+-	err = ip6_mc_msfget(sk, &gf, p->gf_slist);
++	err = ip6_mc_msfget(sk, &gf, p->gf_slist_flex);
+ 	release_sock(sk);
+ 	if (err)
+ 		return err;
 -- 
 2.27.0
 
