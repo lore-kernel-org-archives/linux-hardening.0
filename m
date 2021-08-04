@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DD3C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 22:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1587C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 22:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88A7C60FC3
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 22:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE1261078
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 22:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233739AbhHDWYL (ORCPT
+        id S229688AbhHDWfB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 Aug 2021 18:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
+        Wed, 4 Aug 2021 18:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232709AbhHDWYK (ORCPT
+        with ESMTP id S229963AbhHDWfA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 Aug 2021 18:24:10 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6CFC061798
-        for <linux-hardening@vger.kernel.org>; Wed,  4 Aug 2021 15:23:57 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id g5-20020a9d6b050000b02904f21e977c3eso3147038otp.5
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Aug 2021 15:23:57 -0700 (PDT)
+        Wed, 4 Aug 2021 18:35:00 -0400
+Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FC0C061798
+        for <linux-hardening@vger.kernel.org>; Wed,  4 Aug 2021 15:34:46 -0700 (PDT)
+Received: by mail-oo1-xc30.google.com with SMTP id b25-20020a4ac2990000b0290263aab95660so835884ooq.13
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Aug 2021 15:34:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=P0CPMUoEGq9kX0RjyLZJhNu8qld5+9Q37QY3TTkajhU=;
-        b=RKgpdrx6mJl0U7X86Kem7vK58ksGiKltCbcIDfvTfll0rVb9LvwSaP8XMpHHSqFCtR
-         BoCFo6mB0rSnIHWAoNl4jWBkDYn5ymiczVJwtElEXZX0u1M2CXnSpNYC2TXmTsbC5l1P
-         ++6ZUVngztxFgANTywsu6fuirozS07dfGW09c3fzLWlIVwRZk50xgcdfFXPO52ejA3Wd
-         6AnVgpEFDtmnA3kH9DzFYl42FGS989LVxHmVRey1Ea4r+tW/P6iYqVnYfT72HG9W8sOv
-         ZdEvq76a6FeKmWpReWSum3YXP6cnPp/uhoyXuWaQWduOMRfZktqsOnW89TU8QuJ9+ZRk
-         p+ug==
+        bh=UZJcNHJO4LQR36ixWf/ziwUjfQuMb7Mm0UXvd1Hg4gg=;
+        b=tYW3NQDOaoOAmJhieZdnjoNjyaKSHVE6lyBu/OX7HVPsqfng6qLWGieMImgOnYOTJi
+         cYngNaDNRi+IYluKEdjg2VZop0ieSPcf9B+mXmwNjeBrVp1v/38uzGbg7XC8EZm1aFpf
+         tiFQ8nlYg0YZzyumw/O9+hiqvT0Jw8ihLS6nbGMrj7vqKue0Uq1+aldnBbWl7OoZPXuz
+         kqWQZnQISxU2gZWw8cPt8ezEhjDk3bDetIIylfrpL7z3qftYHAcdSCW9pJSXTLw4UY2z
+         6YacG1MWStILNWzVOCNFqRAS0EY3KK/v9lETqF5C99PjApimrc+i7Gj6c0v1XBuA8Z++
+         0qYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=P0CPMUoEGq9kX0RjyLZJhNu8qld5+9Q37QY3TTkajhU=;
-        b=hRQC3kzsisHpb4NNmYSHfuAM3S6CaIdh6QTlZiu9R87RL7P9uRhGjTPLv0I6Q9qQdP
-         jf3Qt8GxjCY+PHPtAhN71Gxs0bRaLL9o2Wddjh53h4WeaG16J/9hvM98p4OSdGVTBwiU
-         T0Iw3McfAYTw0gPHSvwhCf05SFln665eUjb3gEJFYHKf5LucEZtOTGZ1qT8WxAVvnAvY
-         dUsTqB9Kr0Mum+ZEJGo5JsKmUCMMpm898OeQfs7yxam9oX8uhFHVzijvvyxv0UbOnUF8
-         +EK969oAKRsqZR7n1TQLyrEpmGP/7oc2j0zp3VSBpFd9VTTHa4sDCmKBa5Xf2Wguu5fq
-         hetw==
-X-Gm-Message-State: AOAM530cq8HM01Gy/6VqQC/M2m/zACgY6mksFDsygOBNP/oA24S/q6eH
-        luWd/tKY2EMivH53r7OtqkE/HA==
-X-Google-Smtp-Source: ABdhPJy8yLBbnn0sqDPowy4CJHcQSoKCKptt0aGcYQHL01ibu3htRaVO8hHifHBmycXOD+iZlETZ1A==
-X-Received: by 2002:a9d:3e08:: with SMTP id a8mr1366425otd.91.1628115836969;
-        Wed, 04 Aug 2021 15:23:56 -0700 (PDT)
+        bh=UZJcNHJO4LQR36ixWf/ziwUjfQuMb7Mm0UXvd1Hg4gg=;
+        b=VObL96pvsysHDHpRJppT1ui9EwiILpYLkq4Hzbd9yOODH6TKmQpHdTdaTBZStwzoc1
+         hkoC7uyRLhz7aASsOIcg2JwkpHvSGYeNGdzAYsMjW0uHWrUIS7otuRDu9/+MXzNYnDUL
+         T8BN1zFZGoumiST//JDJ6B0qKEgtiveDVBSnyy4AN2DaIvHUcidO8Fgg8e4mmubuSuSa
+         yrRK5QrqLeOVI1MfVtCR0BST6PI+HosoYyqvSNGKoaLkqvzG6I+7eZ+c/1nz1tpx14Wd
+         4+9OWUAbTEH5reu89N1KGO2zQ8n1GEWVaxJsOjcefLAmrYUV9e/9zRHnRohzV0+8rdtu
+         JK5A==
+X-Gm-Message-State: AOAM532PKw1nFiFfryjwvQ0Qtx03MDldt/4rt4xyJ9OqX3lz4LN9XOU4
+        fY7uyA61TuPj4pa9IQN7p73EJQ==
+X-Google-Smtp-Source: ABdhPJzoI974+mp/rfGo+7Xq9nqrA8eJ6Be/tx/TkRzTQ2z3SwevKn0NJ4P732tpLcSoO/FyWG+urg==
+X-Received: by 2002:a4a:d812:: with SMTP id f18mr1073419oov.50.1628116485417;
+        Wed, 04 Aug 2021 15:34:45 -0700 (PDT)
 Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id a19sm696197oic.38.2021.08.04.15.23.56
+        by smtp.gmail.com with ESMTPSA id r15sm455538otn.33.2021.08.04.15.34.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 15:23:56 -0700 (PDT)
-Date:   Wed, 4 Aug 2021 17:23:54 -0500
+        Wed, 04 Aug 2021 15:34:45 -0700 (PDT)
+Date:   Wed, 4 Aug 2021 17:34:43 -0500
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Len Baker <len.baker@gmx.com>
 Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
@@ -70,7 +70,7 @@ Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
         linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v3] drivers/soc: Remove all strcpy() uses
-Message-ID: <YQsTesvLfAwd8z5B@builder.lan>
+Message-ID: <YQsWA0iyol+EWoPd@builder.lan>
 References: <20210801131958.6144-1-len.baker@gmx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -86,19 +86,21 @@ On Sun 01 Aug 08:19 CDT 2021, Len Baker wrote:
 > could result in linear overflows beyond the end of the buffer, leading
 > to all kinds of misbehaviors. The safe replacement is strscpy().
 > 
-
-While this is true, are any of these uses of strcpy affected by its
-shortcomings?
-
 > Moreover, when the size of the destination buffer cannot be obtained
 > using "sizeof", use the memcpy function instead of strscpy.
 > 
-
-This is not why you're using memcpy, you're using it because you _know_
-how many bytes should be copied - because you just did a strlen() and
-allocated that amount of space.
-
 > Signed-off-by: Len Baker <len.baker@gmx.com>
+
+Forgot one thing, it's unclear who should pick this patch up and there's
+definitely a chance that it will cause merge conflicts regardless of
+whom of us end up picking it.
+
+Could you please split it so that the qcom, renesas and ti pieces can be
+picked up by respective maintainer?
+
+Thanks,
+Bjorn
+
 > ---
 > This is a task of the KSPP [1]
 > 
@@ -172,12 +174,6 @@ allocated that amount of space.
 > -		strcpy(req.service_path, pds->service_path);
 > +		strscpy(req.service_path, pds->service_path,
 > +			sizeof(req.service_path));
-
-There's no need to break this line.
-
-Thanks,
-Bjorn
-
 >  		addr = pds->addr;
 >  		break;
 >  	}
