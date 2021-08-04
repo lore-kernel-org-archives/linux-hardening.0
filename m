@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F1DC4338F
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 21:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D50C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 21:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3703760F38
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 21:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC8660F94
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 21:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbhHDVQY (ORCPT
+        id S232749AbhHDVlZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 Aug 2021 17:16:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42724 "EHLO mail.kernel.org"
+        Wed, 4 Aug 2021 17:41:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229910AbhHDVQY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 Aug 2021 17:16:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 511C160EE8;
-        Wed,  4 Aug 2021 21:16:10 +0000 (UTC)
+        id S231893AbhHDVlZ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 4 Aug 2021 17:41:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7BE7360C3F;
+        Wed,  4 Aug 2021 21:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628111770;
-        bh=VXiqPxF0kjv6nWSjkMwVKlsBbYuZtRFsnuWf5zouccE=;
+        s=k20201202; t=1628113272;
+        bh=19rsvQG9EMQz8ZhU8YsqRzqcn4Eqt5DitxY+bamsUcM=;
         h=Date:From:To:Cc:Subject:From;
-        b=hF5WVeKONzt1hdOekY4f2881K2Sh+Ch7vjgKV6wOGs8H/ZI02DdgNePxokRg6nZ2g
-         YtdajtoC+X18GwemzS9BkcDiDCnLPUeaFpRlYCz3DDSl1/a4g8MJ9bN17wdBdwLwCC
-         MLLkT03bB+gYpEji0BT8GHoaOw+dBtJ6oXfRGuxoBGWusX/QfowVexx3mXLa8ZwM5g
-         rysUJxqP6p1h5H2y3viHY5yQtFQPGQ1MZbUVUHSr1+MKltHPns5/vGC1s29gbu6/PJ
-         0ODp45SjlCA63Xds+2sne77khLEs7CtXlD61Ahe0GVAcjaywqq+bgahYDb6eIeZIsp
-         QlxQB8elpYh9w==
-Date:   Wed, 4 Aug 2021 16:18:50 -0500
+        b=JlTvXNk9yjFt4kBLUd2m7/d5ZyfZPTcIYF7Hc9Omr28oBjW62I0Gdd1V/ih/72y+h
+         XKSDdi2e4o6F36xUgFDGD1LK0FAzqkSutClEEsZZYOA1MkEWzk8GX6tbmju4DksBXJ
+         BOHwNy56fXnWQwyoa26p8CT+a8Vc1rXgurUmwUm17XGqa0Neh9WawGnrv2E/zjOR1/
+         CS4iK3w7V1qBFTUZVkHwCUmbTr6fsFeuI/NAsURQSkvtzCp0xIz/0+WXd8UM4L+MUS
+         E62czxYC/LrHuQimjN92RM2A6v23PBIRumwwMwbNB1WmfGRVo7wu8dMqsICo3RC3Fx
+         7kOZ12XC/Znxg==
+Date:   Wed, 4 Aug 2021 16:43:52 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        David Ahern <dsahern@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net/ipv4/igmp: Use struct_size() helper
-Message-ID: <20210804211850.GA42046@embeddedor>
+Subject: [PATCH][next] net/ipv6/mcast: Use struct_size() helper
+Message-ID: <20210804214352.GA46670@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -50,96 +50,96 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace IP_SFLSIZE() with struct_size() helper in order to avoid any
+Replace IP6_SFLSIZE() with struct_size() helper in order to avoid any
 potential type mistakes or integer overflows that, in the worst
 scenario, could lead to heap overflows.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/igmp.h |  3 ---
- net/ipv4/igmp.c      | 20 +++++++++++++-------
+ include/net/if_inet6.h |  3 ---
+ net/ipv6/mcast.c       | 20 +++++++++++++-------
  2 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/igmp.h b/include/linux/igmp.h
-index 64ce8cd1cfaf..93c262ecbdc9 100644
---- a/include/linux/igmp.h
-+++ b/include/linux/igmp.h
-@@ -41,9 +41,6 @@ struct ip_sf_socklist {
- 	__be32			sl_addr[];
+diff --git a/include/net/if_inet6.h b/include/net/if_inet6.h
+index 71bb4cc4d05d..42235c178b06 100644
+--- a/include/net/if_inet6.h
++++ b/include/net/if_inet6.h
+@@ -82,9 +82,6 @@ struct ip6_sf_socklist {
+ 	struct in6_addr		sl_addr[];
  };
  
--#define IP_SFLSIZE(count)	(sizeof(struct ip_sf_socklist) + \
--	(count) * sizeof(__be32))
+-#define IP6_SFLSIZE(count)	(sizeof(struct ip6_sf_socklist) + \
+-	(count) * sizeof(struct in6_addr))
 -
- #define IP_SFBLOCK	10	/* allocate this many at once */
+ #define IP6_SFBLOCK	10	/* allocate this many at once */
  
- /* ip_mc_socklist is real list now. Speed is not argument;
-diff --git a/net/ipv4/igmp.c b/net/ipv4/igmp.c
-index a5f4ecb02e97..cca84d2b13d6 100644
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -2233,7 +2233,7 @@ static int ip_mc_leave_src(struct sock *sk, struct ip_mc_socklist *iml,
- 			iml->sfmode, psf->sl_count, psf->sl_addr, 0);
- 	RCU_INIT_POINTER(iml->sflist, NULL);
- 	/* decrease mem now to avoid the memleak warning */
--	atomic_sub(IP_SFLSIZE(psf->sl_max), &sk->sk_omem_alloc);
-+	atomic_sub(struct_size(psf, sl_addr, psf->sl_max), &sk->sk_omem_alloc);
- 	kfree_rcu(psf, rcu);
- 	return err;
- }
-@@ -2382,7 +2382,8 @@ int ip_mc_source(int add, int omode, struct sock *sk, struct
+ struct ipv6_mc_socklist {
+diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
+index 54ec163fbafa..cd951faa2fac 100644
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -447,7 +447,8 @@ int ip6_mc_source(int add, int omode, struct sock *sk,
  
  		if (psl)
  			count += psl->sl_max;
--		newpsl = sock_kmalloc(sk, IP_SFLSIZE(count), GFP_KERNEL);
+-		newpsl = sock_kmalloc(sk, IP6_SFLSIZE(count), GFP_KERNEL);
 +		newpsl = sock_kmalloc(sk, struct_size(newpsl, sl_addr, count),
 +				      GFP_KERNEL);
  		if (!newpsl) {
  			err = -ENOBUFS;
  			goto done;
-@@ -2393,7 +2394,8 @@ int ip_mc_source(int add, int omode, struct sock *sk, struct
+@@ -457,7 +458,8 @@ int ip6_mc_source(int add, int omode, struct sock *sk,
+ 		if (psl) {
  			for (i = 0; i < psl->sl_count; i++)
  				newpsl->sl_addr[i] = psl->sl_addr[i];
- 			/* decrease mem now to avoid the memleak warning */
--			atomic_sub(IP_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
+-			atomic_sub(IP6_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
 +			atomic_sub(struct_size(psl, sl_addr, psl->sl_max),
 +				   &sk->sk_omem_alloc);
  			kfree_rcu(psl, rcu);
  		}
- 		rcu_assign_pointer(pmc->sflist, newpsl);
-@@ -2468,8 +2470,9 @@ int ip_mc_msfilter(struct sock *sk, struct ip_msfilter *msf, int ifindex)
+ 		psl = newpsl;
+@@ -525,8 +527,9 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
  		goto done;
  	}
- 	if (msf->imsf_numsrc) {
--		newpsl = sock_kmalloc(sk, IP_SFLSIZE(msf->imsf_numsrc),
--							   GFP_KERNEL);
+ 	if (gsf->gf_numsrc) {
+-		newpsl = sock_kmalloc(sk, IP6_SFLSIZE(gsf->gf_numsrc),
+-							  GFP_KERNEL);
 +		newpsl = sock_kmalloc(sk, struct_size(newpsl, sl_addr,
-+						      msf->imsf_numsrc),
++						      gsf->gf_numsrc),
 +				      GFP_KERNEL);
  		if (!newpsl) {
  			err = -ENOBUFS;
  			goto done;
-@@ -2480,7 +2483,9 @@ int ip_mc_msfilter(struct sock *sk, struct ip_msfilter *msf, int ifindex)
- 		err = ip_mc_add_src(in_dev, &msf->imsf_multiaddr,
- 			msf->imsf_fmode, newpsl->sl_count, newpsl->sl_addr, 0);
+@@ -543,7 +546,8 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
+ 				     newpsl->sl_count, newpsl->sl_addr, 0);
  		if (err) {
--			sock_kfree_s(sk, newpsl, IP_SFLSIZE(newpsl->sl_max));
-+			sock_kfree_s(sk, newpsl,
-+				     struct_size(newpsl, sl_addr,
-+						 newpsl->sl_max));
+ 			mutex_unlock(&idev->mc_lock);
+-			sock_kfree_s(sk, newpsl, IP6_SFLSIZE(newpsl->sl_max));
++			sock_kfree_s(sk, newpsl, struct_size(newpsl, sl_addr,
++							     newpsl->sl_max));
  			goto done;
  		}
- 	} else {
-@@ -2493,7 +2498,8 @@ int ip_mc_msfilter(struct sock *sk, struct ip_msfilter *msf, int ifindex)
- 		(void) ip_mc_del_src(in_dev, &msf->imsf_multiaddr, pmc->sfmode,
- 			psl->sl_count, psl->sl_addr, 0);
- 		/* decrease mem now to avoid the memleak warning */
--		atomic_sub(IP_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
+ 		mutex_unlock(&idev->mc_lock);
+@@ -559,7 +563,8 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
+ 	if (psl) {
+ 		ip6_mc_del_src(idev, group, pmc->sfmode,
+ 			       psl->sl_count, psl->sl_addr, 0);
+-		atomic_sub(IP6_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
 +		atomic_sub(struct_size(psl, sl_addr, psl->sl_max),
 +			   &sk->sk_omem_alloc);
  		kfree_rcu(psl, rcu);
- 	} else
- 		(void) ip_mc_del_src(in_dev, &msf->imsf_multiaddr, pmc->sfmode,
+ 	} else {
+ 		ip6_mc_del_src(idev, group, pmc->sfmode, 0, NULL, 0);
+@@ -2607,7 +2612,8 @@ static int ip6_mc_leave_src(struct sock *sk, struct ipv6_mc_socklist *iml,
+ 		err = ip6_mc_del_src(idev, &iml->addr, iml->sfmode,
+ 				     psl->sl_count, psl->sl_addr, 0);
+ 		RCU_INIT_POINTER(iml->sflist, NULL);
+-		atomic_sub(IP6_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
++		atomic_sub(struct_size(psl, sl_addr, psl->sl_max),
++			   &sk->sk_omem_alloc);
+ 		kfree_rcu(psl, rcu);
+ 	}
+ 
 -- 
 2.27.0
 
