@@ -2,144 +2,254 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D50C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 21:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DD3C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 22:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC8660F94
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 21:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A7C60FC3
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Aug 2021 22:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232749AbhHDVlZ (ORCPT
+        id S233739AbhHDWYL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 Aug 2021 17:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231893AbhHDVlZ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 Aug 2021 17:41:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7BE7360C3F;
-        Wed,  4 Aug 2021 21:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628113272;
-        bh=19rsvQG9EMQz8ZhU8YsqRzqcn4Eqt5DitxY+bamsUcM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JlTvXNk9yjFt4kBLUd2m7/d5ZyfZPTcIYF7Hc9Omr28oBjW62I0Gdd1V/ih/72y+h
-         XKSDdi2e4o6F36xUgFDGD1LK0FAzqkSutClEEsZZYOA1MkEWzk8GX6tbmju4DksBXJ
-         BOHwNy56fXnWQwyoa26p8CT+a8Vc1rXgurUmwUm17XGqa0Neh9WawGnrv2E/zjOR1/
-         CS4iK3w7V1qBFTUZVkHwCUmbTr6fsFeuI/NAsURQSkvtzCp0xIz/0+WXd8UM4L+MUS
-         E62czxYC/LrHuQimjN92RM2A6v23PBIRumwwMwbNB1WmfGRVo7wu8dMqsICo3RC3Fx
-         7kOZ12XC/Znxg==
-Date:   Wed, 4 Aug 2021 16:43:52 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net/ipv6/mcast: Use struct_size() helper
-Message-ID: <20210804214352.GA46670@embeddedor>
+        Wed, 4 Aug 2021 18:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232709AbhHDWYK (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 4 Aug 2021 18:24:10 -0400
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6CFC061798
+        for <linux-hardening@vger.kernel.org>; Wed,  4 Aug 2021 15:23:57 -0700 (PDT)
+Received: by mail-ot1-x330.google.com with SMTP id g5-20020a9d6b050000b02904f21e977c3eso3147038otp.5
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Aug 2021 15:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=P0CPMUoEGq9kX0RjyLZJhNu8qld5+9Q37QY3TTkajhU=;
+        b=RKgpdrx6mJl0U7X86Kem7vK58ksGiKltCbcIDfvTfll0rVb9LvwSaP8XMpHHSqFCtR
+         BoCFo6mB0rSnIHWAoNl4jWBkDYn5ymiczVJwtElEXZX0u1M2CXnSpNYC2TXmTsbC5l1P
+         ++6ZUVngztxFgANTywsu6fuirozS07dfGW09c3fzLWlIVwRZk50xgcdfFXPO52ejA3Wd
+         6AnVgpEFDtmnA3kH9DzFYl42FGS989LVxHmVRey1Ea4r+tW/P6iYqVnYfT72HG9W8sOv
+         ZdEvq76a6FeKmWpReWSum3YXP6cnPp/uhoyXuWaQWduOMRfZktqsOnW89TU8QuJ9+ZRk
+         p+ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P0CPMUoEGq9kX0RjyLZJhNu8qld5+9Q37QY3TTkajhU=;
+        b=hRQC3kzsisHpb4NNmYSHfuAM3S6CaIdh6QTlZiu9R87RL7P9uRhGjTPLv0I6Q9qQdP
+         jf3Qt8GxjCY+PHPtAhN71Gxs0bRaLL9o2Wddjh53h4WeaG16J/9hvM98p4OSdGVTBwiU
+         T0Iw3McfAYTw0gPHSvwhCf05SFln665eUjb3gEJFYHKf5LucEZtOTGZ1qT8WxAVvnAvY
+         dUsTqB9Kr0Mum+ZEJGo5JsKmUCMMpm898OeQfs7yxam9oX8uhFHVzijvvyxv0UbOnUF8
+         +EK969oAKRsqZR7n1TQLyrEpmGP/7oc2j0zp3VSBpFd9VTTHa4sDCmKBa5Xf2Wguu5fq
+         hetw==
+X-Gm-Message-State: AOAM530cq8HM01Gy/6VqQC/M2m/zACgY6mksFDsygOBNP/oA24S/q6eH
+        luWd/tKY2EMivH53r7OtqkE/HA==
+X-Google-Smtp-Source: ABdhPJy8yLBbnn0sqDPowy4CJHcQSoKCKptt0aGcYQHL01ibu3htRaVO8hHifHBmycXOD+iZlETZ1A==
+X-Received: by 2002:a9d:3e08:: with SMTP id a8mr1366425otd.91.1628115836969;
+        Wed, 04 Aug 2021 15:23:56 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id a19sm696197oic.38.2021.08.04.15.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Aug 2021 15:23:56 -0700 (PDT)
+Date:   Wed, 4 Aug 2021 17:23:54 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-hardening@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] drivers/soc: Remove all strcpy() uses
+Message-ID: <YQsTesvLfAwd8z5B@builder.lan>
+References: <20210801131958.6144-1-len.baker@gmx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20210801131958.6144-1-len.baker@gmx.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace IP6_SFLSIZE() with struct_size() helper in order to avoid any
-potential type mistakes or integer overflows that, in the worst
-scenario, could lead to heap overflows.
+On Sun 01 Aug 08:19 CDT 2021, Len Baker wrote:
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/net/if_inet6.h |  3 ---
- net/ipv6/mcast.c       | 20 +++++++++++++-------
- 2 files changed, 13 insertions(+), 10 deletions(-)
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors. The safe replacement is strscpy().
+> 
 
-diff --git a/include/net/if_inet6.h b/include/net/if_inet6.h
-index 71bb4cc4d05d..42235c178b06 100644
---- a/include/net/if_inet6.h
-+++ b/include/net/if_inet6.h
-@@ -82,9 +82,6 @@ struct ip6_sf_socklist {
- 	struct in6_addr		sl_addr[];
- };
- 
--#define IP6_SFLSIZE(count)	(sizeof(struct ip6_sf_socklist) + \
--	(count) * sizeof(struct in6_addr))
--
- #define IP6_SFBLOCK	10	/* allocate this many at once */
- 
- struct ipv6_mc_socklist {
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index 54ec163fbafa..cd951faa2fac 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -447,7 +447,8 @@ int ip6_mc_source(int add, int omode, struct sock *sk,
- 
- 		if (psl)
- 			count += psl->sl_max;
--		newpsl = sock_kmalloc(sk, IP6_SFLSIZE(count), GFP_KERNEL);
-+		newpsl = sock_kmalloc(sk, struct_size(newpsl, sl_addr, count),
-+				      GFP_KERNEL);
- 		if (!newpsl) {
- 			err = -ENOBUFS;
- 			goto done;
-@@ -457,7 +458,8 @@ int ip6_mc_source(int add, int omode, struct sock *sk,
- 		if (psl) {
- 			for (i = 0; i < psl->sl_count; i++)
- 				newpsl->sl_addr[i] = psl->sl_addr[i];
--			atomic_sub(IP6_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
-+			atomic_sub(struct_size(psl, sl_addr, psl->sl_max),
-+				   &sk->sk_omem_alloc);
- 			kfree_rcu(psl, rcu);
- 		}
- 		psl = newpsl;
-@@ -525,8 +527,9 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
- 		goto done;
- 	}
- 	if (gsf->gf_numsrc) {
--		newpsl = sock_kmalloc(sk, IP6_SFLSIZE(gsf->gf_numsrc),
--							  GFP_KERNEL);
-+		newpsl = sock_kmalloc(sk, struct_size(newpsl, sl_addr,
-+						      gsf->gf_numsrc),
-+				      GFP_KERNEL);
- 		if (!newpsl) {
- 			err = -ENOBUFS;
- 			goto done;
-@@ -543,7 +546,8 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
- 				     newpsl->sl_count, newpsl->sl_addr, 0);
- 		if (err) {
- 			mutex_unlock(&idev->mc_lock);
--			sock_kfree_s(sk, newpsl, IP6_SFLSIZE(newpsl->sl_max));
-+			sock_kfree_s(sk, newpsl, struct_size(newpsl, sl_addr,
-+							     newpsl->sl_max));
- 			goto done;
- 		}
- 		mutex_unlock(&idev->mc_lock);
-@@ -559,7 +563,8 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
- 	if (psl) {
- 		ip6_mc_del_src(idev, group, pmc->sfmode,
- 			       psl->sl_count, psl->sl_addr, 0);
--		atomic_sub(IP6_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
-+		atomic_sub(struct_size(psl, sl_addr, psl->sl_max),
-+			   &sk->sk_omem_alloc);
- 		kfree_rcu(psl, rcu);
- 	} else {
- 		ip6_mc_del_src(idev, group, pmc->sfmode, 0, NULL, 0);
-@@ -2607,7 +2612,8 @@ static int ip6_mc_leave_src(struct sock *sk, struct ipv6_mc_socklist *iml,
- 		err = ip6_mc_del_src(idev, &iml->addr, iml->sfmode,
- 				     psl->sl_count, psl->sl_addr, 0);
- 		RCU_INIT_POINTER(iml->sflist, NULL);
--		atomic_sub(IP6_SFLSIZE(psl->sl_max), &sk->sk_omem_alloc);
-+		atomic_sub(struct_size(psl, sl_addr, psl->sl_max),
-+			   &sk->sk_omem_alloc);
- 		kfree_rcu(psl, rcu);
- 	}
- 
--- 
-2.27.0
+While this is true, are any of these uses of strcpy affected by its
+shortcomings?
 
+> Moreover, when the size of the destination buffer cannot be obtained
+> using "sizeof", use the memcpy function instead of strscpy.
+> 
+
+This is not why you're using memcpy, you're using it because you _know_
+how many bytes should be copied - because you just did a strlen() and
+allocated that amount of space.
+
+> Signed-off-by: Len Baker <len.baker@gmx.com>
+> ---
+> This is a task of the KSPP [1]
+> 
+> [1] https://github.com/KSPP/linux/issues/88
+> 
+> Changelog v1 -> v2
+> - Change the "area_name_size" variable for a shorter name (Geert
+>   Uytterhoeven).
+> - Add the "Reviewed-by: Geert Uytterhoeven" tag.
+> - Use the memcpy function instead of strscpy function when the
+>   size of the destination buffer cannot be obtained with "sizeof"
+>   (David Laight, Robin Murphy).
+> 
+> Changelog v2 -> v3
+> - Remove the "Reviewed-by: Geert Uytterhoeven" tag since the code
+>   has changed after the v1 review (use of memcpy instead of
+>   strscpy).
+> 
+>  drivers/soc/qcom/pdr_interface.c    | 13 +++++++------
+>  drivers/soc/renesas/r8a779a0-sysc.c |  6 ++++--
+>  drivers/soc/renesas/rcar-sysc.c     |  6 ++++--
+>  drivers/soc/ti/knav_dma.c           |  2 +-
+>  4 files changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+> index 915d5bc3d46e..cf119fde749d 100644
+> --- a/drivers/soc/qcom/pdr_interface.c
+> +++ b/drivers/soc/qcom/pdr_interface.c
+> @@ -131,7 +131,7 @@ static int pdr_register_listener(struct pdr_handle *pdr,
+>  		return ret;
+> 
+>  	req.enable = enable;
+> -	strcpy(req.service_path, pds->service_path);
+> +	strscpy(req.service_path, pds->service_path, sizeof(req.service_path));
+> 
+>  	ret = qmi_send_request(&pdr->notifier_hdl, &pds->addr,
+>  			       &txn, SERVREG_REGISTER_LISTENER_REQ,
+> @@ -257,7 +257,7 @@ static int pdr_send_indack_msg(struct pdr_handle *pdr, struct pdr_service *pds,
+>  		return ret;
+> 
+>  	req.transaction_id = tid;
+> -	strcpy(req.service_path, pds->service_path);
+> +	strscpy(req.service_path, pds->service_path, sizeof(req.service_path));
+> 
+>  	ret = qmi_send_request(&pdr->notifier_hdl, &pds->addr,
+>  			       &txn, SERVREG_SET_ACK_REQ,
+> @@ -406,7 +406,7 @@ static int pdr_locate_service(struct pdr_handle *pdr, struct pdr_service *pds)
+>  		return -ENOMEM;
+> 
+>  	/* Prepare req message */
+> -	strcpy(req.service_name, pds->service_name);
+> +	strscpy(req.service_name, pds->service_name, sizeof(req.service_name));
+>  	req.domain_offset_valid = true;
+>  	req.domain_offset = 0;
+> 
+> @@ -531,8 +531,8 @@ struct pdr_service *pdr_add_lookup(struct pdr_handle *pdr,
+>  		return ERR_PTR(-ENOMEM);
+> 
+>  	pds->service = SERVREG_NOTIFIER_SERVICE;
+> -	strcpy(pds->service_name, service_name);
+> -	strcpy(pds->service_path, service_path);
+> +	strscpy(pds->service_name, service_name, sizeof(pds->service_name));
+> +	strscpy(pds->service_path, service_path, sizeof(pds->service_path));
+>  	pds->need_locator_lookup = true;
+> 
+>  	mutex_lock(&pdr->list_lock);
+> @@ -587,7 +587,8 @@ int pdr_restart_pd(struct pdr_handle *pdr, struct pdr_service *pds)
+>  			break;
+> 
+>  		/* Prepare req message */
+> -		strcpy(req.service_path, pds->service_path);
+> +		strscpy(req.service_path, pds->service_path,
+> +			sizeof(req.service_path));
+
+There's no need to break this line.
+
+Thanks,
+Bjorn
+
+>  		addr = pds->addr;
+>  		break;
+>  	}
+> diff --git a/drivers/soc/renesas/r8a779a0-sysc.c b/drivers/soc/renesas/r8a779a0-sysc.c
+> index d464ffa1be33..7410b9fa9846 100644
+> --- a/drivers/soc/renesas/r8a779a0-sysc.c
+> +++ b/drivers/soc/renesas/r8a779a0-sysc.c
+> @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
+>  	for (i = 0; i < info->num_areas; i++) {
+>  		const struct r8a779a0_sysc_area *area = &info->areas[i];
+>  		struct r8a779a0_sysc_pd *pd;
+> +		size_t n;
+> 
+>  		if (!area->name) {
+>  			/* Skip NULLified area */
+>  			continue;
+>  		}
+> 
+> -		pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
+> +		n = strlen(area->name) + 1;
+> +		pd = kzalloc(sizeof(*pd) + n, GFP_KERNEL);
+>  		if (!pd) {
+>  			error = -ENOMEM;
+>  			goto out_put;
+>  		}
+> 
+> -		strcpy(pd->name, area->name);
+> +		memcpy(pd->name, area->name, n);
+>  		pd->genpd.name = pd->name;
+>  		pd->pdr = area->pdr;
+>  		pd->flags = area->flags;
+> diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
+> index 53387a72ca00..b0a80de34c98 100644
+> --- a/drivers/soc/renesas/rcar-sysc.c
+> +++ b/drivers/soc/renesas/rcar-sysc.c
+> @@ -396,19 +396,21 @@ static int __init rcar_sysc_pd_init(void)
+>  	for (i = 0; i < info->num_areas; i++) {
+>  		const struct rcar_sysc_area *area = &info->areas[i];
+>  		struct rcar_sysc_pd *pd;
+> +		size_t n;
+> 
+>  		if (!area->name) {
+>  			/* Skip NULLified area */
+>  			continue;
+>  		}
+> 
+> -		pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
+> +		n = strlen(area->name) + 1;
+> +		pd = kzalloc(sizeof(*pd) + n, GFP_KERNEL);
+>  		if (!pd) {
+>  			error = -ENOMEM;
+>  			goto out_put;
+>  		}
+> 
+> -		strcpy(pd->name, area->name);
+> +		memcpy(pd->name, area->name, n);
+>  		pd->genpd.name = pd->name;
+>  		pd->ch.chan_offs = area->chan_offs;
+>  		pd->ch.chan_bit = area->chan_bit;
+> diff --git a/drivers/soc/ti/knav_dma.c b/drivers/soc/ti/knav_dma.c
+> index 591d14ebcb11..5f9816d317a5 100644
+> --- a/drivers/soc/ti/knav_dma.c
+> +++ b/drivers/soc/ti/knav_dma.c
+> @@ -691,7 +691,7 @@ static int dma_init(struct device_node *cloud, struct device_node *dma_node)
+>  	dma->max_rx_flow = max_rx_flow;
+>  	dma->max_tx_chan = min(max_tx_chan, max_tx_sched);
+>  	atomic_set(&dma->ref_count, 0);
+> -	strcpy(dma->name, node->name);
+> +	strscpy(dma->name, node->name, sizeof(dma->name));
+>  	spin_lock_init(&dma->lock);
+> 
+>  	for (i = 0; i < dma->max_tx_chan; i++) {
+> --
+> 2.25.1
+> 
