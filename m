@@ -7,54 +7,55 @@ X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACDCC4338F
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1037FC4338F
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0E96104F
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BF8610A8
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231775AbhHEJ1a (ORCPT
+        id S236120AbhHEJem (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Aug 2021 05:27:30 -0400
-Received: from pegase2.c-s.fr ([93.17.235.10]:49545 "EHLO pegase2.c-s.fr"
+        Thu, 5 Aug 2021 05:34:42 -0400
+Received: from pegase2.c-s.fr ([93.17.235.10]:48257 "EHLO pegase2.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229913AbhHEJ1a (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Aug 2021 05:27:30 -0400
+        id S231775AbhHEJel (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 5 Aug 2021 05:34:41 -0400
 Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-        by localhost (Postfix) with ESMTP id 4GgNYG4hVXz9sWd;
-        Thu,  5 Aug 2021 11:27:14 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4GgNjZ5kr3z9sWG;
+        Thu,  5 Aug 2021 11:34:26 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase2.c-s.fr ([172.26.127.65])
         by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jLOPeGASC_u0; Thu,  5 Aug 2021 11:27:14 +0200 (CEST)
+        with ESMTP id kLFCP15Z8Qrl; Thu,  5 Aug 2021 11:34:26 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase2.c-s.fr (Postfix) with ESMTP id 4GgNYG3dHvz9sWL;
-        Thu,  5 Aug 2021 11:27:14 +0200 (CEST)
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4GgNjZ4hSBz9sWW;
+        Thu,  5 Aug 2021 11:34:26 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 459488B7C1;
-        Thu,  5 Aug 2021 11:27:14 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 851A48B7BD;
+        Thu,  5 Aug 2021 11:34:26 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id of4fuNahxMWp; Thu,  5 Aug 2021 11:27:14 +0200 (CEST)
+        with ESMTP id liNPilBVWVym; Thu,  5 Aug 2021 11:34:26 +0200 (CEST)
 Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 98C118B7BD;
-        Thu,  5 Aug 2021 11:27:13 +0200 (CEST)
-Subject: Re: [PATCH v5 5/8] powerpc/64s: Introduce temporary mm for Radix MMU
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D96588B7C2;
+        Thu,  5 Aug 2021 11:34:25 +0200 (CEST)
+Subject: Re: [PATCH v5 6/8] powerpc: Rework and improve STRICT_KERNEL_RWX
+ patching
 To:     "Christopher M. Riedl" <cmr@linux.ibm.com>,
         linuxppc-dev@lists.ozlabs.org
 Cc:     keescook@chromium.org, peterz@infradead.org, x86@kernel.org,
         npiggin@gmail.com, linux-hardening@vger.kernel.org,
         tglx@linutronix.de, dja@axtens.net
 References: <20210713053113.4632-1-cmr@linux.ibm.com>
- <20210713053113.4632-6-cmr@linux.ibm.com>
+ <20210713053113.4632-7-cmr@linux.ibm.com>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <c8b2291e-57f9-6d9a-583e-4ec65b2c9bcb@csgroup.eu>
-Date:   Thu, 5 Aug 2021 11:27:11 +0200
+Message-ID: <9c53e997-3609-20f8-74c0-7776c867ce6c@csgroup.eu>
+Date:   Thu, 5 Aug 2021 11:34:25 +0200
 User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20210713053113.4632-6-cmr@linux.ibm.com>
+In-Reply-To: <20210713053113.4632-7-cmr@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: fr
 Content-Transfer-Encoding: 8bit
@@ -65,161 +66,169 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 Le 13/07/2021 à 07:31, Christopher M. Riedl a écrit :
-> x86 supports the notion of a temporary mm which restricts access to
-> temporary PTEs to a single CPU. A temporary mm is useful for situations
-> where a CPU needs to perform sensitive operations (such as patching a
-> STRICT_KERNEL_RWX kernel) requiring temporary mappings without exposing
-> said mappings to other CPUs. Another benefit is that other CPU TLBs do
-> not need to be flushed when the temporary mm is torn down.
-> 
-> Mappings in the temporary mm can be set in the userspace portion of the
-> address-space.
-> 
-> Interrupts must be disabled while the temporary mm is in use. HW
-> breakpoints, which may have been set by userspace as watchpoints on
-> addresses now within the temporary mm, are saved and disabled when
-> loading the temporary mm. The HW breakpoints are restored when unloading
-> the temporary mm. All HW breakpoints are indiscriminately disabled while
-> the temporary mm is in use.
-
-Can you explain more about that breakpoint stuff ? Why is it a special case here at all ? Isn't it 
-the same when you switch from one user task to another one ? x86 commit doesn't say anythink about 
-breakpoints.
-
-> 
-> Based on x86 implementation:
-> 
-> commit cefa929c034e
-> ("x86/mm: Introduce temporary mm structs")
+> Rework code-patching with STRICT_KERNEL_RWX to prepare for the next
+> patch which uses a temporary mm for patching under the Book3s64 Radix
+> MMU. Make improvements by adding a WARN_ON when the patchsite doesn't
+> match after patching and return the error from __patch_instruction()
+> properly.
 > 
 > Signed-off-by: Christopher M. Riedl <cmr@linux.ibm.com>
 > 
 > ---
 > 
-> v5:  * Drop support for using a temporary mm on Book3s64 Hash MMU.
-> 
-> v4:  * Pass the prev mm instead of NULL to switch_mm_irqs_off() when
->         using/unusing the temp mm as suggested by Jann Horn to keep
->         the context.active counter in-sync on mm/nohash.
->       * Disable SLB preload in the temporary mm when initializing the
->         temp_mm struct.
->       * Include asm/debug.h header to fix build issue with
->         ppc44x_defconfig.
+> v5:  * New to series.
 > ---
->   arch/powerpc/include/asm/debug.h |  1 +
->   arch/powerpc/kernel/process.c    |  5 +++
->   arch/powerpc/lib/code-patching.c | 56 ++++++++++++++++++++++++++++++++
->   3 files changed, 62 insertions(+)
+>   arch/powerpc/lib/code-patching.c | 51 +++++++++++++++++---------------
+>   1 file changed, 27 insertions(+), 24 deletions(-)
 > 
-> diff --git a/arch/powerpc/include/asm/debug.h b/arch/powerpc/include/asm/debug.h
-> index 86a14736c76c3..dfd82635ea8b3 100644
-> --- a/arch/powerpc/include/asm/debug.h
-> +++ b/arch/powerpc/include/asm/debug.h
-> @@ -46,6 +46,7 @@ static inline int debugger_fault_handler(struct pt_regs *regs) { return 0; }
+> diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+> index 3122d8e4cc013..9f2eba9b70ee4 100644
+> --- a/arch/powerpc/lib/code-patching.c
+> +++ b/arch/powerpc/lib/code-patching.c
+> @@ -102,11 +102,12 @@ static inline void unuse_temporary_mm(struct temp_mm *temp_mm)
+>   }
+>   
+>   static DEFINE_PER_CPU(struct vm_struct *, text_poke_area);
+> +static DEFINE_PER_CPU(unsigned long, cpu_patching_addr);
+>   
+>   #if IS_BUILTIN(CONFIG_LKDTM)
+>   unsigned long read_cpu_patching_addr(unsigned int cpu)
+>   {
+> -	return (unsigned long)(per_cpu(text_poke_area, cpu))->addr;
+> +	return per_cpu(cpu_patching_addr, cpu);
+>   }
 >   #endif
 >   
->   void __set_breakpoint(int nr, struct arch_hw_breakpoint *brk);
-> +void __get_breakpoint(int nr, struct arch_hw_breakpoint *brk);
->   bool ppc_breakpoint_available(void);
->   #ifdef CONFIG_PPC_ADV_DEBUG_REGS
->   extern void do_send_trap(struct pt_regs *regs, unsigned long address,
-> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-> index 185beb2905801..a0776200772e8 100644
-> --- a/arch/powerpc/kernel/process.c
-> +++ b/arch/powerpc/kernel/process.c
-> @@ -865,6 +865,11 @@ static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
+> @@ -121,6 +122,7 @@ static int text_area_cpu_up(unsigned int cpu)
+>   		return -1;
+>   	}
+>   	this_cpu_write(text_poke_area, area);
+> +	this_cpu_write(cpu_patching_addr, (unsigned long)area->addr);
+>   
+>   	return 0;
+>   }
+> @@ -146,7 +148,7 @@ void __init poking_init(void)
+>   /*
+>    * This can be called for kernel text or a module.
+>    */
+> -static int map_patch_area(void *addr, unsigned long text_poke_addr)
+> +static int map_patch_area(void *addr)
+>   {
+>   	unsigned long pfn;
+>   	int err;
+> @@ -156,17 +158,20 @@ static int map_patch_area(void *addr, unsigned long text_poke_addr)
+>   	else
+>   		pfn = __pa_symbol(addr) >> PAGE_SHIFT;
+>   
+> -	err = map_kernel_page(text_poke_addr, (pfn << PAGE_SHIFT), PAGE_KERNEL);
+> +	err = map_kernel_page(__this_cpu_read(cpu_patching_addr),
+> +			      (pfn << PAGE_SHIFT), PAGE_KERNEL);
+>   
+> -	pr_devel("Mapped addr %lx with pfn %lx:%d\n", text_poke_addr, pfn, err);
+> +	pr_devel("Mapped addr %lx with pfn %lx:%d\n",
+> +		 __this_cpu_read(cpu_patching_addr), pfn, err);
+>   	if (err)
+>   		return -1;
+>   
 >   	return 0;
 >   }
 >   
-> +void __get_breakpoint(int nr, struct arch_hw_breakpoint *brk)
-> +{
-> +	memcpy(brk, this_cpu_ptr(&current_brk[nr]), sizeof(*brk));
-> +}
-> +
->   void __set_breakpoint(int nr, struct arch_hw_breakpoint *brk)
+> -static inline int unmap_patch_area(unsigned long addr)
+> +static inline int unmap_patch_area(void)
 >   {
->   	memcpy(this_cpu_ptr(&current_brk[nr]), brk, sizeof(*brk));
-> diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
-> index 54b6157d44e95..3122d8e4cc013 100644
-> --- a/arch/powerpc/lib/code-patching.c
-> +++ b/arch/powerpc/lib/code-patching.c
-> @@ -17,6 +17,9 @@
->   #include <asm/code-patching.h>
->   #include <asm/setup.h>
->   #include <asm/inst.h>
-> +#include <asm/mmu_context.h>
-> +#include <asm/debug.h>
-> +#include <asm/tlb.h>
+> +	unsigned long addr = __this_cpu_read(cpu_patching_addr);
+>   	pte_t *ptep;
+>   	pmd_t *pmdp;
+>   	pud_t *pudp;
+> @@ -175,23 +180,23 @@ static inline int unmap_patch_area(unsigned long addr)
 >   
->   static int __patch_instruction(u32 *exec_addr, struct ppc_inst instr, u32 *patch_addr)
->   {
-> @@ -45,6 +48,59 @@ int raw_patch_instruction(u32 *addr, struct ppc_inst instr)
+>   	pgdp = pgd_offset_k(addr);
+>   	if (unlikely(!pgdp))
+> -		return -EINVAL;
+> +		goto out_err;
+>   
+>   	p4dp = p4d_offset(pgdp, addr);
+>   	if (unlikely(!p4dp))
+> -		return -EINVAL;
+> +		goto out_err;
+>   
+>   	pudp = pud_offset(p4dp, addr);
+>   	if (unlikely(!pudp))
+> -		return -EINVAL;
+> +		goto out_err;
+>   
+>   	pmdp = pmd_offset(pudp, addr);
+>   	if (unlikely(!pmdp))
+> -		return -EINVAL;
+> +		goto out_err;
+>   
+>   	ptep = pte_offset_kernel(pmdp, addr);
+>   	if (unlikely(!ptep))
+> -		return -EINVAL;
+> +		goto out_err;
+>   
+>   	pr_devel("clearing mm %p, pte %p, addr %lx\n", &init_mm, ptep, addr);
+>   
+> @@ -202,15 +207,17 @@ static inline int unmap_patch_area(unsigned long addr)
+>   	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>   
+>   	return 0;
+> +
+> +out_err:
+> +	pr_warn("failed to unmap %lx\n", addr);
+> +	return -EINVAL;
+
+Can you keep that in the caller of unmap_patch_area() instead of all those goto stuff ?
+
 >   }
 >   
->   #ifdef CONFIG_STRICT_KERNEL_RWX
-> +
-> +struct temp_mm {
-> +	struct mm_struct *temp;
-> +	struct mm_struct *prev;
-> +	struct arch_hw_breakpoint brk[HBP_NUM_MAX];
-> +};
-> +
-> +static inline void init_temp_mm(struct temp_mm *temp_mm, struct mm_struct *mm)
-> +{
-> +	/* We currently only support temporary mm on the Book3s64 Radix MMU */
-> +	WARN_ON(!radix_enabled());
-> +
-> +	temp_mm->temp = mm;
-> +	temp_mm->prev = NULL;
-> +	memset(&temp_mm->brk, 0, sizeof(temp_mm->brk));
-> +}
-> +
-> +static inline void use_temporary_mm(struct temp_mm *temp_mm)
-> +{
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	temp_mm->prev = current->active_mm;
-> +	switch_mm_irqs_off(temp_mm->prev, temp_mm->temp, current);
-> +
-> +	WARN_ON(!mm_is_thread_local(temp_mm->temp));
-> +
-> +	if (ppc_breakpoint_available()) {
-> +		struct arch_hw_breakpoint null_brk = {0};
-> +		int i = 0;
-> +
-> +		for (; i < nr_wp_slots(); ++i) {
-> +			__get_breakpoint(i, &temp_mm->brk[i]);
-> +			if (temp_mm->brk[i].type != 0)
-> +				__set_breakpoint(i, &null_brk);
-> +		}
-> +	}
-> +}
-> +
-> +static inline void unuse_temporary_mm(struct temp_mm *temp_mm)
-
-not sure about the naming.
-
-Maybe start_using_temp_mm() and stop_using_temp_mm() would be more explicit.
-
-
-> +{
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	switch_mm_irqs_off(temp_mm->temp, temp_mm->prev, current);
-> +
-> +	if (ppc_breakpoint_available()) {
-> +		int i = 0;
-> +
-> +		for (; i < nr_wp_slots(); ++i)
-> +			if (temp_mm->brk[i].type != 0)
-> +				__set_breakpoint(i, &temp_mm->brk[i]);
-> +	}
-> +}
-> +
->   static DEFINE_PER_CPU(struct vm_struct *, text_poke_area);
+>   static int do_patch_instruction(u32 *addr, struct ppc_inst instr)
+>   {
+> -	int err;
+> +	int err, rc = 0;
+>   	u32 *patch_addr = NULL;
+>   	unsigned long flags;
+> -	unsigned long text_poke_addr;
+> -	unsigned long kaddr = (unsigned long)addr;
 >   
->   #if IS_BUILTIN(CONFIG_LKDTM)
-> 
+>   	/*
+>   	 * During early early boot patch_instruction is called
+> @@ -222,24 +229,20 @@ static int do_patch_instruction(u32 *addr, struct ppc_inst instr)
+>   
+>   	local_irq_save(flags);
+>   
+> -	text_poke_addr = (unsigned long)__this_cpu_read(text_poke_area)->addr;
+> -	if (map_patch_area(addr, text_poke_addr)) {
+> -		err = -1;
+> +	err = map_patch_area(addr);
+> +	if (err)
+>   		goto out;
+> -	}
+> -
+> -	patch_addr = (u32 *)(text_poke_addr + (kaddr & ~PAGE_MASK));
+>   
+> -	__patch_instruction(addr, instr, patch_addr);
+> +	patch_addr = (u32 *)(__this_cpu_read(cpu_patching_addr) | offset_in_page(addr));
+> +	rc = __patch_instruction(addr, instr, patch_addr);
+>   
+> -	err = unmap_patch_area(text_poke_addr);
+> -	if (err)
+> -		pr_warn("failed to unmap %lx\n", text_poke_addr);
+> +	err = unmap_patch_area();
+>   
+>   out:
+>   	local_irq_restore(flags);
+> +	WARN_ON(!ppc_inst_equal(ppc_inst_read(addr), instr));
 
-You'll probably get a bisecting hasard with those unused 'static inline' functions in a .c file 
-because that patch alone probably fails build.
+Why adding that WARN_ON(), what could make that happen that is worth a WARN_ON() ?
+
+Patching is quite a critical fast path, I'm not sure we want to afford too many checks during 
+patching, we want it quick at first.
+
+>   
+> -	return err;
+> +	return rc ? rc : err;
+>   }
+>   #else /* !CONFIG_STRICT_KERNEL_RWX */
+>   
+> 
