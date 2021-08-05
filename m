@@ -3,58 +3,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E634AC4338F
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D473C4320A
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D27266104F
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611E56104F
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239829AbhHEJSY (ORCPT
+        id S232046AbhHEJUc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Aug 2021 05:18:24 -0400
-Received: from pegase2.c-s.fr ([93.17.235.10]:56653 "EHLO pegase2.c-s.fr"
+        Thu, 5 Aug 2021 05:20:32 -0400
+Received: from pegase2.c-s.fr ([93.17.235.10]:43861 "EHLO pegase2.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239918AbhHEJSW (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Aug 2021 05:18:22 -0400
+        id S232182AbhHEJUb (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 5 Aug 2021 05:20:31 -0400
 Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-        by localhost (Postfix) with ESMTP id 4GgNLl4K04z9sWJ;
-        Thu,  5 Aug 2021 11:18:07 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4GgN1g2Hqlz9sWG;
+        Thu,  5 Aug 2021 11:03:19 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase2.c-s.fr ([172.26.127.65])
         by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id u8DIUV7I5wGA; Thu,  5 Aug 2021 11:18:07 +0200 (CEST)
+        with ESMTP id sdqix22qHvS0; Thu,  5 Aug 2021 11:03:19 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase2.c-s.fr (Postfix) with ESMTP id 4GgNLl3KK1z9sWH;
-        Thu,  5 Aug 2021 11:18:07 +0200 (CEST)
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4GgN1g13l5z9sWF;
+        Thu,  5 Aug 2021 11:03:19 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 525F78B7BF;
-        Thu,  5 Aug 2021 11:18:07 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ED34F8B7BE;
+        Thu,  5 Aug 2021 11:03:18 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 0W9Kg7YB8_OZ; Thu,  5 Aug 2021 11:18:07 +0200 (CEST)
+        with ESMTP id RauWxehkW-8Y; Thu,  5 Aug 2021 11:03:18 +0200 (CEST)
 Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C02128B7BE;
-        Thu,  5 Aug 2021 11:18:06 +0200 (CEST)
-Subject: Re: [PATCH v5 8/8] lkdtm/powerpc: Fix code patching hijack test
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3E2618B7BD;
+        Thu,  5 Aug 2021 11:03:18 +0200 (CEST)
+Subject: Re: [PATCH v5 0/8] Use per-CPU temporary mappings for patching on
+ Radix MMU
 To:     "Christopher M. Riedl" <cmr@linux.ibm.com>,
         linuxppc-dev@lists.ozlabs.org
 Cc:     keescook@chromium.org, peterz@infradead.org, x86@kernel.org,
         npiggin@gmail.com, linux-hardening@vger.kernel.org,
         tglx@linutronix.de, dja@axtens.net
 References: <20210713053113.4632-1-cmr@linux.ibm.com>
- <20210713053113.4632-9-cmr@linux.ibm.com>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <7a6c97ed-815b-49fc-5568-ab4420f53122@csgroup.eu>
-Date:   Thu, 5 Aug 2021 11:18:04 +0200
+Message-ID: <0c3cb140-23ad-0eb6-7df9-633aa51a097c@csgroup.eu>
+Date:   Thu, 5 Aug 2021 11:03:16 +0200
 User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20210713053113.4632-9-cmr@linux.ibm.com>
+In-Reply-To: <20210713053113.4632-1-cmr@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: fr
 Content-Transfer-Encoding: 8bit
@@ -65,48 +65,148 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 Le 13/07/2021 à 07:31, Christopher M. Riedl a écrit :
-> Code patching on powerpc with a STRICT_KERNEL_RWX uses a userspace
-> address in a temporary mm on Radix now. Use __put_user() to avoid write
-> failures due to KUAP when attempting a "hijack" on the patching address.
-> __put_user() also works with the non-userspace, vmalloc-based patching
-> address on non-Radix MMUs.
+> When compiled with CONFIG_STRICT_KERNEL_RWX, the kernel must create
+> temporary mappings when patching itself. These mappings temporarily
+> override the strict RWX text protections to permit a write. Currently,
+> powerpc allocates a per-CPU VM area for patching. Patching occurs as
+> follows:
+> 
+> 	1. Map page in per-CPU VM area w/ PAGE_KERNEL protection
+> 	2. Patch text
+> 	3. Remove the temporary mapping
+> 
+> While the VM area is per-CPU, the mapping is actually inserted into the
+> kernel page tables. Presumably, this could allow another CPU to access
+> the normally write-protected text - either malicously or accidentally -
+> via this same mapping if the address of the VM area is known. Ideally,
+> the mapping should be kept local to the CPU doing the patching [0].
+> 
+> x86 introduced "temporary mm" structs which allow the creation of mappings
+> local to a particular CPU [1]. This series intends to bring the notion of a
+> temporary mm to powerpc's Book3s64 Radix MMU and harden it by using such a
+> mapping for patching a kernel with strict RWX permissions.
+> 
+> The first four patches implement an LKDTM test "proof-of-concept" which
+> exploits the potential vulnerability (ie. the temporary mapping during patching
+> is exposed in the kernel page tables and accessible by other CPUs) using a
+> simple brute-force approach. This test is implemented for both powerpc and
+> x86_64. The test passes on powerpc Radix with this new series, fails on
+> upstream powerpc, passes on upstream x86_64, and fails on an older (ancient)
+> x86_64 tree without the x86_64 temporary mm patches. The remaining patches add
+> support for and use a temporary mm for code patching on powerpc with the Radix
+> MMU.
 
-It is not really clean to use __put_user() on non user address, allthought it works by change.
-
-I think it would be better to do something like
-
-	if (is_kernel_addr(addr))
-		copy_to_kernel_nofault(...);
-	else
-		copy_to_user_nofault(...);
-
-
+I think four first patches (together with last one) are quite independent from the heart of the 
+series itself which is patches 5, 6, 7. Maybe you should split that series it two series ? After all 
+those selftests are nice to have but are not absolutely necessary, that would help getting forward I 
+think.
 
 > 
-> Signed-off-by: Christopher M. Riedl <cmr@linux.ibm.com>
-> ---
->   drivers/misc/lkdtm/perms.c | 9 ---------
->   1 file changed, 9 deletions(-)
+> Tested boot, ftrace, and repeated LKDTM "hijack":
+> 	- QEMU+KVM (host: POWER9 Blackbird): Radix MMU w/ KUAP
+> 	- QEMU+KVM (host: POWER9 Blackbird): Hash MMU
 > 
-> diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
-> index 41e87e5f9cc86..da6a34a0a49fb 100644
-> --- a/drivers/misc/lkdtm/perms.c
-> +++ b/drivers/misc/lkdtm/perms.c
-> @@ -262,16 +262,7 @@ static inline u32 lkdtm_read_patch_site(void)
->   /* Returns True if the write succeeds */
->   static inline bool lkdtm_try_write(u32 data, u32 *addr)
->   {
-> -#ifdef CONFIG_PPC
-> -	__put_kernel_nofault(addr, &data, u32, err);
-> -	return true;
-> -
-> -err:
-> -	return false;
-> -#endif
-> -#ifdef CONFIG_X86_64
->   	return !__put_user(data, addr);
-> -#endif
->   }
->   
->   static int lkdtm_patching_cpu(void *data)
+> Tested repeated LKDTM "hijack":
+> 	- QEMU+KVM (host: AMD desktop): x86_64 upstream
+> 	- QEMU+KVM (host: AMD desktop): x86_64 w/o percpu temp mm to
+> 	  verify the LKDTM "hijack" test fails
+> 
+> Tested boot and ftrace:
+> 	- QEMU+TCG: ppc44x (bamboo)
+> 	- QEMU+TCG: g5 (mac99)
+> 
+> I also tested with various extra config options enabled as suggested in
+> section 12) in Documentation/process/submit-checklist.rst.
+> 
+> v5:	* Only support Book3s64 Radix MMU for now. There are some issues with
+> 	  the previous implementation on the Hash MMU as pointed out by Nick
+> 	  Piggin. Fixing these is not trivial so we only support the Radix MMU
+> 	  for now. I tried using realmode (no data translation) to patch with
+> 	  Hash to at least avoid exposing the patch mapping to other CPUs but
+> 	  this doesn't reliably work either since we cannot access vmalloc'd
+> 	  space in realmode.
+
+So you now accept to have two different mode depending on the platform ?
+As far as I remember I commented some time ago that non SMP didn't need that feature and you were 
+reluctant to have two different implementations. What made you change your mind ? (just curious).
+
+
+> 	* Use percpu variables for the patching_mm and patching_addr. This
+> 	  avoids the need for synchronization mechanisms entirely. Thanks to
+> 	  Peter Zijlstra for pointing out text_mutex which unfortunately didn't
+> 	  work out without larger code changes in powerpc. Also thanks to Daniel
+> 	  Axtens for comments about using percpu variables for the *percpu* temp
+> 	  mm things off list.
+> 
+> v4:	* It's time to revisit this series again since @jpn and @mpe fixed
+> 	  our known STRICT_*_RWX bugs on powerpc/64s.
+> 	* Rebase on linuxppc/next:
+>            commit ee1bc694fbaec ("powerpc/kvm: Fix build error when PPC_MEM_KEYS/PPC_PSERIES=n")
+> 	* Completely rework how map_patch() works on book3s64 Hash MMU
+> 	* Split the LKDTM x86_64 and powerpc bits into separate patches
+> 	* Annotate commit messages with changes from v3 instead of
+> 	  listing them here completely out-of context...
+> 
+> v3:	* Rebase on linuxppc/next: commit 9123e3a74ec7 ("Linux 5.9-rc1")
+> 	* Move temporary mm implementation into code-patching.c where it
+> 	  belongs
+> 	* Implement LKDTM hijacker test on x86_64 (on IBM time oof) Do
+> 	* not use address zero for the patching address in the
+> 	  temporary mm (thanks @dja for pointing this out!)
+> 	* Wrap the LKDTM test w/ CONFIG_SMP as suggested by Christophe
+> 	  Leroy
+> 	* Comments to clarify PTE pre-allocation and patching addr
+> 	  selection
+> 
+> v2:	* Rebase on linuxppc/next:
+> 	  commit 105fb38124a4 ("powerpc/8xx: Modify ptep_get()")
+> 	* Always dirty pte when mapping patch
+> 	* Use `ppc_inst_len` instead of `sizeof` on instructions
+> 	* Declare LKDTM patching addr accessor in header where it belongs	
+> 
+> v1:	* Rebase on linuxppc/next (4336b9337824)
+> 	* Save and restore second hw watchpoint
+> 	* Use new ppc_inst_* functions for patching check and in LKDTM test
+> 
+> rfc-v2:	* Many fixes and improvements mostly based on extensive feedback
+>            and testing by Christophe Leroy (thanks!).
+> 	* Make patching_mm and patching_addr static and move
+> 	  '__ro_after_init' to after the variable name (more common in
+> 	  other parts of the kernel)
+> 	* Use 'asm/debug.h' header instead of 'asm/hw_breakpoint.h' to
+> 	  fix PPC64e compile
+> 	* Add comment explaining why we use BUG_ON() during the init
+> 	  call to setup for patching later
+> 	* Move ptep into patch_mapping to avoid walking page tables a
+> 	  second time when unmapping the temporary mapping
+> 	* Use KUAP under non-radix, also manually dirty the PTE for patch
+> 	  mapping on non-BOOK3S_64 platforms
+> 	* Properly return any error from __patch_instruction
+>          * Do not use 'memcmp' where a simple comparison is appropriate
+> 	* Simplify expression for patch address by removing pointer maths
+> 	* Add LKDTM test
+> 
+> [0]: https://github.com/linuxppc/issues/issues/224
+> [1]: https://lore.kernel.org/kernel-hardening/20190426232303.28381-1-nadav.amit@gmail.com/
+> 
+> Christopher M. Riedl (8):
+>    powerpc: Add LKDTM accessor for patching addr
+>    lkdtm/powerpc: Add test to hijack a patch mapping
+>    x86_64: Add LKDTM accessor for patching addr
+>    lkdtm/x86_64: Add test to hijack a patch mapping
+>    powerpc/64s: Introduce temporary mm for Radix MMU
+>    powerpc: Rework and improve STRICT_KERNEL_RWX patching
+>    powerpc/64s: Initialize and use a temporary mm for patching on Radix
+>    lkdtm/powerpc: Fix code patching hijack test
+> 
+>   arch/powerpc/include/asm/code-patching.h |   4 +
+>   arch/powerpc/include/asm/debug.h         |   1 +
+>   arch/powerpc/kernel/process.c            |   5 +
+>   arch/powerpc/lib/code-patching.c         | 240 ++++++++++++++++++++---
+>   arch/x86/include/asm/text-patching.h     |   4 +
+>   arch/x86/kernel/alternative.c            |   7 +
+>   drivers/misc/lkdtm/core.c                |   1 +
+>   drivers/misc/lkdtm/lkdtm.h               |   1 +
+>   drivers/misc/lkdtm/perms.c               | 143 ++++++++++++++
+>   9 files changed, 378 insertions(+), 28 deletions(-)
 > 
