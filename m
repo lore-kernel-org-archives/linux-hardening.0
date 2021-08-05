@@ -2,127 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE003C4338F
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 11:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DA9C4338F
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 11:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B70A6113B
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 11:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633F460C51
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 11:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240644AbhHELAU (ORCPT
+        id S240930AbhHELhP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Aug 2021 07:00:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234312AbhHELAT (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Aug 2021 07:00:19 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1CAC061765;
-        Thu,  5 Aug 2021 04:00:05 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id l8-20020a05600c1d08b02902b5acf7d8b5so2674130wms.2;
-        Thu, 05 Aug 2021 04:00:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GdKJ/76XIyi+KqTfYxSG/ISbmFlzZeKfXC5olcHHZYA=;
-        b=Ed2NCkfiEeQv+1lxfHlAxCbsDzsRcZc5cKSsHL6LvgrzEmyr1guxXIhkGGggE2/veo
-         3N6CEv7zxTyBjcnIOHdn7vasLopKd4dmyG1Iy16EL1DXRYChOcHNSqsWiNxjiQXOw35A
-         5tYiJqnXmebaQDA2ZQkliOk7foDVCDfqHyj2WygsqOqWva/vQooYqIkyTcjmcA8YpG/O
-         fv6hG22viPu+sa4x1/cj1coFHlI/jNkgtJArfDDfcSHjauSyRmyNo7c10f71YTeZ/jht
-         rkRfcPsOZ1/Xj9q0hkgpTx1VhZE0/TIcsAhtPq+rksPoMXLTDGY65LB5K64na0xYm/XO
-         c3dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GdKJ/76XIyi+KqTfYxSG/ISbmFlzZeKfXC5olcHHZYA=;
-        b=ZQU6BVzTHejAP3GDjp5PkAI36pRIoF0bpnFavjOFiMA0oQTvzcp7qeQIkpCPz38eGV
-         lOKu1pMNNq99oIfBALwq48OhoaW6nu637CnuE1Fm/CKP+UDD59zYR3w8rGO28tcGhlza
-         JuMmruvleGqXrb37lzofJd3Fe4bACbfN2zKpVb1bNT0+7bJFEKcLl3CgG13t+jhABIL+
-         JiyqaqEJqoj9BEQYSBbWXSJHmLrjbrUTI8cemR6aECi0J3NGHfsFN93LEFvthuoYK2TX
-         kf4YUSS4LG+64a1sGTcJylqJ4/mTR6uxRCQ3c1JjZSOTNZgWMAITdKPL85xOd0HyQ0TB
-         vUlw==
-X-Gm-Message-State: AOAM533RE4NWGBnwxPyyLKBlyvl4LojW+5dAxwkqnTPfeaa7hbmGkrb/
-        DjmxC4eO1SVJQPNt++zzMHsUTMKB3VI=
-X-Google-Smtp-Source: ABdhPJyphZzKYyn5WvyxcM7dFRCPY3IH/YfgIZ9plDKy6RucnA2uDC/S0nk18eARVC2mFwicBitbqQ==
-X-Received: by 2002:a05:600c:3b08:: with SMTP id m8mr14646736wms.84.1628161203797;
-        Thu, 05 Aug 2021 04:00:03 -0700 (PDT)
-Received: from [10.0.0.18] ([37.168.176.89])
-        by smtp.gmail.com with ESMTPSA id p5sm6394296wrd.25.2021.08.05.04.00.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Aug 2021 04:00:03 -0700 (PDT)
-Subject: Re: [PATCH][next] net/ipv6/mcast: Use struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20210804214352.GA46670@embeddedor>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <aaa77803-fb5f-6444-ae2b-d6498ffea252@gmail.com>
-Date:   Thu, 5 Aug 2021 13:00:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Thu, 5 Aug 2021 07:37:15 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53891 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240857AbhHELhO (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 5 Aug 2021 07:37:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4GgRQx6y6Wz9sRR;
+        Thu,  5 Aug 2021 21:36:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1628163418;
+        bh=LUuDWZ6QjdYX5SUcL0rg4SU99LJt8O7kFIHfniH4Wkg=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=SF7x/1BvF/du6tR1e3AqhoEFXeAMJ23q3ppFOuDYEK6+ht3SZq2BGm0VpBTQhnKiX
+         c69CtfwbXEyopOpWkMlhoaZaNy7MBcjvFgi441GQPs8JoNSbaypcrSiMU40xfYUL8t
+         f9mZrC/0/S9Sd0Sks9Q6ztffcNH3z15sejK3Mrq6GIC9o5cgKjNUdNCU7s+JyZXP+k
+         m7V2vyizjbFsWr3PDpb/VJj0/lHDkB5dWIo6L1vPnRk6HtSQ+cZceBM9r0fWUQuSIl
+         t/rcwuCY/XD4brZ4tPPAIPKwBGgNhCg1BsOkubGmrACsiPv8a+bTpGKspwCElp7iAD
+         /yfmCkkp5M+aw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 58/64] powerpc: Split memset() to avoid multi-field
+ overflow
+In-Reply-To: <20210727205855.411487-59-keescook@chromium.org>
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-59-keescook@chromium.org>
+Date:   Thu, 05 Aug 2021 21:36:54 +1000
+Message-ID: <87czqsnmw9.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20210804214352.GA46670@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 8/4/21 11:43 PM, Gustavo A. R. Silva wrote:
-> Replace IP6_SFLSIZE() with struct_size() helper in order to avoid any
-> potential type mistakes or integer overflows that, in the worst
-> scenario, could lead to heap overflows.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Kees Cook <keescook@chromium.org> writes:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
+>
+> Instead of writing across a field boundary with memset(), move the call
+> to just the array, and an explicit zeroing of the prior field.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  include/net/if_inet6.h |  3 ---
->  net/ipv6/mcast.c       | 20 +++++++++++++-------
->  2 files changed, 13 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/net/if_inet6.h b/include/net/if_inet6.h
-> index 71bb4cc4d05d..42235c178b06 100644
-> --- a/include/net/if_inet6.h
-> +++ b/include/net/if_inet6.h
-> @@ -82,9 +82,6 @@ struct ip6_sf_socklist {
->  	struct in6_addr		sl_addr[];
->  };
->  
-> -#define IP6_SFLSIZE(count)	(sizeof(struct ip6_sf_socklist) + \
-> -	(count) * sizeof(struct in6_addr))
-> -
->  #define IP6_SFBLOCK	10	/* allocate this many at once */
->  
->  struct ipv6_mc_socklist {
-> diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-> index 54ec163fbafa..cd951faa2fac 100644
-> --- a/net/ipv6/mcast.c
-> +++ b/net/ipv6/mcast.c
-> @@ -447,7 +447,8 @@ int ip6_mc_source(int add, int omode, struct sock *sk,
->  
->  		if (psl)
->  			count += psl->sl_max;
-> -		newpsl = sock_kmalloc(sk, IP6_SFLSIZE(count), GFP_KERNEL);
-> +		newpsl = sock_kmalloc(sk, struct_size(newpsl, sl_addr, count),
-> +				      GFP_KERNEL);
+>  drivers/macintosh/smu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/macintosh/smu.c b/drivers/macintosh/smu.c
+> index 94fb63a7b357..59ce431da7ef 100644
+> --- a/drivers/macintosh/smu.c
+> +++ b/drivers/macintosh/smu.c
+> @@ -848,7 +848,8 @@ int smu_queue_i2c(struct smu_i2c_cmd *cmd)
+>  	cmd->read = cmd->info.devaddr & 0x01;
+>  	switch(cmd->info.type) {
+>  	case SMU_I2C_TRANSFER_SIMPLE:
+> -		memset(&cmd->info.sublen, 0, 4);
+> +		cmd->info.sublen = 0;
+> +		memset(&cmd->info.subaddr, 0, 3);
+>  		break;
+>  	case SMU_I2C_TRANSFER_COMBINED:
+>  		cmd->info.devaddr &= 0xfe;
+> -- 
+> 2.30.2
 
+Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
 
-I find the current code is more readable.
-
-Please only change IP6_SFLSIZE() definition maybe 
-
+cheers
