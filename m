@@ -2,146 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43BEC4338F
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 04:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 205D5C4338F
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85448610A0
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 04:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27DE61029
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 09:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233484AbhHEES0 (ORCPT
+        id S236274AbhHEJJZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Aug 2021 00:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
+        Thu, 5 Aug 2021 05:09:25 -0400
+Received: from pegase2.c-s.fr ([93.17.235.10]:41185 "EHLO pegase2.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230215AbhHEES0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Aug 2021 00:18:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BA10F60EE8;
-        Thu,  5 Aug 2021 04:18:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628137092;
-        bh=mB5MPS4/ftvIsrloxEwJS3TMsTJM3QZc0j0Jm9hQDTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ft/IvNgtM0BjaNgo8URgJEl9VK4qdiNqXXHbKxXc2OEo95uBzW+IO/BAgxGjDzsdp
-         HFLR+Fzy/p/NrEkV2M3hCF8skWxinorua25+mbs6oKE71XNjVnkIxVhqF28zhBBBmG
-         MD3E2nYng9lEAoPG3Oj1tc3FiucKaK/Z5xNbhInDCqQXnbsVLKoBlRpu3ponfCNyRQ
-         JGeYBxgNyIZi7MfPRvF3F/RJ5q9kRAtaYAZp3QS+0qIgAI0FBTLaTvZL6MBVKNwpOz
-         BqCdawVBLSuBqUsHtz4xEGRkF70spLCNj4/gDPa55hUpgAk3XnpCXeWlil+YammEtP
-         qYLByuFGplkSA==
-Date:   Wed, 4 Aug 2021 23:20:53 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH v2 4/4][next] scsi: megaraid_sas: Replace one-element array
- with flexible-array member in MR_PD_CFG_SEQ_NUM_SYNC
-Message-ID: <3860f4f6f06dff8e6aea4a8318e9515a0e9cbde3.1628136510.git.gustavoars@kernel.org>
-References: <cover.1628136510.git.gustavoars@kernel.org>
+        id S239135AbhHEJJY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 5 Aug 2021 05:09:24 -0400
+X-Greylist: delayed 351 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Aug 2021 05:09:24 EDT
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+        by localhost (Postfix) with ESMTP id 4GgN8P4tb5z9sWJ;
+        Thu,  5 Aug 2021 11:09:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bbX-U_KwuJ3S; Thu,  5 Aug 2021 11:09:09 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4GgN8P3rktz9sWH;
+        Thu,  5 Aug 2021 11:09:09 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 213358B7BE;
+        Thu,  5 Aug 2021 11:09:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FM7R-FbjtVsw; Thu,  5 Aug 2021 11:09:09 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7BFF08B7BD;
+        Thu,  5 Aug 2021 11:09:08 +0200 (CEST)
+Subject: Re: [PATCH v5 4/8] lkdtm/x86_64: Add test to hijack a patch mapping
+To:     "Christopher M. Riedl" <cmr@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     keescook@chromium.org, peterz@infradead.org, x86@kernel.org,
+        npiggin@gmail.com, linux-hardening@vger.kernel.org,
+        tglx@linutronix.de, dja@axtens.net
+References: <20210713053113.4632-1-cmr@linux.ibm.com>
+ <20210713053113.4632-5-cmr@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <95de5ec5-8d48-c969-3c9f-966561f9f58e@csgroup.eu>
+Date:   Thu, 5 Aug 2021 11:09:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1628136510.git.gustavoars@kernel.org>
+In-Reply-To: <20210713053113.4632-5-cmr@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace one-element array with a flexible-array member in struct
-MR_PD_CFG_SEQ_NUM_SYNC and use the struct_size() helper.
 
-This helps with the ongoing efforts to globally enable -Warray-bounds
-and get us closer to being able to tighten the FORTIFY_SOURCE routines
-on memcpy().
 
-Link: https://en.wikipedia.org/wiki/Flexible_array_member
-Link: https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/109
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - None.
+Le 13/07/2021 à 07:31, Christopher M. Riedl a écrit :
+> A previous commit implemented an LKDTM test on powerpc to exploit the
+> temporary mapping established when patching code with STRICT_KERNEL_RWX
+> enabled. Extend the test to work on x86_64 as well.
+> 
+> Signed-off-by: Christopher M. Riedl <cmr@linux.ibm.com>
+> ---
+>   drivers/misc/lkdtm/perms.c | 26 ++++++++++++++++++++++----
+>   1 file changed, 22 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
+> index 39e7456852229..41e87e5f9cc86 100644
+> --- a/drivers/misc/lkdtm/perms.c
+> +++ b/drivers/misc/lkdtm/perms.c
+> @@ -224,7 +224,7 @@ void lkdtm_ACCESS_NULL(void)
+>   }
+>   
+>   #if (IS_BUILTIN(CONFIG_LKDTM) && defined(CONFIG_STRICT_KERNEL_RWX) && \
+> -	defined(CONFIG_PPC))
+> +	(defined(CONFIG_PPC) || defined(CONFIG_X86_64)))
+>   /*
+>    * This is just a dummy location to patch-over.
+>    */
+> @@ -233,12 +233,25 @@ static void patching_target(void)
+>   	return;
+>   }
+>   
+> -#include <asm/code-patching.h>
+>   const u32 *patch_site = (const u32 *)&patching_target;
+>   
+> +#ifdef CONFIG_PPC
+> +#include <asm/code-patching.h>
+> +#endif
+> +
+> +#ifdef CONFIG_X86_64
+> +#include <asm/text-patching.h>
+> +#endif
+> +
+>   static inline int lkdtm_do_patch(u32 data)
+>   {
+> +#ifdef CONFIG_PPC
+>   	return patch_instruction((u32 *)patch_site, ppc_inst(data));
+> +#endif
+> +#ifdef CONFIG_X86_64
+> +	text_poke((void *)patch_site, &data, sizeof(u32));
+> +	return 0;
+> +#endif
+>   }
+>   
+>   static inline u32 lkdtm_read_patch_site(void)
+> @@ -249,11 +262,16 @@ static inline u32 lkdtm_read_patch_site(void)
+>   /* Returns True if the write succeeds */
+>   static inline bool lkdtm_try_write(u32 data, u32 *addr)
+>   {
+> +#ifdef CONFIG_PPC
+>   	__put_kernel_nofault(addr, &data, u32, err);
+>   	return true;
+>   
+>   err:
+>   	return false;
+> +#endif
+> +#ifdef CONFIG_X86_64
+> +	return !__put_user(data, addr);
+> +#endif
+>   }
+>   
+>   static int lkdtm_patching_cpu(void *data)
+> @@ -346,8 +364,8 @@ void lkdtm_HIJACK_PATCH(void)
+>   
+>   void lkdtm_HIJACK_PATCH(void)
+>   {
+> -	if (!IS_ENABLED(CONFIG_PPC))
+> -		pr_err("XFAIL: this test only runs on powerpc\n");
+> +	if (!IS_ENABLED(CONFIG_PPC) && !IS_ENABLED(CONFIG_X86_64))
+> +		pr_err("XFAIL: this test only runs on powerpc and x86_64\n");
+>   	if (!IS_ENABLED(CONFIG_STRICT_KERNEL_RWX))
+>   		pr_err("XFAIL: this test requires CONFIG_STRICT_KERNEL_RWX\n");
+>   	if (!IS_BUILTIN(CONFIG_LKDTM))
+> 
 
- drivers/scsi/megaraid/megaraid_sas_base.c   | 14 +++++++-------
- drivers/scsi/megaraid/megaraid_sas_fusion.c |  2 +-
- drivers/scsi/megaraid/megaraid_sas_fusion.h |  2 +-
- 3 files changed, 9 insertions(+), 9 deletions(-)
+Instead of spreading arch specific stuff into LKDTM, wouldn't it make sence to define common a 
+common API ? Because the day another arch like arm64 implements it own approach, do we add specific 
+functions again and again into LKDTM ?
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index d072f9caeb4a..a4131dd510e3 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5782,10 +5782,10 @@ megasas_setup_jbod_map(struct megasas_instance *instance)
- {
- 	int i;
- 	struct fusion_context *fusion = instance->ctrl_context;
--	u32 pd_seq_map_sz;
-+	size_t pd_seq_map_sz;
- 
--	pd_seq_map_sz = sizeof(struct MR_PD_CFG_SEQ_NUM_SYNC) +
--		(sizeof(struct MR_PD_CFG_SEQ) * (MAX_PHYSICAL_DEVICES - 1));
-+	pd_seq_map_sz = struct_size((struct MR_PD_CFG_SEQ_NUM_SYNC *)0, seq,
-+				    MAX_PHYSICAL_DEVICES);
- 
- 	instance->use_seqnum_jbod_fp =
- 		instance->support_seqnum_jbod_fp;
-@@ -7961,7 +7961,7 @@ static void megasas_detach_one(struct pci_dev *pdev)
- 	struct Scsi_Host *host;
- 	struct megasas_instance *instance;
- 	struct fusion_context *fusion;
--	u32 pd_seq_map_sz;
-+	size_t pd_seq_map_sz;
- 
- 	instance = pci_get_drvdata(pdev);
- 
-@@ -8033,9 +8033,9 @@ static void megasas_detach_one(struct pci_dev *pdev)
- 
- 	if (instance->adapter_type != MFI_SERIES) {
- 		megasas_release_fusion(instance);
--			pd_seq_map_sz = sizeof(struct MR_PD_CFG_SEQ_NUM_SYNC) +
--				(sizeof(struct MR_PD_CFG_SEQ) *
--					(MAX_PHYSICAL_DEVICES - 1));
-+			pd_seq_map_sz =
-+				struct_size((struct MR_PD_CFG_SEQ_NUM_SYNC *)0,
-+					    seq, MAX_PHYSICAL_DEVICES);
- 		for (i = 0; i < 2 ; i++) {
- 			if (fusion->ld_map[i])
- 				dma_free_coherent(&instance->pdev->dev,
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index 06399c026a8d..a824fb641fda 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -1310,7 +1310,7 @@ megasas_sync_pd_seq_num(struct megasas_instance *instance, bool pend) {
- 
- 	pd_sync = (void *)fusion->pd_seq_sync[(instance->pd_seq_map_id & 1)];
- 	pd_seq_h = fusion->pd_seq_phys[(instance->pd_seq_map_id & 1)];
--	pd_seq_map_sz = struct_size(pd_sync, seq, MAX_PHYSICAL_DEVICES - 1);
-+	pd_seq_map_sz = struct_size(pd_sync, seq, MAX_PHYSICAL_DEVICES);
- 
- 	cmd = megasas_get_cmd(instance);
- 	if (!cmd) {
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.h b/drivers/scsi/megaraid/megaraid_sas_fusion.h
-index 5fe2f7a6eebe..af39d9c20cc6 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
-@@ -1249,7 +1249,7 @@ struct MR_PD_CFG_SEQ {
- struct MR_PD_CFG_SEQ_NUM_SYNC {
- 	__le32 size;
- 	__le32 count;
--	struct MR_PD_CFG_SEQ seq[1];
-+	struct MR_PD_CFG_SEQ seq[];
- } __packed;
- 
- /* stream detection */
--- 
-2.27.0
+Also, I find it odd to define tests only when they can succeed. For other tests like 
+ACCESS_USERSPACE, they are there all the time, regardless of whether we have selected 
+CONFIG_PPC_KUAP or not. I think it should be the same here, have it all there time, if 
+CONFIG_STRICT_KERNEL_RWX is selected the test succeeds otherwise it fails, but it is always there.
 
+Christophe
