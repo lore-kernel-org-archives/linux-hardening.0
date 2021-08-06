@@ -2,116 +2,193 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD1FC4338F
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 21:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC757C4338F
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 22:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2059561164
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 21:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B5361179
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 22:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242179AbhHFV5w (ORCPT
+        id S230348AbhHFWSS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Aug 2021 17:57:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231984AbhHFV5w (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Aug 2021 17:57:52 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A345C061798
-        for <linux-hardening@vger.kernel.org>; Fri,  6 Aug 2021 14:57:36 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id q2so8856675plr.11
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Aug 2021 14:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AY970ncUJAZ3XFO8vIsQqriyIPN/r8JHpDac7fWieeM=;
-        b=GRldI1oetU6ItCaJ5fQcboBOkS3kNm2NJPpnSaaazigE6TM8n6i0NiIJP8y33/Xxwa
-         X1jAnVhjjyuIS90Qp8RPwxHhAgqIXbZqVgNoEV0eule5rbSNSOwhCx8kbtPOAu5r+kt7
-         l/iGkMkrDTQIRoGctxtnHVFRWFZ5GSeRqK0SQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AY970ncUJAZ3XFO8vIsQqriyIPN/r8JHpDac7fWieeM=;
-        b=bRPphPPTP71/8OtBjEJlRIwlUaEMrcCa9kUkn0EEN2W7Nn0sdKtmatn2I7Ql+AWtB9
-         ZZeJ9vQ5RqlA1zL0dZihH5raVgNfdKZRqcatrk7A7r4JFYxi+sujcacUXPEqAg7VWoW+
-         22OYGntXfrPaeMm9OVaee/Y+KIH511afXUaGKjxu+dLnP1Mwlm4wGMGUqi+m9UICnGjt
-         OtbgXlIUfoXV5fgX1xDcTlgpwMnkfDh1O9O9K5GUUnnAcEyqNI7fmW/v3KSYHDY++XdD
-         rhBBC6kBUfDlDgWjiid8UJKYLHlyUXQ8EFllAFG1x+te1e+TWD0++4/auXQJD5evezRg
-         U5vw==
-X-Gm-Message-State: AOAM5303XxGn8v6HzmsZ8G1u1u7BfNrhw0BZ0x5zsQV0vhreSBUsqFay
-        7R1Xu9sdX0H0qVADRjFdQ7R7gnQlBUHC8g==
-X-Google-Smtp-Source: ABdhPJzl6uHhzenJtj16rXyHOXA9lloApy8P+OInYnPj3mA9JONQ+nAAQl57sYQLIY6HcAjxwW1oJg==
-X-Received: by 2002:a63:d607:: with SMTP id q7mr347628pgg.268.1628287055799;
-        Fri, 06 Aug 2021 14:57:35 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v7sm9814110pjk.37.2021.08.06.14.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Aug 2021 14:57:35 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Fri, 6 Aug 2021 18:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230287AbhHFWSS (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 6 Aug 2021 18:18:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 784F361181;
+        Fri,  6 Aug 2021 22:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628288277;
+        bh=uNwLDC0zzFEjsIANnSLlfVSs/ruzuY8EKIGw7CfINHg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=UJGz6msjZYbcA5yPeAoDljc9W+ZzLQdLISN3A/HR9e1u/Un7rNJYIcrULIdaWlW+8
+         sPNb3241biuG97ELaOmAaeXjW69Zr+PD7Jqshfui4FCV9wJdhzhn2u3zGWRXaaypdP
+         9/7DyxodaEkdXXygMVVSsE7jpPOB5HZ8YMsvzDdB+xTWGg9RxB5+4vGJc/pU97ficA
+         qp7J3sgo0uNYg8ccdp1u/FNaR8kKucjgMeGl7gKTv+Me/JqVPj06DzdDTrPmgE+6Yz
+         Tew4cgTHPv0yNntw8Voan3ZM/i0WKFue/1c6RqlNLeuCL+gaTaXDyBGYm2TEv1D9pO
+         5V2cDpINP1tXw==
+Message-ID: <920853c06192a4f5cadf59c90b1510411b197a5e.camel@kernel.org>
+Subject: Re: [PATCH] net/mlx5e: Avoid field-overflowing memcpy()
+From:   Saeed Mahameed <saeed@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] pcmcia: ray_cs: Split memcpy() to avoid bounds check warning
-Date:   Fri,  6 Aug 2021 14:57:33 -0700
-Message-Id: <20210806215733.2875927-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Date:   Fri, 06 Aug 2021 15:17:56 -0700
+In-Reply-To: <20210806215003.2874554-1-keescook@chromium.org>
+References: <20210806215003.2874554-1-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1806; h=from:subject; bh=MoN9sZmmdDw0lR5vW36Fdr39zzqTtcOilmLJ144gA30=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhDbBMeJZHHO3+hbAJbiz+YaA05/E7kfaAlhhB+qwX bgM8lUWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQ2wTAAKCRCJcvTf3G3AJhexD/ kB913c39c5/NcFF+4Bg7joDZ0bnRbO13Ww9Wcn2hoK3sgl3q35x2wuzAdruejBJR/7gKFmzHIor4am aQJFNLZmnb6GPsvPww07WjJfTTEL2aIlKw6+RWECbMmIYaZ37VzT15AZWr7/vFYGDiK3mdL9xbL/me Cqo5qkyChQRNlo/+/yNVveUiJl+1pMkhAmiBJtqpSbz/wsuhbUHV6CTpAr0QbVgJ016V/YJq7thei/ Cxa0BcbWyYKVWQLlUIX5ZHYSD/jLrNRFd6//Q/VIQDxOYsOmsi+CpByAkVxj+lZSZY6tKX8r3nNlOn 7QP7eGd/6oYfB2vi/QzQi0xblqs/V0+YUydIQl82RZVXNrZ4lt2XuUWH0jDHKJA4FFWzIhxEU2zzqO u6boGH1JLSgNFuIqvxpAz2jC0jdOgJzEv7J1/ixrvO2YX1Qwn7wkEuZF1CPlnqb/kbIwhw9xROvpaJ UbKIBV6X3neOI7A6xFItNCs1/NMdpia3JLKGL1rOlEAa+4LJvYDTOk8P64wH6mXxcNW2BfXIMdCM1K 7uSnblp9J+MeWF5KAkfhocRvIvvSLERrXvxiHUeewIlTIZr4emNWe5kaN3svEFMY98VTx6nZI6VQd9 EEqmYPMVOmWup8WfcCrwxyCI6XU8OI1DxJN9glwcxMBWsW1g9DqqZnU9uh1g==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+On Fri, 2021-08-06 at 14:50 -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-
+> time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.
+> 
+> Use flexible arrays instead of zero-element arrays (which look like
+> they
+> are always overflowing) and split the cross-field memcpy() into two
+> halves
+> that can be appropriately bounds-checked by the compiler.
+> 
+> We were doing:
+> 
+>         #define ETH_HLEN  14
+>         #define VLAN_HLEN  4
+>         ...
+>         #define MLX5E_XDP_MIN_INLINE (ETH_HLEN + VLAN_HLEN)
+>         ...
+>         struct mlx5e_tx_wqe      *wqe  = mlx5_wq_cyc_get_wqe(wq, pi);
+>         ...
+>         struct mlx5_wqe_eth_seg  *eseg = &wqe->eth;
+>         struct mlx5_wqe_data_seg *dseg = wqe->data;
+>         ...
+>         memcpy(eseg->inline_hdr.start, xdptxd->data,
+> MLX5E_XDP_MIN_INLINE);
+> 
+> target is wqe->eth.inline_hdr.start (which the compiler sees as being
+> 2 bytes in size), but copying 18, intending to write across start
+> (really vlan_tci, 2 bytes). The remaining 16 bytes get written into
+> wqe->data[0], covering byte_count (4 bytes), lkey (4 bytes), and addr
+> (8 bytes).
+> 
+> struct mlx5e_tx_wqe {
+>         struct mlx5_wqe_ctrl_seg   ctrl;                 /*     0   
+> 16 */
+>         struct mlx5_wqe_eth_seg    eth;                  /*    16   
+> 16 */
+>         struct mlx5_wqe_data_seg   data[];               /*    32    
+> 0 */
+> 
+>         /* size: 32, cachelines: 1, members: 3 */
+>         /* last cacheline: 32 bytes */
+> };
+> 
+> struct mlx5_wqe_eth_seg {
+>         u8                         swp_outer_l4_offset;  /*     0    
+> 1 */
+>         u8                         swp_outer_l3_offset;  /*     1    
+> 1 */
+>         u8                         swp_inner_l4_offset;  /*     2    
+> 1 */
+>         u8                         swp_inner_l3_offset;  /*     3    
+> 1 */
+>         u8                         cs_flags;             /*     4    
+> 1 */
+>         u8                         swp_flags;            /*     5    
+> 1 */
+>         __be16                     mss;                  /*     6    
+> 2 */
+>         __be32                     flow_table_metadata;  /*     8    
+> 4 */
+>         union {
+>                 struct {
+>                         __be16     sz;                   /*    12    
+> 2 */
+>                         u8         start[2];             /*    14    
+> 2 */
+>                 } inline_hdr;                            /*    12    
+> 4 */
+>                 struct {
+>                         __be16     type;                 /*    12    
+> 2 */
+>                         __be16     vlan_tci;             /*    14    
+> 2 */
+>                 } insert;                                /*    12    
+> 4 */
+>                 __be32             trailer;              /*    12    
+> 4 */
+>         };                                               /*    12    
+> 4 */
+> 
+>         /* size: 16, cachelines: 1, members: 9 */
+>         /* last cacheline: 16 bytes */
+> };
+> 
+> struct mlx5_wqe_data_seg {
+>         __be32                     byte_count;           /*     0    
+> 4 */
+>         __be32                     lkey;                 /*     4    
+> 4 */
+>         __be64                     addr;                 /*     8    
+> 8 */
+> 
+>         /* size: 16, cachelines: 1, members: 3 */
+>         /* last cacheline: 16 bytes */
+> };
+> 
+> So, split the memcpy() so the compiler can reason about the buffer
+> sizes.
+> 
+> "pahole" shows no size nor member offset changes to struct
+> mlx5e_tx_wqe
+> nor struct mlx5e_umr_wqe. "objdump -d" shows no meaningful object
+> code changes (i.e. only source line number induced differences and
+> optimizations).
+> 
+> 
 
-Split memcpy() for each address range to help memcpy() correctly reason
-about the bounds checking. Avoids the future warning:
+spiting the memcpy doesn't induce any performance degradation ? extra
+instruction to copy the 1st 2 bytes ? 
 
-In function 'fortify_memcpy_chk',
-    inlined from 'memcpy_toio' at ./include/asm-generic/io.h:1204:2,
-    inlined from 'ray_build_header.constprop' at drivers/net/wireless/ray_cs.c:984:3:
-./include/linux/fortify-string.h:285:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-  285 |    __write_overflow_field(p_size_field, size);
-      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/ray_cs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+[...]
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
 
-diff --git a/drivers/net/wireless/ray_cs.c b/drivers/net/wireless/ray_cs.c
-index 590bd974d94f..d57bbe551630 100644
---- a/drivers/net/wireless/ray_cs.c
-+++ b/drivers/net/wireless/ray_cs.c
-@@ -982,7 +982,9 @@ AP to AP	1	1	dest AP		src AP		dest	source
- 	if (local->net_type == ADHOC) {
- 		writeb(0, &ptx->mac.frame_ctl_2);
- 		memcpy_toio(ptx->mac.addr_1, ((struct ethhdr *)data)->h_dest,
--			    2 * ADDRLEN);
-+			    ADDRLEN);
-+		memcpy_toio(ptx->mac.addr_2, ((struct ethhdr *)data)->h_source,
-+			    ADDRLEN);
- 		memcpy_toio(ptx->mac.addr_3, local->bss_id, ADDRLEN);
- 	} else { /* infrastructure */
- 
--- 
-2.30.2
+why only here ? mlx5 has at least 3 other places where we use this
+unbound memcpy .. 
+
+> @@ -341,8 +341,10 @@ mlx5e_xmit_xdp_frame(struct mlx5e_xdpsq *sq,
+> struct mlx5e_xmit_data *xdptxd,
+>  
+>         /* copy the inline part if required */
+>         if (sq->min_inline_mode != MLX5_INLINE_MODE_NONE) {
+> -               memcpy(eseg->inline_hdr.start, xdptxd->data,
+> MLX5E_XDP_MIN_INLINE);
+> +               memcpy(eseg->inline_hdr.start, xdptxd->data,
+> sizeof(eseg->inline_hdr.start));
+>                 eseg->inline_hdr.sz =
+> cpu_to_be16(MLX5E_XDP_MIN_INLINE);
+> +               memcpy(dseg, xdptxd->data + sizeof(eseg-
+> >inline_hdr.start),
+> +                      MLX5E_XDP_MIN_INLINE - sizeof(eseg-
+> >inline_hdr.start));
+>                 dma_len  -= MLX5E_XDP_MIN_INLINE;
+>                 dma_addr += MLX5E_XDP_MIN_INLINE;
+>                 dseg++;
+
 
