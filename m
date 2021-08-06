@@ -1,116 +1,209 @@
 Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	MONEY_FREEMAIL_REPTO,MONEY_NOHTML,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28770C432BE
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 22:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D17C4338F
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 20:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B32E61155
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Aug 2021 22:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE65260D07
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 20:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232968AbhHEWEW (ORCPT
+        id S244501AbhHFUJT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Aug 2021 18:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
+        Fri, 6 Aug 2021 16:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235464AbhHEWEW (ORCPT
+        with ESMTP id S244462AbhHFUJS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Aug 2021 18:04:22 -0400
-Received: from server.example.com (unknown [IPv6:2001:41d0:8:808d::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0436C061798
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Aug 2021 15:04:06 -0700 (PDT)
-Received: by server.example.com (Postfix, from userid 1023)
-        id D9AFCD42555; Thu,  5 Aug 2021 21:14:44 +0000 (UTC)
-To:     linux-hardening@vger.kernel.org
-Subject: {Spam?} =?UTF-8?Q?Z._HD,Sehr_geehrte_/_r_Fondsempf=C3=A4nger?=
-Date:   Thu, 5 Aug 2021 21:14:44 +0000
-From:   "ANWALT BILBAO &EMMA ASSOZIIERT & CO..." 
-        <support@quali.speed.hebergement-com4design.fr>
-Reply-To: buroLotto.es@spainmail.com
-Message-ID: <f44d3d50965c2a211b104c3a104417b9@www.quali.speed.hebergement-com4design.fr>
+        Fri, 6 Aug 2021 16:09:18 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095E8C06179A
+        for <linux-hardening@vger.kernel.org>; Fri,  6 Aug 2021 13:09:02 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id e2-20020a17090a4a02b029016f3020d867so19556366pjh.3
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Aug 2021 13:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n6L9lQWvGLp2RmRr83sqFXDKRaXPPCi+3uhrZ6kADNA=;
+        b=nWIt5g3GXVnW5z2AYO8uYLJsBM6J19V+JIVdl7YLTXZFqY7W9ei9/SgJ1UmRs6mpSt
+         Sgf7eH9PcaBa1aXMpzUtoN8DPYTYyMKbZdxMdXYTGNWSnoGW6Y5HgZuwuV739iqL14gA
+         jgS2A68AoBOi9b0r8dz5V8+OUWGDinrYH2T2g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n6L9lQWvGLp2RmRr83sqFXDKRaXPPCi+3uhrZ6kADNA=;
+        b=W6uQH5ZVRgJh1Ba4BG66IOS1xrBQWkBA8mkJJIrVYQSsskgv6GO2q416n4aKny2ro9
+         MA9j7UQLYHfBmwJNKtPZRo2TXKrwMylqZnXeFfPmRvByn9yqbgmRZOsxnv5oPg/V9JhV
+         kwx+dGfttSbSfZAPaBWplexB7zfFcfCOetZxO0ucNfqmUI5kv6lsdWqQKGtHs+ZtZ/Jb
+         QSpWnnAoGZkJr4ACKeIArbMK7Hfu5rSLoqQ97dZglcn3rYK/nxCytabYRWxy0GvbdUGX
+         rXi0oD7qZI7sPrFxK9t4vTTsyBNJMJfksHtdFOGYkiXo2Nw+OeMIQ1g+z6jBICNyQsWu
+         J9Bw==
+X-Gm-Message-State: AOAM530BUlP+s8h+AIQ+yIr0XmVm/tlo43oyX020ebzlCmlX+EM3waYP
+        1qVDFk+kAZEZ/NI6I/uJF1u5mw==
+X-Google-Smtp-Source: ABdhPJyaXk/keHXFRBUqFrft8A94/ur96J4Pv6Rk2fUUwU/ShuzzjV/o1/H164HklzW6ysO8GRYZvQ==
+X-Received: by 2002:a17:902:7b8b:b029:12b:8d3e:70e7 with SMTP id w11-20020a1709027b8bb029012b8d3e70e7mr3840249pll.76.1628280541543;
+        Fri, 06 Aug 2021 13:09:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b20sm10911854pfl.9.2021.08.06.13.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Aug 2021 13:09:01 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Stanislav Yakovlev <stas.yakovlev@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] ipw2x00: Avoid field-overflowing memcpy()
+Date:   Fri,  6 Aug 2021 13:08:55 -0700
+Message-Id: <20210806200855.2870554-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4665; h=from:subject; bh=6caGhOOY446DlpmdSUBQVYbe7alelvqjsReWU0FV/Ck=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhDZbWlqznbRsXo6uyVHMPyqNKwaw98x0jc7wCkSGo 4cEIMHSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQ2W1gAKCRCJcvTf3G3AJi8lD/ 9jkPT4xmisHW9IgfwnETPhxevmZe48HyNSPt0ogmaNIQR3nP17BoJqLqbh1kgsgpeDUDDsDy1ua+mO gcrIcZOgYrYrht+RcOiVxnah/a5qQ42tAEaG6f079GUNRdCRUStdeSpRr+P/jfg24QD7+o4gkPsveA WNEwu5IwBUOg6BZ5NR9Umi1zzuf4ApLASOjiQd2q7bnbD+5mGUX3hN7r8dIyp+vrW3+fidwZrgB65n E7eYABTLvNzW1B9QaiGYO0GHFY6a4by6nBT7vzxAxnziKpACP9ByPGpf4WbAwzihh2Odhf5BDtdpD5 uaaJpEJhHMrUgFGvB8Mo0CSqIeKn9owfuOQdo8Rq5KfMHyygDQaD6cVt6uijgZBvA4P1tt9pVzOd9Q f232tFq+SFm0S4xmo+WIs/+YS9wFU66rn/33cWapsMrl297Kf/HHTlQPHz6fKMfbyijX9yqJVcVzNQ HygM9SfHUjQP9RqhiuX4DK9oXycQ6LY3iuV+e4A40NGlSoA5RDiJm8eFZEOPtDbviGGvo5YdQCpoxP aguORZY7LbjDEoI6XbdHLAPO/Q9aWARrUEXlleSGt4kFXPSmXNGB22KWAx2KdEftHEFbdxkHuy+xP/ qUd2YeQXVndotuUf4y6ZzFm854RDTRIRgnzTgcBmD4u8iG+0t1d754v5DEnQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-yoursite-MailScanner-Information: Please contact the ISP for more information
-X-yoursite-MailScanner-ID: D9AFCD42555.ABDC7
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-SpamCheck: spam, SpamAssassin (cached, score=7.061,
-        required 6, ADVANCE_FEE_2_NEW_MONEY 0.15,
-        FREEMAIL_FORGED_REPLYTO 2.50, FREEMAIL_REPLYTO 1.00,
-        LOTS_OF_MONEY 0.00, MONEY_FREEMAIL_REPTO 2.43, MONEY_NOHTML 0.97,
-        NO_RELAYS -0.00, T_FILL_THIS_FORM_SHORT 0.01, XFER_LOTSA_MONEY 0.00)
-X-yoursite-MailScanner-SpamScore: sssssss
-X-yoursite-MailScanner-From: support@quali.speed.hebergement-com4design.fr
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Rechtsanwältin BILBAO &EMMA ASSOZIIERT & CO...
-#########################################
-AV/DE GRAN VIA NO.38k, 28008 MADRID.   SPAIN 
-TEL. ( 34) 602 810 185 FAX: ( 34) 931-702-120
-Eingetragener Fall NR: GY/Q3J63753 / SQQ/93000XS10.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-Ihnen wird empfohlen, die folgenden Informationen an Ihre Bevollmächtigte zu senden. Rechtsanwältin  BILBAO & EMMA  ASSOZIIERT CO ERMÖGLICHT IHNEN DIE FREIGABE IHRES FONDS:Wir bitten dringend, Ihre E-Mails an unsere Büro-E-Mail zu beantworten, buroLotto.es@spainmail.com, 
+libipw_read_qos_param_element() copies a struct libipw_info_element
+into a struct libipw_qos_information_element, but is actually wanting to
+copy into the larger struct libipw_qos_parameter_info (the contents of
+ac_params_record[] is later examined). Refactor the routine to perform
+centralized checks, and copy the entire contents directly (since the id
+and len members match the elementID and length members):
 
-Wir gratulieren und informieren Sie über die Auswahl des Geldpreises €935.470,00 EUROS, SOMMERBONANZA, EL GORDO DE LA PRIMITIVA LOTTERIE IN VERBINDUNG MIT EUROMILLIONS ESPAÑA INTERNATIONAL LOTTERIE BEFÖRDERUNG  PROGRAMM Madrid Spanien
+struct libipw_info_element {
+        u8 id;
+        u8 len;
+        u8 data[];
+} __packed;
 
- Sehr Geehrter  Begünstigten, 
-Wir möchten Sie informieren, dass das Büro des nicht Beanspruchten Preisgeldes in Spanien,unsere Anwaltskanzlei ernannt hat, als gesetzliche Berater zu handeln, in der Verarbeitung und der Zahlung eines Preisgeldes, das auf Ihrem Namen gutgeschrieben wurde, und nun seit über zwei Jahren nicht beansprucht wurde.
+struct libipw_qos_information_element {
+        u8 elementID;
+        u8 length;
+        u8 qui[QOS_OUI_LEN];
+        u8 qui_type;
+        u8 qui_subtype;
+        u8 version;
+        u8 ac_info;
+} __packed;
 
- Der Gesamtbetrag der ihnen zusteht beträgt momentan €935, 470, 15, cent.
+struct libipw_qos_parameter_info {
+        struct libipw_qos_information_element info_element;
+        u8 reserved;
+        struct libipw_qos_ac_parameter ac_params_record[QOS_QUEUE_NUM];
+} __packed;
 
-Der Gesamtbetrag der ihnen zusteht beträgt momentan  €935, 470, 15, neunhundert fünfunddreißigtausend, vierhundertsiebzig und fünfzehn Cent, Das ursprüngliche Preisgeld bertug €785.810, 15.00 EUROS. Siebenhundert Fünfundachtzigtausend Acht Hundertzehn Euro und fünfzehn Cent Diese Summe wurde fuer nun mehr als zwei Jahre,Gewinnbringend  angelegt,daher die aufstockung auf die oben genannte Gesamtsumme.Entsprechend dem Büros des nicht Beanspruchten  Preisgeldes,wurde dieses Geld als nicht beanspruchten Gewinn einer Lotterie Firma bei ihnen zum verwalten niedergelegt und  in ihrem namen versichert. Nach Ansicht der Lotterie Firma wurde ihnen das Geld nach einer Weihnachts Förderung Lotterie  zugesprochen. 
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ .../net/wireless/intel/ipw2x00/libipw_rx.c    | 56 ++++++-------------
+ 1 file changed, 17 insertions(+), 39 deletions(-)
 
- Die Kupons wurden von einer Investmentgesellschaft gekauft.Nach Ansicht der Lotterie Firma wurden sie damals Angeschrieben um Sie über dieses Geld zu informieren es hat sich aber leider bis zum Ablauf  der  gesetzten  Frist  keiner gemeldet um den Gewinn zu Beanspruchen. Dieses war der Grund weshalb das Geld zum verwalten niedergelegt wurde. Gemab des Spanischen Gesetzes muss der inhaber alle zwei Jahre ueber seinen vorhanden Gewinn informiert werden.Sollte dass Geld wieder nicht beansprucht werden,.wird der Gewinn abermals ueber eine Investierung gesellschaft fur eine weitere Periode von zwei Jahren angelegt werden.Wir sind daher, durch das Buro des nicht Beanspruchten Preisgelds beauftragt worden sie anzuschreiben.Dies ist eine Notifikation für das Beanspruchen dieses Gelds.
-
-Wir möchten sie darauf hinweisen, dass die Lotteriegesellschaft überprüfen und bestätigen wird ob ihre Identität  übereinstimmt bevor ihnen ihr Geld ausbezahlt wird.Wir werden sie beraten wie sie ihren Anspruch geltend machen.Bitte  setzen sie sich dafuer mit unserer Deutsch Spanisch oder Englisch Sprachigen Rechtsanwalt in Verbindung Rechtsanwältin: Bilbao & Emma ASSOZIIERT & CO.., TEL( 34) 602 810 185 & email,( Ihre Antwort sollte an diese E-MAIL-Adresse gerichtet, (promolottooffice@spainmail.com  )ist zustaendig fuer  Auszahlungen ins Ausland und wird ihnen in dieser sache zur seite stehen. Der Anspruch sollte vor den 30 August 2021 geltend  gemacht werden,da sonst dass Geld wieder angelegt werden wuerde.Wir freuen uns, von Ihnen zu hören, während wir Ihnen  unsere Rechtshilfe Versichern.
-
-Nachdem Sie die von Ihnen geforderten Daten bereitgestellt haben, können Sie davon ausgehen, dass Sie innerhalb weniger  Stunden direkt von diesem Büro erfahren werden. Bis dahin müssen wir Ihre Informationen verarbeitet und Ihre Fonds Akte für  die Zustellung vorbereitet haben, um Verzögerungen zu vermeiden. 
-Wir gehen davon aus, dass Sie die erläuternden Anweisungen und Anweisungen für den Erhalt Ihrer Prämien (935 €, 470, 15 Cent) verstehen, die Ihnen von der spanischen Euro Millones /El Gordo de la Primitiva International lotterie Madrid Spain legal zugesprochen werden.
-
-HINWEIS: Um unnötige Verzögerungen zu vermeiden, wenn es eine Änderung Ihrer Adresse oder Komplikationen geben, informieren Sie Ihren Agenten so schnell wie möglich, Ihr Agent wird 10% des Premium Preises bezahlt, da die Provision NACH Dem, was Sie Ihr Geld auf Ihr kostenpflichtiges Konto erhalten haben. Das Zahlungsbearbeitung Formular ist mit einer Fotokopie Ihres Ausweises auszufüllen und zur Überprüfung per Faxnummer zu senden: ( 34) 935457490 & E-Mail: Wir bitten dringend, Ihre E-Mails an unsere Büro-E-Mail zu beantworten  promolottooffice@spainmail.com
-
-Mit Freundlichen Grüßen
-Rechtsanwältin Bilbao & Emma ASSOZIIERT & CO..
-
-ANMELDEFORMULAR FÜR DEN GEWINNANSPRUCH Vom 28. Juni bis 30. August 2021
-Hinweis bitte geben Sie die folgenden Informationen, wie unten gefordert, faxen   34935457490 oder e mail: promolottooffice@spainmail.com ,es zurück in mein Büro sofort für uns in der Lage zu sein die Legalisierung Prozess Ihrer  Persönliche investiertes Preisgeld zu vervollständigen, und das Geld wird Ihnen von Zentralbank spain Int  ausgezahlt.  Alle Prozess Überprüfung durch unsere Kanzlei ist für Sie kostenlos, weil unsere Kosten werden von der internationalen  Lotto Kommission am Ende des Prozesses zu zahlen, wenn Sie Ihr Geld erhalten.Wenn Sie nicht die erforderlichen  Informationen vor der Zeit gegeben hat, können ist Anwaltskanzlei nicht haftbar gemacht werden, wenn Ihr Geld reinvestiert  wurde.
-
-Ein Bestätigungsschreiben wird Ihnen gefaxt werden sofort wenn wir komplette Überprüfung der Informationen die Sie uns zur  Verfügung stellen habe, Ich werde die Investmentbank unverzüglich über die von Ihnen angegebene Informationen zu kommen,  bevor sie werden mit Ihnen Kontakt aufnehmen für die ausZahlung von Ihrem Geld . Ihre Daten werden vertraulich gehalten  nach der Europäischen Union Datenschutzrecht.
-
-"Antworten Sie nicht auf die Absenderadresse oder die Quell-E-Mail-Adresse, es wird über den Computer gesendet virtuelle  Hilfe für die Antwort wird  nicht meine menschliche sondern Computer" Daher müssen Sie die Treuhänder über Telefon und E- Mail-Adresse oben" (ACHTUNG Wir (bitten Sie, auf diese E-Mail-Adresse zu antworten, (promolottooffice@spainmail.com )
-########################################################
-
-REF.NR:………………………………STAPELN Sie NR:…………………………
-Vorname:……………………Vor-NACHNAME…………………………………
-GEBURTSDATUM:……………………………BERUF:……………………………
-STRASSE:………………………………………PLZ/ORT…………………………
-ADRESSE:……………………………………………………………………………
-TELEFON:(___)……………………HANDY:(__)………………FAX (__)………
-EMAIL:…………………………………………………………Nationalitit:……
-
-HINWEIS: BANKVERBINDUNG IST NUR ERFORDERLICH, WENN SIE BESCHLIEßEN, IHREN GEWINN ZU ERHALTEN PER ÜBERWEISUNG
-
-Nachdem Sie die von Ihnen geforderten Daten bereitgestellt haben, können Sie davon ausgehen, dass Sie innerhalb weniger  Stunden direkt von diesem Büro erfahren werden. Bis dahin müssen wir Ihre Informationen verarbeitet und Ihre Fonds Akte für  die Zustellung vorbereitet haben, um Verzögerungen zu vermeiden. Wir gehen davon aus, dass Sie die erklärenden Anweisungen  und Anweisungen zum Einholen und Einholen Ihrer Auszeichnungen (€935,470,15 EUROS) verstehen, die Ihnen vom spanischen Euro Millones de La Primitiva International Madrid legal zugesprochen wurden
-
-BANK ZAHLUNGSOPTIONEN: A / BANKÜBERWEISUNG Oder BANK CERTIFIED CHECK (BANKDATEN SIND NUR NOTWENDIG, WENN SIE SICH FÜR EINE  BANKÜBERWEISUNG ENTSCHIEDEN HABEN)
-ZAHLUNGSOPTION: (A) BESTÄTIGTER SCHECK (BEZAHLEN Sie ÜBERTRAGUNG EIN
-
-BETRÄGE GEWONNEN: ……………………………………………………
-NAME DER BANK:……………………………………………………………
-KONTONUMMER:…………………………SWIFT-CODE:…………………
-ADRESSE DER BANK …………………………………………………………
-GEB-DATUM:…………Unterschrift …………(Erst bei hmeAbna)
-
-Rechtsanwältin  Bilbao & Emma Asociados, Abogados, Fiscal Y Accesorios horario de consultas Lunes.bis Samstag De. 09 - 16.30 Uhr  654280 / MLA & (Seien Sie informiert, dass Ihr Vertreter 10% des Preises als Provision erhält, wenn Sie Ihr Geld auf Ihrem  angegebenen Konto erhalten haben) Mitglied des Consejo de Constitucional de España, (ACHTUNG Wir bitten Sie, auf diese E-Mail-Adresse zu antworten (promolottooffice@spainmail.com) BÜRO-KONTOINFORMATIONEN- BANK NAME: P.F.S.SPAIN SL SWIFT CODE: PFSSESM1 IBAN: ES17 6713   0002 5700 0584 3906)COPYRIGHT 2019.LOTERIA SPANIEN. Alle Rechte vorbehalten. NUTZUNGSBEDINGUNGEN HANDELSPOLITIK DATENSCHUTZ VON BESCHWERDEN....
+diff --git a/drivers/net/wireless/intel/ipw2x00/libipw_rx.c b/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
+index 5a2a723e480b..7cda31e403bd 100644
+--- a/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
++++ b/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
+@@ -927,7 +927,8 @@ static u8 qos_oui[QOS_OUI_LEN] = { 0x00, 0x50, 0xF2 };
+ static int libipw_verify_qos_info(struct libipw_qos_information_element
+ 				     *info_element, int sub_type)
+ {
+-
++	if (info_element->elementID != QOS_ELEMENT_ID)
++		return -1;
+ 	if (info_element->qui_subtype != sub_type)
+ 		return -1;
+ 	if (memcmp(info_element->qui, qos_oui, QOS_OUI_LEN))
+@@ -943,57 +944,34 @@ static int libipw_verify_qos_info(struct libipw_qos_information_element
+ /*
+  * Parse a QoS parameter element
+  */
+-static int libipw_read_qos_param_element(struct libipw_qos_parameter_info
+-					    *element_param, struct libipw_info_element
+-					    *info_element)
++static int libipw_read_qos_param_element(
++			struct libipw_qos_parameter_info *element_param,
++			struct libipw_info_element *info_element)
+ {
+-	int ret = 0;
+-	u16 size = sizeof(struct libipw_qos_parameter_info) - 2;
++	size_t size = sizeof(*element_param);
  
-Diese E-Mail ist für den vorgesehenen Empfänger bestimmt und enthält Informationen, die vertraulich sein können. Wenn Sie nicht der beabsichtigte Empfänger sind, benachrichtigen Sie bitte den Absender per E-Mail und löschen Sie diese E-Mail aus Ihrem Posteingang. Jede unbefugte Nutzung oder Verbreitung dieser E-Mail, ganz oder teilweise, ist strengstens untersagt und kann rechtswidrig sein. Alle in dieser E-Mail enthaltenen Preisangebote sind nur indikativ und führen zu keiner rechtlich bindenden oder durchsetzbaren Verpflichtung. Sofern nicht ausdrücklich als beabsichtigter E-Vertrag bezeichnet, stellt diese E-Mail kein Vertragsangebot, keine Vertragsänderung oder eine Annahme eines Vertragsangebots dar.
-WWW.GORDO/ EUROMILLIONS ESPAÑA  Sitz der Gesellschaft: Torre Europa Paseo de la Barcelona 15. Planta 16 28006 • Madrid. (Spanien)
+-	if ((info_element == NULL) || (element_param == NULL))
++	if (!element_param || !info_element || info_element->len != size - 2)
+ 		return -1;
+ 
+-	if (info_element->id == QOS_ELEMENT_ID && info_element->len == size) {
+-		memcpy(element_param->info_element.qui, info_element->data,
+-		       info_element->len);
+-		element_param->info_element.elementID = info_element->id;
+-		element_param->info_element.length = info_element->len;
+-	} else
+-		ret = -1;
+-	if (ret == 0)
+-		ret = libipw_verify_qos_info(&element_param->info_element,
+-						QOS_OUI_PARAM_SUB_TYPE);
+-	return ret;
++	memcpy(element_param, info_element, size);
++	return libipw_verify_qos_info(&element_param->info_element,
++				      QOS_OUI_PARAM_SUB_TYPE);
+ }
+ 
+ /*
+  * Parse a QoS information element
+  */
+-static int libipw_read_qos_info_element(struct
+-					   libipw_qos_information_element
+-					   *element_info, struct libipw_info_element
+-					   *info_element)
++static int libipw_read_qos_info_element(
++			struct libipw_qos_information_element *element_info,
++			struct libipw_info_element *info_element)
+ {
+-	int ret = 0;
+-	u16 size = sizeof(struct libipw_qos_information_element) - 2;
++	size_t size = sizeof(struct libipw_qos_information_element) - 2;
+ 
+-	if (element_info == NULL)
++	if (!element_info || info_element || info_element->len != size - 2)
+ 		return -1;
+-	if (info_element == NULL)
+-		return -1;
+-
+-	if ((info_element->id == QOS_ELEMENT_ID) && (info_element->len == size)) {
+-		memcpy(element_info->qui, info_element->data,
+-		       info_element->len);
+-		element_info->elementID = info_element->id;
+-		element_info->length = info_element->len;
+-	} else
+-		ret = -1;
+ 
+-	if (ret == 0)
+-		ret = libipw_verify_qos_info(element_info,
+-						QOS_OUI_INFO_SUB_TYPE);
+-	return ret;
++	memcpy(element_info, info_element, size);
++	return libipw_verify_qos_info(element_info, QOS_OUI_INFO_SUB_TYPE);
+ }
+ 
+ /*
+-- 
+2.30.2
 
