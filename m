@@ -7,68 +7,67 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D0DC4338F
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 20:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DBDC4338F
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 21:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEFF961154
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 20:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7735961159
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Aug 2021 21:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236344AbhHFUOl (ORCPT
+        id S245331AbhHFVuZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Aug 2021 16:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51396 "EHLO
+        Fri, 6 Aug 2021 17:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232908AbhHFUOl (ORCPT
+        with ESMTP id S245318AbhHFVuX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Aug 2021 16:14:41 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE93C0613CF
-        for <linux-hardening@vger.kernel.org>; Fri,  6 Aug 2021 13:14:25 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id mt6so18382229pjb.1
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Aug 2021 13:14:24 -0700 (PDT)
+        Fri, 6 Aug 2021 17:50:23 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5E1C061799
+        for <linux-hardening@vger.kernel.org>; Fri,  6 Aug 2021 14:50:07 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id pj14-20020a17090b4f4eb029017786cf98f9so19946929pjb.2
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Aug 2021 14:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gPJ8NsKS+3Jw4kxc6WCHLzF/A70YlZNDecLhVvyEwVw=;
-        b=NdOURHyDJZvSh8If1c7MyBRCht7XlsW8r2HtcVAVLUUWoZmmb6rVJdGcw9CANoRI6J
-         tN4WH3v3iQv+ngKFN+eTeHi5IwsFf7MdKjVxLsRHC2An9rllNl6suYGF+oUWh3d4wM+4
-         vNb9dykCBuSZqDfOuwvYjxHcnqP+Y7CAXB+WA=
+        bh=gUraSkyrsAFaSY8vAulmKjK0D4+3OOrGidTEIITk1eo=;
+        b=GSvN543bPKhIK1/VBr27ma7W3pkmJTDziVDbKx6nLAjCtDC/ehiZ9JOsj7z6lqSHJ8
+         IEOKsaCojcFPOZnl6C2vV7yN51EgstGQpoIXr/0fHnejdpEqGnEpXnpHznS9GlWD1piM
+         3ohPvYVp9IUF/Rrc8YGRd1gxDX9Cg6qjXsqIU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gPJ8NsKS+3Jw4kxc6WCHLzF/A70YlZNDecLhVvyEwVw=;
-        b=ElW0AwlKdf1qsh498DCmcYOP0/gNxT/vg/e82HjSQqCk6kLlBLQiRhYZ7ADy7yPgaG
-         NEWM28AIw+R1XDq0yiAC7H28XMezfe6ASs0NCkbVMF2gNN97SSV8sjXUbUdsBh6qDtEN
-         wDwLnQbTDHMpq9aXbuFVFOc6vmp9DrMHSVtHuxJvWFvM/dl8uv+WttLd7XrS5WMb1AFh
-         pMOx8OlDUDyXLUMQAuV565KLxzL8bkTp1sQe5AfF3hoTRsuM4+DWOLq63OJEX9sd+Yuz
-         mLVK4Z65o28ps9Wq2L/pHtejf7ENrrBbdB0l8hKGjgvap3nTZfFkszrp8lOnr7fOyCkC
-         jj+Q==
-X-Gm-Message-State: AOAM531XgfIO18USUdb5a3oNIIGOVWUY7jHKUFQv7OT/XF29ZTdIdGN0
-        B8wNZ3pFNSmjIieQB9A5+hFXVQ==
-X-Google-Smtp-Source: ABdhPJxxlITo6nirtimXf9fsmMsyNhsNe6iZOd6Asay/tIW2ItUL1ICQexCsZ8sZV+5aL8qA97a+yg==
-X-Received: by 2002:aa7:8246:0:b029:39a:1e0a:cd48 with SMTP id e6-20020aa782460000b029039a1e0acd48mr12338144pfn.14.1628280864501;
-        Fri, 06 Aug 2021 13:14:24 -0700 (PDT)
+        bh=gUraSkyrsAFaSY8vAulmKjK0D4+3OOrGidTEIITk1eo=;
+        b=mTxbFfHNUyl3/HtFObFRYAAeDDlAqhr+jBHpSROfyDQwp2vLseWrw191EIpOqXQYSv
+         FZswnCcnoA3ZHHcuvzbr/28gbocsEhT69cDE10t0aA4OHg9Swoh4ZObKPlo0iYBmF7fG
+         o9csTzCOuXs15EGagEKo3Kpb4bsvkdHv7vfvVKFMrfcaMEo4o5York/zwgF51s6PtKGh
+         FOz7ygNhtvd7XqoHrGxTrcpcP87kylCies/i/DTDu1tSCTlHDt7WCtkAP6ehsJA/+tk7
+         JL4NFIQlBK2StwsjUKVzwcQ16vCxCT/YBd0Vj7W3yr1BfiutFDclQ0ySibLWi6ZZiazN
+         Mu8g==
+X-Gm-Message-State: AOAM53251PovFh3ZOWnUtODaqGpMNKZlb+/4zoB7dF9q8zQT3tLHlToJ
+        nW2I7e8mqPUCIQQLpt8uiXAtZg==
+X-Google-Smtp-Source: ABdhPJy+Kf7w5KI+XVSjt2FRNsyGEVYPhSvhEaOPRhbq81cdArt7SKdqZQl0wkZFCGqq39jvuqcP6A==
+X-Received: by 2002:a05:6a00:2150:b029:399:711c:826f with SMTP id o16-20020a056a002150b0290399711c826fmr12556355pfk.14.1628286606720;
+        Fri, 06 Aug 2021 14:50:06 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a35sm12580854pgm.66.2021.08.06.13.14.23
+        by smtp.gmail.com with ESMTPSA id d65sm9570610pjk.45.2021.08.06.14.50.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Aug 2021 13:14:23 -0700 (PDT)
+        Fri, 06 Aug 2021 14:50:06 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saeed Mahameed <saeedm@nvidia.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Ross Schmidt <ross.schm.dev@gmail.com>,
-        Joe Perches <joe@perches.com>, devel@driverdev.osuosl.org,
-        Fabio Aiuto <fabioaiuto83@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: Avoid field-overflowing memcpy()
-Date:   Fri,  6 Aug 2021 13:14:22 -0700
-Message-Id: <20210806201422.2871679-1-keescook@chromium.org>
+Subject: [PATCH] net/mlx5e: Avoid field-overflowing memcpy()
+Date:   Fri,  6 Aug 2021 14:50:03 -0700
+Message-Id: <20210806215003.2874554-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1599; h=from:subject; bh=N0zJZJw4fEfLxgkALcFP9+bOoMIMACrM/hpsApeDvnI=; b=owEBbAKT/ZANAwAKAYly9N/cbcAmAcsmYgBhDZgdacn85cUJLT9+vjP4fZ1DEL36WLydwIVHYdNs rrmiePqJAjIEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQ2YHQAKCRCJcvTf3G3AJkCGD/ iUCT4C9PmKd9Cp68qNLOPT9cs4Sq4vUB0OAch0yQGtn/cHWpgjrSWVikOFA30ueW1pejMqIGHjwEfe uv0f5pcGAL6VB4sQ9zJP71HbfTsFPcTfJexGZMln9z98VlYwY1kN3wvOacp8fENVdE+EBx8sX3RJrW 4cGwdNARI8qGoFxO3xVkM1Ct3zVLgv0jBwXLIh+aQqPZ/htj0Nsz6QPnnFrgSt+oI6cihyNMjONwFQ E0/NDE4V0ZlqJHDgZp1KgM/PJr+BokVI7vYwCSP1Y28WRcck6NGIhOBl0ICAfkz/q26rzf+/3JsC9P Moth1SRuh89E7iz3gk1sV3upvmmGIVKGajM7Cuput472O/SQ7GH3KSFSkmNB5SbpHm+CFl6gEfaKLq LwufREyQVcs4/k2tKjVu/ua9p3TpoUon2rhZxbX7t3Rwmxc4arveTZeifdY4T5xl089sRHM9Hs/0GN EpMxrG9f9mEdw2ieFjyXSghZcoZFHNhoz0YdrQgao+JN7LyLbABYxKvlxr0XorXGkbn6GCOzBVuP2Y EJgmlcjiE0iVIcAgfpgE7niA44YNoBeCjxutXzAbhWSucrlud9JXoqYXlK9VlA6679p9TBjkNyObC8 dCZQw/U/n7z64h/+6pKRjssEYzakpEDkEV9MaNOySixUsyHxruB4HHhK6V
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5742; h=from:subject; bh=cNvlrfIsT1+CpfN0obpPhHEUYJYVuyHpzp3wiLEFNWY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhDa6Lh9EgIloqfj+/VgCfcSonsAQDYPZHBgpoEloD KYt3DsWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYQ2uiwAKCRCJcvTf3G3AJnYvD/ 46bzI0R7MoSLbJUL279MLp9QvSKekQ5AU6B8TL3gvQCC0+AndVvPGLMApL4SjdqpWEP/xLTA4NAgd8 TwofoWZpghQUnERjXPWKrfAjpv85TiEavVzg+rL2xBQFDJaH+6uD2dY5ixrf6RZl0yxTQiqARGzoUl Hzd62Un2FAdrFIbWmwVnhi2BYW45O+GQD6QrswwFzAOsuxjxqQ0yuEZOt8e6tpp2KgQ25ax1Bx1FtQ U9cpPuzkV8TxVLlLyLRQOuu2g/BbbdJC9EBygPYsL2a6+sqRJWYu9fEonuPIiD1usOfaIhNnJ2RO10 FS4YpWMtGALnc/oBChPKuAQ22XFzyDVT+xOAkZEeZF5TUccm+j+357Dl1z/2DJO14INhyP40ADTrx/ hiD0Fassaskv+ktJZObYWplbSaagAD1wRHQW2ptAPJVjkr14QfUa5Z13gWnIEA88XIt5RHLuGHiCFQ HdKMCjuBX/6546bFr5enEtYZmiC02XtEMbovzMsmLYGPK9n43ypS9F9p3v+zighMrbISJ5GTioVb8a Tu/9N1yGPGfwb4caiDgVwSiTPzho318vT4MvoMSQFClrLIet9toEDfMYwaHhUm1TIsl/4Xd3/qfOX9 U8H6Ne/VTSWPNc7Qc/xtGU5OZRqSNBUC2NFAtFyN7zljXkJDUcZGWniJ2A5w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -79,38 +78,131 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memcpy(), memmove(), and memset(), avoid
 intentionally writing across neighboring fields.
 
-Adjust memcpy() destination to be the named structure itself, rather than
-the first member, allowing memcpy() to correctly reason about the size.
+Use flexible arrays instead of zero-element arrays (which look like they
+are always overflowing) and split the cross-field memcpy() into two halves
+that can be appropriately bounds-checked by the compiler.
 
-"objdump -d" shows no object code changes.
+We were doing:
 
-Cc: Ross Schmidt <ross.schm.dev@gmail.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: devel@driverdev.osuosl.org
+	#define ETH_HLEN  14
+	#define VLAN_HLEN  4
+	...
+	#define MLX5E_XDP_MIN_INLINE (ETH_HLEN + VLAN_HLEN)
+	...
+        struct mlx5e_tx_wqe      *wqe  = mlx5_wq_cyc_get_wqe(wq, pi);
+	...
+        struct mlx5_wqe_eth_seg  *eseg = &wqe->eth;
+        struct mlx5_wqe_data_seg *dseg = wqe->data;
+	...
+	memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
+
+target is wqe->eth.inline_hdr.start (which the compiler sees as being
+2 bytes in size), but copying 18, intending to write across start
+(really vlan_tci, 2 bytes). The remaining 16 bytes get written into
+wqe->data[0], covering byte_count (4 bytes), lkey (4 bytes), and addr
+(8 bytes).
+
+struct mlx5e_tx_wqe {
+        struct mlx5_wqe_ctrl_seg   ctrl;                 /*     0    16 */
+        struct mlx5_wqe_eth_seg    eth;                  /*    16    16 */
+        struct mlx5_wqe_data_seg   data[];               /*    32     0 */
+
+        /* size: 32, cachelines: 1, members: 3 */
+        /* last cacheline: 32 bytes */
+};
+
+struct mlx5_wqe_eth_seg {
+        u8                         swp_outer_l4_offset;  /*     0     1 */
+        u8                         swp_outer_l3_offset;  /*     1     1 */
+        u8                         swp_inner_l4_offset;  /*     2     1 */
+        u8                         swp_inner_l3_offset;  /*     3     1 */
+        u8                         cs_flags;             /*     4     1 */
+        u8                         swp_flags;            /*     5     1 */
+        __be16                     mss;                  /*     6     2 */
+        __be32                     flow_table_metadata;  /*     8     4 */
+        union {
+                struct {
+                        __be16     sz;                   /*    12     2 */
+                        u8         start[2];             /*    14     2 */
+                } inline_hdr;                            /*    12     4 */
+                struct {
+                        __be16     type;                 /*    12     2 */
+                        __be16     vlan_tci;             /*    14     2 */
+                } insert;                                /*    12     4 */
+                __be32             trailer;              /*    12     4 */
+        };                                               /*    12     4 */
+
+        /* size: 16, cachelines: 1, members: 9 */
+        /* last cacheline: 16 bytes */
+};
+
+struct mlx5_wqe_data_seg {
+        __be32                     byte_count;           /*     0     4 */
+        __be32                     lkey;                 /*     4     4 */
+        __be64                     addr;                 /*     8     8 */
+
+        /* size: 16, cachelines: 1, members: 3 */
+        /* last cacheline: 16 bytes */
+};
+
+So, split the memcpy() so the compiler can reason about the buffer
+sizes.
+
+"pahole" shows no size nor member offset changes to struct mlx5e_tx_wqe
+nor struct mlx5e_umr_wqe. "objdump -d" shows no meaningful object
+code changes (i.e. only source line number induced differences and
+optimizations).
+
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Hi Greg, since I've split out some other patches from my series, it made
-sense to send this one directly too. You originally Acked it here:
-https://lore.kernel.org/lkml/YQDvM4r2KomO9p+J@kroah.com
-But since it has no dependencies on my tree, you can take it directly. :)
-Thanks!
----
- drivers/staging/rtl8723bs/core/rtw_mlme.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h     | 4 ++--
+ drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-index 5ed13bf765d2..e0cee51224ff 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-@@ -2389,7 +2389,7 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 35668986878a..40af561c98d9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -201,7 +201,7 @@ static inline int mlx5e_get_max_num_channels(struct mlx5_core_dev *mdev)
+ struct mlx5e_tx_wqe {
+ 	struct mlx5_wqe_ctrl_seg ctrl;
+ 	struct mlx5_wqe_eth_seg  eth;
+-	struct mlx5_wqe_data_seg data[0];
++	struct mlx5_wqe_data_seg data[];
+ };
  
- 	/* fill default supported_mcs_set */
--	memcpy(ht_capie.mcs.rx_mask, pmlmeext->default_supported_mcs_set, 16);
-+	memcpy(&ht_capie.mcs, pmlmeext->default_supported_mcs_set, 16);
+ struct mlx5e_rx_wqe_ll {
+@@ -217,7 +217,7 @@ struct mlx5e_umr_wqe {
+ 	struct mlx5_wqe_ctrl_seg       ctrl;
+ 	struct mlx5_wqe_umr_ctrl_seg   uctrl;
+ 	struct mlx5_mkey_seg           mkc;
+-	struct mlx5_mtt                inline_mtts[0];
++	struct mlx5_mtt                inline_mtts[];
+ };
  
- 	/* update default supported_mcs_set */
- 	rtw_hal_get_hwreg(padapter, HW_VAR_RF_TYPE, (u8 *)(&rf_type));
+ extern const char mlx5e_self_tests[][ETH_GSTRING_LEN];
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+index 2f0df5cc1a2d..efae2444c26f 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+@@ -341,8 +341,10 @@ mlx5e_xmit_xdp_frame(struct mlx5e_xdpsq *sq, struct mlx5e_xmit_data *xdptxd,
+ 
+ 	/* copy the inline part if required */
+ 	if (sq->min_inline_mode != MLX5_INLINE_MODE_NONE) {
+-		memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
++		memcpy(eseg->inline_hdr.start, xdptxd->data, sizeof(eseg->inline_hdr.start));
+ 		eseg->inline_hdr.sz = cpu_to_be16(MLX5E_XDP_MIN_INLINE);
++		memcpy(dseg, xdptxd->data + sizeof(eseg->inline_hdr.start),
++		       MLX5E_XDP_MIN_INLINE - sizeof(eseg->inline_hdr.start));
+ 		dma_len  -= MLX5E_XDP_MIN_INLINE;
+ 		dma_addr += MLX5E_XDP_MIN_INLINE;
+ 		dseg++;
 -- 
 2.30.2
 
