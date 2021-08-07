@@ -2,100 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9619C4338F
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Aug 2021 15:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D6EC4338F
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Aug 2021 15:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D94610FB
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Aug 2021 15:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2D960F5A
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Aug 2021 15:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230113AbhHGPCi (ORCPT
+        id S231194AbhHGPSE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 7 Aug 2021 11:02:38 -0400
-Received: from mout.gmx.net ([212.227.15.19]:37737 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229503AbhHGPCi (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 7 Aug 2021 11:02:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628348528;
-        bh=WjUBEM/wpIWu8FjBSrx8sFw9ILP0DGVrd76lOgEqG9g=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=SfYv+F8ftbmpCxr/HiEK/vkitTJ9F+GgT6Iz3HtRWNtJBdVlbdkeahbGrAt0JrSbJ
-         mbeUZveFycVt2VAe+DOWvT7BA0MyWR/rsr5pbzw4jU+LFntd12zt4eg//hBV01OgmO
-         tErPbpQDmRcU7UzHM6OwVbagno6tIRUtGB4N8HPM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MvbBk-1n1T5a0AJ4-00shje; Sat, 07
- Aug 2021 17:02:08 +0200
-Date:   Sat, 7 Aug 2021 17:02:06 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-hardening@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/iio: Remove all strcpy() uses in favor of
+        Sat, 7 Aug 2021 11:18:04 -0400
+Received: from smtprelay0032.hostedemail.com ([216.40.44.32]:38956 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S231159AbhHGPSD (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 7 Aug 2021 11:18:03 -0400
+Received: from omf02.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 662FC18238842;
+        Sat,  7 Aug 2021 15:17:43 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf02.hostedemail.com (Postfix) with ESMTPA id EEE8B1D42FA;
+        Sat,  7 Aug 2021 15:17:41 +0000 (UTC)
+Message-ID: <0c1d7c01821f1f0891fd8f13c1e8f9a68bb21717.camel@perches.com>
+Subject: Re: [PATCH] drivers/input: Remove all strcpy() uses in favor of
  strscpy()
-Message-ID: <20210807141711.GC2688@titan>
-References: <20210801171157.17858-1-len.baker@gmx.com>
- <20210801205528.211c4e9c@jic23-huawei>
+From:   Joe Perches <joe@perches.com>
+To:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>
+Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-hardening@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 07 Aug 2021 08:17:39 -0700
+In-Reply-To: <20210807140245.GA2688@titan>
+References: <20210801144316.12841-1-len.baker@gmx.com>
+         <20210801145959.GI22278@shell.armlinux.org.uk>
+         <20210801155732.GA16547@titan> <202108010934.FA668DEB28@keescook>
+         <20210807140245.GA2688@titan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210801205528.211c4e9c@jic23-huawei>
-X-Provags-ID: V03:K1:SY41mXTtN/r5p3fUCAB+dCcVU5Tm70F9SpAn4XVE0g04UNgcE/h
- Oz55/MbIMuD8PMKkXuF8Di9lokw7mpm5VftC+Bymex4o/gPQkrPxJd3d8uEtacTZt8Qkh7Y
- 9H9E2kml5jZMUzznHnyK4T8RWRu+a0PudtFKvRRN+zCVUsopdWIIctkKe3h6dRsy9qawnpp
- 6eQpIOddwGSO3yCyTodtA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zXPRmHOLj3I=:CzhTGpn/r4cYLdYBEw9KDb
- PiHuwbpH8BhpFC5C0fo9VDvcwcrlM/xYZbVJ7MtuJVPNuflVVjj4lwBMayGB/VRwFt1q3BbBA
- r95xmL3C0HVvXQmxv5zFabKUTjTMmKehByjQo3cq3YIguZNbpRmrpnr7mq1N+v1NnvCHiNkyC
- Je45zzhVrcwIjBfCx2A8EQpqeseHitvTk5OvsVrdIEfbpIy8rw/vsahM5JCadbdM03tV05Llr
- 7DMEfZKbiro96hNzRhFGbqyMWNMB0sSzyiDAo1+p1Dyyn/QMukfyNE/hryxx3Qr5kyeWmPgOc
- 7YN5ecDHdMOPC8ptl8KdevcHVMfqUo9PGXXNopUqCyItQj1BCRLHUqqZnd1SrVnH1EjajyKYT
- NFTcuQ1ggfJQxByGYQg/ZOWJIzm8+XN+cidbOeVSVQDGusq+8kQyzyM9HX2q/8th2LZ326qkD
- 5qKLN3uowGWPZp/El2jMFL4SoEV8FtXc8RUVuGWHfAZ34R5k7vPT/WCgnQqCLqL9Wc6scTLeL
- jHRoCsJX+VkYElRfV9CPa3WgMadWQG+t/sVDW3eckf3chb2fpWUPhOSfJclFlEltVFrthHijG
- Jsvk+gWiqDimFtfdaGgYzQqKxR3oSheNUks5CMA+U1PWuBRKnbeW6FOROjijiHQdwkixOfG8x
- 57hKPrvsscArvNHMGDDfmdwNPc+h99f4QjgrgiaVd0aa6DZ4JzYGTdXwvxzgbP2haYdtieXwb
- Qky1GmkgazJgqdfOaRZwLgRjT9m4UY3HKQwFvB5X907lmM/GMEQCJUp15tOxPwmASZ/va+hzI
- W6oxKht6wZiotxkTsyAthAhWSO77xGv8b01urPFroiXHPpFDZl7k5XBEtqUZrzdcik16k1lKS
- iHjd0uKkbiAa2Y5r6bG+/urLXufKUUukH80Hhw+XeRXi4QG+CpCds7P48KWbO6+q+0r6tPMPh
- CvKJKstIY9TiuSQiY159WBL+oficEYVvmSmHM50VZSP0vqhU7G+yPCQNxgPXoUbBoIYcljbPm
- q5KObz1hLMg1IaqqHYKJfbwqcVWlL3JsAQa/KSBRaIzy6Sc8tWYpqtt6qkU9CrsSkCMosMS95
- ouRbz7zuru2KJ40aAsqdgNqXdgIOpAcfcBPz2K6gQNDijont9dof/LlYw==
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: EEE8B1D42FA
+X-Stat-Signature: pwijksomz6gtkkoep9eeicnahht4ctew
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19wOvYjIgVqLuXn/xjQleZQQKop/qZhuMg=
+X-HE-Tag: 1628349461-59007
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Sat, 2021-08-07 at 16:02 +0200, Len Baker wrote:
+> On Sun, Aug 01, 2021 at 09:44:33AM -0700, Kees Cook wrote:
+[]
+> > One thing is clear: replacing strlcpy() with strscpy() is probably the
+> > easiest and best first step to cleaning up the proliferation of str*()
+> > functions.
+> 
+> Thanks for all this info. I will work on it (clean up the proliferation
+> of str*() functions).
 
-On Sun, Aug 01, 2021 at 08:55:28PM +0100, Jonathan Cameron wrote:
-> On Sun,  1 Aug 2021 19:11:57 +0200
-> Len Baker <len.baker@gmx.com> wrote:
->
-> > strcpy() performs no bounds checking on the destination buffer. This
-> > could result in linear overflows beyond the end of the buffer, leading
-> > to all kinds of misbehaviors. The safe replacement is strscpy().
-> >
-> > Signed-off-by: Len Baker <len.baker@gmx.com>
->
-> Hi Len,
->
-> I'm not convinced this is terribly useful in this particular case.
-> As the code stands today, it is easy to verify that the buffer is
-> large enough by looking up a few lines. As you need to do that
-> anyway to check that n, n -1 in the strscpy is correct, what do we gain?
->
-> I don't mind this if it's part of a general removal of strcpy(), but
-> if so the patch description should state that.
+btw:
 
-Ok, I will send a new version with the commit changelog updated.
+It's not possible to sed as the return value is different,
+but here is a cocci script that converts strlcpy to strscpy
+when the return value is unused.
 
-Regards,
-Len
+    @@
+    expression e1, e2, e3;
+    @@
+    
+    -       strlcpy(
+    +       strscpy(
+            e1, e2, e3);
+
+This cocci script was used on sound/ awhile back.
+see commit 75b1a8f9d62e.
+
+
