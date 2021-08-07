@@ -6,65 +6,68 @@ X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE901C4320A
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Aug 2021 15:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D343BC4320A
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Aug 2021 16:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1BE60F5A
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Aug 2021 15:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F6C61052
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Aug 2021 16:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232474AbhHGPXM (ORCPT
+        id S231452AbhHGQAw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 7 Aug 2021 11:23:12 -0400
-Received: from mout.gmx.net ([212.227.17.22]:53301 "EHLO mout.gmx.net"
+        Sat, 7 Aug 2021 12:00:52 -0400
+Received: from mout.gmx.net ([212.227.15.18]:42673 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231159AbhHGPXM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 7 Aug 2021 11:23:12 -0400
+        id S230332AbhHGQAu (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 7 Aug 2021 12:00:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628349762;
-        bh=+ibWlmjshFukmm99Ae/6IfMlmJeghf0lz1I7GodPIF4=;
+        s=badeba3b8450; t=1628352012;
+        bh=2ti2yxVR7eGU9gsi3/G84Kbo5FGNC3s1wKPVeeD9hR4=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=V3upPG0zpmXrVMIUtlB6qDb7euM0Wvvvq2zxIdopeYNRNz+hAfgQFF4b2OaMc8b/+
-         2miACzn6gsd+knq7euuinesND8UlPU+v6nJALWef81qFzMUf70GFVAyTQlnoKO75DJ
-         7qMsDfTW0u1kPmTfsU/m+V67acyr8UNfXdZQTA1Y=
+        b=WKuTI4cpaUXrlSiKZUQCvTksGS9NSb6T2n/3B/l4D/+p4t0X62Lv5MaCJHHcWYF0H
+         IcSvrXEvI5P/7QOOFFnEj5veUIOZfUzl0O7zO5fP+eGJex9henjoqTjP2y/ZgFoRMR
+         SEZwjshHrKXimekV4h6Vm/EEp8KNAjYuYpvASltg=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MuUnK-1n2ZL131r0-00rZBK; Sat, 07 Aug 2021 17:22:41 +0200
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MZCb5-1mhWYs32AL-00VA1H; Sat, 07 Aug 2021 18:00:11 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>
 Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of strscpy()
-Date:   Sat,  7 Aug 2021 17:22:25 +0200
-Message-Id: <20210807152225.9403-1-len.baker@gmx.com>
+Subject: [PATCH v3] drivers/edac/edac_mc: Remove all strcpy() uses
+Date:   Sat,  7 Aug 2021 17:59:57 +0200
+Message-Id: <20210807155957.10069-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QhAQnspX6TgImJfwDPl3bmuKEG8hAVOgxUykdmVAHPXEfoi31dK
- jQtepaQpA444TPsGpY7ROrSsT8KZPNE+M/GDO8tSbbZIioGGyeSAV/YLMpAsLmjMWtzzahV
- MoKrN6sB37ibQRZ//01GJl7xUskCPNQFG1/A4LloUWsKSQLkRV6fAGkhOQATnM+H5fK+E7g
- l13PsfK7TrBtym87hEjiA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:x4oYf3OT8og=:9cXdk1pj5BFSj5WpjW83zF
- oynIBOgINWzzrmri2VRDxVJaH6gm4BtrM+WJ+cLwzcmRPPgupW2IHSq9yEJqNCWNrIvpgypXH
- Z1/tDeob1nL7RtlFwzW1jL4d7ptJviZCgNOXaF44gyE9Z16J0KnW8wY9h12/z9NlMmR6zuCfp
- Z/X2OIvL9ZMuN85NuOvDsG/US7r0VVr0f3FJkcXCbxyFpSmi1rt91cOJHr6ze4UzYB4alUipI
- 2uhpftC8QIanE7QEpOZfCqde3Vw1Rsm4/KoXyBZnDxDcxGAByaSAphYuVir/hmtNZSvXFotbd
- ez2PqBohqH5A7JKBdAVDhu7+lc5626dAsXL3AbG30UfU4hh7DoOfDPChBMRYNhh6IPlDp0LLj
- cqJlMZosmJym1e6h+m6h2PJNoggM2+9dYIiOZ3y1wVOE+tO5/2yVshMqfOYgmbuTlg5UBpxxi
- 5MBgfg8RKxGHin9u3xxHRCf8SkgkyxKyrLMso5BDfd7iVBBR8tnZzVQi8pNZA01DFlhPDKcSY
- KSy1VW2brIiWTtjvJdebkp76mXEz/bSpJAofHDYdoS10OrI2W0harLXTtFFYIwWSi1rCCS4vr
- 0ZD4Kx4+2xk5U6pRzrYTRzw/6eAs2b91pr8cr/pJVxbpvo852Xr0yhIUbAjVGysvV9DrnVYPE
- Ajt364nzjxxZtCiezfyUPnwR77yimbcFbWAkWuuUTUCs/NO3cUggxqgNdblpeM0T6VtzS7Kxs
- J/Z0VT4nBtx6s9fZvVz1nz2Cxzvla+4Ivr0WH9aVTObjOv0HSS6n3RAwYMS42odaemNwZ9ceA
- Ri09j01BMI2vyG6KC0iyT/xwomhkPfYAyLmC/6JzbQGV760Pq2Xpp9nLbCJzK4fpC6isXB7Va
- N6uO94ooQNNpbYS3TFaTwF1Fi6ZkNLeMzlJAeS4AnMJwH3u/YDMDwDjgEMRqc7JodwMEgn18o
- CF8KuMa+6dy4tKzINR1bMmw3nm4Xe4GKj6Llpi6KrfTXmCB+tkIf4Vh43khODkVcQH27oYRtM
- id2JKxYs1tyYUQ4+0yfzmEoRwUBPpedZeqpYUVRlM22pJ0srDqoicK8qKseLWoKHTocChHuAH
- ybt2KKuLALanx64GaL3qHKdYT+mkqsWQWDh4kPYBhDxlIm9Y8iv/2THxg==
+X-Provags-ID: V03:K1:vPhsX4qcrwNVuGiLz6ovSR1AIIzaIr5pTe5P5tLUSytoH1sDb+f
+ HGw0nc6yYSQMsX9gei/2Aax1cN6bC/lAJvdJy2kLsQFkkqRDz960w+JyzD5QSGHS7n0jBZR
+ 4LzqBeetm6kDtJGNIlwyO6soSBtkYsd0nRLIdR21Wi3TurtZFmWurLai82u5wTm20nuk7ID
+ vG294ocgQmLZfK1+tb8nQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:h7M3H6W0ww8=:HCsiqgamO4sSLT3l4nO3Hg
+ zmqGIXBHgHJZfwHnJql7KqnJfqTiTLwPdPLmjEkIkc2em9YGOpqAXhW31zGvjJqHRZYXxm4Qc
+ pgj4gUUIViEgxRntbHAv1wHaNfvMHVIRAKUtkLqGvVBpZ3XH5juD3ax86x8AHk0dJVyUgjOA3
+ uT+agLv/ejjv6bSpFZvX3vzjTSrLWB7EBAZ8Xnw1TZec8dCibb6ZyV+Ko/4QNwScvCDqx3KVe
+ xsN39EVjJokM43++YsIpeVXsA6LSSaB2ucWlPXSUaYiRXdJUGRjppGUuV8TUrvnsNHplhIHs5
+ F8HojC6SoXDlXKIUpcUXeVsBFBEG214szSaReRy4K5/PVf6cLav5Ps/oL1ZoUdcuwpPfZhvNG
+ BNZvNPzNks/mzLm5Rjh1mR+c8JMpJopS1agcMMhcnwf5tsUSofbM1vVQbXwZyX/opcg8NKzru
+ t2v7jZY25Nu3thh84HicEYBCVABjERcfOcjf6dr1q+aDo+2HCiHOIwA6zUiVHb+kwqUFq1LO8
+ ZGglcnugkrHbxMjvYRd3yhcEsmR8FeK4P8DT3AkbA4DZDD/vdCfn8TvzsgiI9RCUZ5tLRyi7L
+ gu4NwXwpm9Q4mcQv5qSo1+CXFg2/OtK4CxyCAYdDJ5lSv435i1ToaKyLcvOwWZn1RGHZlJKaS
+ NF0VnCEZW71j+WQ2kLrNoL2yCR4mPehTMdgjEhV92sj38MWG3Jmym+0X9Xz+4DVbaSCnpFtgC
+ 0FwETzBbVUSp+g1x+1ETEcbtpPGfYsdDMkJAw65/twSVQ7rW0i7Z2mT1ccn1vdlCVxnhAK2EK
+ rxq6YPNPioupTWykgJ1PHl0gTA3qnhOgYhCXS+XQDnA+BJyJTlBeaMWYSq5f7SbL6NctSt2ev
+ Pv1l/oY/XISgXJovVeRYlMeDwAGcMXoyhtAMfk+D/tZ/8PtUzeCIdtvqIKhECXU8tXmnEE8FH
+ q4AD5jJcztiftxUd84HCogK7NAMj5gn1cD54pYAQQ+gna+zM33E0EX9CwANRqc0ii/KuLtn/G
+ cCHY2mc7Ill5PoS0Qjrq2KDQ/wQsNwlwm6/RzBUJp/kR1S4W4C2KGGcisVlAWQ4400Sg71goK
+ UEXhB/3RDOm90ekoJngZfGin155tldQba+ajtSr8mAMi3NXVrLD+dT3VA==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -73,61 +76,92 @@ strcpy() performs no bounds checking on the destination buffer. This
 could result in linear overflows beyond the end of the buffer, leading
 to all kinds of misbehaviors. The safe replacement is strscpy().
 
-This patch is an effort to clean up the proliferation of str*()
-functions in the kernel and a previous step in the path to remove
-the strcpy function from the kernel entirely [1].
-
-[1] https://github.com/KSPP/linux/issues/88
+This is a previous step in the path to remove the strcpy() function
+entirely from the kernel.
 
 Signed-off-by: Len Baker <len.baker@gmx.com>
 =2D--
+This is a task of the KSPP [1]
+
+[1] https://github.com/KSPP/linux/issues/88
+
 Changelog v1 -> v2
-- Modify the commit changelog to inform that the motivation of this
-  patch is to remove the strcpy() function from the kernel entirely
-  (Jonathan Cameron).
+- Use the strscpy() instead of scnprintf() to add labels and follow a
+  code pattern more similar to the current one (advance "p" and
+  decrement "left") (Robert Richter).
 
- drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Changelog v2 -> v3
+- Rename the "left" variable to "len" (Robert Richter).
+- Use strlen(p) instead of strlen(OTHER_LABEL) to decrement "len" and
+  increment "p" as otherwise "left" could underflow and p overflow
+  (Robert Richter).
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/=
-inv_mpu6050/inv_mpu_magn.c
-index f282e9cc34c5..3a6aa1c4bf6c 100644
-=2D-- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-@@ -264,6 +264,7 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *=
-st)
- 	const char *orient;
- 	char *str;
- 	int i;
-+	size_t n;
+Previous versions:
 
- 	/* fill magnetometer orientation */
- 	switch (st->chip_type) {
-@@ -282,17 +283,18 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state=
- *st)
- 		for (i =3D 0; i < 3; ++i) {
- 			orient =3D st->orientation.rotation[6 + i];
- 			/* use length + 2 for adding minus sign if needed */
--			str =3D devm_kzalloc(regmap_get_device(st->map),
--					   strlen(orient) + 2, GFP_KERNEL);
-+			n =3D strlen(orient) + 2;
-+			str =3D devm_kzalloc(regmap_get_device(st->map), n,
-+					   GFP_KERNEL);
- 			if (str =3D=3D NULL)
- 				return -ENOMEM;
- 			if (strcmp(orient, "0") =3D=3D 0) {
--				strcpy(str, orient);
-+				strscpy(str, orient, n);
- 			} else if (orient[0] =3D=3D '-') {
--				strcpy(str, &orient[1]);
-+				strscpy(str, &orient[1], n);
- 			} else {
- 				str[0] =3D '-';
--				strcpy(&str[1], orient);
-+				strscpy(&str[1], orient, n - 1);
- 			}
- 			st->magn_orient.rotation[6 + i] =3D str;
+v1
+https://lore.kernel.org/linux-hardening/20210725162954.9861-1-len.baker@gm=
+x.com/
+
+v2
+https://lore.kernel.org/linux-hardening/20210801143558.12674-1-len.baker@g=
+mx.com/
+
+ drivers/edac/edac_mc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index f6d462d0be2d..0cdb1e9320ba 100644
+=2D-- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -1032,6 +1032,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
+_type type,
+ 	int i, n_labels =3D 0;
+ 	struct edac_raw_error_desc *e =3D &mci->error_desc;
+ 	bool any_memory =3D true;
++	size_t len;
+
+ 	edac_dbg(3, "MC%d\n", mci->mc_idx);
+
+@@ -1086,6 +1087,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
+_type type,
+ 	 */
+ 	p =3D e->label;
+ 	*p =3D '\0';
++	len =3D sizeof(e->label);
+
+ 	mci_for_each_dimm(mci, dimm) {
+ 		if (top_layer >=3D 0 && top_layer !=3D dimm->location[0])
+@@ -1113,11 +1115,11 @@ void edac_mc_handle_error(const enum hw_event_mc_e=
+rr_type type,
+ 			p =3D e->label;
+ 			*p =3D '\0';
+ 		} else {
+-			if (p !=3D e->label) {
+-				strcpy(p, OTHER_LABEL);
+-				p +=3D strlen(OTHER_LABEL);
+-			}
+-			strcpy(p, dimm->label);
++			const char *text =3D (p !=3D e->label) ? OTHER_LABEL :
++				dimm->label;
++
++			strscpy(p, text, len);
++			len -=3D strlen(p);
+ 			p +=3D strlen(p);
  		}
+
+@@ -1140,9 +1142,9 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
+_type type,
+ 	}
+
+ 	if (any_memory)
+-		strcpy(e->label, "any memory");
++		strscpy(e->label, "any memory", sizeof(e->label));
+ 	else if (!*e->label)
+-		strcpy(e->label, "unknown memory");
++		strscpy(e->label, "unknown memory", sizeof(e->label));
+
+ 	edac_inc_csrow(e, row, chan);
+
 =2D-
 2.25.1
 
