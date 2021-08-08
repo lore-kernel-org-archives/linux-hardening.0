@@ -2,123 +2,134 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B56C4338F
-	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 17:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7B4C4338F
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 19:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B940D60EC0
-	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 17:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FA360EB2
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 19:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232128AbhHHRHC (ORCPT
+        id S232359AbhHHTBc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 8 Aug 2021 13:07:02 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:22455 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232120AbhHHRHB (ORCPT
+        Sun, 8 Aug 2021 15:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232284AbhHHTBc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 8 Aug 2021 13:07:01 -0400
-Received: from [192.168.1.18] ([90.126.253.178])
-        by mwinf5d75 with ME
-        id f56W250073riaq20356WZB; Sun, 08 Aug 2021 19:06:40 +0200
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 08 Aug 2021 19:06:40 +0200
-X-ME-IP: 90.126.253.178
-Subject: Re: [PATCH v4 2/3] drivers/soc/renesas: Prefer memcpy over strcpy
-To:     Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        Len Baker <len.baker@gmx.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-hardening@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20210808125012.4715-1-len.baker@gmx.com>
- <20210808125012.4715-3-len.baker@gmx.com>
- <39485c0e-511c-50a0-83be-f9ce6fc47e67@petrovitsch.priv.at>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <c33adb9e-9604-3d89-5a5b-152eb03e5b54@wanadoo.fr>
-Date:   Sun, 8 Aug 2021 19:06:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Sun, 8 Aug 2021 15:01:32 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EA5C061760;
+        Sun,  8 Aug 2021 12:01:11 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d1so14077924pll.1;
+        Sun, 08 Aug 2021 12:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qBu5iUaSAxxZpgJfxNDAcC/Wp2BLXG1BK3fHE7DMi70=;
+        b=tUpEbBFwt/yi6jWl+lS2T/oX8Km8JAD2DIZeIPuoQE+MF/+EOx8nBPFbudEB0WXd29
+         JEZaNCk960Jpgqn6/b1alTqcbP/Cfx3WAdeksY4clk0CWQMgyFwrkhAAkIrP/QpVJ3hY
+         VqyppylTuz1BsMOSUcvSeEoE6g5hgcMOsFT1d2nMtMmqV68DFBwNX+5UJEls1B7h2LB2
+         eJhNoiw3WpqgrUTb2gk7k4/Qx9+fuVaUh/hLmSnzC2gkjREh83ugtKKBIPJJqP/ytFIN
+         4t1/mGZn51/qpeqpFy7Kv9c78nazmY16RyKg22OTxUtC3Qz8gkpwOi98Ka5JwVe4uV/z
+         TuGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qBu5iUaSAxxZpgJfxNDAcC/Wp2BLXG1BK3fHE7DMi70=;
+        b=EMlynxhvMrcii04RBgzrQbQ0J52GqmfscOEhRVo3voLJH1Zg0w5oIMfq4U7wJvF9nx
+         toj5XNunx7hCl+mN5E2qpt5+FR2mb5FpH5/ZtoC48tEsIVlvo+i3q9bVq2B4CdgN9Fcs
+         +45JJYTAZbI6J7k79NnX+XsP0EmMnK4NBFfoEervxtohgSzDT0kI12LrHPX/XUBPZ5kb
+         vUSKrc8/kIsv8h8fvB9q7BvM82mOAsvCnd6/scdDkzG/+B4+PtSgF3ceueGvVF1IdpZn
+         z1tsEYJDxkRyJoOjV995M7FUYmiSd+NwxjJ4cJ5Rc/tgj1BdcdlPrTuYfJXq6xcVX0AR
+         pDYA==
+X-Gm-Message-State: AOAM5319Dq+hi4zXVQqJGj+zS6jhs/YoBKJvOks4mnHNZVI93WMZ5Hjm
+        c6vh+QSbg27PthF6ML0w08i/BqD8FQRfoG0pbUI=
+X-Google-Smtp-Source: ABdhPJy3lvTMhfLmQ3Z7rH5Zo4CSzjyA+DTg6zkmpCfBaSEixGQ4U1+Ng6BfzOIGfyuiMgVCyRSwpLzOm5cqKOnkV8U=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr32121963pjq.181.1628449270967;
+ Sun, 08 Aug 2021 12:01:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <39485c0e-511c-50a0-83be-f9ce6fc47e67@petrovitsch.priv.at>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210807152225.9403-1-len.baker@gmx.com> <20210808172503.5187cd24@jic23-huawei>
+In-Reply-To: <20210808172503.5187cd24@jic23-huawei>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 8 Aug 2021 22:00:34 +0300
+Message-ID: <CAHp75VfSX-7UqH9Lbr_GxQRY3dGjGo7H8++kBdrrSds1p6nB1Q@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of strscpy()
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Sun, Aug 8, 2021 at 7:25 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Sat,  7 Aug 2021 17:22:25 +0200
+> Len Baker <len.baker@gmx.com> wrote:
+>
+> > strcpy() performs no bounds checking on the destination buffer. This
+> > could result in linear overflows beyond the end of the buffer, leading
+> > to all kinds of misbehaviors. The safe replacement is strscpy().
+> >
+> > This patch is an effort to clean up the proliferation of str*()
+> > functions in the kernel and a previous step in the path to remove
+> > the strcpy function from the kernel entirely [1].
+> >
+> > [1] https://github.com/KSPP/linux/issues/88
+> >
+> > Signed-off-by: Len Baker <len.baker@gmx.com>
+> Applied to the togreg branch of iio.git and pushed out as testing
+> so 0-day can poke at it and see if we missed anything.
 
-Le 08/08/2021 à 17:35, Bernd Petrovitsch a écrit :
-> Hi all!
-> 
-> On 08/08/2021 14:50, Len Baker wrote:
->> strcpy() performs no bounds checking on the destination buffer. This
->> could result in linear overflows beyond the end of the buffer, leading
->> to all kinds of misbehaviors. So, use memcpy() as a safe replacement.
->>
->> This is a previous step in the path to remove the strcpy() function
->> entirely from the kernel.
->>
->> Signed-off-by: Len Baker <len.baker@gmx.com>
->> ---
->>   drivers/soc/renesas/r8a779a0-sysc.c | 6 ++++--
->>   drivers/soc/renesas/rcar-sysc.c     | 6 ++++--
->>   2 files changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/soc/renesas/r8a779a0-sysc.c b/drivers/soc/renesas/r8a779a0-sysc.c
->> index d464ffa1be33..7410b9fa9846 100644
->> --- a/drivers/soc/renesas/r8a779a0-sysc.c
->> +++ b/drivers/soc/renesas/r8a779a0-sysc.c
->> @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
->>   	for (i = 0; i < info->num_areas; i++) {
->>   		const struct r8a779a0_sysc_area *area = &info->areas[i];
->>   		struct r8a779a0_sysc_pd *pd;
->> +		size_t n;
->>
->>   		if (!area->name) {
->>   			/* Skip NULLified area */
->>   			continue;
->>   		}
->>
->> -		pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
->> +		n = strlen(area->name) + 1;
->> +		pd = kzalloc(sizeof(*pd) + n, GFP_KERNEL);
-> Zeroing the allocated bytes is not needed since it's completly
-> overwritten with the strcpy()/memcpy().
+Isn't it too early? Or am I missing something (see below)?
 
-The strcpy()/memcpy() only overwrites the pd->name field, not the whole 
-pd structure.
-I think that it is needed to keep the kzalloc.
+...
 
-Just my 2c,
-CJ
+> >                       /* use length + 2 for adding minus sign if needed */
+> > -                     str = devm_kzalloc(regmap_get_device(st->map),
+> > -                                        strlen(orient) + 2, GFP_KERNEL);
+> > +                     n = strlen(orient) + 2;
+> > +                     str = devm_kzalloc(regmap_get_device(st->map), n,
+> > +                                        GFP_KERNEL);
+> >                       if (str == NULL)
+> >                               return -ENOMEM;
+> >                       if (strcmp(orient, "0") == 0) {
+> > -                             strcpy(str, orient);
+> > +                             strscpy(str, orient, n);
+> >                       } else if (orient[0] == '-') {
+> > -                             strcpy(str, &orient[1]);
+> > +                             strscpy(str, &orient[1], n);
+> >                       } else {
+> >                               str[0] = '-';
+> > -                             strcpy(&str[1], orient);
+> > +                             strscpy(&str[1], orient, n - 1);
 
->>   		if (!pd) {
->>   			error = -ENOMEM;
->>   			goto out_put;
->>   		}
->>
->> -		strcpy(pd->name, area->name);
->> +		memcpy(pd->name, area->name, n);
->>   		pd->genpd.name = pd->name;
->>   		pd->pdr = area->pdr;
->>   		pd->flags = area->flags;
-> 
-> And similar for the second hunk.
-> 
-> MfG,
-> 	Bernd
-> 
+Why n-1?
 
+> >                       }
+
+As far as I understood the logic, it  inverts the sign except the case
+when it equals 0.
+
+I have a question here, why can't we always use +/-?
+Why can't 0 be prefixed with a sign?
+
+If the above can be used, we may simplify this code.
+
+Len, I think this task may be considered simple, but I recommend
+thinking about each case and finding a way to simplify it more.
+
+-- 
+With Best Regards,
+Andy Shevchenko
