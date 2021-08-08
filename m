@@ -2,129 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B82C4320A
-	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 11:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B3CC4320A
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 11:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B02476103B
-	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 11:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF3D60F9E
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 11:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbhHHL1I (ORCPT
+        id S230380AbhHHLbX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 8 Aug 2021 07:27:08 -0400
-Received: from mout.gmx.net ([212.227.15.18]:33771 "EHLO mout.gmx.net"
+        Sun, 8 Aug 2021 07:31:23 -0400
+Received: from mout.gmx.net ([212.227.15.15]:52729 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229473AbhHHL1I (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 8 Aug 2021 07:27:08 -0400
+        id S229473AbhHHLbX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 8 Aug 2021 07:31:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628421990;
-        bh=KmUIUjc/SMPMYj9TExyPq3vQb0YAHTrk48Epwl7WfNw=;
+        s=badeba3b8450; t=1628422255;
+        bh=W5chU5//YfU3n5/LhSUUVSldCLiEe1+cMgrkYXazda0=;
         h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=NhRkGU9VqsJP5ckK4Q/2+stSYMRJGtiExrNFQnWRWUyxYSgitdl0ldpZoFWxEy60A
-         8NNouudzVwlooXPudODpGhmcIGbO/i/AtYOpvyEng0BgYsjl1+na9SJW83FKJgqGC/
-         JtnzOKkkKPalmPFjLvXfQOZ6RbZjCIjVfuhvklMA=
+        b=C9NVFolz1ZsuztP7hj7CJh6tZUOPaGkLRIeA11yOMplKcp81SspAM4UApgNIyzct0
+         tM8nRFXsYv5+bS9hjP+tDhl3VE1QcY+h+xUO5jQcyD1h7EZOiI11dzIzTCpRKTzhkE
+         N27zc9Typcu5BRft/5MU7uZdmw/zIGmLeyxn1Tog=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1N3siA-1nCBW92icC-00zoTX; Sun, 08
- Aug 2021 13:26:29 +0200
-Date:   Sun, 8 Aug 2021 13:26:17 +0200
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MiaY9-1moFlA2Fl9-00fitP; Sun, 08
+ Aug 2021 13:30:55 +0200
+Date:   Sun, 8 Aug 2021 13:30:43 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Joe Perches <joe@perches.com>, Robert Richter <rric@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Len Baker <len.baker@gmx.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] drivers/edac/edac_mc: Remove all strcpy() uses
-Message-ID: <20210808112617.GA1927@titan>
-References: <20210807155957.10069-1-len.baker@gmx.com>
- <ff02ffffdc130a772c01ec0edbf8d1e684b0730a.camel@perches.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-hardening@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/input: Remove all strcpy() uses in favor of
+ strscpy()
+Message-ID: <20210808113043.GA3042@titan>
+References: <20210801144316.12841-1-len.baker@gmx.com>
+ <20210801145959.GI22278@shell.armlinux.org.uk>
+ <20210801155732.GA16547@titan>
+ <202108010934.FA668DEB28@keescook>
+ <20210807140245.GA2688@titan>
+ <0c1d7c01821f1f0891fd8f13c1e8f9a68bb21717.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <0c1d7c01821f1f0891fd8f13c1e8f9a68bb21717.camel@perches.com>
+X-Provags-ID: V03:K1:yhtkYHOcv/CHfzZdfq4WcAMbmVNEMTMq971wsGS9ywr1epjn7nE
+ 1anGABKOQFM/27iH0g27l/ljraDexB9IRu9iidvy8X/LpM2joGccUuJYn98zRJNpxcwF1hH
+ 4kVyEgb9uCeY8Onw6RSereN+/KNXvT3RnXvdOJrUxK7RXnDvSFgiQIMNPInOon9nvXKypme
+ +cp9kDx3Wn2kEYwZssgJA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wbeyWHOiozo=:5WOgHNeL5Q45hm6gMdYeBG
+ WtTe2QQjS0HdeW5zyT6ibXFFhDJc3tdwylJNHtEWpt2TyFEj5WYb3YrzrxD08eg3Xy/woBHn9
+ yEe1nYJtrqknaCyOdbpw6Ki0gGFcNG2smWJdumrE43lrtiX+Pn8oKoDEMPdrraXIVNACGBTLU
+ ZX4j1OlOKccvxSoq5KOOEgl92gufFkfZoUE7yXeQwgxWVwr4OkeZToan0kvPPoy1kcaTEDQCm
+ ZYsqxGKLO8iB5mbi56GDECJsbkq+a8FLK+arZMRQ8qpQ4jMpxfbWKl1p56zZNGwGJm9OBHs8Y
+ fogIgg+H5dXs8bryCTlR4klKFQYyl8CQiR4VFBaZMWnvnRYHDjSRrmB6y0mCY8xyn8mbXO9EQ
+ 9+YCfUODUW3PDoDCkBfr5faMTYYAZuLsJOBDVwVNbuGJ95SB4ztfyzmj+0DO4Wonl4YySCgkm
+ LBnLG/DRJv5Xp7pmaji6AFQcXMYk/PEi4QMs09WOTkWMbJeQqwh0a51+z1asCisPBjIVSSnYB
+ eu8v3PywFRBhwHQjENl/7d68Yp4qeJOw1n/LiO2ELjdGzbzRO/ewiv9cm2+Yk1f26WtCwKrIv
+ 1yhCRyvPiVVjFimBFkybHI4UMqqv7wNftFul18QJttS0jVxkAsuPme4ou5oxtWqyk6dkQSjP9
+ FsQPmhnghB5J+nyJgFFx0TuzMonxdVMtiw+kBv8WsE4W8JOYdHXqAXP8WxRLWsi6BbDF0uKTb
+ Sbr95zUO9WW1qwlCrUra+4VfJ4rI3ei0d39mkC+R46YRW98TD7jIrcfWIjjmqIhkGN/ZaVYCJ
+ gZExeTTDL7cj6JlpXQVNdapx7yXQSRCw2ncdAt6RRBSyMksIh019QOQZ+yVRTe8zGj0LEcuvV
+ j9flNdLJojegbi1BK7m8lNh3oJBdw7MM/Sy5af/Nn78vGMR0HlDgXat6OnZ7Z0IYSn4di8YjS
+ swWD/W23RYRBHgPJN8h2mEQ18S73GveQDcdvVFQYzSOfR1qXm+9nPtyBaBTkP0rVKqgCFihl5
+ J3PM0ngze9EgpdyGDO7AlXxDKGymZXvGntpxQxu7PL416mv5Hw+M82DbL1BJvVbVK9lfxMjhO
+ o1GyuBOQ00Q4wiHnSiH9k3kJqWAGTpT/WL0OoH3iTaFhGOnTgXXMOKYUA==
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ff02ffffdc130a772c01ec0edbf8d1e684b0730a.camel@perches.com>
-X-Provags-ID: V03:K1:3hHWG/tuZZeXkjU7eXoxWLV7rDk8fAeGSgNunmZLLqyFENuj5Do
- LJRKd3uHOhBfKjaEnPLmSR+BXIXXHdzocywXWl2cLSdI+urIPqaPKKY3bHYXPlCTJOcje6R
- ZnnTHw77X6b0sg6AlRcjxNEpVmbVeCp9PpMVriGtrECQrhrB7t+uSKdly6WoG9Ic2iN80zs
- T40773XKAENZUVlxOHHnw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mflkk1dmBT8=:wI7FHju9wMLs7LdKcggpc8
- T7Uf61/gbrpNZ09vrHUwrKFfP02yxCnHP1krx3mcnU1v1jnM0mrZM1IO+uCQQRveMbC9SoNVF
- d0kavCiT/YPfk5vDmygu+mgQbTw52T0LbMO3AxHIsXqvQL5YcIrEGjqBovZqZmGq1BA3WKqMc
- qmZ/2XWFMMFjqjWK4MIK07B2juyGJd4ARK+PYm1JVjZVvk6dv/+iGoQX+naFBfg+9kGSUknBC
- /mptbhtYwzlq5h1GjWjfNLx2f19MXlIuyLsquOUJMi4cFKVBwCujRkWhAHxS478oZGie4OUu/
- f8z4g6nInGcWBshLskkLqQ7jK0TtEwHncx0y+t4+Z1HMqA4lFl6+FXbMRQH/TVx6hdeQjswNF
- khn7O3R10VlGMXwRSWLVytCcNgVY0jK45Hz77tUbtv01gBW7aVIKJ2dubdbE4eCvXLq0JXPAc
- 8Fq7sFmMUD1BcxZ3ttpRIvxvKuhtSMhy2ggGvJ+ZRPqgDqy8BBLR7l5pAhM+MDG4QWnf24SFB
- T8nkera6YXyE1We2v+wXJ6oFH2ES0zhPQnIMvbIpcRm/dbVpsy6GoPfZc+i1bZbwwQZyVlMST
- dZ8i3PZGSLSH0cX7ZY37CugMyxgYoYzzmcTROvf/BbPxmgCrl/WbjG5szjchXK9Ke91PfQUm3
- FUrV2CKW5OhhLeIiTLbbq2e9I7V4rZ2ZxiYs/EA5h9nCPPX9mE2PUzqfUrryivw9sqB/IfHyK
- HzJ2Q8TAQzEN6c3fV52nEwDihSKR5j+hh9V6eG4WfQdFf8kNY0MVQeE0ycFu/hJaJ5Hz73est
- bWczc4vnKollzNx63SL3OVM1YRw2+2BJBJUcNeQGIaPv4HBiXzzRX0zlxi3AvNIfFe3JOIhGZ
- /RRM3QsQr8PI3hV/lxBK3ioWFaM8MaTyvxYBXD64tFMsq7lxcecWEZOslVsRJU5Nk1HqFE0VE
- F9+ZeQj1n99FYCB9yXwjuE80ob5n0BGQru7gYTV7ht0oEHNamtSi+tDsHBNJv/GhsS3NuMA/m
- JkG01ZGN9AbbE6JRbNgWjSyzS6QzoeBnBC8GmkKlXZtQfzyeuIf2l6pAxO9E09cRnkMDil2xq
- dAmfuMW83CJRlURxPaufDWULDg4fte0Ig64yH0/9YCl8MB1jkFd2faoVQ==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 Hi,
 
-On Sat, Aug 07, 2021 at 10:09:35AM -0700, Joe Perches wrote:
-> On Sat, 2021-08-07 at 17:59 +0200, Len Baker wrote:
-> > strcpy() performs no bounds checking on the destination buffer. This
-> > could result in linear overflows beyond the end of the buffer, leading
-> > to all kinds of misbehaviors. The safe replacement is strscpy().
->
-> Probably better to change the commit subject to something like
-> what is generally used by the subsystem.
->
-> Maybe:
-> 	EDAC/mc: Convert strcpy to strscpy
-> or
-> 	EDAC/mc: Prefer strscpy over strcpy
-
-Ok, no problem. I like the second one.
-
-> and also:
->
-> > diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+On Sat, Aug 07, 2021 at 08:17:39AM -0700, Joe Perches wrote:
+> On Sat, 2021-08-07 at 16:02 +0200, Len Baker wrote:
+> > On Sun, Aug 01, 2021 at 09:44:33AM -0700, Kees Cook wrote:
 > []
-> > @@ -1113,11 +1115,11 @@ void edac_mc_handle_error(const enum hw_event_=
-mc_err_type type,
-> > =A0			p =3D e->label;
-> > =A0			*p =3D '\0';
-> > =A0		} else {
-> > -			if (p !=3D e->label) {
-> > -				strcpy(p, OTHER_LABEL);
-> > -				p +=3D strlen(OTHER_LABEL);
-> > -			}
-> > -			strcpy(p, dimm->label);
-> > +			const char *text =3D (p !=3D e->label) ? OTHER_LABEL :
-> > +				dimm->label;
-> > +
-> > +			strscpy(p, text, len);
-> > +			len -=3D strlen(p);
-> > =A0			p +=3D strlen(p);
+> > > One thing is clear: replacing strlcpy() with strscpy() is probably t=
+he
+> > > easiest and best first step to cleaning up the proliferation of str*=
+()
+> > > functions.
+> >
+> > Thanks for all this info. I will work on it (clean up the proliferatio=
+n
+> > of str*() functions).
 >
-> Perhaps this should use scnprintf rather than strscpy
-> Something like:
-> 			n +=3D scnprintf(buf + n, len - n, "%s",
-> 				       p =3D=3D e->label ? dim->label : OTHER_LABEL);
+> btw:
 >
-In the first version [1] the scnprintf was used but Robert Richter don't
-see any benefit compared with the current implementation.
+> It's not possible to sed as the return value is different,
+> but here is a cocci script that converts strlcpy to strscpy
+> when the return value is unused.
+>
+>     @@
+>     expression e1, e2, e3;
+>     @@
+>
+>     -       strlcpy(
+>     +       strscpy(
+>             e1, e2, e3);
+>
+> This cocci script was used on sound/ awhile back.
+> see commit 75b1a8f9d62e.
 
-[1] https://lore.kernel.org/linux-hardening/20210725162954.9861-1-len.bake=
-r@gmx.com/
+Thanks a lot for your help on this. I will take into account all this info=
+.
 
 Regards,
 Len
