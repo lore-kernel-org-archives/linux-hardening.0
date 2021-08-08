@@ -2,107 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0370AC4338F
-	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 15:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE73C4338F
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 16:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D654C6044F
-	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 15:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6427360EE7
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 Aug 2021 16:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232138AbhHHPvG (ORCPT
+        id S231137AbhHHQWf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 8 Aug 2021 11:51:06 -0400
-Received: from mout.gmx.net ([212.227.15.18]:33365 "EHLO mout.gmx.net"
+        Sun, 8 Aug 2021 12:22:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229923AbhHHPvF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 8 Aug 2021 11:51:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628437832;
-        bh=8WpITWSAmjBFl5ukEIIIh0d8OHw71Lp48DGXmRGeV/w=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=BYo69O9ZP31BaGHrttIW3DNXq5fsutLC41vClAk6H35xvuJnDEaTeQkt882+sli2S
-         2zRg9IM9rLshVQr76zjdU/siM1XIhrV5DGCa8+OSeFvcFWuXPM4fnl62KG2W/zcnMS
-         p5HBmLVDPLTX/xCePS6ePL3UqU+5U7dVMFUOgxHA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MmDEg-1muaHQ0Bxg-00i9Ax; Sun, 08 Aug 2021 17:50:32 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-hardening@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 3/3] drivers/soc/ti: Prefer strscpy over strcpy
-Date:   Sun,  8 Aug 2021 14:50:12 +0200
-Message-Id: <20210808125012.4715-4-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210808125012.4715-1-len.baker@gmx.com>
-References: <20210808125012.4715-1-len.baker@gmx.com>
+        id S230049AbhHHQWe (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 8 Aug 2021 12:22:34 -0400
+Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5001060F35;
+        Sun,  8 Aug 2021 16:22:14 +0000 (UTC)
+Date:   Sun, 8 Aug 2021 17:25:03 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of
+ strscpy()
+Message-ID: <20210808172503.5187cd24@jic23-huawei>
+In-Reply-To: <20210807152225.9403-1-len.baker@gmx.com>
+References: <20210807152225.9403-1-len.baker@gmx.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NAahUXrhbe23vphH2V5V8QzAnruX6eosbWznab34o/LlPE7OlPz
- ZAfqE/aSfFY2bE99SUHctzIhbGTUQWHJNn/Zi33p7hM9YmI1PaIFMOPJRHQnTYzgKnn6JtG
- TNmZoPeYiGN/nvP6EicoyWFdt6UhpXby+7FGeJAnE5Qm5siNwa/rOu+5cWNMuUolLKmgMet
- 1iEvwDwn9LM+wXyxXKeaQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:u4E+rKRzLoQ=:p3dXkD+lKAXeP09tYd/b7D
- qn8vWRi74uC9vfxuScHam1WxhNd120vw1V40MrsM6nyCiFv9Uc33D374I0bN9CGAkfJkWKwt7
- bxG5BcKad746HcV7lgz4WImjOEkbmILVwkvt4YULxO4eFLQzE9VJShbifmodkfN7V3n1jrv3d
- HU3ltcoOaxStaDVSwcJ7MIvwWqJCP08wks3Fp3IvPhfS9GusREs5YrE5MncFt/uSRNYRiCqxX
- JCRzxhHVi9bx2epIa1RVZa4IYTHsw6QYn2P14bTi/dg6tHhjRK0+Ax005k5Rc6MxLl+uGVmPy
- 7OlftBhjc14/CGGsFPtoiR86p+uFLP1CEMD4S81UPMER4UgAc3t03wTsocmJbpYh09V3gc9f6
- XmOoL8Aq3OV1WAymxGY0o9VvH/6F0H/HscnBM+hHScAJ4isMJondiGehJdIMCqqa6uS45oU7F
- 33EKZ25HmfSH+E5kXT7XZj6OqkcV3F62BfkTGcghqZiCCpuPtdUc57weM/04Zt3xC0Z6ogIPW
- DVv+un8BttTZSBfcyq4GkAPt0IO0l8MMZRot12IAGClnAfTJTOJWsTF42E+prGhZBGYgEbbkA
- 3K0z38AWuCSgyRWJXflj/4FNEYYk6QKrH6d2U+sSzM8VkgDzqGzElZqRU8KAJC8FaqMi0ccJr
- eyMRqePpr5jj4CbGuqldgl+gM0gPtuQ9MQJy2mRgvvtHfSBbbSVbnh59qybmlJ+3SQmo0ml5z
- mWsBRORfOFu1SR/980MlKJ9dY0s29bqcr8Lr1hIQ3WSz2AEeF9Ma1o0OBLIKd9TVPIzUTx79H
- bDrKeE4WYdVnkvtb5pyiuC7Gn47QwV4acL73BLQJvl25Mi/9bPDnRohcPpHq5BeT7wZX0dgTf
- fMJsQAcAL4nlEyopqtVJrQNdftSBfiipOkyFQupCTw4qGk2J8AAL2QAedYYWZ9yOT7fNbx+ue
- fo3jGU1RkiuHRzPS1OB50OgfUbpl9wQRrdJ3wdJUzTHDg0hZUjasOvDMUReP3VZCEoq5dCKNp
- BaNRaQ8RoJn31P9fd8crvjBwK4IgonyBGcajCsc0F3i6LrsFwKxu99hvCVAUS6I9eGWbKcVyz
- 7XMSfwykaJABkmtEi2C+bgh4crafcW7oUDA6pvxmPkZEdBEO0pDSpLkrQ==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strcpy() performs no bounds checking on the destination buffer. This
-could result in linear overflows beyond the end of the buffer, leading
-to all kinds of misbehaviors. The safe replacement is strscpy().
+On Sat,  7 Aug 2021 17:22:25 +0200
+Len Baker <len.baker@gmx.com> wrote:
 
-This is a previous step in the path to remove the strcpy() function
-entirely from the kernel.
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors. The safe replacement is strscpy().
+> 
+> This patch is an effort to clean up the proliferation of str*()
+> functions in the kernel and a previous step in the path to remove
+> the strcpy function from the kernel entirely [1].
+> 
+> [1] https://github.com/KSPP/linux/issues/88
+> 
+> Signed-off-by: Len Baker <len.baker@gmx.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+so 0-day can poke at it and see if we missed anything.
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/soc/ti/knav_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/soc/ti/knav_dma.c b/drivers/soc/ti/knav_dma.c
-index 591d14ebcb11..5f9816d317a5 100644
-=2D-- a/drivers/soc/ti/knav_dma.c
-+++ b/drivers/soc/ti/knav_dma.c
-@@ -691,7 +691,7 @@ static int dma_init(struct device_node *cloud, struct =
-device_node *dma_node)
- 	dma->max_rx_flow =3D max_rx_flow;
- 	dma->max_tx_chan =3D min(max_tx_chan, max_tx_sched);
- 	atomic_set(&dma->ref_count, 0);
--	strcpy(dma->name, node->name);
-+	strscpy(dma->name, node->name, sizeof(dma->name));
- 	spin_lock_init(&dma->lock);
+Jonathan
 
- 	for (i =3D 0; i < dma->max_tx_chan; i++) {
-=2D-
-2.25.1
+> ---
+> Changelog v1 -> v2
+> - Modify the commit changelog to inform that the motivation of this
+>   patch is to remove the strcpy() function from the kernel entirely
+>   (Jonathan Cameron).
+> 
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> index f282e9cc34c5..3a6aa1c4bf6c 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> @@ -264,6 +264,7 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
+>  	const char *orient;
+>  	char *str;
+>  	int i;
+> +	size_t n;
+> 
+>  	/* fill magnetometer orientation */
+>  	switch (st->chip_type) {
+> @@ -282,17 +283,18 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
+>  		for (i = 0; i < 3; ++i) {
+>  			orient = st->orientation.rotation[6 + i];
+>  			/* use length + 2 for adding minus sign if needed */
+> -			str = devm_kzalloc(regmap_get_device(st->map),
+> -					   strlen(orient) + 2, GFP_KERNEL);
+> +			n = strlen(orient) + 2;
+> +			str = devm_kzalloc(regmap_get_device(st->map), n,
+> +					   GFP_KERNEL);
+>  			if (str == NULL)
+>  				return -ENOMEM;
+>  			if (strcmp(orient, "0") == 0) {
+> -				strcpy(str, orient);
+> +				strscpy(str, orient, n);
+>  			} else if (orient[0] == '-') {
+> -				strcpy(str, &orient[1]);
+> +				strscpy(str, &orient[1], n);
+>  			} else {
+>  				str[0] = '-';
+> -				strcpy(&str[1], orient);
+> +				strscpy(&str[1], orient, n - 1);
+>  			}
+>  			st->magn_orient.rotation[6 + i] = str;
+>  		}
+> --
+> 2.25.1
+> 
 
