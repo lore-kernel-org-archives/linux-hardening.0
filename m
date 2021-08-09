@@ -2,80 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78083C4320A
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 17:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E3FC4338F
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 21:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 633FE6108C
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 17:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968876101E
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 21:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233819AbhHIRTY (ORCPT
+        id S235734AbhHIVJH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Aug 2021 13:19:24 -0400
-Received: from smtprelay0155.hostedemail.com ([216.40.44.155]:56044 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S233656AbhHIRTX (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Aug 2021 13:19:23 -0400
-Received: from omf01.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 96F2F1802F048;
-        Mon,  9 Aug 2021 17:19:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf01.hostedemail.com (Postfix) with ESMTPA id 0A01517275;
-        Mon,  9 Aug 2021 17:18:59 +0000 (UTC)
-Message-ID: <99448ef29830fda9b19409bc23b0e7513b22f7b7.camel@perches.com>
-Subject: Re: [PATCH v3] drivers/edac/edac_mc: Remove all strcpy() uses
-From:   Joe Perches <joe@perches.com>
-To:     Robert Richter <rric@kernel.org>, Len Baker <len.baker@gmx.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 09 Aug 2021 10:18:58 -0700
-In-Reply-To: <YRD90L6PMoVbbv+9@rric.localdomain>
-References: <20210807155957.10069-1-len.baker@gmx.com>
-         <ff02ffffdc130a772c01ec0edbf8d1e684b0730a.camel@perches.com>
-         <20210808112617.GA1927@titan> <YRD90L6PMoVbbv+9@rric.localdomain>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.0-1 
+        Mon, 9 Aug 2021 17:09:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229516AbhHIVJG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 9 Aug 2021 17:09:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C48B660C51;
+        Mon,  9 Aug 2021 21:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628543325;
+        bh=4X7GgQzil0XE9e0MOOkWsScaqNE/lfvOBMhpWRnWcfU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=j0lzJPy28KURuQMgWdr+sn/DCeOLgIMndjvmqkHCUtc/IhjO56JIEwNFILKQTJcVg
+         HLWYC/ZhoLxi6pZvu85QQ/qqsgzICff4AqDN6O62ABHxRQ0y7eQ9W80UUG3rKIyVHv
+         M6MZzNuwryfW06yfp58yxhcXAL5DEp0wSH1tOrj/wkoWgKlAzfMg1CeOgHJR42clq0
+         i24xi9lKw9fvMlzlLU0esbdCMEZOLzRn9UTPo+ZhZUmQRVzhhlOaOZmoq80qmSb2AK
+         2ylRrtxQChcTF9LAPdwi/Mrm8tLCOobvgcjj29HUrJb3CUNTm4sR2F5OXz32xtS1Pk
+         E78FS+j3/sHLA==
+Date:   Mon, 9 Aug 2021 16:11:34 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] mwifiex: usb: Replace one-element array with
+ flexible-array member
+Message-ID: <20210809211134.GA22488@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 0A01517275
-X-Stat-Signature: p5kr8prgqazzpziseafgjpraffk61fyt
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX180VX6TKfp7KxpfCdiqElP3tLF2OZGglEw=
-X-HE-Tag: 1628529539-872985
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 2021-08-09 at 12:05 +0200, Robert Richter wrote:
-> On 08.08.21 13:26:17, Len Baker wrote:
-> 
-> > > Perhaps this should use scnprintf rather than strscpy
-> > > Something like:
-> > > 			n += scnprintf(buf + n, len - n, "%s",
-> > > 				       p == e->label ? dim->label : OTHER_LABEL);
-> > > 
-> > In the first version [1] the scnprintf was used but Robert Richter don't
-> > see any benefit compared with the current implementation.
-> > 
-> > [1] https://lore.kernel.org/linux-hardening/20210725162954.9861-1-len.baker@gmx.com/
-> 
-> Reason is that there is the assumption that p must always point at the
-> end of the string and its trailing zero byte. I am not opposed using
-> the string function's return code instead of strlen() to get the
-> length. But why using formated output if strscpy() can be used?
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-strscpy and scnprintf have different return values and it's simpler
-and much more common to use scnprintf for appended strings that are
-limited to a specific buffer length.
+This helps with the ongoing efforts to globally enable -Warray-bounds
+and get us closer to being able to tighten the FORTIFY_SOURCE routines
+on memcpy().
 
+This issue was found with the help of Coccinelle and audited and fixed,
+manually.
 
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/109
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/marvell/mwifiex/usb.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/usb.h b/drivers/net/wireless/marvell/mwifiex/usb.h
+index d822ec15b7e6..61a96b7fbf21 100644
+--- a/drivers/net/wireless/marvell/mwifiex/usb.h
++++ b/drivers/net/wireless/marvell/mwifiex/usb.h
+@@ -134,7 +134,7 @@ struct fw_sync_header {
+ struct fw_data {
+ 	struct fw_header fw_hdr;
+ 	__le32 seq_num;
+-	u8 data[1];
++	u8 data[];
+ } __packed;
+ 
+ #endif /*_MWIFIEX_USB_H */
+-- 
+2.27.0
 
