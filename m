@@ -2,73 +2,118 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D633C4338F
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 10:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB89C4320A
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 11:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 256276108C
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 10:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703946101E
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 11:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234809AbhHIKFc (ORCPT
+        id S235090AbhHILXo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Aug 2021 06:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234822AbhHIKF3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Aug 2021 06:05:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CAF4861004;
-        Mon,  9 Aug 2021 10:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628503509;
-        bh=2zKz1qElSq58PZRYESvVVX02YG+iPBjCI2bz6gw0UN8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tkLPUzp3FVZI0suGivgvscOU4H5YH5WZAOm7D/zYqm8djWcyc4CaPbrBs5EQiHzi6
-         Svp6jbyK7pZaVKk5NSlSX/mgyVfAKzvDN5SnlF6Pza1YVkgGZLpWHPKRcLF00uEuWR
-         FyvkpnJWfTghbe/BfclSMxIcqKantX3oTZakzcsa1ZPxg8/2FPwIoSZVNkKde4CHqR
-         zo4Kd3fIrtdmi6dIkCvh1Zwinfv2H+dOb7rm4w9qHQJvMVVQjgmSwPEpb+G4m1Gd55
-         lS3Gfso+iprAft7mx7Ywk1WJ77XTsMQmV6Jlg1f6yoGULS0odQBO9hDrorA4JHhxrb
-         20UyaqFPA+Kig==
-Date:   Mon, 9 Aug 2021 12:05:04 +0200
-From:   Robert Richter <rric@kernel.org>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Joe Perches <joe@perches.com>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] drivers/edac/edac_mc: Remove all strcpy() uses
-Message-ID: <YRD90L6PMoVbbv+9@rric.localdomain>
-References: <20210807155957.10069-1-len.baker@gmx.com>
- <ff02ffffdc130a772c01ec0edbf8d1e684b0730a.camel@perches.com>
- <20210808112617.GA1927@titan>
+        Mon, 9 Aug 2021 07:23:44 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:34390 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235007AbhHILXo (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 9 Aug 2021 07:23:44 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 6D8F421ED4;
+        Mon,  9 Aug 2021 11:23:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1628508202;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XEHaigBd+p4Kdq3FOyfyiQahnEWWgwrbyI9p3sYy9Jg=;
+        b=FUJg+QaU7zw3qTf6t8q9Qr96X0Utqfsl+nS4wyhc9/5vWZMS539Of9T5SM02pWzim1Cnda
+        RMrFBB4C9IiCbCzLy7hKe0Nw5kCTqLiYUG2RwoYyBydeMv59tIlgL5Vpa/xsWEDauKkWvj
+        09N1MMAWFSlJkFOi7ijKkWYVWovvXhs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1628508202;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XEHaigBd+p4Kdq3FOyfyiQahnEWWgwrbyI9p3sYy9Jg=;
+        b=4VeRarVySJZv/AlngzeBW/O6mbVTRAHHGwmwBsPvaCbeLhv85RY/VfIGPtUkorqnnpUTKq
+        o+aHpptVRlTrrwAw==
+Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
+        by relay2.suse.de (Postfix) with ESMTP id 53C44A3B8E;
+        Mon,  9 Aug 2021 11:23:22 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id BAE5EDA880; Mon,  9 Aug 2021 13:20:30 +0200 (CEST)
+Date:   Mon, 9 Aug 2021 13:20:30 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 47/64] btrfs: Use memset_after() to clear end of struct
+Message-ID: <20210809112030.GM5047@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20210727205855.411487-1-keescook@chromium.org>
+ <20210727205855.411487-48-keescook@chromium.org>
+ <20210728094215.GX5047@twin.jikos.cz>
+ <202107281455.2A0753F5@keescook>
+ <20210729103337.GS5047@suse.cz>
+ <202107310822.31BEB6E543@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210808112617.GA1927@titan>
+In-Reply-To: <202107310822.31BEB6E543@keescook>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 08.08.21 13:26:17, Len Baker wrote:
-
-> > Perhaps this should use scnprintf rather than strscpy
-> > Something like:
-> > 			n += scnprintf(buf + n, len - n, "%s",
-> > 				       p == e->label ? dim->label : OTHER_LABEL);
-> >
-> In the first version [1] the scnprintf was used but Robert Richter don't
-> see any benefit compared with the current implementation.
+On Sat, Jul 31, 2021 at 08:25:51AM -0700, Kees Cook wrote:
+> On Thu, Jul 29, 2021 at 12:33:37PM +0200, David Sterba wrote:
+> > On Wed, Jul 28, 2021 at 02:56:31PM -0700, Kees Cook wrote:
+> > > On Wed, Jul 28, 2021 at 11:42:15AM +0200, David Sterba wrote:
+> > > > On Tue, Jul 27, 2021 at 01:58:38PM -0700, Kees Cook wrote:
+> > > > >  	}
+> > > > >  	if (need_reset) {
+> > > > > -		memset(&item->generation_v2, 0,
+> > > > > -			sizeof(*item) - offsetof(struct btrfs_root_item,
+> > > > > -					generation_v2));
+> > > > > -
+> > > > 
+> > > > Please add
+> > > > 		/* Clear all members from generation_v2 onwards */
+> > > > 
+> > > > > +		memset_after(item, 0, level);
+> > > 
+> > > Perhaps there should be another helper memset_starting()? That would
+> > > make these cases a bit more self-documenting.
+> > 
+> > That would be better, yes.
+> > 
+> > > +		memset_starting(item, 0, generation_v2);
+> > 
+> > memset_from?
 > 
-> [1] https://lore.kernel.org/linux-hardening/20210725162954.9861-1-len.baker@gmx.com/
+> For v2, I bikeshed this to "memset_startat" since "from" is semantically
+> close to "source" which I thought might be confusing. (I, too, did not
+> like "starting".) :)
 
-Reason is that there is the assumption that p must always point at the
-end of the string and its trailing zero byte. I am not opposed using
-the string function's return code instead of strlen() to get the
-length. But why using formated output if strscpy() can be used?
-
--Robert
+memset_startat works for me, thanks.
