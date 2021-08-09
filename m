@@ -2,118 +2,170 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB89C4320A
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 11:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C6BC4338F
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 16:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 703946101E
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 11:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A4360EB9
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 16:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235090AbhHILXo (ORCPT
+        id S229493AbhHIQPM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Aug 2021 07:23:44 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:34390 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235007AbhHILXo (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Aug 2021 07:23:44 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 6D8F421ED4;
-        Mon,  9 Aug 2021 11:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1628508202;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XEHaigBd+p4Kdq3FOyfyiQahnEWWgwrbyI9p3sYy9Jg=;
-        b=FUJg+QaU7zw3qTf6t8q9Qr96X0Utqfsl+nS4wyhc9/5vWZMS539Of9T5SM02pWzim1Cnda
-        RMrFBB4C9IiCbCzLy7hKe0Nw5kCTqLiYUG2RwoYyBydeMv59tIlgL5Vpa/xsWEDauKkWvj
-        09N1MMAWFSlJkFOi7ijKkWYVWovvXhs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1628508202;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XEHaigBd+p4Kdq3FOyfyiQahnEWWgwrbyI9p3sYy9Jg=;
-        b=4VeRarVySJZv/AlngzeBW/O6mbVTRAHHGwmwBsPvaCbeLhv85RY/VfIGPtUkorqnnpUTKq
-        o+aHpptVRlTrrwAw==
-Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
-        by relay2.suse.de (Postfix) with ESMTP id 53C44A3B8E;
-        Mon,  9 Aug 2021 11:23:22 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id BAE5EDA880; Mon,  9 Aug 2021 13:20:30 +0200 (CEST)
-Date:   Mon, 9 Aug 2021 13:20:30 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 47/64] btrfs: Use memset_after() to clear end of struct
-Message-ID: <20210809112030.GM5047@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
+        Mon, 9 Aug 2021 12:15:12 -0400
+Received: from mout.gmx.net ([212.227.15.18]:41453 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229456AbhHIQPM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 9 Aug 2021 12:15:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1628525673;
+        bh=kXrKblaZ6CNYHnepl9Y8P+zAjCJhII6lv5A6I+8gfu8=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=E1qz8619oknic+0M+CK8i2jhImlE40g45IgOmp6G+fWfGBVCsizP0Z2/CJ9Fn1Ne0
+         Q5sOVQs1ZWAaZ8YOHbu5A9xpZJSSNp0ESUkF5inEWGgEdJfpJDQCeuys03+LCl2fCU
+         XnFBqo0XRdvQy3YiSkwUiQfIwZovDTUnkdOTAtyU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1M9nxn-1m9X1Y0Ulx-005qGA; Mon, 09
+ Aug 2021 18:14:33 +0200
+Date:   Mon, 9 Aug 2021 18:14:22 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Len Baker <len.baker@gmx.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20210727205855.411487-1-keescook@chromium.org>
- <20210727205855.411487-48-keescook@chromium.org>
- <20210728094215.GX5047@twin.jikos.cz>
- <202107281455.2A0753F5@keescook>
- <20210729103337.GS5047@suse.cz>
- <202107310822.31BEB6E543@keescook>
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of
+ strscpy()
+Message-ID: <20210809161422.GA2619@titan>
+References: <20210807152225.9403-1-len.baker@gmx.com>
+ <20210808172503.5187cd24@jic23-huawei>
+ <CAHp75VfSX-7UqH9Lbr_GxQRY3dGjGo7H8++kBdrrSds1p6nB1Q@mail.gmail.com>
+ <20210809102131.000021eb@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202107310822.31BEB6E543@keescook>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20210809102131.000021eb@Huawei.com>
+X-Provags-ID: V03:K1:JDBAWEA04QKyxXvnanhW35lkIvCUd2zrRIULromQ+zDfoiNARFp
+ YMwUD2qwYZvHrtAI1DfvYFOHILplrlq/LPbuebE5J0wbpL+x9pP/WtuzCJs6bzhPnicdWBW
+ VKHbhEnnZXUC4GdSwyzxA10/W6WGOZlqy42CgcQ4+2C8lPqViHqbXKHNe4rtZZKuGiJ1yK5
+ IJ8YF8L5V4DTNDFnspkoA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pbFVuiJtVnA=:HMUtu7bOW3YYjyChEVQY4L
+ rb7ZMJUhQCKBAFhmgFT8548TxQOvuz4grKRCfplZQIglgOCWklhANPNEnQ9fIzo9jdGFRWH7f
+ +AplbnYCSpdetF4icjLUWgwNHws2Brd9PI3Fbe/j48GNX2jybiCqVFhM6E8W5leMabQEmrsTx
+ rDj2wFq9kzGVzWUoNpwhIshrnp1AzCjeOrnXctkUXVIgyOKR+lqdy6oWZpsYAU/vvtIu8G3NF
+ yiwTX84EBjUWH+JU7M4Up3kFq27udfTFURrX25o95WKfk4JRTb6BTuUnVwC2YRdAfJ8/+PhbK
+ VS3wkJ65zU9jIeHEWzRFThprhxT5IVsQGPwzep0mE/rs1FNjIMBSm2sM/8+Ndyd66x5txNftn
+ i9rwDO3XNCqRLZQr5S30qbcHvusvpEqL9ZpBye7EYdlEgXJvo8NXsPrQC7eyrI54LeCfnVrk/
+ veX/HiVyFe37ikZ4ag5c87EclrRwykwcvIaS3fpL2tGq5MHTyVHKhShJ51+tCzHGuOLu/buT5
+ Z74Q60lp4HFe6/K+AtCH6msCNo0LH1x8AX7wCpj2M8kV81jQNdXUDN/zPS7gyVPho2s94QCZv
+ /r8lxW6VCTDdEpzRyT8jgosQV5NRFHMTxRZvmSFhwtjW0jQ6Zr4GuR7rRRVj0v1dyYRbmxqHh
+ Lb3r3IPcly7u+rWoEctxk5ryeHxmaJiELOCmApOLy3svPrroVrONqaSH0/gdbullf7RxCxqdb
+ hbzb0h5f5h3SBvWfDwesijOAxjkGvKOxJJ5jg3mz1K5i1W0qYA0++ybVwhGxh/828XCstA25H
+ a+TiEB7vgU3JMQFqmBGHSEhNLbX6CRrP24bWKhLIXcj5m2xFjIW4Bz0XNT8HRpRjM+/elRhK5
+ bPtXT5oPDPX2R3PdQqKV2SlMjWwC1odoZeX2hpX181pp635RvPoyYfFRQDB2AagcPkHgkF7ja
+ dj+VRi4so5qgIVn5fpCZwydGhdzHF4+bDwjwWe5DQkTO+5lgK7Hx4AaGghCQfx77RRPekJLDz
+ hw196c0E4y1vyM3Tp41k7O940pJ1FkuIKcwaevWt4Tqv3wlBHV5Xd8Nf8R3XeuIBxEd6vX36K
+ B6+Br3tg2YJBwWrLAByi+jyDq+nwvsReZ2ipwBxfMdSWaPhFgmMXlaJ4A==
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Jul 31, 2021 at 08:25:51AM -0700, Kees Cook wrote:
-> On Thu, Jul 29, 2021 at 12:33:37PM +0200, David Sterba wrote:
-> > On Wed, Jul 28, 2021 at 02:56:31PM -0700, Kees Cook wrote:
-> > > On Wed, Jul 28, 2021 at 11:42:15AM +0200, David Sterba wrote:
-> > > > On Tue, Jul 27, 2021 at 01:58:38PM -0700, Kees Cook wrote:
-> > > > >  	}
-> > > > >  	if (need_reset) {
-> > > > > -		memset(&item->generation_v2, 0,
-> > > > > -			sizeof(*item) - offsetof(struct btrfs_root_item,
-> > > > > -					generation_v2));
-> > > > > -
-> > > > 
-> > > > Please add
-> > > > 		/* Clear all members from generation_v2 onwards */
-> > > > 
-> > > > > +		memset_after(item, 0, level);
-> > > 
-> > > Perhaps there should be another helper memset_starting()? That would
-> > > make these cases a bit more self-documenting.
-> > 
-> > That would be better, yes.
-> > 
-> > > +		memset_starting(item, 0, generation_v2);
-> > 
-> > memset_from?
-> 
-> For v2, I bikeshed this to "memset_startat" since "from" is semantically
-> close to "source" which I thought might be confusing. (I, too, did not
-> like "starting".) :)
+Hi,
 
-memset_startat works for me, thanks.
+On Mon, Aug 09, 2021 at 10:21:31AM +0100, Jonathan Cameron wrote:
+> On Sun, 8 Aug 2021 22:00:34 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> > On Sun, Aug 8, 2021 at 7:25 PM Jonathan Cameron <jic23@kernel.org> wro=
+te:
+> > >
+> > > On Sat,  7 Aug 2021 17:22:25 +0200
+> > > Len Baker <len.baker@gmx.com> wrote:
+> > >
+> > > > strcpy() performs no bounds checking on the destination buffer. Th=
+is
+> > > > could result in linear overflows beyond the end of the buffer, lea=
+ding
+> > > > to all kinds of misbehaviors. The safe replacement is strscpy().
+> > > >
+> > > > This patch is an effort to clean up the proliferation of str*()
+> > > > functions in the kernel and a previous step in the path to remove
+> > > > the strcpy function from the kernel entirely [1].
+> > > >
+> > > > [1] https://github.com/KSPP/linux/issues/88
+> > > >
+> > > > Signed-off-by: Len Baker <len.baker@gmx.com>
+> > > Applied to the togreg branch of iio.git and pushed out as testing
+> > > so 0-day can poke at it and see if we missed anything.
+> >
+> > Isn't it too early? Or am I missing something (see below)?
+> >
+> > ...
+> >
+> > > >                       /* use length + 2 for adding minus sign if n=
+eeded */
+> > > > -                     str =3D devm_kzalloc(regmap_get_device(st->m=
+ap),
+> > > > -                                        strlen(orient) + 2, GFP_K=
+ERNEL);
+> > > > +                     n =3D strlen(orient) + 2;
+> > > > +                     str =3D devm_kzalloc(regmap_get_device(st->m=
+ap), n,
+> > > > +                                        GFP_KERNEL);
+> > > >                       if (str =3D=3D NULL)
+> > > >                               return -ENOMEM;
+> > > >                       if (strcmp(orient, "0") =3D=3D 0) {
+> > > > -                             strcpy(str, orient);
+> > > > +                             strscpy(str, orient, n);
+> > > >                       } else if (orient[0] =3D=3D '-') {
+> > > > -                             strcpy(str, &orient[1]);
+> > > > +                             strscpy(str, &orient[1], n);
+> > > >                       } else {
+> > > >                               str[0] =3D '-';
+> > > > -                             strcpy(&str[1], orient);
+> > > > +                             strscpy(&str[1], orient, n - 1);
+> >
+> > Why n-1?
+>
+> n is the total length and this is printing from [1], so n - 1 is remaini=
+ng
+> space.
+>
+> >
+> > > >                       }
+> >
+> > As far as I understood the logic, it  inverts the sign except the case
+> > when it equals 0.
+> >
+> > I have a question here, why can't we always use +/-?
+> > Why can't 0 be prefixed with a sign?
+>
+> Technically a userspace ABI change, but I agree it should be fairly
+> harmless unless someone is rolling their own string handling routines.
+
+I personally don't like the idea of zero having a sign. It's my opinion.
+But if you prefer it I have no problem.
+
+> >
+> > If the above can be used, we may simplify this code.
+> >
+> > Len, I think this task may be considered simple, but I recommend
+> > thinking about each case and finding a way to simplify it more.
+>
+Andy, is what I try to do ;) Thanks for the advise.
+
+> It could be a little simpler doing this, so 'maybe' worth doing.
+
+Ok, I will send a new version if there are no objections.
+
+Regards,
+Len
