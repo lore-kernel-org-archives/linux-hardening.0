@@ -2,78 +2,74 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C6BC4338F
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 16:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67D7C4320A
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 16:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A4360EB9
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 16:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE4860F11
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 16:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbhHIQPM (ORCPT
+        id S232887AbhHIQ0m (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Aug 2021 12:15:12 -0400
-Received: from mout.gmx.net ([212.227.15.18]:41453 "EHLO mout.gmx.net"
+        Mon, 9 Aug 2021 12:26:42 -0400
+Received: from mout.gmx.net ([212.227.17.22]:43689 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229456AbhHIQPM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Aug 2021 12:15:12 -0400
+        id S232881AbhHIQ0Z (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 9 Aug 2021 12:26:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628525673;
-        bh=kXrKblaZ6CNYHnepl9Y8P+zAjCJhII6lv5A6I+8gfu8=;
+        s=badeba3b8450; t=1628526343;
+        bh=3nL4/VMzAAvkcx/Y4QlFv5TCFLlPZza+oU/Wlor7F0I=;
         h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=E1qz8619oknic+0M+CK8i2jhImlE40g45IgOmp6G+fWfGBVCsizP0Z2/CJ9Fn1Ne0
-         Q5sOVQs1ZWAaZ8YOHbu5A9xpZJSSNp0ESUkF5inEWGgEdJfpJDQCeuys03+LCl2fCU
-         XnFBqo0XRdvQy3YiSkwUiQfIwZovDTUnkdOTAtyU=
+        b=fd6T0XFTVs5g11Oy5tuiZ8D+w2Fqyx0qc0G+KYdp6bZXiKZaynOK2zqewkIjJuZWs
+         RLPoHo1J7kaWF0uztR5NtyYInX9qkr6aidHu8K5mfLeRzF5bCvGoIjME8WcTRJ85Qx
+         o5WplG4Qwvz1mwNWZ0VATwOtcimF+SrCeD0BTQzQ=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1M9nxn-1m9X1Y0Ulx-005qGA; Mon, 09
- Aug 2021 18:14:33 +0200
-Date:   Mon, 9 Aug 2021 18:14:22 +0200
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1N9dsb-1n9ETD3FS9-015com; Mon, 09
+ Aug 2021 18:25:42 +0200
+Date:   Mon, 9 Aug 2021 18:25:39 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
+To:     Robert Richter <rric@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of
- strscpy()
-Message-ID: <20210809161422.GA2619@titan>
-References: <20210807152225.9403-1-len.baker@gmx.com>
- <20210808172503.5187cd24@jic23-huawei>
- <CAHp75VfSX-7UqH9Lbr_GxQRY3dGjGo7H8++kBdrrSds1p6nB1Q@mail.gmail.com>
- <20210809102131.000021eb@Huawei.com>
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] drivers/edac/edac_mc: Remove all strcpy() uses
+Message-ID: <20210809162539.GB2619@titan>
+References: <20210807155957.10069-1-len.baker@gmx.com>
+ <YRD6uoVYwCSFN0U0@rric.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210809102131.000021eb@Huawei.com>
-X-Provags-ID: V03:K1:JDBAWEA04QKyxXvnanhW35lkIvCUd2zrRIULromQ+zDfoiNARFp
- YMwUD2qwYZvHrtAI1DfvYFOHILplrlq/LPbuebE5J0wbpL+x9pP/WtuzCJs6bzhPnicdWBW
- VKHbhEnnZXUC4GdSwyzxA10/W6WGOZlqy42CgcQ4+2C8lPqViHqbXKHNe4rtZZKuGiJ1yK5
- IJ8YF8L5V4DTNDFnspkoA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pbFVuiJtVnA=:HMUtu7bOW3YYjyChEVQY4L
- rb7ZMJUhQCKBAFhmgFT8548TxQOvuz4grKRCfplZQIglgOCWklhANPNEnQ9fIzo9jdGFRWH7f
- +AplbnYCSpdetF4icjLUWgwNHws2Brd9PI3Fbe/j48GNX2jybiCqVFhM6E8W5leMabQEmrsTx
- rDj2wFq9kzGVzWUoNpwhIshrnp1AzCjeOrnXctkUXVIgyOKR+lqdy6oWZpsYAU/vvtIu8G3NF
- yiwTX84EBjUWH+JU7M4Up3kFq27udfTFURrX25o95WKfk4JRTb6BTuUnVwC2YRdAfJ8/+PhbK
- VS3wkJ65zU9jIeHEWzRFThprhxT5IVsQGPwzep0mE/rs1FNjIMBSm2sM/8+Ndyd66x5txNftn
- i9rwDO3XNCqRLZQr5S30qbcHvusvpEqL9ZpBye7EYdlEgXJvo8NXsPrQC7eyrI54LeCfnVrk/
- veX/HiVyFe37ikZ4ag5c87EclrRwykwcvIaS3fpL2tGq5MHTyVHKhShJ51+tCzHGuOLu/buT5
- Z74Q60lp4HFe6/K+AtCH6msCNo0LH1x8AX7wCpj2M8kV81jQNdXUDN/zPS7gyVPho2s94QCZv
- /r8lxW6VCTDdEpzRyT8jgosQV5NRFHMTxRZvmSFhwtjW0jQ6Zr4GuR7rRRVj0v1dyYRbmxqHh
- Lb3r3IPcly7u+rWoEctxk5ryeHxmaJiELOCmApOLy3svPrroVrONqaSH0/gdbullf7RxCxqdb
- hbzb0h5f5h3SBvWfDwesijOAxjkGvKOxJJ5jg3mz1K5i1W0qYA0++ybVwhGxh/828XCstA25H
- a+TiEB7vgU3JMQFqmBGHSEhNLbX6CRrP24bWKhLIXcj5m2xFjIW4Bz0XNT8HRpRjM+/elRhK5
- bPtXT5oPDPX2R3PdQqKV2SlMjWwC1odoZeX2hpX181pp635RvPoyYfFRQDB2AagcPkHgkF7ja
- dj+VRi4so5qgIVn5fpCZwydGhdzHF4+bDwjwWe5DQkTO+5lgK7Hx4AaGghCQfx77RRPekJLDz
- hw196c0E4y1vyM3Tp41k7O940pJ1FkuIKcwaevWt4Tqv3wlBHV5Xd8Nf8R3XeuIBxEd6vX36K
- B6+Br3tg2YJBwWrLAByi+jyDq+nwvsReZ2ipwBxfMdSWaPhFgmMXlaJ4A==
+In-Reply-To: <YRD6uoVYwCSFN0U0@rric.localdomain>
+X-Provags-ID: V03:K1:tUFOpibvDcC8BQZoy6rQw+BXUlHzBlNyJwMXnOpXUnskVAlpSTz
+ nh3dHIazEuUS6bNCCMtYrpcmrmeR1lRQ33I61RWuN9v6UOxdRtxX3V7rZUhP8+KUUa4yb7W
+ ZUkIDS/H9oWKgqvjXm2x+y4GYppZ43OX4cqsMl+WZY3/0+zjoRZ5oi3y96W2GZlCvsRiEBw
+ 4ov5U+xfhsnIEjvyxVQtw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RvyGGdQcpwE=:nPhhZFPAwQOPWW+hbdauA5
+ dCVp/TofLGNswLYrURJtbshoSRiZZ+VtjaqE+LF4xLWw8f4NfhdVcUsZxezGyXuYaP5OAtFF8
+ cTCPcFHRyj0BzLER8Bsym4jtp67c2k6Sm9kTdmEi6kDLS4qIy5Q5y6equ97W/obfR4XRobFti
+ bqzj4UghltdqSYSQJmvKkm/COTXCnUGgbJLICUokqHF9fVUoUfSZiWwoW10PB+kfxlYNKdAs7
+ va6pwjVardNYasteTOLar7YCf7zi9ahOQgwED3iK3tX/sE56jK/cV7DdTIfogZFkFjVx8BnTI
+ jeG3dNMTDtSmaJ+gjS5Ra74WsvZBFDPuBwhDc+mhxT553Kf+0hLtLYWlUPpex4gu7OQL3BnG6
+ 9tzz9JhkFQOSm2zFHH0PMKzjzMYXYA4NKcMwJvXngXVD42J5erTOzlN8waUnap2KosLPWCx+u
+ yRM4abt42bcTrvMNG0G/k3ukjUm09v52kfsBpY7rZ5lFESSbsUAqRfJ5gv+Tcq2UkFPqSMJxB
+ 98WwUpK6NVMZKDh6jfxEMBT8v2b43N8nyqB3k7njCDZRkjt7787coXTHV1FkDp3CRnREL4yah
+ n6N0QmeYyaye9ANzrMrFmI5LtmqtlMmfsMlkPsl6K0tgR4NhfMnS+dRaWao6fJkcCWnfgqy7i
+ 4QTkkywBlooihzDWeVJJKwWoFd2JBEmvYoLUMP0OYsOLGL4e7gODhamH6kvre52Q7F+0YCMfD
+ KN+plqORD3tp5g8FxvP81VGujdr3C4CJegUrkY5vP3Jrg2zXYq3PIiJOubT/xIlgy0l9eSisM
+ fN/s64KN42v/kttOAtQANB2acAo7xft8NaXEGIkL+fJrwNQ1EFQ2ggWrysnHICWcUkKtsoLrF
+ SdnPOv4iREsHlpDOcfNa4ZxmVwj1EAs8jlCN2cOwJ0SjF+5xHW+Y1KRfyQ85XBK9JAPxT9TTH
+ MGmIo5N8Ar1IVUFb2L/It6qVm+bTjexe57rx7pNjDF1z+ENPfqOYMnehbJ6exExz5NQ6M+ve6
+ jpqJG/xewEx/7F5QcqFvZItfi4du3BRuSeknQ+lwMh6ZQkSp1FgxbdVqqRICBWQnb5cI5O+Gy
+ p1pz6vOal4xeMzXzqSmKQZJ4rW2rZQj6wY4mIVrapaBLPTki6jTPLRoiw==
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
@@ -81,91 +77,34 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 Hi,
 
-On Mon, Aug 09, 2021 at 10:21:31AM +0100, Jonathan Cameron wrote:
-> On Sun, 8 Aug 2021 22:00:34 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Mon, Aug 09, 2021 at 11:51:54AM +0200, Robert Richter wrote:
+> On 07.08.21 17:59:57, Len Baker wrote:
 >
-> > On Sun, Aug 8, 2021 at 7:25 PM Jonathan Cameron <jic23@kernel.org> wro=
-te:
-> > >
-> > > On Sat,  7 Aug 2021 17:22:25 +0200
-> > > Len Baker <len.baker@gmx.com> wrote:
-> > >
-> > > > strcpy() performs no bounds checking on the destination buffer. Th=
-is
-> > > > could result in linear overflows beyond the end of the buffer, lea=
-ding
-> > > > to all kinds of misbehaviors. The safe replacement is strscpy().
-> > > >
-> > > > This patch is an effort to clean up the proliferation of str*()
-> > > > functions in the kernel and a previous step in the path to remove
-> > > > the strcpy function from the kernel entirely [1].
-> > > >
-> > > > [1] https://github.com/KSPP/linux/issues/88
-> > > >
-> > > > Signed-off-by: Len Baker <len.baker@gmx.com>
-> > > Applied to the togreg branch of iio.git and pushed out as testing
-> > > so 0-day can poke at it and see if we missed anything.
-> >
-> > Isn't it too early? Or am I missing something (see below)?
-> >
-> > ...
-> >
-> > > >                       /* use length + 2 for adding minus sign if n=
-eeded */
-> > > > -                     str =3D devm_kzalloc(regmap_get_device(st->m=
-ap),
-> > > > -                                        strlen(orient) + 2, GFP_K=
-ERNEL);
-> > > > +                     n =3D strlen(orient) + 2;
-> > > > +                     str =3D devm_kzalloc(regmap_get_device(st->m=
-ap), n,
-> > > > +                                        GFP_KERNEL);
-> > > >                       if (str =3D=3D NULL)
-> > > >                               return -ENOMEM;
-> > > >                       if (strcmp(orient, "0") =3D=3D 0) {
-> > > > -                             strcpy(str, orient);
-> > > > +                             strscpy(str, orient, n);
-> > > >                       } else if (orient[0] =3D=3D '-') {
-> > > > -                             strcpy(str, &orient[1]);
-> > > > +                             strscpy(str, &orient[1], n);
-> > > >                       } else {
-> > > >                               str[0] =3D '-';
-> > > > -                             strcpy(&str[1], orient);
-> > > > +                             strscpy(&str[1], orient, n - 1);
-> >
-> > Why n-1?
+> > @@ -1113,11 +1115,11 @@ void edac_mc_handle_error(const enum hw_event_=
+mc_err_type type,
+> >  			p =3D e->label;
+> >  			*p =3D '\0';
+> >  		} else {
+> > -			if (p !=3D e->label) {
+> > -				strcpy(p, OTHER_LABEL);
+> > -				p +=3D strlen(OTHER_LABEL);
+> > -			}
+> > -			strcpy(p, dimm->label);
+> > +			const char *text =3D (p !=3D e->label) ? OTHER_LABEL :
+> > +				dimm->label;
+> > +
+> > +			strscpy(p, text, len);
+> > +			len -=3D strlen(p);
 >
-> n is the total length and this is printing from [1], so n - 1 is remaini=
-ng
-> space.
->
-> >
-> > > >                       }
-> >
-> > As far as I understood the logic, it  inverts the sign except the case
-> > when it equals 0.
-> >
-> > I have a question here, why can't we always use +/-?
-> > Why can't 0 be prefixed with a sign?
->
-> Technically a userspace ABI change, but I agree it should be fairly
-> harmless unless someone is rolling their own string handling routines.
+> The logic looks broken and dimm labels are not properly copied (the
+> code should add an " or " separator between labels).
 
-I personally don't like the idea of zero having a sign. It's my opinion.
-But if you prefer it I have no problem.
-
-> >
-> > If the above can be used, we may simplify this code.
-> >
-> > Len, I think this task may be considered simple, but I recommend
-> > thinking about each case and finding a way to simplify it more.
->
-Andy, is what I try to do ;) Thanks for the advise.
-
-> It could be a little simpler doing this, so 'maybe' worth doing.
-
-Ok, I will send a new version if there are no objections.
+Apologies. My bad.
 
 Regards,
 Len
+
+>
+> >  			p +=3D strlen(p);
+> >  		}
+> >
