@@ -2,72 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDE3C4338F
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E95C4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0417C6101E
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096CC60F25
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240809AbhHJPCn (ORCPT
+        id S241779AbhHJPTa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Aug 2021 11:02:43 -0400
-Received: from smtprelay0209.hostedemail.com ([216.40.44.209]:57676 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S234153AbhHJPCn (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Aug 2021 11:02:43 -0400
-Received: from omf04.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 42AD51836942D;
-        Tue, 10 Aug 2021 15:02:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf04.hostedemail.com (Postfix) with ESMTPA id A6904D1516;
-        Tue, 10 Aug 2021 15:02:18 +0000 (UTC)
-Message-ID: <b3070c0352e2a5661a1a59d5c5354cc82a1cce1e.camel@perches.com>
-Subject: Re: [PATCH v3] drivers/edac/edac_mc: Remove all strcpy() uses
-From:   Joe Perches <joe@perches.com>
-To:     Robert Richter <rric@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, Borislav Petkov <bp@alien8.de>,
+        Tue, 10 Aug 2021 11:19:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:17625 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242914AbhHJPTU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 10 Aug 2021 11:19:20 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="236937112"
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="236937112"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 08:18:58 -0700
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="671802800"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 08:18:55 -0700
+Received: from paasikivi.fi.intel.com (localhost [127.0.0.1])
+        by paasikivi.fi.intel.com (Postfix) with SMTP id 14C6B20345;
+        Tue, 10 Aug 2021 18:18:53 +0300 (EEST)
+Date:   Tue, 10 Aug 2021 18:18:53 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Tianshu Qiu <tian.shu.qiu@intel.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 10 Aug 2021 08:02:17 -0700
-In-Reply-To: <YRKO4An9UkObVGmB@rric.localdomain>
-References: <20210807155957.10069-1-len.baker@gmx.com>
-         <ff02ffffdc130a772c01ec0edbf8d1e684b0730a.camel@perches.com>
-         <20210808112617.GA1927@titan> <YRD90L6PMoVbbv+9@rric.localdomain>
-         <99448ef29830fda9b19409bc23b0e7513b22f7b7.camel@perches.com>
-         <YRKO4An9UkObVGmB@rric.localdomain>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.0-1 
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-hardening@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v2 1/2] media: staging/intel-ipu3: css: Fix wrong size
+ comparison
+Message-ID: <20210810151852.GI3@paasikivi.fi.intel.com>
+References: <cover.1627646101.git.gustavoars@kernel.org>
+ <184d96f95d6261b1a91704eb68adbd0a2e1c2cc2.1627646101.git.gustavoars@kernel.org>
+ <20210802060546.GL3@paasikivi.fi.intel.com>
+ <3c9ac43d-09ca-e5d5-83a8-7b6d23928763@embeddedor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: A6904D1516
-X-Stat-Signature: zomo8gkouz7irgaf7tbabch1cxordum7
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+Gpl2phGQ76xLkFse458J6cytt06otvuo=
-X-HE-Tag: 1628607738-261957
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3c9ac43d-09ca-e5d5-83a8-7b6d23928763@embeddedor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2021-08-10 at 16:36 +0200, Robert Richter wrote:
-> On 09.08.21 10:18:58, Joe Perches wrote:
+Hi Gustavo,
+
+Apologies for the delay.
+
+On Mon, Aug 02, 2021 at 08:46:20AM -0500, Gustavo A. R. Silva wrote:
+> Hi Sakari,
 > 
-> > strscpy and scnprintf have different return values and it's simpler
-> > and much more common to use scnprintf for appended strings that are
-> > limited to a specific buffer length.
+> On 8/2/21 01:05, Sakari Ailus wrote:
+> > Hi Gustavo,
+> > 
+> > I missed you already had sent v2...
+> > 
+> > On Fri, Jul 30, 2021 at 07:08:13AM -0500, Gustavo A. R. Silva wrote:
+> >> There is a wrong comparison of the total size of the loaded firmware
+> >> css->fw->size with the size of a pointer to struct imgu_fw_header.
+> >>
+> >> Fix this by using the right operand 'struct imgu_fw_header' for
+> >> sizeof, instead of 'struct imgu_fw_header *' and turn binary_header
+> >> into a flexible-array member. Also, adjust the relational operator
+> >> to be '<=' instead of '<', as it seems that the intention of the
+> >> comparison is to determine if the loaded firmware contains any
+> >> 'struct imgu_fw_info' items in the binary_header[] array than merely
+> >> the file_header (struct imgu_fw_bi_file_h).
+> >>
+> >> The replacement of the one-element array with a flexible-array member
+> >> also help with the ongoing efforts to globally enable -Warray-bounds
+> >> and get us closer to being able to tighten the FORTIFY_SOURCE routines
+> >> on memcpy().
+> >>
+> >> Link: https://github.com/KSPP/linux/issues/79
+> >> Link: https://github.com/KSPP/linux/issues/109
+> >> Fixes: 09d290f0ba21 ("media: staging/intel-ipu3: css: Add support for firmware management")
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> >> ---
+> >>
+> >> It'd be just great if someone that knows this code better can confirm
+> >> these changes are correct. In particular the adjustment of the
+> >> relational operator. Thanks!
+> >>
+> >> Changes in v2:
+> >>  - Use flexible array and adjust relational operator, accordingly.
+> > 
+> > The operator was just correct. The check is just there to see the firmware
+> > is at least as large as the struct as which it is being accessed.
 > 
-> Calculating the bytes written from the return value is a oneliner.
+> I'm a bit confused, so based on your reply to v1 of this series, this patch
+> is now correct, right?
+> 
+> The operator in v1 _was_ correct as long as the one-element array wasn't
+> transformed into a flexible array, right?
+> 
+> Notice that generally speaking flexible-array members don't occupy space in the
+> containing structure:
+> 
+> $ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
+> struct imgu_fw_header {
+> 	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
+> 	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+> 	struct imgu_fw_info        binary_header[] __attribute__((__aligned__(8))); /*    72     0 */
+> 
+> 	/* size: 72, cachelines: 2, members: 2 */
+> 	/* forced alignments: 1 */
+> 	/* last cacheline: 8 bytes */
+> } __attribute__((__aligned__(8)));
+> 
+> $ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
+> struct imgu_fw_header {
+> 	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
+> 	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+> 	struct imgu_fw_info        binary_header[1] __attribute__((__aligned__(8))); /*    72  1200 */
+> 
+> 	/* size: 1272, cachelines: 20, members: 2 */
+> 	/* forced alignments: 1 */
+> 	/* last cacheline: 56 bytes */
+> } __attribute__((__aligned__(8)));
+> 
+> So, now that the flexible array transformation is included in the same patch as the
+> bugfix, the operator is changed from '<' to '<='
 
-Not really.
-You still have to test for strscpy's possible return of -E2BIG.
+'<' is correct since you only need as much data as the struct you're about
+to access is large, not a byte more than that. As Dan noted.
 
+I think you could add a check for binary_nr is at least one.
 
+-- 
+Kind regards,
 
+Sakari Ailus
