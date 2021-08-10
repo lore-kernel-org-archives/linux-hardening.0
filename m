@@ -2,167 +2,168 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4687FC4320A
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 16:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114D2C432BE
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 16:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29DCB61019
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 16:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CC560F94
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 16:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239134AbhHJQBB (ORCPT
+        id S231573AbhHJQa7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Aug 2021 12:01:01 -0400
-Received: from mout.gmx.net ([212.227.15.18]:41865 "EHLO mout.gmx.net"
+        Tue, 10 Aug 2021 12:30:59 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52989 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239131AbhHJQBA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Aug 2021 12:01:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628611197;
-        bh=G3sM2QcP/MH50Zmwdjb3PS8F5QBGj5Y8VFa/7F2tPSc=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=RLpZ0hqW/lrGAmurvpvHUFQYaAYshU/EL8HTj09Xa1VJXzVbI1pET09X0faIk0+qF
-         TZkmhHf9CmViqUxAAUCF+NxxGBpaiXeCn21JdMnfMEJPC5rbvtkbFoNvkRdRzCd495
-         83pnkOLc/giyhG64K1K/d/2czIyz0vQGQlpCbT94=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MAOJV-1mOBOw2Arz-00Bp83; Tue, 10
- Aug 2021 17:59:57 +0200
-Date:   Tue, 10 Aug 2021 17:59:53 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Bernd Petrovitsch <bernd@petrovitsch.priv.at>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Len Baker <len.baker@gmx.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-hardening@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/3] drivers/soc/renesas: Prefer memcpy over strcpy
-Message-ID: <20210810155953.GB2508@titan>
-References: <20210808125012.4715-1-len.baker@gmx.com>
- <20210808125012.4715-3-len.baker@gmx.com>
- <39485c0e-511c-50a0-83be-f9ce6fc47e67@petrovitsch.priv.at>
- <c33adb9e-9604-3d89-5a5b-152eb03e5b54@wanadoo.fr>
+        id S229997AbhHJQa6 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 10 Aug 2021 12:30:58 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="195206802"
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="195206802"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 09:30:36 -0700
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="638856731"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 09:30:33 -0700
+Received: from paasikivi.fi.intel.com (localhost [127.0.0.1])
+        by paasikivi.fi.intel.com (Postfix) with SMTP id EF95B20345;
+        Tue, 10 Aug 2021 19:30:30 +0300 (EEST)
+Date:   Tue, 10 Aug 2021 19:30:30 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Tianshu Qiu <tian.shu.qiu@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-hardening@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v2 1/2] media: staging/intel-ipu3: css: Fix wrong size
+ comparison
+Message-ID: <20210810163030.GJ3@paasikivi.fi.intel.com>
+References: <cover.1627646101.git.gustavoars@kernel.org>
+ <184d96f95d6261b1a91704eb68adbd0a2e1c2cc2.1627646101.git.gustavoars@kernel.org>
+ <20210802060546.GL3@paasikivi.fi.intel.com>
+ <3c9ac43d-09ca-e5d5-83a8-7b6d23928763@embeddedor.com>
+ <20210810151852.GI3@paasikivi.fi.intel.com>
+ <a5e19508-4d7a-ba63-7ac0-ed2e56bc3bc1@embeddedor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <c33adb9e-9604-3d89-5a5b-152eb03e5b54@wanadoo.fr>
-X-Provags-ID: V03:K1:FPnUfg9bHq3mnp/YBiXnJfdCYth5+kd8VoT92LWLiyrQC/T7qWV
- XqEMPQaChEtvXvpYQ0FF7Z/k5XfSetPCvutFfenyLdouGF3+8FbQSDYSzaKDcHfI9Dhk9pT
- nqMVMtEa8s6Uo4e8R+j6kuHpbSoJjrUwp2ujWigdUNW475H61eXq4DWibqEpwgxIo8irZ9S
- IzLJgN8K5DUg2AmYmO3Sw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xVByGEykzDo=:h92VZnFlg+VkvKpiRFRLaQ
- xPYCBWL7ImYXcrI8PHzLKgnvx0U0nAtR8VXIPzxaGS2RH0f/a614v6z4l9jMI4XuUhRBM0SNc
- RuACv5zcKcI6FLS9IDVu9IUViF/ptqpi0Aqs5HiXD0QXfLE+FSZHZezBncVgpaBNKN2Q9i9Bk
- feL7SK5a6hi14JIlmQUwYFqIsltXxuJw9HRh2QIQD1Xg765Kj9vMVFB16B+udtvO1OFoIHaz8
- 1wYWiODPzdSr/W6iLzLVQsP2xXPk8fZK35qAAMoH7/StbKKXMBwM/LYg5X5DPtGu9X3gznpGm
- JeAY0UZIAdYpRDmEck7ZCoCp94aHNDAZlWPiJrRRb8XcNzmPoj2EsdGdvW0I1DZk8P9TuVmI0
- RxcEs0TnCOOYmHKUo+Ryt4Le5QGsqbK4Ai7/cUCXGpIgAyqUnIYml4CuTj1xo9D3ekA0kzVZa
- pTuhuID0mA6mXzjJ+CET5Re8VGiODsRFBidz9sYs52BdOywTUQPl/RtaMJiuTc/rKoE/pMfY6
- FuWrq+2/cHU/F81lxmccNBCnkIq6lyIAZh2g3k67QqaYYLfg0JCLE4l07Qv/5QCKJTDM/ErHF
- J4kKjwxvybFLkYGtQI0x9Zwu+W++8SuHokR6PzwSJewR2zUtE6MxRgdeCVKiZNkX78ywQu5fc
- R7fq/cl3ZxhUWU4xBVY8FjoglKJkk4IeYaHrXRWB5JaYQY9bceFzcP4vqIkSLdIBMKOqWmVMw
- HaDIyZYNKaVxwrelDBPKQQic2rIJOD4MmoaehCgoZm4fzhqYHTrqgJSXSRaDgYE9+2xrPbfV6
- /ymc1tDje2S0RCukp5/WGd7pyM02KN0T90vEOdW7N3jZJgEoJ3TjEAOtpuPHZ/vt11jsOi3Aa
- /RinBa12sewbhNvzgkynJtSYppciAYDzrWoefKvl0s/UWr/czYfX+jxhLbOUyrP+ujaE//g/s
- Abm1m2QG0QgguPkPwb/TNHJJxMcMpk8lRU8elMr0+SXj/9HMPg+3KlW+31nWHNdu48xI91lK7
- Uto3xv0v7UtLZdO/NNKyXcbdhNYwgT6KHHSNVRPUGG4QxQgzgGES+DV70EO3koX3cakEsBsV6
- CP/4wY6tXJQB6khciYOs09qXEJsZgqDA44XBavobn8ilwZL/8/FvePXAg==
+In-Reply-To: <a5e19508-4d7a-ba63-7ac0-ed2e56bc3bc1@embeddedor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Tue, Aug 10, 2021 at 11:26:14AM -0500, Gustavo A. R. Silva wrote:
+> Hi Sakari,
+> 
+> Please, see my comments below...
+> 
+> On 8/10/21 10:18, Sakari Ailus wrote:
+> > Hi Gustavo,
+> > 
+> > Apologies for the delay.
+> > 
+> > On Mon, Aug 02, 2021 at 08:46:20AM -0500, Gustavo A. R. Silva wrote:
+> >> Hi Sakari,
+> >>
+> >> On 8/2/21 01:05, Sakari Ailus wrote:
+> >>> Hi Gustavo,
+> >>>
+> >>> I missed you already had sent v2...
+> >>>
+> >>> On Fri, Jul 30, 2021 at 07:08:13AM -0500, Gustavo A. R. Silva wrote:
+> >>>> There is a wrong comparison of the total size of the loaded firmware
+> >>>> css->fw->size with the size of a pointer to struct imgu_fw_header.
+> >>>>
+> >>>> Fix this by using the right operand 'struct imgu_fw_header' for
+> >>>> sizeof, instead of 'struct imgu_fw_header *' and turn binary_header
+> >>>> into a flexible-array member. Also, adjust the relational operator
+> >>>> to be '<=' instead of '<', as it seems that the intention of the
+> >>>> comparison is to determine if the loaded firmware contains any
+> >>>> 'struct imgu_fw_info' items in the binary_header[] array than merely
+> >>>> the file_header (struct imgu_fw_bi_file_h).
+> >>>>
+> >>>> The replacement of the one-element array with a flexible-array member
+> >>>> also help with the ongoing efforts to globally enable -Warray-bounds
+> >>>> and get us closer to being able to tighten the FORTIFY_SOURCE routines
+> >>>> on memcpy().
+> >>>>
+> >>>> Link: https://github.com/KSPP/linux/issues/79
+> >>>> Link: https://github.com/KSPP/linux/issues/109
+> >>>> Fixes: 09d290f0ba21 ("media: staging/intel-ipu3: css: Add support for firmware management")
+> >>>> Cc: stable@vger.kernel.org
+> >>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> >>>> ---
+> >>>>
+> >>>> It'd be just great if someone that knows this code better can confirm
+> >>>> these changes are correct. In particular the adjustment of the
+> >>>> relational operator. Thanks!
+> >>>>
+> >>>> Changes in v2:
+> >>>>  - Use flexible array and adjust relational operator, accordingly.
+> >>>
+> >>> The operator was just correct. The check is just there to see the firmware
+> >>> is at least as large as the struct as which it is being accessed.
+> >>
+> >> I'm a bit confused, so based on your reply to v1 of this series, this patch
+> >> is now correct, right?
+> >>
+> >> The operator in v1 _was_ correct as long as the one-element array wasn't
+> >> transformed into a flexible array, right?
+> >>
+> >> Notice that generally speaking flexible-array members don't occupy space in the
+> >> containing structure:
+> >>
+> >> $ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
+> >> struct imgu_fw_header {
+> >> 	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
+> >> 	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+> >> 	struct imgu_fw_info        binary_header[] __attribute__((__aligned__(8))); /*    72     0 */
+> >>
+> >> 	/* size: 72, cachelines: 2, members: 2 */
+> >> 	/* forced alignments: 1 */
+> >> 	/* last cacheline: 8 bytes */
+> >> } __attribute__((__aligned__(8)));
+> >>
+> >> $ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
+> >> struct imgu_fw_header {
+> >> 	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
+> >> 	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+> >> 	struct imgu_fw_info        binary_header[1] __attribute__((__aligned__(8))); /*    72  1200 */
+> >>
+> >> 	/* size: 1272, cachelines: 20, members: 2 */
+> >> 	/* forced alignments: 1 */
+> >> 	/* last cacheline: 56 bytes */
+> >> } __attribute__((__aligned__(8)));
+> >>
+> >> So, now that the flexible array transformation is included in the same patch as the
+> >> bugfix, the operator is changed from '<' to '<='
+> > 
+> > '<' is correct since you only need as much data as the struct you're about
+> > to access is large, not a byte more than that. As Dan noted.
+> > 
+> > I think you could add a check for binary_nr is at least one.
+> 
+> If we need to check that binary_nr is at least one, then this would be the right
+> change:
+> 
+>         css->fwp = (struct imgu_fw_header *)css->fw->data;
+> -       if (css->fw->size < sizeof(struct imgu_fw_header *) ||
+> +       if (css->fw->size < struct_size(css->fwp, binary_header, 1) ||
+>             css->fwp->file_header.h_size != sizeof(struct imgu_fw_bi_file_h))
+>                 goto bad_fw;
 
-On Sun, Aug 08, 2021 at 07:06:30PM +0200, Christophe JAILLET wrote:
-> Hi,
->
-> Le 08/08/2021 =E0 17:35, Bernd Petrovitsch a =E9crit=A0:
-> > Hi all!
-> >
-> > On 08/08/2021 14:50, Len Baker wrote:
-> > > strcpy() performs no bounds checking on the destination buffer. This
-> > > could result in linear overflows beyond the end of the buffer, leadi=
-ng
-> > > to all kinds of misbehaviors. So, use memcpy() as a safe replacement=
-.
-> > >
-> > > This is a previous step in the path to remove the strcpy() function
-> > > entirely from the kernel.
-> > >
-> > > Signed-off-by: Len Baker <len.baker@gmx.com>
-> > > ---
-> > >   drivers/soc/renesas/r8a779a0-sysc.c | 6 ++++--
-> > >   drivers/soc/renesas/rcar-sysc.c     | 6 ++++--
-> > >   2 files changed, 8 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/soc/renesas/r8a779a0-sysc.c b/drivers/soc/renes=
-as/r8a779a0-sysc.c
-> > > index d464ffa1be33..7410b9fa9846 100644
-> > > --- a/drivers/soc/renesas/r8a779a0-sysc.c
-> > > +++ b/drivers/soc/renesas/r8a779a0-sysc.c
-> > > @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
-> > >   	for (i =3D 0; i < info->num_areas; i++) {
-> > >   		const struct r8a779a0_sysc_area *area =3D &info->areas[i];
-> > >   		struct r8a779a0_sysc_pd *pd;
-> > > +		size_t n;
-> > >
-> > >   		if (!area->name) {
-> > >   			/* Skip NULLified area */
-> > >   			continue;
-> > >   		}
-> > >
-> > > -		pd =3D kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
-> > > +		n =3D strlen(area->name) + 1;
-> > > +		pd =3D kzalloc(sizeof(*pd) + n, GFP_KERNEL);
-> > Zeroing the allocated bytes is not needed since it's completly
-> > overwritten with the strcpy()/memcpy().
->
-> The strcpy()/memcpy() only overwrites the pd->name field, not the whole =
-pd
-> structure.
+There's already a check the space required for the array of binary_nr is
+there. But not the number itself.
 
-You are right.
-
-> I think that it is needed to keep the kzalloc.
-
-Yes, I think so. The kzalloc is needed to guarantee that the whole struct =
-is
-initialize (all the members are initialized with zeros).
-
-Regards,
-Len
-
->
-> Just my 2c,
-> CJ
->
-> > >   		if (!pd) {
-> > >   			error =3D -ENOMEM;
-> > >   			goto out_put;
-> > >   		}
-> > >
-> > > -		strcpy(pd->name, area->name);
-> > > +		memcpy(pd->name, area->name, n);
-> > >   		pd->genpd.name =3D pd->name;
-> > >   		pd->pdr =3D area->pdr;
-> > >   		pd->flags =3D area->flags;
-> >
-> > And similar for the second hunk.
-> >
-> > MfG,
-> > 	Bernd
-> >
->
+-- 
+Sakari Ailus
