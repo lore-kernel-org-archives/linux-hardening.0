@@ -5,45 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D10C4338F
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 21:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F51BC4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 23:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 387F060FC4
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 21:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753E560FDA
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 23:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231894AbhHJVFX (ORCPT
+        id S235306AbhHJX2f (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Aug 2021 17:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57706 "EHLO mail.kernel.org"
+        Tue, 10 Aug 2021 19:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232739AbhHJVFN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Aug 2021 17:05:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 216AE60E09;
-        Tue, 10 Aug 2021 21:04:50 +0000 (UTC)
+        id S234470AbhHJX2d (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 10 Aug 2021 19:28:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2A1B860F11;
+        Tue, 10 Aug 2021 23:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628629490;
-        bh=C9XBDAJhXG+Rn8ZoatuMyt7pr8cmprWx13pjHSQveVo=;
+        s=k20201202; t=1628638091;
+        bh=6heJ4WAsNUImSa2tlyDIQMPLxIVBko5KIHmoPRwxyOI=;
         h=Date:From:To:Cc:Subject:From;
-        b=I/wE/F/TPJo5nPASsKpzfqi6kRfsDyGVgwUvtu1SNYrjx3u0uWGF+5cFyVO+Iw7FL
-         Zpz81Q6hMJ2ibs+nDTDxkw1UAFH4axgXqvsKMrUMthjbaFnebPEHj3z0Di5SZms8MP
-         tbxcmiuDAkHGZqdhEOF7rMWh08625ku6s57Faytx+g2rGlsXmxP2Dn6oeHS51lkHqf
-         iA8NsoRbEVlVuujpP2AB65KdQDSdcIJhoDTKkbIgB6xlDkF73dYN051gb88d4EiUi/
-         Dm2buvPvfrwStr0QbMdcWmowzMf/g5D17cvI/0DbvZUzHlI8rHUEGeN85oPrK1fs3z
-         ZV6gMDhC2g0OQ==
-Date:   Tue, 10 Aug 2021 16:07:41 -0500
+        b=ep7pSZTFRTQ1FILB0HRx7qIRF0/QubGkJXiwTKlQayATEwzO82jUG9SybKnK/PSaI
+         KotRCsz3JaiiK7+LwKCMOc0fsh0xVFa2sBSlnwHUJ1BPXuycW8k57ed6VZUJFjd+XO
+         XlOgsx7RxXyFjSswdP3u2+eYb3aJtopFpL2bXfp+DbSii+Rd0u9Cr0MmrBXVVE1QTW
+         0NQtCY0bPcKawbYJQk+L8r7ZZFUBhkRo/rWKNpjLCgYg3Lv7ZFHuMU6LuoyLY5ovnv
+         ITnCJSu66XAG6t9dTfcxDBc/pltuYJ3lUCwLu2BdwFfEPIU/AreA17iVrbWXQeZSQi
+         oRrIQVu3R/F1w==
+Date:   Tue, 10 Aug 2021 18:31:01 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Don Brace <don.brace@microchip.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     storagedev@microchip.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] scsi: smartpqi: Replace one-element array with
- flexible-array member
-Message-ID: <20210810210741.GA58765@embeddedor>
+Subject: [PATCH][next] nfs41: pnfs: filelayout: Replace one-element array
+ with flexible-array member
+Message-ID: <20210810233101.GA64518@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -58,8 +56,8 @@ should always use “flexible array members”[1] for these cases. The older
 style of one-element or zero-length arrays should no longer be used[2].
 
 Refactor the code a bit according to the use of a flexible-array member
-in struct pqi_event_config instead of a one-element array, and use the
-struct_size() helper.
+in struct nfs4_file_layout_dsaddr instead of a one-element array, and
+use the struct_size() helper.
 
 This helps with the ongoing efforts to globally enable -Warray-bounds
 and get us closer to being able to tighten the FORTIFY_SOURCE routines
@@ -75,37 +73,38 @@ Link: https://github.com/KSPP/linux/issues/79
 Link: https://github.com/KSPP/linux/issues/109
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/scsi/smartpqi/smartpqi.h      | 2 +-
- drivers/scsi/smartpqi/smartpqi_init.c | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ fs/nfs/filelayout/filelayout.h    | 2 +-
+ fs/nfs/filelayout/filelayoutdev.c | 4 +---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
-index f340afc011b5..70eca203d72f 100644
---- a/drivers/scsi/smartpqi/smartpqi.h
-+++ b/drivers/scsi/smartpqi/smartpqi.h
-@@ -415,7 +415,7 @@ struct pqi_event_config {
- 	u8	reserved[2];
- 	u8	num_event_descriptors;
- 	u8	reserved1;
--	struct pqi_event_descriptor descriptors[1];
-+	struct pqi_event_descriptor descriptors[];
+diff --git a/fs/nfs/filelayout/filelayout.h b/fs/nfs/filelayout/filelayout.h
+index 79323b5dab0c..aed0748fd6ec 100644
+--- a/fs/nfs/filelayout/filelayout.h
++++ b/fs/nfs/filelayout/filelayout.h
+@@ -51,7 +51,7 @@ struct nfs4_file_layout_dsaddr {
+ 	u32				stripe_count;
+ 	u8				*stripe_indices;
+ 	u32				ds_num;
+-	struct nfs4_pnfs_ds		*ds_list[1];
++	struct nfs4_pnfs_ds		*ds_list[];
  };
  
- #define PQI_MAX_EVENT_DESCRIPTORS	255
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index c1f0f8da9fe2..f9107127bd6e 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -4740,8 +4740,7 @@ static int pqi_create_queues(struct pqi_ctrl_info *ctrl_info)
- }
+ struct nfs4_filelayout_segment {
+diff --git a/fs/nfs/filelayout/filelayoutdev.c b/fs/nfs/filelayout/filelayoutdev.c
+index 86c3f7e69ec4..acf4b88889dc 100644
+--- a/fs/nfs/filelayout/filelayoutdev.c
++++ b/fs/nfs/filelayout/filelayoutdev.c
+@@ -136,9 +136,7 @@ nfs4_fl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 		goto out_err_free_stripe_indices;
+ 	}
  
- #define PQI_REPORT_EVENT_CONFIG_BUFFER_LENGTH	\
--	(offsetof(struct pqi_event_config, descriptors) + \
--	(PQI_MAX_EVENT_DESCRIPTORS * sizeof(struct pqi_event_descriptor)))
-+	struct_size((struct pqi_event_config *)0, descriptors, PQI_MAX_EVENT_DESCRIPTORS)
+-	dsaddr = kzalloc(sizeof(*dsaddr) +
+-			(sizeof(struct nfs4_pnfs_ds *) * (num - 1)),
+-			gfp_flags);
++	dsaddr = kzalloc(struct_size(dsaddr, ds_list, num), gfp_flags);
+ 	if (!dsaddr)
+ 		goto out_err_free_stripe_indices;
  
- static int pqi_configure_events(struct pqi_ctrl_info *ctrl_info,
- 	bool enable_events)
 -- 
 2.27.0
 
