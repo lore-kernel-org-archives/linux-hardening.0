@@ -2,150 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E95C4338F
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7655DC4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 096CC60F25
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5447160E09
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241779AbhHJPTa (ORCPT
+        id S242221AbhHJPn7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Aug 2021 11:19:30 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17625 "EHLO mga01.intel.com"
+        Tue, 10 Aug 2021 11:43:59 -0400
+Received: from mout.gmx.net ([212.227.17.20]:47579 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242914AbhHJPTU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Aug 2021 11:19:20 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="236937112"
-X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
-   d="scan'208";a="236937112"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 08:18:58 -0700
-X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
-   d="scan'208";a="671802800"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 08:18:55 -0700
-Received: from paasikivi.fi.intel.com (localhost [127.0.0.1])
-        by paasikivi.fi.intel.com (Postfix) with SMTP id 14C6B20345;
-        Tue, 10 Aug 2021 18:18:53 +0300 (EEST)
-Date:   Tue, 10 Aug 2021 18:18:53 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        id S242153AbhHJPn7 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 10 Aug 2021 11:43:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1628610195;
+        bh=f9yoZklWAOjRko5GEHne/rB2HxvyimqQxu/6RVsxWfM=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=gaNLTcUfYmNM6APGQiF0FHtnKBz1zKej6HpnDaAgzlhG4E4nolV22WYw1d9mw+2Ns
+         K4MT7IXSfb7VXEFBMevPZ93nvFZJOqq3FBeug+5SrVpcPSfkZDKKLRaxJJc/VKO03P
+         hI6cHuNhjDVvTJGl2HqqzCULIGUdIq1dWdsNecnU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1McpJq-1mlzNZ1L0s-00a0AJ; Tue, 10
+ Aug 2021 17:43:15 +0200
+Date:   Tue, 10 Aug 2021 17:43:03 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Len Baker <len.baker@gmx.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v2 1/2] media: staging/intel-ipu3: css: Fix wrong size
- comparison
-Message-ID: <20210810151852.GI3@paasikivi.fi.intel.com>
-References: <cover.1627646101.git.gustavoars@kernel.org>
- <184d96f95d6261b1a91704eb68adbd0a2e1c2cc2.1627646101.git.gustavoars@kernel.org>
- <20210802060546.GL3@paasikivi.fi.intel.com>
- <3c9ac43d-09ca-e5d5-83a8-7b6d23928763@embeddedor.com>
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of
+ strscpy()
+Message-ID: <20210810154303.GA2508@titan>
+References: <20210807152225.9403-1-len.baker@gmx.com>
+ <20210808172503.5187cd24@jic23-huawei>
+ <CAHp75VfSX-7UqH9Lbr_GxQRY3dGjGo7H8++kBdrrSds1p6nB1Q@mail.gmail.com>
+ <20210809102131.000021eb@Huawei.com>
+ <20210809161422.GA2619@titan>
+ <CAHp75VfyJ1zSmgenn3V-2tF-X9uZJ1tByyJfJOydXZSV1as3GA@mail.gmail.com>
+ <CAHp75VeAf_GYcF--=wXJmJZPr1YHn_gLFAFGHwsMCDX7Mxs5zw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3c9ac43d-09ca-e5d5-83a8-7b6d23928763@embeddedor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VeAf_GYcF--=wXJmJZPr1YHn_gLFAFGHwsMCDX7Mxs5zw@mail.gmail.com>
+X-Provags-ID: V03:K1:cRHTKwbL0WqT843vcAOgaEC2gKAhlW/Nz3Siys7qUczMedk2Sbz
+ CYN4XnCy+VCfuctiQz9MiYdV5tnke7l4479UWw9mSEI7qzLnwIdoeFbWEj+BKtMZaWPVbkn
+ trYBZMDm8S+jM0W5vVjDREqytula4FEoFEuF9qybQUNsUbJquEdW6/QwOOnaRB2rKHsA2vY
+ rY+5uB2126WMJm6t9xDQg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VZWlOome2sY=:7hkCJf7Tk4hkI7kJ3dIFPt
+ 8tK3bg5/XlCkE+AeqXrX3+HxOLVmNaM3vuMDqj4LOmQhbUdI5OG10C1d5a8IYyu6Ti8TAuQ9D
+ ja0T8XxUpLRI8vZDqvMzHXJIbW+lHdCsKhCXD7miGhVSFQL7xAlsLKVVsEmZVfJBRYUOo+TeQ
+ qGtjyQJwUVWUkcz366Y0nS9ZWuuXgVUUX3H8GQn5m2CT3uWiAMVtaChiHZXucm/HBS9S/BdKG
+ L87yLEBZr7EpTguHVMTtWOZVEbGm5j/L9U/c1CkzWhbwcvoH5RO+YKul+tirAhxWjMVAk60Sf
+ 8atQrQSdktM3B0SeDoTIVjFu2WdQo+Pd7xASoCgfXJbzonvTBGcBvB1e12BCF5QusxjPjse3E
+ 2EjOHLvaZjaBVqz7WW1Vo827qgK387et7r4e9Ru+DxzoE9q4CQR0b8hepQRXefNN9SVNB8dCF
+ g0X6jmJe+Szpmlm34awqWB9ulCH4DGIAqirzrmefkVC+7A+861RExTO7Ux2lD6n1kId2/NyUB
+ FtGe16ELqiNdDE20+xndkX3Pg2mL5LsfZ4Pwa3METKwCglQuoecOA8X2gxZw4HwoEcfpzW+Ae
+ d18+S4wbAWjuV2X8oZq92I+V3aCLBrZvJnZprjbyZpY7D68U4fFABoJktK7ZbDhrmhBp0gWgJ
+ f4uAT3B5vK0xCW2KsTjqeXWFz1OAhfu5hKKZPc3udIJcObwzoznA0T+/75EMzxq/LQujctCbH
+ h4z+7Oto8UCefyDxkuQyI2jJTjoyvRCKmtUzsIiMmHMuJYBRhF/pJ6NdALjTTsUuMTcrDpLI+
+ L3L4vZQjrXdrsWg0/PhJLdAixhndGMgpJGMwat5GiBEnwnHRsAafTGrOE1sNWO8LqGn8OdOHY
+ +PPMCz9IxfTkTwk4xnaPYBKOugp9H7hWPQvF46tyb+wDon3hRVia6F2rGUxfvIkLFRHpIpCef
+ YYajSEVtSy3oDeIyqGjdwWPV/ziEkt3X8kUVBksfPDKwKkvJn7aalvw1laAyxytI1kWcL20fE
+ q4omv7Dh6htr5og+YV42Dv5kuP4vyGY2IxEEP0XwCh2x+zDACsxFoFAhTVmekBqdw2thwwJZf
+ G2R1JA6i5fBOWbUdUbZxVa7HucMs/pFqNOYX6A57Quk9dPKwT5rGBT7LQ==
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Gustavo,
+Hi Andy, David and Jonathan
 
-Apologies for the delay.
+First of all thanks you very much for your code snippets ;)
+More below.
 
-On Mon, Aug 02, 2021 at 08:46:20AM -0500, Gustavo A. R. Silva wrote:
-> Hi Sakari,
-> 
-> On 8/2/21 01:05, Sakari Ailus wrote:
-> > Hi Gustavo,
-> > 
-> > I missed you already had sent v2...
-> > 
-> > On Fri, Jul 30, 2021 at 07:08:13AM -0500, Gustavo A. R. Silva wrote:
-> >> There is a wrong comparison of the total size of the loaded firmware
-> >> css->fw->size with the size of a pointer to struct imgu_fw_header.
-> >>
-> >> Fix this by using the right operand 'struct imgu_fw_header' for
-> >> sizeof, instead of 'struct imgu_fw_header *' and turn binary_header
-> >> into a flexible-array member. Also, adjust the relational operator
-> >> to be '<=' instead of '<', as it seems that the intention of the
-> >> comparison is to determine if the loaded firmware contains any
-> >> 'struct imgu_fw_info' items in the binary_header[] array than merely
-> >> the file_header (struct imgu_fw_bi_file_h).
-> >>
-> >> The replacement of the one-element array with a flexible-array member
-> >> also help with the ongoing efforts to globally enable -Warray-bounds
-> >> and get us closer to being able to tighten the FORTIFY_SOURCE routines
-> >> on memcpy().
-> >>
-> >> Link: https://github.com/KSPP/linux/issues/79
-> >> Link: https://github.com/KSPP/linux/issues/109
-> >> Fixes: 09d290f0ba21 ("media: staging/intel-ipu3: css: Add support for firmware management")
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> >> ---
-> >>
-> >> It'd be just great if someone that knows this code better can confirm
-> >> these changes are correct. In particular the adjustment of the
-> >> relational operator. Thanks!
-> >>
-> >> Changes in v2:
-> >>  - Use flexible array and adjust relational operator, accordingly.
-> > 
-> > The operator was just correct. The check is just there to see the firmware
-> > is at least as large as the struct as which it is being accessed.
-> 
-> I'm a bit confused, so based on your reply to v1 of this series, this patch
-> is now correct, right?
-> 
-> The operator in v1 _was_ correct as long as the one-element array wasn't
-> transformed into a flexible array, right?
-> 
-> Notice that generally speaking flexible-array members don't occupy space in the
-> containing structure:
-> 
-> $ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
-> struct imgu_fw_header {
-> 	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
-> 	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
-> 	struct imgu_fw_info        binary_header[] __attribute__((__aligned__(8))); /*    72     0 */
-> 
-> 	/* size: 72, cachelines: 2, members: 2 */
-> 	/* forced alignments: 1 */
-> 	/* last cacheline: 8 bytes */
-> } __attribute__((__aligned__(8)));
-> 
-> $ pahole -C imgu_fw_header drivers/staging/media/ipu3/ipu3-css-fw.o
-> struct imgu_fw_header {
-> 	struct imgu_fw_bi_file_h   file_header;          /*     0    72 */
-> 	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
-> 	struct imgu_fw_info        binary_header[1] __attribute__((__aligned__(8))); /*    72  1200 */
-> 
-> 	/* size: 1272, cachelines: 20, members: 2 */
-> 	/* forced alignments: 1 */
-> 	/* last cacheline: 56 bytes */
-> } __attribute__((__aligned__(8)));
-> 
-> So, now that the flexible array transformation is included in the same patch as the
-> bugfix, the operator is changed from '<' to '<='
+On Tue, Aug 10, 2021 at 03:11:01PM +0300, Andy Shevchenko wrote:
+> On Tue, Aug 10, 2021 at 3:06 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Aug 9, 2021 at 7:14 PM Len Baker <len.baker@gmx.com> wrote:
+>
+>
+>
+> > Even if we leave the logic as is, this might be better
+> >
+> > if (orient[0] =3D=3D '-')
+> >    str =3D devm_kstrdup(dev, orient + 1, GFP_KERNEL);
+>
+> > else if (orient[0] !=3D '0' || orient[1] !=3D '\0')
+> >    str =3D devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
+> > else
+> >    str =3D devm_kstrdup(dev, orient, GFP_KERNEL);
 
-'<' is correct since you only need as much data as the struct you're about
-to access is large, not a byte more than that. As Dan noted.
+I think the above snippet is the right one: Is compact and easy
+to understand.
 
-I think you could add a check for binary_nr is at least one.
+>
+> Or these two swapped for better reading
+>
+>  else if (orient[0] =3D=3D '0' **&& orient[1] =3D=3D '\0')
+>     str =3D devm_kstrdup(dev, orient, GFP_KERNEL);
+> else
+>     str =3D devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
+>
+> And with a comment added that we negate the result according to the
+> rules: 1) drop leading '-' (minus); 2) leave 0 as is; add leading '-'
+> (minus).
+>
+> > if (!str)
+> >    return -ENOMEM;
 
--- 
-Kind regards,
+Also, I think that it is better to leave the logic as is and don't
+try to use always the +/- sign.
 
-Sakari Ailus
+Again thanks to all for the feedback.
+
+Regards,
+Len
