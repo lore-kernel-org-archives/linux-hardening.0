@@ -2,130 +2,167 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7655DC4338F
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4687FC4320A
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 16:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5447160E09
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 15:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29DCB61019
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 16:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242221AbhHJPn7 (ORCPT
+        id S239134AbhHJQBB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Aug 2021 11:43:59 -0400
-Received: from mout.gmx.net ([212.227.17.20]:47579 "EHLO mout.gmx.net"
+        Tue, 10 Aug 2021 12:01:01 -0400
+Received: from mout.gmx.net ([212.227.15.18]:41865 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242153AbhHJPn7 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Aug 2021 11:43:59 -0400
+        id S239131AbhHJQBA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 10 Aug 2021 12:01:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628610195;
-        bh=f9yoZklWAOjRko5GEHne/rB2HxvyimqQxu/6RVsxWfM=;
+        s=badeba3b8450; t=1628611197;
+        bh=G3sM2QcP/MH50Zmwdjb3PS8F5QBGj5Y8VFa/7F2tPSc=;
         h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=gaNLTcUfYmNM6APGQiF0FHtnKBz1zKej6HpnDaAgzlhG4E4nolV22WYw1d9mw+2Ns
-         K4MT7IXSfb7VXEFBMevPZ93nvFZJOqq3FBeug+5SrVpcPSfkZDKKLRaxJJc/VKO03P
-         hI6cHuNhjDVvTJGl2HqqzCULIGUdIq1dWdsNecnU=
+        b=RLpZ0hqW/lrGAmurvpvHUFQYaAYshU/EL8HTj09Xa1VJXzVbI1pET09X0faIk0+qF
+         TZkmhHf9CmViqUxAAUCF+NxxGBpaiXeCn21JdMnfMEJPC5rbvtkbFoNvkRdRzCd495
+         83pnkOLc/giyhG64K1K/d/2czIyz0vQGQlpCbT94=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1McpJq-1mlzNZ1L0s-00a0AJ; Tue, 10
- Aug 2021 17:43:15 +0200
-Date:   Tue, 10 Aug 2021 17:43:03 +0200
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MAOJV-1mOBOw2Arz-00Bp83; Tue, 10
+ Aug 2021 17:59:57 +0200
+Date:   Tue, 10 Aug 2021 17:59:53 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Bernd Petrovitsch <bernd@petrovitsch.priv.at>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Len Baker <len.baker@gmx.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of
- strscpy()
-Message-ID: <20210810154303.GA2508@titan>
-References: <20210807152225.9403-1-len.baker@gmx.com>
- <20210808172503.5187cd24@jic23-huawei>
- <CAHp75VfSX-7UqH9Lbr_GxQRY3dGjGo7H8++kBdrrSds1p6nB1Q@mail.gmail.com>
- <20210809102131.000021eb@Huawei.com>
- <20210809161422.GA2619@titan>
- <CAHp75VfyJ1zSmgenn3V-2tF-X9uZJ1tByyJfJOydXZSV1as3GA@mail.gmail.com>
- <CAHp75VeAf_GYcF--=wXJmJZPr1YHn_gLFAFGHwsMCDX7Mxs5zw@mail.gmail.com>
+        David Laight <David.Laight@ACULAB.COM>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-hardening@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 2/3] drivers/soc/renesas: Prefer memcpy over strcpy
+Message-ID: <20210810155953.GB2508@titan>
+References: <20210808125012.4715-1-len.baker@gmx.com>
+ <20210808125012.4715-3-len.baker@gmx.com>
+ <39485c0e-511c-50a0-83be-f9ce6fc47e67@petrovitsch.priv.at>
+ <c33adb9e-9604-3d89-5a5b-152eb03e5b54@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeAf_GYcF--=wXJmJZPr1YHn_gLFAFGHwsMCDX7Mxs5zw@mail.gmail.com>
-X-Provags-ID: V03:K1:cRHTKwbL0WqT843vcAOgaEC2gKAhlW/Nz3Siys7qUczMedk2Sbz
- CYN4XnCy+VCfuctiQz9MiYdV5tnke7l4479UWw9mSEI7qzLnwIdoeFbWEj+BKtMZaWPVbkn
- trYBZMDm8S+jM0W5vVjDREqytula4FEoFEuF9qybQUNsUbJquEdW6/QwOOnaRB2rKHsA2vY
- rY+5uB2126WMJm6t9xDQg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VZWlOome2sY=:7hkCJf7Tk4hkI7kJ3dIFPt
- 8tK3bg5/XlCkE+AeqXrX3+HxOLVmNaM3vuMDqj4LOmQhbUdI5OG10C1d5a8IYyu6Ti8TAuQ9D
- ja0T8XxUpLRI8vZDqvMzHXJIbW+lHdCsKhCXD7miGhVSFQL7xAlsLKVVsEmZVfJBRYUOo+TeQ
- qGtjyQJwUVWUkcz366Y0nS9ZWuuXgVUUX3H8GQn5m2CT3uWiAMVtaChiHZXucm/HBS9S/BdKG
- L87yLEBZr7EpTguHVMTtWOZVEbGm5j/L9U/c1CkzWhbwcvoH5RO+YKul+tirAhxWjMVAk60Sf
- 8atQrQSdktM3B0SeDoTIVjFu2WdQo+Pd7xASoCgfXJbzonvTBGcBvB1e12BCF5QusxjPjse3E
- 2EjOHLvaZjaBVqz7WW1Vo827qgK387et7r4e9Ru+DxzoE9q4CQR0b8hepQRXefNN9SVNB8dCF
- g0X6jmJe+Szpmlm34awqWB9ulCH4DGIAqirzrmefkVC+7A+861RExTO7Ux2lD6n1kId2/NyUB
- FtGe16ELqiNdDE20+xndkX3Pg2mL5LsfZ4Pwa3METKwCglQuoecOA8X2gxZw4HwoEcfpzW+Ae
- d18+S4wbAWjuV2X8oZq92I+V3aCLBrZvJnZprjbyZpY7D68U4fFABoJktK7ZbDhrmhBp0gWgJ
- f4uAT3B5vK0xCW2KsTjqeXWFz1OAhfu5hKKZPc3udIJcObwzoznA0T+/75EMzxq/LQujctCbH
- h4z+7Oto8UCefyDxkuQyI2jJTjoyvRCKmtUzsIiMmHMuJYBRhF/pJ6NdALjTTsUuMTcrDpLI+
- L3L4vZQjrXdrsWg0/PhJLdAixhndGMgpJGMwat5GiBEnwnHRsAafTGrOE1sNWO8LqGn8OdOHY
- +PPMCz9IxfTkTwk4xnaPYBKOugp9H7hWPQvF46tyb+wDon3hRVia6F2rGUxfvIkLFRHpIpCef
- YYajSEVtSy3oDeIyqGjdwWPV/ziEkt3X8kUVBksfPDKwKkvJn7aalvw1laAyxytI1kWcL20fE
- q4omv7Dh6htr5og+YV42Dv5kuP4vyGY2IxEEP0XwCh2x+zDACsxFoFAhTVmekBqdw2thwwJZf
- G2R1JA6i5fBOWbUdUbZxVa7HucMs/pFqNOYX6A57Quk9dPKwT5rGBT7LQ==
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c33adb9e-9604-3d89-5a5b-152eb03e5b54@wanadoo.fr>
+X-Provags-ID: V03:K1:FPnUfg9bHq3mnp/YBiXnJfdCYth5+kd8VoT92LWLiyrQC/T7qWV
+ XqEMPQaChEtvXvpYQ0FF7Z/k5XfSetPCvutFfenyLdouGF3+8FbQSDYSzaKDcHfI9Dhk9pT
+ nqMVMtEa8s6Uo4e8R+j6kuHpbSoJjrUwp2ujWigdUNW475H61eXq4DWibqEpwgxIo8irZ9S
+ IzLJgN8K5DUg2AmYmO3Sw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xVByGEykzDo=:h92VZnFlg+VkvKpiRFRLaQ
+ xPYCBWL7ImYXcrI8PHzLKgnvx0U0nAtR8VXIPzxaGS2RH0f/a614v6z4l9jMI4XuUhRBM0SNc
+ RuACv5zcKcI6FLS9IDVu9IUViF/ptqpi0Aqs5HiXD0QXfLE+FSZHZezBncVgpaBNKN2Q9i9Bk
+ feL7SK5a6hi14JIlmQUwYFqIsltXxuJw9HRh2QIQD1Xg765Kj9vMVFB16B+udtvO1OFoIHaz8
+ 1wYWiODPzdSr/W6iLzLVQsP2xXPk8fZK35qAAMoH7/StbKKXMBwM/LYg5X5DPtGu9X3gznpGm
+ JeAY0UZIAdYpRDmEck7ZCoCp94aHNDAZlWPiJrRRb8XcNzmPoj2EsdGdvW0I1DZk8P9TuVmI0
+ RxcEs0TnCOOYmHKUo+Ryt4Le5QGsqbK4Ai7/cUCXGpIgAyqUnIYml4CuTj1xo9D3ekA0kzVZa
+ pTuhuID0mA6mXzjJ+CET5Re8VGiODsRFBidz9sYs52BdOywTUQPl/RtaMJiuTc/rKoE/pMfY6
+ FuWrq+2/cHU/F81lxmccNBCnkIq6lyIAZh2g3k67QqaYYLfg0JCLE4l07Qv/5QCKJTDM/ErHF
+ J4kKjwxvybFLkYGtQI0x9Zwu+W++8SuHokR6PzwSJewR2zUtE6MxRgdeCVKiZNkX78ywQu5fc
+ R7fq/cl3ZxhUWU4xBVY8FjoglKJkk4IeYaHrXRWB5JaYQY9bceFzcP4vqIkSLdIBMKOqWmVMw
+ HaDIyZYNKaVxwrelDBPKQQic2rIJOD4MmoaehCgoZm4fzhqYHTrqgJSXSRaDgYE9+2xrPbfV6
+ /ymc1tDje2S0RCukp5/WGd7pyM02KN0T90vEOdW7N3jZJgEoJ3TjEAOtpuPHZ/vt11jsOi3Aa
+ /RinBa12sewbhNvzgkynJtSYppciAYDzrWoefKvl0s/UWr/czYfX+jxhLbOUyrP+ujaE//g/s
+ Abm1m2QG0QgguPkPwb/TNHJJxMcMpk8lRU8elMr0+SXj/9HMPg+3KlW+31nWHNdu48xI91lK7
+ Uto3xv0v7UtLZdO/NNKyXcbdhNYwgT6KHHSNVRPUGG4QxQgzgGES+DV70EO3koX3cakEsBsV6
+ CP/4wY6tXJQB6khciYOs09qXEJsZgqDA44XBavobn8ilwZL/8/FvePXAg==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Andy, David and Jonathan
+Hi,
 
-First of all thanks you very much for your code snippets ;)
-More below.
-
-On Tue, Aug 10, 2021 at 03:11:01PM +0300, Andy Shevchenko wrote:
-> On Tue, Aug 10, 2021 at 3:06 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Aug 9, 2021 at 7:14 PM Len Baker <len.baker@gmx.com> wrote:
+On Sun, Aug 08, 2021 at 07:06:30PM +0200, Christophe JAILLET wrote:
+> Hi,
 >
->
->
-> > Even if we leave the logic as is, this might be better
+> Le 08/08/2021 =E0 17:35, Bernd Petrovitsch a =E9crit=A0:
+> > Hi all!
 > >
-> > if (orient[0] =3D=3D '-')
-> >    str =3D devm_kstrdup(dev, orient + 1, GFP_KERNEL);
+> > On 08/08/2021 14:50, Len Baker wrote:
+> > > strcpy() performs no bounds checking on the destination buffer. This
+> > > could result in linear overflows beyond the end of the buffer, leadi=
+ng
+> > > to all kinds of misbehaviors. So, use memcpy() as a safe replacement=
+.
+> > >
+> > > This is a previous step in the path to remove the strcpy() function
+> > > entirely from the kernel.
+> > >
+> > > Signed-off-by: Len Baker <len.baker@gmx.com>
+> > > ---
+> > >   drivers/soc/renesas/r8a779a0-sysc.c | 6 ++++--
+> > >   drivers/soc/renesas/rcar-sysc.c     | 6 ++++--
+> > >   2 files changed, 8 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/soc/renesas/r8a779a0-sysc.c b/drivers/soc/renes=
+as/r8a779a0-sysc.c
+> > > index d464ffa1be33..7410b9fa9846 100644
+> > > --- a/drivers/soc/renesas/r8a779a0-sysc.c
+> > > +++ b/drivers/soc/renesas/r8a779a0-sysc.c
+> > > @@ -404,19 +404,21 @@ static int __init r8a779a0_sysc_pd_init(void)
+> > >   	for (i =3D 0; i < info->num_areas; i++) {
+> > >   		const struct r8a779a0_sysc_area *area =3D &info->areas[i];
+> > >   		struct r8a779a0_sysc_pd *pd;
+> > > +		size_t n;
+> > >
+> > >   		if (!area->name) {
+> > >   			/* Skip NULLified area */
+> > >   			continue;
+> > >   		}
+> > >
+> > > -		pd =3D kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
+> > > +		n =3D strlen(area->name) + 1;
+> > > +		pd =3D kzalloc(sizeof(*pd) + n, GFP_KERNEL);
+> > Zeroing the allocated bytes is not needed since it's completly
+> > overwritten with the strcpy()/memcpy().
 >
-> > else if (orient[0] !=3D '0' || orient[1] !=3D '\0')
-> >    str =3D devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
-> > else
-> >    str =3D devm_kstrdup(dev, orient, GFP_KERNEL);
+> The strcpy()/memcpy() only overwrites the pd->name field, not the whole =
+pd
+> structure.
 
-I think the above snippet is the right one: Is compact and easy
-to understand.
+You are right.
 
->
-> Or these two swapped for better reading
->
->  else if (orient[0] =3D=3D '0' **&& orient[1] =3D=3D '\0')
->     str =3D devm_kstrdup(dev, orient, GFP_KERNEL);
-> else
->     str =3D devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
->
-> And with a comment added that we negate the result according to the
-> rules: 1) drop leading '-' (minus); 2) leave 0 as is; add leading '-'
-> (minus).
->
-> > if (!str)
-> >    return -ENOMEM;
+> I think that it is needed to keep the kzalloc.
 
-Also, I think that it is better to leave the logic as is and don't
-try to use always the +/- sign.
-
-Again thanks to all for the feedback.
+Yes, I think so. The kzalloc is needed to guarantee that the whole struct =
+is
+initialize (all the members are initialized with zeros).
 
 Regards,
 Len
+
+>
+> Just my 2c,
+> CJ
+>
+> > >   		if (!pd) {
+> > >   			error =3D -ENOMEM;
+> > >   			goto out_put;
+> > >   		}
+> > >
+> > > -		strcpy(pd->name, area->name);
+> > > +		memcpy(pd->name, area->name, n);
+> > >   		pd->genpd.name =3D pd->name;
+> > >   		pd->pdr =3D area->pdr;
+> > >   		pd->flags =3D area->flags;
+> >
+> > And similar for the second hunk.
+> >
+> > MfG,
+> > 	Bernd
+> >
+>
