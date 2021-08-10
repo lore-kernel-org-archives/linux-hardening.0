@@ -2,140 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB265C4338F
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 21:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B742C4320A
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 08:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF66060FC2
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Aug 2021 21:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF4C60FD8
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Aug 2021 08:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236160AbhHIVw6 (ORCPT
+        id S238188AbhHJIaz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Aug 2021 17:52:58 -0400
-Received: from gateway23.websitewelcome.com ([192.185.49.180]:25349 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236129AbhHIVw5 (ORCPT
+        Tue, 10 Aug 2021 04:30:55 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:52137 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238181AbhHJIay (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Aug 2021 17:52:57 -0400
-X-Greylist: delayed 1372 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Aug 2021 17:52:57 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id B64FD7D97
-        for <linux-hardening@vger.kernel.org>; Mon,  9 Aug 2021 16:29:42 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id DCq6myNZ2MGeEDCq6m1Png; Mon, 09 Aug 2021 16:29:42 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QgyrrxOHvP7M6fplZ52oJH8CjSBf+T8N9dmFTacakl0=; b=RJ5HVUfwJimK7r90lDMzMJc0bK
-        kSZulCYMs8kEDYXa7fYxujML3b7F4zI94vIbs1yMfALNkuQpPtZ+y4Z7L7KkyZapPQq8str0VuE1d
-        +k13Y54uSLP/mt2btGWXP/lX9b/sPI9IxSNOm5m7SQDUHhyy4vQqu7QHJh8IohRTBTlvNHkhNN3di
-        9D/KDAvDLagoWUYImeYbxAvFmMcich7didzy0Sp8PEwQL0Hrg8xYkeycHQ8v/i1qyEG+UT9/u7yS5
-        WBVSJ4c1OC+Jhbg0+e3jXKXSsu4cz+QB3VEHdDbtKXl/IRRZMGtotuI8tKb0prXVe9bRWIBkQjjEA
-        /ELAzuUw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:36120 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1mDCq5-000CXb-UH; Mon, 09 Aug 2021 16:29:41 -0500
-Subject: Re: [PATCH][next] mwifiex: usb: Replace one-element array with
- flexible-array member
-To:     Brian Norris <briannorris@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-References: <20210809211134.GA22488@embeddedor>
- <CA+ASDXO+GbP_WWVdO0=Uavh036ZhZiziE8DwGRKP-ooofd2QVw@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <533036d7-1a0e-21e8-5e40-2e807b32a215@embeddedor.com>
-Date:   Mon, 9 Aug 2021 16:32:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Tue, 10 Aug 2021 04:30:54 -0400
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-227-5M0oF5-pMm2WfYqgjlKDBQ-1; Tue, 10 Aug 2021 09:30:27 +0100
+X-MC-Unique: 5M0oF5-pMm2WfYqgjlKDBQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.23; Tue, 10 Aug 2021 09:30:26 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.023; Tue, 10 Aug 2021 09:30:26 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jonathan Cameron' <Jonathan.Cameron@Huawei.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>, Len Baker <len.baker@gmx.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of
+ strscpy()
+Thread-Topic: [PATCH v2] drivers/iio: Remove all strcpy() uses in favor of
+ strscpy()
+Thread-Index: AQHXjQAF/V94Z2zj4EedKEnvL+aRB6tsZ9qw
+Date:   Tue, 10 Aug 2021 08:30:26 +0000
+Message-ID: <9b509d0fd5c4459985aac9b35abe462b@AcuMS.aculab.com>
+References: <20210807152225.9403-1-len.baker@gmx.com>
+        <20210808172503.5187cd24@jic23-huawei>
+        <CAHp75VfSX-7UqH9Lbr_GxQRY3dGjGo7H8++kBdrrSds1p6nB1Q@mail.gmail.com>
+ <20210809102131.000021eb@Huawei.com>
+In-Reply-To: <20210809102131.000021eb@Huawei.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <CA+ASDXO+GbP_WWVdO0=Uavh036ZhZiziE8DwGRKP-ooofd2QVw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1mDCq5-000CXb-UH
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:36120
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 8/9/21 16:24, Brian Norris wrote:
-> On Mon, Aug 9, 2021 at 2:08 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
->>
->> There is a regular need in the kernel to provide a way to declare having
->> a dynamically sized set of trailing elements in a structure. Kernel code
->> should always use “flexible array members”[1] for these cases. The older
->> style of one-element or zero-length arrays should no longer be used[2].
->>
->> This helps with the ongoing efforts to globally enable -Warray-bounds
->> and get us closer to being able to tighten the FORTIFY_SOURCE routines
->> on memcpy().
->>
->> This issue was found with the help of Coccinelle and audited and fixed,
->> manually.
->>
->> [1] https://en.wikipedia.org/wiki/Flexible_array_member
->> [2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
->>
->> Link: https://github.com/KSPP/linux/issues/79
->> Link: https://github.com/KSPP/linux/issues/109
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+From: Jonathan Cameron
+> Sent: 09 August 2021 10:22
 > 
-> An important part of your patch rationale should include determining
-> that the 1-length wasn't actually important anywhere. I double checked
-> for you, and nobody seemed to be relying on 'sizeof struct fw_data' at
-> all, so this should be OK:
+> On Sun, 8 Aug 2021 22:00:34 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> 
+> > On Sun, Aug 8, 2021 at 7:25 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> > >
+> > > On Sat,  7 Aug 2021 17:22:25 +0200
+> > > Len Baker <len.baker@gmx.com> wrote:
+> > >
+> > > > strcpy() performs no bounds checking on the destination buffer. This
+> > > > could result in linear overflows beyond the end of the buffer, leading
+> > > > to all kinds of misbehaviors. The safe replacement is strscpy().
+> > > >
+> > > > This patch is an effort to clean up the proliferation of str*()
+> > > > functions in the kernel and a previous step in the path to remove
+> > > > the strcpy function from the kernel entirely [1].
+> > > >
+> > > > [1] https://github.com/KSPP/linux/issues/88
+> > > >
+> > > > Signed-off-by: Len Baker <len.baker@gmx.com>
+> > > Applied to the togreg branch of iio.git and pushed out as testing
+> > > so 0-day can poke at it and see if we missed anything.
+> >
+> > Isn't it too early? Or am I missing something (see below)?
+> >
+> > ...
+> >
+> > > >                       /* use length + 2 for adding minus sign if needed */
+> > > > -                     str = devm_kzalloc(regmap_get_device(st->map),
+> > > > -                                        strlen(orient) + 2, GFP_KERNEL);
+> > > > +                     n = strlen(orient) + 2;
+> > > > +                     str = devm_kzalloc(regmap_get_device(st->map), n,
+> > > > +                                        GFP_KERNEL);
+> > > >                       if (str == NULL)
+> > > >                               return -ENOMEM;
+> > > >                       if (strcmp(orient, "0") == 0) {
+> > > > -                             strcpy(str, orient);
+> > > > +                             strscpy(str, orient, n);
+> > > >                       } else if (orient[0] == '-') {
+> > > > -                             strcpy(str, &orient[1]);
+> > > > +                             strscpy(str, &orient[1], n);
+> > > >                       } else {
+> > > >                               str[0] = '-';
+> > > > -                             strcpy(&str[1], orient);
+> > > > +                             strscpy(&str[1], orient, n - 1);
+> >
+> > Why n-1?
+> 
+> n is the total length and this is printing from [1], so n - 1 is remaining
+> space.
 
-I always do that. That's the reason why I included this line in the
-changelog text:
+If you do:
+	/* negate 'orient' */
+	n = strlen(orient) + 1;
+	str = malloc(n + 1);
+	if (n == 2 && orient[0] == '0')
+		memcpy(str, orient, n);
+	else if (orient[0] == '-')
+		memcpy(str, orient + 1, n - 1);
+	else {
+		str[0] = '-';
+		memcpy(str + 1, orient, n);
+	}
+Then it is probably less confusing.
 
-"This issue was found with the help of Coccinelle and audited and fixed,
-manually."
+	David
 
-Thanks for double-checking, though. :)
-
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-
-Thanks
---
-Gustavo
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
