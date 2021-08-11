@@ -2,87 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD084C43214
-	for <linux-hardening@archiver.kernel.org>; Wed, 11 Aug 2021 07:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55202C4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 11 Aug 2021 09:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE39860FC0
-	for <linux-hardening@archiver.kernel.org>; Wed, 11 Aug 2021 07:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D9060F55
+	for <linux-hardening@archiver.kernel.org>; Wed, 11 Aug 2021 09:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235565AbhHKHlD (ORCPT
+        id S236664AbhHKJiu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 11 Aug 2021 03:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234043AbhHKHlC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 11 Aug 2021 03:41:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4BEBC6056B;
-        Wed, 11 Aug 2021 07:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628667639;
-        bh=rdqhOz0L1PAh4KXTeSKY4XD8/H+gEn5LQTTMro2BQ9M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uQVzxGtxi3P/hMjDt7J/0kB2xhblAqToa9zpLvlF8G+Vf83bZyGVBqazQX+UNuqL7
-         0Nr4/5GeWK2BB6TfyNUG48RN6NEs/twP/NVKGi+wdis36tHP64IE6qNW4WZJxdhRF7
-         QX+oYwtXG362ZK/Rh5crKTcuFKcObaKlFP3l5lwE+f49eN7wJsLEFzl1ZzoBrQAb9Y
-         CjoyTSylavwgQXDExA4IJY79Lr3nElg5YusevfuvinucbLmlLyiiD2VmzaeCtt+uDi
-         OEQjQ+66vfF0aFHvX8fEAYLiFEdbavEvLltA6xGTpiwuZ2Yfmxti884966gk3bANhO
-         1evdzfauj/Xjw==
-Date:   Wed, 11 Aug 2021 09:40:34 +0200
-From:   Robert Richter <rric@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Len Baker <len.baker@gmx.com>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] drivers/edac/edac_mc: Remove all strcpy() uses
-Message-ID: <YRN+8u59lJ6MWsOL@rric.localdomain>
-References: <20210807155957.10069-1-len.baker@gmx.com>
- <ff02ffffdc130a772c01ec0edbf8d1e684b0730a.camel@perches.com>
- <20210808112617.GA1927@titan>
- <YRD90L6PMoVbbv+9@rric.localdomain>
- <99448ef29830fda9b19409bc23b0e7513b22f7b7.camel@perches.com>
- <YRKO4An9UkObVGmB@rric.localdomain>
- <b3070c0352e2a5661a1a59d5c5354cc82a1cce1e.camel@perches.com>
+        Wed, 11 Aug 2021 05:38:50 -0400
+Received: from mail-vs1-f43.google.com ([209.85.217.43]:42713 "EHLO
+        mail-vs1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236605AbhHKJiu (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 11 Aug 2021 05:38:50 -0400
+Received: by mail-vs1-f43.google.com with SMTP id k24so1072738vsg.9;
+        Wed, 11 Aug 2021 02:38:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jFrsES6PK29W3F7zHpy8Q/7CDx1PGMKHOeHn4kSSpjk=;
+        b=MFY0fWRVEBnfjSQsEplj4oYUIzWDR/ah1kJcHSGcMcO99u/xkEpcbuRbAY0pfr03dM
+         ulaG7U7DC6fhna/TtHX+6uyWHmzgO0MI2OZQc+GTTsi0T8KvDpfVcBZ2EKVQ8t40vNg7
+         p9m5nndiTd8iN2N4AtgVP8Bc/YrpcVSSW+yAgRk40tMnRxzeBAUSeSV1ywuDPTcGolFX
+         JE5tBH+Ur/ooAqOivvxr/vnFRU9Ou36pOMpKzwwioC2yuZ88f9+D2AUd/YdHeLJFxGLJ
+         x10UNTMupJaEXHjWGWOqE/dkpJGwfRNdg+iq+XEakYp57cBtyuB7jLTrE587r0zQemLR
+         3HRQ==
+X-Gm-Message-State: AOAM530oPGY3WU1UGgZNCrkwaT0IdW47pbsYBbzXNnSDi0Fiy1nf9TI7
+        wQdcZPElyIPonekqVkMBhX+II/obVXOukTVxCFk=
+X-Google-Smtp-Source: ABdhPJwaw19/a3af/wq9KAfUTaIhn/b/oWusE9PSK1kD5S7XVBrLMX/us0cmhGf351HBIl3Htr8XHfPPG6n8KuahPiE=
+X-Received: by 2002:a05:6102:d9:: with SMTP id u25mr15945790vsp.42.1628674706266;
+ Wed, 11 Aug 2021 02:38:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3070c0352e2a5661a1a59d5c5354cc82a1cce1e.camel@perches.com>
+References: <20210808125012.4715-1-len.baker@gmx.com> <20210808125012.4715-3-len.baker@gmx.com>
+In-Reply-To: <20210808125012.4715-3-len.baker@gmx.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 11 Aug 2021 11:38:14 +0200
+Message-ID: <CAMuHMdV7ZM9oZG-KU4Ap+H4YehnyGoZn+jsdiJ20GwMFNh+6uQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] drivers/soc/renesas: Prefer memcpy over strcpy
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        David Laight <David.Laight@aculab.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-hardening@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 10.08.21 08:02:17, Joe Perches wrote:
-> On Tue, 2021-08-10 at 16:36 +0200, Robert Richter wrote:
-> > On 09.08.21 10:18:58, Joe Perches wrote:
-> > 
-> > > strscpy and scnprintf have different return values and it's simpler
-> > > and much more common to use scnprintf for appended strings that are
-> > > limited to a specific buffer length.
-> > 
-> > Calculating the bytes written from the return value is a oneliner.
-> 
-> Not really.
-> You still have to test for strscpy's possible return of -E2BIG.
+On Sun, Aug 8, 2021 at 4:50 PM Len Baker <len.baker@gmx.com> wrote:
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors. So, use memcpy() as a safe replacement.
+>
+> This is a previous step in the path to remove the strcpy() function
+> entirely from the kernel.
+>
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 
-I thought of:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.15.
 
-	num = strscpy(p, OTHER_LABEL, len);
-	num = num < 0 ? len : num;
-	len -= num;
-	p += num;
+Gr{oetje,eeting}s,
 
-Clearly, this does not look nice, esp. if this is repeated in the
-code. That's why I prefer the strlen(p) implementation:
+                        Geert
 
-	strscpy(p, OTHER_LABEL, len);
-	len -= strlen(p);
-	p += strlen(p);
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
--Robert
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
