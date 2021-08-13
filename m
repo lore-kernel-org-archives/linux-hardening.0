@@ -2,61 +2,45 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82467C4320A
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 Aug 2021 16:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268B9C4320E
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 Aug 2021 18:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB0E61038
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 Aug 2021 16:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B36A610EA
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 Aug 2021 18:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233289AbhHMQJR (ORCPT
+        id S232820AbhHMSUU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 Aug 2021 12:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60164 "EHLO
+        Fri, 13 Aug 2021 14:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231881AbhHMQJQ (ORCPT
+        with ESMTP id S232796AbhHMSUU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 Aug 2021 12:09:16 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9290FC0613A4
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Aug 2021 09:08:49 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id l11so12587454plk.6
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Aug 2021 09:08:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Zb6hESOPAPpsYQTxj6uunL70me57Ohn5RtlRGa2hRIU=;
-        b=bt0deawY8VgLg78fejbazYxtQGqnJJ+YkSz5IoTYnQ5LuF//jd0UR5Pt6RCob2ruwg
-         L7XvtJcs+LMzfCUDh81Ba+1wBbHDlsnlh6IiZoditm2+zMGPr5c1K/absUN+/4ZuN2lB
-         hqNu9nLcRyjmucoSbEUpC/VFf1vXe3dcafsIk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Zb6hESOPAPpsYQTxj6uunL70me57Ohn5RtlRGa2hRIU=;
-        b=Nrr951HwAmrYmjgEa3kVTB6iM6agviyt7b12G/Yc+D4Zno/L6LYXM578tEClOdmXIm
-         h26CU9IGc95cdkimkucEASLH3FeuUXGlXfS2NZkfuYWoT7fZgxvfNtmuza3QrecroNJL
-         6avWaLoO2y7eUwluwIRQjPKC1QIbsBuEpiulfn/POg2//ANVONa9+t+Xp28HT6BSS2wK
-         urYXhVQ3XNa9tWJo5SzQTWY1nijPRO+JIOVn9c9UQIXt5+xOXLysQpnpuJj06VENE7j9
-         I0youjm3XOclbz4Fq0xnAai5FO1Ty/9ZED9VnxbvZ6YRSQAhWUgP+/Meq1nS0Sc6q9Pa
-         Er7Q==
-X-Gm-Message-State: AOAM532WHVU2xFGNPcs18v/8e5gxdaf8yacCCTs1tIlnlU08dPs6LSqB
-        oqtcW4bHEflqRBDd7vxVMkmIjg==
-X-Google-Smtp-Source: ABdhPJzO/EBStKGp8NBzLlcdP5+lTA2rI0q06EsQcV9US+8Rtvv2vMu7llrU0u1jr9BMG5zMLdkcVQ==
-X-Received: by 2002:a05:6a00:1803:b029:3cd:d5c1:f718 with SMTP id y3-20020a056a001803b02903cdd5c1f718mr3121899pfa.22.1628870928766;
-        Fri, 13 Aug 2021 09:08:48 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y64sm3224461pgy.32.2021.08.13.09.08.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Aug 2021 09:08:48 -0700 (PDT)
-Date:   Fri, 13 Aug 2021 09:08:47 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
+        Fri, 13 Aug 2021 14:20:20 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E470EC061756;
+        Fri, 13 Aug 2021 11:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+        Resent-Cc:Resent-Message-ID; bh=rq6VfTjLJfvWeGU0hw3GUv7MRF3dGVPTx8dKGrBFFlo=;
+        t=1628878793; x=1630088393; b=I5S0gRU1+S7GtJy5aucqUbOjnJXdvDVKjcmWggxsgLj+Opo
+        fyzGd1Bxvte1qlq90HpPXLYOG5gI5qMJ7VnNQl1B4jan0JC4gHk2zw75449DN/FGvBQKNyN+RVPPQ
+        Yv0F94jwEyHXmz9q7GfJpw7qFXxpYv1ji2N+o4yfZwwFYekhLwwD6pno1DHlKCG4v8p6HAB8055oi
+        cGfDJwwYyYvzjoEsDzLEkxB5wgw5S08ft+zSZYxxSmDLzTiwJBJ/FDpq6hWKKzZhz6typDdPRVMvM
+        bIqKAX1GvQmBOLCjqk//FqnBP0mvuceUUgRl16qmg0f0wnFBITH4K6XjE7wWI/mg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1mEbmM-00ALlG-5g; Fri, 13 Aug 2021 20:19:38 +0200
+Message-ID: <465daabf002e098f0a24cf07f72a69d7e20c7440.camel@sipsolutions.net>
+Subject: Re: [PATCH 39/64] mac80211: Use memset_after() to clear tx status
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
@@ -68,61 +52,41 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 39/64] mac80211: Use memset_after() to clear tx status
-Message-ID: <202108130907.FD09C6B@keescook>
+Date:   Fri, 13 Aug 2021 20:19:36 +0200
+In-Reply-To: <202108130907.FD09C6B@keescook>
 References: <20210727205855.411487-1-keescook@chromium.org>
- <20210727205855.411487-40-keescook@chromium.org>
- <202107310852.551B66EE32@keescook>
- <bb01e784dddf6a297025981a2a000a4d3fdaf2ba.camel@sipsolutions.net>
+         <20210727205855.411487-40-keescook@chromium.org>
+         <202107310852.551B66EE32@keescook>
+         <bb01e784dddf6a297025981a2a000a4d3fdaf2ba.camel@sipsolutions.net>
+         <202108130907.FD09C6B@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb01e784dddf6a297025981a2a000a4d3fdaf2ba.camel@sipsolutions.net>
+Content-Transfer-Encoding: 7bit
+X-malware-bazaar: not-scanned
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 09:40:07AM +0200, Johannes Berg wrote:
-> On Sat, 2021-07-31 at 08:55 -0700, Kees Cook wrote:
-> > On Tue, Jul 27, 2021 at 01:58:30PM -0700, Kees Cook wrote:
-> > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > > field bounds checking for memset(), avoid intentionally writing across
-> > > neighboring fields.
-> > > 
-> > > Use memset_after() so memset() doesn't get confused about writing
-> > > beyond the destination member that is intended to be the starting point
-> > > of zeroing through the end of the struct.
-> > > 
-> > > Note that the common helper, ieee80211_tx_info_clear_status(), does NOT
-> > > clear ack_signal, but the open-coded versions do. All three perform
-> > > checks that the ack_signal position hasn't changed, though.
+On Fri, 2021-08-13 at 09:08 -0700, Kees Cook wrote:
 > > 
-> > Quick ping on this question: there is a mismatch between the common
-> > helper and the other places that do this. Is there a bug here?
+> > The common helper should also clear ack_signal, but that was broken by
+> > commit e3e1a0bcb3f1 ("mac80211: reduce IEEE80211_TX_MAX_RATES"), because
+> > that commit changed the order of the fields and updated carl9170 and p54
+> > properly but not the common helper...
 > 
-> Yes.
-> 
-> The common helper should also clear ack_signal, but that was broken by
-> commit e3e1a0bcb3f1 ("mac80211: reduce IEEE80211_TX_MAX_RATES"), because
-> that commit changed the order of the fields and updated carl9170 and p54
-> properly but not the common helper...
+> It looks like p54 actually uses the rates, which is why it does this
+> manually. I can't see why carl9170 does this manually, though.
 
-It looks like p54 actually uses the rates, which is why it does this
-manually. I can't see why carl9170 does this manually, though.
+mac80211 also uses the rates later again on status reporting, it just
+expects the # of attempts to be filled etc. I haven't looked at
+carl9170, but I would expect it to do something there and do it
+correctly, even though old it's a well-written driver and uses mac80211
+rate control, so this would need to be correct for decent performance.
 
-> It doesn't actually matter much because ack_signal is normally filled in
-> afterwards, and even if it isn't, it's just for statistics.
-> 
-> The correct thing to do here would be to
-> 
-> 	memset_after(&info->status, 0, rates);
+But I guess it could be that the helper could be used because the rates
+were already handed to the firmware, and the code was just copy/pasted
+from p54 (the drivers were, IIRC, developed by the same folks)
 
-Sounds good; I will adjust these (and drop the BULID_BUG_ONs, as you
-suggest in the next email).
+johannes
 
-Thanks!
-
--Kees
-
--- 
-Kees Cook
