@@ -2,175 +2,182 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59609C4338F
-	for <linux-hardening@archiver.kernel.org>; Sat, 14 Aug 2021 13:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FA1C4320A
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Aug 2021 19:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4326960EE5
-	for <linux-hardening@archiver.kernel.org>; Sat, 14 Aug 2021 13:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4D960F4B
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Aug 2021 19:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238551AbhHNN4V (ORCPT
+        id S231417AbhHNThY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 14 Aug 2021 09:56:21 -0400
-Received: from mout.gmx.net ([212.227.15.15]:37597 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238523AbhHNN4V (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 14 Aug 2021 09:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1628949327;
-        bh=oirWK8f53ZhGtQZRUdXIiwXN3jynfvqqDCGUwEMI3IE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=TjwoWCOGX4Y2yAtLejBCAlcqr12vaSceXnzM2yYFMXJw9X3s90Sf9qY8cWGCaFL+j
-         xTgVwzgu/LHv34Wp4Kusdmf/Tym6cLTjxnJX4txV/7Fme6EnEL2fpcaFfvyBxezMmz
-         J8wygowy/tHPTGgFG5hHnL2SXJN72HUISCbBI7Xw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1Ma24s-1mZn2p00MW-00VzQC; Sat, 14 Aug 2021 15:55:27 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4] drivers/iio: Remove all strcpy() uses
-Date:   Sat, 14 Aug 2021 15:55:09 +0200
-Message-Id: <20210814135509.4500-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 14 Aug 2021 15:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229489AbhHNThX (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 14 Aug 2021 15:37:23 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45B4C061764;
+        Sat, 14 Aug 2021 12:36:54 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id f3so16160326plg.3;
+        Sat, 14 Aug 2021 12:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KMa88ZgCB+pmOBkgSDJjtHbmNgQd6frmdHWpKQQEAuM=;
+        b=S1uZWzn+8JhxQyga0SXC1Zd6wfLiV6UZ+pL9/PMiilWNM9eCbSVa+lMRFCu8BoaJcc
+         gFbQ5qAFuO/bpT3NWPxKRYOrGebMUDqeWHyrtfJPNR5aZ+/Gc3MGX9YdvmCkFoVYwwI/
+         eW/eDhptxWiI9I4ISq53vtHhSLAWAdT+j63UZzUy7XyPq52Nyw9eKME42CnVMsAO6teV
+         rWNRUUH3IpxhfSHginc8gvP+9MT+nNWqv49wosZuX718OaH1B2p4jS6QWA23TRU7CyHl
+         IDQsVwoMwkomQVfQN41IxjUdOxsq8UAbvGXKAC3qlvV6gl7BX/gubsH3bWaDf366i/H1
+         0d6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KMa88ZgCB+pmOBkgSDJjtHbmNgQd6frmdHWpKQQEAuM=;
+        b=XyfE+9mwVl1+HzeMs1HY1g5cFRBenyPKbtgfFut8RyA60KJO4n8/sOW4xMjKM1+HoF
+         pP701TI2QTnUAVM3b7QfMIIpRwdDDjX+7IOOg6g4ndBER4t7DwN7bJhXX6bQEh3pdHRH
+         vcIZeaAkCIwtAm2mvA0xHkkGKeTRS5c3tmXpXxHOWPuMKwvIFWfbwYr2nTGagapAnCKD
+         7WFR/DNpduXQZfyx84ykyeKLXuWxEMEXSocD+twytb3aHt41Bfva5Ez5lNbuDNTWCLyi
+         9h5h63+3lDtqlYrKs0MTVd/6oNnzvgb5yquilzD/VZCTCGEcVNn/GCQnENxvPlTzn+DK
+         OWjA==
+X-Gm-Message-State: AOAM533bN2on5EU3IGD9yZO9/AwpMUEcNl9WZ65e+e44rBDRLNnhzPcO
+        BhXGQBgJELvyrdRCkRenJXF5Dly9wGo9nOc8ak4=
+X-Google-Smtp-Source: ABdhPJyxYRv8dIkJvibLt0nJ919CHV6jw4qAjCxZfRmiWkPkBwIT/SlZq+NQFhsHMj+EemYmUtwWdhboR6eaiNjeXYE=
+X-Received: by 2002:a17:90b:33c5:: with SMTP id lk5mr8727886pjb.129.1628969814122;
+ Sat, 14 Aug 2021 12:36:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wbAZIvOyO/2NXW+GZdxft/SGny5ZuRJgvK+wr/u1uLz1G2lP8ss
- jLbRjodMtUcXyJYn0VSRKxVqCJk8tCsNDJZTmBDGWDkBw3rstrha39n08YnUoob18tnXDoi
- txp/51jbDH+kUqSsWdkIDFJkyF72oJJY9dhroNuIWYzYaEk6ovWzN8wI5KsGV2WMILkbOir
- e6YrEyzc5Tm7fTL5umFgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K1/PrZK0DaQ=:TC03UH+ejTIVRLIqpormzx
- Bl8npx9Nq83jwG7rdkdbn4UwzbRqc7ROxHHiCM1LUNmy1TYvFnsOZC/0bFAZt2O22l3YDiJUK
- jtUXWw3nudhotEsaZzVYox5UfF23YtlpumhV6UAYdemybtpGN3kuYz2jyKqLrqwFJ0weE7T/M
- F/C1YdZSW6AYYQ190rVgPi00fQBpgewecZn6WetOIFOOOLmRamxmL6DrD6vRXIEW1kAVKSOBe
- XdD7mBGFEc4ouI6MCrUFUMBziXJh6GFWHf/tEQsu6MKxw6B+SaTaiT7X7ZR8Vw/zd0x5YYi++
- RmZftFublOfb3NDPlA5jv8EB6mw9lgO3HcjUY3OuNJDcD4NCqX97VH/IpqhXUSpH5Y8RzHGt6
- ZJCk3oA8W1NIb8+fY+oCi0RgYI9FK+zT4k7qsTFAMX/WI0gO7kG3JmNUQfya2WvhSIRrTFW3c
- U8CBw3YxAWNtY6URrmI3An/7PNyuHQ5sxbutvdhJ6QHulrQ38K4T6pmi0cf8O05iUZU4eWmoN
- ELOvv/8s3UlTwAnaP3eF1lffGDgMJF+diEc4cNTtvMY4gRZSkKNfel+3bHt88Zb/ywM/05PkW
- M8gLfdDiUYzvOJeyhETjGUmIrAUe4+RGEKGqX0HJYkwkJK/0vkpMSvgJL38naBLZrXVohpqLE
- ts3rjE/OjwlGq591TUskjXOX+Ljhif68ToBVArNSNhSbG9uqSOpbiRHbgPWPWAQO0H7lP79ZA
- YsPHbtDn2BA1CWIhkH5NX0tX3nUiUxiJxnUezMRi27UThshOJIcif9PJ6ADThtbC5z4Nyars2
- lJ9R8G+qLrljsedcnQ+HDWUA2of2lWvP4ITfXkJVAfc4QaZvtk+0dJwMFCDeYSTZGfAs6R15Y
- MqTzmJV6pEvX08zk6ghg5nZXGs7HO9TsfhJ3XB5aLbjZhvGoPGmuJ7e8UPYzQ0sp7V1o2qkB2
- UtYxjr4Cd2mprEFLF0aLIgH6zIDQRzOfM02hVKykB8Rv8exuErA1Vqr4PxXnQmQTso2PUzcOA
- 1U4ey6oKUZsYKOD/fMyUB+VEuF5tmmpDGtRnmNWivqdR6cavLLS4n2gKP6dt7AZqAJmsjksLt
- olAg/euqwEY8juWoxynNcScfEFyqoJvzWBYiS6yViuWm7zgmTNP54EEhA==
+References: <20210814135509.4500-1-len.baker@gmx.com>
+In-Reply-To: <20210814135509.4500-1-len.baker@gmx.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 14 Aug 2021 22:36:18 +0300
+Message-ID: <CAHp75VdBuQTzCbz1CJciSA1+UOw0ZmJKAh8u2cbr5eDLSsRJEw@mail.gmail.com>
+Subject: Re: [PATCH v4] drivers/iio: Remove all strcpy() uses
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strcpy() performs no bounds checking on the destination buffer. This
-could result in linear overflows beyond the end of the buffer, leading
-to all kinds of misbehaviors. So, remove all the uses and add
-devm_kstrdup() or devm_kasprintf() instead.
+On Sat, Aug 14, 2021 at 4:55 PM Len Baker <len.baker@gmx.com> wrote:
+>
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors. So, remove all the uses and add
+> devm_kstrdup() or devm_kasprintf() instead.
+>
+> This patch is an effort to clean up the proliferation of str*()
+> functions in the kernel and a previous step in the path to remove
+> the strcpy function from the kernel entirely [1].
+>
+> [1] https://github.com/KSPP/linux/issues/88
 
-This patch is an effort to clean up the proliferation of str*()
-functions in the kernel and a previous step in the path to remove
-the strcpy function from the kernel entirely [1].
+Thank you very much for doing this!
+Now I like the result,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-[1] https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Len Baker <len.baker@gmx.com>
+> ---
+> The previous versions can be found in:
+>
+> v1
+> https://lore.kernel.org/linux-hardening/20210801171157.17858-1-len.baker@gmx.com/
+>
+> v2
+> https://lore.kernel.org/linux-hardening/20210807152225.9403-1-len.baker@gmx.com/
+>
+> v3
+> https://lore.kernel.org/linux-hardening/20210814090618.8920-1-len.baker@gmx.com/
+>
+> Changelog v1 -> v2
+> - Modify the commit changelog to inform that the motivation of this
+>   patch is to remove the strcpy() function from the kernel entirely
+>   (Jonathan Cameron).
+>
+> Changelog v2 -> v3
+> - Rewrite the code using devm_kstrdup() and devm_kasprintf() functions
+>   (Andy Shevchenko).
+> - Rebase against v5.14-rc5.
+>
+> Changelog v3 -> v4
+> - Reorder the variables (Andy Shevchenko).
+> - Get the device in the definition block (Andy Shevchenko).
+> - Reword the comment (Andy Shevchenko).
+> - Change the conditions in the "if" statement to clarify the "0" check
+>   (Andy Shevchenko).
+>
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 30 +++++++++++++---------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> index f282e9cc34c5..7eceae0012c9 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> @@ -261,6 +261,7 @@ int inv_mpu_magn_set_rate(const struct inv_mpu6050_state *st, int fifo_rate)
+>   */
+>  int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
+>  {
+> +       struct device *dev = regmap_get_device(st->map);
+>         const char *orient;
+>         char *str;
+>         int i;
+> @@ -281,19 +282,24 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
+>                 /* z <- -z */
+>                 for (i = 0; i < 3; ++i) {
+>                         orient = st->orientation.rotation[6 + i];
+> -                       /* use length + 2 for adding minus sign if needed */
+> -                       str = devm_kzalloc(regmap_get_device(st->map),
+> -                                          strlen(orient) + 2, GFP_KERNEL);
+> -                       if (str == NULL)
+> +
+> +                       /*
+> +                        * The value is negated according to one of the following
+> +                        * rules:
+> +                        *
+> +                        * 1) Drop leading minus.
+> +                        * 2) Leave 0 as is.
+> +                        * 3) Add leading minus.
+> +                        */
+> +                       if (orient[0] == '-')
+> +                               str = devm_kstrdup(dev, orient + 1, GFP_KERNEL);
+> +                       else if (orient[0] == '0' && orient[1] == '\0')
+> +                               str = devm_kstrdup(dev, orient, GFP_KERNEL);
+> +                       else
+> +                               str = devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
+> +                       if (!str)
+>                                 return -ENOMEM;
+> -                       if (strcmp(orient, "0") == 0) {
+> -                               strcpy(str, orient);
+> -                       } else if (orient[0] == '-') {
+> -                               strcpy(str, &orient[1]);
+> -                       } else {
+> -                               str[0] = '-';
+> -                               strcpy(&str[1], orient);
+> -                       }
+> +
+>                         st->magn_orient.rotation[6 + i] = str;
+>                 }
+>                 break;
+> --
+> 2.25.1
+>
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
-The previous versions can be found in:
 
-v1
-https://lore.kernel.org/linux-hardening/20210801171157.17858-1-len.baker@g=
-mx.com/
-
-v2
-https://lore.kernel.org/linux-hardening/20210807152225.9403-1-len.baker@gm=
-x.com/
-
-v3
-https://lore.kernel.org/linux-hardening/20210814090618.8920-1-len.baker@gm=
-x.com/
-
-Changelog v1 -> v2
-- Modify the commit changelog to inform that the motivation of this
-  patch is to remove the strcpy() function from the kernel entirely
-  (Jonathan Cameron).
-
-Changelog v2 -> v3
-- Rewrite the code using devm_kstrdup() and devm_kasprintf() functions
-  (Andy Shevchenko).
-- Rebase against v5.14-rc5.
-
-Changelog v3 -> v4
-- Reorder the variables (Andy Shevchenko).
-- Get the device in the definition block (Andy Shevchenko).
-- Reword the comment (Andy Shevchenko).
-- Change the conditions in the "if" statement to clarify the "0" check
-  (Andy Shevchenko).
-
- drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 30 +++++++++++++---------
- 1 file changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/=
-inv_mpu6050/inv_mpu_magn.c
-index f282e9cc34c5..7eceae0012c9 100644
-=2D-- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-@@ -261,6 +261,7 @@ int inv_mpu_magn_set_rate(const struct inv_mpu6050_sta=
-te *st, int fifo_rate)
-  */
- int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
- {
-+	struct device *dev =3D regmap_get_device(st->map);
- 	const char *orient;
- 	char *str;
- 	int i;
-@@ -281,19 +282,24 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state=
- *st)
- 		/* z <- -z */
- 		for (i =3D 0; i < 3; ++i) {
- 			orient =3D st->orientation.rotation[6 + i];
--			/* use length + 2 for adding minus sign if needed */
--			str =3D devm_kzalloc(regmap_get_device(st->map),
--					   strlen(orient) + 2, GFP_KERNEL);
--			if (str =3D=3D NULL)
-+
-+			/*
-+			 * The value is negated according to one of the following
-+			 * rules:
-+			 *
-+			 * 1) Drop leading minus.
-+			 * 2) Leave 0 as is.
-+			 * 3) Add leading minus.
-+			 */
-+			if (orient[0] =3D=3D '-')
-+				str =3D devm_kstrdup(dev, orient + 1, GFP_KERNEL);
-+			else if (orient[0] =3D=3D '0' && orient[1] =3D=3D '\0')
-+				str =3D devm_kstrdup(dev, orient, GFP_KERNEL);
-+			else
-+				str =3D devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
-+			if (!str)
- 				return -ENOMEM;
--			if (strcmp(orient, "0") =3D=3D 0) {
--				strcpy(str, orient);
--			} else if (orient[0] =3D=3D '-') {
--				strcpy(str, &orient[1]);
--			} else {
--				str[0] =3D '-';
--				strcpy(&str[1], orient);
--			}
-+
- 			st->magn_orient.rotation[6 + i] =3D str;
- 		}
- 		break;
-=2D-
-2.25.1
-
+-- 
+With Best Regards,
+Andy Shevchenko
