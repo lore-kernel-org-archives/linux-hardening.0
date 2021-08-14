@@ -2,82 +2,184 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0326C4320A
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 Aug 2021 19:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77977C4338F
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Aug 2021 07:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94260610F7
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 Aug 2021 19:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509986101E
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Aug 2021 07:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233716AbhHMTpc (ORCPT
+        id S237208AbhHNH4m (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 Aug 2021 15:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230440AbhHMTpc (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 Aug 2021 15:45:32 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F27FC061756;
-        Fri, 13 Aug 2021 12:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=vGxwLQwFO2S7TTjs1yBKTvR75GNMnpeXiG3mZABQ1io=;
-        t=1628883905; x=1630093505; b=pk97yo0ziCaTXhJO1U8NwHm2jV76Y1SaMwLWw+oePwsCEI4
-        /k80LWcPeO/cALwT9OL5KTQkkm9mEHdtcnFhrJaaBlfgHE8aOrb4x/ZeSluTZXL/didolW5u8Zs9Z
-        bdwbalR72Mqq8K97CK7TiMbG1iz2x6MbEZ8YUiMw31HJNn7vBfxDWUXmczj94VPwWq05wTWxE6U0C
-        H2v26+p/PcH1k3fe7Dev7l/mECrDmmJWH1PKMDIwkJjmVtFfs492L6GS8qdPDJFCGZA1bsGdxbnTr
-        izLUxRkmVFYineHvfmu+L5HCo0cyFqAtG1sXP/U4S/EnF1TotvO9/LYFmwC/zVzw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1mEd6u-00ANL4-Up; Fri, 13 Aug 2021 21:44:57 +0200
-Message-ID: <6488ed24d2ce0ccb1987c271064e25bc72c30863.camel@sipsolutions.net>
-Subject: Re: [PATCH 10/64] lib80211: Use struct_group() for memcpy() region
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Date:   Fri, 13 Aug 2021 21:44:55 +0200
-In-Reply-To: <202108130846.EC339BCA@keescook>
-References: <20210727205855.411487-1-keescook@chromium.org>
-         <20210727205855.411487-11-keescook@chromium.org>
-         <a9c8ae9e05cfe2679cd8a7ef0ab20b66cf38b930.camel@sipsolutions.net>
-         <202108130846.EC339BCA@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Sat, 14 Aug 2021 03:56:42 -0400
+Received: from mout.gmx.net ([212.227.15.15]:60763 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236519AbhHNH4l (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 14 Aug 2021 03:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1628927745;
+        bh=ZZfa3D/xlj1AhWpX8cfXOHAVJvxO9sqXF8P5vPPNy68=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=LUpBBn4pE7R3svYl5tl/e8uMT5w73lp5XJqygBtQPA05Su0kJvxRcYcqYqOZqqaUF
+         XZAjHrKOl+coh26CPl4qXoo92fDwbV6AmWlmWsD8kZaJ5idhx5IhyX0PdIPKSwisLY
+         oFajPtA9BgwlMa1BfpjronVsKNOqcIWDIz0Jt1nc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1M1HZo-1mGTDH2G7e-002n4J; Sat, 14 Aug 2021 09:55:45 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>, Joe Perches <joe@perches.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
+Date:   Sat, 14 Aug 2021 09:55:27 +0200
+Message-Id: <20210814075527.5999-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:javi5gFL5vgU8bODNsXF3HGI+TugHhiTkzGQTTjX81sD3qjiqeF
+ 8N1cA2oYzzMXpiaj91SAM7RoivrD/xR2Ym3yTeajR5xn3cLdKGt9aMy89VEE2Kldm6xOcqU
+ jkh3gT5bzUii5ik/f9+rE9sNAgB/o9e6LRKYh3/LJvAd7xmm2lojbRlsjzWqyk+ZAQF1fCr
+ j8ZHinAr0RW0jKqDddTDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Wwa9qhrL6+M=:h0Ty1K8JmOj3iwQHBA6TxX
+ F1mebYma032LVwQb9rtP4Ax43FXttpyTYbQfi/LyyYqCYStIYa09fLQ+6NMWIZerAoiS9wiUI
+ ZsNfrW35NVRIb/2mMj7b0DWxWB/n6HKWF9rM+eCc/gCKZqOZMG2ZvRZ6a/4dXh2q9yjum4JYZ
+ ZhtA1SZgrbxgOP7p4lEL/72FhKNfzEFejBcuHbJch1+tThcc1gWRH/xn40y6cWT6TcHjL9Ux/
+ 3sRy6aMpmD0GhrfENR3cXk9s3SuEe3WqNaa9vXkVt0IH0Cs/oQodx9AWfuPo9FrTk0CviXje8
+ YvVdZhaxPsgIGz+ByTw55NvPyUY6osHTS/n5zmKmNLCSsFc0vWX8BY7lLqOn5J48V98yef11t
+ 2E2M+gbuDFoG2fckN260LvJtKA49dum52FOaYM2RglMwqkJp7k/XGEtWTokN27E6aUhhlUwgy
+ Z+YOZTOYVqgYqTbvqpqK7i9rFU7vj0YE+9RoqALw9d6BJ5Hsi6j10I5j3D+AOm0ezUBWodkG5
+ k+46er9ZNc5Nz7/iMCCCKDX8IwcmX6C4qOCzCJOSbtFNsQ3bKrPyGJ8p8nQeYjRZy2NHHVR6/
+ MusqNmPsn1NnkxGob6JpxGlfrdJN2xJH4ZChW9cLaDCSu+93gi2xv9/M/0unQu/U1mDv5GWVD
+ dNd1SBo23GLaF/NtxlBhTSpG55+Y9+wPSkSS9M6wAdD0WXc4E8bVcZdKiPPmG0wRhq0zfTRtK
+ zKk4tQnTny2lQJOVSHhqXedcg+e/RBMt7ild6m/WjaY7bYDLI7EyP/nUS0619NlgrbvKqjBwi
+ ghZ/a1teSk++5Cut1eIyMakQaCNG1KhUy74XTYUleEL4jNXIE7QH4ySIv2GW3iyzZ1HwtHoch
+ n0+nmUFD4JQN4SSd4PRrNUnmHVPkgyEV6ZGEMwTlvNNGop+BraDe0NuVF4Ftxftbradxsrbl4
+ BsR3uMfI7cULvQnUUIqn1InmRKGOEsbCV+AdLo68fKtwI/gInu/ecLmOaaPuvTi+oKsLcYbXI
+ Vq8fZkrrh6Soqr+XCvXfR6K9n5iJQ0vWMfmKhLQxp+4SnijMX5XKUmf6EV/edXgXzJ3T9HWTH
+ YzWyUNR7qAgXSIlrclD5DU+7IMmi9J241Q0L5pvFwlG4ntBO6zk/1f0Og==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2021-08-13 at 08:49 -0700, Kees Cook wrote:
-> 
-> Ah! Yes, thanks for pointing this out. During earlier development I split
-> the "cross-field write" changes from the "cross-field read" changes, and
-> it looks like I missed moving lib80211_crypt_ccmp.c into that portion of
-> the series (which I haven't posted nor finished -- it's lower priority
-> than fixing the cross-field writes).
+strcpy() performs no bounds checking on the destination buffer. This
+could result in linear overflows beyond the end of the buffer, leading
+to all kinds of misbehaviors. The safe replacement is strscpy().
 
-Oh, OK. I think all of this patch was cross-field read though.
+This is a previous step in the path to remove the strcpy() function
+entirely from the kernel.
 
-Anyway, the patch itself is fine, just seems incomplete and somewhat
-badly organised :)
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+Hi,
 
-johannes
+Following the comments in the previous version I don't use the scnprintf
+function avoiding speed penalties. Instead I use the strscpy.
 
+Thanks,
+Len
+
+This is a task of the KSPP [1]
+
+[1] https://github.com/KSPP/linux/issues/88
+
+Changelog v1 -> v2
+- Use the strscpy() instead of scnprintf() to add labels and follow a
+  code pattern more similar to the current one (advance "p" and
+  decrement "left") (Robert Richter).
+
+Changelog v2 -> v3
+- Rename the "left" variable to "len" (Robert Richter).
+- Use strlen(p) instead of strlen(OTHER_LABEL) to decrement "len" and
+  increment "p" as otherwise "left" could underflow and p overflow
+  (Robert Richter).
+
+Changelog v3 -> v4
+- Change the commit subject (Joe Perches).
+- Fix broken logic (Robert Richter).
+- Rebase against v5.14-rc5.
+
+Previous versions:
+
+v1
+https://lore.kernel.org/linux-hardening/20210725162954.9861-1-len.baker@gm=
+x.com/
+
+v2
+https://lore.kernel.org/linux-hardening/20210801143558.12674-1-len.baker@g=
+mx.com/
+
+v3
+https://lore.kernel.org/linux-hardening/20210807155957.10069-1-len.baker@g=
+mx.com/
+
+ drivers/edac/edac_mc.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index f6d462d0be2d..7aea6c502316 100644
+=2D-- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -1032,6 +1032,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
+_type type,
+ 	int i, n_labels =3D 0;
+ 	struct edac_raw_error_desc *e =3D &mci->error_desc;
+ 	bool any_memory =3D true;
++	size_t len;
+
+ 	edac_dbg(3, "MC%d\n", mci->mc_idx);
+
+@@ -1086,6 +1087,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
+_type type,
+ 	 */
+ 	p =3D e->label;
+ 	*p =3D '\0';
++	len =3D sizeof(e->label);
+
+ 	mci_for_each_dimm(mci, dimm) {
+ 		if (top_layer >=3D 0 && top_layer !=3D dimm->location[0])
+@@ -1114,10 +1116,12 @@ void edac_mc_handle_error(const enum hw_event_mc_e=
+rr_type type,
+ 			*p =3D '\0';
+ 		} else {
+ 			if (p !=3D e->label) {
+-				strcpy(p, OTHER_LABEL);
+-				p +=3D strlen(OTHER_LABEL);
++				strscpy(p, OTHER_LABEL, len);
++				len -=3D strlen(p);
++				p +=3D strlen(p);
+ 			}
+-			strcpy(p, dimm->label);
++			strscpy(p, dimm->label, len);
++			len -=3D strlen(p);
+ 			p +=3D strlen(p);
+ 		}
+
+@@ -1140,9 +1144,9 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
+_type type,
+ 	}
+
+ 	if (any_memory)
+-		strcpy(e->label, "any memory");
++		strscpy(e->label, "any memory", sizeof(e->label));
+ 	else if (!*e->label)
+-		strcpy(e->label, "unknown memory");
++		strscpy(e->label, "unknown memory", sizeof(e->label));
+
+ 	edac_inc_csrow(e, row, chan);
+
+=2D-
+2.25.1
 
