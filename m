@@ -2,84 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69C3C4338F
-	for <linux-hardening@archiver.kernel.org>; Sun, 15 Aug 2021 14:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90680C4338F
+	for <linux-hardening@archiver.kernel.org>; Sun, 15 Aug 2021 15:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C33A46113D
-	for <linux-hardening@archiver.kernel.org>; Sun, 15 Aug 2021 14:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F90611CC
+	for <linux-hardening@archiver.kernel.org>; Sun, 15 Aug 2021 15:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238485AbhHOOn3 (ORCPT
+        id S232558AbhHOPHT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 15 Aug 2021 10:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232465AbhHOOn3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 15 Aug 2021 10:43:29 -0400
-Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D9A760F21;
-        Sun, 15 Aug 2021 14:42:56 +0000 (UTC)
-Date:   Sun, 15 Aug 2021 15:45:55 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sun, 15 Aug 2021 11:07:19 -0400
+Received: from smtprelay0238.hostedemail.com ([216.40.44.238]:35316 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229603AbhHOPHT (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 15 Aug 2021 11:07:19 -0400
+Received: from omf13.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 8004C100E7B52;
+        Sun, 15 Aug 2021 15:06:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf13.hostedemail.com (Postfix) with ESMTPA id 329591124F5;
+        Sun, 15 Aug 2021 15:06:47 +0000 (UTC)
+Message-ID: <c08cfa8b6bbf07e1860d7dc93739e71ff5f4c0c4.camel@perches.com>
+Subject: Re: [PATCH v4] drivers/iio: Remove all strcpy() uses
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Len Baker <len.baker@gmx.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
         Lars-Peter Clausen <lars@metafoo.de>,
         David Laight <David.Laight@aculab.com>,
         Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org,
         linux-iio <linux-iio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] drivers/iio: Remove all strcpy() uses
-Message-ID: <20210815154555.6770bc8d@jic23-huawei>
-In-Reply-To: <20210815081949.GA1664@titan>
+Date:   Sun, 15 Aug 2021 08:06:45 -0700
+In-Reply-To: <CAHp75VdBuQTzCbz1CJciSA1+UOw0ZmJKAh8u2cbr5eDLSsRJEw@mail.gmail.com>
 References: <20210814135509.4500-1-len.baker@gmx.com>
-        <CAHp75VdBuQTzCbz1CJciSA1+UOw0ZmJKAh8u2cbr5eDLSsRJEw@mail.gmail.com>
-        <20210815081949.GA1664@titan>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
+         <CAHp75VdBuQTzCbz1CJciSA1+UOw0ZmJKAh8u2cbr5eDLSsRJEw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Stat-Signature: scyjwk97ndjnkxgp9nz9retqreya6djg
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 329591124F5
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+4BUvjSH6v/IegChk0z+GhPszkuLSdVFQ=
+X-HE-Tag: 1629040007-28485
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, 15 Aug 2021 10:19:49 +0200
-Len Baker <len.baker@gmx.com> wrote:
-
-> Hi Andy,
+On Sat, 2021-08-14 at 22:36 +0300, Andy Shevchenko wrote:
+> On Sat, Aug 14, 2021 at 4:55 PM Len Baker <len.baker@gmx.com> wrote:
+> > 
+> > strcpy() performs no bounds checking on the destination buffer. This
+> > could result in linear overflows beyond the end of the buffer, leading
+> > to all kinds of misbehaviors. So, remove all the uses and add
+> > devm_kstrdup() or devm_kasprintf() instead.
+> > 
+> > This patch is an effort to clean up the proliferation of str*()
+> > functions in the kernel and a previous step in the path to remove
+> > the strcpy function from the kernel entirely [1].
+> > 
+> > [1] https://github.com/KSPP/linux/issues/88
 > 
-> On Sat, Aug 14, 2021 at 10:36:18PM +0300, Andy Shevchenko wrote:
-> > On Sat, Aug 14, 2021 at 4:55 PM Len Baker <len.baker@gmx.com> wrote:  
-> > >
-> > > strcpy() performs no bounds checking on the destination buffer. This
-> > > could result in linear overflows beyond the end of the buffer, leading
-> > > to all kinds of misbehaviors. So, remove all the uses and add
-> > > devm_kstrdup() or devm_kasprintf() instead.
-> > >
-> > > This patch is an effort to clean up the proliferation of str*()
-> > > functions in the kernel and a previous step in the path to remove
-> > > the strcpy function from the kernel entirely [1].
-> > >
-> > > [1] https://github.com/KSPP/linux/issues/88  
-> >
-> > Thank you very much for doing this!
-> > Now I like the result,
-Agreed and applied to the togreg branch of iio.git, pushed out as testing
-for 0-day to poke at it and see if we missed anything.
+> Thank you very much for doing this!
+> Now I like the result,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+[]
+> > diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+[]
+> > @@ -261,6 +261,7 @@ int inv_mpu_magn_set_rate(const struct inv_mpu6050_state *st, int fifo_rate)
+> >   */
+> >  int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
+> >  {
+> > +       struct device *dev = regmap_get_device(st->map);
+> >         const char *orient;
+> >         char *str;
+> >         int i;
+> > @@ -281,19 +282,24 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
+> >                 /* z <- -z */
+> >                 for (i = 0; i < 3; ++i) {
+> >                         orient = st->orientation.rotation[6 + i];
+> > -                       /* use length + 2 for adding minus sign if needed */
+> > -                       str = devm_kzalloc(regmap_get_device(st->map),
+> > -                                          strlen(orient) + 2, GFP_KERNEL);
+> > -                       if (str == NULL)
+> > +
+> > +                       /*
+> > +                        * The value is negated according to one of the following
+> > +                        * rules:
+> > +                        *
+> > +                        * 1) Drop leading minus.
+> > +                        * 2) Leave 0 as is.
+> > +                        * 3) Add leading minus.
+> > +                        */
+> > +                       if (orient[0] == '-')
+> > +                               str = devm_kstrdup(dev, orient + 1, GFP_KERNEL);
+> > +                       else if (orient[0] == '0' && orient[1] == '\0')
 
-Thanks,
+bikeshed:
 
-Jonathan
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com> 
- 
-> 
-> Thank you too Andy (and folks) for your help on this.
-> 
-> Regards,
-> Len
+I think this change is less intelligible than the original strcmp.
+
+And separately, perhaps for loop would be more readable as
+
+	for (i = 6; i < 9; i++)
+
+converting the 6 + i uses to just i.
+
+> > +                               str = devm_kstrdup(dev, orient, GFP_KERNEL);
+> > +                       else
+> > +                               str = devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
+> > +                       if (!str)
+> >                                 return -ENOMEM;
+> > -                       if (strcmp(orient, "0") == 0) {
+> > -                               strcpy(str, orient);
+> > -                       } else if (orient[0] == '-') {
+> > -                               strcpy(str, &orient[1]);
+> > -                       } else {
+> > -                               str[0] = '-';
+> > -                               strcpy(&str[1], orient);
+> > -                       }
+> > +
+> >                         st->magn_orient.rotation[6 + i] = str;
+> >                 }
+> >                 break;
+
 
