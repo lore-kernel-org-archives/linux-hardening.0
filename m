@@ -2,193 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A202EC4338F
-	for <linux-hardening@archiver.kernel.org>; Sun, 15 Aug 2021 17:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA218C4338F
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 Aug 2021 16:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F2761208
-	for <linux-hardening@archiver.kernel.org>; Sun, 15 Aug 2021 17:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F75360EFE
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 Aug 2021 16:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbhHORnY (ORCPT
+        id S229733AbhHPQ2W (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 15 Aug 2021 13:43:24 -0400
-Received: from mout.gmx.net ([212.227.15.15]:57577 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229447AbhHORnX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 15 Aug 2021 13:43:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1629049343;
-        bh=6AoH7oZM1JjIXr4zjh57kW/A2WvS24w8B79q66WMeGg=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=NquAJy1fIDyTBftP9G5DP8bBtwNtb/8YcV+sQyBeUmpMVMgkubLlADRJ/ghxzizTA
-         do61Z5K33kHDYC3WMXB+7Gch3hldQgm8/MDsQ0t9aq/KDzLULuKD5nJu04+W4zRLGL
-         foixHv1kR1dqEsBgU7diV2kpQpNe2pZYUJ9Cj1d0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1N1wlv-1nCYSt3hxB-012HpN; Sun, 15 Aug 2021 19:42:23 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Len Baker <len.baker@gmx.com>, Joe Perches <joe@perches.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5] drivers/iio: Remove all strcpy() uses
-Date:   Sun, 15 Aug 2021 19:42:04 +0200
-Message-Id: <20210815174204.126593-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 16 Aug 2021 12:28:22 -0400
+Received: from h4.fbrelay.privateemail.com ([131.153.2.45]:51532 "EHLO
+        h4.fbrelay.privateemail.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229600AbhHPQ2W (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 16 Aug 2021 12:28:22 -0400
+Received: from MTA-08-3.privateemail.com (mta-08-1.privateemail.com [68.65.122.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by h3.fbrelay.privateemail.com (Postfix) with ESMTPS id BDDFD814E1
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Aug 2021 12:27:49 -0400 (EDT)
+Received: from mta-08.privateemail.com (localhost [127.0.0.1])
+        by mta-08.privateemail.com (Postfix) with ESMTP id 32DFE18001B5;
+        Mon, 16 Aug 2021 12:27:48 -0400 (EDT)
+Received: from APP-04 (unknown [10.50.14.154])
+        by mta-08.privateemail.com (Postfix) with ESMTPA id 1465D18001B0;
+        Mon, 16 Aug 2021 12:27:48 -0400 (EDT)
+Date:   Mon, 16 Aug 2021 12:27:48 -0400 (EDT)
+From:   Jordy Zomer <jordy@pwning.systems>
+To:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Cc:     "keescook@chromium.org" <keescook@chromium.org>
+Message-ID: <846523794.787379.1629131268027@privateemail.com>
+Subject: Potentially interesting memcpy/memset/memmove calls
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6ihbIysr7KBRuZcDvcUmXQJ6flnrpBiKvZBXqpJUrNTQwLUvI7H
- YfGUHa+lA4T6ve7RST0S0O6Hbvu1BjKcp0OcevpVd9aPqaEdyR9W3aw9OlD0u2Mh4pdeh1Q
- SNpx/cV6WtX/99B1FRLQbJcAVjW/ABrsIyY9BEACdvf8NCBwhmQkasjOu9s0GTVcEvrmxfp
- WT/7fU42gWNfs1i3dvrhQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lFDMZyzasTs=:JVu8vw5VRgml2djeJgDtOX
- LyPZ2vJzsiu1QvJ2H0cOkSulhlotO703WBrxwyP9QKguHLfYBVQBrT1PiUTsGsLcNZLabYxQh
- IUc/oIj1Uvs//0XIh3ZsWox+r1nlAB7sRAiB/zgySvrg3zUs0Y+EK8nWpHtsb8rINLdVyx98Z
- 35bwnWJFMDcPf3lJOpO/lJMQcAvQ6ndLx0o+3feqnuyWgyPAS+amVYxfkEhTTtgx4iqKDMVB5
- c5NyU+u4x4EOcV+HcVT83BWnrBq+4GHctvd1idF6PpBo/iTYTOrq9q6w5IxhCyzdPJPNnJb6d
- OA45J/CMIVJeQqUBKCF8n6wo9kSblSFdvko6xntALQFLX6RRQwZQORsKqr1rFoXZUy6F3hVas
- aAvC3lSQrXmwu2tOSKEF9dB4EUJYwFUnHZLnoOLiwIBS8weh2uVLdsOWNS4bNnkp2RveIRa6q
- GT/qs5Ttq9CMyRclTr4NgQBAxa5LWIeu1QEdBbi0ZrZ8yDNzoO5p4oYKSU08EhhkBTllpnMgl
- 3Tr9+W1JEkknhwyaGQG86KrSac+SfVoSVIduXJxfwWZWDSXgaDoSqdJTsZxfagPQBAtn4/NoC
- XK5r7OI5Y03CpHvBn89s2FwE4NRBu49oaESNWNa+wJRoXRC72zUlTqqOKZy+x7XterUCOecmQ
- Hzb2yMtD7mm5WMluwk6SBZlTSFdkdEDKNnAmZOELwgZWTSMuuwuIwhAD3jsDGGgQu6waGGjZ7
- 8R1JeO0ROEu4maUAe9Satdtxn8vK7+vBtXvzR7CvvM/6QbWZr7eoryZZ24U03ATKKed+2gqu1
- jRldDzjVjYsIU6b8KpbLJYxoVkHHrS0eg/W3iDNrXA7+t9DN9w5M/ExT+kQ1gNdArageTylh5
- hPz5MbDDZLB8IEyVO++fyFcG3WQDDGaqZPwMiYuSKHQCHXf1wqyVIeV3XnzGxeCT2poXprJJG
- N6s2HFWABwedVQVG5yhBXs1p1nFWxiLDZMLaAAhRPGom6o3x6Lv34yP7U4O65RNIZJHSMo2pu
- J1TyU4wL99Fy5Y9aKTiYWKjTG3rymxZg+uMPu77K02Mz2n10h7gnAom/cfsHvOJ6jXOGDpn2S
- S8njPJfS9MGYCzgmZ6HoBKvwXilQ473LfPZXzb+n1ZdAXZ0VfBftK4IuQ==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.5-Rev17
+X-Originating-Client: open-xchange-appsuite
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strcpy() performs no bounds checking on the destination buffer. This
-could result in linear overflows beyond the end of the buffer, leading
-to all kinds of misbehaviors. So, remove all the uses and add
-devm_kstrdup() or devm_kasprintf() instead.
+Hiya!
 
-Also, modify the "for" loop conditions to clarify the access to the
-st->orientation.rotation buffer.
+Kees asked me to develop a query to detect calls where the destinations could need some attention as part of his initiative to harden memcpy calls.
 
-This patch is an effort to clean up the proliferation of str*()
-functions in the kernel and a previous step in the path to remove
-the strcpy function from the kernel entirely [1].
+Regarding:
+(https://lore.kernel.org/lkml/20210727205855.411487-1-keescook@chromium.org/)
 
-[1] https://github.com/KSPP/linux/issues/88
+As a result, I created a CodeQL query to detect some questionable instances. This query identifies a struct having a flexible array member when it is supplied as a reference to memcpy/memmove/memset's first argument. The query was performed on 5.13.11.
+I'm now compiling a database with `make allmodconfig` to see if it finds anything else, but you can see the preliminary findings below.
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
-The previous versions can be found in:
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/x86/kernel/fpu/core.c?h=v5.13.11#n229
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/x86/kvm/x86.c?h=v5.13.11#n10972
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/infiniband/hw/i40iw/i40iw_virtchnl.c?h=v5.13.11#n500
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/infiniband/hw/i40iw/i40iw_virtchnl.c?h=v5.13.11#n528
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/infiniband/hw/i40iw/i40iw_virtchnl.c?h=v5.13.11#n536
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/message/fusion/mptbase.c?h=v5.13.11#n1854
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/net/arcnet/arcnet.c?h=v5.13.11#n1145
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c?h=v5.13.11#n336
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c?h=v5.13.11#n74
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/platform/x86/sony-laptop.c?h=v5.13.11#n4529
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/platform/x86/sony-laptop.c?h=v5.13.11#n4548
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/scsi/be2iscsi/be_mgmt.c?h=v5.13.11#n865
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/w1/w1_netlink.c?h=v5.13.11#n614
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/w1/w1_netlink.c?h=v5.13.11#n199
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/fs/ocfs2/alloc.c?h=v5.13.11#n7007
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/fs/ocfs2/alloc.c?h=v5.13.11#n7011
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/net/ethtool/ioctl.c?h=v5.13.11#n450
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/net/ipv4/devinet.c?h=v5.13.11#n262
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/net/sched/cls_u32.c?h=v5.13.11#n1037
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/net/sched/cls_u32.c?h=v5.13.11#n831
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/virt/kvm/kvm_main.c?h=v5.13.11#n1506
+URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/virt/kvm/kvm_main.c?h=v5.13.11#n1522
 
-v1
-https://lore.kernel.org/linux-hardening/20210801171157.17858-1-len.baker@g=
-mx.com/
 
-v2
-https://lore.kernel.org/linux-hardening/20210807152225.9403-1-len.baker@gm=
-x.com/
+Best Regards,
 
-v3
-https://lore.kernel.org/linux-hardening/20210814090618.8920-1-len.baker@gm=
-x.com/
-
-v4
-https://lore.kernel.org/linux-hardening/20210814135509.4500-1-len.baker@gm=
-x.com/
-
-Changelog v1 -> v2
-- Modify the commit changelog to inform that the motivation of this
-  patch is to remove the strcpy() function from the kernel entirely
-  (Jonathan Cameron).
-
-Changelog v2 -> v3
-- Rewrite the code using devm_kstrdup() and devm_kasprintf() functions
-  (Andy Shevchenko).
-- Rebase against v5.14-rc5.
-
-Changelog v3 -> v4
-- Reorder the variables (Andy Shevchenko).
-- Get the device in the definition block (Andy Shevchenko).
-- Reword the comment (Andy Shevchenko).
-- Change the conditions in the "if" statement to clarify the "0" check
-  (Andy Shevchenko).
-
-Changelog v4 -> v5
-- Use the strcmp() function to clarify the "0" check (Joe Perches).
-- Modify the "for" loop conditions to clarify the access to the
-  st->orientation.rotation buffer (Joe Perches).
-
- drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 36 +++++++++++++---------
- 1 file changed, 21 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/=
-inv_mpu6050/inv_mpu_magn.c
-index f282e9cc34c5..6aee6c989485 100644
-=2D-- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-@@ -261,6 +261,7 @@ int inv_mpu_magn_set_rate(const struct inv_mpu6050_sta=
-te *st, int fifo_rate)
-  */
- int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
- {
-+	struct device *dev =3D regmap_get_device(st->map);
- 	const char *orient;
- 	char *str;
- 	int i;
-@@ -279,22 +280,27 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state=
- *st)
- 		st->magn_orient.rotation[4] =3D st->orientation.rotation[1];
- 		st->magn_orient.rotation[5] =3D st->orientation.rotation[2];
- 		/* z <- -z */
--		for (i =3D 0; i < 3; ++i) {
--			orient =3D st->orientation.rotation[6 + i];
--			/* use length + 2 for adding minus sign if needed */
--			str =3D devm_kzalloc(regmap_get_device(st->map),
--					   strlen(orient) + 2, GFP_KERNEL);
--			if (str =3D=3D NULL)
-+		for (i =3D 6; i < 9; ++i) {
-+			orient =3D st->orientation.rotation[i];
-+
-+			/*
-+			 * The value is negated according to one of the following
-+			 * rules:
-+			 *
-+			 * 1) Drop leading minus.
-+			 * 2) Leave 0 as is.
-+			 * 3) Add leading minus.
-+			 */
-+			if (orient[0] =3D=3D '-')
-+				str =3D devm_kstrdup(dev, orient + 1, GFP_KERNEL);
-+			else if (!strcmp(orient, "0"))
-+				str =3D devm_kstrdup(dev, orient, GFP_KERNEL);
-+			else
-+				str =3D devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
-+			if (!str)
- 				return -ENOMEM;
--			if (strcmp(orient, "0") =3D=3D 0) {
--				strcpy(str, orient);
--			} else if (orient[0] =3D=3D '-') {
--				strcpy(str, &orient[1]);
--			} else {
--				str[0] =3D '-';
--				strcpy(&str[1], orient);
--			}
--			st->magn_orient.rotation[6 + i] =3D str;
-+
-+			st->magn_orient.rotation[i] =3D str;
- 		}
- 		break;
- 	default:
-=2D-
-2.25.1
-
+Jordy Zomer
