@@ -2,104 +2,116 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1F5C19F3A
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 Aug 2021 15:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4312DC4320A
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 Aug 2021 18:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C00B360FDA
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 Aug 2021 15:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B1E60FE6
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 Aug 2021 18:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240373AbhHQPxO (ORCPT
+        id S232378AbhHQSDk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 Aug 2021 11:53:14 -0400
-Received: from mout.gmx.net ([212.227.15.18]:46987 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240271AbhHQPtC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 Aug 2021 11:49:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1629215282;
-        bh=9NtNBAzbovJ6oChii23fCVCShJxs0EWaS5IHENt5Bu4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=kHgb5Wh2YOeKAf335CGvtrAAKPA8I6y+e6qFMQ+Huf/cWKpaxn2Q6cXD1aU9UwAc8
-         6KBKEetyCvQoEGG+sOMV9jSiOw+iJEO/5AgilniF/aC8vBahDqjj40ICPWgZoybMqU
-         m+V2oc4S1shCb6eK0V9AMr9lpXmVLmXen6xHvce4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1N8XPn-1nAkpE32bB-014UpR; Tue, 17 Aug 2021 17:48:01 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Len Baker <len.baker@gmx.com>, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
+        Tue, 17 Aug 2021 14:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229918AbhHQSDj (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 17 Aug 2021 14:03:39 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871FEC061764
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 11:03:06 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id u1so8617417plr.1
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 11:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6lswvnaMe+F2ActgzyrTI+M1fqtFvqoQVjkUc9W7PnY=;
+        b=hc7K+FgwfduIEmInLkmKx4tsC08A3U83T2TJQO0/iX6/ecQCNh13QQgvwv0g0aZr1P
+         C/PhRqHCrMbqua/jd3Gqrx5zn7Ac6f0ZVGmGYVnGq0D+l/CJHNWvNk//tMBgWo7EHI+1
+         uVPiSbNmQcPMA1daymyGJxIa1nRAl4BzsDXq8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6lswvnaMe+F2ActgzyrTI+M1fqtFvqoQVjkUc9W7PnY=;
+        b=PmFYaiQs4nx0nUhRyJUoakAN8bFf0r8UJBzpoBC598XzC1BbEh15GbrGw80J+IHQY6
+         yQXZ3B0UirLCPk6Po5pecGsNSutmulyHR8fJjESqw4ODsHXzbASfCZBcJWHwSPrztaJs
+         RTmC0VXSc7138dSxVVySxfVlcF3sBRcoHfxVg0d1nhbj+K34RBn3dgoC95Rwrbnd5gIP
+         85DiPgVgao2xLz1GYL6Kh7DmRGdxC1srfQvs/I7S7MaopaEiLuxSU8DdIzt4F+uFWCkN
+         Nc1yAsUmXhDdHNTDswz8TXIlBZF05TvSetsVWRcsztLcip+sVOa0LpSXv+bzB+fKWUQ+
+         kvxg==
+X-Gm-Message-State: AOAM533vCL8MXPcJmTKm7fAGdGWEYNfAvdhfSJQ2YK7wvpX9OX9YmOZG
+        CmJSeNiTYjHBi9nxuedSuCR1gQ==
+X-Google-Smtp-Source: ABdhPJzlKS3i2gojyo1afM12URywM46gRjxX8qksMOLbaaGKZX42XyMQ6PQLAlQx4xJTVC0G6dboKg==
+X-Received: by 2002:a65:6398:: with SMTP id h24mr4682422pgv.367.1629223386078;
+        Tue, 17 Aug 2021 11:03:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g2sm3325769pfi.211.2021.08.17.11.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 11:03:05 -0700 (PDT)
+Date:   Tue, 17 Aug 2021 11:03:03 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] input/gscps2: Prefer strscpy over strlcpy
-Date:   Tue, 17 Aug 2021 17:47:28 +0200
-Message-Id: <20210817154728.3964-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH] kbuild: Enable -Wimplicit-fallthrough for clang 14.0.0+
+Message-ID: <202108171056.EDCE562@keescook>
+References: <20210817005624.1455428-1-nathan@kernel.org>
+ <80fa539a-b767-76ed-dafa-4d8d1a6b063e@kernel.org>
+ <CAHk-=wgFXOf9OUh3+vmWjhp1PC47RVsUkL0NszBxSWhbGzx4tw@mail.gmail.com>
+ <5c856f36-69a7-e274-f72a-c3aef195adeb@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SqWuKpv+L/u02yV3UejNX5E2A0SVXdG4VgTJSZ6Xq4Qvjvx2kSj
- uC1K1cVTzi3fvESTvFQmJfFustHJKSOFmpUmJKRMPMvbh+2XBDVrSarX74zy3rvtvEKyvEm
- +g2pW7jQnElStruQRJubmg3ol3J5pcvspB1xbdaER2Em8Qqmas1YhfyI26QoHrcAz0jyD/Q
- tgFk6h5lKGCvouaDJ9PtQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p7+Z05u49Ok=:enr38GetFC858aqm9GCWB9
- le7W32OtXsbQjhJLgMCE9HgqrKEo5xPe1/fHDz4rP6YP4WwZKnBBUKU6duabG1kf+0BNaymKQ
- 6uDKWvtyRiErbDKEh9Ko4zVAEbzVM99lAnEXHjX49R1enIAYALbkCU/vlXwAzgLjDNv6Hq+ef
- iApbHMa4ArmKPsVyE6r3W8vKdXaNtbzSZ4BukpKDzLAGVDFUFtcfAi+KUkTfu0/kGUECrHNvK
- UoWi5F45iYCApfnK+MZnUyxBHsIi9jIXcPmiN25AcpAeTNlcLIlBeorp87yK1abDpSEdqYTnY
- qAWM8wZmwEtNUlVJQaWZZh6D8qEsNBsPzzGShzWpcdv3d6149XEdje7cTyA3zmqmkYY3w5NSN
- rhCp5ywh1TVO1Rqur60WiYKOWdfjlJag5UPlqBT1GH7MlqTzTPeDLmUzfoKQMtfIRmHr+sZ8N
- r+aijTQJHwEFZSKA5ae6jeOU3V6LaISHXliKB956xcnnWK/SPFEvqZ+SxCadFO0zDvAsYzSCb
- jQWS7bCsTdHgpnGS/mKuHg0YITQ0akNtE7bZXGvnJwQcjVzQQ0QAa4Q7LjpDOOrfvX9CTSMVf
- zI+rMUgojvcn2bYReekrt6TQ+kQ1gxoY4LJ/U11e6SXXgjh486trddBhj9F7YllHiLbufyj7C
- aWRREh9jgAJZj6jiyBmJHDpspjWamrf4umlk5/OeyZU96N4MIAiWDmMEdA3sseZyJX5fJ9IF9
- qJ+AXJpkm7ZGduLm3q+oDgTctJf77HctShYHImEu4yr4wHOV7A83n3eYvt3+/leDtCuG56RoF
- +wYnL5ZnOJPXfZmtkFxR22OEqnc7XYORxsDUaa3QLVzCkbEfdbji1XfL1Wi155uZTDE+NOlQG
- ukFHWI86UhMnMvUbYyCUMPpvFnQ3AxME9MRVhccXsk2pYi9v8XDvdXr0pixKDIba/PBmZOOfM
- vXxa+ZrMtzAOuR8tZKrHRyzoPEu8I6VkIaL3g91kaAPDBxDa8GzaTD3sPJqemZGKT8vYIiTEP
- joe4z06MvHl3Ni1lGXFOwOKYVb+E+k6PQKt2nUR4PMZy3pLBtjj60B3glk0T0Exb94i/71vgK
- k1Whs3GErnCyY+0+Kr93GZFsQDoH4N9zdq5jVEliMJKceDMzO5M2NEEiA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c856f36-69a7-e274-f72a-c3aef195adeb@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first. This read may exceed the
-destination size limit. This is both inefficient and can lead to linear
-read overflows if a source string is not NUL-terminated. The safe
-replacement is strscpy().
+On Mon, Aug 16, 2021 at 09:55:28PM -0700, Nathan Chancellor wrote:
+> If you/Gustavo would prefer, I can upgrade that check to
+> 
+> ifneq ($(call cc-option, -Wunreachable-code-fallthrough),)
+> 
+> I was just trying to save a call to the compiler, as that is more expensive
+> than a shell test call.
 
-This is a previous step in the path to remove the strlcpy() function
-entirely from the kernel [1].
+I prefer the option test -- this means no changes are needed on the
+kernel build side if it ever finds itself backported to earlier versions
+(and it handles the current case of "14" not meaning "absolute latest").
 
-[1] https://github.com/KSPP/linux/issues/89
+More specifically, I think you want this (untested):
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/input/serio/gscps2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/Makefile b/Makefile
+index b5fd51e68ae9..9845ea50a368 100644
+--- a/Makefile
++++ b/Makefile
+@@ -859,11 +859,11 @@ KBUILD_CFLAGS += -Wno-gnu
+ # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+ # See modpost pattern 2
+ KBUILD_CFLAGS += -mno-global-merge
++# Warn about unmarked fall-throughs in switch statement only if we can also
++# disable the bogus unreachable code warnings.
++KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough -Wno-unreachable-code-fallthrough,)
+ else
+-
+ # Warn about unmarked fall-throughs in switch statement.
+-# Disabled for clang while comment to attribute conversion happens and
+-# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
+ KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough=5,)
+ endif
+ 
 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index 2f9775de3c5b..cae74d0edb09 100644
-=2D-- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -357,7 +357,7 @@ static int __init gscps2_probe(struct parisc_device *d=
-ev)
-
- 	snprintf(serio->name, sizeof(serio->name), "gsc-ps2-%s",
- 		 (ps2port->id =3D=3D GSC_ID_KEYBOARD) ? "keyboard" : "mouse");
--	strlcpy(serio->phys, dev_name(&dev->dev), sizeof(serio->phys));
-+	strscpy(serio->phys, dev_name(&dev->dev), sizeof(serio->phys));
- 	serio->id.type		=3D SERIO_8042;
- 	serio->write		=3D gscps2_write;
- 	serio->open		=3D gscps2_open;
-=2D-
-2.25.1
-
+-- 
+Kees Cook
