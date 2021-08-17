@@ -2,166 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA4C4320A
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 Aug 2021 23:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9091BC4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 Aug 2021 23:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB68261029
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 Aug 2021 23:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C91A60295
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 Aug 2021 23:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235707AbhHQXYY (ORCPT
+        id S235707AbhHQXef (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 Aug 2021 19:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229466AbhHQXYU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 Aug 2021 19:24:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 66EE760FD7;
-        Tue, 17 Aug 2021 23:23:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629242624;
-        bh=/GnHgdBzB1zvgbKqo8gzvmlUQTPw53iwDmu/OsunGdA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=trSh2BL99Bb9FxJgK31SwOsCbxNuksew8j/Lc39KJmyobbiF/6/fdtg+P7yLX7MfL
-         zvBcH+qOAbU4lDZ4lZeC5+/GpqfmNgeB+ySo6gC+rAwmGwUt7MHfpidb0tnPW1ppfh
-         dtr5XnLG6E+hCczUg3c8q+NOvnDRiZBLOOuIR14eFqLCE5C6xXoP3+GRl6X8/KvffE
-         mjWmDdDmWWz8jsJ4/69ky3VmwQBK6VzHIjo6UwzMy2YvFq55i1+8ASuwKdp+HJe1TG
-         hQI6K5Vld7EUxahUkPf12BKG0qm8YSCbxYieKxxo18csSaNjvcUBX+h8A8jr0ohKOo
-         tnP6ulT1pVpAg==
-Subject: Re: [PATCH] kbuild: Enable -Wimplicit-fallthrough for clang 14.0.0+
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Philip Li <philip.li@intel.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-hardening@vger.kernel.org
-References: <20210817005624.1455428-1-nathan@kernel.org>
- <80fa539a-b767-76ed-dafa-4d8d1a6b063e@kernel.org>
- <CAHk-=wgFXOf9OUh3+vmWjhp1PC47RVsUkL0NszBxSWhbGzx4tw@mail.gmail.com>
- <5c856f36-69a7-e274-f72a-c3aef195adeb@kernel.org>
- <202108171056.EDCE562@keescook>
- <3f28b45e-e725-8b75-042a-d34d90c56361@kernel.org>
- <CAK7LNAQFgYgavTP2ZG9Y16XBVdPuJ98J_Ty1OrQy1GXHq6JjQQ@mail.gmail.com>
- <71d76c41-7f9b-6d60-ba4f-0cd84596b457@embeddedor.com>
- <202108171602.159EB2C7EA@keescook>
-From:   Nathan Chancellor <nathan@kernel.org>
-Message-ID: <72ae69b4-6069-ade5-a12b-8ee0435f803a@kernel.org>
-Date:   Tue, 17 Aug 2021 16:23:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Tue, 17 Aug 2021 19:34:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235345AbhHQXef (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 17 Aug 2021 19:34:35 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FC10C061764
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 16:34:01 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id e7so310506pgk.2
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 16:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U7L3iTWvFeKzQZgTZBYuu/YUTifINCL6rloAW56Sueo=;
+        b=cPp2q0zHkABpipQd22hctmFNb7d5XbI+Yr3Wlui5lS+wNCEbWm/jrfXi0SsdGkBZBy
+         kNssaBUvlpSA0/3d93mjdylrN5wWJseywhns0H7+ifqop3z0yYCoyXaVYc27vt5J9Ds3
+         nt5pbnKJXlIMO21n4RDSIsciO8SCbBSNS7TTg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U7L3iTWvFeKzQZgTZBYuu/YUTifINCL6rloAW56Sueo=;
+        b=dXC6g2q4uqNoPv2WjGbOYK3u7DfURE+jrvX5Rflb09hZFMwldskxZWWlSgukYIl+sG
+         m4ZbPPOAHlp6alwqfskA5cuMsR4GVJM1PmatQ9/0phMALNawIBVXJ+E2h3iSRFL/FbsT
+         j52C+7BRVzgt0NpGHLAb2k7ChVq3hhTKbdm1v3CZZPctXDKDkyLD6An3A6tKGzQR76YA
+         fz0ZuBZSuOH2jVpVpVE9XeJD3Bmny5uaQytgaJt28hB9psnNaWOLdfy1ItUXFhjJkVI/
+         0oHkS7m1duiJscbPTFsWeT/0EcbBewRM6zwCnt8bfiMs5+t460rqH3vlA1BsV7fv2uvO
+         ZuDQ==
+X-Gm-Message-State: AOAM530nN+utmuepRbPprLo2LzJQJTNpYdozJPpuzyJoyiWIAk3h1FLo
+        LvysI6Qu4W920y+D5UAxqzP1rQ==
+X-Google-Smtp-Source: ABdhPJwVvsgK+hN0mp/hLlJbbqFVCT2WxxErPND+/Sl/VFpa9RiNVt/B5g+/R+LAhv4DvpsXm+AQsA==
+X-Received: by 2002:a63:2242:: with SMTP id t2mr5640643pgm.111.1629243241066;
+        Tue, 17 Aug 2021 16:34:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y7sm3788896pfp.102.2021.08.17.16.34.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 16:34:00 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] drm/i915: Use designated initializers for init/exit table
+Date:   Tue, 17 Aug 2021 16:33:57 -0700
+Message-Id: <20210817233357.2379455-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <202108171602.159EB2C7EA@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2931; h=from:subject; bh=3vefYKepCH02DY2DFMy76mE6JeEwlcTf4QCOk25BRc0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHEdkZjQOgOcHFIG7gF74UWCI9mpEXduXimK17i4O f9S9xD+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRxHZAAKCRCJcvTf3G3AJpt9D/ 46cS4zE4GyL48YH64ZVHHu+vSCMZ2y9ICvz089nWWd/xC4nutt6TlTaruazmMWEss5CvmhZWdTZ0is hUCdS2mBn+tTmXFbT5vR/xCCvWrdN6eFjAEyyO2ZrkuT0Csvqs+DW0lCicQBEucdXVW9isU/dHAySO isr77QjyRyhSlNv853518QUz/bFHgVemcpboADt2OlpqUvC5G9GvpnHwMUFL2iwjoahaCZCGPUHoaK bvWo0G9IGnDjStnkcELfukZV4gjvDFhsR5Q5VSaJsadxPY2WsLuzqbeX4dmrI0JZd+fxhHqPZN4MNu Eoc/E2fKXWiq3LZFmOnvVuHbqf0NjS/cqNmxqeIHjfOFZOhsz0FQ42KGxAaeVPUpMk0/LsYCbvdJkS VVyVu/+7PA47JMxssJKToB1dQ/gOW9oiLCERNabEitMIhTq9LNZNU9VbL+dytwtiO56Aoun3duHPXi KCc2NM58GIzsrDIhx6rCojc0WgDRcZO6TLaXLqJTDKfl6u7v4zlEKP5vcdABZmQ00527ztYj0bEpzP Gx1o7zty6fN0A0iE7gtlV8x2VDVPqf9QqaHloNpQ/+unWH7hm2q0xEuEjaGFGiwxmEdod1KGYiUweF UND6SwTy0VwD95qAni9oQqS6YuocTdb8Akr2DyQHfLz0tnFXUhj3ugA4IT4Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 8/17/2021 4:06 PM, Kees Cook wrote:
-> On Tue, Aug 17, 2021 at 04:33:25PM -0500, Gustavo A. R. Silva wrote:
->>
->>
->> On 8/17/21 16:17, Masahiro Yamada wrote:
->>> On Wed, Aug 18, 2021 at 3:25 AM Nathan Chancellor <nathan@kernel.org> wrote:
->>>>
->>>> On 8/17/2021 11:03 AM, Kees Cook wrote:
->>>>> On Mon, Aug 16, 2021 at 09:55:28PM -0700, Nathan Chancellor wrote:
->>>>>> If you/Gustavo would prefer, I can upgrade that check to
->>>>>>
->>>>>> ifneq ($(call cc-option, -Wunreachable-code-fallthrough),)
->>>>>>
->>>>>> I was just trying to save a call to the compiler, as that is more expensive
->>>>>> than a shell test call.
->>>>>
->>>>> I prefer the option test -- this means no changes are needed on the
->>>>> kernel build side if it ever finds itself backported to earlier versions
->>>>> (and it handles the current case of "14" not meaning "absolute latest").
->>>>>
->>>>> More specifically, I think you want this (untested):
->>>>
->>>> That should work but since -Wunreachable-code-fallthrough is off by
->>>> default, I did not really see a reason to include it in KBUILD_CFLAGS. I
->>>> do not have a strong opinion though, your version is smaller than mine
->>>> is so we can just go with that. I'll defer to Gustavo on it since he has
->>>> put in all of the work cleaning up the warnings.
->>>
->>>
->>>
->>> https://github.com/llvm/llvm-project/commit/9ed4a94d6451046a51ef393cd62f00710820a7e8
->>>
->>>     did two things:
->>>
->>>   (1) Change the -Wimplicit-fallthrough behavior so that it fits
->>>        to our use in the kernel
->>>
->>>   (2) Add a new option -Wunreachable-code-fallthrough
->>>        that works like the previous -Wimplicit-fallthrough of
->>>        Clang <= 13.0.0
->>>
->>>
->>> They are separate things.
->>>
->>> Checking the presence of -Wunreachable-code-fallthrough
->>> does not make sense since we are only interested in (1) here.
->>>
->>> So, checking the Clang version is sensible and matches
->>> the explanation in the comment block.
-> 
-> I thought one of the problems (which is quickly draining away) that
-> needed to be solved here is that some Clang trunk builds (that report
-> as version 14) don't yet have support for -Wunreachable-code-fallthrough
-> since they aren't new enough.
+The kernel builds with -Werror=designated-init, and __designated_init
+is used by CONFIG_GCC_PLUGIN_RANDSTRUCT for automatically selected (all
+function pointer) structures. Include the field names in the init/exit
+table. Avoids warnings like:
 
-Philip, how often is the kernel test robot's clang version rebuilt? 
-Would it be possible to bump it to latest ToT or at least 
-9ed4a94d6451046a51ef393cd62f00710820a7e8 so that we do not get bit by 
-this warning when we go to enable this flag?
+drivers/gpu/drm/i915/i915_module.c:59:4: error: positional initialization of field in 'struct' declared with 'designated_init' attribute [-Werror=designated-init]
 
-I do not know of any other CI aside from ours that is testing with tip 
-of tree clang and ours should already have a clang that includes my 
-patch since it comes from apt.llvm.org.
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Fixes: a04ea6ae7c67 ("drm/i915: Use a table for i915_init/exit (v2)")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/gpu/drm/i915/i915_module.c | 37 +++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 13 deletions(-)
 
->>> # Warn about unmarked fall-throughs in switch statement.
->>> # Clang prior to 14.0.0 warned on unreachable fallthroughs with
->>> # -Wimplicit-fallthrough, which is unacceptable due to IS_ENABLED().
->>> # https://bugs.llvm.org/show_bug.cgi?id=51094
->>> ifeq ($(firstword $(sort $(CONFIG_CLANG_VERSION) 140000)),140000)
->>> KBUILD_CFLAGS += -Wimplicit-fallthrough
->>> endif
+diff --git a/drivers/gpu/drm/i915/i915_module.c b/drivers/gpu/drm/i915/i915_module.c
+index c578ea8f56a0..d8b4482c69d0 100644
+--- a/drivers/gpu/drm/i915/i915_module.c
++++ b/drivers/gpu/drm/i915/i915_module.c
+@@ -47,19 +47,30 @@ static const struct {
+    int (*init)(void);
+    void (*exit)(void);
+ } init_funcs[] = {
+-	{ i915_check_nomodeset, NULL },
+-	{ i915_active_module_init, i915_active_module_exit },
+-	{ i915_buddy_module_init, i915_buddy_module_exit },
+-	{ i915_context_module_init, i915_context_module_exit },
+-	{ i915_gem_context_module_init, i915_gem_context_module_exit },
+-	{ i915_objects_module_init, i915_objects_module_exit },
+-	{ i915_request_module_init, i915_request_module_exit },
+-	{ i915_scheduler_module_init, i915_scheduler_module_exit },
+-	{ i915_vma_module_init, i915_vma_module_exit },
+-	{ i915_mock_selftests, NULL },
+-	{ i915_pmu_init, i915_pmu_exit },
+-	{ i915_register_pci_driver, i915_unregister_pci_driver },
+-	{ i915_perf_sysctl_register, i915_perf_sysctl_unregister },
++	{ .init = i915_check_nomodeset },
++	{ .init = i915_active_module_init,
++	  .exit = i915_active_module_exit },
++	{ .init = i915_buddy_module_init,
++	  .exit = i915_buddy_module_exit },
++	{ .init = i915_context_module_init,
++	  .exit = i915_context_module_exit },
++	{ .init = i915_gem_context_module_init,
++	  .exit = i915_gem_context_module_exit },
++	{ .init = i915_objects_module_init,
++	  .exit = i915_objects_module_exit },
++	{ .init = i915_request_module_init,
++	  .exit = i915_request_module_exit },
++	{ .init = i915_scheduler_module_init,
++	  .exit = i915_scheduler_module_exit },
++	{ .init = i915_vma_module_init,
++	  .exit = i915_vma_module_exit },
++	{ .init = i915_mock_selftests },
++	{ .init = i915_pmu_init,
++	  .exit = i915_pmu_exit },
++	{ .init = i915_register_pci_driver,
++	  .exit = i915_unregister_pci_driver },
++	{ .init = i915_perf_sysctl_register,
++	  .exit = i915_perf_sysctl_unregister },
+ };
+ static int init_progress;
+ 
+-- 
+2.30.2
 
-Very clever and nifty trick! I have verified that it works for clang 13 
-and 14 along with a theoretical clang 15. Gustavo, feel free to stick a
-
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-
-if you so desire.
-
->>>
->>> The $(sort ...) is alphabetical sort, not numeric sort.
->>> It works for us because the minimum Clang version is 10.0.1
->>> (that is CONFIG_CLANG_VERSION is always 6-digit)
->>>
->>> It will break when Clang version 100.0.0 is released.
->>>
->>> But, before that, we will raise the minimum supported clang version,
->>> and this conditional will go away.
-> 
-> If a version test is preferred, cool; this is a nice trick. :)
-> 
->> I like this. :)
->>
->> I'm going to make the 0-day robot test it in my tree, first.
-> 
-> Sounds good to me!
-> 
