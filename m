@@ -2,96 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5532CC4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 13:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AACC4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 13:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3606D6108E
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 13:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDD660F4C
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 13:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235943AbhHRNWf (ORCPT
+        id S236270AbhHRNe1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 09:22:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
+        Wed, 18 Aug 2021 09:34:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233722AbhHRNWd (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 09:22:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4BE5E61038;
-        Wed, 18 Aug 2021 13:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629292919;
-        bh=5KcLxEBGDXnCm8nVaw+nWKg2bSoQtlfddRDR7GGl9T8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RndsyT80eK5peg0Wa+LDP9j9fD87rWPH7qIZCmht5Z5qvvpkhwKs50Efvp8c2W/BZ
-         K2+LUMFBtPNST8VG79B8kQVc1cgq9/I35NIa5fnECRSgdYvvuTxAQWyn3US+50ZCTV
-         1vziHJFjbAkqMbNUaCBWYVK0Jl11hbfLkpVOubDUJaABhANU08nQKvlBxCmPoC7Ora
-         guCnuc3dI4J3JvT1iBiSmzKP+5O24KcsCV9HQpxwfjMIg+oo8KAhCUkdV3y9RJxlts
-         vvCb7lejSc+JbydRhSD+8s73QeOek/uomkFwZAEoDfGnncaR4CUK33YJgskRdX+C+r
-         qB/9oQlc9TAqQ==
-Message-ID: <2f3a644e279a8a0933343339fa0add8e76276bf8.camel@kernel.org>
-Subject: Re: [PATCH] CIFS: Fix a potencially linear read overflow
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Len Baker <len.baker@gmx.com>, Steve French <sfrench@samba.org>,
-        Suresh Jayaraman <sjayaraman@suse.de>
-Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        id S233722AbhHRNe1 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 18 Aug 2021 09:34:27 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C0CE6109E;
+        Wed, 18 Aug 2021 13:33:51 +0000 (UTC)
+Date:   Wed, 18 Aug 2021 09:33:49 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
+        linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Date:   Wed, 18 Aug 2021 09:21:57 -0400
-In-Reply-To: <20210817102709.15046-1-len.baker@gmx.com>
-References: <20210817102709.15046-1-len.baker@gmx.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+Subject: Re: [PATCH v2 50/63] tracing: Use memset_startat() to zero struct
+ trace_iterator
+Message-ID: <20210818093349.3144276b@oasis.local.home>
+In-Reply-To: <20210818060533.3569517-51-keescook@chromium.org>
+References: <20210818060533.3569517-1-keescook@chromium.org>
+        <20210818060533.3569517-51-keescook@chromium.org>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2021-08-17 at 12:27 +0200, Len Baker wrote:
-> strlcpy() reads the entire source buffer first. This read may exceed the
-> destination size limit. This is both inefficient and can lead to linear
-> read overflows if a source string is not NUL-terminated.
-> 
-> Also, the strnlen() call does not avoid the read overflow in the strlcpy
-> function when a not NUL-terminated string is passed.
-> 
-> So, replace this block by a call to kstrndup() that avoids this type of
-> overflow and does the same.
-> 
-> Fixes: 066ce6899484d ("cifs: rename cifs_strlcpy_to_host and make it use new functions")
-> Signed-off-by: Len Baker <len.baker@gmx.com>
-> ---
->  fs/cifs/cifs_unicode.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/cifs/cifs_unicode.c b/fs/cifs/cifs_unicode.c
-> index 9bd03a231032..171ad8b42107 100644
-> --- a/fs/cifs/cifs_unicode.c
-> +++ b/fs/cifs/cifs_unicode.c
-> @@ -358,14 +358,9 @@ cifs_strndup_from_utf16(const char *src, const int maxlen,
->  		if (!dst)
->  			return NULL;
->  		cifs_from_utf16(dst, (__le16 *) src, len, maxlen, codepage,
-> -			       NO_MAP_UNI_RSVD);
-> +				NO_MAP_UNI_RSVD);
->  	} else {
-> -		len = strnlen(src, maxlen);
-> -		len++;
-> -		dst = kmalloc(len, GFP_KERNEL);
-> -		if (!dst)
-> -			return NULL;
-> -		strlcpy(dst, src, len);
-> +		dst = kstrndup(src, maxlen, GFP_KERNEL);
->  	}
-> 
->  	return dst;
-> --
-> 2.25.1
-> 
+On Tue, 17 Aug 2021 23:05:20 -0700
+Kees Cook <keescook@chromium.org> wrote:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
+> 
+> Use memset_startat() to avoid confusing memset() about writing beyond
+> the target struct member.
+> 
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  kernel/trace/trace.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 13587e771567..9ff8c31975cd 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -6691,9 +6691,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
+>  		cnt = PAGE_SIZE - 1;
+>  
+>  	/* reset all but tr, trace, and overruns */
+> -	memset(&iter->seq, 0,
+> -	       sizeof(struct trace_iterator) -
+> -	       offsetof(struct trace_iterator, seq));
+> +	memset_startat(iter, 0, seq);
+
+I can't find memset_startat() in mainline nor linux-next. I don't see it
+in this thread either, but since this has 63 patches, I could have
+easily missed it.
+
+This change really should belong to a patch set that just introduces
+memset_startat() (and perhaps memset_after()) and then updates all the
+places that should use it. That way I can give it a proper review. In
+other words, you should break this patch set up into smaller, more
+digestible portions for the reviewers.
+
+Thanks,
+
+-- Steve
+
+
+
+>  	cpumask_clear(iter->started);
+>  	trace_seq_init(&iter->seq);
+>  	iter->pos = -1;
 
