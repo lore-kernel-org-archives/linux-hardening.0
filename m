@@ -8,74 +8,76 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5144CC432BE
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C02C43216
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35186604AC
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A87604AC
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238436AbhHRGSk (ORCPT
+        id S238421AbhHRGTB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
+        Wed, 18 Aug 2021 02:19:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238153AbhHRGP5 (ORCPT
+        with ESMTP id S238789AbhHRGPx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:15:57 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AFA8C0363F4
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:17 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d17so1108744plr.12
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:17 -0700 (PDT)
+        Wed, 18 Aug 2021 02:15:53 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF41AC0363E8
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:16 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id hv22-20020a17090ae416b0290178c579e424so1623329pjb.3
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0MMWsXNyPTiNeiAP5gS1SC+QG9nXJlmhwzZVB05s6vU=;
-        b=lFnsOWBb7INVqCBC7qdAJtdwm7/YI/zQgCoP3x3m0bM+t5LwRECJJtnUsDrlQxjrhX
-         QHqsidPkWI4X7e2ihavui/Ywcxlnw/aFhClReU+sv9f1EOAIRk2xMvoRioWP+UFLSFBK
-         RCfXzgJGwfpUuLe9H9dmyKkDNrcpU89QSc2mo=
+        bh=m1lc/nY2hnA6HnQKSHDtLAeIlS0dmnOBqNYLAvTUlGA=;
+        b=FS+HfMzV5+fC3odMkVXrJwEqyh1+slSdNTkOPSLEnKpgB5aUu5pQ/txX3nZwmH9j9N
+         JpUNb1Ke8Nib613Cf+hSPfr5Treumucoekmun+SpdbNf+2vy/QfKVo4jA8B9b1nCNQor
+         TC8YvVHzeO23Q0aiI3WkjSxOlWzmH2+99jfiw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0MMWsXNyPTiNeiAP5gS1SC+QG9nXJlmhwzZVB05s6vU=;
-        b=qIC3SODbvMVE5jXqwmdCykXbSxh1DRd8rvumqAhYvca7hvRp/91kG00gjixW7KQSW6
-         i80XkvTd8uCEEDEymcfhdDXRqXK+aio8jkxXDHB5I2eYNGgndRqestrq8U1R7vCWPA2L
-         86gJmftOgfz4tCnD/bimKrGFYBRgIIwLTllo3KMqe5xlt94mLoqtd97Jbggnu69JgWF2
-         9a+GfZbeqzOXZ/Aee2hrFWnWvzq36ghAJM7QBBIy02ISmgXNmLS65AITu13Yv4BeGENK
-         CilceFVmaoENvF540FmNsg5XxM4pCvVZxrtiw67s7cJyFfRB7ieToVeoDTfb5o6Y27vM
-         JkeA==
-X-Gm-Message-State: AOAM530Sm99GrfmmIIrw4fAf7xf7AzZ9z0GGXZliXGNIx10aqz/h+Io/
-        c9JHrOZFputr3gncTDO20xC4jw==
-X-Google-Smtp-Source: ABdhPJzuLn/Q432TdsC9Yx7ftRK4PSNzWyeMnAwx3i8tWLw6BmbXc/OzOJqqzYHaCmof15Jus1chGA==
-X-Received: by 2002:a17:90a:f3d2:: with SMTP id ha18mr7684231pjb.232.1629267256892;
+        bh=m1lc/nY2hnA6HnQKSHDtLAeIlS0dmnOBqNYLAvTUlGA=;
+        b=BLV2sR/SKCV2EdEmU6QpiczdRsbNE3lUOq9xYrDBQasuoudTREhutdrUsGPLrt/OK0
+         H+aESt2KKBQYy9q+HKq3sWvhZsfeLP3wrhqFLSZvXIhu6ei2/Th7hh8CKW4OWXhgo140
+         Lr6mByeVA+58+w3lsSelwj3jSjAvHvDxO1kie+l0hrkpdujCuzU8+BF1MPvCTEiMVRid
+         +TZzeuOZ81nGBChoql0vZamd39buVA7AFkWZ032lbsndoGBEHg8IgTM+NEvzSsGTor++
+         OQQqbzp7WvGnSnjhyvfNFEll6VbGA/o7zriuTh2CKquxu2mvyz1LVEHZinpJIZ+hONwF
+         QuCg==
+X-Gm-Message-State: AOAM532bZRBmHzpdJLh/jb63zMTU8LIvLkLCw/Mvd6En6yeVmMDVv5Di
+        prpfEddXZp2e6Ah5DKzySacgMw==
+X-Google-Smtp-Source: ABdhPJwpjXTG6518NueOetV3W8JiXoD95XPqR41s/nyPvt6mMXPV0yaLuwDelBW15us2G4JddcQdZA==
+X-Received: by 2002:a17:90a:7848:: with SMTP id y8mr7473374pjl.223.1629267256351;
         Tue, 17 Aug 2021 23:14:16 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y64sm5430806pgy.32.2021.08.17.23.14.14
+        by smtp.gmail.com with ESMTPSA id c2sm4955669pfi.80.2021.08.17.23.14.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 17 Aug 2021 23:14:15 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, David Airlie <airlied@linux.ie>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+Cc:     Kees Cook <keescook@chromium.org>,
+        Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2@marvell.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
         linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 20/63] drm/mga/mga_ioc32: Use struct_group() for memcpy() region
-Date:   Tue, 17 Aug 2021 23:04:50 -0700
-Message-Id: <20210818060533.3569517-21-keescook@chromium.org>
+Subject: [PATCH v2 43/63] net: qede: Use memset_startat() for counters
+Date:   Tue, 17 Aug 2021 23:05:13 -0700
+Message-Id: <20210818060533.3569517-44-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4026; h=from:subject; bh=qstupb1mRvuiCQ1RTR6k6oV2NxQS+tS8y2enFqRpd68=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMiDAfxk4XGgNDwyOny5QMoIdZacepKSLc24F9z Lo7XG+GJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjIgAKCRCJcvTf3G3AJh6oD/ 9Ovp0Ql0AYVAVX1IIx8UFncQNMHylWbLYYu/pPeuq//n2vP3YxPODUvUsOhKeGvOP827UQo0zYW5iy tgiG1WBc8ebgh5QPmWb88QrAINPUhtbBp+Ot3NMw60te7sqbHEXsxkZV30DmTsosmCxyISKjyVvCWu k9+q0dosQewqL6/+1hWYp1uFW9SNaxLwoQPTdmTeeACtkvBcffo8L6czjWkLiNyOMCTdoqoQssvvRu zHaZ9swQIAAFRlHyaIwcnYCD8acVZhrpgLkn3SFlhEWx/CsFsuWCNm8ykKqoemb7waZs2mfagTLdNd j9c/hMpmgkGT5eBVZm8ZZc0VIpiQDZFHDrAdet4mxrXfRctgoALoLZZXdvZ6hovyaCJEmAL4dpEmzB SfbVedU11Uqk4gqtVGAPiExd0oEsgw9aH5Yi6f5Kq0NHSdjbUKSXAMoY/rdvqf/QkxZBOmr8Wsmgyh uaHkoAimq3GMz0bp3wb+4kSgsFxg4xCu45/FPrJc/fxu4K2kRpOUDG1wDjMc1G1trTeP21//dqz/DY dcmxUTtVuVe2fPww119RF2WXn3/GxtNi5RK7uTtxCgWr96J2MocjYw5//xWdXRfEEWLjXFK52hcX2N rEw10lDXzkEK6IQwMathNTugVFdbD4ID3UeC/FzYInnBnFPluTRksv4HTSmA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1815; h=from:subject; bh=jbnLApEqieW/++fy2QnZQqeijBkPN++4uUcql8IdpbU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMnXjTo191/u7GxZ37Wuvyxz1yYXjk6kYYtU6NG Uk/+1reJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjJwAKCRCJcvTf3G3AJkUKEA CP9QtdF99HOjstydZyty+TXWHCHvk+L8yaRJLfQw9Ij2yJtDUvVtXCUQSdzfwtxENfHB4LlV+pLMa0 qtp570ToxI9xdKB+Abev9OkcAH5UA98HTqhTsHmWJGnTyekyI18DDinSJIB0eLexCslyevedljP+I0 QwGGo7hbN2h4cNBdVfqf7XV3IlJQUfMOqisWo+S9yQprBKthAsTiNykj7Z4XkUt6ZjwQxHdovfcNxr y8X7Xi2L5LS5RUO5L2qMg49ufYnSh+87p3iZSePm58cBLa6PcS3TS+fgKFWq6rKeq7vfzHvCpl9c7m 0Pi2EHJcBRd8x9Bq+0tTmOFbFJj7lE8rPmNRx5iXfmxnplgxUINQjPc04CKf01oNBQ5V2tlOBzEhYh lZkFnyIwxJit2hdyIBpT+Q/x61E/7iEhBXoo2xHetZ1taACUz+5xMZQcqpmrQMWxuQgbwSwepHUAvL ZuGf6b7xvI0ywqYOA0nuNIJ8EVw6IByYxIAIEjfx0glGfIIeP/tLoIsgTV930k309/s9y6TBWRCz8o h5lLHubwZ57QjtbHRdw0A7frEqm19KSAvXwam0MAB43vm0TSt7vbCCiR0uj/9PR2prngJ9eQUl6K5U BuIjpDHq3lGaWV82neHsDnTIdWx4qjzZBWqMMF/rnI56q46Pfk7bv8/pmkfw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -83,116 +85,55 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+field bounds checking for memset(), avoid intentionally writing across
+neighboring fields.
 
-Use struct_group() in struct drm32_mga_init around members chipset, sgram,
-maccess, fb_cpp, front_offset, front_pitch, back_offset, back_pitch,
-depth_cpp, depth_offset, depth_pitch, texture_offset, and texture_size,
-so they can be referenced together. This will allow memcpy() and sizeof()
-to more easily reason about sizes, improve readability, and avoid future
-warnings about writing beyond the end of chipset.
+Use memset_startat() so memset() doesn't get confused about writing
+beyond the destination member that is intended to be the starting point
+of zeroing through the end of the struct.
 
-"pahole" shows no size nor member offset changes to struct drm32_mga_init.
-"objdump -d" shows no meaningful object code changes (i.e. only source
-line number induced differences and optimizations).
+The old code was doing the wrong thing: it starts from the second member
+and writes beyond int_info, clobbering qede_lock:
 
-Note that since this is a UAPI header, __struct_group() is used
-directly.
+struct qede_dev {
+	...
+        struct qed_int_info             int_info;
 
-Cc: David Airlie <airlied@linux.ie>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: dri-devel@lists.freedesktop.org
+        /* Smaller private variant of the RTNL lock */
+        struct mutex                    qede_lock;
+	...
+
+struct qed_int_info {
+        struct msix_entry       *msix;
+        u8                      msix_cnt;
+
+        /* This should be updated by the protocol driver */
+        u8                      used_cnt;
+};
+
+Cc: Ariel Elior <aelior@marvell.com>
+Cc: GR-everest-linux-l2@marvell.com
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Acked-by: Daniel Vetter <daniel@ffwll.ch>
-Link: https://lore.kernel.org/lkml/YQKa76A6XuFqgM03@phenom.ffwll.local
 ---
- drivers/gpu/drm/mga/mga_ioc32.c | 27 ++++++++++++++-------------
- include/uapi/drm/mga_drm.h      | 22 ++++++++++++----------
- 2 files changed, 26 insertions(+), 23 deletions(-)
+ drivers/net/ethernet/qlogic/qede/qede_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mga/mga_ioc32.c b/drivers/gpu/drm/mga/mga_ioc32.c
-index 4fd4de16cd32..894472921c30 100644
---- a/drivers/gpu/drm/mga/mga_ioc32.c
-+++ b/drivers/gpu/drm/mga/mga_ioc32.c
-@@ -38,16 +38,18 @@
- typedef struct drm32_mga_init {
- 	int func;
- 	u32 sarea_priv_offset;
--	int chipset;
--	int sgram;
--	unsigned int maccess;
--	unsigned int fb_cpp;
--	unsigned int front_offset, front_pitch;
--	unsigned int back_offset, back_pitch;
--	unsigned int depth_cpp;
--	unsigned int depth_offset, depth_pitch;
--	unsigned int texture_offset[MGA_NR_TEX_HEAPS];
--	unsigned int texture_size[MGA_NR_TEX_HEAPS];
-+	struct_group(always32bit,
-+		int chipset;
-+		int sgram;
-+		unsigned int maccess;
-+		unsigned int fb_cpp;
-+		unsigned int front_offset, front_pitch;
-+		unsigned int back_offset, back_pitch;
-+		unsigned int depth_cpp;
-+		unsigned int depth_offset, depth_pitch;
-+		unsigned int texture_offset[MGA_NR_TEX_HEAPS];
-+		unsigned int texture_size[MGA_NR_TEX_HEAPS];
-+	);
- 	u32 fb_offset;
- 	u32 mmio_offset;
- 	u32 status_offset;
-@@ -67,9 +69,8 @@ static int compat_mga_init(struct file *file, unsigned int cmd,
- 
- 	init.func = init32.func;
- 	init.sarea_priv_offset = init32.sarea_priv_offset;
--	memcpy(&init.chipset, &init32.chipset,
--		offsetof(drm_mga_init_t, fb_offset) -
--		offsetof(drm_mga_init_t, chipset));
-+	memcpy(&init.always32bit, &init32.always32bit,
-+	       sizeof(init32.always32bit));
- 	init.fb_offset = init32.fb_offset;
- 	init.mmio_offset = init32.mmio_offset;
- 	init.status_offset = init32.status_offset;
-diff --git a/include/uapi/drm/mga_drm.h b/include/uapi/drm/mga_drm.h
-index 8c4337548ab5..2978a435dff9 100644
---- a/include/uapi/drm/mga_drm.h
-+++ b/include/uapi/drm/mga_drm.h
-@@ -279,20 +279,22 @@ typedef struct drm_mga_init {
- 
- 	unsigned long sarea_priv_offset;
- 
--	int chipset;
--	int sgram;
-+	__struct_group(/* no tye */, always32bit, /* no attrs */,
-+		int chipset;
-+		int sgram;
- 
--	unsigned int maccess;
-+		unsigned int maccess;
- 
--	unsigned int fb_cpp;
--	unsigned int front_offset, front_pitch;
--	unsigned int back_offset, back_pitch;
-+		unsigned int fb_cpp;
-+		unsigned int front_offset, front_pitch;
-+		unsigned int back_offset, back_pitch;
- 
--	unsigned int depth_cpp;
--	unsigned int depth_offset, depth_pitch;
-+		unsigned int depth_cpp;
-+		unsigned int depth_offset, depth_pitch;
- 
--	unsigned int texture_offset[MGA_NR_TEX_HEAPS];
--	unsigned int texture_size[MGA_NR_TEX_HEAPS];
-+		unsigned int texture_offset[MGA_NR_TEX_HEAPS];
-+		unsigned int texture_size[MGA_NR_TEX_HEAPS];
-+	);
- 
- 	unsigned long fb_offset;
- 	unsigned long mmio_offset;
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index d400e9b235bf..0ed9a0c8452c 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -2419,7 +2419,7 @@ static int qede_load(struct qede_dev *edev, enum qede_load_mode mode,
+ 	goto out;
+ err4:
+ 	qede_sync_free_irqs(edev);
+-	memset(&edev->int_info.msix_cnt, 0, sizeof(struct qed_int_info));
++	memset_startat(&edev->int_info, 0, msix_cnt);
+ err3:
+ 	qede_napi_disable_remove(edev);
+ err2:
 -- 
 2.30.2
 
