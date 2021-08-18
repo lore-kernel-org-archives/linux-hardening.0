@@ -2,125 +2,433 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA507C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 08:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DF0C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 08:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF2060F58
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 08:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E84460F58
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 08:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240325AbhHRIMC (ORCPT
+        id S240392AbhHRIME (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 04:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        Wed, 18 Aug 2021 04:12:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240197AbhHRIL4 (ORCPT
+        with ESMTP id S240303AbhHRIMC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 04:11:56 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADBBC0613CF
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 01:11:22 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id e7so1448423pgk.2
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 01:11:22 -0700 (PDT)
+        Wed, 18 Aug 2021 04:12:02 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B50D9C0612E7
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 01:11:23 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id w13-20020a17090aea0db029017897a5f7bcso1780246pjy.5
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 01:11:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MY8Vy2Gwyp/6ClqTLbufHKX/EBwR8IarJAz8L3RIxlc=;
-        b=YHDlqivsdPRMc7k7QuFP49YWPnZX5tqBzJZyKfK9Aqg/3i41FY7PvHSffQz8m5Jsqt
-         wg5mZ2IO/8YSKAUhDL2fczpSbua4Y1ajalIN9avI7hnp3bgpEt7s7aeUFbGZ0p1x6VTT
-         geSf8CMBCO5c/ec0G1wW8P6rUX0bRuFRKAlag=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GpF0E/FgRi6qGX/LhpbMUwPUICr1VhVyZ7DJ8GUlvVk=;
+        b=WvNev3Oy64pO1VSwJ5tg1EH5fDsgG5exsqM7TIsClrkbN4NJq0UxJBeVt6CBoBXmNE
+         fdSHSypHujJ+KyDwq4QIBIkVE4ohdvyKTklOAT49I0mmqB5Fp6AqHcGioFE9Ks2KGsGr
+         LIYBqO3DsdO5DFjJDd2pcSj/qzz/3rKq6YRQo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MY8Vy2Gwyp/6ClqTLbufHKX/EBwR8IarJAz8L3RIxlc=;
-        b=ETiREa4SNfPYfuAy1IDdYxtFxWoxMXhGl4jeKW6UN1KXRNDY/fFB5jSHcu7YVNpLnM
-         hlVNjongWvvZivhEAw7QZPq3jYz6qrd8w2I98qQHZJCWXKL0Fxf31KYSW7I21Zmc9gE8
-         brbji4djE/LJUzP9HOPSdMQhirzS63ovBw8xx4F0RTMcro/5L1HJlJjqy/yg+RYkmlvf
-         PXGXGfLs1IDd41NfraBK4vA5REROy3D0R2RPTJrFE4UQwWHLNck2EHz6fpfU1bOeF0MK
-         8evBK95UencCSjiTEIcgIhd4kQvbfJL435INPC723fvIsjLjmRlLyfZqxPcqtPVTQF8/
-         AP8Q==
-X-Gm-Message-State: AOAM53375xxSHn8fTgmiG1U72PlTj3d5rNU3slVIA4diOW8izNUcOQNF
-        u6gasmAOx0oP0Jo8Vp3B+0tcbQ==
-X-Google-Smtp-Source: ABdhPJx5HYsMHa2HyoaLEeJ3ss9Nj8nYDUPuCRY2mLhV6Ni48pmptgwwRam192YCN2nv8vx8MAJ0aQ==
-X-Received: by 2002:a05:6a00:a8a:b029:356:be61:7f18 with SMTP id b10-20020a056a000a8ab0290356be617f18mr8090194pfl.29.1629274281741;
-        Wed, 18 Aug 2021 01:11:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GpF0E/FgRi6qGX/LhpbMUwPUICr1VhVyZ7DJ8GUlvVk=;
+        b=VBF6erQq+GeonHDooR/GXt4Xzcc3NW6MNuQ45ydpuHOrTbkxQo78ztZHAn/0+KtNxb
+         dfr5UCK5EzRRzfFVPAXGiS5buKcDEQrlfR+LBYLhdsnPcGQ3UkuYpTAsznGUpXnp3Nr+
+         RX3ovavfa3XFS47z5m4qxcEddM2D957wjVrUQKIV/Kv0zn7VsBW2Y+YqFiwyhpNGV0Ws
+         opZFQ0r+CThHkIWIBKex2fVaNHTsxSpcEF8+7prmp4e+0HmC6L8aPpzo7483Ev7/Mvg+
+         k+LUYde1ZKK1IzxfEqHursFK7fb+xSyJ5PxFrqD81ZoMq+fns+JGb3RqJwLIAW84ggpr
+         MhtA==
+X-Gm-Message-State: AOAM530Cmn217kFeFSM9hP2tDGbMUoFC76dguR49c76OSjXtbpxLefi1
+        Cth6Br4mqkLy0b/I69stypdlJA==
+X-Google-Smtp-Source: ABdhPJzA57q+7lV/BgTR8zE9bfaFWDujbp+9gxoVmizaVZbAfhx73JbpI6XIc+bce+b65qnBgrBFDQ==
+X-Received: by 2002:a17:902:d114:b029:12d:4202:655a with SMTP id w20-20020a170902d114b029012d4202655amr6377479plw.0.1629274283306;
+        Wed, 18 Aug 2021 01:11:23 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y64sm6025462pgy.32.2021.08.18.01.11.20
+        by smtp.gmail.com with ESMTPSA id c133sm5360276pfb.39.2021.08.18.01.11.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 18 Aug 2021 01:11:21 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+Cc:     Kees Cook <keescook@chromium.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: [PATCH 0/5] Enable -Warray-bounds and -Wzero-length-bounds
-Date:   Wed, 18 Aug 2021 01:11:13 -0700
-Message-Id: <20210818081118.1667663-1-keescook@chromium.org>
+        Arnd Bergmann <arnd@arndb.de>,
+        Ayush Sawal <ayush.sawal@chelsio.com>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Rohit Maheshwari <rohitm@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
+        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+        linux-crypto@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-can@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 2/5] treewide: Replace open-coded flex arrays in unions
+Date:   Wed, 18 Aug 2021 01:11:15 -0700
+Message-Id: <20210818081118.1667663-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210818081118.1667663-1-keescook@chromium.org>
+References: <20210818081118.1667663-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2304; h=from:subject; bh=+3PbFLzhuXuKeiP367B9yvw5C8+1fj6n3ISBhfoxQDs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHMCkSUiloWdfwIMtIoPfyPuaMV2HH6ioubUcVTij 9T1WEYmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRzApAAKCRCJcvTf3G3AJqm0EA ChSv0Nffl6FINd190zgIqcanz0y9aCYtQjW/WBWmWoBHBtLl5zrJmrWacWwc5ocQAkJjaNeIGAxuY/ QHS/tN0fPkWSc2hToXFjHIdJZO1ktvd7QgT8mUfwFqe4Eaz2qZ3XzxGgqB2YzMbL2FYNGvlcniCU/D c3xjyFdgptWVtq5FRm2Dm0/XkDSB6QHlGiy3CmwAX6My8J3cofejb2UiypApunOhy8z9b2O+lZ9QOD Dhzqjex3OvFlJ2Jzyuv1Abo/2QojMbdJghlPzywS9j9ex+gcLxW5GDnguz+ccucqhETH6xC/epZI5h SMYB/DGuWABAN5qGYDTgaJJZpv9KOlSPB5y8VMBbBvaL9FcCc2/wDnzNFYwJf/XjOsC5NXDSTbazmi Ao3IgNbmpJoyX5ZdNLywMf/aaG+PiHVI4wyaJZ9KZeLaK99SofVDXl1cIS/GV9ZG+tUnM9TMw+y8UD cLO8aujcSG+nndIvYgcE4CWJFMAG2gduJ/bA1shlWcQlFPKevKg8mufGF/woJLAMBg5VqIgsc1aCyD bx+5hRr/EINK9i6JNUR4Z0gjmKByzxnfjZhRDipz4KCYd5oA2GJl+VGktm/tdYPXDhzlk0c8TfeVBd BEKphz8q+u/33EhssPDlx4YX5cJyBRvfp5ZIUbBO205h1nFGhvu/LF85Majw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12062; h=from:subject; bh=0CCkznI664JYVvRMoE3qzwUtrImx1HNe0LKH8ibyfWs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHMCkRUrXEgtkRNrsSMCJSduhfGiaBzyFF1NfkOz5 1sgSW+CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRzApAAKCRCJcvTf3G3AJjS0D/ 0b1LwVuUqze95mS2bSnJ7AH4aPgzU1OO2ZMuzSJFdp54NANtgs8l78GnvlaKS2+1Ucg+9SQedab8yy euPrypenPhGxTSyPMT/BKLX4a7OIafCIZRczkVbcnJs512dcNHXVnwxS+53StYdCJ/utKT9M+ljmPc zSzT3rZfunCmfYjnj0CAZ89VQD43HOQwB7OXXxnsX/Aap/kJkCVs+2vZJEsuXVMD9q2tE/xxXAMpjQ YQY2aKPlJ22s20dcW5jeOlG2uK/ReD6K1+++LZVuzl4L6nd5RKa0BuxfPwr3eGMd4nrVQ5hZzaIOCy H4hhv6MgoNJlTIWKFx8fpsBFYgvzf5xLdi8AoGExlkbYlF4wux4PBJP5NHYYQx1+npbK4+8R42Au1I Q4tBLdisBCZYCoQC9/28MjZOEjQJIKes+scxMlO7PjqQez4p+Bc4zriVjRY6jabxsVBLZnCTcojjVN OzyO87Y9aOvuJf8omcP/8KGnNDzJ7acs5VKkD+fCrj+UEim0wgCof8IdtNtt/dBWEFCOPkCIwAzClV rPM9sLwD1J7Pkck/Q4oBpil6tAoTL2OJ28j4JrFP4tF6IWHCds9bLtt1tgzp+o8uyDjFVR3NvvRNpx ZQsS9C9S0z3P7LvltwiuKbf3UzDoltBxV4HvPDQRGG0MEziUOwhNtB7FxYPQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+In support of enabling -Warray-bounds and -Wzero-length-bounds and
+correctly handling run-time memcpy() bounds checking, replace all
+open-coded flexible arrays (i.e. 0-element arrays) in unions with the
+flex_array() helper macro.
 
-In support of the improved buffer overflow detection for memcpy(),
-this enables -Warray-bounds and -Wzero-length-bounds globally. Mostly
-it involves some struct member tricks with the new flex_array() macro.
-Everything else is just replacing stacked 0-element arrays with actual
-unions in two related treewide patches. There is one set of special
-cases that were fixed separately[1] and are needed as well.
+This fixes warnings such as:
 
-I'm expecting to carry this series with the memcpy() series in my
-"overflow" tree.
+fs/hpfs/anode.c: In function 'hpfs_add_sector_to_btree':
+fs/hpfs/anode.c:209:27: warning: array subscript 0 is outside the bounds of an interior zero-length array 'struct bplus_internal_node[0]' [-Wzero-length-bounds]
+  209 |    anode->btree.u.internal[0].down = cpu_to_le32(a);
+      |    ~~~~~~~~~~~~~~~~~~~~~~~^~~
+In file included from fs/hpfs/hpfs_fn.h:26,
+                 from fs/hpfs/anode.c:10:
+fs/hpfs/hpfs.h:412:32: note: while referencing 'internal'
+  412 |     struct bplus_internal_node internal[0]; /* (internal) 2-word entries giving
+      |                                ^~~~~~~~
 
-Thanks!
+drivers/net/can/usb/etas_es58x/es58x_fd.c: In function 'es58x_fd_tx_can_msg':
+drivers/net/can/usb/etas_es58x/es58x_fd.c:360:35: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[]'} [-Wzero-length-bounds]
+  360 |  tx_can_msg = (typeof(tx_can_msg))&es58x_fd_urb_cmd->raw_msg[msg_len];
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/net/can/usb/etas_es58x/es58x_core.h:22,
+                 from drivers/net/can/usb/etas_es58x/es58x_fd.c:17:
+drivers/net/can/usb/etas_es58x/es58x_fd.h:231:6: note: while referencing 'raw_msg'
+  231 |   u8 raw_msg[0];
+      |      ^~~~~~~
 
--Kees
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ayush Sawal <ayush.sawal@chelsio.com>
+Cc: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+Cc: Rohit Maheshwari <rohitm@chelsio.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Mordechay Goodstein <mordechay.goodstein@intel.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>
+Cc: linux-crypto@vger.kernel.org
+Cc: ath10k@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Cc: linux-can@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/crypto/chelsio/chcr_crypto.h              | 14 +++++++++-----
+ drivers/net/can/usb/etas_es58x/es581_4.h          |  2 +-
+ drivers/net/can/usb/etas_es58x/es58x_fd.h         |  2 +-
+ drivers/net/wireless/ath/ath10k/htt.h             |  7 +++++--
+ drivers/net/wireless/intel/iwlegacy/commands.h    |  6 ++++--
+ drivers/net/wireless/intel/iwlwifi/dvm/commands.h |  6 ++++--
+ drivers/net/wireless/intel/iwlwifi/fw/api/tx.h    |  6 ++++--
+ drivers/scsi/aic94xx/aic94xx_sds.c                |  6 ++++--
+ fs/hpfs/hpfs.h                                    |  8 ++++----
+ include/linux/filter.h                            |  6 ++++--
+ include/scsi/sas.h                                | 12 ++++++++----
+ include/uapi/rdma/rdma_user_rxe.h                 |  6 ++++--
+ include/uapi/sound/asoc.h                         |  6 ++++--
+ 13 files changed, 56 insertions(+), 31 deletions(-)
 
-[1] https://lore.kernel.org/lkml/20210818043035.1308062-1-keescook@chromium.org/
-
-Kees Cook (5):
-  stddef: Add flexible array union helper
-  treewide: Replace open-coded flex arrays in unions
-  treewide: Replace 0-element memcpy() destinations with flexible arrays
-  Makefile: Enable -Warray-bounds
-  Makefile: Enable -Wzero-length-bounds
-
- Makefile                                      |  2 --
- drivers/crypto/chelsio/chcr_crypto.h          | 14 +++++---
- drivers/net/can/usb/etas_es58x/es581_4.h      |  2 +-
- drivers/net/can/usb/etas_es58x/es58x_fd.h     |  2 +-
- drivers/net/wireless/ath/ath10k/bmi.h         | 12 +++----
- drivers/net/wireless/ath/ath10k/htt.h         |  7 ++--
- .../net/wireless/intel/iwlegacy/commands.h    |  6 ++--
- .../net/wireless/intel/iwlwifi/dvm/commands.h |  6 ++--
- .../net/wireless/intel/iwlwifi/fw/api/tx.h    |  6 ++--
- drivers/scsi/aic94xx/aic94xx_sds.c            |  6 ++--
- drivers/scsi/qla4xxx/ql4_def.h                |  4 +--
- drivers/staging/r8188eu/include/ieee80211.h   |  6 ++--
- drivers/staging/rtl8712/ieee80211.h           |  4 +--
- drivers/staging/rtl8723bs/include/ieee80211.h |  6 ++--
- fs/hpfs/hpfs.h                                |  8 ++---
- include/linux/filter.h                        |  6 ++--
- include/linux/ieee80211.h                     | 34 +++++++++----------
- include/linux/stddef.h                        | 10 ++++++
- include/scsi/sas.h                            | 12 ++++---
- include/uapi/linux/dlm_device.h               |  4 +--
- include/uapi/linux/stddef.h                   | 13 +++++++
- include/uapi/rdma/rdma_user_rxe.h             |  6 ++--
- include/uapi/sound/asoc.h                     |  6 ++--
- 23 files changed, 112 insertions(+), 70 deletions(-)
-
+diff --git a/drivers/crypto/chelsio/chcr_crypto.h b/drivers/crypto/chelsio/chcr_crypto.h
+index e89f9e0094b4..1cadc231c6b0 100644
+--- a/drivers/crypto/chelsio/chcr_crypto.h
++++ b/drivers/crypto/chelsio/chcr_crypto.h
+@@ -222,8 +222,10 @@ struct chcr_authenc_ctx {
+ };
+ 
+ struct __aead_ctx {
+-	struct chcr_gcm_ctx gcm[0];
+-	struct chcr_authenc_ctx authenc[];
++	union {
++		flex_array(struct chcr_gcm_ctx gcm[]);
++		flex_array(struct chcr_authenc_ctx authenc[]);
++	};
+ };
+ 
+ struct chcr_aead_ctx {
+@@ -245,9 +247,11 @@ struct hmac_ctx {
+ };
+ 
+ struct __crypto_ctx {
+-	struct hmac_ctx hmacctx[0];
+-	struct ablk_ctx ablkctx[0];
+-	struct chcr_aead_ctx aeadctx[];
++	union {
++		flex_array(struct hmac_ctx hmacctx[]);
++		flex_array(struct ablk_ctx ablkctx[]);
++		flex_array(struct chcr_aead_ctx aeadctx[]);
++	};
+ };
+ 
+ struct chcr_context {
+diff --git a/drivers/net/can/usb/etas_es58x/es581_4.h b/drivers/net/can/usb/etas_es58x/es581_4.h
+index 4bc60a6df697..8657145dc2a9 100644
+--- a/drivers/net/can/usb/etas_es58x/es581_4.h
++++ b/drivers/net/can/usb/etas_es58x/es581_4.h
+@@ -192,7 +192,7 @@ struct es581_4_urb_cmd {
+ 		struct es581_4_rx_cmd_ret rx_cmd_ret;
+ 		__le64 timestamp;
+ 		u8 rx_cmd_ret_u8;
+-		u8 raw_msg[0];
++		flex_array(u8 raw_msg);
+ 	} __packed;
+ 
+ 	__le16 reserved_for_crc16_do_not_use;
+diff --git a/drivers/net/can/usb/etas_es58x/es58x_fd.h b/drivers/net/can/usb/etas_es58x/es58x_fd.h
+index ee18a87e40c0..3053e0958132 100644
+--- a/drivers/net/can/usb/etas_es58x/es58x_fd.h
++++ b/drivers/net/can/usb/etas_es58x/es58x_fd.h
+@@ -228,7 +228,7 @@ struct es58x_fd_urb_cmd {
+ 		struct es58x_fd_tx_ack_msg tx_ack_msg;
+ 		__le64 timestamp;
+ 		__le32 rx_cmd_ret_le32;
+-		u8 raw_msg[0];
++		flex_array(u8 raw_msg[]);
+ 	} __packed;
+ 
+ 	__le16 reserved_for_crc16_do_not_use;
+diff --git a/drivers/net/wireless/ath/ath10k/htt.h b/drivers/net/wireless/ath/ath10k/htt.h
+index ec689e3ce48a..c0729f882556 100644
+--- a/drivers/net/wireless/ath/ath10k/htt.h
++++ b/drivers/net/wireless/ath/ath10k/htt.h
+@@ -1674,8 +1674,11 @@ struct htt_tx_fetch_ind {
+ 	__le32 token;
+ 	__le16 num_resp_ids;
+ 	__le16 num_records;
+-	__le32 resp_ids[0]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
+-	struct htt_tx_fetch_record records[];
++	union {
++		/* ath10k_htt_get_tx_fetch_ind_resp_ids() */
++		flex_array(__le32 resp_ids[]);
++		flex_array(struct htt_tx_fetch_record records[]);
++	};
+ } __packed;
+ 
+ static inline void *
+diff --git a/drivers/net/wireless/intel/iwlegacy/commands.h b/drivers/net/wireless/intel/iwlegacy/commands.h
+index 89c6671b32bc..ec0bc534c503 100644
+--- a/drivers/net/wireless/intel/iwlegacy/commands.h
++++ b/drivers/net/wireless/intel/iwlegacy/commands.h
+@@ -1408,8 +1408,10 @@ struct il3945_tx_cmd {
+ 	 * MAC header goes here, followed by 2 bytes padding if MAC header
+ 	 * length is 26 or 30 bytes, followed by payload data
+ 	 */
+-	u8 payload[0];
+-	struct ieee80211_hdr hdr[];
++	union {
++		flex_array(u8 payload[]);
++		flex_array(struct ieee80211_hdr hdr[]);
++	};
+ } __packed;
+ 
+ /*
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/commands.h b/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
+index 235c7a2e3483..efe205929a21 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
+@@ -1251,8 +1251,10 @@ struct iwl_tx_cmd {
+ 	 * MAC header goes here, followed by 2 bytes padding if MAC header
+ 	 * length is 26 or 30 bytes, followed by payload data
+ 	 */
+-	u8 payload[0];
+-	struct ieee80211_hdr hdr[];
++	union {
++		flex_array(u8 payload[]);
++		flex_array(struct ieee80211_hdr hdr[]);
++	};
+ } __packed;
+ 
+ /*
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+index 24e4a82a55da..d183f4856220 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+@@ -713,8 +713,10 @@ struct iwl_mvm_compressed_ba_notif {
+ 	__le32 tx_rate;
+ 	__le16 tfd_cnt;
+ 	__le16 ra_tid_cnt;
+-	struct iwl_mvm_compressed_ba_ratid ra_tid[0];
+-	struct iwl_mvm_compressed_ba_tfd tfd[];
++	union {
++		flex_array(struct iwl_mvm_compressed_ba_ratid ra_tid[]);
++		flex_array(struct iwl_mvm_compressed_ba_tfd tfd[]);
++	};
+ } __packed; /* COMPRESSED_BA_RES_API_S_VER_4 */
+ 
+ /**
+diff --git a/drivers/scsi/aic94xx/aic94xx_sds.c b/drivers/scsi/aic94xx/aic94xx_sds.c
+index 46815e65f7a4..ae20b855d449 100644
+--- a/drivers/scsi/aic94xx/aic94xx_sds.c
++++ b/drivers/scsi/aic94xx/aic94xx_sds.c
+@@ -517,8 +517,10 @@ struct asd_ms_conn_map {
+ 	u8    num_nodes;
+ 	u8    usage_model_id;
+ 	u32   _resvd;
+-	struct asd_ms_conn_desc conn_desc[0];
+-	struct asd_ms_node_desc node_desc[];
++	union {
++		flex_array(struct asd_ms_conn_desc conn_desc[]);
++		flex_array(struct asd_ms_node_desc node_desc[]);
++	};
+ } __attribute__ ((packed));
+ 
+ struct asd_ctrla_phy_entry {
+diff --git a/fs/hpfs/hpfs.h b/fs/hpfs/hpfs.h
+index d92c4af3e1b4..ee26c85d57a7 100644
+--- a/fs/hpfs/hpfs.h
++++ b/fs/hpfs/hpfs.h
+@@ -409,10 +409,10 @@ struct bplus_header
+   __le16 first_free;			/* offset from start of header to
+ 					   first free node in array */
+   union {
+-    struct bplus_internal_node internal[0]; /* (internal) 2-word entries giving
+-					       subtree pointers */
+-    struct bplus_leaf_node external[0];	    /* (external) 3-word entries giving
+-					       sector runs */
++	/* (internal) 2-word entries giving subtree pointers */
++	flex_array(struct bplus_internal_node internal[]);
++	/* (external) 3-word entries giving sector runs */
++	flex_array(struct bplus_leaf_node external[]);
+   } u;
+ };
+ 
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 1797e8506929..6c41c03b791c 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -588,8 +588,10 @@ struct bpf_prog {
+ 	struct bpf_prog_aux	*aux;		/* Auxiliary fields */
+ 	struct sock_fprog_kern	*orig_prog;	/* Original BPF program */
+ 	/* Instructions for interpreter */
+-	struct sock_filter	insns[0];
+-	struct bpf_insn		insnsi[];
++	union {
++		flex_array(struct sock_filter	insns[]);
++		flex_array(struct bpf_insn	insnsi[]);
++	};
+ };
+ 
+ struct sk_filter {
+diff --git a/include/scsi/sas.h b/include/scsi/sas.h
+index 4726c1bbec65..67c63a87602f 100644
+--- a/include/scsi/sas.h
++++ b/include/scsi/sas.h
+@@ -323,8 +323,10 @@ struct ssp_response_iu {
+ 	__be32 sense_data_len;
+ 	__be32 response_data_len;
+ 
+-	u8     resp_data[0];
+-	u8     sense_data[];
++	union {
++		flex_array(u8     resp_data[]);
++		flex_array(u8     sense_data[]);
++	};
+ } __attribute__ ((packed));
+ 
+ struct ssp_command_iu {
+@@ -554,8 +556,10 @@ struct ssp_response_iu {
+ 	__be32 sense_data_len;
+ 	__be32 response_data_len;
+ 
+-	u8     resp_data[0];
+-	u8     sense_data[];
++	union {
++		flex_array(u8     resp_data[]);
++		flex_array(u8     sense_data[]);
++	};
+ } __attribute__ ((packed));
+ 
+ struct ssp_command_iu {
+diff --git a/include/uapi/rdma/rdma_user_rxe.h b/include/uapi/rdma/rdma_user_rxe.h
+index e283c2220aba..fb63de88423b 100644
+--- a/include/uapi/rdma/rdma_user_rxe.h
++++ b/include/uapi/rdma/rdma_user_rxe.h
+@@ -141,8 +141,10 @@ struct rxe_dma_info {
+ 	__u32			sge_offset;
+ 	__u32			reserved;
+ 	union {
+-		__u8		inline_data[0];
+-		struct rxe_sge	sge[0];
++		__flex_array(__fa1,
++			     __u8 inline_data[]);
++		__flex_array(__fa2,
++			     struct rxe_sge sge[]);
+ 	};
+ };
+ 
+diff --git a/include/uapi/sound/asoc.h b/include/uapi/sound/asoc.h
+index da61398b1f8f..aa4e9dd94d29 100644
+--- a/include/uapi/sound/asoc.h
++++ b/include/uapi/sound/asoc.h
+@@ -240,8 +240,10 @@ struct snd_soc_tplg_vendor_array {
+ struct snd_soc_tplg_private {
+ 	__le32 size;	/* in bytes of private data */
+ 	union {
+-		char data[0];
+-		struct snd_soc_tplg_vendor_array array[0];
++		__flex_array(__fa1,
++			     char data[]);
++		__flex_array(__fa2,
++			     struct snd_soc_tplg_vendor_array array[]);
+ 	};
+ } __attribute__((packed));
+ 
 -- 
 2.30.2
 
