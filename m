@@ -5,263 +5,128 @@ X-Spam-Level:
 X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151AEC19F39
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93929C19F34
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A0D610FF
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE58610FF
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234038AbhHRVlQ (ORCPT
+        id S234274AbhHRVlT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 17:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37954 "EHLO
+        Wed, 18 Aug 2021 17:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234121AbhHRVlP (ORCPT
+        with ESMTP id S234078AbhHRVlQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 17:41:15 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68FBEC0617A8
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:40:40 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id c17so2708688plz.2
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:40:40 -0700 (PDT)
+        Wed, 18 Aug 2021 17:41:16 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE627C0613D9
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:40:41 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id fa24-20020a17090af0d8b0290178bfa69d97so3414800pjb.0
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:40:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=O8qjYY2cJtsRmGm/zdMlQTzE6OnnaKrP94K9BZF3rSA=;
-        b=nMy7A/nPsqqnV8Mg5wlS7/0IsGs50z8tCUXJYrfOg4AsWZa9SXVsUnl6Wo70zFzIzZ
-         APXXBcZVA5rMrWVOlBjoM+3eOPYHijbfKlzO6eAP+gry0FfUhhpaeBU0hN4k179yh+Z+
-         jqvpR1Mn8CSchx3dmcpXjwm6mRiWmterswDCU=
+        bh=hkb7Jfu8siQEeZroFh7P2leDv5HZhgyEO3/P7zQyv7o=;
+        b=RSJ0nHFz0YIcadZEK+2T//KeKYLb8iPMtRzFaI7ERNqAF/9UzjlEvsmh60f+OAG0hR
+         Qj0RaYKR9wNVB6Z8CE3TAnUtflL1hT4INidx6hvPICYLbw9LUID/Z0TgTqlMFeC1joks
+         8gQqtC0TPN6FGO2wynWdR3t8c/hxAKrpFBhZ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=O8qjYY2cJtsRmGm/zdMlQTzE6OnnaKrP94K9BZF3rSA=;
-        b=ne7Y0/q1eLuhilBD/SesN4RADKNH3W+F36uzee3+12K6cqjRiNIMmfLpj4QJL7n5sL
-         Yh+pKUwZdUDd6WQINF556UnzIXqL7pDAsefg4TD4CfUOiw49jKk4KSMLrmYmvumfMn1C
-         R1eGh9Vf7rxMdUgmIkSyAJlsWxc2jSzMjkHUflzxI3ofMKdCEbhyY2csfjGAFageCkGK
-         gEt3zx/ZRGCSoFY0ts3PZ+Nc9Mr1Nio7O3WMHrxlS5dA3H3KSu8l354hYC/H1zLqzCD8
-         1T+sp+G1CPyxdR0aO+KWDKz6ZO+RJU43g/Lq/sOcTd6LOcdZlgd7mfiDi56r9IuedSMF
-         nLbw==
-X-Gm-Message-State: AOAM532tqjRLz0UGvIKAloR6/t65Tvvp2IHIF/Iep9Wx+JYuWyO/9W8c
-        lrp5AUzc2q3DJFXrqvHyHXjPqA==
-X-Google-Smtp-Source: ABdhPJxYjaN+DPPuAIQ69L5BdqEKlPPf/7kM7hgR09tYFR4qxImDaw4J7iKHF/Tk7z+ejQWXelFwSA==
-X-Received: by 2002:a17:902:9a47:b0:12f:6a05:caaf with SMTP id x7-20020a1709029a4700b0012f6a05caafmr2040047plv.55.1629322839915;
-        Wed, 18 Aug 2021 14:40:39 -0700 (PDT)
+        bh=hkb7Jfu8siQEeZroFh7P2leDv5HZhgyEO3/P7zQyv7o=;
+        b=elA6leUcR4W/9v8IUO6Gm2Vpq6nx1Xmnmmu8QHkMd6Nu9sVZ415U6T14QrpD/V3na6
+         1X8jKlbyT+FkDt9dyuFq2x0F0NOaeCGliu2Lmkpng3bUR53UZYkDeqHuCkmHlFuIL0rP
+         DpYQiZK96CLhnDS+8mukWgD87fXiPjBfS6Vt8+21FpdsQUhogUOaoGVHP18+gFh2n0gR
+         ONGYSAMJRI4qczDAkJ9/hqN2FvGcywggGE6yrqMxniAUQoSPjSBfCZ9dT/MxUijBDYxE
+         4Dy/9ZfD/ZZhNdhoKQvLWLIpVibggIDu2MFyu3TB3cAB3fh9NkXmtXZ1sVxBOSjfIWHE
+         7QYA==
+X-Gm-Message-State: AOAM5307SSkY980rPrK4QubxfOIVPLgx1ZOcpBPChbTgzl5t5ovMAumn
+        /LrcpJzvbWeOsjlKi9krh7oypg==
+X-Google-Smtp-Source: ABdhPJzmfME2/iuvry6l1RXtXFLw2B8x/9UtYWsQyHviQ+a+yu2VpuQUlSlfyodXtUqiobzZT9CGsQ==
+X-Received: by 2002:a17:902:e54e:b0:12d:cca1:2c1f with SMTP id n14-20020a170902e54e00b0012dcca12c1fmr8778762plf.79.1629322841388;
+        Wed, 18 Aug 2021 14:40:41 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x13sm713276pjh.30.2021.08.18.14.40.36
+        by smtp.gmail.com with ESMTPSA id p30sm771381pfh.116.2021.08.18.14.40.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 14:40:36 -0700 (PDT)
+        Wed, 18 Aug 2021 14:40:39 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Joe Perches <joe@perches.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        Miguel Ojeda <ojeda@kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>, linux-mm@kvack.org,
+        Joe Perches <joe@perches.com>, Miguel Ojeda <ojeda@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Andy Whitcroft <apw@canonical.com>,
         Dwaipayan Ray <dwaipayanray1@gmail.com>,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 3/7] slab: Clean up function declarations
-Date:   Wed, 18 Aug 2021 14:40:17 -0700
-Message-Id: <20210818214021.2476230-4-keescook@chromium.org>
+Subject: [PATCH v2 6/7] percpu: Add __alloc_size attributes for better bounds checking
+Date:   Wed, 18 Aug 2021 14:40:20 -0700
+Message-Id: <20210818214021.2476230-7-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818214021.2476230-1-keescook@chromium.org>
 References: <20210818214021.2476230-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7386; h=from:subject; bh=twU3C8Odrnjtt0fLQV1v3kpwGFqUFkkEJcF/jNvyyhw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHX5DwWG8Hbuzv1t4kr4ppi1TMFFQ+1095F1DCS+E ugeeNVeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR1+QwAKCRCJcvTf3G3AJrrJEA CiuNoKbuv3vd4OKjhaJsh/uzJaVSeJtUBbZd3/9tG9s4xBEiQv2TlQu0xZaF6WmgcCcuqQIstsDoAa QSaY4YKqRiBrUSqEXm6RtvXyFALNQIcRO64dkTw/k6NlY1vnQ+cznAbzY7uUemCoMXMRFWGTrFAjNL h4nYkrsKvd7bJS8rKfhkqhQDjQFHxtxAjYRFEYi018DHon/MmNrWxLSRHwwVfg61CpTHknF6VL5ekk PqE6RbO3HAI94bkmZXP2e09oyfgedXdMHdydBH6m0rXYJXls3R3e3IdGGnG8Lln/FcUMtKuQ+AQYUb uRrqf12S29q1WuPsb9oiBrvP1Faqo5PlB2gFK0Z2pF1ZVWDRFqTkX0hcEJacHbxHTcOfEFoBQDwZYR pECQpkqKGrR4Jft3sMcMHYl9fqRBMIrHg3FR66qExZGsErEYgsDkY8HvzCz7fCjkJZfTW1ZQ7XBdn8 spXz/cTL1OnWA9T+8AFCne8QCjrrGsnCQwaxCStrQc3Oh8sBJ9mwDGXxV+kiqyHyy1LShFc99t2Zz4 vljcX0jpG1gk9KBTw5xPUTxLm++BeNjFJfbKP3k4tUYpXT/A4047+XLEXjnmAWCKUX6p/6sqd8C6F7 kTLOE8Mk9+/O7V/BXO4FZiCjuMmSNstND0eEUVgfzhfaFiAqjYhAtf8HI0dw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1590; h=from:subject; bh=ekTvmEitMMQysLPDeBX8i89VfgDCF2rtfdT6Z6IUx4A=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHX5EsqlEW2vfPq2eFmV43wt3rhdXc8JsXzXAcFu/ K19rrryJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR1+RAAKCRCJcvTf3G3AJuxtD/ 9NUGRG0V5AKk7qevvbKJ8t28yDZ6RZ0La8S1XLLAg61jPfECQvj6pVLv5NrDYtQMSbnwdh77FUg+II vLCH66LG8N2MwxQgbX7gtAfkcv2VV1dChGUbDODhzCKYU1ggZbOz55qV09DiWOCHE04y5LSlABcay2 1Di10cEmBP3LyrcM45UIOvl3fbc5iewqMqz/g2BZSmbGC0jJG1QjOvQezGZvid6TmQozA6VJ7oUJTA yQQ3KaPMNrueSUKmqwe/B5/sBXvgGM1hOSVjuZNFgLeL2Eb4qMJnukSGWxaIHY8JYpT1kMog9OOfD4 ngnPNYTprHzGVHq8wPzJOcfaQ9ZBKsSRM9Sn6mpGfrpqF8+WRID4zn/Vdcz2m8k3AEgPaTs3DWOhq5 9VYp9XI5i5dvtDnlooedZt4ux8Bdv6+JD8e8zwBf+w7uONbj0PU4iq2Kax/B1F8tDOvHyflWvwlQxb nd5XW7tez+VJqv0r+Vi5cyZ9Z4txtiC3cepvO5YiFD/vsyFKB59HnScAAvwClZTYHb+u8xWLrElSDk t8qKonk8l3+uGZueDC8sHGMVtV+lqxYbD10EMx46FGmrtbEBZT/shTf8vQllIDghYvHfEzL9ymZtxG jGGWnPlILGujzSofOTeKoJvJHLxS+LelzhTaK2IdytAHBhi4QsOwxZZNtx8g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In order to have more readable and regular declarations, move __must_check
-to the line above the main function declaration and add all the missing
-parameter names.
+As already done in GrapheneOS, add the __alloc_size attribute for
+appropriate percpu allocator interfaces, to provide additional hinting
+for better bounds checking, assisting CONFIG_FORTIFY_SOURCE and other
+compiler optimizations.
 
-Suggested-by: Joe Perches <joe@perches.com>
+Co-developed-by: Daniel Micay <danielmicay@gmail.com>
+Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
 Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: linux-mm@kvack.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/slab.h | 68 +++++++++++++++++++++++---------------------
- 1 file changed, 35 insertions(+), 33 deletions(-)
+ include/linux/percpu.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index c0d46b6fa12a..10fd0a8c816a 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -152,8 +152,8 @@ struct kmem_cache *kmem_cache_create_usercopy(const char *name,
- 			slab_flags_t flags,
- 			unsigned int useroffset, unsigned int usersize,
- 			void (*ctor)(void *));
--void kmem_cache_destroy(struct kmem_cache *);
--int kmem_cache_shrink(struct kmem_cache *);
-+void kmem_cache_destroy(struct kmem_cache *s);
-+int kmem_cache_shrink(struct kmem_cache *s);
- 
- /*
-  * Please use this macro to create slab caches. Simply specify the
-@@ -181,11 +181,12 @@ int kmem_cache_shrink(struct kmem_cache *);
- /*
-  * Common kmalloc functions provided by all allocators
-  */
--void * __must_check krealloc(const void *, size_t, gfp_t);
--void kfree(const void *);
--void kfree_sensitive(const void *);
--size_t __ksize(const void *);
--size_t ksize(const void *);
-+__must_check
-+void *krealloc(const void *objp, size_t new_size, gfp_t flags);
-+void kfree(const void *objp);
-+void kfree_sensitive(const void *objp);
-+size_t __ksize(const void *objp);
-+size_t ksize(const void *objp);
- #ifdef CONFIG_PRINTK
- bool kmem_valid_obj(void *object);
- void kmem_dump_obj(void *object);
-@@ -426,8 +427,8 @@ static __always_inline unsigned int __kmalloc_index(size_t size,
- #endif /* !CONFIG_SLOB */
- 
- void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __malloc;
--void *kmem_cache_alloc(struct kmem_cache *, gfp_t flags) __assume_slab_alignment __malloc;
--void kmem_cache_free(struct kmem_cache *, void *);
-+void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_kmalloc_alignment __malloc;
-+void kmem_cache_free(struct kmem_cache *s, void *objp);
- 
- /*
-  * Bulk allocation and freeing operations. These are accelerated in an
-@@ -436,8 +437,8 @@ void kmem_cache_free(struct kmem_cache *, void *);
-  *
-  * Note that interrupts must be enabled when calling these functions.
-  */
--void kmem_cache_free_bulk(struct kmem_cache *, size_t, void **);
--int kmem_cache_alloc_bulk(struct kmem_cache *, gfp_t, size_t, void **);
-+void kmem_cache_free_bulk(struct kmem_cache *orig_s, size_t size, void **p);
-+int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size, void **p);
- 
- /*
-  * Caller must not use kfree_bulk() on memory not originally allocated
-@@ -449,8 +450,9 @@ static __always_inline void kfree_bulk(size_t size, void **p)
- }
- 
- #ifdef CONFIG_NUMA
--void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_kmalloc_alignment __malloc;
--void *kmem_cache_alloc_node(struct kmem_cache *, gfp_t flags, int node) __assume_slab_alignment __malloc;
-+void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_slab_alignment __malloc;
-+void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t flags, int node)
-+			    __assume_slab_alignment __malloc;
- #else
- static __always_inline void *__kmalloc_node(size_t size, gfp_t flags, int node)
- {
-@@ -464,17 +466,15 @@ static __always_inline void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t f
+diff --git a/include/linux/percpu.h b/include/linux/percpu.h
+index 5e76af742c80..119f41815b32 100644
+--- a/include/linux/percpu.h
++++ b/include/linux/percpu.h
+@@ -123,6 +123,7 @@ extern int __init pcpu_page_first_chunk(size_t reserved_size,
+ 				pcpu_fc_populate_pte_fn_t populate_pte_fn);
  #endif
  
- #ifdef CONFIG_TRACING
--extern void *kmem_cache_alloc_trace(struct kmem_cache *, gfp_t, size_t) __assume_slab_alignment __malloc;
-+extern void *kmem_cache_alloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
-+				    __assume_slab_alignment __malloc;
++__alloc_size(1)
+ extern void __percpu *__alloc_reserved_percpu(size_t size, size_t align);
+ extern bool __is_kernel_percpu_address(unsigned long addr, unsigned long *can_addr);
+ extern bool is_kernel_percpu_address(unsigned long addr);
+@@ -131,7 +132,9 @@ extern bool is_kernel_percpu_address(unsigned long addr);
+ extern void __init setup_per_cpu_areas(void);
+ #endif
  
- #ifdef CONFIG_NUMA
--extern void *kmem_cache_alloc_node_trace(struct kmem_cache *s,
--					   gfp_t gfpflags,
--					   int node, size_t size) __assume_slab_alignment __malloc;
-+extern void *kmem_cache_alloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
-+					 int node, size_t size) __assume_slab_alignment __malloc;
- #else
--static __always_inline void *
--kmem_cache_alloc_node_trace(struct kmem_cache *s,
--			      gfp_t gfpflags,
--			      int node, size_t size)
-+static __always_inline void *kmem_cache_alloc_node_trace(struct kmem_cache *s,
-+					gfp_t gfpflags, int node, size_t size)
- {
- 	return kmem_cache_alloc_trace(s, gfpflags, size);
- }
-@@ -490,10 +490,8 @@ static __always_inline void *kmem_cache_alloc_trace(struct kmem_cache *s,
- 	return ret;
- }
- 
--static __always_inline void *
--kmem_cache_alloc_node_trace(struct kmem_cache *s,
--			      gfp_t gfpflags,
--			      int node, size_t size)
-+static __always_inline void *kmem_cache_alloc_node_trace(struct kmem_cache *s,
-+					gfp_t gfpflags, int node, size_t size)
- {
- 	void *ret = kmem_cache_alloc_node(s, gfpflags, node);
- 
-@@ -502,13 +500,15 @@ kmem_cache_alloc_node_trace(struct kmem_cache *s,
- }
- #endif /* CONFIG_TRACING */
- 
--extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order) __assume_page_alignment __malloc;
-+extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
-+			   __assume_page_alignment __malloc;
- 
- #ifdef CONFIG_TRACING
--extern void *kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order) __assume_page_alignment __malloc;
-+extern void *kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order)
-+				 __assume_page_alignment __malloc;
- #else
--static __always_inline void *
--kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order)
-+static __always_inline void *kmalloc_order_trace(size_t size, gfp_t flags,
-+						 unsigned int order)
- {
- 	return kmalloc_order(size, flags, order);
- }
-@@ -638,8 +638,9 @@ static inline void *kmalloc_array(size_t n, size_t size, gfp_t flags)
-  * @new_size: new size of a single member of the array
-  * @flags: the type of memory to allocate (see kmalloc)
-  */
--static __must_check inline void *
--krealloc_array(void *p, size_t new_n, size_t new_size, gfp_t flags)
-+__must_check
-+static inline void *krealloc_array(void *p, size_t new_n, size_t new_size,
-+				   gfp_t flags)
- {
- 	size_t bytes;
- 
-@@ -668,7 +669,7 @@ static inline void *kcalloc(size_t n, size_t size, gfp_t flags)
-  * allocator where we care about the real place the memory allocation
-  * request comes from.
-  */
--extern void *__kmalloc_track_caller(size_t, gfp_t, unsigned long);
-+extern void *__kmalloc_track_caller(size_t size, gfp_t flags, unsigned long caller);
- #define kmalloc_track_caller(size, flags) \
- 	__kmalloc_track_caller(size, flags, _RET_IP_)
- 
-@@ -691,7 +692,8 @@ static inline void *kcalloc_node(size_t n, size_t size, gfp_t flags, int node)
- 
- 
- #ifdef CONFIG_NUMA
--extern void *__kmalloc_node_track_caller(size_t, gfp_t, int, unsigned long);
-+extern void *__kmalloc_node_track_caller(size_t size, gfp_t flags, int node,
-+					 unsigned long caller);
- #define kmalloc_node_track_caller(size, flags, node) \
- 	__kmalloc_node_track_caller(size, flags, node, \
- 			_RET_IP_)
++__alloc_size(1)
+ extern void __percpu *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp);
++__alloc_size(1)
+ extern void __percpu *__alloc_percpu(size_t size, size_t align);
+ extern void free_percpu(void __percpu *__pdata);
+ extern phys_addr_t per_cpu_ptr_to_phys(void *addr);
 -- 
 2.30.2
 
