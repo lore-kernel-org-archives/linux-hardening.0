@@ -2,153 +2,118 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC94C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 05:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6595C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 05:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08D2761076
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 05:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C6361076
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 05:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237618AbhHRFOi (ORCPT
+        id S236730AbhHRFcR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 01:14:38 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:45724 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232380AbhHRFOi (ORCPT
+        Wed, 18 Aug 2021 01:32:17 -0400
+Received: from smtprelay0088.hostedemail.com ([216.40.44.88]:51974 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S236055AbhHRFcP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 01:14:38 -0400
-Received: by mail-lf1-f53.google.com with SMTP id g13so1930651lfj.12;
-        Tue, 17 Aug 2021 22:14:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dThlhLLrplnuLh2UP7jmiTXGduhqKRmat16fPmXeSs4=;
-        b=mJMGN8v2uzWYrKsMoCbN/zimJ+q+km9nqHHf00Nw/i0zZ9aChKgb+MqX/n3hsizlCh
-         2if2pDhs/Aq5iNpxMyp2tIG2oX3bmtdYw27M+OMEGy/A9vt5RCFHxj7REJJxhDptpXID
-         YSHQmMz4BPpeMRx5rx8EYb/NHJ1aaA00IEulfbYkLdcUnLnm2YV10xWLPfg23k19P97Q
-         etwKG5LPsOR43rkYgjRucyuekdBoj/VNTURRNrP1NemTnxhr/kGMVD26x8vE0T5g65Us
-         6XnGeoVxZgZ/6PFG+9aWhYPsBTZiOPIQw0foMuSKnHFftzqAkg7v6PlgJtJ8QI7V+5UA
-         ckbQ==
-X-Gm-Message-State: AOAM532rc/NUUIEtYO8OZUYN8Jq3hY2xJFPs+CGN2FJHTV99apgNUz/Y
-        WqFn0+fz24D7+shASMKCUPw0Sy3eg4hw8HJmHL8=
-X-Google-Smtp-Source: ABdhPJzGqt8rmnrhyLdtbX+v8/EnvPatnAlw9hMVu1/WitSQD341ru1TC1ELyRE65BhkPZnlrfdXY1mSAqt/mVKCk4k=
-X-Received: by 2002:ac2:5d27:: with SMTP id i7mr5022735lfb.488.1629263642539;
- Tue, 17 Aug 2021 22:14:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210818034010.800652-1-keescook@chromium.org>
-In-Reply-To: <20210818034010.800652-1-keescook@chromium.org>
-From:   Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
-Date:   Wed, 18 Aug 2021 14:13:51 +0900
-Message-ID: <CAMZ6RqK4Rn4d-1CZsg9vJiAMHhxN6fgcqukdHpGwXoGTyNVr_Q@mail.gmail.com>
-Subject: Re: [PATCH] can: etas_es58x: Replace 0-element raw_msg array
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
-        linux-can <linux-can@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
+        Wed, 18 Aug 2021 01:32:15 -0400
+Received: from omf17.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 0B102183F79A5;
+        Wed, 18 Aug 2021 05:31:38 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf17.hostedemail.com (Postfix) with ESMTPA id 9403D27DD38;
+        Wed, 18 Aug 2021 05:31:33 +0000 (UTC)
+Message-ID: <f3e56f56c36b32dc76e174886008a2a1ecf3fefa.camel@perches.com>
+Subject: Re: [PATCH 2/5] slab: Add __alloc_size attributes for better bounds
+ checking
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Daniel Micay <danielmicay@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date:   Tue, 17 Aug 2021 22:31:32 -0700
+In-Reply-To: <20210818050841.2226600-3-keescook@chromium.org>
+References: <20210818050841.2226600-1-keescook@chromium.org>
+         <20210818050841.2226600-3-keescook@chromium.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.0-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Stat-Signature: kazeuswp33idfqrb7eqs6yyhwczrkq3u
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 9403D27DD38
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/uEF5/fBpMfVSWUWGASCCc76xkvowtGVk=
+X-HE-Tag: 1629264693-636294
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed. 18 Aug 2021 at 12:40, Kees Cook <keescook@chromium.org> wrote:
-> While raw_msg isn't a fixed size, it does have a maximum size. Adjust the
-> struct to represent this and avoid the following warning when building
-> with -Wzero-length-bounds:
->
-> drivers/net/can/usb/etas_es58x/es58x_fd.c: In function 'es58x_fd_tx_can_msg':
-> drivers/net/can/usb/etas_es58x/es58x_fd.c:360:35: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[]'} [-Wzero-length-bounds]
->   360 |  tx_can_msg = (typeof(tx_can_msg))&es58x_fd_urb_cmd->raw_msg[msg_len];
->       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from drivers/net/can/usb/etas_es58x/es58x_core.h:22,
->                  from drivers/net/can/usb/etas_es58x/es58x_fd.c:17:
-> drivers/net/can/usb/etas_es58x/es58x_fd.h:231:6: note: while referencing 'raw_msg'
->   231 |   u8 raw_msg[0];
->       |      ^~~~~~~
->
-> Cc: Wolfgang Grandegger <wg@grandegger.com>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>
-> Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> Cc: linux-can@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/net/can/usb/etas_es58x/es581_4.h  | 2 +-
->  drivers/net/can/usb/etas_es58x/es58x_fd.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/can/usb/etas_es58x/es581_4.h b/drivers/net/can/usb/etas_es58x/es581_4.h
-> index 4bc60a6df697..af38c4938859 100644
-> --- a/drivers/net/can/usb/etas_es58x/es581_4.h
-> +++ b/drivers/net/can/usb/etas_es58x/es581_4.h
-> @@ -192,7 +192,7 @@ struct es581_4_urb_cmd {
->                 struct es581_4_rx_cmd_ret rx_cmd_ret;
->                 __le64 timestamp;
->                 u8 rx_cmd_ret_u8;
-> -               u8 raw_msg[0];
-> +               u8 raw_msg[USHRT_MAX];
->         } __packed;
->
->         __le16 reserved_for_crc16_do_not_use;
-> diff --git a/drivers/net/can/usb/etas_es58x/es58x_fd.h b/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> index ee18a87e40c0..e0319b8358ef 100644
-> --- a/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> +++ b/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> @@ -228,7 +228,7 @@ struct es58x_fd_urb_cmd {
->                 struct es58x_fd_tx_ack_msg tx_ack_msg;
->                 __le64 timestamp;
->                 __le32 rx_cmd_ret_le32;
-> -               u8 raw_msg[0];
-> +               u8 raw_msg[USHRT_MAX];
->         } __packed;
->
->         __le16 reserved_for_crc16_do_not_use;
-> --
-> 2.30.2
+On Tue, 2021-08-17 at 22:08 -0700, Kees Cook wrote:
+> As already done in GrapheneOS, add the __alloc_size attribute for
+> regular kmalloc interfaces, to provide additional hinting for better
+> bounds checking, assisting CONFIG_FORTIFY_SOURCE and other compiler
+> optimizations.
+[]
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+[]
+> @@ -181,7 +181,7 @@ int kmem_cache_shrink(struct kmem_cache *);
+>  /*
+>   * Common kmalloc functions provided by all allocators
+>   */
+> -void * __must_check krealloc(const void *, size_t, gfp_t);
+> +void * __must_check krealloc(const void *, size_t, gfp_t) __alloc_size(2);
 
-raw_msg is part of a union so its maximum size is implicitly the
-biggest size of the other member of that union:
+I suggest the __alloc_size attribute be placed at the beginning of the
+function declaration to be more similar to the common __printf attribute
+location uses.
 
-| struct es58x_fd_urb_cmd {
-|     __le16 SOF;
-|    u8 cmd_type;
-|    u8 cmd_id;
-|    u8 channel_idx;
-|    __le16 msg_len;
-|
-|    union {
-|        struct es58x_fd_tx_conf_msg tx_conf_msg;
-|        u8 tx_can_msg_buf[ES58X_FD_TX_BULK_MAX * ES58X_FD_CANFD_TX_LEN];
-|        u8 rx_can_msg_buf[ES58X_FD_RX_BULK_MAX * ES58X_FD_CANFD_RX_LEN];
-|        struct es58x_fd_echo_msg echo_msg[ES58X_FD_ECHO_BULK_MAX];
-|        struct es58x_fd_rx_event_msg rx_event_msg;
-|        struct es58x_fd_tx_ack_msg tx_ack_msg;
-|        __le64 timestamp;
-|        __le32 rx_cmd_ret_le32;
-|        u8 raw_msg[0];
-|    } __packed;
-|
-|    __le16 reserved_for_crc16_do_not_use;
-| } __packed;
+__alloc_size(2)
+void * __must_check krealloc(const void *, size_t, gfp_t);
 
-ram_msg can then be used to manipulate the other fields at the byte level.
-I am sorry but I fail to understand why this is an issue.
+I really prefer the __must_check to be with the other attribute and that
+function declarations have argument names too like:
 
-Also, the proposed fix drastically increases the size of the structure.
+__alloc_size(2) __must_check
+void *krealloc(const void *ptr, size_t size, gfp_t gfp);
+
+but there are a _lot_ of placement of __must_check after the return type
+
+Lastly __alloc_size should probably be added to checkpatch
+
+Maybe:
+---
+ scripts/checkpatch.pl | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 161ce7fe5d1e5..1a166b5cf3447 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -489,7 +489,8 @@ our $Attribute	= qr{
+ 			____cacheline_aligned|
+ 			____cacheline_aligned_in_smp|
+ 			____cacheline_internodealigned_in_smp|
+-			__weak
++			__weak|
++			__alloc_size\s*\(\s*\d+\s*(?:,\s*d+\s*){0,5}\)
+ 		  }x;
+ our $Modifier;
+ our $Inline	= qr{inline|__always_inline|noinline|__inline|__inline__};
 
 
-Yours sincerely,
-Vincent
