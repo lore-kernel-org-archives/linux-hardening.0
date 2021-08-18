@@ -2,134 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE10C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A61C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 22:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00A21610FD
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEE561103
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 22:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234261AbhHRVvw (ORCPT
+        id S234485AbhHRWLw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 17:51:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44856 "EHLO mail.kernel.org"
+        Wed, 18 Aug 2021 18:11:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234422AbhHRVvw (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 17:51:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id ED6F1600D4;
-        Wed, 18 Aug 2021 21:51:13 +0000 (UTC)
+        id S234362AbhHRWLt (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 18 Aug 2021 18:11:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A61F2610D2;
+        Wed, 18 Aug 2021 22:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629323475;
-        bh=VJvodRz2zx/X85MkngkOTb8/Lf3wBVCvk02sPd1R1SY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JINAHL7yfDUBJP7yKVw6AsvrGRAOFK3v6IE5GMvApip5EKO730SKJXSdpc/JHKY9A
-         d+ZI45WVb2lIJMssuCjnRN+d7bPzCSugXB9jMTMPOgYWcKmsjTtiru2SMlobPmmOlX
-         yfXIdeb4xjMDKG39s5JlvUyCfPs8QcLJdTDy/4shHIGsKWBOd1L5y3pSRLrRSW5l8o
-         Y4wG9xtXpPJU8Uib9oVh9JYdfreOlu9iF9O16tJiGn166n1/u0sYmsbYhGYhNotXT1
-         S33kXTkLcUNEOxPU89O7E2Gq7iGrF5Qn7FRPiWv0xTw/cw1P0WA0nZ07xsunPwF9IN
-         3QFRzEUuvymxQ==
-Subject: Re: [PATCH v2 1/7] Compiler Attributes: Add __alloc_size() for better
- bounds checking
-To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com, Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>, linux-mm@kvack.org,
-        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210818214021.2476230-1-keescook@chromium.org>
- <20210818214021.2476230-2-keescook@chromium.org>
-From:   Nathan Chancellor <nathan@kernel.org>
-Message-ID: <fd4e3b0b-a052-58a7-c816-f055e8404165@kernel.org>
-Date:   Wed, 18 Aug 2021 14:51:13 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        s=k20201202; t=1629324674;
+        bh=5o0UqbvakauILVn4+9hHpTa5fsfopsPUcCG31EYkD2o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cmQsFyNWBn9CiXT/g6KTF8i37CvcvN3+XbdWjGJZTnV6I+n6p6ykj/gk0cbLT9Tu8
+         EeRTiQXNsC8vgmCSQKfVoJSo6qXjURKMlBVk2k9F93FTnKQ1mc3hEWPopK0ZXG20sr
+         bGZ6bUfJ2tbsvfCcZZqtAioJingRYXjFQQpuJDiDzBLuBkTj499lfTwrzRLK4oPY1+
+         7zE+K/prm/FdAJ1v4mPyYvC4+mn0TVx+NtqoUrL5X/wrN0WqRJcpduU663tq5xquVR
+         SkK2KZf4IG3zF/tnJIYOiNz7NWbpa/XwCm7RUAY0d5fFTe42c6iQB4g9zu882QXV/K
+         YTVRJEDgrWmxA==
+Date:   Wed, 18 Aug 2021 17:14:18 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] staging: r8188eu: Fix fall-through warnings for Clang
+Message-ID: <20210818221418.GA311735@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20210818214021.2476230-2-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 8/18/2021 2:40 PM, Kees Cook wrote:
-> GCC and Clang can use the "alloc_size" attribute to better inform the
-> results of __builtin_object_size() (for compile-time constant values).
-> Clang can additionally use alloc_size to inform the results of
-> __builtin_dynamic_object_size() (for run-time values).
-> 
-> Because GCC sees the frequent use of struct_size() as an allocator size
-> argument, and notices it can return SIZE_MAX (the overflow indication),
-> it complains about these call sites may overflow (since SIZE_MAX is
-> greater than the default -Walloc-size-larger-than=PTRDIFF_MAX). This
-> isn't helpful since we already know a SIZE_MAX will be caught at run-time
-> (this was an intentional design). Instead, just disable this check as
-> it is both a false positive and redundant. (Clang does not have this
-> warning option.)
-> 
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: clang-built-linux@googlegroups.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Fix the following fallthrough warnings:
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+drivers/staging/r8188eu/core/rtw_mlme_ext.c:1498:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+drivers/staging/r8188eu/core/rtw_wlan_util.c:1113:4: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+drivers/staging/r8188eu/core/rtw_wlan_util.c:1147:4: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+drivers/staging/r8188eu/core/rtw_wlan_util.c:1405:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
 
-> ---
->   Makefile                            | 6 +++++-
->   include/linux/compiler_attributes.h | 6 ++++++
->   2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 72f9e2b0202c..34cffcdfd5dc 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1078,9 +1078,13 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
->   # Another good warning that we'll want to enable eventually
->   KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
->   
-> -# Enabled with W=2, disabled by default as noisy
->   ifdef CONFIG_CC_IS_GCC
-> +# Enabled with W=2, disabled by default as noisy
->   KBUILD_CFLAGS += -Wno-maybe-uninitialized
-> +
-> +# The allocators already balk at large sizes, so silence the compiler
-> +# warnings for bounds checks involving those possible values.
-> +KBUILD_CFLAGS += -Wno-alloc-size-larger-than
->   endif
->   
->   # disable invalid "can't wrap" optimizations for signed / pointers
-> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-> index 67c5667f8042..203b0ac62d15 100644
-> --- a/include/linux/compiler_attributes.h
-> +++ b/include/linux/compiler_attributes.h
-> @@ -54,6 +54,12 @@
->   #define __aligned(x)                    __attribute__((__aligned__(x)))
->   #define __aligned_largest               __attribute__((__aligned__))
->   
-> +/*
-> + *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-alloc_005fsize-function-attribute
-> + * clang: https://clang.llvm.org/docs/AttributeReference.html#alloc-size
-> + */
-> +#define __alloc_size(x, ...)		__attribute__((__alloc_size__(x, ## __VA_ARGS__)))
-> +
->   /*
->    * Note: users of __always_inline currently do not write "inline" themselves,
->    * which seems to be required by gcc to apply the attribute according
-> 
+This helps with the ongoing efforts to globally enable
+-Wimplicit-fallthrough for Clang.
+
+Link: https://github.com/KSPP/linux/issues/115 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/staging/r8188eu/core/rtw_mlme_ext.c  | 1 +
+ drivers/staging/r8188eu/core/rtw_wlan_util.c | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/staging/r8188eu/core/rtw_mlme_ext.c b/drivers/staging/r8188eu/core/rtw_mlme_ext.c
+index 61b239651e1a..590a4572c23f 100644
+--- a/drivers/staging/r8188eu/core/rtw_mlme_ext.c
++++ b/drivers/staging/r8188eu/core/rtw_mlme_ext.c
+@@ -1495,6 +1495,7 @@ unsigned int OnAssocRsp(struct adapter *padapter, struct recv_frame *precv_frame
+ 			break;
+ 		case _ERPINFO_IE_:
+ 			ERP_IE_handler(padapter, pIE);
++			break;
+ 		default:
+ 			break;
+ 		}
+diff --git a/drivers/staging/r8188eu/core/rtw_wlan_util.c b/drivers/staging/r8188eu/core/rtw_wlan_util.c
+index cddacf023fa6..e0ce2b796abe 100644
+--- a/drivers/staging/r8188eu/core/rtw_wlan_util.c
++++ b/drivers/staging/r8188eu/core/rtw_wlan_util.c
+@@ -1110,6 +1110,7 @@ unsigned int is_ap_in_tkip(struct adapter *padapter)
+ 			case _RSN_IE_2_:
+ 				if (!memcmp((pIE->data + 8), RSN_TKIP_CIPHER, 4))
+ 					return true;
++				break;
+ 			default:
+ 				break;
+ 			}
+@@ -1144,6 +1145,7 @@ unsigned int should_forbid_n_rate(struct adapter *padapter)
+ 				if  ((!memcmp((pIE->data + 8), RSN_CIPHER_SUITE_CCMP, 4))  ||
+ 				     (!memcmp((pIE->data + 12), RSN_CIPHER_SUITE_CCMP, 4)))
+ 					return false;
++				break;
+ 			default:
+ 				break;
+ 			}
+@@ -1401,6 +1403,7 @@ unsigned char check_assoc_AP(u8 *pframe, uint len)
+ 			} else {
+ 				break;
+ 			}
++			break;
+ 
+ 		default:
+ 			break;
+-- 
+2.27.0
+
