@@ -2,101 +2,171 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD85C432BE
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B5CC4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B737761058
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D40960F38
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237493AbhHREbO (ORCPT
+        id S229541AbhHREdo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 00:31:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237378AbhHREbN (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 00:31:13 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5872CC0613D9
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 21:30:39 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id n13-20020a17090a4e0d00b0017946980d8dso8040673pjh.5
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 21:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a0LOe5TP/MBO2wNeDbghMruuMrb9dKCIPmMRCLEki+o=;
-        b=eDN/L6WuO3TyTi0qDmqtH9D45GKtl3b2ANmz/AMyOyEVKFYG/4Yuyy0Gh7FDbN5bWe
-         WBNYwmuDJ+LaXEImCFGYICnkvJLJFiWev+0DLPABDkQXJptxMHh8soPhf4P4IpwnQnV4
-         X0ypgxMF7PN/NHuYeGGKeNdYkajLrqlMYFBRU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a0LOe5TP/MBO2wNeDbghMruuMrb9dKCIPmMRCLEki+o=;
-        b=iJDJRBmsWcs6K3I+XzBFwTCP2gDZ1DqAmYvAx5emwaq+gviWXM7NRXP/HKI7ExHLCN
-         oilqVHtp/ifek6vu1btz3vf2fdHGYgiWHi2nUFwKBI51mROyg7pY670k1xs+LVIr4CMB
-         PkskHNGEuyQR/au9L7nsEs0qTns759QYdfvLWmMsC2GdjOAR0jemnkysfoC4dnL/5jcw
-         GzdLGRFM0gnC0NRxOhUKrrak/OeRStIG3Hpz1HXySwky3B1WbspnvCRyq0sDaZgpkp00
-         nRR61rqrQmWMxnz29a3MQGAaXhUEfhs7aCjARhn6Q6/6vYKXdBiRetii9JWJtakxmSma
-         JT1A==
-X-Gm-Message-State: AOAM532Q3kA4p2kpW2eoe7obf36v6FkLh2FOKhc1vcKpLAcE3NujmGkU
-        AGElzUOkvZQ0b0/PvcrYiKcFTQ==
-X-Google-Smtp-Source: ABdhPJwsaTtZYXKiN4quxJ4tzCQha7i8BPchElKOd3en3ff3OSk7pG/77Ovg0c9R34pvM4YsriVjhA==
-X-Received: by 2002:a17:903:4101:b029:12d:6318:6226 with SMTP id r1-20020a1709034101b029012d63186226mr5601156pld.8.1629261038930;
-        Tue, 17 Aug 2021 21:30:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y5sm4998163pgs.27.2021.08.17.21.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 21:30:38 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, Al Cooper <alcooperx@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
+        Wed, 18 Aug 2021 00:33:44 -0400
+Received: from mga03.intel.com ([134.134.136.65]:5812 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229449AbhHREdo (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 18 Aug 2021 00:33:44 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10079"; a="216284583"
+X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
+   d="scan'208";a="216284583"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 21:33:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
+   d="scan'208";a="488288748"
+Received: from pl-dbox.sh.intel.com (HELO pl-dbox) ([10.239.159.39])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Aug 2021 21:33:06 -0700
+Date:   Wed, 18 Aug 2021 12:27:20 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 0/2] USB: EHCI: Add register array bounds to HCS ports
-Date:   Tue, 17 Aug 2021 21:30:32 -0700
-Message-Id: <20210818043035.1308062-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+Subject: Re: [PATCH] kbuild: Enable -Wimplicit-fallthrough for clang 14.0.0+
+Message-ID: <20210818042720.GA1645557@pl-dbox>
+References: <20210817005624.1455428-1-nathan@kernel.org>
+ <80fa539a-b767-76ed-dafa-4d8d1a6b063e@kernel.org>
+ <CAHk-=wgFXOf9OUh3+vmWjhp1PC47RVsUkL0NszBxSWhbGzx4tw@mail.gmail.com>
+ <5c856f36-69a7-e274-f72a-c3aef195adeb@kernel.org>
+ <202108171056.EDCE562@keescook>
+ <3f28b45e-e725-8b75-042a-d34d90c56361@kernel.org>
+ <CAK7LNAQFgYgavTP2ZG9Y16XBVdPuJ98J_Ty1OrQy1GXHq6JjQQ@mail.gmail.com>
+ <71d76c41-7f9b-6d60-ba4f-0cd84596b457@embeddedor.com>
+ <202108171602.159EB2C7EA@keescook>
+ <72ae69b4-6069-ade5-a12b-8ee0435f803a@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=714; h=from:subject; bh=gAZBA/dZMYNBvc+aJ1p1+ilMGGcRI9fgz97TIxYfSJw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHIzp9ZEAsN6oHOIuutYwg2OQxH7kmBw4WprGR96W TR5ELHSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyM6QAKCRCJcvTf3G3AJlWDD/ 0ZnrXjglcHMcCrFnazmWm3XRbajDPcRWtyCYemldv5kCEDC7Yhxrz8ouoLpM1TIUPfGk9S1kKqNwZU ttqIU9//EVeda2hrcDCV6RuuuOFhdMDU9SRpjwNYbuC46Qr1HoLlhBf5CGEwodNZ2nmCbkzpUXGAU0 ru10H2fLTIYtj3LWG71+bqhbPpu+R6MiTS1mw+G4z6aR+FFBgN3XAJFhML+nIst54zd/ilkhIJMDBN jJPDUXUvlVSiduNap3Wu5oCs/4WcLcj/a6BZ+QaiJTzB0S8NBPdI/RALe6QUscMjda6PCN0HBQ76tD Jjz2ZErujVzW60ugo5EXVsLRNrPE4NfcPS0oIlFjuBsIky9jXTFwEosm16e9u/RI907TYK+5UsEbx/ AGwsZ9aRF6Sd+hdWyaq3o6813KedX4tfhq0JPMVHF16VzNqEDP3MFwDaOkN2AhBPcbknlLvlrZTGCd XIrbW3IVJLYIUp7WKV4HOgXpQKRjWjSDgs4Z5l01G/+67Vk+q3DWZQd1ngBSN9h+YODdiKhXc9CHwT evJo1DkjGAxp9X+MfbeWzt1msdEnQBSulZpce5UN5U7buH+YLftsxHN/x3omJw7sBw+B4eagLsNxOh eBB1nwNxR1MfQn9rezy3pzi8lTunkDWeckdxixa5rmq5rf0TunEMXaJdEttA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72ae69b4-6069-ade5-a12b-8ee0435f803a@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Tue, Aug 17, 2021 at 04:23:41PM -0700, Nathan Chancellor wrote:
+> On 8/17/2021 4:06 PM, Kees Cook wrote:
+> > On Tue, Aug 17, 2021 at 04:33:25PM -0500, Gustavo A. R. Silva wrote:
+> > > 
+> > > 
+> > > On 8/17/21 16:17, Masahiro Yamada wrote:
+> > > > On Wed, Aug 18, 2021 at 3:25 AM Nathan Chancellor <nathan@kernel.org> wrote:
+> > > > > 
+> > > > > On 8/17/2021 11:03 AM, Kees Cook wrote:
+> > > > > > On Mon, Aug 16, 2021 at 09:55:28PM -0700, Nathan Chancellor wrote:
+> > > > > > > If you/Gustavo would prefer, I can upgrade that check to
+> > > > > > > 
+> > > > > > > ifneq ($(call cc-option, -Wunreachable-code-fallthrough),)
+> > > > > > > 
+> > > > > > > I was just trying to save a call to the compiler, as that is more expensive
+> > > > > > > than a shell test call.
+> > > > > > 
+> > > > > > I prefer the option test -- this means no changes are needed on the
+> > > > > > kernel build side if it ever finds itself backported to earlier versions
+> > > > > > (and it handles the current case of "14" not meaning "absolute latest").
+> > > > > > 
+> > > > > > More specifically, I think you want this (untested):
+> > > > > 
+> > > > > That should work but since -Wunreachable-code-fallthrough is off by
+> > > > > default, I did not really see a reason to include it in KBUILD_CFLAGS. I
+> > > > > do not have a strong opinion though, your version is smaller than mine
+> > > > > is so we can just go with that. I'll defer to Gustavo on it since he has
+> > > > > put in all of the work cleaning up the warnings.
+> > > > 
+> > > > 
+> > > > 
+> > > > https://github.com/llvm/llvm-project/commit/9ed4a94d6451046a51ef393cd62f00710820a7e8
+> > > > 
+> > > >     did two things:
+> > > > 
+> > > >   (1) Change the -Wimplicit-fallthrough behavior so that it fits
+> > > >        to our use in the kernel
+> > > > 
+> > > >   (2) Add a new option -Wunreachable-code-fallthrough
+> > > >        that works like the previous -Wimplicit-fallthrough of
+> > > >        Clang <= 13.0.0
+> > > > 
+> > > > 
+> > > > They are separate things.
+> > > > 
+> > > > Checking the presence of -Wunreachable-code-fallthrough
+> > > > does not make sense since we are only interested in (1) here.
+> > > > 
+> > > > So, checking the Clang version is sensible and matches
+> > > > the explanation in the comment block.
+> > 
+> > I thought one of the problems (which is quickly draining away) that
+> > needed to be solved here is that some Clang trunk builds (that report
+> > as version 14) don't yet have support for -Wunreachable-code-fallthrough
+> > since they aren't new enough.
+> 
+> Philip, how often is the kernel test robot's clang version rebuilt? Would it
+> be possible to bump it to latest ToT or at least
+> 9ed4a94d6451046a51ef393cd62f00710820a7e8 so that we do not get bit by this
+> warning when we go to enable this flag?
+Got it, currently we do upgrade in weekly cadence (but it may fall behind sometimes),
+and the one we use now is clang version 14.0.0 (https://github.com/llvm/llvm-project 
+2c6448cdc2f68f8c28fd0bd9404182b81306e6e6)
 
-This is cleaning up some of the remaining things to be able to apply
--Warray-bounds and -Wzero-length-bounds globally. Only after doing my
-own version of the port_status patch did I find Arnd's earlier
-patches, including for the weird Broadcom stuff[1].
+We will ugrade to the head of llvm-project master today.
 
-Anyway, here's what I got. :) No binary differences.
+Thanks
 
--Kees
-
-[1] https://lore.kernel.org/lkml/20200527134320.869042-1-arnd@arndb.de/#t
-
-Kees Cook (2):
-  USB: EHCI: Add register array bounds to HCS ports
-  USB: EHCI: Add alias for Broadcom INSNREG
-
- drivers/usb/host/ehci-brcm.c | 11 +++++------
- include/linux/usb/ehci_def.h | 38 ++++++++++++++++++++++++------------
- 2 files changed, 31 insertions(+), 18 deletions(-)
-
--- 
-2.30.2
-
+> 
+> I do not know of any other CI aside from ours that is testing with tip of
+> tree clang and ours should already have a clang that includes my patch since
+> it comes from apt.llvm.org.
+> 
+> > > > # Warn about unmarked fall-throughs in switch statement.
+> > > > # Clang prior to 14.0.0 warned on unreachable fallthroughs with
+> > > > # -Wimplicit-fallthrough, which is unacceptable due to IS_ENABLED().
+> > > > # https://bugs.llvm.org/show_bug.cgi?id=51094
+> > > > ifeq ($(firstword $(sort $(CONFIG_CLANG_VERSION) 140000)),140000)
+> > > > KBUILD_CFLAGS += -Wimplicit-fallthrough
+> > > > endif
+> 
+> Very clever and nifty trick! I have verified that it works for clang 13 and
+> 14 along with a theoretical clang 15. Gustavo, feel free to stick a
+> 
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
+> 
+> if you so desire.
+> 
+> > > > 
+> > > > The $(sort ...) is alphabetical sort, not numeric sort.
+> > > > It works for us because the minimum Clang version is 10.0.1
+> > > > (that is CONFIG_CLANG_VERSION is always 6-digit)
+> > > > 
+> > > > It will break when Clang version 100.0.0 is released.
+> > > > 
+> > > > But, before that, we will raise the minimum supported clang version,
+> > > > and this conditional will go away.
+> > 
+> > If a version test is preferred, cool; this is a nice trick. :)
+> > 
+> > > I like this. :)
+> > > 
+> > > I'm going to make the 0-day robot test it in my tree, first.
+> > 
+> > Sounds good to me!
+> > 
