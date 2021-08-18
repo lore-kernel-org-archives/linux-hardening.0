@@ -2,223 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19D7C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 07:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F68C4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 08:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA5A760E78
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 07:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4A56102A
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 08:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239379AbhHRH4I (ORCPT
+        id S239506AbhHRIHj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 03:56:08 -0400
-Received: from mail-lf1-f46.google.com ([209.85.167.46]:33508 "EHLO
-        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239275AbhHRH4I (ORCPT
+        Wed, 18 Aug 2021 04:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239328AbhHRIHi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 03:56:08 -0400
-Received: by mail-lf1-f46.google.com with SMTP id p38so2894758lfa.0;
-        Wed, 18 Aug 2021 00:55:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OKNqcjyMKvezCUeqQ9JLkZ4cJ3Qp1tm5Mjp0xQPfVdk=;
-        b=KL93TLEfVVWKQlk9QF5xuI3dfpCI8RPbYAw0WT8QHMc7FcyQENZutcXYw7kuq1EH4Z
-         vcyVg7ZRehOhMA1W7SusE5Trf4TSXxrE2gtEij0mGVbVGz9CwsUhk+Ge5WZtfVq10yHB
-         kZAha8RNscVFV8aZa8m+obW9FYmp1M9kVmdnXgVqrD7QiEM0zdeD41v+yD+d0mcSMOw1
-         F8cORnoxfY6R3zppmB2yv39hNvbZmEg9pVvfn67HYodqzuYaGMhKj6ln79mvMPretcuT
-         PfWNgZPOeU40z6hqrfEr+y62Bb3PeEmVsg0VN22dWnrvv7I3RUODPF7ZTxQcQs7NxXmA
-         aLLw==
-X-Gm-Message-State: AOAM533vwkQcuayi3Yci5yNHmL+2eGfPXLPsBx0HccC9VjEgtbVtAOBI
-        nA5CIEn8fi3HcPwEpAOl6YcQtvg3EtgeuD3o0Yc=
-X-Google-Smtp-Source: ABdhPJzvrTUEsuu+UliVD0ZQ+G9FKD87vbsYb/+XxmogarBDMIyGh6vgVKWqgJPt1W2rNzsulcpbB/8ovtLoJb5k9UY=
-X-Received: by 2002:ac2:5ec7:: with SMTP id d7mr5435897lfq.234.1629273332108;
- Wed, 18 Aug 2021 00:55:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210818034010.800652-1-keescook@chromium.org>
- <CAMZ6RqK4Rn4d-1CZsg9vJiAMHhxN6fgcqukdHpGwXoGTyNVr_Q@mail.gmail.com> <202108172320.1540EC10C@keescook>
-In-Reply-To: <202108172320.1540EC10C@keescook>
-From:   Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
-Date:   Wed, 18 Aug 2021 16:55:20 +0900
-Message-ID: <CAMZ6RqLecbytJFQDC35n7YiqBbrB3--POofnXFeH77Zi2xzqWA@mail.gmail.com>
-Subject: Re: [PATCH] can: etas_es58x: Replace 0-element raw_msg array
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        Wed, 18 Aug 2021 04:07:38 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF55C061764;
+        Wed, 18 Aug 2021 01:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+        Resent-Cc:Resent-Message-ID; bh=6OzbSXXafKMA7YgF8k8Tjy+aXQW8YBJ4OWUwbnu8sQw=;
+        t=1629274024; x=1630483624; b=kJyjXbrF4QQPa7P0m74IZPrJWoLrDTxa4wVNaIbHD1uWT4j
+        94WcxbQAV4TBftGHgR329zxhDjZNz7es6pyN/wpL5DykoZrLKDy+5V50AnCaJX+RB0rwLYWUMlzhA
+        igPDdKjMIr2nyFrQ/XoBar1CpS8wdVIZOEG3ybj9NN/FCmGOfNXMtAgc+85M3I2EdA+rtCjkjk0jY
+        bgOjGKzxaGuhAJAIqL2SVyK7V0LZy1FtoJm/RkCU3WpNw+IDtKAOWRcO1CbbgT0YU5ML//+xvQCsR
+        zbdz7SZvj2MgHC4iyZ63vwVgx9FT/wPYMeK12sHtb41zcjTDVR5DvWPiHPKT0nZQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1mGGb6-00CcdG-FE; Wed, 18 Aug 2021 10:06:52 +0200
+Message-ID: <8b48dac4c40127366e91855306d24e07eb0b81d9.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 44/63] mac80211: Use memset_after() to clear tx status
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
-        linux-can <linux-can@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
+        linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
+Date:   Wed, 18 Aug 2021 10:06:51 +0200
+In-Reply-To: <11db2cdc5316b51f3fa2f34e813a458e455c763d.camel@sipsolutions.net>
+References: <20210818060533.3569517-1-keescook@chromium.org>
+         <20210818060533.3569517-45-keescook@chromium.org>
+         <11db2cdc5316b51f3fa2f34e813a458e455c763d.camel@sipsolutions.net>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed. 18 Aug 2021 at 15:48, Kees Cook <keescook@chromium.org> wrote:
-> On Wed, Aug 18, 2021 at 02:13:51PM +0900, Vincent MAILHOL wrote:
-> > On Wed. 18 Aug 2021 at 12:40, Kees Cook <keescook@chromium.org> wrote:
-> > > While raw_msg isn't a fixed size, it does have a maximum size. Adjust the
-> > > struct to represent this and avoid the following warning when building
-> > > with -Wzero-length-bounds:
-> > >
-> > > drivers/net/can/usb/etas_es58x/es58x_fd.c: In function 'es58x_fd_tx_can_msg':
-> > > drivers/net/can/usb/etas_es58x/es58x_fd.c:360:35: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[]'} [-Wzero-length-bounds]
-> > >   360 |  tx_can_msg = (typeof(tx_can_msg))&es58x_fd_urb_cmd->raw_msg[msg_len];
-> > >       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > In file included from drivers/net/can/usb/etas_es58x/es58x_core.h:22,
-> > >                  from drivers/net/can/usb/etas_es58x/es58x_fd.c:17:
-> > > drivers/net/can/usb/etas_es58x/es58x_fd.h:231:6: note: while referencing 'raw_msg'
-> > >   231 |   u8 raw_msg[0];
-> > >       |      ^~~~~~~
-> > >
-> > > Cc: Wolfgang Grandegger <wg@grandegger.com>
-> > > Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> > > Cc: "David S. Miller" <davem@davemloft.net>
-> > > Cc: Jakub Kicinski <kuba@kernel.org>
-> > > Cc: Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>
-> > > Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> > > Cc: linux-can@vger.kernel.org
-> > > Cc: netdev@vger.kernel.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  drivers/net/can/usb/etas_es58x/es581_4.h  | 2 +-
-> > >  drivers/net/can/usb/etas_es58x/es58x_fd.h | 2 +-
-> > >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/net/can/usb/etas_es58x/es581_4.h b/drivers/net/can/usb/etas_es58x/es581_4.h
-> > > index 4bc60a6df697..af38c4938859 100644
-> > > --- a/drivers/net/can/usb/etas_es58x/es581_4.h
-> > > +++ b/drivers/net/can/usb/etas_es58x/es581_4.h
-> > > @@ -192,7 +192,7 @@ struct es581_4_urb_cmd {
-> > >                 struct es581_4_rx_cmd_ret rx_cmd_ret;
-> > >                 __le64 timestamp;
-> > >                 u8 rx_cmd_ret_u8;
-> > > -               u8 raw_msg[0];
-> > > +               u8 raw_msg[USHRT_MAX];
-> > >         } __packed;
-> > >
-> > >         __le16 reserved_for_crc16_do_not_use;
-> > > diff --git a/drivers/net/can/usb/etas_es58x/es58x_fd.h b/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> > > index ee18a87e40c0..e0319b8358ef 100644
-> > > --- a/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> > > +++ b/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> > > @@ -228,7 +228,7 @@ struct es58x_fd_urb_cmd {
-> > >                 struct es58x_fd_tx_ack_msg tx_ack_msg;
-> > >                 __le64 timestamp;
-> > >                 __le32 rx_cmd_ret_le32;
-> > > -               u8 raw_msg[0];
-> > > +               u8 raw_msg[USHRT_MAX];
-> > >         } __packed;
-> > >
-> > >         __le16 reserved_for_crc16_do_not_use;
-> > > --
-> > > 2.30.2
-> >
-> > raw_msg is part of a union so its maximum size is implicitly the
-> > biggest size of the other member of that union:
->
-> Yup, understood. See below...
->
-> >
-> > | struct es58x_fd_urb_cmd {
-> > |     __le16 SOF;
-> > |    u8 cmd_type;
-> > |    u8 cmd_id;
-> > |    u8 channel_idx;
-> > |    __le16 msg_len;
-> > |
-> > |    union {
-> > |        struct es58x_fd_tx_conf_msg tx_conf_msg;
-> > |        u8 tx_can_msg_buf[ES58X_FD_TX_BULK_MAX * ES58X_FD_CANFD_TX_LEN];
-> > |        u8 rx_can_msg_buf[ES58X_FD_RX_BULK_MAX * ES58X_FD_CANFD_RX_LEN];
-> > |        struct es58x_fd_echo_msg echo_msg[ES58X_FD_ECHO_BULK_MAX];
-> > |        struct es58x_fd_rx_event_msg rx_event_msg;
-> > |        struct es58x_fd_tx_ack_msg tx_ack_msg;
-> > |        __le64 timestamp;
-> > |        __le32 rx_cmd_ret_le32;
-> > |        u8 raw_msg[0];
-> > |    } __packed;
-> > |
-> > |    __le16 reserved_for_crc16_do_not_use;
-> > | } __packed;
-> >
-> > ram_msg can then be used to manipulate the other fields at the byte level.
-> > I am sorry but I fail to understand why this is an issue.
->
-> The issue is with using a 0-element array (these are being removed from
-> the kernel[1] so we can add -Warray-bounds). Normally in this situation I
-> would replace the 0-element array with a flexible array, but this
-> case is unusual in several ways:
->
-> - There is a trailing struct member (reserved_for_crc16_do_not_use),
->   which is never accessed (good), and documented as "please never access
->   this".
+On Wed, 2021-08-18 at 09:08 +0200, Johannes Berg wrote:
+> On Tue, 2021-08-17 at 23:05 -0700, Kees Cook wrote:
+> > 
+> > @@ -275,12 +275,11 @@ static void carl9170_tx_release(struct kref *ref)
+> >  	if (WARN_ON_ONCE(!ar))
+> >  		return;
+> >  
+> > 
+> > 
+> > 
+> > -	BUILD_BUG_ON(
+> > -	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
+> > -
+> > -	memset(&txinfo->status.ack_signal, 0,
+> > -	       sizeof(struct ieee80211_tx_info) -
+> > -	       offsetof(struct ieee80211_tx_info, status.ack_signal));
+> > +	/*
+> > +	 * Should this call ieee80211_tx_info_clear_status() instead of clearing
+> > +	 * manually? txinfo->status.rates do not seem to be used here.
+> > +	 */
+> 
+> Since you insist, I went digging :)
+> 
+> It should not, carl9170_tx_fill_rateinfo() has filled the rate
+> information before we get to this point.
 
-Yes. And FYI, this field is here so that
-| sizeof(struct es58x_fd_urb_cmd)
-returns the correct maximum size.
+Otherwise, looks fine, FWIW.
 
-And, of course, because this structure will be sent to the
-device, there is no possibility to reorder those fields.
+Are you going to apply all of these together somewhere? I (we) can't,
+since memset_after() doesn't exist yet.
 
-> - struct es58x_fd_urb_cmd is statically allocated (it is written into
->   from the URB handler).
->
-> - The message lengths coming from the USB device are stored in a u16,
->   which looked like it was possible to overflow the buffer.
->
-> In taking a closer look, I see that the URB command length is checked,
-> and the in-data length is checked as well, so the overflow concern
-> appears to be addressed.
->
-> > Also, the proposed fix drastically increases the size of the structure.
->
-> Indeed. I will send a v2, now that I see that the overflow concern isn't
-> an issue.
+johannes
 
-Thanks for the explanation. That makes sense.
-
-At the end, the only goal of raw_msg[] is to have a tag pointing
-to the beginning of the union. It would be virtually identical to
-something like:
-|    u8 raw_msg[];
-|    union {
-|        /* ... */
-|    } __packed ;
-
-I had a look at your work and especially at your struct_group() macro.
-Do you think it would make sense to introduce a union_group()?
-
-Result would look like:
-
-|    union_group_attr(urb_msg, __packed, /* raw_msg renamed to urb_msg */
-|        struct es58x_fd_tx_conf_msg tx_conf_msg;
-|        u8 tx_can_msg_buf[ES58X_FD_TX_BULK_MAX * ES58X_FD_CANFD_TX_LEN];
-|        u8 rx_can_msg_buf[ES58X_FD_RX_BULK_MAX * ES58X_FD_CANFD_RX_LEN];
-|        struct es58x_fd_echo_msg echo_msg[ES58X_FD_ECHO_BULK_MAX];
-|        struct es58x_fd_rx_event_msg rx_event_msg;
-|        struct es58x_fd_tx_ack_msg tx_ack_msg;
-|        __le64 timestamp;
-|        __le32 rx_cmd_ret_le32;
-|    );
-
-And I can then use urb_msg in place of the old raw_msg (might
-need a bit of rework here and there but I can take care of it).
-
-This is the most pretty way I can think of to remove this zero length array.
-Keeping the raw_msg[] but with another size seems odd to me.
-
-Or maybe I would be the only one using this feature in the full
-tree? In that case, maybe it would make sense to keep the
-union_group_attr() macro local to the etas_es58x driver?
-
-Yours sincerely,
-Vincent
