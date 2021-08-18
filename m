@@ -2,115 +2,201 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B64C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A7EC4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 684B36102A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE28E61051
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238164AbhHRGnD (ORCPT
+        id S238050AbhHRGtQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:43:03 -0400
-Received: from pegase2.c-s.fr ([93.17.235.10]:57463 "EHLO pegase2.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238034AbhHRGnD (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:43:03 -0400
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-        by localhost (Postfix) with ESMTP id 4GqJH06ckGz9sVX;
-        Wed, 18 Aug 2021 08:42:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id BlboCUcmPLhC; Wed, 18 Aug 2021 08:42:20 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase2.c-s.fr (Postfix) with ESMTP id 4GqJH05SCXz9sVD;
-        Wed, 18 Aug 2021 08:42:20 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9988E8B7D3;
-        Wed, 18 Aug 2021 08:42:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id KISUn5YdRZul; Wed, 18 Aug 2021 08:42:20 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B20628B766;
-        Wed, 18 Aug 2021 08:42:19 +0200 (CEST)
-Subject: Re: [PATCH v2 61/63] powerpc: Split memset() to avoid multi-field
- overflow
-To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wang Wensheng <wangwensheng4@huawei.com>,
-        linux-staging@lists.linux.dev, linux-wireless@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>,
-        linux-block@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kbuild@vger.kernel.org,
+        Wed, 18 Aug 2021 02:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238528AbhHRGtQ (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 18 Aug 2021 02:49:16 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFD3C0613CF
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:48:42 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id i21so1155616pfd.8
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:48:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ydwImPka+33pK3zFh/3ZRhWUJUFUKLKTzYRKuwQUsxw=;
+        b=cGjVLJJdziTcmvJ27JU5rTQ8yCeDMcn5cVnyGLyKhLTIfFt1+UogEWL2TR600L0YNa
+         2ooQ2QARhAFf0vpH9wd2/xNtxYtH/TARe4IIayGOo1ZKruM4m488v+jeFjPTdR1DQCVO
+         +vukV7cOhOLhxKJWKPtV2YOFJB/OfXWuW9pwQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ydwImPka+33pK3zFh/3ZRhWUJUFUKLKTzYRKuwQUsxw=;
+        b=fs85vaqv7C0RNPJOHQpgPErejVFzJZi4BkgjhJdiTKaZgYjMOBK91rnV8Yo2HA8qf7
+         K6B7BCax+7iNhAc4y7j9HaEXAMqItmAH1MU+xPmIl92b8W4VIw8GjtX4qccTpXZ1E5ui
+         fqVTNxYOYIP4thPZT30Czb/lIKWieTEXtGLEk8iRsqZtrIyihCqg9yIx+l14G5YQjUdy
+         e0RjbED1zrihaAi4Ts3n9pHesyDFAj5xr5ymPLOqzJbHxpUBkRzoaEaW+mkwTOuAhpwX
+         gF7Idm5e06WyYf59Wrytzrnzy7WAXDWe6wP+tNEMhDNFKDph3KNfuaA4x3l5wAkIl7GF
+         X62w==
+X-Gm-Message-State: AOAM530hnWwNI9IX7PhSz8R7Zbq0UozOXMhJmLcZCpkDvp0AEYmntgIE
+        e638UzfJKMq5+ANzJz7rkx1Q3A==
+X-Google-Smtp-Source: ABdhPJzRpcjoH3bs6liJdFrWxeTvcoqJK6VQgSUO0sZF2MvCC+Ej5U0n0/HIJjlFa325ZCnA9guB0w==
+X-Received: by 2002:a62:878a:0:b029:3e0:7810:ec36 with SMTP id i132-20020a62878a0000b02903e07810ec36mr7701759pfe.4.1629269321704;
+        Tue, 17 Aug 2021 23:48:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d5sm4039400pju.28.2021.08.17.23.48.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 23:48:41 -0700 (PDT)
+Date:   Tue, 17 Aug 2021 23:48:40 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
+        linux-can <linux-can@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org
-References: <20210818060533.3569517-1-keescook@chromium.org>
- <20210818060533.3569517-62-keescook@chromium.org>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <7630b0bc-4389-6283-d8b9-c532df916d60@csgroup.eu>
-Date:   Wed, 18 Aug 2021 08:42:18 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+Subject: Re: [PATCH] can: etas_es58x: Replace 0-element raw_msg array
+Message-ID: <202108172320.1540EC10C@keescook>
+References: <20210818034010.800652-1-keescook@chromium.org>
+ <CAMZ6RqK4Rn4d-1CZsg9vJiAMHhxN6fgcqukdHpGwXoGTyNVr_Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210818060533.3569517-62-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMZ6RqK4Rn4d-1CZsg9vJiAMHhxN6fgcqukdHpGwXoGTyNVr_Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-Le 18/08/2021 à 08:05, Kees Cook a écrit :
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memset(), avoid intentionally writing across
-> neighboring fields.
+On Wed, Aug 18, 2021 at 02:13:51PM +0900, Vincent MAILHOL wrote:
+> On Wed. 18 Aug 2021 at 12:40, Kees Cook <keescook@chromium.org> wrote:
+> > While raw_msg isn't a fixed size, it does have a maximum size. Adjust the
+> > struct to represent this and avoid the following warning when building
+> > with -Wzero-length-bounds:
+> >
+> > drivers/net/can/usb/etas_es58x/es58x_fd.c: In function 'es58x_fd_tx_can_msg':
+> > drivers/net/can/usb/etas_es58x/es58x_fd.c:360:35: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[]'} [-Wzero-length-bounds]
+> >   360 |  tx_can_msg = (typeof(tx_can_msg))&es58x_fd_urb_cmd->raw_msg[msg_len];
+> >       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > In file included from drivers/net/can/usb/etas_es58x/es58x_core.h:22,
+> >                  from drivers/net/can/usb/etas_es58x/es58x_fd.c:17:
+> > drivers/net/can/usb/etas_es58x/es58x_fd.h:231:6: note: while referencing 'raw_msg'
+> >   231 |   u8 raw_msg[0];
+> >       |      ^~~~~~~
+> >
+> > Cc: Wolfgang Grandegger <wg@grandegger.com>
+> > Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>
+> > Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > Cc: linux-can@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/net/can/usb/etas_es58x/es581_4.h  | 2 +-
+> >  drivers/net/can/usb/etas_es58x/es58x_fd.h | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/net/can/usb/etas_es58x/es581_4.h b/drivers/net/can/usb/etas_es58x/es581_4.h
+> > index 4bc60a6df697..af38c4938859 100644
+> > --- a/drivers/net/can/usb/etas_es58x/es581_4.h
+> > +++ b/drivers/net/can/usb/etas_es58x/es581_4.h
+> > @@ -192,7 +192,7 @@ struct es581_4_urb_cmd {
+> >                 struct es581_4_rx_cmd_ret rx_cmd_ret;
+> >                 __le64 timestamp;
+> >                 u8 rx_cmd_ret_u8;
+> > -               u8 raw_msg[0];
+> > +               u8 raw_msg[USHRT_MAX];
+> >         } __packed;
+> >
+> >         __le16 reserved_for_crc16_do_not_use;
+> > diff --git a/drivers/net/can/usb/etas_es58x/es58x_fd.h b/drivers/net/can/usb/etas_es58x/es58x_fd.h
+> > index ee18a87e40c0..e0319b8358ef 100644
+> > --- a/drivers/net/can/usb/etas_es58x/es58x_fd.h
+> > +++ b/drivers/net/can/usb/etas_es58x/es58x_fd.h
+> > @@ -228,7 +228,7 @@ struct es58x_fd_urb_cmd {
+> >                 struct es58x_fd_tx_ack_msg tx_ack_msg;
+> >                 __le64 timestamp;
+> >                 __le32 rx_cmd_ret_le32;
+> > -               u8 raw_msg[0];
+> > +               u8 raw_msg[USHRT_MAX];
+> >         } __packed;
+> >
+> >         __le16 reserved_for_crc16_do_not_use;
+> > --
+> > 2.30.2
 > 
-> Instead of writing across a field boundary with memset(), move the call
-> to just the array, and an explicit zeroing of the prior field.
-> 
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Qinglang Miao <miaoqinglang@huawei.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Hulk Robot <hulkci@huawei.com>
-> Cc: Wang Wensheng <wangwensheng4@huawei.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-> Link: https://lore.kernel.org/lkml/87czqsnmw9.fsf@mpe.ellerman.id.au
-> ---
->   drivers/macintosh/smu.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/macintosh/smu.c b/drivers/macintosh/smu.c
-> index 94fb63a7b357..59ce431da7ef 100644
-> --- a/drivers/macintosh/smu.c
-> +++ b/drivers/macintosh/smu.c
-> @@ -848,7 +848,8 @@ int smu_queue_i2c(struct smu_i2c_cmd *cmd)
->   	cmd->read = cmd->info.devaddr & 0x01;
->   	switch(cmd->info.type) {
->   	case SMU_I2C_TRANSFER_SIMPLE:
-> -		memset(&cmd->info.sublen, 0, 4);
-> +		cmd->info.sublen = 0;
-> +		memset(&cmd->info.subaddr, 0, 3);
+> raw_msg is part of a union so its maximum size is implicitly the
+> biggest size of the other member of that union:
 
-subaddr[] is a table, should the & be avoided ?
-And while at it, why not use sizeof(subaddr) instead of 3 ?
+Yup, understood. See below...
 
-
->   		break;
->   	case SMU_I2C_TRANSFER_COMBINED:
->   		cmd->info.devaddr &= 0xfe;
 > 
+> | struct es58x_fd_urb_cmd {
+> |     __le16 SOF;
+> |    u8 cmd_type;
+> |    u8 cmd_id;
+> |    u8 channel_idx;
+> |    __le16 msg_len;
+> |
+> |    union {
+> |        struct es58x_fd_tx_conf_msg tx_conf_msg;
+> |        u8 tx_can_msg_buf[ES58X_FD_TX_BULK_MAX * ES58X_FD_CANFD_TX_LEN];
+> |        u8 rx_can_msg_buf[ES58X_FD_RX_BULK_MAX * ES58X_FD_CANFD_RX_LEN];
+> |        struct es58x_fd_echo_msg echo_msg[ES58X_FD_ECHO_BULK_MAX];
+> |        struct es58x_fd_rx_event_msg rx_event_msg;
+> |        struct es58x_fd_tx_ack_msg tx_ack_msg;
+> |        __le64 timestamp;
+> |        __le32 rx_cmd_ret_le32;
+> |        u8 raw_msg[0];
+> |    } __packed;
+> |
+> |    __le16 reserved_for_crc16_do_not_use;
+> | } __packed;
+> 
+> ram_msg can then be used to manipulate the other fields at the byte level.
+> I am sorry but I fail to understand why this is an issue.
+
+The issue is with using a 0-element array (these are being removed from
+the kernel[1] so we can add -Warray-bounds). Normally in this situation I
+would replace the 0-element array with a flexible array, but this
+case is unusual in several ways:
+
+- There is a trailing struct member (reserved_for_crc16_do_not_use),
+  which is never accessed (good), and documented as "please never access
+  this".
+
+- struct es58x_fd_urb_cmd is statically allocated (it is written into
+  from the URB handler).
+
+- The message lengths coming from the USB device are stored in a u16,
+  which looked like it was possible to overflow the buffer.
+
+In taking a closer look, I see that the URB command length is checked,
+and the in-data length is checked as well, so the overflow concern
+appears to be addressed.
+
+> Also, the proposed fix drastically increases the size of the structure.
+
+Indeed. I will send a v2, now that I see that the overflow concern isn't
+an issue.
+
+Thanks!
+
+-Kees
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+
+-- 
+Kees Cook
