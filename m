@@ -8,142 +8,176 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD448C4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A273C432BE
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C270B60EBD
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3236161056
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238224AbhHRGNU (ORCPT
+        id S238641AbhHRGNY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45616 "EHLO
+        Wed, 18 Aug 2021 02:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238421AbhHRGM2 (ORCPT
+        with ESMTP id S238588AbhHRGMi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:12:28 -0400
+        Wed, 18 Aug 2021 02:12:38 -0400
 Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD73CC0698E4
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id k14so1143132pga.13
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE335C07E5E4
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:07 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id c17so1147271pgc.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Bf2aGZjkA9ZdJwTs2unG/S+9qMUhCrqY/7iHdHkH31E=;
-        b=A5I0FSkL7KTi0It4kgEm27RXwjzTjYiZalV5qb+BVbRkycsgZ6clnB+HMIO88/Lahs
-         zUfCqQaTXkbN7vGog/kgYObDuP3sM9ypsYZBTKoYz0zdY2laHeTI6MGbyFuVzp/UhIbz
-         SA33K0vtCtLYBcIuPH619Gf/JvwDe9tUUYn/U=
+        bh=WJrpMRxjlck/EUZE2DWpbaWpfbq9vwWWxHEHR5bnD5E=;
+        b=Y4RaduW1rzoHa2IpujBCd5gie/q9/2hiLeyjeu9ex0Lvtmxof39Ph82c32u/wEVwec
+         BeorvJNM0QtxRwnxngByb5MimEYl+Js8IDKmdRfuXrPFuDqHj3Cmg2kZQWZ0j6OqZuGi
+         4aE9yiwILQW91Q1hmTVcwZmAEbqQUR+FHPZhQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bf2aGZjkA9ZdJwTs2unG/S+9qMUhCrqY/7iHdHkH31E=;
-        b=UhMzv3wGcHHbgPIbqBTblxMHkSrs7e393qEj8mH5PEL3jgcmd/Oby5yxV3qrT/YGGI
-         y4zQPj/GjMdZYhv/D7awPptVFmhIM+31sW6g/UO1jQsSsJcAHNVwlFr+S2fBeufj9EG2
-         zs5Qsft05XZE8AZxjrc14gr/5kN+oxJPheIIcaztawdsDqY0WG1CDSBXmftVAJwhb4t0
-         l2xxUeuv7v4hYhLAsgJICX0wpHrkdiqihnqjyI8G7K6VP5eeGjc3wAYGaeTDJng12zmp
-         2xa1kbDDsSyDcX8gao/NCOruWpjsp4Y1ubUB5sMPJMFln8YkDUKrIJHJwpfbSWjAWxWP
-         hdOg==
-X-Gm-Message-State: AOAM532NcRqJMsXM9cg0+e1RDjlkFvqOoJzfdzEwWATbJg1FybK6K/S3
-        OWX1PLob+ImS+HSrk/LqS/UQ9Q==
-X-Google-Smtp-Source: ABdhPJzIwbxoplLwgyMwAYMY+AYzEbGav9ejSeaA2oSrg/gnLSdaifU6G3gvCszWYv19xo6NLd4rnA==
-X-Received: by 2002:a63:101c:: with SMTP id f28mr7267532pgl.330.1629266766044;
-        Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
+        bh=WJrpMRxjlck/EUZE2DWpbaWpfbq9vwWWxHEHR5bnD5E=;
+        b=lftrsR+hyXZl5jaQD8q6puvaMN6u+FY/bFQKzrFXYRPqs4r1yEj2hDobIw+jBKwvKy
+         IF6gRmWgPr6h5qUWbCn4lo1222zgSdnLwokKN4kJwvURfQwJ8APq2swdf01nfiJO5CO9
+         +jCbfOtCBVsENruEQ+UlktM0xFxMq13EPxkifQTRCMvxkO7nBGtTom1ZHSUUkJyIdIvZ
+         bzpABEWHp8iipmWTcMtOMV8oQvYMKdxdvN9W02QRtiqlk/mjIAYfa/yQFjjd7QXMFEvk
+         vMod289K1QzUCvcY5KmJONIPDsICOgK5Oc1lwIOOx3XvSkI6JFOMbSH+zznJ1cmDGHP+
+         n9xg==
+X-Gm-Message-State: AOAM532K5aoA64MpnOy7VZK9574kDnDEFZHJMJIA4gOgZYwzPJ/B3wVq
+        7K5iG4Iw8N5yzLrl7F/zhJdmwg==
+X-Google-Smtp-Source: ABdhPJw+fxDkXxOl4PBdv0otPn1lIDXevnmHeNda+XtjMx2DvEazLyVTOr/SWrLlENk4ZB/InQEloQ==
+X-Received: by 2002:a62:dbc3:0:b029:3e0:ec4a:6e60 with SMTP id f186-20020a62dbc30000b02903e0ec4a6e60mr7438793pfg.25.1629266767474;
+        Tue, 17 Aug 2021 23:06:07 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c9sm5531358pgq.58.2021.08.17.23.06.01
+        by smtp.gmail.com with ESMTPSA id s5sm5498942pgp.81.2021.08.17.23.06.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 23:06:02 -0700 (PDT)
+        Tue, 17 Aug 2021 23:06:05 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
+        linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 60/63] net/af_iucv: Use struct_group() to zero struct iucv_sock region
-Date:   Tue, 17 Aug 2021 23:05:30 -0700
-Message-Id: <20210818060533.3569517-61-keescook@chromium.org>
+Subject: [PATCH v2 62/63] fortify: Detect struct member overflows in memset() at compile-time
+Date:   Tue, 17 Aug 2021 23:05:32 -0700
+Message-Id: <20210818060533.3569517-63-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2231; h=from:subject; bh=bmKbsRP16CnR5PXdPB4ZiDx9DBCysB2r4z9hIIKiJic=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMrUiy3wzC2Tbpf2LUdDadDtk7FYIB+hFtnsIrW fkTfIlqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKwAKCRCJcvTf3G3AJkYyD/ 9ucWeKdq8Xqqc/QXVsAWFOW9NzYhLInbMDw4OW5CozZyRbnOPk352gq63xaqMFMsclZFLEMQ9TTO33 7OYOFG7yKLJH7xWiqIvXwLztLuZw+JXSioGcmPOGOtg8hAXa8jiQ1KixmMPPGspos7hxqSuEzt31Y0 tNY4L/eDOvurxWrZsBGWm1b1k5PsAc+g8zMvnFzCBDhHj7YU0n+DSqAqBOzdrAc/BDQ6WwCtZWZgHn VVMCXM0qPf/ljXYEYnUK+ZZnl/WfbDvNoDPpsLQ0zZXhIhNtT3BKEfer/GfabdgopxSGXxTV+7JLfW 4zvjCOjHDppWfw99ppMZmvMvDN3k26ttKsLH7cVJ+kxEk9IZohT1lAGOfHEd7n+qAs4B4SrYMGb0uM wnIP+9JGQlViNQCZz8651n9z1vC3LX6PQlO5oS2pjadtH/dqxOhmIw392G3ODhOfboU0ZOnPR3pfTA vv8hjA/ukE5Dt/9T5+e3XaDNef7XzWGuEJy//3iyWc+lV/f+ruPwosN4rWo7gnyIbF2CgCgdasK6ZN PvgpQFRdA0UU/KoP4B9xx0S3rtUne33iTi/VsaHcMSUoisF52ghW2rt/M1apXDnx8RSFOroKKUUTSX 3+F+WfyISvDRWznlKXQ44kQRHNtJUEKNW8cFL9JBRk7SYT4Mh7lRv9p5s4KQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3657; h=from:subject; bh=x4SNp17MkJsMDii5dKL06SU0zDLItyjvjIE8yvAGOLw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMsuEVllcthHvVoZOOtiNzdZSQL+MVxm5lZYC08 cYuVeeiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjLAAKCRCJcvTf3G3AJhFJD/ 0YywcHnMj1c/NexxJTDTdAYqmtmTUD8x82Ns/wjrQAyODC3hv/6fd7/lXy7KLnBf3O7mSQRPo1siWq mi4sD6BTm3hIo3GuFOJ8CTfGgnxxwdN6j/TkfuxlpJSHWlG8CdQJaYNCYJgI7QT0k7mcvIcU0Yiu5/ YaVOOC0zQ85PA//3PbzguuPv50kBbxQ5bQSD5XS5ptljehOSJcCJ66K/cFUtnJoZrfF5m7naOzclM+ YSn8wlMr9aQqL6DEc6etgSVI2n22I9gcsWaObJAPYCut15PH0LnKu3TXUtF2oQy91xDTCZ0kCAuzqt 5poO59eUPNtjb6apuyTyI2sng4UXAVOqnFeKce+zQIoGAdIb5GjE13ffC5AAon3CmAbxRE5FUufUrx zUIYqjgohnwHn6YDtth4aIZB/W2kLG2W2q4TWuZjMxEaw0SVrnd4P2jJSHU8B8d1a6PkAs8epAq0gc D69QvVpSd/j5KuzMZUdDpOKxgIKUXFGXliJiDsu+4vuCdioBLapgoOTvVDBi1LirQl6lP45HoxFQ0b S64cenON/jFuSH9ZmumaJj1QScmPVkoNRRs09YB5f0juMR7C0bopH+EEmaqk++upwBm1nP/e/Dtxew r7vE625A/r6FGg4xIb9flyd3LdIf3HsRkH/Bt6+5XCnDvRxE/u5ev7V+yD8w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memset(), avoid intentionally writing across
-neighboring fields.
+As done for memcpy(), also update memset() to use the same tightened
+compile-time bounds checking under CONFIG_FORTIFY_SOURCE.
 
-Add struct_group() to mark the region of struct iucv_sock that gets
-initialized to zero. Avoid the future warning:
-
-In function 'fortify_memset_chk',
-    inlined from 'iucv_sock_alloc' at net/iucv/af_iucv.c:476:2:
-./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-  199 |    __write_overflow_field(p_size_field, size);
-      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Cc: Julian Wiedmann <jwi@linux.ibm.com>
-Cc: Karsten Graul <kgraul@linux.ibm.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-s390@vger.kernel.org
-Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/net/iucv/af_iucv.h | 10 ++++++----
- net/iucv/af_iucv.c         |  2 +-
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ include/linux/fortify-string.h                | 54 ++++++++++++++++---
+ .../write_overflow_field-memset.c             |  5 ++
+ 2 files changed, 51 insertions(+), 8 deletions(-)
+ create mode 100644 lib/test_fortify/write_overflow_field-memset.c
 
-diff --git a/include/net/iucv/af_iucv.h b/include/net/iucv/af_iucv.h
-index ff06246dbbb9..df85d19fbf84 100644
---- a/include/net/iucv/af_iucv.h
-+++ b/include/net/iucv/af_iucv.h
-@@ -112,10 +112,12 @@ enum iucv_tx_notify {
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 0120d463ba33..7de4673dfe2c 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -198,17 +198,56 @@ __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
+ 	return p;
+ }
  
- struct iucv_sock {
- 	struct sock		sk;
--	char			src_user_id[8];
--	char			src_name[8];
--	char			dst_user_id[8];
--	char			dst_name[8];
-+	struct_group(init,
-+		char		src_user_id[8];
-+		char		src_name[8];
-+		char		dst_user_id[8];
-+		char		dst_name[8];
-+	);
- 	struct list_head	accept_q;
- 	spinlock_t		accept_q_lock;
- 	struct sock		*parent;
-diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-index 18316ee3c692..9446e2771d31 100644
---- a/net/iucv/af_iucv.c
-+++ b/net/iucv/af_iucv.c
-@@ -473,7 +473,7 @@ static struct sock *iucv_sock_alloc(struct socket *sock, int proto, gfp_t prio,
- 	atomic_set(&iucv->msg_recv, 0);
- 	iucv->path = NULL;
- 	iucv->sk_txnotify = afiucv_hs_callback_txnotify;
--	memset(&iucv->src_user_id , 0, 32);
-+	memset(&iucv->init, 0, sizeof(iucv->init));
- 	if (pr_iucv)
- 		iucv->transport = AF_IUCV_TRANS_IUCV;
- 	else
+-__FORTIFY_INLINE void *memset(void *p, int c, __kernel_size_t size)
++__FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
++					 const size_t p_size,
++					 const size_t p_size_field)
+ {
+-	size_t p_size = __builtin_object_size(p, 0);
++	if (__builtin_constant_p(size)) {
++		/*
++		 * Length argument is a constant expression, so we
++		 * can perform compile-time bounds checking where
++		 * buffer sizes are known.
++		 */
+ 
+-	if (__builtin_constant_p(size) && p_size < size)
+-		__write_overflow();
+-	if (p_size < size)
+-		fortify_panic(__func__);
+-	return __underlying_memset(p, c, size);
++		/* Error when size is larger than enclosing struct. */
++		if (p_size > p_size_field && p_size < size)
++			__write_overflow();
++
++		/* Warn when write size is larger than dest field. */
++		if (p_size_field < size)
++			__write_overflow_field(p_size_field, size);
++	}
++	/*
++	 * At this point, length argument may not be a constant expression,
++	 * so run-time bounds checking can be done where buffer sizes are
++	 * known. (This is not an "else" because the above checks may only
++	 * be compile-time warnings, and we want to still warn for run-time
++	 * overflows.)
++	 */
++
++	/*
++	 * Always stop accesses beyond the struct that contains the
++	 * field, when the buffer's remaining size is known.
++	 * (The -1 test is to optimize away checks where the buffer
++	 * lengths are unknown.)
++	 */
++	if (p_size != (size_t)(-1) && p_size < size)
++		fortify_panic("memset");
+ }
+ 
++#define __fortify_memset_chk(p, c, size, p_size, p_size_field) ({	\
++	size_t __fortify_size = (size_t)(size);				\
++	fortify_memset_chk(__fortify_size, p_size, p_size_field),	\
++	__underlying_memset(p, c, __fortify_size);			\
++})
++
++/*
++ * __builtin_object_size() must be captured here to avoid evaluating argument
++ * side-effects further into the macro layers.
++ */
++#define memset(p, c, s) __fortify_memset_chk(p, c, s,			\
++		__builtin_object_size(p, 0), __builtin_object_size(p, 1))
++
+ /*
+  * To make sure the compiler can enforce protection against buffer overflows,
+  * memcpy(), memmove(), and memset() must not be used beyond individual
+@@ -399,7 +438,6 @@ __FORTIFY_INLINE char *strcpy(char *p, const char *q)
+ /* Don't use these outside the FORITFY_SOURCE implementation */
+ #undef __underlying_memchr
+ #undef __underlying_memcmp
+-#undef __underlying_memset
+ #undef __underlying_strcat
+ #undef __underlying_strcpy
+ #undef __underlying_strlen
+diff --git a/lib/test_fortify/write_overflow_field-memset.c b/lib/test_fortify/write_overflow_field-memset.c
+new file mode 100644
+index 000000000000..2331da26909e
+--- /dev/null
++++ b/lib/test_fortify/write_overflow_field-memset.c
+@@ -0,0 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#define TEST	\
++	memset(instance.buf, 0x42, sizeof(instance.buf) + 1)
++
++#include "test_fortify.h"
 -- 
 2.30.2
 
