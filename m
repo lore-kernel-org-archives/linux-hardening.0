@@ -8,214 +8,128 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683FCC4320E
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78D4C4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5229B601FA
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6540A6113B
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237892AbhHRGG1 (ORCPT
+        id S238388AbhHRGGn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44276 "EHLO
+        Wed, 18 Aug 2021 02:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238043AbhHRGG0 (ORCPT
+        with ESMTP id S238023AbhHRGG3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:06:26 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BEBDC06179A
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:05:52 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id 18so1065986pfh.9
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:05:52 -0700 (PDT)
+        Wed, 18 Aug 2021 02:06:29 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5DBCC0612A3
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:05:53 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id bo18so2015992pjb.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:05:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=23NqigPoreurbrTRI3DzstnCrCz1u9qo8AUicrCllIQ=;
-        b=UbvCFEyRrZ9eZIo3hC/X1djDK0zyKbZ+dpC5E+yFQ4NxlkNH9dIRozkfEuSe7qJjsQ
-         cxD/56o5spuj40J0Wg3fR6Wyk3fwk8hV9DWgzhqsRRVRBgGzTqUDfya1TW7GvmKLZ6wo
-         D9xixUQS4qz6M4i5bzbYYLvrORORYZfKr8WPc=
+        bh=q4cKFwd96rtgoKUA6YKX4IuNE9lx/g0UxBcz1pPF338=;
+        b=XMP/StYU8/uLPb/wnRLBGcR3u0V44//53QV0+x1LgHJ11cZUCGD0IAf1IdZ9lDwoLp
+         ZWOz/05bmRXmG9lRDJTD/ZXWTRiCTSdo0A6fczMhmhv2vGilaJvHGHdE7jf23BYsCSiQ
+         dajYZnjb8/arsD8ARG/qxbTWVP2y2RLAspLSY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=23NqigPoreurbrTRI3DzstnCrCz1u9qo8AUicrCllIQ=;
-        b=hoTwGguNbCYjKKrbGDWA7kK2i47uvaXQAJG0lE8gVG1XSriQ/gC4ZDFxAyybpHEhOQ
-         NVamzKDJVINfqphMlBoBWEyN/69pwdTBQRSvYHzYleHnvFDzo0gSPmEq+z7/QgCuKV16
-         K802UXItxdNt10yhGuivDFmxoHaTz769T9CAhzLGuFATlUesy5UkF7W3gULUDZZh3Qtb
-         j7vlVvbhXGvGgh4VuWztL4yTY1Dulo3tK3xA/W0uMC7mJLsxeuEhvdpEh20l6U7NLclB
-         ga2vOEOYD+x7ktWF4rI35iEQE9DcHmS/CYmPf/LM1fYXuOJhH5796u3g4nOdoEHudBkK
-         nlCw==
-X-Gm-Message-State: AOAM530DL5tpg7caRJEeJ6YvWnwWoMovvV/yzblylHQ/mnPVM9e+X6kF
-        L9y8qUZkOo6iGFSE/ag+4wTQhg==
-X-Google-Smtp-Source: ABdhPJylu+fvLjWopDWFH3olkAdKgN4Z9FIPk8JyyTRG5xBoS/mN6Ano8pbp8qiJIYenr0R5MuEjMA==
-X-Received: by 2002:a05:6a00:16d2:b029:300:200b:6572 with SMTP id l18-20020a056a0016d2b0290300200b6572mr7570097pfc.62.1629266751598;
-        Tue, 17 Aug 2021 23:05:51 -0700 (PDT)
+        bh=q4cKFwd96rtgoKUA6YKX4IuNE9lx/g0UxBcz1pPF338=;
+        b=V+NdRFbJSpH9hrap5Cv/YjkFJ5D8pvrWpjAMTVPCMASIOOp49IH9rs+E3kvpKGL5m1
+         4k0Ymcq6Q6OC1aSYgebHcX8a2D4SDBFLa9HIVAgxmy/LOfkQoSMw7VaVliO395w2ufly
+         hZZlNtU2RQt0flSNuNIfCnssReWbYqtMaIILSOzjqbhzMR/jdIj3p69hI/MIO6EsE+CE
+         KpuPKqYbnhXXPIHc5rAJQQ9nEUP6KvFSp//Gdd6X9Wt3Bc2K+x0Pox1v5Arju3eig2d/
+         IoAlfuUFbJ5FvcWFcbGamdcxnyXB/qwGgTbyJWz+AFaOKs1F+XCV+4V5LgdA1dQxbE7v
+         WAdg==
+X-Gm-Message-State: AOAM532NAVeXlAioCSsawDY6zaE1R6qHiYBI+jS+4+pFeUp9KZ9TK91h
+        g/B76Q4L2sC0gIYDkQzTafMGqg==
+X-Google-Smtp-Source: ABdhPJzh3Fos81jJQtXdS+gHGD3Ay4RQaFm6BN3MlQDNgQinKTKzGT7YEaeNTn6TT/NjBcYzUiAE7g==
+X-Received: by 2002:a17:90a:c244:: with SMTP id d4mr7684531pjx.38.1629266753333;
+        Tue, 17 Aug 2021 23:05:53 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l6sm4585677pff.74.2021.08.17.23.05.50
+        by smtp.gmail.com with ESMTPSA id j4sm5379890pgi.6.2021.08.17.23.05.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 17 Aug 2021 23:05:51 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
         linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
         clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 01/63] ipw2x00: Avoid field-overflowing memcpy()
-Date:   Tue, 17 Aug 2021 23:04:31 -0700
-Message-Id: <20210818060533.3569517-2-keescook@chromium.org>
+Subject: [PATCH v2 03/63] rpmsg: glink: Replace strncpy() with strscpy_pad()
+Date:   Tue, 17 Aug 2021 23:04:33 -0700
+Message-Id: <20210818060533.3569517-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4716; h=from:subject; bh=3b5t4fLR/wEetR2E8Hwk2j3VzU8yz2BgAEsleqg3XAU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMd3RE3VXLm1V4wHPPpY4uHLTNlH2i9cpT7/zcX 6bMNqjOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjHQAKCRCJcvTf3G3AJhpED/ 9b4pyd/DG5mv5Tblws3aMWZNDSeCRn3/s9TjbgOMXM4o11x/1+ZleM6Vk2EDLRI/StjZkH7suUShf9 pz8qPCLJYcMOnhXplowR65ecymaR26AWdAh+maUgxLzeDfaqIYCYeE1R/AQ0WwLm+5Exoa4ZI5WS0f rqmhbs0ehQFD4CZMRmfHfUrVstRDcMCvaGy4vJOILTRKBHVmbSZT9t4ZS26+G0Gn3/MfEpQl02c5VG giy+jakP/HC0SaKYh6fz0PynTwGctBrg0Jtrm+P5sBZ5LrYnPR4gQcC+zRGDLNvr9SJfvI3/F80g1h nBOlSrzvmz1/1UBqHvztStqbaaBG+fsJReRuAfOS4pPpyfoSreYc0FSty2WowsZKIQG4KRrFpPJq8y oyVcu4SpPwu0e+hpIT5XJ/ZlUJ3z+GSZyrMGUWADhlMLpd7MuTx1T01Z2DheK2fn7PAfCsewxY48vA klRgq5EmEm78Ws6wLDcon05s0EfYr4KarT1JdG+fV2JuY2Ks6lWjaiGXCMr3QOUuFt3P5lmt4vhwnj EdC/X6leqQSQ89oEFJBzrtCAV0vFOs8DxlHiDaWhg8+sGBq2zvBRy+rxcDyNI36k1pUC1aChW0369A Gf5WfOMa8Bm/SsspWmkkegUh+h5Z0fYmtTzn/GA0ekK/0u14dQxgyN2mEtFg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2189; h=from:subject; bh=zEHqpi3jCPJJtimsK7NnbA6EWwLoFKP9r9dL5ArZyiQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMe8xrKEUyyynWY+9ZZnkpsPM1eYEwBqySCGW3z U2JTvZSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjHgAKCRCJcvTf3G3AJsNcD/ 9XTm0UNtLhF3pcJlIGQ3OBX+21oX4i3rCVVUF6tE46BnLDEeTE53Dgx2PT3pmkaqnzHQEBiWdAf3D+ 2ibPEIWXlwbj/FEpJcA5DcOhIfEfnzVBjHhlpnJrh3SUlVbIH9XtzFjtsdZ62/6vRCWqqArv25gvTH 5vxwJnbsrBQoJVmDrGhqBbXkHwDMfTU3uqjDwaqLe+Jkddl6WDrvL7HDi/a/O+TPG8Ryye+tkF8oUf ynPS+GUMYS16FY7ASzH/0ByS7HnPSf7jbXyCDl9CItMWBCukRuP92dgD5E5h+780QjYVR1TOYTsK7L 29q0KYIRAz/CU7s7NU3I6O+skA8+wO2q8V/qNN9IwIYlovEae8xYxtZGFKS7Asnkx5L41BTHNAewGa ywsnWka4jG//fkzAcJxqaWp/LNz7YIf4ftOs7TahiCUUPyNjn9hGBXe/6UCbulNetUvkUh3MpYNLgO 29/PcVY/jHQm6XmFOLai05ukoMYzOImxjihjBRnvhun0ISzdDvZiF7LuyX34tnTNoUqw0tPYmoyzzS qwS895l/S/Iu0aJ6C60OCVKPU+rRZE7aqmw0H4xtsS4EhelVEbtCx+EFSZg6NR+iqtNBvI80hwpi2k l928h0W2SY4eY/GnEj658aM4Rs5DKGjtsLy4poujBDA8Ehq211Zk9Xhct33g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+The use of strncpy() is considered deprecated for NUL-terminated
+strings[1]. Replace strncpy() with strscpy_pad() (as it seems this case
+expects the NUL padding to fill the allocation following the flexible
+array). This additionally silences a warning seen when building under
+-Warray-bounds:
 
-libipw_read_qos_param_element() copies a struct libipw_info_element
-into a struct libipw_qos_information_element, but is actually wanting to
-copy into the larger struct libipw_qos_parameter_info (the contents of
-ac_params_record[] is later examined). Refactor the routine to perform
-centralized checks, and copy the entire contents directly (since the id
-and len members match the elementID and length members):
+./include/linux/fortify-string.h:38:30: warning: '__builtin_strncpy' offset 24 from the object at '__mptr' is out of the bounds of referenced subobject 'data' with type 'u8[]' {aka 'unsigned char[]'} at offset 24 [-Warray-bounds]
+   38 | #define __underlying_strncpy __builtin_strncpy
+      |                              ^
+./include/linux/fortify-string.h:50:9: note: in expansion of macro '__underlying_strncpy'
+   50 |  return __underlying_strncpy(p, q, size);
+      |         ^~~~~~~~~~~~~~~~~~~~
+drivers/rpmsg/qcom_glink_native.c: In function 'qcom_glink_work':
+drivers/rpmsg/qcom_glink_native.c:36:5: note: subobject 'data' declared here
+   36 |  u8 data[];
+      |     ^~~~
 
-struct libipw_info_element {
-        u8 id;
-        u8 len;
-        u8 data[];
-} __packed;
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
 
-struct libipw_qos_information_element {
-        u8 elementID;
-        u8 length;
-        u8 qui[QOS_OUI_LEN];
-        u8 qui_type;
-        u8 qui_subtype;
-        u8 version;
-        u8 ac_info;
-} __packed;
-
-struct libipw_qos_parameter_info {
-        struct libipw_qos_information_element info_element;
-        u8 reserved;
-        struct libipw_qos_ac_parameter ac_params_record[QOS_QUEUE_NUM];
-} __packed;
-
-Cc: Stanislav Yakovlev <stas.yakovlev@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-remoteproc@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://lore.kernel.org/lkml/20210728020745.GB35706@embeddedor
 ---
- .../net/wireless/intel/ipw2x00/libipw_rx.c    | 56 ++++++-------------
- 1 file changed, 17 insertions(+), 39 deletions(-)
+ drivers/rpmsg/qcom_glink_native.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/ipw2x00/libipw_rx.c b/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
-index 5a2a723e480b..7a684b76f39b 100644
---- a/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
-+++ b/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
-@@ -927,7 +927,8 @@ static u8 qos_oui[QOS_OUI_LEN] = { 0x00, 0x50, 0xF2 };
- static int libipw_verify_qos_info(struct libipw_qos_information_element
- 				     *info_element, int sub_type)
- {
--
-+	if (info_element->elementID != QOS_ELEMENT_ID)
-+		return -1;
- 	if (info_element->qui_subtype != sub_type)
- 		return -1;
- 	if (memcmp(info_element->qui, qos_oui, QOS_OUI_LEN))
-@@ -943,57 +944,34 @@ static int libipw_verify_qos_info(struct libipw_qos_information_element
- /*
-  * Parse a QoS parameter element
-  */
--static int libipw_read_qos_param_element(struct libipw_qos_parameter_info
--					    *element_param, struct libipw_info_element
--					    *info_element)
-+static int libipw_read_qos_param_element(
-+			struct libipw_qos_parameter_info *element_param,
-+			struct libipw_info_element *info_element)
- {
--	int ret = 0;
--	u16 size = sizeof(struct libipw_qos_parameter_info) - 2;
-+	size_t size = sizeof(*element_param);
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index 05533c71b10e..c7b9de655080 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -1440,7 +1440,7 @@ static int qcom_glink_rx_open(struct qcom_glink *glink, unsigned int rcid,
+ 		}
  
--	if ((info_element == NULL) || (element_param == NULL))
-+	if (!element_param || !info_element || info_element->len != size - 2)
- 		return -1;
- 
--	if (info_element->id == QOS_ELEMENT_ID && info_element->len == size) {
--		memcpy(element_param->info_element.qui, info_element->data,
--		       info_element->len);
--		element_param->info_element.elementID = info_element->id;
--		element_param->info_element.length = info_element->len;
--	} else
--		ret = -1;
--	if (ret == 0)
--		ret = libipw_verify_qos_info(&element_param->info_element,
--						QOS_OUI_PARAM_SUB_TYPE);
--	return ret;
-+	memcpy(element_param, info_element, size);
-+	return libipw_verify_qos_info(&element_param->info_element,
-+				      QOS_OUI_PARAM_SUB_TYPE);
- }
- 
- /*
-  * Parse a QoS information element
-  */
--static int libipw_read_qos_info_element(struct
--					   libipw_qos_information_element
--					   *element_info, struct libipw_info_element
--					   *info_element)
-+static int libipw_read_qos_info_element(
-+			struct libipw_qos_information_element *element_info,
-+			struct libipw_info_element *info_element)
- {
--	int ret = 0;
--	u16 size = sizeof(struct libipw_qos_information_element) - 2;
-+	size_t size = sizeof(struct libipw_qos_information_element) - 2;
- 
--	if (element_info == NULL)
-+	if (!element_info || !info_element || info_element->len != size - 2)
- 		return -1;
--	if (info_element == NULL)
--		return -1;
--
--	if ((info_element->id == QOS_ELEMENT_ID) && (info_element->len == size)) {
--		memcpy(element_info->qui, info_element->data,
--		       info_element->len);
--		element_info->elementID = info_element->id;
--		element_info->length = info_element->len;
--	} else
--		ret = -1;
- 
--	if (ret == 0)
--		ret = libipw_verify_qos_info(element_info,
--						QOS_OUI_INFO_SUB_TYPE);
--	return ret;
-+	memcpy(element_info, info_element, size);
-+	return libipw_verify_qos_info(element_info, QOS_OUI_INFO_SUB_TYPE);
- }
- 
- /*
+ 		rpdev->ept = &channel->ept;
+-		strncpy(rpdev->id.name, name, RPMSG_NAME_SIZE);
++		strscpy_pad(rpdev->id.name, name, RPMSG_NAME_SIZE);
+ 		rpdev->src = RPMSG_ADDR_ANY;
+ 		rpdev->dst = RPMSG_ADDR_ANY;
+ 		rpdev->ops = &glink_device_ops;
 -- 
 2.30.2
 
