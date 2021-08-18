@@ -2,105 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDDCC4320A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB127C43216
 	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 17:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5359610F9
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 17:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999C9610CF
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 17:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231800AbhHRRto (ORCPT
+        id S232081AbhHRRtp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 13:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40648 "EHLO
+        Wed, 18 Aug 2021 13:49:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231402AbhHRRtj (ORCPT
+        with ESMTP id S231285AbhHRRtn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 13:49:39 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F7EC0613CF
+        Wed, 18 Aug 2021 13:49:43 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E80C0617AF
         for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 10:48:59 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id nt11so3128965pjb.2
+Received: by mail-pg1-x534.google.com with SMTP id e7so3015338pgk.2
         for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 10:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dThvG95AKYmfSVzdJA3a/UDQFTluWlf22praOUB+Zbs=;
-        b=GeAO1B69Z4+Uupb9HeH1oibnV20CQgb3KyeBWoRXciRWMBhVqVxED2Omhwl1Ikbqk5
-         ogkokoXt330CYDu6kfp0mNUhKoTO7gRPKHr54vU8qIRGMs6HfbdD4VrnZbCVckevrJ61
-         M39NrYJSbwCT2JKeZzREvu5joH4pdBpfDDdT0=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1mY5RIBDNgWagktFsZEnudEN0wbyGTHt9HsdseVRFKY=;
+        b=lkw1GFxei+c9lM+dD9uJpW8DM95igP4b7m/SJ7F/1vBejrYpTKSFtUAf3aWrxF9tWn
+         v3DYj1UCk0uC+7Q+ySeP9w4Dqm+X0sdsz10+2CKJn1O3ZCId95GoWlD32iRwVx3YbYba
+         OYFJhccVe20gKZQT0LbD8pl3H/rCi0S73uBvg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dThvG95AKYmfSVzdJA3a/UDQFTluWlf22praOUB+Zbs=;
-        b=nwZ5HALJgZii1iAXpbL8cRkP0HCiguut/TB8GB0cD0WCxzV4gZuEjrEjfsDvDxhs7u
-         LjctUA8SQk/YNRv/iHjFD8AQupGaORTKG4dCl2Z47IVzsD9lJLERFfaGxv6jtzZjSlpp
-         egBap7X2x4gSwfCddDwKzT2aMPQJyb9qfyHvbvDKqCY0qXOBbDWqepGZqwKF2/KjgDwg
-         lTsZ9pE+fLx9f0aEoPIsplr+7bUk1znhPorcv4y0BAfbIsyPZWvbewjMEoI66d1ogqzG
-         J3LlRY1xlMfYuX+SM6CVB355nJnt7dHUj54RHD7b4OZy+2cLcyso6QfmqTowiyE9LLlG
-         6dmw==
-X-Gm-Message-State: AOAM533QPmrJtGAiMSaXFWJguyLkFbtsxWNxU6TUzMbAqmPV3AUUgMX0
-        jljrkbhay8LB4b9W7DonEqAjpQ==
-X-Google-Smtp-Source: ABdhPJyFmosvGWap4JktyDPy6Mr+eSFnZ2PVT9WyhAMwyE445kte5IuHCw/qUBZBBS05bBCREpDc9w==
-X-Received: by 2002:a17:902:e889:b0:12d:a686:394a with SMTP id w9-20020a170902e88900b0012da686394amr8201851plg.57.1629308938627;
-        Wed, 18 Aug 2021 10:48:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1mY5RIBDNgWagktFsZEnudEN0wbyGTHt9HsdseVRFKY=;
+        b=msGL8JJYUAYK0Z0lrNI67CJUkBBznVIui/2PhVQOHbf5h/uOmGG/jBYADeMb5UQxkO
+         UQfN4P/igB/L7sdOcsSikJX6fSrBtRxmx+yif2tHBMUQPzZaFJhH5u2OpijjjcMLRhp/
+         TiJ99WLvHr4RMed9jj2Dsw93hy0Vhv6JcepgRM8GYXSoBVAr/P8Fr8V0Ok4Ma1OWG+LU
+         uxjV8B12dybHFgexUomdN9WANjwv2Tf1Vl8DCWFyupZm0lhfkuzHk+EuF7ZkW8MhvQIR
+         iwJPsDDtz48x+i1wvkfd9NEFkteslewmXHItnofx6SHM+/unI4xQYBGUvl8W8XWhv3dB
+         cKlQ==
+X-Gm-Message-State: AOAM532nVEjqHeHfk92T3DqsfM4yvLNDT4kHWoO7bp83jyYxZEwBqgUp
+        OebWz+Zih8C2TlEn61HKVp/ahQ==
+X-Google-Smtp-Source: ABdhPJyFeBuwLVlU9TC3ZBx/6QU/4sy4LObAs/CpUDROrocaJs575Va38mcJ2sxKx6dEOTi/qL/Slg==
+X-Received: by 2002:a65:690c:: with SMTP id s12mr10069880pgq.401.1629308939206;
+        Wed, 18 Aug 2021 10:48:59 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b10sm400241pfi.122.2021.08.18.10.48.57
+        by smtp.gmail.com with ESMTPSA id q3sm455504pgf.18.2021.08.18.10.48.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 18 Aug 2021 10:48:58 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
+Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+        kernelci@groups.io,
         Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        kernelci@groups.io, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 0/4] LKDTM: Various CI improvements
-Date:   Wed, 18 Aug 2021 10:48:51 -0700
-Message-Id: <20210818174855.2307828-1-keescook@chromium.org>
+Subject: [PATCH 3/4] lkdtm: Add kernel version to failure hints
+Date:   Wed, 18 Aug 2021 10:48:54 -0700
+Message-Id: <20210818174855.2307828-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210818174855.2307828-1-keescook@chromium.org>
+References: <20210818174855.2307828-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1054; h=from:subject; bh=lfjpPjSL9u6+AD94ZIbB3QoMIRRZ/G7Ezz9D5Ay+kGI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHUgFCPW16E1lQcohGZyFYf0zfIHGTn0zdlBOG4Ge +kf5dIuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR1IBQAKCRCJcvTf3G3AJlh+D/ 94pNcZKwGyNKZDKJOKFk/rJ2BSys9Mg2gwox+65o48wNqzpbqsVzEfsRE1sh/8y8jPPgcUXyjEUmGT KBwnqQRXV+/166xl7aoDpHdjaoz2UWwTyJp0XjNO+uuAKwNI9EYSCRzKRe2wtkMNJkd8yoMDw2hD+A QNQm3egBv0PrDkdJ33VAjpjG73r5BSGrCZB78bc8ZLzjmrkBCutQZUqBNdZ+wmD+hKzslTmuKQ8HKF aZWrNCLWjgDVE9cp/rBtpJI4zQSscGth/hm6C03bEpNLZR9qynYx/opFDkEc373tJUxLXWSSoLC0J5 eoQOsfRk+E58Afh88dsCz+mDmYKxZ7mbKESTRMinTfGwfW2i0diSM857HcfIr78fuh+64X4RAlHEe/ k9sRxX/o/YMrzBw4K0BvelY9bm/nedA7N0hB013/41qciunLBEVTc+Gs0MD9eq20ckDwjhT9CBRqVm A+iF1Az57MiVMeoVXmaVBhlgS9pRcK9grjeAQ+WNlHSJ59jfgfiCTaX7ZzP11sSjrBMPqWHl7LEbYh zFN7Lp3Q02aMkX6Mev3iaWaJDXlCgTi/luNKwvIGSzfj/WFL5beUjeGHgiam4VUzGJmkqWauA01QyK oEK7F0MvMgtkHLPsS6kiZ8WUzwNh5dGRa9Ztz1Yenc3GlRQqBKi+K0dOsPIw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3259; h=from:subject; bh=PtEIiImPUmgrshOeUImaqyYgtJBgocXjAnTdV62YVWE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHUgGpLo07w7JG+djZ75yRYafgXtPwCynK3PTDlkt e7AJbVOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR1IBgAKCRCJcvTf3G3AJo2GD/ 44EkwrK4hbubbr73YxDXfIpSvaWKhnl8gYOa0sDntMqcNRIYzJmGYpNhEHdFQfkZjk1RJ1SR7n2O4X JN1krgFSEuHeAYQaLTMI81W0lhwr3PnOG2qyVGSS7z9qW/1yxUixQiX9lnQDmHfV3aIdB6bYAnKyOR pcJsx8ZdvhfYBahlY8W5jKhVlBZfYoIJKSmdYG12t02WmGwmz3Kou0uHoq1PBRTwDI0QTdbuToTBmJ n7H+N/4owQAe/L5GbyL+UnU2xQYvhwRRMotH02KzigIHfWeGYlrJdAdQOca9igIJ2g7Inlv3AcTlqE Gq3PQikM0G91IIYlsUngDHXmEbCRgyxB4KnA0CbQ4UsNmGhwBZdfvy4WJXixFYcykknjenN4HikXd4 e1EyGxr0t637X4e47h8JP77RqCA3+WA8PGAGnAiRZZalJBUk7rM0BqagmQTpxkiHFIbA+oLY63qu1y IJ9OypOASHrlhwGXhMe4WNOFN2JIXnct8NgPVRDdUDm5lIP0DWOim/w09zhVdd4tDn0madmZKXHsbF cbHznNBjFl8ghq0XtkLQkBJJW5xkTAu2B5Qu74FoKqtd/polUqitIbEi/ijp+2bJ0F45jjO4Bi3KDH Xz7QoPaVowJvl6NaDr4lP0U3vp231xWWZYgeL8KPCjBTjHdG1JDBxPRyPxaA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Greg,
+In an effort to keep as much information in once place as possible in
+CI logs, report the kernel version and architecture in the failure hints.
 
-Can you please pull these LKDTM changes for drivers/misc? I forgot
-to flush this queue of enhancements earlier. :) Here's what I've got
-built up, mostly tweaks for kernelCI, configs, consolidation. This also
-includes the __alloc_size hint adjustment I'd sent earlier, now fixed
-with a better comment.
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: kernelci@groups.io
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/misc/lkdtm/lkdtm.h | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-Thanks!
-
--Kees
-
-Kees Cook (4):
-  lkdtm/bugs: Add ARRAY_BOUNDS to selftests
-  lkdtm/fortify: Consolidate FORTIFY_SOURCE tests
-  lkdtm: Add kernel version to failure hints
-  lkdtm/heap: Avoid __alloc_size hint warning for
-    VMALLOC_LINEAR_OVERFLOW
-
- drivers/misc/lkdtm/bugs.c               | 51 +-----------------------
- drivers/misc/lkdtm/core.c               |  4 +-
- drivers/misc/lkdtm/fortify.c            | 53 +++++++++++++++++++++++++
- drivers/misc/lkdtm/heap.c               |  9 ++++-
- drivers/misc/lkdtm/lkdtm.h              | 24 ++++++-----
- tools/testing/selftests/lkdtm/config    |  2 +
- tools/testing/selftests/lkdtm/tests.txt |  3 ++
- 7 files changed, 83 insertions(+), 63 deletions(-)
-
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index f2e61581c1ae..d7d64d9765eb 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -5,13 +5,17 @@
+ #define pr_fmt(fmt) "lkdtm: " fmt
+ 
+ #include <linux/kernel.h>
++#include <generated/compile.h>
++#include <generated/utsrelease.h>
++
++#define LKDTM_KERNEL "kernel (" UTS_RELEASE " " UTS_MACHINE ")"
+ 
+ #define pr_expected_config(kconfig)				\
+ {								\
+ 	if (IS_ENABLED(kconfig)) 				\
+-		pr_err("Unexpected! This kernel was built with " #kconfig "=y\n"); \
++		pr_err("Unexpected! This " LKDTM_KERNEL " was built with " #kconfig "=y\n"); \
+ 	else							\
+-		pr_warn("This is probably expected, since this kernel was built *without* " #kconfig "=y\n"); \
++		pr_warn("This is probably expected, since this " LKDTM_KERNEL " was built *without* " #kconfig "=y\n"); \
+ }
+ 
+ #ifndef MODULE
+@@ -21,24 +25,24 @@ int lkdtm_check_bool_cmdline(const char *param);
+ 	if (IS_ENABLED(kconfig)) {				\
+ 		switch (lkdtm_check_bool_cmdline(param)) {	\
+ 		case 0:						\
+-			pr_warn("This is probably expected, since this kernel was built with " #kconfig "=y but booted with '" param "=N'\n"); \
++			pr_warn("This is probably expected, since this " LKDTM_KERNEL " was built with " #kconfig "=y but booted with '" param "=N'\n"); \
+ 			break;					\
+ 		case 1:						\
+-			pr_err("Unexpected! This kernel was built with " #kconfig "=y and booted with '" param "=Y'\n"); \
++			pr_err("Unexpected! This " LKDTM_KERNEL " was built with " #kconfig "=y and booted with '" param "=Y'\n"); \
+ 			break;					\
+ 		default:					\
+-			pr_err("Unexpected! This kernel was built with " #kconfig "=y (and booted without '" param "' specified)\n"); \
++			pr_err("Unexpected! This " LKDTM_KERNEL " was built with " #kconfig "=y (and booted without '" param "' specified)\n"); \
+ 		}						\
+ 	} else {						\
+ 		switch (lkdtm_check_bool_cmdline(param)) {	\
+ 		case 0:						\
+-			pr_warn("This is probably expected, as kernel was built *without* " #kconfig "=y and booted with '" param "=N'\n"); \
++			pr_warn("This is probably expected, as this " LKDTM_KERNEL " was built *without* " #kconfig "=y and booted with '" param "=N'\n"); \
+ 			break;					\
+ 		case 1:						\
+-			pr_err("Unexpected! This kernel was built *without* " #kconfig "=y but booted with '" param "=Y'\n"); \
++			pr_err("Unexpected! This " LKDTM_KERNEL " was built *without* " #kconfig "=y but booted with '" param "=Y'\n"); \
+ 			break;					\
+ 		default:					\
+-			pr_err("This is probably expected, since this kernel was built *without* " #kconfig "=y (and booted without '" param "' specified)\n"); \
++			pr_err("This is probably expected, since this " LKDTM_KERNEL " was built *without* " #kconfig "=y (and booted without '" param "' specified)\n"); \
+ 			break;					\
+ 		}						\
+ 	}							\
 -- 
 2.30.2
 
