@@ -8,77 +8,74 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC23C4320E
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A5FC4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4878E61056
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E37D61056
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239334AbhHRGNn (ORCPT
+        id S238232AbhHRGNp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        Wed, 18 Aug 2021 02:13:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238341AbhHRGNW (ORCPT
+        with ESMTP id S238898AbhHRGNW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Wed, 18 Aug 2021 02:13:22 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B992FC0698E0
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:05 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id w8so1142881pgf.5
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:05 -0700 (PDT)
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE60FC08C5CD
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id 7so1061597pfl.10
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=foQDo7WpLo2j2V/z+FSCXpsN+DWjHtp9JYSgEaJMB90=;
-        b=GKSzM0IlJzJUf6lZnhXWBc3es8Ghf2l0pYhAqJGw0m0Etoh9R9ZMUtcr7TQfx5XH16
-         yUU50MfeHmQfTuW7Ip6OieaI0/v3E9dPT9SLJqUTpqoqf9QRyyt07A/6SF5rzbn7F+nJ
-         +/lFdCNLXnONV1jAas5Ljfn8bo+d3tCRsQ77A=
+        bh=PTBKkWGSJ4jeq48Lif1HjorGsj7JNkZaLkD8D5Mis7A=;
+        b=lcRiLN/pxXroa+z0dIVjwpE6juQ/WSj9kN1DJHiXQOxPdexqsXsummW+QGZRKJMuKE
+         goKTAqxz4pwd1w10URarcs5dopjzXmwolbK+77hwkcGaxXJAK302qu5FzsGr1WTfWGGB
+         ymGtBiAAT9XPK+AD9AOkBT52goGiThLInSsB8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=foQDo7WpLo2j2V/z+FSCXpsN+DWjHtp9JYSgEaJMB90=;
-        b=FwfSDd3UgB71x99zCUBclIMYIdKzsyk+2zFd/UeE9MMlGV2eLWVQUy6cYNWVVN9F9J
-         WnMZbAIjTOohRoRdCwZkqzQgR0q49UyIBF543NE9OurlPzmqNssyB7zpT0v4i+ilaYkm
-         mw7K5JQyyEWPm9v1m6fQVE5UFbrJAXqPBiS/AkrpQHK9f9U6I/721QoTNY5v+7QxJ2dZ
-         w4N46D3jyhaS9W8KdUELqY4WmxxB4hVrh8YC8n9y7Pz0OZqQmDbklFslM8tyk7q/JQd2
-         jmv+FMCpw/b1PPJ3KDUPn/TAsr4/x7Ip8XU3fwSjuELIRhWnt4bZeWPVKqM29zUIprTg
-         7aOg==
-X-Gm-Message-State: AOAM530Pc764J6iy9ldYN+CntZqCIwBYfXtxBlCHeHS9+wP02nT7LtbR
-        fkP6ssuKUiwrDJvKqNV60udONQ==
-X-Google-Smtp-Source: ABdhPJyaW6PaSoHolvdHHHrfwFOitgtk5zymjMduPV9RR03aWMu9nIrmKtLLFhURS2RiRyMqgOc9Ww==
-X-Received: by 2002:a63:5c8:: with SMTP id 191mr7451505pgf.293.1629266765131;
-        Tue, 17 Aug 2021 23:06:05 -0700 (PDT)
+        bh=PTBKkWGSJ4jeq48Lif1HjorGsj7JNkZaLkD8D5Mis7A=;
+        b=W9a+XUnUeQrOupIwta+eIbPe4N9JOFaKxFNwUD3ESl87dfp6SBgQ8NoOL6X/cf/PKZ
+         OLQDkiquLZhPgmEEWzNEM/xsobIdMYEmWGkrvDLrVIquKIc4xX38bCdHTzX0JZQBAwKp
+         YmasMp0FfAH4KYAha9dbm1yr1D3b4MQ7edFMpciWFKYlsi4BtGC69YNs87IXeNdAbN+6
+         zI3n8XMFQljj+raMWG4+aERKlq79KomD4rpqg5dXfoI0rd9w7SuhmEPAj8x4y6pAHXuf
+         VgytpuS8SJKxMsBlEWbbOsqS+69jaG+7kNo6lbSxLF5K1DjijvV8ezAjbNpmDb01MrsG
+         3IRQ==
+X-Gm-Message-State: AOAM531oUZUOHBWam81ewAIbEcIHhr/Y5a5aOxNWtIuaSTFbjOFLAki4
+        adopLTUyYt/m+ZkK5JUZfXdWmw==
+X-Google-Smtp-Source: ABdhPJzCiookpb9ebYshndEgzHCX93ly5catWbwmyFE6JV+ARL2uHnLBYxH38LP6l1lYGAvgKe5gsQ==
+X-Received: by 2002:a62:d085:0:b0:3e0:f21a:8030 with SMTP id p127-20020a62d085000000b003e0f21a8030mr7615770pfg.70.1629266766375;
+        Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d18sm5548805pgk.24.2021.08.17.23.06.01
+        by smtp.gmail.com with ESMTPSA id j17sm4782687pfn.148.2021.08.17.23.06.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 17 Aug 2021 23:06:02 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
+        linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 59/63] can: flexcan: Use struct_group() to zero struct flexcan_regs regions
-Date:   Tue, 17 Aug 2021 23:05:29 -0700
-Message-Id: <20210818060533.3569517-60-keescook@chromium.org>
+Subject: [PATCH v2 47/63] intel_th: msu: Use memset_startat() for clearing hw header
+Date:   Tue, 17 Aug 2021 23:05:17 -0700
+Message-Id: <20210818060533.3569517-48-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5011; h=from:subject; bh=8Ts9umslvw0EuXRaphSdWSysW0LFYybLoYrceMcY2J8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMrtWREAe+sayvsZiZZ8f8J5sqHhCBlNW7evqOS y4cIMiCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKwAKCRCJcvTf3G3AJl2pD/ 95zMtNfq1UN3l8y/gyN1appJq7NzWCP9Ku5k1Ba1Voq8jwjYkgywPDqqLvBA6qhUCGs+OtkOFRJm9r 2WBM2tr0yTR7/Huu8tg3Y9QEDaf1r85ita3zR+Lo8bHAVhDGXrm0QLkXcE5kvRTliHDwuyH5NQdbeI y8MSusibpB/OZKb1O2tTsxmhqrhbyjP6XdzghSiU7T4QDxkGxZwJgsAc7vPRqbHk7VQ4C8W2dPyt0e NE2ZrJYx0O61gXhgePrJkWBiMMPSajK74LMAZnW+05D56fMzPxqiMjtL0p/si6OhxhglP8w/YyyfB4 hnLWCd7r/bixExnxdKaJIIssbZtUDNaR6qxxa++crImbOrfTcB2xJkZxZo5FCuWwXjSeFm5seZ8DSF VqrYUY1JAcu3VBvPK178Bzrnv1RgFdvpt4I+zejm4UhAQh4kmjNR1TG43rdFl+h9uzkvW74E7N8ulI x2uluahMtzsRiCPNN78mfMrihT6ffb7zDUoByobpe2156Mnrn0LmOGmBizoXBiY8TaXTRKSEavjrKQ EjTgqkUCcUBJwrofQz5SF6k1zmaygNghMfj+owZdXn8OFWlfbX7KbDZmtfReV8lng9nDI4GeN25VRY 8eq9GEvLK3a8NRy4xCnvyxCK9Lloiounz6j68lZ9p5uyRuvWXtQFVzzhEMKw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1239; h=from:subject; bh=uh3kPqi+1X1lyfKJytqHpZ67tA8Si7LB8pUN1izBRBI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMokuhXR2p74Acuej4eCBPYM2cMZOT8THgQZzGV rdQKEmSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKAAKCRCJcvTf3G3AJvm1D/ 9kF/338CaDSDtZdoqV6TgTFjJO7GhbNkoBmaGibpVP14xbup3OFbl/8EWjfIgiZ5HEL4MqjjTWMyQD GVmRXMyIy+vWRh/NnndkDGceRW6qt3HsyulsPKChA7zxUB+DgshZpdqVp8ftqxAtnr7XjoSLpPjA6Q jd9iNmeK/83BSvOrCXzfw3QnVp7S/8MJgCGvFbdrnET8gv1IOUMB8G7m3XGNLUryv8ZV2DS5g85EQ0 9P28dpGxmAVMsi9vVqMViPQNC/BVKoo+Ax89vzH5K3aMn1bfmCCfXRiU1R1z687xeHxmN0mNjUu943 YG2huUBJz+HFlahhX/8DegqUfH3Roc81OdU4xQrSWUIynliECUj+/rLG3nUrqetH+63wRgHXzOS30A dNLHiD+cCMIYAMXAhvA/kiRl2zfl4bvvXGqwytmyz0E8wMCPXFx5NF0Kx2GmTm0w6DvHzyRwqGzrVe o+OGGog3VcigZZFQfBTpYUYJZ91yw92GJvsWxlN1Jlkk3oLo6ax2gSSw1Kw+wlUL5JUYGviliS2BrP Gjo9a6pi+N90GCV9dZw+rMpbHm49R3IBpe72LrTBqKtVtcEAuFolJR7jQHnLfVqdCTdUjl7xRKSpdJ L25TTHWjDtgY5E6pp3BASup3QhcHbz4WiGqQCnvgdUgeX69GFYXmzp9CuwAg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -89,128 +86,35 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Add struct_group() to mark both regions of struct flexcan_regs that get
-initialized to zero. Avoid the future warnings:
+Use memset_startat() so memset() doesn't get confused about writing
+beyond the destination member that is intended to be the starting point
+of zeroing through the end of the struct.
 
-In function 'fortify_memset_chk',
-    inlined from 'memset_io' at ./include/asm-generic/io.h:1169:2,
-    inlined from 'flexcan_ram_init' at drivers/net/can/flexcan.c:1403:2:
-./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-  199 |    __write_overflow_field(p_size_field, size);
-      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'fortify_memset_chk',
-    inlined from 'memset_io' at ./include/asm-generic/io.h:1169:2,
-    inlined from 'flexcan_ram_init' at drivers/net/can/flexcan.c:1408:3:
-./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-  199 |    __write_overflow_field(p_size_field, size);
-      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/can/flexcan.c | 68 +++++++++++++++++++--------------------
- 1 file changed, 34 insertions(+), 34 deletions(-)
+ drivers/hwtracing/intel_th/msu.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
-index 7734229aa078..12b60ad95b02 100644
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@ -290,31 +290,33 @@ struct flexcan_regs {
- 	u32 dbg1;		/* 0x58 */
- 	u32 dbg2;		/* 0x5c */
- 	u32 _reserved3[8];	/* 0x60 */
--	u8 mb[2][512];		/* 0x80 - Not affected by Soft Reset */
--	/* FIFO-mode:
--	 *			MB
--	 * 0x080...0x08f	0	RX message buffer
--	 * 0x090...0x0df	1-5	reserved
--	 * 0x0e0...0x0ff	6-7	8 entry ID table
--	 *				(mx25, mx28, mx35, mx53)
--	 * 0x0e0...0x2df	6-7..37	8..128 entry ID table
--	 *				size conf'ed via ctrl2::RFFN
--	 *				(mx6, vf610)
--	 */
--	u32 _reserved4[256];	/* 0x480 */
--	u32 rximr[64];		/* 0x880 - Not affected by Soft Reset */
--	u32 _reserved5[24];	/* 0x980 */
--	u32 gfwr_mx6;		/* 0x9e0 - MX6 */
--	u32 _reserved6[39];	/* 0x9e4 */
--	u32 _rxfir[6];		/* 0xa80 */
--	u32 _reserved8[2];	/* 0xa98 */
--	u32 _rxmgmask;		/* 0xaa0 */
--	u32 _rxfgmask;		/* 0xaa4 */
--	u32 _rx14mask;		/* 0xaa8 */
--	u32 _rx15mask;		/* 0xaac */
--	u32 tx_smb[4];		/* 0xab0 */
--	u32 rx_smb0[4];		/* 0xac0 */
--	u32 rx_smb1[4];		/* 0xad0 */
-+	struct_group(init,
-+		u8 mb[2][512];		/* 0x80 - Not affected by Soft Reset */
-+		/* FIFO-mode:
-+		 *			MB
-+		 * 0x080...0x08f	0	RX message buffer
-+		 * 0x090...0x0df	1-5	reserved
-+		 * 0x0e0...0x0ff	6-7	8 entry ID table
-+		 *				(mx25, mx28, mx35, mx53)
-+		 * 0x0e0...0x2df	6-7..37	8..128 entry ID table
-+		 *				size conf'ed via ctrl2::RFFN
-+		 *				(mx6, vf610)
-+		 */
-+		u32 _reserved4[256];	/* 0x480 */
-+		u32 rximr[64];		/* 0x880 - Not affected by Soft Reset */
-+		u32 _reserved5[24];	/* 0x980 */
-+		u32 gfwr_mx6;		/* 0x9e0 - MX6 */
-+		u32 _reserved6[39];	/* 0x9e4 */
-+		u32 _rxfir[6];		/* 0xa80 */
-+		u32 _reserved8[2];	/* 0xa98 */
-+		u32 _rxmgmask;		/* 0xaa0 */
-+		u32 _rxfgmask;		/* 0xaa4 */
-+		u32 _rx14mask;		/* 0xaa8 */
-+		u32 _rx15mask;		/* 0xaac */
-+		u32 tx_smb[4];		/* 0xab0 */
-+		u32 rx_smb0[4];		/* 0xac0 */
-+		u32 rx_smb1[4];		/* 0xad0 */
-+	);
- 	u32 mecr;		/* 0xae0 */
- 	u32 erriar;		/* 0xae4 */
- 	u32 erridpr;		/* 0xae8 */
-@@ -328,9 +330,11 @@ struct flexcan_regs {
- 	u32 fdcbt;		/* 0xc04 - Not affected by Soft Reset */
- 	u32 fdcrc;		/* 0xc08 */
- 	u32 _reserved9[199];	/* 0xc0c */
--	u32 tx_smb_fd[18];	/* 0xf28 */
--	u32 rx_smb0_fd[18];	/* 0xf70 */
--	u32 rx_smb1_fd[18];	/* 0xfb8 */
-+	struct_group(init_fd,
-+		u32 tx_smb_fd[18];	/* 0xf28 */
-+		u32 rx_smb0_fd[18];	/* 0xf70 */
-+		u32 rx_smb1_fd[18];	/* 0xfb8 */
-+	);
- };
+diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
+index 432ade0842f6..70a07b4e9967 100644
+--- a/drivers/hwtracing/intel_th/msu.c
++++ b/drivers/hwtracing/intel_th/msu.c
+@@ -658,13 +658,11 @@ static void msc_buffer_clear_hw_header(struct msc *msc)
  
- static_assert(sizeof(struct flexcan_regs) ==  0x4 * 18 + 0xfb8);
-@@ -1400,14 +1404,10 @@ static void flexcan_ram_init(struct net_device *dev)
- 	reg_ctrl2 |= FLEXCAN_CTRL2_WRMFRZ;
- 	priv->write(reg_ctrl2, &regs->ctrl2);
+ 	list_for_each_entry(win, &msc->win_list, entry) {
+ 		unsigned int blk;
+-		size_t hw_sz = sizeof(struct msc_block_desc) -
+-			offsetof(struct msc_block_desc, hw_tag);
  
--	memset_io(&regs->mb[0][0], 0,
--		  offsetof(struct flexcan_regs, rx_smb1[3]) -
--		  offsetof(struct flexcan_regs, mb[0][0]) + 0x4);
-+	memset_io(&regs->init, 0, sizeof(regs->init));
+ 		for_each_sg(win->sgt->sgl, sg, win->nr_segs, blk) {
+ 			struct msc_block_desc *bdesc = sg_virt(sg);
  
- 	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
--		memset_io(&regs->tx_smb_fd[0], 0,
--			  offsetof(struct flexcan_regs, rx_smb1_fd[17]) -
--			  offsetof(struct flexcan_regs, tx_smb_fd[0]) + 0x4);
-+		memset_io(&regs->init_fd, 0, sizeof(regs->init_fd));
- 
- 	reg_ctrl2 &= ~FLEXCAN_CTRL2_WRMFRZ;
- 	priv->write(reg_ctrl2, &regs->ctrl2);
+-			memset(&bdesc->hw_tag, 0, hw_sz);
++			memset_startat(bdesc, 0, hw_tag);
+ 		}
+ 	}
+ }
 -- 
 2.30.2
 
