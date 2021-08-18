@@ -8,58 +8,63 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A5FC4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80306C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E37D61056
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678476108E
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238232AbhHRGNp (ORCPT
+        id S238369AbhHRGPv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:13:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
+        Wed, 18 Aug 2021 02:15:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238898AbhHRGNW (ORCPT
+        with ESMTP id S238504AbhHRGPr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:13:22 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE60FC08C5CD
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id 7so1061597pfl.10
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
+        Wed, 18 Aug 2021 02:15:47 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D07FDC0613A3
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:13 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id j12-20020a17090aeb0c00b00179530520b3so8293492pjz.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PTBKkWGSJ4jeq48Lif1HjorGsj7JNkZaLkD8D5Mis7A=;
-        b=lcRiLN/pxXroa+z0dIVjwpE6juQ/WSj9kN1DJHiXQOxPdexqsXsummW+QGZRKJMuKE
-         goKTAqxz4pwd1w10URarcs5dopjzXmwolbK+77hwkcGaxXJAK302qu5FzsGr1WTfWGGB
-         ymGtBiAAT9XPK+AD9AOkBT52goGiThLInSsB8=
+        bh=qcRMFUHVF6QqGnr97K+ATth5rLyNBKP5psUqyaewiPQ=;
+        b=a6bTyF6xsvXmJVaSI8AKs77+P0oFTI1gTPlsYa6mh59pACM92P1VFzFqvqU9+X+jNr
+         vTM9CS3vOAuRCBsVzn6N7KgVHI6W6ooLD8DmaYQuGxrolCI4Xru2kAG7C7jmtZ5uZ8PR
+         VDy1iToF9Tpap2g7DTRp0rqJ6lJwmpqW0wJjo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PTBKkWGSJ4jeq48Lif1HjorGsj7JNkZaLkD8D5Mis7A=;
-        b=W9a+XUnUeQrOupIwta+eIbPe4N9JOFaKxFNwUD3ESl87dfp6SBgQ8NoOL6X/cf/PKZ
-         OLQDkiquLZhPgmEEWzNEM/xsobIdMYEmWGkrvDLrVIquKIc4xX38bCdHTzX0JZQBAwKp
-         YmasMp0FfAH4KYAha9dbm1yr1D3b4MQ7edFMpciWFKYlsi4BtGC69YNs87IXeNdAbN+6
-         zI3n8XMFQljj+raMWG4+aERKlq79KomD4rpqg5dXfoI0rd9w7SuhmEPAj8x4y6pAHXuf
-         VgytpuS8SJKxMsBlEWbbOsqS+69jaG+7kNo6lbSxLF5K1DjijvV8ezAjbNpmDb01MrsG
-         3IRQ==
-X-Gm-Message-State: AOAM531oUZUOHBWam81ewAIbEcIHhr/Y5a5aOxNWtIuaSTFbjOFLAki4
-        adopLTUyYt/m+ZkK5JUZfXdWmw==
-X-Google-Smtp-Source: ABdhPJzCiookpb9ebYshndEgzHCX93ly5catWbwmyFE6JV+ARL2uHnLBYxH38LP6l1lYGAvgKe5gsQ==
-X-Received: by 2002:a62:d085:0:b0:3e0:f21a:8030 with SMTP id p127-20020a62d085000000b003e0f21a8030mr7615770pfg.70.1629266766375;
-        Tue, 17 Aug 2021 23:06:06 -0700 (PDT)
+        bh=qcRMFUHVF6QqGnr97K+ATth5rLyNBKP5psUqyaewiPQ=;
+        b=Zf19oVlcZ8B94SdAsSxy1Exs5CFcRvHk4dki73SlWKl0ItMcar+EJMEQuq86eww3sZ
+         2iP2QW9+QHYCoyE7EWlUvoRNxQH8TVxY1ZNej6KNL3LARftyWd/+jX3zbtk+7zdvQOsg
+         fojW1OSgAyFzXaZknPvhPN/GFA8DdeSdv5/TwVpM8k3BX0tGrh0TTTy/ZgSnN5HFNn3W
+         aLHHuyT/O7DCygbeCOj8Bis8eFrSwEL+hrk4FpnT/1f5xHFZ973RvZPCWcfLifLoWgCw
+         IOqBNG1rtgKThW9utG5CJBB1uARHOytx1on0W5sfaeyFSAW/I1upocczyn9x+u2Hra31
+         1Gbg==
+X-Gm-Message-State: AOAM531wjLbvdNOtFgASoZleZjHm3a9fg/JqLcyxUS9YaW2cscn2Po35
+        NaTRXTJQ0C9DrG/HehKQ6UOwGA==
+X-Google-Smtp-Source: ABdhPJxYy9uajyke8AmxVdXcCpVPxEVIqn6teRhyhxiibQmTAmVANSe3Um2YhA94u6j4OQrmXZTUYg==
+X-Received: by 2002:a17:902:e9c6:b029:12d:4cb3:3985 with SMTP id 6-20020a170902e9c6b029012d4cb33985mr5959378plk.56.1629267253269;
+        Tue, 17 Aug 2021 23:14:13 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j17sm4782687pfn.148.2021.08.17.23.06.00
+        by smtp.gmail.com with ESMTPSA id l12sm5631661pgc.41.2021.08.17.23.14.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 23:06:02 -0700 (PDT)
+        Tue, 17 Aug 2021 23:14:12 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Hulk Robot <hulkci@huawei.com>,
+        Wang Wensheng <wangwensheng4@huawei.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
@@ -68,14 +73,14 @@ Cc:     Kees Cook <keescook@chromium.org>,
         clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 47/63] intel_th: msu: Use memset_startat() for clearing hw header
-Date:   Tue, 17 Aug 2021 23:05:17 -0700
-Message-Id: <20210818060533.3569517-48-keescook@chromium.org>
+Subject: [PATCH v2 61/63] powerpc: Split memset() to avoid multi-field overflow
+Date:   Tue, 17 Aug 2021 23:05:31 -0700
+Message-Id: <20210818060533.3569517-62-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1239; h=from:subject; bh=uh3kPqi+1X1lyfKJytqHpZ67tA8Si7LB8pUN1izBRBI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMokuhXR2p74Acuej4eCBPYM2cMZOT8THgQZzGV rdQKEmSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKAAKCRCJcvTf3G3AJvm1D/ 9kF/338CaDSDtZdoqV6TgTFjJO7GhbNkoBmaGibpVP14xbup3OFbl/8EWjfIgiZ5HEL4MqjjTWMyQD GVmRXMyIy+vWRh/NnndkDGceRW6qt3HsyulsPKChA7zxUB+DgshZpdqVp8ftqxAtnr7XjoSLpPjA6Q jd9iNmeK/83BSvOrCXzfw3QnVp7S/8MJgCGvFbdrnET8gv1IOUMB8G7m3XGNLUryv8ZV2DS5g85EQ0 9P28dpGxmAVMsi9vVqMViPQNC/BVKoo+Ax89vzH5K3aMn1bfmCCfXRiU1R1z687xeHxmN0mNjUu943 YG2huUBJz+HFlahhX/8DegqUfH3Roc81OdU4xQrSWUIynliECUj+/rLG3nUrqetH+63wRgHXzOS30A dNLHiD+cCMIYAMXAhvA/kiRl2zfl4bvvXGqwytmyz0E8wMCPXFx5NF0Kx2GmTm0w6DvHzyRwqGzrVe o+OGGog3VcigZZFQfBTpYUYJZ91yw92GJvsWxlN1Jlkk3oLo6ax2gSSw1Kw+wlUL5JUYGviliS2BrP Gjo9a6pi+N90GCV9dZw+rMpbHm49R3IBpe72LrTBqKtVtcEAuFolJR7jQHnLfVqdCTdUjl7xRKSpdJ L25TTHWjDtgY5E6pp3BASup3QhcHbz4WiGqQCnvgdUgeX69GFYXmzp9CuwAg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1360; h=from:subject; bh=JCECg/Hewr4d9JO4WQR5kDd0IjByC1o9V4GNPJaYPKM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMrEHk87hiQVCzgI18EL/HOEsDc4MJhIkHkaVTZ DZKWkUOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKwAKCRCJcvTf3G3AJjKnD/ 9vO5rK1NcyiJFD1V1xX5Q3QwJPN1EMRWYcJsr5dTRrhYDef2VBoAd3vGVJhv5tPWCziVR95zI+LgIL d02IU4Ow0Hf/RnPFBOD9Lk1pR4bdZqy2udFH1tE06S0wBxz6HBgDxKiHg0hd49XAZs+xsJCSVXM+ks ZJe+gXBJkwU0QQlyx97a3srOeF6TBCIwRbfsc1ny8kqeq7rHXhuez2Nl/jEpDrSY7P6MGZ0RS9pwGp BG8XE5jwyatTqBbwztRYJO6EDxF1oljeN+vw6wXSMzHTs0P0jZF+xhBsDePue4SrU1uYVK4eI314VF ytJTqzumiq1LoMoetRo7XbnZL9HC+8KQkD7iex+cbwbl0vBuTQNERQCXbWiuHcR7WbrVndhdzqr/qr 7kpYWqqHhGYN42VOTCoEV+CxxyGt6O1oEwupEs9JwlhAHT0ET/3m5v95ln9sj4q/idsJQyugW9w9wS B+pdNyiwZvnrIR6r8PjnSHwflJuJYyRkP28Ci+HZxNLOE9WlE6UmnuDmdrcVKpWz+nctnlPQ9JHhAq vpfGhXMnm0qF1zx5IYh+d69+ZRtUQbUKz2k4hFKSxvSse3CvWfi63pBT3m1O556umLnQD6zZbq4vQZ p0vLhJOR+anh57gwE1CG5ilwh9jU07xLpPrNzUQkHrIgJsiMsfqPJrC73E9g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -86,35 +91,36 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Use memset_startat() so memset() doesn't get confused about writing
-beyond the destination member that is intended to be the starting point
-of zeroing through the end of the struct.
+Instead of writing across a field boundary with memset(), move the call
+to just the array, and an explicit zeroing of the prior field.
 
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Qinglang Miao <miaoqinglang@huawei.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Hulk Robot <hulkci@huawei.com>
+Cc: Wang Wensheng <wangwensheng4@huawei.com>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/lkml/87czqsnmw9.fsf@mpe.ellerman.id.au
 ---
- drivers/hwtracing/intel_th/msu.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/macintosh/smu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
-index 432ade0842f6..70a07b4e9967 100644
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -658,13 +658,11 @@ static void msc_buffer_clear_hw_header(struct msc *msc)
- 
- 	list_for_each_entry(win, &msc->win_list, entry) {
- 		unsigned int blk;
--		size_t hw_sz = sizeof(struct msc_block_desc) -
--			offsetof(struct msc_block_desc, hw_tag);
- 
- 		for_each_sg(win->sgt->sgl, sg, win->nr_segs, blk) {
- 			struct msc_block_desc *bdesc = sg_virt(sg);
- 
--			memset(&bdesc->hw_tag, 0, hw_sz);
-+			memset_startat(bdesc, 0, hw_tag);
- 		}
- 	}
- }
+diff --git a/drivers/macintosh/smu.c b/drivers/macintosh/smu.c
+index 94fb63a7b357..59ce431da7ef 100644
+--- a/drivers/macintosh/smu.c
++++ b/drivers/macintosh/smu.c
+@@ -848,7 +848,8 @@ int smu_queue_i2c(struct smu_i2c_cmd *cmd)
+ 	cmd->read = cmd->info.devaddr & 0x01;
+ 	switch(cmd->info.type) {
+ 	case SMU_I2C_TRANSFER_SIMPLE:
+-		memset(&cmd->info.sublen, 0, 4);
++		cmd->info.sublen = 0;
++		memset(&cmd->info.subaddr, 0, 3);
+ 		break;
+ 	case SMU_I2C_TRANSFER_COMBINED:
+ 		cmd->info.devaddr &= 0xfe;
 -- 
 2.30.2
 
