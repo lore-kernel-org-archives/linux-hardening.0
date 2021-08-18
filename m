@@ -5,61 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C47C41537
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F70C4320E
 	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB8A61056
+	by mail.kernel.org (Postfix) with ESMTP id C7C9660FDA
 	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238150AbhHRGYy (ORCPT
+        id S239322AbhHRGZE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
+        Wed, 18 Aug 2021 02:25:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238388AbhHRGYs (ORCPT
+        with ESMTP id S240009AbhHRGYz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:24:48 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C51D4C0617AD
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:24:13 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id m24-20020a17090a7f98b0290178b1a81700so1627989pjl.4
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:24:13 -0700 (PDT)
+        Wed, 18 Aug 2021 02:24:55 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186B7C06179A
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:24:18 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id x16so1103944pfh.2
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wNrSyu18+TQvxqozBk6dKmc83xjPuqXEkZM9+CZkQs8=;
-        b=hq0RZc8pvhUdG6LQCrGBNQbN7VTMq2CkOF4QQtsj4WrxV2UTBN34Md8Gi7LkipMBy6
-         xL7jSFJnNHOowLO3Jca2aK8bMlaJLC+laeAIEoH1LMm2sWoMULTrkMcKoRbBAsM8UOpd
-         ihsdkkeDmGTdleDP1YZNWHcSi4UiGfzn3DsyI=
+        bh=dkCK961ZyttB0QG+MUzGRc9GbPNZyJOzxDRl3nXU6Gc=;
+        b=F3ghc0DUnRIAuSynTOo4HhTisr9dY2clGPt7Tp2ELGFpLUMoqQjF17RYWes7eco0Fp
+         HKzP4hJH6W8dElSRC/l4MPe4WbDo+9mFg+K8Li9eyi19QvOkLGzu4axj3QbMT/3x3/oK
+         4mFZNJ8jfnCy22ecNEUEUkyyEwRPO3Ye/ohuI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wNrSyu18+TQvxqozBk6dKmc83xjPuqXEkZM9+CZkQs8=;
-        b=kDRyfUW++v2p3TP++FJfUyPBEL7TEWQ5uRku2boy2EBG59XgkcroH8zJB56WWtirpd
-         bd2en8dBY2oyqvZb6YeubLUaLX+2HlV6ob45CACIUrRcXVPY9tj597zwLle8vlNCxtj+
-         Fy/3wSprUugvAMLy/CMxUK5YtdNWttAs3jN3Uib0722rtDWcF0AdVTcnfEdDC+4QyK6n
-         IVRDkMaEOSHhT4T9cCGkhr6QVeo5UcD3guQdLE9wz+LY6xRYQCgmCIgMNtW5MSQq2xrL
-         zJBTnQxpURLMljhD8sEBRxUCgbaMJdAE0QMWdoKVTcFai1GOfDGU4tfBPnfF5GTmMDsf
-         9auA==
-X-Gm-Message-State: AOAM533At2dD5yc/Y7ySARyVPYImKBMVwxm8Mco25YDKT49SkBwG5smL
-        JtcvPGhSvuIp5WhbUxCiS5sPzQ==
-X-Google-Smtp-Source: ABdhPJxMkEdSe0VUFwn+z4vxkdsUFqJ2UwImPieDkAd2A7unXagJo2uR8zh40lbVDVJdC8iJXw8UiA==
-X-Received: by 2002:a17:902:cec3:b0:12d:92c4:1ea6 with SMTP id d3-20020a170902cec300b0012d92c41ea6mr5911733plg.36.1629267853392;
-        Tue, 17 Aug 2021 23:24:13 -0700 (PDT)
+        bh=dkCK961ZyttB0QG+MUzGRc9GbPNZyJOzxDRl3nXU6Gc=;
+        b=Gj0CwiQW08UxcpNokKHngutWx0zLsOldKkjYW+5ql5IfDgRsEgDS41VSuTeSKecmzc
+         rvl5bcfuyLHbPMMVbhHWIWkejomilWbpMLCL9b2kMBugN4bbZlvLWy9OemH187HkwuJj
+         M9qlmDtG43Tu7lag10jckd23hKduFn7cTkwBAHOAfOepH4MJf2VCFDTi+ROipVaT4Ppq
+         cvUHsDP3jW5/iNV5m9Ewp2A41LwM69SjZx4utFjHJseLL2URBP1TlqetAQ9EUxZ+E04V
+         wFES1GrYv928VywD6nRxmLV580dEnDGwPHPuNHMzqSwIEOULGuT2YWo/LrgVXU7Vruwb
+         VLSw==
+X-Gm-Message-State: AOAM5322za0ASjkHywiP468fzAAY2MSsCsoczma9CsNPZEvZXvdEtP9J
+        Uwgy2s+IyjSYXd8hkuQKSTcRew==
+X-Google-Smtp-Source: ABdhPJzB6Fpw5lksE03mTikq/l8Ungtb52rwsKcOwzebsF0lTq2QR4kdwv8iqtPBdlFbyxw6WcuEBA==
+X-Received: by 2002:aa7:8c19:0:b0:3e1:4b9e:cf89 with SMTP id c25-20020aa78c19000000b003e14b9ecf89mr7683859pfd.58.1629267857641;
+        Tue, 17 Aug 2021 23:24:17 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y13sm2710073pjr.50.2021.08.17.23.24.12
+        by smtp.gmail.com with ESMTPSA id t18sm4582599pfg.111.2021.08.17.23.24.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 23:24:12 -0700 (PDT)
+        Tue, 17 Aug 2021 23:24:15 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+Cc:     Kees Cook <keescook@chromium.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, kernel test robot <lkp@intel.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -69,14 +72,14 @@ Cc:     Kees Cook <keescook@chromium.org>, Chris Mason <clm@fb.com>,
         clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 49/63] btrfs: Use memset_startat() to clear end of struct
-Date:   Tue, 17 Aug 2021 23:05:19 -0700
-Message-Id: <20210818060533.3569517-50-keescook@chromium.org>
+Subject: [PATCH v2 57/63] powerpc/signal32: Use struct_group() to zero spe regs
+Date:   Tue, 17 Aug 2021 23:05:27 -0700
+Message-Id: <20210818060533.3569517-58-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1202; h=from:subject; bh=j07ODF9kjbRRiHohObgJ1N/RHPZCTrQAmspnQvku4YA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMpNf/1TOA8EHO13yPM2WoVQcddjcJSpXNg/q95 NGD5Kx+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKQAKCRCJcvTf3G3AJiFDD/ 43YRq8chsycAfEPzeH3ODP8oX8vzyejO0KZxGwB29jISLONkndclAADo87JB841bplfSqHF4g/N0Yr 9BPUFM/u9aD6MYInBsgRcfvidkMVdvLwJHJroTXouReKf+wENJpCE42XqDFb6/OHW+qszfq48l2ZsZ vlrJcOJH5B/7MGz2vGlPOqarS6QPhKxELyHgWma5US/BF+fmqXoGyLI96PzJHBVwD8Fv1vRW+FZyYX mS0c778XSYdo50TMLiLEeybc58/w6WbytsuOe2gDRaDra0L+tnQU3bUemlEwF/otdXngLgjznL3aHr 03wBbU/uuuYnsF2VxKSH3eTmyOXxM0Fc0gfhMAHlPYOx3FWaj25UujliZBiwYTeajzJsMlNaMxhyYC CNKnLKNfyeqkcnmjrNFG0fLVNoy2o0OR5zMuoedsu9e9ywbM82GfxRkHbOU9ZMZ5GgY2NMQXjzSHXm JS7ECNId/+w48q42Qz1RDDbkk71kX5clz/7ywEULnxcdaVF9VLida+SAjBnEmtDTTT5a3LFsbnweA7 31UgpReo5DWgV9+9dvXi/NGJgP+uufVyB7FGtNrTHKNpqkfmCVfC6YFh7uVwrtuLat1U/8LUy3Rdgf RT0NM3pRRzNQ/fI9ZSg5+8wsIv5qwbvYlgUlhc046qXy22//QbKOPQkqvAQQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2908; h=from:subject; bh=uD1y/xoxNTfC/kMxy1YHPqDr4W4r5gvR6/3LUb/d/+Q=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMqjnaaYE2W2OottJ48+Kv314H+c4/L+2RqMHXv r7V1BciJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKgAKCRCJcvTf3G3AJgmYD/ 4xOx64rrId3koq1dIVBd1c7qtDRXBXq8ocvbv6TiAzQ5OW2IJsAcesmEDGB0aarLTux96zhVYvPuEY ekfg39GKhCgEPeb5jXP+UH57m9qopfeReANE1S4LvEsOJWuHGa5N2yh0MVFMYdstmPHkfTVtOzOdnW 4FpfS36c3/G650GjYZjHYGK93aUv37ocoMf05CH9DSjWcOrGk+21jowTwXALShjZMmIjz5FWSiAPe+ +1eUzjLiqUeJOGZ7Lv40/p3giVTD2/7lEzVVufOf7KMLHvSJmrltr2bLt88CSW+0Qs2cDc8kDwit4g NSusBANylY1K/6uJsrHXOzr8UYkdtB6bsttgeE9V1+wOYhLMeNib3XArxbwXJKppaNHkpLdAyqOc1N hNWxNmFkEb7gLQI+lgaRv2CySpbhIO+o8h7UWzfZ9W2P7Sz8/0+TLD68DRwxBbPxMHy7FpShanbdlR HAvsXrcU8SaCn8kjeuW7pbNPk+pnaYiQiMH5cl3iCfgq1I13gvGVNmMUEdqsNskPE6H1JjH3DkRQLj i7n33M3844UZk+msL24HAJukYQmiAtXqJDGZb3S179NpLnEREMRQveIz0XRN96WDiRCpbvwy644xQe qmxn1RnVllos5p0W46DDS5Z/a2ezsgCPxronRiihYw6gD81m/cUYTrPKHDSw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -87,36 +90,64 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Use memset_startat() so memset() doesn't get confused about writing
-beyond the destination member that is intended to be the starting point
-of zeroing through the end of the struct.
+Add a struct_group() for the spe registers so that memset() can correctly reason
+about the size:
 
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org
+   In function 'fortify_memset_chk',
+       inlined from 'restore_user_regs.part.0' at arch/powerpc/kernel/signal_32.c:539:3:
+>> include/linux/fortify-string.h:195:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+     195 |    __write_overflow_field();
+         |    ^~~~~~~~~~~~~~~~~~~~~~~~
+
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/btrfs/root-tree.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/powerpc/include/asm/processor.h | 6 ++++--
+ arch/powerpc/kernel/signal_32.c      | 6 +++---
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
-index 702dc5441f03..12ceb14a1141 100644
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -39,10 +39,8 @@ static void btrfs_read_root_item(struct extent_buffer *eb, int slot,
- 		need_reset = 1;
- 	}
- 	if (need_reset) {
--		memset(&item->generation_v2, 0,
--			sizeof(*item) - offsetof(struct btrfs_root_item,
--					generation_v2));
--
-+		/* Clear all members from generation_v2 onwards. */
-+		memset_startat(item, 0, generation_v2);
- 		generate_random_guid(item->uuid);
- 	}
- }
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index f348e564f7dd..05dc567cb9a8 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -191,8 +191,10 @@ struct thread_struct {
+ 	int		used_vsr;	/* set if process has used VSX */
+ #endif /* CONFIG_VSX */
+ #ifdef CONFIG_SPE
+-	unsigned long	evr[32];	/* upper 32-bits of SPE regs */
+-	u64		acc;		/* Accumulator */
++	struct_group(spe,
++		unsigned long	evr[32];	/* upper 32-bits of SPE regs */
++		u64		acc;		/* Accumulator */
++	);
+ 	unsigned long	spefscr;	/* SPE & eFP status */
+ 	unsigned long	spefscr_last;	/* SPEFSCR value on last prctl
+ 					   call or trap return */
+diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
+index 0608581967f0..77b86caf5c51 100644
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -532,11 +532,11 @@ static long restore_user_regs(struct pt_regs *regs,
+ 	regs_set_return_msr(regs, regs->msr & ~MSR_SPE);
+ 	if (msr & MSR_SPE) {
+ 		/* restore spe registers from the stack */
+-		unsafe_copy_from_user(current->thread.evr, &sr->mc_vregs,
+-				      ELF_NEVRREG * sizeof(u32), failed);
++		unsafe_copy_from_user(&current->thread.spe, &sr->mc_vregs,
++				      sizeof(current->thread.spe), failed);
+ 		current->thread.used_spe = true;
+ 	} else if (current->thread.used_spe)
+-		memset(current->thread.evr, 0, ELF_NEVRREG * sizeof(u32));
++		memset(&current->thread.spe, 0, sizeof(current->thread.spe));
+ 
+ 	/* Always get SPEFSCR back */
+ 	unsafe_get_user(current->thread.spefscr, (u32 __user *)&sr->mc_vregs + ELF_NEVRREG, failed);
 -- 
 2.30.2
 
