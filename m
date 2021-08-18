@@ -8,76 +8,83 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15454C4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488EFC432BE
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0203C60F35
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354BD60F35
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240401AbhHRGSQ (ORCPT
+        id S240719AbhHRGSY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        Wed, 18 Aug 2021 02:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239585AbhHRGQD (ORCPT
+        with ESMTP id S239173AbhHRGQA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:16:03 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22F5C034622
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:20 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id o10so1207658plg.0
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:20 -0700 (PDT)
+        Wed, 18 Aug 2021 02:16:00 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F78CC03540F
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:19 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id k14so1162564pga.13
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B2pM2ucDG5zliIAHLMoXUSUCi2eG5GhvAhwNtz+MErg=;
-        b=mwg1q+Bt4QS2kDiAiYMrptxKuPiLfGTL3MbhRH+y+rtpN+PzOswpzAybX1QwsdWpC+
-         /4EJLgRYHAO0A/0MlMQ1JbRzphtUuW7CEaeih+Hg720g37V8tn+kB2YNyIeVU9s27YGJ
-         I5Nv+aE5iixSzp+8UlyJNVcSewinIrbX4uCuA=
+        bh=N3Iemq6IfMq8jyV2u9omGTepmgQD8wDuqLYjs8itz1Y=;
+        b=TxRwedVVvF+R1Lfnd1UxRNt4KDV9rNjmqnlR6ek55RYna0VF5FhXLYO+lYfDjL3lub
+         nJUaKphm8EO0FLwlYusMyQ7Zdz/KysFN+HKlkrQtKiJpAlXfQa/iisDbdKvMF/6dslTq
+         ZIzUo34Moo/ZceEV9eGHlI6bz1A5KD4Wfh1Nw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B2pM2ucDG5zliIAHLMoXUSUCi2eG5GhvAhwNtz+MErg=;
-        b=WL7HGUMSXjnVSUabEhYzmodSgvKaJy9O+kybe3V8ZHpOt5nVkrNDOVgACthUdMlJg5
-         V3eWT8PX1dLCfGmZd9cR+WLsGANCtDJrSmno8NrjnDpMCMjauUEj4+uCI4FbiBOMs83E
-         qR8SWxl6ZO8nRPInccvpbYqU+sxnWTQlqfsUdt4U6ONEpzv6ZIHCSp2IW8BXGZCq5pnE
-         IFFynWNiVtv1j2MiHyEJgR5SIKCKaKTRjE2JoakNe3CrPKfzFis+EEGIZIqnStvNzt9J
-         KuSrED6hoogI7ta7pEXwxLb2mPx6qhAjBcG6Xz3xvHZEyqfjXVtKXhM1O2PzwpPwO4yR
-         qjtQ==
-X-Gm-Message-State: AOAM530X8fTUu3g63zcqj+QW0XQLW5yZWQC6aGsRQEudTipIdAnXVhtA
-        FX4YAUDyzOepFXUfZCm8E8AUaw==
-X-Google-Smtp-Source: ABdhPJy3pLNFC0UXT9j5IspDzOvKFRoKWLAd34sfU1xG8WMyu2hdKoL/KuE0lWutReWDKTv5ir2SbA==
-X-Received: by 2002:a17:902:8e84:b029:12c:8742:1d02 with SMTP id bg4-20020a1709028e84b029012c87421d02mr6048620plb.38.1629267260326;
-        Tue, 17 Aug 2021 23:14:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c2sm4955806pfi.80.2021.08.17.23.14.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=N3Iemq6IfMq8jyV2u9omGTepmgQD8wDuqLYjs8itz1Y=;
+        b=TKD5D6TC5N72kuDA3A1Xkfm1emSTp00pg2VWDLV3jEeM3TmTJqTP4L7rFziJeKc7zJ
+         pUYrkL30funJHm/+/6i2WwUzTkSFcPrtNudyQW2s/9EeW9zzqRKt4LN1S/ClV1MFD4aH
+         DZnw92T28AxLCVCOBTcK0SIJM+IH724r8hiCygE5icycXXoZCD10QWSq34i9ykKwU082
+         hScaVKXHQwy2xwhOkQXOl03Hvgw4bYvkdT6z4R49lvme7nswbGTssxxKSkdpPQBirL+p
+         t0eTr3RfoHOYGahe00RJTfvUQeMIaepiJpJZVu2nrbJJuwXImr4ZRvMAFYwtyJI0Q+8Z
+         MfSA==
+X-Gm-Message-State: AOAM533udI0SlLH+RsDJynzjVqeGNFXfLKkiVRAAGTczR1MeANWivu9M
+        wPfMgoRJIUdv0Mfj65cOmSTupw==
+X-Google-Smtp-Source: ABdhPJzbX3ZWnssMxhh5s/pWLIyPLFLmkxT6FRbi0vBpDllDzQCsAGSzrNp4dT0eMcLnMaiF/0hcZg==
+X-Received: by 2002:a63:cd02:: with SMTP id i2mr7277459pgg.116.1629267259068;
         Tue, 17 Aug 2021 23:14:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z9sm4655621pfa.2.2021.08.17.23.14.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 23:14:15 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+Cc:     Kees Cook <keescook@chromium.org>, Jouni Malinen <j@w1.fi>,
+        Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
+        linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 38/63] xfrm: Use memset_after() to clear padding
-Date:   Tue, 17 Aug 2021 23:05:08 -0700
-Message-Id: <20210818060533.3569517-39-keescook@chromium.org>
+Subject: [PATCH v2 15/63] intersil: Use struct_group() for memcpy() region
+Date:   Tue, 17 Aug 2021 23:04:45 -0700
+Message-Id: <20210818060533.3569517-16-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1818; h=from:subject; bh=eNwDaozDVyCitQLryWC3/RFgBjRXkOp7KVQC946+IMc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMmAX0G1QJqNpqHK4m8y3LeJ99HmlfZlOjfOt4C XfOmkkGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjJgAKCRCJcvTf3G3AJqqREA Cd9YfEItqXqOY6xygw682gXWYaNQa5IvKCcsyt4U6GdZah2FRAUQ0UxtMIwc0L2/8g3CAi4wzU83FH 5n6GD+dF8r+3cEP4bPwYLGEKzsgswWQIqJWwKGJoBvFSxG5wbfIHwbvZFOM5y+/t0aPwonqcCoJOw3 ThLBMvQUV6CpfMGRKgiedNLzbF/W83qJ2AR4sriqV/LBY6hNK46QXR861zd0a5kaRKvgMSwMV52G0c jSd0GHvFCTEnjsussKR6m695hHoQ//Grp/PmO9TMZ/3lfxTIWoYIoIcbwp7uZ54MslPdksTUwsmU0h IO8Y+uXx5pnjdZSpaSsSCIOVJL/EthakY7NQ5WVjObsr0IqBBwrY20F03r3zPRKZGy1AqQzOMGCwoZ OzA7VYExn3uUxUXRBqic+nz/P7UBIsBMqdKH9LaSVuz96021TUStdpZJm7ZJXKi0cNJAzywfSDP3HH czY6llUcG1ZRmA3/1iK36jI7I7bTyaQibsz/ss/kI2A94u+5cgagPX+YYXqa9D238TuWELhNQQbyON ahzeMR7rMXzdB40Gm0u/oCpw+3fhAQ8YcZjYa35I7aWjTr47jLo+AN/O0Es/XUUwjNu9T1tAclWZEZ SDapObM7dpmG1Ldxs4y59x6+0RFPyEN5Tb14raVdPsku576ce7lt/B+4yXMw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3106; h=from:subject; bh=zQZGxBfl7dAgG5tBG/ZLbaDQfVLnlG18JlpAF80qB7s=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMhrEzcBPUO2fJ4Pn+xRO14SATLeMOS42x+QUKW 6CMu31qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjIQAKCRCJcvTf3G3AJjCpD/ 0bIdtbe2MXXc36t6JnE/BOu31oCVMunfUwVmUuWjcW5QZKCJKHCaWynEtZ43tRXaPeLyqe2eluQQLX mxQinp+l5Gk6QLjrZ/2gCmzu5dy3Ll0/1wKJHvFSLUCL4ll73Dl/CpGN9Gflki+/WsFSYz93ibz/z0 M39dEpmzX3sxWiz9mnlMByQXhV/tSjSUHsC/tgcT8GzKyWO3TMpyWD1XDQCrzLJtKSQi8YpAM59d9v mfq1ifJj8/Pr227Kk8ZL7KuWz86p/CiKS6R/QqrQ43x+fO1u8dB+xui76UQiHTj+vGBAUCqvW30Bfd g2qbVS2IkFYfjmpfNjvavGsEMxqM5stGW4RqB9jSuZ4tiEXwey6K9+85Nx5lTJyKlU4YCadcNdpEr3 4/oZM06OB8PnSr4lwMAjzFhI6R0fChF5uJxb5fb6pm5hRzt5+5hlgmAopQdTaxyhDK7JO8aZOWd6oV HIrlagRF1x3sVhMuP2UMukVaahRXE6seQlBvx68gpW8OolKr9O58KEWnVxisYzpFhd2vATCBNfT5be wFUq5DxkidJPPpbEzvf40Fgl8vb7r1fbY9+Tnjy4SrwOMGmE63TRwUAhpjgQSgYHKdQMk/8OplMa30 BXm38AUk8ZEnYTmCoH5mEsYfE0KahJm/YgOEspR8zcg/IvsloK8a6Dl/Fx5w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -85,52 +92,78 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memset(), avoid intentionally writing across
-neighboring fields.
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-Clear trailing padding bytes using the new helper so that memset()
-doesn't get confused about writing "past the end" of the last struct
-member. There is no change to the resulting machine code.
+Use struct_group() in struct hfa384x_tx_frame around members
+frame_control, duration_id, addr1, addr2, addr3, and seq_ctrl, so they
+can be referenced together. This will allow memcpy() and sizeof() to
+more easily reason about sizes, improve readability, and avoid future
+warnings about writing beyond the end of frame_control.
 
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
+"pahole" shows no size nor member offset changes to struct
+hfa384x_tx_frame. "objdump -d" shows no object code changes.
+
+Cc: Jouni Malinen <j@w1.fi>
+Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Allen Pais <allen.lkml@gmail.com>
+Cc: Romain Perier <romain.perier@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- net/xfrm/xfrm_policy.c | 4 +---
- net/xfrm/xfrm_user.c   | 2 +-
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intersil/hostap/hostap_hw.c   |  5 +++--
+ drivers/net/wireless/intersil/hostap/hostap_wlan.h | 14 ++++++++------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index 37d17a79617c..1a06585022ab 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -2486,9 +2486,7 @@ static inline struct xfrm_dst *xfrm_alloc_dst(struct net *net, int family)
- 	xdst = dst_alloc(dst_ops, NULL, 1, DST_OBSOLETE_NONE, 0);
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_hw.c b/drivers/net/wireless/intersil/hostap/hostap_hw.c
+index 9a19046217df..cea8a9ddc4da 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_hw.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_hw.c
+@@ -1812,8 +1812,9 @@ static int prism2_tx_80211(struct sk_buff *skb, struct net_device *dev)
+ 	memset(&txdesc, 0, sizeof(txdesc));
  
- 	if (likely(xdst)) {
--		struct dst_entry *dst = &xdst->u.dst;
--
--		memset(dst + 1, 0, sizeof(*xdst) - sizeof(*dst));
-+		memset_after(xdst, 0, u.dst);
- 	} else
- 		xdst = ERR_PTR(-ENOBUFS);
+ 	/* skb->data starts with txdesc->frame_control */
+-	hdr_len = 24;
+-	skb_copy_from_linear_data(skb, &txdesc.frame_control, hdr_len);
++	hdr_len = sizeof(txdesc.frame);
++	BUILD_BUG_ON(hdr_len != 24);
++	skb_copy_from_linear_data(skb, &txdesc.frame, hdr_len);
+ 	if (ieee80211_is_data(txdesc.frame_control) &&
+ 	    ieee80211_has_a4(txdesc.frame_control) &&
+ 	    skb->len >= 30) {
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_wlan.h b/drivers/net/wireless/intersil/hostap/hostap_wlan.h
+index dd2603d9b5d3..174735a137c5 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_wlan.h
++++ b/drivers/net/wireless/intersil/hostap/hostap_wlan.h
+@@ -115,12 +115,14 @@ struct hfa384x_tx_frame {
+ 	__le16 tx_control; /* HFA384X_TX_CTRL_ flags */
  
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 03b66d154b2b..b7b986520dc7 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -2912,7 +2912,7 @@ static int build_expire(struct sk_buff *skb, struct xfrm_state *x, const struct
- 	copy_to_user_state(x, &ue->state);
- 	ue->hard = (c->data.hard != 0) ? 1 : 0;
- 	/* clear the padding bytes */
--	memset(&ue->hard + 1, 0, sizeof(*ue) - offsetofend(typeof(*ue), hard));
-+	memset_after(ue, 0, hard);
+ 	/* 802.11 */
+-	__le16 frame_control; /* parts not used */
+-	__le16 duration_id;
+-	u8 addr1[ETH_ALEN];
+-	u8 addr2[ETH_ALEN]; /* filled by firmware */
+-	u8 addr3[ETH_ALEN];
+-	__le16 seq_ctrl; /* filled by firmware */
++	struct_group(frame,
++		__le16 frame_control; /* parts not used */
++		__le16 duration_id;
++		u8 addr1[ETH_ALEN];
++		u8 addr2[ETH_ALEN]; /* filled by firmware */
++		u8 addr3[ETH_ALEN];
++		__le16 seq_ctrl; /* filled by firmware */
++	);
+ 	u8 addr4[ETH_ALEN];
+ 	__le16 data_len;
  
- 	err = xfrm_mark_put(skb, &x->mark);
- 	if (err)
 -- 
 2.30.2
 
