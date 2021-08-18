@@ -2,130 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AD6C4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 09:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25691C432BE
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 09:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 034CF6109E
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 09:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058F660551
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 09:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231143AbhHRJGW (ORCPT
+        id S232421AbhHRJcg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 05:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229971AbhHRJGW (ORCPT
+        Wed, 18 Aug 2021 05:32:36 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:39800 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233703AbhHRJcU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 05:06:22 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50DDC0613CF
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 02:05:47 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id c17so1418209plz.2
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 02:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=NwlqG+rGO9KvfhCSwLDgRYsI8h6dWdnqYqbHJGPEme0=;
-        b=R5Ryqi+3ufOXj4PruwnTvqtfAJxKzmWANSkCph9vX3JAIUwLfa/ogsf0XiAzmuAaIb
-         VPDfjaA6JoKlT4Kx+R9SxDMV4d2OeUToJNM29cVAvSSW7Gq1sgBqjsTAvV4VPEc/f7nR
-         v/9FoiPkSVtpFKIvuRP2dgdjigBNevI1IirKo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=NwlqG+rGO9KvfhCSwLDgRYsI8h6dWdnqYqbHJGPEme0=;
-        b=ASUdy06pbXkULjVBwfg33pWXf5V0J1UcaFjUCY6E5lW86oZSeqS+HmD66jtbxGiIQS
-         IORA9dlIOumPOhof+Vw8FO7ghswgFnB6QsyTSoHOIqQF7bCyOptNNMVx8/jZ5CuLloyD
-         2DoF3HyrUBKweOnDb4Aq2S5Wvc9jMsJRLcBqIO49+3M1ErSTgelyIvWwJZqfRtLJmqj1
-         ToktTSBtLVonRakJOBYhoC3H+ZlotZ/uOIwqHOHlCuCnXSCwx43cd8MCkf94o50bCaS0
-         nli2mB61XIkVX3L5ygf1kveDc060KcBxeK0ngYYTJiN0STao6l4hCLN7vcgZn+ydTjuo
-         OBaw==
-X-Gm-Message-State: AOAM530pjcV5lu1ioFf0d62m20Na1bYWclYTRNH0+5rp0UHm89vE44qK
-        zS2slNUQZzuVo4DHa0KkXQtnOA==
-X-Google-Smtp-Source: ABdhPJy5VoNYR8gwCuIaLE1kUReGMfgEfhj9n5qCxc6K8dzpoM8CUxBKq9FzEjdxDuCc9RNmRV3rMg==
-X-Received: by 2002:a17:90a:6c97:: with SMTP id y23mr8162537pjj.117.1629277547417;
-        Wed, 18 Aug 2021 02:05:47 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y19sm5468368pfe.71.2021.08.18.02.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 02:05:46 -0700 (PDT)
-Date:   Wed, 18 Aug 2021 02:05:45 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Wed, 18 Aug 2021 05:32:20 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 6BDC422065;
+        Wed, 18 Aug 2021 09:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1629279084;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MjEVLCKBlTSswofPN1pNmxlP19qpFPg2jUD4se0XdyA=;
+        b=Vce+IAwmUDcfv2b7QGyi2Dv7EKo/Co6jwhdkPnVadZs3PhYLf7tUr6B9fRUUxtOcBZk6+N
+        B9XQg+cRWkemeBBWnWGk1wfHVQuq5Xnz4OC/hrrv7YBobuFDHB3iZwPRwWeZB5fMRC+UY8
+        0ZVGoxSYWv4akI4SI4AnM5BUhMcP4k4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1629279084;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MjEVLCKBlTSswofPN1pNmxlP19qpFPg2jUD4se0XdyA=;
+        b=SFOFKtThDem3M1F/rOZMlyJlFmdOZ4+c7ISuV48nRhjMQ1VbfvtT61ULNqlr3zoJHsVSVM
+        ACnXbdzsW0b8HLBQ==
+Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
+        by relay2.suse.de (Postfix) with ESMTP id 4E36EA3B94;
+        Wed, 18 Aug 2021 09:31:24 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id B0437DA72C; Wed, 18 Aug 2021 11:28:27 +0200 (CEST)
+Date:   Wed, 18 Aug 2021 11:28:27 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
         linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
         clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 44/63] mac80211: Use memset_after() to clear tx status
-Message-ID: <202108180203.592E3F01@keescook>
+Subject: Re: [PATCH v2 49/63] btrfs: Use memset_startat() to clear end of
+ struct
+Message-ID: <20210818092827.GO5047@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
+        linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-hardening@vger.kernel.org
 References: <20210818060533.3569517-1-keescook@chromium.org>
- <20210818060533.3569517-45-keescook@chromium.org>
- <11db2cdc5316b51f3fa2f34e813a458e455c763d.camel@sipsolutions.net>
- <8b48dac4c40127366e91855306d24e07eb0b81d9.camel@sipsolutions.net>
+ <20210818060533.3569517-50-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b48dac4c40127366e91855306d24e07eb0b81d9.camel@sipsolutions.net>
+In-Reply-To: <20210818060533.3569517-50-keescook@chromium.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 10:06:51AM +0200, Johannes Berg wrote:
-> On Wed, 2021-08-18 at 09:08 +0200, Johannes Berg wrote:
-> > On Tue, 2021-08-17 at 23:05 -0700, Kees Cook wrote:
-> > > 
-> > > @@ -275,12 +275,11 @@ static void carl9170_tx_release(struct kref *ref)
-> > >  	if (WARN_ON_ONCE(!ar))
-> > >  		return;
-> > >  
-> > > 
-> > > 
-> > > 
-> > > -	BUILD_BUG_ON(
-> > > -	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
-> > > -
-> > > -	memset(&txinfo->status.ack_signal, 0,
-> > > -	       sizeof(struct ieee80211_tx_info) -
-> > > -	       offsetof(struct ieee80211_tx_info, status.ack_signal));
-> > > +	/*
-> > > +	 * Should this call ieee80211_tx_info_clear_status() instead of clearing
-> > > +	 * manually? txinfo->status.rates do not seem to be used here.
-> > > +	 */
-> > 
-> > Since you insist, I went digging :)
-> > 
-> > It should not, carl9170_tx_fill_rateinfo() has filled the rate
-> > information before we get to this point.
+On Tue, Aug 17, 2021 at 11:05:19PM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
+> 
+> Use memset_startat() so memset() doesn't get confused about writing
+> beyond the destination member that is intended to be the starting point
+> of zeroing through the end of the struct.
+> 
+> Cc: Chris Mason <clm@fb.com>
+> Cc: Josef Bacik <josef@toxicpanda.com>
+> Cc: David Sterba <dsterba@suse.com>
+> Cc: linux-btrfs@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Ah-ha! Thanks for checking. I'll update the comment to explain the
-rationale here.
-
-> Otherwise, looks fine, FWIW.
-
-Thanks!
-
-> Are you going to apply all of these together somewhere? I (we) can't,
-> since memset_after() doesn't exist yet.
-
-Right, given the dependencies, I am expecting to just carry the whole
-series, since the vast majority of it has no binary changes, etc. I'm
-hoping to get it into -next soon, but we're uncomfortably close to the
-merge window. :P
-
--- 
-Kees Cook
+Acked-by: David Sterba <dsterba@suse.com>
