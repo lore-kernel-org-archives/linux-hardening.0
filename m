@@ -2,147 +2,134 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15B3C4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE10C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82817606A5
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A21610FD
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234337AbhHRVvo (ORCPT
+        id S234261AbhHRVvw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 17:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234121AbhHRVvn (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 17:51:43 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B78C0613D9
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:51:08 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id n13-20020a17090a4e0d00b0017946980d8dso9850579pjh.5
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:51:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7vHz7lx5HT3o9dUfiJevKg/RCUhyC9oP+KAo7KKSobE=;
-        b=a0gIT1PbsUrzpiMxHFJQf3jDySrUQ8Ww2Lki+TjewXrAJP5UxO7103vV2RR/V3ANRN
-         1nLuL/Iv5GOFWegVwgew6XfBqxD/P2xI/kCXdGtAH6LbMiGNGZJvf9jRwo8l9cGtJXp/
-         NJhI01VKo66AWmiNMy8NublWXQfmYUotQ1JOg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7vHz7lx5HT3o9dUfiJevKg/RCUhyC9oP+KAo7KKSobE=;
-        b=fGQtVLxDO5uoQZutn1WftjYmz514uaVxLT/jWKnlbwUfrPH6nBsAhnjZslYxS11bei
-         +4VsM4TH9swvSNUgv6mZyYv/jkQE7umyPsui8XD2uOFBTuahIhbUySmTK4H9rMjBCTdi
-         JNUYLmUiaC8vVVWYMkCMskmhdyYXShYHB1vxcXoBUe3yfOWOtbYEbujI2zky816t1zAu
-         fWtO2VCHSEKv5z41a9Y63cWdUPPDogZhKR37+TEJH5N99b4pwtpAVfci+aa4HN/CIxWf
-         YdTZujgXmXhCHbr3rhBXIPx+SpYJ/Z2vAHFkWBNWuGzppx+8aAdPDuSQv4IZH4nSbn4K
-         TVlA==
-X-Gm-Message-State: AOAM532R2F17QisKRqohhxQx4sasDW0yS7AsP7ZFz2QSYRIcws3ok8ga
-        Zz9oy8SXnHfvhzHg50VOC+275w==
-X-Google-Smtp-Source: ABdhPJyzlA1BSNScs1NpCi0WnbTUY9sHZCG50/IaKrR4dcNnW411OdaQOYqLBK5zGkg4QWgJ9r2Cng==
-X-Received: by 2002:a17:902:b601:b029:12b:d9a:894f with SMTP id b1-20020a170902b601b029012b0d9a894fmr9050350pls.63.1629323468448;
-        Wed, 18 Aug 2021 14:51:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b190sm808833pgc.91.2021.08.18.14.51.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 14:51:07 -0700 (PDT)
-Date:   Wed, 18 Aug 2021 14:51:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ayush Sawal <ayush.sawal@chelsio.com>,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
-        Rohit Maheshwari <rohitm@chelsio.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
-        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        linux-crypto@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-can@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/5] treewide: Replace open-coded flex arrays in unions
-Message-ID: <202108181448.9C13CE9@keescook>
-References: <20210818081118.1667663-1-keescook@chromium.org>
- <20210818081118.1667663-3-keescook@chromium.org>
- <20210818095635.tm42ctkm6aydjr6g@pengutronix.de>
+        Wed, 18 Aug 2021 17:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234422AbhHRVvw (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 18 Aug 2021 17:51:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ED6F1600D4;
+        Wed, 18 Aug 2021 21:51:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629323475;
+        bh=VJvodRz2zx/X85MkngkOTb8/Lf3wBVCvk02sPd1R1SY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JINAHL7yfDUBJP7yKVw6AsvrGRAOFK3v6IE5GMvApip5EKO730SKJXSdpc/JHKY9A
+         d+ZI45WVb2lIJMssuCjnRN+d7bPzCSugXB9jMTMPOgYWcKmsjTtiru2SMlobPmmOlX
+         yfXIdeb4xjMDKG39s5JlvUyCfPs8QcLJdTDy/4shHIGsKWBOd1L5y3pSRLrRSW5l8o
+         Y4wG9xtXpPJU8Uib9oVh9JYdfreOlu9iF9O16tJiGn166n1/u0sYmsbYhGYhNotXT1
+         S33kXTkLcUNEOxPU89O7E2Gq7iGrF5Qn7FRPiWv0xTw/cw1P0WA0nZ07xsunPwF9IN
+         3QFRzEUuvymxQ==
+Subject: Re: [PATCH v2 1/7] Compiler Attributes: Add __alloc_size() for better
+ bounds checking
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, linux-mm@kvack.org,
+        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210818214021.2476230-1-keescook@chromium.org>
+ <20210818214021.2476230-2-keescook@chromium.org>
+From:   Nathan Chancellor <nathan@kernel.org>
+Message-ID: <fd4e3b0b-a052-58a7-c816-f055e8404165@kernel.org>
+Date:   Wed, 18 Aug 2021 14:51:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210818095635.tm42ctkm6aydjr6g@pengutronix.de>
+In-Reply-To: <20210818214021.2476230-2-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 11:56:35AM +0200, Marc Kleine-Budde wrote:
-> On 18.08.2021 01:11:15, Kees Cook wrote:
-> > diff --git a/drivers/net/can/usb/etas_es58x/es581_4.h b/drivers/net/can/usb/etas_es58x/es581_4.h
-> > index 4bc60a6df697..8657145dc2a9 100644
-> > --- a/drivers/net/can/usb/etas_es58x/es581_4.h
-> > +++ b/drivers/net/can/usb/etas_es58x/es581_4.h
-> > @@ -192,7 +192,7 @@ struct es581_4_urb_cmd {
-> >  		struct es581_4_rx_cmd_ret rx_cmd_ret;
-> >  		__le64 timestamp;
-> >  		u8 rx_cmd_ret_u8;
-> > -		u8 raw_msg[0];
-> > +		flex_array(u8 raw_msg);
-> >  	} __packed;
-> >  
-> >  	__le16 reserved_for_crc16_do_not_use;
-> > diff --git a/drivers/net/can/usb/etas_es58x/es58x_fd.h b/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> > index ee18a87e40c0..3053e0958132 100644
-> > --- a/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> > +++ b/drivers/net/can/usb/etas_es58x/es58x_fd.h
-> > @@ -228,7 +228,7 @@ struct es58x_fd_urb_cmd {
-> >  		struct es58x_fd_tx_ack_msg tx_ack_msg;
-> >  		__le64 timestamp;
-> >  		__le32 rx_cmd_ret_le32;
-> > -		u8 raw_msg[0];
-> > +		flex_array(u8 raw_msg[]);
-> >  	} __packed;
+On 8/18/2021 2:40 PM, Kees Cook wrote:
+> GCC and Clang can use the "alloc_size" attribute to better inform the
+> results of __builtin_object_size() (for compile-time constant values).
+> Clang can additionally use alloc_size to inform the results of
+> __builtin_dynamic_object_size() (for run-time values).
 > 
-> This doesn't look consistent, what's preferred?
+> Because GCC sees the frequent use of struct_size() as an allocator size
+> argument, and notices it can return SIZE_MAX (the overflow indication),
+> it complains about these call sites may overflow (since SIZE_MAX is
+> greater than the default -Walloc-size-larger-than=PTRDIFF_MAX). This
+> isn't helpful since we already know a SIZE_MAX will be caught at run-time
+> (this was an intentional design). Instead, just disable this check as
+> it is both a false positive and redundant. (Clang does not have this
+> warning option.)
 > 
-> u8 raw_msg[0];  -> flex_array(u8 raw_msg);
->  - or-
->                 -> flex_array(u8 raw_msg[]);
+> Cc: Miguel Ojeda <ojeda@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: clang-built-linux@googlegroups.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Eek, thanks for catching that. And this helps me realize that having
-"flex_array" and "[]" is redundant, and the above typo would have been
-caught. I will fix this for v2.
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-Thanks!
-
--Kees
-
--- 
-Kees Cook
+> ---
+>   Makefile                            | 6 +++++-
+>   include/linux/compiler_attributes.h | 6 ++++++
+>   2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 72f9e2b0202c..34cffcdfd5dc 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1078,9 +1078,13 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+>   # Another good warning that we'll want to enable eventually
+>   KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
+>   
+> -# Enabled with W=2, disabled by default as noisy
+>   ifdef CONFIG_CC_IS_GCC
+> +# Enabled with W=2, disabled by default as noisy
+>   KBUILD_CFLAGS += -Wno-maybe-uninitialized
+> +
+> +# The allocators already balk at large sizes, so silence the compiler
+> +# warnings for bounds checks involving those possible values.
+> +KBUILD_CFLAGS += -Wno-alloc-size-larger-than
+>   endif
+>   
+>   # disable invalid "can't wrap" optimizations for signed / pointers
+> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+> index 67c5667f8042..203b0ac62d15 100644
+> --- a/include/linux/compiler_attributes.h
+> +++ b/include/linux/compiler_attributes.h
+> @@ -54,6 +54,12 @@
+>   #define __aligned(x)                    __attribute__((__aligned__(x)))
+>   #define __aligned_largest               __attribute__((__aligned__))
+>   
+> +/*
+> + *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-alloc_005fsize-function-attribute
+> + * clang: https://clang.llvm.org/docs/AttributeReference.html#alloc-size
+> + */
+> +#define __alloc_size(x, ...)		__attribute__((__alloc_size__(x, ## __VA_ARGS__)))
+> +
+>   /*
+>    * Note: users of __always_inline currently do not write "inline" themselves,
+>    * which seems to be required by gcc to apply the attribute according
+> 
