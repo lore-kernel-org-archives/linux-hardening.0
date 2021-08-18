@@ -2,73 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75013C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 14:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01AFC4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 14:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51AF661076
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 14:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DF0610CF
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 14:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236932AbhHROCE (ORCPT
+        id S239509AbhHROpT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 10:02:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235675AbhHROCE (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 10:02:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C192861076;
-        Wed, 18 Aug 2021 14:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1629295289;
-        bh=n0bqvjFk9Fcyf5vG4qnh6fvg/zu6w3/aSDrjvp3f4ss=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WnhjQ5zpBint+sjjMGZejnqN9eQgjtWpg+ZzgZYqRxdf9fWkFqRJW10fEQKDrhi2q
-         sfsmeE19aJI9Qcg3ibbIIVHaaX7dr+CzHSBE2AQR3f7Sg4q2eClWyRbnwjujQc/lRa
-         4sDRCDcNt6oXEOE3/4mCvKsMpADWnJ0pS2qmj18k=
-Date:   Wed, 18 Aug 2021 16:01:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Wed, 18 Aug 2021 10:45:19 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:44375 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S239446AbhHROpR (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 18 Aug 2021 10:45:17 -0400
+Received: (qmail 195955 invoked by uid 1000); 18 Aug 2021 10:44:42 -0400
+Date:   Wed, 18 Aug 2021 10:44:42 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lkdtm/heap: Avoid __alloc_size hint warning
-Message-ID: <YR0StuqeKm1vbaM5@kroah.com>
-References: <20210818044540.1601664-1-keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Al Cooper <alcooperx@gmail.com>,
+        linux-usb@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] USB: EHCI: Add register array bounds to HCS ports
+Message-ID: <20210818144442.GC193695@rowland.harvard.edu>
+References: <20210818043035.1308062-1-keescook@chromium.org>
+ <20210818043035.1308062-2-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210818044540.1601664-1-keescook@chromium.org>
+In-Reply-To: <20210818043035.1308062-2-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 17, 2021 at 09:45:40PM -0700, Kees Cook wrote:
-> Once __alloc_size hints have been added, the compiler will
-> (correctly!) see this as an overflow. We are, however, trying to test
-> for this condition, so work around it with a volatile int.
+On Tue, Aug 17, 2021 at 09:30:33PM -0700, Kees Cook wrote:
+> The original EHCI register struct used a trailing 0-element array for
+> addressing the N_PORTS-many available registers. However, after
+> commit a46af4ebf9ff ("USB: EHCI: define extension registers like normal ones")
+> the 0-element array started to overlap the USBMODE extension register.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> To avoid future compile-time warnings about accessing indexes within a
+> 0-element array, rearrange the struct to actually describe the expected
+> layout (max 15 registers) with a union. All offsets remain the same, and
+> bounds checking becomes possible on accesses to port_status and hostpc.
+> 
+> There are no binary differences, and struct offsets continue to match.
+
+Two comments...
+
 > ---
->  drivers/misc/lkdtm/heap.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  include/linux/usb/ehci_def.h | 24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/misc/lkdtm/heap.c b/drivers/misc/lkdtm/heap.c
-> index 3d9aae5821a0..e59fcbe00ae0 100644
-> --- a/drivers/misc/lkdtm/heap.c
-> +++ b/drivers/misc/lkdtm/heap.c
-> @@ -12,6 +12,8 @@ static struct kmem_cache *double_free_cache;
->  static struct kmem_cache *a_cache;
->  static struct kmem_cache *b_cache;
+> diff --git a/include/linux/usb/ehci_def.h b/include/linux/usb/ehci_def.h
+> index 78e006355557..5398f571113b 100644
+> --- a/include/linux/usb/ehci_def.h
+> +++ b/include/linux/usb/ehci_def.h
+> @@ -45,6 +45,7 @@ struct ehci_caps {
+>  #define HCS_PORTROUTED(p)	((p)&(1 << 7))	/* true: port routing */
+>  #define HCS_PPC(p)		((p)&(1 << 4))	/* true: port power control */
+>  #define HCS_N_PORTS(p)		(((p)>>0)&0xf)	/* bits 3:0, ports on HC */
+> +#define HCS_N_PORTS_MAX		0xf		/* N_PORTS valid 0x1-0xF */
+
+I would prefer to see this value in decimal.  It seems very odd to say 
+something like "The maximum number of ports is 0xf".
+
 >  
-> +static volatile int __offset = 1;
+>  	u32		hcc_params;      /* HCCPARAMS - offset 0x8 */
+>  /* EHCI 1.1 addendum */
+> @@ -126,8 +127,9 @@ struct ehci_regs {
+>  	u32		configured_flag;
+>  #define FLAG_CF		(1<<0)		/* true: we'll support "high speed" */
+>  
+> -	/* PORTSC: offset 0x44 */
+> -	u32		port_status[0];	/* up to N_PORTS */
+> +	union {
+> +		/* PORTSC: offset 0x44 */
+> +		u32	port_status[HCS_N_PORTS_MAX];
 
-Perhaps a comment here as to why volatile is ok to use?  That feels like
-it is a hack around the compiler of today, what happens tomorrow when
-newer versions decide to ignore volatile as it "knows" no one ever
-changes it?
+Please don't lose the second comment.
 
-thanks,
+>  /* EHCI 1.1 addendum */
+>  #define PORTSC_SUSPEND_STS_ACK 0
+>  #define PORTSC_SUSPEND_STS_NYET 1
+> @@ -164,28 +166,28 @@ struct ehci_regs {
+>  #define PORT_CSC	(1<<1)		/* connect status change */
+>  #define PORT_CONNECT	(1<<0)		/* device connected */
+>  #define PORT_RWC_BITS   (PORT_CSC | PORT_PEC | PORT_OCC)
+> -
+> -	u32		reserved3[9];
+> -
+> -	/* USBMODE: offset 0x68 */
+> -	u32		usbmode;	/* USB Device mode */
+> +		struct {
+> +			u32	reserved3[9];
+> +			/* USBMODE: offset 0x68 */
+> +			u32	usbmode;	/* USB Device mode */
+> +		};
+>  #define USBMODE_SDIS	(1<<3)		/* Stream disable */
+>  #define USBMODE_BE	(1<<2)		/* BE/LE endianness select */
+>  #define USBMODE_CM_HC	(3<<0)		/* host controller mode */
+>  #define USBMODE_CM_IDLE	(0<<0)		/* idle state */
+> -
+> -	u32		reserved4[6];
+> +	};
+> +	u32		reserved4;
+>  
+>  /* Moorestown has some non-standard registers, partially due to the fact that
+>   * its EHCI controller has both TT and LPM support. HOSTPCx are extensions to
+>   * PORTSCx
+>   */
+>  	/* HOSTPC: offset 0x84 */
+> -	u32		hostpc[0];	/* HOSTPC extension */
+> +	u32		hostpc[HCS_N_PORTS_MAX];
+>  #define HOSTPC_PHCD	(1<<22)		/* Phy clock disable */
+>  #define HOSTPC_PSPD	(3<<25)		/* Port speed detection */
+>  
+> -	u32		reserved5[17];
+> +	u32		reserved5[2];
+>  
+>  	/* USBMODE_EX: offset 0xc8 */
+>  	u32		usbmode_ex;	/* USB Device mode extension */
 
-greg k-h
+Otherwise okay.
+
+Alan Stern
