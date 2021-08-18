@@ -8,113 +8,158 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D92EC4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E4CC4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2629660F35
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E166E604AC
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239270AbhHRGRg (ORCPT
+        id S240304AbhHRGRr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        Wed, 18 Aug 2021 02:17:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238778AbhHRGQ3 (ORCPT
+        with ESMTP id S239204AbhHRGQt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:16:29 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395CEC03326F
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:23 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id g14so1080486pfm.1
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:23 -0700 (PDT)
+        Wed, 18 Aug 2021 02:16:49 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4CBC02983D
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:25 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id t13so1076153pfl.6
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hsGHodQW7BgMepqmaGaetFXuKMTT3ZW1whu3YzYCf8E=;
-        b=chkB2Egl3g4Hj/WoopucGSp8JEGrZQBb17iw+f5FZVJ88kmKbQgr9VmudEIjafNmTE
-         FU+5/DnwuxN2T0PQuBqDKLSVlxbWgQNmuDbo93m2QOjwn8S/Nmj1KRmXQbdeWCM95LZY
-         12niQpi/k6iQ3pEmgTEwMOYCV0dGWkKcHe2PI=
+        bh=yostY7DgtNEMxgC+z6nJc1wNrs0N6emskwhOe9bgfvc=;
+        b=AeeVJhrfSUwjNkJmHYssbuRGtvwH8MtYjEmQTdlM+zGDSxyBJ28HUKoShXRQriCQzc
+         fJG8YQplcuYQRtRQ2YMV0te2Q2U0QO6Xwj/zC20UVKGNd8srvQxwJqSouXymq5Dm9l9U
+         kg3aDet5N6dWH1hOI5Ptu5TDuJ7GU9hh7JwQs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hsGHodQW7BgMepqmaGaetFXuKMTT3ZW1whu3YzYCf8E=;
-        b=KhjF0e/jBOQSgNMV9qBkcMgyV6kW58+lebDDp8fj9DAji1EUo/2vSdafi237T/JgHK
-         zRicGAB5NHM/qfsZxaAJdCxO8M0Rdh/MGYDMX5CRowEiRydiWXve2fgaum4rbtXtKsH7
-         LXThOxVdEKL7L9Z0J7/GUAYKgzmQVCxm+/qvSy7ZfqrjkBpBeGDglJbNetgP+r7fF/qO
-         pOXSSwMC3+K7Q5mLcbLA+PgDk9OLj7XiOa8NOzmIh9lp1JTveQsNkMK+R6lbwqpRD8Ql
-         fybLljD6UwgeyGBB/FXsaCxYdevtRJsP3eV8c5uUiKKMRBgiJ7bwziXL5Yqn4JDjvLcv
-         Wr0A==
-X-Gm-Message-State: AOAM533fL7jieunhhtLOhjIwTul87jylkoTPFwmQ0wDs81wFnb/RQnKT
-        AptLmT9La7Yn0p27200W4GLwZQ==
-X-Google-Smtp-Source: ABdhPJzyxDStzvV0SEJOZX6pzOD1ZhMBNkc4S43QSApxA2j4lcyMvoA5D5UGsMDwrMeS2qx+i1yP6w==
-X-Received: by 2002:a63:5902:: with SMTP id n2mr7166965pgb.305.1629267262822;
-        Tue, 17 Aug 2021 23:14:22 -0700 (PDT)
+        bh=yostY7DgtNEMxgC+z6nJc1wNrs0N6emskwhOe9bgfvc=;
+        b=H7PEfFcOnPmxS9vLng0UnAT8TsvCA4X32hMVrHYHNZsdzU2jozjPDcGexZ0pAOq1rk
+         ejRcb63UMGC3ecZINZAME5zWfpePpXOyvqYyj6VYH4TtoknnffFAPYs+SgNmZQYwPtvg
+         JTm8kwspxexhO8qZL54LApgi4MJX8eNbAdyRNRlvEVqf3Q7BmvNsCKxV1zLie71g1OfM
+         covrYR1lf5ZLel/oy4ga6efe1QVQRH+ijOYphhHqHXIuqBl295lOryK75VWsMq++Mxwi
+         WPC8K3HXUge1ln4KJw6Z+VXc6r59qtsbyrMv5Tt25PKUCwN4AtNvuP+8wZZH8boWSM/d
+         bnFg==
+X-Gm-Message-State: AOAM530hcvxz7qOtOFJa/Kc1x6sZm+AmKHTb7z8z55BsIckP5eUL2Hpr
+        a04mHOqHxyaLheap/sCbxWmQ/g==
+X-Google-Smtp-Source: ABdhPJx1biBS3JeL8+/6G287ajSKc6EnHKozD5KJ2i1ni7/MspHuQbMRsOEesEpJ1k8lOCChLRw6ow==
+X-Received: by 2002:a63:a58:: with SMTP id z24mr7368490pgk.175.1629267264619;
+        Tue, 17 Aug 2021 23:14:24 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q26sm4699734pff.174.2021.08.17.23.14.19
+        by smtp.gmail.com with ESMTPSA id j12sm4592066pfj.54.2021.08.17.23.14.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 17 Aug 2021 23:14:21 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Max Gurtovoy <maxg@mellanox.com>, linux-rdma@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
         linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
         clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 48/63] IB/mthca: Use memset_startat() for clearing mpt_entry
-Date:   Tue, 17 Aug 2021 23:05:18 -0700
-Message-Id: <20210818060533.3569517-49-keescook@chromium.org>
+Subject: [PATCH v2 27/63] fortify: Move remaining fortify helpers into fortify-string.h
+Date:   Tue, 17 Aug 2021 23:04:57 -0700
+Message-Id: <20210818060533.3569517-28-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1273; h=from:subject; bh=6zw6bd38jtlUGiQNcgA+7Vj02RWEpIKH1rjaE20U52M=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMoltYN7PTWawkHd68VShtA89JYpvOPT9nwsL7B vMD1Gn+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKAAKCRCJcvTf3G3AJgWLEA CA0G8Um7L9QM3tAuk76gzDtGgj6wfZwbHC3gmdPYC4fe5ViwFuFPhPDIlMHnL5Oaft4DZAwvc4TUnI oTxi1AdRfYTfE3lw4LW1em7VDzoYiVdw68YpBJ6do2fEl9ZGK/0mX3zcOafcrAhiHBuet2CjOfPy6t Tq/8ys2f8EU1h6DXTZ5tCPSIi63+7bfI5g0u1GpcBNVQxt4gUaxR4O//oIO5lDG9qKBGuDeUG4v6MF sHcWe6CfAarnlC0ya+ORhjNk8xnbf+b/imo8zl4s0q9DrLXdZ7MNrxO3aI+5yaF2he2ea/hR5kliNG YKO8GWAbKimKYTi8SSFhhsLXFP/6Cks+GGfoihg9Z61PjIiHMhORoWY/P5pTQd90wKeXB9yySfHyeZ isD2ZFnlRhy403y1grxuLe0zaAw5SJXbwyy8thi3DDo7KeX4P92gmWueLuIvjcNP5Kj+GbCcV6vLSm nxByMIRVJuZ4ixj94olxP7vKtNZVvUPh4Ov/qwOFpG7f9rOHf1gXBcckiuBMeL+pZcSr/txM5+0jYN bYjM3KyxyB1TZMYtX1+WjrDISwqn5Gx8m/HAuDxJZ1l4CvotvblNbCStzkY4CxA2N1gZ+rSUQBe+yU YuRbJ6v7hrWUPvepMgl5M8bAqRbVyqW4hTUVa18TP98a9UAYJi8u4E2DpSiQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3427; h=from:subject; bh=0VUkvjsb3JE/e2CXDissoloibGhlZ4bMl0ZngnkvP5A=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMjq105jppvlrAL+Uq+MQY6ED6Y9FMI8zm1hPrE ykvADZuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjIwAKCRCJcvTf3G3AJgxoEA CHX4+YbgJVBHEw9Sn3IX5V504yG/NCxhHF4JykNAz36dr+RFRl0Kcyz2B7nwjZusR5Vmt/ef1uwVpD vUFACpJ9hm3dLxu/TOzjSDpY+dbijOGFsfmjsCnfpZ7Aw7arFR+dueXGHyuppqtxwjiei2VBv7NkLH fIaz4akk3zsm7p8PDUMHVqHTa5KJadN2q9rNGGe0+Vrymyn4W+SQwMoF1brOLKkMdDqC2uxEL+WomR ayeuwznYVE7clbnasPBBK+c0w94SjONDN0Ng+k+qk7s79GdMHv49Bdvc3qSjI4w82/rTLISttfrK8h 8crj7mVMeHx8pEPFSL6XYe9Hp6I0AMkhfaY5SXOS+yzS/kN0cyCbdH2Jz2S2OXNz8FG8XxB4b00ouF va0zZRAIbKaayow+9up5yQAZpQVL+Ck/qd/5shLDnS765J4ldO0QpW00Aqnsheh76nhHtTSkhARFnb nOrWU/S+u9e2w9TiYLMlKl2i29H9TKu/q898ZLUW4WvARATseAhjhoWIIDqDA0tNHartcKh2XPoZUM 6tsR542P5E0Jb+HyJZv13FvgiN/pmDXHx0d4dxAPEXFJ+pJ+KOmNqdeULjuvuwtcy6zKPpS+zTHIhL 71tIGGPwH5X3B5sHrfSSzU26nlZ4bBr+0WqJaLk5Kysl4udUeW+KXqBYHTcQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memset(), avoid intentionally writing across
-neighboring fields.
+When commit a28a6e860c6c ("string.h: move fortified functions definitions
+in a dedicated header.") moved the fortify-specific code, some helpers
+were left behind. Moves the remaining fortify-specific helpers into
+fortify-string.h so they're together where they're used. This requires
+that any FORTIFY helper function prototypes be conditionally built to
+avoid "no prototype" warnings. Additionally removes unused helpers.
 
-Use memset_startat() so memset() doesn't get confused about writing
-beyond the destination member that is intended to be the starting point
-of zeroing through the end of the struct.
-
-Cc: Doug Ledford <dledford@redhat.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Max Gurtovoy <maxg@mellanox.com>
-Cc: linux-rdma@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Francis Laniel <laniel_francis@privacyrequired.com>
+Cc: Daniel Axtens <dja@axtens.net>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/infiniband/hw/mthca/mthca_mr.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ include/linux/fortify-string.h | 7 +++++++
+ include/linux/string.h         | 9 ---------
+ lib/string_helpers.c           | 2 ++
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mthca/mthca_mr.c b/drivers/infiniband/hw/mthca/mthca_mr.c
-index ce0e0867e488..1208e92ca3d3 100644
---- a/drivers/infiniband/hw/mthca/mthca_mr.c
-+++ b/drivers/infiniband/hw/mthca/mthca_mr.c
-@@ -469,8 +469,7 @@ int mthca_mr_alloc(struct mthca_dev *dev, u32 pd, int buffer_size_shift,
- 	mpt_entry->start     = cpu_to_be64(iova);
- 	mpt_entry->length    = cpu_to_be64(total_size);
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index c1be37437e77..7e67d02764db 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -2,6 +2,13 @@
+ #ifndef _LINUX_FORTIFY_STRING_H_
+ #define _LINUX_FORTIFY_STRING_H_
  
--	memset(&mpt_entry->lkey, 0,
--	       sizeof *mpt_entry - offsetof(struct mthca_mpt_entry, lkey));
-+	memset_startat(mpt_entry, 0, lkey);
++#define __FORTIFY_INLINE extern __always_inline __attribute__((gnu_inline))
++#define __RENAME(x) __asm__(#x)
++
++void fortify_panic(const char *name) __noreturn __cold;
++void __read_overflow(void) __compiletime_error("detected read beyond size of object (1st parameter)");
++void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
++void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
  
- 	if (mr->mtt)
- 		mpt_entry->mtt_seg =
+ #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+ extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
+diff --git a/include/linux/string.h b/include/linux/string.h
+index b48d2d28e0b1..9473f81b9db2 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -249,15 +249,6 @@ static inline const char *kbasename(const char *path)
+ 	return tail ? tail + 1 : path;
+ }
+ 
+-#define __FORTIFY_INLINE extern __always_inline __attribute__((gnu_inline))
+-#define __RENAME(x) __asm__(#x)
+-
+-void fortify_panic(const char *name) __noreturn __cold;
+-void __read_overflow(void) __compiletime_error("detected read beyond size of object passed as 1st parameter");
+-void __read_overflow2(void) __compiletime_error("detected read beyond size of object passed as 2nd parameter");
+-void __read_overflow3(void) __compiletime_error("detected read beyond size of object passed as 3rd parameter");
+-void __write_overflow(void) __compiletime_error("detected write beyond size of object passed as 1st parameter");
+-
+ #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+ #include <linux/fortify-string.h>
+ #endif
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index bde13612c25d..faa9d8e4e2c5 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -883,9 +883,11 @@ char *strreplace(char *s, char old, char new)
+ }
+ EXPORT_SYMBOL(strreplace);
+ 
++#ifdef CONFIG_FORTIFY_SOURCE
+ void fortify_panic(const char *name)
+ {
+ 	pr_emerg("detected buffer overflow in %s\n", name);
+ 	BUG();
+ }
+ EXPORT_SYMBOL(fortify_panic);
++#endif /* CONFIG_FORTIFY_SOURCE */
 -- 
 2.30.2
 
