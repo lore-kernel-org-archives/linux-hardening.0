@@ -2,108 +2,153 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FCBC432BE
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C336C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D554610E7
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110F4610CD
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 21:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233915AbhHRVFK (ORCPT
+        id S234045AbhHRVlN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 17:05:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57994 "EHLO
+        Wed, 18 Aug 2021 17:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233753AbhHRVFK (ORCPT
+        with ESMTP id S233971AbhHRVlN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 17:05:10 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0E5C0613D9
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:04:34 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id n18so3630340pgm.12
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:04:34 -0700 (PDT)
+        Wed, 18 Aug 2021 17:41:13 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07705C0613CF
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:40:38 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id o2so3740125pgr.9
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 14:40:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IABWnr1aCDsDwxBBopzlg3HkRiMd7COJyG2pUzXE8/s=;
-        b=Zqem0CoZzHLfKbevjQtLba+oPmNjxfqaUhbg758CCWbVL3Wrgsd0LChYumYDgT8nHV
-         qXI38/TU57+DVyPDVWoD9EBR93b3G6c4a+oZmh44MnpRWPQD3Y87jvx77ewvhtyv0Y9m
-         2cY4BXqC4SNIlGg0H/SqUG3+Xxrnmj9F9H2ss=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XLWKK7LIN3Cbqy3W2WG3JLeHKbBTWFft4ZXFdFk9oXg=;
+        b=iGBFjWUFZQWs5tJxDH1zVSYBBvZeKZmjtKDzzDV/bHENQO/+/SVex15OXmv5bKOox8
+         l1/ZJUuNgNWsTqdylnHEuL68VupV+5Esam26T+2T/VEKF6mHyeATWOFYeeaYMRSynJGo
+         Qg31Vaqz4JIjA32QsGquNnsojx8UC480D2RGY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IABWnr1aCDsDwxBBopzlg3HkRiMd7COJyG2pUzXE8/s=;
-        b=gg3SQ/37hmCypitwjh4wbeorH6d5I0Q5FtjMgHgiqolYSfx+3X2BK9vuwdHJgrYvGZ
-         3MSeL0HMEZz/+GGr5Q4OMQbQi4fpxdaxZPfu4lJMN06GRx46TB4gmDB+/cpu4PExq4/d
-         qW6FiVZMgBlje4x9+e8lsq9c1KaQbznM30t3z7nUWFrKnyMPr7cTGcwh4Ud0mA5uYBoB
-         5QnDvkyIAyqJ8oPpEJx/5+Q5SUu2Ngufp6K3Qk21pqcfnKpvmCE5gzi0kGUAzFpYzMeJ
-         Z7rEJ0a+8UUeWdzid+a8F/S3RFHNm7Kc7h4kr5baGK2PmbqgK1g0XKlatS07emDSbILJ
-         WLNQ==
-X-Gm-Message-State: AOAM533PjfLAEOw2+mcKHQ1efBLXf1Ix9Jqx6Ep1f7csvFJG1Rswtbro
-        HifhmDPSWScasPWbO50f8S6qVA==
-X-Google-Smtp-Source: ABdhPJzPYdmt1qIf1rGmc2u4in8hFFk0iRvjXLJ/SLffXJm1J8kmYOU3/WVPFV9cKWaMBooTd5z2+Q==
-X-Received: by 2002:a63:f656:: with SMTP id u22mr10801321pgj.392.1629320674444;
-        Wed, 18 Aug 2021 14:04:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XLWKK7LIN3Cbqy3W2WG3JLeHKbBTWFft4ZXFdFk9oXg=;
+        b=eSqBHE8MMSzis/osHkb405xlBjI5RetqOEQwTRcEngKQteEhuk/1ReCt19o7OSAwev
+         OIhZxv37G045P7CgZiwwVa2eCWiaGFH5Vz0CdaxG9v0emFI+c/x92Y6Zt3bq+em+/uCW
+         nZ2Qcz7UDEQFv5Gm8YMsITRQkbExVTiwyToRZ22b/lNFzpbqVyqWOImVWg4cFI58i4sS
+         pxwSBqfj0dyFaJYOQzk85otgEOl9X3RwyKNbg8G+7cm4IKgVmDgIQ2radZpok+kaG2FM
+         xVHELGdBJOc2t5vLbhdHP8rYGxiH7Hb2hlpgEjCmwo6TgQ8fjjsvIVAz2+kAI3+8g4ex
+         0wOQ==
+X-Gm-Message-State: AOAM5312SgzbSG9K4HaVNSPAsow8J3dOWHuZ90IuicS7v6zYPAbk4W+q
+        9bjTyF3hXqxSMdvV6h2eV8TQOA==
+X-Google-Smtp-Source: ABdhPJziMmG6PE0Pt8e5A81cwjUWvVn8KVdE0CAWH55XJhYyFQ8cyWD/wnWI9zJoxkQCi3/DdE1R9A==
+X-Received: by 2002:a63:4a55:: with SMTP id j21mr10729161pgl.187.1629322837472;
+        Wed, 18 Aug 2021 14:40:37 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f5sm687890pjo.23.2021.08.18.14.04.32
+        by smtp.gmail.com with ESMTPSA id p10sm733567pfw.28.2021.08.18.14.40.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 14:04:33 -0700 (PDT)
-Date:   Wed, 18 Aug 2021 14:04:31 -0700
+        Wed, 18 Aug 2021 14:40:36 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Micay <danielmicay@gmail.com>,
+        clang-built-linux@googlegroups.com, Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Micay <danielmicay@gmail.com>,
         Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>, linux-mm@kvack.org,
         linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/5] Compiler Attributes: Add __alloc_size() for better
- bounds checking
-Message-ID: <202108181404.B5E8739C3C@keescook>
-References: <20210818050841.2226600-1-keescook@chromium.org>
- <20210818050841.2226600-2-keescook@chromium.org>
- <d326fbfc-dc96-b6e9-6fd8-31df3eb9f1cb@kernel.org>
+Subject: [PATCH v2 1/7] Compiler Attributes: Add __alloc_size() for better bounds checking
+Date:   Wed, 18 Aug 2021 14:40:15 -0700
+Message-Id: <20210818214021.2476230-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210818214021.2476230-1-keescook@chromium.org>
+References: <20210818214021.2476230-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d326fbfc-dc96-b6e9-6fd8-31df3eb9f1cb@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2756; h=from:subject; bh=kP6BgOKRNS6IGb207/dpbelm3mOMw4/bS5t0UhzraAE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHX5Dq2QiOaeJq1Tj5NGc1dgSWvBgwfJAXIGyj+oL W+yI7feJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR1+QwAKCRCJcvTf3G3AJnAYD/ 9S/10XpWJFiW6irIxn1Dci3UXeTaYnlapjvA0tEslOoyvPQVNvDbbtNLWWHgdV2hTr+XBIHJIur28v A7Xakugzm+7yFl6YeZTUQe4KtY3TnrzpIW/ADLn9VeJEwbm3Z6guch1tTPonEB/fNjrPd9y+ymvn3o V68VUOEp3Kl1CaGJnfxPwylMu75z6hn8cDBtpx0YXGTNSiR61ScVZIvqdWYmcJkgHB5FCdUY8PddHs cbYZQqMm/AO1/bb/BjABFx3hJ1OBH4L67gBqXXF4rp1IUzx5+r8buFg4dnfe96CAoPaYCTUq32ooKZ 8bCw/3fuM14Rkz9Q4clEt2Ip10fu6f8dY7bg6H2X+66buRxpc84yFlm68N9SeHZatLiQzU361cSscZ HpjrBWBKG8IZFX/yb6lbpbmEpTUJZg+HEK1z0M+bqp+YIsXoV3P04y9YvpfzuJxI+2Y0iuMQcoVK2a IgOCkNBJXpJOYyT3/ahDUhL504XWhbMqxUycST3NEOKK9Qre9M6eQJnr3AwPBl78mvjJw0dpL3Udk4 ocFoq+Kgk1s0F4/okTEQq71CGxjVrdVyJEPDcOOw28/r+NdKvytkpxCXgtV5kxLkKHC3OpsNIOh/ox UjFVO4rREbJdr6qsgDDPo4jDzWk1N3E/oIFKRyk2wCZwpsBPogv1hwZyjZIA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 11:04:32AM -0700, Nathan Chancellor wrote:
-> On 8/17/2021 10:08 PM, Kees Cook wrote:
-> > GCC and Clang can use the alloc_size attribute to better inform the
-> > results of __builtin_object_size() (for compile-time constant values).
-> > Clang can additionally use alloc_size to informt the results of
-> > __builtin_dynamic_object_size() (for run-time values).
-> > 
-> > Additionally disables -Wno-alloc-size-larger-than since the allocators
-> > already reject SIZE_MAX, and the compile-time warnings aren't helpful.
-> 
-> In addition to what Miguel said, it might be helpful to mention that this
-> warning is GCC specific, I was a little confused at first as to why it was
-> just being added in the GCC only block :)
+GCC and Clang can use the "alloc_size" attribute to better inform the
+results of __builtin_object_size() (for compile-time constant values).
+Clang can additionally use alloc_size to inform the results of
+__builtin_dynamic_object_size() (for run-time values).
 
-Yes, good point. I'll call it out in particular.
+Because GCC sees the frequent use of struct_size() as an allocator size
+argument, and notices it can return SIZE_MAX (the overflow indication),
+it complains about these call sites may overflow (since SIZE_MAX is
+greater than the default -Walloc-size-larger-than=PTRDIFF_MAX). This
+isn't helpful since we already know a SIZE_MAX will be caught at run-time
+(this was an intentional design). Instead, just disable this check as
+it is both a false positive and redundant. (Clang does not have this
+warning option.)
 
-> Otherwise, the attribute addition looks good to me. I will add my tag on v2.
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Makefile                            | 6 +++++-
+ include/linux/compiler_attributes.h | 6 ++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-Thanks!
-
+diff --git a/Makefile b/Makefile
+index 72f9e2b0202c..34cffcdfd5dc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1078,9 +1078,13 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+ # Another good warning that we'll want to enable eventually
+ KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
+ 
+-# Enabled with W=2, disabled by default as noisy
+ ifdef CONFIG_CC_IS_GCC
++# Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += -Wno-maybe-uninitialized
++
++# The allocators already balk at large sizes, so silence the compiler
++# warnings for bounds checks involving those possible values.
++KBUILD_CFLAGS += -Wno-alloc-size-larger-than
+ endif
+ 
+ # disable invalid "can't wrap" optimizations for signed / pointers
+diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+index 67c5667f8042..203b0ac62d15 100644
+--- a/include/linux/compiler_attributes.h
++++ b/include/linux/compiler_attributes.h
+@@ -54,6 +54,12 @@
+ #define __aligned(x)                    __attribute__((__aligned__(x)))
+ #define __aligned_largest               __attribute__((__aligned__))
+ 
++/*
++ *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-alloc_005fsize-function-attribute
++ * clang: https://clang.llvm.org/docs/AttributeReference.html#alloc-size
++ */
++#define __alloc_size(x, ...)		__attribute__((__alloc_size__(x, ## __VA_ARGS__)))
++
+ /*
+  * Note: users of __always_inline currently do not write "inline" themselves,
+  * which seems to be required by gcc to apply the attribute according
 -- 
-Kees Cook
+2.30.2
+
