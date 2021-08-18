@@ -2,171 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B5CC4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504FDC4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D40960F38
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1EC60C40
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229541AbhHREdo (ORCPT
+        id S237565AbhHREjt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 00:33:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:5812 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229449AbhHREdo (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 00:33:44 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10079"; a="216284583"
-X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
-   d="scan'208";a="216284583"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 21:33:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
-   d="scan'208";a="488288748"
-Received: from pl-dbox.sh.intel.com (HELO pl-dbox) ([10.239.159.39])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Aug 2021 21:33:06 -0700
-Date:   Wed, 18 Aug 2021 12:27:20 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Nathan Chancellor <nathan@kernel.org>
+        Wed, 18 Aug 2021 00:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231853AbhHREjt (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 18 Aug 2021 00:39:49 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25840C0613CF
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 21:39:15 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id a5so1036449plh.5
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 21:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RdYh0KzVSM6GfEPOUNKGwmds8J/gMHl6yf/nm5EaGwo=;
+        b=X/cmbieBqLTKIxbCHnmkgunhjwaIKPorKnk1/6Wwque4TYwFu3uY4W4ZbidEJM25fk
+         rAoEl49BCTVuCri5jNEnwPyphEu3F8Utqmen8mugWkqwt9bgvmdN4AhqRyAlnnTtWHm5
+         TThuObe62UlTKrCZlSHdLGZ/Ziace7M1m85BE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RdYh0KzVSM6GfEPOUNKGwmds8J/gMHl6yf/nm5EaGwo=;
+        b=eS6Hgm9mGEIS100thwGQ9F79K8keN7VrsSXRyPwFaqXpemESCxClE0uXLyedv4LAG5
+         plXLbcXLkA82AJNbZoqfmGu8ehgBTar1IWN1JPhQvBy5o08bQ7/hOVlPLIrscHJ17ZLm
+         Fyodkb8BH9tfwwSZe4yITJFesvOoVJ+U2E9AxGZzvPEkTulanCHlRzwLwWlX2doeoSu6
+         utMFMlMdd1Fcd4eXuLGhSjFQ1PRMhxMnH4vI7fyqOnLv6y1QVUGhIpblFcCB2onfvIfD
+         Q5O37a7tjNnMmwMEioAT7fwpVtVoXNAshuAmBuc0wzQZhMxjO9mqKc+oxxlUvOPIU25/
+         19rA==
+X-Gm-Message-State: AOAM530FtthlNss49DRWL0fyw6Gg0HTnlna+2TlVJC88tlKFbX/WE91X
+        eb10sWjzOrfbUDoEjtyVKx9rPA==
+X-Google-Smtp-Source: ABdhPJxFPT7wVpzSlvT8DPbADw2xJozXJw6p/wgABDmTcU0Wr38l7tW8zwD75zO5rpG9oxsfn5DFzQ==
+X-Received: by 2002:a17:90b:d94:: with SMTP id bg20mr7153787pjb.61.1629261554669;
+        Tue, 17 Aug 2021 21:39:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p30sm4389467pfh.116.2021.08.17.21.39.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 21:39:13 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kbuild: Enable -Wimplicit-fallthrough for clang 14.0.0+
-Message-ID: <20210818042720.GA1645557@pl-dbox>
-References: <20210817005624.1455428-1-nathan@kernel.org>
- <80fa539a-b767-76ed-dafa-4d8d1a6b063e@kernel.org>
- <CAHk-=wgFXOf9OUh3+vmWjhp1PC47RVsUkL0NszBxSWhbGzx4tw@mail.gmail.com>
- <5c856f36-69a7-e274-f72a-c3aef195adeb@kernel.org>
- <202108171056.EDCE562@keescook>
- <3f28b45e-e725-8b75-042a-d34d90c56361@kernel.org>
- <CAK7LNAQFgYgavTP2ZG9Y16XBVdPuJ98J_Ty1OrQy1GXHq6JjQQ@mail.gmail.com>
- <71d76c41-7f9b-6d60-ba4f-0cd84596b457@embeddedor.com>
- <202108171602.159EB2C7EA@keescook>
- <72ae69b4-6069-ade5-a12b-8ee0435f803a@kernel.org>
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] Bluetooth: mgmt: Pessimize compile-time bounds-check
+Date:   Tue, 17 Aug 2021 21:39:12 -0700
+Message-Id: <20210818043912.1466447-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <72ae69b4-6069-ade5-a12b-8ee0435f803a@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1435; h=from:subject; bh=E0l6g+Q1UhnSMK4lDN7R/eQd0SuD7Heg/eD8YzK5Lic=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHI7vo8PzMk5HF85TGPbfFBW7iT4mrKvH5KZU5yn/ EkWlbBmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyO7wAKCRCJcvTf3G3AJny4D/ 9kWDf6kh3N+iOlTVivvviWpmxld7NQMSysukicQNgR4Dx8+v5gkpBVF24L+b/IjWlz1Q0bYoNeHz8Q 05okcO2+H3Z2d0C9lqy4dUvYk4v+lNQOuT1oQoc00+Ki7iMO5hIEEw0NcNALnAwNaWAZQyL316p1K0 BwBuVRms/OPZmrNjA7tNB4kTQYn8NKMEw4XmXd3bZGyPtOXHFdznKXPCHKLc7xfp9S5CWWMi74+3S7 XSRxLGCJJNwdqiSP5chMEwUzGdyMkLDloeWyknX4Qk3Mr28EyZXXkrILdpTlAPPCQ2194vXCy7tOEF b54oNbJI8g7HPCqh4oJsLC0R+OMbE/VEr/cobvPT9w6h53xo14s9rTsB7A9ppZr0xZDScpGNK/fj/H qbDej5cRTSDwG9VztYg6h+XLk3u9Sk/H23r0ASa5yszCJLho3tJLICpJhqUJXGxuH6pj17xAFZuh/S DqBArkMNxHyt2q2UmoqpGTR5Fpg4MeOxbzCNo087bCvFkXOembW+nbP7i51jiBaJf3dvtTIc7dl1df pn7CQGa5gcz+dUNskx58QRhJiyGNWpD+8BCP6Co/56dunORoba5Gnpso3ZQCi6Hf3iw/KgNd9/Ob60 YaURx0KP4qAqdhiOzeTVYgPZq+mM6wIV2p0zK/EVOB6DyUOr/U52eyoQBAiQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 17, 2021 at 04:23:41PM -0700, Nathan Chancellor wrote:
-> On 8/17/2021 4:06 PM, Kees Cook wrote:
-> > On Tue, Aug 17, 2021 at 04:33:25PM -0500, Gustavo A. R. Silva wrote:
-> > > 
-> > > 
-> > > On 8/17/21 16:17, Masahiro Yamada wrote:
-> > > > On Wed, Aug 18, 2021 at 3:25 AM Nathan Chancellor <nathan@kernel.org> wrote:
-> > > > > 
-> > > > > On 8/17/2021 11:03 AM, Kees Cook wrote:
-> > > > > > On Mon, Aug 16, 2021 at 09:55:28PM -0700, Nathan Chancellor wrote:
-> > > > > > > If you/Gustavo would prefer, I can upgrade that check to
-> > > > > > > 
-> > > > > > > ifneq ($(call cc-option, -Wunreachable-code-fallthrough),)
-> > > > > > > 
-> > > > > > > I was just trying to save a call to the compiler, as that is more expensive
-> > > > > > > than a shell test call.
-> > > > > > 
-> > > > > > I prefer the option test -- this means no changes are needed on the
-> > > > > > kernel build side if it ever finds itself backported to earlier versions
-> > > > > > (and it handles the current case of "14" not meaning "absolute latest").
-> > > > > > 
-> > > > > > More specifically, I think you want this (untested):
-> > > > > 
-> > > > > That should work but since -Wunreachable-code-fallthrough is off by
-> > > > > default, I did not really see a reason to include it in KBUILD_CFLAGS. I
-> > > > > do not have a strong opinion though, your version is smaller than mine
-> > > > > is so we can just go with that. I'll defer to Gustavo on it since he has
-> > > > > put in all of the work cleaning up the warnings.
-> > > > 
-> > > > 
-> > > > 
-> > > > https://github.com/llvm/llvm-project/commit/9ed4a94d6451046a51ef393cd62f00710820a7e8
-> > > > 
-> > > >     did two things:
-> > > > 
-> > > >   (1) Change the -Wimplicit-fallthrough behavior so that it fits
-> > > >        to our use in the kernel
-> > > > 
-> > > >   (2) Add a new option -Wunreachable-code-fallthrough
-> > > >        that works like the previous -Wimplicit-fallthrough of
-> > > >        Clang <= 13.0.0
-> > > > 
-> > > > 
-> > > > They are separate things.
-> > > > 
-> > > > Checking the presence of -Wunreachable-code-fallthrough
-> > > > does not make sense since we are only interested in (1) here.
-> > > > 
-> > > > So, checking the Clang version is sensible and matches
-> > > > the explanation in the comment block.
-> > 
-> > I thought one of the problems (which is quickly draining away) that
-> > needed to be solved here is that some Clang trunk builds (that report
-> > as version 14) don't yet have support for -Wunreachable-code-fallthrough
-> > since they aren't new enough.
-> 
-> Philip, how often is the kernel test robot's clang version rebuilt? Would it
-> be possible to bump it to latest ToT or at least
-> 9ed4a94d6451046a51ef393cd62f00710820a7e8 so that we do not get bit by this
-> warning when we go to enable this flag?
-Got it, currently we do upgrade in weekly cadence (but it may fall behind sometimes),
-and the one we use now is clang version 14.0.0 (https://github.com/llvm/llvm-project 
-2c6448cdc2f68f8c28fd0bd9404182b81306e6e6)
+After gaining __alloc_size hints, GCC thinks it can reach a memcpy()
+with eir_len == 0 (since it can't see into the rewrite of status).
+Instead, check eir_len == 0, avoiding this future warning:
 
-We will ugrade to the head of llvm-project master today.
+In function 'eir_append_data',
+    inlined from 'read_local_oob_ext_data_complete' at net/bluetooth/mgmt.c:7210:12:
+./include/linux/fortify-string.h:54:29: warning: '__builtin_memcpy' offset 5 is out of the bounds [0, 3] [-Warray-bounds]
+...
+net/bluetooth/hci_request.h:133:2: note: in expansion of macro 'memcpy'
+  133 |  memcpy(&eir[eir_len], data, data_len);
+      |  ^~~~~~
 
-Thanks
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ net/bluetooth/mgmt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> I do not know of any other CI aside from ours that is testing with tip of
-> tree clang and ours should already have a clang that includes my patch since
-> it comes from apt.llvm.org.
-> 
-> > > > # Warn about unmarked fall-throughs in switch statement.
-> > > > # Clang prior to 14.0.0 warned on unreachable fallthroughs with
-> > > > # -Wimplicit-fallthrough, which is unacceptable due to IS_ENABLED().
-> > > > # https://bugs.llvm.org/show_bug.cgi?id=51094
-> > > > ifeq ($(firstword $(sort $(CONFIG_CLANG_VERSION) 140000)),140000)
-> > > > KBUILD_CFLAGS += -Wimplicit-fallthrough
-> > > > endif
-> 
-> Very clever and nifty trick! I have verified that it works for clang 13 and
-> 14 along with a theoretical clang 15. Gustavo, feel free to stick a
-> 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
-> 
-> if you so desire.
-> 
-> > > > 
-> > > > The $(sort ...) is alphabetical sort, not numeric sort.
-> > > > It works for us because the minimum Clang version is 10.0.1
-> > > > (that is CONFIG_CLANG_VERSION is always 6-digit)
-> > > > 
-> > > > It will break when Clang version 100.0.0 is released.
-> > > > 
-> > > > But, before that, we will raise the minimum supported clang version,
-> > > > and this conditional will go away.
-> > 
-> > If a version test is preferred, cool; this is a nice trick. :)
-> > 
-> > > I like this. :)
-> > > 
-> > > I'm going to make the 0-day robot test it in my tree, first.
-> > 
-> > Sounds good to me!
-> > 
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 1e21e014efd2..cea01e275f1e 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -7204,7 +7204,7 @@ static void read_local_oob_ext_data_complete(struct hci_dev *hdev, u8 status,
+ 	if (!mgmt_rp)
+ 		goto done;
+ 
+-	if (status)
++	if (eir_len == 0)
+ 		goto send_rsp;
+ 
+ 	eir_len = eir_append_data(mgmt_rp->eir, 0, EIR_CLASS_OF_DEV,
+-- 
+2.30.2
+
