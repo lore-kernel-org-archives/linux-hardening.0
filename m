@@ -8,56 +8,58 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27347C43214
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9F6C4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16E9760FDA
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B673D60FDA
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238324AbhHRGZV (ORCPT
+        id S240429AbhHRGZ1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48364 "EHLO
+        Wed, 18 Aug 2021 02:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238813AbhHRGYv (ORCPT
+        with ESMTP id S238633AbhHRGYt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:24:51 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CBC8C0612A4
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:24:16 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id q2so1183332pgt.6
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:24:16 -0700 (PDT)
+        Wed, 18 Aug 2021 02:24:49 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E5DC0617AF
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:24:15 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id y11so1102390pfl.13
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:24:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k/wMqZhYPv/ednyUtGVLuOyBDdwE/DxTOa1GSHOTwQw=;
-        b=h1vqsKCq3LguZasBrpDaxLMbE54XIdT056wn+53xSVHzW2Ewxb/OwMHrme5OgTt4Jz
-         Rn6+Nw/UlSdQJuXyyuSYWqcsqPV0JLgcmYGV56fwQSHpm2I+9h+ZIKfx2co1C0VimpZf
-         7dKUtyu84DuqlRQ87BuDsdzr8aHRxeo0v95wg=
+        bh=hNEXxevdADdpiZT9yDPKRLqHYKrfWBF19uxfyZWmCGo=;
+        b=EGdWOE7bxdowrmsIKSgjZSgmQoiGO+6J6ji89xZ0Q2fptOidpphd5g7qqYXeSAgP8F
+         HH8T/J8n5DYlHXumOIgXQUvZBImHN7ALjddHiJ17ignvtzPpjV4Byoe7oWxlyDXQgWZD
+         c2+aZ7dLhbaQbRZXx81PpkPBbEKgxoLZ5UKNk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k/wMqZhYPv/ednyUtGVLuOyBDdwE/DxTOa1GSHOTwQw=;
-        b=ILK3LCqjn0GjrH+MDNh8vmrqsT9OHIGekq4IufmHjzF76Ah5B8NqTUFWVDS8IXgTmQ
-         D331nai3j4/cvXQy3aMNjK0osuHanGUQT92ftHk/H/A1XSryrVGMBluM2i6WVhCarHan
-         GqYUnPSIj5HfJIvP8mLdsg5eZM65EHDUCIYHNDJ2hu/0GKOwImT53kMyVgyoORj8zJlG
-         9ChstYAyn2vtHHcYfrW2cAic/L3un0m/wgsQsKTVwaBKQZM27XvqX4S6wa4G2oJ6PJtN
-         EUl1j++0vWxCO3JYO4W2pTe9rAlrudef1LY285Rl+5iaQziKGDKGUu/rfJhyotzn8vga
-         y6zg==
-X-Gm-Message-State: AOAM532efSpjJNoR0Wr5ONmz1W+w6SnAbIcz8OVGdJCR4RiRpXr2FtbV
-        EiiBwSFznPAnN/VTHzgU63fDdw==
-X-Google-Smtp-Source: ABdhPJwamERI+b3fB1OT2OBb/Oo32Bs69oRVEvsPMoSjLvciwc2SdyfJNwL8U1PKVMBNffysj5z0og==
-X-Received: by 2002:a62:1a03:0:b029:3e0:30aa:5172 with SMTP id a3-20020a621a030000b02903e030aa5172mr7615458pfa.69.1629267856113;
-        Tue, 17 Aug 2021 23:24:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p17sm3873060pjg.54.2021.08.17.23.24.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=hNEXxevdADdpiZT9yDPKRLqHYKrfWBF19uxfyZWmCGo=;
+        b=QcxO27yRjXFpMYgePL5rg8oKWeyHpwYkWG4yubKMGqxBUYudsK+EPqpJYUCQj81T4j
+         Gi9fRYAxt7LcBH5P2oGUJ56mxEtHkuo4UbSFv6QpzHPRAf3qZs6iUg1W7WMOQ4FJPWp9
+         QI8zV6gUfdHL02z1GkrArr5T4CGis23Rw5CHxz8N/Niwy15zlSfVE3+ppR9F5hy197nV
+         VYxfdQSI0xhQC7X3UNiV1XRr+Zw5gaKeN6A4N9D4AYQjmgJ4gF/ME4jYOjzweRRUcHmr
+         3W4VyRzhLzlLZB8SpT++3Zzq63Iyr5okJ7S35p7BJxwLmRjtngLeAtsSC3Ti70w/rW/n
+         GdPg==
+X-Gm-Message-State: AOAM530Fx7TCcGwzeLo0Q9QD+WneaV8SIvXEee2640q4dCUje562qPXK
+        2iLwlfa1G1TFmd2HxEKM9onx3g==
+X-Google-Smtp-Source: ABdhPJzEZLL4+vuxKf2KA80vRRNe/aKYgSEeAOIcbSklQP4uG9CeHnUETuB9bUeNsXUisBI4mxHrBA==
+X-Received: by 2002:a65:6658:: with SMTP id z24mr7321502pgv.266.1629267854650;
         Tue, 17 Aug 2021 23:24:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v9sm5393520pga.82.2021.08.17.23.24.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 23:24:12 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Jiri Kosina <jikos@kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>,
+        Stefan Achatz <erazor_de@users.sourceforge.net>,
+        Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         linux-input@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
@@ -69,14 +71,14 @@ Cc:     Kees Cook <keescook@chromium.org>, Jiri Kosina <jikos@kernel.org>,
         clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 22/63] HID: cp2112: Use struct_group() for memcpy() region
-Date:   Tue, 17 Aug 2021 23:04:52 -0700
-Message-Id: <20210818060533.3569517-23-keescook@chromium.org>
+Subject: [PATCH v2 55/63] HID: roccat: Use struct_group() to zero kone_mouse_event
+Date:   Tue, 17 Aug 2021 23:05:25 -0700
+Message-Id: <20210818060533.3569517-56-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2247; h=from:subject; bh=/f7Uu4v/C7D/CabqYQdkLwI9T63RoTYSlGbQfk4by30=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMi/T6L3PaIJG69XO7seVV8nfPKvnO/RnRfY1YP eqF5TIqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjIgAKCRCJcvTf3G3AJiqND/ 4o9z0rLLj4NSz3P+N5dEODqZN+0JFe68SJEpcnI/yqBAJ991CZgBW3P4hegMy7LP416vg4a8VXWuZf PdkwM1HtKI3bOIJmJ/oXuHc0Cd8E1/i9IdhWeZkwnk4ATdl52t6KiufRupzJ474wQ6gIOIfDj0KQ0R kyIFkhVeoA2Kr7NRe3qo9ChOoz9iHtgIp5yRu2OL9iopUm7HJMVli+T8Rkjfs1WdXgucAW17dFCaQf jscROMyLQGnCUMePS1yvQgUiFCFi1PlQtlLu+P7JTZudtLxFONjQCqvINDVVTB7e+TdY6/uBtgZzeK irTF7jSjV82n7MLfw4dCwSr5O2rrLJUaRZRfu6EiE2apChq5mvhSkWogW11l43Du1tv0vSY8wCE7XA sqKXkssO6OXrNOfPC9zrrUYQOnTwssqdo4orsoUV57XBYhxldJWv/VtIL/gNK2X1AMSQ2l2j8jVWtm /ZmkiVPYHo1cAbq84GdiW7UhznMM4bt9KCq8jxr7jM/YO6AI8nO2vNY/g02E3s1LVpfe2iqQHiaXcU HzwXGWuEQSSIRd009WPzQD3vPRqgiHua6vhSwtjUVgJ7mB06uFmWn0gFEj2FoGkgl1YLXKQ9crqUgL wCJdGavuSKwTapzMz2igVrV/qHEivZbe8115YGPQPbagYEoCWw+9D4gRcRag==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1908; h=from:subject; bh=1pufhTOQ+Ev1TBqsKxncMFoRA1ZRswld+5UcgY3UHPc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMqezgIdICqUvusV3uxfFgc/NzjoDMPzoTPLXKQ ysx/Q+WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjKgAKCRCJcvTf3G3AJvMhD/ 4/FvXFOoXTIkumS1QqMpAFhaJGCKF+0RDx/z48DGYo98kCwWG6ybzb+3Sly47Z+VgrSp0nI5xp/nwa 7vzRFjBAI8F/fZVbUlI8Z/Fya+aZbPEeiEK947R3H8Wbap6uVAex0YjyWhhrJ5ZvwN2gBayJJ1WAXz +0fz1YMH8bcbhmSMSRON2ZGR1UjjBuaTH+o0ighQljGy5YLUHHZ+P4xNS0whZ8d+THVIEhrrdzHdRV xQ+rSGFdrgJR7xYVHqTNDyySccjRR12fCgsnFgzx2wmvqD6usQbAtioyZ5ZCTcNXNfyyvHgd++uCyK e638UGzfpOzM5vUWRjmLl1KeEBbobuCg3sgk1AQzR2mUpn6cvbWbZbOyGlGZtTdTn7wCe/qfq120Ud zfBKERaOR0vpEYpiRESonq/qBjud3tRwJ0H/FhwsbPbp2lo15qfYimJ41SEC1abj3Da1Xu61TlMqEd S5Rzg+maFwNcx3sFBdUId31vsspRp/LAtiMPvI3MalLGcTxm9Gdf8i9hEI2yM8v6QUVUqBl/F6N1uW 0dr4/U6A89Pj+zJUWKnGqTw3EZAQEgK5Lbi/njYrrq3JeohlG7jtmoxQDLp3fMw23TORKszxjv3y76 kDqBN4o2faONCRYDcPk3N/ArWnW2NiFPXTb3nBBeYGgetTCuosxxzdiUWWLg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -84,59 +86,58 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+field bounds checking for memset(), avoid intentionally writing across
+neighboring fields.
 
-Use struct_group() in struct cp2112_string_report around members report,
-length, type, and string, so they can be referenced together. This will
-allow memcpy() and sizeof() to more easily reason about sizes, improve
-readability, and avoid future warnings about writing beyond the end of
-report.
+Add struct_group() to mark region of struct kone_mouse_event that should
+be initialized to zero.
 
-"pahole" shows no size nor member offset changes to struct
-cp2112_string_report.  "objdump -d" shows no meaningful object
-code changes (i.e. only source line number induced differences.)
-
+Cc: Stefan Achatz <erazor_de@users.sourceforge.net>
 Cc: Jiri Kosina <jikos@kernel.org>
 Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Cc: linux-input@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/hid/hid-cp2112.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/hid/hid-roccat-kone.c |  2 +-
+ drivers/hid/hid-roccat-kone.h | 12 +++++++-----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
-index 477baa30889c..ece147d1a278 100644
---- a/drivers/hid/hid-cp2112.c
-+++ b/drivers/hid/hid-cp2112.c
-@@ -129,10 +129,12 @@ struct cp2112_xfer_status_report {
+diff --git a/drivers/hid/hid-roccat-kone.c b/drivers/hid/hid-roccat-kone.c
+index 1ca64481145e..ea17abc7ad52 100644
+--- a/drivers/hid/hid-roccat-kone.c
++++ b/drivers/hid/hid-roccat-kone.c
+@@ -857,7 +857,7 @@ static int kone_raw_event(struct hid_device *hdev, struct hid_report *report,
+ 		memcpy(&kone->last_mouse_event, event,
+ 				sizeof(struct kone_mouse_event));
+ 	else
+-		memset(&event->tilt, 0, 5);
++		memset(&event->wipe, 0, sizeof(event->wipe));
  
- struct cp2112_string_report {
- 	u8 dummy;		/* force .string to be aligned */
--	u8 report;		/* CP2112_*_STRING */
--	u8 length;		/* length in bytes of everyting after .report */
--	u8 type;		/* USB_DT_STRING */
--	wchar_t string[30];	/* UTF16_LITTLE_ENDIAN string */
-+	struct_group_attr(contents, __packed,
-+		u8 report;		/* CP2112_*_STRING */
-+		u8 length;		/* length in bytes of everything after .report */
-+		u8 type;		/* USB_DT_STRING */
-+		wchar_t string[30];	/* UTF16_LITTLE_ENDIAN string */
+ 	kone_keep_values_up_to_date(kone, event);
+ 
+diff --git a/drivers/hid/hid-roccat-kone.h b/drivers/hid/hid-roccat-kone.h
+index 4a1a9cb76b08..65c800e3addc 100644
+--- a/drivers/hid/hid-roccat-kone.h
++++ b/drivers/hid/hid-roccat-kone.h
+@@ -152,11 +152,13 @@ struct kone_mouse_event {
+ 	uint16_t x;
+ 	uint16_t y;
+ 	uint8_t wheel; /* up = 1, down = -1 */
+-	uint8_t tilt; /* right = 1, left = -1 */
+-	uint8_t unknown;
+-	uint8_t event;
+-	uint8_t value; /* press = 0, release = 1 */
+-	uint8_t macro_key; /* 0 to 8 */
++	struct_group(wipe,
++		uint8_t tilt; /* right = 1, left = -1 */
++		uint8_t unknown;
++		uint8_t event;
++		uint8_t value; /* press = 0, release = 1 */
++		uint8_t macro_key; /* 0 to 8 */
 +	);
- } __packed;
+ } __attribute__ ((__packed__));
  
- /* Number of times to request transfer status before giving up waiting for a
-@@ -986,8 +988,8 @@ static ssize_t pstr_show(struct device *kdev,
- 	u8 length;
- 	int ret;
- 
--	ret = cp2112_hid_get(hdev, attr->report, &report.report,
--			     sizeof(report) - 1, HID_FEATURE_REPORT);
-+	ret = cp2112_hid_get(hdev, attr->report, (u8 *)&report.contents,
-+			     sizeof(report.contents), HID_FEATURE_REPORT);
- 	if (ret < 3) {
- 		hid_err(hdev, "error reading %s string: %d\n", kattr->attr.name,
- 			ret);
+ enum kone_mouse_events {
 -- 
 2.30.2
 
