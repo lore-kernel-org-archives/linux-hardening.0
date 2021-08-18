@@ -2,117 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB673C4320E
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB434C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE985610D2
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF8061075
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 04:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237588AbhHREnV (ORCPT
+        id S237649AbhHREnb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 00:43:21 -0400
-Received: from gateway30.websitewelcome.com ([192.185.192.34]:14363 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237714AbhHREnU (ORCPT
+        Wed, 18 Aug 2021 00:43:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237714AbhHREna (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 00:43:20 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id E64A018E51
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:42:44 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id GDPYmaEjGK61iGDPYmYhth; Tue, 17 Aug 2021 23:42:44 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fqWho5z6HDj4E/uC18IyWmSmTMfo9JPqAgS3dawEvWk=; b=be9hlQMJu3Ujj1NTF548ywxCeb
-        Cdh3EeFeibFikH+Pyt4qRrY2hsmcU9q5mv0J4whSv06j3VboWiOUR7Ig1dwy+SLDhj0ORSNzgoikp
-        mOjCvl9AKoj+snKJQ3B7JHIP0XSuj7vXUD3RDsGwhJWYRRXdegf4d0wVeoRdCTMMQ4nY7BIAglxbh
-        Px17n9e22kpZp3eUpwwy8UKxZ8e0MXHHjsZNiwyLVO2ZCP2jXhVeUOd1gUbuzyJbiZMMTh1PuNKrx
-        LVvwpTxiFeCKOIQdAxaCgQh2j3Lulj845WoZ4FYCHVl5AFALi+MQxer4P0Ue4xFhmpu/xbVDdmo6o
-        CPfYNuuw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:45490 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1mGDPY-002STB-9X; Tue, 17 Aug 2021 23:42:44 -0500
-Subject: Re: [PATCH] kbuild: Enable -Wimplicit-fallthrough for clang 14.0.0+
-To:     Philip Li <philip.li@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-hardening@vger.kernel.org
-References: <20210817005624.1455428-1-nathan@kernel.org>
- <80fa539a-b767-76ed-dafa-4d8d1a6b063e@kernel.org>
- <CAHk-=wgFXOf9OUh3+vmWjhp1PC47RVsUkL0NszBxSWhbGzx4tw@mail.gmail.com>
- <5c856f36-69a7-e274-f72a-c3aef195adeb@kernel.org>
- <202108171056.EDCE562@keescook>
- <3f28b45e-e725-8b75-042a-d34d90c56361@kernel.org>
- <CAK7LNAQFgYgavTP2ZG9Y16XBVdPuJ98J_Ty1OrQy1GXHq6JjQQ@mail.gmail.com>
- <71d76c41-7f9b-6d60-ba4f-0cd84596b457@embeddedor.com>
- <202108171602.159EB2C7EA@keescook>
- <72ae69b4-6069-ade5-a12b-8ee0435f803a@kernel.org>
- <20210818042720.GA1645557@pl-dbox>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <d19dd1f7-3898-227a-3d7d-25cddb0434d0@embeddedor.com>
-Date:   Tue, 17 Aug 2021 23:45:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Wed, 18 Aug 2021 00:43:30 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3347C0613CF
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 21:42:56 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id y190so891919pfg.7
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 21:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n6kYv5qs2U5TDaRwVdsnZZRqO6Jb+ByXJ8zD1IUqO58=;
+        b=gLNXqYFJBgXda8AczoZgx2Ab7vX25Hiq7x5mv5VD7ys5VUnd/eDPkl2myWiX7IbJa8
+         XQ7spT+M7+Cty6i9haMBqVPbDoLsr518VyVZtB8u29NZwBYTa4+Q44I83og78TJL4SgL
+         c6ZcBo8Q52xDbF6xBv2Lr1pio1M7Qu0bi/y+U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n6kYv5qs2U5TDaRwVdsnZZRqO6Jb+ByXJ8zD1IUqO58=;
+        b=E/2349qC2SatsyBSuEig/sRlJORTqVMFTV+cGOkKefWDK/PA2onkUUOpQ8XHyLczRt
+         jyYywSNh0w/xg6s3/RP2r2uIOPFBhElBn1aIOP/whaMNxSpLY3NhY0YekodoLLwJWhqr
+         swPqFYybIrTPvixnA6xxWpLr9oS7D3hCSSkpjFOdikKqufq/FOmBHGIzixPzF4R1b7YP
+         BpM21/53b7oGYv+9V2pUsljf728radIPmGS5JsXp7j1n4Yz2uc6cUzfR7As8rDQrrtg+
+         kPRSVdz6ZPGXQpqT0ciI1A+j4RA2HwS/gp6V+nZ7P+LY2LfImM6iCrXaAqcEUA2skhaA
+         SWQg==
+X-Gm-Message-State: AOAM533kHs3bEQtNNqPGuOoU9O+oX+La2dki3CVpsp9gvFo5uyYYHGBh
+        4heXKdJDmQ/SV+nkJw0wcgtWMOi7lKDUCg==
+X-Google-Smtp-Source: ABdhPJw2jYB9l0R7WFUhPJs3ENXjO+knhTs7u8+lFuGMKnsHlUZLfTf8F0CDoClzOrtMlJV9L//UDw==
+X-Received: by 2002:a05:6a00:704:b029:39e:3043:ec64 with SMTP id 4-20020a056a000704b029039e3043ec64mr7198884pfl.68.1629261776383;
+        Tue, 17 Aug 2021 21:42:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j68sm5109996pgc.44.2021.08.17.21.42.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 21:42:55 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-staging@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] staging: rts5208: Fix get_ms_information() heap buffer size
+Date:   Tue, 17 Aug 2021 21:42:52 -0700
+Message-Id: <20210818044252.1533634-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <20210818042720.GA1645557@pl-dbox>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1mGDPY-002STB-9X
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:45490
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2921; h=from:subject; bh=OPgWxfVbe6Ch3Gi360oeNmrGi1QocR4XlQyE7Vi1MFM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHI/LOnJmhqY91I+JO2LnJu8KltlU2ODOIHVqS4wU Oda8pwiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyPywAKCRCJcvTf3G3AJsxZD/ 4hbkFgS0HxFPsqLAP88lHEhEfKxOBwgDOo4YDSl2nrPzQpBOdvxPcA20FWPRoWUgZ5OanUZq7D/yGz AOXpB9YL508ueXW7GVYH//kd/2uM/gqNNOFeIRzHix5E0gtm+SkP92DpND8pSQfyQJgXjODLhsR9dC FaTNiALDs8vqsgwMS8eX2j8XtmKrGgZONuaHcmYlp4M6xwWbl9rOF/245Rddbc+4aHZGJv014xEv4E QaaaMI57tTuZwkn2bMW8Zdi8GmEyAPkheQpyW9G82xGaeIBi1ycmMLEQWTjxNilESoUKhSEiiqrunj ARVe3YFiMGd62ij25juUqW08Jpl3Nx0665isfyaXki7zkVzkE+8jg5H1spe0H2zConY/86feh5La1X gARw8gjDz6CmNxn9Cbtk4W6cFSwZT4D+6Ay4bTnbp4SkI1C90Ugk861AfBUi8uP/xziWL1RwV/y15v 9tyPee3+33v5pbHPmPbqT2TM0pdKGTQg8scwRxhaHpDQb9HOFM1w4V62zry7RPpubc5eKVZeQhK92K uMlk/VIp1i2/B05+u0uwomOBfgm+TbunYbtoVwwuQSn9gln8drnrSzkbrVv9QEL9m7TzocziFa6sC+ 2DY9ohayN2DVCHMeygsKncwtknrYJKI+BZDN4mdLTnxZiD1Uoqa3WcyWSyNw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Fix buf allocation size (it needs to be 2 bytes larger). Found when
+__alloc_size() annotations were added to kmalloc() interfaces.
 
+In file included from ./include/linux/string.h:253,
+                 from ./include/linux/bitmap.h:10,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/paravirt.h:17,
+                 from ./arch/x86/include/asm/irqflags.h:63,
+                 from ./include/linux/irqflags.h:16,
+                 from ./include/linux/rcupdate.h:26,
+                 from ./include/linux/rculist.h:11,
+                 from ./include/linux/pid.h:5,
+                 from ./include/linux/sched.h:14,
+                 from ./include/linux/blkdev.h:5,
+                 from drivers/staging/rts5208/rtsx_scsi.c:12:
+In function 'get_ms_information',
+    inlined from 'ms_sp_cmnd' at drivers/staging/rts5208/rtsx_scsi.c:2877:12,
+    inlined from 'rtsx_scsi_handler' at drivers/staging/rts5208/rtsx_scsi.c:3247:12:
+./include/linux/fortify-string.h:54:29: warning: '__builtin_memcpy' forming offset [106, 107] is out
+ of the bounds [0, 106] [-Warray-bounds]
+   54 | #define __underlying_memcpy __builtin_memcpy
+      |                             ^
+./include/linux/fortify-string.h:417:2: note: in expansion of macro '__underlying_memcpy'
+  417 |  __underlying_##op(p, q, __fortify_size);   \
+      |  ^~~~~~~~~~~~~
+./include/linux/fortify-string.h:463:26: note: in expansion of macro '__fortify_memcpy_chk'
+  463 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,   \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+drivers/staging/rts5208/rtsx_scsi.c:2851:3: note: in expansion of macro 'memcpy'
+ 2851 |   memcpy(buf + i, ms_card->raw_sys_info, 96);
+      |   ^~~~~~
 
-On 8/17/21 23:27, Philip Li wrote:
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-staging@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/staging/rts5208/rtsx_scsi.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
->> Philip, how often is the kernel test robot's clang version rebuilt? Would it
->> be possible to bump it to latest ToT or at least
->> 9ed4a94d6451046a51ef393cd62f00710820a7e8 so that we do not get bit by this
->> warning when we go to enable this flag?
-> Got it, currently we do upgrade in weekly cadence (but it may fall behind sometimes),
-> and the one we use now is clang version 14.0.0 (https://github.com/llvm/llvm-project 
-> 2c6448cdc2f68f8c28fd0bd9404182b81306e6e6)
-> 
-> We will ugrade to the head of llvm-project master today.
+diff --git a/drivers/staging/rts5208/rtsx_scsi.c b/drivers/staging/rts5208/rtsx_scsi.c
+index 1deb74112ad4..11d9d9155eef 100644
+--- a/drivers/staging/rts5208/rtsx_scsi.c
++++ b/drivers/staging/rts5208/rtsx_scsi.c
+@@ -2802,10 +2802,10 @@ static int get_ms_information(struct scsi_cmnd *srb, struct rtsx_chip *chip)
+ 	}
+ 
+ 	if (dev_info_id == 0x15) {
+-		buf_len = 0x3A;
++		buf_len = 0x3C;
+ 		data_len = 0x3A;
+ 	} else {
+-		buf_len = 0x6A;
++		buf_len = 0x6C;
+ 		data_len = 0x6A;
+ 	}
+ 
+@@ -2855,11 +2855,7 @@ static int get_ms_information(struct scsi_cmnd *srb, struct rtsx_chip *chip)
+ 	}
+ 
+ 	rtsx_stor_set_xfer_buf(buf, buf_len, srb);
+-
+-	if (dev_info_id == 0x15)
+-		scsi_set_resid(srb, scsi_bufflen(srb) - 0x3C);
+-	else
+-		scsi_set_resid(srb, scsi_bufflen(srb) - 0x6C);
++	scsi_set_resid(srb, scsi_bufflen(srb) - buf_len);
+ 
+ 	kfree(buf);
+ 	return STATUS_SUCCESS;
+-- 
+2.30.2
 
-Thanks, Philip. We really appreciate it.
---
-Gustavo
