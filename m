@@ -8,57 +8,56 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16673C43216
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836B0C4320A
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F12336108E
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD5B6108F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 06:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238161AbhHRGJj (ORCPT
+        id S239520AbhHRGJn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 02:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44316 "EHLO
+        Wed, 18 Aug 2021 02:09:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239485AbhHRGJQ (ORCPT
+        with ESMTP id S238395AbhHRGJ3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 02:09:16 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2818C061D73
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:00 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id u15so1093968plg.13
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:00 -0700 (PDT)
+        Wed, 18 Aug 2021 02:09:29 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 203C2C061D7F
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:01 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id u21-20020a17090a8915b02901782c36f543so8173619pjn.4
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 23:06:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hSMMgZw7/2olmGwk+x9hLUDcbTdJzqluz+oi39a5oaM=;
-        b=AMRBYGxWigAndwRUkfX3NhBSUU8MSjoRTCHz9zrrsgdg3Vx7dfMY0hvzndczVU9K2K
-         OwjIPvlD7qSunG4V08GZHGWtKJwfeKCLlU3S37o3Gz4IcLm+qCx3PPRbw20HXjHiEzkE
-         uX9jeofCLBVvaQkzgW2gi+vm4H1Oim/Okgn7o=
+        bh=/IK2hUcT/4MYA89svC69IqQzJMxj9iX8eWhKLXV32Iw=;
+        b=Qk0Yz6lf1elHUTBtp4C2PYtCn7PIFLnNofb8ZAFlDdG4MWjk2P3OaV86YbdgUyM7dY
+         p5uUZRrMjW9T3n9vwb+/beYXH7FS8a6aFx9wvyxcLlDC639Mj5fKZjSOHMOoCJZ9CqB8
+         zyXlq2w/M//Z/z6+X7i6enEtE9dSCC78+dKrU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hSMMgZw7/2olmGwk+x9hLUDcbTdJzqluz+oi39a5oaM=;
-        b=qTQuvsBbsyRaVbJTU7az+EeqiFtGdSJ++J4WdUs2kTShM+oU3HT2RKAf/TETtlpeoG
-         IhRL+ur7d7hLBQFt+k1/Hcvm3Z6yND3uG3hqNM2/WbW3L/l4yIe3fQ8BsieHPxnCW/6r
-         ACdMtc8zQVQ2tfbzRmAY1moIQjcDxdp3wlhfadyvXK2/CNQ5yShOC+hmIZfizFz7WjsR
-         H8Qg5XQmXeMq4QtZF0jlxD3DlyI36B2RJanHSaTDAqbpJ3rdY+FpYg7LIifO3+dJgW5M
-         45VvjPrB/H1F9cJo+CiS5iCJG9YCBvPqnKzI95UlAr2vErlDmkGWYUM+J8J2nrxs1Ddl
-         hqQg==
-X-Gm-Message-State: AOAM5327UoBbxTXYWqRmpB037Efikf/XDtxrZIq/IQmeea6SYWLmLNt3
-        KB61mVV0E1OPvW9bOuB5uCtu9w==
-X-Google-Smtp-Source: ABdhPJw3YCb8XFLM24p+5tCFOEGFX4q333wRrCUDGyZQSVGiN6LbUqPysW/vGPLsQ7I9wOKcC9qAYw==
-X-Received: by 2002:a17:902:b190:b029:12d:487:dddc with SMTP id s16-20020a170902b190b029012d0487dddcmr5995051plr.24.1629266760257;
+        bh=/IK2hUcT/4MYA89svC69IqQzJMxj9iX8eWhKLXV32Iw=;
+        b=HD98u3CTN6kOxnFD5tS2dYMs4bSmKzeF9CwCTRrPFzvP5b8LFBjknqAKOuA4byXHGY
+         +gHcz9iJhV0GgVRvZvGGYLj2wraKDw+zdunqBJEUS1WlcTx3sITUsgy0isIoxlqkdSe0
+         pxY8Nk0DwNpa4EhLUxplnt6uRBXOMWjEQVYSozI28hhcJm6oYiHsUOi3nziHsAKzBF0f
+         9stVRiaSgUuf02f7WZ9oxs9QMKd13DCejn5Ex9KaroXUp+xraO7g+UMAbdkJy5nwQaud
+         jicU5Eyc26fkFec55m3JbR/pLrchPFzFf0hzCwJI9wFnileNS8FS17PkCLtmxuQbbUxb
+         iNzw==
+X-Gm-Message-State: AOAM530GsSjGNBtLdEe432BHRBbt/E7fZr92JxONTgexJoyvkzpLHNyp
+        L3PSdrAhW4bgiMVi00eeQy9M9g==
+X-Google-Smtp-Source: ABdhPJwEgHsXijuO9XlN7yS/zuRdw2vU1CmLoC5NvWxHWcUZp3RabJGNl5c6cwBjXYc7xJwspuAu9w==
+X-Received: by 2002:a17:902:9046:b029:12c:b5b7:e443 with SMTP id w6-20020a1709029046b029012cb5b7e443mr5821798plz.31.1629266760522;
         Tue, 17 Aug 2021 23:06:00 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ms19sm3881385pjb.53.2021.08.17.23.05.57
+        by smtp.gmail.com with ESMTPSA id y2sm4445932pfe.146.2021.08.17.23.05.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 17 Aug 2021 23:05:58 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -68,70 +67,123 @@ Cc:     Kees Cook <keescook@chromium.org>,
         clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 30/63] fortify: Prepare to improve strnlen() and strlen() warnings
-Date:   Tue, 17 Aug 2021 23:05:00 -0700
-Message-Id: <20210818060533.3569517-31-keescook@chromium.org>
+Subject: [PATCH v2 31/63] fortify: Allow strlen() and strnlen() to pass compile-time known lengths
+Date:   Tue, 17 Aug 2021 23:05:01 -0700
+Message-Id: <20210818060533.3569517-32-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210818060533.3569517-1-keescook@chromium.org>
 References: <20210818060533.3569517-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1906; h=from:subject; bh=wvK3U1xEzLn7HBnl3TVbXk2P5Mye7QhLMp4JdS3JmN8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMkjtivRrqM/8t8pX2BgfBDvrRaH9kWYRdFJy03 ZmaWqcKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjJAAKCRCJcvTf3G3AJnZBD/ 9ZO2jtNOBwLeuE65ugO7S8QVPVTc02JQcjXAhVIMip8GcftBIh6y33OIXJbGvumJ/EBr4oAJKmP1+L +oCFFakYPIeuRV6pxMxO5+wfJJPqCT3cphUSCrquRhKuZxNJlP1uRMqbL/K2OLFwn4Rqr295BG/Ij7 bIuDzHDRDYuTekT9PxGCWIUivMtqV1HLgXIhtxri3qlsFlwdbx1zU/5GmOLFNh+btb9eKauiShw4vB Ae3CvfS1tdmSXrvEgvGSz0wG9HcHySLpIsZglW8TI+gV/WPu/q3Izlql98/zjYhKCVFpN56jlwkoyx zcKcg+gRzQRrROnH/ZkeMj4iHx7aenKCH2VKKG5+PbFX2LcaG6OYcmX/AlIJ7kzv1caSMVeESCpb9F xeqmqDw5IN+/8UVBy/7bNpQ7uu2aF/hk2m7Hf07uYrLH/+NRJor0Fqsfz4VYDNfsHb3mkTeLYZvdL5 V79pX7BaQEUTM11ow989NnALA2oTs242bRvfR7vGQccFJk8QsH3kWYnDaR1HrXnh+M5cU2H4jxIFDj qR4X2svRVHZBfMvnGQgeEkvADKirqLGVc+4vohELtBuJ/63n2yvR1gtZwjZo1KYFSY1RxyqzGjfvPd scVAGDxupEYbw0MN1qMftL6MMY2m0jmHqf5z7ekO4APDSXkLXnzkcpyCrLMg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4037; h=from:subject; bh=A8Geo8n4i5qwpvkI4vHxNJg+9VAd1dz9Zyf2I1wPWkI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHKMk1/syAnC8eDuJXMCDQbQtT/FS9k5h9kcLncy9 eJedf0qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyjJAAKCRCJcvTf3G3AJrkGD/ sGA1st6iXQakkMrv5jlDBfJfIKpPRffAM37N71hpqxpr1Fr7DdDm3SkcllpDVPtIqv1i9Cq8eZToIP /UfE6TKceHuZ3LA8KcaYA/hx0EQstrTKbvGo5hJu7X3Ycoxw2wvax9yM+VwquMUfmLBHH9kP6tLV/S ggDpCb8GF8AfsdQOxNJZwtuEQHOY/3Vmylwx85UDPcvrJnGAuwc/dEkRVikDg+jmDVeQw6BaEXhsWz VXTUlkQl/+6v0SasN6VTLBRMwAYtijt48hQvZlvCmLFOaRFPlX5PrsmqzeNzTt2J+7R/0dz5cgjoYm 2YSDE0BDUQ1VbBkMkcUoz0ev1b819hruB/JCr91xtsNo+R4R3LVnQHBJVjoctZ0f0mVe+/NM97Zajx Phb9H24sbFTLbi334Ac+II/djOciKyoZNRy1Gozfa6LM2cQPWUQ5sk0ezJ8yxOetb6Xz3m/ygEhbSZ qTJRhaE4vTVKHV9994E/MKPsHd+xSG+9/hzqiL1h5P9/FhRZenRL0+KQ1oW+Z1W3wQmOBsJfj8Qe93 52bnf9k2WzJVmTp3cwaPCp8Uvuh5Ype/IYtfxoP8YApi2HbanWdnrLIMsD9pCtnzhoSncNnH//7lUf iI0pELVQiyQsjoUfQ6MDPhEkqWTauXrhO0J2TxH8JfEbbkLp6/lRYfH8bPiA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In order to have strlen() use fortified strnlen() internally, swap their
-positions in the source. Doing this as part of later changes makes
-review difficult, so reoroder it here; no code changes.
+Under CONFIG_FORTIFY_SOURCE, it is possible for the compiler to perform
+strlen() and strnlen() at compile-time when the string size is known.
+This is required to support compile-time overflow checking in strlcpy().
 
-Cc: Francis Laniel <laniel_francis@privacyrequired.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/fortify-string.h | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ include/linux/fortify-string.h | 47 ++++++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 11 deletions(-)
 
 diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index 68bc5978d916..a3cb1d9aacce 100644
+index a3cb1d9aacce..e232a63fd826 100644
 --- a/include/linux/fortify-string.h
 +++ b/include/linux/fortify-string.h
-@@ -56,6 +56,17 @@ __FORTIFY_INLINE char *strcat(char *p, const char *q)
- 	return p;
- }
+@@ -10,6 +10,18 @@ void __read_overflow(void) __compiletime_error("detected read beyond size of obj
+ void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
+ void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
  
-+extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
-+__FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
-+{
-+	size_t p_size = __builtin_object_size(p, 1);
-+	__kernel_size_t ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
++#define __compiletime_strlen(p)	({		\
++	size_t ret = (size_t)-1;			\
++	size_t p_size = __builtin_object_size(p, 1);	\
++	if (p_size != (size_t)-1) {			\
++		size_t p_len = p_size - 1;		\
++		if (__builtin_constant_p(p[p_len]) &&	\
++		    p[p_len] == '\0')			\
++			ret = __builtin_strlen(p);	\
++	}						\
++	ret;						\
++})
 +
-+	if (p_size <= ret && maxlen != ret)
-+		fortify_panic(__func__);
-+	return ret;
-+}
-+
- __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+ #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+ extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
+ extern int __underlying_memcmp(const void *p, const void *q, __kernel_size_t size) __RENAME(memcmp);
+@@ -60,21 +72,31 @@ extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(st
+ __FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
  {
- 	__kernel_size_t ret;
-@@ -71,17 +82,6 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+ 	size_t p_size = __builtin_object_size(p, 1);
+-	__kernel_size_t ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
++	size_t p_len = __compiletime_strlen(p);
++	size_t ret;
++
++	/* We can take compile-time actions when maxlen is const. */
++	if (__builtin_constant_p(maxlen) && p_len != (size_t)-1) {
++		/* If p is const, we can use its compile-time-known len. */
++		if (maxlen >= p_size)
++			return p_len;
++	}
+ 
++	/* Do no check characters beyond the end of p. */
++	ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+ 	if (p_size <= ret && maxlen != ret)
+ 		fortify_panic(__func__);
  	return ret;
  }
  
--extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
--__FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
--{
--	size_t p_size = __builtin_object_size(p, 1);
--	__kernel_size_t ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
--
--	if (p_size <= ret && maxlen != ret)
--		fortify_panic(__func__);
--	return ret;
--}
--
- /* defined after fortified strlen to reuse it */
++/* defined after fortified strnlen to reuse it. */
+ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+ {
+ 	__kernel_size_t ret;
+ 	size_t p_size = __builtin_object_size(p, 1);
+ 
+-	/* Work around gcc excess stack consumption issue */
+-	if (p_size == (size_t)-1 ||
+-		(__builtin_constant_p(p[p_size - 1]) && p[p_size - 1] == '\0'))
++	/* Give up if we don't know how large p is. */
++	if (p_size == (size_t)-1)
+ 		return __underlying_strlen(p);
+ 	ret = strnlen(p, p_size);
+ 	if (p_size <= ret)
+@@ -86,24 +108,27 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
  extern size_t __real_strlcpy(char *, const char *, size_t) __RENAME(strlcpy);
  __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
+ {
+-	size_t ret;
+ 	size_t p_size = __builtin_object_size(p, 1);
+ 	size_t q_size = __builtin_object_size(q, 1);
++	size_t q_len;	/* Full count of source string length. */
++	size_t len;	/* Count of characters going into destination. */
+ 
+ 	if (p_size == (size_t)-1 && q_size == (size_t)-1)
+ 		return __real_strlcpy(p, q, size);
+-	ret = strlen(q);
+-	if (size) {
+-		size_t len = (ret >= size) ? size - 1 : ret;
+-
+-		if (__builtin_constant_p(len) && len >= p_size)
++	q_len = strlen(q);
++	len = (q_len >= size) ? size - 1 : q_len;
++	if (__builtin_constant_p(size) && __builtin_constant_p(q_len) && size) {
++		/* Write size is always larger than destintation. */
++		if (len >= p_size)
+ 			__write_overflow();
++	}
++	if (size) {
+ 		if (len >= p_size)
+ 			fortify_panic(__func__);
+ 		__underlying_memcpy(p, q, len);
+ 		p[len] = '\0';
+ 	}
+-	return ret;
++	return q_len;
+ }
+ 
+ /* defined after fortified strnlen to reuse it */
 -- 
 2.30.2
 
