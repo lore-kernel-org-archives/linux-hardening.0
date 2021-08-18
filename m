@@ -8,120 +8,129 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16877C4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 03:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918CEC432BE
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 03:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA3D560F38
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 03:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CB8610A6
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 03:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235399AbhHRDSr (ORCPT
+        id S236518AbhHRDlW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 Aug 2021 23:18:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34260 "EHLO
+        Tue, 17 Aug 2021 23:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234860AbhHRDSq (ORCPT
+        with ESMTP id S236392AbhHRDlW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 Aug 2021 23:18:46 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C4DEC0613CF
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 20:18:12 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id o2so792689pgr.9
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 20:18:12 -0700 (PDT)
+        Tue, 17 Aug 2021 23:41:22 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DC3C0613CF
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 20:40:48 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id o10so1026958plg.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Aug 2021 20:40:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=j5+GyHW/4S3DPa6ifrE4AkuMeTrhrVLTRLEjOxHyD2Q=;
-        b=jvz7/vMzC87FldKmkHelmV6pkdk0P1wtKugQDFaobnoogyZyd9WTlD+2gY3JoPs3a4
-         uNgNQ5EYnBU09ao/wHlDQhOnOvFmC6o0zsSadfSlcMQo1CzXJaGWWkVwTRrOZ72SKLBh
-         STpOMnZlEgMrj5TqH6O0zTJQp5fRZmJGUaQqQ=
+        bh=BsdVXbhtWjUQaskCMlUgEBNS4pC3NCkpK2fi3WMsLKs=;
+        b=Ljf+4KWeVggSI4Lf6tc0A3nHEXXDjCM1/9HKrlbPRAGljqsAxLc2XrTWzSUlDcrMPh
+         P6DnuN3vSN0v5bJ/HdgOf94oR/ORI+tgmH6XRTm2wnfkm5667m2RKbNnJ77J82+Nx5pX
+         bpu+zhJrfZSTkVjY8NK3lNiH6W5lAUhuFMu7g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=j5+GyHW/4S3DPa6ifrE4AkuMeTrhrVLTRLEjOxHyD2Q=;
-        b=NoBag1Rb8bRuMZ0oIU3hsp3bNjDe2xvVcjCXdkv6X49ldoy48srXdRr5Sag7pt85xf
-         b87SlY6EYOStf2K1IJukoEC0nz7UpwC3UpFWM1upOBTrnD3XT6H7ee0JjhuScbkE+vkb
-         u0zap+QoeBgSWzsT4LdF3M4Cx8QlhIYpSdgMkfi8G6cfZjJSct1oQP923spat2n/jpwI
-         t2Xt+w/nJuzzFLxHwyJk6+1NS+82Y8mAlKfKBeIrK8pCKtlBKIi1TpZsw4Elnq5dBVo6
-         c0clC5a0ecaN6eXcpMSaKRee4uatCXnoLfyPWq1uyCHhfp9KKS9AfEW8XWWF4GA/4+ON
-         cIoA==
-X-Gm-Message-State: AOAM530y5f6m8DoZrq8X+LIYdHLVfx/a5aUyO0POrvXn1h9t8KDdRGxr
-        qMWbaYstkxcaSgAgSo6Yw624iA==
-X-Google-Smtp-Source: ABdhPJxHgAcD+t24XepH6prWsbYT0xI/k6k9nDSdr1WcHPOqrmKg34/1qtWr4o5hweEMC438oWNP3g==
-X-Received: by 2002:a65:6a09:: with SMTP id m9mr6595093pgu.269.1629256691973;
-        Tue, 17 Aug 2021 20:18:11 -0700 (PDT)
+        bh=BsdVXbhtWjUQaskCMlUgEBNS4pC3NCkpK2fi3WMsLKs=;
+        b=KqlQeI29rnaqqjhFnqtEFy/hGXfPTTAL0Ob3io50ZFCxrGlmBsiVSoHN3lyNL/PpwW
+         DtX5YyV3Sc1AKFk9UaepdXo2lb+QGBqZkfOj/1crbrHkd4tDN/aNuyel6r3MEPCpohU1
+         fOa4Yel1oGpd/hBu3bZQmwALq/0KqFKU8D1bE4SrmX/DypjOte9cI+AaNoDo8i0ewkAC
+         PYX0atC+Yx0AkjU47/B1jXo4YLpv7AxQ+afNNl5qD7OGH5DRPmtmyxQM/5j35zRW1xmt
+         0DN+8ma9wOAAja8XnlCyjtNWDeGK7QHetwWQF4bvBzdO1JPLHivhqcUpALAhaqJ4Co+5
+         TAuQ==
+X-Gm-Message-State: AOAM531OLcqov0MNrA/QMzf9VuGU85oRDBtILig9RlOpjR8Z245Z50Sr
+        t2cQAGvXBO7I1orqs9tdiZ6AqQ==
+X-Google-Smtp-Source: ABdhPJw24WGCJrWQghLliT0HNHXvdWx3O8W8rtadIm9NJXzk0hbgrpwKdgVNf6ToS1Ukehs1HtNQaw==
+X-Received: by 2002:a17:90a:6888:: with SMTP id a8mr7162828pjd.91.1629258047889;
+        Tue, 17 Aug 2021 20:40:47 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n15sm3984352pff.149.2021.08.17.20.18.11
+        by smtp.gmail.com with ESMTPSA id y5sm3790937pfa.5.2021.08.17.20.40.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 20:18:11 -0700 (PDT)
+        Tue, 17 Aug 2021 20:40:47 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc:     Kees Cook <keescook@chromium.org>, Helge Deller <deller@gmx.de>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] parisc: math-emu: Avoid "fmt" macro collision
-Date:   Tue, 17 Aug 2021 20:18:09 -0700
-Message-Id: <20210818031809.735689-1-keescook@chromium.org>
+To:     Wolfgang Grandegger <wg@grandegger.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
+        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] can: etas_es58x: Replace 0-element raw_msg array
+Date:   Tue, 17 Aug 2021 20:40:10 -0700
+Message-Id: <20210818034010.800652-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2357; h=from:subject; bh=BAykg0i7p0/8eJzpRw9Ux1XnGwbtnouiM7jianmwKDc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHHvwNns9GPVFId5XpY/rjNKgrEk3HM9CwndqYGZ7 iLquAeSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRx78AAKCRCJcvTf3G3AJq44D/ 0Rww7PARe1v7Xrgq0fvsUfOXkQFNiuN9/WGA/RNTsk7WD8KC5I6eMlNvPOB3pKqFkiHbjneOi4jxp6 3ISKQJZgvNBDN7w+S1EEA3/NUHPdx7JTNXPubGlGknV7ylACCjzmoWHEP6LkDV+WGX0Del8/uGkgsb 8glYxbiKMGmM90igS0t8WXnYA8Z1f1T3943k7gNMm0DysLq+8SjNquGNlRCvMSvkbLjrjA6oCB3RTz i3Ki9kTg67GPto1gQFrLigc0mJkYmHQ93fOU9x3THcxoEVd8tATIWW4GLTiJaahlWnPrVqADOlf2B1 w/SQJmuIDYd1B4+V2RBQFnT1T1WJWM0pvgIN+9P9QeB8atEaCt69h74iMqpZJvGKEpMOL3evxp3qIr 64WWCoFh9VIH8yJvUrc2fsZlK8DcpubB52SM5m30/5SredsM8am0AzHv409+4ZyQnmr9ivec/VpD2g ZcM2Uht7+Znwbv3VdqH7PTgr8y6lfBZPcda4tiQ/KxJlUDAvLq7qGlLqF1B1Pr6Hd/6rbRUN39t3Ko BColCL/X+f5hvu04ZbIUic5OPjBu7ZXEvqoIE6za///Fz93Gigi1aMkCENMpm6PRnJ2iDO8zAkywF8 YobNhFKAqeftYClqJvOMkakeyVc4X7NmvOQ3WC1jVB1LHj7mgVIf6Ri1mMLA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2405; h=from:subject; bh=2pghWRFPuQ+zVAOzO5gfNiPmiJDuiTH+Yfm+Ryq/M0I=; b=owEBbAKT/ZANAwAKAYly9N/cbcAmAcsmYgBhHIEaiZ+lXRC4QwUOqC71mOhS6HSGOj3Caw1KKYLF 7L2JZyaJAjIEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRyBGgAKCRCJcvTf3G3AJsVpD/ j7xXbwKjJwKT2/GO+ODaujdBGdL6Osu0WV1eU4XmqS5JfJkc+l2PFtKNfj6weSU0gXlOjRX8zQo9Vk RGTXtjXdt7Cw6atuK6aFxzGJuFRek6LadYkYs7hUunrsAuHTyoV++Q/ltnSzptbX6zTZtKkzjT4Mnb 1sbL6mA+MGtTnYFO6cqc5IPv9qZZFZr7lOyYkpiztuUQjj1Lb8Zqj+/IP6sh7ePDPksNRFqHcIeEx4 u+cDgj0hCPPHdE4WRYbK2CSXjL5m9stprftBB5AfmdxXblnZIPW9w26iSWTVSKoyej3pB/f1upjQxs YUs4j6qklJb8pe1DGwrudFdZtGtFImGSL7ap+9UXyYhkU2txwLCOMZbwHhrSKTGw7C2c/GLTO+rceS qa/qXMGgpT1cMAkKX2yL1XK/wg4yCEbT00q4oj7XPLEcadol2gXH3dafW+/ydbcaY4kgxvYvBSewsP rXPTtLeoN4RpHB+kHdSXET3oed3KzRg6hS2x1078wD2iCE/RKQtbEyGHXPlpq8HOkHjCazT9CMbR9L cpAmLTqZeddlhGnvs0rlgQ8LxHHeEPEPCzyK+2blJZjg7aYahRjZlUm05YoPSQUN0XhInmO7oJIutG lbwOtuCNS2QSeh6mvvNab0mm/3Ibe3VZ8Kq/+P1m+l1sisDz595D+GbIOg
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The printk "fmt" macro was colliding. Rename like the others with a
-"bits" suffix. Fixes a build failure:
+While raw_msg isn't a fixed size, it does have a maximum size. Adjust the
+struct to represent this and avoid the following warning when building
+with -Wzero-length-bounds:
 
-arch/parisc/math-emu/decode_exc.c: In function 'decode_fpu':
-arch/parisc/math-emu/decode_exc.c:49:14: error: expected identifier before numeric constant
-   49 | #define fmt  11 /* bits 19 & 20 */
-      |              ^~
-./include/linux/printk.h:379:6: note: in expansion of macro 'fmt'
-  379 |     .fmt = __builtin_constant_p(_fmt) ? (_fmt) : NULL, \
-      |      ^~~
-./include/linux/printk.h:417:3: note: in expansion of macro '__printk_index_emit'
-  417 |   __printk_index_emit(_fmt, NULL, NULL);   \
-      |   ^~~~~~~~~~~~~~~~~~~
-./include/linux/printk.h:446:26: note: in expansion of macro 'printk_index_wrap'
-  446 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
-      |                          ^~~~~~~~~~~~~~~~~
-arch/parisc/math-emu/decode_exc.c:339:3: note: in expansion of macro 'printk'
-  339 |   printk("%s(%d) Unknown FPU exception 0x%x\n", __FILE__,
-      |   ^~~~~~
+drivers/net/can/usb/etas_es58x/es58x_fd.c: In function 'es58x_fd_tx_can_msg':
+drivers/net/can/usb/etas_es58x/es58x_fd.c:360:35: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[]'} [-Wzero-length-bounds]
+  360 |  tx_can_msg = (typeof(tx_can_msg))&es58x_fd_urb_cmd->raw_msg[msg_len];
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/net/can/usb/etas_es58x/es58x_core.h:22,
+                 from drivers/net/can/usb/etas_es58x/es58x_fd.c:17:
+drivers/net/can/usb/etas_es58x/es58x_fd.h:231:6: note: while referencing 'raw_msg'
+  231 |   u8 raw_msg[0];
+      |      ^~~~~~~
 
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: linux-parisc@vger.kernel.org
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/parisc/math-emu/decode_exc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/usb/etas_es58x/es581_4.h  | 2 +-
+ drivers/net/can/usb/etas_es58x/es58x_fd.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/parisc/math-emu/decode_exc.c b/arch/parisc/math-emu/decode_exc.c
-index cd8ffc6ceadf..494ca41df05d 100644
---- a/arch/parisc/math-emu/decode_exc.c
-+++ b/arch/parisc/math-emu/decode_exc.c
-@@ -46,7 +46,7 @@
- #define SIGNALCODE(signal, code) ((signal) << 24 | (code))
- #define copropbit	1<<31-2	/* bit position 2 */
- #define opclass		9	/* bits 21 & 22 */
--#define fmt		11	/* bits 19 & 20 */
-+#define fmtbits		11	/* bits 19 & 20 */
- #define df		13	/* bits 17 & 18 */
- #define twobits		3	/* mask low-order 2 bits */
- #define fivebits	31	/* mask low-order 5 bits */
-@@ -57,7 +57,7 @@
- #define Excp_instr(index) Instructionfield(Fpu_register[index])
- #define Clear_excp_register(index) Allexception(Fpu_register[index]) = 0
- #define Excp_format() \
--    (current_ir >> ((current_ir>>opclass & twobits)==1 ? df : fmt) & twobits)
-+	(current_ir >> ((current_ir>>opclass & twobits) == 1 ? df : fmtbits) & twobits)
+diff --git a/drivers/net/can/usb/etas_es58x/es581_4.h b/drivers/net/can/usb/etas_es58x/es581_4.h
+index 4bc60a6df697..af38c4938859 100644
+--- a/drivers/net/can/usb/etas_es58x/es581_4.h
++++ b/drivers/net/can/usb/etas_es58x/es581_4.h
+@@ -192,7 +192,7 @@ struct es581_4_urb_cmd {
+ 		struct es581_4_rx_cmd_ret rx_cmd_ret;
+ 		__le64 timestamp;
+ 		u8 rx_cmd_ret_u8;
+-		u8 raw_msg[0];
++		u8 raw_msg[USHRT_MAX];
+ 	} __packed;
  
- /* Miscellaneous definitions */
- #define Fpu_sgl(index) Fpu_register[index*2]
+ 	__le16 reserved_for_crc16_do_not_use;
+diff --git a/drivers/net/can/usb/etas_es58x/es58x_fd.h b/drivers/net/can/usb/etas_es58x/es58x_fd.h
+index ee18a87e40c0..e0319b8358ef 100644
+--- a/drivers/net/can/usb/etas_es58x/es58x_fd.h
++++ b/drivers/net/can/usb/etas_es58x/es58x_fd.h
+@@ -228,7 +228,7 @@ struct es58x_fd_urb_cmd {
+ 		struct es58x_fd_tx_ack_msg tx_ack_msg;
+ 		__le64 timestamp;
+ 		__le32 rx_cmd_ret_le32;
+-		u8 raw_msg[0];
++		u8 raw_msg[USHRT_MAX];
+ 	} __packed;
+ 
+ 	__le16 reserved_for_crc16_do_not_use;
 -- 
 2.30.2
 
