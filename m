@@ -2,122 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631DDC4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 08:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06654C4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 09:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B4E61029
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 08:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06C560FDA
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Aug 2021 09:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239703AbhHRIUQ (ORCPT
+        id S230435AbhHRJDz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 04:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47750 "EHLO
+        Wed, 18 Aug 2021 05:03:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239616AbhHRIUP (ORCPT
+        with ESMTP id S230340AbhHRJDx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 04:20:15 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E867C0613CF
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 01:19:41 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id k14so1470287pga.13
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 01:19:41 -0700 (PDT)
+        Wed, 18 Aug 2021 05:03:53 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7FBC061796
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 02:03:18 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id o10so1452013plg.0
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 02:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yWCs2vRunxYw/2LTzrenXx3FyLmYWTHbkmxW6S9lQ6o=;
-        b=Xbs1PlLLSpgp12XsSXiO9dHPBqg046u+axGYHh61zauRi4wHisoKZ7piU+aThX5HKw
-         S7Y0f8OZzYpNGPMlJr6OxgJYf+e1PUiUInGPJuunDc0zaX77q7DSeYJvr8QW262gPZ6l
-         wmMwpGYF4yFre3/oBCHlAprBCkbfUzTwbpJ8U=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wi6GiW3siAeArZqvWLcz46sruMCMOkQL9Tx1MHP2F9M=;
+        b=O6b9QEJX2A+BMP2t/Jopnb3uLzfw7MkxdgYGDPd8kXg7lj6i5rW4b1KQUD7duBp0NW
+         ARZb6rSvwK8yUjjDtTmZ/No5b/N6TJNMpFMfjHQcB66xfWC5jxVfZdmVgg/rw4tb9D9m
+         KTQ5SvRW25g7NfqelO4dYcMxQcfvJG7CIhrVQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yWCs2vRunxYw/2LTzrenXx3FyLmYWTHbkmxW6S9lQ6o=;
-        b=iooVS/Bfv8q7WfeqjsEgxGOstjhWxtN1NRaUu0EYFxq5CyCo9ZM8+PPNQSTI249XXu
-         GNTQLVU4J6iPamzOD85OZGRxSq/iLxZx8gjh3Kc9DAwHMZ/kNSQiiyCTVEf9FoZ6ycez
-         4qM5ZkQDBPI5wcCH0uW3qxAhpSjTispGNN2k26LnxFiWI6asrXNZYs/wfllLcUhBJKeE
-         826aDFWle8xrJex/AjZMK/gwH+7MZ1/gB+SgKdhjdcPlI2SPP6EqU6Fhzlc2JAp1bF1t
-         eeiJjGlLYeoct857n9IGuFHY2dvZQ1v9T1e519NgX9Uc3ZdQu+iFK60ySLd4oACWsu+x
-         rJbg==
-X-Gm-Message-State: AOAM533s68+rd45aFsvnG7yYQw2NWQP+IuyjdosDgs35dvcjsNp+dACx
-        O5RELfnVY8d5hgrhVndDvCtvdg==
-X-Google-Smtp-Source: ABdhPJyHMomXUUSsim9BNDKSfgWuXipYZG3PXU/QZcHRhPnPUWPnIYtsppjWSiGU4XA2AOeUZekwhg==
-X-Received: by 2002:a05:6a00:230e:b029:3c4:24ff:969d with SMTP id h14-20020a056a00230eb02903c424ff969dmr8103456pfh.44.1629274780870;
-        Wed, 18 Aug 2021 01:19:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wi6GiW3siAeArZqvWLcz46sruMCMOkQL9Tx1MHP2F9M=;
+        b=t0jGyFrU/0O2UIBOyDKVzT+VUnClc3iAAj3GVdec5BY2wpU1w020y+wLdtr5ZKttx0
+         pJ2yoLayc1B/I+BdmoN2UU+0y0f5OVnEziOUFTED9LyiE7mAX/UWPm1qF7zrfGl8HxnM
+         bVD3U1qVkP2Ih5T+tVRKlQcO6idIvkt3TA1tyXRRuE93aZ35y2+1uJPFZKQ7Xp078kvH
+         mg0JHaH/ovCXDXkI68BAKHDP+zX28UJIza3GooMRkOJyDBAnn+LIJJpDyMjqneQJYBfv
+         RecGq0DnIEh8dKZblHz0+NRtT5A8FnGit0F2hHYkja5aTN/PviU69e5dJJRsKAFZLfE2
+         lB8g==
+X-Gm-Message-State: AOAM531SFYvaPi2f/9LtgAWXl3tqSOQF+xKZC0cKE+YwOTYioULGMBUC
+        orptn3jhpQ3Yb1F/CL25uRO/Tg==
+X-Google-Smtp-Source: ABdhPJwBy4P3b9ZHL/uuEc5QK3+QU7JmWq9RZXhEv09uSY9Rwkh8duMfsoih0ejFVq5RU4iOGkX0cA==
+X-Received: by 2002:a17:903:22cd:b0:12d:8876:eea7 with SMTP id y13-20020a17090322cd00b0012d8876eea7mr6462580plg.75.1629277398247;
+        Wed, 18 Aug 2021 02:03:18 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r78sm5425224pfc.206.2021.08.18.01.19.39
+        by smtp.gmail.com with ESMTPSA id y13sm5730422pfq.147.2021.08.18.02.03.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 01:19:40 -0700 (PDT)
+        Wed, 18 Aug 2021 02:03:17 -0700 (PDT)
+Date:   Wed, 18 Aug 2021 02:03:16 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Igor Matheus Andrade Torrente <igormtorrente@gmail.com>,
-        linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+To:     Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
+        linux-can <linux-can@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] staging: wlan-ng: Disable buggy MIB ioctl
-Date:   Wed, 18 Aug 2021 01:19:37 -0700
-Message-Id: <20210818081937.1668775-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+Subject: Re: [PATCH] can: etas_es58x: Replace 0-element raw_msg array
+Message-ID: <202108180159.5C1CEE70F@keescook>
+References: <20210818034010.800652-1-keescook@chromium.org>
+ <CAMZ6RqK4Rn4d-1CZsg9vJiAMHhxN6fgcqukdHpGwXoGTyNVr_Q@mail.gmail.com>
+ <202108172320.1540EC10C@keescook>
+ <CAMZ6RqLecbytJFQDC35n7YiqBbrB3--POofnXFeH77Zi2xzqWA@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1567; h=from:subject; bh=Sgwjp53Pz70aIh4b/DDRu0OZ/4XXSmncmaDMLY4cqIw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHMKY2ZE8JgxxJFeCq1C/wwUCKAJPO2ye+nyaVoJF tdhC7VeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYRzCmAAKCRCJcvTf3G3AJjprD/ kBbBNMPslIY0OVULW5j/PMahglxJ5BZqHi3SutRyz4d20V/aFKmPQdgacFaghGdiyQRWXeGP13uAuw vXEt8OjGNW8fFgpZglspaLB0ZLiXyZJV06AwQycNuo6nTv0cAtR9aqTiz/QNabg1u/X16l1fuu6ORw pr8Cp4CQ55HnUInyKG/wEC1Fg0u76cAl/dM/eYBcOppW2DGf2Z1zYe8R1frBgg+FJExpD4C1462W5b gGPrBOSuUG+1YA/3S5frN5BzLvbom/0jKzKh04ROSFKygNvPyX4n4wMpwzDK78xEyRHl7nr3lah4u7 oEjvEwEj0jZgkpwejrRof67vD6pldQjYfgKynzFlHVvndWajkfIcEvqmTcc2yUaAiZcID557G+EhlM nvMpLxhHBk0k34mIg77w7islWTrtAblsHJFjXCBp9LDJMkyzvYH3p73dDyYCiCloY/noIFn8HceyVR 8CNPEmLZY1NaOgedSQx7v4dBeFrY6XPY6Ov1sD+6F8oUwt6XUoPUgWK5FOA7VdPBZuW9shxai5fm1X +GmcSB++9XWXnyHJgNoSit0m9Fd9Q5le1I+cowp218iEVtBHqNa4ysn74BFwaK94RFnIh3cQTFMH2R U/5nn3X2DZ4GLxYjV8flPH1NBF7FXRRC7G8K5jI/NFPQrEXzs6OTULkn0lhw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMZ6RqLecbytJFQDC35n7YiqBbrB3--POofnXFeH77Zi2xzqWA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-struct hfa384x_wpa_data ends with a flexible array, but it is allocated
-on the stack. This means it can never hold any data. Disable the
-memcpy() calls in and out of the structure, since it must always be
-zero. This could never have worked.
+On Wed, Aug 18, 2021 at 04:55:20PM +0900, Vincent MAILHOL wrote:
+> At the end, the only goal of raw_msg[] is to have a tag pointing
+> to the beginning of the union. It would be virtually identical to
+> something like:
+> |    u8 raw_msg[];
+> |    union {
+> |        /* ... */
+> |    } __packed ;
+> 
+> I had a look at your work and especially at your struct_group() macro.
+> Do you think it would make sense to introduce a union_group()?
+> 
+> Result would look like:
+> 
+> |    union_group_attr(urb_msg, __packed, /* raw_msg renamed to urb_msg */
+> |        struct es58x_fd_tx_conf_msg tx_conf_msg;
+> |        u8 tx_can_msg_buf[ES58X_FD_TX_BULK_MAX * ES58X_FD_CANFD_TX_LEN];
+> |        u8 rx_can_msg_buf[ES58X_FD_RX_BULK_MAX * ES58X_FD_CANFD_RX_LEN];
+> |        struct es58x_fd_echo_msg echo_msg[ES58X_FD_ECHO_BULK_MAX];
+> |        struct es58x_fd_rx_event_msg rx_event_msg;
+> |        struct es58x_fd_tx_ack_msg tx_ack_msg;
+> |        __le64 timestamp;
+> |        __le32 rx_cmd_ret_le32;
+> |    );
+> 
+> And I can then use urb_msg in place of the old raw_msg (might
+> need a bit of rework here and there but I can take care of it).
+> 
+> This is the most pretty way I can think of to remove this zero length array.
+> Keeping the raw_msg[] but with another size seems odd to me.
+> 
+> Or maybe I would be the only one using this feature in the full
+> tree? In that case, maybe it would make sense to keep the
+> union_group_attr() macro local to the etas_es58x driver?
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
-Cc: linux-staging@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/staging/wlan-ng/prism2mib.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I actually ended up with something close to this idea, but more
+generalized for other cases in the kernel. There was a sane way to
+include a "real" flexible array in a union (or alone in a struct), so
+I've proposed this flex_array() helper:
+https://lore.kernel.org/lkml/20210818081118.1667663-2-keescook@chromium.org/
 
-diff --git a/drivers/staging/wlan-ng/prism2mib.c b/drivers/staging/wlan-ng/prism2mib.c
-index 875812a391c9..d14f032a7ed6 100644
---- a/drivers/staging/wlan-ng/prism2mib.c
-+++ b/drivers/staging/wlan-ng/prism2mib.c
-@@ -668,6 +668,10 @@ static int prism2mib_priv(struct mibrec *mib,
- 
- 	switch (mib->did) {
- 	case DIDMIB_LNX_CONFIGTABLE_RSNAIE: {
-+		/*
-+		 * This can never work: wpa is on the stack
-+		 * and has no bytes allocated in wpa.data.
-+		 */
- 		struct hfa384x_wpa_data wpa;
- 
- 		if (isget) {
-@@ -675,11 +679,17 @@ static int prism2mib_priv(struct mibrec *mib,
- 					       HFA384x_RID_CNFWPADATA,
- 					       (u8 *)&wpa,
- 					       sizeof(wpa));
-+			/*
- 			pstr->len = le16_to_cpu(wpa.datalen);
- 			memcpy(pstr->data, wpa.data, pstr->len);
-+			*/
-+			pstr->len = 0;
- 		} else {
-+			/*
- 			wpa.datalen = cpu_to_le16(pstr->len);
- 			memcpy(wpa.data, pstr->data, pstr->len);
-+			*/
-+			wpa.datalen = 0;
- 
- 			hfa384x_drvr_setconfig(hw,
- 					       HFA384x_RID_CNFWPADATA,
+and then it's just a drop-in replacement for all the places that need
+this fixed, including etas_es58x:
+https://lore.kernel.org/lkml/20210818081118.1667663-3-keescook@chromium.org/#Z30drivers:net:can:usb:etas_es58x:es581_4.h
+
+Hopefully this will work out; I think it's as clean as we can get for
+now. :)
+
 -- 
-2.30.2
-
+Kees Cook
