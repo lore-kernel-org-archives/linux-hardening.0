@@ -2,119 +2,225 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC94C4338F
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EECC4320A
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF5C0610E6
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A862610FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231856AbhHSUSd (ORCPT
+        id S235343AbhHSU3H (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 Aug 2021 16:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231683AbhHSUSd (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 Aug 2021 16:18:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B3A6610D2;
-        Thu, 19 Aug 2021 20:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629404276;
-        bh=JLc6MbNYqramEDF6nTAvsq6MESZmf7zguMGFkkGgcHg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=qWo5JIbfjmGVZi+yzG/U7j5d0gwQLO1/cLteNgLHXzqOIBbmRSfbA782mYM1PHhzJ
-         S7y6lYlNxwEXl+jo9T/l083VI3JWDT57uiAUueRlLWKqga8Imyeu5vCXMSiSaR8NoW
-         PSKOgv0jBWYciM8KYTl8Gz8nFSEJF2dzl8meistXieu2YGYLswS5x7K/zhmoEdP7jT
-         XXax6mzWi3JDfJI8N5pc9frY0vkhkqKmy/oEtRBEvx6fTwRZZK0uVQOVyA1GvrWFC8
-         n1cO1FP3196VCJ+vkI4EeRz4aNvgoAwl49mEPyEf5Z3yKBPU5jtEalDylVs8svVOIA
-         mttbmKf3RCIYg==
-Subject: Re: [GIT PULL] Enable -Wimplicit-fallthrough for Clang for 5.14-rc7
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+        Thu, 19 Aug 2021 16:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231683AbhHSU3G (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 19 Aug 2021 16:29:06 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 208E0C061756
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:28:29 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id w8so6990010pgf.5
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LmJ99teUGdinNbfoKjiCNsrT2KdowhAH1C31uHkGRNA=;
+        b=Dj15yo21NCrkIvM7NC1lrgzKnXjpR6Ran1CaUSVIc7SDs+XJQu4+4SIyboeBH2p0+3
+         N8nGdctdwQHRXi+AuCSq4u8lcVPv+/dBJ6wSYJ3XdJGosYQ6TiqS0KWc1gyWYzhKmmYw
+         3lPlg0n+jRA26KK/nvtftN5I3bOswZf505Pqk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LmJ99teUGdinNbfoKjiCNsrT2KdowhAH1C31uHkGRNA=;
+        b=c9ktaKQm3e0DbyQlbULJ2VRf3YTJR0o7BvvZkFRu7TrAxvEtcqh5ZETQ4x39FGS/op
+         ZoT0h/TkeZhd49Rm5fKp487t9kdx3m957FduVMilJRrOw/ZuXVImBH00V+0ODJHgnHP0
+         BPQSvhSiM0z7GsM/QmO/Q4IFzQXQgXEmfmnFlHbSUk9IVO/cVlu0rXDRSV6b9doKUsk3
+         UwUJFF3aia2ujThaAOQndNJDCMg4PGQbFTicQclAEh+fSuMamHeUi1LNesIxj/tySw8u
+         O0LRQ/I9Pfq5VDL1iXvvdRU4KCfvgafNUVlRhy8hv+1KXRTPQaKPiQB+JeeFESdu5U3A
+         Yijw==
+X-Gm-Message-State: AOAM5334xALQtSRe27TxDMbIut6Mx3rzBt5APC8hSDtbnDUPR/CdY6UP
+        ztAzINzXyM0zPkySAPX9ChJqLA==
+X-Google-Smtp-Source: ABdhPJyDdCH7kBGcDAaf55svTOs4FrH/0oEtzY2oPb1XFGfb9dMJOJHOnZ1x6JELh6d01qnrUV728Q==
+X-Received: by 2002:a65:468c:: with SMTP id h12mr15916127pgr.423.1629404908650;
+        Thu, 19 Aug 2021 13:28:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x14sm4439825pfa.127.2021.08.19.13.28.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Aug 2021 13:28:27 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     netdev@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org
-References: <20210819040517.GA329693@embeddedor>
- <CAHk-=whXUJbqhjkRSjOQ2Tm5OmyKv3_JUTh8pxxvykGaC+fM0Q@mail.gmail.com>
-From:   Nathan Chancellor <nathan@kernel.org>
-Message-ID: <9ef3265b-a5e7-d21b-68a8-ad137ac6ebfd@kernel.org>
-Date:   Thu, 19 Aug 2021 13:17:54 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH 2/3] net/mlx5e: Avoid field-overflowing memcpy()
+Date:   Thu, 19 Aug 2021 13:28:24 -0700
+Message-Id: <20210819202825.3545692-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210819202825.3545692-1-keescook@chromium.org>
+References: <20210819202825.3545692-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whXUJbqhjkRSjOQ2Tm5OmyKv3_JUTh8pxxvykGaC+fM0Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5945; h=from:subject; bh=aAhXgOvjd8fFl6HHAOH2dNe1RpxfNiJeVAevXZn1G1s=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHr7os55xLZsomlfyqNbHN963vbWsu6lq/7sGdDVv bsZ6eIyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR6+6AAKCRCJcvTf3G3AJt4zD/ sHmmUuEJhefcu1/BIWauiIG3HeHJeUZKq/wb8kvLmppRsA5tE5R8SCtTbNOLGdb5P1FZoq/2nSAtlB Jg3AjDzmiNAVMiF+TmElADQXKuoGQE4qy+GV4RXJEJZ8U03o4eHw0KWWg4elHpCA4WPUveev5SI5gW WrW9hq4yscbuASX4gRfrp8EuwinBveG0xhjB1TZh7qb4u8TAW5OOIovOFIzxYOz6A9Zb98Gx1Vu7ZN 3/BpRrAPSKgKoBB6yMWoLMCugPVDG0Cn4PQRUfW+KwNZDUsLpZube9hmCXe0Ujs/f0H97jfVvaX1bz 7hWcaE5rWoSBj63Uqom5NIHhwPjvg54h4KPCNDZ9KLmG0ToxwmqDhk7F798BIs7estEA2YpZTEsyOR +9tYFwDtPOb7EOG9e5Y8x/BswkIyutAAGkGMd9c9LUiHu5zV2nbF/yiPGECcAhVL8uldcIBzDwJPE9 goDkibmTjyrsaa4i4Vept+fpSjR3D7fg8nMtlneYdzSN9ZL+L8RofiQtRy+8aj/1/dJ/oFim9ddoBz e17OLMyoVP9lixwQZxCqQN4wH+9Cu3H2zsTeY7pVhBnqYpoXOB2WcWa2CoK8TV0dj8DEoTOPX1NwFi sfWnuW/PQPEQP7GSt52LOkvFLNkl5tPpWq5cqouM4sWlz9Q0n5dzRvYdx39w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 8/19/2021 12:19 PM, Linus Torvalds wrote:
-> On Wed, Aug 18, 2021 at 9:02 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
->>
->> Enable -Wimplicit-fallthrough for Clang for 5.14-rc7
-> 
-> No. Much too late in the release, particularly knowing that we have
-> Clang pre-releases that claim to be 14.0.0 and get this wrong.
-> 
-> So no way does this happen like this.
-> 
-> That's doubly true since the clang support for this all adds exactly
-> _zero_ upside, only downside: we made the gcc checks be stricter, and
-> gcc ends up having (a) more wide coverage and (b) doesn't have the
-> bugs clang has.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-For what it's worth, clang's version of -Wimplicit-fallthrough would 
-have caught the bug in commit 652b44453ea9 ("habanalabs/gaudi: fix 
-missing code in ECC handling"). Yes, small fix in the sea of patches 
-that were needed to address clang's more pedantic version of the warning 
-but this version of the warning is completely in line with the kernel's 
-stance of switch statements in Documentation/process/deprecated.rst:
+Use flexible arrays instead of zero-element arrays (which look like they
+are always overflowing) and split the cross-field memcpy() into two halves
+that can be appropriately bounds-checked by the compiler.
 
-"All switch/case blocks must end in one of:
+We were doing:
 
-* break;
-* fallthrough;
-* continue;
-* goto <label>;
-* return [expression];"
+	#define ETH_HLEN  14
+	#define VLAN_HLEN  4
+	...
+	#define MLX5E_XDP_MIN_INLINE (ETH_HLEN + VLAN_HLEN)
+	...
+        struct mlx5e_tx_wqe      *wqe  = mlx5_wq_cyc_get_wqe(wq, pi);
+	...
+        struct mlx5_wqe_eth_seg  *eseg = &wqe->eth;
+        struct mlx5_wqe_data_seg *dseg = wqe->data;
+	...
+	memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
 
-> Honestly, I think the clang "version 14 or more" check is simply
-> buggy. We *know* that check fails. Don't do it.
-> 
-> Make it "strictly more than 14.0.0" which hopefully doesn't fail, is
-> cheap and easy, and which will make clang work correctly in the not
-> too distant future.
+target is wqe->eth.inline_hdr.start (which the compiler sees as being
+2 bytes in size), but copying 18, intending to write across start
+(really vlan_tci, 2 bytes). The remaining 16 bytes get written into
+wqe->data[0], covering byte_count (4 bytes), lkey (4 bytes), and addr
+(8 bytes).
 
-Just to give some more context, Clang is not like GCC where x.0.0 is the 
-development version and x.1.0 is the stable release. The first stable 
-version of clang-14 will be clang 14.0.0 when it is released, just as it 
-is now, so making it "strictly more than 14.0.0" will just delay 
-enabling this even more despite the issue being fixed now. Intel already 
-upgraded the clang they use for testing to one that is fixed and Mark 
-Brown said Arm does testing with clang-14 but they regularly upgrade as 
-well. Nobody should get bitten by this check in its current form unless 
-they are not upgrading their development version of clang but in that 
-case, they are doing it wrong to begin with in my opinion (would it not 
-be the same as someone using v5.13-rc1 when v5.13-rc6 is out?)
+struct mlx5e_tx_wqe {
+        struct mlx5_wqe_ctrl_seg   ctrl;                 /*     0    16 */
+        struct mlx5_wqe_eth_seg    eth;                  /*    16    16 */
+        struct mlx5_wqe_data_seg   data[];               /*    32     0 */
 
-If we waited until the next merge window, that would certainly give 
-various entities enough time to upgrade their pre-release versions.
+        /* size: 32, cachelines: 1, members: 3 */
+        /* last cacheline: 32 bytes */
+};
 
-However, if you are truly opposed to a version check, can we at least 
-just check for the presence of -Wunreachable-code-fallthrough as I 
-suggested before? Yes, it is slightly more expensive as we have to call 
-the compiler rather than using make builtins but then your concern of 
--Wimplicit-fallthrough getting enabled when it is buggy is completely 
-addressed and people who have a fixed toolchain get access to the 
-warning now.
+struct mlx5_wqe_eth_seg {
+        u8                         swp_outer_l4_offset;  /*     0     1 */
+        u8                         swp_outer_l3_offset;  /*     1     1 */
+        u8                         swp_inner_l4_offset;  /*     2     1 */
+        u8                         swp_inner_l3_offset;  /*     3     1 */
+        u8                         cs_flags;             /*     4     1 */
+        u8                         swp_flags;            /*     5     1 */
+        __be16                     mss;                  /*     6     2 */
+        __be32                     flow_table_metadata;  /*     8     4 */
+        union {
+                struct {
+                        __be16     sz;                   /*    12     2 */
+                        u8         start[2];             /*    14     2 */
+                } inline_hdr;                            /*    12     4 */
+                struct {
+                        __be16     type;                 /*    12     2 */
+                        __be16     vlan_tci;             /*    14     2 */
+                } insert;                                /*    12     4 */
+                __be32             trailer;              /*    12     4 */
+        };                                               /*    12     4 */
 
-Cheers,
-Nathan
+        /* size: 16, cachelines: 1, members: 9 */
+        /* last cacheline: 16 bytes */
+};
+
+struct mlx5_wqe_data_seg {
+        __be32                     byte_count;           /*     0     4 */
+        __be32                     lkey;                 /*     4     4 */
+        __be64                     addr;                 /*     8     8 */
+
+        /* size: 16, cachelines: 1, members: 3 */
+        /* last cacheline: 16 bytes */
+};
+
+So, split the memcpy() so the compiler can reason about the buffer
+sizes.
+
+"pahole" shows no size nor member offset changes to struct mlx5e_tx_wqe
+nor struct mlx5e_umr_wqe. "objdump -d" shows no meaningful object
+code changes (i.e. only source line number induced differences and
+optimizations).
+
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en.h     | 4 ++--
+ drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 4f6897c1ea8d..8997476c20cc 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -200,7 +200,7 @@ static inline int mlx5e_get_max_num_channels(struct mlx5_core_dev *mdev)
+ struct mlx5e_tx_wqe {
+ 	struct mlx5_wqe_ctrl_seg ctrl;
+ 	struct mlx5_wqe_eth_seg  eth;
+-	struct mlx5_wqe_data_seg data[0];
++	struct mlx5_wqe_data_seg data[];
+ };
+ 
+ struct mlx5e_rx_wqe_ll {
+@@ -216,7 +216,7 @@ struct mlx5e_umr_wqe {
+ 	struct mlx5_wqe_ctrl_seg       ctrl;
+ 	struct mlx5_wqe_umr_ctrl_seg   uctrl;
+ 	struct mlx5_mkey_seg           mkc;
+-	struct mlx5_mtt                inline_mtts[0];
++	struct mlx5_mtt                inline_mtts[];
+ };
+ 
+ extern const char mlx5e_self_tests[][ETH_GSTRING_LEN];
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+index 2f0df5cc1a2d..efae2444c26f 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+@@ -341,8 +341,10 @@ mlx5e_xmit_xdp_frame(struct mlx5e_xdpsq *sq, struct mlx5e_xmit_data *xdptxd,
+ 
+ 	/* copy the inline part if required */
+ 	if (sq->min_inline_mode != MLX5_INLINE_MODE_NONE) {
+-		memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
++		memcpy(eseg->inline_hdr.start, xdptxd->data, sizeof(eseg->inline_hdr.start));
+ 		eseg->inline_hdr.sz = cpu_to_be16(MLX5E_XDP_MIN_INLINE);
++		memcpy(dseg, xdptxd->data + sizeof(eseg->inline_hdr.start),
++		       MLX5E_XDP_MIN_INLINE - sizeof(eseg->inline_hdr.start));
+ 		dma_len  -= MLX5E_XDP_MIN_INLINE;
+ 		dma_addr += MLX5E_XDP_MIN_INLINE;
+ 		dseg++;
+-- 
+2.30.2
+
