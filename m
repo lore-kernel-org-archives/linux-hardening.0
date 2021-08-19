@@ -2,222 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6949DC4320A
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F13C4320A
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C58610FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51B6610A5
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234881AbhHSUaH (ORCPT
+        id S235399AbhHSUiS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 Aug 2021 16:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43068 "EHLO
+        Thu, 19 Aug 2021 16:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235230AbhHSU3G (ORCPT
+        with ESMTP id S235364AbhHSUiS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 Aug 2021 16:29:06 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 863EAC061796
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:28:29 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id j187so6579487pfg.4
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:28:29 -0700 (PDT)
+        Thu, 19 Aug 2021 16:38:18 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316F0C061575
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:37:41 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id h9so13549571ljq.8
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:37:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=23NqigPoreurbrTRI3DzstnCrCz1u9qo8AUicrCllIQ=;
-        b=F/aXFSEFO3B0S1KjxtCFJ0bHN8UOoU5i9j7QIQ9H4wCLpPExP8i4eq1nUqdGC+vTAl
-         qpkYSn/zo5uF001tqNcSIy5OHDEEyNlsMGJFCO4L+E7F3tNOhKH/pjcDNRFmTt4sIiKy
-         R+62ZU9GtHuOUMyC4YOREpkj2XaWxyuMRkKPQ=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HgXymfqgLxB55cygt9ZhuDY1NRwbRIl68JfwaLHFxU8=;
+        b=MceR7MtQuMc4MmHD20XUcnrhWaX0y7Pv84DU/6PNFNUkZl6vYjYv+XP2za7cYFWX+Y
+         4XR3BlXpVnb4zj1YPJq4lKKIOOQqXZ9vr//f/7JgmeaUJ3yBBLGCORXwGnhFBJvZP1s3
+         oAXhWUma+gSbrJUF5XAndd1SKKPWftW/RUHuM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=23NqigPoreurbrTRI3DzstnCrCz1u9qo8AUicrCllIQ=;
-        b=unmhKBzOm65E8yy7tTN/FbWruxfFsVCXC7nNpQTbsejNHQIRyfM7WxAaxo7jA46sYU
-         jXbOhcE7cVINWS9a9PJmqNoMe+U5d5hlp5REL6oTqTE+2aCGWOJhzB5lluY9+9a+ZPWb
-         XLrLns6ep544msP68TLFaTHUDdiLKonMrwzx73PhfI9NLvYm2q6n4CjrUH6N76y+P7Q6
-         DA+z8P6LrWBnYcWNY2+//aUNzPk/qGEhwezfnTnpB5eZrHwYHbLr3uWx7PloQmrlYT59
-         eu0XkAZjSU/YhnIoCsuBDgmKlTSpp1bJ8DRmCeMG73kcruKDw8q/KcX71fZgWTzZL+gm
-         5EWw==
-X-Gm-Message-State: AOAM530GzrEKrG96ybdE4sx+IoVBiP6lGLL3LjeHeiPde6rpsNYoRM/q
-        4F7n0zGcYNDWS8NZiSk9WpezIg==
-X-Google-Smtp-Source: ABdhPJz+KOpZhGJ5FXJOigQpPSgrYjpb97GBUvqFXR+qoBMUxfptkbVry7hNayEJ2a7UzVP906Pfwg==
-X-Received: by 2002:aa7:8b07:0:b029:3c7:c29f:9822 with SMTP id f7-20020aa78b070000b02903c7c29f9822mr15973588pfd.33.1629404909020;
-        Thu, 19 Aug 2021 13:28:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k25sm4370211pfa.213.2021.08.19.13.28.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 13:28:27 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     netdev@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 1/3] ipw2x00: Avoid field-overflowing memcpy()
-Date:   Thu, 19 Aug 2021 13:28:23 -0700
-Message-Id: <20210819202825.3545692-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210819202825.3545692-1-keescook@chromium.org>
-References: <20210819202825.3545692-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HgXymfqgLxB55cygt9ZhuDY1NRwbRIl68JfwaLHFxU8=;
+        b=OLXQtyw/c3JYT543RfN1CwBSVc4prixnD/TOo3Ax2spKoDLcMc2DvseWk8OTidvhbH
+         zXGNP4rJi4KkcNlH23JyGjYO7btsqGCTLUxwHiT1m9E8lqCRDQl5Kuss6rZaWVAXFYFI
+         xxX8++HRBEpD8BR1JommuxHyj7b+3/Z5S4ZH3I189VxwV+Lq4IwUqh9ave6OUta0yQA3
+         zxC+3BWTruhEyhVVMBATxWFEWDHzbiv7f2Xy1mSXgpmnZkga6oBAwbSokqAPDq52kd7X
+         VCGzBSUlXI+Xt26B9Gff++j8VMi+ZgaHsXRJk51jGPcGCE9CpTDhYPjkxP+6GMhk46uW
+         U4aA==
+X-Gm-Message-State: AOAM532QSDJpehbtNiQ1mx6HDYS5wywPNxfoU3xhYelW82aNsv3BlKw7
+        iDsA/E53GrHUAkMRr69ul2Ba7WGlRM385mwjPwY=
+X-Google-Smtp-Source: ABdhPJy7NyPN6jjO0EgLKi38a4iAy/6thZ96ATfqe8SAtD7NPLsIcveMg3HGEFJJIoXcEbAs+lnLCw==
+X-Received: by 2002:a2e:97cf:: with SMTP id m15mr3547696ljj.125.1629405457351;
+        Thu, 19 Aug 2021 13:37:37 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id t12sm410170lfg.151.2021.08.19.13.37.36
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Aug 2021 13:37:37 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id u22so15526157lfq.13
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:37:36 -0700 (PDT)
+X-Received: by 2002:a19:4f1a:: with SMTP id d26mr11522879lfb.377.1629405456647;
+ Thu, 19 Aug 2021 13:37:36 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4716; h=from:subject; bh=3b5t4fLR/wEetR2E8Hwk2j3VzU8yz2BgAEsleqg3XAU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHr7o3RE3VXLm1V4wHPPpY4uHLTNlH2i9cpT7/zcX 6bMNqjOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR6+6AAKCRCJcvTf3G3AJumUD/ 0f1bg3FbVuqAiMBaS9IMEbmlwImkHFdXvVqAGU0c0JnDVZSLl2o2jU4irNcZfOHOGiyYpNUxA8mBNP Y0BXEwPXwzfEODoS/bKlfvvDB4v5d0nQoewu4eFdhGrxNUqnaYxIf2ZgkWFpbxJQnWNR9PSXhdRv/7 8Xe1K+TlHO/3aUYVYuWA/xyvHtdSpptiyvVf3SzuCCmB1Nxzl1mT2w8+AUzjXJ33G+FItKamDkI9iU fpmEm+7I35jZniX3qbMeW+pB/I1M/xgCAPZSeRkDk+x+5wL+ENoCG8oWONDewGhXmjydCkRSIcCinC Iw5eONYFN8dyEG0CljmQvmUrLMIaIowHZwfIbrnf2We+VJEMYCDc6DwIe6OB/fNutrXM0C7eF9il4z PrdDwnVMQawJ9pmSFF8T8fSvCFQ5IYh7/qiP+bYkKv6D6iBH8sep+aWaGHsPbXJCBTV4MSCj8Htluh T2+HVUM+wthFo1IgE64PMPX1dOnTXs6C/w+96vYw3d8flThTGS4zgwyEIXUBWVuqFeyl6zwyNeC2s8 91oO/WcGpuQ7nfQe/lhNmXygtElyjfy8OrkfQqJzAHjJOr7/h9InrqLU8Q93mnIFEx2mDaWcrJUMYR sQ8w+xtOk+PnA9bV07nr3lpdK4YQX8rffoX2nSX4l2Yc4i2FTP3Z66PxBt+Q==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20210819040517.GA329693@embeddedor> <CAHk-=whXUJbqhjkRSjOQ2Tm5OmyKv3_JUTh8pxxvykGaC+fM0Q@mail.gmail.com>
+ <9ef3265b-a5e7-d21b-68a8-ad137ac6ebfd@kernel.org>
+In-Reply-To: <9ef3265b-a5e7-d21b-68a8-ad137ac6ebfd@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 19 Aug 2021 13:37:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whPU-SA2L=wiDGHGQBL_K-qtpu5EzQLwmV0qk7LSZKQrA@mail.gmail.com>
+Message-ID: <CAHk-=whPU-SA2L=wiDGHGQBL_K-qtpu5EzQLwmV0qk7LSZKQrA@mail.gmail.com>
+Subject: Re: [GIT PULL] Enable -Wimplicit-fallthrough for Clang for 5.14-rc7
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+On Thu, Aug 19, 2021 at 1:17 PM Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> For what it's worth, clang's version of -Wimplicit-fallthrough would
+> have caught the bug in commit 652b44453ea9 [..]
 
-libipw_read_qos_param_element() copies a struct libipw_info_element
-into a struct libipw_qos_information_element, but is actually wanting to
-copy into the larger struct libipw_qos_parameter_info (the contents of
-ac_params_record[] is later examined). Refactor the routine to perform
-centralized checks, and copy the entire contents directly (since the id
-and len members match the elementID and length members):
+The thing is, any warning can catch a bug. The "signed pointer"
+warnings could catch things too if people really care about "unsigned
+char *" vs just plain "char *".
 
-struct libipw_info_element {
-        u8 id;
-        u8 len;
-        u8 data[];
-} __packed;
+But warnings that have too many false positives are more likely to
+hide bugs than expose them. So it's very much a balancing act.
 
-struct libipw_qos_information_element {
-        u8 elementID;
-        u8 length;
-        u8 qui[QOS_OUI_LEN];
-        u8 qui_type;
-        u8 qui_subtype;
-        u8 version;
-        u8 ac_info;
-} __packed;
+I personally think that false positives are deadly: I'd much rather
+have a c completely clean build where are the warnings are big red
+flags, than a build that has warnings that _may_ be signs of bugs, but
+where you have known false positives that have no sane workaround.
 
-struct libipw_qos_parameter_info {
-        struct libipw_qos_information_element info_element;
-        u8 reserved;
-        struct libipw_qos_ac_parameter ac_params_record[QOS_QUEUE_NUM];
-} __packed;
+Because with even a _single_ false positive, people will immediately
+just stop caring about any other warnings at all. We've seen that over
+and over again.
 
-Cc: Stanislav Yakovlev <stas.yakovlev@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- .../net/wireless/intel/ipw2x00/libipw_rx.c    | 56 ++++++-------------
- 1 file changed, 17 insertions(+), 39 deletions(-)
+This is why a compiler warning - to be useful - has to be completely
+unambiguously about bad code, or at least have a alternate "good code
+pattern" that is no worse than the code that the warning about.
 
-diff --git a/drivers/net/wireless/intel/ipw2x00/libipw_rx.c b/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
-index 5a2a723e480b..7a684b76f39b 100644
---- a/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
-+++ b/drivers/net/wireless/intel/ipw2x00/libipw_rx.c
-@@ -927,7 +927,8 @@ static u8 qos_oui[QOS_OUI_LEN] = { 0x00, 0x50, 0xF2 };
- static int libipw_verify_qos_info(struct libipw_qos_information_element
- 				     *info_element, int sub_type)
- {
--
-+	if (info_element->elementID != QOS_ELEMENT_ID)
-+		return -1;
- 	if (info_element->qui_subtype != sub_type)
- 		return -1;
- 	if (memcmp(info_element->qui, qos_oui, QOS_OUI_LEN))
-@@ -943,57 +944,34 @@ static int libipw_verify_qos_info(struct libipw_qos_information_element
- /*
-  * Parse a QoS parameter element
-  */
--static int libipw_read_qos_param_element(struct libipw_qos_parameter_info
--					    *element_param, struct libipw_info_element
--					    *info_element)
-+static int libipw_read_qos_param_element(
-+			struct libipw_qos_parameter_info *element_param,
-+			struct libipw_info_element *info_element)
- {
--	int ret = 0;
--	u16 size = sizeof(struct libipw_qos_parameter_info) - 2;
-+	size_t size = sizeof(*element_param);
- 
--	if ((info_element == NULL) || (element_param == NULL))
-+	if (!element_param || !info_element || info_element->len != size - 2)
- 		return -1;
- 
--	if (info_element->id == QOS_ELEMENT_ID && info_element->len == size) {
--		memcpy(element_param->info_element.qui, info_element->data,
--		       info_element->len);
--		element_param->info_element.elementID = info_element->id;
--		element_param->info_element.length = info_element->len;
--	} else
--		ret = -1;
--	if (ret == 0)
--		ret = libipw_verify_qos_info(&element_param->info_element,
--						QOS_OUI_PARAM_SUB_TYPE);
--	return ret;
-+	memcpy(element_param, info_element, size);
-+	return libipw_verify_qos_info(&element_param->info_element,
-+				      QOS_OUI_PARAM_SUB_TYPE);
- }
- 
- /*
-  * Parse a QoS information element
-  */
--static int libipw_read_qos_info_element(struct
--					   libipw_qos_information_element
--					   *element_info, struct libipw_info_element
--					   *info_element)
-+static int libipw_read_qos_info_element(
-+			struct libipw_qos_information_element *element_info,
-+			struct libipw_info_element *info_element)
- {
--	int ret = 0;
--	u16 size = sizeof(struct libipw_qos_information_element) - 2;
-+	size_t size = sizeof(struct libipw_qos_information_element) - 2;
- 
--	if (element_info == NULL)
-+	if (!element_info || !info_element || info_element->len != size - 2)
- 		return -1;
--	if (info_element == NULL)
--		return -1;
--
--	if ((info_element->id == QOS_ELEMENT_ID) && (info_element->len == size)) {
--		memcpy(element_info->qui, info_element->data,
--		       info_element->len);
--		element_info->elementID = info_element->id;
--		element_info->length = info_element->len;
--	} else
--		ret = -1;
- 
--	if (ret == 0)
--		ret = libipw_verify_qos_info(element_info,
--						QOS_OUI_INFO_SUB_TYPE);
--	return ret;
-+	memcpy(element_info, info_element, size);
-+	return libipw_verify_qos_info(element_info, QOS_OUI_INFO_SUB_TYPE);
- }
- 
- /*
--- 
-2.30.2
+> However, if you are truly opposed to a version check, can we at least
+> just check for the presence of -Wunreachable-code-fallthrough as I
+> suggested before?
 
+I'm ok with that, since at that point there are no false warnings.
+
+But even then, it's much too late for 5.14 by now, considering that
+this has had issues, and that we already enable the warnings on the
+common gcc builds.
+
+                Linus
