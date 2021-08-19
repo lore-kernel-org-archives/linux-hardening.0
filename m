@@ -2,64 +2,62 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CF7C432BE
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 19:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AADC432BE
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89395610E5
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 19:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56F26109E
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233995AbhHST7E (ORCPT
+        id S234867AbhHSUPY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 Aug 2021 15:59:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36166 "EHLO
+        Thu, 19 Aug 2021 16:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234138AbhHST7D (ORCPT
+        with ESMTP id S234706AbhHSUPY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 Aug 2021 15:59:03 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E46C06175F
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 12:58:25 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id 17so6902727pgp.4
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 12:58:25 -0700 (PDT)
+        Thu, 19 Aug 2021 16:15:24 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80737C061575
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:14:47 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id x16so6564612pfh.2
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:14:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=LynX178MCRLTZU5nO2CQfUksz3iyT32ZXzH2mGMWDBA=;
-        b=IXP6D8XUx7q38sbKdbR+/AGu2s0ZJLBWooVJkgCUSHWtToTxSgv5DmH5+2jvYOp6Zi
-         HzsBie7+wTjJLrZAtj2grSzQ23RPyHvcRjIk1YBMcTFffxfJWBxG7UDPfDsT7lYLqEXs
-         P59yXQ7sA3PbiyfDMZYBhF0RVfO2fU3LZbyYQ=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SWonK40nfLuKYWvrqlegwHOX79F+iH7r7S8ceDKJ73w=;
+        b=IJptv6+ED2SgpSRkeJi/2ho6iTHaXtYfyLiySxQuoNMdF1AasxvuCUFZHXoetmVfVl
+         0evldTvTyMXXeS4wZD1+qp7lEf29/Dq+N9wdcm+G9qpFgGqlvMKRRlkipdTCLOQiHMXO
+         YdqtUQrJqZysCWHTXjCxeVcMUcIAJh8qGptiM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=LynX178MCRLTZU5nO2CQfUksz3iyT32ZXzH2mGMWDBA=;
-        b=gFpZ7L7fAvYeOBPr2UXflK9SBPylQszuhmsmtTlyqXxNnsQeOkzrgiM1hkEzNVq4UP
-         0FEIlUQyLYZuXdhcyCUDHRcjgs7UqNAk2nE/bCjsOqeRxM2/7WtMSyBBT++XNMfLTCZu
-         GAlZodoW6imczB6EntU1zuInDNsc1gWVN4WPfvHR3a/XOvg11+72Br/j51M3JQzmTGS6
-         M9IhWML6YnC9V760/dIko389Q1reohoxnWdvo2o/hMKveShRY0nFCdE8SrL5ubawwbsX
-         3T+ApjpDwyLpCo4IkuaTF8xhgWT3RYflvVNU0/dPF+dcRUuCqbJG6JemLfcfoNfoQaM3
-         Uw0Q==
-X-Gm-Message-State: AOAM531wyeW08CXVM1eOTUBTld92UR3Z/Zz6yVdp1RFgB4/6Y9th/syC
-        d+1wl2WYFh76whX9nPU+GQUBAw==
-X-Google-Smtp-Source: ABdhPJwENFrpIU7Xhf4Zl5AymWSqlMMnYKOiArZ+vRAHZd9/qVLc9guwbLoTcMORFGutADg/dAOGOw==
-X-Received: by 2002:aa7:83c6:0:b029:3e0:1f64:6f75 with SMTP id j6-20020aa783c60000b02903e01f646f75mr15962378pfn.69.1629403104650;
-        Thu, 19 Aug 2021 12:58:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SWonK40nfLuKYWvrqlegwHOX79F+iH7r7S8ceDKJ73w=;
+        b=gybUlueXbgibqtCOLHMdQtFHsQVxtR9pYYGxyiveUPgOXF+FTiExbI/DZCqbJmei0b
+         izv2FqHZUotnKtc+AA3qpjDIjGAeJnYjIdVwCM8rSOQzPKZxcybGvtYF2Y5hTuTDcd3S
+         GF1dDXwOtjK0hcs34SlbTZ5onGchht2oG0xHnYr22UFSaBc0iGX8KYx0DtXBiu7z/On2
+         Ll+VIZXdI0A9QeeqR9koE8ZIeJH2IThdNH+qx2n2QxjwyFUO6VnN55ulZfSaCIGNQHL6
+         LwV4xxlDkvz6IepB4yd549mGwWKFh2gTt06v3kZPb1Wp1/wVCoeuSBvw8yben81S1clX
+         +HtA==
+X-Gm-Message-State: AOAM532QhmRi5ZwWc0neziGqIQz47E9J+dZfSj9dIbl5m6O2Hez/T1b1
+        EId/yYQLHM+VRYwug9BRFdM63g==
+X-Google-Smtp-Source: ABdhPJwOnooA//ZI2yY2w3HhhA71tc7MYj5UAHPJaeMdESG6/Mo5ArqPp78/8chRXBFrSXp80yNy4g==
+X-Received: by 2002:aa7:850c:0:b0:3e2:edf3:3d09 with SMTP id v12-20020aa7850c000000b003e2edf33d09mr9540100pfn.42.1629404087013;
+        Thu, 19 Aug 2021 13:14:47 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r16sm3784554pje.10.2021.08.19.12.58.23
+        by smtp.gmail.com with ESMTPSA id j4sm5109612pgi.6.2021.08.19.13.14.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 12:58:24 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 12:58:22 -0700
+        Thu, 19 Aug 2021 13:14:46 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Lazar, Lijo" <lijo.lazar@amd.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+To:     Lijo Lazar <lijo.lazar@amd.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         "Pan, Xinhui" <Xinhui.Pan@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -68,317 +66,77 @@ Cc:     linux-kernel@vger.kernel.org,
         Jiawei Gu <Jiawei.Gu@amd.com>, Evan Quan <evan.quan@amd.com>,
         amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         Alex Deucher <alexander.deucher@amd.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 18/63] drm/amd/pm: Use struct_group() for memcpy()
- region
-Message-ID: <202108191214.6269AFD@keescook>
-References: <20210818060533.3569517-1-keescook@chromium.org>
- <20210818060533.3569517-19-keescook@chromium.org>
- <753ef2d1-0f7e-c930-c095-ed86e1518395@amd.com>
- <202108181619.B603481527@keescook>
- <e56aad3c-a06f-da07-f491-a894a570d78f@amd.com>
+        Luben Tuikov <luben.tuikov@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Dennis Li <Dennis.Li@amd.com>,
+        Sathishkumar S <sathishkumar.sundararaju@amd.com>,
+        Jonathan Kim <jonathan.kim@amd.com>,
+        Kevin Wang <kevin1.wang@amd.com>,
+        David M Nieto <David.Nieto@amd.com>,
+        Kenneth Feng <kenneth.feng@amd.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        John Clements <John.Clements@amd.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] drm/amd/pm: And destination bounds checking to struct copy
+Date:   Thu, 19 Aug 2021 13:14:41 -0700
+Message-Id: <20210819201441.3545027-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6384; h=from:subject; bh=cvRZIn3RJBaQNBAJjwgDTl32BXjr/3MDNasdqtotH60=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHruwFDFDjn9GfKm+ZpkXhmC4GSPPLnOXnRs08yoS 3gaj152JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR67sAAKCRCJcvTf3G3AJsiZD/ 463O5ZlWD/33hUv4/iLJRdRrEpVzMn1Znf6F0qdUkO9B3eGv+E0ybaUS6z9Z4PMWmO2DucTecwo9TR VC3sh27JAPDo9hR1O9Wsz80Yhhqu8QCrcGSEnMYqf3KD1q/SswU4w2qOB346yhWGA5FqqHSIyZiVZz MbmFs+nxIG9PoQrqq7Sul683ADQkTAt7X0avOZ8LTna2XDizljUnY6dJ2gpOR/NKa3Eme9xXYVshvm BOj8QKhMS09oJ94jq5n1UJuEod5emDIu2G7PmdsSUOXyIv3Cq9+kEJNejeZh2RbDL0nS5q/TXhwXNu 7tUYH8xuLZu+LE9CQH6Xn+XnBmgfTMTASx4aoaSu85Ys0kt1moUmpPuKvfz1L0L5kd1DrNfmUj70Cx qOcT3NvuR5tUUF7b9D736pwe/dNrFi2hYHTZ5P1nz3Oh+7bhzDOGUXg+IVZMqbUagp8Req9iSxoL29 FRE2hrE/MOM3Mm9V25yZTo35nf4friJHDQbMy9I5dZa7JhEYd+TzUzKSX/p4Dzi2F0I9bvc1RZ3S0S Qg1CA3pbZ6kQo23yrHotBS/oPiKY292DX02PtOMNxUwWtyS9uIFmv99+kAwpsa/zKB+IGhLxaTx26Q +kYyapDKFaIWlDpFgeZWq93rbRY5dv/DZ8+2PIY1nJuDhKtsarlRZnjifJFQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e56aad3c-a06f-da07-f491-a894a570d78f@amd.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 10:33:43AM +0530, Lazar, Lijo wrote:
-> On 8/19/2021 5:29 AM, Kees Cook wrote:
-> > On Wed, Aug 18, 2021 at 05:12:28PM +0530, Lazar, Lijo wrote:
-> > > 
-> > > On 8/18/2021 11:34 AM, Kees Cook wrote:
-> > > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > > > field bounds checking for memcpy(), memmove(), and memset(), avoid
-> > > > intentionally writing across neighboring fields.
-> > > > 
-> > > > Use struct_group() in structs:
-> > > > 	struct atom_smc_dpm_info_v4_5
-> > > > 	struct atom_smc_dpm_info_v4_6
-> > > > 	struct atom_smc_dpm_info_v4_7
-> > > > 	struct atom_smc_dpm_info_v4_10
-> > > > 	PPTable_t
-> > > > so the grouped members can be referenced together. This will allow
-> > > > memcpy() and sizeof() to more easily reason about sizes, improve
-> > > > readability, and avoid future warnings about writing beyond the end of
-> > > > the first member.
-> > > > 
-> > > > "pahole" shows no size nor member offset changes to any structs.
-> > > > "objdump -d" shows no object code changes.
-> > > > 
-> > > > Cc: "Christian König" <christian.koenig@amd.com>
-> > > > Cc: "Pan, Xinhui" <Xinhui.Pan@amd.com>
-> > > > Cc: David Airlie <airlied@linux.ie>
-> > > > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > > > Cc: Hawking Zhang <Hawking.Zhang@amd.com>
-> > > > Cc: Feifei Xu <Feifei.Xu@amd.com>
-> > > > Cc: Lijo Lazar <lijo.lazar@amd.com>
-> > > > Cc: Likun Gao <Likun.Gao@amd.com>
-> > > > Cc: Jiawei Gu <Jiawei.Gu@amd.com>
-> > > > Cc: Evan Quan <evan.quan@amd.com>
-> > > > Cc: amd-gfx@lists.freedesktop.org
-> > > > Cc: dri-devel@lists.freedesktop.org
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > Acked-by: Alex Deucher <alexander.deucher@amd.com>
-> > > > Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2FCADnq5_Npb8uYvd%2BR4UHgf-w8-cQj3JoODjviJR_Y9w9wqJ71mQ%40mail.gmail.com&amp;data=04%7C01%7Clijo.lazar%40amd.com%7C3861f20094074bf7328808d962a433f2%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637649279701053991%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=386LcfJJGfQfHsXBuK17LMqxJ2nFtGoj%2FUjoN2ZtJd0%3D&amp;reserved=0
-> > > > ---
-> > > >    drivers/gpu/drm/amd/include/atomfirmware.h           |  9 ++++++++-
-> > > >    .../gpu/drm/amd/pm/inc/smu11_driver_if_arcturus.h    |  3 ++-
-> > > >    drivers/gpu/drm/amd/pm/inc/smu11_driver_if_navi10.h  |  3 ++-
-> > > >    .../gpu/drm/amd/pm/inc/smu13_driver_if_aldebaran.h   |  3 ++-
-> > > 
-> > > Hi Kees,
-> > 
-> > Hi! Thanks for looking into this.
-> > 
-> > > The headers which define these structs are firmware/VBIOS interfaces and are
-> > > picked directly from those components. There are difficulties in grouping
-> > > them to structs at the original source as that involves other component
-> > > changes.
-> > 
-> > So, can you help me understand this a bit more? It sounds like these are
-> > generated headers, yes? I'd like to understand your constraints and
-> > weight them against various benefits that could be achieved here.
-> > 
-> > The groupings I made do appear to be roughly documented already,
-> > for example:
-> > 
-> >     struct   atom_common_table_header  table_header;
-> >       // SECTION: BOARD PARAMETERS
-> > +  struct_group(dpm_info,
-> > 
-> > Something emitted the "BOARD PARAMETERS" section heading as a comment,
-> > so it likely also would know where it ends, yes? The good news here is
-> > that for the dpm_info groups, they all end at the end of the existing
-> > structs, see:
-> > 	struct atom_smc_dpm_info_v4_5
-> > 	struct atom_smc_dpm_info_v4_6
-> > 	struct atom_smc_dpm_info_v4_7
-> > 	struct atom_smc_dpm_info_v4_10
-> > 
-> > The matching regions in the PPTable_t structs are similarly marked with a
-> > "BOARD PARAMETERS" section heading comment:
-> > 
-> > --- a/drivers/gpu/drm/amd/pm/inc/smu11_driver_if_arcturus.h
-> > +++ b/drivers/gpu/drm/amd/pm/inc/smu11_driver_if_arcturus.h
-> > @@ -643,6 +643,7 @@ typedef struct {
-> >     // SECTION: BOARD PARAMETERS
-> >     // SVI2 Board Parameters
-> > +  struct_group(v4_6,
-> >     uint16_t     MaxVoltageStepGfx; // In mV(Q2) Max voltage step that SMU will request. Multiple steps are taken if voltage change exceeds this value.
-> >     uint16_t     MaxVoltageStepSoc; // In mV(Q2) Max voltage step that SMU will request. Multiple steps are taken if voltage change exceeds this value.
-> > @@ -728,10 +729,10 @@ typedef struct {
-> >     uint32_t     BoardVoltageCoeffB;    // decode by /1000
-> >     uint32_t     BoardReserved[7];
-> > +  );
-> >     // Padding for MMHUB - do not modify this
-> >     uint32_t     MmHubPadding[8]; // SMU internal use
-> > -
-> >   } PPTable_t;
-> > 
-> > Where they end seems known as well (the padding switches from a "Board"
-> > to "MmHub" prefix at exactly the matching size).
-> > 
-> > So, given that these regions are already known by the export tool, how
-> > about just updating the export tool to emit a struct there? I imagine
-> > the problem with this would be the identifier churn needed, but that's
-> > entirely mechanical.
-> > 
-> > However, I'm curious about another aspect of these regions: they are,
-> > by definition, the same. Why isn't there a single struct describing
-> > them already, given the existing redundancy? For example, look at the
-> > member names: maxvoltagestepgfx vs MaxVoltageStepGfx. Why aren't these
-> > the same? And then why aren't they described separately?
-> > 
-> > Fixing that would cut down on the redundancy here, and in the renaming,
-> > you can fix the identifiers as well. It should be straight forward to
-> > write a Coccinelle script to do this renaming for you after extracting
-> > the structure.
-> > 
-> > > The driver_if_* files updates are frequent and it is error prone to manually
-> > > group them each time we pick them for any update.
-> > 
-> > Why are these structs updated? It looks like they're specifically
-> > versioned, and aren't expected to change (i.e. v4.5, v4.6, v4.10, etc).
-> > 
-> > > Our usage of memcpy in this way is restricted only to a very few places.
-> > 
-> > True, there's 1 per PPTable_t duplication. With a proper struct, you
-> > wouldn't even need a memcpy().
-> > 
-> > Instead of the existing:
-> >                 memcpy(smc_pptable->I2cControllers, smc_dpm_table_v4_7->I2cControllers,
-> >                         sizeof(*smc_dpm_table_v4_7) - sizeof(smc_dpm_table_v4_7->table_header));
-> > 
-> > or my proposed:
-> >                 memcpy(&smc_pptable->v4, &smc_dpm_table_v4_7->dpm_info,
-> >                        sizeof(smc_dpm_table_v4_7->dpm_info));
-> > 
-> > you could just have:
-> > 		smc_pptable->v4 = smc_dpm_table_v4_7->dpm_info;
-> > 
-> > since they'd be explicitly the same type.
-> > 
-> > That looks like a much cleaner solution to this. It greatly improves
-> > readability, reduces the redundancy in the headers, and should be a
-> > simple mechanical refactoring.
-> > 
-> > Oh my, I just noticed append_vbios_pptable() in
-> > drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega12_processpptables.c
-> > which does an open-coded assignment of the entire PPTable_t, including
-> > padding, and, apparently, the i2c address twice:
-> > 
-> >          ppsmc_pptable->Vr2_I2C_address = smc_dpm_table.Vr2_I2C_address;
-> > 
-> >          ppsmc_pptable->Vr2_I2C_address = smc_dpm_table.Vr2_I2C_address;
-> > 
-> > > As another option - is it possible to have a helper function/macro like
-> > > memcpy_fortify() which takes the extra arguments and does the extra compile
-> > > time checks? We will use the helper whenever we have such kind of usage.
-> > 
-> > I'd rather avoid special cases just for this, especially when the code
-> > here is already doing a couple things we try to avoid in the rest of
-> > the kernel (i.e. open coded redundant struct contents, etc).
-> > 
-> > If something mechanically produced append_vbios_pptable() above, I bet
-> > we can get rid of the memcpy()s entirely and save a lot of code doing a
-> > member-to-member assignment.
-> > 
-> > What do you think?
-> > 
-> 
-> Hi Kees,
-> 
-> Will give a background on why there are multiple headers and why it's
-> structured this way. That may help to better understand this arrangement.
-> 
-> This code is part of driver for AMD GPUs. These GPUs get to the consumers
-> through multiple channels - AMD designs a few boards with those, there are
-> add-in-board partners like ASRock, Sapphire etc. who take these ASICs and
-> design their own boards, and others like OEM vendors who have their own
-> design for boards in their laptops.
-> 
-> As you have noticed, this particular section in the structure carries
-> information categorized as 'BOARD PARAMETERS'. Since there are multiple
-> vendors designing their own boards, this gives the option to customize the
-> parameters based on their board design.
-> 
-> There are a few components in AMD GPUs which are interested in these board
-> parameters main ones being - Video BIOS (VBIOS) and power management
-> firmware (PMFW). There needs to be a single source where a vendor can input
-> the information and that is decided as VBIOS. VBIOS carries different data
-> tables which carry other information also (some of which are used by
-> driver), so this information is added as a separate data table in VBIOS. A
-> board vendor can customize the VBIOS build with this information.
-> 
-> The data tables (and some other interfaces with driver) carried by VBIOS are
-> published in this header - drivers/gpu/drm/amd/include/atomfirmware.h
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-I understand this to mean that this header is shared by other projects?
+The "Board Parameters" members of the structs:
+	struct atom_smc_dpm_info_v4_5
+	struct atom_smc_dpm_info_v4_6
+	struct atom_smc_dpm_info_v4_7
+	struct atom_smc_dpm_info_v4_10
+are written to the corresponding members of the corresponding PPTable_t
+variables, but they lack destination size bounds checking, which means
+the compiler cannot verify at compile time that this is an intended and
+safe memcpy().
 
-If that's true, what compilers are processing this header? (i.e. so I
-can scope my suggestions to things that all the compilers will be able
-to deal with.)
+Since the header files are effectively immutable[1] and a struct_group()
+cannot be used, nor a common struct referenced by both sides of the
+memcpy() arguments, add a new helper, memcpy_trailing(), to perform the
+bounds checking at compile time. Replace the open-coded memcpy()s with
+memcpy_trailing() which includes enough context for the bounds checking.
 
-How are edits of this file managed "upstream" from the Linux kernel?
+"objdump -d" shows no object code changes.
 
-Why does it have strange indentations like this:
+[1] https://lore.kernel.org/lkml/e56aad3c-a06f-da07-f491-a894a570d78f@amd.com
 
-  uint8_t  ledpin0;
-  uint8_t  ledpin1;
-  uint8_t  ledpin2;
-  uint8_t  padding8_4;
-
-	uint8_t  pllgfxclkspreadenabled;
-	uint8_t  pllgfxclkspreadpercent;
-	uint16_t pllgfxclkspreadfreq;
-
-  uint8_t uclkspreadenabled;
-  uint8_t uclkspreadpercent;
-  uint16_t uclkspreadfreq;
-
-
-> There are multiple families of AMD GPUs like Navi10, Arcturus, Aldebaran
-> etc. and the board specific details change with different families of GPUs.
-> However, VBIOS team publishes a common header file for these GPUs and any
-> difference in data tables (between GPU families) is maintained through a
-> versioning scheme. Thus there are different tables like
-> atom_smc_dpm_info_v4_5, atom_smc_dpm_info_v4_6 etc. which are relevant for a
-> particular family of GPUs.
-> 
-> With newer VBIOS versions and new GPU families, there could be changes in
-> the structs defined in atomfirmware.h and we pick the header accordingly.
-> 
-> As mentioned earlier, one other user of the board specific information is
-> power management firmware (PMFW). PMFW design is isolated from the actual
-> source of board information. In addition to board specific information, PMFW
-> needs some other info as well and driver is the one responsible for passing
-> this info to the firmware. PMFW gives an interface header to driver
-> providing the different struct formats which are used in driver<->PMFW
-> interactions. Unlike VBIOS, these interface headers are defined per family
-> of ASICs and those are smu11_driver_if_arcturus.h, smu11_driver_if_* etc.
-> (in short driver_if_* files). Like VBIOS,  with newer firmware versions,
-> there could be changes in the different structs defined in these headers and
-> we pick them accordingly.
-
-Are these headers also shared between other projects?
-
-What's needed to coordinate making these less redundant? (i.e. replacing
-the "BOARD PARAMETERS" portion of PPTable_t with the associated
-struct *_dpm_info_v* from atomfirmware.h?)
-
-> Driver acts the intermediary between actual source of board information
-> (VBIOS) and PMFW. So what is being done here is driver picks the board
-> information from VBIOS table, strips the VBIOS table header and passes it as
-> part of PPTable_t which defines all the information that is needed by PMFW
-> from driver for enabling dynamic power management.
-> 
-> In summary, these headers are not generated and not owned by driver. They
-> define the interfaces of two different components with driver, and are
-> consumed by those components themselves. A simple change to group the
-> information as a separate structure involves changes in multiple components
-> like VBIOS, PMFW, software used to build VBIOS, Windows driver etc.
-> 
-> In all practical cases, this code is harmless as these structs (in both
-> headers) are well defined for a specific family of GPUs. There is always a
-> reserve field defined with some extra bytes so that the size is not affected
-> if at all new fields need to be added.
-
-It sounds like it's unlikely that the headers will be able to change? If
-that's true, it seems like a good idea to mark those headers very
-clearly at the top with details like you describe here. Maybe something
-like:
-
-/*
- * This header file is shared between VBIOS, Windows drivers, and Linux
- * drivers. Any changes need to be well justified and coordinated with
- * email@address...
- */
-
-And in looking through these, I notice there's a typo in the Description:
-
-    header file of general definitions for OS nd pre-OS video drivers
-
-nd -> and
-
-> The patch now makes us to modify the headers for Linux through
-> script/manually whenever we pick them, and TBH that strips off the coherency
-> with the original source. The other option is field by field copy. Now we
-> use memcpy as a safe bet so that a new field added later taking some reserve
-> space is not missed even if we miss a header update.
-
-How does this look as a work-around for now:
-
+Cc: Lijo Lazar <lijo.lazar@amd.com>
+Cc: "Christian KÃ¶nig" <christian.koenig@amd.com>
+Cc: "Pan, Xinhui" <Xinhui.Pan@amd.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Hawking Zhang <Hawking.Zhang@amd.com>
+Cc: Feifei Xu <Feifei.Xu@amd.com>
+Cc: Likun Gao <Likun.Gao@amd.com>
+Cc: Jiawei Gu <Jiawei.Gu@amd.com>
+Cc: Evan Quan <evan.quan@amd.com>
+Cc: amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/lkml/CADnq5_Npb8uYvd+R4UHgf-w8-cQj3JoODjviJR_Y9w9wqJ71mQ@mail.gmail.com
+---
+Alex, I dropped your prior Acked-by, since the implementation is very
+different. If you're still happy with it, I can add it back. :)
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h           | 25 +++++++++++++++++++
+ .../gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c |  6 ++---
+ .../gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c   |  8 +++---
+ .../drm/amd/pm/swsmu/smu13/aldebaran_ppt.c    |  5 ++--
+ 4 files changed, 33 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
 index 96e895d6be35..4605934a4fb7 100644
@@ -472,6 +230,6 @@ index c8eefacfdd37..a6fd7ee314a9 100644
  	return 0;
  }
  
-
 -- 
-Kees Cook
+2.30.2
+
