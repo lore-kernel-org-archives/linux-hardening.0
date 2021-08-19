@@ -2,161 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2656C4338F
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 03:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FF5C4338F
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 04:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A936D61104
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 03:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB41B61100
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 04:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236271AbhHSDh3 (ORCPT
+        id S229491AbhHSECs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 23:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236576AbhHSDh2 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 23:37:28 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E00C061796
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 20:36:52 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 28-20020a17090a031cb0290178dcd8a4d1so6465921pje.0
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Aug 2021 20:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OWG8gSW9FTH/AgnNjiR6jP10S4rh/ZtmSM7TNejSBro=;
-        b=bf7AXXLxLTv0CmXBn58RWmQBZ9LcpPYWlDQy1fNAeZxT8k+tgPLMbTJRZoV7+TJLqA
-         D0YMfmBS5GGXVxU0KTGqEuvI+CEu5kNnqcVLDWTAvxbYGPt9ZraQM+QErigXfLpgJBNu
-         W9zs3o59Wfdjd+g/h9ljZvX4U1YJVbddLGkoI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OWG8gSW9FTH/AgnNjiR6jP10S4rh/ZtmSM7TNejSBro=;
-        b=jIUVcNl/U/CyFEMJ8S0XHL+I7w8z1MN0XqiDs1Wea+u12Wh774fxeV+WnRcOwYvzTu
-         mcgc0oCd5vsFsNJTEQ3xI7sTFFTMHmj18UsC/0kAmvVFGENjCMBSLjGFzux9gzFVgtcv
-         SETYIHwj1UvRaOgo8U82KGoUyBWJb04i8Yvj84X9y66GOlyZL3+zyR1gNiIWIF/zQXFA
-         qFL257jYBq+cKT7iD/Wj1EmXtbZ44lBX66Yl+KSCsNNbtODRQo/W8oaA75rneIH6iajs
-         3tKCZHyTxu9ztppLc52OMbnaij26t7wl1tyl0eCcFpW2Ak8rWKs5E6oddukFQaq64KNK
-         wb6Q==
-X-Gm-Message-State: AOAM530tT5WgTMo0cqqIZMJTxM7CTyKYk7MosS9oJZfDPEkwRpEMlUW1
-        yMstM00LuuSWihs2CVSwGk8gRg==
-X-Google-Smtp-Source: ABdhPJyhy0+a4fDGJXB6BO9R+BMhAU0XGAPV4/WUygffKCQlZpUdChD3xai7iJvGVEwQjN9BPChIEg==
-X-Received: by 2002:a17:902:b593:b0:12d:7aa5:de2d with SMTP id a19-20020a170902b59300b0012d7aa5de2dmr10093375pls.31.1629344212131;
-        Wed, 18 Aug 2021 20:36:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y12sm1476515pgl.65.2021.08.18.20.36.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 20:36:51 -0700 (PDT)
-Date:   Wed, 18 Aug 2021 20:36:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dennis Zhou <dennis@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Daniel Micay <danielmicay@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        linux-mm@kvack.org, Joe Perches <joe@perches.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
+        Thu, 19 Aug 2021 00:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229451AbhHSECs (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 19 Aug 2021 00:02:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 299D3610FA;
+        Thu, 19 Aug 2021 04:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629345732;
+        bh=cKPPsaEGpLp6LZgL6DO1Tbd1NxBMQ6XwrR2IwGuwMPs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LEU8viFGQvLs9Mrjnr4T5maIaz8uRZnEdPs7ViZPl2lEsDMD8sPpT+DJg+lkJttuD
+         6gegwzKxXQPFmlEznhBBqnCdRXIuJ78ZlS5go+HudsdPlSr80VHdnJsoT6z2vPj9gx
+         l8p+rP44M2+6+uTIr9zyVtoUvg66G+f3LXEV6FsdPdR16Y/4Rz/U3YL5jf6MifPIUP
+         wkjCTj0spJDlhYD083f8mRMALhLODc/wJjVSzM9cTXlI2bDX6Mgu537eSjLrSowzMy
+         kID1Y6k4rSiLScd0LgeyhvGZgBej0Sny1PtBD7Z4L/iFh/tM1pdFusplqhTIcK0FU+
+         oTuDSX9Jw2pDQ==
+Date:   Wed, 18 Aug 2021 23:05:17 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] percpu: Add __alloc_size attributes for better
- bounds checking
-Message-ID: <202108182018.6DA03EA818@keescook>
-References: <20210818214021.2476230-1-keescook@chromium.org>
- <20210818214021.2476230-7-keescook@chromium.org>
- <YR2pE9V1P0xmBWUo@fedora>
+Subject: [GIT PULL] Enable -Wimplicit-fallthrough for Clang for 5.14-rc7
+Message-ID: <20210819040517.GA329693@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YR2pE9V1P0xmBWUo@fedora>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 08:42:59PM -0400, Dennis Zhou wrote:
-> On Wed, Aug 18, 2021 at 02:40:20PM -0700, Kees Cook wrote:
-> > As already done in GrapheneOS, add the __alloc_size attribute for
-> > appropriate percpu allocator interfaces, to provide additional hinting
-> > for better bounds checking, assisting CONFIG_FORTIFY_SOURCE and other
-> > compiler optimizations.
-> 
-> Can you elaborate a little bit for me how this works for percpu? In any
-> case that's not uniprocessor, any modification is done through address
-> accessors and not on the returned percpu pointer. Is the metadata kept
-> by gcc/clang able to transpire the percpu pointer accessors?
+The following changes since commit 7c60610d476766e128cc4284bb6349732cbd6606:
 
-That's an excellent point. :P I haven't tested it through the accessors,
-but I guess it's possible that this is only useful for UP, and even
-then, only where the access is very close to the "allocation", maybe
-like:
+  Linux 5.14-rc6 (2021-08-15 13:40:53 -1000)
 
-char __percpu *test_buf;
+are available in the Git repository at:
 
-	char *buf;
-	test_var = __alloc_percpu(16, __alignof__(char));
-	buf = per_cpu_ptr(test_buf, get_cpu());
-	...
-	buf[20] = '!';
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/implicit-fallthrough-clang-5.14-rc7
 
--Kees
+for you to fetch changes up to 7bc04ce6b914a06d5823509d1de237787c58e649:
 
-> 
-> Thanks,
-> Dennis
-> 
-> > 
-> > Co-developed-by: Daniel Micay <danielmicay@gmail.com>
-> > Signed-off-by: Daniel Micay <danielmicay@gmail.com>
-> > Cc: Dennis Zhou <dennis@kernel.org>
-> > Cc: Tejun Heo <tj@kernel.org>
-> > Cc: Christoph Lameter <cl@linux.com>
-> > Cc: linux-mm@kvack.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/linux/percpu.h | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/include/linux/percpu.h b/include/linux/percpu.h
-> > index 5e76af742c80..119f41815b32 100644
-> > --- a/include/linux/percpu.h
-> > +++ b/include/linux/percpu.h
-> > @@ -123,6 +123,7 @@ extern int __init pcpu_page_first_chunk(size_t reserved_size,
-> >  				pcpu_fc_populate_pte_fn_t populate_pte_fn);
-> >  #endif
-> >  
-> > +__alloc_size(1)
-> >  extern void __percpu *__alloc_reserved_percpu(size_t size, size_t align);
-> >  extern bool __is_kernel_percpu_address(unsigned long addr, unsigned long *can_addr);
-> >  extern bool is_kernel_percpu_address(unsigned long addr);
-> > @@ -131,7 +132,9 @@ extern bool is_kernel_percpu_address(unsigned long addr);
-> >  extern void __init setup_per_cpu_areas(void);
-> >  #endif
-> >  
-> > +__alloc_size(1)
-> >  extern void __percpu *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp);
-> > +__alloc_size(1)
-> >  extern void __percpu *__alloc_percpu(size_t size, size_t align);
-> >  extern void free_percpu(void __percpu *__pdata);
-> >  extern phys_addr_t per_cpu_ptr_to_phys(void *addr);
-> > -- 
-> > 2.30.2
-> > 
+  Makefile: Enable -Wimplicit-fallthrough for Clang (2021-08-18 16:46:44 -0500)
 
--- 
-Kees Cook
+----------------------------------------------------------------
+Enable -Wimplicit-fallthrough for Clang for 5.14-rc7
+
+Hi Linus,
+
+Please, pull the following patch that enables -Wimplicit-fallthrough
+for Clang 14+, globally.
+
+We had almost 40,000[1] of these issues for Clang in the beginning,
+and there might be a couple more out there when building some
+architectures with certain configurations. However, with the
+recent fixes I think we are in good shape and it is now possible
+to enable -Wimplicit-fallthrough for Clang. :)
+
+[1] https://github.com/KSPP/linux/issues/115
+
+Thanks!
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      Makefile: Enable -Wimplicit-fallthrough for Clang
+
+ Makefile | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
