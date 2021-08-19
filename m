@@ -2,93 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD73C4320A
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 00:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13574C4338F
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 00:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC91610D2
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 00:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFC7610A4
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 00:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234600AbhHSA3r (ORCPT
+        id S234677AbhHSAni (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Aug 2021 20:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234546AbhHSA3q (ORCPT
+        Wed, 18 Aug 2021 20:43:38 -0400
+Received: from mail-qv1-f49.google.com ([209.85.219.49]:38781 "EHLO
+        mail-qv1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234523AbhHSAnh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Aug 2021 20:29:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82AC4C061764;
-        Wed, 18 Aug 2021 17:29:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SYTkN+XVkEdV/u+OxTKinuCFAobXZwOiwDBIdlXk06k=; b=YBhDgQ1p9IUPiv47d0MqLCASm4
-        HJVkmYggSMFi4n3amj0hm596YZl1Jz+DdWH3wr2UuoPFm/UhZeIEK9CTEJ11Dheu63eZmE/WdWwNE
-        GwEQr2+NVe5lvFuxRMgRDdBFBYUAHzU6PbAbxG9jk+7ErnCggEJzrv7qcIC5FEzxt+wgcz9/eT6E6
-        /PZjZ4p5TpX6lf4no5VFR12kf0yMwgHcrOjiGHRwFmk13NmKCdNJ5bCiTy03H22L8OG0psiccHKqa
-        RmFTzU6ZmbI8B5vEjW/VdMYuUTE+Pr0wyCwxB7VFsbxPVlTwXZw0q6PzN5N9ZxRKlI72+xvtTC17y
-        vk84IU2A==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mGVuF-004Qmy-PG; Thu, 19 Aug 2021 00:28:06 +0000
-Date:   Thu, 19 Aug 2021 01:27:39 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        Daniel Micay <danielmicay@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
+        Wed, 18 Aug 2021 20:43:37 -0400
+Received: by mail-qv1-f49.google.com with SMTP id bl13so2759795qvb.5;
+        Wed, 18 Aug 2021 17:43:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WUckR6/rEyG6hoZXTxRWHk9iw1OsAucy5gKY4D8oDS4=;
+        b=mbLSyTIAKSlwe7r/tkKetZFBXt5infeLFXZ9WN4lQ1B6d+n9gJ760sTf4MgG1Hvjp+
+         DoQJBD7LMRWZCziqrTMTx6yiuPp2iE6g66kxUEeRiaxK9EK90oucRyXwAGPS0dLQGEfl
+         AnBntlEOIjnN70WqJW7PEWhIKW+/AUOWrkDrEjQS25Wo9eEVy9LKrif/98bWaR3fj6l4
+         wz+Y54c1EP2s92SpW67TZkM4JrM2fV8B8SVp+J5RV+ZKA+Qpim0yyXy4mRj+pb8z7eTZ
+         0n4dxUUbc9dwnNMcZ9BuqK8+/qaOBCD5Nfg55AxG7ZQyBb/CIjnsqvaBTXNSCxJIdev/
+         J/6A==
+X-Gm-Message-State: AOAM531NpHCyK5G+dZyNB5aQPHpA+J3qCEYLr9ZtG1dzrJbVxcSomGaB
+        fJ579pUAt9RdUDn1Mc6stOA=
+X-Google-Smtp-Source: ABdhPJw2WHDOBNbPG85sjVtvZQqxQoF7wFWwdSLM/WNkMnAF4dVw1u1fqgrrm+X/5nVgJcE1FJnGbA==
+X-Received: by 2002:a05:6214:902:: with SMTP id dj2mr11985796qvb.62.1629333782032;
+        Wed, 18 Aug 2021 17:43:02 -0700 (PDT)
+Received: from fedora (pool-173-68-57-129.nycmny.fios.verizon.net. [173.68.57.129])
+        by smtp.gmail.com with ESMTPSA id d8sm758453qtr.0.2021.08.18.17.43.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Aug 2021 17:43:01 -0700 (PDT)
+Date:   Wed, 18 Aug 2021 20:42:59 -0400
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Daniel Micay <danielmicay@gmail.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>, linux-mm@kvack.org,
+        Joe Perches <joe@perches.com>, Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/5] slab: Add __alloc_size attributes for better bounds
- checking
-Message-ID: <YR2lexDd9N0sWxIW@casper.infradead.org>
-References: <20210818050841.2226600-1-keescook@chromium.org>
- <20210818050841.2226600-3-keescook@chromium.org>
- <f3e56f56c36b32dc76e174886008a2a1ecf3fefa.camel@perches.com>
+Subject: Re: [PATCH v2 6/7] percpu: Add __alloc_size attributes for better
+ bounds checking
+Message-ID: <YR2pE9V1P0xmBWUo@fedora>
+References: <20210818214021.2476230-1-keescook@chromium.org>
+ <20210818214021.2476230-7-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f3e56f56c36b32dc76e174886008a2a1ecf3fefa.camel@perches.com>
+In-Reply-To: <20210818214021.2476230-7-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 17, 2021 at 10:31:32PM -0700, Joe Perches wrote:
-> Lastly __alloc_size should probably be added to checkpatch
-> 
-> Maybe:
-> ---
->  scripts/checkpatch.pl | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 161ce7fe5d1e5..1a166b5cf3447 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -489,7 +489,8 @@ our $Attribute	= qr{
->  			____cacheline_aligned|
->  			____cacheline_aligned_in_smp|
->  			____cacheline_internodealigned_in_smp|
-> -			__weak
-> +			__weak|
-> +			__alloc_size\s*\(\s*\d+\s*(?:,\s*d+\s*){0,5}\)
+Hello,
 
-Should probably be added to kernel-doc as well.  Any other awful regexes
-that need to be changed to understand it?  And can we commonise the
-regexes that do exist into a perl helper library?
+On Wed, Aug 18, 2021 at 02:40:20PM -0700, Kees Cook wrote:
+> As already done in GrapheneOS, add the __alloc_size attribute for
+> appropriate percpu allocator interfaces, to provide additional hinting
+> for better bounds checking, assisting CONFIG_FORTIFY_SOURCE and other
+> compiler optimizations.
+
+Can you elaborate a little bit for me how this works for percpu? In any
+case that's not uniprocessor, any modification is done through address
+accessors and not on the returned percpu pointer. Is the metadata kept
+by gcc/clang able to transpire the percpu pointer accessors?
+
+Thanks,
+Dennis
+
+> 
+> Co-developed-by: Daniel Micay <danielmicay@gmail.com>
+> Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+> Cc: Dennis Zhou <dennis@kernel.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: linux-mm@kvack.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/percpu.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/include/linux/percpu.h b/include/linux/percpu.h
+> index 5e76af742c80..119f41815b32 100644
+> --- a/include/linux/percpu.h
+> +++ b/include/linux/percpu.h
+> @@ -123,6 +123,7 @@ extern int __init pcpu_page_first_chunk(size_t reserved_size,
+>  				pcpu_fc_populate_pte_fn_t populate_pte_fn);
+>  #endif
+>  
+> +__alloc_size(1)
+>  extern void __percpu *__alloc_reserved_percpu(size_t size, size_t align);
+>  extern bool __is_kernel_percpu_address(unsigned long addr, unsigned long *can_addr);
+>  extern bool is_kernel_percpu_address(unsigned long addr);
+> @@ -131,7 +132,9 @@ extern bool is_kernel_percpu_address(unsigned long addr);
+>  extern void __init setup_per_cpu_areas(void);
+>  #endif
+>  
+> +__alloc_size(1)
+>  extern void __percpu *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp);
+> +__alloc_size(1)
+>  extern void __percpu *__alloc_percpu(size_t size, size_t align);
+>  extern void free_percpu(void __percpu *__pdata);
+>  extern phys_addr_t per_cpu_ptr_to_phys(void *addr);
+> -- 
+> 2.30.2
+> 
