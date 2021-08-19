@@ -2,234 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AADC432BE
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC94C4338F
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B56F26109E
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5C0610E6
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234867AbhHSUPY (ORCPT
+        id S231856AbhHSUSd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 Aug 2021 16:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234706AbhHSUPY (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 Aug 2021 16:15:24 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80737C061575
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:14:47 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id x16so6564612pfh.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:14:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SWonK40nfLuKYWvrqlegwHOX79F+iH7r7S8ceDKJ73w=;
-        b=IJptv6+ED2SgpSRkeJi/2ho6iTHaXtYfyLiySxQuoNMdF1AasxvuCUFZHXoetmVfVl
-         0evldTvTyMXXeS4wZD1+qp7lEf29/Dq+N9wdcm+G9qpFgGqlvMKRRlkipdTCLOQiHMXO
-         YdqtUQrJqZysCWHTXjCxeVcMUcIAJh8qGptiM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SWonK40nfLuKYWvrqlegwHOX79F+iH7r7S8ceDKJ73w=;
-        b=gybUlueXbgibqtCOLHMdQtFHsQVxtR9pYYGxyiveUPgOXF+FTiExbI/DZCqbJmei0b
-         izv2FqHZUotnKtc+AA3qpjDIjGAeJnYjIdVwCM8rSOQzPKZxcybGvtYF2Y5hTuTDcd3S
-         GF1dDXwOtjK0hcs34SlbTZ5onGchht2oG0xHnYr22UFSaBc0iGX8KYx0DtXBiu7z/On2
-         Ll+VIZXdI0A9QeeqR9koE8ZIeJH2IThdNH+qx2n2QxjwyFUO6VnN55ulZfSaCIGNQHL6
-         LwV4xxlDkvz6IepB4yd549mGwWKFh2gTt06v3kZPb1Wp1/wVCoeuSBvw8yben81S1clX
-         +HtA==
-X-Gm-Message-State: AOAM532QhmRi5ZwWc0neziGqIQz47E9J+dZfSj9dIbl5m6O2Hez/T1b1
-        EId/yYQLHM+VRYwug9BRFdM63g==
-X-Google-Smtp-Source: ABdhPJwOnooA//ZI2yY2w3HhhA71tc7MYj5UAHPJaeMdESG6/Mo5ArqPp78/8chRXBFrSXp80yNy4g==
-X-Received: by 2002:aa7:850c:0:b0:3e2:edf3:3d09 with SMTP id v12-20020aa7850c000000b003e2edf33d09mr9540100pfn.42.1629404087013;
-        Thu, 19 Aug 2021 13:14:47 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j4sm5109612pgi.6.2021.08.19.13.14.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 13:14:46 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Lijo Lazar <lijo.lazar@amd.com>
+        Thu, 19 Aug 2021 16:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231683AbhHSUSd (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 19 Aug 2021 16:18:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B3A6610D2;
+        Thu, 19 Aug 2021 20:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629404276;
+        bh=JLc6MbNYqramEDF6nTAvsq6MESZmf7zguMGFkkGgcHg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qWo5JIbfjmGVZi+yzG/U7j5d0gwQLO1/cLteNgLHXzqOIBbmRSfbA782mYM1PHhzJ
+         S7y6lYlNxwEXl+jo9T/l083VI3JWDT57uiAUueRlLWKqga8Imyeu5vCXMSiSaR8NoW
+         PSKOgv0jBWYciM8KYTl8Gz8nFSEJF2dzl8meistXieu2YGYLswS5x7K/zhmoEdP7jT
+         XXax6mzWi3JDfJI8N5pc9frY0vkhkqKmy/oEtRBEvx6fTwRZZK0uVQOVyA1GvrWFC8
+         n1cO1FP3196VCJ+vkI4EeRz4aNvgoAwl49mEPyEf5Z3yKBPU5jtEalDylVs8svVOIA
+         mttbmKf3RCIYg==
+Subject: Re: [GIT PULL] Enable -Wimplicit-fallthrough for Clang for 5.14-rc7
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Feifei Xu <Feifei.Xu@amd.com>, Likun Gao <Likun.Gao@amd.com>,
-        Jiawei Gu <Jiawei.Gu@amd.com>, Evan Quan <evan.quan@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Luben Tuikov <luben.tuikov@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Dennis Li <Dennis.Li@amd.com>,
-        Sathishkumar S <sathishkumar.sundararaju@amd.com>,
-        Jonathan Kim <jonathan.kim@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        David M Nieto <David.Nieto@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        John Clements <John.Clements@amd.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] drm/amd/pm: And destination bounds checking to struct copy
-Date:   Thu, 19 Aug 2021 13:14:41 -0700
-Message-Id: <20210819201441.3545027-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org
+References: <20210819040517.GA329693@embeddedor>
+ <CAHk-=whXUJbqhjkRSjOQ2Tm5OmyKv3_JUTh8pxxvykGaC+fM0Q@mail.gmail.com>
+From:   Nathan Chancellor <nathan@kernel.org>
+Message-ID: <9ef3265b-a5e7-d21b-68a8-ad137ac6ebfd@kernel.org>
+Date:   Thu, 19 Aug 2021 13:17:54 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6384; h=from:subject; bh=cvRZIn3RJBaQNBAJjwgDTl32BXjr/3MDNasdqtotH60=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhHruwFDFDjn9GfKm+ZpkXhmC4GSPPLnOXnRs08yoS 3gaj152JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYR67sAAKCRCJcvTf3G3AJsiZD/ 463O5ZlWD/33hUv4/iLJRdRrEpVzMn1Znf6F0qdUkO9B3eGv+E0ybaUS6z9Z4PMWmO2DucTecwo9TR VC3sh27JAPDo9hR1O9Wsz80Yhhqu8QCrcGSEnMYqf3KD1q/SswU4w2qOB346yhWGA5FqqHSIyZiVZz MbmFs+nxIG9PoQrqq7Sul683ADQkTAt7X0avOZ8LTna2XDizljUnY6dJ2gpOR/NKa3Eme9xXYVshvm BOj8QKhMS09oJ94jq5n1UJuEod5emDIu2G7PmdsSUOXyIv3Cq9+kEJNejeZh2RbDL0nS5q/TXhwXNu 7tUYH8xuLZu+LE9CQH6Xn+XnBmgfTMTASx4aoaSu85Ys0kt1moUmpPuKvfz1L0L5kd1DrNfmUj70Cx qOcT3NvuR5tUUF7b9D736pwe/dNrFi2hYHTZ5P1nz3Oh+7bhzDOGUXg+IVZMqbUagp8Req9iSxoL29 FRE2hrE/MOM3Mm9V25yZTo35nf4friJHDQbMy9I5dZa7JhEYd+TzUzKSX/p4Dzi2F0I9bvc1RZ3S0S Qg1CA3pbZ6kQo23yrHotBS/oPiKY292DX02PtOMNxUwWtyS9uIFmv99+kAwpsa/zKB+IGhLxaTx26Q +kYyapDKFaIWlDpFgeZWq93rbRY5dv/DZ8+2PIY1nJuDhKtsarlRZnjifJFQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=whXUJbqhjkRSjOQ2Tm5OmyKv3_JUTh8pxxvykGaC+fM0Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+On 8/19/2021 12:19 PM, Linus Torvalds wrote:
+> On Wed, Aug 18, 2021 at 9:02 PM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+>>
+>> Enable -Wimplicit-fallthrough for Clang for 5.14-rc7
+> 
+> No. Much too late in the release, particularly knowing that we have
+> Clang pre-releases that claim to be 14.0.0 and get this wrong.
+> 
+> So no way does this happen like this.
+> 
+> That's doubly true since the clang support for this all adds exactly
+> _zero_ upside, only downside: we made the gcc checks be stricter, and
+> gcc ends up having (a) more wide coverage and (b) doesn't have the
+> bugs clang has.
 
-The "Board Parameters" members of the structs:
-	struct atom_smc_dpm_info_v4_5
-	struct atom_smc_dpm_info_v4_6
-	struct atom_smc_dpm_info_v4_7
-	struct atom_smc_dpm_info_v4_10
-are written to the corresponding members of the corresponding PPTable_t
-variables, but they lack destination size bounds checking, which means
-the compiler cannot verify at compile time that this is an intended and
-safe memcpy().
+For what it's worth, clang's version of -Wimplicit-fallthrough would 
+have caught the bug in commit 652b44453ea9 ("habanalabs/gaudi: fix 
+missing code in ECC handling"). Yes, small fix in the sea of patches 
+that were needed to address clang's more pedantic version of the warning 
+but this version of the warning is completely in line with the kernel's 
+stance of switch statements in Documentation/process/deprecated.rst:
 
-Since the header files are effectively immutable[1] and a struct_group()
-cannot be used, nor a common struct referenced by both sides of the
-memcpy() arguments, add a new helper, memcpy_trailing(), to perform the
-bounds checking at compile time. Replace the open-coded memcpy()s with
-memcpy_trailing() which includes enough context for the bounds checking.
+"All switch/case blocks must end in one of:
 
-"objdump -d" shows no object code changes.
+* break;
+* fallthrough;
+* continue;
+* goto <label>;
+* return [expression];"
 
-[1] https://lore.kernel.org/lkml/e56aad3c-a06f-da07-f491-a894a570d78f@amd.com
+> Honestly, I think the clang "version 14 or more" check is simply
+> buggy. We *know* that check fails. Don't do it.
+> 
+> Make it "strictly more than 14.0.0" which hopefully doesn't fail, is
+> cheap and easy, and which will make clang work correctly in the not
+> too distant future.
 
-Cc: Lijo Lazar <lijo.lazar@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: "Pan, Xinhui" <Xinhui.Pan@amd.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Hawking Zhang <Hawking.Zhang@amd.com>
-Cc: Feifei Xu <Feifei.Xu@amd.com>
-Cc: Likun Gao <Likun.Gao@amd.com>
-Cc: Jiawei Gu <Jiawei.Gu@amd.com>
-Cc: Evan Quan <evan.quan@amd.com>
-Cc: amd-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/lkml/CADnq5_Npb8uYvd+R4UHgf-w8-cQj3JoODjviJR_Y9w9wqJ71mQ@mail.gmail.com
----
-Alex, I dropped your prior Acked-by, since the implementation is very
-different. If you're still happy with it, I can add it back. :)
----
- drivers/gpu/drm/amd/amdgpu/amdgpu.h           | 25 +++++++++++++++++++
- .../gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c |  6 ++---
- .../gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c   |  8 +++---
- .../drm/amd/pm/swsmu/smu13/aldebaran_ppt.c    |  5 ++--
- 4 files changed, 33 insertions(+), 11 deletions(-)
+Just to give some more context, Clang is not like GCC where x.0.0 is the 
+development version and x.1.0 is the stable release. The first stable 
+version of clang-14 will be clang 14.0.0 when it is released, just as it 
+is now, so making it "strictly more than 14.0.0" will just delay 
+enabling this even more despite the issue being fixed now. Intel already 
+upgraded the clang they use for testing to one that is fixed and Mark 
+Brown said Arm does testing with clang-14 but they regularly upgrade as 
+well. Nobody should get bitten by this check in its current form unless 
+they are not upgrading their development version of clang but in that 
+case, they are doing it wrong to begin with in my opinion (would it not 
+be the same as someone using v5.13-rc1 when v5.13-rc6 is out?)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-index 96e895d6be35..4605934a4fb7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-@@ -1446,4 +1446,29 @@ static inline int amdgpu_in_reset(struct amdgpu_device *adev)
- {
- 	return atomic_read(&adev->in_gpu_reset);
- }
-+
-+/**
-+ * memcpy_trailing - Copy the end of one structure into the middle of another
-+ *
-+ * @dst: Pointer to destination struct
-+ * @first_dst_member: The member name in @dst where the overwrite begins
-+ * @last_dst_member: The member name in @dst where the overwrite ends after
-+ * @src: Pointer to the source struct
-+ * @first_src_member: The member name in @src where the copy begins
-+ *
-+ */
-+#define memcpy_trailing(dst, first_dst_member, last_dst_member,		   \
-+		        src, first_src_member)				   \
-+({									   \
-+	size_t __src_offset = offsetof(typeof(*(src)), first_src_member);  \
-+	size_t __src_size = sizeof(*(src)) - __src_offset;		   \
-+	size_t __dst_offset = offsetof(typeof(*(dst)), first_dst_member);  \
-+	size_t __dst_size = offsetofend(typeof(*(dst)), last_dst_member) - \
-+			    __dst_offset;				   \
-+	BUILD_BUG_ON(__src_size != __dst_size);				   \
-+	__builtin_memcpy((u8 *)(dst) + __dst_offset,			   \
-+			 (u8 *)(src) + __src_offset,			   \
-+			 __dst_size);					   \
-+})
-+
- #endif
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
-index 8ab58781ae13..1918e6232319 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
-@@ -465,10 +465,8 @@ static int arcturus_append_powerplay_table(struct smu_context *smu)
- 
- 	if ((smc_dpm_table->table_header.format_revision == 4) &&
- 	    (smc_dpm_table->table_header.content_revision == 6))
--		memcpy(&smc_pptable->MaxVoltageStepGfx,
--		       &smc_dpm_table->maxvoltagestepgfx,
--		       sizeof(*smc_dpm_table) - offsetof(struct atom_smc_dpm_info_v4_6, maxvoltagestepgfx));
--
-+		memcpy_trailing(smc_pptable, MaxVoltageStepGfx, BoardReserved,
-+				smc_dpm_table, maxvoltagestepgfx);
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
-index 2e5d3669652b..b738042e064d 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
-@@ -431,16 +431,16 @@ static int navi10_append_powerplay_table(struct smu_context *smu)
- 
- 	switch (smc_dpm_table->table_header.content_revision) {
- 	case 5: /* nv10 and nv14 */
--		memcpy(smc_pptable->I2cControllers, smc_dpm_table->I2cControllers,
--			sizeof(*smc_dpm_table) - sizeof(smc_dpm_table->table_header));
-+		memcpy_trailing(smc_pptable, I2cControllers, BoardReserved,
-+				smc_dpm_table, I2cControllers);
- 		break;
- 	case 7: /* nv12 */
- 		ret = amdgpu_atombios_get_data_table(adev, index, NULL, NULL, NULL,
- 					      (uint8_t **)&smc_dpm_table_v4_7);
- 		if (ret)
- 			return ret;
--		memcpy(smc_pptable->I2cControllers, smc_dpm_table_v4_7->I2cControllers,
--			sizeof(*smc_dpm_table_v4_7) - sizeof(smc_dpm_table_v4_7->table_header));
-+		memcpy_trailing(smc_pptable, I2cControllers, BoardReserved,
-+				smc_dpm_table_v4_7, I2cControllers);
- 		break;
- 	default:
- 		dev_err(smu->adev->dev, "smc_dpm_info with unsupported content revision %d!\n",
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
-index c8eefacfdd37..a6fd7ee314a9 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
-@@ -409,9 +409,8 @@ static int aldebaran_append_powerplay_table(struct smu_context *smu)
- 
- 	if ((smc_dpm_table->table_header.format_revision == 4) &&
- 	    (smc_dpm_table->table_header.content_revision == 10))
--		memcpy(&smc_pptable->GfxMaxCurrent,
--		       &smc_dpm_table->GfxMaxCurrent,
--		       sizeof(*smc_dpm_table) - offsetof(struct atom_smc_dpm_info_v4_10, GfxMaxCurrent));
-+		memcpy_trailing(smc_pptable, GfxMaxCurrent, reserved,
-+				smc_dpm_table, GfxMaxCurrent);
- 	return 0;
- }
- 
--- 
-2.30.2
+If we waited until the next merge window, that would certainly give 
+various entities enough time to upgrade their pre-release versions.
 
+However, if you are truly opposed to a version check, can we at least 
+just check for the presence of -Wunreachable-code-fallthrough as I 
+suggested before? Yes, it is slightly more expensive as we have to call 
+the compiler rather than using make builtins but then your concern of 
+-Wimplicit-fallthrough getting enabled when it is buggy is completely 
+addressed and people who have a fixed toolchain get access to the 
+warning now.
+
+Cheers,
+Nathan
