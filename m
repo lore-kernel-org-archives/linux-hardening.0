@@ -2,114 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A249DC4338F
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 16:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D55C43216
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 16:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86F30610FF
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 16:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C99610CE
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 16:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbhHSQZo (ORCPT
+        id S229629AbhHSQsh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 Aug 2021 12:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
+        Thu, 19 Aug 2021 12:48:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbhHSQZj (ORCPT
+        with ESMTP id S229548AbhHSQsg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 Aug 2021 12:25:39 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8FEC061756
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 09:25:03 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id cp15-20020a17090afb8fb029017891959dcbso11731401pjb.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 09:25:03 -0700 (PDT)
+        Thu, 19 Aug 2021 12:48:36 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66C0AC061756
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 09:48:00 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id p22so7798093qki.10
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 09:48:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=UyAqbe771W+Lff6kTHtxqnAb6wyR4jVkJwEdQgLmwXM=;
-        b=RCXKCYv9ln5LbhRxVsZkAgrsxHMHPqdffVncbCoP8zHTR2s05PTRSMgK+hG8fnm1xI
-         VE6KocOflCQf5XUe9L88OiJ4Gd0AvGpF0XcmTinZR6J2WFjWLqXyGYbTjTqdNZrTLIee
-         af/RfWFTDj7DmtJmZJTbT1bZunbQVpzZBc1ts=
+        bh=PRHyIH4ijXf+mY+7Vzztn6Pqcrl1CNKx+frAJCQ2Has=;
+        b=dvp/j6HxEOhxjJeYtRuITNLUFUiXaR12Gjf8/ktdKok1mdPSqBAuwZQe5cZNMP2mDW
+         3XfbKhK5yP5sXbvvgiRAJLySLRNXDSdWgdpIlJ+p1nb8B/xTAZATOdWzyKh3+ivgYCqx
+         8oZP3fpWWL1vXVtmf+rKQ6CTdO5XEJdXVeXt2fAqXtYhfo9t+pN17guOHmzXCrch0SjV
+         BbcNWpQeXixu5hFl3i4TO87exvR7v19wOfyomnTLv0qVBV8dT8wAG8LfOqoP7y+u3kYd
+         /SnsOmmjTd5AIZnCCCKduJeONImiY/HiZFdLHTFk9UNfDVqiBBtPTkZAeJw6idovNHIn
+         m6lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UyAqbe771W+Lff6kTHtxqnAb6wyR4jVkJwEdQgLmwXM=;
-        b=mzrB3LySOz4egfQ77HdcdAMH1jf60cYtvo+mGjjDc0NElTmqDv5GMVLDuOK/6g2GQ8
-         EguhT5PGKkAKvrZqUziGngXijjsZa2XnsIju/RzxRpTfedVLVf75zYl3vFYXNS7Op7VT
-         2SZrJkd9ZuVN7i3UrKO6vYXpgFrq0V6D0TX0LdowqCJpFkZAC+b4vWIn1/jLdfP82Xb0
-         5r2WTx2x8oKZD5Na/0MAMQBThip1xe1uVqhPtVywkMPoco0AEsTGBmUjvck6/rOD65aN
-         sLF3nDlWo3ruEzxy1P8I9nlyCalgqwUexH2SrL6nmyGI9jVBxMX0WGmsM2ETvM1V55d4
-         L2BA==
-X-Gm-Message-State: AOAM533gScCTVY5LdBqqbz/SyH9UPXHzsPA6Z5V5NOg9tBYraKNlXPn6
-        hQiL7ZZqmWwW/rdP89gebGtpMw==
-X-Google-Smtp-Source: ABdhPJyq4LOVatvfadz65o72x/gkprpZlPk/8y+Qcd235dkYfx++eKkOf6dJ+KUNEdEavgccQRbFxg==
-X-Received: by 2002:a17:90a:4894:: with SMTP id b20mr16180176pjh.13.1629390302929;
-        Thu, 19 Aug 2021 09:25:02 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id nn18sm8165841pjb.21.2021.08.19.09.25.02
+        bh=PRHyIH4ijXf+mY+7Vzztn6Pqcrl1CNKx+frAJCQ2Has=;
+        b=q9TET6wx+0NfzGlHpbdCaVQiZ7ewNLPbH5+1W8uLRfRAgyWgmFX91bvnq1Aj5a6uz0
+         DdThwx+qxxPHbk/R4iauOaRyYCqRQODcGv8wWtaB+h9ObBb5a5rp73L+2+ySODLl5uP7
+         QPJJrk0y1/AxS32bVgrTPFgPzmqOJrQquJ8W03K2/rkB/GP47kBMkybw5bY3oL+idMIV
+         tVssOGsRYuw0u5XdBTqgfsPSf4NcEV5iJtkUai7Mef22dYoM+W2WDuPupH8gyKbJJakE
+         eYNeQsNJ71mRbwIkDTyhQpW+tNUttUJJVt9ImyExX6BQaa46A0y3d5wezRDrTClpakXE
+         wkXg==
+X-Gm-Message-State: AOAM532icafLw11XXqyNL/w+8xC0ai6vBU9/1TqXa+mv7P3clCMDj4Ru
+        DvzaBEu9MMDhb3b+1dkrK/LwuA==
+X-Google-Smtp-Source: ABdhPJwj157bJQx4yOUhNfsxgTN1x3aSuRlBknKFgP45+xvMm65JsiwY8VNQc1a5fM1ZgYeoBo5u0g==
+X-Received: by 2002:a05:620a:1221:: with SMTP id v1mr4584134qkj.357.1629391678741;
+        Thu, 19 Aug 2021 09:47:58 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id c67sm1770032qke.113.2021.08.19.09.47.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 09:25:02 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 09:25:01 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Thu, 19 Aug 2021 09:47:58 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1mGlCv-001See-95; Thu, 19 Aug 2021 13:47:57 -0300
+Date:   Thu, 19 Aug 2021 13:47:57 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
         linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
         clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 45/63] ath11k: Use memset_startat() for clearing queue
- descriptors
-Message-ID: <202108190923.30FD4FC6E@keescook>
+Subject: Re: [PATCH v2 56/63] RDMA/mlx5: Use struct_group() to zero struct
+ mlx5_ib_mr
+Message-ID: <20210819164757.GS543798@ziepe.ca>
 References: <20210818060533.3569517-1-keescook@chromium.org>
- <20210818060533.3569517-46-keescook@chromium.org>
- <87eeapbmhi.fsf@tynnyri.adurom.net>
+ <20210818060533.3569517-57-keescook@chromium.org>
+ <20210819122716.GP543798@ziepe.ca>
+ <202108190916.7CC455DA@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87eeapbmhi.fsf@tynnyri.adurom.net>
+In-Reply-To: <202108190916.7CC455DA@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 04:19:37PM +0300, Kalle Valo wrote:
-> Kees Cook <keescook@chromium.org> writes:
+On Thu, Aug 19, 2021 at 09:19:08AM -0700, Kees Cook wrote:
+> On Thu, Aug 19, 2021 at 09:27:16AM -0300, Jason Gunthorpe wrote:
+> > On Tue, Aug 17, 2021 at 11:05:26PM -0700, Kees Cook wrote:
+> > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > > field bounds checking for memset(), avoid intentionally writing across
+> > > neighboring fields.
+> > > 
+> > > Add struct_group() to mark region of struct mlx5_ib_mr that should be
+> > > initialized to zero.
+> > > 
+> > > Cc: Leon Romanovsky <leon@kernel.org>
+> > > Cc: Doug Ledford <dledford@redhat.com>
+> > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > > Cc: linux-rdma@vger.kernel.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > >  drivers/infiniband/hw/mlx5/mlx5_ib.h | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+> > > index bf20a388eabe..f63bf204a7a1 100644
+> > > +++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+> > > @@ -644,6 +644,7 @@ struct mlx5_ib_mr {
+> > >  	struct ib_umem *umem;
+> > >  
+> > >  	/* This is zero'd when the MR is allocated */
+> > > +	struct_group(cleared,
+> > >  	union {
+> > >  		/* Used only while the MR is in the cache */
+> > >  		struct {
+> > > @@ -691,12 +692,13 @@ struct mlx5_ib_mr {
+> > >  			bool is_odp_implicit;
+> > >  		};
+> > >  	};
+> > > +	);
+> > >  };
+> > >  
+> > >  /* Zero the fields in the mr that are variant depending on usage */
+> > >  static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
+> > >  {
+> > > -	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
+> > > +	memset(&mr->cleared, 0, sizeof(mr->cleared));
+> > >  }
+> > 
+> > Why not use the memset_after(mr->umem) here?
 > 
-> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > field bounds checking for memset(), avoid intentionally writing across
-> > neighboring fields.
-> >
-> > Use memset_startat() so memset() doesn't get confused about writing
-> > beyond the destination member that is intended to be the starting point
-> > of zeroing through the end of the struct. Additionally split up a later
-> > field-spanning memset() so that memset() can reason about the size.
-> >
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: ath11k@lists.infradead.org
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> To avoid conflicts I prefer taking this via my ath tree.
+> I can certainly do that instead. In this series I've tended to opt
+> for groupings so the position of future struct member additions are
+> explicitly chosen. (i.e. reducing the chance that a zeroing of the new
+> member be a surprise.)
 
-The memset helpers are introduced as part of this series, so that makes
-things more difficult. Do you want me to create a branch with the
-helpers that you can merge?
+I saw the earlier RDMA patches where using other memset techniques
+though? Were there flex arrays or something that made groups infeasible?
 
--Kees
-
--- 
-Kees Cook
+Jason
