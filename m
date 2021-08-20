@@ -2,115 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F13C4320A
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95652C432BE
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 05:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C51B6610A5
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 Aug 2021 20:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B26C61037
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 05:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235399AbhHSUiS (ORCPT
+        id S233148AbhHTFL4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 Aug 2021 16:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235364AbhHSUiS (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 Aug 2021 16:38:18 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316F0C061575
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:37:41 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id h9so13549571ljq.8
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:37:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HgXymfqgLxB55cygt9ZhuDY1NRwbRIl68JfwaLHFxU8=;
-        b=MceR7MtQuMc4MmHD20XUcnrhWaX0y7Pv84DU/6PNFNUkZl6vYjYv+XP2za7cYFWX+Y
-         4XR3BlXpVnb4zj1YPJq4lKKIOOQqXZ9vr//f/7JgmeaUJ3yBBLGCORXwGnhFBJvZP1s3
-         oAXhWUma+gSbrJUF5XAndd1SKKPWftW/RUHuM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HgXymfqgLxB55cygt9ZhuDY1NRwbRIl68JfwaLHFxU8=;
-        b=OLXQtyw/c3JYT543RfN1CwBSVc4prixnD/TOo3Ax2spKoDLcMc2DvseWk8OTidvhbH
-         zXGNP4rJi4KkcNlH23JyGjYO7btsqGCTLUxwHiT1m9E8lqCRDQl5Kuss6rZaWVAXFYFI
-         xxX8++HRBEpD8BR1JommuxHyj7b+3/Z5S4ZH3I189VxwV+Lq4IwUqh9ave6OUta0yQA3
-         zxC+3BWTruhEyhVVMBATxWFEWDHzbiv7f2Xy1mSXgpmnZkga6oBAwbSokqAPDq52kd7X
-         VCGzBSUlXI+Xt26B9Gff++j8VMi+ZgaHsXRJk51jGPcGCE9CpTDhYPjkxP+6GMhk46uW
-         U4aA==
-X-Gm-Message-State: AOAM532QSDJpehbtNiQ1mx6HDYS5wywPNxfoU3xhYelW82aNsv3BlKw7
-        iDsA/E53GrHUAkMRr69ul2Ba7WGlRM385mwjPwY=
-X-Google-Smtp-Source: ABdhPJy7NyPN6jjO0EgLKi38a4iAy/6thZ96ATfqe8SAtD7NPLsIcveMg3HGEFJJIoXcEbAs+lnLCw==
-X-Received: by 2002:a2e:97cf:: with SMTP id m15mr3547696ljj.125.1629405457351;
-        Thu, 19 Aug 2021 13:37:37 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id t12sm410170lfg.151.2021.08.19.13.37.36
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Aug 2021 13:37:37 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id u22so15526157lfq.13
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Aug 2021 13:37:36 -0700 (PDT)
-X-Received: by 2002:a19:4f1a:: with SMTP id d26mr11522879lfb.377.1629405456647;
- Thu, 19 Aug 2021 13:37:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210819040517.GA329693@embeddedor> <CAHk-=whXUJbqhjkRSjOQ2Tm5OmyKv3_JUTh8pxxvykGaC+fM0Q@mail.gmail.com>
- <9ef3265b-a5e7-d21b-68a8-ad137ac6ebfd@kernel.org>
-In-Reply-To: <9ef3265b-a5e7-d21b-68a8-ad137ac6ebfd@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 19 Aug 2021 13:37:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whPU-SA2L=wiDGHGQBL_K-qtpu5EzQLwmV0qk7LSZKQrA@mail.gmail.com>
-Message-ID: <CAHk-=whPU-SA2L=wiDGHGQBL_K-qtpu5EzQLwmV0qk7LSZKQrA@mail.gmail.com>
-Subject: Re: [GIT PULL] Enable -Wimplicit-fallthrough for Clang for 5.14-rc7
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fri, 20 Aug 2021 01:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231524AbhHTFLz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Aug 2021 01:11:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DC1966054E;
+        Fri, 20 Aug 2021 05:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1629436278;
+        bh=cc0SAzsXcx00EyeJ0FnbHDyCca6n3ae4I61WSDxYEwA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bvG0F0sKpl38gpuSoBBM0DZ34c97J/dKjpUWMG8mSl3eY714SZ4ZWdp1CQY8YNrA2
+         SPU8krSWxILdcGpNCLNNpl3SdCjAgi0zjp2U1rC0n6EVvrIEJaZlb50Q7cdfCLrPAX
+         lEVaPGgaOoS19JK0+ItRQJeLSQeMZf5dbV0xOzew=
+Date:   Thu, 19 Aug 2021 22:11:15 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Daniel Micay <danielmicay@gmail.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>, linux-mm@kvack.org,
+        Joe Perches <joe@perches.com>, Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 6/7] percpu: Add __alloc_size attributes for better
+ bounds checking
+Message-Id: <20210819221115.b3a34e280cfe748ad6a76b04@linux-foundation.org>
+In-Reply-To: <20210818214021.2476230-7-keescook@chromium.org>
+References: <20210818214021.2476230-1-keescook@chromium.org>
+        <20210818214021.2476230-7-keescook@chromium.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 1:17 PM Nathan Chancellor <nathan@kernel.org> wrote:
->
-> For what it's worth, clang's version of -Wimplicit-fallthrough would
-> have caught the bug in commit 652b44453ea9 [..]
+On Wed, 18 Aug 2021 14:40:20 -0700 Kees Cook <keescook@chromium.org> wrote:
 
-The thing is, any warning can catch a bug. The "signed pointer"
-warnings could catch things too if people really care about "unsigned
-char *" vs just plain "char *".
+> As already done in GrapheneOS, add the __alloc_size attribute for
+> appropriate percpu allocator interfaces, to provide additional hinting
+> for better bounds checking, assisting CONFIG_FORTIFY_SOURCE and other
+> compiler optimizations.
+> 
 
-But warnings that have too many false positives are more likely to
-hide bugs than expose them. So it's very much a balancing act.
+Caught one, I assume:
 
-I personally think that false positives are deadly: I'd much rather
-have a c completely clean build where are the warnings are big red
-flags, than a build that has warnings that _may_ be signs of bugs, but
-where you have known false positives that have no sane workaround.
+In file included from ./include/linux/string.h:262,
+                 from ./include/linux/bitmap.h:11,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+                 from ./arch/x86/include/asm/processor.h:22,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:60,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:55,
+                 from ./include/linux/mmzone.h:8,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/slab.h:15,
+                 from drivers/misc/lkdtm/heap.c:7:
+In function 'memset',
+    inlined from 'lkdtm_VMALLOC_LINEAR_OVERFLOW' at drivers/misc/lkdtm/heap.c:27:2:
+./include/linux/fortify-string.h:172:3: error: call to '__write_overflow' declared with attribute error: detected write beyond size of object passed as 1st parameter
+  172 |   __write_overflow();
+      |   ^~~~~~~~~~~~~~~~~~
+make[3]: *** [drivers/misc/lkdtm/heap.o] Error 1
+make[2]: *** [drivers/misc/lkdtm] Error 2
+make[1]: *** [drivers/misc] Error 2
+make: *** [drivers] Error 2
 
-Because with even a _single_ false positive, people will immediately
-just stop caring about any other warnings at all. We've seen that over
-and over again.
+I want to get a kernel release out, so I'll hide
+mm-vmalloc-add-__alloc_size-attributes-for-better-bounds-checking.patch
+for now.
 
-This is why a compiler warning - to be useful - has to be completely
-unambiguously about bad code, or at least have a alternate "good code
-pattern" that is no worse than the code that the warning about.
-
-> However, if you are truly opposed to a version check, can we at least
-> just check for the presence of -Wunreachable-code-fallthrough as I
-> suggested before?
-
-I'm ok with that, since at that point there are no false warnings.
-
-But even then, it's much too late for 5.14 by now, considering that
-this has had issues, and that we already enable the warnings on the
-common gcc builds.
-
-                Linus
