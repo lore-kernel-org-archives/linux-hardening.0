@@ -2,129 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB99CC4338F
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 05:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C804C432BE
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 07:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5136044F
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 05:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C3B610D2
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 07:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233976AbhHTF7l (ORCPT
+        id S238799AbhHTHuY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Aug 2021 01:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232500AbhHTF7k (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Aug 2021 01:59:40 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F795C061575;
-        Thu, 19 Aug 2021 22:59:03 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id y6so15474992lje.2;
-        Thu, 19 Aug 2021 22:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=48Hb/Qgy2m5wWev5VsfncYKR1cJzadSWEDW/hiW1JKE=;
-        b=uU6/WcBRyLDu0UTuJ8Px/JqtCnevMORcSNmDk1Xqt0LVStFW3tSw6p+WwlTt7j48Wk
-         hlJ6rviDndHRe9M8CyNHjlCDqvPtc3wsKEaDKi4lcmDG02yRpq6QgDrVo41ApjAYeNuw
-         CV5jcXpcEBBy9Zf7ilQd7SqCEHtOjD82AkPGc9fN8EdAnhf3z8rmoxfwo+h6Sf+r26kU
-         DUaCMI7TACT7qoWCB3+6xDBE/p3ty5dIkel8Vm+WWENUNrzFlxRGgILdfMx69jYjn3I7
-         FvcOmHHMFA6+uHEopjdtF86P0Um69G3GtgJCW9ZTRFwzFEr4Ga0UgwaUZy4TK4GdDi2+
-         PtTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=48Hb/Qgy2m5wWev5VsfncYKR1cJzadSWEDW/hiW1JKE=;
-        b=bY5inNMA6qG1ml7oE5iN0j7ujiwTop68u35OUVFipGQHPCSYitQ9ovx94kv/Ka3438
-         R+45f2bQ3vCqR8p+dkjy5e7db0cKQEnIf/ibUyIkIVjECDCfMFjvCTLxZTJEANsfS7LD
-         L/P4sk4nrRlQuLd+NdsqMZrO+SiOjKVhft1Hh66M2y9lN9vsHqvbOi8NmTP3bwph+j9j
-         bOUmB+K/j4JvHYEdthwdSkGtMzkukIXkT1KPKqotIqa5O9+HX7l/UVaZZjvUymdKdAO4
-         vwKxj99G4ApvpVtAdfZfGeOE+4UdJKb6+k2OhxFpKVmpwbeibrcWB69llEw8vUxchZEL
-         WZXg==
-X-Gm-Message-State: AOAM531bt1Df84bFif7/1dmHsxAOBe4pXBKxnAApJNNmFGWoFvkNfbTR
-        C3w20hLdrahsSUqX1fQdxzvvfFusc5RhApc2O1s=
-X-Google-Smtp-Source: ABdhPJxJFkEicXBCXcmKO2Qb4x3gTqTvh9KLsu8FLi/awHbRkJtOze0bMErSZYFBjVjGftgdeiVuv7cPIHgvjUQMktI=
-X-Received: by 2002:a2e:2417:: with SMTP id k23mr14866266ljk.256.1629439141581;
- Thu, 19 Aug 2021 22:59:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210817102709.15046-1-len.baker@gmx.com> <2f3a644e279a8a0933343339fa0add8e76276bf8.camel@kernel.org>
-In-Reply-To: <2f3a644e279a8a0933343339fa0add8e76276bf8.camel@kernel.org>
-From:   Steve French <smfrench@gmail.com>
-Date:   Fri, 20 Aug 2021 00:58:50 -0500
-Message-ID: <CAH2r5msKF-YZsmWEwqZZEn2ibooEOtFm7khvSnhD9uOidNycew@mail.gmail.com>
-Subject: Re: [PATCH] CIFS: Fix a potencially linear read overflow
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, Steve French <sfrench@samba.org>,
-        Suresh Jayaraman <sjayaraman@suse.de>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
+        Fri, 20 Aug 2021 03:50:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36029 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238603AbhHTHuY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Aug 2021 03:50:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4GrYgn1dHhz9sW5;
+        Fri, 20 Aug 2021 17:49:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1629445784;
+        bh=J88K3uaWPTCJyDGiM5or1YoD8rBCAEgZEcryK0u/Zo8=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Z88hVJChPLNbFu7va+/1tqYNPa130kSyesJQV170fqBHtyrBHgsoYQ2vG7jWAFenK
+         UnM2Xa2WgoEuieSkc1ZLVVCug9f3+zRWbhv+8Kwz9lJ0T0OnirC7rGiJCfhmiQugbk
+         Gsb7MIcErTNH7IqyHIXf4NSUrbbL24pfQhAXgxRcFTJzWh3imrJnTVx0viKKp/yGsL
+         l2OmzlfcafH3m4gmgvP4ByLj0MCm/9nnxFrtr8KESxwRDR7p6qbKr/nDLbVfTi5zPT
+         FKKzWNEL1TGEoS3kCLjjXXVT5+f+vjk1mCNrPw4HFdJEtcPLwmj4uEVdYODVh2zgGX
+         +3YZnoSC4+cKQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, kernel test robot <lkp@intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-staging@lists.linux.dev,
+        linux-block@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 57/63] powerpc/signal32: Use struct_group() to zero
+ spe regs
+In-Reply-To: <20210818060533.3569517-58-keescook@chromium.org>
+References: <20210818060533.3569517-1-keescook@chromium.org>
+ <20210818060533.3569517-58-keescook@chromium.org>
+Date:   Fri, 20 Aug 2021 17:49:35 +1000
+Message-ID: <877dggeesw.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Added RB and repushed to cifs-2.6.git for-next
-
-On Wed, Aug 18, 2021 at 8:22 AM Jeff Layton <jlayton@kernel.org> wrote:
+Kees Cook <keescook@chromium.org> writes:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 >
-> On Tue, 2021-08-17 at 12:27 +0200, Len Baker wrote:
-> > strlcpy() reads the entire source buffer first. This read may exceed the
-> > destination size limit. This is both inefficient and can lead to linear
-> > read overflows if a source string is not NUL-terminated.
-> >
-> > Also, the strnlen() call does not avoid the read overflow in the strlcpy
-> > function when a not NUL-terminated string is passed.
-> >
-> > So, replace this block by a call to kstrndup() that avoids this type of
-> > overflow and does the same.
-> >
-> > Fixes: 066ce6899484d ("cifs: rename cifs_strlcpy_to_host and make it use new functions")
-> > Signed-off-by: Len Baker <len.baker@gmx.com>
-> > ---
-> >  fs/cifs/cifs_unicode.c | 9 ++-------
-> >  1 file changed, 2 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/fs/cifs/cifs_unicode.c b/fs/cifs/cifs_unicode.c
-> > index 9bd03a231032..171ad8b42107 100644
-> > --- a/fs/cifs/cifs_unicode.c
-> > +++ b/fs/cifs/cifs_unicode.c
-> > @@ -358,14 +358,9 @@ cifs_strndup_from_utf16(const char *src, const int maxlen,
-> >               if (!dst)
-> >                       return NULL;
-> >               cifs_from_utf16(dst, (__le16 *) src, len, maxlen, codepage,
-> > -                            NO_MAP_UNI_RSVD);
-> > +                             NO_MAP_UNI_RSVD);
-> >       } else {
-> > -             len = strnlen(src, maxlen);
-> > -             len++;
-> > -             dst = kmalloc(len, GFP_KERNEL);
-> > -             if (!dst)
-> > -                     return NULL;
-> > -             strlcpy(dst, src, len);
-> > +             dst = kstrndup(src, maxlen, GFP_KERNEL);
-> >       }
-> >
-> >       return dst;
-> > --
-> > 2.25.1
-> >
+> Add a struct_group() for the spe registers so that memset() can correctly reason
+> about the size:
 >
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>    In function 'fortify_memset_chk',
+>        inlined from 'restore_user_regs.part.0' at arch/powerpc/kernel/signal_32.c:539:3:
+>>> include/linux/fortify-string.h:195:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>      195 |    __write_overflow_field();
+>          |    ^~~~~~~~~~~~~~~~~~~~~~~~
 >
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/powerpc/include/asm/processor.h | 6 ++++--
+>  arch/powerpc/kernel/signal_32.c      | 6 +++---
+>  2 files changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+> index f348e564f7dd..05dc567cb9a8 100644
+> --- a/arch/powerpc/include/asm/processor.h
+> +++ b/arch/powerpc/include/asm/processor.h
+> @@ -191,8 +191,10 @@ struct thread_struct {
+>  	int		used_vsr;	/* set if process has used VSX */
+>  #endif /* CONFIG_VSX */
+>  #ifdef CONFIG_SPE
+> -	unsigned long	evr[32];	/* upper 32-bits of SPE regs */
+> -	u64		acc;		/* Accumulator */
+> +	struct_group(spe,
+> +		unsigned long	evr[32];	/* upper 32-bits of SPE regs */
+> +		u64		acc;		/* Accumulator */
+> +	);
+>  	unsigned long	spefscr;	/* SPE & eFP status */
+>  	unsigned long	spefscr_last;	/* SPEFSCR value on last prctl
+>  					   call or trap return */
+> diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
+> index 0608581967f0..77b86caf5c51 100644
+> --- a/arch/powerpc/kernel/signal_32.c
+> +++ b/arch/powerpc/kernel/signal_32.c
+> @@ -532,11 +532,11 @@ static long restore_user_regs(struct pt_regs *regs,
+>  	regs_set_return_msr(regs, regs->msr & ~MSR_SPE);
+>  	if (msr & MSR_SPE) {
+>  		/* restore spe registers from the stack */
+> -		unsafe_copy_from_user(current->thread.evr, &sr->mc_vregs,
+> -				      ELF_NEVRREG * sizeof(u32), failed);
+> +		unsafe_copy_from_user(&current->thread.spe, &sr->mc_vregs,
+> +				      sizeof(current->thread.spe), failed);
+
+This makes me nervous, because the ABI is that we copy ELF_NEVRREG *
+sizeof(u32) bytes, not whatever sizeof(current->thread.spe) happens to
+be.
+
+ie. if we use sizeof an inadvertent change to the fields in
+thread_struct could change how many bytes we copy out to userspace,
+which would be an ABI break.
+
+And that's not that hard to do, because it's not at all obvious that the
+size and layout of fields in thread_struct affects the user ABI.
+
+At the same time we don't want to copy the right number of bytes but
+the wrong content, so from that point of view using sizeof is good :)
+
+The way we handle it in ptrace is to have BUILD_BUG_ON()s to verify that
+things match up, so maybe we should do that here too.
+
+ie. add:
+
+	BUILD_BUG_ON(sizeof(current->thread.spe) == ELF_NEVRREG * sizeof(u32));
 
 
--- 
-Thanks,
+Not sure if you are happy doing that as part of this patch. I can always
+do it later if not.
 
-Steve
+cheers
