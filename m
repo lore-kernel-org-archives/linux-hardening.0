@@ -2,97 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA63C432BE
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 16:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46026C43216
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 17:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0504060EE4
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 16:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DADD6113D
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Aug 2021 17:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233778AbhHTQME (ORCPT
+        id S233780AbhHTRCg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Aug 2021 12:12:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47630 "EHLO mail.kernel.org"
+        Fri, 20 Aug 2021 13:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235634AbhHTQLx (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Aug 2021 12:11:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D147E61244;
-        Fri, 20 Aug 2021 16:11:12 +0000 (UTC)
+        id S232906AbhHTRCb (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 20 Aug 2021 13:02:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 906B0610CC;
+        Fri, 20 Aug 2021 17:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629475875;
-        bh=QtHvxXjD6Lxo5RaKara/Y2QvqxDS6ThacQcb91QFjy8=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=Cm8q6m2PtljGp+99RX9+Khsax5QCk8ma2yXHvKEh8RrOqdQSjmdQD2FlsFBC5lfPd
-         hDf7fZUEaGki4tlDFutbg5ca6FLVXGfPxHWaOBD4XhqmxjD5ePMawLPi6bmTjgSHcj
-         8DgCDWq5VV5OHyCMsJm5rGAQ/UScpbb7txwU6ToO1lJuBsRHIKQLuxTBS3CKRDxgkY
-         zbUcPhLTjOj0CWY3U2jpczxlNukz8oI1saQ7GA/O6BTQCSTo/8mMx+D4koYcDYvj2z
-         VhBU9Lvgl0wa0B8f5+WyDtCS3bjffcF1LCILvKtgT/qWDSeF7AMzYCV7dZ3fCz/Xm4
-         QMcNMCjdf825A==
-Date:   Fri, 20 Aug 2021 18:11:10 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input <linux-input@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, linux-staging@lists.linux.dev,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 55/63] HID: roccat: Use struct_group() to zero
- kone_mouse_event
-In-Reply-To: <202108200857.FA4AA13@keescook>
-Message-ID: <nycvar.YFH.7.76.2108201810560.15313@cbobk.fhfr.pm>
-References: <20210818060533.3569517-1-keescook@chromium.org> <20210818060533.3569517-56-keescook@chromium.org> <nycvar.YFH.7.76.2108201501510.15313@cbobk.fhfr.pm> <CAJr-aD=6-g7VRw2Hw0dhs+RrtA=Tago5r6Dukfw_gGPB0YYKOQ@mail.gmail.com>
- <nycvar.YFH.7.76.2108201725360.15313@cbobk.fhfr.pm> <202108200857.FA4AA13@keescook>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        s=k20201202; t=1629478913;
+        bh=xTkMIkuRn3ljkfmNjAERQ5Fr9C6u5cx0vFhpd6KNW+w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JRdx79AsJcT6Zc5Uyn3gZruJaO9Ff23MDu6d+m+7oqP29/sX9gQVEwXJ2AeQAvYc0
+         Gbj4drL6XtAfuPnBOpHkGOmJyLNU4axMlP6hU2K8yQWsZtoR/0udqGOoyr+e0SyeUL
+         h/zn0BeNrl5W1t/Rrzagp6aUcwFJ+sqt32KbWJMX0tMG95IPUZTAEy7D94QBIgjyG4
+         AWNc+N7kUZWfDUL2cpSqufQsJMDPeaOCmnNMrrLR5VXHkfbEL5KgGvvEUbS7XC130Y
+         pm71LqlZNBlv+F4oft0cZObRc89TZJ3pVd7rdL2OURCZ5lz4rRIBFIUnlAJ+gdXObM
+         KH2HThdFFtQHA==
+Date:   Fri, 20 Aug 2021 10:01:51 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     netdev@vger.kernel.org,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Leon Romanovsky <leon@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org,
+        bpf@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/3] net: Cleanups for FORTIFY_SOURCE
+Message-ID: <20210820100151.25f7ccd4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20210819202825.3545692-1-keescook@chromium.org>
+References: <20210819202825.3545692-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 20 Aug 2021, Kees Cook wrote:
-
-> > > > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > > > > field bounds checking for memset(), avoid intentionally writing across
-> > > > > neighboring fields.
-> > > > >
-> > > > > Add struct_group() to mark region of struct kone_mouse_event that should
-> > > > > be initialized to zero.
-> > > > >
-> > > > > Cc: Stefan Achatz <erazor_de@users.sourceforge.net>
-> > > > > Cc: Jiri Kosina <jikos@kernel.org>
-> > > > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > > > Cc: linux-input@vger.kernel.org
-> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > >
-> > > > Applied, thank you Kees.
-> > > >
-> > > 
-> > > Eek! No, this will break the build: struct_group() is not yet in the tree.
-> > > I can carry this with an Ack, etc.
-> > 
-> > I was pretty sure I saw struct_group() already in linux-next, but that was 
-> > apparently a vacation-induced brainfart, sorry. Dropping.
+On Thu, 19 Aug 2021 13:28:22 -0700 Kees Cook wrote:
+> Hi,
 > 
-> Oh, for these two patches, can I add your Acked-by while I carry them?
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.
+> 
+> These three changes have been living in my memcpy() series[1], but have
+> no external dependencies. It's probably better to have these go via
+> netdev.
 
-Yes, thanks, and sorry for the noise.
+Thanks.
 
--- 
-Jiri Kosina
-SUSE Labs
-
+Kalle, Saeed - would you like to take the relevant changes? Presumably
+they would get into net-next anyway by the time the merge window opens.
