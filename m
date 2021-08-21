@@ -2,133 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB93C4320A
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Aug 2021 17:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06E7C4320A
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Aug 2021 17:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B0D60FE8
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Aug 2021 17:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2B2611EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 Aug 2021 17:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231564AbhHURQt (ORCPT
+        id S232822AbhHURu4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 21 Aug 2021 13:16:49 -0400
-Received: from so254-9.mailgun.net ([198.61.254.9]:18533 "EHLO
-        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230347AbhHURQs (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 21 Aug 2021 13:16:48 -0400
+        Sat, 21 Aug 2021 13:50:56 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:19572 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232491AbhHURux (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 21 Aug 2021 13:50:53 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1629566169; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1629568213; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=MLXw2kAV40fUYj05/3m6TBzD/fnzpbaaqB86lj9wxNQ=;
- b=YvaqIFhphguctGSq56BKs4BmSIy/xNl4MbUloieGT9XE2aefVeVVpm/cULdo6m1+TB8TvUQC
- ZhRjmmW1j87ubspSAoId7Gjwb39JO0XautDjbZB/k80Fv072f1gxaVcx2jpuM/Ul64v21xYT
- zfGRy8pnKLYz0P5/siO2+tCxOYU=
-X-Mailgun-Sending-Ip: 198.61.254.9
+ Content-Type: Sender; bh=mC61AFoHpG912f7MDaS4x9Wn0S/T4Umgu8SemSLv6vQ=;
+ b=GMGDX3e5XBCdBkt3AnK5b2xUtaIwHjHSSrB19XWhAXuqQwNvzigJO6Ifk0oK4/M9yxt0a9lt
+ MWHNficXhWqymS2IFCB9PVNShd8gl0TCDz9kiPk/ro30a+ynLJ3wSo9KHHC2AD2yUn7E7BHT
+ ie0PlBQdnKhBL9RVs+c/DEttjbg=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 612134cb89fbdf3ffe78282a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 21 Aug 2021 17:15:55
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 61213cd5a2d1fbf62b3af4d2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 21 Aug 2021 17:50:13
  GMT
 Sender: kvalo=codeaurora.org@mg.codeaurora.org
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 398BEC43619; Sat, 21 Aug 2021 17:15:54 +0000 (UTC)
+        id D0717C43460; Sat, 21 Aug 2021 17:50:12 +0000 (UTC)
 Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AEA07C4360C;
-        Sat, 21 Aug 2021 17:15:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org AEA07C4360C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F51DC4338F;
+        Sat, 21 Aug 2021 17:50:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 7F51DC4338F
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/3] ipw2x00: Avoid field-overflowing memcpy()
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] mwifiex: usb: Replace one-element array with
+ flexible-array member
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20210819202825.3545692-2-keescook@chromium.org>
-References: <20210819202825.3545692-2-keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     netdev@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+In-Reply-To: <20210809211134.GA22488@embeddedor>
+References: <20210809211134.GA22488@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-Id: <20210821171554.398BEC43619@smtp.codeaurora.org>
-Date:   Sat, 21 Aug 2021 17:15:54 +0000 (UTC)
+Message-Id: <20210821175012.D0717C43460@smtp.codeaurora.org>
+Date:   Sat, 21 Aug 2021 17:50:12 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), memmove(), and memset(), avoid
-> intentionally writing across neighboring fields.
+> There is a regular need in the kernel to provide a way to declare having
+> a dynamically sized set of trailing elements in a structure. Kernel code
+> should always use “flexible array members”[1] for these cases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
 > 
-> libipw_read_qos_param_element() copies a struct libipw_info_element
-> into a struct libipw_qos_information_element, but is actually wanting to
-> copy into the larger struct libipw_qos_parameter_info (the contents of
-> ac_params_record[] is later examined). Refactor the routine to perform
-> centralized checks, and copy the entire contents directly (since the id
-> and len members match the elementID and length members):
+> This helps with the ongoing efforts to globally enable -Warray-bounds
+> and get us closer to being able to tighten the FORTIFY_SOURCE routines
+> on memcpy().
 > 
-> struct libipw_info_element {
->         u8 id;
->         u8 len;
->         u8 data[];
-> } __packed;
+> This issue was found with the help of Coccinelle and audited and fixed,
+> manually.
 > 
-> struct libipw_qos_information_element {
->         u8 elementID;
->         u8 length;
->         u8 qui[QOS_OUI_LEN];
->         u8 qui_type;
->         u8 qui_subtype;
->         u8 version;
->         u8 ac_info;
-> } __packed;
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
 > 
-> struct libipw_qos_parameter_info {
->         struct libipw_qos_information_element info_element;
->         u8 reserved;
->         struct libipw_qos_ac_parameter ac_params_record[QOS_QUEUE_NUM];
-> } __packed;
-> 
-> Cc: Stanislav Yakovlev <stas.yakovlev@gmail.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/109
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
 
-2 patches applied to wireless-drivers-next.git, thanks.
+Patch applied to wireless-drivers-next.git, thanks.
 
-d6b6d1bb80be ipw2x00: Avoid field-overflowing memcpy()
-92276c592a6b ray_cs: Split memcpy() to avoid bounds check warning
+090f2c5d3d07 mwifiex: usb: Replace one-element array with flexible-array member
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20210819202825.3545692-2-keescook@chromium.org/
+https://patchwork.kernel.org/project/linux-wireless/patch/20210809211134.GA22488@embeddedor/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
