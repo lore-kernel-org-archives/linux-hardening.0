@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B649C43214
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1802EC4338F
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5761B61051
+	by mail.kernel.org (Postfix) with ESMTP id 02E7761051
 	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231979AbhHVH5n (ORCPT
+        id S232113AbhHVH5o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Aug 2021 03:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45732 "EHLO
+        Sun, 22 Aug 2021 03:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231836AbhHVH5j (ORCPT
+        with ESMTP id S231843AbhHVH5j (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Sun, 22 Aug 2021 03:57:39 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F54C061760
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB04C061756
         for <linux-hardening@vger.kernel.org>; Sun, 22 Aug 2021 00:56:59 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id j10-20020a17090a94ca00b00181f17b7ef7so3808521pjw.2
+Received: by mail-pg1-x530.google.com with SMTP id s11so13649103pgr.11
         for <linux-hardening@vger.kernel.org>; Sun, 22 Aug 2021 00:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=esTuixCLLKpApTRPX2HCFeqFboPKiGroJFfFu+WSZ+c=;
-        b=GKUtY8ZrZ4YxyomQrw3mctoYe3dAP1PnMS0oH7ETjsmOWcGnzH36Ggp0utlA9FaGJ1
-         u1cxfGaSuq85aAwt3PInT80bQRHWLJfRvEXw/TYYwmghCjwvNXBJgscwf+nt3Co9q1qS
-         ZxoYlFZa21Mv2qWzBdh2u0QB9kPUEQWehtXBo=
+        bh=/IK2hUcT/4MYA89svC69IqQzJMxj9iX8eWhKLXV32Iw=;
+        b=QCLdF+eD0anvEeWmalPSIHQDeFFhVXfkPNxoAL80wy2cfcL6ACoqSdB9gkksbW4ara
+         cUfJu5UBfqt9XyNRqvYrrwTAQ1GEBtmaHDiKfHYgEdDdFVCzLFgdXRmHOzKPfysJQzjS
+         z/xEGc3jiiIXY7kxxXwT+9TFBnlrpvOxikJ2E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=esTuixCLLKpApTRPX2HCFeqFboPKiGroJFfFu+WSZ+c=;
-        b=jORhFwhlFewvQZrONuG1o25pDeKjrvIoRFBMbja2ld0EuNlR3L+lb5Sk4y35R6uzQz
-         XgWR2yRFMVTFsP+kpv1xIjQrFnFnS2OMfVf/haxqOTqXjpYvY+HIIY6d53qE8tLCV6sA
-         lclv+iooVjaawbdbJK9wCnlY8De/TK0Cfk3tDe2REOD4RleFePV9ldPYFvN0/PggoVl3
-         edcNV4/87lYVfjZMn5vAA3jHfIBFwWNSlmnkveNrlfG/MWZiWNC6Turs8lEyaFSFliK2
-         /xndHfQ4a4sACvguAPkg34mB/y0A/ZmAqgtjzAqU69lcGzDdiKIpLI6oypJsknVUJJE8
-         boOg==
-X-Gm-Message-State: AOAM533sbRbpAJF90DggLTdNtyMX0gpLzM0qjnFNiBgBNcq+5WDtashx
-        4qOApPrQaLO9HleiJR/mLsX1vw==
-X-Google-Smtp-Source: ABdhPJwo5ELpZ0YQPq/qVUPXhIWu/ybHgv13O9nHqnr1ED+Mg4kLOwRM3DlYKffNYyExkgsEbtfP8w==
-X-Received: by 2002:a17:902:a40c:b029:12c:17cf:ab6f with SMTP id p12-20020a170902a40cb029012c17cfab6fmr23344154plq.71.1629619018562;
+        bh=/IK2hUcT/4MYA89svC69IqQzJMxj9iX8eWhKLXV32Iw=;
+        b=svNVeWqMe9EOyJvWTqFpLzW9HKdix+7xpRme3ceeKZsCnaSfWSvDPpGxhOCZ4wqylw
+         OHKQ8Z+SM14HdcWN6bX4fP/piumZKZH/k7CXjLla6Aq+qbBdaNTucJRhCsHFQX68ZZMP
+         QARorFt5i1ebNrl9jOR37ojQqal9g+tbIKieQ81iDib2+0DH2HNc3C6417o+xBa+93Ng
+         hFPW0igmzjz0hUaNZeiTjf4KNrCn00C9BK2nSmIAOorAADLeYPSOTDDRZ/Tndz3zt9No
+         IyZBkDm8HKd6OgcgWzF1Gxd476N6mZFkFuvLjMCqdy9ZW5k8m/invvFOuwK78xo6byzt
+         laPg==
+X-Gm-Message-State: AOAM532/EQmsHOUFIyEdGF8unxRMNKon4OA2ux05cTC5bkVx2n1RAPo2
+        offb4PCAkkszPuadxI/VsGecNA==
+X-Google-Smtp-Source: ABdhPJzq+TtZMZSw8dHF+lSpjwFHFLC/dgieYhWajSzCVBQ6JialEzTQyJ9NmX8gtFmU5viJM2uayw==
+X-Received: by 2002:a63:5604:: with SMTP id k4mr26801500pgb.363.1629619018842;
         Sun, 22 Aug 2021 00:56:58 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x19sm12550691pfo.40.2021.08.22.00.56.56
+        by smtp.gmail.com with ESMTPSA id m28sm14880372pgl.9.2021.08.22.00.56.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 22 Aug 2021 00:56:57 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -63,421 +63,123 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Bart Van Assche <bvanassche@acm.org>,
         David Gow <davidgow@google.com>, linux-mm@kvack.org,
         clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: [PATCH for-next 20/25] fortify: Add compile-time FORTIFY_SOURCE tests
-Date:   Sun, 22 Aug 2021 00:51:17 -0700
-Message-Id: <20210822075122.864511-21-keescook@chromium.org>
+Subject: [PATCH for-next 19/25] fortify: Allow strlen() and strnlen() to pass compile-time known lengths
+Date:   Sun, 22 Aug 2021 00:51:16 -0700
+Message-Id: <20210822075122.864511-20-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210822075122.864511-1-keescook@chromium.org>
 References: <20210822075122.864511-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=14487; h=from:subject; bh=d6cDtDi6tN5v08m75LtOJYNhyRaS100VqVCmwytOPcA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhIgH5ERUpR7c+mr4L29WRtM/FRs2vNUIC5P2B2Vhn t9DCo3uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSIB+QAKCRCJcvTf3G3AJqHbEA CvBOupzpzAqKpudZfOWXmv6P7Rp4Ydmmt21tYPMRTgrUXM0kUkrpQYgJwUIIK6lDPhndiIS0pjsxZO adadaKlLyh1ZAo3I1qLdrxNgl9iEeTiB9yLXVJB8i+1dCVnppO6AesG77zl2Fvku+4mtZzeHvqZV0a n+sF2GLTt0s/mT30JCo3yktg9egOrws4a7ltpSDjNe4PY4kL4VSD501QjGvkJxiacFMJUb8HWBu9IV W/zGJ6til24TARTtvOXxTvOc1WI8uk2FKUToOA6pRJEaM+IICKp/YBJ0jWM8DFyZtuCcKbEtY8uaCr 4yDE7VTOED9w7uSvCOIod5JGQFxKHUmRZ8W0+LiP/YAoF8fGoQI2wnpsujy18ATF40cdjYNZOXkve6 STYbwV0Go/BCiMT75p8TVboQJzQeuJEMw+MkqGSw1SE0Y92ysetyTv+P9pOfDZGiNTB7qsgH+MuQDl ylRzlYqiYAHETYMDuEkICUmfpxZxVq5aZCGsfznDFeijK+aAeFENs6L7U+QS/s85C70WRsPdU6SVoS giWJzqZf25zLjEd1T0AHLCA5z3LFlJyG9prGFIGoslQyAmpOLWO/0bnLPnd5Y2NIbJ/6CHwtKybd9X P02jcYFpzKpayUTPgY2SzN71CYpawRiaELNkz+YBPxx+sJCnsEXzZsdx2S6g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4037; h=from:subject; bh=A8Geo8n4i5qwpvkI4vHxNJg+9VAd1dz9Zyf2I1wPWkI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhIgH41/syAnC8eDuJXMCDQbQtT/FS9k5h9kcLncy9 eJedf0qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSIB+AAKCRCJcvTf3G3AJrn9D/ 9w5dThNsyCdRB28y4gKpDDLcvUjRa1Q7oKkwUtwYdV4cfAf+oyY6FWe+T3MEuQEGGcOExyAmym8iuM YdmWCH662e/XOVtgNQqcXFcLIOs0PWUTdV1Ps7VotgZMQFC2oVwakzruXHCfkyrKUEtcR5z0CILGRn t8zpD6TGNmD40Ks+KA3xAF4dpBjzIzL5Z/Sbix2dA6CwwEOedcVhEoOZkwefsdAqsCRIDrsxe46uhR yTqT1Py3Ztyo4HBf5/fq0ZvpqMNknPbP2I9+yxFrBfP2wJDCZcS7MR2x7q/USsg4Jm4oUzdL4M869d XaY4fTLBn0Skhh1lYpQRY7tw0HAru9lWcfYHIwQpzINLpSk4Gtcnik3fND1lF7OcQSnu/HmTyRBWes Pw83R50BMTQ8a/vjGbbbKml6GSvKB+UsGwvFTPgRD6xN71rN8D8YCvPxS+12ubmM+cTDFHZ/BX0QuD lMXeN2s9Zzs584Jq/4VOo/4f6vtSgmd2BOwzfyyDo+eYNHIPxS4YFZGaxGjcxgp9Tqz6cnc+5iHa1s 9lIm/i+0pU3Q0IcYwzFXrhkrNCarXCgQ8jI+7+dMIxsDfQQBkh+kv4HVXAM7bqjhArAiqt5J+w+QSP jotniJxsBv+glaPCKkmwkAM/MdceVn/RgSpZqz9gbeHZz+aD8fXSw7K9N+FQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-While the run-time testing of FORTIFY_SOURCE is already present in
-LKDTM, there is no testing of the expected compile-time detections. In
-preparation for correctly supporting FORTIFY_SOURCE under Clang, adding
-additional FORTIFY_SOURCE defenses, and making sure FORTIFY_SOURCE
-doesn't silently regress with GCC, introduce a build-time test suite that
-checks each expected compile-time failure condition.
-
-As this is relatively backwards from standard build rules in the
-sense that a successful test is actually a compile _failure_, create
-a wrapper script to check for the correct errors, and wire it up as
-a dummy dependency to lib/string.o, collecting the results into a log
-file artifact.
+Under CONFIG_FORTIFY_SOURCE, it is possible for the compiler to perform
+strlen() and strnlen() at compile-time when the string size is known.
+This is required to support compile-time overflow checking in strlcpy().
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- lib/.gitignore                                |  2 +
- lib/Makefile                                  | 33 +++++++++++
- lib/test_fortify/read_overflow-memchr.c       |  5 ++
- lib/test_fortify/read_overflow-memchr_inv.c   |  5 ++
- lib/test_fortify/read_overflow-memcmp.c       |  5 ++
- lib/test_fortify/read_overflow-memscan.c      |  5 ++
- lib/test_fortify/read_overflow2-memcmp.c      |  5 ++
- lib/test_fortify/read_overflow2-memcpy.c      |  5 ++
- lib/test_fortify/read_overflow2-memmove.c     |  5 ++
- lib/test_fortify/test_fortify.h               | 35 +++++++++++
- lib/test_fortify/write_overflow-memcpy.c      |  5 ++
- lib/test_fortify/write_overflow-memmove.c     |  5 ++
- lib/test_fortify/write_overflow-memset.c      |  5 ++
- lib/test_fortify/write_overflow-strcpy-lit.c  |  5 ++
- lib/test_fortify/write_overflow-strcpy.c      |  5 ++
- lib/test_fortify/write_overflow-strlcpy-src.c |  5 ++
- lib/test_fortify/write_overflow-strlcpy.c     |  5 ++
- lib/test_fortify/write_overflow-strncpy-src.c |  5 ++
- lib/test_fortify/write_overflow-strncpy.c     |  5 ++
- lib/test_fortify/write_overflow-strscpy.c     |  5 ++
- scripts/test_fortify.sh                       | 59 +++++++++++++++++++
- 21 files changed, 214 insertions(+)
- create mode 100644 lib/test_fortify/read_overflow-memchr.c
- create mode 100644 lib/test_fortify/read_overflow-memchr_inv.c
- create mode 100644 lib/test_fortify/read_overflow-memcmp.c
- create mode 100644 lib/test_fortify/read_overflow-memscan.c
- create mode 100644 lib/test_fortify/read_overflow2-memcmp.c
- create mode 100644 lib/test_fortify/read_overflow2-memcpy.c
- create mode 100644 lib/test_fortify/read_overflow2-memmove.c
- create mode 100644 lib/test_fortify/test_fortify.h
- create mode 100644 lib/test_fortify/write_overflow-memcpy.c
- create mode 100644 lib/test_fortify/write_overflow-memmove.c
- create mode 100644 lib/test_fortify/write_overflow-memset.c
- create mode 100644 lib/test_fortify/write_overflow-strcpy-lit.c
- create mode 100644 lib/test_fortify/write_overflow-strcpy.c
- create mode 100644 lib/test_fortify/write_overflow-strlcpy-src.c
- create mode 100644 lib/test_fortify/write_overflow-strlcpy.c
- create mode 100644 lib/test_fortify/write_overflow-strncpy-src.c
- create mode 100644 lib/test_fortify/write_overflow-strncpy.c
- create mode 100644 lib/test_fortify/write_overflow-strscpy.c
- create mode 100644 scripts/test_fortify.sh
+ include/linux/fortify-string.h | 47 ++++++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 11 deletions(-)
 
-diff --git a/lib/.gitignore b/lib/.gitignore
-index 5e7fa54c4536..e5e217b8307b 100644
---- a/lib/.gitignore
-+++ b/lib/.gitignore
-@@ -4,3 +4,5 @@
- /gen_crc32table
- /gen_crc64table
- /oid_registry_data.c
-+/test_fortify.log
-+/test_fortify/*.log
-diff --git a/lib/Makefile b/lib/Makefile
-index 5efd1b435a37..bd17c2bf43e1 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -360,3 +360,36 @@ obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
- obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index a3cb1d9aacce..e232a63fd826 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -10,6 +10,18 @@ void __read_overflow(void) __compiletime_error("detected read beyond size of obj
+ void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
+ void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
  
- obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
++#define __compiletime_strlen(p)	({		\
++	size_t ret = (size_t)-1;			\
++	size_t p_size = __builtin_object_size(p, 1);	\
++	if (p_size != (size_t)-1) {			\
++		size_t p_len = p_size - 1;		\
++		if (__builtin_constant_p(p[p_len]) &&	\
++		    p[p_len] == '\0')			\
++			ret = __builtin_strlen(p);	\
++	}						\
++	ret;						\
++})
 +
-+# FORTIFY_SOURCE compile-time behavior tests
-+TEST_FORTIFY_SRCS = $(wildcard $(srctree)/$(src)/test_fortify/*-*.c)
-+TEST_FORTIFY_LOGS = $(patsubst $(srctree)/$(src)/%.c, %.log, $(TEST_FORTIFY_SRCS))
-+TEST_FORTIFY_LOG = test_fortify.log
+ #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+ extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
+ extern int __underlying_memcmp(const void *p, const void *q, __kernel_size_t size) __RENAME(memcmp);
+@@ -60,21 +72,31 @@ extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(st
+ __FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
+ {
+ 	size_t p_size = __builtin_object_size(p, 1);
+-	__kernel_size_t ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
++	size_t p_len = __compiletime_strlen(p);
++	size_t ret;
 +
-+quiet_cmd_test_fortify = TEST    $@
-+      cmd_test_fortify = $(CONFIG_SHELL) $(srctree)/scripts/test_fortify.sh \
-+			$< $@ "$(NM)" $(CC) $(c_flags) \
-+			$(call cc-disable-warning,fortify-source)
-+
-+targets += $(TEST_FORTIFY_LOGS)
-+clean-files += $(TEST_FORTIFY_LOGS)
-+clean-files += $(addsuffix .o, $(TEST_FORTIFY_LOGS))
-+$(obj)/test_fortify/%.log: $(src)/test_fortify/%.c \
-+			   $(src)/test_fortify/test_fortify.h \
-+			   $(srctree)/include/linux/fortify-string.h \
-+			   $(srctree)/scripts/test_fortify.sh \
-+			   FORCE
-+	$(call if_changed,test_fortify)
-+
-+quiet_cmd_gen_fortify_log = GEN     $@
-+      cmd_gen_fortify_log = cat </dev/null $(filter-out FORCE,$^) 2>/dev/null > $@ || true
-+
-+targets += $(TEST_FORTIFY_LOG)
-+clean-files += $(TEST_FORTIFY_LOG)
-+$(obj)/$(TEST_FORTIFY_LOG): $(addprefix $(obj)/, $(TEST_FORTIFY_LOGS)) FORCE
-+	$(call if_changed,gen_fortify_log)
-+
-+# Fake dependency to trigger the fortify tests.
-+ifeq ($(CONFIG_FORTIFY_SOURCE),y)
-+$(obj)/string.o: $(obj)/$(TEST_FORTIFY_LOG)
-+endif
-diff --git a/lib/test_fortify/read_overflow-memchr.c b/lib/test_fortify/read_overflow-memchr.c
-new file mode 100644
-index 000000000000..2743084b32af
---- /dev/null
-+++ b/lib/test_fortify/read_overflow-memchr.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memchr(small, 0x7A, sizeof(small) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/read_overflow-memchr_inv.c b/lib/test_fortify/read_overflow-memchr_inv.c
-new file mode 100644
-index 000000000000..b26e1f1bc217
---- /dev/null
-+++ b/lib/test_fortify/read_overflow-memchr_inv.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memchr_inv(small, 0x7A, sizeof(small) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/read_overflow-memcmp.c b/lib/test_fortify/read_overflow-memcmp.c
-new file mode 100644
-index 000000000000..d5d301ff64ef
---- /dev/null
-+++ b/lib/test_fortify/read_overflow-memcmp.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memcmp(small, large, sizeof(small) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/read_overflow-memscan.c b/lib/test_fortify/read_overflow-memscan.c
-new file mode 100644
-index 000000000000..c1a97f2df0f0
---- /dev/null
-+++ b/lib/test_fortify/read_overflow-memscan.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memscan(small, 0x7A, sizeof(small) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/read_overflow2-memcmp.c b/lib/test_fortify/read_overflow2-memcmp.c
-new file mode 100644
-index 000000000000..c6091e640f76
---- /dev/null
-+++ b/lib/test_fortify/read_overflow2-memcmp.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memcmp(large, small, sizeof(small) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/read_overflow2-memcpy.c b/lib/test_fortify/read_overflow2-memcpy.c
-new file mode 100644
-index 000000000000..07b62e56cf16
---- /dev/null
-+++ b/lib/test_fortify/read_overflow2-memcpy.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memcpy(large, instance.buf, sizeof(large))
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/read_overflow2-memmove.c b/lib/test_fortify/read_overflow2-memmove.c
-new file mode 100644
-index 000000000000..34edfab040a3
---- /dev/null
-+++ b/lib/test_fortify/read_overflow2-memmove.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memmove(large, instance.buf, sizeof(large))
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/test_fortify.h b/lib/test_fortify/test_fortify.h
-new file mode 100644
-index 000000000000..d22664fff197
---- /dev/null
-+++ b/lib/test_fortify/test_fortify.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#include <linux/kernel.h>
-+#include <linux/printk.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+
-+void do_fortify_tests(void);
-+
-+#define __BUF_SMALL	16
-+#define __BUF_LARGE	32
-+struct fortify_object {
-+	int a;
-+	char buf[__BUF_SMALL];
-+	int c;
-+};
-+
-+#define LITERAL_SMALL "AAAAAAAAAAAAAAA"
-+#define LITERAL_LARGE "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-+const char small_src[__BUF_SMALL] = LITERAL_SMALL;
-+const char large_src[__BUF_LARGE] = LITERAL_LARGE;
-+
-+char small[__BUF_SMALL];
-+char large[__BUF_LARGE];
-+struct fortify_object instance;
-+size_t size;
-+
-+void do_fortify_tests(void)
-+{
-+	/* Normal initializations. */
-+	memset(&instance, 0x32, sizeof(instance));
-+	memset(small, 0xA5, sizeof(small));
-+	memset(large, 0x5A, sizeof(large));
-+
-+	TEST;
-+}
-diff --git a/lib/test_fortify/write_overflow-memcpy.c b/lib/test_fortify/write_overflow-memcpy.c
-new file mode 100644
-index 000000000000..3b3984e428fb
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-memcpy.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memcpy(instance.buf, large_src, sizeof(large_src))
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-memmove.c b/lib/test_fortify/write_overflow-memmove.c
-new file mode 100644
-index 000000000000..640437c3b3e0
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-memmove.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memmove(instance.buf, large_src, sizeof(large_src))
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-memset.c b/lib/test_fortify/write_overflow-memset.c
-new file mode 100644
-index 000000000000..36e34908cfb3
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-memset.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	memset(instance.buf, 0x5A, sizeof(large_src))
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-strcpy-lit.c b/lib/test_fortify/write_overflow-strcpy-lit.c
-new file mode 100644
-index 000000000000..51effb3e50f9
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-strcpy-lit.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	strcpy(small, LITERAL_LARGE)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-strcpy.c b/lib/test_fortify/write_overflow-strcpy.c
-new file mode 100644
-index 000000000000..84f1c56a64c8
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-strcpy.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	strcpy(small, large_src)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-strlcpy-src.c b/lib/test_fortify/write_overflow-strlcpy-src.c
-new file mode 100644
-index 000000000000..91bf83ebd34a
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-strlcpy-src.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	strlcpy(small, large_src, sizeof(small) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-strlcpy.c b/lib/test_fortify/write_overflow-strlcpy.c
-new file mode 100644
-index 000000000000..1883db7c0cd6
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-strlcpy.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	strlcpy(instance.buf, large_src, sizeof(instance.buf) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-strncpy-src.c b/lib/test_fortify/write_overflow-strncpy-src.c
-new file mode 100644
-index 000000000000..8dcfb8c788dd
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-strncpy-src.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	strncpy(small, large_src, sizeof(small) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-strncpy.c b/lib/test_fortify/write_overflow-strncpy.c
-new file mode 100644
-index 000000000000..b85f079c815d
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-strncpy.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	strncpy(instance.buf, large_src, sizeof(instance.buf) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-strscpy.c b/lib/test_fortify/write_overflow-strscpy.c
-new file mode 100644
-index 000000000000..38feddf377dc
---- /dev/null
-+++ b/lib/test_fortify/write_overflow-strscpy.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#define TEST	\
-+	strscpy(instance.buf, large_src, sizeof(instance.buf) + 1)
-+
-+#include "test_fortify.h"
-diff --git a/scripts/test_fortify.sh b/scripts/test_fortify.sh
-new file mode 100644
-index 000000000000..622c7a0b15e5
---- /dev/null
-+++ b/scripts/test_fortify.sh
-@@ -0,0 +1,59 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-only
-+set -e
-+
-+# Argument 1: Source file to build.
-+IN="$1"
-+shift
-+# Extract just the filename for error messages below.
-+FILE="${IN##*/}"
-+# Extract the function name for error messages below.
-+FUNC="${FILE#*-}"
-+FUNC="${FUNC%%-*}"
-+FUNC="${FUNC%%.*}"
-+# Extract the symbol to test for in build/symbol test below.
-+WANT="__${FILE%%-*}"
-+
-+# Argument 2: Where to write the build log.
-+OUT="$1"
-+shift
-+TMP="${OUT}.tmp"
-+
-+# Argument 3: Path to "nm" tool.
-+NM="$1"
-+shift
-+
-+# Remaining arguments are: $(CC) $(c_flags)
-+
-+# Clean up temporary file at exit.
-+__cleanup() {
-+	rm -f "$TMP"
-+}
-+trap __cleanup EXIT
-+
-+status=
-+# Attempt to build a source that is expected to fail with a specific warning.
-+if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
-+	# If the build succeeds, either the test has failed or the
-+	# warning may only happen at link time (Clang). In that case,
-+	# make sure the expected symbol is unresolved in the symbol list.
-+	# If so, FORTIFY is working for this case.
-+	if ! $NM -A "$OUT".o | grep -m1 "\bU ${WANT}$" >>"$TMP" ; then
-+		status="warning: unsafe ${FUNC}() usage lacked '$WANT' symbol in $IN"
-+	fi
-+else
-+	# If the build failed, check for the warning in the stderr (gcc).
-+	if ! grep -q -m1 "error:.*\b${WANT}'" "$TMP" ; then
-+		status="warning: unsafe ${FUNC}() usage lacked '$WANT' warning in $IN"
-+	fi
-+fi
-+
-+if [ -n "$status" ]; then
-+	# Report on failure results, including compilation warnings.
-+	echo "$status" | tee "$OUT" >&2
-+	cat "$TMP" | tee -a "$OUT" >&2
-+else
-+	# Report on good results, and save any compilation output to log.
-+	echo "ok: unsafe ${FUNC}() usage correctly detected with '$WANT' in $IN" >"$OUT"
-+	cat "$TMP" >>"$OUT"
-+fi
++	/* We can take compile-time actions when maxlen is const. */
++	if (__builtin_constant_p(maxlen) && p_len != (size_t)-1) {
++		/* If p is const, we can use its compile-time-known len. */
++		if (maxlen >= p_size)
++			return p_len;
++	}
+ 
++	/* Do no check characters beyond the end of p. */
++	ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+ 	if (p_size <= ret && maxlen != ret)
+ 		fortify_panic(__func__);
+ 	return ret;
+ }
+ 
++/* defined after fortified strnlen to reuse it. */
+ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+ {
+ 	__kernel_size_t ret;
+ 	size_t p_size = __builtin_object_size(p, 1);
+ 
+-	/* Work around gcc excess stack consumption issue */
+-	if (p_size == (size_t)-1 ||
+-		(__builtin_constant_p(p[p_size - 1]) && p[p_size - 1] == '\0'))
++	/* Give up if we don't know how large p is. */
++	if (p_size == (size_t)-1)
+ 		return __underlying_strlen(p);
+ 	ret = strnlen(p, p_size);
+ 	if (p_size <= ret)
+@@ -86,24 +108,27 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+ extern size_t __real_strlcpy(char *, const char *, size_t) __RENAME(strlcpy);
+ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
+ {
+-	size_t ret;
+ 	size_t p_size = __builtin_object_size(p, 1);
+ 	size_t q_size = __builtin_object_size(q, 1);
++	size_t q_len;	/* Full count of source string length. */
++	size_t len;	/* Count of characters going into destination. */
+ 
+ 	if (p_size == (size_t)-1 && q_size == (size_t)-1)
+ 		return __real_strlcpy(p, q, size);
+-	ret = strlen(q);
+-	if (size) {
+-		size_t len = (ret >= size) ? size - 1 : ret;
+-
+-		if (__builtin_constant_p(len) && len >= p_size)
++	q_len = strlen(q);
++	len = (q_len >= size) ? size - 1 : q_len;
++	if (__builtin_constant_p(size) && __builtin_constant_p(q_len) && size) {
++		/* Write size is always larger than destintation. */
++		if (len >= p_size)
+ 			__write_overflow();
++	}
++	if (size) {
+ 		if (len >= p_size)
+ 			fortify_panic(__func__);
+ 		__underlying_memcpy(p, q, len);
+ 		p[len] = '\0';
+ 	}
+-	return ret;
++	return q_len;
+ }
+ 
+ /* defined after fortified strnlen to reuse it */
 -- 
 2.30.2
 
