@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCB1C43214
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32FEC4338F
 	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0530F61266
+	by mail.kernel.org (Postfix) with ESMTP id 9DF9C61051
 	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231811AbhHVH5w (ORCPT
+        id S232833AbhHVH5x (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Aug 2021 03:57:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
+        Sun, 22 Aug 2021 03:57:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231932AbhHVH5n (ORCPT
+        with ESMTP id S231940AbhHVH5n (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Sun, 22 Aug 2021 03:57:43 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BB2C0613D9
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661ADC061796
         for <linux-hardening@vger.kernel.org>; Sun, 22 Aug 2021 00:57:00 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id x16so12599420pfh.2
+Received: by mail-pg1-x532.google.com with SMTP id e7so13647024pgk.2
         for <linux-hardening@vger.kernel.org>; Sun, 22 Aug 2021 00:57:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ph4GT+kwYLxKYCnHgj0jmviVrrZnOYP9VDlVxWdpZQQ=;
-        b=cbLTkI8FGlMZoWwhmEL31Z1PpldZ0bP1X2vFQGCguwY5ox7lY/NOROJg1Xo/BU8tS/
-         dTs5W1L6oA+/2K1K+Tx4FfqCmeih9PwnXsX9lmumaLgQ3WuL9MkoBNqvAUkXzifIUUa+
-         GJGdLE7kOjtc8r9IN3SzhvqM4bH7FMBRKuB9c=
+        bh=hSMMgZw7/2olmGwk+x9hLUDcbTdJzqluz+oi39a5oaM=;
+        b=IBY/Ab1jTqOxNATsWUpsmSxONXTQq2Ys6gb1+Vyxa8Lpbog138B9bqIQgjgqYQbCAy
+         Au0vGoYwvkwjmd/JfcVLueZEasVH4PU5lYaXM7S83ecygMUinu7K8Zq1MrpNBh3GCN+p
+         l3bxNibyZlNWMuffpyWPrCb1ABH1473Nbupzo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ph4GT+kwYLxKYCnHgj0jmviVrrZnOYP9VDlVxWdpZQQ=;
-        b=jD46KloBT9prPcF1d3yWoYMXXRX/puxoGuzjTcWcuAVVJLNtK0XxnfWPMxTpWdQrbG
-         swCdRFgc8rbNlW7KIsyuhTcjzGpZg/dffpxUNcv9wuGGN0vgDK05zo9rdGGo/9Pv0jEs
-         Xia4dJXpKaHhgH+VSQWK2TaHnqB5vAjvGoZPjHaSaG+DyivzjIR/Jjrdot+C0omUGgo4
-         c77PZz1ZPDxqTTsvXgoq7yx13G0UL7J4/B/hxmh8mLkrdcLMyN3YCfdpNEoRiIYUJ7DP
-         ULsaMI6ut6pkMWXcGpOwnmso8wXSdRkSJaqCxvXFXEbB6Y9wWYqYfyTb0Vh80CjuLv+j
-         ragg==
-X-Gm-Message-State: AOAM533knyRA9bceGZtF1M4PYQKWWrCtwKI8qP/u99YFEnMCcnGcmXfS
-        YzmUWi2TOldCP2OVaVEjgWx5pw==
-X-Google-Smtp-Source: ABdhPJzlbbguhPCOwVVseo2aHiBc5K1TMiBPy0saNT0fZdfylNZQrj8879LHDAnvJwM3IAaZ+bBpLw==
-X-Received: by 2002:a63:1e5c:: with SMTP id p28mr27011640pgm.89.1629619019738;
-        Sun, 22 Aug 2021 00:56:59 -0700 (PDT)
+        bh=hSMMgZw7/2olmGwk+x9hLUDcbTdJzqluz+oi39a5oaM=;
+        b=YKLsZoz90NzhitBwf//7sQKd3B0lqAdtIxbaahSGV6mxPy6/fcx+N92xu0e35h0fTW
+         9qyHwG31Js7U7gievslkwf4N52LNdIQqegE5cUx7bNMYbv69GCyJXbdF5R1xCUSls2ng
+         Jq8M+lKPm10XoaEmQT/WhrO60LSIdozAVA4OwjSp+M/V7h9gSc6ZLV6XZuvfHc4uZ7nf
+         rMji7pqnuWDd0UMGF156MDKfWshM3W2xrotrgCLRf5SngiEK3Y22+2+hNpdUnr+2xMrN
+         1DFNnscbURXSSRc6kOdi//mjpRukeRzYaFR7F60JlDae9fKVZ5z/e1ltLpD+kiimHY4A
+         /wzQ==
+X-Gm-Message-State: AOAM530O23ZI9W3h2ziXkXZ3BHib8Q5QjEVvUAlabhBan+HJPd8ieMlM
+        +6SOpHXsSCwiXJI7W1oPizk0Ow==
+X-Google-Smtp-Source: ABdhPJyXbJowrE/7sid2FKC9cN6WVRYZytt653/I23EunqSwlP9yMw5BQyJG2TAm9RFSJrZx51VZrw==
+X-Received: by 2002:a05:6a00:213c:b0:3e1:c3af:134 with SMTP id n28-20020a056a00213c00b003e1c3af0134mr28070949pfj.5.1629619020040;
+        Sun, 22 Aug 2021 00:57:00 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u10sm12069888pfg.168.2021.08.22.00.56.56
+        by smtp.gmail.com with ESMTPSA id s2sm12005635pfw.193.2021.08.22.00.56.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 22 Aug 2021 00:56:57 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -63,89 +63,70 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Bart Van Assche <bvanassche@acm.org>,
         David Gow <davidgow@google.com>, linux-mm@kvack.org,
         clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: [PATCH for-next 15/25] fortify: Move remaining fortify helpers into fortify-string.h
-Date:   Sun, 22 Aug 2021 00:51:12 -0700
-Message-Id: <20210822075122.864511-16-keescook@chromium.org>
+Subject: [PATCH for-next 18/25] fortify: Prepare to improve strnlen() and strlen() warnings
+Date:   Sun, 22 Aug 2021 00:51:15 -0700
+Message-Id: <20210822075122.864511-19-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210822075122.864511-1-keescook@chromium.org>
 References: <20210822075122.864511-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3207; h=from:subject; bh=93UyhKlsXw7Mzj4VgqjxzznxP8lIxJTMZfvK+B8oq14=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhIgH3OYfO092ICV+ibgtBFhM/x4pDGM/xKvrIF7Y4 u9GhAY2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSIB9wAKCRCJcvTf3G3AJhbFEA CQLxyeDalkY9Ndqv9AMIJK+dR3dgTsvujTNcKxybFXMsPX5qQiLXzxnYHbnEZA6O9qCYtJGHDMqouc paqokzs2Ftz7Kl0kFYhdvYUcwRL9fpEtbKHFDkqhMKF8IiA+10Ii//mSexWDVUVLe8NK5LHKoLvbo8 48TXLu3uXiOmZGOYPlIBcvX5mpJM2AYJynN6+0hTg2FmNBd45C6pNtPNsA7DThyPl6jNJ+igNROeMK UThLUHiK5Q79iJFl6WC973bw5kezzGgJIdI6a1lppHVtLPsr9I5yI7GZkEjcPAq+rpaCy/gE1MmBci +SVMcWyeDoz5d99y1b0ctqGrX/yRGTZdo3lW8fTBk/iJ7UC9lp+SOtUYvqOIwMZbvntUVHp1kGEMuI xvTohIpbi6bWZ9S6I3OH9M2GFX31nnJkgChPBA+BqgBGC/ZCheCUWV+Ph5b2zeXaScEgHD81mhCo8P +O00gNJc7y/qHI9jPjraGc1ZlgsasPmF+GZDL0trnSJ7/PGjHQddLBdFytk8Mv3CyvxuCCG8JhqslH bHEx7JNqbiE8wYakA5zgtjc+KBMZyD8P4dBOVVGTMAMWshyQdGGbaeBIxwVrQBxq+2a/GOgpwpdKuv clylHOCpzbAArRCT+MmyC53n3BEbpzanfvZzsn7CJEuuvmmYH6WttlaIdD6Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1906; h=from:subject; bh=wvK3U1xEzLn7HBnl3TVbXk2P5Mye7QhLMp4JdS3JmN8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhIgH4jtivRrqM/8t8pX2BgfBDvrRaH9kWYRdFJy03 ZmaWqcKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSIB+AAKCRCJcvTf3G3AJl6KD/ 9ZeXY58Pb6asLkXbDN3ArZieQhAzcaOUkAzqG+27e2UGmpU0fknMzrGcr5+bkH2vEtiT4wNbDYkQq4 pZ6OZKutd6P6bu3+l+mKEmtVzf6KkiOK6TyJu8byh1zcL79cPXCfg8pQlRxXiNw9RFS166rGMNLxYZ nIEGonm/floTW9BuU4HFNu/TrNFbG3SJgO0nucUsT4WiBiLchgd5aWvp5Gwrv4sn923STbNDhw75NS 43aU65qAxXTi7xVG/NA05RHFoPMpNcl8avEQOoC0yj4euWk9XBOOG8cUT1FrJMNzbSWDjOAx3/bM4v 0clrSucVbpwU/vo+jp9jqrVBhOTsTMe+8wfTYd++e+iKkMkWcWnv//tV/sjsZDhzvXa6H0+INFk1XL lpxEWUOQpYeNp2yhvPBG2mkdvFZiDBLLhr+L3bawbfVA3Bz5X2Qo7e4vQrSlPv0cegUmMFAVIUJWL/ /LioZcopshY+OJkRivbWBSt0y2S43LUmbf+LS8vD8ednSpZl/Dd8ZuWHxgO3SJc/2ByaujeQIdUPI/ BhgTHT8Enu0y2D/+PDRvmDd3WdSYPYc9dmbrkn7GDGz4NFQ/2ZFnWHLUARALIAj8mKIoM4tyL/IlMb Wssv9xgg1JIxTzM7sy2rjvrfS8sqTwDadM85qSaEWTOpykmLWQrNYVa+tR7Q==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When commit a28a6e860c6c ("string.h: move fortified functions definitions
-in a dedicated header.") moved the fortify-specific code, some helpers
-were left behind. Move the remaining fortify-specific helpers into
-fortify-string.h so they're together where they're used. This requires
-that any FORTIFY helper function prototypes be conditionally built to
-avoid "no prototype" warnings. Additionally removes unused helpers.
+In order to have strlen() use fortified strnlen() internally, swap their
+positions in the source. Doing this as part of later changes makes
+review difficult, so reoroder it here; no code changes.
 
-Acked-by: Francis Laniel <laniel_francis@privacyrequired.com>
+Cc: Francis Laniel <laniel_francis@privacyrequired.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/fortify-string.h | 7 +++++++
- include/linux/string.h         | 9 ---------
- lib/string_helpers.c           | 2 ++
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ include/linux/fortify-string.h | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index c1be37437e77..7e67d02764db 100644
+index 68bc5978d916..a3cb1d9aacce 100644
 --- a/include/linux/fortify-string.h
 +++ b/include/linux/fortify-string.h
-@@ -2,6 +2,13 @@
- #ifndef _LINUX_FORTIFY_STRING_H_
- #define _LINUX_FORTIFY_STRING_H_
+@@ -56,6 +56,17 @@ __FORTIFY_INLINE char *strcat(char *p, const char *q)
+ 	return p;
+ }
  
-+#define __FORTIFY_INLINE extern __always_inline __attribute__((gnu_inline))
-+#define __RENAME(x) __asm__(#x)
++extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
++__FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
++{
++	size_t p_size = __builtin_object_size(p, 1);
++	__kernel_size_t ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
 +
-+void fortify_panic(const char *name) __noreturn __cold;
-+void __read_overflow(void) __compiletime_error("detected read beyond size of object (1st parameter)");
-+void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
-+void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
- 
- #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
- extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
-diff --git a/include/linux/string.h b/include/linux/string.h
-index b48d2d28e0b1..9473f81b9db2 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -249,15 +249,6 @@ static inline const char *kbasename(const char *path)
- 	return tail ? tail + 1 : path;
- }
- 
--#define __FORTIFY_INLINE extern __always_inline __attribute__((gnu_inline))
--#define __RENAME(x) __asm__(#x)
--
--void fortify_panic(const char *name) __noreturn __cold;
--void __read_overflow(void) __compiletime_error("detected read beyond size of object passed as 1st parameter");
--void __read_overflow2(void) __compiletime_error("detected read beyond size of object passed as 2nd parameter");
--void __read_overflow3(void) __compiletime_error("detected read beyond size of object passed as 3rd parameter");
--void __write_overflow(void) __compiletime_error("detected write beyond size of object passed as 1st parameter");
--
- #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
- #include <linux/fortify-string.h>
- #endif
-diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-index e9433caab217..1274f45ffaf4 100644
---- a/lib/string_helpers.c
-+++ b/lib/string_helpers.c
-@@ -879,9 +879,11 @@ char *strreplace(char *s, char old, char new)
- }
- EXPORT_SYMBOL(strreplace);
- 
-+#ifdef CONFIG_FORTIFY_SOURCE
- void fortify_panic(const char *name)
++	if (p_size <= ret && maxlen != ret)
++		fortify_panic(__func__);
++	return ret;
++}
++
+ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
  {
- 	pr_emerg("detected buffer overflow in %s\n", name);
- 	BUG();
+ 	__kernel_size_t ret;
+@@ -71,17 +82,6 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+ 	return ret;
  }
- EXPORT_SYMBOL(fortify_panic);
-+#endif /* CONFIG_FORTIFY_SOURCE */
+ 
+-extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
+-__FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
+-{
+-	size_t p_size = __builtin_object_size(p, 1);
+-	__kernel_size_t ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+-
+-	if (p_size <= ret && maxlen != ret)
+-		fortify_panic(__func__);
+-	return ret;
+-}
+-
+ /* defined after fortified strlen to reuse it */
+ extern size_t __real_strlcpy(char *, const char *, size_t) __RENAME(strlcpy);
+ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
 -- 
 2.30.2
 
