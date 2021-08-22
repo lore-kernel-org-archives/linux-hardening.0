@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380B8C4320A
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBCEC43216
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECB561242
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6630F61220
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 07:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231674AbhHVH5h (ORCPT
+        id S231841AbhHVH5j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Aug 2021 03:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45706 "EHLO
+        Sun, 22 Aug 2021 03:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231147AbhHVH5h (ORCPT
+        with ESMTP id S231753AbhHVH5i (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 22 Aug 2021 03:57:37 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C3FC06175F
-        for <linux-hardening@vger.kernel.org>; Sun, 22 Aug 2021 00:56:56 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id e15so8369749plh.8
-        for <linux-hardening@vger.kernel.org>; Sun, 22 Aug 2021 00:56:56 -0700 (PDT)
+        Sun, 22 Aug 2021 03:57:38 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7751C061757
+        for <linux-hardening@vger.kernel.org>; Sun, 22 Aug 2021 00:56:57 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id a5so8384001plh.5
+        for <linux-hardening@vger.kernel.org>; Sun, 22 Aug 2021 00:56:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QvdBkUpptZhXKvwrMm3zs3qjx3Jw+Diy7BkjH6c2x9o=;
-        b=fg7ZhYLvxUugb8iVfWfC92pGeyt+/r98pwZwtJjW7D5m9+btWV+mAQjVNa2DeXw4uZ
-         TBCIVYhAM3WflYWa48L2s/VrNdwxu7CILWfDneyuRYST6Ezk3jJitCQAyBVZW7Ex0udr
-         QdVPoFRKhE/kfvccRSPKXi6X4fAb/9Tcqr5Xk=
+        bh=KeRymW7dpjbPF0p3gK+nxzTW84+DhIw7kOz+lQywMZ0=;
+        b=GtqbJu9GeClCLuX9kKSu6AhRGxUvezMUT8vQo9fmVoFBFpFdDwLQeC9w7zVGHzwZVs
+         fm2cFLchpTTPvW/jKqNYwBKtia6/BEPXlsXB2QK4X/r/kVuB3K05kOGWQ0AItq116wzt
+         5YEVQMp/JqDaE2i4NCCQOiVmK7J78FfNN3xTA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QvdBkUpptZhXKvwrMm3zs3qjx3Jw+Diy7BkjH6c2x9o=;
-        b=JQNyKDabYxKkPYwlDB6mMouqCsFvmJEM9NRt/9IkcTr2uxMNRo/FJNVCCPSfDIBwf+
-         rsT9zIeCVrcSy5Gvb37n3AusTh8lI3YTpPqAvw5URUU5w+YkDZv8xKnaTZjnB5IQGPqZ
-         A/ADvg2VfLLXi1rzdceiYDMdiKBkxUPM7BOQzNmhU0MFfmNDiRSTarVRR8wB/1CVbZ10
-         KWMQUWfhzPpP82wsFyYrU922JDj2sY+ivZfsWsGFBBJXa6A3U5LCoCTPPIpPrwx08/jS
-         GH/FocVLOA24y9NxxStcxozDYFOnRvCpIX77XFpooqFYPebozm5k2raKTj7WIq6x4mj6
-         Zk4Q==
-X-Gm-Message-State: AOAM5314TTF/QPTJ4lcQtZiJKHhnORQYH1fhFm81K2p69aZZX05BHRhF
-        tKbdv0EtfcXG5qIbiZcZB5SQJQ==
-X-Google-Smtp-Source: ABdhPJz1nXhyYemKrw+6kLeSH+jeEvo0I7wavFPKVlcHjoh7EMzwLenW7bCSCiP8kEkvHvQIIQc1kg==
-X-Received: by 2002:a17:902:d2cd:b0:130:a7b7:3c8f with SMTP id n13-20020a170902d2cd00b00130a7b73c8fmr10580004plc.46.1629619016141;
-        Sun, 22 Aug 2021 00:56:56 -0700 (PDT)
+        bh=KeRymW7dpjbPF0p3gK+nxzTW84+DhIw7kOz+lQywMZ0=;
+        b=cPkv1bmAaPflPvJ7tdxPi7wLTzRZnFS+/e+FnZn0XhaKPxHF7gZzP+TP09rkQ4xy4F
+         qN9GyA0SBOZ4i/auQJWtW6xnsy3v24DGs2ZnyMZzZ8ChuSLsKqt9RwB3eya1iuh05ROq
+         nM4wb0VmcOOQBRrQc8fiVLCe7zD+Durj5EycHfZmEOHavFyAG5q7Svj0BdyDYka7zRS7
+         wmgyFN5VdMSm6CuSXBifY3jc+hpzjyIVS19p2k8BGZnTzgJc46UChe1efwnB2ezc6wZs
+         7Q+PGjFxJXkIZ0bwpHlD9AlG+o7FG5zufCKghgiJO24QYMYS+Fkb6jMk256hhnp4j09l
+         tYrw==
+X-Gm-Message-State: AOAM5304/GIexFjXbXQ+CnKa8SS17autHt61d8RYQJwmS+4nUi2MZ1ML
+        /iM5TFFUTDw8PWySxW5j7w1qL4Qlh+wZjw==
+X-Google-Smtp-Source: ABdhPJw5qqLxbeIMdz9bpb1faLEb3miaokOsGudL8vTF5FOOAvB47FOTI+E5A51WIiKfocd9oLdolA==
+X-Received: by 2002:a17:902:ed8d:b0:132:39c7:2e1b with SMTP id e13-20020a170902ed8d00b0013239c72e1bmr5655204plj.78.1629619017358;
+        Sun, 22 Aug 2021 00:56:57 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y62sm11996200pfg.88.2021.08.22.00.56.54
+        by smtp.gmail.com with ESMTPSA id e26sm12137313pfj.46.2021.08.22.00.56.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 22 Aug 2021 00:56:55 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -63,96 +63,62 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Bart Van Assche <bvanassche@acm.org>,
         David Gow <davidgow@google.com>, linux-mm@kvack.org,
         clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: [PATCH for-next 22/25] string.h: Introduce memset_after() for wiping trailing members/padding
-Date:   Sun, 22 Aug 2021 00:51:19 -0700
-Message-Id: <20210822075122.864511-23-keescook@chromium.org>
+Subject: [PATCH for-next 23/25] xfrm: Use memset_after() to clear padding
+Date:   Sun, 22 Aug 2021 00:51:20 -0700
+Message-Id: <20210822075122.864511-24-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210822075122.864511-1-keescook@chromium.org>
 References: <20210822075122.864511-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2741; h=from:subject; bh=E6gFtKPMaqY94NYGTcjgqzMn4Zg8efYnWFddeRIDocU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhIgH50IyFEulz6vf4MWlQ/Ezu82EvPp7pmwWKKNPw FQi+vpGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSIB+QAKCRCJcvTf3G3AJh3rEA CrFF/z6kOuE4E1nPr3TROjLRJGQjTLaabDuXR/aIm4UQKeKkoTwGA2+A4SqjMTq/+P5Ys7g2X4LT/W Z2l1Vk9U0SrRQPJl7vZYRJ+9O4qUs3Kf8Ny2bIVgxeZT2N0blFHjxagjdD8vAzrY3b1LssVIU5HLiQ CkTZwHf1BnUGyXWqlHau1Vtb3xdCMueRk/f0+dyoPkbCq9ZiKc0XgtZ5MOlzVE66BQLezYe3VZxDUH aDeSYCo7PVgr9pV36o86mUKSUXJWTQ74tdMd1P2VvIhlNEI+vIzBXIjvq2l/IC+Ia2/oqyD/PBLJJk RoXa16m2Lr5ydwZuU+5qMNSo8Cz5OcHc0iQS5x/zK4L2Y6i84HtrS2Ja/RoBQ4SawOGvwkqQMDWUhM tML3SJfr/6qBoVbM7j7oTKiWGwFiZkpavW0iPpwrFqTjTonEi3vdUzO/ahwHLs5uU8gEPP+nPovcfo wZ9AAvOWdDZeSU8i0x0zCI2Hiu5fGcmVETpSSG/F1WqZuQHz8KRI4ndkMy5COuwjY5DADDoBVXuei2 GDhIxOMqkO2jtycMsYYhPX4LOTHskAA/ikwrRY9YVN753cwclPR1h9ULCg29KZIvJfiQ4oFMPNQ49S SyWtCljmqAu2E43Fu6xl6RJf6H3Wn1D9Ei2FNzhed+0om1vGjS5eu9TtBUHg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1608; h=from:subject; bh=U7PaWYEfsXfIcToHk3c5jWu69loxq4nonTzrBaorlEM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhIgH5KReKo4xPiA+igvESV/+YjCKmaMo7h3r3peg5 oUkpUq6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSIB+QAKCRCJcvTf3G3AJm2UD/ 98c2p0Ikiqsfy0j09gDXjeb7uKt0hgg7w53Nm+FtEIpYiAbu2CuvI+bHrR+SD7yUMm1+vjr0vc4kcd kZF7jPP29ob7jRgTAFK21qeVCgV4H6OnLOuMGLybTf+p2Z+NTI5pBMwPKdPH1xsMWx+g1eOje4vvFl l0yXN7kbBmP1M+Ra6Ag+4zagN1Ev6Laj3DgeUP/bTFZ8EA7g5kpRr7c+geKPv1VVuyAcVJ+nep0Q/b KYL/q5ggAniSaDOdrr8b2MLWPZ1lrZQEI80Ou6KpNLFSwDdYwFWK250WDmwvSpUPsr5+YPkIapRC89 Jr4Ent2s1dBrTvzGdA/vNUbxWTBYFhYu1+7Ddch+R9FEjI0ePfXW7UhAoXszw1pxzSTd9u2wpyNzW1 i99sojhrSCSWj2+6efx7Ibsm/MPHcA8Ufy5Zd0YX5kjFwE2ZTgoY9FqOuPowQ4nPwXNOhi2ncSuJ49 +FHMc8nTHMmxpRxPcvv01N2GiFUy+iQiXXh9a65TVwmOuxSlOPlYfRUJQ2Gq8nzBOnfzodozrzRVNg mx56HetgdfRArbIMBbUaPP4/eP655rDJIJt9SCjxvLO+flWZkKsMn9hDOno6/nZGQcqqWhoaq1coCe FoDJiZU5nJHDzMdZhRBY57wuh+PEm24MXBWCaRW25xVtt1qVqUQbnw2Vyb0w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-A common idiom in kernel code is to wipe the contents of a structure
-after a given member. This is especially useful in places where there is
-trailing padding. These open-coded cases are usually difficult to read
-and very sensitive to struct layout changes. Introduce a new helper,
-memset_after() that takes the target struct instance, the byte to write,
-and the member name after which the zeroing should start.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memset(), avoid intentionally writing across
+neighboring fields.
 
-Additionally adds memset_startat() for wiping trailing members _starting_
-at a specific member instead of after a member, which is more readable
-in certain circumstances, but doesn't include any preceding padding.
+Clear trailing padding bytes using the new helper so that memset()
+doesn't get confused about writing "past the end" of the last struct
+member. There is no change to the resulting machine code.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/string.h | 17 +++++++++++++++++
- lib/test_memcpy.c      | 13 +++++++++++++
- 2 files changed, 30 insertions(+)
+ net/xfrm/xfrm_policy.c | 4 +---
+ net/xfrm/xfrm_user.c   | 2 +-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 9473f81b9db2..d593de2635ba 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -271,6 +271,23 @@ static inline void memcpy_and_pad(void *dest, size_t dest_len,
- 		memcpy(dest, src, dest_len);
- }
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 827d84255021..a21af241a2bb 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -2494,9 +2494,7 @@ static inline struct xfrm_dst *xfrm_alloc_dst(struct net *net, int family)
+ 	xdst = dst_alloc(dst_ops, NULL, 1, DST_OBSOLETE_NONE, 0);
  
-+/**
-+ * memset_after - Set a value after a struct member to the end of a struct
-+ *
-+ * @obj: Address of target struct instance
-+ * @v: Byte value to repeatedly write
-+ * @member: after which struct member to start writing bytes
-+ *
-+ * This is good for clearing padding following the given member.
-+ */
-+#define memset_after(obj, v, member)					\
-+({									\
-+	u8 *__ptr = (u8 *)(obj);					\
-+	typeof(v) __val = (v);						\
-+	memset(__ptr + offsetofend(typeof(*(obj)), member), __val,	\
-+	       sizeof(*(obj)) - offsetofend(typeof(*(obj)), member));	\
-+})
-+
- /**
-  * str_has_prefix - Test if a string has a given prefix
-  * @str: The string to test
-diff --git a/lib/test_memcpy.c b/lib/test_memcpy.c
-index ec546cec883e..3b485de8c885 100644
---- a/lib/test_memcpy.c
-+++ b/lib/test_memcpy.c
-@@ -215,6 +215,13 @@ static void memset_test(struct kunit *test)
- 			  0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
- 			},
- 	};
-+	struct some_bytes after = {
-+		.data = { 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x72,
-+			  0x72, 0x72, 0x72, 0x72, 0x72, 0x72, 0x72, 0x72,
-+			  0x72, 0x72, 0x72, 0x72, 0x72, 0x72, 0x72, 0x72,
-+			  0x72, 0x72, 0x72, 0x72, 0x72, 0x72, 0x72, 0x72,
-+			},
-+	};
- 	struct some_bytes dest = { };
- 	int count, value;
- 	u8 *ptr;
-@@ -245,6 +252,12 @@ static void memset_test(struct kunit *test)
- 	ptr += 8;
- 	memset(ptr++, value++, count++);
- 	compare("argument side-effects", dest, three);
-+
-+	/* Verify memset_after() */
-+	dest = control;
-+	memset_after(&dest, 0x72, three);
-+	compare("memset_after()", dest, after);
-+
- #undef TEST_OP
- }
+ 	if (likely(xdst)) {
+-		struct dst_entry *dst = &xdst->u.dst;
+-
+-		memset(dst + 1, 0, sizeof(*xdst) - sizeof(*dst));
++		memset_after(xdst, 0, u.dst);
+ 	} else
+ 		xdst = ERR_PTR(-ENOBUFS);
  
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index b47d613409b7..880d260541c9 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -2845,7 +2845,7 @@ static int build_expire(struct sk_buff *skb, struct xfrm_state *x, const struct
+ 	copy_to_user_state(x, &ue->state);
+ 	ue->hard = (c->data.hard != 0) ? 1 : 0;
+ 	/* clear the padding bytes */
+-	memset(&ue->hard + 1, 0, sizeof(*ue) - offsetofend(typeof(*ue), hard));
++	memset_after(ue, 0, hard);
+ 
+ 	err = xfrm_mark_put(skb, &x->mark);
+ 	if (err)
 -- 
 2.30.2
 
