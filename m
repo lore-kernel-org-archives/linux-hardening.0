@@ -2,105 +2,116 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06E7C4320A
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Aug 2021 17:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A484C4338F
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 05:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA2B2611EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 Aug 2021 17:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A95610FF
+	for <linux-hardening@archiver.kernel.org>; Sun, 22 Aug 2021 05:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232822AbhHURu4 (ORCPT
+        id S231153AbhHVFRD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 21 Aug 2021 13:50:56 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:19572 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232491AbhHURux (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 21 Aug 2021 13:50:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1629568213; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=mC61AFoHpG912f7MDaS4x9Wn0S/T4Umgu8SemSLv6vQ=;
- b=GMGDX3e5XBCdBkt3AnK5b2xUtaIwHjHSSrB19XWhAXuqQwNvzigJO6Ifk0oK4/M9yxt0a9lt
- MWHNficXhWqymS2IFCB9PVNShd8gl0TCDz9kiPk/ro30a+ynLJ3wSo9KHHC2AD2yUn7E7BHT
- ie0PlBQdnKhBL9RVs+c/DEttjbg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 61213cd5a2d1fbf62b3af4d2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 21 Aug 2021 17:50:13
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D0717C43460; Sat, 21 Aug 2021 17:50:12 +0000 (UTC)
-Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F51DC4338F;
-        Sat, 21 Aug 2021 17:50:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 7F51DC4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] mwifiex: usb: Replace one-element array with
- flexible-array member
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20210809211134.GA22488@embeddedor>
-References: <20210809211134.GA22488@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
+        Sun, 22 Aug 2021 01:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230153AbhHVFRA (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 22 Aug 2021 01:17:00 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 881F5C061575
+        for <linux-hardening@vger.kernel.org>; Sat, 21 Aug 2021 22:16:20 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id qe12-20020a17090b4f8c00b00179321cbae7so9968757pjb.2
+        for <linux-hardening@vger.kernel.org>; Sat, 21 Aug 2021 22:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=y8ajL1MXjnm98ftlu2xw9F3LVfgwHRHrIy4fib1NoNg=;
+        b=Y0a8GbxIDGsupMPfALs9c9spCnnTUj10GqcmI81qVhXcdsNXwx3+WXpuFT/OMEwdqV
+         ov72OppMgo1s3fFQNnWub4aPQ3g1ot25/8ftkZ5p3ZUdFTAy3eibMgeUHw1Ncik4DfoH
+         1fyvWtmEFxySeGpMWW3u1iMK9poENxq7thhvU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=y8ajL1MXjnm98ftlu2xw9F3LVfgwHRHrIy4fib1NoNg=;
+        b=DWN02ygDLRspyRw4NotiAy6Nl/5iPBy850ksOcIVnYSPc2kcK981KT7QeejK3sL682
+         lHEUnOa7RWPrHvyUOJPnS56gIZJlIGwhwHFSwlgYVnQ4v8EYw400++md3VZSTJQHMM1y
+         xTbOf7fenXhJQ68sWandLBSurt/DRRFgV9yEG2sNmQHyqrEpQa+/hxtTuTgwGA7hjamw
+         nBv9TzPXMCZtepZDT65zbCq1JMrAjyrkKuD3LKYZdVDjxyb7HAEzlqcXw/WtEx3Txdgx
+         EHLepUs22lvhicpLDLu0CopzTgQfwQbR3SyDiLzrKgyAiMICDOj+1McRDSU3nr7osGDh
+         ZxWw==
+X-Gm-Message-State: AOAM532/zplQEs+vKvJjpqZtazXKAjYWSJeh6sw2DxOtf6BIT9h6+qiX
+        AWzbk6n3cioYcGYIL3dfqDnVpA==
+X-Google-Smtp-Source: ABdhPJyR+NATVJLBLIhcM5YqAZh+Upqb5pIwMTUuXQGDWIR7A9ZoJQ38xuDUEW6TSdHtuwjl1NIx8w==
+X-Received: by 2002:a17:90a:5147:: with SMTP id k7mr11682056pjm.73.1629609380131;
+        Sat, 21 Aug 2021 22:16:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m194sm11771124pfd.58.2021.08.21.22.16.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Aug 2021 22:16:19 -0700 (PDT)
+Date:   Sat, 21 Aug 2021 22:16:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-Id: <20210821175012.D0717C43460@smtp.codeaurora.org>
-Date:   Sat, 21 Aug 2021 17:50:12 +0000 (UTC)
+        Leon Romanovsky <leon@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org,
+        bpf@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/3] net: Cleanups for FORTIFY_SOURCE
+Message-ID: <202108212215.35185C924B@keescook>
+References: <20210819202825.3545692-1-keescook@chromium.org>
+ <20210820100151.25f7ccd4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <87tujjt8d9.fsf@codeaurora.org>
+ <87eean9kby.fsf@tynnyri.adurom.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eean9kby.fsf@tynnyri.adurom.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+On Sat, Aug 21, 2021 at 01:13:37PM +0300, Kalle Valo wrote:
+> Kalle Valo <kvalo@codeaurora.org> writes:
+> 
+> > Jakub Kicinski <kuba@kernel.org> writes:
+> >
+> >> On Thu, 19 Aug 2021 13:28:22 -0700 Kees Cook wrote:
+> >>> Hi,
+> >>> 
+> >>> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> >>> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> >>> intentionally writing across neighboring fields.
+> >>> 
+> >>> These three changes have been living in my memcpy() series[1], but have
+> >>> no external dependencies. It's probably better to have these go via
+> >>> netdev.
+> >>
+> >> Thanks.
+> >>
+> >> Kalle, Saeed - would you like to take the relevant changes? Presumably
+> >> they would get into net-next anyway by the time the merge window opens.
+> >
+> > Ok, I'll take patch 1 to wireless-drivers-next.
+> 
+> Correction: I'll take patches 1 and 3 to wireless-drivers-next.
 
-> There is a regular need in the kernel to provide a way to declare having
-> a dynamically sized set of trailing elements in a structure. Kernel code
-> should always use “flexible array members”[1] for these cases. The older
-> style of one-element or zero-length arrays should no longer be used[2].
-> 
-> This helps with the ongoing efforts to globally enable -Warray-bounds
-> and get us closer to being able to tighten the FORTIFY_SOURCE routines
-> on memcpy().
-> 
-> This issue was found with the help of Coccinelle and audited and fixed,
-> manually.
-> 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/109
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-
-Patch applied to wireless-drivers-next.git, thanks.
-
-090f2c5d3d07 mwifiex: usb: Replace one-element array with flexible-array member
+Great; thanks!
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20210809211134.GA22488@embeddedor/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Kees Cook
