@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C099C4338F
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F160C4338F
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 068F76140B
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6698461423
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231622AbhHWRO0 (ORCPT
+        id S231788AbhHWRO2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Aug 2021 13:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
+        Mon, 23 Aug 2021 13:14:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231652AbhHWROU (ORCPT
+        with ESMTP id S231715AbhHWROX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Aug 2021 13:14:20 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D44C0617AD
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:36 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id ib9-20020a0562141c8900b003671c3a1243so7158867qvb.21
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:35 -0700 (PDT)
+        Mon, 23 Aug 2021 13:14:23 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB85EC0613CF
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:40 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id s206-20020a3745d70000b02903b9207abc7bso12332669qka.4
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=OjHgDJUvJmMOnMd0mi83Z9bddC5eVI/HUOS0aA/fCjo=;
-        b=Dna0EQXkdpMIYwRPENTuTtD45Xxz00+bPzyOn6DWxIcwL0q6aW6lkwtVlDnuMZuAEA
-         8sIkWePDkiji5yZon0dVb8HXmOr7mEzoHZ5lQQHdTzgZHGUhTEo6QEZ5jHCtKwjZa60J
-         uNEz1aSczSOjajbuJjU/0lZ4076zCEjFHCzb/GzyleOAAJDdTiLueqUl6x5XGftohdwu
-         U+8rspiV1W6jiMa8ujDzD710tDfqTvVPsz9/JR2Koyb14Kfwnn4SUA3EIPZ4b92ksJBL
-         iYBJb7esO6wqajz4QMQjRtUQg/vPUrnXPvvvgrq2KcZy+42G0jJwrxzNFIPxfUOLIkFT
-         QDMg==
+        bh=BYMhGy+epBtHbIYQT2/VbUiIkPl/Kv4Ems36NpeUGps=;
+        b=wT0V05nbcLtKte6uXnUlxE52FOtdLnLKCupQHGQRJf16S2rE9Ids9NA0gz3Qev9arc
+         k/a1BmTpNar/ew1KuYgFbWsa9Hd7abezUfV1EGIX9ItkLJlPMAtrIwBQm1SUyUfRBcvR
+         Xr+kamQphUmQtMBsy/tgLZtXd7i/pWvsYgWSlVO20GdhlNLif9AyfKvI72ySabnAk1AU
+         YQSTOlYLxjxC64U0Z8LllnN2Uf28waRqdV/5NjfXntrfjzJ5yDWPUyc7XJ6ViBnDUri0
+         erHfjBnjz9nZKsQTvtmmke2PwOpW7jBd0Ij27ONud4W+BXjk+auaDZp6zw3J1QJGv7NN
+         tG0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=OjHgDJUvJmMOnMd0mi83Z9bddC5eVI/HUOS0aA/fCjo=;
-        b=VgNREZueN1uAadatF4eTfdL+ODb7JaAAZhhg++BXEHLuF01XQjeR1eq0iE+weqPZjj
-         x7bd67lvY1CqcNvPomo57R70W8fDKK55pFlNJG4ItIqyGctxHyHREKJsCWIzW9JlKQnP
-         TtJUrPlUEObZz7Rvu9jhK+CnDM+dBOYwWupfA9dwm/nlLjvNt1h9SYVautmABvsgg1DR
-         OEpKoiRwHdifEbGQhkQAH0g4n6TWHQB2uhXcoOHPNQew5PQ6HgmT3KXd+r05dDZUOvxK
-         Q4/hGZs//lxxTxwuNzTWY4W0MNBvgK/gAe5AsClsGMKcmtoGEIPmsAzQ5ZXAWL3k9Zhr
-         E7NA==
-X-Gm-Message-State: AOAM530JV+mckudOkbeUEYYjul9ia2GcL0ZBm0h7xg+frgZH3uCdtFfD
-        XjPPiIWjhm4JRuRdxEtvvN/v+r95vziUkYOdfWA=
-X-Google-Smtp-Source: ABdhPJzi9cvrwOFBpM3xgvXo+JzAAlmiz1LkJnW74n84Ibws5mGYLA0Os3m+2on4AveQflOlFROtCJbTM/5knrZQjsg=
+        bh=BYMhGy+epBtHbIYQT2/VbUiIkPl/Kv4Ems36NpeUGps=;
+        b=diDQa2QgHAHkGtyVBhw0UEwgSu1GEbpY4gcEFUGN6Ko6ifxSJO66iT/g8am3KbJfCi
+         YaD53aQwhgmO1gkaJhh62K45vP6kwazeuFcPXI5c+lg2Ro9WjknlCA6cQyAZuSHTIUCh
+         ILE9jT+0K71WxtUMtcB846iDsnFkWtKFg2j00MNt0QG29Nun7iv0u5YRsUiEcETZFiZY
+         UA7Hc7ZEyNLGhK+fDEaYT9JnzCV0T9n9OfE7uKiSpt0JqhX86ku2MBiFFK4XXmdScx3b
+         lSDHZcIWB3NXDeyiIlgdUuxhCpu4NOWGUHQX7gmWURMtUkp+fpSD06CY/J6MIxPuN/Ny
+         +Q0g==
+X-Gm-Message-State: AOAM531fJft6kNq5eHzzwNfL4nT9xc0AqYpRVNssD/kCuTOZUxqSzn0R
+        R0U8n1Q5l9mIKG09ZYiL0BZB5SIVpDG+Ty6RktY=
+X-Google-Smtp-Source: ABdhPJwiVYYbpwCgNO4jaCxSi5gp0M4KQZKNZEPiQ9kbx3ytaOBPYGiiWpIefhbqdr1fOsij3cYx8walgEP31P0VulA=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:cc48:aa6a:f4ec:7d19])
- (user=samitolvanen job=sendgmr) by 2002:a05:6214:1142:: with SMTP id
- b2mr34567008qvt.0.1629738815199; Mon, 23 Aug 2021 10:13:35 -0700 (PDT)
-Date:   Mon, 23 Aug 2021 10:13:10 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6214:2623:: with SMTP id
+ gv3mr11237178qvb.9.1629738820095; Mon, 23 Aug 2021 10:13:40 -0700 (PDT)
+Date:   Mon, 23 Aug 2021 10:13:12 -0700
 In-Reply-To: <20210823171318.2801096-1-samitolvanen@google.com>
-Message-Id: <20210823171318.2801096-7-samitolvanen@google.com>
+Message-Id: <20210823171318.2801096-9-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210823171318.2801096-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.rc2.250.ged5fa647cd-goog
-Subject: [PATCH v2 06/14] lkdtm: Use an opaque type for lkdtm_rodata_do_nothing
+Subject: [PATCH v2 08/14] x86/extable: Do not mark exception callback as CFI
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,54 +78,30 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use an opaque type for lkdtm_rodata_do_nothing to stop the compiler
-from generating a CFI jump table entry that jumps to .rodata.
+From: Kees Cook <keescook@chromium.org>
 
+The exception table entries are constructed out of a relative offset
+and point to the actual function, not the CFI table entry. For now,
+just mark the caller as not checking CFI. The failure is most visible
+at boot with CONFIG_DEBUG_RODATA_TEST=y.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- drivers/misc/lkdtm/lkdtm.h  | 2 +-
- drivers/misc/lkdtm/perms.c  | 2 +-
- drivers/misc/lkdtm/rodata.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/mm/extable.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 6a30b60519f3..90d92eb92c16 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -129,7 +129,7 @@ void lkdtm_REFCOUNT_TIMING(void);
- void lkdtm_ATOMIC_TIMING(void);
- 
- /* rodata.c */
--void lkdtm_rodata_do_nothing(void);
-+DECLARE_ASM_FUNC_SYMBOL(lkdtm_rodata_do_nothing);
- 
- /* usercopy.c */
- void __init lkdtm_usercopy_init(void);
-diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
-index 2dede2ef658f..fa2bd90bd8ee 100644
---- a/drivers/misc/lkdtm/perms.c
-+++ b/drivers/misc/lkdtm/perms.c
-@@ -151,7 +151,7 @@ void lkdtm_EXEC_VMALLOC(void)
- 
- void lkdtm_EXEC_RODATA(void)
- {
--	execute_location(lkdtm_rodata_do_nothing, CODE_AS_IS);
-+	execute_location((void *)lkdtm_rodata_do_nothing, CODE_AS_IS);
+diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+index e1664e9f969c..d150d4d12d53 100644
+--- a/arch/x86/mm/extable.c
++++ b/arch/x86/mm/extable.c
+@@ -155,6 +155,7 @@ enum handler_type ex_get_fault_handler_type(unsigned long ip)
+ 		return EX_HANDLER_OTHER;
  }
  
- void lkdtm_EXEC_USERSPACE(void)
-diff --git a/drivers/misc/lkdtm/rodata.c b/drivers/misc/lkdtm/rodata.c
-index baacb876d1d9..17ed0ad4e6ae 100644
---- a/drivers/misc/lkdtm/rodata.c
-+++ b/drivers/misc/lkdtm/rodata.c
-@@ -3,7 +3,7 @@
-  * This includes functions that are meant to live entirely in .rodata
-  * (via objcopy tricks), to validate the non-executability of .rodata.
-  */
--#include "lkdtm.h"
-+void lkdtm_rodata_do_nothing(void);
- 
- void noinstr lkdtm_rodata_do_nothing(void)
++__nocfi
+ int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
+ 		    unsigned long fault_addr)
  {
 -- 
 2.33.0.rc2.250.ged5fa647cd-goog
