@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1932DC4338F
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B249C432BE
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0333161440
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F2E61465
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231731AbhHWRO3 (ORCPT
+        id S231454AbhHWROg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Aug 2021 13:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
+        Mon, 23 Aug 2021 13:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231773AbhHWRO0 (ORCPT
+        with ESMTP id S231688AbhHWRO2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Aug 2021 13:14:26 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA55C0617A8
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:43 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id y185-20020a3764c20000b02903d2c78226ceso12291296qkb.6
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:43 -0700 (PDT)
+        Mon, 23 Aug 2021 13:14:28 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87DCBC06175F
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:45 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id m10-20020a25d40a000000b00598bbbf467dso6537574ybf.1
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=mey0v7exe5c+yBAN3SU9wb93KZCOv1Lxd2KHYNUz0Mk=;
-        b=pRDBRM0ZDSPHtwYk6vo2nEL4sl7uSQgEKF6lqCG9PRSUXW0+hY09NZKkepss+zOhJB
-         RZJ4OhpnIQe5VsAhZobgjkF8NjkXH/ic6yTt8/iS4ehrVTNLNP7dY0hxecAiBQKFHA56
-         bnHbtB8ONjGJv6HhgbciR0XXNOh6bBf0QPK9uszzpKLRjZlrmvIZMbpmmKtbZslPQBBN
-         FyjTNlMOMiSJZ8qLdOpjKIjsP7KRGEjKiLWJB59jeDiJtzwRiyA5FD9MKm73hAvItrif
-         tEBz/IgNIv9FMsrMbd7lmEwkbTBlOAnwi0bERDIorGb82NlUHbWpaVvH/5cTjjtwHvhi
-         ai6Q==
+        bh=vRXS84bbJsUYBdo6NrPKOtGxl8FaD7rd6BPrYrnkXmM=;
+        b=bIfEQab0ztkAIlL/xRfn6eVYhJL2L+v0DkKAC8N8G3UMfmdGyNTZYuZTCInyENzt1h
+         HQGcVJs2tfEjOA8KETf0IlsWZwd0kWg1SOECL5mxpeJQD4Y7+X3nzE57BjzOj8fEMSUM
+         mmF3qFDK4e9lIEXkiiHpg1ZFjI7/cjU7hkuKI7vehXhlq67DGHreEZ+ghgTmyMqUXNGf
+         fmKC4OWXelFPk6v8hAtJhSE2QnCts7WompYRJfoAU1BRx6J4VJlXDBBFFKdpai1Szyvc
+         1XlVAo3pc6wfat6tbEQk/sz9L+sUtpRFxpOB+zYCv88sDJ9O/WXmyM2oiWjh0/HUewH4
+         j6hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=mey0v7exe5c+yBAN3SU9wb93KZCOv1Lxd2KHYNUz0Mk=;
-        b=A3csxYT0imJhX9gMGVyGx9QLtPlB9EwjuIAu6F/5yaVfSm5xEd8qzL5OJ1+RnhnBAT
-         BIqjAsom1SdgE/IkhqmwXDk+OM17FvR67Tzr13A87xW0Rbqc8/IDixnYcROHZChc8hC3
-         MHK49x8rm4C4MGnAnFPuYKO94tALnnkyTito4RtFG2pG5mlysV1jFFPGPgicZCFEtKM8
-         vyvjpdNfcGU5EJaCxh+81b5pGxMNh+Gf1pf/w8CV1erMfgFG0zMf4Vu8tU1bTNRs48Oh
-         PqGmC7k4Df/M2EDgaKV3Me3zU93wlEJ+VRp2jkoEkHCIz2BrC8NT1QXMw4IozPkQGWYL
-         FCbg==
-X-Gm-Message-State: AOAM5304phIRVO3V+Y1KVhokpiWXthictDyirzNWQ5ZEIiltsZS/Opa7
-        7LUBmdCzMmgxq7mYditerdYSCgTfIhLKrbQ6niY=
-X-Google-Smtp-Source: ABdhPJx7GCdUxAsclqml/3nj1pOEX1o+zNUpaZiH2IQlvhX2sRoNhrD4ck7AleYysi5ixwnD13R/KRhwqUQ/nL0Kk3M=
+        bh=vRXS84bbJsUYBdo6NrPKOtGxl8FaD7rd6BPrYrnkXmM=;
+        b=oaF9+zvxUHugKuyxlPB41zqd3X/dMZsE6Bpwomzhq/pj6leCuU8tv0pwSXkpVVQGyh
+         2vQ8+Upsg2kmLRyle0Yw7lWnBPuoTrfBGgUHXXSgjxVmOF1DZWnMk8xcpISxfqnFSxUa
+         R+noWs/XKZRCadhumZT//If6pXhqVS+BtYe6QXn07KeCb+0reVDgZ0sWLkIKp5V6n8wh
+         L0VG3yubA8PXIQUnt0I6B30iuA5eU94Llxz0wDz41BXI9MYjrJ5bkxuv44DHQVhF13ly
+         2xpQQ/pML2AdnzvRxPs7CcM4HnB1EOxjNu7LgrQhoo2ZgZg49bqe/5TR+6XmtwdpeGJ/
+         Ui0A==
+X-Gm-Message-State: AOAM530H4hTvEBbbidDjVzSlpKtidUm3ASOgkTQKcx/6eThWKW4fUMGl
+        hcB0zbueXhv8AcX7OCZFcmg1/SQ2df+PgvKqte4=
+X-Google-Smtp-Source: ABdhPJyjtX9cXBMbDaPB4aYRDFhd+jDhg4GxlUeGGU8eWpH4EUhCxiyYud6++fKmMaIrRAYPpL5TYTaxYN7lCR1LEHk=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:cc48:aa6a:f4ec:7d19])
- (user=samitolvanen job=sendgmr) by 2002:a05:6214:e4e:: with SMTP id
- o14mr33977238qvc.46.1629738822531; Mon, 23 Aug 2021 10:13:42 -0700 (PDT)
-Date:   Mon, 23 Aug 2021 10:13:13 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:9a84:: with SMTP id
+ s4mr45327262ybo.416.1629738824799; Mon, 23 Aug 2021 10:13:44 -0700 (PDT)
+Date:   Mon, 23 Aug 2021 10:13:14 -0700
 In-Reply-To: <20210823171318.2801096-1-samitolvanen@google.com>
-Message-Id: <20210823171318.2801096-10-samitolvanen@google.com>
+Message-Id: <20210823171318.2801096-11-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210823171318.2801096-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.rc2.250.ged5fa647cd-goog
-Subject: [PATCH v2 09/14] x86/purgatory: Disable CFI
+Subject: [PATCH v2 10/14] x86, relocs: Ignore __typeid__ relocations
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,26 +78,42 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
+From: Kees Cook <keescook@chromium.org>
 
+The __typeid__* symbols aren't actually relocations, so they can be
+ignored during relocation generation.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/purgatory/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/tools/relocs.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 95ea17a9d20c..ed46ad780130 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -31,7 +31,7 @@ KCOV_INSTRUMENT := n
- # These are adjustments to the compiler flags used for objects that
- # make up the standalone purgatory.ro
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index 9ba700dc47de..fbc57cc00914 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -48,6 +48,7 @@ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
+ 	"^(xen_irq_disable_direct_reloc$|"
+ 	"xen_save_fl_direct_reloc$|"
+ 	"VDSO|"
++	"__typeid__|"
+ 	"__crc_)",
  
--PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
-+PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel $(CC_FLAGS_CFI)
- PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss -g0
- PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
- PURGATORY_CFLAGS += -fno-stack-protector
+ /*
+@@ -808,6 +809,12 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
+ 			    symname);
+ 		break;
+ 
++	case R_X86_64_8:
++		if (!shn_abs || !is_reloc(S_ABS, symname))
++			die("Non-whitelisted %s relocation: %s\n",
++				rel_type(r_type), symname);
++		break;
++
+ 	case R_X86_64_32:
+ 	case R_X86_64_32S:
+ 	case R_X86_64_64:
 -- 
 2.33.0.rc2.250.ged5fa647cd-goog
 
