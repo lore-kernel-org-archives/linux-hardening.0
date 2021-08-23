@@ -8,61 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D1CC4320A
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F615C4338F
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4A7613D3
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A276140B
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231398AbhHWROO (ORCPT
+        id S231670AbhHWROV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Aug 2021 13:14:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
+        Mon, 23 Aug 2021 13:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231185AbhHWROO (ORCPT
+        with ESMTP id S231430AbhHWROQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Aug 2021 13:14:14 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55344C061575
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:31 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id q13-20020a0ce9cd000000b003608f06491fso12841384qvo.18
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:31 -0700 (PDT)
+        Mon, 23 Aug 2021 13:14:16 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64D6C061764
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:33 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id r15-20020a056902154f00b00598b87f197cso6757353ybu.13
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Y1wIG3cVmpd4xa85rFblMllcZ1GkvMzjnLxgyrp1PBQ=;
-        b=UR5N0BFHElSUkBSQFS7IRnWg9ye3xqrC5uWs8Q58L6k3/X1XKRNrA0b6ehi0z1pnnh
-         ukv2NIX/yGhQHUQBIEnDv1+cIrOjwfFZSQ637+UhTmgo+C6lB8E4467KEsleaRyVuf8l
-         LPm0vmMrIjXRI57/Cv/NSIuPQrsNU2YNe+BpyduzKpebsO4w79niuksN+bCJ7kh4+OXF
-         gJIXP9xP7N6dZ5l1Y5lsws/L8BqOlJZx7r9BC2EaX5KnKiaZWGztILBnY2O1xs/dtFDa
-         JcRF7rBXaSKygF4C7yECJgsmhIToViDgDVHmiSMFeskY7MXNZ7If7xfI+TUGfPl3JQNh
-         KLYw==
+        bh=k0Gm7u8L5tSmKVW+xlotholGa6yE9iw0uF/tHV2p52o=;
+        b=TefnZXsw1ovvynSraGlA1+As/q+9xVcCWyqpliHonvceW0VLYAx3sHV+wdbEQip7lT
+         iM5QchjhV6rqHETKec7PF3/RImK94FljwLXzqSwhmxMMZzWqBgPU3RmtvbGsvFX/kQcs
+         IjWfGPaxtlqqYBA9FY4jYD7leJMhO2e7VEtxJDdEy53fDXTlZwiXZfqufANNMF8Aqn1q
+         HGuqbVqmWADNt5bqD5J7zQZYtnljw7wx2N723QjvftDxWCSDxGmV0j9LaVB+hGANmDIq
+         ylQRAbOgPHhcp4GqoR60aXUyGlMriolzJODHNkhV2QmBQNNJbYvJQSiRBxVckimJGDkz
+         yKDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Y1wIG3cVmpd4xa85rFblMllcZ1GkvMzjnLxgyrp1PBQ=;
-        b=WbDjm0ldLWULJsPQbKGD4yj+6iMvo2k4VROigXVUIUGj6W7anEw+YHCHUZduNeeAqs
-         4QkWpnvNBjPkglI67GGTXS/zDe01XNJ7tZX08xUL9fZSR5m/ZM0yMwT4TsbtJ2R4RcIX
-         bQTZ1Qxpu2Q6aHQue71O7glI7UO3ctcTt3PFraqEIPT6Cm9rcf/8gzMmaF62Q8/lbUeY
-         D0eeWW+Bz4kHXEJMfaMC7czhErsKFIIBNlwwOcmPo0JCBmJGZ7AI5JmDm81oAv05T6zB
-         meunOv4wMq/z8ceqTI9AirL7kqbZiUrXJmN3Exi2Ntah250yJUpB2z78UIhjNs8bu6YR
-         S+8w==
-X-Gm-Message-State: AOAM532l6XMRueRUdxzPJZaiHBM3D6lju1aqnjnTotwcwgUPxkzJboZY
-        mLSDkpM0SN77ybaaaB85ZDx19Jr/ACz7RYnOwKw=
-X-Google-Smtp-Source: ABdhPJziyOvP+QWBDtSJeOoqGBazQWys1QijMPFocO7Y1Epuyme1bD5gJNucc356VALDlG5Je49i62tUqSF88NWcLqc=
+        bh=k0Gm7u8L5tSmKVW+xlotholGa6yE9iw0uF/tHV2p52o=;
+        b=U3iJe+2WPqqKGiFY/aR3QkQjru8gkPPCNUiK84ZVVSS2/hHV3tAgoeFFvAr64SaQhY
+         VY2zppC22Y5z5JuH2dMDwl8h2XqwEFT5DUmHVmUQCfHrLi7xdUd6UNxnhgbWWGbcY3Hm
+         kgWNV7IWKlK7NW68eoNyi3oOhRMpsTgHdKWlXUqclXDMSuz3K6KGMSk12ScZ4ixbRBoS
+         YqBI7Xo3HBfIOjsqZyeUKD1stfzLA2n3Lz2s24rMUi8h85+BtVTBu6+MgjQBujoTxFcg
+         svd9OXQf4Y3ntjGI6slTRdaFw6Nq33bB43iZ0uFNtEOlPUNruGG/Lh87Iik43AHW4sEv
+         rwhA==
+X-Gm-Message-State: AOAM531wbYokxfbXmARkq4votZ4kfxuCho+RkOigoC8c8g7Ufd4pUaM+
+        pmhJTEba2k6r8NJ/ZtB3aG8XwFGGdDAzKidFYlM=
+X-Google-Smtp-Source: ABdhPJyx/GQSOWYSoc1Zbdbw/tpxR1dF+HznFS7w34jPMlo0rvu3YqqIMH8KRsr/ZDfW4oKqcK49kJ0r/p8Q4qeFtaM=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:cc48:aa6a:f4ec:7d19])
- (user=samitolvanen job=sendgmr) by 2002:a05:6214:29cd:: with SMTP id
- gh13mr33753444qvb.25.1629738810535; Mon, 23 Aug 2021 10:13:30 -0700 (PDT)
-Date:   Mon, 23 Aug 2021 10:13:08 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:2b85:: with SMTP id
+ r127mr44980616ybr.232.1629738812933; Mon, 23 Aug 2021 10:13:32 -0700 (PDT)
+Date:   Mon, 23 Aug 2021 10:13:09 -0700
 In-Reply-To: <20210823171318.2801096-1-samitolvanen@google.com>
-Message-Id: <20210823171318.2801096-5-samitolvanen@google.com>
+Message-Id: <20210823171318.2801096-6-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210823171318.2801096-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.rc2.250.ged5fa647cd-goog
-Subject: [PATCH v2 04/14] ftrace: Use an opaque type for functions not
- callable from C
+Subject: [PATCH v2 05/14] lkdtm: Disable UNSET_SMEP with CFI
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -79,33 +78,27 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, the compiler changes function references to point
-to the CFI jump table. As ftrace_call, ftrace_regs_call, and mcount_call
-are not called from C, use DECLARE_ASM_FUNC_SYMBOL to declare them.
+Disable the UNSET_SMEP test when CONFIG_CFI_CLANG is enabled as
+jumping to a call gadget would always trip CFI instead.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- include/linux/ftrace.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/misc/lkdtm/bugs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index a69f363b61bf..6fdfbcc14608 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -578,9 +578,10 @@ extern void ftrace_replace_code(int enable);
- extern int ftrace_update_ftrace_func(ftrace_func_t func);
- extern void ftrace_caller(void);
- extern void ftrace_regs_caller(void);
--extern void ftrace_call(void);
--extern void ftrace_regs_call(void);
--extern void mcount_call(void);
-+
-+DECLARE_ASM_FUNC_SYMBOL(ftrace_call);
-+DECLARE_ASM_FUNC_SYMBOL(ftrace_regs_call);
-+DECLARE_ASM_FUNC_SYMBOL(mcount_call);
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 88c218a9f8b3..bc3e54e580ab 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -366,7 +366,7 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
  
- void ftrace_modify_all_code(int command);
- 
+ void lkdtm_UNSET_SMEP(void)
+ {
+-#if IS_ENABLED(CONFIG_X86_64) && !IS_ENABLED(CONFIG_UML)
++#if IS_ENABLED(CONFIG_X86_64) && !IS_ENABLED(CONFIG_UML) && !IS_ENABLED(CONFIG_CFI_CLANG)
+ #define MOV_CR4_DEPTH	64
+ 	void (*direct_write_cr4)(unsigned long val);
+ 	unsigned char *insn;
 -- 
 2.33.0.rc2.250.ged5fa647cd-goog
 
