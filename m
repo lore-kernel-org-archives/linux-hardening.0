@@ -2,143 +2,180 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18962C4338F
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 14:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3960EC4338F
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF272613AC
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 14:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E85613A8
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229950AbhHWOYE (ORCPT
+        id S230484AbhHWROF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Aug 2021 10:24:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57210 "EHLO
+        Mon, 23 Aug 2021 13:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229743AbhHWOYE (ORCPT
+        with ESMTP id S229977AbhHWROE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Aug 2021 10:24:04 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C85C061757
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 07:23:21 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d17so10216946plr.12
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 07:23:21 -0700 (PDT)
+        Mon, 23 Aug 2021 13:14:04 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA11C061757
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:22 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id w2-20020a3794020000b02903b54f40b442so12358869qkd.0
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=WtsUEsqMTxeu0ASY9ZGldGWSKXK/Bt2mBtS4t1K1jok=;
-        b=Twno2VV6Mfpk9mFt1zef4nXG4k9+uk+hiqK3q7qn6xzeS8fqb9Sd0RsRYk+AW49Sup
-         kwtvnA0rQxXUqxgPFcN5FFmZ1DHdc6mRIoougB08bPum5ctx5mGdYBLMBllI20ZQwywX
-         GsosFTC7bkpcR7C+TuJ+4VIi+eYChTNMCf2uA=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=TzNwsac26TTE64TPkO8Zw+SslAPN+OSf9Wllga1ByII=;
+        b=MWCB6WvxwB6F+zLlU+bdbowGxXUtB63H+yJwpmJyNAmu5GmajAS54irNfnIfCvocsu
+         eZb3WO9dtpFHSozTZNbYUFe7K+7WgkiX+8PcurbyaXl3h5FzLkHEeCDOE4PhBEkt3Q/3
+         689FGSYc2GAUMryf71LD18gLqQ2aJ4FH9RVoreE8/pmJ6YFqIMfkhuI7tDj4v8pd2/YY
+         EhS2WEWXsurJTItW3ayl0nVFqT+rLDOiYDo1w4sl0hx4Qd0TMmQWnhKYXa8y54cGAdOH
+         11DFcJ1EkloaNKV7luDDjEGXe2UFm1KWNF1/aqaBiOzpnkDBEp+Q9j5xz60MCvmvdGmF
+         ouQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=WtsUEsqMTxeu0ASY9ZGldGWSKXK/Bt2mBtS4t1K1jok=;
-        b=CqYRTVntekBmKF0xCGXxAhalgy4+Y/8u0SOhadyHB9ndFBj4nEwPj1ukz+JoFdlZWd
-         lMao3bKVXvI6ySc8laz8EiCWhTlrdSueimtEX8VhXt8qt3EvLx2Gz+Qms9enIIjF0C+F
-         2KMRv1ov1ZQQFgktXnE9ZPakYCvTbqYjpf6ou59v5iJeegJslLlBeW4i34YFJUr40CWv
-         EDUY/JpYQH3aJLt5wMtkWz9oqwc5D9gEiIU/I+svwo6sFBDCGK0oirok63ZcsaQZtCZv
-         Kq12LrlYAiV+DY5yra8QOavuvxNZMRioTGh7FSKkGAf8ebm899xpdLoV0EE+ugez9eaV
-         8WGQ==
-X-Gm-Message-State: AOAM532aVeyn39HfzxQK7poXbuTkNlZ5aeK+hSE4IuqLDb2qvu/fai8R
-        fyAl0aDOvf1l8/+n2PZDcwMNqA==
-X-Google-Smtp-Source: ABdhPJyi22ur2sPI/DYF4luwUXxBY5gmZaV71bLC6h6PGLbA+cDZDfqrOe18jGG3kcfwjHp+QTWrPQ==
-X-Received: by 2002:a17:90b:4b84:: with SMTP id lr4mr20672140pjb.32.1629728601332;
-        Mon, 23 Aug 2021 07:23:21 -0700 (PDT)
-Received: from [127.0.0.1] ([67.219.225.50])
-        by smtp.gmail.com with ESMTPSA id 10sm16158814pjc.41.2021.08.23.07.23.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Aug 2021 07:23:20 -0700 (PDT)
-Date:   Mon, 23 Aug 2021 07:23:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?ISO-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        Lijo Lazar <lijo.lazar@amd.com>
-CC:     "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Feifei Xu <Feifei.Xu@amd.com>, Likun Gao <Likun.Gao@amd.com>,
-        Jiawei Gu <Jiawei.Gu@amd.com>, Evan Quan <evan.quan@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Luben Tuikov <luben.tuikov@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Dennis Li <Dennis.Li@amd.com>,
-        Sathishkumar S <sathishkumar.sundararaju@amd.com>,
-        Jonathan Kim <jonathan.kim@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        David M Nieto <David.Nieto@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        John Clements <John.Clements@amd.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_drm/amd/pm=3A_And_destina?= =?US-ASCII?Q?tion_bounds_checking_to_struct_copy?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <4922d89d-1293-7b32-d684-c731c246e6c1@amd.com>
-References: <20210819201441.3545027-1-keescook@chromium.org> <4922d89d-1293-7b32-d684-c731c246e6c1@amd.com>
-Message-ID: <FB2A077F-78CB-4D84-A8F2-C63C57923496@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=TzNwsac26TTE64TPkO8Zw+SslAPN+OSf9Wllga1ByII=;
+        b=Y2zSTMr4aifRhIYRXuskOxj+UGHHCIyFSO3PnpdowAi/7pOV22a4cWz9FBS52cYvzr
+         jerCGqUo8LEW5hvRkn5VRbbeU8oUd9ETftx7qn9guOk/d1AK+GXnMU/IiH29d9RTu3tn
+         JH9tHsbJ9tjaVuAkeBzX5M4VvJ0Ww9nz8vSUINfQDuyznBhf1uZwdGm465diYXSp7lEf
+         XOB0AGamDVtFRYe0qs6UfX7MQjfkgqlNkUsRi6O38yZ6NAEs1y09u90Zo6cjQmudVQOx
+         oaDu8MSGclRSCbqOnlHGKcAbuw7QDj0Y2VOcYuGt3LcjhkIUXfSt0sFL/10qvMUN5Xak
+         nTSA==
+X-Gm-Message-State: AOAM530Fo06P4u28WDV6VkFBf5rTLYHOWfZun53ZCdorgedl90rDN+jB
+        G5olN3fea4XGI8CEll+UEvxDuiNybPHdqIbZ0B4=
+X-Google-Smtp-Source: ABdhPJxt8SJCutO9XHUVYmIp52dTbp47/ya7vTQEF5ZIf2RLhHoucPX+tAFdFlCKuykZ0yJF0dNYbwrgxddFKALm6h4=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:cc48:aa6a:f4ec:7d19])
+ (user=samitolvanen job=sendgmr) by 2002:a05:6214:23cc:: with SMTP id
+ hr12mr34346389qvb.56.1629738800924; Mon, 23 Aug 2021 10:13:20 -0700 (PDT)
+Date:   Mon, 23 Aug 2021 10:13:04 -0700
+Message-Id: <20210823171318.2801096-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.33.0.rc2.250.ged5fa647cd-goog
+Subject: [PATCH v2 00/14] x86: Add support for Clang CFI
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     x86@kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+This series adds support for Clang's Control-Flow Integrity (CFI)
+checking to x86_64. With CFI, the compiler injects a runtime
+check before each indirect function call to ensure the target is
+a valid function with the correct static type. This restricts
+possible call targets and makes it more difficult for an attacker
+to exploit bugs that allow the modification of stored function
+pointers. For more details, see:
+
+  https://clang.llvm.org/docs/ControlFlowIntegrity.html
+
+Version 2 depends on Clang >=14, where we fixed the issue with
+referencing static functions from inline assembly. Based on the
+feedback for v1, this version also changes the declaration of
+functions that are not callable from C to use an opaque type,
+which stops the compiler from replacing references to them. This
+avoids the need to sprinkle function_nocfi() macros in the kernel
+code.
+
+The first two patches contain objtool support for CFI, the
+remaining patches change function declarations to use opaque
+types, fix type mismatch issues that confuse the compiler, and
+disable CFI where it can't be used.
+
+You can also pull this series from
+
+  https://github.com/samitolvanen/linux.git x86-cfi-v2
+
+---
+Changes in v2:
+- Dropped the first objtool patch as the warnings were fixed in
+  separate patches.
+
+- Changed fix_cfi_relocs() in objtool to not rely on jump table
+  symbols, and to return an error if it can't find a relocation.
+
+- Fixed a build issue with ASM_STACK_FRAME_NON_STANDARD().
+
+- Dropped workarounds for inline assembly references to
+  address-taken static functions with CFI as this was fixed in
+  the compiler.
+
+- Changed the C declarations of non-callable functions to use
+  opaque types and dropped the function_nocfi() patches.
+
+- Changed ARCH_SUPPORTS_CFI_CLANG to depend on Clang >=14 for
+  the compiler fixes.
+
+Kees Cook (2):
+  x86/extable: Do not mark exception callback as CFI
+  x86, relocs: Ignore __typeid__ relocations
+
+Sami Tolvanen (12):
+  objtool: Add CONFIG_CFI_CLANG support
+  objtool: Add ASM_STACK_FRAME_NON_STANDARD
+  linkage: Add DECLARE_ASM_FUNC_SYMBOL
+  ftrace: Use an opaque type for functions not callable from C
+  lkdtm: Disable UNSET_SMEP with CFI
+  lkdtm: Use an opaque type for lkdtm_rodata_do_nothing
+  x86: Use an opaque type for functions not callable from C
+  x86/purgatory: Disable CFI
+  x86, module: Ignore __typeid__ relocations
+  x86, cpu: Use LTO for cpu.c with CFI
+  x86, kprobes: Fix optprobe_template_func type mismatch
+  x86, build: Allow CONFIG_CFI_CLANG to be selected
+
+ arch/x86/Kconfig                      |  1 +
+ arch/x86/include/asm/ftrace.h         |  2 +-
+ arch/x86/include/asm/idtentry.h       | 10 +++---
+ arch/x86/include/asm/page_64.h        |  7 ++--
+ arch/x86/include/asm/paravirt_types.h |  3 +-
+ arch/x86/include/asm/processor.h      |  2 +-
+ arch/x86/include/asm/proto.h          | 25 ++++++-------
+ arch/x86/include/asm/uaccess_64.h     |  9 ++---
+ arch/x86/kernel/alternative.c         |  2 +-
+ arch/x86/kernel/ftrace.c              |  2 +-
+ arch/x86/kernel/kprobes/opt.c         |  4 +--
+ arch/x86/kernel/module.c              |  4 +++
+ arch/x86/kernel/paravirt.c            |  4 +--
+ arch/x86/kvm/emulate.c                |  4 +--
+ arch/x86/kvm/kvm_emulate.h            |  9 ++---
+ arch/x86/mm/extable.c                 |  1 +
+ arch/x86/power/Makefile               |  2 ++
+ arch/x86/purgatory/Makefile           |  2 +-
+ arch/x86/tools/relocs.c               |  7 ++++
+ arch/x86/xen/enlighten_pv.c           |  6 ++--
+ arch/x86/xen/xen-ops.h                | 10 +++---
+ drivers/misc/lkdtm/bugs.c             |  2 +-
+ drivers/misc/lkdtm/lkdtm.h            |  2 +-
+ drivers/misc/lkdtm/perms.c            |  2 +-
+ drivers/misc/lkdtm/rodata.c           |  2 +-
+ include/linux/ftrace.h                |  7 ++--
+ include/linux/linkage.h               | 13 +++++++
+ include/linux/objtool.h               |  6 ++++
+ tools/include/linux/objtool.h         |  6 ++++
+ tools/objtool/arch/x86/decode.c       | 16 +++++++++
+ tools/objtool/elf.c                   | 51 +++++++++++++++++++++++++++
+ tools/objtool/include/objtool/arch.h  |  3 ++
+ tools/objtool/include/objtool/elf.h   |  2 +-
+ 33 files changed, 166 insertions(+), 62 deletions(-)
 
 
-On August 22, 2021 11:28:54 PM PDT, "Christian K=C3=B6nig" <christian=2Eko=
-enig@amd=2Ecom> wrote:
->
->
->Am 19=2E08=2E21 um 22:14 schrieb Kees Cook:
->> [=2E=2E=2E]
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu=2Eh b/drivers/gpu/drm/am=
-d/amdgpu/amdgpu=2Eh
->> index 96e895d6be35=2E=2E4605934a4fb7 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu=2Eh
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu=2Eh
->> @@ -1446,4 +1446,29 @@ static inline int amdgpu_in_reset(struct amdgpu_=
-device *adev)
->>   {
->>   	return atomic_read(&adev->in_gpu_reset);
->>   }
->> +
->> +/**
->> + * memcpy_trailing - Copy the end of one structure into the middle of =
-another
->> + *
->> + * @dst: Pointer to destination struct
->> + * @first_dst_member: The member name in @dst where the overwrite begi=
-ns
->> + * @last_dst_member: The member name in @dst where the overwrite ends =
-after
->> + * @src: Pointer to the source struct
->> + * @first_src_member: The member name in @src where the copy begins
->> + *
->> + */
->> +#define memcpy_trailing(dst, first_dst_member, last_dst_member,		   \
->> +		        src, first_src_member)				   \
->
->Please don't add a function like this into amdgpu=2Eh, especially when it=
-=20
->is only used by the SMU code=2E
+base-commit: d5ae8d7f85b7f6f6e60f1af8ff4be52b0926fde1
+-- 
+2.33.0.rc2.250.ged5fa647cd-goog
 
-Sure, I'm happy to move it=2E It wasn't clear to me which headers were con=
-sidered "immutable"=2E Which header should I put this in?
-
->And please give it an amdgpu_ prefix so that we are not confusing it=20
->with a core function=2E
-
-Sure, I will include that=2E
-
->Apart from that looks good to me=2E
-
-Thanks!
-
--Kees
