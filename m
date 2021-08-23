@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08909C432BE
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66F0C4338F
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E438C613D5
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F53F613BD
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232138AbhHWROx (ORCPT
+        id S232203AbhHWRO5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Aug 2021 13:14:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
+        Mon, 23 Aug 2021 13:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231432AbhHWROf (ORCPT
+        with ESMTP id S231814AbhHWROi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Aug 2021 13:14:35 -0400
+        Mon, 23 Aug 2021 13:14:38 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB964C06129F
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:52 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id f64-20020a2538430000b0290593bfc4b046so17018587yba.9
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DC6C06175F
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:55 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id d78-20020a256851000000b00598b2a660e2so7141508ybc.6
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=+NWMVXrt3P4ge7VqYOvLEIp/M9aVwCe7Nh6ObW2ZBPc=;
-        b=hFjJ1e+C1MlypS/buKfzRCFkG/9cMbUhkjqvF3HOWHEYkoz3N7NX8cJhjHTYQ/qtyp
-         2tLkviVOtycQi/lT7Bqo3OcvF5r543o3HOh072GAdPadwN2fE/+AWc/LXwi7Khc8Iprd
-         SbS56lYw5x7Hx6jf25yadN2fNtqR7HBEz8pcM0/wLAUYbWWpj3reFt5V+3jvDDmjFjFl
-         DJ7h/D42e9VHIF14u2DZy+GdSTQ1NQJA0y9trOu84QKzNpJ294yMoilqnBZr1mHcW75V
-         nIygPAcoCxwLFE0WK24aLTNS7BBsZvO+WEqh6pxAazj/ovklE/EFg5oIl7Z+edLMSGWr
-         oWTA==
+        bh=Rn4Ov6fZtIeuYv4qe0duX3eTx27b0q1rGV7B2MFXCkM=;
+        b=j4Fz5nKfDBIg6wGCX99oSD3qw+9mbpkBIV+gOiN5gOqYPBf8xKsRiv4NCnNtfxvGz5
+         y6GKY3b2JbRDDfueb2CkhEeI7beflC6wiiafJimcNoeQuObystNTTA5pIsa3xFvCYBt9
+         ydA7gzBTHz+lU829Kc2bHhqZ/+yQA2cWyKSLMUcfRQoj7/diGWT8gV6nbeEULgSN2jDp
+         vx+68GUIHcdhTyPglZY63BqqWy3IJ01MOVpGI9RuO6V+xS6YNJEYrXZBZ3OHpJrRdUoB
+         MUMFhySVjh/SWbsNoFpcgTJLlKudWt9G4AYFp27LraAAM3EOOBusIJm01Y9mGSVFLTo3
+         E1aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=+NWMVXrt3P4ge7VqYOvLEIp/M9aVwCe7Nh6ObW2ZBPc=;
-        b=e6cJ5cjaT7QMXErWDao3PyZ32r5ZPNNDniQgloc76Pa73z3hckwLc/LYdDTadINywe
-         7fz0BKX5IZfu5Yj1GFj8Z189bdzN8GvVJTKZ0cKxe5sitVtzx9S0ICYT6KQGAMuMsZUk
-         Ow7+JU1+tTtmDheu/PpmZHfxnEtgDZsWRVyEe+G98fUPqOEN2lpBbSz3+58Co8wDuJi7
-         jyAo5SpBQyL7w6v2oa97hWmjf9umPT4Tao/vSQRgWrQe7+31G05iTAuiRrCYSVs7hJO/
-         5T+0V1+GdYD7ukoHYguFS/ZhrKqCOlyflzId23XTK/R9D3XlLznE1zxSX0I9Va8ZgveN
-         2EdQ==
-X-Gm-Message-State: AOAM532qIQIpdDx7dnV8FnEGQcMFAOWLWbx8xxNbJOQ0j0zyV3UbiAka
-        /fJr2CL19ynoxA8HOYdRf8qbIllnqO4Epmuk4LQ=
-X-Google-Smtp-Source: ABdhPJxClc9bFSSM1trVCieFK4BS23aESsI41IIN3LRY5ta0ot4fK5RLjCtUzOgKw0Vkr1NLBaaYQnrZtNnFvxI7zRA=
+        bh=Rn4Ov6fZtIeuYv4qe0duX3eTx27b0q1rGV7B2MFXCkM=;
+        b=ncFykgw+pI/G9jHZiLDkrJTbWfUT8ykzBOSbnfpHFHOrzgpAyXXfUKP9WCYJufxY5J
+         5BCaxr1cyC1km9qqQnXM1S6ixkTdgqcUiMODujCVTE1DRKnyHk9d0bR+B9UM+SoWASxy
+         AJJ7z6eTLNrzeCWioZRtqS6/ILACSg6gEW1E2BcGD6z8kgsOXC4R50sf5IIgAcR+5dEo
+         y3HI7nyldrnFU+aV3Tyn7j7GXTYlb76S6li2YUlzIxkEi7xV8zAm5Sf/cOLeYof4Ulbo
+         g0gCUDhC7qC2sj1XkM0YwvKmYLV14Evpb+j+Z4waHgqC2EjayvBM2HedMPtvVyxuT32Y
+         KzlQ==
+X-Gm-Message-State: AOAM532qCLeazGzn2wKN/dUvfZxMroWbhm7lIzVnkmEPUDtPgvnAeXQ7
+        gg3sKZuL6+FwBqz72qVSjFy3yn2tyBdH321ETTA=
+X-Google-Smtp-Source: ABdhPJzC7ogvonrsSKVnw0YC87eH29k88ofugQafcLSHc1QP/Ose4p2Mx7EWK3xZS3bmJ/eC6x7NMo3scppuISgjSb0=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:cc48:aa6a:f4ec:7d19])
- (user=samitolvanen job=sendgmr) by 2002:a25:c60f:: with SMTP id
- k15mr26774743ybf.200.1629738832122; Mon, 23 Aug 2021 10:13:52 -0700 (PDT)
-Date:   Mon, 23 Aug 2021 10:13:17 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:55d6:: with SMTP id
+ j205mr46404895ybb.395.1629738834582; Mon, 23 Aug 2021 10:13:54 -0700 (PDT)
+Date:   Mon, 23 Aug 2021 10:13:18 -0700
 In-Reply-To: <20210823171318.2801096-1-samitolvanen@google.com>
-Message-Id: <20210823171318.2801096-14-samitolvanen@google.com>
+Message-Id: <20210823171318.2801096-15-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210823171318.2801096-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.rc2.250.ged5fa647cd-goog
-Subject: [PATCH v2 13/14] x86, kprobes: Fix optprobe_template_func type mismatch
+Subject: [PATCH v2 14/14] x86, build: Allow CONFIG_CFI_CLANG to be selected
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,46 +78,26 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The optprobe_template_func symbol is defined in inline assembly,
-but it's not marked global, which conflicts with the C declaration
-needed for STACK_FRAME_NON_STANDARD and confuses the compiler when
-CONFIG_CFI_CLANG is enabled.
-
-Marking the symbol global would make the compiler happy, but as the
-compiler also generates a CFI jump table entry for all address-taken
-functions, the jump table ends up containing a jump to the .rodata
-section where optprobe_template_func resides, which results in an
-objtool warning.
-
-Use ASM_STACK_FRAME_NON_STANDARD instead to avoid both issues.
+Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled with
+Clang >=14.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/kernel/kprobes/opt.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index 71425ebba98a..95375ef5deee 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -103,6 +103,7 @@ static void synthesize_set_arg1(kprobe_opcode_t *addr, unsigned long val)
- asm (
- 			".pushsection .rodata\n"
- 			"optprobe_template_func:\n"
-+			ASM_STACK_FRAME_NON_STANDARD(optprobe_template_func)
- 			".global optprobe_template_entry\n"
- 			"optprobe_template_entry:\n"
- #ifdef CONFIG_X86_64
-@@ -154,9 +155,6 @@ asm (
- 			"optprobe_template_end:\n"
- 			".popsection\n");
- 
--void optprobe_template_func(void);
--STACK_FRAME_NON_STANDARD(optprobe_template_func);
--
- #define TMPL_CLAC_IDX \
- 	((long)optprobe_template_clac - (long)optprobe_template_entry)
- #define TMPL_MOVE_IDX \
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 88fb922c23a0..c487c482ed67 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -107,6 +107,7 @@ config X86
+ 	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <= 4096
+ 	select ARCH_SUPPORTS_LTO_CLANG
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
++	select ARCH_SUPPORTS_CFI_CLANG		if X86_64 && CLANG_VERSION >= 140000
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
 -- 
 2.33.0.rc2.250.ged5fa647cd-goog
 
