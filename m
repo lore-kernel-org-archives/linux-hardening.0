@@ -2,106 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C4CC4338F
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482B4C432BE
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96C9961528
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7B761184
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 Aug 2021 17:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229946AbhHWRV2 (ORCPT
+        id S229627AbhHWRaq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 Aug 2021 13:21:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbhHWRV2 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 Aug 2021 13:21:28 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80629C061757
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:20:45 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id z5so35549327ybj.2
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Aug 2021 10:20:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J8JSmD33jCZgI4ZSaQy5K3s54xcB739cSJ9JuXolesw=;
-        b=P5bg4x+sppTF8KfYOZ6xzQ2IuZWnsL3ygtYFeJxzzIIi7j7kAKCH8d/yLgi+zyFFqi
-         u9TP3tE4mnS6dWJRj4pZ/QNn2d+GXi7o3wWSPRLMMRdeF1FPMZ60nP6MXVCNJAGbwIXV
-         fIe5+7zt/iOBKvlNwwvgrHL0tJH/7XcHVDGoSGD7c5Jhx3VEkZ28AGT623sp1UIOB9EB
-         UcXROEvoFM9pnMiLGIC8618oJxeRgF0QuUyiVNaX08KIj5PL3RUS36otWfBLa3DFyR6h
-         G2gmRrNEu2l6hwmif6PddC4du1tO2qXJn9mEcfk3rI4szbm9lKzjqpQ/jyfmn/D7B+Vo
-         nBdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J8JSmD33jCZgI4ZSaQy5K3s54xcB739cSJ9JuXolesw=;
-        b=lhsDOADtWmbi495pCjuVKWbKPmQHcDbMSxTHAhcIgRfrFuDkZl2J4GETZCTjX7cEBq
-         Ozx965gStg1YzUkPa7Cl026JP2q1s3BapF8uJh4GZdY6mfR1r0cizuKk4lzhpJ6okPbi
-         YhWIyBvf7dXXQQVIBYBM2vYBp5MLTzNXRhOm956DYUPULRy0vXqtfFhkUSPVeEpoy9qP
-         rtNpVcmTxd8j5yzJYq6IZEOF9rgiL3bTyBST8/M5QNz/ffFeSKkV5dW90HAA1I8SbyEL
-         /3daZpkQb0BQ/4efK7GtlFPGppJsqQyUaBL+H/z+khX4lF9o0bxESA6PcST3HMzzRIRF
-         3KEg==
-X-Gm-Message-State: AOAM532LJVo5c/+xGMPmQEGvTGJl/Ys+GfCzDX4gQYDfK5zmqtwiWMZ5
-        C8WiBGjVZ+LM7WU5Z4j+/Wcl7vjF+r+xgNK719iaqA==
-X-Google-Smtp-Source: ABdhPJyyiBA5CCMkXEhpbhsS/96cPOh2zy3DLZEEEW5Gl5DuBQPzg1bxS5UHBRMWXBf8KH5b1JU24ZYb31adZ7PmR3E=
-X-Received: by 2002:a25:734e:: with SMTP id o75mr24134262ybc.498.1629739244588;
- Mon, 23 Aug 2021 10:20:44 -0700 (PDT)
+        Mon, 23 Aug 2021 13:30:46 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42596 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229471AbhHWRap (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 23 Aug 2021 13:30:45 -0400
+Received: from zn.tnic (p200300ec2f07d9009c2198849783fa17.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:d900:9c21:9884:9783:fa17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 63E151EC0354;
+        Mon, 23 Aug 2021 19:29:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1629739797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=k7kW0H/f78ipggRR3pMr7cXUnVjI28dbJ/hrQ806WjA=;
+        b=hDhXULFWcHFsoJBIsrfHxmwpgT3Wnl9sEleCLnWDCuz5POadrad9gy5ajW3R69VqkH+gH5
+        9K0Vr0mUo/r33+mjTLFeLTpCv/rZPsIGkCo79PEIkh4IMsknG5IJuzQARW/Ns9Myjbjs+G
+        dE1D547ttNlcLZzDNJGnSf6K/ahRXc0=
+Date:   Mon, 23 Aug 2021 19:30:34 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Joe Perches <joe@perches.com>,
+        David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
+Message-ID: <YSPbOo90alPsv4vL@zn.tnic>
+References: <20210814075527.5999-1-len.baker@gmx.com>
 MIME-Version: 1.0
-References: <20210823171318.2801096-1-samitolvanen@google.com> <1706ee8e-c21c-f867-c0be-24814a92b853@redhat.com>
-In-Reply-To: <1706ee8e-c21c-f867-c0be-24814a92b853@redhat.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 23 Aug 2021 10:20:33 -0700
-Message-ID: <CABCJKufrpx9arM-hfX_bR-efO+13VBMFNBTe4ff036VEZi1LZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/14] x86: Add support for Clang CFI
-To:     Tom Stellard <tstellar@redhat.com>
-Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210814075527.5999-1-len.baker@gmx.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 10:16 AM Tom Stellard <tstellar@redhat.com> wrote:
->
-> On 8/23/21 10:13 AM, 'Sami Tolvanen' via Clang Built Linux wrote:
-> > This series adds support for Clang's Control-Flow Integrity (CFI)
-> > checking to x86_64. With CFI, the compiler injects a runtime
-> > check before each indirect function call to ensure the target is
-> > a valid function with the correct static type. This restricts
-> > possible call targets and makes it more difficult for an attacker
-> > to exploit bugs that allow the modification of stored function
-> > pointers. For more details, see:
-> >
-> >    https://clang.llvm.org/docs/ControlFlowIntegrity.html
-> >
-> > Version 2 depends on Clang >=14, where we fixed the issue with
-> > referencing static functions from inline assembly. Based on the
-> > feedback for v1, this version also changes the declaration of
-> > functions that are not callable from C to use an opaque type,
-> > which stops the compiler from replacing references to them. This
-> > avoids the need to sprinkle function_nocfi() macros in the kernel
-> > code.
->
-> How invasive are the changes in clang 14 necessary to make CFI work?
-> Would it be possible to backport them to LLVM 13?
+On Sat, Aug 14, 2021 at 09:55:27AM +0200, Len Baker wrote:
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors. The safe replacement is strscpy().
+> 
+> This is a previous step in the path to remove the strcpy() function
 
-I'm not sure what the LLVM backport policy is, but this specific fix
-was quite simple:
+"previous step"?
 
-https://reviews.llvm.org/rG7ce1c4da7726
+> entirely from the kernel.
+> 
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 
-Sami
+...
+
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index f6d462d0be2d..7aea6c502316 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -1032,6 +1032,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  	int i, n_labels = 0;
+>  	struct edac_raw_error_desc *e = &mci->error_desc;
+>  	bool any_memory = true;
+> +	size_t len;
+> 
+>  	edac_dbg(3, "MC%d\n", mci->mc_idx);
+> 
+> @@ -1086,6 +1087,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  	 */
+>  	p = e->label;
+>  	*p = '\0';
+> +	len = sizeof(e->label);
+> 
+>  	mci_for_each_dimm(mci, dimm) {
+>  		if (top_layer >= 0 && top_layer != dimm->location[0])
+> @@ -1114,10 +1116,12 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			*p = '\0';
+>  		} else {
+>  			if (p != e->label) {
+> -				strcpy(p, OTHER_LABEL);
+> -				p += strlen(OTHER_LABEL);
+> +				strscpy(p, OTHER_LABEL, len);
+
+Hm, maybe I'm missing something but looking at that strscpy()
+definition, why aren't you doing:
+
+				num = strscpy(p, OTHER_LABEL, len);
+				if (num < 0)
+					/* just in case */
+					break;
+
+				len -= num;
+				p   += num;
+
+since that function supposedly returns the number of chars copied.
+
+> +				len -= strlen(p);
+> +				p += strlen(p);
+>  			}
+> -			strcpy(p, dimm->label);
+> +			strscpy(p, dimm->label, len);
+> +			len -= strlen(p);
+>  			p += strlen(p);
+
+Ditto.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
