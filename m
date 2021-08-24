@@ -2,113 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5109BC4320A
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 19:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AD3C4338F
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 19:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3315F60232
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 19:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF56E610FD
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 19:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232710AbhHXTGk (ORCPT
+        id S232297AbhHXTr6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Aug 2021 15:06:40 -0400
-Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:46410 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232117AbhHXTGk (ORCPT
+        Tue, 24 Aug 2021 15:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229514AbhHXTr6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Aug 2021 15:06:40 -0400
-Received: from omf19.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id BE3FE100E7B5C;
-        Tue, 24 Aug 2021 19:05:54 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf19.hostedemail.com (Postfix) with ESMTPA id 3ADAE20D75C;
-        Tue, 24 Aug 2021 19:05:53 +0000 (UTC)
-Message-ID: <6dd7d45d8dccacb6d37ad5f6f137413b229d8565.camel@perches.com>
-Subject: Re: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
-From:   Joe Perches <joe@perches.com>
-To:     Borislav Petkov <bp@alien8.de>, Len Baker <len.baker@gmx.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 24 Aug 2021 12:05:52 -0700
-In-Reply-To: <YSU5wp/ZpsXuDgmu@zn.tnic>
-References: <20210814075527.5999-1-len.baker@gmx.com>
-         <YSPbOo90alPsv4vL@zn.tnic> <20210824090338.GB7999@titan>
-         <YSU5wp/ZpsXuDgmu@zn.tnic>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.0-1 
+        Tue, 24 Aug 2021 15:47:58 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E19FDC061757;
+        Tue, 24 Aug 2021 12:47:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5xmXB2Lw/5xwUTRzhqLNhETYzTNETFh6DtMn8eUe4N4=; b=GV04Oz1moYv6gNOH40ylMi/NQa
+        metvJKbOP2iPdDUhWKcAC8Ky5DqjfpI6Yqk6gOUWOsKtTyyaTzcyZDpERAg/6ykMJCVJx76NCGt3T
+        Rifsl17evmXj7yJiLKaoQCu4n9LEGMGHOLMTmLTS7IB5JFRqwoS42RzlUOLJm8XrTjWv6vHpsQ7Kh
+        uq/TfeaXsTFIzm+eXTO/B7TGb09kwPk8vudY6XQjqnuhn8wMLCaYjPn8OXpDJAg/EOCTFRXzwiP+Z
+        uiN58m6+nptSOvFikZVJcpPVMhCBTL9DPuL60e89nTC1Omdujf4+NdE0qnXwWK63PTzTH/R9rkoCm
+        ZPIGPeJg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mIcNq-00CgII-Jj; Tue, 24 Aug 2021 19:46:54 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 493BA981198; Tue, 24 Aug 2021 21:46:52 +0200 (CEST)
+Date:   Tue, 24 Aug 2021 21:46:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 00/14] x86: Add support for Clang CFI
+Message-ID: <20210824194652.GB17784@worktop.programming.kicks-ass.net>
+References: <20210823171318.2801096-1-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: gbw8hao5yg94bjpfq3cs1hmfuybbbawk
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 3ADAE20D75C
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+qhTBzD3PJ/ihefUS3Wgwe9dpo85K7g1c=
-X-HE-Tag: 1629831953-473425
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210823171318.2801096-1-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2021-08-24 at 20:26 +0200, Borislav Petkov wrote:
-> On Tue, Aug 24, 2021 at 12:28:07PM +0200, Len Baker wrote:
-> > This is a task of the KSPP [1] and the main reason is to clean up the
-> > proliferation of str*cpy functions in the kernel.
-> 
-> That I understood - you prominently explain where the patches stem from.
-> 
-> What I can't parse is that formulation "previous step". What previous
-> step do you mean?
-> 
-> > Yes, you are right. The same discussion happened in the v3 review [2] and
-> > I agree with the reasons that Robert Richter exposed. Using the strlen()
-> > implementation it is not necessary to check the return code of strcpy and
-> > we can assume a silent truncation.
-> > 
-> > [2] https://lore.kernel.org/linux-hardening/YRN+8u59lJ6MWsOL@rric.localdomain/
-> 
-> Ok, looking at the asm, gcc is actually smart enough not to call
-> strlen() twice on the same buffer.
-> 
-> But then there's this in the strscpy() kernel-doc comment:
-> 
-> "The destination buffer is always NUL terminated, unless it's
-> zero-sized."
-> 
-> so looking at the code, we're merrily decrementing len but nothing's
-> checking whether len can become 0. Because if it does, strscpy() will
-> do:
-> 
-> 	if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
-> 		return -E2BIG;
-> 
-> so if p ends up pointing to something which is *not* '\0', strlen() will
-> go off into the weeds.
-> 
-> So I don't care if it doesn't look just as nice - it better be correct
-> in all cases first.
+On Mon, Aug 23, 2021 at 10:13:04AM -0700, Sami Tolvanen wrote:
+> This series adds support for Clang's Control-Flow Integrity (CFI)
+> checking to x86_64. With CFI, the compiler injects a runtime
+> check before each indirect function call to ensure the target is
+> a valid function with the correct static type. This restricts
+> possible call targets and makes it more difficult for an attacker
+> to exploit bugs that allow the modification of stored function
+> pointers. For more details, see:
 
-It's all somehat unnecessary as it seems it's guaranteed not to overflow.
+If I understand this right; tp_stub_func() in kernel/tracepoint.c
+violates this (as would much of the HAVE_STATIC_CALL=n code, luckily
+that is not a valid x86_64 configuration).
 
-$ git grep -n -w OTHER_LABEL next-20210820
-next-20210820:drivers/edac/edac_mc.c:1118:                              strcpy(p, OTHER_LABEL);
-next-20210820:drivers/edac/edac_mc.c:1119:                              p += strlen(OTHER_LABEL);
-next-20210820:include/linux/edac.h:57:#define OTHER_LABEL " or "
-next-20210820:include/linux/edac.h:470: char label[(EDAC_MC_LABEL_LEN + 1 + sizeof(OTHER_LABEL)) * EDAC_MAX_LABELS];
+Specifically, we assign &tp_stub_func to tracepoint_func::func, but that
+function pointer is only ever indirectly called when cast to the
+tracepoint prototype:
 
-Also the array size of char label is too large.
+  ((void(*)(void *, proto))(it_func))(__data, args);
 
-First by 1 * EDAC_MAX_LABELS as sizeof(OTHER_LABEL) is 5 not 4 and
-second there can only be EDAC_MAX_LABELS - 1 uses of OTHER_LABEL.
+(see DEFINE_TRACE_FN() in linux/tracepoint.h)
 
-And I would remove the define for OTHER_LABEL and use " or " directly.
+This means the indirect function type and the target function type
+mismatch, resulting in that runtime check you added to trigger.
 
-Lastly, this could be easier to understand using stpcpy and/or scnprintf.
+Hitting tp_stub_func() at runtime is exceedingly rare, but possible.
 
+I realize this is strictly UB per C, but realistically any CDECL ABI
+requires that any function with arbitrary signature:
 
+  void foo(...)
+  {
+  }
+
+translates to the exact same code. Specifically on x86-64, the super
+impressive:
+
+foo:
+	RET
+
+And as such this works just fine. Except now you wrecked it.
