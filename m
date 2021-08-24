@@ -2,185 +2,446 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B4BC4320A
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 04:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E8AC432BE
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 07:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD7906125F
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 04:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1694161360
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 07:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229831AbhHXEEK (ORCPT
+        id S234496AbhHXHBS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Aug 2021 00:04:10 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:10754 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229713AbhHXED7 (ORCPT
+        Tue, 24 Aug 2021 03:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234557AbhHXHBQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Aug 2021 00:03:59 -0400
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.0.43) with SMTP id 17O0xBfE014822;
-        Tue, 24 Aug 2021 04:03:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=ngkIN2tuh+af+sxSkkrn8inzufgjGoJK/rSUGJTouec=;
- b=LrCl78hd8wG8hO1rk+gWjkAsgeAxWRE5jLsnl9UfDUNteXL8K5yoLi3FUUYA4Elx0rvn
- +TOdGIcMKN5cwOAWe1J8lgdWOnu04Hn1/HxyNQ9aWi9w936nhMpn6vStU1OEjZHpvSNe
- MKZTja6kUBXsx9TT7gCjmQ4cbC/zMArNXw3UG8BlQvZttwi1hZwmANeN4kzbOZ3DTgO+
- c6YodK6RCgr3DMBdtri1zKviYWKoylklKWUSE5kyLsBl2Bw2dBmi/VuV+xVIWRm7WJFJ
- /kJuGfDRdZXOopRXYsg7piJqAQOSl7hYRAV1f1ChQnqteXRGQJd7G9OrIbqgu9dgLazO Qw== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=ngkIN2tuh+af+sxSkkrn8inzufgjGoJK/rSUGJTouec=;
- b=bEV+x/uq2tIRIXy4Qpadp0qBlnV679yA3/UWuVZMZAoBQrUhv16Z0LRtR12a4+hhbbBs
- 1pLmrXatbJipTuco8Nu4e+8IFmcH8bseWpbMmNB7AS70oaAS3G77H97sgb2wxp0z+yTs
- ntPxFiv9chjA1k4hu7JiYoETOatWjVygnFB+K7Thj65tkziYPJLs9xwAOW67jEabcw5E
- 1iTVSLaXPNxexNMzwLrOqtrd9ctLpCt9MpGA22Dhz/Gq4PtbzL1TkQJMEX4zevp2tdj9
- bebNgUdJiMCBojPF8kwqHDFvGdO03PPpxGdNNOv7rU1ehihvdER3NcRJ+D0WySV2R7ml 2Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3akuswk9j1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Aug 2021 04:03:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 17O41N3p082500;
-        Tue, 24 Aug 2021 04:03:10 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
-        by userp3020.oracle.com with ESMTP id 3akb8tya34-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Aug 2021 04:03:10 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NiqVsO+yHEHmFJIztw0USzFhHkC44wmTRpuTL8YCXhjwwfOQpAuLgjXeCWh7ftFybCngz769GtlHHr1GXn2dGc4blon0XDBqDCsUC++orZ/zL+FQ3NZV9ZQ8Ba567UHevv25OKNmtisTa1ZJ3fZw/d2nAssQ22wSbxUmSbffm9miXrBpzxRTrLMx77RZRnDU+C5yqHY7qIIoxx5bEH5mMza2f0btjrp+xqJE/5CgGHOL2mESV6S+0f31ZoEXYuPEfOMvhCLyuCVU+G+RzAmSoCAR9hzvqiM8iOeku2cNIoJBLQ+naINu2B2qHe2P0La9MsO0CX9tF7g2EmXyiF9Shg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ngkIN2tuh+af+sxSkkrn8inzufgjGoJK/rSUGJTouec=;
- b=XbdFLL08XC0KUYv659uak+r1nMmidAM11anKLS0crsd4h4pw/HGnHJJJQsidqt7bVCvGKe6HuDCsa2gs6ZvqbPKKsKGcf/TrWbMjeN0Ukv3hmYZYfz7eZoSPNO7F59tkpn3S4jO3NyXOrc5TXlPNPpA90Y74q0XrfGEM7NEOwX3Y8aJrM2JL0z2ifOktokKP0jGaS1f3kdBbuHfaQDL5VUjaW51w6bm2SQiy9yOo06jA0SdJAffH/2LoA9MkPlNFNIFVQjhaMXR2qDK70ZfYN4BuNOx+2xJfByKwd98t/JscVaM6vWEtgqdSUn+xMTOzIg2jfhiaHzLodlX3etl37w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Tue, 24 Aug 2021 03:01:16 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6916EC06175F
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Aug 2021 00:00:32 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id i3so1265411wmq.3
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Aug 2021 00:00:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ngkIN2tuh+af+sxSkkrn8inzufgjGoJK/rSUGJTouec=;
- b=yQa5fhzzFseTbdJIKp3MPJcC6yfnJC+v6tV5jxApUIkGVm9dEb2NOufTNd8z//dLDMyVVJgMil8E84KykeGdhvWlCL9blNscDOT2yQBm04hGmL7I+YgdVJd2SQzpAVOXHgBOk4kAoOkhKd+fcNAKw5wsi4hVrXXwpgyer6TTKbA=
-Authentication-Results: linux.ibm.com; dkim=none (message not signed)
- header.d=none;linux.ibm.com; dmarc=none action=none header.from=oracle.com;
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by PH0PR10MB5529.namprd10.prod.outlook.com (2603:10b6:510:106::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19; Tue, 24 Aug
- 2021 04:03:09 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::c0ed:36a0:7bc8:f2dc]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::c0ed:36a0:7bc8:f2dc%7]) with mapi id 15.20.4436.024; Tue, 24 Aug 2021
- 04:03:08 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Don Brace <don.brace@microchip.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        storagedev@microchip.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: smartpqi: Replace one-element array with flexible-array member
-Date:   Tue, 24 Aug 2021 00:02:58 -0400
-Message-Id: <162977310550.31461.13461113082507282975.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210810210741.GA58765@embeddedor>
-References: <20210810210741.GA58765@embeddedor>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0295.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::30) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ICdLCAE9F2d1J4gjoAJ7XKYwkHuUbm1vnXwFQHx40iE=;
+        b=nNas2w1Y3fz7wuL5P1E4e+IpX/4X0yObkGSivzMK3HvusWrYcgIzL40Hiw1OWyvMvx
+         V1TwzHfaP7mJ+ozxvftB5YmzAd8LkjY6KaXFmiwCh6GB5fCekybMW1q4mkuHQCVRgMtl
+         15FX6VANBhbuEthFCdEM7IOB2kxLgPBxMmlUwStsnThtykN40bdUCHxiOVq9vgzeyOqm
+         jgylqVQ7leXHJYyQfpdtHbgQU4xpy6TsRmmdwA7qVg1UbZoKv+Rc3Qju2U2pV6ySHAZR
+         XFN7QZ2q4Ytest0WptzCMsW4xklMPvZO+G/ZZxCEYI6qJ4aHmsALSZuTJESB93aKgoUq
+         7crQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ICdLCAE9F2d1J4gjoAJ7XKYwkHuUbm1vnXwFQHx40iE=;
+        b=YFEWWnWPDcmUyMXHfMt/gdxMatdiAWJ3W4fVux2O0hCcLSn1BygSIBiHSBiHmpZZ1G
+         cT74+nZnNkrxIgRhNUx/Do/1+LjOEOt+sJQc9KVGdgeg6NePKEG33n4bfl/ap6vsN2g4
+         LOYv8/8GxlqzKDiopdtaQgXDi4THXFuUYSNp8hw6g8gFMACG3lJ9R2LjYrVAyO+AB+dx
+         LhZO/L2shtkRMUteoDMzAruxapOiUeuMHeEm+oJJ6VDHBBxmC2TdAh8w5mC/QZkITQSr
+         qWuKhr+dynG2OVlLCHLXxsQw5QyfJp5ZaUdiraEqmitYt9AkpHy3WfZTaJVQ71mL8KpE
+         YVWg==
+X-Gm-Message-State: AOAM531za0oUexmo3DxKMNgJ/WYzggGPeh3aD4s6sPyQoWeGx1xtnglY
+        zOPUioydd5aaq493WwRzzj3QEPYIJuvmKNPKQBWU6A==
+X-Google-Smtp-Source: ABdhPJy985yRA4Oysjxf1QPktANY8Xl8Fwej2Qliu0YbgVY7veBPK5GUw1LEddDO8iS31szVLE9BN4bRrkY/cQdVlMw=
+X-Received: by 2002:a05:600c:3514:: with SMTP id h20mr2545861wmq.31.1629788430655;
+ Tue, 24 Aug 2021 00:00:30 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ca-mkp.mkp.ca.oracle.com (138.3.201.9) by SJ0PR03CA0295.namprd03.prod.outlook.com (2603:10b6:a03:39e::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend Transport; Tue, 24 Aug 2021 04:03:07 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 21c4c3f4-1497-4241-2290-08d966b41515
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5529:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <PH0PR10MB552962E3C0A30B5ABE73B8488EC59@PH0PR10MB5529.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: d8/OikqhGfiRpT+IRttUD/oQrwrCtcRR8GEXqKk0WKQs3MrjmspgI3yEoROfbwjZBoHrziR7zOAxTIGuXPFFpwP/UTrVdCz8QG8zjyGjQHjxOaBY7cT9Hxn/TVkO5MLvQoj6EpsU/NuUAD1WGUwk7rlbC7BqknJxODmnqKReIDB917RKBBddUXOX6dWgZq/cCU0w5DGvijZq3Nf1Ij0qTytjlDFA7SS4Py/gy2sr6FUNXtxvUi5Ln1THVYJSm/wnqiMCKuIOJWNsdx0ToYD/MZHu/P0MIYOJr/58Rlq+ALz6dCSULPIFfP1SGPcy6tDykefafM17iLpYNUjxjHwdo1oaW82WqlZSWbpytQczJSbc76R28jHc786Xg6/TMstBlskM8befvu2drfu9iPbd4fGPjDjkPjfrHM6ApPkbgPO8mFr0BfwS9mVppf7m3jAWB8utac/FxGr+zdmn8r3q09M6A0dcnWgJv0uBzh+ULSqmp1Wrdra6/hvVfl8Y/rDNCntyzZesnz+6OV88B/l2Ub5ocKQZkvQi7wNxypHjqSIOmz/9/KdAz1GwJHWskIzXNI04Y6tpUZDi2e7iacHvAAVhm3yOdI7wkLEJRY0bVbEzzNETacI2p0btELb4C18IRxYt0zGcLPoKDqbHM/orMAj2JuuLl9s3w7mDduwXRJp5QHWND2JzI2w4X9Db37/lzgOijrcS2y+H41X7W91wnL+5ErQIxyoh33WChg0y97fedkg4LI1vZYEdUCE47EbuKTkPbGtnoCfFNHXUzoj5tw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(39860400002)(376002)(136003)(366004)(26005)(5660300002)(4744005)(186003)(8936002)(966005)(38100700002)(6666004)(6486002)(110136005)(7696005)(478600001)(4326008)(2616005)(956004)(66476007)(66946007)(52116002)(2906002)(66556008)(38350700002)(36756003)(86362001)(8676002)(316002)(103116003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VzFNY3RZVlR4NzJuMXIwZUI0R0dFaDBuTHIzUUFRU1NZeURCa3RYOEFBVmRP?=
- =?utf-8?B?Mnk1cFF0aDVZUjBjMU5Yd0xqNURDMURYeVVneUIyN09FN0NkWG1ETUgwNHlW?=
- =?utf-8?B?RnduelM0M09KQ3QxcWhEcFZIRkp1dnlqcjBnMklkMFdxOFVKQituMnVudXZK?=
- =?utf-8?B?eWRwUzVwWndkTXpBc2ZDNmN1ejFOUGMveDJyYUY1Y1RhRW0xWXQ4aTJVNnNw?=
- =?utf-8?B?WDdGbXJpV3pqbHF4SVhFSGZxWDlFN05ON3FnK1I4blo1ZGpKYkc0eEIrcVBp?=
- =?utf-8?B?ZmJ6ZXFBdy95UWlWSTVHN0hFLytJY3Z1VDNldWxDUHBvZDV3UGxhdHhvcllp?=
- =?utf-8?B?bnBqeU1rcFpqTFRINHIwV3VTd0tsV3JDQnNKTFBmaGFaVURqaUhPVHNmcnFr?=
- =?utf-8?B?MGxhNEF4aHBYVnhMWnFzUnlla1dlaVBxS015QmkyaE9jSWJKTk0zT3BQcDlK?=
- =?utf-8?B?OExSWHZxdklhU1VmMlFVdGpiMk1UL3l0WkZMZ3kxZzFnL2JQYm5SeTZNMjFM?=
- =?utf-8?B?bmdTRmI3NlNtU3VtZjB1UGRNa1hnQXllMEN5SkhIaVNhamN5ZmxKK05RYWJ1?=
- =?utf-8?B?MkVDN3E2NzNvdkJRaGNNZHpQODZaK3VWc0o1WHk1Wm5KT1YyWUJKZVBMWnNw?=
- =?utf-8?B?aS93SGpPWFdnazI2UXBwRnRyYUl0dXNvb3FZTXdNeGM1L2dsVTlDQ3hsL0R5?=
- =?utf-8?B?dWE3YWJPTXM1bmhFTkpBUlUxdkdTYWZuaUFmOWpjMXdyajJkMVMrdmppRE9P?=
- =?utf-8?B?ZXdYWGxCY3ViUkN0OU9hcGRkMHNRdlQzaWNRK0F5cFdzK2lBUm9CajhiMHFH?=
- =?utf-8?B?cTl6RmFZSHhSY0htakFxaUxQc3AwY3FvZlFpZklYcERoMWI1YjdscEVDSy9W?=
- =?utf-8?B?ZW1xeEtQcUN3bzFyVnAwWXY2enl5TjdQSURPTWhGQU92bnFjKy9tb1JaTmQr?=
- =?utf-8?B?MmYyY0ZMUm5GSEc3R3J5K1hhb1Y5eHhzL0k5WlFoTWpkTjJmNFhwVndqdmlS?=
- =?utf-8?B?NW5HNGxQOHRUT0hsMTh0Tzd2Zno5NjViUlh0L2NlUm1MakRWYUJoZ1NiMWxq?=
- =?utf-8?B?Q0JTaEQyeVA4N0VGMVNSVVlyNHo1UElwZmRESFRXRjJHa3BxbEYzSXRDMW5N?=
- =?utf-8?B?emtnUHl1a0F0RnlURWpjWnEyejFCRzFYaFByZVNDQkEwOU0yZGZ5dW9nTnFX?=
- =?utf-8?B?ZzdrcG0yd0t3Q21zdEJ4NUFIVnlja3dqb1lyc05oZ1dXOFpRNDlTSktUWFBu?=
- =?utf-8?B?eTdSZU5tbllDdWs5OG1zdGh2K3ppNys1ZENpSGkrTWRnNjE5R0p0eHZJb09y?=
- =?utf-8?B?SU80cVRGTm5iZ20wQWxQQ0JKZUdSTWFzZi9VNEVFYmd0YXk1aEszVmF1WHd4?=
- =?utf-8?B?ZkRUU2xLMWVnYnNvMG10Vm9iRDJNSUpnQ2VaNWRsSkxUZGV2bXlLaWFYQmtY?=
- =?utf-8?B?Y1ZCYm5Kdm9MODlJeVVEdmhCb1VESzdRa2NYM0RrWnlIb3pSSzVXSEhuTzVv?=
- =?utf-8?B?SUZOem5Zdndsd0wwbitoMXlEMjVveS92Q3Vlby8xbWlZbEFkRTk4UDRzTE9X?=
- =?utf-8?B?L2owZkJ3TU5QQUcvMDE1WkFRRzVlYVQ5Zmo2aVdxd1NkUzVwRFBqeFVaTG5J?=
- =?utf-8?B?M2MxVkhzV0NlN29wVllhQSt1MDlwRDFNVyt4dlJQdVpNcjNTSWpmVzNoTU8x?=
- =?utf-8?B?YkhUYkdNVmZkeXdBV2xWZE1EMW1VblZYdGZyQW1QcGhVUE8rQ011L1VFeVhn?=
- =?utf-8?Q?11T+4QHOdWhqQhapF6/bIn8Cbm2527ycuVob7hE?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21c4c3f4-1497-4241-2290-08d966b41515
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2021 04:03:08.8058
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I+wKbdWUY3h/aMhLpD7WuVcvm/GqNXhqZgsP9QTcWUWiILwQgp0YTmY/+Gj4XCN4iOQRHrg1qXohcdv+lM72oeqB/EBJSJwpw5TCv4oexTQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5529
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10085 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 spamscore=0
- bulkscore=0 mlxlogscore=855 malwarescore=0 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2108240024
-X-Proofpoint-ORIG-GUID: ZaA3PATrf78J6JjiqVj9cUeH39qWZ5TF
-X-Proofpoint-GUID: ZaA3PATrf78J6JjiqVj9cUeH39qWZ5TF
+References: <20210822075122.864511-1-keescook@chromium.org> <20210822075122.864511-22-keescook@chromium.org>
+In-Reply-To: <20210822075122.864511-22-keescook@chromium.org>
+From:   David Gow <davidgow@google.com>
+Date:   Tue, 24 Aug 2021 15:00:19 +0800
+Message-ID: <CABVgOSn=fmUctW_xexDyS_c4G3ee4vGvuJLaanRDQbzQkfAOBQ@mail.gmail.com>
+Subject: Re: [PATCH for-next 21/25] lib: Introduce CONFIG_TEST_MEMCPY
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 10 Aug 2021 16:07:41 -0500, Gustavo A. R. Silva wrote:
+On Sun, Aug 22, 2021 at 3:56 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Before changing anything about memcpy(), memmove(), and memset(), add
+> run-time tests to check basic behaviors for any regressions.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-> There is a regular need in the kernel to provide a way to declare having
-> a dynamically sized set of trailing elements in a structure. Kernel code
-> should always use “flexible array members”[1] for these cases. The older
-> style of one-element or zero-length arrays should no longer be used[2].
-> 
-> Refactor the code a bit according to the use of a flexible-array member
-> in struct pqi_event_config instead of a one-element array, and use the
-> struct_size() helper.
-> 
-> [...]
+Thanks for adding a KUnit test here: it's great to have better
+coverage of some of these basic functions!
 
-Applied to 5.15/scsi-queue, thanks!
+There's a name mismatch with the Kconfig entry and the Makefile,
+otherwise this looks good and works fine on my machine (under both UML
+and qemu/x86_64).
 
-[1/1] scsi: smartpqi: Replace one-element array with flexible-array member
-      https://git.kernel.org/mkp/scsi/c/5f492a7aa13b
+It would be possible to split these tests up further if you wanted,
+which could be useful if there's a desire to track the individual
+assertion results independently. That's probably what I'd've done, but
+It's a matter of personal preference either way, though: the tests
+aren't absurdly huge or over-complicated as-is.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Cheers,
+-- David
+
+>  MAINTAINERS       |   9 ++
+>  lib/Kconfig.debug |  11 ++
+>  lib/Makefile      |   1 +
+>  lib/test_memcpy.c | 265 ++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 286 insertions(+)
+>  create mode 100644 lib/test_memcpy.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6c8be735cc91..e3ffd4bdc24f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7248,6 +7248,15 @@ L:       netdev@vger.kernel.org
+>  S:     Maintained
+>  F:     drivers/net/ethernet/nvidia/*
+>
+> +FORTIFY_SOURCE
+> +M:     Kees Cook <keescook@chomium.org>
+> +L:     linux-hardening@vger.kernel.org
+> +S:     Supported
+> +F:     include/linux/fortify-string.h
+> +F:     lib/test_fortify/*
+> +F:     scripts/test_fortify.sh
+> +K:     \b__NO_FORTIFY\b
+> +
+
+Do you want this to be part of the memcpy() KUnit test commit, or is
+it better suited in one of the changes to the actual fortify stuff?
+
+>  FPGA DFL DRIVERS
+>  M:     Wu Hao <hao.wu@intel.com>
+>  R:     Tom Rix <trix@redhat.com>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 831212722924..9199be57ba2a 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2467,6 +2467,17 @@ config RATIONAL_KUNIT_TEST
+>
+>           If unsure, say N.
+>
+> +config MEMCPY_KUNIT_TEST
+> +       tristate "Test memcpy(), memmove(), and memset() functions at runtime" if !KUNIT_ALL_TESTS
+> +       depends on KUNIT
+> +       default KUNIT_ALL_TESTS
+> +       help
+> +         Builds unit tests for memcpy(), memmove(), and memset() functions.
+> +         For more information on KUnit and unit tests in general please refer
+> +         to the KUnit documentation in Documentation/dev-tools/kunit/.
+> +
+> +         If unsure, say N.
+> +
+>  config TEST_UDELAY
+>         tristate "udelay test driver"
+>         help
+> diff --git a/lib/Makefile b/lib/Makefile
+> index bd17c2bf43e1..8a4c8bdb38a2 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -77,6 +77,7 @@ obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
+>  obj-$(CONFIG_TEST_LKM) += test_module.o
+>  obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+>  obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+> +obj-$(CONFIG_TEST_MEMCPY) += test_memcpy.o
+
+This doesn't match CONFIG_MEMCPY_KUNIT_TEST above, so the test is
+never compiled in.
+
+>  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+>  obj-$(CONFIG_TEST_SORT) += test_sort.o
+>  obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+> diff --git a/lib/test_memcpy.c b/lib/test_memcpy.c
+> new file mode 100644
+> index 000000000000..ec546cec883e
+> --- /dev/null
+> +++ b/lib/test_memcpy.c
+> @@ -0,0 +1,265 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Test cases for memcpy(), memmove(), and memset().
+> + */
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <kunit/test.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mm.h>
+> +#include <linux/module.h>
+> +#include <linux/overflow.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +#include <linux/vmalloc.h>
+> +
+> +struct some_bytes {
+> +       union {
+> +               u8 data[32];
+> +               struct {
+> +                       u32 one;
+> +                       u16 two;
+> +                       u8  three;
+> +                       /* 1 byte hole */
+> +                       u32 four[4];
+> +               };
+> +       };
+> +};
+> +
+> +#define check(instance, v) do {        \
+> +       int i;  \
+> +       BUILD_BUG_ON(sizeof(instance.data) != 32);      \
+> +       for (i = 0; i < sizeof(instance.data); i++) {   \
+> +               KUNIT_ASSERT_EQ_MSG(test, instance.data[i], v, \
+> +                       "line %d: '%s' not initialized to 0x%02x @ %d (saw 0x%02x)\n", \
+> +                       __LINE__, #instance, v, i, instance.data[i]);   \
+> +       }       \
+> +} while (0)
+> +
+> +#define compare(name, one, two) do { \
+> +       int i; \
+> +       BUILD_BUG_ON(sizeof(one) != sizeof(two)); \
+> +       for (i = 0; i < sizeof(one); i++) {     \
+> +               KUNIT_EXPECT_EQ_MSG(test, one.data[i], two.data[i], \
+> +                       "line %d: %s.data[%d] (0x%02x) != %s.data[%d] (0x%02x)\n", \
+> +                       __LINE__, #one, i, one.data[i], #two, i, two.data[i]); \
+> +       }       \
+> +       kunit_info(test, "ok: " TEST_OP "() " name "\n");       \
+> +} while (0)
+> +
+> +static void memcpy_test(struct kunit *test)
+> +{
+> +#define TEST_OP "memcpy"
+> +       struct some_bytes control = {
+> +               .data = { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                       },
+> +       };
+> +       struct some_bytes zero = { };
+> +       struct some_bytes middle = {
+> +               .data = { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                         0x20, 0x20, 0x20, 0x20, 0x00, 0x00, 0x00, 0x00,
+> +                         0x00, 0x00, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                       },
+> +       };
+> +       struct some_bytes three = {
+> +               .data = { 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                         0x20, 0x00, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +                       },
+> +       };
+> +       struct some_bytes dest = { };
+> +       int count;
+> +       u8 *ptr;
+> +
+> +       /* Verify static initializers. */
+> +       check(control, 0x20);
+> +       check(zero, 0);
+> +       compare("static initializers", dest, zero);
+> +
+> +       /* Verify assignment. */
+> +       dest = control;
+> +       compare("direct assignment", dest, control);
+> +
+> +       /* Verify complete overwrite. */
+> +       memcpy(dest.data, zero.data, sizeof(dest.data));
+> +       compare("complete overwrite", dest, zero);
+> +
+> +       /* Verify middle overwrite. */
+> +       dest = control;
+> +       memcpy(dest.data + 12, zero.data, 7);
+> +       compare("middle overwrite", dest, middle);
+> +
+> +       /* Verify argument side-effects aren't repeated. */
+> +       dest = control;
+> +       ptr = dest.data;
+> +       count = 1;
+> +       memcpy(ptr++, zero.data, count++);
+> +       ptr += 8;
+> +       memcpy(ptr++, zero.data, count++);
+> +       compare("argument side-effects", dest, three);
+> +#undef TEST_OP
+> +}
+> +
+> +static void memmove_test(struct kunit *test)
+> +{
+> +#define TEST_OP "memmove"
+> +       struct some_bytes control = {
+> +               .data = { 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                       },
+> +       };
+> +       struct some_bytes zero = { };
+> +       struct some_bytes middle = {
+> +               .data = { 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x00, 0x00, 0x00, 0x00,
+> +                         0x00, 0x00, 0x00, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                       },
+> +       };
+> +       struct some_bytes five = {
+> +               .data = { 0x00, 0x00, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x00, 0x00, 0x00, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                       },
+> +       };
+> +       struct some_bytes overlap = {
+> +               .data = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+> +                         0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                       },
+> +       };
+> +       struct some_bytes overlap_expected = {
+> +               .data = { 0x00, 0x01, 0x00, 0x01, 0x02, 0x03, 0x04, 0x07,
+> +                         0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+> +                       },
+> +       };
+> +       struct some_bytes dest = { };
+> +       int count;
+> +       u8 *ptr;
+> +
+> +       /* Verify static initializers. */
+> +       check(control, 0x99);
+> +       check(zero, 0);
+> +       compare("static initializers", zero, dest);
+> +
+> +       /* Verify assignment. */
+> +       dest = control;
+> +       compare("direct assignment", dest, control);
+> +
+> +       /* Verify complete overwrite. */
+> +       memmove(dest.data, zero.data, sizeof(dest.data));
+> +       compare("complete overwrite", dest, zero);
+> +
+> +       /* Verify middle overwrite. */
+> +       dest = control;
+> +       memmove(dest.data + 12, zero.data, 7);
+> +       compare("middle overwrite", dest, middle);
+> +
+> +       /* Verify argument side-effects aren't repeated. */
+> +       dest = control;
+> +       ptr = dest.data;
+> +       count = 2;
+> +       memmove(ptr++, zero.data, count++);
+> +       ptr += 9;
+> +       memmove(ptr++, zero.data, count++);
+> +       compare("argument side-effects", dest, five);
+> +
+> +       /* Verify overlapping overwrite is correct. */
+> +       ptr = &overlap.data[2];
+> +       memmove(ptr, overlap.data, 5);
+> +       compare("overlapping write", overlap, overlap_expected);
+> +#undef TEST_OP
+> +}
+> +
+> +static void memset_test(struct kunit *test)
+> +{
+> +#define TEST_OP "memset"
+> +       struct some_bytes control = {
+> +               .data = { 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                         0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                         0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                         0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                       },
+> +       };
+> +       struct some_bytes complete = {
+> +               .data = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+> +                         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+> +                         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+> +                         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+> +                       },
+> +       };
+> +       struct some_bytes middle = {
+> +               .data = { 0x30, 0x30, 0x30, 0x30, 0x31, 0x31, 0x31, 0x31,
+> +                         0x31, 0x31, 0x31, 0x31, 0x31, 0x31, 0x31, 0x31,
+> +                         0x31, 0x31, 0x31, 0x31, 0x30, 0x30, 0x30, 0x30,
+> +                         0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                       },
+> +       };
+> +       struct some_bytes three = {
+> +               .data = { 0x60, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                         0x30, 0x61, 0x61, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                         0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                         0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+> +                       },
+> +       };
+> +       struct some_bytes dest = { };
+> +       int count, value;
+> +       u8 *ptr;
+> +
+> +       /* Verify static initializers. */
+> +       check(control, 0x30);
+> +       check(dest, 0);
+> +
+> +       /* Verify assignment. */
+> +       dest = control;
+> +       compare("direct assignment", dest, control);
+> +
+> +       /* Verify complete overwrite. */
+> +       memset(dest.data, 0xff, sizeof(dest.data));
+> +       compare("complete overwrite", dest, complete);
+> +
+> +       /* Verify middle overwrite. */
+> +       dest = control;
+> +       memset(dest.data + 4, 0x31, 16);
+> +       compare("middle overwrite", dest, middle);
+> +
+> +       /* Verify argument side-effects aren't repeated. */
+> +       dest = control;
+> +       ptr = dest.data;
+> +       value = 0x60;
+> +       count = 1;
+> +       memset(ptr++, value++, count++);
+> +       ptr += 8;
+> +       memset(ptr++, value++, count++);
+> +       compare("argument side-effects", dest, three);
+> +#undef TEST_OP
+> +}
+> +
+> +static struct kunit_case memcpy_test_cases[] = {
+> +       KUNIT_CASE(memset_test),
+> +       KUNIT_CASE(memcpy_test),
+> +       KUNIT_CASE(memmove_test),
+> +       {}
+> +};
+> +
+> +static struct kunit_suite memcpy_test_suite = {
+> +       .name = "memcpy-test",
+
+It may be better to just name the suite "memcpy", since -- by
+definition -- it's a test if it's a KUnit test suite.
+
+> +       .test_cases = memcpy_test_cases,
+> +};
+> +
+> +kunit_test_suite(memcpy_test_suite);
+> +
+> +MODULE_LICENSE("GPL");
+> --
+> 2.30.2
+>
