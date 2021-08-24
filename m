@@ -2,103 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13383C432BE
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 18:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5109BC4320A
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 19:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8AF361265
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 18:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3315F60232
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Aug 2021 19:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231986AbhHXS0X (ORCPT
+        id S232710AbhHXTGk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Aug 2021 14:26:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34718 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231494AbhHXS0X (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Aug 2021 14:26:23 -0400
-Received: from zn.tnic (p200300ec2f114400ce3b938495d443bc.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:4400:ce3b:9384:95d4:43bc])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6C4981EC01FC;
-        Tue, 24 Aug 2021 20:25:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1629829533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=zZGkwWSiDZd/SYcLT5qkYvAPUqD+oDPAAEUs5B3f5eo=;
-        b=pbTnW4F/JQeXpkgNJypk6W3fcyJRq66+e87oCG9qDGS0mzB8LkGjt6fK0Fonzv12eLyJiE
-        jR7+b6gKUtixMAMoyFEtTRt8783+maqHC/tqknnYhkZpQrRGfpBNMR454EiBJhe+lwMIsL
-        eshGboOwyzHABQIQiNN5gslplo14aIE=
-Date:   Tue, 24 Aug 2021 20:26:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Len Baker <len.baker@gmx.com>
+        Tue, 24 Aug 2021 15:06:40 -0400
+Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:46410 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232117AbhHXTGk (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 24 Aug 2021 15:06:40 -0400
+Received: from omf19.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id BE3FE100E7B5C;
+        Tue, 24 Aug 2021 19:05:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf19.hostedemail.com (Postfix) with ESMTPA id 3ADAE20D75C;
+        Tue, 24 Aug 2021 19:05:53 +0000 (UTC)
+Message-ID: <6dd7d45d8dccacb6d37ad5f6f137413b229d8565.camel@perches.com>
+Subject: Re: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
+From:   Joe Perches <joe@perches.com>
+To:     Borislav Petkov <bp@alien8.de>, Len Baker <len.baker@gmx.com>
 Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Tony Luck <tony.luck@intel.com>,
         James Morse <james.morse@arm.com>,
         Robert Richter <rric@kernel.org>,
-        Joe Perches <joe@perches.com>,
         David Laight <David.Laight@aculab.com>,
         Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
-Message-ID: <YSU5wp/ZpsXuDgmu@zn.tnic>
+Date:   Tue, 24 Aug 2021 12:05:52 -0700
+In-Reply-To: <YSU5wp/ZpsXuDgmu@zn.tnic>
 References: <20210814075527.5999-1-len.baker@gmx.com>
- <YSPbOo90alPsv4vL@zn.tnic>
- <20210824090338.GB7999@titan>
+         <YSPbOo90alPsv4vL@zn.tnic> <20210824090338.GB7999@titan>
+         <YSU5wp/ZpsXuDgmu@zn.tnic>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210824090338.GB7999@titan>
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: gbw8hao5yg94bjpfq3cs1hmfuybbbawk
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 3ADAE20D75C
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+qhTBzD3PJ/ihefUS3Wgwe9dpo85K7g1c=
+X-HE-Tag: 1629831953-473425
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 12:28:07PM +0200, Len Baker wrote:
-> This is a task of the KSPP [1] and the main reason is to clean up the
-> proliferation of str*cpy functions in the kernel.
-
-That I understood - you prominently explain where the patches stem from.
-
-What I can't parse is that formulation "previous step". What previous
-step do you mean?
-
-> Yes, you are right. The same discussion happened in the v3 review [2] and
-> I agree with the reasons that Robert Richter exposed. Using the strlen()
-> implementation it is not necessary to check the return code of strcpy and
-> we can assume a silent truncation.
+On Tue, 2021-08-24 at 20:26 +0200, Borislav Petkov wrote:
+> On Tue, Aug 24, 2021 at 12:28:07PM +0200, Len Baker wrote:
+> > This is a task of the KSPP [1] and the main reason is to clean up the
+> > proliferation of str*cpy functions in the kernel.
 > 
-> [2] https://lore.kernel.org/linux-hardening/YRN+8u59lJ6MWsOL@rric.localdomain/
+> That I understood - you prominently explain where the patches stem from.
+> 
+> What I can't parse is that formulation "previous step". What previous
+> step do you mean?
+> 
+> > Yes, you are right. The same discussion happened in the v3 review [2] and
+> > I agree with the reasons that Robert Richter exposed. Using the strlen()
+> > implementation it is not necessary to check the return code of strcpy and
+> > we can assume a silent truncation.
+> > 
+> > [2] https://lore.kernel.org/linux-hardening/YRN+8u59lJ6MWsOL@rric.localdomain/
+> 
+> Ok, looking at the asm, gcc is actually smart enough not to call
+> strlen() twice on the same buffer.
+> 
+> But then there's this in the strscpy() kernel-doc comment:
+> 
+> "The destination buffer is always NUL terminated, unless it's
+> zero-sized."
+> 
+> so looking at the code, we're merrily decrementing len but nothing's
+> checking whether len can become 0. Because if it does, strscpy() will
+> do:
+> 
+> 	if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
+> 		return -E2BIG;
+> 
+> so if p ends up pointing to something which is *not* '\0', strlen() will
+> go off into the weeds.
+> 
+> So I don't care if it doesn't look just as nice - it better be correct
+> in all cases first.
 
-Ok, looking at the asm, gcc is actually smart enough not to call
-strlen() twice on the same buffer.
+It's all somehat unnecessary as it seems it's guaranteed not to overflow.
 
-But then there's this in the strscpy() kernel-doc comment:
+$ git grep -n -w OTHER_LABEL next-20210820
+next-20210820:drivers/edac/edac_mc.c:1118:                              strcpy(p, OTHER_LABEL);
+next-20210820:drivers/edac/edac_mc.c:1119:                              p += strlen(OTHER_LABEL);
+next-20210820:include/linux/edac.h:57:#define OTHER_LABEL " or "
+next-20210820:include/linux/edac.h:470: char label[(EDAC_MC_LABEL_LEN + 1 + sizeof(OTHER_LABEL)) * EDAC_MAX_LABELS];
 
-"The destination buffer is always NUL terminated, unless it's
-zero-sized."
+Also the array size of char label is too large.
 
-so looking at the code, we're merrily decrementing len but nothing's
-checking whether len can become 0. Because if it does, strscpy() will
-do:
+First by 1 * EDAC_MAX_LABELS as sizeof(OTHER_LABEL) is 5 not 4 and
+second there can only be EDAC_MAX_LABELS - 1 uses of OTHER_LABEL.
 
-	if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
-		return -E2BIG;
+And I would remove the define for OTHER_LABEL and use " or " directly.
 
-so if p ends up pointing to something which is *not* '\0', strlen() will
-go off into the weeds.
+Lastly, this could be easier to understand using stpcpy and/or scnprintf.
 
-So I don't care if it doesn't look just as nice - it better be correct
-in all cases first.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
