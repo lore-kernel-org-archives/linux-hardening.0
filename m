@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A500C432BE
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 18:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80BCC432BE
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 18:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D74B60F25
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 18:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86CBF6044F
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 18:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237199AbhHYSby (ORCPT
+        id S237725AbhHYSek (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 25 Aug 2021 14:31:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41642 "EHLO
+        Wed, 25 Aug 2021 14:34:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236968AbhHYSbx (ORCPT
+        with ESMTP id S238062AbhHYSej (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 25 Aug 2021 14:31:53 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A81C061757
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 11:31:06 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id f11-20020a17090aa78b00b0018e98a7cddaso427559pjq.4
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 11:31:06 -0700 (PDT)
+        Wed, 25 Aug 2021 14:34:39 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D8EC0613D9
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 11:33:53 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id e7so608771pgk.2
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 11:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=E6dOXUoSPTypGPQDCucOQV34a6rWJR5EWTqmODKV08s=;
-        b=YiOVAxh8heSMZTuQdsY3Rn90r7ckvGRPSgw6gusedwKl6hrqXtX+qL+HGrRI83QgZs
-         m3pFCruNZauUuMVhH9M7YBc4vS7vGwyUtquoBBPcvoFTOF56RwP1TntNfwtSRIAZJIpT
-         NU7ofXdsneBIS8e7YjQ6MdkdiWmzTxtzM7Mls=
+        bh=Ggf+LpJPCzqcDcd2e/5j3m/TAA3DFUus0qxXI93OXMw=;
+        b=CsfwSRyoDWtqTpvJN2VE9yqMc//0Dh3+4OBPgIbZC04ZCSC8Zpvrla7s3FECoQzFyR
+         er96tpvXPhXPStl9lnMkpniY1tQrHmKcBBU4ECKzgxCNsp4yg32j2wOlyRn1YvOYwPcB
+         dLRSn1ySg03S/IoQasZzd2kEnMVVEqfN7is1Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=E6dOXUoSPTypGPQDCucOQV34a6rWJR5EWTqmODKV08s=;
-        b=S0Imqt83wTd9/8WiamdWrcJJXiNtLbymrh9WT6KeQr2FMsE0xMbJcMEr5ze8cJFNO6
-         Cex9XG3znUnrBK3UwPxVBJr+8lgwklByMcK9mE9qfEzX23wau8CevVWqjAcFswIRqUss
-         v04OXNgEcvKEwbSgNf7eAYNKiluDPI6WBj0boOupDaH9NRKvBZTA6M66mWXxrZzI/mrA
-         3Us/BwhXMlezrSgb+q4DvXQvCdcKrRSW8cA4A7xSny7QF2VB7bECJ8nFie23DQYDxaTI
-         6+Hq0Ri1dR8lOHYpWE4KeIKl3IcQYdTgR9SmSRKgTw6vEd2FMWOVxlFkY4BqTkQ1Aral
-         aeWg==
-X-Gm-Message-State: AOAM5328GM2KheZyolIuq0icfsG1VjQfS6btYhaBb9JhyIXMt/9MnaNd
-        amPNUzzFwvKWaZJZGMlcQFoFJw==
-X-Google-Smtp-Source: ABdhPJwuW+8E9IwXrJ6Bs6gnlyFZ9HmMjLjxedAJoqQTnZPubi7HPwA1Bb216qD2OnMWatoJkBD3jQ==
-X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr11866220pjb.23.1629916266354;
-        Wed, 25 Aug 2021 11:31:06 -0700 (PDT)
+        bh=Ggf+LpJPCzqcDcd2e/5j3m/TAA3DFUus0qxXI93OXMw=;
+        b=o5/o0WK8X8YsprGmEJ1Ndik5LLIyvbihPLhgZE+HBafA2XdyFV0+ipOOVWYliwZ4lV
+         5AQsSZcpOyKjdtdGL8+QvWgsbflRmCzQLWjyId8B3T3vlxMvxDhuua0Luv1dxCp4xnSs
+         zn8EFV/Cl3dwklIDjYQGdQpLVl/0pfGtlbBQ/iVCyvBPh1rvLNJ9VCA/qAZLAdygHArB
+         HnHLSRchm/OWOkuZss0dSAR2wT3+O7Of9pd8NMkT7X9/dd08FJxGuP3h9Gw8bLkOWSfV
+         I2tD4ONKhnI3vMmXo3p+jclEMyIUfyaRMsLDeVZWbOsOX1QHGCZZmPfZZietk7Ej/9w9
+         hvQw==
+X-Gm-Message-State: AOAM530A9Ke8DyDQbSmFwpaELqOMw3CNbmFHKh5xwsQP2ipxNQFXse1T
+        OtSrXHMVpk747b85l0yj9D4kVA==
+X-Google-Smtp-Source: ABdhPJzvLkiLyiR8okGaSKcAVrW2SnLai1N911vjm8Gmj6lrRbWXY5pWPjjrAAUnXeI5gXGvK7YUrA==
+X-Received: by 2002:a62:e116:0:b0:3e1:57a4:e501 with SMTP id q22-20020a62e116000000b003e157a4e501mr45763002pfh.36.1629916432644;
+        Wed, 25 Aug 2021 11:33:52 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j9sm700035pgl.1.2021.08.25.11.31.05
+        by smtp.gmail.com with ESMTPSA id br3sm4801088pjb.52.2021.08.25.11.33.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Aug 2021 11:31:05 -0700 (PDT)
+        Wed, 25 Aug 2021 11:33:52 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Ping-Ke Shih <pkshih@realtek.com>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -62,54 +62,85 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Jakub Kicinski <kuba@kernel.org>,
         Larry Finger <Larry.Finger@lwfinger.net>,
         Colin Ian King <colin.king@canonical.com>,
-        Kaixu Xia <kaixuxia@tencent.com>,
-        Joe Perches <joe@perches.com>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Joe Perches <joe@perches.com>,
+        Kaixu Xia <kaixuxia@tencent.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] rtlwifi: rtl8192de: Restore channel index initialization
-Date:   Wed, 25 Aug 2021 11:31:03 -0700
-Message-Id: <20210825183103.1142909-1-keescook@chromium.org>
+Subject: [PATCH] rtlwifi: rtl8192de: Style clean-ups
+Date:   Wed, 25 Aug 2021 11:33:50 -0700
+Message-Id: <20210825183350.1145441-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1333; h=from:subject; bh=Hw85ADjil8Tyn+cbVzUlabg2wwgY/mlYBNlLCrYximo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhJoxntp7RbQ9YdoPTLDiD6nyn1nZUuZgcd7qA8AzQ LoTbsfyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSaMZwAKCRCJcvTf3G3AJq0HD/ 9kc+5/HXPayu+LgCjEUEG+dTqq6bkKPnXVRQ7zWMCkT7ihzaUHCBEw9UZgcjMucAZ1HQsofxZomolf RtboXmrxE9/bTSbjHONDVtTo6ZZynqTyU7IbQ6aENortHOR4BCZ7/jWQ2yH9+AknPWve4A5hA7c1ZD 9ga3HHTctJ00csVbZ9x0ozOUTBRGcM69jDEu8vkQ+NY/nC7ls9VxYwTupGS73eWPUFfG1ctJz+gVBu INp+vEu7vgYFYDf7VrUeWSkm1QkXLTGdFFi9tivY0cLe74OqBTZutg/zHBARRjIku9HdPxf4KTTEce 84MK03bpAcIwsXzzAgGvj/nss7LHAEeYmyVqbryEU391TpScdAXCKIZlHORqlQYjLF3f+/KH0llJAS w6BU3q4mo/wYKs5Fe17Rt6bY3s1RsC/Ypphuy2h22H0GzoL9nWO5L6iihaNTddnULj+kflTswWTw2Y ++I69b2Otse7z07SuogA/eERasbX6Gxivt4Dz321weCd3CONopR9jUS/wAq63us7l5pzB2atCBZckG dHLBRsjWmp4ydQu+p6JJsbUJDD0LS1S+FeOhsbRRS5ZuemQzQswrTD/oR5p6HJBLZqSM1dgJ/txu8n B6TwEq4+ZOaw+CHavUlgovoQcx3SpUk00B1V3xJgfYTHWBvbAH94/GknfxQg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2542; h=from:subject; bh=WiI8i3mVA5kMq1xjzJQkl4VAkYEYT2HU/B+WViFz08k=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhJo0NkICAybEIi3bCEwhqPsG25+Mb1MpwZyumlIsh CtJ5dJaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSaNDQAKCRCJcvTf3G3AJqCXD/ 0SV/fuu4BuMqqjwabMcvyFOrQX+6BYxq4R9SGvGsvGBzn4cDaoGlC/DKqGSE4gHnCQjd3B7UsLHD/c Y6nWJ+7LpvVYO9IRwIDfIPn/ahXGNEy7OOp1VLkP9f8NMtHBwsFynMr4re77KztB5A3idqT3W5t0KA V4PTpJrKFwiBKQJ4Xfm8y2dmn7hoz8+Agq7Y8QHBy63FR5RHs9LO/7y1flQ9as9mIidNxhV3gozvW2 324af4kHsg+ECMUat7mkUzL4wKPVfakuxF2iW+kY++hRK5HESb51ov2ZF9GpWOIu3xpHMws719ZE3Z gQrQ9KhSKTX602mr/mp1UVZhLVB0PQGXoHm/ydi1bustMKpPG7pyOkQEPkAxdbyArmGkfM2Ucm+xJ4 vxy35LlOsrZN6fM9HWV75yy9Ta1fsBcUJN5mCazaJmXlMJdLYYzG8tbHBR4m0++ASGgzEjLfsJm3iO NL56mC4bu+/QMuhoZWhGG+yMRHGexC3bE/CZuReAs9+fl3QUgkP4cOvB5ikc00qO46kJX29oAKTVpX PFGyq3bvBEU7L5/3z4WNoohsjAyWrmNeCMrNrNF/2shq7BxyUBiqpS7qt3EtutjCdA/s0UmR8/CV+G d5Ryhn2BQUZiUhBy9UkBaRFVqfspXa7kngyIKpHoYRdeM1vo6TjjeIJ23L+Q==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-2G channel indexes still need "place" to be initialized, since it is
-returned from this function when channel is less than 14.
+Clean up some style issues:
+- Use ARRAY_SIZE() even though it's a u8 array.
+- Remove redundant CHANNEL_MAX_NUMBER_2G define.
+Additionally fix some dead code WARNs.
 
-Fixes: 369956ae5720 ("rtlwifi: rtl8192de: Remove redundant variable initializations")
 Cc: Ping-Ke Shih <pkshih@realtek.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: Larry Finger <Larry.Finger@lwfinger.net>
 Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Kaixu Xia <kaixuxia@tencent.com>
-Cc: Joe Perches <joe@perches.com>
 Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c | 8 +++-----
+ drivers/net/wireless/realtek/rtlwifi/wifi.h          | 1 -
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-index 8ae69d914312..b32fa7a75f17 100644
+index b32fa7a75f17..9807c9e91998 100644
 --- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
 +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-@@ -896,7 +896,7 @@ static void _rtl92d_ccxpower_index_check(struct ieee80211_hw *hw,
- 
- static u8 _rtl92c_phy_get_rightchnlplace(u8 chnl)
- {
--	u8 place;
-+	u8 place = chnl;
+@@ -899,7 +899,7 @@ static u8 _rtl92c_phy_get_rightchnlplace(u8 chnl)
+ 	u8 place = chnl;
  
  	if (chnl > 14) {
- 		for (place = 14; place < sizeof(channel5g); place++) {
+-		for (place = 14; place < sizeof(channel5g); place++) {
++		for (place = 14; place < ARRAY_SIZE(channel5g); place++) {
+ 			if (channel5g[place] == chnl) {
+ 				place++;
+ 				break;
+@@ -2861,16 +2861,14 @@ u8 rtl92d_phy_sw_chnl(struct ieee80211_hw *hw)
+ 	case BAND_ON_5G:
+ 		/* Get first channel error when change between
+ 		 * 5G and 2.4G band. */
+-		if (channel <= 14)
++		if (WARN_ONCE(channel <= 14, "rtl8192de: 5G but channel<=14\n"))
+ 			return 0;
+-		WARN_ONCE((channel <= 14), "rtl8192de: 5G but channel<=14\n");
+ 		break;
+ 	case BAND_ON_2_4G:
+ 		/* Get first channel error when change between
+ 		 * 5G and 2.4G band. */
+-		if (channel > 14)
++		if (WARN_ONCE(channel > 14, "rtl8192de: 2G but channel>14\n"))
+ 			return 0;
+-		WARN_ONCE((channel > 14), "rtl8192de: 2G but channel>14\n");
+ 		break;
+ 	default:
+ 		WARN_ONCE(true, "rtl8192de: Invalid WirelessMode(%#x)!!\n",
+diff --git a/drivers/net/wireless/realtek/rtlwifi/wifi.h b/drivers/net/wireless/realtek/rtlwifi/wifi.h
+index aa07856411b1..31f9e9e5c680 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/wifi.h
++++ b/drivers/net/wireless/realtek/rtlwifi/wifi.h
+@@ -108,7 +108,6 @@
+ #define	CHANNEL_GROUP_IDX_5GM		6
+ #define	CHANNEL_GROUP_IDX_5GH		9
+ #define	CHANNEL_GROUP_MAX_5G		9
+-#define CHANNEL_MAX_NUMBER_2G		14
+ #define AVG_THERMAL_NUM			8
+ #define AVG_THERMAL_NUM_88E		4
+ #define AVG_THERMAL_NUM_8723BE		4
 -- 
 2.30.2
 
