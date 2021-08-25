@@ -2,81 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408D8C4338F
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 08:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5EEC4338F
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 10:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C97761103
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 08:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93212610D1
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 10:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbhHYItA (ORCPT
+        id S237163AbhHYKL1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 25 Aug 2021 04:49:00 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:23112 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233459AbhHYIsx (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 25 Aug 2021 04:48:53 -0400
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mtapsc-7-cZxJurhOOG-McPtL_PvPpQ-1; Wed, 25 Aug 2021 09:48:05 +0100
-X-MC-Unique: cZxJurhOOG-McPtL_PvPpQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.23; Wed, 25 Aug 2021 09:48:03 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.023; Wed, 25 Aug 2021 09:48:03 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Borislav Petkov' <bp@alien8.de>, Len Baker <len.baker@gmx.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Joe Perches <joe@perches.com>,
+        Wed, 25 Aug 2021 06:11:27 -0400
+Received: from vmi485042.contaboserver.net ([161.97.139.209]:34644 "EHLO
+        gentwo.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239874AbhHYKLZ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 25 Aug 2021 06:11:25 -0400
+X-Greylist: delayed 537 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Aug 2021 06:11:25 EDT
+Received: by gentwo.de (Postfix, from userid 1001)
+        id E4281B004CA; Wed, 25 Aug 2021 12:01:42 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.de (Postfix) with ESMTP id E2A99B0021C;
+        Wed, 25 Aug 2021 12:01:42 +0200 (CEST)
+Date:   Wed, 25 Aug 2021 12:01:42 +0200 (CEST)
+From:   Christoph Lameter <cl@gentwo.de>
+To:     Daniel Micay <danielmicay@gmail.com>
+cc:     Christoph Hellwig <hch@infradead.org>,
         Kees Cook <keescook@chromium.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
-Thread-Topic: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
-Thread-Index: AQHXmRVyn+L+Io0D10+HJaTYjDNR26uD6Jzg
-Date:   Wed, 25 Aug 2021 08:48:03 +0000
-Message-ID: <a45274ec2e454323a37cde36bb365e97@AcuMS.aculab.com>
-References: <20210814075527.5999-1-len.baker@gmx.com>
- <YSPbOo90alPsv4vL@zn.tnic> <20210824090338.GB7999@titan>
- <YSU5wp/ZpsXuDgmu@zn.tnic>
-In-Reply-To: <YSU5wp/ZpsXuDgmu@zn.tnic>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, Linux-MM <linux-mm@kvack.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/5] Add __alloc_size() for better bounds checking
+In-Reply-To: <CA+DvKQL6pLfK1vRzaOkEWR7DQLgTh=WZTka2L5yuS8Lf_1ZmoA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2108251158420.317806@gentwo.de>
+References: <20210818050841.2226600-1-keescook@chromium.org> <YR4frlpfJQonPuKp@infradead.org> <CA+DvKQL6pLfK1vRzaOkEWR7DQLgTh=WZTka2L5yuS8Lf_1ZmoA@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogQm9yaXNsYXYgUGV0a292DQo+IFNlbnQ6IDI0IEF1Z3VzdCAyMDIxIDE5OjI2DQouLg0K
-PiBzbyBsb29raW5nIGF0IHRoZSBjb2RlLCB3ZSdyZSBtZXJyaWx5IGRlY3JlbWVudGluZyBsZW4g
-YnV0IG5vdGhpbmcncw0KPiBjaGVja2luZyB3aGV0aGVyIGxlbiBjYW4gYmVjb21lIDAuIEJlY2F1
-c2UgaWYgaXQgZG9lcywgc3Ryc2NweSgpIHdpbGwNCj4gZG86DQo+IA0KPiAJaWYgKGNvdW50ID09
-IDAgfHwgV0FSTl9PTl9PTkNFKGNvdW50ID4gSU5UX01BWCkpDQo+IAkJcmV0dXJuIC1FMkJJRzsN
-Cg0KVGhhdCAtRTJCSUcgaXMgZ29pbmcgdG8gYnJlYWsgc29tZXRoaW5nLg0KSXQgbWVhbnMgdGhh
-dCB5b3UgYWx3YXlzIGhhdmUgdG8gZG8gYW4gZXJyb3IgY2hlY2sgd2hlbmV2ZXINCnlvdSB1c2Ug
-dGhlIHJldHVybiB2YWx1ZSBvZiBzdHJzY3B5KCkuDQoNCkFueXRoaW5nIHRoYXQgZG9lczoNCglv
-ZmZzZXQgKz0gc3Ryc2NweSguLi4pDQppcyBicm9rZW4uDQoNCkl0IHJlYWxseSB3YXNuJ3QgYSBn
-b29kIGlkZWEgZm9yIHJlcG9ydGluZyAndHJ1bmNhdGVkJy4NCg0KCURhdmlkDQoNCi0NClJlZ2lz
-dGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24g
-S2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Thu, 19 Aug 2021, Daniel Micay wrote:
 
+> For example, it will know that kmalloc(n) returns either NULL or an
+> allocation of size n. A simple sample program with calloc in
+> userspace:
+>
+>     #include <stdlib.h>
+>     #include <stdio.h>
+>
+>     int main(void) {
+>         char *p = calloc(64, 1);
+>         if (!p) {
+>             return 1;
+>         }
+>         printf("%zu\n", __builtin_object_size(p, 1));
+>         return 0;
+>     }
+>
+> It will also detect an out-of-bounds access via the allocation with
+> -fsanitize=object-size including with a runtime value as the index.
+>
+> It's not as useful as it should be yet because __builtin_object_size
+> must return a compile-time constant. Clang has a new
+> __builtin_dynamic_object_size that's allowed to return a value that's
+> not a compile-time constant so it can work for kmalloc(n) where n is a
+> runtime value. It might not be quite ready for use yet but it should
+> be able to make it a lot more useful. GCC also seems open to adding it
+> too.
+
+The other complication with kmalloc etc is that the slab allocators may
+decided to allocate more bytes than needed because it does not support
+that particular allocation size. Some functions check the allocated true
+size and make use of that. See ksize().
