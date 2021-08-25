@@ -2,173 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53680C4320A
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 21:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21D8C432BE
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 21:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF66610D1
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 21:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBB260E77
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 21:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233245AbhHYVKv (ORCPT
+        id S229983AbhHYVSS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 25 Aug 2021 17:10:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49094 "EHLO
+        Wed, 25 Aug 2021 17:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232873AbhHYVKu (ORCPT
+        with ESMTP id S229707AbhHYVSS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 25 Aug 2021 17:10:50 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584E2C0613CF
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 14:10:04 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id i28so1808340lfl.2
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 14:10:04 -0700 (PDT)
+        Wed, 25 Aug 2021 17:18:18 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 109C9C061757
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 14:17:32 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id j4so1745290lfg.9
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 14:17:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=E9tATzQmNnf1n87t/HdQMMPUKAwA0uk3NMuEvkkauNQ=;
-        b=rDk6QdPmNKIfsBWw+RCk/zTo1/Iz/KktStVviVo1+3U2kouL2fe+6wd/+A6pEaCMzh
-         xzM7QapYS3avKaOtSvCRpfQi1VypfGMygawhsTaUr+awCsB60kx+mrvhp8FXcMEcdXqO
-         k3IksxDiST5MMM06Rug+w9s0ESAs5BEt6zxwHbiXGdm6tVzS06DDI3L+Lt856rQlitrh
-         fVxEvhZ64781J7thqfN5yP8emsMeF7kIh9DgpVHuJN04jnJVHa/d/zG2uAegWku2U2Q2
-         Xc1QFKy0jWfRFrx/OwfmhlXYphVlf3P8Fh9tkf4nRNAo32xs40V655CNr61QKh0PP7Fd
-         npvw==
+        bh=cAlJBNQn16JjUkHYdCuHXibhY5cJqMeU9e15H1wH+kQ=;
+        b=Twvb5JwGXq7g8xGxqMloGmKOTKjL4Cpr7Hrkzmdj1rM9cAtIDoJQlHk/FubuEVlXUS
+         3YA89nJqolCmBl0X+218EiNXgod3K2tHKBNueNTJp2dhWHaoQEjCYliDGM3Jp+P8jrp1
+         U6incOxlb5XMQ5WLp+xztlf+F7edMQ0aSrHv9TPi+Ll75CedhDDQBSBjY3vID9LJG8lU
+         IceClHUlaGxSZPYAuCqKx7xqyW9uslzP4Lp0rDx9Yl7618mw5Og/JVlsPgflydKIzjRW
+         nTv08AP6n7WDSJXmhx0111VHP64plhof0Gy4X0XfGmjg63JF8AVQ1FVrFBTQ5ppldxFD
+         DVgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E9tATzQmNnf1n87t/HdQMMPUKAwA0uk3NMuEvkkauNQ=;
-        b=OCdJ0IvQ49gRvD48Gi+yHXnfrv+5btYvNuy+Ij3EepED08ZVIwdzcHqnXs4dHfVIod
-         GAUTcRkRtLBc/AqRw4+KXLP/wCCyWcgMdFiHfWQpGyUXO3gbfJmOCHXUIaSZL1pbUVf4
-         jZBhep4cMAPx9Nn7a3JsQeaLBFKWApW/1JUM9TkrHot5AR3gQ3JBrWXANaG3srPwNZre
-         A9xgrbPO4bqKgTX8O8jr2Y0YFQNvjXoyHbC812Q1kRv6DeX+xrhot9lDnO33yQPw150L
-         Bxx1HnFvb5WJxKimbBBpEuKGCItj3zr+s12ytiHwWvTv7PFSeJm/PFkucwbQIdwq394W
-         qpTg==
-X-Gm-Message-State: AOAM533feWdIM0YGyD7qVSqJkdvKJmxTH32i30c98mgmZ2lWFiLwbnsJ
-        F4B+/z8Jj/KmDbu/SIyOk/L+GAQAA36fyTWJ0VUpoA==
-X-Google-Smtp-Source: ABdhPJxcXkQ87HPRlelKv1H2O2oI5mVq94OOJodcCv7br/8wMY6xYTPcFQlMwHXL2Jn30VXNM/5NnB7UPwjzKfyqj9o=
-X-Received: by 2002:a05:6512:3b85:: with SMTP id g5mr87035lfv.368.1629925802350;
- Wed, 25 Aug 2021 14:10:02 -0700 (PDT)
+        bh=cAlJBNQn16JjUkHYdCuHXibhY5cJqMeU9e15H1wH+kQ=;
+        b=Cnx1a2kAkCZgIps3nCmB/HKvLBECRV+Z3GmUpPWtMIDE1nfu9D4SJvRHHoi0lBKu2a
+         TWBdxQ/k6ONZGw9rvakfrc3Yw7HhpMdl7338/Y24Da+RyXcE9XK/rJYHoyciQRJTwK7T
+         loKfQGynYP4/Pytfogrs6dyXj8f7HydPFD00RK+Gy9pmt3JhLscXf1CSJyGhtv73P2R3
+         q9aZRtQWvkQZ5zm0dLdpsCaaJ5PWVG9DhNB546aXydk5P/dlEVIykqtppTAfqP8wNtYp
+         BmnuEPz/1emPM8Alo7++OhgPfHsTbRgQL5XZ0d6c0gIE2lftFggl9iWhkt+W/nG6B+3H
+         /1Yg==
+X-Gm-Message-State: AOAM530XWESyV5P/u/7BoxcL2ueYtOh0lLCkbLuSToeNcwkple9XK/bs
+        OcVtAd/8H7VBsl6t8ThXumYHp9kCxsaVDpaugq/ny5R4bmGdbA==
+X-Google-Smtp-Source: ABdhPJwfpYIvlODDHiRHyf2+aTCddGrNRBCe0ubiEEwEmq1swxye6qx60WEAreo9vIgjPwwCEf++BetmgbXXELUhpN8=
+X-Received: by 2002:a19:5f04:: with SMTP id t4mr88603lfb.297.1629926250176;
+ Wed, 25 Aug 2021 14:17:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210817005624.1455428-1-nathan@kernel.org> <80fa539a-b767-76ed-dafa-4d8d1a6b063e@kernel.org>
- <CAHk-=wgFXOf9OUh3+vmWjhp1PC47RVsUkL0NszBxSWhbGzx4tw@mail.gmail.com>
- <5c856f36-69a7-e274-f72a-c3aef195adeb@kernel.org> <202108171056.EDCE562@keescook>
- <3f28b45e-e725-8b75-042a-d34d90c56361@kernel.org> <CAK7LNAQFgYgavTP2ZG9Y16XBVdPuJ98J_Ty1OrQy1GXHq6JjQQ@mail.gmail.com>
-In-Reply-To: <CAK7LNAQFgYgavTP2ZG9Y16XBVdPuJ98J_Ty1OrQy1GXHq6JjQQ@mail.gmail.com>
+References: <20210818081118.1667663-1-keescook@chromium.org> <20210818081118.1667663-6-keescook@chromium.org>
+In-Reply-To: <20210818081118.1667663-6-keescook@chromium.org>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 25 Aug 2021 14:09:50 -0700
-Message-ID: <CAKwvOdkaHp5akDyAz_rav5u6gu4SgtjhmzftKgNCPr0LVukHOA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Enable -Wimplicit-fallthrough for clang 14.0.0+
-To:     Masahiro Yamada <masahiroy@kernel.org>,
+Date:   Wed, 25 Aug 2021 14:17:18 -0700
+Message-ID: <CAKwvOd=bcs5W6eEDXGn5ROR2EuMiSp_2e6sLFxak=KK6yLWcvA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] Makefile: Enable -Wzero-length-bounds
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
         linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 17, 2021 at 2:18 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Wed, Aug 18, 2021 at 1:11 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> On Wed, Aug 18, 2021 at 3:25 AM Nathan Chancellor <nathan@kernel.org> wrote:
-> >
-> > On 8/17/2021 11:03 AM, Kees Cook wrote:
-> > > On Mon, Aug 16, 2021 at 09:55:28PM -0700, Nathan Chancellor wrote:
-> > >> If you/Gustavo would prefer, I can upgrade that check to
-> > >>
-> > >> ifneq ($(call cc-option, -Wunreachable-code-fallthrough),)
-> > >>
-> > >> I was just trying to save a call to the compiler, as that is more expensive
-> > >> than a shell test call.
-> > >
-> > > I prefer the option test -- this means no changes are needed on the
-> > > kernel build side if it ever finds itself backported to earlier versions
-> > > (and it handles the current case of "14" not meaning "absolute latest").
-> > >
-> > > More specifically, I think you want this (untested):
-> >
-> > That should work but since -Wunreachable-code-fallthrough is off by
-> > default, I did not really see a reason to include it in KBUILD_CFLAGS. I
-> > do not have a strong opinion though, your version is smaller than mine
-> > is so we can just go with that. I'll defer to Gustavo on it since he has
-> > put in all of the work cleaning up the warnings.
+> With all known internal zero-length accesses fixed, it is possible to
+> enable -Wzero-length-bounds globally. Since this is included by default
+> in -Warray-bounds, we just need to stop disabling it.
 >
->
->
-> https://github.com/llvm/llvm-project/commit/9ed4a94d6451046a51ef393cd62f00710820a7e8
->
->    did two things:
->
->  (1) Change the -Wimplicit-fallthrough behavior so that it fits
->       to our use in the kernel
->
->  (2) Add a new option -Wunreachable-code-fallthrough
->       that works like the previous -Wimplicit-fallthrough of
->       Clang <= 13.0.0
->
->
-> They are separate things.
->
-> Checking the presence of -Wunreachable-code-fallthrough
-> does not make sense since we are only interested in (1) here.
->
->
->
-> So, checking the Clang version is sensible and matches
-> the explanation in the comment block.
->
->
-> Moreover, using $(shell test ...) is less expensive than cc-option.
->
->
-> If you want to make it even faster, you can use only
-> built-in functions, like this:
->
->
-> # Warn about unmarked fall-throughs in switch statement.
-> # Clang prior to 14.0.0 warned on unreachable fallthroughs with
-> # -Wimplicit-fallthrough, which is unacceptable due to IS_ENABLED().
-> # https://bugs.llvm.org/show_bug.cgi?id=51094
-> ifeq ($(firstword $(sort $(CONFIG_CLANG_VERSION) 140000)),140000)
-> KBUILD_CFLAGS += -Wimplicit-fallthrough
-> endif
->
->
->
-> The $(sort ...) is alphabetical sort, not numeric sort.
-> It works for us because the minimum Clang version is 10.0.1
-> (that is CONFIG_CLANG_VERSION is always 6-digit)
->
-> It will break when Clang version 100.0.0 is released.
->
-> But, before that, we will raise the minimum supported clang version,
-> and this conditional will go away.
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: linux-kbuild@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I'd much rather pay the cost of cc-option to have a more precise
-check; Linus is right: when I upgrade AOSP's fork of LLVM, it may not
-be the fully released version of clang-14 though we have already moved
-the version numbers upstream to clang-14.  I think we should strive to
-prefer feature tests over version tests, which are brittle.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-```
-# Clang would warn about unreachable fall throughs until clang-14.
-ifdef CONFIG_CC_IS_CLANG
-ifneq ($(call cc-option,-Wunreachable-code-fallthrough),)
-KBUILD_CFLAGS += -Wimplicit-fallthrough
-endif
-endif
-```
+> ---
+>  Makefile | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index af22b83cede7..3b6fb740584e 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1071,7 +1071,6 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+>  KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+>
+>  # We'll want to enable this eventually, but it's not going away for 5.7 at least
+> -KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+>  KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+>
+>  # Another good warning that we'll want to enable eventually
+> --
 
-Is precisely what we want.
 -- 
 Thanks,
 ~Nick Desaulniers
