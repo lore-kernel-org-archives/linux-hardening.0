@@ -2,67 +2,68 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C22C432BE
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 19:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A00DC4320E
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 19:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02B2D610A7
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 19:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA557610D0
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Aug 2021 19:44:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237617AbhHYTm4 (ORCPT
+        id S239340AbhHYTox (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 25 Aug 2021 15:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57564 "EHLO
+        Wed, 25 Aug 2021 15:44:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235061AbhHYTm4 (ORCPT
+        with ESMTP id S232098AbhHYTow (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 25 Aug 2021 15:42:56 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22F4C0613C1
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 12:42:09 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id f2so656156ljn.1
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 12:42:09 -0700 (PDT)
+        Wed, 25 Aug 2021 15:44:52 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CCC5C061757
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 12:44:06 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id i28so616294ljm.7
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 12:44:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=e8bdCyvC7Uu9hJ+o7Jz6ECHUhPAIMpOORzVb26WnGxM=;
-        b=fy7FSMFVhod+RQF9PxaNTXukhehzmnrw1oVvDT6ae1n1J2qALCG4+tGNP3gWGuP4TO
-         EHapm1ur3TPgRbHJ4n4KixsoM/Og/0Hv1QyipQr8I9Gzo7NycATrc3EGLMCdllO2e5pR
-         5C+VYFEX+Txbv5I9Bpxa4Hhud2zg+zRSP8ePynlDEmgWB2YkK06YIpQ7+dQ4/bGDQdEw
-         +RzNQz2O5OCruiOJbcE8PFY5Knpx1aEH9X4LzfLcWCgWbB68/pqzg8Shu07RVYTpqzo4
-         IGZMriF7cj5OC43E+/QyQcAJoE9gGaED08EjsBMgeZaSYJDnQVZ0cf0qOszhqrPOjOVi
-         gh5Q==
+        bh=6hionP+S3WQHCeRsfV2U1fbeKdh6BHUGkpwhUBr6Opo=;
+        b=cSO5M3pXxwAmQTu4luHD6GnYnkqg92T0OMr1XA6ueriTiYW41YJ1a4sLbAmVHerBfw
+         Twvwln+3PoG5r3psuTBFR3bMMBT21KQan37TbOfPSqxaWBJwUjIK7Z6Fb/ySGvljgGZ+
+         /9XpvKthjhblWn4cPz+TQGVoKb2//adm+EAHu702s3rePIN1d1gJtOMnHQXVRmj/jzQG
+         F4Tm4Jc5nKZp+chGDsdDfI5M3twgwM5WfuqdOAGx+jF1TXsZp93DfdgRlck4ywgtDCPo
+         nUMs9u6uiZnEnhVVFlQqRNnkcq+Y+UwuKC5Dbp33Me8D35Xw5mlK9Jk9Q2qJjkBhS0db
+         2NSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=e8bdCyvC7Uu9hJ+o7Jz6ECHUhPAIMpOORzVb26WnGxM=;
-        b=C7gyoq5epyIr77gZKenvnNQpjw90fpAZR7DqftULhTyxTEU+WimR5DZDknvk3CQY1Y
-         QXGdgaK+qBeJ3b6bRB9w2w//RZT5ehvDxbPosYjlREFDzh95V88jJVuREJ630NLPJ3b5
-         ZbY/O4fdE1z+HCJJUPaWJVsEThWs3nH8/GTr66KERXH53DlyrI1oHL6wNnA321C9SioC
-         ygAc+Cc6jviSjtZGU+Lui7tdhvLgwTvC+LyG6SOpDlFiBg7Xg9jEArg8nB062EWvbH+b
-         VXc1WBAinkPx5+n2qQCsm2zhaxcLBNSoYAigR3JgeCGm5TzPz/FI6QPHuDRhxiqWJkt+
-         s9CA==
-X-Gm-Message-State: AOAM533mtwWfbJWzeKWHEY34e7GkwH6J8/0I9iGGuCQGofmGG8OoQMKd
-        PP0K/AbKTz9L7BL/KnBVduTwI1P6HO2uJQ9eI0eEvg==
-X-Google-Smtp-Source: ABdhPJwZnjnGR+4s5l/KVJUFTI3ve9z49umzxrFnkgYuE41CcXxbXBK+PWqEpd6EYW2goWod17qptKYPuxBC6zXhitk=
-X-Received: by 2002:a2e:8008:: with SMTP id j8mr36245723ljg.233.1629920527830;
- Wed, 25 Aug 2021 12:42:07 -0700 (PDT)
+        bh=6hionP+S3WQHCeRsfV2U1fbeKdh6BHUGkpwhUBr6Opo=;
+        b=GbT/u47f1p/M0mh9eq0tnqn6EUgGwoV/rWfSdkPZyImZWaW+3kBSF8QoaHO0+XGC0s
+         U1lAmgI8VIGrycrshBYoHGHR7PmqvzkW6Cj/SHjjG5Yi5zPjaOjObbaGZ6w+xViKY7lu
+         61XtB7W0YmP/ZleAmOES6dmFGCegDIz8AE/523kDlWoHOPt0ReVvzQwkRFirna9cW+Zj
+         qheozGqdcM7I2eToF8EBQB707GMiE5IhKOPnetTQybtkZ0XTSjoZ5lu7mD6KOVgbMHiq
+         zM8cUuXUEDhqZqhy3GZM7WvvJ/duc5x8mEQRsKndB9TQ2uiCk8QlwC02JygqNj+4K0WK
+         CsBw==
+X-Gm-Message-State: AOAM533DOwh4IuR+2mINFCzXe45JTD6tqPiyTnLw7uxy38y+UjmAnVJd
+        sQ5mmPBEpzKc1qnsMs8UEXXkTgynvXTGZM3Y7gcl6w==
+X-Google-Smtp-Source: ABdhPJyZ7uDwfp8fuaRxMK0BR+wxPpEoAE9f9CfLQXt1nMlh04/ioOFiOdQlutGtK4GqkF0S0R4UriHTlLmeZsPRp1A=
+X-Received: by 2002:a2e:a367:: with SMTP id i7mr268052ljn.244.1629920644666;
+ Wed, 25 Aug 2021 12:44:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210822075122.864511-1-keescook@chromium.org> <20210822075122.864511-17-keescook@chromium.org>
-In-Reply-To: <20210822075122.864511-17-keescook@chromium.org>
+References: <20210822075122.864511-1-keescook@chromium.org>
+ <20210822075122.864511-14-keescook@chromium.org> <4fff1f46-ab10-317b-8cf0-05871e4a9d71@rasmusvillemoes.dk>
+In-Reply-To: <4fff1f46-ab10-317b-8cf0-05871e4a9d71@rasmusvillemoes.dk>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 25 Aug 2021 12:41:56 -0700
-Message-ID: <CAKwvOd=A+ueGV2ihdy5GtgR2fQbcXjjAtVxv3=cPjffpebZB7A@mail.gmail.com>
-Subject: Re: [PATCH for-next 16/25] fortify: Explicitly disable Clang support
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+Date:   Wed, 25 Aug 2021 12:43:53 -0700
+Message-ID: <CAKwvOdnd_e7K9Ayn+4pMgWzbu7W8U5dWiSVa9AEKs99m+q7K+g@mail.gmail.com>
+Subject: Re: [PATCH for-next 13/25] compiler_types.h: Remove __compiletime_object_size()
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>,
         Daniel Micay <danielmicay@gmail.com>,
         Francis Laniel <laniel_francis@privacyrequired.com>,
         Bart Van Assche <bvanassche@acm.org>,
@@ -73,57 +74,30 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Aug 22, 2021 at 12:57 AM Kees Cook <keescook@chromium.org> wrote:
+On Sun, Aug 22, 2021 at 11:43 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
 >
-> Clang has never correctly compiled the FORTIFY_SOURCE defenses due to
-> a couple bugs:
+> On 22/08/2021 09.51, Kees Cook wrote:
 >
->         Eliding inlines with matching __builtin_* names
->         https://bugs.llvm.org/show_bug.cgi?id=50322
+> > -     int sz = __compiletime_object_size(addr);
+> > +     int sz = __builtin_object_size(addr, 0);
 >
->         Incorrect __builtin_constant_p() of some globals
->         https://bugs.llvm.org/show_bug.cgi?id=41459
+> Not directly related to this patch, but seeing this I wonder if there
+> would be some value in introducing names for those magic 0/1/2/3 that
+> are used with __b_o_s. Every time I stumble on code using that I have to
+> go to the gcc docs, and even then it takes me a while to grok what
 >
-> In the process of making improvements to the FORTIFY_SOURCE defenses, the
-> first (silent) bug (coincidentally) becomes worked around, but exposes
-> the latter which breaks the build. As such, Clang must not be used with
-> CONFIG_FORTIFY_SOURCE until at least latter bug is fixed (in Clang 13),
-> and the fortify routines have been rearranged.
+>      TYPE is an integer constant from 0 to 3.  If the least significant
+>      bit is clear, objects are whole variables, if it is set, a closest
+>      surrounding subobject is considered the object a pointer points to.
+>      The second bit determines if maximum or minimum of remaining bytes
+>      is computed.
 >
-> Update the Kconfig to reflect the reality of the current situation.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> means. The names don't need to be too verbose, just having a few
+> #defines in-tree with the above quoted above them makes it a lot easier
+> to figure out what they mean.
 
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-
-> ---
->  security/Kconfig | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/security/Kconfig b/security/Kconfig
-> index 0ced7fd33e4d..fe6c0395fa02 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -191,6 +191,9 @@ config HARDENED_USERCOPY_PAGESPAN
->  config FORTIFY_SOURCE
->         bool "Harden common str/mem functions against buffer overflows"
->         depends on ARCH_HAS_FORTIFY_SOURCE
-> +       # https://bugs.llvm.org/show_bug.cgi?id=50322
-> +       # https://bugs.llvm.org/show_bug.cgi?id=41459
-> +       depends on !CC_IS_CLANG
->         help
->           Detect overflows of buffers in common string and memory functions
->           where the compiler can determine and validate the buffer sizes.
-> --
-> 2.30.2
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20210822075122.864511-17-keescook%40chromium.org.
-
-
-
+We share a similar experience.
 -- 
 Thanks,
 ~Nick Desaulniers
