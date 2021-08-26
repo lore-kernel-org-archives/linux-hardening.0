@@ -2,198 +2,432 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-24.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C767C43214
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A603AC43216
 	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 05:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF06610A6
+	by mail.kernel.org (Postfix) with ESMTP id 9C124610CA
 	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 05:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238470AbhHZFFu (ORCPT
+        id S233364AbhHZFFv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 26 Aug 2021 01:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42820 "EHLO
+        Thu, 26 Aug 2021 01:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238028AbhHZFFt (ORCPT
+        with ESMTP id S238369AbhHZFFu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 26 Aug 2021 01:05:49 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7525DC0617A8
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 22:05:02 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id 2so1705651pfo.8
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 22:05:02 -0700 (PDT)
+        Thu, 26 Aug 2021 01:05:50 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E754C0613C1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 22:05:03 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id n13-20020a17090a4e0d00b0017946980d8dso5732969pjh.5
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 22:05:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Bjf8zsEWLFO7/Ib/h44uO3Tc/LDuVPPKXDL5B0YH1P0=;
-        b=ItBe2AmTFmlXnGgM3OXUjArQz/pCBHNTNWhADCdTfqmaG8j+pYR40cFoN7g6S5apQk
-         FNFLKMlswwBFSNCIbS6RmR1uVnEvSz0vhN79BTeVXwbV5Nxbq7XNCuvs5tGBoS4MhiSF
-         k7IWXgpuvgsaqASj1sTThqkJIjZV3l2XAWqaY=
+        bh=fQOw84Q+0nXTS439fkG942FAnjDvqnWfwdQqvALTohQ=;
+        b=mBIJf6cF++on2w7AujWCveBhy0CESIqRracrI4E+ReA9rzTkRtqNOIlcy6OoyMY9rA
+         fVp6vRqdfABOysoWaBwtNlxCGcEfJc+LWjjt7Ug4t+rHu1C9f9TTZFqRONpkHBJ9c3gp
+         TKzREeVw5QxC8MUXXm70TDsfZJAYCuA2pO3mA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bjf8zsEWLFO7/Ib/h44uO3Tc/LDuVPPKXDL5B0YH1P0=;
-        b=evHXY3WOEvJYUsyXtJOYmzBCtILafrXBaKdQ709m2/ZG1Dk7UJlCzMYcZsfMxCgVUp
-         ZjINW+iccmaRiIlA0urPyGThD7DqcdiPXuDt6lkOFmZj4jTeAaaRn4gaKbnNqkMRyu/E
-         oscYnn8t6HgEJsiBOAkIzC0Fgqc+kyveYhmR/tX+HrjJB5YUr5XLXr351cfX0RfbioJh
-         K6PflmsLnLHmZR0HjqGV62Wpsmvv7oq1MgTlMxu3Ks6z4JiwrTJOZLHUEg2wMMis1X8y
-         qn48dNm74WQMwhD+CQzWkRR7KdNaTSsnPQoZHj9KXh2lAcdQ4FCEemtDjrdi2AkKEfqz
-         LeJg==
-X-Gm-Message-State: AOAM533wDCXjYGJud0vNrkvoE3a9k5z8BR1qWgP/c6Wlw4aLgePfdxHi
-        X6KcvtrDPhFjiFb/UBxUotBf/g==
-X-Google-Smtp-Source: ABdhPJz4LBDrbVN7Ty8j/rAw8gzm8IOhqHlWLFmMHx1byZkgYYg5mEnfXIAcUmAQkmY2pVy2dtPAfg==
-X-Received: by 2002:a63:4c0e:: with SMTP id z14mr1746894pga.427.1629954301987;
-        Wed, 25 Aug 2021 22:05:01 -0700 (PDT)
+        bh=fQOw84Q+0nXTS439fkG942FAnjDvqnWfwdQqvALTohQ=;
+        b=jA9r9grmzi5WJJ770qdbRqsVWp4pphMjtL1p4Md+VwRPOduo/nXsILdMERn2Glyu8Q
+         Ct8Vk/mi5RyahJyEUIhuDHv+DNJzuadvcnWZggbKh5SF+BxKUu5SbyI5DBWGnNwn5Br/
+         G9bzL6M69BK4eJI9/O9e88QevmRN5IbBZ7x8EBCCiX35YaSrnan8bZjt2xTkuZjdpmhH
+         t8a9xQ9r4DETSg+MzBLK+R+V7l6nZJLfX10K/mNETSU6pRK1uDtqsn5Ud9nHAQENLkLF
+         XUliI+hq9cLrQdN8Bd2WGm3Dp1WCK+9XFfIrHt7iMAaAL1zmJJq3KoSAFsL/CHNOHJvM
+         /Ywg==
+X-Gm-Message-State: AOAM533bbxZW+B0rXeox2/u2mtk6ri/hGMr/JaAa82M2IYJjQhIAumXf
+        4K1QzhSHfReTOi+DcGa/K6ua/g==
+X-Google-Smtp-Source: ABdhPJwo6VGS8sgKUC/lXBcJ3A2OczgUkjeK4pZ7P3TBrDAjZPBQPQLeVWGiqnBaLDF+/uFr4CyJyQ==
+X-Received: by 2002:a17:90b:4d91:: with SMTP id oj17mr14662366pjb.209.1629954303060;
+        Wed, 25 Aug 2021 22:05:03 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y1sm1778585pga.50.2021.08.25.22.05.00
+        by smtp.gmail.com with ESMTPSA id t13sm1119130pjg.25.2021.08.25.22.05.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 25 Aug 2021 22:05:00 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+Cc:     Kees Cook <keescook@chromium.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Nilesh Javali <njavali@marvell.com>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Fabio Aiuto <fabioaiuto83@gmail.com>,
+        Ross Schmidt <ross.schm.dev@gmail.com>,
+        Marco Cesati <marcocesati@gmail.com>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-staging@lists.linux.dev,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Keith Packard <keithp@keithp.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 1/5] stddef: Add flexible array union helper
-Date:   Wed, 25 Aug 2021 22:04:54 -0700
-Message-Id: <20210826050458.1540622-2-keescook@chromium.org>
+Subject: [PATCH v2 3/5] treewide: Replace 0-element memcpy() destinations with flexible arrays
+Date:   Wed, 25 Aug 2021 22:04:56 -0700
+Message-Id: <20210826050458.1540622-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210826050458.1540622-1-keescook@chromium.org>
 References: <20210826050458.1540622-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4937; h=from:subject; bh=OYtDID8J7StNizowp5Wg1fLuDBrb5WfNy3bIGlN/Sf4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhJyD42tPXbGA6YjavUogqBy5DKEOesnsgInMjhgiJ j6k5fzqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYScg+AAKCRCJcvTf3G3AJuIxD/ 9qTo5HJzehOCezWOZekXVh6mKrVwKgNXzFv5hZI6nedbnrqDmEMIEClEBxjakuCACEvA0US6AOe0De /opDL8nhnKWhEndjyrbPcrFCWeO2F2LoPTftJq0vMU76vP3yhWvbs+BkWKRr+O1jKMIzJQcW6QN8vY sEuELPbfhnMfoPyWDlMRdDqt0zRazB/CeRpKtDDivmaHCuoWWLFD/47DYVRvEqS3aFHpI3yYdu1/lo WUDvWxocyX3m2qyi0vB8dLUlBfmoVKpZms/lBfWbbNe855cXI+QY9hl+mE2oNiRCsQmu2VWVJUORfL VeYitMEmXTmt+F9N5smVQLHUFbA1kSFcWRyY3w5z0EVotZu/9bu8HG7W2WtcZIOc3SRtZCv6DewNu1 KOdWDO6JJeZSKBBr8zcPAGmvDFB2rkq8vHqCCfvx/BJArPwETQXNURT9p+1wKQ07yOp1cOP1TP86PG +zVpTF1nvUTYe3Xwb2Lw+hifIekUyuqCErFLT4LRg3E853rbENNkZHX8R6/TXcRmROw8g28vEsWFwG xIVLqjX9CvYp3imX0nIGCZBPUhudrqgDIllOmlnugQtvWrqYWf+i0IZ8oLh0Knnx8fLokFXflc6Udw eChuEIt5f9zz1Ae8qHrsBcua4cmXIm0nMh64wvZWU8/+dyC6v4HuXA3XekXA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9605; h=from:subject; bh=tuToPGIO1fwcT/OaQE7CJFyWXS25t8uKJXExyhn0DhY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhJyD5WMohc3p5GetuWgfUYA3hlc3eWWWJdl37Tmzk tsRDR+6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYScg+QAKCRCJcvTf3G3AJjLxD/ 0WbSS7m0+jhuZ0yEDDmx1f3f3Fd4ylc4n8eEvJqyWQTOEBeC52HalM7Wv0GoqDZsr409+b70Kj9En7 2n3jS2Nmosga/L9RN7YC9u8qi0OdqGXVUmPmOeeAy6vMY3nf32TfdIzBf0OFgzOF693Uri3lQdQkGt X1n7jN2/ma2qJETdJEoWZeFuLUJzQFnFmLtffWGvJelOhGoZJVCtEqyChndE2RRsiGw9sxkJrtip/M wVQhx9fXljN7jgmfAnkuyY8cPPfzM8tFAZk5QNk1DwKxkTY6kSjPMt3wQIP2PWVeJxve8cxG6tBEBy 9QcRSQin4AKCk5e1K9dRUpr2rBZ2pxTpu9+h1fQLeq9crY4tlIWA1N9IE+CYenSB5QS/ElgexfKNWg QRC7FAybRvx09RpC7bmtInRliESEbFkmAyXw51g8m6wzhInC4+FQEU3btvs3iAdymFag/3LI+VDOqN 5i89pzAUXDMY+BMrDEHQd5bsBN4FxGIZeLO0x4J0nF3WZCfnqplq/MCuM8U9cVBQWVBkao42uT4M03 Yy3Q3ELveBean30nqem7NAzic3v+h/HJEV+FbLPiM77rxRQPDLqVPu8NjkMJdVAcDTZpjIfLbI/bt/ ZPL1usCDRxrpqI9YR6ZS/0XI6opvoGU0RxLd5AQLk0ekgfIvkKpQ5pCyGAaQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Many places in the kernel want to use a flexible array in a union. This
-is especially common when wanting several different typed trailing
-flexible arrays. Since GCC and Clang don't (on the surface) allow this,
-such structs have traditionally used combinations of zero-element arrays
-instead. This is usually in the form:
+The 0-element arrays that are used as memcpy() destinations are actually
+flexible arrays. Adjust their structures accordingly so that memcpy()
+can better reason able their destination size (i.e. they need to be seen
+as "unknown" length rather than "zero").
 
-struct thing {
-	...
-	struct type1 foo[0];
-	struct type2 bar[];
-};
+In some cases, use of the flex_array() helper is needed when a flexible
+array is part of a union.
 
-This causes problems with size checks against such zero-element arrays
-(for example with -Warray-bounds and -Wzero-length-bounds), so they must
-all be converted to "real" flexible arrays, avoiding warnings like this:
-
-fs/hpfs/anode.c: In function 'hpfs_add_sector_to_btree':
-fs/hpfs/anode.c:209:27: warning: array subscript 0 is outside the bounds of an interior zero-length array 'struct bplus_internal_node[0]' [-Wzero-length-bounds]
-  209 |    anode->btree.u.internal[0].down = cpu_to_le32(a);
-      |    ~~~~~~~~~~~~~~~~~~~~~~~^~~
-In file included from fs/hpfs/hpfs_fn.h:26,
-                 from fs/hpfs/anode.c:10:
-fs/hpfs/hpfs.h:412:32: note: while referencing 'internal'
-  412 |     struct bplus_internal_node internal[0]; /* (internal) 2-word entries giving
-      |                                ^~~~~~~~
-
-drivers/net/can/usb/etas_es58x/es58x_fd.c: In function 'es58x_fd_tx_can_msg':
-drivers/net/can/usb/etas_es58x/es58x_fd.c:360:35: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[]'} [-Wzero-length-bounds]
-  360 |  tx_can_msg = (typeof(tx_can_msg))&es58x_fd_urb_cmd->raw_msg[msg_len];
-      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/net/can/usb/etas_es58x/es58x_core.h:22,
-                 from drivers/net/can/usb/etas_es58x/es58x_fd.c:17:
-drivers/net/can/usb/etas_es58x/es58x_fd.h:231:6: note: while referencing 'raw_msg'
-  231 |   u8 raw_msg[0];
-      |      ^~~~~~~
-
-Introduce DECLARE_FLEX_ARRAY() in support of flexible arrays in unions. It
-is entirely possible to have a flexible array in a union: it just has to
-be in a struct. And since it cannot be alone in a struct, such a struct
-must have at least 1 other named member but that member can be zero sized.
-
-As with struct_group(), this is needed in UAPI headers as well, so
-implement the core there, with non-UAPI wrapper.
-
-Additionally update kernel-doc to understand its existence.
-
-https://github.com/KSPP/linux/issues/137
-
-Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Nilesh Javali <njavali@marvell.com>
+Cc: Manish Rangankar <mrangankar@marvell.com>
+Cc: GR-QLogic-Storage-Upstream@marvell.com
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Phillip Potter <phil@philpotter.co.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Florian Schilhabel <florian.c.schilhabel@googlemail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
+Cc: Ross Schmidt <ross.schm.dev@gmail.com>
+Cc: Marco Cesati <marcocesati@gmail.com>
+Cc: ath10k@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Cc: linux-staging@lists.linux.dev
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/stddef.h      | 13 +++++++++++++
- include/uapi/linux/stddef.h | 16 ++++++++++++++++
- scripts/kernel-doc          |  2 ++
- 3 files changed, 31 insertions(+)
+ drivers/net/wireless/ath/ath10k/bmi.h         | 10 +++----
+ drivers/scsi/qla4xxx/ql4_def.h                |  4 +--
+ drivers/staging/rtl8188eu/include/ieee80211.h |  6 ++--
+ drivers/staging/rtl8712/ieee80211.h           |  4 +--
+ drivers/staging/rtl8723bs/include/ieee80211.h |  6 ++--
+ include/linux/ieee80211.h                     | 30 +++++++++----------
+ include/uapi/linux/dlm_device.h               |  4 +--
+ 7 files changed, 32 insertions(+), 32 deletions(-)
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 8b103a53b000..ca507bd5f808 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -84,4 +84,17 @@ enum {
- #define struct_group_tagged(TAG, NAME, MEMBERS...) \
- 	__struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+diff --git a/drivers/net/wireless/ath/ath10k/bmi.h b/drivers/net/wireless/ath/ath10k/bmi.h
+index f6fadcbdd86e..0685c0d2d4ea 100644
+--- a/drivers/net/wireless/ath/ath10k/bmi.h
++++ b/drivers/net/wireless/ath/ath10k/bmi.h
+@@ -109,7 +109,7 @@ struct bmi_cmd {
+ 		struct {
+ 			__le32 addr;
+ 			__le32 len;
+-			u8 payload[0];
++			u8 payload[];
+ 		} write_mem;
+ 		struct {
+ 			__le32 addr;
+@@ -138,18 +138,18 @@ struct bmi_cmd {
+ 		} rompatch_uninstall;
+ 		struct {
+ 			__le32 count;
+-			__le32 patch_ids[0]; /* length of @count */
++			__le32 patch_ids[]; /* length of @count */
+ 		} rompatch_activate;
+ 		struct {
+ 			__le32 count;
+-			__le32 patch_ids[0]; /* length of @count */
++			__le32 patch_ids[]; /* length of @count */
+ 		} rompatch_deactivate;
+ 		struct {
+ 			__le32 addr;
+ 		} lz_start;
+ 		struct {
+ 			__le32 len; /* max BMI_MAX_DATA_SIZE */
+-			u8 payload[0]; /* length of @len */
++			u8 payload[]; /* length of @len */
+ 		} lz_data;
+ 		struct {
+ 			u8 name[BMI_NVRAM_SEG_NAME_SZ];
+@@ -160,7 +160,7 @@ struct bmi_cmd {
  
-+/**
-+ * DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
-+ *
-+ * @TYPE: The type of each flexible array element
-+ * @NAME: The name of the flexible array member
-+ *
-+ * In order to have a flexible array member in a union or alone in a
-+ * struct, it needs to be wrapped in an anonymous struct with at least 1
-+ * named member, but that member can be empty.
-+ */
-+#define DECLARE_FLEX_ARRAY(TYPE, NAME) \
-+	__DECLARE_FLEX_ARRAY(TYPE, NAME)
-+
+ union bmi_resp {
+ 	struct {
+-		u8 payload[0];
++		DECLARE_FLEX_ARRAY(u8, payload);
+ 	} read_mem;
+ 	struct {
+ 		__le32 result;
+diff --git a/drivers/scsi/qla4xxx/ql4_def.h b/drivers/scsi/qla4xxx/ql4_def.h
+index 031569c496e5..69a590546bf9 100644
+--- a/drivers/scsi/qla4xxx/ql4_def.h
++++ b/drivers/scsi/qla4xxx/ql4_def.h
+@@ -366,13 +366,13 @@ struct qla4_work_evt {
+ 		struct {
+ 			enum iscsi_host_event_code code;
+ 			uint32_t data_size;
+-			uint8_t data[0];
++			uint8_t data[];
+ 		} aen;
+ 		struct {
+ 			uint32_t status;
+ 			uint32_t pid;
+ 			uint32_t data_size;
+-			uint8_t data[0];
++			uint8_t data[];
+ 		} ping;
+ 	} u;
+ };
+diff --git a/drivers/staging/rtl8188eu/include/ieee80211.h b/drivers/staging/rtl8188eu/include/ieee80211.h
+index da6245a77d5d..aa5c1a513495 100644
+--- a/drivers/staging/rtl8188eu/include/ieee80211.h
++++ b/drivers/staging/rtl8188eu/include/ieee80211.h
+@@ -199,7 +199,7 @@ struct ieee_param {
+ 		struct {
+ 			u32 len;
+ 			u8 reserved[32];
+-			u8 data[0];
++			u8 data[];
+ 		} wpa_ie;
+ 		struct {
+ 			int command;
+@@ -212,7 +212,7 @@ struct ieee_param {
+ 			u8 idx;
+ 			u8 seq[8]; /* sequence counter (set: RX, get: TX) */
+ 			u16 key_len;
+-			u8 key[0];
++			u8 key[];
+ 		} crypt;
+ #ifdef CONFIG_88EU_AP_MODE
+ 		struct {
+@@ -224,7 +224,7 @@ struct ieee_param {
+ 		} add_sta;
+ 		struct {
+ 			u8	reserved[2];/* for set max_num_sta */
+-			u8	buf[0];
++			u8	buf[];
+ 		} bcn_ie;
  #endif
-diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
-index 610204f7c275..3021ea25a284 100644
---- a/include/uapi/linux/stddef.h
-+++ b/include/uapi/linux/stddef.h
-@@ -25,3 +25,19 @@
- 		struct { MEMBERS } ATTRS; \
- 		struct TAG { MEMBERS } ATTRS NAME; \
- 	}
-+
-+/**
-+ * __DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
-+ *
-+ * @TYPE: The type of each flexible array element
-+ * @NAME: The name of the flexible array member
-+ *
-+ * In order to have a flexible array member in a union or alone in a
-+ * struct, it needs to be wrapped in an anonymous struct with at least 1
-+ * named member, but that member can be empty.
-+ */
-+#define __DECLARE_FLEX_ARRAY(TYPE, NAME)	\
-+	struct { \
-+		struct { } __empty_ ## NAME; \
-+		TYPE NAME[]; \
-+	}
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index d9715efbe0b7..65088b512d14 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -1263,6 +1263,8 @@ sub dump_struct($$) {
- 	$members =~ s/DECLARE_KFIFO\s*\($args,\s*$args,\s*$args\)/$2 \*$1/gos;
- 	# replace DECLARE_KFIFO_PTR
- 	$members =~ s/DECLARE_KFIFO_PTR\s*\($args,\s*$args\)/$2 \*$1/gos;
-+	# replace DECLARE_FLEX_ARRAY
-+	$members =~ s/(?:__)?DECLARE_FLEX_ARRAY\s*\($args,\s*$args\)/$1 $2\[\]/gos;
- 	my $declaration = $members;
  
- 	# Split nested struct/union elements as newer ones
+diff --git a/drivers/staging/rtl8712/ieee80211.h b/drivers/staging/rtl8712/ieee80211.h
+index 61eff7c5746b..65ceaca9b51e 100644
+--- a/drivers/staging/rtl8712/ieee80211.h
++++ b/drivers/staging/rtl8712/ieee80211.h
+@@ -78,7 +78,7 @@ struct ieee_param {
+ 		struct {
+ 			u32 len;
+ 			u8 reserved[32];
+-			u8 data[0];
++			u8 data[];
+ 		} wpa_ie;
+ 		struct {
+ 			int command;
+@@ -91,7 +91,7 @@ struct ieee_param {
+ 			u8 idx;
+ 			u8 seq[8]; /* sequence counter (set: RX, get: TX) */
+ 			u16 key_len;
+-			u8 key[0];
++			u8 key[];
+ 		} crypt;
+ 	} u;
+ };
+diff --git a/drivers/staging/rtl8723bs/include/ieee80211.h b/drivers/staging/rtl8723bs/include/ieee80211.h
+index 378c21595e05..89c311cd20a6 100644
+--- a/drivers/staging/rtl8723bs/include/ieee80211.h
++++ b/drivers/staging/rtl8723bs/include/ieee80211.h
+@@ -180,7 +180,7 @@ struct ieee_param {
+ 		struct {
+ 			u32 len;
+ 			u8 reserved[32];
+-			u8 data[0];
++			u8 data[];
+ 		} wpa_ie;
+ 	        struct{
+ 			int command;
+@@ -193,7 +193,7 @@ struct ieee_param {
+ 			u8 idx;
+ 			u8 seq[8]; /* sequence counter (set: RX, get: TX) */
+ 			u16 key_len;
+-			u8 key[0];
++			u8 key[];
+ 		} crypt;
+ 		struct {
+ 			u16 aid;
+@@ -204,7 +204,7 @@ struct ieee_param {
+ 		} add_sta;
+ 		struct {
+ 			u8 reserved[2];/* for set max_num_sta */
+-			u8 buf[0];
++			u8 buf[];
+ 		} bcn_ie;
+ 	} u;
+ };
+diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
+index a6730072d13a..445597c03cd1 100644
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -1101,7 +1101,7 @@ struct ieee80211_mgmt {
+ 			__le16 auth_transaction;
+ 			__le16 status_code;
+ 			/* possibly followed by Challenge text */
+-			u8 variable[0];
++			u8 variable[];
+ 		} __packed auth;
+ 		struct {
+ 			__le16 reason_code;
+@@ -1110,26 +1110,26 @@ struct ieee80211_mgmt {
+ 			__le16 capab_info;
+ 			__le16 listen_interval;
+ 			/* followed by SSID and Supported rates */
+-			u8 variable[0];
++			u8 variable[];
+ 		} __packed assoc_req;
+ 		struct {
+ 			__le16 capab_info;
+ 			__le16 status_code;
+ 			__le16 aid;
+ 			/* followed by Supported rates */
+-			u8 variable[0];
++			u8 variable[];
+ 		} __packed assoc_resp, reassoc_resp;
+ 		struct {
+ 			__le16 capab_info;
+ 			__le16 status_code;
+-			u8 variable[0];
++			u8 variable[];
+ 		} __packed s1g_assoc_resp, s1g_reassoc_resp;
+ 		struct {
+ 			__le16 capab_info;
+ 			__le16 listen_interval;
+ 			u8 current_ap[ETH_ALEN];
+ 			/* followed by SSID and Supported rates */
+-			u8 variable[0];
++			u8 variable[];
+ 		} __packed reassoc_req;
+ 		struct {
+ 			__le16 reason_code;
+@@ -1140,11 +1140,11 @@ struct ieee80211_mgmt {
+ 			__le16 capab_info;
+ 			/* followed by some of SSID, Supported rates,
+ 			 * FH Params, DS Params, CF Params, IBSS Params, TIM */
+-			u8 variable[0];
++			u8 variable[];
+ 		} __packed beacon;
+ 		struct {
+ 			/* only variable items: SSID, Supported rates */
+-			u8 variable[0];
++			DECLARE_FLEX_ARRAY(u8, variable);
+ 		} __packed probe_req;
+ 		struct {
+ 			__le64 timestamp;
+@@ -1152,7 +1152,7 @@ struct ieee80211_mgmt {
+ 			__le16 capab_info;
+ 			/* followed by some of SSID, Supported rates,
+ 			 * FH Params, DS Params, CF Params, IBSS Params */
+-			u8 variable[0];
++			u8 variable[];
+ 		} __packed probe_resp;
+ 		struct {
+ 			u8 category;
+@@ -1161,16 +1161,16 @@ struct ieee80211_mgmt {
+ 					u8 action_code;
+ 					u8 dialog_token;
+ 					u8 status_code;
+-					u8 variable[0];
++					u8 variable[];
+ 				} __packed wme_action;
+ 				struct{
+ 					u8 action_code;
+-					u8 variable[0];
++					u8 variable[];
+ 				} __packed chan_switch;
+ 				struct{
+ 					u8 action_code;
+ 					struct ieee80211_ext_chansw_ie data;
+-					u8 variable[0];
++					u8 variable[];
+ 				} __packed ext_chan_switch;
+ 				struct{
+ 					u8 action_code;
+@@ -1186,7 +1186,7 @@ struct ieee80211_mgmt {
+ 					__le16 timeout;
+ 					__le16 start_seq_num;
+ 					/* followed by BA Extension */
+-					u8 variable[0];
++					u8 variable[];
+ 				} __packed addba_req;
+ 				struct{
+ 					u8 action_code;
+@@ -1202,11 +1202,11 @@ struct ieee80211_mgmt {
+ 				} __packed delba;
+ 				struct {
+ 					u8 action_code;
+-					u8 variable[0];
++					u8 variable[];
+ 				} __packed self_prot;
+ 				struct{
+ 					u8 action_code;
+-					u8 variable[0];
++					u8 variable[];
+ 				} __packed mesh_action;
+ 				struct {
+ 					u8 action;
+@@ -1250,7 +1250,7 @@ struct ieee80211_mgmt {
+ 					u8 toa[6];
+ 					__le16 tod_error;
+ 					__le16 toa_error;
+-					u8 variable[0];
++					u8 variable[];
+ 				} __packed ftm;
+ 			} u;
+ 		} __packed action;
+diff --git a/include/uapi/linux/dlm_device.h b/include/uapi/linux/dlm_device.h
+index f880d2831160..e83954c69fff 100644
+--- a/include/uapi/linux/dlm_device.h
++++ b/include/uapi/linux/dlm_device.h
+@@ -45,13 +45,13 @@ struct dlm_lock_params {
+ 	void __user *bastaddr;
+ 	struct dlm_lksb __user *lksb;
+ 	char lvb[DLM_USER_LVB_LEN];
+-	char name[0];
++	char name[];
+ };
+ 
+ struct dlm_lspace_params {
+ 	__u32 flags;
+ 	__u32 minor;
+-	char name[0];
++	char name[];
+ };
+ 
+ struct dlm_purge_params {
 -- 
 2.30.2
 
