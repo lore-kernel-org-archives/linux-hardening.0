@@ -2,155 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BF2C432BE
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 03:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237B5C432BE
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 05:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A51610CD
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 03:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F397861073
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 05:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233873AbhHZDug convert rfc822-to-8bit (ORCPT
+        id S238252AbhHZFFt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 25 Aug 2021 23:50:36 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:37515 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbhHZDuf (ORCPT
+        Thu, 26 Aug 2021 01:05:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235468AbhHZFFs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 25 Aug 2021 23:50:35 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.73 with qID 17Q3mKQ61021020, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36501.realtek.com.tw[172.21.6.27])
-        by rtits2.realtek.com.tw (8.15.2/2.71/5.88) with ESMTPS id 17Q3mKQ61021020
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 26 Aug 2021 11:48:20 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36501.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 26 Aug 2021 11:48:19 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 26 Aug 2021 11:48:18 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::cdd5:82a3:e854:7098]) by
- RTEXMBS04.realtek.com.tw ([fe80::cdd5:82a3:e854:7098%5]) with mapi id
- 15.01.2106.013; Thu, 26 Aug 2021 11:48:18 +0800
-From:   Pkshih <pkshih@realtek.com>
-To:     Kees Cook <keescook@chromium.org>
-CC:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kaixu Xia <kaixuxia@tencent.com>,
-        Joe Perches <joe@perches.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] rtlwifi: rtl8192de: Restore channel index initialization
-Thread-Topic: [PATCH] rtlwifi: rtl8192de: Restore channel index initialization
-Thread-Index: AQHXmd9h/5hSWDmaB0eK6ixaYO0v8quE8ftA//+aYgCAAJKPAA==
-Date:   Thu, 26 Aug 2021 03:48:18 +0000
-Message-ID: <0a292d54a2574fb486f905c1c8c94bcf@realtek.com>
-References: <20210825183103.1142909-1-keescook@chromium.org>
- <0f63064fd9f4464a87d9358e874c6b84@realtek.com>
- <202108251935.1F1CBBD3@keescook>
-In-Reply-To: <202108251935.1F1CBBD3@keescook>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.69.146]
-x-kse-serverinfo: RTEXMBS04.realtek.com.tw, 9
-x-kse-attachmentfiltering-interceptor-info: no applicable attachment filtering
- rules found
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: =?us-ascii?Q?Clean,_bases:_2021/8/25_=3F=3F_11:16:00?=
-x-kse-bulkmessagesfiltering-scan-result: protection disabled
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 26 Aug 2021 01:05:48 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5C7C0613CF
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 22:05:02 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id n18so2037039pgm.12
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 22:05:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=H+ke82JqnNzuF+ETLARNzezEA9Zqm2D4YO8akYC5ijQ=;
+        b=TXfA89AwrHNBCE0emeWk24ecxJ5IcsflSZCiMHER4Vz/S6r2VxQGH+ZyLfhNaiGz2X
+         8hn6ZM+WaZgk8lsalj+53TMWoYSZihHlWGdPZZQ2Lk7u4nLLuXnHnUhhUYlLqCs+ltCD
+         YCETgE3Vuy9QfKCuisQgOQr6bNjw6Az3WpSOo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=H+ke82JqnNzuF+ETLARNzezEA9Zqm2D4YO8akYC5ijQ=;
+        b=rKNx4g4QVucB+fCWYPjXnMZthzyw37S3fJ3RGpf5WM9IBIJb8KGy5G3ot+fXRdwTLr
+         2jxypL+EZItbk8RedwV7/LoeGJU8Yn9Tu2CdKGWynm78nOevXGHv6610CcxZXVOqLM0R
+         YCs1XUvdbnNLe+4Q5m4xxmiqwLU1ggyMBHUEjoArZGU2uaIsWkujBVfJWQAsdX5sF/gD
+         SE0baIA+OWGkcAQKIRiTU7TXX+ODioRvYo2bEhoRS1Axi9GDTi4IbQ/IAfZQPHTDiO7U
+         p2fbTw0hXtf0eA0CbmyaOeZu0ZDzToGOEcuk7NcZoUdTexPm7TThpCHLGJAnKhMgZ5fn
+         0eHw==
+X-Gm-Message-State: AOAM531U+gL0Fc6XmLUYoM0CDU9zvlmb/sTDuIiKKDvmmILs9L4Thp5o
+        0UzCXa/h1JjkfzfCEg7gnLLuXg==
+X-Google-Smtp-Source: ABdhPJx2VMSKs/v7tqMFkn/Q6/kBji0mAtIa+Anlr5oH0jYuxB1l7qI8qu3PXXevarRmfGhnqeoBRA==
+X-Received: by 2002:a63:c158:: with SMTP id p24mr1726458pgi.336.1629954301691;
+        Wed, 25 Aug 2021 22:05:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d18sm1812151pgk.24.2021.08.25.22.05.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Aug 2021 22:05:00 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Keith Packard <keithp@keithp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: [PATCH v2 4/5] Makefile: Enable -Warray-bounds
+Date:   Wed, 25 Aug 2021 22:04:57 -0700
+Message-Id: <20210826050458.1540622-5-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210826050458.1540622-1-keescook@chromium.org>
+References: <20210826050458.1540622-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-KSE-ServerInfo: RTEXH36501.realtek.com.tw, 9
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: protection disabled
-X-KSE-AntiSpam-Outbound-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 5.9.20, Database issued on: 08/26/2021 03:28:23
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 165781 [Aug 25 2021]
-X-KSE-AntiSpam-Info: Version: 5.9.20.0
-X-KSE-AntiSpam-Info: Envelope from: pkshih@realtek.com
-X-KSE-AntiSpam-Info: LuaCore: 457 457 f9912fc467375383fbac52a53ade5bbe1c769e2a
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: lore.kernel.org:7.1.1;realtek.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 08/26/2021 03:30:00
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1113; h=from:subject; bh=oefMcHZzjrqvoOMjUB7suXN8EJKiDU2oIYgtW+uUBtg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhJyD5aFIio04DmLvoRaIim4FnyDX46vN/W1R6TAc9 7X8LHOKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYScg+QAKCRCJcvTf3G3AJnbVD/ 99uKUWved0lEF54nU1F7qKRM+Mv7siWIawdByX70YCMH1LpDZs6ja7HAHyb5nY0zJbQwGopcJsFn11 yntizr+UNLRhKE+CI5hmHijdbpaXrvNxCaSJF+DAkyEjqlmlAHSm1FWzX2ffYiEMhJTdPUebBpDVYr xwj4co1+92cPTQZg9VaD5UN55j9gc46QTYRsyvBl2jxtW8DPSVTWy7vaCya9Bn4TY5evml2nwFt3p+ sf7fn9Y1rf8xHpOEa+gNVbFst4tZ3KV9UupkpsSLi7+VLwDm9g2fwhma1aWdrtuO3q7iBbKEs3Y2Qq ans0Np+r32K3v5Pm7PYx8VDN9zn0LvK9Oc4Gsm6blZyPCqulPENZid0NeFXBICff4z2MgWn+UR4fyJ EqSn/aDYwWG6PjKkkfVr4NZr/olZHzwEhpaqReNAWzV01WUSmo+cmq3LIR7SslJXMiPM9F33KwApfq guhvH6SLi67EfhowGkIyFpDil1Keh+khqje+ZsIJgTqAhiBF72scXtqvP73hNT6w3M5x46LZyRLDbN TjvGaYP/k4JRtFdZYCxLFFVDov+8nlgA09DuTuePiFy68KyvBo1pZPZSNJejo1N5DSu5ll3PmckN+A IwAMOP/e2UwotUVUgDM95mAQA/ypXqzU/BhSxY9MkQfLOT5IAjW2i5ByugJw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+With the recent fixes for flexible arrays and expanded FORTIFY_SOURCE
+coverage, it is now possible to enable -Warray-bounds. Since both
+GCC and Clang include -Warray-bounds in -Wall, we just need to stop
+disabling it.
 
-> -----Original Message-----
-> From: Kees Cook [mailto:keescook@chromium.org]
-> Sent: Thursday, August 26, 2021 10:36 AM
-> To: Pkshih
-> Cc: Kalle Valo; David S. Miller; Jakub Kicinski; Larry Finger; Colin Ian King; Kaixu Xia; Joe Perches;
-> linux-wireless@vger.kernel.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> linux-hardening@vger.kernel.org
-> Subject: Re: [PATCH] rtlwifi: rtl8192de: Restore channel index initialization
-> 
-> On Thu, Aug 26, 2021 at 12:45:53AM +0000, Pkshih wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Kees Cook [mailto:keescook@chromium.org]
-> > > Sent: Thursday, August 26, 2021 2:31 AM
-> > > To: Pkshih
-> > > Cc: Kees Cook; Kalle Valo; David S. Miller; Jakub Kicinski; Larry Finger; Colin Ian King; Kaixu
-> Xia;
-> > > Joe Perches; linux-wireless@vger.kernel.org; netdev@vger.kernel.org;
-> linux-kernel@vger.kernel.org;
-> > > linux-hardening@vger.kernel.org
-> > > Subject: [PATCH] rtlwifi: rtl8192de: Restore channel index initialization
-> > >
-> > > 2G channel indexes still need "place" to be initialized, since it is
-> > > returned from this function when channel is less than 14.
-> > >
-> > > Fixes: 369956ae5720 ("rtlwifi: rtl8192de: Remove redundant variable initializations")
-> >
-> > Like the patch "rtlwifi: rtl8192de: Fix initialization of place in _rtl92c_phy_get_rightchnlplace()"
-> > you sent before, please help to correct the removal of the commit 369956ae5720.
-> > I think we can add following into this patch.
-> >
-> > --- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-> > +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-> > @@ -1363,7 +1363,7 @@ static void _rtl92d_phy_switch_rf_setting(struct ieee80211_hw *hw, u8 channel)
-> >
-> >  u8 rtl92d_get_rightchnlplace_for_iqk(u8 chnl)
-> >  {
-> > -       u8 place = chnl;
-> > +       u8 place;
-> >
-> >         if (chnl > 14) {
-> >                 for (place = 14; place < sizeof(channel_all); place++) {
-> 
-> Oh, er, it looks like Nathan found this before me, yes. I think
-> https://lore.kernel.org/linux-wireless/20210823222014.764557-1-nathan@kernel.org/
-> is the complete patch.
-> 
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org
+Co-developed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-Oops. Sorry, I misread the author who isn't you.
-
+diff --git a/Makefile b/Makefile
+index e4f5895badb5..8e7e73a642e2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -995,7 +995,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ 
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+-KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+ 
+ # Another good warning that we'll want to enable eventually
+-- 
+2.30.2
 
