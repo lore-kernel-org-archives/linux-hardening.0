@@ -2,126 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EBEC4320E
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 15:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE8DC432BE
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 16:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8AF61002
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 15:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762FA60F6F
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 16:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242967AbhHZPkl (ORCPT
+        id S243062AbhHZQzD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 26 Aug 2021 11:40:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242923AbhHZPkk (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 26 Aug 2021 11:40:40 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4625AC0613CF
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Aug 2021 08:39:53 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id qe12-20020a17090b4f8c00b00179321cbae7so2659247pjb.2
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Aug 2021 08:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=0x3JVYJjoPp3mCHZGSPU/br7LvYDmK0AvhxHSp9lei4=;
-        b=BR2UH4Z+GTbgEsYwtzFTbhdGQ/ifkZOkcR9teV+AYwQ3uF+6UE2vX9k0M4WOgNrNWf
-         raCkiFOMfrY6FzZdgajczRJJIDJCdW9kwHCG5G2CE9JrNoSypm+HxXGIIAQstL4hFcZ9
-         m1iWfYepYFxbr1A5juP/ftBYb8BjyINYS3TVo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=0x3JVYJjoPp3mCHZGSPU/br7LvYDmK0AvhxHSp9lei4=;
-        b=nOuoi6UC6oVJY3zKZoDvb/Q2Iqoa9Mz8HIzT6PZeHS6wUWfEJ/f4eK5YMOLnxWHzNt
-         7tz2ZXyaI1ydNj5UGSDJkqRjn8GHrKRx2SAkK84MS+Co18LaaRqi/4Hr+kiJiojqL880
-         t5/3qYzlPr8l1MZCbTch3bwU8RohcaMqnM8bGqYGQniSqrxLREvhsgyEc1FyTmOfeXJF
-         3c71ZS7rW6Xd5uYMhxzdrvIVsVlxMcYfqw1e83taSnyki1gLKl/6OIyzRb9gJLWIfbYO
-         +9xBhuvJ0HK4/DR7JXnLoXXdxJjZ5dL87Q1RAj7w4f0Iknfi1W/mQY0CwjPwec8ytjxJ
-         DxqA==
-X-Gm-Message-State: AOAM532Bb+IIuvLIDK//PrcGI8RaAAkE0KArQTrdQBoHPNz50lH5v8GR
-        ZSgN+w8eyVlP++wkPpioAHLqLQ==
-X-Google-Smtp-Source: ABdhPJyT1qPGkMrZWNyo9SQCMwAQb4rxdWH8bunPfFQd6Ss5tMxVMpPCzWceJSepz+bPci6A3ddt0g==
-X-Received: by 2002:a17:90a:14e4:: with SMTP id k91mr17431519pja.3.1629992392852;
-        Thu, 26 Aug 2021 08:39:52 -0700 (PDT)
-Received: from ?IPv6:::1? ([2600:6c55:4b00:c768:1835:a5a0:2702:1052])
-        by smtp.gmail.com with ESMTPSA id z131sm3466093pfc.159.2021.08.26.08.39.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Aug 2021 08:39:52 -0700 (PDT)
-Date:   Thu, 26 Aug 2021 08:39:47 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ayush Sawal <ayush.sawal@chelsio.com>,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
-        Rohit Maheshwari <rohitm@chelsio.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        linux-crypto@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, linux-can <linux-can@vger.kernel.org>,
-        bpf@vger.kernel.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Keith Packard <keithp@keithp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] treewide: Replace open-coded flex arrays in unions
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMZ6RqJMWaRCB3sZa-it804Sv6aFyZ9J3aQyAStMY-1GAwR1Jg@mail.gmail.com>
-References: <20210826050458.1540622-1-keescook@chromium.org> <20210826050458.1540622-3-keescook@chromium.org> <CAMZ6RqJMWaRCB3sZa-it804Sv6aFyZ9J3aQyAStMY-1GAwR1Jg@mail.gmail.com>
-Message-ID: <AD5C7E3B-6984-49D9-8666-B3BE90588F1F@chromium.org>
+        Thu, 26 Aug 2021 12:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229986AbhHZQzB (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 26 Aug 2021 12:55:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AA38560FD9;
+        Thu, 26 Aug 2021 16:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629996854;
+        bh=klpBCF3eOV7RWryCWxBXMbfoU4bGxqdvQgWtryTGOPg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EAJWiRYZSnbbMdKzWCPaNizrHYnsjksDCPp9AwFg7nuQbaz7N8zd9M5neTt5PKry8
+         5lQ3DLc6ithwKg29EpbGzfmID84HBXppPXLsji5katHz0i/4rLSbrusb+t0Ppy2Wnr
+         vfEDpnId106PPWYj2OK3NJr0Emvdnv4H8tRpr56nxpxG9LMeb/BNKCpjCfaVL5AAIp
+         gXtwkeUTzmHeeAn8w2DueXdcjLxDd12Ce2E+T3kCEiahQf8otkKL/fCJab/tjQZoyH
+         WfHsyeq/Tq8IiwxPLFnqFbhmw8ZBFhY3jRvuCbraMndavDv1y8/vRo2KDy21ITHYpf
+         PU3cvEjWLez7A==
+Subject: Re: [PATCH v2 07/14] x86: Use an opaque type for functions not
+ callable from C
+To:     Sami Tolvanen <samitolvanen@google.com>, x86@kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+References: <20210823171318.2801096-1-samitolvanen@google.com>
+ <20210823171318.2801096-8-samitolvanen@google.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Message-ID: <b2b0247a-39ad-097b-8fab-023ee378c806@kernel.org>
+Date:   Thu, 26 Aug 2021 09:54:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210823171318.2801096-8-samitolvanen@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On 8/23/21 10:13 AM, Sami Tolvanen wrote:
+> The kernel has several assembly functions that are not directly callable
+> from C. Use an opaque type for these function prototypes to make misuse
+> harder, and to avoid the need to annotate references to these functions
+> for Clang's Control-Flow Integrity (CFI).
 
+You have:
 
-On August 26, 2021 12:36:27 AM PDT, Vincent MAILHOL <mailhol=2Evincent@wan=
-adoo=2Efr> wrote:
->On Thu=2E 26 Aug 2021 at 14:04, Kees Cook <keescook@chromium=2Eorg> wrote=
-:
->> In support of enabling -Warray-bounds and -Wzero-length-bounds and
->> correctly handling run-time memcpy() bounds checking, replace all
->> open-coded flexible arrays (i=2Ee=2E 0-element arrays) in unions with t=
-he
->> flex_array() helper macro=2E
->
->Nitpick: the commit description says flex_array() but the code is
->actually DECLARE_FLEX_ARRAY() or __DECLARE_FLEX_ARRAY()=2E
+typedef const u8 *asm_func_t;
 
-Ah yes, thanks! I had renamed the macro but missed these references=2E Now=
- fixed!
+This is IMO a bit confusing.  asm_func_t like this is an *address* of a
+function, not a function.
 
--Kees
+To be fair, C is obnoxious, but I think this will lead to more confusion
+than is idea.  For example:
+
+> -extern void __fentry__(void);
+> +DECLARE_ASM_FUNC_SYMBOL(__fentry__);
+
+Okay, __fentry__ is the name of a symbol, and the expression __fentry__
+is a pointer (or an array that decays to a pointer, thanks C), which is
+at least somewhat sensible.  But:
+
+> -extern void (*paravirt_iret)(void);
+> +extern asm_func_t paravirt_iret;
+
+Now paravirt_iret is a global variable that points to an asm func.  I
+bet people will read this wrong and, worse, type it wrong.
+
+I think that there a couple ways to change this that would be a bit nicer.
+
+1. typedef const u8 asm_func_t[];
+
+This is almost nice, but asm_func_t will still be accepted as a function
+argument, and the automatic decay rules will probably be confusing.
+
+2. Rename asm_func_t to asm_func_ptr.  Then it's at least a bit more clear.
+
+3. Use an incomplete struct:
+
+struct asm_func;
+
+typedef struct asm_func asm_func;
+
+extern asm_func some_func;
+
+void *get_ptr(void)
+{
+    return &some_func;
+}
+
+No macros required, and I think it's quite hard to misuse this by
+accident.  asm_func can't be passed as an argument or used as a variable
+because it has incomplete type, and there are no arrays so the decay
+rules aren't in effect.
+
+--Andy
