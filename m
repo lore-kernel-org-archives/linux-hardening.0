@@ -7,647 +7,219 @@ X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D596C432BE
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 02:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10061C4320A
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 02:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E18860EE4
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 02:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF392610A3
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 02:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237793AbhHZCsE (ORCPT
+        id S236094AbhHZC50 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 25 Aug 2021 22:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40554 "EHLO
+        Wed, 25 Aug 2021 22:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232441AbhHZCsE (ORCPT
+        with ESMTP id S234669AbhHZC50 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 25 Aug 2021 22:48:04 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E376EC061757
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 19:47:17 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id qe12-20020a17090b4f8c00b00179321cbae7so1301543pjb.2
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 19:47:17 -0700 (PDT)
+        Wed, 25 Aug 2021 22:57:26 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C479BC0613C1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 19:56:39 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id x16so1464486pfh.2
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Aug 2021 19:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=2NTnR4tKqkUMwtt7VmZitcD8mv+aAAdUIksgDSJe0RM=;
-        b=PpXBh4KIrPHyeYV5WYxZcDrXhrw16aCmd+jC9qMjezCHeIFay6RQlH4s+vNY6snhep
-         psjbOhxJt7dcxQXhBBbVHyhnI3u8FiFHYpxevGQCacXI4QJSy9i83KNxVKqZeecH4yKT
-         UCBJmr+1l9I27q+TBGsZRPaTAn/xDYak3SZAs=
+        bh=vjFyaPLJq7d41xsQ0Ub2Dz36OvdKw1xIWIuZp7vFybM=;
+        b=ZjLf16/FV8SL4+3VkdHnifcQwGNBNqy/2s8QZ7lUTTgN/vU+Cm1PAOewNKpkE3P/n4
+         cqqnWeMyIL92WRLnjgDYf8ni9mqZkb5LlRAlwAkPjQg4tNkdnuxmUmDlVjZpRbK7Oxc6
+         9FWuvdHBAjcysfo33hxE5NfUwNgwBak2B34p0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=2NTnR4tKqkUMwtt7VmZitcD8mv+aAAdUIksgDSJe0RM=;
-        b=RvTQyHNay0iE5YxEHTHzS9ghzmlonF7+DTW6jb0+mGXEr2Ni8PP3gURzAaRZmV3V65
-         t3YvkUqBKFaslxV5uhOILZr5CI1uzCIZFHSDFfHq1j3lbyrRVBjzSwMHcw/oGHuYR677
-         RgGWIPJcSz5IZVG4tUlEaogA/QYmsIqIQXscbmLs0ovvIY6m/PSVC7oswlqwf3TPLOUT
-         8K6w/UsiXeVWgfSGBtnenq8SkPnkl9pNv3kvoR51pEJEJi+lbWELi7Wn0kwX27BKdHNt
-         IG00LGKwS9846Cf8fMPwrvrMSp0ZftAtUppL1NSaNNk8kXFKBd6n6JDgHEUvaMoZTWRE
-         OzOg==
-X-Gm-Message-State: AOAM533NzkJkzs8uSrv5+VocEETKGabNaQm2xngjdUe3Qgm0ciKYgBJK
-        pc/bfCSsCqoq2XMGOkz2cGQwHD0xMy1r/A==
-X-Google-Smtp-Source: ABdhPJyQI+5QxqKNOHbxsc5Vnh6PE5VMSpjzMsB51hcbIOlVkjell4GyZ+NWFL0F4ITCd3vh5Jr0YQ==
-X-Received: by 2002:a17:90a:9314:: with SMTP id p20mr14161631pjo.87.1629946037190;
-        Wed, 25 Aug 2021 19:47:17 -0700 (PDT)
+        bh=vjFyaPLJq7d41xsQ0Ub2Dz36OvdKw1xIWIuZp7vFybM=;
+        b=J6BAXrTXHIskLndkW4Azfj4X2C7/B4QRK7uJ1nMBGATP9WrIEzulT+q/6xWzElKBjY
+         7MeaqjV3xj8u5x/XX1J+vXjZ3LXJE/E08fGy+hLYxQLDZfeap1wEJA/YWxPY/CAEbRRC
+         5qJGUQp8ycRf51dO7n7zMVoOMDcLk/smVVGXO+xL9D8mgadoThPE2qTlOcRx3EG7Hq3+
+         DEk/j6vqPrcsHYooLFywTUWMIztMUk/n9l5qs653GBpVZuxnAc2z1zh3fO32ANQBWD4e
+         fL4NPJKJIDbOXv+5qFHdYyVYzM6tySI2qN9NDIQA0w6d/Ym97Zn2Uhc93IAZsYjNd0bg
+         axng==
+X-Gm-Message-State: AOAM5308FEXKLpEAAIeZpGZKJUQbAaCZdW2qe2k5I47ASVj+aIIR3cBf
+        CY+1VKigOU7Nch+Hv5qw4rnKBQ==
+X-Google-Smtp-Source: ABdhPJwbdAeN/df8R344ak31FsUULbySJGGQTp2hcnRm+4cE29aVKuu8C2p4V0YC9oRoAUkJS/7LIg==
+X-Received: by 2002:a62:8287:0:b0:3ec:f6dc:9672 with SMTP id w129-20020a628287000000b003ecf6dc9672mr1314917pfd.65.1629946599192;
+        Wed, 25 Aug 2021 19:56:39 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 141sm1355928pgf.46.2021.08.25.19.47.16
+        by smtp.gmail.com with ESMTPSA id a2sm1383840pgb.19.2021.08.25.19.56.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Aug 2021 19:47:16 -0700 (PDT)
-Date:   Wed, 25 Aug 2021 19:47:15 -0700
+        Wed, 25 Aug 2021 19:56:38 -0700 (PDT)
+Date:   Wed, 25 Aug 2021 19:56:37 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Nick Desaulniers <ndesaulniers@google.com>
 Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Daniel Micay <danielmicay@gmail.com>,
         Francis Laniel <laniel_francis@privacyrequired.com>,
         Bart Van Assche <bvanassche@acm.org>,
         David Gow <davidgow@google.com>, linux-mm@kvack.org,
         clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH for-next 14/25] lib/string: Move helper functions out of
- string.c
-Message-ID: <202108251942.26FC1B8E7@keescook>
+Subject: Re: [PATCH for-next 19/25] fortify: Allow strlen() and strnlen() to
+ pass compile-time known lengths
+Message-ID: <202108251950.61F7A4CD@keescook>
 References: <20210822075122.864511-1-keescook@chromium.org>
- <20210822075122.864511-15-keescook@chromium.org>
- <CAKwvOdmY2DQbjKutcofN3zsiz_majg6UnhMjMWbamVRhaRPhsw@mail.gmail.com>
+ <20210822075122.864511-20-keescook@chromium.org>
+ <CAKwvOdnrO+oagJEiBMmoHrhTJKSRwzb0DK=R_QdVjhiNzb34dg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdmY2DQbjKutcofN3zsiz_majg6UnhMjMWbamVRhaRPhsw@mail.gmail.com>
+In-Reply-To: <CAKwvOdnrO+oagJEiBMmoHrhTJKSRwzb0DK=R_QdVjhiNzb34dg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 25, 2021 at 02:48:30PM -0700, Nick Desaulniers wrote:
-> On Sun, Aug 22, 2021 at 12:51 AM Kees Cook <keescook@chromium.org> wrote:
+On Wed, Aug 25, 2021 at 03:05:56PM -0700, Nick Desaulniers wrote:
+> On Sun, Aug 22, 2021 at 12:57 AM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > The core functions of string.c are those that may be implemented by
-> > per-architecture functions, or overloaded by FORTIFY_SOURCE. As a
-> > result, it needs to be built with __NO_FORTIFY. Without this, macros
-> 
-> Sorry, is there more info on what exactly __NO_FORTIFY is (and why we
-> "need" it)?
-
-include/linux/string.h has:
-
-#if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
-#include <linux/fortify-string.h>
-#endif
-
-It's needed in cases where fortification won't actually operate (i.e.
-early boot without the full kernel running), or in similar situations
-(code meant to be executed under different "runtimes" (hypervisors), or
-for the fortified string implementations themselves (i.e. what these
-couple of patches are reorganizing to correctly do here).
-
-> 
-> > will collide with function declarations. This was accidentally working
-> > due to -ffreestanding (on some architectures). Make this deterministic
-> > by explicitly setting __NO_FORTIFY and move all the helper functions
-> > into string_helpers.c so that they gain the fortification coverage they
-> > had been missing.
+> > Under CONFIG_FORTIFY_SOURCE, it is possible for the compiler to perform
+> > strlen() and strnlen() at compile-time when the string size is known.
+> > This is required to support compile-time overflow checking in strlcpy().
 > >
-> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > > Signed-off-by: Kees Cook <keescook@chromium.org>
 > > ---
-> >  arch/arm/boot/compressed/string.c     |   1 +
-> >  arch/s390/lib/string.c                |   3 +
-> >  arch/x86/boot/compressed/misc.h       |   2 +
-> >  arch/x86/boot/compressed/pgtable_64.c |   2 +
-> >  arch/x86/lib/string_32.c              |   1 +
-> >  lib/string.c                          | 210 +-------------------------
-> >  lib/string_helpers.c                  | 193 +++++++++++++++++++++++
-> >  7 files changed, 208 insertions(+), 204 deletions(-)
+> >  include/linux/fortify-string.h | 47 ++++++++++++++++++++++++++--------
+> >  1 file changed, 36 insertions(+), 11 deletions(-)
 > >
-> > diff --git a/arch/arm/boot/compressed/string.c b/arch/arm/boot/compressed/string.c
-> > index 8c0fa276d994..fcc678fce045 100644
-> > --- a/arch/arm/boot/compressed/string.c
-> > +++ b/arch/arm/boot/compressed/string.c
-> > @@ -5,6 +5,7 @@
-> >   * Small subset of simple string routines
-> >   */
+> > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+> > index a3cb1d9aacce..e232a63fd826 100644
+> > --- a/include/linux/fortify-string.h
+> > +++ b/include/linux/fortify-string.h
+> > @@ -10,6 +10,18 @@ void __read_overflow(void) __compiletime_error("detected read beyond size of obj
+> >  void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
+> >  void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
 > >
-> > +#define __NO_FORTIFY
-> >  #include <linux/string.h>
-> >
-> >  /*
-> > diff --git a/arch/s390/lib/string.c b/arch/s390/lib/string.c
-> > index cfcdf76d6a95..392fb9f4f4db 100644
-> > --- a/arch/s390/lib/string.c
-> > +++ b/arch/s390/lib/string.c
-> > @@ -8,6 +8,9 @@
-> >   */
-> >
-> >  #define IN_ARCH_STRING_C 1
-> > +#ifndef __NO_FORTIFY
-> > +# define __NO_FORTIFY
-> > +#endif
-> >
-> >  #include <linux/types.h>
-> >  #include <linux/string.h>
-> > diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-> > index 31139256859f..49bde196da9b 100644
-> > --- a/arch/x86/boot/compressed/misc.h
-> > +++ b/arch/x86/boot/compressed/misc.h
-> > @@ -14,6 +14,8 @@
-> >  #undef CONFIG_KASAN
-> >  #undef CONFIG_KASAN_GENERIC
-> >
-> > +#define __NO_FORTIFY
+> > +#define __compiletime_strlen(p)        ({              \
+> > +       size_t ret = (size_t)-1;                        \
+> > +       size_t p_size = __builtin_object_size(p, 1);    \
+> > +       if (p_size != (size_t)-1) {                     \
+> > +               size_t p_len = p_size - 1;              \
+> > +               if (__builtin_constant_p(p[p_len]) &&   \
+> > +                   p[p_len] == '\0')                   \
+> > +                       ret = __builtin_strlen(p);      \
+> > +       }                                               \
+> > +       ret;                                            \
+> > +})
+> 
+> Can this be a `static inline` function that accepts a `const char *`
+> and returns a `size_t` rather than a statement expression?
+
+No because both __builtin_object_size() and __builtin_strlen() may not
+work. See:
+https://lore.kernel.org/lkml/20210818060533.3569517-64-keescook@chromium.org/
+
+Regardless, it will always collapse to a const value of either -1 or
+the length of the string.
+
+> 
 > > +
-> >  /* cpu_feature_enabled() cannot be used this early */
-> >  #define USE_EARLY_PGTABLE_L5
+> >  #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+> >  extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
+> >  extern int __underlying_memcmp(const void *p, const void *q, __kernel_size_t size) __RENAME(memcmp);
+> > @@ -60,21 +72,31 @@ extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(st
+> >  __FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
+> >  {
+> >         size_t p_size = __builtin_object_size(p, 1);
+> > -       __kernel_size_t ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+> > +       size_t p_len = __compiletime_strlen(p);
+> > +       size_t ret;
+> > +
+> > +       /* We can take compile-time actions when maxlen is const. */
+> > +       if (__builtin_constant_p(maxlen) && p_len != (size_t)-1) {
+> > +               /* If p is const, we can use its compile-time-known len. */
+> > +               if (maxlen >= p_size)
+> > +                       return p_len;
+> > +       }
 > >
-> > diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-> > index 2a78746f5a4c..a1733319a22a 100644
-> > --- a/arch/x86/boot/compressed/pgtable_64.c
-> > +++ b/arch/x86/boot/compressed/pgtable_64.c
-> > @@ -1,3 +1,5 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include "misc.h"
+> > +       /* Do no check characters beyond the end of p. */
 > 
-> ^ should we just `#define __NO_FORTIFY` here in pgtable_64.c rather
-> than set that for a whole header?
+> s/no/not/
 
-No -- anything using the string functions in x86 early boot needs to use
-misc.h, since it correctly handles to various dances of includes and
-defines to get the right combinations.
-
-> 
-> >  #include <linux/efi.h>
-> >  #include <asm/e820/types.h>
-> >  #include <asm/processor.h>
-> > diff --git a/arch/x86/lib/string_32.c b/arch/x86/lib/string_32.c
-> > index d15fdae9656e..53b3f202267c 100644
-> > --- a/arch/x86/lib/string_32.c
-> > +++ b/arch/x86/lib/string_32.c
-> > @@ -11,6 +11,7 @@
-> >   * strings.
-> >   */
-> >
-> > +#define __NO_FORTIFY
-> >  #include <linux/string.h>
-> >  #include <linux/export.h>
-> >
-> > diff --git a/lib/string.c b/lib/string.c
-> > index 77bd0b1d3296..1e6259f263b8 100644
-> > --- a/lib/string.c
-> > +++ b/lib/string.c
-> > @@ -6,20 +6,15 @@
-> >   */
-> >
-> >  /*
-> > - * stupid library routines.. The optimized versions should generally be found
-> > - * as inline code in <asm-xx/string.h>
-> > + * This file should be used only for "library" routines that may have
-> > + * alternative implementations on specific architectures (generally
-> > + * found in <asm-xx/string.h>), or get overloaded by FORTIFY_SOURCE.
-> > + * (Specifically, this file is built with __NO_FORTIFY.)
-> >   *
-> > - * These are buggy as well..
-> > - *
-> > - * * Fri Jun 25 1999, Ingo Oeser <ioe@informatik.tu-chemnitz.de>
-> > - * -  Added strsep() which will replace strtok() soon (because strsep() is
-> > - *    reentrant and should be faster). Use only strsep() in new code, please.
-> > - *
-> > - * * Sat Feb 09 2002, Jason Thomas <jason@topic.com.au>,
-> > - *                    Matthew Hawkins <matt@mh.dropbear.id.au>
-> > - * -  Kissed strtok() goodbye
-> > + * Other helper functions should live in string_helpers.c.
-> >   */
-> >
-> > +#define __NO_FORTIFY
-> >  #include <linux/types.h>
-> >  #include <linux/string.h>
-> >  #include <linux/ctype.h>
-> > @@ -237,40 +232,6 @@ ssize_t strscpy(char *dest, const char *src, size_t count)
-> >  EXPORT_SYMBOL(strscpy);
-> >  #endif
-> >
-> > -/**
-> > - * strscpy_pad() - Copy a C-string into a sized buffer
-> > - * @dest: Where to copy the string to
-> > - * @src: Where to copy the string from
-> > - * @count: Size of destination buffer
-> > - *
-> > - * Copy the string, or as much of it as fits, into the dest buffer.  The
-> > - * behavior is undefined if the string buffers overlap.  The destination
-> > - * buffer is always %NUL terminated, unless it's zero-sized.
-> > - *
-> > - * If the source string is shorter than the destination buffer, zeros
-> > - * the tail of the destination buffer.
-> > - *
-> > - * For full explanation of why you may want to consider using the
-> > - * 'strscpy' functions please see the function docstring for strscpy().
-> > - *
-> > - * Returns:
-> > - * * The number of characters copied (not including the trailing %NUL)
-> > - * * -E2BIG if count is 0 or @src was truncated.
-> > - */
-> > -ssize_t strscpy_pad(char *dest, const char *src, size_t count)
-> > -{
-> > -       ssize_t written;
-> > -
-> > -       written = strscpy(dest, src, count);
-> > -       if (written < 0 || written == count - 1)
-> > -               return written;
-> > -
-> > -       memset(dest + written + 1, 0, count - written - 1);
-> > -
-> > -       return written;
-> > -}
-> > -EXPORT_SYMBOL(strscpy_pad);
-> > -
-> >  /**
-> >   * stpcpy - copy a string from src to dest returning a pointer to the new end
-> >   *          of dest, including src's %NUL-terminator. May overrun dest.
-> > @@ -513,46 +474,6 @@ char *strnchr(const char *s, size_t count, int c)
-> >  EXPORT_SYMBOL(strnchr);
-> >  #endif
-> >
-> > -/**
-> > - * skip_spaces - Removes leading whitespace from @str.
-> > - * @str: The string to be stripped.
-> > - *
-> > - * Returns a pointer to the first non-whitespace character in @str.
-> > - */
-> > -char *skip_spaces(const char *str)
-> > -{
-> > -       while (isspace(*str))
-> > -               ++str;
-> > -       return (char *)str;
-> > -}
-> > -EXPORT_SYMBOL(skip_spaces);
-> > -
-> > -/**
-> > - * strim - Removes leading and trailing whitespace from @s.
-> > - * @s: The string to be stripped.
-> > - *
-> > - * Note that the first trailing whitespace is replaced with a %NUL-terminator
-> > - * in the given string @s. Returns a pointer to the first non-whitespace
-> > - * character in @s.
-> > - */
-> > -char *strim(char *s)
-> > -{
-> > -       size_t size;
-> > -       char *end;
-> > -
-> > -       size = strlen(s);
-> > -       if (!size)
-> > -               return s;
-> > -
-> > -       end = s + size - 1;
-> > -       while (end >= s && isspace(*end))
-> > -               end--;
-> > -       *(end + 1) = '\0';
-> > -
-> > -       return skip_spaces(s);
-> > -}
-> > -EXPORT_SYMBOL(strim);
-> > -
-> >  #ifndef __HAVE_ARCH_STRLEN
-> >  /**
-> >   * strlen - Find the length of a string
-> > @@ -687,101 +608,6 @@ char *strsep(char **s, const char *ct)
-> >  EXPORT_SYMBOL(strsep);
-> >  #endif
-> >
-> > -/**
-> > - * sysfs_streq - return true if strings are equal, modulo trailing newline
-> > - * @s1: one string
-> > - * @s2: another string
-> > - *
-> > - * This routine returns true iff two strings are equal, treating both
-> > - * NUL and newline-then-NUL as equivalent string terminations.  It's
-> > - * geared for use with sysfs input strings, which generally terminate
-> > - * with newlines but are compared against values without newlines.
-> > - */
-> > -bool sysfs_streq(const char *s1, const char *s2)
-> > -{
-> > -       while (*s1 && *s1 == *s2) {
-> > -               s1++;
-> > -               s2++;
-> > -       }
-> > -
-> > -       if (*s1 == *s2)
-> > -               return true;
-> > -       if (!*s1 && *s2 == '\n' && !s2[1])
-> > -               return true;
-> > -       if (*s1 == '\n' && !s1[1] && !*s2)
-> > -               return true;
-> > -       return false;
-> > -}
-> > -EXPORT_SYMBOL(sysfs_streq);
-> > -
-> > -/**
-> > - * match_string - matches given string in an array
-> > - * @array:     array of strings
-> > - * @n:         number of strings in the array or -1 for NULL terminated arrays
-> > - * @string:    string to match with
-> > - *
-> > - * This routine will look for a string in an array of strings up to the
-> > - * n-th element in the array or until the first NULL element.
-> > - *
-> > - * Historically the value of -1 for @n, was used to search in arrays that
-> > - * are NULL terminated. However, the function does not make a distinction
-> > - * when finishing the search: either @n elements have been compared OR
-> > - * the first NULL element was found.
-> > - *
-> > - * Return:
-> > - * index of a @string in the @array if matches, or %-EINVAL otherwise.
-> > - */
-> > -int match_string(const char * const *array, size_t n, const char *string)
-> > -{
-> > -       int index;
-> > -       const char *item;
-> > -
-> > -       for (index = 0; index < n; index++) {
-> > -               item = array[index];
-> > -               if (!item)
-> > -                       break;
-> > -               if (!strcmp(item, string))
-> > -                       return index;
-> > -       }
-> > -
-> > -       return -EINVAL;
-> > -}
-> > -EXPORT_SYMBOL(match_string);
-> > -
-> > -/**
-> > - * __sysfs_match_string - matches given string in an array
-> > - * @array: array of strings
-> > - * @n: number of strings in the array or -1 for NULL terminated arrays
-> > - * @str: string to match with
-> > - *
-> > - * Returns index of @str in the @array or -EINVAL, just like match_string().
-> > - * Uses sysfs_streq instead of strcmp for matching.
-> > - *
-> > - * This routine will look for a string in an array of strings up to the
-> > - * n-th element in the array or until the first NULL element.
-> > - *
-> > - * Historically the value of -1 for @n, was used to search in arrays that
-> > - * are NULL terminated. However, the function does not make a distinction
-> > - * when finishing the search: either @n elements have been compared OR
-> > - * the first NULL element was found.
-> > - */
-> > -int __sysfs_match_string(const char * const *array, size_t n, const char *str)
-> > -{
-> > -       const char *item;
-> > -       int index;
-> > -
-> > -       for (index = 0; index < n; index++) {
-> > -               item = array[index];
-> > -               if (!item)
-> > -                       break;
-> > -               if (sysfs_streq(item, str))
-> > -                       return index;
-> > -       }?
-> > -
-> > -       return -EINVAL;
-> > -}
-> > -EXPORT_SYMBOL(__sysfs_match_string);
-> > -
-> 
-> are memset16, memset32, and memset64 worth moving as well? Also,
-> memscan(), check_bytes(), memchr_inv()?
-
-All of these are implementations, so they should stay put.
+Thanks!
 
 > 
-> >  #ifndef __HAVE_ARCH_MEMSET
-> >  /**
-> >   * memset - Fill a region of memory with the given value
-> > @@ -1125,27 +951,3 @@ void *memchr_inv(const void *start, int c, size_t bytes)
-> >         return check_bytes8(start, value, bytes % 8);
+> > +       ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+> >         if (p_size <= ret && maxlen != ret)
+> >                 fortify_panic(__func__);
+> >         return ret;
 > >  }
-> >  EXPORT_SYMBOL(memchr_inv);
+> >
+> > +/* defined after fortified strnlen to reuse it. */
+> >  __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+> >  {
+> >         __kernel_size_t ret;
+> >         size_t p_size = __builtin_object_size(p, 1);
+> >
+> > -       /* Work around gcc excess stack consumption issue */
+> > -       if (p_size == (size_t)-1 ||
+> > -               (__builtin_constant_p(p[p_size - 1]) && p[p_size - 1] == '\0'))
+> > +       /* Give up if we don't know how large p is. */
+> > +       if (p_size == (size_t)-1)
+> >                 return __underlying_strlen(p);
+> >         ret = strnlen(p, p_size);
+> >         if (p_size <= ret)
+> > @@ -86,24 +108,27 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+> >  extern size_t __real_strlcpy(char *, const char *, size_t) __RENAME(strlcpy);
+> >  __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
+> >  {
+> > -       size_t ret;
+> >         size_t p_size = __builtin_object_size(p, 1);
+> >         size_t q_size = __builtin_object_size(q, 1);
+> > +       size_t q_len;   /* Full count of source string length. */
+> > +       size_t len;     /* Count of characters going into destination. */
+> >
+> >         if (p_size == (size_t)-1 && q_size == (size_t)-1)
+> >                 return __real_strlcpy(p, q, size);
+> > -       ret = strlen(q);
+> > -       if (size) {
+> > -               size_t len = (ret >= size) ? size - 1 : ret;
 > > -
-> > -/**
-> > - * strreplace - Replace all occurrences of character in string.
-> > - * @s: The string to operate on.
-> > - * @old: The character being replaced.
-> > - * @new: The character @old is replaced with.
-> > - *
-> > - * Returns pointer to the nul byte at the end of @s.
-> > - */
-> > -char *strreplace(char *s, char old, char new)
-> > -{
-> > -       for (; *s; ++s)
-> > -               if (*s == old)
-> > -                       *s = new;
-> > -       return s;
-> > -}
-> > -EXPORT_SYMBOL(strreplace);
-> > -
-> > -void fortify_panic(const char *name)
-> > -{
-> > -       pr_emerg("detected buffer overflow in %s\n", name);
-> > -       BUG();
-> > -}
-> > -EXPORT_SYMBOL(fortify_panic);
-> > diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-> > index 5a35c7e16e96..e9433caab217 100644
-> > --- a/lib/string_helpers.c
-> > +++ b/lib/string_helpers.c
-> > @@ -692,3 +692,196 @@ void kfree_strarray(char **array, size_t n)
-> >         kfree(array);
+> > -               if (__builtin_constant_p(len) && len >= p_size)
+> > +       q_len = strlen(q);
+> > +       len = (q_len >= size) ? size - 1 : q_len;
+> > +       if (__builtin_constant_p(size) && __builtin_constant_p(q_len) && size) {
+> > +               /* Write size is always larger than destintation. */
+> 
+> s/destintation/destination/
+
+I can't type. :)
+
+Fixed now.
+
+-Kees
+
+> 
+> > +               if (len >= p_size)
+> >                         __write_overflow();
+> > +       }
+> > +       if (size) {
+> >                 if (len >= p_size)
+> >                         fortify_panic(__func__);
+> >                 __underlying_memcpy(p, q, len);
+> >                 p[len] = '\0';
+> >         }
+> > -       return ret;
+> > +       return q_len;
 > >  }
-> >  EXPORT_SYMBOL_GPL(kfree_strarray);
-> > +
-> > +/**
-> > + * strscpy_pad() - Copy a C-string into a sized buffer
-> > + * @dest: Where to copy the string to
-> > + * @src: Where to copy the string from
-> > + * @count: Size of destination buffer
-> > + *
-> > + * Copy the string, or as much of it as fits, into the dest buffer.  The
-> > + * behavior is undefined if the string buffers overlap.  The destination
-> > + * buffer is always %NUL terminated, unless it's zero-sized.
-> > + *
-> > + * If the source string is shorter than the destination buffer, zeros
-> > + * the tail of the destination buffer.
-> > + *
-> > + * For full explanation of why you may want to consider using the
-> > + * 'strscpy' functions please see the function docstring for strscpy().
-> > + *
-> > + * Returns:
-> > + * * The number of characters copied (not including the trailing %NUL)
-> > + * * -E2BIG if count is 0 or @src was truncated.
-> > + */
-> > +ssize_t strscpy_pad(char *dest, const char *src, size_t count)
-> > +{
-> > +       ssize_t written;
-> > +
-> > +       written = strscpy(dest, src, count);
-> > +       if (written < 0 || written == count - 1)
-> > +               return written;
-> > +
-> > +       memset(dest + written + 1, 0, count - written - 1);
-> > +
-> > +       return written;
-> > +}
-> > +EXPORT_SYMBOL(strscpy_pad);
-> > +
-> > +/**
-> > + * skip_spaces - Removes leading whitespace from @str.
-> > + * @str: The string to be stripped.
-> > + *
-> > + * Returns a pointer to the first non-whitespace character in @str.
-> > + */
-> > +char *skip_spaces(const char *str)
-> > +{
-> > +       while (isspace(*str))
-> > +               ++str;
-> > +       return (char *)str;
-> > +}
-> > +EXPORT_SYMBOL(skip_spaces);
-> > +
-> > +/**
-> > + * strim - Removes leading and trailing whitespace from @s.
-> > + * @s: The string to be stripped.
-> > + *
-> > + * Note that the first trailing whitespace is replaced with a %NUL-terminator
-> > + * in the given string @s. Returns a pointer to the first non-whitespace
-> > + * character in @s.
-> > + */
-> > +char *strim(char *s)
-> > +{
-> > +       size_t size;
-> > +       char *end;
-> > +
-> > +       size = strlen(s);
-> > +       if (!size)
-> > +               return s;
-> > +
-> > +       end = s + size - 1;
-> > +       while (end >= s && isspace(*end))
-> > +               end--;
-> > +       *(end + 1) = '\0';
-> > +
-> > +       return skip_spaces(s);
-> > +}
-> > +EXPORT_SYMBOL(strim);
-> > +
-> > +/**
-> > + * sysfs_streq - return true if strings are equal, modulo trailing newline
-> > + * @s1: one string
-> > + * @s2: another string
-> > + *
-> > + * This routine returns true iff two strings are equal, treating both
-> > + * NUL and newline-then-NUL as equivalent string terminations.  It's
-> > + * geared for use with sysfs input strings, which generally terminate
-> > + * with newlines but are compared against values without newlines.
-> > + */
-> > +bool sysfs_streq(const char *s1, const char *s2)
-> > +{
-> > +       while (*s1 && *s1 == *s2) {
-> > +               s1++;
-> > +               s2++;
-> > +       }
-> > +
-> > +       if (*s1 == *s2)
-> > +               return true;
-> > +       if (!*s1 && *s2 == '\n' && !s2[1])
-> > +               return true;
-> > +       if (*s1 == '\n' && !s1[1] && !*s2)
-> > +               return true;
-> > +       return false;
-> > +}
-> > +EXPORT_SYMBOL(sysfs_streq);
-> > +
-> > +/**
-> > + * match_string - matches given string in an array
-> > + * @array:     array of strings
-> > + * @n:         number of strings in the array or -1 for NULL terminated arrays
-> > + * @string:    string to match with
-> > + *
-> > + * This routine will look for a string in an array of strings up to the
-> > + * n-th element in the array or until the first NULL element.
-> > + *
-> > + * Historically the value of -1 for @n, was used to search in arrays that
-> > + * are NULL terminated. However, the function does not make a distinction
-> > + * when finishing the search: either @n elements have been compared OR
-> > + * the first NULL element was found.
-> > + *
-> > + * Return:
-> > + * index of a @string in the @array if matches, or %-EINVAL otherwise.
-> > + */
-> > +int match_string(const char * const *array, size_t n, const char *string)
-> > +{
-> > +       int index;
-> > +       const char *item;
-> > +
-> > +       for (index = 0; index < n; index++) {
-> > +               item = array[index];
-> > +               if (!item)
-> > +                       break;
-> > +               if (!strcmp(item, string))
-> > +                       return index;
-> > +       }
-> > +
-> > +       return -EINVAL;
-> > +}
-> > +EXPORT_SYMBOL(match_string);
-> > +
-> > +/**
-> > + * __sysfs_match_string - matches given string in an array
-> > + * @array: array of strings
-> > + * @n: number of strings in the array or -1 for NULL terminated arrays
-> > + * @str: string to match with
-> > + *
-> > + * Returns index of @str in the @array or -EINVAL, just like match_string().
-> > + * Uses sysfs_streq instead of strcmp for matching.
-> > + *
-> > + * This routine will look for a string in an array of strings up to the
-> > + * n-th element in the array or until the first NULL element.
-> > + *
-> > + * Historically the value of -1 for @n, was used to search in arrays that
-> > + * are NULL terminated. However, the function does not make a distinction
-> > + * when finishing the search: either @n elements have been compared OR
-> > + * the first NULL element was found.
-> > + */
-> > +int __sysfs_match_string(const char * const *array, size_t n, const char *str)
-> > +{
-> > +       const char *item;
-> > +       int index;
-> > +
-> > +       for (index = 0; index < n; index++) {
-> > +               item = array[index];
-> > +               if (!item)
-> > +                       break;
-> > +               if (sysfs_streq(item, str))
-> > +                       return index;
-> > +       }
-> > +
-> > +       return -EINVAL;
-> > +}
-> > +EXPORT_SYMBOL(__sysfs_match_string);
-> > +
-> > +/**
-> > + * strreplace - Replace all occurrences of character in string.
-> > + * @s: The string to operate on.
-> > + * @old: The character being replaced.
-> > + * @new: The character @old is replaced with.
-> > + *
-> > + * Returns pointer to the nul byte at the end of @s.
-> > + */
-> > +char *strreplace(char *s, char old, char new)
-> > +{
-> > +       for (; *s; ++s)
-> > +               if (*s == old)
-> > +                       *s = new;
-> > +       return s;
-> > +}
-> > +EXPORT_SYMBOL(strreplace);
-> > +
-> > +void fortify_panic(const char *name)
-> > +{
-> > +       pr_emerg("detected buffer overflow in %s\n", name);
-> > +       BUG();
-> > +}
-> > +EXPORT_SYMBOL(fortify_panic);
+> >
+> >  /* defined after fortified strnlen to reuse it */
 > > --
+> > 2.30.2
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20210822075122.864511-20-keescook%40chromium.org.
+> 
 > 
 > 
 > -- 
