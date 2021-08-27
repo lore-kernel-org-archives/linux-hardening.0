@@ -2,151 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3530C43214
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED242C432BE
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 874F060E93
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC6260FD9
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233113AbhH0RKn (ORCPT
+        id S235865AbhH0RNt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Aug 2021 13:10:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230021AbhH0RKm (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Aug 2021 13:10:42 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C2DC0613CF
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 10:09:53 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1mJfLX-00064y-Ny; Fri, 27 Aug 2021 19:08:51 +0200
-Received: from pengutronix.de (2a03-f580-87bc-d400-4ac6-d86b-e43f-77c5.ip6.dokom21.de [IPv6:2a03:f580:87bc:d400:4ac6:d86b:e43f:77c5])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        (Authenticated sender: mkl-all@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id A327F670F04;
-        Fri, 27 Aug 2021 17:08:38 +0000 (UTC)
-Date:   Fri, 27 Aug 2021 19:08:37 +0200
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
+        Fri, 27 Aug 2021 13:13:49 -0400
+Received: from mout.gmx.net ([212.227.17.22]:56999 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235695AbhH0RNs (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 27 Aug 2021 13:13:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1630084370;
+        bh=YGrt/tZqC6Fgg1MGVMuVmS6neQk6AN33ybHRfOyG7U4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=HexiUg1W5x2Jo15hbQizUtOvWIGA7i04Ksg6C4jYtc9xdf/4EcF+Hr5T+y3uwh2H+
+         nnkZ+QOQRvYtD/qi1VtgNc8k+jlMk9UcdGH+PxQhFIhw+Jl1mFyaEDoCRGzSF3YIQY
+         tG5kWehi9jn49B5WbDbQ9g0/CCDKAAJZtZr6vpMM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1N8XPt-1n60o70u0H-014Vvb; Fri, 27 Aug 2021 19:12:50 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>
+Cc:     Len Baker <len.baker@gmx.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ayush Sawal <ayush.sawal@chelsio.com>,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
-        Rohit Maheshwari <rohitm@chelsio.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
-        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        linux-crypto@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-can@vger.kernel.org,
-        bpf@vger.kernel.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Keith Packard <keithp@keithp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] treewide: Replace open-coded flex arrays in unions
-Message-ID: <20210827170837.mu4hql5bev2f5x2o@pengutronix.de>
-References: <20210826050458.1540622-1-keescook@chromium.org>
- <20210826050458.1540622-3-keescook@chromium.org>
- <20210826062452.jekmoo43f4xu5jxk@pengutronix.de>
- <202108270906.7C85982525@keescook>
+        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] docs: deprecated.rst: Clarify open-coded arithmetic with literals
+Date:   Fri, 27 Aug 2021 19:12:26 +0200
+Message-Id: <20210827171226.2938-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gkkaemaf4slct3pn"
-Content-Disposition: inline
-In-Reply-To: <202108270906.7C85982525@keescook>
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:I4VWPP58QCGSuKHAt9e7f4B6GR0oJLIbfsgC5vaEc4Jc+JHrAW/
+ M8cvyz1w4tH1262z1GzwPm7Yy/QsCM+Vv0UAV7x/DqOpdjRa/hRByyP3Xzbyi67knQD8aek
+ b/m8TnEg9IQROi9C2I+iIjWx20VYjJerMA2GtIpeY2noVT6Eg4G1DQH3ncBfar9gb+6SNM/
+ jwcjwJobLqQzVzi+IC+LA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eJgriy0mrwI=:BRr/Xj1/Ce77Qxj3YGdtWH
+ 900bbVsHm6mQeIWxP1zoB9sgWuq1885wFtslqEN/+l9wJxXfaqyuSDE9wvAT2tWOhDCGeagc/
+ VlfRsgzJQr54TnB8gELEbfCWRNPeJioRovPh0znkMooyZkF0D/ZfOYD8wclbvq3Un4NrGlOR0
+ IOx/UjqmDrOrZ7wOiCppKuvfb/hW/8GKAxXvUAg8l1pZz88/gmBsLgsdC0louSCm2/rLM//+V
+ dWvvYh+OnmkgcBnIw3pVZmQvBoFJSNbAFByOIv0GH37kp3UGmonNtk+GHvW/fcEq67AXZCd/c
+ xNRAGUcCxKzjEyYEKffDQVfK1ANPMjdTOZbGunJaOGlfzuTNbZ+BA+jkJYlGukrwO8VfiDKDd
+ Y27ly0uCWBcixtHZgrCaXv5jSRL9Y9MmIgbCvsdHx0R6P/nGBMQOy726KonYpsOClhdoFgWZY
+ vdAG/PbNRyQgRUikzqCB6w7zA/lyzm5HOKtDi/O5cikXMXSCgiJmEyGwAyjFYdMoyDQ99PPaL
+ ZYPUTMjimH8qeUj8Twz1pYydnX2G/c3dYC4i4+8K0FbK3jQ+CbnWAa1jwvm1IgmOe9Khu/xbj
+ +TqUzfJSimkaP6kjlEurxyslOiIRLmI3XoelrXcDNPQmItrd9Jy0hcxxvo9RVNP1jp5bqUXrT
+ d8xM5IxrMLiDxw23aUKi84aQqw0l56OeoU4fjsz5IUje3QJQk5e8e+4DTaz2gsGuaJ66sS8TQ
+ RHhyxP1syRFD6vwuUsjghqjW3CeCTZkghqKl3fcFIBZIBCYgF7dP6qhcs/cJjBCFL7xM6Edvx
+ AfEhL9+U9AxsvuPNjLd6ilGSziwDsImiCncZFN1JbT50oZKQfI5e/LIr5qpW8veg60b6wEmut
+ ELPlaLfSCOBaFluHWvY4Hs4Zu8QIXCHAiWPfWI9EOBCeWrBDji6hbCg8ktpjShbTm60kf9HM8
+ QLU8wmOMoQ/5nMPw8Yjfd9u6DhDrdrxzkyryZXjsc4/HQWJsWZckcaTpVcgCgT1kuZL3CqzuK
+ OBWzcAVfLKlQ5SYxGc8JN/Q0D8EqCYFWh+eNUiutQL56GRL943xFGlgogzhfghmtmvbxCDuOk
+ qPHbgb5oqk0DIqJN4/X4I6kJ1a22yoKAAMjCk6iOEmqUppnS6R73Ovmgw==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Although using literals for size calculation in allocator arguments may
+be harmless due to compiler warnings in case of overflows, it is better
+to refactor the code to avoid the use of open-coded math idiom.
 
---gkkaemaf4slct3pn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So, clarify the preferred way in these cases.
 
-On 27.08.2021 09:08:19, Kees Cook wrote:
-> > BTW: Is there opportunity for conversion, too?
-> >=20
-> > | drivers/net/can/peak_canfd/peak_pciefd_main.c:146:32: warning: array =
-of flexible structures
->=20
-> Oh, hrmpf. This isn't a sane use of flex arrays:
->=20
-> struct __packed pucan_rx_msg {
-> 	...
-> 	__le32	can_id;
-> 	u8	d[];
-> };
->=20
-> struct pciefd_rx_dma {
->         __le32 irq_status;
->         __le32 sys_time_low;
->         __le32 sys_time_high;
->         struct pucan_rx_msg msg[];
-> } __packed __aligned(4);
->=20
-> I think that needs to be handled separately. How are you building to get
-> that warning, by the way? I haven't seen that in my builds...
+Suggested-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ Documentation/process/deprecated.rst | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-If compiling with C=3D1, sparse will complain about this.
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/=
+deprecated.rst
+index 9d83b8db8874..fdfafdefe296 100644
+=2D-- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -60,7 +60,8 @@ smaller allocation being made than the caller was expect=
+ing. Using those
+ allocations could lead to linear overflows of heap memory and other
+ misbehaviors. (One exception to this is literal values where the compiler
+ can warn if they might overflow. Though using literals for arguments as
+-suggested below is also harmless.)
++suggested below is also harmless. So, the preferred way in these cases is
++to refactor the code to keep the open-coded math idiom out.)
 
-regards,
-Marc
+ For example, do not use ``count * size`` as an argument, as in::
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+=2D-
+2.25.1
 
---gkkaemaf4slct3pn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEK3kIWJt9yTYMP3ehqclaivrt76kFAmEpHBEACgkQqclaivrt
-76nZyQf/cQC8nVICmegw2Xx7F4e9MRmYJPNlM4CBOw9lsPVBDSn9GON+JkvMIfWI
-gzsHT/fSQfAerrBnUGqaLqbI/HjEa1cgkevLmMY6SnSYZN1tYmiYUhhirVAUN07C
-QchAwrLEtdk4fwE/PMvjCcsmw1BrM85bW5B9h/Ug5xhhZZGJu+0I1DSR9s4ERi1M
-SGHegQvm8xGiPYDiYOOmXX75G9X4rtVGcpNWj9Iu9hscU0F2exWZz5wB1cZQSK4s
-Ka+x3qrkGo4rP+qNov0TlUZEwY3YSmZWx4slMWhR53Shdzpo7H3aylw8JLIra1/i
-YPgsmxiUEP6P9DiHmH2O5IVgUsy9kg==
-=L8Rq
------END PGP SIGNATURE-----
-
---gkkaemaf4slct3pn--
