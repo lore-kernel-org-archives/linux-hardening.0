@@ -2,121 +2,151 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4C9C432BE
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 16:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3530C43214
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B62460F92
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 16:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874F060E93
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:09:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbhH0Qd7 (ORCPT
+        id S233113AbhH0RKn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Aug 2021 12:33:59 -0400
-Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:49477 "EHLO
-        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231854AbhH0Qd7 (ORCPT
+        Fri, 27 Aug 2021 13:10:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230021AbhH0RKm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Aug 2021 12:33:59 -0400
-X-Greylist: delayed 369 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Aug 2021 12:33:58 EDT
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 0E9BD820C9;
-        Fri, 27 Aug 2021 19:27:00 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1630081620;
-        bh=tt5mEXv8qlqB4YWly4mTmZV3s2uSzB94kC/w5/UcOAA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=DnbMDwgJ1skFvRHRP9TsCDgd4tSsKgmEQOAvDWxEa+W9b5OnWPw9f4t7/OCOBrqtn
-         k3W3blR5if8lKOGw2lazGBz/JWGXbnmh0jnM63d05DufaU1cwrGYZsoeOShVZy3jdX
-         udFgsQTUT6Ysmc2lZU6CHSCuB3/9xLadKhEfhL8Q=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 27 Aug 2021 19:26:59 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%12]) with
- mapi id 15.01.2176.009; Fri, 27 Aug 2021 19:26:59 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     "ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH][next] fs/ntfs3: Fix fall-through warnings for Clang
-Thread-Topic: [PATCH][next] fs/ntfs3: Fix fall-through warnings for Clang
-Thread-Index: AQHXlH8GgQxbFi/fhU2Z/WpnkAbBi6uHl4+Q
-Date:   Fri, 27 Aug 2021 16:26:59 +0000
-Message-ID: <aeb1cad119034c359939c76c4835b86a@paragon-software.com>
-References: <20210818222146.GA312859@embeddedor>
-In-Reply-To: <20210818222146.GA312859@embeddedor>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.0.26]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 27 Aug 2021 13:10:42 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C2DC0613CF
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 10:09:53 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1mJfLX-00064y-Ny; Fri, 27 Aug 2021 19:08:51 +0200
+Received: from pengutronix.de (2a03-f580-87bc-d400-4ac6-d86b-e43f-77c5.ip6.dokom21.de [IPv6:2a03:f580:87bc:d400:4ac6:d86b:e43f:77c5])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        (Authenticated sender: mkl-all@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id A327F670F04;
+        Fri, 27 Aug 2021 17:08:38 +0000 (UTC)
+Date:   Fri, 27 Aug 2021 19:08:37 +0200
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ayush Sawal <ayush.sawal@chelsio.com>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Rohit Maheshwari <rohitm@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
+        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+        linux-crypto@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-can@vger.kernel.org,
+        bpf@vger.kernel.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Keith Packard <keithp@keithp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] treewide: Replace open-coded flex arrays in unions
+Message-ID: <20210827170837.mu4hql5bev2f5x2o@pengutronix.de>
+References: <20210826050458.1540622-1-keescook@chromium.org>
+ <20210826050458.1540622-3-keescook@chromium.org>
+ <20210826062452.jekmoo43f4xu5jxk@pengutronix.de>
+ <202108270906.7C85982525@keescook>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gkkaemaf4slct3pn"
+Content-Disposition: inline
+In-Reply-To: <202108270906.7C85982525@keescook>
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> From: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Sent: Thursday, August 19, 2021 1:22 AM
-> To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-> Cc: ntfs3@lists.linux.dev; linux-kernel@vger.kernel.org; Gustavo A. R. Si=
-lva <gustavoars@kernel.org>; linux-
-> hardening@vger.kernel.org
-> Subject: [PATCH][next] fs/ntfs3: Fix fall-through warnings for Clang
->=20
-> Fix the following fallthrough warnings:
->=20
-> fs/ntfs3/inode.c:1792:2: warning: unannotated fall-through between switch=
- labels [-Wimplicit-fallthrough]
-> fs/ntfs3/index.c:178:2: warning: unannotated fall-through between switch =
-labels [-Wimplicit-fallthrough]
->=20
-> This helps with the ongoing efforts to globally enable
-> -Wimplicit-fallthrough for Clang.
->=20
-> Link: https://github.com/KSPP/linux/issues/115
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  fs/ntfs3/index.c | 1 +
->  fs/ntfs3/inode.c | 1 +
->  2 files changed, 2 insertions(+)
->=20
-> diff --git a/fs/ntfs3/index.c b/fs/ntfs3/index.c
-> index 6aa9540ece47..76eae60b7fce 100644
-> --- a/fs/ntfs3/index.c
-> +++ b/fs/ntfs3/index.c
-> @@ -175,6 +175,7 @@ static inline NTFS_CMP_FUNC get_cmp_func(const struct=
- INDEX_ROOT *root)
->  		default:
->  			break;
->  		}
-> +		break;
->  	default:
->  		break;
->  	}
-> diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-> index bf51e294432e..a573c6e98cb8 100644
-> --- a/fs/ntfs3/inode.c
-> +++ b/fs/ntfs3/inode.c
-> @@ -1789,6 +1789,7 @@ int ntfs_unlink_inode(struct inode *dir, const stru=
-ct dentry *dentry)
->  	switch (err) {
->  	case 0:
->  		drop_nlink(inode);
-> +		break;
->  	case -ENOTEMPTY:
->  	case -ENOSPC:
->  	case -EROFS:
-> --
-> 2.27.0
 
-Hi Gustavo, thank you. Picked into ntfs3 tree.
+--gkkaemaf4slct3pn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards.
+On 27.08.2021 09:08:19, Kees Cook wrote:
+> > BTW: Is there opportunity for conversion, too?
+> >=20
+> > | drivers/net/can/peak_canfd/peak_pciefd_main.c:146:32: warning: array =
+of flexible structures
+>=20
+> Oh, hrmpf. This isn't a sane use of flex arrays:
+>=20
+> struct __packed pucan_rx_msg {
+> 	...
+> 	__le32	can_id;
+> 	u8	d[];
+> };
+>=20
+> struct pciefd_rx_dma {
+>         __le32 irq_status;
+>         __le32 sys_time_low;
+>         __le32 sys_time_high;
+>         struct pucan_rx_msg msg[];
+> } __packed __aligned(4);
+>=20
+> I think that needs to be handled separately. How are you building to get
+> that warning, by the way? I haven't seen that in my builds...
+
+If compiling with C=3D1, sparse will complain about this.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+--gkkaemaf4slct3pn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEK3kIWJt9yTYMP3ehqclaivrt76kFAmEpHBEACgkQqclaivrt
+76nZyQf/cQC8nVICmegw2Xx7F4e9MRmYJPNlM4CBOw9lsPVBDSn9GON+JkvMIfWI
+gzsHT/fSQfAerrBnUGqaLqbI/HjEa1cgkevLmMY6SnSYZN1tYmiYUhhirVAUN07C
+QchAwrLEtdk4fwE/PMvjCcsmw1BrM85bW5B9h/Ug5xhhZZGJu+0I1DSR9s4ERi1M
+SGHegQvm8xGiPYDiYOOmXX75G9X4rtVGcpNWj9Iu9hscU0F2exWZz5wB1cZQSK4s
+Ka+x3qrkGo4rP+qNov0TlUZEwY3YSmZWx4slMWhR53Shdzpo7H3aylw8JLIra1/i
+YPgsmxiUEP6P9DiHmH2O5IVgUsy9kg==
+=L8Rq
+-----END PGP SIGNATURE-----
+
+--gkkaemaf4slct3pn--
