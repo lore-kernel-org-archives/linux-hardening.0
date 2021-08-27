@@ -7,170 +7,110 @@ X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922E2C432BE
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 15:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43D6C4320E
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 15:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7586960EB3
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 15:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8662E60E99
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 15:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245460AbhH0PF1 (ORCPT
+        id S245401AbhH0POU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Aug 2021 11:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56804 "EHLO
+        Fri, 27 Aug 2021 11:14:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245447AbhH0PFS (ORCPT
+        with ESMTP id S245398AbhH0POT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Aug 2021 11:05:18 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507F5C0613D9
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 08:04:29 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id s11so6165782pgr.11
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 08:04:29 -0700 (PDT)
+        Fri, 27 Aug 2021 11:14:19 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA52C0613CF
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 08:13:30 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id oa17so4752190pjb.1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 08:13:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KAECcBr13A7/Y2OTRwW1tphAS3RtXLfsmJpN2+1wV/g=;
-        b=eOcsJSkR3Tcwg/sysGWZjHB3j7i5r7/PV9NeUpJgrJbmyULq0nH9YQOHu6OfxzbHKe
-         +pqjyGtX5lbERmDoDn0TFryW9eiklpbv+vwxUDsCmYqm2vAmc+UOnTUPjndIWDtzZGE6
-         1I4m3oFj3B4WBm9sPNSoqOuPlO6sKlxv2tj0U=
+        bh=wNcmjrgT+pU+GmhhBaKch+j5CYTuccBi6r9ayZ8AZ60=;
+        b=U5tDJ9/RQAYnU3F2ma/wk72GTxi+fHt4hEeoQs1qIN7ZMPEy6HulJhciZk7evjIZMQ
+         07nV6skA9QSQm6MNgm2WVLQY459u5PNlqtEl+huRZXXpGb5c6nwQUm2nwy7vSsCO/bHG
+         A1BRNOEK+ZHGUhRPBIXH0sVgLlmEJQJTJYOEQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KAECcBr13A7/Y2OTRwW1tphAS3RtXLfsmJpN2+1wV/g=;
-        b=rViqWEkwBwGuKIauRZQGJ0a+ruGNxOt8NfqfcmyrKQO4r/Vni9LMg9d93xborZoQh1
-         FpZm959BYEZ8cdVcrzdxo+2/1kmTB6qVgFh0N8rZOhV15FZRK7IiPoqvj8cRj95TyDOd
-         80TOafulImrzTD+C9sJ9lxtB8t8GHa632dqQb1jjYi+eRbwo90qW8+2Xe/CVkHpW0nOO
-         lVhE3HYcEzl+z41PRwJcbAyMDYpygLf4txMLtovGVQDIQWZIvVV1Bl7mUO+nn+fJmTJZ
-         iU9yiClxNrJZzcbn3odqylkQjcVASI8MbxsLJ7I46tb2NqcHZAJkhmo9pvkH5okDLG9O
-         qQtw==
-X-Gm-Message-State: AOAM5322gkVnKheWq2nimcgQHKkJ+5bY9c49Dd6bY6zoaG3MxnGMogpE
-        eOuR1g8c0RNu1w67H6TUv+Bo0g==
-X-Google-Smtp-Source: ABdhPJx3Th/aWz4EKkeULbF3x4SNVKUYkcYbm9Af9rvuqm06QYk8iV99LuIHbCBgC2+RnLK8ojmnXw==
-X-Received: by 2002:aa7:850c:0:b0:3e2:edf3:3d09 with SMTP id v12-20020aa7850c000000b003e2edf33d09mr9710410pfn.42.1630076668808;
-        Fri, 27 Aug 2021 08:04:28 -0700 (PDT)
+        bh=wNcmjrgT+pU+GmhhBaKch+j5CYTuccBi6r9ayZ8AZ60=;
+        b=CIbwap+5h8ALZoZVcsi17eRP/2722DNaw41ocmk43MyflzbD1pXVv/LTsuQiYgJIxU
+         51s74zLZ7MfIB7+lxOjZ81Xl9JNxqhpNuxOISfbglsWD8bipFmpHS/ufrHuQ1vpQzqj0
+         ScDz5TxdDuNkJyxq9SyRkJzqglz8wbUe0BsE7pbZcfz0Mz4jYoZY1+j9sYI+JHruZYuj
+         lyoMPEei3wVKptLZbDFzmLSrUGpEn3AQZxg4rEr1y8puEemhDaWfejKkzhhiocp8VmLW
+         PSuBWzNNyvnU1QGgK+Z013PL2Fei+deiPAgxRjmg0j8YmniXuJApoLFeLMNIv7b5p0aC
+         DqVw==
+X-Gm-Message-State: AOAM533eRpnhyB5JQ0LyVh1Knc3mag7g2Jl04b7F6a1+KOrdg44PrEmh
+        k9ffezxGsXToPcmlwiWIm6yvVx6Xpdf6/A==
+X-Google-Smtp-Source: ABdhPJxUcgLEHFsn0Yuu8AZiBkgBaBNil2cWE6ZrY4Cs5N+rhLI+1oVhHNCz0OBHaTIn7V/pSHXTig==
+X-Received: by 2002:a17:90a:2ec6:: with SMTP id h6mr23348104pjs.79.1630077209688;
+        Fri, 27 Aug 2021 08:13:29 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q3sm7411290pgf.18.2021.08.27.08.04.27
+        by smtp.gmail.com with ESMTPSA id 188sm2699820pfz.193.2021.08.27.08.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Aug 2021 08:04:28 -0700 (PDT)
+        Fri, 27 Aug 2021 08:13:29 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Tejun Heo <tj@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] cgroup: Avoid compiler warnings with no subsystems
-Date:   Fri, 27 Aug 2021 08:04:24 -0700
-Message-Id: <20210827150424.2729274-1-keescook@chromium.org>
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] Compiler Attributes: Add __alloc_size for better bounds checking fix
+Date:   Fri, 27 Aug 2021 08:13:27 -0700
+Message-Id: <20210827151327.2729736-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3945; h=from:subject; bh=GFK3BETQmfQB9ONseeh+QxRF9yf/a6MqKtjDJoZzqeA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhKP74SaubLPqskWOEDTayM2+b9dEi4jnuGNQvHGBR dbuO1zCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSj++AAKCRCJcvTf3G3AJs/ZD/ 4nZI7nyxeKoS/vLqeVHPIvoLfK1l5E/MD6+mX9oxiTv2+rWvwB+LEqyQsAeWZhefkPXXtHMlSKlfZf wfngNKG3xBkDUzhHgrPH6rw0jXrzoxLQ+RziHvHD05OqAzdfEn9rqkpTRMDklEEuWtApzTu7d+e6Dk +MXPDo7l+RrVk3CHNyjvM5sz5dHE4Yx8J9WISnfgMxfKymmCsm9hW/ekMILXJhLObzsCBxtpLrhJA6 X7ghcNxXlrFlvwnteEiSYkz+8Lo5+rKXwL8DagDfwkxuCGzDQ0G86atUitohjKT70bvqKK3XlpUl+A R3/njlqqexcL9f1UoODTtGPU0rnYsj2GXoOH/iRX1wJD95tG9hOa/h7/FDkVUC8E7RhboN/0EyX57/ oswoRaZlkjUWKfHZQXYzFCl6vYIdPX8bCzqqvVXNMkwojxLHqCJ521sBuGKKMmfo86PbNOQAq6OcSW fWhNjsjZ/pgqnROVQGFyXA/Yu+9P7F34MJlrpzItf55SYOtML5fiObXzJPoG7AU6woH0md7QjAJW1i lfXc9OGmU3RqAyGV6XEo7tjbUGZ4uxhAqtQVnBdTva2n88emli1eqk6j111Hb1uEhqkLJhey4K96QQ 42Myh/Q9bRh4WDV+hP4sfQ0Aub1+R4QMdLj+6ppDmC0jhcsvC/gDYadUhqig==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1741; h=from:subject; bh=bQiqqUs8UgNqYHyn8tJ+VrFYud+KD23pl32jsqxD5V0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhKQEW1o69iAiX3Ex2Z+uUHJT1dh2Os0spjaIJ2W7I YuuIJpaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSkBFgAKCRCJcvTf3G3AJh1FD/ 4oSWVyoj7gFVEqWWWp8f2YNTe2Yhq/m+pdF2Y3qfMOgCpl2x+LKls5kQAW0pHx9aQOzNlJzEVq79Xm n5keqN3S2zsBThMt82K4Fe1egwVB8mg80nW2VzNHPG9+C9MexwMM+as2KBe6zbXmDd3QWFgBXFnyFJ whENJz/bd0ZmyuHKUQVD0FGWmBex8MoSC1x3WWVVM9+UlqKzahi+0QSYZJNOMKyHzsbFGDae5bpAeV kCaXOD/omaROpKxuavMYfMvDQqbVJE0FFOtZBMs30IbATeqfYcubirJV+2Blz81i4djZSBSRjAmSzW mVSwqizQl3Toe6fogXeR3qENg7+X4myHbeip3NRBGo0t2q5d5tJq8XLIqv5+ua9ZF59dn9XghG82Yi glRfSW9R59f1PkD8pFtuHjTDW/oL+S6Ma9umbymMDMxfTawLImJUbabTBF/c4DHCNqz2u4n+R8/edJ I8/Z3ZDopJNF0+ZJbCn/+CGIXCiWCHOvM7ECcAUo4YthtFIfUCLyH/4zfAllLbCtok6Ta61Lrv/WX0 RxoK3s1wybRavDYnbhEkt/usspwZtJqMJ9c8cluBMAOGXdrgW4qJB5eVH8QAGZvSVTaiELCyD+V0ma Dtb20IJyw9O2O3TdSt6nZSe4PKF5bxINnb+jp4t3dyw77/fAGgQzaUUeJpEg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As done before in commit cb4a31675270 ("cgroup: use bitmask to filter
-for_each_subsys"), avoid compiler warnings for the pathological case of
-having no subsystems (i.e. CGROUP_SUBSYS_COUNT == 0). This condition is
-hit for the arm multi_v7_defconfig config under -Wzero-length-bounds:
+Adjust the warning logic to deal with pre-9.1 gcc behaviors.
 
-In file included from ./arch/arm/include/generated/asm/rwonce.h:1,
-                 from include/linux/compiler.h:264,
-                 from include/uapi/linux/swab.h:6,
-                 from include/linux/swab.h:5,
-                 from arch/arm/include/asm/opcodes.h:86,
-                 from arch/arm/include/asm/bug.h:7,
-                 from include/linux/bug.h:5,
-                 from include/linux/thread_info.h:13,
-                 from include/asm-generic/current.h:5,
-                 from ./arch/arm/include/generated/asm/current.h:1,
-                 from include/linux/sched.h:12,
-                 from include/linux/cgroup.h:12,
-                 from kernel/cgroup/cgroup-internal.h:5,
-                 from kernel/cgroup/cgroup.c:31:
-kernel/cgroup/cgroup.c: In function 'of_css':
-kernel/cgroup/cgroup.c:651:42: warning: array subscript '<unknown>' is outside the bounds of an
-interior zero-length array 'struct cgroup_subsys_state *[0]' [-Wzero-length-bounds]
-  651 |   return rcu_dereference_raw(cgrp->subsys[cft->ss->id]);
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Zefan Li <lizefan.x@bytedance.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: cgroups@vger.kernel.org
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-v2: avoid "converting the enum constant to a boolean" warnings
-    https://lore.kernel.org/lkml/202108271524.oOIHtG9S-lkp@intel.com/
-v1: https://lore.kernel.org/lkml/20210827034741.2214318-1-keescook@chromium.org/
+Hi Andrew, this is meant to replace:
+compiler-attributes-add-__alloc_size-for-better-bounds-checking-fix.patch
+Thanks!
 ---
- kernel/cgroup/cgroup.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ Makefile | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index d0725c1a8db5..76693a86e8b7 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -472,7 +472,7 @@ static u16 cgroup_ss_mask(struct cgroup *cgrp)
- static struct cgroup_subsys_state *cgroup_css(struct cgroup *cgrp,
- 					      struct cgroup_subsys *ss)
- {
--	if (ss)
-+	if (CGROUP_SUBSYS_COUNT > 0 && ss)
- 		return rcu_dereference_check(cgrp->subsys[ss->id],
- 					lockdep_is_held(&cgroup_mutex));
- 	else
-@@ -550,6 +550,9 @@ struct cgroup_subsys_state *cgroup_e_css(struct cgroup *cgrp,
- {
- 	struct cgroup_subsys_state *css;
+diff --git a/Makefile b/Makefile
+index 41ed29b5af2b..141a851930e6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1096,8 +1096,17 @@ endif
  
-+	if (!CGROUP_SUBSYS_COUNT)
-+		return NULL;
-+
- 	do {
- 		css = cgroup_css(cgrp, ss);
+ ifdef CONFIG_CC_IS_GCC
+ # The allocators already balk at large sizes, so silence the compiler
+-# warnings for bounds checks involving those possible values.
+-KBUILD_CFLAGS += -Wno-alloc-size-larger-than
++# warnings for bounds checks involving those possible values. While
++# -Wno-alloc-size-larger-than would normally be used here, earlier versions
++# of gcc (<9.1) weirdly don't handle the option correctly when _other_
++# warnings are produced (?!). Using -Walloc-size-larger-than=SIZE_MAX
++# doesn't work (as it is documented to), silently resolving to "0" prior to
++# version 9.1 (and producing an error more recently). Numeric values larger
++# than PTRDIFF_MAX also don't work prior to version 9.1, which are silently
++# ignored, continuing to default to PTRDIFF_MAX. So, left with no other
++# choice, we must perform a versioned check to disable this warning.
++# https://lore.kernel.org/lkml/20210824115859.187f272f@canb.auug.org.au
++KBUILD_CFLAGS += $(call cc-ifversion, -ge, 0901, -Wno-alloc-size-larger-than)
+ endif
  
-@@ -577,6 +580,9 @@ struct cgroup_subsys_state *cgroup_get_e_css(struct cgroup *cgrp,
- {
- 	struct cgroup_subsys_state *css;
- 
-+	if (!CGROUP_SUBSYS_COUNT)
-+		return NULL;
-+
- 	rcu_read_lock();
- 
- 	do {
-@@ -647,7 +653,7 @@ struct cgroup_subsys_state *of_css(struct kernfs_open_file *of)
- 	 * the matching css from the cgroup's subsys table is guaranteed to
- 	 * be and stay valid until the enclosing operation is complete.
- 	 */
--	if (cft->ss)
-+	if (CGROUP_SUBSYS_COUNT > 0 && cft->ss)
- 		return rcu_dereference_raw(cgrp->subsys[cft->ss->id]);
- 	else
- 		return &cgrp->self;
-@@ -2372,7 +2378,7 @@ struct task_struct *cgroup_taskset_next(struct cgroup_taskset *tset,
- 	struct css_set *cset = tset->cur_cset;
- 	struct task_struct *task = tset->cur_task;
- 
--	while (&cset->mg_node != tset->csets) {
-+	while (CGROUP_SUBSYS_COUNT > 0 && &cset->mg_node != tset->csets) {
- 		if (!task)
- 			task = list_first_entry(&cset->mg_tasks,
- 						struct task_struct, cg_list);
-@@ -4643,7 +4649,7 @@ void css_task_iter_start(struct cgroup_subsys_state *css, unsigned int flags,
- 	it->ss = css->ss;
- 	it->flags = flags;
- 
--	if (it->ss)
-+	if (CGROUP_SUBSYS_COUNT > 0 && it->ss)
- 		it->cset_pos = &css->cgroup->e_csets[css->ss->id];
- 	else
- 		it->cset_pos = &css->cgroup->cset_links;
+ # disable invalid "can't wrap" optimizations for signed / pointers
 -- 
 2.30.2
 
