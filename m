@@ -2,86 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEB8C432BE
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33D2C4320A
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F11C608FB
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874EE60FE6
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236341AbhH0Rv5 (ORCPT
+        id S231287AbhH0RyZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Aug 2021 13:51:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
+        Fri, 27 Aug 2021 13:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230035AbhH0Rv5 (ORCPT
+        with ESMTP id S231349AbhH0RyY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Aug 2021 13:51:57 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F59CC061757;
-        Fri, 27 Aug 2021 10:51:08 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id j2so4413733pll.1;
-        Fri, 27 Aug 2021 10:51:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=c65PIoZtXrK5fG5yv9bS73WbrNpIpRgBV7KDj6Yda9o=;
-        b=IdBLcrm3jZpcZrU/u1e8c49BCTkbf1fL9uye8pgEDvFivomEZ9CkjJScQHaslx8MRm
-         Z6ks5DWfj9tf0yvzUXn43NlaS9EfJwcKUVcLkq4Fsg4leSe/mR+pAC7EsMr6gXo4QgGn
-         4oWayV3tbdmwUCY5PZbZwTkREOjQIy+dZjVa4VbMu3KZf4tjv2j9UGMw1oWQB2aDAer9
-         v1j/drh3EWQe92JJWBb2osEz1CcA6O/fPmWIJqrI7Rg26DcZ5kOdV8Y5P0KAmE47EJwe
-         lQeUASFfUjFpg/jfmeKvlS81m/BhLeF/vUPhalCfuaspJz6FMd2QpFM22zcvLMeej0s/
-         0ENg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=c65PIoZtXrK5fG5yv9bS73WbrNpIpRgBV7KDj6Yda9o=;
-        b=mNgJbHzV5gHtxofo39efx6zPNEQD/5+WVGt3lYUl7oZ6F1e8P7bkKDLS3n/I/HHoF6
-         HNj1PiSgPwtTqHkRdAi7WDYjmyaftlHiTsV5dQ1UgyHnnaF3uciyHVxErZsSpMSTylFL
-         ZJ2sstgHapBjJ78PweAyyz/V2LJ/O4yd4mjE8YP1DbJP6H+Z9a2XuNiQw8NMQcVQPCMP
-         uTZMed2lsLSKC3zFxX0e13RmgLZJ7R8OAl4+kOlnKMy3YM1Gmp780W4YfQzjn/at8I3a
-         At2iYf9aQmHfodDC4PWdlYB/7aErJLE1pcUDhPCJnf3UKQ+KIYKCXWuHXlFtDt5Qli9f
-         G0RQ==
-X-Gm-Message-State: AOAM5318uYBP0Tn5qE6AXkd4AN21PxMLDRb/0pCItZfMxJIMVS+v5Mb9
-        bGki15TxbU6ccAy1OxymzMQ=
-X-Google-Smtp-Source: ABdhPJyKNuu8YFmP/NPLRgOuwuUnXHyKeo4iR4oHDHkmWjX/1Z1MzYQdwhYdQpEOpx4nLT91WlP8lQ==
-X-Received: by 2002:a17:90a:5d8b:: with SMTP id t11mr12169346pji.136.1630086667376;
-        Fri, 27 Aug 2021 10:51:07 -0700 (PDT)
-Received: from localhost (2603-800c-1a02-1bae-e24f-43ff-fee6-449f.res6.spectrum.com. [2603:800c:1a02:1bae:e24f:43ff:fee6:449f])
-        by smtp.gmail.com with ESMTPSA id e18sm6462549pfv.172.2021.08.27.10.51.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Aug 2021 10:51:07 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date:   Fri, 27 Aug 2021 07:51:05 -1000
-From:   Tejun Heo <tj@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] cgroup: Avoid compiler warnings with no subsystems
-Message-ID: <YSkmCVwLvfusqtmA@slm.duckdns.org>
-References: <20210827150424.2729274-1-keescook@chromium.org>
+        Fri, 27 Aug 2021 13:54:24 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8698C061757;
+        Fri, 27 Aug 2021 10:53:31 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f111700cf40790d4c46ba75.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:1700:cf40:790d:4c46:ba75])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C0D781EC0464;
+        Fri, 27 Aug 2021 19:53:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1630086805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Vnzi8i4BEi+cvl2op6fLcbMnIqawCJJ9n45UwHm3acc=;
+        b=dE/4cW7JIYkODgbdUOgqYWF853o0YXGEMA5Vs0UV4nyXDhklFT5wPwDMO8d42wsyIDh5L8
+        03OTw4N2uUvYWb0eoiVLN4YFaDAT5e59Ge8dIewEO6WY+HjqER9WJ6zSPSmtouSFZVtbKb
+        Vv30fIMAPxzc3cFG7H+3NN/vD7XmHJY=
+Date:   Fri, 27 Aug 2021 19:54:07 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Joe Perches <joe@perches.com>,
+        David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
+Message-ID: <YSkmv8kz2z3OBHVe@zn.tnic>
+References: <20210814075527.5999-1-len.baker@gmx.com>
+ <YSPbOo90alPsv4vL@zn.tnic>
+ <20210824090338.GB7999@titan>
+ <YSU5wp/ZpsXuDgmu@zn.tnic>
+ <20210827173633.GA3040@titan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210827150424.2729274-1-keescook@chromium.org>
+In-Reply-To: <20210827173633.GA3040@titan>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 27, 2021 at 08:04:24AM -0700, Kees Cook wrote:
-> +	if (CGROUP_SUBSYS_COUNT > 0 && ss)
+On Fri, Aug 27, 2021 at 07:36:33PM +0200, Len Baker wrote:
+> Well, the main purpose is to clean up the proliferation of str*cpy functions.
+> One task is to remove the strcpy uses: The first step (previous step) would
+> be to remove all the strcpy uses. Then, as a second step remove all the
+> strcpy implementations.
+> 
+> I hope that this clarify your question.
 
-Can we encapsulate this in a macro so that it's clear (or at least
-consolidated) why we need these without adding a comment in each spot?
+Yes, it does.
 
-Thanks.
+Now lemme clarify why I'm asking: when your patch is committed to the
+kernel tree and someone reads its commit message months or even years
+from now - and those who do that are mostly maintainers trying to figure
+out why stuff was done the way it was - they will read:
+
+"This is a previous step in the path to remove the strcpy() function
+entirely from the kernel."
+
+and wonder what previous step that is what the following step is...
+
+So, long story short, your commit message should be complete on its own
+and understandable without any references to things which might not be
+as clear and self-evident in the future as they are now.
+
+Makes sense?
+
+Also, if you're wondering if you should send the patch with the error
+checking of strscpy() added, as I requested, even if it might look
+superfluous now, yes you should.
+
+Even if it looks impossible now, we might change some of those defines
+in the future and forget to touch the logic which generates e->label and
+we might end up exhausting that string.
+
+So it would be a lot more robust if something would catch that change,
+albeit seemingly redundant now.
+
+I sincerely hope that clears up things.
+
+Thx.
 
 -- 
-tejun
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
