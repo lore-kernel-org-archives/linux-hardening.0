@@ -2,432 +2,224 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-24.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3540AC43214
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 16:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6A6C43214
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 16:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1868160E99
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 16:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BBB560E99
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 16:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235678AbhH0QbP (ORCPT
+        id S237367AbhH0Qb0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Aug 2021 12:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48440 "EHLO
+        Fri, 27 Aug 2021 12:31:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234662AbhH0QbN (ORCPT
+        with ESMTP id S236654AbhH0QbU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Aug 2021 12:31:13 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DE2C061757
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 09:30:24 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id r13so5726391pff.7
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 09:30:24 -0700 (PDT)
+        Fri, 27 Aug 2021 12:31:20 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECF08C0612E7
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 09:30:29 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id t42so6100597pfg.12
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 09:30:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1psCo0hHdSsvpvZi1i10TA+ZorhOo3SQLpKqrNnbpKQ=;
-        b=OmnqFAP7ktTCd9H3gR8AVQeDG+ud0Mtb2MSPXbpux8F/3bTLlDa8f5Vcqs7FwvrfVk
-         731hNKcsoWeGTILObQXHXl5QUzZuVzwVHwtI6D2+JXxVGW+sQ7jnUj3Q7lJweJ4NAedF
-         Tb3qROx9NVlnsVaFGC4Ka3YR8s7r8IkeN8bjQ=
+        bh=RZ7w9nrQr4P1IWSgKdcY6Z3nzDxlYwk7QATUALf7otg=;
+        b=AUaH8LHTxnNOodpzuuYzLiG4/cVeJLWGjI/YM0gDk+lWx8HLU/7/HC6+7N94wjqY2N
+         xsCcNuwkJqzizXolSlmfLYnNMGYvoQvcDtFwRKBpMmWb9QxdN5KXZk48E55Qptv4y+Uy
+         Z3Q+n9fQ4GVnlimzhoQ0NT71RobVN7+28vk+w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1psCo0hHdSsvpvZi1i10TA+ZorhOo3SQLpKqrNnbpKQ=;
-        b=Rr/UPYh/39EBtWSIuhn3wvSKWjiHkcRhKpfmrDjnlc7QQpn5EX6I66/VQ30tAwVVPx
-         IxVQ9Z7G32YeXEOmUR0Lw6kVgc+UJIi7XphmnSyw67A6MJ27QvszSV0tCNwFb/Vvi0jk
-         gTG47jb+jAb1TL5HrAhHj0XMlvH2t16NjIIVuPKZMLegLu/t84lwLgISh69BG4rRD+Pt
-         qQrFmNVSczYRs3Zjidrtg9OBJdi8yX3wGqzBKHqAnUANt+f7IK9YCkMiihzs53SR0L6x
-         qlJ6CZ1IWcYgk505ytfokOG5p8xngrbEhUhfz+fPf/En9IQsFs3B4O3px5bIYTJ9lj91
-         RhYg==
-X-Gm-Message-State: AOAM533VpgZ8weZaKjSH5fxaNQdhS1OrVsNCMe0fks5Alt3R2/G3JWrC
-        R3ctmmLQhooGXKSBmeBnXK6JMA==
-X-Google-Smtp-Source: ABdhPJzetnDNmg6GQEa6gDwmO0Vjz/O0oS5CoVDRuSpJH609wxH+6x0AvmklOe/wlDSvwKW+u/LiYA==
-X-Received: by 2002:a63:68a:: with SMTP id 132mr8698863pgg.154.1630081823959;
-        Fri, 27 Aug 2021 09:30:23 -0700 (PDT)
+        bh=RZ7w9nrQr4P1IWSgKdcY6Z3nzDxlYwk7QATUALf7otg=;
+        b=UoxchSv8QFb7GMtZCXfsAG6bSXi+q68/18cxLHR8VJDc3LQWF8z0QWPoK8dF+Kq215
+         epkrCR+n/L0k06sP4wkhSqIRL745Rcp6qDdQpGxec2wDgZA8x+nWs+PIwptRVkrlGIL4
+         4fRwW3yxUsGLoP1szPqhg/bCJtJ7FUJojeGA3Zqn+gwbWSTwDttU+6DnHF4EMxQtz03w
+         aI89iiWBZapI1HyjDW1kFf9tVa7AvVA6i38KtYjIkK6emH97ZUZssoCgxGslIFt7LBbx
+         w3s14jcG6y8dH9FEdMGAjMzp7WRmoq2poH0YyZ0gNxCj/IfM2um/gMW2jAgMsgrnvM+F
+         Iahg==
+X-Gm-Message-State: AOAM5329yCUMV/tNeXn36ut/8n1GrGXci+HdgJQcHBOkTMuq/99JIAWu
+        DUkXAQkonvexX1xR+nID5Wa9zA==
+X-Google-Smtp-Source: ABdhPJxF6d2WDm1ndBGxujInBCdm38Attvke2+ydBHtrDX1lH1nSXAJFJ3JLOPRxFjIy2r23FNYNzg==
+X-Received: by 2002:a05:6a00:1589:b0:3f2:7075:3746 with SMTP id u9-20020a056a00158900b003f270753746mr6974752pfk.35.1630081829313;
+        Fri, 27 Aug 2021 09:30:29 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x16sm7444590pgc.49.2021.08.27.09.30.17
+        by smtp.gmail.com with ESMTPSA id a21sm1056797pjo.14.2021.08.27.09.30.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 27 Aug 2021 09:30:18 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
+Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Nilesh Javali <njavali@marvell.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Phillip Potter <phil@philpotter.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Fabio Aiuto <fabioaiuto83@gmail.com>,
-        Ross Schmidt <ross.schm.dev@gmail.com>,
-        Marco Cesati <marcocesati@gmail.com>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-staging@lists.linux.dev,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Keith Packard <keithp@keithp.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: [PATCH v3 3/5] treewide: Replace 0-element memcpy() destinations with flexible arrays
-Date:   Fri, 27 Aug 2021 09:30:13 -0700
-Message-Id: <20210827163015.3141722-4-keescook@chromium.org>
+Subject: [PATCH v3 1/5] stddef: Introduce DECLARE_FLEX_ARRAY() helper
+Date:   Fri, 27 Aug 2021 09:30:11 -0700
+Message-Id: <20210827163015.3141722-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210827163015.3141722-1-keescook@chromium.org>
 References: <20210827163015.3141722-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9615; h=from:subject; bh=DQFK9rz+vbtwSe8m1jRGSzDk89AmiraaMvJ3vzaHm8Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhKRMWNfZsDewA0npSo8PMQq7ndkNGBWcmzgJmKRrJ 1BkWyaKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSkTFgAKCRCJcvTf3G3AJr0uD/ 4mAYPTqz/QSFVNhxAMqLvTQS1+RgNFauOCioQYwm1AMJdQ8XhUGVPZ5u7bpT77mQ4ShRsILG1SKcRq X2v0DzW0lK/aU0unUk0NzIIVHn5L2izCW1x66txy02zy1EMGvgy7A4k25ef19jKZn5W0nYlHFokzsB OmUn/u9jfMVp0lQlJZYc5u+oLNwFHerFEME+eQuB2GPR2MXgGmItzHkhlJ3rg5zOITlORtNZxpTuQE cJa6WU27FaSI4SzOoLDXs2bJ8/uNKRq6Rm1fLN0IFrV6TxBUExu2x9TDuCPrLsayDjtWDSed96v4k3 wf7j2rtoN4ra8X84L3mtuBv0ye7UDIiMJrBxwqqmJLPsiNLECTfh/s8YcmypPEMFyIrQx5lHhQEFgU yIcdbY5hY/Ok2A2Jh9vgkjghochXbxfy1R7sboEoh9ZipKOWdIQEIt+Ihat2UsOcNi7XQRsoVM/UhF 4zRfIi3vicfpkpZGiU/orZN69+ouZyzFrNKcsK6TgjJVBU0cZR148+Pi0cb3phPtxrczreV4TbQTIw 2raMJPQBueGoeiduPt9tuBXiwVseZeVNQHRSk9A33Vkod3D6cjAVs/jPrlFG64umQd1zgHY7FFYjpJ rj9R4U+O5+aKEKzGT+UWyv+E+X7NizZ0dcfT+jBtMTEqj6BRx8G/j32rnqLQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5572; h=from:subject; bh=8c+U/iZ/gycRs8w0t9BFRRAIIYbu9Tv+SQs3W1gDUds=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhKRMWWOizJLxfxAKDY9M1B0NWYHAQZ0rmE/jQBiGJ xEEM+v2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSkTFgAKCRCJcvTf3G3AJuroD/ 9MopnQF8VZySpYDfNEEXUgKmgmCUX+G9pVEV/h8Cfmb1ViQr1+ykyuvzf/eH7jslS6vj0UyxtTa00o H2MazDMxzHCyXkSHPtmai6DO3aQBKsEKbsDYAhmiIEyFYuzDHs9+/8JQ7p40gssc7KA5dHx7/V9+04 vALrNSUzLoZqfNQY80xOldjifCwn8p7gMA172DMO9kka8QYQVVdkhUZmcpQ8vT4j2zHMRDmu3cFJ3G 5QDUSgLxDa0q95rEhm1E4qytSUjJ9nUBU3i7k5KKElTtSL8yadPyiUwimZJV+Qcf0pten/ip6zCpob eWCHn13w2bGPO8ymxzCuKSd5hCwon3asjJRypNd/7L7aNrK71wN9WQZAV503wOzK/J20aQUHWFcwxU wNMnXbonCLwDYgNOnIyrMD1VwLXGeINhOXu4Z/XOehuiCR2iWjk2YpBPfNVx26OgapNYcRDA/94IOF YrHxed+lWSd9Md+5wCrVHsly28/HnuSE3vaamZ26QRTKrMfdj31tximpc1m3pOYr9Jnsh6GNgHLOEJ 3oT/yJQYfMeeAMOzZQLGf7DVStSgA3MJRWTDjgaAcTV/HyxbFTmXISprCuB9FyOyjE6HYykchs0P/F NIP5ZyVXP9wPP6jWQxH5H2FrM4H8B9JoyBLDyJfujOO5YRetAubwLVDaKGYQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The 0-element arrays that are used as memcpy() destinations are actually
-flexible arrays. Adjust their structures accordingly so that memcpy()
-can better reason able their destination size (i.e. they need to be seen
-as "unknown" length rather than "zero").
+There are many places where kernel code wants to have several different
+typed trailing flexible arrays. This would normally be done with multiple
+flexible arrays in a union, but since GCC and Clang don't (on the surface)
+allow this, there have been many open-coded workarounds, usually involving
+neighboring 0-element arrays at the end of a structure. For example,
+instead of something like this:
 
-In some cases, use of the DECLARE_FLEX_ARRAY() helper is needed when a
-flexible array is alone in a struct.
+struct thing {
+	...
+	union {
+		struct type1 foo[];
+		struct type2 bar[];
+	};
+};
 
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+code works around the compiler with:
+
+struct thing {
+	...
+	struct type1 foo[0];
+	struct type2 bar[];
+};
+
+Another case is when a flexible array is wanted as the single member
+within a struct (which itself is usually in a union). For example, this
+would be worked around as:
+
+union many {
+	...
+	struct {
+		struct type3 baz[0];
+	};
+};
+
+These kinds of work-arounds cause problems with size checks against such
+zero-element arrays (for example when building with -Warray-bounds and
+-Wzero-length-bounds, and with the coming FORTIFY_SOURCE improvements),
+so they must all be converted to "real" flexible arrays, avoiding warnings
+like this:
+
+fs/hpfs/anode.c: In function 'hpfs_add_sector_to_btree':
+fs/hpfs/anode.c:209:27: warning: array subscript 0 is outside the bounds of an interior zero-length array 'struct bplus_internal_node[0]' [-Wzero-length-bounds]
+  209 |    anode->btree.u.internal[0].down = cpu_to_le32(a);
+      |    ~~~~~~~~~~~~~~~~~~~~~~~^~~
+In file included from fs/hpfs/hpfs_fn.h:26,
+                 from fs/hpfs/anode.c:10:
+fs/hpfs/hpfs.h:412:32: note: while referencing 'internal'
+  412 |     struct bplus_internal_node internal[0]; /* (internal) 2-word entries giving
+      |                                ^~~~~~~~
+
+drivers/net/can/usb/etas_es58x/es58x_fd.c: In function 'es58x_fd_tx_can_msg':
+drivers/net/can/usb/etas_es58x/es58x_fd.c:360:35: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[]'} [-Wzero-length-bounds]
+  360 |  tx_can_msg = (typeof(tx_can_msg))&es58x_fd_urb_cmd->raw_msg[msg_len];
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/net/can/usb/etas_es58x/es58x_core.h:22,
+                 from drivers/net/can/usb/etas_es58x/es58x_fd.c:17:
+drivers/net/can/usb/etas_es58x/es58x_fd.h:231:6: note: while referencing 'raw_msg'
+  231 |   u8 raw_msg[0];
+      |      ^~~~~~~
+
+However, it _is_ entirely possible to have one or more flexible arrays
+in a struct or union: it just has to be in another struct. And since it
+cannot be alone in a struct, such a struct must have at least 1 other
+named member -- but that member can be zero sized. Wrap all this nonsense
+into the new DECLARE_FLEX_ARRAY() in support of having flexible arrays
+in unions (or alone in a struct).
+
+As with struct_group(), since this is needed in UAPI headers as well,
+implement the core there, with a non-UAPI wrapper.
+
+Additionally update kernel-doc to understand its existence.
+
+https://github.com/KSPP/linux/issues/137
+
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Nilesh Javali <njavali@marvell.com>
-Cc: Manish Rangankar <mrangankar@marvell.com>
-Cc: GR-QLogic-Storage-Upstream@marvell.com
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Phillip Potter <phil@philpotter.co.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Florian Schilhabel <florian.c.schilhabel@googlemail.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
-Cc: Ross Schmidt <ross.schm.dev@gmail.com>
-Cc: Marco Cesati <marcocesati@gmail.com>
-Cc: ath10k@lists.infradead.org
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org
-Cc: linux-staging@lists.linux.dev
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/ath/ath10k/bmi.h         | 10 +++----
- drivers/scsi/qla4xxx/ql4_def.h                |  4 +--
- drivers/staging/rtl8188eu/include/ieee80211.h |  6 ++--
- drivers/staging/rtl8712/ieee80211.h           |  4 +--
- drivers/staging/rtl8723bs/include/ieee80211.h |  6 ++--
- include/linux/ieee80211.h                     | 30 +++++++++----------
- include/uapi/linux/dlm_device.h               |  4 +--
- 7 files changed, 32 insertions(+), 32 deletions(-)
+ include/linux/stddef.h      | 13 +++++++++++++
+ include/uapi/linux/stddef.h | 16 ++++++++++++++++
+ scripts/kernel-doc          |  2 ++
+ 3 files changed, 31 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/bmi.h b/drivers/net/wireless/ath/ath10k/bmi.h
-index f6fadcbdd86e..0685c0d2d4ea 100644
---- a/drivers/net/wireless/ath/ath10k/bmi.h
-+++ b/drivers/net/wireless/ath/ath10k/bmi.h
-@@ -109,7 +109,7 @@ struct bmi_cmd {
- 		struct {
- 			__le32 addr;
- 			__le32 len;
--			u8 payload[0];
-+			u8 payload[];
- 		} write_mem;
- 		struct {
- 			__le32 addr;
-@@ -138,18 +138,18 @@ struct bmi_cmd {
- 		} rompatch_uninstall;
- 		struct {
- 			__le32 count;
--			__le32 patch_ids[0]; /* length of @count */
-+			__le32 patch_ids[]; /* length of @count */
- 		} rompatch_activate;
- 		struct {
- 			__le32 count;
--			__le32 patch_ids[0]; /* length of @count */
-+			__le32 patch_ids[]; /* length of @count */
- 		} rompatch_deactivate;
- 		struct {
- 			__le32 addr;
- 		} lz_start;
- 		struct {
- 			__le32 len; /* max BMI_MAX_DATA_SIZE */
--			u8 payload[0]; /* length of @len */
-+			u8 payload[]; /* length of @len */
- 		} lz_data;
- 		struct {
- 			u8 name[BMI_NVRAM_SEG_NAME_SZ];
-@@ -160,7 +160,7 @@ struct bmi_cmd {
+diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+index 8b103a53b000..ca507bd5f808 100644
+--- a/include/linux/stddef.h
++++ b/include/linux/stddef.h
+@@ -84,4 +84,17 @@ enum {
+ #define struct_group_tagged(TAG, NAME, MEMBERS...) \
+ 	__struct_group(TAG, NAME, /* no attrs */, MEMBERS)
  
- union bmi_resp {
- 	struct {
--		u8 payload[0];
-+		DECLARE_FLEX_ARRAY(u8, payload);
- 	} read_mem;
- 	struct {
- 		__le32 result;
-diff --git a/drivers/scsi/qla4xxx/ql4_def.h b/drivers/scsi/qla4xxx/ql4_def.h
-index 031569c496e5..69a590546bf9 100644
---- a/drivers/scsi/qla4xxx/ql4_def.h
-+++ b/drivers/scsi/qla4xxx/ql4_def.h
-@@ -366,13 +366,13 @@ struct qla4_work_evt {
- 		struct {
- 			enum iscsi_host_event_code code;
- 			uint32_t data_size;
--			uint8_t data[0];
-+			uint8_t data[];
- 		} aen;
- 		struct {
- 			uint32_t status;
- 			uint32_t pid;
- 			uint32_t data_size;
--			uint8_t data[0];
-+			uint8_t data[];
- 		} ping;
- 	} u;
- };
-diff --git a/drivers/staging/rtl8188eu/include/ieee80211.h b/drivers/staging/rtl8188eu/include/ieee80211.h
-index da6245a77d5d..aa5c1a513495 100644
---- a/drivers/staging/rtl8188eu/include/ieee80211.h
-+++ b/drivers/staging/rtl8188eu/include/ieee80211.h
-@@ -199,7 +199,7 @@ struct ieee_param {
- 		struct {
- 			u32 len;
- 			u8 reserved[32];
--			u8 data[0];
-+			u8 data[];
- 		} wpa_ie;
- 		struct {
- 			int command;
-@@ -212,7 +212,7 @@ struct ieee_param {
- 			u8 idx;
- 			u8 seq[8]; /* sequence counter (set: RX, get: TX) */
- 			u16 key_len;
--			u8 key[0];
-+			u8 key[];
- 		} crypt;
- #ifdef CONFIG_88EU_AP_MODE
- 		struct {
-@@ -224,7 +224,7 @@ struct ieee_param {
- 		} add_sta;
- 		struct {
- 			u8	reserved[2];/* for set max_num_sta */
--			u8	buf[0];
-+			u8	buf[];
- 		} bcn_ie;
++/**
++ * DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
++ *
++ * @TYPE: The type of each flexible array element
++ * @NAME: The name of the flexible array member
++ *
++ * In order to have a flexible array member in a union or alone in a
++ * struct, it needs to be wrapped in an anonymous struct with at least 1
++ * named member, but that member can be empty.
++ */
++#define DECLARE_FLEX_ARRAY(TYPE, NAME) \
++	__DECLARE_FLEX_ARRAY(TYPE, NAME)
++
  #endif
+diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
+index 610204f7c275..3021ea25a284 100644
+--- a/include/uapi/linux/stddef.h
++++ b/include/uapi/linux/stddef.h
+@@ -25,3 +25,19 @@
+ 		struct { MEMBERS } ATTRS; \
+ 		struct TAG { MEMBERS } ATTRS NAME; \
+ 	}
++
++/**
++ * __DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
++ *
++ * @TYPE: The type of each flexible array element
++ * @NAME: The name of the flexible array member
++ *
++ * In order to have a flexible array member in a union or alone in a
++ * struct, it needs to be wrapped in an anonymous struct with at least 1
++ * named member, but that member can be empty.
++ */
++#define __DECLARE_FLEX_ARRAY(TYPE, NAME)	\
++	struct { \
++		struct { } __empty_ ## NAME; \
++		TYPE NAME[]; \
++	}
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index d9715efbe0b7..65088b512d14 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -1263,6 +1263,8 @@ sub dump_struct($$) {
+ 	$members =~ s/DECLARE_KFIFO\s*\($args,\s*$args,\s*$args\)/$2 \*$1/gos;
+ 	# replace DECLARE_KFIFO_PTR
+ 	$members =~ s/DECLARE_KFIFO_PTR\s*\($args,\s*$args\)/$2 \*$1/gos;
++	# replace DECLARE_FLEX_ARRAY
++	$members =~ s/(?:__)?DECLARE_FLEX_ARRAY\s*\($args,\s*$args\)/$1 $2\[\]/gos;
+ 	my $declaration = $members;
  
-diff --git a/drivers/staging/rtl8712/ieee80211.h b/drivers/staging/rtl8712/ieee80211.h
-index 61eff7c5746b..65ceaca9b51e 100644
---- a/drivers/staging/rtl8712/ieee80211.h
-+++ b/drivers/staging/rtl8712/ieee80211.h
-@@ -78,7 +78,7 @@ struct ieee_param {
- 		struct {
- 			u32 len;
- 			u8 reserved[32];
--			u8 data[0];
-+			u8 data[];
- 		} wpa_ie;
- 		struct {
- 			int command;
-@@ -91,7 +91,7 @@ struct ieee_param {
- 			u8 idx;
- 			u8 seq[8]; /* sequence counter (set: RX, get: TX) */
- 			u16 key_len;
--			u8 key[0];
-+			u8 key[];
- 		} crypt;
- 	} u;
- };
-diff --git a/drivers/staging/rtl8723bs/include/ieee80211.h b/drivers/staging/rtl8723bs/include/ieee80211.h
-index 378c21595e05..89c311cd20a6 100644
---- a/drivers/staging/rtl8723bs/include/ieee80211.h
-+++ b/drivers/staging/rtl8723bs/include/ieee80211.h
-@@ -180,7 +180,7 @@ struct ieee_param {
- 		struct {
- 			u32 len;
- 			u8 reserved[32];
--			u8 data[0];
-+			u8 data[];
- 		} wpa_ie;
- 	        struct{
- 			int command;
-@@ -193,7 +193,7 @@ struct ieee_param {
- 			u8 idx;
- 			u8 seq[8]; /* sequence counter (set: RX, get: TX) */
- 			u16 key_len;
--			u8 key[0];
-+			u8 key[];
- 		} crypt;
- 		struct {
- 			u16 aid;
-@@ -204,7 +204,7 @@ struct ieee_param {
- 		} add_sta;
- 		struct {
- 			u8 reserved[2];/* for set max_num_sta */
--			u8 buf[0];
-+			u8 buf[];
- 		} bcn_ie;
- 	} u;
- };
-diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
-index a6730072d13a..445597c03cd1 100644
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -1101,7 +1101,7 @@ struct ieee80211_mgmt {
- 			__le16 auth_transaction;
- 			__le16 status_code;
- 			/* possibly followed by Challenge text */
--			u8 variable[0];
-+			u8 variable[];
- 		} __packed auth;
- 		struct {
- 			__le16 reason_code;
-@@ -1110,26 +1110,26 @@ struct ieee80211_mgmt {
- 			__le16 capab_info;
- 			__le16 listen_interval;
- 			/* followed by SSID and Supported rates */
--			u8 variable[0];
-+			u8 variable[];
- 		} __packed assoc_req;
- 		struct {
- 			__le16 capab_info;
- 			__le16 status_code;
- 			__le16 aid;
- 			/* followed by Supported rates */
--			u8 variable[0];
-+			u8 variable[];
- 		} __packed assoc_resp, reassoc_resp;
- 		struct {
- 			__le16 capab_info;
- 			__le16 status_code;
--			u8 variable[0];
-+			u8 variable[];
- 		} __packed s1g_assoc_resp, s1g_reassoc_resp;
- 		struct {
- 			__le16 capab_info;
- 			__le16 listen_interval;
- 			u8 current_ap[ETH_ALEN];
- 			/* followed by SSID and Supported rates */
--			u8 variable[0];
-+			u8 variable[];
- 		} __packed reassoc_req;
- 		struct {
- 			__le16 reason_code;
-@@ -1140,11 +1140,11 @@ struct ieee80211_mgmt {
- 			__le16 capab_info;
- 			/* followed by some of SSID, Supported rates,
- 			 * FH Params, DS Params, CF Params, IBSS Params, TIM */
--			u8 variable[0];
-+			u8 variable[];
- 		} __packed beacon;
- 		struct {
- 			/* only variable items: SSID, Supported rates */
--			u8 variable[0];
-+			DECLARE_FLEX_ARRAY(u8, variable);
- 		} __packed probe_req;
- 		struct {
- 			__le64 timestamp;
-@@ -1152,7 +1152,7 @@ struct ieee80211_mgmt {
- 			__le16 capab_info;
- 			/* followed by some of SSID, Supported rates,
- 			 * FH Params, DS Params, CF Params, IBSS Params */
--			u8 variable[0];
-+			u8 variable[];
- 		} __packed probe_resp;
- 		struct {
- 			u8 category;
-@@ -1161,16 +1161,16 @@ struct ieee80211_mgmt {
- 					u8 action_code;
- 					u8 dialog_token;
- 					u8 status_code;
--					u8 variable[0];
-+					u8 variable[];
- 				} __packed wme_action;
- 				struct{
- 					u8 action_code;
--					u8 variable[0];
-+					u8 variable[];
- 				} __packed chan_switch;
- 				struct{
- 					u8 action_code;
- 					struct ieee80211_ext_chansw_ie data;
--					u8 variable[0];
-+					u8 variable[];
- 				} __packed ext_chan_switch;
- 				struct{
- 					u8 action_code;
-@@ -1186,7 +1186,7 @@ struct ieee80211_mgmt {
- 					__le16 timeout;
- 					__le16 start_seq_num;
- 					/* followed by BA Extension */
--					u8 variable[0];
-+					u8 variable[];
- 				} __packed addba_req;
- 				struct{
- 					u8 action_code;
-@@ -1202,11 +1202,11 @@ struct ieee80211_mgmt {
- 				} __packed delba;
- 				struct {
- 					u8 action_code;
--					u8 variable[0];
-+					u8 variable[];
- 				} __packed self_prot;
- 				struct{
- 					u8 action_code;
--					u8 variable[0];
-+					u8 variable[];
- 				} __packed mesh_action;
- 				struct {
- 					u8 action;
-@@ -1250,7 +1250,7 @@ struct ieee80211_mgmt {
- 					u8 toa[6];
- 					__le16 tod_error;
- 					__le16 toa_error;
--					u8 variable[0];
-+					u8 variable[];
- 				} __packed ftm;
- 			} u;
- 		} __packed action;
-diff --git a/include/uapi/linux/dlm_device.h b/include/uapi/linux/dlm_device.h
-index f880d2831160..e83954c69fff 100644
---- a/include/uapi/linux/dlm_device.h
-+++ b/include/uapi/linux/dlm_device.h
-@@ -45,13 +45,13 @@ struct dlm_lock_params {
- 	void __user *bastaddr;
- 	struct dlm_lksb __user *lksb;
- 	char lvb[DLM_USER_LVB_LEN];
--	char name[0];
-+	char name[];
- };
- 
- struct dlm_lspace_params {
- 	__u32 flags;
- 	__u32 minor;
--	char name[0];
-+	char name[];
- };
- 
- struct dlm_purge_params {
+ 	# Split nested struct/union elements as newer ones
 -- 
 2.30.2
 
