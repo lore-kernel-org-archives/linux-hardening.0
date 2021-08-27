@@ -2,115 +2,227 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-21.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43D6C4320E
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 15:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06875C432BE
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 15:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8662E60E99
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 15:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62ED604D7
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 15:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245401AbhH0POU (ORCPT
+        id S234242AbhH0Pko (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Aug 2021 11:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58892 "EHLO
+        Fri, 27 Aug 2021 11:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245398AbhH0POT (ORCPT
+        with ESMTP id S234231AbhH0Pkb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Aug 2021 11:14:19 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA52C0613CF
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 08:13:30 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id oa17so4752190pjb.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 08:13:30 -0700 (PDT)
+        Fri, 27 Aug 2021 11:40:31 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A35DC061757
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 08:39:42 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id q21so4183276plq.3
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 08:39:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wNcmjrgT+pU+GmhhBaKch+j5CYTuccBi6r9ayZ8AZ60=;
-        b=U5tDJ9/RQAYnU3F2ma/wk72GTxi+fHt4hEeoQs1qIN7ZMPEy6HulJhciZk7evjIZMQ
-         07nV6skA9QSQm6MNgm2WVLQY459u5PNlqtEl+huRZXXpGb5c6nwQUm2nwy7vSsCO/bHG
-         A1BRNOEK+ZHGUhRPBIXH0sVgLlmEJQJTJYOEQ=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ncSvdn48KwHrQzYtexzGkXlloweM6fpLnKP3mFqE2B8=;
+        b=ZAMkIey41zgYylKJDDWIsk6u0/nHXLyn+DgPQvjEzKV/STttKZSR6WL2vI8pTX61xt
+         ISq0/8nLupj1xC/8EEqLrPIPMZ5hxD0lxCF5hFnZZ7/1ymgY07h2fbQknsJZ+4yvgLyL
+         NSnDwsm37KvzXDaJK8fCCtODrWWedFSnH78hA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wNcmjrgT+pU+GmhhBaKch+j5CYTuccBi6r9ayZ8AZ60=;
-        b=CIbwap+5h8ALZoZVcsi17eRP/2722DNaw41ocmk43MyflzbD1pXVv/LTsuQiYgJIxU
-         51s74zLZ7MfIB7+lxOjZ81Xl9JNxqhpNuxOISfbglsWD8bipFmpHS/ufrHuQ1vpQzqj0
-         ScDz5TxdDuNkJyxq9SyRkJzqglz8wbUe0BsE7pbZcfz0Mz4jYoZY1+j9sYI+JHruZYuj
-         lyoMPEei3wVKptLZbDFzmLSrUGpEn3AQZxg4rEr1y8puEemhDaWfejKkzhhiocp8VmLW
-         PSuBWzNNyvnU1QGgK+Z013PL2Fei+deiPAgxRjmg0j8YmniXuJApoLFeLMNIv7b5p0aC
-         DqVw==
-X-Gm-Message-State: AOAM533eRpnhyB5JQ0LyVh1Knc3mag7g2Jl04b7F6a1+KOrdg44PrEmh
-        k9ffezxGsXToPcmlwiWIm6yvVx6Xpdf6/A==
-X-Google-Smtp-Source: ABdhPJxUcgLEHFsn0Yuu8AZiBkgBaBNil2cWE6ZrY4Cs5N+rhLI+1oVhHNCz0OBHaTIn7V/pSHXTig==
-X-Received: by 2002:a17:90a:2ec6:: with SMTP id h6mr23348104pjs.79.1630077209688;
-        Fri, 27 Aug 2021 08:13:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ncSvdn48KwHrQzYtexzGkXlloweM6fpLnKP3mFqE2B8=;
+        b=VOsnfJH4rkqDjsOpl+bVrnHJvwdozrR6C1IhgzEoveTKoeirxOG6wHPuk1QhSlpijA
+         V2hJ/GOh6qkeljWn2gNWm5fJScgKdqau0frSmQvQHWWXTNMrk+UspT9g8HBdTV5Pluw9
+         Nij3zh9VUE/SoNCpz97DAbbweF8uzExx5/9owSUh6HXoNX4n9GvegQRkyENyzovecphS
+         JH5lF5HXCs2YTMOZirCCeXvO5UjeuNTgHPI4Bt+YFzENI2m6W0uIwsAyjIllJdIaPfxc
+         R9Xg8KhxmpLO9lVCYycQFjJ0aHQnG5+OXHtNlvyeBqj3YQdTDFhxn/P4GxwhwB1xw/U4
+         aYiQ==
+X-Gm-Message-State: AOAM531WFmVUlQrXKbbtSLpllPLiol9iCdZq2h0SxXDwJKZEu91El0s5
+        mlagnJy+g9pUotNdFp4suaVUSA==
+X-Google-Smtp-Source: ABdhPJzPu7aaMkSWPZA8phlPxNkUScTOuzkkNeN4thlRBsFhGmSGEigch3otJ94lot5HVvmS3MSkcg==
+X-Received: by 2002:a17:90b:1bc8:: with SMTP id oa8mr11096998pjb.25.1630078781831;
+        Fri, 27 Aug 2021 08:39:41 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 188sm2699820pfz.193.2021.08.27.08.13.28
+        by smtp.gmail.com with ESMTPSA id f5sm6532402pfn.134.2021.08.27.08.39.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Aug 2021 08:13:29 -0700 (PDT)
+        Fri, 27 Aug 2021 08:39:41 -0700 (PDT)
+Date:   Fri, 27 Aug 2021 08:39:40 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] Compiler Attributes: Add __alloc_size for better bounds checking fix
-Date:   Fri, 27 Aug 2021 08:13:27 -0700
-Message-Id: <20210827151327.2729736-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+To:     Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] stddef: Add flexible array union helper
+Message-ID: <202108270838.10695297AD@keescook>
+References: <20210826050458.1540622-1-keescook@chromium.org>
+ <20210826050458.1540622-1-keescook@chromium.org>
+ <20210827092532.908506-1-mailhol.vincent@wanadoo.fr>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1741; h=from:subject; bh=bQiqqUs8UgNqYHyn8tJ+VrFYud+KD23pl32jsqxD5V0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhKQEW1o69iAiX3Ex2Z+uUHJT1dh2Os0spjaIJ2W7I YuuIJpaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSkBFgAKCRCJcvTf3G3AJh1FD/ 4oSWVyoj7gFVEqWWWp8f2YNTe2Yhq/m+pdF2Y3qfMOgCpl2x+LKls5kQAW0pHx9aQOzNlJzEVq79Xm n5keqN3S2zsBThMt82K4Fe1egwVB8mg80nW2VzNHPG9+C9MexwMM+as2KBe6zbXmDd3QWFgBXFnyFJ whENJz/bd0ZmyuHKUQVD0FGWmBex8MoSC1x3WWVVM9+UlqKzahi+0QSYZJNOMKyHzsbFGDae5bpAeV kCaXOD/omaROpKxuavMYfMvDQqbVJE0FFOtZBMs30IbATeqfYcubirJV+2Blz81i4djZSBSRjAmSzW mVSwqizQl3Toe6fogXeR3qENg7+X4myHbeip3NRBGo0t2q5d5tJq8XLIqv5+ua9ZF59dn9XghG82Yi glRfSW9R59f1PkD8pFtuHjTDW/oL+S6Ma9umbymMDMxfTawLImJUbabTBF/c4DHCNqz2u4n+R8/edJ I8/Z3ZDopJNF0+ZJbCn/+CGIXCiWCHOvM7ECcAUo4YthtFIfUCLyH/4zfAllLbCtok6Ta61Lrv/WX0 RxoK3s1wybRavDYnbhEkt/usspwZtJqMJ9c8cluBMAOGXdrgW4qJB5eVH8QAGZvSVTaiELCyD+V0ma Dtb20IJyw9O2O3TdSt6nZSe4PKF5bxINnb+jp4t3dyw77/fAGgQzaUUeJpEg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210827092532.908506-1-mailhol.vincent@wanadoo.fr>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Adjust the warning logic to deal with pre-9.1 gcc behaviors.
+On Fri, Aug 27, 2021 at 06:25:32PM +0900, Vincent Mailhol wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> > Many places in the kernel want to use a flexible array in a union. This
+> > is especially common when wanting several different typed trailing
+> > flexible arrays. Since GCC and Clang don't (on the surface) allow this,
+> > such structs have traditionally used combinations of zero-element arrays
+> > instead. This is usually in the form:
+> > 
+> > struct thing {
+> > 	...
+> > 	struct type1 foo[0];
+> > 	struct type2 bar[];
+> > };
+> 
+> At first read, I found the description confusing (and even thought
+> that there was a copy/paste issue). The subject and the first sentence
+> is about "flexible arrays in a *union*". Then suddenly, the topic
+> shifts to *structs*.
+> 
+> After reading at the code, it is clear that this work for both:
+>   - unions with a flexible array.
+>   - structures with different typed trailing flexible arrays.
+> 
+> The subject and the description could be updated to clarify that this
+> macro can be used for both unions and structs.
+> 
+> N.B. this comment only applies to the commit message, the kerneldoc
+> part is clear.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Hi Andrew, this is meant to replace:
-compiler-attributes-add-__alloc_size-for-better-bounds-checking-fix.patch
-Thanks!
----
- Makefile | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Yeah, I see now how this doesn't read well. I've rewritten this to
+describe the problem better. Thanks! I will send a v3.
 
-diff --git a/Makefile b/Makefile
-index 41ed29b5af2b..141a851930e6 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1096,8 +1096,17 @@ endif
- 
- ifdef CONFIG_CC_IS_GCC
- # The allocators already balk at large sizes, so silence the compiler
--# warnings for bounds checks involving those possible values.
--KBUILD_CFLAGS += -Wno-alloc-size-larger-than
-+# warnings for bounds checks involving those possible values. While
-+# -Wno-alloc-size-larger-than would normally be used here, earlier versions
-+# of gcc (<9.1) weirdly don't handle the option correctly when _other_
-+# warnings are produced (?!). Using -Walloc-size-larger-than=SIZE_MAX
-+# doesn't work (as it is documented to), silently resolving to "0" prior to
-+# version 9.1 (and producing an error more recently). Numeric values larger
-+# than PTRDIFF_MAX also don't work prior to version 9.1, which are silently
-+# ignored, continuing to default to PTRDIFF_MAX. So, left with no other
-+# choice, we must perform a versioned check to disable this warning.
-+# https://lore.kernel.org/lkml/20210824115859.187f272f@canb.auug.org.au
-+KBUILD_CFLAGS += $(call cc-ifversion, -ge, 0901, -Wno-alloc-size-larger-than)
- endif
- 
- # disable invalid "can't wrap" optimizations for signed / pointers
+-Kees
+
+> 
+> > This causes problems with size checks against such zero-element arrays
+> > (for example with -Warray-bounds and -Wzero-length-bounds), so they must
+> > all be converted to "real" flexible arrays, avoiding warnings like this:
+> > 
+> > fs/hpfs/anode.c: In function 'hpfs_add_sector_to_btree':
+> > fs/hpfs/anode.c:209:27: warning: array subscript 0 is outside the bounds of an interior zero-length array 'struct bplus_internal_node[0]' [-Wzero-length-bounds]
+> >   209 |    anode->btree.u.internal[0].down = cpu_to_le32(a);
+> >       |    ~~~~~~~~~~~~~~~~~~~~~~~^~~
+> > In file included from fs/hpfs/hpfs_fn.h:26,
+> >                  from fs/hpfs/anode.c:10:
+> > fs/hpfs/hpfs.h:412:32: note: while referencing 'internal'
+> >   412 |     struct bplus_internal_node internal[0]; /* (internal) 2-word entries giving
+> >       |                                ^~~~~~~~
+> > 
+> > drivers/net/can/usb/etas_es58x/es58x_fd.c: In function 'es58x_fd_tx_can_msg':
+> > drivers/net/can/usb/etas_es58x/es58x_fd.c:360:35: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[]'} [-Wzero-length-bounds]
+> >   360 |  tx_can_msg = (typeof(tx_can_msg))&es58x_fd_urb_cmd->raw_msg[msg_len];
+> >       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > In file included from drivers/net/can/usb/etas_es58x/es58x_core.h:22,
+> >                  from drivers/net/can/usb/etas_es58x/es58x_fd.c:17:
+> > drivers/net/can/usb/etas_es58x/es58x_fd.h:231:6: note: while referencing 'raw_msg'
+> >   231 |   u8 raw_msg[0];
+> >       |      ^~~~~~~
+> > 
+> > Introduce DECLARE_FLEX_ARRAY() in support of flexible arrays in unions.
+> 
+> ... and structures.
+> 
+> > It is entirely possible to have a flexible array in a union:
+> 
+> It is entirely possible to have one or several flexible arrays in a
+> structure or a union:
+> 
+> > it just has to
+> > be in a struct. And since it cannot be alone in a struct, such a struct
+> > must have at least 1 other named member but that member can be zero sized.
+> > 
+> > As with struct_group(), this is needed in UAPI headers as well, so
+> > implement the core there, with non-UAPI wrapper.
+> > 
+> > Additionally update kernel-doc to understand its existence.
+> > 
+> > https://github.com/KSPP/linux/issues/137
+> > 
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  include/linux/stddef.h      | 13 +++++++++++++
+> >  include/uapi/linux/stddef.h | 16 ++++++++++++++++
+> >  scripts/kernel-doc          |  2 ++
+> >  3 files changed, 31 insertions(+)
+> > 
+> > diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+> > index 8b103a53b000..ca507bd5f808 100644
+> > --- a/include/linux/stddef.h
+> > +++ b/include/linux/stddef.h
+> > @@ -84,4 +84,17 @@ enum {
+> >  #define struct_group_tagged(TAG, NAME, MEMBERS...) \
+> >  	__struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+> >  
+> > +/**
+> > + * DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
+> > + *
+> > + * @TYPE: The type of each flexible array element
+> > + * @NAME: The name of the flexible array member
+> > + *
+> > + * In order to have a flexible array member in a union or alone in a
+> > + * struct, it needs to be wrapped in an anonymous struct with at least 1
+> > + * named member, but that member can be empty.
+> > + */
+> > +#define DECLARE_FLEX_ARRAY(TYPE, NAME) \
+> > +	__DECLARE_FLEX_ARRAY(TYPE, NAME)
+> > +
+> >  #endif
+> > diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
+> > index 610204f7c275..3021ea25a284 100644
+> > --- a/include/uapi/linux/stddef.h
+> > +++ b/include/uapi/linux/stddef.h
+> > @@ -25,3 +25,19 @@
+> >  		struct { MEMBERS } ATTRS; \
+> >  		struct TAG { MEMBERS } ATTRS NAME; \
+> >  	}
+> > +
+> > +/**
+> > + * __DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
+> > + *
+> > + * @TYPE: The type of each flexible array element
+> > + * @NAME: The name of the flexible array member
+> > + *
+> > + * In order to have a flexible array member in a union or alone in a
+> > + * struct, it needs to be wrapped in an anonymous struct with at least 1
+> > + * named member, but that member can be empty.
+> > + */
+> > +#define __DECLARE_FLEX_ARRAY(TYPE, NAME)	\
+> > +	struct { \
+> > +		struct { } __empty_ ## NAME; \
+> > +		TYPE NAME[]; \
+> > +	}
+> > diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+> > index d9715efbe0b7..65088b512d14 100755
+> > --- a/scripts/kernel-doc
+> > +++ b/scripts/kernel-doc
+> > @@ -1263,6 +1263,8 @@ sub dump_struct($$) {
+> >  	$members =~ s/DECLARE_KFIFO\s*\($args,\s*$args,\s*$args\)/$2 \*$1/gos;
+> >  	# replace DECLARE_KFIFO_PTR
+> >  	$members =~ s/DECLARE_KFIFO_PTR\s*\($args,\s*$args\)/$2 \*$1/gos;
+> > +	# replace DECLARE_FLEX_ARRAY
+> > +	$members =~ s/(?:__)?DECLARE_FLEX_ARRAY\s*\($args,\s*$args\)/$1 $2\[\]/gos;
+> >  	my $declaration = $members;
+> >  
+> >  	# Split nested struct/union elements as newer ones
+> > -- 
+> > 2.30.2
+> > 
+
 -- 
-2.30.2
-
+Kees Cook
