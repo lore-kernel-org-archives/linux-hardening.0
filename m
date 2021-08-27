@@ -2,156 +2,284 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0DBC432BE
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 23:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE276C4320E
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 03:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A4760E0B
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Aug 2021 23:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F55601FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 03:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbhHZXq5 (ORCPT
+        id S243896AbhH0DKt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 26 Aug 2021 19:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46290 "EHLO
+        Thu, 26 Aug 2021 23:10:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243859AbhHZXq4 (ORCPT
+        with ESMTP id S231607AbhH0DKq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 26 Aug 2021 19:46:56 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2299DC061757
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Aug 2021 16:46:08 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id k78so5894644ybf.10
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Aug 2021 16:46:08 -0700 (PDT)
+        Thu, 26 Aug 2021 23:10:46 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DAFC0613C1
+        for <linux-hardening@vger.kernel.org>; Thu, 26 Aug 2021 20:09:58 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id x16so1404102pll.2
+        for <linux-hardening@vger.kernel.org>; Thu, 26 Aug 2021 20:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gJVh8U7H1D0AP9Coqw4pJN8m0+s+/ZBxKNZaTaJtBCs=;
-        b=Xqhk5PzMZ8HwiFHy1j3KgSqIUsuesqOgAYxTqG+gg3IKh74p9Lc0qmnQIbPJPadJAH
-         s+1b84DrufWYCarVbavP9HYs1l8Mf23WhxGnhLc5NHwM1aZV3QxyitPT6qcUoWO8cAsJ
-         IkFkpkg8zh6EAkS0DtVSs8zlXq/GYP0uYYWtAX0RSYArNp3r1FHd21C4QeZib06amuht
-         bOvIKFCoa21xDnN85hwIw/+lTqhUzpz5fGCFdVf93eqjXTNqP/lgPmC1vAKcQ295+tq0
-         DnNFCGq44tKL6Z3R8VloEQWQffjm59guTFxGbEtXxMX0D+WvRsZpfEQmQT9BtOZkTgzz
-         hypQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=A0T8uTR7GMZqtBCbDn/gFQIDHCnH77G7fVAFcMza5dc=;
+        b=RTQNLhPEzWsh2Lauk0HYElABZJ+QsERiqC/cM4gadfwqV3fVLLURSgxMXdzSiz26bS
+         IVaFUx0bR6tT2+oWog+ObpVTHcRR4583kYQi1NAdU1KTWzdV5np1thbramOM6615/40v
+         TzLoELgsoc1qBqeya7L0yB2ULv0wvSgeF7Qls=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gJVh8U7H1D0AP9Coqw4pJN8m0+s+/ZBxKNZaTaJtBCs=;
-        b=H6k5Wys27NQplNuuj/vtn0hTbQBLswjv3bx7hiEA+040epxc1C+e8WgdECCVVqzAIx
-         jdnIZqy0tsZkEEinFt4oF9STy1WoiwRt6hDA/z/DPtB0I235k6ULcRbAUM347laBs1hr
-         w3BaFX4lFnvR8cxE4WC8uHFsO8vzzpbPGP7LUyWl29ENnYwRPxZGj3CkkE9/qD85Qofg
-         FEBMxV4DN+8eAyfzl4LCT8i/RIK6pNRqdPFaOwo63qljd6C/X0Fy6X2Fk4vSPRFiQeXh
-         GLAd+yE28z/4iq72RfJlLPnW174bVEZUmU03gSJXwVZkhSTqlF5n+Uj5P00ZozNIhBeW
-         +p7g==
-X-Gm-Message-State: AOAM532dg0vrnsLGBExpCw9cE6d7d+A++T3oPL/AMA/QqeEgm9dEtixq
-        28Ki4LGvNnskZl42baopwxyuqSh2iQbBVUWZQzr7bA==
-X-Google-Smtp-Source: ABdhPJxAOEGBwm8gjuZ5VtjQ9bngsTCVz4sLCbftexa9Obb7SZdCWz6S38c+wzpRgFDk6IG6atpQjye9P0dszmTioTg=
-X-Received: by 2002:a25:1b09:: with SMTP id b9mr1576338ybb.293.1630021567153;
- Thu, 26 Aug 2021 16:46:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=A0T8uTR7GMZqtBCbDn/gFQIDHCnH77G7fVAFcMza5dc=;
+        b=g08Z/qUtfBgxLUzTFm37aMKn/McOY68qT636EW7BXCI1r3JLMNwt2l/UzmFh4CATrY
+         XWpPQRjlphZ0+FLKNBvGBD6eCLPFpkOfARpdNwF8UT3wbVPmlPIddCjBQru9ciXWwm3F
+         AKuvVK7q3Pt6IXPZs7D7WfVYXsOPA4zIA+ZHjPVE0pGSd6VE+5Z0gAcRjVWurRCd9q4u
+         1n6uyonQmzokmug5ZZZj8J3NDQEQiQgQsXl5V1X8sZUiPYmPYLArSDSgOSmJ92gnLXWX
+         lZdZqV79IopJwoxogVf9QY6woiwFJf6q1AppGG6S8MrL94oDeIHpVpW2i9lGNMreglVd
+         I6TA==
+X-Gm-Message-State: AOAM531cxhgii90vYfshQn/RE8MlyF7P4DRmU9vt/mbp92j1nBDSE+tB
+        h8tlddpWJrck8/X/yKhPIX8j+g==
+X-Google-Smtp-Source: ABdhPJwYWdGUce0Ml+jbyi9WOZar6+mJGMxIi2FvO9ZXxBpA2sOq6YXA918EUzgTEb2gkeKFBegHVQ==
+X-Received: by 2002:a17:90a:d589:: with SMTP id v9mr20307795pju.61.1630033797527;
+        Thu, 26 Aug 2021 20:09:57 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c124sm4358304pfc.216.2021.08.26.20.09.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Aug 2021 20:09:56 -0700 (PDT)
+Date:   Thu, 26 Aug 2021 20:09:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Feifei Xu <Feifei.Xu@amd.com>, Likun Gao <Likun.Gao@amd.com>,
+        Jiawei Gu <Jiawei.Gu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Lijo Lazar <lijo.lazar@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Luben Tuikov <luben.tuikov@amd.com>,
+        Sathishkumar S <sathishkumar.sundararaju@amd.com>,
+        Jonathan Kim <jonathan.kim@amd.com>,
+        Darren Powell <darren.powell@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Xiaojian Du <Xiaojian.Du@amd.com>,
+        Ryan Taylor <Ryan.Taylor@amd.com>,
+        Graham Sider <Graham.Sider@amd.com>,
+        Kevin Wang <kevin1.wang@amd.com>,
+        David M Nieto <David.Nieto@amd.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        John Clements <john.clements@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] drm/amd/pm: And destination bounds checking to struct
+ copy
+Message-ID: <202108262009.85E4C2B53@keescook>
+References: <20210825161957.3904130-1-keescook@chromium.org>
+ <CADnq5_M7cj3o4KbtA937nO_oA6ZS3-ZByLBqif_BzkXuYyV8Kw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210823171318.2801096-1-samitolvanen@google.com>
- <20210823171318.2801096-8-samitolvanen@google.com> <b2b0247a-39ad-097b-8fab-023ee378c806@kernel.org>
- <CABCJKueE=_WCLkVDmPss-Bo-1VWaX7W6SSNx33rQCO+eEv_Lzg@mail.gmail.com> <959b3e65-97c9-4e00-87c5-f4a31c6739de@www.fastmail.com>
-In-Reply-To: <959b3e65-97c9-4e00-87c5-f4a31c6739de@www.fastmail.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 26 Aug 2021 16:45:56 -0700
-Message-ID: <CABCJKud4auwY50rO0UzH721eRyyvJ8+43+Xt9vcLgw-SMYtHEw@mail.gmail.com>
-Subject: Re: [PATCH v2 07/14] x86: Use an opaque type for functions not
- callable from C
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADnq5_M7cj3o4KbtA937nO_oA6ZS3-ZByLBqif_BzkXuYyV8Kw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 26, 2021 at 4:24 PM Andy Lutomirski <luto@kernel.org> wrote:
->
->
->
-> On Thu, Aug 26, 2021, at 3:11 PM, Sami Tolvanen wrote:
-> > On Thu, Aug 26, 2021 at 9:54 AM Andy Lutomirski <luto@kernel.org> wrote:
-> > >
-> > > On 8/23/21 10:13 AM, Sami Tolvanen wrote:
-> > > > The kernel has several assembly functions that are not directly callable
-> > > > from C. Use an opaque type for these function prototypes to make misuse
-> > > > harder, and to avoid the need to annotate references to these functions
-> > > > for Clang's Control-Flow Integrity (CFI).
-> > >
-> > > You have:
-> > >
-> > > typedef const u8 *asm_func_t;
-> > >
-> > > This is IMO a bit confusing.  asm_func_t like this is an *address* of a
-> > > function, not a function.
-> > >
-> > > To be fair, C is obnoxious, but I think this will lead to more confusion
-> > > than is idea.  For example:
-> > >
-> > > > -extern void __fentry__(void);
-> > > > +DECLARE_ASM_FUNC_SYMBOL(__fentry__);
-> > >
-> > > Okay, __fentry__ is the name of a symbol, and the expression __fentry__
-> > > is a pointer (or an array that decays to a pointer, thanks C), which is
-> > > at least somewhat sensible.  But:
-> > >
-> > > > -extern void (*paravirt_iret)(void);
-> > > > +extern asm_func_t paravirt_iret;
-> > >
-> > > Now paravirt_iret is a global variable that points to an asm func.  I
-> > > bet people will read this wrong and, worse, type it wrong.
-> > >
-> > > I think that there a couple ways to change this that would be a bit nicer.
-> > >
-> > > 1. typedef const u8 asm_func_t[];
-> > >
-> > > This is almost nice, but asm_func_t will still be accepted as a function
-> > > argument, and the automatic decay rules will probably be confusing.
-> > >
-> > > 2. Rename asm_func_t to asm_func_ptr.  Then it's at least a bit more clear.
-> > >
-> > > 3. Use an incomplete struct:
-> > >
-> > > struct asm_func;
-> > >
-> > > typedef struct asm_func asm_func;
-> > >
-> > > extern asm_func some_func;
-> > >
-> > > void *get_ptr(void)
-> > > {
-> > >     return &some_func;
-> > > }
-> > >
-> > > No macros required, and I think it's quite hard to misuse this by
-> > > accident.  asm_func can't be passed as an argument or used as a variable
-> > > because it has incomplete type, and there are no arrays so the decay
-> > > rules aren't in effect.
+On Thu, Aug 26, 2021 at 03:51:29PM -0400, Alex Deucher wrote:
+> On Wed, Aug 25, 2021 at 12:20 PM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > I considered using an incomplete struct, but that would require an
-> > explicit '&' when we take the address of these symbols, which I
-> > thought would be unnecessary churn. Unless you strongly prefer this
-> > one, I'll go with option 2 and rename asm_func_t to asm_func_ptr in
-> > v3.
+> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > field bounds checking for memcpy(), memmove(), and memset(), avoid
+> > intentionally writing across neighboring fields.
 > >
->
-> Do you have a sense for how many occurrences there are that would need an &?
+> > The "Board Parameters" members of the structs:
+> >         struct atom_smc_dpm_info_v4_5
+> >         struct atom_smc_dpm_info_v4_6
+> >         struct atom_smc_dpm_info_v4_7
+> >         struct atom_smc_dpm_info_v4_10
+> > are written to the corresponding members of the corresponding PPTable_t
+> > variables, but they lack destination size bounds checking, which means
+> > the compiler cannot verify at compile time that this is an intended and
+> > safe memcpy().
+> >
+> > Since the header files are effectively immutable[1] and a struct_group()
+> > cannot be used, nor a common struct referenced by both sides of the
+> > memcpy() arguments, add a new helper, amdgpu_memcpy_trailing(), to
+> > perform the bounds checking at compile time. Replace the open-coded
+> > memcpy()s with amdgpu_memcpy_trailing() which includes enough context
+> > for the bounds checking.
+> >
+> > "objdump -d" shows no object code changes.
+> >
+> > [1] https://lore.kernel.org/lkml/e56aad3c-a06f-da07-f491-a894a570d78f@amd.com
+> >
+> > Cc: "Christian König" <christian.koenig@amd.com>
+> > Cc: "Pan, Xinhui" <Xinhui.Pan@amd.com>
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Hawking Zhang <Hawking.Zhang@amd.com>
+> > Cc: Feifei Xu <Feifei.Xu@amd.com>
+> > Cc: Likun Gao <Likun.Gao@amd.com>
+> > Cc: Jiawei Gu <Jiawei.Gu@amd.com>
+> > Cc: Evan Quan <evan.quan@amd.com>
+> > Cc: amd-gfx@lists.freedesktop.org
+> > Cc: dri-devel@lists.freedesktop.org
+> > Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
+> > Acked-by: Alex Deucher <alexander.deucher@amd.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > v2:
+> > - rename and move helper to drivers/gpu/drm/amd/pm/inc/amdgpu_smu.h
+> > - add reviews/acks
+> > v1: https://lore.kernel.org/lkml/20210819201441.3545027-1-keescook@chromium.org/
+> > ---
+> >  drivers/gpu/drm/amd/amdgpu/amdgpu.h           |  1 +
+> >  drivers/gpu/drm/amd/pm/inc/amdgpu_smu.h       | 24 +++++++++++++++++++
+> >  .../gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c |  6 ++---
+> >  .../gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c   |  8 +++----
+> >  .../drm/amd/pm/swsmu/smu13/aldebaran_ppt.c    |  5 ++--
+> >  5 files changed, 33 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> > index dc3c6b3a00e5..c911387045e2 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> > @@ -1452,4 +1452,5 @@ static inline int amdgpu_in_reset(struct amdgpu_device *adev)
+> >  {
+> >         return atomic_read(&adev->in_gpu_reset);
+> >  }
+> > +
+> >  #endif
+> > diff --git a/drivers/gpu/drm/amd/pm/inc/amdgpu_smu.h b/drivers/gpu/drm/amd/pm/inc/amdgpu_smu.h
+> > index 715b4225f5ee..29031eb11d39 100644
+> > --- a/drivers/gpu/drm/amd/pm/inc/amdgpu_smu.h
+> > +++ b/drivers/gpu/drm/amd/pm/inc/amdgpu_smu.h
+> > @@ -1335,6 +1335,30 @@ enum smu_cmn2asic_mapping_type {
+> >  #define WORKLOAD_MAP(profile, workload) \
+> >         [profile] = {1, (workload)}
+> >
+> > +/**
+> > + * amdgpu_memcpy_trailing - Copy the end of one structure into the middle of another
+> > + *
+> > + * @dst: Pointer to destination struct
+> > + * @first_dst_member: The member name in @dst where the overwrite begins
+> > + * @last_dst_member: The member name in @dst where the overwrite ends after
+> > + * @src: Pointer to the source struct
+> > + * @first_src_member: The member name in @src where the copy begins
+> > + *
+> > + */
+> > +#define amdgpu_memcpy_trailing(dst, first_dst_member, last_dst_member,    \
+> 
+> I would change this to smu_memcpy_trailing() for consistency.  Other
 
-Quick grepping suggests there are ~80 occurrences in arch/x86. ~40 of
-these are in kernel/idt.c.
+Sure; I will send a v3.
 
-Sami
+> than that, it the patch looks good to me.  Did you want me to pick
+> this up or do you want to keep this with the other patches in your
+> series?
+
+Since this has no external dependencies, it's probably best to go via
+your tree.
+
+Thanks!
+
+-Kees
+
+> 
+> Thanks!
+> 
+> Alex
+> 
+> > +                              src, first_src_member)                      \
+> > +({                                                                        \
+> > +       size_t __src_offset = offsetof(typeof(*(src)), first_src_member);  \
+> > +       size_t __src_size = sizeof(*(src)) - __src_offset;                 \
+> > +       size_t __dst_offset = offsetof(typeof(*(dst)), first_dst_member);  \
+> > +       size_t __dst_size = offsetofend(typeof(*(dst)), last_dst_member) - \
+> > +                           __dst_offset;                                  \
+> > +       BUILD_BUG_ON(__src_size != __dst_size);                            \
+> > +       __builtin_memcpy((u8 *)(dst) + __dst_offset,                       \
+> > +                        (u8 *)(src) + __src_offset,                       \
+> > +                        __dst_size);                                      \
+> > +})
+> > +
+> >  #if !defined(SWSMU_CODE_LAYER_L2) && !defined(SWSMU_CODE_LAYER_L3) && !defined(SWSMU_CODE_LAYER_L4)
+> >  int smu_get_power_limit(void *handle,
+> >                         uint32_t *limit,
+> > diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
+> > index 273df66cac14..bda8fc12c91f 100644
+> > --- a/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
+> > +++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
+> > @@ -483,10 +483,8 @@ static int arcturus_append_powerplay_table(struct smu_context *smu)
+> >
+> >         if ((smc_dpm_table->table_header.format_revision == 4) &&
+> >             (smc_dpm_table->table_header.content_revision == 6))
+> > -               memcpy(&smc_pptable->MaxVoltageStepGfx,
+> > -                      &smc_dpm_table->maxvoltagestepgfx,
+> > -                      sizeof(*smc_dpm_table) - offsetof(struct atom_smc_dpm_info_v4_6, maxvoltagestepgfx));
+> > -
+> > +               amdgpu_memcpy_trailing(smc_pptable, MaxVoltageStepGfx, BoardReserved,
+> > +                                      smc_dpm_table, maxvoltagestepgfx);
+> >         return 0;
+> >  }
+> >
+> > diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
+> > index f96681700c41..88a4a2aed48e 100644
+> > --- a/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
+> > +++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
+> > @@ -431,16 +431,16 @@ static int navi10_append_powerplay_table(struct smu_context *smu)
+> >
+> >         switch (smc_dpm_table->table_header.content_revision) {
+> >         case 5: /* nv10 and nv14 */
+> > -               memcpy(smc_pptable->I2cControllers, smc_dpm_table->I2cControllers,
+> > -                       sizeof(*smc_dpm_table) - sizeof(smc_dpm_table->table_header));
+> > +               amdgpu_memcpy_trailing(smc_pptable, I2cControllers, BoardReserved,
+> > +                                      smc_dpm_table, I2cControllers);
+> >                 break;
+> >         case 7: /* nv12 */
+> >                 ret = amdgpu_atombios_get_data_table(adev, index, NULL, NULL, NULL,
+> >                                               (uint8_t **)&smc_dpm_table_v4_7);
+> >                 if (ret)
+> >                         return ret;
+> > -               memcpy(smc_pptable->I2cControllers, smc_dpm_table_v4_7->I2cControllers,
+> > -                       sizeof(*smc_dpm_table_v4_7) - sizeof(smc_dpm_table_v4_7->table_header));
+> > +               amdgpu_memcpy_trailing(smc_pptable, I2cControllers, BoardReserved,
+> > +                                      smc_dpm_table_v4_7, I2cControllers);
+> >                 break;
+> >         default:
+> >                 dev_err(smu->adev->dev, "smc_dpm_info with unsupported content revision %d!\n",
+> > diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
+> > index ec8c30daf31c..d46b892846f6 100644
+> > --- a/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
+> > +++ b/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
+> > @@ -409,9 +409,8 @@ static int aldebaran_append_powerplay_table(struct smu_context *smu)
+> >
+> >         if ((smc_dpm_table->table_header.format_revision == 4) &&
+> >             (smc_dpm_table->table_header.content_revision == 10))
+> > -               memcpy(&smc_pptable->GfxMaxCurrent,
+> > -                      &smc_dpm_table->GfxMaxCurrent,
+> > -                      sizeof(*smc_dpm_table) - offsetof(struct atom_smc_dpm_info_v4_10, GfxMaxCurrent));
+> > +               amdgpu_memcpy_trailing(smc_pptable, GfxMaxCurrent, reserved,
+> > +                                      smc_dpm_table, GfxMaxCurrent);
+> >         return 0;
+> >  }
+> >
+> > --
+> > 2.30.2
+> >
+
+-- 
+Kees Cook
