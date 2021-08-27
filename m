@@ -2,104 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8FDC432BE
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEB8C432BE
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C68D60E73
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F11C608FB
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Aug 2021 17:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237097AbhH0Rhz (ORCPT
+        id S236341AbhH0Rv5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Aug 2021 13:37:55 -0400
-Received: from mout.gmx.net ([212.227.15.15]:54303 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237087AbhH0Rhz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Aug 2021 13:37:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630085807;
-        bh=nTR4iuVPmMGAXaXpmel+nekd8a2+COglF3GB0Y3BokA=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Xj0ceu4uzMDri8vHPD4M+88HkanYzsPE3T1ha1BfamL9rdRH6XOhgRv0STcK9ZuRp
-         d0TVMC6TSjs9m3JgNNEUFyB9rtGBmBeAhTAKmEI6jg8aRyNKiNnfIjKupeDXv4KMXw
-         bnSpM3bImH8ydjlIZbEMzZty7wD1r0gyXLLK8GUg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MWRVh-1mV0Sa0N4d-00XtPK; Fri, 27
- Aug 2021 19:36:47 +0200
-Date:   Fri, 27 Aug 2021 19:36:33 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        David Laight <David.Laight@aculab.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] EDAC/mc: Prefer strscpy over strcpy
-Message-ID: <20210827173633.GA3040@titan>
-References: <20210814075527.5999-1-len.baker@gmx.com>
- <YSPbOo90alPsv4vL@zn.tnic>
- <20210824090338.GB7999@titan>
- <YSU5wp/ZpsXuDgmu@zn.tnic>
+        Fri, 27 Aug 2021 13:51:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230035AbhH0Rv5 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 27 Aug 2021 13:51:57 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F59CC061757;
+        Fri, 27 Aug 2021 10:51:08 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id j2so4413733pll.1;
+        Fri, 27 Aug 2021 10:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c65PIoZtXrK5fG5yv9bS73WbrNpIpRgBV7KDj6Yda9o=;
+        b=IdBLcrm3jZpcZrU/u1e8c49BCTkbf1fL9uye8pgEDvFivomEZ9CkjJScQHaslx8MRm
+         Z6ks5DWfj9tf0yvzUXn43NlaS9EfJwcKUVcLkq4Fsg4leSe/mR+pAC7EsMr6gXo4QgGn
+         4oWayV3tbdmwUCY5PZbZwTkREOjQIy+dZjVa4VbMu3KZf4tjv2j9UGMw1oWQB2aDAer9
+         v1j/drh3EWQe92JJWBb2osEz1CcA6O/fPmWIJqrI7Rg26DcZ5kOdV8Y5P0KAmE47EJwe
+         lQeUASFfUjFpg/jfmeKvlS81m/BhLeF/vUPhalCfuaspJz6FMd2QpFM22zcvLMeej0s/
+         0ENg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=c65PIoZtXrK5fG5yv9bS73WbrNpIpRgBV7KDj6Yda9o=;
+        b=mNgJbHzV5gHtxofo39efx6zPNEQD/5+WVGt3lYUl7oZ6F1e8P7bkKDLS3n/I/HHoF6
+         HNj1PiSgPwtTqHkRdAi7WDYjmyaftlHiTsV5dQ1UgyHnnaF3uciyHVxErZsSpMSTylFL
+         ZJ2sstgHapBjJ78PweAyyz/V2LJ/O4yd4mjE8YP1DbJP6H+Z9a2XuNiQw8NMQcVQPCMP
+         uTZMed2lsLSKC3zFxX0e13RmgLZJ7R8OAl4+kOlnKMy3YM1Gmp780W4YfQzjn/at8I3a
+         At2iYf9aQmHfodDC4PWdlYB/7aErJLE1pcUDhPCJnf3UKQ+KIYKCXWuHXlFtDt5Qli9f
+         G0RQ==
+X-Gm-Message-State: AOAM5318uYBP0Tn5qE6AXkd4AN21PxMLDRb/0pCItZfMxJIMVS+v5Mb9
+        bGki15TxbU6ccAy1OxymzMQ=
+X-Google-Smtp-Source: ABdhPJyKNuu8YFmP/NPLRgOuwuUnXHyKeo4iR4oHDHkmWjX/1Z1MzYQdwhYdQpEOpx4nLT91WlP8lQ==
+X-Received: by 2002:a17:90a:5d8b:: with SMTP id t11mr12169346pji.136.1630086667376;
+        Fri, 27 Aug 2021 10:51:07 -0700 (PDT)
+Received: from localhost (2603-800c-1a02-1bae-e24f-43ff-fee6-449f.res6.spectrum.com. [2603:800c:1a02:1bae:e24f:43ff:fee6:449f])
+        by smtp.gmail.com with ESMTPSA id e18sm6462549pfv.172.2021.08.27.10.51.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Aug 2021 10:51:07 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Fri, 27 Aug 2021 07:51:05 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] cgroup: Avoid compiler warnings with no subsystems
+Message-ID: <YSkmCVwLvfusqtmA@slm.duckdns.org>
+References: <20210827150424.2729274-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YSU5wp/ZpsXuDgmu@zn.tnic>
-X-Provags-ID: V03:K1:JEqlwMVH6r3hWoS9kloc3KrglkJTJwAoWlVo2fLLTtKvjRpRX6o
- dU7eV+hcBX9GOgqqiO+nenAY32iusp2nmfkldMlDPUgRQwvGrWImH62x+iBUTSgIwyyyxle
- rGhJNAfpbEKM9aJo4xz8jQRyjpBK1gjmZ2OndaQg2KtGWvnuo5aNnKOYWcgg17Br4AtPEQQ
- 1chVSUBR9ej0Un8jTmU+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bog80o/EQMA=:fEvY3VupqWgMiyNOuCvw5K
- MnyYTx/T3zlkyUvpDjOLv4V2g8IeTJy5AxDpW0hvY7Rsq0aJtL5Z9yx6nGgKGeWnUlw/o3zj1
- ZZeZ6dQPcutCv/7EKg+FI6TTclaPgXPJ+qMsOZddrO7S3lqYXnO+t06e1TwkvPv7HqsySiPex
- 2yW0xPt8uq7P6yLO2BOqvvdFZTX6Rut9DwDTkJddGpB8akCnjb8uqulDFNSgcn5mOqzf+4/LG
- Zf7n+XDNWNzFZyScGYXCZM04oxexsYVXW8VlL/9LucX8KqLPkM981k4driNnVdT8uJskzhp0X
- owuSu/7Yjhj2UKgA/4wTJO/DPK4xcfR4SDi4y7YpU3bQ5cF2wb1cFJUrV1gdolWjvq/smNahH
- mVlz4K9NhLj+hLEA6VKF+C/GCLxiuRK7nuSACA/pARh8fn/JNuWVx2T2RPpVw4t/I8tFKhr7x
- 0FA/v+S62emrJYa1H1ltUNmDGe7jcUqCFySr0kHhBfqyfRwZzsFzr8RwKv7s89Te31QUz4Djn
- yGvjZyYrbY4r1RfNr0iC7m1KYT67BCAa8s4mA8M/STkjxdGm0FDjROuUVhaf7ui1uOejUgKUX
- 24rfeuP18ZnPcM2KyIxh4KcQLQ5suduLbBgRjMcwqerbkKrbhbFEUgsuZ/035sQ6AhtMd6vAy
- 8IGUaHjVk5tu+zUfgKkJDcT4GCY5+KVMRwgq+B5NDizMNVtz122acl+soOzWFLp/Fg+xzqtew
- oKqlrjjMYcEHe3ZQdbM7LqLg0Q3Goydfy0Es5xHaTlXhNUzihQdSytYpV3aS49gxtK3KsPBji
- PvZtGuq8pKdUtWxZUCQ/cGRn41nFbdN0dB7aRiHwLMilmTaWslTWUdmghtRNubybG1Sc/Jf3U
- roT589Wm7kg29iZGOHmrhzLOnUM4uSUFJ6hYaPmHa6Vhds2mDUBLYZcYYnkJBzauqfvZDHjcL
- qJEopzBSftXuVUxIxvK028xk7MEezrLZ17IygQCMWC230cJ+mvzst1aTosYSyal9tsqsSjcF7
- q6Jvzhnr+uvvg1e1y9aFBFbC3E+V/H+9TcJ0ZsD8CZTw44Sm48ONlg11CdotVO/AsvOTK36+h
- InvEi1JZ/itVVygCaNzoX1NtQde3l4G+GOz7a3CdlZSu3yMNg3RS3rLHw==
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210827150424.2729274-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Fri, Aug 27, 2021 at 08:04:24AM -0700, Kees Cook wrote:
+> +	if (CGROUP_SUBSYS_COUNT > 0 && ss)
 
-On Tue, Aug 24, 2021 at 08:26:10PM +0200, Borislav Petkov wrote:
-> On Tue, Aug 24, 2021 at 12:28:07PM +0200, Len Baker wrote:
-> > This is a task of the KSPP [1] and the main reason is to clean up the
-> > proliferation of str*cpy functions in the kernel.
->
-> That I understood - you prominently explain where the patches stem from.
->
-> What I can't parse is that formulation "previous step". What previous
-> step do you mean?
+Can we encapsulate this in a macro so that it's clear (or at least
+consolidated) why we need these without adding a comment in each spot?
 
-Well, the main purpose is to clean up the proliferation of str*cpy functio=
-ns.
-One task is to remove the strcpy uses: The first step (previous step) woul=
-d
-be to remove all the strcpy uses. Then, as a second step remove all the
-strcpy implementations.
+Thanks.
 
-I hope that this clarify your question.
-
-Regards,
-Len
+-- 
+tejun
