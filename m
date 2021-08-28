@@ -2,209 +2,222 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA8CC432BE
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Aug 2021 00:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A7EC4320A
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Aug 2021 07:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F04B60FE6
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Aug 2021 00:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF6B610C7
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Aug 2021 07:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232705AbhH1ADw (ORCPT
+        id S233410AbhH1HcR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Aug 2021 20:03:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232696AbhH1ADs (ORCPT
+        Sat, 28 Aug 2021 03:32:17 -0400
+Received: from mail-pj1-f50.google.com ([209.85.216.50]:37642 "EHLO
+        mail-pj1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233348AbhH1HcQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Aug 2021 20:03:48 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89377C0617AD
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 17:02:58 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id t42so6980425pfg.12
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Aug 2021 17:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vpHRD/GDXCtXf6T/R+VbfrDOl4cnu8hdcSMOeGwnnmk=;
-        b=AVx/g4V6fRSiYb5+aCUHZ+vvxQpnkLRjlTpl7etiotwvxzABQ7KoFK4acqYfMxpiNQ
-         5eCZy4qTlgADhnUkwzr4MoogCRVr/zH5sQ2xmZGhTzW1TkuISRoeOuWocUplwnJFXoLQ
-         x5D2WdKAJouPT7KPod3M9eUkF+ETxeQ91jdnw=
+        Sat, 28 Aug 2021 03:32:16 -0400
+Received: by mail-pj1-f50.google.com with SMTP id j10-20020a17090a94ca00b00181f17b7ef7so10504166pjw.2;
+        Sat, 28 Aug 2021 00:31:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vpHRD/GDXCtXf6T/R+VbfrDOl4cnu8hdcSMOeGwnnmk=;
-        b=VmtjBtLErH7Au1JsWeBDtAhXc1sjcDJawnLwCIagYPpgrBf/ZSUaqpfeadCQiVZOsF
-         pytRRBVy9Cebx9e388lZ8T2Nbd4S9fqKV2rYu/owE8iso+SCentAdk6G9ZsCSF7QM3Hp
-         +oCILKgN7m7TGNikQbw/pEDRfj81j+vhZYQj4oRctXa0k9HzOGIL1cImEZKUfG0749IU
-         /1Vob76mE9WkmlfX8Hrr3M+HcUigR8pZD3naEkh8q0ghlaEUAS7NPeVEmX7YvA/ikcs4
-         mT4uqL7YfcwFiDS2xyvSRvkrdFaJVYrn94kpH3ibXucotQlv1JwHknwN8Y7smdNDttzk
-         c9jg==
-X-Gm-Message-State: AOAM532f34xepTtp/ZNFY994rfaF5UaM5o+O34zfaNKUSTaF2QA7gNTG
-        yxuN/dQkDIBrqQUd15VkjCb1cA==
-X-Google-Smtp-Source: ABdhPJx0Nkoil6Eq3hwUY2XNreZKWHup+/K9Or0Gjs+lkadYQjDQK7Zpttu4uPwhV9lWa+YqLolpSA==
-X-Received: by 2002:a63:cf41:: with SMTP id b1mr9930209pgj.407.1630108977982;
-        Fri, 27 Aug 2021 17:02:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g6sm7149077pjs.11.2021.08.27.17.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Aug 2021 17:02:57 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3] cgroup: Avoid compiler warnings with no subsystems
-Date:   Fri, 27 Aug 2021 17:02:55 -0700
-Message-Id: <20210828000255.3213497-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=72FGwkr2cgYiG2mCqnRFPrgyEIFWlTQT13Q2rpcWR6c=;
+        b=L+vVgObJEkYk7Kj9HifFAAdZZz9aNXuZhrDFsHtkhV/VNZ9897PRKglf16uBw9UTmi
+         9cddLe4hmacg1zuTx0Re7pbPE0Mu2682dNgSCqsErobItEHcivwT4vp0DIXGbjgUNEMj
+         2rNX76AW5H0hrl6T6OAuJSsZgYY6aqgBfjAIYp0eQCb0lOsI1miW8y6tD+fBfmbGH5Ga
+         hrwwnW2IxSwKUGz2+WagX5HEe7uKuGUCf7NdHgX2EfrSVPgXUU4QsDrlFGsE7cXEIpds
+         hSdsKTY1p6UZEaEMMAy25+O4GC4/8THYW7nXYvxNsptsURic/iQqiZiRFCP6azgQDCae
+         3Emw==
+X-Gm-Message-State: AOAM532ki5yPgAYmkfZytjljhxN8sJ4nQPsm0mxEFyhA1t4fcpcHX1ON
+        VbT0VlKLLafWNf5/vTAAermSbuEibtBEYOKX4zU=
+X-Google-Smtp-Source: ABdhPJzVwiRr/iufrwRsD3iA1dLD0/75TS+nkg+Sq3eKriL7lOlxSYaVCBACpKhZsKqGUkHhvzxRECVhEBWX+9qFs7M=
+X-Received: by 2002:a17:902:9b89:b0:12d:7f02:f6a5 with SMTP id
+ y9-20020a1709029b8900b0012d7f02f6a5mr12373883plp.39.1630135885761; Sat, 28
+ Aug 2021 00:31:25 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5181; h=from:subject; bh=wfnValxKLcACBeIlJMD51jipqZPz6JJchrYHO4kvj0I=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhKX0uxRBPCEWXPaLksSSzYiRg+n0CdzY1PINGJ8SW P1zYi2CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSl9LgAKCRCJcvTf3G3AJl1dD/ 455E8QbUu9CfXqJUHZOvqlHmjm22DvsSzSW1FWeWAI7It4PMgHxUTiLfg0FJkIsgeMBOeAKcV/jcRd 3Nh9uyToj0AeRctJQpUXvdKkV+7L331/48X1VB6SqggfDjjD1jQ+y49UuEBfBau7uNL41eSUSn7t4p ex6wcBQEiP4HY32Yg4Zn9BhNtO2Xjt/bZbF62hAuQ5HNQOwbs6woKWMD4g4cP41/NdvIYGIw6fssOl 0yYheNhN8ZVr+dqnBuB41D+R0Pu85zOCvvKFEz4NKRjTbSiYrInn+2AXE8NNg9QJ07SxNl1D7UJufG 8W1BvYjery34OinE/USvhcJjL52tcijrogxCnuRsz5CactotX8+TRYGnTiVs86dAs2K8f/YZImyoAS TiODY7y/7G8aaik3UxNr6beDSIyP2c8AJZuZxdYllDlYSzywQxJvL5kTROhtBvdEycw0A6TgxUnbvk LaWk5PUi9+pFt09hfomWW2kyDYzVfE0YV9Etr5VltjaVm8r0F9cAm0psYiNKdDY+ZReYAJG5V+CCUm IqBc2FBj7tIWRNMdSYARi/DMwqa8eZrQhxWBlCbbj5d/ta4Y5y8IscSte3LLB2nLPilxWDMEffP+2z HyNBhjySSGyqA0VEsEoHDFctzEdCNI2nNULdiqaGCH/5VelsV8CQi2Z3NUVg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20210826050458.1540622-1-keescook@chromium.org>
+ <20210826050458.1540622-3-keescook@chromium.org> <20210826062452.jekmoo43f4xu5jxk@pengutronix.de>
+ <202108270915.B4DD070AF@keescook>
+In-Reply-To: <202108270915.B4DD070AF@keescook>
+From:   Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
+Date:   Sat, 28 Aug 2021 16:31:14 +0900
+Message-ID: <CAMZ6Rq+b1wy3miNvXyeM5Cbp16CH78RKRf2WxUSL4s4w5=+aYg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] treewide: Replace open-coded flex arrays in unions
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ayush Sawal <ayush.sawal@chelsio.com>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Rohit Maheshwari <rohitm@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Arunachalam Santhanam <arunachalam.santhanam@in.bosch.com>,
+        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+        linux-crypto@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, linux-can <linux-can@vger.kernel.org>,
+        bpf@vger.kernel.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Keith Packard <keithp@keithp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As done before in commit cb4a31675270 ("cgroup: use bitmask to filter
-for_each_subsys"), avoid compiler warnings for the pathological case of
-having no subsystems (i.e. CGROUP_SUBSYS_COUNT == 0). This condition is
-hit for the arm multi_v7_defconfig config under -Wzero-length-bounds:
+Le sam. 28 août 2021 à 01:17, Kees Cook <keescook@chromium.org> a écrit :
+>
+> On Thu, Aug 26, 2021 at 08:24:52AM +0200, Marc Kleine-Budde wrote:
+> > [...]
+> > BTW: Is there opportunity for conversion, too?
+> >
+> > | drivers/net/can/peak_canfd/peak_pciefd_main.c:146:32: warning: array of flexible structures
+>
+> Untested potential solution:
+>
+> diff --git a/drivers/net/can/peak_canfd/peak_pciefd_main.c b/drivers/net/can/peak_canfd/peak_pciefd_main.c
+> index 1df3c4b54f03..efa2b5a52bd7 100644
+> --- a/drivers/net/can/peak_canfd/peak_pciefd_main.c
+> +++ b/drivers/net/can/peak_canfd/peak_pciefd_main.c
+> @@ -143,7 +143,11 @@ struct pciefd_rx_dma {
+>         __le32 irq_status;
+>         __le32 sys_time_low;
+>         __le32 sys_time_high;
+> -       struct pucan_rx_msg msg[];
+> +       /*
+> +        * with "msg" being pciefd_irq_rx_cnt(priv->irq_status)-many
+> +        * variable-sized struct pucan_rx_msg following.
+> +        */
+> +       __le32 msg[];
 
-In file included from ./arch/arm/include/generated/asm/rwonce.h:1,
-                 from include/linux/compiler.h:264,
-                 from include/uapi/linux/swab.h:6,
-                 from include/linux/swab.h:5,
-                 from arch/arm/include/asm/opcodes.h:86,
-                 from arch/arm/include/asm/bug.h:7,
-                 from include/linux/bug.h:5,
-                 from include/linux/thread_info.h:13,
-                 from include/asm-generic/current.h:5,
-                 from ./arch/arm/include/generated/asm/current.h:1,
-                 from include/linux/sched.h:12,
-                 from include/linux/cgroup.h:12,
-                 from kernel/cgroup/cgroup-internal.h:5,
-                 from kernel/cgroup/cgroup.c:31:
-kernel/cgroup/cgroup.c: In function 'of_css':
-kernel/cgroup/cgroup.c:651:42: warning: array subscript '<unknown>' is outside the bounds of an
-interior zero-length array 'struct cgroup_subsys_state *[0]' [-Wzero-length-bounds]
-  651 |   return rcu_dereference_raw(cgrp->subsys[cft->ss->id]);
+Isn't u8 msg[] preferable here?
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Zefan Li <lizefan.x@bytedance.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: cgroups@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v3:
-- encapsulate test in a macro with a big comment (tj)
-v2: https://lore.kernel.org/lkml/20210827150424.2729274-1-keescook@chromium.org
-v1: https://lore.kernel.org/lkml/20210827034741.2214318-1-keescook@chromium.org
----
- kernel/cgroup/cgroup.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+>  } __packed __aligned(4);
+>
+>  /* Tx Link record */
+> @@ -327,7 +331,7 @@ static irqreturn_t pciefd_irq_handler(int irq, void *arg)
+>
+>         /* handle rx messages (if any) */
+>         peak_canfd_handle_msgs_list(&priv->ucan,
+> -                                   rx_dma->msg,
+> +                                   (struct pucan_rx_msg *)rx_dma->msg,
+>                                     pciefd_irq_rx_cnt(priv->irq_status));
+>
+>         /* handle tx link interrupt (if any) */
+>
+>
+> It's not great, but it's also not strictly a flex array, in the sense
+> that since struct pucan_rx_msg is a variable size, the compiler cannot
+> reason about the size of struct pciefd_rx_dma based only on the
+> irq_status encoding...
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 3a0161c21b6b..b320cace5342 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -67,6 +67,14 @@
- /* let's not notify more than 100 times per second */
- #define CGROUP_FILE_NOTIFY_MIN_INTV	DIV_ROUND_UP(HZ, 100)
- 
-+/*
-+ * To avoid confusing the compiler (and generating warnings) with code
-+ * that attempts to access what would be a 0-element array (i.e. sized
-+ * to a potentially empty array when CGROUP_SUBSYS_COUNT == 0), this
-+ * constant expression can be added.
-+ */
-+#define CGROUP_HAS_SUBSYS_CONFIG	(CGROUP_SUBSYS_COUNT > 0)
-+
- /*
-  * cgroup_mutex is the master lock.  Any modification to cgroup or its
-  * hierarchy must be performed while holding it.
-@@ -248,7 +256,7 @@ static int cgroup_addrm_files(struct cgroup_subsys_state *css,
-  */
- bool cgroup_ssid_enabled(int ssid)
- {
--	if (CGROUP_SUBSYS_COUNT == 0)
-+	if (!CGROUP_HAS_SUBSYS_CONFIG)
- 		return false;
- 
- 	return static_key_enabled(cgroup_subsys_enabled_key[ssid]);
-@@ -472,7 +480,7 @@ static u16 cgroup_ss_mask(struct cgroup *cgrp)
- static struct cgroup_subsys_state *cgroup_css(struct cgroup *cgrp,
- 					      struct cgroup_subsys *ss)
- {
--	if (ss)
-+	if (CGROUP_HAS_SUBSYS_CONFIG && ss)
- 		return rcu_dereference_check(cgrp->subsys[ss->id],
- 					lockdep_is_held(&cgroup_mutex));
- 	else
-@@ -550,6 +558,9 @@ struct cgroup_subsys_state *cgroup_e_css(struct cgroup *cgrp,
- {
- 	struct cgroup_subsys_state *css;
- 
-+	if (!CGROUP_HAS_SUBSYS_CONFIG)
-+		return NULL;
-+
- 	do {
- 		css = cgroup_css(cgrp, ss);
- 
-@@ -577,6 +588,9 @@ struct cgroup_subsys_state *cgroup_get_e_css(struct cgroup *cgrp,
- {
- 	struct cgroup_subsys_state *css;
- 
-+	if (!CGROUP_HAS_SUBSYS_CONFIG)
-+		return NULL;
-+
- 	rcu_read_lock();
- 
- 	do {
-@@ -647,7 +661,7 @@ struct cgroup_subsys_state *of_css(struct kernfs_open_file *of)
- 	 * the matching css from the cgroup's subsys table is guaranteed to
- 	 * be and stay valid until the enclosing operation is complete.
- 	 */
--	if (cft->ss)
-+	if (CGROUP_HAS_SUBSYS_CONFIG && cft->ss)
- 		return rcu_dereference_raw(cgrp->subsys[cft->ss->id]);
- 	else
- 		return &cgrp->self;
-@@ -695,7 +709,7 @@ EXPORT_SYMBOL_GPL(of_css);
-  */
- #define do_each_subsys_mask(ss, ssid, ss_mask) do {			\
- 	unsigned long __ss_mask = (ss_mask);				\
--	if (!CGROUP_SUBSYS_COUNT) { /* to avoid spurious gcc warning */	\
-+	if (!CGROUP_HAS_SUBSYS_CONFIG) {					\
- 		(ssid) = 0;						\
- 		break;							\
- 	}								\
-@@ -2373,7 +2387,7 @@ struct task_struct *cgroup_taskset_next(struct cgroup_taskset *tset,
- 	struct css_set *cset = tset->cur_cset;
- 	struct task_struct *task = tset->cur_task;
- 
--	while (&cset->mg_node != tset->csets) {
-+	while (CGROUP_HAS_SUBSYS_CONFIG && &cset->mg_node != tset->csets) {
- 		if (!task)
- 			task = list_first_entry(&cset->mg_tasks,
- 						struct task_struct, cg_list);
-@@ -4644,7 +4658,7 @@ void css_task_iter_start(struct cgroup_subsys_state *css, unsigned int flags,
- 	it->ss = css->ss;
- 	it->flags = flags;
- 
--	if (it->ss)
-+	if (CGROUP_HAS_SUBSYS_CONFIG && it->ss)
- 		it->cset_pos = &css->cgroup->e_csets[css->ss->id];
- 	else
- 		it->cset_pos = &css->cgroup->cset_links;
--- 
-2.30.2
+In the same spirit, it is a bit cleaner to change the prototype of
+handle_msgs_list().
 
+Like that:
+
+
+diff --git a/drivers/net/can/peak_canfd/peak_canfd.c b/drivers/net/can/peak_canf
+d/peak_canfd.c
+index d08718e98e11..81a9faa6193f 100644
+--- a/drivers/net/can/peak_canfd/peak_canfd.c
++++ b/drivers/net/can/peak_canfd/peak_canfd.c
+@@ -484,9 +484,8 @@ int peak_canfd_handle_msg(struct peak_canfd_priv *priv,
+
+ /* handle a list of rx_count messages from rx_msg memory address */
+ int peak_canfd_handle_msgs_list(struct peak_canfd_priv *priv,
+-                               struct pucan_rx_msg *msg_list, int msg_count)
++                               void *msg_ptr, int msg_count)
+ {
+-       void *msg_ptr = msg_list;
+        int i, msg_size = 0;
+
+        for (i = 0; i < msg_count; i++) {
+diff --git a/drivers/net/can/peak_canfd/peak_canfd_user.h b/drivers/net/can/peak
+_canfd/peak_canfd_user.h
+index a72719dc3b74..ef91f92e70c3 100644
+--- a/drivers/net/can/peak_canfd/peak_canfd_user.h
++++ b/drivers/net/can/peak_canfd/peak_canfd_user.h
+@@ -42,5 +42,5 @@ struct net_device *alloc_peak_canfd_dev(int
+sizeof_priv, int index,
+ int peak_canfd_handle_msg(struct peak_canfd_priv *priv,
+                          struct pucan_rx_msg *msg);
+ int peak_canfd_handle_msgs_list(struct peak_canfd_priv *priv,
+-                               struct pucan_rx_msg *rx_msg, int rx_count);
++                               void *msg_ptr, int rx_count);
+ #endif
+diff --git a/drivers/net/can/peak_canfd/peak_pciefd_main.c
+b/drivers/net/can/peak_canfd/peak_pciefd_main.c
+index 1df3c4b54f03..c1de1e3dc4bc 100644
+--- a/drivers/net/can/peak_canfd/peak_pciefd_main.c
++++ b/drivers/net/can/peak_canfd/peak_pciefd_main.c
+@@ -143,7 +143,11 @@ struct pciefd_rx_dma {
+        __le32 irq_status;
+        __le32 sys_time_low;
+        __le32 sys_time_high;
+-       struct pucan_rx_msg msg[];
++       /*
++        * with "msg" being pciefd_irq_rx_cnt(priv->irq_status)-many
++        * variable-sized struct pucan_rx_msg following.
++        */
++       u8 msg[];
+ } __packed __aligned(4);
+
+ /* Tx Link record */
+
+
+Another solution would be to declare a maximum length for struct
+pucan_rx_msg::d. Because these are CAN FD messages, I suppose
+that maximum length would be CANFD_MAX_DLEN. struct canfd_frame
+from the UAPI uses the same pattern.
+
+N.B. This solution is not exclusive from the above one (actually,
+I think that using both would be the best solution).
+
+diff --git a/include/linux/can/dev/peak_canfd.h
+b/include/linux/can/dev/peak_canfd.h
+index f38772fd0c07..a048359db430 100644
+--- a/include/linux/can/dev/peak_canfd.h
++++ b/include/linux/can/dev/peak_canfd.h
+@@ -189,7 +189,7 @@ struct __packed pucan_rx_msg {
+        u8      client;
+        __le16  flags;
+        __le32  can_id;
+-       u8      d[];
++       u8      d[CANFD_MAX_DLEN];
+ };
+
+ /* uCAN error types */
+
+
+
+I only tested for compilation.
+
+Yours sincerely,
+Vincent
