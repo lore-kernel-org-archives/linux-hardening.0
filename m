@@ -2,106 +2,170 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0780C43214
-	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 07:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C92C4320E
+	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 14:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9302D60E76
-	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 07:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F8360F25
+	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 14:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234838AbhH2Hbi (ORCPT
+        id S232062AbhH2OSO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 29 Aug 2021 03:31:38 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:27868 "EHLO m43-7.mailgun.net"
+        Sun, 29 Aug 2021 10:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232155AbhH2Hbf (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 29 Aug 2021 03:31:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1630222243; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=DHvXwT1LctpTZp4W8bTzih3oWrD/e7ln1sSyPPM0QXc=;
- b=ZqybbWZqjJsy5IKDWuLmsBNOx4za1RNHPeUm+WN808BukhCbToiREyLaQWPbZBV8V1YBulOm
- OQveiNDsyISia84Xe9UnyJxa0mLU6/8dBhHvwt5gNq9dsVy7YUdCHLGg59hi3VUzN0MbevXC
- 81zlVWcjSbDglizdgYkLjREedjk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 612b37944cd90150371dde65 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 29 Aug 2021 07:30:28
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 69AECC43460; Sun, 29 Aug 2021 07:30:28 +0000 (UTC)
-Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        id S231199AbhH2OSN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 29 Aug 2021 10:18:13 -0400
+Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 45C3FC4338F;
-        Sun, 29 Aug 2021 07:30:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 45C3FC4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] rtlwifi: rtl8192de: Style clean-ups
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20210826023230.1148924-1-keescook@chromium.org>
-References: <20210826023230.1148924-1-keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ping-Ke Shih <pkshih@realtek.com>,
-        Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        by mail.kernel.org (Postfix) with ESMTPSA id 9058260295;
+        Sun, 29 Aug 2021 14:17:18 +0000 (UTC)
+Date:   Sun, 29 Aug 2021 15:20:21 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
         Joe Perches <joe@perches.com>,
-        Kaixu Xia <kaixuxia@tencent.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-Id: <20210829073028.69AECC43460@smtp.codeaurora.org>
-Date:   Sun, 29 Aug 2021 07:30:28 +0000 (UTC)
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] drivers/iio: Remove all strcpy() uses
+Message-ID: <20210829152021.7b5cae16@jic23-huawei>
+In-Reply-To: <20210815174204.126593-1-len.baker@gmx.com>
+References: <20210815174204.126593-1-len.baker@gmx.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
+On Sun, 15 Aug 2021 19:42:04 +0200
+Len Baker <len.baker@gmx.com> wrote:
 
-> Clean up some style issues:
-> - Use ARRAY_SIZE() for arrays (even when u8 sized)
-> - Remove redundant CHANNEL_MAX_NUMBER_2G define.
-> Additionally fix some dead code WARNs.
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors. So, remove all the uses and add
+> devm_kstrdup() or devm_kasprintf() instead.
 > 
-> Cc: Ping-Ke Shih <pkshih@realtek.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Larry Finger <Larry.Finger@lwfinger.net>
-> Cc: Colin Ian King <colin.king@canonical.com>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+> Also, modify the "for" loop conditions to clarify the access to the
+> st->orientation.rotation buffer.
+> 
+> This patch is an effort to clean up the proliferation of str*()
+> functions in the kernel and a previous step in the path to remove
+> the strcpy function from the kernel entirely [1].
+> 
+> [1] https://github.com/KSPP/linux/issues/88
+> 
+> Signed-off-by: Len Baker <len.baker@gmx.com>
+Applied.
 
-Failed to apply, please rebase over wireless-drivers-next.
+Thanks,
 
-error: sha1 information is lacking or useless (drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c).
-error: could not build fake ancestor
-hint: Use 'git am --show-current-patch' to see the failed patch
-Applying: rtlwifi: rtl8192de: Style clean-ups
-Patch failed at 0001 rtlwifi: rtl8192de: Style clean-ups
+Jonathan
 
-Patch set to Changes Requested.
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20210826023230.1148924-1-keescook@chromium.org/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> ---
+> The previous versions can be found in:
+> 
+> v1
+> https://lore.kernel.org/linux-hardening/20210801171157.17858-1-len.baker@gmx.com/
+> 
+> v2
+> https://lore.kernel.org/linux-hardening/20210807152225.9403-1-len.baker@gmx.com/
+> 
+> v3
+> https://lore.kernel.org/linux-hardening/20210814090618.8920-1-len.baker@gmx.com/
+> 
+> v4
+> https://lore.kernel.org/linux-hardening/20210814135509.4500-1-len.baker@gmx.com/
+> 
+> Changelog v1 -> v2
+> - Modify the commit changelog to inform that the motivation of this
+>   patch is to remove the strcpy() function from the kernel entirely
+>   (Jonathan Cameron).
+> 
+> Changelog v2 -> v3
+> - Rewrite the code using devm_kstrdup() and devm_kasprintf() functions
+>   (Andy Shevchenko).
+> - Rebase against v5.14-rc5.
+> 
+> Changelog v3 -> v4
+> - Reorder the variables (Andy Shevchenko).
+> - Get the device in the definition block (Andy Shevchenko).
+> - Reword the comment (Andy Shevchenko).
+> - Change the conditions in the "if" statement to clarify the "0" check
+>   (Andy Shevchenko).
+> 
+> Changelog v4 -> v5
+> - Use the strcmp() function to clarify the "0" check (Joe Perches).
+> - Modify the "for" loop conditions to clarify the access to the
+>   st->orientation.rotation buffer (Joe Perches).
+> 
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 36 +++++++++++++---------
+>  1 file changed, 21 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> index f282e9cc34c5..6aee6c989485 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
+> @@ -261,6 +261,7 @@ int inv_mpu_magn_set_rate(const struct inv_mpu6050_state *st, int fifo_rate)
+>   */
+>  int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
+>  {
+> +	struct device *dev = regmap_get_device(st->map);
+>  	const char *orient;
+>  	char *str;
+>  	int i;
+> @@ -279,22 +280,27 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
+>  		st->magn_orient.rotation[4] = st->orientation.rotation[1];
+>  		st->magn_orient.rotation[5] = st->orientation.rotation[2];
+>  		/* z <- -z */
+> -		for (i = 0; i < 3; ++i) {
+> -			orient = st->orientation.rotation[6 + i];
+> -			/* use length + 2 for adding minus sign if needed */
+> -			str = devm_kzalloc(regmap_get_device(st->map),
+> -					   strlen(orient) + 2, GFP_KERNEL);
+> -			if (str == NULL)
+> +		for (i = 6; i < 9; ++i) {
+> +			orient = st->orientation.rotation[i];
+> +
+> +			/*
+> +			 * The value is negated according to one of the following
+> +			 * rules:
+> +			 *
+> +			 * 1) Drop leading minus.
+> +			 * 2) Leave 0 as is.
+> +			 * 3) Add leading minus.
+> +			 */
+> +			if (orient[0] == '-')
+> +				str = devm_kstrdup(dev, orient + 1, GFP_KERNEL);
+> +			else if (!strcmp(orient, "0"))
+> +				str = devm_kstrdup(dev, orient, GFP_KERNEL);
+> +			else
+> +				str = devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
+> +			if (!str)
+>  				return -ENOMEM;
+> -			if (strcmp(orient, "0") == 0) {
+> -				strcpy(str, orient);
+> -			} else if (orient[0] == '-') {
+> -				strcpy(str, &orient[1]);
+> -			} else {
+> -				str[0] = '-';
+> -				strcpy(&str[1], orient);
+> -			}
+> -			st->magn_orient.rotation[6 + i] = str;
+> +
+> +			st->magn_orient.rotation[i] = str;
+>  		}
+>  		break;
+>  	default:
+> --
+> 2.25.1
+> 
 
