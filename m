@@ -2,170 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C92C4320E
-	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 14:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A00EC4320A
+	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 14:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32F8360F25
-	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 14:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CBE60F25
+	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 14:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232062AbhH2OSO (ORCPT
+        id S235444AbhH2OdR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 29 Aug 2021 10:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
+        Sun, 29 Aug 2021 10:33:17 -0400
+Received: from mout.gmx.net ([212.227.15.18]:46603 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231199AbhH2OSN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 29 Aug 2021 10:18:13 -0400
-Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9058260295;
-        Sun, 29 Aug 2021 14:17:18 +0000 (UTC)
-Date:   Sun, 29 Aug 2021 15:20:21 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Joe Perches <joe@perches.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        David Laight <David.Laight@ACULAB.COM>,
+        id S231791AbhH2OdP (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 29 Aug 2021 10:33:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1630247534;
+        bh=nvs8837RL/FatuUxRpR3LhumAcLvvX9cPIPV4FvwiMY=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=BjFyeo8JUe3Jw+zYj7BGClvNYAj0E9f+o7JAfMNlQOS4NaNkNdNS8TDnzxpABsSLl
+         6Gvxk25GsS0+hxX33+3A2e5xn2w2+8D0tv8RtnGFmnc+PyEUgAtJ4R4YIP1aO6+iAz
+         Hs1Q1T+BUjAadhrDUjivdGBtEYiR5P8RCTPOgvdw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1N5G9n-1n392G41On-011BBk; Sun, 29
+ Aug 2021 16:32:14 +0200
+Date:   Sun, 29 Aug 2021 16:32:00 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Len Baker <len.baker@gmx.com>, Jonathan Corbet <corbet@lwn.net>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] drivers/iio: Remove all strcpy() uses
-Message-ID: <20210829152021.7b5cae16@jic23-huawei>
-In-Reply-To: <20210815174204.126593-1-len.baker@gmx.com>
-References: <20210815174204.126593-1-len.baker@gmx.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] docs: deprecated.rst: Clarify open-coded arithmetic with
+ literals
+Message-ID: <20210829143200.GA2185@titan>
+References: <20210827171226.2938-1-len.baker@gmx.com>
+ <bd7487c725e15b0c20612a44ecf301637a60c157.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <bd7487c725e15b0c20612a44ecf301637a60c157.camel@perches.com>
+X-Provags-ID: V03:K1:FeeK8l1PQF76mrGFcok+5fvjCtP8b80O0RczVz9pQCL76eUr90Y
+ YOqUfFd9Wu6YV5NK7NhbaEDZ5PsWH+OVf5icznT9kVfiDChGgQsdBnxO6awRVi/BDGKOhzi
+ m/5cJjg6xXp56u6Th1uxU9hiUJYX3gn3qU9zU3use1GIkS20PCP8dMEaaKMX9yD9h4Lteyy
+ QDQxkKHCLzszbU8IZiTug==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BbSC90bemSE=:57FwL7S+I37KEX6nDvpsT/
+ MD3jACPRwaJ/PZc7PjI3vpohZjJsmNoD5iVIuz6Y2ivWWPjJMiLBGMpj8h/hDngjxOLUV6Fv6
+ vafjv1OjiwSj39j86Zq9iuqm1Q3/8KP3cd+Bzu55Z/s04iIHwP0CXCV8XZ5wHO1+Eq7Udlw5u
+ gYfVKNjVtpHDpRTFl/7he8VC8J7ojvNsElkz2xwOb2R9pIttFjeLV40h7E8/+u2KwhJNuv+39
+ JDyJNITRWI6yE7cgAtTLAsVw0tAn2+IQvc8FMvernU7ppc5+x4nB7oRTdVqqrCNOh1EtYNPyh
+ kOol2cDUJ1g8kILQqAAExUJi7VojOUsFYZCzJeFxz27zMLZ3Ja0vEx0HrdF7hLtONu4NPOgrH
+ XU3HGa2mHviFDM0Nlx8ZK28sP1rqQqdO9OPJHA/WoZeNk67oBHD6JRbJWAgBJWAwGYkWrZYEL
+ eJfG37FtDYZxM1jseG6ign4jiRkYu0nqNodm9mR7/XZJt3OO6IhZ8GnyUAH0k0PaDhoDvK/tZ
+ /sIHrhLrKxbWF9PZDi2mIzmjIMEdf+cUnohEGmRERjWKnVORoXKfvSgQZL/cHJR91fjovMjCa
+ u+xaPl4ebv+QIJXW2B1WCqiJBUIUZ1dFYu1dYHapqcohda8+fLWpPoZZYzvCg8PL9846vCW64
+ 0YNumYeYjdJ3/gbkvvZkZExo3GmnUnKYcTYXbAYt2gF/lsPrXg+bw6pOwbtz/4loK1Z6G1Mju
+ lIlXqBUhW18EP4HUFo/rX6dFxz8jDLGiw8W1F6y3hyHYJ6QF9BGiTQjT0//ThCiZ/s2xmYGtI
+ nKFUAAZ+yVv7Mko4CO+KC7vX2by0eBJXH/GWaM5X45PUoL9CIP9Z9iDHxVIBS2cBkB7npSltu
+ aoezIM8zVqeQ94ZhYEHMX1pNLnu4/HcOc30OM5GNVnFxIKW73XW77HFrZ0Xxh7bH2iZERCm3s
+ NjXB2CuttKTOwPAvuBfGraf4i9VhpJmcDyoWYSLEuDwhtSJ0SyxgbXAJ/CVoVvA74kgAVxv3r
+ XARAdMC+6TSRag6/cfN4sDVEc7tC7cDqGV8E3HzxQNHbt1fswSxU5tlAa6wHSefFRPwoYs/43
+ VqhbVEo2ecCwbc6uY/cm2FXajA74nL/cJHQjp8KED2luLJh9M3VewbvMw==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, 15 Aug 2021 19:42:04 +0200
-Len Baker <len.baker@gmx.com> wrote:
+Hi,
 
-> strcpy() performs no bounds checking on the destination buffer. This
-> could result in linear overflows beyond the end of the buffer, leading
-> to all kinds of misbehaviors. So, remove all the uses and add
-> devm_kstrdup() or devm_kasprintf() instead.
-> 
-> Also, modify the "for" loop conditions to clarify the access to the
-> st->orientation.rotation buffer.
-> 
-> This patch is an effort to clean up the proliferation of str*()
-> functions in the kernel and a previous step in the path to remove
-> the strcpy function from the kernel entirely [1].
-> 
-> [1] https://github.com/KSPP/linux/issues/88
-> 
-> Signed-off-by: Len Baker <len.baker@gmx.com>
-Applied.
+On Fri, Aug 27, 2021 at 12:06:18PM -0700, Joe Perches wrote:
+> On Fri, 2021-08-27 at 19:12 +0200, Len Baker wrote:
+> > Although using literals for size calculation in allocator arguments ma=
+y
+> > be harmless due to compiler warnings in case of overflows, it is bette=
+r
+> > to refactor the code to avoid the use of open-coded math idiom.
+> >
+> > So, clarify the preferred way in these cases.
+> []
+> > diff --git a/Documentation/process/deprecated.rst b/Documentation/proc=
+ess/deprecated.rst
+> []
+> > @@ -60,7 +60,8 @@ smaller allocation being made than the caller was ex=
+pecting. Using those
+> > =A0allocations could lead to linear overflows of heap memory and other
+> > =A0misbehaviors. (One exception to this is literal values where the co=
+mpiler
+> > =A0can warn if they might overflow. Though using literals for argument=
+s as
+> > -suggested below is also harmless.)
+> > +suggested below is also harmless. So, the preferred way in these case=
+s is
+> > +to refactor the code to keep the open-coded math idiom out.)
+>
+> wordsmithing trivia:
+>
+> 'keep <foo> out' is difficult to parse as 'keep' is generally a positive
+> word but its meaning is later reversed with out.
+>
+> 'avoid <foo>' maybe be better phrasing.
+>
+Understood. I will do this change and I will send a new version.
+Thanks for the review.
 
-Thanks,
-
-Jonathan
-
-> ---
-> The previous versions can be found in:
-> 
-> v1
-> https://lore.kernel.org/linux-hardening/20210801171157.17858-1-len.baker@gmx.com/
-> 
-> v2
-> https://lore.kernel.org/linux-hardening/20210807152225.9403-1-len.baker@gmx.com/
-> 
-> v3
-> https://lore.kernel.org/linux-hardening/20210814090618.8920-1-len.baker@gmx.com/
-> 
-> v4
-> https://lore.kernel.org/linux-hardening/20210814135509.4500-1-len.baker@gmx.com/
-> 
-> Changelog v1 -> v2
-> - Modify the commit changelog to inform that the motivation of this
->   patch is to remove the strcpy() function from the kernel entirely
->   (Jonathan Cameron).
-> 
-> Changelog v2 -> v3
-> - Rewrite the code using devm_kstrdup() and devm_kasprintf() functions
->   (Andy Shevchenko).
-> - Rebase against v5.14-rc5.
-> 
-> Changelog v3 -> v4
-> - Reorder the variables (Andy Shevchenko).
-> - Get the device in the definition block (Andy Shevchenko).
-> - Reword the comment (Andy Shevchenko).
-> - Change the conditions in the "if" statement to clarify the "0" check
->   (Andy Shevchenko).
-> 
-> Changelog v4 -> v5
-> - Use the strcmp() function to clarify the "0" check (Joe Perches).
-> - Modify the "for" loop conditions to clarify the access to the
->   st->orientation.rotation buffer (Joe Perches).
-> 
->  drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c | 36 +++++++++++++---------
->  1 file changed, 21 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-> index f282e9cc34c5..6aee6c989485 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_magn.c
-> @@ -261,6 +261,7 @@ int inv_mpu_magn_set_rate(const struct inv_mpu6050_state *st, int fifo_rate)
->   */
->  int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
->  {
-> +	struct device *dev = regmap_get_device(st->map);
->  	const char *orient;
->  	char *str;
->  	int i;
-> @@ -279,22 +280,27 @@ int inv_mpu_magn_set_orient(struct inv_mpu6050_state *st)
->  		st->magn_orient.rotation[4] = st->orientation.rotation[1];
->  		st->magn_orient.rotation[5] = st->orientation.rotation[2];
->  		/* z <- -z */
-> -		for (i = 0; i < 3; ++i) {
-> -			orient = st->orientation.rotation[6 + i];
-> -			/* use length + 2 for adding minus sign if needed */
-> -			str = devm_kzalloc(regmap_get_device(st->map),
-> -					   strlen(orient) + 2, GFP_KERNEL);
-> -			if (str == NULL)
-> +		for (i = 6; i < 9; ++i) {
-> +			orient = st->orientation.rotation[i];
-> +
-> +			/*
-> +			 * The value is negated according to one of the following
-> +			 * rules:
-> +			 *
-> +			 * 1) Drop leading minus.
-> +			 * 2) Leave 0 as is.
-> +			 * 3) Add leading minus.
-> +			 */
-> +			if (orient[0] == '-')
-> +				str = devm_kstrdup(dev, orient + 1, GFP_KERNEL);
-> +			else if (!strcmp(orient, "0"))
-> +				str = devm_kstrdup(dev, orient, GFP_KERNEL);
-> +			else
-> +				str = devm_kasprintf(dev, GFP_KERNEL, "-%s", orient);
-> +			if (!str)
->  				return -ENOMEM;
-> -			if (strcmp(orient, "0") == 0) {
-> -				strcpy(str, orient);
-> -			} else if (orient[0] == '-') {
-> -				strcpy(str, &orient[1]);
-> -			} else {
-> -				str[0] = '-';
-> -				strcpy(&str[1], orient);
-> -			}
-> -			st->magn_orient.rotation[6 + i] = str;
-> +
-> +			st->magn_orient.rotation[i] = str;
->  		}
->  		break;
->  	default:
-> --
-> 2.25.1
-> 
-
+Regards,
+Len
