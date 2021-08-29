@@ -2,114 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595E6C4320E
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Aug 2021 17:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0780C43214
+	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 07:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03C0E60EAF
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Aug 2021 17:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9302D60E76
+	for <linux-hardening@archiver.kernel.org>; Sun, 29 Aug 2021 07:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbhH1R6s (ORCPT
+        id S234838AbhH2Hbi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 28 Aug 2021 13:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbhH1R6q (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 28 Aug 2021 13:58:46 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F2A5C061756
-        for <linux-hardening@vger.kernel.org>; Sat, 28 Aug 2021 10:57:56 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id mq3so6785595pjb.5
-        for <linux-hardening@vger.kernel.org>; Sat, 28 Aug 2021 10:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qoRrda6U6GxHzpOEaIJ6gVUXCj3XTmN8tjTe4PtJ0hc=;
-        b=mmMbPiCU3U+syXMjU8vmu6LDmEoQU8JvLN7kPzP2kUB2pj1DoBzCimW/GwtZyrYsiu
-         ddQHHN+WPFjOXjVBZdvWcwpfDfER+4xVOWV93BdAAmPCASjc1I1FSB6KLfHvnofn1nHK
-         i1/OgItiwbOqlNZtnkp2Ww50woEvHsYEsO+V8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qoRrda6U6GxHzpOEaIJ6gVUXCj3XTmN8tjTe4PtJ0hc=;
-        b=rB4XDxNy3NjjvecQDPbZgNxTErzHxFg80yn2V5isc0BIkUqVhQ+gNlNIINJ8EfKoHN
-         bDTrOCzG2yskrvOUSlq2b/O2WHiM3RYJgRx15is0Xzk0cEluHps9zZVwbQH/kTanu7gy
-         PHFhQcmvgkrxw2FKdE6GapNL7SopgincGWWLhH8N8lcrwZo5dYWRYXq5sO21nOP8Bve/
-         AChfuN9Be5cieeIDA94KOJVA2HKLrzXaSOxE/femqPXdlYlwv5+VANwwE85hYGZYI1Au
-         g/GyzTJikAJ+fFwu0MWko8c2Ar7Zf9Zo7Ln9HWU1BG7mQrrxjpM9LXmKJWhhFcUBUTJm
-         SHjg==
-X-Gm-Message-State: AOAM5307BcsqifwdH9uXiyJ0kliQwQKAmKs8zjConhmLI5CpI4v00cLk
-        sbQsiNWpFITQhPScMCOmfCD1oQ==
-X-Google-Smtp-Source: ABdhPJwIfzGrqWWVKr5y17UZd/DsAh6nRMZPSFCys6z9v4x1Eg8H5t+RpDONcLx091gGh24zKeqkUA==
-X-Received: by 2002:a17:902:fe81:b0:133:851e:5923 with SMTP id x1-20020a170902fe8100b00133851e5923mr14151597plm.25.1630173475568;
-        Sat, 28 Aug 2021 10:57:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t15sm11199595pgi.80.2021.08.28.10.57.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Aug 2021 10:57:54 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Keerthy <j-keerthy@ti.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.co.uk>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        linux-omap@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] clocksource/drivers/timer-ti-dm: Select TIMER_OF
-Date:   Sat, 28 Aug 2021 10:57:47 -0700
-Message-Id: <20210828175747.3777891-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Sun, 29 Aug 2021 03:31:38 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:27868 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232155AbhH2Hbf (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 29 Aug 2021 03:31:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1630222243; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=DHvXwT1LctpTZp4W8bTzih3oWrD/e7ln1sSyPPM0QXc=;
+ b=ZqybbWZqjJsy5IKDWuLmsBNOx4za1RNHPeUm+WN808BukhCbToiREyLaQWPbZBV8V1YBulOm
+ OQveiNDsyISia84Xe9UnyJxa0mLU6/8dBhHvwt5gNq9dsVy7YUdCHLGg59hi3VUzN0MbevXC
+ 81zlVWcjSbDglizdgYkLjREedjk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 612b37944cd90150371dde65 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 29 Aug 2021 07:30:28
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 69AECC43460; Sun, 29 Aug 2021 07:30:28 +0000 (UTC)
+Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 45C3FC4338F;
+        Sun, 29 Aug 2021 07:30:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 45C3FC4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1368; h=from:subject; bh=9jx5uQPQqpp6TrFslvjEgR6EW3HiZEM9ERGP13bv27o=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhKnka8IMpGL75t9SdPtlw5cO32b0cj/Ljslc5NM+C Mk3bmEKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYSp5GgAKCRCJcvTf3G3AJsbaD/ 9aHBUpWn4I1adVnh/gDEinuFwYEId8xHXMAzcKmAtGYn9aDrtjoho0QB65x/XE3thwjJv4rCtM6cfP im14GI7xHW/uIfagrW0Jiv9Rg9b1t0Gu2w6x6HrzymAHfrplvvcm8A8TDdFOWBrECEbKKEyFHvKxvI 7LEnxaaIY5RGxG17eFQXW2wdFuGppuHhZqenCfX8JRIZ2XzGKOJ6VnV7i5qWldvBe7jSPUbiYAK+xm Mi+AN3Xqkc1Guj/KGGMJ6nAyZKHRQ0l8SVTJeShnoPnWuor8X6haOExTFTH6tPl+0pbOisdtXiOumw axOUWWOeU7ga0QFJ+vacWTKXFmc+fMAS6355YTYFM3q2Rnv1eLDTZoetNwjxvitQtVfoeoY6+DQUtg uRMxDbULb22uh2rWpm5GkRABAdPiNXfbSUjTFRKAOjYFFxA85CC3XlHI9eW4Sa0Xr1hbffFm50Fb7j L+XEGRWoVoO/UONT74eVGC1HLJXDqGUs71GTXbWDRG77Sg2CN/+GNTI+JlJjznLvbWPT8njCD7Qr5n 0ZXDIlKtM2NF2xfDOWksUL6GgQc1sGloiVyDtxVgiyJIpNsHC4AG9hJUSQ0zi0PzoIr3LAz/3ylz6e ktGmQcMYLEmlX14y5Vn4v+WxMigNBrSEQU8vbERGmENn9RVkg4tg3OAs9NHA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] rtlwifi: rtl8192de: Style clean-ups
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20210826023230.1148924-1-keescook@chromium.org>
+References: <20210826023230.1148924-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Joe Perches <joe@perches.com>,
+        Kaixu Xia <kaixuxia@tencent.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-Id: <20210829073028.69AECC43460@smtp.codeaurora.org>
+Date:   Sun, 29 Aug 2021 07:30:28 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When building OMAP_DM_TIMER without TIMER_OF, there are orphan sections
-due to the use of TIMER_OF_DELCARE() without CONFIG_TIMER_OF. Select
-CONFIG_TIMER_OF when enaling OMAP_DM_TIMER:
+Kees Cook <keescook@chromium.org> wrote:
 
-arm-linux-gnueabi-ld: warning: orphan section `__timer_of_table' from `drivers/clocksource/timer-ti-dm-systimer.o' being placed in section `__timer_of_table'
+> Clean up some style issues:
+> - Use ARRAY_SIZE() for arrays (even when u8 sized)
+> - Remove redundant CHANNEL_MAX_NUMBER_2G define.
+> Additionally fix some dead code WARNs.
+> 
+> Cc: Ping-Ke Shih <pkshih@realtek.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Larry Finger <Larry.Finger@lwfinger.net>
+> Cc: Colin Ian King <colin.king@canonical.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/202108282255.tkdt4ani-lkp@intel.com/
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: linux-omap@vger.kernel.org
-Fixes: 52762fbd1c47 ("clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/clocksource/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Failed to apply, please rebase over wireless-drivers-next.
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 0f5e3983951a..08f8cb944a2a 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -24,6 +24,7 @@ config I8253_LOCK
- 
- config OMAP_DM_TIMER
- 	bool
-+	select TIMER_OF
- 
- config CLKBLD_I8253
- 	def_bool y if CLKSRC_I8253 || CLKEVT_I8253 || I8253_LOCK
+error: sha1 information is lacking or useless (drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c).
+error: could not build fake ancestor
+hint: Use 'git am --show-current-patch' to see the failed patch
+Applying: rtlwifi: rtl8192de: Style clean-ups
+Patch failed at 0001 rtlwifi: rtl8192de: Style clean-ups
+
+Patch set to Changes Requested.
+
 -- 
-2.30.2
+https://patchwork.kernel.org/project/linux-wireless/patch/20210826023230.1148924-1-keescook@chromium.org/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
