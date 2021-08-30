@@ -2,132 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCF5C432BE
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Aug 2021 19:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA4AC4320E
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Aug 2021 20:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 988DC60F25
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Aug 2021 19:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C74B60F5B
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Aug 2021 20:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234008AbhH3T6u (ORCPT
+        id S234882AbhH3UNZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 30 Aug 2021 15:58:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
+        Mon, 30 Aug 2021 16:13:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231775AbhH3T6t (ORCPT
+        with ESMTP id S234874AbhH3UNZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 30 Aug 2021 15:58:49 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C39C06175F
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Aug 2021 12:57:55 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id a93so30542897ybi.1
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Aug 2021 12:57:55 -0700 (PDT)
+        Mon, 30 Aug 2021 16:13:25 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70949C06175F
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Aug 2021 13:12:31 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id 28-20020a17090a031cb0290178dcd8a4d1so625146pje.0
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Aug 2021 13:12:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E4eWYvLXqtDCW55gS9rY1AWkuU5oblAvUHBbE8tFwPM=;
-        b=OGS3yhWXTyzWkpkWUMNaVxVTFC+AJsJpa1DFA/leGUMaTbpMJCmekJnDQQ4LplT57V
-         jqNNZXj6JX7NOfeLnm+uT5dA0mLCg8pwGj1o0mYZdsP9Quvy5T5hSYvF5qmD9jfroMs2
-         qPasNy6wNFNrWWLGUhw/SxSku/7Jy8no4SwyhhtopI+m/AyfB/hgwTGCjSSgtwhu2a7+
-         FKUpLNZNgZ/Q5M1oSQsCFw3Sk4FXFmxqPBLJj7j9sNKn1/KD2yYZ732zInXTsWT7lC0T
-         FYlAc0L7oTnv1eOt77XImOLWiEKn6m2ZSntrQB+KftmGlZJfZO07ewXz/XnvAxEUIHzY
-         vDLA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NyqR6zuX2UnSlgO+2J5doXVmpsPXm+DS8g/36ybZddY=;
+        b=SQIeHtMBmXoWaJa+oEtkE7Z1Wr1+Gk4thLQ2B11dg25gCON/sRMIUQ2ljp7IqrY8Os
+         VDOxbk7Omq2Pkz+86BFH/5NQSq7osGz1aCoVXyKXmHyt8R9/VCV80GPZM2udmS+cBlv2
+         ekjmo0brEeHjMdioxs/LOQzXP+9CsqieIfHzM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E4eWYvLXqtDCW55gS9rY1AWkuU5oblAvUHBbE8tFwPM=;
-        b=USJwKbl3DruLjOhQC0E91NoiqODaxIJTXgziLvlyUpbLDyW+XDEvL3mhtvTc1Dy3Wd
-         MrBw1HiM1Vy/1Z4A/qM4+11Oxb52M+gzWvdm0r9mAMzY9bSjoemI5LWUhRtOP6WteJCi
-         DN6kPTCpTTe+IbKuDPQfs7wgc4QKlEkY2HwXp+4QTtIy/g2pIBgL6lPpqNI7SbEdWr3O
-         UISRICczY0QL33tlfhoM/sDzhLm+xBSbAGqGGWL7/pI+s3lh6dt5Of+bWwW8LHLxaYdx
-         EklHzZW3i7eAh8EauK7qj+AW62wZqlip8xAj+XN6D1EEhAb7LVsusHJ+9wVINjw/Ls40
-         SV+w==
-X-Gm-Message-State: AOAM532KFbgew3g33a736GZt8QbMICNZ5v+4nvskRwpc8gyYss4teyR5
-        U8jCYrRp9TS4/N0wtakL3FthIZRqT44JsC/0QXlMiQ==
-X-Google-Smtp-Source: ABdhPJzfPVC/aqfGdEcBrN11+dQpuqIHr6C0XzX81vMefCFwtWvmVxyFoBlwpKAw7HaWmKsQxG3hWFuvfK71fynvpXY=
-X-Received: by 2002:a05:6902:703:: with SMTP id k3mr24784014ybt.47.1630353474553;
- Mon, 30 Aug 2021 12:57:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NyqR6zuX2UnSlgO+2J5doXVmpsPXm+DS8g/36ybZddY=;
+        b=rK3IEPIr4Hx0Cu+G3jZOJWHbfIKuOEFMiywu9NqxUti2Cy2jsJ+xP8iZLBDYZD8CTh
+         dN3akOR4SZ27w0aDDk8t9I5V02IvDnURSzNKktYwmVhq5Wpu9rK56MnSOu/6srfG7B2i
+         U8ijhH5Yth/+XHaXRctKHWU7AfaNfvRqb4hTwcywqdreCdxPsaPTOBNf+x+NrhJAjL3i
+         hH5XEPbogt2/QpCFR2RrKrG/7rkJ0Y3XsNkogsK/yBn6Tnu66wuvbPJlJsHheLe3LLmN
+         pFpTEI9R3Y25EUsunCh70yNp3qMIMGeaiocQZCwps0oMHKmTx+ih8GmVvAWtjKABCz6s
+         i+1Q==
+X-Gm-Message-State: AOAM532hihNrADDJBpLAwlR7Nxaxyp00W/gEGPWv/F729lXdCfIPYfDd
+        mSArTXCPTpECf/hiFXcjaSQFdQ==
+X-Google-Smtp-Source: ABdhPJwxc+D9Kf5/yanvqh7j1hXLkbHyjoIvaTM7O7M6Ceokm1ELoy1wb3ivRqj2YByLgovOTg4T5g==
+X-Received: by 2002:a17:90a:1990:: with SMTP id 16mr940236pji.11.1630354350873;
+        Mon, 30 Aug 2021 13:12:30 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c16sm15534732pfb.196.2021.08.30.13.12.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Aug 2021 13:12:30 -0700 (PDT)
+Date:   Mon, 30 Aug 2021 13:12:28 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Keith Packard <keithp@keithp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        clang-built-linux@googlegroups.com,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v3 0/5] Enable -Warray-bounds and -Wzero-length-bounds
+Message-ID: <202108301259.1FC43498@keescook>
+References: <20210827163015.3141722-1-keescook@chromium.org>
+ <YS0nJtNDCwfbaubZ@Ryzen-9-3900X.localdomain>
 MIME-Version: 1.0
-References: <20210823171318.2801096-1-samitolvanen@google.com>
- <20210823171318.2801096-9-samitolvanen@google.com> <e33bdfc8-6de9-0e91-eec6-39e6aca61758@kernel.org>
-In-Reply-To: <e33bdfc8-6de9-0e91-eec6-39e6aca61758@kernel.org>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 30 Aug 2021 12:57:43 -0700
-Message-ID: <CABCJKufsdcfdSQ4JMx1dw1HXgqk4rtqGRoHMUdK6r5cxzrEg3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 08/14] x86/extable: Do not mark exception callback as CFI
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YS0nJtNDCwfbaubZ@Ryzen-9-3900X.localdomain>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 26, 2021 at 9:56 AM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On 8/23/21 10:13 AM, Sami Tolvanen wrote:
-> > From: Kees Cook <keescook@chromium.org>
-> >
-> > The exception table entries are constructed out of a relative offset
-> > and point to the actual function, not the CFI table entry. For now,
-> > just mark the caller as not checking CFI
->
-> Does this *mark* the caller as not checking CFI or does it actually make
-> the caller stop checking CFI?  What are the semantics of a __nocfi function?
+On Mon, Aug 30, 2021 at 11:44:54AM -0700, Nathan Chancellor wrote:
+> On Fri, Aug 27, 2021 at 09:30:10AM -0700, Kees Cook wrote:
+> > v3:
+> > - fix typo in treewide conversion (u8 should have been __u8)
+> > - improve changelog for DECLARE_FLEX_ARRAY patch
+> > - add acks/reviews
+> > v2: https://lore.kernel.org/lkml/20210826050458.1540622-1-keescook@chromium.org/
+> > v1: https://lore.kernel.org/lkml/20210818081118.1667663-1-keescook@chromium.org/
+> > 
+> > Hi,
+> > 
+> > In support of the improved buffer overflow detection for memcpy(),
+> > this enables -Warray-bounds and -Wzero-length-bounds globally. Mostly
+> > it involves some struct member tricks with the new DECLARE_FLEX_ARRAY()
+> > macro. Everything else is just replacing stacked 0-element arrays
+> > with actual unions in two related treewide patches. There is one set of
+> > special cases that were fixed separately[1] and are needed as well.
+> > 
+> > I'm expecting to carry this series with the memcpy() series in my
+> > "overflow" tree. Reviews appreciated! :)
+> 
+> Hi Kees,
+> 
+> I ran this series through my local build tests and uncovered two
+> warnings in the same file that appear to be unhandled as of
+> next-20210830. This is from ARCH=powerpc pseries_defconfig with
+> clang-14, I did not try earlier versions of clang.
 
-__nocfi disables CFI checking in the function, so in this case,
-fixup_exception can make an indirect call anywhere.
+Thanks for double-checking!
 
-> > The failure is most visible
-> > at boot with CONFIG_DEBUG_RODATA_TEST=y.
->
-> What's the failure?
->
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > ---
-> >  arch/x86/mm/extable.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-> > index e1664e9f969c..d150d4d12d53 100644
-> > --- a/arch/x86/mm/extable.c
-> > +++ b/arch/x86/mm/extable.c
-> > @@ -155,6 +155,7 @@ enum handler_type ex_get_fault_handler_type(unsigned long ip)
-> >               return EX_HANDLER_OTHER;
-> >  }
-> >
-> > +__nocfi
-> >  int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
-> >                   unsigned long fault_addr)
-> >  {
-> >
->
->
-> This at least needs a comment explaining what's going on.  But maybe it
-> could be fixed better by either having the extable entry resolve to the
-> magic CFI table entry (can this be done?) or by marking the actual
-> indirect call or the type of the variable through which the call is done
-> as being a non-CFI call.
+> 
+> arch/powerpc/kernel/signal_32.c:780:2: error: array index 3 is past the end of the array (which contains 1 element) [-Werror,-Warray-bounds]
+>         unsafe_put_sigset_t(&frame->uc.uc_sigmask, oldset, failed);
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> [...]
+> arch/powerpc/kernel/signal_32.c:1044:3: error: array index 2 is past the end of the array (which contains 1 element) [-Werror,-Warray-bounds]
+>                 unsafe_put_sigset_t(&old_ctx->uc_sigmask, &current->blocked, failed);
+>                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can avoid the __nocfi here by marking the handlers __cficanonical.
-This attribute tells the compiler to rename the function and point the
-original name to the CFI jump table, which allows addresses taken in
-assembly code to also pass CFI checking. I'll change this in v3.
+This smells like some kind of casting issue. uc_sigmask has only a single
+unsigned long element but unsafe_put_compat_sigset() seems to be doing
+stuff with [3], etc. Is it expecting u8? I will keep looking...
 
-Sami
+-- 
+Kees Cook
