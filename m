@@ -2,187 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC6FC432BE
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Aug 2021 22:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E29EC432BE
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Aug 2021 23:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93FE061008
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Aug 2021 22:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FEE60F4B
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Aug 2021 23:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237384AbhH3We7 (ORCPT
+        id S233863AbhHaAAw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 30 Aug 2021 18:34:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
+        Mon, 30 Aug 2021 20:00:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50152 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230140AbhH3We6 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 30 Aug 2021 18:34:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C1B5460E98;
-        Mon, 30 Aug 2021 22:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630362844;
-        bh=wlr+0GYj5AofoT2qLGQnGAd0De8XaqzW9JKk9OfETXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WvvNsgssfkXqpGn/WQqRti1oOg9e3+5keyLeV+h/FY5iMBnW6NGD3RXQOThN5C+dd
-         YmmaClMBnqiN0Jug1ruemGzaqGcTxHbCV/bXm0qRdBq8R8SlsXKnfsjWDo2LEK4Ok4
-         PZSZd5LgsAukrOFPqaDF7lUSO9NGEXYJ/ZIuiuwRHpjbxyKc4vj/gF5DZ79Ezwe9rZ
-         cypetSnlmu3d80ml+4HhrjBuAnH8YQN3JGkTqOb73fnEdnZNJimUPhHTFvlbVRgdep
-         LLNFLXEmPoxmlFgmk+Xn7WNxPHPdnNW2ezmTQZbv+XU4YTudIqgxHXmv583MViTvWd
-         IDbDQRlDKgT5g==
-Date:   Mon, 30 Aug 2021 15:34:01 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Keith Packard <keithp@keithp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        clang-built-linux@googlegroups.com,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 0/5] Enable -Warray-bounds and -Wzero-length-bounds
-Message-ID: <YS1c2UE487rkGnya@Ryzen-9-3900X.localdomain>
-References: <20210827163015.3141722-1-keescook@chromium.org>
- <YS0nJtNDCwfbaubZ@Ryzen-9-3900X.localdomain>
- <202108301314.22B3CB015C@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202108301314.22B3CB015C@keescook>
+        id S233513AbhHaAAw (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 30 Aug 2021 20:00:52 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="218381509"
+X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
+   d="scan'208";a="218381509"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 16:59:57 -0700
+X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
+   d="scan'208";a="530712788"
+Received: from ajinkyak-mobl2.amr.corp.intel.com (HELO rpedgeco-desk.amr.corp.intel.com) ([10.212.240.95])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 16:59:56 -0700
+From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
+To:     dave.hansen@intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, akpm@linux-foundation.org, keescook@chromium.org,
+        shakeelb@google.com, vbabka@suse.cz, rppt@kernel.org
+Cc:     Rick Edgecombe <rick.p.edgecombe@intel.com>, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, ira.weiny@intel.com,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v2 00/19] PKS write protected page tables
+Date:   Mon, 30 Aug 2021 16:59:08 -0700
+Message-Id: <20210830235927.6443-1-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Aug 30, 2021 at 01:16:41PM -0700, Kees Cook wrote:
-> On Mon, Aug 30, 2021 at 11:44:54AM -0700, Nathan Chancellor wrote:
-> > arch/powerpc/kernel/signal_32.c:780:2: error: array index 3 is past the end of the array (which contains 1 element) [-Werror,-Warray-bounds]
-> >         unsafe_put_sigset_t(&frame->uc.uc_sigmask, oldset, failed);
-> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Or is this a Clang DCE failure?
-> 
-> #define unsafe_put_compat_sigset(compat, set, label) do {               \
->         compat_sigset_t __user *__c = compat;                           \
->         const sigset_t *__s = set;                                      \
->                                                                         \
->         switch (_NSIG_WORDS) {                                          \
->         case 4:                                                         \
->                 unsafe_put_user(__s->sig[3] >> 32, &__c->sig[7], label);        \
->                 unsafe_put_user(__s->sig[3], &__c->sig[6], label);      \
->                 fallthrough;                                            \
->         case 3:                                                         \
->                 unsafe_put_user(__s->sig[2] >> 32, &__c->sig[5], label);        \
->                 unsafe_put_user(__s->sig[2], &__c->sig[4], label);      \
->                 fallthrough;                                            \
->         case 2:                                                         \
->                 unsafe_put_user(__s->sig[1] >> 32, &__c->sig[3], label);        \
->                 unsafe_put_user(__s->sig[1], &__c->sig[2], label);      \
->                 fallthrough;                                            \
->         case 1:                                                         \
->                 unsafe_put_user(__s->sig[0] >> 32, &__c->sig[1], label);        \
->                 unsafe_put_user(__s->sig[0], &__c->sig[0], label);      \
->         }                                                               \
-> } while (0)
-> 
-> if "set" has only 1 element, then _NSIG_WORDS must be 1. The warnings
-> are coming from cases 4 and 3. (But why not 2, which would also access
-> beyond the end?)
+Hi,
 
-I trimmed the warnings down otherwise it would have been 400 lines long
-:) it did warn for the 2 case.
+This is a second RFC for the PKS write protected tables concept. I'm sharing to
+show the progress to interested people. I'd also appreciate any comments,
+especially on the direct map page table protection solution (patch 17).
 
-Clang does not like the use of asm goto in unsafe_put_user on powerpc it
-seems:
+Since v1[1], the improvements are:
+ - Fully handle direct map page tables, and handle hotplug/unplug path.
+ - Create a debug time checker that scans page tables and verifies 
+   their protection.
+ - Fix odds-and-ends kernel page tables that showed up with debug 
+   checker. At this point all of the typical normal page tables should be
+   protected.
+ - Fix toggling of writablility for odds-and-ends page table modifications found
+   that don't use the normal helpers.
+ - Create atomic context grouped page allocator, after finding some page table
+   allocations that are passing GFP_ATOMIC.
+ - Create "soft" mode that warns and disables protection on violation instead
+   of oopsing.
+ - Boot parameters for disabling pks tables
+ - Change PageTable set clear to ctor/dtor (peterz)
+ - Remove VM_BUG_ON_PAGE in alloc_table() (Shakeel Butt) 
+ - PeterZ/Vlastimil had suggested to also build a non-PKS mode for use in  
+   debugging. I skipped it for now because the series was too big.
+ - Rebased to latest PKS core v7 [2]
 
-$ cat warray-bounds.c
-#define NSIG_WORDS      1
+Also, Mike Rapoport has been experimenting[3] with this usage to work on how to
+share caches of permissioned/broken pages between use cases. This RFCv2 still
+uses the "grouped pages" concept, where each usage would maintain its own
+cache, but should be able to integrate with a central solution if something is
+developed.
 
-typedef struct {
-        unsigned long sig[NSIG_WORDS];
-} sigset_t;
+Next I was planning to look into characterizing/tuning the performance, although
+what page allocation scheme is ultimately used will probably impact that.
 
-int handle_rt_signal32_bad(sigset_t *);
-int handle_rt_signal32_bad(sigset_t *oldset)
-{
-	switch (NSIG_WORDS) {
-	case 4:
-			__asm__ goto("" : : "r"(oldset->sig[3] >> 32) : : failed);
-			__asm__ goto("" : : "r"(oldset->sig[3]) : : failed);
-			__attribute__((fallthrough));
-	case 3:
-			__asm__ goto("" : : "r"(oldset->sig[2] >> 32) : : failed);
-			__asm__ goto("" : : "r"(oldset->sig[2]) : : failed);
-			__attribute__((fallthrough));
-	case 2:
-			__asm__ goto("" : : "r"(oldset->sig[1] >> 32) : : failed);
-			__asm__ goto("" : : "r"(oldset->sig[1]) : : failed);
-			__attribute__((fallthrough));
-	case 1:
-			__asm__ goto("" : : "r"(oldset->sig[0] >> 32) : : failed);
-			__asm__ goto("" : : "r"(oldset->sig[0]) : : failed);
-	}
+This applies on top of the PKS core v7 series[2] and this patch[4]. Testing is
+still pretty light.
 
-	return 0;
-failed:
-	return 1;
-}
+This RFC has been acked by Dave Hansen.
 
-void normal_array_access(unsigned long);
-int handle_rt_signal32_good(sigset_t *);
-int handle_rt_signal32_good(sigset_t *oldset)
-{
-	switch (NSIG_WORDS) {
-	case 4:
-			normal_array_access(oldset->sig[3] >> 32);
-			normal_array_access(oldset->sig[3]);
-			__attribute__((fallthrough));
-	case 3:
-			normal_array_access(oldset->sig[2] >> 32);
-			normal_array_access(oldset->sig[2]);
-			__attribute__((fallthrough));
-	case 2:
-			normal_array_access(oldset->sig[1] >> 32);
-			normal_array_access(oldset->sig[1]);
-			__attribute__((fallthrough));
-	case 1:
-			normal_array_access(oldset->sig[0] >> 32);
-			normal_array_access(oldset->sig[0]);
-	}
+[1] https://lore.kernel.org/lkml/20210505003032.489164-1-rick.p.edgecombe@intel.com/
+[2] https://lore.kernel.org/lkml/20210804043231.2655537-1-ira.weiny@intel.com/
+[3] https://lore.kernel.org/lkml/20210823132513.15836-1-rppt@kernel.org/
+[4] https://lore.kernel.org/lkml/20210818221026.10794-1-rick.p.edgecombe@intel.com/
 
-	return 0;
-}
+Rick Edgecombe (19):
+  list: Support getting most recent element in list_lru
+  list: Support list head not in object for list_lru
+  x86/mm/cpa: Add grouped page allocations
+  mm: Explicitly zero page table lock ptr
+  x86, mm: Use cache of page tables
+  x86/mm/cpa: Add perm callbacks to grouped pages
+  x86/cpufeatures: Add feature for pks tables
+  x86/mm/cpa: Add get_grouped_page_atomic()
+  x86/mm: Support GFP_ATOMIC in alloc_table_node()
+  x86/mm: Use alloc_table() for fill_pte(), etc
+  mm/sparsemem: Use alloc_table() for table allocations
+  x86/mm: Use free_table in unmap path
+  mm/debug_vm_page_table: Use setters instead of WRITE_ONCE
+  x86/efi: Toggle table protections when copying
+  x86/mm/cpa: Add set_memory_pks()
+  x86/mm: Protect page tables with PKS
+  x86/mm/cpa: PKS protect direct map page tables
+  x86/mm: Add PKS table soft mode
+  x86/mm: Add PKS table debug checking
 
-$ clang -fsyntax-only -Weverything warray-bounds.c
-warray-bounds.c:12:27: warning: array index 3 is past the end of the array (which contains 1 element) [-Warray-bounds]
-                __asm__ goto("" : : "r"(oldset->sig[3] >> 32) : : failed);
-                                        ^           ~
-warray-bounds.c:4:2: note: array 'sig' declared here
-        unsigned long sig[NSIG_WORDS];
-        ^
-warray-bounds.c:16:27: warning: array index 2 is past the end of the array (which contains 1 element) [-Warray-bounds]
-                __asm__ goto("" : : "r"(oldset->sig[2] >> 32) : : failed);
-                                        ^           ~
-warray-bounds.c:4:2: note: array 'sig' declared here
-        unsigned long sig[NSIG_WORDS];
-        ^
-warray-bounds.c:20:27: warning: array index 1 is past the end of the array (which contains 1 element) [-Warray-bounds]
-                __asm__ goto("" : : "r"(oldset->sig[1] >> 32) : : failed);
-                                        ^           ~
-warray-bounds.c:4:2: note: array 'sig' declared here
-        unsigned long sig[NSIG_WORDS];
-        ^
-3 warnings generated.
+ .../admin-guide/kernel-parameters.txt         |   4 +
+ arch/x86/boot/compressed/ident_map_64.c       |   5 +
+ arch/x86/include/asm/cpufeatures.h            |   2 +-
+ arch/x86/include/asm/pgalloc.h                |   6 +-
+ arch/x86/include/asm/pgtable.h                |  31 +-
+ arch/x86/include/asm/pgtable_64.h             |  33 +-
+ arch/x86/include/asm/pkeys_common.h           |   1 -
+ arch/x86/include/asm/set_memory.h             |  24 +
+ arch/x86/mm/init.c                            |  90 +++
+ arch/x86/mm/init_64.c                         |  29 +-
+ arch/x86/mm/pat/set_memory.c                  | 527 +++++++++++++++++-
+ arch/x86/mm/pgtable.c                         | 183 +++++-
+ arch/x86/mm/pkeys.c                           |   4 +
+ arch/x86/platform/efi/efi_64.c                |   8 +
+ include/asm-generic/pgalloc.h                 |  46 +-
+ include/linux/list_lru.h                      |  26 +
+ include/linux/mm.h                            |  16 +-
+ include/linux/pkeys.h                         |   1 +
+ mm/Kconfig                                    |  23 +
+ mm/debug_vm_pgtable.c                         |  36 +-
+ mm/list_lru.c                                 |  38 +-
+ mm/memory.c                                   |   1 +
+ mm/sparse-vmemmap.c                           |  22 +-
+ mm/swap.c                                     |   6 +
+ mm/swap_state.c                               |   5 +
+ .../arch/x86/include/asm/disabled-features.h  |   8 +-
+ 26 files changed, 1123 insertions(+), 52 deletions(-)
 
-$ gcc -fsyntax-only -Wall -Wextra -Wpedantic warray-bounds.c
+-- 
+2.17.1
 
-godbolt link: https://godbolt.org/z/8xYojs1WY
-
-I've reported this on LLVM's bug tracker to see what the clang
-developers can do with you on CC:
-
-https://bugs.llvm.org/show_bug.cgi?id=51682
-
-Cheers,
-Nathan
