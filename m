@@ -5,169 +5,175 @@ X-Spam-Level:
 X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DB5C43216
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Sep 2021 23:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5E5C432BE
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Sep 2021 23:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0786761026
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Sep 2021 23:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BD961026
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Sep 2021 23:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242312AbhIAXjE (ORCPT
+        id S240719AbhIAXoR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Sep 2021 19:39:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44488 "EHLO
+        Wed, 1 Sep 2021 19:44:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237857AbhIAXi7 (ORCPT
+        with ESMTP id S244401AbhIAXoP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Sep 2021 19:38:59 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 579E0C061764
-        for <linux-hardening@vger.kernel.org>; Wed,  1 Sep 2021 16:38:02 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id k24so20857pgh.8
-        for <linux-hardening@vger.kernel.org>; Wed, 01 Sep 2021 16:38:02 -0700 (PDT)
+        Wed, 1 Sep 2021 19:44:15 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F23C061757
+        for <linux-hardening@vger.kernel.org>; Wed,  1 Sep 2021 16:43:18 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id s29so190914pfw.5
+        for <linux-hardening@vger.kernel.org>; Wed, 01 Sep 2021 16:43:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VvPvP0nRsxQ3kkX46yakySUL2CaA4lERj2AqfItHK10=;
-        b=DwoX6EoLPPfWYs1uWTq18V8HVxBlevpESu8u4ShmR/6zIERDN5mRiVY3osfpafSTuf
-         xwTY1WuqT9sGbJG8RMqfCyKnJkFuIpiREO+0P7yznZjqdkamQkvs4eiv59hVUM7tKPpw
-         lTOzSQM923igOuXmyStOd8iiJIiT3aVbsMcO0=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SKq9FaM29beTFKHBuFsUutnwIAeKxNVhRiqi1gUUfqk=;
+        b=PzmK/+NUhZxG8Z+YuxmTpJb9O380IFK7e1wlHLXqZCa1XFyxfVnhpezGuyhZ1kjAoF
+         xxjSBwVxaM4uxKEzPeHweqkiVLEtiyo0Zt0xhddivh38U2sDftCITySNaIEc1dqIurxM
+         0TWMp/bKIm8hlLJykPTkJVGON+3mdvfQ8/p84=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VvPvP0nRsxQ3kkX46yakySUL2CaA4lERj2AqfItHK10=;
-        b=KwtLZBSmvyLpIssx7y6UMsnnqoIMrDRKohxgVnrE06MBML6roHV+cCDQ+PelmYKAG5
-         oVzX9OTRpQs5WHmCJR7jG3qLM62ypaNHLLIxsjBF1N5mVut3OYzCoXJ82IsDAdLcgucw
-         1kkdd9NOy10L9TQsmDwSrdxrFLSx898CJzwfutYLSqvQtVHwpqwq5LbAP202//JSWjjC
-         rQJK4FnVTp2aF1qOq1JM6NS3ULLOwuxZFRSHsLtD7jg2oV41ajcbWWI31Clg4yUAnWkC
-         hbXt9izs6CZxJwHhpyH/6cJvdPxHOy32Pgf/tBXAYjoKr32ALJ0v02ycU7RIQxyRKwfL
-         Oqag==
-X-Gm-Message-State: AOAM531LV3zNkMvSPAJcYmQkW5qceukU7D9hnLmiV3Ix2CTS/sfR6acB
-        fMlZYIIs4UgtcG3C8MAu3Kf99w==
-X-Google-Smtp-Source: ABdhPJx9VQ87Fi72gnvZ9lzkqt8HoWMcG2PGehz0JFkvV2InNksLBR3JT/5Uy3vn1h2GdcYLwpSd5A==
-X-Received: by 2002:a63:b91d:: with SMTP id z29mr207957pge.436.1630539481956;
-        Wed, 01 Sep 2021 16:38:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SKq9FaM29beTFKHBuFsUutnwIAeKxNVhRiqi1gUUfqk=;
+        b=pRcDatA5AqawRFAQ+gbuPHFenZxU/uncrA/eM/X2h5547gIkpk93C5EVzL2/BwtsQk
+         TJc0oVpnzQvRohCVrFXK+dv+BTvVY74p+Oz3uOuvTz7x2kFKZBaZhhRB4mPpuhJdngSW
+         Nw+OsCic+QNPbGWpBf57s+O31Cl6HqPF89fHDTiPvlx7WCDz2h4oFMcLX8dtjnxDobfr
+         Vr25YcJLPRc8Lpcw3BTQ1FXkjetx93UBs1/M23PdG6+L5bERjfhtkLsolw7VxSsPsfML
+         I520eAl6XEtyTWSIekCdext4yjAtbBza9WjdNZ4Z/6Dfn/YJmDYoFmlD1Z51jINGv9BF
+         7SfQ==
+X-Gm-Message-State: AOAM533Z1c+86ctVHxhSsr6KmoAtM1vAbxhpd4RW7YrVJlwT8ITKAU+c
+        Ry9a+ItlI6ecC/yf6dHtTUajkw==
+X-Google-Smtp-Source: ABdhPJyKvnT+zbVm+OyNSiV0tbk4E8w3SgYbGSl4SqDh2XVYSBz4FJsZZOYUbxtYJOwjDXefvJQ2VQ==
+X-Received: by 2002:a05:6a00:230e:b029:3c4:24ff:969d with SMTP id h14-20020a056a00230eb02903c424ff969dmr380233pfh.44.1630539797625;
+        Wed, 01 Sep 2021 16:43:17 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a142sm80572pfd.172.2021.09.01.16.37.59
+        by smtp.gmail.com with ESMTPSA id n24sm37653pgv.60.2021.09.01.16.43.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Sep 2021 16:37:59 -0700 (PDT)
+        Wed, 01 Sep 2021 16:43:16 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
-        Jessica Yu <jeyu@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Michal Hocko <mhocko@suse.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 3/4] module: Use a list of strings for ro_after_init sections
-Date:   Wed,  1 Sep 2021 16:37:56 -0700
-Message-Id: <20210901233757.2571878-4-keescook@chromium.org>
+Subject: [PATCH] binfmt_elf: Reintroduce using MAP_FIXED_NOREPLACE
+Date:   Wed,  1 Sep 2021 16:43:14 -0700
+Message-Id: <20210901234314.2624109-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210901233757.2571878-1-keescook@chromium.org>
-References: <20210901233757.2571878-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3174; h=from:subject; bh=Ok3nFwFwt1wHYs8UapY8Q4P5KHfmbREksRDyR3/xqoI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhMA7VgNoX/TyNQu2ZCFYBTWLfvfIumM2gB94VWaFO dyRIIB2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYTAO1QAKCRCJcvTf3G3AJvAOD/ wPxMVQA6Vmz9d/0SDtspYT1KR1euVl+8Xff9h/ruugR3+rxx879yMUqBZPSVI3PdxwW99f5QcPqSEx b6O5ZSyJQXu98M1iITlyEN/WFiGSXUngPrnfylUHR3k4iGCJQKyuwmImfCtwanF3SBLJtkyFyrLnQv JwtSOBUR3J7wNVtJdytQitI5RRho2650NunUlCWZ0k5vxdc3QteoDmDuucrInUi83T0a3a/KF7PfPs r+TecNOCliA7TRzSgoUNrek3xZy7DEFWRSdSqA1a7NNzoBXOV0AryDuIozXbSY3FdFMOnN7ByucqK5 tt88/yTrCBkICByhkDons8qyuCsZrI0LxkjjUeV5+yOgB4IXqZKHu/Qw02WymJPXZH+WMg1uHbs7Qi aKBsi+k4keSRr0LrTJ+B7cKef+cph9og0yxzvdkCjSNXE04R48baHJ8WWwddqPmZr2trA2UY8MUUb1 smxYUUdThpmqUfVz4t6txKUG/cuQTBXAYaPekWDFtGgwnJUbfCZbgtkd42ak3Jxn6R6E04xOHpMmW8 fkQUDa1HqwCGSBQojbwo22f1Y4Tx4vT6PTCxdDDFHmgemg8IjGUMZACqwSQhCaSPb3KnUxZEfLvvY2 HbLpZQzbst9yCYNXOsrK8I2bsUaV8Bnvg5AsKLJRknfGCApgdbIeuFfreNjw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4227; h=from:subject; bh=mwvE/gDRs6e5NxW4p+Kk0QNaEgjqTD4VySLc2KZdvDw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhMBARowTodGVt/9YDPs4IjC58d4M0IDDsGnVkzR3B foKFAPqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYTAQEQAKCRCJcvTf3G3AJluIEA Cd38ESBXKwortzq1h4eaJNKXI+JZlB8Ihl3WB4vg7A+ecCnsG2ZOz1BJAZhCsIHQ4wfKFylECGxLoO V2adQU117i+u6jhbZMMoL3hMRYQpPEe684WeiBrHhFRvt0epxz9T1SGWWYkyqEB9mnptqUbFI+VPQ1 wTMc++ZzZMufUt2AG17s+0gRSXiyznVoCZiZKtnvVOaAQy2XKjmrq7lEIxcp2UUxLlKzzWFZJuseby Fzln0RbCW3aKjqTTHwTv/8rt5ENbFwsOI3jf5J5rFqXhyYA2lzzlVvDYvcR/U8N2EOfExj9fKWgm/s I803h1/1F4j9/VNdZW+36lQMRsOKOuP88ogB+1+JxirbW0jaORfgWcZqhdkPNBDQ9IeheOrSb+rqWC d6cr12+FbjtuZ1RQqx1c0Ad0izk1d6tWVA2kWDNq0IGVqjeyl0H4oPz6uMwD4uifcM3QX6xEZCtJVJ PIL21XXJoCeg2wvt7hx6ni/hgKinu2/6/6UVCofRNtdwBEd2LRtp3cpz0Jx1qJFgFURztowHKjsj63 +OHMxAuVxTEznUewjivihW34ePYJeDtRQ6QbbPv0FgtwlJBoVfldEfKVHxnRHC8ZbRZL6y+XYeiXM2 31zO61UhfXd3LtZzgI7344SkvMkk3FG5+EYRMlJ+uLTk0mv0IF+Mk50hDPuw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Instead of open-coding the section names, use a list for the sections that
-need to be marked read-only after init. Unfortunately, it seems we can't
-do normal section merging with scripts/module.lds.S as ld.bfd doesn't
-correctly update symbol tables. For more details, see commit 6a3193cdd5e5
-("kbuild: lto: Merge module sections if and only if CONFIG_LTO_CLANG
-is enabled").
+Commit b212921b13bd ("elf: don't use MAP_FIXED_NOREPLACE for elf
+executable mappings") reverted back to using MAP_FIXED to map ELF
+LOAD segments because it was found that the segments in some binaries
+overlap and can cause MAP_FIXED_NOREPLACE to fail. The original intent of
+MAP_FIXED_NOREPLACE was to prevent the silent clobbering of an existing
+mapping (e.g. stack) by the ELF image. To achieve this, expand on the
+logic used when loading ET_DYN binaries which calculates a total size
+for the image when the first segment is mapped, maps the entire image,
+and then unmaps the remainder before remaining segments are mapped.
+Apply this to ET_EXEC binaries as well as ET_DYN binaries as is done
+now, and for both ET_EXEC and ET_DYN+INTERP use MAP_FIXED_NOREPLACE for
+the initial total size mapping and MAP_FIXED for remaining mappings.
+For ET_DYN w/out INTERP, continue to map at a system-selected address
+in the mmap region.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: linux-arch@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Co-developed-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+Link: https://lore.kernel.org/lkml/1595869887-23307-2-git-send-email-anthony.yznaga@oracle.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/asm-generic/vmlinux.lds.h |  4 +++-
- kernel/module.c                   | 28 ++++++++++++++++------------
- 2 files changed, 19 insertions(+), 13 deletions(-)
+ fs/binfmt_elf.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 4781a8154254..d532baadaeae 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -418,7 +418,9 @@
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 439ed81e755a..ef00bf8bd6f4 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1074,20 +1074,26 @@ static int load_elf_binary(struct linux_binprm *bprm)
  
- /*
-  * Allow architectures to handle ro_after_init data on their
-- * own by defining an empty RO_AFTER_INIT_DATA.
-+ * own by defining an empty RO_AFTER_INIT_DATA. Any sections
-+ * added here must be explicitly marked SHF_RO_AFTER_INIT
-+ * via module_sections_ro_after_init[] in kernel/module.c.
-  */
- #ifndef RO_AFTER_INIT_DATA
- #define RO_AFTER_INIT_DATA						\
-diff --git a/kernel/module.c b/kernel/module.c
-index ed13917ea5f3..b0ff82cc48fe 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3514,10 +3514,21 @@ static bool blacklisted(const char *module_name)
- }
- core_param(module_blacklist, module_blacklist, charp, 0400);
+ 		vaddr = elf_ppnt->p_vaddr;
+ 		/*
+-		 * If we are loading ET_EXEC or we have already performed
+-		 * the ET_DYN load_addr calculations, proceed normally.
++		 * The first time through the loop, load_addr_set is false:
++		 * layout will be calculated. Once set, use MAP_FIXED since
++		 * we know we've already safely mapped the entire region with
++		 * MAP_FIXED_NOREPLACE in the once-per-binary logic following.
+ 		 */
+-		if (elf_ex->e_type == ET_EXEC || load_addr_set) {
++		if (load_addr_set) {
+ 			elf_flags |= MAP_FIXED;
++		} else if (elf_ex->e_type == ET_EXEC) {
++			/*
++			 * This logic is run once for the first LOAD Program
++			 * Header for ET_EXEC binaries. No special handling
++			 * is needed.
++			 */
++			elf_flags |= MAP_FIXED_NOREPLACE;
+ 		} else if (elf_ex->e_type == ET_DYN) {
+ 			/*
+ 			 * This logic is run once for the first LOAD Program
+ 			 * Header for ET_DYN binaries to calculate the
+ 			 * randomization (load_bias) for all the LOAD
+-			 * Program Headers, and to calculate the entire
+-			 * size of the ELF mapping (total_size). (Note that
+-			 * load_addr_set is set to true later once the
+-			 * initial mapping is performed.)
++			 * Program Headers.
+ 			 *
+ 			 * There are effectively two types of ET_DYN
+ 			 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
+@@ -1108,7 +1114,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			 * Therefore, programs are loaded offset from
+ 			 * ELF_ET_DYN_BASE and loaders are loaded into the
+ 			 * independently randomized mmap region (0 load_bias
+-			 * without MAP_FIXED).
++			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
+ 			 */
+ 			if (interpreter) {
+ 				load_bias = ELF_ET_DYN_BASE;
+@@ -1117,7 +1123,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 				alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
+ 				if (alignment)
+ 					load_bias &= ~(alignment - 1);
+-				elf_flags |= MAP_FIXED;
++				elf_flags |= MAP_FIXED_NOREPLACE;
+ 			} else
+ 				load_bias = 0;
  
-+/*
-+ * List of sections to be marked read-only after init. This should match
-+ * the RO_AFTER_INIT_DATA macro in include/asm-generic/vmlinux.lds.h.
-+ */
-+static const char * const module_sections_ro_after_init[] = {
-+	".data..ro_after_init",
-+	"__jump_table",
-+	NULL
-+};
-+
- static struct module *layout_and_allocate(struct load_info *info, int flags)
- {
- 	struct module *mod;
- 	unsigned int ndx;
-+	const char * const *section;
- 	int err;
+@@ -1129,7 +1135,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			 * is then page aligned.
+ 			 */
+ 			load_bias = ELF_PAGESTART(load_bias - vaddr);
++		}
  
- 	err = check_modinfo(info->mod, info, flags);
-@@ -3543,18 +3554,11 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
- 	 * layout_sections() can put it in the right place.
- 	 * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
- 	 */
--	ndx = find_sec(info, ".data..ro_after_init");
--	if (ndx)
--		info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
--	/*
--	 * Mark the __jump_table section as ro_after_init as well: these data
--	 * structures are never modified, with the exception of entries that
--	 * refer to code in the __init section, which are annotated as such
--	 * at module load time.
--	 */
--	ndx = find_sec(info, "__jump_table");
--	if (ndx)
--		info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
-+	for (section = module_sections_ro_after_init; *section; section++) {
-+		ndx = find_sec(info, *section);
-+		if (ndx)
-+			info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
-+	}
- 
- 	/*
- 	 * Determine total sizes, and put offsets in sh_entsize.  For now
++		/*
++		 * Calculate the entire size of the ELF mapping (total_size).
++		 * (Note that load_addr_set is set to true later once the
++		 * initial mapping is performed.)
++		 */
++		if (!load_addr_set) {
+ 			total_size = total_mapping_size(elf_phdata,
+ 							elf_ex->e_phnum);
+ 			if (!total_size) {
 -- 
 2.30.2
 
