@@ -2,104 +2,132 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3A4C432BE
-	for <linux-hardening@archiver.kernel.org>; Tue, 31 Aug 2021 20:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7155C432BE
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Sep 2021 07:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4A960F56
-	for <linux-hardening@archiver.kernel.org>; Tue, 31 Aug 2021 20:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F55761053
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Sep 2021 07:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241207AbhHaUui (ORCPT
+        id S242526AbhIAHXs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 31 Aug 2021 16:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229916AbhHaUuh (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 31 Aug 2021 16:50:37 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DD52C061575;
-        Tue, 31 Aug 2021 13:49:42 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id w19-20020a17090aaf9300b00191e6d10a19so460597pjq.1;
-        Tue, 31 Aug 2021 13:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+VwqWzlQd0bwFmrYU/A5aapOrfg1k7jNvsAz6oqsjSk=;
-        b=aObe45tP4fRqFS+ujpgUyLzKfwt4SIAx8G6sjeM5x833KJsU8PwZtW8jFTY/ue/OB1
-         jxq1Lf2tsvJZJf9Ew1pfi9jHvoGDol1362QVC/zF7G2EzYOxDmb57oVhlHW8W8tpHkx4
-         gzlGYkl5LoTkAAIwn+f+thTBYOm/9VjH7+zUVRXIt7fJI0x0gl6UThJ51n/GhNKrxmPE
-         nL9nCsFpWaBL3PgXcbaFh8//Lkr4aZCPzfxGjkE7jNIUpen0r8VBt1KZKhqVOBcWndHY
-         kWIAcdJSVhhKqtpt+sqGHlGFGjU0yAunyvkUarZ7UGNdhYEnOLth5e09w2RBrnPGV5GS
-         7egQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+VwqWzlQd0bwFmrYU/A5aapOrfg1k7jNvsAz6oqsjSk=;
-        b=TegYZJWct9qCDW/XQ+1visagRqHnlM3jZX3y/F7AT/lK6jf3tP/qM9lOifvP1hert2
-         70OCB3RTNRjUBbxQNaEE3oxNScMP13BUmWotiqSKKHsNi6yU7IUMLtlVEcUNzqitKKa1
-         IWM3DgFNKm5NAKNrANTVEbel+UtjjLtkBhR3C6RFoDM9KuhMWS0MYi1b8zkTGqzqCWCq
-         CkwwmlU3OcToMa0vmttqZJxykyrYl+xFCZ+SUOVDhCj4+2uvMotQ5lLWoIRoFb4lB/Rz
-         pXvcNiTp47lX7+p4/b0MbN7gEIq1aW1rSD7n28nToTw3RCHY02BJmjlcrukm0z+Ly7Mp
-         VcFg==
-X-Gm-Message-State: AOAM530fKCMMmTZIac0HJksqgoM0H5LA9kV+A7C3C5IyG3W1yYnK9mLj
-        7baAyKoQ11rx0f00esl3gbGFwzDj3y4=
-X-Google-Smtp-Source: ABdhPJw65oVh7dCRrS1w+sYI5jNapkVdWQmQFN5nHlNVaALSMC7aQObtjXMwKZYQNVRqWSpDJdKBjQ==
-X-Received: by 2002:a17:90a:1f4c:: with SMTP id y12mr7180671pjy.60.1630442981280;
-        Tue, 31 Aug 2021 13:49:41 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q4sm3520936pjd.52.2021.08.31.13.49.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Aug 2021 13:49:40 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH v3 4/5] Makefile: Enable -Warray-bounds
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Keith Packard <keithp@keithp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-References: <20210827163015.3141722-1-keescook@chromium.org>
- <20210827163015.3141722-5-keescook@chromium.org>
- <20210831043128.GA2749311@roeck-us.net> <202108311042.FFE1818D@keescook>
- <3ab153ec-2798-da4c-f7b1-81b0ac8b0c5b@roeck-us.net>
- <202108311317.DFFFCFC74@keescook>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <6565714b-6c25-b244-1aad-5111b9667b30@roeck-us.net>
-Date:   Tue, 31 Aug 2021 13:49:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Wed, 1 Sep 2021 03:23:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242494AbhIAHXr (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 1 Sep 2021 03:23:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DAB4B60E98;
+        Wed,  1 Sep 2021 07:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630480971;
+        bh=ROvubnIZ7CG7NtmC524Rg5/WiRX8ZoyaERotUEZbRL0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OwvGS0g9Rk3Sbnr9PqhqnIqsnpglwcimyj5PYWZl+ld0I8CY15MKMWHd3uVhtm18y
+         DXLWffZNKZCSjJ8MwZVNT4VI130Pw8HnmI1QDiG8OZafTNCe3l/J1Ck1ZXFGIrPrSU
+         iW5bZiqaaPZkiTXAqz3RcDIyqE2xSDcKxm57tPE83v8pIPwp2+xP3lRaYHWo4/M9na
+         i5AaXBZHxFAJdF4sv7rwX33WBPT6fOVKQJVlZXJJK8Jn9D8e/ml2Jhye3d88jqtHVw
+         qJ1ivQ9AhefJSJF9A5hafWAMdfJRsLXUNDadIIMh4dglT0cmfW1f8BVhpF1m9biuBY
+         +bKu2nmjT8KOg==
+Date:   Wed, 1 Sep 2021 10:22:44 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Lutomirski, Andy" <luto@kernel.org>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "shakeelb@google.com" <shakeelb@google.com>
+Subject: Re: [RFC PATCH v2 11/19] mm/sparsemem: Use alloc_table() for table
+ allocations
+Message-ID: <YS8qRHrGzevns32P@kernel.org>
+References: <20210830235927.6443-1-rick.p.edgecombe@intel.com>
+ <20210830235927.6443-12-rick.p.edgecombe@intel.com>
+ <YS3uhdT88XFvP9n3@kernel.org>
+ <f77f3312a1b17b8f8de2ccf0f40f9f19f4a9f151.camel@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <202108311317.DFFFCFC74@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f77f3312a1b17b8f8de2ccf0f40f9f19f4a9f151.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 8/31/21 1:18 PM, Kees Cook wrote:
-> On Tue, Aug 31, 2021 at 12:40:53PM -0700, Guenter Roeck wrote:
->> The configuration doesn't matter; it fails for me for all configurations,
->> including defconfig, alllnoconfig, and allmodconfig.
->> Key is to use gcc 11.2. The image builds just fine with gcc 9.4 and 10.3.
+On Tue, Aug 31, 2021 at 06:25:23PM +0000, Edgecombe, Rick P wrote:
+> On Tue, 2021-08-31 at 11:55 +0300, Mike Rapoport wrote:
+> > On Mon, Aug 30, 2021 at 04:59:19PM -0700, Rick Edgecombe wrote:
+> <trim> 
+> > > -static void * __meminit vmemmap_alloc_block_zero(unsigned long
+> > > size, int node)
+> > > +static void * __meminit vmemmap_alloc_table(int node)
+> > >  {
+> > > -	void *p = vmemmap_alloc_block(size, node);
+> > > +	void *p;
+> > > +	if (slab_is_available()) {
+> > > +		struct page *page = alloc_table_node(GFP_KERNEL |
+> > > __GFP_ZERO, node);
+> > 
+> > This change removes __GFP_RETRY_MAYFAIL|__GFP_NOWARN from the
+> > original gfp
+> > vmemmap_alloc_block() used.
+> Oh, yea good point. Hmm, I guess grouped pages could be aware of that
+> flag too. Would be a small addition, but it starts to grow
+> unfortunately.
 > 
-> Ah! Yes, heh. That would be my problem; I've got 10.3 for my builders.
-> Thanks! I will give 11.2 a spin.
-> 
-In case you don't have gcc 11.2 available - I tested with 11.1 as well;
-that also fails.
+> > Not sure __GFP_RETRY_MAYFAIL is really needed in
+> > vmemmap_alloc_block_zero()
+> > at the first place, though.
+> Looks like due to a real issue:
+> 055e4fd96e95b0eee0d92fd54a26be7f0d3bcad0
 
-Guenter
+I believe the issue was with memory map blocks rather than with page
+tables, but since sparse-vmemmap uses the same vmemmap_alloc_block() for
+both, the GFP flag got stick with both.
 
+I'm not really familiar with reclaim internals to say if
+__GFP_RETRY_MAYFAIL would help much for order-0 allocation.
+
+Vlastimil, can you comment on this?
+ 
+> I think it should not affect PKS tables for now, so maybe I can make
+> separate logic instead. I'll look into it. Thanks.
+> > 
+> > More broadly, maybe it makes sense to split boot time and memory
+> > hotplug
+> > paths and use pxd_alloc() for the latter.
+> > 
+> > > +
+> > > +		if (!page)
+> > > +			return NULL;
+> > > +		return page_address(page);
+> > > +	}
+> > >  
+> > > +	p = __earlyonly_bootmem_alloc(node, PAGE_SIZE, PAGE_SIZE,
+> > > __pa(MAX_DMA_ADDRESS));
+> > 
+> > Opportunistically rename to __earlyonly_memblock_alloc()? ;-)
+> > 
+> Heh, I can. Just grepping, there are several other instances of
+> foo_bootmem() only calling foo_memblock() pattern scattered about. Or
+> maybe I'm missing the distinction.
+
+Heh, I didn't do s/bootmem/memblock/g, so foo_bootmem() are reminders we
+had bootmem allocator once.
+Maybe it's a good time to remove them :)
+ 
+> <trim>
+
+-- 
+Sincerely yours,
+Mike.
