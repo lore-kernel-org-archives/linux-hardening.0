@@ -2,168 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB60C4320A
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 13:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04068C87FE2
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 16:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE97610CC
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 13:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542DC615A7
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 16:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345271AbhIBN5z (ORCPT
+        id S1346307AbhIBQTk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Sep 2021 09:57:55 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:49270 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345262AbhIBN5y (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Sep 2021 09:57:54 -0400
-Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id B39C420367;
-        Thu,  2 Sep 2021 13:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1630591015; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FBJbFYS9GOV6EVOWjJDcmNKkVbrLdPLLQpcRZp1U3Lo=;
-        b=F13lE2uqBNL7cIzpI01TniOVlc4xNW5ZO2BZI2dJ6afYyrB454Zmhn+mH9+SatFH9xVzpQ
-        ZfKGEBTckXRsgH8XBybfpxxHNQcA0mnznOCjT3CPuats9GRwVCYadzJyd8u+Vlmli+7bU2
-        X8hLoWJ+sLTVb8upO6g24YHeDKIxivA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1630591015;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FBJbFYS9GOV6EVOWjJDcmNKkVbrLdPLLQpcRZp1U3Lo=;
-        b=i9b7kb31nHLHFzgkDvG366ucXQh4DnidX/PceibcSoTwZ1jwf/pQ9lpN0AwFldF98FLLzx
-        5nxmRNdWDsvlmKCQ==
-Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id 7BE4C13732;
-        Thu,  2 Sep 2021 13:56:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap1.suse-dmz.suse.de with ESMTPSA
-        id S3cxHSfYMGH7HwAAGKfGzw
-        (envelope-from <vbabka@suse.cz>); Thu, 02 Sep 2021 13:56:55 +0000
-Message-ID: <38d2a358-4146-bfc9-2a4f-68ce02f75c94@suse.cz>
-Date:   Thu, 2 Sep 2021 15:56:55 +0200
+        Thu, 2 Sep 2021 12:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1346300AbhIBQTk (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 2 Sep 2021 12:19:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 778E46187D;
+        Thu,  2 Sep 2021 16:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630599521;
+        bh=JcYHOKNx0hNjqmpLEEHso3KVVidsGV0+VqdBVx4KJ+E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a6+vJTGRHe9Xk+46Babj4Gu37PjdCTzZYp0DfDtkOJqquwkr/5mOPt4qdYrECoU8t
+         49oSyyN+AzKd/DqIfJ7DlWYaJJrRlGox7+furvQdwPKa66x9Te8SlUFYGKH+SCgb7o
+         uNTQcaDM5ZWsyxuoR8pdw1g2F7At4e3p1XAQO145v1W5/+g6LTxWNEONuFXdbEpbkv
+         jv6ZNJrcDavta44h8cPv1I6sjItQ1f/mzsAKR/dnB/AJgvgq/lkReFAhaLWvTmiOsF
+         xdYsndBmLwUTtVzBXMQnoVNjY1SqfANX4zVIHMaeL8xtf97NFimFW2Tt36qW3MtCzT
+         j1JEI1UPDLqPQ==
+Received: by mail-ot1-f54.google.com with SMTP id i3-20020a056830210300b0051af5666070so3200908otc.4;
+        Thu, 02 Sep 2021 09:18:41 -0700 (PDT)
+X-Gm-Message-State: AOAM530NEJklET1K1auVD1gnvWx6mwsyR0aN/tJdaWxGQPNbQcIqf0ly
+        C9e5xQi85MTlqOc2lwuQ/Ve7b5hIZpexuWtOUKI=
+X-Google-Smtp-Source: ABdhPJxfaiUX2hrLyMECVCPFUe0KB68VWCzNVh8WiWCsq55R8cwzjxP/YB85hPhk+fGyzUWOXODcvPEpwiPMUcAX4EE=
+X-Received: by 2002:a05:6830:444:: with SMTP id d4mr3261443otc.108.1630599520694;
+ Thu, 02 Sep 2021 09:18:40 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.0.3
-Content-Language: en-US
-To:     Mike Rapoport <rppt@kernel.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Lutomirski, Andy" <luto@kernel.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "shakeelb@google.com" <shakeelb@google.com>
-References: <20210830235927.6443-1-rick.p.edgecombe@intel.com>
- <20210830235927.6443-12-rick.p.edgecombe@intel.com>
- <YS3uhdT88XFvP9n3@kernel.org>
- <f77f3312a1b17b8f8de2ccf0f40f9f19f4a9f151.camel@intel.com>
- <YS8qRHrGzevns32P@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [RFC PATCH v2 11/19] mm/sparsemem: Use alloc_table() for table
- allocations
-In-Reply-To: <YS8qRHrGzevns32P@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20210902155429.3987201-1-keithp@keithp.com> <202109020904.976207C@keescook>
+In-Reply-To: <202109020904.976207C@keescook>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 2 Sep 2021 18:18:29 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGfQuEFOh79TZ089+9eP4S5svWgTMbZLugmD8Hq9b=fMQ@mail.gmail.com>
+Message-ID: <CAMj1kXGfQuEFOh79TZ089+9eP4S5svWgTMbZLugmD8Hq9b=fMQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2]: ARM: Enable THREAD_INFO_IN_TASK
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Keith Packard <keithp@keithp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abbott Liu <liuwenliang@huawei.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Jens Axboe <axboe@kernel.dk>, Jian Cai <jiancai@google.com>,
+        Joe Perches <joe@perches.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Maninder Singh <maninder1.s@samsung.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nick Desaulniers <ndesaulniers@gooogle.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vaneet Narang <v.narang@samsung.com>,
+        "Wolfram Sang (Renesas)" <wsa+renesas@sang-engineering.com>,
+        YiFei Zhu <yifeifz2@illinois.edu>,
+        Keith Packard <keithpac@amazon.com>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/1/21 09:22, Mike Rapoport wrote:
-> On Tue, Aug 31, 2021 at 06:25:23PM +0000, Edgecombe, Rick P wrote:
->> On Tue, 2021-08-31 at 11:55 +0300, Mike Rapoport wrote:
->> > On Mon, Aug 30, 2021 at 04:59:19PM -0700, Rick Edgecombe wrote:
->> <trim> 
->> > > -static void * __meminit vmemmap_alloc_block_zero(unsigned long
->> > > size, int node)
->> > > +static void * __meminit vmemmap_alloc_table(int node)
->> > >  {
->> > > -	void *p = vmemmap_alloc_block(size, node);
->> > > +	void *p;
->> > > +	if (slab_is_available()) {
->> > > +		struct page *page = alloc_table_node(GFP_KERNEL |
->> > > __GFP_ZERO, node);
->> > 
->> > This change removes __GFP_RETRY_MAYFAIL|__GFP_NOWARN from the
->> > original gfp
->> > vmemmap_alloc_block() used.
->> Oh, yea good point. Hmm, I guess grouped pages could be aware of that
->> flag too. Would be a small addition, but it starts to grow
->> unfortunately.
->> 
->> > Not sure __GFP_RETRY_MAYFAIL is really needed in
->> > vmemmap_alloc_block_zero()
->> > at the first place, though.
->> Looks like due to a real issue:
->> 055e4fd96e95b0eee0d92fd54a26be7f0d3bcad0
+On Thu, 2 Sept 2021 at 18:07, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Sep 02, 2021 at 08:54:26AM -0700, Keith Packard wrote:
+> > Placing thread_info in the kernel stack leaves it vulnerable to stack
+> > overflow attacks. This short series addresses that by using the
+> > existing THREAD_INFO_IN_TASK infrastructure.
+>
+> Very cool! Thanks for working on this. If you want, you can refer to the
+> KSPP bug for this too:
+> https://github.com/KSPP/linux/issues/1
+>
+> (Anyone want to do MIPS?)
+>
 
-That commit added __GFP_REPEAT, but __GFP_RETRY_MAYFAIL these days became
-subtly different.
+I take it this breaks the GCC plugin based per-task stack protector,
+given that it emits code to mask the stack pointer and apply an offset
+to the resulting value.
 
-> I believe the issue was with memory map blocks rather than with page
-> tables, but since sparse-vmemmap uses the same vmemmap_alloc_block() for
-> both, the GFP flag got stick with both.
-> 
-> I'm not really familiar with reclaim internals to say if
-> __GFP_RETRY_MAYFAIL would help much for order-0 allocation.
+It would be nice if we could replace this with something suitable for
+THREAD_INFO_IN_TASK, and if it is suitable enough, try and get the
+GCC/Clang folks to adopt it as well (which was never going to happen
+for the stack pointer mask/offset approach)
 
-For costly allocation, __GFP_RETRY_MAYFAIL will try harder, thus the RETRY
-part is accented. For order-0 the only difference is that it will skip OOM,
-thus the MAYFAIL part. It usually means there's a fallback. I guess in this
-case there's no fallback, so allocating without __GFP_RETRY_MAYFAIL would be
-better.
-
-> Vlastimil, can you comment on this?
->  
->> I think it should not affect PKS tables for now, so maybe I can make
->> separate logic instead. I'll look into it. Thanks.
->> > 
->> > More broadly, maybe it makes sense to split boot time and memory
->> > hotplug
->> > paths and use pxd_alloc() for the latter.
->> > 
->> > > +
->> > > +		if (!page)
->> > > +			return NULL;
->> > > +		return page_address(page);
->> > > +	}
->> > >  
->> > > +	p = __earlyonly_bootmem_alloc(node, PAGE_SIZE, PAGE_SIZE,
->> > > __pa(MAX_DMA_ADDRESS));
->> > 
->> > Opportunistically rename to __earlyonly_memblock_alloc()? ;-)
->> > 
->> Heh, I can. Just grepping, there are several other instances of
->> foo_bootmem() only calling foo_memblock() pattern scattered about. Or
->> maybe I'm missing the distinction.
-> 
-> Heh, I didn't do s/bootmem/memblock/g, so foo_bootmem() are reminders we
-> had bootmem allocator once.
-> Maybe it's a good time to remove them :)
->  
->> <trim>
-> 
-
+Where can I find these patches? I don't see them on linux-arm-kernel@
