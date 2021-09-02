@@ -2,243 +2,168 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FABC4320A
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 01:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB60C4320A
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 13:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F53A61074
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 01:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE97610CC
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 13:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232372AbhIBBiA (ORCPT
+        id S1345271AbhIBN5z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Sep 2021 21:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230295AbhIBBh7 (ORCPT
+        Thu, 2 Sep 2021 09:57:55 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:49270 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345262AbhIBN5y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Sep 2021 21:37:59 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E10C061764
-        for <linux-hardening@vger.kernel.org>; Wed,  1 Sep 2021 18:37:01 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 8so263361pga.7
-        for <linux-hardening@vger.kernel.org>; Wed, 01 Sep 2021 18:37:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FZj7bQstLxvnggT+mYiVUDNrPe/KHWsDuFwFpohZ6DE=;
-        b=Yz45njvZVO+Cpr39aEBvL0FTZkY5Blnr5hSWS3nvZDHVvt9nqI3D43b3ByvoUj8ALi
-         XaYzeq0y+rrbu/B617KfdfkLiwyeEwL/XJtt1vxFN3sW32gL26ZF1eArH00fHhn9u6sW
-         l3BWFO4oXlVM/JcD7m9CWcHLzQKYeyGNWEGoQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FZj7bQstLxvnggT+mYiVUDNrPe/KHWsDuFwFpohZ6DE=;
-        b=nxNzjsGmt1hh9BdrPnI/VpzoVwKZ3fQGGeiCYJ7evcePSilBrT8ISaVgF26IR/Y7KZ
-         5jkyu/EbfoywI3S4o5M5zOspkCRPSvcyjo2U2KquwtaiYAwosYF4s5YIuiePUdENsSFy
-         Ab0MonuMMtBIcNlQ0uMdenkAM0AZDCr0tZ5phUS+jyLs/xEr4hMrtvE82IsXLl5DmZqf
-         fnickadQ6Q1afKGXQ4vcM4URDFlMLuBxvCy/j0a3WXP0BBxIRUcJJLwCyt5Bmn+aGinj
-         eN0jcpSF4bGwol7rY2viPS51f82CnQHvGl/oPviC6pa6sqzYCQ7ZbAHqDYhTNmxujzAs
-         Cd5A==
-X-Gm-Message-State: AOAM531ga6U9LTRBxGBsKtSgs7WqEmlrorg9JloB4I0GzZ0xUX0uTom4
-        4rEwbuFbtejM+BVr1tVmv2JCPQ==
-X-Google-Smtp-Source: ABdhPJzhAG9s+9WAnP6Ve94qoEOufRZ1W4NPrrIfMRuirMeW2MzBIWdc511hGMVFoIq7dNJHgFeSRQ==
-X-Received: by 2002:a62:7c05:0:b0:40b:5d8f:6a56 with SMTP id x5-20020a627c05000000b0040b5d8f6a56mr778489pfc.74.1630546621308;
-        Wed, 01 Sep 2021 18:37:01 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z131sm197063pfc.159.2021.09.01.18.37.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Sep 2021 18:37:00 -0700 (PDT)
-Date:   Wed, 1 Sep 2021 18:36:59 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Lobakin <alexandr.lobakin@intel.com>
-Cc:     linux-hardening@vger.kernel.org,
-        Kristen C Accardi <kristen.c.accardi@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Lukasz Czapnik <lukasz.czapnik@intel.com>,
-        Marta A Plantykow <marta.a.plantykow@intel.com>,
-        Michal Kubiak <michal.kubiak@intel.com>,
-        Michal Swiatkowski <michal.swiatkowski@intel.com>,
-        linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v6 kspp-next 00/22] Function Granular KASLR
-Message-ID: <202109011815.1C439A6DA9@keescook>
-References: <20210831144114.154-1-alexandr.lobakin@intel.com>
- <202108311010.8250B34D5@keescook>
- <20210901103658.228-1-alexandr.lobakin@intel.com>
+        Thu, 2 Sep 2021 09:57:54 -0400
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id B39C420367;
+        Thu,  2 Sep 2021 13:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1630591015; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FBJbFYS9GOV6EVOWjJDcmNKkVbrLdPLLQpcRZp1U3Lo=;
+        b=F13lE2uqBNL7cIzpI01TniOVlc4xNW5ZO2BZI2dJ6afYyrB454Zmhn+mH9+SatFH9xVzpQ
+        ZfKGEBTckXRsgH8XBybfpxxHNQcA0mnznOCjT3CPuats9GRwVCYadzJyd8u+Vlmli+7bU2
+        X8hLoWJ+sLTVb8upO6g24YHeDKIxivA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1630591015;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FBJbFYS9GOV6EVOWjJDcmNKkVbrLdPLLQpcRZp1U3Lo=;
+        b=i9b7kb31nHLHFzgkDvG366ucXQh4DnidX/PceibcSoTwZ1jwf/pQ9lpN0AwFldF98FLLzx
+        5nxmRNdWDsvlmKCQ==
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id 7BE4C13732;
+        Thu,  2 Sep 2021 13:56:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap1.suse-dmz.suse.de with ESMTPSA
+        id S3cxHSfYMGH7HwAAGKfGzw
+        (envelope-from <vbabka@suse.cz>); Thu, 02 Sep 2021 13:56:55 +0000
+Message-ID: <38d2a358-4146-bfc9-2a4f-68ce02f75c94@suse.cz>
+Date:   Thu, 2 Sep 2021 15:56:55 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210901103658.228-1-alexandr.lobakin@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.0.3
+Content-Language: en-US
+To:     Mike Rapoport <rppt@kernel.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Lutomirski, Andy" <luto@kernel.org>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "shakeelb@google.com" <shakeelb@google.com>
+References: <20210830235927.6443-1-rick.p.edgecombe@intel.com>
+ <20210830235927.6443-12-rick.p.edgecombe@intel.com>
+ <YS3uhdT88XFvP9n3@kernel.org>
+ <f77f3312a1b17b8f8de2ccf0f40f9f19f4a9f151.camel@intel.com>
+ <YS8qRHrGzevns32P@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [RFC PATCH v2 11/19] mm/sparsemem: Use alloc_table() for table
+ allocations
+In-Reply-To: <YS8qRHrGzevns32P@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 01, 2021 at 12:36:58PM +0200, Alexander Lobakin wrote:
-> Without FG-KASLR, we have only one .text section, and the total
-> section number is relatively small.
-> With FG-KASLR enabled, we have 40K+ separate text sections (I have
-> 40K on a setup with ClangLTO and ClangCFI and about 48K on a
-> "regular" one) and each of them is described in the ELF header. Plus
-> a separate .rela.text section for every single of them. That's the
-> main reason of the size increases.
+On 9/1/21 09:22, Mike Rapoport wrote:
+> On Tue, Aug 31, 2021 at 06:25:23PM +0000, Edgecombe, Rick P wrote:
+>> On Tue, 2021-08-31 at 11:55 +0300, Mike Rapoport wrote:
+>> > On Mon, Aug 30, 2021 at 04:59:19PM -0700, Rick Edgecombe wrote:
+>> <trim> 
+>> > > -static void * __meminit vmemmap_alloc_block_zero(unsigned long
+>> > > size, int node)
+>> > > +static void * __meminit vmemmap_alloc_table(int node)
+>> > >  {
+>> > > -	void *p = vmemmap_alloc_block(size, node);
+>> > > +	void *p;
+>> > > +	if (slab_is_available()) {
+>> > > +		struct page *page = alloc_table_node(GFP_KERNEL |
+>> > > __GFP_ZERO, node);
+>> > 
+>> > This change removes __GFP_RETRY_MAYFAIL|__GFP_NOWARN from the
+>> > original gfp
+>> > vmemmap_alloc_block() used.
+>> Oh, yea good point. Hmm, I guess grouped pages could be aware of that
+>> flag too. Would be a small addition, but it starts to grow
+>> unfortunately.
+>> 
+>> > Not sure __GFP_RETRY_MAYFAIL is really needed in
+>> > vmemmap_alloc_block_zero()
+>> > at the first place, though.
+>> Looks like due to a real issue:
+>> 055e4fd96e95b0eee0d92fd54a26be7f0d3bcad0
 
-If you have the size comparisons handy, I'd love to see them. My memory
-from v5 was that none of that end up in-core. And in that case, why
-limit the entropy of the resulting layout?
+That commit added __GFP_REPEAT, but __GFP_RETRY_MAYFAIL these days became
+subtly different.
 
-> We still have LD_ORPHAN_WARN on non-FG-KASLR builds, but we also
-> have a rather different set of sections with FG-KASLR enabled. For
-> example, I noticed the appearing of .symtab_shndx section only in
-> virtue of LD_ORPHAN_WARN. So it's kinda not the same.
-
-Agreed: I'd rather have LD_ORPHAN_WARN always enabled.
-
-> I don't see a problem in this extra minute. FG-KASLR is all about
-
-But not at this cost. Maybe the x86 maintainers will disagree, but I see
-this as a prohibitive cost to doing development work under FGKASLR, and
-if we expect this to become the default in distros, no one is going to
-be happy with that change. Link time dominates the partial rebuild time,
-so my opinion is that it should not be so inflated if not absolutely
-needed. Perhaps once the link time bugs in ld.bfd and ld.lld get fixed,
-but not now.
-
-> security, and you often pay something for this. We already have a
-> size increase, and a small delay while booting, and we can't get
-> rid of them. With orphan sections you leave a space for potentional
-
-There's a difference between development time costs and run time costs.
-I don't think the LD_ORPHAN_WARN coverage is worth it in this case.
-
-Either way, we need to fix the linker.
-
-> flaws of the code, linker and/or linker script, which is really
-> unwanted in case of a security feature.
-> After all, ClangLTO increases the linking time at lot, and
-> TRIM_UNUSED_KSYMS builds almost the entire kernel two times in a
-> row, but nobody complains about this as there's nothing we can do
-> with it and it's the price you pay for the optimizations, so again,
-> I don't see a problem here.
-
-I get what you mean with regard to getting the perfect situation, but
-the kernel went 29 years without LD_ORPHAN_WARN. :) Anyway, we'll see
-what other folks think, I guess.
-
-> I still don't get why you're trying to split this series into two.
-> It's been almost a year since v5 was published, I doubt you can get
-> "basic FG-KASLR" accepted quickly just because it was reviewed back
-> then.
-
-Well, because it was blocked then by a single bug, and everything else
-you've described are distinct improvements on v5, so to me it makes
-sense to have it separated into those phases. I don't mean split the
-series, I mean rearrange the series so that a rebased v5 is at the
-start, and the improvements follow.
-
-> I prefer to provide a full picture of what I'm trying to bring, so
-> the community could review it all and throw much more ideas and
-> stuff.
-
-Understood. I am suggesting some ideas about how it might help with
-review. :)
-
-> > > * It's now fully compatible with ClangLTO, ClangCFI,
-> > >   CONFIG_LD_ORPHAN_WARN and some more stuff landed since the last
-> > >   revision was published;
-> > 
-> > FWIW, v5 was was too. :) I didn't have to do anything to v5 to make it
-> > work with ClangLTO and ClangCFI.
+> I believe the issue was with memory map blocks rather than with page
+> tables, but since sparse-vmemmap uses the same vmemmap_alloc_block() for
+> both, the GFP flag got stick with both.
 > 
-> Once again, repeating the thing I wrote earlier in our discussion:
-> ClangCFI, at least shadowed implementation, requires the first text
-> section of the module to be page-aligned and contain __cfi_check()
-> at the very beginning of this section. With FG-KASLR and without
-> special handling, this section gets randomized along with the
-> others, and ClangCFI either rejects almost all modules or panics
-> the kernel.
+> I'm not really familiar with reclaim internals to say if
+> __GFP_RETRY_MAYFAIL would help much for order-0 allocation.
 
-Ah-ha, thanks. I must have missed your answer to this earlier. I had
-probably done my initial v5 testing without modules.
+For costly allocation, __GFP_RETRY_MAYFAIL will try harder, thus the RETRY
+part is accented. For order-0 the only difference is that it will skip OOM,
+thus the MAYFAIL part. It usually means there's a fallback. I guess in this
+case there's no fallback, so allocating without __GFP_RETRY_MAYFAIL would be
+better.
 
-> > Great, this is a good start. One place we saw problems in the past was
-> > with i386 build gotchas, so that'll need testing too.
+> Vlastimil, can you comment on this?
+>  
+>> I think it should not affect PKS tables for now, so maybe I can make
+>> separate logic instead. I'll look into it. Thanks.
+>> > 
+>> > More broadly, maybe it makes sense to split boot time and memory
+>> > hotplug
+>> > paths and use pxd_alloc() for the latter.
+>> > 
+>> > > +
+>> > > +		if (!page)
+>> > > +			return NULL;
+>> > > +		return page_address(page);
+>> > > +	}
+>> > >  
+>> > > +	p = __earlyonly_bootmem_alloc(node, PAGE_SIZE, PAGE_SIZE,
+>> > > __pa(MAX_DMA_ADDRESS));
+>> > 
+>> > Opportunistically rename to __earlyonly_memblock_alloc()? ;-)
+>> > 
+>> Heh, I can. Just grepping, there are several other instances of
+>> foo_bootmem() only calling foo_memblock() pattern scattered about. Or
+>> maybe I'm missing the distinction.
 > 
-> For now, FG_KASLR for x86 depends on X86_64. We might relax this
-> dependency later after enough testing or whatsoever (like it's been
-> done for ClangLTO).
-
-Yes, but we've had a history of making big patches that do _intend_ to
-break the i386 build, but they do anyway. Hence my question.
-
-> > Sounds good. It might be easier to base the series on linux-next, so a
-> > smaller series. Though given the merge window just opened, it might make
-> > more sense for a v7 to be based on v5.15-rc2 in three weeks.
+> Heh, I didn't do s/bootmem/memblock/g, so foo_bootmem() are reminders we
+> had bootmem allocator once.
+> Maybe it's a good time to remove them :)
+>  
+>> <trim>
 > 
-> I don't usually base any series on linux-next, because it contains
-> all the changes from all "for-next" branches and repos, while the
-> series finally gets accepted to the specific repo based on just
-> v5.x-rc1 (sometimes on -rc2). This may bring additional apply/merge
-> problems.
 
-Understood. I just find it confusing to include patches on lkml that
-already exist in a -next branch. Perhaps base on kbuild -next?
-
-> > > Kees Cook (2):
-> > >   x86/boot: Allow a "silent" kaslr random byte fetch
-> > >   x86/boot/compressed: Avoid duplicate malloc() implementations
-> > 
-> > These two can get landed right away -- they're standalone fixes that
-> > can safely go in -tip.
-> > 
-> > > 
-> > > Kristen Carlson Accardi (9):
-> > >   x86: tools/relocs: Support >64K section headers
-> > 
-> > Same for this.
-> 
-> They make little to no sense for non-FG-KASLR systems. And none of
-> them are "pure" fixes.
-> The same could be said about e.g. ORC lookup patch, but again, it
-> makes no sense right now.
-
-*shrug* They're trivial changes that have been reviewed before, so it
-seems like we can avoid resending them every time.
-
-> > I suspect it'll still be easier to review this series as a rebase v5
-> > followed by the evolutionary improvements, since the "basic FGKASLR" has
-> > been reviewed in the past, and is fairly noninvasive. The changes for
-> > ASM, new .text rules, etc, make a lot more changes that I think would be
-> > nice to have separate so reasonable a/b testing can be done.
-> 
-> I don't see a point in testing it two times instead of just one, as
-> well as in delivering this feature in two halves. It sounds like
-> "let's introduce ClangLTO, but firstly only for modules, as LTO for
-> vmlinux requires changes in objtool code and a special handling for
-> the initcalls".
-> The changes you mentioned only seem invasive, in fact, they can
-> carry way less harm than the "basic FG-KASLR" itself.
-
-Mostly it's a question of building on prior testing (v5 worked), so that
-new changes can be debugged if they cause problems. Regardless, it's
-been so long, perhaps it won't matter to other reviewers and they'll
-want to just start over from scratch.
-
--Kees
-
--- 
-Kees Cook
