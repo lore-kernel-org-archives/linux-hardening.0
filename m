@@ -2,58 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04068C87FE2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4BBCA9EAC
 	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 16:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 542DC615A7
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 16:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D8E61106
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Sep 2021 16:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346307AbhIBQTk (ORCPT
+        id S235417AbhIBQIn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Sep 2021 12:19:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346300AbhIBQTk (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Sep 2021 12:19:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 778E46187D;
-        Thu,  2 Sep 2021 16:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630599521;
-        bh=JcYHOKNx0hNjqmpLEEHso3KVVidsGV0+VqdBVx4KJ+E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=a6+vJTGRHe9Xk+46Babj4Gu37PjdCTzZYp0DfDtkOJqquwkr/5mOPt4qdYrECoU8t
-         49oSyyN+AzKd/DqIfJ7DlWYaJJrRlGox7+furvQdwPKa66x9Te8SlUFYGKH+SCgb7o
-         uNTQcaDM5ZWsyxuoR8pdw1g2F7At4e3p1XAQO145v1W5/+g6LTxWNEONuFXdbEpbkv
-         jv6ZNJrcDavta44h8cPv1I6sjItQ1f/mzsAKR/dnB/AJgvgq/lkReFAhaLWvTmiOsF
-         xdYsndBmLwUTtVzBXMQnoVNjY1SqfANX4zVIHMaeL8xtf97NFimFW2Tt36qW3MtCzT
-         j1JEI1UPDLqPQ==
-Received: by mail-ot1-f54.google.com with SMTP id i3-20020a056830210300b0051af5666070so3200908otc.4;
-        Thu, 02 Sep 2021 09:18:41 -0700 (PDT)
-X-Gm-Message-State: AOAM530NEJklET1K1auVD1gnvWx6mwsyR0aN/tJdaWxGQPNbQcIqf0ly
-        C9e5xQi85MTlqOc2lwuQ/Ve7b5hIZpexuWtOUKI=
-X-Google-Smtp-Source: ABdhPJxfaiUX2hrLyMECVCPFUe0KB68VWCzNVh8WiWCsq55R8cwzjxP/YB85hPhk+fGyzUWOXODcvPEpwiPMUcAX4EE=
-X-Received: by 2002:a05:6830:444:: with SMTP id d4mr3261443otc.108.1630599520694;
- Thu, 02 Sep 2021 09:18:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210902155429.3987201-1-keithp@keithp.com> <202109020904.976207C@keescook>
-In-Reply-To: <202109020904.976207C@keescook>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 2 Sep 2021 18:18:29 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGfQuEFOh79TZ089+9eP4S5svWgTMbZLugmD8Hq9b=fMQ@mail.gmail.com>
-Message-ID: <CAMj1kXGfQuEFOh79TZ089+9eP4S5svWgTMbZLugmD8Hq9b=fMQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2]: ARM: Enable THREAD_INFO_IN_TASK
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Keith Packard <keithp@keithp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abbott Liu <liuwenliang@huawei.com>,
+        Thu, 2 Sep 2021 12:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235316AbhIBQIn (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 2 Sep 2021 12:08:43 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C316CC061575
+        for <linux-hardening@vger.kernel.org>; Thu,  2 Sep 2021 09:07:44 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id e16so2010320pfc.6
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Sep 2021 09:07:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BGrVU98Zacn5uG81q99DxyUsWOrCnOhhT/dK37UsEiU=;
+        b=lQfm8PKUgLZqfpgTk9CZI28oAthBMMxm9xTl2XYEBMCVut/D/XscAuELHGMabtiU7d
+         r2FH9zrmKqXbJy4ol/w2QaFc1j7XV/o8NW4ubivUp4ALkp19LfVsupvUMlQANopLM2kw
+         Y6zyDQRM8GOGvJO8BVMb/ni4OYK77TtzG+omQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BGrVU98Zacn5uG81q99DxyUsWOrCnOhhT/dK37UsEiU=;
+        b=MO03iZMwOxihGEoLfkTKiHi+1gURtQAy90iURdVmmIPsHVTPhd+73jnHxYgnypttNK
+         X7Neg2kxZ8m7z207wxIcjurlLU4Ng6lxpZrelPlgpUqL1austpmpeKbhh8/WAvXAw3Ua
+         s/Re1s3YsuNCo/InC6P5zsD0GqSdeze2JSOQmoL1h6Cm/b2UgbwaMuOG/bGVvruMnxRH
+         hsO9afJrKdtuuumruGNMRwzmOYtDEVXoMzCBdLaw7gQec1f6Eyl13D0BQHpdvg4gSEgl
+         55jj4ZZRsZfYvKnCdOPEUqV3eM+g08L9MEcro5ydh98sT11qVaEI5OwhWS/hmcQOP8KX
+         2twA==
+X-Gm-Message-State: AOAM533cek45zFk5NOucEMmz0HwMJLVZBQW6mOzKxPq1sNWMPFioRC73
+        MYzomXpoZuykKhpmTlppmDIhqQ==
+X-Google-Smtp-Source: ABdhPJzNQZasCUlINaO1/WxTEUOJhLcP6KAhMypIpiLxI1BdOKXxkzuvOj3gnCdQv+9EZtpdl5jh+Q==
+X-Received: by 2002:a63:5413:: with SMTP id i19mr3942630pgb.297.1630598864267;
+        Thu, 02 Sep 2021 09:07:44 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q22sm3111413pgn.67.2021.09.02.09.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Sep 2021 09:07:43 -0700 (PDT)
+Date:   Thu, 2 Sep 2021 09:07:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Keith Packard <keithp@keithp.com>
+Cc:     linux-kernel@vger.kernel.org, Abbott Liu <liuwenliang@huawei.com>,
         Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Andrew Morton <akpm@linux-foundation.org>,
         Anshuman Khandual <anshuman.khandual@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -62,7 +71,7 @@ Cc:     Keith Packard <keithp@keithp.com>,
         Jens Axboe <axboe@kernel.dk>, Jian Cai <jiancai@google.com>,
         Joe Perches <joe@perches.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-kernel@lists.infradead.org,
         Maninder Singh <maninder1.s@samsung.com>,
         Manivannan Sadhasivam <mani@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
@@ -74,7 +83,7 @@ Cc:     Keith Packard <keithp@keithp.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Russell King <linux@armlinux.org.uk>,
         Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Vaneet Narang <v.narang@samsung.com>,
@@ -82,32 +91,29 @@ Cc:     Keith Packard <keithp@keithp.com>,
         YiFei Zhu <yifeifz2@illinois.edu>,
         Keith Packard <keithpac@amazon.com>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 0/2]: ARM: Enable THREAD_INFO_IN_TASK
+Message-ID: <202109020904.976207C@keescook>
+References: <20210902155429.3987201-1-keithp@keithp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210902155429.3987201-1-keithp@keithp.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2 Sept 2021 at 18:07, Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Sep 02, 2021 at 08:54:26AM -0700, Keith Packard wrote:
-> > Placing thread_info in the kernel stack leaves it vulnerable to stack
-> > overflow attacks. This short series addresses that by using the
-> > existing THREAD_INFO_IN_TASK infrastructure.
->
-> Very cool! Thanks for working on this. If you want, you can refer to the
-> KSPP bug for this too:
-> https://github.com/KSPP/linux/issues/1
->
-> (Anyone want to do MIPS?)
->
+On Thu, Sep 02, 2021 at 08:54:26AM -0700, Keith Packard wrote:
+> Placing thread_info in the kernel stack leaves it vulnerable to stack
+> overflow attacks. This short series addresses that by using the
+> existing THREAD_INFO_IN_TASK infrastructure.
 
-I take it this breaks the GCC plugin based per-task stack protector,
-given that it emits code to mask the stack pointer and apply an offset
-to the resulting value.
+Very cool! Thanks for working on this. If you want, you can refer to the
+KSPP bug for this too:
+https://github.com/KSPP/linux/issues/1
 
-It would be nice if we could replace this with something suitable for
-THREAD_INFO_IN_TASK, and if it is suitable enough, try and get the
-GCC/Clang folks to adopt it as well (which was never going to happen
-for the stack pointer mask/offset approach)
+(Anyone want to do MIPS?)
 
-Where can I find these patches? I don't see them on linux-arm-kernel@
+-Kees
+
+-- 
+Kees Cook
