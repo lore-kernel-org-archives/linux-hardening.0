@@ -2,209 +2,203 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C701C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 15:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E93CC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 16:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29F6F60EBA
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 15:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57565610CF
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 16:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234053AbhICPHM (ORCPT
+        id S1350083AbhICQjp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Sep 2021 11:07:12 -0400
-Received: from mout.gmx.net ([212.227.17.21]:43751 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229997AbhICPHM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Sep 2021 11:07:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630681561;
-        bh=2NsobSJ0oyoOkDCO4kNPox42OsO4Nli7GYVADpwZFfk=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=KgB1oGa26/ftR5JtjgnCkm+LjSNjE91aGRPWcIb6t1XB5VbxTe/0HHCk1dylY+IhD
-         8DHPkRcgqvDIVMlzTPzOliBWGvdT5qyWcy6PpE8paNeNscd2vLNj9LcWiYGNVdiEcb
-         ypTdR3d8h/HQ+TSjwVDIsvtLo0TcbPChzCm4JtPA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1M1Ycl-1mO5di2BWl-0038Dr; Fri, 03 Sep 2021 17:06:01 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>, Joe Perches <joe@perches.com>
-Cc:     Len Baker <len.baker@gmx.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6] EDAC/mc: Prefer strscpy or scnprintf over strcpy
-Date:   Fri,  3 Sep 2021 17:05:39 +0200
-Message-Id: <20210903150539.7282-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 3 Sep 2021 12:39:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350010AbhICQjo (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 3 Sep 2021 12:39:44 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C123AC061757
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Sep 2021 09:38:44 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id m17so3622092plc.6
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Sep 2021 09:38:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FfOt3SEZ0/w/EILHgIhc/sI685lMnBLBscfmUVoWBxM=;
+        b=U3zD7zTVZnXyaVHVcepE2ZnBhIVi+C+briI5/GPmfUYXdkLyFmxljAvwjJ2Y/T6FN7
+         JEKgVwTx7TIQEk8iONrflQBgQEuu9wPi6w1QPNdCALwa6JGDNl9ILIHqvd26pArQ3XuF
+         FBhHN4XJSFB6INWrh3p2QndF/YNVVDAe55YSQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FfOt3SEZ0/w/EILHgIhc/sI685lMnBLBscfmUVoWBxM=;
+        b=io48whE3j1HnKp/oXgnqPfIYtFYLoReF1Bwc9E2FJBRQWCAvnVM+NScHZdmZj8kjAH
+         pOP7/ydMC600l46RlZpfbnqx9L3Oo1Wo2/PWg338w53K8mV+3rSsutz7NPlBNvFDKYOF
+         OPVZ/j2FKfkxTmHOpqlg89M7kkWhGaJ1o9s3FuCncptVHSxK6+gkPR3Wsb1TCvpxD3ZI
+         2+fpnd7aG6QcXmRBN7bbRrtT4VnMy/Bd6cy19ZnLDgpZu8AblbjmPc2c8cPTShGJyJSY
+         qN3VEaM9y8/oOB4rnzTlTbrsdWa1WT0eqrVuWVVPHwSoLvdbBU0Y4OvYjuVcSI+MgzOe
+         VQ3w==
+X-Gm-Message-State: AOAM532T/XviKt4+87NMTNG4OKknINzJ29uO3SZ5vMYbTAv7q8SBZF5b
+        G+T0mI4trK2duBvOBRZBsruAgA==
+X-Google-Smtp-Source: ABdhPJy/x5blIx3Lk+xBJRMgzA9HJvA8GilrLG2XXL2QHa1y/6WGYsNlTmOkpxYQfB+u+t83J6O6NQ==
+X-Received: by 2002:a17:90b:2212:: with SMTP id kw18mr1653921pjb.59.1630687124160;
+        Fri, 03 Sep 2021 09:38:44 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s31sm5894049pfw.23.2021.09.03.09.38.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Sep 2021 09:38:43 -0700 (PDT)
+Date:   Fri, 3 Sep 2021 09:38:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-arch@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alexander Egorenkov <egorenar@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 3/4] module: Use a list of strings for ro_after_init
+ sections
+Message-ID: <202109030932.1358C4093@keescook>
+References: <20210901233757.2571878-1-keescook@chromium.org>
+ <20210901233757.2571878-4-keescook@chromium.org>
+ <20210903064951.to4dhiu7zua7s6dn@treble>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1WWrz35yiVKX3AEpwLelo43wNkwyWS28+jV7tcAjnkGOVJRGex4
- 62kMobnU+zTr4NUJU2ElQKZSbknVD9xi/fiZzgHOPEn0yel6FeiNrZ0/rYf7Tqr15wECqqe
- saJNo9jDiqMX7ZTjwu2Gk76XKK9yCFifqrNUd7hHgSBKW/shQPYUUZhnwVeDiho6+DlLcTJ
- 4lx+zPpb5BPdw91l7pDug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IZ8oGDh5x9g=:U+bLOJMA3OId4qv5emQuZJ
- U3SDolIicL6kmud82MC2AcCCKEKfgtK6iwlCcbXPpLe8oRZG32aFPhUPF4i6+81O3fuWjqaYv
- AfCueHqlctbkBfoxJvZl4GFMHIczszAa6hzwS03rHmJzbOY7FU2CozUGVofdPegbWbPeZkrKl
- W2ZNOhpTEvj6nerJFSl7FkalWzKab6bgvItqGNZesS55bBax9SWf3yZiHGh++skpxzY9Yv71g
- 87OtKy3xdcTECktspsLeGVBeompS816qCi6TOeTYrLyeVsDdt4KEqkfFNrdVx7IXdwg16TGsa
- yGZCDzHtCaWTendBhow9Un3qUENtZboG9rQLXPnboFGBMoaFsnkgRM6i6vi8lgPlxQEpmsuyR
- nqo1h5k+lraAbmF1UuPV4I15e4yr61npqDc29+Fy4LMNt5cV1FHhWigLSc4vurAFcMTfNVcWc
- jA1uH9avsfU9hGU78MPK0vGSawZEkPxtBzUqzSCeFUCTjq5njHGT0xqrSWJ2hKtyiT4tObcEn
- 4NkuPxFPaiyYOgYah0WCYUCY0SM4MhK1u3SYRCincR313ICEX50GUyesA0Fdy+i+7audYHyXr
- geDDSsqHNNanXAB/0Tjz754Gm7qIXKhBigPCBY2rrLBPpXH8LGgfeQt2znXbXNB19K4oqaovA
- Y4rL0WGc5W/8HxFYDm7Cvz/T0RfOuZgPxp6UN+RTWfm/i3KBqwt9E5KVm52HQ1zLB/toHSyU6
- k0CXQUZ9KFErAqhPKiMrn9kqYoqIcYuVB+UsqC2M2IN7nCeP1bDfBHZDo99wjo7qUTbWvAiBZ
- laiYC8qNqPl1fkYY2f7pPqBFdOs0ZrKVd39FpSM7bUcY6n/fcyUsuRlyOc7sJP8IgsVEkMhEz
- N3JVMbvs2yqCERYMC+4dtbeg8ztQg82ZJlSS1N0N+04CKpEk+9xbkzbVc3+yKfSryQ8xqpUnR
- MHN+Pt0D49C2I7WOfw6uwy5Ng9X54JNOiIHRRrnPz/JmamP3qNM5QPlnVo8k++RpJKDa9AWhh
- lknR4drQhVLIDWSrBrm8/BrVqNXYGVmiKRDc4XRF99CR5e1690bgDRRXPBXf1FQLifyVLnKks
- 1tQk0TXeq5h+GgbwVgGaWqvDkw+RL38ckS2FBm/N4KrP+bKapASiM1YiQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210903064951.to4dhiu7zua7s6dn@treble>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strcpy() performs no bounds checking on the destination buffer. This
-could result in linear overflows beyond the end of the buffer, leading
-to all kinds of misbehaviors. The safe replacement is strscpy() [1].
+On Thu, Sep 02, 2021 at 11:49:51PM -0700, Josh Poimboeuf wrote:
+> On Wed, Sep 01, 2021 at 04:37:56PM -0700, Kees Cook wrote:
+> > Instead of open-coding the section names, use a list for the sections that
+> > need to be marked read-only after init. Unfortunately, it seems we can't
+> > do normal section merging with scripts/module.lds.S as ld.bfd doesn't
+> > correctly update symbol tables. For more details, see commit 6a3193cdd5e5
+> > ("kbuild: lto: Merge module sections if and only if CONFIG_LTO_CLANG
+> > is enabled").
+> 
+> I'm missing what this has to do with section merging.  Can you connect
+> the dots here, i.e. what sections would we want to merge and how would
+> that help here?
 
-However, to simplify and clarify the code, to concatenate labels use
-the scnprintf() function. This way it is not necessary to check the
-return value of strscpy (-E2BIG if the parameter count is 0 or the src
-was truncated) since the scnprintf returns always the number of chars
-written into the buffer. This function returns always a nul-terminated
-string even if it needs to be truncated.
+Right, sorry, if ld.bfd didn't have this issue, we could use section
+merging in the module.lds.S file the way we do in vmlinux.lds:
 
-The main reason behind this patch is to remove all the strcpy() uses
-from the kernel with the purpose to clean up the proliferation of
-str*cpy() functions. Later on, the next step will be remove all the
-strcpy implementations [2].
+#ifndef RO_AFTER_INIT_DATA
+#define RO_AFTER_INIT_DATA                                              \
+        . = ALIGN(8);                                                   \
+        __start_ro_after_init = .;                                      \
+        *(.data..ro_after_init)                                         \
+        JUMP_TABLE_DATA                                                 \
+        STATIC_CALL_DATA                                                \
+        __end_ro_after_init = .;
+#endif
+...
+        . = ALIGN((align));                                             \
+        .rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {           \
+                __start_rodata = .;                                     \
+                *(.rodata) *(.rodata.*)                                 \
+                SCHED_DATA                                              \
+                RO_AFTER_INIT_DATA      /* Read only after init */      \
+                . = ALIGN(8);                                           \
+                __start___tracepoints_ptrs = .;                         \
+                KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+                __stop___tracepoints_ptrs = .;                          \
+                *(__tracepoints_strings)/* Tracepoints: strings */      \
+        }                                                               \
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-[2] https://github.com/KSPP/linux/issues/88
+Then jump_table and static_call sections could be collected into a
+new section, as the module loader would only need to look for that
+single name.
 
-Co-developed-by: Joe Perches <joe@perches.com>
-Signed-off-by: Joe Perches <joe@perches.com>
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
-Hi Joe,
+> Instead of hard-coding section names in module.c, I'm wondering if we
+> can do something like the following to set SHF_RO_AFTER_INIT when first
+> creating the sections.  Completely untested...
+> 
+> 
+> diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
+> index 0449b125d27f..d4ff34c6199c 100644
+> --- a/arch/x86/include/asm/jump_label.h
+> +++ b/arch/x86/include/asm/jump_label.h
+> @@ -13,7 +13,7 @@
+>  #include <linux/types.h>
+>  
+>  #define JUMP_TABLE_ENTRY				\
+> -	".pushsection __jump_table,  \"aw\" \n\t"	\
+> +	".pushsection __jump_table, \"0x00200003\" \n\t"\
+>  	_ASM_ALIGN "\n\t"				\
+>  	".long 1b - . \n\t"				\
+>  	".long %l[l_yes] - . \n\t"			\
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 40ec9a030eec..1dda33c9ae49 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3549,15 +3549,6 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
+>  	 * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
+>  	 */
+>  	ndx = find_sec(info, ".data..ro_after_init");
+> -	if (ndx)
+> -		info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
+> -	/*
+> -	 * Mark the __jump_table section as ro_after_init as well: these data
+> -	 * structures are never modified, with the exception of entries that
+> -	 * refer to code in the __init section, which are annotated as such
+> -	 * at module load time.
+> -	 */
+> -	ndx = find_sec(info, "__jump_table");
+>  	if (ndx)
+>  		info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
+>  
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index e5947fbb9e7a..b25ca38179ea 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -20,6 +20,9 @@
+>  #include <linux/kernel.h>
+>  #include <linux/static_call_types.h>
+>  
+> +/* cribbed from include/uapi/linux/elf.h */
+> +#define SHF_RO_AFTER_INIT	0x00200000
+> +
+>  struct alternative {
+>  	struct list_head list;
+>  	struct instruction *insn;
+> @@ -466,7 +469,8 @@ static int create_static_call_sections(struct objtool_file *file)
+>  	list_for_each_entry(insn, &file->static_call_list, call_node)
+>  		idx++;
+>  
+> -	sec = elf_create_section(file->elf, ".static_call_sites", SHF_WRITE,
+> +	sec = elf_create_section(file->elf, ".static_call_sites",
+> +				 SHF_WRITE | SHF_RO_AFTER_INIT,
+>  				 sizeof(struct static_call_site), idx);
+>  	if (!sec)
+>  		return -1;
 
-I have added the "Co-developed-by: Joe Perches" tag to give you credit,
-since all the code used in this patch relies heavily on your review
-code snippets.
+Interesting! I got the impression from the module code that this wasn't
+possible since it'd be exposing an internal set of flags to the external
+linker, and would break the vmlinux section merging (since it _is_
+supposed to live in the .rodata section ultimately). The modules handle
+permissions slightly differently (i.e. more exact temporal), than the
+kernel though. (Most of the architecture's vmlinux logic starts with
+everything writable, and only does the read-only-ness after __init,
+though I think s390 does it "correctly" and as such has a separate area
+for the ro-after-init section.)
 
-I hope there are no objections.
-
-Thanks,
-Len
-
-Changelog v1 -> v2
-- Use the strscpy() instead of scnprintf() to add labels and follow a
-  code pattern more similar to the current one (advance "p" and
-  decrement "left") (Robert Richter).
-
-Changelog v2 -> v3
-- Rename the "left" variable to "len" (Robert Richter).
-- Use strlen(p) instead of strlen(OTHER_LABEL) to decrement "len" and
-  increment "p" as otherwise "left" could underflow and p overflow
-  (Robert Richter).
-
-Changelog v3 -> v4
-- Change the commit subject (Joe Perches).
-- Fix broken logic (Robert Richter).
-- Rebase against v5.14-rc5.
-
-Changelog v4 -> v5
-- Change the commit subject.
-- Clarify why the change is being made by adding more info to the
-  commit message (Borislav Petkov).
-- Use scnprintf instead of strscpy (Joe Perches).
-- Rebase against v5.14-rc7.
-
-Changelog v5 -> v6
-- Rebase against v5.14.
-- Refactor the code to use a more common scnprintf mechanism (Joe
-  Perches).
-
-Previous versions:
-
-v1
-https://lore.kernel.org/linux-hardening/20210725162954.9861-1-len.baker@gm=
-x.com/
-
-v2
-https://lore.kernel.org/linux-hardening/20210801143558.12674-1-len.baker@g=
-mx.com/
-
-v3
-https://lore.kernel.org/linux-hardening/20210807155957.10069-1-len.baker@g=
-mx.com/
-
-v4
-https://lore.kernel.org/linux-hardening/20210814075527.5999-1-len.baker@gm=
-x.com/
-
-v5
-https://lore.kernel.org/linux-hardening/20210829161547.6069-1-len.baker@gm=
-x.com/
-
- drivers/edac/edac_mc.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index f6d462d0be2d..97dff62970a5 100644
-=2D-- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -1032,6 +1032,8 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
-_type type,
- 	int i, n_labels =3D 0;
- 	struct edac_raw_error_desc *e =3D &mci->error_desc;
- 	bool any_memory =3D true;
-+	const char *prefix =3D "";
-+	int n =3D 0;
-
- 	edac_dbg(3, "MC%d\n", mci->mc_idx);
-
-@@ -1113,12 +1115,9 @@ void edac_mc_handle_error(const enum hw_event_mc_er=
-r_type type,
- 			p =3D e->label;
- 			*p =3D '\0';
- 		} else {
--			if (p !=3D e->label) {
--				strcpy(p, OTHER_LABEL);
--				p +=3D strlen(OTHER_LABEL);
--			}
--			strcpy(p, dimm->label);
--			p +=3D strlen(p);
-+			n +=3D scnprintf(e->label + n, sizeof(e->label) - n,
-+				       "%s%s", prefix, dimm->label);
-+			prefix =3D OTHER_LABEL;
- 		}
-
- 		/*
-@@ -1140,9 +1139,9 @@ void edac_mc_handle_error(const enum hw_event_mc_err=
-_type type,
- 	}
-
- 	if (any_memory)
--		strcpy(e->label, "any memory");
-+		strscpy(e->label, "any memory", sizeof(e->label));
- 	else if (!*e->label)
--		strcpy(e->label, "unknown memory");
-+		strscpy(e->label, "unknown memory", sizeof(e->label));
-
- 	edac_inc_csrow(e, row, chan);
-
-=2D-
-2.25.1
-
+-- 
+Kees Cook
