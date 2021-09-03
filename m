@@ -2,203 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E93CC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 16:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92A5C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 17:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57565610CF
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 16:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAB36054F
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 17:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350083AbhICQjp (ORCPT
+        id S1350186AbhICREV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Sep 2021 12:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350010AbhICQjo (ORCPT
+        Fri, 3 Sep 2021 13:04:21 -0400
+Received: from smtprelay0212.hostedemail.com ([216.40.44.212]:49408 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S235774AbhICREU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Sep 2021 12:39:44 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C123AC061757
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Sep 2021 09:38:44 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id m17so3622092plc.6
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Sep 2021 09:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FfOt3SEZ0/w/EILHgIhc/sI685lMnBLBscfmUVoWBxM=;
-        b=U3zD7zTVZnXyaVHVcepE2ZnBhIVi+C+briI5/GPmfUYXdkLyFmxljAvwjJ2Y/T6FN7
-         JEKgVwTx7TIQEk8iONrflQBgQEuu9wPi6w1QPNdCALwa6JGDNl9ILIHqvd26pArQ3XuF
-         FBhHN4XJSFB6INWrh3p2QndF/YNVVDAe55YSQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FfOt3SEZ0/w/EILHgIhc/sI685lMnBLBscfmUVoWBxM=;
-        b=io48whE3j1HnKp/oXgnqPfIYtFYLoReF1Bwc9E2FJBRQWCAvnVM+NScHZdmZj8kjAH
-         pOP7/ydMC600l46RlZpfbnqx9L3Oo1Wo2/PWg338w53K8mV+3rSsutz7NPlBNvFDKYOF
-         OPVZ/j2FKfkxTmHOpqlg89M7kkWhGaJ1o9s3FuCncptVHSxK6+gkPR3Wsb1TCvpxD3ZI
-         2+fpnd7aG6QcXmRBN7bbRrtT4VnMy/Bd6cy19ZnLDgpZu8AblbjmPc2c8cPTShGJyJSY
-         qN3VEaM9y8/oOB4rnzTlTbrsdWa1WT0eqrVuWVVPHwSoLvdbBU0Y4OvYjuVcSI+MgzOe
-         VQ3w==
-X-Gm-Message-State: AOAM532T/XviKt4+87NMTNG4OKknINzJ29uO3SZ5vMYbTAv7q8SBZF5b
-        G+T0mI4trK2duBvOBRZBsruAgA==
-X-Google-Smtp-Source: ABdhPJy/x5blIx3Lk+xBJRMgzA9HJvA8GilrLG2XXL2QHa1y/6WGYsNlTmOkpxYQfB+u+t83J6O6NQ==
-X-Received: by 2002:a17:90b:2212:: with SMTP id kw18mr1653921pjb.59.1630687124160;
-        Fri, 03 Sep 2021 09:38:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s31sm5894049pfw.23.2021.09.03.09.38.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Sep 2021 09:38:43 -0700 (PDT)
-Date:   Fri, 3 Sep 2021 09:38:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/4] module: Use a list of strings for ro_after_init
- sections
-Message-ID: <202109030932.1358C4093@keescook>
-References: <20210901233757.2571878-1-keescook@chromium.org>
- <20210901233757.2571878-4-keescook@chromium.org>
- <20210903064951.to4dhiu7zua7s6dn@treble>
+        Fri, 3 Sep 2021 13:04:20 -0400
+Received: from omf11.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 9AF37181D861A;
+        Fri,  3 Sep 2021 17:03:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf11.hostedemail.com (Postfix) with ESMTPA id E361C20A296;
+        Fri,  3 Sep 2021 17:03:18 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210903064951.to4dhiu7zua7s6dn@treble>
+Date:   Fri, 03 Sep 2021 10:03:18 -0700
+From:   Joe Perches <joe@perches.com>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] EDAC/mc: Prefer strscpy or scnprintf over strcpy
+In-Reply-To: <20210903150539.7282-1-len.baker@gmx.com>
+References: <20210903150539.7282-1-len.baker@gmx.com>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <3a035a3ec4571a622ce640e042f9a119@perches.com>
+X-Sender: joe@perches.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: j7xjyr4odatdy7rb6mkgdmxeee87f933
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: E361C20A296
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+E6cAmHeP0H2cTANzNcBy/xjzDpz0K7BE=
+X-HE-Tag: 1630688598-308236
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 02, 2021 at 11:49:51PM -0700, Josh Poimboeuf wrote:
-> On Wed, Sep 01, 2021 at 04:37:56PM -0700, Kees Cook wrote:
-> > Instead of open-coding the section names, use a list for the sections that
-> > need to be marked read-only after init. Unfortunately, it seems we can't
-> > do normal section merging with scripts/module.lds.S as ld.bfd doesn't
-> > correctly update symbol tables. For more details, see commit 6a3193cdd5e5
-> > ("kbuild: lto: Merge module sections if and only if CONFIG_LTO_CLANG
-> > is enabled").
-> 
-> I'm missing what this has to do with section merging.  Can you connect
-> the dots here, i.e. what sections would we want to merge and how would
-> that help here?
+On 2021-09-03 08:05, Len Baker wrote:
+> strcpy() performs no bounds checking on the destination buffer. 
+> len.baker@gmx.com/
 
-Right, sorry, if ld.bfd didn't have this issue, we could use section
-merging in the module.lds.S file the way we do in vmlinux.lds:
+[]
 
-#ifndef RO_AFTER_INIT_DATA
-#define RO_AFTER_INIT_DATA                                              \
-        . = ALIGN(8);                                                   \
-        __start_ro_after_init = .;                                      \
-        *(.data..ro_after_init)                                         \
-        JUMP_TABLE_DATA                                                 \
-        STATIC_CALL_DATA                                                \
-        __end_ro_after_init = .;
-#endif
-...
-        . = ALIGN((align));                                             \
-        .rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {           \
-                __start_rodata = .;                                     \
-                *(.rodata) *(.rodata.*)                                 \
-                SCHED_DATA                                              \
-                RO_AFTER_INIT_DATA      /* Read only after init */      \
-                . = ALIGN(8);                                           \
-                __start___tracepoints_ptrs = .;                         \
-                KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
-                __stop___tracepoints_ptrs = .;                          \
-                *(__tracepoints_strings)/* Tracepoints: strings */      \
-        }                                                               \
+> @@ -1113,12 +1115,9 @@ void edac_mc_handle_error(const enum
+> hw_event_mc_err_type type,
+>  			p = e->label;
+>  			*p = '\0';
+>  		} else {
+> -			if (p != e->label) {
+> -				strcpy(p, OTHER_LABEL);
+> -				p += strlen(OTHER_LABEL);
+> -			}
+> -			strcpy(p, dimm->label);
+> -			p += strlen(p);
+> +			n += scnprintf(e->label + n, sizeof(e->label) - n,
+> +				       "%s%s", prefix, dimm->label);
+> +			prefix = OTHER_LABEL;
 
-Then jump_table and static_call sections could be collected into a
-new section, as the module loader would only need to look for that
-single name.
+OTHER_LABEL is a define specific to this module
 
-> Instead of hard-coding section names in module.c, I'm wondering if we
-> can do something like the following to set SHF_RO_AFTER_INIT when first
-> creating the sections.  Completely untested...
-> 
-> 
-> diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
-> index 0449b125d27f..d4ff34c6199c 100644
-> --- a/arch/x86/include/asm/jump_label.h
-> +++ b/arch/x86/include/asm/jump_label.h
-> @@ -13,7 +13,7 @@
->  #include <linux/types.h>
->  
->  #define JUMP_TABLE_ENTRY				\
-> -	".pushsection __jump_table,  \"aw\" \n\t"	\
-> +	".pushsection __jump_table, \"0x00200003\" \n\t"\
->  	_ASM_ALIGN "\n\t"				\
->  	".long 1b - . \n\t"				\
->  	".long %l[l_yes] - . \n\t"			\
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 40ec9a030eec..1dda33c9ae49 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3549,15 +3549,6 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
->  	 * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
->  	 */
->  	ndx = find_sec(info, ".data..ro_after_init");
-> -	if (ndx)
-> -		info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
-> -	/*
-> -	 * Mark the __jump_table section as ro_after_init as well: these data
-> -	 * structures are never modified, with the exception of entries that
-> -	 * refer to code in the __init section, which are annotated as such
-> -	 * at module load time.
-> -	 */
-> -	ndx = find_sec(info, "__jump_table");
->  	if (ndx)
->  		info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
->  
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index e5947fbb9e7a..b25ca38179ea 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -20,6 +20,9 @@
->  #include <linux/kernel.h>
->  #include <linux/static_call_types.h>
->  
-> +/* cribbed from include/uapi/linux/elf.h */
-> +#define SHF_RO_AFTER_INIT	0x00200000
-> +
->  struct alternative {
->  	struct list_head list;
->  	struct instruction *insn;
-> @@ -466,7 +469,8 @@ static int create_static_call_sections(struct objtool_file *file)
->  	list_for_each_entry(insn, &file->static_call_list, call_node)
->  		idx++;
->  
-> -	sec = elf_create_section(file->elf, ".static_call_sites", SHF_WRITE,
-> +	sec = elf_create_section(file->elf, ".static_call_sites",
-> +				 SHF_WRITE | SHF_RO_AFTER_INIT,
->  				 sizeof(struct static_call_site), idx);
->  	if (!sec)
->  		return -1;
-
-Interesting! I got the impression from the module code that this wasn't
-possible since it'd be exposing an internal set of flags to the external
-linker, and would break the vmlinux section merging (since it _is_
-supposed to live in the .rodata section ultimately). The modules handle
-permissions slightly differently (i.e. more exact temporal), than the
-kernel though. (Most of the architecture's vmlinux logic starts with
-everything writable, and only does the read-only-ness after __init,
-though I think s390 does it "correctly" and as such has a separate area
-for the ro-after-init section.)
-
--- 
-Kees Cook
+IMO: Used once text macros are just obfuscating and should be removed.
