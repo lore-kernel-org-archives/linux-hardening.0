@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF60AC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 05:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38AFC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 05:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB99E60FC0
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 05:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A0A60FE6
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Sep 2021 05:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234681AbhICF4e (ORCPT
+        id S235494AbhICF6C (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Sep 2021 01:56:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29955 "EHLO
+        Fri, 3 Sep 2021 01:58:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44695 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234575AbhICF4d (ORCPT
+        by vger.kernel.org with ESMTP id S234575AbhICF6B (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Sep 2021 01:56:33 -0400
+        Fri, 3 Sep 2021 01:58:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630648533;
+        s=mimecast20190719; t=1630648622;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=YVcqIhLjK1aLZFmGstA8aMe5xkC0R7kiAZwq3yD/UZo=;
-        b=Uwe3MMXm5P+7/RNxK+csOwaFx7Jvjh12Pu5e5mjmXrDzWXTiMbuXUA6egTBkMxw3Z8C6aX
-        VjVuS6R+5j9qvz2+6YhL+aoBNbXWqT/6tiwu0hs5UCKWyQwiPyYcZsViZb/qdqheoGMbBE
-        l370ildiNt+NBKWYCk0hIxj119TTGX0=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-BNiawID-NP-cGicQVX8KnQ-1; Fri, 03 Sep 2021 01:55:31 -0400
-X-MC-Unique: BNiawID-NP-cGicQVX8KnQ-1
-Received: by mail-qt1-f197.google.com with SMTP id l22-20020a05622a175600b0029d63a970f6so4459969qtk.23
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Sep 2021 22:55:30 -0700 (PDT)
+        bh=bDvgsokZwzrcNUaLieJR18ZGVjKpNWnq/qMS3t3kGKI=;
+        b=bDR2sbcE06mO17dljQ8YYGjRam+zR16BLHuynm3MrfTlXelXxYMDOxXXxDZeMzxVfyGMUl
+        M65TdPioI8GU0UyVAKCVWnKcDLg9DOs8ZqmxpaQt4qTT/DXBgQYajbj/NegvBtxbOu5w02
+        nCRZ6lZK+Oi6vfzRxgAeP0NOV9hRKls=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-27-NiHTXLmEOeyW0gMesrV4NA-1; Fri, 03 Sep 2021 01:55:46 -0400
+X-MC-Unique: NiHTXLmEOeyW0gMesrV4NA-1
+Received: by mail-qv1-f69.google.com with SMTP id r3-20020a0cc403000000b00377a3318261so5050931qvi.11
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Sep 2021 22:55:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YVcqIhLjK1aLZFmGstA8aMe5xkC0R7kiAZwq3yD/UZo=;
-        b=snuqDa2L9vXVrMjYWT1Bxn90LKOqf2qt1PvvsnxweXS6ahQzcAvOwh3un674WP+nGA
-         HbhN+m+A5eN5S+fDxo1KVVkslV/3UT0Bzxxiciv6qe3/3FG1wyVTFhnt2cSG5Vv261f/
-         e2DFz9n6P1cvW23ox8TirC0tUkfAx18DALIMVTTbTH8G08oqKcedyP21Rctmduw8i90X
-         7QiHTO0tss2ab8HvuSaJBp/CREkvIx7BxEwnkVRrogGLTwtjaJQXo/pjiXs2IJc6tCCg
-         Nu1CjdjX9uG11RaI2lM6TSTdGnfc04D84jj4h1uHlKNkG6dbbAQwSW2bRdvOkNtmFc23
-         u/5Q==
-X-Gm-Message-State: AOAM530Dz1zjHIjPV9rMOZ8Z6skS+2y/LtC9zeRuuEOictyyv9n7xRC9
-        gzC+xfi220InIoYdAvZSVZRXzsN2LexeTcaZYuiyPOY94d5vCTkPUEAVNAhqE7zrd4owimO/3FH
-        EG4E2qKX9fMuGKU21hxHJsLkJOdEV
-X-Received: by 2002:a05:620a:1529:: with SMTP id n9mr1829198qkk.322.1630648530598;
-        Thu, 02 Sep 2021 22:55:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyBA2PPgx2ogxp7sl4eBWoxXxd8xybtAdlH2aAWqzoyoFquWEXA675Jbr2q0U4tlJxGlHbFOw==
-X-Received: by 2002:a05:620a:1529:: with SMTP id n9mr1829187qkk.322.1630648530395;
-        Thu, 02 Sep 2021 22:55:30 -0700 (PDT)
+        bh=bDvgsokZwzrcNUaLieJR18ZGVjKpNWnq/qMS3t3kGKI=;
+        b=X89A6hxbqUTu13DCYtspyzyp6B0HA3Vd7Xsgv+XSKmVs22nu9ryutB5cc5KzYKf90V
+         GHIcp9XRSyS38yctpr7bdjOnXMBjhB2RH1KFv5pdwh4urzigALemQYpmVf1g91Q08slO
+         f8g1msUPwTC+7adLcF9RiitdHp292qXqmiDFSrWFrIK10S5qUcsqwZzdpGYluP/T62b/
+         aR4yjIbt0z29qu4uPFhEnXPSE7fCypUDhQx2dkwQXqlRC+5pmmU1yVnT1ME5zW05vgQi
+         DMLLMVjDkfmVpQOnkjwPztHG3vRZR/3SlRteJrFjSE70/+1x1Sq487+BJgmpiUMtAQwv
+         zXgg==
+X-Gm-Message-State: AOAM531umMcurgPH++oNEL7VazjRywj+TJcGrLjaG5BFsm0cRrEl+OSG
+        hUJ9ZBGswW8UnVBpjxlGZaJVUbEZSAgVWORUzFUAcfrrW2/4+yJT57YSzOHHzAvnh5OVJw5K27Z
+        vm3in34Ao5z0RPT8DTxPgGvVtu+ZM
+X-Received: by 2002:ad4:47cc:: with SMTP id p12mr1967383qvw.16.1630648545822;
+        Thu, 02 Sep 2021 22:55:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy2rfokB35RHoytkOenvkXEQNhy0zoJ+Ni5jGU5Fpr4Gqpd31z62no5fBtGg9o+rq+iUgaKgw==
+X-Received: by 2002:ad4:47cc:: with SMTP id p12mr1967372qvw.16.1630648545652;
+        Thu, 02 Sep 2021 22:55:45 -0700 (PDT)
 Received: from treble ([2600:1700:6e32:6c00::d])
-        by smtp.gmail.com with ESMTPSA id g8sm3144077qkm.25.2021.09.02.22.55.28
+        by smtp.gmail.com with ESMTPSA id x23sm3180733qkn.29.2021.09.02.22.55.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Sep 2021 22:55:29 -0700 (PDT)
-Date:   Thu, 2 Sep 2021 22:55:26 -0700
+        Thu, 02 Sep 2021 22:55:45 -0700 (PDT)
+Date:   Thu, 2 Sep 2021 22:55:41 -0700
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -76,13 +76,13 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Sami Tolvanen <samitolvanen@google.com>,
         linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/4] vmlinux.lds.h: Use regular *RODATA and
- *RO_AFTER_INIT_DATA suffixes
-Message-ID: <20210903055526.mmi6hoomawavkbsp@treble>
+Subject: Re: [PATCH 2/4] vmlinux.lds.h: Split .static_call_sites from
+ .static_call_tramp_key
+Message-ID: <20210903055541.b3dk5yqwkslklvsa@treble>
 References: <20210901233757.2571878-1-keescook@chromium.org>
- <20210901233757.2571878-2-keescook@chromium.org>
+ <20210901233757.2571878-3-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20210901233757.2571878-2-keescook@chromium.org>
+In-Reply-To: <20210901233757.2571878-3-keescook@chromium.org>
 Authentication-Results: relay.mimecast.com;
         auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -93,10 +93,10 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 01, 2021 at 04:37:54PM -0700, Kees Cook wrote:
-> Rename the various section macros that live in RODATA and
-> RO_AFTER_INIT_DATA. Just being called "DATA" implies they are expected
-> to be writable.
+On Wed, Sep 01, 2021 at 04:37:55PM -0700, Kees Cook wrote:
+> These two sections are ro_after_init and .rodata respectively. While
+> they will ultimately become read-only, there's no reason to confuse
+> their macro names.
 > 
 > Cc: Arnd Bergmann <arnd@arndb.de>
 > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
