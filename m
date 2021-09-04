@@ -2,107 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12520C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 13:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E9DC433EF
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 13:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A7460F9C
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 13:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D01960FA0
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 13:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231229AbhIDNSq (ORCPT
+        id S231165AbhIDNYQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 09:18:46 -0400
-Received: from mout.gmx.net ([212.227.15.15]:35711 "EHLO mout.gmx.net"
+        Sat, 4 Sep 2021 09:24:16 -0400
+Received: from mout.gmx.net ([212.227.17.22]:41841 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230379AbhIDNSp (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 09:18:45 -0400
+        id S230297AbhIDNYQ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 4 Sep 2021 09:24:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630761459;
-        bh=anRpNVH27qFxp/JuNYRLaMaSlrUvcuVTQZSIBrXFAPM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=hGeA4LjSAWagwA+D3QEVGKowTQTlSwiVD6jHCasbiDtYxF/xOMIqAugRyElrcsdwo
-         Rkn00cOrVvvP4dRdDfkgFc0TP8gqTvG0fbHDVmQddt8pBNJhVclqDPqJSUnXqY9Iws
-         Kf2sXun9Wymc/FCizeRWdCNiqjf4abclqO3beKP0=
+        s=badeba3b8450; t=1630761779;
+        bh=VedANFIqdoIjEowtEWOZv/ASCI66wxx8Mg47+8sNjBE=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=KGRV4H0rUFaNpYk30tnCxpFQBIMZsXQRwqWykxbSnBD1qN2GhR5Ta99iwq/NZyBiQ
+         QSiuR+R1jpvHgoUX6mv22UAiIuQNKio8kIdZ5t0jWWShfmwu3W4dIpLPYGqyBXgXqU
+         zb4skP+/Csih/O2Nlz10uU0XlGNbr3lFJNzS3qUo=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MEUzA-1mAuxF2gNG-00FzhO; Sat, 04 Sep 2021 15:17:39 +0200
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MTiPl-1mYF5T3bzh-00U0Aj; Sat, 04
+ Sep 2021 15:22:59 +0200
+Date:   Sat, 4 Sep 2021 15:22:44 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Tero Kristo <kristo@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: ti: composite: Prefer kcalloc over open coded arithmetic
-Date:   Sat,  4 Sep 2021 15:17:14 +0200
-Message-Id: <20210904131714.2312-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Len Baker <len.baker@gmx.com>, Joe Perches <joe@perches.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] EDAC/mc: Prefer strscpy or scnprintf over strcpy
+Message-ID: <20210904132244.GA2384@titan>
+References: <20210903150539.7282-1-len.baker@gmx.com>
+ <3a035a3ec4571a622ce640e042f9a119@perches.com>
+ <20210904094451.GA2998@titan>
+ <YTNaOsF3cRpL7065@zn.tnic>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YTNaOsF3cRpL7065@zn.tnic>
+X-Provags-ID: V03:K1:01/cutQ6WDHs06bO6yQe43QhF9ZJYQd4XTLYWuJ5jvZM09VoDut
+ y9NBU3I1Cv8oxk8tZITw/Rb2wptgQQ6Y57HhPuhEJ5syUOmI63Djkf4kf+ErgacjINoSvz8
+ 9HtHWTqeeUa61gOek37pjXBJOAPgJnKFEGcRz1R88SCQ2379R0oAYGLBy9EF5Pk2Icarcg6
+ ETvXR66cQz3CInpw4yF7Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MDv4+8Eu+1c=:3eglAEAFlOmd9f4/pip2Pg
+ Nbll9pQ6VVQBu/4pdJ6kdsLTUecOq2sn+f3V44l37diWcR9UR0KV6zSnORM599u3GozJx0teD
+ qQ9b4zZxD/qHLDlk1hZguRKSN9/UrjFGtxva6qmYLN9VCTIhILmXVPEvYRjMx4oZqwSdAoYkM
+ zOtl6hB2gXtLGP2NsyQ5Qxcgz4B17sUKKdJunrnDO5bKEI2cvAgCKIeQPtT7fPGKA5ZeCSDdj
+ lt/A/ugYsE/cAnXNK+3ikKXXCZliqDoRXaNmsih3S/6N+CWnSwhZ/IW2fxPn6lnKmLQhLT2cf
+ s2o/V5DQhgZpkLwDH1khQ2+QSgjYSV2o32R5OU8CmnslpYNJOfPUQd2ZiFib9AGpyxOgYhCOp
+ krqcaNGA54hkXSWJxKYSfCzMiEEBw1a3tyfuWwj2vr5ukCjobBM6XTyeWZ3sWlP9aEs7+3Klv
+ gOI2vCdL/wlsSTrcpRjdDoaOEh2R4cRqDRcn1sbMj5CweLb2WzqkTEfQ7WibtY2MFL7nOvh4g
+ HYRH6aiadekvQ3BeWs1OsuEjilPCM8LCbt+vZLpPOxPrdjRStBdU6NqglEMYxplSRFGE35Xge
+ mLqJT1xcatTZS42KZFuWyq5Rf9hAnvbGvm2MIuYKhff+coZBh/RaK00ta9OTEp365dpbvQe4m
+ n7qXwWvXxI8J/9Pfw/PCQjnU4dsCtdkeL0RwH9P85QUpTYT4HKGyELXr1efARjIWpHkAjzBA/
+ q/BW2mNW5PYzwB2DlRprj3G3FiULEDdLaPz0ZdW5lhAqnEPB89MATRd/qSoUP8SZ59kPnm5Pp
+ ISjgYZcvnMglhLMhcf5m+nNG1gftWU1bID1E5GCbPe+dsh9XkozS9WJCqSoM32ZDMmBVXLuVs
+ JqkTbOoYXYdDZT1utwRk+nwnYWxea3qtqm5t5fu1JhY6mXZw6XLxd3mrt2PDitQpqeW5o0GKd
+ W3nnwYpIr+G5K9EBm911GPjNyIKg60CFp1xRdgde8QcZDT1k7syUYwOLSuQeose23ycfqHw9f
+ loHcfpopwdbd+nwlY/9rhC+du8qxfBy+ooToaO1s132rfsdfOtk/wbvFKnBLUe9kSaAxHV7H+
+ Fk4DYAjDMgH4eeXCP8UE0XcZma84sbO1K2oJghXmG37jHfmj8TGXt3uLA==
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/CTvZZgUUU4aW56h57ya80evQdHSE2y2Afe+boB24hpwe914lpk
- x6nxeUz3HoNtUEfE1fnSXTLwXfieC2KH6c6TZ+oCh9X2txpFZoLwBi62uqIF4fxree+EXlm
- 19hxmCeNtTHbUGTpwIR1H6xVRexeCNuRKUzceIuwCt3mfhEySYtUub3ltH4wJjOVLmRsbJ9
- /ZxJr/45nR990NCS/pdCA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tVroNg3tl+w=:PPfRbT44yh/VG/YPE/zc4S
- Hf5BJscqDVAdXhETLWnirVm9IF5zVkrlhVa76tCVJZTLSshkIVx4ck71kza5L0Jp2pmhrp5Ue
- MFIzURUtMrhYBRuaaQgpi6AzA6R6z4HypWEAkpdFEwJTMs7EUwJ1KDGifGp+5JxsQn6rLFvdy
- H3v5snz/I7tRhqCdOBgkVpqyKpTBUCXf5/2ATAdDPxyUZ48ic024WmtvbfRQBkEEATeX7DAKD
- gFZIA31OEwSgkn+XQVI846aQX0z9PYuoAzr43KHwIIK8cqr3Ku2ABCSUmJI6HrUqke2Gbf1z4
- i6JpFTHZSWhT3Q1VqNorWSE65+NIfUszWvkuDieAtCR/P/n0eDyb01jQv3vjRHbLjhJJJ3hr7
- m2C8oEsAICIBQA44xNbmiEjmuqXhIlYHtYznFyJLRTQKpwoAgxTfi6xN58KGmtmc/AMI4PjOI
- TjUK7fxDyHSUaone8+XStiGtn3xGW61IqElWkJ2JHtHY4XpMis+fYMzISlPAEfBXqRQqUpEJK
- c0Z83nIFNt8J1C0XDEgkto348schP5gU9m/Xi4LAWlkL8oGNYxLGDqBc9MI+CYws8Ems2XFZ8
- nvujerrwm767GgE4Mdy8XzXjV8i15NLYklBTEogPxEICbJ4WuMYAxWGbvPjdzESY4PhXr9LkA
- 3JIUFB28t6YppK+oPUh4OHY4mmVJeFx28KvKYQTSbjx0MwjxKfRC0jDGi0Po+nQrJuHDWA51o
- MEqtdqNFp4+eb9jjaDfHOQxa2GYks/ej3KnKs+Ff9gEoAJESG3w1Zwr9OH9Cgoxjx5rqb/6zk
- je69cg4CiOrQyN3qU1mcKXohc7s0ppe4Aj+OlSsVu7NDmfDyH6pDkTIKRIHm4k0zCs9joXyvn
- bNMsJ0EpfgMwEe+KyGyDgHpj7eWu3pvwp2CHC7d03i2CFfK5t498aDPlq5gGzbY46Dp9GsS3y
- rZbk/cA9cMfoy5pPmfpK5tyOuafql1gRu4JZk6nsBG4aUPqfSG4MJAkmh4zHnbny6UwSK98qN
- 2xTVgl6c7Vlc4krtIGLYfcf3hrqx9nzFsMQP2GjHuiiLCrAS3gKLXBnxrzHc99342cFQxTxh3
- je/ODOtT8sZgRzfi+Bwwd5Se+Z4TTid3yf5SbjIJimUmZd/dFvprkcn3w==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+Hi,
 
-So, use the purpose specific kcalloc() function instead of the argument
-size * count in the kzalloc() function.
+On Sat, Sep 04, 2021 at 01:36:26PM +0200, Borislav Petkov wrote:
+> On Sat, Sep 04, 2021 at 01:23:03PM +0200, Len Baker wrote:
+> > I can remove the macro and add a comment with some explanation.
+>
+> No, please leave the macro.
 
-[1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
-ed-arithmetic-in-allocator-arguments
+Ok, so I leave the patch as is.
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/clk/ti/composite.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
-index eaa43575cfa5..eb5ce9735c7d 100644
-=2D-- a/drivers/clk/ti/composite.c
-+++ b/drivers/clk/ti/composite.c
-@@ -253,7 +253,7 @@ int __init ti_clk_add_component(struct device_node *no=
-de, struct clk_hw *hw,
- 		return -EINVAL;
- 	}
-
--	parent_names =3D kzalloc((sizeof(char *) * num_parents), GFP_KERNEL);
-+	parent_names =3D kcalloc(num_parents, sizeof(char *), GFP_KERNEL);
- 	if (!parent_names)
- 		return -ENOMEM;
-
-=2D-
-2.25.1
-
+Thanks,
+Len
