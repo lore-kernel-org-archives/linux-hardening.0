@@ -2,92 +2,200 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E9DC433EF
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 13:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8D7C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 14:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D01960FA0
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 13:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39046108E
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 14:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbhIDNYQ (ORCPT
+        id S230514AbhIDOlM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 09:24:16 -0400
-Received: from mout.gmx.net ([212.227.17.22]:41841 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230297AbhIDNYQ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 09:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630761779;
-        bh=VedANFIqdoIjEowtEWOZv/ASCI66wxx8Mg47+8sNjBE=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=KGRV4H0rUFaNpYk30tnCxpFQBIMZsXQRwqWykxbSnBD1qN2GhR5Ta99iwq/NZyBiQ
-         QSiuR+R1jpvHgoUX6mv22UAiIuQNKio8kIdZ5t0jWWShfmwu3W4dIpLPYGqyBXgXqU
-         zb4skP+/Csih/O2Nlz10uU0XlGNbr3lFJNzS3qUo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MTiPl-1mYF5T3bzh-00U0Aj; Sat, 04
- Sep 2021 15:22:59 +0200
-Date:   Sat, 4 Sep 2021 15:22:44 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Len Baker <len.baker@gmx.com>, Joe Perches <joe@perches.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] EDAC/mc: Prefer strscpy or scnprintf over strcpy
-Message-ID: <20210904132244.GA2384@titan>
-References: <20210903150539.7282-1-len.baker@gmx.com>
- <3a035a3ec4571a622ce640e042f9a119@perches.com>
- <20210904094451.GA2998@titan>
- <YTNaOsF3cRpL7065@zn.tnic>
+        Sat, 4 Sep 2021 10:41:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232832AbhIDOlM (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 4 Sep 2021 10:41:12 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5B7AC0613C1
+        for <linux-hardening@vger.kernel.org>; Sat,  4 Sep 2021 07:40:10 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id n18so1278842plp.7
+        for <linux-hardening@vger.kernel.org>; Sat, 04 Sep 2021 07:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rT9D3cD6AK/U9ynMxv4dnPjLHMnSzhI3eW+DvMhMYv4=;
+        b=bA7994xBs5m1ZQvCLablElQZ97mYGS2txQ6t1KugHdJ9bOTKQn/g1ykQb6kf+VW1kj
+         x53d9bgkmnic8+HM/3c01odPUM/1NaKqTuMfBesS5QBLCQov39J4DsNKc4fDhIo5uKGu
+         QmkVEDxUwaKxGfTW9JqRWsG1vFwPPcYyrSs1A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rT9D3cD6AK/U9ynMxv4dnPjLHMnSzhI3eW+DvMhMYv4=;
+        b=QVzBRLUW4dQO+yDAldkb53e4InRyEzZ5q5GB7W6T1t112duYUZLIbPnVlGxSVXWR4X
+         0UiKq2wsZt1AmfagwwVZ6PeQCgH2snpmx8oWnNqnfdv9j1DWY6HlYVRs/bM3fHrqwXw8
+         ec2A6Npd/fFie3xQThFp9qCzCA/gliaSNBflj03rjQp57VFCSzTL9wAPys+5yQCctOZM
+         /3L2bJcrCCAzY5KxUkL8F3kA65GZwR/YAe6UJnzWTP4CO0LlDuXxyTiXt3SWcyFCgV+/
+         aGiEnKeLJgRfuRPVBacz1qSLoXgLaqJX8395Dl0ziO3e0DaeNGPrQ3TXyvvgkFyzGecx
+         gVvw==
+X-Gm-Message-State: AOAM533ootD6hyrt/iJ6MT5cE+xzu5XGUa4AZO1nIjOI2wk6E2XDvdfV
+        aMVyt2eeehcknULy65IzoO5iLw==
+X-Google-Smtp-Source: ABdhPJzl0DwgZA0hvjnFBnC+PnasBoLTB/Zs++xSopyABJPyxYKDWg4SZhDJeJK8DjDAcojzCdCxpQ==
+X-Received: by 2002:a17:902:a50f:b029:11a:b033:e158 with SMTP id s15-20020a170902a50fb029011ab033e158mr3561213plq.26.1630766410054;
+        Sat, 04 Sep 2021 07:40:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u6sm2949081pgr.3.2021.09.04.07.40.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Sep 2021 07:40:09 -0700 (PDT)
+Date:   Sat, 4 Sep 2021 07:40:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-arch@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alexander Egorenkov <egorenar@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Sean Christopherson <seanjc@google.com>
+Subject: Re: [PATCH 3/4] module: Use a list of strings for ro_after_init
+ sections
+Message-ID: <202109040739.F973371BD@keescook>
+References: <20210901233757.2571878-1-keescook@chromium.org>
+ <20210901233757.2571878-4-keescook@chromium.org>
+ <20210903064951.to4dhiu7zua7s6dn@treble>
+ <202109030932.1358C4093@keescook>
+ <20210904040903.tgkkoo2x76zpuj62@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YTNaOsF3cRpL7065@zn.tnic>
-X-Provags-ID: V03:K1:01/cutQ6WDHs06bO6yQe43QhF9ZJYQd4XTLYWuJ5jvZM09VoDut
- y9NBU3I1Cv8oxk8tZITw/Rb2wptgQQ6Y57HhPuhEJ5syUOmI63Djkf4kf+ErgacjINoSvz8
- 9HtHWTqeeUa61gOek37pjXBJOAPgJnKFEGcRz1R88SCQ2379R0oAYGLBy9EF5Pk2Icarcg6
- ETvXR66cQz3CInpw4yF7Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MDv4+8Eu+1c=:3eglAEAFlOmd9f4/pip2Pg
- Nbll9pQ6VVQBu/4pdJ6kdsLTUecOq2sn+f3V44l37diWcR9UR0KV6zSnORM599u3GozJx0teD
- qQ9b4zZxD/qHLDlk1hZguRKSN9/UrjFGtxva6qmYLN9VCTIhILmXVPEvYRjMx4oZqwSdAoYkM
- zOtl6hB2gXtLGP2NsyQ5Qxcgz4B17sUKKdJunrnDO5bKEI2cvAgCKIeQPtT7fPGKA5ZeCSDdj
- lt/A/ugYsE/cAnXNK+3ikKXXCZliqDoRXaNmsih3S/6N+CWnSwhZ/IW2fxPn6lnKmLQhLT2cf
- s2o/V5DQhgZpkLwDH1khQ2+QSgjYSV2o32R5OU8CmnslpYNJOfPUQd2ZiFib9AGpyxOgYhCOp
- krqcaNGA54hkXSWJxKYSfCzMiEEBw1a3tyfuWwj2vr5ukCjobBM6XTyeWZ3sWlP9aEs7+3Klv
- gOI2vCdL/wlsSTrcpRjdDoaOEh2R4cRqDRcn1sbMj5CweLb2WzqkTEfQ7WibtY2MFL7nOvh4g
- HYRH6aiadekvQ3BeWs1OsuEjilPCM8LCbt+vZLpPOxPrdjRStBdU6NqglEMYxplSRFGE35Xge
- mLqJT1xcatTZS42KZFuWyq5Rf9hAnvbGvm2MIuYKhff+coZBh/RaK00ta9OTEp365dpbvQe4m
- n7qXwWvXxI8J/9Pfw/PCQjnU4dsCtdkeL0RwH9P85QUpTYT4HKGyELXr1efARjIWpHkAjzBA/
- q/BW2mNW5PYzwB2DlRprj3G3FiULEDdLaPz0ZdW5lhAqnEPB89MATRd/qSoUP8SZ59kPnm5Pp
- ISjgYZcvnMglhLMhcf5m+nNG1gftWU1bID1E5GCbPe+dsh9XkozS9WJCqSoM32ZDMmBVXLuVs
- JqkTbOoYXYdDZT1utwRk+nwnYWxea3qtqm5t5fu1JhY6mXZw6XLxd3mrt2PDitQpqeW5o0GKd
- W3nnwYpIr+G5K9EBm911GPjNyIKg60CFp1xRdgde8QcZDT1k7syUYwOLSuQeose23ycfqHw9f
- loHcfpopwdbd+nwlY/9rhC+du8qxfBy+ooToaO1s132rfsdfOtk/wbvFKnBLUe9kSaAxHV7H+
- Fk4DYAjDMgH4eeXCP8UE0XcZma84sbO1K2oJghXmG37jHfmj8TGXt3uLA==
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210904040903.tgkkoo2x76zpuj62@treble>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Fri, Sep 03, 2021 at 09:09:03PM -0700, Josh Poimboeuf wrote:
+> On Fri, Sep 03, 2021 at 09:38:42AM -0700, Kees Cook wrote:
+> > On Thu, Sep 02, 2021 at 11:49:51PM -0700, Josh Poimboeuf wrote:
+> > > On Wed, Sep 01, 2021 at 04:37:56PM -0700, Kees Cook wrote:
+> > > > Instead of open-coding the section names, use a list for the sections that
+> > > > need to be marked read-only after init. Unfortunately, it seems we can't
+> > > > do normal section merging with scripts/module.lds.S as ld.bfd doesn't
+> > > > correctly update symbol tables. For more details, see commit 6a3193cdd5e5
+> > > > ("kbuild: lto: Merge module sections if and only if CONFIG_LTO_CLANG
+> > > > is enabled").
+> > > 
+> > > I'm missing what this has to do with section merging.  Can you connect
+> > > the dots here, i.e. what sections would we want to merge and how would
+> > > that help here?
+> > 
+> > Right, sorry, if ld.bfd didn't have this issue, we could use section
+> > merging in the module.lds.S file the way we do in vmlinux.lds:
+> > 
+> > #ifndef RO_AFTER_INIT_DATA
+> > #define RO_AFTER_INIT_DATA                                              \
+> >         . = ALIGN(8);                                                   \
+> >         __start_ro_after_init = .;                                      \
+> >         *(.data..ro_after_init)                                         \
+> >         JUMP_TABLE_DATA                                                 \
+> >         STATIC_CALL_DATA                                                \
+> >         __end_ro_after_init = .;
+> > #endif
+> > ...
+> >         . = ALIGN((align));                                             \
+> >         .rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {           \
+> >                 __start_rodata = .;                                     \
+> >                 *(.rodata) *(.rodata.*)                                 \
+> >                 SCHED_DATA                                              \
+> >                 RO_AFTER_INIT_DATA      /* Read only after init */      \
+> >                 . = ALIGN(8);                                           \
+> >                 __start___tracepoints_ptrs = .;                         \
+> >                 KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+> >                 __stop___tracepoints_ptrs = .;                          \
+> >                 *(__tracepoints_strings)/* Tracepoints: strings */      \
+> >         }                                                               \
+> > 
+> > Then jump_table and static_call sections could be collected into a
+> > new section, as the module loader would only need to look for that
+> > single name.
+> 
+> Hm, that could be a really nice way to converge things for vmlinux and
+> module linking.
 
-On Sat, Sep 04, 2021 at 01:36:26PM +0200, Borislav Petkov wrote:
-> On Sat, Sep 04, 2021 at 01:23:03PM +0200, Len Baker wrote:
-> > I can remove the macro and add a comment with some explanation.
->
-> No, please leave the macro.
+Agreed! I had really wanted to do more of this, but was stumped by the
+weird symbol behavior.
 
-Ok, so I leave the patch as is.
+> After some digging, 6a3193cdd5e5 isn't necessarily a linker bug.  It may
+> be some kind of undefined behavior when the section address isn't
+> specified.  If you just explicitly set the section address to zero then
+> the "bug" goes away.
 
-Thanks,
-Len
+Well that's a nice find! I'll play more with this to see if I can make a
+cleaner solution.
+
+Thanks!
+
+-Kees
+
+> 
+> diff --git a/scripts/module.lds.S b/scripts/module.lds.S
+> index 04c5685c25cf..80b09b7d405c 100644
+> --- a/scripts/module.lds.S
+> +++ b/scripts/module.lds.S
+> @@ -30,23 +30,22 @@ SECTIONS {
+>  
+>  	__patchable_function_entries : { *(__patchable_function_entries) }
+>  
+> -#ifdef CONFIG_LTO_CLANG
+>  	/*
+>  	 * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
+>  	 * -ffunction-sections, which increases the size of the final module.
+>  	 * Merge the split sections in the final binary.
+>  	 */
+> -	.bss : {
+> +	.bss 0 : {
+>  		*(.bss .bss.[0-9a-zA-Z_]*)
+>  		*(.bss..L*)
+>  	}
+>  
+> -	.data : {
+> +	.data 0 : {
+>  		*(.data .data.[0-9a-zA-Z_]*)
+>  		*(.data..L*)
+>  	}
+>  
+> -	.rodata : {
+> +	.rodata 0 : {
+>  		*(.rodata .rodata.[0-9a-zA-Z_]*)
+>  		*(.rodata..L*)
+>  	}
+> @@ -55,11 +54,10 @@ SECTIONS {
+>  	 * With CONFIG_CFI_CLANG, we assume __cfi_check is at the beginning
+>  	 * of the .text section, and is aligned to PAGE_SIZE.
+>  	 */
+> -	.text : ALIGN_CFI {
+> +	.text 0 : ALIGN_CFI {
+>  		*(.text.__cfi_check)
+>  		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
+>  	}
+> -#endif
+>  }
+>  
+>  /* bring in arch-specific sections */
+> 
+
+-- 
+Kees Cook
