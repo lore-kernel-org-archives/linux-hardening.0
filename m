@@ -8,128 +8,101 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A46C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 11:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12520C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 13:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252E060FA0
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 11:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A7460F9C
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 13:17:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234848AbhIDLvc (ORCPT
+        id S231229AbhIDNSq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 07:51:32 -0400
-Received: from mout.gmx.net ([212.227.15.15]:54833 "EHLO mout.gmx.net"
+        Sat, 4 Sep 2021 09:18:46 -0400
+Received: from mout.gmx.net ([212.227.15.15]:35711 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234695AbhIDLvb (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 07:51:31 -0400
+        id S230379AbhIDNSp (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 4 Sep 2021 09:18:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630756195;
-        bh=v23ee+m+JJjtewkqOV9p0pm3JlwVl9WxkFvaAGuX1Ok=;
+        s=badeba3b8450; t=1630761459;
+        bh=anRpNVH27qFxp/JuNYRLaMaSlrUvcuVTQZSIBrXFAPM=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=aFui8fkZ7Z58f+hoFtAARRQYR9O68rtrzMTniksFo0yE+lIEfO8ModCfBVi3mXR5i
-         EiOQClEbqBjrK4Gn5fkW3frJ1W1wJ28rxOIoMIaAkazaBm4BVzWTUpmsjw9B6B7DvV
-         +BTYZq34iQwbt2CERbZuU6dSHBuhNNARphYOxqDg=
+        b=hGeA4LjSAWagwA+D3QEVGKowTQTlSwiVD6jHCasbiDtYxF/xOMIqAugRyElrcsdwo
+         Rkn00cOrVvvP4dRdDfkgFc0TP8gqTvG0fbHDVmQddt8pBNJhVclqDPqJSUnXqY9Iws
+         Kf2sXun9Wymc/FCizeRWdCNiqjf4abclqO3beKP0=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
  (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MNKhs-1mbF5F0Vek-00OpPE; Sat, 04 Sep 2021 13:49:55 +0200
+ 1MEUzA-1mAuxF2gNG-00FzhO; Sat, 04 Sep 2021 15:17:39 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+To:     Tero Kristo <kristo@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ath11k: Replace one-element array with flexible-array member
-Date:   Sat,  4 Sep 2021 13:49:37 +0200
-Message-Id: <20210904114937.6644-1-len.baker@gmx.com>
+Subject: [PATCH] clk: ti: composite: Prefer kcalloc over open coded arithmetic
+Date:   Sat,  4 Sep 2021 15:17:14 +0200
+Message-Id: <20210904131714.2312-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:80dhGiw6SsS128pziswnDI1u80tDjGhkmv0etse23Btp6AiuXMU
- erX4Fha1+Rio79fF8pR8DDJ243friSWaqCt5kJWcTfJS8wa/JbBXL4tgdUSUZYaPB9y7t0X
- 9ZEW64C2K3McSXftObLTHx2lBttv0XJ/hCJFeLcUY4zh87JmoJAlgu26uWiTJbTQJy6b4hi
- SILt2HJn0e/o9Q3rmEX8w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hwJ/wysCuJA=:gLwWR3WSAne682ae3N83h7
- 50mzDgEeO35RizI+pFCaDClySune61eyNXfXjLGv6+ZINVl5WeMkJTnPUt+6yi6iloIqsY1Bo
- 3oEgJpt+dDyr33uMSv10s3FwMTuBd+b3R+KBHY2fFqSVHuI6DKRQICn+TrH+k/U5ftBNaaHhb
- sju5YC9m1VdKaetngY17T8nk28xhEZCAYKpsYvYNuVoLYu4b8Y122XoJq2NCNbhJlHKFtWTUQ
- 6wlAv7cn+wobzXEc1s4XmWZNF5dMwSmrSv5wYpBP/jlCUvh/wV1NcwYpWPz+UhZWdkuZpVMEN
- Jd7AF4eu4eXPmLexUxlWjZfuw7mwsxoWiyWT8+0mZT5RFufCGtdJV2MS1gAgK7/vtScsB3fBo
- +CBPGDQxKx046dbIJYdy81lWeSDDdn9HGLCeSvZdNrFtIlNYwYQkCKOWgsvbxOUYMm8z9+ZWs
- 1/ghu6bCKaR9DSMjZ1Y4/en4DCsoOS6o2ExUB5DCL6ZTCizzqsPCZuBk+Jn2toPzILlSJiujM
- 3qI4SwhsxWgjMaOQl8sWt//D9QYjh7ILxAljt7JMEfuDmsQd37zETumtwPmq9MqADN1JnPQCf
- PEJ7+Epmtn9Q8NuHDceo3VwcbtG1BPh4CfQkyt9R2e6JweyG69DslwhMhFiP1OG8OFKsLAjoq
- Ll5CkkmUvYz2eQy/0Ir/ZQg8BMAXp4K+ODHOsTYq3Q/dmz7bMYRZlHVasI5iWQwegyhLRgA4J
- 0qI0Z/Ppfx3xXsBJnnJBn8q50MP30dlVQ6APQm8uvH52NUZ7wqGebKiKPEecS18MFHIlLO8mC
- xqJL1by3fzzt8VWO8+6pTSN99WU4chbNeaS3+8ntlhIoOcEu2VK0Xg9xOzNGCu/69ZG2zNlss
- W5gftl2UUdcsuZv10FcUv2tiNEcB58aL5bHPNyUAbzPuexYpcxrVUj+5m5Yb8dLzbCDuY68TD
- R7xEjJB3zUAyDJ77S4e3lrUoOWJQQu41sVXPm1Pu0JuKGbr06Pk5rh1I8edO/OnbcYSyPSSMe
- VzUVBm+roYpznFZXx6FxTnuataFDQOcwfoWxNbh2Q/3YfR5E4xVGCAzmb0e3ZwmPa9Fy6oIBc
- spnMijX1mfCTHO9cQgrpNdhlNAB4gtHtDXSthY1/3jqmx+N4q4T9CiZTw==
+X-Provags-ID: V03:K1:/CTvZZgUUU4aW56h57ya80evQdHSE2y2Afe+boB24hpwe914lpk
+ x6nxeUz3HoNtUEfE1fnSXTLwXfieC2KH6c6TZ+oCh9X2txpFZoLwBi62uqIF4fxree+EXlm
+ 19hxmCeNtTHbUGTpwIR1H6xVRexeCNuRKUzceIuwCt3mfhEySYtUub3ltH4wJjOVLmRsbJ9
+ /ZxJr/45nR990NCS/pdCA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tVroNg3tl+w=:PPfRbT44yh/VG/YPE/zc4S
+ Hf5BJscqDVAdXhETLWnirVm9IF5zVkrlhVa76tCVJZTLSshkIVx4ck71kza5L0Jp2pmhrp5Ue
+ MFIzURUtMrhYBRuaaQgpi6AzA6R6z4HypWEAkpdFEwJTMs7EUwJ1KDGifGp+5JxsQn6rLFvdy
+ H3v5snz/I7tRhqCdOBgkVpqyKpTBUCXf5/2ATAdDPxyUZ48ic024WmtvbfRQBkEEATeX7DAKD
+ gFZIA31OEwSgkn+XQVI846aQX0z9PYuoAzr43KHwIIK8cqr3Ku2ABCSUmJI6HrUqke2Gbf1z4
+ i6JpFTHZSWhT3Q1VqNorWSE65+NIfUszWvkuDieAtCR/P/n0eDyb01jQv3vjRHbLjhJJJ3hr7
+ m2C8oEsAICIBQA44xNbmiEjmuqXhIlYHtYznFyJLRTQKpwoAgxTfi6xN58KGmtmc/AMI4PjOI
+ TjUK7fxDyHSUaone8+XStiGtn3xGW61IqElWkJ2JHtHY4XpMis+fYMzISlPAEfBXqRQqUpEJK
+ c0Z83nIFNt8J1C0XDEgkto348schP5gU9m/Xi4LAWlkL8oGNYxLGDqBc9MI+CYws8Ems2XFZ8
+ nvujerrwm767GgE4Mdy8XzXjV8i15NLYklBTEogPxEICbJ4WuMYAxWGbvPjdzESY4PhXr9LkA
+ 3JIUFB28t6YppK+oPUh4OHY4mmVJeFx28KvKYQTSbjx0MwjxKfRC0jDGi0Po+nQrJuHDWA51o
+ MEqtdqNFp4+eb9jjaDfHOQxa2GYks/ej3KnKs+Ff9gEoAJESG3w1Zwr9OH9Cgoxjx5rqb/6zk
+ je69cg4CiOrQyN3qU1mcKXohc7s0ppe4Aj+OlSsVu7NDmfDyH6pDkTIKRIHm4k0zCs9joXyvn
+ bNMsJ0EpfgMwEe+KyGyDgHpj7eWu3pvwp2CHC7d03i2CFfK5t498aDPlq5gGzbY46Dp9GsS3y
+ rZbk/cA9cMfoy5pPmfpK5tyOuafql1gRu4JZk6nsBG4aUPqfSG4MJAkmh4zHnbny6UwSK98qN
+ 2xTVgl6c7Vlc4krtIGLYfcf3hrqx9nzFsMQP2GjHuiiLCrAS3gKLXBnxrzHc99342cFQxTxh3
+ je/ODOtT8sZgRzfi+Bwwd5Se+Z4TTid3yf5SbjIJimUmZd/dFvprkcn3w==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare having
-a dynamically sized set of trailing elements in a structure. Kernel code
-should always use "flexible array members"[1] for these cases. The older
-style of one-element or zero-length arrays should no longer be used[2].
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-Also, refactor the code a bit to make use of the struct_size() helper in
-kzalloc().
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#zero-len=
-gth-and-one-element-arrays
+[1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
+ed-arithmetic-in-allocator-arguments
 
 Signed-off-by: Len Baker <len.baker@gmx.com>
 =2D--
- drivers/net/wireless/ath/ath11k/reg.c | 7 ++-----
- drivers/net/wireless/ath/ath11k/wmi.h | 2 +-
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/clk/ti/composite.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/reg.c b/drivers/net/wireless/=
-ath/ath11k/reg.c
-index e1a1df169034..c83d265185f1 100644
-=2D-- a/drivers/net/wireless/ath/ath11k/reg.c
-+++ b/drivers/net/wireless/ath/ath11k/reg.c
-@@ -97,7 +97,6 @@ int ath11k_reg_update_chan_list(struct ath11k *ar)
- 	struct channel_param *ch;
- 	enum nl80211_band band;
- 	int num_channels =3D 0;
--	int params_len;
- 	int i, ret;
-
- 	bands =3D hw->wiphy->bands;
-@@ -117,10 +116,8 @@ int ath11k_reg_update_chan_list(struct ath11k *ar)
- 	if (WARN_ON(!num_channels))
+diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
+index eaa43575cfa5..eb5ce9735c7d 100644
+=2D-- a/drivers/clk/ti/composite.c
++++ b/drivers/clk/ti/composite.c
+@@ -253,7 +253,7 @@ int __init ti_clk_add_component(struct device_node *no=
+de, struct clk_hw *hw,
  		return -EINVAL;
+ 	}
 
--	params_len =3D sizeof(struct scan_chan_list_params) +
--			num_channels * sizeof(struct channel_param);
--	params =3D kzalloc(params_len, GFP_KERNEL);
--
-+	params =3D kzalloc(struct_size(params, ch_param, num_channels),
-+			 GFP_KERNEL);
- 	if (!params)
+-	parent_names =3D kzalloc((sizeof(char *) * num_parents), GFP_KERNEL);
++	parent_names =3D kcalloc(num_parents, sizeof(char *), GFP_KERNEL);
+ 	if (!parent_names)
  		return -ENOMEM;
 
-diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/=
-ath/ath11k/wmi.h
-index d35c47e0b19d..d9c83726f65d 100644
-=2D-- a/drivers/net/wireless/ath/ath11k/wmi.h
-+++ b/drivers/net/wireless/ath/ath11k/wmi.h
-@@ -3608,7 +3608,7 @@ struct wmi_stop_scan_cmd {
- struct scan_chan_list_params {
- 	u32 pdev_id;
- 	u16 nallchans;
--	struct channel_param ch_param[1];
-+	struct channel_param ch_param[];
- };
-
- struct wmi_scan_chan_list_cmd {
 =2D-
 2.25.1
 
