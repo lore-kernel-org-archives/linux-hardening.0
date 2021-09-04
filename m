@@ -2,133 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF486C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 09:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9CBC433F5
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 11:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 939FE60F3A
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 09:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37B0610A2
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 11:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350924AbhIDJYI (ORCPT
+        id S236318AbhIDLYf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 05:24:08 -0400
-Received: from mout.gmx.net ([212.227.17.22]:51087 "EHLO mout.gmx.net"
+        Sat, 4 Sep 2021 07:24:35 -0400
+Received: from mout.gmx.net ([212.227.15.19]:33071 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234866AbhIDJYG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 05:24:06 -0400
+        id S234482AbhIDLYf (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 4 Sep 2021 07:24:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630747360;
-        bh=L8fR945KNUQU+9zGd9AirfrQd7Dhe+868DIRkoUMeH0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=KPuwhoGdL1qtDoIegwLhiFudjE9mb4U/uYMLe62hqCmdXmKQrlkc5t+529UOGi28V
-         0EGugWzvEUKDat/PMWYgya+QPYfCVH1y5VZQDLHXOKX3j9J7HY1kAnInlBre7hkGtc
-         7CHfeoQrjNCIhH2L87tFdmflw4IAilEpy1TJxZcA=
+        s=badeba3b8450; t=1630754598;
+        bh=oNeNfx2Pff1MWMSsLtAuLuPTtNZrnmhUxJ32Wbzy0PQ=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=Dq4T0yIIxdhcaG7ubWZf6umefhUbVnJM96o4nRUvZeFWuKlp6+2tV6tTi9eh9dhYi
+         n4Zm24xU9PW5q/JZkCB5PAx4Px5jd7tz3NDYZ6DVlN0SvonHW9+PJWz79bzDwt0jfB
+         9n69iEydC1gJzeA9iRqfcn49u+yYcfc7a4SWdJMw=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MtwUm-1nGkKi0f8u-00uFTU; Sat, 04 Sep 2021 11:22:40 +0200
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1M6Db0-1mKGqc2Geu-006fjl; Sat, 04
+ Sep 2021 13:23:18 +0200
+Date:   Sat, 4 Sep 2021 13:23:03 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Arend van Spriel <aspriel@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-hsien Lin <chi-hsien.lin@infineon.com>,
-        Wright Feng <wright.feng@infineon.com>,
-        Chung-hsien Hsu <chung-hsien.hsu@infineon.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+To:     Joe Perches <joe@perches.com>
+Cc:     Len Baker <len.baker@gmx.com>, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
         Kees Cook <keescook@chromium.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] brcmfmac: Replace zero-length array with flexible array member
-Date:   Sat,  4 Sep 2021 11:22:17 +0200
-Message-Id: <20210904092217.2848-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] EDAC/mc: Prefer strscpy or scnprintf over strcpy
+Message-ID: <20210904094451.GA2998@titan>
+References: <20210903150539.7282-1-len.baker@gmx.com>
+ <3a035a3ec4571a622ce640e042f9a119@perches.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a035a3ec4571a622ce640e042f9a119@perches.com>
+X-Provags-ID: V03:K1:NdVm4hX0KwBB2OaFVM6rjj/Cadbwqs5ugUJfNJk7Ty+WXs1tLIe
+ cd8ytx9mGoQ1OW+qjqlWJO1rXOQxyIt1P4fm8Mn29xxlljrZ+lXG3q04Wmo9dXo8cERCtn0
+ cOX3p0pDk30ysHvv+juk+ncPbBJebBwLsIKbswEJLA1kui0gQKWJsJpQa/k+zUui6IjEHTH
+ lUWFNgv8gI3TmFG+W8sww==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+kOwGOz9i50=:n3oD+TWpsWVH3tZ47rLE33
+ xNKfDTS10b1eWX3wB4Yarw9c59AWrxRQd6QXhd2CnnzYVKy6ujAdQApf1GG6qu9JdGXM2zJFV
+ 7jli3iY6Rc7WMXezeImPqXDSByr3NLpgvxdaiazkhhYZ31QiTl0Af91ajdRXpU3JyhvfTA8+n
+ dNUxTsheNJP4CgI19FDD3OlZdK4SannMVX7f1MkB1btpM4pgQ7OH90Hrq87SBer+R92FsnOi+
+ cM9qwFZYeH9zqrisJ01wXulEv6EUpzQdqBKbiBBdq7uxnwcnwC23mb4mhTxJW+/5QtNJMNNW+
+ C5FBFVm7iBBwiVt9aNvkfbr+tZjL3jqMsGgbYOqqbbt6MyM0PCcQVwPAr57L2Q8J2tAFJYeP/
+ MEIQHb8493jqt5e1qNoXOiW8TUVAqq17k+DZLcVkRc8BNPQqv9iRRUiVH3t3H1lgV0maRO7g4
+ It50hJ3iZvKiHjeWBFgtPX+WwmjXFkFmgzeLY6okJd37m5jgSOYE9h6ZFLpWN1dcAsX3Q6S8Y
+ GeOZ4NAUPhVlzgokTnSWz3FH+T7UWreq1eB8nT6kLM+VRjuZXzExAf1bx4CQzg6AN60lunxcU
+ KP8B1R/ILroWP0CYimeXtIqp02A1GWF0935yhVPLSWlUns9CQZHmV9GnP/sa35w7ruS9GeDQK
+ dTuHO1k3Tt6XvEmtS62A4FU+zgBv6HURI/8ARpJ7cPrYY/I1L68EVwOE+2FfusVkEqJKtkJI1
+ WP2VkWvRJGiseEXbRP4qUyMsdGBD64FxTlE8uUaKIR2Mpy5Api2/6VTYDN0nMbD/gdFZSvf9Z
+ 7su3MpJSFU98JXalmmGNW0P+q8u8euThJO7NECBGuCga9f3/KusE9/ueeBRQRo6s7MYzOfWPD
+ faVmwKWHErErrqDrEQ0VZRunCRL4wGq0w9cFFob+4yUb+LY/VcwD5n+GaTQAFNzy64bhfe2JO
+ 70f4AkNUE7Cc6NUEJGDfhSoj769f3sjid1Gbf2sU2Ir6TGp7SPlRyjjTutWT7y6bJIPFlf93a
+ fZV4C8L5tcDGUaqTIkBMTWx4S0CkwE0kA/z+2A61vIZJ4Iov90OrKgzrWu4Kl2r5pE3RmS1wV
+ /gjmct5YEhWaS+F/+EFuprjyliYuSIDBBsyVtamhQIz5YFmBi0xksQVvQ==
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:euYYOsb5q5zCJ4JY1G8MCDhKfAWFs1ghhE5kP0cv6RywSV2UxZ1
- fxPceTtBwTdShAJ6/4x+825c0S3Ky6CsOuUrvOH4K6U+scsz9heJrrgeJB8euqfflTid0SR
- Un3U1J6gvPXYSOB2XKbNO4eQPeBBnbeUypYI2+8u/+/bE3yjSBP3gN+2qIa/H7vn9HAnTvk
- /KroPLIRgjq/VVEPEuLLg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EKAQ7qUHQtE=:gVhJg9ndawlGst90XC9ztI
- 1GpYupu7tWcNmgjgMbohKTP9fZqwZpV24Dx7jeAh66bY5T+mdDeMFkXyfsJY8tFgZLRegKZIA
- U/UtHq1bgkCaRkrQaXttPvpL0+wndlh1DD5ZcBgpqkBWayPmCxPu5ASc6HQsmqiT/gRGib109
- rkrMBU9wqZjAacHEWVb8cwLd7z7P2ic8ZxXoSffx9sPsJ2C7AlJVqUk5a7y8lwl1Kvr4PJf0R
- tn6yjkXN75kyKNg+/SaXymeivKMmb4/BxYhkEtdJyrGqR/5aG7Ewd157oO4mDM14w7kPDuqtj
- wLUKgpL/YgQgwFdb9t6AKqXau3Q3oNM86P3a+6gJYUCJDWshvYQSKA9zxgwqakKIauxJKIvBH
- Hmt0f3KFlBfrpx9m+MZxCjALvXgZAiuqUncVyIoleMaRcAOHgC07H/KnMqz39bBLATgx0dokD
- jZ0Qjkb1Q1g6tdNKNT1YuHUV/dI9okBaM74mvbb5grB637AsqXfgGXcHFSPgmiT1MVu/cOOYj
- We9WefT14CgpduKxebRWd0UMzKmoB4psDOR6flebXUDi8mY8VHvw2PV7SQ1v4nNIrPUdY85C5
- CGkAWULOpG8z9dccR0NZixztTLM5QgXGXnI18UpQLoocT+250OTm5VGp31iKZfIF890joCJ83
- nax8+NVWxqn0s07uBvz2lTaivWLlE31NDbmI3cE/NL73WZpOke8rBmtC8SDzYMydOnuC4FOiR
- qOl62mHUTtBvKtv4detKnL+VpD03rzp2LTNNTxsmVzPMumMh3F5NsdwhU1qxum1rJbkO3Lw0n
- rWPYD+ACWU32DD8R29R+sLky0dUYIYd266fMBQuyp4Glt5qWmM2Spwr90ec4KPKyiw9gTMotE
- rv1Xo2Re19XFWsCkpHUpUjfmWWJBeAOPAmL544OvoT7aHzArAnTZNGoKQXdAlusYEhzuMxaM0
- B+6gFRVh+OpDpEqpz1oYwMYsocz+vB/AYSm5te926yVJb35tz3cWWllWPL9W5ylHc67VEDcAa
- 9oqnmm+D/kwiRPaq3/Ywj0VLMbjbzp+ZaRjW3+JSd7OjNdU99CNdzRCJDdRNjZkJfCTbKHr37
- X12l52GhnS4tOfDv4ym044m4sZx99wmWfc0bjb1kX1dXWXG2zlyRmCUlA==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare
-having a dynamically sized set of trailing elements in a structure.
-Kernel code should always use "flexible array members"[1] for these
-cases. The older style of one-element or zero-length arrays should
-no longer be used[2].
+Hi,
 
-Also, make use of the struct_size() helper in devm_kzalloc().
+On Fri, Sep 03, 2021 at 10:03:18AM -0700, Joe Perches wrote:
+> On 2021-09-03 08:05, Len Baker wrote:
+> > strcpy() performs no bounds checking on the destination buffer.
+> > len.baker@gmx.com/
+>
+> []
+>
+> > @@ -1113,12 +1115,9 @@ void edac_mc_handle_error(const enum
+> > hw_event_mc_err_type type,
+> >  			p =3D e->label;
+> >  			*p =3D '\0';
+> >  		} else {
+> > -			if (p !=3D e->label) {
+> > -				strcpy(p, OTHER_LABEL);
+> > -				p +=3D strlen(OTHER_LABEL);
+> > -			}
+> > -			strcpy(p, dimm->label);
+> > -			p +=3D strlen(p);
+> > +			n +=3D scnprintf(e->label + n, sizeof(e->label) - n,
+> > +				       "%s%s", prefix, dimm->label);
+> > +			prefix =3D OTHER_LABEL;
+>
+> OTHER_LABEL is a define specific to this module
+>
+> IMO: Used once text macros are just obfuscating and should be removed.
 
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#zero-len=
-gth-and-one-element-arrays
+This macro is used in "/include/linux/edac.h" as follows:
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c | 2 +-
- include/linux/platform_data/brcmfmac.h                | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+struct edac_raw_error_desc {
+	[...]
+	char label[(EDAC_MC_LABEL_LEN + 1 + sizeof(OTHER_LABEL)) * EDAC_MAX_LABEL=
+S];
+	[...]
+};
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c b/drive=
-rs/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-index 2f7bc3a70c65..513c7e6421b2 100644
-=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-@@ -29,7 +29,7 @@ static int brcmf_of_get_country_codes(struct device *dev=
-,
- 		return (count =3D=3D -EINVAL) ? 0 : count;
- 	}
+If we remove this define the size of label would be:
 
--	cc =3D devm_kzalloc(dev, sizeof(*cc) + count * sizeof(*cce), GFP_KERNEL)=
-;
-+	cc =3D devm_kzalloc(dev, struct_size(cc, table, count), GFP_KERNEL);
- 	if (!cc)
- 		return -ENOMEM;
+	char label[(EDAC_MC_LABEL_LEN + 6) * EDAC_MAX_LABELS];
 
-diff --git a/include/linux/platform_data/brcmfmac.h b/include/linux/platfo=
-rm_data/brcmfmac.h
-index 1d30bf278231..2b5676ff35be 100644
-=2D-- a/include/linux/platform_data/brcmfmac.h
-+++ b/include/linux/platform_data/brcmfmac.h
-@@ -125,7 +125,7 @@ struct brcmfmac_pd_cc_entry {
-  */
- struct brcmfmac_pd_cc {
- 	int				table_size;
--	struct brcmfmac_pd_cc_entry	table[0];
-+	struct brcmfmac_pd_cc_entry	table[];
- };
+So, I think now is more complicated to understand because the size is
+what it is. If you prefer this option, I can remove the macro and add
+a comment with some explanation.
 
- /**
-=2D-
-2.25.1
-
+Regards,
+Len
