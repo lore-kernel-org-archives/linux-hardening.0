@@ -2,193 +2,133 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE3AC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 04:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF486C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 09:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00BA861054
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 04:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939FE60F3A
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 09:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbhIDEKO (ORCPT
+        id S1350924AbhIDJYI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 00:10:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35034 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229918AbhIDEKM (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 00:10:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630728551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JsroHwqSqpHGTdfNxA5PLdxrx3L9qSi9QYjP9ozR0Rg=;
-        b=bxkszI/YtTqyESUc4ND8ShGtbLhoMYO1n5zZy4aiPiWX6NnimltBMajN5c8MZKIvUQVYeI
-        Or7LJvmynlw0YPJIpgR9qTHw+GbwSAh+wKIE+2fIYEJEmHngD43BqQGgRa0jrES+K3MEXS
-        lP2RrD7nRLJGmStuVVjNZoBK2sk6Z6E=
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
- [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-jayLnfISO7el8KXOiHDqGQ-1; Sat, 04 Sep 2021 00:09:08 -0400
-X-MC-Unique: jayLnfISO7el8KXOiHDqGQ-1
-Received: by mail-oo1-f70.google.com with SMTP id x7-20020a4aea07000000b0028b880a3cd3so561022ood.15
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Sep 2021 21:09:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JsroHwqSqpHGTdfNxA5PLdxrx3L9qSi9QYjP9ozR0Rg=;
-        b=VrT7fQJHVZGNDEG9F6naIwe+AhT8zM5wJRIfcarzSHurOoSBZImP6pjW8dFxNp4LSO
-         Ct/trsCOD1y34QuK6MubHvSuALxkwSFCGIiJ8Pjduq9U77GUEP7K7wwxG8Ouhwcq74oh
-         yYLjxYQBK8w1GNgTGgZRxMuumFc+zH6xHbtiOiXdfdHtjx1vpHIkTavb5ANFc6z5QzCJ
-         SSET+vLWXFwgu+NjEo0AtdIXf0/8hWnUkngPBzykYf/0TPP33ajRJ1FTe6w4aFvEJbh7
-         dD3Uf3ILZGZp05sXOFcjv6npLsk01ZNdHdiNwPlK/K2D8ZGkAKgZVNO3eK5MPgC/yVBe
-         sklw==
-X-Gm-Message-State: AOAM532dMecbKgcXYuDbxU01BubOaVbjgpIiTKWEn8bFkNm1zXTrJZbC
-        NTkeKgXxtwwKbFprAHV3sR7wv3pjcETt+96do32/JUGiD4umxLcOsjujHj3S69meMgO/LNqbiY4
-        +JwHE3YCI7WYULTVMC3lYvm0vP9Ca
-X-Received: by 2002:aca:2116:: with SMTP id 22mr1480695oiz.170.1630728547335;
-        Fri, 03 Sep 2021 21:09:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwKG2Bhyz5Pv4rdwpFAlJhDWYZhyA5CL4ylAm5niXx52VorWmQTsjlaYrGdEv5Ldte8e6NL+w==
-X-Received: by 2002:aca:2116:: with SMTP id 22mr1480685oiz.170.1630728547110;
-        Fri, 03 Sep 2021 21:09:07 -0700 (PDT)
-Received: from treble ([2600:1700:6e32:6c00::15])
-        by smtp.gmail.com with ESMTPSA id b25sm293987ooq.6.2021.09.03.21.09.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Sep 2021 21:09:06 -0700 (PDT)
-Date:   Fri, 3 Sep 2021 21:09:03 -0700
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Sean Christopherson <seanjc@google.com>
-Subject: Re: [PATCH 3/4] module: Use a list of strings for ro_after_init
- sections
-Message-ID: <20210904040903.tgkkoo2x76zpuj62@treble>
-References: <20210901233757.2571878-1-keescook@chromium.org>
- <20210901233757.2571878-4-keescook@chromium.org>
- <20210903064951.to4dhiu7zua7s6dn@treble>
- <202109030932.1358C4093@keescook>
+        Sat, 4 Sep 2021 05:24:08 -0400
+Received: from mout.gmx.net ([212.227.17.22]:51087 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234866AbhIDJYG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 4 Sep 2021 05:24:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1630747360;
+        bh=L8fR945KNUQU+9zGd9AirfrQd7Dhe+868DIRkoUMeH0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=KPuwhoGdL1qtDoIegwLhiFudjE9mb4U/uYMLe62hqCmdXmKQrlkc5t+529UOGi28V
+         0EGugWzvEUKDat/PMWYgya+QPYfCVH1y5VZQDLHXOKX3j9J7HY1kAnInlBre7hkGtc
+         7CHfeoQrjNCIhH2L87tFdmflw4IAilEpy1TJxZcA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MtwUm-1nGkKi0f8u-00uFTU; Sat, 04 Sep 2021 11:22:40 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Arend van Spriel <aspriel@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-hsien Lin <chi-hsien.lin@infineon.com>,
+        Wright Feng <wright.feng@infineon.com>,
+        Chung-hsien Hsu <chung-hsien.hsu@infineon.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] brcmfmac: Replace zero-length array with flexible array member
+Date:   Sat,  4 Sep 2021 11:22:17 +0200
+Message-Id: <20210904092217.2848-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <202109030932.1358C4093@keescook>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:euYYOsb5q5zCJ4JY1G8MCDhKfAWFs1ghhE5kP0cv6RywSV2UxZ1
+ fxPceTtBwTdShAJ6/4x+825c0S3Ky6CsOuUrvOH4K6U+scsz9heJrrgeJB8euqfflTid0SR
+ Un3U1J6gvPXYSOB2XKbNO4eQPeBBnbeUypYI2+8u/+/bE3yjSBP3gN+2qIa/H7vn9HAnTvk
+ /KroPLIRgjq/VVEPEuLLg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EKAQ7qUHQtE=:gVhJg9ndawlGst90XC9ztI
+ 1GpYupu7tWcNmgjgMbohKTP9fZqwZpV24Dx7jeAh66bY5T+mdDeMFkXyfsJY8tFgZLRegKZIA
+ U/UtHq1bgkCaRkrQaXttPvpL0+wndlh1DD5ZcBgpqkBWayPmCxPu5ASc6HQsmqiT/gRGib109
+ rkrMBU9wqZjAacHEWVb8cwLd7z7P2ic8ZxXoSffx9sPsJ2C7AlJVqUk5a7y8lwl1Kvr4PJf0R
+ tn6yjkXN75kyKNg+/SaXymeivKMmb4/BxYhkEtdJyrGqR/5aG7Ewd157oO4mDM14w7kPDuqtj
+ wLUKgpL/YgQgwFdb9t6AKqXau3Q3oNM86P3a+6gJYUCJDWshvYQSKA9zxgwqakKIauxJKIvBH
+ Hmt0f3KFlBfrpx9m+MZxCjALvXgZAiuqUncVyIoleMaRcAOHgC07H/KnMqz39bBLATgx0dokD
+ jZ0Qjkb1Q1g6tdNKNT1YuHUV/dI9okBaM74mvbb5grB637AsqXfgGXcHFSPgmiT1MVu/cOOYj
+ We9WefT14CgpduKxebRWd0UMzKmoB4psDOR6flebXUDi8mY8VHvw2PV7SQ1v4nNIrPUdY85C5
+ CGkAWULOpG8z9dccR0NZixztTLM5QgXGXnI18UpQLoocT+250OTm5VGp31iKZfIF890joCJ83
+ nax8+NVWxqn0s07uBvz2lTaivWLlE31NDbmI3cE/NL73WZpOke8rBmtC8SDzYMydOnuC4FOiR
+ qOl62mHUTtBvKtv4detKnL+VpD03rzp2LTNNTxsmVzPMumMh3F5NsdwhU1qxum1rJbkO3Lw0n
+ rWPYD+ACWU32DD8R29R+sLky0dUYIYd266fMBQuyp4Glt5qWmM2Spwr90ec4KPKyiw9gTMotE
+ rv1Xo2Re19XFWsCkpHUpUjfmWWJBeAOPAmL544OvoT7aHzArAnTZNGoKQXdAlusYEhzuMxaM0
+ B+6gFRVh+OpDpEqpz1oYwMYsocz+vB/AYSm5te926yVJb35tz3cWWllWPL9W5ylHc67VEDcAa
+ 9oqnmm+D/kwiRPaq3/Ywj0VLMbjbzp+ZaRjW3+JSd7OjNdU99CNdzRCJDdRNjZkJfCTbKHr37
+ X12l52GhnS4tOfDv4ym044m4sZx99wmWfc0bjb1kX1dXWXG2zlyRmCUlA==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 03, 2021 at 09:38:42AM -0700, Kees Cook wrote:
-> On Thu, Sep 02, 2021 at 11:49:51PM -0700, Josh Poimboeuf wrote:
-> > On Wed, Sep 01, 2021 at 04:37:56PM -0700, Kees Cook wrote:
-> > > Instead of open-coding the section names, use a list for the sections that
-> > > need to be marked read-only after init. Unfortunately, it seems we can't
-> > > do normal section merging with scripts/module.lds.S as ld.bfd doesn't
-> > > correctly update symbol tables. For more details, see commit 6a3193cdd5e5
-> > > ("kbuild: lto: Merge module sections if and only if CONFIG_LTO_CLANG
-> > > is enabled").
-> > 
-> > I'm missing what this has to do with section merging.  Can you connect
-> > the dots here, i.e. what sections would we want to merge and how would
-> > that help here?
-> 
-> Right, sorry, if ld.bfd didn't have this issue, we could use section
-> merging in the module.lds.S file the way we do in vmlinux.lds:
-> 
-> #ifndef RO_AFTER_INIT_DATA
-> #define RO_AFTER_INIT_DATA                                              \
->         . = ALIGN(8);                                                   \
->         __start_ro_after_init = .;                                      \
->         *(.data..ro_after_init)                                         \
->         JUMP_TABLE_DATA                                                 \
->         STATIC_CALL_DATA                                                \
->         __end_ro_after_init = .;
-> #endif
-> ...
->         . = ALIGN((align));                                             \
->         .rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {           \
->                 __start_rodata = .;                                     \
->                 *(.rodata) *(.rodata.*)                                 \
->                 SCHED_DATA                                              \
->                 RO_AFTER_INIT_DATA      /* Read only after init */      \
->                 . = ALIGN(8);                                           \
->                 __start___tracepoints_ptrs = .;                         \
->                 KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
->                 __stop___tracepoints_ptrs = .;                          \
->                 *(__tracepoints_strings)/* Tracepoints: strings */      \
->         }                                                               \
-> 
-> Then jump_table and static_call sections could be collected into a
-> new section, as the module loader would only need to look for that
-> single name.
+There is a regular need in the kernel to provide a way to declare
+having a dynamically sized set of trailing elements in a structure.
+Kernel code should always use "flexible array members"[1] for these
+cases. The older style of one-element or zero-length arrays should
+no longer be used[2].
 
-Hm, that could be a really nice way to converge things for vmlinux and
-module linking.
+Also, make use of the struct_size() helper in devm_kzalloc().
 
-After some digging, 6a3193cdd5e5 isn't necessarily a linker bug.  It may
-be some kind of undefined behavior when the section address isn't
-specified.  If you just explicitly set the section address to zero then
-the "bug" goes away.
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#zero-len=
+gth-and-one-element-arrays
 
-diff --git a/scripts/module.lds.S b/scripts/module.lds.S
-index 04c5685c25cf..80b09b7d405c 100644
---- a/scripts/module.lds.S
-+++ b/scripts/module.lds.S
-@@ -30,23 +30,22 @@ SECTIONS {
- 
- 	__patchable_function_entries : { *(__patchable_function_entries) }
- 
--#ifdef CONFIG_LTO_CLANG
- 	/*
- 	 * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
- 	 * -ffunction-sections, which increases the size of the final module.
- 	 * Merge the split sections in the final binary.
- 	 */
--	.bss : {
-+	.bss 0 : {
- 		*(.bss .bss.[0-9a-zA-Z_]*)
- 		*(.bss..L*)
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c | 2 +-
+ include/linux/platform_data/brcmfmac.h                | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c b/drive=
+rs/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+index 2f7bc3a70c65..513c7e6421b2 100644
+=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+@@ -29,7 +29,7 @@ static int brcmf_of_get_country_codes(struct device *dev=
+,
+ 		return (count =3D=3D -EINVAL) ? 0 : count;
  	}
- 
--	.data : {
-+	.data 0 : {
- 		*(.data .data.[0-9a-zA-Z_]*)
- 		*(.data..L*)
- 	}
- 
--	.rodata : {
-+	.rodata 0 : {
- 		*(.rodata .rodata.[0-9a-zA-Z_]*)
- 		*(.rodata..L*)
- 	}
-@@ -55,11 +54,10 @@ SECTIONS {
- 	 * With CONFIG_CFI_CLANG, we assume __cfi_check is at the beginning
- 	 * of the .text section, and is aligned to PAGE_SIZE.
- 	 */
--	.text : ALIGN_CFI {
-+	.text 0 : ALIGN_CFI {
- 		*(.text.__cfi_check)
- 		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
- 	}
--#endif
- }
- 
- /* bring in arch-specific sections */
+
+-	cc =3D devm_kzalloc(dev, sizeof(*cc) + count * sizeof(*cce), GFP_KERNEL)=
+;
++	cc =3D devm_kzalloc(dev, struct_size(cc, table, count), GFP_KERNEL);
+ 	if (!cc)
+ 		return -ENOMEM;
+
+diff --git a/include/linux/platform_data/brcmfmac.h b/include/linux/platfo=
+rm_data/brcmfmac.h
+index 1d30bf278231..2b5676ff35be 100644
+=2D-- a/include/linux/platform_data/brcmfmac.h
++++ b/include/linux/platform_data/brcmfmac.h
+@@ -125,7 +125,7 @@ struct brcmfmac_pd_cc_entry {
+  */
+ struct brcmfmac_pd_cc {
+ 	int				table_size;
+-	struct brcmfmac_pd_cc_entry	table[0];
++	struct brcmfmac_pd_cc_entry	table[];
+ };
+
+ /**
+=2D-
+2.25.1
 
