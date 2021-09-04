@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF0AC433EF
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 14:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130F5C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 15:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51F1660F38
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 14:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59CA60F55
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 15:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233798AbhIDO7r (ORCPT
+        id S232532AbhIDPRw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 10:59:47 -0400
-Received: from mout.gmx.net ([212.227.15.18]:44473 "EHLO mout.gmx.net"
+        Sat, 4 Sep 2021 11:17:52 -0400
+Received: from mout.gmx.net ([212.227.15.18]:43507 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230514AbhIDO7q (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 10:59:46 -0400
+        id S230514AbhIDPRw (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 4 Sep 2021 11:17:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630767520;
-        bh=kHtuAbYiiBfGxvhY45tuo5q2d2Qu8ss/9ZK1wHJ1PWA=;
+        s=badeba3b8450; t=1630768607;
+        bh=4ANx2vQH7iUfBjxYEEyIv5InnOcmLlsv7CD1nz2q4jY=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=Wj532fDDWd7ji7XrN17RIRGtf/MgSvCBh+8fW7803p2BqmLxsR8MYSTobDjCbVd3U
-         wmaVGPvjLCN6kC20IJ/GbQgXzF4q4QZ7Q2GMGqj1y7Rmdj+bPFg2B5PPrZJTIP6Gl2
-         n9OPlXux4V2tKE2JNAP9TOpQI2PhM5KN+cBv/hZ0=
+        b=M2cVjhoh45xX65ta5m4cPtHvdxIPNrpAw1F0G0T1K8Bkjrsb1r737tvEy/imRgV9V
+         R6XY+xNsY6tXNuBrjGwznpZEzzcH0OBexs8PNzLRILuYsXXU7jqJSOjAqwCrbD1v//
+         2q38xp61Cit8nzz/J/uLO6o6up8N1npRmQodOFn4=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MybKp-1nBtic3Mq5-00yzDG; Sat, 04 Sep 2021 16:58:39 +0200
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MEm2D-1mAl2S1mZ9-00GLJd; Sat, 04 Sep 2021 17:16:47 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Vinod Koul <vkoul@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: milbeaut-hdmac: Prefer kcalloc over open coded arithmetic
-Date:   Sat,  4 Sep 2021 16:58:13 +0200
-Message-Id: <20210904145813.5161-1-len.baker@gmx.com>
+Subject: [PATCH] cpufreq: powernow: Prefer kcalloc over open coded arithmetic
+Date:   Sat,  4 Sep 2021 17:16:28 +0200
+Message-Id: <20210904151628.6618-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NSQFmTYhh/v2YneA2W5Ogc8MRxblor3ZiAgHPc+Z3Fg9SuI3aN8
- /+x7hJn+9pOrlLQfyzRLGYbnCoaTk0GppfuHyJwHf8q4sbq1c5HITIzK7E9+NoRAl9izBhF
- JMTQ830MDv6lRKX8j3lRT+heSk9Wdy+Vl8va/12qCess5IkxRQaQBZiqrsWE/pZNZ5oxTC/
- sOe6BHT4QTXqbs47F1ruw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qex0b/X3PnI=:hitT94Zrb/n84OxuD0tlVr
- MxRw+2EmoU5WK0rtdpk+rJRlA+Tpk4h124IU4P9YBdaXi5Q/vNHG6ecGn3rNlFlDYqkZnsItD
- FNwXE2IVeIRXtsOJ+Uhacr5NGv7MdK8HKQ2DmZ1w1s5oc9pB0Gv3QlGEevl+NEoycWh1eKcV1
- dSBfLTRh3VTa7Lz0R5ozdVKCfFSnrMSXT4JyIfdquH/dCqEBhJXevDPT5E83VO9hQlVYQCpvD
- A+p9qVKuIgWfFyqRQ0GcdoItFZXxciKPbMHEr5OsTgqbVvYHPUZ/Y9A0W6wpp0UHkChwmWgWV
- o2Sw4u4jiovfqIDxe9OKOYSNbwAi4+yZyq4fRb2GUboJqjU1Z2lltIsPYljXzdERlfCEpfF2A
- JS7c33WMd8/vmE23E2mySnJO9Yh214wVM20NU4bgGnvlGB1CKF2HeerdDDce92ATEN0oJHNZL
- CeuO/3ziMBrmQ8l9+N94RAKDi4HQfOXjtaKHc6bPbevh18bEOegnd6HJ8jHdvhT255cwcq2kT
- nEqhH8wlIj4CD/ucfc8QhGcp76yjwF4EMDwP5qfVbEII3f9stXeyWZaajPko/G/rTHNyGz/cE
- fzrRFYWRE/V8avPkUb75hExN17ZSzOafax+Cy9dUtgUX+CiOJ7xS45MZR8BkBZxtZHLV8nvcf
- Aw387J0v5PhTIjNgpMH6OuTKuGsxnl5F7NjhA3ekxbER6IQGQOfhrfu7zG0MCEOP2xmYu+3rp
- UaHhGIoFCXl6Qhf+4j+bpua0PKIb7hS2wTcEFZd0O0I6902VPOHSk1ioB23vU0ueWDNrJf4Dt
- 2VWWaq3574Jm1hpdBJ1YN9ager1hT2x05NlyWaUq6Z5+Eocn+/i+SlLwOn6isFS6rAj2wAo9G
- Y4ygFOrA3sGzAtYX0Kirq3dXhe3hueTVjokP1BUeyy2u7UCtkKzVbnhpdNXlCgy1sP6Sj9ynI
- qSPJ7COsJzyOKeD6dFyl7w+ebmwBnCbFbe96me1x3o4xZStvddcbXsob/AjP0lTBjPETUUjgE
- h6wIbQ/9mRjTu0k/ccY9OwmkxUbX/P25hRmCuN2n4vN6oKG3jREztQPgDvlGdEjMXLyjRG62f
- HUTtinN2SjgaL/EWm40Rhy6WVoKvEGq8xiMR3F4iGbVvoVD3PQ3qL1aXw==
+X-Provags-ID: V03:K1:Fz00f2zl30lePk2hUfI0+vrZgaY3Bl3Wi4wOgZXuYJcsYXGB9a/
+ 1HzQ7AE+uqZMFjtXiuz2uMNtCDKrspCycA1Nrp7Ov+I1k9mtyYnwE9uj6itUvA9IiDWVtgs
+ bjTIqlJk9vDugJ0j9CWus9+Z4u0/te2pNQ0egxgxQ8irvntBuCSAigmw4NB01DVaDFxTHrT
+ UWcbj/wFyHXSf6uSpKjLw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qTf5c/4A6Rs=:xfdaGwvgcm9LZ29ZKYCxNt
+ 6S/WTVipfUO/io6x8Tq29NiZpqNd+/6lhkfV0+xqa001fNV3Xl6A8iq3If/kGmBLigatlqEc+
+ z9NVFjzq9SMhK4v+/gqG8OhTf1LJs2+WSKUzze9T3nofcR1269nhNc0AXZgtn8sYQOMGjblRP
+ cEbiXHr0sAMsamAGcy34/Fu3KI6J9brHdi3irt1fQQ21onQOSfi1urB/x080B3nVgl+KR/NGE
+ 5A/G0hg2aHFfi+DB/6v64GkDTHiaaGyWFDyv2+xU76wnlisuGUB7DCOUgIMEyO0Ic0r+gPJek
+ 7yTIg1vWGwMlkCHOpIksljYTQuefmgqGzAXNrcpYccLPZhqQ6m40ntq12VCd1S3dtKpWJlbL5
+ 0U9r6LGqoFlH4qTanV42DVi2BB57P6CrdHgWtPCBtycz08NE0Eld7vSq3cVrZcfAN3hZGXHt9
+ WFmAzaGupy7Ea1KxF8br2C38UcK1oh6lcufd5M9WMADGavj1ZUQnsv/BpF1ayvf3ktBKqHCRf
+ h9YiAK6e21BhOAUk71pjoBgc14wEhkYst1JonYfkC/7puEHmIcTSdg1iTbv750crQEftt6DHl
+ 43ELQjQ2GJ+q47t46zGamiM+PIVV9oiHSQwqt8hKFM2q42bpMVztI9cHorgpLq4VCsoR7sFjc
+ UKO5reKsD8vYXr836IKc3xDJQTIHsWFCZKNpU/A9bE1PImGqMVAjsJ3AhRB2fPj5Atd2M7oEJ
+ aLmXTKlpLT5kVM79jxHyF5WH3w50CjPRFoG1WtSXJ13RzQrCK6a44Pk8tr2mDUkipnlEpnwu6
+ o6/vE25vsHkbrf29ilNPstZaNA+VBZQ+gK7rDBUEMJPAmVGIiIs19ZsIxySrf8BhgS9jmxTCh
+ zgrkLQ6Xfs4vaFXHs9XxABrDk/fCaiqvS6/ZCceRWYpwjGYv8SoAAlwluRW9gphnNbd8igZ1p
+ lu8ComueqEsShBXy2M3hXMRV+2V69mYVR2Ukccac6Twp/9DU/Oydi3L9fyc9LGyNCInk4LNZW
+ OKnxiHIl0qre4lwAKriSZg5XcrCqiQfVz23RwbutbSU3MtRW1CGJHbb+pZ6NaW+M0NPIUYiO6
+ o5OGeD8vq/w/42ppotMsmCjofADggVaPlEsqj9rPrsDJHgexkyd5LXuAg==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -84,23 +85,24 @@ ed-arithmetic-in-allocator-arguments
 
 Signed-off-by: Len Baker <len.baker@gmx.com>
 =2D--
- drivers/dma/milbeaut-hdmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/powernow-k7.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/milbeaut-hdmac.c b/drivers/dma/milbeaut-hdmac.c
-index a8cfb59f6efe..1b0a95892627 100644
-=2D-- a/drivers/dma/milbeaut-hdmac.c
-+++ b/drivers/dma/milbeaut-hdmac.c
-@@ -269,7 +269,7 @@ milbeaut_hdmac_prep_slave_sg(struct dma_chan *chan, st=
-ruct scatterlist *sgl,
- 	if (!md)
- 		return NULL;
+diff --git a/drivers/cpufreq/powernow-k7.c b/drivers/cpufreq/powernow-k7.c
+index 5d515fc34836..a9d2c7bae235 100644
+=2D-- a/drivers/cpufreq/powernow-k7.c
++++ b/drivers/cpufreq/powernow-k7.c
+@@ -174,8 +174,8 @@ static int get_ranges(unsigned char *pst)
+ 	unsigned int speed;
+ 	u8 fid, vid;
 
--	md->sgl =3D kzalloc(sizeof(*sgl) * sg_len, GFP_NOWAIT);
-+	md->sgl =3D kcalloc(sg_len, sizeof(*sgl), GFP_NOWAIT);
- 	if (!md->sgl) {
- 		kfree(md);
- 		return NULL;
+-	powernow_table =3D kzalloc((sizeof(*powernow_table) *
+-				(number_scales + 1)), GFP_KERNEL);
++	powernow_table =3D kcalloc(number_scales + 1, sizeof(*powernow_table),
++				 GFP_KERNEL);
+ 	if (!powernow_table)
+ 		return -ENOMEM;
+
 =2D-
 2.25.1
 
