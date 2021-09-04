@@ -2,169 +2,152 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18ED1C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C17FC433FE
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 20:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEEFC60F3A
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD0D60ED6
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 20:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237290AbhIDR4W (ORCPT
+        id S233774AbhIDUtR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 13:56:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:24832 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237271AbhIDR4V (ORCPT
+        Sat, 4 Sep 2021 16:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229888AbhIDUtR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 13:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630778118;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6lcQHSayde3n9IkdvfIrHZle4H+zzn24IgjkiwSRWcs=;
-        b=JMDrN2o/iAyhpl3faBpQhmMs9bHmNlCbCmIXiweX9z5DcNEZWe1srgbXqtfl54Ang5xXQ0
-        uwYNSXNG3nO2k3sMqxlO38EzDmlIhnGMRlrZVIkZQTxz12jr8RbIh+KNJ1AR7WlC+/avMy
-        WDbFO5iHhkSYGfYntoYLjt88zkQA1g0=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-35-ArVaMMAIPsCYea0PQuv2_A-1; Sat, 04 Sep 2021 13:55:16 -0400
-X-MC-Unique: ArVaMMAIPsCYea0PQuv2_A-1
-Received: by mail-qv1-f69.google.com with SMTP id i8-20020a0cf388000000b00377cd31a04bso4297763qvk.17
-        for <linux-hardening@vger.kernel.org>; Sat, 04 Sep 2021 10:55:16 -0700 (PDT)
+        Sat, 4 Sep 2021 16:49:17 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1378C061575
+        for <linux-hardening@vger.kernel.org>; Sat,  4 Sep 2021 13:48:14 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id s10so5347990lfr.11
+        for <linux-hardening@vger.kernel.org>; Sat, 04 Sep 2021 13:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zHHc5Ft3Ok6Z3pRnyZ85tV26jItKpe9ZasjrvP2F9MQ=;
+        b=fLS/Wwf8Pg9aIz7w9/dZITjC1PCxmO/MKANDa1mRx1+Fwm3hX1ZJ8O3+Omdy4oKpCz
+         8waa+KCSeiDwz5XSqEyiN9FxWNMJ+3+n5mWTGVJK6lvg8LJ+JONBA5I8Pmo8Pcmdu0Ak
+         M9Qkp9DUbKWuiYEqSg2ZNPMzpiFcDyRRUWRS4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6lcQHSayde3n9IkdvfIrHZle4H+zzn24IgjkiwSRWcs=;
-        b=NGSQT4DhJ74iTLtabiYOcGfNWcYYpQAiMW8VAQ+WF2cYwifJC5Qi1OSe1gQGUGk6Fm
-         mX9+TVB1e7UdNVtO9h5jlFUWS4U7hJhBHCfgehwWcYXA1LAPLlo+V2Dqgehgh5MGcy99
-         FyPXZtXO8cLJUNAywIa4v3wpouCuyIJpdMHwk6F+V9GLezG1eSCIyVWIc0/MAvI4gh8E
-         YnFuxcF2X65gp2n8wa+g8Buht+0MRSikws1IWJR/ySxB/JHGtJkU2dfMfB9Vv1ohiXlp
-         eABnrye72SZS/5OJXJ/5muRT/f2TVj+QOKProsm+SRctFkWdYj2Tpl4/5zeLJfAYtb6y
-         2Yiw==
-X-Gm-Message-State: AOAM533XQJEQbr1xnLjqnSk+AvFfiffYez+z1skxxCDUvXrudxcEvU/Y
-        rd0g7ZCRdpVy04ITt4vEj+V/3Kg01CV/QnG1gUjtC85QoeqkdMo4/He6OMhqoC8uwCV1+FoPSuk
-        5ToW3CGn701Ek6vMe8LOWgi8qVotz
-X-Received: by 2002:a37:f515:: with SMTP id l21mr4158583qkk.234.1630778115886;
-        Sat, 04 Sep 2021 10:55:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynF9Y6BjqxIWiaX6cDMwcVqync6czUcP+2+d9LbHh6ElU+IIqbVYZyvvi6UbQI6IemnJWkUQ==
-X-Received: by 2002:a37:f515:: with SMTP id l21mr4158578qkk.234.1630778115683;
-        Sat, 04 Sep 2021 10:55:15 -0700 (PDT)
-Received: from treble ([2600:1700:6e32:6c00::15])
-        by smtp.gmail.com with ESMTPSA id l7sm2148433qki.99.2021.09.04.10.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Sep 2021 10:55:15 -0700 (PDT)
-Date:   Sat, 4 Sep 2021 10:55:11 -0700
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Marios Pomonis <pomonis@google.com>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
-        Kristen C Accardi <kristen.c.accardi@intel.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-hardening@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] x86/unwind/orc: Handle kretprobes_trampoline
-Message-ID: <20210904175511.oijbn4f2tzghwk7l@treble>
-References: <20210903021326.206548-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zHHc5Ft3Ok6Z3pRnyZ85tV26jItKpe9ZasjrvP2F9MQ=;
+        b=HlRJuqpEf56JcC++Doi6Ni0wzyuy9BmCeMWuF0qdcaVP+hdtTCsxZTzJZ0eMAOHocd
+         P1qOZ2psbcrnXy+7W5Xhyna1fHcTWh2/+Q/sYXR+uNO3t6vir1IpYes6Iu9bXyTuyr1z
+         G4n5zub9sd0k/sd8ZuZNzDvoZUqnsiPMK2ePQMJPw78C3sheMxeuN1/Jbn+ycS3m3r6W
+         QhbaLJfTMWzi/PRPnEE5NkSi+A8DLjLb1pTkztqUexqe1soHypn8cigcZBtUNAMlDiIt
+         STDpffckyf91IzYlW2szaS87+ArvuU12QBdzD+wqdACKowEveJejrIXVC/jnnst5JeFP
+         w34A==
+X-Gm-Message-State: AOAM530FaYkj+tx5y5SaIuCX5r403LzFcRvOa3ib5qlxdFFjh4hGrDCb
+        O0FeZyHKyaxK1aO9k2bMb/eUReloF/tGi0Kd
+X-Google-Smtp-Source: ABdhPJyzcpIHNqiEWx/SNbwhOlN9Gg7zaew4yaX8SNh7VWH8fcuoY4PLm5UBSXW0KJ3yarp6lraQig==
+X-Received: by 2002:a05:6512:b28:: with SMTP id w40mr3924293lfu.480.1630788492305;
+        Sat, 04 Sep 2021 13:48:12 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id i5sm10242ljg.53.2021.09.04.13.48.11
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Sep 2021 13:48:11 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id m4so4340027ljq.8
+        for <linux-hardening@vger.kernel.org>; Sat, 04 Sep 2021 13:48:11 -0700 (PDT)
+X-Received: by 2002:a05:651c:158f:: with SMTP id h15mr4190618ljq.249.1630788491026;
+ Sat, 04 Sep 2021 13:48:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210903021326.206548-1-keescook@chromium.org>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <202109022012.756B6B5B79@keescook>
+In-Reply-To: <202109022012.756B6B5B79@keescook>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 4 Sep 2021 13:47:54 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiPOXS2f90Ykk3V76sJLx0wMVywke8pc=88r1trmDuhmw@mail.gmail.com>
+Message-ID: <CAHk-=wiPOXS2f90Ykk3V76sJLx0wMVywke8pc=88r1trmDuhmw@mail.gmail.com>
+Subject: Re: [GIT PULL] overflow updates for v5.15-rc1
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithp@keithp.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 02, 2021 at 07:13:26PM -0700, Kees Cook wrote:
-> From: Marios Pomonis <pomonis@google.com>
-> 
-> Fix a bug in the ORC unwinder when kretprobes has replaced a return
-> address with the address of `kretprobes_trampoline'. ORC mistakenly
-> assumes that the address in the stack is a return address and decrements
-> it by 1 in order to find the proper depth of the next frame.
-> 
-> This issue was discovered while testing the FG-KASLR series[0][1] and
-> running the live patching test[2] that was originally failing[3].
-> 
-> [0] https://lore.kernel.org/kernel-hardening/20200923173905.11219-1-kristen@linux.intel.com/
-> [1] https://github.com/KSPP/linux/issues/132
-> [2] https://github.com/lpechacek/qa_test_klp
-> [3] https://lore.kernel.org/lkml/alpine.LSU.2.21.2009251450260.13615@pobox.suse.cz/
-> 
-> Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-> Signed-off-by: Marios Pomonis <pomonis@google.com>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Cc: Alexander Lobakin <alexandr.lobakin@intel.com>
-> Cc: Kristen C Accardi <kristen.c.accardi@intel.com>
-> Cc: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Thu, Sep 2, 2021 at 8:22 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Please pull these overflow updates for v5.15-rc1.
 
-I suspect this is fixed by:
+I pulled and then immediately unpulled again.
 
-  https://lkml.kernel.org/r/162756755600.301564.4957591913842010341.stgit@devnote2
+You can't add new warnings without fixing them, and this adds some
+HORRENDOUSLY ugly new warnings that would most definitely hide other
+warnings.
 
+It doesn't matter one whit if the new warnings are from some
+test-file, they are not acceptable for a build.
 
-> ---
->  arch/x86/kernel/unwind_orc.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> index a1202536fc57..8c5038b3b707 100644
-> --- a/arch/x86/kernel/unwind_orc.c
-> +++ b/arch/x86/kernel/unwind_orc.c
-> @@ -7,6 +7,7 @@
->  #include <asm/unwind.h>
->  #include <asm/orc_types.h>
->  #include <asm/orc_lookup.h>
-> +#include <asm/kprobes.h>
->  
->  #define orc_warn(fmt, ...) \
->  	printk_deferred_once(KERN_WARNING "WARNING: " fmt, ##__VA_ARGS__)
-> @@ -414,6 +415,15 @@ static bool get_reg(struct unwind_state *state, unsigned int reg_off,
->  	return false;
->  }
->  
-> +static bool is_kretprobe_trampoline(unsigned long ip)
-> +{
-> +#ifdef	CONFIG_KRETPROBES
-> +	if (ip == (unsigned long)&kretprobe_trampoline)
-> +		return true;
-> +#endif
-> +	return false;
-> +}
-> +
->  bool unwind_next_frame(struct unwind_state *state)
->  {
->  	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
-> @@ -540,7 +550,7 @@ bool unwind_next_frame(struct unwind_state *state)
->  		state->sp = sp;
->  		state->regs = NULL;
->  		state->prev_regs = NULL;
-> -		state->signal = false;
-> +		state->signal = is_kretprobe_trampoline(state->ip);
->  		break;
->  
->  	case UNWIND_HINT_TYPE_REGS:
-> -- 
-> 2.30.2
-> 
+Make any tests separate from a real kernel build, because if "make
+allmodconfig" results in hundreds of lines of warning crud, it's
+useless garbage.
 
--- 
-Josh
+             Linus
 
+---
+
+warning: unsafe memchr() usage lacked '__read_overflow' warning in
+lib/test_fortify/read_overflow-memchr.c
+lib/test_fortify/test_fortify.h: In function =E2=80=98do_fortify_tests=E2=
+=80=99:
+lib/test_fortify/read_overflow-memchr.c:3:9: error: statement with no
+effect [-Werror=3Dunused-value]
+    3 |         memchr(small, 0x7A, sizeof(small) + 1)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+lib/test_fortify/test_fortify.h:34:9: note: in expansion of macro =E2=80=98=
+TEST=E2=80=99
+   34 |         TEST;
+      |         ^~~~
+In file included from ./include/linux/string.h:253,
+                 from ./include/linux/bitmap.h:10,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+.. lots of noise ..
+
+In function =E2=80=98strncpy=E2=80=99,
+    inlined from =E2=80=98do_fortify_tests=E2=80=99 at lib/test_fortify/tes=
+t_fortify.h:34:2:
+./include/linux/fortify-string.h:56:17: error: call to
+=E2=80=98__write_overflow=E2=80=99 declared with attribute error: detected =
+write
+beyond size of object (1st parameter)
+   56 |                 __write_overflow();
+      |                 ^~~~~~~~~~~~~~~~~~
+warning: unsafe strncpy() usage lacked '__write_overflow' warning in
+lib/test_fortify/write_overflow-strncpy.c
+In file included from ./include/linux/string.h:253,
+                 from ./include/linux/bitmap.h:10,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+                 from ./arch/x86/include/asm/processor.h:22,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:60,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:55,
+                 from ./include/linux/mmzone.h:8,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/slab.h:15,
+                 from lib/test_fortify/test_fortify.h:4,
+                 from lib/test_fortify/write_overflow-strncpy.c:5:
