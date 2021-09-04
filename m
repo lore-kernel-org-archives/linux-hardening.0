@@ -2,118 +2,169 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA799C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 15:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18ED1C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAEFA60F22
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 15:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEFC60F3A
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 17:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231757AbhIDPmg (ORCPT
+        id S237290AbhIDR4W (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 11:42:36 -0400
-Received: from mout.gmx.net ([212.227.15.19]:33649 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230312AbhIDPmg (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 11:42:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630770087;
-        bh=OZtiJphuOZiymShv6jIHIa+0m3md61/j1EJ52nNdmpU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=abE/QikUO73fUuTEdflYyli8YfMo7zoy7HI+1snwhtqYVfwgaps69o+ArL97Ew+g7
-         cj5zjhNXiYb1DNZ7slmZpLKXiIk5IbXBRM0BCKu4oZkva2tS7fXNiotmoGMIJSPTD1
-         NIczoAXAizyqoRRKlSUZii6lKeN4XE5aFHkPKM+I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MryXH-1mjFYY2AEv-00nwYh; Sat, 04 Sep 2021 17:41:27 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/radeon: Prefer kcalloc over open coded arithmetic
-Date:   Sat,  4 Sep 2021 17:41:06 +0200
-Message-Id: <20210904154106.9550-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 4 Sep 2021 13:56:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:24832 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237271AbhIDR4V (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 4 Sep 2021 13:56:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1630778118;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6lcQHSayde3n9IkdvfIrHZle4H+zzn24IgjkiwSRWcs=;
+        b=JMDrN2o/iAyhpl3faBpQhmMs9bHmNlCbCmIXiweX9z5DcNEZWe1srgbXqtfl54Ang5xXQ0
+        uwYNSXNG3nO2k3sMqxlO38EzDmlIhnGMRlrZVIkZQTxz12jr8RbIh+KNJ1AR7WlC+/avMy
+        WDbFO5iHhkSYGfYntoYLjt88zkQA1g0=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-35-ArVaMMAIPsCYea0PQuv2_A-1; Sat, 04 Sep 2021 13:55:16 -0400
+X-MC-Unique: ArVaMMAIPsCYea0PQuv2_A-1
+Received: by mail-qv1-f69.google.com with SMTP id i8-20020a0cf388000000b00377cd31a04bso4297763qvk.17
+        for <linux-hardening@vger.kernel.org>; Sat, 04 Sep 2021 10:55:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6lcQHSayde3n9IkdvfIrHZle4H+zzn24IgjkiwSRWcs=;
+        b=NGSQT4DhJ74iTLtabiYOcGfNWcYYpQAiMW8VAQ+WF2cYwifJC5Qi1OSe1gQGUGk6Fm
+         mX9+TVB1e7UdNVtO9h5jlFUWS4U7hJhBHCfgehwWcYXA1LAPLlo+V2Dqgehgh5MGcy99
+         FyPXZtXO8cLJUNAywIa4v3wpouCuyIJpdMHwk6F+V9GLezG1eSCIyVWIc0/MAvI4gh8E
+         YnFuxcF2X65gp2n8wa+g8Buht+0MRSikws1IWJR/ySxB/JHGtJkU2dfMfB9Vv1ohiXlp
+         eABnrye72SZS/5OJXJ/5muRT/f2TVj+QOKProsm+SRctFkWdYj2Tpl4/5zeLJfAYtb6y
+         2Yiw==
+X-Gm-Message-State: AOAM533XQJEQbr1xnLjqnSk+AvFfiffYez+z1skxxCDUvXrudxcEvU/Y
+        rd0g7ZCRdpVy04ITt4vEj+V/3Kg01CV/QnG1gUjtC85QoeqkdMo4/He6OMhqoC8uwCV1+FoPSuk
+        5ToW3CGn701Ek6vMe8LOWgi8qVotz
+X-Received: by 2002:a37:f515:: with SMTP id l21mr4158583qkk.234.1630778115886;
+        Sat, 04 Sep 2021 10:55:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJynF9Y6BjqxIWiaX6cDMwcVqync6czUcP+2+d9LbHh6ElU+IIqbVYZyvvi6UbQI6IemnJWkUQ==
+X-Received: by 2002:a37:f515:: with SMTP id l21mr4158578qkk.234.1630778115683;
+        Sat, 04 Sep 2021 10:55:15 -0700 (PDT)
+Received: from treble ([2600:1700:6e32:6c00::15])
+        by smtp.gmail.com with ESMTPSA id l7sm2148433qki.99.2021.09.04.10.55.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Sep 2021 10:55:15 -0700 (PDT)
+Date:   Sat, 4 Sep 2021 10:55:11 -0700
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Marios Pomonis <pomonis@google.com>,
+        Alexander Lobakin <alexandr.lobakin@intel.com>,
+        Kristen C Accardi <kristen.c.accardi@intel.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-hardening@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] x86/unwind/orc: Handle kretprobes_trampoline
+Message-ID: <20210904175511.oijbn4f2tzghwk7l@treble>
+References: <20210903021326.206548-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:g78TReDYEcEf342gsWjMpYj895XYqOvDT7IgDccIGAZ3cG9CKY8
- J3OarlOX08+QjZpPDCsJ2h8Vep7hMZ1g8Wm9xhuAJ4V3LXZgvIGYtaUrr6UFJ1NQzxB5YLw
- BXe0HeK8+mOHBYfy6tEcsqcAhRk2cuRNxaC/CtUd76HFciMzDGwEzQyzUNFlisPxjGdVR2t
- Xr3LTk6QlVSnKVxpnPiEw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eGRB9xg1zms=:85yEomvdk+F7/JkBp56Nji
- YzEcCkNvC3r6w2zSxUHtid69XdzZZbPxxsfA6tDlgGYQr/0tP9FJZMMn4n+Mxq6x19QG+ttj2
- qYAxIwh5LDvOuz4Cci6GqATzYKS6A6EFYsOlZmU4vM85IHOXTnL49qLRc0e/YN+EuLfcGJGvb
- XASMgKJASIhhxbWuk9RkQ9v7Y49A8C8+ElPkO1G0oQxE6UJ9nAMsyx99/s3oG+tqgDpDnEwPa
- gXhpONB7OeY5VIM2okfL7VOOGU2A6y05GvufPYHB4YHrjVpvjUxvq2BQxROy0D+xOSE7G9JaW
- /tiZF4Bn3HXxiHMOBrh8UcE2j2A7u5ETRE8fOhP67lD4AyV6rEMCTSu4ic0DPejDbwik3PRPt
- 8D7JLtp5NWszZ8MgxtXykz0jjqUbe/Ey645HHfBH0S+PKJBeTLF0pZid/CaVflv2mAOz6KaYR
- lakhzO8nh691l6kJTgIPyq3zlKBS2U7F3zhAjTvQDKt7S/gtRqMZ07o3GJ0VkidAnkZFVcCO9
- KTOsJd4ZR2QLGoS0U5eJ8BETYlyTs9QZEZb23MhP8DmkXsMJl3jpOI6ivedrhWCHFVZRHC95S
- /zm37SRWCZ7H+FAtHP4rqg5oG+wvPj0VTxd/rVhag7VqnJw5+wfLmWlImCHz62oEmGBzurcCT
- 512U8fUkfN6PgHrhcWAiJZoG94uhN21v4alOcjYM13gn4fT6PHshd7kbxUf/5rVSvCCjoIeiP
- /8gC9zvaLvI+y3RXuH38Jo/i3HqWxr51Q2SDt7cRk1FGQCxsa1Fr5BATHg0ttg48EeuMZqWBm
- YlkXNwOc0v5vRWA9k6hU6FttIaz468AOh6MROW4wgUOqZ70O8gxYC2cP8oK4zUUUxeMM1ebm7
- TGmnywDLShYqgi2UqIsSc/fJyCumSFiN9yevBoiw4PJMmGeSwUKWIoGHbeuykqQO8cc4hik7R
- YLe8oghDabqcT0jCAaQ/y4N5Pcya8HoIi4HyZ9vmuBS92hhHr/UGK4Ke8FyjkUZtMttyWRqwo
- AhOmvGvRMO9X1x0KOhmsMfFjKxHBNoPZ1lBR1kYxYGE3PhRisZwbArzufpl3AUTr+++Y6CIGA
- o8dnWf3NH1KYvP/xSTcTsPZEd+nqQGb60sRTs0zTpILFnIIwa6TUSt+rg==
+In-Reply-To: <20210903021326.206548-1-keescook@chromium.org>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+On Thu, Sep 02, 2021 at 07:13:26PM -0700, Kees Cook wrote:
+> From: Marios Pomonis <pomonis@google.com>
+> 
+> Fix a bug in the ORC unwinder when kretprobes has replaced a return
+> address with the address of `kretprobes_trampoline'. ORC mistakenly
+> assumes that the address in the stack is a return address and decrements
+> it by 1 in order to find the proper depth of the next frame.
+> 
+> This issue was discovered while testing the FG-KASLR series[0][1] and
+> running the live patching test[2] that was originally failing[3].
+> 
+> [0] https://lore.kernel.org/kernel-hardening/20200923173905.11219-1-kristen@linux.intel.com/
+> [1] https://github.com/KSPP/linux/issues/132
+> [2] https://github.com/lpechacek/qa_test_klp
+> [3] https://lore.kernel.org/lkml/alpine.LSU.2.21.2009251450260.13615@pobox.suse.cz/
+> 
+> Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
+> Signed-off-by: Marios Pomonis <pomonis@google.com>
+> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> Cc: Alexander Lobakin <alexandr.lobakin@intel.com>
+> Cc: Kristen C Accardi <kristen.c.accardi@intel.com>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-So, refactor the code a bit to use the purpose specific kcalloc()
-function instead of the calculated size argument in the kzalloc()
-function.
+I suspect this is fixed by:
 
-[1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
-ed-arithmetic-in-allocator-arguments
+  https://lkml.kernel.org/r/162756755600.301564.4957591913842010341.stgit@devnote2
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/gpu/drm/radeon/r600_dpm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/r600_dpm.c b/drivers/gpu/drm/radeon/r6=
-00_dpm.c
-index 35b77c944701..fd4226b99862 100644
-=2D-- a/drivers/gpu/drm/radeon/r600_dpm.c
-+++ b/drivers/gpu/drm/radeon/r600_dpm.c
-@@ -820,12 +820,12 @@ union fan_info {
- static int r600_parse_clk_voltage_dep_table(struct radeon_clock_voltage_d=
-ependency_table *radeon_table,
- 					    ATOM_PPLIB_Clock_Voltage_Dependency_Table *atom_table)
- {
--	u32 size =3D atom_table->ucNumEntries *
--		sizeof(struct radeon_clock_voltage_dependency_entry);
- 	int i;
- 	ATOM_PPLIB_Clock_Voltage_Dependency_Record *entry;
+> ---
+>  arch/x86/kernel/unwind_orc.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+> index a1202536fc57..8c5038b3b707 100644
+> --- a/arch/x86/kernel/unwind_orc.c
+> +++ b/arch/x86/kernel/unwind_orc.c
+> @@ -7,6 +7,7 @@
+>  #include <asm/unwind.h>
+>  #include <asm/orc_types.h>
+>  #include <asm/orc_lookup.h>
+> +#include <asm/kprobes.h>
+>  
+>  #define orc_warn(fmt, ...) \
+>  	printk_deferred_once(KERN_WARNING "WARNING: " fmt, ##__VA_ARGS__)
+> @@ -414,6 +415,15 @@ static bool get_reg(struct unwind_state *state, unsigned int reg_off,
+>  	return false;
+>  }
+>  
+> +static bool is_kretprobe_trampoline(unsigned long ip)
+> +{
+> +#ifdef	CONFIG_KRETPROBES
+> +	if (ip == (unsigned long)&kretprobe_trampoline)
+> +		return true;
+> +#endif
+> +	return false;
+> +}
+> +
+>  bool unwind_next_frame(struct unwind_state *state)
+>  {
+>  	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
+> @@ -540,7 +550,7 @@ bool unwind_next_frame(struct unwind_state *state)
+>  		state->sp = sp;
+>  		state->regs = NULL;
+>  		state->prev_regs = NULL;
+> -		state->signal = false;
+> +		state->signal = is_kretprobe_trampoline(state->ip);
+>  		break;
+>  
+>  	case UNWIND_HINT_TYPE_REGS:
+> -- 
+> 2.30.2
+> 
 
--	radeon_table->entries =3D kzalloc(size, GFP_KERNEL);
-+	radeon_table->entries =3D kcalloc(atom_table->ucNumEntries,
-+					sizeof(struct radeon_clock_voltage_dependency_entry),
-+					GFP_KERNEL);
- 	if (!radeon_table->entries)
- 		return -ENOMEM;
-
-=2D-
-2.25.1
+-- 
+Josh
 
