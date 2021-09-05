@@ -2,181 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B69DC433F5
-	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 07:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5816C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 08:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610E560F92
-	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 07:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808D6600D4
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 08:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235400AbhIEH6q (ORCPT
+        id S234057AbhIEITz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 5 Sep 2021 03:58:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
+        Sun, 5 Sep 2021 04:19:55 -0400
+Received: from mout.gmx.net ([212.227.15.15]:49905 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231239AbhIEH6p (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 5 Sep 2021 03:58:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3444F60EE1;
-        Sun,  5 Sep 2021 07:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630828662;
-        bh=W3xcCkndsu9LZ9q+jY/ntg77e+br2nanRDdnooBmmLA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=h0tvopfAiDHKnDcH+4QW90p8DaBe6vH9j9UGa3MFN7xyImYh3P1LTZtJBOPTtRdyQ
-         6euUZwa9PWCWlslSal64RRtKwZuWDmkDpf3wk0UFk7d91jSDFZv/bWwASQbPyOTZwR
-         T4zxj8IQd6+gJu/vrnBgPBXlGDzD4Bh70f3zBlGV/b1ww3so5tZN5Hf1xLA7j2g8JA
-         /gndGNBz9OhuMbCUSlhOt+8pCYt1DK/IFkZaRvx7hEsStnOV/xT0bD5ltUJ71DeUst
-         N8mkriGbU3TYZ9qMz3vFuMCiL2i/Vkm+LfZnd2jYFSvFq8+aknFm52iZw/41YTvzeE
-         kZjh7B+Qd8dxw==
-Date:   Sun, 5 Sep 2021 16:57:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
-        Kristen C Accardi <kristen.c.accardi@intel.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-hardening@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] x86/unwind/orc: Handle kretprobes_trampoline
-Message-Id: <20210905165738.7e40d6e2cba3dd0724f85f3a@kernel.org>
-In-Reply-To: <20210904175511.oijbn4f2tzghwk7l@treble>
-References: <20210903021326.206548-1-keescook@chromium.org>
-        <20210904175511.oijbn4f2tzghwk7l@treble>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S229482AbhIEITz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 5 Sep 2021 04:19:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1630829927;
+        bh=fTBXvKxZl6B/IHLAHmbTOQkcjt7hvW0fG3GfH17J/Fo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=MKhhkRe79drF0yldxNMv8bw7RvqDGYCpPKLRJ8T6cHob+tjK0KBTyC0kmiWKPjnuF
+         GRj2bhslB2MACSgwtLe4wImcRzoZzw97MQgf/E2//kLkdOmhNJat1kQa0MmwUZBwoZ
+         gtaZnHGqEyR3QLCV5nlhzMBlmAQdimYzE99mwqG4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MoO6M-1ml4UZ1JpQ-00oq2c; Sun, 05 Sep 2021 10:18:47 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Selvin Xavier <selvin.xavier@broadcom.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        linux-rdma@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/bnxt_re: Prefer kcalloc over open coded arithmetic
+Date:   Sun,  5 Sep 2021 10:18:12 +0200
+Message-Id: <20210905081812.17113-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vzAhzYJz4CiUc9w8Raus6XPXj/K19h+cFftCVKPdHnD4ICkrkCu
+ 7XoRcMK28P6FVNJAkB5J+Uh68r9xW4RJ96AUzolLL5sB/gd6R5NhZi9Bd1mTNBXpId7tnuH
+ GItLhPLWaDlDzjdLvGTKA5/qMkvNIrXqe3NYeKn7X2+20/wggFuycRphjbgkSvdmLWSD+Rr
+ TW6J58OCRhYABkn+jzNXw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:f7gIwwtcx9A=:XxVo3HNf616woWeFi8zZq+
+ 5D7nCIn5pEcUHG5vSvZ200ZzIMNo/YWu4j4GIp0VULBni31LlbnoyYKDyxL3KT22WDMzxuLPM
+ aE7fFznWCXIvVRyZ3kPOnXO9OOYPdh3GHAZv/VCoqSBb9hgU4qcDuJ+VCAFC4cBvPrbY4xGqr
+ rrChP7/WxGZU3zUtB3trQtM+VmW0otfvEWSd4AK2RTvH7I44DWVcQHIs09FDjgCN/qDCmkczb
+ e2ROm5Rpbv4CT4jr6Fr52QwSMFAJA7BK5LHDm2mqrNuQphmUb948Ui6ABe3oa5FszqlbTpFWe
+ 2LIUVU5j5/H49bzG3WLalfTYOTKQRVaq10QRaX5evKqI+r2njf9eoLsn30qcnN5li8Wh0hRWW
+ MFQP6GoKQoxRGvF+7v6BtKjF+v3IY241Bf11vw4MS06bugtWaL6stPM6LQFh32VSPhto0L+RE
+ ePiCVB3JlLeWjgCMiH81B9VZasS2D0TKS6ds95w4C6Oo5hgTef4T/yTxJK6wir3PT9EdiY2Bz
+ J4lQ6INNolzp0Cx6OtpAqYg0i5MM1SUYf6pTJq04yxIY9M3PXmGlgVzwxvaE2XM1Ge0+bWzi1
+ A9DZmpXu03Y6Ju7FJT3V7/tclCV8dDkufM+s3fPFZs9YPTQJ2zorWegFNRa9GoOa0EDGbj2rw
+ pPl0sMpL7DYla6vMit264JgMqIiiZSHwLH7MH/2H1hIv5n7wR3eKp8tvB5+JAbsKXTyrstkAB
+ QesQ+VBuvkFc9IkQVlfkH0jAjA+ojMUsSnMTe0P3KEJSN2gVX23lmPS04XYWBjnIz8aQGYw1Y
+ hekMx3d6YQJkpTSnMPdd15W+aoDtkaEb0ZP+bZ0V1auoZGkg/yUcBXfZNJfHP7GGU0B0xgO/0
+ m7lNF6eUxOxWtQMfNF09W6Z8Eae041rhRO5UcC2YvbgJk3/Q3zb0tmbGpb4uO3Jbr3eqE9qLw
+ A9Bes/uM3wvh/cGpg0kXuKjJlqIxK2l+ozrF24oMmDF+TnyIna0IMbXS5nSiub1YcCc2DegTp
+ 3xLw2w2ErNdpZeLoMLQUjYEP9zr6H6xNxmpLvg01sQyaz6hXm7rJMVgpJvTwlb9DQ9LD1wDm9
+ 2yayfwbWyoz13I/5qINqRqtHxwLcKR/mGMEw6qyAejHRlwiXZ0rVQ5Y9A==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, 4 Sep 2021 10:55:11 -0700
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-> On Thu, Sep 02, 2021 at 07:13:26PM -0700, Kees Cook wrote:
-> > From: Marios Pomonis <pomonis@google.com>
-> > 
-> > Fix a bug in the ORC unwinder when kretprobes has replaced a return
-> > address with the address of `kretprobes_trampoline'. ORC mistakenly
-> > assumes that the address in the stack is a return address and decrements
-> > it by 1 in order to find the proper depth of the next frame.
-> > 
-> > This issue was discovered while testing the FG-KASLR series[0][1] and
-> > running the live patching test[2] that was originally failing[3].
-> > 
-> > [0] https://lore.kernel.org/kernel-hardening/20200923173905.11219-1-kristen@linux.intel.com/
-> > [1] https://github.com/KSPP/linux/issues/132
-> > [2] https://github.com/lpechacek/qa_test_klp
-> > [3] https://lore.kernel.org/lkml/alpine.LSU.2.21.2009251450260.13615@pobox.suse.cz/
-> > 
-> > Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-> > Signed-off-by: Marios Pomonis <pomonis@google.com>
-> > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Cc: Alexander Lobakin <alexandr.lobakin@intel.com>
-> > Cc: Kristen C Accardi <kristen.c.accardi@intel.com>
-> > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> I suspect this is fixed by:
-> 
->   https://lkml.kernel.org/r/162756755600.301564.4957591913842010341.stgit@devnote2
+In this case this is not actually dynamic sizes: both sides of the
+multiplication are constant values. However it is best to refactor this
+anyway, just to keep the open-coded math idiom out of code.
 
-I think this can be a bit different issue. As far as I ran my test code
-(same one in the above cover mail) with this fix, the stacktrace wasn't
-fixed.
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
-ffffffff812b7c80  r  vfs_read+0x0    [FTRACE]
-ffffffff813b4cc0  r  full_proxy_read+0x0    [FTRACE]
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 3/3   #P:8
-#
-#                                _-----=> irqs-off
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| /     delay
-#           TASK-PID     CPU#  ||||   TIMESTAMP  FUNCTION
-#              | |         |   ||||      |         |
-             cat-138     [002] ...1     9.488727: r_full_proxy_read_0: (vfs_read+0x99/0x190 <- full_proxy_read)
-             cat-138     [002] ...1     9.488732: <stack trace>
- => kretprobe_trace_func+0x209/0x300
- => kretprobe_dispatcher+0x9d/0xb0
- => __kretprobe_trampoline_handler+0xc5/0x160
- => trampoline_handler+0x44/0x60
- => kretprobe_trampoline+0x25/0x50
-             cat-138     [002] ...1     9.488733: r_vfs_read_0: (ksys_read+0x68/0xe0 <- vfs_read)
+Also, remove the unnecessary initialization of the sqp_tbl variable
+since it is set a few lines later.
 
-Kees, can you also try to test with my series?
-It should be able to be checked out with;
+[1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
+ed-arithmetic-in-allocator-arguments
 
-git clone git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git -b kprobes/kretprobe-stackfix-v10
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ drivers/infiniband/hw/bnxt_re/ib_verbs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thank you,
-> 
-> 
-> > ---
-> >  arch/x86/kernel/unwind_orc.c | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> > index a1202536fc57..8c5038b3b707 100644
-> > --- a/arch/x86/kernel/unwind_orc.c
-> > +++ b/arch/x86/kernel/unwind_orc.c
-> > @@ -7,6 +7,7 @@
-> >  #include <asm/unwind.h>
-> >  #include <asm/orc_types.h>
-> >  #include <asm/orc_lookup.h>
-> > +#include <asm/kprobes.h>
-> >  
-> >  #define orc_warn(fmt, ...) \
-> >  	printk_deferred_once(KERN_WARNING "WARNING: " fmt, ##__VA_ARGS__)
-> > @@ -414,6 +415,15 @@ static bool get_reg(struct unwind_state *state, unsigned int reg_off,
-> >  	return false;
-> >  }
-> >  
-> > +static bool is_kretprobe_trampoline(unsigned long ip)
-> > +{
-> > +#ifdef	CONFIG_KRETPROBES
-> > +	if (ip == (unsigned long)&kretprobe_trampoline)
-> > +		return true;
-> > +#endif
-> > +	return false;
-> > +}
-> > +
-> >  bool unwind_next_frame(struct unwind_state *state)
-> >  {
-> >  	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
-> > @@ -540,7 +550,7 @@ bool unwind_next_frame(struct unwind_state *state)
-> >  		state->sp = sp;
-> >  		state->regs = NULL;
-> >  		state->prev_regs = NULL;
-> > -		state->signal = false;
-> > +		state->signal = is_kretprobe_trampoline(state->ip);
-> >  		break;
-> >  
-> >  	case UNWIND_HINT_TYPE_REGS:
-> > -- 
-> > 2.30.2
-> > 
-> 
-> -- 
-> Josh
-> 
+diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.c b/drivers/infiniband=
+/hw/bnxt_re/ib_verbs.c
+index ea0054c60fbc..6fd4b87832b4 100644
+=2D-- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
++++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
+@@ -1312,7 +1312,7 @@ static int bnxt_re_init_qp_attr(struct bnxt_re_qp *q=
+p, struct bnxt_re_pd *pd,
+ static int bnxt_re_create_shadow_gsi(struct bnxt_re_qp *qp,
+ 				     struct bnxt_re_pd *pd)
+ {
+-	struct bnxt_re_sqp_entries *sqp_tbl =3D NULL;
++	struct bnxt_re_sqp_entries *sqp_tbl;
+ 	struct bnxt_re_dev *rdev;
+ 	struct bnxt_re_qp *sqp;
+ 	struct bnxt_re_ah *sah;
+@@ -1320,7 +1320,7 @@ static int bnxt_re_create_shadow_gsi(struct bnxt_re_=
+qp *qp,
 
+ 	rdev =3D qp->rdev;
+ 	/* Create a shadow QP to handle the QP1 traffic */
+-	sqp_tbl =3D kzalloc(sizeof(*sqp_tbl) * BNXT_RE_MAX_GSI_SQP_ENTRIES,
++	sqp_tbl =3D kcalloc(BNXT_RE_MAX_GSI_SQP_ENTRIES, sizeof(*sqp_tbl),
+ 			  GFP_KERNEL);
+ 	if (!sqp_tbl)
+ 		return -ENOMEM;
+=2D-
+2.25.1
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
