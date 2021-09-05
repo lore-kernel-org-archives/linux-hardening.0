@@ -2,152 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C17FC433FE
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 20:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD310C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 06:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD0D60ED6
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Sep 2021 20:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75C760F51
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 06:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233774AbhIDUtR (ORCPT
+        id S232161AbhIEG01 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Sep 2021 16:49:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbhIDUtR (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Sep 2021 16:49:17 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1378C061575
-        for <linux-hardening@vger.kernel.org>; Sat,  4 Sep 2021 13:48:14 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id s10so5347990lfr.11
-        for <linux-hardening@vger.kernel.org>; Sat, 04 Sep 2021 13:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zHHc5Ft3Ok6Z3pRnyZ85tV26jItKpe9ZasjrvP2F9MQ=;
-        b=fLS/Wwf8Pg9aIz7w9/dZITjC1PCxmO/MKANDa1mRx1+Fwm3hX1ZJ8O3+Omdy4oKpCz
-         8waa+KCSeiDwz5XSqEyiN9FxWNMJ+3+n5mWTGVJK6lvg8LJ+JONBA5I8Pmo8Pcmdu0Ak
-         M9Qkp9DUbKWuiYEqSg2ZNPMzpiFcDyRRUWRS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zHHc5Ft3Ok6Z3pRnyZ85tV26jItKpe9ZasjrvP2F9MQ=;
-        b=HlRJuqpEf56JcC++Doi6Ni0wzyuy9BmCeMWuF0qdcaVP+hdtTCsxZTzJZ0eMAOHocd
-         P1qOZ2psbcrnXy+7W5Xhyna1fHcTWh2/+Q/sYXR+uNO3t6vir1IpYes6Iu9bXyTuyr1z
-         G4n5zub9sd0k/sd8ZuZNzDvoZUqnsiPMK2ePQMJPw78C3sheMxeuN1/Jbn+ycS3m3r6W
-         QhbaLJfTMWzi/PRPnEE5NkSi+A8DLjLb1pTkztqUexqe1soHypn8cigcZBtUNAMlDiIt
-         STDpffckyf91IzYlW2szaS87+ArvuU12QBdzD+wqdACKowEveJejrIXVC/jnnst5JeFP
-         w34A==
-X-Gm-Message-State: AOAM530FaYkj+tx5y5SaIuCX5r403LzFcRvOa3ib5qlxdFFjh4hGrDCb
-        O0FeZyHKyaxK1aO9k2bMb/eUReloF/tGi0Kd
-X-Google-Smtp-Source: ABdhPJyzcpIHNqiEWx/SNbwhOlN9Gg7zaew4yaX8SNh7VWH8fcuoY4PLm5UBSXW0KJ3yarp6lraQig==
-X-Received: by 2002:a05:6512:b28:: with SMTP id w40mr3924293lfu.480.1630788492305;
-        Sat, 04 Sep 2021 13:48:12 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id i5sm10242ljg.53.2021.09.04.13.48.11
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Sep 2021 13:48:11 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id m4so4340027ljq.8
-        for <linux-hardening@vger.kernel.org>; Sat, 04 Sep 2021 13:48:11 -0700 (PDT)
-X-Received: by 2002:a05:651c:158f:: with SMTP id h15mr4190618ljq.249.1630788491026;
- Sat, 04 Sep 2021 13:48:11 -0700 (PDT)
+        Sun, 5 Sep 2021 02:26:27 -0400
+Received: from mout.gmx.net ([212.227.17.21]:58325 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230339AbhIEG01 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 5 Sep 2021 02:26:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1630823115;
+        bh=Ys+NZEboVUnWFmEum0YlSuqPTHhM88xGEAWwfO8U6p8=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=LYQMqG0cLXy3HjfS5drEIsUBmIT4S7Y9hYcdU3/rqBUDGrBEt0aCsLWvb97F5ExXl
+         ZFEAAGKmhTy6aGGybjUrPJuooDsUwREpZ0/AdSSx3QMnKWD6ccPwtIo1HWfbWdPmyv
+         couumRpr9Ka4CXcF15E76Vx4W5vsD3sLTb6MB6g8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1M3DJl-1mO9hO18nN-003gEy; Sun, 05 Sep 2021 08:25:15 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     James Smart <james.smart@broadcom.com>,
+        Ram Vegesna <ram.vegesna@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        Hannes Reinecke <hare@suse.de>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: elx: libefc: Prefer kcalloc over open coded arithmetic
+Date:   Sun,  5 Sep 2021 08:24:48 +0200
+Message-Id: <20210905062448.6587-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <202109022012.756B6B5B79@keescook>
-In-Reply-To: <202109022012.756B6B5B79@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 4 Sep 2021 13:47:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiPOXS2f90Ykk3V76sJLx0wMVywke8pc=88r1trmDuhmw@mail.gmail.com>
-Message-ID: <CAHk-=wiPOXS2f90Ykk3V76sJLx0wMVywke8pc=88r1trmDuhmw@mail.gmail.com>
-Subject: Re: [GIT PULL] overflow updates for v5.15-rc1
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithp@keithp.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/O4hM7ALWbCPWzwIh+ID1vD4gm33Nk5xbWknmtdnrQfONIGxnAw
+ KijyByAx4jKrZz6Z8MForS0A4E1MXm4O7LBF0IOjpkTwel/n1RCJPGkn/73/FbB/LgSZxbO
+ iN9Ck1gE1dF1MUTr2lh35vAVXzMuQEKukMS8UwZwzN1axKoOOL2audpNJZPB4JmZpo58Lo5
+ h1F5dPfVpwVDFdF8JrH7A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WMpzMZHxKls=:OMKsG8ZAyZXRTwqURhjP5w
+ kG9d71iTnYzxIO78R418bZTDuW4sLwuCeXIu7G56B1TEhAhrZb6z1mhT+QuYVafViVHuLLw8q
+ GiFS19yxGhoU9L3z5HNdZaWdwTAzyt2M3J3nG81jMg56Nxyc2Aut17XmD+7/Ou4ISwYmDogCc
+ Sz3250PXheHgDE/GsWX+HpZvBd8vvgV+Nw5/qKK32O5S0Qtk3hIvDL/UsyzUnRSdyb1C9q5Xb
+ cFsnb7N01eJb8R0fSiUdOReVMnaZITVUMDEnO68A5T89aA/fEctbwA411CZqMqbOFmTEOCCbU
+ HRKNMSMQRjfrEfcHBkXd74f6XfGazRLzXnxjIIZN0Z/V8kIYZIQhLRerS0E5BmqtVxELsjK5+
+ 6IPmGC9mzz9R3hz84EDXn+mhkJw94sXLpXWrAaXZTjKkSg1UkmyTTNRYZCaiOQ7O9FFU7eJl8
+ osFb+n/V261XeA0o90BAzseeQr01Ji0oVL8fIif8h5p26cF7zBJP4q/WjQFzGsDlPwZh9DTVZ
+ SHDY//X7vU8qRbSnxyvf5gS8A/M+QRexUN8Uqf/lfbNqKa0dnd6h2/X0Y8+i7/aZhZB993T3q
+ azPbBcIJu+L8XJma+93GR/WRYHxij6Z8InjSjXTxLow5pdBnZ8Sa0H5x2RfTfuwzvasbkELhH
+ LCGHJhk1+h4vn0DiOU8c2SFqHy8pTMC1FkbnRyBsp8dlaZqY3zGDdx1vuVnMnddJqcaJlgXtB
+ jwtSShhjtyFa22u2zbh/vMbPu9RhEyIaWIgeZmcEDzDeVaWpnQ6ChI26vP9aPmcmC50mFlP+s
+ ZdM/f9LGtizVzxKovx2kA4sVQnlc739aFb83JiTRMoTJ2BWbLMYTcfdD1yOau4nXLT149HfE6
+ xp2dHZG07MgfAk9JH6gfBGc4utFOLSKgcsPB4fsZbYsnZJ4iiNnjfDI2v5v15/DtGnWWMi4Ls
+ wBCQo7HYYuron3wbndhmYS1ESMQ0tHKHT3QO6CN2W4SUrz14Nm0/7SOhAH9fPhK0V6gJbyAQO
+ 7xg0Dmsv6HRVWUDA4NZEI00y+vA19krVxqbLQ9VofMJY5yVyAAWnAbtNc+TjX7Ch3bdWTkAgY
+ OMjhU8bzN+KIlrmXtBqNZVO+kfHadlRPqi7KRtOIV8d+Wad5cCk40TN/A==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 2, 2021 at 8:22 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Please pull these overflow updates for v5.15-rc1.
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-I pulled and then immediately unpulled again.
+So, use the purpose specific kcalloc() function instead of the argument
+count * size in the kzalloc() function.
 
-You can't add new warnings without fixing them, and this adds some
-HORRENDOUSLY ugly new warnings that would most definitely hide other
-warnings.
+[1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
+ed-arithmetic-in-allocator-arguments
 
-It doesn't matter one whit if the new warnings are from some
-test-file, they are not acceptable for a build.
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ drivers/scsi/elx/libefc/efc_fabric.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Make any tests separate from a real kernel build, because if "make
-allmodconfig" results in hundreds of lines of warning crud, it's
-useless garbage.
+diff --git a/drivers/scsi/elx/libefc/efc_fabric.c b/drivers/scsi/elx/libef=
+c/efc_fabric.c
+index d397220d9e54..f9412437ad47 100644
+=2D-- a/drivers/scsi/elx/libefc/efc_fabric.c
++++ b/drivers/scsi/elx/libefc/efc_fabric.c
+@@ -686,7 +686,7 @@ efc_process_gidpt_payload(struct efc_node *node,
+ 	}
 
-             Linus
+ 	/* Allocate a buffer for all nodes */
+-	active_nodes =3D kzalloc(port_count * sizeof(*active_nodes), GFP_ATOMIC)=
+;
++	active_nodes =3D kcalloc(port_count, sizeof(*active_nodes), GFP_ATOMIC);
+ 	if (!active_nodes) {
+ 		node_printf(node, "efc_malloc failed\n");
+ 		return -EIO;
+=2D-
+2.25.1
 
----
-
-warning: unsafe memchr() usage lacked '__read_overflow' warning in
-lib/test_fortify/read_overflow-memchr.c
-lib/test_fortify/test_fortify.h: In function =E2=80=98do_fortify_tests=E2=
-=80=99:
-lib/test_fortify/read_overflow-memchr.c:3:9: error: statement with no
-effect [-Werror=3Dunused-value]
-    3 |         memchr(small, 0x7A, sizeof(small) + 1)
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/test_fortify/test_fortify.h:34:9: note: in expansion of macro =E2=80=98=
-TEST=E2=80=99
-   34 |         TEST;
-      |         ^~~~
-In file included from ./include/linux/string.h:253,
-                 from ./include/linux/bitmap.h:10,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-.. lots of noise ..
-
-In function =E2=80=98strncpy=E2=80=99,
-    inlined from =E2=80=98do_fortify_tests=E2=80=99 at lib/test_fortify/tes=
-t_fortify.h:34:2:
-./include/linux/fortify-string.h:56:17: error: call to
-=E2=80=98__write_overflow=E2=80=99 declared with attribute error: detected =
-write
-beyond size of object (1st parameter)
-   56 |                 __write_overflow();
-      |                 ^~~~~~~~~~~~~~~~~~
-warning: unsafe strncpy() usage lacked '__write_overflow' warning in
-lib/test_fortify/write_overflow-strncpy.c
-In file included from ./include/linux/string.h:253,
-                 from ./include/linux/bitmap.h:10,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:22,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:60,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:55,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/gfp.h:6,
-                 from ./include/linux/slab.h:15,
-                 from lib/test_fortify/test_fortify.h:4,
-                 from lib/test_fortify/write_overflow-strncpy.c:5:
