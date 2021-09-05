@@ -2,126 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.3 required=3.0 tests=BAYES_40,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5816C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 08:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD2BC433F5
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 09:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 808D6600D4
-	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 08:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BB060F12
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Sep 2021 09:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234057AbhIEITz (ORCPT
+        id S235749AbhIEJuN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 5 Sep 2021 04:19:55 -0400
-Received: from mout.gmx.net ([212.227.15.15]:49905 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229482AbhIEITz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 5 Sep 2021 04:19:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630829927;
-        bh=fTBXvKxZl6B/IHLAHmbTOQkcjt7hvW0fG3GfH17J/Fo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=MKhhkRe79drF0yldxNMv8bw7RvqDGYCpPKLRJ8T6cHob+tjK0KBTyC0kmiWKPjnuF
-         GRj2bhslB2MACSgwtLe4wImcRzoZzw97MQgf/E2//kLkdOmhNJat1kQa0MmwUZBwoZ
-         gtaZnHGqEyR3QLCV5nlhzMBlmAQdimYzE99mwqG4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MoO6M-1ml4UZ1JpQ-00oq2c; Sun, 05 Sep 2021 10:18:47 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Selvin Xavier <selvin.xavier@broadcom.com>,
-        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        linux-rdma@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] RDMA/bnxt_re: Prefer kcalloc over open coded arithmetic
-Date:   Sun,  5 Sep 2021 10:18:12 +0200
-Message-Id: <20210905081812.17113-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 5 Sep 2021 05:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229691AbhIEJuM (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 5 Sep 2021 05:50:12 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CF5C061575
+        for <linux-hardening@vger.kernel.org>; Sun,  5 Sep 2021 02:49:05 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id q70so7364761ybg.11
+        for <linux-hardening@vger.kernel.org>; Sun, 05 Sep 2021 02:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=AQI+gaP3gRr3DWEJsbHrkGhbGs7Zx+5Z3tcCL1B09EM=;
+        b=N0HH1/cu3QWh+3njUp8JC/KM9BTpPcb4WqrYOrByJcCloli3M2aRc5RmMdjN9xowYQ
+         b+Dqyn9KheIRrTkwRMkAI9zWSSX5AA4P7R1XMgfMJOBlNVppSE23bXixqAwpLiRQlJWv
+         IQjLK020hGDyNh40hUryBUeDtrSYDDevnL5ffAscKiSd831sDT6lohhyIUh4YuabXUmN
+         5/2lHLCK8YuYyCOVzwevZ/nF9mvtdppOZeszHfXZrGKu0z2g+NVqad2r4vFtrkeap8Fr
+         oziMRG8IX3uITR5wwXETjDu/ayOO1eFB074qhshsYw5oERro5q9PAB5+VlPYuSSGqYck
+         UPmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=AQI+gaP3gRr3DWEJsbHrkGhbGs7Zx+5Z3tcCL1B09EM=;
+        b=HPjNeWq6BRMR7JwjmEB9a2xLlI9sv6U6hF/UUSNf25/BhnYL75GFEDZkcVPlhRH2Kv
+         kROuznx0dn/xoPMH5cpMn1k49QF5ZY5oU5d4/KbrOK8rGR4kotxZf8awqYZfY7KcbPHc
+         TTza0rCWGWXWbunHguiydKYUM49leJ3pMjiLlKKCcMrcPHWb4oVnYLAEJOGjp5KXkLVI
+         tOXZDCIT6aoICKTkeEhV1bmU5TMa05Ml18gM+x52w6jdwlvfnY9/p2scQjAMuX3T7yJL
+         R3UrPSN9uTgVi1ovEcSZnQ3RGXs4jpTiqinBNrpi2jkd9hkJayCty1Mh6Z06AigiZZvh
+         5TMQ==
+X-Gm-Message-State: AOAM533KWPd/JcF2wjWAoO9g0rjdiHXyOk2Y7S5OeznJnp1zFDIQUY/j
+        C+pM5tZHt3FxtRuuKQfsIgKSQYKm93hzaN3vP5PQUlwtQ8XctQ==
+X-Google-Smtp-Source: ABdhPJyNm2OriKCmYlSWhW2lNBd8jG3IepYpN7hf4Pz91LAR391GRz0w6YZkeHBTZsI1qB9vrC9B2qsS07JsOEgE+eQ=
+X-Received: by 2002:a25:5086:: with SMTP id e128mr9285880ybb.89.1630835344617;
+ Sun, 05 Sep 2021 02:49:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vzAhzYJz4CiUc9w8Raus6XPXj/K19h+cFftCVKPdHnD4ICkrkCu
- 7XoRcMK28P6FVNJAkB5J+Uh68r9xW4RJ96AUzolLL5sB/gd6R5NhZi9Bd1mTNBXpId7tnuH
- GItLhPLWaDlDzjdLvGTKA5/qMkvNIrXqe3NYeKn7X2+20/wggFuycRphjbgkSvdmLWSD+Rr
- TW6J58OCRhYABkn+jzNXw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f7gIwwtcx9A=:XxVo3HNf616woWeFi8zZq+
- 5D7nCIn5pEcUHG5vSvZ200ZzIMNo/YWu4j4GIp0VULBni31LlbnoyYKDyxL3KT22WDMzxuLPM
- aE7fFznWCXIvVRyZ3kPOnXO9OOYPdh3GHAZv/VCoqSBb9hgU4qcDuJ+VCAFC4cBvPrbY4xGqr
- rrChP7/WxGZU3zUtB3trQtM+VmW0otfvEWSd4AK2RTvH7I44DWVcQHIs09FDjgCN/qDCmkczb
- e2ROm5Rpbv4CT4jr6Fr52QwSMFAJA7BK5LHDm2mqrNuQphmUb948Ui6ABe3oa5FszqlbTpFWe
- 2LIUVU5j5/H49bzG3WLalfTYOTKQRVaq10QRaX5evKqI+r2njf9eoLsn30qcnN5li8Wh0hRWW
- MFQP6GoKQoxRGvF+7v6BtKjF+v3IY241Bf11vw4MS06bugtWaL6stPM6LQFh32VSPhto0L+RE
- ePiCVB3JlLeWjgCMiH81B9VZasS2D0TKS6ds95w4C6Oo5hgTef4T/yTxJK6wir3PT9EdiY2Bz
- J4lQ6INNolzp0Cx6OtpAqYg0i5MM1SUYf6pTJq04yxIY9M3PXmGlgVzwxvaE2XM1Ge0+bWzi1
- A9DZmpXu03Y6Ju7FJT3V7/tclCV8dDkufM+s3fPFZs9YPTQJ2zorWegFNRa9GoOa0EDGbj2rw
- pPl0sMpL7DYla6vMit264JgMqIiiZSHwLH7MH/2H1hIv5n7wR3eKp8tvB5+JAbsKXTyrstkAB
- QesQ+VBuvkFc9IkQVlfkH0jAjA+ojMUsSnMTe0P3KEJSN2gVX23lmPS04XYWBjnIz8aQGYw1Y
- hekMx3d6YQJkpTSnMPdd15W+aoDtkaEb0ZP+bZ0V1auoZGkg/yUcBXfZNJfHP7GGU0B0xgO/0
- m7lNF6eUxOxWtQMfNF09W6Z8Eae041rhRO5UcC2YvbgJk3/Q3zb0tmbGpb4uO3Jbr3eqE9qLw
- A9Bes/uM3wvh/cGpg0kXuKjJlqIxK2l+ozrF24oMmDF+TnyIna0IMbXS5nSiub1YcCc2DegTp
- 3xLw2w2ErNdpZeLoMLQUjYEP9zr6H6xNxmpLvg01sQyaz6hXm7rJMVgpJvTwlb9DQ9LD1wDm9
- 2yayfwbWyoz13I/5qINqRqtHxwLcKR/mGMEw6qyAejHRlwiXZ0rVQ5Y9A==
+From:   Turritopsis Dohrnii Teo En Ming <ceo.teo.en.ming@gmail.com>
+Date:   Sun, 5 Sep 2021 17:48:54 +0800
+Message-ID: <CAMEJMGHtdxmX5ayE8g+sHx1QxRdsqkyyPyVAVVk4AvgcfHm9zQ@mail.gmail.com>
+Subject: Introduction: I am a Linux and open source software enthusiast
+To:     linux-hardening@vger.kernel.org
+Cc:     ceo@teo-en-ming-corp.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+Subject: Introduction: I am a Linux and open source software enthusiast
 
-In this case this is not actually dynamic sizes: both sides of the
-multiplication are constant values. However it is best to refactor this
-anyway, just to keep the open-coded math idiom out of code.
+Greetings from Singapore,
 
-So, use the purpose specific kcalloc() function instead of the argument
-size * count in the kzalloc() function.
+My name is Mr. Turritopsis Dohrnii Teo En Ming, 43 years old as of 5
+September 2021. My country is Singapore. Presently I am an IT
+Consultant with a System Integrator (SI)/computer firm in Singapore. I
+am also a Linux and open source software and information technology
+enthusiast.
 
-Also, remove the unnecessary initialization of the sqp_tbl variable
-since it is set a few lines later.
+You can read my autobiography on my redundant blogs. The title of my
+autobiography is:
 
-[1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
-ed-arithmetic-in-allocator-arguments
+"Autobiography of Singaporean Targeted Individual Mr. Turritopsis
+Dohrnii Teo En Ming (Very First Draft, Lots More to Add in Future)"
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/infiniband/hw/bnxt_re/ib_verbs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Links to my redundant blogs (Blogger and Wordpress) can be found in my
+email signature below.
 
-diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.c b/drivers/infiniband=
-/hw/bnxt_re/ib_verbs.c
-index ea0054c60fbc..6fd4b87832b4 100644
-=2D-- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-+++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-@@ -1312,7 +1312,7 @@ static int bnxt_re_init_qp_attr(struct bnxt_re_qp *q=
-p, struct bnxt_re_pd *pd,
- static int bnxt_re_create_shadow_gsi(struct bnxt_re_qp *qp,
- 				     struct bnxt_re_pd *pd)
- {
--	struct bnxt_re_sqp_entries *sqp_tbl =3D NULL;
-+	struct bnxt_re_sqp_entries *sqp_tbl;
- 	struct bnxt_re_dev *rdev;
- 	struct bnxt_re_qp *sqp;
- 	struct bnxt_re_ah *sah;
-@@ -1320,7 +1320,7 @@ static int bnxt_re_create_shadow_gsi(struct bnxt_re_=
-qp *qp,
+I have three other redundant blogs, namely:
 
- 	rdev =3D qp->rdev;
- 	/* Create a shadow QP to handle the QP1 traffic */
--	sqp_tbl =3D kzalloc(sizeof(*sqp_tbl) * BNXT_RE_MAX_GSI_SQP_ENTRIES,
-+	sqp_tbl =3D kcalloc(BNXT_RE_MAX_GSI_SQP_ENTRIES, sizeof(*sqp_tbl),
- 			  GFP_KERNEL);
- 	if (!sqp_tbl)
- 		return -ENOMEM;
-=2D-
-2.25.1
+https://teo-en-ming.tumblr.com/
 
+https://teo-en-ming.medium.com/
+
+https://teo-en-ming.livejournal.com/
+
+Future/subsequent versions of my autobiography will be published on my
+redundant blogs.
+
+My Blog Books are also available for download on my redundant blogs.
+
+Thank you very much.
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link:
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Targeted Individual Mr. Turritopsis Dohrnii Teo En Ming's
+Academic Qualifications as at 14 Feb 2019 and refugee seeking attempts
+at the United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan
+(5 Aug 2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
