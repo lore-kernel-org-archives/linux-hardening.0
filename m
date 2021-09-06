@@ -2,114 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBB5C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Sep 2021 11:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D831BC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Sep 2021 17:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 679CC61004
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Sep 2021 11:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD33B60F70
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Sep 2021 17:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233158AbhIFLpb (ORCPT
+        id S240965AbhIFRGZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Sep 2021 07:45:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231173AbhIFLpa (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Sep 2021 07:45:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 97A8B6056B;
-        Mon,  6 Sep 2021 11:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630928666;
-        bh=hC5aPFrcJXwbmvjAje6ve3g5ksRe+uHuix3L09NNEV4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ewzHkc4zSgJrADj9ahsPtGZXlDqwdosotrGK6DuC6g/5wIXWEKEQQTI82xGltsPTd
-         pbgrEDuzgEtQ8WI8HPYdVOePN3gzLU2p2ybimTzHXJXnE014KyeTMddocnCBpFIjZR
-         FISq63FVHNtirACoFmUzRZZQ4Zq9FHg98XPETfJCLx0KVa0xgSBbASBnkB7SES6Rzx
-         HRk4ChefTDblw9H+ks76yYSeyvAcl6JL7K/8Q/PkomXnkxFRtHahD8kYEWE7HTdICs
-         oIbJJqhZSf4YYndt82K73QEfdSzLn0+aFimgi5R7L6Z9B4Z3VZRncX5o1z00mgl0Vd
-         RVDqTqYwNoENw==
-Date:   Mon, 6 Sep 2021 12:43:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithp@keithp.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [GIT PULL] overflow updates for v5.15-rc1
-Message-ID: <20210906114350.GB4309@sirena.org.uk>
-References: <202109022012.756B6B5B79@keescook>
- <CAHk-=wiPOXS2f90Ykk3V76sJLx0wMVywke8pc=88r1trmDuhmw@mail.gmail.com>
- <45312958-B844-4B4C-9808-8205866675A1@chromium.org>
- <CAHk-=widUkzjVMW99L6OZpJc1wDnZbBbnOOzgXOMypOPoV6mjg@mail.gmail.com>
- <202109051123.11E4E31@keescook>
+        Mon, 6 Sep 2021 13:06:25 -0400
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:39877 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233888AbhIFRGW (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 6 Sep 2021 13:06:22 -0400
+Received: by mail-ot1-f46.google.com with SMTP id m7-20020a9d4c87000000b0051875f56b95so9463200otf.6;
+        Mon, 06 Sep 2021 10:05:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nWSkQkSt0bxIWZikjyNv1yc6a2mBNyIggcCEjOgf7nk=;
+        b=h8jegpGdYZGD22NG/QMUwQ947lZ7fXcYLoflwSGc8VkEz1oLstIrsONdFLBi6NkZZ/
+         dRmzkjds4F4GSu69leGD4/onRNXK/PJJX0KaNV+8R/ommh8Kz9qxiQpbB3JlwYqiJVml
+         YDfYKtMEhFAnNvJmks7l+EmxQUHGPiwmJaNk6oNxnPr1bLIC5oeHTKS0g6IQSVeV28Gd
+         Brp8v38dtZPuknaRGpDeeeAgwkVcpIFIdjDfBPryb1p/GF8u4e6ePuxD1LcfLeJxuPI1
+         OUZLBHv+fKru6wFFUhLc/7QIEYjeqOGcnBEd8vEi/20B2a19wP7ScIleY6ommeWMhywq
+         yuVg==
+X-Gm-Message-State: AOAM532RuPH/GgS6tS/+ERoKWW8bPEyvEK4hRl4X+aT53InkQY/FeNv0
+        iImwnILtRd7E3WA693R6o07RhfQx1xXx4CnmzYA=
+X-Google-Smtp-Source: ABdhPJyX4pJ82lhruFxtVqo76a/SKXbQN1Ot4TUHTDaQfC+AMjsTShGS3vOfZirkAgS56YQITo1F5aLqKIHvTkr7q0M=
+X-Received: by 2002:a9d:6945:: with SMTP id p5mr11983974oto.301.1630947917061;
+ Mon, 06 Sep 2021 10:05:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
-Content-Disposition: inline
-In-Reply-To: <202109051123.11E4E31@keescook>
-X-Cookie: I smell a RANCID CORN DOG!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20210904151628.6618-1-len.baker@gmx.com>
+In-Reply-To: <20210904151628.6618-1-len.baker@gmx.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 6 Sep 2021 19:05:06 +0200
+Message-ID: <CAJZ5v0inR2Sj3cRXYa3ip3hG1-1Gbv3QHExQmGO12AJmUjYB5w@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: powernow: Prefer kcalloc over open coded arithmetic
+To:     Len Baker <len.baker@gmx.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Sat, Sep 4, 2021 at 5:16 PM Len Baker <len.baker@gmx.com> wrote:
+>
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+>
+> So, use the purpose specific kcalloc() function instead of the argument
+> size * count in the kzalloc() function.
+>
+> [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+>
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 
---XOIedfhf+7KOe/yw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm assuming that this patch will be picked up by the powerpc arch maintainers.
 
-On Sun, Sep 05, 2021 at 11:31:44AM -0700, Kees Cook wrote:
-> On Sun, Sep 05, 2021 at 10:36:22AM -0700, Linus Torvalds wrote:
-
-> > > Yeech. Yeah, no, that was not expected at all. I even did test merge builds against your latest tree before sending the Pull Request. This has been in -next for weeks, too.
-
-> > Sadly, I don't think linux-next checks for warnings.
-
-> Oh, I thought I'd gotten such reports from sfr before, but certainly the
-> 0day bot and others have yelled loudly about new warnings (from earlier
-> iterations of this series in -next).
-
-Yes, Stephen will report new warnings in the configs he tested and
-there's a bunch of people who like to go around fixing warnings whenever
-they do appear though only in the more common configurations.
-
-> > > What was the build environment?
-
-> > This is actually just bog-standard gcc-11.2 from F34, and an allmodconfig build.
-
-> Ah, fun. Yeah, I'm behind on versions, it seems. Default gcc version on
-> latest stable Ubuntu release is 10.3. I will go retest on the devel
-> release.
-
-If you're looking for coverage on this stuff it's also good to check
-with clang as well, it's sufficiently different that it often triggers
-extra stuff (eg, turning on -Werror broke i386 allmodconfig for clang-10
-since that triggers some stack frame size warnings which are now
-errors).
-
---XOIedfhf+7KOe/yw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmE1/vUACgkQJNaLcl1U
-h9Cf2Qf/XxqoOJVy17BQ8WlyOMfwUSZl8yxck50R61Fkj3TDtAnU89NtCmKleen1
-u8ReMG75E0DjgKcwZ9SkQoMf0gUdplD+kKsvTAGvM2PvNGsUsnIt/ga97LuLztNz
-3e1J1s7mcEqSiwg10dukT/Qw4YuaMdA5GCuLcUYkROJY65q+du9ACRJeeH3i5+US
-Bfw8MBbdAzJ/iEhRdFT32BqJ3FFNDhdk+cVZL12ZO9K8YDu/LJZJqzgeJ/t1/9Bb
-F6CvE6YWL6PoqnHNxjL7lfVvLbP9IIcrurXgwozU2Od4M8CxcRWR8mGmSf59xlD7
-k2hzt8WrX47o/PZaUHcj8HV8yTJfqQ==
-=fxh3
------END PGP SIGNATURE-----
-
---XOIedfhf+7KOe/yw--
+> ---
+>  drivers/cpufreq/powernow-k7.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/cpufreq/powernow-k7.c b/drivers/cpufreq/powernow-k7.c
+> index 5d515fc34836..a9d2c7bae235 100644
+> --- a/drivers/cpufreq/powernow-k7.c
+> +++ b/drivers/cpufreq/powernow-k7.c
+> @@ -174,8 +174,8 @@ static int get_ranges(unsigned char *pst)
+>         unsigned int speed;
+>         u8 fid, vid;
+>
+> -       powernow_table = kzalloc((sizeof(*powernow_table) *
+> -                               (number_scales + 1)), GFP_KERNEL);
+> +       powernow_table = kcalloc(number_scales + 1, sizeof(*powernow_table),
+> +                                GFP_KERNEL);
+>         if (!powernow_table)
+>                 return -ENOMEM;
+>
+> --
+> 2.25.1
+>
