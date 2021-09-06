@@ -2,117 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C1DC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Sep 2021 04:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A392BC4321E
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Sep 2021 05:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2C260F70
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Sep 2021 04:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888F261054
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Sep 2021 05:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229577AbhIFEbX (ORCPT
+        id S238906AbhIFF2n (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Sep 2021 00:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38080 "EHLO
+        Mon, 6 Sep 2021 01:28:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbhIFEbX (ORCPT
+        with ESMTP id S238102AbhIFF2m (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Sep 2021 00:31:23 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467C0C061757
-        for <linux-hardening@vger.kernel.org>; Sun,  5 Sep 2021 21:30:19 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id p4so5786711qki.3
-        for <linux-hardening@vger.kernel.org>; Sun, 05 Sep 2021 21:30:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=vvzWX1VxxcUHUOP9/2aXTP+rW0zKame8C1AO3Rx+r/w=;
-        b=rX0Ig+wxQ0/f+2fWW0QRafOX5QSukEZf7//CW++9MwHwR86AbsTnsIlIkTRtzNiDMw
-         akc9m/xzr1AhQAzP7yp8tR89YwhFbOlUK4+ndREPhcYv5YLVrbo1SMPXKTEQdEILm0qc
-         stC2AkixomaestdTIUTHLUxgUNHBBJlH0hOdYE3q9DSkGBHMbiZrU36aki1WJzzXtN8A
-         FZ2/L8YLQ0LrAoJuHxVTnfSwkNpIA/mu6SGmF+rrh+31a4n/P6WvO0+W4U3AihCN2xrI
-         117fdYDKmtGvuhdbIw3ueWCd9aJ9L/jQ6dbEBcRBVXi7Z0x44y9KmS1nKcQS86e0atns
-         eAsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=vvzWX1VxxcUHUOP9/2aXTP+rW0zKame8C1AO3Rx+r/w=;
-        b=SkjzbPybscBz0pidvuGCvy4LOE5Zf327Q+dYGXmdYDP9Dkl2LMSVFbyUxLbAPGHf7q
-         XOOQMKKH6qnmq7XFUjuDQiZXriUpfkx6B6G7Bd2Gm/4BTOG56fcvvec/jyv5qDwiE2IB
-         QHhug8MHePA1c1uWHK2+dJWbYQiuDVMRJbEI+UMd1xEWoLRW+NkGLR/zRDFjLEYasny+
-         Dqd8K2B/SRDBNpbnJ8B9qe6Up5f5e4WXx5sb8uVQQgbiYRCT2q0u5+EPS6vzcgivMcsX
-         sxJfKSLRewhePw+2YQGWaJ+24iV424XdjCIj+htYqi/QODTn9MYKSIh1na/qhWJYEZsJ
-         9dRA==
-X-Gm-Message-State: AOAM5326EXqd0XIGpjJCuhK8vUSg84OLA9nL/qHq0EY51HD+ZlnQwMGx
-        mi/FRe7yBsVeSR4OOoUKn/AU6g==
-X-Google-Smtp-Source: ABdhPJyjPDFmglS6I6kGROXHnrT+IRxprFjndS3w+nZ8O1VQ2ufB7xV4g3s87MHqaFdAJd1qHlx25w==
-X-Received: by 2002:a37:6253:: with SMTP id w80mr9632856qkb.237.1630902618264;
-        Sun, 05 Sep 2021 21:30:18 -0700 (PDT)
-Received: from xanadu.home (modemcable108.170-21-96.mc.videotron.ca. [96.21.170.108])
-        by smtp.gmail.com with ESMTPSA id v24sm4587011qtq.17.2021.09.05.21.30.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Sep 2021 21:30:17 -0700 (PDT)
-Date:   Mon, 6 Sep 2021 00:30:16 -0400 (EDT)
-From:   Nicolas Pitre <npitre@baylibre.com>
-To:     Len Baker <len.baker@gmx.com>
-cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-i3c@lists.infradead.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i3c/master/mipi-i3c-hci: Prefer struct_size over open
- coded arithmetic
-In-Reply-To: <20210905144054.5124-1-len.baker@gmx.com>
-Message-ID: <65q16p1-7o22-pq77-38s8-9rr27p56s16n@onlyvoer.pbz>
-References: <20210905144054.5124-1-len.baker@gmx.com>
+        Mon, 6 Sep 2021 01:28:42 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2E2C061575;
+        Sun,  5 Sep 2021 22:27:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+        s=201702; t=1630906056;
+        bh=wRP6H3xLozP+d9ZCC0YyBnN4YegkYGX8jU5kAZtJ8wc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=e7DBWt2dHzczZJHJC3Fxf1pVNLIJvvXAhYy3hSn8gmqQ0T5iDw6h02QhhOPzn3OSb
+         I0sXOP3TQ0NiAAqdcAP0h0YQNGe0ZK6+KCH4+9rHKfhm1xAd8nlZ6WpYIyqo39PtI5
+         Wjzos/xJTVK5xydm+3aAMh3Hry/Rm7HTdN/0o8iSkCqy6VUbFYN15ZoafJ7wLwZooh
+         QVUCIkLT1xEwmiAyh06BhKm068ElOo/PJ8cHtVUtH0WcNwt+H1XyA5uOMbXZbhmWV0
+         y2CY1x31lpnbn/GlHIiq5zjbdmi/D5ByV6KYLMQqAhub8E4Qy5+cnR36x8nCfupORF
+         98TFtuf+A2Y2g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4H2xjx0Fs0z9sVw;
+        Mon,  6 Sep 2021 15:27:32 +1000 (AEST)
+Date:   Mon, 6 Sep 2021 15:27:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithp@keithp.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [GIT PULL] overflow updates for v5.15-rc1
+Message-ID: <20210906152731.43a9c67e@canb.auug.org.au>
+In-Reply-To: <CAHk-=widUkzjVMW99L6OZpJc1wDnZbBbnOOzgXOMypOPoV6mjg@mail.gmail.com>
+References: <202109022012.756B6B5B79@keescook>
+        <CAHk-=wiPOXS2f90Ykk3V76sJLx0wMVywke8pc=88r1trmDuhmw@mail.gmail.com>
+        <45312958-B844-4B4C-9808-8205866675A1@chromium.org>
+        <CAHk-=widUkzjVMW99L6OZpJc1wDnZbBbnOOzgXOMypOPoV6mjg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/=Sbf_q1jPPWfNEYdPkEF9el";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, 5 Sep 2021, Len Baker wrote:
+--Sig_/=Sbf_q1jPPWfNEYdPkEF9el
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the struct_size() helper to do the arithmetic instead of the
-> argument "size + count * size" in the kzalloc() function.
-> 
-> [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
-> Signed-off-by: Len Baker <len.baker@gmx.com>
+Hi Linus,
 
-Acked-by: Nicolas Pitre <npitre@baylibre.com>
+On Sun, 5 Sep 2021 10:36:22 -0700 Linus Torvalds <torvalds@linux-foundation=
+.org> wrote:
+>
+> On Sun, Sep 5, 2021 at 12:38 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Yeech. Yeah, no, that was not expected at all. I even did test merge bu=
+ilds against your latest tree before sending the Pull Request. This has bee=
+n in -next for weeks, too. =20
+>=20
+> Sadly, I don't think linux-next checks for warnings.
 
+Yes, I do.  And report them.  I did not get these warnings for some
+reason.  One of my builds is an X86_64 allmodconfig, currently using
 
-> ---
->  drivers/i3c/master/mipi-i3c-hci/dma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i3c/master/mipi-i3c-hci/dma.c b/drivers/i3c/master/mipi-i3c-hci/dma.c
-> index af873a9be050..2990ac9eaade 100644
-> --- a/drivers/i3c/master/mipi-i3c-hci/dma.c
-> +++ b/drivers/i3c/master/mipi-i3c-hci/dma.c
-> @@ -223,7 +223,7 @@ static int hci_dma_init(struct i3c_hci *hci)
->  	}
->  	if (nr_rings > XFER_RINGS)
->  		nr_rings = XFER_RINGS;
-> -	rings = kzalloc(sizeof(*rings) + nr_rings * sizeof(*rh), GFP_KERNEL);
-> +	rings = kzalloc(struct_size(rings, headers, nr_rings), GFP_KERNEL);
->  	if (!rings)
->  		return -ENOMEM;
->  	hci->io_data = rings;
-> --
-> 2.25.1
-> 
-> 
+x86_64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/=Sbf_q1jPPWfNEYdPkEF9el
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmE1psMACgkQAVBC80lX
+0GwyLQf/dS0qDqLBYPog4aARLifKVXXjCe0+Apz4UYnDZAofwYOi6ACDjoVp8yMA
+ei8RDDZjlL6xdBcYZkXh0eK4tBljlWxT6kiEYkM/wkZvIOD4fSqbTZWXP+NDNevi
+D4EQwVsR42jEg0vHS+q6kry5a5lMnhBWObdnCTGjzMntpYActiTSxzDi6xSZlrP3
+R9cZbnn60MN8vv2oPXA44FR9UFGHlfS7j9sk5Zl7ge8lUlxORnF/9PTmNVPcRSWL
+23YS+dRDYSIi73tfV4ugfosr3dAesFU/11VySmjqqIwLkS1k1y5rZ8x4ViSvr5WK
+iO2PNDo5nNVhfskYaHjeZjnK7+n3HQ==
+=2YWD
+-----END PGP SIGNATURE-----
+
+--Sig_/=Sbf_q1jPPWfNEYdPkEF9el--
