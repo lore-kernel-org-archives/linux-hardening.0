@@ -2,89 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B6AC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Sep 2021 16:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1430EC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Sep 2021 17:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289C560EBA
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Sep 2021 16:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E168160EBA
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Sep 2021 17:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345180AbhIGQ41 (ORCPT
+        id S1345333AbhIGRBh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Sep 2021 12:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
+        Tue, 7 Sep 2021 13:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234571AbhIGQ41 (ORCPT
+        with ESMTP id S232621AbhIGRBh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Sep 2021 12:56:27 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E1CC061575;
-        Tue,  7 Sep 2021 09:55:20 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id j16so8646709pfc.2;
-        Tue, 07 Sep 2021 09:55:20 -0700 (PDT)
+        Tue, 7 Sep 2021 13:01:37 -0400
+Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D93C061575;
+        Tue,  7 Sep 2021 10:00:30 -0700 (PDT)
+Received: by mail-ot1-x32c.google.com with SMTP id c19-20020a9d6153000000b0051829acbfc7so13566735otk.9;
+        Tue, 07 Sep 2021 10:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=fo01n+oht3lwEJyeQrCoe6KGpWuXH6sm5NGKluVcVIg=;
-        b=LFIdP+U7Iy++SMozkDbn1A+ei8rDjByZWsek36sc+DPewZshw3o11baFsUXh8NxHD2
-         1SCt+C6R1JVqpf+i0FwudI+7/TxKXjMfNIOOxvVXjtGz5F4x7jsC5VLaNV69fi8oFuZv
-         cbn1mZz4bNPQEjz/rOldefzEBxFq2TyX7GKuT6B5qNiXHyMeY515Prcz77pQrPs/oKaw
-         UsH9r6D4ptR1fpeS0MCTOy+0yqyLQjDc/zwTK4+tZgjVCKNTFLyeRa2K6udHvq1vE5m9
-         yl3L2Lfs8PLKc8tO7pdhHYp9qkuNAtRzZpqerJP2zNFKhzghKl7eN07W2c9VYdAwq/+L
-         mxqg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tX3dLY3KjaJdK+boJZc/jDVbrXqd0jZWFd+gRGqD1s0=;
+        b=JDQqLN0MwwK5CCpl1DnA4YhnQTWZvr8TH6HVybD0AeeTcxvlEvUwKAO1AVnNz+g5Fl
+         F+VYli6qUA/dz6+QZTxAMfsN3DkNBwjnjP4X4YICQi1JZm2ZqZjXje/Zxd6aPlUTkpgb
+         xCI9iENlZWLA0VcWtac6VIx8hJXRv3+hmwVbPx+1sodHQRpAQjqDIoTMziGMRvlRpG8/
+         QudUgxMk5JoVXuTso95DqKHtS2Aw8+WwY5CSfoSLb7gbNFAIgygP58dAzmBidrDkt7LN
+         u4V+EtJEJdwac6M455A+mc3vWCI8YZSv2INqZz8drbbeGoG5CVhKlBWpqt0/rwgxrd5b
+         pMmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=fo01n+oht3lwEJyeQrCoe6KGpWuXH6sm5NGKluVcVIg=;
-        b=Nsb4pTsDLD0VQXkg8KrqWpob0enCXR9sbjlv3oAJWsPsh3nieLcxl9sBjINbu6zktb
-         PTgtVwdJjrNKUDKciSFEqPO9YF0LFf0rN3iqmXOtBIc9unzNps+G2kqB5qjnua91lmC6
-         wQSuv3/LwRlwMDfthL1TpwnSQtzghuwVVWJ4DDs9zgkusED8efNJoqgZAvgEjaQCaZ2G
-         nBCwadl/WchtCBRwdSr3OZ8ypPdzL4XYR6pDB3eeR5Lyg/lr27bSCA4TsKN9o+cVQrcl
-         Dgz3zYHbDA8Bx390cqvMf3sR3GUIeBSUUK2tdBfSJIRPDAhtG8vrOfeUd2Lq28hoUMWq
-         cKPg==
-X-Gm-Message-State: AOAM532nMF8ezxryhfEOupe8jHE1u22aCjEWp596C1q444gBcIf7bhgv
-        CY55AT2iX5iR29uHyuMeJbs=
-X-Google-Smtp-Source: ABdhPJyA7g73nobmCRmNnC9ZtQDCq9alkwEM3kPNXBGC/NCYT3AXahvI7A8NdPr/2dFr9GzsFtVfWA==
-X-Received: by 2002:a63:704f:: with SMTP id a15mr18037290pgn.120.1631033720601;
-        Tue, 07 Sep 2021 09:55:20 -0700 (PDT)
-Received: from [10.69.44.239] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id gw21sm2865041pjb.36.2021.09.07.09.55.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Sep 2021 09:55:20 -0700 (PDT)
-Message-ID: <8edb44da-87e3-7e81-c9a8-54b27dde2fc1@gmail.com>
-Date:   Tue, 7 Sep 2021 09:55:19 -0700
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tX3dLY3KjaJdK+boJZc/jDVbrXqd0jZWFd+gRGqD1s0=;
+        b=Otv90+FJwAye+7A4CxuPB/GekolIalC7kHm+9Spt9pnVG8xZxdJrfyTFRuSaed2CkL
+         nR1Gv/fUdWvTQpmeLY2jA/Ya8rTHMBWiMYNYHhVQ5asfvb6g644D0+G1J6nXboJ9oydi
+         3moRTZ1ANHtYtxHM0MgSHtWxuKCGZfQ0Q54hm6rgDHegad/mH2WpaL/XH+jhoknD2R3i
+         Q9XV2HQWP4MUE/idR8TRHUeNZdhRI9kto2VXnGv8m6Z6HJXw3epwrhylQB3AQcR0s+FD
+         xQHwxU5dwsKeMxHLiR9xNQXRiZVPS6YGV0svMPkuea1QCh2JZHYVjPVqMZ3YIbSwdD+/
+         UeXw==
+X-Gm-Message-State: AOAM5308I/APPCXkykuSsiiOYu4s+atFDRwbchdJwKYPqzHQahfCaYNt
+        ssybvY7j7MyNnFZB5Oa0gawLKKWSARpzu4GImaAzG9b1
+X-Google-Smtp-Source: ABdhPJzwSR0tEBZdt+IeLRjOaJvXXaOQn4kPRkpLoZWTSbNFLWCZ+U8QwcBpUgbwb+zy7V3LmUG/aj6K0dQ93vW2HLg=
+X-Received: by 2002:a05:6830:25d3:: with SMTP id d19mr16404248otu.357.1631034030040;
+ Tue, 07 Sep 2021 10:00:30 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.0.3
-Subject: Re: [PATCH] scsi: elx: libefc: Prefer kcalloc over open coded
- arithmetic
-Content-Language: en-US
-To:     Len Baker <len.baker@gmx.com>,
-        James Smart <james.smart@broadcom.com>,
-        Ram Vegesna <ram.vegesna@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Kees Cook <keescook@chromium.org>, Hannes Reinecke <hare@suse.de>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210905062448.6587-1-len.baker@gmx.com>
-From:   James Smart <jsmart2021@gmail.com>
-In-Reply-To: <20210905062448.6587-1-len.baker@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20210904154106.9550-1-len.baker@gmx.com>
+In-Reply-To: <20210904154106.9550-1-len.baker@gmx.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 7 Sep 2021 13:00:19 -0400
+Message-ID: <CADnq5_P_Vq9Qw+K4-mOf-VYDq20UQJ3k1PE94f9-nqi36qmE3g@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon: Prefer kcalloc over open coded arithmetic
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, linux-hardening@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/4/2021 11:24 PM, Len Baker wrote:
+Applied.  Thanks!
+
+Alex
+
+On Sat, Sep 4, 2021 at 11:41 AM Len Baker <len.baker@gmx.com> wrote:
+>
 > As noted in the "Deprecated Interfaces, Language Features, Attributes,
 > and Conventions" documentation [1], size calculations (especially
 > multiplication) should not be performed in memory allocator (or similar)
@@ -92,16 +90,38 @@ On 9/4/2021 11:24 PM, Len Baker wrote:
 > to values wrapping around and a smaller allocation being made than the
 > caller was expecting. Using those allocations could lead to linear
 > overflows of heap memory and other misbehaviors.
-> 
-> So, use the purpose specific kcalloc() function instead of the argument
-> count * size in the kzalloc() function.
-> 
+>
+> So, refactor the code a bit to use the purpose specific kcalloc()
+> function instead of the calculated size argument in the kzalloc()
+> function.
+>
 > [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
+>
 > Signed-off-by: Len Baker <len.baker@gmx.com>
-
-Looks good.  Thanks
-
-Reviewed-by: James Smart <jsmart2021@gmail.com>
-
--- james
+> ---
+>  drivers/gpu/drm/radeon/r600_dpm.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/r600_dpm.c b/drivers/gpu/drm/radeon/r600_dpm.c
+> index 35b77c944701..fd4226b99862 100644
+> --- a/drivers/gpu/drm/radeon/r600_dpm.c
+> +++ b/drivers/gpu/drm/radeon/r600_dpm.c
+> @@ -820,12 +820,12 @@ union fan_info {
+>  static int r600_parse_clk_voltage_dep_table(struct radeon_clock_voltage_dependency_table *radeon_table,
+>                                             ATOM_PPLIB_Clock_Voltage_Dependency_Table *atom_table)
+>  {
+> -       u32 size = atom_table->ucNumEntries *
+> -               sizeof(struct radeon_clock_voltage_dependency_entry);
+>         int i;
+>         ATOM_PPLIB_Clock_Voltage_Dependency_Record *entry;
+>
+> -       radeon_table->entries = kzalloc(size, GFP_KERNEL);
+> +       radeon_table->entries = kcalloc(atom_table->ucNumEntries,
+> +                                       sizeof(struct radeon_clock_voltage_dependency_entry),
+> +                                       GFP_KERNEL);
+>         if (!radeon_table->entries)
+>                 return -ENOMEM;
+>
+> --
+> 2.25.1
+>
