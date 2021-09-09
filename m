@@ -3,129 +3,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B92C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 06:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1221C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 11:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F35161184
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 06:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA423613AC
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 11:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352438AbhIIGQZ (ORCPT
+        id S240589AbhIIL5D (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Sep 2021 02:16:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56612 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1352448AbhIIGQY (ORCPT
+        Thu, 9 Sep 2021 07:57:03 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:33810 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244846AbhIILyq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Sep 2021 02:16:24 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 18963cdb004569;
-        Thu, 9 Sep 2021 02:14:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=cPUonm5kJsYc2X/GGy0xJ2tmTzDsookwnNtXApmtolc=;
- b=NrJLNRL4xEjUp1z+/jRe3yFzuigHc03eaOxwwrifihwsN+sqwlBg5anjhndNmZhJuGrX
- zp7VBDPyu6dMj8amk4nETdtLln66fP0tplxQAuQB/WA2sT0SyesvaCIxzq2xqvGUqm09
- FmJlvYRX2SIKAK7g1vS+dof5/8Cyxic2YCAulXMVh8uLUsUM3mFioi5QfMr0+goLF+4J
- joRGTbx0+e3qYUH/ds+jOC6DgM8NpcQnMNtCRDjnfKtk5KoUGTcq0YOLqv79g4njT3qw
- f2uQDrt/1Sc22wnHlB77aYvioOoWnWwwrqFgZN8djBgmUMtAaKRCfcKb2ckkS6ZKeLWw RQ== 
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3axmeqtg97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Sep 2021 02:14:57 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1896CAlI007700;
-        Thu, 9 Sep 2021 06:14:55 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma02fra.de.ibm.com with ESMTP id 3axcnk87vk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Sep 2021 06:14:54 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1896EpGp46661900
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Sep 2021 06:14:52 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D918B42041;
-        Thu,  9 Sep 2021 06:14:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DBB794203F;
-        Thu,  9 Sep 2021 06:14:50 +0000 (GMT)
-Received: from [9.171.14.134] (unknown [9.171.14.134])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Sep 2021 06:14:50 +0000 (GMT)
-Subject: Re: [PATCH v2 60/63] net/af_iucv: Use struct_group() to zero struct
- iucv_sock region
-To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-hardening@vger.kernel.org
-References: <20210818060533.3569517-1-keescook@chromium.org>
- <20210818060533.3569517-61-keescook@chromium.org>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-Message-ID: <19ff61a0-0cda-6000-ce56-dc6b367c00d6@linux.ibm.com>
-Date:   Thu, 9 Sep 2021 08:14:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Thu, 9 Sep 2021 07:54:46 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 98B442237B;
+        Thu,  9 Sep 2021 11:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1631188415; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eQS9ZQeFJQGmX5k5doxlCL9tdEWoOdO3DeKwN1zi5T0=;
+        b=00v59IeElg7EiE7DHb1zWtlUZ3YJjEriMz7GShwSI6HjWFzOHS2CdJ7M8fAz9nQNtDDcbs
+        J94bvmK7f4pGSSFGQotiPbZkObv+nYsyIAt733HOZLRCX7yJf4RBKu48LKihYPWrZIbBaf
+        eTzw669qmbL0RhD8IQ34BLGFO+BFHEE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1631188415;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eQS9ZQeFJQGmX5k5doxlCL9tdEWoOdO3DeKwN1zi5T0=;
+        b=p8MQdENfUnWaooQFXZj2H0QuLNNlmNpjSCkjq7a3nqRLLVr7DZorlFYl4fe7CAR7GhGKtc
+        Yfa5jdGKWMEhqCDg==
+Received: from pobox.suse.cz (pobox.suse.cz [10.100.2.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 3BD0DA3CFC;
+        Thu,  9 Sep 2021 11:53:35 +0000 (UTC)
+Date:   Thu, 9 Sep 2021 13:53:35 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Alexander Lobakin <alexandr.lobakin@intel.com>
+cc:     linux-hardening@vger.kernel.org,
+        Kristen C Accardi <kristen.c.accardi@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Lukasz Czapnik <lukasz.czapnik@intel.com>,
+        Marta A Plantykow <marta.a.plantykow@intel.com>,
+        Michal Kubiak <michal.kubiak@intel.com>,
+        Michal Swiatkowski <michal.swiatkowski@intel.com>,
+        linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v6 kspp-next 16/22] livepatch: only match unique symbols
+ when using fgkaslr
+In-Reply-To: <20210831144114.154-17-alexandr.lobakin@intel.com>
+Message-ID: <alpine.LSU.2.21.2109091347400.20761@pobox.suse.cz>
+References: <20210831144114.154-1-alexandr.lobakin@intel.com> <20210831144114.154-17-alexandr.lobakin@intel.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20210818060533.3569517-61-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oFVZQt8pTzxySj5pZJpy_ghkEsh5Wye4
-X-Proofpoint-ORIG-GUID: oFVZQt8pTzxySj5pZJpy_ghkEsh5Wye4
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-09-09_01:2021-09-07,2021-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- phishscore=0 adultscore=0 suspectscore=0 malwarescore=0 mlxlogscore=968
- priorityscore=1501 clxscore=1011 lowpriorityscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109030001
- definitions=main-2109090035
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 18/08/2021 08:05, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memset(), avoid intentionally writing across
-> neighboring fields.
+Hi,
+
+On Tue, 31 Aug 2021, Alexander Lobakin wrote:
+
+> From: Kristen Carlson Accardi <kristen@linux.intel.com>
 > 
-> Add struct_group() to mark the region of struct iucv_sock that gets
-> initialized to zero. Avoid the future warning:
+> If any type of function granular randomization is enabled, the sympos
+> algorithm will fail, as it will be impossible to resolve symbols when
+> there are duplicates using the previous symbol position.
 > 
-> In function 'fortify_memset_chk',
->     inlined from 'iucv_sock_alloc' at net/iucv/af_iucv.c:476:2:
-> ./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
->   199 |    __write_overflow_field(p_size_field, size);
->       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> Override the value of sympos to always be zero if fgkaslr is enabled for
+> either the core kernel or modules, forcing the algorithm
+> to require that only unique symbols are allowed to be patched.
 > 
-> Cc: Julian Wiedmann <jwi@linux.ibm.com>
-> Cc: Karsten Graul <kgraul@linux.ibm.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: linux-s390@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+> Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
 > ---
->  include/net/iucv/af_iucv.h | 10 ++++++----
->  net/iucv/af_iucv.c         |  2 +-
->  2 files changed, 7 insertions(+), 5 deletions(-)
+>  kernel/livepatch/core.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index 335d988bd811..852bbfa9da7b 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -169,6 +169,17 @@ static int klp_find_object_symbol(const char *objname, const char *name,
+>  	else
+>  		kallsyms_on_each_symbol(klp_find_callback, &args);
+>  
+> +	/*
+> +	 * If any type of function granular randomization is enabled, it
+> +	 * will be impossible to resolve symbols when there are duplicates
+> +	 * using the previous symbol position (i.e. sympos != 0). Override
+> +	 * the value of sympos to always be zero in this case. This will
+> +	 * force the algorithm to require that only unique symbols are
+> +	 * allowed to be patched.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_FG_KASLR))
+> +		sympos = 0;
+> +
 
-No objections.
-Acked-by: Karsten Graul <kgraul@linux.ibm.com>
+I ran the live patching tests and no problem occurred, which is great. We 
+do not have a test for old_sympos, which makes the testing less telling, 
+but at least nothing blows up with the section randomization itself.
 
-Thank you.
+However, I want to reiterate what I wrote for the same patch in v5 
+series.
+
+The above hunk should work, but I wonder if we should make it more 
+explicit. With the change the user will get the error with "unresolvable 
+ambiguity for symbol..." if they specify sympos and the symbol is not 
+unique. It could confuse them.
+
+So, how about it making it something like
+
+if (IS_ENABLED(CONFIG_FG_KASLR) || IS_ENABLED(CONFIG_MODULE_FG_KASLR))
+        if (sympos) {
+                pr_err("fgkaslr is enabled, specifying sympos for symbol '%s' in object '%s' does not work.\n",
+                        name, objname);
+                *addr = 0;
+                return -EINVAL;
+        }
+
+? (there could be goto to the error out at the end of the function to 
+save copy-pasting).
+
+In that case, if sympos is not specified, the user will get the message 
+which matches the reality. If the user specifies it, they will get the 
+error in case of fgkaslr (no matter if the symbol is found or not).
+
+What do you think?
+
+Miroslav
