@@ -2,153 +2,204 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1221C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 11:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40975C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 15:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA423613AC
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 11:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140DD610CE
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 15:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240589AbhIIL5D (ORCPT
+        id S235625AbhIIPvJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Sep 2021 07:57:03 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:33810 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244846AbhIILyq (ORCPT
+        Thu, 9 Sep 2021 11:51:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234143AbhIIPvJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Sep 2021 07:54:46 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 98B442237B;
-        Thu,  9 Sep 2021 11:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1631188415; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eQS9ZQeFJQGmX5k5doxlCL9tdEWoOdO3DeKwN1zi5T0=;
-        b=00v59IeElg7EiE7DHb1zWtlUZ3YJjEriMz7GShwSI6HjWFzOHS2CdJ7M8fAz9nQNtDDcbs
-        J94bvmK7f4pGSSFGQotiPbZkObv+nYsyIAt733HOZLRCX7yJf4RBKu48LKihYPWrZIbBaf
-        eTzw669qmbL0RhD8IQ34BLGFO+BFHEE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1631188415;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eQS9ZQeFJQGmX5k5doxlCL9tdEWoOdO3DeKwN1zi5T0=;
-        b=p8MQdENfUnWaooQFXZj2H0QuLNNlmNpjSCkjq7a3nqRLLVr7DZorlFYl4fe7CAR7GhGKtc
-        Yfa5jdGKWMEhqCDg==
-Received: from pobox.suse.cz (pobox.suse.cz [10.100.2.14])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 3BD0DA3CFC;
-        Thu,  9 Sep 2021 11:53:35 +0000 (UTC)
-Date:   Thu, 9 Sep 2021 13:53:35 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Alexander Lobakin <alexandr.lobakin@intel.com>
-cc:     linux-hardening@vger.kernel.org,
-        Kristen C Accardi <kristen.c.accardi@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Lukasz Czapnik <lukasz.czapnik@intel.com>,
-        Marta A Plantykow <marta.a.plantykow@intel.com>,
-        Michal Kubiak <michal.kubiak@intel.com>,
-        Michal Swiatkowski <michal.swiatkowski@intel.com>,
-        linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v6 kspp-next 16/22] livepatch: only match unique symbols
- when using fgkaslr
-In-Reply-To: <20210831144114.154-17-alexandr.lobakin@intel.com>
-Message-ID: <alpine.LSU.2.21.2109091347400.20761@pobox.suse.cz>
-References: <20210831144114.154-1-alexandr.lobakin@intel.com> <20210831144114.154-17-alexandr.lobakin@intel.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 9 Sep 2021 11:51:09 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD56C061574
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Sep 2021 08:50:00 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id s29so2132027pfw.5
+        for <linux-hardening@vger.kernel.org>; Thu, 09 Sep 2021 08:50:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ccOcs8iBHJVAAqs60NeIUiu4ZxBLFQEliRnS3en5X58=;
+        b=lxRXYgQmqVK5ANKfYJsFTga6OHIZyWAvTSJc+T3OCdM5t2tzGCVusH0zrc6rKu/GSj
+         oOBDX1R9qF/CVEADuAEBZ3CdkOtpUIH4XF5ahOe4ubwYS7U2s6LQmHDg5BtCtMPvfVRd
+         mq48ESscoLRHzWrfjmAuc2kM4s4CLjaCBx3Rc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ccOcs8iBHJVAAqs60NeIUiu4ZxBLFQEliRnS3en5X58=;
+        b=ysgIJD8j7qXG65SC3T3w/1phZ+i4qsW2gfMoCKqisNn0U3VHleyoko3vRsxAAKEagT
+         BqwE8UqdUFhdaqvMybu1Paa6WD4wHwuh2qUHSNUSyJegzGsZ6B5+0xTPT7d2fuwuBtEe
+         Jn+B92NLX6QTgBTd6mo0O2ht/zibs1wUG6SIJoCbu+gPs120lIXmrZzdZfVXGNdb8a2u
+         q+lMIJkaJEGtrY+CxyqK8OgZ5pi5hlFuxNga7aeVmnLibMFxIYY9jEBzYucP14/SvWmm
+         ibrY7GiPVDu3B/qoQ5ml36GC3ghEvlR0CEpbrL6TV1GxugC6oDicuVev+M2BUfrXxzAd
+         7jrQ==
+X-Gm-Message-State: AOAM532cU9avrqjBam+AjxPXSozTvj6zD1qUp5Gdk+rZU3zNqCSi3PIi
+        Gjox/A7f0nTm7GWCl/v237hcWQ==
+X-Google-Smtp-Source: ABdhPJwO0jwD30CKKYCudS1Q+gjBcvBfbtEioGoP63vHyGYU5FLrehOZO/Fn/ODlq5u9Jb9P4L5Qhw==
+X-Received: by 2002:a63:7404:: with SMTP id p4mr3245964pgc.222.1631202599515;
+        Thu, 09 Sep 2021 08:49:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k190sm2821106pgc.11.2021.09.09.08.49.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Sep 2021 08:49:58 -0700 (PDT)
+Date:   Thu, 9 Sep 2021 08:49:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] lkdtm: Use init_uts_ns.name instead of macros
+Message-ID: <202109090848.129A49E8BD@keescook>
+References: <20210901233406.2571643-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210901233406.2571643-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Wed, Sep 01, 2021 at 04:34:06PM -0700, Kees Cook wrote:
+> Using generated/compile.h triggered a full LKDTM rebuild with every
+> build. Avoid this by using the exported strings instead.
+> 
+> Fixes: b8661450bc7f ("lkdtm: Add kernel version to failure hints")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-On Tue, 31 Aug 2021, Alexander Lobakin wrote:
+Hi Greg,
 
-> From: Kristen Carlson Accardi <kristen@linux.intel.com>
-> 
-> If any type of function granular randomization is enabled, the sympos
-> algorithm will fail, as it will be impossible to resolve symbols when
-> there are duplicates using the previous symbol position.
-> 
-> Override the value of sympos to always be zero if fgkaslr is enabled for
-> either the core kernel or modules, forcing the algorithm
-> to require that only unique symbols are allowed to be patched.
-> 
-> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-> Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+Your bot said "please wait, the merge window is open", but it'd be really
+nice to get this into -rc1 to avoid annoying people doing rebuilds...
+
+:)
+
+-Kees
+
 > ---
->  kernel/livepatch/core.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/misc/lkdtm/core.c  | 10 ++++++++++
+>  drivers/misc/lkdtm/lkdtm.h | 28 +++++++++++++++++-----------
+>  2 files changed, 27 insertions(+), 11 deletions(-)
 > 
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index 335d988bd811..852bbfa9da7b 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -169,6 +169,17 @@ static int klp_find_object_symbol(const char *objname, const char *name,
->  	else
->  		kallsyms_on_each_symbol(klp_find_callback, &args);
+> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+> index 95b1c6800a22..fe6fd34b8caf 100644
+> --- a/drivers/misc/lkdtm/core.c
+> +++ b/drivers/misc/lkdtm/core.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/init.h>
+>  #include <linux/slab.h>
+>  #include <linux/debugfs.h>
+> +#include <linux/utsname.h>
 >  
-> +	/*
-> +	 * If any type of function granular randomization is enabled, it
-> +	 * will be impossible to resolve symbols when there are duplicates
-> +	 * using the previous symbol position (i.e. sympos != 0). Override
-> +	 * the value of sympos to always be zero in this case. This will
-> +	 * force the algorithm to require that only unique symbols are
-> +	 * allowed to be patched.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_FG_KASLR))
-> +		sympos = 0;
+>  #define DEFAULT_COUNT 10
+>  
+> @@ -210,6 +211,8 @@ module_param(cpoint_count, int, 0644);
+>  MODULE_PARM_DESC(cpoint_count, " Crash Point Count, number of times the "\
+>  				"crash point is to be hit to trigger action");
+>  
+> +/* For test debug reporting. */
+> +char *lkdtm_kernel_info;
+>  
+>  /* Return the crashtype number or NULL if the name is invalid */
+>  static const struct crashtype *find_crashtype(const char *name)
+> @@ -490,6 +493,11 @@ static int __init lkdtm_module_init(void)
+>  	crash_count = cpoint_count;
+>  #endif
+>  
+> +	/* Common initialization. */
+> +	lkdtm_kernel_info = kasprintf(GFP_KERNEL, "kernel (%s %s)",
+> +				      init_uts_ns.name.release,
+> +				      init_uts_ns.name.machine);
 > +
+>  	/* Handle test-specific initialization. */
+>  	lkdtm_bugs_init(&recur_count);
+>  	lkdtm_perms_init();
+> @@ -538,6 +546,8 @@ static void __exit lkdtm_module_exit(void)
+>  	if (lkdtm_kprobe != NULL)
+>  		unregister_kprobe(lkdtm_kprobe);
+>  
+> +	kfree(lkdtm_kernel_info);
+> +
+>  	pr_info("Crash point unregistered\n");
+>  }
+>  
+> diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+> index d7d64d9765eb..c212a253edde 100644
+> --- a/drivers/misc/lkdtm/lkdtm.h
+> +++ b/drivers/misc/lkdtm/lkdtm.h
+> @@ -5,17 +5,17 @@
+>  #define pr_fmt(fmt) "lkdtm: " fmt
+>  
+>  #include <linux/kernel.h>
+> -#include <generated/compile.h>
+> -#include <generated/utsrelease.h>
+>  
+> -#define LKDTM_KERNEL "kernel (" UTS_RELEASE " " UTS_MACHINE ")"
+> +extern char *lkdtm_kernel_info;
+>  
+>  #define pr_expected_config(kconfig)				\
+>  {								\
+>  	if (IS_ENABLED(kconfig)) 				\
+> -		pr_err("Unexpected! This " LKDTM_KERNEL " was built with " #kconfig "=y\n"); \
+> +		pr_err("Unexpected! This %s was built with " #kconfig "=y\n", \
+> +			lkdtm_kernel_info);			\
+>  	else							\
+> -		pr_warn("This is probably expected, since this " LKDTM_KERNEL " was built *without* " #kconfig "=y\n"); \
+> +		pr_warn("This is probably expected, since this %s was built *without* " #kconfig "=y\n", \
+> +			lkdtm_kernel_info);			\
+>  }
+>  
+>  #ifndef MODULE
+> @@ -25,24 +25,30 @@ int lkdtm_check_bool_cmdline(const char *param);
+>  	if (IS_ENABLED(kconfig)) {				\
+>  		switch (lkdtm_check_bool_cmdline(param)) {	\
+>  		case 0:						\
+> -			pr_warn("This is probably expected, since this " LKDTM_KERNEL " was built with " #kconfig "=y but booted with '" param "=N'\n"); \
+> +			pr_warn("This is probably expected, since this %s was built with " #kconfig "=y but booted with '" param "=N'\n", \
+> +				lkdtm_kernel_info);		\
+>  			break;					\
+>  		case 1:						\
+> -			pr_err("Unexpected! This " LKDTM_KERNEL " was built with " #kconfig "=y and booted with '" param "=Y'\n"); \
+> +			pr_err("Unexpected! This %s was built with " #kconfig "=y and booted with '" param "=Y'\n", \
+> +				lkdtm_kernel_info);		\
+>  			break;					\
+>  		default:					\
+> -			pr_err("Unexpected! This " LKDTM_KERNEL " was built with " #kconfig "=y (and booted without '" param "' specified)\n"); \
+> +			pr_err("Unexpected! This %s was built with " #kconfig "=y (and booted without '" param "' specified)\n", \
+> +				lkdtm_kernel_info);		\
+>  		}						\
+>  	} else {						\
+>  		switch (lkdtm_check_bool_cmdline(param)) {	\
+>  		case 0:						\
+> -			pr_warn("This is probably expected, as this " LKDTM_KERNEL " was built *without* " #kconfig "=y and booted with '" param "=N'\n"); \
+> +			pr_warn("This is probably expected, as this %s was built *without* " #kconfig "=y and booted with '" param "=N'\n", \
+> +				lkdtm_kernel_info);		\
+>  			break;					\
+>  		case 1:						\
+> -			pr_err("Unexpected! This " LKDTM_KERNEL " was built *without* " #kconfig "=y but booted with '" param "=Y'\n"); \
+> +			pr_err("Unexpected! This %s was built *without* " #kconfig "=y but booted with '" param "=Y'\n", \
+> +				lkdtm_kernel_info);		\
+>  			break;					\
+>  		default:					\
+> -			pr_err("This is probably expected, since this " LKDTM_KERNEL " was built *without* " #kconfig "=y (and booted without '" param "' specified)\n"); \
+> +			pr_err("This is probably expected, since this %s was built *without* " #kconfig "=y (and booted without '" param "' specified)\n", \
+> +				lkdtm_kernel_info);		\
+>  			break;					\
+>  		}						\
+>  	}							\
+> -- 
+> 2.30.2
+> 
 
-I ran the live patching tests and no problem occurred, which is great. We 
-do not have a test for old_sympos, which makes the testing less telling, 
-but at least nothing blows up with the section randomization itself.
-
-However, I want to reiterate what I wrote for the same patch in v5 
-series.
-
-The above hunk should work, but I wonder if we should make it more 
-explicit. With the change the user will get the error with "unresolvable 
-ambiguity for symbol..." if they specify sympos and the symbol is not 
-unique. It could confuse them.
-
-So, how about it making it something like
-
-if (IS_ENABLED(CONFIG_FG_KASLR) || IS_ENABLED(CONFIG_MODULE_FG_KASLR))
-        if (sympos) {
-                pr_err("fgkaslr is enabled, specifying sympos for symbol '%s' in object '%s' does not work.\n",
-                        name, objname);
-                *addr = 0;
-                return -EINVAL;
-        }
-
-? (there could be goto to the error out at the end of the function to 
-save copy-pasting).
-
-In that case, if sympos is not specified, the user will get the message 
-which matches the reality. If the user specifies it, they will get the 
-error in case of fgkaslr (no matter if the symbol is found or not).
-
-What do you think?
-
-Miroslav
+-- 
+Kees Cook
