@@ -2,147 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FC1C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Sep 2021 11:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B92C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 06:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0D4960F92
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Sep 2021 11:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F35161184
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Sep 2021 06:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351549AbhIHLpv (ORCPT
+        id S1352438AbhIIGQZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Sep 2021 07:45:51 -0400
-Received: from mail-dm6nam11on2075.outbound.protection.outlook.com ([40.107.223.75]:44416
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1349218AbhIHLpv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Sep 2021 07:45:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DUdiR+vwTyu0rzjP2wMb3BZEEqDR0KeMZrOTz+5UlxJkEtXMEyoulrmBWoA8JktIpu7X1aA/JR60fBinrbL0LIQv1p1ygCGyRmNxw4A7bT3mUqZXUEqM23qLwSWkPLk1lse+wD/UyXx86BQ9mODPPVUJN81US50Am57s6XX5p+HF8usi20nViiFjMpFmmO27bvMouHPGKraJzHEStHarHL6zTPKp4FLdct2OXlkahg1SQKFdjhg0z5wTasOcRo3I5viiQhc5QSkXtUHAehTxilUWBz8Guc34jNx/2tMwxYaDI+LM1rEdzPGgpCn+/9ax6eaLVThR8moOD8QNXMzvcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=rNy1XzjbgOq9bDkaMalG9uAALbRrDf1EGcMnBT4RC8k=;
- b=KaZ+tosoGq0GA2LdFbKmU18VD5hUaNLxzQ76J6ANMoxy95XvVAdVo4oIU2jQ2LAR4/IP3D0GYMJ98v7BNdx+DBtQ+zxlnDuFyARN7j4cBy6fRvBVdzoLEcMZv3bTeNRWrtdlj/KoWpaFIuVwTtW9cD7AIwm06sYT6xyK/RmCtVVjLwP70QSyItbPsLr+9vISgnhDGGkFqpYNPJG2ICLngyIMOPhQMg1D+1cx+QOgyemqxK6q+wV734V0Pj/p2WBJ03Vz1EWFd8guUGmvElxL8Lrtn4/kjFKYfFHBKaLGntWF1X9zPSsyf1baIXze8/JPVAMbPl6zHV5KLLCaDXnyww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rNy1XzjbgOq9bDkaMalG9uAALbRrDf1EGcMnBT4RC8k=;
- b=j0yA6K0Z1Vk5cR+s+kc2+lYGNZkTPGkHn84jb2ZndP/C/9iyG58eyAXong1VLOql1bZBNeaqRAH/1n5uPjMx5HEfvasW/p9+cIpvjxf9GQ2TwSVWn1SoDG7FZHIxbW1LNORpT2evLLaEk48C4RpZjNwVrdC9Gt1XAlMFERaHN+7PqBahBh5waUTDwTsok0Ak64QmPnygbS2wb7YfC1figQE0ff7fq5aG5SooJfZGHYxYCmXrY5+eUswDL73WDtCXYXK0zgJ1ruGyhOp3sa5oXYxsI8n9XMm4AeaHtz9qIp0Dg8i7TGA+LW8FPPhJ4FuSlB591yByknN7vYc5+LalkQ==
-Authentication-Results: gmx.com; dkim=none (message not signed)
- header.d=none;gmx.com; dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5158.namprd12.prod.outlook.com (2603:10b6:208:31c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.21; Wed, 8 Sep
- 2021 11:44:41 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::e8af:232:915e:2f95]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::e8af:232:915e:2f95%8]) with mapi id 15.20.4500.014; Wed, 8 Sep 2021
- 11:44:41 +0000
-Date:   Wed, 8 Sep 2021 08:44:40 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Selvin Xavier <selvin.xavier@broadcom.com>,
-        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Kees Cook <keescook@chromium.org>, linux-rdma@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/bnxt_re: Prefer kcalloc over open coded arithmetic
-Message-ID: <20210908114440.GB3190597@nvidia.com>
-References: <20210905081812.17113-1-len.baker@gmx.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210905081812.17113-1-len.baker@gmx.com>
-X-ClientProxiedBy: BL1PR13CA0427.namprd13.prod.outlook.com
- (2603:10b6:208:2c3::12) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
+        Thu, 9 Sep 2021 02:16:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56612 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1352448AbhIIGQY (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 9 Sep 2021 02:16:24 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 18963cdb004569;
+        Thu, 9 Sep 2021 02:14:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=cPUonm5kJsYc2X/GGy0xJ2tmTzDsookwnNtXApmtolc=;
+ b=NrJLNRL4xEjUp1z+/jRe3yFzuigHc03eaOxwwrifihwsN+sqwlBg5anjhndNmZhJuGrX
+ zp7VBDPyu6dMj8amk4nETdtLln66fP0tplxQAuQB/WA2sT0SyesvaCIxzq2xqvGUqm09
+ FmJlvYRX2SIKAK7g1vS+dof5/8Cyxic2YCAulXMVh8uLUsUM3mFioi5QfMr0+goLF+4J
+ joRGTbx0+e3qYUH/ds+jOC6DgM8NpcQnMNtCRDjnfKtk5KoUGTcq0YOLqv79g4njT3qw
+ f2uQDrt/1Sc22wnHlB77aYvioOoWnWwwrqFgZN8djBgmUMtAaKRCfcKb2ckkS6ZKeLWw RQ== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3axmeqtg97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Sep 2021 02:14:57 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1896CAlI007700;
+        Thu, 9 Sep 2021 06:14:55 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 3axcnk87vk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Sep 2021 06:14:54 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1896EpGp46661900
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Sep 2021 06:14:52 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D918B42041;
+        Thu,  9 Sep 2021 06:14:51 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBB794203F;
+        Thu,  9 Sep 2021 06:14:50 +0000 (GMT)
+Received: from [9.171.14.134] (unknown [9.171.14.134])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Sep 2021 06:14:50 +0000 (GMT)
+Subject: Re: [PATCH v2 60/63] net/af_iucv: Use struct_group() to zero struct
+ iucv_sock region
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-hardening@vger.kernel.org
+References: <20210818060533.3569517-1-keescook@chromium.org>
+ <20210818060533.3569517-61-keescook@chromium.org>
+From:   Karsten Graul <kgraul@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+Message-ID: <19ff61a0-0cda-6000-ce56-dc6b367c00d6@linux.ibm.com>
+Date:   Thu, 9 Sep 2021 08:14:52 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by BL1PR13CA0427.namprd13.prod.outlook.com (2603:10b6:208:2c3::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.6 via Frontend Transport; Wed, 8 Sep 2021 11:44:41 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mNw0O-00DO39-8Z; Wed, 08 Sep 2021 08:44:40 -0300
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e8c68312-08ea-471e-46af-08d972be0b72
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5158:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB5158FBE96A90C45F88DED74AC2D49@BL1PR12MB5158.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: q31BUA55KNHxCHJCeEWSxCAlJbyVdUj71NVh51NLq5r3N8XqWXJRiBOT4+/ADYL1x4S+5BZwaKOeresLdK6bJVm4zo1RitY0YPH0T9YQZbfMZRvPH8F6bhzAP8Ts4cjKMMV2iLZdXzElBV6BtY6/r6iOwSqiokopjxtmyHDb/GDIOH7Uc0OIIoNw4nGT6asnkhS42/87Ke4bm/rGql6qnGoYBg2/TvqvRTi9rpDcT/eExKODeXTmWmUlWb4PGj93z4p1qm7M0ZBcf1huv7HBj71/GwISIqLSa+e8Mr7x45xF8b/3p3tZPPVV6rRACHoBomUX0TWc6PQwYtBA1oMTg26HyUiGMJdZ//wA8gp5tbwsfLX7T4cZhDqK2N+EGIVF1gQVXdMzZPMRlSv2n4rTcArfh5A9H13+tSTN/htrlkSu8/nqPN15r/2c4xNYkl0Iw75QTpMxhokAl18pW0xwehEJZQfkJlFUmy31ztOpnZOXgFL5ysBlxyNGIUK7ptkZ+3zFNq2RXLub8rt26zZ0bOBOlJrKJhnWWEllY1jIaImzJYMZDmi18+RfB10cIs4K2gZTbXzA+o3QxTVD+p99GjCWuWUPqf5le1Ir6Z105PvFJvh8T50K6QSU9dyI9dXm9GzloMour6Cju5QVaCTKiGvysJbkcI3AyB0v0PDaQzJYtS63I1wEN9H7BZ4KklYmkEMGDeTIx+E0SmxMyt39hSCBYJqhjFtf0Kz/lWNCKXySHju9eDCDj3BZfgbWo7R2cRLV2YckUtrCBtkDwHHhiu1bWoB1sluOfeU4dBWTkrM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(366004)(39860400002)(376002)(396003)(66476007)(9786002)(26005)(66946007)(54906003)(66556008)(2616005)(8936002)(966005)(478600001)(316002)(426003)(5660300002)(2906002)(36756003)(86362001)(33656002)(1076003)(83380400001)(38100700002)(8676002)(9746002)(4326008)(186003)(6916009)(518174003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eSPQdQUB5CSGABiddkvey4MNkC0Xi3iBNbNib0mauNTzDcQ4YUOE6BJFWh4P?=
- =?us-ascii?Q?ut7F5WBzK5W1yVbtornz0j457NckZCXs0bp1J7GrmEsWliFO2EPUvA3uqoEu?=
- =?us-ascii?Q?z9oPAChO1aX+h2PGFQoSyXCsciiT223tcyn3BRhGRLsodBTA46bfI3BhS4RY?=
- =?us-ascii?Q?9sma0XGZR3nOyOTJAssYZOtX1y1yf33nPfxJcNl2BlPcdJK7fXOc6RIJY0dr?=
- =?us-ascii?Q?3Yoq2ZK3N2iTZEmQYDPw7UF1ec0IU5q40YCELaGhag+jL25+nLeTO4ecLrh6?=
- =?us-ascii?Q?sYQNsQqB0liTJ8WEtMDl9KnM6lrt7SIIp1Tb8yGBsZ3derBSsnFr4n1L2mTQ?=
- =?us-ascii?Q?EzDK+56DG35AAd4JXBL6F5ovq1tkR1UH/Z5Kw9ndJXvPu+3h/Pz1YhfOqHlo?=
- =?us-ascii?Q?SRHUMKh1nWEq/1f222WRWk9CMLzAHW0K33dK4QuINeixI2CfPNJGJP5wP5JA?=
- =?us-ascii?Q?JZaI7FaIYwWP39TR+YyeGm9ZiIDJHXMGtjjje5CFFHHPDJmvu8UtWN4uf9I5?=
- =?us-ascii?Q?vVSBAP8aESX3rLQ3BRi22AooRxZZji1+0CGvsrgPS6lTR7yG10nlskK/R8Zu?=
- =?us-ascii?Q?jAihTtsn5uYiK4BDcA7PkJsybyhp49wjYErMUDSALVBwOU84mgsZfz8LhT7g?=
- =?us-ascii?Q?8Fm6jtlqWKLZ+x1coiShHLHl8s5T6ssa6YBZIjByVrWwX+8USGajipfQRXon?=
- =?us-ascii?Q?vhKFHqPk1bRFnrj67hjFWx4FSy9rIrp6xrRDPzptjSAdHBw98PFPnUQdfYW4?=
- =?us-ascii?Q?mgzDknCDGCR3H9YmxZqG2u5INtISxmoqIBxm/BCMILcPIZNBOdSWVE66R0rC?=
- =?us-ascii?Q?PCbFfcwt995veuO2TQbxq7mQwNonaiif//3+O2xn90vfRYWI/7b8fG2UQz+y?=
- =?us-ascii?Q?jBcs8c/N/lOhtCXBthI2iVOyNf0FOHzRnh1DM4VU5APy5nxKOUW665Ww9l7U?=
- =?us-ascii?Q?+TQxEaQqjiFzDwtzWU4x/xHsvMOT0/onjW0x88hl/oYeECJ93LcA0RiaB4sp?=
- =?us-ascii?Q?A4hEjlB2eZWxSGM9lgrj01z2p9gqM3H8fhZYVG7esD4l69OSL+7GO1cYooH4?=
- =?us-ascii?Q?a5CQBuf3j6YZcNjlo446FCgMsTGpcaBtljW7dx1bQ6b2PcAWvctJ3AA5dBoo?=
- =?us-ascii?Q?0Lk2Nt9/jjUkCM2+Oj6HK7nPqi6rB8luIzxEoGkl2y+p85yK23VErkhuihYY?=
- =?us-ascii?Q?ahD50VwR8q1wQC+c+EgU+CgdDHh0JyMJoanjn7pnHtYdcUGaqvFi1uSxF2zJ?=
- =?us-ascii?Q?jE4WnfsNDoJUAA5C/1cN1N0pgXYdXUJd70YfJ+JH168KBnqRRPO8QVUChwfb?=
- =?us-ascii?Q?M6nfBbRVx+m083j8NP3aBadz?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8c68312-08ea-471e-46af-08d972be0b72
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2021 11:44:41.6294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7MoNOex5QVImQAOhksopb/vAt5puy8wQPuaicDc5g9K+FZFo9n3tZ8J0QMHv7Mm9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5158
+In-Reply-To: <20210818060533.3569517-61-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: oFVZQt8pTzxySj5pZJpy_ghkEsh5Wye4
+X-Proofpoint-ORIG-GUID: oFVZQt8pTzxySj5pZJpy_ghkEsh5Wye4
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-09-09_01:2021-09-07,2021-09-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ phishscore=0 adultscore=0 suspectscore=0 malwarescore=0 mlxlogscore=968
+ priorityscore=1501 clxscore=1011 lowpriorityscore=0 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109030001
+ definitions=main-2109090035
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Sep 05, 2021 at 10:18:12AM +0200, Len Baker wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
+On 18/08/2021 08:05, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 > 
-> In this case this is not actually dynamic sizes: both sides of the
-> multiplication are constant values. However it is best to refactor this
-> anyway, just to keep the open-coded math idiom out of code.
+> Add struct_group() to mark the region of struct iucv_sock that gets
+> initialized to zero. Avoid the future warning:
 > 
-> So, use the purpose specific kcalloc() function instead of the argument
-> size * count in the kzalloc() function.
+> In function 'fortify_memset_chk',
+>     inlined from 'iucv_sock_alloc' at net/iucv/af_iucv.c:476:2:
+> ./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+>   199 |    __write_overflow_field(p_size_field, size);
+>       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> Also, remove the unnecessary initialization of the sqp_tbl variable
-> since it is set a few lines later.
-> 
-> [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
-> Signed-off-by: Len Baker <len.baker@gmx.com>
-> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-> Acked-by: Selvin Xavier <selvin.xavier@broadcom.com>
+> Cc: Julian Wiedmann <jwi@linux.ibm.com>
+> Cc: Karsten Graul <kgraul@linux.ibm.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-s390@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  drivers/infiniband/hw/bnxt_re/ib_verbs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  include/net/iucv/af_iucv.h | 10 ++++++----
+>  net/iucv/af_iucv.c         |  2 +-
+>  2 files changed, 7 insertions(+), 5 deletions(-)
 
-Applied to for-rc, thanks
+No objections.
+Acked-by: Karsten Graul <kgraul@linux.ibm.com>
 
-Jason
+Thank you.
