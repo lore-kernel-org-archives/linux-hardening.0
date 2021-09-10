@@ -2,113 +2,154 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4192BC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Sep 2021 06:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A362C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Sep 2021 12:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E312611AD
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Sep 2021 06:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7670D611CE
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Sep 2021 12:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231225AbhIJGad (ORCPT
+        id S233121AbhIJMbW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Sep 2021 02:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231183AbhIJGaa (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Sep 2021 02:30:30 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815C7C061574
-        for <linux-hardening@vger.kernel.org>; Thu,  9 Sep 2021 23:29:20 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id q22so1034426pfu.0
-        for <linux-hardening@vger.kernel.org>; Thu, 09 Sep 2021 23:29:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SqoyNLPV12UI+aH0KY3hvzjuZwQ2VZlAP4igBb/D7xg=;
-        b=aB535l98SeNAaY1Uh99F7nuRtdDDNPyqFS0oRlPK59Shl5turlqFkRRF2pIc7Se6Kk
-         JXCs1tGQtTIYyP5AYMNY7sf1sUAKiJeDBQPXbD2wxT7ivIM8staCntTB+GC1LIbFllPa
-         YVnLB4Qr5a+15SBQs1uksXr+Q9A64TPOLXCl0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SqoyNLPV12UI+aH0KY3hvzjuZwQ2VZlAP4igBb/D7xg=;
-        b=0KVGOrQiiZte4A/eXb/REZbFtAKTmA/7jNPBoOdH843M4tPmAtfcJJls/Bq1wvPe/d
-         JBu703xsoN/Rcr8MtXRgdgA2QxCFK7Gl91+fe9/mvt/vZO/KKsc3hUimWFOc4J++F8v3
-         lf2kvPJGfEYxaUKagWE5IVldd+kGSbxLd3KYf8GSFSSQXuP5qn7YSbLH8+lII8LsezYr
-         tVoc3euWL+dyF3FYMeqNnKLgbNiG+bCHS7mZgIEMVsj+wa3RHr0LB1VuFpfTnrIVYeLr
-         72QS3X8sb5yE07QbcJ7IAwt/kEJF6LPHYN9XmBGIxWICwdX+QyptJeA3BOMDwKr2g2o9
-         /Msw==
-X-Gm-Message-State: AOAM530yoXfNKRS4RnGsR9a4Zru7TJZLFIdxuA05cREUUYvvhXXYeSY6
-        i79NNbVnkSjrlIfQAsARlvIteg==
-X-Google-Smtp-Source: ABdhPJz4r+H2RdiVoqM5I7lfYVhiC53JkDnmzl8bnZp3A/ckLw3UuC3EUho9rSj/GkL+QQ5jkOeVFQ==
-X-Received: by 2002:a63:5c51:: with SMTP id n17mr5975475pgm.376.1631255360120;
-        Thu, 09 Sep 2021 23:29:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a11sm4064214pgj.75.2021.09.09.23.29.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Sep 2021 23:29:19 -0700 (PDT)
-Date:   Thu, 9 Sep 2021 23:29:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        kernel test robot <lkp@intel.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] rapidio: Avoid bogus __alloc_size warning
-Message-ID: <202109092327.C582B074C@keescook>
-References: <20210909161409.2250920-1-keescook@chromium.org>
- <20210909132752.4bde36ccf50720e56160f00c@linux-foundation.org>
- <202109091549.FF8E0C61E2@keescook>
- <20210909161109.14b147628de07ed7c20d84ae@linux-foundation.org>
- <202109091849.53C9A8AD@keescook>
- <20210910045010.GO1935@kadam>
- <20210909224814.7460f8dfa3134742b90b34eb@linux-foundation.org>
+        Fri, 10 Sep 2021 08:31:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57381 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232997AbhIJMbW (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 10 Sep 2021 08:31:22 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10102"; a="219205329"
+X-IronPort-AV: E=Sophos;i="5.85,282,1624345200"; 
+   d="scan'208";a="219205329"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2021 05:30:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,282,1624345200"; 
+   d="scan'208";a="431539785"
+Received: from irvmail001.ir.intel.com ([10.43.11.63])
+  by orsmga006.jf.intel.com with ESMTP; 10 Sep 2021 05:30:05 -0700
+Received: from alobakin-mobl.ger.corp.intel.com (alobakin-mobl.ger.corp.intel.com [10.237.140.50])
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 18ACU3af025901;
+        Fri, 10 Sep 2021 13:30:03 +0100
+From:   Alexander Lobakin <alexandr.lobakin@intel.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org,
+        Kristen C Accardi <kristen.c.accardi@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Lukasz Czapnik <lukasz.czapnik@intel.com>,
+        Marta A Plantykow <marta.a.plantykow@intel.com>,
+        Michal Kubiak <michal.kubiak@intel.com>,
+        Michal Swiatkowski <michal.swiatkowski@intel.com>,
+        linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v6 kspp-next 16/22] livepatch: only match unique symbols when using fgkaslr
+Date:   Fri, 10 Sep 2021 14:29:53 +0200
+Message-Id: <20210910122953.400-1-alexandr.lobakin@intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <alpine.LSU.2.21.2109091347400.20761@pobox.suse.cz>
+References: <20210831144115.154-1-alexandr.lobakin@intel.com> <20210831144114.154-17-alexandr.lobakin@intel.com> <alpine.LSU.2.21.2109091347400.20761@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210909224814.7460f8dfa3134742b90b34eb@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 09, 2021 at 10:48:14PM -0700, Andrew Morton wrote:
-> On Fri, 10 Sep 2021 07:50:10 +0300 Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > This is how the email looks like to Andrew.
-> > 
-> > https://sylpheed.sraoss.jp/images/sylpheed2-mainwindow.png
-> > 
-> > Try to find the subject in that nonsense.  Same for everyone else on
-> > email as well.
-> > 
-> > https://marc.info/?l=linux-kernel&m=163120404328790&w=2
-> > 
-> > I only either read the subject or the body of the commit message and
-> > never both.  :P
-> 
-> I read the body if the subject looks relevant ;)
-> 
-> But that subject reads to me as "rapidio: Avoid bogus *blah* warning". 
-> We have soooooo many alloc_foo functions that one's eyes glaze over
-> something like "alloc_size"
-> 
-> Why?  Because the identifier "__alloc_size" is of great significance
-> to Kees because he wrote the thing.  Everyone else just sees "*blah*".
+From: Miroslav Benes <mbenes@suse.cz>
+Date: Thu, 9 Sep 2021 13:53:35 +0200 (CEST)
 
-Heh. Okay, fair enough. I will make Subject/body independent. It felt
-redundant to me before, but greater verbosity is a good idea. Sorry!
+> Hi,
 
--- 
-Kees Cook
+Hi!
+
+> On Tue, 31 Aug 2021, Alexander Lobakin wrote:
+> 
+> > From: Kristen Carlson Accardi <kristen@linux.intel.com>
+> > 
+> > If any type of function granular randomization is enabled, the sympos
+> > algorithm will fail, as it will be impossible to resolve symbols when
+> > there are duplicates using the previous symbol position.
+> > 
+> > Override the value of sympos to always be zero if fgkaslr is enabled for
+> > either the core kernel or modules, forcing the algorithm
+> > to require that only unique symbols are allowed to be patched.
+> > 
+> > Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+> > Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+> > ---
+> >  kernel/livepatch/core.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> > index 335d988bd811..852bbfa9da7b 100644
+> > --- a/kernel/livepatch/core.c
+> > +++ b/kernel/livepatch/core.c
+> > @@ -169,6 +169,17 @@ static int klp_find_object_symbol(const char *objname, const char *name,
+> >  	else
+> >  		kallsyms_on_each_symbol(klp_find_callback, &args);
+> >  
+> > +	/*
+> > +	 * If any type of function granular randomization is enabled, it
+> > +	 * will be impossible to resolve symbols when there are duplicates
+> > +	 * using the previous symbol position (i.e. sympos != 0). Override
+> > +	 * the value of sympos to always be zero in this case. This will
+> > +	 * force the algorithm to require that only unique symbols are
+> > +	 * allowed to be patched.
+> > +	 */
+> > +	if (IS_ENABLED(CONFIG_FG_KASLR))
+> > +		sympos = 0;
+> > +
+> 
+> I ran the live patching tests and no problem occurred, which is great. We 
+> do not have a test for old_sympos, which makes the testing less telling, 
+> but at least nothing blows up with the section randomization itself.
+
+Great, thanks!
+
+> However, I want to reiterate what I wrote for the same patch in v5 
+> series.
+> 
+> The above hunk should work, but I wonder if we should make it more 
+> explicit. With the change the user will get the error with "unresolvable 
+> ambiguity for symbol..." if they specify sympos and the symbol is not 
+> unique. It could confuse them.
+> 
+> So, how about it making it something like
+> 
+> if (IS_ENABLED(CONFIG_FG_KASLR) || IS_ENABLED(CONFIG_MODULE_FG_KASLR))
+>         if (sympos) {
+>                 pr_err("fgkaslr is enabled, specifying sympos for symbol '%s' in object '%s' does not work.\n",
+>                         name, objname);
+>                 *addr = 0;
+>                 return -EINVAL;
+>         }
+> 
+> ? (there could be goto to the error out at the end of the function to 
+> save copy-pasting).
+> 
+> In that case, if sympos is not specified, the user will get the message 
+> which matches the reality. If the user specifies it, they will get the 
+> error in case of fgkaslr (no matter if the symbol is found or not).
+
+Not familiar with livepatching unfortunately, hope Kristen and/or
+Kees will comment on this. Looks fine for me anyways.
+
+> What do you think?
+> 
+> Miroslav
+
+Thanks,
+Al
