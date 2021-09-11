@@ -6,75 +6,65 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F85C4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 10:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263CDC433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 11:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 618E8611F2
-	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 10:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FA5610C8
+	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 11:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235513AbhIKKaH (ORCPT
+        id S231749AbhIKL2C (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 11 Sep 2021 06:30:07 -0400
-Received: from mout.gmx.net ([212.227.17.20]:39781 "EHLO mout.gmx.net"
+        Sat, 11 Sep 2021 07:28:02 -0400
+Received: from mout.gmx.net ([212.227.17.20]:57281 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235443AbhIKKaH (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 11 Sep 2021 06:30:07 -0400
+        id S230249AbhIKL2C (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 11 Sep 2021 07:28:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1631356120;
-        bh=kW2/XFCgLeQJ8pAdiZHbaLLR//IPNQFMApFkxDIZUaU=;
+        s=badeba3b8450; t=1631359607;
+        bh=G8MUuBpNtnBNxQFmEG2ZlriHlD7R4/yuBbjO5Ngy/bk=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=WBtsBZQz4G7/paKCTF08Zb5U1QgauCNKCCBvanb6wH1x9zXRmsbI68y2CmpVblb5/
-         DCnuY6avzo55meTZwHv0/vgqPtrkqRNlAJueAHSe7z0z6mkbUrN8Tc0pa0mzBN+uOi
-         +zB3F/2TIfN6gn2kHWDi6e/S20kgBRV0pNu75rko=
+        b=J7+O/q5h+I2kZg3xNyRxgirD/9jSmAllZs6+S9q5aabZCbMLWPbDy/1smQhpOOFa5
+         LMamsWd5C5hj9F6PdbGIzFK+0RkEyuCkpqIhX3ZhgEm3+YnCaXz45KHbdXa/9PtCA+
+         k4wdX/bSl48iiBmCa4vyAAi25ZS3ApiifahMAf9w=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
  (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1M1Hdq-1mNMcU11P0-002rAx; Sat, 11 Sep 2021 12:28:40 +0200
+ 1My32F-1n8rk1313v-00zVbD; Sat, 11 Sep 2021 13:26:46 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
-Subject: [PATCH] net: mana: Prefer struct_size over open coded arithmetic
-Date:   Sat, 11 Sep 2021 12:28:18 +0200
-Message-Id: <20210911102818.3804-1-len.baker@gmx.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        linux-usb@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: ohci: Prefer struct_size over open coded arithmetic
+Date:   Sat, 11 Sep 2021 13:26:31 +0200
+Message-Id: <20210911112631.10004-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dfVEWPwUfXk7WIDTAbTGVLjgPLhUDRc24p6xewK3GBqzbU6DrcU
- ykjnc9cNedQlmlg2HsTJDh+pa11ahYb6Y+2sPn51SUs8CNYG+ggGvmOsFmGmQQ77r9/a55S
- 635XjyqZv/kz30sj90ZoUxbIdPhLVdwaip4p8XoRizgjtM4u7JfPsXt8t4JOwK4SDCTUtrm
- 5Pzh+wyuAZy8g7EzyPK9w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aaZQKqUHAsA=:5UH7+Vp9zv9Ebwsos2eXEL
- B9iNcka0v4OG7PMubbF6LdznXb4ErFlO61hZEhq9oGgckm3FJ5cKWQ6bC5ipCTI2+MA4SK92W
- caQsjELrtMbv2QGtFTKiDEXjhOrnNwJuRtMXY7SnPFkDvfQzrhvrnXPE4k8Dl6wZDlpOssnnB
- 7Md6XCXwhXb8UkN+julAy9NVlC1bD2ntsojt+gzru8JEvgQKl+FEgmFC4rMiabvgWEFdpk6YT
- vSLGf110Znb6tr18K7NJuNP0gYe3Xf0QSIUt3X3dmhQ5Z28f1APyaDisfGrvg5McuOpxiriox
- oNr5gWttuw+wWB0KBjT6gy09FhBv8Wa2Snh1pHG2PKdqU6mYe0C5Lxk4TzHaDqVxye1tL6Pg7
- dO28z09KUC+EIgw6S8XgCQBVx7dm6oRNWqciRZxWO/7JgTCbaueHrnYtvOhaAhWIFpqM829r0
- 9v8XeeePZO7B4DYIylStJa4mfNvq6jmLF5djc5DCcvi/gaTaiYD3vNk9/dXpq+TkKy/g+aEfA
- Z6A473KvK+Vk/6cFyb+9UUEWfvN82lv0L3ds3h/Al3c+OODzmxfT9D9a1G0PleRnBt6JqNAtW
- SlGpWhwEbBo57JGu09iPWi96i2Unng+YUswRioMXwko49w3MoRSAYVeTpADhUhm9OMqiD+gt1
- P+zM/eLcG2vo5UJ9FHqsJrek28qAXjmH4bp/2yHajA97YalRzcXzUvcXMYhWTAIjPP5LyDbO8
- Bm2/KgO8boMYnKYDBfPQczPSGkgDm6UD+aj6shCY9KfHj6iBLr98XGbnZYH715DHm8uN507bJ
- dnIZUXqBE9qkNQqSXlyiWymtlJinnByOgJeOwuaYYmUlnh9CRyb/k/plz86cTGBiEHUd+XDUr
- IZXEg0c18VaopPD1wCJHhpN1xg+lIsALJ+Mbg2hf5JutDHfznaK7mqEzMJkQYY+KejZyp6QZ9
- w0e5Nmfb7xkg3Al2NYG9jcEpuQFRTQP6OWFcEP5lAySuU5Y2cRE5He88sy4DYYaRprCEbEmCo
- 4/aUvhJqiRUfnu8/v+kmZp/aNk2DG+fTaQnpzNkRq+yWLhCvmmS/gbJGYPrimhWlGMUk7KF3y
- 4tVhgpYCBw4awQ=
+X-Provags-ID: V03:K1:SOgd2+Qv+9I1QBgs75UshmVAAaFWc90Wg57FZNwfUUC6f8n5T8f
+ HJw96UmmQebgnfQYnnxxmXbKH1HcO8USYLODFrtqDgXlMR0vo7F6Titc4F19OUwwSQPMeBG
+ dfHe718u1e2BtEmh0rIxyDCq8ihyGbm6nIxKQYaaO3zjNkmBLJaDVgt7Jq/BhWEIvmRLZnW
+ IGGqhk3VDeYtW3tXO2eNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8h8+1ruWDmA=:554Ej/I6jXV1JUfMIWrw5J
+ ake8jIw9w82IDeMl5cfWTP/XtoPS/DNg6V/FfRMlO/T87lQ1sbmSlPdXqCHzseAXJdJqOK1Wk
+ 1nWtgh7ZScL+XUy8ePANoIx2YFoaRTVvy02zEgvutD8e191gWOqC+tf2ShBvgGUxwjYonOio8
+ wKhdqLdmHrPgMoC6ILHH9GeUcJyagc7+jTWjJq6f7zXNhNTCvoq5Mg4FXQeNBwjDEPwXrWvJV
+ ynu6nAWULXw4+IUbwB9UuIpWWtukRCCiAx3x/YFHqta5GYvff3eAO37hEAHzqY06Hfk2LKmL7
+ lahEv5Jhf4MCAfhO5WhD2L6W6lsVSuAMYzUb0H7QKwMciskhNVuUMTUuFckvzbnkO1F+dNVzO
+ L6eP2aowal7nkAJFb/M3Cp9gbNNOG2kzLZVT8Fc+Ezj1C+A9lGklfWJEE2IsLAH45+vTdoNWM
+ MeXaWDLWBwYqxhrGWKc1L52tHsrDWdTcGQbHIUPeQ8k2T9o+iNGYXynEF+fK6GoaZ0WPwdV32
+ uavPGGoxnbAkyMYt52CLXbDPY0HWZXXj/+6s4weE54QrRvk33GPGj8kSvp2BMPVSFv9ZvIpoJ
+ 5nRO64TS4brSQuqZvoguBKbH6LbniTZDGt94A29iSEqINR4mTNxnUPJhWVvecsvpwuQ1f5RvP
+ FkstAC/yBkuJxS731Y7U0oWRMOYRhdUUc5B8BU4SH+Wh+qhHOzgynqLMu4sMDV5ZCQhTkgy36
+ z64Wyh1h9JXu6+eH/OXVAYyaWKesEUvTNG7p00B5qz9q90a/c/e0hQXFM8cBEzxqzNKidisAt
+ 1Mz2bo4OgEnJvtqTPNBLHiGSbMWk7QoV1fUk75ALnfjX8Wlb+S+/OaejTAafFiqEkI4htq+iR
+ FPEaJHYvCVUQVVLnE19KGftux1zL7XHxE+I0iAziMPs49BoeOSm461ysNhiPjWo3U4RwtTM0X
+ Km3oeuJ3tl1POnBt3fmq8/s1TWmkTu520VEGooSYAoarrXQ3hsBarkj2b7KnnWl8Y9X8nxU2K
+ Ieqz1ew2T8uFO/rZLUn2CYMmQflqpxMoimpHo682UKYm1M1U7TQZ1HML9DA8lgSZgKANy5ZRM
+ a7VcIcymeOjO20=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -95,26 +85,23 @@ ed-arithmetic-in-allocator-arguments
 
 Signed-off-by: Len Baker <len.baker@gmx.com>
 =2D--
- drivers/net/ethernet/microsoft/mana/hw_channel.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/usb/host/ohci-hcd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/ne=
-t/ethernet/microsoft/mana/hw_channel.c
-index 1a923fd99990..0efdc6c3c32a 100644
-=2D-- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
-+++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-@@ -398,9 +398,7 @@ static int mana_hwc_alloc_dma_buf(struct hw_channel_co=
-ntext *hwc, u16 q_depth,
- 	int err;
- 	u16 i;
+diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
+index 1f5e69314a17..666b1c665188 100644
+=2D-- a/drivers/usb/host/ohci-hcd.c
++++ b/drivers/usb/host/ohci-hcd.c
+@@ -191,8 +191,7 @@ static int ohci_urb_enqueue (
+ 	}
 
--	dma_buf =3D kzalloc(sizeof(*dma_buf) +
--			  q_depth * sizeof(struct hwc_work_request),
--			  GFP_KERNEL);
-+	dma_buf =3D kzalloc(struct_size(dma_buf, reqs, q_depth), GFP_KERNEL);
- 	if (!dma_buf)
+ 	/* allocate the private part of the URB */
+-	urb_priv =3D kzalloc (sizeof (urb_priv_t) + size * sizeof (struct td *),
+-			mem_flags);
++	urb_priv =3D kzalloc(struct_size(urb_priv, td, size), mem_flags);
+ 	if (!urb_priv)
  		return -ENOMEM;
-
+ 	INIT_LIST_HEAD (&urb_priv->pending);
 =2D-
 2.25.1
 
