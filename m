@@ -8,62 +8,64 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D5DC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 11:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF11C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 13:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72F7611CC
-	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 11:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0690C611CC
+	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 13:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235715AbhIKL2r (ORCPT
+        id S236543AbhIKNXR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 11 Sep 2021 07:28:47 -0400
-Received: from mout.gmx.net ([212.227.17.22]:50971 "EHLO mout.gmx.net"
+        Sat, 11 Sep 2021 09:23:17 -0400
+Received: from mout.gmx.net ([212.227.17.20]:35509 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230249AbhIKL2r (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 11 Sep 2021 07:28:47 -0400
+        id S237507AbhIKNVO (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 11 Sep 2021 09:21:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1631359652;
-        bh=PhWfRPf31PepNWYNB76MkqMicEwzfnpoC3K7z7hIAVk=;
+        s=badeba3b8450; t=1631366392;
+        bh=l59PM1Fs/cmKt8wqLqgWL72Gp/GHOpUwGSncn3oSEoI=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=HneWRXlcWTKqLtex0Fe+OiCOEsgBBRJ0ryRhvEitmHtP0gb4TgESQk3J2BDL325ZQ
-         7SHtwYLBSMB7dkasjll+6JGQPJ5nn526x1S0j3etvt0xU8QPOeY7ciOt4ZyqkzuxM0
-         u180pQJt6iXgVcjcUw0nUH8WZnGN5BHyyMf/IAmA=
+        b=DbfOkvwS3dekgjP8N2b55KrobJfb9Wtz0XuFCJ0wvmVQGokNhYim4sRlDwnHf77LC
+         g97myHz+QKVoaoJaTyK2Iy2ng7XFXPWLUmTST16Fxg+UhGRsq5tIeziMfXJpQtHvC4
+         +9aHVkh4ntkozBjXWKbzZY4lN3S6sOWpQxWTx81s=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
  (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MdNcG-1my4s0091U-00ZS4c; Sat, 11 Sep 2021 13:27:32 +0200
+ 1MZTqg-1mSwdd49xe-00WTYB; Sat, 11 Sep 2021 15:19:52 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: omap-keypad - prefer struct_size over open coded arithmetic
-Date:   Sat, 11 Sep 2021 13:27:16 +0200
-Message-Id: <20210911112716.10067-1-len.baker@gmx.com>
+        Tom Rix <trix@redhat.com>, linux-hardening@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] memstick: jmb38x_ms: Prefer struct_size over open coded arithmetic
+Date:   Sat, 11 Sep 2021 15:19:33 +0200
+Message-Id: <20210911131933.2089-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GKwmQlkYhmtlh9LkRWaTgXGoUoEhf8TnpxfaAe+WAcCCHqQg5zQ
- uw8hl40ouK9WZw0Y/obObHuibTH8egW4fL/Ki9NoWfSqy482RSn47leEkjGSJnb6yoUGtvy
- ZH2agJcMKxIAqylXpQIE8uq4UsaVaY7g7lI86z+Z+8VMOltLL1g+5sYqmj5POhgzjihZK1h
- QiTqFmbrP4FOL84sCr1jA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:77agfypHFcU=:n5emUQls6dZ7KabUao+CTw
- MoyczOfuOGNMMg8CMg8TYmM2jlg7zcP5XpSGRkoKYX4B0YSW2TwBmBoQFbbp2ESfcoegWfg4w
- 6HS7mFaip9b+mQEgs1GmgTN1zYaAnZDmR5CxVAYdvs9ZUmQVrqDSzF3Uw5GHWnJUuqd+gM75R
- NtQF1oPEVQ3WzVcu4TNq6tdMhVvJZ/4YrJXEc36F/soePFJSswrq6oxL7VAGnSgylIszFCBI3
- HWRVOnwHT78KrX/LDD2WVgZa4Hfl8s+65rUZUz48bTBh6aWVYCn9lOvsLQdaz6Scbav683k1B
- d3caGCe272soxwsRFdrhy9V/QzFridEtINrdd4MSy9ZP6t10O3qoZhbZeucCenx3ixdxqszSy
- VhJqFczRs9o+3WCK8/pB6716fuh7AcxsUuTIcavHWUrTBQYXGDCDFKYVm8xuPx54Ap57hhZr/
- SulxK03TRQSzb5SroIb/uauj8ftgy94K0iw+Oph3tHeG4Qio+WHG8Uv2NskJWVkVNxYiDx7Ci
- /8TcExWlfTdKoGC1F+zqcl5NYWZgijvgADurr2aIcqMjiAcnBKG07QIgYDt/d/4n2/QZ78Ncs
- lcVUnVSc+Q9WCVvDmV84H9FRARD//4jgpfuiVBdpRzPURhn6INHOSYcy6PIsYb6hJ2B6ur2c4
- lCWrZdooFLLaVLVTQyen5CUkUJFUNBLr6MYIvklwmNkqbC6smCXrua+guJ/aR04FIUEHhKXux
- CeoqyDu1LxmTiDPJ+4Su/lTNRW2HOslstCrQdTddaLQbzqsrY4oXXEdovX6C2yqnwfXuS5lIO
- PSiNS7umGnuBNtAJMfc6hCjKEhm8t++97jREOLmiIkUzfj11eZGTjvFyB4HQVtszUIdiy0i7k
- 7BBBrBMTtBMtaQRc2ESQzHW4sae80cdj+vJ2bk4IQCJEXQmlZcx1Uvw7hdRjdvBiHHHXTa1Cg
- RshXBHJapeY+tK6WNlUPDxEBaID2BwC/QaDpY+GBHQUEcImssgwCZE4HhBKseQpiiFWh2zH7H
- OehR8WNwiAwj7JHq7C9FFzaVovWUt3AOXcm2sGANpb0SrQIXTH0iyPuwft7T0Hw191d+hljkE
- 88wJSbxIk2K3NA=
+X-Provags-ID: V03:K1:c6Ig4Obe3Q3j3moUxcfS+LciEA5uOCXmbpNQ8tM6qr3ju/cJ2W9
+ QIOASDqowAyl+AetKcDTc3JOINMJkkUpBM9J1A5SYl5bXG9+P6nIWCtLkl/HY+C3XTvlgtt
+ UAzLQI5lfOjt9S/pA4DixRbsIdzZ6zfirD8i7fiRgF/xYmVYhex4k+90eKsfi01mtg37P+F
+ uBayeLNE/hFg+D1h50gTA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rfH7G68vj+E=:8NkfttQKabHCymCsDppJ5q
+ LpnweXmrTNuhOjN3P6qEadw0eQNs4XWOvtmEGY5SmbZivKA6KzGAk0hP+4XnM9Mluh8U14hLX
+ 98/zOEOsZD1OOm3OhkN/mdPeVIn+wqst1TQp0xZ2fa51yHsRqV+lXlnu03TNqnWE9osdPsKmX
+ DVeaX5wFt9XhGAyLwvjTIPMCihgK2sIAMnW5WnN5Gl1zZAzziQiNtBEFFv1WWoQU+IhPgxfZg
+ C7dJASxOxf8m8MJ99Judu2Iur8p7jRP9Xzm/WWTn97ZiCxjBqN+NHtqsXbXQDhHUCtX1YHSPw
+ HL0kHh7PGhlncIlfE9NMDUapRB95T/Tj/Nuv09y5WW5/BvSpZaGYWCf2b1aVmRBbGV3u6SD4h
+ I3w8yoThdyxb2OaSWTx//FKid/qkTlD8qv28HlG6th4Q0dTHMx6jf/9bDf44ihcv6WN1Ov/Ae
+ HkBlOnDV7X1si9+LIlh7+cNR1RIA8A0R8r70if7jcYdOoSDRc+eNhKNb4uOW0n4Sr8nNgVw6y
+ 11zSnNt2skpEVANmdGmRhUXrt7aoI8YmvjjArvsY/Gg5v9viHfItVGqvcWauY1GPiUFNC6GIO
+ V/F8SQRwXO8MZcaev7ctUdDcOFADBROhT2rr4oUip98M1NIP0NDw0wrQIhDak56JGQiPiffG8
+ ZVckQsCbHAH8ksswXYChsCyRNmBzwGptpd5mOh+ZGxUxhakwNrNwoLys+q41Q2n8V/Pu0Z06p
+ VGiNvvbyeTRlYCA44luOoDjBCuA/yXuZTtWBkH1/sISu33QkL8cV1lEPM9yvLKngcr2iIKFBN
+ lELm+KuV1U2rC2Rhia8fDLzxz6nA53HhozcFCK5ig+N0GSym1Im/d85EO5NRY9m0kXnRnKC0z
+ tYg3ZOWa057N99J2EqqfCRFCbYXLbTwLmNSiprov0XeiJBgJ88Exr7IegGKanDKGwqFBrSydN
+ U+oFOnVhkNrbbVpLwyAjK6Wzo7FTVzlRo5kfkiG1Qtsxrb8c6p3APxt8gjsnOTld2NSiVhKxg
+ zyNhrkFVtOS3lUNTtokFx33ZJzxWoj5yxV0YnECevhuuBlfnJyxLAb/cdlUbXduriT6DMLxEX
+ mV+Hty3Ya5mo7g=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -84,25 +86,24 @@ ed-arithmetic-in-allocator-arguments
 
 Signed-off-by: Len Baker <len.baker@gmx.com>
 =2D--
- drivers/input/keyboard/omap-keypad.c | 3 +--
+ drivers/memstick/host/jmb38x_ms.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/input/keyboard/omap-keypad.c b/drivers/input/keyboard=
-/omap-keypad.c
-index dbe836c7ff47..eb3a687796e7 100644
-=2D-- a/drivers/input/keyboard/omap-keypad.c
-+++ b/drivers/input/keyboard/omap-keypad.c
-@@ -190,8 +190,7 @@ static int omap_kp_probe(struct platform_device *pdev)
- 	row_shift =3D get_count_order(pdata->cols);
- 	keycodemax =3D pdata->rows << row_shift;
+diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb=
+38x_ms.c
+index f9a93b0565e1..a7a0f0caea15 100644
+=2D-- a/drivers/memstick/host/jmb38x_ms.c
++++ b/drivers/memstick/host/jmb38x_ms.c
+@@ -927,8 +927,7 @@ static int jmb38x_ms_probe(struct pci_dev *pdev,
+ 		goto err_out_int;
+ 	}
 
--	omap_kp =3D kzalloc(sizeof(struct omap_kp) +
--			keycodemax * sizeof(unsigned short), GFP_KERNEL);
-+	omap_kp =3D kzalloc(struct_size(omap_kp, keymap, keycodemax), GFP_KERNEL=
-);
- 	input_dev =3D input_allocate_device();
- 	if (!omap_kp || !input_dev) {
- 		kfree(omap_kp);
+-	jm =3D kzalloc(sizeof(struct jmb38x_ms)
+-		     + cnt * sizeof(struct memstick_host *), GFP_KERNEL);
++	jm =3D kzalloc(struct_size(jm, hosts, cnt), GFP_KERNEL);
+ 	if (!jm) {
+ 		rc =3D -ENOMEM;
+ 		goto err_out_int;
 =2D-
 2.25.1
 
