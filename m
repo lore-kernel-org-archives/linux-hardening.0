@@ -2,128 +2,196 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55BFC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Sep 2021 22:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4E3C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 02:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B2A6120E
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Sep 2021 22:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6910D611CC
+	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 02:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231156AbhIJWh3 (ORCPT
+        id S235061AbhIKCag (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Sep 2021 18:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54374 "EHLO
+        Fri, 10 Sep 2021 22:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230386AbhIJWh2 (ORCPT
+        with ESMTP id S231864AbhIKCaf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Sep 2021 18:37:28 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDF3C061756
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Sep 2021 15:36:17 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id v123so3137628pfb.11
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Sep 2021 15:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3hRvD55AlzDiLkgU8O9lPB5ydkM58COgww4lK+xPKNA=;
-        b=dpRA7ez275uqyRkLGORHUCTMk/8G0HtxdMZkxlxRihNXrl2ZoTus5twwsplRPDAJGq
-         LPRu7cpDcaVy7m5FDm9DYofpU6odEqix822/WDwSYAbS5+izVmB5NG08olewAx98uUjX
-         oMlP334dbBmyMTPJdUObMj4BH0XxW5cRc2qH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3hRvD55AlzDiLkgU8O9lPB5ydkM58COgww4lK+xPKNA=;
-        b=6xPWITOT5C0O8Jg0vOglJrsAYBnKb9lURm2dF+77yBnGqurBeKB6XLwrgUWS5Q8Dhg
-         /UMGUns2OPRk8ytN5QdUbGPk7/p48/PbYFJPuD5pG7FA4kChGSw/2HYjhZlmrc6fHeDX
-         QmRl4PSt9ULwptfvgAd3ymS2+H9Qry1xjHqP16c51DkC72C6vf3yCJfFX2IXVeOxEv+o
-         Tqy8fdUHhmBuyc3OV4bXbGLrvYIASjSi6H4xMqMSvmvBhh/aaCtFv6bIyJPOfTlonoj2
-         V38V7NVYVv35HmMaDONrsohT5CDdrti+2QSvCoYFeKHd6HEUgJ/S0yWbAIn5j8Xf/xLh
-         ndPw==
-X-Gm-Message-State: AOAM533NCOYXCgidOrJYcNIkkwBFRU58/JDSO8CSJKVs+zAan7I4Vde/
-        Mbo/uv8zF1vC7INFbK7NLdLk8vdVm2AGEg==
-X-Google-Smtp-Source: ABdhPJxx4Wit0Qftq06uh3Cat42JuEm3a7XOFH1pu3N0oC8WjAG8iOMSri5ZckEHwBjtsymKIQWpuA==
-X-Received: by 2002:a63:841:: with SMTP id 62mr4745pgi.354.1631313376938;
-        Fri, 10 Sep 2021 15:36:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m64sm6192774pga.55.2021.09.10.15.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Sep 2021 15:36:16 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] landlock: Drop "const" argument qualifier to avoid GCC 4.9 warnings
-Date:   Fri, 10 Sep 2021 15:36:13 -0700
-Message-Id: <20210910223613.3225685-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Fri, 10 Sep 2021 22:30:35 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F25D0C061574
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Sep 2021 19:29:23 -0700 (PDT)
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [80.241.60.233])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4H5xX15kCwzQjdv;
+        Sat, 11 Sep 2021 04:29:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+From:   "Christopher M. Riedl" <cmr@bluescreens.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-hardening@vger.kernel.org
+Subject: [PATCH v6 1/4] powerpc/64s: Introduce temporary mm for Radix MMU
+Date:   Fri, 10 Sep 2021 21:29:01 -0500
+Message-Id: <20210911022904.30962-2-cmr@bluescreens.de>
+In-Reply-To: <20210911022904.30962-1-cmr@bluescreens.de>
+References: <20210911022904.30962-1-cmr@bluescreens.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2292; h=from:subject; bh=iSCHjkob/n8sXCvfeWoki7FcCa2YHoXRmVIzTgHXdDw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhO93d+UF0sB8wKqxFZeWzbz/6fQSst1worP6xVvlG h7cEzeaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYTvd3QAKCRCJcvTf3G3AJp9aEA CpQq+EIq1+kfJ3pXfrc9dJ8SmatIREczqwN8997WehcYNz1Xtzx3/SgFfdS7/N2AQIhmGBgqJIaG7Z gp9/7r6HtpzGNaUZ2SsI2n14SgDEonvySHwGoAB3W8ItzUT640UDajRSEKrGwRsEiPFKpkYdQDJ373 OvCO6JKKqJ6JBvw/5mmRRgU/nMdbYiJ7E3LTJ91OHF6abPQObupwZ/rMt9CP+yAVpxivC4BiJkE7Ds BG+oCo94uVEwxB/oTNSb6iK+GcRic5Mp3vGDfN7BG8eWCVD594codlePQFQh//j6bNfPVsnbuaGrW1 UPjO9CRiu6WFHFb0Kt3jYpQnQZPC71THlZ3z5N+mFlRfjU+LzAxwgOMhwpbMW83Kh0lqj+RYxP0Ipf ls/7VXgxj3jEJbxtV9nLSLObcmHSUyBL3fil8eKL7Jx76nbSqllTTc26OPHMmOGV9X6KyvwlCQWD5n xnQu23MO66kwIZPcio9W+HI+XgiW4H6uHxHBP0bWSIvnnxG/5lZYsGfNg0920PCyl0tSvoEwIwhhRx QgcH6FViLYp1mM2lzHftz21HiQzXtaGrsi8xFy5+SEin7hemmFD7Vv9C1Uw8w/xbkoTSubmwYpqfVK mMM0EPNLgcl51mLx2gDuoR1wJ5yMyxJwW9t4WV9Mq2GumgFwBuxZj6aLJIew==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: A68E726F
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When building under GCC 4.9, the compiler warns about const mismatches:
+x86 supports the notion of a temporary mm which restricts access to
+temporary PTEs to a single CPU. A temporary mm is useful for situations
+where a CPU needs to perform sensitive operations (such as patching a
+STRICT_KERNEL_RWX kernel) requiring temporary mappings without exposing
+said mappings to other CPUs. Another benefit is that other CPU TLBs do
+not need to be flushed when the temporary mm is torn down.
 
-security/landlock/ruleset.c: In function 'insert_rule':
-security/landlock/ruleset.c:196:34: error: passing argument 2 of 'create_rule' from incompatible pointer type [-Werror]
-   new_rule = create_rule(object, &this->layers, this->num_layers,
-                                  ^
-security/landlock/ruleset.c:69:30: note: expected 'const struct landlock_layer ** const' but argument is of type 'struct landlock_layer (*)[]'
- static struct landlock_rule *create_rule(
-                              ^
-security/landlock/ruleset.c: In function 'landlock_insert_rule':
-security/landlock/ruleset.c:240:38: error: passing argument 3 of 'insert_rule' from incompatible pointer type [-Werror]
-  return insert_rule(ruleset, object, &layers, ARRAY_SIZE(layers));
-                                      ^
-security/landlock/ruleset.c:144:12: note: expected 'const struct landlock_layer ** const' but argument is of type 'struct landlock_layer (*)[1]'
- static int insert_rule(struct landlock_ruleset *const ruleset,
-            ^
+Mappings in the temporary mm can be set in the userspace portion of the
+address-space.
 
-Drop "const" from the function definition.
+Interrupts must be disabled while the temporary mm is in use. HW
+breakpoints, which may have been set by userspace as watchpoints on
+addresses now within the temporary mm, are saved and disabled when
+loading the temporary mm. The HW breakpoints are restored when unloading
+the temporary mm. All HW breakpoints are indiscriminately disabled while
+the temporary mm is in use - this may include breakpoints set by perf.
 
-Cc: "Mickaël Salaün" <mic@digikod.net>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-security-module@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Based on x86 implementation:
+
+commit cefa929c034e
+("x86/mm: Introduce temporary mm structs")
+
+Signed-off-by: Christopher M. Riedl <cmr@bluescreens.de>
+
 ---
- security/landlock/ruleset.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
-index ec72b9262bf3..64c37af88ee7 100644
---- a/security/landlock/ruleset.c
-+++ b/security/landlock/ruleset.c
-@@ -68,7 +68,7 @@ static void build_check_rule(void)
+v6:  * Use {start,stop}_using_temporary_mm() instead of
+       {use,unuse}_temporary_mm() as suggested by Christophe.
+
+v5:  * Drop support for using a temporary mm on Book3s64 Hash MMU.
+
+v4:  * Pass the prev mm instead of NULL to switch_mm_irqs_off() when
+       using/unusing the temp mm as suggested by Jann Horn to keep
+       the context.active counter in-sync on mm/nohash.
+     * Disable SLB preload in the temporary mm when initializing the
+       temp_mm struct.
+     * Include asm/debug.h header to fix build issue with
+       ppc44x_defconfig.
+---
+ arch/powerpc/include/asm/debug.h |  1 +
+ arch/powerpc/kernel/process.c    |  5 +++
+ arch/powerpc/lib/code-patching.c | 56 ++++++++++++++++++++++++++++++++
+ 3 files changed, 62 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/debug.h b/arch/powerpc/include/asm/debug.h
+index 86a14736c76c..dfd82635ea8b 100644
+--- a/arch/powerpc/include/asm/debug.h
++++ b/arch/powerpc/include/asm/debug.h
+@@ -46,6 +46,7 @@ static inline int debugger_fault_handler(struct pt_regs *regs) { return 0; }
+ #endif
  
- static struct landlock_rule *create_rule(
- 		struct landlock_object *const object,
--		const struct landlock_layer (*const layers)[],
-+		struct landlock_layer (*layers)[],
- 		const u32 num_layers,
- 		const struct landlock_layer *const new_layer)
+ void __set_breakpoint(int nr, struct arch_hw_breakpoint *brk);
++void __get_breakpoint(int nr, struct arch_hw_breakpoint *brk);
+ bool ppc_breakpoint_available(void);
+ #ifdef CONFIG_PPC_ADV_DEBUG_REGS
+ extern void do_send_trap(struct pt_regs *regs, unsigned long address,
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 50436b52c213..6aa1f5c4d520 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -865,6 +865,11 @@ static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
+ 	return 0;
+ }
+ 
++void __get_breakpoint(int nr, struct arch_hw_breakpoint *brk)
++{
++	memcpy(brk, this_cpu_ptr(&current_brk[nr]), sizeof(*brk));
++}
++
+ void __set_breakpoint(int nr, struct arch_hw_breakpoint *brk)
  {
-@@ -143,7 +143,7 @@ static void build_check_ruleset(void)
-  */
- static int insert_rule(struct landlock_ruleset *const ruleset,
- 		struct landlock_object *const object,
--		const struct landlock_layer (*const layers)[],
-+		struct landlock_layer (*layers)[],
- 		size_t num_layers)
+ 	memcpy(this_cpu_ptr(&current_brk[nr]), brk, sizeof(*brk));
+diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+index f9a3019e37b4..8d61a7d35b89 100644
+--- a/arch/powerpc/lib/code-patching.c
++++ b/arch/powerpc/lib/code-patching.c
+@@ -17,6 +17,9 @@
+ #include <asm/code-patching.h>
+ #include <asm/setup.h>
+ #include <asm/inst.h>
++#include <asm/mmu_context.h>
++#include <asm/debug.h>
++#include <asm/tlb.h>
+ 
+ static int __patch_instruction(u32 *exec_addr, struct ppc_inst instr, u32 *patch_addr)
  {
- 	struct rb_node **walker_node;
+@@ -45,6 +48,59 @@ int raw_patch_instruction(u32 *addr, struct ppc_inst instr)
+ }
+ 
+ #ifdef CONFIG_STRICT_KERNEL_RWX
++
++struct temp_mm {
++	struct mm_struct *temp;
++	struct mm_struct *prev;
++	struct arch_hw_breakpoint brk[HBP_NUM_MAX];
++};
++
++static inline void init_temp_mm(struct temp_mm *temp_mm, struct mm_struct *mm)
++{
++	/* We currently only support temporary mm on the Book3s64 Radix MMU */
++	WARN_ON(!radix_enabled());
++
++	temp_mm->temp = mm;
++	temp_mm->prev = NULL;
++	memset(&temp_mm->brk, 0, sizeof(temp_mm->brk));
++}
++
++static inline void start_using_temporary_mm(struct temp_mm *temp_mm)
++{
++	lockdep_assert_irqs_disabled();
++
++	temp_mm->prev = current->active_mm;
++	switch_mm_irqs_off(temp_mm->prev, temp_mm->temp, current);
++
++	WARN_ON(!mm_is_thread_local(temp_mm->temp));
++
++	if (ppc_breakpoint_available()) {
++		struct arch_hw_breakpoint null_brk = {0};
++		int i = 0;
++
++		for (; i < nr_wp_slots(); ++i) {
++			__get_breakpoint(i, &temp_mm->brk[i]);
++			if (temp_mm->brk[i].type != 0)
++				__set_breakpoint(i, &null_brk);
++		}
++	}
++}
++
++static inline void stop_using_temporary_mm(struct temp_mm *temp_mm)
++{
++	lockdep_assert_irqs_disabled();
++
++	switch_mm_irqs_off(temp_mm->temp, temp_mm->prev, current);
++
++	if (ppc_breakpoint_available()) {
++		int i = 0;
++
++		for (; i < nr_wp_slots(); ++i)
++			if (temp_mm->brk[i].type != 0)
++				__set_breakpoint(i, &temp_mm->brk[i]);
++	}
++}
++
+ static DEFINE_PER_CPU(struct vm_struct *, text_poke_area);
+ 
+ static int text_area_cpu_up(unsigned int cpu)
 -- 
-2.30.2
+2.32.0
 
