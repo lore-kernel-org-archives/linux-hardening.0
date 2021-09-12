@@ -8,65 +8,64 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B794C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 12 Sep 2021 13:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF59DC433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 12 Sep 2021 15:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42DC560F38
-	for <linux-hardening@archiver.kernel.org>; Sun, 12 Sep 2021 13:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961F361050
+	for <linux-hardening@archiver.kernel.org>; Sun, 12 Sep 2021 15:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235206AbhILNMw (ORCPT
+        id S229726AbhILPxT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 12 Sep 2021 09:12:52 -0400
-Received: from mout.gmx.net ([212.227.17.22]:35423 "EHLO mout.gmx.net"
+        Sun, 12 Sep 2021 11:53:19 -0400
+Received: from mout.gmx.net ([212.227.15.19]:36599 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235203AbhILNMv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 12 Sep 2021 09:12:51 -0400
+        id S229560AbhILPxT (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 12 Sep 2021 11:53:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1631452284;
-        bh=A/5R/9lReRnqhX6VardHyEyyLao6a251fVotksIzRz4=;
+        s=badeba3b8450; t=1631461914;
+        bh=acR4bOYsVFW3jWp5YfwQ2ux3deK09WbrFwToGIM5Wr8=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=FHaHEneD/JHM91TlbiVBwG1FybHQieys3tZ581/oKQypH5ceh3JkG1LwdYEUL6OUw
-         6zj1G4LfYdl7CYUgq8mQYxfThp3P/JSkZuEBxw3M8hcg0ZHdfJBeXyg1egHrYH6464
-         boDX61NkPwYOm4kq+wa75mjkSLQzXO7r/gqNkrmw=
+        b=betXKHWy88VQXJn/oCsS/DwSPiMD2g+7M5yrfDJEOq+jhucC93vV/XtyDal2sGlka
+         xmLZAd1qc95FgGQo/fD6Hexyc1U0eU4F3MOswwlnsRtaIPKVoWwsU/TU3kZU34Ixy1
+         o6q6OUlCeDsHz+PFAxZURE+H4JLobEx+KCy+QK/4=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MbRfl-1mvz7q2KgT-00burL; Sun, 12 Sep 2021 15:11:23 +0200
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1N9MpS-1n28f01Ru0-015L0K; Sun, 12 Sep 2021 17:51:54 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Simon Horman <simon.horman@corigine.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nfp: Prefer struct_size over open coded arithmetic
-Date:   Sun, 12 Sep 2021 15:10:57 +0200
-Message-Id: <20210912131057.2285-1-len.baker@gmx.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Len Baker <len.baker@gmx.com>, Nicolas Pitre <npitre@baylibre.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-i3c@lists.infradead.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] i3c/master/mipi-i3c-hci: Prefer kcalloc over open coded arithmetic
+Date:   Sun, 12 Sep 2021 17:51:35 +0200
+Message-Id: <20210912155135.7541-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xQAYY+Wh3B5HSBfIXdY8+Kf81F3qLDBWMoLrHBOCyshSYw3i/RW
- e+K8wrfSv20BllJvs53spJa4W2SC/Mv0nkaEjszAWE1b1C0stbJ5yuK1Q0cUgoXk5rgjDaY
- aOWPEMQIO+qHqaiWI3sIAyDp+dapwOfvBkjnxxdNny1dTg/en3+bMDOcnLlL26N738cCTal
- 1d+67ZAZatc2kGXROTVOA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:u7CVJm1RPxk=:1VBoFGX8IlYt2jE+xxUaIL
- ff2UltfrQLU1mqqJb7jFf35QnbmQO57kMXAJy8gR22BDvBp/yUkhfmJ+8iNAeX194eyzWW2QD
- p8BHFY6AyLeKX425tsTzCJf99HV2pRGqpjzChBAM8aWbZ80YvAPdhkXLyqYjvin+TVNa0RjDE
- ux17lqoxq5O4wxeaXD25fqeNG8JLwCvZQKYyzx4tTOnyZy28q7hf0aZ/sUVL4xfRMiadE6RfK
- kRCqtMq78mOUWRcKl2fNVIPzEkLq1WPxBu9bfivYQThkGpmckjOgIkGt2JiYb1WDqgOca394K
- AL5rKMh+ynSQfq7+bd0lOWIu+TllD2tmDn9Jaz8ndQgyVbjVp1Ciphc9piPDWSqfpNDFB1+RM
- gHgfjNiNgbdd6qspL/UCMrn4t8NZtWUp/RvAk9BYgG0KLNgRuJB7jZkOZCxLFH1zANV+XnQPf
- M8yKSjH3ErFBF4peSaueVxXwil3/IxBLrBdzI+KZ81rxE5pQZukSOlAbWa6MTaOTokKXWyJ10
- sItVP+HqXOXOYXIdP8A5l9srpgHUiGu6Dsi0f3fkv62PSvEyAlcTbOZqO3ZTssut97rUIpspu
- VG3IAxsuX2XfoeT82++CSkWAHIx6cbXK9fhz0VeQj9Q9kSSECoQZgwikkXiJ7T0bk7swReqyi
- AEbFRePf9c1/tN3oc5SC58riSmyIfEAQ1120E/muKiOAGTQ1ZNvtnixQAaO9P1vav/GLkU8/S
- PfWdhJDKK+Z1tv10ZFRT56wwpoc74oB3P4aJk+UKp+Few2Yfivok8fs3ChMiNNWvjE9IDR1Yz
- Z+R6IuayR0RKmkJAdahcBWc72e/V/E2jGj6OpLEqqPquvPeWM6t6JTwdBfv2Pbuju7KVamqP8
- Btj0H2phmuaKntjKaww8TWdu6FsKttQCJCHDbbj4iYc6FRPtSEKOmarRtzB6DAIUBibdYB/NN
- +qQEjOPlqQdo4x/gfyLucU/3vTsoLi8yVPmf9s/bTJ64SoFzT4GG+HsOBd/u48GdPQfyfs3Tk
- N57YioDiW8zSvlaq7bLt5TpT3XxmwicI7pMS5pDFVi2NunBbW0AUSs9k2ve6mpwitKIYgCv8Y
- Rldt21TSBEQMd8=
+X-Provags-ID: V03:K1:12Wxb35A9HfIn30GEUc5xzIzDRpJ5lPs/PpFMm+D3nx+SYskX9X
+ 5yUBASZXWNG9x2DIsftzvtH+mycCDGn0lBzzRKz56ZNK8N83gYraXbaelZVYvj1qHGY4PRp
+ Bw5Z+ZJYd7WwV06KAuwduDbMYi+PUGmfCriF+/o+ZuERBS9ByFgl0T0wpNjoAKjQtVQRLsX
+ NQGzDGcZrJZxytOJU6ONA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Oa08IYzxaO8=:LdljQr4FvbYrpeql8L/94t
+ zY6HFuPCFEUy2ku3dg6IYlfkM0GscR+L/nMs/9++kjR4mt7x5j60SP+LYaND79n/H/z65T1nJ
+ Z8ryXDxs+dUVEXmY2dg0h3oWplA9p5t5TjlsaVefcbZmBz0zJgFff6L8mzPgDzOSAUufA5MiI
+ ywrRDHL8wx4RF0xfm1MF6vpGoV0QUlQH4qakL/tvd511L3E1hovSS4+rJFAKy/KSP/IVIgSM/
+ VHSWz+Nn7/BbBXFvHpReklkCtOw7R/BAYHdruVZ2/npUuVUgugu67nX6gogVqEF76Oq8pIIH9
+ M4XLPoZFaY3Lbxu6KmtP9SMuMpJpbnDo7AOmytJW0X3NspfAgWPAY92IccplqemHE6tXOwGAo
+ IofD6tMF5fTyIr7nqeRSmn+dmRqwth0ZLQtoH3bccwk1J+Q5A6nNz/p7J8HdYK+wz7IQ+ek91
+ i9ExzqqQh2/IKqogfAcnh95n6iA5s3PYNjWXMNuju/Gv9Ku0Ip4Y7+qNSoakbPCnQVb2wo7fe
+ 4dKO5wLEBXZ1gnUwlaO9sisOQ206/MsEavQnzfT7GnTy9sZh7dlpsckaHoVvGdnNOOllOHy4y
+ P7SPrfA+3Z0SG8DBnoG0bIa/kO9JGWyPpW8QmVb1EbqrDBnxC7SmH5ubF3cmbf0NriN11mMY3
+ IHb5Bx5e2Z6iUvKRcFMxKYSdiIM3rRuzioBhueDDDh2OE1fBQ/EciKt4vDD76YhO4KNmFDIPf
+ 7qlnIZ4OVp6nK++R40P/mDcz2IsvaWih/ANNL8/qU2GO76j6UFRW719Gjzk7pbFSGTlgKP6lY
+ HuRGsngGLpUxzKI8cna/stS1NvGKb6Ko0vrHgtalguhIKayqqMlcAF60EtFtLe1Sd4cXAic0p
+ zDzxV4XnAyTqU4ShuSG0NYXgnJP3A/qy4VWWYro1qTvy7/Cygm/a/w2qLH11OljwIkyovBgK7
+ 9RY5/MP0sW2bfJNlT/nNzNlM/UYWZexuXq1aCxL4iljcsCNQYf0DEWbZ5q5evnUw+Jj8KjIPJ
+ HHLn4sDWhIAVH7HVb1tacK0NgwL+2vcujrfjzh/tIaCYlErsWrBp/JxZAYakjJONdxWYM0psl
+ j9QFX9ZDLnT36w=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -79,33 +78,31 @@ to values wrapping around and a smaller allocation being made than the
 caller was expecting. Using those allocations could lead to linear
 overflows of heap memory and other misbehaviors.
 
-So, use the struct_size() helper to do the arithmetic instead of the
-argument "size + count * size" in the kzalloc() function.
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
 [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
 ed-arithmetic-in-allocator-arguments
 
 Signed-off-by: Len Baker <len.baker@gmx.com>
 =2D--
- drivers/net/ethernet/netronome/nfp/nfp_net_repr.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/i3c/master/mipi-i3c-hci/hci.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c b/drivers/n=
-et/ethernet/netronome/nfp/nfp_net_repr.c
-index 3b8e675087de..369f6ae700c7 100644
-=2D-- a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
-@@ -499,8 +499,7 @@ struct nfp_reprs *nfp_reprs_alloc(unsigned int num_rep=
-rs)
+diff --git a/drivers/i3c/master/mipi-i3c-hci/hci.h b/drivers/i3c/master/mi=
+pi-i3c-hci/hci.h
+index 80beb1d5be8f..f109923f6c3f 100644
+=2D-- a/drivers/i3c/master/mipi-i3c-hci/hci.h
++++ b/drivers/i3c/master/mipi-i3c-hci/hci.h
+@@ -98,7 +98,7 @@ struct hci_xfer {
+
+ static inline struct hci_xfer *hci_alloc_xfer(unsigned int n)
  {
- 	struct nfp_reprs *reprs;
+-	return kzalloc(sizeof(struct hci_xfer) * n, GFP_KERNEL);
++	return kcalloc(n, sizeof(struct hci_xfer), GFP_KERNEL);
+ }
 
--	reprs =3D kzalloc(sizeof(*reprs) +
--			num_reprs * sizeof(struct net_device *), GFP_KERNEL);
-+	reprs =3D kzalloc(struct_size(reprs, reprs, num_reprs), GFP_KERNEL);
- 	if (!reprs)
- 		return NULL;
- 	reprs->num_reprs =3D num_reprs;
+ static inline void hci_free_xfer(struct hci_xfer *xfer, unsigned int n)
 =2D-
 2.25.1
 
