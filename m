@@ -2,80 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1899C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 15:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B794C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun, 12 Sep 2021 13:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6CE861153
-	for <linux-hardening@archiver.kernel.org>; Sat, 11 Sep 2021 15:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DC560F38
+	for <linux-hardening@archiver.kernel.org>; Sun, 12 Sep 2021 13:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232435AbhIKPsC (ORCPT
+        id S235206AbhILNMw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 11 Sep 2021 11:48:02 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:48695 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S230305AbhIKPsB (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 11 Sep 2021 11:48:01 -0400
-Received: (qmail 69147 invoked by uid 1000); 11 Sep 2021 11:46:48 -0400
-Date:   Sat, 11 Sep 2021 11:46:48 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org,
+        Sun, 12 Sep 2021 09:12:52 -0400
+Received: from mout.gmx.net ([212.227.17.22]:35423 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235203AbhILNMv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 12 Sep 2021 09:12:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1631452284;
+        bh=A/5R/9lReRnqhX6VardHyEyyLao6a251fVotksIzRz4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=FHaHEneD/JHM91TlbiVBwG1FybHQieys3tZ581/oKQypH5ceh3JkG1LwdYEUL6OUw
+         6zj1G4LfYdl7CYUgq8mQYxfThp3P/JSkZuEBxw3M8hcg0ZHdfJBeXyg1egHrYH6464
+         boDX61NkPwYOm4kq+wa75mjkSLQzXO7r/gqNkrmw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MbRfl-1mvz7q2KgT-00burL; Sun, 12 Sep 2021 15:11:23 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Simon Horman <simon.horman@corigine.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        oss-drivers@corigine.com, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: ohci: Prefer struct_size over open coded arithmetic
-Message-ID: <20210911154648.GA68944@rowland.harvard.edu>
-References: <20210911112631.10004-1-len.baker@gmx.com>
+Subject: [PATCH] nfp: Prefer struct_size over open coded arithmetic
+Date:   Sun, 12 Sep 2021 15:10:57 +0200
+Message-Id: <20210912131057.2285-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210911112631.10004-1-len.baker@gmx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xQAYY+Wh3B5HSBfIXdY8+Kf81F3qLDBWMoLrHBOCyshSYw3i/RW
+ e+K8wrfSv20BllJvs53spJa4W2SC/Mv0nkaEjszAWE1b1C0stbJ5yuK1Q0cUgoXk5rgjDaY
+ aOWPEMQIO+qHqaiWI3sIAyDp+dapwOfvBkjnxxdNny1dTg/en3+bMDOcnLlL26N738cCTal
+ 1d+67ZAZatc2kGXROTVOA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:u7CVJm1RPxk=:1VBoFGX8IlYt2jE+xxUaIL
+ ff2UltfrQLU1mqqJb7jFf35QnbmQO57kMXAJy8gR22BDvBp/yUkhfmJ+8iNAeX194eyzWW2QD
+ p8BHFY6AyLeKX425tsTzCJf99HV2pRGqpjzChBAM8aWbZ80YvAPdhkXLyqYjvin+TVNa0RjDE
+ ux17lqoxq5O4wxeaXD25fqeNG8JLwCvZQKYyzx4tTOnyZy28q7hf0aZ/sUVL4xfRMiadE6RfK
+ kRCqtMq78mOUWRcKl2fNVIPzEkLq1WPxBu9bfivYQThkGpmckjOgIkGt2JiYb1WDqgOca394K
+ AL5rKMh+ynSQfq7+bd0lOWIu+TllD2tmDn9Jaz8ndQgyVbjVp1Ciphc9piPDWSqfpNDFB1+RM
+ gHgfjNiNgbdd6qspL/UCMrn4t8NZtWUp/RvAk9BYgG0KLNgRuJB7jZkOZCxLFH1zANV+XnQPf
+ M8yKSjH3ErFBF4peSaueVxXwil3/IxBLrBdzI+KZ81rxE5pQZukSOlAbWa6MTaOTokKXWyJ10
+ sItVP+HqXOXOYXIdP8A5l9srpgHUiGu6Dsi0f3fkv62PSvEyAlcTbOZqO3ZTssut97rUIpspu
+ VG3IAxsuX2XfoeT82++CSkWAHIx6cbXK9fhz0VeQj9Q9kSSECoQZgwikkXiJ7T0bk7swReqyi
+ AEbFRePf9c1/tN3oc5SC58riSmyIfEAQ1120E/muKiOAGTQ1ZNvtnixQAaO9P1vav/GLkU8/S
+ PfWdhJDKK+Z1tv10ZFRT56wwpoc74oB3P4aJk+UKp+Few2Yfivok8fs3ChMiNNWvjE9IDR1Yz
+ Z+R6IuayR0RKmkJAdahcBWc72e/V/E2jGj6OpLEqqPquvPeWM6t6JTwdBfv2Pbuju7KVamqP8
+ Btj0H2phmuaKntjKaww8TWdu6FsKttQCJCHDbbj4iYc6FRPtSEKOmarRtzB6DAIUBibdYB/NN
+ +qQEjOPlqQdo4x/gfyLucU/3vTsoLi8yVPmf9s/bTJ64SoFzT4GG+HsOBd/u48GdPQfyfs3Tk
+ N57YioDiW8zSvlaq7bLt5TpT3XxmwicI7pMS5pDFVi2NunBbW0AUSs9k2ve6mpwitKIYgCv8Y
+ Rldt21TSBEQMd8=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Sep 11, 2021 at 01:26:31PM +0200, Len Baker wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the struct_size() helper to do the arithmetic instead of the
-> argument "size + count * size" in the kzalloc() function.
-> 
-> [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
-> Signed-off-by: Len Baker <len.baker@gmx.com>
-> ---
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+So, use the struct_size() helper to do the arithmetic instead of the
+argument "size + count * size" in the kzalloc() function.
 
->  drivers/usb/host/ohci-hcd.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
-> index 1f5e69314a17..666b1c665188 100644
-> --- a/drivers/usb/host/ohci-hcd.c
-> +++ b/drivers/usb/host/ohci-hcd.c
-> @@ -191,8 +191,7 @@ static int ohci_urb_enqueue (
->  	}
-> 
->  	/* allocate the private part of the URB */
-> -	urb_priv = kzalloc (sizeof (urb_priv_t) + size * sizeof (struct td *),
-> -			mem_flags);
-> +	urb_priv = kzalloc(struct_size(urb_priv, td, size), mem_flags);
->  	if (!urb_priv)
->  		return -ENOMEM;
->  	INIT_LIST_HEAD (&urb_priv->pending);
-> --
-> 2.25.1
-> 
+[1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
+ed-arithmetic-in-allocator-arguments
+
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ drivers/net/ethernet/netronome/nfp/nfp_net_repr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c b/drivers/n=
+et/ethernet/netronome/nfp/nfp_net_repr.c
+index 3b8e675087de..369f6ae700c7 100644
+=2D-- a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+@@ -499,8 +499,7 @@ struct nfp_reprs *nfp_reprs_alloc(unsigned int num_rep=
+rs)
+ {
+ 	struct nfp_reprs *reprs;
+
+-	reprs =3D kzalloc(sizeof(*reprs) +
+-			num_reprs * sizeof(struct net_device *), GFP_KERNEL);
++	reprs =3D kzalloc(struct_size(reprs, reprs, num_reprs), GFP_KERNEL);
+ 	if (!reprs)
+ 		return NULL;
+ 	reprs->num_reprs =3D num_reprs;
+=2D-
+2.25.1
+
