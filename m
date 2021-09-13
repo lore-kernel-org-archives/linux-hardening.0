@@ -2,254 +2,116 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E08C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 08:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C833C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 11:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5BC61051
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 08:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145A260ED8
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 11:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238361AbhIMJAb (ORCPT
+        id S239604AbhIML2U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Sep 2021 05:00:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236022AbhIMJAb (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Sep 2021 05:00:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F414461029;
-        Mon, 13 Sep 2021 08:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631523556;
-        bh=CwfHxitG9wk52V601afoOOoBW02DjRN5SudCah4N5Uc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t+GO5J1bNRJgY7k+CL+jaxFuXEHPHGwmbTU/cTgaE7Ik0XfWZUgKXtPEuyfNRogcH
-         YUMVsz7iHJV0hHFNXCgeaWJbt8o65LNt2RLEVbEDhjLC3vWjF8R0laBnmFS/UCMBJM
-         nGx2YL5udEKiH7eNa2J4FgP29EeoWWUT5PAxR+vWW8lcOog/HB4Y38Po6rWZDttq+2
-         YXqN0WHt749l0I8/JAIXxJmOOTMXP8qv8ICVemxpTS/Y52J822nTh8A5MiwgyXn2QA
-         4jY+8C2tdqi7ZxQtHtgUcX3QnBVofTDrzAUBhEI1FutV6L5nYq3LFn2BsoHCsNFcSL
-         RX/RpR3JRMDxQ==
-Date:   Mon, 13 Sep 2021 10:59:10 +0200
-From:   Robert Richter <rric@kernel.org>
-To:     Len Baker <len.baker@gmx.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Joe Perches <joe@perches.com>,
-        David Laight <David.Laight@aculab.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] EDAC/mc: Prefer strscpy or scnprintf over strcpy, sprintf
- and snprintf
-Message-ID: <YT8S3poKyd5Nr5cK@rric.localdomain>
-References: <20210903150539.7282-1-len.baker@gmx.com>
+        Mon, 13 Sep 2021 07:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239678AbhIML2R (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 13 Sep 2021 07:28:17 -0400
+X-Greylist: delayed 591 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Sep 2021 04:27:01 PDT
+Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [IPv6:2001:1600:3:17::42ad])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80918C061767
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Sep 2021 04:27:01 -0700 (PDT)
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4H7P832GLXzMppGC;
+        Mon, 13 Sep 2021 13:17:07 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [23.97.221.149])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4H7P821s1xzlhKSC;
+        Mon, 13 Sep 2021 13:17:06 +0200 (CEST)
+Subject: Re: [PATCH] landlock: Drop "const" argument qualifier to avoid GCC
+ 4.9 warnings
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210910223613.3225685-1-keescook@chromium.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <b269cdc1-a4f0-d614-f026-dc0f7c455da0@digikod.net>
+Date:   Mon, 13 Sep 2021 13:19:19 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210903150539.7282-1-len.baker@gmx.com>
+In-Reply-To: <20210910223613.3225685-1-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Len,
 
-On 03.09.21 17:05:39, Len Baker wrote:
-> strcpy() performs no bounds checking on the destination buffer. This
-> could result in linear overflows beyond the end of the buffer, leading
-> to all kinds of misbehaviors. The safe replacement is strscpy() [1].
+On 11/09/2021 00:36, Kees Cook wrote:
+> When building under GCC 4.9, the compiler warns about const mismatches:
 > 
-> However, to simplify and clarify the code, to concatenate labels use
-> the scnprintf() function. This way it is not necessary to check the
-> return value of strscpy (-E2BIG if the parameter count is 0 or the src
-> was truncated) since the scnprintf returns always the number of chars
-> written into the buffer. This function returns always a nul-terminated
-> string even if it needs to be truncated.
+> security/landlock/ruleset.c: In function 'insert_rule':
+> security/landlock/ruleset.c:196:34: error: passing argument 2 of 'create_rule' from incompatible pointer type [-Werror]
+>    new_rule = create_rule(object, &this->layers, this->num_layers,
+>                                   ^
+> security/landlock/ruleset.c:69:30: note: expected 'const struct landlock_layer ** const' but argument is of type 'struct landlock_layer (*)[]'
+>  static struct landlock_rule *create_rule(
+>                               ^
+> security/landlock/ruleset.c: In function 'landlock_insert_rule':
+> security/landlock/ruleset.c:240:38: error: passing argument 3 of 'insert_rule' from incompatible pointer type [-Werror]
+>   return insert_rule(ruleset, object, &layers, ARRAY_SIZE(layers));
+>                                       ^
+> security/landlock/ruleset.c:144:12: note: expected 'const struct landlock_layer ** const' but argument is of type 'struct landlock_layer (*)[1]'
+>  static int insert_rule(struct landlock_ruleset *const ruleset,
+
+I guess this is a bug in GCC 4.9 (i.e. missing automatic const upgrade).
+Couldn't we backport a fix to GCC 4.9 instead?
+
+>             ^
 > 
-> The main reason behind this patch is to remove all the strcpy() uses
-> from the kernel with the purpose to clean up the proliferation of
-> str*cpy() functions. Later on, the next step will be remove all the
-> strcpy implementations [2].
+> Drop "const" from the function definition.
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-> [2] https://github.com/KSPP/linux/issues/88
+> Cc: "Mickaël Salaün" <mic@digikod.net>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: linux-security-module@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  security/landlock/ruleset.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Co-developed-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Len Baker <len.baker@gmx.com>
+> diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
+> index ec72b9262bf3..64c37af88ee7 100644
+> --- a/security/landlock/ruleset.c
+> +++ b/security/landlock/ruleset.c
+> @@ -68,7 +68,7 @@ static void build_check_rule(void)
+>  
+>  static struct landlock_rule *create_rule(
+>  		struct landlock_object *const object,
+> -		const struct landlock_layer (*const layers)[],
+> +		struct landlock_layer (*layers)[],
 
-this patch looks good to me. I made some changes on top of it to
-further ease pointer arithmetic and also fix remaining
-sprintf/snprintf() users as it makes sense to have them all in a
-single change. See below. Boris, please apply.
+The "const layers" is not an issue, it should not be removed.
 
-Thanks,
+>  		const u32 num_layers,
+>  		const struct landlock_layer *const new_layer)
+>  {
+> @@ -143,7 +143,7 @@ static void build_check_ruleset(void)
+>   */
+>  static int insert_rule(struct landlock_ruleset *const ruleset,
+>  		struct landlock_object *const object,
+> -		const struct landlock_layer (*const layers)[],
+> +		struct landlock_layer (*layers)[],
 
--Robert
+Same here for the second const.
 
-From 01a3c62a533e71984dfff7189e247b3e848f1449 Mon Sep 17 00:00:00 2001
-From: Len Baker <len.baker@gmx.com>
-Date: Fri, 3 Sep 2021 17:05:39 +0200
-Subject: [PATCH] EDAC/mc: Prefer strscpy or scnprintf over strcpy, sprintf
- and snprintf
-
-strcpy() performs no bounds checking on the destination buffer. This
-could result in linear overflows beyond the end of the buffer, leading
-to all kinds of misbehaviors. The safe replacement is strscpy().
-[1][2]
-
-However, to simplify and clarify the code, to concatenate labels use
-the scnprintf() function. This way it is not necessary to check the
-return value of strscpy (-E2BIG if the parameter count is 0 or the src
-was truncated) since the scnprintf returns always the number of chars
-written into the buffer. This function returns always a nul-terminated
-string even if it needs to be truncated.
-
-While at it, fix all other broken string generation code that wrongly
-interprets snprintf()'s return code or just uses sprintf(), implement
-that using scnprintf() here too. Drop breaks in loops around
-scnprintf() as it is safe now to loop. Moreover, the check is
-needless: For the case when the buffer is exhausted, len never gets
-zero because scnprintf() takes the full buffer length as input
-parameter, but excludes the trailing '\0' in its return code and thus,
-1 is the minimum len.
-
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-[2] https://github.com/KSPP/linux/issues/88
-
- [ rric: Replace snprintf() with scnprintf(), rework sprintf() user,
-   drop breaks in loops around scnprintf(), introduce 'end' pointer to
-   reduce pointer arithmetic, use prefix pattern for e->location,
-   adjust subject and description ]
-
-Co-developed-by: Joe Perches <joe@perches.com>
-Signed-off-by: Joe Perches <joe@perches.com>
-Signed-off-by: Len Baker <len.baker@gmx.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/edac/edac_mc.c | 42 ++++++++++++++++++------------------------
- 1 file changed, 18 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 2c5975674723..9f82ca295353 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -66,14 +66,12 @@ unsigned int edac_dimm_info_location(struct dimm_info *dimm, char *buf,
- 	char *p = buf;
- 
- 	for (i = 0; i < mci->n_layers; i++) {
--		n = snprintf(p, len, "%s %d ",
-+		n = scnprintf(p, len, "%s %d ",
- 			      edac_layer_name[mci->layers[i].type],
- 			      dimm->location[i]);
- 		p += n;
- 		len -= n;
- 		count += n;
--		if (!len)
--			break;
- 	}
- 
- 	return count;
-@@ -341,19 +339,16 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
- 		 */
- 		len = sizeof(dimm->label);
- 		p = dimm->label;
--		n = snprintf(p, len, "mc#%u", mci->mc_idx);
-+		n = scnprintf(p, len, "mc#%u", mci->mc_idx);
- 		p += n;
- 		len -= n;
- 		for (layer = 0; layer < mci->n_layers; layer++) {
--			n = snprintf(p, len, "%s#%u",
--				     edac_layer_name[mci->layers[layer].type],
--				     pos[layer]);
-+			n = scnprintf(p, len, "%s#%u",
-+				      edac_layer_name[mci->layers[layer].type],
-+				      pos[layer]);
- 			p += n;
- 			len -= n;
- 			dimm->location[layer] = pos[layer];
--
--			if (len <= 0)
--				break;
- 		}
- 
- 		/* Link it to the csrows old API data */
-@@ -1027,12 +1022,13 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 			  const char *other_detail)
- {
- 	struct dimm_info *dimm;
--	char *p;
-+	char *p, *end;
- 	int row = -1, chan = -1;
- 	int pos[EDAC_MAX_LAYERS] = { top_layer, mid_layer, low_layer };
- 	int i, n_labels = 0;
- 	struct edac_raw_error_desc *e = &mci->error_desc;
- 	bool any_memory = true;
-+	const char *prefix;
- 
- 	edac_dbg(3, "MC%d\n", mci->mc_idx);
- 
-@@ -1087,6 +1083,8 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 	 */
- 	p = e->label;
- 	*p = '\0';
-+	end = p + sizeof(e->label);
-+	prefix = "";
- 
- 	mci_for_each_dimm(mci, dimm) {
- 		if (top_layer >= 0 && top_layer != dimm->location[0])
-@@ -1114,12 +1112,8 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 			p = e->label;
- 			*p = '\0';
- 		} else {
--			if (p != e->label) {
--				strcpy(p, OTHER_LABEL);
--				p += strlen(OTHER_LABEL);
--			}
--			strcpy(p, dimm->label);
--			p += strlen(p);
-+			p += scnprintf(p, end - p, "%s%s", prefix, dimm->label);
-+			prefix = OTHER_LABEL;
- 		}
- 
- 		/*
-@@ -1141,25 +1135,25 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 	}
- 
- 	if (any_memory)
--		strcpy(e->label, "any memory");
-+		strscpy(e->label, "any memory", sizeof(e->label));
- 	else if (!*e->label)
--		strcpy(e->label, "unknown memory");
-+		strscpy(e->label, "unknown memory", sizeof(e->label));
- 
- 	edac_inc_csrow(e, row, chan);
- 
- 	/* Fill the RAM location data */
- 	p = e->location;
-+	end = p + sizeof(e->location);
-+	prefix = "";
- 
- 	for (i = 0; i < mci->n_layers; i++) {
- 		if (pos[i] < 0)
- 			continue;
- 
--		p += sprintf(p, "%s:%d ",
--			     edac_layer_name[mci->layers[i].type],
--			     pos[i]);
-+		p += scnprintf(p, end - p, "%s%s:%d", prefix,
-+			       edac_layer_name[mci->layers[i].type], pos[i]);
-+		prefix = " ";
- 	}
--	if (p > e->location)
--		*(p - 1) = '\0';
- 
- 	edac_raw_mc_handle_error(e);
- }
--- 
-2.30.2
-
+>  		size_t num_layers)
+>  {
+>  	struct rb_node **walker_node;
+> 
