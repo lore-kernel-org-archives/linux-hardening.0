@@ -2,94 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C27AC433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 12 Sep 2021 20:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C605EC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 01:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF3160EE7
-	for <linux-hardening@archiver.kernel.org>; Sun, 12 Sep 2021 20:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BAE60FBF
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 01:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236197AbhILUj0 (ORCPT
+        id S236883AbhIMBzR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 12 Sep 2021 16:39:26 -0400
-Received: from gateway20.websitewelcome.com ([192.185.46.107]:17522 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236411AbhILUjX (ORCPT
+        Sun, 12 Sep 2021 21:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231810AbhIMBzR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 12 Sep 2021 16:39:23 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 0358D400D3751
-        for <linux-hardening@vger.kernel.org>; Sun, 12 Sep 2021 15:19:41 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id PWEomitE5rJtZPWEomPNke; Sun, 12 Sep 2021 15:38:06 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bTvHNmRto0c3Q12aHNZXcfzC8RmgCTvLXG0gbaQDzZs=; b=fAFqb0RbOxCoSFvl4espjd21av
-        6BKxxHMhumwxxYvF9U5YBgP72ZOBqSQ/OTdemj8UD1PxU2WU1+6K7LSMDZ9SmSUGwZ2MikTf6wBgu
-        e6/yNw+EuSlEPl8YCr9RdLOg0pr39n1V55xqvIpvQKp75J9VghU4Q3xGfxXVzk0BhHvcoDcH+usbJ
-        qtGFv0dDw8I+aylk5RKvmHON6lX5EJY8ZVdGk7ZxshOyR3y7pS74+YAtiBEf7jEUYieGrtilq7qSl
-        LFfCoT1il5VxYWOQAdxkTSlrSkiGOSKoco4vv9hj3WQynZKVA0uKbHv3mZgJIAcZzq1PVwJQs4GRW
-        OLDyRstA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:57174 helo=[192.168.15.9])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1mPWEo-000Mwx-5W; Sun, 12 Sep 2021 15:38:06 -0500
-Subject: Re: [Intel-wired-lan] [PATCH] ice: Prefer kcalloc over open coded
+        Sun, 12 Sep 2021 21:55:17 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79446C061574
+        for <linux-hardening@vger.kernel.org>; Sun, 12 Sep 2021 18:54:02 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id w78so8908682qkb.4
+        for <linux-hardening@vger.kernel.org>; Sun, 12 Sep 2021 18:54:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=+PfhPG9W/lVy5ramZlbvodr40rH8UAo/+DD6H/rYHgU=;
+        b=RRw5BTtqAvrwS9+emiwJjMqd2O39pRgO3Zd3l5FJNxz3o2Hrm6wuIgWuEvYJeGLuiS
+         NZDi+GQt2jNdsAoTzmoVu+FBqU1KrxU5cPyzWnCm0p3waCNglVKYCvf4rVZLr5V5Inzu
+         CBRk4OaF1GT+b4FFidVfQieGY21560FxDis9VeeXvFJ+WhBxzwqxGl6FoqVbBt0ADvwz
+         7KPF2QRTlOjt5dXmG9xPG4IgtGnumwCKO9Kz1I5k17CNhBmAjXFV+EkN+Z9FDDQNtE2y
+         RJOFMketDAz/+GIDL4v7ZhxBm2Firm1lrroKJ98UiuVsq/mTQe2/+jsZY7EY79PBW5fi
+         ucwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=+PfhPG9W/lVy5ramZlbvodr40rH8UAo/+DD6H/rYHgU=;
+        b=Hablxg8bL+PB7ySnTL2z8euQV7dzbE4a/d2/EOGV1Kg7WO0ib9FbhrGrn4K1tD6LZ/
+         +dpv/lh3EhIPuafRKsUkrAIf1mEQPRL38zMEhDU8LZAUh5XUFiQFMba6EP+koK7boo1V
+         5Efa3swdDLKVrVGlq9kWlpDUETriRtGGfbQcLEHuN0lp8qA4vjttG6WFKlS/moY/Cnod
+         vGltD4XbdmL8RZDOqXZM48K61JpdMLSoFJIAsSpj8Co64zt8sxaogpyoV+9a9TA74guC
+         XpNHokGWq1mOItYp0MnAXYxKwwz0idvuNyQtSA+s6GPgv8HOyvLlF3QNmXhpuMPcdKP1
+         Yp7g==
+X-Gm-Message-State: AOAM533TD68jYnG1pCrQo+13ce7h+hNmp1ftxUorSSbnSGYyDcM99Fl5
+        ZBZyI4y1Y3fwjHIkqSSuEO0iHw==
+X-Google-Smtp-Source: ABdhPJz1tPyRLt5iDx3vqQcqvJmS7pHTx2yQurIdV5JfgES/R1rDULM39SqHER96PakPtfNvMl/11w==
+X-Received: by 2002:a05:620a:1403:: with SMTP id d3mr7747441qkj.67.1631498041280;
+        Sun, 12 Sep 2021 18:54:01 -0700 (PDT)
+Received: from xanadu.home (modemcable108.170-21-96.mc.videotron.ca. [96.21.170.108])
+        by smtp.gmail.com with ESMTPSA id t188sm4412807qkf.22.2021.09.12.18.54.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Sep 2021 18:54:01 -0700 (PDT)
+Date:   Sun, 12 Sep 2021 21:54:00 -0400 (EDT)
+From:   Nicolas Pitre <npitre@baylibre.com>
+To:     Len Baker <len.baker@gmx.com>
+cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-i3c@lists.infradead.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i3c/master/mipi-i3c-hci: Prefer kcalloc over open coded
  arithmetic
-To:     Len Baker <len.baker@gmx.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-hardening@vger.kernel.org
-References: <20210905065020.8402-1-len.baker@gmx.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <8cd5adaf-6f83-d3df-abd2-b668d29b50a1@embeddedor.com>
-Date:   Sun, 12 Sep 2021 15:41:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+In-Reply-To: <20210912155135.7541-1-len.baker@gmx.com>
+Message-ID: <0611r11-rsq7-2n9-n834-9o31rq8qo737@onlyvoer.pbz>
+References: <20210912155135.7541-1-len.baker@gmx.com>
 MIME-Version: 1.0
-In-Reply-To: <20210905065020.8402-1-len.baker@gmx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1mPWEo-000Mwx-5W
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:57174
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Sun, 12 Sep 2021, Len Baker wrote:
 
-
-On 9/5/21 01:50, Len Baker wrote:
 > As noted in the "Deprecated Interfaces, Language Features, Attributes,
 > and Conventions" documentation [1], size calculations (especially
 > multiplication) should not be performed in memory allocator (or similar)
@@ -98,10 +86,6 @@ On 9/5/21 01:50, Len Baker wrote:
 > caller was expecting. Using those allocations could lead to linear
 > overflows of heap memory and other misbehaviors.
 > 
-> In this case this is not actually dynamic sizes: both sides of the
-> multiplication are constant values. However it is best to refactor this
-> anyway, just to keep the open-coded math idiom out of code.
-> 
 > So, use the purpose specific kcalloc() function instead of the argument
 > size * count in the kzalloc() function.
 > 
@@ -109,36 +93,26 @@ On 9/5/21 01:50, Len Baker wrote:
 > 
 > Signed-off-by: Len Baker <len.baker@gmx.com>
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-BTW... Len, feel free to CC me on all your patches related to KSPP work. :)
-
-Thanks
---
-Gustavo
+Acked-by: Nicolas Pitre <npitre@baylibre.com>
 
 > ---
->  drivers/net/ethernet/intel/ice/ice_arfs.c | 2 +-
+>  drivers/i3c/master/mipi-i3c-hci/hci.h | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_arfs.c b/drivers/net/ethernet/intel/ice/ice_arfs.c
-> index 88d98c9e5f91..3071b8e79499 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_arfs.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_arfs.c
-> @@ -513,7 +513,7 @@ void ice_init_arfs(struct ice_vsi *vsi)
->  	if (!vsi || vsi->type != ICE_VSI_PF)
->  		return;
+> diff --git a/drivers/i3c/master/mipi-i3c-hci/hci.h b/drivers/i3c/master/mipi-i3c-hci/hci.h
+> index 80beb1d5be8f..f109923f6c3f 100644
+> --- a/drivers/i3c/master/mipi-i3c-hci/hci.h
+> +++ b/drivers/i3c/master/mipi-i3c-hci/hci.h
+> @@ -98,7 +98,7 @@ struct hci_xfer {
 > 
-> -	arfs_fltr_list = kzalloc(sizeof(*arfs_fltr_list) * ICE_MAX_ARFS_LIST,
-> +	arfs_fltr_list = kcalloc(ICE_MAX_ARFS_LIST, sizeof(*arfs_fltr_list),
->  				 GFP_KERNEL);
->  	if (!arfs_fltr_list)
->  		return;
+>  static inline struct hci_xfer *hci_alloc_xfer(unsigned int n)
+>  {
+> -	return kzalloc(sizeof(struct hci_xfer) * n, GFP_KERNEL);
+> +	return kcalloc(n, sizeof(struct hci_xfer), GFP_KERNEL);
+>  }
+> 
+>  static inline void hci_free_xfer(struct hci_xfer *xfer, unsigned int n)
 > --
 > 2.25.1
 > 
-> _______________________________________________
-> Intel-wired-lan mailing list
-> Intel-wired-lan@osuosl.org
-> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
 > 
