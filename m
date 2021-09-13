@@ -2,82 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C605EC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 01:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847F9C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 08:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96BAE60FBF
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 01:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E78A60EE9
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Sep 2021 08:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236883AbhIMBzR (ORCPT
+        id S238025AbhIMIdC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 12 Sep 2021 21:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231810AbhIMBzR (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 12 Sep 2021 21:55:17 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79446C061574
-        for <linux-hardening@vger.kernel.org>; Sun, 12 Sep 2021 18:54:02 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id w78so8908682qkb.4
-        for <linux-hardening@vger.kernel.org>; Sun, 12 Sep 2021 18:54:02 -0700 (PDT)
+        Mon, 13 Sep 2021 04:33:02 -0400
+Received: from mail-dm6nam11on2106.outbound.protection.outlook.com ([40.107.223.106]:5601
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S238152AbhIMIcs (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 13 Sep 2021 04:32:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cDYqUBH5dYYKHAodg6tMdGXR83GrIt1iTbaNCVI96Pdh/yaGWAhwK8ZRE6DQLVtrL88OpJFWb9icfn7Uljwx2GlDuhx50dja1pJ1ATLOWLYfC3MZ40y11m5ap9IU8b9dQvpX5ElU9AKyHhLgW3cnlzSQrpOYcGOeuDzHNsELttF6O6h2nSdm+X5QwAI9P713Rt96hPbnBETfI5MyvIFaPX/fKuA+EM4Bfpx30mjQ5MoMFLWKb9ACpu6RIYBtcxkTTkHG9n+SzEZUrrvGwhqjdiUiIqHmJmAldx1S3BQTm3cBI71/LwuEXcyPQ9Q/OSxkR1hkxNES4qF56zC6dyvyPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=3pw8PRHgYZSWyr4uqLGmozteCtT2035EaAez7qeai0o=;
+ b=XPNivy2cePvQ6lQDOZlDcZt1K3lyNjcEWiiPiF1C0d2Cm1H+dcZ8HGxdk5v22QmG3lS4PDH8q8o/fLfk0Wbau5Fu1O4ovOOpV12KvxjgXsI0OVw+h5Ex/pi2xr8XehmRwH4H0MauiIFyzWNUNAxZk9SwdyaJkMIZQzOOgoRx3G57zXqAm6qZ/Jw3Y35Pl5yzgB4uIwRb7g60WEaFcw7D2DSlZ1uRmtLti0F7uJGDPFVOL+m7fFRAoXpPCyhqKA6i9IwNf4SCxrVSbtQJtw9nrsTLXakUOhTncW2k8WUlX9cgb6C9vCG7yHGvrRBg67n5d89BubZN//EufaCHDgQ6Qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=+PfhPG9W/lVy5ramZlbvodr40rH8UAo/+DD6H/rYHgU=;
-        b=RRw5BTtqAvrwS9+emiwJjMqd2O39pRgO3Zd3l5FJNxz3o2Hrm6wuIgWuEvYJeGLuiS
-         NZDi+GQt2jNdsAoTzmoVu+FBqU1KrxU5cPyzWnCm0p3waCNglVKYCvf4rVZLr5V5Inzu
-         CBRk4OaF1GT+b4FFidVfQieGY21560FxDis9VeeXvFJ+WhBxzwqxGl6FoqVbBt0ADvwz
-         7KPF2QRTlOjt5dXmG9xPG4IgtGnumwCKO9Kz1I5k17CNhBmAjXFV+EkN+Z9FDDQNtE2y
-         RJOFMketDAz/+GIDL4v7ZhxBm2Firm1lrroKJ98UiuVsq/mTQe2/+jsZY7EY79PBW5fi
-         ucwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=+PfhPG9W/lVy5ramZlbvodr40rH8UAo/+DD6H/rYHgU=;
-        b=Hablxg8bL+PB7ySnTL2z8euQV7dzbE4a/d2/EOGV1Kg7WO0ib9FbhrGrn4K1tD6LZ/
-         +dpv/lh3EhIPuafRKsUkrAIf1mEQPRL38zMEhDU8LZAUh5XUFiQFMba6EP+koK7boo1V
-         5Efa3swdDLKVrVGlq9kWlpDUETriRtGGfbQcLEHuN0lp8qA4vjttG6WFKlS/moY/Cnod
-         vGltD4XbdmL8RZDOqXZM48K61JpdMLSoFJIAsSpj8Co64zt8sxaogpyoV+9a9TA74guC
-         XpNHokGWq1mOItYp0MnAXYxKwwz0idvuNyQtSA+s6GPgv8HOyvLlF3QNmXhpuMPcdKP1
-         Yp7g==
-X-Gm-Message-State: AOAM533TD68jYnG1pCrQo+13ce7h+hNmp1ftxUorSSbnSGYyDcM99Fl5
-        ZBZyI4y1Y3fwjHIkqSSuEO0iHw==
-X-Google-Smtp-Source: ABdhPJz1tPyRLt5iDx3vqQcqvJmS7pHTx2yQurIdV5JfgES/R1rDULM39SqHER96PakPtfNvMl/11w==
-X-Received: by 2002:a05:620a:1403:: with SMTP id d3mr7747441qkj.67.1631498041280;
-        Sun, 12 Sep 2021 18:54:01 -0700 (PDT)
-Received: from xanadu.home (modemcable108.170-21-96.mc.videotron.ca. [96.21.170.108])
-        by smtp.gmail.com with ESMTPSA id t188sm4412807qkf.22.2021.09.12.18.54.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Sep 2021 18:54:01 -0700 (PDT)
-Date:   Sun, 12 Sep 2021 21:54:00 -0400 (EDT)
-From:   Nicolas Pitre <npitre@baylibre.com>
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3pw8PRHgYZSWyr4uqLGmozteCtT2035EaAez7qeai0o=;
+ b=ukP0YMkmtK9zt31gbr5nikZJquGncmU25DSo2s+Pr38zJHjUBO6bjM6962F75an5uTTS8LZDmrfsj5sCxU8iQw/SuTHm3XGmYxgv5D6anjzGDdj74kFjguyfARSG8b9H7mDW068XYgvGgqiOiY2lphBMhoohN5sX3gq5thtsSII=
+Authentication-Results: gmx.com; dkim=none (message not signed)
+ header.d=none;gmx.com; dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by PH0PR13MB4780.namprd13.prod.outlook.com (2603:10b6:510:79::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.10; Mon, 13 Sep
+ 2021 08:31:30 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::e1d9:64d0:cb4f:3e90]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::e1d9:64d0:cb4f:3e90%7]) with mapi id 15.20.4523.013; Mon, 13 Sep 2021
+ 08:31:30 +0000
+Date:   Mon, 13 Sep 2021 10:31:25 +0200
+From:   Simon Horman <simon.horman@corigine.com>
 To:     Len Baker <len.baker@gmx.com>
-cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Kees Cook <keescook@chromium.org>,
-        linux-i3c@lists.infradead.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i3c/master/mipi-i3c-hci: Prefer kcalloc over open coded
- arithmetic
-In-Reply-To: <20210912155135.7541-1-len.baker@gmx.com>
-Message-ID: <0611r11-rsq7-2n9-n834-9o31rq8qo737@onlyvoer.pbz>
-References: <20210912155135.7541-1-len.baker@gmx.com>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        oss-drivers@corigine.com, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfp: Prefer struct_size over open coded arithmetic
+Message-ID: <20210913083124.GB30223@corigine.com>
+References: <20210912131057.2285-1-len.baker@gmx.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210912131057.2285-1-len.baker@gmx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: AM0PR03CA0103.eurprd03.prod.outlook.com
+ (2603:10a6:208:69::44) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Received: from corigine.com (2001:982:7ed1:403:201:8eff:fe22:8fea) by AM0PR03CA0103.eurprd03.prod.outlook.com (2603:10a6:208:69::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14 via Frontend Transport; Mon, 13 Sep 2021 08:31:28 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1c5ff7dc-5157-4631-be04-08d97690e303
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4780:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <PH0PR13MB4780E73F5A501211D8FEB145E8D99@PH0PR13MB4780.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aVSHL+HFOozNPsVwrFGNC8gTSK8nEzMCpgAEPsS+rjkxOekL0vmgtk+Gq403zKzQYLt3uMdS36Ev0q/ZoISHWpRvKfTmNmhrcbngEUWoIwMO7lqv5Cap6Xg7oXNKvEEWWNmFwnFWNgwJyT/ntELzmlfexRTTA3j77ofY14UCqzW1BzJYChJFFbaggT7a94XzP2OWAMjsQjxNmmJh4r4BelU0KMwqL9KQ5/m/iGIWl9GudE0xkdaTKTat8Lmuj7dvALcIui8Kuyl19RVo/2BMRBIym0WGrH0rqf8Dj/rDG77WSt+q0E+fYdNOWwor/KKDc9s7IQOkgz62RQlDMhWw3VoCwUVofYy79FyGt+0eD1eMBlc5cuPeXJrky7Q/Mnu3vb1IbHUZQoobR9X7sDZFizbqRAm/RQgTnBblHyeT5JD5F+WZaEBEFV+k8W6VXV+XUaRdjLNF00iPZxOM+9jlASp29UfpoXF+YtJoG6NGFQoIA1JflAgoVe1+FLU++y2gkrtWy3QpPXKMvNIeheNzk/bc33FAKZH6be2CwHfNpHDUt6sjDSqpfg5C/tWjMLn79mFQpVTov+Tz7DX/pooqnX9Tc2MN2kcCniL319ZWXmbG+MGBGbAat51U8IF3JjJvTlDHyCK9GaFjI5RuocHVYoY2nyBnjtBxCrw5p63BGkAGFJEtkooKzRSEWHfkIU0/J02+pVVs7SsjKKkCfJ0sJyJKA0nrwuXfqkWOhTkzb5WmzGC+fW140x8yy9ZLTyWzkZkVlsxmuDwxH3FE8Rtg32x4YLF4E4e4uoAL29f8rbE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(39830400003)(376002)(136003)(396003)(366004)(52116002)(2906002)(4326008)(316002)(6916009)(33656002)(2616005)(66476007)(66556008)(8886007)(86362001)(83380400001)(6666004)(36756003)(54906003)(1076003)(66946007)(8936002)(55016002)(38100700002)(966005)(5660300002)(7696005)(186003)(44832011)(8676002)(478600001)(518174003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GZd69KRbXK5ZE4BSiFn7a44UZIPKIK0QNrZdFUn5d0rewOYio/TIIW3nvTMt?=
+ =?us-ascii?Q?q4sG7FaGeamK34ax4M2gIRwTRWsbdtqMY4al2lzMB+sr7ri5vng+IKOlNVbJ?=
+ =?us-ascii?Q?UhvvUlQYpAXTtZI5IpB5qIeEsh0X5m4/9tuesLp0KewxAwQhXWm3vMTD12EG?=
+ =?us-ascii?Q?igBoKHh+ruB91Kq8o6sAAmsFw3Iwvrjyhh66wRZNNCYT7eJyA/o5pGU88tYU?=
+ =?us-ascii?Q?n2OwOZFbYj34NzolAkg///FIA1maptf9d5A26Tus3BIHypHmrTGZF/k/Hukr?=
+ =?us-ascii?Q?lNjw8JRkG6p/tmQ41+wfIrepuaEfus0I0Czjd5WFTJvqcf4JhDJe0rvhqjcf?=
+ =?us-ascii?Q?3Rk0/v9k/IE+g0cuDh1cUCPrcnsbvCBXpMV7JE/ogfJT4nNhzia8R6Ddi5TL?=
+ =?us-ascii?Q?QYi8rACYQCzTBbzgxLtDynvezWBgRYIFPz9/S+GtlTpIabhfA3zEqNkhLaLF?=
+ =?us-ascii?Q?YyZwrydTxnLCfnCtSndpP1mdDstDLu7Zwnsa4KT8+HxkWf39h6Avh1dIs77H?=
+ =?us-ascii?Q?Rv+jXP8Ol6iVLFCMLw/yhVsiC8ERvPcS6kpoV3+A2j9xaclze+9Y7vUYoREF?=
+ =?us-ascii?Q?fhxCO95ilZqw7NnVRIk85xzWkfhJSIffhMtXlKADbPcJTHdEhrABlruXkOxn?=
+ =?us-ascii?Q?c9xseF6TDXe7gCbkFum5pg7yl5MDrGUU5KKRP8Iex9uUPdNtV5NUHDfos/zE?=
+ =?us-ascii?Q?gnl87egfsN0Mwjo/d6O8gKAba5+MgqA2zZksaJxaiBInSQajZv7b5aaC/z5P?=
+ =?us-ascii?Q?HPeVxQ7gstbbWh98HJ3Ps1wkvQJiUhQrX1MaY7Bo5z1QH5e7Hz78H37DpESs?=
+ =?us-ascii?Q?1XmFKBUvDerESaznWnGlbbWSieofZBAz2kYEhmDosiRZ2FBcFf9UP9gCy7/9?=
+ =?us-ascii?Q?JZXe83dfETS7Gfd3+ZhKAT+sN1iUbVMRoKJGtR25xWU2cMMzPkUhh/FDGjTQ?=
+ =?us-ascii?Q?CJiiPttQijqJ8VctEv9q+GSl8imBEH1hj1iF9ZyJDq9ZyaoxxamqM2XAEwwP?=
+ =?us-ascii?Q?gDtnSmAWVFUw1/xyMNMRgS6gKtWmo1r3nho6+w7FRmuqpPY0qKw2twmLVrS6?=
+ =?us-ascii?Q?nxGxtu6VmIqYs3JMDL6dZRCXhMG+ggx9kR8ncoXE1JGIZwudVEsoGwZu+itC?=
+ =?us-ascii?Q?atrFEzil/jFYV5paKDW/F7t4mQFtcc0JJE3W4UiYeCd6W+J6zYgCoS6aH8Wm?=
+ =?us-ascii?Q?sE+dB/JKpD/DdgMEJN+pEQphj5itZNGWjessU57pAj4GrgGPqrawJVVT5PXF?=
+ =?us-ascii?Q?Sffef97BnWlOvhmNmPA39+bPxKPwR26L4RroeC+4OlN1K+kFtMuCmXrTzPfb?=
+ =?us-ascii?Q?SzYqDrCbEtiz92Tfkv5gT8aoZ2ExaGzV13F02h23fXFbJUMOMt+SpHnwavEx?=
+ =?us-ascii?Q?U02XkaypcF0oeHyNK5yzDXRdwnsL?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c5ff7dc-5157-4631-be04-08d97690e303
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2021 08:31:30.6882
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: j9aKx0PsDpDLXckZLDNffHx5iQea/C6GWr8W99m2kq400VYqlDJZ7C9wgqLYmiZe/4p/G+Nb3JK4imOUHta0PTZwMPmT9Ss3C52u/+RbDaw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR13MB4780
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, 12 Sep 2021, Len Baker wrote:
-
+On Sun, Sep 12, 2021 at 03:10:57PM +0200, Len Baker wrote:
 > As noted in the "Deprecated Interfaces, Language Features, Attributes,
 > and Conventions" documentation [1], size calculations (especially
 > multiplication) should not be performed in memory allocator (or similar)
@@ -86,33 +127,33 @@ On Sun, 12 Sep 2021, Len Baker wrote:
 > caller was expecting. Using those allocations could lead to linear
 > overflows of heap memory and other misbehaviors.
 > 
-> So, use the purpose specific kcalloc() function instead of the argument
-> size * count in the kzalloc() function.
+> So, use the struct_size() helper to do the arithmetic instead of the
+> argument "size + count * size" in the kzalloc() function.
 > 
 > [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 > 
 > Signed-off-by: Len Baker <len.baker@gmx.com>
 
-Acked-by: Nicolas Pitre <npitre@baylibre.com>
+Reviewed-by: Simon Horman <simon.horman@corigine.com>
 
 > ---
->  drivers/i3c/master/mipi-i3c-hci/hci.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/net/ethernet/netronome/nfp/nfp_net_repr.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/i3c/master/mipi-i3c-hci/hci.h b/drivers/i3c/master/mipi-i3c-hci/hci.h
-> index 80beb1d5be8f..f109923f6c3f 100644
-> --- a/drivers/i3c/master/mipi-i3c-hci/hci.h
-> +++ b/drivers/i3c/master/mipi-i3c-hci/hci.h
-> @@ -98,7 +98,7 @@ struct hci_xfer {
-> 
->  static inline struct hci_xfer *hci_alloc_xfer(unsigned int n)
+> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+> index 3b8e675087de..369f6ae700c7 100644
+> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+> @@ -499,8 +499,7 @@ struct nfp_reprs *nfp_reprs_alloc(unsigned int num_reprs)
 >  {
-> -	return kzalloc(sizeof(struct hci_xfer) * n, GFP_KERNEL);
-> +	return kcalloc(n, sizeof(struct hci_xfer), GFP_KERNEL);
->  }
+>  	struct nfp_reprs *reprs;
 > 
->  static inline void hci_free_xfer(struct hci_xfer *xfer, unsigned int n)
+> -	reprs = kzalloc(sizeof(*reprs) +
+> -			num_reprs * sizeof(struct net_device *), GFP_KERNEL);
+> +	reprs = kzalloc(struct_size(reprs, reprs, num_reprs), GFP_KERNEL);
+>  	if (!reprs)
+>  		return NULL;
+>  	reprs->num_reprs = num_reprs;
 > --
 > 2.25.1
-> 
 > 
