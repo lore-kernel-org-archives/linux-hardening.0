@@ -2,132 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E57C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 22:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40D5C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 22:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4C91610A2
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 22:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C955060EB4
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 22:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235315AbhINWKJ (ORCPT
+        id S235637AbhINWct (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 18:10:09 -0400
-Received: from gateway20.websitewelcome.com ([192.185.68.24]:45135 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234956AbhINWKJ (ORCPT
+        Tue, 14 Sep 2021 18:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235645AbhINWcp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 18:10:09 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 587DA401129CE
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 16:27:11 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id QGFLmhOhlrJtZQGFLmOBLm; Tue, 14 Sep 2021 16:45:43 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2vSlWpDlgQ1WCtKW+iJxypZWQ+3srQCmJtCimsZZbKQ=; b=ccvX3c8vYx2soiyQjSD3Y3K9ld
-        9n8goroyewasfqmu9ivOOmOTa9INFz7yHnPJ9azhVmUGNyiekWz9n/lTDaBAAJuN7TXnRQnQewfra
-        yLoOnkE78oNRJR2Dt8+zAiXw/iUMCXDZPWQiDx8DCpCova0lD/z5VLA83pYB8s0ZJz0pAqCGlp4Tz
-        JaRPSkMp/vCIeWhkRSJOGwpOh6FbNWPWAxjwL8JbFfGGOBjbORla0GnVQ9kHpwVOfjCErxqoD0XVl
-        x279Qwh5Mjb2yhVQHWf93gTuFWGPWS2nccT1D3QueiBPvKXsaQiE12MeTd1YhutRZJDtmVAXyDsBh
-        FPleGuxw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:35226 helo=[192.168.15.9])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1mQGFK-003opJ-Uw; Tue, 14 Sep 2021 16:45:42 -0500
-Subject: Re: [PATCH] Input: omap-keypad - prefer struct_size over open coded
- arithmetic
-To:     Len Baker <len.baker@gmx.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210911112716.10067-1-len.baker@gmx.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <32777a69-297a-f68a-d0c3-e5920035531b@embeddedor.com>
-Date:   Tue, 14 Sep 2021 16:49:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Tue, 14 Sep 2021 18:32:45 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC62C061574
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 15:31:27 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id o11so1460067ljp.8
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 15:31:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/NVWJihw8+mxkblMeUMKWZHa5HcW57V47+/ryRA4f4g=;
+        b=qgFutAKEGpZf/SKejV/Bi2NvnFIej9XU7ZBF5Rsx7JkwnAFyYg3lckowPNJ17rk4mk
+         DV3q6AswIVnkJ/uQDSz3gsB946gSRsqJcBwHVi8iqbvUqaSIU04Vgj90096Fmxf+GWdy
+         I8Hd6on20wzkR5xl0kJGh5nQw44HLi/F6vtULV3QuN8FIByAMCEvwqyldqODg+2+vVjj
+         DOcdlURnGyYkSEVHXi7yl7y9pR9foHVBUJunF6gGn+NLicmzott3wMS8dDUM42YY9UEk
+         /LuBflX18x1HOIDjgpG3Svi7P8/2W+Ra1wC0LZa3Lbn8T6PyYcN9w8le+LW0PGIhBRd5
+         4Eqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/NVWJihw8+mxkblMeUMKWZHa5HcW57V47+/ryRA4f4g=;
+        b=J60FtsrHifUuBXpnm1JKXacPVGe5ytdeO8dGLZC1uBhA0CPx+noj/KMU3gNn3GD4EO
+         vmKBGjGaypCHwinOo+D/T1Wh2T7nvI3sxlGtJB//OSf2drHkTWD0DVXSS3JLHbM2vxeY
+         aHcxgNSyz9FXa1iB3ot8PP7/lGFxNogT+HNkk1/+Rqo+uhhwB2eOwLB08cE1RF2oATtS
+         fTh6rDIYEg5MVCoLkV+x8UpngkzPi1nopNB+6xJlag009mF/fpPmdpkPxqIV8VoihG4k
+         FMyAkmtnpuyL95fUskevByrBTyEaHXUXwFjvJVRtht+rnSd9t1xwp9Cd9HWsNwFJNrpZ
+         9TjA==
+X-Gm-Message-State: AOAM532qYqc4VNfxaRNDxH6J3AWOWrhnrFYbgJeFQcIPYfYMDy1q9NW/
+        w6XbFvrJeBX00Nmb+8guV81hAt9bJpsrxxaOgMvHFQ==
+X-Google-Smtp-Source: ABdhPJzfSMfk3cB0ZCvwLiGPWOn8ZNgyMxOydEvYDNoBwhQ3myvaaomRVN0JfSKn3Mu8Vcacbr1v4PNVRcOKeKSEf0Q=
+X-Received: by 2002:a2e:b551:: with SMTP id a17mr17253096ljn.128.1631658685761;
+ Tue, 14 Sep 2021 15:31:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210911112716.10067-1-len.baker@gmx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1mQGFK-003opJ-Uw
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:35226
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20210914191045.2234020-1-samitolvanen@google.com>
+ <20210914191045.2234020-12-samitolvanen@google.com> <CAKwvOd=OvR8iZogXhMxkbt5qT7jbhaARgk5NsCzhpkjoZ7yy5Q@mail.gmail.com>
+ <CABCJKudRDcwfkSK205Pb__hzLWQPUFhbjUtFPbctdPAycSOKQw@mail.gmail.com>
+In-Reply-To: <CABCJKudRDcwfkSK205Pb__hzLWQPUFhbjUtFPbctdPAycSOKQw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 14 Sep 2021 15:31:14 -0700
+Message-ID: <CAKwvOd=q1xhn9OEyowWyMeDW8CbWW4=nRmdE1tHggjCZKr7xrA@mail.gmail.com>
+Subject: Re: [PATCH v3 11/16] x86/purgatory: Disable CFI
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, Sep 14, 2021 at 1:30 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> On Tue, Sep 14, 2021 at 1:02 PM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > On Tue, Sep 14, 2021 at 12:11 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+> > >
+> > > Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
+> > >
+> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> >
+> > I kind of prefer the existing convention that has explicit guards on
+> > specific configs (ie. CONFIG_FUNCTION_TRACER, CONFIG_STACKPROTECTOR,
+> > CONFIG_STACKPROTECTOR_STRONG, CONFIG_RETPOLINE); it's more obvious
+> > which configs may introduce which flags that are problematic. This
+> > patch is ok as is, but it kind of makes this Makefile more
+> > inconsistent.  I would prefer we had the explicit checks.
+>
+> The Makefile does already use DISABLE_STACKLEAK_PLUGIN in a similar
+> way, but I don't have a strong preference here.
 
+mmm...DISABLE_STACKLEAK_PLUGIN adds to PURGATORY_CFLAGS. This patch
+adds to PURGATORY_CFLAGS_REMOVE.
 
-On 9/11/21 06:27, Len Baker wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the struct_size() helper to do the arithmetic instead of the
-> argument "size + count * size" in the kzalloc() function.
-> 
-> [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
-> Signed-off-by: Len Baker <len.baker@gmx.com>
+> I can move this into
+> an ifdef if it makes things cleaner.
+>
+> > Does CFI actually do any instrumentation in these object files? I
+> > guess issues in purgatory cause silent/hard to debug kexec failures?
+>
+> The compiler shouldn't add any actual CFI instrumentation here right
+> now, but I would prefer to avoid issues in future.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
-
-> ---
->  drivers/input/keyboard/omap-keypad.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/omap-keypad.c b/drivers/input/keyboard/omap-keypad.c
-> index dbe836c7ff47..eb3a687796e7 100644
-> --- a/drivers/input/keyboard/omap-keypad.c
-> +++ b/drivers/input/keyboard/omap-keypad.c
-> @@ -190,8 +190,7 @@ static int omap_kp_probe(struct platform_device *pdev)
->  	row_shift = get_count_order(pdata->cols);
->  	keycodemax = pdata->rows << row_shift;
-> 
-> -	omap_kp = kzalloc(sizeof(struct omap_kp) +
-> -			keycodemax * sizeof(unsigned short), GFP_KERNEL);
-> +	omap_kp = kzalloc(struct_size(omap_kp, keymap, keycodemax), GFP_KERNEL);
->  	input_dev = input_allocate_device();
->  	if (!omap_kp || !input_dev) {
->  		kfree(omap_kp);
-> --
-> 2.25.1
-> 
-> 
-> 
-> 
+Ok, good to know.
+-- 
+Thanks,
+~Nick Desaulniers
