@@ -2,148 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63D5C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 20:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C30C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 20:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A35A36112D
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 20:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFD560E08
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 20:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233290AbhINUD1 (ORCPT
+        id S233263AbhINUDi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 16:03:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32844 "EHLO
+        Tue, 14 Sep 2021 16:03:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232840AbhINUD0 (ORCPT
+        with ESMTP id S233328AbhINUDc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 16:03:26 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA18C061766
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 13:02:08 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id bb10so132791plb.2
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 13:02:08 -0700 (PDT)
+        Tue, 14 Sep 2021 16:03:32 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD7CC061767
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 13:02:14 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id f2so914042ljn.1
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 13:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ytz9T65KINeMDYgtvEhkkCARVDqnbfdteXwgWuVKDiI=;
-        b=NRuom6JboBrj4IXL+pBGw7eEz90ljXX1tfKU8KHlfdND+6f8WcEcq3XSl5fZ+Z7Hm7
-         jOf2r+/EUDLBo2NN6Fo36PIWetd1fxV20GRa8K/6eGrxrDkSGtLwzkC0HQ2wotAzsSqJ
-         QwxakmNvcd59dGryK2aUYTK0qGCUv6FnpFEms=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sbWkolcm+ANzoV9xuDvSV9WrohIVsxKiIB6DNRxGuYQ=;
+        b=AumVqFTPEOpwx/P01HDSDl0Xyg9EZjukpRm4GjNnTxYi4iflx8ADSvZYffaWzo6YRX
+         ZlUPMpQATGWyZ1ymbyqu+Y6A8p/ZyiaEjbs8428eLfoRyWqoArZf0Lgc0mv2n3fHfuA7
+         QdHyKbFtIF6C2xzsgZHoB67ZBy2bxmxdrQVKZvTQdPzS0LgRbGylCT5dQszKRQb1btUP
+         TKMz1/TYe9Mokaf2zDFhR7pOhOlu661WSTCEWEyGBh9JZ0l84CoOTMDjeeocYnZdCbiH
+         5sJq0K/cPviZeLfsgxoWFa3mOqyNIgDWabCPWdMZ1es8uEpGhWgrBm9rmUpF3iGlRS2J
+         QUiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ytz9T65KINeMDYgtvEhkkCARVDqnbfdteXwgWuVKDiI=;
-        b=5/N+5sacOG47G0Ioq4l8xsVWzB1hksfR3xFdE2RREw9TsUI6/g+UZKofuqUfuMMa9b
-         677/vkRTB4fi9QbdCB8YZ7siIOKnIo9kqtJE0wfoeEbP4oVDHl78pBhsSHj+gFIQXRdr
-         TX7d9KzPfGL0+fHujS0y9R2F3Ni07EePIPlK9Pvx8HzWe/TWqTHlm/2+ahBE3PLFA11u
-         9gGojhDCNcV9Lzntw5JOO/POWx2M7ZV+bYjSOc9qW0Y2AvI44CNUO13Drd/N3cTLSWsv
-         SrMPlSrr/A4IqYvACzy74ASXaxS1mxrfHr0ySgoTnIN/9qx6t6pisCGDkaXzvfFyYMl2
-         kcbQ==
-X-Gm-Message-State: AOAM533fUjdkCkxWlzp6LAVF6zzCsFM8DGAc5dCGZKZH/Psmx+v1qyb+
-        bPiKGbvRn+prb7Bv5lYMjLyN9A==
-X-Google-Smtp-Source: ABdhPJxhhZk1i7zHZPiprze3RqdD3yBPfw9oRSO69WtgTUwL8hmFgpqNya25NvLvysnJFy0XAsg0ng==
-X-Received: by 2002:a17:902:8a83:b0:132:6674:f28b with SMTP id p3-20020a1709028a8300b001326674f28bmr16382589plo.63.1631649727515;
-        Tue, 14 Sep 2021 13:02:07 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m21sm2406530pjl.14.2021.09.14.13.02.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 13:02:06 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>, llvm@lists.linux.dev,
-        Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] hardening: Avoid harmless Clang option under CONFIG_INIT_STACK_ALL_ZERO
-Date:   Tue, 14 Sep 2021 13:02:03 -0700
-Message-Id: <20210914200203.1667751-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sbWkolcm+ANzoV9xuDvSV9WrohIVsxKiIB6DNRxGuYQ=;
+        b=IyDtcFtu53VVeYWezNHUAm0fqtSvNJ9m8aFg4lBRX64njvg8RX6qV7QsDaVNURLAGW
+         LZijqhza6LZPMe/4feV72cgEkYZaZnGJKJdsGW4pLjnryoIQ45AMP/+GfunaLeQv723Q
+         waCvyLLDH5mM2BlSXQAHmr4pZ3UPEwVZvOgbtHQQCaG91mt1oBD9eU7IXiAepUgub3vc
+         fCiutrOuqd5fJex2uXzyyvZ8un1o/o0ybNsmlIME/sHV+GIQYhSg8Fii4awvd18jMrYq
+         KLO9H0XUppDWtzFHpCjoIzQxiJVg/t1IEEZnLj2qlojhP8jWOMs+ZDaBeUvf5Wb/AEUY
+         cmaw==
+X-Gm-Message-State: AOAM530XdxJKs5Wd0Euruow5LiEsE2d7tDYbDeJj8q4ayMNESxYJVbXj
+        uC/ZoVH9085QMM56Kwgp41ZD7JO0d5Os35B9WGlAcmAxsPIsvg==
+X-Google-Smtp-Source: ABdhPJw4LtQ05rJ+hXSjPwQcTef45Tg42XsJIXLFX5Za0EUr6bqFR/mLTAL/6ZogeLtnD6KV3CulDGGwOquR7AbFCUA=
+X-Received: by 2002:a2e:750e:: with SMTP id q14mr16766504ljc.338.1631649732696;
+ Tue, 14 Sep 2021 13:02:12 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2977; h=from:subject; bh=imXvSq9i08/jXla4+sBmsEoHRgxDVq0c/pR4Y+Src2Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhQP+6KIBv7ADhwLtBfRJcxajHiIjU9syPZkgPPvze 7pK8/OSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYUD/ugAKCRCJcvTf3G3AJmttD/ 4mVU7Uy78lGKS9GG4/AATbbI2r+H4dlMvkCBdPoS9u0ZZWy9ANO/hgX4YAbWMHyJlcwuYaEF0qlNXY FH+7dggnZaFS02i3ZFJLPcdDZPEBZnFO87uTxXL9lDha35X9mC7epPNTP4noj25bU5erE5pbxyxPDu DqImezS/gxrMsa1DPkvzKshSTEOM/LfO9VmN9wucjUMzlEYZzsToT+DbvdczK0B5RgoCSY787J5FYu 6P+N5A3SeT4ob22KoyAGNYGhXjELxTAPqnvXbj0CEkRh1WKNc8Knz/R9mk3FCx0qMkCRx5UxqYXMc2 E46IBRhrauS2lc2V0BQ9Ucip2broVQVj/A5jWAt7zd3JubGP14NTreyt9tV3Ry21uOrZfpipH/Txh5 plKgkla9cKh4yOR6PXD6wmEihq0pkOrOg3HSkWLtH2/dknakAYmN863uoCRPbe86Y2PMyM9uy1EU7V 9pS8Hz+GnxJLTX6HMJvQZvCyfQ/9Nj996X3+9iXDguWxM1fqrw9vwr/qdP1GO0jMKb/CqdAUNM1Xge 2tzx3f9Ds6ue6YV6t28roXbHEyYyTwzggRYDpWyj6pbN3NknET2P0o8TNtnCBFLDYyQKwc9YstZ02m vuyuoahu6RDM2jnuT5Khd3rtsnEBEbQW7Wp952MN5xrEpYIsZ2Os14rEiVNw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20210914191045.2234020-1-samitolvanen@google.com> <20210914191045.2234020-12-samitolvanen@google.com>
+In-Reply-To: <20210914191045.2234020-12-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 14 Sep 2021 13:02:01 -0700
+Message-ID: <CAKwvOd=OvR8iZogXhMxkbt5qT7jbhaARgk5NsCzhpkjoZ7yy5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 11/16] x86/purgatory: Disable CFI
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Currently under Clang, CC_HAS_AUTO_VAR_INIT_ZERO requires an extra
--enable flag compared to CC_HAS_AUTO_VAR_INIT_PATTERN. GCC does not,
-and will happily ignore the Clang-specific flag. However, its presence
-on the command-line is both cumbersome and confusing. Due to GCC's
-tolerant behavior, though, we can continue to use a single Kconfig
-cc-option test for the feature on both compilers, but then drop the
-Clang-specific option in the Makefile.
+On Tue, Sep 14, 2021 at 12:11 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
+>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: llvm@lists.linux.dev
-Fixes: dcb7c0b9461c ("hardening: Clarify Kconfig text for auto-var-init")
-Suggested-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/lkml/20210914102837.6172-1-will@kernel.org/
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- Makefile                   | 6 +++---
- security/Kconfig.hardening | 5 ++++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+I kind of prefer the existing convention that has explicit guards on
+specific configs (ie. CONFIG_FUNCTION_TRACER, CONFIG_STACKPROTECTOR,
+CONFIG_STACKPROTECTOR_STRONG, CONFIG_RETPOLINE); it's more obvious
+which configs may introduce which flags that are problematic. This
+patch is ok as is, but it kind of makes this Makefile more
+inconsistent.  I would prefer we had the explicit checks.
 
-diff --git a/Makefile b/Makefile
-index 34a0afc3a8eb..72d165ffabdb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -831,12 +831,12 @@ endif
- 
- # Initialize all stack variables with a zero value.
- ifdef CONFIG_INIT_STACK_ALL_ZERO
--# Future support for zero initialization is still being debated, see
--# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
--# renamed or dropped.
- KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero
-+ifdef CONFIG_CC_IS_CLANG
-+# https://bugs.llvm.org/show_bug.cgi?id=45497
- KBUILD_CFLAGS	+= -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
- endif
-+endif
- 
- # While VLAs have been removed, GCC produces unreachable stack probes
- # for the randomize_kstack_offset feature. Disable it for all compilers.
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index 90cbaff86e13..ded17b8abce2 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -23,13 +23,16 @@ config CC_HAS_AUTO_VAR_INIT_PATTERN
- 	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
- 
- config CC_HAS_AUTO_VAR_INIT_ZERO
-+	# GCC ignores the -enable flag, so we can test for the feature with
-+	# a single invocation using the flag, but drop it as appropriate in
-+	# the Makefile, depending on the presence of Clang.
- 	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
- 
- choice
- 	prompt "Initialize kernel stack variables at function entry"
- 	default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
- 	default INIT_STACK_ALL_PATTERN if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT_PATTERN
--	default INIT_STACK_ALL_ZERO if CC_HAS_AUTO_VAR_INIT_PATTERN
-+	default INIT_STACK_ALL_ZERO if CC_HAS_AUTO_VAR_INIT_ZERO
- 	default INIT_STACK_NONE
- 	help
- 	  This option enables initialization of stack variables at
+Does CFI actually do any instrumentation in these object files? I
+guess issues in purgatory cause silent/hard to debug kexec failures?
+
+> ---
+>  arch/x86/purgatory/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+> index 95ea17a9d20c..ed46ad780130 100644
+> --- a/arch/x86/purgatory/Makefile
+> +++ b/arch/x86/purgatory/Makefile
+> @@ -31,7 +31,7 @@ KCOV_INSTRUMENT := n
+>  # These are adjustments to the compiler flags used for objects that
+>  # make up the standalone purgatory.ro
+>
+> -PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+> +PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel $(CC_FLAGS_CFI)
+>  PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss -g0
+>  PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
+>  PURGATORY_CFLAGS += -fno-stack-protector
+> --
+> 2.33.0.309.g3052b89438-goog
+>
+
+
 -- 
-2.30.2
-
+Thanks,
+~Nick Desaulniers
