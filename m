@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6D7C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1833FC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04F3D60E52
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F31C96113B
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232582AbhINTMI (ORCPT
+        id S232644AbhINTMM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:12:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49002 "EHLO
+        Tue, 14 Sep 2021 15:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232535AbhINTMI (ORCPT
+        with ESMTP id S232606AbhINTMM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:12:08 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E876C061762
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:10:50 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id c11-20020ac81e8b000000b002a0d78f8f9fso20005qtm.2
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:10:50 -0700 (PDT)
+        Tue, 14 Sep 2021 15:12:12 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121EDC061762
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:10:54 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id f64-20020a2538430000b0290593bfc4b046so186525yba.9
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:10:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=6wsaeVs2pKdYr3cjE54GmOMKWkqFIYtd4ul6D2XgoZU=;
-        b=SltRY0PhqLK7FYtJkRMpj0cip7N3mIDzycHhJwSJI/vXbbxiBlS/DkOmt1Bam+2NaS
-         KNqcNsjuZHP2NrWLhUY05IfpzjDC9bG/2nBjT4fJAVqlS6mjc61BQWEl0JpHpFJ8CJGs
-         tS7wC9+QSXSSkJ/Lg7n1c03rmwmHz9phqCM1Zr4mVysI+SRsNQ2mRuQ+0jQpxyIKmDxO
-         5X3WotGkHldgI8P4dkwN8eSZs0YdF55zFQx6v5t5a9P9mI1dbku9QqjpOBr7lZY0fQzZ
-         9t3RkXjkzFiOIqtPKmwq0CcGZP+d35k6Am/sYlrNKXs3bhDVve8A5bzd+NV2w3Y/1qfX
-         2pJw==
+        bh=GntyULKYdaSgQ4FSc94xW8hjeJrETKXOJriN4s54uWw=;
+        b=aT2jrjMLALuM68EN4GvqBSoT8NJnT9S2KnAKIX46DewiNosK9gM7YNFb5fGzZriFGh
+         uDzfTa6GeTXvkTCRtLIUrwNnePSl9yeBJ1HJ7UMdv6Wk61BiJdpiqNGl1yHyLW9N/+8/
+         zLbll7gVEFTWrlgJM4DrG6I7JAkFPIYDb6kIAI9WSZoe5r2oil66tfaQj1AfRj8rU7hf
+         MEqRX7MYF0gEt6FXt6w1efL6SpTptQO5m8h2QhJrY/ctS7TpdEVAKklJCcBcwCJ3MwpG
+         AidaSzC9/d7Xhchi37fMrF9Zuszg6sAA/imLd95dIE12VzNWRmz7WRAeXqiLCoX4nyVN
+         mBvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=6wsaeVs2pKdYr3cjE54GmOMKWkqFIYtd4ul6D2XgoZU=;
-        b=5MaC3E2zuB/7sX+8i71jIXv/Sz98bqJT2+gLIwKDfeqGeZhykrm/FjlAvUDJd1FpPe
-         ecf+TbBxZpIgm9B2snL1ByNr6ZArVLoPCzhMEcizheKL05nxTQE22LmsUybuNrr7jJ5L
-         fddigKuWF082tEpJoTqMKrBCXAUSyvvj6tCtxH+eWrkN8mN3Z8QT9sqo9EBlzBMltybS
-         j78v4pSQnSf1jGJeGnjx7Tu/dyNvMZFN7hvS2LIFylr0DxHnsHvXTSq2muZZ4M/9JRWk
-         W9MJB/MgVo/b2yIThg1Y2Tdar74n/IAlBf5PWSBp44M4T4T63PKyFWu1gaoh+b/QDIEb
-         L3Nw==
-X-Gm-Message-State: AOAM531+MEbAoUQgT7BrMrUNjadQ2Gu3hEVX1LQi6J1IqgvoOcT4HLfJ
-        HW1w6HEVs2FRE1O+McrtCrFKup519ppJfM811qc=
-X-Google-Smtp-Source: ABdhPJyDx0Z0D7ip/W8X0y/WUO54NQO7F+xb7o3bHjGEkSDgPZVhwNYUYk8ghI2IPK1QbCY4mIINfa4EP8DImMu+pLA=
+        bh=GntyULKYdaSgQ4FSc94xW8hjeJrETKXOJriN4s54uWw=;
+        b=oc8oPKhziqSRAZeZehaJ/6InDt4J5KLPE4K40Ew0p28N9/F4IvXUto5WH/GPjQPNAE
+         Ky8S4t1tEWbEAreGY+BLvm97Flg/6ywZqXtGqrq0FpRaGxVcfo2ohyedKuIDd5p/sAmM
+         pMLaYe6Vc3CwcF4IB10c25T3glyHVqA274k2XVWfPm4f0/8sYPc/res5WO8amrnFZ7bq
+         YvIrzYFXAohdiFC86zz/GFiG4GwrANa/vq6YFco5xTvfswkMqyJ9lhH+pWDiCcKhX5Ra
+         MCIhim3hYdThE2F5L9ElvnL5+XUYv/iE1L8uIndqf783fT9j/Z0pznY/X8criyatifua
+         vyGw==
+X-Gm-Message-State: AOAM532VB5/eSz7D+1E+GF3OQbUOscuXLi8USNnnOeWY/ToBZtj93n0W
+        bEVVQepm2U0323WYhh823/5eCFSZZJuFJ5csUiA=
+X-Google-Smtp-Source: ABdhPJyYl9xP8Yp6E1SQkkBSZ4rht1wn3c1LW67yBaBUGjJheWeCP7bZzJS5bR7dIXtl9GLAlvLe0P8Tf6LjwTs01TA=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:d19c:5902:49bb:c41])
- (user=samitolvanen job=sendgmr) by 2002:a0c:aa01:: with SMTP id
- d1mr7115315qvb.47.1631646649694; Tue, 14 Sep 2021 12:10:49 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 12:10:30 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:c446:: with SMTP id
+ u67mr972641ybf.269.1631646653326; Tue, 14 Sep 2021 12:10:53 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:10:31 -0700
 In-Reply-To: <20210914191045.2234020-1-samitolvanen@google.com>
-Message-Id: <20210914191045.2234020-2-samitolvanen@google.com>
+Message-Id: <20210914191045.2234020-3-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210914191045.2234020-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
-Subject: [PATCH v3 01/16] objtool: Add CONFIG_CFI_CLANG support
+Subject: [PATCH v3 02/16] objtool: Add ASM_STACK_FRAME_NON_STANDARD
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,160 +78,66 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, the compiler replaces function references with
-references to the CFI jump table, which confuses objtool. This change,
-based on Josh's initial patch [1], goes through the list of relocations
-and replaces jump table symbols with the actual function symbols.
+To use the STACK_FRAME_NON_STANDARD macro for a static symbol
+defined in inline assembly, we need a C declaration that implies
+global visibility. This type mismatch confuses the compiler with
+CONFIG_CFI_CLANG. This change adds an inline assembly version of
+the macro to avoid the issue.
 
-[1] https://lore.kernel.org/r/d743f4b36e120c06506567a9f87a062ae03da47f.1611263462.git.jpoimboe@redhat.com/
-
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- tools/objtool/arch/x86/decode.c      | 16 +++++++++
- tools/objtool/elf.c                  | 51 ++++++++++++++++++++++++++++
- tools/objtool/include/objtool/arch.h |  3 ++
- tools/objtool/include/objtool/elf.h  |  2 +-
- 4 files changed, 71 insertions(+), 1 deletion(-)
+ include/linux/objtool.h       | 6 ++++++
+ tools/include/linux/objtool.h | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index bc821056aba9..318189c8065e 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -62,6 +62,22 @@ bool arch_callee_saved_reg(unsigned char reg)
- 	}
- }
+diff --git a/include/linux/objtool.h b/include/linux/objtool.h
+index 7e72d975cb76..080e95174536 100644
+--- a/include/linux/objtool.h
++++ b/include/linux/objtool.h
+@@ -66,6 +66,11 @@ struct unwind_hint {
+ 	static void __used __section(".discard.func_stack_frame_non_standard") \
+ 		*__func_stack_frame_non_standard_##func = func
  
-+unsigned long arch_cfi_section_reloc_offset(struct reloc *reloc)
-+{
-+	if (!reloc->addend)
-+		return 0;
++#define ASM_STACK_FRAME_NON_STANDARD(func)				\
++	".pushsection .discard.func_stack_frame_non_standard, \"aw\"\n"	\
++	".long " __stringify(func) " - .\n"				\
++	".popsection\n"
 +
-+	if (reloc->type == R_X86_64_PC32 || reloc->type == R_X86_64_PLT32)
-+		return reloc->addend + 4;
-+
-+	return reloc->addend;
-+}
-+
-+unsigned long arch_cfi_jump_reloc_offset(unsigned long offset)
-+{
-+	return offset + 1;
-+}
-+
- unsigned long arch_dest_reloc_offset(int addend)
- {
- 	return addend + 4;
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 8676c7598728..05a5f51aad2c 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -18,6 +18,7 @@
- #include <errno.h>
- #include <objtool/builtin.h>
+ #else /* __ASSEMBLY__ */
  
-+#include <objtool/arch.h>
- #include <objtool/elf.h>
- #include <objtool/warn.h>
+ /*
+@@ -127,6 +132,7 @@ struct unwind_hint {
+ #define UNWIND_HINT(sp_reg, sp_offset, type, end)	\
+ 	"\n\t"
+ #define STACK_FRAME_NON_STANDARD(func)
++#define ASM_STACK_FRAME_NON_STANDARD(func)
+ #else
+ #define ANNOTATE_INTRA_FUNCTION_CALL
+ .macro UNWIND_HINT sp_reg:req sp_offset=0 type:req end=0
+diff --git a/tools/include/linux/objtool.h b/tools/include/linux/objtool.h
+index 7e72d975cb76..080e95174536 100644
+--- a/tools/include/linux/objtool.h
++++ b/tools/include/linux/objtool.h
+@@ -66,6 +66,11 @@ struct unwind_hint {
+ 	static void __used __section(".discard.func_stack_frame_non_standard") \
+ 		*__func_stack_frame_non_standard_##func = func
  
-@@ -291,6 +292,10 @@ static int read_sections(struct elf *elf)
- 		if (sec->sh.sh_flags & SHF_EXECINSTR)
- 			elf->text_size += sec->len;
++#define ASM_STACK_FRAME_NON_STANDARD(func)				\
++	".pushsection .discard.func_stack_frame_non_standard, \"aw\"\n"	\
++	".long " __stringify(func) " - .\n"				\
++	".popsection\n"
++
+ #else /* __ASSEMBLY__ */
  
-+		/* Detect -fsanitize=cfi jump table sections */
-+		if (!strncmp(sec->name, ".text..L.cfi.jumptable", 22))
-+			sec->cfi_jt = true;
-+
- 		list_add_tail(&sec->list, &elf->sections);
- 		elf_hash_add(section, &sec->hash, sec->idx);
- 		elf_hash_add(section_name, &sec->name_hash, str_hash(sec->name));
-@@ -576,6 +581,49 @@ static int read_rela_reloc(struct section *sec, int i, struct reloc *reloc, unsi
- 	return 0;
- }
- 
-+/*
-+ * CONFIG_CFI_CLANG replaces function relocations to refer to an intermediate
-+ * jump table. Undo the conversion so objtool can make sense of things.
-+ */
-+static int fix_cfi_relocs(const struct elf *elf)
-+{
-+	struct section *sec;
-+	struct reloc *reloc;
-+
-+	list_for_each_entry(sec, &elf->sections, list) {
-+		list_for_each_entry(reloc, &sec->reloc_list, list) {
-+			struct reloc *cfi_reloc;
-+			unsigned long offset;
-+
-+			if (!reloc->sym->sec->cfi_jt)
-+				continue;
-+
-+			if (reloc->sym->type == STT_SECTION)
-+				offset = arch_cfi_section_reloc_offset(reloc);
-+			else
-+				offset = reloc->sym->offset;
-+
-+			/*
-+			 * The jump table immediately jumps to the actual function,
-+			 * so look up the relocation there.
-+			 */
-+			offset = arch_cfi_jump_reloc_offset(offset);
-+			cfi_reloc = find_reloc_by_dest(elf, reloc->sym->sec, offset);
-+
-+			if (!cfi_reloc || !cfi_reloc->sym) {
-+				WARN("can't find a CFI jump table relocation at %s+0x%lx",
-+					reloc->sym->sec->name, offset);
-+				return -1;
-+			}
-+
-+			reloc->sym = cfi_reloc->sym;
-+			reloc->addend = 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int read_relocs(struct elf *elf)
- {
- 	struct section *sec;
-@@ -639,6 +687,9 @@ static int read_relocs(struct elf *elf)
- 		tot_reloc += nr_reloc;
- 	}
- 
-+	if (fix_cfi_relocs(elf))
-+		return -1;
-+
- 	if (stats) {
- 		printf("max_reloc: %lu\n", max_reloc);
- 		printf("tot_reloc: %lu\n", tot_reloc);
-diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
-index 062bb6e9b865..2205b2b08268 100644
---- a/tools/objtool/include/objtool/arch.h
-+++ b/tools/objtool/include/objtool/arch.h
-@@ -81,6 +81,9 @@ unsigned long arch_jump_destination(struct instruction *insn);
- 
- unsigned long arch_dest_reloc_offset(int addend);
- 
-+unsigned long arch_cfi_section_reloc_offset(struct reloc *reloc);
-+unsigned long arch_cfi_jump_reloc_offset(unsigned long offset);
-+
- const char *arch_nop_insn(int len);
- 
- int arch_decode_hint_reg(struct instruction *insn, u8 sp_reg);
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index e34395047530..d9c1dacc6572 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -39,7 +39,7 @@ struct section {
- 	char *name;
- 	int idx;
- 	unsigned int len;
--	bool changed, text, rodata, noinstr;
-+	bool changed, text, rodata, noinstr, cfi_jt;
- };
- 
- struct symbol {
+ /*
+@@ -127,6 +132,7 @@ struct unwind_hint {
+ #define UNWIND_HINT(sp_reg, sp_offset, type, end)	\
+ 	"\n\t"
+ #define STACK_FRAME_NON_STANDARD(func)
++#define ASM_STACK_FRAME_NON_STANDARD(func)
+ #else
+ #define ANNOTATE_INTRA_FUNCTION_CALL
+ .macro UNWIND_HINT sp_reg:req sp_offset=0 type:req end=0
 -- 
 2.33.0.309.g3052b89438-goog
 
