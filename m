@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4B6C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4F1C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017876113E
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E732B61164
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232656AbhINTMO (ORCPT
+        id S232694AbhINTMS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49040 "EHLO
+        Tue, 14 Sep 2021 15:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232667AbhINTMO (ORCPT
+        with ESMTP id S232743AbhINTMQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:12:14 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B54C061574
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:10:56 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id p200-20020a25d8d1000000b005a3a281bc11so293405ybg.0
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:10:56 -0700 (PDT)
+        Tue, 14 Sep 2021 15:12:16 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6934C061762
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:10:58 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id h7-20020a37b707000000b003fa4d25d9d0so666045qkf.17
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:10:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=1oOz6kaFdaWVr/jQmAaRDSorIwh4Z5I78YdyCUUNK9s=;
-        b=Mpm5cQyxv4z1foMX312l2Tgy7gTfZn2UKqiNEm/bDeCpNs2Z2PFSloOoHJZbl9naVQ
-         zqBEYS3THb+8QyjMkgmxc7puYOFu37WsvvCCk/6UkKq4ej8f21HCMyVPWgDbpaQJiDcW
-         w+fBeBgbzefjp3/omKonhEIcGN10jh9cTkqGGDyim/HTmHZeV33Gc7604YpJPeObUCs2
-         d1y9TFpFItoYhXMBU67pq0VbC+GD++Rro/eLkWTCaJpM91IOrvQw4j+7aAZtd4+HTVHr
-         tCig2fxlOqSR035A/SVkPOC6u6oHEu73HqFSGhY9E1vq8t3WpjjlGvfT9N/hCxLoMNJ3
-         wdlg==
+        bh=MYedQpyvB9Rmmtvd5nbBABH5KnAjy2gVig66j6N03ws=;
+        b=jV5ieCvRSmnHwgG1kcnfTC98EqPu6tMmhqKE58NlZh3zdBOtjDaH2Z1kfehpGXjL1v
+         DnArexSZ4+J5ChP9E5mPy659ZCRgjmHr1YU14elAzeIsRhqfD6majuaSuM+7pOlSicru
+         Im1bolmuY1wXNiUlFUhsP9C+5aVPx8G06siO23Ow1wtnKNwC9c2u8LE8NQQGMNHNiZFF
+         kKRvVxlEBu831HRHQNP1RT5JPlT9n7cfpYZhnYVu+2KoxYJ1h2J1CRgpGLmdtvYlincP
+         E/lDgqlNBSpRPeeYh/rsQyRInJckGdgYr8S2oDlmY65+GU6huC0FOx215/7GNnz5B53X
+         UF4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=1oOz6kaFdaWVr/jQmAaRDSorIwh4Z5I78YdyCUUNK9s=;
-        b=JEGKNv+dqYtTbGx5SEGAX5xX57akbMoPU6uyXy+jW20XQvRNLi2pB/pSM6yo4aw2As
-         yfIP9RZrB1O4QkjjUi6giPix6vTPobosHdO2hilut0tXQqMFIKao38inToQvzA81Dmf4
-         lQPFgbKWBOwVWoYlzOK/YJwNojGbDJzFQhwtO2AcZNxQxrCW4DgxA3q5tfovZYEG+y+R
-         2xNDLmc3c7w0zNqT5lT/HM89CJCImdIjklX9gD5SUNEFYQgTZ3122LKJ333pTTAu7m8M
-         nckrQQHswGkvYKc2H7veYsLYDs+qxHrX4P/onaBZBL83bme4Hl79NWBfNOU5ghPRn2nE
-         6yHQ==
-X-Gm-Message-State: AOAM532is3dJpik6a++TDiMKrILt8jYft04wmWYrvF9wU06XzB6rdhx5
-        OVws344bbQW2KtKOBw914xRJXlgPxSpR2e97amk=
-X-Google-Smtp-Source: ABdhPJygYL+QqEjY5IK1osIHUTbFG9QZLqmwDt4ruKmO9HXh0t15yJzZ0ETG7dkreOm0w+tD1mcKz/86mHGueJRp8Sc=
+        bh=MYedQpyvB9Rmmtvd5nbBABH5KnAjy2gVig66j6N03ws=;
+        b=ykHGkQfREOUW4PQcwlGRxIkC+qkrq9U+RzSfAxrs379O4ukB53dBGv3s3VfhoH1M3e
+         IsoN3ZD5Rl5Fe/3YxvbuZKw9CfjpR3kMDKmGMBXpm1YvWrMbqp9H0ccqRrsGXq9IJ8MA
+         MhGhGY7gytoFYDCkAnAvaWsuQj1ldKmgUCThYbFY5m/NKDVtWEWPoHZ8P9NRCt/qCExC
+         52mCJXHg4VkFCunoKVUZWX/LNExZv4sLwg+dHRTHnQQDIn6pt5c+C6VLv8f5UTOa/qFp
+         CGiuMnIWB9/nahOtwVxoAXatnwpeuKDgKtwZU5iZIjXDWLj1Mg1Ybb/i6HxbI58jWvsf
+         EHCg==
+X-Gm-Message-State: AOAM5302P+ZE+LqlmDlBx/rrPItZkIplBiOtRbduJ+hHS50UK+vun/st
+        noUvjDg4eQokF2ooV4T/Mn7C1yeOy2Nj6Y2PGkE=
+X-Google-Smtp-Source: ABdhPJwrCL8aGVXaMUWav9OzBfROuvbuHsjc+XeHdh9QeYYSbvOIXbTWQhyQpAvF57jHfZOs6K1C9GBv1ozee5pr/2I=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:d19c:5902:49bb:c41])
- (user=samitolvanen job=sendgmr) by 2002:a25:3046:: with SMTP id
- w67mr1001922ybw.134.1631646655540; Tue, 14 Sep 2021 12:10:55 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 12:10:32 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:f38b:: with SMTP id
+ i11mr7112243qvk.42.1631646658006; Tue, 14 Sep 2021 12:10:58 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:10:33 -0700
 In-Reply-To: <20210914191045.2234020-1-samitolvanen@google.com>
-Message-Id: <20210914191045.2234020-4-samitolvanen@google.com>
+Message-Id: <20210914191045.2234020-5-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210914191045.2234020-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
-Subject: [PATCH v3 03/16] linkage: Add DECLARE_ASM_FUNC_SYMBOL
+Subject: [PATCH v3 04/16] cfi: Add DEFINE_CFI_IMMEDIATE_RETURN_STUB
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,43 +78,120 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The kernel has several assembly functions, which are not directly
-callable from C but need to be referred to from C code. This change adds
-the DECLARE_ASM_FUNC_SYMBOL macro, which allows us to declare these
-symbols using an opaque type, which makes misuse harder, and avoids the
-need to annotate references to the functions for Clang's Control-Flow
-Integrity (CFI).
+This change introduces the DEFINE_CFI_IMMEDIATE_RETURN_STUB macro,
+which defines a stub function that immediately returns and when
+defined in the core kernel, always passes indirect call checking
+with CONFIG_CFI_CLANG. Note that this macro should only be used when
+a stub cannot be called using the correct function type.
 
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- include/linux/linkage.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ include/asm-generic/vmlinux.lds.h | 11 +++++++++++
+ include/linux/cfi.h               | 14 ++++++++++++++
+ kernel/cfi.c                      | 24 +++++++++++++++++++++++-
+ 3 files changed, 48 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/linkage.h b/include/linux/linkage.h
-index dbf8506decca..f1eac26b2dd6 100644
---- a/include/linux/linkage.h
-+++ b/include/linux/linkage.h
-@@ -48,6 +48,19 @@
- #define __PAGE_ALIGNED_DATA	.section ".data..page_aligned", "aw"
- #define __PAGE_ALIGNED_BSS	.section ".bss..page_aligned", "aw"
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index f2984af2b85b..5b77284f7221 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -407,6 +407,16 @@
+ 	KEEP(*(.static_call_tramp_key))					\
+ 	__stop_static_call_tramp_key = .;
  
-+/*
-+ * Declares a function not callable from C using an opaque type. Defined as
-+ * an array to allow the address of the symbol to be taken without '&'.
-+ */
-+#ifndef DECLARE_ASM_FUNC_SYMBOL
-+#define DECLARE_ASM_FUNC_SYMBOL(sym) \
-+	extern const u8 sym[]
-+#endif
-+
-+#ifndef __ASSEMBLY__
-+typedef const u8 *asm_func_ptr;
++#ifdef CONFIG_CFI_CLANG
++#define CFI_EXCLUDED_DATA						\
++	. = ALIGN(8);							\
++	__start_cfi_excluded = .;					\
++	KEEP(*(.cfi_excluded_stubs))					\
++	__stop_cfi_excluded = .;
++#else
++#define CFI_EXCLUDED_DATA
 +#endif
 +
  /*
-  * This is used by architectures to keep arguments on the stack
-  * untouched by the compiler by keeping them live until the end.
+  * Allow architectures to handle ro_after_init data on their
+  * own by defining an empty RO_AFTER_INIT_DATA.
+@@ -430,6 +440,7 @@
+ 		__start_rodata = .;					\
+ 		*(.rodata) *(.rodata.*)					\
+ 		SCHED_DATA						\
++		CFI_EXCLUDED_DATA					\
+ 		RO_AFTER_INIT_DATA	/* Read only after init */	\
+ 		. = ALIGN(8);						\
+ 		__start___tracepoints_ptrs = .;				\
+diff --git a/include/linux/cfi.h b/include/linux/cfi.h
+index 879744aaa6e0..9ebf67a0d421 100644
+--- a/include/linux/cfi.h
++++ b/include/linux/cfi.h
+@@ -20,6 +20,18 @@ extern void __cfi_check(uint64_t id, void *ptr, void *diag);
+ #define __CFI_ADDRESSABLE(fn, __attr) \
+ 	const void *__cfi_jt_ ## fn __visible __attr = (void *)&fn
+ 
++/*
++ * Defines a stub function that returns immediately, and when defined and
++ * referenced in the core kernel, always passes CFI checking. This should
++ * be used only for stubs that cannot be called using the correct function
++ * pointer type, which should be rare.
++ */
++#define DEFINE_CFI_IMMEDIATE_RETURN_STUB(fn) \
++	void fn(void) { return; } \
++	const void *__cfi_excl_ ## fn __visible \
++		__attribute__((__section__(".cfi_excluded_stubs"))) \
++		= (void *)&fn
++
+ #ifdef CONFIG_CFI_CLANG_SHADOW
+ 
+ extern void cfi_module_add(struct module *mod, unsigned long base_addr);
+@@ -35,6 +47,8 @@ static inline void cfi_module_remove(struct module *mod, unsigned long base_addr
+ #else /* !CONFIG_CFI_CLANG */
+ 
+ #define __CFI_ADDRESSABLE(fn, __attr)
++#define DEFINE_CFI_IMMEDIATE_RETURN_STUB(fn) \
++	void fn(void) { return; }
+ 
+ #endif /* CONFIG_CFI_CLANG */
+ 
+diff --git a/kernel/cfi.c b/kernel/cfi.c
+index 9594cfd1cf2c..8d931089141b 100644
+--- a/kernel/cfi.c
++++ b/kernel/cfi.c
+@@ -278,12 +278,34 @@ static inline cfi_check_fn find_module_check_fn(unsigned long ptr)
+ 	return fn;
+ }
+ 
++extern unsigned long __start_cfi_excluded[];
++extern unsigned long __stop_cfi_excluded[];
++
++static inline bool is_cfi_excluded(unsigned long ptr)
++{
++	unsigned long *p = __start_cfi_excluded;
++
++	for ( ; p < __stop_cfi_excluded; ++p)
++		if (*p == ptr)
++			return true;
++
++	return false;
++}
++
++static void __cfi_pass(uint64_t id, void *ptr, void *diag)
++{
++}
++
+ static inline cfi_check_fn find_check_fn(unsigned long ptr)
+ {
+ 	cfi_check_fn fn = NULL;
+ 
+-	if (is_kernel_text(ptr))
++	if (is_kernel_text(ptr)) {
++		if (unlikely(is_cfi_excluded(ptr)))
++			return __cfi_pass;
++
+ 		return __cfi_check;
++	}
+ 
+ 	/*
+ 	 * Indirect call checks can happen when RCU is not watching. Both
 -- 
 2.33.0.309.g3052b89438-goog
 
