@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C8FC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B35C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59810610CE
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCBA61168
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232598AbhINTdV (ORCPT
+        id S232661AbhINTex (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:33:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53966 "EHLO
+        Tue, 14 Sep 2021 15:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbhINTdU (ORCPT
+        with ESMTP id S232507AbhINTex (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:33:20 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C045C061762
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:32:03 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id v2so40414plp.8
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:32:03 -0700 (PDT)
+        Tue, 14 Sep 2021 15:34:53 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C31BC061762
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:33:35 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id mi6-20020a17090b4b4600b00199280a31cbso2717570pjb.0
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=7HJuxS291se7h0pWa8RwOF5pMXHcq2hWKO/DuoK0nSw=;
-        b=YcuSryWcll5qZWFgHfCzkDhCl/66XVdRjSv6JbOVPFPcgy0ifWt+iJ4I67uLoOfz96
-         ljG8aT7RCWjDbEzYCmmjafKuNtT6gxSQ/6Iv1+q/yNgvNCrUTFxlctrM9ZfCehlbpHcB
-         wE2alCrI13VE0W8/6XPfkD8d/v3z2M1+pF/ag=
+        bh=9HtM5LJiLlnoib4lYiLRFHMJjkrTtS7BIKN49Lg7zyU=;
+        b=RHFMNiuVUUspmr+lhdCReOoOs7+PeEiR7YxvRBK+bOaJjHyjmsWEsHDDfPvqOW5yDt
+         zDszNFdSaCO9MJJDSYfPopSCiem5AU0gZoCRKqDh/QvdN2Ymcesw1yLpXVJaTU6eUXqv
+         npcnYs7mz2Z5E88V5YhqqQwtlO4PQG7pJ5e0Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=7HJuxS291se7h0pWa8RwOF5pMXHcq2hWKO/DuoK0nSw=;
-        b=ajr++401KPuaOtXYLBbLX4b9e/1JCP6h8Fpwxgff/4no8yTSKvq1C62AiOoP7OqmRG
-         PhU8kl3AJCPSg7VDNidEWrE4Zo3ZqevBXIB4XuxTx/Ky2XLD+LxubTsChxZvGWw+8Tzt
-         avG8SVuYstJB833yecbRNbgcd5NP1DrxQGut/C04PxHQUH4xGbCf2xI9Qh4BeFmCD5cU
-         jb1gslOhFY9KNzpX/rLmHH+dApHJJPNE7xyppthLUjiYPf1SMPkdnlvx9AC2N3cbGoUc
-         +/E7glCV+5gIlEhkRrenBCGkeVx4bekRpR4o5UMuRd0rOcSIHGM/T8r7V/N/JJxfrvZF
-         tBQA==
-X-Gm-Message-State: AOAM533loKaVB7FRY1XJGiJBOrGoMfd9FxSP/Pb/zkCSuHD3oO0sU+wI
-        pykQa4ahj51Hb08AbXCWd4HMtE76pmq1LA==
-X-Google-Smtp-Source: ABdhPJxAfgyQ+0BOY7pY+EQe0yRgyPOYJ2jE1ubX84l0DdSbIMZJuiU2yae5vGJ4DadJ6Ju+1sfzqw==
-X-Received: by 2002:a17:902:ab5c:b0:13c:87ab:15f5 with SMTP id ij28-20020a170902ab5c00b0013c87ab15f5mr3703119plb.79.1631647922974;
-        Tue, 14 Sep 2021 12:32:02 -0700 (PDT)
+        bh=9HtM5LJiLlnoib4lYiLRFHMJjkrTtS7BIKN49Lg7zyU=;
+        b=3j+Y3hFRlEpnhyuelNUDT0oJhrxDsALlAzprZ2zY67NJohL+gSkAF0LPg3Ggn6k2Rv
+         +/r3jWLMh9Ef7Vl1z7zKrEQnLAoiFciKtDHKXBz7PsxpFTGlNHIj0qvJA6ICXiV53BlX
+         e8K/CXHiJ/bZjJRa51Ott60JLf/sWBgvUiadHTOEyA/fkPi3WZRo9GTgbylJuvaw1bc0
+         RJsepAGmRC0EEV72H7mmLRumVdFvP3e61rAB2Vf654kmbhtmCZBXbTv3mKo9EN5+GqI5
+         XKW92SQGVsQI9/jRUrjig1bkdYO0cEUZVY1wHdTAz8ziMQlWY8B6L//5VsSEqt2rOELg
+         Ygiw==
+X-Gm-Message-State: AOAM532XvLR7qbGKOFdhZkBb+HXTXhN0hgW3zaus16oT+hgUGUBukFqy
+        0e+1npfN5BJDZfBGacs0MPaKLw==
+X-Google-Smtp-Source: ABdhPJxt3I/wU2dbM+lhO1fHQtKXL2+tDL6MvOTSBjT+HagDNkkLLV/diGyDZV6HNqrasy3yCjtLNw==
+X-Received: by 2002:a17:90b:4c8f:: with SMTP id my15mr3924149pjb.131.1631648015192;
+        Tue, 14 Sep 2021 12:33:35 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p5sm11377017pfp.218.2021.09.14.12.32.02
+        by smtp.gmail.com with ESMTPSA id i1sm2464576pjs.31.2021.09.14.12.33.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 12:32:02 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 12:32:01 -0700
+        Tue, 14 Sep 2021 12:33:34 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:33:33 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -64,26 +64,32 @@ Cc:     x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v3 08/16] lkdtm: Use an opaque type for
- lkdtm_rodata_do_nothing
-Message-ID: <202109141231.CD2DE05@keescook>
+Subject: Re: [PATCH v3 09/16] x86: Use an opaque type for functions not
+ callable from C
+Message-ID: <202109141233.01761C8@keescook>
 References: <20210914191045.2234020-1-samitolvanen@google.com>
- <20210914191045.2234020-9-samitolvanen@google.com>
+ <20210914191045.2234020-10-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210914191045.2234020-9-samitolvanen@google.com>
+In-Reply-To: <20210914191045.2234020-10-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 12:10:37PM -0700, Sami Tolvanen wrote:
-> Use an opaque type for lkdtm_rodata_do_nothing to stop the compiler
-> from generating a CFI jump table entry that jumps to .rodata.
+On Tue, Sep 14, 2021 at 12:10:38PM -0700, Sami Tolvanen wrote:
+> The kernel has several assembly functions that are not directly callable
+> from C. Use an opaque type for these function prototypes to make misuse
+> harder, and to avoid the need to annotate references to these functions
+> for Clang's Control-Flow Integrity (CFI).
 > 
+> Suggested-by: Andy Lutomirski <luto@amacapital.net>
+> Suggested-by: Alexander Lobakin <alobakin@pm.me>
 > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Acked-by: Kees Cook <keescook@chromium.org>
+This looks clean to me.
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
