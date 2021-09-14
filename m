@@ -2,97 +2,132 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3295AC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 21:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E57C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 22:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 115C361185
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 21:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C91610A2
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 22:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233101AbhINVIT (ORCPT
+        id S235315AbhINWKJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 17:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234183AbhINVIT (ORCPT
+        Tue, 14 Sep 2021 18:10:09 -0400
+Received: from gateway20.websitewelcome.com ([192.185.68.24]:45135 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234956AbhINWKJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 17:08:19 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3280C061574
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 14:07:01 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:104d::5f6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 49BE92CA;
-        Tue, 14 Sep 2021 21:07:01 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 49BE92CA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1631653621; bh=aRIuKcelosoK7HSq+GC2ST2aT0MMYO+BBP+OHR42Tnk=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=DF5eyEPCSfnJMLuEitlrBN1ofw/Bm9eNbLjJM8hQ3CmUUW2YVzeW2shBm9HLfu/5p
-         Ob6ojTKZEIP2RLq+DBTXEG1CHIc2Atym7cUat3XVjFfTbpBdCewoXlMjUKLHolV+kN
-         SZI8LixJab3flQHeGvMOxYiWlgTNtIbvABZGhQZCOR9lNxyuygNjGn07Cyiz8QK1Aq
-         gE7v+nb/TU3LATeSEfi1vjbwGIjBpyO0tV/xvajH5iFnIpIwlFZ0YLFm4vz4QQh7rt
-         8iDwky8DJB4GwbGY0mVnX3zVRkXOF0hZY5OnhcQAwQfZYHRXNc4hPngv2JcScbOfS3
-         uB5rT4GTT+VOw==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] docs: deprecated.rst: Clarify open-coded arithmetic
- with literals
-In-Reply-To: <20210829144716.2931-1-len.baker@gmx.com>
-References: <20210829144716.2931-1-len.baker@gmx.com>
-Date:   Tue, 14 Sep 2021 15:07:00 -0600
-Message-ID: <87r1dqdfyj.fsf@meer.lwn.net>
+        Tue, 14 Sep 2021 18:10:09 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 587DA401129CE
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 16:27:11 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id QGFLmhOhlrJtZQGFLmOBLm; Tue, 14 Sep 2021 16:45:43 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=2vSlWpDlgQ1WCtKW+iJxypZWQ+3srQCmJtCimsZZbKQ=; b=ccvX3c8vYx2soiyQjSD3Y3K9ld
+        9n8goroyewasfqmu9ivOOmOTa9INFz7yHnPJ9azhVmUGNyiekWz9n/lTDaBAAJuN7TXnRQnQewfra
+        yLoOnkE78oNRJR2Dt8+zAiXw/iUMCXDZPWQiDx8DCpCova0lD/z5VLA83pYB8s0ZJz0pAqCGlp4Tz
+        JaRPSkMp/vCIeWhkRSJOGwpOh6FbNWPWAxjwL8JbFfGGOBjbORla0GnVQ9kHpwVOfjCErxqoD0XVl
+        x279Qwh5Mjb2yhVQHWf93gTuFWGPWS2nccT1D3QueiBPvKXsaQiE12MeTd1YhutRZJDtmVAXyDsBh
+        FPleGuxw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:35226 helo=[192.168.15.9])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1mQGFK-003opJ-Uw; Tue, 14 Sep 2021 16:45:42 -0500
+Subject: Re: [PATCH] Input: omap-keypad - prefer struct_size over open coded
+ arithmetic
+To:     Len Baker <len.baker@gmx.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210911112716.10067-1-len.baker@gmx.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <32777a69-297a-f68a-d0c3-e5920035531b@embeddedor.com>
+Date:   Tue, 14 Sep 2021 16:49:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20210911112716.10067-1-len.baker@gmx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1mQGFK-003opJ-Uw
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:35226
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Len Baker <len.baker@gmx.com> writes:
 
-> Although using literals for size calculation in allocator arguments may
-> be harmless due to compiler warnings in case of overflows, it is better
-> to refactor the code to avoid the use of open-coded math idiom.
->
-> So, clarify the preferred way in these cases.
->
-> Suggested-by: Kees Cook <keescook@chromium.org>
+
+On 9/11/21 06:27, Len Baker wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> So, use the struct_size() helper to do the arithmetic instead of the
+> argument "size + count * size" in the kzalloc() function.
+> 
+> [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
 > Signed-off-by: Len Baker <len.baker@gmx.com>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+--
+Gustavo
+
 > ---
-> Changelog v1 -> v2
->  - Clarify the sentence by changing "keep <foo> out" with "avoid <foo>"
->    (Joe Perches).
->
->  Documentation/process/deprecated.rst | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-> index 9d83b8db8874..b5a8be914178 100644
-> --- a/Documentation/process/deprecated.rst
-> +++ b/Documentation/process/deprecated.rst
-> @@ -60,7 +60,8 @@ smaller allocation being made than the caller was expecting. Using those
->  allocations could lead to linear overflows of heap memory and other
->  misbehaviors. (One exception to this is literal values where the compiler
->  can warn if they might overflow. Though using literals for arguments as
-> -suggested below is also harmless.)
-> +suggested below is also harmless. So, the preferred way in these cases is
-> +to refactor the code to avoid the open-coded math idiom.)
-
-Sorry for being so slow to get to this...  honestly, though, I've been
-staring at it for a bit and cannot figure out what you are trying to
-communicate.  What does "math idiom" mean here?  If you are trying to
-say that using literals is *not* harmless, then perhaps the first part
-of the parenthetical should be taken out?
-
-Confused...
-
-jon
+>  drivers/input/keyboard/omap-keypad.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/omap-keypad.c b/drivers/input/keyboard/omap-keypad.c
+> index dbe836c7ff47..eb3a687796e7 100644
+> --- a/drivers/input/keyboard/omap-keypad.c
+> +++ b/drivers/input/keyboard/omap-keypad.c
+> @@ -190,8 +190,7 @@ static int omap_kp_probe(struct platform_device *pdev)
+>  	row_shift = get_count_order(pdata->cols);
+>  	keycodemax = pdata->rows << row_shift;
+> 
+> -	omap_kp = kzalloc(sizeof(struct omap_kp) +
+> -			keycodemax * sizeof(unsigned short), GFP_KERNEL);
+> +	omap_kp = kzalloc(struct_size(omap_kp, keymap, keycodemax), GFP_KERNEL);
+>  	input_dev = input_allocate_device();
+>  	if (!omap_kp || !input_dev) {
+>  		kfree(omap_kp);
+> --
+> 2.25.1
+> 
+> 
+> 
+> 
