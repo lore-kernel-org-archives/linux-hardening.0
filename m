@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1BDC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E60C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 230D860E8B
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5E160E8B
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233300AbhINTNF (ORCPT
+        id S233087AbhINTNE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:13:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49212 "EHLO
+        Tue, 14 Sep 2021 15:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233206AbhINTMv (ORCPT
+        with ESMTP id S233105AbhINTMu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:12:51 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C335C061767
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:27 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id j4-20020a258b84000000b005a203c5e066so131407ybl.19
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:27 -0700 (PDT)
+        Tue, 14 Sep 2021 15:12:50 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E35FC061762
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:22 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id o9-20020ac80249000000b002a0c9fd54d5so13830qtg.4
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=b0EYrut/AMnqvvjXL4pjf9dWfm7AKB9fbO85nvqHRtI=;
-        b=QuRKXPpb0p4VvZqUTrg1/JtXx9DPS0drlMlV/0qcrpX0pO4U/nYSz+tYk1ujhIejkD
-         KUjt5WBJGivXZVD3BvcE9T95e5Wa7b6edeRs7HcucORjEBPHg4Ms+mONomYYhr3RdO4/
-         2bmnQYaMR1inGzhBsPnQcT8f8YlOuqjpuzVpyK5Su48qulySmEnyA/UV8l1dK61CbFxY
-         PzmgNHjrhpO+XWMowtXmy2+8igPbHZsVzxeZoPuk7hkBIA+3opkyoq+DI1Uy/RjfYVQd
-         rFdNZqvtLUI1z02q4tXaCR9r7/ktKAp/pyrZ8zwW48AMcfXgptBraDCN2VS+V0w72gIw
-         yA7g==
+        bh=fFCvJWug7bauvAerSk8DsPanFpmiKREnwLe0beFIomQ=;
+        b=nD5XzlTypImdd/oPybicKlrz8zUhRN9g+uNSLkIczGQJR2I4tjNxtsS7NThpohf75w
+         PUiFDcqyOnR9QiX1VMMiRtyt2Cooz7OGyEnta1g7hhOCQv3cl37zL5gtjc7f3aWvOc6p
+         gvl1OxyIGiZbOgF121Umexe3usYciXcmOnsTN7IbjpJE8CdZXdzC+xO8nuNZ4XwTZPkk
+         atgYAVTZp49mIbJRZbCCVXydFiaeO27Slkc0R1J1+nW2lQ8NVuKHxe+aXtBtYcvHG30s
+         I6zB6XmYc9vvc1GmJ7McPMbhLE+Tk/4zvCt/A4AbtxL+q32suxpYQk70AA+BrjTmKmjv
+         NNrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=b0EYrut/AMnqvvjXL4pjf9dWfm7AKB9fbO85nvqHRtI=;
-        b=xxXbtJ/3AgKFUVwWi0OqYPZKkgfYaKqMhtqDLQvpYXmUWiDDpJpcksv53aQQQgdOWF
-         9W4b+Mhfhi6RKWjK2iLJdPRNH0kRsrGZ9RFd70Qx+kwN2ThLGzDibhx0nIp4H7Iuhr12
-         vyUuhd2b1iyWv+FTGP2NyI2X5TUCfAGKxNZBRr20tXAs5Qjr13ljzoW1EwJxh+Rm+5F8
-         GUATH+F4/+AMnziXN8u+leLIeM3ocWX6CGfaHxvjlQKX+gT6wiXnWpFrb5dfMtpWIjcc
-         fDe4vqzGDJPC3v0acY5XQ3s2Mq3Fk59FnEFUdy/Tw9HV58kHgbFrda+D8ErN+qDPkq0w
-         HPhA==
-X-Gm-Message-State: AOAM53171X9hSQxB1kuiROFMPXLviACxObc57bo4/t0kiblFhWE/0pNA
-        PZD3bzAmPgN8Z/nAALcdvUFsgm9tV+QyoZQBGDw=
-X-Google-Smtp-Source: ABdhPJxhp4NW539pWSgPnc//mdohgsLEl+VSRPA2sl17a4iU7q0uCjSiZtcbjOB2t0939rAsaF/3vGW+4CRTzpwXxMg=
+        bh=fFCvJWug7bauvAerSk8DsPanFpmiKREnwLe0beFIomQ=;
+        b=YHtB7LkVbHT6UpDo+rQubb88fnA8YsdwPsMz4GCcXEickLpYxh9t9lM9pb47vnHi9O
+         TrZFUN4MHgcF5BrIxFaRfZWxYnOWuLN4GJxqh4yBwwp//wgI3F4Db8HEteD/bXwP5c1Z
+         r2FAT+yj7KCDdN6pNx8E3azbO/aHffeNwlFBTwMwC6JUxxzz9NM9sREHt2Bxbx3y+2SC
+         04ApRXounao/XWKCRcJk5QgU8ggw9DjSQLtFkYISpo9HfzBMH8J3+TwHPSMf8HM45ezP
+         HIXL8unF0vI7aAPQ9JsG3zMen1eYDYb7GfYWYK7zMK8RI1nzEU6q3LOiBtd4cy1GOBkq
+         A85w==
+X-Gm-Message-State: AOAM532e1trj9ee28LTM9WRYps/mlqiNwNXoiXMgpfTw44cRD7RcIEeI
+        OJEPwrnzyek9gaN3zsL+nwSKBZqMOZteUKVKbas=
+X-Google-Smtp-Source: ABdhPJxUkEbd6MqiNa0YQikYTQZXHSQ16XBIBC4qHqf5VyvIYtbxinPvuPBdcN70cPLeaKLvMQ4B5coQCJnt+UP1ZG0=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:d19c:5902:49bb:c41])
- (user=samitolvanen job=sendgmr) by 2002:a25:5205:: with SMTP id
- g5mr923777ybb.292.1631646686506; Tue, 14 Sep 2021 12:11:26 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 12:10:45 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:9c8a:: with SMTP id
+ i10mr6916385qvf.59.1631646681262; Tue, 14 Sep 2021 12:11:21 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:10:43 -0700
 In-Reply-To: <20210914191045.2234020-1-samitolvanen@google.com>
-Message-Id: <20210914191045.2234020-17-samitolvanen@google.com>
+Message-Id: <20210914191045.2234020-15-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210914191045.2234020-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
-Subject: [PATCH v3 16/16] x86, build: Allow CONFIG_CFI_CLANG to be selected
+Subject: [PATCH v3 14/16] x86, cpu: Use LTO for cpu.c with CFI
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,27 +78,31 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled with
-Clang >= 13.
+Allow LTO to be used for cpu.c when CONFIG_CFI_CLANG is enabled to avoid
+indirect call failures. CFI requires Clang >= 13, which doesn't have the
+stack protector inlining bug.
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=51588
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/power/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 4e001bbbb425..0df0285d3ed4 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -107,6 +107,7 @@ config X86
- 	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <= 4096
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-+	select ARCH_SUPPORTS_CFI_CLANG		if X86_64 && CLANG_VERSION >= 130000
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_MEMTEST
- 	select ARCH_USE_QUEUED_RWLOCKS
+diff --git a/arch/x86/power/Makefile b/arch/x86/power/Makefile
+index 379777572bc9..a0532851fed7 100644
+--- a/arch/x86/power/Makefile
++++ b/arch/x86/power/Makefile
+@@ -4,9 +4,11 @@
+ # itself be stack-protected
+ CFLAGS_cpu.o	:= -fno-stack-protector
+ 
++ifndef CONFIG_CFI_CLANG
+ # Clang may incorrectly inline functions with stack protector enabled into
+ # __restore_processor_state(): https://bugs.llvm.org/show_bug.cgi?id=47479
+ CFLAGS_REMOVE_cpu.o := $(CC_FLAGS_LTO)
++endif
+ 
+ obj-$(CONFIG_PM_SLEEP)		+= cpu.o
+ obj-$(CONFIG_HIBERNATION)	+= hibernate_$(BITS).o hibernate_asm_$(BITS).o hibernate.o
 -- 
 2.33.0.309.g3052b89438-goog
 
