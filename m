@@ -2,59 +2,59 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422BBC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18B1C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F25661108
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C179360F58
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232759AbhINTl2 (ORCPT
+        id S232207AbhINTqT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:41:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55960 "EHLO
+        Tue, 14 Sep 2021 15:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232545AbhINTl1 (ORCPT
+        with ESMTP id S231490AbhINTqT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:41:27 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 306B8C061762
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:40:10 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id v2so56841plp.8
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:40:10 -0700 (PDT)
+        Tue, 14 Sep 2021 15:46:19 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65571C061762
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:45:01 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id f129so266850pgc.1
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:45:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=tcEmJONXzFctWoWAbmoyFCWtMu++a2TB+LdKgluV5F8=;
-        b=b67l9+LmGiNJMncgt37heGIa5UQNPduT93QdVJx5GAJ47eIMnEysXAK67zMtur4ffr
-         kmwp2SMskf750h8rbaW2gKeA9RbZxn2pgByKKIBkWHmbsDqBni80cuhkQjdWGap7rUkg
-         A7PRp6V9lRIT5Kn6iFNaEs1/fij2HOq1ve17k=
+        bh=40ZURQJupNlRJgwd5eFMDDAoOIJDnuXt7LSY56o8kS4=;
+        b=lzKqvUMMu5rxZiqj9wuiEEqTywKGvVrRs/BoshVydiH6sBPIGfWkXRSzVTGM3rvCS2
+         PAWNn8aqesPB4rxY0bXzkl7M1Ur32qcvhxqZYkIzSbrGQY7CJc1+59ig8uJED2rsTjGU
+         fgPULrNelKVe1v2UbHUgYjnLPZhiru0ekHUt8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tcEmJONXzFctWoWAbmoyFCWtMu++a2TB+LdKgluV5F8=;
-        b=jr/ozjZauw2d4VByg716siDEUPW91F7I8kxrJvZSJ+8gi+vLs82TxH2FwYwd8Xp8km
-         TFXxjSq5lO/NSUYnPL65+NFsL3f4QzNiiSL9ZZNxoBbKHBIe3nbEfe93xp10hEM5gwiH
-         gnfhX5QZbKFvT5puejnwdeRzYEIwhV6NG/sUuVjqAN6P8pZpl6WXOUis/v4BrwzrJx58
-         xYrb6OgoFCP+zHXjgmwlqKl5wgVUmvw2yccTS/DV2ifb7tBWbXlU8V6dOR1P/sYVn+D/
-         TEqWAWhJtQAccAklh2vTT1GrdjqFAMC6DivJ0GBeBrFIBs7VaI4kEvx1yJw/Q4v9U4Kn
-         Oitw==
-X-Gm-Message-State: AOAM5319zdLE+RCEmtR4ItyPwBKWKZ4C9TwHp17WzGxTCPB+9k5MpCxL
-        DmGTmDKSSZOZXJY+1DFRvIvT9w==
-X-Google-Smtp-Source: ABdhPJyQ2jde2kQCG8xG2FpSQla1sqvqKIfFblIQE21QUYBOqODtnpyqi+wdRz0ZEUo2GLzDt4e3+w==
-X-Received: by 2002:a17:90a:1984:: with SMTP id 4mr3968880pji.87.1631648409751;
-        Tue, 14 Sep 2021 12:40:09 -0700 (PDT)
+        bh=40ZURQJupNlRJgwd5eFMDDAoOIJDnuXt7LSY56o8kS4=;
+        b=3LAoEg1chuM8UaGqdPXRsltNmy5q07mtClL7LAAmtQDks/J249bL0GxnB17DDKb5+N
+         8Z0zIVeCmbsKYawNi1IXwIpS1SPNo86plFyqY1SrIOphiSsCxTczQgPFRnTK/IIE08OS
+         ZPtSt+bcWkBILRqxaAUDrgFbcCk1gEHUf/weGZTTQCFpA8Gr/jP8wy5vF7wib3JXwhmz
+         O/Zgtl0E6Tpfsb5yRhlSIJCNRJFFoUy+KtwfL7cp/aKWVB3H7za/qdecgQQtQnDULNxz
+         8RIoOVI+Skb2tFg3ecgSpiuPPZyyhzKZ2ceWFwM4iv91Mry13MPptSao5j720M1yO2bw
+         zCdA==
+X-Gm-Message-State: AOAM5307NFYsJbQq5q3LJ+IjBhLrB4d/I7/L5SqF0dpJhG5SoM0V6og/
+        2j1QBXs1TruDqN6aFdfPFiMyug==
+X-Google-Smtp-Source: ABdhPJwZC1UnAqusCV/aN1WgfFeau94VOV/0JXpAw24GnrE0f07TEv5EJbkRuymd8go+0OU8PPvHYg==
+X-Received: by 2002:aa7:8426:0:b0:438:3550:f190 with SMTP id q6-20020aa78426000000b004383550f190mr6376014pfn.19.1631648700830;
+        Tue, 14 Sep 2021 12:45:00 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y3sm2464895pjg.7.2021.09.14.12.40.08
+        by smtp.gmail.com with ESMTPSA id e11sm4983537pfv.201.2021.09.14.12.44.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 12:40:08 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 12:40:08 -0700
+        Tue, 14 Sep 2021 12:45:00 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:44:59 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -64,36 +64,54 @@ Cc:     x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v3 15/16] x86, kprobes: Fix optprobe_template_func type
- mismatch
-Message-ID: <202109141240.4843E7A9@keescook>
+Subject: Re: [PATCH v3 14/16] x86, cpu: Use LTO for cpu.c with CFI
+Message-ID: <202109141240.6928C1498B@keescook>
 References: <20210914191045.2234020-1-samitolvanen@google.com>
- <20210914191045.2234020-16-samitolvanen@google.com>
+ <20210914191045.2234020-15-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210914191045.2234020-16-samitolvanen@google.com>
+In-Reply-To: <20210914191045.2234020-15-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 12:10:44PM -0700, Sami Tolvanen wrote:
-> The optprobe_template_func symbol is defined in inline assembly,
-> but it's not marked global, which conflicts with the C declaration
-> needed for STACK_FRAME_NON_STANDARD and confuses the compiler when
-> CONFIG_CFI_CLANG is enabled.
-> 
-> Marking the symbol global would make the compiler happy, but as the
-> compiler also generates a CFI jump table entry for all address-taken
-> functions, the jump table ends up containing a jump to the .rodata
-> section where optprobe_template_func resides, which results in an
-> objtool warning.
-> 
-> Use ASM_STACK_FRAME_NON_STANDARD instead to avoid both issues.
+On Tue, Sep 14, 2021 at 12:10:43PM -0700, Sami Tolvanen wrote:
+> Allow LTO to be used for cpu.c when CONFIG_CFI_CLANG is enabled to avoid
+> indirect call failures. CFI requires Clang >= 13, which doesn't have the
+> stack protector inlining bug.
 > 
 > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/x86/power/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/power/Makefile b/arch/x86/power/Makefile
+> index 379777572bc9..a0532851fed7 100644
+> --- a/arch/x86/power/Makefile
+> +++ b/arch/x86/power/Makefile
+> @@ -4,9 +4,11 @@
+>  # itself be stack-protected
+>  CFLAGS_cpu.o	:= -fno-stack-protector
+>  
+> +ifndef CONFIG_CFI_CLANG
+>  # Clang may incorrectly inline functions with stack protector enabled into
+>  # __restore_processor_state(): https://bugs.llvm.org/show_bug.cgi?id=47479
+>  CFLAGS_REMOVE_cpu.o := $(CC_FLAGS_LTO)
+> +endif
+
+This seems weird -- it's tangential that CONFIG_CFI_CLANG is only on
+Clang >= 13, but it does seem better than adding a $(shell) to test the
+Clang version. So:
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
+
+>  
+>  obj-$(CONFIG_PM_SLEEP)		+= cpu.o
+>  obj-$(CONFIG_HIBERNATION)	+= hibernate_$(BITS).o hibernate_asm_$(BITS).o hibernate.o
+> -- 
+> 2.33.0.309.g3052b89438-goog
+> 
 
 -- 
 Kees Cook
