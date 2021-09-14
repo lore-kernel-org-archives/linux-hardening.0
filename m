@@ -8,60 +8,61 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D53EC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFBCC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6578661246
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54DBF61168
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232861AbhINTMU (ORCPT
+        id S232823AbhINTMW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:12:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49086 "EHLO
+        Tue, 14 Sep 2021 15:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232743AbhINTMS (ORCPT
+        with ESMTP id S232660AbhINTMU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:12:18 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83C1C061766
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:00 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id e8-20020a0cf348000000b0037a350958f2so793279qvm.7
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:00 -0700 (PDT)
+        Tue, 14 Sep 2021 15:12:20 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C9D5C061762
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:03 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id dv7-20020ad44ee7000000b0036fa79fd337so799901qvb.6
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=l9mJIyUqootgRNTBiBt+8dXdqm6+1gSNLr/rJAR02zA=;
-        b=Pf/yJENmsDHPVrKOCs7o0dEbd5TU3p9BMGkHoeSTGNwEHhjRdzECfmow0BqmDVllQz
-         WKMtAPK4Pk4TXKh+amiaqRBh3Z3ALCtQ+FoD9wpIk7jwBrnXo5xYiPQMvtgOt8qpO1Fn
-         vyNMoxgcPqs92XItc5iiF6novLQFrcrVSeLVUB7OQXAIS+DzFr+YNd9WsbP35QBUGY/w
-         CoHeipLM8r6/4fIjMDyjZ9Fa/xBaOvjx+2tFlFAhJ7bSzOV3gKce0DyhFJk9ifg33+RT
-         gnj+Q7Ex/GF/BS40DWaQVwVC2SCGv1otH0UsAaqDOZaX5fjAikeCuE1uEpent+K6JVXz
-         Q3cw==
+        bh=jYwwg+Kk2U3ZYcf6hnRJvQXYZdAJEEpKGctoJaVt6gw=;
+        b=NPAnSX36jiv1lKvN8PC/ewFg4fvEFLSg0OXLd21hP+Yo1usj7PqD7TR2NByTekAfUh
+         h9FPMybF8EhSxOIuOyNDV9uJ3TwEcK1rcB6qB5/J0Tl0bZGvxvAqk2EDGRz1Mt/FZDQ7
+         KAqeulJ41HnmYVV0VRGj/e/Bdnaq6UA5+Mf4Pw1RQ5+HIX/nmeyLhlAhPZ+kxQNzIbMK
+         73i8cwOy46P1K3GtC6eEcdY7ARKNBIR0voK5g+UhKzsZPQ+HtMoorSGJctiTYpw/+R+W
+         zmKfLiyY1lX2hHyg2Z0XkIggSV3I6MVdfihK1jHHsSzHQkEGdMEpalpoF6M63toc9pvQ
+         Rkmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=l9mJIyUqootgRNTBiBt+8dXdqm6+1gSNLr/rJAR02zA=;
-        b=xlLpHkl1Xnc9QVLTHbQQvvOjLMa+G6NH+fVFEIAZbtMUoYEQfC2bQxcrBrTnO/Uj8+
-         mE5xYn7RDJDeROhMGykxZ5yQ70LCm9V8iwEySGO1qThybqAjPvKC+1Uxw5pmmQTwa4k8
-         0sCHDeCTdoH0FQtetwr/JP35sZYwUQbB8toOpd8XZdLMjU4kinzZX2537T5Ga4+WWf0C
-         3q8ttuv56IqvDsdHA+5bPb3vz/GlrMy4Ecn1SgJqjSe1NHgdWUT4WI3V002yf48aFNll
-         eUDpk7J1MScVA4JGXGMJWD8PfYXtf6V60svypjVVtCNiH5Uo81NsC6lUlYxDN79jK/8a
-         LomQ==
-X-Gm-Message-State: AOAM530SiNc/E4tgMJEt7v9juZIk3BUSWEiJ8jIsk58f0bZmhk3ls+CV
-        /alDBvVCKtcUBj6SIaL+HA/pTiYZ/8M+9WZMbIo=
-X-Google-Smtp-Source: ABdhPJzHZdT/l7HIAU895z7Y+lhZHXrnjfKLISS83BOwvoTWOV5t3zlx6Jm6b8gbenEqLpa7OhId1hiwrbltZ8OOHvI=
+        bh=jYwwg+Kk2U3ZYcf6hnRJvQXYZdAJEEpKGctoJaVt6gw=;
+        b=v2N0llhLE/OwxV80VkMh2iESdVzxMb7yHMYYoUxLqL/sIriBCaqL4EhOCxPDhQYb9E
+         pHRnnoaoeGj5QHVMBtQ4WKl4Ky4uMl6JA1A0glv1TXtFqgzpBXvp3ezuMaTakLwbuWDf
+         +bjwzHoKpo1jfUAKhWcLMHkQw605TwpH6pivszUrNtBTRkt4bhISlsiIvw0zGdvOZakW
+         0lhBVYmFplpp8r2ANhi6P2u0oLVMb+NZB80dMgNBdYEBPm2LIYGBsoGorMXHgkYHgJtZ
+         0P6+dN+BFuiGg9GRgqTJ/BlcYBVzr+1tlMt182jT8V9vuH2g5X5Eqw25kiciCOuEVEpp
+         AK1w==
+X-Gm-Message-State: AOAM53192FPEtx7PtbeBGO4ohuZiYfZXPlwWDMvBiwXVmRL8XWT/RSW9
+        z5Nix8fMyRGR2ojoBjfE9s//7GFXvexvvXjeuCA=
+X-Google-Smtp-Source: ABdhPJwfi4qx4qnJtxV1+MH40mouU14ol9xzH3S5QgcUtGhRKkBUjAuIzNteOtfGHhHJLuACMu86DCp6Rz07WMTqCQQ=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:d19c:5902:49bb:c41])
- (user=samitolvanen job=sendgmr) by 2002:a0c:ab08:: with SMTP id
- h8mr7159579qvb.41.1631646660085; Tue, 14 Sep 2021 12:11:00 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 12:10:34 -0700
+ (user=samitolvanen job=sendgmr) by 2002:ad4:4652:: with SMTP id
+ y18mr7035452qvv.2.1631646662445; Tue, 14 Sep 2021 12:11:02 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:10:35 -0700
 In-Reply-To: <20210914191045.2234020-1-samitolvanen@google.com>
-Message-Id: <20210914191045.2234020-6-samitolvanen@google.com>
+Message-Id: <20210914191045.2234020-7-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210914191045.2234020-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
-Subject: [PATCH v3 05/16] tracepoint: Exclude tp_stub_func from CFI checking
+Subject: [PATCH v3 06/16] ftrace: Use an opaque type for functions not
+ callable from C
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,33 +79,33 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-If allocate_probes fails, func_remove replaces the old function
-with a pointer to tp_stub_func, which is called using a mismatching
-function pointer that's will always trip indirect call checks with
-CONFIG_CFI_CLANG. Use DEFINE_CFI_IMMEDATE_RETURN_STUB to define
-tp_stub_func to allow it to pass CFI checking.
+With CONFIG_CFI_CLANG, the compiler changes function references to point
+to the CFI jump table. As ftrace_call, ftrace_regs_call, and mcount_call
+are not called from C, use DECLARE_ASM_FUNC_SYMBOL to declare them.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- kernel/tracepoint.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ include/linux/ftrace.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index 64ea283f2f86..58acc7d86c3f 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -99,10 +99,7 @@ struct tp_probes {
- };
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 832e65f06754..67de28464aeb 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -578,9 +578,10 @@ extern void ftrace_replace_code(int enable);
+ extern int ftrace_update_ftrace_func(ftrace_func_t func);
+ extern void ftrace_caller(void);
+ extern void ftrace_regs_caller(void);
+-extern void ftrace_call(void);
+-extern void ftrace_regs_call(void);
+-extern void mcount_call(void);
++
++DECLARE_ASM_FUNC_SYMBOL(ftrace_call);
++DECLARE_ASM_FUNC_SYMBOL(ftrace_regs_call);
++DECLARE_ASM_FUNC_SYMBOL(mcount_call);
  
- /* Called in removal of a func but failed to allocate a new tp_funcs */
--static void tp_stub_func(void)
--{
--	return;
--}
-+static DEFINE_CFI_IMMEDIATE_RETURN_STUB(tp_stub_func);
+ void ftrace_modify_all_code(int command);
  
- static inline void *allocate_probes(int count)
- {
 -- 
 2.33.0.309.g3052b89438-goog
 
