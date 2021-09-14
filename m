@@ -2,95 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC4EC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 16:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA1FC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 17:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34EF16112E
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 16:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F27461029
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 17:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229959AbhINQii (ORCPT
+        id S230008AbhINR7K (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 12:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231202AbhINQib (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 12:38:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BD12F60FD7;
-        Tue, 14 Sep 2021 16:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631637434;
-        bh=UAcYLB+NEUWJXtqSiE8P3i+7GLJn9hsz9hqFty/Uc0g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=f18CaMqaWCA6mI5EuEpru5Amvr6VzYDlVPu58O+SJMc4jAhz8U/tjoDfBLlvVz0cH
-         YGyOiFOm3G9SE9oKZiKKvwf+6rmo3QV985HzIiisd2P+qN3804gwSxL00qWwmbVCMI
-         l1gstKRl8tiiPwVAoTbZc6Hut2viVfdtrJo3M68DxCHL7fxCdEibzOO/fPbCJf75U7
-         YTd7luKmFOgJIf/NBFGnbw9fZVnuo0py2fvlqkf18NqEfPps6H371ObuJzh6UQR7qy
-         yLUjF1OodXJqIAyZE0wcw9VBlb1S+Xyi/JFU+SJ8QI/lb5tQicXxlAoRI7DN9h4BA4
-         67+DHHVS5LPdg==
-Date:   Tue, 14 Sep 2021 11:41:00 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [GIT PULL] Enable -Wimplicit-fallthrough for Clang for 5.15-rc2
-Message-ID: <20210914164100.GA236780@embeddedor>
+        Tue, 14 Sep 2021 13:59:10 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.178]:18018 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229993AbhINR7J (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 14 Sep 2021 13:59:09 -0400
+X-Greylist: delayed 1524 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Sep 2021 13:59:09 EDT
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 1060B1A51D9
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:32:27 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id QCIEmmolLHlR1QCIEmCvQR; Tue, 14 Sep 2021 12:32:27 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3sP6jXMNnxu6PJJC0Lvm+qOKW0f/dGtu/4FvN9Uf7iM=; b=g8Az3FMGHjcUQunQDfThX3OfVx
+        fI2MMchUpam/fzYsvIrUYzq3Ilrjsmjg+DZnyr7STqsjSE6Itbo44efKDrBR8yt4YU+riVw7lErnt
+        dR21PRArQDvU37USJICiFK8IoldkWyUV2C51+PhJihApbCnlTysBXPUGldNdXyzWcDPxzCuk9viYi
+        UOojkNYveJSd6GoERVUQOiaJEmTP0yFJ40vkx0Lblpafjwsw7qDE6uzkZbODbs5AN85CZa5jizmRL
+        nSBET8eexfyAaLddgskzpeW2PpEoY/fqAQxhOK8cuFH/FuHeLymn32wmV6yeWV3dneeYdtffFwStn
+        a3ziMzJw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:34626 helo=[192.168.15.9])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1mQCIE-0035SF-A2; Tue, 14 Sep 2021 12:32:26 -0500
+Subject: Re: [PATCH][next] ath11k: Replace one-element array with
+ flexible-array member
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210823172159.GA25800@embeddedor>
+ <6e8229a1-187c-cd69-ad1c-018737e5e455@embeddedor.com>
+ <87r1dr1vpf.fsf@codeaurora.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <36d4e936-527d-e6ff-8f6a-e06fcb275327@embeddedor.com>
+Date:   Tue, 14 Sep 2021 12:36:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <87r1dr1vpf.fsf@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1mQCIE-0035SF-A2
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:34626
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The following changes since commit 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f:
 
-  Linux 5.15-rc1 (2021-09-12 16:28:37 -0700)
 
-are available in the Git repository at:
+On 9/14/21 02:07, Kalle Valo wrote:
+> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+> 
+>> I wonder if you can take this patch, please.
+> 
+> This is in my queue, please do not take ath11k patches.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/implicit-fallthrough-clang-5.15-rc2
+Great, and sure thing. :)
 
-for you to fetch changes up to 236378bb6ca791cbde68eacedd7688084d06177e:
-
-  Makefile: Enable -Wimplicit-fallthrough for Clang (2021-09-13 23:47:12 -0500)
-
-----------------------------------------------------------------
-Enable -Wimplicit-fallthrough for Clang for 5.15-rc2
-
-Hi Linus,
-
-Please, pull the following patches that fix the last warnings in
-x86_64, ARM and MIPS reported by kernel test robot, and enables
--Wimplicit-fallthrough for Clang 14+, globally.
-
-We had almost 40,000[1] of these issues for Clang in the beginning,
-and there might be a couple more out there when building some
-architectures with certain configurations. However, with the
-recent fixes, I think we are in good shape and it is now possible
-to enable -Wimplicit-fallthrough for Clang, with this finally getting rid of
-the unintentional fallthrough bug-class in the kernel, entirely. :)
-
-[1] https://github.com/KSPP/linux/issues/115
-
-Thanks!
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (4):
-      scsi: st: Fix fall-through warning for Clang
-      MIPS: Fix fall-through warnings for Clang
-      pcmcia: db1xxx_ss: Fix fall-through warning for Clang
-      Makefile: Enable -Wimplicit-fallthrough for Clang
-
- Makefile                             | 8 ++++++++
- arch/mips/alchemy/devboards/db1550.c | 1 +
- arch/mips/kernel/uprobes.c           | 1 +
- drivers/pcmcia/db1xxx_ss.c           | 1 +
- drivers/scsi/st.c                    | 1 +
- 5 files changed, 12 insertions(+)
+Thanks
+--
+Gustavo
