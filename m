@@ -2,202 +2,229 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98F6C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD77C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDEE3610CE
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF5460F11
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232732AbhINThr (ORCPT
+        id S232341AbhINTjA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55038 "EHLO
+        Tue, 14 Sep 2021 15:39:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233026AbhINThn (ORCPT
+        with ESMTP id S232207AbhINTjA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:37:43 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5212BC061764
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:36:24 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id f2so783072ljn.1
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:36:24 -0700 (PDT)
+        Tue, 14 Sep 2021 15:39:00 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA7EC061574
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:37:42 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id s11so193897pgr.11
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:37:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zRm0lqiAbi6ssQDGfy8o0TiHXCZIhqN7Pmc2NlxMpy8=;
-        b=F83eSKq4GiQioqeodNpvZ8dTsI0osaxb7TKxXWF1RND2pTqkw9RYtDrG8Fp/3irrKv
-         q+5MmSAXauGqbvutu2IUoy4le3OWZaU3gO1pPyZep53bf8CG6XRZiLkQE81J+Qzbqp6B
-         beI6W3XSL7dp2JG+/iDVcGkIFQrxBvHqSEJpYE1mdJJXUHMsv+YUMdvs1JyziY+yRWm5
-         T0Ie5JjJrAcSzGBztmg5JbinjwLMZOuAmNoUo8jtFNbC576gGFIPym3KorPkm4UGEz8q
-         Uc7NElra0NWCOSIL7kv99y2mGpb/B1/41CVdecVE078RmN/JKffsqJ5e9v/nh3QOw1NW
-         yERQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EaW35x72GNh4jI/yVERXrJlTV6ZAnW2fqMDnsImY8/4=;
+        b=OSKuSjLocjuewfPQ4w7rEtlqeziC/WnWO53nguIxJqu1LMfY++zpt42N5kzEwqMQsS
+         SUKxoGOw3JOksisigkLJsuZ/pijyDvLIsKmgx10nxH25CnimVOV5u2lfmCRzhYs+qUzP
+         IzNKTn3cXL7JiH5O19KrS9VUnk4UQD65XsaEk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zRm0lqiAbi6ssQDGfy8o0TiHXCZIhqN7Pmc2NlxMpy8=;
-        b=c0zvQ10DInG3ZSSlkyWW91Ikf/K0PYsFp8kIOzsmIHq9So+ZTGlZiXy6p/4KxarmzA
-         TgA9XDILfleU/sA3HvJRzljsy8Lztb5HZynaDZ+h6TwsNUXhi3JxvL8MjRw6ppiVjYGY
-         bk+YdjbA7XKXqGlMZFAdhjBo9u0fxDJ8/ZZKOn8Hg6RJlUagA37wkcB3IcQ2wMJsgsra
-         9k4/u4bGGuPy2zQYfeSa0RmfAFtSM0W1GmV+1+1N0QKeH2VYs1jfdQRj0f+xWOwwkTpG
-         q0r8tVvmrUCfT9dyhA3HwGw+r+STj664TEtgkOgzsHzl0O2I0Fn7WqdpJ3d8g7+dXbi+
-         m+dQ==
-X-Gm-Message-State: AOAM530wSHDdOi0DYi2p112PCu7Uq451CeCjmllMS6eTG+rmwoum4cYJ
-        WnksB41i0Rx3gb3NYSowPC4a2LtnIBSvMxrYzBu4Eg==
-X-Google-Smtp-Source: ABdhPJzWasbt1nSfH/aTZ2tmWuYt7/AFbrlD8TfBLIlAmysS8NukT3vJ2wb3/b9J986Ft01zofIXZpJXDpApNHIwqf4=
-X-Received: by 2002:a2e:750e:: with SMTP id q14mr16681926ljc.338.1631648182493;
- Tue, 14 Sep 2021 12:36:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210914191045.2234020-1-samitolvanen@google.com> <20210914191045.2234020-5-samitolvanen@google.com>
-In-Reply-To: <20210914191045.2234020-5-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 14 Sep 2021 12:36:11 -0700
-Message-ID: <CAKwvOdnTeTLcrjPy5QcshSLr0Cc2uj7_hTt70j37eEBZzxr=PA@mail.gmail.com>
-Subject: Re: [PATCH v3 04/16] cfi: Add DEFINE_CFI_IMMEDIATE_RETURN_STUB
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EaW35x72GNh4jI/yVERXrJlTV6ZAnW2fqMDnsImY8/4=;
+        b=MLjL4TeGXAwYEveGNk5x0uRfculQY0dy4DYpIQTyM1Mrv0eGMComL2KM2K2nF+BCxZ
+         +NOIawX+czn3Ok10Dhj5UjuodUCvswo39319tZqJZL1kA6lIyyWjffikDOcYpYK71E6S
+         Ilw9LAAbtEiwb9C2neF8fJB9pj5tJOqauPrTftQuV6cbf0TADORuSP1v48k05Ytmmp24
+         kwQ7VGsPmCGgUiVTaQC3jC2s1vQUyaYNWV1/dRgCOhr2dk6lTq0urX7yXU1/4Dgel/Sq
+         pjy9suxRff3TqLExynxFd1dtZRK4AeHUi//Oo/Y+5ygt1ucRdR+TK3x2899W6N3JZYD2
+         4EAw==
+X-Gm-Message-State: AOAM532PmWhiUfxgF/WqHqovUlPRmGA1WM9EcoCZ3Pt/A/yS2A8bQN3s
+        CTXT1Uu43/YMOjd26tzD3ycaurDclJM25w==
+X-Google-Smtp-Source: ABdhPJwOXJ3KD7uAr31NtTgsl8y72c8faND5klawk2gESRf4CBhKImOimYYVgdlcJKHbsaB7n5YnsA==
+X-Received: by 2002:a62:4dc5:0:b0:438:8133:fcef with SMTP id a188-20020a624dc5000000b004388133fcefmr6457410pfb.44.1631648261915;
+        Tue, 14 Sep 2021 12:37:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p30sm11328125pfh.116.2021.09.14.12.37.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Sep 2021 12:37:41 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:37:40 -0700
+From:   Kees Cook <keescook@chromium.org>
 To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+Cc:     x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 10/16] x86/extable: Mark handlers __cficanonical
+Message-ID: <202109141235.BE65491A4@keescook>
+References: <20210914191045.2234020-1-samitolvanen@google.com>
+ <20210914191045.2234020-11-samitolvanen@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210914191045.2234020-11-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 12:10 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> This change introduces the DEFINE_CFI_IMMEDIATE_RETURN_STUB macro,
-> which defines a stub function that immediately returns and when
-> defined in the core kernel, always passes indirect call checking
-> with CONFIG_CFI_CLANG. Note that this macro should only be used when
-> a stub cannot be called using the correct function type.
->
+On Tue, Sep 14, 2021 at 12:10:39PM -0700, Sami Tolvanen wrote:
+> Exception tables are populated in assembly code, but the handlers are
+> called in fixup_exception, which trips indirect call checking with
+> CONFIG_CFI_CLANG. Mark the handlers __cficanonical to allow addresses
+> taken in assembly to pass CFI checking.
+> 
 > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 > ---
->  include/asm-generic/vmlinux.lds.h | 11 +++++++++++
->  include/linux/cfi.h               | 14 ++++++++++++++
->  kernel/cfi.c                      | 24 +++++++++++++++++++++++-
->  3 files changed, 48 insertions(+), 1 deletion(-)
->
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index f2984af2b85b..5b77284f7221 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -407,6 +407,16 @@
->         KEEP(*(.static_call_tramp_key))                                 \
->         __stop_static_call_tramp_key = .;
->
-> +#ifdef CONFIG_CFI_CLANG
-> +#define CFI_EXCLUDED_DATA                                              \
-> +       . = ALIGN(8);                                                   \
-> +       __start_cfi_excluded = .;                                       \
-> +       KEEP(*(.cfi_excluded_stubs))                                    \
-> +       __stop_cfi_excluded = .;
-> +#else
-> +#define CFI_EXCLUDED_DATA
-> +#endif
-> +
->  /*
->   * Allow architectures to handle ro_after_init data on their
->   * own by defining an empty RO_AFTER_INIT_DATA.
-> @@ -430,6 +440,7 @@
->                 __start_rodata = .;                                     \
->                 *(.rodata) *(.rodata.*)                                 \
->                 SCHED_DATA                                              \
-> +               CFI_EXCLUDED_DATA                                       \
->                 RO_AFTER_INIT_DATA      /* Read only after init */      \
->                 . = ALIGN(8);                                           \
->                 __start___tracepoints_ptrs = .;                         \
-> diff --git a/include/linux/cfi.h b/include/linux/cfi.h
-> index 879744aaa6e0..9ebf67a0d421 100644
-> --- a/include/linux/cfi.h
-> +++ b/include/linux/cfi.h
-> @@ -20,6 +20,18 @@ extern void __cfi_check(uint64_t id, void *ptr, void *diag);
->  #define __CFI_ADDRESSABLE(fn, __attr) \
->         const void *__cfi_jt_ ## fn __visible __attr = (void *)&fn
->
-> +/*
-> + * Defines a stub function that returns immediately, and when defined and
-> + * referenced in the core kernel, always passes CFI checking. This should
-> + * be used only for stubs that cannot be called using the correct function
-> + * pointer type, which should be rare.
-> + */
-> +#define DEFINE_CFI_IMMEDIATE_RETURN_STUB(fn) \
-> +       void fn(void) { return; } \
-> +       const void *__cfi_excl_ ## fn __visible \
-> +               __attribute__((__section__(".cfi_excluded_stubs"))) \
-
-Can we use __section from include/linux/compiler_attributes.h here
-rather than open coding the function attribute?
-
-> +               = (void *)&fn
-> +
->  #ifdef CONFIG_CFI_CLANG_SHADOW
->
->  extern void cfi_module_add(struct module *mod, unsigned long base_addr);
-> @@ -35,6 +47,8 @@ static inline void cfi_module_remove(struct module *mod, unsigned long base_addr
->  #else /* !CONFIG_CFI_CLANG */
->
->  #define __CFI_ADDRESSABLE(fn, __attr)
-> +#define DEFINE_CFI_IMMEDIATE_RETURN_STUB(fn) \
-> +       void fn(void) { return; }
->
->  #endif /* CONFIG_CFI_CLANG */
->
-> diff --git a/kernel/cfi.c b/kernel/cfi.c
-> index 9594cfd1cf2c..8d931089141b 100644
-> --- a/kernel/cfi.c
-> +++ b/kernel/cfi.c
-> @@ -278,12 +278,34 @@ static inline cfi_check_fn find_module_check_fn(unsigned long ptr)
->         return fn;
+>  arch/x86/mm/extable.c | 64 ++++++++++++++++++++++++-------------------
+>  1 file changed, 36 insertions(+), 28 deletions(-)
+> 
+> diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+> index e1664e9f969c..d16912dcbb4e 100644
+> --- a/arch/x86/mm/extable.c
+> +++ b/arch/x86/mm/extable.c
+> @@ -24,16 +24,18 @@ ex_fixup_handler(const struct exception_table_entry *x)
+>  	return (ex_handler_t)((unsigned long)&x->handler + x->handler);
 >  }
->
-> +extern unsigned long __start_cfi_excluded[];
-> +extern unsigned long __stop_cfi_excluded[];
-> +
-> +static inline bool is_cfi_excluded(unsigned long ptr)
-> +{
-> +       unsigned long *p = __start_cfi_excluded;
-> +
-> +       for ( ; p < __stop_cfi_excluded; ++p)
-> +               if (*p == ptr)
-> +                       return true;
-> +
-> +       return false;
-> +}
-> +
-> +static void __cfi_pass(uint64_t id, void *ptr, void *diag)
-> +{
-> +}
-> +
->  static inline cfi_check_fn find_check_fn(unsigned long ptr)
+>  
+> -__visible bool ex_handler_default(const struct exception_table_entry *fixup,
+> -				  struct pt_regs *regs, int trapnr,
+> -				  unsigned long error_code,
+> -				  unsigned long fault_addr)
+> +__visible __cficanonical
+> +bool ex_handler_default(const struct exception_table_entry *fixup,
+> +			struct pt_regs *regs, int trapnr,
+> +			unsigned long error_code,
+> +			unsigned long fault_addr)
 >  {
->         cfi_check_fn fn = NULL;
->
-> -       if (is_kernel_text(ptr))
-> +       if (is_kernel_text(ptr)) {
-> +               if (unlikely(is_cfi_excluded(ptr)))
-> +                       return __cfi_pass;
-> +
->                 return __cfi_check;
-> +       }
->
->         /*
->          * Indirect call checks can happen when RCU is not watching. Both
-> --
-> 2.33.0.309.g3052b89438-goog
->
+>  	regs->ip = ex_fixup_addr(fixup);
+>  	return true;
+>  }
+>  EXPORT_SYMBOL(ex_handler_default);
+>  
+> +__visible __cficanonical
+>  __visible bool ex_handler_fault(const struct exception_table_entry *fixup,
 
+Double __visible here, but with that fixed:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+I would note that given Linus's recent comments on attribute locations,
+it does seem that __cficanonical is more a function behavior attribute
+than a storage class... I'm not really sure:
+https://lore.kernel.org/mm-commits/CAHk-=wiOCLRny5aifWNhr621kYrJwhfURsa0vFPeUEm8mF0ufg@mail.gmail.com
+
+-Kees
+
+>  				struct pt_regs *regs, int trapnr,
+>  				unsigned long error_code,
+> @@ -55,10 +57,11 @@ EXPORT_SYMBOL_GPL(ex_handler_fault);
+>   * of vulnerability by restoring from the initial state (essentially, zeroing
+>   * out all the FPU registers) if we can't restore from the task's FPU state.
+>   */
+> -__visible bool ex_handler_fprestore(const struct exception_table_entry *fixup,
+> -				    struct pt_regs *regs, int trapnr,
+> -				    unsigned long error_code,
+> -				    unsigned long fault_addr)
+> +__visible __cficanonical
+> +bool ex_handler_fprestore(const struct exception_table_entry *fixup,
+> +			  struct pt_regs *regs, int trapnr,
+> +			  unsigned long error_code,
+> +			  unsigned long fault_addr)
+>  {
+>  	regs->ip = ex_fixup_addr(fixup);
+>  
+> @@ -70,10 +73,11 @@ __visible bool ex_handler_fprestore(const struct exception_table_entry *fixup,
+>  }
+>  EXPORT_SYMBOL_GPL(ex_handler_fprestore);
+>  
+> -__visible bool ex_handler_uaccess(const struct exception_table_entry *fixup,
+> -				  struct pt_regs *regs, int trapnr,
+> -				  unsigned long error_code,
+> -				  unsigned long fault_addr)
+> +__visible __cficanonical
+> +bool ex_handler_uaccess(const struct exception_table_entry *fixup,
+> +			struct pt_regs *regs, int trapnr,
+> +			unsigned long error_code,
+> +			unsigned long fault_addr)
+>  {
+>  	WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in user access. Non-canonical address?");
+>  	regs->ip = ex_fixup_addr(fixup);
+> @@ -81,10 +85,11 @@ __visible bool ex_handler_uaccess(const struct exception_table_entry *fixup,
+>  }
+>  EXPORT_SYMBOL(ex_handler_uaccess);
+>  
+> -__visible bool ex_handler_copy(const struct exception_table_entry *fixup,
+> -			       struct pt_regs *regs, int trapnr,
+> -			       unsigned long error_code,
+> -			       unsigned long fault_addr)
+> +__visible __cficanonical
+> +bool ex_handler_copy(const struct exception_table_entry *fixup,
+> +		     struct pt_regs *regs, int trapnr,
+> +		     unsigned long error_code,
+> +		     unsigned long fault_addr)
+>  {
+>  	WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in user access. Non-canonical address?");
+>  	regs->ip = ex_fixup_addr(fixup);
+> @@ -93,10 +98,11 @@ __visible bool ex_handler_copy(const struct exception_table_entry *fixup,
+>  }
+>  EXPORT_SYMBOL(ex_handler_copy);
+>  
+> -__visible bool ex_handler_rdmsr_unsafe(const struct exception_table_entry *fixup,
+> -				       struct pt_regs *regs, int trapnr,
+> -				       unsigned long error_code,
+> -				       unsigned long fault_addr)
+> +__visible __cficanonical
+> +bool ex_handler_rdmsr_unsafe(const struct exception_table_entry *fixup,
+> +			     struct pt_regs *regs, int trapnr,
+> +			     unsigned long error_code,
+> +			     unsigned long fault_addr)
+>  {
+>  	if (pr_warn_once("unchecked MSR access error: RDMSR from 0x%x at rIP: 0x%lx (%pS)\n",
+>  			 (unsigned int)regs->cx, regs->ip, (void *)regs->ip))
+> @@ -110,10 +116,11 @@ __visible bool ex_handler_rdmsr_unsafe(const struct exception_table_entry *fixup
+>  }
+>  EXPORT_SYMBOL(ex_handler_rdmsr_unsafe);
+>  
+> -__visible bool ex_handler_wrmsr_unsafe(const struct exception_table_entry *fixup,
+> -				       struct pt_regs *regs, int trapnr,
+> -				       unsigned long error_code,
+> -				       unsigned long fault_addr)
+> +__visible __cficanonical
+> +bool ex_handler_wrmsr_unsafe(const struct exception_table_entry *fixup,
+> +			     struct pt_regs *regs, int trapnr,
+> +			     unsigned long error_code,
+> +			     unsigned long fault_addr)
+>  {
+>  	if (pr_warn_once("unchecked MSR access error: WRMSR to 0x%x (tried to write 0x%08x%08x) at rIP: 0x%lx (%pS)\n",
+>  			 (unsigned int)regs->cx, (unsigned int)regs->dx,
+> @@ -126,10 +133,11 @@ __visible bool ex_handler_wrmsr_unsafe(const struct exception_table_entry *fixup
+>  }
+>  EXPORT_SYMBOL(ex_handler_wrmsr_unsafe);
+>  
+> -__visible bool ex_handler_clear_fs(const struct exception_table_entry *fixup,
+> -				   struct pt_regs *regs, int trapnr,
+> -				   unsigned long error_code,
+> -				   unsigned long fault_addr)
+> +__visible __cficanonical
+> +bool ex_handler_clear_fs(const struct exception_table_entry *fixup,
+> +			 struct pt_regs *regs, int trapnr,
+> +			 unsigned long error_code,
+> +			 unsigned long fault_addr)
+>  {
+>  	if (static_cpu_has(X86_BUG_NULL_SEG))
+>  		asm volatile ("mov %0, %%fs" : : "rm" (__USER_DS));
+> -- 
+> 2.33.0.309.g3052b89438-goog
+> 
 
 -- 
-Thanks,
-~Nick Desaulniers
+Kees Cook
