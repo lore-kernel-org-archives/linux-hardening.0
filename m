@@ -2,117 +2,148 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7E1C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63D5C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 20:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02EE6610CE
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35A36112D
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 20:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232324AbhINTrk (ORCPT
+        id S233290AbhINUD1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:47:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
+        Tue, 14 Sep 2021 16:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231490AbhINTrj (ORCPT
+        with ESMTP id S232840AbhINUD0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:47:39 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE772C061762
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:46:21 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id i4so846665lfv.4
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:46:21 -0700 (PDT)
+        Tue, 14 Sep 2021 16:03:26 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA18C061766
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 13:02:08 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id bb10so132791plb.2
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 13:02:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zJoP/OqIzovh+f7RN/ZmhSCTt8+2LJh5ljOOfisx8/A=;
-        b=CCXklwHg9kiNvnZWRukTby2pDIPeoMSxmSeHJzt+vLgD8NR5uPjZwbE6bx7MH4vGHZ
-         QY1wW/6RJzP6zW7pfLxLTSw+QnhAbhj+XtHwjkJRVCqUsLQ7WTLcEr3rhT8fp1IAGUR/
-         z3ksXpK5imnJv2Xzo5Nz4/p1ysDmSUwVGZS3HgEsoYYHKQ+OJ3oyqbOUvLViN4hZEvbs
-         afwNVOmQGGTyCJOf9WsOaSB237K1IdfgmZIWgQ7CAbgXO9h2xo5DID/FvNVQLOmoC/Wd
-         P5fJcPNEgddzeiE6a5ZiNE3kYhwlVatVfen/Nue2r9zMfroBicCRPstvt89qbsQszfHp
-         lQbw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ytz9T65KINeMDYgtvEhkkCARVDqnbfdteXwgWuVKDiI=;
+        b=NRuom6JboBrj4IXL+pBGw7eEz90ljXX1tfKU8KHlfdND+6f8WcEcq3XSl5fZ+Z7Hm7
+         jOf2r+/EUDLBo2NN6Fo36PIWetd1fxV20GRa8K/6eGrxrDkSGtLwzkC0HQ2wotAzsSqJ
+         QwxakmNvcd59dGryK2aUYTK0qGCUv6FnpFEms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zJoP/OqIzovh+f7RN/ZmhSCTt8+2LJh5ljOOfisx8/A=;
-        b=l3bhVJuof3Fv6imp8QInlmfWuXsbGoX+2tXT89FfoCA7PVME+LLIeI6naCvC0tRBIO
-         epaUy40S9QyYx/4knNYu5pTwseBdRtItVUIQKnO53CKZIHXMU2F/uEgCNGVUz0iyikS+
-         03yk9vw5vb6e4BHPFUAhTPWQo4RJP+foDi44hjISREP3EMCaKCMnfkr1PVXUxu21pMt/
-         b3g+D0jqmuONgiNVmTQ1nlcMN5g267xGdtnMzb1CZBM5Qwsz1Y05ZKO7JvheQtcIv3Zo
-         mcYg36oM0nBVL/aSt2SfzskebEvuzQFSA5UfEMavTh8q8dmcEf3BpTMDfaDX6tLn45Af
-         CZYg==
-X-Gm-Message-State: AOAM531vzOm6pCxFbnUOq7EgDjgGuH8A6vlX0ySH1HRj51U0LrQBvORH
-        LO325dNmYA9n1HFnqIsgCluqlKHtAQm68vrq2OFT9Q==
-X-Google-Smtp-Source: ABdhPJwxMW3WhfPkamXqYeMSjNTgE7RuclPcDOmDe8a9WaD1GnvpXOb90wRrGwAG4pV7hkqsRsXFiR5LDQ/Egb+xexI=
-X-Received: by 2002:a05:6512:2291:: with SMTP id f17mr14633288lfu.489.1631648779874;
- Tue, 14 Sep 2021 12:46:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210914191045.2234020-1-samitolvanen@google.com> <20210914191045.2234020-15-samitolvanen@google.com>
-In-Reply-To: <20210914191045.2234020-15-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 14 Sep 2021 12:46:08 -0700
-Message-ID: <CAKwvOdm1dy7RiSfP1Ra1ek08OQ=8o8FDnrMdW44e6ZssgPbCAw@mail.gmail.com>
-Subject: Re: [PATCH v3 14/16] x86, cpu: Use LTO for cpu.c with CFI
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ytz9T65KINeMDYgtvEhkkCARVDqnbfdteXwgWuVKDiI=;
+        b=5/N+5sacOG47G0Ioq4l8xsVWzB1hksfR3xFdE2RREw9TsUI6/g+UZKofuqUfuMMa9b
+         677/vkRTB4fi9QbdCB8YZ7siIOKnIo9kqtJE0wfoeEbP4oVDHl78pBhsSHj+gFIQXRdr
+         TX7d9KzPfGL0+fHujS0y9R2F3Ni07EePIPlK9Pvx8HzWe/TWqTHlm/2+ahBE3PLFA11u
+         9gGojhDCNcV9Lzntw5JOO/POWx2M7ZV+bYjSOc9qW0Y2AvI44CNUO13Drd/N3cTLSWsv
+         SrMPlSrr/A4IqYvACzy74ASXaxS1mxrfHr0ySgoTnIN/9qx6t6pisCGDkaXzvfFyYMl2
+         kcbQ==
+X-Gm-Message-State: AOAM533fUjdkCkxWlzp6LAVF6zzCsFM8DGAc5dCGZKZH/Psmx+v1qyb+
+        bPiKGbvRn+prb7Bv5lYMjLyN9A==
+X-Google-Smtp-Source: ABdhPJxhhZk1i7zHZPiprze3RqdD3yBPfw9oRSO69WtgTUwL8hmFgpqNya25NvLvysnJFy0XAsg0ng==
+X-Received: by 2002:a17:902:8a83:b0:132:6674:f28b with SMTP id p3-20020a1709028a8300b001326674f28bmr16382589plo.63.1631649727515;
+        Tue, 14 Sep 2021 13:02:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m21sm2406530pjl.14.2021.09.14.13.02.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Sep 2021 13:02:06 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>, llvm@lists.linux.dev,
+        Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <nathan@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2] hardening: Avoid harmless Clang option under CONFIG_INIT_STACK_ALL_ZERO
+Date:   Tue, 14 Sep 2021 13:02:03 -0700
+Message-Id: <20210914200203.1667751-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2977; h=from:subject; bh=imXvSq9i08/jXla4+sBmsEoHRgxDVq0c/pR4Y+Src2Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhQP+6KIBv7ADhwLtBfRJcxajHiIjU9syPZkgPPvze 7pK8/OSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYUD/ugAKCRCJcvTf3G3AJmttD/ 4mVU7Uy78lGKS9GG4/AATbbI2r+H4dlMvkCBdPoS9u0ZZWy9ANO/hgX4YAbWMHyJlcwuYaEF0qlNXY FH+7dggnZaFS02i3ZFJLPcdDZPEBZnFO87uTxXL9lDha35X9mC7epPNTP4noj25bU5erE5pbxyxPDu DqImezS/gxrMsa1DPkvzKshSTEOM/LfO9VmN9wucjUMzlEYZzsToT+DbvdczK0B5RgoCSY787J5FYu 6P+N5A3SeT4ob22KoyAGNYGhXjELxTAPqnvXbj0CEkRh1WKNc8Knz/R9mk3FCx0qMkCRx5UxqYXMc2 E46IBRhrauS2lc2V0BQ9Ucip2broVQVj/A5jWAt7zd3JubGP14NTreyt9tV3Ry21uOrZfpipH/Txh5 plKgkla9cKh4yOR6PXD6wmEihq0pkOrOg3HSkWLtH2/dknakAYmN863uoCRPbe86Y2PMyM9uy1EU7V 9pS8Hz+GnxJLTX6HMJvQZvCyfQ/9Nj996X3+9iXDguWxM1fqrw9vwr/qdP1GO0jMKb/CqdAUNM1Xge 2tzx3f9Ds6ue6YV6t28roXbHEyYyTwzggRYDpWyj6pbN3NknET2P0o8TNtnCBFLDYyQKwc9YstZ02m vuyuoahu6RDM2jnuT5Khd3rtsnEBEbQW7Wp952MN5xrEpYIsZ2Os14rEiVNw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 12:11 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> Allow LTO to be used for cpu.c when CONFIG_CFI_CLANG is enabled to avoid
-> indirect call failures. CFI requires Clang >= 13, which doesn't have the
-> stack protector inlining bug.
+Currently under Clang, CC_HAS_AUTO_VAR_INIT_ZERO requires an extra
+-enable flag compared to CC_HAS_AUTO_VAR_INIT_PATTERN. GCC does not,
+and will happily ignore the Clang-specific flag. However, its presence
+on the command-line is both cumbersome and confusing. Due to GCC's
+tolerant behavior, though, we can continue to use a single Kconfig
+cc-option test for the feature on both compilers, but then drop the
+Clang-specific option in the Makefile.
 
-True, that was fixed in clang-12. I hope to one day use
-__attribute__((no_stack_protector)) to clean up this chem spill.
-
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: llvm@lists.linux.dev
+Fixes: dcb7c0b9461c ("hardening: Clarify Kconfig text for auto-var-init")
+Suggested-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/lkml/20210914102837.6172-1-will@kernel.org/
 Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Makefile                   | 6 +++---
+ security/Kconfig.hardening | 5 ++++-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-Technically, GCC still has this bug.
-
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  arch/x86/power/Makefile | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/x86/power/Makefile b/arch/x86/power/Makefile
-> index 379777572bc9..a0532851fed7 100644
-> --- a/arch/x86/power/Makefile
-> +++ b/arch/x86/power/Makefile
-> @@ -4,9 +4,11 @@
->  # itself be stack-protected
->  CFLAGS_cpu.o   := -fno-stack-protector
->
-> +ifndef CONFIG_CFI_CLANG
->  # Clang may incorrectly inline functions with stack protector enabled into
->  # __restore_processor_state(): https://bugs.llvm.org/show_bug.cgi?id=47479
->  CFLAGS_REMOVE_cpu.o := $(CC_FLAGS_LTO)
-> +endif
->
->  obj-$(CONFIG_PM_SLEEP)         += cpu.o
->  obj-$(CONFIG_HIBERNATION)      += hibernate_$(BITS).o hibernate_asm_$(BITS).o hibernate.o
-> --
-> 2.33.0.309.g3052b89438-goog
->
-
-
+diff --git a/Makefile b/Makefile
+index 34a0afc3a8eb..72d165ffabdb 100644
+--- a/Makefile
++++ b/Makefile
+@@ -831,12 +831,12 @@ endif
+ 
+ # Initialize all stack variables with a zero value.
+ ifdef CONFIG_INIT_STACK_ALL_ZERO
+-# Future support for zero initialization is still being debated, see
+-# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
+-# renamed or dropped.
+ KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero
++ifdef CONFIG_CC_IS_CLANG
++# https://bugs.llvm.org/show_bug.cgi?id=45497
+ KBUILD_CFLAGS	+= -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
+ endif
++endif
+ 
+ # While VLAs have been removed, GCC produces unreachable stack probes
+ # for the randomize_kstack_offset feature. Disable it for all compilers.
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index 90cbaff86e13..ded17b8abce2 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -23,13 +23,16 @@ config CC_HAS_AUTO_VAR_INIT_PATTERN
+ 	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
+ 
+ config CC_HAS_AUTO_VAR_INIT_ZERO
++	# GCC ignores the -enable flag, so we can test for the feature with
++	# a single invocation using the flag, but drop it as appropriate in
++	# the Makefile, depending on the presence of Clang.
+ 	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
+ 
+ choice
+ 	prompt "Initialize kernel stack variables at function entry"
+ 	default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
+ 	default INIT_STACK_ALL_PATTERN if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT_PATTERN
+-	default INIT_STACK_ALL_ZERO if CC_HAS_AUTO_VAR_INIT_PATTERN
++	default INIT_STACK_ALL_ZERO if CC_HAS_AUTO_VAR_INIT_ZERO
+ 	default INIT_STACK_NONE
+ 	help
+ 	  This option enables initialization of stack variables at
 -- 
-Thanks,
-~Nick Desaulniers
+2.30.2
+
