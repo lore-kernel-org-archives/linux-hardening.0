@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433EFC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BC4C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3052C60E9B
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E5E60E8B
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232660AbhINTMz (ORCPT
+        id S233451AbhINTNE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49138 "EHLO
+        Tue, 14 Sep 2021 15:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233276AbhINTMr (ORCPT
+        with ESMTP id S233045AbhINTMt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:12:47 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 447B5C061788
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:16 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id r3-20020a0cc403000000b00377a3318261so757558qvi.11
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:16 -0700 (PDT)
+        Tue, 14 Sep 2021 15:12:49 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 965A7C061796
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:19 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id u8-20020a0cee88000000b00363b89e1c50so725170qvr.16
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=7FmmYO5sGsSDFsyzZhjTcgNpdgmOw3lheV9G3g3oFsc=;
-        b=rMhm0pmeUWwGdlL6RQI4oCzPbj72ZIyNG2snpZQFgvnNpiOph4JIFCy5L8QrzZXOyI
-         q82RrO5j4Aog+dJS+8W1D7C2YlpHKrVJicS7BBenAZgxf54ru8fmBZE6Jow60Evl2J8s
-         HoBI6nq7SWbZiyoHkntfm3U2t+cy7Ra+7xN5/KK5kRw9N2Wi/tu4iwiJoXzte0rLAUv7
-         Rsaw42LQ9OkgZBQ4IzxAef7a3m1Rv2C7ch5YRWQVaLa1H2erOICbIeDQ9qdn+A6YFHqL
-         Au2QqhfpQDoLzFElxt7oSynkueeLrJyOwI6uBx+Eu6/RCfaQMQ8WoSRumwWUN23MUOCC
-         YR1g==
+        bh=kfIc+vswMal1y/GnkCq7gBbYkzLItYqo8IumxqOd7RU=;
+        b=AqILFiwQmf3jA0AwV/o54cYhmVwlUmQp+5bSFq9OoWy1dNdXVoknMtpdat7iX2/OUs
+         rnlDytvYhFwVm46OxThKp/iG76QR5Dwcek8ruO0jd/nGbBJpKGHDka0/LjrRl6QUbMWf
+         ofVcQJZXsY4NWEf6/+zB9E5m1/Tm2JlZFvzTDzvB89qeLUu5alUGA6fXsv+SG2PujBr8
+         0Kq3hBqhTsap2i8m06wwQs11pP9pO/Mrv52hklDmehZtNP1ZRM6tQVQJAoRvL2LCTt30
+         OwfWg5luD7QuyPfWRxOl6hvp1jvSgCcjv82ldkNUAVOk4UFKzhUw/54JAD+m739FMh4G
+         Eb9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=7FmmYO5sGsSDFsyzZhjTcgNpdgmOw3lheV9G3g3oFsc=;
-        b=XRZqCWPdLMLhO77Vv2Z6WyXL92pdO8296u6hH4nB6dSRpZLIWFy4FV3+kLYEk7eVnb
-         P1gOi372Wk3Oof6J4f+5qbjlvvMindfWIF/n3mFpbZY8pdln7HtKxZKt19Y8iaO115wO
-         U9zIjptoAadpVhTFS+DYa2abaRlVOM7VhyhrqjNcsRXSenJNCHWfLhihBSjZREISlb1S
-         ybrsVNAAGAffyPWv21uxHYxiC5GvVygycORaT0M9t+4mdLtUfLmaJct9NZ4UYyRnzhaY
-         blWFnvSWFwQxN3SMnnPErquIa0gZtPzXlIhZEhvPJMb1Igu5dY59xLRrzSWiuoTO6hcI
-         3++w==
-X-Gm-Message-State: AOAM530S9CPA3MWZhTPx9U+3FF/Y9woxl+X0QJI3uO+LZgUaOduivhGv
-        gHOJgtDjybNyaybdGDE+o+nJmsZki4TQuWdxHKk=
-X-Google-Smtp-Source: ABdhPJzTueWCiZ7bZVTid9Rvg78H2wdCUDBIlSsSwH0OvpItrzOqHNy0pz/wDgP/UqDD80MjsGh6X7BY53KlZIsNFUg=
+        bh=kfIc+vswMal1y/GnkCq7gBbYkzLItYqo8IumxqOd7RU=;
+        b=QLG5/MG/4n02+vCs5LGoOIElBHJwiHjjVmsjHkG02pK+t/x+5sANdTYfrbzwzN4+3K
+         G+7K2z0LEUvUepAct2hFbMm0ZPWWLHnV2qQdLfSuEhDqQX8eXUZDgaLGOZzKfY4vwYEf
+         SbUPBLr2G62jVnziTl9w/++HZPpDpoiSrl824yG+RzuMTjgVlqOEJve2lWpgcrrKI07H
+         clBnliy6bI79j66ug8Z6MjhUOweuF9evZ2Mo0qyApfkIJrp0quQWwZtsGMcms+jJiIDJ
+         FVADrJ1E0ab3bU79eOcpxxGoiWb/zdtmBKa/+UY7dhQNNrfwQzgYHzmAd8n0WG05daMS
+         tblA==
+X-Gm-Message-State: AOAM533nVW1JSAJINF9QBoaXAmyFiNucvKDPFTCcCrmcRxGmGcKjNnVA
+        7YPwgw1Dfc9DWhDd7KHt7SN3j96+rai2Jfs95A0=
+X-Google-Smtp-Source: ABdhPJwriSMOh7PYI7oetLeMw8cyOwxNlMbnOWj5jax2QNj7qwyVuB1yCuGw4uHleiM9+s5hIKACogvIl+SyHoY+Y5Q=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:d19c:5902:49bb:c41])
- (user=samitolvanen job=sendgmr) by 2002:ad4:5492:: with SMTP id
- q18mr7305979qvy.17.1631646675993; Tue, 14 Sep 2021 12:11:15 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 12:10:41 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:b2d6:: with SMTP id
+ d22mr7033291qvf.7.1631646678669; Tue, 14 Sep 2021 12:11:18 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:10:42 -0700
 In-Reply-To: <20210914191045.2234020-1-samitolvanen@google.com>
-Message-Id: <20210914191045.2234020-13-samitolvanen@google.com>
+Message-Id: <20210914191045.2234020-14-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210914191045.2234020-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
-Subject: [PATCH v3 12/16] x86, relocs: Ignore __typeid__ relocations
+Subject: [PATCH v3 13/16] x86, module: Ignore __typeid__ relocations
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,42 +78,29 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+Ignore the __typeid__ relocations generated with CONFIG_CFI_CLANG
+when loading modules.
 
-The __typeid__* symbols aren't actually relocations, so they can be
-ignored during relocation generation.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/tools/relocs.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/kernel/module.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index 27c82207d387..5304a6037924 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -51,6 +51,7 @@ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
- 	"^(xen_irq_disable_direct_reloc$|"
- 	"xen_save_fl_direct_reloc$|"
- 	"VDSO|"
-+	"__typeid__|"
- 	"__crc_)",
- 
- /*
-@@ -811,6 +812,12 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
- 			    symname);
- 		break;
- 
-+	case R_X86_64_8:
-+		if (!shn_abs || !is_reloc(S_ABS, symname))
-+			die("Non-whitelisted %s relocation: %s\n",
-+				rel_type(r_type), symname);
-+		break;
-+
- 	case R_X86_64_32:
- 	case R_X86_64_32S:
- 	case R_X86_64_64:
+diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+index 5e9a34b5bd74..c4aeba237eef 100644
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -197,6 +197,10 @@ static int __apply_relocate_add(Elf64_Shdr *sechdrs,
+ 			val -= (u64)loc;
+ 			write(loc, &val, 8);
+ 			break;
++		case R_X86_64_8:
++			if (!strncmp(strtab + sym->st_name, "__typeid__", 10))
++				break;
++			fallthrough;
+ 		default:
+ 			pr_err("%s: Unknown rela relocation: %llu\n",
+ 			       me->name, ELF64_R_TYPE(rel[i].r_info));
 -- 
 2.33.0.309.g3052b89438-goog
 
