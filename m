@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE04BC43217
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B4C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAE4661164
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F96560E8B
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 19:11:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233103AbhINTMw (ORCPT
+        id S233242AbhINTMx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 15:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49210 "EHLO
+        Tue, 14 Sep 2021 15:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232934AbhINTMo (ORCPT
+        with ESMTP id S232660AbhINTMp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 15:12:44 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3272FC0613E7
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:12 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id dv7-20020ad44ee7000000b0036fa79fd337so800245qvb.6
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:12 -0700 (PDT)
+        Tue, 14 Sep 2021 15:12:45 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C68C0613EF
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:14 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id c27-20020a05620a165b00b003d3817c7c23so660935qko.16
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 12:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=5q55M6RvtBEJ7bIEFnF7x+P56Y4KPBvG/74gMuSxay0=;
-        b=rRw1wY8xLFoflTSA4M9Uu3g1LYtyyWhfYh8ARPlvg7DtdBlz+2OkV/MIAhPVqoIFXF
-         5YbTkafEeLQ0puWSVhspkByBfoQQuBRGK47UlPY2Xtud/PBulEgBuhf8HQlcC2DC86V+
-         wjJJ8bnuFvQQiJsYlyCy0sGmBCx5mTm3JnYQw0jQgcDMIS/89ABB7WmbaIktymHylCDc
-         L3m4cZc+u4scryftbDWsagmPam3U2p6bv6gTef+Va7ceFxrMacQY1oBJxiN2YTCF9yzO
-         GNAecDpknmZb2rtDFJfWxH22HUeiWSBbAvOWW49Q4fr02rzbJJFSbkUqjWvgFHs0ctXY
-         9jhA==
+        bh=Be3mh0Heurxu9hJFvemOYTuJUhV3+qi/M0uRvmj0wVs=;
+        b=DDt3LXDIM6D14nTNIFjpw3vKg5ni9Dz/m//OwVfRby+FVF3IiVLeiYeagFlA2lEI6e
+         pJcRKjCH7Vt+DbMmLiH6A1nCSXP9DpX+708QFWosI26p3rx1+ewRY6PDvEejIlMtvL/R
+         AvWJFHqIolAdE65gAczGCFErRp3qqne6IhCMeo62vlXwT+bmLHk16qy8BcTpgT6U0Ik8
+         n0I40GCMgwmCnz9UBlcpUvN/0RAs6xhSeUuBplHbULzrfvprgMZqB7IQWtJl+Bvu/Hl/
+         4Csa6RoPGYw+yh7DBTluINMrluyotliQWlOFFo3q6fOLah7KAO1WuV1XrEYsgTiImq5w
+         ZZQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=5q55M6RvtBEJ7bIEFnF7x+P56Y4KPBvG/74gMuSxay0=;
-        b=gBCkBZlcQVVqJczEKeAskfhSrFRPCo7urWtDO/cNCauVDrq3sDmbSMJ11EZYXCpCHS
-         66XWyky4PLiLR5fejGNE32+6hLr6cUNssfhF24bYFnp4FZrUa4QkakvMwJkxA/uCM1ws
-         6y/RF9v1pTr1l95GElNzSNGnvgs9Rhy0sxufqdsh78t513odTNSQsneEmUhqBJhisvnm
-         bIExiz3MdhMY4Ys7ZAVrtGGFv+V67nGW1rFQH5YbeIyqNM/4GkR0ZkzGsCVm0ztY0eWp
-         dayCCR1GZ6MNPB4QfIBg/9ubiweDVNM5VpfV13rrhxP4Xwga1uPv+NgqBtfsv7Kz7+Zd
-         2hSg==
-X-Gm-Message-State: AOAM530Q93cLVXGlcq+JzVn8hVvskweiRw+nl6oAuLlufkFrxOxGsQIN
-        /uQ7VLqSgnz7L3iiofn/HBsdBYP6yTz5AAYVvE4=
-X-Google-Smtp-Source: ABdhPJwGJOGIXFMtYLhll+x11pub9XuoIxXffB39KHfzXxqOvWlRfgo0ohBqmmkCLqTOkQ2Yv+JKK1X1VEH1ey2Qe6w=
+        bh=Be3mh0Heurxu9hJFvemOYTuJUhV3+qi/M0uRvmj0wVs=;
+        b=OSMhaVj+K1IhQmsVDLklRWRvhA6cp+jf9fECjzRIKayhE4YMMcF3dCg8culdTIZCaD
+         KLBY6Phm91vve3q5mwGrhXa0F19XDGyG2R1P3oPxJZcQ3JC9g4Sn/4q72bJ2q3vXRKsA
+         bsCx026u0N8EMu/OkhmKlSq+hmrDG1uI7IeD4N8bc2poBtkCr2iv8tz1SxKgJ0gTKTtT
+         PuflE1G8+d+cXknQeqmzOZgLkRUN158XcZWO7jet21i7MreDzA6UygoyRcz4o7x2pbK9
+         o8L+33iugStaoW16rnbwgfkRIQBVFT4SIp2SE7v41izWvUKJ95z19FB7F2q7l7066SV2
+         q+nA==
+X-Gm-Message-State: AOAM5300v2MFyq9Cg8pOhSp5u+kSo1LLuz/NLxfyiTnNzgE7+k0B8+jS
+        wJ2XHljD4GLuIWAVdLrOvnzhu1ydgPdU0mClb5M=
+X-Google-Smtp-Source: ABdhPJyXXGJ7Gi5RRDxl0Fxr3hT8RF4DN7XFQKLXWH7dlLm+ZZpT6iG28weHPCTPYeBMToGTvJQdxxi9X1J6cCMl/44=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:d19c:5902:49bb:c41])
- (user=samitolvanen job=sendgmr) by 2002:a05:6214:2d1:: with SMTP id
- g17mr6884704qvu.63.1631646671398; Tue, 14 Sep 2021 12:11:11 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 12:10:39 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:b286:: with SMTP id
+ r6mr7155507qve.33.1631646673546; Tue, 14 Sep 2021 12:11:13 -0700 (PDT)
+Date:   Tue, 14 Sep 2021 12:10:40 -0700
 In-Reply-To: <20210914191045.2234020-1-samitolvanen@google.com>
-Message-Id: <20210914191045.2234020-11-samitolvanen@google.com>
+Message-Id: <20210914191045.2234020-12-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210914191045.2234020-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
-Subject: [PATCH v3 10/16] x86/extable: Mark handlers __cficanonical
+Subject: [PATCH v3 11/16] x86/purgatory: Disable CFI
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -78,139 +78,26 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Exception tables are populated in assembly code, but the handlers are
-called in fixup_exception, which trips indirect call checking with
-CONFIG_CFI_CLANG. Mark the handlers __cficanonical to allow addresses
-taken in assembly to pass CFI checking.
+Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/mm/extable.c | 64 ++++++++++++++++++++++++-------------------
- 1 file changed, 36 insertions(+), 28 deletions(-)
+ arch/x86/purgatory/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index e1664e9f969c..d16912dcbb4e 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -24,16 +24,18 @@ ex_fixup_handler(const struct exception_table_entry *x)
- 	return (ex_handler_t)((unsigned long)&x->handler + x->handler);
- }
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 95ea17a9d20c..ed46ad780130 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -31,7 +31,7 @@ KCOV_INSTRUMENT := n
+ # These are adjustments to the compiler flags used for objects that
+ # make up the standalone purgatory.ro
  
--__visible bool ex_handler_default(const struct exception_table_entry *fixup,
--				  struct pt_regs *regs, int trapnr,
--				  unsigned long error_code,
--				  unsigned long fault_addr)
-+__visible __cficanonical
-+bool ex_handler_default(const struct exception_table_entry *fixup,
-+			struct pt_regs *regs, int trapnr,
-+			unsigned long error_code,
-+			unsigned long fault_addr)
- {
- 	regs->ip = ex_fixup_addr(fixup);
- 	return true;
- }
- EXPORT_SYMBOL(ex_handler_default);
- 
-+__visible __cficanonical
- __visible bool ex_handler_fault(const struct exception_table_entry *fixup,
- 				struct pt_regs *regs, int trapnr,
- 				unsigned long error_code,
-@@ -55,10 +57,11 @@ EXPORT_SYMBOL_GPL(ex_handler_fault);
-  * of vulnerability by restoring from the initial state (essentially, zeroing
-  * out all the FPU registers) if we can't restore from the task's FPU state.
-  */
--__visible bool ex_handler_fprestore(const struct exception_table_entry *fixup,
--				    struct pt_regs *regs, int trapnr,
--				    unsigned long error_code,
--				    unsigned long fault_addr)
-+__visible __cficanonical
-+bool ex_handler_fprestore(const struct exception_table_entry *fixup,
-+			  struct pt_regs *regs, int trapnr,
-+			  unsigned long error_code,
-+			  unsigned long fault_addr)
- {
- 	regs->ip = ex_fixup_addr(fixup);
- 
-@@ -70,10 +73,11 @@ __visible bool ex_handler_fprestore(const struct exception_table_entry *fixup,
- }
- EXPORT_SYMBOL_GPL(ex_handler_fprestore);
- 
--__visible bool ex_handler_uaccess(const struct exception_table_entry *fixup,
--				  struct pt_regs *regs, int trapnr,
--				  unsigned long error_code,
--				  unsigned long fault_addr)
-+__visible __cficanonical
-+bool ex_handler_uaccess(const struct exception_table_entry *fixup,
-+			struct pt_regs *regs, int trapnr,
-+			unsigned long error_code,
-+			unsigned long fault_addr)
- {
- 	WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in user access. Non-canonical address?");
- 	regs->ip = ex_fixup_addr(fixup);
-@@ -81,10 +85,11 @@ __visible bool ex_handler_uaccess(const struct exception_table_entry *fixup,
- }
- EXPORT_SYMBOL(ex_handler_uaccess);
- 
--__visible bool ex_handler_copy(const struct exception_table_entry *fixup,
--			       struct pt_regs *regs, int trapnr,
--			       unsigned long error_code,
--			       unsigned long fault_addr)
-+__visible __cficanonical
-+bool ex_handler_copy(const struct exception_table_entry *fixup,
-+		     struct pt_regs *regs, int trapnr,
-+		     unsigned long error_code,
-+		     unsigned long fault_addr)
- {
- 	WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in user access. Non-canonical address?");
- 	regs->ip = ex_fixup_addr(fixup);
-@@ -93,10 +98,11 @@ __visible bool ex_handler_copy(const struct exception_table_entry *fixup,
- }
- EXPORT_SYMBOL(ex_handler_copy);
- 
--__visible bool ex_handler_rdmsr_unsafe(const struct exception_table_entry *fixup,
--				       struct pt_regs *regs, int trapnr,
--				       unsigned long error_code,
--				       unsigned long fault_addr)
-+__visible __cficanonical
-+bool ex_handler_rdmsr_unsafe(const struct exception_table_entry *fixup,
-+			     struct pt_regs *regs, int trapnr,
-+			     unsigned long error_code,
-+			     unsigned long fault_addr)
- {
- 	if (pr_warn_once("unchecked MSR access error: RDMSR from 0x%x at rIP: 0x%lx (%pS)\n",
- 			 (unsigned int)regs->cx, regs->ip, (void *)regs->ip))
-@@ -110,10 +116,11 @@ __visible bool ex_handler_rdmsr_unsafe(const struct exception_table_entry *fixup
- }
- EXPORT_SYMBOL(ex_handler_rdmsr_unsafe);
- 
--__visible bool ex_handler_wrmsr_unsafe(const struct exception_table_entry *fixup,
--				       struct pt_regs *regs, int trapnr,
--				       unsigned long error_code,
--				       unsigned long fault_addr)
-+__visible __cficanonical
-+bool ex_handler_wrmsr_unsafe(const struct exception_table_entry *fixup,
-+			     struct pt_regs *regs, int trapnr,
-+			     unsigned long error_code,
-+			     unsigned long fault_addr)
- {
- 	if (pr_warn_once("unchecked MSR access error: WRMSR to 0x%x (tried to write 0x%08x%08x) at rIP: 0x%lx (%pS)\n",
- 			 (unsigned int)regs->cx, (unsigned int)regs->dx,
-@@ -126,10 +133,11 @@ __visible bool ex_handler_wrmsr_unsafe(const struct exception_table_entry *fixup
- }
- EXPORT_SYMBOL(ex_handler_wrmsr_unsafe);
- 
--__visible bool ex_handler_clear_fs(const struct exception_table_entry *fixup,
--				   struct pt_regs *regs, int trapnr,
--				   unsigned long error_code,
--				   unsigned long fault_addr)
-+__visible __cficanonical
-+bool ex_handler_clear_fs(const struct exception_table_entry *fixup,
-+			 struct pt_regs *regs, int trapnr,
-+			 unsigned long error_code,
-+			 unsigned long fault_addr)
- {
- 	if (static_cpu_has(X86_BUG_NULL_SEG))
- 		asm volatile ("mov %0, %%fs" : : "rm" (__USER_DS));
+-PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
++PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel $(CC_FLAGS_CFI)
+ PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss -g0
+ PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
+ PURGATORY_CFLAGS += -fno-stack-protector
 -- 
 2.33.0.309.g3052b89438-goog
 
