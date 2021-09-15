@@ -2,114 +2,338 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40D5C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 22:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D01AC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Sep 2021 04:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C955060EB4
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Sep 2021 22:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4B261056
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Sep 2021 04:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235637AbhINWct (ORCPT
+        id S230517AbhIOEZl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Sep 2021 18:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39494 "EHLO
+        Wed, 15 Sep 2021 00:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235645AbhINWcp (ORCPT
+        with ESMTP id S229450AbhIOEZi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Sep 2021 18:32:45 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC62C061574
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 15:31:27 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id o11so1460067ljp.8
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 15:31:27 -0700 (PDT)
+        Wed, 15 Sep 2021 00:25:38 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E29C061574
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 21:24:19 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id y16so3055580ybm.3
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 21:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/NVWJihw8+mxkblMeUMKWZHa5HcW57V47+/ryRA4f4g=;
-        b=qgFutAKEGpZf/SKejV/Bi2NvnFIej9XU7ZBF5Rsx7JkwnAFyYg3lckowPNJ17rk4mk
-         DV3q6AswIVnkJ/uQDSz3gsB946gSRsqJcBwHVi8iqbvUqaSIU04Vgj90096Fmxf+GWdy
-         I8Hd6on20wzkR5xl0kJGh5nQw44HLi/F6vtULV3QuN8FIByAMCEvwqyldqODg+2+vVjj
-         DOcdlURnGyYkSEVHXi7yl7y9pR9foHVBUJunF6gGn+NLicmzott3wMS8dDUM42YY9UEk
-         /LuBflX18x1HOIDjgpG3Svi7P8/2W+Ra1wC0LZa3Lbn8T6PyYcN9w8le+LW0PGIhBRd5
-         4Eqw==
+        bh=0+ZzSrXo4Rd+VLXM8jhbALnhfJeOXmrvw8MzANFt4/E=;
+        b=ByJLsXedNtM1l0PAllqPX4WYzjRDGPqepnjfjBbIsA5OriBsFsu9XOCwdAMLanfG3n
+         smjG+l1cFk+hdofMX9uc9Cg6ckGBow4N3T7euKLxtyI5dPAXM6s0PkDyG39ulZ141CjU
+         WY3IRnw9H/MPmWjZrjDe7dfl3GQs7wrpIrFa0ra8HwJIns8+0SOZO1lzNxjU56F56jU2
+         MplRStVvwOD28LdRKphUHQJ4YG022oA7isBtd64770UH2a1Asdg6IRm3kjlEPTwP4ZWb
+         8h0Eez1zmzh8mClwUIMb6SJlX+L/TsWeeTQ0qpjkpPBm3azP/e47pcoIIWhc7n2G3DF5
+         rTXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/NVWJihw8+mxkblMeUMKWZHa5HcW57V47+/ryRA4f4g=;
-        b=J60FtsrHifUuBXpnm1JKXacPVGe5ytdeO8dGLZC1uBhA0CPx+noj/KMU3gNn3GD4EO
-         vmKBGjGaypCHwinOo+D/T1Wh2T7nvI3sxlGtJB//OSf2drHkTWD0DVXSS3JLHbM2vxeY
-         aHcxgNSyz9FXa1iB3ot8PP7/lGFxNogT+HNkk1/+Rqo+uhhwB2eOwLB08cE1RF2oATtS
-         fTh6rDIYEg5MVCoLkV+x8UpngkzPi1nopNB+6xJlag009mF/fpPmdpkPxqIV8VoihG4k
-         FMyAkmtnpuyL95fUskevByrBTyEaHXUXwFjvJVRtht+rnSd9t1xwp9Cd9HWsNwFJNrpZ
-         9TjA==
-X-Gm-Message-State: AOAM532qYqc4VNfxaRNDxH6J3AWOWrhnrFYbgJeFQcIPYfYMDy1q9NW/
-        w6XbFvrJeBX00Nmb+8guV81hAt9bJpsrxxaOgMvHFQ==
-X-Google-Smtp-Source: ABdhPJzfSMfk3cB0ZCvwLiGPWOn8ZNgyMxOydEvYDNoBwhQ3myvaaomRVN0JfSKn3Mu8Vcacbr1v4PNVRcOKeKSEf0Q=
-X-Received: by 2002:a2e:b551:: with SMTP id a17mr17253096ljn.128.1631658685761;
- Tue, 14 Sep 2021 15:31:25 -0700 (PDT)
+        bh=0+ZzSrXo4Rd+VLXM8jhbALnhfJeOXmrvw8MzANFt4/E=;
+        b=ZRN2Bcl9CldODEkWA070SWaAc7Uup7f6VjaecxcEeKrQHN12s02PqbV+pYK20Y/OjB
+         gZqRPZgAolRlvWHDp7/FugPqOMhiU5QoSp6PlBL8fuuyBxSKSZBG3K+ZuYJcECHTW1Un
+         Qne15jKb+r5PZ6u7dB/VSLIZgGLWlqDnmp1JWJZJYp3/K7MkUfoYjp3WM1yjk9WKp9Bn
+         jwC8ndwUuYjYq1LcRgxu04TTKx4F4lPYq1ehd0OVpY1JLZOaXHQNbjbKDseJXPKd6C6X
+         jUhLsw0aXLaohGks0e5B/ndfbabTQ7amWXKi59P6/kFZsuA+cwuyO6s0TPxUqOoNmbDA
+         tocw==
+X-Gm-Message-State: AOAM533JTDyuUcPDMc7HuZaqRbSmCxfxEWWGrRy2GXT6e5CHMwNXRpXv
+        NkB/Jh5Uq4GcRnW07i2I1LE07qTmog1v1m7+8I9HkqX/YA4=
+X-Google-Smtp-Source: ABdhPJwxe4h6xJTgoFG3YMrbyPWA1JVhj4pt/UAifTyiZr3cwF40sOLpWTvZhpG2prBA+fjEO4xFQoirI1NxeU95w/U=
+X-Received: by 2002:a25:6e05:: with SMTP id j5mr3659466ybc.86.1631679858809;
+ Tue, 14 Sep 2021 21:24:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210914191045.2234020-1-samitolvanen@google.com>
- <20210914191045.2234020-12-samitolvanen@google.com> <CAKwvOd=OvR8iZogXhMxkbt5qT7jbhaARgk5NsCzhpkjoZ7yy5Q@mail.gmail.com>
- <CABCJKudRDcwfkSK205Pb__hzLWQPUFhbjUtFPbctdPAycSOKQw@mail.gmail.com>
-In-Reply-To: <CABCJKudRDcwfkSK205Pb__hzLWQPUFhbjUtFPbctdPAycSOKQw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 14 Sep 2021 15:31:14 -0700
-Message-ID: <CAKwvOd=q1xhn9OEyowWyMeDW8CbWW4=nRmdE1tHggjCZKr7xrA@mail.gmail.com>
-Subject: Re: [PATCH v3 11/16] x86/purgatory: Disable CFI
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20210911022904.30962-1-cmr@bluescreens.de> <20210911022904.30962-5-cmr@bluescreens.de>
+In-Reply-To: <20210911022904.30962-5-cmr@bluescreens.de>
+From:   Jordan Niethe <jniethe5@gmail.com>
+Date:   Wed, 15 Sep 2021 14:24:07 +1000
+Message-ID: <CACzsE9qr6QK_Xm6yVXT061sxR9SXaeFx5fkjiNAXFBFr6WDQOw@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] powerpc/64s: Initialize and use a temporary mm for
+ patching on Radix
+To:     "Christopher M. Riedl" <cmr@bluescreens.de>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 1:30 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+On Sat, Sep 11, 2021 at 12:39 PM Christopher M. Riedl
+<cmr@bluescreens.de> wrote:
 >
-> On Tue, Sep 14, 2021 at 1:02 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > On Tue, Sep 14, 2021 at 12:11 PM Sami Tolvanen <samitolvanen@google.com> wrote:
-> > >
-> > > Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
-> > >
-> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> >
-> > I kind of prefer the existing convention that has explicit guards on
-> > specific configs (ie. CONFIG_FUNCTION_TRACER, CONFIG_STACKPROTECTOR,
-> > CONFIG_STACKPROTECTOR_STRONG, CONFIG_RETPOLINE); it's more obvious
-> > which configs may introduce which flags that are problematic. This
-> > patch is ok as is, but it kind of makes this Makefile more
-> > inconsistent.  I would prefer we had the explicit checks.
+> When code patching a STRICT_KERNEL_RWX kernel the page containing the
+> address to be patched is temporarily mapped as writeable. Currently, a
+> per-cpu vmalloc patch area is used for this purpose. While the patch
+> area is per-cpu, the temporary page mapping is inserted into the kernel
+> page tables for the duration of patching. The mapping is exposed to CPUs
+> other than the patching CPU - this is undesirable from a hardening
+> perspective. Use a temporary mm instead which keeps the mapping local to
+> the CPU doing the patching.
 >
-> The Makefile does already use DISABLE_STACKLEAK_PLUGIN in a similar
-> way, but I don't have a strong preference here.
+> Use the `poking_init` init hook to prepare a temporary mm and patching
+> address. Initialize the temporary mm by copying the init mm. Choose a
+> randomized patching address inside the temporary mm userspace address
+> space. The patching address is randomized between PAGE_SIZE and
+> DEFAULT_MAP_WINDOW-PAGE_SIZE.
+>
+> Bits of entropy with 64K page size on BOOK3S_64:
+>
+>         bits of entropy = log2(DEFAULT_MAP_WINDOW_USER64 / PAGE_SIZE)
+>
+>         PAGE_SIZE=64K, DEFAULT_MAP_WINDOW_USER64=128TB
+>         bits of entropy = log2(128TB / 64K)
+>         bits of entropy = 31
+>
+> The upper limit is DEFAULT_MAP_WINDOW due to how the Book3s64 Hash MMU
+> operates - by default the space above DEFAULT_MAP_WINDOW is not
+> available. Currently the Hash MMU does not use a temporary mm so
+> technically this upper limit isn't necessary; however, a larger
+> randomization range does not further "harden" this overall approach and
+> future work may introduce patching with a temporary mm on Hash as well.
+>
+> Randomization occurs only once during initialization at boot for each
+> possible CPU in the system.
+>
+> Introduce two new functions, map_patch_mm() and unmap_patch_mm(), to
+> respectively create and remove the temporary mapping with write
+> permissions at patching_addr. Map the page with PAGE_KERNEL to set
+> EAA[0] for the PTE which ignores the AMR (so no need to unlock/lock
+> KUAP) according to PowerISA v3.0b Figure 35 on Radix.
+>
+> Based on x86 implementation:
+>
+> commit 4fc19708b165
+> ("x86/alternatives: Initialize temporary mm for patching")
+>
+> and:
+>
+> commit b3fd8e83ada0
+> ("x86/alternatives: Use temporary mm for text poking")
+>
+> Signed-off-by: Christopher M. Riedl <cmr@bluescreens.de>
+>
+> ---
+>
+> v6:  * Small clean-ups (naming, formatting, style, etc).
+>      * Call stop_using_temporary_mm() before pte_unmap_unlock() after
+>        patching.
+>      * Replace BUG_ON()s in poking_init() w/ WARN_ON()s.
+>
+> v5:  * Only support Book3s64 Radix MMU for now.
+>      * Use a per-cpu datastructure to hold the patching_addr and
+>        patching_mm to avoid the need for a synchronization lock/mutex.
+>
+> v4:  * In the previous series this was two separate patches: one to init
+>        the temporary mm in poking_init() (unused in powerpc at the time)
+>        and the other to use it for patching (which removed all the
+>        per-cpu vmalloc code). Now that we use poking_init() in the
+>        existing per-cpu vmalloc approach, that separation doesn't work
+>        as nicely anymore so I just merged the two patches into one.
+>      * Preload the SLB entry and hash the page for the patching_addr
+>        when using Hash on book3s64 to avoid taking an SLB and Hash fault
+>        during patching. The previous implementation was a hack which
+>        changed current->mm to allow the SLB and Hash fault handlers to
+>        work with the temporary mm since both of those code-paths always
+>        assume mm == current->mm.
+>      * Also (hmm - seeing a trend here) with the book3s64 Hash MMU we
+>        have to manage the mm->context.active_cpus counter and mm cpumask
+>        since they determine (via mm_is_thread_local()) if the TLB flush
+>        in pte_clear() is local or not - it should always be local when
+>        we're using the temporary mm. On book3s64's Radix MMU we can
+>        just call local_flush_tlb_mm().
+>      * Use HPTE_USE_KERNEL_KEY on Hash to avoid costly lock/unlock of
+>        KUAP.
+> ---
+>  arch/powerpc/lib/code-patching.c | 119 +++++++++++++++++++++++++++++--
+>  1 file changed, 112 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+> index e802e42c2789..af8e2a02a9dd 100644
+> --- a/arch/powerpc/lib/code-patching.c
+> +++ b/arch/powerpc/lib/code-patching.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/cpuhotplug.h>
+>  #include <linux/slab.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/random.h>
+>
+>  #include <asm/tlbflush.h>
+>  #include <asm/page.h>
+> @@ -103,6 +104,7 @@ static inline void stop_using_temporary_mm(struct temp_mm *temp_mm)
+>
+>  static DEFINE_PER_CPU(struct vm_struct *, text_poke_area);
+>  static DEFINE_PER_CPU(unsigned long, cpu_patching_addr);
+> +static DEFINE_PER_CPU(struct mm_struct *, cpu_patching_mm);
+>
+>  static int text_area_cpu_up(unsigned int cpu)
+>  {
+> @@ -126,8 +128,48 @@ static int text_area_cpu_down(unsigned int cpu)
+>         return 0;
+>  }
+>
+> +static __always_inline void __poking_init_temp_mm(void)
+> +{
+> +       int cpu;
+> +       spinlock_t *ptl; /* for protecting pte table */
+> +       pte_t *ptep;
+> +       struct mm_struct *patching_mm;
+> +       unsigned long patching_addr;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               patching_mm = copy_init_mm();
+> +               WARN_ON(!patching_mm);
+> +               per_cpu(cpu_patching_mm, cpu) = patching_mm;
+> +
+> +               /*
+> +                * Choose a randomized, page-aligned address from the range:
+> +                * [PAGE_SIZE, DEFAULT_MAP_WINDOW - PAGE_SIZE] The lower
+> +                * address bound is PAGE_SIZE to avoid the zero-page.  The
+> +                * upper address bound is DEFAULT_MAP_WINDOW - PAGE_SIZE to
+> +                * stay under DEFAULT_MAP_WINDOW with the Book3s64 Hash MMU.
+> +                */
+> +               patching_addr = PAGE_SIZE + ((get_random_long() & PAGE_MASK)
+> +                               % (DEFAULT_MAP_WINDOW - 2 * PAGE_SIZE));
+> +               per_cpu(cpu_patching_addr, cpu) = patching_addr;
+> +
+> +               /*
+> +                * PTE allocation uses GFP_KERNEL which means we need to
+> +                * pre-allocate the PTE here because we cannot do the
+> +                * allocation during patching when IRQs are disabled.
+> +                */
+> +               ptep = get_locked_pte(patching_mm, patching_addr, &ptl);
+> +               WARN_ON(!ptep);
+> +               pte_unmap_unlock(ptep, ptl);
+> +       }
+> +}
+> +
+>  void __init poking_init(void)
+>  {
+> +       if (radix_enabled()) {
+> +               __poking_init_temp_mm();
+> +               return;
+> +       }
+> +
+>         WARN_ON(cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+>                 "powerpc/text_poke:online", text_area_cpu_up,
+>                 text_area_cpu_down) < 0);
+> @@ -197,30 +239,93 @@ static inline int unmap_patch_area(void)
+>         return 0;
+>  }
+>
+> +struct patch_mapping {
+> +       spinlock_t *ptl; /* for protecting pte table */
+> +       pte_t *ptep;
+> +       struct temp_mm temp_mm;
+> +};
+> +
+> +/*
+> + * This can be called for kernel text or a module.
+> + */
+> +static int map_patch_mm(const void *addr, struct patch_mapping *patch_mapping)
+> +{
+> +       struct page *page;
+> +       struct mm_struct *patching_mm = __this_cpu_read(cpu_patching_mm);
+> +       unsigned long patching_addr = __this_cpu_read(cpu_patching_addr);
+> +
+> +       if (is_vmalloc_or_module_addr(addr))
+> +               page = vmalloc_to_page(addr);
+> +       else
+> +               page = virt_to_page(addr);
+> +
+> +       patch_mapping->ptep = get_locked_pte(patching_mm, patching_addr,
+> +                                            &patch_mapping->ptl);
+> +       if (unlikely(!patch_mapping->ptep)) {
+> +               pr_warn("map patch: failed to allocate pte for patching\n");
+> +               return -1;
+> +       }
+> +
+> +       set_pte_at(patching_mm, patching_addr, patch_mapping->ptep,
+> +                  pte_mkdirty(mk_pte(page, PAGE_KERNEL)));
 
-mmm...DISABLE_STACKLEAK_PLUGIN adds to PURGATORY_CFLAGS. This patch
-adds to PURGATORY_CFLAGS_REMOVE.
+I think because switch_mm_irqs_off() will  not necessarily have a
+barrier so a ptesync would be needed.
+A spurious fault here from __patch_instruction() would not be handled correctly.
 
-> I can move this into
-> an ifdef if it makes things cleaner.
+> +
+> +       init_temp_mm(&patch_mapping->temp_mm, patching_mm);
+> +       start_using_temporary_mm(&patch_mapping->temp_mm);
+> +
+> +       return 0;
+> +}
+> +
+> +static int unmap_patch_mm(struct patch_mapping *patch_mapping)
+> +{
+> +       struct mm_struct *patching_mm = __this_cpu_read(cpu_patching_mm);
+> +       unsigned long patching_addr = __this_cpu_read(cpu_patching_addr);
+> +
+> +       pte_clear(patching_mm, patching_addr, patch_mapping->ptep);
+> +
+> +       local_flush_tlb_mm(patching_mm);
+> +       stop_using_temporary_mm(&patch_mapping->temp_mm);
+> +
+> +       pte_unmap_unlock(patch_mapping->ptep, patch_mapping->ptl);
+> +
+> +       return 0;
+> +}
+> +
+>  static int do_patch_instruction(u32 *addr, struct ppc_inst instr)
+>  {
+>         int err, rc = 0;
+>         u32 *patch_addr = NULL;
+>         unsigned long flags;
+> +       struct patch_mapping patch_mapping;
 >
-> > Does CFI actually do any instrumentation in these object files? I
-> > guess issues in purgatory cause silent/hard to debug kexec failures?
+>         /*
+> -        * During early early boot patch_instruction is called
+> -        * when text_poke_area is not ready, but we still need
+> -        * to allow patching. We just do the plain old patching
+> +        * During early early boot patch_instruction is called when the
+> +        * patching_mm/text_poke_area is not ready, but we still need to allow
+> +        * patching. We just do the plain old patching.
+>          */
+> -       if (!this_cpu_read(text_poke_area))
+> -               return raw_patch_instruction(addr, instr);
+> +       if (radix_enabled()) {
+> +               if (!this_cpu_read(cpu_patching_mm))
+> +                       return raw_patch_instruction(addr, instr);
+> +       } else {
+> +               if (!this_cpu_read(text_poke_area))
+> +                       return raw_patch_instruction(addr, instr);
+> +       }
 >
-> The compiler shouldn't add any actual CFI instrumentation here right
-> now, but I would prefer to avoid issues in future.
-
-Ok, good to know.
--- 
-Thanks,
-~Nick Desaulniers
+>         local_irq_save(flags);
+>
+> -       err = map_patch_area(addr);
+> +       if (radix_enabled())
+> +               err = map_patch_mm(addr, &patch_mapping);
+> +       else
+> +               err = map_patch_area(addr);
+>         if (err)
+>                 goto out;
+>
+>         patch_addr = (u32 *)(__this_cpu_read(cpu_patching_addr) | offset_in_page(addr));
+>         rc = __patch_instruction(addr, instr, patch_addr);
+>
+> -       err = unmap_patch_area();
+> +       if (radix_enabled())
+> +               err = unmap_patch_mm(&patch_mapping);
+> +       else
+> +               err = unmap_patch_area();
+>
+>  out:
+>         local_irq_restore(flags);
+> --
+> 2.32.0
+>
