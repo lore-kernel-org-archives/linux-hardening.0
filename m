@@ -2,142 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ED3C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Sep 2021 06:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B456DC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Sep 2021 07:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD7F961179
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Sep 2021 06:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DC361216
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Sep 2021 07:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230494AbhIOG0M (ORCPT
+        id S231728AbhIOHvm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Sep 2021 02:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230428AbhIOG0M (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Sep 2021 02:26:12 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491B7C061575
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 23:24:54 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id c13-20020a17090a558d00b00198e6497a4fso4149901pji.4
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Sep 2021 23:24:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vuCBzZ9zBNkDaxH2jJ5BbxSUdPvdCFa3DgGVw8Quh9c=;
-        b=IpmZwGI6942DHOxFv4kJ7/ue70Xwg9Fxnip6YLfFQPIuFyzEmqBIOrejRsyoBdc3T3
-         7izvZK7izFkZvO5GMB4G91KuvPLwBiJz9HEJFir1sAUOXbUiVwLvlk4Mfi1XNyR8KGhm
-         8/xUEOOiVMFrofVh9igVKLlLMjqdtqdE8GUsk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vuCBzZ9zBNkDaxH2jJ5BbxSUdPvdCFa3DgGVw8Quh9c=;
-        b=2qdWqIwewPxRe5j5zu0GlpCF2S6c/yUM71WaQ4JuV57WsaZ8x6J2mFKFbtQuEWw2F1
-         VGo+13/uOdZ2kyg6VOmijiUhpvWcrVrXBjwaU8C1AFzq8pV1NZ/kcyNcFkZwwDpcU/OS
-         SQUbL771clqJrUYVqhKLBrT47R1MZLJW8VjPHE7/16Bfj12Kl8o7MLkkOP8ZaVzQtUst
-         xDOlQINfhCxgUGcvLXS4Gi8igUEtbrry9u+x/yONTJtBZVC7lgheUNm5keMQPITBcmu8
-         RpXlGCgNYF+1VN2Q1p/2mXo2Fv7L+o+doSr2L7OOM8Y6mvbOrJ5LixmYnPgttzrD8vVG
-         XzWg==
-X-Gm-Message-State: AOAM532vUhPfSsHrzfRP/5Qfw1uMFuG+ddANbBmXMBiFBV0DTz/V6zTH
-        dcyfdV20rI+iD4/4AuYK3XDBZA==
-X-Google-Smtp-Source: ABdhPJyqrx7hBPKHGCo043/ShbjXHrI4bHbybJD44p09EnDBCs7/tS6xWCcaVY6oVAmwcLuJuE8VTQ==
-X-Received: by 2002:a17:90b:1e06:: with SMTP id pg6mr6657056pjb.238.1631687093555;
-        Tue, 14 Sep 2021 23:24:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u21sm13559568pgk.57.2021.09.14.23.24.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 23:24:52 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 23:24:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>, X86 ML <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 15 Sep 2021 03:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231591AbhIOHvl (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 15 Sep 2021 03:51:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ADF2D60FC0;
+        Wed, 15 Sep 2021 07:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631692222;
+        bh=rOV6VdXOkJfIxOZPAprG0bTwTgNrwNK0GLwnyoOsXsw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CosvF/2mEpaBVAjk53vkw4rFZiBvUkNPDmFsfVfB8AfAS5yKMJtJV7Y0n9VW7nXSW
+         UvG1NsbzUEVdWxb/8+mUtvh2ifCubaNGGvEYAUm08wx36HbFK088m8v+2hra9wu2jh
+         sWoZW8Jj4vByrYnQTEiu1EQ1Y2ZR7IR3AbV7vvpaY/iknKCt+E26mYv1aHOG627H5M
+         xjE6Tql5nC5Ewy5IST3yo3/SRyx4pEgwAnAHgk0MW5MD4+50RRRk1RBjEFLW90V2ld
+         ohXEW9BtfzBlPBGqAa2MMXpaaSEYtPTUvU40gQ7po2aPVi681FStvYPDlvnLWk0x/p
+         1TjIrJPBhXsiA==
+Date:   Wed, 15 Sep 2021 08:50:17 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>, llvm@lists.linux.dev,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <nathan@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v3 11/16] x86/purgatory: Disable CFI
-Message-ID: <202109142257.7BAE8074@keescook>
-References: <20210914191045.2234020-1-samitolvanen@google.com>
- <20210914191045.2234020-12-samitolvanen@google.com>
- <CAKwvOd=OvR8iZogXhMxkbt5qT7jbhaARgk5NsCzhpkjoZ7yy5Q@mail.gmail.com>
- <CABCJKudRDcwfkSK205Pb__hzLWQPUFhbjUtFPbctdPAycSOKQw@mail.gmail.com>
- <CAKwvOd=q1xhn9OEyowWyMeDW8CbWW4=nRmdE1tHggjCZKr7xrA@mail.gmail.com>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] hardening: Avoid harmless Clang option under
+ CONFIG_INIT_STACK_ALL_ZERO
+Message-ID: <20210915075011.GA7321@willie-the-truck>
+References: <20210914200203.1667751-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOd=q1xhn9OEyowWyMeDW8CbWW4=nRmdE1tHggjCZKr7xrA@mail.gmail.com>
+In-Reply-To: <20210914200203.1667751-1-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 03:31:14PM -0700, Nick Desaulniers wrote:
-> On Tue, Sep 14, 2021 at 1:30 PM Sami Tolvanen <samitolvanen@google.com> wrote:
-> >
-> > On Tue, Sep 14, 2021 at 1:02 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > On Tue, Sep 14, 2021 at 12:11 PM Sami Tolvanen <samitolvanen@google.com> wrote:
-> > > >
-> > > > Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
-> > > >
-> > > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > >
-> > > I kind of prefer the existing convention that has explicit guards on
-> > > specific configs (ie. CONFIG_FUNCTION_TRACER, CONFIG_STACKPROTECTOR,
-> > > CONFIG_STACKPROTECTOR_STRONG, CONFIG_RETPOLINE); it's more obvious
-> > > which configs may introduce which flags that are problematic. This
-> > > patch is ok as is, but it kind of makes this Makefile more
-> > > inconsistent.  I would prefer we had the explicit checks.
-
-Can you explain your reasoning a bit more? It seems like redundant
-open-coded logic to me, but I do see this idiom repeated in the kernel.
-And/or maybe I've misunderstood you?
-
-It seems like it's better to have a single variable (like in the proposed
-patch: CC_FLAGS_CFI) that has all the details internal -- no tests needed.
-
-i.e.: instead of this in many places:
-
-ifdef CONFIG_FEATURE
-PURGATORY_CFLAGS_REMOVE	+= -feature-flag
-endif
-
-do this once:
-
-CC_FEATURE_CFLAGS	:= -feature-flag
-...
-KBUILD_CFLAGS		+= $(CC_FEATURE_CFLAGS)
-
-and only repeat a single line in for targets:
-
-CFLAGS_REMOVE_target.o	+= $(CC_FEATURE_CFLAGS)
-
-> >
-> > The Makefile does already use DISABLE_STACKLEAK_PLUGIN in a similar
-> > way, but I don't have a strong preference here.
+On Tue, Sep 14, 2021 at 01:02:03PM -0700, Kees Cook wrote:
+> Currently under Clang, CC_HAS_AUTO_VAR_INIT_ZERO requires an extra
+> -enable flag compared to CC_HAS_AUTO_VAR_INIT_PATTERN. GCC does not,
+> and will happily ignore the Clang-specific flag. However, its presence
+> on the command-line is both cumbersome and confusing. Due to GCC's
+> tolerant behavior, though, we can continue to use a single Kconfig
+> cc-option test for the feature on both compilers, but then drop the
+> Clang-specific option in the Makefile.
 > 
-> mmm...DISABLE_STACKLEAK_PLUGIN adds to PURGATORY_CFLAGS. This patch
-> adds to PURGATORY_CFLAGS_REMOVE.
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: llvm@lists.linux.dev
+> Fixes: dcb7c0b9461c ("hardening: Clarify Kconfig text for auto-var-init")
+> Suggested-by: Will Deacon <will@kernel.org>
+> Link: https://lore.kernel.org/lkml/20210914102837.6172-1-will@kernel.org/
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  Makefile                   | 6 +++---
+>  security/Kconfig.hardening | 5 ++++-
+>  2 files changed, 7 insertions(+), 4 deletions(-)
 
-CFI is "simple" in that regard; its options can just be left off. This
-isn't true for some weirder stuff. Stack protector is a good one, in
-that just removing the options may not disable it depending on distro
-patches (which may turn it on by default), so both target_CFLAGS and
-target_REMOVE are needed there.
+Acked-by: Will Deacon <will@kernel.org>
 
-(In the case of the plugins, yes, I think they could be rearranged to
-use the target_REMOVE method, but I have a memory of REMOVE not working
-there for some weird thing? Hmm.)
+Cheers for sorting this out!
 
--- 
-Kees Cook
+Will
