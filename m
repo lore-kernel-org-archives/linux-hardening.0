@@ -2,105 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6767BC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 15:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD23C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 15:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52D506120D
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 15:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2866B600D4
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 15:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236570AbhIPPTS (ORCPT
+        id S239624AbhIPPiB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Sep 2021 11:19:18 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:39910 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236853AbhIPPTR (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Sep 2021 11:19:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1631805477; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=W6szQ/LiyIiaf2JeeBlcAruOxPvIgc68+ew5H7jm+GE=; b=a2WCKQjVWWmYl3hJ487mi8onxdD0Zlc3NnP5FymxxyaOqKnfty+zSXt3TVbKMvcQRthvtpMC
- zDHdZKdcWPEgzpGyMKMzjUpOZAYpdOfd9vs2r9vu8azvQqfD9WQtA7eNVFlZlZ00vhSxQYVO
- uECMIrOBqAW9WVw9Ip4OncHwZ14=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 6143601265c3cc8c6365f453 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Sep 2021 15:17:38
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9E2EFC4361C; Thu, 16 Sep 2021 15:17:38 +0000 (UTC)
-Received: from tykki (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BCC1C4338F;
-        Thu, 16 Sep 2021 15:17:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 9BCC1C4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-hsien Lin <chi-hsien.lin@infineon.com>,
-        Wright Feng <wright.feng@infineon.com>,
-        Chung-hsien Hsu <chung-hsien.hsu@infineon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] brcmfmac: Replace zero-length array with flexible array member
-References: <20210904092217.2848-1-len.baker@gmx.com>
-        <20210912191536.GB146608@embeddedor>
-Date:   Thu, 16 Sep 2021 18:17:31 +0300
-In-Reply-To: <20210912191536.GB146608@embeddedor> (Gustavo A. R. Silva's
-        message of "Sun, 12 Sep 2021 14:15:36 -0500")
-Message-ID: <87o88sy2gk.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 16 Sep 2021 11:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239978AbhIPPh7 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 16 Sep 2021 11:37:59 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB8EC061764
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Sep 2021 08:36:39 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id bg1so4071380plb.13
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Sep 2021 08:36:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=ENvOsyQTP3q+b7sG/A34KHGPYvoe5AEUOk70oriKBEY=;
+        b=hEE4psC5jT2K7UdsYae884Fi6US6W+HiSw9IenKyuz+BFnhOu991MCrIQ0kI8p2EFz
+         nwmWG+Y2+moyIutFt+4yJ0SitHFsPL8Z6nTV7DqEuOwQ8lke4/X6VnmIJ+0dxBeJb//y
+         nrjN1bQXaqp2YI2iI3GnbQlIVHB77HkogMQJc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=ENvOsyQTP3q+b7sG/A34KHGPYvoe5AEUOk70oriKBEY=;
+        b=tqggT1UEaZPApg5s38vK3OZHTqG9F2wn/8kDK37XBRBhQfnUWU2aqSFhJM/9gHzNa4
+         m+ZaFklfsEb0BWNzqLqiNg23haC4OpAcIpZhvRBtpfRtvFIKtpaaYVTVNOKjItU5IjHq
+         iK2PRj62t85l8kEpf07oBams1cPYmZRA7up0qaPK2Rbyfik8ZuL+BdzGn5xxYDDHOXpk
+         mMd2uj7Dv54VX/r8F0Voqudt+/QNlA9nJpQxJ9eGOotZIzc21hpgos64TixQvf93my5F
+         fpWMGgLsHkaD7z2f7NM1bLq/i353dm9AMjihGAUyl8W6lcLRtfAkP/uSZV9IOefeCNXc
+         ujqg==
+X-Gm-Message-State: AOAM533o+mKyD4P62vVjC0Dp6psi6TUH8ahfYpe3qPWTFOzsSCdwU8rx
+        7YWvtk/Ra7zbBTvBRtGCHRgxuuty+wmONw==
+X-Google-Smtp-Source: ABdhPJwp6RCWH8PgplP50wYCPE7epJ5BF8mbwpACkKZiaHGTG08EtQhk/x9OlXnPbLEkFPcoJe+Sqw==
+X-Received: by 2002:a17:90a:2e0e:: with SMTP id q14mr6818879pjd.171.1631806598477;
+        Thu, 16 Sep 2021 08:36:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f205sm2510356pfa.92.2021.09.16.08.36.37
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Sep 2021 08:36:37 -0700 (PDT)
+Date:   Thu, 16 Sep 2021 08:36:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-hardening@vger.kernel.org
+Subject: bug scrub
+Message-ID: <202109160827.7F5C1AFC7E@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
+Hi!
 
-> On Sat, Sep 04, 2021 at 11:22:17AM +0200, Len Baker wrote:
->> There is a regular need in the kernel to provide a way to declare
->> having a dynamically sized set of trailing elements in a structure.
->> Kernel code should always use "flexible array members"[1] for these
->> cases. The older style of one-element or zero-length arrays should
->> no longer be used[2].
->> 
->> Also, make use of the struct_size() helper in devm_kzalloc().
->> 
->> [1] https://en.wikipedia.org/wiki/Flexible_array_member
->> [2] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#zero-length-and-one-element-arrays
->> 
->> Signed-off-by: Len Baker <len.baker@gmx.com>
->
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->
-> I'll take this in my -next tree. :)
+I went through the issue tracker and tried to get issues updated, add
+some new labels, etc.
 
-Why? It should go to wireless-drivers-next.
+Stuff of note:
+
+- "Global flag" label[1], for compiler options to turn on globally in the
+  top-level Makefile.
+	https://github.com/KSPP/linux/labels/%5BBuild%5D%20Global%20flag
+
+- Scrubbed per-arch issues, but mostly seemed to update the status of
+  powerpc.
+	https://github.com/KSPP/linux/labels/%5BARCH%5D%20powerpc64
+
+- Collected all sub-bugs of the top-level "get rid of fake flex arrays"
+  issue, so there's a single place to look at status.
+	https://github.com/KSPP/linux/issues/21
+
+As always, the "good first issue" list of bugs is a nice place for folks
+to look through if they want to help out.
+	https://github.com/KSPP/linux/labels/good%20first%20issue
+
+And if anyone wants to continue the strlcpy removal work, I think it
+just needs some rebasing and shepherding of patches through to subsystem
+maintainers.
+	https://github.com/KSPP/linux/issues/89
+
+
+-Kees
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Kees Cook
