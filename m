@@ -2,115 +2,249 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFB1C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Sep 2021 11:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB34DC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 00:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A70A60698
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Sep 2021 11:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8920610A6
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 00:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232927AbhIOL74 (ORCPT
+        id S233363AbhIPAYd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Sep 2021 07:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52572 "EHLO
+        Wed, 15 Sep 2021 20:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232793AbhIOL74 (ORCPT
+        with ESMTP id S233367AbhIPAYd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Sep 2021 07:59:56 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA72C061574;
-        Wed, 15 Sep 2021 04:58:37 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0d07000c3d48728178681f.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:700:c3d:4872:8178:681f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Sep 2021 20:24:33 -0400
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050::465:103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF244C061574
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Sep 2021 17:23:13 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:105:465:1:4:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 08E451EC0246;
-        Wed, 15 Sep 2021 13:58:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1631707112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=7hCArrqxq0Qci8ylNfmgdAjsDrtbpQawOVjshhDjY7E=;
-        b=OSalYsvT788Z61aexg2fiPKFerIUw4nOwq3ZBuMk4dVxJ2yMEER3//m6AsY+jyns8JUIHl
-        hmkUgdawNrvbNhOd/qstaU3Gh+pR8ih6/sKMU8/J4i/wxRYGgPLl0D9WgyPN/BHGz4lYP3
-        Nh9cr2J7i0LkxZbZ6aGwb9nTS8HptTI=
-Date:   Wed, 15 Sep 2021 13:58:25 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rric@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Joe Perches <joe@perches.com>,
-        David Laight <David.Laight@aculab.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] EDAC/mc: Prefer strscpy or scnprintf over strcpy,
- sprintf and snprintf
-Message-ID: <YUHf4cEEKFjQznJS@zn.tnic>
-References: <20210903150539.7282-1-len.baker@gmx.com>
- <YT8S3poKyd5Nr5cK@rric.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YT8S3poKyd5Nr5cK@rric.localdomain>
+        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4H8yV572d8zQjld;
+        Thu, 16 Sep 2021 02:23:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v6 1/4] powerpc/64s: Introduce temporary mm for Radix
+ MMU
+From:   "Christopher M. Riedl" <cmr@bluescreens.de>
+To:     "Jordan Niethe" <jniethe5@gmail.com>
+Cc:     "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>,
+        <linux-hardening@vger.kernel.org>
+Date:   Wed, 15 Sep 2021 19:24:12 -0500
+Message-Id: <CEAVR8LKNP66.HVO0DKKWEHOE@wrwlf0000>
+In-Reply-To: <CACzsE9rThU0JBACJoeeHOyEOA8CbFwRExrOhTsySaOH44yJa6g@mail.gmail.com>
+X-Rspamd-Queue-Id: C4D8B26A
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 13, 2021 at 10:59:10AM +0200, Robert Richter wrote:
-> From 01a3c62a533e71984dfff7189e247b3e848f1449 Mon Sep 17 00:00:00 2001
-> From: Len Baker <len.baker@gmx.com>
-> Date: Fri, 3 Sep 2021 17:05:39 +0200
-> Subject: [PATCH] EDAC/mc: Prefer strscpy or scnprintf over strcpy, sprintf
->  and snprintf
-> 
-> strcpy() performs no bounds checking on the destination buffer. This
-> could result in linear overflows beyond the end of the buffer, leading
-> to all kinds of misbehaviors. The safe replacement is strscpy().
-> [1][2]
-> 
-> However, to simplify and clarify the code, to concatenate labels use
-> the scnprintf() function. This way it is not necessary to check the
-> return value of strscpy (-E2BIG if the parameter count is 0 or the src
-> was truncated) since the scnprintf returns always the number of chars
-> written into the buffer. This function returns always a nul-terminated
-> string even if it needs to be truncated.
-> 
-> While at it, fix all other broken string generation code that wrongly
-> interprets snprintf()'s return code or just uses sprintf(), implement
-> that using scnprintf() here too. Drop breaks in loops around
-> scnprintf() as it is safe now to loop. Moreover, the check is
-> needless: For the case when the buffer is exhausted, len never gets
-> zero because scnprintf() takes the full buffer length as input
-> parameter, but excludes the trailing '\0' in its return code and thus,
-> 1 is the minimum len.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-> [2] https://github.com/KSPP/linux/issues/88
-> 
->  [ rric: Replace snprintf() with scnprintf(), rework sprintf() user,
->    drop breaks in loops around scnprintf(), introduce 'end' pointer to
->    reduce pointer arithmetic, use prefix pattern for e->location,
->    adjust subject and description ]
-> 
-> Co-developed-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Len Baker <len.baker@gmx.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/edac/edac_mc.c | 42 ++++++++++++++++++------------------------
->  1 file changed, 18 insertions(+), 24 deletions(-)
+On Sat Sep 11, 2021 at 3:26 AM CDT, Jordan Niethe wrote:
+> On Sat, Sep 11, 2021 at 12:35 PM Christopher M. Riedl
+> <cmr@bluescreens.de> wrote:
+> >
+> > x86 supports the notion of a temporary mm which restricts access to
+> > temporary PTEs to a single CPU. A temporary mm is useful for situations
+> > where a CPU needs to perform sensitive operations (such as patching a
+> > STRICT_KERNEL_RWX kernel) requiring temporary mappings without exposing
+> > said mappings to other CPUs. Another benefit is that other CPU TLBs do
+> > not need to be flushed when the temporary mm is torn down.
+> >
+> > Mappings in the temporary mm can be set in the userspace portion of the
+> > address-space.
+> >
+> > Interrupts must be disabled while the temporary mm is in use. HW
+> > breakpoints, which may have been set by userspace as watchpoints on
+> > addresses now within the temporary mm, are saved and disabled when
+> > loading the temporary mm. The HW breakpoints are restored when unloading
+> > the temporary mm. All HW breakpoints are indiscriminately disabled while
+> > the temporary mm is in use - this may include breakpoints set by perf.
+>
+> I had thought CPUs with a DAWR might not need to do this because the
+> privilege level that breakpoints trigger on can be configured. But it
+> turns out in ptrace, etc we use HW_BRK_TYPE_PRIV_ALL.
 
-Applied, thanks.
+Thanks for double checking :)
 
--- 
-Regards/Gruss,
-    Boris.
+>
+> >
+> > Based on x86 implementation:
+> >
+> > commit cefa929c034e
+> > ("x86/mm: Introduce temporary mm structs")
+> >
+> > Signed-off-by: Christopher M. Riedl <cmr@bluescreens.de>
+> >
+> > ---
+> >
+> > v6:  * Use {start,stop}_using_temporary_mm() instead of
+> >        {use,unuse}_temporary_mm() as suggested by Christophe.
+> >
+> > v5:  * Drop support for using a temporary mm on Book3s64 Hash MMU.
+> >
+> > v4:  * Pass the prev mm instead of NULL to switch_mm_irqs_off() when
+> >        using/unusing the temp mm as suggested by Jann Horn to keep
+> >        the context.active counter in-sync on mm/nohash.
+> >      * Disable SLB preload in the temporary mm when initializing the
+> >        temp_mm struct.
+> >      * Include asm/debug.h header to fix build issue with
+> >        ppc44x_defconfig.
+> > ---
+> >  arch/powerpc/include/asm/debug.h |  1 +
+> >  arch/powerpc/kernel/process.c    |  5 +++
+> >  arch/powerpc/lib/code-patching.c | 56 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 62 insertions(+)
+> >
+> > diff --git a/arch/powerpc/include/asm/debug.h b/arch/powerpc/include/asm/debug.h
+> > index 86a14736c76c..dfd82635ea8b 100644
+> > --- a/arch/powerpc/include/asm/debug.h
+> > +++ b/arch/powerpc/include/asm/debug.h
+> > @@ -46,6 +46,7 @@ static inline int debugger_fault_handler(struct pt_regs *regs) { return 0; }
+> >  #endif
+> >
+> >  void __set_breakpoint(int nr, struct arch_hw_breakpoint *brk);
+> > +void __get_breakpoint(int nr, struct arch_hw_breakpoint *brk);
+> >  bool ppc_breakpoint_available(void);
+> >  #ifdef CONFIG_PPC_ADV_DEBUG_REGS
+> >  extern void do_send_trap(struct pt_regs *regs, unsigned long address,
+> > diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+> > index 50436b52c213..6aa1f5c4d520 100644
+> > --- a/arch/powerpc/kernel/process.c
+> > +++ b/arch/powerpc/kernel/process.c
+> > @@ -865,6 +865,11 @@ static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
+> >         return 0;
+> >  }
+> >
+> > +void __get_breakpoint(int nr, struct arch_hw_breakpoint *brk)
+> > +{
+> > +       memcpy(brk, this_cpu_ptr(&current_brk[nr]), sizeof(*brk));
+> > +}
+>
+> The breakpoint code is already a little hard to follow. I'm worried
+> doing this might spread breakpoint handling into more places in the
+> future.
+> What about something like having a breakpoint_pause() function which
+> clears the hardware registers only and then a breakpoint_resume()
+> function that copies from current_brk[] back to the hardware
+> registers?
+> Then we don't have to make another copy of the breakpoint state.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I think that sounds reasonable - I'll add those functions instead with
+the next spin.
+
+>
+> > +
+> >  void __set_breakpoint(int nr, struct arch_hw_breakpoint *brk)
+> >  {
+> >         memcpy(this_cpu_ptr(&current_brk[nr]), brk, sizeof(*brk));
+> > diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+> > index f9a3019e37b4..8d61a7d35b89 100644
+> > --- a/arch/powerpc/lib/code-patching.c
+> > +++ b/arch/powerpc/lib/code-patching.c
+>
+> Sorry I might have missed it, but what was the reason for not putting
+> this stuff in mmu_context.h?
+
+x86 ended up moving this code into their code-patching file as well. I
+suppose nobody has thought of another use for a temporary mm like this
+yet :)
+
+>
+> > @@ -17,6 +17,9 @@
+> >  #include <asm/code-patching.h>
+> >  #include <asm/setup.h>
+> >  #include <asm/inst.h>
+> > +#include <asm/mmu_context.h>
+> > +#include <asm/debug.h>
+> > +#include <asm/tlb.h>
+> >
+> >  static int __patch_instruction(u32 *exec_addr, struct ppc_inst instr, u32 *patch_addr)
+> >  {
+> > @@ -45,6 +48,59 @@ int raw_patch_instruction(u32 *addr, struct ppc_inst instr)
+> >  }
+> >
+> >  #ifdef CONFIG_STRICT_KERNEL_RWX
+> > +
+> > +struct temp_mm {
+> > +       struct mm_struct *temp;
+> > +       struct mm_struct *prev;
+> > +       struct arch_hw_breakpoint brk[HBP_NUM_MAX];
+> ^ Then we wouldn't need this.
+> > +};
+> > +
+> > +static inline void init_temp_mm(struct temp_mm *temp_mm, struct mm_struct *mm)
+> > +{
+> > +       /* We currently only support temporary mm on the Book3s64 Radix MMU */
+> > +       WARN_ON(!radix_enabled());
+> > +
+> > +       temp_mm->temp = mm;
+> > +       temp_mm->prev = NULL;
+> > +       memset(&temp_mm->brk, 0, sizeof(temp_mm->brk));
+> > +}
+> > +
+> > +static inline void start_using_temporary_mm(struct temp_mm *temp_mm)
+> > +{
+> > +       lockdep_assert_irqs_disabled();
+> > +
+> > +       temp_mm->prev = current->active_mm;
+> > +       switch_mm_irqs_off(temp_mm->prev, temp_mm->temp, current);
+>
+> Now that we only support radix it should be fine again to have it like
+> this:
+> switch_mm_irqs_off(NULL, temp_mm->temp, current);?
+> It was changed from that because it would cause issues on nohash I
+> thought.
+
+That's true - but if we want to support the other MMUs in the future
+I'd rather just keep it as-is. AFAICS there's no harm in passing
+temp_mm->prev here instead of NULL.
+
+>
+> > +
+> > +       WARN_ON(!mm_is_thread_local(temp_mm->temp));
+> > +
+> > +       if (ppc_breakpoint_available()) {
+> > +               struct arch_hw_breakpoint null_brk = {0};
+> > +               int i = 0;
+> > +
+> > +               for (; i < nr_wp_slots(); ++i) {
+> > +                       __get_breakpoint(i, &temp_mm->brk[i]);
+> > +                       if (temp_mm->brk[i].type != 0)
+> > +                               __set_breakpoint(i, &null_brk);
+> > +               }
+> > +       }
+> > +}
+> > +
+> > +static inline void stop_using_temporary_mm(struct temp_mm *temp_mm)
+> > +{
+> > +       lockdep_assert_irqs_disabled();
+> > +
+> > +       switch_mm_irqs_off(temp_mm->temp, temp_mm->prev, current);
+> > +
+> > +       if (ppc_breakpoint_available()) {
+> > +               int i = 0;
+> > +
+> > +               for (; i < nr_wp_slots(); ++i)
+> > +                       if (temp_mm->brk[i].type != 0)
+> > +                               __set_breakpoint(i, &temp_mm->brk[i]);
+> > +       }
+> > +}
+> > +
+> >  static DEFINE_PER_CPU(struct vm_struct *, text_poke_area);
+> >
+> >  static int text_area_cpu_up(unsigned int cpu)
+> > --
+> > 2.32.0
+> >
+> Thanks,
+> Jordan
+
