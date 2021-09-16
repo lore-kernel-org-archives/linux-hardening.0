@@ -2,120 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2503C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 02:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6767BC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 15:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6DF5611C6
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 02:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D506120D
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Sep 2021 15:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233652AbhIPCGD (ORCPT
+        id S236570AbhIPPTS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Sep 2021 22:06:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233648AbhIPCGD (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Sep 2021 22:06:03 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D20C061574
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Sep 2021 19:04:43 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id k65so9720631yba.13
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Sep 2021 19:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tz6piMeU5SmaffRbNmnfnHu1gxXBC9YCGjCvKu8dEbk=;
-        b=XkrIPrRzEz2KMMyLG5dI7T+y/swRc8XV0Khbp57pyuTJX1Nz53Sy5wYFxxasrmPF+W
-         XWX4DCY05NF0GjPvXZ7Ep35ASUa9bHnP+CiwvErWytJWGYSp+uEb3kahqmCSwe8eks3k
-         hNvCuVF9Hrf0lJBsPeORLejCy7RsF2K5fwMf4v0o0FuhpX/k/i8/yFhv4S936uYarThx
-         s57VeJJ0vlnR4Lv9n9XZHyx7v6C8YXOAFY7mBHQqKmybfx/9OxwiGmoBRvL9hbWgBn62
-         Q21W/Elc3EZWmj52qEGdeHVUotFvcdY1knESEwSSod+16kOQ6XuSDFQjnJgafr2AnxmF
-         ToTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tz6piMeU5SmaffRbNmnfnHu1gxXBC9YCGjCvKu8dEbk=;
-        b=ZRWTm/57koVPbuHGrgVrAAGzaLSsJV/s5bzznaMHUENQKDaxQ/FrlMBgimwwHurTQR
-         zb28WhnutfDsRGcKLtF4l9eqGHxTI1+S3THS6YnBCY5Z1eeifasogS6hmtod5BPTzNgF
-         vpCapTurZjfdDEYgMXRtOfnqm0kA9DALlKHT0ANt3MWvIQDiyX3vabvK49t7GZPIQH9C
-         sGNBpQyanpixfZ/5FBEoFX7EcQMDHXn16i/ezv0JNqqTI+zslXqf70baej7+LWLmCZDi
-         +lZhSYO6hCGQNWl1H1bRTuqM3Ns1fXi+hjV9LS5jhEN937QtvhrmhOpxLr1dPaSyleqe
-         YjXA==
-X-Gm-Message-State: AOAM531YT3IhjUOujYRUIkpRDZYz/tXbz497lwg3Mlwnsg4uCdoWHXjI
-        7PykpWTscrvHLl9Qhlu85TaN789oDurRMCcxZm+cOPmV6fs=
-X-Google-Smtp-Source: ABdhPJx72GnacP9xthd9U/wXYrT459EEqrVhb1oa3QdSt9K3KHRK7tf+FRk49IS71Z/jfNvAPJl53stO99zV+UfTWBs=
-X-Received: by 2002:a5b:f43:: with SMTP id y3mr3940004ybr.45.1631757882872;
- Wed, 15 Sep 2021 19:04:42 -0700 (PDT)
+        Thu, 16 Sep 2021 11:19:18 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:39910 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236853AbhIPPTR (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 16 Sep 2021 11:19:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1631805477; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=W6szQ/LiyIiaf2JeeBlcAruOxPvIgc68+ew5H7jm+GE=; b=a2WCKQjVWWmYl3hJ487mi8onxdD0Zlc3NnP5FymxxyaOqKnfty+zSXt3TVbKMvcQRthvtpMC
+ zDHdZKdcWPEgzpGyMKMzjUpOZAYpdOfd9vs2r9vu8azvQqfD9WQtA7eNVFlZlZ00vhSxQYVO
+ uECMIrOBqAW9WVw9Ip4OncHwZ14=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 6143601265c3cc8c6365f453 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Sep 2021 15:17:38
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9E2EFC4361C; Thu, 16 Sep 2021 15:17:38 +0000 (UTC)
+Received: from tykki (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BCC1C4338F;
+        Thu, 16 Sep 2021 15:17:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 9BCC1C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-hsien Lin <chi-hsien.lin@infineon.com>,
+        Wright Feng <wright.feng@infineon.com>,
+        Chung-hsien Hsu <chung-hsien.hsu@infineon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] brcmfmac: Replace zero-length array with flexible array member
+References: <20210904092217.2848-1-len.baker@gmx.com>
+        <20210912191536.GB146608@embeddedor>
+Date:   Thu, 16 Sep 2021 18:17:31 +0300
+In-Reply-To: <20210912191536.GB146608@embeddedor> (Gustavo A. R. Silva's
+        message of "Sun, 12 Sep 2021 14:15:36 -0500")
+Message-ID: <87o88sy2gk.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <CACzsE9qr6QK_Xm6yVXT061sxR9SXaeFx5fkjiNAXFBFr6WDQOw@mail.gmail.com>
- <CEAW7GNXW96H.18ANPMC01JA2C@wrwlf0000>
-In-Reply-To: <CEAW7GNXW96H.18ANPMC01JA2C@wrwlf0000>
-From:   Jordan Niethe <jniethe5@gmail.com>
-Date:   Thu, 16 Sep 2021 12:04:31 +1000
-Message-ID: <CACzsE9qmjABva6-RB5HVciB7tJ-XdD2=-cLFoxjh5UG9fyOJNg@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] powerpc/64s: Initialize and use a temporary mm for
- patching on Radix
-To:     "Christopher M. Riedl" <cmr@bluescreens.de>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 10:40 AM Christopher M. Riedl
-<cmr@bluescreens.de> wrote:
+"Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
+
+> On Sat, Sep 04, 2021 at 11:22:17AM +0200, Len Baker wrote:
+>> There is a regular need in the kernel to provide a way to declare
+>> having a dynamically sized set of trailing elements in a structure.
+>> Kernel code should always use "flexible array members"[1] for these
+>> cases. The older style of one-element or zero-length arrays should
+>> no longer be used[2].
+>> 
+>> Also, make use of the struct_size() helper in devm_kzalloc().
+>> 
+>> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+>> [2] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#zero-length-and-one-element-arrays
+>> 
+>> Signed-off-by: Len Baker <len.baker@gmx.com>
 >
-> On Tue Sep 14, 2021 at 11:24 PM CDT, Jordan Niethe wrote:
-> > On Sat, Sep 11, 2021 at 12:39 PM Christopher M. Riedl
-> > <cmr@bluescreens.de> wrote:
-> > > ...
-> > > +/*
-> > > + * This can be called for kernel text or a module.
-> > > + */
-> > > +static int map_patch_mm(const void *addr, struct patch_mapping *patch_mapping)
-> > > +{
-> > > +       struct page *page;
-> > > +       struct mm_struct *patching_mm = __this_cpu_read(cpu_patching_mm);
-> > > +       unsigned long patching_addr = __this_cpu_read(cpu_patching_addr);
-> > > +
-> > > +       if (is_vmalloc_or_module_addr(addr))
-> > > +               page = vmalloc_to_page(addr);
-> > > +       else
-> > > +               page = virt_to_page(addr);
-> > > +
-> > > +       patch_mapping->ptep = get_locked_pte(patching_mm, patching_addr,
-> > > +                                            &patch_mapping->ptl);
-> > > +       if (unlikely(!patch_mapping->ptep)) {
-> > > +               pr_warn("map patch: failed to allocate pte for patching\n");
-> > > +               return -1;
-> > > +       }
-> > > +
-> > > +       set_pte_at(patching_mm, patching_addr, patch_mapping->ptep,
-> > > +                  pte_mkdirty(mk_pte(page, PAGE_KERNEL)));
-> >
-> > I think because switch_mm_irqs_off() will not necessarily have a
-> > barrier so a ptesync would be needed.
-> > A spurious fault here from __patch_instruction() would not be handled
-> > correctly.
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 >
-> Sorry I don't quite follow - can you explain this to me in a bit more
-> detail?
+> I'll take this in my -next tree. :)
 
-radix__set_pte_at() skips calling ptesync as an optimization.
-If there is no ordering between changing the pte and then accessing
-the page with __patch_instruction(), a spurious fault could be raised.
-I think such a fault would end up being causing bad_kernel_fault() ->
-true and would not be fixed up.
+Why? It should go to wireless-drivers-next.
 
-I thought there might be a barrier in switch_mm_irqs_off() that would
-provide this ordering but afaics that is not always the case.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-So I think that we need to have a ptesync after set_pte_at().
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
