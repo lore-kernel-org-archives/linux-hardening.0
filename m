@@ -5,120 +5,125 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB68C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 14:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B622C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 15:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F0F61212
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 14:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096F861100
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 15:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231441AbhIROXZ (ORCPT
+        id S239611AbhIRPHC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 18 Sep 2021 10:23:25 -0400
-Received: from mout.gmx.net ([212.227.17.22]:59955 "EHLO mout.gmx.net"
+        Sat, 18 Sep 2021 11:07:02 -0400
+Received: from mout.gmx.net ([212.227.15.15]:54909 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237771AbhIROXY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 18 Sep 2021 10:23:24 -0400
+        id S236670AbhIRPHC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 18 Sep 2021 11:07:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1631974912;
-        bh=UmWycZcizNYid4Z+392DMeF7EKIyi4qx+X3CFcO1uDE=;
+        s=badeba3b8450; t=1631977519;
+        bh=rLUVq/5WjZwOkbgA+dP4sfu+nqx8j/0kB4xgX5lXHN8=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=OHL5tT3y1TiXx0wkB4k4slkZMZI8KDCqbWKc5Q/EfYtvF6NluuoyY9yoJP4YD9gPc
-         kOiKCdeyfrg9M6eb9R1PUYhsu/qy6vcNmHvC2Wa4VzgxCcC+a7IG1JciPyJ+vYHapK
-         AR+DjUc4Kjgwl5XEUFwoiAawV1qbTBW0/nG7t5pM=
+        b=ee/5Qs0MJ3qCddW0ywPH8NBrV0b3YY98Me+BsMuLbtomtv8lu3CnRB4J+/Z+clAxL
+         1yIuYvITUmhItcLi3UCFSeeN4ixdVOkhjodfTV9rW/QV/Rqyi7JYroeci+UyhdQOlp
+         nf2EFtN88B5EYE8lQ0HPBLKID0dVcoVt3/jnEDCY=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MdebB-1n0O0n1DxB-00ZjGv; Sat, 18 Sep 2021 16:21:52 +0200
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1N33Ed-1mtdfH3wGz-013NMO; Sat, 18 Sep 2021 17:05:19 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Paul Mackerras <paulus@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
 Cc:     Len Baker <len.baker@gmx.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: PPC: Replace zero-length array with flexible array member
-Date:   Sat, 18 Sep 2021 16:21:38 +0200
-Message-Id: <20210918142138.17709-1-len.baker@gmx.com>
+        Kees Cook <keescook@chromium.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Prefer struct_size over open coded arithmetic
+Date:   Sat, 18 Sep 2021 17:05:00 +0200
+Message-Id: <20210918150500.21530-1-len.baker@gmx.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nUjxkWAcJOBgMwjffXAt1QuuDOCIXUU/JKmzX9iUDs9pGqz2aHN
- 98GDDCSWE9bq+l3Sk5BPYQ5vXYhDBd6i6m9oBE/LNW0YxvO/oLjzioqf/Ji0uzBVOm9chr0
- LL9bRwvN7Fce6JyKqT87QUtYysU10VZEQcZZKM2WuxjcBrS1kJvveJZIa+QYFSTgKVzdzcF
- 5QICgt5PO1IAWzYmd7a8Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RM7jumJIPRc=:iV3Dwa2P7AD02q/3KO68IT
- BDzSVfG1ioBkwhrb+6qgNASCHxUj9Q/aArb1XlOug0eTZo7EX0tS/9NcbcL0gFVq7ZiK7juec
- aw+TghlsV9LQa5Ab4H5yeHGk0H6nj6B8NbQ2TstFwNlbxh2MqxJjrfMPNXTad7dxB8cZJPdN1
- igLcjxvmZjs/JmZxWWMzf2z2WY87Q9L4+b5ssB9aMIqj8TcNWZfHTpL1O9y5XmxwGfqPMMtdV
- lTxgVnjIhym06uO7OUfYZWIJVHEU7sFRH0yYPBLA6XJzmLPbq+LXlw0eQ9P1Ho6ogRHG2DS3c
- 0JZKvyMZ7Gi9aqlxb8hQj5WyfDWAMTjYXCR8j3YFRAJ1WRJ0UyRKctaAwZSYEnmjYVGJDhQ19
- dPPt152wY9NjQBc3Hn7UgUhXHcSb70hIxNxQHRB+foCmSGwCQwsiGfJ9aZi+PSspzri3kEJW8
- i1thsYq8MTvOW3OLDv1iqHVDMni5wJIwKZqqWDhIWovfesZZ5k4DIF9QWkvW7z6P+ovABo5Wd
- j5HiWNZxxqdBZA1mBxyxe5hglT1H15Z+9v2JuWw7Yd/ATfvksdQjMZ/7HpsJ2TrNxF2twTMay
- s4yaFIj6/SBsngxuQ52uPAbxM9hCp3Il0g+9wBzE0HX3QAw+fNosh/2fM9N9D07T79yQMevCv
- QRWygqOq+PS7QU3vcJE+9PD2DpIMC8jr5n6pVK80AxxV2yK1lbLmV4MLFhwYn63Wo7REVNSTX
- g0NCghfK9b8jA0runYKHxOf4whbKHtsPf4lFYYNSDjdIfnkJuAsPu55RB4gB6evPW7rgxE6os
- uka2MC208rgCXyYKnQeWPakWWEC1WXveod36ovFxvraYU4GEK1dRFAKK5wPIruIwJQBptcCVj
- 0Zf7vmXOTwGKA9T5AxPsMfaP5V1XR95fvMV73zHAwfuW+8LSgIfCepvfXh+GMYPoOQ683DsxF
- 4PmOqPwM8OS038ga1mnPs/aQhfat5tzpxxDHsjplerHiZ9I51+aXdsjmGza1VVjut2rFfV2Fu
- KxL08FdYrJDx/nxab6C/N+Ux0B18NAs1Z60J9YoO7dRbx1vMlqSwskF4hBxXACceg/mH/t7yq
- o/7JJ0W4gKEMJg=
+X-Provags-ID: V03:K1:Rc9p4OaTbEa8/RXDx8uu1meei7DGGAuUsLO4ulKVim9zhhX+Aq/
+ ubiCX63Cuu5YCXYKlX5/ropa+nOsUUvcgcE0bBC6u904gPgijbZEqW9HCZy/9ilXWPyN0vO
+ a3zpDtCEHiUDQ4ehEBYqsepRdMXmK2TVSjjZfRKap2LQv01bT9SBqI7aI9lahqKQgji0D6B
+ qpVRVS+/9yU7yXLy11R1A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:j+pkyp40oak=:N8XrJMxklZIN278tDejCIy
+ nVkwX2OtECRXKUsO3ux0wLTlqcxrKtlvYUriG1FvCsXUghtZVEfOnd7uL1TVtPi4wSMbzV1FD
+ l4t9/ZKDC3DBNQu5wdZXQDpm5B6IX9iIpvC9yqywAmPKlUIkevdpJfWfHTSIjbwaiy4FaCouS
+ +CH+oQRf4tetr9IZSgAJZJWiyDvwkfCkqKAe1b8MjdhhPGYUt8A0y+wDlH65kZDl1gCDpHvFI
+ w/TEE/gQpUh/OPFGBA5P8o1svDH2gsMDnw8hn/g7Zv1Ayu0An9KH9SHsnC+hdB1UclAcpQtLc
+ OPUhRlwL1ZuaHTSwLB3oHYuQZnbUe4OHIaxIXkiOmBfT1o9rHZ3r5SgjgFnbD1OVEKtqMlORI
+ l/56ho4KIwWEkH2UQ6StLJak09KFGnZz6caxmqvF2xT5MvT6beF93UXhMEpXNGrY06Xv1lJbi
+ 41QtazeDcSkQJdSNnIoy5EP9rLAM/73DdGUwkR27nk4iwZdWC4PigMUvxZ+G++xFkrk+3gfim
+ UyORl5O0x3dH3qLtns4lhn9Cb4iRgpw6iMbB8YVnLbzrbxtuOZ1Y9obp9HOAo2L0Ew05jevDB
+ hR8gY74R9ZS3p3jpi0c+Y0XKQ74MI38eHFAen3+S1I3lLDbKosyixeLsN5KFVRHrAMyQTQKuG
+ 53JNIPU7qgRCJxNn5FJq4P+1yCBM7auA+J4aDDyAAI8NhLzuYXB1X7+LUSPub7JIc9lzbbAFQ
+ LKRdvsECE9mu3x7O5R1gGbhpjJ3unJ+MQFLX0auwKimZkzWD1py/9S8oaNDN5daLaqJGC4uC5
+ rtQD4JekCPOo89rtoc5fYzT7UHVcWSuy+JZYGeOFHunG7P5zVBj+g4WM6xXEPDZ11LgwpmMDD
+ CRFqHQgBu/BSgVAN74SJzRSubE055M9bPelIRMjRzHUO1b0E+aHuWWF8yoKhCl+OgSbhVlSNY
+ BjlFlRBg7hTMN5YfmaX9stN/4lDDzXfLb1hCKGBevCkHc1m9g1R/mv/vdR4TyK7WOIRdgMHMz
+ N1q/3DkVibGaEdoeXpLbVq0qp6EN8VXfwy5az9nHwjA8zwZJpHeACjskId91H5IN2lDx1evln
+ Rk256vCuJh/lXg=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare having
-a dynamically sized set of trailing elements in a structure. Kernel code
-should always use "flexible array members" [1] for these cases. The
-older style of one-element or zero-length arrays should no longer be
-used[2].
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-Also, make use of the struct_size() helper in kzalloc().
+So, switch to flexible array member in the struct attribute_set_obj and
+refactor the code accordingly to use the struct_size() helper instead of
+the argument "size + count * size" in the kzalloc() function.
 
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-le=
-ngth-and-one-element-arrays
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments
 
 Signed-off-by: Len Baker <len.baker@gmx.com>
 =2D--
- arch/powerpc/include/asm/kvm_host.h | 2 +-
- arch/powerpc/kvm/book3s_64_vio.c    | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/as=
-m/kvm_host.h
-index 080a7feb7731..3aed653373a5 100644
-=2D-- a/arch/powerpc/include/asm/kvm_host.h
-+++ b/arch/powerpc/include/asm/kvm_host.h
-@@ -190,7 +190,7 @@ struct kvmppc_spapr_tce_table {
- 	u64 size;		/* window size in pages */
- 	struct list_head iommu_tables;
- 	struct mutex alloc_lock;
--	struct page *pages[0];
-+	struct page *pages[];
- };
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/t=
+hinkpad_acpi.c
+index 50ff04c84650..ed0b01ead796 100644
+=2D-- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -1008,7 +1008,7 @@ struct attribute_set {
 
- /* XICS components, defined in book3s_xics.c */
-diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64=
-_vio.c
-index 6365087f3160..d42b4b6d4a79 100644
-=2D-- a/arch/powerpc/kvm/book3s_64_vio.c
-+++ b/arch/powerpc/kvm/book3s_64_vio.c
-@@ -295,8 +295,7 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
- 		return ret;
+ struct attribute_set_obj {
+ 	struct attribute_set s;
+-	struct attribute *a;
++	struct attribute *a[];
+ } __attribute__((packed));
 
- 	ret =3D -ENOMEM;
--	stt =3D kzalloc(sizeof(*stt) + npages * sizeof(struct page *),
--		      GFP_KERNEL);
-+	stt =3D kzalloc(struct_size(stt, pages, npages), GFP_KERNEL);
- 	if (!stt)
- 		goto fail_acct;
+ static struct attribute_set *create_attr_set(unsigned int max_members,
+@@ -1020,13 +1020,11 @@ static struct attribute_set *create_attr_set(unsig=
+ned int max_members,
+ 		return NULL;
 
+ 	/* Allocates space for implicit NULL at the end too */
+-	sobj =3D kzalloc(sizeof(struct attribute_set_obj) +
+-		    max_members * sizeof(struct attribute *),
+-		    GFP_KERNEL);
++	sobj =3D kzalloc(struct_size(sobj, a, max_members + 1), GFP_KERNEL);
+ 	if (!sobj)
+ 		return NULL;
+ 	sobj->s.max_members =3D max_members;
+-	sobj->s.group.attrs =3D &sobj->a;
++	sobj->s.group.attrs =3D sobj->a;
+ 	sobj->s.group.name =3D name;
+
+ 	return &sobj->s;
 =2D-
 2.25.1
 
