@@ -2,73 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0DBC433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 09:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB22C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 09:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BB16124B
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 09:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DC261108
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 09:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238142AbhIRJMm (ORCPT
+        id S231676AbhIRJS4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 18 Sep 2021 05:12:42 -0400
-Received: from mout.gmx.net ([212.227.15.15]:52151 "EHLO mout.gmx.net"
+        Sat, 18 Sep 2021 05:18:56 -0400
+Received: from mout.gmx.net ([212.227.15.18]:37867 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235575AbhIRJMl (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 18 Sep 2021 05:12:41 -0400
+        id S231497AbhIRJSz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 18 Sep 2021 05:18:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1631956269;
-        bh=6lHVqi2oAFRgu31JzplJx3TGWSkqTLjIaeLQgF6ecoI=;
+        s=badeba3b8450; t=1631956630;
+        bh=iry8CxJ90YvNjBabfl8pNpq16ZRgsLo1wiD4DopXVmU=;
         h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=LgeENGbNsutmTokAbwcWLikRAWA9im4VR59qUC2PoHk9IErmBVj8EA7ol0JX2atuI
-         qsJA66Zq6mth3/fsJtdT2dEVnyq86CQKz86dLkbFcSi2uCAt+eY88/ZCSiWwYMlkbD
-         VNlfLvGl9GUGaOHRRo76hUobDGeHw3l8ICrp73BQ=
+        b=N5oBX9fJAM5iyWuylOVnewRLM5T8PbFyPWX5WoDIVrxxzEaifUei5SK4HbJaLcyhB
+         mJR+WMiSp3QyFWhfZKVQGTm/aD5WeY/i+OsZ1fIV3JUkQX3pFihlSiCWZqp4qiMocw
+         0M8GLO9j+6c609FcTk5bxH+vIQdau5X9WPcSltcI=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mel3n-1mzCZ60Wvt-00ao6q; Sat, 18
- Sep 2021 11:11:09 +0200
-Date:   Sat, 18 Sep 2021 11:10:57 +0200
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1M72oH-1mXIh03s1X-008aqz; Sat, 18
+ Sep 2021 11:17:10 +0200
+Date:   Sat, 18 Sep 2021 11:17:06 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kees Cook <keescook@chromium.org>, Len Baker <len.baker@gmx.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] docs: deprecated.rst: Clarify open-coded arithmetic
- with literals
-Message-ID: <20210918091057.GA2941@titan>
-References: <20210829144716.2931-1-len.baker@gmx.com>
- <87r1dqdfyj.fsf@meer.lwn.net>
+To:     Robert Richter <rric@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Joe Perches <joe@perches.com>,
+        David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] EDAC/mc: Prefer strscpy or scnprintf over strcpy,
+ sprintf and snprintf
+Message-ID: <20210918091706.GB2941@titan>
+References: <20210903150539.7282-1-len.baker@gmx.com>
+ <YT8S3poKyd5Nr5cK@rric.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87r1dqdfyj.fsf@meer.lwn.net>
-X-Provags-ID: V03:K1:+rzmVjyumADpwk6ze8EV6Asf3Yjw5vSPudcQosQUPxoZxe/DZAZ
- fd0xuk608Ry2zuEFF+HkMxfOeLR9OMc9gTqVyZ9/6I+PlfBsDkslt3aRueSgPrquZig0f8I
- GXVXWDuEr0LfZfK1bp+kZ5DvaXJbLinfzsrfOnocv1mWIj3zh9D6QLVDWqpqVnZah2AkVux
- OphmbzKU+NIM5214SCl5A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/CXm4Xg46iY=:1M0YfzRb9DL+6kpqhW35Z0
- Gjrbw4prYP0ScyduDM1/ZOwnnChTfrKqaaBA7sbIjYTJY7h/EJvAC4zhZbIKwpbo3XP3pSHsN
- HsGMJbv+PkjofuAu0GOSak6IOxMtrNIEyo10nRroQZ/K7ufsgkxoJC3xChFpMcCeezd66kg5f
- MpmRGUrEif82wZR0APv/Hd/3ellsA8q7/dGwLGhArp+s5j2iVElFXa+N7kLg3feta/x7E2uHJ
- Xmhn728r7lJzGQ7bvaTIZC1WrcQMOAcylQ+UDtqCZFe3CUCBFZbZY/m1BEgEoDaRma5/rEuqR
- E8T/qRZYU5YwxzlvsFAUw/SXIGQO/BbohjZ6wS1IVFlbtMvGvQ7XhxGGFeXexQV785BM3NwpJ
- IUkhpr2ophYFfohqocqQV3lZfD02x2aznfRTCOkN3dHMzLEw4dgk6VA9EEzeetiM4rAchEIWR
- g1z2Fz6pOtDE1/4hG5h1T8dwhsdt49reasm6DL1T5J+FTN2irWsyrKecB8Kh4r4o6yaq5I5iD
- Fm0paUelZiV3QkUWpnWSaODsjrdtOHjsaWRSy+KXblwQoiXUGprhT2BJji/k4dqUyYIFWOi6x
- qJUiEw5j/jjkoa6tD0oTRgwFVgY/aSuiHYKu3Yrveq+ZfC8pHFsUHjlMMZgjvNLbr79kKzCPO
- kgKeDMKFSHrRMN5PM9sHwD0TyIWHJ5ZuA9UGEbV3BwfKY19Xp1Th6c3UqZrQILednm6TWU6vs
- Onv4uZ9o72EYHv9UATbYiA8epvQe7kgPvFKIApG8K1Kh8Zc64CdPdXYWPQK7pTylqqbV+t/lG
- /KqEMWbwwLHznmzvW810yP55ElauBVbmqx9U8eti8Aq0ZYJPGTyV6CzZty6gTEJFr8LRQpACx
- p+3yxhW7EXvkHwbMrgSOVhq5oXDzZ2CuHNKNRO3lONMpSpJ0mUTAaFRi2M+67hAELk4xG6nnd
- TXJRQrUOcClkvX0oY6Xx65Ewlvy9jZ1+5gz0Iy73flAWl2cyVO+TUrW0jrlb9mCRig8M8sAyF
- RWF4pAe9TmGfIuPX9pUDA3YoV/Hktpbiz9XrDiKi5PxU3/IZPHjyGilQwiKgRUdkB24O9YSDn
- qQSftDwP8edRTc=
+In-Reply-To: <YT8S3poKyd5Nr5cK@rric.localdomain>
+X-Provags-ID: V03:K1:x0hRNgzN/YTNYOtTnqiD/7Y0qsVVqL9WVhMPAY6LnNnNY4O2mkH
+ oG+BnOd9niqyJRuLPBiDldfFUoeD85ilPs9KPbod2z+yNhyqhYRs+M5zTqhzOnA6fCLJiif
+ UCclBZVfVw9wuZYAwoq/wlzZZGw4UVhTZvrZVP/eNvxEFn+R/AnhhLEkHLeUa1e8hu+4UqW
+ UeC20cI2ifUtL4sp8gqFg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tWU3fgmMYgo=:XFGFwtM/KjC8HsB9wUwC8D
+ tqSyMMJa3StwqxNbr3Il5Y4S+yMMFvhnERirF78hD5ipB0sbfKgAWoXXCSzlbfnt8xyH8Ktec
+ K7xDCgNTalQX/8bT1Ttl8PFwcNK8gq/SdGkjXSs8sYIU53dQOMapjmx8uijekomsaCbvSG4Fp
+ ZZP787y/zmDYfv0BBoZV2QJ9tjZYeT0GKzXmghPBg5Yorgqiw0fjiF8yP/WO7MQlIW9R7GxnK
+ 3k/2/98ZmIEn54yJgAP0FlAdTYOioYim398Oq+sEE7fSSZdTXrY3DdXXuYZlpcWMzH7yCV9P1
+ 8tALytVCBRcAlzpmMG0uTSD/TP0SLX/AtF3BQZySasu0Ye/Ygfa3oANc20bPurr+dnLh/txlG
+ n/GMFybb1qHtzEv+5O3R8EuXTH0UF8DVyeYwbIbQctURkYqWWhXxpustPBDqLC6oogPf4B1bQ
+ t6fDtjgFl4qTFbuPEgUFcaloo5SGhjk2wURzM6vwJngpY0RXpr7eLoduP8TEjePClWaoyw/q9
+ VjtymHc2ol3lV3GWFa0DG8voi0TWWjeeP8jjw2QhbD+kGK58GNPgI//Y2iV+HX9diVAsBdVBV
+ PaeZXJaH9BcKwHAL2PO5RmF37Rgf8mHojGkMR2dmaql4XXHHk8VTrFCKiFVd8I4M1lHSGSzt+
+ 5txKU0e5NFJHzGuHJoL4gkYag86GXN86kK8I2v/F9nysMmLbtbBkq+IxRRUi88AlXYRS12325
+ /i1WBKYJpS6N5ryUSNJ1ZErEWTqPmXyRRKdLeM93VyQgvoHAnFTzBhj2TX3FCd0RZ6TP30rSb
+ j0YHzMG9NFJbQ0XxQJdY6vJrBm32HXCGHqxmSeK/j3VCZgbLQUs0T5rOM9zki5XejwTUz5r0E
+ 9lHWxm/TRq2+p0c48SnwrJYwv3zP7WYx9kOz8nMnoIusJq6utBXz1I5SudTMYuhT1Gq3Ios+O
+ kZUJXvi3x7QuG/Je08IdAGBAFX2ozgJXTlqR0POlqEuozSaI933Kjkg8KUBmfyDwOF2xohusa
+ ylkCVcDLDHG2FKV//K+JsxKrfnwF5UGPAbCEK02fY3zAI1iPVVsmE+g86fmt4zq57xeKS5ca/
+ VsAO2yMY+aKH2g=
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
@@ -76,80 +80,14 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 Hi,
 
-On Tue, Sep 14, 2021 at 03:07:00PM -0600, Jonathan Corbet wrote:
-> Len Baker <len.baker@gmx.com> writes:
->
-> > Although using literals for size calculation in allocator arguments ma=
-y
-> > be harmless due to compiler warnings in case of overflows, it is bette=
-r
-> > to refactor the code to avoid the use of open-coded math idiom.
-> >
-> > So, clarify the preferred way in these cases.
-> >
-> > Suggested-by: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Len Baker <len.baker@gmx.com>
-> > ---
-> > Changelog v1 -> v2
-> >  - Clarify the sentence by changing "keep <foo> out" with "avoid <foo>=
-"
-> >    (Joe Perches).
-> >
-> >  Documentation/process/deprecated.rst | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/process/deprecated.rst b/Documentation/proc=
-ess/deprecated.rst
-> > index 9d83b8db8874..b5a8be914178 100644
-> > --- a/Documentation/process/deprecated.rst
-> > +++ b/Documentation/process/deprecated.rst
-> > @@ -60,7 +60,8 @@ smaller allocation being made than the caller was ex=
-pecting. Using those
-> >  allocations could lead to linear overflows of heap memory and other
-> >  misbehaviors. (One exception to this is literal values where the comp=
-iler
-> >  can warn if they might overflow. Though using literals for arguments =
-as
-> > -suggested below is also harmless.)
-> > +suggested below is also harmless. So, the preferred way in these case=
-s is
-> > +to refactor the code to avoid the open-coded math idiom.)
->
-> Sorry for being so slow to get to this...
+On Mon, Sep 13, 2021 at 10:59:10AM +0200, Robert Richter wrote:
 
-Don't worry.
+> this patch looks good to me. I made some changes on top of it to
+> further ease pointer arithmetic and also fix remaining
+> sprintf/snprintf() users as it makes sense to have them all in a
+> single change. See below. Boris, please apply.
 
-> honestly, though, I've been
-> staring at it for a bit and cannot figure out what you are trying to
-> communicate.  What does "math idiom" mean here?  If you are trying to
-> say that using literals is *not* harmless, then perhaps the first part
-> of the parenthetical should be taken out?
->
-> Confused...
-
-The "open-coded arithmetic in allocator arguments" section in the document=
-ation
-explains that dynamic syze calculations should not be performed in memory
-allocator function arguments. Then, the text in parenthesis explains an
-exception to this rule: when the calculus is made using literals for all t=
-he
-operands. However, the text in parenthesis also tells that using the same
-literals in the recommended helpers or purpose specific functions is harml=
-ess.
-
-So, there are two options for size calculations using literals:
-
-1.- Leave it as is.
-2.- Refactor the code to use purpose specific functions or helpers.
-
-What I try to explain with this patch is that when the calculus is done us=
-ing
-only literals, the preferred way is the second option. In this manner the
-open-coded calulation (multiplication, addition, ...) is avoided.
-
-The "math idiom" refers to the open-coded arithmetic.
-
-I hope this clarify things a bit.
+Thanks Robert for doing this.
 
 Regards,
 Len
