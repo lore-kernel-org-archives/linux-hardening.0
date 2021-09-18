@@ -2,92 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB22C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 09:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9625C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 10:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43DC261108
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 09:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3F461212
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 10:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231676AbhIRJS4 (ORCPT
+        id S235388AbhIRKnC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 18 Sep 2021 05:18:56 -0400
-Received: from mout.gmx.net ([212.227.15.18]:37867 "EHLO mout.gmx.net"
+        Sat, 18 Sep 2021 06:43:02 -0400
+Received: from mout.gmx.net ([212.227.17.21]:54145 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231497AbhIRJSz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 18 Sep 2021 05:18:55 -0400
+        id S234492AbhIRKnA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 18 Sep 2021 06:43:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1631956630;
-        bh=iry8CxJ90YvNjBabfl8pNpq16ZRgsLo1wiD4DopXVmU=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=N5oBX9fJAM5iyWuylOVnewRLM5T8PbFyPWX5WoDIVrxxzEaifUei5SK4HbJaLcyhB
-         mJR+WMiSp3QyFWhfZKVQGTm/aD5WeY/i+OsZ1fIV3JUkQX3pFihlSiCWZqp4qiMocw
-         0M8GLO9j+6c609FcTk5bxH+vIQdau5X9WPcSltcI=
+        s=badeba3b8450; t=1631961675;
+        bh=BJyBSDq1vg3gPl9/hHfnt695lOw4ev4/ffazgBhzBCo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=IWcS6flJU9YNVYC5w3ByxN1KoStXSdVm6i5CtSFHFdWCCgTnH7yoJfqru5xpUWXu5
+         qTg+2IMMYt0RYJYBmNbGJRfltyIfIp/IUxyb0yl0varXaWI3bsCLwWJHN3IE0eXuva
+         FewU0JazI3EOavR0MDfpD/WEw3UqLvmrQAxlqQqk=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1M72oH-1mXIh03s1X-008aqz; Sat, 18
- Sep 2021 11:17:10 +0200
-Date:   Sat, 18 Sep 2021 11:17:06 +0200
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MgvvJ-1n5rPj33NN-00hLOQ; Sat, 18 Sep 2021 12:41:14 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Robert Richter <rric@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Joe Perches <joe@perches.com>,
-        David Laight <David.Laight@aculab.com>,
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] EDAC/mc: Prefer strscpy or scnprintf over strcpy,
- sprintf and snprintf
-Message-ID: <20210918091706.GB2941@titan>
-References: <20210903150539.7282-1-len.baker@gmx.com>
- <YT8S3poKyd5Nr5cK@rric.localdomain>
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: pxa_dma: Prefer struct_size over open coded arithmetic
+Date:   Sat, 18 Sep 2021 12:40:55 +0200
+Message-Id: <20210918104055.8444-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YT8S3poKyd5Nr5cK@rric.localdomain>
-X-Provags-ID: V03:K1:x0hRNgzN/YTNYOtTnqiD/7Y0qsVVqL9WVhMPAY6LnNnNY4O2mkH
- oG+BnOd9niqyJRuLPBiDldfFUoeD85ilPs9KPbod2z+yNhyqhYRs+M5zTqhzOnA6fCLJiif
- UCclBZVfVw9wuZYAwoq/wlzZZGw4UVhTZvrZVP/eNvxEFn+R/AnhhLEkHLeUa1e8hu+4UqW
- UeC20cI2ifUtL4sp8gqFg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tWU3fgmMYgo=:XFGFwtM/KjC8HsB9wUwC8D
- tqSyMMJa3StwqxNbr3Il5Y4S+yMMFvhnERirF78hD5ipB0sbfKgAWoXXCSzlbfnt8xyH8Ktec
- K7xDCgNTalQX/8bT1Ttl8PFwcNK8gq/SdGkjXSs8sYIU53dQOMapjmx8uijekomsaCbvSG4Fp
- ZZP787y/zmDYfv0BBoZV2QJ9tjZYeT0GKzXmghPBg5Yorgqiw0fjiF8yP/WO7MQlIW9R7GxnK
- 3k/2/98ZmIEn54yJgAP0FlAdTYOioYim398Oq+sEE7fSSZdTXrY3DdXXuYZlpcWMzH7yCV9P1
- 8tALytVCBRcAlzpmMG0uTSD/TP0SLX/AtF3BQZySasu0Ye/Ygfa3oANc20bPurr+dnLh/txlG
- n/GMFybb1qHtzEv+5O3R8EuXTH0UF8DVyeYwbIbQctURkYqWWhXxpustPBDqLC6oogPf4B1bQ
- t6fDtjgFl4qTFbuPEgUFcaloo5SGhjk2wURzM6vwJngpY0RXpr7eLoduP8TEjePClWaoyw/q9
- VjtymHc2ol3lV3GWFa0DG8voi0TWWjeeP8jjw2QhbD+kGK58GNPgI//Y2iV+HX9diVAsBdVBV
- PaeZXJaH9BcKwHAL2PO5RmF37Rgf8mHojGkMR2dmaql4XXHHk8VTrFCKiFVd8I4M1lHSGSzt+
- 5txKU0e5NFJHzGuHJoL4gkYag86GXN86kK8I2v/F9nysMmLbtbBkq+IxRRUi88AlXYRS12325
- /i1WBKYJpS6N5ryUSNJ1ZErEWTqPmXyRRKdLeM93VyQgvoHAnFTzBhj2TX3FCd0RZ6TP30rSb
- j0YHzMG9NFJbQ0XxQJdY6vJrBm32HXCGHqxmSeK/j3VCZgbLQUs0T5rOM9zki5XejwTUz5r0E
- 9lHWxm/TRq2+p0c48SnwrJYwv3zP7WYx9kOz8nMnoIusJq6utBXz1I5SudTMYuhT1Gq3Ios+O
- kZUJXvi3x7QuG/Je08IdAGBAFX2ozgJXTlqR0POlqEuozSaI933Kjkg8KUBmfyDwOF2xohusa
- ylkCVcDLDHG2FKV//K+JsxKrfnwF5UGPAbCEK02fY3zAI1iPVVsmE+g86fmt4zq57xeKS5ca/
- VsAO2yMY+aKH2g=
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:aKPT9HrV3eSSCxGAWSMTQvGr3LwrGp+4r78lkLF0wZ5cm0aCXXV
+ BfIzMcoW1vr0AKTwLukCf06hSyzSTMz6szYRSIPD35P8rT4enLt8b2/BLW3q0WS41glkBr5
+ uWcmGw1zyHl/dOpiVa7rfJEfqe1J3qC95XlbpWRlc1L/nDk/fd5v2agCvzVzuumbAsQyVUm
+ McKq8WoZ7IENYoVL3sO9Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:T7anHeQreg8=:mOX+MzsS6IIrLyXa8GTyoy
+ r9uR+sNSkSKsUmKGYrbBiGJjcsRjkLFth7/BZkvIHtb8JJYr0+CTtB80TgMnrvcdg/T5OPS1h
+ xnsCwADCVoWeX8/VG+jtGSBFZxrxor23gNS+voSYxtid7C9u5lrZ+ujxWKABSXMdjBIl2NdmW
+ bY9uyVl5wvdoXOJHyXZPz4ivGWWxKshJ0Ctd/7tPjL2E+RcKc9otm1wAO1Emv3DqUFuKmsM/f
+ hYCUyqAqYCDWbhPpjVQYTED4ZZk+qLWAiHjwZJlNM8enxK3H6+X3R5cH3ClupkT9Hwb8Z9sL3
+ qD55ABaLvqqNc2BpDncYTNPNItdMRJHhQc3YxLLdoIkUOqF8+qiON0XwPnklgR3noVOcV4/i+
+ o21Fs8QbNyW2HTM5fXfJfhIqrwd3YjQTW4VVQq8COIssSAtdz1uXi09H8cfdsXCwnka0wqKyq
+ 92LHoVbpOguxcFDTEgYl88SsZ9M6wAjbDl0JMm+oXZyrZws/RmtF2Pk/LTvnCwoRM5q5zV/7b
+ rbB/N1s3ngVnvb7P1u4gArr/CtOUkMnWjYvzHSG0UTS7PXPuUGGZtR44jr936cH5ct1GO3wOQ
+ mHqdgclGgCFuflhDgpdr3Mon8xPfAd1GUj4m64xmaJ7enSldZmMhraQhxuGNG1bhzGbEDHdkY
+ 792qzcFZCyt/af+4+WVUrycpKDfHAlblzdjowPPvysO4Z5lXJWatopbRn2BUoolr1Yt8XeJmZ
+ BbSOFmPtjYMaKDpRBFd6wXxqk7BFLQuCB6lZPKlGYPI1MT23T7Q4DLGI+hpRnZl13Kf0r+CGE
+ 2Myx7EA2O8a0yd2LMh3lLKLFzongDWFEIujeHLmGMPOC/+MHtPt+hdl/lKczhwPWyQn/uFP1O
+ 3WGnvpbs0u3geBJV9mfQ+P2FU/zq7F9wvG72dZeJNYQihTYdrsqIs1u1WuGwpMZlkx06xQuit
+ dtTSDAlWH/jJVwIllBevHz1DPjPebW7T+FmnQWu8SRxzbAMscnmWFLt5MPSBDFpDCaLg9A17O
+ pqFb53rnfwYRDgnsZKTEg4nNymuZK+R/MWIgZyImTyK7WFTsLtfGBSy/mCLrZiXdxD43RBmu4
+ mO080zyroYDgp8=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-On Mon, Sep 13, 2021 at 10:59:10AM +0200, Robert Richter wrote:
+So, use the struct_size() helper to do the arithmetic instead of the
+argument "size + count * size" in the kzalloc() function.
 
-> this patch looks good to me. I made some changes on top of it to
-> further ease pointer arithmetic and also fix remaining
-> sprintf/snprintf() users as it makes sense to have them all in a
-> single change. See below. Boris, please apply.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments
 
-Thanks Robert for doing this.
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ drivers/dma/pxa_dma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Regards,
-Len
+diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+index 4a2a796e348c..52d04641e361 100644
+=2D-- a/drivers/dma/pxa_dma.c
++++ b/drivers/dma/pxa_dma.c
+@@ -742,8 +742,7 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int n=
+b_hw_desc)
+ 	dma_addr_t dma;
+ 	int i;
+
+-	sw_desc =3D kzalloc(sizeof(*sw_desc) +
+-			  nb_hw_desc * sizeof(struct pxad_desc_hw *),
++	sw_desc =3D kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc),
+ 			  GFP_NOWAIT);
+ 	if (!sw_desc)
+ 		return NULL;
+=2D-
+2.25.1
+
