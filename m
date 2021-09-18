@@ -2,164 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E9FC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 13:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB68C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 14:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A27656126A
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 13:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F0F61212
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 14:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235764AbhIRNxU (ORCPT
+        id S231441AbhIROXZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 18 Sep 2021 09:53:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236010AbhIRNxT (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 18 Sep 2021 09:53:19 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C14C061574
-        for <linux-hardening@vger.kernel.org>; Sat, 18 Sep 2021 06:51:56 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id w14so1395783pfu.2
-        for <linux-hardening@vger.kernel.org>; Sat, 18 Sep 2021 06:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=miV8uugxK2l0+TxTl0bYFsYjBqHnegb6tYLIO2c+/pQ=;
-        b=VKw24EWmI8tJCg4PHVON7yyfJEQYhqptyNWjyqSgsFi2IVS6iZif5B1uZsuSDvQJQx
-         +SLIrVCrSDmIzh61Ekf1bB13WKURTAlrae0zpyW9LPkrZhrxOTmbsf6XQShfyz4Em/fS
-         wf5x9/lw0kRW0qR2yJUr6fJ35kuYwP3X2e7dA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=miV8uugxK2l0+TxTl0bYFsYjBqHnegb6tYLIO2c+/pQ=;
-        b=lCCEelk3JZlmv3H88PKiGNWImHDHV9BEhgR6c7sKQe5XSWCNYFUtZSulEvIDmmK05a
-         J7AJEAtOlNURNGzhxpvlNsGXHglm8ZrOc8XNidqCqanUkBK5kku2VXQgy+HoD5SF03IM
-         WkNDqvY00pcHC8eUrumaHE3GnHQPVh2fVGhy8rf7RN2xfzUty7G/Tz8tH5F8rva427YM
-         8g8cZFftfgZRCQC0O+7FCYl+UjcCd6zlF/Af/JF4x3fYNwtd8VGkwJNSKmAgPQz0djkN
-         R1w+JG7kSbU44GYHpA13Cqg9wQ12AE2Jwh31EevIUtdNk9QpcC/c9397EimLwLPGVkVl
-         tEvg==
-X-Gm-Message-State: AOAM530BFKV0+gsgU6vwa2hUC1XL4Mm3MFTChxwQXAt1Bu8axgnqXH+9
-        dbg4EJ4MsVHMU+7pHH6LAJjSXg==
-X-Google-Smtp-Source: ABdhPJyS2QSKmMpzTd7MmHyqFtqie45S/kXPdQTs6m3qND4U8eV1/DVEXDB+DPoyXL97BCM+ZzgQOA==
-X-Received: by 2002:a63:2011:: with SMTP id g17mr14710533pgg.379.1631973115834;
-        Sat, 18 Sep 2021 06:51:55 -0700 (PDT)
-Received: from [127.0.0.1] (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id k29sm9351614pfp.200.2021.09.18.06.51.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Sep 2021 06:51:54 -0700 (PDT)
-Date:   Sat, 18 Sep 2021 06:51:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Len Baker <len.baker@gmx.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?ISO-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>
-CC:     Colin Ian King <colin.king@canonical.com>,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH] net: mana: Prefer struct_size over open coded arithmetic
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20210918132010.GA15999@titan>
-References: <20210911102818.3804-1-len.baker@gmx.com> <20210918132010.GA15999@titan>
-Message-ID: <D81D1EE2-92A0-42D5-9238-9B05E4BDE230@chromium.org>
+        Sat, 18 Sep 2021 10:23:25 -0400
+Received: from mout.gmx.net ([212.227.17.22]:59955 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237771AbhIROXY (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 18 Sep 2021 10:23:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1631974912;
+        bh=UmWycZcizNYid4Z+392DMeF7EKIyi4qx+X3CFcO1uDE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=OHL5tT3y1TiXx0wkB4k4slkZMZI8KDCqbWKc5Q/EfYtvF6NluuoyY9yoJP4YD9gPc
+         kOiKCdeyfrg9M6eb9R1PUYhsu/qy6vcNmHvC2Wa4VzgxCcC+a7IG1JciPyJ+vYHapK
+         AR+DjUc4Kjgwl5XEUFwoiAawV1qbTBW0/nG7t5pM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MdebB-1n0O0n1DxB-00ZjGv; Sat, 18 Sep 2021 16:21:52 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Len Baker <len.baker@gmx.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: PPC: Replace zero-length array with flexible array member
+Date:   Sat, 18 Sep 2021 16:21:38 +0200
+Message-Id: <20210918142138.17709-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nUjxkWAcJOBgMwjffXAt1QuuDOCIXUU/JKmzX9iUDs9pGqz2aHN
+ 98GDDCSWE9bq+l3Sk5BPYQ5vXYhDBd6i6m9oBE/LNW0YxvO/oLjzioqf/Ji0uzBVOm9chr0
+ LL9bRwvN7Fce6JyKqT87QUtYysU10VZEQcZZKM2WuxjcBrS1kJvveJZIa+QYFSTgKVzdzcF
+ 5QICgt5PO1IAWzYmd7a8Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RM7jumJIPRc=:iV3Dwa2P7AD02q/3KO68IT
+ BDzSVfG1ioBkwhrb+6qgNASCHxUj9Q/aArb1XlOug0eTZo7EX0tS/9NcbcL0gFVq7ZiK7juec
+ aw+TghlsV9LQa5Ab4H5yeHGk0H6nj6B8NbQ2TstFwNlbxh2MqxJjrfMPNXTad7dxB8cZJPdN1
+ igLcjxvmZjs/JmZxWWMzf2z2WY87Q9L4+b5ssB9aMIqj8TcNWZfHTpL1O9y5XmxwGfqPMMtdV
+ lTxgVnjIhym06uO7OUfYZWIJVHEU7sFRH0yYPBLA6XJzmLPbq+LXlw0eQ9P1Ho6ogRHG2DS3c
+ 0JZKvyMZ7Gi9aqlxb8hQj5WyfDWAMTjYXCR8j3YFRAJ1WRJ0UyRKctaAwZSYEnmjYVGJDhQ19
+ dPPt152wY9NjQBc3Hn7UgUhXHcSb70hIxNxQHRB+foCmSGwCQwsiGfJ9aZi+PSspzri3kEJW8
+ i1thsYq8MTvOW3OLDv1iqHVDMni5wJIwKZqqWDhIWovfesZZ5k4DIF9QWkvW7z6P+ovABo5Wd
+ j5HiWNZxxqdBZA1mBxyxe5hglT1H15Z+9v2JuWw7Yd/ATfvksdQjMZ/7HpsJ2TrNxF2twTMay
+ s4yaFIj6/SBsngxuQ52uPAbxM9hCp3Il0g+9wBzE0HX3QAw+fNosh/2fM9N9D07T79yQMevCv
+ QRWygqOq+PS7QU3vcJE+9PD2DpIMC8jr5n6pVK80AxxV2yK1lbLmV4MLFhwYn63Wo7REVNSTX
+ g0NCghfK9b8jA0runYKHxOf4whbKHtsPf4lFYYNSDjdIfnkJuAsPu55RB4gB6evPW7rgxE6os
+ uka2MC208rgCXyYKnQeWPakWWEC1WXveod36ovFxvraYU4GEK1dRFAKK5wPIruIwJQBptcCVj
+ 0Zf7vmXOTwGKA9T5AxPsMfaP5V1XR95fvMV73zHAwfuW+8LSgIfCepvfXh+GMYPoOQ683DsxF
+ 4PmOqPwM8OS038ga1mnPs/aQhfat5tzpxxDHsjplerHiZ9I51+aXdsjmGza1VVjut2rFfV2Fu
+ KxL08FdYrJDx/nxab6C/N+Ux0B18NAs1Z60J9YoO7dRbx1vMlqSwskF4hBxXACceg/mH/t7yq
+ o/7JJ0W4gKEMJg=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use "flexible array members" [1] for these cases. The
+older style of one-element or zero-length arrays should no longer be
+used[2].
 
+Also, make use of the struct_size() helper in kzalloc().
 
-On September 18, 2021 6:20:10 AM PDT, Len Baker <len=2Ebaker@gmx=2Ecom> wr=
-ote:
->Hi,
->
->On Sat, Sep 11, 2021 at 12:28:18PM +0200, Len Baker wrote:
->> As noted in the "Deprecated Interfaces, Language Features, Attributes,
->> and Conventions" documentation [1], size calculations (especially
->> multiplication) should not be performed in memory allocator (or similar=
-)
->> function arguments due to the risk of them overflowing=2E This could le=
-ad
->> to values wrapping around and a smaller allocation being made than the
->> caller was expecting=2E Using those allocations could lead to linear
->> overflows of heap memory and other misbehaviors=2E
->>
->> So, use the struct_size() helper to do the arithmetic instead of the
->> argument "size + count * size" in the kzalloc() function=2E
->>
->> [1] https://www=2Ekernel=2Eorg/doc/html/v5=2E14/process/deprecated=2Eht=
-ml#open-coded-arithmetic-in-allocator-arguments
->>
->> Signed-off-by: Len Baker <len=2Ebaker@gmx=2Ecom>
->> ---
->>  drivers/net/ethernet/microsoft/mana/hw_channel=2Ec | 4 +---
->>  1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel=2Ec b/drive=
-rs/net/ethernet/microsoft/mana/hw_channel=2Ec
->> index 1a923fd99990=2E=2E0efdc6c3c32a 100644
->> --- a/drivers/net/ethernet/microsoft/mana/hw_channel=2Ec
->> +++ b/drivers/net/ethernet/microsoft/mana/hw_channel=2Ec
->> @@ -398,9 +398,7 @@ static int mana_hwc_alloc_dma_buf(struct hw_channel=
-_context *hwc, u16 q_depth,
->>  	int err;
->>  	u16 i;
->>
->> -	dma_buf =3D kzalloc(sizeof(*dma_buf) +
->> -			  q_depth * sizeof(struct hwc_work_request),
->> -			  GFP_KERNEL);
->> +	dma_buf =3D kzalloc(struct_size(dma_buf, reqs, q_depth), GFP_KERNEL);
->>  	if (!dma_buf)
->>  		return -ENOMEM;
->>
->> --
->> 2=2E25=2E1
->>
->
->I have received a email from the linux-media subsystem telling that this
->patch is not applicable=2E The email is the following:
->
->Hello,
->
->The following patch (submitted by you) has been updated in Patchwork:
->
-> * linux-media: net: mana: Prefer struct_size over open coded arithmetic
->     - http://patchwork=2Elinuxtv=2Eorg/project/linux-media/patch/2021091=
-1102818=2E3804-1-len=2Ebaker@gmx=2Ecom/
->     - for: Linux Media kernel patches
->    was: New
->    now: Not Applicable
->
->This email is a notification only - you do not need to respond=2E
->
->The question is: Why it is not applicable?=2E I have no received any bad =
-comment
->and a "Reviewed-by:" tag from Haiyang Zhang=2E So, what is the reason for=
- the
->"Not Applicable" state?=2E
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-le=
+ngth-and-one-element-arrays
 
-That is the "Media" subsystem patch tracker=2E The patch appears to be for=
- networking, so the Media tracker has marked it as "not applicable [to the =
-media subsystem]"=2E
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ arch/powerpc/include/asm/kvm_host.h | 2 +-
+ arch/powerpc/kvm/book3s_64_vio.c    | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-The CC list for this patch seems rather wide (media, dri)=2E I would have =
-expected only netdev=2E Were you using scripts/get_maintainer=2Epl for gett=
-ing addresses?
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/as=
+m/kvm_host.h
+index 080a7feb7731..3aed653373a5 100644
+=2D-- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -190,7 +190,7 @@ struct kvmppc_spapr_tce_table {
+ 	u64 size;		/* window size in pages */
+ 	struct list_head iommu_tables;
+ 	struct mutex alloc_lock;
+-	struct page *pages[0];
++	struct page *pages[];
+ };
 
--Kees
+ /* XICS components, defined in book3s_xics.c */
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64=
+_vio.c
+index 6365087f3160..d42b4b6d4a79 100644
+=2D-- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -295,8 +295,7 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
+ 		return ret;
+
+ 	ret =3D -ENOMEM;
+-	stt =3D kzalloc(sizeof(*stt) + npages * sizeof(struct page *),
+-		      GFP_KERNEL);
++	stt =3D kzalloc(struct_size(stt, pages, npages), GFP_KERNEL);
+ 	if (!stt)
+ 		goto fail_acct;
+
+=2D-
+2.25.1
+
