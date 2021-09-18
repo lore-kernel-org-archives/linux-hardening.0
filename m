@@ -2,105 +2,154 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54B6C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Sep 2021 18:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0DBC433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 09:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B34EB611C8
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Sep 2021 18:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BB16124B
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Sep 2021 09:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241141AbhIQSmZ (ORCPT
+        id S238142AbhIRJMm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Sep 2021 14:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240839AbhIQSmY (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Sep 2021 14:42:24 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 572E1C061766
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Sep 2021 11:41:02 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id p29so35825990lfa.11
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Sep 2021 11:41:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cpak71tpwGIH8sDgLDrdJbMzVDQHoqt6rJZasCMwdzc=;
-        b=PPZqYKySWRBXLCmQqLignaVRzeemkJWbOSVm4Nk3LB3/dwYqxZT99gFitFC859Cqmo
-         5dHLqIWjBbL09xTf3eNTCSAzEfwW62QnHoObFrYVOWn0PPzzY6lksRvKhahbrO9bPfvT
-         /jfwN2l8iu/pKIRl254LqCHUDuwZMUECiAh00=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cpak71tpwGIH8sDgLDrdJbMzVDQHoqt6rJZasCMwdzc=;
-        b=b5yY/NS7ibxhf/XXMy9kp6Rh/Frs+bj7XzXjz5JSd8aJ6SwfNIAw0jMA2/nZrR5xwW
-         7cSs85XL4465Fh79LkKQtv5S0EzBBJgBmPtxQ/0Y5NxQIwI/HUD1aCldaiSPC8xvpJvK
-         NX8dKCagVaaLgXdpL2ir9yfHsCKl/dm6chyKyATWtY0iquOkgsp8gH1T7EtqIkANN+Gm
-         kLujzWmFbqGKaoOm84Mu+xqjBQw2eO3b/YXFs6WW0bd+jmPLAUkc70MlVAnn6MCKry7Q
-         1glkJt50fc3JNSDHbBzjRjmrLxMAeBtm4oTb2uUUmH+xIHMCni6n3Os3CkhoqdtrtULq
-         7Mlg==
-X-Gm-Message-State: AOAM530FxWqX4bOgxWXGDA4O5PSwtjveeVCYIMKCP6RKJr33fkHmlTbX
-        p1rSl6uu/dMqCKvZkoFF+CsPf3MbcoMjM0AU7Cs=
-X-Google-Smtp-Source: ABdhPJz0kzkzThsnf5bnxpGzJF2o63UDwJnoweDkTl4B3S1gli2Wufl+ndBoF1XsAUrYx572PlyT9A==
-X-Received: by 2002:ac2:4f8f:: with SMTP id z15mr9031912lfs.361.1631904060330;
-        Fri, 17 Sep 2021 11:41:00 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id r11sm786050ljk.71.2021.09.17.11.41.00
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Sep 2021 11:41:00 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id bq5so36824995lfb.9
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Sep 2021 11:41:00 -0700 (PDT)
-X-Received: by 2002:a19:ae15:: with SMTP id f21mr9099719lfc.402.1631904049054;
- Fri, 17 Sep 2021 11:40:49 -0700 (PDT)
+        Sat, 18 Sep 2021 05:12:42 -0400
+Received: from mout.gmx.net ([212.227.15.15]:52151 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235575AbhIRJMl (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 18 Sep 2021 05:12:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1631956269;
+        bh=6lHVqi2oAFRgu31JzplJx3TGWSkqTLjIaeLQgF6ecoI=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=LgeENGbNsutmTokAbwcWLikRAWA9im4VR59qUC2PoHk9IErmBVj8EA7ol0JX2atuI
+         qsJA66Zq6mth3/fsJtdT2dEVnyq86CQKz86dLkbFcSi2uCAt+eY88/ZCSiWwYMlkbD
+         VNlfLvGl9GUGaOHRRo76hUobDGeHw3l8ICrp73BQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mel3n-1mzCZ60Wvt-00ao6q; Sat, 18
+ Sep 2021 11:11:09 +0200
+Date:   Sat, 18 Sep 2021 11:10:57 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Kees Cook <keescook@chromium.org>, Len Baker <len.baker@gmx.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] docs: deprecated.rst: Clarify open-coded arithmetic
+ with literals
+Message-ID: <20210918091057.GA2941@titan>
+References: <20210829144716.2931-1-len.baker@gmx.com>
+ <87r1dqdfyj.fsf@meer.lwn.net>
 MIME-Version: 1.0
-References: <20210917061104.2680133-1-brendanhiggins@google.com>
- <20210917061104.2680133-6-brendanhiggins@google.com> <202109170856.8DDB49112D@keescook>
-In-Reply-To: <202109170856.8DDB49112D@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 17 Sep 2021 11:40:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whck4RtO7yp-jKK8QQc0bCDZBkdHc=3pGiFsFjwnQ+-mw@mail.gmail.com>
-Message-ID: <CAHk-=whck4RtO7yp-jKK8QQc0bCDZBkdHc=3pGiFsFjwnQ+-mw@mail.gmail.com>
-Subject: Re: [PATCH v1 5/6] mmc: sdhci-of-aspeed: build kunit tests without
- structleak plugin
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <shuah@kernel.org>, David Gow <davidgow@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rafael Wysocki <rafael@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>, andreas.noever@gmail.com,
-        michael.jamet@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        YehezkelShB@gmail.com, Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r1dqdfyj.fsf@meer.lwn.net>
+X-Provags-ID: V03:K1:+rzmVjyumADpwk6ze8EV6Asf3Yjw5vSPudcQosQUPxoZxe/DZAZ
+ fd0xuk608Ry2zuEFF+HkMxfOeLR9OMc9gTqVyZ9/6I+PlfBsDkslt3aRueSgPrquZig0f8I
+ GXVXWDuEr0LfZfK1bp+kZ5DvaXJbLinfzsrfOnocv1mWIj3zh9D6QLVDWqpqVnZah2AkVux
+ OphmbzKU+NIM5214SCl5A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/CXm4Xg46iY=:1M0YfzRb9DL+6kpqhW35Z0
+ Gjrbw4prYP0ScyduDM1/ZOwnnChTfrKqaaBA7sbIjYTJY7h/EJvAC4zhZbIKwpbo3XP3pSHsN
+ HsGMJbv+PkjofuAu0GOSak6IOxMtrNIEyo10nRroQZ/K7ufsgkxoJC3xChFpMcCeezd66kg5f
+ MpmRGUrEif82wZR0APv/Hd/3ellsA8q7/dGwLGhArp+s5j2iVElFXa+N7kLg3feta/x7E2uHJ
+ Xmhn728r7lJzGQ7bvaTIZC1WrcQMOAcylQ+UDtqCZFe3CUCBFZbZY/m1BEgEoDaRma5/rEuqR
+ E8T/qRZYU5YwxzlvsFAUw/SXIGQO/BbohjZ6wS1IVFlbtMvGvQ7XhxGGFeXexQV785BM3NwpJ
+ IUkhpr2ophYFfohqocqQV3lZfD02x2aznfRTCOkN3dHMzLEw4dgk6VA9EEzeetiM4rAchEIWR
+ g1z2Fz6pOtDE1/4hG5h1T8dwhsdt49reasm6DL1T5J+FTN2irWsyrKecB8Kh4r4o6yaq5I5iD
+ Fm0paUelZiV3QkUWpnWSaODsjrdtOHjsaWRSy+KXblwQoiXUGprhT2BJji/k4dqUyYIFWOi6x
+ qJUiEw5j/jjkoa6tD0oTRgwFVgY/aSuiHYKu3Yrveq+ZfC8pHFsUHjlMMZgjvNLbr79kKzCPO
+ kgKeDMKFSHrRMN5PM9sHwD0TyIWHJ5ZuA9UGEbV3BwfKY19Xp1Th6c3UqZrQILednm6TWU6vs
+ Onv4uZ9o72EYHv9UATbYiA8epvQe7kgPvFKIApG8K1Kh8Zc64CdPdXYWPQK7pTylqqbV+t/lG
+ /KqEMWbwwLHznmzvW810yP55ElauBVbmqx9U8eti8Aq0ZYJPGTyV6CzZty6gTEJFr8LRQpACx
+ p+3yxhW7EXvkHwbMrgSOVhq5oXDzZ2CuHNKNRO3lONMpSpJ0mUTAaFRi2M+67hAELk4xG6nnd
+ TXJRQrUOcClkvX0oY6Xx65Ewlvy9jZ1+5gz0Iy73flAWl2cyVO+TUrW0jrlb9mCRig8M8sAyF
+ RWF4pAe9TmGfIuPX9pUDA3YoV/Hktpbiz9XrDiKi5PxU3/IZPHjyGilQwiKgRUdkB24O9YSDn
+ qQSftDwP8edRTc=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 8:57 AM Kees Cook <keescook@chromium.org> wrote:
+Hi,
+
+On Tue, Sep 14, 2021 at 03:07:00PM -0600, Jonathan Corbet wrote:
+> Len Baker <len.baker@gmx.com> writes:
 >
-> This isn't a stand-alone test object, so I'm less excited about
-> disabling STRUCTLEAK here.
+> > Although using literals for size calculation in allocator arguments ma=
+y
+> > be harmless due to compiler warnings in case of overflows, it is bette=
+r
+> > to refactor the code to avoid the use of open-coded math idiom.
+> >
+> > So, clarify the preferred way in these cases.
+> >
+> > Suggested-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Len Baker <len.baker@gmx.com>
+> > ---
+> > Changelog v1 -> v2
+> >  - Clarify the sentence by changing "keep <foo> out" with "avoid <foo>=
+"
+> >    (Joe Perches).
+> >
+> >  Documentation/process/deprecated.rst | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/process/deprecated.rst b/Documentation/proc=
+ess/deprecated.rst
+> > index 9d83b8db8874..b5a8be914178 100644
+> > --- a/Documentation/process/deprecated.rst
+> > +++ b/Documentation/process/deprecated.rst
+> > @@ -60,7 +60,8 @@ smaller allocation being made than the caller was ex=
+pecting. Using those
+> >  allocations could lead to linear overflows of heap memory and other
+> >  misbehaviors. (One exception to this is literal values where the comp=
+iler
+> >  can warn if they might overflow. Though using literals for arguments =
+as
+> > -suggested below is also harmless.)
+> > +suggested below is also harmless. So, the preferred way in these case=
+s is
+> > +to refactor the code to avoid the open-coded math idiom.)
+>
+> Sorry for being so slow to get to this...
 
-Yeah, please don't do this for things that aren't pure tests. You're
-now disabling security measures (even if I hate the gcc plugins and
-hope they will go away).
+Don't worry.
 
-             Linus
+> honestly, though, I've been
+> staring at it for a bit and cannot figure out what you are trying to
+> communicate.  What does "math idiom" mean here?  If you are trying to
+> say that using literals is *not* harmless, then perhaps the first part
+> of the parenthetical should be taken out?
+>
+> Confused...
+
+The "open-coded arithmetic in allocator arguments" section in the document=
+ation
+explains that dynamic syze calculations should not be performed in memory
+allocator function arguments. Then, the text in parenthesis explains an
+exception to this rule: when the calculus is made using literals for all t=
+he
+operands. However, the text in parenthesis also tells that using the same
+literals in the recommended helpers or purpose specific functions is harml=
+ess.
+
+So, there are two options for size calculations using literals:
+
+1.- Leave it as is.
+2.- Refactor the code to use purpose specific functions or helpers.
+
+What I try to explain with this patch is that when the calculus is done us=
+ing
+only literals, the preferred way is the second option. In this manner the
+open-coded calulation (multiplication, addition, ...) is avoided.
+
+The "math idiom" refers to the open-coded arithmetic.
+
+I hope this clarify things a bit.
+
+Regards,
+Len
