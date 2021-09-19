@@ -2,131 +2,453 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8A4C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 13:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12663C433FE
+	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 16:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA8666101C
-	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 13:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E775561242
+	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 16:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231313AbhISNj1 (ORCPT
+        id S230154AbhISQi4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 19 Sep 2021 09:39:27 -0400
-Received: from mout.gmx.net ([212.227.15.15]:33671 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230520AbhISNj0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 19 Sep 2021 09:39:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1632058665;
-        bh=dpjCOuKB0TZy7jl7Q6EZkoIUODpfOzZ8mzMHRj/tlR8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=aX+/dYy8K7jjYR+BNVzCTOS9DKWcZByht1WI8r1M3J+x5J9obfL3fqM5z9wz1Tyff
-         CEuL60E9RuBCF8sRjK5ggoFaZVn2p+Y52BPLAaKqTJREH3EDZsxLkLD+Y+4JFiGWQI
-         0KeB4TDiMRArz+h/y+VHFxP2PtxNUIyqqYJTm890=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MjS9I-1nBh9G3VgQ-00l1HA; Sun, 19 Sep 2021 15:37:45 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     Len Baker <len.baker@gmx.com>,
-        gushengxian <gushengxian@yulong.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: usx2y: Prefer struct_size over open coded arithmetic
-Date:   Sun, 19 Sep 2021 15:37:27 +0200
-Message-Id: <20210919133727.44694-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:P9oIxYBOWvzrzNnQljfTLmWev1T5GgHrU1V0RW+hDl7hechpNCb
- yXApUgoBWVxF/hzexad3zye4uplzArdeOjM9blm/ubzqrtsjPXSAIU3Y8mu0dQU0QAcQ1MB
- p0LIGGOCYOqIENCu1dFEnIqSFkGQbrgg9KPffwnm5rPkOZyIBZ9uvRb9ygXyTqO3TmtzITx
- zOntSI0hJjd7wfEXSwGUg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NfIJcycmvpQ=:1tfk/HaLRv0twRHFyFsZY4
- 8dVjG0/gT1xtsEm368V9IzmJcc8UMgvp7myybpGLqGoSdoGNO0/axAwj+rxulDg9JWUZbcbXH
- fGVgDB1Eidpj933sk24qotHY/keC+oVlxRDGnuzTyRCG06ggMN1nVqry6nd1d491/RD6uoj38
- NTNiHfgRavCvlaAvgN3KH/6QTuUz25hFNuy75CS5G6LXO/eW+1rSgdCl/8Dc/ks1fNheBdbIc
- 7JGPXOUO1yNak5ahprM/+4qYTt6yz3KF9SVzhZ+x7eoEfWQdPSlwYgJq6C7fs3DeXuWR8ieQY
- lbW3rxteq6HlARDpGMTVDMmi2LTo9IST7DBvAPhRKSk22/Yq2BT5vb8eGYOeZ3mHDWgXmgdyJ
- E7klhm7uSje4BY7IC0ye1McZCQ/CwRuc3iX6cp7312sVtzx4i+FG/CzEvk291xDeR4u9AlDCN
- mnQdYv7zhI7pK4mpBbu+DDKkbMjlfVP6wlp+lP8lubg9lkHYDbSJD8qgHBlPIe9Hwmh9DgJkn
- A8GuekYYGrsRyY3iEk5IOyhNwfPvJgs9OaOLNon79zADHJ4qjTG1WDNomVGOLU9n/qQMD58z/
- mqECHEeueFqftrvCw3IY3X0sPr8oII6lqK2RRKssg5wsIF78eVWJoZqiknK0/rm52TsEbLy3E
- lFwIU2pDBRyKzQJKqqAVHbZ0O+55IXlI1lmJcG2ATtMoPvjzj2T4bvcA95XrurjcAyzr/9eXw
- VG0GsheguVeVWD8Cgy8p45gRlSbzDtVv5oz5ApMfMCI470rGnbN6/Z+BRKAgM0v4xBPV542Gd
- LOEBUjj9Ltu0faGDw9q7zP1G/PefItDyA4KAHAYyA4OYLkW0rZFW0uLFhBz6gwS5vef8oFGUu
- UEFvlHa8Dfw66IcCFBEFoP/cgV5UO7j61XJhEz4Ak9CJ5vWKHumpepAfCMFoSENxyxeM/mJXz
- P2mDicAW9R7CN6ve6TTa+YRZXPauJAPxhl7aaTMo0z2f19wq0BYsSbPWdbh6OZjw1tqmV8ew9
- ddYOD+UMLzpE3x2UHarOcpB3FAgpXQAxFAFnfBfOJ30dgxaUIoC3F+cf8FwButwAfE8DbB/0O
- 1FyE8i9QMgONYw=
+        Sun, 19 Sep 2021 12:38:56 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:36800 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229437AbhISQi4 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 19 Sep 2021 12:38:56 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=27;SR=0;TI=SMTPD_---0Uot2tLe_1632069438;
+Received: from localhost(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0Uot2tLe_1632069438)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 20 Sep 2021 00:37:25 +0800
+From:   Dan Li <ashimida@linux.alibaba.com>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net,
+        keescook@chromium.org, nathan@kernel.org, ndesaulniers@google.com,
+        akpm@linux-foundation.org, tglx@linutronix.de,
+        peterz@infradead.org, samitolvanen@google.com, frederic@kernel.org,
+        rppt@kernel.org, yifeifz2@illinois.edu, viresh.kumar@linaro.org,
+        colin.king@canonical.com, andreyknvl@gmail.com,
+        mark.rutland@arm.com, ojeda@kernel.org, will@kernel.org,
+        ardb@kernel.org, luc.vanoostenryck@gmail.com, elver@google.com,
+        nivedita@alum.mit.edu
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Dan Li <ashimida@linux.alibaba.com>
+Subject: [PATCH] [RFC/RFT]SCS:Add gcc plugin to support Shadow Call Stack
+Date:   Mon, 20 Sep 2021 00:37:16 +0800
+Message-Id: <1632069436-25075-1-git-send-email-ashimida@linux.alibaba.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+The Clang-based shadow call stack protection has been integrated into the
+mainline, but kernel compiled by gcc cannot enable this feature for now.
 
-In this case this is not actually dynamic size: all the operands
-involved in the calculation are constant values. However it is better to
-refactor this anyway, just to keep the open-coded math idiom out of
-code.
+This Patch supports gcc-based SCS protection by adding a plugin.
 
-So, use the struct_size() helper to do the arithmetic instead of the
-argument "size + size * count" in the kzalloc() function.
+For each function that x30 will be pushed onto the stack during execution,
+this plugin:
+1) insert "str x30, [x18], #8" at the entry of the function to save x30
+   to current SCS
+2) insert "ldr x30, [x18, #-8]!"  before the exit of this function to
+   restore x30
 
-Also, take the opportunity to refactor the declaration variables to make
-it more easy to read.
+At present, this patch has been successfully compiled(based on defconfig)
+in the following gcc versions(if plugin is supported) and startup normally:
+* 6.3.1
+* 7.3.1
+* 7.5.0
+* 8.2.1
+* 9.2.0
+* 10.3.1
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-co=
-ded-arithmetic-in-allocator-arguments
+with commands:
+make ARCH=arm64 defconfig
+./scripts/config -e CONFIG_GCC_PLUGINS -e CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- sound/usb/usx2y/usbusx2yaudio.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+---
+FYI:
+1) The function can be used to test whether the shadow stack is effective:
+//noinline void __noscs scs_test(void)
+noinline void scs_test(void)
+{
+    register unsigned long *sp asm("sp");
+    unsigned long * lr = sp + 1;
 
-diff --git a/sound/usb/usx2y/usbusx2yaudio.c b/sound/usb/usx2y/usbusx2yaud=
-io.c
-index c39cc6851e2d..cfc1ea53978d 100644
-=2D-- a/sound/usb/usx2y/usbusx2yaudio.c
-+++ b/sound/usb/usx2y/usbusx2yaudio.c
-@@ -668,14 +668,15 @@ static void i_usx2y_04int(struct urb *urb)
+    asm volatile("":::"x30");
+    *lr = 0;
+}
 
- static int usx2y_rate_set(struct usx2ydev *usx2y, int rate)
- {
--	int			err =3D 0, i;
--	struct snd_usx2y_urb_seq	*us =3D NULL;
--	int			*usbdata =3D NULL;
--	const struct s_c2	*ra =3D rate =3D=3D 48000 ? setrate_48000 : setrate_44=
-100;
-+	int err =3D 0, i;
-+	struct snd_usx2y_urb_seq *us =3D NULL;
-+	int *usbdata =3D NULL;
-+	const struct s_c2 *ra =3D rate =3D=3D 48000 ? setrate_48000 : setrate_44=
-100;
- 	struct urb *urb;
+ffff800010012670 <scs_test>:
+ffff800010012670:       f800865e        str     x30, [x18], #8
+ffff800010012674:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
+ffff800010012678:       910003fd        mov     x29, sp
+ffff80001001267c:       f90007ff        str     xzr, [sp, #8]
+ffff800010012680:       a8c17bfd        ldp     x29, x30, [sp], #16
+ffff800010012684:       f85f8e5e        ldr     x30, [x18, #-8]!
+ffff800010012688:       d65f03c0        ret
 
- 	if (usx2y->rate !=3D rate) {
--		us =3D kzalloc(sizeof(*us) + sizeof(struct urb *) * NOOF_SETRATE_URBS, =
-GFP_KERNEL);
-+		us =3D kzalloc(struct_size(us, urb, NOOF_SETRATE_URBS),
-+			     GFP_KERNEL);
- 		if (!us) {
- 			err =3D -ENOMEM;
- 			goto cleanup;
-=2D-
-2.25.1
+If SCS protection is enabled, this function will return normally.
+If the function has __noscs attribute (scs disabled), it will crash due to 0
+address access.
+
+2) Other tests are in progress ...
+
+Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
+---
+ Makefile                               |   2 +-
+ arch/Kconfig                           |   2 +-
+ include/linux/compiler-gcc.h           |   4 +
+ scripts/Makefile.gcc-plugins           |   4 +
+ scripts/gcc-plugins/Kconfig            |   8 ++
+ scripts/gcc-plugins/arm64_scs_plugin.c | 256 +++++++++++++++++++++++++++++++++
+ 6 files changed, 274 insertions(+), 2 deletions(-)
+ create mode 100644 scripts/gcc-plugins/arm64_scs_plugin.c
+
+diff --git a/Makefile b/Makefile
+index 61741e9..0f0121a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -924,7 +924,7 @@ LDFLAGS_vmlinux += --gc-sections
+ endif
+ 
+ ifdef CONFIG_SHADOW_CALL_STACK
+-CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
++CC_FLAGS_SCS	:= $(if $(CONFIG_CC_IS_CLANG),-fsanitize=shadow-call-stack,)
+ KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
+ export CC_FLAGS_SCS
+ endif
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 98db634..81ff127 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -594,7 +594,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+ 
+ config SHADOW_CALL_STACK
+ 	bool "Clang Shadow Call Stack"
+-	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
++	depends on (CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK) || GCC_PLUGIN_SHADOW_CALL_STACK
+ 	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+ 	help
+ 	  This option enables Clang's Shadow Call Stack, which uses a
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index cb9217f..426c8e5 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -50,6 +50,10 @@
+ #define __latent_entropy __attribute__((latent_entropy))
+ #endif
+ 
++#if defined(SHADOW_CALL_STACK_PLUGIN) && !defined(__CHECKER__)
++#define __noscs __attribute__((no_shadow_call_stack))
++#endif
++
+ /*
+  * calling noreturn functions, __builtin_unreachable() and __builtin_trap()
+  * confuse the stack allocation in gcc, leading to overly large stack
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index 952e468..eeaf2c6 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -46,6 +46,10 @@ ifdef CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK
+ endif
+ export DISABLE_ARM_SSP_PER_TASK_PLUGIN
+ 
++gcc-plugin-$(CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK) += arm64_scs_plugin.so
++gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK)	\
++		+= -DSHADOW_CALL_STACK_PLUGIN
++
+ # All the plugin CFLAGS are collected here in case a build target needs to
+ # filter them out of the KBUILD_CFLAGS.
+ GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
+diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+index ab9eb4c..2534195e 100644
+--- a/scripts/gcc-plugins/Kconfig
++++ b/scripts/gcc-plugins/Kconfig
+@@ -19,6 +19,14 @@ menuconfig GCC_PLUGINS
+ 
+ if GCC_PLUGINS
+ 
++config GCC_PLUGIN_SHADOW_CALL_STACK
++	bool "GCC Shadow Call Stack plugin"
++	select SHADOW_CALL_STACK
++	help
++	  This plugin is used to support the kernel CONFIG_SHADOW_CALL_STACK
++	  compiled by gcc. Its principle is basically the same as that of CLANG.
++	  For more information, please refer to "config SHADOW_CALL_STACK"
++
+ config GCC_PLUGIN_CYC_COMPLEXITY
+ 	bool "Compute the cyclomatic complexity of a function" if EXPERT
+ 	depends on !COMPILE_TEST	# too noisy
+diff --git a/scripts/gcc-plugins/arm64_scs_plugin.c b/scripts/gcc-plugins/arm64_scs_plugin.c
+new file mode 100644
+index 0000000..c5a66140
+--- /dev/null
++++ b/scripts/gcc-plugins/arm64_scs_plugin.c
+@@ -0,0 +1,256 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "gcc-common.h"
++
++#define v_info(fmt, ...)							\
++	do {									\
++		if (verbose)							\
++			fprintf(stderr, "[SCS]: " fmt,  ## __VA_ARGS__);	\
++	} while (0)
++
++#define NOSCS_ATTR_STR  "no_shadow_call_stack"
++#define SCS_ASM_PUSH_STR "str x30, [x18], #8\n\t"
++#define SCS_ASM_POP_STR  "ldr x30, [x18, #-8]!\n\t"
++
++__visible int plugin_is_GPL_compatible;
++
++static struct plugin_info arm64_scs_plugin_info = {
++	.version	= "20210926vanilla",
++	.help		= "disable\tdo not activate plugin\n"
++			  "verbose\tprint all debug infos\n",
++};
++
++static bool verbose;
++
++static rtx gen_scs_push(location_t loc)
++{
++	rtx insn = gen_rtx_ASM_INPUT_loc(VOIDmode, ggc_strdup(SCS_ASM_PUSH_STR), loc);
++
++	MEM_VOLATILE_P(insn) = 1;
++	return insn;
++}
++
++static rtx gen_scs_pop(location_t loc)
++{
++	rtx insn = gen_rtx_ASM_INPUT_loc(VOIDmode, ggc_strdup(SCS_ASM_POP_STR), loc);
++
++	MEM_VOLATILE_P(insn) = 1;
++	return insn;
++}
++
++static bool arm64_scs_gate(void)
++{
++	bool is_ignored;
++
++#if BUILDING_GCC_VERSION >= 8002
++	is_ignored = !cfun->machine->frame.emit_frame_chain;
++#else
++	is_ignored = !frame_pointer_needed;
++#endif
++
++	/* No need to insert protection code into functions that do not push LR into stack */
++	if (is_ignored) {
++		v_info("No protection code inserted into func:%s in file:%s\n",
++			get_name(current_function_decl), main_input_filename);
++		return 0;
++	}
++
++	gcc_assert(cfun->machine->frame.wb_candidate2 == R30_REGNUM);
++
++	/* Don't insert protection code into functions with NOSCS_ATTR_STR attribute */
++	if (lookup_attribute(NOSCS_ATTR_STR, DECL_ATTRIBUTES(current_function_decl))) {
++		v_info("No protection code inserted into %s func:%s in file:%s\n", NOSCS_ATTR_STR,
++				get_name(current_function_decl), main_input_filename);
++		return 0;
++	}
++	return 1;
++}
++
++enum scs_state {
++	/* The first valid instruction has not been found in the current instruction sequence */
++	SCS_SEARCHING_FIRST_INSN,
++	/* Currently searching for the return rtx instruction in this function */
++	SCS_SEARCHING_FUNC_RETURN,
++	/* Found an EPILOGUE_BEGIN before the function return instruction */
++	SCS_FOUND_ONE_EPILOGUE_NOTE,
++};
++
++static unsigned int arm64_scs_execute(void)
++{
++	rtx_insn *insn;
++	enum scs_state state = SCS_SEARCHING_FIRST_INSN;
++
++	for (insn = get_insns(); insn; insn = NEXT_INSN(insn)) {
++		rtx mark = NULL;
++
++		switch (GET_CODE(insn)) {
++		case NOTE:
++		case BARRIER:
++		case CODE_LABEL:
++		case INSN:
++		case DEBUG_INSN:
++		case JUMP_INSN:
++		case JUMP_TABLE_DATA:
++			break;
++		case CALL_INSN:
++			if (SIBLING_CALL_P(insn)) {
++				error(G_("Sibling call found in func:%s, file:%s\n"),
++						get_name(current_function_decl),
++						main_input_filename);
++				gcc_unreachable();
++			}
++			break;
++		default:
++			error(G_("Invalid rtx_insn seqs found with type:%s in func:%s, file:%s\n"),
++					GET_RTX_NAME(GET_CODE(insn)),
++					get_name(current_function_decl), main_input_filename);
++			gcc_unreachable();
++			break;
++		}
++
++		if (state == SCS_SEARCHING_FIRST_INSN) {
++			/* A function that needs to be instrumented should not found epilogue
++			 * before its first insn
++			 */
++			gcc_assert(!(NOTE_P(insn) && (NOTE_KIND(insn) == NOTE_INSN_EPILOGUE_BEG)));
++
++			if (NOTE_P(insn) || INSN_DELETED_P(insn))
++				continue;
++
++			state = SCS_SEARCHING_FUNC_RETURN;
++
++			/* Insert scs pop before the first instruction found */
++			mark = gen_scs_push(RESERVED_LOCATION_COUNT);
++			emit_insn_before(mark, insn);
++		}
++
++		/* Find the corresponding epilogue before 'RETURN' instruction (if any) */
++		if (state == SCS_SEARCHING_FUNC_RETURN) {
++			if (NOTE_P(insn) && (NOTE_KIND(insn) == NOTE_INSN_EPILOGUE_BEG)) {
++				state = SCS_FOUND_ONE_EPILOGUE_NOTE;
++				continue;
++			}
++		}
++
++		if (!JUMP_P(insn))
++			continue;
++
++		/* A function return insn was found */
++		if (ANY_RETURN_P(PATTERN(insn))) {
++			/* There should be an epilogue before 'RETURN' inst */
++			if (GET_CODE(PATTERN(insn)) == RETURN) {
++				gcc_assert(state == SCS_FOUND_ONE_EPILOGUE_NOTE);
++				state = SCS_SEARCHING_FUNC_RETURN;
++			}
++
++			/* There is no epilogue before 'SIMPLE_RETURN' insn */
++			if (GET_CODE(PATTERN(insn)) == SIMPLE_RETURN)
++				gcc_assert(state == SCS_SEARCHING_FUNC_RETURN);
++
++			/* Insert scs pop instruction(s) before return insn */
++			mark = gen_scs_pop(RESERVED_LOCATION_COUNT);
++			emit_insn_before(mark, insn);
++		}
++	}
++	return 0;
++}
++
++static tree handle_noscs_attribute(tree *node, tree name, tree args __unused, int flags,
++		bool *no_add_attrs)
++{
++	*no_add_attrs = true;
++
++	gcc_assert(DECL_P(*node));
++	switch (TREE_CODE(*node)) {
++	default:
++		error(G_("%qE attribute can be applies to function decl only (%qE)"), name, *node);
++		gcc_unreachable();
++
++	case FUNCTION_DECL:	/* the attribute is only used for function declarations */
++		break;
++	}
++
++	*no_add_attrs = false;
++	return NULL_TREE;
++}
++
++static struct attribute_spec noscs_attr = {};
++
++static void scs_register_attributes(void *event_data __unused, void *data __unused)
++{
++	noscs_attr.name	= NOSCS_ATTR_STR;
++	noscs_attr.decl_required = true;
++	noscs_attr.handler = handle_noscs_attribute;
++	register_attribute(&noscs_attr);
++}
++
++static void (*old_override_options_after_change)(void);
++
++static void scs_override_options_after_change(void)
++{
++	if (old_override_options_after_change)
++		old_override_options_after_change();
++
++	flag_optimize_sibling_calls = 0;
++}
++
++static void callback_before_start_unit(void *gcc_data __unused, void *user_data __unused)
++{
++	/* Turn off sibling call to avoid inserting duplicate scs pop codes */
++	old_override_options_after_change = targetm.override_options_after_change;
++	targetm.override_options_after_change = scs_override_options_after_change;
++
++	flag_optimize_sibling_calls = 0;
++}
++
++#define PASS_NAME arm64_scs
++#define TODO_FLAGS_FINISH (TODO_dump_func | TODO_verify_rtl_sharing)
++#include "gcc-generate-rtl-pass.h"
++
++__visible int plugin_init(struct plugin_name_args *plugin_info, struct plugin_gcc_version *version)
++{
++	int i;
++	const char * const plugin_name = plugin_info->base_name;
++	const int argc = plugin_info->argc;
++	const struct plugin_argument * const argv = plugin_info->argv;
++	bool enable = true;
++
++	PASS_INFO(arm64_scs, "shorten", 1, PASS_POS_INSERT_BEFORE);
++
++	if (!plugin_default_version_check(version, &gcc_version)) {
++		error(G_("Incompatible gcc/plugin versions"));
++		return 1;
++	}
++
++	if (strncmp(lang_hooks.name, "GNU C", 5) && !strncmp(lang_hooks.name, "GNU C+", 6)) {
++		inform(UNKNOWN_LOCATION, G_("%s supports C only, not %s"), plugin_name,
++				lang_hooks.name);
++		enable = false;
++	}
++
++	for (i = 0; i < argc; ++i) {
++		if (!strcmp(argv[i].key, "disable")) {
++			enable = false;
++			continue;
++		}
++		if (!strcmp(argv[i].key, "verbose")) {
++			verbose = true;
++			continue;
++		}
++		error(G_("unknown option '-fplugin-arg-%s-%s'"), plugin_name, argv[i].key);
++	}
++
++	register_callback(plugin_name, PLUGIN_INFO, NULL, &arm64_scs_plugin_info);
++
++	register_callback(plugin_name, PLUGIN_ATTRIBUTES, scs_register_attributes, NULL);
++
++	if (!enable) {
++		v_info("Plugin disabled for file:%s\n", main_input_filename);
++		return 0;
++	}
++
++	register_callback(plugin_name, PLUGIN_START_UNIT, callback_before_start_unit, NULL);
++
++	register_callback(plugin_name, PLUGIN_PASS_MANAGER_SETUP, NULL, &arm64_scs_pass_info);
++
++	return 0;
++}
+-- 
+2.7.4
 
