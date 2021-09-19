@@ -2,104 +2,238 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD0CC433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 20:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41882C433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 21:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666D760F9D
-	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 20:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2137660FBF
+	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 21:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbhISUqc (ORCPT
+        id S232901AbhISVqt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 19 Sep 2021 16:46:32 -0400
-Received: from mslow1.mail.gandi.net ([217.70.178.240]:33715 "EHLO
-        mslow1.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbhISUqb (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 19 Sep 2021 16:46:31 -0400
-Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
-        by mslow1.mail.gandi.net (Postfix) with ESMTP id EEC05C6374
-        for <linux-hardening@vger.kernel.org>; Sun, 19 Sep 2021 20:45:04 +0000 (UTC)
-Received: (Authenticated sender: tad@spotco.us)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id A4EE1FF803;
-        Sun, 19 Sep 2021 20:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spotco.us; s=gm1;
-        t=1632084283;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=9uoIEIA3582w/7yrrFMK2dalpy8bbXkkhxY5yUGLWSg=;
-        b=SH+9uiMelYRWQI1tkDc0TNyWpBkumSl0rW98JufpnpO7n+h/DnUtQok2TxCRtQ8ntjexhv
-        B1FQfn2zPMziLpkH6DB+H0nQATuNb8os/fRRO0c5XrRnjyFYLOsHd1mz9fPc2aHh1SuJff
-        sO+HgGs8ZVDlTI+Fc2NPT6cbU+haQDMD5reFKMd0fxKapODA5moFiDbvKkA8TI6+rlKTiO
-        +W5USu0ZNBV5ia9N3RHibXIR+YV0U9dZ0QemN3yzvJzw6zyi/kYPm1pA4LeKYlmTCl//QT
-        WOoE5E9nz9KVeg6dnTFPve5dIj9SDdQPD8wyQYuxPYiVJifNTkn9pNFE+E7dXA==
-Message-ID: <67cf8b802fe868ba63b28d49f8d836e179df833a.camel@spotco.us>
-Subject: Self introduction
-From:   Tad <tad@spotco.us>
-To:     kernel-hardening@lists.openwall.com
-Cc:     linux-hardening@vger.kernel.org
-Date:   Sun, 19 Sep 2021 16:44:40 -0400
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        Sun, 19 Sep 2021 17:46:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229790AbhISVqs (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 19 Sep 2021 17:46:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 72FBC60F92;
+        Sun, 19 Sep 2021 21:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632087922;
+        bh=Jm3nJojXxT0r30IXLhyp5n0DfvgwwMDvnybLcAvRX58=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jkNZeaa9P5mSICrVPwZbGQ31FtnQSuxk/JPR1gs6ahAa4SEPc65qbsL3ZqFjXsJ4/
+         4/ZBWkNBm7/MmWHGF2Ng8HMqveZd+0kw1cbIZxFVhQMUcU8PWNcsWcftGdqtGh5va6
+         suJU+foPHsm0R8aodT0QzWYE6VIROTI/y+tjV90DsB/eS5QJgQ9R2K31STUdXf1LrK
+         HMWMDRmQyybXIGt7z+PtgUIGPRWv89PmvRmxr2iCgmN0qAZRH85mk/fPOAQGZFT52o
+         DXGlu4wPueq/OZmVSEgcq3gdxJ49ZDE234liWkEJf20cZVGydbJzhknOxI+89jn0GV
+         vHwWJ+IH/Ls0g==
+Date:   Sun, 19 Sep 2021 14:45:15 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Dan Li <ashimida@linux.alibaba.com>
+Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
+        keescook@chromium.org, ndesaulniers@google.com,
+        akpm@linux-foundation.org, tglx@linutronix.de,
+        peterz@infradead.org, samitolvanen@google.com, frederic@kernel.org,
+        rppt@kernel.org, yifeifz2@illinois.edu, viresh.kumar@linaro.org,
+        colin.king@canonical.com, andreyknvl@gmail.com,
+        mark.rutland@arm.com, ojeda@kernel.org, will@kernel.org,
+        ardb@kernel.org, luc.vanoostenryck@gmail.com, elver@google.com,
+        nivedita@alum.mit.edu, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] [RFC/RFT]SCS:Add gcc plugin to support Shadow Call Stack
+Message-ID: <YUeva0jP7P2qCr+R@archlinux-ax161>
+References: <1632069436-25075-1-git-send-email-ashimida@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1632069436-25075-1-git-send-email-ashimida@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
-My name is Tad.
+Hi Dan,
 
-I have a few personal projects for the past five or so years for making
-available kernel hardening features to more users.
+A couple of initial high level comments, I do not really feel qualified
+to review the plugin itself.
 
-My main project is DivestOS, which provides more secure images for older/legacy
-Android devices.
-I harden all device kernels via the following:
- * My automatic CVE checker/patcher program [1]. It is able to apply many dozen
-   to many hundred CVE patches to trees. It is backed by an extensive versioned
-   list [2] of CVE patches that I origianlly maintained by hand. In the past
-   year or so I pull in using a scraper I made for the CIP scripts [3].
- * My hardenDefconfig function [4], inspired by the KSPP recommendations and
-   later Popov's kconfig-hardened-check. It simply enables and disables various
-   options.
- * My hardenBootArgs function [5], currently just enables slub_debug=FZP for
-   devices.
- * Some misc tweaks [6], currently for disabling slub/slab merging.
- * And lastly some sysctl tweaks [7].
+On Mon, Sep 20, 2021 at 12:37:16AM +0800, Dan Li wrote:
+> The Clang-based shadow call stack protection has been integrated into the
+> mainline, but kernel compiled by gcc cannot enable this feature for now.
+> 
+> This Patch supports gcc-based SCS protection by adding a plugin.
+> 
+> For each function that x30 will be pushed onto the stack during execution,
+> this plugin:
+> 1) insert "str x30, [x18], #8" at the entry of the function to save x30
+>    to current SCS
+> 2) insert "ldr x30, [x18, #-8]!"  before the exit of this function to
+>    restore x30
+> 
+> At present, this patch has been successfully compiled(based on defconfig)
+> in the following gcc versions(if plugin is supported) and startup normally:
+> * 6.3.1
+> * 7.3.1
+> * 7.5.0
+> * 8.2.1
+> * 9.2.0
+> * 10.3.1
+> 
+> with commands:
+> make ARCH=arm64 defconfig
+> ./scripts/config -e CONFIG_GCC_PLUGINS -e CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK
+> make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+> 
+> ---
+> FYI:
+> 1) The function can be used to test whether the shadow stack is effective:
+> //noinline void __noscs scs_test(void)
+> noinline void scs_test(void)
+> {
+>     register unsigned long *sp asm("sp");
+>     unsigned long * lr = sp + 1;
+> 
+>     asm volatile("":::"x30");
+>     *lr = 0;
+> }
+> 
+> ffff800010012670 <scs_test>:
+> ffff800010012670:       f800865e        str     x30, [x18], #8
+> ffff800010012674:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
+> ffff800010012678:       910003fd        mov     x29, sp
+> ffff80001001267c:       f90007ff        str     xzr, [sp, #8]
+> ffff800010012680:       a8c17bfd        ldp     x29, x30, [sp], #16
+> ffff800010012684:       f85f8e5e        ldr     x30, [x18, #-8]!
+> ffff800010012688:       d65f03c0        ret
+> 
+> If SCS protection is enabled, this function will return normally.
+> If the function has __noscs attribute (scs disabled), it will crash due to 0
+> address access.
+> 
+> 2) Other tests are in progress ...
+> 
+> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
+> ---
+>  Makefile                               |   2 +-
+>  arch/Kconfig                           |   2 +-
+>  include/linux/compiler-gcc.h           |   4 +
+>  scripts/Makefile.gcc-plugins           |   4 +
+>  scripts/gcc-plugins/Kconfig            |   8 ++
+>  scripts/gcc-plugins/arm64_scs_plugin.c | 256 +++++++++++++++++++++++++++++++++
+>  6 files changed, 274 insertions(+), 2 deletions(-)
+>  create mode 100644 scripts/gcc-plugins/arm64_scs_plugin.c
+> 
+> diff --git a/Makefile b/Makefile
+> index 61741e9..0f0121a 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -924,7 +924,7 @@ LDFLAGS_vmlinux += --gc-sections
+>  endif
+>  
+>  ifdef CONFIG_SHADOW_CALL_STACK
 
-I also maintain another project for providing some extra security to modern
-distros, without recompilation.
-It is called Brace [8] and compatible with Arch/Fedora/Debian/OpenSUSE.
-In the kernel relations, it is mostly just sysctl [9] changes and kernel
-commandline [10] changes.
+I would rather see this become
 
-Lastly some background:
-Micay inspired me to work on this area back in mid-2015, after he helped me port
-his Android PaX patchset to the OnePlus One phone [11].
+ifeq ($(CONFIG_SHADOW_CALL_STACK)$(CONFIG_CC_IS_CLANG), yy)
+...
+endif
 
-Sharing for any comments.
-Also most of you are likely working on mainline, not ancient kernels, so maybe
-you'll find this interesting.
+rather than just avoiding assigning to CC_FLAGS_SCS.
 
-Best regards,
-Tad.
+However, how does disabling the shadow call stack plugin work for a
+whole translation unit or directory? There are a few places where
+CC_FLAGS_SCS are filtered out and I am not sure I see where that happens
+here? It looks like the plugin has a disabled option but I do not see it
+hooked in anywhere.
 
-[1] https://gitlab.com/divested-mobile/cve_checker
-[2] https://gitlab.com/divested-mobile/kernel_patches/-/blob/master/Kernel_CVE_Patch_List.txt
-[3] https://gitlab.com/cip-project/cip-kernel/cip-kernel-sec
-[4] https://gitlab.com/divested-mobile/divestos-build/-/blob/e7dd0af4/Scripts/Common/Functions.sh#L657
-[5] https://gitlab.com/divested-mobile/divestos-build/-/blob/e7dd0af4/Scripts/Common/Functions.sh#L493
-[6] https://gitlab.com/divested-mobile/divestos-build/-/blob/e7dd0af4/Scripts/Common/Post.sh#L28
-[7] https://gitlab.com/divested-mobile/divestos-build/-/blob/e7dd0af4/Patches/LineageOS-18.1/android_system_core/0001-Harden.patch
-[8] https://gitlab.com/divested/brace
-[9] https://gitlab.com/divested/brace/-/blob/1e4975c9/brace/usr/lib/sysctl.d/60-restrict.conf
-[10] https://gitlab.com/divested/brace/-/blob/1e4975c9/brace/usr/bin/brace-supplemental-changes#L33
-[11] https://divestos.org/images/screenshots/CopperheadOS-bacon.png
+> -CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
+> +CC_FLAGS_SCS	:= $(if $(CONFIG_CC_IS_CLANG),-fsanitize=shadow-call-stack,)
+>  KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
+>  export CC_FLAGS_SCS
+>  endif
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 98db634..81ff127 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -594,7 +594,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+>  
+>  config SHADOW_CALL_STACK
+>  	bool "Clang Shadow Call Stack"
+> -	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
+> +	depends on (CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK) || GCC_PLUGIN_SHADOW_CALL_STACK
 
+Is this logic right? SHADOW_CALL_STACK is only supported by arm64 (as
+they set ARCH_SUPPORTS_SHADOW_CALL_STACK) but now you are enabling it
+for any architecture, even though it seems like it still only works on
+arm64. I think this wants to be
 
+depends on (CC_IS_CLANG || GCC_PLUGIN_SHADOW_CALL_STACK) && ARCH_SUPPORTS_SHADOW_CALL_STACK
+
+>  	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+>  	help
+>  	  This option enables Clang's Shadow Call Stack, which uses a
+> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+> index cb9217f..426c8e5 100644
+> --- a/include/linux/compiler-gcc.h
+> +++ b/include/linux/compiler-gcc.h
+> @@ -50,6 +50,10 @@
+>  #define __latent_entropy __attribute__((latent_entropy))
+>  #endif
+>  
+> +#if defined(SHADOW_CALL_STACK_PLUGIN) && !defined(__CHECKER__)
+> +#define __noscs __attribute__((no_shadow_call_stack))
+> +#endif
+> +
+>  /*
+>   * calling noreturn functions, __builtin_unreachable() and __builtin_trap()
+>   * confuse the stack allocation in gcc, leading to overly large stack
+> diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+> index 952e468..eeaf2c6 100644
+> --- a/scripts/Makefile.gcc-plugins
+> +++ b/scripts/Makefile.gcc-plugins
+> @@ -46,6 +46,10 @@ ifdef CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK
+>  endif
+>  export DISABLE_ARM_SSP_PER_TASK_PLUGIN
+>  
+> +gcc-plugin-$(CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK) += arm64_scs_plugin.so
+> +gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK)	\
+> +		+= -DSHADOW_CALL_STACK_PLUGIN
+> +
+>  # All the plugin CFLAGS are collected here in case a build target needs to
+>  # filter them out of the KBUILD_CFLAGS.
+>  GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
+> diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+> index ab9eb4c..2534195e 100644
+> --- a/scripts/gcc-plugins/Kconfig
+> +++ b/scripts/gcc-plugins/Kconfig
+> @@ -19,6 +19,14 @@ menuconfig GCC_PLUGINS
+>  
+>  if GCC_PLUGINS
+>  
+> +config GCC_PLUGIN_SHADOW_CALL_STACK
+> +	bool "GCC Shadow Call Stack plugin"
+
+This should also have a
+
+depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+
+if you are selecting SHADOW_CALL_STACK, as selecting does not account
+for dependencies.
+
+> +	select SHADOW_CALL_STACK
+> +	help
+> +	  This plugin is used to support the kernel CONFIG_SHADOW_CALL_STACK
+> +	  compiled by gcc. Its principle is basically the same as that of CLANG.
+> +	  For more information, please refer to "config SHADOW_CALL_STACK"
+> +
+>  config GCC_PLUGIN_CYC_COMPLEXITY
+>  	bool "Compute the cyclomatic complexity of a function" if EXPERT
+>  	depends on !COMPILE_TEST	# too noisy
+
+Cheers,
+Nathan
