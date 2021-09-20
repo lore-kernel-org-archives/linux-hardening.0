@@ -2,238 +2,148 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41882C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 21:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA4CC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 20 Sep 2021 05:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2137660FBF
-	for <linux-hardening@archiver.kernel.org>; Sun, 19 Sep 2021 21:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4920A6101C
+	for <linux-hardening@archiver.kernel.org>; Mon, 20 Sep 2021 05:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232901AbhISVqt (ORCPT
+        id S233090AbhITF7h (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 19 Sep 2021 17:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229790AbhISVqs (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 19 Sep 2021 17:46:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 72FBC60F92;
-        Sun, 19 Sep 2021 21:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632087922;
-        bh=Jm3nJojXxT0r30IXLhyp5n0DfvgwwMDvnybLcAvRX58=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jkNZeaa9P5mSICrVPwZbGQ31FtnQSuxk/JPR1gs6ahAa4SEPc65qbsL3ZqFjXsJ4/
-         4/ZBWkNBm7/MmWHGF2Ng8HMqveZd+0kw1cbIZxFVhQMUcU8PWNcsWcftGdqtGh5va6
-         suJU+foPHsm0R8aodT0QzWYE6VIROTI/y+tjV90DsB/eS5QJgQ9R2K31STUdXf1LrK
-         HMWMDRmQyybXIGt7z+PtgUIGPRWv89PmvRmxr2iCgmN0qAZRH85mk/fPOAQGZFT52o
-         DXGlu4wPueq/OZmVSEgcq3gdxJ49ZDE234liWkEJf20cZVGydbJzhknOxI+89jn0GV
-         vHwWJ+IH/Ls0g==
-Date:   Sun, 19 Sep 2021 14:45:15 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
-        keescook@chromium.org, ndesaulniers@google.com,
-        akpm@linux-foundation.org, tglx@linutronix.de,
-        peterz@infradead.org, samitolvanen@google.com, frederic@kernel.org,
-        rppt@kernel.org, yifeifz2@illinois.edu, viresh.kumar@linaro.org,
-        colin.king@canonical.com, andreyknvl@gmail.com,
-        mark.rutland@arm.com, ojeda@kernel.org, will@kernel.org,
-        ardb@kernel.org, luc.vanoostenryck@gmail.com, elver@google.com,
-        nivedita@alum.mit.edu, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] [RFC/RFT]SCS:Add gcc plugin to support Shadow Call Stack
-Message-ID: <YUeva0jP7P2qCr+R@archlinux-ax161>
-References: <1632069436-25075-1-git-send-email-ashimida@linux.alibaba.com>
+        Mon, 20 Sep 2021 01:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233023AbhITF7g (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 20 Sep 2021 01:59:36 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2011CC061762
+        for <linux-hardening@vger.kernel.org>; Sun, 19 Sep 2021 22:58:10 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id l6so5535033plh.9
+        for <linux-hardening@vger.kernel.org>; Sun, 19 Sep 2021 22:58:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+0o34hX5+MHO24oI1veVFWolKS99D91CBQbJfAxR2ho=;
+        b=L2q62tfvMM8cZq0HwyyDu/pq8OD1J2L/NO/fg5svc0KNLSZwoJjazHFrWLdQpcPO+U
+         0QffmXYHmZRPE+B/9+FAVwozUNgpPamL+d2uN7j7xK6zK03tlP1PJC6C+UAu6fzp550G
+         AseKUemDSOsLnYnzHygW5wZcpjJZ9pjeXI548=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+0o34hX5+MHO24oI1veVFWolKS99D91CBQbJfAxR2ho=;
+        b=r/fPEXSWeHF8r2Q9tWHFj10vMNYFp5ndI4Ga6Ml4zCOnjXedb/PDugDJeJORgq/7qN
+         eYNEhM9wDBjqxdUmsDEBjh4tHWO1Lt5Ch2GnZWf/hE2dk55YiaUjMD/80lnvFL8+4DHH
+         bM0BSOLOjmrhUe2xGW6qM4b/YtkfDYYXjVE6EfariI9HGrUlAxIdo0+67dLyT+2v2P/4
+         sNlLFN/KCqTH8tIBcin27FKbfaCsxqLiGPqZQKaK8VE/NpA1IP4uygOSh/v3f+N/OrnK
+         8DSdq1+fooYkb0BdjlfI1v2r4JaKintd6y+KWEPZnBcgwYWcgAH9n0GDOXP7sXTCFEQK
+         NaXA==
+X-Gm-Message-State: AOAM531HW29l1DkGcs/LuQtQjYVKHh5bWQw2uCO7m4T7v2p53dgbwwkj
+        AKzNY0cEJM/QUsI4WkwOzAzRuw==
+X-Google-Smtp-Source: ABdhPJwnPpSYE6Badmmc/9HPD2wDyj/8JaCgZR5rFgaa7XH92xlYaf/hrtS+JDGvq+hYL0r5/Udl1g==
+X-Received: by 2002:a17:90a:bb09:: with SMTP id u9mr27240755pjr.165.1632117489284;
+        Sun, 19 Sep 2021 22:58:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e7sm3467279pfc.114.2021.09.19.22.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Sep 2021 22:58:08 -0700 (PDT)
+Date:   Sun, 19 Sep 2021 22:58:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Prefer struct_size over
+ open coded arithmetic
+Message-ID: <202109192246.B438B42EF@keescook>
+References: <20210918150500.21530-1-len.baker@gmx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1632069436-25075-1-git-send-email-ashimida@linux.alibaba.com>
+In-Reply-To: <20210918150500.21530-1-len.baker@gmx.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Dan,
-
-A couple of initial high level comments, I do not really feel qualified
-to review the plugin itself.
-
-On Mon, Sep 20, 2021 at 12:37:16AM +0800, Dan Li wrote:
-> The Clang-based shadow call stack protection has been integrated into the
-> mainline, but kernel compiled by gcc cannot enable this feature for now.
+On Sat, Sep 18, 2021 at 05:05:00PM +0200, Len Baker wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
 > 
-> This Patch supports gcc-based SCS protection by adding a plugin.
+> So, switch to flexible array member in the struct attribute_set_obj and
+> refactor the code accordingly to use the struct_size() helper instead of
+> the argument "size + count * size" in the kzalloc() function.
 > 
-> For each function that x30 will be pushed onto the stack during execution,
-> this plugin:
-> 1) insert "str x30, [x18], #8" at the entry of the function to save x30
->    to current SCS
-> 2) insert "ldr x30, [x18, #-8]!"  before the exit of this function to
->    restore x30
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 > 
-> At present, this patch has been successfully compiled(based on defconfig)
-> in the following gcc versions(if plugin is supported) and startup normally:
-> * 6.3.1
-> * 7.3.1
-> * 7.5.0
-> * 8.2.1
-> * 9.2.0
-> * 10.3.1
-> 
-> with commands:
-> make ARCH=arm64 defconfig
-> ./scripts/config -e CONFIG_GCC_PLUGINS -e CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK
-> make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
-> 
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 > ---
-> FYI:
-> 1) The function can be used to test whether the shadow stack is effective:
-> //noinline void __noscs scs_test(void)
-> noinline void scs_test(void)
-> {
->     register unsigned long *sp asm("sp");
->     unsigned long * lr = sp + 1;
+>  drivers/platform/x86/thinkpad_acpi.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
 > 
->     asm volatile("":::"x30");
->     *lr = 0;
-> }
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 50ff04c84650..ed0b01ead796 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -1008,7 +1008,7 @@ struct attribute_set {
 > 
-> ffff800010012670 <scs_test>:
-> ffff800010012670:       f800865e        str     x30, [x18], #8
-> ffff800010012674:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-> ffff800010012678:       910003fd        mov     x29, sp
-> ffff80001001267c:       f90007ff        str     xzr, [sp, #8]
-> ffff800010012680:       a8c17bfd        ldp     x29, x30, [sp], #16
-> ffff800010012684:       f85f8e5e        ldr     x30, [x18, #-8]!
-> ffff800010012688:       d65f03c0        ret
+>  struct attribute_set_obj {
+>  	struct attribute_set s;
+> -	struct attribute *a;
+> +	struct attribute *a[];
+>  } __attribute__((packed));
+
+Whoa. I have so many questions... :)
+
 > 
-> If SCS protection is enabled, this function will return normally.
-> If the function has __noscs attribute (scs disabled), it will crash due to 0
-> address access.
+>  static struct attribute_set *create_attr_set(unsigned int max_members,
+> @@ -1020,13 +1020,11 @@ static struct attribute_set *create_attr_set(unsigned int max_members,
+>  		return NULL;
 > 
-> 2) Other tests are in progress ...
+>  	/* Allocates space for implicit NULL at the end too */
+> -	sobj = kzalloc(sizeof(struct attribute_set_obj) +
+> -		    max_members * sizeof(struct attribute *),
+> -		    GFP_KERNEL);
+> +	sobj = kzalloc(struct_size(sobj, a, max_members + 1), GFP_KERNEL);
+
+Whoa, this needs a lot more detail in the changelog if this is actually
+correct. The original code doesn't seem to match the comment? (Where is
+the +1?) So is this also a bug-fix?
+
+(I see the caller uses +2? Why? It seems to be using each of hotkey_attributes,
+plus 1 more attr, plus a final NULL?)
+
+>  	if (!sobj)
+>  		return NULL;
+>  	sobj->s.max_members = max_members;
+> -	sobj->s.group.attrs = &sobj->a;
+> +	sobj->s.group.attrs = sobj->a;
+>  	sobj->s.group.name = name;
+
+The caller also never sets a name?
+
+Why is struct attribute_set_obj marked as __packed?
+
 > 
-> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
-> ---
->  Makefile                               |   2 +-
->  arch/Kconfig                           |   2 +-
->  include/linux/compiler-gcc.h           |   4 +
->  scripts/Makefile.gcc-plugins           |   4 +
->  scripts/gcc-plugins/Kconfig            |   8 ++
->  scripts/gcc-plugins/arm64_scs_plugin.c | 256 +++++++++++++++++++++++++++++++++
->  6 files changed, 274 insertions(+), 2 deletions(-)
->  create mode 100644 scripts/gcc-plugins/arm64_scs_plugin.c
+>  	return &sobj->s;
+> --
+> 2.25.1
 > 
-> diff --git a/Makefile b/Makefile
-> index 61741e9..0f0121a 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -924,7 +924,7 @@ LDFLAGS_vmlinux += --gc-sections
->  endif
->  
->  ifdef CONFIG_SHADOW_CALL_STACK
 
-I would rather see this become
-
-ifeq ($(CONFIG_SHADOW_CALL_STACK)$(CONFIG_CC_IS_CLANG), yy)
-...
-endif
-
-rather than just avoiding assigning to CC_FLAGS_SCS.
-
-However, how does disabling the shadow call stack plugin work for a
-whole translation unit or directory? There are a few places where
-CC_FLAGS_SCS are filtered out and I am not sure I see where that happens
-here? It looks like the plugin has a disabled option but I do not see it
-hooked in anywhere.
-
-> -CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
-> +CC_FLAGS_SCS	:= $(if $(CONFIG_CC_IS_CLANG),-fsanitize=shadow-call-stack,)
->  KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
->  export CC_FLAGS_SCS
->  endif
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 98db634..81ff127 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -594,7 +594,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
->  
->  config SHADOW_CALL_STACK
->  	bool "Clang Shadow Call Stack"
-> -	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
-> +	depends on (CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK) || GCC_PLUGIN_SHADOW_CALL_STACK
-
-Is this logic right? SHADOW_CALL_STACK is only supported by arm64 (as
-they set ARCH_SUPPORTS_SHADOW_CALL_STACK) but now you are enabling it
-for any architecture, even though it seems like it still only works on
-arm64. I think this wants to be
-
-depends on (CC_IS_CLANG || GCC_PLUGIN_SHADOW_CALL_STACK) && ARCH_SUPPORTS_SHADOW_CALL_STACK
-
->  	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
->  	help
->  	  This option enables Clang's Shadow Call Stack, which uses a
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index cb9217f..426c8e5 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -50,6 +50,10 @@
->  #define __latent_entropy __attribute__((latent_entropy))
->  #endif
->  
-> +#if defined(SHADOW_CALL_STACK_PLUGIN) && !defined(__CHECKER__)
-> +#define __noscs __attribute__((no_shadow_call_stack))
-> +#endif
-> +
->  /*
->   * calling noreturn functions, __builtin_unreachable() and __builtin_trap()
->   * confuse the stack allocation in gcc, leading to overly large stack
-> diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-> index 952e468..eeaf2c6 100644
-> --- a/scripts/Makefile.gcc-plugins
-> +++ b/scripts/Makefile.gcc-plugins
-> @@ -46,6 +46,10 @@ ifdef CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK
->  endif
->  export DISABLE_ARM_SSP_PER_TASK_PLUGIN
->  
-> +gcc-plugin-$(CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK) += arm64_scs_plugin.so
-> +gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK)	\
-> +		+= -DSHADOW_CALL_STACK_PLUGIN
-> +
->  # All the plugin CFLAGS are collected here in case a build target needs to
->  # filter them out of the KBUILD_CFLAGS.
->  GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
-> diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> index ab9eb4c..2534195e 100644
-> --- a/scripts/gcc-plugins/Kconfig
-> +++ b/scripts/gcc-plugins/Kconfig
-> @@ -19,6 +19,14 @@ menuconfig GCC_PLUGINS
->  
->  if GCC_PLUGINS
->  
-> +config GCC_PLUGIN_SHADOW_CALL_STACK
-> +	bool "GCC Shadow Call Stack plugin"
-
-This should also have a
-
-depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
-
-if you are selecting SHADOW_CALL_STACK, as selecting does not account
-for dependencies.
-
-> +	select SHADOW_CALL_STACK
-> +	help
-> +	  This plugin is used to support the kernel CONFIG_SHADOW_CALL_STACK
-> +	  compiled by gcc. Its principle is basically the same as that of CLANG.
-> +	  For more information, please refer to "config SHADOW_CALL_STACK"
-> +
->  config GCC_PLUGIN_CYC_COMPLEXITY
->  	bool "Compute the cyclomatic complexity of a function" if EXPERT
->  	depends on !COMPILE_TEST	# too noisy
-
-Cheers,
-Nathan
+-- 
+Kees Cook
