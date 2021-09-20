@@ -2,101 +2,417 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14985C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 01:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6D8C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 02:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7B6A61159
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 01:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1850E61183
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 02:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231183AbhIUBhR (ORCPT
+        id S1346502AbhIUCXj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Sep 2021 21:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
+        Mon, 20 Sep 2021 22:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229960AbhIUBfA (ORCPT
+        with ESMTP id S236429AbhIUBuP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Sep 2021 21:35:00 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4685FC0611C6
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 11:08:57 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id me1so3936530pjb.4
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 11:08:57 -0700 (PDT)
+        Mon, 20 Sep 2021 21:50:15 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87A7AC06AB2F
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 15:06:47 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id e15so34699948lfr.10
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 15:06:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iWhoWBW+6i3JSlaA/8K89arcAnj7wf0LVk0B/HGuZ4E=;
-        b=XMVRtqGDgddJ9vmZtXl+N9v3wZWQz8TsekFurV+IhOoFVVk2LuP86HJ3JUlObyYKm5
-         vOoC54qa29lMWiPGJe2N2EUYMSnylo49Z16fOr26DSDVnTIfJDkqpM8wuQd6PNh/Ab5f
-         12fZvtZeKCazWZW5L8F3NdOMcFnn/0ObVd/QQ=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W/UkYUWvQppHg/h6TOvqj/oAgk41M6HSow/5/SrZHMU=;
+        b=rsMnFXZppvLGZL3CfEbgfKuxneUnfyJInkdmHVLG8BtzQHhCbMvvrbfHNvF6AFDZ8T
+         PxHs8tfG9o/4WvZIJpHkq5A4jQml1PC5etTsYHCEgKR9jyq6QBQ0uEjPYcAbmRIaQa8e
+         dchL1erHY4W1CRt0t5SgTAoPHLdhqAzm+bEGgM0CPWTIT/KoCb0OxYR3KrVf92DHuWZ8
+         ViK91qEuxhfMJXzi0neGQSKlA6JfhwqSDgNVrMUELnx/wxRG4TTWStkFUrHMnHFmzNnb
+         Q80Z8Dq6RMVNOVsN+Ky+O63OHTP2ZtpIJe2fOcQD7ZhEhiBWvcVUHnak7rtWU/2cGf/G
+         h7uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iWhoWBW+6i3JSlaA/8K89arcAnj7wf0LVk0B/HGuZ4E=;
-        b=H8vRRhSQeqtWO06mvNg04nnj7Eo0F7ylKyCf1GwKHjkRkb4L1W/S8Itl0DamoviQmP
-         VSVCBomYlr5oDFRbjp0HOz2FgJHiHodsgNbX807BljhXOvEqfvhpYDb97s5lvn3EQ5hB
-         d1ftjNBuOAvVABaiS2Sk2C9VyTA02nomfoZMRhXGH3cw/fhd3uIhSpIgsqeyhdgplvNZ
-         5dRlkUYJItmEXwbg88+XXftFAbZvU58p9TxiCLNWXrL9X7SmYJqmdjsQtetxteWBUHqX
-         sgeJEH5TtZA852J85ko8IGLPr7S4Vve+UT8Hxdsq4qqL7qCVz9oiXL2n5ODIR8lNGpWW
-         8bWA==
-X-Gm-Message-State: AOAM532CF/kpZGCZ9jJl7nrYE0OxGh89HZ+wUyxvUt1JRK0i8NOfXYq+
-        JlHMbYCou6fjQiASnVZp6sndTA==
-X-Google-Smtp-Source: ABdhPJxJkyvaK3tKy4vV8SofFI4zOawknZJhuHckMeHtbZcxA64+Z/AEQVh4NOO0f0h2sSGL+DDMxQ==
-X-Received: by 2002:a17:90b:3a8a:: with SMTP id om10mr301445pjb.223.1632161336832;
-        Mon, 20 Sep 2021 11:08:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g3sm133895pjm.22.2021.09.20.11.08.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Sep 2021 11:08:55 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W/UkYUWvQppHg/h6TOvqj/oAgk41M6HSow/5/SrZHMU=;
+        b=Nrg36aJK6y3OeeYA6sSfJR94j/l33JQgJKxiDgMXoVxBSSXCO9++lVBvNoOz9oTVas
+         YrcwFZhU4pdpAgdFsh4OuGqbtCU/Tif2apbgL/FrN691uNsprOXrmj8nTeLljzddZrHN
+         p+Gecu8mkYgVDSHQOV79TGldQZjYEBjJdiLA6J+8sXIDRMq1Aj7EhM5Q6WDozOxkontS
+         gmGqzVaiZjVhzSWjUMPW4GpAsmfmbuPyb+aEBrQzZPU/9O0obdmIc6YNS+N0yH3IVaux
+         D/dayjamkFBkVQFnuUr0ycyrBkq1Dk4gqq534hl3+F42QqQMmmF7jbRC94nPRQzAoS1r
+         ZkVw==
+X-Gm-Message-State: AOAM530qSkWQQYT0n2bpJhqIORkaobZlSYF7zBMNWJoHZ3/lDtZQk1Jx
+        9o33oRVkqMpRYwNVj8tkxvsxpJEhwir+A39llKYWOw==
+X-Google-Smtp-Source: ABdhPJznaJqCc9LFaUArhF7hBN8tCRFGKy1v8jj2zHxLpTMt9pKxLG2KTCj0rg3x8CdKaTFNoNgU4mvdmGQ9i8FXwIk=
+X-Received: by 2002:a05:6512:b22:: with SMTP id w34mr5587375lfu.240.1632175605544;
+ Mon, 20 Sep 2021 15:06:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210920180853.1825195-1-keescook@chromium.org> <20210920180853.1825195-2-keescook@chromium.org>
+In-Reply-To: <20210920180853.1825195-2-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 20 Sep 2021 15:06:33 -0700
+Message-ID: <CAKwvOdnWiBwXq2atuHXYUfGLiHPhmipJmXze-ymtKG_Vmf7w2g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] overflow: Implement size_t saturating arithmetic helpers
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Jason Gunthorpe <jgg@ziepe.ca>,
-        Nick Desaulniers <ndesaulniers@google.com>,
         Leon Romanovsky <leon@kernel.org>,
         Keith Busch <kbusch@kernel.org>, Len Baker <len.baker@gmx.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 0/2] overflow: Implement size_t saturating arithmetic helpers
-Date:   Mon, 20 Sep 2021 11:08:51 -0700
-Message-Id: <20210920180853.1825195-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=685; h=from:subject; bh=FeG5PlfVQOLm7yYHENWE55wzEyBQPrLEryzPdosJgs4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhSM402j4bi/2udxuIImKCgmvR1/RMVmE5NfB0uQe9 ov29NnCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYUjONAAKCRCJcvTf3G3AJkCqD/ 9wne1Eptj0PIivZbRY8lVn4JyDC7UhAQr4gHCOyvPKbQ8YuHJZwKGwTftmmeOU9iR4vmLtg729JALP OGU249kFWYyRLcDTQYhN8IDTZAFOuWr49twoJAkugw0Oh1T+OQX64DMHeLxaqhNQVhEpmDVtfSuLIp Z6350Ufx3WfpKutOlwTN/snYSetedt/sXo7ebW3IEQQ3KjgraTlhQF2IlUvYnMpxx7NJLMdG66wSwD Od2hMQw/XKGRmRh3fJpRptzhA/oUGkKiGKFrFxyReQ9BdUacnYOLO8MLncsQ4DTRO7lVeFt42hgwQ5 PUtsstbbVYlGZ3RKmUj973T8/9+WDXs2je27S3nut+/uu/vY2d+Ehww1WhMUnmj0qoOQlGOTCKIWHI WxMQ0oMaKpBWIDjiHg4snsjgLxIC0RSwvNfnTmt8Blr/krbwZcRyoP3k/RWUI1JqEnuAmWI+cJ7NBq dFu7S4MC0718Q+hS2WQMaKFACmrH3HQT2mbvh1H5t6q518HbWEsFf4vbEUb7EbH1D31KG/DifLRjh9 KJLFUFHnumgao8bYjXwynF9v8tdUXDfXXNY2QIDWKhWYRVfqO2cMZOoxfpVsstai+aMRERT/7kzkMq KayOgWm9jy+bO7UvQv5WXgR17VZZT6XNxvVCZ++hQYmwJ7S+w25PbZBhywAw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Mon, Sep 20, 2021 at 11:09 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> In order to perform more open-coded replacements of common allocation
+> size arithmetic, the kernel needs a saturating (SIZE_MAX) helper for
+> addition and multiplication. It is common in allocators, especially on
+> realloc, to add to an existing size. For example:
+>
+>         p = krealloc(map->patch,
+>                      sizeof(struct reg_sequence) * (map->patch_regs + num_regs),
+>                      GFP_KERNEL);
+>
+> There is no existing saturating replacement for this calculation, and
+> just leaving the addition open coded inside array_size() could
+> potentially overflow as well. For example, an overflow in an expression
+> for a size_t argument might wrap to zero:
+>
+>         array_size(anything, something_at_size_max + 1) == 0
+>
+> Introduce size_mul() and size_add() helpers to perform size_t promotion
+> and saturated calculations for use in such allocations. With these
+> helpers it is also possible to redefine array_size(), array3_size(),
+> flex_array_size(), and struct_size() in terms of the new helpers.
+>
+> As with the check_*_overflow() helpers, the helpers are wrapped in a
+> __must_check function that passes through the size_t result. In order
+> for the helpers to be composed with themselves, they must have unique
+> variable names to avoid shadowing, so this uses a similar method to what
+> is already done in minmax.h for constructing unique names to be passed
+> in as arguments to the statement expression that does the actual work.
+>
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: Keith Busch <kbusch@kernel.org>
+> Cc: Len Baker <len.baker@gmx.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/overflow.h | 140 ++++++++++++++++++++++++---------------
+>  lib/test_overflow.c      |  61 +++++++++++++++++
+>  2 files changed, 149 insertions(+), 52 deletions(-)
+>
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 4669632bd72b..cd154d47807c 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -117,6 +117,77 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>         (*_d >> _to_shift) != _a);                                      \
+>  }))
+>
+> +/*
+> + * As with __must_check_overflow() above, this is used to wrap the
+> + * size_t output from a statement expression macro.
+> + */
+> +static inline size_t __must_check __must_check_size(size_t size)
+> +{
+> +       return size;
+> +}
+> +
+> +/*
+> + * Internal logic for size_mul(). Takes variable names from UNIQUE_ID
+> + * so that the local variables here will never collide with other local
+> + * variables (for example, with itself).
+> + */
+> +#define __size_mul(factor1, factor2, __factor1, __factor2, __product)  \
+> +({                                                                     \
+> +       size_t __product;                                               \
+> +       size_t __factor1 = (factor1);                                   \
+> +       size_t __factor2 = (factor2);                                   \
+> +       if (check_mul_overflow(__factor1, __factor2, &__product))       \
+> +               __product = SIZE_MAX;                                   \
+> +       __product;                                                      \
+> +})
+> +
+> +/**
+> + * size_mul() - Calculate size_t multiplication with saturation at SIZE_MAX
+> + *
+> + * @factor1: first factor
+> + * @factor2: second factor
+> + *
+> + * Returns: calculate @factor1 * @factor2, where both values are
+> + * evaluated as size_t, with any overflow causing the return value to
+> + * be SIZE_MAX.
+> + */
+> +#define size_mul(factor1, factor2)                                     \
+> +       __must_check_size(__size_mul(factor1, factor2,                  \
+> +                                    __UNIQUE_ID(__factor1_),           \
+> +                                    __UNIQUE_ID(__factor2_),           \
+> +                                    __UNIQUE_ID(__product_)))
+> +
+> +/*
+> + * Internal logic for size_add(). Takes variable names from UNIQUE_ID
+> + * so that the local variables here will never collide with other local
+> + * variables (for example, with itself).
+> + */
+> +#define __size_add(addend1, addend2, __addend1, __addend2, __sum)      \
+> +({                                                                     \
+> +       size_t __sum;                                                   \
+> +       size_t __addend1 = (addend1);                                   \
+> +       size_t __addend2 = (addend2);                                   \
+> +       if (check_add_overflow(__addend1, __addend2, &__sum))           \
+> +               __sum = SIZE_MAX;                                       \
+> +       __sum;                                                          \
+> +})
+> +
+> +/**
+> + * size_add() - Calculate size_t addition with saturation at SIZE_MAX
+> + *
+> + * @addend1: first addend
+> + * @addend2: second addend
+> + *
+> + * Returns: calculate @addend1 + @addend2, where both values are
+> + * evaluated as size_t, with any overflow causing the return value to
+> + * be SIZE_MAX.
+> + */
+> +#define size_add(addend1, addend2)                                     \
+> +       __must_check_size(__size_add(addend1, addend2,                  \
+> +                                    __UNIQUE_ID(__addend1_),           \
+> +                                    __UNIQUE_ID(__addend2_),           \
+> +                                    __UNIQUE_ID(__sum_)))
 
-While doing more array_size() scans on the kernel, and reviewing recent
-struct_size() work[1], it became clear we needed helpers to perform
-composed saturating add and multiplies. This creates those helpers and
-updates the self tests to check them.
+Is the use of __UNIQUE_ID really necessary? Is the point to avoid some
+kind of variable shadowing?  (As opposed to just using names for the
+new variables in the scope of the statement expressions? ie.
 
-Thanks,
++#define __size_add(addend1, addend2, __sum)      \
++({                                                                     \
++       size_t __sum;                                                   \
++       if (check_add_overflow((size_t)__addend1, (size_t)__addend2,
+&__sum))           \
++               __sum = SIZE_MAX;                                       \
++       __sum;                                                          \
++})
 
--Kees
+Do the double-underscore-prefixed really need to be a separate
+#define, or can their definitions be inlined into the expansion sites;
+there seems like there's no other users of the
+double-underscore-prefixed versions otherwise. ie.
 
-[1] https://lore.kernel.org/lkml/?q=%22open-coded+arithmetic%22
+#define size_add(addend1, addend2) \
+  __must_check_size(({ \
+    size_t sum;  \
+    if (check_add_overflow((size_t)addend1, (size_t)addend2), &sum;  \
+      sum = SIZE_MAX;  \
+    sum;  \
+})
 
-Kees Cook (2):
-  overflow: Implement size_t saturating arithmetic helpers
-  test_overflow: Regularize test reporting output
+> +
+>  /**
+>   * array_size() - Calculate size of 2-dimensional array.
+>   *
+> @@ -128,15 +199,7 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>   * Returns: number of bytes needed to represent the array or SIZE_MAX on
+>   * overflow.
+>   */
+> -static inline __must_check size_t array_size(size_t a, size_t b)
+> -{
+> -       size_t bytes;
+> -
+> -       if (check_mul_overflow(a, b, &bytes))
+> -               return SIZE_MAX;
+> -
+> -       return bytes;
+> -}
+> +#define array_size(a, b)       size_mul(a, b)
+>
+>  /**
+>   * array3_size() - Calculate size of 3-dimensional array.
+> @@ -150,65 +213,38 @@ static inline __must_check size_t array_size(size_t a, size_t b)
+>   * Returns: number of bytes needed to represent the array or SIZE_MAX on
+>   * overflow.
+>   */
+> -static inline __must_check size_t array3_size(size_t a, size_t b, size_t c)
+> -{
+> -       size_t bytes;
+> -
+> -       if (check_mul_overflow(a, b, &bytes))
+> -               return SIZE_MAX;
+> -       if (check_mul_overflow(bytes, c, &bytes))
+> -               return SIZE_MAX;
+> -
+> -       return bytes;
+> -}
+> -
+> -/*
+> - * Compute a*b+c, returning SIZE_MAX on overflow. Internal helper for
+> - * struct_size() below.
+> - */
+> -static inline __must_check size_t __ab_c_size(size_t a, size_t b, size_t c)
+> -{
+> -       size_t bytes;
+> -
+> -       if (check_mul_overflow(a, b, &bytes))
+> -               return SIZE_MAX;
+> -       if (check_add_overflow(bytes, c, &bytes))
+> -               return SIZE_MAX;
+> -
+> -       return bytes;
+> -}
+> +#define array3_size(a, b, c)   size_mul(size_mul(a, b), c)
+>
+>  /**
+> - * struct_size() - Calculate size of structure with trailing array.
+> + * flex_array_size() - Calculate size of a flexible array member
+> + *                     within an enclosing structure.
+> + *
+>   * @p: Pointer to the structure.
+> - * @member: Name of the array member.
+> + * @member: Name of the flexible array member.
+>   * @count: Number of elements in the array.
+>   *
+> - * Calculates size of memory needed for structure @p followed by an
+> - * array of @count number of @member elements.
+> + * Calculates size of a flexible array of @count number of @member
+> + * elements, at the end of structure @p.
+>   *
+>   * Return: number of bytes needed or SIZE_MAX on overflow.
+>   */
+> -#define struct_size(p, member, count)                                  \
+> -       __ab_c_size(count,                                              \
+> -                   sizeof(*(p)->member) + __must_be_array((p)->member),\
+> -                   sizeof(*(p)))
+> +#define flex_array_size(p, member, count)                              \
+> +       size_mul(count,                                                 \
+> +                sizeof(*(p)->member) + __must_be_array((p)->member))
+>
+>  /**
+> - * flex_array_size() - Calculate size of a flexible array member
+> - *                     within an enclosing structure.
+> + * struct_size() - Calculate size of structure with trailing flexible array.
+>   *
+>   * @p: Pointer to the structure.
+> - * @member: Name of the flexible array member.
+> + * @member: Name of the array member.
+>   * @count: Number of elements in the array.
+>   *
+> - * Calculates size of a flexible array of @count number of @member
+> - * elements, at the end of structure @p.
+> + * Calculates size of memory needed for structure @p followed by an
+> + * array of @count number of @member elements.
+>   *
+>   * Return: number of bytes needed or SIZE_MAX on overflow.
+>   */
+> -#define flex_array_size(p, member, count)                              \
+> -       array_size(count,                                               \
+> -                   sizeof(*(p)->member) + __must_be_array((p)->member))
+> +#define struct_size(p, member, count)                                  \
+> +       size_add(sizeof(*(p)), flex_array_size(p, member, count))
+>
+>  #endif /* __LINUX_OVERFLOW_H */
+> diff --git a/lib/test_overflow.c b/lib/test_overflow.c
+> index 7a4b6f6c5473..01a469ff7ff6 100644
+> --- a/lib/test_overflow.c
+> +++ b/lib/test_overflow.c
+> @@ -588,12 +588,73 @@ static int __init test_overflow_allocation(void)
+>         return err;
+>  }
+>
+> +struct __test_flex_array {
+> +       unsigned long flags;
+> +       size_t count;
+> +       unsigned long data[];
+> +};
+> +
+> +static int __init test_overflow_size_helpers(void)
+> +{
+> +       struct __test_flex_array *obj;
+> +       int count = 0;
+> +       int err = 0;
+> +
+> +#define check_one_size_helper(expected, func, args...) ({      \
+> +       bool __failure = false;                                 \
+> +       size_t _r;                                              \
+> +                                                               \
+> +       _r = func(args);                                        \
+> +       if (_r != (expected)) {                                 \
+> +               pr_warn("expected " #func "(" #args ") "        \
+> +                       "to return %zu but got %zu instead\n",  \
+> +                       (size_t)(expected), _r);                \
+> +               __failure = true;                               \
+> +       }                                                       \
+> +       count++;                                                \
+> +       __failure;                                              \
+> +})
+> +
+> +       err |= check_one_size_helper(5,        size_add, 2, 3);
+> +       err |= check_one_size_helper(SIZE_MAX, size_add, SIZE_MAX,  1);
+> +       err |= check_one_size_helper(SIZE_MAX, size_add, SIZE_MAX,  3);
+> +       err |= check_one_size_helper(SIZE_MAX, size_add, SIZE_MAX, -3);
 
- include/linux/overflow.h | 140 ++++++++++++++++++++++++---------------
- lib/test_overflow.c      | 111 ++++++++++++++++++++++++-------
- 2 files changed, 175 insertions(+), 76 deletions(-)
+Sorry, is this ^ case saying that we expect SIZE_MAX + -3 == SIZE_MAX?
+This is because the helpers performed unsigned arithmetic on size_t?
+
+> +
+> +       err |= check_one_size_helper(6,        size_mul, 2, 3);
+> +       err |= check_one_size_helper(SIZE_MAX, size_mul, SIZE_MAX,  1);
+> +       err |= check_one_size_helper(SIZE_MAX, size_mul, SIZE_MAX,  3);
+> +       err |= check_one_size_helper(SIZE_MAX, size_mul, SIZE_MAX, -3);
+> +
+> +       err |= check_one_size_helper(0, flex_array_size, obj, data, 0);
+> +       err |= check_one_size_helper(sizeof(*obj->data),
+> +                                    flex_array_size, obj, data, 1);
+> +       err |= check_one_size_helper(7 * sizeof(*obj->data),
+> +                                    flex_array_size, obj, data, 7);
+> +       err |= check_one_size_helper(SIZE_MAX,
+> +                                    flex_array_size, obj, data, -1);
+> +       err |= check_one_size_helper(SIZE_MAX,
+> +                                    flex_array_size, obj, data, SIZE_MAX - 4);
+> +
+> +       err |= check_one_size_helper(sizeof(*obj), struct_size, obj, data, 0);
+> +       err |= check_one_size_helper(sizeof(*obj) + sizeof(*obj->data),
+> +                                    struct_size, obj, data, 1);
+> +       err |= check_one_size_helper(SIZE_MAX,
+> +                                    struct_size, obj, data, -3);
+> +       err |= check_one_size_helper(SIZE_MAX,
+> +                                    struct_size, obj, data, SIZE_MAX - 3);
+> +
+> +       pr_info("%d overflow size helper tests finished\n", count);
+> +
+> +       return err;
+> +}
+> +
+>  static int __init test_module_init(void)
+>  {
+>         int err = 0;
+>
+>         err |= test_overflow_calculation();
+>         err |= test_overflow_shift();
+> +       err |= test_overflow_size_helpers();
+>         err |= test_overflow_allocation();
+>
+>         if (err) {
+> --
+> 2.30.2
+>
+
 
 -- 
-2.30.2
-
+Thanks,
+~Nick Desaulniers
