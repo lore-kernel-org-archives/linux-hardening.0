@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41878C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Sep 2021 23:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A2BC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 00:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2518D61107
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Sep 2021 23:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC96960F6B
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 00:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239602AbhIUAAk (ORCPT
+        id S233428AbhIUAEs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Sep 2021 20:00:40 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.219]:49742 "EHLO
+        Mon, 20 Sep 2021 20:04:48 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.219]:26859 "EHLO
         gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239611AbhITX6k (ORCPT
+        by vger.kernel.org with ESMTP id S233243AbhIUACr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Sep 2021 19:58:40 -0400
+        Mon, 20 Sep 2021 20:02:47 -0400
 Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id A23BB10F41A
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 18:57:11 -0500 (CDT)
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 222F6C4D22
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 19:01:20 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id ST9rmVzAxcEL1ST9rm9s8f; Mon, 20 Sep 2021 18:57:11 -0500
+        id STDsmW2v1cEL1STDsm9vs6; Mon, 20 Sep 2021 19:01:20 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -34,35 +34,34 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=l54vatPzJc7ae4VPK1rE18+/33qlQpWc3ikOysttu7Y=; b=r+m6rkmYLSXCfkF4UqkZA7ymV8
-        Is0TecEuYONlyespTdbJhCpfajKXK7QQuLOdHeQ6uWhF7pJcdfogq96aBZB7aaTB8NE9SiKhfBspC
-        7fOt/dgfa0hHxnXBOA0dTFPDza0RxsSZ0RvjTdktY8K6fia4SWJ2rs6l50aDDgNn9ZmZOKas/5xEj
-        yEqDCBgPva8kNe8CAR2GR+aJgqao35OjNMRENM8fAd6tQaq1wz5ek75nj0k4fsUTiikpFeRCcE57U
-        IbNjrAqN3KrvSAfj6gLFtgM32cZmuJx0i+xJ24q/0gmqQNJkX1O2+VuHWcBviREl+em1EuaCRNMIx
-        gJDRFO1g==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:33692 helo=[192.168.15.9])
+        bh=czSdDpNgb0Ii/RJWWpIWH8ssgyJ0ANHKIaZ5AJ+/NWg=; b=eTNSUnUcbS4YXJdyxijuf+L6bU
+        +3nwvc5H7uG93RrOlY4XaQr+WJ8j5NasVF1FSOVL0/lk0bOYG9UZE8acN2rotuQu6llY12vdmrkGU
+        V/wsZwwCXSGfqjcL47Efj5u5L7QG7rSltVQBuNf465bB8o++v9MW7Ru5j/oTS343jFEKZWZOwZPoZ
+        Pm+Cg0lzTlOKUEcweILPt8iBUx3r/LhGmgqJfKT7Ch/3zTdxNnb6PVKumenkJm9EbYGGsCCT1Rt1V
+        eT9MOfKYpHUcAA3fr58PiS5injGTx47qqOPbDuIfN/4ufmiTmASdY8S6YpDmURQ6RNucrEwqKf29z
+        PtygWsHw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:33780 helo=[192.168.15.9])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.94.2)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1mST9r-000R7p-3a; Mon, 20 Sep 2021 18:57:11 -0500
-Subject: Re: [PATCH] dmaengine: pxa_dma: Prefer struct_size over open coded
- arithmetic
-To:     Len Baker <len.baker@gmx.com>, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Vinod Koul <vkoul@kernel.org>
+        id 1mSTDr-000Y7U-Iv; Mon, 20 Sep 2021 19:01:19 -0500
+Subject: Re: [PATCH] KVM: PPC: Replace zero-length array with flexible array
+ member
+To:     Len Baker <len.baker@gmx.com>, Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210918104055.8444-1-len.baker@gmx.com>
+        Kees Cook <keescook@chromium.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210918142138.17709-1-len.baker@gmx.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <e7e103f3-74eb-9cf4-a150-e2333d4f2ace@embeddedor.com>
-Date:   Mon, 20 Sep 2021 19:00:58 -0500
+Message-ID: <bb4faf3a-9fe9-280b-cb4c-e4904b0b2a8f@embeddedor.com>
+Date:   Mon, 20 Sep 2021 19:05:07 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20210918104055.8444-1-len.baker@gmx.com>
+In-Reply-To: <20210918142138.17709-1-len.baker@gmx.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -74,13 +73,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1mST9r-000R7p-3a
+X-Exim-ID: 1mSTDr-000Y7U-Iv
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:33692
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:33780
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 20
+X-Email-Count: 9
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Precedence: bulk
@@ -89,42 +88,58 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 9/18/21 05:40, Len Baker wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
+On 9/18/21 09:21, Len Baker wrote:
+> There is a regular need in the kernel to provide a way to declare having
+> a dynamically sized set of trailing elements in a structure. Kernel code
+> should always use "flexible array members" [1] for these cases. The
+> older style of one-element or zero-length arrays should no longer be
+> used[2].
 > 
-> So, use the struct_size() helper to do the arithmetic instead of the
-> argument "size + count * size" in the kzalloc() function.
+> Also, make use of the struct_size() helper in kzalloc().
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 > 
 > Signed-off-by: Len Baker <len.baker@gmx.com>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks
+--
+Gustavo
+
 > ---
->  drivers/dma/pxa_dma.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  arch/powerpc/include/asm/kvm_host.h | 2 +-
+>  arch/powerpc/kvm/book3s_64_vio.c    | 3 +--
+>  2 files changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-> index 4a2a796e348c..52d04641e361 100644
-> --- a/drivers/dma/pxa_dma.c
-> +++ b/drivers/dma/pxa_dma.c
-> @@ -742,8 +742,7 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
->  	dma_addr_t dma;
->  	int i;
+> diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+> index 080a7feb7731..3aed653373a5 100644
+> --- a/arch/powerpc/include/asm/kvm_host.h
+> +++ b/arch/powerpc/include/asm/kvm_host.h
+> @@ -190,7 +190,7 @@ struct kvmppc_spapr_tce_table {
+>  	u64 size;		/* window size in pages */
+>  	struct list_head iommu_tables;
+>  	struct mutex alloc_lock;
+> -	struct page *pages[0];
+> +	struct page *pages[];
+>  };
 > 
-> -	sw_desc = kzalloc(sizeof(*sw_desc) +
-> -			  nb_hw_desc * sizeof(struct pxad_desc_hw *),
-> +	sw_desc = kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc),
->  			  GFP_NOWAIT);
->  	if (!sw_desc)
->  		return NULL;
+>  /* XICS components, defined in book3s_xics.c */
+> diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+> index 6365087f3160..d42b4b6d4a79 100644
+> --- a/arch/powerpc/kvm/book3s_64_vio.c
+> +++ b/arch/powerpc/kvm/book3s_64_vio.c
+> @@ -295,8 +295,7 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
+>  		return ret;
+> 
+>  	ret = -ENOMEM;
+> -	stt = kzalloc(sizeof(*stt) + npages * sizeof(struct page *),
+> -		      GFP_KERNEL);
+> +	stt = kzalloc(struct_size(stt, pages, npages), GFP_KERNEL);
+>  	if (!stt)
+>  		goto fail_acct;
+> 
 > --
 > 2.25.1
 > 
