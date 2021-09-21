@@ -2,106 +2,96 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16E8C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 15:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39708C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 16:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA25061090
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 15:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D0C761165
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 16:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbhIUPsQ (ORCPT
+        id S229456AbhIUQmz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Sep 2021 11:48:16 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:52437 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234211AbhIUPrP (ORCPT
+        Tue, 21 Sep 2021 12:42:55 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:59554 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229441AbhIUQmy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Sep 2021 11:47:15 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.west.internal (Postfix) with ESMTP id 88B752B013BA;
-        Tue, 21 Sep 2021 11:45:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 21 Sep 2021 11:45:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=68Ez9kJNOEr/C+egNL3CEoXa9GE
-        O4jmpwrJs9DLpLDg=; b=b8Xq/u2P2r2mU/sMeJ+g7E1UIIBCj7fudf6fVi2NqUW
-        gFRfZELr2enVCh6DjaMetTI4G0sFgTfFRDu1L8oE+kOjoeO8nDgZNjrL8O4ruERY
-        QQ9pgh/7833+n/+vJy/xB5WvKBQ3yEIODA3ewTf+o7oK0YXRWOYpLXgAhuhn8a0Q
-        S8BT9ddw4wuCRnTUW7rnPOKH1pyDeZMLivhpWWvfehamINIQ6Yf2/sAMZvgqqWom
-        tTksrBhLNdeThVqgHs6oy0nHdOzGMffxqopCZVR5x+dt32LxZ6ZWF/2Hu3hY+0kx
-        P+xAqNi8RA3IqmEJB0K50sfPYXw4qXUUHyfk5rMe+vA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=68Ez9k
-        JNOEr/C+egNL3CEoXa9GEO4jmpwrJs9DLpLDg=; b=Ls6G5GkOc5MBBotV22r9Uo
-        NWjeD1Cwgy7h4PrJJwdCk9xSIpvSspXJn/lK3ole7H8+uLSJuslCV9wfeuzauKAn
-        1ilALdzmqL5nY+PTYKicPlSOrfhay6pAI7CQ0CPDh3KDQtbs5xS50gvAyhoVsQ7k
-        3BXPHQH6fup08FQIGLCYgYl0lOHz5FX6h5LQEzE5bQWpMi0otBBId/dRG905seJG
-        PT72pP7GWElLvcZi01iEbsJZXvUPhyVAy+KMm+/8bvd2N2mPlS11LTXjQSzF6TU/
-        zX6Z5uER4cM2L0IRV6d6WL0CSKUFS34W4dKOihzmrw9fJCSReNW/9T3OxJlw+RnA
-        ==
-X-ME-Sender: <xms:J_5JYSe6D7aaoRNo-_lyZPJQXJcLtD3RsmmkG7frh-Js6XfEx60alQ>
-    <xme:J_5JYcNo21un18096Ck-eSIEDCKAR8z1-KjzRBfHAuKRCMe67LZpEoNxht5PNtgGP
-    OQ7tOtrS96k9w>
-X-ME-Received: <xmr:J_5JYTglr-G_PY_M4IOwYlpO80oVXdNshkJA_XRaL2uiG9NF0zAbp7Cau9jIq3m6MWw7alqv_wislBOpmA7RP10BWbX6XHEk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudeigedgleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhh
-    drtghomh
-X-ME-Proxy: <xmx:J_5JYf-Uhpe58UIWGYofA7myYYpdIgQx5HGpMYZo3PhIdLcuHA8IkQ>
-    <xmx:J_5JYetOgieNVo6mNCisN27dFF55aw0up_BluX1kQqO-1zfnvEAfrQ>
-    <xmx:J_5JYWFY7fAUYmYGLo07sDXpHxwKJpnVPzUYtoigI05IgxbyByZQjg>
-    <xmx:Kf5JYZlJ8GNH98916Fl08WrKH5ydkjqhrCM6fBTyUWh6JZunx9wTPGrKPho>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 21 Sep 2021 11:45:43 -0400 (EDT)
-Date:   Tue, 21 Sep 2021 17:45:41 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>, Len Baker <len.baker@gmx.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <mgross@linux.intel.com>,
+        Tue, 21 Sep 2021 12:42:54 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 12CFF2217A;
+        Tue, 21 Sep 2021 16:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1632242485; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y9/p8UT6XMNyd/8OKyW671IeFdUR2a1ME2bzSTT0Uaw=;
+        b=IRaI7Sop8R0IUfhVkJtQBCHmbLiGjy36ZuVEP5ygv1Xm9I9+SpYjd27VylKbwrZRZae0at
+        uz8Que0alKaogm0WE7kgUOzTD4ONQdDaYBbBbBCmzJCnHwqgns3V3eIS+Eq3heOWRupRab
+        Bz3NmaukG9Nh3aYxLKybPxFHZ8mtnsw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1632242485;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y9/p8UT6XMNyd/8OKyW671IeFdUR2a1ME2bzSTT0Uaw=;
+        b=KNCm8PafKIQyPfmcUJjMb2zIrWnMk2D7TbKpOxfAQK4ZbbBuN2vX9qPmZghVZYvoUWxsQF
+        oNC7WZXgwnfgauAg==
+Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
+        by relay2.suse.de (Postfix) with ESMTP id B2223A3B90;
+        Tue, 21 Sep 2021 16:41:24 +0000 (UTC)
+Date:   Tue, 21 Sep 2021 18:41:24 +0200
+Message-ID: <s5h35px98zv.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        gushengxian <gushengxian@yulong.com>,
+        Kees Cook <keescook@chromium.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Prefer struct_size over
- open coded arithmetic
-Message-ID: <YUn+Jfx9a+Ad1PsK@kroah.com>
-References: <20210918150500.21530-1-len.baker@gmx.com>
- <202109192246.B438B42EF@keescook>
- <ba427967-cb1b-58a8-ec93-bd5ae89f58f8@redhat.com>
- <YUn3F9HtgrpN9sSM@kroah.com>
- <725ac392-642b-f57d-a286-d662eaa7d2a2@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <725ac392-642b-f57d-a286-d662eaa7d2a2@redhat.com>
+        alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: usx2y: Prefer struct_size over open coded arithmetic
+In-Reply-To: <20210919133727.44694-1-len.baker@gmx.com>
+References: <20210919133727.44694-1-len.baker@gmx.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 21, 2021 at 05:38:39PM +0200, Hans de Goede wrote:
-> > All attributes for this driver are documented in Documentation/ABI/,
-> > right? :)
+On Sun, 19 Sep 2021 15:37:27 +0200,
+Len Baker wrote:
 > 
-> I'm not sure if all attributes are documented, but a lot of them
-> (including all recently added ones) are documented in:
-> Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> In this case this is not actually dynamic size: all the operands
+> involved in the calculation are constant values. However it is better to
+> refactor this anyway, just to keep the open-coded math idiom out of
+> code.
+> 
+> So, use the struct_size() helper to do the arithmetic instead of the
+> argument "size + size * count" in the kzalloc() function.
+> 
+> Also, take the opportunity to refactor the declaration variables to make
+> it more easy to read.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 
-They should also go into Documentation/ABI/ which is where sysfs files
-are documented.  We are working on tools that make parsing that easier,
-so it would be good to keep them out of other random documentation
-files whenever possible.
+Thanks, applied.
 
-thanks,
 
-greg k-h
+Takashi
