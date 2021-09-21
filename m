@@ -2,236 +2,168 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680DCC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 02:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA94C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 03:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 517A361183
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 02:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5459960FA0
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 03:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236429AbhIUCXm (ORCPT
+        id S229973AbhIUDWK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Sep 2021 22:23:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
+        Mon, 20 Sep 2021 23:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236448AbhIUBuS (ORCPT
+        with ESMTP id S1350463AbhIUCcl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Sep 2021 21:50:18 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E19C06AB38
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 15:10:51 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id i4so74139692lfv.4
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 15:10:51 -0700 (PDT)
+        Mon, 20 Sep 2021 22:32:41 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CBD8C061787
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 18:38:38 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id m21so9991701pgu.13
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Sep 2021 18:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6eV7ZEknL6BkA6f/6DuS4NzZxFcAYVBj2zF/41tusYQ=;
-        b=nO1fHPON5V8RPEe8sjglg5u1uwbH+IpUsz9W0GgnwtFFbCbvZjpCK2W0AZ02vPueOk
-         rhEZcjahbMzw7oDngXGb7xTeUJ225XsTgyFkqbQ+w7l+W+gWBOQMcG/DpY+y1USQRED8
-         /Aiy3uD6vO8NhZG0eZhQiMwn9gqCV/kpKBU6BEAyVE5N7AKXWw8GzqGePPIq13OuhqUf
-         E64Zlqrz2cZeaJMToQ47ZjRg5kGEiAjdgGlZqLOjC7WUe145oyDs0MQ5bRhJFv9cqNBE
-         QVpq+AMYa6hl0j+3rtEprLI/dUDBPPcgVGWUjr2MNPtxCW6DKaNiJBLDsjasHT07FZ9k
-         fEzg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DFo/KdHwALOng6HEKOBq1CxW/zYSviOMlInYDjNQwgY=;
+        b=OuKhhOMXdJ3+QJ2ozA4PPnvxrX8DCykNuXiiDbt/su3xfY7jVcPrMLK0mfpZusLlML
+         QtWo4MKU9QikB7pvMmx7MBl8nXjsHjFdjk9Bbrt/lgwj00ZSws+05+90r75lgRq+wZer
+         GXTJ02LcfJ5FhjYczJXDHdIuBlIMdEQnelzKA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6eV7ZEknL6BkA6f/6DuS4NzZxFcAYVBj2zF/41tusYQ=;
-        b=sSB73iG1RIltHBFTWbOxJAST2qPtoN1nTZGRaYuZ//VvR9QbMj1EH8lPYSs/JRWD+b
-         De2XWDV7Etqm2DNyeMB2RFTmHEQVYQJGdKlsFUvqMV2f3YohFbOpxhVjhxB+LfpcngMj
-         T+nFTEEO0I0otOcEXOmdUSIzccSZGcyiN0o34YsWj0WGGRu7ygWNo1W9WhAA6nPcuxa4
-         ybwhqvlAAxMi9e64Ksr5fl0sbhIIs9LOcen2+BrKueQpWXyVlRsRHgQVwhJ8yu8tyW3k
-         EKBJvxl1TcYkhiw5GM0OOoaGTgcbo9frS9GE7OOvTmxEWQ0U4DKVDc5ufiCkPL4s3QBt
-         CO/A==
-X-Gm-Message-State: AOAM530eNUHU0QPTU1LYuOjGzreY0gvzixXJaa2p3xo4cVQqif/6mLaG
-        jNDO23FZIIKJVgyfH9p4qDB7tW6VDFWwxDzT6uFY/w==
-X-Google-Smtp-Source: ABdhPJz0WBX5wfCly2Kf6J53UybjMeTFy9UttFKEgQfdbXF1ZEwIseu8gK/Gt1DRko2YV4OErJW8g8bbgNraSSRafBY=
-X-Received: by 2002:a05:6512:3ba5:: with SMTP id g37mr7361147lfv.651.1632175849450;
- Mon, 20 Sep 2021 15:10:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210920180853.1825195-1-keescook@chromium.org> <20210920180853.1825195-3-keescook@chromium.org>
-In-Reply-To: <20210920180853.1825195-3-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 20 Sep 2021 15:10:37 -0700
-Message-ID: <CAKwvOdnYYa+72VhtJ4ug=SJVFn7w+n7Th+hKYE87BRDt4hvqOg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] test_overflow: Regularize test reporting output
-To:     Kees Cook <keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DFo/KdHwALOng6HEKOBq1CxW/zYSviOMlInYDjNQwgY=;
+        b=Tk0ZHjVlj2EknqcBDXZwRvSwSquUY2Z0gG8kCcISReUXEW7biVNaLqn+TDe8ANTe+P
+         Jq2RddpDHl2/PiE88ifur7FSx6l1eOoVxY+OUcLnK6vI1HS1e3bQbKW0ZGCd7QXl3Ssw
+         Io+d3GXqx932wldW3wv4JQshf1MirAUQTZpsZwLvJFgqlLQ3zX8XrhTx0d31dhwl3Guy
+         0FbyLKqwMJnC7nqW9r0kmOeUcC52QkLuhZP0hkR2qCXwTDBoBtCi5AvSxRVPAGWFRBll
+         Q+ncJdK/bEcpIruQ3Vra+zQxVCEqt6+nqSC4nVaykV5S0oTeUp9I2QIFPujhW0zsXNrx
+         CjFQ==
+X-Gm-Message-State: AOAM530hToUIsLai3vRtehoECOGWO9al01PNA9ffyOu7QEgGtQevIEkz
+        q/ig63AsX2Pp3VE/uzGfUb5SJQ==
+X-Google-Smtp-Source: ABdhPJwQ0WNLQZaaLRrF869CrtQnn2XBfqD1LwJBMsKSPTvdLtrP8Ja03e/kBn7zYU8D8ScKjPQXeg==
+X-Received: by 2002:a63:7d46:: with SMTP id m6mr26695743pgn.409.1632188317997;
+        Mon, 20 Sep 2021 18:38:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 11sm14564267pfl.41.2021.09.20.18.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Sep 2021 18:38:37 -0700 (PDT)
+Date:   Mon, 20 Sep 2021 18:38:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
 Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Jason Gunthorpe <jgg@ziepe.ca>,
         Leon Romanovsky <leon@kernel.org>,
         Keith Busch <kbusch@kernel.org>, Len Baker <len.baker@gmx.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 1/2] overflow: Implement size_t saturating arithmetic
+ helpers
+Message-ID: <202109201815.E4D4AEA317@keescook>
+References: <20210920180853.1825195-1-keescook@chromium.org>
+ <20210920180853.1825195-2-keescook@chromium.org>
+ <CAKwvOdnWiBwXq2atuHXYUfGLiHPhmipJmXze-ymtKG_Vmf7w2g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnWiBwXq2atuHXYUfGLiHPhmipJmXze-ymtKG_Vmf7w2g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 11:09 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Report test run summaries more regularly, so it's easier to understand
-> the output:
-> - Remove noisy "ok" reports for shift and allocator tests.
-> - Reorganize per-type output to the end of each type's tests.
-> - Replace redundant vmalloc tests with __vmalloc so that __GFP_NO_WARN
->   can be used to keep the expected failure warnings out of dmesg,
->   similar to commit 8e060c21ae2c ("lib/test_overflow.c: avoid tainting
->   the kernel and fix wrap size")
->
-> Resulting output:
->
->   test_overflow: 18 u8 arithmetic tests finished
->   test_overflow: 19 s8 arithmetic tests finished
->   test_overflow: 17 u16 arithmetic tests finished
->   test_overflow: 17 s16 arithmetic tests finished
->   test_overflow: 17 u32 arithmetic tests finished
->   test_overflow: 17 s32 arithmetic tests finished
->   test_overflow: 17 u64 arithmetic tests finished
->   test_overflow: 21 s64 arithmetic tests finished
->   test_overflow: 113 shift tests finished
->   test_overflow: 17 overflow size helper tests finished
->   test_overflow: 11 allocation overflow tests finished
->   test_overflow: all tests passed
->
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Mon, Sep 20, 2021 at 03:06:33PM -0700, Nick Desaulniers wrote:
+> On Mon, Sep 20, 2021 at 11:09 AM Kees Cook <keescook@chromium.org> wrote:
+> > [...]
+> > +/*
+> > + * Internal logic for size_add(). Takes variable names from UNIQUE_ID
+> > + * so that the local variables here will never collide with other local
+> > + * variables (for example, with itself).
+> > + */
+> > +#define __size_add(addend1, addend2, __addend1, __addend2, __sum)      \
+> > +({                                                                     \
+> > +       size_t __sum;                                                   \
+> > +       size_t __addend1 = (addend1);                                   \
+> > +       size_t __addend2 = (addend2);                                   \
+> > +       if (check_add_overflow(__addend1, __addend2, &__sum))           \
+> > +               __sum = SIZE_MAX;                                       \
+> > +       __sum;                                                          \
+> > +})
+> > +
+> > +/**
+> > + * size_add() - Calculate size_t addition with saturation at SIZE_MAX
+> > + *
+> > + * @addend1: first addend
+> > + * @addend2: second addend
+> > + *
+> > + * Returns: calculate @addend1 + @addend2, where both values are
+> > + * evaluated as size_t, with any overflow causing the return value to
+> > + * be SIZE_MAX.
+> > + */
+> > +#define size_add(addend1, addend2)                                     \
+> > +       __must_check_size(__size_add(addend1, addend2,                  \
+> > +                                    __UNIQUE_ID(__addend1_),           \
+> > +                                    __UNIQUE_ID(__addend2_),           \
+> > +                                    __UNIQUE_ID(__sum_)))
+> 
+> Is the use of __UNIQUE_ID really necessary? Is the point to avoid some
+> kind of variable shadowing?  (As opposed to just using names for the
+> new variables in the scope of the statement expressions? ie.
 
-Much appreciated!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Yes, when composed[1], they would shadow (under -Wshadow). I'd rather
+not knowingly add yet more[2] shadowed variables to the kernel. :)
 
-> ---
->  lib/test_overflow.c | 50 +++++++++++++++++++++++----------------------
->  1 file changed, 26 insertions(+), 24 deletions(-)
->
-> diff --git a/lib/test_overflow.c b/lib/test_overflow.c
-> index 01a469ff7ff6..e1fd2d72dc61 100644
-> --- a/lib/test_overflow.c
-> +++ b/lib/test_overflow.c
-> @@ -252,10 +252,10 @@ static int __init test_ ## t ## _overflow(void) {                 \
->         int err = 0;                                                    \
->         unsigned i;                                                     \
->                                                                         \
-> -       pr_info("%-3s: %zu arithmetic tests\n", #t,                     \
-> -               ARRAY_SIZE(t ## _tests));                               \
->         for (i = 0; i < ARRAY_SIZE(t ## _tests); ++i)                   \
->                 err |= do_test_ ## t(&t ## _tests[i]);                  \
-> +       pr_info("%zu %s arithmetic tests finished\n",                   \
-> +               ARRAY_SIZE(t ## _tests), #t);                           \
->         return err;                                                     \
->  }
->
-> @@ -291,6 +291,7 @@ static int __init test_overflow_calculation(void)
->  static int __init test_overflow_shift(void)
->  {
->         int err = 0;
-> +       int count = 0;
->
->  /* Args are: value, shift, type, expected result, overflow expected */
->  #define TEST_ONE_SHIFT(a, s, t, expect, of) ({                         \
-> @@ -313,9 +314,7 @@ static int __init test_overflow_shift(void)
->                         pr_warn("got %llu\n", (u64)__d);                \
->                 __failed = 1;                                           \
->         }                                                               \
-> -       if (!__failed)                                                  \
-> -               pr_info("ok: (%s)(%s << %s) == %s\n", #t, #a, #s,       \
-> -                       of ? "overflow" : #expect);                     \
-> +       count++;                                                        \
->         __failed;                                                       \
->  })
->
-> @@ -479,6 +478,8 @@ static int __init test_overflow_shift(void)
->         err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
->         err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
->
-> +       pr_info("%d shift tests finished\n", count);
-> +
->         return err;
->  }
->
-> @@ -530,7 +531,6 @@ static int __init test_ ## func (void *arg)                         \
->                 free ## want_arg (free_func, arg, ptr);                 \
->                 return 1;                                               \
->         }                                                               \
-> -       pr_info(#func " detected saturation\n");                        \
->         return 0;                                                       \
->  }
->
-> @@ -544,10 +544,7 @@ DEFINE_TEST_ALLOC(kmalloc,  kfree,      0, 1, 0);
->  DEFINE_TEST_ALLOC(kmalloc_node,         kfree,      0, 1, 1);
->  DEFINE_TEST_ALLOC(kzalloc,      kfree,      0, 1, 0);
->  DEFINE_TEST_ALLOC(kzalloc_node,  kfree,             0, 1, 1);
-> -DEFINE_TEST_ALLOC(vmalloc,      vfree,      0, 0, 0);
-> -DEFINE_TEST_ALLOC(vmalloc_node,  vfree,             0, 0, 1);
-> -DEFINE_TEST_ALLOC(vzalloc,      vfree,      0, 0, 0);
-> -DEFINE_TEST_ALLOC(vzalloc_node,  vfree,             0, 0, 1);
-> +DEFINE_TEST_ALLOC(__vmalloc,    vfree,      0, 1, 0);
->  DEFINE_TEST_ALLOC(kvmalloc,     kvfree,     0, 1, 0);
->  DEFINE_TEST_ALLOC(kvmalloc_node, kvfree,     0, 1, 1);
->  DEFINE_TEST_ALLOC(kvzalloc,     kvfree,     0, 1, 0);
-> @@ -559,8 +556,14 @@ static int __init test_overflow_allocation(void)
->  {
->         const char device_name[] = "overflow-test";
->         struct device *dev;
-> +       int count = 0;
->         int err = 0;
->
-> +#define check_allocation_overflow(alloc)       ({      \
-> +       count++;                                        \
-> +       test_ ## alloc(dev);                            \
+[1] https://godbolt.org/z/1rM6Ko1j3
+[2] https://github.com/KSPP/linux/issues/152
+
+> +#define __size_add(addend1, addend2, __sum)      \
+> +({                                                                     \
+> +       size_t __sum;                                                   \
+> +       if (check_add_overflow((size_t)__addend1, (size_t)__addend2,
+> &__sum))           \
+> +               __sum = SIZE_MAX;                                       \
+> +       __sum;                                                          \
 > +})
-> +
->         /* Create dummy device for devm_kmalloc()-family tests. */
->         dev = root_device_register(device_name);
->         if (IS_ERR(dev)) {
-> @@ -568,23 +571,22 @@ static int __init test_overflow_allocation(void)
->                 return 1;
->         }
->
-> -       err |= test_kmalloc(NULL);
-> -       err |= test_kmalloc_node(NULL);
-> -       err |= test_kzalloc(NULL);
-> -       err |= test_kzalloc_node(NULL);
-> -       err |= test_kvmalloc(NULL);
-> -       err |= test_kvmalloc_node(NULL);
-> -       err |= test_kvzalloc(NULL);
-> -       err |= test_kvzalloc_node(NULL);
-> -       err |= test_vmalloc(NULL);
-> -       err |= test_vmalloc_node(NULL);
-> -       err |= test_vzalloc(NULL);
-> -       err |= test_vzalloc_node(NULL);
-> -       err |= test_devm_kmalloc(dev);
-> -       err |= test_devm_kzalloc(dev);
-> +       err |= check_allocation_overflow(kmalloc);
-> +       err |= check_allocation_overflow(kmalloc_node);
-> +       err |= check_allocation_overflow(kzalloc);
-> +       err |= check_allocation_overflow(kzalloc_node);
-> +       err |= check_allocation_overflow(__vmalloc);
-> +       err |= check_allocation_overflow(kvmalloc);
-> +       err |= check_allocation_overflow(kvmalloc_node);
-> +       err |= check_allocation_overflow(kvzalloc);
-> +       err |= check_allocation_overflow(kvzalloc_node);
-> +       err |= check_allocation_overflow(devm_kmalloc);
-> +       err |= check_allocation_overflow(devm_kzalloc);
->
->         device_unregister(dev);
->
-> +       pr_info("%d allocation overflow tests finished\n", count);
-> +
->         return err;
->  }
->
-> --
-> 2.30.2
->
+> 
+> Do the double-underscore-prefixed really need to be a separate
+> #define, or can their definitions be inlined into the expansion sites;
+> there seems like there's no other users of the
+> double-underscore-prefixed versions otherwise. ie.
+> 
+> #define size_add(addend1, addend2) \
+>   __must_check_size(({ \
+>     size_t sum;  \
+>     if (check_add_overflow((size_t)addend1, (size_t)addend2), &sum;  \
+>       sum = SIZE_MAX;  \
+>     sum;  \
+> })
 
+Right, there aren't, but that's the way to pass such variable names in.
+(See minmax.h.) This also leaves the door open for using these helpers
+as constant expressions, if the need arises.
+
+> > +       err |= check_one_size_helper(SIZE_MAX, size_add, SIZE_MAX, -3);
+> 
+> Sorry, is this ^ case saying that we expect SIZE_MAX + -3 == SIZE_MAX?
+> This is because the helpers performed unsigned arithmetic on size_t?
+
+Correct. When I wrote this I hadn't yet found any cases of needing to
+shrink an allocation size that followed a common pattern like this. But it
+turns out we do have some:
+
+drivers/infiniband/core/sa_query.c:     sa_dev = kzalloc(struct_size(sa_dev, port, e - s + 1), GFP_KERNEL);
+drivers/infiniband/core/user_mad.c:     umad_dev = kzalloc(struct_size(umad_dev, ports, e - s + 1), GFP_KERNEL);
+drivers/net/ethernet/intel/iavf/iavf_virtchnl.c:        len = struct_size(vti, list, adapter->num_tc - 1);
+
+I'll need to add size_sub() as well.
+
+Thanks for looking this over!
 
 -- 
-Thanks,
-~Nick Desaulniers
+Kees Cook
