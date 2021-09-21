@@ -2,164 +2,102 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A640C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 18:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3344C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 19:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE29D61186
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 18:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF0261186
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 19:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbhIUStw (ORCPT
+        id S233920AbhIUTCo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Sep 2021 14:49:52 -0400
-Received: from gateway22.websitewelcome.com ([192.185.46.234]:24505 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231145AbhIUStw (ORCPT
+        Tue, 21 Sep 2021 15:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232481AbhIUTCn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Sep 2021 14:49:52 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 058021D803
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Sep 2021 13:48:10 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id SkoLmpWlCcEL1SkoMmTQqz; Tue, 21 Sep 2021 13:48:10 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DE7tJmoJY542ECw3zNe99FgfYCCZRmZ+e7TMY8BcwkI=; b=ydXAntc8wo6PEex7KQ+biJ4Ok4
-        kqiDaypCXy7PA53MZiT+wphL75V5V2rxZUxbVQgoM6i9XWx6YHoanCNTlPnV/ghZRgAl4st5d2GTC
-        YNj5IXr0Eo2QmSeJtWn9EvgpsR3X5Fxu6EPd8caMyS87EaJ76Dr3Xd/wxm1h9WQW8GSCyaPJ4UGmd
-        6B9wASWWXjU1ntxRGEOSF+W9MoisLFNceKTYv2u9DLSM8EmmqHtW5vnGO1HatUxZdF3PXXIoOYeVx
-        3a0+t6BATb/sMe3rsoAEBtL8SOL/VUjecYux4JxBNpyqIn3Su9bHGghNb+X4QcRKy9Bjh/tEge5P/
-        582q5ptA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:36692 helo=[192.168.15.9])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1mSkoL-0010W9-Ey; Tue, 21 Sep 2021 13:48:09 -0500
-Subject: Re: [PATCH] nl80211: prefer struct_size over open coded arithmetic
-To:     Len Baker <len.baker@gmx.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210919114040.41522-1-len.baker@gmx.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <47961463-5b2c-dd6f-0e98-ea95c13409fb@embeddedor.com>
-Date:   Tue, 21 Sep 2021 13:51:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Tue, 21 Sep 2021 15:02:43 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14CE8C061756
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Sep 2021 12:01:15 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 17so45672pgp.4
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Sep 2021 12:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uUvwtgDvS9z+MmLCsIbndyuppV43gHnzlz5qvL6KeNg=;
+        b=c9uP+rap/UfN7fREE6h8u3lsZij8/9nesp5oAq6rWx9xNnYvzMF9PP463fCmsUqDar
+         kEwNNzzupFjl3iVssQImb8bF3h2/B/8MlMGNIDKsuMe9bchBPSyFkLc+uuhUiy9QTIMI
+         6UVxssDsqkegyngHCgoDjyvtGGXIsR18yy7Rg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uUvwtgDvS9z+MmLCsIbndyuppV43gHnzlz5qvL6KeNg=;
+        b=3acDAuJo77blSdT1ETpntS2EJKEJiQmNeyNuU+R+TDjCxbSPZKN52gZd5jFcLrjiSN
+         LgGPUP/BoZVbz2J1GLMFP5XTXPR8I5ZU2OMQkEGP/PthAKIstMrCa8Wu1XeZXddUNeT9
+         wYby9xyb8whtPCUymsnUPr7DSLri4Qnk2jdYzyncjr8P4lUAju5YkbRUCK3HtrOn7vAi
+         PD3vt16swqAK/ARFa0epsZQSHzJUnwX1hXhUWdjf4ZuteAM2sfcy8lQ0kJ97U5Yd9w0R
+         cVcExEZxa9IK9WKJSq/Ul+YAsfrNasIY7h86VPOG+oPzZHxtJVT3GI60MZIM7YlUyXiR
+         2WfQ==
+X-Gm-Message-State: AOAM5304HYhZs3oCr4weJnCmzXw3orfDL9v4CH+u5oF4exWjUdnB4zNd
+        C1uJFcYFLaWWNYbC4Bk9Al/dWg==
+X-Google-Smtp-Source: ABdhPJyhkEtFnUnBg+9qtMK4KmQYa6j/evLKD74iespv+jzZ07EoQOA7rlY7bUrm0t6g+7REwX8YJw==
+X-Received: by 2002:a63:2cce:: with SMTP id s197mr3869655pgs.45.1632250874538;
+        Tue, 21 Sep 2021 12:01:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t6sm3451285pjr.36.2021.09.21.12.01.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Sep 2021 12:01:13 -0700 (PDT)
+Date:   Tue, 21 Sep 2021 12:01:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] mm: Remove HARDENED_USERCOPY_FALLBACK
+Message-ID: <202109211200.14E421C@keescook>
+References: <20210921061149.1091163-1-steve@sk2.org>
 MIME-Version: 1.0
-In-Reply-To: <20210919114040.41522-1-len.baker@gmx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1mSkoL-0010W9-Ey
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:36692
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210921061149.1091163-1-steve@sk2.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, Sep 21, 2021 at 08:11:49AM +0200, Stephen Kitt wrote:
+> This has served its purpose and is no longer used. All usercopy
+> violations appear to have been handled by now, any remaining
+> instances (or new bugs) will cause copies to be rejected.
+> 
+> This isn't a direct revert of commit 2d891fbc3bb6 ("usercopy: Allow
+> strict enforcement of whitelists"); since usercopy_fallback is
+> effectively 0, the fallback handling is removed too.
+> 
+> This also removes the usercopy_fallback module parameter on
+> slab_common.
+> 
+> Link: https://github.com/KSPP/linux/issues/153
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> Suggested-by: Kees Cook <keescook@chromium.org>
 
+Thanks for doing this!
 
-On 9/19/21 06:40, Len Baker wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the struct_size() helper to do the arithmetic instead of the
-> argument "size + count * size" in the kzalloc() functions.
-> 
-> Also, take the opportunity to refactor the memcpy() call to use the
-> flex_array_size() helper.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
-> Signed-off-by: Len Baker <len.baker@gmx.com>
-> ---
->  net/wireless/nl80211.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-> index bf7cd4752547..b56856349ced 100644
-> --- a/net/wireless/nl80211.c
-> +++ b/net/wireless/nl80211.c
-> @@ -11766,9 +11766,10 @@ static int nl80211_set_cqm_rssi(struct genl_info *info,
->  	wdev_lock(wdev);
->  	if (n_thresholds) {
->  		struct cfg80211_cqm_config *cqm_config;
-> +		size_t size = struct_size(cqm_config, rssi_thresholds,
-> +					  n_thresholds);
-> 
-> -		cqm_config = kzalloc(sizeof(struct cfg80211_cqm_config) +
-> -				     n_thresholds * sizeof(s32), GFP_KERNEL);
-> +		cqm_config = kzalloc(size, GFP_KERNEL);
+Acked-by: Kees Cook <keescook@chromium.org>
 
-I don't think variable _size_ is needed here; this is just fine:
-
--               cqm_config = kzalloc(sizeof(struct cfg80211_cqm_config) +
--                                    n_thresholds * sizeof(s32), GFP_KERNEL);
-+               cqm_config = kzalloc(struct_size(cqm_config, rssi_thresholds,
-+                                                n_thresholds), GFP_KERNEL);
-
-Thanks
---
-Gustavo
-
->  		if (!cqm_config) {
->  			err = -ENOMEM;
->  			goto unlock;
-> @@ -11777,7 +11778,8 @@ static int nl80211_set_cqm_rssi(struct genl_info *info,
->  		cqm_config->rssi_hyst = hysteresis;
->  		cqm_config->n_rssi_thresholds = n_thresholds;
->  		memcpy(cqm_config->rssi_thresholds, thresholds,
-> -		       n_thresholds * sizeof(s32));
-> +		       flex_array_size(cqm_config, rssi_thresholds,
-> +				       n_thresholds));
-> 
->  		wdev->cqm_config = cqm_config;
->  	}
-> @@ -15081,9 +15083,7 @@ static int nl80211_set_sar_specs(struct sk_buff *skb, struct genl_info *info)
->  	if (specs > rdev->wiphy.sar_capa->num_freq_ranges)
->  		return -EINVAL;
-> 
-> -	sar_spec = kzalloc(sizeof(*sar_spec) +
-> -			   specs * sizeof(struct cfg80211_sar_sub_specs),
-> -			   GFP_KERNEL);
-> +	sar_spec = kzalloc(struct_size(sar_spec, sub_specs, specs), GFP_KERNEL);
->  	if (!sar_spec)
->  		return -ENOMEM;
-> 
-> --
-> 2.25.1
-> 
+-- 
+Kees Cook
