@@ -2,241 +2,176 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9C8C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 23:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E8AC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 22 Sep 2021 04:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF6961038
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Sep 2021 23:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E095A6109F
+	for <linux-hardening@archiver.kernel.org>; Wed, 22 Sep 2021 04:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231143AbhIUXvw (ORCPT
+        id S232216AbhIVErb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Sep 2021 19:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbhIUXvu (ORCPT
+        Wed, 22 Sep 2021 00:47:31 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:30070 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231976AbhIVErT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Sep 2021 19:51:50 -0400
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985C2C061574;
-        Tue, 21 Sep 2021 16:50:21 -0700 (PDT)
-Received: by mail-qk1-x72c.google.com with SMTP id c7so3609253qka.2;
-        Tue, 21 Sep 2021 16:50:21 -0700 (PDT)
+        Wed, 22 Sep 2021 00:47:19 -0400
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18M4ZpDC027991;
+        Wed, 22 Sep 2021 04:45:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=4yHkBCvIkptxML65agggPRTGwuvl05pJW+GLoBdRpmI=;
+ b=inYTspdAimWcGXBcd9jIldqFQqgmbQP41S5mbOELtCpfmHyfgoMSn0th+wCdFgef1mCh
+ gMnctLiSNpssiW3N9VKYhEcJCt/cwQ2cJpW+avWUfmL9fhyVo42dHrSw9hkImsV0WUtd
+ FXaNpX3qZFO5SmvSIzyLtuttdZKNj/wwvn5L3nj5E41l3GWAvy2Gl46cRVsEzAvCRUBy
+ jFJKlEf24eqYdOXlNLK3wSOW2/QE1cr0FhlteENiohNfD/SxFXP3Kp6b4QzyKlTDdv+A
+ qx9FYh1h2JiN7/gpyhOG/Z6akm6fbwiMpcpLc5RQaoKEmIqIs3wXVi2vKYT4SWYc0Qz+ YQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3b7q4r9d8x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Sep 2021 04:45:41 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18M4imvK117636;
+        Wed, 22 Sep 2021 04:45:40 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2173.outbound.protection.outlook.com [104.47.55.173])
+        by aserp3020.oracle.com with ESMTP id 3b7q5a3ry1-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Sep 2021 04:45:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZHNUS6ibM7ubCRVRVWISup4oNzvw2tmS+G+FHbp06vVKh9u9Wmx9vESH97EoBft2sCOWWXHBctCdccjgtwubIzkDnutbwZJBPgZrs55FGII89SEFkJj+E7yWmIIapZtw9Bmeiou1IZgMSWetSxxsEnjrZQdDaqe9/ww9z9srKNMLGzuMdwaY+VuUEIyKg3ohOVrvQ17yC5s1xNMnJMvqy5CbimSBf8/979DZ43p3flhpWorPvmiD5yxLAeQwimihOh1FJX0DVVyxn8DscbKxXwRYVdiD7XpWiVF1wBukYLhWJNSOhLaGZmkYDrro5CaySLN1/ceuEvBkrNc7RQjVww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=4yHkBCvIkptxML65agggPRTGwuvl05pJW+GLoBdRpmI=;
+ b=L6gWVkfSi+bIiPeaH55z9q3nQPxdWkS1KZqTefkm2sX8tYGUabz5cOUNsFMbSUPhmXK5qR3B0LYjkiC4k/RTbnJg4/ZIl8QF1oPDUZBPv/7GkomhCRVkPN2x9D8f3LBrYwE8FUAZephrCzAUG50/O94ijtlR5NAREbTsb1XN1/jfDfyCZlPd7iHplwVKwcGqWcpbe4tjrerDFn4VkuWLzwgo4o3xoP1YonhPsBk417LI6AuwiywmO+upuKddRDHwau4PrfyI89b2Ts9+UlBce6SHDpsan2QpRN3CpdXJjGi4LqI3WzPTtzHcPGB1jSIC98PrUvRr75kOd7Capk+I/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3pBdD6hrMTmywMpC16GHqHBzp8LFNfLUt8n19YiipuE=;
-        b=j98HoVhGODFy30aSZxYuX/CaYVRRgrLXGPZZcL3+5TEMk0kxZ9rEUZ5VzStdEt0IGw
-         3GdBetANKHrXw0Bg13KgU9vZfOKAKCK8ysvqoLeq2CE8u8xSqc/YIrNHWmSlqDbYFesa
-         fd4+CZ0W6h3HDeC+g6xK4UlALy3rQ5FspPWvw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3pBdD6hrMTmywMpC16GHqHBzp8LFNfLUt8n19YiipuE=;
-        b=vslkV3CsHe4z0JIxkIbXwCPK09gGvwaUmWUbLqAR73qmBtYd6UusMWoGwbBy5UvdEG
-         au1VHoSleK34TopmxsEv/Y761l7pMnhgYDIIqYhMrvAcKNjMuSUhXkbEvqRZQlCdtrgq
-         ntgut/BpmamBy1dkP1Sz9AFpCZ7XvHexF1Wc5lGUn7Uzhd1gVPtnR8X+TH4YgDUqE4kY
-         oeR/UKPtRVDEfQPJMRPldwGf3g8kwQS7eoTstMBkvddieIo6mEluzuVEv5tn3VBclu7F
-         XVn+GoNDJYqbhCzeTas3LQEBX5VpJi9iLq7tYOrUSGVeCmqSp0WRvjNvNXWtEDFYDXwE
-         HN6Q==
-X-Gm-Message-State: AOAM532Y+4IqssVI40nYb9579QkNcomVs2ojo8fWlkE+D/slYCI3NWwP
-        AmQha6KXXjiUKxoQ1K2KtWGKtUbXrkMg1b3h6CE=
-X-Google-Smtp-Source: ABdhPJzmNaG8eSfVVVJ//FXKvDj4/vyLvQR0ArS164V3qTiwONEwO8r07klh3oIBYs3tiqkXwlfH9eLZGel8VCFwWKo=
-X-Received: by 2002:a37:6596:: with SMTP id z144mr18531657qkb.292.1632268220710;
- Tue, 21 Sep 2021 16:50:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210921061149.1091163-1-steve@sk2.org>
-In-Reply-To: <20210921061149.1091163-1-steve@sk2.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 21 Sep 2021 23:50:08 +0000
-Message-ID: <CACPK8XeH55MGGPHEXXq1jmeQHQYuOfEuDYTbQiG6SWhwgLd7Sw@mail.gmail.com>
-Subject: Re: [PATCH] mm: Remove HARDENED_USERCOPY_FALLBACK
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4yHkBCvIkptxML65agggPRTGwuvl05pJW+GLoBdRpmI=;
+ b=CoED6Z2Zf+QVAJBathTY/J8OVy5zBiz1bz71S2VSDZBkhoqmRxas2gqoNkxnEryd3WIOGiqC7NJnwoYXtBk7pT57ItLJRqPjGbwO4dsaoRVmMu5ogiylc2e8A2KMcciyze6hZ6oy5YM46e62xDO7YmGiUWarEZk2AYd9mIZHPaw=
+Authentication-Results: gmx.com; dkim=none (message not signed)
+ header.d=none;gmx.com; dmarc=none action=none header.from=oracle.com;
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by PH0PR10MB4456.namprd10.prod.outlook.com (2603:10b6:510:43::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13; Wed, 22 Sep
+ 2021 04:45:37 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::c0ed:36a0:7bc8:f2dc]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::c0ed:36a0:7bc8:f2dc%7]) with mapi id 15.20.4523.018; Wed, 22 Sep 2021
+ 04:45:37 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Len Baker <len.baker@gmx.com>,
+        James Smart <james.smart@broadcom.com>,
+        Ram Vegesna <ram.vegesna@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-security-module@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+        target-devel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH] scsi: elx: libefc: Prefer kcalloc over open coded arithmetic
+Date:   Wed, 22 Sep 2021 00:45:21 -0400
+Message-Id: <163228527480.25516.16772825174305781427.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210905062448.6587-1-len.baker@gmx.com>
+References: <20210905062448.6587-1-len.baker@gmx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA0PR11CA0154.namprd11.prod.outlook.com
+ (2603:10b6:806:1bb::9) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
+MIME-Version: 1.0
+Received: from ca-mkp.mkp.ca.oracle.com (138.3.201.9) by SA0PR11CA0154.namprd11.prod.outlook.com (2603:10b6:806:1bb::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.14 via Frontend Transport; Wed, 22 Sep 2021 04:45:35 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cab41a42-76f1-444a-6019-08d97d83d217
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4456:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <PH0PR10MB4456D7E142522D4AE0117F718EA29@PH0PR10MB4456.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LzCK+I2jEZkopVDetiOQu0TP/4LCkgTvTDSzX1JhfqQE+ECfiLv3tI5U4a6VtCZogOUKn+kMOS+sTPE3eHqcJoA9YJHQfZ+YdU08nzbKoPzdJcGyosJREWF35IfAIUBorDYVzl3OS+1U3GHNSzKgfECJuVR+/li6qoQPAtO2vpF35phwYIQlzzRrO6slh3rKM3fZXt1BLaPk50x+R4CzJWEJLP0MbZ4QqCk1pdIrU0+cI8EAmTpBB1FEcv3utn6L6KgURav/tKlid3tqgL+gzY89OnXmIH55908DbQJ71ZzWgQZwNUYn1svm1WGC8k+4l6rlA4/22xqFQWozk1UYQ8vF2KCYdbPlxzuufaV+HjEx4VekkBF3Qqt2RZ0CXMDJtprd2dRTvmMSYFHVhZxXKOR0vtsMB6SVZD1XmmOLZsBa//By/NqKfWLDgdOwv1NbLxg6gM4BDeuqGqTxW1X1pjUPJ9zdsI+3d9uKhBJOQ9xYVtEZsgiXyRYA35CcZII/4I6PPKYmCfmWDgy4dpfYnq+VL602iVoe5deNb5Bb7dDrnUL7QgFpp5QOmKfI05ZOyC93geffdYvR9aDsz+ycygr+KAoQj50GhELnUTCgKVsaeiOrWOa7BXcF6CSadUV3w0tyyUqlrCJrnDYWSF9G4DT+w8vWvN0+BjaGB776+HaIXjw0jcbbJeWsmsiMzivNMq+L+9iAThJDY2CTV3p0KivZl3FBXhNa43Q1Z+lnCLBowvA9Q7jkAXk3R4Pf8xcdYrp2irkvvQYYNFDV51vGQ606Pko/hh7rPtEQeMGQxK0=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(83380400001)(966005)(36756003)(86362001)(2616005)(4326008)(508600001)(2906002)(8676002)(6666004)(66476007)(38100700002)(26005)(52116002)(103116003)(66556008)(5660300002)(66946007)(7416002)(7696005)(6486002)(4744005)(186003)(38350700002)(8936002)(110136005)(54906003)(316002)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SCt1bjNsbXpjRkFQeVRwdzRGRzZENi95NEpRbXhrMXRBeUx3S3NGNkVkTE9k?=
+ =?utf-8?B?SzlmL1pQZmhjcWFhSlF3c3dTYVdORXpBTnVET3lVYm4zZjlLZHdRcWsxWUNS?=
+ =?utf-8?B?N2h0TE9MS0Jyd0wxUXZsSlNVT01MeHlDK1N2REc5Z3cyRnRxVE42a0l4bldk?=
+ =?utf-8?B?ZGF3NjVvRXZmNjNsWTRiUTBsM3A4bmlaMERxbTBxTWE3WjdkN0FjQTZvMWZB?=
+ =?utf-8?B?S1VZQ1hsTk9uTU13c0VDNXdOK1lJUzdHZ1BzWDdKZGJZbU41YXRueGNYZ3NL?=
+ =?utf-8?B?M2U0dURtTEs0dWdwSjdzNTBLYlpZLzBJeGFlVENwZk1NT1hRNGdVbjc3YUpw?=
+ =?utf-8?B?V3E4OVVQZ2NZZ3IrL3ZwRmlMNW9DMitOWHFHUkZCd2ljMENzcW4vbDNQSGlQ?=
+ =?utf-8?B?Q29iKzR3N2dkVXEvUjFuTFBCWWxBNHVxbjkrZkdXQWp6T3RGellvYTBrMWMw?=
+ =?utf-8?B?ZDJrWko1YlpybFkxUTZJdnQ0eGNMbjhuK0oyMmpyR2dncUp6RGJvR3h1a0JP?=
+ =?utf-8?B?TFVmaFNWM0dVck91TGNzbHowZXRlYlIzaXk2dWRpTm1VMUo0Z2VlL1hKV2Jy?=
+ =?utf-8?B?elNEYzBuYjhZSjRBMHU3RGFqRWEvK0NDT0cwZkJ3UXBuMkJqZXhxdGR5eVMz?=
+ =?utf-8?B?R0ZZNmhQQlNhUFU3TW5USnlSZENXUS9ZbDJaTjJEbFN4M1BuOXBnRlJmNWJp?=
+ =?utf-8?B?cTBRMEVWb1h2NmUyL0ZCN09yZGM3K1oyUkplMW5LaU1icmoyOWVIeDVoUTE4?=
+ =?utf-8?B?a05KN2J4SXJ3bTJ5NTAyTWhjNjBtRTVndlhmZmkwRFFzRDZid1VOY21IVmpY?=
+ =?utf-8?B?UVBIVWdLUnQ1ZEE2NTlUOHJUNUQ5eThqbzJWNUs1YmZXc0JvVm5RSHNwc3du?=
+ =?utf-8?B?bitBQ2FadGhXNExmYXhxeW5nRjlUK0htVDN4YVJvQ0NUZ3k4ekV0UWowQk9r?=
+ =?utf-8?B?NmYzL0pzRm5HckMwOG8wWVI3WmFMd1Z4cU1pbTRSOUdGRXZUdTFEYTFFVVlM?=
+ =?utf-8?B?VmhnT0dBOEdXeTllZExMWTV3Q2NDdGZSM3o2YURrWUZEWFFvbitsK2Q2SHNs?=
+ =?utf-8?B?ZWx2UHNHZ0FsYmcvR2txeklTZXkvbTY3T0I4TE1lR0NaaktFYm9CUDhaQmRR?=
+ =?utf-8?B?SitKc3V0enZnTU41czBONGdjdkVEM1JjMHRyZVQybkw2bjN0b3ZYMVp2Q24x?=
+ =?utf-8?B?MkRCejIreC8vMWZIS0ZMalVjSWx0Z0lnaUswRkFQaUZ4WVhqcHdvZTlzN3RX?=
+ =?utf-8?B?M2djQUJreklCYllzVnBwNG5MeUNIMkNwWEl6SS82ZWpyQi9yaXdzRVQ2OEsr?=
+ =?utf-8?B?R0NsaEZjYlNTb1AreU0raGhJdUhhVzByeE9hTGgvY1AzNFI3WGpFNmpBMGov?=
+ =?utf-8?B?SmhKQ25BYkxCTktGTW9NdFlORVlyaVdkKzV6dDlzaG81aGx1SUFHWXFiSnQv?=
+ =?utf-8?B?ZFJKdHJTbHJqQytBcEhJTUdweWtHSVd1M0l4eDczMW1JVGZhczFUTWZNQ0Z3?=
+ =?utf-8?B?cHpvMlFxUytXZ3hjQkQ2Z3NCSzZLV3J5cVhNMFBUcytaY2RpS1RLYlUzNDJG?=
+ =?utf-8?B?Zjc1SHpsdlpXUzdWZ0F4TjFrV1o5eXdjOHZ4Q2I4U0ZEMFMvVDFqcktYYmoy?=
+ =?utf-8?B?VDhGNHdMWWIweXQwSnhCNFp5aTVrenBzNTE0MlBxL0NlaERtUDRxTkx2YXA2?=
+ =?utf-8?B?b3BmWlZMSTY4UWtiVm1hZDZWNk9mVXZhR01PdXhxVUZGRWZUcVdkRE5lNldo?=
+ =?utf-8?Q?IusRvVI+DQ9JcF18qhknu3fPghkhvIWCSo82q77?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cab41a42-76f1-444a-6019-08d97d83d217
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2021 04:45:37.0054
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oB40l12amGwds45bin2+PorVs7hyV+ayAPfMJ0v6jA67cju1eTYFBDA8LBrAKtI1rxV24fdg9Ce4jL8ofr6nSxz1JAngai56gXM5y/mY9Gg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4456
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10114 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=829 bulkscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109200000 definitions=main-2109220030
+X-Proofpoint-GUID: lXy7zmNDOnqOQPzVbwkCBLtm-NBovlGe
+X-Proofpoint-ORIG-GUID: lXy7zmNDOnqOQPzVbwkCBLtm-NBovlGe
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 21 Sept 2021 at 09:50, Stephen Kitt <steve@sk2.org> wrote:
->
-> This has served its purpose and is no longer used. All usercopy
-> violations appear to have been handled by now, any remaining
-> instances (or new bugs) will cause copies to be rejected.
->
-> This isn't a direct revert of commit 2d891fbc3bb6 ("usercopy: Allow
-> strict enforcement of whitelists"); since usercopy_fallback is
-> effectively 0, the fallback handling is removed too.
->
-> This also removes the usercopy_fallback module parameter on
-> slab_common.
->
-> Link: https://github.com/KSPP/linux/issues/153
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/powerpc/configs/skiroot_defconfig |  1 -
+On Sun, 5 Sep 2021 08:24:48 +0200, Len Baker wrote:
 
-For the defconfig change:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> [...]
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+Applied to 5.16/scsi-queue, thanks!
 
-Cheers,
+[1/1] scsi: elx: libefc: Prefer kcalloc over open coded arithmetic
+      https://git.kernel.org/mkp/scsi/c/0a5e20fc8ca7
 
-Joel
-
->  include/linux/slab.h                   |  2 --
->  mm/slab.c                              | 13 -------------
->  mm/slab_common.c                       |  8 --------
->  mm/slub.c                              | 14 --------------
->  security/Kconfig                       | 14 --------------
->  6 files changed, 52 deletions(-)
->
-> diff --git a/arch/powerpc/configs/skiroot_defconfig b/arch/powerpc/configs/skiroot_defconfig
-> index b806a5d3a695..c3ba614c973d 100644
-> --- a/arch/powerpc/configs/skiroot_defconfig
-> +++ b/arch/powerpc/configs/skiroot_defconfig
-> @@ -275,7 +275,6 @@ CONFIG_NLS_UTF8=y
->  CONFIG_ENCRYPTED_KEYS=y
->  CONFIG_SECURITY=y
->  CONFIG_HARDENED_USERCOPY=y
-> -# CONFIG_HARDENED_USERCOPY_FALLBACK is not set
->  CONFIG_HARDENED_USERCOPY_PAGESPAN=y
->  CONFIG_FORTIFY_SOURCE=y
->  CONFIG_SECURITY_LOCKDOWN_LSM=y
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 0c97d788762c..5b21515afae0 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -142,8 +142,6 @@ struct mem_cgroup;
->  void __init kmem_cache_init(void);
->  bool slab_is_available(void);
->
-> -extern bool usercopy_fallback;
-> -
->  struct kmem_cache *kmem_cache_create(const char *name, unsigned int size,
->                         unsigned int align, slab_flags_t flags,
->                         void (*ctor)(void *));
-> diff --git a/mm/slab.c b/mm/slab.c
-> index d0f725637663..4d826394ffcb 100644
-> --- a/mm/slab.c
-> +++ b/mm/slab.c
-> @@ -4207,19 +4207,6 @@ void __check_heap_object(const void *ptr, unsigned long n, struct page *page,
->             n <= cachep->useroffset - offset + cachep->usersize)
->                 return;
->
-> -       /*
-> -        * If the copy is still within the allocated object, produce
-> -        * a warning instead of rejecting the copy. This is intended
-> -        * to be a temporary method to find any missing usercopy
-> -        * whitelists.
-> -        */
-> -       if (usercopy_fallback &&
-> -           offset <= cachep->object_size &&
-> -           n <= cachep->object_size - offset) {
-> -               usercopy_warn("SLAB object", cachep->name, to_user, offset, n);
-> -               return;
-> -       }
-> -
->         usercopy_abort("SLAB object", cachep->name, to_user, offset, n);
->  }
->  #endif /* CONFIG_HARDENED_USERCOPY */
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index a4a571428c51..925b00c1d4e8 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -37,14 +37,6 @@ LIST_HEAD(slab_caches);
->  DEFINE_MUTEX(slab_mutex);
->  struct kmem_cache *kmem_cache;
->
-> -#ifdef CONFIG_HARDENED_USERCOPY
-> -bool usercopy_fallback __ro_after_init =
-> -               IS_ENABLED(CONFIG_HARDENED_USERCOPY_FALLBACK);
-> -module_param(usercopy_fallback, bool, 0400);
-> -MODULE_PARM_DESC(usercopy_fallback,
-> -               "WARN instead of reject usercopy whitelist violations");
-> -#endif
-> -
->  static LIST_HEAD(slab_caches_to_rcu_destroy);
->  static void slab_caches_to_rcu_destroy_workfn(struct work_struct *work);
->  static DECLARE_WORK(slab_caches_to_rcu_destroy_work,
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 3f96e099817a..77f53e76a3c3 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -4125,7 +4125,6 @@ void __check_heap_object(const void *ptr, unsigned long n, struct page *page,
->  {
->         struct kmem_cache *s;
->         unsigned int offset;
-> -       size_t object_size;
->         bool is_kfence = is_kfence_address(ptr);
->
->         ptr = kasan_reset_tag(ptr);
-> @@ -4158,19 +4157,6 @@ void __check_heap_object(const void *ptr, unsigned long n, struct page *page,
->             n <= s->useroffset - offset + s->usersize)
->                 return;
->
-> -       /*
-> -        * If the copy is still within the allocated object, produce
-> -        * a warning instead of rejecting the copy. This is intended
-> -        * to be a temporary method to find any missing usercopy
-> -        * whitelists.
-> -        */
-> -       object_size = slab_ksize(s);
-> -       if (usercopy_fallback &&
-> -           offset <= object_size && n <= object_size - offset) {
-> -               usercopy_warn("SLUB object", s->name, to_user, offset, n);
-> -               return;
-> -       }
-> -
->         usercopy_abort("SLUB object", s->name, to_user, offset, n);
->  }
->  #endif /* CONFIG_HARDENED_USERCOPY */
-> diff --git a/security/Kconfig b/security/Kconfig
-> index 0ced7fd33e4d..d9698900c9b7 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -163,20 +163,6 @@ config HARDENED_USERCOPY
->           or are part of the kernel text. This kills entire classes
->           of heap overflow exploits and similar kernel memory exposures.
->
-> -config HARDENED_USERCOPY_FALLBACK
-> -       bool "Allow usercopy whitelist violations to fallback to object size"
-> -       depends on HARDENED_USERCOPY
-> -       default y
-> -       help
-> -         This is a temporary option that allows missing usercopy whitelists
-> -         to be discovered via a WARN() to the kernel log, instead of
-> -         rejecting the copy, falling back to non-whitelisted hardened
-> -         usercopy that checks the slab allocation size instead of the
-> -         whitelist size. This option will be removed once it seems like
-> -         all missing usercopy whitelists have been identified and fixed.
-> -         Booting with "slab_common.usercopy_fallback=Y/N" can change
-> -         this setting.
-> -
->  config HARDENED_USERCOPY_PAGESPAN
->         bool "Refuse to copy allocations that span multiple pages"
->         depends on HARDENED_USERCOPY
->
-> base-commit: 368094df48e680fa51cedb68537408cfa64b788e
-> --
-> 2.30.2
->
+-- 
+Martin K. Petersen	Oracle Linux Engineering
