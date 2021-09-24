@@ -2,174 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DE4C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 08:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53424C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 10:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAAC1610CF
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 08:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCE260EE2
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 10:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244655AbhIXIVH (ORCPT
+        id S245652AbhIXKzP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Sep 2021 04:21:07 -0400
-Received: from mout.gmx.net ([212.227.17.21]:57777 "EHLO mout.gmx.net"
+        Fri, 24 Sep 2021 06:55:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244581AbhIXIVG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Sep 2021 04:21:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1632471485;
-        bh=C777DmMNW5eFDnLiRSawdY+pQLiqLPZy/xITCio022Y=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=iBnmuJjEIdWjIMXv4M764Ql30gX9rM+bLX2x305od8qctpqHa/t86lw2sQh4GxIU3
-         b7Y6grtcw+QV2f0V+sBUNz5fYUaZyKrkXOzJtcJqQ0noFj/aQjVpqQ1ZzLjBNeFZX5
-         AvgqoiwrTh+nytOtUbqajzzskW4HfAy/Hhx6ZOfE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.20.60] ([92.116.164.225]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N95iR-1mxdyU18OF-0168Pm; Fri, 24
- Sep 2021 10:18:05 +0200
-Subject: Re: [PATCH 1/3] Revert "proc/wchan: use printk format instead of
- lookup_symbol_name()"
-To:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel test robot <oliver.sang@intel.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Jann Horn <jannh@google.com>, stable@vger.kernel.org,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Tycho Andersen <tycho@tycho.pizza>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Stefan Metzmacher <metze@samba.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ohhoon Kwon <ohoono.kwon@samsung.com>,
-        YiFei Zhu <yifeifz2@illinois.edu>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        x86@kernel.org, linux-fsdevel@vger.kernel.org
-References: <20210924062006.231699-1-keescook@chromium.org>
- <20210924062006.231699-2-keescook@chromium.org>
-From:   Helge Deller <deller@gmx.de>
-Message-ID: <16ebd28d-9d99-d217-c62f-03d7c158ac84@gmx.de>
-Date:   Fri, 24 Sep 2021 10:17:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S244742AbhIXKzO (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 24 Sep 2021 06:55:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D53B61107;
+        Fri, 24 Sep 2021 10:53:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632480821;
+        bh=X3iFV4UPkFtW/wAMFdMZ6F4j16STunkrtRPHPmEE4hw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DEF/0Z0fl+rhizpmcrV8fQndAuSJVFtWcDBbyz3agsDkUVTpX5mrVOvgIiKtk81QQ
+         5/yz5R8BRCnEqio5PxV537tlhy0QQnbqptdIIfsRia03uPC6xidB0QNBdzdsKHyEwJ
+         ZmQFreX+O3Rg29MKwimIHG7VssqMuc0Aceh7OZ6eFHhGQ5utEagBwSXDTbff3oG3xW
+         lbJNj/dQEOwARNAQu6yvU6tsOBcSuDw5qld+dZJYHvP4mbgz/IhQYoTQH/aq2Aa1G1
+         mouf30CAefETXVu7SypcQ/v3Uj1cqBNXO72HQaj/fg/PHlRbSexOS6HukeT10Yr16u
+         cEvSYJ6SdY45g==
+Date:   Fri, 24 Sep 2021 05:57:33 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
+Cc:     linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] firewire: cdev: Fix function cast error
+Message-ID: <20210924105733.GA78013@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20210924062006.231699-2-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:juNbC6f/1V5binVA0KJ+XuiJKiYMyApey/Ddho5X3mMoBMfQwDk
- TuA2vwTlZ22jHEaxbKGfwAnXqMNEJcq7lcTE1z6JlIZfoqoB6wwJKwPPPnvo4ASROGCGJ9S
- 2FexoaDzFAtZ14qC0PhsAK2wZDuJh2HJzMF2UFSOv+z0v3j/3h/jleoXbMW9zOIScnf9ata
- /QBIa5jJW66aBl8CifzMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XPWXjf+Xlr0=:vwBxSfjavDx3REh940xA63
- Hs1OcsjOsenOWFYHMemjan1JseBv+dLI6jVHYABszdCOPNnRuIs9a1fuTNal/oe2JsEDClm0R
- Ij9zv17urwqhMSNRORqPVZ5eYknWjXljLtsckeaXskXjwOr+i8Lte0S5SKyCWkS1n1UQHX4Xd
- 7C6wqnXKARnbzyrkiVGlTVe6pm+kjgcZttYxhUfp+y3MoyGMw37XrUxHByBynTRuA6c21ledO
- OhzCHC/lACgaQYIYYxadSbhCVOU6IiUrCBBiW1np27Mz0ImwFno/oWO+9etzoHKaRmNl/0Hmb
- IZWE/abNUQuqMEUPpPw93i/fydM+hgId5Vkq+uSwX6k6OSuMlEClf3SHvNWXIhfD5km45RebJ
- VqFjvx1zW0xQu+gmljFuAEoWH0oSQR1AKGCge3DsAsYKODoQaFY6G3aGVhbMDP7rsGX2YvxEi
- cOWufHhrCqbqkhKqpgtyotx8y5xfbDWFieJIGobKUPfjJS/z0vJqXLeL+JB4+8Nxm4EbgP71S
- HRsi/X4mLgAZ3V0yv6WJUXbJf5U2l9HE4ozvk4hFVcB0tP9XhSSLceLGMV/u2+GCLzII3/imj
- lF3JXXngzziQAQldL+6wKK+Qz9ImV64LaQQSMNF6Gedt6quESPLU1GfEOtpMq9jlOqtbdQs2+
- j2LtXE8ZtJHTMBe131eBMg8m2fAaidASyzQr/zAWn362fvNKnwFzFT9EhIgH8d3BfAYBTRtnu
- EUlx+AHHMmmP8cdCXoDRz8zuLc0oyD1bZUhTY36DJ4vXKDwYe3qYfKJqXTF4YUWhXVO9tdHFT
- pxvKMfFExEIQL2Ro/naobDhuIw3h8GfDfXMj12Q4DBqg5ppmFpATx0OND3CtoGhEqtLNoVhPp
- 6Eth3irNiSGv1yZlZL9hWcJS5FJ58T2eXccp5fM+NEafWC08GERPpF305TK9Zsq5o8dd2iHsi
- CS61OnJApUnywQRVbs7k5IFL/7S+yyTZ9UyyhXIP8ixTBrs3dzzG7sU5svUuyRYMgpu8sfuMp
- scTjV1wGCDFSVnozCCt7Cy+XPHPOqOb2zZ9jk8V0LTI7zq3jLVqey8M4BYQs6iat52LqJUY44
- hOEEO/8sARmMWY=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/24/21 8:20 AM, Kees Cook wrote:
-> This reverts commit 152c432b128cb043fc107e8f211195fe94b2159c.
->
-> When a kernel address couldn't be symbolized for /proc/$pid/wchan, it
-> would leak the raw value, a potential information exposure. This is a
-> regression compared to the safer pre-v5.12 behavior.
+Fix the following function cast error when building with
+-Wcast-function-type:
 
-Instead of reverting, another possibility might be to depend on
-CONFIG_KALLSYMS before using the %ps format specifier and print "0" otherw=
-ise.
-If it can't be symbolized it's most likely not a valid kernel address
-and as such wouldn't leak anything....
-But well,
-Acked-by: Helge Deller <deller@gmx.de>
+drivers/firewire/core-cdev.c: In function ‘ioctl_create_iso_context’:
+drivers/firewire/core-cdev.c:985:8: error: cast between incompatible function types from ‘void (*)(struct fw_iso_context *, dma_addr_t,  void *)’ {aka ‘void (*)(struct fw_iso_context *, long long unsigned int,  void *)’} to ‘void (*)(struct fw_iso_context *, u32,  size_t,  void *, void *)’ {aka ‘void (*)(struct fw_iso_context *, unsigned int,  long unsigned int,  void *, void *)’} [-Werror=cast-function-type]
+  985 |   cb = (fw_iso_callback_t)iso_mc_callback;
+      |        ^
+cc1: all warnings being treated as errors
 
-Helge
+This helps with the ongoing efforts to globally enable -Wcast-function-type,
+so when Control Flow Integrity checking lands in the kernel, incompatible
+function type casting doesn't interfere with it.
 
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Link: https://lore.kernel.org/all/20210103142726.GC30643@xsang-OptiPlex-=
-9020/
-> Reported-by: Vito Caputo <vcaputo@pengaru.com>
-> Link: https://lore.kernel.org/lkml/20210921193249.el476vlhg5k6lfcq@shell=
-s.gnugeneration.com/
-> Reported-by: Jann Horn <jannh@google.com>
-> Link: https://lore.kernel.org/lkml/CAG48ez2zC=3D+PuNgezH53HBPZ8CXU5H=3Dv=
-kWx7nJs60G8RXt3w0Q@mail.gmail.com/
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   fs/proc/base.c | 19 +++++++++++--------
->   1 file changed, 11 insertions(+), 8 deletions(-)
->
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 533d5836eb9a..1f394095eb88 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -67,6 +67,7 @@
->   #include <linux/mm.h>
->   #include <linux/swap.h>
->   #include <linux/rcupdate.h>
-> +#include <linux/kallsyms.h>
->   #include <linux/stacktrace.h>
->   #include <linux/resource.h>
->   #include <linux/module.h>
-> @@ -386,17 +387,19 @@ static int proc_pid_wchan(struct seq_file *m, stru=
-ct pid_namespace *ns,
->   			  struct pid *pid, struct task_struct *task)
->   {
->   	unsigned long wchan;
-> +	char symname[KSYM_NAME_LEN];
->
-> -	if (ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
-> -		wchan =3D get_wchan(task);
-> -	else
-> -		wchan =3D 0;
-> +	if (!ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
-> +		goto print0;
->
-> -	if (wchan)
-> -		seq_printf(m, "%ps", (void *) wchan);
-> -	else
-> -		seq_putc(m, '0');
-> +	wchan =3D get_wchan(task);
-> +	if (wchan && !lookup_symbol_name(wchan, symname)) {
-> +		seq_puts(m, symname);
-> +		return 0;
-> +	}
->
-> +print0:
-> +	seq_putc(m, '0');
->   	return 0;
->   }
->   #endif /* CONFIG_KALLSYMS */
->
+Link: https://github.com/KSPP/linux/issues/20
+Link: https://github.com/KSPP/linux/issues/102
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/firewire/core-cdev.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+index fb6c651214f3..fd2923599667 100644
+--- a/drivers/firewire/core-cdev.c
++++ b/drivers/firewire/core-cdev.c
+@@ -957,7 +957,10 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+ {
+ 	struct fw_cdev_create_iso_context *a = &arg->create_iso_context;
+ 	struct fw_iso_context *context;
+-	fw_iso_callback_t cb;
++	union callback {
++		fw_iso_callback_t sc;
++		fw_iso_mc_callback_t mc;
++	} cb;
+ 	int ret;
+ 
+ 	BUILD_BUG_ON(FW_CDEV_ISO_CONTEXT_TRANSMIT != FW_ISO_CONTEXT_TRANSMIT ||
+@@ -970,7 +973,7 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+ 		if (a->speed > SCODE_3200 || a->channel > 63)
+ 			return -EINVAL;
+ 
+-		cb = iso_callback;
++		cb.sc = iso_callback;
+ 		break;
+ 
+ 	case FW_ISO_CONTEXT_RECEIVE:
+@@ -978,11 +981,11 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+ 		    a->channel > 63)
+ 			return -EINVAL;
+ 
+-		cb = iso_callback;
++		cb.sc = iso_callback;
+ 		break;
+ 
+ 	case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
+-		cb = (fw_iso_callback_t)iso_mc_callback;
++		cb.mc = iso_mc_callback;
+ 		break;
+ 
+ 	default:
+@@ -990,7 +993,7 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+ 	}
+ 
+ 	context = fw_iso_context_create(client->device->card, a->type,
+-			a->channel, a->speed, a->header_size, cb, client);
++			a->channel, a->speed, a->header_size, cb.sc, client);
+ 	if (IS_ERR(context))
+ 		return PTR_ERR(context);
+ 	if (client->version < FW_CDEV_VERSION_AUTO_FLUSH_ISO_OVERFLOW)
+-- 
+2.27.0
 
