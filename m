@@ -2,203 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7948CC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 17:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E3FC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 20:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F95661250
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 17:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E838611C8
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 20:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344944AbhIXRTr (ORCPT
+        id S1348432AbhIXUYt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Sep 2021 13:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49434 "EHLO
+        Fri, 24 Sep 2021 16:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347521AbhIXRTo (ORCPT
+        with ESMTP id S1348433AbhIXUYj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Sep 2021 13:19:44 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E816C061613
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Sep 2021 10:18:11 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id r4so7235400ybp.4
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Sep 2021 10:18:11 -0700 (PDT)
+        Fri, 24 Sep 2021 16:24:39 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F2CC06161E
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Sep 2021 13:23:06 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id c1so9806941pfp.10
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Sep 2021 13:23:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QMNH1n+J9Sdp/Dhc4InVJUy+tIIlUR+ChPt/tLgskEw=;
-        b=aLE0RcKB98oARudLo8/YXOn4Q6uewwPUUzHKjKmNvi27bu83jqBw7XkYFRQjhjhSjF
-         CmWoUrwGv4OPfvNRARxDJ2tYg4esu97zljUEruRbbT6d1d+7ocUYQY0NkIi6pHpoto09
-         bZgkYxQrIHVUWdRxrDHWOLKfwh8WGEdZSXqpapmHU3/CB7k+P2tkUh6GBmMKVfUXV7AC
-         dRnd5HgoCUET/dQhsYo1aVEUvpEvSRgfmga0bn4HOmyKkrZiv+BUuqn+q72H0NKAC3GV
-         z3b+SxR7Qm/7K3rg6L/j+RMJ88eLPSQpYq5Mi4mGkTCV3Pnowd6c3NqmkrhwHZBSZedn
-         va1Q==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q2XJIyuLuPiwmfllhtQcLNWsdYZDAyHGRwxHWCUSgAk=;
+        b=dwet/Cnw4R1aEbpy6KKiP2uMHrE7rz5g45N9sRNoGiAOaoBXG6TiDEF6Z46hZRGCqo
+         5zHAHo1WSf7QEhK7bgTj80Tnmu7l6uaSssAKIN8s8Zz1RV2kzaBOGRVUC1XBnWQD+khd
+         ysNjOrbrIxqQpk7g+bLr59JFMZKg7phwnjCzc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QMNH1n+J9Sdp/Dhc4InVJUy+tIIlUR+ChPt/tLgskEw=;
-        b=y/51G5RygzpDc3QMOrL6Kij4vAV3orfr1lHOK49iwXJFepp+myt6dY8E7zlfQEHQbn
-         /IoAqxeC5cuIHiMh3xuiYg3RuV7P+SAoV5TsJD+ogPT8E/TMifuT24HJ8d0a/eKyKSBK
-         GPgC56TVjpV8pRdA+8uadMambiybwQD8/935pgitJ7wdAKYBIHp0kt1Bc3GRxkZZ7RBI
-         fDcbZT27cT1fPphgxMmsN+x7Ww2Ii/LkmSyanpol+jSHE9c1KmPFRXQphHUB7zZS1Vct
-         4xv+5pmk80X2ug3QAK4nNq8ABDi8RIX9eGRCbmlDLXnEq+RazDid4DYq8dQS/0DHk43y
-         yYXA==
-X-Gm-Message-State: AOAM532AvQD0J6JCB9UqROtgQ+N1RdvSBFYSh9ZKITyCCNvyoT8eJ4mZ
-        MnKJs+Ds33AwTj3nc6znKjlOADSr4IFE4ptrkGPFUA==
-X-Google-Smtp-Source: ABdhPJzyKdCVKSFCibtqbyhxpBaijFfu673x+3GDeHkRohDZ3CDX23jeamrsn3495406nZjIQd9iKS2aGoduBpo5j1c=
-X-Received: by 2002:a25:3545:: with SMTP id c66mr14231452yba.317.1632503889886;
- Fri, 24 Sep 2021 10:18:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210903021326.206548-1-keescook@chromium.org>
- <20210904175511.oijbn4f2tzghwk7l@treble> <20210905165738.7e40d6e2cba3dd0724f85f3a@kernel.org>
-In-Reply-To: <20210905165738.7e40d6e2cba3dd0724f85f3a@kernel.org>
-From:   Marios Pomonis <pomonis@google.com>
-Date:   Fri, 24 Sep 2021 10:17:58 -0700
-Message-ID: <CAKXAmdgS3SL_qyjzjY32_DXe3WVTN+O=wYwJ9vkUXKhjmt87fA@mail.gmail.com>
-Subject: Re: [PATCH] x86/unwind/orc: Handle kretprobes_trampoline
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
-        Kristen C Accardi <kristen.c.accardi@intel.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q2XJIyuLuPiwmfllhtQcLNWsdYZDAyHGRwxHWCUSgAk=;
+        b=f4KSS9zp/OV/L+f53r2JPg6o+EUpsWKsXdl3zjus9wQAUc4Xt0uMECeNUprh9IWyGQ
+         gcX1XrrdMK7k5EucJXW6xnfRPVQ+xEEE6CJTD3fKOLx3gFFip1yPAG2hUQ8UfwfXjE3I
+         9kw4goG8iW2F3HRWhgfQJS5h454budPGJ8/DGToZXN0gCVroEGDbfd6CF+LfoZVqABcO
+         9PQuT//8+pHwOkdAEdFvh60dGIO4o7qdDD/Dw0jU1BjEbK2zzI+lVh4QnkItm8C6fUkZ
+         E1gSdK9oR1faUPe0Sj2JfKgVh6y0NTZpOwZCOEiqrECR9Be1P0wLISA2Bsadc24GcRoF
+         cvpQ==
+X-Gm-Message-State: AOAM533UVGQtkTTRV4jtmEipg5FjkFLC0/6+Ekc2yCzd/8hE9uqff+nZ
+        dCuQ9iF/IWU5rC1HGSVrqU1ixTZVEkoEPA==
+X-Google-Smtp-Source: ABdhPJzAt6+0yGWLndCymdd2PYackaA3Qavfcu+EpKhxYqBna1Gu7h3RCxZzyC9GOHKS6n5U0If8vg==
+X-Received: by 2002:aa7:956a:0:b0:447:96bd:8df5 with SMTP id x10-20020aa7956a000000b0044796bd8df5mr11475407pfq.35.1632514985663;
+        Fri, 24 Sep 2021 13:23:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b7sm9753023pfb.20.2021.09.24.13.23.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Sep 2021 13:23:05 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] docs: Explain the desired position of function attributes
+Date:   Fri, 24 Sep 2021 13:23:02 -0700
+Message-Id: <20210924202302.2335542-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2128; h=from:subject; bh=QTO9uSZ4HV31mzUIdTms9ofAmY44hmOsdsNfkP2Fupg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhTjOmqdYiF66xBc6cimfQFv5/sM6LDfv9vgQMC9tt aCg0zayJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYU4zpgAKCRCJcvTf3G3AJr/+EA CTKulsHK3K7wnbWaAIa1H/VS/2m0e1fD2UIdiDWcLlUJLBSEr+NVWOdNYsqNX6LHfz+3y5tkZAeqs3 Ckjjt0pnVCsaxGkYysQvJ+WSK0+Vh02+XRqbgAiN0xJOCGu48Iwtueb/wUtBiTDK5gx1gpwfYUpAkh KtqpozuINhMFHJ5WySY5WeK6FTN3nxF4FRV3gsglhsezNlcltWdSKx96DUKP4CRYldXM76KQScX9pT 0IrKxYS3c1rsghNJ/05YRNENK5kI2vKl0Hr18LQLxxHPyiozyiI8BVV5i8hv8T/01Qp0HJU6LtSYvK Mi66ElK5hLZkg6KW5DUc9ncv3mqP2uKb4FInLFMJzSNijpevw0dOyNMYGyBNQqKgNUSVNRWWyTLvDR rfTwjNGeEZP8sVMnDbP/cG6MIoOvq17cLZhVr/PYYjceF1Lt5E8CltzeBrWi2NKEyyLQZJjHSHgj7m Tbmj1KK9QCInrAZXoGowAsUDjfFOlLBnfWr3aiq8QT+vcsS03x4t8qy/uclMP9925SjzYoe7a/Hlmk 5k0VehFk2cX80K8BqHNy2wKKQfiJ3/+pr1QpDXahRKq9H2ErkrAkiZ6LcGOtlO3gqO70a1ULosoCya gsS+h6sSKlMK7KTerVGMKnVtja8h2W3yIHXy/jEMWnuryhWmPxf/oW2l3Wuw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Sep 5, 2021 at 12:57 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Sat, 4 Sep 2021 10:55:11 -0700
-> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> > On Thu, Sep 02, 2021 at 07:13:26PM -0700, Kees Cook wrote:
-> > > From: Marios Pomonis <pomonis@google.com>
-> > >
-> > > Fix a bug in the ORC unwinder when kretprobes has replaced a return
-> > > address with the address of `kretprobes_trampoline'. ORC mistakenly
-> > > assumes that the address in the stack is a return address and decrements
-> > > it by 1 in order to find the proper depth of the next frame.
-> > >
-> > > This issue was discovered while testing the FG-KASLR series[0][1] and
-> > > running the live patching test[2] that was originally failing[3].
-> > >
-> > > [0] https://lore.kernel.org/kernel-hardening/20200923173905.11219-1-kristen@linux.intel.com/
-> > > [1] https://github.com/KSPP/linux/issues/132
-> > > [2] https://github.com/lpechacek/qa_test_klp
-> > > [3] https://lore.kernel.org/lkml/alpine.LSU.2.21.2009251450260.13615@pobox.suse.cz/
-> > >
-> > > Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-> > > Signed-off-by: Marios Pomonis <pomonis@google.com>
-> > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > Cc: Alexander Lobakin <alexandr.lobakin@intel.com>
-> > > Cc: Kristen C Accardi <kristen.c.accardi@intel.com>
-> > > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> >
-> > I suspect this is fixed by:
-> >
-> >   https://lkml.kernel.org/r/162756755600.301564.4957591913842010341.stgit@devnote2
->
-> I think this can be a bit different issue. As far as I ran my test code
-> (same one in the above cover mail) with this fix, the stacktrace wasn't
-> fixed.
->
-> ffffffff812b7c80  r  vfs_read+0x0    [FTRACE]
-> ffffffff813b4cc0  r  full_proxy_read+0x0    [FTRACE]
-> # tracer: nop
-> #
-> # entries-in-buffer/entries-written: 3/3   #P:8
-> #
-> #                                _-----=> irqs-off
-> #                               / _----=> need-resched
-> #                              | / _---=> hardirq/softirq
-> #                              || / _--=> preempt-depth
-> #                              ||| /     delay
-> #           TASK-PID     CPU#  ||||   TIMESTAMP  FUNCTION
-> #              | |         |   ||||      |         |
->              cat-138     [002] ...1     9.488727: r_full_proxy_read_0: (vfs_read+0x99/0x190 <- full_proxy_read)
->              cat-138     [002] ...1     9.488732: <stack trace>
->  => kretprobe_trace_func+0x209/0x300
->  => kretprobe_dispatcher+0x9d/0xb0
->  => __kretprobe_trampoline_handler+0xc5/0x160
->  => trampoline_handler+0x44/0x60
->  => kretprobe_trampoline+0x25/0x50
->              cat-138     [002] ...1     9.488733: r_vfs_read_0: (ksys_read+0x68/0xe0 <- vfs_read)
->
-> Kees, can you also try to test with my series?
-> It should be able to be checked out with;
->
-> git clone git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git -b kprobes/kretprobe-stackfix-v10
->
-> Thank you,
+While discussing how to format the addition of various function
+attributes, some "unwritten rules" of ordering surfaced[1]. Capture a
+synthesized version of Linus's, Joe's, and Rasmus's recommendations on
+this subject for future reference.
 
-I tested this series in conjunction with FG-KASLR and klp_tc_12 fails.
-Therefore the patch of the cover mail fixes a different issue than the
-one of this series.
+[1] https://lore.kernel.org/mm-commits/CAHk-=wiOCLRny5aifWNhr621kYrJwhfURsa0vFPeUEm8mF0ufg@mail.gmail.com
 
-Thanks,
-Marios
-> >
-> >
-> > > ---
-> > >  arch/x86/kernel/unwind_orc.c | 12 +++++++++++-
-> > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> > > index a1202536fc57..8c5038b3b707 100644
-> > > --- a/arch/x86/kernel/unwind_orc.c
-> > > +++ b/arch/x86/kernel/unwind_orc.c
-> > > @@ -7,6 +7,7 @@
-> > >  #include <asm/unwind.h>
-> > >  #include <asm/orc_types.h>
-> > >  #include <asm/orc_lookup.h>
-> > > +#include <asm/kprobes.h>
-> > >
-> > >  #define orc_warn(fmt, ...) \
-> > >     printk_deferred_once(KERN_WARNING "WARNING: " fmt, ##__VA_ARGS__)
-> > > @@ -414,6 +415,15 @@ static bool get_reg(struct unwind_state *state, unsigned int reg_off,
-> > >     return false;
-> > >  }
-> > >
-> > > +static bool is_kretprobe_trampoline(unsigned long ip)
-> > > +{
-> > > +#ifdef     CONFIG_KRETPROBES
-> > > +   if (ip == (unsigned long)&kretprobe_trampoline)
-> > > +           return true;
-> > > +#endif
-> > > +   return false;
-> > > +}
-> > > +
-> > >  bool unwind_next_frame(struct unwind_state *state)
-> > >  {
-> > >     unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
-> > > @@ -540,7 +550,7 @@ bool unwind_next_frame(struct unwind_state *state)
-> > >             state->sp = sp;
-> > >             state->regs = NULL;
-> > >             state->prev_regs = NULL;
-> > > -           state->signal = false;
-> > > +           state->signal = is_kretprobe_trampoline(state->ip);
-> > >             break;
-> > >
-> > >     case UNWIND_HINT_TYPE_REGS:
-> > > --
-> > > 2.30.2
-> > >
-> >
-> > --
-> > Josh
-> >
->
->
-> --
-> Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Documentation/process/coding-style.rst | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+index 42969ab37b34..3559c34a9281 100644
+--- a/Documentation/process/coding-style.rst
++++ b/Documentation/process/coding-style.rst
+@@ -487,6 +487,33 @@ because it is a simple way to add valuable information for the reader.
+ Do not use the ``extern`` keyword with function prototypes as this makes
+ lines longer and isn't strictly necessary.
+ 
++When writing a function prototype, please keep the `order of elements regular
++<https://lore.kernel.org/mm-commits/CAHk-=wiOCLRny5aifWNhr621kYrJwhfURsa0vFPeUEm8mF0ufg@mail.gmail.com>`_. For example::
++
++	__must_check __printf(4, 5) __malloc __init
++	static __always_inline void *action(enum magic value, size_t size,
++					    u8 count, char *fmt, ...)
++	{
++		...
++	}
++
++The preferred order of elements for a function prototype is:
++
++- attributes on the preceding lines
++
++  - return type attributes (here, ``__must_check``)
++  - function parameter attributes (here, ``__printf(4,5)``)
++  - function behavior attributes (here, ``__malloc``)
++  - storage class attributes (here, ``__init``)
++
++- main function prototype on the next lines
++
++  - storage class (here, ``static __always_inline`` -- even though
++    ``__always_inline`` is technically an attribute, it is treated like
++    ``inline``)
++  - return type (here, ``void *``)
++  - function name (here, ``action``)
++  - function parameters (as described earlier: each with type and name)
+ 
+ 7) Centralized exiting of functions
+ -----------------------------------
+-- 
+2.30.2
+
