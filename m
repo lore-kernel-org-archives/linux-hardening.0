@@ -2,65 +2,43 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C8CC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 06:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DE4C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 08:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD6CB6124C
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 06:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAC1610CF
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 08:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244231AbhIXGYy (ORCPT
+        id S244655AbhIXIVH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Sep 2021 02:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244234AbhIXGW5 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Sep 2021 02:22:57 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455AFC0613CF
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Sep 2021 23:20:18 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id j15so4349087plh.7
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Sep 2021 23:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5WCcuqE5ATqYYHgSY5EFkOCbHMpsSpyspHQpjUNcv5Y=;
-        b=USHlnTajiNdM3P0VqSbAStEFaTYJqzSg2nm8ztUGra2sh16n3N01QtIiwG20m1d8E6
-         gGXkwSZDUKgQ0zX/AiF0MDejr+diNlb9FGN0Zhf6/ppRfEeSRs3ijG839x/k4a+/DPb9
-         JAS5vCtmD2lzaA67KHZaDPUzKqWnavkhSuSRA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5WCcuqE5ATqYYHgSY5EFkOCbHMpsSpyspHQpjUNcv5Y=;
-        b=bSioAHYZY9Q5TmjW8Zsg4yxqpkt2YBp0l93jIxTLL0g7dsxMG4vRpqVS7OgKlw4we/
-         qihT/1ooVrj/VT5Do2ZRqPdIhvS8S/gw1RNTn27XfXeHM3Cf9dWdoiu9mZg3ZfRCR+mD
-         C17r44tvcTht/vlmGnV9B4JL7udnUSvjdy7lnltLldrIBAfqm3ddhEfKd+vS+KBEX3/9
-         WEdkE3cKDXctWcIqKHO28kFTAZXyWfbxvBoecekZCebl9WY5GYerz5KDsLFwnpwlOQQJ
-         Jztw0ojOGQFxFOYuE/q+nBW9/bc6uNakt6Z0ah3F1iU+2UTuwqQDCcD2Vmb79Xi0oAi+
-         G03g==
-X-Gm-Message-State: AOAM533PSWqtwN4iz+8XN9Y/BbWBqaKfFwP5tlHLVhhIl1dNg8zLywPL
-        6cGvSl9+LTkevJzjQMUUjMe5ig==
-X-Google-Smtp-Source: ABdhPJzfo1VcZJOORPchCfryh29i7+7kZ0+4SqFHpt+xI9bVgeTLDt8+VLo9QSQzSiBPaVyH03zneg==
-X-Received: by 2002:a17:90a:460a:: with SMTP id w10mr270337pjg.132.1632464417651;
-        Thu, 23 Sep 2021 23:20:17 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e2sm7733726pfn.141.2021.09.23.23.20.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Sep 2021 23:20:16 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <oliver.sang@intel.com>,
+        Fri, 24 Sep 2021 04:21:07 -0400
+Received: from mout.gmx.net ([212.227.17.21]:57777 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244581AbhIXIVG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 24 Sep 2021 04:21:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1632471485;
+        bh=C777DmMNW5eFDnLiRSawdY+pQLiqLPZy/xITCio022Y=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=iBnmuJjEIdWjIMXv4M764Ql30gX9rM+bLX2x305od8qctpqHa/t86lw2sQh4GxIU3
+         b7Y6grtcw+QV2f0V+sBUNz5fYUaZyKrkXOzJtcJqQ0noFj/aQjVpqQ1ZzLjBNeFZX5
+         AvgqoiwrTh+nytOtUbqajzzskW4HfAy/Hhx6ZOfE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.20.60] ([92.116.164.225]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N95iR-1mxdyU18OF-0168Pm; Fri, 24
+ Sep 2021 10:18:05 +0200
+Subject: Re: [PATCH 1/3] Revert "proc/wchan: use printk format instead of
+ lookup_symbol_name()"
+To:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel test robot <oliver.sang@intel.com>,
         Vito Caputo <vcaputo@pengaru.com>,
         Jann Horn <jannh@google.com>, stable@vger.kernel.org,
-        Helge Deller <deller@gmx.de>,
         Qi Zheng <zhengqi.arch@bytedance.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         "Tobin C. Harding" <me@tobin.cc>,
@@ -83,78 +61,115 @@ Cc:     Kees Cook <keescook@chromium.org>,
         YiFei Zhu <yifeifz2@illinois.edu>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         x86@kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 1/3] Revert "proc/wchan: use printk format instead of lookup_symbol_name()"
-Date:   Thu, 23 Sep 2021 23:20:04 -0700
-Message-Id: <20210924062006.231699-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210924062006.231699-1-keescook@chromium.org>
 References: <20210924062006.231699-1-keescook@chromium.org>
+ <20210924062006.231699-2-keescook@chromium.org>
+From:   Helge Deller <deller@gmx.de>
+Message-ID: <16ebd28d-9d99-d217-c62f-03d7c158ac84@gmx.de>
+Date:   Fri, 24 Sep 2021 10:17:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1921; h=from:subject; bh=48rNinxgYhX0MMt+z9ytmuG8GHuOw2IZ5/XYplBnCcc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhTW4V3aAmkY3cNkeh8mx6qR4Wd4ABLM9VfEd7+ihZ Bx7vHSCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYU1uFQAKCRCJcvTf3G3AJnoXD/ 9+ie60XyWvsYauLjXuepEjG45dMmVfHo8TJw7OCNXZ2lTIe5ZGlf6Rx4OVEwn44n4dTUH8avAsCeKU tw8F1HJKdyRsL3NojF9a7XLqhrfqcnRaDkh/0BQejpIToUmgWFrtjFdKlKi0AfADEqEiMAqi7JHSZj lE1dM2Vxe1Paqq79EITBohvHgYebZ3WrG4OuDaw1Vxpy8DoeElQfU+5pcvDokYbIls5rQAnAH4AtUp TVlgob8YzJvqYTYCDyIb9yxXKG7NAaY16IKLIhgnxcu75kkVFJ9CDRNIj1YHu7bbosm4rYpS7zACEM 0X2UGQ5R4jMA2jP2jP5CeNr3hotGrlZ8rtZ/SkhcWdcgu6Br7T4YnrAo6o99k7unwja/t4wugVSbcc sm7ZrehQY2OqsB/m7q4ClgVslqFfVcJRTvXlrAQJoQuCp419WQ90WLqdWheX1fZmu+kILVE2c3Zz28 fSCWDwW2Tc/g4VxVVqtjtiZkSZxBkcfyzt0e9R/Aciv2Y+Z95MtshjPERDwO6BaarMumHYWcwmMG+Z uBdVf6svZlcVnsn3J4HEnNZlk47ez87SpbihS9Vud0VBydXWwYsXBTLtFi9yT/EzMIG1INYJ62cs1B w/bp15u2DxJQTfDAKRvzhLl7s/oYbFUbxJ+vogxQzPbKDzPi2NQ4UKbDo4wQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210924062006.231699-2-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:juNbC6f/1V5binVA0KJ+XuiJKiYMyApey/Ddho5X3mMoBMfQwDk
+ TuA2vwTlZ22jHEaxbKGfwAnXqMNEJcq7lcTE1z6JlIZfoqoB6wwJKwPPPnvo4ASROGCGJ9S
+ 2FexoaDzFAtZ14qC0PhsAK2wZDuJh2HJzMF2UFSOv+z0v3j/3h/jleoXbMW9zOIScnf9ata
+ /QBIa5jJW66aBl8CifzMA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XPWXjf+Xlr0=:vwBxSfjavDx3REh940xA63
+ Hs1OcsjOsenOWFYHMemjan1JseBv+dLI6jVHYABszdCOPNnRuIs9a1fuTNal/oe2JsEDClm0R
+ Ij9zv17urwqhMSNRORqPVZ5eYknWjXljLtsckeaXskXjwOr+i8Lte0S5SKyCWkS1n1UQHX4Xd
+ 7C6wqnXKARnbzyrkiVGlTVe6pm+kjgcZttYxhUfp+y3MoyGMw37XrUxHByBynTRuA6c21ledO
+ OhzCHC/lACgaQYIYYxadSbhCVOU6IiUrCBBiW1np27Mz0ImwFno/oWO+9etzoHKaRmNl/0Hmb
+ IZWE/abNUQuqMEUPpPw93i/fydM+hgId5Vkq+uSwX6k6OSuMlEClf3SHvNWXIhfD5km45RebJ
+ VqFjvx1zW0xQu+gmljFuAEoWH0oSQR1AKGCge3DsAsYKODoQaFY6G3aGVhbMDP7rsGX2YvxEi
+ cOWufHhrCqbqkhKqpgtyotx8y5xfbDWFieJIGobKUPfjJS/z0vJqXLeL+JB4+8Nxm4EbgP71S
+ HRsi/X4mLgAZ3V0yv6WJUXbJf5U2l9HE4ozvk4hFVcB0tP9XhSSLceLGMV/u2+GCLzII3/imj
+ lF3JXXngzziQAQldL+6wKK+Qz9ImV64LaQQSMNF6Gedt6quESPLU1GfEOtpMq9jlOqtbdQs2+
+ j2LtXE8ZtJHTMBe131eBMg8m2fAaidASyzQr/zAWn362fvNKnwFzFT9EhIgH8d3BfAYBTRtnu
+ EUlx+AHHMmmP8cdCXoDRz8zuLc0oyD1bZUhTY36DJ4vXKDwYe3qYfKJqXTF4YUWhXVO9tdHFT
+ pxvKMfFExEIQL2Ro/naobDhuIw3h8GfDfXMj12Q4DBqg5ppmFpATx0OND3CtoGhEqtLNoVhPp
+ 6Eth3irNiSGv1yZlZL9hWcJS5FJ58T2eXccp5fM+NEafWC08GERPpF305TK9Zsq5o8dd2iHsi
+ CS61OnJApUnywQRVbs7k5IFL/7S+yyTZ9UyyhXIP8ixTBrs3dzzG7sU5svUuyRYMgpu8sfuMp
+ scTjV1wGCDFSVnozCCt7Cy+XPHPOqOb2zZ9jk8V0LTI7zq3jLVqey8M4BYQs6iat52LqJUY44
+ hOEEO/8sARmMWY=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This reverts commit 152c432b128cb043fc107e8f211195fe94b2159c.
+On 9/24/21 8:20 AM, Kees Cook wrote:
+> This reverts commit 152c432b128cb043fc107e8f211195fe94b2159c.
+>
+> When a kernel address couldn't be symbolized for /proc/$pid/wchan, it
+> would leak the raw value, a potential information exposure. This is a
+> regression compared to the safer pre-v5.12 behavior.
 
-When a kernel address couldn't be symbolized for /proc/$pid/wchan, it
-would leak the raw value, a potential information exposure. This is a
-regression compared to the safer pre-v5.12 behavior.
+Instead of reverting, another possibility might be to depend on
+CONFIG_KALLSYMS before using the %ps format specifier and print "0" otherw=
+ise.
+If it can't be symbolized it's most likely not a valid kernel address
+and as such wouldn't leak anything....
+But well,
+Acked-by: Helge Deller <deller@gmx.de>
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Link: https://lore.kernel.org/all/20210103142726.GC30643@xsang-OptiPlex-9020/
-Reported-by: Vito Caputo <vcaputo@pengaru.com>
-Link: https://lore.kernel.org/lkml/20210921193249.el476vlhg5k6lfcq@shells.gnugeneration.com/
-Reported-by: Jann Horn <jannh@google.com>
-Link: https://lore.kernel.org/lkml/CAG48ez2zC=+PuNgezH53HBPZ8CXU5H=vkWx7nJs60G8RXt3w0Q@mail.gmail.com/
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/proc/base.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+Helge
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 533d5836eb9a..1f394095eb88 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -67,6 +67,7 @@
- #include <linux/mm.h>
- #include <linux/swap.h>
- #include <linux/rcupdate.h>
-+#include <linux/kallsyms.h>
- #include <linux/stacktrace.h>
- #include <linux/resource.h>
- #include <linux/module.h>
-@@ -386,17 +387,19 @@ static int proc_pid_wchan(struct seq_file *m, struct pid_namespace *ns,
- 			  struct pid *pid, struct task_struct *task)
- {
- 	unsigned long wchan;
-+	char symname[KSYM_NAME_LEN];
- 
--	if (ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
--		wchan = get_wchan(task);
--	else
--		wchan = 0;
-+	if (!ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
-+		goto print0;
- 
--	if (wchan)
--		seq_printf(m, "%ps", (void *) wchan);
--	else
--		seq_putc(m, '0');
-+	wchan = get_wchan(task);
-+	if (wchan && !lookup_symbol_name(wchan, symname)) {
-+		seq_puts(m, symname);
-+		return 0;
-+	}
- 
-+print0:
-+	seq_putc(m, '0');
- 	return 0;
- }
- #endif /* CONFIG_KALLSYMS */
--- 
-2.30.2
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Link: https://lore.kernel.org/all/20210103142726.GC30643@xsang-OptiPlex-=
+9020/
+> Reported-by: Vito Caputo <vcaputo@pengaru.com>
+> Link: https://lore.kernel.org/lkml/20210921193249.el476vlhg5k6lfcq@shell=
+s.gnugeneration.com/
+> Reported-by: Jann Horn <jannh@google.com>
+> Link: https://lore.kernel.org/lkml/CAG48ez2zC=3D+PuNgezH53HBPZ8CXU5H=3Dv=
+kWx7nJs60G8RXt3w0Q@mail.gmail.com/
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   fs/proc/base.c | 19 +++++++++++--------
+>   1 file changed, 11 insertions(+), 8 deletions(-)
+>
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 533d5836eb9a..1f394095eb88 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -67,6 +67,7 @@
+>   #include <linux/mm.h>
+>   #include <linux/swap.h>
+>   #include <linux/rcupdate.h>
+> +#include <linux/kallsyms.h>
+>   #include <linux/stacktrace.h>
+>   #include <linux/resource.h>
+>   #include <linux/module.h>
+> @@ -386,17 +387,19 @@ static int proc_pid_wchan(struct seq_file *m, stru=
+ct pid_namespace *ns,
+>   			  struct pid *pid, struct task_struct *task)
+>   {
+>   	unsigned long wchan;
+> +	char symname[KSYM_NAME_LEN];
+>
+> -	if (ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
+> -		wchan =3D get_wchan(task);
+> -	else
+> -		wchan =3D 0;
+> +	if (!ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
+> +		goto print0;
+>
+> -	if (wchan)
+> -		seq_printf(m, "%ps", (void *) wchan);
+> -	else
+> -		seq_putc(m, '0');
+> +	wchan =3D get_wchan(task);
+> +	if (wchan && !lookup_symbol_name(wchan, symname)) {
+> +		seq_puts(m, symname);
+> +		return 0;
+> +	}
+>
+> +print0:
+> +	seq_putc(m, '0');
+>   	return 0;
+>   }
+>   #endif /* CONFIG_KALLSYMS */
+>
 
