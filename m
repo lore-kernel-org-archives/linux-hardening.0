@@ -2,58 +2,38 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720FFC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 13:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42172C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 13:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 511DE6103B
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 13:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1434460F11
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 13:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344801AbhIXNkP (ORCPT
+        id S234673AbhIXN4L (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Sep 2021 09:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344482AbhIXNkO (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Sep 2021 09:40:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523B0C0614ED;
-        Fri, 24 Sep 2021 06:38:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5eUm/3BocFnd6jqw8ryBk2FLBZ1MGOAGbJXeqs1dooA=; b=BjCdxAtrap7UL9wsq/2CwCsa67
-        +ukKcoaDAqitwzOvAeOc6RHcdzo2P0AI2VV6yMliXQjzK/ZNnVikF1Ea0ohyOxLld/H5gnHBL5Ld7
-        oOLXqUG+NvkrCV4NAk9/00veGCfGKXNfOJ+Cw3Ijcg76dBS241OzsvjhsVX8kvqxjMy7ua+cih6CT
-        N/k/u/UMwWGeSnUofEdTBXnvrYefFp+RGje4X6pepKKyNym5uZ+mKxJx3N2Wj0iao/OSqxR66ANvG
-        kdbr9bcr3vgtg5IT7S6aieRH3K3huMnV4iMvn6mZuORnochk5lChpBLXDBpEwbs0KePGts+kamAHo
-        DHvN/YmQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mTlIn-007Edy-Sv; Fri, 24 Sep 2021 13:32:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 068E0300273;
-        Fri, 24 Sep 2021 15:31:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E201D2C5DFD92; Fri, 24 Sep 2021 15:31:44 +0200 (CEST)
-Date:   Fri, 24 Sep 2021 15:31:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+        Fri, 24 Sep 2021 09:56:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:50004 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231174AbhIXN4K (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 24 Sep 2021 09:56:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F197D6E;
+        Fri, 24 Sep 2021 06:54:37 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.20.247])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF8D43F719;
+        Fri, 24 Sep 2021 06:54:30 -0700 (PDT)
+Date:   Fri, 24 Sep 2021 14:54:24 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Qi Zheng <zhengqi.arch@bytedance.com>,
+Cc:     Vito Caputo <vcaputo@pengaru.com>, Jann Horn <jannh@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Stefan Metzmacher <metze@samba.org>,
         Andy Lutomirski <luto@kernel.org>,
         Lai Jiangshan <laijs@linux.alibaba.com>,
@@ -61,8 +41,7 @@ Cc:     Qi Zheng <zhengqi.arch@bytedance.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Michael =?iso-8859-1?Q?Wei=DF?= 
-        <michael.weiss@aisec.fraunhofer.de>,
+        Michael =?utf-8?B?V2Vpw58=?= <michael.weiss@aisec.fraunhofer.de>,
         Anand K Mistry <amistry@google.com>,
         Alexey Gladkov <legion@kernel.org>,
         Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
@@ -75,27 +54,40 @@ Cc:     Qi Zheng <zhengqi.arch@bytedance.com>,
         linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] proc: Disable /proc/$pid/wchan
-Message-ID: <YU3TQBIBnrbzWS30@hirez.programming.kicks-ass.net>
+Message-ID: <20210924135424.GA33573@C02TD0UTHF1T.local>
 References: <20210923233105.4045080-1-keescook@chromium.org>
- <202109231636.C233D6D82@keescook>
+ <20210923234917.pqrxwoq7yqnvfpwu@shells.gnugeneration.com>
+ <CAG48ez0Rtv5kqHWw368Ym3GkKodPA+JETOAN+=c2KPa3opENSA@mail.gmail.com>
+ <20210924002230.sijoedia65hf5bj7@shells.gnugeneration.com>
+ <202109231814.FD09DBAD3@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202109231636.C233D6D82@keescook>
+In-Reply-To: <202109231814.FD09DBAD3@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 23, 2021 at 04:38:26PM -0700, Kees Cook wrote:
-> On Thu, Sep 23, 2021 at 04:31:05PM -0700, Kees Cook wrote:
-
-> If the fair scheduler would actually benefit from still using get_wchan,
-> I think this patch:
-> https://lore.kernel.org/all/20210831083625.59554-1-zhengqi.arch@bytedance.com/
-> should still be applied too.
+On Thu, Sep 23, 2021 at 06:16:16PM -0700, Kees Cook wrote:
+> On Thu, Sep 23, 2021 at 05:22:30PM -0700, Vito Caputo wrote:
+> > Instead of unwinding stacks maybe the kernel should be sticking an
+> > entrypoint address in the current task struct for get_wchan() to
+> > access, whenever userspace enters the kernel?
 > 
-> If not, we can rip get_wchan() out completely (across all
-> architectures).
+> wchan is supposed to show where the kernel is at the instant the
+> get_wchan() happens. (i.e. recording it at syscall entry would just
+> always show syscall entry.)
 
-The scheduler doesn't care, it's kernel/profile.c and please kill that
-right along with wchan, good riddance.
+It's supposed to show where a blocked task is blocked; the "wait
+channel".
+
+I'd wanted to remove get_wchan since it requires cross-task stack
+walking, which is generally painful. 
+
+We could instead have the scheduler entrypoints snapshot their caller
+into a field in task_struct. If there are sufficiently few callers, that
+could be an inline wrapper that passes a __func__ string. Otherwise, we
+still need to symbolize.
+
+Thanks,
+Mark.
