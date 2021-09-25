@@ -2,104 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15728C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 21:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1460C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 25 Sep 2021 07:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F261961076
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Sep 2021 21:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 775A56127B
+	for <linux-hardening@archiver.kernel.org>; Sat, 25 Sep 2021 07:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343605AbhIXVru (ORCPT
+        id S231741AbhIYHay (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Sep 2021 17:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245016AbhIXVrt (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Sep 2021 17:47:49 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F07FC061571
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Sep 2021 14:46:16 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id y1so7385865plk.10
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Sep 2021 14:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pj9R2irEWaO0s1+n+LsLmweXYY63Hpa6KiQfqiA0N2E=;
-        b=blNaN+UKBFauXCPwp7waJ+lVReCH+8D1Vxvu6ZpDLEYwbmXskSTlyi7u2crkunxzrv
-         z60arbLXR5+C2OqJZxp9PgeOC+Ad1F+woM2GVGRzUeSXWM08Ev0qwLafjJSk2szllV1S
-         ZAXAwx332SBfogEuG6yPs92Yj665v9+S27ifg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pj9R2irEWaO0s1+n+LsLmweXYY63Hpa6KiQfqiA0N2E=;
-        b=jDV7h8VL4zEOuDYgKAmO3m6V+rDvdCJgM8DHVe3PBpoQXZoacKVGas5WWbfyyCWjjH
-         KaD0FDjkpsDKVjaq9C7F0GApHZHx/p27p5pt8QNUv1jCVgtgozf2gvXOoJJVfXlDXXmN
-         jrUQjY19r+sgq6iUEsqmWUN33AY7XzEOREjFw/iJY0nG+vSFsdwYJxYq/yTdVzUKJ+xx
-         YJoVy4nt+SGI6i1bje7Q3PeXynTR/En5sAHIDkBpJIz39LKSzXLp29MVj0UUbJXs4Er7
-         sfcc3G1QIcX8/vICS7h/q/vseRv8lvlmJvSdh0ak8oXDWeTTRXHaphCSPr+dN7x9t/5S
-         WspA==
-X-Gm-Message-State: AOAM530qODfnCgEBmitOR7uGVzfLjfZKtASzyTqjSL8gcIoXHukyU1Hl
-        KG9ySjO3MjO440+YigdeoRzB7A==
-X-Google-Smtp-Source: ABdhPJyTj6m731cSp4Hd3lineRhJPbqmoPR3Z1ORTW1YqObWYHJWp28Pw5w+g61tc1vDtrl4YN13rQ==
-X-Received: by 2002:a17:90a:ee82:: with SMTP id i2mr4752094pjz.166.1632519975624;
-        Fri, 24 Sep 2021 14:46:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o15sm10414469pfg.14.2021.09.24.14.46.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Sep 2021 14:46:15 -0700 (PDT)
-Date:   Fri, 24 Sep 2021 14:46:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] docs: Explain the desired position of function attributes
-Message-ID: <202109241441.20B7EE4B@keescook>
-References: <20210924202302.2335542-1-keescook@chromium.org>
- <053717cf-e1b3-15a4-97e6-e72848f6d7bd@infradead.org>
+        Sat, 25 Sep 2021 03:30:54 -0400
+Received: from mout.gmx.net ([212.227.15.15]:32783 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230029AbhIYHay (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 25 Sep 2021 03:30:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1632554949;
+        bh=yFDb4A4/GKbkjkwFKbZYWrHFDEh/iWmCyJIjxuX4JRg=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=lQyskH9jAMoAMLP8KqTdBeTKpV2iLZwv9fcEazU1jz5jWCygaADc7xZwfFAZEjnLo
+         1jJYQTYic+gVR9HzrtX8ZkdhujDOT5frDs2ZcM2w4DjwxOVD2CffTpNRbLQ1XY2VX5
+         BhGKBvloCZNnLPiwdQ1srgr/fbFocg/0tWEFRWg8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MPog5-1mGVJX2PCN-00Mpcl; Sat, 25
+ Sep 2021 09:29:08 +0200
+Date:   Sat, 25 Sep 2021 09:28:56 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Len Baker <len.baker@gmx.com>, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Yevgeny Kliteynik <kliteyn@nvidia.com>,
+        Alex Vesker <valex@nvidia.com>,
+        Erez Shitrit <erezsh@nvidia.com>,
+        Jianbo Liu <jianbol@nvidia.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/mlx5: DR, Prefer kcalloc over open coded arithmetic
+Message-ID: <20210925072856.GA1660@titan>
+References: <20210905074936.15723-1-len.baker@gmx.com>
+ <202109202105.9E901893@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <053717cf-e1b3-15a4-97e6-e72848f6d7bd@infradead.org>
+In-Reply-To: <202109202105.9E901893@keescook>
+X-Provags-ID: V03:K1:klFNjD6m3a+ozEsOsMiNydZCSb43iYDcQ8ER9QidygMym4OfgPs
+ D9DtkkRLi3ZZLQzUoPdPvUueBxaFGJ09EFhSOAnovKo0oykH/2m9ht2LYjSVkBHikPUR/NO
+ nwHLaiuNX4XKvYtw+U9zh58/aH0ruKUtDK/R+ySTuwYChsrS/OdTQn5vGO1WTIx1QZNEL9S
+ hrGDj9gq/rqkARZauO9VA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Mtn6d7yNuYc=:QIJZrerQqy1JFr3BD4QVi1
+ 8Hs+Gy7pD5ODJrHge8xFCB0aTtWpuEGp2Rm3LDZMAQOODunpOKMG4goWxz1pWF1dTJ5jjUR6T
+ iljjCjAmHCYgAbsVBtBuu5us00hz7bKnuimm4yAbuncpeS/IDHIJAKTfBBIkLPo0cIPQ81Z9p
+ IMCpUvtBaHVtNwIhHZuZQb1OOPt4/G9ExyJp+kj6+7Epg5Y5himx4sJkWaQuQpr2lHQeK81oD
+ gZ7r+JYhbfsl2m1HV0FXiMX6boItp5EEM+OWSo2JhYPNb4TP+WtbjsEf3gaciIPwWMGoOxTTi
+ pNBU8houNdiwCmqvUpLcM0I9aAAOSX8jzVfTIKrga3qiRNZpyTsKVy+Omg44DSSKr82kyIYHB
+ RjmUm5jhQxJ/rkJVRQ8Ug2ytlz71BF1pogB8+Xf9BiChyG4gWj6fkrQEXQ8GyrmASry+yXnSk
+ gpSFN9eHBC6rAfpDzpt5CGBdVbBUjkagDmjjJpDtYADRKxEhzU0OILeL/NgqrfeyLzU8400vk
+ 9WngvC8jeNhhzX00Xw7uq1QC50Og/z2n482Tm567np0uqPI0bCCplXWeZVNxe5q1yAIqyNUbb
+ 16BkZFRT49ejfWLW0+g94xe0jSYyKHjIPjl1Z6EZ+i0C9c4a+H49BtYw6pccvQziFbvTrcKmM
+ mndA//4qjzFP77acRB80LcuVyXGRrdQZNNCJj8bTDwrKbG/ZgM7mhrfg48C+inV116saPeWwk
+ gFVZObGd03nmRqC/9r5fPOPeH5OP4HjHhYi0K1CZawZlcfTXRUkh0QVwQCch0YPyj/3v/aT6m
+ 71kULj2Qy/IIm9HqDOsUA6eIIZfu4t6+xuV/JFiLro1uuW/K4upm2SjAJeW3hMy1gOaWket3V
+ dssrnEbJ855YZQ9RWyhJozq8mRrCbTzmDBXmWHjHEArDT3NbEa/EIUNf5yXcIgLpUGUui7pNv
+ 2L7FPM6s3cTdvMurH5cUUI4OQitLhtjrF5dlWDLB5qhbZoH2lxYws3UIiEoTdIMio3TOKpRhE
+ 6sQ2UP3LF0MBMTzowXUY7UPsJGF5cUxhvoj84DciCxH4fynRAC2bqqGMKBrg+KD1C34M5NS2R
+ bMIaeMkGzVJil0=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 24, 2021 at 01:27:20PM -0700, Randy Dunlap wrote:
-> On 9/24/21 1:23 PM, Kees Cook wrote:
-> > +The preferred order of elements for a function prototype is:
+Hi,
+
+On Mon, Sep 20, 2021 at 09:06:35PM -0700, Kees Cook wrote:
+> >
+> > -	ref_actions =3D kzalloc(sizeof(*ref_actions) * num_of_dests * 2, GFP=
+_KERNEL);
+> > +	if (unlikely(check_mul_overflow(num_of_dests, 2u, &ref_act_cnt)))
+> > +		goto free_hw_dests;
 > > +
-> > +- attributes on the preceding lines
-> > +
-> 
-> I thought that idea was already nacked: (it's more of a BSD thing AFAIK)
-> (and I would NAK it if I could :)
-> 
-> """
-> > Attributes should be on their own line, they can be quite lengthy.
-> 
-> No, no no. They really shouldn't.
-> ""
-> 
-> from: https://lore.kernel.org/mm-commits/CAHk-=wjS-Jg7sGMwUPpDsjv392nDOOs0CtUtVkp=S6Q7JzFJRw@mail.gmail.com/
+> > +	ref_actions =3D kcalloc(ref_act_cnt, sizeof(*ref_actions), GFP_KERNE=
+L);
+>
+> In the future, consider array3_size(), but this is fine too. :)
 
-Right -- and then Joe and Rasmus had some convincing counter-arguments,
-IMO. So, given the outlined Docs patch, I'd like to see what folks can
-propose in the form of alternative patches for this topic.
+Ok, thanks for the advise.
 
-I genuinely don't care. I just want to have something I can follow for the
-refactoring of the allocator attributes. :) The trouble I had with Linus's
-suggestion is that some attributes don't work[1] at the end for function
-definitions, so I'm left unable to follow his recommendations too.
-
--Kees
-
-[1] https://lore.kernel.org/mm-commits/202109211630.2D00627@keescook/
-
--- 
-Kees Cook
+Regards,
+Len
