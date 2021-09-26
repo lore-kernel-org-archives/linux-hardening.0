@@ -2,109 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A007BC433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 26 Sep 2021 11:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9FEC433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 26 Sep 2021 20:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE7D61090
-	for <linux-hardening@archiver.kernel.org>; Sun, 26 Sep 2021 11:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE0C60F5D
+	for <linux-hardening@archiver.kernel.org>; Sun, 26 Sep 2021 20:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231246AbhIZLvq (ORCPT
+        id S230161AbhIZUvP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 26 Sep 2021 07:51:46 -0400
-Received: from mout.gmx.net ([212.227.15.18]:45869 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231206AbhIZLvp (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 26 Sep 2021 07:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-        s=badeba3b8450; t=1632656985;
-        bh=0rIwgn2+oCBKdiYEGxebf4tyq7xKWUvrjdTls2w8bTQ=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=lTrRQS9XaD6F1ONfw8099VGdThd5PAgQwBday0keXJxgtR0a6GC329uCQAWKjHzUy
-         N1xTUyKJqvj3erwLL3Ml6csLeaL9znZUcFzyMsfXirCqEZKkclP9mBUAo1WY6x9/xM
-         ghvLD1yminXNnsbNkp33uiA2vDBBB9sSGmHSEfhA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MnakR-1nE0EO1gbF-00jaCp; Sun, 26
- Sep 2021 13:49:45 +0200
-Date:   Sun, 26 Sep 2021 13:49:34 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Switch to common use of
- attributes
-Message-ID: <20210926114934.GA7286@titan>
-References: <20210926111908.6950-1-len.baker@gmx.com>
- <YVBaQAFVX1CeQUPE@kroah.com>
+        Sun, 26 Sep 2021 16:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230171AbhIZUvO (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 26 Sep 2021 16:51:14 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E8C7C061575
+        for <linux-hardening@vger.kernel.org>; Sun, 26 Sep 2021 13:49:38 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id n23so11076489pfv.4
+        for <linux-hardening@vger.kernel.org>; Sun, 26 Sep 2021 13:49:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=1Xi2zI3xz++jAU4KL461gSjO8O02r5P5HLSbGNQJnPI=;
+        b=YNUKZmOzFiHeJ2mJa7gvVYN7uN2TvfskQSN1D5sRVykhEQSaJ9ruR/0/YcZL/v6m+1
+         ej1FfHbYG0ay7WCE+E3fA04decWx+gxNMJh/2AfKb1EJT5DQhro8je6KQpQGeHKkDbsI
+         2Vo6bqf1guqWezlCcy2Pu6ROHYsiuxXT4kAlFIb+PM88X+oLVX6srxEMUnpVmYtptPL8
+         WAOiHaRdS1eZovd/jq4qVEL92/LIrjngBpm8KGcaYFTn8I1F9IQaKEEHQjkczzN5zKka
+         GwufIKM8VX78GbMlNVMgRK/KoB016OeVF3XuaLuGYvlJ152+ArnP4IkuG15uKtU0UehI
+         POCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=1Xi2zI3xz++jAU4KL461gSjO8O02r5P5HLSbGNQJnPI=;
+        b=vN++z8nH0wYExOC1roNR6N4Ydu/kTV9JjyagIf+sAKKASFKU7911qmnK6BdWr71Cb/
+         gJ4+aS0dtx4U9ogACK5zPBHhZbzDNTVCq2/g6C9y9kGPFGh/koaAqFljXZLFegQCgmZZ
+         FJWTYn/XXUovYCAcS8Jahy2pmseFj47jQV9gYiXhuubr5RQxcDVDJOHXcfQD94fTBBIN
+         LKwCrDz1HEsCL7sYyeYBXqtGnRdTPgtHixWBCqSR44seA49p351jVErcav2+ZHkeGvtE
+         2yeKGxeagNGffHAYTHnY3r2ZwVFGqBV/X0fSsveau97xrBqiaF4Rop+UCgLVyDZ3Yj1B
+         imwA==
+X-Gm-Message-State: AOAM532lsDOxL1dw+XJDgO33NphJO9ojhzTSIk9Ez9edtsTMh+TBaLGT
+        kLxNKFf6S2xhepqkja7+wXV/SA==
+X-Google-Smtp-Source: ABdhPJzndYH2uLj5kPrP3Kat7T50/IOEb8DNH7IWYo8ePwhsiil1vOxBGyaBm89cXY3NegHO0nVNfg==
+X-Received: by 2002:a63:4457:: with SMTP id t23mr583580pgk.354.1632689377421;
+        Sun, 26 Sep 2021 13:49:37 -0700 (PDT)
+Received: from [2620:15c:17:3:4d45:c2:971a:f134] ([2620:15c:17:3:4d45:c2:971a:f134])
+        by smtp.gmail.com with ESMTPSA id q13sm6606060pfk.128.2021.09.26.13.49.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Sep 2021 13:49:36 -0700 (PDT)
+Date:   Sun, 26 Sep 2021 13:49:35 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+To:     Stephen Kitt <steve@sk2.org>
+cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] mm: Remove HARDENED_USERCOPY_FALLBACK
+In-Reply-To: <20210921061149.1091163-1-steve@sk2.org>
+Message-ID: <d2dc495-98c8-9a5c-823f-bb1cd55a8d4@google.com>
+References: <20210921061149.1091163-1-steve@sk2.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YVBaQAFVX1CeQUPE@kroah.com>
-X-Provags-ID: V03:K1:HkWiYA0Jt5HBdYP/LidFZOnItr02xlDFohMZktYouwwlV4AxKeo
- EApb4Ji3/iX5l/aJIojCmNDEjuqi2GOvjW5v2qLFlvH+4TUEtMkZvvULXTCxJ1a8pMUdJip
- YsBrzKTBateYYU07GQPsBSiF8o8KSShzd7fDUw7WKBGGgod8wHB+fY/2Y3Aa6OZ9c5xdapx
- 8nGRB1GDgHzeOmpkGeqQg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aUuzZ2iWYWg=:NsMNqTlri2SdA3cPh4zGLb
- yLHgGUr39uAWpMqs2PYOXmr0M1EEH7VzAcV2EG74g/4BSD51m4p1ziooEVIAiCl/s/q+rGkIK
- c2+3Qqsf1yPSGn2bF9kPOOitg2sZLQb/Yz2UpQfosTTccCyCR7CFHzTOOh6cLiFswTSvWOeFl
- 3D1tc/9kQ2urkZFTjQmK6dzGzEcUrZ/UVWx98z0/6BIrJ4TlNWGhsAUMPj6VapZvWEkjbw3+P
- 0Rg0p2L+/JKjuW1U7vQ2EO2jq/5UBrpkKnKqLZaFQ4tsKadupAxvNklBMDNcZG31ea0Lwu5cY
- no5wqqmx3gLj3wLK84Rv9LI96pLm8zatn6sAy6wMog26YfGU8qxgpvOfD4Om0M172ZERWNd1W
- 2A6tGl72a7G5CjVMQwSaPP/QlhOUOPMxJolXQkZh71dkEVSSfo0hOQRQSlJGs/wAjXFjLU01i
- 4B6lb2jjmP7P8vNWbtCwuLQnnoc/JlQdnaZpC1VNuicr4J1hHCy19TmADmXb1LE1B4/8PBAZC
- 7tc2KrV9ebz/SqOY0CpO6saA2ykCYgGDxyovTot2CTPVan9JwF3zcCbWz3FIKqvHGuLhnPBKm
- I1j8m3ueKKmUGIwyLNAtnOSsf2AACO0hdNNoT6bmkmGOqo3aqzJNXuHWTNwMFwr3E1ECMivxe
- DkOTebD027Ezc6YCO5yCdniaPoqfpQHy33lCNMg8P1mFLuCdtm9g32n/X67aALjvUOr7fGktV
- f16xN6+Q69vvh3mm1QyxyQvLHnYBPlIc5SnvkcU6uLqYuF6zlL6lGSbDaIyBh1vV8AcpWZJXK
- x6EzZCybXkyzSUg0d+xCITUz5P6bSSFn/35QKTbqCexJvKuFFXYBOOdu9FFUlKeG9j59+fm9c
- /U2DgnjhBNtmBybRoThS/m+B7sqL2RPV8SdddrEGMj0AwpUxwR0XDibjqXFkcWm+AqkQfd/W6
- lNAUue60wcU9ckN1vxemRhgeoHI63WeMp9FuG2xhwMB1mPG55FaV9FkmDFFuE7MMb7SjaMa/a
- I/dP/zVNpDiIzGxjdhXJvRDgWG45CMzF6r7iRbhRkfUlc+5Z3rJvVI+uVCfxvz0ZejEeTWX4z
- lQxR4d4+pxSIZ8=
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Greg,
+On Tue, 21 Sep 2021, Stephen Kitt wrote:
 
-On Sun, Sep 26, 2021 at 01:32:16PM +0200, Greg Kroah-Hartman wrote:
-> On Sun, Sep 26, 2021 at 01:19:08PM +0200, Len Baker wrote:
->
-> > @@ -3161,9 +3106,7 @@ static void hotkey_exit(void)
-> >  	hotkey_poll_stop_sync();
-> >  	mutex_unlock(&hotkey_mutex);
-> >  #endif
-> > -
-> > -	if (hotkey_dev_attributes)
-> > -		delete_attr_set(hotkey_dev_attributes, &tpacpi_pdev->dev.kobj);
-> > +	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &hotkey_attr_group);
->
-> Why do you have to manually add/remove these groups still?
->
-> A huge hint that something is going wrong is when you have to call a
-> sysfs_*() call from within a driver.  There should be proper driver_*()
-> calls for you instead to get the job done.
->
-> As this is a platform device, why not set the dev_groups variable in the
-> platform_driver field so that these attribute groups get added and
-> removed automatically?
->
-> An example commit to look at that shows how this was converted for one
-> driver is 5bd08a4ae3d0 ("platform: x86: hp-wmi: convert platform driver
-> to use dev_groups").  See if that helps here as well.
+> This has served its purpose and is no longer used. All usercopy
+> violations appear to have been handled by now, any remaining
+> instances (or new bugs) will cause copies to be rejected.
+> 
+> This isn't a direct revert of commit 2d891fbc3bb6 ("usercopy: Allow
+> strict enforcement of whitelists"); since usercopy_fallback is
+> effectively 0, the fallback handling is removed too.
+> 
+> This also removes the usercopy_fallback module parameter on
+> slab_common.
+> 
+> Link: https://github.com/KSPP/linux/issues/153
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> Suggested-by: Kees Cook <keescook@chromium.org>
 
-Ok, I will look at this and I will try to improve the patch. Anyway thanks
-for the guidance and advices.
-
-Again, thanks for your time.
-
-Regards,
-Len
+Acked-by: David Rientjes <rientjes@google.com>
