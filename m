@@ -2,51 +2,51 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B986EC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 18:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB3FC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 18:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 934F060F6C
-	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 18:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67BE60FBF
+	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 18:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236134AbhI0S2m (ORCPT
+        id S236189AbhI0S2n (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 27 Sep 2021 14:28:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57368 "EHLO
+        Mon, 27 Sep 2021 14:28:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235991AbhI0S2m (ORCPT
+        with ESMTP id S236012AbhI0S2m (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Mon, 27 Sep 2021 14:28:42 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A31C061714
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Sep 2021 11:27:03 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id k23-20020a17090a591700b001976d2db364so736702pji.2
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Sep 2021 11:27:03 -0700 (PDT)
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D498C061765
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Sep 2021 11:27:04 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id lb1-20020a17090b4a4100b001993f863df2so727535pjb.5
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Sep 2021 11:27:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cqZ/haXgFjIpSJHfI1VAsLg6naAL8kq0nI4pUX8OICI=;
-        b=Ae/GnkZxx3AzOrnhpyQniuKHJ0wlNZWBFXL/PP1m5XyrATkGpzSqE3Uq9DuDZcHqBT
-         3/7Pw6GZqWYV5lFyBe6YWzOm62BJxOQ1gbk2uXzktlBWHR6jSykmBSNWR3rHP9Q44Ws4
-         uBBuE2m75g5Q8oX4OZxMmO0/NIOGZwIvpfmq4=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=43dYGFExJoNuUmNt38Q8tohqKTb1ufKF7gir+xFriEA=;
+        b=OTAJiCmBuuuFhoToQMBxE4KKkWNnqjyY0T5C3ko8WigldOACXGOmEVIThFL4CLWHfO
+         0boiIvm+MRHkRP41MYoLnff6X/iHRMjtpJjnNiOV5LMSlmS2bgfQf1LYCsoBbDk6Vro4
+         YGrdlHlgW3FYYUDbRLxmgCOQqLpvBX8z7RJbg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cqZ/haXgFjIpSJHfI1VAsLg6naAL8kq0nI4pUX8OICI=;
-        b=dk7enBkV1j6CgyxKBQZn76vcbeXUpb3gSpCtbRzWoC0vL3TQdy4moeDwy6bazaKyGK
-         mw4IeomwbUXvJPsV0HbZ4XkKCmHh/1HXdrWDHLZLfK5uTCG/rcr5UCkIxcCe/Cn22Xo6
-         Ge9hvYkeFJPLagjmCgSqTBS36tBcsnyME7DASg6EqCwKqaV3+EPupne/hK5ee8K7M1fm
-         65XwBgmU3TD9OqF4rtxjMuNtP9n0FdfnsmJ66iL4l1ekiqiXyolPM8tN0KCCOYg70gZl
-         Zz0GCmLEprBo3kLy+wmVhmH+FbrpkdMXVh2Ib5NK1uNgLvWF2s87q3Lk+SPlTYVSj3W6
-         6rVQ==
-X-Gm-Message-State: AOAM532/oj/uLDZD09/L5EBEbdi8ElXpXEvlTEcRYtabZoLZTt1fKv/j
-        hqyvh3s0Qw6k/xtDabNzxtk15FlyL7SC7g==
-X-Google-Smtp-Source: ABdhPJywmhpBzovEAGLAlFReddqtfL+7gRfxRwqhTffp+Of1COtfe+1K/C/r12SNHYB9tQ7E7aOY9Q==
-X-Received: by 2002:a17:902:bd8d:b0:13a:8c8:a2b2 with SMTP id q13-20020a170902bd8d00b0013a08c8a2b2mr1103469pls.89.1632767223468;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=43dYGFExJoNuUmNt38Q8tohqKTb1ufKF7gir+xFriEA=;
+        b=aM/WE8iJY3AIFb5seDkWzxQd8O80r4zMVyvPGX4J23LvJL2H+47gqQOO6lNAPti5pL
+         /KH/DS3E+gHnS0fmOk50KBFvC2AuHwxOlcXgTr0p1rUxe9Tio2MajuRsVSYxE70Fs7S2
+         qVrIdVbmz2KSL9vn2PwOdk+2iYfPY6KfzuNz36Aqqw8R/9nYGdq5u+goHuA8FResPfgQ
+         oIXt0smf0N/3Zqg4UQlSoqr9/Byr+RrqbU6RHOTd+uho7ZyVThX518GMg+czvi3l5lRE
+         MkapMhOBKOLuM2y/WZ57W7Af482jQVrtLBVkwM0e9ubwTY/lEnyTJgdvPQ7TN7iveMcB
+         ESHw==
+X-Gm-Message-State: AOAM533TCmYknjMfIioOjo42XJEoOqF11Wrl+hIlRooxryZS0Ebg1eZx
+        gUhrktuAQqvP+7bRrbZ9ET2QOw==
+X-Google-Smtp-Source: ABdhPJxn5n/7A6OeXcZ2gt0ceLGh0mQJYaK+ALnORV1nQHPSTfrg5bFiJNgYv9qmlI2GDrQ5D/juVA==
+X-Received: by 2002:a17:90a:8596:: with SMTP id m22mr569840pjn.218.1632767223760;
         Mon, 27 Sep 2021 11:27:03 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p26sm16995621pfw.137.2021.09.27.11.27.02
+        by smtp.gmail.com with ESMTPSA id h21sm17302774pfc.118.2021.09.27.11.27.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 27 Sep 2021 11:27:02 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -57,46 +57,167 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Martin KaFai Lau <kafai@fb.com>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
         John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 0/2] bpf: Build with -Wcast-function-type
-Date:   Mon, 27 Sep 2021 11:26:58 -0700
-Message-Id: <20210927182700.2980499-1-keescook@chromium.org>
+        KP Singh <kpsingh@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH 2/2] bpf: Replace callers of BPF_CAST_CALL with proper function typedef
+Date:   Mon, 27 Sep 2021 11:27:00 -0700
+Message-Id: <20210927182700.2980499-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210927182700.2980499-1-keescook@chromium.org>
+References: <20210927182700.2980499-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=813; h=from:subject; bh=MnT3y2POoh9krBGr+oM0LKIH9K7M9hDNGXXQn9PnoRw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhUgzzvGdW82BhK8YP1w6/r5Vk4Bo4qJhhkmiN8oKK zuSXBkqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVIM8wAKCRCJcvTf3G3AJhHyD/ 92lm82tkG/wPJiioqfs+Kxaa88GuCYKYWWP/IpncLQxmww37DgGOH/Wl/oJrhtTcw8GZZpOoNH3sse 7rn2JRT4QSEt5CzLLoD05pa6ceTWKIjkJ/d/VXCqNv+AfWepP3FacdWj60HKye/chGORzdj39B1tvC v62lA+y14QDzdx/r3AZ9MVzrnNaQFo4toGxCBRp7MnHFxL/mEv4cgPPAjFTfouI8vjnDy9GxHwlWnC xRONH7W48GvmgxCCtQg8Xmj380nJ/j3EImlyRlV0GulKQE8HUggfHnCp0BhmGL+RnuYJgfcpRkeO8F xI5c1r+1N6SZdUoRpQeXoaXu06lnFVybmVEa2qQwbq8zB0lCmpWH4moHHvk2EJ6lejNPCr8Tqbhyz7 2Sfh9Wzdb0IwASUho4vpo8yC3j3Z1EglOYMbTnM0yfx9K8vVmDNfJAi07mlFimGY/El21EE+vEb0Bb ZWJEP5ZsVJoI2H+wJXoNMM1rYE9WVWNJlCakhG7SJKxKbe85sJ6Z0/bPeukf+StZP+PhGG9uYGsygG kTPKuc45qiVI4IKKLnwhHm4B8BAg8WqCGUqePAvbi0tIopgbzqU37XmEc07HeCiwfr70U+YuVMs2wD x8/ZL4nbwMj00/sy7GZ/kgYZFPRtsLQ2djb0/g0c0gZAzlD9lQHeSbx4nrmA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5714; h=from:subject; bh=9JNJGH2jsdZr2e7yM2qvfQSMdoLIKPava0PYTFnVOoE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhUgzzQWvlA6xROER3rNkckjnSKXUmUWAhnSt0wEvb X2wRni2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVIM8wAKCRCJcvTf3G3AJl+zD/ 4kSHS8ROEmGLh19XUw5x0ZU+DiRLH2SQ1oI6znQZbgydbJmDS81IMLn+XMiTZevkXONslNzNQKTH1c kc3SDmSLlCifVvC0QCFUi6hajHSbBdLJHYTFTrqCAesvGCtZOne84ZyN5VGs0A0nNrodSE3okF+YDV rN5lLXMpOXS5Wnn+xs1RjKavvL9g1WkOlDAMe0P7IoPumksdGo/xHx17i7qpiqGx8uF5CbhHhyZkyn 6ri6k3O2cOOwGiZKP3nu/BFMBu8648kDEnA8aVTx/cGWLGyVg5wnVFxdEXtXpB5Y9+LlwOkVEvPlAh OufsAAX36wtfReKPXEDrO8eLq/513snXaFKkvKK7AuzDqmGefSlj4I+WDofkWJzHvr3yzS0bKoAoMW bMVA7nsYELnyydbt7/UZFwdb+ZIvqgK200kmEkNkOJjAy6mAb5IED7982+JUMxiNIZd/vHZNtIiB98 urArKjnn5jRgxZMyJw/g7zk6nbLJt9i0Nd2zXn53sWNM0CiVewTUkEFnSHlrOIEPJXeEUOTBYuezaB cwEdmdM8XpOacyGM52zWM87QBpxT5/2nbFiuQJhnpIx4DkEpld9a1Pg8ElZyv+lVE5G1SU2SaaMFrc 3DN/n+3XaZDNpjq3aM9MCTbmZY6KvpV2m6gAf3HtFeQscEWax6MhgkyQpasg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+In order to keep ahead of cases in the kernel where Control Flow
+Integrity (CFI) may trip over function call casts, enabling
+-Wcast-function-type is helpful. To that end, BPF_CAST_CALL causes
+various warnings and is one of the last places in the kernel
+triggering this warning.
 
-In order to keep ahead of cases in the kernel where Control Flow Integrity
-(CFI) may trip over function call casts, enabling -Wcast-function-type
-is helpful. To that end, replace BPF_CAST_CALL() as it triggers warnings
-with this option and is now one of the last places in the kernel in need
-of fixing.
+For actual function calls, replace BPF_CAST_CALL() with a typedef, which
+captures the same details about the given function pointers.
 
-Thanks,
+This change results in no object code difference.
 
--Kees
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://github.com/KSPP/linux/issues/20
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/bpf.h    | 4 +++-
+ include/linux/filter.h | 5 -----
+ kernel/bpf/arraymap.c  | 7 +++----
+ kernel/bpf/hashtab.c   | 7 +++----
+ kernel/bpf/helpers.c   | 5 ++---
+ 5 files changed, 11 insertions(+), 17 deletions(-)
 
-Kees Cook (2):
-  bpf: Replace "want address" users of BPF_CAST_CALL with BPF_CALL_IMM
-  bpf: Replace callers of BPF_CAST_CALL with proper function typedef
-
- include/linux/bpf.h    |  4 +++-
- include/linux/filter.h |  7 +++----
- kernel/bpf/arraymap.c  |  7 +++----
- kernel/bpf/hashtab.c   | 13 ++++++-------
- kernel/bpf/helpers.c   |  5 ++---
- kernel/bpf/verifier.c  | 26 +++++++++-----------------
- 6 files changed, 26 insertions(+), 36 deletions(-)
-
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index f4c16f19f83e..ff633f08cb51 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -48,6 +48,7 @@ extern struct idr btf_idr;
+ extern spinlock_t btf_idr_lock;
+ extern struct kobject *btf_kobj;
+ 
++typedef u64 (*bpf_callback_t)(u64, u64, u64, u64, u64);
+ typedef int (*bpf_iter_init_seq_priv_t)(void *private_data,
+ 					struct bpf_iter_aux_info *aux);
+ typedef void (*bpf_iter_fini_seq_priv_t)(void *private_data);
+@@ -142,7 +143,8 @@ struct bpf_map_ops {
+ 	int (*map_set_for_each_callback_args)(struct bpf_verifier_env *env,
+ 					      struct bpf_func_state *caller,
+ 					      struct bpf_func_state *callee);
+-	int (*map_for_each_callback)(struct bpf_map *map, void *callback_fn,
++	int (*map_for_each_callback)(struct bpf_map *map,
++				     bpf_callback_t callback_fn,
+ 				     void *callback_ctx, u64 flags);
+ 
+ 	/* BTF name and id of struct allocated by map_alloc */
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 6c247663d4ce..47f80adbe744 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -360,11 +360,6 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
+ 		.off   = 0,					\
+ 		.imm   = TGT })
+ 
+-/* Function call */
+-
+-#define BPF_CAST_CALL(x)					\
+-		((u64 (*)(u64, u64, u64, u64, u64))(x))
+-
+ /* Convert function address to BPF immediate */
+ 
+ #define BPF_CALL_IMM(x)	((void *)(x) - (void *)__bpf_call_base)
+diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+index cebd4fb06d19..5e1ccfae916b 100644
+--- a/kernel/bpf/arraymap.c
++++ b/kernel/bpf/arraymap.c
+@@ -645,7 +645,7 @@ static const struct bpf_iter_seq_info iter_seq_info = {
+ 	.seq_priv_size		= sizeof(struct bpf_iter_seq_array_map_info),
+ };
+ 
+-static int bpf_for_each_array_elem(struct bpf_map *map, void *callback_fn,
++static int bpf_for_each_array_elem(struct bpf_map *map, bpf_callback_t callback_fn,
+ 				   void *callback_ctx, u64 flags)
+ {
+ 	u32 i, key, num_elems = 0;
+@@ -668,9 +668,8 @@ static int bpf_for_each_array_elem(struct bpf_map *map, void *callback_fn,
+ 			val = array->value + array->elem_size * i;
+ 		num_elems++;
+ 		key = i;
+-		ret = BPF_CAST_CALL(callback_fn)((u64)(long)map,
+-					(u64)(long)&key, (u64)(long)val,
+-					(u64)(long)callback_ctx, 0);
++		ret = callback_fn((u64)(long)map, (u64)(long)&key,
++				  (u64)(long)val, (u64)(long)callback_ctx, 0);
+ 		/* return value: 0 - continue, 1 - stop and return */
+ 		if (ret)
+ 			break;
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 3d8f9d6997d5..d29af9988f37 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -2049,7 +2049,7 @@ static const struct bpf_iter_seq_info iter_seq_info = {
+ 	.seq_priv_size		= sizeof(struct bpf_iter_seq_hash_map_info),
+ };
+ 
+-static int bpf_for_each_hash_elem(struct bpf_map *map, void *callback_fn,
++static int bpf_for_each_hash_elem(struct bpf_map *map, bpf_callback_t callback_fn,
+ 				  void *callback_ctx, u64 flags)
+ {
+ 	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+@@ -2089,9 +2089,8 @@ static int bpf_for_each_hash_elem(struct bpf_map *map, void *callback_fn,
+ 				val = elem->key + roundup_key_size;
+ 			}
+ 			num_elems++;
+-			ret = BPF_CAST_CALL(callback_fn)((u64)(long)map,
+-					(u64)(long)key, (u64)(long)val,
+-					(u64)(long)callback_ctx, 0);
++			ret = callback_fn((u64)(long)map, (u64)(long)key,
++					  (u64)(long)val, (u64)(long)callback_ctx, 0);
+ 			/* return value: 0 - continue, 1 - stop and return */
+ 			if (ret) {
+ 				rcu_read_unlock();
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index 9aabf84afd4b..25d7e02ba449 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -1058,7 +1058,7 @@ static enum hrtimer_restart bpf_timer_cb(struct hrtimer *hrtimer)
+ 	struct bpf_hrtimer *t = container_of(hrtimer, struct bpf_hrtimer, timer);
+ 	struct bpf_map *map = t->map;
+ 	void *value = t->value;
+-	void *callback_fn;
++	bpf_callback_t callback_fn;
+ 	void *key;
+ 	u32 idx;
+ 
+@@ -1083,8 +1083,7 @@ static enum hrtimer_restart bpf_timer_cb(struct hrtimer *hrtimer)
+ 		key = value - round_up(map->key_size, 8);
+ 	}
+ 
+-	BPF_CAST_CALL(callback_fn)((u64)(long)map, (u64)(long)key,
+-				   (u64)(long)value, 0, 0);
++	callback_fn((u64)(long)map, (u64)(long)key, (u64)(long)value, 0, 0);
+ 	/* The verifier checked that return value is zero. */
+ 
+ 	this_cpu_write(hrtimer_running, NULL);
 -- 
 2.30.2
 
