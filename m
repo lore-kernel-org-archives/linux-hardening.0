@@ -2,228 +2,146 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E801EC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 18:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286ECC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 20:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B5260F6C
-	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 18:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08DAC61052
+	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 20:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236277AbhI0S2y (ORCPT
+        id S236414AbhI0Uwp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 27 Sep 2021 14:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236107AbhI0S2m (ORCPT
+        Mon, 27 Sep 2021 16:52:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56379 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236868AbhI0Uwo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 27 Sep 2021 14:28:42 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77665C061714
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Sep 2021 11:27:04 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id k23-20020a17090a591700b001976d2db364so736726pji.2
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Sep 2021 11:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gyzvvu34BplawGFiRX25KunAAS4/1dR6ovGk97BDMko=;
-        b=AqFgl97FE4+vPmW/oUfPm4QB6nODUdWUTYULvyTCp3IhilgNVmjfon3i9ob9keQNf8
-         woCGo9/wCPdefx0Uk17wMSpWEHWt4UqUlzAf0IZNh9Mpyc1E+6NH/6y4tYJrXZcVdhbn
-         umsVCYp3sBHgiIFAzWpuyIxk7ZFzWMwrE5FXg=
+        Mon, 27 Sep 2021 16:52:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632775865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JD0mT4ckkienFPXQ/dMglnBNojQj5rBrrYdubpyF/sM=;
+        b=bZDPz0YAzDhsoVLaw1IeVgGM20g7qN5ft5MeeLLD+PVcGOXlm3fm3h0GePwRic6mUVD7E1
+        +DZzD2U3cFs3GoeK+7FZ0gGCAYnEFI8oTnb50RX1IRAj8L/EHCd7KcBmCKeHKyDY5z1xlR
+        lkeAayRB7lBA8zeA7mjKrsCk8QlEVCg=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-479-efyIvZYdN4yHqefWwmjo_Q-1; Mon, 27 Sep 2021 16:51:02 -0400
+X-MC-Unique: efyIvZYdN4yHqefWwmjo_Q-1
+Received: by mail-qk1-f198.google.com with SMTP id x3-20020a05620a448300b0045e3e24de82so5117954qkp.3
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Sep 2021 13:51:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gyzvvu34BplawGFiRX25KunAAS4/1dR6ovGk97BDMko=;
-        b=h3wCZ57MZpiL4+92u4XpYCWLKAbsPOq73LyrzWakST6or2hJXr2uKJ5gsqnopLavxd
-         js/52Jri2BPkHxX9fOZ5ve0rnqYOk8nuOBrXi0B2icDBv7vN93u3J1bPJ6y3PCxcWl1w
-         fRcWXaEoWzb+tHV/v8aWCetzNXtJcKLwXQkXUbta/wRM5moHyhedaD2h6jN15q14BU+x
-         yGgrNqe/JNoTQYgBtyRADLYN3yeDzKDmlayTbmpzzlAfBv7s2wQpesYRAzVBHBHM3gxr
-         NpSMGW148N9dEatbCaUmrUTxOlLUsC9+Do9Xv/VRdapCCHLte4ppvVK9D4h/DAqOi4sH
-         tbtA==
-X-Gm-Message-State: AOAM531DOobAFogC0mdugXzD29PuZR9/hyPc/hLKmC8TSFAiqeKeRneJ
-        FctqVZQuoJ/UFNCk5aD9SmlL1g==
-X-Google-Smtp-Source: ABdhPJyoaOvMk0IfLf2HRzl/qDsqyYT4TE+UU14FEECwgFwzBavl9qEbXkKuM7TnRlGzuhzNXodDSg==
-X-Received: by 2002:a17:902:7590:b0:13d:c5d4:1b29 with SMTP id j16-20020a170902759000b0013dc5d41b29mr1196935pll.36.1632767224034;
-        Mon, 27 Sep 2021 11:27:04 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g15sm17681849pfu.155.2021.09.27.11.27.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JD0mT4ckkienFPXQ/dMglnBNojQj5rBrrYdubpyF/sM=;
+        b=C4ut13JrNV2ZQUhqyqqyZDmurfuFIR4vPw5Ogq1zcrnOdY90UytmWsWolXsziCCaKP
+         mQGukXMjkEHVixAGagcM1dKx1vpmVrLZxe1A58Qq9DlkheRsmkdv1g4cauijHUDeKFjU
+         Y6PfZT7Bc8/PVpqk76v9Du6yFEsuVpleXCDazfE1U70YjeJxkmK/Pd9tSNgiKQXIrySQ
+         K9DWgegNPMQyvc10wR8DjfHn+tTUE1Ej3ybgcVUJkE8KDsTjkAOMhlk/tocK4AhnsPiw
+         /Pxu4XIyTJeOmdDIFP09aoSgW2WEV0y1OVto0K8cQ+ZC1NHgShUMHSL3jqYY47M9gX/G
+         fsAQ==
+X-Gm-Message-State: AOAM533cr8WQrVWRIq9JY1ZpYzgkxIganPTd2yHSU3cVxa3Y3Upok4IJ
+        Y5RoFLdYoJMlvEDTqgTt2cfbAT7suRDjHERL14vj2TnYa/1y95TeSPw463unGdKigeNTEFWimVT
+        LDPK5wofRoGnwOB2O93Uk3O0unOs7
+X-Received: by 2002:ac8:5a4a:: with SMTP id o10mr1965117qta.61.1632775862131;
+        Mon, 27 Sep 2021 13:51:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzTRBkkAbh0TQhbT5DxVcLFqQZvP8ZJBSTBJtCeQmJMCWaVvaksY4R32FfJrYe6wg6cp394wQ==
+X-Received: by 2002:ac8:5a4a:: with SMTP id o10mr1965099qta.61.1632775861872;
+        Mon, 27 Sep 2021 13:51:01 -0700 (PDT)
+Received: from treble ([2600:1700:6e32:6c00::15])
+        by smtp.gmail.com with ESMTPSA id h17sm1019186qtp.13.2021.09.27.13.50.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Sep 2021 11:27:03 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 1/2] bpf: Replace "want address" users of BPF_CAST_CALL with BPF_CALL_IMM
-Date:   Mon, 27 Sep 2021 11:26:59 -0700
-Message-Id: <20210927182700.2980499-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210927182700.2980499-1-keescook@chromium.org>
-References: <20210927182700.2980499-1-keescook@chromium.org>
+        Mon, 27 Sep 2021 13:51:01 -0700 (PDT)
+Date:   Mon, 27 Sep 2021 13:50:56 -0700
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stefan Metzmacher <metze@samba.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Michael =?utf-8?B?V2Vpw58=?= <michael.weiss@aisec.fraunhofer.de>,
+        Anand K Mistry <amistry@google.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        Ohhoon Kwon <ohoono.kwon@samsung.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        YiFei Zhu <yifeifz2@illinois.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] proc: Disable /proc/$pid/wchan
+Message-ID: <20210927205056.jjdlkof5w6fs5wzw@treble>
+References: <20210923233105.4045080-1-keescook@chromium.org>
+ <20210923234917.pqrxwoq7yqnvfpwu@shells.gnugeneration.com>
+ <CAG48ez0Rtv5kqHWw368Ym3GkKodPA+JETOAN+=c2KPa3opENSA@mail.gmail.com>
+ <20210924002230.sijoedia65hf5bj7@shells.gnugeneration.com>
+ <202109231814.FD09DBAD3@keescook>
+ <20210924135424.GA33573@C02TD0UTHF1T.local>
+ <202109240716.A0792BE46@keescook>
+ <20210927090337.GB1131@C02TD0UTHF1T.local>
+ <202109271103.4E15FC0@keescook>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5922; h=from:subject; bh=trwG88QMUpz37N/1nVjow7A8tNfjHkzeQ6HCfI516c8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhUgzz9SJeieOEbkNq+ygFiFmxJBVrJVIgw4LdlBeF LahQ+jyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVIM8wAKCRCJcvTf3G3AJncVD/ 40BsDBm8XgAkbm6v1I7oRgAWWLOhNyFFGJW+6jWwOfzsJCYpu6PBhskJslczKfvzntBkvR5QSjEaZa IoLRyiiU4yLjVBmEAMdBIqyvTDhf8Nqkax0HJGgccbOz4D9rAu6AnvieL4cS6Q6ZTc1gMXtTzBjnJX e4Bij3eAkR3PnvEDBgXFdCFMZUv2hM1FzC8VWMRPSNWBqjJTXbf2jMThs41D1buJOFU7oK+jYHMUcX evb3pqU3iCl8Kw4kELBy1GaRrWPshVF5cHxAYiE1r/0Bw5SrjiqeEi54OLnT1wo0ZbKRgGncwPGJoM 2p88NgD1peZ6aAIAddUMadT6Yj+7CEDGb1Xx8gkgaUCdRTQp/AFk8TLHOiLNvRP+Eu29IBF4RJtVnG A9YeyG8hIicIpQ3FDePwCpwgKJ5VayEHiZyz1ZZLctzVYJG9ZYRvWFuL+EkgiX8NLFOGaPHbt57wdr cHeKPx/ftFbXocRSHeRzGHKesuG0EZTV0nLBuHG88v4t9UQnoRz3NeUG+4Tw9CsWQB3FST+SLLLQ/Z 1sYywf4dYqQ+usVvEqsWIlH6Q6I9VFWHuNw0isv0MrurmZU3S+Urg5Fe1YKHNIn03WumN8g/1sz0tc P5BFUIgu4jBRrnYdgxfCbN9LzNnhYc9BEAjlZf4uf5GCVME8P1xpjEIml8EA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <202109271103.4E15FC0@keescook>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In order to keep ahead of cases in the kernel where Control Flow
-Integrity (CFI) may trip over function call casts, enabling
--Wcast-function-type is helpful. To that end, BPF_CAST_CALL causes
-various warnings and is one of the last places in the kernel triggering
-this warning.
+On Mon, Sep 27, 2021 at 11:07:27AM -0700, Kees Cook wrote:
+> On Mon, Sep 27, 2021 at 10:03:51AM +0100, Mark Rutland wrote:
+> > On Fri, Sep 24, 2021 at 07:26:22AM -0700, Kees Cook wrote:
+> > > On Fri, Sep 24, 2021 at 02:54:24PM +0100, Mark Rutland wrote:
+> > > > On Thu, Sep 23, 2021 at 06:16:16PM -0700, Kees Cook wrote:
+> > > > > On Thu, Sep 23, 2021 at 05:22:30PM -0700, Vito Caputo wrote:
+> > > > > > Instead of unwinding stacks maybe the kernel should be sticking an
+> > > > > > entrypoint address in the current task struct for get_wchan() to
+> > > > > > access, whenever userspace enters the kernel?
+> > > > > 
+> > > > > wchan is supposed to show where the kernel is at the instant the
+> > > > > get_wchan() happens. (i.e. recording it at syscall entry would just
+> > > > > always show syscall entry.)
+> > > > 
+> > > > It's supposed to show where a blocked task is blocked; the "wait
+> > > > channel".
+> > > > 
+> > > > I'd wanted to remove get_wchan since it requires cross-task stack
+> > > > walking, which is generally painful.
+> > > 
+> > > Right -- this is the "fragile" part I'm worried about.
+> 
+> I'd like to clarify this concern first -- is the proposed fix actually
+> fragile? Because I think we'd be better off just restoring behavior than
+> trying to invent new behavior...
+> 
+> i.e. Josh, Jann, do you see any issues with Qi Zheng's fix here:
+> https://lore.kernel.org/all/20210924062006.231699-4-keescook@chromium.org/
 
-Most places using BPF_CAST_CALL actually just want a void * to perform
-math on. It's not actually performing a call, so just use a different
-helper to get the void *, by way of the new BPF_CALL_IMM() helper, which
-can clean up a common copy/paste idiom as well.
+Even with that patch, it doesn't lock the task's runqueue before reading
+the stack, so there's still the possibility of the task running on
+another CPU and the unwinder going off the rails a bit, which might be
+used by an attacker in creative ways similar to the /proc/<pid>/stack
+vulnerability Jann mentioned earlier.
 
-This change results in no object code difference.
-
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Link: https://github.com/KSPP/linux/issues/20
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/filter.h |  6 +++++-
- kernel/bpf/hashtab.c   |  6 +++---
- kernel/bpf/verifier.c  | 26 +++++++++-----------------
- 3 files changed, 17 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 4a93c12543ee..6c247663d4ce 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -365,13 +365,17 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
- #define BPF_CAST_CALL(x)					\
- 		((u64 (*)(u64, u64, u64, u64, u64))(x))
- 
-+/* Convert function address to BPF immediate */
-+
-+#define BPF_CALL_IMM(x)	((void *)(x) - (void *)__bpf_call_base)
-+
- #define BPF_EMIT_CALL(FUNC)					\
- 	((struct bpf_insn) {					\
- 		.code  = BPF_JMP | BPF_CALL,			\
- 		.dst_reg = 0,					\
- 		.src_reg = 0,					\
- 		.off   = 0,					\
--		.imm   = ((FUNC) - __bpf_call_base) })
-+		.imm   = BPF_CALL_IMM(FUNC) })
- 
- /* Raw code statement block */
- 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index 32471ba02708..3d8f9d6997d5 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -668,7 +668,7 @@ static int htab_map_gen_lookup(struct bpf_map *map, struct bpf_insn *insn_buf)
- 
- 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
- 		     (void *(*)(struct bpf_map *map, void *key))NULL));
--	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
-+	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
- 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 1);
- 	*insn++ = BPF_ALU64_IMM(BPF_ADD, ret,
- 				offsetof(struct htab_elem, key) +
-@@ -709,7 +709,7 @@ static int htab_lru_map_gen_lookup(struct bpf_map *map,
- 
- 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
- 		     (void *(*)(struct bpf_map *map, void *key))NULL));
--	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
-+	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
- 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 4);
- 	*insn++ = BPF_LDX_MEM(BPF_B, ref_reg, ret,
- 			      offsetof(struct htab_elem, lru_node) +
-@@ -2397,7 +2397,7 @@ static int htab_of_map_gen_lookup(struct bpf_map *map,
- 
- 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
- 		     (void *(*)(struct bpf_map *map, void *key))NULL));
--	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
-+	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
- 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 2);
- 	*insn++ = BPF_ALU64_IMM(BPF_ADD, ret,
- 				offsetof(struct htab_elem, key) +
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index e76b55917905..15068fa7b16d 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -1730,7 +1730,7 @@ static int add_kfunc_call(struct bpf_verifier_env *env, u32 func_id)
- 
- 	desc = &tab->descs[tab->nr_descs++];
- 	desc->func_id = func_id;
--	desc->imm = BPF_CAST_CALL(addr) - __bpf_call_base;
-+	desc->imm = BPF_CALL_IMM(addr);
- 	err = btf_distill_func_proto(&env->log, btf_vmlinux,
- 				     func_proto, func_name,
- 				     &desc->func_model);
-@@ -12469,8 +12469,7 @@ static int jit_subprogs(struct bpf_verifier_env *env)
- 			if (!bpf_pseudo_call(insn))
- 				continue;
- 			subprog = insn->off;
--			insn->imm = BPF_CAST_CALL(func[subprog]->bpf_func) -
--				    __bpf_call_base;
-+			insn->imm = BPF_CALL_IMM(func[subprog]->bpf_func);
- 		}
- 
- 		/* we use the aux data to keep a list of the start addresses
-@@ -12950,32 +12949,25 @@ static int do_misc_fixups(struct bpf_verifier_env *env)
- patch_map_ops_generic:
- 			switch (insn->imm) {
- 			case BPF_FUNC_map_lookup_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_lookup_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_CALL_IMM(ops->map_lookup_elem);
- 				continue;
- 			case BPF_FUNC_map_update_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_update_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_CALL_IMM(ops->map_update_elem);
- 				continue;
- 			case BPF_FUNC_map_delete_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_delete_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_CALL_IMM(ops->map_delete_elem);
- 				continue;
- 			case BPF_FUNC_map_push_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_push_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_CALL_IMM(ops->map_push_elem);
- 				continue;
- 			case BPF_FUNC_map_pop_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_pop_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_CALL_IMM(ops->map_pop_elem);
- 				continue;
- 			case BPF_FUNC_map_peek_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_peek_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_CALL_IMM(ops->map_peek_elem);
- 				continue;
- 			case BPF_FUNC_redirect_map:
--				insn->imm = BPF_CAST_CALL(ops->map_redirect) -
--					    __bpf_call_base;
-+				insn->imm = BPF_CALL_IMM(ops->map_redirect);
- 				continue;
- 			}
- 
 -- 
-2.30.2
+Josh
 
