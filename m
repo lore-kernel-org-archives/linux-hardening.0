@@ -2,44 +2,42 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C7CC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 22:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B512C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 22:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC61610FC
-	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 22:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9DC60FED
+	for <linux-hardening@archiver.kernel.org>; Mon, 27 Sep 2021 22:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237507AbhI0WQ2 (ORCPT
+        id S237679AbhI0WlX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 27 Sep 2021 18:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45410 "EHLO mail.kernel.org"
+        Mon, 27 Sep 2021 18:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237364AbhI0WQ2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:16:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5AAB8610A2;
-        Mon, 27 Sep 2021 22:14:49 +0000 (UTC)
+        id S237501AbhI0WlX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 27 Sep 2021 18:41:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EDB006103B;
+        Mon, 27 Sep 2021 22:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632780890;
-        bh=I6vpnDbNhhUsp54rvz1mBOT9j/vZz9K4WQuPuoIW0Gs=;
+        s=k20201202; t=1632782384;
+        bh=jQsMfUi7sijCHy0O5BfSM8V3P+BdbGszL5QX7pxZXXY=;
         h=Date:From:To:Cc:Subject:From;
-        b=muuQ+/aAo1K+cXU1Ad0D5sMxg4AYcoyNKjkWotosE083Kh+Enxz9QlEcKd70i+Tfm
-         Jbcu/FpwvPemCIL7bivkKw2DNpd4/gYKnP6rijTmNsZuXejBBBxaypU4QN3mhvFgMg
-         j0S+WvEcAyP5RM37aLXFedMeCyFJamNmV9UysS36bKS+kLRnpV85lXLiW5SelEBeGX
-         Etxsi+pvTs7QWSsVgVU1wH41QOWxHKs4OY7SPDFZA3LQx13EGZw64pOEU7yD6mtNSV
-         XPfw2xS+OiBH3oofM92JnYVhblWm2aGMJWgoghOyWhdGbcwikOMMcHqcMAQ3KBqo16
-         jC26lV6WUkPpw==
-Date:   Mon, 27 Sep 2021 17:18:49 -0500
+        b=DYKF/8qpc/4F6ifKfma2hGmYUvK8dtjn5mwyLzcvwOY72cajp0EDGXKyRFkUgldQr
+         8ANrq+f8cWJd3YEkqpS9MlwC0y4a6/z3jFa/igq+ITLSRbeueg0JHjbFxWDyhBbT2h
+         zTlM3r5DGSxbZuUmgMIJhZxyKWId0vFPmhYMzANwUWHhwYSGqcMgLe194FSkRxoKFp
+         7vACCxL1P1ReQqesKH0ivhPiYkApZ+XVqW/vetmg7AzBY0U3rCuxRSkbnh82slAJiW
+         Ran+iHz+qbxFEGLSgCeaO8FryeDJJKI/puwy1vOLQ9g8RJDedASXs8+tXGwAdS01Fn
+         30Qfyq2tfRP7A==
+Date:   Mon, 27 Sep 2021 17:43:44 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Bodo Stroesser <bostroesser@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net_sched: Use struct_size() and flex_array_size()
- helpers
-Message-ID: <20210927221849.GA188050@embeddedor>
+Subject: [PATCH][next] scsi: target: tcmu: Use struct_size() helper in
+ kmalloc()
+Message-ID: <20210927224344.GA190701@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -47,47 +45,36 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() and flex_array_size() helpers instead of
-an open-coded version, in order to avoid any potential type mistakes
-or integer overflows that, in the worse scenario, could lead to heap
-overflows.
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows
+that, in the worst scenario, could lead to heap overflows.
 
 Link: https://github.com/KSPP/linux/issues/160
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/sched/sch_api.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/target/target_core_user.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-index 12f39a2dffd4..91820f67275c 100644
---- a/net/sched/sch_api.c
-+++ b/net/sched/sch_api.c
-@@ -507,7 +507,8 @@ static struct qdisc_size_table *qdisc_get_stab(struct nlattr *opt,
- 	list_for_each_entry(stab, &qdisc_stab_list, list) {
- 		if (memcmp(&stab->szopts, s, sizeof(*s)))
- 			continue;
--		if (tsize > 0 && memcmp(stab->data, tab, tsize * sizeof(u16)))
-+		if (tsize > 0 &&
-+		    memcmp(stab->data, tab, flex_array_size(stab, data, tsize)))
- 			continue;
- 		stab->refcnt++;
- 		return stab;
-@@ -519,14 +520,14 @@ static struct qdisc_size_table *qdisc_get_stab(struct nlattr *opt,
- 		return ERR_PTR(-EINVAL);
- 	}
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index 9f552f48084c..dc220fad06fa 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1255,7 +1255,6 @@ tcmu_tmr_notify(struct se_device *se_dev, enum tcm_tmreq_table tmf,
+ {
+ 	int i = 0, cmd_cnt = 0;
+ 	bool unqueued = false;
+-	uint16_t *cmd_ids = NULL;
+ 	struct tcmu_cmd *cmd;
+ 	struct se_cmd *se_cmd;
+ 	struct tcmu_tmr *tmr;
+@@ -1292,7 +1291,7 @@ tcmu_tmr_notify(struct se_device *se_dev, enum tcm_tmreq_table tmf,
+ 	pr_debug("TMR event %d on dev %s, aborted cmds %d, afflicted cmd_ids %d\n",
+ 		 tcmu_tmr_type(tmf), udev->name, i, cmd_cnt);
  
--	stab = kmalloc(sizeof(*stab) + tsize * sizeof(u16), GFP_KERNEL);
-+	stab = kmalloc(struct_size(stab, data, tsize), GFP_KERNEL);
- 	if (!stab)
- 		return ERR_PTR(-ENOMEM);
- 
- 	stab->refcnt = 1;
- 	stab->szopts = *s;
- 	if (tsize > 0)
--		memcpy(stab->data, tab, tsize * sizeof(u16));
-+		memcpy(stab->data, tab, flex_array_size(stab, data, tsize));
- 
- 	list_add_tail(&stab->list, &qdisc_stab_list);
+-	tmr = kmalloc(sizeof(*tmr) + cmd_cnt * sizeof(*cmd_ids), GFP_NOIO);
++	tmr = kmalloc(struct_size(tmr, tmr_cmd_ids, cmd_cnt), GFP_NOIO);
+ 	if (!tmr)
+ 		goto unlock;
  
 -- 
 2.27.0
