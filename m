@@ -2,43 +2,43 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC55C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 21:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745CBC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 21:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E98F61378
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 21:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD3D6127A
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 21:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242923AbhI1Vfo (ORCPT
+        id S242556AbhI1Vvt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Sep 2021 17:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53008 "EHLO mail.kernel.org"
+        Tue, 28 Sep 2021 17:51:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242943AbhI1Vfn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Sep 2021 17:35:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 24A1F6135F;
-        Tue, 28 Sep 2021 21:34:03 +0000 (UTC)
+        id S241482AbhI1Vvs (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 28 Sep 2021 17:51:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3799C6127A;
+        Tue, 28 Sep 2021 21:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632864843;
-        bh=2hOPqcyqypMpKLqdAQNJCW9CnAKsvTzqaAiKGYi0Y+Q=;
+        s=k20201202; t=1632865808;
+        bh=OHwpnjwm82cj6sJjtQtvCN3PkpAY98SAptr+7neTpeA=;
         h=Date:From:To:Cc:Subject:From;
-        b=GH0E0UAGigSBp79hPgAZBz1cOI8i1bRzNKg8vSXYptJ1gc05+KL9u+CIokrcwwJxo
-         CAmGmAgKMB1fpwC5esV78h1pZAKX8KKFKJM1+iXxHpxhINm+lYEjz0n3JbZrwTGq0M
-         Ed1zzTr8OuyiwecoOLx80FIi1P8JhPBVTVIeNDOI2Y0r29PDZVkkgZYrx8sWojasuU
-         +wl84HpWV0rvBMHb+WlGHnaolqjIDvs9fJozXC0OND2IPsSjueIkvIlWzLZZBW3xac
-         7cJlyyyoXPMw/Gfen2xB9JE9/KHnYnPUmzvKiSS+POdndIznLZjOoSYqTad0rnGaTX
-         ffRry30oczBQQ==
-Date:   Tue, 28 Sep 2021 16:38:05 -0500
+        b=GOHttJZ8dM0gRk1EolNJ3bxuhNWc75vnpW/Yzpt8Ii3gRolWMvdQfavyXhdhnMBY7
+         yvbrehz/jQCus9ZiTkggNVk7FfHHtfpKkRAXSv7RkBzOxYX6qqB8V4r4h1k2J56M5r
+         Uk7BJ/lH39jgjqsmGJA1O2cJmnP07AwMJRtXhGqXDPCMn/01w4qmgm38q0Kvh1+fG2
+         d6aFXcI70saF869FLR/E6zV6kgchD6Wc+uqXrAEHGBODkrtarn/fHnD28+x/jvyfba
+         UzuPubxBgHifGe56rIi8eC8+4oxFuUdpQ5IgA2bpslMAZ9Ijj8hQ1ZREi4nu2xBu9H
+         A2OQABoVKehGQ==
+Date:   Tue, 28 Sep 2021 16:54:10 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jeroen de Borst <jeroendb@google.com>,
-        Catherine Sullivan <csully@google.com>,
-        David Awogbemila <awogbemila@google.com>,
+To:     Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][net-next] gve: Use kvcalloc() instead of kvzalloc()
-Message-ID: <20210928213805.GA273413@embeddedor>
+Subject: [PATCH][net-next] net/mlx5e: Use array_size() helper
+Message-ID: <20210928215410.GA275646@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -46,77 +46,45 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use 2-factor argument form kvcalloc() instead of kvzalloc().
+Use array_size() helper to aid in 2-factor allocation instances.
 
+Link: https://github.com/KSPP/linux/issues/160
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/google/gve/gve_main.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
-index 099a2bc5ae67..cd9df68cc01e 100644
---- a/drivers/net/ethernet/google/gve/gve_main.c
-+++ b/drivers/net/ethernet/google/gve/gve_main.c
-@@ -268,7 +268,7 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
- 	int i, j;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 3fd515e7bf30..3ab5929ff131 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -930,9 +930,10 @@ static int mlx5e_alloc_xdpsq_fifo(struct mlx5e_xdpsq *sq, int numa)
+ 	struct mlx5e_xdp_info_fifo *xdpi_fifo = &sq->db.xdpi_fifo;
+ 	int wq_sz        = mlx5_wq_cyc_get_size(&sq->wq);
+ 	int dsegs_per_wq = wq_sz * MLX5_SEND_WQEBB_NUM_DS;
++	size_t size;
+ 
+-	xdpi_fifo->xi = kvzalloc_node(sizeof(*xdpi_fifo->xi) * dsegs_per_wq,
+-				      GFP_KERNEL, numa);
++	size = array_size(sizeof(*xdpi_fifo->xi), dsegs_per_wq);
++	xdpi_fifo->xi = kvzalloc_node(size, GFP_KERNEL, numa);
+ 	if (!xdpi_fifo->xi)
+ 		return -ENOMEM;
+ 
+@@ -946,10 +947,11 @@ static int mlx5e_alloc_xdpsq_fifo(struct mlx5e_xdpsq *sq, int numa)
+ static int mlx5e_alloc_xdpsq_db(struct mlx5e_xdpsq *sq, int numa)
+ {
+ 	int wq_sz = mlx5_wq_cyc_get_size(&sq->wq);
++	size_t size;
  	int err;
  
--	priv->msix_vectors = kvzalloc(num_vecs_requested *
-+	priv->msix_vectors = kvcalloc(num_vecs_requested,
- 				      sizeof(*priv->msix_vectors), GFP_KERNEL);
- 	if (!priv->msix_vectors)
- 		return -ENOMEM;
-@@ -628,7 +628,7 @@ static int gve_alloc_rings(struct gve_priv *priv)
- 	int err;
- 
- 	/* Setup tx rings */
--	priv->tx = kvzalloc(priv->tx_cfg.num_queues * sizeof(*priv->tx),
-+	priv->tx = kvcalloc(priv->tx_cfg.num_queues, sizeof(*priv->tx),
- 			    GFP_KERNEL);
- 	if (!priv->tx)
- 		return -ENOMEM;
-@@ -641,7 +641,7 @@ static int gve_alloc_rings(struct gve_priv *priv)
- 		goto free_tx;
- 
- 	/* Setup rx rings */
--	priv->rx = kvzalloc(priv->rx_cfg.num_queues * sizeof(*priv->rx),
-+	priv->rx = kvcalloc(priv->rx_cfg.num_queues, sizeof(*priv->rx),
- 			    GFP_KERNEL);
- 	if (!priv->rx) {
- 		err = -ENOMEM;
-@@ -764,12 +764,11 @@ static int gve_alloc_queue_page_list(struct gve_priv *priv, u32 id,
- 
- 	qpl->id = id;
- 	qpl->num_entries = 0;
--	qpl->pages = kvzalloc(pages * sizeof(*qpl->pages), GFP_KERNEL);
-+	qpl->pages = kvcalloc(pages, sizeof(*qpl->pages), GFP_KERNEL);
- 	/* caller handles clean up */
- 	if (!qpl->pages)
- 		return -ENOMEM;
--	qpl->page_buses = kvzalloc(pages * sizeof(*qpl->page_buses),
--				   GFP_KERNEL);
-+	qpl->page_buses = kvcalloc(pages, sizeof(*qpl->page_buses), GFP_KERNEL);
- 	/* caller handles clean up */
- 	if (!qpl->page_buses)
- 		return -ENOMEM;
-@@ -828,7 +827,7 @@ static int gve_alloc_qpls(struct gve_priv *priv)
- 	if (priv->queue_format == GVE_GQI_RDA_FORMAT)
- 		return 0;
- 
--	priv->qpls = kvzalloc(num_qpls * sizeof(*priv->qpls), GFP_KERNEL);
-+	priv->qpls = kvcalloc(num_qpls, sizeof(*priv->qpls), GFP_KERNEL);
- 	if (!priv->qpls)
+-	sq->db.wqe_info = kvzalloc_node(sizeof(*sq->db.wqe_info) * wq_sz,
+-					GFP_KERNEL, numa);
++	size = array_size(sizeof(*sq->db.wqe_info), wq_sz);
++	sq->db.wqe_info = kvzalloc_node(size, GFP_KERNEL, numa);
+ 	if (!sq->db.wqe_info)
  		return -ENOMEM;
  
-@@ -847,7 +846,7 @@ static int gve_alloc_qpls(struct gve_priv *priv)
- 
- 	priv->qpl_cfg.qpl_map_size = BITS_TO_LONGS(num_qpls) *
- 				     sizeof(unsigned long) * BITS_PER_BYTE;
--	priv->qpl_cfg.qpl_id_map = kvzalloc(BITS_TO_LONGS(num_qpls) *
-+	priv->qpl_cfg.qpl_id_map = kvcalloc(BITS_TO_LONGS(num_qpls),
- 					    sizeof(unsigned long), GFP_KERNEL);
- 	if (!priv->qpl_cfg.qpl_id_map) {
- 		err = -ENOMEM;
 -- 
 2.27.0
 
