@@ -2,43 +2,39 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2930BC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 22:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015ABC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 22:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13FFB6138D
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 22:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D276134F
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 22:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242998AbhI1WOo (ORCPT
+        id S243025AbhI1WUI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Sep 2021 18:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36880 "EHLO mail.kernel.org"
+        Tue, 28 Sep 2021 18:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243072AbhI1WOm (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Sep 2021 18:14:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 31DB26128E;
-        Tue, 28 Sep 2021 22:13:02 +0000 (UTC)
+        id S242981AbhI1WUG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 28 Sep 2021 18:20:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3652A6134F;
+        Tue, 28 Sep 2021 22:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632867182;
-        bh=DO4R1ntyCuxR411t9Um4s+4nqiBmOq4RrqJ6OCNb2JM=;
+        s=k20201202; t=1632867506;
+        bh=5J0hY9xgoHquzGvQlOV+Av63MmjnlOGF9TMY09r5wos=;
         h=Date:From:To:Cc:Subject:From;
-        b=Bc7I9Cosp099R+FCix2qg9sJAR4y0Knq51WZuE0ubDjZeGzh/kJxW6T+XXqVgmbV+
-         h2hJiLVsViRSXTuZzhSrl+cIir//EntAq8KfWH1skBkzFSV7Kp8I3UJFBwSF1K0kk7
-         pYseO7CrOFAta8Y8mv3zmiFkRqRFaLqATxD4w9XihM9NnexAUvaXU+QKCgGPvtIuBT
-         W6/dTF5CbqnQKTQ05vOpjPJDmjbCpyRwNHZ86v27OML9A3oJORxj6V64Z2jXLORmeb
-         kQntAacQG564yT35SO8tTWn73XLAM1u6N9nhrkdEGabBDhzIVkczr7LHUkNOifHB9r
-         4ygVj8Kx1YROA==
-Date:   Tue, 28 Sep 2021 17:17:05 -0500
+        b=jSwtgiY9ALwoZuiz/OECPEXHzc3u6igBwRmJzenKUw1kaa1Ghok+oOPeCejks9fQ0
+         6nGlXJeQAFn9u8GBzntySvne7RNmGNi1/2kJbUK3++P2QTE6f7qWlVur/j/xFnSMLW
+         WsABrnrouI3JaFKfJxgywqFsf0indPGsf97gis4e+0k6zkhUPgt6Ztc7o6bl4p9EEg
+         k/cZWSKsQFZetYLscriMHKS4t2K820opsTd8dQMCEsh7klKZF5tfFqx7bwKVDosRI8
+         YWJ2x6kxWxSkJXqPpth/4xuuUt4uZ5OzQGYTvtUcrK97JlJ93cUo3UDgpr6rumRvma
+         vz+2QVCq8esHg==
+Date:   Tue, 28 Sep 2021 17:22:29 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     wireguard@lists.zx2c4.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][net-next] net: wireguard: Use kvcalloc() instead of
- kvzalloc()
-Message-ID: <20210928221705.GA279593@embeddedor>
+Subject: [PATCH][next] iommu/dma: Use kvcalloc() instead of kvzalloc()
+Message-ID: <20210928222229.GA280355@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -51,28 +47,22 @@ Use 2-factor argument form kvcalloc() instead of kvzalloc().
 Link: https://github.com/KSPP/linux/issues/162
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireguard/ratelimiter.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/dma-iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireguard/ratelimiter.c b/drivers/net/wireguard/ratelimiter.c
-index 3fedd1d21f5e..dd55e5c26f46 100644
---- a/drivers/net/wireguard/ratelimiter.c
-+++ b/drivers/net/wireguard/ratelimiter.c
-@@ -176,12 +176,12 @@ int wg_ratelimiter_init(void)
- 			(1U << 14) / sizeof(struct hlist_head)));
- 	max_entries = table_size * 8;
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 896bea04c347..18c6edbe5fbf 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -616,7 +616,7 @@ static struct page **__iommu_dma_alloc_pages(struct device *dev,
+ 	if (!order_mask)
+ 		return NULL;
  
--	table_v4 = kvzalloc(table_size * sizeof(*table_v4), GFP_KERNEL);
-+	table_v4 = kvcalloc(table_size, sizeof(*table_v4), GFP_KERNEL);
- 	if (unlikely(!table_v4))
- 		goto err_kmemcache;
+-	pages = kvzalloc(count * sizeof(*pages), GFP_KERNEL);
++	pages = kvcalloc(count, sizeof(*pages), GFP_KERNEL);
+ 	if (!pages)
+ 		return NULL;
  
- #if IS_ENABLED(CONFIG_IPV6)
--	table_v6 = kvzalloc(table_size * sizeof(*table_v6), GFP_KERNEL);
-+	table_v6 = kvcalloc(table_size, sizeof(*table_v6), GFP_KERNEL);
- 	if (unlikely(!table_v6)) {
- 		kvfree(table_v4);
- 		goto err_kmemcache;
 -- 
 2.27.0
 
