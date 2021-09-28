@@ -2,107 +2,165 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7910EC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 05:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1582C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 10:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCB2611BD
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 05:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59136101E
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 10:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234124AbhI1F0Y (ORCPT
+        id S240285AbhI1K4z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Sep 2021 01:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234177AbhI1F0X (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Sep 2021 01:26:23 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB50C061575;
-        Mon, 27 Sep 2021 22:24:44 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id u32so8439050ybd.9;
-        Mon, 27 Sep 2021 22:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v3NEK8pPEgXFEQ4ELQDWncywX9Rjl1R3L1/HQjl3gew=;
-        b=m6752IA5QJA6vatmMChf/VuIfoiGB64b3cz0wfsXyLH8lnN8H/49bCjXaAu4AJGmco
-         Em+mx5Cn9bKiC7Sd8o/53y09xrbvo5SkXWik6DxdBY5MiKpC9PHy4nFRJAySuAeyxmH9
-         LSb8aR6mPZbSgGKcu4E+1cHDY3JWJ5nyI92I8SbZIR40QmRji/a3/iJyglIryLPhY/z1
-         YRg/7JN2A/nV8/fwZif7CkTBiWfwbD5HF3PpI/QSOXGyUi7noJMq421wYuBdXrbtWXtj
-         X2oTE0eEgDe3NT4WMdnjcuzy4WaIuY93wqN/QgwiK2snjGctAZ/XyPQyGIXq8SxIQsB5
-         EG0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v3NEK8pPEgXFEQ4ELQDWncywX9Rjl1R3L1/HQjl3gew=;
-        b=5vseAXFLpiClturVYH5ofNl7BOdflugj77hPHQ1CmM7GKzAmayU07AiMAPGZUJMT2j
-         Y7nbCZsrZp2YIAL0mZnS/xmNA7RQaHQoADpK+LQ0io2ohb0yX4j5+/q68kErXujCM4bO
-         UrHQ7BSb67vrzuETaPv4UzHYr9tIxvJ052epZPkzxxqL6t0m90kj3U/U3tG9O8v9aM7+
-         j2/cO3T2xziRX5zBCFN8i5ZHQNe0NJNEkae9AKNj8vJ2HnQn0U/3Mr/qJiDmiUHV5YM0
-         jl66e4QGMKVHWGngCtWLeAcynE514wb2ceyiF87sKVjtShZUgLSRKnw4yC8lCjmjN7mn
-         SAXQ==
-X-Gm-Message-State: AOAM531PWqsClRlBXs9hyzzeSe40rjQeleN26xn8V9M8oxPPdoHVAedj
-        5L/PO22EnsV0hkwkM/QifX7UrVhcHDQD6zxwWhI=
-X-Google-Smtp-Source: ABdhPJwAFGx76qmz0A/PqtRX5vtKX0x9+TFOdc1krGsTa3S/Foz/uJUyYGX5DlAO5Yg4MqrMiMMMBZfXe1I9HzvRKpI=
-X-Received: by 2002:a25:1dc4:: with SMTP id d187mr2647041ybd.455.1632806683740;
- Mon, 27 Sep 2021 22:24:43 -0700 (PDT)
+        Tue, 28 Sep 2021 06:56:55 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:49298 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240268AbhI1K4y (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 28 Sep 2021 06:56:54 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1632826515; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=D+OE+2bP057AaZUh2ZBJbHsm1BvNBCz9ficS8dfx5KU=;
+ b=NkHNvKiK4ITE+J+UsLAXEkVDNqGx9UHATOwMN5D7WsoJdZkvHWE2qkicDA2uB6FlY0dQP+0r
+ by+Ijj39TpIdNfzFqR0syEvGveqNzCQxIdP7WnvZNr2EDv0JWl0lKrAy1Nl1/ff5lIuZis8M
+ rerYXNzoiDSkwpefEn3Yc79aGKE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 6152f47d519bd8dcf01c06d6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Sep 2021 10:54:53
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1656EC4360D; Tue, 28 Sep 2021 10:54:53 +0000 (UTC)
+Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8DC3C4338F;
+        Tue, 28 Sep 2021 10:54:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org E8DC3C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20210927182700.2980499-1-keescook@chromium.org>
-In-Reply-To: <20210927182700.2980499-1-keescook@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 27 Sep 2021 22:24:32 -0700
-Message-ID: <CAEf4Bzb46=-J5Fxc3mMZ8JQPtK1uoE0q6+g6WPz53Cvx=CBEhw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] bpf: Build with -Wcast-function-type
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] ath11k: Replace one-element array with
+ flexible-array
+ member
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20210823172159.GA25800@embeddedor>
+References: <20210823172159.GA25800@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-Id: <20210928105453.1656EC4360D@smtp.codeaurora.org>
+Date:   Tue, 28 Sep 2021 10:54:53 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 27, 2021 at 11:27 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Hi,
->
-> In order to keep ahead of cases in the kernel where Control Flow Integrity
-> (CFI) may trip over function call casts, enabling -Wcast-function-type
-> is helpful. To that end, replace BPF_CAST_CALL() as it triggers warnings
-> with this option and is now one of the last places in the kernel in need
-> of fixing.
->
-> Thanks,
->
-> -Kees
->
-> Kees Cook (2):
->   bpf: Replace "want address" users of BPF_CAST_CALL with BPF_CALL_IMM
->   bpf: Replace callers of BPF_CAST_CALL with proper function typedef
->
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-Both patches look good to me. For the series:
+> There is a regular need in the kernel to provide a way to declare having a
+> dynamically sized set of trailing elements in a structure. Kernel code
+> should always use "flexible array members"[1] for these cases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
+> 
+> Refactor the code a bit according to the use of a flexible-array member in
+> struct scan_chan_list_params instead of a one-element array, and use the
+> struct_size() helper.
+> 
+> Also, save 25 (too many) bytes that were being allocated:
+> 
+> $ pahole -C channel_param drivers/net/wireless/ath/ath11k/reg.o
+> struct channel_param {
+>         u8                         chan_id;              /*     0     1 */
+>         u8                         pwr;                  /*     1     1 */
+>         u32                        mhz;                  /*     2     4 */
+> 
+>         /* Bitfield combined with next fields */
+> 
+>         u32                        half_rate:1;          /*     4:16  4 */
+>         u32                        quarter_rate:1;       /*     4:17  4 */
+>         u32                        dfs_set:1;            /*     4:18  4 */
+>         u32                        dfs_set_cfreq2:1;     /*     4:19  4 */
+>         u32                        is_chan_passive:1;    /*     4:20  4 */
+>         u32                        allow_ht:1;           /*     4:21  4 */
+>         u32                        allow_vht:1;          /*     4:22  4 */
+>         u32                        allow_he:1;           /*     4:23  4 */
+>         u32                        set_agile:1;          /*     4:24  4 */
+>         u32                        psc_channel:1;        /*     4:25  4 */
+> 
+>         /* XXX 6 bits hole, try to pack */
+> 
+>         u32                        phy_mode;             /*     8     4 */
+>         u32                        cfreq1;               /*    12     4 */
+>         u32                        cfreq2;               /*    16     4 */
+>         char                       maxpower;             /*    20     1 */
+>         char                       minpower;             /*    21     1 */
+>         char                       maxregpower;          /*    22     1 */
+>         u8                         antennamax;           /*    23     1 */
+>         u8                         reg_class_id;         /*    24     1 */
+> 
+>         /* size: 25, cachelines: 1, members: 21 */
+>         /* sum members: 23 */
+>         /* sum bitfield members: 10 bits, bit holes: 1, sum bit holes: 6 bits */
+>         /* last cacheline: 25 bytes */
+> } __attribute__((__packed__));
+> 
+> as previously, sizeof(struct scan_chan_list_params) was 32 bytes:
+> 
+> $ pahole -C scan_chan_list_params drivers/net/wireless/ath/ath11k/reg.o
+> struct scan_chan_list_params {
+>         u32                        pdev_id;              /*     0     4 */
+>         u16                        nallchans;            /*     4     2 */
+>         struct channel_param       ch_param[1];          /*     6    25 */
+> 
+>         /* size: 32, cachelines: 1, members: 3 */
+>         /* padding: 1 */
+>         /* last cacheline: 32 bytes */
+> };
+> 
+> and now with the flexible array transformation it is just 8 bytes:
+> 
+> $ pahole -C scan_chan_list_params drivers/net/wireless/ath/ath11k/reg.o
+> struct scan_chan_list_params {
+>         u32                        pdev_id;              /*     0     4 */
+>         u16                        nallchans;            /*     4     2 */
+>         struct channel_param       ch_param[];           /*     6     0 */
+> 
+>         /* size: 8, cachelines: 1, members: 3 */
+>         /* padding: 2 */
+>         /* last cacheline: 8 bytes */
+> };
+> 
+> This helps with the ongoing efforts to globally enable -Warray-bounds and
+> get us closer to being able to tighten the FORTIFY_SOURCE routines on
+> memcpy().
+> 
+> This issue was found with the help of Coccinelle and audited and fixed,
+> manually.
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/109
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Patch applied to ath-next branch of ath.git, thanks.
 
->  include/linux/bpf.h    |  4 +++-
->  include/linux/filter.h |  7 +++----
->  kernel/bpf/arraymap.c  |  7 +++----
->  kernel/bpf/hashtab.c   | 13 ++++++-------
->  kernel/bpf/helpers.c   |  5 ++---
->  kernel/bpf/verifier.c  | 26 +++++++++-----------------
->  6 files changed, 26 insertions(+), 36 deletions(-)
->
-> --
-> 2.30.2
->
+b2549465cdea ath11k: Replace one-element array with flexible-array member
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20210823172159.GA25800@embeddedor/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
