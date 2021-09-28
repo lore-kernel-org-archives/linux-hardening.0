@@ -2,58 +2,107 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1FAC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 00:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7910EC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 05:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B78F611EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 00:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCB2611BD
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 05:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238382AbhI1A5o (ORCPT
+        id S234124AbhI1F0Y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 27 Sep 2021 20:57:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229942AbhI1A5o (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 27 Sep 2021 20:57:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 184AB611CE;
-        Tue, 28 Sep 2021 00:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632790565;
-        bh=Hm/Wj9PE5z58tT4ALTqj5FVxuHO8s34gYJbDIZ0MFhs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GbNe0epshlkMxQnUa+L+A7JAvGSUj2f4m83qDi5i9r53yHm6/HJedN174x7wnHU65
-         aCzX9FF6b5Chpgp4/+1krfZFj2B5bhpfog1A7RWtOv7ZT08y7JZvBLmFbYy8DWbODj
-         MllJtzQUjrnrwKucExPOhTC/Rhdhy4P83/T2EbY0wZDIXDeCLEsrRVU2W2/z7mkQ06
-         I6oMF9vk+c4n8M9oI7e8cdv6tR9Irl6Rt+iHcI0WA5Rjbvn46+HThMALe8H+M9eGwD
-         bqw9p1C2KhbNcCTSvZe5UZYSRuaFILCH2RwCxiiG6w0xrl33d+Pl2zibIbKlekKrV9
-         1pk/qet0xN3fw==
-Date:   Mon, 27 Sep 2021 17:56:04 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] net_sched: Use struct_size() and
- flex_array_size() helpers
-Message-ID: <20210927175604.66ec0cff@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20210927221849.GA188050@embeddedor>
-References: <20210927221849.GA188050@embeddedor>
+        Tue, 28 Sep 2021 01:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234177AbhI1F0X (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 28 Sep 2021 01:26:23 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB50C061575;
+        Mon, 27 Sep 2021 22:24:44 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id u32so8439050ybd.9;
+        Mon, 27 Sep 2021 22:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v3NEK8pPEgXFEQ4ELQDWncywX9Rjl1R3L1/HQjl3gew=;
+        b=m6752IA5QJA6vatmMChf/VuIfoiGB64b3cz0wfsXyLH8lnN8H/49bCjXaAu4AJGmco
+         Em+mx5Cn9bKiC7Sd8o/53y09xrbvo5SkXWik6DxdBY5MiKpC9PHy4nFRJAySuAeyxmH9
+         LSb8aR6mPZbSgGKcu4E+1cHDY3JWJ5nyI92I8SbZIR40QmRji/a3/iJyglIryLPhY/z1
+         YRg/7JN2A/nV8/fwZif7CkTBiWfwbD5HF3PpI/QSOXGyUi7noJMq421wYuBdXrbtWXtj
+         X2oTE0eEgDe3NT4WMdnjcuzy4WaIuY93wqN/QgwiK2snjGctAZ/XyPQyGIXq8SxIQsB5
+         EG0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v3NEK8pPEgXFEQ4ELQDWncywX9Rjl1R3L1/HQjl3gew=;
+        b=5vseAXFLpiClturVYH5ofNl7BOdflugj77hPHQ1CmM7GKzAmayU07AiMAPGZUJMT2j
+         Y7nbCZsrZp2YIAL0mZnS/xmNA7RQaHQoADpK+LQ0io2ohb0yX4j5+/q68kErXujCM4bO
+         UrHQ7BSb67vrzuETaPv4UzHYr9tIxvJ052epZPkzxxqL6t0m90kj3U/U3tG9O8v9aM7+
+         j2/cO3T2xziRX5zBCFN8i5ZHQNe0NJNEkae9AKNj8vJ2HnQn0U/3Mr/qJiDmiUHV5YM0
+         jl66e4QGMKVHWGngCtWLeAcynE514wb2ceyiF87sKVjtShZUgLSRKnw4yC8lCjmjN7mn
+         SAXQ==
+X-Gm-Message-State: AOAM531PWqsClRlBXs9hyzzeSe40rjQeleN26xn8V9M8oxPPdoHVAedj
+        5L/PO22EnsV0hkwkM/QifX7UrVhcHDQD6zxwWhI=
+X-Google-Smtp-Source: ABdhPJwAFGx76qmz0A/PqtRX5vtKX0x9+TFOdc1krGsTa3S/Foz/uJUyYGX5DlAO5Yg4MqrMiMMMBZfXe1I9HzvRKpI=
+X-Received: by 2002:a25:1dc4:: with SMTP id d187mr2647041ybd.455.1632806683740;
+ Mon, 27 Sep 2021 22:24:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20210927182700.2980499-1-keescook@chromium.org>
+In-Reply-To: <20210927182700.2980499-1-keescook@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 27 Sep 2021 22:24:32 -0700
+Message-ID: <CAEf4Bzb46=-J5Fxc3mMZ8JQPtK1uoE0q6+g6WPz53Cvx=CBEhw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] bpf: Build with -Wcast-function-type
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 27 Sep 2021 17:18:49 -0500 Gustavo A. R. Silva wrote:
-> Make use of the struct_size() and flex_array_size() helpers instead of
-> an open-coded version, in order to avoid any potential type mistakes
-> or integer overflows that, in the worse scenario, could lead to heap
-> overflows.
-> 
-> Link: https://github.com/KSPP/linux/issues/160
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Mon, Sep 27, 2021 at 11:27 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> Hi,
+>
+> In order to keep ahead of cases in the kernel where Control Flow Integrity
+> (CFI) may trip over function call casts, enabling -Wcast-function-type
+> is helpful. To that end, replace BPF_CAST_CALL() as it triggers warnings
+> with this option and is now one of the last places in the kernel in need
+> of fixing.
+>
+> Thanks,
+>
+> -Kees
+>
+> Kees Cook (2):
+>   bpf: Replace "want address" users of BPF_CAST_CALL with BPF_CALL_IMM
+>   bpf: Replace callers of BPF_CAST_CALL with proper function typedef
+>
 
-Does not apply to net-next, please rebase & resend. Thanks!
+Both patches look good to me. For the series:
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>  include/linux/bpf.h    |  4 +++-
+>  include/linux/filter.h |  7 +++----
+>  kernel/bpf/arraymap.c  |  7 +++----
+>  kernel/bpf/hashtab.c   | 13 ++++++-------
+>  kernel/bpf/helpers.c   |  5 ++---
+>  kernel/bpf/verifier.c  | 26 +++++++++-----------------
+>  6 files changed, 26 insertions(+), 36 deletions(-)
+>
+> --
+> 2.30.2
+>
