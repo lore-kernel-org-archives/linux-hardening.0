@@ -2,116 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4398AC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 21:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC55C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 21:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 294C16135D
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 21:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E98F61378
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 21:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242832AbhI1VOO (ORCPT
+        id S242923AbhI1Vfo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Sep 2021 17:14:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241482AbhI1VON (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Sep 2021 17:14:13 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1979CC06161C;
-        Tue, 28 Sep 2021 14:12:34 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id e7so426879pgk.2;
-        Tue, 28 Sep 2021 14:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pHYj7HRtahjbKwEBtzCUYVObQgp1AeKgLSsYRQ8rMi0=;
-        b=K1C9LSpM1QNOMC/qREq9uYcoo3rfN5zeS32XGKdG2eM6GETIOOXbwy6YuJ/EifFg5s
-         xqbTJZdvVMFhJB3YTMX9ce2Kb2z/eplfEeN4wM69qcuCm9V/wYAcce4+dV2WETYDR+6L
-         zbIRBxBDodqw9VWY5wG+0QQt6OMP72V5uWVA65TA4KVcvPw6mvmrbg9RRHcYYudGMVn+
-         iRX2XxbH2Xv+pGqiIQ2BK8QGQIzMklN32ochpjgsLdkqm+O/0occ/B7toJs8LhJRUonj
-         uLRi9owSupAJ80JA4QL050ihR5FJj3nAB99gSTjhpqrovMniq/dN+E83fgdG4xk3mJWX
-         Bc3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pHYj7HRtahjbKwEBtzCUYVObQgp1AeKgLSsYRQ8rMi0=;
-        b=sM9295G+DMoSkTnGlzarym5okKi67ObaajKxLreJ/UvV6oDJlMv6VRihOfJpXyv/Df
-         X7Bs0EToaXRho9dO9Ywx94jcx+DNUuWYKbNKsqnsmQAQgL6FPqFlr0KmIp7UFy1WXO/h
-         u10Q3KDg3lZrh8UWTTb7xU9zNgshGplWAoAYry1lmsg4RdcZxpbf0rL4Qcib6o+79i7D
-         EqNKNsq8wDK2eEnd4gj4jfiqB4UwIRFcfbs6+BAUX9bcVCAbFUlk0Np9jDq+VSuK6CQu
-         x2cP+4utmnFNlQaR0PJsw6RZjbgj6Mp8HlAqOytKNTbJjL5l8uFAllYEjesmb2Iybfc6
-         imDg==
-X-Gm-Message-State: AOAM532b669xFAO08Z4jTNYhjyPVtjsr7qns30wfVCnD5Oo36fCEs1HA
-        s2BRGfxXbXbejOOv3mDCmaoQG6hzJnDf7SRW/p4=
-X-Google-Smtp-Source: ABdhPJylbWKY9yS+Xe+vI41SkojRTv66HK3od19kYKSV+bsAsKa/+ykIfQi5Z4oTK3GcuAuKUgP4tiSPKM0wyD0neik=
-X-Received: by 2002:aa7:83c4:0:b0:44b:bc59:1a46 with SMTP id
- j4-20020aa783c4000000b0044bbc591a46mr2555856pfn.77.1632863552393; Tue, 28 Sep
- 2021 14:12:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210927182700.2980499-1-keescook@chromium.org> <CAEf4Bzb46=-J5Fxc3mMZ8JQPtK1uoE0q6+g6WPz53Cvx=CBEhw@mail.gmail.com>
-In-Reply-To: <CAEf4Bzb46=-J5Fxc3mMZ8JQPtK1uoE0q6+g6WPz53Cvx=CBEhw@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 28 Sep 2021 14:12:21 -0700
-Message-ID: <CAADnVQJmXEpzA6Phgmf8AW6ZvKjbn1XQeZZQdNt_rrQ6NxGD3A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] bpf: Build with -Wcast-function-type
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
+        Tue, 28 Sep 2021 17:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242943AbhI1Vfn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 28 Sep 2021 17:35:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 24A1F6135F;
+        Tue, 28 Sep 2021 21:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632864843;
+        bh=2hOPqcyqypMpKLqdAQNJCW9CnAKsvTzqaAiKGYi0Y+Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GH0E0UAGigSBp79hPgAZBz1cOI8i1bRzNKg8vSXYptJ1gc05+KL9u+CIokrcwwJxo
+         CAmGmAgKMB1fpwC5esV78h1pZAKX8KKFKJM1+iXxHpxhINm+lYEjz0n3JbZrwTGq0M
+         Ed1zzTr8OuyiwecoOLx80FIi1P8JhPBVTVIeNDOI2Y0r29PDZVkkgZYrx8sWojasuU
+         +wl84HpWV0rvBMHb+WlGHnaolqjIDvs9fJozXC0OND2IPsSjueIkvIlWzLZZBW3xac
+         7cJlyyyoXPMw/Gfen2xB9JE9/KHnYnPUmzvKiSS+POdndIznLZjOoSYqTad0rnGaTX
+         ffRry30oczBQQ==
+Date:   Tue, 28 Sep 2021 16:38:05 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jeroen de Borst <jeroendb@google.com>,
+        Catherine Sullivan <csully@google.com>,
+        David Awogbemila <awogbemila@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH][net-next] gve: Use kvcalloc() instead of kvzalloc()
+Message-ID: <20210928213805.GA273413@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 27, 2021 at 10:24 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Sep 27, 2021 at 11:27 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > In order to keep ahead of cases in the kernel where Control Flow Integr=
-ity
-> > (CFI) may trip over function call casts, enabling -Wcast-function-type
-> > is helpful. To that end, replace BPF_CAST_CALL() as it triggers warning=
-s
-> > with this option and is now one of the last places in the kernel in nee=
-d
-> > of fixing.
-> >
-> > Thanks,
-> >
-> > -Kees
-> >
-> > Kees Cook (2):
-> >   bpf: Replace "want address" users of BPF_CAST_CALL with BPF_CALL_IMM
-> >   bpf: Replace callers of BPF_CAST_CALL with proper function typedef
-> >
->
-> Both patches look good to me. For the series:
->
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Use 2-factor argument form kvcalloc() instead of kvzalloc().
 
-It needs a rebase to bpf-next:
-In file included from ../lib/test_bpf.c:12:
-../lib/test_bpf.c: In function =E2=80=98prepare_tail_call_tests=E2=80=99:
-../lib/test_bpf.c:12442:27: error: implicit declaration of function
-=E2=80=98BPF_CAST_CALL=E2=80=99; did you mean =E2=80=98BPF_EMIT_CALL=E2=80=
-=99?
-[-Werror=3Dimplicit-function-declaration]
-     *insn =3D BPF_EMIT_CALL(BPF_CAST_CALL(addr));
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/ethernet/google/gve/gve_main.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-Please mark the patches as [PATCH bpf-next v2] to help CI pick the right tr=
-ee.
+diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
+index 099a2bc5ae67..cd9df68cc01e 100644
+--- a/drivers/net/ethernet/google/gve/gve_main.c
++++ b/drivers/net/ethernet/google/gve/gve_main.c
+@@ -268,7 +268,7 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
+ 	int i, j;
+ 	int err;
+ 
+-	priv->msix_vectors = kvzalloc(num_vecs_requested *
++	priv->msix_vectors = kvcalloc(num_vecs_requested,
+ 				      sizeof(*priv->msix_vectors), GFP_KERNEL);
+ 	if (!priv->msix_vectors)
+ 		return -ENOMEM;
+@@ -628,7 +628,7 @@ static int gve_alloc_rings(struct gve_priv *priv)
+ 	int err;
+ 
+ 	/* Setup tx rings */
+-	priv->tx = kvzalloc(priv->tx_cfg.num_queues * sizeof(*priv->tx),
++	priv->tx = kvcalloc(priv->tx_cfg.num_queues, sizeof(*priv->tx),
+ 			    GFP_KERNEL);
+ 	if (!priv->tx)
+ 		return -ENOMEM;
+@@ -641,7 +641,7 @@ static int gve_alloc_rings(struct gve_priv *priv)
+ 		goto free_tx;
+ 
+ 	/* Setup rx rings */
+-	priv->rx = kvzalloc(priv->rx_cfg.num_queues * sizeof(*priv->rx),
++	priv->rx = kvcalloc(priv->rx_cfg.num_queues, sizeof(*priv->rx),
+ 			    GFP_KERNEL);
+ 	if (!priv->rx) {
+ 		err = -ENOMEM;
+@@ -764,12 +764,11 @@ static int gve_alloc_queue_page_list(struct gve_priv *priv, u32 id,
+ 
+ 	qpl->id = id;
+ 	qpl->num_entries = 0;
+-	qpl->pages = kvzalloc(pages * sizeof(*qpl->pages), GFP_KERNEL);
++	qpl->pages = kvcalloc(pages, sizeof(*qpl->pages), GFP_KERNEL);
+ 	/* caller handles clean up */
+ 	if (!qpl->pages)
+ 		return -ENOMEM;
+-	qpl->page_buses = kvzalloc(pages * sizeof(*qpl->page_buses),
+-				   GFP_KERNEL);
++	qpl->page_buses = kvcalloc(pages, sizeof(*qpl->page_buses), GFP_KERNEL);
+ 	/* caller handles clean up */
+ 	if (!qpl->page_buses)
+ 		return -ENOMEM;
+@@ -828,7 +827,7 @@ static int gve_alloc_qpls(struct gve_priv *priv)
+ 	if (priv->queue_format == GVE_GQI_RDA_FORMAT)
+ 		return 0;
+ 
+-	priv->qpls = kvzalloc(num_qpls * sizeof(*priv->qpls), GFP_KERNEL);
++	priv->qpls = kvcalloc(num_qpls, sizeof(*priv->qpls), GFP_KERNEL);
+ 	if (!priv->qpls)
+ 		return -ENOMEM;
+ 
+@@ -847,7 +846,7 @@ static int gve_alloc_qpls(struct gve_priv *priv)
+ 
+ 	priv->qpl_cfg.qpl_map_size = BITS_TO_LONGS(num_qpls) *
+ 				     sizeof(unsigned long) * BITS_PER_BYTE;
+-	priv->qpl_cfg.qpl_id_map = kvzalloc(BITS_TO_LONGS(num_qpls) *
++	priv->qpl_cfg.qpl_id_map = kvcalloc(BITS_TO_LONGS(num_qpls),
+ 					    sizeof(unsigned long), GFP_KERNEL);
+ 	if (!priv->qpl_cfg.qpl_id_map) {
+ 		err = -ENOMEM;
+-- 
+2.27.0
+
