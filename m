@@ -2,41 +2,48 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C07C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 19:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACB9C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 20:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D60616115A
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 19:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45496115A
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 20:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242529AbhI1TzO (ORCPT
+        id S242547AbhI1UEZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Sep 2021 15:55:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
+        Tue, 28 Sep 2021 16:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242492AbhI1TzN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Sep 2021 15:55:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1EAC561139;
-        Tue, 28 Sep 2021 19:53:33 +0000 (UTC)
+        id S242534AbhI1UEZ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 28 Sep 2021 16:04:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 74A6D610E6;
+        Tue, 28 Sep 2021 20:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632858813;
-        bh=e6MtrjsgtQPw9bfe+NcBnbhVfsOEoU0GU4nhflE6ch8=;
+        s=k20201202; t=1632859365;
+        bh=JUbEawgwP2c3g8ePRDbJDUMS5ioHTfLNboJDo0lgTFU=;
         h=Date:From:To:Cc:Subject:From;
-        b=NCQ9+jzB5f6pisllAQXlnmIvPZYIPhCkeQidb19IDqRI7VPivuLARbfSI3v1X3qj4
-         lpxGvQBONpAsPAnitBBzeTXLroMxTdq2s+Fml0gMY/8Dl37RJb9vSMFLVcS76yIXoB
-         p+551u+4+32fJcT7vDOfTAIW9MfoodTg1dtwX1/0ACbd2Qi7spsokUFC6L7QNpVv8K
-         uqGLNkrXp4eJwBmXcrcITbib6mky9QV0M/gtVV12lVJcoMELKUIVHSArSx7YQBoAtE
-         Qf6ifuU4uYe5FIKnsvd2YAPsmgAek96+5Za9YBaGyhy1XDhFZZcRXoZm8Ri/zqwdxR
-         e4neogR1a8UTQ==
-Date:   Tue, 28 Sep 2021 14:57:35 -0500
+        b=Ux5mxk8+u9s/JuBAUe8lOapvH73pC8IDGMANlVx6y8oPhvgbvBvHWer4TncIe4O5P
+         zRAc9E+j11GMc534Us0lyChK0krofQdH61wQYT+tlB96ajEswJlW5LiB//1WTO2L5f
+         OMdrtwjp0duaQIPR+qZIqgAi6Qa8l2np6wXwolZtpIwLuqrEayWPXVgfeSukyRPcND
+         nY0jFdRZ4a8XxMmYjRaDR7p3FjeSk8z6pkePYifJt/My7UG/ldZJhgQVzS3VbSERG8
+         OBVMvKrRhltAQVgX/vRxXj76KXsBAURq7425SEWqtcbmF2tEpoF58LKK2rfiAYS5sI
+         9KKrJqsNYsFsw==
+Date:   Tue, 28 Sep 2021 15:06:47 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <nikolay@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][net-next] ethtool: ioctl: Use array_size() helper in
+Subject: [PATCH][net-next] netfilter: ebtables: use array_size() helper in
  copy_{from,to}_user()
-Message-ID: <20210928195735.GA264809@embeddedor>
+Message-ID: <20210928200647.GA266402@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -51,60 +58,41 @@ need to be wrapped in array_size().
 Link: https://github.com/KSPP/linux/issues/160
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/ethtool/ioctl.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ net/bridge/netfilter/ebtables.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 999e2a6bed13..bf6e8c2f9bf7 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -89,7 +89,8 @@ static int ethtool_get_features(struct net_device *dev, void __user *useraddr)
- 	if (copy_to_user(useraddr, &cmd, sizeof(cmd)))
- 		return -EFAULT;
- 	useraddr += sizeof(cmd);
--	if (copy_to_user(useraddr, features, copy_size * sizeof(*features)))
-+	if (copy_to_user(useraddr, features,
-+			 array_size(copy_size, sizeof(*features))))
- 		return -EFAULT;
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index 83d1798dfbb4..32fa05ec4a6d 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1071,7 +1071,7 @@ static int do_replace_finish(struct net *net, struct ebt_replace *repl,
+ 	 */
+ 	if (repl->num_counters &&
+ 	   copy_to_user(repl->counters, counterstmp,
+-	   repl->num_counters * sizeof(struct ebt_counter))) {
++	   array_size(repl->num_counters, sizeof(struct ebt_counter)))) {
+ 		/* Silent error, can't fail, new table is already in place */
+ 		net_warn_ratelimited("ebtables: counters copy to user failed while replacing table\n");
+ 	}
+@@ -1399,7 +1399,8 @@ static int do_update_counters(struct net *net, const char *name,
+ 		goto unlock_mutex;
+ 	}
  
- 	return 0;
-@@ -799,7 +800,7 @@ static noinline_for_stack int ethtool_get_sset_info(struct net_device *dev,
- 		goto out;
+-	if (copy_from_user(tmp, counters, num_counters * sizeof(*counters))) {
++	if (copy_from_user(tmp, counters,
++			   array_size(num_counters, sizeof(*counters)))) {
+ 		ret = -EFAULT;
+ 		goto unlock_mutex;
+ 	}
+@@ -1532,7 +1533,7 @@ static int copy_counters_to_user(struct ebt_table *t,
+ 	write_unlock_bh(&t->lock);
  
- 	useraddr += offsetof(struct ethtool_sset_info, data);
--	if (copy_to_user(useraddr, info_buf, idx * sizeof(u32)))
-+	if (copy_to_user(useraddr, info_buf, array_size(idx, sizeof(u32))))
- 		goto out;
- 
- 	ret = 0;
-@@ -1022,7 +1023,7 @@ static int ethtool_copy_validate_indir(u32 *indir, void __user *useraddr,
- {
- 	int i;
- 
--	if (copy_from_user(indir, useraddr, size * sizeof(indir[0])))
-+	if (copy_from_user(indir, useraddr, array_size(size, sizeof(indir[0]))))
- 		return -EFAULT;
- 
- 	/* Validate ring indices */
-@@ -1895,7 +1896,7 @@ static int ethtool_self_test(struct net_device *dev, char __user *useraddr)
- 	if (copy_to_user(useraddr, &test, sizeof(test)))
- 		goto out;
- 	useraddr += sizeof(test);
--	if (copy_to_user(useraddr, data, test.len * sizeof(u64)))
-+	if (copy_to_user(useraddr, data, array_size(test.len, sizeof(u64))))
- 		goto out;
- 	ret = 0;
- 
-@@ -1937,7 +1938,8 @@ static int ethtool_get_strings(struct net_device *dev, void __user *useraddr)
- 		goto out;
- 	useraddr += sizeof(gstrings);
- 	if (gstrings.len &&
--	    copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
-+	    copy_to_user(useraddr, data,
-+			 array_size(gstrings.len, ETH_GSTRING_LEN)))
- 		goto out;
- 	ret = 0;
- 
+ 	if (copy_to_user(user, counterstmp,
+-	   nentries * sizeof(struct ebt_counter)))
++	    array_size(nentries, sizeof(struct ebt_counter))))
+ 		ret = -EFAULT;
+ 	vfree(counterstmp);
+ 	return ret;
 -- 
 2.27.0
 
