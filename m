@@ -2,44 +2,42 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B92C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 20:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B3DC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 20:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E522611BD
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 20:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC327601FC
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Sep 2021 20:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242667AbhI1UKR (ORCPT
+        id S242643AbhI1UPM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Sep 2021 16:10:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40022 "EHLO mail.kernel.org"
+        Tue, 28 Sep 2021 16:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242672AbhI1UKR (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Sep 2021 16:10:17 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E49B611BD;
-        Tue, 28 Sep 2021 20:08:36 +0000 (UTC)
+        id S232756AbhI1UPL (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 28 Sep 2021 16:15:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4177C601FC;
+        Tue, 28 Sep 2021 20:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632859717;
-        bh=iGeBtWmkRfAzSRTb77ICIIphC0rlNZhpBjX8dqGzNdE=;
+        s=k20201202; t=1632860011;
+        bh=po+9kYDDgjfbfvvYQ07OcmfQEVl4eYh+maNs0aRKbX8=;
         h=Date:From:To:Cc:Subject:From;
-        b=QSz+7uuGhjxu5ImIZDs39zDTwyBDTiFHsi1eRagbHh6ByUCOO2mPsQUxgrEenKiAt
-         B4aiqepgKIVeEeiai4Sjb+z7aN5rLt2Q/iDTcXC3+dw8jDRSdS6djC2vgsnP6K1pae
-         jByhOq3eFccW+h7ol0y5x6IoyZZaHoTqfVdc6Jbcp8pBjYr9KTYic09JTBHS36yOS0
-         iF8zDfOU9YzJ0uLSiB/6NVZ6MCA/pt3tXQJ+KkPRZV1FBcca3BTugcf0RPzSbZGMNR
-         jahze2rOThLQIVYyKSCdBBF9Merdt1Ax0+h5xbxWFk/h8pbgjydpLXIoAmrCs+4ea6
-         WztIrCREd/tUw==
-Date:   Tue, 28 Sep 2021 15:12:39 -0500
+        b=bA+3AIRTcidhuvV1nYj45uxbCWRdRX6cpp+ty9s7D9DcO0rrdFyFelzsNjgPVrJgw
+         JouZu5y8kogDClaJO7PWZh2sex67nJZraAy7LiQvVmBK0/lkZ8K0uARxyO48DKfzKe
+         tC4nKUVaLKfmbZgkeQDrpY8NT9TGZWQv4yYcQUXv/T3iD5cQlrl6xNniJlF7yW1LRJ
+         oLC9w4AdvzbNyoVso4kWJnR0sedTowyv4jJoWWlAxWH3SPq18hZ6G9cGEZlq+yvy87
+         zKeDpgje6hhv8yXB7+wDZZFTekimUYHMbUtmBMakjMmn/3KEyf0vO2Y8BYfxRdB0Ii
+         4tMJu168f8oSw==
+Date:   Tue, 28 Sep 2021 15:17:33 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Roopa Prabhu <roopa@nvidia.com>,
-        Nikolay Aleksandrov <nikolay@nvidia.com>,
+To:     Tariq Toukan <tariqt@nvidia.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][net-next] net: bridge: Use array_size() helper in
- copy_to_user()
-Message-ID: <20210928201239.GA267176@embeddedor>
+Subject: [PATCH][net-next] net/mlx4: Use array_size() helper in copy_to_user()
+Message-ID: <20210928201733.GA268467@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -54,42 +52,23 @@ to be wrapped in array_size().
 Link: https://github.com/KSPP/linux/issues/160
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/bridge/br_ioctl.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx4/cq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/bridge/br_ioctl.c b/net/bridge/br_ioctl.c
-index 793b0db9d9a3..49c268871fc1 100644
---- a/net/bridge/br_ioctl.c
-+++ b/net/bridge/br_ioctl.c
-@@ -71,7 +71,8 @@ static int get_fdb_entries(struct net_bridge *br, void __user *userbuf,
- 
- 	num = br_fdb_fillbuf(br, buf, maxnum, offset);
- 	if (num > 0) {
--		if (copy_to_user(userbuf, buf, num*sizeof(struct __fdb_entry)))
-+		if (copy_to_user(userbuf, buf,
-+				 array_size(num, sizeof(struct __fdb_entry))))
- 			num = -EFAULT;
+diff --git a/drivers/net/ethernet/mellanox/mlx4/cq.c b/drivers/net/ethernet/mellanox/mlx4/cq.c
+index f7053a74e6a8..4d4f9cf9facb 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/cq.c
++++ b/drivers/net/ethernet/mellanox/mlx4/cq.c
+@@ -314,7 +314,8 @@ static int mlx4_init_user_cqes(void *buf, int entries, int cqe_size)
+ 			buf += PAGE_SIZE;
+ 		}
+ 	} else {
+-		err = copy_to_user((void __user *)buf, init_ents, entries * cqe_size) ?
++		err = copy_to_user((void __user *)buf, init_ents,
++				   array_size(entries, cqe_size)) ?
+ 			-EFAULT : 0;
  	}
- 	kfree(buf);
-@@ -188,7 +189,7 @@ int br_dev_siocdevprivate(struct net_device *dev, struct ifreq *rq, void __user
- 			return -ENOMEM;
  
- 		get_port_ifindices(br, indices, num);
--		if (copy_to_user(argp, indices, num * sizeof(int)))
-+		if (copy_to_user(argp, indices, array_size(num, sizeof(int))))
- 			num =  -EFAULT;
- 		kfree(indices);
- 		return num;
-@@ -336,7 +337,8 @@ static int old_deviceless(struct net *net, void __user *uarg)
- 
- 		args[2] = get_bridge_ifindices(net, indices, args[2]);
- 
--		ret = copy_to_user(uarg, indices, args[2]*sizeof(int))
-+		ret = copy_to_user(uarg, indices,
-+				   array_size(args[2], sizeof(int)))
- 			? -EFAULT : args[2];
- 
- 		kfree(indices);
 -- 
 2.27.0
 
