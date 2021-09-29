@@ -2,142 +2,165 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57640C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 18:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161E1C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 18:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3739B61390
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 18:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F5B61507
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 18:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346363AbhI2S4j (ORCPT
+        id S1345038AbhI2TAV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 14:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346351AbhI2S4i (ORCPT
+        Wed, 29 Sep 2021 15:00:21 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:34642 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244766AbhI2TAV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Sep 2021 14:56:38 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C18FC061765
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 11:54:57 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id om12-20020a17090b3a8c00b0019eff43daf5so2756721pjb.4
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 11:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8+uJcBBc/PF7ems2z5fw4m588jWE79HAklefzm/UZpA=;
-        b=jUKnSXoA0hVODkS6t3osdG2XYk+v1gSULRVbnIZ9NcZh4ZpOliivKVPuRpp/UlzKhh
-         AbAGzhdYgAFxFcXd7rtQC4jDpvDc26ThZ27hDgqIxJg/E3s6vOblrrvcj45Gi0/6cPpw
-         q2WLquH9eoGvFWwMXjEu5YoLIYzPRTV+vvS4w=
+        Wed, 29 Sep 2021 15:00:21 -0400
+Received: by mail-wr1-f49.google.com with SMTP id t8so5965924wri.1;
+        Wed, 29 Sep 2021 11:58:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8+uJcBBc/PF7ems2z5fw4m588jWE79HAklefzm/UZpA=;
-        b=Cmd10RClwJD4ARVrEwzd3w0NJTPjIJTxgUy+vCYGkbQOFnaoUkXVfEG2jN/FxLLH7H
-         VtzSDpUp03+ITjphZ7OdN4pB2WVbQudDA+8YB/SFtdBYC6HgdFDT/tYWaKNGRu/k6POY
-         fv0DnHUAvzm1RwioWCwumItNx+AFxVUyYVipcun2w+MWMY6VMHiV5m+IaTdAp3k1Y5/g
-         NPw3HBfnkSF96opALwoiZHnXCvGGrWhjwEVNwOZBQitF43CynfSPSJVWznsnDbwj8bzk
-         m32skJlZEwp8T2DdGHGROfmjPSXwI4M7uNitStV1BR4/nxsqG9VcSl8AwMzu3KEwQAqJ
-         vYlA==
-X-Gm-Message-State: AOAM532cJvFg/F57IFS1qwWDGH1qAckGM8PXE5U+sIKoLkXqjp/+Nccs
-        a00+8W9zWi/yGzpB4bO3xJ2MK85d30vI7w==
-X-Google-Smtp-Source: ABdhPJzMCh/F5SF+Yhv5xgUAe1RpRTKX6R9v+nOxJt1NfhIE0v6dfSR2DW4sq15+zE5QfL0u0Kpdvg==
-X-Received: by 2002:a17:90a:304:: with SMTP id 4mr8095556pje.124.1632941697076;
-        Wed, 29 Sep 2021 11:54:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c206sm480031pfc.220.2021.09.29.11.54.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NX7kzOlXhLlKh6a09QjwKCvbG9nCgyCouwpC4Jjr1c0=;
+        b=J3Q503Q7diec1tu9EHnjkZ7g8rTLY9YleEXr17WU5YJArSDcRchO75irT+yYkIKPyG
+         vxirKzyCwxPvIOY6P2DI7bA1rnd+jq6HoikWpOgjJb7870rtVwc5vm043ALcG9TcnR+V
+         /a1y61VZlTN0qdBWYk68YG+Q+2XEPjMFRh/ksQyD+J3dqckwLfu+Qi/003XmV77FyTsQ
+         NFmXxeJOlv7I0s1eBidXFPvQz604p4/o21ITVdmsqJQ0AicnkLA3f/s2WClvqLBHspAm
+         edzQLuTAfjovieRJLNZci/qKBfm0d2Xkn6Iy+EzCkHelz/BMfYpSyMp0ZcIoTZJK9m00
+         2XBg==
+X-Gm-Message-State: AOAM533M8z53u2JDWlLwOdHictUf7mC7US/AtZ5GT+6Lutp7PwRCnSED
+        yB8qTIEKtIGE7kQ2lVyI0GM=
+X-Google-Smtp-Source: ABdhPJyyBlk2gE76cLFYDnNAs1zIskLuX0HW15xFYCDmMjXxjdTVQLDm8F/ZK9yNz7ieyQ+tLmq0QQ==
+X-Received: by 2002:adf:f0d2:: with SMTP id x18mr1873652wro.25.1632941918820;
+        Wed, 29 Sep 2021 11:58:38 -0700 (PDT)
+Received: from localhost.localdomain ([46.166.133.199])
+        by smtp.gmail.com with ESMTPSA id r19sm578288wmp.43.2021.09.29.11.58.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Sep 2021 11:54:56 -0700 (PDT)
-Date:   Wed, 29 Sep 2021 11:54:55 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stefan Metzmacher <metze@samba.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
+        Wed, 29 Sep 2021 11:58:38 -0700 (PDT)
+From:   Alexander Popov <alex.popov@linux.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Paul McKenney <paulmck@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Michael =?iso-8859-1?Q?Wei=DF?= 
-        <michael.weiss@aisec.fraunhofer.de>,
-        Anand K Mistry <amistry@google.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        Ohhoon Kwon <ohoono.kwon@samsung.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        YiFei Zhu <yifeifz2@illinois.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] proc: Disable /proc/$pid/wchan
-Message-ID: <202109291152.681444A135@keescook>
-References: <20210923233105.4045080-1-keescook@chromium.org>
- <20210923234917.pqrxwoq7yqnvfpwu@shells.gnugeneration.com>
- <CAG48ez0Rtv5kqHWw368Ym3GkKodPA+JETOAN+=c2KPa3opENSA@mail.gmail.com>
- <20210924002230.sijoedia65hf5bj7@shells.gnugeneration.com>
- <202109231814.FD09DBAD3@keescook>
- <20210924135424.GA33573@C02TD0UTHF1T.local>
- <202109240716.A0792BE46@keescook>
- <20210927090337.GB1131@C02TD0UTHF1T.local>
- <202109271103.4E15FC0@keescook>
- <20210927205056.jjdlkof5w6fs5wzw@treble>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Alexander Popov <alex.popov@linux.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     notify@kernel.org
+Subject: [PATCH] Introduce the pkill_on_warn boot parameter
+Date:   Wed, 29 Sep 2021 21:58:23 +0300
+Message-Id: <20210929185823.499268-1-alex.popov@linux.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210927205056.jjdlkof5w6fs5wzw@treble>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 27, 2021 at 01:50:56PM -0700, Josh Poimboeuf wrote:
-> On Mon, Sep 27, 2021 at 11:07:27AM -0700, Kees Cook wrote:
-> > On Mon, Sep 27, 2021 at 10:03:51AM +0100, Mark Rutland wrote:
-> > > On Fri, Sep 24, 2021 at 07:26:22AM -0700, Kees Cook wrote:
-> > > > On Fri, Sep 24, 2021 at 02:54:24PM +0100, Mark Rutland wrote:
-> > > > > On Thu, Sep 23, 2021 at 06:16:16PM -0700, Kees Cook wrote:
-> > > > > > On Thu, Sep 23, 2021 at 05:22:30PM -0700, Vito Caputo wrote:
-> > > > > > > Instead of unwinding stacks maybe the kernel should be sticking an
-> > > > > > > entrypoint address in the current task struct for get_wchan() to
-> > > > > > > access, whenever userspace enters the kernel?
-> > > > > > 
-> > > > > > wchan is supposed to show where the kernel is at the instant the
-> > > > > > get_wchan() happens. (i.e. recording it at syscall entry would just
-> > > > > > always show syscall entry.)
-> > > > > 
-> > > > > It's supposed to show where a blocked task is blocked; the "wait
-> > > > > channel".
-> > > > > 
-> > > > > I'd wanted to remove get_wchan since it requires cross-task stack
-> > > > > walking, which is generally painful.
-> > > > 
-> > > > Right -- this is the "fragile" part I'm worried about.
-> > 
-> > I'd like to clarify this concern first -- is the proposed fix actually
-> > fragile? Because I think we'd be better off just restoring behavior than
-> > trying to invent new behavior...
-> > 
-> > i.e. Josh, Jann, do you see any issues with Qi Zheng's fix here:
-> > https://lore.kernel.org/all/20210924062006.231699-4-keescook@chromium.org/
-> 
-> Even with that patch, it doesn't lock the task's runqueue before reading
-> the stack, so there's still the possibility of the task running on
-> another CPU and the unwinder going off the rails a bit, which might be
-> used by an attacker in creative ways similar to the /proc/<pid>/stack
-> vulnerability Jann mentioned earlier.
+Currently, the Linux kernel provides two types of reaction to kernel
+warnings:
+ 1. Do nothing (by default),
+ 2. Call panic() if panic_on_warn is set. That's a very strong reaction,
+    so panic_on_warn is usually disabled on production systems.
 
-Since I think we're considering get_wchan() to be slow-path, can we just
-lock the runqueue and use arch_stack_walk_reliable()?
+From a safety point of view, the Linux kernel misses a middle way of
+handling kernel warnings:
+ - The kernel should stop the activity that provokes a warning,
+ - But the kernel should avoid complete denial of service.
 
+From a security point of view, kernel warning messages provide a lot of
+useful information for attackers. Many GNU/Linux distributions allow
+unprivileged users to read the kernel log, so attackers use kernel
+warning infoleak in vulnerability exploits. See the examples:
+  https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+  https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html
+
+Let's introduce the pkill_on_warn boot parameter.
+If this parameter is set, the kernel kills all threads in a process
+that provoked a kernel warning. This behavior is reasonable from a safety
+point of view described above. It is also useful for kernel security
+hardening because the system kills an exploit process that hits a
+kernel warning.
+
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 4 ++++
+ kernel/panic.c                                  | 5 +++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 91ba391f9b32..86c748907666 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4112,6 +4112,10 @@
+ 	pirq=		[SMP,APIC] Manual mp-table setup
+ 			See Documentation/x86/i386/IO-APIC.rst.
+ 
++	pkill_on_warn=	Kill all threads in a process that provoked a
++			kernel warning.
++			Format: { "0" | "1" }
++
+ 	plip=		[PPT,NET] Parallel port network link
+ 			Format: { parport<nr> | timid | 0 }
+ 			See also Documentation/admin-guide/parport.rst.
+diff --git a/kernel/panic.c b/kernel/panic.c
+index cefd7d82366f..47b728bfb1d3 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -53,6 +53,7 @@ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
+ bool crash_kexec_post_notifiers;
+ int panic_on_warn __read_mostly;
++int pkill_on_warn __read_mostly;
+ unsigned long panic_on_taint;
+ bool panic_on_taint_nousertaint = false;
+ 
+@@ -610,6 +611,9 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ 
+ 	print_oops_end_marker();
+ 
++	if (pkill_on_warn && system_state >= SYSTEM_RUNNING)
++		do_group_exit(SIGKILL);
++
+ 	/* Just a warning, don't kill lockdep. */
+ 	add_taint(taint, LOCKDEP_STILL_OK);
+ }
+@@ -694,6 +698,7 @@ core_param(panic, panic_timeout, int, 0644);
+ core_param(panic_print, panic_print, ulong, 0644);
+ core_param(pause_on_oops, pause_on_oops, int, 0644);
+ core_param(panic_on_warn, panic_on_warn, int, 0644);
++core_param(pkill_on_warn, pkill_on_warn, int, 0644);
+ core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool, 0644);
+ 
+ static int __init oops_setup(char *s)
 -- 
-Kees Cook
+2.31.1
+
