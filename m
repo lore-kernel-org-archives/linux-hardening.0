@@ -2,133 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5906EC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 21:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3E8C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 21:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35B04613A9
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 21:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7357361504
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 21:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345314AbhI2VGZ (ORCPT
+        id S1346550AbhI2VMO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 17:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344893AbhI2VGY (ORCPT
+        Wed, 29 Sep 2021 17:12:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37996 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1346340AbhI2VMN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Sep 2021 17:06:24 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0637DC061767
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 14:04:41 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id v19so2612005pjh.2
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 14:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FurABvQrnW7SVwUVRUJVf5Azv+RVGAv+gR3wBDsauaI=;
-        b=rpuh4Cn9psRPurHAZOwfwzZdIMhLn3EI2hZI6OkxWUQ9wr7PoYy17LA/S2hdC0molh
-         x7naFVL8ORxyHvk6XU8Urpy4rEKfbkzmh/bHAXpJKlxN4aNQc9RA3Qz8rhTFdCkXHK11
-         6nHk0J9aEvF0lxamc/+wIh6SCR984r4cRANMeCx8ff/uH+27rSh6w7khjk1zI0WTGwvG
-         eGJMmselLZ/VfaB1jkfuvALphegy0dJH9YWLozgw9tnU+rXQwegYkIkgiBnPsyPIYdbf
-         Qyw7am/MQOgdU7U/vre/ki6YRt0cJ8Lp5QBk+d21tZ0+8atwOc3EPdtZNcc3cJBo1pkr
-         m1hw==
+        Wed, 29 Sep 2021 17:12:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632949831;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wIkb/A/ZJJji8jbTcCnkjRo12VXeXRq0QRKfxt1FsB0=;
+        b=InPcSY2D/fXJaNzTzx5ekqdpy7HHyYBAAU6tA+bzWTV5ealKUJ65ow3IHSxvXBS3GVm2eZ
+        foj9CyOuc6DPq4Tcdmp10aUAK0fM2kiPfs3HSFSbqFyDW4R5Z/N4MiBNVfpr7zQHioXvkD
+        YNsQ0GTU5iwOSzXio3JyYvxi8ChDLmE=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-283-i94xkdHYP8Gak3ixJlCBhQ-1; Wed, 29 Sep 2021 17:10:29 -0400
+X-MC-Unique: i94xkdHYP8Gak3ixJlCBhQ-1
+Received: by mail-qk1-f198.google.com with SMTP id j6-20020a05620a288600b0045e5d85ca17so11047134qkp.16
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 14:10:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FurABvQrnW7SVwUVRUJVf5Azv+RVGAv+gR3wBDsauaI=;
-        b=R8MpgzrhRC5IwlnDWKfOP2Rg35YFhT+uDVPTCIGFiVmU12Pw+HPiR7er2jQZ3el6h2
-         eQJv2mTaC+phOFhOm1GshPy4zenLYpVYxGkptql8aARETIPI3pnNx/azEegnE8rK1CgZ
-         NB9jRmM7pphd19t2IVt1xAtdZWfTw6yI6lIDWj/W6usFx30cU6CDg7tsAzIo7drtA6HD
-         0JxAQbUDEkwweW8fcSqvsH3IU5jvRDsxEAnjUxWQMR03x7cOo0xwi2PO9Mid0WGGjiI/
-         XXgdJxQT1/0fuApmpYfORXpLPmEZi0msXAzMJz3Ra7y33aYwX1Y0HhwVIy7kHHqu7zqV
-         hlXg==
-X-Gm-Message-State: AOAM531xp95wmC4TIuEMI7j7jd0CGHNyjiAjwVh6/tWe1f+84HCtM2uK
-        1/UoCURJGGD7HKOasuPgcsbyR0SN6Xf9fQ5jFDK6ZA==
-X-Google-Smtp-Source: ABdhPJzOhQy/gGu8lMtKb8M0sjvDqwDEJ/je0DS9bogbfQiprbFdAgdaZ7mgV7duq5hHM60hS4aDncf0veJTFvsVTxc=
-X-Received: by 2002:a17:90b:3108:: with SMTP id gc8mr8437024pjb.63.1632949481073;
- Wed, 29 Sep 2021 14:04:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wIkb/A/ZJJji8jbTcCnkjRo12VXeXRq0QRKfxt1FsB0=;
+        b=hmsNptVsOV37MojeubhydCiR2am2ZcO1/TBNaMjsgQkTssynrPuXI0ocYuM+LZ0OiR
+         yQTiNsFXY6zVX9QyIoBGPCv0Lj1hh6gwY5LqlEGUcMIbmQpALoSCrChm392Z+RWJ/+yB
+         bH4vpOfevxdno+SiGcTcVf5r+9afYU6Ws96KMIGlHDxwrUBHCs38F24+NK9NMXD2VlSv
+         I4A9c+KQDMCPasGcBu9uQUQ5Ko3uKmWpDWFce0Vnutr9waTGWNhG2XHBjXyGv41A7wDC
+         7Ja59Mxe8wbcJ/F0N+2sPc3a0TaYovzMbXwj+eIo/kKBcTDAOUuxOmvCBAqZY5K0kZd7
+         PEHQ==
+X-Gm-Message-State: AOAM531kxYg4nzLvVxWzTZprvVOPABLfJvaWOAfi0sJx+wRTuKOf9zs6
+        mg9Iy0MFOeSywH6dImjMEg47rhILcHWZvOYZ/lien2Of6UpLu6YtpxUoG6aTtcOz9lHxCbcADGq
+        mI5khAQX4mf5wDCun8bXlkZBukgjK
+X-Received: by 2002:a05:620a:22e:: with SMTP id u14mr1806763qkm.101.1632949829290;
+        Wed, 29 Sep 2021 14:10:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzcgVEpWdM29SW/CX8zRJPEzIxUJPnsb1Fm0pAA0XRfwrFWVYuJzcONjT5C6NUoEyRfY0MPcw==
+X-Received: by 2002:a05:620a:22e:: with SMTP id u14mr1806721qkm.101.1632949829055;
+        Wed, 29 Sep 2021 14:10:29 -0700 (PDT)
+Received: from treble ([2600:1700:6e32:6c00::15])
+        by smtp.gmail.com with ESMTPSA id x10sm569784qtq.45.2021.09.29.14.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Sep 2021 14:10:28 -0700 (PDT)
+Date:   Wed, 29 Sep 2021 14:10:23 -0700
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
+        Stefan Metzmacher <metze@samba.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Michael =?utf-8?B?V2Vpw58=?= <michael.weiss@aisec.fraunhofer.de>,
+        Anand K Mistry <amistry@google.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        Ohhoon Kwon <ohoono.kwon@samsung.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        YiFei Zhu <yifeifz2@illinois.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] proc: Disable /proc/$pid/wchan
+Message-ID: <20210929211023.runlsoqfto7hrl36@treble>
+References: <CAG48ez0Rtv5kqHWw368Ym3GkKodPA+JETOAN+=c2KPa3opENSA@mail.gmail.com>
+ <20210924002230.sijoedia65hf5bj7@shells.gnugeneration.com>
+ <202109231814.FD09DBAD3@keescook>
+ <20210924135424.GA33573@C02TD0UTHF1T.local>
+ <202109240716.A0792BE46@keescook>
+ <20210927090337.GB1131@C02TD0UTHF1T.local>
+ <202109271103.4E15FC0@keescook>
+ <20210927205056.jjdlkof5w6fs5wzw@treble>
+ <202109291152.681444A135@keescook>
+ <20210929194026.GA4323@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20210917061104.2680133-1-brendanhiggins@google.com>
- <20210917061104.2680133-7-brendanhiggins@google.com> <CAK8P3a21j9yJe_X=kU6v2YgOnrhunRbPv+O6STSH71qTb7xnfg@mail.gmail.com>
-In-Reply-To: <CAK8P3a21j9yJe_X=kU6v2YgOnrhunRbPv+O6STSH71qTb7xnfg@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 29 Sep 2021 14:04:30 -0700
-Message-ID: <CAFd5g46KzHbm_mneJPJ00Dk2mi-rrs2bX1tWix8pX7uL0=TibA@mail.gmail.com>
-Subject: Re: [PATCH v1 6/6] bitfield: build kunit tests without structleak plugin
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Shuah Khan <shuah@kernel.org>, David Gow <davidgow@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>, andreas.noever@gmail.com,
-        michael.jamet@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        yehezkelshb@gmail.com, Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        gregkh <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210929194026.GA4323@worktop.programming.kicks-ass.net>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 12:22 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Sep 17, 2021 at 8:11 AM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > From: Arnd Bergmann <arnd@arndb.de>
-> >
-> > The structleak plugin causes the stack frame size to grow immensely:
-> >
-> > lib/bitfield_kunit.c: In function 'test_bitfields_constants':
-> > lib/bitfield_kunit.c:93:1: error: the frame size of 7440 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
-> >
-> > Turn it off in this file.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
-> >  lib/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/lib/Makefile b/lib/Makefile
-> > index 5efd1b435a37c..c93c4b59af969 100644
-> > --- a/lib/Makefile
-> > +++ b/lib/Makefile
-> > @@ -351,7 +351,7 @@ obj-$(CONFIG_OBJAGG) += objagg.o
-> >  obj-$(CONFIG_PLDMFW) += pldmfw/
-> >
-> >  # KUnit tests
-> > -CFLAGS_bitfield_kunit.o := $(call cc-option,-Wframe-larger-than=10240)
-> > +CFLAGS_bitfield_kunit.o := $(call cc-option,-Wframe-larger-than=10240) $(DISABLE_STRUCTLEAK_PLUGIN)
->
-> I think the  $(call cc-option,-Wframe-larger-than=10240) needs to be dropped
-> here. This was not in my original patch and it is definitely broken on
+On Wed, Sep 29, 2021 at 09:40:26PM +0200, Peter Zijlstra wrote:
+> On Wed, Sep 29, 2021 at 11:54:55AM -0700, Kees Cook wrote:
+> 
+> > > > > > > It's supposed to show where a blocked task is blocked; the "wait
+> > > > > > > channel".
+> 
+> > Since I think we're considering get_wchan() to be slow-path, can we just
+> > lock the runqueue and use arch_stack_walk_reliable()?
+> 
+> Funny thing, when a task is blocked it isn't on the runqueue :-)
+> 
+> So if all we want to do is capture a blocked task and fail otherwise we
+> don't need the rq->lock at all.
+> 
+> Something like:
+> 
+> 	unsigned long ip = 0;
+> 
+> 	raw_spin_lock_irq(&p->pi_lock);
+> 	state = READ_ONCE(p->__state);
+> 	smp_rmb(); /* see try_to_wake_up() */
+> 	if (state == TASK_RUNNING || state == TASK_WAKING || p->on_rq)
+> 		goto unlock;
+> 
+> 	ip = /* do actual stack walk on a blocked task */
+> unlock:
+> 	raw_spin_unlock_irq(&p->pi_lock);
+> 
+> 	return ip;
 
-Ah, someone else put that there, so I just left it, but I can drop it.
+Ah, cool :-)
 
-> all architectures
-> with 8KB stack size or less if the function needs that much. What is the amount
-> of actual stack usage you observe without this?
+I'd also add that I don't see any reason to use the "reliable" unwinding
+variant.  AFAIK, just basic stack_trace_save_tsk() should be sufficient.
 
-Well STRUCTLEAK claims 7440 bytes, but I don't entirely believe that.
-Regardless, it is definitely less than 8KB.
+-- 
+Josh
 
-> If we still get a warning, then
-> I think this needs to be fixed in the code.
->
->        Arnd
-
-Cheers
