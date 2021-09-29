@@ -2,120 +2,182 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BEFC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 19:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF7FC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 19:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80A1611C0
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 19:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96280611C0
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 19:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346405AbhI2TDT (ORCPT
+        id S1345362AbhI2TDW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 15:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345276AbhI2TDN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Sep 2021 15:03:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C94A961452;
-        Wed, 29 Sep 2021 19:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632942092;
-        bh=9BZ9SSNsunYXKIbF+mdQMEB+a7jO8KRnYCiZ9joa8Kw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ByqA7vIURnm2UsOZu2n0iL0xlzT0yi80z6jgMGuxYEqGCH0zXDvI6R1U0qBAfdIKf
-         mvm55L8qEXRhYLRnAo/xnvZk88WT3ihqdM7wzWzxzmAUvVmF7XPWpdZdrVMCm7kz0v
-         JNF1LiRbKiZztxduPw91K44Mg1QcybzLj87Dtw0T1a3L8LpUcdvtwi61dEaEpWLh0R
-         mNFmWK+uPoDh4AV4G+3h3EbzPHPxPazjmxBT7uAUBxdxaIZ/QqnUsEJzN/P1kKwArp
-         czJvKoCKbo0uSN92OmrSI74V/u89rF0mcDU0FXPXKWmCFvWNX3OYBp7Fmq6nwiANeJ
-         TWlsJvmH339pA==
-Date:   Wed, 29 Sep 2021 20:00:42 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stefan Metzmacher <metze@samba.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
+        Wed, 29 Sep 2021 15:03:22 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:38639 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345276AbhI2TDV (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 29 Sep 2021 15:03:21 -0400
+Received: by mail-wr1-f51.google.com with SMTP id u18so5951206wrg.5;
+        Wed, 29 Sep 2021 12:01:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=mEoo1pQnu6pHp5PWM8SXaa1FHr3gfkl9owRi01q3hsE=;
+        b=QT7dvnmOmfygOGlTKT9DUAqNlH1d0VnsXCcEFx23jb1dTu7JD0pzQcChEMsIksk6H0
+         l3LUpWDybnbsu1d6jmAzQgYhGrMTP/NU3MIDoKtH3lHyLRzk1kRwHgIlDsqtAnL23Kmu
+         5nWXgQRBXP6lP5ULtWkvNlohjsn+++qS57KLgjq7VWephB0AkS2T/hdGaBJfurhw61Tp
+         rFN7jQRpxmQrUpGzbI3qM4uWKx5UPGtQ4m1pK/fGlWfjEm/x15hxQ/qsHx/DRclhpbZ5
+         WHIZvTcgKEzsj3Ks1/vZX+Ew619WbjKUmvC15JM98O1oCLAmLIQt7+OuSseHgBIwv1Av
+         4Xlw==
+X-Gm-Message-State: AOAM533f+rrETvEPllGbUBFp4F11sn5W3kBzUcPYw2BQkgl/yKFkkadd
+        /c+KrF5D/WC3jzd+orBTnQQ=
+X-Google-Smtp-Source: ABdhPJy1ardq98oFiY34LpGEOjDmhtsZmRBhn3UkbjGJZMFFKb47vUt0fbZWbD1yt5tsb4oHfHeY7Q==
+X-Received: by 2002:a05:6000:1546:: with SMTP id 6mr1776663wry.305.1632942098923;
+        Wed, 29 Sep 2021 12:01:38 -0700 (PDT)
+Received: from [10.9.0.26] ([46.166.133.199])
+        by smtp.gmail.com with ESMTPSA id t11sm686798wrz.65.2021.09.29.12.01.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Sep 2021 12:01:37 -0700 (PDT)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Paul McKenney <paulmck@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Michael =?iso-8859-1?Q?Wei=DF?= 
-        <michael.weiss@aisec.fraunhofer.de>,
-        Anand K Mistry <amistry@google.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        Ohhoon Kwon <ohoono.kwon@samsung.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        YiFei Zhu <yifeifz2@illinois.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] proc: Disable /proc/$pid/wchan
-Message-ID: <20210929190042.GU4199@sirena.org.uk>
-References: <20210923234917.pqrxwoq7yqnvfpwu@shells.gnugeneration.com>
- <CAG48ez0Rtv5kqHWw368Ym3GkKodPA+JETOAN+=c2KPa3opENSA@mail.gmail.com>
- <20210924002230.sijoedia65hf5bj7@shells.gnugeneration.com>
- <202109231814.FD09DBAD3@keescook>
- <20210924135424.GA33573@C02TD0UTHF1T.local>
- <202109240716.A0792BE46@keescook>
- <20210927090337.GB1131@C02TD0UTHF1T.local>
- <202109271103.4E15FC0@keescook>
- <20210927205056.jjdlkof5w6fs5wzw@treble>
- <202109291152.681444A135@keescook>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     notify@kernel.org
+References: <20210929185823.499268-1-alex.popov@linux.com>
+From:   Alexander Popov <alex.popov@linux.com>
+Message-ID: <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
+Date:   Wed, 29 Sep 2021 22:01:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pzbqGaOtRNiVr7w4"
-Content-Disposition: inline
-In-Reply-To: <202109291152.681444A135@keescook>
-X-Cookie: 98% lean.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210929185823.499268-1-alex.popov@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On 29.09.2021 21:58, Alexander Popov wrote:
+> Currently, the Linux kernel provides two types of reaction to kernel
+> warnings:
+>  1. Do nothing (by default),
+>  2. Call panic() if panic_on_warn is set. That's a very strong reaction,
+>     so panic_on_warn is usually disabled on production systems.
+> 
+> From a safety point of view, the Linux kernel misses a middle way of
+> handling kernel warnings:
+>  - The kernel should stop the activity that provokes a warning,
+>  - But the kernel should avoid complete denial of service.
+> 
+> From a security point of view, kernel warning messages provide a lot of
+> useful information for attackers. Many GNU/Linux distributions allow
+> unprivileged users to read the kernel log, so attackers use kernel
+> warning infoleak in vulnerability exploits. See the examples:
+>   https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+>   https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html
+> 
+> Let's introduce the pkill_on_warn boot parameter.
+> If this parameter is set, the kernel kills all threads in a process
+> that provoked a kernel warning. This behavior is reasonable from a safety
+> point of view described above. It is also useful for kernel security
+> hardening because the system kills an exploit process that hits a
+> kernel warning.
+> 
+> Signed-off-by: Alexander Popov <alex.popov@linux.com>
 
---pzbqGaOtRNiVr7w4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch was tested using CONFIG_LKDTM.
+The kernel kills a process that performs this:
+  echo WARNING > /sys/kernel/debug/provoke-crash/DIRECT
 
-On Wed, Sep 29, 2021 at 11:54:55AM -0700, Kees Cook wrote:
-> On Mon, Sep 27, 2021 at 01:50:56PM -0700, Josh Poimboeuf wrote:
+If you are fine with this approach, I will prepare a patch adding the
+pkill_on_warn sysctl.
 
-> > Even with that patch, it doesn't lock the task's runqueue before reading
-> > the stack, so there's still the possibility of the task running on
-> > another CPU and the unwinder going off the rails a bit, which might be
-> > used by an attacker in creative ways similar to the /proc/<pid>/stack
-> > vulnerability Jann mentioned earlier.
+Best regards,
+Alexander
 
-> Since I think we're considering get_wchan() to be slow-path, can we just
-> lock the runqueue and use arch_stack_walk_reliable()?
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 4 ++++
+>  kernel/panic.c                                  | 5 +++++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 91ba391f9b32..86c748907666 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4112,6 +4112,10 @@
+>  	pirq=		[SMP,APIC] Manual mp-table setup
+>  			See Documentation/x86/i386/IO-APIC.rst.
+>  
+> +	pkill_on_warn=	Kill all threads in a process that provoked a
+> +			kernel warning.
+> +			Format: { "0" | "1" }
+> +
+>  	plip=		[PPT,NET] Parallel port network link
+>  			Format: { parport<nr> | timid | 0 }
+>  			See also Documentation/admin-guide/parport.rst.
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index cefd7d82366f..47b728bfb1d3 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -53,6 +53,7 @@ static int pause_on_oops_flag;
+>  static DEFINE_SPINLOCK(pause_on_oops_lock);
+>  bool crash_kexec_post_notifiers;
+>  int panic_on_warn __read_mostly;
+> +int pkill_on_warn __read_mostly;
+>  unsigned long panic_on_taint;
+>  bool panic_on_taint_nousertaint = false;
+>  
+> @@ -610,6 +611,9 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+>  
+>  	print_oops_end_marker();
+>  
+> +	if (pkill_on_warn && system_state >= SYSTEM_RUNNING)
+> +		do_group_exit(SIGKILL);
+> +
+>  	/* Just a warning, don't kill lockdep. */
+>  	add_taint(taint, LOCKDEP_STILL_OK);
+>  }
+> @@ -694,6 +698,7 @@ core_param(panic, panic_timeout, int, 0644);
+>  core_param(panic_print, panic_print, ulong, 0644);
+>  core_param(pause_on_oops, pause_on_oops, int, 0644);
+>  core_param(panic_on_warn, panic_on_warn, int, 0644);
+> +core_param(pkill_on_warn, pkill_on_warn, int, 0644);
+>  core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool, 0644);
+>  
+>  static int __init oops_setup(char *s)
+> 
 
-Unfortunately arch_stack_walk_reliable() is only available for powerpc,
-s390 and x86 currently - work is in progress to implement it for arm64
-as well but it's not there yet.
-
---pzbqGaOtRNiVr7w4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmFUt9kACgkQJNaLcl1U
-h9BfJgf+O3xANtFrCZ5ZmvugZNPSBKmFmwXYza30TbY2cow+hwARTUCHPxRCDxq3
-xHnib4kJ43GPqzw/CGZzdzYMv9JY6Uxk7o0v/4bemkoH5hywwVC0vefRVeFCsX9b
-Wq7NwpmwbKz9hL3fRnlWL5Y8MGWieuOo+QgK5eOe82h9Z9BjzxLTY2hIKk09AlQA
-NGouW/lSLQPyfN5SyD2LKETG1y2SlY3GwYEZIDSCScY/9JnlF40pgByIudz+Xi5O
-xIZUR6UpeCQAAFf6f6VgoUWVAdVgLKMq/wnBmajicvzj+p8QFi3krttH2H8ZwVX6
-v2RVJaXwOmj/g/llVWW6WgZqgxcz2Q==
-=nUIA
------END PGP SIGNATURE-----
-
---pzbqGaOtRNiVr7w4--
