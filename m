@@ -2,112 +2,133 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D136EC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 17:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D13C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 17:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA6D761440
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 17:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4BA614C8
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 17:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344647AbhI2Rgw (ORCPT
+        id S1345019AbhI2RrD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 13:36:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        Wed, 29 Sep 2021 13:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244721AbhI2Rgv (ORCPT
+        with ESMTP id S1344502AbhI2RrC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Sep 2021 13:36:51 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B20C06161C;
-        Wed, 29 Sep 2021 10:35:10 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id j27so2487068wms.0;
-        Wed, 29 Sep 2021 10:35:10 -0700 (PDT)
+        Wed, 29 Sep 2021 13:47:02 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFCFC06161C;
+        Wed, 29 Sep 2021 10:45:21 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id v10so11844324edj.10;
+        Wed, 29 Sep 2021 10:45:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n8HsfV7RFQWoa5/TFlxFufaedtFCNha3XC2H4rDNQEw=;
-        b=dTMB3JlFoZDI53nuVwIENnq/dXA5ultZwJbnG/iLS1y3AHpEsc82O4yU1r4gKIQ3tg
-         Lur+dstLEbIcEeBTv7Hvj78kVY1OO7KnWrhDqwZCNbpVg265sGX8K6cgEAe6lP+QEjnB
-         ftY1I6YclRwDcbRuiL1vD4BZa3QWUgYapW8EsawKzdndVOavplv78DVU6rnTG63tqrVt
-         fRPMd7cqJO6fuVp5UpwLGfvJtmuib68fBTHA6r0iWEj4crfz6eEOvuqH31B8xbwamUiu
-         l6sDMMr0lDCqp6cRYxacKYaaWyBxt67plFSGZEHW73rzT0EHPrtO+YSVo/syngnV56uj
-         yqwQ==
+        bh=FIySyrXxkEKwm26jEVGIMsY7wJRMxgw98emBJrp8y6k=;
+        b=TPaJQTAmcDitxf8sdYRG0suoD9OHN+sqJSpRUZK8MeJi++z5D1ptjyVQYeiOQb0xRz
+         q/12yatXna9nstDHjtX91d0WHkcHgEAmqP9KMZqwMfGcdSq7xnaER0/LWjNOXtpP9FKn
+         F3+D2FaUshkIzokd6Ze1bOk/b9cs9UH1g7G0Ksb88yXanQlTAXv2ypXxRprYdArK4k0G
+         Xn+kJjK5+UFvUyGSF2oJM/6kx8z9D3NMPMQN/uBU+/8OO7orSgyv8a58AwQYVQpBjb3A
+         18cLyXbIvuY44Xrh/FnXl+PelNAiW3VaJSNiucUy2QkJmmJ3Hh60DV5sVavSCgo0lUb8
+         A+Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=n8HsfV7RFQWoa5/TFlxFufaedtFCNha3XC2H4rDNQEw=;
-        b=Gy5xwbyGRkURPSbiok6us1at+sblxA+hxR3JcYSWDfqi4lyZFJbcVTGHRWjfxsvRBb
-         9FQ0EY0/aaXTgXdsRdTJL8tq2JwmziYMwBD+iHvtmdBSPQVLjE5ruWPISb1JI03tmp3N
-         2MuG9rZ4mvrqk1hJIWcznDLvN9fBACq3kgM/4K1jJ9CqcPshNZTw07ScVOhF5ReW4BB/
-         43qbe3dxFGHjpuABp1wOo8DK5lqRHCSMjP1dcgrFYbPgBRzPuKAiGs43i1cMyv+iJ9Pf
-         +hCUzVxSQVaS4188o0Wmm4uiAim8YrRMbigROMyVDnBwrb7FqV0sjM2yPmvPN5YEEjz8
-         Ehnw==
-X-Gm-Message-State: AOAM531hw2W2RDXzNRTLvnPPOzy+q8nHebrReVq6wSLSoQmqboixx8v6
-        IuPe7SsYt2vRJVqjks1GYNtz0CMEMa4=
-X-Google-Smtp-Source: ABdhPJyATJPwbEg/doeTmrol2GqI/583Jn1pVMHc8sQzIjAK5xGXGIUUIjklCtqxz6mUCv6ObbLl9w==
-X-Received: by 2002:a1c:a94a:: with SMTP id s71mr11527424wme.32.1632936908571;
-        Wed, 29 Sep 2021 10:35:08 -0700 (PDT)
-Received: from [192.168.178.40] (ipbcc061e7.dynamic.kabel-deutschland.de. [188.192.97.231])
-        by smtp.gmail.com with ESMTPSA id u2sm512802wrr.35.2021.09.29.10.35.08
+        bh=FIySyrXxkEKwm26jEVGIMsY7wJRMxgw98emBJrp8y6k=;
+        b=bwTpLIRvO8V7/spP36xvwJ4PbNUS7gG2Vsrf2zLJ4FLJpmD7AZGqmA8C/jyg09A2au
+         vXt4p8KAAX7K02XDtWsUqICafmz+KBJqK860EsJP7SqXnbeA01VPyZkKJn9G2gWOHo7d
+         nZEfhKxFfkBN27/FoJltM1wRqMgWtMPfRGDjp0Xp5udoimmKBnMZSWkF6VMANqoHJ+Re
+         r4PTWmZ63nBcgpECIENwKmhCkntap83iQ3xQ4lgCXqbnvmdIN+qnqKaaN4SWl3zlBO5L
+         3VkCdGHR+C1TPjJb7+WuFXjHanPEGjJ/6GIj/P4/mvILBlgrZF5Y11WY3ACdd+z38pR9
+         3NBw==
+X-Gm-Message-State: AOAM531MHijAAd/9isynwPi8J8V5whxOlJaWBTZDOA7yLwONWtl2vMPn
+        Jh+GZlt+Dpjt55r8luaHeFpMX4m6bZ0=
+X-Google-Smtp-Source: ABdhPJyv6MYqHGEXqX5DmaZbUP++IQh7gQRcGMZL91Fz4wXLE2Arze2Mh7vp5GGyw/Lnk8fL/qPVcw==
+X-Received: by 2002:a50:fa89:: with SMTP id w9mr1411930edr.113.1632937519918;
+        Wed, 29 Sep 2021 10:45:19 -0700 (PDT)
+Received: from [192.168.0.108] ([176.228.98.2])
+        by smtp.gmail.com with ESMTPSA id dt4sm350760ejb.27.2021.09.29.10.45.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Sep 2021 10:35:08 -0700 (PDT)
-Subject: Re: [PATCH][next] scsi: target: tcmu: Use struct_size() helper in
- kmalloc()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Wed, 29 Sep 2021 10:45:19 -0700 (PDT)
+Subject: Re: [PATCH][net-next] net/mlx4: Use array_size() helper in
+ copy_to_user()
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210927224344.GA190701@embeddedor>
-From:   Bodo Stroesser <bostroesser@gmail.com>
-Message-ID: <289a7052-7062-ce88-7cbd-dd29f23b4c60@gmail.com>
-Date:   Wed, 29 Sep 2021 19:35:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+References: <20210928201733.GA268467@embeddedor>
+ <283d239b-9af9-d3a3-72be-9138c032ef63@gmail.com>
+ <16ae2d2d-3aba-82b2-0bd8-90f7d0367a62@gmail.com>
+From:   Tariq Toukan <ttoukan.linux@gmail.com>
+Message-ID: <e2f72429-91c5-7140-c13d-35d4623092de@gmail.com>
+Date:   Wed, 29 Sep 2021 20:45:17 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20210927224344.GA190701@embeddedor>
+In-Reply-To: <16ae2d2d-3aba-82b2-0bd8-90f7d0367a62@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 28.09.21 00:43, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version,
-> in order to avoid any potential type mistakes or integer overflows
-> that, in the worst scenario, could lead to heap overflows.
+
+
+On 9/29/2021 8:21 PM, Eric Dumazet wrote:
 > 
-> Link: https://github.com/KSPP/linux/issues/160
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/target/target_core_user.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-> index 9f552f48084c..dc220fad06fa 100644
-> --- a/drivers/target/target_core_user.c
-> +++ b/drivers/target/target_core_user.c
-> @@ -1255,7 +1255,6 @@ tcmu_tmr_notify(struct se_device *se_dev, enum tcm_tmreq_table tmf,
->   {
->   	int i = 0, cmd_cnt = 0;
->   	bool unqueued = false;
-> -	uint16_t *cmd_ids = NULL;
->   	struct tcmu_cmd *cmd;
->   	struct se_cmd *se_cmd;
->   	struct tcmu_tmr *tmr;
-> @@ -1292,7 +1291,7 @@ tcmu_tmr_notify(struct se_device *se_dev, enum tcm_tmreq_table tmf,
->   	pr_debug("TMR event %d on dev %s, aborted cmds %d, afflicted cmd_ids %d\n",
->   		 tcmu_tmr_type(tmf), udev->name, i, cmd_cnt);
->   
-> -	tmr = kmalloc(sizeof(*tmr) + cmd_cnt * sizeof(*cmd_ids), GFP_NOIO);
-> +	tmr = kmalloc(struct_size(tmr, tmr_cmd_ids, cmd_cnt), GFP_NOIO);
->   	if (!tmr)
->   		goto unlock;
->   
+> On 9/29/21 3:24 AM, Tariq Toukan wrote:
+>>
+>>
+>> On 9/28/2021 11:17 PM, Gustavo A. R. Silva wrote:
+>>> Use array_size() helper instead of the open-coded version in
+>>> copy_to_user(). These sorts of multiplication factors need
+>>> to be wrapped in array_size().
+>>>
+>>> Link: https://github.com/KSPP/linux/issues/160
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>>    drivers/net/ethernet/mellanox/mlx4/cq.c | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/mellanox/mlx4/cq.c b/drivers/net/ethernet/mellanox/mlx4/cq.c
+>>> index f7053a74e6a8..4d4f9cf9facb 100644
+>>> --- a/drivers/net/ethernet/mellanox/mlx4/cq.c
+>>> +++ b/drivers/net/ethernet/mellanox/mlx4/cq.c
+>>> @@ -314,7 +314,8 @@ static int mlx4_init_user_cqes(void *buf, int entries, int cqe_size)
+>>>                buf += PAGE_SIZE;
+>>>            }
+>>>        } else {
+>>> -        err = copy_to_user((void __user *)buf, init_ents, entries * cqe_size) ?
+>>> +        err = copy_to_user((void __user *)buf, init_ents,
+>>> +                   array_size(entries, cqe_size)) ?
+>>>                -EFAULT : 0;
+>>>        }
+>>>   
+>>
+>> Thanks for your patch.
+>> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+> 
+> Not sure why avoiding size_t overflows would make this code safer.
+> init_ents contains PAGE_SIZE bytes...
+> 
+> BTW
+> 
+> Is @entries guaranteed to be a power of two ?
+
+Yes.
+
+> 
+> This function seems to either copy one chunk ( <= PAGE_SIZE),
+> or a number of full pages.
 > 
 
-Looks good. Thank you.
-
-Reviewed-by: Bodo Stroesser <bostroesser@gmail.com>
+Exactly. No remainder handling is needed, for the reason you mentioned 
+above.
