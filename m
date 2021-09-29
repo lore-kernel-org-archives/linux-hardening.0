@@ -2,66 +2,65 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCCAC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4F8C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5412613CE
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB9A61406
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346439AbhI2WFT (ORCPT
+        id S1346938AbhI2WEG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 18:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346846AbhI2WEG (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
         Wed, 29 Sep 2021 18:04:06 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 190B1C061767
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 15:02:25 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id e7so4150927pgk.2
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 15:02:25 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346531AbhI2WEF (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 29 Sep 2021 18:04:05 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B733CC061767
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 15:02:23 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 17so4151472pgp.4
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 15:02:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=24HVUmck1VAppvs7Tv/9xSBlIyZfrWIg2aOoPOSGCPk=;
-        b=Z7lHWLK+hOMb6TEvynvt5OOVH+QHo2cH2h2k1Ry8FKJTYlHQETIp6IxEc+SmF1BeTX
-         yJOzvuRU5hMPQzdYuHJ65wJIoEZw01G5PrAIGEON27gmtBXYz/wKT09kpuwkF/QySjet
-         PmgwVIZDx7jTYnmGY8m2xgJopVcTncBlMz/2k=
+        bh=uRhBWrgFlaAm1vNONWn7eBn+C1gWiV8BF1SotpY7wF4=;
+        b=XKTJ3egRbn88mEWHt3e+NT5KCfMY5twURwT5zz5ZEAy4HBp8LSwa/+FnrXK3LRRKkT
+         z6g2BRe8HPSATIQEdZO9kSxRUJH9iUGNXS5qMILUhHDhj8MwNkfpgrdoFzdwmxBE3ALy
+         dACyf1uiHL0kU9LpK6/Jwb0rEZezv2HsKTPx4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=24HVUmck1VAppvs7Tv/9xSBlIyZfrWIg2aOoPOSGCPk=;
-        b=0vaIE2Y+JDGrPcQsfQTYJHu2pwFdoHWTiir7ru3w4sSiUne1ffau7F35d4sD2Qk2d7
-         F4pMmSTD2ABXQiuc0bMg9JTX4sTqua6YD3dKsJgOSZHhZtjgU3gJtzoy1kj+BOupoIpZ
-         SRWHOQxufKW6dNO/jfsQSG+Tme0cDqft3cvr0n+xdWoegfPOulgUWBKsj4vdYoz9Cf1l
-         bxByh56yGyUApHN06FYLmgJQZPTvQcvNdXecy1J10afDwe1Yxz5axD110j4VZTa+O1bC
-         Lyb6P3MoO9LWeHg9+gG1elT6vEnTSwWNWjesMLTcRRosL3mH3JHqctHMhQmPrJjmpSh6
-         b9Gw==
-X-Gm-Message-State: AOAM532yxaGrUgykdPYFb/adosfj/X8TtVQ722aW8gXuvKPHMDHkW1OC
-        ombIXpn98ifBUDuya8Au8T6voQ==
-X-Google-Smtp-Source: ABdhPJwTXGwIeBPVP+42Jds8fbtC28D1cwIq/SGc7KPzUX4XorS7Wwdx4edKqckr5//XoxuyCbyXgQ==
-X-Received: by 2002:a05:6a00:1a04:b0:44b:346a:2a25 with SMTP id g4-20020a056a001a0400b0044b346a2a25mr753024pfv.59.1632952944631;
-        Wed, 29 Sep 2021 15:02:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u24sm720217pfm.81.2021.09.29.15.02.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=uRhBWrgFlaAm1vNONWn7eBn+C1gWiV8BF1SotpY7wF4=;
+        b=zJLrBizMqafYC5WkFkCgJzd+dqLFW73RtdKq+mLPwItZ0pVuzRKRDCW3jfQMpYXttD
+         dgyz1r/vrtMkpEb6+YSuJsRpNvqgQVToqyMn7Xex2uZEG+prd+Kp9qviP8uwVsuk2jjP
+         jBOx5kKEh4LPw3jrwvMocsRbc3iGco0rLQL/2FMoi2P8Jm7Fq4Va/haMV/lLYhrmN0HL
+         tQQVoQVy7B6bpo87iS8L/OyIQbbps9IeOp0K72Px5i/DPGrf6CxGBzp/oXR43k23YVNi
+         mrdne4S58MNVe0CP2f4feu1V1D2HnBiAJVo+SmsWW9vMrd6RdWqjrR4j9IvYzl1eaob8
+         QHMA==
+X-Gm-Message-State: AOAM530DsORC6Qed1WYko5WbY37+v0xHTMe5gQeHk6+eyq4P/RgJcaex
+        8bysffV1DZJ4nA2QKpjAgM5Zfg==
+X-Google-Smtp-Source: ABdhPJxC17A4z/lSx47PDiLiFULUOvXwmBTm++Bv6j1g8B33SA4QeFQDMuP4z5hdB2v8p/omo/yiPg==
+X-Received: by 2002:a62:51c6:0:b0:43d:e849:c69d with SMTP id f189-20020a6251c6000000b0043de849c69dmr843514pfb.31.1632952943316;
         Wed, 29 Sep 2021 15:02:23 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u6sm582368pgr.3.2021.09.29.15.02.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Sep 2021 15:02:20 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        kernel test robot <oliver.sang@intel.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Jann Horn <jannh@google.com>, Ingo Molnar <mingo@redhat.com>,
+Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@redhat.com>,
         Juri Lelli <juri.lelli@redhat.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
+        kernel test robot <oliver.sang@intel.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Jann Horn <jannh@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Christian Brauner <christian.brauner@ubuntu.com>,
         Anand K Mistry <amistry@google.com>,
@@ -69,6 +68,7 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alexey Gladkov <legion@kernel.org>,
         =?UTF-8?q?Michael=20Wei=C3=9F?= <michael.weiss@aisec.fraunhofer.de>,
         Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
         "Tobin C. Harding" <me@tobin.cc>,
         Tycho Andersen <tycho@tycho.pizza>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -87,104 +87,77 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-hardening@vger.kernel.org, x86@kernel.org
-Subject: [PATCH v2 5/6] x86: Fix get_wchan() to support the ORC unwinder
-Date:   Wed, 29 Sep 2021 15:02:17 -0700
-Message-Id: <20210929220218.691419-6-keescook@chromium.org>
+Subject: [PATCH v2 2/6] sched: Add wrapper for get_wchan() to keep task blocked
+Date:   Wed, 29 Sep 2021 15:02:14 -0700
+Message-Id: <20210929220218.691419-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210929220218.691419-1-keescook@chromium.org>
 References: <20210929220218.691419-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2627; i=keescook@chromium.org; h=from:subject; bh=Q52zDV9YajI3kkCmjslJF3Brs06bPq6a2KD+X5RLir0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhVOJpPZoMxuXMkWZwnGRPVVYkoF0bnz3DmLyKHCXu Uc/LlKWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVTiaQAKCRCJcvTf3G3AJhkJEA CSWLiYfLZArGwkCuomnnMwflTp76Al/53DgAspMiCGY+D9t1wxV/T0OQ+XuriYreg1Ob4OTVbSc7Ai MIFwyTGivV6BZBrE8hrDHjIUqcuKSeX4OU8TW9mDA79zmYv3etEQtpaliZi9F3ib9JuVjOJUKxBXly NXBX9p6RRX5RuxkNaiWIe1fiQfx4mF6ngBP+kyX40O6ZiIfnycCs6M9fqnaMf29HacI1kGKmfXieIL eZCQGdWLmGBwAaqhzhBcsPkPoCRmD+Z6NXu0xcwg7UeCQ2iwEOfdauHk/jIhQBy6eQ2ulLTqKHEFqV 22syyb7kEo3Nd0KxZGwIlLBko8LvmTaTgxNkOWSWBEycJgFO4z1myxXJath5y8VAxxJ9VL5VYQcE5E Rvi0MmCFsX1m9uW9jbtc8KHyJCH+Vosizn748Dgw/qV71Gb9cELpPnhe+qQxDw6kbw1/cklbxXc5n1 YrmgxCiKjSK6IAEcgHRKx/gQl/erbweNjGqeveXvp4hkKYd9YdLhRVVVeodSH32F105/S7GbYXGdzn NtN1ijRVXePtNwpGATDj8mNZfPIVZWevD0LHAFv1SnqnN2Y8yXFQx1bqThDITEct88Cuxujc2H7/kl bkSfx/sgrTI0SMpE9A+H4LKkTmQ1xD+aPxQ47C/a6x/lxMtP7AGoPiRrASmg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2019; h=from:subject; bh=hDSVcS+yS4zZDdIDUOZIhgW3NO0PbtwfKyydbAUGaMU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhVOJoXE4lnUJcVhzfp3ihdwxyB+SepKuT2zcL6CCW aOKOM4iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVTiaAAKCRCJcvTf3G3AJtD4EA CKIae2l/Y4dicmSYuz6SdCtnqA0Rd5XecPN40jZIiItJs97tI0zHJfZJ0grAuBL62iw0oTrDAep0rJ hbKWV0M7J6ZcSqjI/alre0T7Jp1q8rOp/PnsXrdt23dO2vZXQh/6qvDemzNIvxOpQ4xk1cEann4FyQ mb1o02iC6K5JJaKT7HJXFfQo3fi++ezzGECuBqyyZYFcIMx5RuTUS+ZpWNgraW+WZpPgzl6ZXGP4bn xB+1NZDZqY5Q9oZ8vuDm1SC/+QwmZJCrgyeQTS213hV7Kuv0qIo/GTM+v/+/jTbqfXPZUWNKUbB28I TxAnDGXvT77m6f1R0ihCffDBj36GLZF6X+u1Mb8BeSeg7UGxXLf9EdwMsZIGs9PhUL6titRBgNwAc0 R7vAin9+bCS4p/0Tl9HfHtJoIRUWleimK8KDxGOz6LuA8ZozXBRcwUuCoTwT+9nF4T06Nou/8fcvfF BSG0SkCgkr0ug2ebMP2txQ8gxIXcWKntvutRuw0xuKNeHWIGtg8JMccsidYwQ6l2D0q6FMDcE+K1QJ YU4/m+ZEpM1mrWDvBfI0i2fkC85s++MH3kuyyx15f8J6ZosClV6STeF5l8QBbZC5wWgoxEdV50MX+A QOOb4MBGs24mNWLO/oiPqGS21M141Fn88kp6/GifGhov5UAVvVKoaTEUseeA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Qi Zheng <zhengqi.arch@bytedance.com>
+Having a stable wchan means the process must be blocked and for it to
+stay that way while performing stack unwinding.
 
-Currently, the kernel CONFIG_UNWINDER_ORC option is enabled by default
-on x86, but the implementation of get_wchan() is still based on the frame
-pointer unwinder, so the /proc/<pid>/wchan usually returned 0 regardless
-of whether the task <pid> is running.
-
-Reimplement get_wchan() by calling stack_trace_save_tsk(), which is
-adapted to the ORC and frame pointer unwinders.
-
-Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20210831083625.59554-1-zhengqi.arch@bytedance.com
 ---
- arch/x86/kernel/process.c | 51 +++------------------------------------
- 1 file changed, 3 insertions(+), 48 deletions(-)
+ include/linux/sched.h |  1 +
+ kernel/sched/core.c   | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 1d9463e3096b..e645925f9f02 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -944,58 +944,13 @@ unsigned long arch_randomize_brk(struct mm_struct *mm)
-  */
- unsigned long get_wchan(struct task_struct *p)
- {
--	unsigned long start, bottom, top, sp, fp, ip, ret = 0;
--	int count = 0;
-+	unsigned long entry = 0;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 39039ce8ac4c..0c8185089e20 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -2137,6 +2137,7 @@ static inline void set_task_cpu(struct task_struct *p, unsigned int cpu)
+ #endif /* CONFIG_SMP */
  
- 	if (p == current || task_is_running(p))
- 		return 0;
+ extern bool sched_task_on_rq(struct task_struct *p);
++extern unsigned long sched_task_get_wchan(struct task_struct *p);
  
--	if (!try_get_task_stack(p))
--		return 0;
--
--	start = (unsigned long)task_stack_page(p);
--	if (!start)
--		goto out;
--
--	/*
--	 * Layout of the stack page:
--	 *
--	 * ----------- topmax = start + THREAD_SIZE - sizeof(unsigned long)
--	 * PADDING
--	 * ----------- top = topmax - TOP_OF_KERNEL_STACK_PADDING
--	 * stack
--	 * ----------- bottom = start
--	 *
--	 * The tasks stack pointer points at the location where the
--	 * framepointer is stored. The data on the stack is:
--	 * ... IP FP ... IP FP
--	 *
--	 * We need to read FP and IP, so we need to adjust the upper
--	 * bound by another unsigned long.
--	 */
--	top = start + THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;
--	top -= 2 * sizeof(unsigned long);
--	bottom = start;
--
--	sp = READ_ONCE(p->thread.sp);
--	if (sp < bottom || sp > top)
--		goto out;
--
--	fp = READ_ONCE_NOCHECK(((struct inactive_task_frame *)sp)->bp);
--	do {
--		if (fp < bottom || fp > top)
--			goto out;
--		ip = READ_ONCE_NOCHECK(*(unsigned long *)(fp + sizeof(unsigned long)));
--		if (!in_sched_functions(ip)) {
--			ret = ip;
--			goto out;
--		}
--		fp = READ_ONCE_NOCHECK(*(unsigned long *)fp);
--	} while (count++ < 16 && !task_is_running(p));
--
--out:
--	put_task_stack(p);
--	return ret;
-+	stack_trace_save_tsk(p, &entry, 1, 0);
-+	return entry;
+ /*
+  * In order to reduce various lock holder preemption latencies provide an
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1bba4128a3e6..4a30455e1ff5 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1962,6 +1962,22 @@ bool sched_task_on_rq(struct task_struct *p)
+ 	return task_on_rq_queued(p);
  }
  
- long do_arch_prctl_common(struct task_struct *task, int option,
++unsigned long sched_task_get_wchan(struct task_struct *p)
++{
++	unsigned int state;
++	unsigned long ip = 0;
++
++	/* Only get wchan if task is blocked and we can keep it that way. */
++	raw_spin_lock_irq(&p->pi_lock);
++	state = READ_ONCE(p->__state);
++	smp_rmb(); /* see try_to_wake_up() */
++	if (state != TASK_RUNNING && state != TASK_WAKING && !p->on_rq)
++		ip = get_wchan(p);
++	raw_spin_unlock_irq(&p->pi_lock);
++
++	return ip;
++}
++
+ static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+ {
+ 	if (!(flags & ENQUEUE_NOCLOCK))
 -- 
 2.30.2
 
