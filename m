@@ -2,98 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD639C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 08:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5DCC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 10:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85E9E61357
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 08:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DDB613A7
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 10:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244931AbhI2IxX (ORCPT
+        id S245462AbhI2KZu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 04:53:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49962 "EHLO
+        Wed, 29 Sep 2021 06:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244928AbhI2IxW (ORCPT
+        with ESMTP id S245325AbhI2KZu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Sep 2021 04:53:22 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D261DC06161C;
-        Wed, 29 Sep 2021 01:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4h+WjU1N5cfE4q4zvv/AkfkoROJ4yuJcSxv2qDwXp8A=; b=kjkV9U7jjvkuZx1HNd22gm1vKE
-        WJuWv/Cm7z0my16pQVbeeJ3tdwmYXoiSKRBGaGsnu598GyDjltR5gy+uhDOcRr9h4VEU0tKZfYi3Y
-        z13Vgs0pTjPvMDVPpP7QU0zP96mG1ALAauLu/0Mn0hTJYsO8yFTJsCMhwPC0TA7NsgPEVOP3BhskQ
-        6JOaDnAd1vPdGokansJgZ4bfuF6M6xgSLbeBzReCnp4+xp3KzWMCgT1W6UMK98XjLukDYECtfVRio
-        DBMO8eMtj+LsUQlmD9+H8fCgqhoZS4Da2KCuQm3s0IEh8XlNjE0TC6F7HESXdXgsx020mlebk38zD
-        pjPm9fVQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mVVGq-00Bf4M-DZ; Wed, 29 Sep 2021 08:49:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E67F230023F;
-        Wed, 29 Sep 2021 10:48:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C22632DC92D07; Wed, 29 Sep 2021 10:48:53 +0200 (CEST)
-Date:   Wed, 29 Sep 2021 10:48:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Stefan Metzmacher <metze@samba.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Michael =?iso-8859-1?Q?Wei=DF?= 
-        <michael.weiss@aisec.fraunhofer.de>,
-        Anand K Mistry <amistry@google.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        Ohhoon Kwon <ohoono.kwon@samsung.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        YiFei Zhu <yifeifz2@illinois.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] proc: Disable /proc/$pid/wchan
-Message-ID: <YVQodT191JGCCY/F@hirez.programming.kicks-ass.net>
-References: <20210923233105.4045080-1-keescook@chromium.org>
- <20210923234917.pqrxwoq7yqnvfpwu@shells.gnugeneration.com>
- <CAG48ez0Rtv5kqHWw368Ym3GkKodPA+JETOAN+=c2KPa3opENSA@mail.gmail.com>
- <20210924002230.sijoedia65hf5bj7@shells.gnugeneration.com>
- <202109231814.FD09DBAD3@keescook>
- <20210924135424.GA33573@C02TD0UTHF1T.local>
+        Wed, 29 Sep 2021 06:25:50 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46548C06161C;
+        Wed, 29 Sep 2021 03:24:09 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id x7so6644659edd.6;
+        Wed, 29 Sep 2021 03:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JhKUer31n+qbgtT3+NjW3VfpyAlVd0vh/K+LV/OlnC0=;
+        b=jSphoSBJrNAGxP46hTwTkPJ+4SUeOjCSlvf6lHPnYVcIC2Sp9CIctgkr/4C25tDF4Y
+         3pNnH15BJv95ZySDXwNuhU0gj3WxUA4LvlvjK2qj6zpN505D96/NoD80xA8NFR3dqwp9
+         bhZI6vR8M1TvuakHkXKD3eN5qcPlKtog7x9T59p4Lsfe5rJW6xX8g57yAqwVN05+FtiZ
+         ctmYeh+gpPNaenfir8Hip2wUdy2nUwU11ZWgtRieT91IYcPk6TPOT8MoNSvTxweao2PG
+         ukPFxyd4k/x60OrMfQ5ThSqQSTwYxJ/8gEcsTv4Kvh9xpuYb8kh3xPB55xUTK3QzQNvP
+         HePw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JhKUer31n+qbgtT3+NjW3VfpyAlVd0vh/K+LV/OlnC0=;
+        b=cptjrHhRXebv+Hvm4r5MjGC48ClJAdtbndRr4k4rhX8FrKhHlxeEq6B2PYYdcWfsht
+         AHLS3pLdckhb/PKZI4J6kfaqzhsveDt/vedxCp9bEz+nkd2/85i6cebtE/zQzXrOx0el
+         etv4Icd8H0rFUFuRhNc28WaavpLUyyVtGd2YkUqo8bILVALIbe6mch1AovYIu+1ZMmc9
+         g5p2h9XJPpqTQoC7i2ZDhIFxmxO0GOYZF8oov1T2PNKl+ufPCpkgFY4nmGOfvo6PnEEx
+         PWvdSrTWRGSGRVN+pYtCms9q7fOdA3Slcalf+LIMsMib8lL0llxn5cRMH4YUPRtNwsWi
+         V4nQ==
+X-Gm-Message-State: AOAM530Rd4K8sxihbUJ3j5+3wfqTYChU+oFuSyvbyJIPoZYSrV0ydUsN
+        6PEHunUQ1Of5OfrkpuFj0uQ6x66J38M=
+X-Google-Smtp-Source: ABdhPJyAjbsIYBh97/f406c0qcVrYdyUoTN8xMbO1QoYXsFSFUYZEeqAOKwoJXyMeaeWqO/jOFfldA==
+X-Received: by 2002:a17:906:b884:: with SMTP id hb4mr1341395ejb.376.1632911047229;
+        Wed, 29 Sep 2021 03:24:07 -0700 (PDT)
+Received: from [192.168.0.108] ([176.228.98.2])
+        by smtp.gmail.com with ESMTPSA id my11sm1096098ejc.80.2021.09.29.03.24.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Sep 2021 03:24:06 -0700 (PDT)
+Subject: Re: [PATCH][net-next] net/mlx4: Use array_size() helper in
+ copy_to_user()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210928201733.GA268467@embeddedor>
+From:   Tariq Toukan <ttoukan.linux@gmail.com>
+Message-ID: <283d239b-9af9-d3a3-72be-9138c032ef63@gmail.com>
+Date:   Wed, 29 Sep 2021 13:24:05 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210924135424.GA33573@C02TD0UTHF1T.local>
+In-Reply-To: <20210928201733.GA268467@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 24, 2021 at 02:54:24PM +0100, Mark Rutland wrote:
-> We could instead have the scheduler entrypoints snapshot their caller
-> into a field in task_struct. If there are sufficiently few callers, that
-> could be an inline wrapper that passes a __func__ string. Otherwise, we
-> still need to symbolize.
 
-I strongly dislike that option, we'd make the scheduler slower for
-something that's typically unused.
 
-The 3 people actually using wchan should pay the cost of obtaining the
-data, not everybody all the time.
+On 9/28/2021 11:17 PM, Gustavo A. R. Silva wrote:
+> Use array_size() helper instead of the open-coded version in
+> copy_to_user(). These sorts of multiplication factors need
+> to be wrapped in array_size().
+> 
+> Link: https://github.com/KSPP/linux/issues/160
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   drivers/net/ethernet/mellanox/mlx4/cq.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/cq.c b/drivers/net/ethernet/mellanox/mlx4/cq.c
+> index f7053a74e6a8..4d4f9cf9facb 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/cq.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/cq.c
+> @@ -314,7 +314,8 @@ static int mlx4_init_user_cqes(void *buf, int entries, int cqe_size)
+>   			buf += PAGE_SIZE;
+>   		}
+>   	} else {
+> -		err = copy_to_user((void __user *)buf, init_ents, entries * cqe_size) ?
+> +		err = copy_to_user((void __user *)buf, init_ents,
+> +				   array_size(entries, cqe_size)) ?
+>   			-EFAULT : 0;
+>   	}
+>   
+> 
+
+Thanks for your patch.
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
