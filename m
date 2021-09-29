@@ -2,75 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDE5C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC37C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 23:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2412560EE5
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BBF615E0
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 23:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346581AbhI2W07 (ORCPT
+        id S1347578AbhI2Xd1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 18:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
+        Wed, 29 Sep 2021 19:33:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346527AbhI2W07 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Sep 2021 18:26:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5633361425;
-        Wed, 29 Sep 2021 22:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632954318;
-        bh=gCBBC7JLGcZQaPz+Vpq0Pd8Hio930/7xgACvcEd+XUY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VQjSOMwzO2qj85XL58H9btVmTAisQxj9svagsvJ6Fs1umbMjHiELrKopvMjhlXg2t
-         EAP0K+SlqqlNQ+pNDOw8GXjcAkF/wP/n31E5BRUhe82OBzspT6S7YBIzxJY79iu0/I
-         jB8TWO2wVwhzXWNfWEdC2mznHwmsOI86fGjBusdQ2f6lvOpBHCI9xfrPQVLLh+5xqo
-         GclWImlBNL0OMGqYw8Lk62q+IF6kHK+E70AgPj9Sx1alMFoOmilsKP8nr9OLwSkg5P
-         hFxaUdEEYJiYFgNWjs4cDvbXUaPAwMfnUmfwJ2VLI7WxAzerck07FJkbcC6bpzksmL
-         OTg52+ALhspWw==
-Date:   Wed, 29 Sep 2021 17:29:22 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc:     dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] dmaengine: stm32-mdma: Use struct_size() helper in
- devm_kzalloc()
-Message-ID: <20210929222922.GA357509@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        id S1345134AbhI2Xd0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 29 Sep 2021 19:33:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F2E116135D;
+        Wed, 29 Sep 2021 23:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1632958305;
+        bh=gDC8FeyWEK+m6y1oljAXM/J6NEZQW93X8rLKfj3knFM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NN3ijR4TISmoUJq81Zy37jY9PjgUYWr1BP/sBn1OfDNimXfNczZOTVlBRFYi7KdEr
+         RW3FtjLpG7VUwM3JHrL8iT/N71iEhCjuMHpQ9p1+bEiLpk/Yb7F3BjkQeuutBDFOuo
+         4y8StbCdPsAQAqoV6S/9tsLkZcjUHrmh5gA8n9kA=
+Date:   Wed, 29 Sep 2021 16:31:43 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     alex.popov@linux.com
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paul McKenney <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, notify@kernel.org
+Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
+Message-Id: <20210929163143.aa8b70ac9d5cf0b628823370@linux-foundation.org>
+In-Reply-To: <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
+References: <20210929185823.499268-1-alex.popov@linux.com>
+        <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version,
-in order to avoid any potential type mistakes or integer overflows that,
-in the worse scenario, could lead to heap overflows.
+On Wed, 29 Sep 2021 22:01:33 +0300 Alexander Popov <alex.popov@linux.com> wrote:
 
-Link: https://github.com/KSPP/linux/issues/160
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/dma/stm32-mdma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> On 29.09.2021 21:58, Alexander Popov wrote:
+> > Currently, the Linux kernel provides two types of reaction to kernel
+> > warnings:
+> >  1. Do nothing (by default),
+> >  2. Call panic() if panic_on_warn is set. That's a very strong reaction,
+> >     so panic_on_warn is usually disabled on production systems.
+> > 
+> > From a safety point of view, the Linux kernel misses a middle way of
+> > handling kernel warnings:
+> >  - The kernel should stop the activity that provokes a warning,
+> >  - But the kernel should avoid complete denial of service.
+> > 
+> > From a security point of view, kernel warning messages provide a lot of
+> > useful information for attackers. Many GNU/Linux distributions allow
+> > unprivileged users to read the kernel log, so attackers use kernel
+> > warning infoleak in vulnerability exploits. See the examples:
+> >   https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+> >   https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html
+> > 
+> > Let's introduce the pkill_on_warn boot parameter.
+> > If this parameter is set, the kernel kills all threads in a process
+> > that provoked a kernel warning. This behavior is reasonable from a safety
+> > point of view described above. It is also useful for kernel security
+> > hardening because the system kills an exploit process that hits a
+> > kernel warning.
+> > 
+> > Signed-off-by: Alexander Popov <alex.popov@linux.com>
+> 
+> This patch was tested using CONFIG_LKDTM.
+> The kernel kills a process that performs this:
+>   echo WARNING > /sys/kernel/debug/provoke-crash/DIRECT
+> 
+> If you are fine with this approach, I will prepare a patch adding the
+> pkill_on_warn sysctl.
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index 18cbd1e43c2e..d30a4a28d3bf 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -1566,7 +1566,8 @@ static int stm32_mdma_probe(struct platform_device *pdev)
- 	if (count < 0)
- 		count = 0;
- 
--	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
-+	dmadev = devm_kzalloc(&pdev->dev,
-+			      struct_size(dmadev, ahb_addr_masks, count),
- 			      GFP_KERNEL);
- 	if (!dmadev)
- 		return -ENOMEM;
--- 
-2.27.0
+Why do we need a boot parameter?  Isn't a sysctl all we need for this
+feature?
 
+Also, 
+
+	if (pkill_on_warn && system_state >= SYSTEM_RUNNING)
+		do_group_exit(SIGKILL);
+
+- why do we care about system_state?  An explanatory code comment
+  seems appropriate.
+
+- do we really want to do this in states > SYSTEM_RUNNING?  If so, why?
