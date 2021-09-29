@@ -2,154 +2,75 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C29C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDE5C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 174496124D
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2412560EE5
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 22:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346891AbhI2WGV (ORCPT
+        id S1346581AbhI2W07 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 18:06:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346848AbhI2WEE (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Sep 2021 18:04:04 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2C7C061770
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 15:02:22 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id k24so4129487pgh.8
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 15:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FXiCuxEPMvqVSi+g+P0evOsDZPlbh8jjQbS0s6wZm8k=;
-        b=SRrGW9zo/d6XA0WfD3zwDEcbIo+Z1I96cCKPaPYXClI+Qfg8s9OJNo/xb7TEDE5aYr
-         Ho17NV6HPaJkzNytOQUl6mp8zKXpU0ULv+wkVZg+EBUY+CEH/WHSNssW9o9ZppK3PwaO
-         fhhITLjFDcaVBGI2nxkxo8lrt6URHO+miQv6Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FXiCuxEPMvqVSi+g+P0evOsDZPlbh8jjQbS0s6wZm8k=;
-        b=UzeneQcRcwWKnS4sDE+lhKDZMDw03syr7Du04pGyCoZlmzPFVXW8EIfsOjbj0WeMzg
-         opBZSDnWiGdZEei78t8fXbV+a6SLDw4YVKuzhtEH8BaAmvmriCbaV54digTm0nmYpga3
-         yBOB+SyxQiovPArpc05R2ACDApPuKXOGFCCfUgTr/P7Eq0GnqQntKFPnw8vMUZzPyVkt
-         zAG3RZyrgmIRG2mVyIIc1dp+V+8pbVuYejZWZ9nFkZcc5cxjsRVrmyVY4wpKKvZixzYT
-         mMEbXJZhqIb1i8SP9jzpunMJT/+MUV3CWyAEFSPkaGD5SeDek5JXlMSb2agMIDDUwbq/
-         fFwg==
-X-Gm-Message-State: AOAM53235+YWtwModMMIIZC5Ne8IigyEPtseGxtiqSChSduhg2l/mZEY
-        CpeidtleKgOflBATodanLyn8Pg==
-X-Google-Smtp-Source: ABdhPJzliJ0RYWBweCHHWJ+P3Zmj4CAL9EDfVBAf9D4cTfaBNZUREv4N4JrivSvzlyTgfNZ7/6QD/Q==
-X-Received: by 2002:a63:1e60:: with SMTP id p32mr1903923pgm.234.1632952941938;
-        Wed, 29 Sep 2021 15:02:21 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o16sm561897pgv.29.2021.09.29.15.02.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Sep 2021 15:02:20 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Anand K Mistry <amistry@google.com>,
-        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        =?UTF-8?q?Michael=20Wei=C3=9F?= <michael.weiss@aisec.fraunhofer.de>,
-        Jann Horn <jannh@google.com>, Michal Hocko <mhocko@suse.com>,
-        Helge Deller <deller@gmx.de>, linux-fsdevel@vger.kernel.org,
-        kernel test robot <oliver.sang@intel.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Tycho Andersen <tycho@tycho.pizza>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Stefan Metzmacher <metze@samba.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ohhoon Kwon <ohoono.kwon@samsung.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        YiFei Zhu <yifeifz2@illinois.edu>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        x86@kernel.org
-Subject: [PATCH v2 3/6] proc: Use task_is_running() for wchan in /proc/$pid/stat
-Date:   Wed, 29 Sep 2021 15:02:15 -0700
-Message-Id: <20210929220218.691419-4-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210929220218.691419-1-keescook@chromium.org>
-References: <20210929220218.691419-1-keescook@chromium.org>
+        Wed, 29 Sep 2021 18:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1346527AbhI2W07 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 29 Sep 2021 18:26:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5633361425;
+        Wed, 29 Sep 2021 22:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632954318;
+        bh=gCBBC7JLGcZQaPz+Vpq0Pd8Hio930/7xgACvcEd+XUY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VQjSOMwzO2qj85XL58H9btVmTAisQxj9svagsvJ6Fs1umbMjHiELrKopvMjhlXg2t
+         EAP0K+SlqqlNQ+pNDOw8GXjcAkF/wP/n31E5BRUhe82OBzspT6S7YBIzxJY79iu0/I
+         jB8TWO2wVwhzXWNfWEdC2mznHwmsOI86fGjBusdQ2f6lvOpBHCI9xfrPQVLLh+5xqo
+         GclWImlBNL0OMGqYw8Lk62q+IF6kHK+E70AgPj9Sx1alMFoOmilsKP8nr9OLwSkg5P
+         hFxaUdEEYJiYFgNWjs4cDvbXUaPAwMfnUmfwJ2VLI7WxAzerck07FJkbcC6bpzksmL
+         OTg52+ALhspWw==
+Date:   Wed, 29 Sep 2021 17:29:22 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc:     dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] dmaengine: stm32-mdma: Use struct_size() helper in
+ devm_kzalloc()
+Message-ID: <20210929222922.GA357509@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1702; h=from:subject; bh=vEcA8vhX2LIYTyny+lSt9vtrmOxzTbXuNEQhn5SMUqg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhVOJo4pEo1xkbc20ffT7DBLQ7oi+h8cwMpfxIYeBP 9Dwzkr+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVTiaAAKCRCJcvTf3G3AJoEdD/ 9KIWtXlguBEKgRhhajeWO7Pq+iFfZvVJRNJmrg0tcqcStHiicYq1RMWEekffyqtSOir3ypL+ZJQjSF 6GDHvBFJh7991cXxetyQeqCTAKuTRoa5QBNJCbVfjQjoehkd1NR4BodXDO8xKDStibOXos+qMk7CBm Cz+QSk9v7a6MmB3IuTuNYKf5moDvV53v0OFtDA4714WSd5ShHTdMGUTZXLzHTprDTrIsdgUJDWcgwU NoE2htw5yghyl0k2oadQlfuXAL44IaBAvchMl13m3h7zgyIzy7KLWQExSSB1XshnESbPLqMU0N3xue 9Lfw/GNXEm+nJgzx85rt8cpn2deSM2SUnYiGPwwZDItrgLHxkd7MX8MygS+wIteE1AGdSus2UaIhlt 7t1hMuRkDzT7WkChhvwrSXHsyJhI01x+Igb6+RJ9j4EDiKXCkPd0v1p+0kzEJjAllijhODUtrKZ3Z2 atfnQ3RiRcuYjhlsadJ29M4C7rlbDE3TB2bKss8qHqUxOaTbQg7iDZ8XPr3Aqp4Gx4H6rxo7FyWtfO UgeXQf+UH1M+SV0t/DDebEW4zwUheVNQC7i6+QxMbEmHf5G6DWKoKCytjqMoemLz3MWCpuI7CrTAnw LE7THqJDnJuZVjESgcd7V8f6lxhoVL2AI2WJSi4sKEScJQLVH9CxLpOzqWkQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The implementations of get_wchan() can be expensive. The only information
-imparted here is whether or not a process is currently blocked in the
-scheduler (and even this doesn't need to be exact). Avoid doing the
-heavy lifting of stack walking and just report that information by using
-task_is_running().
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows that,
+in the worse scenario, could lead to heap overflows.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Anand K Mistry <amistry@google.com>
-Cc: "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>
-Cc: Alexey Gladkov <legion@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Michael Weiß" <michael.weiss@aisec.fraunhofer.de>
-Cc: Jann Horn <jannh@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: linux-fsdevel@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://github.com/KSPP/linux/issues/160
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- fs/proc/array.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/dma/stm32-mdma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/proc/array.c b/fs/proc/array.c
-index 49be8c8ef555..77cf4187adec 100644
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -541,7 +541,7 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
- 	}
+diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+index 18cbd1e43c2e..d30a4a28d3bf 100644
+--- a/drivers/dma/stm32-mdma.c
++++ b/drivers/dma/stm32-mdma.c
+@@ -1566,7 +1566,8 @@ static int stm32_mdma_probe(struct platform_device *pdev)
+ 	if (count < 0)
+ 		count = 0;
  
- 	if (permitted && (!whole || num_threads < 2))
--		wchan = get_wchan(task);
-+		wchan = !task_is_running(task);
- 	if (!whole) {
- 		min_flt = task->min_flt;
- 		maj_flt = task->maj_flt;
-@@ -606,10 +606,7 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
- 	 *
- 	 * This works with older implementations of procps as well.
- 	 */
--	if (wchan)
--		seq_puts(m, " 1");
--	else
--		seq_puts(m, " 0");
-+	seq_put_decimal_ull(m, " ", wchan);
- 
- 	seq_put_decimal_ull(m, " ", 0);
- 	seq_put_decimal_ull(m, " ", 0);
+-	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
++	dmadev = devm_kzalloc(&pdev->dev,
++			      struct_size(dmadev, ahb_addr_masks, count),
+ 			      GFP_KERNEL);
+ 	if (!dmadev)
+ 		return -ENOMEM;
 -- 
-2.30.2
+2.27.0
 
