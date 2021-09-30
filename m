@@ -2,60 +2,60 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFB6C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418A8C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E870E619F6
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D41F619F6
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353175AbhI3SHz (ORCPT
+        id S1353222AbhI3SIE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 14:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59110 "EHLO
+        Thu, 30 Sep 2021 14:08:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353108AbhI3SHp (ORCPT
+        with ESMTP id S1353166AbhI3SHx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 14:07:45 -0400
+        Thu, 30 Sep 2021 14:07:53 -0400
 Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DC4C06176D
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:06:02 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id o6-20020a05622a008600b002a6c2fbc853so12479176qtw.16
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:06:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46F9C061774
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:06:06 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id m26-20020ac87b5a000000b002a6b3744ae6so12433979qtu.22
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:06:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=36JGoOQwhp84OMbqBWPfqbJksyq4Ee1GRSA1czJSFhs=;
-        b=cB77Vb/CwICfRwD2mkh0raoM//6noNAFP5BtwePcoVGM1nyAlCfVJtKF35wL1pMwev
-         D2GqltNZ1bhq+hRH8UnFSweflcXsS95Ir8dZ3rY6OVAjnMt/R0W1UR6ctQPtg/gcIBa9
-         y8KQaYC2G05aBR5jrnIWIZ3huUYLx77QQT5hlGs/UVeG0GqNpK2l8DTtd4cNHYI81Vw3
-         zwyXCy6a/HqwSqBa9p+Vi89JXE5Vy18KuamIGkTDlZ/7kQWptK+0iRY5d9Fkqgkci/3a
-         srPd+GRRzz57/fZCNOzWknSmGYqJ1fzF0HmWIqUaS3MZQa3RmMT3xGN54NzMRyKTJiRj
-         eUqw==
+        bh=QXcVEtkl1ttQdqJQ36Mmw2BuBwRi/4y7WfQWoHeDQYQ=;
+        b=YIvuqa4diHL/KOdonWT+XrXNn6ejbmYGrxpcq6tHonqWDd9wLeV2kwwd7/MnZkZe+o
+         s2KOkSSO2fNwJF71waRq3eGAH4t/zuBbUl+XNk9E9a6TngigsVIeZe5yIU42XiSqwlo8
+         HQ9xPg9wLyxcZETOfRH6ThiR7EGl9OmCGOW0Fy7NxiJTbRGoINKW6TqXqmjsD6Gjlfn/
+         1A8wRMJIuH+s8jB6UrBBIYr1tJxFMfIp51clrm1Ltlh5lxhL31MVFlV8m5jJB1qsC5Bz
+         y30kNX8VS2C21viJCJ3iLc/AywLzChE7HO7BQ8g0EW657HJlc44Icfo9Td2j2D5Ps4vu
+         t4eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=36JGoOQwhp84OMbqBWPfqbJksyq4Ee1GRSA1czJSFhs=;
-        b=GOCsMw2jH16aDxeVG8ex8VdyG9Tp21oHB1sknTAirgFekUDn4N87NdTavdm7fx3dQO
-         P5uoDpOONtf6TGxrslz99jA9qiMjtuStwnzZwMvTurlUZ+su6771tHtt5gVlco9XCcri
-         B4sfxJZJPkCXVyJYN9cJKNtuRLh42XGsGEEU+bZUmgVs+XJ/pwDUnRbjvw8Zeiir1g/J
-         Tr+Q70Broo6mGvRlIZcaST5NI+ji6wMXNxekCyfLyH3d+18YzBUH8x1EnbW/0Cpm99i7
-         ts1Swkf/LXNSQhQ21P7fBcgKHZEywSxzdiaG0edkGXklUP5/RuO9j1wNHIHSb5tYRyMc
-         NeVA==
-X-Gm-Message-State: AOAM531N7BLlAMlMk9ci8J6k6NFZn5PKgm8NcN+Fe53SfeZ24g/Ss3fM
-        RoNBveabaZAoKvt7mA4lcPTVrGvHQoT3JzMEBG4=
-X-Google-Smtp-Source: ABdhPJzH+nWTE6A+qxvqzNs/xyKJE6Qfj8m4/ETPnnzMgQrPSxiF3nkVfaZaM0P8d+oy0XInEzgoA4qs0F4Eos30P9A=
+        bh=QXcVEtkl1ttQdqJQ36Mmw2BuBwRi/4y7WfQWoHeDQYQ=;
+        b=CZdBgGMIJrr0Q2Z1640NR9srq/4ekyLQj5Sr62aGm9QhZwak60whQu+I4YweadCMwN
+         /3ACq/nuzMTXBBuVpfGBw6Cez9zplpm//IfGr98zmgKn2jtgu3QC8O+sOPVsWcebf4Do
+         Dx7y1Fc+53L8/utrAwYGylssOe2BPm4z0UaeyoWDxkFJlN4wJPkD7nRgfKtc6e4wXXi7
+         /tpA44sFvVz6mp81/bik93ZFLDdvw5Yxx+IOPCbSGBJAnDsGIUWiKOOrKZ/UNP2+KpBd
+         4R5TCZomnXXEPfERWxcMFrUHSrGQEfP5sE7hzm1B4hyx7dOyOkc6g2MiPKUp7Pi5qIVY
+         Fzkg==
+X-Gm-Message-State: AOAM531KqMZ7Me5AJ2VUvzono2EsrC1TCCSIVw1m+N/qq0GzPsdL8VMd
+        Msh3sktCnJWXX1OedJC4af5QiWCKE+YRu92+6RA=
+X-Google-Smtp-Source: ABdhPJwOEaXh89+R/H7MBRz5M9c3ZhPc6Z/jeTX/U7qPBoq+FlxU6J4n+Dxg9mzNIkwXfswiN5kgdhWujNpQQLRVsnA=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:ce43:4366:95ca:d6e9])
- (user=samitolvanen job=sendgmr) by 2002:a05:6214:1022:: with SMTP id
- k2mr5344731qvr.53.1633025161554; Thu, 30 Sep 2021 11:06:01 -0700 (PDT)
-Date:   Thu, 30 Sep 2021 11:05:27 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6214:122e:: with SMTP id
+ p14mr6685928qvv.37.1633025165880; Thu, 30 Sep 2021 11:06:05 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 11:05:29 -0700
 In-Reply-To: <20210930180531.1190642-1-samitolvanen@google.com>
-Message-Id: <20210930180531.1190642-12-samitolvanen@google.com>
+Message-Id: <20210930180531.1190642-14-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210930180531.1190642-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.33.0.800.g4c38ced690-goog
-Subject: [PATCH v4 11/15] x86, relocs: Ignore __typeid__ relocations
+Subject: [PATCH v4 13/15] x86, cpu: Use LTO for cpu.c with CFI
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     x86@kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -71,42 +71,33 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+Allow LTO to be used for cpu.c when CONFIG_CFI_CLANG is enabled to avoid
+indirect call failures. CFI requires Clang >= 13, which doesn't have the
+stack protector inlining bug.
 
-The __typeid__* symbols aren't actually relocations, so they can be
-ignored during relocation generation.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/x86/tools/relocs.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/power/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index 27c82207d387..5304a6037924 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -51,6 +51,7 @@ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
- 	"^(xen_irq_disable_direct_reloc$|"
- 	"xen_save_fl_direct_reloc$|"
- 	"VDSO|"
-+	"__typeid__|"
- 	"__crc_)",
+diff --git a/arch/x86/power/Makefile b/arch/x86/power/Makefile
+index 379777572bc9..a0532851fed7 100644
+--- a/arch/x86/power/Makefile
++++ b/arch/x86/power/Makefile
+@@ -4,9 +4,11 @@
+ # itself be stack-protected
+ CFLAGS_cpu.o	:= -fno-stack-protector
  
- /*
-@@ -811,6 +812,12 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
- 			    symname);
- 		break;
++ifndef CONFIG_CFI_CLANG
+ # Clang may incorrectly inline functions with stack protector enabled into
+ # __restore_processor_state(): https://bugs.llvm.org/show_bug.cgi?id=47479
+ CFLAGS_REMOVE_cpu.o := $(CC_FLAGS_LTO)
++endif
  
-+	case R_X86_64_8:
-+		if (!shn_abs || !is_reloc(S_ABS, symname))
-+			die("Non-whitelisted %s relocation: %s\n",
-+				rel_type(r_type), symname);
-+		break;
-+
- 	case R_X86_64_32:
- 	case R_X86_64_32S:
- 	case R_X86_64_64:
+ obj-$(CONFIG_PM_SLEEP)		+= cpu.o
+ obj-$(CONFIG_HIBERNATION)	+= hibernate_$(BITS).o hibernate_asm_$(BITS).o hibernate.o
 -- 
 2.33.0.800.g4c38ced690-goog
 
