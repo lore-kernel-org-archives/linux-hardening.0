@@ -2,133 +2,163 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70691C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB39C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5798761881
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D7161268
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343536AbhI3Wb7 (ORCPT
+        id S1344136AbhI3Wnm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 18:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230146AbhI3Wb7 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 18:31:59 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED07C06176D
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 15:30:16 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id k26so6259538pfi.5
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 15:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ay1V9ffhoIQpAyVwXtDPPJf/MtSlguJd/osoDxW8SDA=;
-        b=kVsHfZVKOYr6X7ZVCJLOUmZbyKyVf/bYM8s99VI4B80qJy7pPxA628vxCTsFzp7tyP
-         XSpU3MVW1ltSiWhVPbk+zaJMLCSAq0kFseKWHZ8+4JW5TyaIJrVmKMO922X8q/GK/TuJ
-         YVuK/6k0A3pH00DPOaraAo1wT5H3pv/3ClKf4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ay1V9ffhoIQpAyVwXtDPPJf/MtSlguJd/osoDxW8SDA=;
-        b=wpRlqh4bYBtbcLAUutEXKx8mS+cqBWhEpQa1IA8xXoGLbfO142jSh08R0WKPjUw6L7
-         FQ1fxuGtyL2/RCZ6cmQOwYgg/jhyh/7HbYwRLDWLLy7No4c3hn84HJeqmOFxkb9BLO6F
-         ux4IxGih4xCzGVaydGHRoo4TC4rQgiOECi/m5bWfYPBlQcjZFSveqAFeAvWdlwrTbo3h
-         Xfp9f7JCxEoBP2t3Dr3WTVY6AXvmbMZdh4+soCCj27kDnpowA6CKsWiaxVc+/WB8IlP3
-         bHDvLsixfN48VLzC2X5bc3OzEwMxYyINOAGlj8TqKGSF61yq8OeN6EeBTAK8Cy0+6DQp
-         KC1A==
-X-Gm-Message-State: AOAM531q8EAQgR43J+n6Ll9dYqV+bVleitYDtSLYlgY0yaWhkSkVmwSE
-        SjPSASV+eOTJSbu2Hky26yC9tg==
-X-Google-Smtp-Source: ABdhPJwZ793yTpzmrRHTCtRd2jlASWf7dvmXfH5zjJdW0TTlbdlf2QpIXv1clEmFFvWLEYrABHKSYA==
-X-Received: by 2002:a63:125f:: with SMTP id 31mr6964264pgs.98.1633041015750;
-        Thu, 30 Sep 2021 15:30:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p17sm5680848pjg.54.2021.09.30.15.30.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Sep 2021 15:30:15 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thu, 30 Sep 2021 18:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343554AbhI3Wnm (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 30 Sep 2021 18:43:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2FA9F6109E;
+        Thu, 30 Sep 2021 22:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633041719;
+        bh=FxgCKikKkujaOhD0GKVlpovh2JSLoa6S3E3sVjKqxC0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dGDIR4AzX+Adf/hTKvFpvU2ysWfztQWbBPb450/GzHL/nYyM8pG7uXYQYO12ToIq2
+         xMKbS51LnW3DeCWgI0ym0sVJmtBukbSZD+0dBOOasLaRHQJIA7FaNiMuACQ5wYwB8V
+         8j+HRERUIGt2XhvbB1QlWrIoPTq2o0lx20nz3rgnLIZLVRu7+JwQji2xmeMYCTzgI9
+         UxEfz0qKXBWOLn7s7naVQhz4rSnaxOFOBqeZfHb5lH6nrR7K6Oh92eTs/XD9zZDGxn
+         6UTM7U0bFFjrV5VD3HDtQfKq2IrpJw1Yak+ptLBONhPTdK+IYmMKbAbE+BZV2t5ovW
+         MKarUjHBFvcog==
+Date:   Thu, 30 Sep 2021 17:46:04 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        kernel test robot <lkp@intel.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Joe Perches <joe@perches.com>, Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v3] docs: Explain the desired position of function attributes
-Date:   Thu, 30 Sep 2021 15:30:11 -0700
-Message-Id: <20210930223011.2632202-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+Subject: Re: [PATCH v3 1/8] rapidio: Avoid bogus __alloc_size warning
+Message-ID: <20210930224604.GA906353@embeddedor>
+References: <20210930222704.2631604-1-keescook@chromium.org>
+ <20210930222704.2631604-2-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2757; h=from:subject; bh=3wGJertCA84vSipOAoJMdWC2Kpb30Chb+rYiYzarEXY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhVjpzJYBemhbhMV2SCbBlCVqtipvyBjBdX7HDeYGf 4SgtxWOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVY6cwAKCRCJcvTf3G3AJiTpEA CTbq+h6g0PRtkcBqqqPBHTpRRub1OUpFluXUYffpv0W6UYQjeWYdubXisKrUg0YbF6RXqz/qrjjJgC 4yPj1dzMppohf81BqnBRPR5mwTf31SLI4QYvBSvfO6rHiGQL1ozIf2GklWAGE+WdxAmkaGbm//PjFY uGsO/PGsg7eRYp2v0WsRr4FhzVFhw7gsDjlpLUHtEf68W7Jwk9K2oSTUEq3+l8cEZZYHPMbF5b/vi7 eRy1hFZhJOya1qmBli8UuSn4hrmI7+iBD0i9FP0Kv0UeOwruc8CmrnONkjWCGeJYGviBfnFIq6GP0Q U1CpRG476qAUfL4X8LaE/2MzDIEVWCLFUa3ndx4FDJ/16R4fZEWOc98juTzkGONPx2lwpPCYPdH7AK Kynky1PcNAgQjN2ikfS23agy1n3RkWKZ9lvP0y3Kc0bidWyaYEU/dhEdm5Qd+Hm3cGinsDxU43uKvv kBA20jxfW4Sqlu0zty6cxM6MdGb+q/xEBxHimTiMDMPxKxiqaihnV26BUAhG9q8Jn4mIUXX/BiczXe 5dfQonXbRhAYjdo26Nu/oNqmPvdkrjRtxansaJqToBTiZUKoPKECnW64qc3Gnr/rUk352yZplQV9qD bO7LVdGDEyu1jFEq+0Zv3YD4/zOivFBunW0KwcAaeCK+8uu6oeJ9KkRLnpjg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210930222704.2631604-2-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-While discussing how to format the addition of various function
-attributes, some "unwritten rules" of ordering surfaced[1]. Capture as
-close as possible to Linus's preferences for future reference.
+On Thu, Sep 30, 2021 at 03:26:57PM -0700, Kees Cook wrote:
+> After adding __alloc_size attributes to the allocators, GCC 9.3 (but not
+> later) may incorrectly evaluate the arguments to check_copy_size(),
+> getting seemingly confused by the size being returned from array_size().
+> Instead, perform the calculation once, which both makes the code more
+> readable and avoids the bug in GCC.
+> 
+>    In file included from arch/x86/include/asm/preempt.h:7,
+>                     from include/linux/preempt.h:78,
+>                     from include/linux/spinlock.h:55,
+>                     from include/linux/mm_types.h:9,
+>                     from include/linux/buildid.h:5,
+>                     from include/linux/module.h:14,
+>                     from drivers/rapidio/devices/rio_mport_cdev.c:13:
+>    In function 'check_copy_size',
+>        inlined from 'copy_from_user' at include/linux/uaccess.h:191:6,
+>        inlined from 'rio_mport_transfer_ioctl' at drivers/rapidio/devices/rio_mport_cdev.c:983:6:
+>    include/linux/thread_info.h:213:4: error: call to '__bad_copy_to' declared with attribute error: copy destination size is too small
+>      213 |    __bad_copy_to();
+>          |    ^~~~~~~~~~~~~~~
+> 
+> But the allocation size and the copy size are identical:
+> 
+> 	transfer = vmalloc(array_size(sizeof(*transfer), transaction.count));
+> 	if (!transfer)
+> 		return -ENOMEM;
+> 
+> 	if (unlikely(copy_from_user(transfer,
+> 				    (void __user *)(uintptr_t)transaction.block,
+> 				    array_size(sizeof(*transfer), transaction.count)))) {
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/linux-mm/202109091134.FHnRmRxu-lkp@intel.com/
+> Cc: Matt Porter <mporter@kernel.crashing.org>
+> Cc: Alexandre Bounine <alex.bou9@gmail.com>
+> Cc: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 
-(Though I note the dissent voiced by Joe Perches, Alexey Dobriyan, and
-others that would prefer all attributes live on a separate leading line.)
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-[1] https://lore.kernel.org/mm-commits/CAHk-=wiOCLRny5aifWNhr621kYrJwhfURsa0vFPeUEm8mF0ufg@mail.gmail.com/
+Thanks
+--
+Gustavo
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Fixed-by: Randy Dunlap <rdunlap@infradead.org>
----
- Documentation/process/coding-style.rst | 30 ++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-index 42969ab37b34..1b0800591e73 100644
---- a/Documentation/process/coding-style.rst
-+++ b/Documentation/process/coding-style.rst
-@@ -487,6 +487,36 @@ because it is a simple way to add valuable information for the reader.
- Do not use the ``extern`` keyword with function prototypes as this makes
- lines longer and isn't strictly necessary.
- 
-+When writing a function declarations, please keep the `order of elements regular
-+<https://lore.kernel.org/mm-commits/CAHk-=wiOCLRny5aifWNhr621kYrJwhfURsa0vFPeUEm8mF0ufg@mail.gmail.com/>`_.
-+For example::
-+
-+ extern __init void * __must_check void action(enum magic value, size_t size,
-+ 	u8 count, char *fmt, ...) __printf(4, 5) __malloc;
-+
-+The preferred order of elements for a function prototype is:
-+
-+- storage class (here, ``extern``, and things like ``static __always_inline`` even though
-+  ``__always_inline`` is technically an attribute, it is treated like ``inline``)
-+- storage class attributes (here, ``__init`` -- i.e. section declarations, but also things like ``__cold``)
-+- return type (here, ``void *``)
-+- return type attributes (here, ``__must_check``)
-+- function name (here, ``action``)
-+- function parameters (here, ``(enum magic value, size_t size, u8 count, char *fmt, ...)``, noting that parameter names should always be included)
-+- function parameter attributes (here, ``__printf(4, 5)``)
-+- function behavior attributes (here, ``__malloc``)
-+
-+Note that for a function definition (e.g. ``static inline``), the compiler does
-+not allow function parameter attributes after the function parameters. In these
-+cases, they should go after the storage class attributes (e.g. note the changed
-+position of ``__printf(4, 5)``)::
-+
-+ static __always_inline __init __printf(4, 5) void * __must_check action(enum magic value,
-+ 		size_t size, u8 count, char *fmt, ...)
-+ 		__malloc
-+ {
-+ 	...
-+ }
- 
- 7) Centralized exiting of functions
- -----------------------------------
--- 
-2.30.2
-
+> ---
+>  drivers/rapidio/devices/rio_mport_cdev.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+> index 94331d999d27..7df466e22282 100644
+> --- a/drivers/rapidio/devices/rio_mport_cdev.c
+> +++ b/drivers/rapidio/devices/rio_mport_cdev.c
+> @@ -965,6 +965,7 @@ static int rio_mport_transfer_ioctl(struct file *filp, void __user *arg)
+>  	struct rio_transfer_io *transfer;
+>  	enum dma_data_direction dir;
+>  	int i, ret = 0;
+> +	size_t size;
+>  
+>  	if (unlikely(copy_from_user(&transaction, arg, sizeof(transaction))))
+>  		return -EFAULT;
+> @@ -976,13 +977,14 @@ static int rio_mport_transfer_ioctl(struct file *filp, void __user *arg)
+>  	     priv->md->properties.transfer_mode) == 0)
+>  		return -ENODEV;
+>  
+> -	transfer = vmalloc(array_size(sizeof(*transfer), transaction.count));
+> +	size = array_size(sizeof(*transfer), transaction.count);
+> +	transfer = vmalloc(size);
+>  	if (!transfer)
+>  		return -ENOMEM;
+>  
+>  	if (unlikely(copy_from_user(transfer,
+>  				    (void __user *)(uintptr_t)transaction.block,
+> -				    array_size(sizeof(*transfer), transaction.count)))) {
+> +				    size))) {
+>  		ret = -EFAULT;
+>  		goto out_free;
+>  	}
+> @@ -994,8 +996,7 @@ static int rio_mport_transfer_ioctl(struct file *filp, void __user *arg)
+>  			transaction.sync, dir, &transfer[i]);
+>  
+>  	if (unlikely(copy_to_user((void __user *)(uintptr_t)transaction.block,
+> -				  transfer,
+> -				  array_size(sizeof(*transfer), transaction.count))))
+> +				  transfer, size)))
+>  		ret = -EFAULT;
+>  
+>  out_free:
+> -- 
+> 2.30.2
+> 
