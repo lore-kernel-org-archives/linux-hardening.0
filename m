@@ -2,263 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3356C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D46C43217
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 745166128C
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED2B61882
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343706AbhI3W2w (ORCPT
+        id S1344573AbhI3W2x (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 18:28:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33572 "EHLO
+        Thu, 30 Sep 2021 18:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237295AbhI3W2v (ORCPT
+        with ESMTP id S1343652AbhI3W2v (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 30 Sep 2021 18:28:51 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45AD0C06176A
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FB4C06176D
         for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 15:27:08 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id me5-20020a17090b17c500b0019af76b7bb4so7830026pjb.2
+Received: by mail-pg1-x532.google.com with SMTP id h3so7628415pgb.7
         for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 15:27:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BT90LCkstOs8lo40mx0B1wAunL8tBqNcKJloICKrjPQ=;
-        b=RC1OHFyjxktnPOJtgBxUBH84zn9fSZ38Zhq8Wi83FTysSaB3pmYPxNijtvte3iAUAH
-         vwX8yXUhSKj4wUx4cTBotgH0tICjEVvlEeCAknggHrsRqJhJEo1YEciktEIQivGeHh75
-         bXf7j0es7Sa8cOpUBQ9hSh4c3BOebAV2Grn1I=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=36j5L3IXWBXJSa10uMT5uD6s/Y5u7bDApoWqfRj3glw=;
+        b=jdF4+GGFPTaheVbue765+UfgFhpqgRf4n2s6bFx1BdfagCMTvVJMI5rPIAsyJxBIUp
+         /wGNVS5PAsmda7VGWicIS0lb7cjah8fETmzwWJksUMDbKsbCYNLWuZdJZ40Usk5gnrrU
+         +C63RBPWlPJP62rZ6V8t/R4q8cigpMX4rIgYk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BT90LCkstOs8lo40mx0B1wAunL8tBqNcKJloICKrjPQ=;
-        b=0JnkVlnyK3Eqe6M8HKY1zoxdgt/TZs3LuDgESPzI1OjGPggQwwxJOxqNXAVJFIlYPU
-         lg0+b8UQ9Ven1sKOTF3D/OabwJOXBg/ipxYBkmX1SFpmsDT/OC6oIwJoFPYAV+VESL6w
-         usVuZBvyjXDlFfW31Rtm4ftvHcvVVp6tFZ2kl0Pm2Ocp5A6icKWeLfB1ovlCbWYVQz+i
-         ZM6tIQcKSaG9ya9mNHR0nTklykERLGkr/92C9Tpau8Uo0SQgn7eOvYFK/yZ107OI0Zn7
-         dYM56N5ED7U2FF2ECfvF4keR+vaFnFlw8QOJEba+iKiwNeDIhZmxd7gflW5oqIpjobNw
-         a4Mg==
-X-Gm-Message-State: AOAM530VaniyI+PuJ5VXQVyTHqq2cy18wYydhP5mo4EyT0q4lJsRogRH
-        crHR+IxRCNFBh+DcQeoVn2avCQ==
-X-Google-Smtp-Source: ABdhPJyMfjpC76ypDMyp3+NLQz9t5YC7E7dp/eMNGw7umGk0OtlkjaRm0QXZ32bmrT30OgO49awBTA==
-X-Received: by 2002:a17:90b:3e84:: with SMTP id rj4mr15805970pjb.208.1633040827758;
-        Thu, 30 Sep 2021 15:27:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=36j5L3IXWBXJSa10uMT5uD6s/Y5u7bDApoWqfRj3glw=;
+        b=qalZj4KXmz0mE17lpZwVSP8XJAx/fjwW8jyD079z13MeFwBysOvUZNtk7J+pJGiWL5
+         x4UNxsd+wjWkplSAr7Ik7Paj1vnVePoAmxDIlVaHQtpHtwN7Zq6tWDxT80QYO2M9BtC/
+         g5I/J/xhgOfmwSaynPaJvMb5qy9lKZ9S2Ys5U42rNOdDMoyD6zz6nA/Zr2fO9QUCHEcy
+         C5Uyr0TB5vIwoaMa5EQMCTGe34O/qRe4MSTs1S13GowKwFRFMPGcS9l4MU4p84iuf7ED
+         cyAyNMiFlu1bhjXdSgJ5KXn9ThKRN1qK5gPxonFclF56NYDNm+9G8Eeaw+6wKmDQ45MP
+         rg9Q==
+X-Gm-Message-State: AOAM530rAKCxXSwkIy1KqUg4XMQsENHNLGy5hy//fGNKz0iMCy12rraK
+        G8mMws6onxw7hCmIqjvNuxNjTDNxRz80qw==
+X-Google-Smtp-Source: ABdhPJzwvdcLzYPcnUhMbdaXUYsbzCJISTZjEr818vMUHCmvn0wRC/EuUIDTvv2mbQ0uruyIeNqBeA==
+X-Received: by 2002:a63:1104:: with SMTP id g4mr6808034pgl.403.1633040828353;
+        Thu, 30 Sep 2021 15:27:08 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d5sm3528826pjs.53.2021.09.30.15.27.06
+        by smtp.gmail.com with ESMTPSA id w14sm4014005pge.40.2021.09.30.15.27.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 30 Sep 2021 15:27:07 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        Joe Perches <joe@perches.com>, Miguel Ojeda <ojeda@kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>, Joe Perches <joe@perches.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Andy Whitcroft <apw@canonical.com>,
         Dwaipayan Ray <dwaipayanray1@gmail.com>,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Daniel Micay <danielmicay@gmail.com>,
         Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3 3/8] slab: Clean up function prototypes
-Date:   Thu, 30 Sep 2021 15:26:59 -0700
-Message-Id: <20210930222704.2631604-4-keescook@chromium.org>
+        clang-built-linux@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/8] Add __alloc_size()
+Date:   Thu, 30 Sep 2021 15:26:56 -0700
+Message-Id: <20210930222704.2631604-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210930222704.2631604-1-keescook@chromium.org>
-References: <20210930222704.2631604-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7538; h=from:subject; bh=4zGyVVwporv8ja7RCDSosI43pqvJgeMGlgRJrQqRrvI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhVjm38v31ZVQqC6PbDKBvc3yzNA+GO2RmSS9QSIVZ CEBfQX6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVY5twAKCRCJcvTf3G3AJmN4D/ 4vNGbbh2hscU2eFW3AiHCopH+L3OHR+xl7Sn5RTZrk1m49xZUHxkzxOJsuxYXhy1A/uknbc29G8NrP KwGpHfPdQ+AjTbaqt5hcMOP7z0ffFK6t6RCGvVu0dBpEMsBk0YDN+lG7xS5aCm9pLgXDCOT5Q/2m30 mtMjTpEVIpRFeLWSpieVomarBGwQ5q2Bv42PWTnUmL8A+iNbY426xt1VkNh67lWl8TfhUKJ6gUd5Nj pLM7NpBQH3P3/0PYamPaJzPA6ShBVCTTc3EIjA/efKRZBDx2fR+8VXRvDgKorjtlh+T6/e/dnpCA4L n1RFBxOnRqGvpOss5V00nWIeJna+DRdZaGWrrDcr7TkT8I6w0NtKlhHmKNwMrrQkJrMl6X2Ebiq4Hz tPBDAVmTdS17XVAGKPhcaBV3krF6NWj9Vtw97hrrY8zQLlDiRW2wPkug5KTrWEkYQXPBK4X8v7bDV4 M2cXzTw6K0meXie2c9UcIR4CYepC5vFj3kfaSmCwUVBb0ZkCehShHV8kqUqxfD9AA2Ahzozh2Vsqc3 P/uTWkwXaEA7ZpL0fagn4IBEdLgKf3pFvNp7yIJkm8pYQPoTcDw3aBQ1t/4nhxk3rRlRFe1IiGTDiM D7eBTHrpDKRzGi1BE3EV+JuvSOzcyI8QnotreEGoS+HGqFBBH5zSzUSD2q5w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2796; h=from:subject; bh=I3VSaYm9ezb7bHImNRkPHiAlz1ym/3eSqmSHHw7PzPc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhVjm2trNkLaQC+FMTfijdk1cGylQunUf+UbapBw2l aTY8uFmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVY5tgAKCRCJcvTf3G3AJqQFD/ 9YSlk3PdAdtRBkTdXkwP8owLGfO+VnOq9vtRzRbsuSKa7C8/IvCCNxD16nC3XgUP+A3X9DeEeZpxtN KQQXav7b2c9MVVtP9HKO6AeJzfz0IEGECZ9KI+Om3wXz+qsFv+fZCWl4UmNQKT1vr+SDRyEINCKxGZ ExiIpojTRrbldN7lLHazXnka1vOiJ8O1zA8zi8fjhL2Lb+oj2/7/HUXzK7cOKdG/+FQ2ku14z+hnVT Fn3ErgRyIZxOuaCPtryDdLV7nNoSmxT9f9UFP2uWIZ5SU6gPOfEI7frcGyIm/IlMXNcdTBMhNK8UhY 65VQezKn/Uk3bD4JOquuWhail4ChaSiWz/h/rY5VbegnJrC66iy96m6zTOmFqmPpYjCsVCR2VFUWuf FrYMjVOEO36ewYrtLO1ZjP6c9/AahG4Z6Nq75Or9T9JLHKcvSP06DtEC4H/aApy80DQqKojn/TJSTV wuVss9nAR6pZniVZ32+7TIfb9VbNbz1q4KGxkgFn46pkNlb8s0h9x0X7mjw6QgnnSkvocacbtiOvx0 SQisQwgvoDLZYG9YIvVpGJxy8TeyCBmt6LLM0ecQmxk+H5Q6PwgQAH6s6Eg5ofM+TMmgIJwHsdN82F OuoVLbrzAV/9M48u+Nw5VdALC6BZmelf+t3IXv0xggKtQwplVG9fyn3dmBsQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Based on feedback from Joe Perches and Linus Torvalds, regularize the
-slab function prototypes before making attribute changes.
+Hi Andrew,
 
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: linux-mm@kvack.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/slab.h | 68 ++++++++++++++++++++++----------------------
- 1 file changed, 34 insertions(+), 34 deletions(-)
+This is a refresh of the __alloc_size series you have in -mm
+currently. This addresses the issues[1] Linus had with attribute
+location and the redundant use of __malloc. These are meant to replace
+the following patches:
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 083f3ce550bc..d9f14125d7a2 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -152,8 +152,8 @@ struct kmem_cache *kmem_cache_create_usercopy(const char *name,
- 			slab_flags_t flags,
- 			unsigned int useroffset, unsigned int usersize,
- 			void (*ctor)(void *));
--void kmem_cache_destroy(struct kmem_cache *);
--int kmem_cache_shrink(struct kmem_cache *);
-+void kmem_cache_destroy(struct kmem_cache *s);
-+int kmem_cache_shrink(struct kmem_cache *s);
- 
- /*
-  * Please use this macro to create slab caches. Simply specify the
-@@ -181,11 +181,11 @@ int kmem_cache_shrink(struct kmem_cache *);
- /*
-  * Common kmalloc functions provided by all allocators
-  */
--void * __must_check krealloc(const void *, size_t, gfp_t);
--void kfree(const void *);
--void kfree_sensitive(const void *);
--size_t __ksize(const void *);
--size_t ksize(const void *);
-+void * __must_check krealloc(const void *objp, size_t new_size, gfp_t flags);
-+void kfree(const void *objp);
-+void kfree_sensitive(const void *objp);
-+size_t __ksize(const void *objp);
-+size_t ksize(const void *objp);
- #ifdef CONFIG_PRINTK
- bool kmem_valid_obj(void *object);
- void kmem_dump_obj(void *object);
-@@ -426,8 +426,8 @@ static __always_inline unsigned int __kmalloc_index(size_t size,
- #endif /* !CONFIG_SLOB */
- 
- void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __malloc;
--void *kmem_cache_alloc(struct kmem_cache *, gfp_t flags) __assume_slab_alignment __malloc;
--void kmem_cache_free(struct kmem_cache *, void *);
-+void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_slab_alignment __malloc;
-+void kmem_cache_free(struct kmem_cache *s, void *objp);
- 
- /*
-  * Bulk allocation and freeing operations. These are accelerated in an
-@@ -436,8 +436,8 @@ void kmem_cache_free(struct kmem_cache *, void *);
-  *
-  * Note that interrupts must be enabled when calling these functions.
-  */
--void kmem_cache_free_bulk(struct kmem_cache *, size_t, void **);
--int kmem_cache_alloc_bulk(struct kmem_cache *, gfp_t, size_t, void **);
-+void kmem_cache_free_bulk(struct kmem_cache *s, size_t size, void **p);
-+int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size, void **p);
- 
- /*
-  * Caller must not use kfree_bulk() on memory not originally allocated
-@@ -450,7 +450,8 @@ static __always_inline void kfree_bulk(size_t size, void **p)
- 
- #ifdef CONFIG_NUMA
- void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_kmalloc_alignment __malloc;
--void *kmem_cache_alloc_node(struct kmem_cache *, gfp_t flags, int node) __assume_slab_alignment __malloc;
-+void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t flags, int node) __assume_slab_alignment
-+									 __malloc;
- #else
- static __always_inline void *__kmalloc_node(size_t size, gfp_t flags, int node)
- {
-@@ -464,25 +465,24 @@ static __always_inline void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t f
- #endif
- 
- #ifdef CONFIG_TRACING
--extern void *kmem_cache_alloc_trace(struct kmem_cache *, gfp_t, size_t) __assume_slab_alignment __malloc;
-+extern void *kmem_cache_alloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
-+				   __assume_slab_alignment __malloc;
- 
- #ifdef CONFIG_NUMA
--extern void *kmem_cache_alloc_node_trace(struct kmem_cache *s,
--					   gfp_t gfpflags,
--					   int node, size_t size) __assume_slab_alignment __malloc;
-+extern void *kmem_cache_alloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
-+					 int node, size_t size) __assume_slab_alignment __malloc;
- #else
--static __always_inline void *
--kmem_cache_alloc_node_trace(struct kmem_cache *s,
--			      gfp_t gfpflags,
--			      int node, size_t size)
-+static __always_inline void *kmem_cache_alloc_node_trace(struct kmem_cache *s,
-+							 gfp_t gfpflags, int node,
-+							 size_t size)
- {
- 	return kmem_cache_alloc_trace(s, gfpflags, size);
- }
- #endif /* CONFIG_NUMA */
- 
- #else /* CONFIG_TRACING */
--static __always_inline void *kmem_cache_alloc_trace(struct kmem_cache *s,
--		gfp_t flags, size_t size)
-+static __always_inline void *kmem_cache_alloc_trace(struct kmem_cache *s, gfp_t flags,
-+						    size_t size)
- {
- 	void *ret = kmem_cache_alloc(s, flags);
- 
-@@ -490,10 +490,8 @@ static __always_inline void *kmem_cache_alloc_trace(struct kmem_cache *s,
- 	return ret;
- }
- 
--static __always_inline void *
--kmem_cache_alloc_node_trace(struct kmem_cache *s,
--			      gfp_t gfpflags,
--			      int node, size_t size)
-+static __always_inline void *kmem_cache_alloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
-+							 int node, size_t size)
- {
- 	void *ret = kmem_cache_alloc_node(s, gfpflags, node);
- 
-@@ -502,13 +500,14 @@ kmem_cache_alloc_node_trace(struct kmem_cache *s,
- }
- #endif /* CONFIG_TRACING */
- 
--extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order) __assume_page_alignment __malloc;
-+extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order) __assume_page_alignment
-+									 __malloc;
- 
- #ifdef CONFIG_TRACING
--extern void *kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order) __assume_page_alignment __malloc;
-+extern void *kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order)
-+				__assume_page_alignment __malloc;
- #else
--static __always_inline void *
--kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order)
-+static __always_inline void *kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order)
- {
- 	return kmalloc_order(size, flags, order);
- }
-@@ -638,8 +637,8 @@ static inline void *kmalloc_array(size_t n, size_t size, gfp_t flags)
-  * @new_size: new size of a single member of the array
-  * @flags: the type of memory to allocate (see kmalloc)
-  */
--static __must_check inline void *
--krealloc_array(void *p, size_t new_n, size_t new_size, gfp_t flags)
-+static inline void * __must_check krealloc_array(void *p, size_t new_n, size_t new_size,
-+						 gfp_t flags)
- {
- 	size_t bytes;
- 
-@@ -668,7 +667,7 @@ static inline void *kcalloc(size_t n, size_t size, gfp_t flags)
-  * allocator where we care about the real place the memory allocation
-  * request comes from.
-  */
--extern void *__kmalloc_track_caller(size_t, gfp_t, unsigned long);
-+extern void *__kmalloc_track_caller(size_t size, gfp_t flags, unsigned long caller);
- #define kmalloc_track_caller(size, flags) \
- 	__kmalloc_track_caller(size, flags, _RET_IP_)
- 
-@@ -691,7 +690,8 @@ static inline void *kcalloc_node(size_t n, size_t size, gfp_t flags, int node)
- 
- 
- #ifdef CONFIG_NUMA
--extern void *__kmalloc_node_track_caller(size_t, gfp_t, int, unsigned long);
-+extern void *__kmalloc_node_track_caller(size_t size, gfp_t flags, int node,
-+					 unsigned long caller);
- #define kmalloc_node_track_caller(size, flags, node) \
- 	__kmalloc_node_track_caller(size, flags, node, \
- 			_RET_IP_)
+compiler-attributes-add-__alloc_size-for-better-bounds-checking.patch
+compiler-attributes-add-__alloc_size-for-better-bounds-checking-fix.patch
+checkpatch-add-__alloc_size-to-known-attribute.patch
+slab-clean-up-function-declarations.patch
+slab-add-__alloc_size-attributes-for-better-bounds-checking.patch
+mm-page_alloc-add-__alloc_size-attributes-for-better-bounds-checking.patch
+percpu-add-__alloc_size-attributes-for-better-bounds-checking.patch
+mm-vmalloc-add-__alloc_size-attributes-for-better-bounds-checking.patch
+rapidio-avoid-bogus-__alloc_size-warning.patch
+
+Thanks!
+
+-Kees
+
+[1] https://lore.kernel.org/mm-commits/CAHk-=wgfbSyW6QYd5rmhSHRoOQ=ZvV+jLn1U8U4nBDgBuaOAjQ@mail.gmail.com/
+
+v3:
+- move attribute logic around to better handle GCC's weird behavior
+- merge __malloc into the __alloc_size macro (Linus)
+- refactor attribute positions (Linus)
+v2: https://lore.kernel.org/lkml/20210818214021.2476230-1-keescook@chromium.org
+v1: https://lore.kernel.org/lkml/20210818050841.2226600-1-keescook@chromium.org
+
+Original cover letter:
+
+GCC and Clang both use the "alloc_size" attribute to assist with bounds
+checking around the use of allocation functions. Add the attribute,
+adjust the Makefile to silence needless warnings, and add the hints to
+the allocators where possible. These changes have been in use for a
+while now in GrapheneOS.
+
+Kees Cook (8):
+  rapidio: Avoid bogus __alloc_size warning
+  Compiler Attributes: add __alloc_size() for better bounds checking
+  slab: Clean up function prototypes
+  slab: Add __alloc_size attributes for better bounds checking
+  mm/kvmalloc: Add __alloc_size attributes for better bounds checking
+  mm/vmalloc: Add __alloc_size attributes for better bounds checking
+  mm/page_alloc: Add __alloc_size attributes for better bounds checking
+  percpu: Add __alloc_size attributes for better bounds checking
+
+ Makefile                                 | 15 ++++
+ drivers/rapidio/devices/rio_mport_cdev.c |  9 ++-
+ include/linux/compiler-gcc.h             |  8 ++
+ include/linux/compiler_attributes.h      | 10 +++
+ include/linux/compiler_types.h           | 12 +++
+ include/linux/gfp.h                      |  4 +-
+ include/linux/mm.h                       | 16 ++--
+ include/linux/percpu.h                   |  6 +-
+ include/linux/slab.h                     | 99 +++++++++++++-----------
+ include/linux/vmalloc.h                  | 22 +++---
+ scripts/checkpatch.pl                    |  3 +-
+ 11 files changed, 128 insertions(+), 76 deletions(-)
+
 -- 
 2.30.2
 
