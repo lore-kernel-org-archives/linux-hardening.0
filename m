@@ -2,129 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0358C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 15:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA910C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 16:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE2661881
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 15:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85952619E4
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 16:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245514AbhI3PUT (ORCPT
+        id S1348606AbhI3RAw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 11:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245495AbhI3PUT (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 11:20:19 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5882C06176A
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 08:18:36 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id k24so6579261pgh.8
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 08:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Z/xgE/Y55JRJKfdAPlV0ukAj6bmYdIAVihPBePNuMEA=;
-        b=Z2IgmXvUaFEXY7MoioDiKe6ZZXF3Bz9nLqLBxBra5B6yYSfjaV6O3KO7hSmCQCYZwn
-         AJym7zohhwCmLwm3Ggn4jIJhrIwFaKsw7T0/Byaoj/Q4zb48yyrzljuLX9WGvrE8k0xl
-         YrDcPGeqFNU/vPgzQWAb2nzuj9yniB4QbcaIc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z/xgE/Y55JRJKfdAPlV0ukAj6bmYdIAVihPBePNuMEA=;
-        b=YY10TbuMuV/onlbhJg4U2dAt/g86N32hta5nKOfTXBOYQ0D8Jio6xyL20PKhJ6VhC2
-         fBGe26rJwW0OY6xkBTGuyLawF/52ocNrQP2lDQxvI4zwUnBJydtUwx3PwmP464J/crHt
-         fdbbf5psjNybxcnKylLFcJcJ2kgMttIoV8HutuKpozHRxylUMkdJ0uwm/O/QyfVbENjW
-         GIoNmvCrGTIACdpkqifYwQnNXM1RMjLUb+3csNwbGLB1qkJPKEcAQoaeE9FYcJ4PVO4W
-         ScN/gRlPX87zEat9Ky7Wx5gGDK5CVNmuR7wpi2Txdn+xUnabn8CqwGzoHhKeupBKYKqB
-         iGBw==
-X-Gm-Message-State: AOAM530cAw4TQ2cgsnDXvkcMsZYtH41AU1jIWWB+ESAL3g0zqkwJXXNs
-        LXE2t0warHvtOglyo/rn/sAwuA==
-X-Google-Smtp-Source: ABdhPJx9xd/CgJ2K56cg1nMviMwyZqmS6824yDtPEv7b6XWoioc9YvVjIpGU29bL2HCgdp9tPKZPhw==
-X-Received: by 2002:a63:1a64:: with SMTP id a36mr5432550pgm.225.1633015116124;
-        Thu, 30 Sep 2021 08:18:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c22sm3022703pja.10.2021.09.30.08.18.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Sep 2021 08:18:35 -0700 (PDT)
-Date:   Thu, 30 Sep 2021 08:18:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        kernel test robot <oliver.sang@intel.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Jann Horn <jannh@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Thu, 30 Sep 2021 13:00:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1350497AbhI3RAu (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 30 Sep 2021 13:00:50 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 173F6617E5;
+        Thu, 30 Sep 2021 16:59:05 +0000 (UTC)
+Date:   Thu, 30 Sep 2021 12:59:03 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Popov <alex.popov@linux.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Anand K Mistry <amistry@google.com>,
-        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Michael =?iso-8859-1?Q?Wei=DF?= 
-        <michael.weiss@aisec.fraunhofer.de>,
-        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Tycho Andersen <tycho@tycho.pizza>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Stefan Metzmacher <metze@samba.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ohhoon Kwon <ohoono.kwon@samsung.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        YiFei Zhu <yifeifz2@illinois.edu>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 0/6] wchan: Fix ORC support and leaky fallback
-Message-ID: <202109300817.36A8D1D0A@keescook>
-References: <20210929220218.691419-1-keescook@chromium.org>
- <20210930010157.mtn7pjyxkxokzmyh@treble>
- <YVV36z4UZaL/vOBI@hirez.programming.kicks-ass.net>
+        Thomas Garnier <thgarnie@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, notify@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
+Message-ID: <20210930125903.0783b06e@oasis.local.home>
+In-Reply-To: <YVWAPXSzFNbHz6+U@alley>
+References: <20210929185823.499268-1-alex.popov@linux.com>
+        <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
+        <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1>
+        <YVWAPXSzFNbHz6+U@alley>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YVV36z4UZaL/vOBI@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 10:40:11AM +0200, Peter Zijlstra wrote:
-> On Wed, Sep 29, 2021 at 06:01:57PM -0700, Josh Poimboeuf wrote:
-> 
-> > - Should we use a similar sched wrapper for /proc/$pid/stack to make its
-> >   raciness go away?
-> 
-> Alternatively, can we make /stack go away? AFAICT the semantics of that
-> are far worse in that it wants the actual kernel stack of a task,
-> blocked or not, which is a total pain in the arse (not to mention a
-> giant infoleak and side-channel).
-> 
-> > - At the risk of triggering a much larger patch set, I suspect
-> >   get_wchan() can be made generic ;-)  It's just a glorified wrapper
-> >   around stack_trace_save_tsk().
-> 
-> Done that for you :-)
+On Thu, 30 Sep 2021 11:15:41 +0200
+Petr Mladek <pmladek@suse.com> wrote:
 
-Thanks! I wasn't sure the renaming was worth the churn, but the other
-cleanups make it much nicer. :)
+> On Wed 2021-09-29 12:49:24, Paul E. McKenney wrote:
+> > On Wed, Sep 29, 2021 at 10:01:33PM +0300, Alexander Popov wrote:  
+> > > On 29.09.2021 21:58, Alexander Popov wrote:  
+> > > > Currently, the Linux kernel provides two types of reaction to kernel
+> > > > warnings:
+> > > >  1. Do nothing (by default),
+> > > >  2. Call panic() if panic_on_warn is set. That's a very strong reaction,
+> > > >     so panic_on_warn is usually disabled on production systems.  
+> 
+> Honestly, I am not sure if panic_on_warn() or the new pkill_on_warn()
+> work as expected. I wonder who uses it in practice and what is
+> the experience.
 
-Do you want me to re-collect the resulting series, or do you have a tree
-already for -tip for this?
+Several people use it, as I see reports all the time when someone can
+trigger a warn on from user space, and it's listed as a DOS of the
+system.
 
--Kees
+> 
+> The problem is that many developers do not know about this behavior.
+> They use WARN() when they are lazy to write more useful message or when
+> they want to see all the provided details: task, registry, backtrace.
 
--- 
-Kees Cook
+WARN() Should never be used just because of laziness. If it is, then
+that's a bug. Let's not use that as an excuse to shoot down this
+proposal. WARN() should only be used to test assumptions where you do
+not believe something can happen. I use it all the time when the logic
+prevents some state, and have the WARN() enabled if that state is hit.
+Because to me, it shows something that shouldn't happen happened, and I
+need to fix the code.
+
+Basically, WARN should be used just like BUG. But Linus hates BUG,
+because in most cases, these bad areas shouldn't take down the entire
+kernel, but for some people, they WANT it to take down the system.
+
+> 
+> Also it is inconsistent with pr_warn() behavior. Why a single line
+> warning would be innocent and full info WARN() cause panic/pkill?
+
+pr_warn() can be used for things that the user can hit. I'll use
+pr_warn, for memory failures, and such. Something that says "we ran out
+of resources, this will not work the way you expect". That is perfect
+for pr_warn. But not something that requires a stack dump.
+
+> 
+> What about pr_err(), pr_crit(), pr_alert(), pr_emerg()? They inform
+> about even more serious problems. Why a warning should cause panic/pkill
+> while an alert message is just printed?
+
+Because really, WARN() == BUG() but like I said, Linus doesn't like
+taking down the entire system on these areas.
+
+> 
+> 
+> It somehow reminds me the saga with %pK. We were not able to teach
+> developers to use it correctly for years and ended with hashed
+> pointers.
+> 
+> Well, this might be different. Developers might learn this the hard
+> way from bug reports. But there will be bug reports only when
+> anyone really enables this behavior. They will enable it only
+> when it works the right way most of the time.
+
+The panic_on_warn() has been used for years now. I do not think this is
+an issue.
+
+> 
+> I wonder if kernel could survive killing of any kthread. I have never
+> seen a code that would check whether a kthread was killed and
+> restart it.
+
+We can easily check if the thread is a kernel thread or a user thread,
+and make the decision on that.
+
+-- Steve
