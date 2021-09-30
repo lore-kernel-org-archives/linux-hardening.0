@@ -2,269 +2,311 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB32C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A85FC4167D
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2327F61A52
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF07E61882
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 22:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343919AbhI3W2w (ORCPT
+        id S1347745AbhI3W2y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 18:28:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33582 "EHLO
+        Thu, 30 Sep 2021 18:28:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343536AbhI3W2v (ORCPT
+        with ESMTP id S1344758AbhI3W2x (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 18:28:51 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A8FC061770
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 15:27:08 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id k24so7630613pgh.8
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 15:27:08 -0700 (PDT)
+        Thu, 30 Sep 2021 18:28:53 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22280C06176F
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 15:27:10 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id k23-20020a17090a591700b001976d2db364so5875203pji.2
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 15:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Jqphm/t74nfIK7/mu6AcFgxlnMC07oundR+N8B/zwSg=;
-        b=GUXLeQcPSVkFzaLKSP+/cXpr9g4ODTT5kgAVqgohUTrn+LrD4gNXODt+2jhNlF9iZZ
-         tl3iTlgcEGUFIOH3iAsKDS4CC2Oes6Dpn6Mscm4R6rhzq8DRsx740VlJlGFYNFnnaXje
-         +o6Nbio/K/D8YPClhsnQOpx6974EkOmZr4kbU=
+        bh=zygAiLSQoNsoIY1uvxoA1hwJtuo0y1KIlpyKLcao1qw=;
+        b=YGS0FrT8KgFYxIsPD1Vmo9YWUEsTitNyDANqflXGAcsxo5zFbryKfJ3PfKygTk25ql
+         O0fmHhCXQZOedvwacR/EjYGFf81Coe7XD5U+og7DwDF4ETb13Zrj2+ZmMsrzgEJNqYvZ
+         PG1VS5MwQ61xDXx3Kmy6wRy0VfGli/ZIYblIM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Jqphm/t74nfIK7/mu6AcFgxlnMC07oundR+N8B/zwSg=;
-        b=Liik35RnUvbCnXZFrHVotizK8TbQI/4uKhBwg6e/72YJktspHV2zj9MqG8KrBFSBXn
-         j2Excy+lBuDPbtrtnCqtGCqViidjtMeQEUBqmLMTcJJ4vExA3F7DeJB3xiOJwUE51noi
-         gQAoTwqICorRvHMkRd7T95z1Mkp8oU9K/h/KmePEBu14/O3FmhOKkaP9ngC/Hv1shgQ5
-         3iv5UDqDSERLNMcbMUvd9zUe/mojyqOaJfYq7R3HYzUhq6P37cVdVpi4QcZsFP33hy4g
-         N2LeJtMoDks7mvn59U/0d/e+PrpHXXbtcSx9G8BJFManriXsmSRe6pD8C1bO3wnPHy42
-         21mw==
-X-Gm-Message-State: AOAM532qOUdPwUQ+Xw81pvCQ49frPr+95GqVtW6KboZTiMUN94BCoWPy
-        24N+a6S7GAU1TN68meLE8MFGlA==
-X-Google-Smtp-Source: ABdhPJzBwm+VUDbUCaL37snzWxDJ+ABVVniWgQ658F6dS5xXeVT9ih3tezXi6vlT3ZniRVVLYG3I5A==
-X-Received: by 2002:a62:1c0e:0:b0:44b:e18c:b497 with SMTP id c14-20020a621c0e000000b0044be18cb497mr6680389pfc.2.1633040828055;
-        Thu, 30 Sep 2021 15:27:08 -0700 (PDT)
+        bh=zygAiLSQoNsoIY1uvxoA1hwJtuo0y1KIlpyKLcao1qw=;
+        b=MLYgoYb7ZBdQS5WFUUDSsNvf8a0xFhsO6JeLUzCb1sFBF5embUoDkPVilS6l4vKs1T
+         VAr/NeD8Be9IvOcRNFbCzTWY0XsQz/cQF0rA1qbrjHdPD47sGCSxtuATowdGN+6TDGB5
+         HH07ECm2gWPuOR2yAxFv2CvienaWsUyRJcrsnQN0m8nJUauE1bCy2oOQaLJ2jr8Uh1uK
+         hvcLJWwTvhluE5lYJd5ZF2Qx4nCLO7rhjCCsD75dMpppMfpKJlrmScX6bcukE1fjObnP
+         Megr182WWv1hrdxeqOE8F/UzNfuaJz85n+mz079Stx7d6bBzMo/GDYt1Yr85rIeyHOx+
+         dHsA==
+X-Gm-Message-State: AOAM5306X6uucrH/A0fMUkj6myMNTwsS1DreOTSWId2Yv9WcGLZ4ENCg
+        kUHVMB6thXzmCC/v7nGDSV8g7Q==
+X-Google-Smtp-Source: ABdhPJwt90voN5Dif7tX7/zONpBmQ3a4brdmA7e+RYd3OUtCE8kmT7pZTDjrBs2yiQk3xt/RqH38tQ==
+X-Received: by 2002:a17:90b:4d07:: with SMTP id mw7mr15084160pjb.66.1633040829698;
+        Thu, 30 Sep 2021 15:27:09 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d12sm4224538pgf.19.2021.09.30.15.27.06
+        by smtp.gmail.com with ESMTPSA id 127sm4084858pfw.10.2021.09.30.15.27.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 30 Sep 2021 15:27:07 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andy Whitcroft <apw@canonical.com>,
         Christoph Lameter <cl@linux.com>,
-        Daniel Micay <danielmicay@gmail.com>,
+        Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andy Whitcroft <apw@canonical.com>,
         Dennis Zhou <dennis@kernel.org>,
         Dwaipayan Ray <dwaipayanray1@gmail.com>,
         Joe Perches <joe@perches.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Pekka Enberg <penberg@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
         Miguel Ojeda <ojeda@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         clang-built-linux@googlegroups.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v3 2/8] Compiler Attributes: add __alloc_size() for better bounds checking
-Date:   Thu, 30 Sep 2021 15:26:58 -0700
-Message-Id: <20210930222704.2631604-3-keescook@chromium.org>
+Subject: [PATCH v3 4/8] slab: Add __alloc_size attributes for better bounds checking
+Date:   Thu, 30 Sep 2021 15:27:00 -0700
+Message-Id: <20210930222704.2631604-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210930222704.2631604-1-keescook@chromium.org>
 References: <20210930222704.2631604-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7935; h=from:subject; bh=Lhtx1mFqM2HAjuPryrsJ8/awNqfH8M5mYNjwTuoC5ts=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhVjm2qxr9gbYrncp+jUvaSMHaGkavg9PvHN0Z2ac8 78iBz+aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVY5tgAKCRCJcvTf3G3AJjYaD/ 9j21sTOV1qO/ZPTDlWzDz+1O8pgTrpZUsw7H33B4GcXGon4z9Z+sPoibx0mmTGjHLo+d+LC4873uK0 QvfGbBbzic3mc1FPmALk8Dn5czU3RAzzWHSfBVDcvLUuCHU/0gD8bkc7XC/kvnIHNcjb6zOK6bK9Y9 delHC9rSJQ4AK7X1x8hiClJ6LFP0wVDEHhlwdvI8I4+PvF9tleJ5k8Pw8KkLn85AYGUEfdgqUIuKAH rkrUruN3FMNuvvkGzl1fKK+de9Vxsxl1XaxTehkJSPqCiHFnA+zfh77L36DdITiLgNBHGTQuvq3npW 1Dt3zTOVuSzp4WcaEG7Fl+0MnlXyNFt84a5BMsHExLrerYZg7mCS3jkracEiRoBr++Fw1lSu3qnK0v bWI7hdORTKNDZE9x0OWrnW8E6accFNVNr1XJ64nx3qxqkwq1EMHF3Rt/1J5oywDQsgz8b9cL42ZSfJ 7OuTGB7tstyozps+yW935o6TIkVlOtHN7x93a9FmkhZhEePvAnfNai972lg0mnXqhTAoaI71N9er49 BDE7AVuSwn5V5LWR/tZ2lTfn9Utrm9xTg/UYX4rUo0AdnBf3vkfZ+/T260MWOSB3jS/7TvNQbWl4Gd SYHTZ58uRBlYoAVczk4GJcINy9mT6a94ilYwkDLiWqsfGGDKDcAU80ybcsIw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9514; h=from:subject; bh=jz2EabWJ4V7UBTDnXqnj7V0rrqkbx+8deuoqLgEzAyQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhVjm312aTAJy2rK6CUEO/3iGG5lrIgRt8I0BPxLQA ws2ETQaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYVY5twAKCRCJcvTf3G3AJoJsEA C0rp8pQeMkm2vohx8uuRwQGOg6XG6s9CbtQeM4TyD50PjHE/lRZdMz9+1gs0isac2J/MXzvuqkuUrH 33hBSKyFFTWa7OsdpupncwDiNBrgYjdmG5ZDm4KnGt5fmFjoyHsSkoM2m/q9nvk9HNMYCRj28rIsxw thd+1X5Zp4lfCeZcuQ/Rwf89CFtQTYq4tUN0942g3ii5+uVMMVC//dHySTHaSoSsJQgaYF1cD6BtqC O8xOT4G85XQc77P3POwRAKIc25jmPB7KRDuvnA4W2QDZm7bZOd1bosuM1PIUqm2OLm3yDVJHrNqSTL K/RcyNzkD3XM8gCcXCzzquG85b0e6uLU0gtnToglQo8DrMyVMgEjgCBuYIDZsAubJrfRsUDHrG9Q6M yye6Cz/CBZPzzQp0EXnWrBYQiJcHnuaawTJy4zNUVmlQ4R+raTrwRJYUEoL0lavFq0DXTnTwrjy/yT n5jWoUBS+gIqkOrp/BR8PYnrQjmT5sziW4d5YB4BhuNWhj2KXYyy4DEIhAHk7WDdo28MeVg8xlsUZU 6ipMnWY/3LzGFN6RoJ2fdothXH0DrptbevsKo/R0owUDLmZ+DHaWygKTwv1hSBm6k7oGU3CQmxwwbP Ju2UNQEXJS77ak+emdTaVAlpSNgikS3plbXgSD9VtpE3izBIu05Jhfhs+tDg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-GCC and Clang can use the "alloc_size" attribute to better inform the
-results of __builtin_object_size() (for compile-time constant values).
-Clang can additionally use alloc_size to inform the results of
-__builtin_dynamic_object_size() (for run-time values).
+As already done in GrapheneOS, add the __alloc_size attribute for regular
+kmalloc interfaces, to provide additional hinting for better bounds
+checking, assisting CONFIG_FORTIFY_SOURCE and other compiler
+optimizations.
 
-Because GCC sees the frequent use of struct_size() as an allocator size
-argument, and notices it can return SIZE_MAX (the overflow indication),
-it complains about these call sites overflowing (since SIZE_MAX is
-greater than the default -Walloc-size-larger-than=PTRDIFF_MAX). This
-isn't helpful since we already know a SIZE_MAX will be caught at run-time
-(this was an intentional design). To deal with this, we must disable
-this check as it is both a false positive and redundant. (Clang does
-not have this warning option.)
-
-Unfortunately, just checking the -Wno-alloc-size-larger-than is not
-sufficient to make the __alloc_size attribute behave correctly under
-older GCC versions. The attribute itself must be disabled in those
-situations too, as there appears to be no way to reliably silence the
-SIZE_MAX constant expression cases for GCC versions less than 9.1:
-
-In file included from ./include/linux/resource_ext.h:11,
-                 from ./include/linux/pci.h:40,
-                 from drivers/net/ethernet/intel/ixgbe/ixgbe.h:9,
-                 from drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c:4:
-In function 'kmalloc_node',
-    inlined from 'ixgbe_alloc_q_vector' at ./include/linux/slab.h:743:9:
-./include/linux/slab.h:618:9: error: argument 1 value '18446744073709551615' exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
-  return __kmalloc_node(size, flags, node);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/slab.h: In function 'ixgbe_alloc_q_vector':
-./include/linux/slab.h:455:7: note: in a call to allocation function '__kmalloc_node' declared here
- void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_slab_alignment __malloc;
-       ^~~~~~~~~~~~~~
-
-Specifically:
--Wno-alloc-size-larger-than is not correctly handled by GCC < 9.1
-  https://godbolt.org/z/hqsfG7q84 (doesn't disable)
-  https://godbolt.org/z/P9jdrPTYh (doesn't admit to not knowing about option)
-  https://godbolt.org/z/465TPMWKb (only warns when other warnings appear)
-
--Walloc-size-larger-than=18446744073709551615 is not handled by GCC < 8.2
-  https://godbolt.org/z/73hh1EPxz (ignores numeric value)
-
-Since anything marked with __alloc_size would also qualify for marking
-with __malloc, just include __malloc along with it to avoid redundant
-markings. (Suggested by Linus Torvalds.)
-
-Finally, make sure checkpatch.pl doesn't get confused about finding the
-__alloc_size attribute on functions. (Thanks to Joe Perches.)
-
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Andy Whitcroft <apw@canonical.com>
 Cc: Christoph Lameter <cl@linux.com>
-Cc: Daniel Micay <danielmicay@gmail.com>
+Cc: Pekka Enberg <penberg@kernel.org>
 Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andy Whitcroft <apw@canonical.com>
 Cc: Dennis Zhou <dennis@kernel.org>
 Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
 Cc: Joe Perches <joe@perches.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Pekka Enberg <penberg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
 Cc: Tejun Heo <tj@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
+Co-developed-by: Daniel Micay <danielmicay@gmail.com>
+Signed-off-by: Daniel Micay <danielmicay@gmail.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- Makefile                            | 15 +++++++++++++++
- include/linux/compiler-gcc.h        |  8 ++++++++
- include/linux/compiler_attributes.h | 10 ++++++++++
- include/linux/compiler_types.h      | 12 ++++++++++++
- scripts/checkpatch.pl               |  3 ++-
- 5 files changed, 47 insertions(+), 1 deletion(-)
+ include/linux/slab.h | 61 ++++++++++++++++++++++++--------------------
+ 1 file changed, 33 insertions(+), 28 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 5e7c1d854441..b1a98ac31200 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1008,6 +1008,21 @@ ifdef CONFIG_CC_IS_GCC
- KBUILD_CFLAGS += -Wno-maybe-uninitialized
- endif
- 
-+ifdef CONFIG_CC_IS_GCC
-+# The allocators already balk at large sizes, so silence the compiler
-+# warnings for bounds checks involving those possible values. While
-+# -Wno-alloc-size-larger-than would normally be used here, earlier versions
-+# of gcc (<9.1) weirdly don't handle the option correctly when _other_
-+# warnings are produced (?!). Using -Walloc-size-larger-than=SIZE_MAX
-+# doesn't work (as it is documented to), silently resolving to "0" prior to
-+# version 9.1 (and producing an error more recently). Numeric values larger
-+# than PTRDIFF_MAX also don't work prior to version 9.1, which are silently
-+# ignored, continuing to default to PTRDIFF_MAX. So, left with no other
-+# choice, we must perform a versioned check to disable this warning.
-+# https://lore.kernel.org/lkml/20210824115859.187f272f@canb.auug.org.au
-+KBUILD_CFLAGS += $(call cc-ifversion, -ge, 0901, -Wno-alloc-size-larger-than)
-+endif
-+
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= -fno-strict-overflow
- 
-diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-index bd2b881c6b63..b9d5f9c373a0 100644
---- a/include/linux/compiler-gcc.h
-+++ b/include/linux/compiler-gcc.h
-@@ -144,3 +144,11 @@
- #else
- #define __diag_GCC_8(s)
- #endif
-+
-+/*
-+ * Prior to 9.1, -Wno-alloc-size-larger-than (and therefore the "alloc_size"
-+ * attribute) do not work, and must be disabled.
-+ */
-+#if GCC_VERSION < 90100
-+#undef __alloc_size__
-+#endif
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index e6ec63403965..3de06a8fae73 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -33,6 +33,15 @@
- #define __aligned(x)                    __attribute__((__aligned__(x)))
- #define __aligned_largest               __attribute__((__aligned__))
- 
-+/*
-+ * Note: do not use this directly. Instead, use __alloc_size() since it is conditionally
-+ * available and includes other attributes.
-+ *
-+ *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-alloc_005fsize-function-attribute
-+ * clang: https://clang.llvm.org/docs/AttributeReference.html#alloc-size
-+ */
-+#define __alloc_size__(x, ...)		__attribute__((__alloc_size__(x, ## __VA_ARGS__)))
-+
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index d9f14125d7a2..844b776deecf 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -181,7 +181,7 @@ int kmem_cache_shrink(struct kmem_cache *s);
  /*
-  * Note: users of __always_inline currently do not write "inline" themselves,
-  * which seems to be required by gcc to apply the attribute according
-@@ -153,6 +162,7 @@
- 
- /*
-  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-malloc-function-attribute
-+ * clang: https://clang.llvm.org/docs/AttributeReference.html#malloc
+  * Common kmalloc functions provided by all allocators
   */
- #define __malloc                        __attribute__((__malloc__))
+-void * __must_check krealloc(const void *objp, size_t new_size, gfp_t flags);
++void * __must_check krealloc(const void *objp, size_t new_size, gfp_t flags) __alloc_size(2);
+ void kfree(const void *objp);
+ void kfree_sensitive(const void *objp);
+ size_t __ksize(const void *objp);
+@@ -425,7 +425,7 @@ static __always_inline unsigned int __kmalloc_index(size_t size,
+ #define kmalloc_index(s) __kmalloc_index(s, true)
+ #endif /* !CONFIG_SLOB */
  
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index b6ff83a714ca..4f2203c4a257 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -250,6 +250,18 @@ struct ftrace_likely_data {
- # define __cficanonical
+-void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __malloc;
++void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
+ void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_slab_alignment __malloc;
+ void kmem_cache_free(struct kmem_cache *s, void *objp);
+ 
+@@ -449,11 +449,12 @@ static __always_inline void kfree_bulk(size_t size, void **p)
+ }
+ 
+ #ifdef CONFIG_NUMA
+-void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_kmalloc_alignment __malloc;
++void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_kmalloc_alignment
++							 __alloc_size(1);
+ void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t flags, int node) __assume_slab_alignment
+ 									 __malloc;
+ #else
+-static __always_inline void *__kmalloc_node(size_t size, gfp_t flags, int node)
++static __always_inline __alloc_size(1) void *__kmalloc_node(size_t size, gfp_t flags, int node)
+ {
+ 	return __kmalloc(size, flags);
+ }
+@@ -466,23 +467,23 @@ static __always_inline void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t f
+ 
+ #ifdef CONFIG_TRACING
+ extern void *kmem_cache_alloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
+-				   __assume_slab_alignment __malloc;
++				   __assume_slab_alignment __alloc_size(3);
+ 
+ #ifdef CONFIG_NUMA
+ extern void *kmem_cache_alloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
+-					 int node, size_t size) __assume_slab_alignment __malloc;
++					 int node, size_t size) __assume_slab_alignment
++								__alloc_size(4);
+ #else
+-static __always_inline void *kmem_cache_alloc_node_trace(struct kmem_cache *s,
+-							 gfp_t gfpflags, int node,
+-							 size_t size)
++static __always_inline __alloc_size(4) void *kmem_cache_alloc_node_trace(struct kmem_cache *s,
++						 gfp_t gfpflags, int node, size_t size)
+ {
+ 	return kmem_cache_alloc_trace(s, gfpflags, size);
+ }
+ #endif /* CONFIG_NUMA */
+ 
+ #else /* CONFIG_TRACING */
+-static __always_inline void *kmem_cache_alloc_trace(struct kmem_cache *s, gfp_t flags,
+-						    size_t size)
++static __always_inline __alloc_size(3) void *kmem_cache_alloc_trace(struct kmem_cache *s,
++								    gfp_t flags, size_t size)
+ {
+ 	void *ret = kmem_cache_alloc(s, flags);
+ 
+@@ -501,19 +502,20 @@ static __always_inline void *kmem_cache_alloc_node_trace(struct kmem_cache *s, g
+ #endif /* CONFIG_TRACING */
+ 
+ extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order) __assume_page_alignment
+-									 __malloc;
++									 __alloc_size(1);
+ 
+ #ifdef CONFIG_TRACING
+ extern void *kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order)
+-				__assume_page_alignment __malloc;
++				__assume_page_alignment __alloc_size(1);
+ #else
+-static __always_inline void *kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order)
++static __always_inline __alloc_size(1) void *kmalloc_order_trace(size_t size, gfp_t flags,
++								 unsigned int order)
+ {
+ 	return kmalloc_order(size, flags, order);
+ }
  #endif
  
-+/*
-+ * Any place that could be marked with the "alloc_size" attribute is also
-+ * a place to be marked with the "malloc" attribute. Do this as part of the
-+ * __alloc_size macro to avoid redundant attributes and to avoid missing a
-+ * __malloc marking.
-+ */
-+#ifdef __alloc_size__
-+# define __alloc_size(x, ...)	__alloc_size__(x, ## __VA_ARGS__) __malloc
-+#else
-+# define __alloc_size(x, ...)	__malloc
-+#endif
-+
- #ifndef asm_volatile_goto
- #define asm_volatile_goto(x...) asm goto(x)
- #endif
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index c27d2312cfc3..88cb294dc447 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -489,7 +489,8 @@ our $Attribute	= qr{
- 			____cacheline_aligned|
- 			____cacheline_aligned_in_smp|
- 			____cacheline_internodealigned_in_smp|
--			__weak
-+			__weak|
-+			__alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\)
- 		  }x;
- our $Modifier;
- our $Inline	= qr{inline|__always_inline|noinline|__inline|__inline__};
+-static __always_inline void *kmalloc_large(size_t size, gfp_t flags)
++static __always_inline __alloc_size(1) void *kmalloc_large(size_t size, gfp_t flags)
+ {
+ 	unsigned int order = get_order(size);
+ 	return kmalloc_order_trace(size, flags, order);
+@@ -573,7 +575,7 @@ static __always_inline void *kmalloc_large(size_t size, gfp_t flags)
+  *	Try really hard to succeed the allocation but fail
+  *	eventually.
+  */
+-static __always_inline void *kmalloc(size_t size, gfp_t flags)
++static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+ {
+ 	if (__builtin_constant_p(size)) {
+ #ifndef CONFIG_SLOB
+@@ -595,7 +597,7 @@ static __always_inline void *kmalloc(size_t size, gfp_t flags)
+ 	return __kmalloc(size, flags);
+ }
+ 
+-static __always_inline void *kmalloc_node(size_t size, gfp_t flags, int node)
++static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
+ {
+ #ifndef CONFIG_SLOB
+ 	if (__builtin_constant_p(size) &&
+@@ -619,7 +621,7 @@ static __always_inline void *kmalloc_node(size_t size, gfp_t flags, int node)
+  * @size: element size.
+  * @flags: the type of memory to allocate (see kmalloc).
+  */
+-static inline void *kmalloc_array(size_t n, size_t size, gfp_t flags)
++static inline __alloc_size(1, 2) void *kmalloc_array(size_t n, size_t size, gfp_t flags)
+ {
+ 	size_t bytes;
+ 
+@@ -637,8 +639,10 @@ static inline void *kmalloc_array(size_t n, size_t size, gfp_t flags)
+  * @new_size: new size of a single member of the array
+  * @flags: the type of memory to allocate (see kmalloc)
+  */
+-static inline void * __must_check krealloc_array(void *p, size_t new_n, size_t new_size,
+-						 gfp_t flags)
++static inline __alloc_size(2, 3) void * __must_check krealloc_array(void *p,
++								    size_t new_n,
++								    size_t new_size,
++								    gfp_t flags)
+ {
+ 	size_t bytes;
+ 
+@@ -654,7 +658,7 @@ static inline void * __must_check krealloc_array(void *p, size_t new_n, size_t n
+  * @size: element size.
+  * @flags: the type of memory to allocate (see kmalloc).
+  */
+-static inline void *kcalloc(size_t n, size_t size, gfp_t flags)
++static inline __alloc_size(1, 2) void *kcalloc(size_t n, size_t size, gfp_t flags)
+ {
+ 	return kmalloc_array(n, size, flags | __GFP_ZERO);
+ }
+@@ -667,12 +671,13 @@ static inline void *kcalloc(size_t n, size_t size, gfp_t flags)
+  * allocator where we care about the real place the memory allocation
+  * request comes from.
+  */
+-extern void *__kmalloc_track_caller(size_t size, gfp_t flags, unsigned long caller);
++extern void *__kmalloc_track_caller(size_t size, gfp_t flags, unsigned long caller)
++				   __alloc_size(1);
+ #define kmalloc_track_caller(size, flags) \
+ 	__kmalloc_track_caller(size, flags, _RET_IP_)
+ 
+-static inline void *kmalloc_array_node(size_t n, size_t size, gfp_t flags,
+-				       int node)
++static inline __alloc_size(1, 2) void *kmalloc_array_node(size_t n, size_t size, gfp_t flags,
++							  int node)
+ {
+ 	size_t bytes;
+ 
+@@ -683,7 +688,7 @@ static inline void *kmalloc_array_node(size_t n, size_t size, gfp_t flags,
+ 	return __kmalloc_node(bytes, flags, node);
+ }
+ 
+-static inline void *kcalloc_node(size_t n, size_t size, gfp_t flags, int node)
++static inline __alloc_size(1, 2) void *kcalloc_node(size_t n, size_t size, gfp_t flags, int node)
+ {
+ 	return kmalloc_array_node(n, size, flags | __GFP_ZERO, node);
+ }
+@@ -691,7 +696,7 @@ static inline void *kcalloc_node(size_t n, size_t size, gfp_t flags, int node)
+ 
+ #ifdef CONFIG_NUMA
+ extern void *__kmalloc_node_track_caller(size_t size, gfp_t flags, int node,
+-					 unsigned long caller);
++					 unsigned long caller) __alloc_size(1);
+ #define kmalloc_node_track_caller(size, flags, node) \
+ 	__kmalloc_node_track_caller(size, flags, node, \
+ 			_RET_IP_)
+@@ -716,7 +721,7 @@ static inline void *kmem_cache_zalloc(struct kmem_cache *k, gfp_t flags)
+  * @size: how many bytes of memory are required.
+  * @flags: the type of memory to allocate (see kmalloc).
+  */
+-static inline void *kzalloc(size_t size, gfp_t flags)
++static inline __alloc_size(1) void *kzalloc(size_t size, gfp_t flags)
+ {
+ 	return kmalloc(size, flags | __GFP_ZERO);
+ }
+@@ -727,7 +732,7 @@ static inline void *kzalloc(size_t size, gfp_t flags)
+  * @flags: the type of memory to allocate (see kmalloc).
+  * @node: memory node from which to allocate
+  */
+-static inline void *kzalloc_node(size_t size, gfp_t flags, int node)
++static inline __alloc_size(1) void *kzalloc_node(size_t size, gfp_t flags, int node)
+ {
+ 	return kmalloc_node(size, flags | __GFP_ZERO, node);
+ }
 -- 
 2.30.2
 
