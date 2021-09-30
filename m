@@ -2,150 +2,153 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4645C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 13:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D64C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 14:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBAE619EC
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 13:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7F861507
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 14:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351536AbhI3N52 (ORCPT
+        id S1349303AbhI3OkA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 09:57:28 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:38496 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351510AbhI3N50 (ORCPT
+        Thu, 30 Sep 2021 10:40:00 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53643 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1348440AbhI3OjS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 09:57:26 -0400
-Received: by mail-wr1-f54.google.com with SMTP id u18so10233884wrg.5;
-        Thu, 30 Sep 2021 06:55:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=XIBvChFKd70IQU/OaMjJCINVW+wyQl1HNkbZBhbOPoI=;
-        b=8CfbARVXFzf7MFBoctitWkTl1kPbsxP1NaDzyzQr5w/U/szRkMB+SjHzCmbA88cYJ4
-         xVMkeqnD5WO6QxYteYELVw2N1cDACd41B10puoNWA6xSmJmEBSJFCPj+6bfJGYgznwAU
-         e+tOrNlcFMp06UUyfXEe33QdPp2uR973I/HrqxQMGcjj0eSFvF8/obmvdhSRw8btTfo/
-         3bEBxxy0fEht85a6jf4Qw7QTSYO+81fTgJ237g7UTd9Gy6qbNsKEx5ghwmXJhmVuDJtk
-         +jb11NmXy7rZuhn/JfEYNuoKRejfmeB36ULLi9R7crt4a9GB3/ctb9YV37IIJfTZeO8K
-         hkrg==
-X-Gm-Message-State: AOAM533OR057nFfXUzhOu4BvayMpnIa2KpEFNDSrptaqB/ebL8o/1njj
-        8GMrrMqZIUnBYx9NuGBeM80=
-X-Google-Smtp-Source: ABdhPJyfiFxiOHTqszHIrDDHSj7cKIx9P6KR71PRpxnSn6DAWepMhnjvSct+GsB9xt+w+bIBcMmn/w==
-X-Received: by 2002:a5d:64a3:: with SMTP id m3mr6461208wrp.157.1633010142527;
-        Thu, 30 Sep 2021 06:55:42 -0700 (PDT)
-Received: from [10.9.0.26] ([46.166.133.199])
-        by smtp.gmail.com with ESMTPSA id i92sm3028618wri.28.2021.09.30.06.55.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Sep 2021 06:55:42 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
-To:     Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Paul McKenney <paulmck@kernel.org>,
+        Thu, 30 Sep 2021 10:39:18 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5A9F8580F9A;
+        Thu, 30 Sep 2021 10:37:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Thu, 30 Sep 2021 10:37:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=mx+31OMai8gbaIunBA/PcL9q6BG
+        p95XY+PT2AgPSDuI=; b=JYAPl8xuiMqjPKgj4D5TmY/fbL5ORVlyC8IMByPJoSf
+        rFfBL+JSOjLRSdKL5CxCCD28WWHdKcS8bZLdyvoJhjwKWH6QZC36Q9HENw8S3H77
+        6B5Rgt4ZU4WTAV64E2nivZ67w8+8v4Paz5nXCYViB/AyUQKWk4LL3uXMIzKTYdxa
+        7+9k0AB3UFf+ffa9LLX4bZO4LAm4UavnOc4TA8kjhJZGsXXAqRvOghy6oouQsE4u
+        6RLOrZF/jczhlgtVmGDzW9s6KZTvc3joQP+GcZA7Ym5h3ZbzOBB0I6R1V7+l8o16
+        oJ9pRD4b7y1v2wQoKeQAplg3SA7qJgd2iAj7rglptkA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=mx+31O
+        Mai8gbaIunBA/PcL9q6BGp95XY+PT2AgPSDuI=; b=Hkeiyi6U0uImqNh8Q55Fxq
+        5Nry+jvvYAqpMOLpeP4TG0HnSix9czmk62R+t3LeuI5Bv6MySvwi4cf+RYZneYjc
+        qrefVFoLOHlnXPM2AB4rdk9IyYKJn68YAtyH1/ZMUWmw/bpx3WBKXoA7cius8Mm4
+        FfQMp9tWPexnRflXcF4Sb7yqvNiHssoatzJMX7EEiNfWyAb7v9pRgYy30eZQjLfA
+        eWjBtrGfFqqsPHwl9qKRKxe3T9mNOGVIYX036yJ8sOT7DQbBoQ+8I4EZf5WCc1vB
+        PwRJLl9toGEyM3Ki6HXQV2BPclPvLwYsIfgLQlGWvIeGvxrmefEn75pjb8H8B7Dg
+        ==
+X-ME-Sender: <xms:n8tVYZ6NoqwsyUVPSsciMz5l00besVr288mFzIw4Srergzc8szvlbw>
+    <xme:n8tVYW5cEGblGsepamYCmpWYkiXDlSqm_gvfFcF2RmyVrNHXSPc9Ui9Xay_NW04-J
+    dXZWP9bfdOaqx1vwOU>
+X-ME-Received: <xmr:n8tVYQeHyrhpcAwjgmyOlsB5RLUtaS9DThMravEcO9FesdfSmUis3En0IPz9HwofSeARJ_lJvY_wTLTaEwON8omp>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekgedgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepvfihtghhohcutehnuggvrhhsvghnuceothihtghhohesthihtghhoh
+    drphhiiiiirgeqnecuggftrfgrthhtvghrnhepffeukeekudejfefhjeevgeejgffhkefh
+    ffetleduvddufeekteelkeekhfefudejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehthigt
+    hhhosehthigthhhordhpihiiiigr
+X-ME-Proxy: <xmx:n8tVYSI043SLp-mQJrY7ZeLX0WxKyvFtInlS5134PNnWyRc107HnTg>
+    <xmx:n8tVYdKCL61aT7mZ7jTwLvL67HqH_TN4mvqlcLO31N8jT34r0mujKw>
+    <xmx:n8tVYbz7QaM8utHAVyjZo0hpkJ93z2FHR3PHtpcbieOEAyclOBiLdw>
+    <xmx:o8tVYXaDZEfAVQibC0xnGAOZQCbAZFQs3K32yigrzQPaHYTn2EKdKw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 30 Sep 2021 10:37:17 -0400 (EDT)
+Date:   Thu, 30 Sep 2021 08:37:15 -0600
+From:   Tycho Andersen <tycho@tycho.pizza>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Tobin C. Harding" <me@tobin.cc>, linux-hardening@vger.kernel.org,
+        kernel test robot <oliver.sang@intel.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Jann Horn <jannh@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Anand K Mistry <amistry@google.com>,
+        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Michael =?iso-8859-1?Q?Wei=DF?= 
+        <michael.weiss@aisec.fraunhofer.de>,
+        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Stefan Metzmacher <metze@samba.org>,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will.deacon@arm.com>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, notify@kernel.org
-References: <20210929185823.499268-1-alex.popov@linux.com>
- <323d0784-249d-7fef-6c60-e8426d35b083@intel.com>
- <202109291229.C64A1D9D@keescook>
-From:   Alexander Popov <alex.popov@linux.com>
-Message-ID: <cf6ada34-9854-b7ad-f671-52186da5abd0@linux.com>
-Date:   Thu, 30 Sep 2021 16:55:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ohhoon Kwon <ohoono.kwon@samsung.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        YiFei Zhu <yifeifz2@illinois.edu>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 6/6] leaking_addresses: Always print a trailing newline
+Message-ID: <YVXLm5dC3nRKZpF3@cisco>
+References: <20210929220218.691419-1-keescook@chromium.org>
+ <20210929220218.691419-7-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <202109291229.C64A1D9D@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210929220218.691419-7-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 29.09.2021 23:06, Kees Cook wrote:
-> On Wed, Sep 29, 2021 at 12:03:36PM -0700, Dave Hansen wrote:
->> On 9/29/21 11:58 AM, Alexander Popov wrote:
->>> --- a/kernel/panic.c
->>> +++ b/kernel/panic.c
->>> @@ -53,6 +53,7 @@ static int pause_on_oops_flag;
->>>  static DEFINE_SPINLOCK(pause_on_oops_lock);
->>>  bool crash_kexec_post_notifiers;
->>>  int panic_on_warn __read_mostly;
->>> +int pkill_on_warn __read_mostly;
+On Wed, Sep 29, 2021 at 03:02:18PM -0700, Kees Cook wrote:
+> For files that lack trailing newlines and match a leaking address (e.g.
+> wchan[1]), the leaking_addresses.pl report would run together with the
+> next line, making things look corrupted.
 > 
-> I like this idea. I can't tell if Linus would tolerate it, though. But I
-> really have wanted a middle ground like BUG(). Having only WARN() and
-> panic() is not very friendly. :(
-
-Ok, let's see.
-
-Kees, could you also share your thoughts on the good questions by Petr Mladek in
-this thread?
-
->>>  unsigned long panic_on_taint;
->>>  bool panic_on_taint_nousertaint = false;
->>>  
->>> @@ -610,6 +611,9 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
->>>  
->>>  	print_oops_end_marker();
->>>  
->>> +	if (pkill_on_warn && system_state >= SYSTEM_RUNNING)
->>> +		do_group_exit(SIGKILL);
->>> +
->>>  	/* Just a warning, don't kill lockdep. */
->>>  	add_taint(taint, LOCKDEP_STILL_OK);
->>>  }
->>
->> Doesn't this tie into the warning *printing* code?  That's better than
->> nothing, for sure.  But, if we're doing this for hardening, I think we
->> would want to kill anyone provoking a warning, not just the first one
->> that triggered *printing* the warning.
+> Unconditionally remove the newline on input, and write it back out on
+> output.
 > 
-> Right, this needs to be moved into the callers of __warn() (i.e.
-> report_bug(), and warn_slowpath_fmt()), likely with some small
-> refactoring in report_bug().
+> [1] https://lore.kernel.org/all/20210103142726.GC30643@xsang-OptiPlex-9020/
+> 
+> Cc: "Tobin C. Harding" <me@tobin.cc>
+> Cc: Tycho Andersen <tycho@tycho.pizza>
 
-Yes, I see now. Thanks, Dave, Peter and Kees.
-The kernel can hit warning and omit calling __warn() that prints the message.
-But pkill_on_warn action should be taken each time.
+Acked-by: Tycho Andersen <tycho@tycho.pizza>
 
-As I can understand now, include/asm-generic/bug.h defines three warning
-implementations:
- 1. CONFIG_BUG=y and the arch provides __WARN_FLAGS. In that case pkill_on_warn
-should be checked in report_bug() that you mention.
- 2. CONFIG_BUG=y and the arch doesn't have __WARN_FLAGS. In that case
-pkill_on_warn should be checked in warn_slowpath_fmt().
- 3. CONFIG_BUG is not set. In that case pkill_on_warn should not be considered.
+Thanks!
 
-Please, correct me if needed.
-
-Best regards,
-Alexander
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  scripts/leaking_addresses.pl | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
+> index b2d8b8aa2d99..8f636a23bc3f 100755
+> --- a/scripts/leaking_addresses.pl
+> +++ b/scripts/leaking_addresses.pl
+> @@ -455,8 +455,9 @@ sub parse_file
+>  
+>  	open my $fh, "<", $file or return;
+>  	while ( <$fh> ) {
+> +		chomp;
+>  		if (may_leak_address($_)) {
+> -			print $file . ': ' . $_;
+> +			printf("$file: $_\n");
+>  		}
+>  	}
+>  	close $fh;
+> -- 
+> 2.30.2
+> 
