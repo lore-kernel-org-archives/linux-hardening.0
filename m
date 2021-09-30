@@ -2,96 +2,120 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BEAC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7890C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39C2D61164
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843A86140F
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:12:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353160AbhI3SJK (ORCPT
+        id S1353207AbhI3SOR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 14:09:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59152 "EHLO
+        Thu, 30 Sep 2021 14:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353163AbhI3SID (ORCPT
+        with ESMTP id S1353144AbhI3SOP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 14:08:03 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A2BC06176F
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:06:11 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id bi20-20020a05620a319400b0045df2735d63so14322994qkb.2
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:06:11 -0700 (PDT)
+        Thu, 30 Sep 2021 14:14:15 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C29EC06176A
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:12:32 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id qe4-20020a17090b4f8400b0019f663cfcd1so964418pjb.1
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=YTs3o+Lcv5DCr2QuauAOS05kw4e75hGm1Ap6LaNmDuQ=;
-        b=X2H89x2ZY/Vpdf/BQvunK6wfPqMyb4DEDk9pbiFs6nK3/2FbhHHbrE6V4xLhMLMO72
-         drYHTD2/KCJ6G99TSY9C0aO1sKa6Of2qEhogYWv2HQTGYu0JWgUpAaLMIJzwMu+or7pa
-         iHk0oBTabObWMRZMT4JZN8w06cBqyUEON9DOp1KFYQGQ3SL+tbs7p/0CMzwj/JX+J6Bv
-         wWym0ky/0NAtPtaaqTZBHkMxxafKQWsjUiZH+m2pu8IQRQNs99qH5Pfj/TWo3mDJ7327
-         NFrnHKXLRwYMI9ciPDGRpaNES499YGFq66cYMWgu6ugJqzdhsfWL/THEpUxc1niccano
-         aXmw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/jP68Qb3IOmFZtyBmCWtI8sRKP1bO4xuJlNxJXxFMLo=;
+        b=eEsa6HUQ1ug8JocDGdLB7jS8rTRNf4nqyY/oodN6m4TktfoLZ4ty8Nb+FwT5sZ/zkF
+         sMO73naAZDcBp4UQBX3l3Wunm9J9cMJrljTMO5D0Ch/WSk8j2E+ZZ5dpjxsFahZZewX3
+         mPfNaddSe5vK2Ko8GUCIHmjLbKcAxLL058uts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=YTs3o+Lcv5DCr2QuauAOS05kw4e75hGm1Ap6LaNmDuQ=;
-        b=wgfv/lwz84oLqw8Dd9iuz4Ktv9h0BraWn8MJTKdz5VKIU8NpnWJ4WMa7UsKB1hjsbC
-         cIsGjG7yJaxH6Y+rzRp1wojjs6X1naMG0uNqrQYOyKrboid2GEeKxY4KBRluTp1d/w43
-         uK7xB+KUsLG+lwaFXT0nsErig26Cq3xQv7yHPODtz9mz/a70WDyKk6vJ4tMoEDbsUpyT
-         m2b75rL7z4CPEqOD8+YSWROAEYxwkcrEi0eF4+a366+WEWtx1Hq4We7JCTSvcfXT0tMQ
-         mtR/wwmEb3mSkoBNNtq1TewZVVqiTRqARpumnIr+PqkmZOPWzC21dILVsgCYXzOk1efQ
-         8SnQ==
-X-Gm-Message-State: AOAM532o2i0F305HNPMlxnRhRD1PQ5VYaSe//IwRXjMKi112M455DNfq
-        FzZWVSlbc8d5aLLmzwCoJQj0GUcqnuLYS/M9wFA=
-X-Google-Smtp-Source: ABdhPJxQHjdB5w0u1pGsQKGQzmTIef8NLz4brDiegqDKDUQgvgv1vEwzWyrPFnKCP//0W8Pt+jlJdM7oOGX+dho9Rwo=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:ce43:4366:95ca:d6e9])
- (user=samitolvanen job=sendgmr) by 2002:a0c:8e8e:: with SMTP id
- x14mr5086772qvb.67.1633025170495; Thu, 30 Sep 2021 11:06:10 -0700 (PDT)
-Date:   Thu, 30 Sep 2021 11:05:31 -0700
-In-Reply-To: <20210930180531.1190642-1-samitolvanen@google.com>
-Message-Id: <20210930180531.1190642-16-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20210930180531.1190642-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.33.0.800.g4c38ced690-goog
-Subject: [PATCH v4 15/15] x86, build: Allow CONFIG_CFI_CLANG to be selected
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     x86@kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/jP68Qb3IOmFZtyBmCWtI8sRKP1bO4xuJlNxJXxFMLo=;
+        b=5YW+WpDvJLpDTxYT7iOyxtHQl+xdieXfUFr3MT1qJfOX29a2D7UmoWsst38IoGCcDk
+         FwqM8TdbZpLN9u0ohEVW8tSgNkf5KtODgRf2IEpqPIAHrejnYE4/j5PmONyUAOnx9Lzj
+         yeA74U6eaSJgmnawUZ51gg0pwsUcKRZFy+jBMJLewb0QJ2yWY9vVbo97KrKSLcrBqREU
+         lpYJQonZdWvgJjupEffk5ZjAyBVrbROvqq+YLK12INTp88eQgX7Tjwke/JMsRElp8309
+         I4SxCj7K5w8M0bKPnTJN5aYKxDbaVeeXMmgesS2Etw2tzklOstZG7KuYdxZjEhocd+8E
+         7+UQ==
+X-Gm-Message-State: AOAM533DpQ61NcBv1sklDMeEyjAQZgyG8Uba9/DfF5J7EcebKFwApgcP
+        kNDL54+zwNjU8/hllYKpiTarOA==
+X-Google-Smtp-Source: ABdhPJwA6GX/vcgv5ngu+bjUf2n7PrKcV867/lIhgcPiU4+jQau4QO3qCBLPDhd9B03CglGFhKlpuA==
+X-Received: by 2002:a17:902:b193:b029:11a:a179:453a with SMTP id s19-20020a170902b193b029011aa179453amr5469195plr.69.1633025551776;
+        Thu, 30 Sep 2021 11:12:31 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o3sm5391243pjq.34.2021.09.30.11.12.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Sep 2021 11:12:31 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 11:12:30 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
+        Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Stefan Metzmacher <metze@samba.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Michael =?iso-8859-1?Q?Wei=DF?= 
+        <michael.weiss@aisec.fraunhofer.de>,
+        Anand K Mistry <amistry@google.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        Ohhoon Kwon <ohoono.kwon@samsung.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        YiFei Zhu <yifeifz2@illinois.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] proc: Disable /proc/$pid/wchan
+Message-ID: <202109301109.4E172219@keescook>
+References: <20210923233105.4045080-1-keescook@chromium.org>
+ <c283c978-2563-06b9-4c21-59bedceda9ea@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c283c978-2563-06b9-4c21-59bedceda9ea@oracle.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled with
-Clang >= 13.
+On Thu, Sep 30, 2021 at 11:05:35AM -0700, Stephen Brennan wrote:
+> On 9/23/21 4:31 PM, Kees Cook wrote:
+> > The /proc/$pid/wchan file has been broken by default on x86_64 for 4
+> > years now[1]. As this remains a potential leak of either kernel
+> > addresses (when symbolization fails) or limited observation of kernel
+> > function progress, just remove the contents for good.
+> > 
+> > Unconditionally set the contents to "0" and also mark the wchan
+> > field in /proc/$pid/stat with 0.
+> 
+> Hi all,
+> 
+> It looks like there's already been pushback on this idea, but I wanted
+> to add another voice from a frequent user of /proc/$pid/wchan (via PS).
+> Much of my job involves diagnosing kernel issues and performance issues
+> on stable kernels, frequently on production systems where I can't do
+> anything too invasive. wchan is incredibly useful for these situations,
+> so much so that we store regular snapshots of ps output, and we expand
+> the size of the WCHAN column to fit more data (e.g. ps -e -o
+> pid,wchan=WCHAN-WIDE-COLUMN). Disabling wchan would remove a critical
+> tool for me and my team.
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=51588
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for speaking up! Yes, we've moved to fixing wchan correctly as
+it's clear it's still very much in use. :) Current thread is here:
+https://lore.kernel.org/lkml/20210929220218.691419-1-keescook@chromium.org/
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 16e216b57863..ea6d255a125f 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -107,6 +107,7 @@ config X86
- 	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <= 4096
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-+	select ARCH_SUPPORTS_CFI_CLANG		if X86_64 && CLANG_VERSION >= 130000
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_MEMTEST
- 	select ARCH_USE_QUEUED_RWLOCKS
 -- 
-2.33.0.800.g4c38ced690-goog
-
+Kees Cook
