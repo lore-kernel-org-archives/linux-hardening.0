@@ -2,147 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA910C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 16:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B43C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85952619E4
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 16:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C4D619F7
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348606AbhI3RAw (ORCPT
+        id S1352962AbhI3SCf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 13:00:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1350497AbhI3RAu (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 13:00:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 173F6617E5;
-        Thu, 30 Sep 2021 16:59:05 +0000 (UTC)
-Date:   Thu, 30 Sep 2021 12:59:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexander Popov <alex.popov@linux.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, notify@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
-Message-ID: <20210930125903.0783b06e@oasis.local.home>
-In-Reply-To: <YVWAPXSzFNbHz6+U@alley>
-References: <20210929185823.499268-1-alex.popov@linux.com>
-        <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
-        <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1>
-        <YVWAPXSzFNbHz6+U@alley>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 30 Sep 2021 14:02:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352958AbhI3SCe (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 30 Sep 2021 14:02:34 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB8AC06176A
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:00:51 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id il14-20020a17090b164e00b0019c7a7c362dso2269022pjb.0
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GvInsCJfgVIdu+bTl+EZcCSDBMnOYdIPFiEnPSEGWq8=;
+        b=C+AhbK8OmIghCqB38Es9+sqV5ZiplbGylDANFPGzeGsstzb+vKsJgLrMKcqsXrj+Ls
+         E51vKRIr5y+WbmZvxZVTas6LticTYRZPHvE3mTOcmA5do+nsSSV1iTn7ls4F2BlhqLym
+         CVjOo2cReN5XP3kuUARBo3Iiap96FHW4NnrJM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GvInsCJfgVIdu+bTl+EZcCSDBMnOYdIPFiEnPSEGWq8=;
+        b=m1kV+fTCXMZHP4PFEX/6s4v9rDsYBVjeRIAqZYSnSy/tJ5IdTeaoy+Fdz8aohzaM09
+         HHzajZE5gjpVr9mF+gQj9Okpr/jqWd0YaTq0ez3nsHYO+vr1+zPvxM3OH7vhBbYZK6Oe
+         8R8IJyjbQSWwaCnGiyjV3uFlx83ogy68jqWqgBud3R1o3hpch6txaDwPjEEGJMLicERQ
+         Yw7xCbcEvGMCO19FHd1XemnpRKYTai/iiORUqAxRxKWNPHo0UYft8tTT48U78+6ZGvZj
+         de8RG9Jx5musygK3wU8N7SRfxriWiWnqeo57pgU7RUAOPHtx0JNGOGvLA0ixLicDtK4s
+         6ZiA==
+X-Gm-Message-State: AOAM530YQs2dzxaxhY1BqAAsDsjwbfuwCFdlMQEh/Vf0tlyeb18zytmF
+        pwp/ZfpCK2prunEHNxFWmIXlYQ==
+X-Google-Smtp-Source: ABdhPJw1x/cuO9mw2pkpxFtvuHlojDjhxrcg02FFcSXPI1A/yf4JspLL4WFzVx/lrn2zgGEudX2AQw==
+X-Received: by 2002:a17:902:6ac7:b0:13e:1fec:2bbc with SMTP id i7-20020a1709026ac700b0013e1fec2bbcmr5413917plt.82.1633024851430;
+        Thu, 30 Sep 2021 11:00:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k9sm3628222pfi.86.2021.09.30.11.00.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Sep 2021 11:00:50 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 11:00:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] dmaengine: stm32-mdma: Use struct_size() helper in
+ devm_kzalloc()
+Message-ID: <202109301100.2BB00DE96A@keescook>
+References: <20210929222922.GA357509@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210929222922.GA357509@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 30 Sep 2021 11:15:41 +0200
-Petr Mladek <pmladek@suse.com> wrote:
-
-> On Wed 2021-09-29 12:49:24, Paul E. McKenney wrote:
-> > On Wed, Sep 29, 2021 at 10:01:33PM +0300, Alexander Popov wrote:  
-> > > On 29.09.2021 21:58, Alexander Popov wrote:  
-> > > > Currently, the Linux kernel provides two types of reaction to kernel
-> > > > warnings:
-> > > >  1. Do nothing (by default),
-> > > >  2. Call panic() if panic_on_warn is set. That's a very strong reaction,
-> > > >     so panic_on_warn is usually disabled on production systems.  
+On Wed, Sep 29, 2021 at 05:29:22PM -0500, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows that,
+> in the worse scenario, could lead to heap overflows.
 > 
-> Honestly, I am not sure if panic_on_warn() or the new pkill_on_warn()
-> work as expected. I wonder who uses it in practice and what is
-> the experience.
+> Link: https://github.com/KSPP/linux/issues/160
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Several people use it, as I see reports all the time when someone can
-trigger a warn on from user space, and it's listed as a DOS of the
-system.
+Looks right to me.
 
-> 
-> The problem is that many developers do not know about this behavior.
-> They use WARN() when they are lazy to write more useful message or when
-> they want to see all the provided details: task, registry, backtrace.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-WARN() Should never be used just because of laziness. If it is, then
-that's a bug. Let's not use that as an excuse to shoot down this
-proposal. WARN() should only be used to test assumptions where you do
-not believe something can happen. I use it all the time when the logic
-prevents some state, and have the WARN() enabled if that state is hit.
-Because to me, it shows something that shouldn't happen happened, and I
-need to fix the code.
-
-Basically, WARN should be used just like BUG. But Linus hates BUG,
-because in most cases, these bad areas shouldn't take down the entire
-kernel, but for some people, they WANT it to take down the system.
-
-> 
-> Also it is inconsistent with pr_warn() behavior. Why a single line
-> warning would be innocent and full info WARN() cause panic/pkill?
-
-pr_warn() can be used for things that the user can hit. I'll use
-pr_warn, for memory failures, and such. Something that says "we ran out
-of resources, this will not work the way you expect". That is perfect
-for pr_warn. But not something that requires a stack dump.
-
-> 
-> What about pr_err(), pr_crit(), pr_alert(), pr_emerg()? They inform
-> about even more serious problems. Why a warning should cause panic/pkill
-> while an alert message is just printed?
-
-Because really, WARN() == BUG() but like I said, Linus doesn't like
-taking down the entire system on these areas.
-
-> 
-> 
-> It somehow reminds me the saga with %pK. We were not able to teach
-> developers to use it correctly for years and ended with hashed
-> pointers.
-> 
-> Well, this might be different. Developers might learn this the hard
-> way from bug reports. But there will be bug reports only when
-> anyone really enables this behavior. They will enable it only
-> when it works the right way most of the time.
-
-The panic_on_warn() has been used for years now. I do not think this is
-an issue.
-
-> 
-> I wonder if kernel could survive killing of any kthread. I have never
-> seen a code that would check whether a kthread was killed and
-> restart it.
-
-We can easily check if the thread is a kernel thread or a user thread,
-and make the decision on that.
-
--- Steve
+-- 
+Kees Cook
