@@ -2,59 +2,59 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EE1C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA940C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF1A61216
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC1F61350
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344827AbhI3SwJ (ORCPT
+        id S1346418AbhI3SxI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 14:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41174 "EHLO
+        Thu, 30 Sep 2021 14:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344688AbhI3SwJ (ORCPT
+        with ESMTP id S1346012AbhI3Swx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 14:52:09 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038C0C06176A
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:50:25 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id b20so29596187lfv.3
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:50:25 -0700 (PDT)
+        Thu, 30 Sep 2021 14:52:53 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B229C06176C
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:51:10 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id y26so29513755lfa.11
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:51:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hWitM0oBtgSbSNuh7FbCHTwd99GX2nX2dA9XhUdlU74=;
-        b=ZLG63FktyWv+RybYSzSL2qFeCGnsmrIHsRTZUACIK8vDatq78aNZkLrK+f9NlgqAvS
-         Jx9Za1sjvTL049HkZU/eK3R5OupW5tioTG5LZtB8py2mcA8e3c3sj0T3ikB6HDK3gIYL
-         8SDHIAqURPBfbgjh+tLWK3oECM35mmTggEOr4tBGKzzmVEYcjFUZWNk/dyYD05qD15bz
-         c4bEx6J9ZVanUQLA1BeWCIbR8lu8JO2HOnxpU9lj9ZGwhpRKDJTBEPr80gkQrIbb1rM4
-         IMYCDsmv9rde7lC5agMhnn3P+uCT4njA59H3Sg1TNHxl0CLMHpF8Ef8LbpW8/kUS3xA3
-         lyeQ==
+        bh=IO2yScWcP1V3nkSCAyqfJDaTb8wvqyBUDTytiX1OoYI=;
+        b=soIWJ7+oT5oJYc/VTgT4oO8XQJsb/jD0w3MRT9k9qq1A9c1ZaQS3s4W/9o8W3j6V8p
+         5pbIutFIOS6cJasSJhN7HM1fbbbS1EZuQNrp1sWV1O/EYelYQ3FYHKZUI1TkQ780sqnT
+         u19dcZmAqeTRNMvKdNEa27nspq3S570gqBYkXrfvyQ/U+lKWVVR3vThrLKqp6vrKxPF5
+         sLLrcLijrtzLw8qWLTxQ4Fy5SGVDtd2BvWqR/VpkNAGF/kZa9Vf+G36OzHJyJyKeTh6c
+         36B8YtmmujuiiddyndiXgPesk2OsxgcSUoo/L4wl9kEpFWvicCQIK4PMFaypYyCPYhNS
+         XKDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hWitM0oBtgSbSNuh7FbCHTwd99GX2nX2dA9XhUdlU74=;
-        b=cPc7JheFUyxAjjrAV82ACtJcTVGOD4XnH2ybWfJe1HH9cDOnTnNkjUK+KlYrKPbPL6
-         utVFHu/dloFU2FH3G60JbosjncZ1P5lP5grWwedaDoXXJrinpst2kxsluWYjzic7fPnW
-         Vnp8vY9/8Jo6CKmcleplw5GNWUDQdjRr77nX+n3AeZBPXM9591b87fRBYlEwQ0YyblZL
-         NcAq1O3rHOgAKmX79TKeLuy5hyCvmvyg5d7eqZqRxMobTT930aAdY+OMBcIizbGTjZkc
-         xv3uGAatItbFmn5Olx+MYanpHdG28dCKI/xRbFf3LDz+ePZAWUKUKdYsAMHhfDJxyHeM
-         O7Vg==
-X-Gm-Message-State: AOAM533IIto6/VpBdePFE6k0VseDTc53cNAvL8RrhOmva42liNW09qXC
-        teTmsEvOrlOVS2N3wz5sxL2z2PORgBScn3Z0AD0MlA==
-X-Google-Smtp-Source: ABdhPJz3Bn8rJGaOZV5Vj0101XSEKUvm4JuxzRUyshaM+ETq3KaK35bLzMTRK/Wg2lD/B2CKh+0M11TwPBvY7oDPV4c=
-X-Received: by 2002:a05:6512:3ba5:: with SMTP id g37mr692891lfv.651.1633027824058;
- Thu, 30 Sep 2021 11:50:24 -0700 (PDT)
+        bh=IO2yScWcP1V3nkSCAyqfJDaTb8wvqyBUDTytiX1OoYI=;
+        b=d/6X7lGWIiOiBac1rX3pKHjPl73FR+Sh98Y9wXQolsobivI8AgVzoJMmVy+SB0HJS0
+         kYlZmMmP4baEQ7jebar1zv2mIfX1eCcwoCujmIWG/D9eEQNvu23r4dCAw1j1GUsbPcc0
+         0/PSVpzM9w6EJKKZi8sq+WSqYOS0zksoBJ7aJe0fKTO3cOPBFpac2f9V09whx7O5Go0A
+         xATZX7skS1oQyTKjD3IWovrGlBFHsrG+/swTi4E4MWrIwxp42rKHlb1kN3ICpptPGnVS
+         RN7muj8JN8cuiS9VMLW01sB5TIBz5XDDQh9Fhc83d9e//Z0Ol29FfKeow9g5sXla+gmW
+         JNqw==
+X-Gm-Message-State: AOAM5304mqgDqGbqlC+2NSeDsJjUCJL0Z4kj/Ng4Tt0tCRA2Kz/QF76D
+        YGD5NIdbBTKKtpI/T9/gN1jDNZ7OECbDEh5nBkdRoA==
+X-Google-Smtp-Source: ABdhPJwliirpZ6GgdbLM//GKHu/jI+FUv6Eo6sSVuFPqLNLIXYKUMrEJTAvhFCRFN+Qnuok9jzqx8j5kXlYAdUyYD+s=
+X-Received: by 2002:a2e:9b98:: with SMTP id z24mr7204666lji.339.1633027868339;
+ Thu, 30 Sep 2021 11:51:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210930180531.1190642-1-samitolvanen@google.com> <20210930180531.1190642-5-samitolvanen@google.com>
-In-Reply-To: <20210930180531.1190642-5-samitolvanen@google.com>
+References: <20210930180531.1190642-1-samitolvanen@google.com> <20210930180531.1190642-6-samitolvanen@google.com>
+In-Reply-To: <20210930180531.1190642-6-samitolvanen@google.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 30 Sep 2021 11:50:13 -0700
-Message-ID: <CAKwvOdnN-5PBnegEpb4eq3uPWezmAO6Zrvy3O7zyCNEBFvYt4A@mail.gmail.com>
-Subject: Re: [PATCH v4 04/15] cfi: Add DEFINE_CFI_IMMEDIATE_RETURN_STUB
+Date:   Thu, 30 Sep 2021 11:50:57 -0700
+Message-ID: <CAKwvOdnJ6EPPd5UbhZhdggPRzCXmdrnxg_tO=Bq_+Gcgarvw1g@mail.gmail.com>
+Subject: Re: [PATCH v4 05/15] tracepoint: Exclude tp_stub_func from CFI checking
 To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -70,124 +70,38 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 On Thu, Sep 30, 2021 at 11:05 AM Sami Tolvanen <samitolvanen@google.com> wrote:
 >
-> This change introduces the DEFINE_CFI_IMMEDIATE_RETURN_STUB macro,
-> which defines a stub function that immediately returns and when
-> defined in the core kernel, always passes indirect call checking
-> with CONFIG_CFI_CLANG. Note that this macro should only be used when
-> a stub cannot be called using the correct function type.
-
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Seems like the only use is in patch 5/15. Probably could be squashed...
-
+> If allocate_probes fails, func_remove replaces the old function
+> with a pointer to tp_stub_func, which is called using a mismatching
+> function pointer that will always trip indirect call checks with
+> CONFIG_CFI_CLANG. Use DEFINE_CFI_IMMEDATE_RETURN_STUB to define
+> tp_stub_func to allow it to pass CFI checking.
 >
 > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 > ---
->  include/asm-generic/vmlinux.lds.h | 11 +++++++++++
->  include/linux/cfi.h               | 13 +++++++++++++
->  kernel/cfi.c                      | 24 +++++++++++++++++++++++-
->  3 files changed, 47 insertions(+), 1 deletion(-)
+>  kernel/tracepoint.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 >
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index f2984af2b85b..5b77284f7221 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -407,6 +407,16 @@
->         KEEP(*(.static_call_tramp_key))                                 \
->         __stop_static_call_tramp_key = .;
+> diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+> index 64ea283f2f86..58acc7d86c3f 100644
+> --- a/kernel/tracepoint.c
+> +++ b/kernel/tracepoint.c
+
+looking at 4+5/15 together, I wonder if this TU should explicitly
+include linux/cfi.h?
+
+> @@ -99,10 +99,7 @@ struct tp_probes {
+>  };
 >
-> +#ifdef CONFIG_CFI_CLANG
-> +#define CFI_EXCLUDED_DATA                                              \
-> +       . = ALIGN(8);                                                   \
-> +       __start_cfi_excluded = .;                                       \
-> +       KEEP(*(.cfi_excluded_stubs))                                    \
-> +       __stop_cfi_excluded = .;
-> +#else
-> +#define CFI_EXCLUDED_DATA
-> +#endif
-> +
->  /*
->   * Allow architectures to handle ro_after_init data on their
->   * own by defining an empty RO_AFTER_INIT_DATA.
-> @@ -430,6 +440,7 @@
->                 __start_rodata = .;                                     \
->                 *(.rodata) *(.rodata.*)                                 \
->                 SCHED_DATA                                              \
-> +               CFI_EXCLUDED_DATA                                       \
->                 RO_AFTER_INIT_DATA      /* Read only after init */      \
->                 . = ALIGN(8);                                           \
->                 __start___tracepoints_ptrs = .;                         \
-> diff --git a/include/linux/cfi.h b/include/linux/cfi.h
-> index 879744aaa6e0..19f74af8eac2 100644
-> --- a/include/linux/cfi.h
-> +++ b/include/linux/cfi.h
-> @@ -20,6 +20,17 @@ extern void __cfi_check(uint64_t id, void *ptr, void *diag);
->  #define __CFI_ADDRESSABLE(fn, __attr) \
->         const void *__cfi_jt_ ## fn __visible __attr = (void *)&fn
+>  /* Called in removal of a func but failed to allocate a new tp_funcs */
+> -static void tp_stub_func(void)
+> -{
+> -       return;
+> -}
+> +static DEFINE_CFI_IMMEDIATE_RETURN_STUB(tp_stub_func);
 >
-> +/*
-> + * Defines a stub function that returns immediately, and when defined and
-> + * referenced in the core kernel, always passes CFI checking. This should
-> + * be used only for stubs that cannot be called using the correct function
-> + * pointer type, which should be rare.
-> + */
-> +#define DEFINE_CFI_IMMEDIATE_RETURN_STUB(fn) \
-> +       void fn(void) { return; } \
-> +       const void *__cfi_excl_ ## fn __visible \
-> +               __section(".cfi_excluded_stubs") = (void *)&fn
-> +
->  #ifdef CONFIG_CFI_CLANG_SHADOW
->
->  extern void cfi_module_add(struct module *mod, unsigned long base_addr);
-> @@ -35,6 +46,8 @@ static inline void cfi_module_remove(struct module *mod, unsigned long base_addr
->  #else /* !CONFIG_CFI_CLANG */
->
->  #define __CFI_ADDRESSABLE(fn, __attr)
-> +#define DEFINE_CFI_IMMEDIATE_RETURN_STUB(fn) \
-> +       void fn(void) { return; }
->
->  #endif /* CONFIG_CFI_CLANG */
->
-> diff --git a/kernel/cfi.c b/kernel/cfi.c
-> index 9594cfd1cf2c..8d931089141b 100644
-> --- a/kernel/cfi.c
-> +++ b/kernel/cfi.c
-> @@ -278,12 +278,34 @@ static inline cfi_check_fn find_module_check_fn(unsigned long ptr)
->         return fn;
->  }
->
-> +extern unsigned long __start_cfi_excluded[];
-> +extern unsigned long __stop_cfi_excluded[];
-> +
-> +static inline bool is_cfi_excluded(unsigned long ptr)
-> +{
-> +       unsigned long *p = __start_cfi_excluded;
-> +
-> +       for ( ; p < __stop_cfi_excluded; ++p)
-> +               if (*p == ptr)
-> +                       return true;
-> +
-> +       return false;
-> +}
-> +
-> +static void __cfi_pass(uint64_t id, void *ptr, void *diag)
-> +{
-> +}
-> +
->  static inline cfi_check_fn find_check_fn(unsigned long ptr)
+>  static inline void *allocate_probes(int count)
 >  {
->         cfi_check_fn fn = NULL;
->
-> -       if (is_kernel_text(ptr))
-> +       if (is_kernel_text(ptr)) {
-> +               if (unlikely(is_cfi_excluded(ptr)))
-> +                       return __cfi_pass;
-> +
->                 return __cfi_check;
-> +       }
->
->         /*
->          * Indirect call checks can happen when RCU is not watching. Both
 > --
 > 2.33.0.800.g4c38ced690-goog
 >
