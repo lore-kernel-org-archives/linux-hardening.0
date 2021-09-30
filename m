@@ -2,120 +2,116 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7890C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D383C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 843A86140F
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889B561A0D
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 18:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353207AbhI3SOR (ORCPT
+        id S1350389AbhI3SWU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 14:14:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60654 "EHLO
+        Thu, 30 Sep 2021 14:22:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353144AbhI3SOP (ORCPT
+        with ESMTP id S1351123AbhI3SWU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 14:14:15 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C29EC06176A
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:12:32 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id qe4-20020a17090b4f8400b0019f663cfcd1so964418pjb.1
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:12:32 -0700 (PDT)
+        Thu, 30 Sep 2021 14:22:20 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB4AC06176D
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:20:36 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id k23so4819749pji.0
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Sep 2021 11:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=/jP68Qb3IOmFZtyBmCWtI8sRKP1bO4xuJlNxJXxFMLo=;
-        b=eEsa6HUQ1ug8JocDGdLB7jS8rTRNf4nqyY/oodN6m4TktfoLZ4ty8Nb+FwT5sZ/zkF
-         sMO73naAZDcBp4UQBX3l3Wunm9J9cMJrljTMO5D0Ch/WSk8j2E+ZZ5dpjxsFahZZewX3
-         mPfNaddSe5vK2Ko8GUCIHmjLbKcAxLL058uts=
+        bh=rRzmSQnYKN75Gg93YuIv+rBGX5i47OpZAXZvIJOPAT0=;
+        b=lEQ8DLBf3vFDxlv1guB97pybHM/E5OgqqY7s5GW48JHxOcQmMFcVANRfaTHTtWIF9Y
+         9kRwW6x+vjlSmmTqC0Stb7CrJ/tg3DjlMrf5MAtA7cjscqC+AIUITJ17K3S1fLhd9/Xb
+         H6Q003Tl/g15SHWxlAxw0KfC0GrYBfK6GsZ94=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/jP68Qb3IOmFZtyBmCWtI8sRKP1bO4xuJlNxJXxFMLo=;
-        b=5YW+WpDvJLpDTxYT7iOyxtHQl+xdieXfUFr3MT1qJfOX29a2D7UmoWsst38IoGCcDk
-         FwqM8TdbZpLN9u0ohEVW8tSgNkf5KtODgRf2IEpqPIAHrejnYE4/j5PmONyUAOnx9Lzj
-         yeA74U6eaSJgmnawUZ51gg0pwsUcKRZFy+jBMJLewb0QJ2yWY9vVbo97KrKSLcrBqREU
-         lpYJQonZdWvgJjupEffk5ZjAyBVrbROvqq+YLK12INTp88eQgX7Tjwke/JMsRElp8309
-         I4SxCj7K5w8M0bKPnTJN5aYKxDbaVeeXMmgesS2Etw2tzklOstZG7KuYdxZjEhocd+8E
-         7+UQ==
-X-Gm-Message-State: AOAM533DpQ61NcBv1sklDMeEyjAQZgyG8Uba9/DfF5J7EcebKFwApgcP
-        kNDL54+zwNjU8/hllYKpiTarOA==
-X-Google-Smtp-Source: ABdhPJwA6GX/vcgv5ngu+bjUf2n7PrKcV867/lIhgcPiU4+jQau4QO3qCBLPDhd9B03CglGFhKlpuA==
-X-Received: by 2002:a17:902:b193:b029:11a:a179:453a with SMTP id s19-20020a170902b193b029011aa179453amr5469195plr.69.1633025551776;
-        Thu, 30 Sep 2021 11:12:31 -0700 (PDT)
+        bh=rRzmSQnYKN75Gg93YuIv+rBGX5i47OpZAXZvIJOPAT0=;
+        b=UKHuW09yq8SzZHRa5cfgQcW2FF4agS1g3RWUcEcfs44EK5oluwrJVV/ef63waZd2en
+         3pdH5qIHSxjcmGSdwMFvmOQawlCGsVxuvsDcgVKlbx2UbFyppDRC7Mv4u7s8KroKEZVq
+         QJUglBE5A18NECzCIkaCKCjMeIDFm+70tz+ZGJUE6etF5O++QHy2TOrEqVu450epdHMT
+         aadrGWoo6Ti7CLQpUzNHFu6OMIULkmfAHqVhARGGM/R1Q1JLUKm7SejR4KGkSPSFUqNC
+         LC6V4FvRYuj5INA1ugu8zWjByQmmDHsBd8t15AZO4GZpAm45swj/agyfoUKoBuZsuJD3
+         NB2w==
+X-Gm-Message-State: AOAM533bjIRgHPwrtAmUdFsU94P4yJue0WCHffVgBZg0zhVLkHGMfQqU
+        LA0YWSaY3Q5TrIYF+NmcTlstaA==
+X-Google-Smtp-Source: ABdhPJyimYmtoacGEdurWEUSpaz+kvhw5xhIwlnWJodE7rV8ATefMii0ooqe8fOMpyVb9+6sAe5Wrw==
+X-Received: by 2002:a17:903:2c2:b029:101:9c88:d928 with SMTP id s2-20020a17090302c2b02901019c88d928mr5409323plk.62.1633026036390;
+        Thu, 30 Sep 2021 11:20:36 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o3sm5391243pjq.34.2021.09.30.11.12.30
+        by smtp.gmail.com with ESMTPSA id l10sm3720957pff.119.2021.09.30.11.20.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Sep 2021 11:12:31 -0700 (PDT)
-Date:   Thu, 30 Sep 2021 11:12:30 -0700
+        Thu, 30 Sep 2021 11:20:35 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 11:20:34 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Mark Rutland <mark.rutland@arm.com>,
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Stefan Metzmacher <metze@samba.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul McKenney <paulmck@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Michael =?iso-8859-1?Q?Wei=DF?= 
-        <michael.weiss@aisec.fraunhofer.de>,
-        Anand K Mistry <amistry@google.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        Ohhoon Kwon <ohoono.kwon@samsung.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        YiFei Zhu <yifeifz2@illinois.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] proc: Disable /proc/$pid/wchan
-Message-ID: <202109301109.4E172219@keescook>
-References: <20210923233105.4045080-1-keescook@chromium.org>
- <c283c978-2563-06b9-4c21-59bedceda9ea@oracle.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will.deacon@arm.com>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, notify@kernel.org
+Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
+Message-ID: <202109301120.B7B8F3F8A@keescook>
+References: <20210929185823.499268-1-alex.popov@linux.com>
+ <323d0784-249d-7fef-6c60-e8426d35b083@intel.com>
+ <202109291229.C64A1D9D@keescook>
+ <cf6ada34-9854-b7ad-f671-52186da5abd0@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c283c978-2563-06b9-4c21-59bedceda9ea@oracle.com>
+In-Reply-To: <cf6ada34-9854-b7ad-f671-52186da5abd0@linux.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 11:05:35AM -0700, Stephen Brennan wrote:
-> On 9/23/21 4:31 PM, Kees Cook wrote:
-> > The /proc/$pid/wchan file has been broken by default on x86_64 for 4
-> > years now[1]. As this remains a potential leak of either kernel
-> > addresses (when symbolization fails) or limited observation of kernel
-> > function progress, just remove the contents for good.
-> > 
-> > Unconditionally set the contents to "0" and also mark the wchan
-> > field in /proc/$pid/stat with 0.
+On Thu, Sep 30, 2021 at 04:55:37PM +0300, Alexander Popov wrote:
+> The kernel can hit warning and omit calling __warn() that prints the message.
+> But pkill_on_warn action should be taken each time.
 > 
-> Hi all,
+> As I can understand now, include/asm-generic/bug.h defines three warning
+> implementations:
+>  1. CONFIG_BUG=y and the arch provides __WARN_FLAGS. In that case pkill_on_warn
+> should be checked in report_bug() that you mention.
+>  2. CONFIG_BUG=y and the arch doesn't have __WARN_FLAGS. In that case
+> pkill_on_warn should be checked in warn_slowpath_fmt().
+>  3. CONFIG_BUG is not set. In that case pkill_on_warn should not be considered.
 > 
-> It looks like there's already been pushback on this idea, but I wanted
-> to add another voice from a frequent user of /proc/$pid/wchan (via PS).
-> Much of my job involves diagnosing kernel issues and performance issues
-> on stable kernels, frequently on production systems where I can't do
-> anything too invasive. wchan is incredibly useful for these situations,
-> so much so that we store regular snapshots of ps output, and we expand
-> the size of the WCHAN column to fit more data (e.g. ps -e -o
-> pid,wchan=WCHAN-WIDE-COLUMN). Disabling wchan would remove a critical
-> tool for me and my team.
+> Please, correct me if needed.
 
-Thanks for speaking up! Yes, we've moved to fixing wchan correctly as
-it's clear it's still very much in use. :) Current thread is here:
-https://lore.kernel.org/lkml/20210929220218.691419-1-keescook@chromium.org/
+That looks correct to me, yes.
 
 -- 
 Kees Cook
