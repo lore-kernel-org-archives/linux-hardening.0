@@ -2,107 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019F0C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 08:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42509C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 08:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D22B66187A
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 08:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2614C6136A
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 08:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348199AbhI3Irw (ORCPT
+        id S1348786AbhI3Iv3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Sep 2021 04:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348126AbhI3Irv (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Sep 2021 04:47:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 817E8C06176A;
-        Thu, 30 Sep 2021 01:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8d/h8nbryP0oox/DlztyppXYQ0VJiTBHMbHxYT4g2MA=; b=BsQNPW9QuCs+taahSJyEvp3Rn5
-        Xb1xz8lAshcXFfFgb1EIrAvRKPwLrP7U/84MCzl60R9Rbi9wWd0eAefJiXxbDGve0K4XPGkRTzoHY
-        2v0iJ1ZAGnkLb7uhiqDsOfE5jl4YVXWGMmMKRXSPR1iluINri5uET20DdA+KydQq01euzTjmuJord
-        IAkDUm/o6MN+82D5XPfqz6mWcdZb/iXx8tf5scl1SY68IcCFzzMZjZYWwk3XxG/zbmacZmVF1oBNG
-        T/lwVlLQoF4oAJR10a03+B3+Vb8VFeYA6KGMJPaYC/rHO7huAdkuJ+sEqg5QjhG21S62pE62A1MCZ
-        phMzpMXw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mVrby-00CeuG-9b; Thu, 30 Sep 2021 08:40:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 15836300252;
-        Thu, 30 Sep 2021 10:40:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E0C6620831B8A; Thu, 30 Sep 2021 10:40:11 +0200 (CEST)
-Date:   Thu, 30 Sep 2021 10:40:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Jann Horn <jannh@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Anand K Mistry <amistry@google.com>,
-        "Kenta.Tada@sony.com" <Kenta.Tada@sony.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Michael =?iso-8859-1?Q?Wei=DF?= 
-        <michael.weiss@aisec.fraunhofer.de>,
-        Michal Hocko <mhocko@suse.com>, Helge Deller <deller@gmx.de>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Tycho Andersen <tycho@tycho.pizza>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Stefan Metzmacher <metze@samba.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ohhoon Kwon <ohoono.kwon@samsung.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        YiFei Zhu <yifeifz2@illinois.edu>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 0/6] wchan: Fix ORC support and leaky fallback
-Message-ID: <YVV36z4UZaL/vOBI@hirez.programming.kicks-ass.net>
-References: <20210929220218.691419-1-keescook@chromium.org>
- <20210930010157.mtn7pjyxkxokzmyh@treble>
+        Thu, 30 Sep 2021 04:51:29 -0400
+Received: from muru.com ([72.249.23.125]:39120 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1348818AbhI3Iv3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 30 Sep 2021 04:51:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id ED3A38050;
+        Thu, 30 Sep 2021 08:50:15 +0000 (UTC)
+Date:   Thu, 30 Sep 2021 11:49:45 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Keerthy <j-keerthy@ti.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.co.uk>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-omap@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Select TIMER_OF
+Message-ID: <YVV6KZ7TYhvABjIz@atomide.com>
+References: <20210828175747.3777891-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210930010157.mtn7pjyxkxokzmyh@treble>
+In-Reply-To: <20210828175747.3777891-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 06:01:57PM -0700, Josh Poimboeuf wrote:
+* Kees Cook <keescook@chromium.org> [210828 17:58]:
+> When building OMAP_DM_TIMER without TIMER_OF, there are orphan sections
+> due to the use of TIMER_OF_DELCARE() without CONFIG_TIMER_OF. Select
+> CONFIG_TIMER_OF when enaling OMAP_DM_TIMER:
+> 
+> arm-linux-gnueabi-ld: warning: orphan section `__timer_of_table' from `drivers/clocksource/timer-ti-dm-systimer.o' being placed in section `__timer_of_table'
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/202108282255.tkdt4ani-lkp@intel.com/
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> Cc: Ladislav Michl <ladis@linux-mips.org>
+> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+> Cc: linux-omap@vger.kernel.org
+> Fixes: 52762fbd1c47 ("clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-> - Should we use a similar sched wrapper for /proc/$pid/stack to make its
->   raciness go away?
+Sorry for the delay, I just noticed I never replied earlier:
 
-Alternatively, can we make /stack go away? AFAICT the semantics of that
-are far worse in that it wants the actual kernel stack of a task,
-blocked or not, which is a total pain in the arse (not to mention a
-giant infoleak and side-channel).
+Acked-by: Tony Lindgren <tony@atomide.com>
 
-> - At the risk of triggering a much larger patch set, I suspect
->   get_wchan() can be made generic ;-)  It's just a glorified wrapper
->   around stack_trace_save_tsk().
-
-Done that for you :-)
+> ---
+>  drivers/clocksource/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 0f5e3983951a..08f8cb944a2a 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -24,6 +24,7 @@ config I8253_LOCK
+>  
+>  config OMAP_DM_TIMER
+>  	bool
+> +	select TIMER_OF
+>  
+>  config CLKBLD_I8253
+>  	def_bool y if CLKSRC_I8253 || CLKEVT_I8253 || I8253_LOCK
+> -- 
+> 2.30.2
+> 
