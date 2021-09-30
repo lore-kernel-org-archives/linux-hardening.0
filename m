@@ -2,123 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC37C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 23:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8035DC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 00:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BBF615E0
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Sep 2021 23:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6924361528
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Sep 2021 00:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347578AbhI2Xd1 (ORCPT
+        id S1347361AbhI3AO0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Sep 2021 19:33:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345134AbhI2Xd0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Sep 2021 19:33:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F2E116135D;
-        Wed, 29 Sep 2021 23:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1632958305;
-        bh=gDC8FeyWEK+m6y1oljAXM/J6NEZQW93X8rLKfj3knFM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NN3ijR4TISmoUJq81Zy37jY9PjgUYWr1BP/sBn1OfDNimXfNczZOTVlBRFYi7KdEr
-         RW3FtjLpG7VUwM3JHrL8iT/N71iEhCjuMHpQ9p1+bEiLpk/Yb7F3BjkQeuutBDFOuo
-         4y8StbCdPsAQAqoV6S/9tsLkZcjUHrmh5gA8n9kA=
-Date:   Wed, 29 Sep 2021 16:31:43 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     alex.popov@linux.com
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Paul McKenney <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
+        Wed, 29 Sep 2021 20:14:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347305AbhI3AO0 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 29 Sep 2021 20:14:26 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3386CC06176C
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 17:12:44 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id k7so6925207wrd.13
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Sep 2021 17:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=so++ktLIXuia7S6U7BNUIBcKY9801GrgXLBNXOJCctA=;
+        b=H10inSR11/VqU/haFPGpWYX4eIl9XnsEwCEZH+0AQ8FWEQkjTj0EN+Ya1EZTQu+shE
+         kLIbu8rSIIg9sHC7IW3s76bjB/WmFjFJjdj0iG5s2SYq24KYemuCcgelDuoHT3GfKS5v
+         GHSR1Dp2nFiYEjqUc142eJslL5BRz2qpBArRi0DXE+UlUPDs76Licbk4P74ic6KB3nuO
+         nbcqF+xbsNBjS+T7iHicGmK/f3REcqIW+rmyhP9eOiM6KxgtdZWCtDzuFE1OlxUQLNxZ
+         DffsQdUDTQvoP4PoIaIP9ZQclasRxjaTX+Ph27orlZrw9Of2+FqJkvWU93dImtsnJ5AL
+         8P4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=so++ktLIXuia7S6U7BNUIBcKY9801GrgXLBNXOJCctA=;
+        b=nbqy7yMIG4naeD+Qp6TbOoiAlTsTexXqCkTnsy0/pWmiidTJ14PlvHaf8srG8rTb3H
+         QPDaowE0+cebdpQDjtS3MHOPk6gKVaKea7rj6YVwilnMQbYqxJnVNyyiLgUxx1nvruCL
+         3Nq1J+KJJE7i0h5aXJkR2DqOGs8tqIYbMamkzIRmqEJc3sgzVSYT3lEa3T8FPm8HT5g5
+         olqTa7oKPLNxsKBiL+uYr6uo9ffycj7xvwSL708z35haYEVWSRwrjURQJguyiwfupYM6
+         k+q8sgweJptygO7goJHHKZxmU/c5LDNjXfPHXh0rANoPEzIDCAZLCFzOTI4lkf2FuWwW
+         WrwA==
+X-Gm-Message-State: AOAM531NLTtnxAxkAqcklQjT6liBYuOTazFm/wYDwD+heslGk4py7qyW
+        njSuL8ImJ3X04cMiA8yBn4jrGLl46SLUA0ePYO2Zwg==
+X-Google-Smtp-Source: ABdhPJzLw+kdyCSCCFIkNR/DETrYiq3Usylp9hzBKF2UTTUKIJsZKQpT9jR+TAL9iB1u9TMtKwstF0pfX1MRpQGrFfM=
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr2980547wrl.200.1632960762539;
+ Wed, 29 Sep 2021 17:12:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210929212713.1213476-1-brendanhiggins@google.com> <20210929212713.1213476-2-brendanhiggins@google.com>
+In-Reply-To: <20210929212713.1213476-2-brendanhiggins@google.com>
+From:   David Gow <davidgow@google.com>
+Date:   Thu, 30 Sep 2021 08:12:31 +0800
+Message-ID: <CABVgOSm-UO7dqgBQs81rof1H92Vcfs0j4XsWBa_Wt+LTiimWNA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] gcc-plugins/structleak: add makefile var for
+ disabling structleak
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>, rafael@kernel.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>, andreas.noever@gmail.com,
+        michael.jamet@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        YehezkelShB@gmail.com, Masahiro Yamada <masahiroy@kernel.org>,
+        michal.lkml@markovi.net,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, notify@kernel.org
-Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
-Message-Id: <20210929163143.aa8b70ac9d5cf0b628823370@linux-foundation.org>
-In-Reply-To: <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
-References: <20210929185823.499268-1-alex.popov@linux.com>
-        <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        linux-iio@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-usb@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 29 Sep 2021 22:01:33 +0300 Alexander Popov <alex.popov@linux.com> wrote:
+On Thu, Sep 30, 2021 at 5:27 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> KUnit and structleak don't play nice, so add a makefile variable for
+> enabling structleak when it complains.
+>
+> Co-developed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+> Changes since last revision:
+>  - None
+> ---
 
-> On 29.09.2021 21:58, Alexander Popov wrote:
-> > Currently, the Linux kernel provides two types of reaction to kernel
-> > warnings:
-> >  1. Do nothing (by default),
-> >  2. Call panic() if panic_on_warn is set. That's a very strong reaction,
-> >     so panic_on_warn is usually disabled on production systems.
-> > 
-> > From a safety point of view, the Linux kernel misses a middle way of
-> > handling kernel warnings:
-> >  - The kernel should stop the activity that provokes a warning,
-> >  - But the kernel should avoid complete denial of service.
-> > 
-> > From a security point of view, kernel warning messages provide a lot of
-> > useful information for attackers. Many GNU/Linux distributions allow
-> > unprivileged users to read the kernel log, so attackers use kernel
-> > warning infoleak in vulnerability exploits. See the examples:
-> >   https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
-> >   https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html
-> > 
-> > Let's introduce the pkill_on_warn boot parameter.
-> > If this parameter is set, the kernel kills all threads in a process
-> > that provoked a kernel warning. This behavior is reasonable from a safety
-> > point of view described above. It is also useful for kernel security
-> > hardening because the system kills an exploit process that hits a
-> > kernel warning.
-> > 
-> > Signed-off-by: Alexander Popov <alex.popov@linux.com>
-> 
-> This patch was tested using CONFIG_LKDTM.
-> The kernel kills a process that performs this:
->   echo WARNING > /sys/kernel/debug/provoke-crash/DIRECT
-> 
-> If you are fine with this approach, I will prepare a patch adding the
-> pkill_on_warn sysctl.
+This seems as sensible a way of working around this as we're going to
+get in the short-term.
 
-Why do we need a boot parameter?  Isn't a sysctl all we need for this
-feature?
+Reviewed-by: David Gow <davidgow@google.com>
 
-Also, 
-
-	if (pkill_on_warn && system_state >= SYSTEM_RUNNING)
-		do_group_exit(SIGKILL);
-
-- why do we care about system_state?  An explanatory code comment
-  seems appropriate.
-
-- do we really want to do this in states > SYSTEM_RUNNING?  If so, why?
+Cheers,
+-- David
