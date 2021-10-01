@@ -2,121 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35194C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri,  1 Oct 2021 12:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0647BC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  1 Oct 2021 14:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15C7A6136A
-	for <linux-hardening@archiver.kernel.org>; Fri,  1 Oct 2021 12:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E378661A57
+	for <linux-hardening@archiver.kernel.org>; Fri,  1 Oct 2021 14:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbhJAMZh (ORCPT
+        id S231777AbhJAORk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 1 Oct 2021 08:25:37 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:56636 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbhJAMZe (ORCPT
+        Fri, 1 Oct 2021 10:17:40 -0400
+Received: from mail-qv1-f50.google.com ([209.85.219.50]:45973 "EHLO
+        mail-qv1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231702AbhJAORk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 1 Oct 2021 08:25:34 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 0E7CB22644;
-        Fri,  1 Oct 2021 12:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1633091029; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wtBZ7U5ewDlKJ28ZtqZTNSvN7kEYRmILRT2iVxUTj2c=;
-        b=m/wphk5uR59ODqBgPtgUELkhpG+snjW4Ik51wxuXL7I+dgCA/YWVS6i8kfqV3u/+B2rFRf
-        nuk6zDSKvhAs2QhrlRxWlDH53/17tz18jDnmmyRctW1FYjWNFKCdFZkZjrQGIpTzSWjafn
-        dUFZjBihk0jDWceRW3LSio4aswzbFdw=
-Received: from suse.cz (pathway.suse.cz [10.100.12.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 799EFA3B81;
-        Fri,  1 Oct 2021 12:23:48 +0000 (UTC)
-Date:   Fri, 1 Oct 2021 14:23:48 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will.deacon@arm.com>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, notify@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
-Message-ID: <20211001122348.GB965@pathway.suse.cz>
-References: <20210929185823.499268-1-alex.popov@linux.com>
- <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
- <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1>
- <YVWAPXSzFNbHz6+U@alley>
- <a09c1d4d-1d5b-9092-ae3a-61bc22689dd2@linux.com>
+        Fri, 1 Oct 2021 10:17:40 -0400
+Received: by mail-qv1-f50.google.com with SMTP id x9so5605799qvn.12;
+        Fri, 01 Oct 2021 07:15:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QVjZB2U1LiPX5N7VS+BV6iC3aFCiEGYAbe9Pf/bwPeM=;
+        b=vqwf25kVpnYE2kXFeCVs/rZtjFrAGuR6P0EWW9wmS4EC0zSp2qn7MsxhZ23MKrNFWX
+         Rvh8g7JiW83mBhr67VxJ6H6WTolCu0wpYNPJFCeViEjkvSPyxAA0WdsonrAg9UlsI8+h
+         gVpPt53Kv9ERiMNLW9pH1f+yz2uArQPi8gysMIJ02LcpsH+CdPcHmsvd9XZJAQYdrZln
+         vsoA+rWOAw1OkysNg3G+xFClPoK24uRagfEfAd5gjK6Wv6CA2UHi01VRYdcmagcrPUEP
+         laRRX1e9bgc2WL2ru9XQUC/wqD+pxW+RafeKF38VjlS8zXl0PwsSGjhsMnf93mh96CSm
+         FKXw==
+X-Gm-Message-State: AOAM531aZLa6xF+1NvmuJiODLkbJB39/aI/L9Gn50v2I5OyApuSgIoLx
+        IcUVFUQP4KtrziX4SLlQ5Fw=
+X-Google-Smtp-Source: ABdhPJyIkUYORyiz2OEQ8u3gomA3D95woMcD+5WRTPssKn45MNYSYCELeiB1FGLm40MPn35a8Jk15Q==
+X-Received: by 2002:ad4:5bad:: with SMTP id 13mr9283552qvq.52.1633097755709;
+        Fri, 01 Oct 2021 07:15:55 -0700 (PDT)
+Received: from fedora (pool-173-68-57-129.nycmny.fios.verizon.net. [173.68.57.129])
+        by smtp.gmail.com with ESMTPSA id y27sm126180qkj.64.2021.10.01.07.15.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Oct 2021 07:15:55 -0700 (PDT)
+Date:   Fri, 1 Oct 2021 10:15:52 -0400
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        David Rientjes <rientjes@google.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 8/8] percpu: Add __alloc_size attributes for better
+ bounds checking
+Message-ID: <YVcYGOIT8eUUiPcc@fedora>
+References: <20210930222704.2631604-1-keescook@chromium.org>
+ <20210930222704.2631604-9-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a09c1d4d-1d5b-9092-ae3a-61bc22689dd2@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210930222704.2631604-9-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu 2021-09-30 18:05:54, Alexander Popov wrote:
-> On 30.09.2021 12:15, Petr Mladek wrote:
-> > On Wed 2021-09-29 12:49:24, Paul E. McKenney wrote:
-> >> On Wed, Sep 29, 2021 at 10:01:33PM +0300, Alexander Popov wrote:
-> >>> This patch was tested using CONFIG_LKDTM.
-> >>> The kernel kills a process that performs this:
-> >>>   echo WARNING > /sys/kernel/debug/provoke-crash/DIRECT
-> >>>
-> >>> If you are fine with this approach, I will prepare a patch adding the
-> >>> pkill_on_warn sysctl.
-> >>
-> >> I suspect that you need a list of kthreads for which you are better
-> >> off just invoking panic().  RCU's various kthreads, for but one set
-> >> of examples.
-> > 
-> > I wonder if kernel could survive killing of any kthread. I have never
-> > seen a code that would check whether a kthread was killed and
-> > restart it.
+Hello,
+
+On Thu, Sep 30, 2021 at 03:27:04PM -0700, Kees Cook wrote:
+> As already done in GrapheneOS, add the __alloc_size attribute for
+> appropriate percpu allocator interfaces, to provide additional hinting for
+> better bounds checking, assisting CONFIG_FORTIFY_SOURCE and other compiler
+> optimizations.
 > 
-> The do_group_exit() function calls do_exit() from kernel/exit.c, which is also
-> called during a kernel oops. This function cares about a lot of special cases
-> depending on the current task_struct. Is it fine?
+> Note that due to the implementation of the percpu API, this is unlikely
+> to ever actually provide compile-time checking beyond very simple non-SMP
+> builds. But, since they are technically allocators, mark them as such.
+> 
+> Cc: Dennis Zhou <dennis@kernel.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Andy Whitcroft <apw@canonical.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Cc: Miguel Ojeda <ojeda@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Co-developed-by: Daniel Micay <danielmicay@gmail.com>
+> Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-IMHO, the bigger problem is that nobody will start the kthreads again.
-As a result, some kernel functionality will not longer work.
+Thanks for updating the commit log.
 
-User space threads are different. The user/admin typically
-have a chance to start them again.
+Acked-by: Dennis Zhou <dennis@kernel.org>
 
-We might get inspiration in OOM killer. It never kills kthreads
-and the init process, see oom_unkillable_task().
+Thanks,
+Dennis
 
-It would be better to panic() when WARN() is called from a kthread
-or the init process.
-
-Best Regards,
-Petr
+> ---
+>  include/linux/percpu.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/percpu.h b/include/linux/percpu.h
+> index 5e76af742c80..98a9371133f8 100644
+> --- a/include/linux/percpu.h
+> +++ b/include/linux/percpu.h
+> @@ -123,7 +123,7 @@ extern int __init pcpu_page_first_chunk(size_t reserved_size,
+>  				pcpu_fc_populate_pte_fn_t populate_pte_fn);
+>  #endif
+>  
+> -extern void __percpu *__alloc_reserved_percpu(size_t size, size_t align);
+> +extern void __percpu *__alloc_reserved_percpu(size_t size, size_t align) __alloc_size(1);
+>  extern bool __is_kernel_percpu_address(unsigned long addr, unsigned long *can_addr);
+>  extern bool is_kernel_percpu_address(unsigned long addr);
+>  
+> @@ -131,8 +131,8 @@ extern bool is_kernel_percpu_address(unsigned long addr);
+>  extern void __init setup_per_cpu_areas(void);
+>  #endif
+>  
+> -extern void __percpu *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp);
+> -extern void __percpu *__alloc_percpu(size_t size, size_t align);
+> +extern void __percpu *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp) __alloc_size(1);
+> +extern void __percpu *__alloc_percpu(size_t size, size_t align) __alloc_size(1);
+>  extern void free_percpu(void __percpu *__pdata);
+>  extern phys_addr_t per_cpu_ptr_to_phys(void *addr);
+>  
+> -- 
+> 2.30.2
+> 
