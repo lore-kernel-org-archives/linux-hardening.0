@@ -2,41 +2,40 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA14C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  1 Oct 2021 12:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35194C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  1 Oct 2021 12:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9CFC61A8F
-	for <linux-hardening@archiver.kernel.org>; Fri,  1 Oct 2021 12:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C7A6136A
+	for <linux-hardening@archiver.kernel.org>; Fri,  1 Oct 2021 12:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354236AbhJAMLo (ORCPT
+        id S231206AbhJAMZh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 1 Oct 2021 08:11:44 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:53186 "EHLO
+        Fri, 1 Oct 2021 08:25:37 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:56636 "EHLO
         smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354146AbhJAMLm (ORCPT
+        with ESMTP id S231186AbhJAMZe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 1 Oct 2021 08:11:42 -0400
+        Fri, 1 Oct 2021 08:25:34 -0400
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id D7D55223FF;
-        Fri,  1 Oct 2021 12:09:56 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTP id 0E7CB22644;
+        Fri,  1 Oct 2021 12:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1633090196; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1633091029; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ZMNtJrbC0GnzRHpRVHcvpxd5r5byMIwvTLIh1FKx91I=;
-        b=sXm0w2uUnG8p6tiV2Z1mK1CVCNFn3B50GQ0XrAGn2QOR5GIUB+/8cEE6DSKYRJgsyCmxev
-        PSwoqv6ESRnPMVUC+IJNmxsyjyv7E2S2IoGx/0BdkhUcz41PQ7cHBX/YAbnJgobD9cAFk4
-        vUr0IHQweYKklazQJmidOEv16+HHW1s=
+        bh=wtBZ7U5ewDlKJ28ZtqZTNSvN7kEYRmILRT2iVxUTj2c=;
+        b=m/wphk5uR59ODqBgPtgUELkhpG+snjW4Ik51wxuXL7I+dgCA/YWVS6i8kfqV3u/+B2rFRf
+        nuk6zDSKvhAs2QhrlRxWlDH53/17tz18jDnmmyRctW1FYjWNFKCdFZkZjrQGIpTzSWjafn
+        dUFZjBihk0jDWceRW3LSio4aswzbFdw=
 Received: from suse.cz (pathway.suse.cz [10.100.12.24])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id C1854A3B81;
-        Fri,  1 Oct 2021 12:09:55 +0000 (UTC)
-Date:   Fri, 1 Oct 2021 14:09:55 +0200
+        by relay2.suse.de (Postfix) with ESMTPS id 799EFA3B81;
+        Fri,  1 Oct 2021 12:23:48 +0000 (UTC)
+Date:   Fri, 1 Oct 2021 14:23:48 +0200
 From:   Petr Mladek <pmladek@suse.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
+To:     Alexander Popov <alex.popov@linux.com>
 Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexander Popov <alex.popov@linux.com>,
         Jonathan Corbet <corbet@lwn.net>,
         Andrew Morton <akpm@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -59,91 +58,65 @@ Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Garnier <thgarnie@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
         David S Miller <davem@davemloft.net>,
         Borislav Petkov <bp@alien8.de>,
         kernel-hardening@lists.openwall.com,
         linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, notify@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>
 Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
-Message-ID: <20211001120955.GA965@pathway.suse.cz>
+Message-ID: <20211001122348.GB965@pathway.suse.cz>
 References: <20210929185823.499268-1-alex.popov@linux.com>
  <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
  <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1>
  <YVWAPXSzFNbHz6+U@alley>
- <20210930125903.0783b06e@oasis.local.home>
+ <a09c1d4d-1d5b-9092-ae3a-61bc22689dd2@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210930125903.0783b06e@oasis.local.home>
+In-Reply-To: <a09c1d4d-1d5b-9092-ae3a-61bc22689dd2@linux.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu 2021-09-30 12:59:03, Steven Rostedt wrote:
-> On Thu, 30 Sep 2021 11:15:41 +0200
-> Petr Mladek <pmladek@suse.com> wrote:
-> 
+On Thu 2021-09-30 18:05:54, Alexander Popov wrote:
+> On 30.09.2021 12:15, Petr Mladek wrote:
 > > On Wed 2021-09-29 12:49:24, Paul E. McKenney wrote:
-> > > On Wed, Sep 29, 2021 at 10:01:33PM +0300, Alexander Popov wrote:  
-> > > > On 29.09.2021 21:58, Alexander Popov wrote:  
-> > > > > Currently, the Linux kernel provides two types of reaction to kernel
-> > > > > warnings:
-> > > > >  1. Do nothing (by default),
-> > > > >  2. Call panic() if panic_on_warn is set. That's a very strong reaction,
-> > > > >     so panic_on_warn is usually disabled on production systems.  
+> >> On Wed, Sep 29, 2021 at 10:01:33PM +0300, Alexander Popov wrote:
+> >>> This patch was tested using CONFIG_LKDTM.
+> >>> The kernel kills a process that performs this:
+> >>>   echo WARNING > /sys/kernel/debug/provoke-crash/DIRECT
+> >>>
+> >>> If you are fine with this approach, I will prepare a patch adding the
+> >>> pkill_on_warn sysctl.
+> >>
+> >> I suspect that you need a list of kthreads for which you are better
+> >> off just invoking panic().  RCU's various kthreads, for but one set
+> >> of examples.
 > > 
-> > Honestly, I am not sure if panic_on_warn() or the new pkill_on_warn()
-> > work as expected. I wonder who uses it in practice and what is
-> > the experience.
+> > I wonder if kernel could survive killing of any kthread. I have never
+> > seen a code that would check whether a kthread was killed and
+> > restart it.
 > 
-> Several people use it, as I see reports all the time when someone can
-> trigger a warn on from user space, and it's listed as a DOS of the
-> system.
+> The do_group_exit() function calls do_exit() from kernel/exit.c, which is also
+> called during a kernel oops. This function cares about a lot of special cases
+> depending on the current task_struct. Is it fine?
 
-Good to know.
+IMHO, the bigger problem is that nobody will start the kthreads again.
+As a result, some kernel functionality will not longer work.
 
-> > The problem is that many developers do not know about this behavior.
-> > They use WARN() when they are lazy to write more useful message or when
-> > they want to see all the provided details: task, registry, backtrace.
-> 
-> WARN() Should never be used just because of laziness. If it is, then
-> that's a bug. Let's not use that as an excuse to shoot down this
-> proposal. WARN() should only be used to test assumptions where you do
-> not believe something can happen. I use it all the time when the logic
-> prevents some state, and have the WARN() enabled if that state is hit.
-> Because to me, it shows something that shouldn't happen happened, and I
-> need to fix the code.
+User space threads are different. The user/admin typically
+have a chance to start them again.
 
-I have just double checked code written or reviewed by me and it
-mostly follow the rules. But it is partly just by chance. I did not
-have these rather clear rules in my head.
+We might get inspiration in OOM killer. It never kills kthreads
+and the init process, see oom_unkillable_task().
 
-But for example, the following older WARN() in format_decode() in
-lib/vsprintf.c is questionable:
-
-	WARN_ONCE(1, "Please remove unsupported %%%c in format string\n", *fmt);
-
-I guess that the WARN() was used to easily locate the caller. But it
-is not a reason the reboot the system or kill the process, definitely.
-
-Maybe, we could implement an alternative macro for these situations,
-e.g. DEBUG() or warn().
-
-> > Well, this might be different. Developers might learn this the hard
-> > way from bug reports. But there will be bug reports only when
-> > anyone really enables this behavior. They will enable it only
-> > when it works the right way most of the time.
-> 
-> The panic_on_warn() has been used for years now. I do not think this is
-> an issue.
-
-If panic_on_warn() is widely used then pkill_on_warn() is fine as well.
+It would be better to panic() when WARN() is called from a kthread
+or the init process.
 
 Best Regards,
 Petr
