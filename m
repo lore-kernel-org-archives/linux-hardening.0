@@ -2,106 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7082DC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 12:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80ACC433F5
+	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 15:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9AA61AF8
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 12:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50E361B00
+	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 15:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233051AbhJBMPs (ORCPT
+        id S233482AbhJBPXt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 2 Oct 2021 08:15:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233008AbhJBMPr (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 2 Oct 2021 08:15:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A0DE961A38;
-        Sat,  2 Oct 2021 12:14:01 +0000 (UTC)
-Date:   Sat, 2 Oct 2021 08:13:59 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sat, 2 Oct 2021 11:23:49 -0400
+Received: from smtprelay0040.hostedemail.com ([216.40.44.40]:37060 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S233425AbhJBPXt (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 2 Oct 2021 11:23:49 -0400
+Received: from omf10.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 49791100E7B55;
+        Sat,  2 Oct 2021 15:22:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf10.hostedemail.com (Postfix) with ESMTPA id 077632351F3;
+        Sat,  2 Oct 2021 15:21:59 +0000 (UTC)
+Message-ID: <9f262a81acffffb6e267d5832b29d8596d8046e2.camel@perches.com>
+Subject: Re: [PATCH v4] docs: Explain the desired position of function
+ attributes
+From:   Joe Perches <joe@perches.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
         Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-hardening@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        notify@kernel.org
-Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
-Message-ID: <20211002081359.5de4e2b1@oasis.local.home>
-In-Reply-To: <ba67ead7-f075-e7ad-3274-d9b2bc4c1f44@linux.com>
-References: <20210929185823.499268-1-alex.popov@linux.com>
-        <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
-        <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1>
-        <YVWAPXSzFNbHz6+U@alley>
-        <CAHk-=widOm3FXMPXXK0cVaoFuy3jCk65=5VweLceQCuWdep=Hg@mail.gmail.com>
-        <ba67ead7-f075-e7ad-3274-d9b2bc4c1f44@linux.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Date:   Sat, 02 Oct 2021 08:21:58 -0700
+In-Reply-To: <YVf80rXg8Yd19Hmw@kroah.com>
+References: <20210930235754.2635912-1-keescook@chromium.org>
+         <CAKwvOdm37zpJZkLvbHvVkXax=XGQ-Ym3iPfx7LtTUnZhADnYCA@mail.gmail.com>
+         <YVf80rXg8Yd19Hmw@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 077632351F3
+X-Stat-Signature: soyiqo7o57w1r49asd8u46n98r7p3mry
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18XHyC4W8Hgtuauvy9FtyuPzQMwcIbmQI8=
+X-HE-Tag: 1633188119-488567
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, 2 Oct 2021 14:41:34 +0300
-Alexander Popov <alex.popov@linux.com> wrote:
+On Sat, 2021-10-02 at 08:31 +0200, Greg KH wrote:
+> I would think that now we have a format that the tools can
+> actually follow, while before it was semi-random as to what to pick as
+> the "one true way".
 
-> Currently, the Linux kernel provides two types of reaction to kernel warnings:
->  1. Do nothing (by default),
->  2. Call panic() if panic_on_warn is set. That's a very strong reaction,
->     so panic_on_warn is usually disabled on production systems.
-> 
-> >From a safety point of view, the Linux kernel misses a middle way of handling  
-> kernel warnings:
->  - The kernel should stop the activity that provokes a warning,
->  - But the kernel should avoid complete denial of service.
-> 
-> >From a security point of view, kernel warning messages provide a lot of useful  
-> information for attackers. Many GNU/Linux distributions allow unprivileged users
-> to read the kernel log (for various reasons), so attackers use kernel warning
-> infoleak in vulnerability exploits. See the examples:
-> https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html
-> https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
-> https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
-> 
-> Let's introduce the pkill_on_warn parameter.
-> If this parameter is set, the kernel kills all threads in a process that
-> provoked a kernel warning. This behavior is reasonable from a safety point of
-> view described above. It is also useful for kernel security hardening because
-> the system kills an exploit process that hits a kernel warning.
+There will never be 'one true (and universal) way'.
 
-How does this help? It only kills the process that caused the warning,
-it doesn't kill the process that spawned it. This is trivial to get
-around. Just fork a process, trigger the warning (it gets killed) and
-then read the kernel log.
+Most existing code doesn't follow the suggested formatting and you
+can't require or expect the existing code to change.
 
-If this is your rationale, then I'm not convinced this helps at all.
+If automated scripts exist to change all the code to that new
+'one true way', it wouldn't be applied.
+ 
+> What am I missing here?
 
--- Steve
+Try writing a regex for the proposal and make sure to separate out
+all the various __<foo> attributes into their proper locations...
+
+yuck and g'luck.
+
