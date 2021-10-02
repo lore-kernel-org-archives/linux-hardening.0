@@ -2,92 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43688C433FE
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 16:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E51BC433FE
+	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 16:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2783261B04
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 16:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09F5361B00
+	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 16:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233638AbhJBQbx (ORCPT
+        id S233565AbhJBQfL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 2 Oct 2021 12:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233632AbhJBQbt (ORCPT
+        Sat, 2 Oct 2021 12:35:11 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:46892 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233444AbhJBQfK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 2 Oct 2021 12:31:49 -0400
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA29EC0613EC;
-        Sat,  2 Oct 2021 09:30:03 -0700 (PDT)
-Received: by mail-il1-x129.google.com with SMTP id y17so5572010ilb.9;
-        Sat, 02 Oct 2021 09:30:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H8go0BCd7H65wVa/X24gvQ3JnQkogTpqfFuo2bWI+s8=;
-        b=BVYHvEcKd6Zj+Kj9iKtqxd8Sl+ykv/Yz/sQpws1aH8ImBG2FwI8xBahAh0GDgmMqGE
-         47s7yBDOugz56rN1mVEmJwD8NT8tBc8CxAxHRlK2/C45rW5oAdQwMU2gMFLeMXBb6RvL
-         IXeYmV9+2ltqmtZ7p/Gnt+rL7HekZCPFpHkPX8GnTg9qh3Xp0mfejWFI62sGuFrBIVh+
-         bok3b9g3iG6UMgTvY1O26jq9PCT8ZRjcoyCeZk0eYRXDGKqh2/Y4ZuGEuncAtiuN+o1T
-         +b1QHq/8bczcmz4MQakPcefVaAztei2Y3p9aaRnQDjcC58sQJumch0ITszCHUXzmyICo
-         U4Kg==
+        Sat, 2 Oct 2021 12:35:10 -0400
+Received: by mail-wm1-f53.google.com with SMTP id o4-20020a05600c510400b0030d55d6449fso2348996wms.5;
+        Sat, 02 Oct 2021 09:33:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H8go0BCd7H65wVa/X24gvQ3JnQkogTpqfFuo2bWI+s8=;
-        b=JuzxrwT73wbHwBDoZYl14+o1y6v9avTI4L2jlMitsfLFufyXmGTT4+92nw5CQI+58X
-         PurhMG7++5Eqpr1IvQL8aU94L6nU1W4LGoqY6wbib/Yj0gvyxz0FSQQlOfRHR5wu0Wyl
-         ZH1SxdrFLn4tWZUXrdLpie1bE0s90/QSMpPudpAkqNVmY0wlC3woRS0Oxee+EtK41P2x
-         DHebUtAtHzsIdjDiupEaL6Jm0pdull9/1jhU7DQqRSjhzDuVIBtBO4PI3frU0NfCehcC
-         l2+OiKYXzGfXwz1WiXvfO+bMDshLBEod7wDXmkzkPeAu76pSly0/XajMRWP4FU++ieLd
-         oGCQ==
-X-Gm-Message-State: AOAM530NcJWR2ZKFGyIkE+JGqlxlkTVkGoIcXRdJzVaYb2uJF6bczflB
-        HvbxtAMngD+dJHmsR5fI+QBmbTQuWt4YJhI88g4RGYM4jphMyTz8
-X-Google-Smtp-Source: ABdhPJy2rWJkZ+eaChFGDRMPhyqbXZoL5TRYoFNoATP3ti5LWy9fFbt+eXabUtPysAcGUqbXxbjySeFQRjyO7F8xR10=
-X-Received: by 2002:a05:6e02:19c6:: with SMTP id r6mr3111286ill.321.1633192203205;
- Sat, 02 Oct 2021 09:30:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210930235754.2635912-1-keescook@chromium.org>
- <CAKwvOdm37zpJZkLvbHvVkXax=XGQ-Ym3iPfx7LtTUnZhADnYCA@mail.gmail.com>
- <YVf80rXg8Yd19Hmw@kroah.com> <CANiq72=T9b_RgZGHuKDjj=E46c0nB2CHH3+Wsdws2Wt9YWcHVw@mail.gmail.com>
- <0cbd2549be1245b445796f6c57a27b910fa4dc9d.camel@perches.com>
-In-Reply-To: <0cbd2549be1245b445796f6c57a27b910fa4dc9d.camel@perches.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 2 Oct 2021 18:29:52 +0200
-Message-ID: <CANiq72=fOYUjoqjW6+kvf7krqb_AqxmYbkcCwn-Oaw-ApFq9LQ@mail.gmail.com>
-Subject: Re: [PATCH v4] docs: Explain the desired position of function attributes
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=XPPGkU56zJhC1We9hrBWJnpYMVu8F2L8QKrG+oAgNZA=;
+        b=GiQyFy2Nwz42KBqTETpKBTHxTSNtgOnkLCANiRsyoQGMTJtY4L3O4vZyDoVmdIgDuS
+         4VNJQNI1H4RBL3WY1JyAgHh+GY50rH8+zoBCMbotHGpLHKuKs+rlN+zvFhh9vWRw1cRC
+         eIBMcAkSaJJjEa5BhlgdxpITdWjhVDxqApes3EluqCcC/mCRn/e0LzaKXj3ZarhIAkyk
+         aqgaUM7UbK4Kyz3zX/C6wHfjis70tnrNPp7Fv9bVUkOJLtDfaUEZ4g4hFPuku4leZEFK
+         BP5K3LRz43whMy3UdnPaJx0DVCZGl6NYY4efGr4Xtdg5Eg9bL4XQzoES3qvcljtfbHE/
+         Pkwg==
+X-Gm-Message-State: AOAM532iRdTiZ7WBzs9hos4vSvZTMyBbF8Og81+4ILfTCjnIVDzhvYcp
+        vJEFCfJuUjNTOU0RDKS9Sr0=
+X-Google-Smtp-Source: ABdhPJxnblRp0iST3pjMz+7tehqv68lMCKl8gTtuCPWUtdqmj3LGMvYGXoO4MgsXUEEqgbn3pAhWlA==
+X-Received: by 2002:a05:600c:1907:: with SMTP id j7mr10013673wmq.184.1633192403799;
+        Sat, 02 Oct 2021 09:33:23 -0700 (PDT)
+Received: from [10.9.0.26] ([46.166.133.199])
+        by smtp.gmail.com with ESMTPSA id q126sm10973918wma.10.2021.10.02.09.33.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Oct 2021 09:33:23 -0700 (PDT)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-hardening@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        notify@kernel.org
+References: <20210929185823.499268-1-alex.popov@linux.com>
+ <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
+ <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1> <YVWAPXSzFNbHz6+U@alley>
+ <CAHk-=widOm3FXMPXXK0cVaoFuy3jCk65=5VweLceQCuWdep=Hg@mail.gmail.com>
+ <ba67ead7-f075-e7ad-3274-d9b2bc4c1f44@linux.com>
+ <20211002081359.5de4e2b1@oasis.local.home>
+From:   Alexander Popov <alex.popov@linux.com>
+Message-ID: <62cd30d5-0982-5074-969b-a4ae1ee188c3@linux.com>
+Date:   Sat, 2 Oct 2021 19:33:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <20211002081359.5de4e2b1@oasis.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 2, 2021 at 5:22 PM Joe Perches <joe@perches.com> wrote:
->
-> It's not so much a sort order so much as it's a positional one.
+On 02.10.2021 15:13, Steven Rostedt wrote:
+> On Sat, 2 Oct 2021 14:41:34 +0300
+> Alexander Popov <alex.popov@linux.com> wrote:
+> 
+>> Currently, the Linux kernel provides two types of reaction to kernel warnings:
+>>  1. Do nothing (by default),
+>>  2. Call panic() if panic_on_warn is set. That's a very strong reaction,
+>>     so panic_on_warn is usually disabled on production systems.
+>>
+>> >From a safety point of view, the Linux kernel misses a middle way of handling  
+>> kernel warnings:
+>>  - The kernel should stop the activity that provokes a warning,
+>>  - But the kernel should avoid complete denial of service.
+>>
+>> >From a security point of view, kernel warning messages provide a lot of useful  
+>> information for attackers. Many GNU/Linux distributions allow unprivileged users
+>> to read the kernel log (for various reasons), so attackers use kernel warning
+>> infoleak in vulnerability exploits. See the examples:
+>> https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html
+>> https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+>> https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
+>>
+>> Let's introduce the pkill_on_warn parameter.
+>> If this parameter is set, the kernel kills all threads in a process that
+>> provoked a kernel warning. This behavior is reasonable from a safety point of
+>> view described above. It is also useful for kernel security hardening because
+>> the system kills an exploit process that hits a kernel warning.
+> 
+> How does this help? It only kills the process that caused the warning,
+> it doesn't kill the process that spawned it. This is trivial to get
+> around. Just fork a process, trigger the warning (it gets killed) and
+> then read the kernel log.
+> 
+> If this is your rationale, then I'm not convinced this helps at all.
 
-Sure, there are two parts, the order w.r.t. the signature parts (e.g.
-"before return type") and the order between the attributes themselves.
-Both are included in what I meant.
+Steven, as I understand, here you ask about the security implications of
+pkill_on_warn (not about the safety implications that I mentioned).
 
-By the way, clang-format-13 already has a way to pass it a list of the
-"attribute macros" (such as `__unused`), so adding more information on
-top seems reasonable.
+Killing the exploit process that hit a warning is MUCH better than ignoring and
+proceeding with execution. That may influence the stability of the exploits that
+hit WARN_ON() or rely on WARN_ON() infoleak.
 
-Cheers,
-Miguel
+Exploit development is the constant struggle for attack stability. Exploiting a
+heap memory corruption is especially painful when the kernel works with the
+attacked slab caches in parallel with your exploit.
+
+So when the kernel kills the exploit process, some of the WARN_ON() infoleak
+data becomes obsolete; the attacker loses the execution in that particular
+kernel task on that particular CPU. Moreover, restarting the exploit process
+would bring a lot of noise to the system. That may decrease the attack stability
+even more.
+
+So killing the exploit process is the best option that we have here to distress
+the attacker who uses the WARN_ON() infoleak technique. I.e. that is
+probabilistic attack mitigation, which is reasonable for kernel safety as well.
+
+I hope I managed to show this from the attacker's side.
+
+Best regards,
+Alexander
