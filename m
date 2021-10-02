@@ -2,69 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABA5C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 10:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F4CC433EF
+	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 10:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252F661A51
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 10:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAA8619E5
+	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 10:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232752AbhJBKoi (ORCPT
+        id S232777AbhJBKsf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 2 Oct 2021 06:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43204 "EHLO
+        Sat, 2 Oct 2021 06:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232621AbhJBKoh (ORCPT
+        with ESMTP id S232621AbhJBKse (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 2 Oct 2021 06:44:37 -0400
+        Sat, 2 Oct 2021 06:48:34 -0400
 Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F6DBC061570;
-        Sat,  2 Oct 2021 03:42:52 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id d18so14535755iof.13;
-        Sat, 02 Oct 2021 03:42:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCD2C061570;
+        Sat,  2 Oct 2021 03:46:48 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id e144so14580649iof.3;
+        Sat, 02 Oct 2021 03:46:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2Osma+ZoY9LB956joAB5f2LyabZrBd+3JOYnpTaKn98=;
-        b=AZA7gEItNhKh1XJTh7QZQayfq7PVl0xLGa5hb/b/laX+qbam8EDGNoMPJvHaHacnMI
-         HtRA/Awer9UHEEvgs29F71U8AM4k1XU3kcKRUkspE30kG9CbUMnlKygqBg1ZzEQ2Fj9g
-         +JiEqTvAViUTfW7JDbMcrBdMYB9l7gNaTLO8GwWFMET1BjWRNVcjSfULzdrU5gYLuV96
-         a3ocG4kUSUSn+SKxAG9r10sDCQ+wS8zYEocdXb+lY645IKXxKXIZaOc3BxgQpJABmIlY
-         wkuMfUSF/ii4JaayjcJqcw6JBTN3H8oKPi/h4xF1Doa3auF0JIJ1hMkJK/QjWU/vdvOG
-         o8mw==
+        bh=t4Vbvfqul2QFRFjweRNao7lCpjhaECLAq5CXnSLrpSc=;
+        b=Fva1PNUDrspBT6Qe0CKmeiDlLQYn67jc2rEtlOgRoO8FU3CZdwYpTed5cW4Uo308rm
+         OyiSMfjQge65mReRhI3soLOTBWg4ZInOOUMi8dXwcRkeKP4yelPNhFLdUmiZCouDr3mP
+         +FJk7IsSne5B1YI+qo5qrPI2AKXkFl3D2Jn/+L9LPO9cuooTNlRu6pApag+rKzM9Egxc
+         i7uyiMoYkotU7PyLaH8F903WuzYYJ3mnsPmUTnVBKVUhgLNxO38pN/FJ6oYJ8ayUS+2Q
+         jaINIV/yAUlA2LpBovEfWb4xoTTh6Sdnsl9nIW+fM3Df6xP0wMvdk/5ktRuZk75UJiyp
+         1awg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2Osma+ZoY9LB956joAB5f2LyabZrBd+3JOYnpTaKn98=;
-        b=oTDY71MbNucIQLWgxOZUS7Wp49ixwnu+mLN8xlRulWyUmw1OMGhwzkPRp83kKuk3j6
-         BxciGxg/fx2nQBUJbXL6yi3cAwZ6MdTXuO9izn3A6LFeFPhZkWk4amFyt5+8YzqBpb9o
-         PgE5mCA9GkFKdflRWslFhyALK+3aEgOjr/Uc5h09ztGLkEIE6h55j4nTvwiPXhufttta
-         HpRrRYUlMVb/9R9xV5wb+Q4wn9chun1Cuhbi/+eAX8/DYw/NUJVvKVYTsLztMNOkya4m
-         FtL6xsc4ZJXTpg/Ez/QdjBDqxjgALdyXri4cVRXXm3YiaY3rmHeD50IPu/WlcVbJ68Yw
-         A1tA==
-X-Gm-Message-State: AOAM531bAXxXgfWu2OtD7Jua0ECaR7JoL90c7CBUkSb6Tzq7cFJFh4e2
-        /c9qX0jSEpEOOxMYnI+iVlhnwOshhP08wfYW8pQ=
-X-Google-Smtp-Source: ABdhPJxuEAK4ZOjYd7EF/1e7D6z07isVKPcr4xyWh9Zb1t1TyGx6rtYErz2wRSd6SNyRWmJ302ZOb1G+07YE0jGhgWk=
-X-Received: by 2002:a05:6638:d89:: with SMTP id l9mr2376403jaj.46.1633171371734;
- Sat, 02 Oct 2021 03:42:51 -0700 (PDT)
+        bh=t4Vbvfqul2QFRFjweRNao7lCpjhaECLAq5CXnSLrpSc=;
+        b=6zSpt5zQ2I4/QSzuGlIUZ6Z5zpclJclZHvc+lbu1we5Op0QMa5RUlfGHegLk75MfLr
+         xSsG7/lrgsZRcxlG0Qv4kW1Pv5+6N1qdCR9iYZOZHyF/c8uTDouvict+E02DDW9p537e
+         soLGRhUaxn+hkLmnT0ldVsYBK0oNkZUOcof91TJaSG1oXXJ0fpfgWEzDplMNRGQ5rrFX
+         SBk72exU75Wq1b2hpCPWDOYbM/wBV5uH7gzXmxFKdX3UZ9N72mdMNXSlQuVmOxQDP+DZ
+         Ky11GAByXjiP+UK9f3m1uU8E9dqePQGEB6ikMlAr10j9n3hDiIcUJk6424ySISs8j87C
+         nVSA==
+X-Gm-Message-State: AOAM53261g4Q0Rb8+KSwiR3n9zHpBOns3Q/mo0tju/xbpI3oZbp0yLq/
+        0573WPX74q7jN8VKC4gd3Foej1giTyHBjKgRaCM=
+X-Google-Smtp-Source: ABdhPJz7DQ9B1xRDxK67+F0v4ZEUenO0JwNu2opo+RO5QCCO+W4xelFrC3zfK2DDB15nEA7awHxuGqRlMDBO5125Smk=
+X-Received: by 2002:a05:6638:12d5:: with SMTP id v21mr2388869jas.133.1633171608331;
+ Sat, 02 Oct 2021 03:46:48 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210930235754.2635912-1-keescook@chromium.org>
- <CAKwvOdm37zpJZkLvbHvVkXax=XGQ-Ym3iPfx7LtTUnZhADnYCA@mail.gmail.com> <YVf80rXg8Yd19Hmw@kroah.com>
-In-Reply-To: <YVf80rXg8Yd19Hmw@kroah.com>
+In-Reply-To: <20210930235754.2635912-1-keescook@chromium.org>
 From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 2 Oct 2021 12:42:40 +0200
-Message-ID: <CANiq72=T9b_RgZGHuKDjj=E46c0nB2CHH3+Wsdws2Wt9YWcHVw@mail.gmail.com>
+Date:   Sat, 2 Oct 2021 12:46:37 +0200
+Message-ID: <CANiq72=Z30f6nPN+pBLYzkew0UipXmBV1Wd_hr4u6aiug=8qrA@mail.gmail.com>
 Subject: Re: [PATCH v4] docs: Explain the desired position of function attributes
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Randy Dunlap <rdunlap@infradead.org>,
         Joe Perches <joe@perches.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
@@ -75,28 +72,14 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 2, 2021 at 8:31 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Fri, Oct 1, 2021 at 1:59 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> Why would documenting the expected format have an affect on tools not
-> being able to follow that exact expected format?  Are we defining a
-> format that is somehow impossible for them to use?
+> + static __always_inline __init __printf(4, 5) void * __must_check action(enum magic value,
+> +               size_t size, u8 count, char *fmt, ...)
+> +               __malloc
 
-From a quick test, clang-format-12 with our current config keeps
-attributes in the same line and it does not seem to reorder them, so
-it seems OK (the developer has to do it by hand, but that is fine)
-except for the `__malloc` in the second example which is in a
-different line (but not in the first). Is that intended?
-
-> If anything I would think that now we have a format that the tools can
-> actually follow, while before it was semi-random as to what to pick as
-> the "one true way".
-
-In the future, clang-format could have a configuration option to pass
-a sort order, in which case, having the sort order already defined in
-the kernel would definitely be helpful.
-
-In fact, we could use the fact that the kernel has one as a way to
-tell upstream that such a feature would be nice to have :)
+(From my other email) Is this `__malloc` intended to be in a separate
+line? (the first example has everything on the same line).
 
 Cheers,
 Miguel
