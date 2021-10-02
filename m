@@ -2,60 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA679C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 16:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43688C433FE
+	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 16:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9B561425
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 16:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2783261B04
+	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 16:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233602AbhJBQ3A (ORCPT
+        id S233638AbhJBQbx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 2 Oct 2021 12:29:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34356 "EHLO
+        Sat, 2 Oct 2021 12:31:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233594AbhJBQ3A (ORCPT
+        with ESMTP id S233632AbhJBQbt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 2 Oct 2021 12:29:00 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC55C0613EC;
-        Sat,  2 Oct 2021 09:27:14 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id r75so15277575iod.7;
-        Sat, 02 Oct 2021 09:27:14 -0700 (PDT)
+        Sat, 2 Oct 2021 12:31:49 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA29EC0613EC;
+        Sat,  2 Oct 2021 09:30:03 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id y17so5572010ilb.9;
+        Sat, 02 Oct 2021 09:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vd+gTZwolgcCYNprrURY6Og3fy+5eYa5b4XVVJG/2QE=;
-        b=o5fhWcKmht8xoMVSBgIwpxCx+YGRwbIeOsXFkbCWKiy10keg2Cu43Mh7aYr7Cn8rus
-         WER83mWeztZiqvVzGW9R21HLAX2gYFJulGrY9sPoWz6lWKzebHEpxr9lI84nzhTKrK/O
-         3UDvZHwjjDClG4aALZsMaKFNETlm8uCvkIp+QiDSQ5jSJf6m9mGErrbRD2J+Czcs/TSM
-         zDr24oK4v7Jg2kFWUSX2eoKddf7l6X8RqbhqGTQbAuhW3nFDYM56zVliAnFXSI4SihL/
-         IxTvF5NFWeRcf3YaLmLu8UiFWwFV5xsulgMPjAsGx7C17647T5Y1Q87P3/M2xXeNJjLU
-         CoCw==
+        bh=H8go0BCd7H65wVa/X24gvQ3JnQkogTpqfFuo2bWI+s8=;
+        b=BVYHvEcKd6Zj+Kj9iKtqxd8Sl+ykv/Yz/sQpws1aH8ImBG2FwI8xBahAh0GDgmMqGE
+         47s7yBDOugz56rN1mVEmJwD8NT8tBc8CxAxHRlK2/C45rW5oAdQwMU2gMFLeMXBb6RvL
+         IXeYmV9+2ltqmtZ7p/Gnt+rL7HekZCPFpHkPX8GnTg9qh3Xp0mfejWFI62sGuFrBIVh+
+         bok3b9g3iG6UMgTvY1O26jq9PCT8ZRjcoyCeZk0eYRXDGKqh2/Y4ZuGEuncAtiuN+o1T
+         +b1QHq/8bczcmz4MQakPcefVaAztei2Y3p9aaRnQDjcC58sQJumch0ITszCHUXzmyICo
+         U4Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vd+gTZwolgcCYNprrURY6Og3fy+5eYa5b4XVVJG/2QE=;
-        b=UxLfpMuLmm9ynHC61OHODJHVxMhE0k9xvT61lD6q12bPcQi9kXL3XejY5zqzVLXqIN
-         MvVXsDyw5DorbidetE5A2rXXXauHzuTkqYvWSdaWOhHrLfg6EYk3RdAqrufMfUV0TKwI
-         hhNbezB6RyRKpRgCIvIULPZAC6rFHDd2SZj9EpX4MB/S2I/wgwJ0IQ+gjHMfZpRioIkQ
-         cANUQIMnrSwsz7MY8xs3Ah/sOcxLHnwGE0OEFCqC4KPc9JzM4a5yy7P863kxIRarbYe1
-         7TQQrtw242BWIAeWOGKp1HZUum+06q3m7wXR9zRGe/YaTN/SeBKdcgAK2UA+Q1+c9cK/
-         cjmw==
-X-Gm-Message-State: AOAM532+MgLuCxJ1s8eezuJIhzgxkZ5R6FLZfApZ8LY2zJMo5xbK9e7i
-        OM1o4jPXheDycudkhm+JAMZPHDlx0P5TOqi3IoJK2VXJ3jpvl8P6ilk=
-X-Google-Smtp-Source: ABdhPJzyRUDP3QBgjDmsYwv+5cTa+DybnD8O7sIBKNMVWYP7phxkZm32TpmnOh1j9vJ23XqGKaeaxBw5e1WkQe8Q0Ho=
-X-Received: by 2002:a05:6638:14d0:: with SMTP id l16mr3382380jak.142.1633192033477;
- Sat, 02 Oct 2021 09:27:13 -0700 (PDT)
+        bh=H8go0BCd7H65wVa/X24gvQ3JnQkogTpqfFuo2bWI+s8=;
+        b=JuzxrwT73wbHwBDoZYl14+o1y6v9avTI4L2jlMitsfLFufyXmGTT4+92nw5CQI+58X
+         PurhMG7++5Eqpr1IvQL8aU94L6nU1W4LGoqY6wbib/Yj0gvyxz0FSQQlOfRHR5wu0Wyl
+         ZH1SxdrFLn4tWZUXrdLpie1bE0s90/QSMpPudpAkqNVmY0wlC3woRS0Oxee+EtK41P2x
+         DHebUtAtHzsIdjDiupEaL6Jm0pdull9/1jhU7DQqRSjhzDuVIBtBO4PI3frU0NfCehcC
+         l2+OiKYXzGfXwz1WiXvfO+bMDshLBEod7wDXmkzkPeAu76pSly0/XajMRWP4FU++ieLd
+         oGCQ==
+X-Gm-Message-State: AOAM530NcJWR2ZKFGyIkE+JGqlxlkTVkGoIcXRdJzVaYb2uJF6bczflB
+        HvbxtAMngD+dJHmsR5fI+QBmbTQuWt4YJhI88g4RGYM4jphMyTz8
+X-Google-Smtp-Source: ABdhPJy2rWJkZ+eaChFGDRMPhyqbXZoL5TRYoFNoATP3ti5LWy9fFbt+eXabUtPysAcGUqbXxbjySeFQRjyO7F8xR10=
+X-Received: by 2002:a05:6e02:19c6:: with SMTP id r6mr3111286ill.321.1633192203205;
+ Sat, 02 Oct 2021 09:30:03 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210930235754.2635912-1-keescook@chromium.org>
  <CAKwvOdm37zpJZkLvbHvVkXax=XGQ-Ym3iPfx7LtTUnZhADnYCA@mail.gmail.com>
- <YVf80rXg8Yd19Hmw@kroah.com> <9f262a81acffffb6e267d5832b29d8596d8046e2.camel@perches.com>
-In-Reply-To: <9f262a81acffffb6e267d5832b29d8596d8046e2.camel@perches.com>
+ <YVf80rXg8Yd19Hmw@kroah.com> <CANiq72=T9b_RgZGHuKDjj=E46c0nB2CHH3+Wsdws2Wt9YWcHVw@mail.gmail.com>
+ <0cbd2549be1245b445796f6c57a27b910fa4dc9d.camel@perches.com>
+In-Reply-To: <0cbd2549be1245b445796f6c57a27b910fa4dc9d.camel@perches.com>
 From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 2 Oct 2021 18:27:02 +0200
-Message-ID: <CANiq72m7gRxNmHUJb9jJ+JMiYHyMuNf6Yc1+7N87yz_RLc3atA@mail.gmail.com>
+Date:   Sat, 2 Oct 2021 18:29:52 +0200
+Message-ID: <CANiq72=fOYUjoqjW6+kvf7krqb_AqxmYbkcCwn-Oaw-ApFq9LQ@mail.gmail.com>
 Subject: Re: [PATCH v4] docs: Explain the desired position of function attributes
 To:     Joe Perches <joe@perches.com>
 Cc:     Greg KH <gregkh@linuxfoundation.org>,
@@ -78,17 +79,15 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 On Sat, Oct 2, 2021 at 5:22 PM Joe Perches <joe@perches.com> wrote:
 >
-> If automated scripts exist to change all the code to that new
-> 'one true way', it wouldn't be applied.
+> It's not so much a sort order so much as it's a positional one.
 
-I think nobody is saying we should reformat all code at once, just
-that agreeing on a given style allows us to eventually automate it (it
-also makes humans more likely to be consistent).
+Sure, there are two parts, the order w.r.t. the signature parts (e.g.
+"before return type") and the order between the attributes themselves.
+Both are included in what I meant.
 
-> Try writing a regex for the proposal and make sure to separate out
-> all the various __<foo> attributes into their proper locations...
-
-It does not need to be a regex...
+By the way, clang-format-13 already has a way to pass it a list of the
+"attribute macros" (such as `__unused`), so adding more information on
+top seems reasonable.
 
 Cheers,
 Miguel
