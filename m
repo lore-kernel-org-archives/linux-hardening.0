@@ -2,99 +2,155 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BE1C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 21:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A53BFC433F5
+	for <linux-hardening@archiver.kernel.org>; Sun,  3 Oct 2021 10:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE9B61AEF
-	for <linux-hardening@archiver.kernel.org>; Sat,  2 Oct 2021 21:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8822661B3C
+	for <linux-hardening@archiver.kernel.org>; Sun,  3 Oct 2021 10:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234042AbhJBVon (ORCPT
+        id S230004AbhJCKpW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 2 Oct 2021 17:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233999AbhJBVon (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 2 Oct 2021 17:44:43 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0363C0613EF
-        for <linux-hardening@vger.kernel.org>; Sat,  2 Oct 2021 14:42:56 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id np13so2642299pjb.4
-        for <linux-hardening@vger.kernel.org>; Sat, 02 Oct 2021 14:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0FFjP0oMZpxRexvNkXdCYUTlS/H85H78Cl8QLMYAVqY=;
-        b=lu/QAwQBpT03rq/VQqSlSsmAXa6QbEPOPpK95EFgVMjGjF7JAjrI9RiL1pn6ZotiKB
-         g8/UamqqsiA5JdRLDR8CJ2qO1NoES6urk1/CRCn+M6s0ohwG4KegN2MXXtF2rSUgiiJo
-         neebnm2figgIUrMXjkXgAD6IquiNvy+HfLBjI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0FFjP0oMZpxRexvNkXdCYUTlS/H85H78Cl8QLMYAVqY=;
-        b=wViku5+EFv3KsLb6ZDRL5pFQ2UHKHbZsr62ikhvpwakQQdmVkgQr7K0q/otjkAJ0KD
-         ZXLXb8La4S4Jt+ceU+UZhSNIaQG4Pz2m1YcWhEG3ZjSKDoMAa3YoUgTkNsOp+d0OvyxW
-         oBKmGkiKksRqmH25SENqLDC95aKpPY9qez5WjRfhQNnVde69VfT9VGpvJvVCc4aoefLT
-         zOatFP47fe/QXACXCxDzoJe4rH5cBt04x+Oyp24I/RsBThot73uTEfgfrP020tlXerFS
-         doYy9p/YuUx8bCEM1P8rDUlZbzf0OqBzgYrF8RQFBZzaO1OBuYQq9c9A6L9qvFHEtXGO
-         KePA==
-X-Gm-Message-State: AOAM532CPgoEvfDNdInDR7+jGwDsS8f+apfsnMijPqzDCDe3uRwtzPip
-        PMLSySZN/xiQ5bKPkDYMdtQSlA==
-X-Google-Smtp-Source: ABdhPJwHouZwwcQTL+3/hhpEg8o6JRvZfZmd3ySpA8bXdqKGb9wtZn+VEUaXyTMCYiTTh0fev9osyw==
-X-Received: by 2002:a17:90a:588f:: with SMTP id j15mr28057348pji.177.1633210976114;
-        Sat, 02 Oct 2021 14:42:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t8sm10821655pjt.39.2021.10.02.14.42.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Oct 2021 14:42:55 -0700 (PDT)
-Date:   Sat, 2 Oct 2021 14:42:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4] docs: Explain the desired position of function
- attributes
-Message-ID: <202110021441.C70D775A61@keescook>
-References: <20210930235754.2635912-1-keescook@chromium.org>
- <CAKwvOdm37zpJZkLvbHvVkXax=XGQ-Ym3iPfx7LtTUnZhADnYCA@mail.gmail.com>
- <YVf80rXg8Yd19Hmw@kroah.com>
- <9f262a81acffffb6e267d5832b29d8596d8046e2.camel@perches.com>
- <CANiq72m7gRxNmHUJb9jJ+JMiYHyMuNf6Yc1+7N87yz_RLc3atA@mail.gmail.com>
+        Sun, 3 Oct 2021 06:45:22 -0400
+Received: from mout.gmx.net ([212.227.15.15]:55463 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229994AbhJCKpV (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 3 Oct 2021 06:45:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1633257798;
+        bh=zopy7JiduOhiOraL+CIOE8r8McNSECiWHJbGvJY+/wk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=lvx5GL/7dRsd5R/rBBj/tK46Hs3uVK08hGHs9VaKJev7d95nT7KoAgo7aEpUrCa7k
+         83SRFuRYMzsPBEdgge8DSDM5R0q3nqYztQq01UkWpw4O79nannpH7bk5uz4E18oi1w
+         0rsU9CC57/nCJ6bu1AJzqJw3PjjC2vB/oucng1CQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1N9dwd-1mtnBT2n9J-015c9e; Sun, 03 Oct 2021 12:43:18 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915: Prefer struct_size over open coded arithmetic
+Date:   Sun,  3 Oct 2021 12:42:58 +0200
+Message-Id: <20211003104258.18550-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72m7gRxNmHUJb9jJ+JMiYHyMuNf6Yc1+7N87yz_RLc3atA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uxCZL6xJRu3oEOGIGxrkEkeAYobt3kt5RUND+CwOV7gb29aFtlt
+ XYBMW8PY3+dXrVVEyjK13+fJll8DyzLN5hKiyTJwBj7xorhQJWIRIJlhc7qgnpoRH1yJWkf
+ 2hAQv7FbJdd4kVls/vfCWapbxyQ/CmhjQU/diQasrAEpcfjfCgHmpKHWhCb4I10bOqQkLUT
+ Pl1tYhlOrbJQJf1gpBtaw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QArz2dc5ypc=:p3dODVcckWTX11y2VtLBr7
+ FC/Utic68qHS63CflCCl/X/mpL8FtpFit/UwO99wCcZMBO1JS8G0MRlSRYJSv0w8aYX+OM/Gi
+ 0g/5QwJ8hI91A3IUORASvq1Py8jAcoa2371wPgjzXDAlkjeJxyTn0nwzFuIeuOdp9Wz6qtrLO
+ KqDd5Kn/vq8cGvb59EQWFwz/VfRxBqMLXCHzE6U8CZA8cBUH6WDcVGLNDOe8oiZX1GPS/H4+d
+ YSEff4AmwtR3f0jr24gk0vYqTFNFJbPDYFqE8g2vqEblxo3SzOpVuoAbNiobu1PN8mHUEdJiB
+ KEPFHijtDdOIzsAg3FmkiVrzyGz+/j8N9GlbIaDXx+c10rCjzeg5fTc036Bce48tJh1Y/phG0
+ B/4aSWr1pHD7PeQPry1Ev/isEjZdovZLu/dFZMQFzJuoiDFi2guxhdKSJZOsZAnGfDvvgIslN
+ O3nfeHlqbFxhMcB5amayK+e5mZ00v4AfqImC1wJPRZj0CKR/H0yYHcVbQTJk1F9nwIP1M0sKY
+ caLX0bCQKnRZXK0b/OJkr9F+2Jioc98c66zsbZm4vP6WsMQj+n9XyFwFi4+phdUuer6N0rbBE
+ UzUcMtXWWhUmY+AIoKJmWJ53JQG9qO358J7PMEJMVXt1COwQlZh8SoR3Ve8aTDng3TpP7KhEI
+ 88f3kO03YSsBXibhXRandSRMdKMuZzF0GmcfSiioLaqVmJxc/+yszUq7wfeaNKKJg/93Jdo7d
+ 4Il2pBI04ZylcnevLpzPm0o6KfoHv9PDjiPoINqlFfnd7bZprZWAFOTO6hvTQraPWTRQaYaGg
+ fZBmNv+8PIIxZs/Lmjce8KIFr9vz6nnmVF/46ue+3fElE1UBYb3utd2ciSaf9eDOrcFyJGea3
+ 2oU8WEZYAQpWUFTCB1eh/kJQy4PfLUp1YnkFM/comLpQib+PHEFIx/RIBlVpIqPbeNXN2P/I9
+ xdd/texNihEkS69vV9nviESlpMvEcsX2NcmdxYViSYZqystYFjeXGnmpRdKuZ7KniGRMqsIIW
+ vHrGhRMNFS4rbZTbHWOUUhcosT3/MQdtCIbLGktMWhRwiKy37OOr2339lZPXA6LvwTaq4SE0r
+ +2AKRZwPwqeFYQ=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 02, 2021 at 06:27:02PM +0200, Miguel Ojeda wrote:
-> On Sat, Oct 2, 2021 at 5:22 PM Joe Perches <joe@perches.com> wrote:
-> >
-> > If automated scripts exist to change all the code to that new
-> > 'one true way', it wouldn't be applied.
-> 
-> I think nobody is saying we should reformat all code at once, just
-> that agreeing on a given style allows us to eventually automate it (it
-> also makes humans more likely to be consistent).
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-I just want to know what style to use to not have it NAKed by Linus. ;)
+In this case these are not actually dynamic sizes: all the operands
+involved in the calculation are constant values. However it is better to
+refactor them anyway, just to keep the open-coded math idiom out of
+code.
 
-But yeah, it might be nice to do style checking against the kernel some
-day. We have a lot of weird stuff in here, though! *slaps roof of kernel*
+So, add at the end of the struct i915_syncmap a union with two flexible
+array members (these arrays share the same memory layout). This is
+possible using the new DECLARE_FLEX_ARRAY macro. And then, use the
+struct_size() helper to do the arithmetic instead of the argument
+"size + count * size" in the kmalloc and kzalloc() functions.
 
--- 
-Kees Cook
+Also, take the opportunity to refactor the __sync_seqno and __sync_child
+making them more readable.
+
+This code was detected with the help of Coccinelle and audited and fixed
+manually.
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments
+
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ drivers/gpu/drm/i915/i915_syncmap.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_syncmap.c b/drivers/gpu/drm/i915/i9=
+15_syncmap.c
+index 60404dbb2e9f..a8d35491d05a 100644
+=2D-- a/drivers/gpu/drm/i915/i915_syncmap.c
++++ b/drivers/gpu/drm/i915/i915_syncmap.c
+@@ -82,6 +82,10 @@ struct i915_syncmap {
+ 	 *	struct i915_syncmap *child[KSYNCMAP];
+ 	 * };
+ 	 */
++	union {
++		DECLARE_FLEX_ARRAY(u32, seqno);
++		DECLARE_FLEX_ARRAY(struct i915_syncmap *, child);
++	};
+ };
+
+ /**
+@@ -99,13 +103,13 @@ void i915_syncmap_init(struct i915_syncmap **root)
+ static inline u32 *__sync_seqno(struct i915_syncmap *p)
+ {
+ 	GEM_BUG_ON(p->height);
+-	return (u32 *)(p + 1);
++	return p->seqno;
+ }
+
+ static inline struct i915_syncmap **__sync_child(struct i915_syncmap *p)
+ {
+ 	GEM_BUG_ON(!p->height);
+-	return (struct i915_syncmap **)(p + 1);
++	return p->child;
+ }
+
+ static inline unsigned int
+@@ -200,7 +204,7 @@ __sync_alloc_leaf(struct i915_syncmap *parent, u64 id)
+ {
+ 	struct i915_syncmap *p;
+
+-	p =3D kmalloc(sizeof(*p) + KSYNCMAP * sizeof(u32), GFP_KERNEL);
++	p =3D kmalloc(struct_size(p, seqno, KSYNCMAP), GFP_KERNEL);
+ 	if (unlikely(!p))
+ 		return NULL;
+
+@@ -282,7 +286,7 @@ static noinline int __sync_set(struct i915_syncmap **r=
+oot, u64 id, u32 seqno)
+ 			unsigned int above;
+
+ 			/* Insert a join above the current layer */
+-			next =3D kzalloc(sizeof(*next) + KSYNCMAP * sizeof(next),
++			next =3D kzalloc(struct_size(next, child, KSYNCMAP),
+ 				       GFP_KERNEL);
+ 			if (unlikely(!next))
+ 				return -ENOMEM;
+=2D-
+2.25.1
+
