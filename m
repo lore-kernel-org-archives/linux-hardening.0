@@ -2,106 +2,160 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA25C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 19:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F03EC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 19:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6451D6137C
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 19:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2694B61371
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 19:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235306AbhJETRG (ORCPT
+        id S231266AbhJETvZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 5 Oct 2021 15:17:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235176AbhJETRF (ORCPT
+        Tue, 5 Oct 2021 15:51:25 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:55402 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230333AbhJETvY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 5 Oct 2021 15:17:05 -0400
-Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D55C061749;
-        Tue,  5 Oct 2021 12:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=FbGbTzVN9zJ2FK467mGNFjxVX9oK9l7Rkf+moaDWL/0=; b=Z4+g5nBtCXAhTOPi8DhfZwuL3m
-        npca5yx9Hhy/QGu/cX7271mH8AQusLVQxhczjcmRWL+yCO2TQfC60VKSoL2kMUPpNhY1RkAX+ZT32
-        6N/hqhkj+mlvSdBXjRgx7iigKH/1ju92pUlA1H31FvLgu8H774gTvme2lScB7a7kHb/hCcMaes1jM
-        M+x7lVVSDQ8gd2factizIqidruofZ9yJs/ZINmw9FZyOiRHn5Dv8UFKnjZhYaGP9oIT+CVBcrndzj
-        m68i7thVbN8Ict3e3Sp/rwZ36ymaPSPuzHZHP+1wDu3a57VLPz1WdafsHnwDOp9O0nhD+2lUzudUD
-        OjgcQZ7g==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mXpuD-00BdhP-RL; Tue, 05 Oct 2021 19:15:13 +0000
-Subject: Re: [PATCH v5] docs: Explain the desired position of function
- attributes
-To:     Kees Cook <keescook@chromium.org>, Joe Perches <joe@perches.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Tue, 5 Oct 2021 15:51:24 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51]:54136)
+        by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1mXqRI-00BOhD-Fk; Tue, 05 Oct 2021 13:49:24 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:41390 helo=email.xmission.com)
+        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1mXqRH-008ayT-2v; Tue, 05 Oct 2021 13:49:24 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will.deacon@arm.com>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
         linux-hardening@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-References: <20211005152611.4120605-1-keescook@chromium.org>
- <7f6e53d04849daabd3e85c23f9974b2eb4a20c13.camel@perches.com>
- <202110051004.C4D9EBA0@keescook>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <742567f3-f043-6fab-235a-5835ca025f54@infradead.org>
-Date:   Tue, 5 Oct 2021 12:15:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        notify@kernel.org
+References: <20210929185823.499268-1-alex.popov@linux.com>
+        <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
+        <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1>
+        <YVWAPXSzFNbHz6+U@alley>
+        <CAHk-=widOm3FXMPXXK0cVaoFuy3jCk65=5VweLceQCuWdep=Hg@mail.gmail.com>
+        <ba67ead7-f075-e7ad-3274-d9b2bc4c1f44@linux.com>
+        <CAHk-=whrLuVEC0x+XzYUNV2de5kM-k39GkJWwviQNuCdZ0nfKg@mail.gmail.com>
+        <0e847d7f-7bf0-cdd4-ba6e-a742ce877a38@linux.com>
+Date:   Tue, 05 Oct 2021 14:48:47 -0500
+In-Reply-To: <0e847d7f-7bf0-cdd4-ba6e-a742ce877a38@linux.com> (Alexander
+        Popov's message of "Sun, 3 Oct 2021 00:05:56 +0300")
+Message-ID: <87zgrnqmlc.fsf@disp2133>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <202110051004.C4D9EBA0@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1mXqRH-008ayT-2v;;;mid=<87zgrnqmlc.fsf@disp2133>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19LbUxC2F3Wifzbmkmxv5sYTECcq8ioZjc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 10/5/21 10:04 AM, Kees Cook wrote:
-> On Tue, Oct 05, 2021 at 08:39:14AM -0700, Joe Perches wrote:
->> On Tue, 2021-10-05 at 08:26 -0700, Kees Cook wrote:
->>> While discussing how to format the addition of various function
->>> attributes, some "unwritten rules" of ordering surfaced[1]. Capture as
->>> close as possible to Linus's preferences for future reference.
->>> +For example, using this function declaration example::
->>> +
->>> + __init void * __must_check action(enum magic value, size_t size, u8 count,
->>> +				   char *fmt, ...) __printf(4, 5) __malloc;
->>
->> trivia: almost all fmt declarations should be const char *
-> 
-> Heh, good point!
-> 
->>> +Note that for a function **definition** (i.e. the actual function body),
->>> +the compiler does not allow function parameter attributes after the
->>> +function parameters. In these cases, they should go after the storage
->>> +class attributes (e.g. note the changed position of ``__printf(4, 5)``
->>> +below, compared to the **declaration** example above)::
->>> +
->>> + static __always_inline __init __printf(4, 5) void * __must_check action(enum magic value,
->>> +		size_t size, u8 count, char *fmt, ...) __malloc
->>
->> here too, and 80 columns?
-> 
-> Kernel standard is now 100. *shrug*
+Alexander Popov <alex.popov@linux.com> writes:
 
-That's more for exceptions, not the common rule.
-AFAIUI.
+> On 02.10.2021 19:52, Linus Torvalds wrote:
+>> On Sat, Oct 2, 2021 at 4:41 AM Alexander Popov <alex.popov@linux.com> wrote:
+>>>
+>>> And what do you think about the proposed pkill_on_warn?
+>> 
+>> Honestly, I don't see the point.
+>> 
+>> If you can reliably trigger the WARN_ON some way, you can probably
+>> cause more problems by fooling some other process to trigger it.
+>> 
+>> And if it's unintentional, then what does the signal help?
+>> 
+>> So rather than a "rationale" that makes little sense, I'd like to hear
+>> of an actual _use_ case. That's different. That's somebody actually
+>> _using_ that pkill to good effect for some particular load.
+>
+> I was thinking about a use case for you and got an insight.
+>
+> Bugs usually don't come alone. Killing the process that got WARN_ON() prevents
+> possible bad effects **after** the warning. For example, in my exploit for
+> CVE-2019-18683, the kernel warning happens **before** the memory corruption
+> (use-after-free in the V4L2 subsystem).
+> https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+>
+> So pkill_on_warn allows the kernel to stop the process when the first signs of
+> wrong behavior are detected. In other words, proceeding with the code execution
+> from the wrong state can bring more disasters later.
+>
+>> That said, I don't much care in the end. But it sounds like a
+>> pointless option to just introduce yet another behavior to something
+>> that should never happen anyway, and where the actual
+>> honest-to-goodness reason for WARN_ON() existing is already being
+>> fulfilled (ie syzbot has been very effective at flushing things like
+>> that out).
+>
+> Yes, we slowly get rid of kernel warnings.
+> However, the syzbot dashboard still shows a lot of them.
+> Even my small syzkaller setup finds plenty of new warnings.
+> I believe fixing all of them will take some time.
+> And during that time, pkill_on_warn may be a better reaction to WARN_ON() than
+> ignoring and proceeding with the execution.
+>
+> Is that reasonable?
 
-> 
->>> + {
->>> +	...
->>> + }
->>
->> Or just put all the attributes before the storage class... <grumble/chuckle>
-> 
-> I hear ya...
-> 
+I won't comment on the sanity of the feature but I will say that calling
+it oops_on_warn (rather than pkill_on_warn), and using the usual oops
+facilities rather than rolling oops by hand sounds like a better
+implementation.
 
+Especially as calling do_group_exit(SIGKILL) from a random location is
+not a clean way to kill a process.  Strictly speaking it is not even
+killing the process.
 
--- 
-~Randy
+Partly this is just me seeing the introduction of a
+do_group_exit(SIGKILL) call and not likely the maintenance that will be
+needed.  I am still sorting out the problems with other randomly placed
+calls to do_group_exit(SIGKILL) and interactions with ptrace and
+PTRACE_EVENT_EXIT in particular.
+
+Which is a long winded way of saying if I can predictably trigger a
+warning that calls do_group_exit(SIGKILL), on some architectures I can
+use ptrace and  can convert that warning into a way to manipulate the
+kernel stack to have the contents of my choice.
+
+If anyone goes forward with this please use the existing oops
+infrastructure so the ptrace interactions and anything else that comes
+up only needs to be fixed once.
+
+Eric
