@@ -2,84 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61775C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 06:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F52CC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 08:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C322613B5
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 06:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AA66128A
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 08:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231913AbhJEHB1 (ORCPT
+        id S232478AbhJEIam (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 5 Oct 2021 03:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51766 "EHLO
+        Tue, 5 Oct 2021 04:30:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231816AbhJEHB1 (ORCPT
+        with ESMTP id S230286AbhJEIal (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 5 Oct 2021 03:01:27 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD3D8C061745;
-        Mon,  4 Oct 2021 23:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ilnRYqTFf8fyFuSzqW3O0n0QWAQ9g8mOenxw49e75Rg=; b=CMv16MhF/Am98MlSq+aU712wBL
-        Pyz9j6zAixVPnrG/UmZbLboI969n1FF9339/KDL0c9zWrk9r8NSUOEkld8IIssJk5hjXNBq83IqsK
-        PLrx66+Zpc5r58Gi1ZSpR3MV/4YmdoExnqF91dsK7do5qcuLJx3T8MJTJ6K9GoWz0EqUSGLOuMQl8
-        IuO17vFEw78Qnv+wMgHM+LP7Z/z8qQPGjHJXdqN7UuyfKkdUoDPK2U02MnWJqvVnhzgNvtsgTzr+D
-        4wNbQ6TOMEugO8sUEFg1KG1ph17Zzv8S0/Lti3ldMiwnUq9YYG2w82K2g6F+Bit2jMYnW2nVhIfNg
-        3plpBQtQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mXeQ7-0080Dg-EX; Tue, 05 Oct 2021 06:59:23 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8258E9811EE; Tue,  5 Oct 2021 08:59:23 +0200 (CEST)
-Date:   Tue, 5 Oct 2021 08:59:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 04/15] cfi: Add DEFINE_CFI_IMMEDIATE_RETURN_STUB
-Message-ID: <20211005065923.GH4323@worktop.programming.kicks-ass.net>
-References: <20210930180531.1190642-1-samitolvanen@google.com>
- <20210930180531.1190642-5-samitolvanen@google.com>
- <YVsGoJ+NN6wRFi22@hirez.programming.kicks-ass.net>
- <CABCJKudBrHfwR=gQc=9=cfBjR9p5jm65ovSNwzLLEpDUdo6ZPQ@mail.gmail.com>
+        Tue, 5 Oct 2021 04:30:41 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C504CC061745;
+        Tue,  5 Oct 2021 01:28:51 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id d11so21044309ilc.8;
+        Tue, 05 Oct 2021 01:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jxntDmAn7pyc+6bbfF1hzJvhGPEpkzavUN7ynxK4EDM=;
+        b=d0VG/7IwzKhSeSVkEXyX8+vqtEaNLONPlemle0rf98iFOOGAT1E/b6MIx1eAkCmuZC
+         OH3gwqGQwe3RhST5ewUzbkE9JZ1/womyxeYComV+do2cteAaq8eGLjs8Yz5zt1+fTNrN
+         CX5aqkWAetjmhTKa/bJzPWFK2bc9mvX/cVbMBcjBWJsPTQMjKNPQJc3AWKnDyGma1p26
+         LxtuarShq+XOwuQFS1F7eWLtxMxye3pZDXaoTNsAuWSbc/pc+gqezUnVCB054uoPeQYt
+         UpAIXzorrIo6vf0Oq7OAkUsO1oIqtQd8Q+te3kkwko5wpLj0kHJKJrXc0FcXZBdpIGQg
+         1l3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jxntDmAn7pyc+6bbfF1hzJvhGPEpkzavUN7ynxK4EDM=;
+        b=V+MJQWakWfFoIdvx1KXDsa1qsFP0woTpWctOyhfg+J/hHth6N6J1wGX3n6ms1mlXN7
+         RsSNagSA5DeHdtwD/ezsBzDMUdQItVKb81yN9+QjjCBy8joAGopbHGKRdbmJydGKJQck
+         k4HJ4YISa8Mt9T5H6LCwwDZMfS3trBfgpKeO4hWLwNWALcHM5GPVrPlJqtNWJGCeH+qR
+         PVrLE3MsnPp/QIs0nTV8rQPu/g5kywZ6C4VAP9n/iZ1Ru/jqj4FwUOO7A89WjpdlF8fr
+         JI99FVnxjds+bqDYHGec7Pq8Jqm6wCIUcll/01vO7aqFve/wISTeXx5RlkVceQ5exnab
+         3wdA==
+X-Gm-Message-State: AOAM530LHCoT8PIznnlplenEChAY2N2UyyK5yBqM3hvSlxFsTMQi9bri
+        /8oxiuQ1ItjLI+bw2EgR62mZqHgY6caRTrcMOUo=
+X-Google-Smtp-Source: ABdhPJzHm6OHvKeXKD6v6d9vbtQDlLspmnLKVdoMZNAsJtn10HUY8fIMcH41bal7yxgpl0eUvlbYPEn6fvMvsrg8HwI=
+X-Received: by 2002:a05:6e02:1d86:: with SMTP id h6mr2164806ila.5.1633422531046;
+ Tue, 05 Oct 2021 01:28:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABCJKudBrHfwR=gQc=9=cfBjR9p5jm65ovSNwzLLEpDUdo6ZPQ@mail.gmail.com>
+References: <20210930235754.2635912-1-keescook@chromium.org> <87h7dw75gh.fsf@meer.lwn.net>
+In-Reply-To: <87h7dw75gh.fsf@meer.lwn.net>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 5 Oct 2021 10:28:40 +0200
+Message-ID: <CANiq72mTmYCJ4_7KVRMMKCDTMrnE9wCXBKViCMzkW1ErpdZKHg@mail.gmail.com>
+Subject: Re: [PATCH v4] docs: Explain the desired position of function attributes
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 04, 2021 at 12:10:46PM -0700, Sami Tolvanen wrote:
-> On Mon, Oct 4, 2021 at 6:50 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Oct 5, 2021 at 1:57 AM Jonathan Corbet <corbet@lwn.net> wrote:
+>
+> In this case I think we're as close as to consensus as things get.  In
+> the absence of a strong reason to the contrary, I'll apply this before
+> too long.
 
-> > Why DEFINE_CFI_IMMEDIATE_RETURN_STUB() vs __no_cfi attribute that we can
-> > stick on the relvant functions?
-> 
-> To avoid accidentally creating useful gadgets for attackers. For
-> example, while excluding an empty stub isn't necessarily ideal,
-> allowing calls to a function that always returns zero would be worse.
+No strong reason, but there was the question about the `__malloc` in a
+separate line in the second example which seems to contradict the
+declaration and it is not explained otherwise (+ clang-format does it
+differently).
 
-I was afraid you'd say something like that...
-
-> > Because I've got at least one more variant for you :-) See
-> > kernel/static_call.c:__static_call_return0
-> 
-> Does __static_call_return0 ever get called indirectly on architectures
-> that support static calls? If it's always patched into a direct call,
-> the type mismatch isn't an issue.
-
-For x86_64 it should indeed never get called, however if you plan on
-supporting i386 then you need the annotation. Also, it might get called
-on arm64 which is about to grow basic HAVE_STATIC_CALL support.
-
-(and just in case you care about CFI on PPC32, they too grew basic
-static_call support)
+Cheers,
+Miguel
