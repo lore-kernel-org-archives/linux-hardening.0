@@ -2,160 +2,107 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F03EC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 19:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6CEC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 20:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2694B61371
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 19:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2751E60F44
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Oct 2021 20:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231266AbhJETvZ (ORCPT
+        id S235957AbhJEUbG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 5 Oct 2021 15:51:25 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:55402 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbhJETvY (ORCPT
+        Tue, 5 Oct 2021 16:31:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232250AbhJEUbF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 5 Oct 2021 15:51:24 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51]:54136)
-        by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1mXqRI-00BOhD-Fk; Tue, 05 Oct 2021 13:49:24 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:41390 helo=email.xmission.com)
-        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1mXqRH-008ayT-2v; Tue, 05 Oct 2021 13:49:24 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will.deacon@arm.com>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-hardening@vger.kernel.org,
-        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        notify@kernel.org
-References: <20210929185823.499268-1-alex.popov@linux.com>
-        <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
-        <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1>
-        <YVWAPXSzFNbHz6+U@alley>
-        <CAHk-=widOm3FXMPXXK0cVaoFuy3jCk65=5VweLceQCuWdep=Hg@mail.gmail.com>
-        <ba67ead7-f075-e7ad-3274-d9b2bc4c1f44@linux.com>
-        <CAHk-=whrLuVEC0x+XzYUNV2de5kM-k39GkJWwviQNuCdZ0nfKg@mail.gmail.com>
-        <0e847d7f-7bf0-cdd4-ba6e-a742ce877a38@linux.com>
-Date:   Tue, 05 Oct 2021 14:48:47 -0500
-In-Reply-To: <0e847d7f-7bf0-cdd4-ba6e-a742ce877a38@linux.com> (Alexander
-        Popov's message of "Sun, 3 Oct 2021 00:05:56 +0300")
-Message-ID: <87zgrnqmlc.fsf@disp2133>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 5 Oct 2021 16:31:05 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9B70C061749
+        for <linux-hardening@vger.kernel.org>; Tue,  5 Oct 2021 13:29:14 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id q189so530812ybq.1
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Oct 2021 13:29:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OcQv/s+1PQ0ZjDCw+SRTOFCxUQmvWoG+IaGmgRCu54s=;
+        b=MW14OSQ1gFA4P7702EgFpqM3qR3T4ysOSPqEqQduRialXr2rl+z6u1qfBew5gCMwxP
+         He0OejT6iuY2z8ccXO2nJN2cvrfEb3xsVI2LTu9Dq+HbqvZLLzKClVUbl2lCw2cxayay
+         bjMlUpJL4oXj88XjInk7lSQBsjgghYRFeZq66op4EtfF4MEf07gQqOJGAKnMo6LR6R9r
+         agZjlErLE9uBq3uzftWy/5vlpMpuF6hapb8jPGMhmMdwnb9oLoHxfLKXAfGCQnV/ckZO
+         tIyrfw0Q9PYNgG8xvztQ+v6/B+DG1lxyTv5RrdFo4HqZ5OApN9bxwaDHd6NWUiP+MZEp
+         wSng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OcQv/s+1PQ0ZjDCw+SRTOFCxUQmvWoG+IaGmgRCu54s=;
+        b=J+n9HKsgx5aTuBJ/i5GDZBiOmwtOUTTfFPOD3Tfl9r2HgLeEVRCI+Hz1AFrxfebE9V
+         M1rtrHHmHvVZF3s4x40rjxyUSdYePjqN3P345F847Fz5MeX4Vav6wEHHugFPv9M0iLVa
+         HD4Yu2wCrR2ozWcgA2hDZbZ6ZzY/lA/ozJtLaFmTjOLX+Qc3cBnlRCQImKXtqTMcfyXO
+         3NCQal7WkB57dw599SHPXUmKV4nmztU48IQdZH6AZeRX68U4+o8UfxQtRUC6D0ImeUtr
+         +Jlac3g78UThVXMm42e41d1IWZloUKUaTtz5RnZ2A+iAoW5gijzj0CkZ9eJKZtm0iriz
+         VBNw==
+X-Gm-Message-State: AOAM533Ha4JnONQljMI8cVZeK8NjsKZuSuIA2P8pQIlTUutf95w/GY5p
+        RAZYjCmYH+otizz9d5ss2rlp+wwaG0iI0T+KSwbmgQ==
+X-Google-Smtp-Source: ABdhPJzJsAm0jIvkO40dr+sZFTs2tR+7kzjFwmvCvA4ilABfEgSVApT0Rz05CRz9lseERDmx31G5dQQz6jq8IE2Ituw=
+X-Received: by 2002:a25:cf8f:: with SMTP id f137mr26144522ybg.338.1633465753946;
+ Tue, 05 Oct 2021 13:29:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1mXqRH-008ayT-2v;;;mid=<87zgrnqmlc.fsf@disp2133>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19LbUxC2F3Wifzbmkmxv5sYTECcq8ioZjc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20210930180531.1190642-1-samitolvanen@google.com>
+ <20210930180531.1190642-5-samitolvanen@google.com> <YVsGoJ+NN6wRFi22@hirez.programming.kicks-ass.net>
+ <CABCJKudBrHfwR=gQc=9=cfBjR9p5jm65ovSNwzLLEpDUdo6ZPQ@mail.gmail.com> <20211005065923.GH4323@worktop.programming.kicks-ass.net>
+In-Reply-To: <20211005065923.GH4323@worktop.programming.kicks-ass.net>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Tue, 5 Oct 2021 13:29:02 -0700
+Message-ID: <CABCJKud1Gm0ouROKLAw9t03qbs+_EASky053=SqijPJahqogng@mail.gmail.com>
+Subject: Re: [PATCH v4 04/15] cfi: Add DEFINE_CFI_IMMEDIATE_RETURN_STUB
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Alexander Popov <alex.popov@linux.com> writes:
-
-> On 02.10.2021 19:52, Linus Torvalds wrote:
->> On Sat, Oct 2, 2021 at 4:41 AM Alexander Popov <alex.popov@linux.com> wrote:
->>>
->>> And what do you think about the proposed pkill_on_warn?
->> 
->> Honestly, I don't see the point.
->> 
->> If you can reliably trigger the WARN_ON some way, you can probably
->> cause more problems by fooling some other process to trigger it.
->> 
->> And if it's unintentional, then what does the signal help?
->> 
->> So rather than a "rationale" that makes little sense, I'd like to hear
->> of an actual _use_ case. That's different. That's somebody actually
->> _using_ that pkill to good effect for some particular load.
+On Mon, Oct 4, 2021 at 11:59 PM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> I was thinking about a use case for you and got an insight.
+> On Mon, Oct 04, 2021 at 12:10:46PM -0700, Sami Tolvanen wrote:
+> > On Mon, Oct 4, 2021 at 6:50 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> Bugs usually don't come alone. Killing the process that got WARN_ON() prevents
-> possible bad effects **after** the warning. For example, in my exploit for
-> CVE-2019-18683, the kernel warning happens **before** the memory corruption
-> (use-after-free in the V4L2 subsystem).
-> https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+> > > Why DEFINE_CFI_IMMEDIATE_RETURN_STUB() vs __no_cfi attribute that we can
+> > > stick on the relvant functions?
+> >
+> > To avoid accidentally creating useful gadgets for attackers. For
+> > example, while excluding an empty stub isn't necessarily ideal,
+> > allowing calls to a function that always returns zero would be worse.
 >
-> So pkill_on_warn allows the kernel to stop the process when the first signs of
-> wrong behavior are detected. In other words, proceeding with the code execution
-> from the wrong state can bring more disasters later.
+> I was afraid you'd say something like that...
 >
->> That said, I don't much care in the end. But it sounds like a
->> pointless option to just introduce yet another behavior to something
->> that should never happen anyway, and where the actual
->> honest-to-goodness reason for WARN_ON() existing is already being
->> fulfilled (ie syzbot has been very effective at flushing things like
->> that out).
+> > > Because I've got at least one more variant for you :-) See
+> > > kernel/static_call.c:__static_call_return0
+> >
+> > Does __static_call_return0 ever get called indirectly on architectures
+> > that support static calls? If it's always patched into a direct call,
+> > the type mismatch isn't an issue.
 >
-> Yes, we slowly get rid of kernel warnings.
-> However, the syzbot dashboard still shows a lot of them.
-> Even my small syzkaller setup finds plenty of new warnings.
-> I believe fixing all of them will take some time.
-> And during that time, pkill_on_warn may be a better reaction to WARN_ON() than
-> ignoring and proceeding with the execution.
->
-> Is that reasonable?
+> For x86_64 it should indeed never get called, however if you plan on
+> supporting i386 then you need the annotation. Also, it might get called
+> on arm64 which is about to grow basic HAVE_STATIC_CALL support.
 
-I won't comment on the sanity of the feature but I will say that calling
-it oops_on_warn (rather than pkill_on_warn), and using the usual oops
-facilities rather than rolling oops by hand sounds like a better
-implementation.
+Good point. I read through the latest arm64 static call proposal and
+while it can fall back to an indirect call, it doesn't look like that
+would cause issues with CFI.
 
-Especially as calling do_group_exit(SIGKILL) from a random location is
-not a clean way to kill a process.  Strictly speaking it is not even
-killing the process.
+> (and just in case you care about CFI on PPC32, they too grew basic
+> static_call support)
 
-Partly this is just me seeing the introduction of a
-do_group_exit(SIGKILL) call and not likely the maintenance that will be
-needed.  I am still sorting out the problems with other randomly placed
-calls to do_group_exit(SIGKILL) and interactions with ptrace and
-PTRACE_EVENT_EXIT in particular.
+We are currently targeting only x86_64 and arm64, but I'll keep that
+in mind in case we want to add more platforms.
 
-Which is a long winded way of saying if I can predictably trigger a
-warning that calls do_group_exit(SIGKILL), on some architectures I can
-use ptrace and  can convert that warning into a way to manipulate the
-kernel stack to have the contents of my choice.
-
-If anyone goes forward with this please use the existing oops
-infrastructure so the ptrace interactions and anything else that comes
-up only needs to be fixed once.
-
-Eric
+Sami
