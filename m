@@ -2,158 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15694C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 04:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C827BC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 09:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E776D611F0
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 04:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E91B6117A
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 09:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229861AbhJFEym (ORCPT
+        id S230071AbhJFJbk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Oct 2021 00:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
+        Wed, 6 Oct 2021 05:31:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbhJFEym (ORCPT
+        with ESMTP id S229874AbhJFJbk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Oct 2021 00:54:42 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6842BC061753
-        for <linux-hardening@vger.kernel.org>; Tue,  5 Oct 2021 21:52:50 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id x27so5061333lfu.5
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Oct 2021 21:52:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3KNLEP17J4fGFGePafL9e/em5qLyI4/H75ODeeqFPy4=;
-        b=CaOWAOrwZbSOE5dR3MqwfrmPYlqUVOLLG6p1aODud/NwXWJQiRS5FhtR2EQZX8kY5m
-         7Ecehb4y6Skh2dqABZH6BcO1ivS01STlLtgU6rYr4X8l9ZdhQsrxdzKCZYqiQxsX04n4
-         RQx6CMFvAj8EzVHPEuI2uPckqFLkFZg5NV4y7hbH0ArIIQ6UZKmh/wBXA1CUlF6ZmWKw
-         CeSu9cAiBP0WlSrHFkrisOU97HOwvbdx6OnjCEX6rSrIQVDmZn5LXFYvwtopuDuJlJTR
-         3OB1sBumZXVU1owfxavZ008gv6hlsiHPcCMfRiGz3S15Jnf+obS6yrzmoiLKvZCwB/TM
-         xhPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3KNLEP17J4fGFGePafL9e/em5qLyI4/H75ODeeqFPy4=;
-        b=H5pcOKqnHtMkgQCtrGkrIhmo+MExWrEaqHncOzsVhVvITOD60i9v7lESwL37Cc5kxo
-         Oj72vc4NUgsVVxypyayhXgYL1EZta1j82QyZff8aMx/eX9Xwlp6CSNEJc1UEEVQccxaq
-         nH54fbXMhzy/+CybGoVS/nexjz7W5e9/G5wysEY+4mzpAPBUBor2tdw21ID0kHXVqVUB
-         GWzJHYACifFyKNH3oy3dSdfNm3RYQ4WacJeTb1mjI3jpMKT/iovWgtnh/+3JWndgYW3j
-         K5QG1AXtlWGkTtFa8N7Xf+TOOBqJ2rtROxUQQdCKzIeqWoZTXDQXwDjDVBHvVPOrPYYW
-         1pCg==
-X-Gm-Message-State: AOAM533dTS16+WTDrBjnksLX/x3fV0W2IdGQorgMKQarcxS0DgEHm+AF
-        FFaQ2aGstDcLG7qhC9VvpixhYOvq6susiGMWNIB2qg==
-X-Google-Smtp-Source: ABdhPJxpUZzFJ/6ioAhBGcD9vzEImJPunmpEp6cj/Rk2Cc1xOWjoRZ7tWmMKzDF3Pm9+uwpJa5b8o2ZEyoA6j2g2vus=
-X-Received: by 2002:ac2:4f01:: with SMTP id k1mr7561021lfr.157.1633495968423;
- Tue, 05 Oct 2021 21:52:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210930222704.2631604-1-keescook@chromium.org>
- <20210930222704.2631604-5-keescook@chromium.org> <20211005184717.65c6d8eb39350395e387b71f@linux-foundation.org>
- <202110052002.34E998B@keescook> <CAG48ez19raco+s+UF8eiXqTvaDEoMAo6_qmW2KdO24QDpmZpFQ@mail.gmail.com>
- <202110052056.F09CD8A@keescook>
-In-Reply-To: <202110052056.F09CD8A@keescook>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 6 Oct 2021 06:52:21 +0200
-Message-ID: <CAG48ez30MS2sNQX1Sb-MDF7SbLEbD8p0ncOvQteyj38fygG8bQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] slab: Add __alloc_size attributes for better
- bounds checking
+        Wed, 6 Oct 2021 05:31:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57039C061749;
+        Wed,  6 Oct 2021 02:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xZm5kVAF4GxyNSQZ7ZpOau+eXzycMw18CKyxakwvLK0=; b=MsowkM4j330OoqazuiCLUkS12v
+        0l/QXqv2Jr5/OD4UfzpYfX6FTQRL8FJrnx7EpfUdSugz9De2lf+7UvElkBwHUZQWrWk9DycjEUW/y
+        RKdtSqaF6cCjVGVZ2uZAzdZ7wYtI6RbSkvUustWEpDVM+Fos8p7zvb0GXtjpFDsZZNhHeCUNRWzn8
+        9FJmxWlgOWhxmfHwP5w0EPP+Yenfi5f1jm4ZAzEzDY8TqQAt9mHYslHO/8dM1gZjNoZ/8be2N88va
+        cbSJnpfpManE8le/U3T7Nn4htugwSbVSg+ZAbfD6Hc6dFSHOnMLFN4sClBAbndu2DcxhhAfo3oLVV
+        cFvMbnkg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mY3Ca-000jrQ-LV; Wed, 06 Oct 2021 09:27:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0C79730019C;
+        Wed,  6 Oct 2021 11:27:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E47CE2136BA84; Wed,  6 Oct 2021 11:27:03 +0200 (CEST)
+Date:   Wed, 6 Oct 2021 11:27:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux@googlegroups.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] sched: task_struct: Fill unconditional hole induced by
+ sched_entity
+Message-ID: <YV1r57V3baZIs8dl@hirez.programming.kicks-ass.net>
+References: <20210924025450.4138503-1-keescook@chromium.org>
+ <202110052146.D639C70@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202110052146.D639C70@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 6, 2021 at 5:56 AM Kees Cook <keescook@chromium.org> wrote:
-> On Wed, Oct 06, 2021 at 05:22:06AM +0200, Jann Horn wrote:
-> > On Wed, Oct 6, 2021 at 5:06 AM Kees Cook <keescook@chromium.org> wrote:
-> > > On Tue, Oct 05, 2021 at 06:47:17PM -0700, Andrew Morton wrote:
-> > > > On Thu, 30 Sep 2021 15:27:00 -0700 Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > > As already done in GrapheneOS, add the __alloc_size attribute for regular
-> > > > > kmalloc interfaces, to provide additional hinting for better bounds
-> > > > > checking, assisting CONFIG_FORTIFY_SOURCE and other compiler
-> > > > > optimizations.
-> > > >
-> > > > x86_64 allmodconfig:
-> > >
-> > > What compiler and version?
-> > >
-> > > >
-> > > > In file included from ./arch/x86/include/asm/preempt.h:7,
-> > > >                  from ./include/linux/preempt.h:78,
-> > > >                  from ./include/linux/spinlock.h:55,
-> > > >                  from ./include/linux/mmzone.h:8,
-> > > >                  from ./include/linux/gfp.h:6,
-> > > >                  from ./include/linux/mm.h:10,
-> > > >                  from ./include/linux/mman.h:5,
-> > > >                  from lib/test_kasan_module.c:10:
-> > > > In function 'check_copy_size',
-> > > >     inlined from 'copy_user_test' at ./include/linux/uaccess.h:191:6:
-> > > > ./include/linux/thread_info.h:213:4: error: call to '__bad_copy_to' declared with attribute error: copy destination size is too small
-> > > >   213 |    __bad_copy_to();
-> > > >       |    ^~~~~~~~~~~~~~~
-> > > > In function 'check_copy_size',
-> > > >     inlined from 'copy_user_test' at ./include/linux/uaccess.h:199:6:
-> > > > ./include/linux/thread_info.h:211:4: error: call to '__bad_copy_from' declared with attribute error: copy source size is too small
-> > > >   211 |    __bad_copy_from();
-> > > >       |    ^~~~~~~~~~~~~~~~~
-> > > > make[1]: *** [lib/test_kasan_module.o] Error 1
-> > > > make: *** [lib] Error 2
-> > >
-> > > Hah, yes, it caught an intentionally bad copy. This may bypass the
-> > > check, as I've had to do in LKDTM before. I will test...
-> > >
-> > > diff --git a/lib/test_kasan_module.c b/lib/test_kasan_module.c
-> > > index 7ebf433edef3..9fb2fb2937da 100644
-> > > --- a/lib/test_kasan_module.c
-> > > +++ b/lib/test_kasan_module.c
-> > > @@ -19,7 +19,12 @@ static noinline void __init copy_user_test(void)
-> > >  {
-> > >         char *kmem;
-> > >         char __user *usermem;
-> > > -       size_t size = 128 - KASAN_GRANULE_SIZE;
-> > > +       /*
-> > > +        * This is marked volatile to avoid __alloc_size()
-> > > +        * noticing the intentionally out-of-bounds copys
-> > > +        * being done on the allocation.
-> > > +        */
-> > > +       volatile size_t size = 128 - KASAN_GRANULE_SIZE;
-> >
-> > Maybe OPTIMIZER_HIDE_VAR()? The normal version of that abuses an empty
-> > asm statement to hide the value from the compiler.
->
-> Oh! I hadn't seen that before. Is that better than volatile in this
-> case?
+On Tue, Oct 05, 2021 at 09:48:51PM -0700, Kees Cook wrote:
+> On Thu, Sep 23, 2021 at 07:54:50PM -0700, Kees Cook wrote:
+> > With struct sched_entity before the other sched entities, its alignment
+> > won't induce a struct hole. This saves 64 bytes in defconfig task_struct:
+> 
+> Friendly ping. Can someone snag this for -tip please?
 
-It forces the compiler to assume an arbitrary modification of the
-value, but doesn't force allocation of a stack slot like "volatile"
-does, so it probably generates nicer code? Not that it really matters here...
+Hurpmf... if only we had like perf driven pahole output :/
 
-It also has the difference that you can explicitly specify where the
-compiler's analysis should cut off, instead of just doing it on every
-access to a variable. But I guess maybe in this case, that's an
-argument in favor of "volatile"? I don't know... I guess maybe
-"volatile" does make sense here.
+Picked it up, we'll see what if anything hurts.
