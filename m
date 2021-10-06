@@ -2,94 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDAFC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 00:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF76EC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 01:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E52A161108
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 00:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC25C6120D
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 01:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236969AbhJFAx2 (ORCPT
+        id S237059AbhJFBtL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 5 Oct 2021 20:53:28 -0400
-Received: from smtprelay0097.hostedemail.com ([216.40.44.97]:39696 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230218AbhJFAx2 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 5 Oct 2021 20:53:28 -0400
-Received: from omf17.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 8E2E1837F24A;
-        Wed,  6 Oct 2021 00:51:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf17.hostedemail.com (Postfix) with ESMTPA id AFB4F27DD2E;
-        Wed,  6 Oct 2021 00:51:33 +0000 (UTC)
-Message-ID: <b59c7f33ff9c8443cf08204ec37383d734fbbf60.camel@perches.com>
-Subject: Re: [PATCH v5] docs: Explain the desired position of function
- attributes
-From:   Joe Perches <joe@perches.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tue, 5 Oct 2021 21:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229908AbhJFBtL (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 5 Oct 2021 21:49:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9D00A611CC;
+        Wed,  6 Oct 2021 01:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1633484838;
+        bh=Xt+wZ6PkpbqGmpCET0SN48ylqvwvPAINuGHGp2TK1uY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IxA2DMOOXNCn02Sbwsru0IXmgNMs9rv4nMcyqr06+2YctzkpKzNPO6CCXPdKM1Np0
+         t7lmbu0FEO37bLus65CjV0G166hksDhs7XFigmUyv4IM9aFkaL9zjCRpK2rOMsWEqX
+         EkL6cytWknEjtB//VUBv0jEX19efvyxzhNHUIrns=
+Date:   Tue, 5 Oct 2021 18:47:17 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andy Whitcroft <apw@canonical.com>,
+        Dennis Zhou <dennis@kernel.org>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 05 Oct 2021 17:51:31 -0700
-In-Reply-To: <742567f3-f043-6fab-235a-5835ca025f54@infradead.org>
-References: <20211005152611.4120605-1-keescook@chromium.org>
-         <7f6e53d04849daabd3e85c23f9974b2eb4a20c13.camel@perches.com>
-         <202110051004.C4D9EBA0@keescook>
-         <742567f3-f043-6fab-235a-5835ca025f54@infradead.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.0-1 
-MIME-Version: 1.0
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 4/8] slab: Add __alloc_size attributes for better
+ bounds checking
+Message-Id: <20211005184717.65c6d8eb39350395e387b71f@linux-foundation.org>
+In-Reply-To: <20210930222704.2631604-5-keescook@chromium.org>
+References: <20210930222704.2631604-1-keescook@chromium.org>
+        <20210930222704.2631604-5-keescook@chromium.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 1prmcwyjmgygdxkfhijpkjwfsy6hinz9
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: AFB4F27DD2E
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX19BpTF+UZGYfSoG/T6NSdvICE9NN8lR8bk=
-X-HE-Tag: 1633481493-933631
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2021-10-05 at 12:15 -0700, Randy Dunlap wrote:
-> On 10/5/21 10:04 AM, Kees Cook wrote:
-> > On Tue, Oct 05, 2021 at 08:39:14AM -0700, Joe Perches wrote:
-> > > On Tue, 2021-10-05 at 08:26 -0700, Kees Cook wrote:
-> > > > While discussing how to format the addition of various function
-> > > > attributes, some "unwritten rules" of ordering surfaced[1]. Capture as
-> > > > close as possible to Linus's preferences for future reference.
-> > > > +For example, using this function declaration example::
-> > > > +
-> > > > + __init void * __must_check action(enum magic value, size_t size, u8 count,
-> > > > +				   char *fmt, ...) __printf(4, 5) __malloc;
-> > > 
-> > > trivia: almost all fmt declarations should be const char *
-> > 
-> > Heh, good point!
-> > 
-> > > > +Note that for a function **definition** (i.e. the actual function body),
-> > > > +the compiler does not allow function parameter attributes after the
-> > > > +function parameters. In these cases, they should go after the storage
-> > > > +class attributes (e.g. note the changed position of ``__printf(4, 5)``
-> > > > +below, compared to the **declaration** example above)::
-> > > > +
-> > > > + static __always_inline __init __printf(4, 5) void * __must_check action(enum magic value,
-> > > > +		size_t size, u8 count, char *fmt, ...) __malloc
-> > > 
-> > > here too, and 80 columns?
-> > 
-> > Kernel standard is now 100. *shrug*
-> 
-> That's more for exceptions, not the common rule.
-> AFAIUI.
+On Thu, 30 Sep 2021 15:27:00 -0700 Kees Cook <keescook@chromium.org> wrote:
 
-And for function definitions that are not static inline, when
-separate function declarations exist, the function definition
-does not need any attribute marking at all.
+> As already done in GrapheneOS, add the __alloc_size attribute for regular
+> kmalloc interfaces, to provide additional hinting for better bounds
+> checking, assisting CONFIG_FORTIFY_SOURCE and other compiler
+> optimizations.
 
+x86_64 allmodconfig:
+
+In file included from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:55,
+                 from ./include/linux/mmzone.h:8,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/mm.h:10,
+                 from ./include/linux/mman.h:5,
+                 from lib/test_kasan_module.c:10:
+In function 'check_copy_size',
+    inlined from 'copy_user_test' at ./include/linux/uaccess.h:191:6:
+./include/linux/thread_info.h:213:4: error: call to '__bad_copy_to' declared with attribute error: copy destination size is too small
+  213 |    __bad_copy_to();
+      |    ^~~~~~~~~~~~~~~
+In function 'check_copy_size',
+    inlined from 'copy_user_test' at ./include/linux/uaccess.h:199:6:
+./include/linux/thread_info.h:211:4: error: call to '__bad_copy_from' declared with attribute error: copy source size is too small
+  211 |    __bad_copy_from();
+      |    ^~~~~~~~~~~~~~~~~
+make[1]: *** [lib/test_kasan_module.o] Error 1
+make: *** [lib] Error 2
 
