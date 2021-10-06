@@ -2,136 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D56EC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 11:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632F2C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 12:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6FE6113E
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 11:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D3D61039
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 12:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238167AbhJFLkn (ORCPT
+        id S231356AbhJFM4J (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Oct 2021 07:40:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:59664 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238143AbhJFLkm (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Oct 2021 07:40:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB9DB1FB;
-        Wed,  6 Oct 2021 04:38:50 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.22.219])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E72033F70D;
-        Wed,  6 Oct 2021 04:38:46 -0700 (PDT)
-Date:   Wed, 6 Oct 2021 12:38:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kasan: test: Bypass __alloc_size checks
-Message-ID: <20211006113732.GA14159@C02TD0UTHF1T.local>
-References: <20211006035522.539346-1-keescook@chromium.org>
+        Wed, 6 Oct 2021 08:56:09 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:65227 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231259AbhJFM4J (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 6 Oct 2021 08:56:09 -0400
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 196CrtAO003873;
+        Wed, 6 Oct 2021 21:53:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 196CrtAO003873
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1633524836;
+        bh=2urYqRpQOPLkXeqFaqK5WGjp3qwohqBRnzDNoFyjX5E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AkytsekUP+8dLZwCyk5z0xPlkYm/8Mp0dfCnumdu2uc/fgnYuV5MSYN6RosJo3hRB
+         wugNicRKwHBj3Gh1+jMX079WrZOi+davLkaACgA2Ravi8eriW8Gyy5XUF9gZtWet1f
+         PNwVFcEj8utSj6ZFJO1sDbtHIidOU09WO6JjStCJ/B/BpX5B7etevd1hDnniJK7hyo
+         olNWIo47pC1BzTWcQOxKb4xRnZhuIGlLj2G8kdUs2Y/U1CHXiryEljufWt3JDE87Lp
+         EU8SLUy7fDqQYtvjCixvBQbXTn2v9NL8LRngVGknFOkbrAAT/jdeYswWk0mVURTkFZ
+         eQIkX//kJRsDA==
+X-Nifty-SrcIP: [209.85.216.53]
+Received: by mail-pj1-f53.google.com with SMTP id na16-20020a17090b4c1000b0019f5bb661f9so2261176pjb.0;
+        Wed, 06 Oct 2021 05:53:56 -0700 (PDT)
+X-Gm-Message-State: AOAM531TaeeSCRqPpGaRbCiq/nho/eCcbSJOCCkrR+5Q7EE2ismK9qSY
+        z6lDT6QlZUXhFKA3dY01+uhvJV6KgDAzApKws5w=
+X-Google-Smtp-Source: ABdhPJwtZ1OJRVKlgVuSgn4O8szQOkDxdm0+QT605WYDW9qZNXDVj5R8bLV+NjFqsV6Wjz7uCmiLbK7ponM2TPTHoFY=
+X-Received: by 2002:a17:90a:9306:: with SMTP id p6mr10777738pjo.119.1633524835305;
+ Wed, 06 Oct 2021 05:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211006035522.539346-1-keescook@chromium.org>
+References: <20210923215418.3936726-1-keescook@chromium.org>
+ <YU1WYLN4eptJhuIX@deb-nschier.ads.avm.de> <202110052144.25B30F2D4F@keescook>
+In-Reply-To: <202110052144.25B30F2D4F@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 6 Oct 2021 21:53:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASWgdULqBJMQMkoy=mXtAj_xxcYXXXi0wYojMkWW4ktGA@mail.gmail.com>
+Message-ID: <CAK7LNASWgdULqBJMQMkoy=mXtAj_xxcYXXXi0wYojMkWW4ktGA@mail.gmail.com>
+Subject: Re: [PATCH] sparc: Add missing "FORCE" target when using if_changed
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Nicolas Schier <n.schier@avm.de>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+On Wed, Oct 6, 2021 at 1:45 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Sep 24, 2021 at 06:38:56AM +0200, Nicolas Schier wrote:
+> > On Thu, Sep 23, 2021 at 02:54:18PM -0700, Kees Cook wrote:
+> > > Fix observed warning:
+> > >
+> > >     /builds/linux/arch/sparc/boot/Makefile:35: FORCE prerequisite is missing
+> > >
+> > > Fixes: e1f86d7b4b2a5213 ("kbuild: warn if FORCE is missing for if_changed(_dep,_rule) and filechk")
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > > Cc: sparclinux@vger.kernel.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> >
+> > Acked-by: Nicolas Schier <n.schier@avm.de>
+>
+> Thanks!
+>
+> Masahiro, are you able to add this to your kbuild tree?
 
-On Tue, Oct 05, 2021 at 08:55:22PM -0700, Kees Cook wrote:
-> Intentional overflows, as performed by the KASAN tests, are detected
-> at compile time[1] (instead of only at run-time) with the addition of
-> __alloc_size. Fix this by forcing the compiler into not being able to
-> trust the size used following the kmalloc()s.
+Sure, applied to linux-kbuild. Thanks.
 
-It might be better to use OPTIMIZER_HIDE_VAR(), since that's intended to
-make the value opaque to the compiler, and volatile might not always do
-that depending on how the compiler tracks the variable.
 
-Thanks,
-Mark.
+> -Kees
+>
+> >
+> > > ---
+> > > I'm not sure if this should go via sparc or via kbuild. :)
+> > > ---
+> > >  arch/sparc/boot/Makefile | 8 ++++----
+> > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/arch/sparc/boot/Makefile b/arch/sparc/boot/Makefile
+> > > index 849236d4eca4..45e5c76d449e 100644
+> > > --- a/arch/sparc/boot/Makefile
+> > > +++ b/arch/sparc/boot/Makefile
+> > > @@ -22,7 +22,7 @@ ifeq ($(CONFIG_SPARC64),y)
+> > >
+> > >  # Actual linking
+> > >
+> > > -$(obj)/zImage: $(obj)/image
+> > > +$(obj)/zImage: $(obj)/image FORCE
+> > >     $(call if_changed,gzip)
+> > >     @echo '  kernel: $@ is ready'
+> > >
+> > > @@ -31,7 +31,7 @@ $(obj)/vmlinux.aout: vmlinux FORCE
+> > >     @echo '  kernel: $@ is ready'
+> > >  else
+> > >
+> > > -$(obj)/zImage: $(obj)/image
+> > > +$(obj)/zImage: $(obj)/image FORCE
+> > >     $(call if_changed,strip)
+> > >     @echo '  kernel: $@ is ready'
+> > >
+> > > @@ -44,7 +44,7 @@ OBJCOPYFLAGS_image.bin := -S -O binary -R .note -R .comment
+> > >  $(obj)/image.bin: $(obj)/image FORCE
+> > >     $(call if_changed,objcopy)
+> > >
+> > > -$(obj)/image.gz: $(obj)/image.bin
+> > > +$(obj)/image.gz: $(obj)/image.bin FORCE
+> > >     $(call if_changed,gzip)
+> > >
+> > >  UIMAGE_LOADADDR = $(CONFIG_UBOOT_LOAD_ADDR)
+> > > @@ -56,7 +56,7 @@ quiet_cmd_uimage.o = UIMAGE.O $@
+> > >                       -r -b binary $@ -o $@.o
+> > >
+> > >  targets += uImage
+> > > -$(obj)/uImage: $(obj)/image.gz
+> > > +$(obj)/uImage: $(obj)/image.gz FORCE
+> > >     $(call if_changed,uimage)
+> > >     $(call if_changed,uimage.o)
+> > >     @echo '  Image $@ is ready'
+> > > --
+> > > 2.30.2
+> > >
+>
+> --
+> Kees Cook
 
-> 
-> [1] https://lore.kernel.org/lkml/20211005184717.65c6d8eb39350395e387b71f@linux-foundation.org
-> 
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: kasan-dev@googlegroups.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  lib/test_kasan.c        | 10 +++++-----
->  lib/test_kasan_module.c |  2 +-
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 8835e0784578..0e1f8d5281b4 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -435,7 +435,7 @@ static void kmalloc_uaf_16(struct kunit *test)
->  static void kmalloc_oob_memset_2(struct kunit *test)
->  {
->  	char *ptr;
-> -	size_t size = 128 - KASAN_GRANULE_SIZE;
-> +	volatile size_t size = 128 - KASAN_GRANULE_SIZE;
->  
->  	ptr = kmalloc(size, GFP_KERNEL);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> @@ -447,7 +447,7 @@ static void kmalloc_oob_memset_2(struct kunit *test)
->  static void kmalloc_oob_memset_4(struct kunit *test)
->  {
->  	char *ptr;
-> -	size_t size = 128 - KASAN_GRANULE_SIZE;
-> +	volatile size_t size = 128 - KASAN_GRANULE_SIZE;
->  
->  	ptr = kmalloc(size, GFP_KERNEL);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> @@ -459,7 +459,7 @@ static void kmalloc_oob_memset_4(struct kunit *test)
->  static void kmalloc_oob_memset_8(struct kunit *test)
->  {
->  	char *ptr;
-> -	size_t size = 128 - KASAN_GRANULE_SIZE;
-> +	volatile size_t size = 128 - KASAN_GRANULE_SIZE;
->  
->  	ptr = kmalloc(size, GFP_KERNEL);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> @@ -471,7 +471,7 @@ static void kmalloc_oob_memset_8(struct kunit *test)
->  static void kmalloc_oob_memset_16(struct kunit *test)
->  {
->  	char *ptr;
-> -	size_t size = 128 - KASAN_GRANULE_SIZE;
-> +	volatile size_t size = 128 - KASAN_GRANULE_SIZE;
->  
->  	ptr = kmalloc(size, GFP_KERNEL);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> @@ -483,7 +483,7 @@ static void kmalloc_oob_memset_16(struct kunit *test)
->  static void kmalloc_oob_in_memset(struct kunit *test)
->  {
->  	char *ptr;
-> -	size_t size = 128 - KASAN_GRANULE_SIZE;
-> +	volatile size_t size = 128 - KASAN_GRANULE_SIZE;
->  
->  	ptr = kmalloc(size, GFP_KERNEL);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> diff --git a/lib/test_kasan_module.c b/lib/test_kasan_module.c
-> index 7ebf433edef3..c8cc77b1dcf3 100644
-> --- a/lib/test_kasan_module.c
-> +++ b/lib/test_kasan_module.c
-> @@ -19,7 +19,7 @@ static noinline void __init copy_user_test(void)
->  {
->  	char *kmem;
->  	char __user *usermem;
-> -	size_t size = 128 - KASAN_GRANULE_SIZE;
-> +	volatile size_t size = 128 - KASAN_GRANULE_SIZE;
->  	int __maybe_unused unused;
->  
->  	kmem = kmalloc(size, GFP_KERNEL);
-> -- 
-> 2.30.2
-> 
+
+
+-- 
+Best Regards
+Masahiro Yamada
