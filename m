@@ -2,143 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632F2C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 12:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DB9C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 13:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45D3D61039
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 12:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03029610A1
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 13:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231356AbhJFM4J (ORCPT
+        id S230008AbhJFNEo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Oct 2021 08:56:09 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:65227 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231259AbhJFM4J (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Oct 2021 08:56:09 -0400
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 196CrtAO003873;
-        Wed, 6 Oct 2021 21:53:56 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 196CrtAO003873
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1633524836;
-        bh=2urYqRpQOPLkXeqFaqK5WGjp3qwohqBRnzDNoFyjX5E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AkytsekUP+8dLZwCyk5z0xPlkYm/8Mp0dfCnumdu2uc/fgnYuV5MSYN6RosJo3hRB
-         wugNicRKwHBj3Gh1+jMX079WrZOi+davLkaACgA2Ravi8eriW8Gyy5XUF9gZtWet1f
-         PNwVFcEj8utSj6ZFJO1sDbtHIidOU09WO6JjStCJ/B/BpX5B7etevd1hDnniJK7hyo
-         olNWIo47pC1BzTWcQOxKb4xRnZhuIGlLj2G8kdUs2Y/U1CHXiryEljufWt3JDE87Lp
-         EU8SLUy7fDqQYtvjCixvBQbXTn2v9NL8LRngVGknFOkbrAAT/jdeYswWk0mVURTkFZ
-         eQIkX//kJRsDA==
-X-Nifty-SrcIP: [209.85.216.53]
-Received: by mail-pj1-f53.google.com with SMTP id na16-20020a17090b4c1000b0019f5bb661f9so2261176pjb.0;
-        Wed, 06 Oct 2021 05:53:56 -0700 (PDT)
-X-Gm-Message-State: AOAM531TaeeSCRqPpGaRbCiq/nho/eCcbSJOCCkrR+5Q7EE2ismK9qSY
-        z6lDT6QlZUXhFKA3dY01+uhvJV6KgDAzApKws5w=
-X-Google-Smtp-Source: ABdhPJwtZ1OJRVKlgVuSgn4O8szQOkDxdm0+QT605WYDW9qZNXDVj5R8bLV+NjFqsV6Wjz7uCmiLbK7ponM2TPTHoFY=
-X-Received: by 2002:a17:90a:9306:: with SMTP id p6mr10777738pjo.119.1633524835305;
- Wed, 06 Oct 2021 05:53:55 -0700 (PDT)
+        Wed, 6 Oct 2021 09:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231538AbhJFNEn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 6 Oct 2021 09:04:43 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF71E61039;
+        Wed,  6 Oct 2021 13:02:50 +0000 (UTC)
+Date:   Wed, 6 Oct 2021 09:02:49 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>, x86@kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v4 06/15] ftrace: Use an opaque type for functions not
+ callable from C
+Message-ID: <20211006090249.248c65b0@gandalf.local.home>
+In-Reply-To: <20211006032945.axlqh3vehgar6adr@treble>
+References: <20210930180531.1190642-1-samitolvanen@google.com>
+        <20210930180531.1190642-7-samitolvanen@google.com>
+        <20211006032945.axlqh3vehgar6adr@treble>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20210923215418.3936726-1-keescook@chromium.org>
- <YU1WYLN4eptJhuIX@deb-nschier.ads.avm.de> <202110052144.25B30F2D4F@keescook>
-In-Reply-To: <202110052144.25B30F2D4F@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 6 Oct 2021 21:53:18 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASWgdULqBJMQMkoy=mXtAj_xxcYXXXi0wYojMkWW4ktGA@mail.gmail.com>
-Message-ID: <CAK7LNASWgdULqBJMQMkoy=mXtAj_xxcYXXXi0wYojMkWW4ktGA@mail.gmail.com>
-Subject: Re: [PATCH] sparc: Add missing "FORCE" target when using if_changed
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Nicolas Schier <n.schier@avm.de>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 6, 2021 at 1:45 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Sep 24, 2021 at 06:38:56AM +0200, Nicolas Schier wrote:
-> > On Thu, Sep 23, 2021 at 02:54:18PM -0700, Kees Cook wrote:
-> > > Fix observed warning:
-> > >
-> > >     /builds/linux/arch/sparc/boot/Makefile:35: FORCE prerequisite is missing
-> > >
-> > > Fixes: e1f86d7b4b2a5213 ("kbuild: warn if FORCE is missing for if_changed(_dep,_rule) and filechk")
-> > > Cc: "David S. Miller" <davem@davemloft.net>
-> > > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > > Cc: sparclinux@vger.kernel.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> >
-> > Acked-by: Nicolas Schier <n.schier@avm.de>
->
-> Thanks!
->
-> Masahiro, are you able to add this to your kbuild tree?
+On Tue, 5 Oct 2021 20:29:45 -0700
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-Sure, applied to linux-kbuild. Thanks.
+Thanks for Cc'ing me, as I should have been Cc'd on the original patch.
 
+> On Thu, Sep 30, 2021 at 11:05:22AM -0700, Sami Tolvanen wrote:
+> > With CONFIG_CFI_CLANG, the compiler changes function references to point
+> > to the CFI jump table. As ftrace_call, ftrace_regs_call, and mcount_call
+> > are not called from C, use DECLARE_ASM_FUNC_SYMBOL to declare them.
 
-> -Kees
->
-> >
-> > > ---
-> > > I'm not sure if this should go via sparc or via kbuild. :)
-> > > ---
-> > >  arch/sparc/boot/Makefile | 8 ++++----
-> > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/arch/sparc/boot/Makefile b/arch/sparc/boot/Makefile
-> > > index 849236d4eca4..45e5c76d449e 100644
-> > > --- a/arch/sparc/boot/Makefile
-> > > +++ b/arch/sparc/boot/Makefile
-> > > @@ -22,7 +22,7 @@ ifeq ($(CONFIG_SPARC64),y)
-> > >
-> > >  # Actual linking
-> > >
-> > > -$(obj)/zImage: $(obj)/image
-> > > +$(obj)/zImage: $(obj)/image FORCE
-> > >     $(call if_changed,gzip)
-> > >     @echo '  kernel: $@ is ready'
-> > >
-> > > @@ -31,7 +31,7 @@ $(obj)/vmlinux.aout: vmlinux FORCE
-> > >     @echo '  kernel: $@ is ready'
-> > >  else
-> > >
-> > > -$(obj)/zImage: $(obj)/image
-> > > +$(obj)/zImage: $(obj)/image FORCE
-> > >     $(call if_changed,strip)
-> > >     @echo '  kernel: $@ is ready'
-> > >
-> > > @@ -44,7 +44,7 @@ OBJCOPYFLAGS_image.bin := -S -O binary -R .note -R .comment
-> > >  $(obj)/image.bin: $(obj)/image FORCE
-> > >     $(call if_changed,objcopy)
-> > >
-> > > -$(obj)/image.gz: $(obj)/image.bin
-> > > +$(obj)/image.gz: $(obj)/image.bin FORCE
-> > >     $(call if_changed,gzip)
-> > >
-> > >  UIMAGE_LOADADDR = $(CONFIG_UBOOT_LOAD_ADDR)
-> > > @@ -56,7 +56,7 @@ quiet_cmd_uimage.o = UIMAGE.O $@
-> > >                       -r -b binary $@ -o $@.o
-> > >
-> > >  targets += uImage
-> > > -$(obj)/uImage: $(obj)/image.gz
-> > > +$(obj)/uImage: $(obj)/image.gz FORCE
-> > >     $(call if_changed,uimage)
-> > >     $(call if_changed,uimage.o)
-> > >     @echo '  Image $@ is ready'
-> > > --
-> > > 2.30.2
-> > >
->
-> --
-> Kees Cook
+"not called from C" is a bit confusing.
+
+> > 
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  include/linux/ftrace.h | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > index 832e65f06754..67de28464aeb 100644
+> > --- a/include/linux/ftrace.h
+> > +++ b/include/linux/ftrace.h
+> > @@ -578,9 +578,10 @@ extern void ftrace_replace_code(int enable);
+> >  extern int ftrace_update_ftrace_func(ftrace_func_t func);
+> >  extern void ftrace_caller(void);
+> >  extern void ftrace_regs_caller(void);
+> > -extern void ftrace_call(void);
+> > -extern void ftrace_regs_call(void);
+> > -extern void mcount_call(void);
+> > +
+> > +DECLARE_ASM_FUNC_SYMBOL(ftrace_call);
+> > +DECLARE_ASM_FUNC_SYMBOL(ftrace_regs_call);
+> > +DECLARE_ASM_FUNC_SYMBOL(mcount_call);  
+> 
+> I'm thinking DECLARE_ASM_FUNC_SYMBOL needs a better name. It's not clear
+> from reading it why some asm symbols need the macro and others don't.
+> 
+> I guess it means "an asm text symbol which isn't callable from C code
+> (not including alternatives)"?
+> 
+> DECLARE_UNCALLED_SYMBOL() maybe?
+> 
+
+That's even worse ;-) Because "called" is an assembler command in x86, and
+it is "called" from assembly (when you look at an objdump, it is most
+definitely "called").
+
+Perhaps DECLARE_ASM_INTERNAL_SYMBOL() ?
+
+Or call it "DECLARE_ASM_MCOUNT_SYMBOL()" as "mcount" is the original name
+of what a compiler does when passed the -pg option, and that's exactly what
+those functions are.
+
+-- Steve
 
 
-
--- 
-Best Regards
-Masahiro Yamada
