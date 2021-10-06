@@ -2,95 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BCFC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 17:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE92DC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 18:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54C6610E6
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 17:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4FD661027
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Oct 2021 18:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231756AbhJFRrq (ORCPT
+        id S231175AbhJFSEB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Oct 2021 13:47:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56058 "EHLO
+        Wed, 6 Oct 2021 14:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbhJFRrp (ORCPT
+        with ESMTP id S229835AbhJFSD7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Oct 2021 13:47:45 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1B5C061746
-        for <linux-hardening@vger.kernel.org>; Wed,  6 Oct 2021 10:45:53 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id h2so7183210ybi.13
-        for <linux-hardening@vger.kernel.org>; Wed, 06 Oct 2021 10:45:53 -0700 (PDT)
+        Wed, 6 Oct 2021 14:03:59 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77957C061753
+        for <linux-hardening@vger.kernel.org>; Wed,  6 Oct 2021 11:02:07 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id c4so2208443pls.6
+        for <linux-hardening@vger.kernel.org>; Wed, 06 Oct 2021 11:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ymHLGH0Raq7ZmGFbhtXmAYW4w7KWD4EjLyVclCp4QNk=;
-        b=FDtgJKC2yf2w+mH0oA+D57k3nx54eAv/j4VPf/geQ25vy2h5bs5gGf0Yl1iswCf1br
-         twAlku9c9HaQSksJSdqaGILpkNO3VsxHP9T1pKiFZm1xd81utR7KiW1+TbdnVFM9dzpv
-         8MoBpvwGcgoktnH8xTxKJKbmy6W3EpmN8/refTKp/q1c/VYBmgAmlELHwB6dYPrGl42f
-         EK8d99G65Tdvk9Jmz13SG4Pw3nOYOepqAVXVBjNnwjzcGQfYX7qjEKWCQW1sl81JGpj/
-         wPwKz8QCcOlukoAR89S4zRJYHYvhB8UdTQ37d5TO0bIL21axXkguID2Igqxbg/MNVIs/
-         eROQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EG8j31Vcr06OO0AkEnbVwb8A1TK2ZuJTLW5vJccv8+U=;
+        b=kyQfZHTuGRS3x7+q3DhtYRabFYQAZrB1mJCuvDtH0mtIVLxEp9hNPNBVAAN+IX2wqk
+         NT3vGYdNyZVngtG5ikkNHpFN609iBkyuh+oeZfjl7lW5OiiZzRUzXS0+Zrbn5Cj8aAzA
+         hoewaqxmzmvm1GgQcd5QguIU3FyNTea9K8U2M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ymHLGH0Raq7ZmGFbhtXmAYW4w7KWD4EjLyVclCp4QNk=;
-        b=md9QWdBwjWIfiNNmZud+nlSQq/E5deS6ZNY7z92CJbgE9LqOyITjsRv6H2jaAsnz7P
-         qFOueAzDxYp8admrgpTvpQvGbN51GeK1xr8kRisXZlvpnyhdKBFZJLYGN+4zocbLxd5V
-         8yQFd0IuCUujFIKo8VUH/liAZb1F3qj0gus8Pn2qQgTRkP+P9Xyn72J40V3LAh2nGTUu
-         ajL048wTPB/BgJTsHiZJ6DFKHjlke93pB/3A/jQb8vqyBES3rFORQFB+X4HQnoF81AHM
-         X43M2mtB0HHGB3U93PYq6TSxV0SP67QOb/TlgzVOHRhcA/zSV5Ng//itball5aDvEqby
-         XEFQ==
-X-Gm-Message-State: AOAM531mp9GUF2UiKrC0dveHT2uaoeP24g042FVvMvIywhyR8P8JlsIf
-        /p6095d76gvf1L8XiS13KdXN7+DT7yqdWFrb6K66oQ==
-X-Google-Smtp-Source: ABdhPJx/PRDppXa0Kq84b+6Rsz/D47+Ohg3rhbB34IFTWREHPFR3I/tnnF4mNhbpL2vllEq5+bhlJ18BTkRVcOXB5SQ=
-X-Received: by 2002:a5b:286:: with SMTP id x6mr30426375ybl.59.1633542352526;
- Wed, 06 Oct 2021 10:45:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EG8j31Vcr06OO0AkEnbVwb8A1TK2ZuJTLW5vJccv8+U=;
+        b=mxkLnD+T3rjK80oqTA7MNfAMgwo85YYFCUYma6RFBM8imch2aqZGI016hFN6BJorIx
+         kWot8qWcmmsE+1fiSQRosILUDKvmh/JeEBoQ6yb8YdVmID0Y9QO5IXBDeJ7BkJTL/LQF
+         6UxFd2IlxsC33GFG3KhVztEwnr3vS8NAhq0hhOQtqp8jPc8MfJrNZvUcR/kPqbjFhPBA
+         Tz2FIBzn6/KEUiOScUyqjUpMSChtibVos3R0S2I3DZpsNop6NCq6cEuprWekkgjYw1KM
+         YWqq0cLQc6K1Pq1r2fjH40quVa6TcOeTuDMqDfguJOJrtvJPUh6kZJbfd4KZNoqDmr0E
+         u00Q==
+X-Gm-Message-State: AOAM530FKVNpVyuHbpIEKxkqCItiJBD6VcfBOPZWitsp6zJqaxDpyhXY
+        1VLo5nwUJWBVSpTMKFygFAXCqQ==
+X-Google-Smtp-Source: ABdhPJwqIGhj94Z4ChDqPf3S3GPhPLzwMf56i1qKB0Ek4TOHgDRWvJKzVHuMHSC0/GVQpPuDvZVk/A==
+X-Received: by 2002:a17:902:aa88:b0:13a:95d:d059 with SMTP id d8-20020a170902aa8800b0013a095dd059mr12467927plr.65.1633543326814;
+        Wed, 06 Oct 2021 11:02:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u12sm20908080pgi.21.2021.10.06.11.02.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Oct 2021 11:02:06 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Add "exec & binfmt" section with myself and Eric
+Date:   Wed,  6 Oct 2021 11:02:00 -0700
+Message-Id: <20211006180200.1178142-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20210930180531.1190642-1-samitolvanen@google.com>
- <20210930180531.1190642-7-samitolvanen@google.com> <20211006032945.axlqh3vehgar6adr@treble>
- <20211006090249.248c65b0@gandalf.local.home> <CABCJKueL4Ebaan=JBUyO3oewq7RTHHXWUQpixgf2AfC_r5T3uA@mail.gmail.com>
- <20211006125809.5389b2a3@gandalf.local.home>
-In-Reply-To: <20211006125809.5389b2a3@gandalf.local.home>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 6 Oct 2021 10:45:41 -0700
-Message-ID: <CABCJKudTuheEd5jyhXmfJHup7iYzOz3_OcO92hFnpRK1MapJSg@mail.gmail.com>
-Subject: Re: [PATCH v4 06/15] ftrace: Use an opaque type for functions not
- callable from C
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1037; h=from:subject; bh=jlsQHm8XF6DHzxt252D/9lsthhPYy3DOfgA1oJ7BBOw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhXeSXH/CxB/y5SqE2evX8LGc7ACYrGw3tQMmBRWjg AVLxizCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYV3klwAKCRCJcvTf3G3AJp2bD/ wNmn1qQtT+QZu4DMDVwK2/i1mB14z/WYMDA28LxFDVQOYP8gs5jv+jjVfPP0foOfM4ftnrIDsdaozc sq22UDQfs68bVgMl5lv6R9u28m0YR34PiaBosKsBfwN8c4pQ7Vcl+4n52RO0xG62hgHdz/M2q8oi/L xHjB+IBXiaCPyG7ViEPF12AEOIGsbGJxpEtych+5bpp6aiQ0PHxQhCO6XA5N1nRs8GuAOWM8OfRsmo Ha7MfK/2cgUtN3rxtZPitucPLKP2+TwBIbTMnfJ8RIUrcKNy/xUU6XH21Ib9LXIr9eXMRcQQexrV92 cfR3+tUvz90Vs7Za7KKLS1TYT5hFGsOVDyTdOIPZjHGJGwkPWFJEvHh+IN+q43tRb7jTQ3DeQKQki+ QzYWfWQKch2vZx8Ym6LcTryFJsiSt+OHNq5UhLedweZ+zy/cJ6K2KOHrQRZCufqw4VJKqHhDlNtpXA QOVzsQJlZQuicB0FxzRDf7CcbpN+Cgdib0k0VQ99jId9vjvjZocVhcSwUoyHfltJ3MMYInKI4XuD/U QkajEB6ZV5TtfS3oUQBeyS5gCadoBq+Twfz0FvUHTHO5dQXED4J7RIjHDqrt+TukT2/3tU/yfFJvmN ltwqWWAyPL6e6uM927ZV/rDxVdM1dlsdAfD3aoT8csskbbMcwPqsnMNqF8hQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 6, 2021 at 9:58 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Wed, 6 Oct 2021 09:31:04 -0700
-> Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> > > > On Thu, Sep 30, 2021 at 11:05:22AM -0700, Sami Tolvanen wrote:
-> > > > > With CONFIG_CFI_CLANG, the compiler changes function references to point
-> > > > > to the CFI jump table. As ftrace_call, ftrace_regs_call, and mcount_call
-> > > > > are not called from C, use DECLARE_ASM_FUNC_SYMBOL to declare them.
-> > >
-> > > "not called from C" is a bit confusing.
-> >
-> > Any thoughts on how to make this less confusing?
->
->  "Not called by C code, but injected by the compiler."
->
-> ?
+I'd like more continuity of review for the exec and binfmt (and ELF)
+stuff. Eric and I have been the most active lately, so list us as
+reviewers.
 
-Sure, sounds good to me. I'll update this in v5.
+Cc: Eric Biederman <ebiederm@xmission.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ MAINTAINERS | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Sami
+diff --git a/MAINTAINERS b/MAINTAINERS
+index abdcbcfef73d..385b12e37c43 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7020,6 +7020,20 @@ F:	include/trace/events/mdio.h
+ F:	include/uapi/linux/mdio.h
+ F:	include/uapi/linux/mii.h
+ 
++EXEC & BINFMT API
++R:	Eric Biederman <ebiederm@xmission.com>
++R:	Kees Cook <keescook@chromium.org>
++F:	arch/alpha/kernel/binfmt_loader.c
++F:	arch/x86/ia32/ia32_aout.c
++F:	fs/*binfmt_*.c
++F:	fs/exec.c
++F:	include/linux/binfmts.h
++F:	include/linux/elf.h
++F:	include/uapi/linux/binfmts.h
++F:	tools/testing/selftests/exec/
++N:	asm/elf.h
++N:	binfmt
++
+ EXFAT FILE SYSTEM
+ M:	Namjae Jeon <linkinjeon@kernel.org>
+ M:	Sungjong Seo <sj1557.seo@samsung.com>
+-- 
+2.30.2
+
