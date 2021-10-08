@@ -2,47 +2,47 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76BCC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4C8C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC6960F5B
-	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2282761038
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240250AbhJHLTb (ORCPT
+        id S240228AbhJHLTa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 8 Oct 2021 07:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
+        Fri, 8 Oct 2021 07:19:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240222AbhJHLT0 (ORCPT
+        with ESMTP id S240225AbhJHLT0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 8 Oct 2021 07:19:26 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35037C061755;
-        Fri,  8 Oct 2021 04:17:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E9EC061570;
+        Fri,  8 Oct 2021 04:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=umSfuLmNyx4dR8mDkBis1oRVsQNuMXaIh5WYIShus0o=; b=kyV7a5VCRDjg0lCxTwlu9BoLfA
-        j0FlmMCPFG1UizZ0ewTSHVjKcuv2XpbfoGf4ChD2nr0alhYJWtbCl/hhaL2E5HEECcqf+i3fLo8KY
-        hR69k8ZNf/NrwVCnlgLrNA3p4REQnE7mvSfJNf/Ntui5NkxQlJB5VpsQ8QD6SupueH5NJFlZUEwjI
-        f8r4AVLvc0NoPelOJaxHuIntff438VPrTbdXZWTCcZnTNxlKTyUU9kvXfcUtCvzWi+GpezSVoOIaO
-        Q7bNrKBgZuXqq6InRVW81DbNKdFDhFtDGFLEHc6BwfSVc8DZ4P/t8f5aR8ebv1QHpp9mZkUmut+4d
-        EagtDrSg==;
+        d=infradead.org; s=desiato.20200630; h=Subject:Cc:To:From:Date:Message-ID:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=hmkYnnIILnrl0z+glbF3vsotGauPDPEqjLkfBoI45PI=; b=IEDn1dPSAlSouoL5XqDhyDertI
+        xsDtLy+YVUXNszpoJaTAoN7qzQ8EDRKaFDzoGYnvW/DhE6QcGXddcIWlKIhKG13gFXIwPRubcch6v
+        ZZ/+OyuH3MbmYMlIVg1xMsWulajyLIF31hw5oZU4YY4zfMvi0kqzl/841f43rIA2xZCfV9hUOAzle
+        XJU/Yz8tDQp50Ft/23Y9tU/BInBryov4yi2aDFBDs1XhfSOOA9xHoHxxfkDAaG5eygnWhgxPqjlCp
+        ExWTJaWAoUiBAXBKmaByABoFX7XRfc/y9+FFZUoPxu9FCqvk7Fhvuy+G1xWWnxVPghKPPH5btdvP+
+        Z0X71f2Q==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mYnsE-008eLN-3c; Fri, 08 Oct 2021 11:17:16 +0000
+        id 1mYnsD-008eLA-BU; Fri, 08 Oct 2021 11:17:15 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C305E302D45;
-        Fri,  8 Oct 2021 13:17:08 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EEDEB300094;
+        Fri,  8 Oct 2021 13:17:07 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id F0ABC2DB84A6C; Fri,  8 Oct 2021 13:17:07 +0200 (CEST)
-Message-ID: <20211008111626.455137084@infradead.org>
+        id CCA9E2DB84A65; Fri,  8 Oct 2021 13:17:07 +0200 (CEST)
+Message-ID: <20211008111527.438276127@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 08 Oct 2021 13:15:34 +0200
+Date:   Fri, 08 Oct 2021 13:15:27 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     keescook@chromium.org, jannh@google.com
 Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
@@ -67,129 +67,89 @@ Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
         jonas@southpole.se, mpe@ellerman.id.au, paul.walmsley@sifive.com,
         hca@linux.ibm.com, ysato@users.sourceforge.jp, davem@davemloft.net,
         chris@zankel.net
-Subject: [PATCH 7/7] arch: Fix STACKTRACE_SUPPORT
-References: <20211008111527.438276127@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH 0/7] wchan: Fix wchan support
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-A few archs got save_stack_trace_tsk() vs in_sched_functions() wrong.
+Hi,
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+This fixes up wchan which is various degrees of broken across the
+architectures.
+
+Patch 4 fixes wchan for x86, which has been returning 0 for the past many
+releases.
+
+Patch 5 fixes the fundamental race against scheduling.
+
+Patch 6 deletes a lot and makes STACKTRACE unconditional
+
+patch 7 fixes up a few STACKTRACE arch oddities
+
+0day says all builds are good, so it must be perfect :-) I'm planning on
+queueing up at least the first 5 patches, but I'm hoping the last two patches
+can be too.
+
+Also available here:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git sched/wchan
+
 ---
- arch/csky/kernel/stacktrace.c  |    7 ++++++-
- arch/mips/kernel/stacktrace.c  |   27 ++++++++++++++++-----------
- arch/nds32/kernel/stacktrace.c |   21 +++++++++++----------
- 3 files changed, 33 insertions(+), 22 deletions(-)
-
---- a/arch/csky/kernel/stacktrace.c
-+++ b/arch/csky/kernel/stacktrace.c
-@@ -122,12 +122,17 @@ static bool save_trace(unsigned long pc,
- 	return __save_trace(pc, arg, false);
- }
- 
-+static bool save_trace_nosched(unsigned long pc, void *arg)
-+{
-+	return __save_trace(pc, arg, true);
-+}
-+
- /*
-  * Save stack-backtrace addresses into a stack_trace buffer.
-  */
- void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
- {
--	walk_stackframe(tsk, NULL, save_trace, trace);
-+	walk_stackframe(tsk, NULL, save_trace_nosched, trace);
- }
- EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
- 
---- a/arch/mips/kernel/stacktrace.c
-+++ b/arch/mips/kernel/stacktrace.c
-@@ -66,16 +66,7 @@ static void save_context_stack(struct st
- #endif
- }
- 
--/*
-- * Save stack-backtrace addresses into a stack_trace buffer.
-- */
--void save_stack_trace(struct stack_trace *trace)
--{
--	save_stack_trace_tsk(current, trace);
--}
--EXPORT_SYMBOL_GPL(save_stack_trace);
--
--void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-+static void __save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace, bool savesched)
- {
- 	struct pt_regs dummyregs;
- 	struct pt_regs *regs = &dummyregs;
-@@ -88,6 +79,20 @@ void save_stack_trace_tsk(struct task_st
- 		regs->cp0_epc = tsk->thread.reg31;
- 	} else
- 		prepare_frametrace(regs);
--	save_context_stack(trace, tsk, regs, tsk == current);
-+	save_context_stack(trace, tsk, regs, savesched);
-+}
-+
-+/*
-+ * Save stack-backtrace addresses into a stack_trace buffer.
-+ */
-+void save_stack_trace(struct stack_trace *trace)
-+{
-+	__save_stack_trace_tsk(current, trace, true);
-+}
-+EXPORT_SYMBOL_GPL(save_stack_trace);
-+
-+void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-+{
-+	__save_stack_trace_tsk(tsk, trace, false);
- }
- EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
---- a/arch/nds32/kernel/stacktrace.c
-+++ b/arch/nds32/kernel/stacktrace.c
-@@ -6,25 +6,16 @@
- #include <linux/stacktrace.h>
- #include <linux/ftrace.h>
- 
--void save_stack_trace(struct stack_trace *trace)
--{
--	save_stack_trace_tsk(current, trace);
--}
--EXPORT_SYMBOL_GPL(save_stack_trace);
--
--void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-+static void __save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace, bool savesched)
- {
- 	unsigned long *fpn;
- 	int skip = trace->skip;
--	int savesched;
- 	int graph_idx = 0;
- 
- 	if (tsk == current) {
- 		__asm__ __volatile__("\tori\t%0, $fp, #0\n":"=r"(fpn));
--		savesched = 1;
- 	} else {
- 		fpn = (unsigned long *)thread_saved_fp(tsk);
--		savesched = 0;
- 	}
- 
- 	while (!kstack_end(fpn) && !((unsigned long)fpn & 0x3)
-@@ -50,4 +41,14 @@ void save_stack_trace_tsk(struct task_st
- 		fpn = (unsigned long *)fpp;
- 	}
- }
-+void save_stack_trace(struct stack_trace *trace)
-+{
-+	__save_stack_trace_tsk(current, trace, true);
-+}
-+EXPORT_SYMBOL_GPL(save_stack_trace);
-+
-+void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-+{
-+	__save_stack_trace_tsk(tsk, trace, false);
-+}
- EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
-
+ arch/alpha/include/asm/processor.h      |  2 +-
+ arch/alpha/kernel/process.c             |  5 ++-
+ arch/arc/include/asm/processor.h        |  2 --
+ arch/arc/kernel/stacktrace.c            | 19 +---------
+ arch/arm/include/asm/processor.h        |  2 --
+ arch/arm/kernel/process.c               | 24 -------------
+ arch/arm64/include/asm/processor.h      |  2 --
+ arch/arm64/kernel/process.c             | 28 ---------------
+ arch/csky/include/asm/processor.h       |  2 --
+ arch/csky/kernel/stacktrace.c           | 26 ++++----------
+ arch/h8300/include/asm/processor.h      |  2 +-
+ arch/h8300/kernel/process.c             |  5 +--
+ arch/hexagon/include/asm/processor.h    |  3 --
+ arch/hexagon/kernel/process.c           | 28 ---------------
+ arch/ia64/include/asm/processor.h       |  3 --
+ arch/ia64/kernel/process.c              | 31 -----------------
+ arch/m68k/include/asm/processor.h       |  2 +-
+ arch/m68k/kernel/process.c              |  4 +--
+ arch/microblaze/include/asm/processor.h |  2 --
+ arch/microblaze/kernel/process.c        |  6 ----
+ arch/mips/include/asm/processor.h       |  2 --
+ arch/mips/kernel/process.c              | 31 +----------------
+ arch/mips/kernel/stacktrace.c           | 27 ++++++++------
+ arch/nds32/include/asm/processor.h      |  2 --
+ arch/nds32/kernel/process.c             | 28 ---------------
+ arch/nds32/kernel/stacktrace.c          | 21 +++++------
+ arch/nios2/include/asm/processor.h      |  2 +-
+ arch/nios2/kernel/process.c             |  5 +--
+ arch/openrisc/include/asm/processor.h   |  1 -
+ arch/openrisc/kernel/process.c          |  6 ----
+ arch/parisc/include/asm/processor.h     |  2 --
+ arch/parisc/kernel/process.c            | 27 --------------
+ arch/powerpc/include/asm/processor.h    |  2 --
+ arch/powerpc/kernel/process.c           | 40 ---------------------
+ arch/riscv/include/asm/processor.h      |  3 --
+ arch/riscv/kernel/stacktrace.c          | 23 ------------
+ arch/s390/include/asm/processor.h       |  1 -
+ arch/s390/kernel/process.c              | 29 ---------------
+ arch/sh/include/asm/processor_32.h      |  2 --
+ arch/sh/kernel/process_32.c             | 22 ------------
+ arch/sparc/include/asm/processor_32.h   |  2 +-
+ arch/sparc/include/asm/processor_64.h   |  2 --
+ arch/sparc/kernel/process_32.c          |  5 +--
+ arch/sparc/kernel/process_64.c          | 31 -----------------
+ arch/um/include/asm/processor-generic.h |  1 -
+ arch/um/kernel/process.c                | 35 -------------------
+ arch/x86/include/asm/processor.h        |  2 --
+ arch/x86/kernel/process.c               | 62 ---------------------------------
+ arch/xtensa/include/asm/processor.h     |  2 --
+ arch/xtensa/kernel/process.c            | 32 -----------------
+ fs/proc/array.c                         |  7 ++--
+ fs/proc/base.c                          | 19 +++++-----
+ include/linux/sched.h                   |  1 +
+ kernel/sched/core.c                     | 34 ++++++++++++++++++
+ lib/Kconfig.debug                       |  7 +---
+ scripts/leaking_addresses.pl            |  3 +-
+ 56 files changed, 97 insertions(+), 622 deletions(-)
 
