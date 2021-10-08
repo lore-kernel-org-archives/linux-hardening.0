@@ -2,50 +2,64 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9634C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 13:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73475C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 16:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88AFB60F6B
-	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 13:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523DC61019
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 16:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233614AbhJHNuG (ORCPT
+        id S230232AbhJHQTV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 8 Oct 2021 09:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbhJHNuF (ORCPT
+        Fri, 8 Oct 2021 12:19:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33403 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229896AbhJHQTV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 8 Oct 2021 09:50:05 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A315C061570;
-        Fri,  8 Oct 2021 06:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AeZfY9f2iurPW1q+xtFtNI1W2I5709CG4W+EJzRCAMU=; b=DqeWXbPQlW8+2aIXHL4un8c8+C
-        ruiELp8b0b13YYNPX7L4rPcFlICkbKbxDmpxW0wfhQri+vCj4+Un16Vk2xSx5dnHKB6XjF/nCD4Kc
-        nlnyFWrwNg5WN4WEfLzCSesqGpp15v6P6xIml5ZTruuTBuiM9FYSXvBMo18CxswkMsRBySXd9+BjP
-        UIzM212gfP/XKVRlc+i9DzGCdyo6ulxCGiaIh7lO+UySloIQPd2SGi0v5Xr81ivHfLGBEpUiHJRBR
-        NSJhA9/LEcIXsBIVuCAiF2O2TNE5GY68jb8IP3tr8i6lQN6u1mH0yrsXX5Ji+Xu+tNprYsQ4lhIl4
-        GOQBFtJA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mYqCJ-008fZ5-Li; Fri, 08 Oct 2021 13:46:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A494E300ECB;
-        Fri,  8 Oct 2021 15:45:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 64C3A2007A037; Fri,  8 Oct 2021 15:45:59 +0200 (CEST)
-Date:   Fri, 8 Oct 2021 15:45:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     keescook@chromium.org, jannh@google.com,
-        linux-kernel@vger.kernel.org, vcaputo@pengaru.com,
-        mingo@redhat.com, juri.lelli@redhat.com,
+        Fri, 8 Oct 2021 12:19:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633709845;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=F8CaDxS3ZxSSQU+iGhFbf89kwNPmHoSD1YG/GilwFS8=;
+        b=MPJCIuBfRJFxdEeSKix14lm8blSJ1fkUKXjPbImU3zJQ/LOSzh4PkcXMmTrbEfLdvKMPm5
+        ZeCZQV4k76CBZG6vXAZmw+JrDj039m9TDvAlKJ9rau0rqWSeUxTlgfX933R+Qyn4wi2bsg
+        c1dTUUX789bt86HuspIGIpYD5a3Ln3c=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-NYDur-YBNyW_XQ2OHYCxRA-1; Fri, 08 Oct 2021 12:17:14 -0400
+X-MC-Unique: NYDur-YBNyW_XQ2OHYCxRA-1
+Received: by mail-qt1-f199.google.com with SMTP id t9-20020a05622a180900b002a71f83a1cdso8072494qtc.17
+        for <linux-hardening@vger.kernel.org>; Fri, 08 Oct 2021 09:17:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F8CaDxS3ZxSSQU+iGhFbf89kwNPmHoSD1YG/GilwFS8=;
+        b=tZgW9y3aRt08yqk6yvsJu4JmKrZtnadKSnONDkr0CZMZzzPVGbvflI2rA0WVWVV1TT
+         KU4TZgxazOWUdgnm3MxBMAP2llJAOwMJepMwmNAm+xXfwcd/YPYfZ9l35yscR/JY/nGC
+         pZLoEKI1X9B8blfJ8p705geDxwIjI441wNvVV0gMISrsJeqs5wMCpp3F+jNFAJsyZbFl
+         KVv2virt5YKCPy3kFYCyIvka520mB9HGpJXPOzY3BunfrCnJsZ0dHSvjrmOjG6G+sprX
+         BYBJ83D5ux02hbQ7yvhCi1BZMPz9tITwzNjW6K3G/GKCL+GinVWbvli9qCcANdgq4nn9
+         WA4w==
+X-Gm-Message-State: AOAM533aXIkS6aHIvgdxcRLAScU16OeG7HsHsmik5PwAkoGdm9P1610D
+        Fq0YEjuPJejW1WGDWM0VsDyUNu2gyvttI6wmkMp2cgwvKe+7Wc3HTIKj+1T1uNhrU2rOyEbTAaR
+        N57PZFIBNF7/dPz4N5G0jMc5gZsdY
+X-Received: by 2002:a05:6214:294:: with SMTP id l20mr9523297qvv.30.1633709834201;
+        Fri, 08 Oct 2021 09:17:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw6ExCuEMbasm/gLwW//wQY0/4UCLYUOl4ssvLqUvFOcMjFiAJy1vmJaiafPCJcjnPk3KtghQ==
+X-Received: by 2002:a05:6214:294:: with SMTP id l20mr9523255qvv.30.1633709834017;
+        Fri, 08 Oct 2021 09:17:14 -0700 (PDT)
+Received: from treble ([2600:1700:6e32:6c00::48])
+        by smtp.gmail.com with ESMTPSA id p19sm2730266qtk.20.2021.10.08.09.17.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Oct 2021 09:17:13 -0700 (PDT)
+Date:   Fri, 8 Oct 2021 09:17:07 -0700
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, keescook@chromium.org,
+        jannh@google.com, linux-kernel@vger.kernel.org,
+        vcaputo@pengaru.com, mingo@redhat.com, juri.lelli@redhat.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
         rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
         bristot@redhat.com, akpm@linux-foundation.org,
@@ -57,73 +71,43 @@ Cc:     keescook@chromium.org, jannh@google.com,
         metze@samba.org, laijs@linux.alibaba.com, luto@kernel.org,
         dave.hansen@linux.intel.com, ebiederm@xmission.com,
         ohoono.kwon@samsung.com, kaleshsingh@google.com,
-        yifeifz2@illinois.edu, jpoimboe@redhat.com,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        vgupta@kernel.org, linux@armlinux.org.uk, will@kernel.org,
-        guoren@kernel.org, bcain@codeaurora.org, monstr@monstr.eu,
-        tsbogend@alpha.franken.de, nickhu@andestech.com,
-        jonas@southpole.se, mpe@ellerman.id.au, paul.walmsley@sifive.com,
-        hca@linux.ibm.com, ysato@users.sourceforge.jp, davem@davemloft.net,
-        chris@zankel.net
+        yifeifz2@illinois.edu, linux-hardening@vger.kernel.org,
+        linux-arch@vger.kernel.org, vgupta@kernel.org,
+        linux@armlinux.org.uk, will@kernel.org, guoren@kernel.org,
+        bcain@codeaurora.org, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        nickhu@andestech.com, jonas@southpole.se, mpe@ellerman.id.au,
+        paul.walmsley@sifive.com, hca@linux.ibm.com,
+        ysato@users.sourceforge.jp, davem@davemloft.net, chris@zankel.net
 Subject: Re: [PATCH 6/7] arch: __get_wchan || STACKTRACE_SUPPORT
-Message-ID: <YWBLl0mMTGPE/7hM@hirez.programming.kicks-ass.net>
+Message-ID: <20211008161707.i3cwz6qukgcf4frj@treble>
 References: <20211008111527.438276127@infradead.org>
  <20211008111626.392918519@infradead.org>
  <20211008124052.GA976@C02TD0UTHF1T.local>
+ <YWBLl0mMTGPE/7hM@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <YWBLl0mMTGPE/7hM@hirez.programming.kicks-ass.net>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211008124052.GA976@C02TD0UTHF1T.local>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 01:40:52PM +0100, Mark Rutland wrote:
-> [Adding Josh, since there might be a concern here from a livepatch pov]
+On Fri, Oct 08, 2021 at 03:45:59PM +0200, Peter Zijlstra wrote:
+> > stack_trace_save_tsk() *shouldn't* skip anything unless we've explicitly
+> > told it to via skipnr, because I'd expect that
 > 
+> It's what most archs happen to do today and is what
+> stack_trace_save_tsk() as implemented using arch_stack_walk() does.
+> Which is I think the closest to canonical we have.
 
-> > +static unsigned long __get_wchan(struct task_struct *p)
-> > +{
-> > +	unsigned long entry = 0;
-> > +
-> > +	stack_trace_save_tsk(p, &entry, 1, 0);
-> 
-> This assumes stack_trace_save_tsk() will skip sched functions, but I
-> don't think that's ever been a requirement? It's certinaly not
-> documented anywhere that I could find, and arm64 doesn't do so today,
-> and this patch causes wchan to just log `__switch_to` for everything.
+It *is* confusing though.  Even if 'nosched' may be the normally
+desired behavior, stack_trace_save_tsk() should probably be named
+stack_trace_save_tsk_nosched().
 
-Confused, arm64 has arch_stack_walk() and should thus use
-kernel/stacktrace.c's stack_trace_consume_entry_nosched.
+-- 
+Josh
 
-> I realise you "fix" that for some arches in the next patch, but it's not
-> clear to me that's the right thing to do -- I would expect that
-
-I only actually change the behaviour on csky, both mips and nds32 have
-this 'savesched = (task == current)' logic which ends up being a very
-confusing way to write things, but for wchan we never call on current,
-and hence don't save the __sched functions.
-
-> stack_trace_save_tsk() *shouldn't* skip anything unless we've explicitly
-> told it to via skipnr, because I'd expect that
-
-It's what most archs happen to do today and is what
-stack_trace_save_tsk() as implemented using arch_stack_walk() does.
-Which is I think the closest to canonical we have.
-
-> stack_trace_save_tsk_reliable() mustn't, in case we ever need to patch
-> anything in the scheduler (or arch ctxsw code) with a livepatch, or if
-> you ever *want* to have the sched functions in a trace.
-> 
-> So I have two big questions:
-> 
-> 1) Where precisely should stack_trace_save_tsk() and
->    stack_trace_save_tsk_reliable() start from?
-> 
-> 1) What should you do when you *do* want sched functions in a trace?
-> 
-> We could side-step the issue here by using arch_stack_walk(), which'd
-> make it easy to skip sched functions in the core code.
-
-arch_stack_walk() is the modern API and should be used going forward,
-and I've gone with the stack_trace_save*() implementation as per that.
