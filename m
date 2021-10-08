@@ -2,83 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A3FC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  7 Oct 2021 07:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F03DC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC16D610FB
-	for <linux-hardening@archiver.kernel.org>; Thu,  7 Oct 2021 07:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C7961038
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240248AbhJGHP4 (ORCPT
+        id S240128AbhJHLTK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 7 Oct 2021 03:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40044 "EHLO
+        Fri, 8 Oct 2021 07:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240232AbhJGHPy (ORCPT
+        with ESMTP id S240084AbhJHLTK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 7 Oct 2021 03:15:54 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2812C061746;
-        Thu,  7 Oct 2021 00:14:00 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id g10so18897613edj.1;
-        Thu, 07 Oct 2021 00:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zU9vVGfgwfclx0P9kgofxt67V29qFzN+kIDgX9LtHew=;
-        b=K8/QWGXzaodYr8Z9EaUfd5S6mUHZipd/xkPVLjzhCUl7fNX967e4RyaRp14nhUpXh7
-         SkqFRjsNd38w7qp5bEKgNu0GQPHtsNyyDLQvqFunrrc3JR8TTna75EscjSQ3WBvEZR1p
-         QlJoBvr2NPJqEtVY13fNXBAd85f9IrY2hmgPMKWdKTYhJb2gQyf6NSmJQ3FM03ZANFq0
-         yySBqMPYgATtogT/NMFHKxe4HbrHQ5L0T+0qu46MUGpzT0w9Ey0JIGMdE7e8FzbSsYCo
-         8a3UxxHtL5ZsvjpkVLLCWGPV64uvCbivv5fhb0K82KdOSIlD24buzXt91zDA6MTWZSeV
-         poUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zU9vVGfgwfclx0P9kgofxt67V29qFzN+kIDgX9LtHew=;
-        b=u7Rwr1hzLBzTgXOsHEZqUXeARJfYKLRlI1cr5THTqZS1LJVmXaO0r9FP8GEwLL5jJ/
-         PQgN7q2JIFHOCdSMQQwbkjNRQLIAvSOnpazTjkNkph4dK4HI0CYRxRIZBvVGCtRQx4Ld
-         mBq90ifbSguMWC7OzXwru7spQqHy8E4huoptVdOsKA7C4RhKNxWIWX9aC33E6QeKtJ6E
-         VfOfUly/TWgTms/BLvYITm3mBy52vfpin+c5pVEguj/AZbNHEMgaQ+Dea6arJaseiA4s
-         XrKSZ2Yj7EQEYiB4L9vjf/Hb31BDkY51PpWmRhfVSCAgnXxzsksASIOvlPApkBNX8v3X
-         g2uw==
-X-Gm-Message-State: AOAM531Of/utpTamyA43z9lCmWX0wMKGY58HMT3/Blx2KvfpF7QPKTjO
-        iNtzr648Xklg6AlKhZ2lqzKEiiP41hrb25Ds31Q=
-X-Google-Smtp-Source: ABdhPJwII0eh9lNLPvP+5FATHOW7a8R9n2MzMHyNMYNTdqZUaZ2ZQHRWCS/Po1DiwzfXzgbMwGiTFdA3qzZIa8Zf188=
-X-Received: by 2002:a50:e142:: with SMTP id i2mr3939626edl.107.1633590839529;
- Thu, 07 Oct 2021 00:13:59 -0700 (PDT)
+        Fri, 8 Oct 2021 07:19:10 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64DBC061570;
+        Fri,  8 Oct 2021 04:17:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=Wpos95iylg095UsnNd0rlORwCu4Pilf9lSCl83VJs5E=; b=D5gn/w+kAJPRW9syBZ6bNLF5jH
+        TihRX03GgyxgNzl+IwjDIV5wSjEiKKF3sVGg3I89GlGxXeb3qS+b5clklyCbFOW3VOMc8JIrpLNw0
+        Kedl++F7FhITDTvd8Ycsam6Xip+7Nog8MZ7VGvSTN+raC5xQ3WYEgnCP2XFgX9xuBQ2zwDpr/j0fg
+        OwatR0nCMo18uKPaA5Eb9+jY0NsUubllEyo3a1mdCN6gm3kzd1vw05cbSXqXHNQ1NprLCl40lncS2
+        vxP5kEnMb5SJmzxtYZHA61gWgRoaaS/68hioT5a17e8YgAEHz+8ZyAwsHZAfPSE3mlIJIPbcOIo4P
+        khD6vjtg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mYnsD-008eLB-AA; Fri, 08 Oct 2021 11:17:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 99013302A2C;
+        Fri,  8 Oct 2021 13:17:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id DAF102DB84A68; Fri,  8 Oct 2021 13:17:07 +0200 (CEST)
+Message-ID: <20211008111626.211281780@infradead.org>
+User-Agent: quilt/0.66
+Date:   Fri, 08 Oct 2021 13:15:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     keescook@chromium.org, jannh@google.com
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        vcaputo@pengaru.com, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, akpm@linux-foundation.org,
+        christian.brauner@ubuntu.com, amistry@google.com,
+        Kenta.Tada@sony.com, legion@kernel.org,
+        michael.weiss@aisec.fraunhofer.de, mhocko@suse.com, deller@gmx.de,
+        zhengqi.arch@bytedance.com, me@tobin.cc, tycho@tycho.pizza,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com,
+        mark.rutland@arm.com, axboe@kernel.dk, metze@samba.org,
+        laijs@linux.alibaba.com, luto@kernel.org,
+        dave.hansen@linux.intel.com, ebiederm@xmission.com,
+        ohoono.kwon@samsung.com, kaleshsingh@google.com,
+        yifeifz2@illinois.edu, jpoimboe@redhat.com,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        vgupta@kernel.org, linux@armlinux.org.uk, will@kernel.org,
+        guoren@kernel.org, bcain@codeaurora.org, monstr@monstr.eu,
+        tsbogend@alpha.franken.de, nickhu@andestech.com,
+        jonas@southpole.se, mpe@ellerman.id.au, paul.walmsley@sifive.com,
+        hca@linux.ibm.com, ysato@users.sourceforge.jp, davem@davemloft.net,
+        chris@zankel.net
+Subject: [PATCH 3/7] proc: Use task_is_running() for wchan in /proc/$pid/stat
+References: <20211008111527.438276127@infradead.org>
 MIME-Version: 1.0
-References: <20211006180810.GA913370@embeddedor>
-In-Reply-To: <20211006180810.GA913370@embeddedor>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 7 Oct 2021 10:13:23 +0300
-Message-ID: <CAHp75VeZHEm2eXS-FJEuaAge1kPuS3acNYnJocXzN3TmF0+=nQ@mail.gmail.com>
-Subject: Re: [PATCH][next] ASoC: q6asm: use kcalloc() instead of kzalloc()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 6, 2021 at 9:04 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Use 2-factor multiplication argument form kcalloc() instead
-> of kzalloc().
+From: Kees Cook <keescook@chromium.org>
 
-You probably need to elaborate why. E.g. refer to overflow.h and its
-idea behind.
+The implementations of get_wchan() can be expensive. The only information
+imparted here is whether or not a process is currently blocked in the
+scheduler (and even this doesn't need to be exact). Avoid doing the
+heavy lifting of stack walking and just report that information by using
+task_is_running().
 
--- 
-With Best Regards,
-Andy Shevchenko
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ fs/proc/array.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -541,7 +541,7 @@ static int do_task_stat(struct seq_file
+ 	}
+ 
+ 	if (permitted && (!whole || num_threads < 2))
+-		wchan = get_wchan(task);
++		wchan = !task_is_running(task);
+ 	if (!whole) {
+ 		min_flt = task->min_flt;
+ 		maj_flt = task->maj_flt;
+@@ -606,10 +606,7 @@ static int do_task_stat(struct seq_file
+ 	 *
+ 	 * This works with older implementations of procps as well.
+ 	 */
+-	if (wchan)
+-		seq_puts(m, " 1");
+-	else
+-		seq_puts(m, " 0");
++	seq_put_decimal_ull(m, " ", wchan);
+ 
+ 	seq_put_decimal_ull(m, " ", 0);
+ 	seq_put_decimal_ull(m, " ", 0);
+
+
