@@ -2,47 +2,47 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75657C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2EFC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F02661038
-	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665E461038
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Oct 2021 11:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240181AbhJHLTL (ORCPT
+        id S240180AbhJHLVa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 8 Oct 2021 07:19:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
+        Fri, 8 Oct 2021 07:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240082AbhJHLTK (ORCPT
+        with ESMTP id S240238AbhJHLT3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 8 Oct 2021 07:19:10 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A670DC061755;
-        Fri,  8 Oct 2021 04:17:12 -0700 (PDT)
+        Fri, 8 Oct 2021 07:19:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0449C061570;
+        Fri,  8 Oct 2021 04:17:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=MLBczIwgfzeLbScljLp1G7yX9BxWvuTlFh8XrSH1m84=; b=EsWUcNy7X1pxSg/3JppKere+rn
-        Q/LqgISmaCXx5XliS78/WHpuybOwDYcGnyg8+6zOCujnOENeS9MxMeI0yHF8ciMWwprpi106Oe0el
-        2FGvYJ9irJhyN/eRUfx5bNZbg2X84D6RGTQ92hMA7nIX4zTMDBbG3uzjfg5kJ6rOflry5KrOrbQbR
-        +XkfJvP47dp0mtpF1+w5koEaA4Vg37N2fsHFA9qOnXWZ2/w6EmtF4Jlvd9qCGQpHy+Jn78ZXMT/MV
-        yXgISXQUZsjInq3nql3MimkKotV3df/LVtiZdLns5caQAxkY/wCyfkBQUx6E5IM8URQIcB+MTLReu
-        H8Cge1HA==;
+        bh=yKKSjQPEnCfcZmt5gUs0/OGmQc6HpFW+TX3lGOKtFIA=; b=k+IHGVPAZOqkcmZukn/zWFMXoM
+        ZsHwklLO0eb9YmTp01zAApO+oBahjAfNKIU0CZLwIC6/FO3hAj0BnhJ/TfRLSHyqcenNgte4mqfec
+        yU6uhUkPeQFTaJrkjYYAys2ay9C+yaxEjdOWlVYSZuEZY4Vi73F6mZLlDg5RkutOH8p4eW2cxKZkM
+        JQfP2TQIE0NDBdAQeDXiSFUN84Gwjvnn+dg2n5Y5JNLzrjgq3YHPk7jkCN9Elu1hT0GtvjwPumNfr
+        3odHdRZfcSHYbVEZcBq2Cj5889IAyLJcMuWLOzcR2JwijoywebOohtOYny5+RenAJuwX8bx99OuHR
+        4/3N+GJA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mYnsD-008eL9-Bp; Fri, 08 Oct 2021 11:17:09 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mYnsC-0032fe-D9; Fri, 08 Oct 2021 11:17:17 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 04A87300F19;
-        Fri,  8 Oct 2021 13:17:07 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 93CFE302A1F;
+        Fri,  8 Oct 2021 13:17:08 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id D20662C4B3CDC; Fri,  8 Oct 2021 13:17:07 +0200 (CEST)
-Message-ID: <20211008111626.090829198@infradead.org>
+        id D699F2DB84A66; Fri,  8 Oct 2021 13:17:07 +0200 (CEST)
+Message-ID: <20211008111626.151570317@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 08 Oct 2021 13:15:28 +0200
+Date:   Fri, 08 Oct 2021 13:15:29 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     keescook@chromium.org, jannh@google.com
 Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
@@ -66,9 +66,8 @@ Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
         tsbogend@alpha.franken.de, nickhu@andestech.com,
         jonas@southpole.se, mpe@ellerman.id.au, paul.walmsley@sifive.com,
         hca@linux.ibm.com, ysato@users.sourceforge.jp, davem@davemloft.net,
-        chris@zankel.net, kernel test robot <oliver.sang@intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH 1/7] Revert "proc/wchan: use printk format instead of lookup_symbol_name()"
+        chris@zankel.net
+Subject: [PATCH 2/7] leaking_addresses: Always print a trailing newline
 References: <20211008111527.438276127@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -78,60 +77,33 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-This reverts commit 152c432b128cb043fc107e8f211195fe94b2159c.
+For files that lack trailing newlines and match a leaking address (e.g.
+wchan[1]), the leaking_addresses.pl report would run together with the
+next line, making things look corrupted.
 
-When a kernel address couldn't be symbolized for /proc/$pid/wchan, it
-would leak the raw value, a potential information exposure. This is a
-regression compared to the safer pre-v5.12 behavior.
+Unconditionally remove the newline on input, and write it back out on
+output.
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Reported-by: Vito Caputo <vcaputo@pengaru.com>
-Reported-by: Jann Horn <jannh@google.com>
+[1] https://lore.kernel.org/all/20210103142726.GC30643@xsang-OptiPlex-9020/
+
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
 ---
- fs/proc/base.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ scripts/leaking_addresses.pl |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -67,6 +67,7 @@
- #include <linux/mm.h>
- #include <linux/swap.h>
- #include <linux/rcupdate.h>
-+#include <linux/kallsyms.h>
- #include <linux/stacktrace.h>
- #include <linux/resource.h>
- #include <linux/module.h>
-@@ -386,17 +387,19 @@ static int proc_pid_wchan(struct seq_fil
- 			  struct pid *pid, struct task_struct *task)
- {
- 	unsigned long wchan;
-+	char symname[KSYM_NAME_LEN];
+--- a/scripts/leaking_addresses.pl
++++ b/scripts/leaking_addresses.pl
+@@ -455,8 +455,9 @@ sub parse_file
  
--	if (ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
--		wchan = get_wchan(task);
--	else
--		wchan = 0;
--
--	if (wchan)
--		seq_printf(m, "%ps", (void *) wchan);
--	else
--		seq_putc(m, '0');
-+	if (!ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
-+		goto print0;
- 
-+	wchan = get_wchan(task);
-+	if (wchan && !lookup_symbol_name(wchan, symname)) {
-+		seq_puts(m, symname);
-+		return 0;
-+	}
-+
-+print0:
-+	seq_putc(m, '0');
- 	return 0;
- }
- #endif /* CONFIG_KALLSYMS */
+ 	open my $fh, "<", $file or return;
+ 	while ( <$fh> ) {
++		chomp;
+ 		if (may_leak_address($_)) {
+-			print $file . ': ' . $_;
++			printf("$file: $_\n");
+ 		}
+ 	}
+ 	close $fh;
 
 
