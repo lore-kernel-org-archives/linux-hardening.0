@@ -2,234 +2,175 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A8BC433FE
-	for <linux-hardening@archiver.kernel.org>; Sat,  9 Oct 2021 09:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1234BC433F5
+	for <linux-hardening@archiver.kernel.org>; Sat,  9 Oct 2021 12:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52DB60FC1
-	for <linux-hardening@archiver.kernel.org>; Sat,  9 Oct 2021 09:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE6A60E53
+	for <linux-hardening@archiver.kernel.org>; Sat,  9 Oct 2021 12:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231555AbhJIJi2 (ORCPT
+        id S233007AbhJIMyF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 9 Oct 2021 05:38:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230022AbhJIJi2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 9 Oct 2021 05:38:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C30956103B;
-        Sat,  9 Oct 2021 09:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633772191;
-        bh=SjT8GXjp2vALqAboJSsc+ya7I8HSo3JkjeRK9RdsfOs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RPa5mVuZmKfBqcwzAKdwFLiOTh4k96G1uawf5srCOZkavlEliMGmiGYkMd7zaYuur
-         9D/ZlUyYDul7Iscb2Mj4kG9D1oktsPMIHdKq28uLstTO+wi+4Wyqg6G/dZfjqibPlX
-         BWvz/ey57e+lL7xBmVtUf/NMqHIu87QifvYy8QuWHYaUFj9311A2jnF3aSvVPWq44V
-         KVZ87zyADOVHAVnZ1Ian7zheZDXzmotL+Yhr3k8r+3DZ0DNfQ8KbYtVUYfCDsrLy09
-         320QguKRYhBKQczyXoi0ZYQCk6nuZOTUhkRXtLwm+lAYi62nqVX8UY3xT8x7Mc78Nv
-         IW/MbN0QRJCKw==
-Received: by mail-ua1-f51.google.com with SMTP id r17so189394uaf.8;
-        Sat, 09 Oct 2021 02:36:31 -0700 (PDT)
-X-Gm-Message-State: AOAM532YhZTiXp89NiMmfRD1AumqnX8VDxiLTqOo7S80vJ2uEkcuT+Po
-        tVIxJrzhhWt214xwdiHlh4IoBbBWsCFuRZkFn9M=
-X-Google-Smtp-Source: ABdhPJw4K9Vh0ayL3YzQdV/mPKwTuZ6tYl/k8iHoEU5LBj948W/50Y3El7sw3j56qe2h+lEng8MYJoY+5CCl0TmO9lE=
-X-Received: by 2002:a05:6130:426:: with SMTP id ba38mr7997026uab.108.1633772190841;
- Sat, 09 Oct 2021 02:36:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211008111527.438276127@infradead.org> <20211008111626.455137084@infradead.org>
-In-Reply-To: <20211008111626.455137084@infradead.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 9 Oct 2021 17:36:19 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRTbOjqfNcm16E_XCtBSxTiUyczsWYR9uy6ZYqSuR41Pg@mail.gmail.com>
-Message-ID: <CAJF2gTRTbOjqfNcm16E_XCtBSxTiUyczsWYR9uy6ZYqSuR41Pg@mail.gmail.com>
-Subject: Re: [PATCH 7/7] arch: Fix STACKTRACE_SUPPORT
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        vcaputo@pengaru.com, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        christian.brauner@ubuntu.com, amistry@google.com,
-        Kenta.Tada@sony.com, legion@kernel.org,
-        michael.weiss@aisec.fraunhofer.de, mhocko@suse.com,
-        Helge Deller <deller@gmx.de>, zhengqi.arch@bytedance.com,
-        me@tobin.cc, tycho@tycho.pizza,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Sat, 9 Oct 2021 08:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231132AbhJIMyE (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 9 Oct 2021 08:54:04 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E786CC061570;
+        Sat,  9 Oct 2021 05:52:07 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id d9so22944791edh.5;
+        Sat, 09 Oct 2021 05:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=975/0lKre2jbukZyrsOHoZ3KIJn08g0A4cVpQ8XD8kI=;
+        b=hVcr+o1302lP3dfkILDlV1SWMYeqJQl7pYfgbS3boQXLZweylwSzlGJGLLJwQNk8Kh
+         CwL7ZYgMcu859cwij3WRju+M/6IBw1l5qVyv2sqs6vEeLyQuIkqRBOLAvpHG2flk3GUu
+         tn0JJzxP25bxoKIzhRhoiWy9CUZiPDduVKRLOFHRfOkYUOyLurBQIqcI3eVAOA/JbRy2
+         URi2wY4/k/7uTuVYTbc7wFkTe2AuqPP9pdDjOKvn430JKAXbvj/JUkCfUmvxV47WBwOb
+         Mj3LP/fA8TkfpmWrugYinFcFGixuwTX3+KlDePQpccjqsQkgWcVl0e5M7KhxZopGYHU0
+         f0Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=975/0lKre2jbukZyrsOHoZ3KIJn08g0A4cVpQ8XD8kI=;
+        b=58bRgh0YaApsf9ucmbdBUrwwnu1g2tFopow5ehNT7NW94QMrRzcmLItk2H/kFz3+mY
+         XwF2sELqV8jQ1CXDwarwvo4La6X5Eujv9cCj9tAtqskh+bmyKYtKHgYdBoKWGSKRR8FH
+         NTGZ78bUZ03A0lOfOGEui5NGDLWavOV0HNzQwqzHsc47Cqe43Bkmoyfs7a69XU0azDtY
+         ZH6w+0Lk7CrjSJCksaEtw1sM3DSKNNcLt1/Jr2UoncN2VlC09vPYUGZa8xfqIRG3INHq
+         mOYw5ZdlytbhIh9FNlt6eTGLY8/LVRL1sQPgNAVsj0qHMJnAhsFVUWxnKpPfeKnTh23/
+         q/lw==
+X-Gm-Message-State: AOAM532aokajDtWcxh8tk8E55SWI3Lws098OzbiEPI8hEr58pY9114MT
+        RfIC26JzHIZE6YUjsIiGiQ==
+X-Google-Smtp-Source: ABdhPJwyfUp4OaPU6ugKRCPVVsevXJUZSC5gxhhEWZth3zrYETY0kH108F0bm4pu2qMTrK4qsPlwXg==
+X-Received: by 2002:a17:906:7848:: with SMTP id p8mr11404695ejm.212.1633783926493;
+        Sat, 09 Oct 2021 05:52:06 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.249.82])
+        by smtp.gmail.com with ESMTPSA id l23sm967292ejn.15.2021.10.09.05.52.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Oct 2021 05:52:06 -0700 (PDT)
+Date:   Sat, 9 Oct 2021 15:52:02 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, metze@samba.org,
-        laijs@linux.alibaba.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>, jannh@google.com,
+        vcaputo@pengaru.com, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, christian.brauner@ubuntu.com,
+        amistry@google.com, Kenta.Tada@sony.com, legion@kernel.org,
+        michael.weiss@aisec.fraunhofer.de, mhocko@suse.com, deller@gmx.de,
+        zhengqi.arch@bytedance.com, me@tobin.cc, tycho@tycho.pizza,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, axboe@kernel.dk,
+        metze@samba.org, laijs@linux.alibaba.com, luto@kernel.org,
+        dave.hansen@linux.intel.com, ebiederm@xmission.com,
         ohoono.kwon@samsung.com, kaleshsingh@google.com,
-        yifeifz2@illinois.edu, jpoimboe@redhat.com,
-        linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>, vgupta@kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nick Hu <nickhu@andestech.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        David Miller <davem@davemloft.net>,
-        Chris Zankel <chris@zankel.net>
-Content-Type: text/plain; charset="UTF-8"
+        yifeifz2@illinois.edu, linux-arch@vger.kernel.org,
+        vgupta@kernel.org, linux@armlinux.org.uk, will@kernel.org,
+        guoren@kernel.org, bcain@codeaurora.org, monstr@monstr.eu,
+        tsbogend@alpha.franken.de, nickhu@andestech.com,
+        jonas@southpole.se, mpe@ellerman.id.au, paul.walmsley@sifive.com,
+        hca@linux.ibm.com, ysato@users.sourceforge.jp, davem@davemloft.net,
+        chris@zankel.net, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] selftests: proc: Make sure wchan works when it exists
+Message-ID: <YWGQckkJuKB4yAfg@localhost.localdomain>
+References: <20211008235504.2957528-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211008235504.2957528-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Thx Peter,
+On Fri, Oct 08, 2021 at 04:55:04PM -0700, Kees Cook wrote:
+> This makes sure that wchan contains a sensible symbol when a process is
+> blocked.
 
-On Fri, Oct 8, 2021 at 7:18 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> A few archs got save_stack_trace_tsk() vs in_sched_functions() wrong.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/csky/kernel/stacktrace.c  |    7 ++++++-
->  arch/mips/kernel/stacktrace.c  |   27 ++++++++++++++++-----------
->  arch/nds32/kernel/stacktrace.c |   21 +++++++++++----------
->  3 files changed, 33 insertions(+), 22 deletions(-)
->
-> --- a/arch/csky/kernel/stacktrace.c
-> +++ b/arch/csky/kernel/stacktrace.c
-> @@ -122,12 +122,17 @@ static bool save_trace(unsigned long pc,
->         return __save_trace(pc, arg, false);
->  }
->
-> +static bool save_trace_nosched(unsigned long pc, void *arg)
-> +{
-> +       return __save_trace(pc, arg, true);
-> +}
-> +
->  /*
->   * Save stack-backtrace addresses into a stack_trace buffer.
->   */
->  void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
->  {
-> -       walk_stackframe(tsk, NULL, save_trace, trace);
-> +       walk_stackframe(tsk, NULL, save_trace_nosched, trace);
->  }
->  EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
-I think the patch should be:
-@@ -138,7 +138,7 @@ static bool __save_trace(unsigned long pc, void
-*arg, bool nosched)
+> Specifically this calls the sleep() syscall, and expects the
+> architecture to have called schedule() from a function that has "sleep"
+> somewhere in its name.
 
- static bool save_trace(unsigned long pc, void *arg)
- {
--       return __save_trace(pc, arg, false);
-+       return __save_trace(pc, arg, true);
- }
+This exposes internal kernel symbol to userspace.
+Why would want to test that?
 
-Another question:
-If we put sched_text in the backtrace buffer, just cause put no useful
-information in wchan, right?
-(I think it wouldn't cause a worse problem than debugging.)
+Doing s/sleep/SLEEP/g doesn't change kernel but now the test is broken.
 
+> For example, on the architectures I tested
+> (x86_64, arm64, arm, mips, and powerpc) this is "hrtimer_nanosleep":
 
->
-> --- a/arch/mips/kernel/stacktrace.c
-> +++ b/arch/mips/kernel/stacktrace.c
-> @@ -66,16 +66,7 @@ static void save_context_stack(struct st
->  #endif
->  }
->
-> -/*
-> - * Save stack-backtrace addresses into a stack_trace buffer.
-> - */
-> -void save_stack_trace(struct stack_trace *trace)
-> -{
-> -       save_stack_trace_tsk(current, trace);
-> -}
-> -EXPORT_SYMBOL_GPL(save_stack_trace);
-> -
-> -void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-> +static void __save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace, bool savesched)
->  {
->         struct pt_regs dummyregs;
->         struct pt_regs *regs = &dummyregs;
-> @@ -88,6 +79,20 @@ void save_stack_trace_tsk(struct task_st
->                 regs->cp0_epc = tsk->thread.reg31;
->         } else
->                 prepare_frametrace(regs);
-> -       save_context_stack(trace, tsk, regs, tsk == current);
-> +       save_context_stack(trace, tsk, regs, savesched);
-> +}
-> +
 > +/*
-> + * Save stack-backtrace addresses into a stack_trace buffer.
+> + * Make sure that wchan returns a reasonable symbol when blocked.
 > + */
-> +void save_stack_trace(struct stack_trace *trace)
+
+Test should be "contains C identifier" then?
+
+> +int main(void)
 > +{
-> +       __save_stack_trace_tsk(current, trace, true);
-> +}
-> +EXPORT_SYMBOL_GPL(save_stack_trace);
+> +	char buf[64];
+> +	pid_t child;
+> +	int sync[2], fd;
 > +
-> +void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-> +{
-> +       __save_stack_trace_tsk(tsk, trace, false);
->  }
->  EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
-> --- a/arch/nds32/kernel/stacktrace.c
-> +++ b/arch/nds32/kernel/stacktrace.c
-> @@ -6,25 +6,16 @@
->  #include <linux/stacktrace.h>
->  #include <linux/ftrace.h>
->
-> -void save_stack_trace(struct stack_trace *trace)
-> -{
-> -       save_stack_trace_tsk(current, trace);
-> -}
-> -EXPORT_SYMBOL_GPL(save_stack_trace);
-> -
-> -void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-> +static void __save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace, bool savesched)
->  {
->         unsigned long *fpn;
->         int skip = trace->skip;
-> -       int savesched;
->         int graph_idx = 0;
->
->         if (tsk == current) {
->                 __asm__ __volatile__("\tori\t%0, $fp, #0\n":"=r"(fpn));
-> -               savesched = 1;
->         } else {
->                 fpn = (unsigned long *)thread_saved_fp(tsk);
-> -               savesched = 0;
->         }
->
->         while (!kstack_end(fpn) && !((unsigned long)fpn & 0x3)
-> @@ -50,4 +41,14 @@ void save_stack_trace_tsk(struct task_st
->                 fpn = (unsigned long *)fpp;
->         }
->  }
-> +void save_stack_trace(struct stack_trace *trace)
-> +{
-> +       __save_stack_trace_tsk(current, trace, true);
-> +}
-> +EXPORT_SYMBOL_GPL(save_stack_trace);
+> +	if (pipe(sync) < 0)
+> +		perror_exit("pipe");
 > +
-> +void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
-> +{
-> +       __save_stack_trace_tsk(tsk, trace, false);
+> +	child = fork();
+> +	if (child < 0)
+> +		perror_exit("fork");
+> +	if (child == 0) {
+> +		/* Child */
+> +		if (close(sync[0]) < 0)
+> +			perror_exit("child close sync[0]");
+> +		if (close(sync[1]) < 0)
+> +			perror_exit("child close sync[1]");
+
+Redundant close().
+
+> +		sleep(10);
+> +		_exit(0);
+> +	}
+> +	/* Parent */
+> +	if (close(sync[1]) < 0)
+> +		perror_exit("parent close sync[1]");
+
+Redundant close().
+
+> +	if (read(sync[0], buf, 1) != 0)
+> +		perror_exit("parent read sync[0]");
+
+Racy if child is scheduled out after first close in the child.
+
+> +	snprintf(buf, sizeof(buf), "/proc/%d/wchan", child);
+> +	fd = open(buf, O_RDONLY);
+> +	if (fd < 0) {
+> +		if (errno == ENOENT)
+> +			return 4;
+> +		perror_exit(buf);
+> +	}
+> +
+> +	memset(buf, 0, sizeof(buf));
+> +	if (read(fd, buf, sizeof(buf) - 1) < 1)
+> +		perror_exit(buf);
+> +	if (strstr(buf, "sleep") == NULL) {
+> +		fprintf(stderr, "FAIL: did not find 'sleep' in wchan '%s'\n", buf);
+> +		return 1;
+> +	}
+> +	printf("ok: found 'sleep' in wchan '%s'\n", buf);
+> +
+> +	if (kill(child, SIGKILL) < 0)
+> +		perror_exit("kill");
+> +	if (waitpid(child, NULL, 0) != child) {
+> +		fprintf(stderr, "waitpid: got the wrong child!?\n");
+> +		return 1;
+> +	}
+> +
+> +	return 0;
 > +}
->  EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
->
->
-
-
---
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
