@@ -2,91 +2,148 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33FAC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Oct 2021 22:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEBEC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Oct 2021 01:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4FA160EFE
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Oct 2021 22:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C651860462
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Oct 2021 01:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235614AbhJKXAj (ORCPT
+        id S231873AbhJLBgE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Oct 2021 19:00:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
+        Mon, 11 Oct 2021 21:36:04 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27025 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235610AbhJKXAj (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Oct 2021 19:00:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 99D3360E9C;
-        Mon, 11 Oct 2021 22:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633993118;
-        bh=C7TM3EmPN6DorfUEVOLqh8TJscFvq9jGaAVd0ARsT1c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oOAawjLPgc6W09z6cqLCC04LuJz+rEeKqmk+zYRPRu2oUVyJNHjXNKpnxA8H3PHxh
-         IAd8Vz0/ehIs3ZXxFiUenpmaR1RLiPh1P4GxD6raXoPXTBmgZMRnA0IF5QX9M+j9WX
-         dsTSIoVWuQcGKZcVg1Jru1fOpLw9sGyaOBf44C9NfTTNv6NMZzKeuaoMzzveYe3VZq
-         FGfSC4zE+4CAwEfYUp/4pFCdfd6oOG4kxl/UmONFl1xVy70mwRrl4pyrPMSk1pyHdj
-         8E+B4uvo1J9jgFYNKBJ2+jXEUDdkML8CKZaLWY65FbMaRkBSvBUkSdLzusyky49Z5T
-         t7RhldW9YPb+g==
-Date:   Mon, 11 Oct 2021 15:58:38 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] xfs: Use kvcalloc() instead of kvzalloc()
-Message-ID: <20211011225838.GJ24307@magnolia>
-References: <20210928223307.GA295934@embeddedor>
+        id S231135AbhJLBgE (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 11 Oct 2021 21:36:04 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10134"; a="250404503"
+X-IronPort-AV: E=Sophos;i="5.85,366,1624345200"; 
+   d="scan'208";a="250404503"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2021 18:33:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,366,1624345200"; 
+   d="scan'208";a="591540770"
+Received: from louislifei-optiplex-7050.sh.intel.com (HELO louislifei-OptiPlex-7050) ([10.239.154.151])
+  by orsmga004.jf.intel.com with ESMTP; 11 Oct 2021 18:33:57 -0700
+Date:   Tue, 12 Oct 2021 09:34:29 +0800
+From:   Li Fei1 <fei1.li@intel.com>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     keescook@chromium.org, gustavoars@kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fei1.li@intel.com
+Subject: Re: [PATCH] virt: acrn: Prefer array_syze and struct_size over open
+ coded arithmetic
+Message-ID: <20211012013429.GA28284@louislifei-OptiPlex-7050>
+References: <20211011103902.15638-1-len.baker@gmx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210928223307.GA295934@embeddedor>
+In-Reply-To: <20211011103902.15638-1-len.baker@gmx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 28, 2021 at 05:33:07PM -0500, Gustavo A. R. Silva wrote:
-> Use 2-factor argument multiplication form kvcalloc() instead of
-> kvzalloc().
+On Mon, Oct 11, 2021 at 12:39:02PM +0200, Len Baker wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
 > 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> So, use the array_size() helper to do the arithmetic instead of the
+> argument "count * size" in the vzalloc() function.
+> 
+> Also, take the opportunity to add a flexible array member of struct
+> vm_memory_region_op to the vm_memory_region_batch structure. And then,
+> change the code accordingly and use the struct_size() helper to do the
+> arithmetic instead of the argument "size + size * count" in the kzalloc
+> function.
+> 
+> This code was detected with the help of Coccinelle and audited and fixed
+> manually.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 
-Oooh, fun, checks for multiplication overflows.
+Hi Baker
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Thanks for helping us to fix this issue. This patch looks good to me.
+Please add Signed-off-by: Fei Li <fei1.li@intel.com>.
+Only two minor comments.
 
---D
 
 > ---
->  fs/xfs/xfs_ioctl.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/virt/acrn/acrn_drv.h | 10 ++++++----
+>  drivers/virt/acrn/mm.c       |  9 ++++-----
+>  2 files changed, 10 insertions(+), 9 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 0c795dc093ef..174cd8950cb6 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1547,7 +1547,7 @@ xfs_ioc_getbmap(
->  	if (bmx.bmv_count > ULONG_MAX / recsize)
+> diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+> index 1be54efa666c..fcc2e3e5232a 100644
+> --- a/drivers/virt/acrn/acrn_drv.h
+> +++ b/drivers/virt/acrn/acrn_drv.h
+> @@ -48,6 +48,7 @@ struct vm_memory_region_op {
+>   * @reserved:		Reserved.
+>   * @regions_num:	The number of vm_memory_region_op.
+>   * @regions_gpa:	Physical address of a vm_memory_region_op array.
+> + * @regions_op:		Flexible array of vm_memory_region_op.
+One Tab please.
+>   *
+>   * HC_VM_SET_MEMORY_REGIONS uses this structure to manage EPT mappings of
+>   * multiple memory regions of a User VM. A &struct vm_memory_region_batch
+> @@ -55,10 +56,11 @@ struct vm_memory_region_op {
+>   * ACRN Hypervisor.
+>   */
+>  struct vm_memory_region_batch {
+> -	u16	vmid;
+> -	u16	reserved[3];
+> -	u32	regions_num;
+> -	u64	regions_gpa;
+> +	u16				vmid;
+> +	u16				reserved[3];
+> +	u32				regions_num;
+> +	u64				regions_gpa;
+> +	struct vm_memory_region_op	regions_op[];
+Please use Whitespace instead of Tab.
+>  };
+> 
+>  /**
+> diff --git a/drivers/virt/acrn/mm.c b/drivers/virt/acrn/mm.c
+> index c4f2e15c8a2b..a881742cd48d 100644
+> --- a/drivers/virt/acrn/mm.c
+> +++ b/drivers/virt/acrn/mm.c
+> @@ -168,7 +168,7 @@ int acrn_vm_ram_map(struct acrn_vm *vm, struct acrn_vm_memmap *memmap)
+> 
+>  	/* Get the page number of the map region */
+>  	nr_pages = memmap->len >> PAGE_SHIFT;
+> -	pages = vzalloc(nr_pages * sizeof(struct page *));
+> +	pages = vzalloc(array_size(nr_pages, sizeof(struct page *)));
+>  	if (!pages)
 >  		return -ENOMEM;
->  
-> -	buf = kvzalloc(bmx.bmv_count * sizeof(*buf), GFP_KERNEL);
-> +	buf = kvcalloc(bmx.bmv_count, sizeof(*buf), GFP_KERNEL);
->  	if (!buf)
->  		return -ENOMEM;
->  
-> @@ -1601,11 +1601,11 @@ xfs_ioc_getfsmap(
->  	 */
->  	count = min_t(unsigned int, head.fmh_count,
->  			131072 / sizeof(struct fsmap));
-> -	recs = kvzalloc(count * sizeof(struct fsmap), GFP_KERNEL);
-> +	recs = kvcalloc(count, sizeof(struct fsmap), GFP_KERNEL);
->  	if (!recs) {
->  		count = min_t(unsigned int, head.fmh_count,
->  				PAGE_SIZE / sizeof(struct fsmap));
-> -		recs = kvzalloc(count * sizeof(struct fsmap), GFP_KERNEL);
-> +		recs = kvcalloc(count, sizeof(struct fsmap), GFP_KERNEL);
->  		if (!recs)
->  			return -ENOMEM;
+> 
+> @@ -220,16 +220,15 @@ int acrn_vm_ram_map(struct acrn_vm *vm, struct acrn_vm_memmap *memmap)
 >  	}
-> -- 
-> 2.27.0
+> 
+>  	/* Prepare the vm_memory_region_batch */
+> -	regions_info = kzalloc(sizeof(*regions_info) +
+> -			       sizeof(*vm_region) * nr_regions,
+> -			       GFP_KERNEL);
+> +	regions_info = kzalloc(struct_size(regions_info, regions_op,
+> +					   nr_regions), GFP_KERNEL);
+>  	if (!regions_info) {
+>  		ret = -ENOMEM;
+>  		goto unmap_kernel_map;
+>  	}
+> 
+>  	/* Fill each vm_memory_region_op */
+> -	vm_region = (struct vm_memory_region_op *)(regions_info + 1);
+> +	vm_region = regions_info->regions_op;
+>  	regions_info->vmid = vm->vmid;
+>  	regions_info->regions_num = nr_regions;
+>  	regions_info->regions_gpa = virt_to_phys(vm_region);
+> --
+> 2.25.1
 > 
