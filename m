@@ -2,85 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C58AC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 15:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50077C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 15:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E08760F21
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 15:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3631360F21
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 15:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229514AbhJMPZA (ORCPT
+        id S231938AbhJMPZB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Oct 2021 11:25:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38312 "EHLO mail.kernel.org"
+        Wed, 13 Oct 2021 11:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229777AbhJMPY7 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Oct 2021 11:24:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EA3026113D;
-        Wed, 13 Oct 2021 15:22:54 +0000 (UTC)
+        id S229851AbhJMPZB (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 13 Oct 2021 11:25:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D0B8B61056;
+        Wed, 13 Oct 2021 15:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634138576;
-        bh=flUoePz/ELcAVPcE4t/3y39R7GhsHD4BKh/RcKQ0z/A=;
+        s=k20201202; t=1634138578;
+        bh=R2UYEqSTRtChtC4QgeRilpzF9vEGT72cMEAtMxwkrdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hu+vgOE5Q2S9stUfHBDPDugz9oB89WK6gH/XriFHis7aAX7tSXsemgZIWMoyiQqO2
-         t1QBMgGqJUBe0iF/3ocgjAEUklT6vBbbcoKKN2+QgEo9qMfLWfYIFscRnZ6XdMMpnI
-         WJfetasZ1V1G/B7Xh+Htus9qWG+UhsARVYXNMlv5oAsxZvUnpUu2yCFMA2yclHzM/r
-         E8HZLcY+mDCwP2LUJYeITP645O+zaIpv8XdTeRf3QC/PSzSRF6G5YSof63yvOc52N5
-         bYm3q5qT0TewizUH+C0FsgWJjbFAQiQHWhGoTrr9LzYdValf0juXFRraBv+fbdUnLb
-         HJ2iIjvZd09vg==
+        b=SD49Vd42WXZLw/PvW6bu69SQXt++KH5NdhwciCvqJ1dpXyvizRJTIkdAuvSQiH020
+         5E0zj4MOmboXANs3PPglBPm20qZEEUeuMxTw2Ko0onsdZpAcpb0YPCB+Sv/sv5qGLO
+         PocfF7cIBqpkmqMFVOL3o+Ym1h+d+UkjZHOblUqpuiOyRjzLC0XR44CAQysctrD3LX
+         8j8jvhur0NqYHhu0yFtVn1OuqDTmnGQ9nt+mmu5HqME6YVQccj8dWhVxw4LV5hpiAK
+         HOpcnhoJ0y6pnaeguzs+I9/JXBcaf/ad6jT1aNZ4vpJoWnm3yjszWNaVYtYHlud0eF
+         MYebslUbSc/bg==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, mark.rutland@arm.com,
         catalin.marinas@arm.com, will@kernel.org,
         Ard Biesheuvel <ardb@kernel.org>
-Subject: [RFC PATCH 1/9] arm64: assembler: enable PAC for non-leaf assembler routines
-Date:   Wed, 13 Oct 2021 17:22:35 +0200
-Message-Id: <20211013152243.2216899-2-ardb@kernel.org>
+Subject: [RFC PATCH 2/9] arm64: cache: use ALIAS version of linkage macros for local aliases
+Date:   Wed, 13 Oct 2021 17:22:36 +0200
+Message-Id: <20211013152243.2216899-3-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211013152243.2216899-1-ardb@kernel.org>
 References: <20211013152243.2216899-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1085; h=from:subject; bh=flUoePz/ELcAVPcE4t/3y39R7GhsHD4BKh/RcKQ0z/A=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBhZvmyx1T9ZjfUmm1pG7KbdLlq1l1jOmPiOC7NNXoR hU1cfDCJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYWb5sgAKCRDDTyI5ktmPJL70DA DGmzNDA3P176nmDyPRGr1hOmSglwN3TvUuOkL/jZIMFs32EjsnNYmO+iShq/g7MCXzc7Hd0QLHr8wy c2WUEEzxpXDr7aYnNw89G5S1s36fOGm8Ys624CxdenYJvD88FO2nqWu9mX+x+5d+5dn2g8IK4Ft5Kb Wru1SnRVcVJdBapduHdYTelK5hvJFr2soctm2EZZB28YPsmUhVJ1LhftuTf9S3thqhtLsKCefJfx6u FnIGGVdomcqPVqKRjbLXlZ2v+UGt3wppn96v//u4oqlAAqfRpWO116lE0NZXdKrIw2igOqBCbWq8Zn J83jIi2eAZukiT1qwaD6OCMeHZ4ZxyHZ6R/R5iBZkNvtZAE2mVE9vDFrQB1knnLxzpK1Q1yhFgbosY ofniB1oyZ0tp7kwjoQjmhCOW65mvithKKIVxhrbrLEaEU1oHqS6bO6vbVR11rMMDrjip8wP5nskcAZ fR0DpBDYKSL5RIgK7rTT63eC5GqR9ZLeH1OEZyV97yst8=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1738; h=from:subject; bh=R2UYEqSTRtChtC4QgeRilpzF9vEGT72cMEAtMxwkrdw=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBhZvm0p29nyIDFC/OgnXq/llxD0h6xSy4cOgfF2mK/ WgyVZWKJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYWb5tAAKCRDDTyI5ktmPJOX1C/ 9Rx/vpSt0ularwZlcpCvbRefn/JQU/xWgTbX5/unHHupZnDI26dncpgWVHQHc94ktpdHJsbTktWvUT 9eDQ/rX+C6YEwwl/+uev6DM4qWjmGdmO0C3/BIL68ntMK4HS8YG/FkBedbwENxjM8dvfEppqHb0dTZ 8RzlNHRY/TwJoBuibcnZIgI7+fYsNVlv1igojMonHn8XJ0p5U4SIbaLDIU8ozTKpBsMHi1rW59afci ULmRmlo+nciO9W4oqVK2BvGoKZSKdt5f533flUd0X+GmIJ6p0BEH/Ro1qrkEGfwVK3UMEAvPktbzQO EMlAzRQaeXeoKXdp+RlLcv6qkClfWBsF22/Lh/MWCp3C7vegrVqi671TgcNLZkUKp3a3oQaSKlu2Ys Ga/egoW2MDQQHt1uco23mAFsr+OYrBtlZ9o6W37pQYU8sDUdvSWH/7+XpoadrZfMK8aYhDWssM62lf Ma3r880sBACKvnaW+nr/fSFXIm1zokM3XYQaZNSIozDFE=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Enable pointer signing and authentication when preserving and restoring
-the linker register to/from the stack for assembler routines that use
-the frame_push and frame_pop macros to set up their stack frames. This
-protects the return address from inadvertent modification while stored
-in memory.
+Upcoming changes to the linkage macros will no longer tolerate duplicate
+start and end symbols for functions unless they are annotated as
+aliases. This is needed to avoid emitting mismatched .cfi start/end
+directives.
+
+So update a couple of occurrences in cache.S where a local alias is
+incorrectly declared as a proper local symbol.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm64/include/asm/assembler.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/mm/cache.S | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 89faca0e740d..ceed84ac4005 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -665,6 +665,9 @@ alternative_endif
- 	 *              for locals.
- 	 */
- 	.macro		frame_push, regcount:req, extra
-+#ifdef CONFIG_ARM64_PTR_AUTH_KERNEL
-+	paciasp
-+#endif
- 	__frame		st, \regcount, \extra
- 	.endm
+diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
+index 5051b3c1a4f1..681a89921992 100644
+--- a/arch/arm64/mm/cache.S
++++ b/arch/arm64/mm/cache.S
+@@ -140,7 +140,7 @@ SYM_FUNC_END(dcache_clean_pou)
+  *	- start   - kernel start address of region
+  *	- end     - kernel end address of region
+  */
+-SYM_FUNC_START_LOCAL(__dma_inv_area)
++SYM_FUNC_START_LOCAL_ALIAS(__dma_inv_area)
+ SYM_FUNC_START_PI(dcache_inval_poc)
+ 	/* FALLTHROUGH */
  
-@@ -676,6 +679,9 @@ alternative_endif
- 	 */
- 	.macro		frame_pop
- 	__frame		ld
-+#ifdef CONFIG_ARM64_PTR_AUTH_KERNEL
-+	autiasp
-+#endif
- 	.endm
+@@ -167,7 +167,7 @@ SYM_FUNC_START_PI(dcache_inval_poc)
+ 	dsb	sy
+ 	ret
+ SYM_FUNC_END_PI(dcache_inval_poc)
+-SYM_FUNC_END(__dma_inv_area)
++SYM_FUNC_END_ALIAS(__dma_inv_area)
  
- 	.macro		__frame_regs, reg1, reg2, op, num
+ /*
+  *	dcache_clean_poc(start, end)
+@@ -178,7 +178,7 @@ SYM_FUNC_END(__dma_inv_area)
+  *	- start   - virtual start address of region
+  *	- end     - virtual end address of region
+  */
+-SYM_FUNC_START_LOCAL(__dma_clean_area)
++SYM_FUNC_START_LOCAL_ALIAS(__dma_clean_area)
+ SYM_FUNC_START_PI(dcache_clean_poc)
+ 	/* FALLTHROUGH */
+ 
+@@ -190,7 +190,7 @@ SYM_FUNC_START_PI(dcache_clean_poc)
+ 	dcache_by_line_op cvac, sy, x0, x1, x2, x3
+ 	ret
+ SYM_FUNC_END_PI(dcache_clean_poc)
+-SYM_FUNC_END(__dma_clean_area)
++SYM_FUNC_END_ALIAS(__dma_clean_area)
+ 
+ /*
+  *	dcache_clean_pop(start, end)
 -- 
 2.30.2
 
