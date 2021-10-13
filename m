@@ -2,84 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA80C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 19:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD2AC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 21:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75AA8611CB
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 19:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B42611C1
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 21:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237651AbhJMTXE (ORCPT
+        id S229710AbhJMVmT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Oct 2021 15:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233182AbhJMTXC (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Oct 2021 15:23:02 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232B1611F0;
-        Wed, 13 Oct 2021 19:20:58 +0000 (UTC)
-Date:   Wed, 13 Oct 2021 15:20:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v5 06/15] ftrace: Use an opaque type for functions not
- callable from C
-Message-ID: <20211013152056.3a01d9bb@gandalf.local.home>
-In-Reply-To: <20211013181658.1020262-7-samitolvanen@google.com>
-References: <20211013181658.1020262-1-samitolvanen@google.com>
-        <20211013181658.1020262-7-samitolvanen@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 13 Oct 2021 17:42:19 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:55982 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229588AbhJMVmT (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 13 Oct 2021 17:42:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=28;SR=0;TI=SMTPD_---0UrjC5sw_1634161208;
+Received: from ashimida.local(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0UrjC5sw_1634161208)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 14 Oct 2021 05:40:11 +0800
+Subject: Re: [PATCH] [PATCH V3]ARM64: SCS: Add gcc plugin to support Shadow
+ Call Stack
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
+        catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
+        nathan@kernel.org, tglx@linutronix.de, akpm@linux-foundation.org,
+        samitolvanen@google.com, frederic@kernel.org, rppt@kernel.org,
+        mark.rutland@arm.com, yifeifz2@illinois.edu, rostedt@goodmis.org,
+        viresh.kumar@linaro.org, andreyknvl@gmail.com,
+        colin.king@canonical.com, ojeda@kernel.org,
+        luc.vanoostenryck@gmail.com, elver@google.com,
+        nivedita@alum.mit.edu, ardb@kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <1634148189-29393-1-git-send-email-ashimida@linux.alibaba.com>
+ <CAKwvOd=qxHU41HFEWLAz6DOvSMPdW863E9SKVe0PFK0ePDvizQ@mail.gmail.com>
+From:   Dan Li <ashimida@linux.alibaba.com>
+Message-ID: <c2d0bfc9-364e-a2a8-e786-7a5102e34ddc@linux.alibaba.com>
+Date:   Thu, 14 Oct 2021 05:40:08 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAKwvOd=qxHU41HFEWLAz6DOvSMPdW863E9SKVe0PFK0ePDvizQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 13 Oct 2021 11:16:49 -0700
-Sami Tolvanen <samitolvanen@google.com> wrote:
 
-> With CONFIG_CFI_CLANG, the compiler changes function references to
-> point to the CFI jump table. As ftrace_call, ftrace_regs_call, and
-> mcount_call are not called by C code, but are trampolines injected
-> as calls replacing the nops at the start of functions added by the
-> compiler, use DECLARE_NOT_CALLED_FROM_C to declare them.
+
+On 10/14/21 2:50 AM, Nick Desaulniers wrote:
+> On Wed, Oct 13, 2021 at 11:03 AM Dan Li <ashimida@linux.alibaba.com> wrote:
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 62c3c1d..da2da8c 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -81,7 +81,7 @@ config ARM64
+>>          select ARCH_SUPPORTS_DEBUG_PAGEALLOC
+>>          select ARCH_SUPPORTS_HUGETLBFS
+>>          select ARCH_SUPPORTS_MEMORY_FAILURE
+>> -       select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
+>> +       select ARCH_SUPPORTS_SHADOW_CALL_STACK if (CC_HAVE_SHADOW_CALL_STACK || GCC_PLUGIN_SHADOW_CALL_STACK)
+>>          select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
+>>          select ARCH_SUPPORTS_LTO_CLANG_THIN
+>>          select ARCH_SUPPORTS_CFI_CLANG
+>> @@ -1062,7 +1062,7 @@ config ARCH_HAS_FILTER_PGPROT
+>>
+>>   # Supported by clang >= 7.0
+>>   config CC_HAVE_SHADOW_CALL_STACK
+>> -       def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
+>> +       def_bool (CC_IS_CLANG && $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18))
 > 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> ---
->  include/linux/ftrace.h | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> I guess since clang supported SCS since clang-7, but the minimally
+> supported version of clang according to
+> Documentation/process/changes.rst is 10.0.1, then this could be:
 > 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 832e65f06754..c53a00b96ba9 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -578,9 +578,10 @@ extern void ftrace_replace_code(int enable);
->  extern int ftrace_update_ftrace_func(ftrace_func_t func);
->  extern void ftrace_caller(void);
->  extern void ftrace_regs_caller(void);
-> -extern void ftrace_call(void);
-> -extern void ftrace_regs_call(void);
-> -extern void mcount_call(void);
-> +
-> +DECLARE_NOT_CALLED_FROM_C(ftrace_call);
-> +DECLARE_NOT_CALLED_FROM_C(ftrace_regs_call);
-> +DECLARE_NOT_CALLED_FROM_C(mcount_call);
->  
->  void ftrace_modify_all_code(int command);
->  
+> def_boot CC_IS_CLANG || $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
+> 
+> Then we won't have to touch it again once SCS lands in upstream GCC,
+> as the cc-option test will start to pass?
+> 
+Thanks Nick,
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
+That sounds reasonable.
