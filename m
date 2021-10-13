@@ -2,108 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DE7C43217
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 18:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451FEC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 18:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E45361130
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 18:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2422E6008E
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 18:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238780AbhJMSwX (ORCPT
+        id S231445AbhJMS5v (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Oct 2021 14:52:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54672 "EHLO
+        Wed, 13 Oct 2021 14:57:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231490AbhJMSwV (ORCPT
+        with ESMTP id S229814AbhJMS5u (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Oct 2021 14:52:21 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C29C061570
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 11:50:17 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id u18so15861119lfd.12
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 11:50:17 -0700 (PDT)
+        Wed, 13 Oct 2021 14:57:50 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69165C061570
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 11:55:47 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id x8so2456881plv.8
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 11:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b8/P8tB/Z2lB3uczx8fuNs4yrMjdgai73jQwqgSmb8k=;
-        b=kDywsRyuPxVHakfyaPBhZGFsKn8P4P0Orn2Y9o0bfVo3J1d4YQZHM3XDib2XXfdWRs
-         KTmYLFOmkI72Z1QGH14GvjX6AYTmZDaS5dPBLcz6wdhhka5qkR2cU5HScrfq4eii9joB
-         kJjGWi78b/h0zw8iYk9t9gAym09ABl/pER9JXtJLYgxQ76TT9SVBaLAHX0NHc43gYtpv
-         IT8uisa6SAJ5YyHZQGUMVqG+3X4K8BBUc6GIlt52UJw1KnuqCIAIzZwGOt7sIWLXLM4M
-         bbF0pE5C2+pwsgZA7jHkaRqoaaFO9M5F6awahLSQp4rxAF+ikhwtg2LfOdeyXOevu15n
-         rmFA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CeDioKlYWP/Ln2/sv3Boh4vbm3yoXHdApCIilZ4yhGw=;
+        b=adSofeNpkzFQ7ekSQ+w/o5WGdQNGCajwgRa++HMYHPPE9dE7+IC42Fj/GAeu8fYZ2r
+         T/XBrlk0nCBGvuFRp8tBJuAGrzUUCHkF6HcKiI/zzyA7Z6Ea0LF0Z2ezCoSZ8jcy8UHd
+         LFxEWL7AMGZDGCcK2aRmNHSiq6g3Eol3eDjVI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b8/P8tB/Z2lB3uczx8fuNs4yrMjdgai73jQwqgSmb8k=;
-        b=kabnAZlGIc/UzjemJ8JfnmQ1bwXdhU5fDbE0ICWpdaww+0b57Yntg3tr2/Q476X6BV
-         U3tI0EFa2pvkYknMmRQZlh4r04h7nC8+znsTq6rXTXlzwznSEB87AIqYerag+JkHjWXF
-         RpKHfiOS9jwg3MftS3ZJBOjW1EzhRBdzY+mqBSpOpzjvNaecuoaBTMTDDlDgx3xJ/0s0
-         9Y97JTS5iLyP4gqNbCx78TVymz/HBJrF7wUH9o5HBJPfLato5RVp+3PjTN8XAAiHk9du
-         uVjRKJPNw6ufn/DYAtv1nRzmLL4dZJA47eqie2DLg5XWhuRSkyGVHBhR8rsitzwu6Nlm
-         TrkA==
-X-Gm-Message-State: AOAM530ASuenK73ETL2UbNqY4LNKnv2X8w7eCXdkwhRnQdiLK+96Cjp4
-        qjEleqaLVw3+eIR4pXzuM3p04Nc2qwFTsEOaGmgAWg==
-X-Google-Smtp-Source: ABdhPJybMQxtFkt+CSaxFXxXt2PhnxWlWW8tmKXXryRxD06ne8odxGrqIGRARW9LCy1ltHsb2ZBF1fp2E4wP78hKYmc=
-X-Received: by 2002:a05:6512:4c7:: with SMTP id w7mr700247lfq.444.1634151015014;
- Wed, 13 Oct 2021 11:50:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CeDioKlYWP/Ln2/sv3Boh4vbm3yoXHdApCIilZ4yhGw=;
+        b=wkNSeFLxvibsqHwVNgPb1kG7jiuUlJ7UzYxRrQ9HIPAGQa/b6e7FoNqgiwdKRv4Wj9
+         q+lXxTcyt2VM534xvbtK9wPn7SzOHPc37oTzDbTv6O6tYKZ4bAkDWd0e6r5Yw8Yx2+mk
+         zoLARPD90nq0HZLENTUJhRmMlszHwKoFLF1CsYhZeLouUxE/0Oo4zJEUk5yJOD6Ef7vf
+         N/gAmq3TMFqVMyYDcgyngmKnAiWWVpPFMIPGzZEG83yogNopommAju/1AUrg8hUODGeq
+         r3jhU8LsfQxfYtrf3HeH07lodRA2FwIamCdzXNbuLejARWIEisoBYn68AshixrCA8i71
+         71fA==
+X-Gm-Message-State: AOAM532cidKt3tRNOtO+9Ma+9ZC4cBTeYINhjAWdQ4M7sUgvZVF2y6MN
+        YBfNTfCqzh1jjuEeGCXSp1HmaA==
+X-Google-Smtp-Source: ABdhPJwbaTpa6edmN31oVJb/gCU2mYzliazMjcWHBH0jE37kLU9+/IH13a8ovSasYEkmTLsZf/xfDg==
+X-Received: by 2002:a17:90a:bd04:: with SMTP id y4mr1109096pjr.9.1634151346914;
+        Wed, 13 Oct 2021 11:55:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j6sm225896pfb.175.2021.10.13.11.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Oct 2021 11:55:46 -0700 (PDT)
+Date:   Wed, 13 Oct 2021 11:55:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v5 12/15] x86, module: Ignore __typeid__ relocations
+Message-ID: <202110131155.3A730AB3@keescook>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211013181658.1020262-13-samitolvanen@google.com>
 MIME-Version: 1.0
-References: <1634148189-29393-1-git-send-email-ashimida@linux.alibaba.com>
-In-Reply-To: <1634148189-29393-1-git-send-email-ashimida@linux.alibaba.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 13 Oct 2021 11:50:03 -0700
-Message-ID: <CAKwvOd=qxHU41HFEWLAz6DOvSMPdW863E9SKVe0PFK0ePDvizQ@mail.gmail.com>
-Subject: Re: [PATCH] [PATCH V3]ARM64: SCS: Add gcc plugin to support Shadow
- Call Stack
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
-        catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
-        nathan@kernel.org, tglx@linutronix.de, akpm@linux-foundation.org,
-        samitolvanen@google.com, frederic@kernel.org, rppt@kernel.org,
-        mark.rutland@arm.com, yifeifz2@illinois.edu, rostedt@goodmis.org,
-        viresh.kumar@linaro.org, andreyknvl@gmail.com,
-        colin.king@canonical.com, ojeda@kernel.org,
-        luc.vanoostenryck@gmail.com, elver@google.com,
-        nivedita@alum.mit.edu, ardb@kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211013181658.1020262-13-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 11:03 AM Dan Li <ashimida@linux.alibaba.com> wrote:
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 62c3c1d..da2da8c 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -81,7 +81,7 @@ config ARM64
->         select ARCH_SUPPORTS_DEBUG_PAGEALLOC
->         select ARCH_SUPPORTS_HUGETLBFS
->         select ARCH_SUPPORTS_MEMORY_FAILURE
-> -       select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
-> +       select ARCH_SUPPORTS_SHADOW_CALL_STACK if (CC_HAVE_SHADOW_CALL_STACK || GCC_PLUGIN_SHADOW_CALL_STACK)
->         select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
->         select ARCH_SUPPORTS_LTO_CLANG_THIN
->         select ARCH_SUPPORTS_CFI_CLANG
-> @@ -1062,7 +1062,7 @@ config ARCH_HAS_FILTER_PGPROT
->
->  # Supported by clang >= 7.0
->  config CC_HAVE_SHADOW_CALL_STACK
-> -       def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
-> +       def_bool (CC_IS_CLANG && $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18))
+On Wed, Oct 13, 2021 at 11:16:55AM -0700, Sami Tolvanen wrote:
+> The R_X86_64_8 __typeid__* relocations are for constants the compiler
+> generates for indirect call type checking with CONFIG_CFI_CLANG. Ignore
+> them when loading modules.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-I guess since clang supported SCS since clang-7, but the minimally
-supported version of clang according to
-Documentation/process/changes.rst is 10.0.1, then this could be:
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-def_boot CC_IS_CLANG || $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
-
-Then we won't have to touch it again once SCS lands in upstream GCC,
-as the cc-option test will start to pass?
 -- 
-Thanks,
-~Nick Desaulniers
+Kees Cook
