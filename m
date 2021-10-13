@@ -2,78 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D45C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 15:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72EC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7EEC61154
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 15:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93096610E5
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbhJMPq3 (ORCPT
+        id S238001AbhJMRdU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Oct 2021 11:46:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229715AbhJMPq2 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Oct 2021 11:46:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0FB64610CF;
-        Wed, 13 Oct 2021 15:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634139865;
-        bh=cnGlpW9Ly5FilYoIQdSEYJWtCFx9ARHjDe1Sg0ekjmw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CzajSGMwhKw54NOGhnE7F2IsJip06oWdwjPXrsJYaGK3G06B+XFFlztuYx4c9XNoI
-         LidxNwB3DdGNxDs7GLMCJP1iB2KRAHG251FK3lWdOyZ3vowZPAkvVPDEFHtV+bJucF
-         4dixNEHdc+FAeU6zcpd2qZFrWSL3sbltSgvY50rPHqf6EOTLV4tHhN5MMl5Jp0f8bX
-         u7GfmPdSCsrEQIxDhCIlvMmwXCZv7wtbyvfeDdG8VTGr1U0EO2Fsme5nyxZfmT6PGF
-         2r1zZHnPouBvQf9/2mmPLQUxJn0hUmg9yDeHJ2IkKFWJbJo2jQhjCAgSouVXxlSlyh
-         hrHlN/4zmP3AQ==
-Date:   Wed, 13 Oct 2021 16:44:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, will@kernel.org
-Subject: Re: [RFC PATCH 6/9] arm64: smccc: create proper stack frames for
- HVC/SMC calls
-Message-ID: <YWb+19izRou0L2tZ@sirena.org.uk>
-References: <20211013152243.2216899-1-ardb@kernel.org>
- <20211013152243.2216899-7-ardb@kernel.org>
+        Wed, 13 Oct 2021 13:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238211AbhJMRdT (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 13 Oct 2021 13:33:19 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AFEC06174E
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:31:15 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id s1so499215plg.12
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stHyXTiMOoD7piHsq5gSpAvQZs8ZLbpI4dQLsTzc/s8=;
+        b=DQyccFak9W+HHVS0jN3SNFAcP9nmOiYmmATMBRZTJ+JuzbOgEOcr1ttcYIBSAfRiqn
+         Lz4JUkAmI842pKVjUcAR65yzW1Q2Bqa7rMxpcuZWWK/deSzwtgD2ABIVN79sLsh1xrLY
+         L4N6hqUD1rBTVAYU9+wkk1BSrfKWne8+sim5g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stHyXTiMOoD7piHsq5gSpAvQZs8ZLbpI4dQLsTzc/s8=;
+        b=3uQc/D7R8rTT8Lvzfw3x6xVM8Oq7P9NDQREjtf65i28jMpZOAw+uigEUfvivrutn0t
+         GIJwwuCUgFWj8gaFbxwIdHcteSjofJVBjQvHpR5rttVRgBYOXL7YOzkSjOh14E3kXQvG
+         zZY0YjtkBTtRHkouOKYyKT4u4y+bQHBxh8nznkXNpX0dGUV4HkC6hOQiiRI7Hd9boDtc
+         qSCT2gw2LgGCYO/9ehffStUzhgbB2CQLxpkM2AgDkfHnAgn+TIMKfFQjfR/NSmWk7rgw
+         AVNxfKekQJLwYyBQLWdtTRR4ISME8feDV7sdTit5LVTr0BAX1xDYPBDXQQa4kx5Wn8YU
+         k9Zg==
+X-Gm-Message-State: AOAM532V7QsQikgVAKrvoPWK6trX0F+qxSpqYDQvnsFy0DV0JywqBGtO
+        bLkEvO//IB3tcdI85xoZMrssAg==
+X-Google-Smtp-Source: ABdhPJxCmUitcOaunWwIz1uT+vrqsMZlpKkH4k1LFnoUcQVy6JXfNA+72u3QYh4Ml2B4Vnyvv0zalA==
+X-Received: by 2002:a17:90b:4d09:: with SMTP id mw9mr667890pjb.100.1634146275121;
+        Wed, 13 Oct 2021 10:31:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x35sm161664pfh.52.2021.10.13.10.31.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Oct 2021 10:31:14 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        KP Singh <kpsingh@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        kernel test robot <lkp@intel.com>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] LSM: Avoid warnings about potentially unused hook variables
+Date:   Wed, 13 Oct 2021 10:28:48 -0700
+Message-Id: <20211013172847.1196305-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OIhNViKtqllNxFTS"
-Content-Disposition: inline
-In-Reply-To: <20211013152243.2216899-7-ardb@kernel.org>
-X-Cookie: Where do you think you're going today?
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2126; h=from:subject; bh=LcQThCv4yG6dBsiN2R0V8pX78rE7KrdD224PvV6t8ac=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhZxfMASF8Im7S+/H7DmFA5FYXENvqZbCwPV4BosIK 3hO2hZyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYWcXzAAKCRCJcvTf3G3AJtRcD/ 46Wah2rQa6Cz9vARcUj3izpenVsSBEaeuEyoKQZAGD8czXxlEtI8ovV46ySz2lD7T4/br/4QgtfLrh 4T8woNw3ybe6zKEQay2uI4IX2U58EBtnxkwygQpvq+ZN04ZcC9nsubw+RMAvSbkNOvMOqh/ttpS90P y7cRP5ZXSzZ7Vi+a3Cq2DGAiPCkbupTl/PcbpS73gj60T6mzLEajMez3ll+Ic3z3aB61Ivu1ASziWQ 5u/ZytW6WHTyOaNhnQ98hxjMgkeQPGjOy8KPwnUJF/qQXowvatt1HpydQXxz/4lNrESxWseW0pQk8n 5N5daJ35C6xe09ETUj7SaWrvBT7TyH/NnaTl4ZWZuknhZTZNURiS1QGf6DNtaupnLtVcVuLCjkrTL+ 5/u7xcsgQQwtY0qRNKtvb4m18WCyurYESc5Ih9S5BxFTla3tzPPLQwr+TXxg/JPtkuJXcqp/WULiXh /oHYuLJutOT4Zprn/MjieN4+hoXgOQg9OpuKQvMCqbY5ho06Glff2f364W0bYLiKj0H3q0EMymLaqU R/WMCi84e9KmmPQclpPwXLOD3qUsW95L1Q3lYDjZTLLCPgr8nH12UW4E/EhOp9MSOE6kbh40wnJgoU +HHb6nQfH4unwy1QeA54wlOGbYNAjI4NjtFCtTWAjgjU6h37OMc5t+YetnDg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Building with W=1 shows many unused const variable warnings. These can
+be silenced, as we're well aware of their being potentially unused:
 
---OIhNViKtqllNxFTS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+./include/linux/lsm_hook_defs.h:36:18: error: 'ptrace_access_check_default' defined but not used [-Werror=unused-const-variable=]
+   36 | LSM_HOOK(int, 0, ptrace_access_check, struct task_struct *child,
+      |                  ^~~~~~~~~~~~~~~~~~~
+security/security.c:706:32: note: in definition of macro 'LSM_RET_DEFAULT'
+  706 | #define LSM_RET_DEFAULT(NAME) (NAME##_default)
+      |                                ^~~~
+security/security.c:711:9: note: in expansion of macro 'DECLARE_LSM_RET_DEFAULT_int'
+  711 |         DECLARE_LSM_RET_DEFAULT_##RET(DEFAULT, NAME)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/lsm_hook_defs.h:36:1: note: in expansion of macro 'LSM_HOOK'
+   36 | LSM_HOOK(int, 0, ptrace_access_check, struct task_struct *child,
+      | ^~~~~~~~
 
-On Wed, Oct 13, 2021 at 05:22:40PM +0200, Ard Biesheuvel wrote:
-> Create proper stack frames using the provided macros for HVC/SMC calling
-> helpers that use the stack. This adds the PAC return address signing
-> when enabled, and ensures that the unwinder can deal with occurrences
-> of these routines appearing on the call stack.
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>
+Cc: KP Singh <kpsingh@chromium.org>
+Cc: linux-security-module@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/linux-mm/202110131608.zms53FPR-lkp@intel.com/
+Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ security/security.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+diff --git a/security/security.c b/security/security.c
+index 9ffa9e9c5c55..462f14354c2c 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -706,7 +706,7 @@ static int lsm_superblock_alloc(struct super_block *sb)
+ #define LSM_RET_DEFAULT(NAME) (NAME##_default)
+ #define DECLARE_LSM_RET_DEFAULT_void(DEFAULT, NAME)
+ #define DECLARE_LSM_RET_DEFAULT_int(DEFAULT, NAME) \
+-	static const int LSM_RET_DEFAULT(NAME) = (DEFAULT);
++	static const int __maybe_unused LSM_RET_DEFAULT(NAME) = (DEFAULT);
+ #define LSM_HOOK(RET, DEFAULT, NAME, ...) \
+ 	DECLARE_LSM_RET_DEFAULT_##RET(DEFAULT, NAME)
+ 
+-- 
+2.30.2
 
---OIhNViKtqllNxFTS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmFm/tYACgkQJNaLcl1U
-h9ClQQf/bxzPA/9s7Ggzd9YOq7uB9uMWO0CmgMzktgGs1JDQmAETht/rOoqRm5tU
-zgDhHwbag7KbrViGK2SPpzm3iXvEM6omtIy7HY+4OsCxeZhPsjvhCMECFBilXT/5
-NT61hz68sOHP6bujzZqd6BFZRtXQ2DCl/KyXdWExPyQdM38JiE4201j5+0Qozngm
-c+5XRRnzVbKBF5gSdGE9vmwvGiT0THotq7WCWqORir+R8PAGwlwALAnvyJs8mGrW
-EE7zOew/jxa5IeAoBJYYIn5McQGRBD53cymqfbg0iAG7NkZau1tNLCtIc5rGYoF8
-L/1oZ+dcCHKnCw7kAEsQo8SlkqgbKQ==
-=/qA3
------END PGP SIGNATURE-----
-
---OIhNViKtqllNxFTS--
