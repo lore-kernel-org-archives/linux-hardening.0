@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1101C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC502C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A34CA60E54
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986A060174
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238353AbhJMR75 (ORCPT
+        id S238329AbhJMR77 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Oct 2021 13:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42604 "EHLO
+        Wed, 13 Oct 2021 13:59:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233315AbhJMR74 (ORCPT
+        with ESMTP id S238310AbhJMR75 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Oct 2021 13:59:56 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DFF3C061760
+        Wed, 13 Oct 2021 13:59:57 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2CBC061746
         for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:57:53 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id k26so3171700pfi.5
+Received: by mail-pf1-x429.google.com with SMTP id y7so3165521pfg.8
         for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:57:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tovZs/fMamUNhc9V1ZyRuitMxRBIyX1nI5NaXzCb1hY=;
-        b=G2qErgjv5HIfhOUry8jDhzJppHdZE25hAmIYtv/loO+niQCfapFhBGvRWsOBJLizPg
-         AWT7H19YivWexKf2RxMOYI7qy7LBwic4NCRwwvkEPxTK85KAECjiBduVd79ggD6MNlQ3
-         PwMusKJy8PAMRDONeipR+AKRPwnMTeTPncnCA=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Kcjz/jZcxE+mB3F2AkM0clWB2nKEsktmPdDaqY7pNLM=;
+        b=L75cOX6+P2Yg2PCtJBc3rDxsjCw7N/NVtlafkSSqqUGzYVqCBBPEt9zMKsJ+BBeqTQ
+         XSfl2ZFSn+uvEQ2K00+x27I4dsgfBWLotrBBXGLMS7tKuUf8Tj6WaQSomgkFtKyLA4W2
+         lCeFO9tpk6CbOVBc2TLZDwUMCfoxm5xa5u7L0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tovZs/fMamUNhc9V1ZyRuitMxRBIyX1nI5NaXzCb1hY=;
-        b=pI9OsgFPYs26PiiaB31f1DVZTTqbEe0MAVD5z7YPynRyjytxCJKi8ywga7AqmV1SxC
-         667iJP53hnRQKmLZVfdsd+w4mSMJsdMq24pmrlKc9lNfRyxXFKsb57dYgXJrssAL8s4/
-         /IgFjBJ//QFfDKQhFDd5ijzvxei4VNSvrQZ0T/Xc4zMRTHE2SKjUGERrqMYCaSFHDR/+
-         rUj8YoHA6tgFIHSI0hOnC56DNBUg1XGW3XlwW09jR06k/ADE+OXpbPD9vvYbhhTU/QQb
-         AKizoRbslH/4lGmbnB8YR5TM9MJwPdE9BcTd1ttAWoJxzbmJKpRgX2gSMrIDf692E2Qm
-         nK3g==
-X-Gm-Message-State: AOAM530gyvbx+F1+X001zcx4AGYIuc9Ed5Lq5JqYLJAfeDXaHFfR9r5+
-        NXSR5142uQhtyGMhnZsHdRH2QA==
-X-Google-Smtp-Source: ABdhPJzCKTW81GqeouHKZKjp+D5/8WyFEtj3voLvuSJY69lPRmI2Nh2pCbNkaKmEWld21LKZUBGxgQ==
-X-Received: by 2002:a05:6a00:8c7:b0:44c:a7f9:d8d1 with SMTP id s7-20020a056a0008c700b0044ca7f9d8d1mr756635pfu.49.1634147872423;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Kcjz/jZcxE+mB3F2AkM0clWB2nKEsktmPdDaqY7pNLM=;
+        b=Lo+Frj9CYGXpMDGKgZIvlMDOT188LzsfJSw7JDR4eiMZ+IoqaQPaZYsRLUr4bp9C+L
+         HEEQxjon1iy12cDIIuATPVvqEfj8Y98AxYoNHXSUhONJOYJ/s5rJhx9kiQYaoxeMSr4t
+         9/1hQHhkggh9RWp+lUQLMD69Ur0Qs0UD3iqIa31cPFkWKesHVpfJIjIsPO3XqHrq0Lhp
+         OToI2aY36VRpRtK3V193eOFlnI6diR7JE/32yIxSxHPZoYWuLGivdW2XWv0nShP6zmRq
+         oPIDa3Uuf0N9eooyuWOI7M8qSUUqCotcWNjiJ1gp+TYmhjTQciwMaRII05Nj5NjuCHRh
+         pMWA==
+X-Gm-Message-State: AOAM530JEQQ1mabSzaIT9a3GybCdsu++iu8QvhXu2oZhBdhjhBBFazLY
+        dRltkzrxbcWc8oe20I/u80U1tg==
+X-Google-Smtp-Source: ABdhPJx3hCeP0/qXzBriQG9RAyOIBhOSahtHSc2nigzi8GBlJyOW45fh2MS5OSF1B4QStfEMj11pPA==
+X-Received: by 2002:a63:2acc:: with SMTP id q195mr450989pgq.45.1634147872623;
         Wed, 13 Oct 2021 10:57:52 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d67sm155299pfd.151.2021.10.13.10.57.51
+        by smtp.gmail.com with ESMTPSA id d9sm162132pgn.64.2021.10.13.10.57.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 13 Oct 2021 10:57:52 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Borislav Petkov <bp@suse.de>
 Cc:     Kees Cook <keescook@chromium.org>,
+        Alexander Lobakin <alexandr.lobakin@intel.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         Kristen Carlson Accardi <kristen@linux.intel.com>,
         Tony Luck <tony.luck@intel.com>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <jroedel@suse.de>,
@@ -73,49 +73,153 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Fangrui Song <maskray@google.com>,
         linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 0/4] x86: Various clean-ups in support of FGKASLR
-Date:   Wed, 13 Oct 2021 10:57:38 -0700
-Message-Id: <20211013175742.1197608-1-keescook@chromium.org>
+Subject: [PATCH 3/4] x86/boot/compressed: Avoid duplicate malloc() implementations
+Date:   Wed, 13 Oct 2021 10:57:41 -0700
+Message-Id: <20211013175742.1197608-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20211013175742.1197608-1-keescook@chromium.org>
+References: <20211013175742.1197608-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1156; h=from:subject; bh=PRf65j0JLkeyuy0M8f8WYpGBuH2Z9LGCXYFpyuGxQQ4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhZx4UR5tiE4MGhsX6k9YeysDLLv8D+UhwbD5cdGmc M3oPcB6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYWceFAAKCRCJcvTf3G3AJsetD/ 9jqt/mMainURcBkfvabgTOLY7SRxtWhpfdp++dz9638RboQjKK/pgK1aMBtMqEAT0nvJtZGoM2JGjl V+W0N3WaIATR8h73k+fgtgD2zIagC7IibIhV06Tj3tSztXwCvEe+tMaQEfpYFaaNc/Tw5lFpcx4AKx eOphkWsQSvzyQIq1F6dX7QXLn5HZjCQB5QAOo21siALDbAAExXUqGoc1W96ILJuAVCg3nJCP92pADz gOfRDCvPwI+1/WEdpe8qgDpI+EhrRs+3z+D1sBi3S+WsQthGxnoj+Cr8yYyeOih10wCOnixEutJAo6 0jhz01Bn5Wv78B0vwxSp2uPs1Qw2mf5zsDwbQdCaqj+cQbqEcyTNRlxcwsAkgU1V5oSYh5XyNbORRM pxZxmtir61MsEkHgx8juWagLoab5D7Tszt5m6y0a+y0CpqFjR98b+P2jLHtN9j83QEnE+lYx8pXH9k VER+Yrzu6DTNobQcAwJiObxxWzRnvrmHqfU49BF92SBkov6axqsXziXbS5fjRJmN6ZceJpeCW7SvIA XRdw/QgHEV2Wf/dyRZAPBySso5Dra6Ry1KaDBHtULwsy7NCjSLZQupWLz/v/Q9/yDafPmMJmkMN6GK 6vru6cw6mIsWUB6Fwck+eMzTdtk1gEuxfrDG3sD2Q+pNjVW9752yKR7iCnXA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4454; h=from:subject; bh=hYF77CNx8NXydRq0Sh94JwlUksK5cSbvI41FvGg5UbQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhZx4VrL7HD4WV4zwnJZdT6sN2jDPwltje0/KQButA e0RjcEKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYWceFQAKCRCJcvTf3G3AJjoGD/ sGuSJ5GjwOngN6Kzcn20C3dlHYxuKIeUYkhzF7JVQ1n9+cPfhqDVzDkbO+NJHYfvK7zrlGgsa6wtI2 fi7EeRT/FVXdNE356vGVAKnwm8+JqAf8+fMAZCnQAtpMjwF6Wgs9uBhPvRxnKb2AKTXjWqEiwhfTBS QabEnkh5Xo6Dy2QFIJVGPob91BrYShwcIClCE2qTZiAIGbKxS4ia3bHtBPTDXVLNgutIo9Lemw9Htd 70YgUsSCEj0YBclhomTZ4ZMh/hN6yNgXDVo8vnUGrLqtWKsrqAec1NSe11qDqnG2ih+vcoYkivRemG c6TCd9u6BDGU8EIATYPTf577U7csmm4Mdfi29fsUhG58Fg0z9Os2/cZd4LKvAJFZmDmyIQvrnw9Ymt jHGrMQz2/qdikk4WfndV7Pw+tJ7c68L2hHXynezzXebe1LdW2fcuVaeeME1cyF0kjZ9x1lIBw3MBEv Q+OqsZCZ0mSjrL2zFAovH6+vnhA5M1wv34ML2bYsgn/kDHg7SgmIEfzCvi/0p4rk9guAkF+VSMhNQn s/AEh3Knh2JP4VvkKq4gR1of3+iCI8cr5aPhhwppSOvqqJdjozgCHojH4ZZG/m1yiprZBQBWEDVT1n Ax/1g3/3igDo4LbXRABYBefMmZOEFhGay99YNxHgk0tkgX2EXq8bucbu/1Hg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+The early malloc() and free() implementation in include/linux/decompress/mm.h
+(which is also included by the static decompressors) is static. This is
+fine when the only thing interested in using malloc() is the decompression
+code, but the x86 early boot environment may use malloc() in a couple places,
+leading to a potential collision when the static copies of the available
+memory region ("malloc_ptr") gets reset to the global "free_mem_ptr" value.
+As it happened, the existing usage pattern was accidentally safe because each
+user did 1 malloc() and 1 free() before returning and were not nested:
 
-These are a small set of patches that clean up various things that are
-each stand-alone improvements, but they're also needed for the coming
-FGKASLR series[1]. I thought it best to just get these landed instead
-of having them continue to tag along with FGKASLR, especially the
-early malloc() fix, which is a foot-gun waiting to happen. :)
+extract_kernel() (misc.c)
+	choose_random_location() (kaslr.c)
+		mem_avoid_init()
+			handle_mem_options()
+				malloc()
+				...
+				free()
+	...
+	parse_elf() (misc.c)
+		malloc()
+		...
+		free()
 
-Thanks!
+Once the future FGKASLR series is added, however, it will insert
+additional malloc() calls local to fgkaslr.c in the middle of
+parse_elf()'s malloc()/free() pair:
 
--Kees
+	parse_elf() (misc.c)
+		malloc()
+		if (...) {
+			layout_randomized_image(output, &ehdr, phdrs);
+				malloc() <- boom
+				...
+		else
+			layout_image(output, &ehdr, phdrs);
+		free()
 
-[1] https://lore.kernel.org/lkml/20210831144114.154-1-alexandr.lobakin@intel.com/
+To avoid collisions, there must be a single implementation of malloc().
+Adjust include/linux/decompress/mm.h so that visibility can be
+controlled, provide prototypes in misc.h, and implement the functions in
+misc.c. This also results in a small size savings:
 
-Kees Cook (2):
-  x86/boot: Allow a "silent" kaslr random byte fetch
-  x86/boot/compressed: Avoid duplicate malloc() implementations
+$ size vmlinux.before vmlinux.after
+   text    data     bss     dec     hex filename
+8842314     468  178320 9021102  89a6ae vmlinux.before
+8842240     468  178320 9021028  89a664 vmlinux.after
 
-Kristen Carlson Accardi (2):
-  x86/tools/relocs: Support >64K section headers
-  vmlinux.lds.h: Have ORC lookup cover entire _etext - _stext
+Fixed-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/boot/compressed/kaslr.c |  4 ----
+ arch/x86/boot/compressed/misc.c  |  3 +++
+ arch/x86/boot/compressed/misc.h  |  2 ++
+ include/linux/decompress/mm.h    | 12 ++++++++++--
+ 4 files changed, 15 insertions(+), 6 deletions(-)
 
- arch/x86/boot/compressed/kaslr.c  |   4 --
- arch/x86/boot/compressed/misc.c   |   3 +
- arch/x86/boot/compressed/misc.h   |   2 +
- arch/x86/lib/kaslr.c              |  18 ++++--
- arch/x86/tools/relocs.c           | 103 ++++++++++++++++++++++--------
- include/asm-generic/vmlinux.lds.h |   3 +-
- include/linux/decompress/mm.h     |  12 +++-
- 7 files changed, 107 insertions(+), 38 deletions(-)
-
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 67c3208b668a..411b268bc0a2 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -32,10 +32,6 @@
+ #include <generated/utsrelease.h>
+ #include <asm/efi.h>
+ 
+-/* Macros used by the included decompressor code below. */
+-#define STATIC
+-#include <linux/decompress/mm.h>
+-
+ #define _SETUP
+ #include <asm/setup.h>	/* For COMMAND_LINE_SIZE */
+ #undef _SETUP
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 743f13ea25c1..a4339cb2d247 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -28,6 +28,9 @@
+ 
+ /* Macros used by the included decompressor code below. */
+ #define STATIC		static
++/* Define an externally visible malloc()/free(). */
++#define MALLOC_VISIBLE
++#include <linux/decompress/mm.h>
+ 
+ /*
+  * Provide definitions of memzero and memmove as some of the decompressors will
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 31139256859f..975ef4ae7395 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -44,6 +44,8 @@ extern char _head[], _end[];
+ /* misc.c */
+ extern memptr free_mem_ptr;
+ extern memptr free_mem_end_ptr;
++void *malloc(int size);
++void free(void *where);
+ extern struct boot_params *boot_params;
+ void __putstr(const char *s);
+ void __puthex(unsigned long value);
+diff --git a/include/linux/decompress/mm.h b/include/linux/decompress/mm.h
+index 868e9eacd69e..9192986b1a73 100644
+--- a/include/linux/decompress/mm.h
++++ b/include/linux/decompress/mm.h
+@@ -25,13 +25,21 @@
+ #define STATIC_RW_DATA static
+ #endif
+ 
++/*
++ * When an architecture needs to share the malloc()/free() implementation
++ * between compilation units, it needs to have non-local visibility.
++ */
++#ifndef MALLOC_VISIBLE
++#define MALLOC_VISIBLE static
++#endif
++
+ /* A trivial malloc implementation, adapted from
+  *  malloc by Hannu Savolainen 1993 and Matthias Urlichs 1994
+  */
+ STATIC_RW_DATA unsigned long malloc_ptr;
+ STATIC_RW_DATA int malloc_count;
+ 
+-static void *malloc(int size)
++MALLOC_VISIBLE void *malloc(int size)
+ {
+ 	void *p;
+ 
+@@ -52,7 +60,7 @@ static void *malloc(int size)
+ 	return p;
+ }
+ 
+-static void free(void *where)
++MALLOC_VISIBLE void free(void *where)
+ {
+ 	malloc_count--;
+ 	if (!malloc_count)
 -- 
 2.30.2
 
