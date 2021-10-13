@@ -2,89 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD2AC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 21:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CF8C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 22:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B42611C1
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 21:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BFB61039
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 22:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbhJMVmT (ORCPT
+        id S231274AbhJMWMu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Oct 2021 17:42:19 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:55982 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229588AbhJMVmT (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Oct 2021 17:42:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=28;SR=0;TI=SMTPD_---0UrjC5sw_1634161208;
-Received: from ashimida.local(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0UrjC5sw_1634161208)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 14 Oct 2021 05:40:11 +0800
-Subject: Re: [PATCH] [PATCH V3]ARM64: SCS: Add gcc plugin to support Shadow
- Call Stack
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
-        catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
-        nathan@kernel.org, tglx@linutronix.de, akpm@linux-foundation.org,
-        samitolvanen@google.com, frederic@kernel.org, rppt@kernel.org,
-        mark.rutland@arm.com, yifeifz2@illinois.edu, rostedt@goodmis.org,
-        viresh.kumar@linaro.org, andreyknvl@gmail.com,
-        colin.king@canonical.com, ojeda@kernel.org,
-        luc.vanoostenryck@gmail.com, elver@google.com,
-        nivedita@alum.mit.edu, ardb@kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <1634148189-29393-1-git-send-email-ashimida@linux.alibaba.com>
- <CAKwvOd=qxHU41HFEWLAz6DOvSMPdW863E9SKVe0PFK0ePDvizQ@mail.gmail.com>
-From:   Dan Li <ashimida@linux.alibaba.com>
-Message-ID: <c2d0bfc9-364e-a2a8-e786-7a5102e34ddc@linux.alibaba.com>
-Date:   Thu, 14 Oct 2021 05:40:08 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.1
+        Wed, 13 Oct 2021 18:12:50 -0400
+Received: from namei.org ([65.99.196.166]:56478 "EHLO mail.namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230284AbhJMWMt (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 13 Oct 2021 18:12:49 -0400
+X-Greylist: delayed 545 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Oct 2021 18:12:49 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.namei.org (Postfix) with ESMTPS id 3D4854A2;
+        Wed, 13 Oct 2021 21:51:54 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.namei.org 3D4854A2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=namei.org; s=2;
+        t=1634161914; bh=crwpcPDPfqhOEItFpX0KQi8ZF7K7m6bms2MCaFaNIAk=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=uaJyrL4nFIHwsOyxj4ZPfHHPzqj9fktEdNEdEwESQOXuBr5Hzi1FSXnJB+eypVVD6
+         MSxFAp8K/B8azKTr08x0kca/hPf9/5R79sI5Nma7DdxBvueVzmPXizM4QvzeHJ0aeL
+         AZ0feRt3/jsNT68hfzBlV1e7bi3vQzySTWSKQUDk=
+Date:   Thu, 14 Oct 2021 08:51:54 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Paul Moore <paul@paul-moore.com>
+cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        KP Singh <kpsingh@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        kernel test robot <lkp@intel.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] LSM: Avoid warnings about potentially unused hook
+ variables
+In-Reply-To: <CAHC9VhT0+omwDjqrJ2BtnRfa8SSGAkyUvB6WX95E=ntf9gUbmQ@mail.gmail.com>
+Message-ID: <f1a143f5-7972-413d-497c-617b915c4b30@namei.org>
+References: <20211013172847.1196305-1-keescook@chromium.org> <CAHC9VhT0+omwDjqrJ2BtnRfa8SSGAkyUvB6WX95E=ntf9gUbmQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOd=qxHU41HFEWLAz6DOvSMPdW863E9SKVe0PFK0ePDvizQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Wed, 13 Oct 2021, Paul Moore wrote:
+
+> Looks reasonable to me, thanks Kees.  Unless James wants to pick this
+> up for the security tree, I can pull this into the SElinux tree with
+> the io_uring change which is causing the testing robot to complain.
+> 
+> Acked-by: Paul Moore <paul@paul-moore.com>
+
+Sounds good.
 
 
-On 10/14/21 2:50 AM, Nick Desaulniers wrote:
-> On Wed, Oct 13, 2021 at 11:03 AM Dan Li <ashimida@linux.alibaba.com> wrote:
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 62c3c1d..da2da8c 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -81,7 +81,7 @@ config ARM64
->>          select ARCH_SUPPORTS_DEBUG_PAGEALLOC
->>          select ARCH_SUPPORTS_HUGETLBFS
->>          select ARCH_SUPPORTS_MEMORY_FAILURE
->> -       select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
->> +       select ARCH_SUPPORTS_SHADOW_CALL_STACK if (CC_HAVE_SHADOW_CALL_STACK || GCC_PLUGIN_SHADOW_CALL_STACK)
->>          select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
->>          select ARCH_SUPPORTS_LTO_CLANG_THIN
->>          select ARCH_SUPPORTS_CFI_CLANG
->> @@ -1062,7 +1062,7 @@ config ARCH_HAS_FILTER_PGPROT
->>
->>   # Supported by clang >= 7.0
->>   config CC_HAVE_SHADOW_CALL_STACK
->> -       def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
->> +       def_bool (CC_IS_CLANG && $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18))
-> 
-> I guess since clang supported SCS since clang-7, but the minimally
-> supported version of clang according to
-> Documentation/process/changes.rst is 10.0.1, then this could be:
-> 
-> def_boot CC_IS_CLANG || $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
-> 
-> Then we won't have to touch it again once SCS lands in upstream GCC,
-> as the cc-option test will start to pass?
-> 
-Thanks Nick,
+Acked-by: James Morris <jamorris@linux.microsoft.com>
 
-That sounds reasonable.
+
+-- 
+James Morris
+<jmorris@namei.org>
+
