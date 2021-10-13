@@ -2,128 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6248CC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7878EC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 18:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B41C60E0C
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A48601FF
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 18:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238365AbhJMSAH (ORCPT
+        id S234061AbhJMSEG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Oct 2021 14:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42630 "EHLO
+        Wed, 13 Oct 2021 14:04:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238371AbhJMR76 (ORCPT
+        with ESMTP id S238339AbhJMSEF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Oct 2021 13:59:58 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A41C06176A
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:57:53 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id oa4so2853867pjb.2
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:57:53 -0700 (PDT)
+        Wed, 13 Oct 2021 14:04:05 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A90C061570
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 11:02:01 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id i24so14914579lfj.13
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 11:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Wil/63TXmGDXk8caQMGWTopKyQa13eqS6eC+7karBaE=;
-        b=VZ4nrKIZEK1VybcI8FUe8isxzKX4Ld95xUW5bYpz4w9tM0KJD65DFFtnfXHg2TwCKh
-         BSgOYOh/4sFeW21L2nDMi05diDrAY9bYzujsdWGACTFL3Im10dOCEZiiKvJ+xSSiIUWR
-         v8vX1ZIJvu0XaWLCYRpRl3Fcrt/nvFH9hFgZg=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eXEMF9jddBl4hhPgEztfWgI/5rbtT2E/0qOGe0WIz2o=;
+        b=LZM+FXsHA++ZuE1QesalkGBD5qQiNQhRqcE5eL3h5lzpj+VfVop+WkzA1fpkZLbJG2
+         eRDHfA4z2qUQapbX4Ns3GdO4h/Y+oPmLO3uQ30X2tKzITY/OmqqAeDJkRTi2r4h4vFG+
+         dAnZQ85jlLRCshR3vs8rZu05ve4oclIkzbAPPudCJuBrdH4psPZsbUkJ/awu967Mgslc
+         3aqY8/ic9Bfi2YhLU+HcZt9kpBE6UNorS/9JquA3+oWJfVXkAaIhCMO3JVIjXhlifRGM
+         Mn5/IW2LeHiQ/wuEbKK0vBr+e65zSpi/gs8+VVJeOFt9L8fxg7ckmnb6VZMH/qT35UVy
+         vlig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Wil/63TXmGDXk8caQMGWTopKyQa13eqS6eC+7karBaE=;
-        b=ovbgLCsMPf74otLJRG8eorxZ8WzqMJsaQTZyaehiCeDh3BngKMmRFpsbGh4X0Lwcw6
-         GQm275MgrweH5UsaWgvKWM8uLNnjOkVlSfhBtpMA5NkGURDKgF6NetQD8IUt0YizwDO5
-         u+vdO1OFppYAj8TYOvVnHfIVrBYNLNBnZykucT16orYWtomH/5Fvjjj13jpZDdDgSKwj
-         eHLZffI0G7RW0pnmO4Mys+pRclGr1thfR995zlCotFIP+m+0eXzMVgT8ripqaS7qfQ4b
-         vONo10utwlE2g6Z6VYRLXtWUZzdXjHgaAlpS1iiAQ0q+O1/DQE/X7fT5NtI9YN65yWX7
-         pxwg==
-X-Gm-Message-State: AOAM531EA4stlVszXllv2BrmEMyWjPMhgkkmKMjc+BWB5TbbMRkp2OXA
-        MgE0praYZ2VoP2VYN+4wTt53qg==
-X-Google-Smtp-Source: ABdhPJyswszq3QTxMPcFY4OXzvodtOaRNJnZsNbbx4wT72YhrF8zSP+mvkenSQMQ5T9gqtN5mHsrGA==
-X-Received: by 2002:a17:90a:708c:: with SMTP id g12mr14898831pjk.13.1634147873464;
-        Wed, 13 Oct 2021 10:57:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y17sm152997pfi.206.2021.10.13.10.57.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Oct 2021 10:57:52 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <jroedel@suse.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Jing Yangyang <jing.yangyang@zte.com.cn>,
-        Abaci Robot <abaci@linux.alibaba.com>,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Fangrui Song <maskray@google.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 4/4] vmlinux.lds.h: Have ORC lookup cover entire _etext - _stext
-Date:   Wed, 13 Oct 2021 10:57:42 -0700
-Message-Id: <20211013175742.1197608-5-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211013175742.1197608-1-keescook@chromium.org>
-References: <20211013175742.1197608-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eXEMF9jddBl4hhPgEztfWgI/5rbtT2E/0qOGe0WIz2o=;
+        b=FMMa6i0kqdcdWZ6rwtNPhiltxf6i5YqXXTRi3iopaBFnugA+0R2wPcUWDXkdNk+wbq
+         ifR9bgidON/Y++w76kdNTd6dRY/boc/OeHL5mYkf/WnIGACQoNwFukK/vrFhxpfOxq3A
+         2H9km7820ykFjqdAUC7k/Qe7aEu1lcJi6AgwkPP1pk2/FqQKxBq0qsWGg2OH8MfTklNL
+         ZIum6NI3T+ugj5aDtt1gGYgkD9lEfW2wYtq5Z7ORyiyd2U9NIHBJ0J1aIMhSODI/sPqG
+         aMFVpCigLvvyxRfnDd/7rrls7yKoPEdfNS7gTV5sfJ1bSqw1yPR5g3z8DfpBdhBqP9/T
+         TzBQ==
+X-Gm-Message-State: AOAM533dcc98yw55J3nDdDvx6ptYHS1R+qgHDhjyX2fLHLFm32D+3le2
+        E8jkMmpbYLg7fUnL3HdfcDmfHmZE5k61vPBtbL6OxA==
+X-Google-Smtp-Source: ABdhPJylMON5l5bseh8pbsCQX9tadNqTljkobwM6wU0TX7nvQNE5ggOFSnvpO1pC0mpx+7ZDygMwwmHOIRygZF/t61I=
+X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr885886ljo.220.1634148115061;
+ Wed, 13 Oct 2021 11:01:55 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1515; i=keescook@chromium.org; h=from:subject; bh=k2EbSSyIQX82JiiaJvqlP/RcdDJ2EE1Zagzi5pGa5w4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhZx4V/q7Qtv5z3EdcaNERESTHxHiSwOuLyfKGJP66 I1Sp0GeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYWceFQAKCRCJcvTf3G3AJtMAEA CnRbxwLq4djag3FKjOJqXVG93SIBjMFoOP2r6FQKFmg+Sx+La42TmYXQfl+Y06uyzGPXzn7lcPTd3t pRS8Nd3mtup03MwELRe6hepMKBzwbcD0DSL3fndhNAwHi+SAK7TbPDOTSMktICkLwNxdxceTeddsTt /w5ooHDAqXGXij9kSQBuseSSUkUH6YfKAvh0Uhqw1Y7md8TgXSOQI1n5t6QcZIX1kPwY4exf2sF169 Pv8rwaPg6oJId6/sMD5Xd3zPuJiUT8Id+EhXiuHAh6j3TSZ/U2uJkBhpGoR+bVvOnAO8CkqyT8BSIf Jt9PSr72bX6gWiIIKzcUYSYN+WXQubCAO/xfE+KFnc1Al4IXgSydyQrKaWIptFb5MJJasBLUrvBvTv 5RzNH+pVCKeuwVw6cHcQyjp7zj+MQ3sP0lkVhO/RsDlVAoBdUCBvLuWkhU4RCIxVJqsBtYP9NbGO8B a+BdIC7FEAcehRluS64ab6KeoTTiFKSHftDHrKVUPdpvpBetoajc/Z59dZbygKvUF5c+SbrdR9IPhu w/kglfkq/QK/hAbQlufGfiqb9ademjXAqKzsDG8fp4eiMndvw/DTr/VJofRwVnsE+1IeEP2wzQ5QbT 6HBmO1LZToqH6fQT/9RLKxqVs/6ObcOHgnhAxVxI3mz5PDRVmd325GFaAX2g==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20211013152243.2216899-1-ardb@kernel.org>
+In-Reply-To: <20211013152243.2216899-1-ardb@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 13 Oct 2021 11:01:43 -0700
+Message-ID: <CAKwvOdkS1LuEEXOAUCDNBWJBbo-GPisf0s-BtL119Kfi7084kA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/9] arm64: use unwind data on GCC for shadow call stack
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        Kees Cook <keescook@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dan Li <ashimida@linux.alibaba.com>,
+        linux-toolchains@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kristen Carlson Accardi <kristen@linux.intel.com>
+On Wed, Oct 13, 2021 at 8:22 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> This series is a proof of concept implementation of using unwind tables
+> to locate PACIASP/AUTIASP instructions in the code, and patching them
+> into shadow call stack pushes/pops at boot time if the platform in
+> question does not support pointer authentication in hardware. This way,
+> the overhead of the shadow call stack is only imposed if it actually
+> gives any benefit. It also means that the compiler does not need to
+> generate the code, so this works with GCC as well.
+>
+> In fact, it only works with GCC at the moment, as Clang does not seem to
+> implement the DW_CFA_negate_ra_state correctly, which is emitted after
+> each PACIASP or AUTIASP instruction (Clang only does the former).
+> However, GCC does not appear to get it quite right either, as it emits
+> the directive in the wrong place in some cases (but in a way that can be
+> worked around).
 
-When using -ffunction-sections to place each function in its own text
-section (so it can be randomized at load time in the future FGKASLR
-series), the linker will place most of the functions into separate .text.*
-sections. SIZEOF(.text) won't work here for calculating the ORC lookup
-table size, so the total text size must be calculated to include .text
-AND all .text.* sections.
+Can we work on getting bug reports to the compiler vendors? Then we
+can have something free of workarounds, and more toolchain portable.
 
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Tested-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-[ alobakin: move it to vmlinux.lds.h and make arch-indep ]
-Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/asm-generic/vmlinux.lds.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> Note that this only implements it for the core kernel. Modules should be
+> straight-forward, and most of the code can be reused. Also, the
+> transformation is applied unconditionally, even if the hardware does
+> implement PAC, but this does not really matter for a PoC.
+>
+> One obvious downside is the size of the unwind tables (3 MiB for
+> defconfig), although there are plenty of use cases where this does not
+> really matters (and I haven't checked the compressed size). However,
+> there may be other reasons why we'd want to have access to these unwind
+> tables (reliable stack traces), so this will need to be discussed before
+> I intend to take this any further.
+>
+> Cc: Kees Cook <keescook@google.com>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: Fangrui Song <maskray@google.com>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Dan Li <ashimida@linux.alibaba.com>
+>
+> Ard Biesheuvel (9):
+>   arm64: assembler: enable PAC for non-leaf assembler routines
+>   arm64: cache: use ALIAS version of linkage macros for local aliases
+>   arm64: crypto: avoid overlapping linkage definitions for AES-CBC
+>   arm64: aes-neonbs: move frame pop to end of function
+>   arm64: chacha-neon: move frame pop forward
+>   arm64: smccc: create proper stack frames for HVC/SMC calls
+>   arm64: assembler: add unwind annotations to frame push/pop macros
+>   arm64: unwind: add asynchronous unwind tables to the kernel proper
+>   arm64: implement dynamic shadow call stack for GCC
+>
+>  Makefile                              |   4 +-
+>  arch/Kconfig                          |   4 +-
+>  arch/arm64/Kconfig                    |  11 +-
+>  arch/arm64/Makefile                   |   7 +-
+>  arch/arm64/crypto/aes-modes.S         |   4 +-
+>  arch/arm64/crypto/aes-neonbs-core.S   |   8 +-
+>  arch/arm64/crypto/chacha-neon-core.S  |   9 +-
+>  arch/arm64/include/asm/assembler.h    |  32 ++-
+>  arch/arm64/include/asm/linkage.h      |  16 +-
+>  arch/arm64/kernel/Makefile            |   2 +
+>  arch/arm64/kernel/head.S              |   3 +
+>  arch/arm64/kernel/patch-scs.c         | 223 ++++++++++++++++++++
+>  arch/arm64/kernel/smccc-call.S        |  40 ++--
+>  arch/arm64/kernel/vmlinux.lds.S       |  20 ++
+>  arch/arm64/mm/cache.S                 |   8 +-
+>  drivers/firmware/efi/libstub/Makefile |   1 +
+>  16 files changed, 347 insertions(+), 45 deletions(-)
+>  create mode 100644 arch/arm64/kernel/patch-scs.c
+>
+> --
+> 2.30.2
+>
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index f2984af2b85b..e8234911dc18 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -869,10 +869,11 @@
- 		KEEP(*(.orc_unwind))					\
- 		__stop_orc_unwind = .;					\
- 	}								\
-+	text_size = _etext - _stext;					\
- 	. = ALIGN(4);							\
- 	.orc_lookup : AT(ADDR(.orc_lookup) - LOAD_OFFSET) {		\
- 		orc_lookup = .;						\
--		. += (((SIZEOF(.text) + LOOKUP_BLOCK_SIZE - 1) /	\
-+		. += (((text_size + LOOKUP_BLOCK_SIZE - 1) /		\
- 			LOOKUP_BLOCK_SIZE) + 1) * 4;			\
- 		orc_lookup_end = .;					\
- 	}
+
 -- 
-2.30.2
-
+Thanks,
+~Nick Desaulniers
