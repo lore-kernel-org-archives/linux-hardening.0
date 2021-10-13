@@ -2,133 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6140C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52A4C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F526113D
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A597C60FDA
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Oct 2021 17:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236010AbhJMRzO (ORCPT
+        id S238172AbhJMRzo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Oct 2021 13:55:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229814AbhJMRzN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Oct 2021 13:55:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2C8CE61139
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 17:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634147590;
-        bh=bg4eQMSYTVjgOi7gDOpvfbv+2tkdNKMHGQe8r5tgt2I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ltz07qEP3MWnq/VS415PtXV7zM+Hdgb6MU7/99qiYS9vKhGE9lDcGxHmx9n/Y4QX1
-         qW+elox7pXCPJ4xL/iuYgdGkMtJkJJ7zbDY1e7xNdB7UsXlcwLiU44vS7uAWeL6oXn
-         8bddrBy/TxEcYNmJFTFrjyO/PSr/vQRNtw6WS9ivEOTY7m1rgKioOAguPm/Unryaud
-         A00+0yRQLVTWT2+BT4iCHfB/UYVf5P1ujQCryyvdMkVLrbtj/7BMB40NEyzJScQx8q
-         dQES+nfnGau9/Xzow9LJKh3NK9M2/OPFprBJAmPpfB2KEpS75JCbfkn9mm9HoK6DOr
-         xsk0h+AJ01FZg==
-Received: by mail-oi1-f174.google.com with SMTP id o204so4840423oih.13
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:53:10 -0700 (PDT)
-X-Gm-Message-State: AOAM530qy3oma85HmPc7sltSRX8sHHz2kYwKcQp/dlRgaNj1uLGyco7A
-        JIzJlsQvdlcbiD5HZ6v70vdz0DvMK71izjrHzaA=
-X-Google-Smtp-Source: ABdhPJzim2NCcO+mHPgELqoNVBsCPSNa0JcBsYXpMGjp5agu5hAFKcQ0tflxFfNNj3dna+jXZnI4/z8kGnehxQcV/AA=
-X-Received: by 2002:aca:32c2:: with SMTP id y185mr9282719oiy.47.1634147589469;
- Wed, 13 Oct 2021 10:53:09 -0700 (PDT)
+        Wed, 13 Oct 2021 13:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238200AbhJMRzn (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 13 Oct 2021 13:55:43 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD599C061746
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:53:39 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id d9so13491147edh.5
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Oct 2021 10:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aLaYS9RXqNt7+hFwlO6gsKYZWSmRQqVaqX+hEJqB9LM=;
+        b=xKey7FWoKrUCv8IvtxRentW1ZmNn3JSpGsLpA2udEtATxoIGbSXEjH+SSpjwExDslC
+         d+h4PmQCK2gG3F9s49Cfwd/Hyp/+uGQiyhKkvstRVmfUjpCLXom6QKI6qYkOmSSRm1an
+         5MPW67g9kXLDgFZ+fw3p5THkh8wGt3zKPpLHASmMfIpUXMEzwzij8u4es9Bh+PITik1a
+         94mEzYi/57g6QtmHRg4CQNgkqCLIfUl21ck/+j+Ek7i82MeG0pX2vdRqJilrqmYh5f4j
+         UyTT+JRJjjtRNWDFC43CwLfVCddlKhuEOjZRwsgE/1+69lbzCJuGtSMf3AA/SS/cKzF2
+         f/sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aLaYS9RXqNt7+hFwlO6gsKYZWSmRQqVaqX+hEJqB9LM=;
+        b=Xd9BswxgP1ZAgcfkEU0fkyzYtO6zp06yYvUEssR8mpryq8n4hd+VnxRjKb2WseFqgT
+         Ef/2+XdR0uycT7yjf7DXmG4juESWax1RTGqCivZhIT8Ytt2u7pwsO6QPzFTA40Q8dMLn
+         0Z2LNMXU2N5hhxdPwYbbWcd6YN5WqsNapNJZDJ1DCIU4MJQsHrUWtVrr0RVzaWeKlBZu
+         /CzHqnc9aYxd8aiKma7mHkygjKL5w8zQ/rQyDdF+xMSDh415EQa127a34OkAq/SH0fPs
+         D790uHGCOoS1ow4ajn4SGy0EiJ+r/4WImvBm4CXt0G7peStV6p97o8wxXBd8KBA//nMv
+         dHdQ==
+X-Gm-Message-State: AOAM533KH7BpUZxsvpJBiQQZeNV4tY+AzgrU9JjCbEJKXiqlzxhK6w2d
+        YXvbgYgQ8iXzAAFgIE4hJWEO3Wbt+7HBKywqg60w
+X-Google-Smtp-Source: ABdhPJzxdv34rnUgFkzMsE+FKKRO+1gOHd0i8Ivdq0iHCNJpeRU70lMiFr2rZbn/NVPSyCVuYwZUPN/FflUsOTUSvek=
+X-Received: by 2002:a05:6402:22d6:: with SMTP id dm22mr1120550edb.209.1634147618378;
+ Wed, 13 Oct 2021 10:53:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211013152243.2216899-1-ardb@kernel.org>
-In-Reply-To: <20211013152243.2216899-1-ardb@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 13 Oct 2021 19:52:57 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEuKStReBFT46w4UUmW2vK8C3VHTQnrUJRRa4SdPLtuyQ@mail.gmail.com>
-Message-ID: <CAMj1kXEuKStReBFT46w4UUmW2vK8C3VHTQnrUJRRa4SdPLtuyQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/9] arm64: use unwind data on GCC for shadow call stack
-To:     Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <keescook@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dan Li <ashimida@linux.alibaba.com>
+References: <20211013172847.1196305-1-keescook@chromium.org>
+In-Reply-To: <20211013172847.1196305-1-keescook@chromium.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 13 Oct 2021 13:53:27 -0400
+Message-ID: <CAHC9VhT0+omwDjqrJ2BtnRfa8SSGAkyUvB6WX95E=ntf9gUbmQ@mail.gmail.com>
+Subject: Re: [PATCH] LSM: Avoid warnings about potentially unused hook variables
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        KP Singh <kpsingh@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        kernel test robot <lkp@intel.com>,
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 13 Oct 2021 at 17:22, Ard Biesheuvel <ardb@kernel.org> wrote:
+On Wed, Oct 13, 2021 at 1:31 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> This series is a proof of concept implementation of using unwind tables
-> to locate PACIASP/AUTIASP instructions in the code, and patching them
-> into shadow call stack pushes/pops at boot time if the platform in
-> question does not support pointer authentication in hardware. This way,
-> the overhead of the shadow call stack is only imposed if it actually
-> gives any benefit. It also means that the compiler does not need to
-> generate the code, so this works with GCC as well.
+> Building with W=1 shows many unused const variable warnings. These can
+> be silenced, as we're well aware of their being potentially unused:
 >
-> In fact, it only works with GCC at the moment, as Clang does not seem to
-> implement the DW_CFA_negate_ra_state correctly, which is emitted after
-> each PACIASP or AUTIASP instruction (Clang only does the former).
-> However, GCC does not appear to get it quite right either, as it emits
-> the directive in the wrong place in some cases (but in a way that can be
-> worked around).
+> ./include/linux/lsm_hook_defs.h:36:18: error: 'ptrace_access_check_default' defined but not used [-Werror=unused-const-variable=]
+>    36 | LSM_HOOK(int, 0, ptrace_access_check, struct task_struct *child,
+>       |                  ^~~~~~~~~~~~~~~~~~~
+> security/security.c:706:32: note: in definition of macro 'LSM_RET_DEFAULT'
+>   706 | #define LSM_RET_DEFAULT(NAME) (NAME##_default)
+>       |                                ^~~~
+> security/security.c:711:9: note: in expansion of macro 'DECLARE_LSM_RET_DEFAULT_int'
+>   711 |         DECLARE_LSM_RET_DEFAULT_##RET(DEFAULT, NAME)
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/linux/lsm_hook_defs.h:36:1: note: in expansion of macro 'LSM_HOOK'
+>    36 | LSM_HOOK(int, 0, ptrace_access_check, struct task_struct *child,
+>       | ^~~~~~~~
 >
-> Note that this only implements it for the core kernel. Modules should be
-> straight-forward, and most of the code can be reused. Also, the
-> transformation is applied unconditionally, even if the hardware does
-> implement PAC, but this does not really matter for a PoC.
->
-> One obvious downside is the size of the unwind tables (3 MiB for
-> defconfig), although there are plenty of use cases where this does not
-> really matters (and I haven't checked the compressed size). However,
-> there may be other reasons why we'd want to have access to these unwind
-> tables (reliable stack traces), so this will need to be discussed before
-> I intend to take this any further.
->
-> Cc: Kees Cook <keescook@google.com>
-> Cc: Sami Tolvanen <samitolvanen@google.com>
-> Cc: Fangrui Song <maskray@google.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Dan Li <ashimida@linux.alibaba.com>
->
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: Casey Schaufler <casey@schaufler-ca.com>
+> Cc: KP Singh <kpsingh@chromium.org>
+> Cc: linux-security-module@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/linux-mm/202110131608.zms53FPR-lkp@intel.com/
+> Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  security/security.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Apologies - i failed to pass --cc-cover so the cc'ees above have only
-received this cover letter.
+Looks reasonable to me, thanks Kees.  Unless James wants to pick this
+up for the security tree, I can pull this into the SElinux tree with
+the io_uring change which is causing the testing robot to complain.
 
-The lore thread is here:
-https://lore.kernel.org/r/20211013152243.2216899-1-ardb@kernel.org/
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-
-> Ard Biesheuvel (9):
->   arm64: assembler: enable PAC for non-leaf assembler routines
->   arm64: cache: use ALIAS version of linkage macros for local aliases
->   arm64: crypto: avoid overlapping linkage definitions for AES-CBC
->   arm64: aes-neonbs: move frame pop to end of function
->   arm64: chacha-neon: move frame pop forward
->   arm64: smccc: create proper stack frames for HVC/SMC calls
->   arm64: assembler: add unwind annotations to frame push/pop macros
->   arm64: unwind: add asynchronous unwind tables to the kernel proper
->   arm64: implement dynamic shadow call stack for GCC
->
->  Makefile                              |   4 +-
->  arch/Kconfig                          |   4 +-
->  arch/arm64/Kconfig                    |  11 +-
->  arch/arm64/Makefile                   |   7 +-
->  arch/arm64/crypto/aes-modes.S         |   4 +-
->  arch/arm64/crypto/aes-neonbs-core.S   |   8 +-
->  arch/arm64/crypto/chacha-neon-core.S  |   9 +-
->  arch/arm64/include/asm/assembler.h    |  32 ++-
->  arch/arm64/include/asm/linkage.h      |  16 +-
->  arch/arm64/kernel/Makefile            |   2 +
->  arch/arm64/kernel/head.S              |   3 +
->  arch/arm64/kernel/patch-scs.c         | 223 ++++++++++++++++++++
->  arch/arm64/kernel/smccc-call.S        |  40 ++--
->  arch/arm64/kernel/vmlinux.lds.S       |  20 ++
->  arch/arm64/mm/cache.S                 |   8 +-
->  drivers/firmware/efi/libstub/Makefile |   1 +
->  16 files changed, 347 insertions(+), 45 deletions(-)
->  create mode 100644 arch/arm64/kernel/patch-scs.c
+> diff --git a/security/security.c b/security/security.c
+> index 9ffa9e9c5c55..462f14354c2c 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -706,7 +706,7 @@ static int lsm_superblock_alloc(struct super_block *sb)
+>  #define LSM_RET_DEFAULT(NAME) (NAME##_default)
+>  #define DECLARE_LSM_RET_DEFAULT_void(DEFAULT, NAME)
+>  #define DECLARE_LSM_RET_DEFAULT_int(DEFAULT, NAME) \
+> -       static const int LSM_RET_DEFAULT(NAME) = (DEFAULT);
+> +       static const int __maybe_unused LSM_RET_DEFAULT(NAME) = (DEFAULT);
+>  #define LSM_HOOK(RET, DEFAULT, NAME, ...) \
+>         DECLARE_LSM_RET_DEFAULT_##RET(DEFAULT, NAME)
 >
 > --
 > 2.30.2
->
+
+--
+paul moore
+www.paul-moore.com
