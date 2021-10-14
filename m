@@ -2,90 +2,118 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5019CC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 11:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C817EC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 11:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349AC60F9E
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 11:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13F0610EA
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 11:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230229AbhJNLJs (ORCPT
+        id S230411AbhJNLXt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Oct 2021 07:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
+        Thu, 14 Oct 2021 07:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbhJNLJr (ORCPT
+        with ESMTP id S230241AbhJNLXr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Oct 2021 07:09:47 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2041FC061570;
-        Thu, 14 Oct 2021 04:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=77VgjRIde6vwrbjli0psB7WD0kOrKVS+AX+DTq527kY=; b=OFc23zjqWRPL0UVhuJbDqj8Mqh
-        mfDbpqRGvNvE6FafTd32fExbhNT3WG1AuznDKUPdN8l9mpNjAHslTNQf2mkbjv/3jDBmWB+IZkJHd
-        yE/hy3j1ce3n51aNMARZjXFpuX+ZYQ8/rtR70DtjSmvHX79Gko91eC/eBT0ULMeqHQcPNqjmADUHm
-        QU5l1jK6RmiGobV13xqTG+bDr0Lv/gCxOf5Jue6y++ne5mRm3hAGcoNDS7I+fDTbK2NdHDy4R2qD4
-        gEuS5xlsp2bIqWt3+b6eQzCSqUHKZiub1L/tmCjKUbtzBDaXsB1A9emf3LtR9++wuK2g0a0XrO1Mp
-        2ci62zJQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55090)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1mayaB-0001EW-KU; Thu, 14 Oct 2021 12:07:31 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1maya3-00025Z-J0; Thu, 14 Oct 2021 12:07:23 +0100
-Date:   Thu, 14 Oct 2021 12:07:23 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     keescook@chromium.org, jannh@google.com,
-        linux-kernel@vger.kernel.org, vcaputo@pengaru.com,
-        mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, akpm@linux-foundation.org,
-        christian.brauner@ubuntu.com, amistry@google.com,
-        Kenta.Tada@sony.com, legion@kernel.org,
-        michael.weiss@aisec.fraunhofer.de, mhocko@suse.com, deller@gmx.de,
-        zhengqi.arch@bytedance.com, me@tobin.cc, tycho@tycho.pizza,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com,
-        mark.rutland@arm.com, axboe@kernel.dk, metze@samba.org,
-        laijs@linux.alibaba.com, luto@kernel.org,
-        dave.hansen@linux.intel.com, ebiederm@xmission.com,
-        ohoono.kwon@samsung.com, kaleshsingh@google.com,
-        yifeifz2@illinois.edu, jpoimboe@redhat.com,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        vgupta@kernel.org, will@kernel.org, guoren@kernel.org,
-        bcain@codeaurora.org, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        nickhu@andestech.com, jonas@southpole.se, mpe@ellerman.id.au,
-        paul.walmsley@sifive.com, hca@linux.ibm.com,
-        ysato@users.sourceforge.jp, davem@davemloft.net, chris@zankel.net
-Subject: Re: [PATCH 6/7] arch: __get_wchan || STACKTRACE_SUPPORT
-Message-ID: <YWgPa3C8dKkNoJBu@shell.armlinux.org.uk>
-References: <20211008111527.438276127@infradead.org>
- <20211008111626.392918519@infradead.org>
+        Thu, 14 Oct 2021 07:23:47 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0AFC061570;
+        Thu, 14 Oct 2021 04:21:41 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0c7200b0e4a365e78c79f0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7200:b0e4:a365:e78c:79f0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CC2DE1EC0295;
+        Thu, 14 Oct 2021 13:21:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1634210499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ZMyXicVPK+418sO0IkpvfxexKs54FvpkvATrHGg61HU=;
+        b=I+4uzH8dHQ5I3LryUUwdKW1lHdViRHIUPN909vfyqKjQHPR8IWALQE/nvwze85e9bp45MS
+        cqSN8H4Qi8pXIB6uOVzlOasS3dTeWcbDtOZ14sYZzhqMFsGfbnkOpP6/jJeruV5CGG4as3
+        pa8y8z6IbPSQ/msLy5vAbtnRVoU2OHw=
+Date:   Thu, 14 Oct 2021 13:21:38 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v5 09/15] x86: Use an opaque type for functions not
+ callable from C
+Message-ID: <YWgSwmzPFrRbMC1P@zn.tnic>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211013181658.1020262-10-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211008111626.392918519@infradead.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20211013181658.1020262-10-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 01:15:33PM +0200, Peter Zijlstra wrote:
-> It's trivial to implement __get_wchan() with CONFIG_STACKTRACE
+On Wed, Oct 13, 2021 at 11:16:52AM -0700, Sami Tolvanen wrote:
+> The kernel has several assembly functions that are not directly callable
+> from C. Use an opaque type for these function prototypes to make misuse
+> harder, and to avoid the need to annotate references to these functions
+> for Clang's Control-Flow Integrity (CFI).
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Suggested-by: Andy Lutomirski <luto@amacapital.net>
+> Suggested-by: Alexander Lobakin <alobakin@pm.me>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> ---
+>  arch/x86/include/asm/ftrace.h         |  2 +-
+>  arch/x86/include/asm/idtentry.h       | 10 +++++-----
+>  arch/x86/include/asm/page_64.h        |  7 ++++---
+>  arch/x86/include/asm/paravirt_types.h |  3 ++-
+>  arch/x86/include/asm/processor.h      |  2 +-
+>  arch/x86/include/asm/proto.h          | 25 +++++++++++++------------
+>  arch/x86/include/asm/uaccess_64.h     |  9 +++------
+>  arch/x86/kernel/alternative.c         |  2 +-
+>  arch/x86/kernel/ftrace.c              |  2 +-
+>  arch/x86/kernel/paravirt.c            |  4 ++--
+>  arch/x86/kvm/emulate.c                |  4 ++--
+>  arch/x86/kvm/kvm_emulate.h            |  9 ++-------
+>  arch/x86/xen/enlighten_pv.c           |  6 +++---
+>  arch/x86/xen/xen-ops.h                | 10 +++++-----
+>  14 files changed, 45 insertions(+), 50 deletions(-)
 
-This definitely needs testing, but looking at the code, I think this
-will be compatible since we're essentially doing the same tests to
-omit scheduling functions in both the old and replacement code.
+No matter from which direction I look at it, wrapping some functions
+which a crazy macro doesn't look good.
+
+So what's the plan here?
+
+Everytime someone adds an asm function which is not callable from C but
+forgets to use that magic macro, someone from team CFI will send a patch
+fixing that?
+
+I.e., a whack-a-mole game?
+
+If we're going to do that keep-CFI-working game, we might just as well
+not do the macro but use the C code it evaluates to, so that at least it
+looks ok-ish:
+
+DECLARE_NOT_CALLED_FROM_C(int3_magic);
+
+vs
+
+extern const u8 int3_magic[];
+
+(Just picked one at random).
+
+Thx.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
