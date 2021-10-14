@@ -2,150 +2,96 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9751DC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 10:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76E1C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 10:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750C36109E
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 10:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A996460E09
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 10:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbhJNK0L (ORCPT
+        id S230189AbhJNKtU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Oct 2021 06:26:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39846 "EHLO
+        Thu, 14 Oct 2021 06:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229912AbhJNK0K (ORCPT
+        with ESMTP id S230176AbhJNKtT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Oct 2021 06:26:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50016C061570;
-        Thu, 14 Oct 2021 03:24:06 -0700 (PDT)
+        Thu, 14 Oct 2021 06:49:19 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAEC1C061570;
+        Thu, 14 Oct 2021 03:47:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Fx9cLhN7mOpr+grnv3F8YGfL7yLYIEU/n5hQtUEVSyY=; b=HBIQ7Jv1D7PPTEog37ZzHEDdD4
-        fXw09We7EjdRG/JsM2auCONGNaJeVYxByvJTR0BBLKpQ50E0jtBIQ7oQQffEBpR9ZVVLPtqljJ8mV
-        UeQqOkDFaU5AKBy/93IfRosKVg5rftVMdtvUtKocfd4a/yCtssToumA9HK42YLAG2zchyc6OzD29W
-        TZD+lj0UpmmwgtcRMFDUk79nkNmdTdewozr/yxZmM+S2kwLrMfhug+3aK2WS962VeMVFclKDzGE4i
-        mYIfeZ70gxEXEZ3S6iJZ5hy6+VvSJWqPRql0cEAiAN5VwrIhTaLUtfVC7Z8WdlVFsV1XiYhU8mWFt
-        YnObZJxA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1maxsY-008FhE-QL; Thu, 14 Oct 2021 10:22:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59FB93001C0;
-        Thu, 14 Oct 2021 12:22:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 45B2C2008CB91; Thu, 14 Oct 2021 12:22:26 +0200 (CEST)
-Date:   Thu, 14 Oct 2021 12:22:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v5 01/15] objtool: Add CONFIG_CFI_CLANG support
-Message-ID: <YWgE4iTPGr/ruu8e@hirez.programming.kicks-ass.net>
-References: <20211013181658.1020262-1-samitolvanen@google.com>
- <20211013181658.1020262-2-samitolvanen@google.com>
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=x2jwRKorCNgoPpdzs8qq0S06D6G51+ysL6On8xrWlx4=; b=CfPcr/fStuSF0qZNy/VAv+H3s7
+        L9YGbVbhEWRfVBhVxZVY/eeeWIktt/E96qgOPsWQf2q8SWy8Yuqhx+EOSKtN7ZB7LM0c/Vqf98C8T
+        Mll/EkUeNf4GOKHpgFo0Mcd28if7n9ivKKtPDD8B34uKiuA/Yc9INrI3SPLwTmaAcL6Ny66G6KQA2
+        ueU+cbMrsxFe4DsyT/pMVKQYn47syi2Ju8tbSkMs+9+RzoHuv8Ez43s+wn9Jm3tiL/ajgeGpGQELC
+        EOM+xu+3yOpt0u9VR5DnlW9SJHMc8VeMf2m1eByX6BvLA5HfKmH6PYJJuv3B3vA14vwlfXmvDJ5hN
+        1FeoWXfg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55088)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1mayG7-0001Bc-CD; Thu, 14 Oct 2021 11:46:47 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1mayFr-00025O-R6; Thu, 14 Oct 2021 11:46:31 +0100
+Date:   Thu, 14 Oct 2021 11:46:31 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     keescook@chromium.org, jannh@google.com,
+        linux-kernel@vger.kernel.org, vcaputo@pengaru.com,
+        mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, akpm@linux-foundation.org,
+        christian.brauner@ubuntu.com, amistry@google.com,
+        Kenta.Tada@sony.com, legion@kernel.org,
+        michael.weiss@aisec.fraunhofer.de, mhocko@suse.com, deller@gmx.de,
+        zhengqi.arch@bytedance.com, me@tobin.cc, tycho@tycho.pizza,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com,
+        mark.rutland@arm.com, axboe@kernel.dk, metze@samba.org,
+        laijs@linux.alibaba.com, luto@kernel.org,
+        dave.hansen@linux.intel.com, ebiederm@xmission.com,
+        ohoono.kwon@samsung.com, kaleshsingh@google.com,
+        yifeifz2@illinois.edu, jpoimboe@redhat.com,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        vgupta@kernel.org, will@kernel.org, guoren@kernel.org,
+        bcain@codeaurora.org, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        nickhu@andestech.com, jonas@southpole.se, mpe@ellerman.id.au,
+        paul.walmsley@sifive.com, hca@linux.ibm.com,
+        ysato@users.sourceforge.jp, davem@davemloft.net, chris@zankel.net
+Subject: Re: [PATCH 5/7] sched: Add wrapper for get_wchan() to keep task
+ blocked
+Message-ID: <YWgKh8JRYjDpU9zW@shell.armlinux.org.uk>
+References: <20211008111527.438276127@infradead.org>
+ <20211008111626.332092234@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211013181658.1020262-2-samitolvanen@google.com>
+In-Reply-To: <20211008111626.332092234@infradead.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 11:16:44AM -0700, Sami Tolvanen wrote:
-> diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-> index 1f2ae708b223..5fe31523e51f 100644
-> --- a/tools/objtool/arch/x86/decode.c
-> +++ b/tools/objtool/arch/x86/decode.c
-> @@ -63,6 +63,23 @@ bool arch_callee_saved_reg(unsigned char reg)
->  	}
->  }
->  
-> +unsigned long arch_cfi_section_reloc_offset(struct reloc *reloc)
-> +{
-> +	if (!reloc->addend)
-> +		return 0;
-> +
-> +	if (reloc->type == R_X86_64_PC32 || reloc->type == R_X86_64_PLT32)
-> +		return reloc->addend + 4;
-> +
-> +	return reloc->addend;
-> +}
-> +
-> +unsigned long arch_cfi_jump_reloc_offset(unsigned long offset)
-> +{
-> +	/* offset to the relocation in a jmp instruction */
-> +	return offset + 1;
-> +}
-> +
->  unsigned long arch_dest_reloc_offset(int addend)
->  {
->  	return addend + 4;
-> diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-> index b18f0055b50b..cd09c93c34fb 100644
-> --- a/tools/objtool/elf.c
-> +++ b/tools/objtool/elf.c
+On Fri, Oct 08, 2021 at 01:15:32PM +0200, Peter Zijlstra wrote:
+> From: Kees Cook <keescook@chromium.org>
+> 
+> Having a stable wchan means the process must be blocked and for it to
+> stay that way while performing stack unwinding.
+> 
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-> @@ -575,6 +580,49 @@ static int read_rela_reloc(struct section *sec, int i, struct reloc *reloc, unsi
->  	return 0;
->  }
->  
-> +/*
-> + * CONFIG_CFI_CLANG replaces function relocations to refer to an intermediate
-> + * jump table. Undo the conversion so objtool can make sense of things.
-> + */
-> +static int fix_cfi_relocs(const struct elf *elf)
-> +{
-> +	struct section *sec;
-> +	struct reloc *reloc;
-> +
-> +	list_for_each_entry(sec, &elf->sections, list) {
-> +		list_for_each_entry(reloc, &sec->reloc_list, list) {
-> +			struct reloc *cfi_reloc;
-> +			unsigned long offset;
-> +
-> +			if (!reloc->sym->sec->cfi_jt)
-> +				continue;
-> +
-> +			if (reloc->sym->type == STT_SECTION)
-> +				offset = arch_cfi_section_reloc_offset(reloc);
-> +			else
-> +				offset = reloc->sym->offset;
-> +
-> +			/*
-> +			 * The jump table immediately jumps to the actual function,
-> +			 * so look up the relocation there.
-> +			 */
-> +			offset = arch_cfi_jump_reloc_offset(offset);
-> +			cfi_reloc = find_reloc_by_dest(elf, reloc->sym->sec, offset);
-> +
-> +			if (!cfi_reloc || !cfi_reloc->sym) {
-> +				WARN("can't find a CFI jump table relocation at %s+0x%lx",
-> +					reloc->sym->sec->name, offset);
-> +				return -1;
-> +			}
-> +
-> +			reloc->sym = cfi_reloc->sym;
-> +			reloc->addend = 0;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
+Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk> [arm]
 
-If that section ever gets modified and we end up running
-elf_rebuild_reloc_section() on it, we're in trouble, right?
+I will eventually get around to test this once I've caught up.
 
-Do we want a fatal error in elf_rebuild_reloc_section() when ->cfi_jt is
-set?
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
