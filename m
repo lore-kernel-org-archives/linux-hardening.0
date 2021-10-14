@@ -2,131 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9468C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 08:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5817C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 09:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A657C610E8
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 08:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA64460F41
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 09:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbhJNIOk (ORCPT
+        id S229468AbhJNJnw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Oct 2021 04:14:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:50984 "EHLO foss.arm.com"
+        Thu, 14 Oct 2021 05:43:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229992AbhJNIOk (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Oct 2021 04:14:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 145C61063;
-        Thu, 14 Oct 2021 01:12:35 -0700 (PDT)
-Received: from [192.168.1.131] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD7A43F66F;
-        Thu, 14 Oct 2021 01:12:31 -0700 (PDT)
-Subject: Re: [PATCH 1/2] kasan: test: use underlying string helpers
-To:     Arnd Bergmann <arnd@kernel.org>, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chomium.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Patricia Alfonso <trishalfonso@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20211013150025.2875883-1-arnd@kernel.org>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <b35768f5-8e06-ebe6-1cdd-65f7fe67ff7a@arm.com>
-Date:   Thu, 14 Oct 2021 10:12:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S230018AbhJNJnv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 14 Oct 2021 05:43:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 446D160FE8
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Oct 2021 09:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634204506;
+        bh=+pJC+Rkqx7OwiUym9k2/c49FU2yNvL/+R4TIiQPyJHo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HiUibQxxeVy+br1Rj2734BQtTtFQO2V9nrlxSs0xVmjh0zuekwFjj0tMZTe2dAcWB
+         9Y/aSFk8UM2fKs47kJMwg3ol3PPSgAtTMRIxKiNCA3xZOM8NpApb32ObuJL9EiV+3r
+         VZL3+1ZEsID+PxgoXy/oML3XyR0dcS5AnCLar3Bthmi6jiDImLNbnT2ztE1auPvUzt
+         JyqkHL9KpCDGjlnHABDNBGhITuaUjSoLFT8qWDUgKgbTBxOqhUg2n+u8u97LimjR6i
+         YiIIuRkdD2O+eRtLeCJNQzXelECrF2zcKOHVhhUPlaTojoNORMgAlTEOW25x597ySO
+         qR/f97NyKHMFg==
+Received: by mail-ot1-f43.google.com with SMTP id s18-20020a0568301e1200b0054e77a16651so7433130otr.7
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Oct 2021 02:41:46 -0700 (PDT)
+X-Gm-Message-State: AOAM532bq8KjBERGRpB7jsqYuymOXXkgFFMGL11H4Z9u42Awkjk2qJeM
+        eOUVhCksV2/p6MfKk3HmNx+o70Cl2Z+qm6cubaw=
+X-Google-Smtp-Source: ABdhPJzua6jofMCS8Pl1Rjhixioz+F1B3LZGfjUEZ1zrXhd0g7jjjMiRt4cCJdCsmpPVYCCGRWD4L1UQ3oHTcNiS6iI=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr1578208oto.112.1634204505543;
+ Thu, 14 Oct 2021 02:41:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20211013150025.2875883-1-arnd@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20211013152243.2216899-1-ardb@kernel.org> <20211013152243.2216899-10-ardb@kernel.org>
+ <82104d87-b077-87a0-2393-ab15ac66dcf7@linux.alibaba.com>
+In-Reply-To: <82104d87-b077-87a0-2393-ab15ac66dcf7@linux.alibaba.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 14 Oct 2021 11:41:34 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGNpnXF5_xEBmomdb5O+pDyX16eZ1TRgaCB7hYBF+9scA@mail.gmail.com>
+Message-ID: <CAMj1kXGNpnXF5_xEBmomdb5O+pDyX16eZ1TRgaCB7hYBF+9scA@mail.gmail.com>
+Subject: Re: [RFC PATCH 9/9] arm64: implement dynamic shadow call stack for GCC
+To:     Dan Li <ashimida@linux.alibaba.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-hardening@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Thu, 14 Oct 2021 at 00:35, Dan Li <ashimida@linux.alibaba.com> wrote:
+>
+>
+>
+> On 10/13/21 11:22 PM, Ard Biesheuvel wrote:
+> > Implement support for the shadow call stack on GCC, and in a dynamic
+> > manner, by parsing the unwind tables at init time to locate all
+> > occurrences of PACIASP/AUTIASP, and replacing them with the shadow call
+> > stack push and pop instructions, respectively.
+> >
+> > This is useful because the overhead of the shadow call stack is
+> > difficult to justify on hardware that implements pointer authentication
+> > (PAC), and given that the PAC instructions are executed as NOPs on
+> > hardware that doesn't, we can just replace them.
+> >
+> > This patch only implements this for the core kernel, but the logic can
+> > be reused for modules without much trouble.
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> >   Makefile                      |   4 +-
+> >   arch/Kconfig                  |   4 +-
+> >   arch/arm64/Kconfig            |   8 +-
+> >   arch/arm64/kernel/Makefile    |   2 +
+> >   arch/arm64/kernel/head.S      |   3 +
+> >   arch/arm64/kernel/patch-scs.c | 223 ++++++++++++++++++++
+> >   6 files changed, 239 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 7cfe4ff36f44..2d94fed93d9d 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -933,8 +933,8 @@ LDFLAGS_vmlinux += --gc-sections
+> >   endif
+> >
+> >   ifdef CONFIG_SHADOW_CALL_STACK
+> > -CC_FLAGS_SCS := -fsanitize=shadow-call-stack
+> > -KBUILD_CFLAGS        += $(CC_FLAGS_SCS)
+> > +CC_FLAGS_SCS-$(CONFIG_CC_IS_CLANG)   := -fsanitize=shadow-call-stack
+> > +KBUILD_CFLAGS                                += $(CC_FLAGS_SCS-y)
+> >   export CC_FLAGS_SCS
+> >   endif
+> >
+> > diff --git a/arch/arm64/kernel/patch-scs.c b/arch/arm64/kernel/patch-scs.c
+> > new file mode 100644
+> > index 000000000000..878a40060550
+> > --- /dev/null
+> > +++ b/arch/arm64/kernel/patch-scs.c
+> > +static int scs_patch_loc(u64 loc)
+> > +{
+> > +     u32 insn = le32_to_cpup((void *)loc);
+> > +
+> > +     /*
+> > +      * Sometimes, the unwind data appears to be out of sync, and associates
+> > +      * the DW_CFA_negate_ra_state directive with the ret instruction
+> > +      * following the autiasp, rather than the autiasp itself.
+> > +      */
+> > +     if (insn == 0xd65f03c0) { // ret
+> > +             loc -= 4;
+> > +             insn = le32_to_cpup((void *)loc);
+> > +     }
+> > +
+> > +     switch (insn) {
+> > +     case 0xd503233f: // paciasp
+> > +             *(u32 *)loc = cpu_to_le32(0xf800865e);
+> > +             break;
+> > +     case 0xd50323bf: // autiasp
+> > +             *(u32 *)loc = cpu_to_le32(0xf85f8e5e);
+> > +             break;
+> > +     default:
+> > +             // ignore
+> > +             break;
+> > +     }
+> > +     return 0;
+> > +}
+>
+> Hi Ard,
+>
+> According to my understanding (may be wrong), here may need to filter out
+> '-march=armv8.3-a'. When it is specified, gcc will use 'retaa' instead of
+> 'autiasp' as a pac check.
 
-
-On 10/13/21 5:00 PM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Calling memcmp() and memchr() with an intentional buffer overflow
-> is now caught at compile time:
-> 
-> In function 'memcmp',
->     inlined from 'kasan_memcmp' at lib/test_kasan.c:897:2:
-> include/linux/fortify-string.h:263:25: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter)
->   263 |                         __read_overflow();
->       |                         ^~~~~~~~~~~~~~~~~
-> In function 'memchr',
->     inlined from 'kasan_memchr' at lib/test_kasan.c:872:2:
-> include/linux/fortify-string.h:277:17: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter)
->   277 |                 __read_overflow();
->       |                 ^~~~~~~~~~~~~~~~~
-> 
-> Change the kasan tests to wrap those inside of a noinline function
-> to prevent the compiler from noticing the bug and let kasan find
-> it at runtime.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-
-> ---
->  lib/test_kasan.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 67ed689a0b1b..903215e944f1 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -852,6 +852,21 @@ static void kmem_cache_invalid_free(struct kunit *test)
->  	kmem_cache_destroy(cache);
->  }
->  
-> +/*
-> + * noinline wrappers to prevent the compiler from noticing the overflow
-> + * at compile time rather than having kasan catch it.
-> + * */
-> +static noinline void *__kasan_memchr(const void *s, int c, size_t n)
-> +{
-> +	return memchr(s, c, n);
-> +}
-> +
-> +static noinline int __kasan_memcmp(const void *s1, const void *s2, size_t n)
-> +{
-> +	return memcmp(s1, s2, n);
-> +}
-> +
-> +
->  static void kasan_memchr(struct kunit *test)
->  {
->  	char *ptr;
-> @@ -870,7 +885,7 @@ static void kasan_memchr(struct kunit *test)
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
->  
->  	KUNIT_EXPECT_KASAN_FAIL(test,
-> -		kasan_ptr_result = memchr(ptr, '1', size + 1));
-> +		kasan_ptr_result = __kasan_memchr(ptr, '1', size + 1));
->  
->  	kfree(ptr);
->  }
-> @@ -895,7 +910,7 @@ static void kasan_memcmp(struct kunit *test)
->  	memset(arr, 0, sizeof(arr));
->  
->  	KUNIT_EXPECT_KASAN_FAIL(test,
-> -		kasan_int_result = memcmp(ptr, arr, size+1));
-> +		kasan_int_result = __kasan_memcmp(ptr, arr, size+1));
->  	kfree(ptr);
->  }
->  
-> 
-
--- 
-Regards,
-Vincenzo
+We can't use that for the single kernel image anyway, since retaa is
+UNDEFINED if the PAC extension is not implemented. So in this
+particular case, it does not really matter, given that you would not
+include the SCS fallback in a kernel that is targetting only hardware
+that implements PAC.
