@@ -2,83 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B82C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 16:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34868C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 17:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B98AA61151
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 16:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1412661152
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 17:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233522AbhJNQvE (ORCPT
+        id S231667AbhJNRdd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Oct 2021 12:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37450 "EHLO mail.kernel.org"
+        Thu, 14 Oct 2021 13:33:33 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39874 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233497AbhJNQvB (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Oct 2021 12:51:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B2BDD6109E;
-        Thu, 14 Oct 2021 16:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634230136;
-        bh=/Hf0VjXN6iyYy6YK32OUC6tMBg1hQi/SYJ14SKE5H/4=;
-        h=Date:From:To:Subject:From;
-        b=ooCImsbvs+VtpH8EU0ZNPxgl6dfPCRirRShNowMC4TH6HA74C7k0jmazO2lO0D4FB
-         riKUsg+P3Tw825Db06ypvOYMi00tW/xFnJFc1Obfqp53qI/qhjkBm0iH1StR785T00
-         oaQBtBpMgElQP7UP/dEG34IdcqgEH2An1K1HBjaKzzEHlSOldL0drDzqeQbGIb0JFT
-         C4AR2wXM5KPbcEDc2IIG89gllO6wPZ9p81Ij4MOL+dzXfL2IzEJSTZYkT2hj+5hiff
-         mNAy8+H+ftORN/K2uJcBivQsPuJWRzOK2Fe/JpABAoSmBWQP27zTM4XHmO6m5pK03I
-         G79ZH9vfz96dg==
-Date:   Thu, 14 Oct 2021 11:53:20 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Cc: linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, ;
-Illegal-Object: Syntax error in To: address found on vger.kernel.org:
-        To:     ;
-                        ^-missing semicolon to end mail group, extraneous tokens in mailbox, missing end of mailbox
-Subject: [PATCH] video: omapfb: Fix fall-through warning for Clang
-Message-ID: <20211014165320.GA1145571@embeddedor>
+        id S231265AbhJNRdd (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 14 Oct 2021 13:33:33 -0400
+Received: from zn.tnic (p200300ec2f0c720076278dcac58b4415.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7200:7627:8dca:c58b:4415])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 827361EC0136;
+        Thu, 14 Oct 2021 19:31:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1634232686;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=DQftSPqAxAWNjuaFkjQxzK/R7rLUcHBb68ob6y37uAY=;
+        b=oAjh5oIbWL4Qps5tii3z9bWeNfIXuMC0QHYFueKGxd59UyW/fZ8YnGzPXV4s72lU0LuPcF
+        1PeAlpl6o1Qg0UBR1hXBa+cATJP38cNKvjDL+XUUMJOkaq5qJP97/+Zz+vko9NQ7yU26OS
+        82fmwfUbc+Fr1ZAeTMRvYwVSV6OwzZY=
+Date:   Thu, 14 Oct 2021 19:31:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>, x86@kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v5 09/15] x86: Use an opaque type for functions not
+ callable from C
+Message-ID: <YWhpbu/Y6V2p/zlY@zn.tnic>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211013181658.1020262-10-samitolvanen@google.com>
+ <YWgSwmzPFrRbMC1P@zn.tnic>
+ <202110140904.41B5183E@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <202110140904.41B5183E@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the following fallthrough warnings:
+On Thu, Oct 14, 2021 at 09:07:57AM -0700, Kees Cook wrote:
+> I don't think it's a super common thing to add, so in this case, yes,
+> I think doing it on a case-by-case basis will be fine. 
 
-drivers/video/fbdev/omap/omapfb_main.c:1558:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-           case 0:
-           ^
-   drivers/video/fbdev/omap/omapfb_main.c:1558:2: note: insert 'break;' to avoid fall-through
-           case 0:
-           ^
-           break;
-   1 warning generated.
+You don't have a choice - if there's no automation which verifies
+whether all the CFI annotation needed is there, people won't know what
+to wrap in what macro.
 
-This helps with the ongoing efforts to globally enable
--Wimplicit-fallthrough for Clang.
+> I'd _much_ prefer keeping the macro, as it explains what's going on,
+> which doesn't require a comment at every "extern const u8 foo[]" usage.
 
-Link: https://github.com/KSPP/linux/issues/115
-Link: https://lore.kernel.org/lkml/202110141005.hUjaYMEi-lkp@intel.com/
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/video/fbdev/omap/omapfb_main.c | 1 +
- 1 file changed, 1 insertion(+)
+You don't have to - it is just an extern.
 
-diff --git a/drivers/video/fbdev/omap/omapfb_main.c b/drivers/video/fbdev/omap/omapfb_main.c
-index 3d090d2d9ed9..b495c09e6102 100644
---- a/drivers/video/fbdev/omap/omapfb_main.c
-+++ b/drivers/video/fbdev/omap/omapfb_main.c
-@@ -1555,6 +1555,7 @@ static void omapfb_free_resources(struct omapfb_device *fbdev, int state)
- 	case 1:
- 		dev_set_drvdata(fbdev->dev, NULL);
- 		kfree(fbdev);
-+		break;
- 	case 0:
- 		/* nothing to free */
- 		break;
+> It serves as an annotation, etc.
+
+Oh, that I figured.
+
+> And, there's been a lot of discussion on the best way to do this, what
+> to name it, etc.
+
+Looking at the changelog, DECLARE_ASM_FUNC_SYMBOL, makes a lot more
+sense to me even if it doesn't specify the aspect that it is not called
+by C but who cares - it is generic enough.
+
+> This looks to be the best option currently.
+
+Maybe because wrapping some random symbols in a obfuscating macro to
+make the next tool happy, is simply the wrong thing to do. I know, I
+know, clang CFI needs it because of magical reason X but that doesn't
+make it any better. Someday soon we'll have to write a tutorial for
+people submitting kernel patches explaining what annotation to add where
+and why.
+
+Why can't clang be taught to ignore those symbols:
+
+clang -fsanitize=cfi -fsanitize-cfi-ignore-symbols=<list>
+
+?
+
+Hmm, looking at https://clang.llvm.org/docs/ControlFlowIntegrity.html
+
+there *is* an ignore list:
+
+"Ignorelist
+
+A Sanitizer special case list can be used to relax CFI checks for
+certain source files, functions and types using the src, fun and type
+entity types. Specific CFI modes can be be specified using [section]
+headers.
+
+...
+
+# Ignore all functions with names containing MyFooBar.
+fun:*MyFooBar*
+..."
+
+
+So why aren't we doing that instead of those macros?
+
 -- 
-2.27.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
