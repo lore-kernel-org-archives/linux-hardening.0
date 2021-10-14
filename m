@@ -2,137 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5315C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 10:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9751DC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 10:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1D74610E6
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 10:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750C36109E
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Oct 2021 10:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbhJNKSw (ORCPT
+        id S229994AbhJNK0L (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Oct 2021 06:18:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229468AbhJNKSw (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Oct 2021 06:18:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E358B60EBB;
-        Thu, 14 Oct 2021 10:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634206607;
-        bh=3XsDHD/eBSYmde+bZHZT79zui6v3kV5ZUbATOpXk5nc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ca50zmQcZF6benVZW7U0Xq7fM5jl9D342FFc0SlGtkV3OPo07L9taV2OH3FIgImFt
-         xk2qqfVfJ4mIoMoBJXjBJN+zCSpALYyOFynQfUiP26r5btucp/5PNOspCELUJXN9k3
-         /nqIDU9ztvGU7r1XKj9I76MX/IbSx/isG9AeUo1q4mwokhMIIdXpYWld5Z8sUmHVeZ
-         K/kiQch3GPJKvuruCvmg0mFYsPSRZq+okvLP3nwy4NlGOhCRVpK/P6j4q1sF/pjLIa
-         Yg1pBwRNzzMAoh9dOOlezm8h1T54nQoHPZvvCB1K2zHgJIMwbMZrwAxMwuym7qefub
-         cJfSbtIwp17KA==
-Date:   Thu, 14 Oct 2021 19:16:43 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
-        Kristen C Accardi <kristen.c.accardi@intel.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-hardening@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] x86/unwind/orc: Handle kretprobes_trampoline
-Message-Id: <20211014191643.6c7ca819a732dd6479329a6b@kernel.org>
-In-Reply-To: <202110132151.F78F49AD8@keescook>
-References: <20210903021326.206548-1-keescook@chromium.org>
-        <202110111403.3C59BF77@keescook>
-        <20211014014101.6du6jj2o7g4ficu5@treble>
-        <202110132151.F78F49AD8@keescook>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 14 Oct 2021 06:26:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229912AbhJNK0K (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 14 Oct 2021 06:26:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50016C061570;
+        Thu, 14 Oct 2021 03:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Fx9cLhN7mOpr+grnv3F8YGfL7yLYIEU/n5hQtUEVSyY=; b=HBIQ7Jv1D7PPTEog37ZzHEDdD4
+        fXw09We7EjdRG/JsM2auCONGNaJeVYxByvJTR0BBLKpQ50E0jtBIQ7oQQffEBpR9ZVVLPtqljJ8mV
+        UeQqOkDFaU5AKBy/93IfRosKVg5rftVMdtvUtKocfd4a/yCtssToumA9HK42YLAG2zchyc6OzD29W
+        TZD+lj0UpmmwgtcRMFDUk79nkNmdTdewozr/yxZmM+S2kwLrMfhug+3aK2WS962VeMVFclKDzGE4i
+        mYIfeZ70gxEXEZ3S6iJZ5hy6+VvSJWqPRql0cEAiAN5VwrIhTaLUtfVC7Z8WdlVFsV1XiYhU8mWFt
+        YnObZJxA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1maxsY-008FhE-QL; Thu, 14 Oct 2021 10:22:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59FB93001C0;
+        Thu, 14 Oct 2021 12:22:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 45B2C2008CB91; Thu, 14 Oct 2021 12:22:26 +0200 (CEST)
+Date:   Thu, 14 Oct 2021 12:22:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v5 01/15] objtool: Add CONFIG_CFI_CLANG support
+Message-ID: <YWgE4iTPGr/ruu8e@hirez.programming.kicks-ass.net>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211013181658.1020262-2-samitolvanen@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211013181658.1020262-2-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 13 Oct 2021 21:52:36 -0700
-Kees Cook <keescook@chromium.org> wrote:
+On Wed, Oct 13, 2021 at 11:16:44AM -0700, Sami Tolvanen wrote:
+> diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+> index 1f2ae708b223..5fe31523e51f 100644
+> --- a/tools/objtool/arch/x86/decode.c
+> +++ b/tools/objtool/arch/x86/decode.c
+> @@ -63,6 +63,23 @@ bool arch_callee_saved_reg(unsigned char reg)
+>  	}
+>  }
+>  
+> +unsigned long arch_cfi_section_reloc_offset(struct reloc *reloc)
+> +{
+> +	if (!reloc->addend)
+> +		return 0;
+> +
+> +	if (reloc->type == R_X86_64_PC32 || reloc->type == R_X86_64_PLT32)
+> +		return reloc->addend + 4;
+> +
+> +	return reloc->addend;
+> +}
+> +
+> +unsigned long arch_cfi_jump_reloc_offset(unsigned long offset)
+> +{
+> +	/* offset to the relocation in a jmp instruction */
+> +	return offset + 1;
+> +}
+> +
+>  unsigned long arch_dest_reloc_offset(int addend)
+>  {
+>  	return addend + 4;
+> diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+> index b18f0055b50b..cd09c93c34fb 100644
+> --- a/tools/objtool/elf.c
+> +++ b/tools/objtool/elf.c
 
-> On Wed, Oct 13, 2021 at 06:41:01PM -0700, Josh Poimboeuf wrote:
-> > On Mon, Oct 11, 2021 at 02:03:26PM -0700, Kees Cook wrote:
-> > > On Thu, Sep 02, 2021 at 07:13:26PM -0700, Kees Cook wrote:
-> > > > From: Marios Pomonis <pomonis@google.com>
-> > > > 
-> > > > Fix a bug in the ORC unwinder when kretprobes has replaced a return
-> > > > address with the address of `kretprobes_trampoline'. ORC mistakenly
-> > > > assumes that the address in the stack is a return address and decrements
-> > > > it by 1 in order to find the proper depth of the next frame.
+> @@ -575,6 +580,49 @@ static int read_rela_reloc(struct section *sec, int i, struct reloc *reloc, unsi
+>  	return 0;
+>  }
+>  
+> +/*
+> + * CONFIG_CFI_CLANG replaces function relocations to refer to an intermediate
+> + * jump table. Undo the conversion so objtool can make sense of things.
+> + */
+> +static int fix_cfi_relocs(const struct elf *elf)
+> +{
+> +	struct section *sec;
+> +	struct reloc *reloc;
+> +
+> +	list_for_each_entry(sec, &elf->sections, list) {
+> +		list_for_each_entry(reloc, &sec->reloc_list, list) {
+> +			struct reloc *cfi_reloc;
+> +			unsigned long offset;
+> +
+> +			if (!reloc->sym->sec->cfi_jt)
+> +				continue;
+> +
+> +			if (reloc->sym->type == STT_SECTION)
+> +				offset = arch_cfi_section_reloc_offset(reloc);
+> +			else
+> +				offset = reloc->sym->offset;
+> +
+> +			/*
+> +			 * The jump table immediately jumps to the actual function,
+> +			 * so look up the relocation there.
+> +			 */
+> +			offset = arch_cfi_jump_reloc_offset(offset);
+> +			cfi_reloc = find_reloc_by_dest(elf, reloc->sym->sec, offset);
+> +
+> +			if (!cfi_reloc || !cfi_reloc->sym) {
+> +				WARN("can't find a CFI jump table relocation at %s+0x%lx",
+> +					reloc->sym->sec->name, offset);
+> +				return -1;
+> +			}
+> +
+> +			reloc->sym = cfi_reloc->sym;
+> +			reloc->addend = 0;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
 
-Hmm, with my fixes[1], the kretprobe_trampoline address in the stack will be
-replaced with the correct return address. In that case, that behavior
-sounds correct.
+If that section ever gets modified and we end up running
+elf_rebuild_reloc_section() on it, we're in trouble, right?
 
-[1] https://lore.kernel.org/all/163163030719.489837.2236069935502195491.stgit@devnote2/
-
-> > > > 
-> > > > This issue was discovered while testing the FG-KASLR series[0][1] and
-> > > > running the live patching test[2] that was originally failing[3].
-> > > > 
-> > > > [0] https://lore.kernel.org/kernel-hardening/20200923173905.11219-1-kristen@linux.intel.com/
-> > > > [1] https://github.com/KSPP/linux/issues/132
-> > > > [2] https://github.com/lpechacek/qa_test_klp
-> > > > [3] https://lore.kernel.org/lkml/alpine.LSU.2.21.2009251450260.13615@pobox.suse.cz/
-> > > > 
-> > > > Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-> > > > Signed-off-by: Marios Pomonis <pomonis@google.com>
-> > > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > > Cc: Alexander Lobakin <alexandr.lobakin@intel.com>
-> > > > Cc: Kristen C Accardi <kristen.c.accardi@intel.com>
-> > > > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > 
-> > > Ping again; Josh can you take this please?
-> > 
-> > I'm confused how this still fixes anything after Masami's patch set,
-> > which is now in linux-next.
-> > 
-> > After those patches, for a CALL-type ORC entry, the unwinder sets
-> > state->ip to the address returned by unwind_recover_ret_addr().  In the
-> > case of a kretprobe, that means that state->ip will no longer point to
-> > kretprobes_trampoline() -- making the above patch description incorrect.
-> > 
-> > Instead, state->ip will then contain the original call return address
-> > which was replaced by kretpobes.  So it looks to the unwinder like a
-> > normal call return address, and 'state->signal' should remain false.
-> > 
-> > Am I missing something?
-> 
-> I'll let Marios answer in more detail, but my understanding is that
-> Masami's patch set didn't solve the FGKASLR-vs-kretprobes issue[1].
-> I don't understand _why_ yet, though.
-
-My another question is that this fix still works correctly on my series,
-because it's already merged via Steve's tree. Isn't this break anything?
-
-I also need to know how (from where) the failed test uses stacktrace.
-Does it call stacktrace from outside of kretprobe?
-
-Thank you,
-
-> 
-> -Kees
-> 
-> [1] https://lore.kernel.org/all/CAKXAmdgS3SL_qyjzjY32_DXe3WVTN+O=wYwJ9vkUXKhjmt87fA@mail.gmail.com/
-> 
-> -- 
-> Kees Cook
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Do we want a fatal error in elf_rebuild_reloc_section() when ->cfi_jt is
+set?
