@@ -2,181 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BA5C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 19:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C6DC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 19:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F99460F11
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 19:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AE5611C1
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 19:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242693AbhJOTP7 (ORCPT
+        id S242701AbhJOTiI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Oct 2021 15:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242669AbhJOTPy (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Oct 2021 15:15:54 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9846AC061762
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Oct 2021 12:13:46 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id i24so44587366lfj.13
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Oct 2021 12:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HBzr0B3tGGPW4EBa2LvZed6scqvnq5Oml+sl03YQDio=;
-        b=BA/5lSdu+5ROrNUsKhvi+0xgDXMbeH1IeW/bUOWfcmhvn1b5gplsN/lhjVCre6mi7A
-         T02zPFwlJIn5jPNjwH4oOtQyucvs6lBBcy+OrsPY3YL/FYdY0J233zlFzQbbtj4HgTc2
-         L9417guhXF0JmPaEr+m4IC2Neu+S/CP0pe8W1DeWsGEaRfcbKuXMoiVVLIsmZUAZYhDW
-         i839MhmZ7hNt4oiL/fD/Ou4ujKkHeGGDRRmS1Lm9czlqguFwu1qDQyHbuiiIuclaTR8n
-         zgTo8mkTKOfB8QZ+Z9qaTsaUNQSAUoM7AdYTjJhuqe3g1u8w9OuBkFHS5pOcW6IIJz3a
-         cmzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HBzr0B3tGGPW4EBa2LvZed6scqvnq5Oml+sl03YQDio=;
-        b=WUopUSjyTP7G6fZ5BJV+ERPObBmDlveql5qocYYaRBfWFiSeiuvpt8puBoXKEbnAdM
-         kA5Pm0da0fmHo9avNAavLhgwTchkh0cLUjIwOv+4koF96OjQNIZ7auWKKdPfRcr3oK8x
-         G85r+kyCpJvnHPCfi0lZfM5bT2lpbrDLhLlzNVdvvS1lKE4ng5RvSUuuBStGHyNNb/kJ
-         YDm4yVrv/ZybhUVYcPD+arXBEruD0JprROJiGmN+kvier1uHSKNLqOvB+Qe1jnYsbTBq
-         jBv4f0mKp9YQHeIaHQaRjEOwPAfyKH9EUCc+BwnBD5T4d2Xkst7nRlH3XyzmjjK2VWHJ
-         kEFQ==
-X-Gm-Message-State: AOAM531v9MrA2sHTjoW5fOqkh07DTXzQ7ttL25XX/qnlx+rJaWKGVm9n
-        ULeRXaompUIg69R1NPKfZuvId+1RiPVoT+Yf5QQGQg==
-X-Google-Smtp-Source: ABdhPJz8/p6IXPlhwfOmIFLJc3rweNG7wsVdft9QVM6g2UNGOxECgfrMdFD6Bhxm1ySa6xlaQxoW0bTsBpferjnjiCE=
-X-Received: by 2002:a05:6512:3ba3:: with SMTP id g35mr13415925lfv.651.1634325224740;
- Fri, 15 Oct 2021 12:13:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <1634167668-60198-1-git-send-email-ashimida@linux.alibaba.com>
- <CAKwvOdkv70XDdK-k3n4ycFQsz+h7V-sTiH8RuxxaLofp-okweQ@mail.gmail.com> <722d9662-e27c-2efb-e8cf-d505b6950475@linux.alibaba.com>
-In-Reply-To: <722d9662-e27c-2efb-e8cf-d505b6950475@linux.alibaba.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 15 Oct 2021 12:13:33 -0700
-Message-ID: <CAKwvOdnMvBP-1=YbXTpYOgWqCBy44tUvWdtMXp8p485bYnPYNQ@mail.gmail.com>
-Subject: Re: [PATCH] [PATCH V4]ARM64: SCS: Add gcc plugin to support Shadow
- Call Stack
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
-        catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
-        nathan@kernel.org, tglx@linutronix.de, akpm@linux-foundation.org,
-        samitolvanen@google.com, frederic@kernel.org, rppt@kernel.org,
-        mark.rutland@arm.com, yifeifz2@illinois.edu, rostedt@goodmis.org,
-        viresh.kumar@linaro.org, andreyknvl@gmail.com,
-        colin.king@canonical.com, ojeda@kernel.org,
-        luc.vanoostenryck@gmail.com, elver@google.com,
-        nivedita@alum.mit.edu, ardb@kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Oct 2021 15:38:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235221AbhJOTiG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 15 Oct 2021 15:38:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B140B61164;
+        Fri, 15 Oct 2021 19:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634326559;
+        bh=AZ5p6oEVThK3Hju2UMF66DeyAGk6wtxhmCc/P49JGZY=;
+        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
+        b=QG1N0CPTSMVPjvRQ/dBLSGz7kCaVVYvN8kYBGIb9n7YZhEASCwZMnHkWb8Ku9NIE1
+         BWQraZItdtSwjvKcoM/ZW/ME8P052uovATvI7XZIjvU3UHwg2xFQYRN1/DW22I632/
+         6VG0HxKEYsV7oJLb5l/bVQ5gHOe2jnILeRerv9qCRV6Gvaqt86S8SlgjL7Vks35MGg
+         yq+qGZ7BY1yu1LC9/kFlKlrJYL51WXrWh1AJri42/nquhEqRnBcqDz3aICfOwrAqhG
+         K/YsJ77uvJMtParKPyCafpjSabB309SfL4qbXPT6OWvrXrjZu0FvB4Op4AZyZGQ7UU
+         g+h6mVbOsgOhg==
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id BD6DA27C0054;
+        Fri, 15 Oct 2021 15:35:57 -0400 (EDT)
+Received: from imap48 ([10.202.2.98])
+  by compute6.internal (MEProxy); Fri, 15 Oct 2021 15:35:57 -0400
+X-ME-Sender: <xms:HdhpYVS3E_KDyVr09KiFeRY-MRjhWyiP5lu9oyj7m8uUBvi_wdK2Fg>
+    <xme:HdhpYeyigOqf6ue2VNZzUSfaFQbPmHDAwSHRbl7aibVBsXwOkPJA4_vmRM5V8CKPC
+    dw68ollmPaLCgFKmps>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrvddugedgudefkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ugihucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecugg
+    ftrfgrthhtvghrnhephfelhfdugeetvdfhfeeuveevtdegueekhfffheetffdtleevtdeh
+    tdeivdeuvedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhguhidomhgvshhmthhprghu
+    thhhphgvrhhsohhnrghlihhthidqudduiedukeehieefvddqvdeifeduieeitdekqdhluh
+    htoheppehkvghrnhgvlhdrohhrgheslhhinhhugidrlhhuthhordhush
+X-ME-Proxy: <xmx:HdhpYa2-FTzPO0fAaKG4u5I9xftlZGa5Z8lb1HIFmkQtMFU0IwF8hw>
+    <xmx:HdhpYdAJ8TAAORamFxldXaN_0t3V3NNYgSNg7w9g050ccioVUns5-w>
+    <xmx:HdhpYejRdQ3UIOSEhz8ASRxIybaVFlpSKGowGWwyOoDGNyBPQHCUlw>
+    <xmx:HdhpYTauFATTZqnctJ6ZvWlWOjq_qCIVZQOBhDLGKHtHvAiSPK0gy8d-H7o>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 626A821E0066; Fri, 15 Oct 2021 15:35:57 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1345-g8441cd7852-fm-20211006.001-g8441cd78
+Mime-Version: 1.0
+Message-Id: <ecbe49c8-b30b-456c-931a-cc65647b0958@www.fastmail.com>
+In-Reply-To: <CABCJKuc+mN4vw_sanZQKcb1=SyfT4h3JK2wpBuaB2qZH3Croxg@mail.gmail.com>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211013181658.1020262-4-samitolvanen@google.com>
+ <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com> <8735p25llh.ffs@tglx>
+ <87zgra41dh.ffs@tglx>
+ <CABCJKuc+mN4vw_sanZQKcb1=SyfT4h3JK2wpBuaB2qZH3Croxg@mail.gmail.com>
+Date:   Fri, 15 Oct 2021 12:35:37 -0700
+From:   "Andy Lutomirski" <luto@kernel.org>
+To:     "Sami Tolvanen" <samitolvanen@google.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>
+Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Nathan Chancellor" <nathan@kernel.org>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        "Sedat Dilek" <sedat.dilek@gmail.com>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v5 03/15] linkage: Add DECLARE_NOT_CALLED_FROM_C
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 11:29 AM Dan Li <ashimida@linux.alibaba.com> wrote:
+On Fri, Oct 15, 2021, at 11:42 AM, Sami Tolvanen wrote:
+>>   https://lore.kernel.org/lkml/alpine.LFD.2.00.1001251002430.3574@localhost.localdomain/
+>>
+>> That said, I still want to have a coherent technical explanation why the
+>> compiler people cannot come up with a sensible annotation for these
+>> things.
 >
->
->
-> On 10/15/21 2:44 AM, Nick Desaulniers wrote:
-> >   On Wed, Oct 13, 2021 at 4:28 PM Dan Li <ashimida@linux.alibaba.com> wrote:
-> >> --- a/include/linux/compiler-gcc.h
-> >> +++ b/include/linux/compiler-gcc.h
-> >> @@ -50,6 +50,10 @@
-> >>   #define __latent_entropy __attribute__((latent_entropy))
-> >>   #endif
-> >>
-> >> +#if defined(SHADOW_CALL_STACK_PLUGIN) && !defined(__CHECKER__)
-> >> +#define __noscs __attribute__((no_shadow_call_stack))
-> >> +#endif
-> >
-> > Cool this is a nice addition, and something I don't think that clang
-> > has.  For any new feature, having a function attribute to disable it
-> > at the function granularity is nice, and plays better with LTO than -f
-> > group flags.  Though that begs the question: what happens if a __noscs
-> > callee is inlined into a non-__noscs caller, or vice versa?
-> Thanks Nick,
->
-> According to my understanding, all inline optimizations in gcc should
-> happen before inserting scs insns (scs and paciasp/autiasp use the
-> same insertion point). Therefore, the check for the __noscs attribute
-> will also occur after all inlining is completed.
->
-> As in the following example:
-> - Since __noscs attribute is specified, scs_test1 does not insert scs insns
-> - Since normal functions scs_test2/3 uses x30, it needs to insert scs insns
-> - Since __noscs attribute is specified, scs_test4 after inlining does not
-> need to insert scs insns
->
-> __always_inline __noscs void scs_test1(void)
-> {
->      asm volatile("mov x1, x1\n\t":::"x30");
-> }
->
-> //scs insns inserted after function inline
-> void scs_test2(void)
-> {
->      scs_test1();
-> }
+> I can only assume they didn't think about this specific use case.
 
-That may be surprising to developers.  Perhaps __always_inline on
-scs_test1 is distracting this test case, but I suspect it may not make
-a difference.  This particular issue comes up time and again with
-stack protectors; ie. the callee is marked no stack protector, then
-gets inlined into a caller and suddenly gets a stack protector.
+I must be missing something here.  Linux is full of C-ABI functions implemented in asm.  Just off of a quick grep:
 
->
-> __always_inline void scs_test3(void)
-> {
->      asm volatile("mov x3, x3\n\t":::"x30");
-> }
->
-> //no scs insns inserted
-> __noscs void scs_test4(void)
-> {
->      scs_test3();
-> }
->
-> ffff800010012900 <scs_test1>:
-> ffff800010012900:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-> ffff800010012904:       910003fd        mov     x29, sp
-> ffff800010012908:       aa0103e1        mov     x1, x1
-> ffff80001001290c:       a8c17bfd        ldp     x29, x30, [sp], #16
-> ffff800010012910:       d65f03c0        ret
->
-> ffff800010012914 <scs_test2>:
-> ffff800010012914:       f800865e        str     x30, [x18], #8
-> ffff800010012918:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-> ffff80001001291c:       910003fd        mov     x29, sp
-> ffff800010012920:       aa0103e1        mov     x1, x1
-> ffff800010012924:       a8c17bfd        ldp     x29, x30, [sp], #16
-> ffff800010012928:       f85f8e5e        ldr     x30, [x18, #-8]!
-> ffff80001001292c:       d65f03c0        ret
->
-> ffff800010012930 <scs_test3>:
-> ffff800010012930:       f800865e        str     x30, [x18], #8
-> ffff800010012934:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-> ffff800010012938:       910003fd        mov     x29, sp
-> ffff80001001293c:       aa0303e3        mov     x3, x3
-> ffff800010012940:       a8c17bfd        ldp     x29, x30, [sp], #16
-> ffff800010012944:       f85f8e5e        ldr     x30, [x18, #-8]!
-> ffff800010012948:       d65f03c0        ret
-> ffff80001001294c:       d503201f        nop
->
-> ffff800010012950 <scs_test4>:
-> ffff800010012950:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-> ffff800010012954:       910003fd        mov     x29, sp
-> ffff800010012958:       aa0303e3        mov     x3, x3
-> ffff80001001295c:       a8c17bfd        ldp     x29, x30, [sp], #16
-> ffff800010012960:       d65f03c0        ret
-> > I noticed that __noscs isn't actually applied anywhere in the kernel,
-> > yet, at least in this series.  Were there any places necessary that
-> > you've found thus far?
-> At present, I have not found a function that must use the __noscs
-> attribute in the kernel. I have only used this attribute in test cases.
+asm_load_gs_index, memset, memmove, basically everything in arch/x86/lib/*.S
 
+If they're just declared and called directly from C, it should just work.  But an *indirect* call needs some sort of special handling.  How does this work in your patchset?
 
--- 
-Thanks,
-~Nick Desaulniers
+Then we get to these nasty cases where, for some reason, we need to explicitly grab the actual entry point or we need to grab the actual literal address that we can call indirectly.  This might be alternative_call, where we're trying to be fast and we want to bypass the CFI magic because, despite what the compiler might try to infer, we are doing a direct call (so it can't be the wrong address due a runtime attack, ENDBR isn't needed, etc).  And I can easily believe that the opposite comes to mind.  And there are things like exception entries, where C calls make no sense, CFI makes no sense, and they should be totally opaque.
+
+So I tend to think that tglx is right *and* we need an attribute, because there really are multiple things going on here.
+
+SYM_FUNC_START(c_callable_func)
+  ...
+  ret
+SYM_FUNC_END
+
+extern __magic int c_callable_func(whatever);
+
+Surely *something* needs to go where __magic is to tell the compiler that we have a function that wasn't generated by a CFI-aware compiler and that it's just a C ABI function.  (Or maybe this is completely implicit?  I can't keep track of exactly which thing generates which code in clang CFI.)
+
+But we *also* have the read-the-address thing:
+
+void something(void)
+{
+  /* actual C body */
+}
+alternative_call(something, someotherthing, ...);
+
+That wants to expand to assembly code that does:
+
+CALL [target]
+
+where [target] is the actual first instruction of real code and not a CFI prologue.  Or, inversely, we want:
+
+void (*ptr)(void) = something;
+
+which (I presume -- correct me if I'm wrong) wants the CFI landing pad.  It's not the same address.
+
+And this all wants to work both for asm-defined functions and C-defined functions.  This really is orthogonal to the is-it-asm-or-is-it-C things.  All four combinations are possible.
+
+Does this make any sense?  I kind of thing we want the attributes and the builtin, along the lines of:
+
+asm("call %m", function_nocfi_address(something));
+
+or however else we wire it up.
+
+(And, of course, the things that aren't C functions at all, like exception entries, should be opaque.)
