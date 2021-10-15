@@ -2,127 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E0FC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 17:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1627CC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 18:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E61D60E96
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 17:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E429E60FF2
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 18:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242420AbhJOR7j (ORCPT
+        id S242375AbhJOS33 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Oct 2021 13:59:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51734 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237652AbhJOR7i (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Oct 2021 13:59:38 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1634320650;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nJ0THKXxd/Bt+ZOJhojuTzHMSTcdTYp1X+BGRWm6h4g=;
-        b=AmJt9r5Wubqb7bqcK7HDmhMVd2IlIBGgmSCKDUp5K/5o5V6Uh/oRsuJPA9R+z3eKwJTuPj
-        cbr/jHp9zoRYrsH05O2ABxTbz/ygz9YHb2Ldy4/xiuCYkD+9/BpE48QjLMHEKjTbby/gXr
-        ZDqzXr8mnDn6+yf7dkpBrdEPRBzHpg7szyQL+VEwzWdV0kfMfeXLPZDPkW1xYDQLiXrT1k
-        g4ExYzVi/cyrGEcMw3QAErKB2sAdsdLUaKkra411yZ+B30sEqcRuaXEojh1k7wzOT1Ke/L
-        RM+BzrACLxY9/aN7DICkUA94TM70plzX4NiUXtv5+l6k8hn8gn25dzTbQ3DcwQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1634320650;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nJ0THKXxd/Bt+ZOJhojuTzHMSTcdTYp1X+BGRWm6h4g=;
-        b=Av/zrPQ98wmRxY7Yh8H4q2ZJOvvECSItHXiAM1Did8Vc8w8w8mFy8UkB5thu3zMMUloM0h
-        6LVOlDPSdTb2C4Dg==
-To:     Andy Lutomirski <luto@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Fri, 15 Oct 2021 14:29:29 -0400
+Received: from mga18.intel.com ([134.134.136.126]:65297 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237667AbhJOS32 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 15 Oct 2021 14:29:28 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10138"; a="214900521"
+X-IronPort-AV: E=Sophos;i="5.85,376,1624345200"; 
+   d="scan'208";a="214900521"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2021 11:27:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,376,1624345200"; 
+   d="scan'208";a="571833563"
+Received: from irvmail001.ir.intel.com ([10.43.11.63])
+  by fmsmga002.fm.intel.com with ESMTP; 15 Oct 2021 11:27:05 -0700
+Received: from alobakin-mobl.ger.corp.intel.com (dkaczkow-MOBL2.ger.corp.intel.com [10.213.18.206])
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 19FIR2T7023903;
+        Fri, 15 Oct 2021 19:27:02 +0100
+From:   Alexander Lobakin <alexandr.lobakin@intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        Borislav Petkov <bp@suse.de>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <jroedel@suse.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Jing Yangyang <jing.yangyang@zte.com.cn>,
+        Abaci Robot <abaci@linux.alibaba.com>,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v5 03/15] linkage: Add DECLARE_NOT_CALLED_FROM_C
-In-Reply-To: <8735p25llh.ffs@tglx>
-References: <20211013181658.1020262-1-samitolvanen@google.com>
- <20211013181658.1020262-4-samitolvanen@google.com>
- <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com>
- <8735p25llh.ffs@tglx>
-Date:   Fri, 15 Oct 2021 19:57:30 +0200
-Message-ID: <87zgra41dh.ffs@tglx>
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/4] x86: Various clean-ups in support of FGKASLR
+Date:   Fri, 15 Oct 2021 20:27:01 +0200
+Message-Id: <20211015182701.13573-1-alexandr.lobakin@intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211013175742.1197608-1-keescook@chromium.org>
+References: <20211013175742.1197608-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 15 2021 at 17:55, Thomas Gleixner wrote:
-> On Thu, Oct 14 2021 at 19:51, Andy Lutomirski wrote:
->> On Wed, Oct 13, 2021, at 11:16 AM, Sami Tolvanen wrote:
-> That still tells me:
->
->     1) This is a function
->     
->     2) It has a regular argument which is expected to be in RDI
->
-> which even allows to do analyis of e.g. the alternative call which
-> invokes that function.
->
-> DECLARE_NOT_CALLED_FROM_C(clear_page_erms);
->
-> loses these properties and IMO it's a tasteless hack.
+From: Kees Cook <keescook@chromium.org>
+Date: Wed, 13 Oct 2021 10:57:38 -0700
 
-Look:
+> Hi,
+> 
+> These are a small set of patches that clean up various things that are
+> each stand-alone improvements, but they're also needed for the coming
+> FGKASLR series[1]. I thought it best to just get these landed instead
+> of having them continue to tag along with FGKASLR, especially the
+> early malloc() fix, which is a foot-gun waiting to happen. :)
 
-SYSCALL_DEFINE2(set_robust_list, struct robust_list_head __user *, head,
-                size_t, len)
+Thanks for picking this! Those really are standalone guys.
 
-Not beautiful, but it gives the information which is needed and it tells
-me clearly what this is about. While the above lumps everything together
-whatever it is.
-
-Having __bikeshedme would allow to do:
-
-   __hardware_call
-   __xenhv_call
-   __inline_asm_call
-
-or such, which clearly tells how the function should be used and it can
-even be validated by tooling.
-
-You could to that with macros as well, but thats not what you offered.
-
-Seriously, if you want to sell me that stuff, then you really should
-offer me something which has a value on its own and makes it palatable
-to me. That's not something new. See:
-
-  https://lore.kernel.org/lkml/alpine.LFD.2.00.1001251002430.3574@localhost.localdomain/
-
-That said, I still want to have a coherent technical explanation why the
-compiler people cannot come up with a sensible annotation for these
-things.
-
-I'm tired of this attitude, that they add features and then ask us to
-make our code more ugly.
-
-It's not a well hidden secret that the kernel uses these kind of
-constructs. So why on earth can't they be bothered to think about these
-things upfront and offer us something nice and useful?
+> Thanks!
+> 
+> -Kees
+> 
+> [1] https://lore.kernel.org/lkml/20210831144114.154-1-alexandr.lobakin@intel.com/
+> 
+> Kees Cook (2):
+>   x86/boot: Allow a "silent" kaslr random byte fetch
+>   x86/boot/compressed: Avoid duplicate malloc() implementations
+> 
+> Kristen Carlson Accardi (2):
+>   x86/tools/relocs: Support >64K section headers
+>   vmlinux.lds.h: Have ORC lookup cover entire _etext - _stext
+> 
+>  arch/x86/boot/compressed/kaslr.c  |   4 --
+>  arch/x86/boot/compressed/misc.c   |   3 +
+>  arch/x86/boot/compressed/misc.h   |   2 +
+>  arch/x86/lib/kaslr.c              |  18 ++++--
+>  arch/x86/tools/relocs.c           | 103 ++++++++++++++++++++++--------
+>  include/asm-generic/vmlinux.lds.h |   3 +-
+>  include/linux/decompress/mm.h     |  12 +++-
+>  7 files changed, 107 insertions(+), 38 deletions(-)
+> 
+> -- 
+> 2.30.2
 
 Thanks,
-
-        tglx
-
-
-
-
-
-
-
+Al
