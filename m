@@ -2,160 +2,145 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21C7C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 18:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF9CC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 18:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6FC60F36
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 18:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF5061040
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 18:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242627AbhJOSbP (ORCPT
+        id S241274AbhJOSpC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Oct 2021 14:31:15 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:49966 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242604AbhJOSbM (ORCPT
+        Fri, 15 Oct 2021 14:45:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241210AbhJOSpC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Oct 2021 14:31:12 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=28;SR=0;TI=SMTPD_---0UsDzA4._1634322537;
-Received: from ashimida.local(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0UsDzA4._1634322537)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 16 Oct 2021 02:29:01 +0800
-Subject: Re: [PATCH] [PATCH V4]ARM64: SCS: Add gcc plugin to support Shadow
- Call Stack
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
-        catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
-        nathan@kernel.org, tglx@linutronix.de, akpm@linux-foundation.org,
-        samitolvanen@google.com, frederic@kernel.org, rppt@kernel.org,
-        mark.rutland@arm.com, yifeifz2@illinois.edu, rostedt@goodmis.org,
-        viresh.kumar@linaro.org, andreyknvl@gmail.com,
-        colin.king@canonical.com, ojeda@kernel.org,
-        luc.vanoostenryck@gmail.com, elver@google.com,
-        nivedita@alum.mit.edu, ardb@kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <1634167668-60198-1-git-send-email-ashimida@linux.alibaba.com>
- <CAKwvOdkv70XDdK-k3n4ycFQsz+h7V-sTiH8RuxxaLofp-okweQ@mail.gmail.com>
-From:   Dan Li <ashimida@linux.alibaba.com>
-Message-ID: <722d9662-e27c-2efb-e8cf-d505b6950475@linux.alibaba.com>
-Date:   Sat, 16 Oct 2021 02:28:56 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.1
+        Fri, 15 Oct 2021 14:45:02 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C108C061762
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Oct 2021 11:42:55 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id z5so24941070ybj.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Oct 2021 11:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YyFndEo3gUR+eMx/EaHlI/+HLKDJ+s4HAj68KJojv2E=;
+        b=MbkkXxRw1l7BoouF3CrgxtsPPhDu1KnBZaY06+EdyKH1pO6POgMfNhqvlqd6DsgXlq
+         ezhS9Gd12dfBMPidYDxcylK0EZgaXQcxtRmXvaQEjcEjvgB8IbWAz9E1bZRwJAIrRqo2
+         bHjc0L4ctaVMPcb/OR5YAUjiVd62l+Kn5ZBTpWWQ7cx+6wZJqjhsZV1jpqCMWkb8e8oS
+         q5od3+7tLzc+ciaOMd6t36bhGtfqsDKQDzNBQkLHH1tNtkxIdW8M+ljHCQXdsKxwjyC1
+         WqxnjKiUYq0D0Qv4P/i8ZiemKmyDGSbDwdHvNonz58bB/4+5GZIOD03WNN/2uU7WBOMw
+         RjwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YyFndEo3gUR+eMx/EaHlI/+HLKDJ+s4HAj68KJojv2E=;
+        b=tMBa/es5Onb8FbOyaJ6Wn2ljqoleINmbE4X3RElKVGqHHzvYQGuJx+SObYWcBsdb8u
+         4Gvv2sFvb7O5m/FWOhspYXyWb3PxZYIpQpVNuY7frUPLTz8hcZl9kgolsH6IpSyOlFSf
+         bF1U6pe4mMiyqZWpXnBJmkqOWsmxxYVpPTjYMkawztBFrlzbU6NF30sdrc850jommYsx
+         zZCOmlzoDnKKGYy/BBTTNwfJCMUbpCklaQoG7g8mkJGeQL6zkXwxyGvej4vIg7t1a9VA
+         5yp68SHANMJFGyD88Z+gk0Z5OLIGwt3H6NY06VrChUibqJwrRxLxFV4WsqHcgdu1cis4
+         o1Pw==
+X-Gm-Message-State: AOAM533g2709BRW2HTIsvzG2tgGgntvogvsmEHlnR+EOse8KYum84fYq
+        umfZfKQ2Th2y+AG4WnKndYbZ9pzwUYVZ2BvzRPHBrA==
+X-Google-Smtp-Source: ABdhPJzHhDNJ92BDjbL3eNowitqNJl7sbLIc9MyypGUdc+46JWKxEJW9d9Z/0MDyie59LcpfhOWnx7jOWMeN1OLfsFQ=
+X-Received: by 2002:a25:cf8f:: with SMTP id f137mr15531922ybg.338.1634323374308;
+ Fri, 15 Oct 2021 11:42:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdkv70XDdK-k3n4ycFQsz+h7V-sTiH8RuxxaLofp-okweQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211013181658.1020262-4-samitolvanen@google.com> <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com>
+ <8735p25llh.ffs@tglx> <87zgra41dh.ffs@tglx>
+In-Reply-To: <87zgra41dh.ffs@tglx>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 15 Oct 2021 11:42:43 -0700
+Message-ID: <CABCJKuc+mN4vw_sanZQKcb1=SyfT4h3JK2wpBuaB2qZH3Croxg@mail.gmail.com>
+Subject: Re: [PATCH v5 03/15] linkage: Add DECLARE_NOT_CALLED_FROM_C
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 10/15/21 2:44 AM, Nick Desaulniers wrote:
->   On Wed, Oct 13, 2021 at 4:28 PM Dan Li <ashimida@linux.alibaba.com> wrote:
->> --- a/include/linux/compiler-gcc.h
->> +++ b/include/linux/compiler-gcc.h
->> @@ -50,6 +50,10 @@
->>   #define __latent_entropy __attribute__((latent_entropy))
->>   #endif
->>
->> +#if defined(SHADOW_CALL_STACK_PLUGIN) && !defined(__CHECKER__)
->> +#define __noscs __attribute__((no_shadow_call_stack))
->> +#endif
-> 
-> Cool this is a nice addition, and something I don't think that clang
-> has.  For any new feature, having a function attribute to disable it
-> at the function granularity is nice, and plays better with LTO than -f
-> group flags.  Though that begs the question: what happens if a __noscs
-> callee is inlined into a non-__noscs caller, or vice versa?
-Thanks Nick,
-
-According to my understanding, all inline optimizations in gcc should
-happen before inserting scs insns (scs and paciasp/autiasp use the
-same insertion point). Therefore, the check for the __noscs attribute
-will also occur after all inlining is completed.
-
-As in the following example:
-- Since __noscs attribute is specified, scs_test1 does not insert scs insns
-- Since normal functions scs_test2/3 uses x30, it needs to insert scs insns
-- Since __noscs attribute is specified, scs_test4 after inlining does not
-need to insert scs insns
-
-__always_inline __noscs void scs_test1(void)
-{
-     asm volatile("mov x1, x1\n\t":::"x30");
-}
-
-//scs insns inserted after function inline
-void scs_test2(void)
-{
-     scs_test1();
-}
-
-__always_inline void scs_test3(void)
-{
-     asm volatile("mov x3, x3\n\t":::"x30");
-}
-
-//no scs insns inserted
-__noscs void scs_test4(void)
-{
-     scs_test3();
-}
-
-ffff800010012900 <scs_test1>:
-ffff800010012900:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-ffff800010012904:       910003fd        mov     x29, sp
-ffff800010012908:       aa0103e1        mov     x1, x1
-ffff80001001290c:       a8c17bfd        ldp     x29, x30, [sp], #16
-ffff800010012910:       d65f03c0        ret
-
-ffff800010012914 <scs_test2>:
-ffff800010012914:       f800865e        str     x30, [x18], #8
-ffff800010012918:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-ffff80001001291c:       910003fd        mov     x29, sp
-ffff800010012920:       aa0103e1        mov     x1, x1
-ffff800010012924:       a8c17bfd        ldp     x29, x30, [sp], #16
-ffff800010012928:       f85f8e5e        ldr     x30, [x18, #-8]!
-ffff80001001292c:       d65f03c0        ret
-
-ffff800010012930 <scs_test3>:
-ffff800010012930:       f800865e        str     x30, [x18], #8
-ffff800010012934:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-ffff800010012938:       910003fd        mov     x29, sp
-ffff80001001293c:       aa0303e3        mov     x3, x3
-ffff800010012940:       a8c17bfd        ldp     x29, x30, [sp], #16
-ffff800010012944:       f85f8e5e        ldr     x30, [x18, #-8]!
-ffff800010012948:       d65f03c0        ret
-ffff80001001294c:       d503201f        nop
-
-ffff800010012950 <scs_test4>:
-ffff800010012950:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-ffff800010012954:       910003fd        mov     x29, sp
-ffff800010012958:       aa0303e3        mov     x3, x3
-ffff80001001295c:       a8c17bfd        ldp     x29, x30, [sp], #16
-ffff800010012960:       d65f03c0        ret
-> I noticed that __noscs isn't actually applied anywhere in the kernel,
-> yet, at least in this series.  Were there any places necessary that
-> you've found thus far?
-At present, I have not found a function that must use the __noscs
-attribute in the kernel. I have only used this attribute in test cases.
-
-> Overall, I'm happy with the patch and am ready to ack it, but I would
-> like to see a link to to the upstream GCC feature request for SCS (and
-> one created if it doesn't exist) cited explicitly in the commit
-> message.  I think that would be a good demonstration that this can or
-> will be upstreamed into the compiler proper for the compiler vendors
-> to maintain, rather than the kernel folks.  The compiler vendors may
-> have further feedback on the approach, such as my question above
-> pertaining to inlining.
+On Fri, Oct 15, 2021 at 10:57 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-I have submitted a feature request to the gcc community, and waiting
-for a follow-up response.
+> On Fri, Oct 15 2021 at 17:55, Thomas Gleixner wrote:
+> > On Thu, Oct 14 2021 at 19:51, Andy Lutomirski wrote:
+> >> On Wed, Oct 13, 2021, at 11:16 AM, Sami Tolvanen wrote:
+> > That still tells me:
+> >
+> >     1) This is a function
+> >
+> >     2) It has a regular argument which is expected to be in RDI
+> >
+> > which even allows to do analyis of e.g. the alternative call which
+> > invokes that function.
+> >
+> > DECLARE_NOT_CALLED_FROM_C(clear_page_erms);
+> >
+> > loses these properties and IMO it's a tasteless hack.
+>
+> Look:
+>
+> SYSCALL_DEFINE2(set_robust_list, struct robust_list_head __user *, head,
+>                 size_t, len)
+>
+> Not beautiful, but it gives the information which is needed and it tells
+> me clearly what this is about. While the above lumps everything together
+> whatever it is.
 
-Is it fine to add the following description in [PATCH V5]?
+Sure, that makes sense. Ignoring the macro for a moment, how do you
+feel about using incomplete structs for the non-C functions as Andy
+suggested?
 
-A similar feature request has also been sent to gcc.
-link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102768
+> Having __bikeshedme would allow to do:
+>
+>    __hardware_call
+>    __xenhv_call
+>    __inline_asm_call
+>
+> or such, which clearly tells how the function should be used and it can
+> even be validated by tooling.
+
+Previously you suggested adding a built-in function to the compiler:
+
+https://lore.kernel.org/lkml/877dl0sc2m.ffs@nanos.tec.linutronix.de/
+
+I actually did implement this in Clang, but the feature wasn't
+necessary with opaque types, so I never moved forward with those
+patches. A built-in also won't make the code any cleaner, which was a
+concern last time.
+
+I do agree that a function attribute would look cleaner, but it won't
+stop anyone from mistakenly calling these functions from C code, which
+was something Andy wanted to address at the same time. Do you still
+prefer a function attribute over using an opaque type nevertheless?
+
+> You could to that with macros as well, but thats not what you offered.
+>
+> Seriously, if you want to sell me that stuff, then you really should
+> offer me something which has a value on its own and makes it palatable
+> to me. That's not something new. See:
+>
+>   https://lore.kernel.org/lkml/alpine.LFD.2.00.1001251002430.3574@localhost.localdomain/
+>
+> That said, I still want to have a coherent technical explanation why the
+> compiler people cannot come up with a sensible annotation for these
+> things.
+
+I can only assume they didn't think about this specific use case.
+
+Sami
