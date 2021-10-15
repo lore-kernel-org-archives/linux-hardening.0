@@ -2,192 +2,127 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92814C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 15:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15445C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 15:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69CB961090
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 15:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7ED61090
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 15:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232842AbhJOPzQ (ORCPT
+        id S235052AbhJOP5b (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Oct 2021 11:55:16 -0400
-Received: from mout.gmx.net ([212.227.17.22]:44995 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230236AbhJOPzP (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Oct 2021 11:55:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1634313181;
-        bh=+UHew0luVMjbFHLFFxpMVAj6c4oCiqqrwNFkNSmpVnc=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=bNMoRusyJ3ZAITJjBXEGnrF/VZf/Lg1Tc1XGprY/P+wmg7YOSAvz1H0PrrNBvpEw4
-         rRNswxHoPFTOPwrRpArgTEYu+MJCb8p/kj4qqLkHoSg3E8zF9z+Qo563/UY/1Zstc6
-         Fig975eH6tseR0OkPg9TCHQcpcg70i502R2TEUwc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MOiHf-1mNTvO2Jjz-00QBxU; Fri, 15
- Oct 2021 17:53:01 +0200
-Date:   Fri, 15 Oct 2021 17:52:48 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Li Fei1 <fei1.li@intel.com>
-Cc:     Len Baker <len.baker@gmx.com>, keescook@chromium.org,
-        gustavoars@kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] virt: acrn: Prefer array_syze and struct_size over open
- coded arithmetic
-Message-ID: <20211015155248.GA3289@titan>
-References: <20211011103902.15638-1-len.baker@gmx.com>
- <20211012013429.GA28284@louislifei-OptiPlex-7050>
+        Fri, 15 Oct 2021 11:57:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233273AbhJOP5b (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 15 Oct 2021 11:57:31 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7698AC061570;
+        Fri, 15 Oct 2021 08:55:24 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1634313323;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sFrKPQRzDTKs0QNA4mzAX7Wpe5TO8YTE5o8WYqOKeDs=;
+        b=gijAJFHIcbUh9LlKhz+b8pZZHFCP4uYbKvBkMt2yaZSzUj9mnNfFbgXutfB5sgZvwlpbFK
+        brLdXbTaboyu9xuuT6rXSOowyLUBdH3/JOq/EP8OQMri9RQyaG6hHAytKesFsrF6P8XKrM
+        OG5Q5C5nI7NcuN3IwRGPlgfpk7CY4KNYieXHj8bRZzJV6gsZjNZDV3289/Jo6WXveOxU99
+        H5XU9Y/3D2x5+e1o6ByUKtt4azsRaIxCFeEUK44x/F7jfwBL9A/NuR9dEH3ZnK5aWzPzIB
+        BJnbXbme5143vkUD5DNTB8qCnS7xgrc31C5Mc59/40UvA+yLqy0VPpI5SXCfqg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1634313323;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sFrKPQRzDTKs0QNA4mzAX7Wpe5TO8YTE5o8WYqOKeDs=;
+        b=pSsHnrcLqmy+2ohuajOXale7osrdx/UQbalyx0Q6La/AG+Xq5YkKptrunxW9PcgrVUhBVG
+        1GZj3RWM2dyqjpCQ==
+To:     Andy Lutomirski <luto@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v5 03/15] linkage: Add DECLARE_NOT_CALLED_FROM_C
+In-Reply-To: <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211013181658.1020262-4-samitolvanen@google.com>
+ <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com>
+Date:   Fri, 15 Oct 2021 17:55:22 +0200
+Message-ID: <8735p25llh.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211012013429.GA28284@louislifei-OptiPlex-7050>
-X-Provags-ID: V03:K1:8I+AheHcTcMLiJ9hfpPED3m8oSKH+eBB1bHCp+r/xQVcTprDcm5
- KBjwwnuV0I8gSMJkr/DGJSkw5Eh17+rMInQaQDotNJwy1e/kdlFWsLwb6BUCPV1DgRreeu/
- 4lN1pSKPBSNicTfDn3rogaqBhNbBziQrLjiaKyqmAOSmYqhmyIrADq5RxNuqrYXhad4gwzO
- 0vzVDRxos3NRV6UgnXjCQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VPU8bzKmywU=:8hWSVEQaIaHe5wtqLtao/J
- HLmxpJlmhigxNo9PyfGSlvuOZREkvznZNMpECXE/P3iC8febf8b31ZEuyWy6OprJb1J07dO2h
- PUAEa2fQKDUQmzjUd26HvlcWFQ9kbI9Kqtwu4LOt3Iys0RY6ScTPKu+JdHqadjzZ4CNPhaT6j
- dGFmALgUGolB9H2DFL/DcR3NskXry6fmKU90n/Zy4RjuQ4jndk7gM+ONMB9LCmish2ojRelu6
- uk8XZIEjTFEIxbH+XXEejEYnx2SCPIjAAtgkBdK5DZzJeob4Yk33+FiC4WD+rhd/qsM+EyEFy
- jYYnXGmuq/ir7knbSrvFzyIoJzd8TmbY7iorvh2y4komJY/RvarTi7OuOLdEV2WfBRg7aimID
- l40T80Zn5tpBAfjxEf4ZpnXgBr4jXR2x9V6qwK9+29+LIEOfnyvsHJhJKPlWN7Xf5brow9aUw
- BIr3tjQiaJw654tHNNHB2N2aaUgrKlJDtHShSP80Web+vqQxGCf7BNWe4MsFS7n9+tZt/iMXk
- LbWWyRuN9HFdJFRtk3LwIZQDbRNu3yD6hlubhnWcL82IjbqbUTkQayzDmhXwhLUGsygcTyCss
- KNOs7sZZC5JLPtUJ+RuOt/MtFJ8I4Ia+LO170gwOQMG4Z6vRfNVk3Bl7tQP/fBaR9SDUoFXVy
- pFN1S4Q+R3PcbVeMUG6jmxPr+PEsvlhxw6z73ljex/e7WOq/w8WOZEZHyz+Vn1HfJay9iKJHl
- iUZWAXAvJtBvPGaIa65BpRH+pEut8kY84EgDWpOC6MyS0BQtOqa3FAfm/px7McLD/TIGQ/ezK
- r3ClWprt+R3IyGfoqQHeAOhX2eRWUadf/hG6VtanV6EF5dNPlZ/dUXKzdcfzMMdFQcEZK3Lut
- DnxoX3ty7pZ3XCh7C+TKtKtk2mV54ZRlawnpRrmFgofxp9n0W+PyKRk7/UYtHDwd1M/xhMTHp
- FPnKIJWEgrQmxyE+yzYdxBm0QINS3OjUjQVooEyU6KaGkXARKGiRlZ17rf4/IBtwoWt8kdmTV
- Tq2CbOpy5qJm64jQAEY80j8JXSW4gB9fHE+QncHItm7wvrzCDBM0XG+qkPbIeyKWsm8dmcYiI
- qX+ZGYM+UudPmo=
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Li,
+On Thu, Oct 14 2021 at 19:51, Andy Lutomirski wrote:
+> On Wed, Oct 13, 2021, at 11:16 AM, Sami Tolvanen wrote:
+>>=20
+>> +/*
+>> + * Declares a function not callable from C using an opaque type. Define=
+d as
+>> + * an array to allow the address of the symbol to be taken without '&'.
+>> + */
+> I=E2=80=99m not convinced that taking the address without using & is a
+> laudable goal.  The magical arrays-are-pointers-too behavior of C is a
+> mistake, not a delightful simplification.
 
-On Tue, Oct 12, 2021 at 09:34:29AM +0800, Li Fei1 wrote:
-> On Mon, Oct 11, 2021 at 12:39:02PM +0200, Len Baker wrote:
-> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> > and Conventions" documentation [1], size calculations (especially
-> > multiplication) should not be performed in memory allocator (or simila=
-r)
-> > function arguments due to the risk of them overflowing. This could lea=
-d
-> > to values wrapping around and a smaller allocation being made than the
-> > caller was expecting. Using those allocations could lead to linear
-> > overflows of heap memory and other misbehaviors.
-> >
-> > So, use the array_size() helper to do the arithmetic instead of the
-> > argument "count * size" in the vzalloc() function.
-> >
-> > Also, take the opportunity to add a flexible array member of struct
-> > vm_memory_region_op to the vm_memory_region_batch structure. And then,
-> > change the code accordingly and use the struct_size() helper to do the
-> > arithmetic instead of the argument "size + size * count" in the kzallo=
-c
-> > function.
-> >
-> > This code was detected with the help of Coccinelle and audited and fix=
-ed
-> > manually.
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#ope=
-n-coded-arithmetic-in-allocator-arguments
-> >
-> > Signed-off-by: Len Baker <len.baker@gmx.com>
+>> +#ifndef DECLARE_NOT_CALLED_FROM_C
+>> +#define DECLARE_NOT_CALLED_FROM_C(sym) \
+>> +	extern const u8 sym[]
+>> +#endif
 >
-> Hi Baker
->
-> Thanks for helping us to fix this issue. This patch looks good to me.
-> Please add Signed-off-by: Fei Li <fei1.li@intel.com>.
 
-I can't add the "Signed-off-by" tag by myself. However, if you are in the
-path to forward the patch to the mainline (maintainer's tree), you can
-add by yourself the "Signed-off-by" tag before send a "pull" to Linus.
-See [1] for more information.
+> The relevant property of these symbols isn=E2=80=99t that they=E2=80=99re=
+ not called
+> from C.  The relevant thing is that they are just and not objects of a
+> type that the programmer cares to tell the compiler about. (Or that
+> the compiler understands, for that matter. On a system with XO memory
+> or if they=E2=80=99re in a funny section, dereferencing them may fail.)
 
-[1] https://www.kernel.org/doc/html/latest/process/submitting-patches.html=
-#sign-your-work-the-developer-s-certificate-of-origin
+I agree.
 
-If you don't have a maintainer's tree, you can give (as a maintainer) an
-"Acked-by" tag that then I can add to the patch. More info in [2].
+> So I think we should use incomplete structs, which can=E2=80=99t be
+> dereferenced and will therefore be less error prone.
 
-[2] https://www.kernel.org/doc/html/latest/process/submitting-patches.html=
-#when-to-use-acked-by-cc-and-co-developed-by
+While being late to that bike shed painting party, I really have to ask
+the question _why_ can't the compiler provide an annotation for these
+kind of things which:
 
-> Only two minor comments.
->
->
-> > ---
-> >  drivers/virt/acrn/acrn_drv.h | 10 ++++++----
-> >  drivers/virt/acrn/mm.c       |  9 ++++-----
-> >  2 files changed, 10 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv=
-.h
-> > index 1be54efa666c..fcc2e3e5232a 100644
-> > --- a/drivers/virt/acrn/acrn_drv.h
-> > +++ b/drivers/virt/acrn/acrn_drv.h
-> > @@ -48,6 +48,7 @@ struct vm_memory_region_op {
-> >   * @reserved:		Reserved.
-> >   * @regions_num:	The number of vm_memory_region_op.
-> >   * @regions_gpa:	Physical address of a vm_memory_region_op array.
-> > + * @regions_op:		Flexible array of vm_memory_region_op.
-> One Tab please.
+    1) Make the build fail when invoked directly
 
-Sorry, but if I use only one tab, the parameters description are not all
-aligned.
+    2) Tell CFI that this is _NOT_ something it can understand
 
-> >   *
-> >   * HC_VM_SET_MEMORY_REGIONS uses this structure to manage EPT mapping=
-s of
-> >   * multiple memory regions of a User VM. A &struct vm_memory_region_b=
-atch
-> > @@ -55,10 +56,11 @@ struct vm_memory_region_op {
-> >   * ACRN Hypervisor.
-> >   */
-> >  struct vm_memory_region_batch {
-> > -	u16	vmid;
-> > -	u16	reserved[3];
-> > -	u32	regions_num;
-> > -	u64	regions_gpa;
-> > +	u16				vmid;
-> > +	u16				reserved[3];
-> > +	u32				regions_num;
-> > +	u64				regions_gpa;
-> > +	struct vm_memory_region_op	regions_op[];
-> Please use Whitespace instead of Tab.
+-void clear_page_erms(void *page);
++void __bikeshedme clear_page_erms(void *page);
 
-Sorry, but I don't understand. Do you prefer something like?:
+That still tells me:
 
-diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
-index fcc2e3e5232a..5663c17ad37c 100644
-=2D-- a/drivers/virt/acrn/acrn_drv.h
-+++ b/drivers/virt/acrn/acrn_drv.h
-@@ -56,11 +56,11 @@ struct vm_memory_region_op {
-  * ACRN Hypervisor.
-  */
- struct vm_memory_region_batch {
--	u16				vmid;
--	u16				reserved[3];
--	u32				regions_num;
--	u64				regions_gpa;
--	struct vm_memory_region_op	regions_op[];
-+	u16			   vmid;
-+	u16			   reserved[3];
-+	u32			   regions_num;
-+	u64			   regions_gpa;
-+	struct vm_memory_region_op regions_op[];
- };
+    1) This is a function
+=20=20=20=20
+    2) It has a regular argument which is expected to be in RDI
 
- /**
+which even allows to do analyis of e.g. the alternative call which
+invokes that function.
 
-Moreover, for the v2 I will fix the typo "syze->size" in the subject as
-suggested Kees ;)
+DECLARE_NOT_CALLED_FROM_C(clear_page_erms);
 
-Regards,
-Len
+loses these properties and IMO it's a tasteless hack.
+
+Thanks,
+
+        tglx
+
