@@ -2,156 +2,192 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B0CC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 15:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92814C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 15:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976A96105A
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 15:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CB961090
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Oct 2021 15:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240918AbhJOPhy (ORCPT
+        id S232842AbhJOPzQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Oct 2021 11:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240869AbhJOPhx (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Oct 2021 11:37:53 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B9FC061762
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Oct 2021 08:35:47 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id i84so23622671ybc.12
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Oct 2021 08:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0lincm8RXR6uBNLZqXdUZLWmSPqPmrrBGxkwcemXX+k=;
-        b=lNkB/tzENYRNN34nvlEabksBcuXaIB/leiAX1+iCfoj/b7p26GFIfxa90d1JOnEKUn
-         XZKj9UNrTFBXybsY/8EOO+01cWT21/Loc8ZlO0KeZgGAEpb5ntvlqVZg6ZGUtf3BAYZO
-         jwdaDV6nZI/+P4sXBvs3De/832d6ypXLERSvwTkkoSMfwjQ0JMCzvWR0F+wLdrQFmJc4
-         HgFYODOdkHQvSTJ5clWvZw+5ydBrccKyIhjM/L5uyxh/RrMM2nSTnNZ5zuYbe2zOO3Zb
-         F+IpuoKcRqhb7+B+kUuJtack9NO9oEXz0zG9FnxLitirEkTXyUKjPuvhW3Um9pKU0jjo
-         f97w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0lincm8RXR6uBNLZqXdUZLWmSPqPmrrBGxkwcemXX+k=;
-        b=h0yzf1VM3qUnnAAOozRi1iYaKlxXsYmGvda1k6okuMn4sA7L9BqCNjDgV/Vgnk4qzt
-         xjbVGjXPt09CF5bi0+8ZXs6CsTYusEDV6ukw9s8weNiwb5yVgekhypQld3HM39z0wKJt
-         a2SK/XXFkdBdiMetqRvSGF7oqlcb44KlmhGlo8YTRhiVepe/2/aLXtm+e5bkzsDXS+h4
-         B77Jeb5nNSc4oXgUbjXzDGeHF81X8vqImEBYGVXV4wZtyVdLHfnpUsO2hmDzGGS3wfE4
-         QhMcPn5KuIdWvwzN/ZTTXzPl9BcWX7Gsngfuepn3xvz9yo3XmJ+wmM63/4+W7yhP8ymu
-         N+0g==
-X-Gm-Message-State: AOAM531SU55DjlvMwrJGd+rrnTOrUX6lRtAEB0kD8McDpkC6vUvOQaUH
-        KNBc+AVaI6KQKoBGFqiHcS+yTekmezuQOgANMkN/iw==
-X-Google-Smtp-Source: ABdhPJzljSLIPUpS+oPZCNQDD4Du++b8bGyu4mYPoIqhgOBbZGmGRfYID1OXr7Qv58vv/WOKGqkAKULFLdmcQqhh5fk=
-X-Received: by 2002:a25:aaec:: with SMTP id t99mr15016754ybi.456.1634312142950;
- Fri, 15 Oct 2021 08:35:42 -0700 (PDT)
+        Fri, 15 Oct 2021 11:55:16 -0400
+Received: from mout.gmx.net ([212.227.17.22]:44995 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230236AbhJOPzP (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 15 Oct 2021 11:55:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1634313181;
+        bh=+UHew0luVMjbFHLFFxpMVAj6c4oCiqqrwNFkNSmpVnc=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=bNMoRusyJ3ZAITJjBXEGnrF/VZf/Lg1Tc1XGprY/P+wmg7YOSAvz1H0PrrNBvpEw4
+         rRNswxHoPFTOPwrRpArgTEYu+MJCb8p/kj4qqLkHoSg3E8zF9z+Qo563/UY/1Zstc6
+         Fig975eH6tseR0OkPg9TCHQcpcg70i502R2TEUwc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MOiHf-1mNTvO2Jjz-00QBxU; Fri, 15
+ Oct 2021 17:53:01 +0200
+Date:   Fri, 15 Oct 2021 17:52:48 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Li Fei1 <fei1.li@intel.com>
+Cc:     Len Baker <len.baker@gmx.com>, keescook@chromium.org,
+        gustavoars@kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] virt: acrn: Prefer array_syze and struct_size over open
+ coded arithmetic
+Message-ID: <20211015155248.GA3289@titan>
+References: <20211011103902.15638-1-len.baker@gmx.com>
+ <20211012013429.GA28284@louislifei-OptiPlex-7050>
 MIME-Version: 1.0
-References: <20211013181658.1020262-1-samitolvanen@google.com>
- <20211013181658.1020262-4-samitolvanen@google.com> <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com>
-In-Reply-To: <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 15 Oct 2021 08:35:32 -0700
-Message-ID: <CABCJKufbRDv1pfr7aPMcPsqDNJHf+_Otc88TMKg+xnLC-01Kzw@mail.gmail.com>
-Subject: Re: [PATCH v5 03/15] linkage: Add DECLARE_NOT_CALLED_FROM_C
-To:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211012013429.GA28284@louislifei-OptiPlex-7050>
+X-Provags-ID: V03:K1:8I+AheHcTcMLiJ9hfpPED3m8oSKH+eBB1bHCp+r/xQVcTprDcm5
+ KBjwwnuV0I8gSMJkr/DGJSkw5Eh17+rMInQaQDotNJwy1e/kdlFWsLwb6BUCPV1DgRreeu/
+ 4lN1pSKPBSNicTfDn3rogaqBhNbBziQrLjiaKyqmAOSmYqhmyIrADq5RxNuqrYXhad4gwzO
+ 0vzVDRxos3NRV6UgnXjCQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VPU8bzKmywU=:8hWSVEQaIaHe5wtqLtao/J
+ HLmxpJlmhigxNo9PyfGSlvuOZREkvznZNMpECXE/P3iC8febf8b31ZEuyWy6OprJb1J07dO2h
+ PUAEa2fQKDUQmzjUd26HvlcWFQ9kbI9Kqtwu4LOt3Iys0RY6ScTPKu+JdHqadjzZ4CNPhaT6j
+ dGFmALgUGolB9H2DFL/DcR3NskXry6fmKU90n/Zy4RjuQ4jndk7gM+ONMB9LCmish2ojRelu6
+ uk8XZIEjTFEIxbH+XXEejEYnx2SCPIjAAtgkBdK5DZzJeob4Yk33+FiC4WD+rhd/qsM+EyEFy
+ jYYnXGmuq/ir7knbSrvFzyIoJzd8TmbY7iorvh2y4komJY/RvarTi7OuOLdEV2WfBRg7aimID
+ l40T80Zn5tpBAfjxEf4ZpnXgBr4jXR2x9V6qwK9+29+LIEOfnyvsHJhJKPlWN7Xf5brow9aUw
+ BIr3tjQiaJw654tHNNHB2N2aaUgrKlJDtHShSP80Web+vqQxGCf7BNWe4MsFS7n9+tZt/iMXk
+ LbWWyRuN9HFdJFRtk3LwIZQDbRNu3yD6hlubhnWcL82IjbqbUTkQayzDmhXwhLUGsygcTyCss
+ KNOs7sZZC5JLPtUJ+RuOt/MtFJ8I4Ia+LO170gwOQMG4Z6vRfNVk3Bl7tQP/fBaR9SDUoFXVy
+ pFN1S4Q+R3PcbVeMUG6jmxPr+PEsvlhxw6z73ljex/e7WOq/w8WOZEZHyz+Vn1HfJay9iKJHl
+ iUZWAXAvJtBvPGaIa65BpRH+pEut8kY84EgDWpOC6MyS0BQtOqa3FAfm/px7McLD/TIGQ/ezK
+ r3ClWprt+R3IyGfoqQHeAOhX2eRWUadf/hG6VtanV6EF5dNPlZ/dUXKzdcfzMMdFQcEZK3Lut
+ DnxoX3ty7pZ3XCh7C+TKtKtk2mV54ZRlawnpRrmFgofxp9n0W+PyKRk7/UYtHDwd1M/xhMTHp
+ FPnKIJWEgrQmxyE+yzYdxBm0QINS3OjUjQVooEyU6KaGkXARKGiRlZ17rf4/IBtwoWt8kdmTV
+ Tq2CbOpy5qJm64jQAEY80j8JXSW4gB9fHE+QncHItm7wvrzCDBM0XG+qkPbIeyKWsm8dmcYiI
+ qX+ZGYM+UudPmo=
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 14, 2021 at 7:51 PM Andy Lutomirski <luto@kernel.org> wrote:
->
->
->
-> On Wed, Oct 13, 2021, at 11:16 AM, Sami Tolvanen wrote:
-> > The kernel has several assembly functions, which are not directly
-> > callable from C but need to be referred to from C code. This change add=
-s
-> > the DECLARE_NOT_CALLED_FROM_C macro, which allows us to declare these
-> > symbols using an opaque type, which makes misuse harder, and avoids the
-> > need to annotate references to the functions for Clang's Control-Flow
-> > Integrity (CFI).
+Hi Li,
+
+On Tue, Oct 12, 2021 at 09:34:29AM +0800, Li Fei1 wrote:
+> On Mon, Oct 11, 2021 at 12:39:02PM +0200, Len Baker wrote:
+> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> > and Conventions" documentation [1], size calculations (especially
+> > multiplication) should not be performed in memory allocator (or simila=
+r)
+> > function arguments due to the risk of them overflowing. This could lea=
+d
+> > to values wrapping around and a smaller allocation being made than the
+> > caller was expecting. Using those allocations could lead to linear
+> > overflows of heap memory and other misbehaviors.
 > >
-> > Suggested-by: Andy Lutomirski <luto@amacapital.net>
-> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > So, use the array_size() helper to do the arithmetic instead of the
+> > argument "count * size" in the vzalloc() function.
+> >
+> > Also, take the opportunity to add a flexible array member of struct
+> > vm_memory_region_op to the vm_memory_region_batch structure. And then,
+> > change the code accordingly and use the struct_size() helper to do the
+> > arithmetic instead of the argument "size + size * count" in the kzallo=
+c
+> > function.
+> >
+> > This code was detected with the help of Coccinelle and audited and fix=
+ed
+> > manually.
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#ope=
+n-coded-arithmetic-in-allocator-arguments
+> >
+> > Signed-off-by: Len Baker <len.baker@gmx.com>
+>
+> Hi Baker
+>
+> Thanks for helping us to fix this issue. This patch looks good to me.
+> Please add Signed-off-by: Fei Li <fei1.li@intel.com>.
+
+I can't add the "Signed-off-by" tag by myself. However, if you are in the
+path to forward the patch to the mainline (maintainer's tree), you can
+add by yourself the "Signed-off-by" tag before send a "pull" to Linus.
+See [1] for more information.
+
+[1] https://www.kernel.org/doc/html/latest/process/submitting-patches.html=
+#sign-your-work-the-developer-s-certificate-of-origin
+
+If you don't have a maintainer's tree, you can give (as a maintainer) an
+"Acked-by" tag that then I can add to the patch. More info in [2].
+
+[2] https://www.kernel.org/doc/html/latest/process/submitting-patches.html=
+#when-to-use-acked-by-cc-and-co-developed-by
+
+> Only two minor comments.
+>
+>
 > > ---
-> >  include/linux/linkage.h | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
+> >  drivers/virt/acrn/acrn_drv.h | 10 ++++++----
+> >  drivers/virt/acrn/mm.c       |  9 ++++-----
+> >  2 files changed, 10 insertions(+), 9 deletions(-)
 > >
-> > diff --git a/include/linux/linkage.h b/include/linux/linkage.h
-> > index dbf8506decca..f982d5f550ac 100644
-> > --- a/include/linux/linkage.h
-> > +++ b/include/linux/linkage.h
-> > @@ -48,6 +48,19 @@
-> >  #define __PAGE_ALIGNED_DATA  .section ".data..page_aligned", "aw"
-> >  #define __PAGE_ALIGNED_BSS   .section ".bss..page_aligned", "aw"
-> >
-> > +/*
-> > + * Declares a function not callable from C using an opaque type. Defin=
-ed as
-> > + * an array to allow the address of the symbol to be taken without '&'=
-.
-> > + */
->
-> I=E2=80=99m not convinced that taking the address without using & is a la=
-udable goal.  The magical arrays-are-pointers-too behavior of C is a mistak=
-e, not a delightful simplification.
+> > diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv=
+.h
+> > index 1be54efa666c..fcc2e3e5232a 100644
+> > --- a/drivers/virt/acrn/acrn_drv.h
+> > +++ b/drivers/virt/acrn/acrn_drv.h
+> > @@ -48,6 +48,7 @@ struct vm_memory_region_op {
+> >   * @reserved:		Reserved.
+> >   * @regions_num:	The number of vm_memory_region_op.
+> >   * @regions_gpa:	Physical address of a vm_memory_region_op array.
+> > + * @regions_op:		Flexible array of vm_memory_region_op.
+> One Tab please.
 
-Sure, if everyone is fine with the extra churn of adding & to the
-symbol references, I can certainly switch to an incomplete struct here
-instead. I stayed with extern const u8[] because you didn't comment on
-the potential churn previously:
+Sorry, but if I use only one tab, the parameters description are not all
+aligned.
 
-https://lore.kernel.org/lkml/CABCJKud4auwY50rO0UzH721eRyyvJ8+43+Xt9vcLgw-SM=
-YtHEw@mail.gmail.com/
+> >   *
+> >   * HC_VM_SET_MEMORY_REGIONS uses this structure to manage EPT mapping=
+s of
+> >   * multiple memory regions of a User VM. A &struct vm_memory_region_b=
+atch
+> > @@ -55,10 +56,11 @@ struct vm_memory_region_op {
+> >   * ACRN Hypervisor.
+> >   */
+> >  struct vm_memory_region_batch {
+> > -	u16	vmid;
+> > -	u16	reserved[3];
+> > -	u32	regions_num;
+> > -	u64	regions_gpa;
+> > +	u16				vmid;
+> > +	u16				reserved[3];
+> > +	u32				regions_num;
+> > +	u64				regions_gpa;
+> > +	struct vm_memory_region_op	regions_op[];
+> Please use Whitespace instead of Tab.
 
-Boris, any thoughts about using an incomplete struct instead of extern u8[]=
-?
+Sorry, but I don't understand. Do you prefer something like?:
 
-> > +#ifndef DECLARE_NOT_CALLED_FROM_C
-> > +#define DECLARE_NOT_CALLED_FROM_C(sym) \
-> > +     extern const u8 sym[]
-> > +#endif
->
-> The relevant property of these symbols isn=E2=80=99t that they=E2=80=99re=
- not called from C.  The relevant thing is that they are just and not objec=
-ts of a type that the programmer cares to tell the compiler about. (Or that=
- the compiler understands, for that matter. On a system with XO memory or i=
-f they=E2=80=99re in a funny section, dereferencing them may fail.)
+diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+index fcc2e3e5232a..5663c17ad37c 100644
+=2D-- a/drivers/virt/acrn/acrn_drv.h
++++ b/drivers/virt/acrn/acrn_drv.h
+@@ -56,11 +56,11 @@ struct vm_memory_region_op {
+  * ACRN Hypervisor.
+  */
+ struct vm_memory_region_batch {
+-	u16				vmid;
+-	u16				reserved[3];
+-	u32				regions_num;
+-	u64				regions_gpa;
+-	struct vm_memory_region_op	regions_op[];
++	u16			   vmid;
++	u16			   reserved[3];
++	u32			   regions_num;
++	u64			   regions_gpa;
++	struct vm_memory_region_op regions_op[];
+ };
 
-Makes sense. It sounds like the macro should be renamed then. Josh
-wasn't a fan of DECLARE_ASM_FUNC_SYMBOL() and if I understand
-correctly, you and Boris feel like DECLARE_NOT_CALLED_FROM_C() is not
-quite right either. Suggestions?
+ /**
 
-> So I think we should use incomplete structs, which can=E2=80=99t be deref=
-erenced and will therefore be less error prone.
+Moreover, for the v2 I will fix the typo "syze->size" in the subject as
+suggested Kees ;)
 
-Another option is to just drop the macro and use something like struct
-opaque_symbol instead, as you suggested earlier:
-
-https://lore.kernel.org/lkml/CALCETrVEhL9N_DEM8=3DrbAzp8Nb2pDitRCZGRAVcE288=
-MBrJ4ug@mail.gmail.com/
-
-Any preferences? I wouldn't mind having a consensus on the approach
-and naming before sending v6. :)
-
-Sami
+Regards,
+Len
