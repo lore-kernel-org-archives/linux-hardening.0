@@ -2,128 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA45C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 16 Oct 2021 21:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44F0C433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 17 Oct 2021 09:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 170FA61181
-	for <linux-hardening@archiver.kernel.org>; Sat, 16 Oct 2021 21:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F23260FDC
+	for <linux-hardening@archiver.kernel.org>; Sun, 17 Oct 2021 09:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244670AbhJPVS7 (ORCPT
+        id S245202AbhJQJ7e (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 16 Oct 2021 17:18:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35768 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244660AbhJPVS5 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 16 Oct 2021 17:18:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634419008;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vuVl/Lm9y3LUoPVRoQC3DsmftxQZFqWY4bGxbzZzkc4=;
-        b=TbW86SeJjgsy+a/B84MVI1g6wxQPkUA4wXtUdvkFhNaO2x+wK3YNz1O3c8YEJotkA3bokR
-        b8XnvloadmFKUREaMLxa/z1dwS1E58zkWBDQIt6BqA4rKMy5eR3GgSwHt0wQaa7WbB+QAR
-        /3+lBRQvi/O/dw2nFIjoH/eimLzmm4M=
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
- [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-6hjG4JncPTKUwbvZFUJsng-1; Sat, 16 Oct 2021 17:16:47 -0400
-X-MC-Unique: 6hjG4JncPTKUwbvZFUJsng-1
-Received: by mail-oo1-f70.google.com with SMTP id u1-20020a4a6141000000b002b6d25c0103so5821619ooe.2
-        for <linux-hardening@vger.kernel.org>; Sat, 16 Oct 2021 14:16:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vuVl/Lm9y3LUoPVRoQC3DsmftxQZFqWY4bGxbzZzkc4=;
-        b=lCt4LUDBMNNDSJWYpVuDMW/nx6mUzg8aZ3deejzXQsg/J/BnYS3278+Ex+l7jVqQK2
-         D7QHjuOQ3Q79kQUbDpDVN1P8Fab1dQznBz2jj5lhZVKI/A8x3M5W1aCiGEKXmbcjz+ja
-         twjG9fs7C7rkPjYfabcS+e0QBRgd0gUBHjxnNXDgvGV10Y+UwOmLhor4/fUVrbWtF1/D
-         KqF0JrJ0wuZ9Dj//bQI8cJtWXJhIJ0DekT7mQzHubAZXOQZ8FaXIwDYQLEttS3t6/iJb
-         NVLmN+ZT9NAR91GFLz4kqAktujktIBxQNr3saH5k1ERTfQxHdDjVPUvLV1uFBvm9NdhC
-         m63Q==
-X-Gm-Message-State: AOAM533Uz31UOukd98o8MwL74i2LaOElKDQe47bOL55B4EWsZPDDTCVT
-        pjdL1/dz5j0oQXQr0b4msxCX/D+Lm1Nahig6hAGqNFLgl3ftlgU6m151pWD6LcAL/oWL4jmUmAu
-        Gu9kdBjt0pZRJTHhSyQW/qX1WjJdw
-X-Received: by 2002:aca:60c5:: with SMTP id u188mr17386272oib.87.1634419006554;
-        Sat, 16 Oct 2021 14:16:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyBX20oEuac4tZkLH0fjEqXPtWWEkbBGKJ/9HICffJyOCrhjoT616RBoDQWmMMJitU2vuhYxg==
-X-Received: by 2002:aca:60c5:: with SMTP id u188mr17386265oib.87.1634419006377;
-        Sat, 16 Oct 2021 14:16:46 -0700 (PDT)
-Received: from treble ([2600:1700:6e32:6c00::15])
-        by smtp.gmail.com with ESMTPSA id f8sm2040834otp.63.2021.10.16.14.16.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Oct 2021 14:16:45 -0700 (PDT)
-Date:   Sat, 16 Oct 2021 14:16:43 -0700
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v5 03/15] linkage: Add DECLARE_NOT_CALLED_FROM_C
-Message-ID: <20211016211643.h5ylg3hlhnzbee2u@treble>
-References: <20211013181658.1020262-1-samitolvanen@google.com>
- <20211013181658.1020262-4-samitolvanen@google.com>
- <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com>
- <8735p25llh.ffs@tglx>
- <87zgra41dh.ffs@tglx>
- <CABCJKuc+mN4vw_sanZQKcb1=SyfT4h3JK2wpBuaB2qZH3Croxg@mail.gmail.com>
- <87wnme3pbv.ffs@tglx>
+        Sun, 17 Oct 2021 05:59:34 -0400
+Received: from mout.gmx.net ([212.227.17.20]:45923 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236079AbhJQJ7d (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 17 Oct 2021 05:59:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1634464626;
+        bh=GK27mjfavzFQQjBXkKn0RLCiDGh17zJ13VUyMZ39ERs=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=g4QPrqgqY8bWgQhTWOHyALwiyqEIhfzf/HKIQKPTPGY6TZEFRMJrZBj0MbLPzX0uw
+         UDK1QJfLuNmOw5NXdBONMR05OVNxh1AD8CDN6q+D3/TWDxg536mfm9gAb2vMU53Zzf
+         MyMiyhqK27oR+DMbuFr3agQPgkvTv5twuWz87Rbk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MSc1B-1m94pM2rqD-00Szo6; Sun, 17 Oct 2021 11:57:05 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <kch@nvidia.com>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nvmet: prefer struct_size over open coded arithmetic
+Date:   Sun, 17 Oct 2021 11:56:50 +0200
+Message-Id: <20211017095650.3718-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <87wnme3pbv.ffs@tglx>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:87l8oHXEfjCElo1TfalS+3I3QAENKqmFPDOlW7QVOffxRttv4nQ
+ 2AMPklv1f8oNxtJoCI1kESq9updTTNLaT8S8om5Xk+CPLW75asuvC0IENPAKV627O07UzWS
+ JU0rMQ7aE5QwMkuA/Hrhj1oFv7UdgPM1pFkeoifDS3V5cmzqG+Z22u7ngNCUj7rElfftrgD
+ Z7FYrBQVEwjaXW11HwaGg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yuAiV954YSg=:cYURQWGEk30tKqGLBXHtIj
+ xwzMpAgdJTjqcuvKEtY8b9OMK5hmvMS6vFB72geh5KDQmb6L2VSIby/8ELL5Hi8e2mWdKJdE7
+ kN8c8d2q6zKTvzk4yu/LMKdCdkSnd/pfPcS9tNBu0Mc7GVSYjDJ5Pvj31a6skIkhuBb3ESdcy
+ 9WHIIcyk/AUgVIjIzTWstU8h7h4C4CdbbXwzRPOCOTHLWfnaedc0LnFJLA51dPyCpZcI+FKRz
+ 6otGxpVaEQ9HjA/gBUA1JAKuMahEDZzeOnurm7934tg+CL11vtjOKNr5+BRkSxBBhHhe0cdzC
+ KRgrbbMzBPB8vX3r4fAh0W64z87bGB/PAKnX/krmDiMDyqIfRF+kAMtdjRa7uSBSfbE5c4FRx
+ GE9up/5XUTPICti40Eu78nDoyPeUdBq70+A9n2aVbYrLDGo148Mqmnt5i86APP2Wg+LpIr71C
+ E6cy9xBvB0240oWdoJTiupbH5+FTiC/D6Q7cIkM2FU0BBq1ZSQ2kqsPL7JUuGY9dTQdtiosKY
+ guqOOEja0wSGQXwQ2tB8Oo1AEOi9M/pBdmW2D7/bIadpZ5YsQCEw89BkbP8P/Yc2RObG6zl10
+ KgnqZi5A781t+XqWceb07dYGZAmYklqX3aez6cPLq4zgWlCKLTCGp8ZjYzkhbJUwEHdxj6ret
+ Bc0VxgXIimfIWqpnmRSDbcFWhW2WPV5dtK4rt2WbaQBsqtVaZvXdZoZUgNSwRB9bc/vpYAcvL
+ jGPwxATwLNezpK/ZZGSuFiCYWnVmAeOqbRa53b+d5eSMDYhvA+UdqRVQpaURea58WyhfmTjbS
+ Wnbd0NYvhLxVRMkLwvlM5nUb7eErcedBzXWvNHgZRxzIHK42w6nbjxtKwtkFXN+nmxcrN5dvd
+ tXByxa0ycZt1BG9R0o7ivvE5py/t1GiHlQFtZZJwYJQzRuj0SFV8Y689DN+9icZ7AQSEJHp5L
+ 4/7DhF6CNPKr2Z2PBiKPyXPUZIbQbCw0kCRn3bGdftJzbHqdF/cCypfYjGotYe+Jo8ghk+1HD
+ rDov0d2PEF+4IxYO3xLlDlx6iW/WjFxoniNP8gu6S43Kjn5z7mj2Q0b9hPpDABsiRL9Vj3Qo6
+ WPOhsZgyYVIzvs=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 16, 2021 at 12:17:40AM +0200, Thomas Gleixner wrote:
-> For actually callable functions, by some definition of callable,
-> e.g. the clear_page_*() variants a proper attribute would be definitely
-> preferred.
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-See my last email, clear_page_*() has nothing to do with CFI in the
-first place.
+In this case this is not actually dynamic size: all the operands
+involved in the calculation are constant values. However it is better to
+refactor this anyway, just to keep the open-coded math idiom out of
+code.
 
-> That attribute should tell the compiler that the function is using the
-> register arguments correctly but is not suitable for direct invocation
-> because it clobbers registers.
-> 
-> So the compiler can just refuse to call such a function if used directly
-> without an inline asm wrapper which describes the clobbers, right?
-> 
-> But thinking more about clobbers. The only "annotation" of clobbers we
-> have today are the clobbers in the inline asm, which is fragile too.
-> 
-> Something like
-> 
->  __attribute__ ((clobbers ("rcx", "rax")))
-> 
-> might be useful by itself because it allows validation of the clobbers
-> in the inline asm wrappers and also allows a analysis tool to look at
-> the ASM code and check whether the above list is correct.
-> 
-> Hmm?
+So, use the struct_size() helper to do the arithmetic instead of the
+argument "size + count * size" in the kmalloc() function.
 
-Functions are allowed to clobber rcx and rax anyway.
+This code was detected with the help of Coccinelle and audited and fixed
+manually.
 
-The clear_page_*() functions follow the C ABI, like (almost) every other
-asm function in the kernel.  I think there's a misunderstanding here, as
-most of this doesn't have anything to do with CFI anyway.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments
 
--- 
-Josh
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+Hi,
+
+this patch is built against the linux-next tree (tag next-20211015).
+
+Regards,
+Len
+
+ drivers/nvme/target/admin-cmd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-c=
+md.c
+index aa6d84d8848e..4aa71625c86a 100644
+=2D-- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -278,8 +278,8 @@ static void nvmet_execute_get_log_page_ana(struct nvme=
+t_req *req)
+ 	u16 status;
+
+ 	status =3D NVME_SC_INTERNAL;
+-	desc =3D kmalloc(sizeof(struct nvme_ana_group_desc) +
+-			NVMET_MAX_NAMESPACES * sizeof(__le32), GFP_KERNEL);
++	desc =3D kmalloc(struct_size(desc, nsids, NVMET_MAX_NAMESPACES),
++		       GFP_KERNEL);
+ 	if (!desc)
+ 		goto out;
+
+=2D-
+2.25.1
 
