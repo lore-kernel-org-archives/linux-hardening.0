@@ -2,88 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB157C43217
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 13:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D244EC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 15:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96154610E8
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 13:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C2960EFE
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 15:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232585AbhJRN6z (ORCPT
+        id S232164AbhJRPsj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Oct 2021 09:58:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:38522 "EHLO foss.arm.com"
+        Mon, 18 Oct 2021 11:48:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232380AbhJRN4h (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Oct 2021 09:56:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD8A1101E;
-        Mon, 18 Oct 2021 06:54:25 -0700 (PDT)
-Received: from bogus (unknown [10.57.25.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E356D3F73D;
-        Mon, 18 Oct 2021 06:54:23 -0700 (PDT)
-Date:   Mon, 18 Oct 2021 14:54:21 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        jing yangyang <cgel.zte@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jing yangyang <jing.yangyang@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH linux-next] firmware/psci: fix application of sizeof to
- pointer
-Message-ID: <20211018135421.gnjbkuvrmjep2odz@bogus>
-References: <61d3cc7e5cd4a819381fcb22e1853d6f48a0c927.1629212319.git.jing.yangyang@zte.com.cn>
- <20210824105824.GC96738@C02TD0UTHF1T.local>
- <20211016181003.GA1193402@embeddedor>
+        id S231986AbhJRPsi (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 18 Oct 2021 11:48:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C965460F9F;
+        Mon, 18 Oct 2021 15:46:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634571986;
+        bh=rvQv9P/Tr9IQeyrtF20/KMfdi6OiCCGfgGnZYK4YN7w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vBnzxFy5t0zvqVPxZXTKskPiutZBBlnQimjDagHpTlReeAogosu+geXtpqkY6C+rL
+         rLEs5hWnW4Pr/T4o7uQgwQnnPyCt5Ru9uWRYy3GORGIHHqfMHUP5zSsxXeQEr+C7r8
+         w1HTNthbN5pS4YmGDpCPAeNz13A08NMxyyJpLUsySmqlRG7BI86v85pChl46Jr7Pkn
+         Uycjq2nnNLSgfmsRzOt/etBdITSmXdIUYERxM1ltJKzEIpQrjsTCn48CBpjToSkjnl
+         U8xUNcWGHdH52n2kSxvWbwxybx3ADwd3qCgEXOiJ5VfKgUxxnFS63rDJC3qOTIdbcE
+         WK866GkeR87OQ==
+Received: by mail-wr1-f45.google.com with SMTP id k7so42051407wrd.13;
+        Mon, 18 Oct 2021 08:46:26 -0700 (PDT)
+X-Gm-Message-State: AOAM533xVvJc3jBLCYHx1Naj9ikSxpljc6YUVImOjb72xRv5wcRIiSIE
+        gociNgHTYoxqIWewZObilWMt7kBVUhWeKE1apMU=
+X-Google-Smtp-Source: ABdhPJyVSTym0arEJ6ZwtHU4fs5OSXOHeSmEtNbviOiBmtgXR11Ca2zcAFNb/orCjHKR3vegA/Xk2elZ8RZ8MhXF1+w=
+X-Received: by 2002:adf:b1c4:: with SMTP id r4mr36465681wra.428.1634571985240;
+ Mon, 18 Oct 2021 08:46:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211016181003.GA1193402@embeddedor>
+References: <20210822075122.864511-1-keescook@chromium.org> <20210822075122.864511-22-keescook@chromium.org>
+In-Reply-To: <20210822075122.864511-22-keescook@chromium.org>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Mon, 18 Oct 2021 17:46:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1o58qeUsn9_+o1v1POZ9=3p17TCEba4-TRQ7Hf5mRg1A@mail.gmail.com>
+Message-ID: <CAK8P3a1o58qeUsn9_+o1v1POZ9=3p17TCEba4-TRQ7Hf5mRg1A@mail.gmail.com>
+Subject: Re: [PATCH for-next 21/25] lib: Introduce CONFIG_TEST_MEMCPY
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        David Gow <davidgow@google.com>, Linux-MM <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 16, 2021 at 01:10:03PM -0500, Gustavo A. R. Silva wrote:
-> On Tue, Aug 24, 2021 at 11:58:24AM +0100, Mark Rutland wrote:
-> > On Thu, Aug 19, 2021 at 07:30:16PM -0700, jing yangyang wrote:
-> > > sizeof when applied to a pointer typed expression gives the size of
-> > > the pointer.
-> > > 
-> > > ./drivers/firmware/psci/psci_checker.c:158:41-47: ERROR application of sizeof to pointer
-> > > 
-> > > This issue was detected with the help of Coccinelle.
-> > > 
-> > > Reported-by: Zeal Robot <zealci@zte.com.cn>
-> > > Signed-off-by: jing yangyang <jing.yangyang@zte.com.cn>
-> > 
-> > >From looking at the git history, we should add:
-> > 
-> >   Fixes: 7401056de5f8d4ea ("drivers/firmware: psci_checker: stash and use topology_core_cpumask for hotplug tests)"
-> > 
-> > With that:
-> > 
-> >   Acked-by: Mark Rutland <mark.rutland@arm.com>
-> > 
-> > Lorenzo, how do we normally direct these patches?
-> 
-> It seems that these patches are consistently being ignored[1][2][3]. So,
+On Sun, Aug 22, 2021 at 9:56 AM Kees Cook <keescook@chromium.org> wrote:
+> +FORTIFY_SOURCE
+> +M:     Kees Cook <keescook@chomium.org>
+> +L:     linux-hardening@vger.kernel.org
+> +S:     Supported
 
-Sorry for that. Sometime it does happen. Anyways thanks for reminding about
-it.
+I had added you to Cc on a patch because of this entry, and the email
+bounced. It looks like you need an extra 'r' in the address.
 
-> I'll take this in my -next tree[4] before it gets lost again.
-
-Mark has already acked it, so you can take it via your tree if you are OK.
-
-We generally ask the author to post to soc@kernel.org for one of patches
-like this when we don't have any plans to send PR to SoC team so that they
-can apply the patch directly.
-
-So it should be fine if you prefer to pick up and send to SoC team or we
-can resend the patch to them and ask to apply. Let us know.
-
--- 
-Regards,
-Sudeep
+         Arnd
