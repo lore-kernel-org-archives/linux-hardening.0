@@ -2,128 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A11AC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 17:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1A3C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 19:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B1F610C8
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 17:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4CA61074
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 19:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231739AbhJRRK7 (ORCPT
+        id S232871AbhJRTa0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Oct 2021 13:10:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
+        Mon, 18 Oct 2021 15:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233852AbhJRRK6 (ORCPT
+        with ESMTP id S231424AbhJRTaZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Oct 2021 13:10:58 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D33C061745
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Oct 2021 10:08:47 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id u32so6947722ybd.9
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Oct 2021 10:08:47 -0700 (PDT)
+        Mon, 18 Oct 2021 15:30:25 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F18BC061745
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Oct 2021 12:28:14 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id q10-20020a17090a1b0a00b001a076a59640so549537pjq.0
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Oct 2021 12:28:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I3j7UqVjgTnmYPUxSgIR20gTOiacgwPLmKSZwLzYul8=;
-        b=T5Pw+RiwBW0N+FA93+IrhIMG1kPW4MVVbfdu2jTP/u7c+g4dPXF8PfXCK9G6YMVjlg
-         4WBEK7CbMJ2YpifOHQOiqexaMfkQqx0wrbMIwnP/zKXXJM3xygIpqyxUIbkOB7O8gYry
-         Wghn2Lr/eW6HV2j1+W3nbouocFWV3SSefJYqOREZysmOknCOqwNOH7fubwK8+vbkK78n
-         OAKy9rYiqfbz9X4BNQdjPKY+Y1J8q9a8fniKahUfSLNiZD+AGSOkz707Sml9IzDsonZM
-         aHJcBfPFDQhe3miOudj9n1EAkgIs6nUDqTR2rOzUeQd4UZ/WJqEuHMIDWnhTm61VnoTb
-         xyjw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=T17Zx5b+9cZpZ2b2XmW+zfPtibEmmpshlWxKBV4MDzM=;
+        b=TZ1/KPtQoYkVktZdrLnmAUt3Xt+Yl/n4oACnfVoXP8srs1kET1CPyXfdDW9mxolIso
+         ytcf1512ADi86r/4854+CiERO/U8Vb+dKemq7SPbiZ0E0Xw4C9k6IPrMdQAX484+P1Fz
+         hIphG9vwoMayv9/tVBkymSEIb9v0eJTtV5j/E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I3j7UqVjgTnmYPUxSgIR20gTOiacgwPLmKSZwLzYul8=;
-        b=wU4i8wIOJSg0oOMltqKOufzvpz6bOjOKUnt23VBW6fLqdMAUSQ7ntoML1FQdOhtBwz
-         +nOu8Pt1kRDcHFvKbY7NO0gfD/lacwXDXcz+pw853rPo8qZOdZGS+bvicIXerevp2ZuF
-         dxBHHXJHkUl0R+Wvp07dDeSVVzZofj7HO3GdBz6xphvcd9ufaQkRJ91jMNMrUWr3lGxI
-         eTd3GZqGAGE7w/YB0pT/DSzh+Zlckwse50m4hWGuCa9uSBvvWGb+EZM/5/pcN37BIPaT
-         IFEAztG4wEfwm3nzZPs67GYIOGEZEr++7zDojN9jPZ3lfziAnKTSpBNgqyxEK89udcdT
-         aDRw==
-X-Gm-Message-State: AOAM531n6lds6JpRYjAXsYNtihJwzfVdU7YdfKbuLWISgN1V4DL2Pt0F
-        mynxtdsQEzzibAR2SBUgdfOBVMFRx+XivPJcttgrcA==
-X-Google-Smtp-Source: ABdhPJychZS1c4zhuCsT0UtT+C4l6qM+ZY4CmBXeM4lYI/sMnDtuR1ghwld8PShjuKs6rpu3+7PA3C4qIiDjV1EUidw=
-X-Received: by 2002:a25:6908:: with SMTP id e8mr30172247ybc.289.1634576925983;
- Mon, 18 Oct 2021 10:08:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T17Zx5b+9cZpZ2b2XmW+zfPtibEmmpshlWxKBV4MDzM=;
+        b=CMssCX2Y8Gc2TZQds/ZVIrTpArHEd9PzUfwAOy44LOmoVtB/6JDvdRuJnW3ONWpsQw
+         xfF3b+snsClz6UZ6gx8AeRCVAiL2EvhklcM6ofNLL3apbgWpA+VP1HqvOM9TH3SaIqTx
+         18SVZaUtogezCC7ZMbEBORoiLSUaYePRFCZBZ+qXl1x2QI0FhpPYnn9m9fr+GUOxibC+
+         abJbfRBzO1Q9m13RujJjeFJz1AY2fWGwe3+X5o0lQZvenjuvRdT/XXKLkqn/5oOBbsW/
+         DsWVn0Q1cJ68gLW6MO1bjsGJB745zIOgD+ywyT/wOYu0FOwxh1IbFFGMJJK7OscT6UwR
+         nJsQ==
+X-Gm-Message-State: AOAM532UWfyjkBo6jBYZam5hblVjHcskrgj8DGW5JzEXzIUtgg7Yllq5
+        IzN2JscD1lqjSOUAdS/G7koYJQ==
+X-Google-Smtp-Source: ABdhPJyQWXpyp8PGkVchG0m3Q5r5UvHI3hWDDD7MwqFIbT/BbmPwUxhIsbhwMH+mFw+4XJqrBdvkrw==
+X-Received: by 2002:a17:903:1112:b0:13d:ce49:e275 with SMTP id n18-20020a170903111200b0013dce49e275mr29826166plh.5.1634585293673;
+        Mon, 18 Oct 2021 12:28:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ng5sm211359pjb.51.2021.10.18.12.28.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Oct 2021 12:28:13 -0700 (PDT)
+Date:   Mon, 18 Oct 2021 12:28:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        David Gow <davidgow@google.com>, Linux-MM <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH for-next 21/25] lib: Introduce CONFIG_TEST_MEMCPY
+Message-ID: <202110181227.534491C34@keescook>
+References: <20210822075122.864511-1-keescook@chromium.org>
+ <20210822075122.864511-22-keescook@chromium.org>
+ <CAK8P3a1o58qeUsn9_+o1v1POZ9=3p17TCEba4-TRQ7Hf5mRg1A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20211013181658.1020262-1-samitolvanen@google.com>
- <20211013181658.1020262-4-samitolvanen@google.com> <7377e6b9-7130-4c20-a0c8-16de4620c995@www.fastmail.com>
- <8735p25llh.ffs@tglx> <87zgra41dh.ffs@tglx> <CABCJKuc+mN4vw_sanZQKcb1=SyfT4h3JK2wpBuaB2qZH3Croxg@mail.gmail.com>
- <ecbe49c8-b30b-456c-931a-cc65647b0958@www.fastmail.com> <CABCJKucuun-n8w3=U6i43kVGkCgYL7kmz5wx8nYxsxUOCfzBFw@mail.gmail.com>
- <20211016211200.umf7okyvtet5ayrd@treble>
-In-Reply-To: <20211016211200.umf7okyvtet5ayrd@treble>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 18 Oct 2021 10:08:34 -0700
-Message-ID: <CABCJKucVy3eKJbq8cnKZJDE-5L3xmo=S=1GUQVW+-QF3Hg=iWQ@mail.gmail.com>
-Subject: Re: [PATCH v5 03/15] linkage: Add DECLARE_NOT_CALLED_FROM_C
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1o58qeUsn9_+o1v1POZ9=3p17TCEba4-TRQ7Hf5mRg1A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 16, 2021 at 2:12 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, Oct 15, 2021 at 01:37:02PM -0700, Sami Tolvanen wrote:
-> > > But we *also* have the read-the-address thing:
-> > >
-> > > void something(void)
-> > > {
-> > >   /* actual C body */
-> > > }
-> > > alternative_call(something, someotherthing, ...);
-> > >
-> > > That wants to expand to assembly code that does:
-> > >
-> > > CALL [target]
-> > >
-> > > where [target] is the actual first instruction of real code and not
-> > > a CFI prologue.
-> >
-> > Yes, here we would ideally want to avoid the CFI stub for better
-> > performance, but nothing actually breaks even if we don't.
->
-> That's because there's no CFI involved in alternative_call().  It
-> doesn't use function pointers.  It uses direct calls.
+On Mon, Oct 18, 2021 at 05:46:09PM +0200, Arnd Bergmann wrote:
+> On Sun, Aug 22, 2021 at 9:56 AM Kees Cook <keescook@chromium.org> wrote:
+> > +FORTIFY_SOURCE
+> > +M:     Kees Cook <keescook@chomium.org>
+> > +L:     linux-hardening@vger.kernel.org
+> > +S:     Supported
+> 
+> I had added you to Cc on a patch because of this entry, and the email
+> bounced. It looks like you need an extra 'r' in the address.
 
-Ah, you're right. alternative_call() uses the function name instead of
-the address, so it's not actually affected by CFI.
+*facepalm*
 
-> > > I kind of thing we want the attributes and the builtin, along the lines of:
-> > >
-> > > asm("call %m", function_nocfi_address(something));
-> > >
-> > > or however else we wire it up.
-> > >
-> > > (And, of course, the things that aren't C functions at all, like
-> > > exception entries, should be opaque.)
-> >
-> > I agree, there are cases where having a function attribute and/or a
-> > built-in to stop the compiler from interfering would be useful. I'll
-> > dust off my patch series and see how the LLVM folks feel about it.
->
-> With all the talk about function attributes I still haven't heard a
-> clear and specific case where one is needed.
->
-> If you take out the things that don't actually need the
-> DEFINE_NOT_CALLED_FROM_C() annotation then all you have left is the need
-> for opaque structs as far as I can tell.
+Thank you, fixing...
 
-Correct.
-
-Sami
+-- 
+Kees Cook
