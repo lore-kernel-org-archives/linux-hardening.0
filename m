@@ -2,154 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAD3C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 20:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC2AC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 21:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F03D61206
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 20:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AF160FF2
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 21:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbhJRULi (ORCPT
+        id S229529AbhJRVMR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Oct 2021 16:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233688AbhJRULi (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Oct 2021 16:11:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8ED2161206;
-        Mon, 18 Oct 2021 20:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634587766;
-        bh=vP/q8RAdwKPOaVadQ+zBGMSPKsA6SzxEBfr5WcIOjGU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dz7ITajDyNGZb0OpVqVG3EXS45e16zdG+PDOFEDg+Fi2zxEWN01Ts/+YoKs6BV6bP
-         0ybkaW9sVT7heZEOmjM2qs8iDYXFlHdGS+wpKB1eJzn96xQFDpvW70G+5qPSMwZC/W
-         aluxIzGeYuhD30bfaX+fYAWwd0yjlc9JLN7z7nKxReMxdCLpXn9HIbMavdGjJSq+Ah
-         LS+ZuKw+HON06LSQtn9/o6z9zOWcKsu0daoAF+3H4U+i4vym8K20CNknY1Tvg4uN6d
-         EnAcam42k+VeQllPnAycyjZQgDVzZ+GWUtjmwQzKGohwnWXnFT9BliSOaiTTqZhfWY
-         KG1n2ynkUjr/g==
-Received: by mail-wm1-f54.google.com with SMTP id n40-20020a05600c3ba800b0030da2439b21so368250wms.0;
-        Mon, 18 Oct 2021 13:09:26 -0700 (PDT)
-X-Gm-Message-State: AOAM533Yfp21BXZ/STsKMmk+ub0pREdLVGHYccxRckDIwt+94eaS+Y8Q
-        B9cwoejsBVfsYEmMpCtteIJbRx8rp2v3Oq0J4x4=
-X-Google-Smtp-Source: ABdhPJyJnJ+uE/FeRlOWARcqSSVWZ/9aNle2g3RzqpCnvsVM6fYU6uv54ImfAtoK/Ra8YO1pvPF8xF0ZojLEEw9T+3w=
-X-Received: by 2002:a05:600c:1548:: with SMTP id f8mr1129122wmg.35.1634587765086;
- Mon, 18 Oct 2021 13:09:25 -0700 (PDT)
+        Mon, 18 Oct 2021 17:12:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49514 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229524AbhJRVMR (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 18 Oct 2021 17:12:17 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19IKxVRX008295;
+        Mon, 18 Oct 2021 17:09:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=BDkVMWffyqmpIoyluN1eDCN/iczFwSrFK4pwZZk7jqg=;
+ b=VqhTedsCZjzWA/iWnL08UKamzZ6ZZ34hwawUqTwQXm2o5s7pSyEtmFRZh7u2NHOm/x/7
+ FKmo1UbeayvZyri84k2JG904Bjg0aVU0XI/HZ3/s5cI91tTOs9C77BbfVGKqMgQERjNJ
+ Lsq7zgllMJ5QV7P1K47hcQDXrGIlPv/vOkFAsj17oQMsLqppU9/nsW74PxwD5ibHXz0J
+ mPnw5b/lgMj+yRuJyTPbdV2knjcuhIVPN6XzJBe4kahmkn4uNFdgzappw73UHN+3vy+k
+ zfVzbrCyzn/lIHV4sTSiiMhzwqVGNAo1Zy/ybYkDbS0pzAsCCEjPYlqqMBkebgTNiaKb TA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3bs8bpmkfp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Oct 2021 17:09:36 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19IKxYjn008509;
+        Mon, 18 Oct 2021 17:09:36 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3bs8bpmkfg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Oct 2021 17:09:36 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19IL81fq021056;
+        Mon, 18 Oct 2021 21:09:35 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma05wdc.us.ibm.com with ESMTP id 3bqpcaywht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Oct 2021 21:09:35 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19IL9YNM33751650
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Oct 2021 21:09:34 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E430C6066;
+        Mon, 18 Oct 2021 21:09:34 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D4CFC6059;
+        Mon, 18 Oct 2021 21:09:32 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.65.235.71])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 18 Oct 2021 21:09:32 +0000 (GMT)
+Subject: Re: [PATCH][next] powerpc/vas: Fix potential NULL pointer dereference
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Haren Myneni <haren@linux.ibm.com>
+Cc:     linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20211015050345.GA1161918@embeddedor>
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+Message-ID: <97c42e43-15b9-5db6-d460-dbb16f31954d@linux.ibm.com>
+Date:   Mon, 18 Oct 2021 14:09:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <20211013150025.2875883-1-arnd@kernel.org> <20211013150025.2875883-2-arnd@kernel.org>
- <202110181247.8F53380@keescook>
-In-Reply-To: <202110181247.8F53380@keescook>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Mon, 18 Oct 2021 22:09:09 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2wO+diAvRXtZKq+z84sfson6GhxgL9gpBG_BP4h5bSQA@mail.gmail.com>
-Message-ID: <CAK8P3a2wO+diAvRXtZKq+z84sfson6GhxgL9gpBG_BP4h5bSQA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kasan: use fortified strings for hwaddress sanitizer
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Marco Elver <elver@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211015050345.GA1161918@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: jjEfsc0uU9hTp1jgkr7mgAjx7RJc61ww
+X-Proofpoint-ORIG-GUID: T-oUCkfhnD21FXZhl8bo8dZAkS_FM3Vs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-10-18_07,2021-10-18_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 spamscore=0 clxscore=1011 suspectscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2110180114
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 9:57 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Oct 13, 2021 at 05:00:06PM +0200, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> >
-> > GCC has separate macros for -fsanitize=kernel-address and
-> > -fsanitize=kernel-hwaddress, and the check in the arm64 string.h
-> > gets this wrong, which leads to string functions not getting
-> > fortified with gcc. The newly added tests find this:
-> >
-> > warning: unsafe memchr() usage lacked '__read_overflow' warning in /git/arm-soc/lib/test_fortify/read_overflow-memchr.c
-> > warning: unsafe memchr_inv() usage lacked '__read_overflow' symbol in /git/arm-soc/lib/test_fortify/read_overflow-memchr_inv.c
-> > warning: unsafe memcmp() usage lacked '__read_overflow' warning in /git/arm-soc/lib/test_fortify/read_overflow-memcmp.c
-> > warning: unsafe memscan() usage lacked '__read_overflow' symbol in /git/arm-soc/lib/test_fortify/read_overflow-memscan.c
-> > warning: unsafe memcmp() usage lacked '__read_overflow2' warning in /git/arm-soc/lib/test_fortify/read_overflow2-memcmp.c
-> > warning: unsafe memcpy() usage lacked '__read_overflow2' symbol in /git/arm-soc/lib/test_fortify/read_overflow2-memcpy.c
-> > warning: unsafe memmove() usage lacked '__read_overflow2' symbol in /git/arm-soc/lib/test_fortify/read_overflow2-memmove.c
-> > warning: unsafe memcpy() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-memcpy.c
-> > warning: unsafe memmove() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-memmove.c
-> > warning: unsafe memset() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-memset.c
-> > warning: unsafe strcpy() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-strcpy-lit.c
-> > warning: unsafe strcpy() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-strcpy.c
-> > warning: unsafe strlcpy() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-strlcpy-src.c
-> > warning: unsafe strlcpy() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-strlcpy.c
-> > warning: unsafe strncpy() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-strncpy-src.c
-> > warning: unsafe strncpy() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-strncpy.c
-> > warning: unsafe strscpy() usage lacked '__write_overflow' symbol in /git/arm-soc/lib/test_fortify/write_overflow-strscpy.c
-> >
->
-> What is the build config that trips these warnings?
+On 10/14/21 10:03 PM, Gustavo A. R. Silva wrote:
+> (!ptr && !ptr->foo) strikes again. :)
+> 
+> The expression (!ptr && !ptr->foo) is bogus and in case ptr is NULL,
+> it leads to a NULL pointer dereference: ptr->foo.
+> 
+> Fix this by converting && to ||
+> 
+> This issue was detected with the help of Coccinelle, and audited and
+> fixed manually.
+> 
+> Fixes: 1a0d0d5ed5e3 ("powerpc/vas: Add platform specific user window operations")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Looking at the usage pattern it is obvious that if we determine !ptr attempting
+to also confirm !ptr->ops is going to blow up.
 
-It's a randconfig build, I've uploaded one .config to
-https://pastebin.com/raw/4TKB9mhs,
-but I have other ones if you can't reproduce with that one.
+LGTM.
 
-> In trying to understand this, I see in arch/arm64/include/asm/string.h:
->
-> #if (defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)) && \
->         !defined(__SANITIZE_ADDRESS__)
->
-> other architectures (like arm32) do:
->
-> #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
+Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-Yes, that is exactly the thing that goes wrong. With clang, __SANITIZE_ADDRESS__
-gets set here, but gcc sets __SANITIZE_HWADDRESS__ instead
-for CONFIG_KASAN_SW_TAGS, so the condition is always true.
+> ---
+>  arch/powerpc/platforms/book3s/vas-api.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/book3s/vas-api.c b/arch/powerpc/platforms/book3s/vas-api.c
+> index 30172e52e16b..4d82c92ddd52 100644
+> --- a/arch/powerpc/platforms/book3s/vas-api.c
+> +++ b/arch/powerpc/platforms/book3s/vas-api.c
+> @@ -303,7 +303,7 @@ static int coproc_ioc_tx_win_open(struct file *fp, unsigned long arg)
+>  		return -EINVAL;
+>  	}
+> 
+> -	if (!cp_inst->coproc->vops && !cp_inst->coproc->vops->open_win) {
+> +	if (!cp_inst->coproc->vops || !cp_inst->coproc->vops->open_win) {
+>  		pr_err("VAS API is not registered\n");
+>  		return -EACCES;
+>  	}
+> @@ -373,7 +373,7 @@ static int coproc_mmap(struct file *fp, struct vm_area_struct *vma)
+>  		return -EINVAL;
+>  	}
+> 
+> -	if (!cp_inst->coproc->vops && !cp_inst->coproc->vops->paste_addr) {
+> +	if (!cp_inst->coproc->vops || !cp_inst->coproc->vops->paste_addr) {
+>  		pr_err("%s(): VAS API is not registered\n", __func__);
+>  		return -EACCES;
+>  	}
+> 
 
-> > Add a workaround to include/linux/compiler_types.h so we always
-> > define __SANITIZE_ADDRESS__ for either mode, as we already do
-> > for clang.
->
-> Where is the clang work-around? (Or is this a statement that clang,
-> under -fsanitize=kernel-hwaddress, already sets __SANITIZE_ADDRESS__ by
-> default?
-
-I mean this snippet:
-
-#if __has_feature(address_sanitizer) || __has_feature(hwaddress_sanitizer)
-/* Emulate GCC's __SANITIZE_ADDRESS__ flag */
-#define __SANITIZE_ADDRESS__
-#endif
-
-Without that, clang sets neither __SANITIZE_ADDRESS__ nor
-__SANITIZE_HWADDRESS__
-
-> > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> > index aad6f6408bfa..2f2776fffefe 100644
-> > --- a/include/linux/compiler_types.h
-> > +++ b/include/linux/compiler_types.h
-> > @@ -178,6 +178,13 @@ struct ftrace_likely_data {
-> >   */
-> >  #define noinline_for_stack noinline
-> >
-> > +/*
-> > + * Treat __SANITIZE_HWADDRESS__ the same as __SANITIZE_ADDRESS__ in the kernel
-> > + */
-> > +#ifdef __SANITIZE_HWADDRESS__
-> > +#define __SANITIZE_ADDRESS__
-> > +#endif
->
-> Should this go into compiler-gcc.h instead?
-
-Yes, that might be clearer, but the effect is the same, as no other
-compiler defines
-those macros.
-
-       Arnd
