@@ -2,105 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F24C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 21:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10483C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Oct 2021 08:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 254206112D
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Oct 2021 21:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B8261212
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Oct 2021 08:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbhJRVXt (ORCPT
+        id S234132AbhJSIb3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Oct 2021 17:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229524AbhJRVXt (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Oct 2021 17:23:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 08D676113D;
-        Mon, 18 Oct 2021 21:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634592097;
-        bh=r+U+HRVQuA0YbQnhsffBIKTPjNzgnGyVqS2dVQNn2D0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jkM+1QBLNmmr2PR2zw2SC8iGjREGbYOVerrkSYv8jxLrqA9IIHJg+L/VcMTBqG8hh
-         huAmTTF47wai2Ksr+eiVkQgaVJXGZASCP0F/JIkO4EM9DVuXLchxXbF41zo1naYbNx
-         JXYUgmJ4QuUfYnGD1HBMdVuKulpF4MuJYhKj+SnFw6F5O7dycf75FOu5OcnxlFnQa6
-         X6UGocjlHew9R39KPk3JbWDddBMFKJjbBmWHhC3MtkXTIaOFGvkPtDXgZtmY5vsV3D
-         tdZyp1/wtkTwabinzQahybxs1JiXRYZCtYO/3jbIGJPAk5B/pbC/dw+sGQSlhMVzB0
-         rj/96f25tNgvA==
-Date:   Mon, 18 Oct 2021 16:26:12 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Haren Myneni <haren@linux.ibm.com>,
-        linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] powerpc/vas: Fix potential NULL pointer dereference
-Message-ID: <20211018212612.GA1237121@embeddedor>
-References: <20211015050345.GA1161918@embeddedor>
- <97c42e43-15b9-5db6-d460-dbb16f31954d@linux.ibm.com>
+        Tue, 19 Oct 2021 04:31:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230082AbhJSIb2 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 19 Oct 2021 04:31:28 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 555FEC06161C;
+        Tue, 19 Oct 2021 01:29:16 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id f5so18648303pgc.12;
+        Tue, 19 Oct 2021 01:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aFr6U5adp/cpEW1jFDDWLEXY0Sj6xHUTx2NxqyNWcP8=;
+        b=BwBChJJ/ATDvXTTrXEPaR8EyXhyVkkIxN1rsIrWDOYca5XQeUXWhs5b9LsWuvVrwRF
+         u2t62KFJiAeWYdiKCk67eQVm5K5mYi/FUy9d5Zjieit5Q5FfkG3yqXW4+XtHPFQ1kzeg
+         V+WxvhKNcBtK8AonRyevSbxGZ+nS3Isuk3u43aROJ3T8gshMrbOAMfxTSlHRaUitzB65
+         nwCnv8SwSQlfn30uAYmNsQaH03UqVf3snhg1VTn+zKcP73442LdvQvu6G7KuFwkcn7SR
+         pEAW3rEy9KB4zdOjrQnvqpqfrhEhudtPPphXkYd5Fd7kyVrp9EW4cRKgMAqYQ1qcqD2m
+         F3FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aFr6U5adp/cpEW1jFDDWLEXY0Sj6xHUTx2NxqyNWcP8=;
+        b=vXBSiuzTBkKBssH8WQtBgGybOkjlsOCO2zIyeJ5DnZL/stweOfiarS/nXxyjmlCqEr
+         UyU+ocqABTaxz+KoykKP6HkVX7miXKyCqujE5JYKKS9EAh5FaMyE80ynO1qXwcDbfwFX
+         vr/o206a/SSBWaGk/iMlS2q7MGHIOvfOb5dmh6XYnNefGkG7oY1Hx79yGXaSjhhhzkkV
+         49VfaSoo3+Np9lEJk7mgH/Rz2pgOcqr4rML5QkcrWkSsI+Hv+S51WrrIctECdda2Tnvy
+         7+5m86vVX9oKP8MhccLrZ5La2imsaMH/b4iJJlzbWhiLaJ9L7FbUFNXvTTHufWB39r7W
+         g/lw==
+X-Gm-Message-State: AOAM531ExwMj3bK2ZiiUV/i2+M7NMlvztF0yPwTdurs1ugJ1RxQJsArv
+        pm0vpOmRejkn4+3wp8mzJYU=
+X-Google-Smtp-Source: ABdhPJxCz5RoqLOp1WigJZ2UajCah//FfCgUXuvSNjzwPHLFhHtyPlR+/CrDOl6JqLHJXO25QUHhRA==
+X-Received: by 2002:a63:4c4c:: with SMTP id m12mr3878079pgl.171.1634632155717;
+        Tue, 19 Oct 2021 01:29:15 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id ob5sm2035231pjb.2.2021.10.19.01.29.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Oct 2021 01:29:15 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: ye.guojin@zte.com.cn
+To:     keescook@chromium.org
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ye Guojin <ye.guojin@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH V1] gcc-plugins: remove duplicate include in gcc-common.h
+Date:   Tue, 19 Oct 2021 08:29:10 +0000
+Message-Id: <20211019082910.998257-1-ye.guojin@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97c42e43-15b9-5db6-d460-dbb16f31954d@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 02:09:31PM -0700, Tyrel Datwyler wrote:
-> On 10/14/21 10:03 PM, Gustavo A. R. Silva wrote:
-> > (!ptr && !ptr->foo) strikes again. :)
-> > 
-> > The expression (!ptr && !ptr->foo) is bogus and in case ptr is NULL,
-> > it leads to a NULL pointer dereference: ptr->foo.
-> > 
-> > Fix this by converting && to ||
-> > 
-> > This issue was detected with the help of Coccinelle, and audited and
-> > fixed manually.
-> > 
-> > Fixes: 1a0d0d5ed5e3 ("powerpc/vas: Add platform specific user window operations")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Looking at the usage pattern it is obvious that if we determine !ptr attempting
-> to also confirm !ptr->ops is going to blow up.
-> 
-> LGTM.
-> 
-> Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Ye Guojin <ye.guojin@zte.com.cn>
 
-Thanks, Tyrel.
---
-Gustavo
+'tree-ssa-operands.h' included in 'gcc-common.h' is duplicated.
+it's also included at line 56.
 
-> 
-> > ---
-> >  arch/powerpc/platforms/book3s/vas-api.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/platforms/book3s/vas-api.c b/arch/powerpc/platforms/book3s/vas-api.c
-> > index 30172e52e16b..4d82c92ddd52 100644
-> > --- a/arch/powerpc/platforms/book3s/vas-api.c
-> > +++ b/arch/powerpc/platforms/book3s/vas-api.c
-> > @@ -303,7 +303,7 @@ static int coproc_ioc_tx_win_open(struct file *fp, unsigned long arg)
-> >  		return -EINVAL;
-> >  	}
-> > 
-> > -	if (!cp_inst->coproc->vops && !cp_inst->coproc->vops->open_win) {
-> > +	if (!cp_inst->coproc->vops || !cp_inst->coproc->vops->open_win) {
-> >  		pr_err("VAS API is not registered\n");
-> >  		return -EACCES;
-> >  	}
-> > @@ -373,7 +373,7 @@ static int coproc_mmap(struct file *fp, struct vm_area_struct *vma)
-> >  		return -EINVAL;
-> >  	}
-> > 
-> > -	if (!cp_inst->coproc->vops && !cp_inst->coproc->vops->paste_addr) {
-> > +	if (!cp_inst->coproc->vops || !cp_inst->coproc->vops->paste_addr) {
-> >  		pr_err("%s(): VAS API is not registered\n", __func__);
-> >  		return -EACCES;
-> >  	}
-> > 
-> 
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Ye Guojin <ye.guojin@zte.com.cn>
+---
+ scripts/gcc-plugins/gcc-common.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
+index 62bf1c07b8bf..9a1895747b15 100644
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -86,7 +86,6 @@
+ #include "stmt.h"
+ #include "gimplify.h"
+ #include "gimple.h"
+-#include "tree-ssa-operands.h"
+ #include "tree-phinodes.h"
+ #include "tree-cfg.h"
+ #include "gimple-iterator.h"
+-- 
+2.25.1
+
