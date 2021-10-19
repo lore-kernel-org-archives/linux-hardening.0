@@ -2,95 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10483C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Oct 2021 08:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEF3C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Oct 2021 10:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B8261212
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Oct 2021 08:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071E161212
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Oct 2021 10:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234132AbhJSIb3 (ORCPT
+        id S235109AbhJSKI4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Oct 2021 04:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230082AbhJSIb2 (ORCPT
+        Tue, 19 Oct 2021 06:08:56 -0400
+Received: from mail-40131.protonmail.ch ([185.70.40.131]:24759 "EHLO
+        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234914AbhJSKI4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Oct 2021 04:31:28 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 555FEC06161C;
-        Tue, 19 Oct 2021 01:29:16 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id f5so18648303pgc.12;
-        Tue, 19 Oct 2021 01:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aFr6U5adp/cpEW1jFDDWLEXY0Sj6xHUTx2NxqyNWcP8=;
-        b=BwBChJJ/ATDvXTTrXEPaR8EyXhyVkkIxN1rsIrWDOYca5XQeUXWhs5b9LsWuvVrwRF
-         u2t62KFJiAeWYdiKCk67eQVm5K5mYi/FUy9d5Zjieit5Q5FfkG3yqXW4+XtHPFQ1kzeg
-         V+WxvhKNcBtK8AonRyevSbxGZ+nS3Isuk3u43aROJ3T8gshMrbOAMfxTSlHRaUitzB65
-         nwCnv8SwSQlfn30uAYmNsQaH03UqVf3snhg1VTn+zKcP73442LdvQvu6G7KuFwkcn7SR
-         pEAW3rEy9KB4zdOjrQnvqpqfrhEhudtPPphXkYd5Fd7kyVrp9EW4cRKgMAqYQ1qcqD2m
-         F3FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aFr6U5adp/cpEW1jFDDWLEXY0Sj6xHUTx2NxqyNWcP8=;
-        b=vXBSiuzTBkKBssH8WQtBgGybOkjlsOCO2zIyeJ5DnZL/stweOfiarS/nXxyjmlCqEr
-         UyU+ocqABTaxz+KoykKP6HkVX7miXKyCqujE5JYKKS9EAh5FaMyE80ynO1qXwcDbfwFX
-         vr/o206a/SSBWaGk/iMlS2q7MGHIOvfOb5dmh6XYnNefGkG7oY1Hx79yGXaSjhhhzkkV
-         49VfaSoo3+Np9lEJk7mgH/Rz2pgOcqr4rML5QkcrWkSsI+Hv+S51WrrIctECdda2Tnvy
-         7+5m86vVX9oKP8MhccLrZ5La2imsaMH/b4iJJlzbWhiLaJ9L7FbUFNXvTTHufWB39r7W
-         g/lw==
-X-Gm-Message-State: AOAM531ExwMj3bK2ZiiUV/i2+M7NMlvztF0yPwTdurs1ugJ1RxQJsArv
-        pm0vpOmRejkn4+3wp8mzJYU=
-X-Google-Smtp-Source: ABdhPJxCz5RoqLOp1WigJZ2UajCah//FfCgUXuvSNjzwPHLFhHtyPlR+/CrDOl6JqLHJXO25QUHhRA==
-X-Received: by 2002:a63:4c4c:: with SMTP id m12mr3878079pgl.171.1634632155717;
-        Tue, 19 Oct 2021 01:29:15 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id ob5sm2035231pjb.2.2021.10.19.01.29.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 01:29:15 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: ye.guojin@zte.com.cn
-To:     keescook@chromium.org
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ye Guojin <ye.guojin@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH V1] gcc-plugins: remove duplicate include in gcc-common.h
-Date:   Tue, 19 Oct 2021 08:29:10 +0000
-Message-Id: <20211019082910.998257-1-ye.guojin@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Tue, 19 Oct 2021 06:08:56 -0400
+Date:   Tue, 19 Oct 2021 10:06:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1634637998; bh=LOFsSQgEL4w+fS68cEWnarmWnUdXiUZe2VQW9yMhlYk=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=kgnUhhOx8j6ksT5RA6+ox2FUcgrA4VVcqOldtTlgDhhKSNfUVd498eXSm5hL82SQn
+         Vm3wvVOK0PrS3vSnid7gZE6SBQBntl4WR/Omv6Cq4Idpv6TJUU+pgbBB1XGTN1MYiT
+         hNIk4CI43LHFyiElLWwvfQYkg0hJLXQrHSuGtYE8cw9xFo58ByNHjnTL7Mhk3WzwyN
+         08R/zkYS6jzfHnRjsWKuTL6BybGW+N7dAMV+Rd+b7FVIpJ8eXw0V4z3KeIxMpP+QAp
+         nGqASZ2lfKwKJw1L75wTS8+Prb7EzGYyhsz+08EzUZjo0s3SkKNhwkJLmgWpd60aoP
+         kHly93G10ZO4Q==
+To:     Sami Tolvanen <samitolvanen@google.com>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Alexander Lobakin <alobakin@pm.me>, x86@kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: Re: [PATCH v5 00/15] x86: Add support for Clang CFI
+Message-ID: <20211019095947.89257-1-alobakin@pm.me>
+In-Reply-To: <20211013181658.1020262-1-samitolvanen@google.com>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Ye Guojin <ye.guojin@zte.com.cn>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Wed, 13 Oct 2021 11:16:43 -0700
 
-'tree-ssa-operands.h' included in 'gcc-common.h' is duplicated.
-it's also included at line 56.
+> This series adds support for Clang's Control-Flow Integrity (CFI)
+> checking to x86_64. With CFI, the compiler injects a runtime
+> check before each indirect function call to ensure the target is
+> a valid function with the correct static type. This restricts
+> possible call targets and makes it more difficult for an attacker
+> to exploit bugs that allow the modification of stored function
+> pointers. For more details, see:
+>
+>   https://clang.llvm.org/docs/ControlFlowIntegrity.html
+>
+> Note that v5 is based on tip/master. The first two patches contain
+> objtool support for CFI, the remaining patches change function
+> declarations to use opaque types, fix type mismatch issues that
+> confuse the compiler, and disable CFI where it can't be used.
+>
+> You can also pull this series from
+>
+>   https://github.com/samitolvanen/linux.git x86-cfi-v5
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Ye Guojin <ye.guojin@zte.com.cn>
----
- scripts/gcc-plugins/gcc-common.h | 1 -
- 1 file changed, 1 deletion(-)
+Hi,
 
-diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
-index 62bf1c07b8bf..9a1895747b15 100644
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -86,7 +86,6 @@
- #include "stmt.h"
- #include "gimplify.h"
- #include "gimple.h"
--#include "tree-ssa-operands.h"
- #include "tree-phinodes.h"
- #include "tree-cfg.h"
- #include "gimple-iterator.h"
--- 
-2.25.1
+I found [0] while was testing Peter's retpoline series, wanted to
+ask / double check if that is because I'm using ClangCFI for x86
+on unsupported Clang 12. It is fixed in 13 I suppose?
+
+[0] https://lore.kernel.org/all/20211019094038.80569-1-alobakin@pm.me
+
+Thanks,
+Al
 
