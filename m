@@ -2,180 +2,161 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A56C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 19:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3CDC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 19:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9B06135E
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 19:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5381560FED
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 19:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231516AbhJTTRZ (ORCPT
+        id S231605AbhJTTkZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Oct 2021 15:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33468 "EHLO
+        Wed, 20 Oct 2021 15:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231488AbhJTTRY (ORCPT
+        with ESMTP id S231461AbhJTTkY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Oct 2021 15:17:24 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1307C061755
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Oct 2021 12:15:09 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id t184so10394814pgd.8
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Oct 2021 12:15:09 -0700 (PDT)
+        Wed, 20 Oct 2021 15:40:24 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362B3C06161C
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Oct 2021 12:38:10 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id q5so23436496pgr.7
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Oct 2021 12:38:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i22CGOfMdCgEzNofkN2ujFXF/VRH37ibkrOAmDeTGJk=;
-        b=JpcmTmu47LLgTalrcwHRfbvnurUdEUIPsEFm+gDXyWzHYc7ndXQEKbhgm4vo91rqt1
-         TMNIN7Qa9dCpB6e3ViS2EZ+qPxoTjr6dHBkYXKic25otGOFt5rTop+eIp8mnFDNRwpGt
-         aje3upgjKjBAz6T1loijjMNJQqfNOXXET2wlA=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AieI3bvElbBAFUYr7qnOh/7i3cSfGy56FTR3mT6hwmE=;
+        b=JKyb1SkFN3SMYLLFhnbqPffCCkIhLIn2NewvRo9HmWO+JgInVY5CfgAjedd39VjJiR
+         0iIi3Kzm5cOFuuzjFVE21MauGKKDEelbsvDKGXaKGYt/U6eeTNQNodalYp7PdHNknH8K
+         LSDaYEDIw6rciFlQexovQJFSkjkV7V90Ba2UU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i22CGOfMdCgEzNofkN2ujFXF/VRH37ibkrOAmDeTGJk=;
-        b=oBRvsDI3AmQckaujWlWnRgFDZOPib3IOWe3JrKfhwe06RSCWjMhNB+HFvbECMfxsUB
-         Q5XAjUlE4pzKzTPShn/iDbB0YKeHxVq/NIfMzCQ0do6AKUHSRqwa8TUles5BCbA5GcuP
-         BvFAx3+N8JCV36/gDcNDTaqrLCP1gy1RM2cNcFuLd4eReC3hLufAgNtKBsvB1zg3AyiF
-         aYKvFY56EagN1FU3N5RPc60zC8vsL2dGgRllj6RRlA+dNcpcZbmUZlCdoHVyCI0OajWB
-         KP1DW6jvuaVXd4SGhSxCIJdcl8/CuTxwAEqjk8oNSxpHekwcnWbiXWPMRTc/oQ6FH4dy
-         TQ9g==
-X-Gm-Message-State: AOAM533fBdc/9V9GWd+rIfD1Wioww0C8EJp48b3Ua7Su0lPbAUnQbOG1
-        7dY5niVZnaCPnG9j8fRLat1/vg==
-X-Google-Smtp-Source: ABdhPJwlN6e6EukdLBE/1sEfEDDBaNtAFd50dDayRvjCFtYq+pdfXTDmzg6uAqxABX6av/5tLtlX3w==
-X-Received: by 2002:aa7:94a8:0:b0:44c:f3e0:81fb with SMTP id a8-20020aa794a8000000b0044cf3e081fbmr797733pfl.6.1634757309155;
-        Wed, 20 Oct 2021 12:15:09 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AieI3bvElbBAFUYr7qnOh/7i3cSfGy56FTR3mT6hwmE=;
+        b=dpUUAytNCy/JSJcrdFp3nG8N/YIGmKv0MW2aq45DSt0hvSbixLZz2sgqgYXTgQhBAk
+         DdaAKe5tkZckTDY1x5DB5JffPFXxM5sNyDZwpr3zghV3seFluL8PqVpmbvnT/jiydJOl
+         /tBFmO1wGPlOqka5x5/dqXky7NN+ac/Quq6JJNTQFGv5DbsZu8njYInm/PocR/hu6cNX
+         PBcQ/JtE3fgknnBrJ2D/CJAyTITkgYFho3gS5Yv6+b+XFmX0Zd+2kNNwaJUhSk5jvBf7
+         nGvFrx2wOYnnb6pi3rqAywwY5u+ZRXTGomv5OcUXWiIA04HO6OC7YXo1lj3r1EHYVnQI
+         jmaA==
+X-Gm-Message-State: AOAM532CeHtj3r6oETR3s8s6t9m96N7d5vF2C1s5DCYpBXoJDcVB7znz
+        5L4+Xv4cFSZI/qfEgNgXw4o0IA==
+X-Google-Smtp-Source: ABdhPJwqDOdqmlhsXqex24xJoPb07RcqwWVHrt+R0o/zydVIUSbU49nt98KnA4FEgx4UWf0YGBhNgw==
+X-Received: by 2002:a63:720d:: with SMTP id n13mr940824pgc.470.1634758689723;
+        Wed, 20 Oct 2021 12:38:09 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p12sm3981100pfh.52.2021.10.20.12.15.08
+        by smtp.gmail.com with ESMTPSA id hi1sm3116213pjb.28.2021.10.20.12.38.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 12:15:08 -0700 (PDT)
-Date:   Wed, 20 Oct 2021 12:15:08 -0700
+        Wed, 20 Oct 2021 12:38:08 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
-        llvm@lists.linux.dev, Dan Li <ashimida@linux.alibaba.com>,
-        ardb@kernel.org, ojeda@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] gcc-plugins: Explicitly document purpose and
- deprecation schedule
-Message-ID: <202110201212.43DC4A24@keescook>
-References: <20211020173554.38122-1-keescook@chromium.org>
- <20211020173554.38122-2-keescook@chromium.org>
- <YXBVx+0YjoMtQ27T@archlinux-ax161>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] kasan: test: Consolidate workarounds for unwanted __alloc_size() protection
+Date:   Wed, 20 Oct 2021 12:38:07 -0700
+Message-Id: <20211020193807.40684-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YXBVx+0YjoMtQ27T@archlinux-ax161>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2714; h=from:subject; bh=iLZ4NeBfkWYVPoHEvytY6uZRaHHHRpbBD9aJk8sFCo8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhcHAeOncBqloNqe5Jh5YTZozruTg+mIo+5x7FRFmv mT1TQsyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYXBwHgAKCRCJcvTf3G3AJjHvD/ 4vNtVszulxNrfqy5Wok6IMFaTdPBhyb0/9pmGXt/kGQ+XSo/013n5wISDITIGlAQaUr7fdJ+x+dwR7 rutGa4psrboVf6tFgP1/krBnCqXLvFJUGtLUAmNXkFQuD6MNd1EKbh1rnzuH33A+rWlbVWaN+liVYk 9LUaozVSdQQMvuCQMG6WYxUV2rbZ4hxsfnbTJxV06MgEefnOaatyC5sk68te9ZZzvITNXX0uBSpdKL fUlWPVqG19X3Rq59o1X6V9oCFQsFBKRjB2AaUFHfMdob9r7fsND8SgxXO46Rin+cVV61lVy6+NrVtz m25U3dihpLRJYtWagAZkdjaAdAR/s7tFILPHPmRhITTMpq8NhvBVTvNSsdLph0w5JkDWN+vE0yui1e k2ar8i8TTRN8sQnJg3EsWRHReJqdDTOaU58KROqbhGTRsfar2gKPzpA63ApdwKOAY4JWNcPWeX1nPO Oj99NLNw6WyPXQ9Zh01P+0e/ywi40AoShv3TLDy5LSC41ksTOgu9Ts9MfealpwqzoyEebs5/vMRXmm w2/FWZh/2vIAMsWwV2kQTCXNpIRyOqxtb6bt1ZnYW+YaTgVEdAxssuZbeiuZzMWjrLlpEwuTq1AZQE 7dcMAf9nOO8fICycy8lx4p1CdESG3md29TTylk+fFKD7c9KqOXyRtHpWYGkg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 20, 2021 at 10:45:43AM -0700, Nathan Chancellor wrote:
-> On Wed, Oct 20, 2021 at 10:35:53AM -0700, Kees Cook wrote:
-> > GCC plugins should only exist when some compiler feature needs to be
-> > proven but does not exist in either GCC nor Clang. For example, if a
-> > desired feature is already in Clang, it should be added to GCC upstream.
-> > Document this explicitly.
-> > 
-> > Additionally, mark the plugins with matching upstream GCC features as
-> > removable past their respective GCC versions.
-> > 
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: Michal Marek <michal.lkml@markovi.net>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Cc: James Morris <jmorris@namei.org>
-> > Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: linux-hardening@vger.kernel.org
-> > Cc: linux-kbuild@vger.kernel.org
-> > Cc: linux-doc@vger.kernel.org
-> > Cc: linux-security-module@vger.kernel.org
-> > Cc: llvm@lists.linux.dev
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Seems reasonable to me.
-> 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+This fixes kasan-test-use-underlying-string-helpers.patch to avoid needing
+new helpers. As done in kasan-test-bypass-__alloc_size-checks.patch,
+just use OPTIMIZER_HIDE_VAR(). Additionally converts a use of
+"volatile", which was trying to work around similar detection.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: kasan-dev@googlegroups.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Hi Andrew,
+
+Can you please collapse this into your series? It's cleaner to use the
+same method everywhere in this file to avoid the compiler being smart. :)
 
 Thanks!
 
-> 
-> One comment below.
-> 
-> > ---
-> >  Documentation/kbuild/gcc-plugins.rst | 26 ++++++++++++++++++++++++++
-> >  scripts/gcc-plugins/Kconfig          |  4 ++--
-> >  security/Kconfig.hardening           |  9 ++++++---
-> >  3 files changed, 34 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/kbuild/gcc-plugins.rst b/Documentation/kbuild/gcc-plugins.rst
-> > index 3349966f213d..4b28c7a4032f 100644
-> > --- a/Documentation/kbuild/gcc-plugins.rst
-> > +++ b/Documentation/kbuild/gcc-plugins.rst
-> > @@ -32,6 +32,32 @@ This infrastructure was ported from grsecurity [6]_ and PaX [7]_.
-> >  .. [7] https://pax.grsecurity.net/
-> >  
-> >  
-> > +Purpose
-> > +=======
-> > +
-> > +GCC plugins are designed to provide a place to experiment with potential
-> > +compiler features that are neither in GCC nor Clang upstream. Once
-> > +their utility is proven, the goal is to upstream the feature into GCC
-> > +(and Clang), and then to finally remove them from the kernel once the
-> > +feature is available in all supported versions of GCC.
-> > +
-> > +Specifically, new plugins should implement only features that have no
-> > +upstream compiler support (in either GCC or Clang).
-> > +
-> > +When a feature exists in Clang but not GCC, effort should be made to
-> > +bring the feature to upstream GCC (rather than just as a kernel-specific
-> > +GCC plugin), so the entire ecosystem can benefit from it.
-> > +
-> > +Similarly, even if a feature provided by a GCC plugin does *not* exist
-> > +in Clang, but the feature is proven to be useful, effort should be spent
-> > +to upstream the feature to GCC (and Clang).
-> > +
-> > +After a feature is available in upstream GCC, the plugin will be made
-> > +unbuildable for the corresponding GCC version (and later). Once all
-> > +kernel-supported versions of GCC provide the feature, the plugin will
-> > +be removed from the kernel.
-> > +
-> > +
-> >  Files
-> >  =====
-> >  
-> > diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> > index ab9eb4cbe33a..3f5d3580ec06 100644
-> > --- a/scripts/gcc-plugins/Kconfig
-> > +++ b/scripts/gcc-plugins/Kconfig
-> > @@ -37,6 +37,8 @@ config GCC_PLUGIN_CYC_COMPLEXITY
-> >  
-> >  config GCC_PLUGIN_SANCOV
-> >  	bool
-> > +	# Plugin can be removed once the kernel only supports GCC 6.1.0+
-> > +	depends on !CC_HAS_SANCOV_TRACE_PC
-> 
-> This symbol is not user selectable and the one place that does select it
-> only does so when !CC_HAS_SANCOV_TRACE_PC so this seems pointless to me.
-> 
-> Keep the comment, ditch the depends?
-
-I had a similar thought, and in the end, I decided I wanted to always
-enforce the GCC feature check through a depends, with a comment about
-the expected version. I want to make sure we don't use plugins if an
-upstream feature is already available. It happens that SANCOV was
-effectively the first to do this, but it did so on the other side and I
-wanted it repeated here so it was "self contained".
-
 -Kees
+---
+ lib/test_kasan.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
 
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index 318fc612e7e7..96a1f085b460 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -525,12 +525,13 @@ static void kmalloc_memmove_invalid_size(struct kunit *test)
+ {
+ 	char *ptr;
+ 	size_t size = 64;
+-	volatile size_t invalid_size = size;
++	size_t invalid_size = size;
+ 
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
+ 	memset((char *)ptr, 0, 64);
++	OPTIMIZER_HIDE_VAR(invalid_size);
+ 	KUNIT_EXPECT_KASAN_FAIL(test,
+ 		memmove((char *)ptr, (char *)ptr + 4, invalid_size));
+ 	kfree(ptr);
+@@ -852,21 +853,6 @@ static void kmem_cache_invalid_free(struct kunit *test)
+ 	kmem_cache_destroy(cache);
+ }
+ 
+-/*
+- * noinline wrappers to prevent the compiler from noticing the overflow
+- * at compile time rather than having kasan catch it.
+- */
+-static noinline void *__kasan_memchr(const void *s, int c, size_t n)
+-{
+-	return memchr(s, c, n);
+-}
+-
+-static noinline int __kasan_memcmp(const void *s1, const void *s2, size_t n)
+-{
+-	return memcmp(s1, s2, n);
+-}
+-
+-
+ static void kasan_memchr(struct kunit *test)
+ {
+ 	char *ptr;
+@@ -884,8 +870,9 @@ static void kasan_memchr(struct kunit *test)
+ 	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
++	OPTIMIZER_HIDE_VAR(size);
+ 	KUNIT_EXPECT_KASAN_FAIL(test,
+-		kasan_ptr_result = __kasan_memchr(ptr, '1', size + 1));
++		kasan_ptr_result = memchr(ptr, '1', size + 1));
+ 
+ 	kfree(ptr);
+ }
+@@ -909,8 +896,9 @@ static void kasan_memcmp(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 	memset(arr, 0, sizeof(arr));
+ 
++	OPTIMIZER_HIDE_VAR(size);
+ 	KUNIT_EXPECT_KASAN_FAIL(test,
+-		kasan_int_result = __kasan_memcmp(ptr, arr, size+1));
++		kasan_int_result = memcmp(ptr, arr, size+1));
+ 	kfree(ptr);
+ }
+ 
 -- 
-Kees Cook
+2.30.2
+
