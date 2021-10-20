@@ -2,129 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ED4C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 21:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1480CC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 22:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E02C61057
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 21:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21F86103D
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 22:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230123AbhJTWBr (ORCPT
+        id S230123AbhJTW3H (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Oct 2021 18:01:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229695AbhJTWBr (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Oct 2021 18:01:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F030E611CB;
-        Wed, 20 Oct 2021 21:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634767172;
-        bh=p/FrOCkd3lRrm2AfwEqVbzWLSKdO/oVRmjDk7ncCiIo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mYND7Su80MFf6on5xybMBeQ3xq3iEPl3QFGuUPqq886JJm9kANRaq5nIg7JyfWyhj
-         IujPCDxkdoDXx9DQcX5UAPJAcLl0ufZJW/j6XvlYEdY5nXqTxepLwwq0XXNsMXkTLx
-         lnWr7zmXqnhNYPne9hBhBO+qSEkm9iHcv7mMm7RMaRsgcElkyLW3MdiAwxos0Oyxk1
-         DB86QqE6CDENE7xjacxOWji28VLhavIhqiiAZqVQVhCiJai3HwS+EZqiXJ9Yju5iYr
-         nPzzLq7pSSXxWOKC3DSheXU3bukzE6mJXQleTLgM6Fq62SzHDS5a0iW7Ol5pOSWtCW
-         Xqz3gVZeNkFcA==
-Date:   Wed, 20 Oct 2021 14:59:26 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>, llvm@lists.linux.dev,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] compiler-gcc.h: Define __SANITIZE_ADDRESS__ under
- hwaddress sanitizer
-Message-ID: <YXCRPsNl2Vlgd7ct@archlinux-ax161>
-References: <20211020200039.170424-1-keescook@chromium.org>
+        Wed, 20 Oct 2021 18:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229695AbhJTW3G (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 20 Oct 2021 18:29:06 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F26DC06161C
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Oct 2021 15:26:52 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id i1so529965plr.13
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Oct 2021 15:26:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=fbp2dMqzqsLzaK2fqOr04ZEdLzjptq3j7UX1IpCxDuo=;
+        b=laJaNRW6dzkM62xKhNNJkerUWs/XeBuYOGOym0ER4sQSZkhxb8hLQGIKyoxXLW8k1L
+         P/d942ZnkrfJSPbiqeyewf2ftV3A+afkWuvuBOzHccw2cViL+tOEwYuLYmaFvv9YFuXQ
+         s36u+9sSUOLr2NhCJNPH2CPr+GzirTvybGlTM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=fbp2dMqzqsLzaK2fqOr04ZEdLzjptq3j7UX1IpCxDuo=;
+        b=joqcWNNDQIs6Tg2WoHZOWSmUQ7EPQWsjl4X9Ze6F/UIs8jy+fw1d1m35+hM8n1SXkA
+         8GvsHo0ShNz3uW+6AXkEDxMcDoGFQ3hhqjGFk7A6LyNU8Q1etZNDtxoMXMtmtREIGAbl
+         TlNfcYFnKCF2wbOA5gemjDpJVCthGPWQANgLDMSCyLNv/ouDvG7m1jw9ONfkkbs41q5N
+         6fg95Ti+3GhBBIh1zrizLtFejRLUlXzEDgdL4DCcqaMnfFhsJnmmDoNrYc0PBjW4srmO
+         v74WGoQlp7d/SwfWFUUuDHkh/YQaKNmTpoLgtOWIeu4rgXvKNXTVStyrVFKSdRPL+oav
+         K6TQ==
+X-Gm-Message-State: AOAM530VpiHoiP9jjJo/AlFoyKForZ5NZTmxJGWQcQAIDYhuNOt0P87f
+        ipr8f8D9kgOGqhd1/m0wYGyt9Df93QM=
+X-Google-Smtp-Source: ABdhPJyn36Bux9lkSYQkr+BdUYk6jXpUXurMDz3Qq2YIob5KoxLCuKhd9stADWEFmSXS3AiFpGoilA==
+X-Received: by 2002:a17:903:234f:b0:13e:e6e1:c132 with SMTP id c15-20020a170903234f00b0013ee6e1c132mr1684390plh.57.1634768811285;
+        Wed, 20 Oct 2021 15:26:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id lb9sm977732pjb.25.2021.10.20.15.26.50
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Oct 2021 15:26:50 -0700 (PDT)
+Date:   Wed, 20 Oct 2021 15:26:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-hardening@vger.kernel.org
+Subject: patchwork triage process
+Message-ID: <202110201522.7C700A80D7@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211020200039.170424-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 20, 2021 at 01:00:39PM -0700, Kees Cook wrote:
-> When Clang is using the hwaddress sanitizer, it sets __SANITIZE_ADDRESS__
-> explicitly:
-> 
->  #if __has_feature(address_sanitizer) || __has_feature(hwaddress_sanitizer)
->  /* Emulate GCC's __SANITIZE_ADDRESS__ flag */
->  #define __SANITIZE_ADDRESS__
->  #endif
-> 
-> Once hwaddress sanitizer was added to GCC, however, a separate define
-> was created, __SANITIZE_HWADDRESS__. The kernel is expecting to find
-> __SANITIZE_ADDRESS__ in either case, though, and the existing string
-> macros break on supported architectures:
-> 
->  #if (defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)) && \
->           !defined(__SANITIZE_ADDRESS__)
-> 
-> where as other architectures (like arm32) have no idea about hwaddress
-> sanitizer and just check for __SANITIZE_ADDRESS__:
-> 
->  #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
-> 
-> This would lead to compiler foritfy self-test warnings when building
-> with CONFIG_KASAN_SW_TAGS=y:
-> 
-> warning: unsafe memmove() usage lacked '__read_overflow2' symbol in lib/test_fortify/read_overflow2-memmove.c
-> warning: unsafe memcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-memcpy.c
-> ...
-> 
-> Sort this out by also defining __SANITIZE_ADDRESS__ in GCC under the
-> hwaddress sanitizer.
-> 
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Arvind Sankar <nivedita@alum.mit.edu>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Hi,
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Here's my proposal[1] for handling the patchwork patch states:
 
-> ---
-> I'm intending to take this via my overflow series, since that is what introduces
-> the compile-test regression tests (which found this legitimate bug). :)
-> 
-> -Kees
-> ---
->  include/linux/compiler-gcc.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index 6f24eb8c5dda..ccbbd31b3aae 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -121,6 +121,14 @@
->  #define __no_sanitize_coverage
->  #endif
->  
-> +/*
-> + * Treat __SANITIZE_HWADDRESS__ the same as __SANITIZE_ADDRESS__ in the kernel,
-> + * matching the defines used by Clang.
-> + */
-> +#ifdef __SANITIZE_HWADDRESS__
-> +#define __SANITIZE_ADDRESS__
-> +#endif
-> +
->  /*
->   * Turn individual warnings and errors on and off locally, depending
->   * on version.
-> -- 
-> 2.30.2
-> 
+New: No activity yet.
+ - Move to "Under Review" (possibly with a delegate assigned to do the review).
+ - Move to "Superseded" if a newer version of the same patch has been sent
+   (the patchwork-bot usually does this automatically).
+
+Under Review: Reviewers need to give feedback on the patch.
+ - Move to "Changes Requested" if a new version of the patch is needed
+   after review feedback.
+ - Move to "Handled Elsewhere" if a non-linux-hardening tree says they are
+   applying the patch.
+ - Move to "Queued" if a linux-hardening tree applies the patch.
+ - Move to "Superseded" if a newer version of the same patch has been sent
+   (the patchwork-bot usually does this automatically).
+ - In rare cases, a patch can be moved to "Rejected", but that is uncommon,
+   as normally review feedback is expected to be acted on.
+
+Handled Elsewhere: Going via another tree, but not yet in linux-next.
+ - Move to "Awaiting Upstream" once a patch appears in linux-next (the
+   patchwork-bot usually does this automatically).
+
+Queued: Going via a linux-hardening tree, but not yet in linux-next.
+ - Move to "Awaiting Upstream" once a patch appears in linux-next (the
+   patchwork-bot usually does this automatically).
+
+Awaiting Upstream: In linux-next, but not yet in Linus's tree.
+ - Move to "Mainlined" once a patch appears in Linus's tree (the
+   patchwork-bot usually does this automatically).
+
+Mainlined: Done! In Linus's tree.
+
+
+This should let us see each given state, and makes a distinction between
+things going via one of the KSPP trees (Queued) vs a different subsystem
+(Handled Elsewhere). i.e. we can check for stalled patches by getting
+a list of all the "Handled Elsewhere" patches, since any that appeared
+in -next should have moved on to "Awaiting Upstream", etc.
+
+Thoughts?
+
+-Kees
+
+
+[1] https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Patch_Tracking
+
+-- 
+Kees Cook
