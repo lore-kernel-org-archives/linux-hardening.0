@@ -2,103 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E7EC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Oct 2021 23:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6F3C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 14:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7CC16115A
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Oct 2021 23:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6EE613AC
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 14:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229678AbhJSXRJ (ORCPT
+        id S229842AbhJTOnA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Oct 2021 19:17:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbhJSXRJ (ORCPT
+        Wed, 20 Oct 2021 10:43:00 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:37586 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229639AbhJTOnA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Oct 2021 19:17:09 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25069C06161C;
-        Tue, 19 Oct 2021 16:14:56 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id y17so20136704ilb.9;
-        Tue, 19 Oct 2021 16:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zrpUaoVvt5AlUK4ZVm+tzAJguis11QzWu+GC5e0/HsQ=;
-        b=R2CXYQwuyS8tpS5KHqWJYBfj5mAki/U4l8yzO1/O+VV55lknzcm4yP+iTceUFKFRMA
-         TvgrR/4ozjGcX9AVdZkDURNRg7kzqud4WyaLRsKCMdyMbJn71upAJ/2SglfXs20NhjUt
-         FYEtZsG0eTqsJWswVdsrPnX5KWN+2qqfVSTGrNcn4PNQHdf6GcgA5C+tc6RER1tl+oZd
-         EWI5ZcVh8H/8OHcbLsW8kJHXaDpAK6xOgVvp+m/G+1MGinIxPIiLzD1iceuX2yXVfNpQ
-         Fr4byRZ8CdQtASjg4R5Z2+lSDPceDnHhCFpkPiwLskFt4v41vvuSFeZmXyV9/A2TSaqf
-         4tvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zrpUaoVvt5AlUK4ZVm+tzAJguis11QzWu+GC5e0/HsQ=;
-        b=RuvbK5cg63XCRsRFMVdzk+zblK/pKBITgwNkVkLisCGs2fsx5xOHl4sUqS7dlYb0Vz
-         0cqhMTkyH58UUCEsojjkzU8LmJPs7nlBAs1FcVlDVWFXs6Ryre8FOVxjj5SYOXzmtNlv
-         eDWSq/pZAN7daB0RwBH/cWoPJUlDcVxNKo1EG+vwOSDOojAfXkxxrjIuMJjUYoad+u2Q
-         6/LSXQ6eoRyOcAfcRWTd9uFOrO80PDbMUMfxc632fw2ui505lScakkig3cpAnQSAZyDN
-         hUrKkJrmgXQithkQwo8rB3YTZ5KAcrDG5eXyBQygC61pld3d17s+z/WSUqL+hsSUYKil
-         DxHQ==
-X-Gm-Message-State: AOAM531ujvZ7WqHnhv26isYvIF7RFHuaM7jX+h8jrEIHIDI7XdGdfw1U
-        b3RC3lypiaaF0NEkwp5on+YBKgIe9QumwD12KAs=
-X-Google-Smtp-Source: ABdhPJy3iJPFtUkZwa1+rcrOFAnL5k4AxU9bHWqWoOMWZ4Nhr2D4WUwI27a154ZG/6ykw/rBduzXUJAf6Ze3juWMYdw=
-X-Received: by 2002:a05:6e02:1543:: with SMTP id j3mr20327074ilu.151.1634685295474;
- Tue, 19 Oct 2021 16:14:55 -0700 (PDT)
+        Wed, 20 Oct 2021 10:43:00 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id D21AF21981;
+        Wed, 20 Oct 2021 14:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1634740844; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+hJgAW2xx50BzR2rX4mlcXSbU5B0LhOwVBhbeQTEvos=;
+        b=FSv56sui4dMt+PIBRwErbnSw2qPzY7Fqq1ki+ygBydcD9KS5/JAMtyoD4CpDNIsjS+ryBd
+        xxqrsT1LouofpWogfbE6lOiA1Srro8kCcVVmGCf1cOQS0Czf/Oy+9SIKmUBOP10pk5IHkM
+        i8uIpwhY0CKQESuGkXTTaxwRROomvAs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1634740844;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+hJgAW2xx50BzR2rX4mlcXSbU5B0LhOwVBhbeQTEvos=;
+        b=t0EXJ90f+im6X7Onw6DiZwwZPTtFX0Xkd+yRryz6sNYUFEoabRjgRaRZt1yuSubVID1pXV
+        zJxLuSllka0hICDQ==
+Received: from quack2.suse.cz (unknown [10.100.224.230])
+        by relay2.suse.de (Postfix) with ESMTP id AE8D7A3B84;
+        Wed, 20 Oct 2021 14:40:44 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 998151F2C7D; Wed, 20 Oct 2021 16:40:44 +0200 (CEST)
+Date:   Wed, 20 Oct 2021 16:40:44 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] writeback: prefer struct_size over open coded
+ arithmetic
+Message-ID: <20211020144044.GB16460@quack2.suse.cz>
+References: <20210925114308.11455-1-len.baker@gmx.com>
 MIME-Version: 1.0
-References: <1634337180-92127-1-git-send-email-ashimida@linux.alibaba.com> <202110191006.68BB660@keescook>
-In-Reply-To: <202110191006.68BB660@keescook>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 20 Oct 2021 01:14:44 +0200
-Message-ID: <CANiq72k9GMuCtJq0=3Csk1yO8imGkveXJ5io0gjJH3+R73RRdg@mail.gmail.com>
-Subject: Re: [PATCH] [PATCH V5]ARM64: SCS: Add gcc plugin to support Shadow
- Call Stack
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Dan Li <ashimida@linux.alibaba.com>,
-        Qing Zhao <qing.zhao@oracle.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, frederic@kernel.org,
-        Mike Rapoport <rppt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, yifeifz2@illinois.edu,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, andreyknvl@gmail.com,
-        Colin King <colin.king@canonical.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hardening@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-toolchains@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210925114308.11455-1-len.baker@gmx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 19, 2021 at 11:40 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Anyway, this is a long way to say that I don't think I want to add
-> a new gcc-plugin when it is at "State 2" (i.e. Clang has support but
-> GCC doesn't.) There's no need to "prove" that the compiler feature is
-> generally desirable, so it's best to get this into GCC directly.
+On Sat 25-09-21 13:43:08, Len Baker wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> In this case these are not actually dynamic sizes: all the operands
+> involved in the calculation are constant values. However it is better to
+> refactor them anyway, just to keep the open-coded math idiom out of
+> code.
+> 
+> So, use the struct_size() helper to do the arithmetic instead of the
+> argument "size + count * size" in the kzalloc() functions.
+> 
+> This code was detected with the help of Coccinelle and audited and fixed
+> manually.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 
-Sounds reasonable.
+Looks good. Feel free to add:
 
-Cc'ing linux-toolchains, by the way.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Cheers,
-Miguel
+BTW, writeback patches are usually merged by Andrew Morton so probably send
+it to him. Thanks!
+
+								Honza
+
+> ---
+> Changelog v1 -> v2
+> - Rebase against v5.15-rc2
+> - Refactor another instance in the same file (Gustavo A. R. Silva).
+> - Update the commit changelog to inform that this code was detected
+>   using a Coccinelle script (Gustavo A. R. Silva).
+> 
+>  fs/fs-writeback.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> index 81ec192ce067..5eb0ada7468c 100644
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -566,7 +566,7 @@ static void inode_switch_wbs(struct inode *inode, int new_wb_id)
+>  	if (atomic_read(&isw_nr_in_flight) > WB_FRN_MAX_IN_FLIGHT)
+>  		return;
+> 
+> -	isw = kzalloc(sizeof(*isw) + 2 * sizeof(struct inode *), GFP_ATOMIC);
+> +	isw = kzalloc(struct_size(isw, inodes, 2), GFP_ATOMIC);
+>  	if (!isw)
+>  		return;
+> 
+> @@ -624,8 +624,8 @@ bool cleanup_offline_cgwb(struct bdi_writeback *wb)
+>  	int nr;
+>  	bool restart = false;
+> 
+> -	isw = kzalloc(sizeof(*isw) + WB_MAX_INODES_PER_ISW *
+> -		      sizeof(struct inode *), GFP_KERNEL);
+> +	isw = kzalloc(struct_size(isw, inodes, WB_MAX_INODES_PER_ISW),
+> +		      GFP_KERNEL);
+>  	if (!isw)
+>  		return restart;
+> 
+> --
+> 2.25.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
