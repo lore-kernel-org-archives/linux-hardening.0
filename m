@@ -2,67 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C63C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 23:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850B4C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 23:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEEF60EE2
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 23:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D445611C7
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Oct 2021 23:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230515AbhJTX02 (ORCPT
+        id S229998AbhJTXaJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Oct 2021 19:26:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
+        Wed, 20 Oct 2021 19:30:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229998AbhJTX0Z (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Oct 2021 19:26:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3B2CD610A1;
-        Wed, 20 Oct 2021 23:24:09 +0000 (UTC)
+        id S229702AbhJTXaJ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 20 Oct 2021 19:30:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4FBB660F57;
+        Wed, 20 Oct 2021 23:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634772250;
-        bh=GoOxfVhzMaSH83/PPC4fKRkQJxI67w6NPcUG959R24Q=;
+        s=k20201202; t=1634772474;
+        bh=vvRfwlxU8SZoTOlb+tOlX8/u84LD6FdEwl6WBQOZ+Tc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kVF6fvmtL4Mu1Xj7uTGncdFr/ePyJYT/b6WZhUm5wUy+PGfRbO0ToTHqhEsLNpBFy
-         28epgObVph/WB2G922TqXd++kxaJcPC8S9IRZtszlzlmkF4dMVtoDJuPaXz5iY63aL
-         U2gVd6o9o4Cv2I/Z7VDw6KG8VVar5IaETUmz5ELQXbxMvR39grhgyPbWhSCCFtjmdy
-         REOtw6Rwg/pCXc0FWjAb+WZ5Kr3z/dDWCeL5C82MylddzkcsUSrlaQel4o2youov6E
-         55x2lsri162oQGFcL4Fm+WhNt4d86Fq3ihrMe8saqCQtEaE5Url2wNs8sBZtoVeLwv
-         KqrRs9ePNTrPA==
-Date:   Wed, 20 Oct 2021 18:28:49 -0500
+        b=Dxe/2mw2u998213c2OEBsM+rmgFmeySkb1AN7HPknwuv/VV80nKAP2ufhmV6lBq+M
+         3PIQO/YXQrRM45BFEfCKzFpHlYamtnEuKk/kn/4TdrFapzUtiX/XN8Krt+4XQ9aDjf
+         3KxkOC3Q6cIUp3JQdWnZt228t5jHvMto3m3x94gRP8pedSm7l72CVAImRnmPIJ+xCQ
+         uGPbHGZHvDwbp8IOcHhElGCcgAjXayJ80KWLJ/o1tX3gYjT906BiODqr89ZOsKdPSl
+         /o9MLlNfGH0OaORrwMs6/2672EDzHDX+yTZ3Buant1Ts8fdmfJNzEropurEqGx2swU
+         +rkGKPKYTAqzQ==
+Date:   Wed, 20 Oct 2021 18:32:33 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Len Baker <len.baker@gmx.com>, Paul Mackerras <paulus@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Kees Cook <keescook@chromium.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: PPC: Replace zero-length array with flexible array
- member
-Message-ID: <20211020232849.GA1315641@embeddedor>
-References: <20210918142138.17709-1-len.baker@gmx.com>
- <bb4faf3a-9fe9-280b-cb4c-e4904b0b2a8f@embeddedor.com>
+Cc:     Len Baker <len.baker@gmx.com>, Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: pxa_dma: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <20211020233233.GA1320242@embeddedor>
+References: <20210918104055.8444-1-len.baker@gmx.com>
+ <e7e103f3-74eb-9cf4-a150-e2333d4f2ace@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bb4faf3a-9fe9-280b-cb4c-e4904b0b2a8f@embeddedor.com>
+In-Reply-To: <e7e103f3-74eb-9cf4-a150-e2333d4f2ace@embeddedor.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 07:05:07PM -0500, Gustavo A. R. Silva wrote:
+On Mon, Sep 20, 2021 at 07:00:58PM -0500, Gustavo A. R. Silva wrote:
 > 
 > 
-> On 9/18/21 09:21, Len Baker wrote:
-> > There is a regular need in the kernel to provide a way to declare having
-> > a dynamically sized set of trailing elements in a structure. Kernel code
-> > should always use "flexible array members" [1] for these cases. The
-> > older style of one-element or zero-length arrays should no longer be
-> > used[2].
+> On 9/18/21 05:40, Len Baker wrote:
+> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> > and Conventions" documentation [1], size calculations (especially
+> > multiplication) should not be performed in memory allocator (or similar)
+> > function arguments due to the risk of them overflowing. This could lead
+> > to values wrapping around and a smaller allocation being made than the
+> > caller was expecting. Using those allocations could lead to linear
+> > overflows of heap memory and other misbehaviors.
 > > 
-> > Also, make use of the struct_size() helper in kzalloc().
+> > So, use the struct_size() helper to do the arithmetic instead of the
+> > argument "size + count * size" in the kzalloc() function.
 > > 
-> > [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> > [2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 > > 
 > > Signed-off-by: Len Baker <len.baker@gmx.com>
 > 
