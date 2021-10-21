@@ -2,190 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BBFC43217
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 14:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4D3C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 15:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09EB1611CE
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 14:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD7861052
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 15:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231626AbhJUOvr (ORCPT
+        id S231641AbhJUPQ1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Oct 2021 10:51:47 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:48616 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231522AbhJUOvq (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Oct 2021 10:51:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=29;SR=0;TI=SMTPD_---0UtAB4.e_1634827764;
-Received: from ashimida.local(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0UtAB4.e_1634827764)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 21 Oct 2021 22:49:25 +0800
-Subject: Re: [PATCH] [PATCH V5]ARM64: SCS: Add gcc plugin to support Shadow
- Call Stack
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Qing Zhao <qing.zhao@oracle.com>,
+        Thu, 21 Oct 2021 11:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232068AbhJUPQI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 21 Oct 2021 11:16:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B162C60F46;
+        Thu, 21 Oct 2021 15:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634829232;
+        bh=ruagNsEyw3JIWO97eB7HyyER6TijqqZmxwT762qH5yw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KzlxnxPjYfw7b7HUIL2fVpwTigQ556Uhy4x3O5vKe3EN+oWMlCI6pPX13bbS22shB
+         u5+vZUlcMn6WpwESYxBRhfd6OhdovCJBPf9LngAQIKfeodhwnrz5DibVJEp9r1ADrT
+         8YKBVKQK51IAlLrxZu6/2v+3IMUaLaneGC3+PYqU5NDIj6AAr9qL8/fPZLGdSxVj+L
+         z+2c9P8AFdvLbgqC6X8qH5ojpuuUWAQqk7mtaGAP64FMZwg2X91TaK36UVZvH4ixQc
+         u92bZnx0G8tO+b46atopV3RYMPghlZcacRbY+1eW1mE1pxsTiguTdrkpG4920GVii+
+         DwGK/Rx/qMjSw==
+Date:   Fri, 22 Oct 2021 00:13:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Alexander Lobakin <alexandr.lobakin@intel.com>,
+        Kristen C Accardi <kristen.c.accardi@intel.com>,
         Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>, masahiroy@kernel.org,
-        michal.lkml@markovi.net, catalin.marinas@arm.com, will@kernel.org,
-        nathan@kernel.org, ndesaulniers@google.com, tglx@linutronix.de,
-        akpm@linux-foundation.org, frederic@kernel.org, rppt@kernel.org,
-        mark.rutland@arm.com, yifeifz2@illinois.edu, rostedt@goodmis.org,
-        viresh.kumar@linaro.org, andreyknvl@gmail.com,
-        colin.king@canonical.com, ojeda@kernel.org,
-        luc.vanoostenryck@gmail.com, elver@google.com,
-        nivedita@alum.mit.edu, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <1634337180-92127-1-git-send-email-ashimida@linux.alibaba.com>
- <202110191006.68BB660@keescook>
-From:   Dan Li <ashimida@linux.alibaba.com>
-Message-ID: <a8d3fbb8-916a-13db-fc60-4ed7881d2bdb@linux.alibaba.com>
-Date:   Thu, 21 Oct 2021 22:49:23 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.1
-MIME-Version: 1.0
-In-Reply-To: <202110191006.68BB660@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-hardening@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] x86/unwind/orc: Handle kretprobes_trampoline
+Message-Id: <20211022001347.6da975173bc8c797595630e6@kernel.org>
+In-Reply-To: <20211014191643.6c7ca819a732dd6479329a6b@kernel.org>
+References: <20210903021326.206548-1-keescook@chromium.org>
+        <202110111403.3C59BF77@keescook>
+        <20211014014101.6du6jj2o7g4ficu5@treble>
+        <202110132151.F78F49AD8@keescook>
+        <20211014191643.6c7ca819a732dd6479329a6b@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Thu, 14 Oct 2021 19:16:43 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
+> On Wed, 13 Oct 2021 21:52:36 -0700
+> Kees Cook <keescook@chromium.org> wrote:
+> 
+> > On Wed, Oct 13, 2021 at 06:41:01PM -0700, Josh Poimboeuf wrote:
+> > > On Mon, Oct 11, 2021 at 02:03:26PM -0700, Kees Cook wrote:
+> > > > On Thu, Sep 02, 2021 at 07:13:26PM -0700, Kees Cook wrote:
+> > > > > From: Marios Pomonis <pomonis@google.com>
+> > > > > 
+> > > > > Fix a bug in the ORC unwinder when kretprobes has replaced a return
+> > > > > address with the address of `kretprobes_trampoline'. ORC mistakenly
+> > > > > assumes that the address in the stack is a return address and decrements
+> > > > > it by 1 in order to find the proper depth of the next frame.
+> 
+> Hmm, with my fixes[1], the kretprobe_trampoline address in the stack will be
+> replaced with the correct return address. In that case, that behavior
+> sounds correct.
+> 
+> [1] https://lore.kernel.org/all/163163030719.489837.2236069935502195491.stgit@devnote2/
 
-On 10/20/21 5:40 AM, Kees Cook wrote:
-> On Sat, Oct 16, 2021 at 06:33:00AM +0800, Dan Li wrote:
->> This patch supports gcc-based SCS protection on ARM64 by adding a plugin.
->>
->> For each function that x30 will be pushed onto the stack during execution,
->> this plugin, similar to gcc's pac implementation, will normally:
->> 1) insert "str x30, [x18], #8" at the beginning of function's prologue
->> 2) insert "ldr x30, [x18, #-8]!" immediately before function's
->> epilogue return/sibling calls
->>
->> If pac is enabled, scs push/pop will be inserted between paciasp/autiasp.
->>
->> At present, this patch has been successfully compiled in the following
->> gcc versions based on defconfig with kernel 5.14 and startup normally
->> with commands:
->>
->> make ARCH=arm64 defconfig
->> ./scripts/config -e CONFIG_GCC_PLUGINS -e CONFIG_SHADOW_CALL_STACK \
->> -e CONFIG_GCC_PLUGIN_SHADOW_CALL_STACK
->> make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
->>
->> Tested gcc version:
->> * 6.3.1
->> * 7.3.1
->> * 7.5.0
->> * 8.2.1
->> * 9.2.0
->> * 10.3.1
->>
->> A similar feature request has also been sent to gcc.
->> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102768
->>
->> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
->> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> 
-> This is very cool; thanks for working on this! I am, however, struggling
-> with a few overlapping issues that touch this area of functionality.
-> I'll try to give you some background on my thoughts here...
-> 
-> For a while now, it's been made clear that Linus isn't a fan[1] of the
-> gcc-plugins (and Masahiro hasn't been too happy either, as the plugins
-> complicate[2] things for the build infrastructure). However, it's been
-> pretty important for proving out various compiler-provided security
-> defenses. I view them as being in one of three states:
-> 
-> 1) stuff that isn't available in either compiler
-> 	- e.g. structure randomization
-> 	- e.g. per-task canaries on arm32
-> 2) stuff that is in Clang but stalled/unlikely in GCC
-> 	- e.g. stack initialization
-> 3) deprecated
-> 
-> State 1 hasn't changed much really, and serves as a good "try out this
-> idea and see if people want it", as a jumping-off point for actually
-> getting the feature into GCC and Clang proper.
-> 
-> State 2 is what happens with something from State 1 gets implemented in
-> Clang but not GCC. (i.e. Clang upstream has been convinced of the
-> utility of a given feature, which should help with upstreaming it to
-> GCC.)
-> 
-> State 3 is what happens when the feature exists in GCC, but not in all GCC
-> versions supported by the kernel. It makes a plugin follow the kernel's
-> GCC deprecation schedule.
-> 
-> Notably, since we don't have Clang plugins, there's no corresponding
-> "State 2" for where something is in GCC but not Clang, but we can still
-> enable it under Clang builds.
-> 
-> Anyway, this is a long way to say that I don't think I want to add
-> a new gcc-plugin when it is at "State 2" (i.e. Clang has support but
-> GCC doesn't.) There's no need to "prove" that the compiler feature is
-> generally desirable, so it's best to get this into GCC directly.
-> 
-Thank for your sharing kees,
+Here is the code which I applied this on my series.
 
-I learned the history of discussions about plugins, and also just saw
-your latest patch[1].
+        /* Find IP, SP and possibly regs: */
+        switch (orc->type) {
+        case UNWIND_HINT_TYPE_CALL:
+                ip_p = sp - sizeof(long);
 
-It sounds reasonable that the kernel should not rely on GCC plugins as
-much as possible, and it's better to submit such features to GCC first.
+                if (!deref_stack_reg(state, ip_p, &state->ip))
+                        goto err;
 
-But we often face the problem of low compiler version in practice. Those
-who really care about security should choose to switch to the appropriate
-version, but it may not always be easy for security guys to push compiler
-guys or customers to make changes. It's even more annoying when this
-happens frequently. Providing plugins for lower versions of GCC will make
-such things easier.
+                state->ip = unwind_recover_ret_addr(state, state->ip,
+                                                    (unsigned long *)ip_p);
+                state->sp = sp;
+                state->regs = NULL;
+                state->prev_regs = NULL;
+                state->signal = is_kretprobe_trampoline(state->ip);
+                break;
 
-At the same time, it sounds more reasonable to dynamically select pac/scs
-for SCS, but there are also gcc <7 versions that may need to be supported.
-Another case is forward edge KCFI, I'm not sure if there are other ways to
-support low version gcc besides plugins (please let me know if so)
+Actually, this cause a build issue because I introduced more generic is_kretprobe_trampoline().
+Anyway, after calling unwind_recover_ret_addr(), the state->ip should be fixed.
+This means that the is_kretprobe_trampoline(state->ip) always be false, and
+that is correct because state->ip is recovered with the correct return address
+which is call instruction + 5.
 
-So what I want to say is, after both GCC and CLANG support a feature
-(in "State 3"), could it be allowed to support for this feature
-in lower versions of gcc through a plugin?
+So this patch seems not needed, hmm...
 
-[1]https://lore.kernel.org/all/20211020173554.38122-1-keescook@chromium.org/
+Thank you,
 
-> On top of this, there is the interaction between SCS and PAC, in the
-> sense that the kernel will need to be able to dynamically select between
-> SCS and PAC (likely via the "alternatives" infrastructure), and that
-> needs work for Clang too, so it'd be a good time to coordinate this with
-> GCC. (Sami and Ard have been working[3] on this, though I realize I don't
-> think there was a specific bug for it, so I've opened one now[4]).
->
-I'm not sure, maybe it's a stupid question ...
-
-Do SCS and PAC have to choose one or the other? Although the two are
-similar in theory, they can be implemented without conflict. If they are
-turned on at the same time, it may usually makes the attacker think about
-one more step.
-
-In the case that both can be supported at the same time, is it better to
-let the user decide whether to open at the same time?
-
-> So, I think the best way forward with this would be to implement this as
-> a feature in GCC directly, and to see if there's some way to coordinate
-> work with Sami, Ard, Qing, and other folks who look into this.
-> 
-> -Kees
-> 
-> [1] https://lore.kernel.org/lkml/202103031334.8D898CA@keescook/
-> [2] https://lore.kernel.org/lkml/20200729031537.37926-1-masahiroy@kernel.org/
-> [3] https://lore.kernel.org/all/20211013152243.2216899-1-ardb@kernel.org/
-> [4] https://github.com/KSPP/linux/issues/168
-> 
->> 2.7.4
->>
->> -- 
->> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
->> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
->> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/1634337180-92127-1-git-send-email-ashimida%40linux.alibaba.com.
-> 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
