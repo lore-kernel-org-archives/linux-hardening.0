@@ -2,84 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772A5C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 10:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9865DC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 10:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0C060EBB
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 10:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F2B60EBB
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 10:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbhJUK3h (ORCPT
+        id S230334AbhJUKaq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Oct 2021 06:29:37 -0400
-Received: from mail-40134.protonmail.ch ([185.70.40.134]:15326 "EHLO
-        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230117AbhJUK3g (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Oct 2021 06:29:36 -0400
-Date:   Thu, 21 Oct 2021 10:27:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1634812035; bh=u9dXeRHmyJjJ/lRfD7FnZKxrYeIO9pbRnhaEFiIApHA=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=gF/MS+RdqblRdgH+fw/8LduG7fvCXAKuqA0bgpPF+hbc0/+Kw69rDI1cuvnLasAuU
-         9+S6pR3opgbGDcWGcqQeLFFkrkDoQMYg45kX+cyZ8FYKTtRgNAsFbWTLmTa4rRK/4P
-         5lw7SdMy256qFG54vaXLhgzJqMqR4Bnu1aM2J4OUMZbdFqa9rg7VgoYWGX6wK4UYCA
-         tlCabXp35jPeuuDvo29ZNMTmMKKvfxtZMS66Hg1jRt/rGMnIApHYp5rdQP3OwY65CO
-         eiyFjjGgaFZOeS042BBFKN6waG6Ymg0aqB5+FZD8DwaMhAtIRtDRTYPhLcPiHrU4Jq
-         zR+bwdYwEAUdg==
-To:     Sami Tolvanen <samitolvanen@google.com>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, x86@kernel.org
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: Re: [PATCH v5 00/15] x86: Add support for Clang CFI
-Message-ID: <20211021102033.113197-1-alobakin@pm.me>
-In-Reply-To: <20211013181658.1020262-1-samitolvanen@google.com>
-References: <20211013181658.1020262-1-samitolvanen@google.com>
+        Thu, 21 Oct 2021 06:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230077AbhJUKah (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 21 Oct 2021 06:30:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 874596120C;
+        Thu, 21 Oct 2021 10:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634812101;
+        bh=XZqwcRi8eGbcHfTa8FsBo0CyV+VMmanZEXSL34v2xNA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LSIZboXeBiM2XeY8Wt+EdS5vzOT0y1ZBbT9bRqQsj3JP7BP/yWGDJFdQJDSckB09B
+         7uqGgy/9ZJHs5HkWP1mzK+b4YDPzJqFGxOwtsNXcSuJd++RJzuPnbSBghUV5uvPrQr
+         48FXQ0hb3XPEUFdAkHZ8go/OfpfNzL7Oi+qwtMWOwsIoe54SPCBCf3WNrap+GInr0V
+         yGABj0eWy+Oy4uHPhX+84IqzwjRnnFriSooLwDn9DdP3ldmXSfRxTG8Sqpob+snAai
+         xloBuBSX8vt6kna/4iXumpsepFj39VfqjUz5ICYwwc7ll2r4XouRi6EbQQOqDpLgmh
+         FssfdAsIY4+8g==
+Received: by mail-oi1-f170.google.com with SMTP id o83so295125oif.4;
+        Thu, 21 Oct 2021 03:28:21 -0700 (PDT)
+X-Gm-Message-State: AOAM532DDyVNWD56Lze+VMe2j0wrKXyHFoz1vzJF7HGTawJ3pxUd+IoB
+        fsnsREcnrxDYexSext4MlwHcM8cep6MuXn6B43k=
+X-Google-Smtp-Source: ABdhPJwJS57ISbZcVKqBAD81WN0NdiqSiFCaDg4V8so9PFGuh1YHfNT+etwlr7CUC37Bkxt5mEwG0tXwsqwrLAT+eTk=
+X-Received: by 2002:aca:4bc4:: with SMTP id y187mr3602617oia.174.1634812100804;
+ Thu, 21 Oct 2021 03:28:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20211020173554.38122-1-keescook@chromium.org>
+In-Reply-To: <20211020173554.38122-1-keescook@chromium.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 21 Oct 2021 12:28:09 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEw2P+Q2Nd-+vf6U5apx+v5Q4TTW6y0m-MFaB1O2OAehQ@mail.gmail.com>
+Message-ID: <CAMj1kXEw2P+Q2Nd-+vf6U5apx+v5Q4TTW6y0m-MFaB1O2OAehQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gcc-plugins: Explicitly document purpose and
+ deprecation schedule
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Dan Li <ashimida@linux.alibaba.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Wed, 13 Oct 2021 11:16:43 -0700
-
-> This series adds support for Clang's Control-Flow Integrity (CFI)
-> checking to x86_64. With CFI, the compiler injects a runtime
-> check before each indirect function call to ensure the target is
-> a valid function with the correct static type. This restricts
-> possible call targets and makes it more difficult for an attacker
-> to exploit bugs that allow the modification of stored function
-> pointers. For more details, see:
+On Wed, 20 Oct 2021 at 19:35, Kees Cook <keescook@chromium.org> wrote:
 >
->   https://clang.llvm.org/docs/ControlFlowIntegrity.html
+> Hi,
 >
-> Note that v5 is based on tip/master. The first two patches contain
-> objtool support for CFI, the remaining patches change function
-> declarations to use opaque types, fix type mismatch issues that
-> confuse the compiler, and disable CFI where it can't be used.
+> GCC plugins should only exist when some compiler feature needs to be
+> proven but does not exist in either GCC nor Clang. For example, if a
+> desired feature is already in Clang, it should be added to GCC upstream.
+> Document this explicitly.
 >
-> You can also pull this series from
+> I'll put this in -next unless there are objections. :)
 >
->   https://github.com/samitolvanen/linux.git x86-cfi-v5
+> Thanks!
+>
+> -Kees
+>
+>
+> Kees Cook (2):
+>   gcc-plugins: Explicitly document purpose and deprecation schedule
+>   gcc-plugins: Remove cyc_complexity
+>
 
-[ snip ]
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-I've been using it since the end of May on my x86_64, so for v5
-(with changing retpoline thunks prototypes to opaque):
-
-Reviwed-by: Alexander Lobakin <alobakin@pm.me>
-Tested-by: Alexander Lobakin <alobakin@pm.me>
-
-Thanks!
-Al
-
+>  Documentation/kbuild/gcc-plugins.rst        | 28 ++++++++-
+>  scripts/Makefile.gcc-plugins                |  2 -
+>  scripts/gcc-plugins/Kconfig                 | 20 +-----
+>  scripts/gcc-plugins/cyc_complexity_plugin.c | 69 ---------------------
+>  security/Kconfig.hardening                  |  9 ++-
+>  5 files changed, 34 insertions(+), 94 deletions(-)
+>  delete mode 100644 scripts/gcc-plugins/cyc_complexity_plugin.c
+>
+> --
+> 2.30.2
+>
