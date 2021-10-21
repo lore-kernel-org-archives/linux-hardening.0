@@ -2,90 +2,152 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEDBC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 08:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF53C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 10:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49BE3610C8
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 08:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAED610D0
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 10:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231439AbhJUItI (ORCPT
+        id S229914AbhJUK0F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Oct 2021 04:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231391AbhJUItH (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Oct 2021 04:49:07 -0400
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3AB7C061749
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 01:46:51 -0700 (PDT)
-Received: by mail-oi1-x234.google.com with SMTP id o83so25504oif.4
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 01:46:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LdXFjy61Qy/rnsWDdjxcnajZ2gMgamPPbsD5FZNqukA=;
-        b=cnx7RWXe9MTa2MyYSEhY11osG+93I8MxzJ7YGe9R3MBcBh818wFg8gXiNrmQwSWnFC
-         wxl5gQXgq/UOg0CLpgJRaKhnKaqeanItrEtiC7ACXxPgc5bNcNYWGveXIPp93STtRcrb
-         iKSV5e6zUvcLsUOUr7Nujd6G18wCd0vo0Yxzky7sVWYchvWu/YLPdhjD/j9YEjumxpEl
-         BpdWvCqtNM51PmjdT3Bydf1MpOZy/5f/d1fslw7UB0axfJQeX48O3z6Soo5jT8VjEwcM
-         QQ1z+lMKRWwIfOZrtihBi3sstqQr8k5baiYdYgG/xflNTXMcCAm9NodyKw/Bn77cYza2
-         v9rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LdXFjy61Qy/rnsWDdjxcnajZ2gMgamPPbsD5FZNqukA=;
-        b=NJKTI22SYm+wfSc5EJBFgYnFbouvTSuOD6LJPZX5+91TjFpARJtLRHJi0UzlMdCQux
-         9RdifpZemHnGpUud1pcbbjCIcmAfjRPa5i75Hb/2tj/iZ5nYUefMBYR2A8NGTr1tvwt6
-         AnsJ7aYHWDFl3SKJeqTQ2wnUp3CmwUxt2MPyF5jXXPHA+wxUWtgFsScZfL5yM+o9eXCz
-         IQa1XLvC3DrTm81gDQLYLEtfVo1JmtaiFfk4OQTO5HCCzn4tpx8Grf3k5LVzq01REBwp
-         fq/qO6pRHgOB7uRdaQ0ldjrQDZlCpwcGYpGaBfnQCvyBwmpfoXO33AF5H+y7gYqjpL5k
-         mFkQ==
-X-Gm-Message-State: AOAM531J654f251FiNJWIvoo25CEtEbbxWIo/541bwzaTr8dFembGNT2
-        tSyBhHs2rDhdWiGSE+1ya88lB9o0POIQBxWLz0I2UA==
-X-Google-Smtp-Source: ABdhPJzVvuyF5GdGpswaNFJXcJVKW/wyXlllnzMgF8chWYnVNr+F18Z+ShLA/2gjBOhpxLhqslZEhvZw3tToO3Mvy5c=
-X-Received: by 2002:a05:6808:6ce:: with SMTP id m14mr398982oih.134.1634806011175;
- Thu, 21 Oct 2021 01:46:51 -0700 (PDT)
+        Thu, 21 Oct 2021 06:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229567AbhJUK0F (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 21 Oct 2021 06:26:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C9AFF60F6E;
+        Thu, 21 Oct 2021 10:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634811829;
+        bh=M7N8j7t/rl4OcxrrYoAxv54oEt27kUUqEQNdlz2ubHc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RJVvzAUYnTlxxgNm4VLHPB8h9ySepfDxwexDi5KA/bx/t/9oK9TlIveVZ8ofc3FbM
+         49XtIsiX8wwC+i4SrculaxBNX6HCHaOCTsIZpu/ynTdUlgIYgvokQTgwNtmvZem5Oz
+         qE1d1THUFvBDUWHgr4ZA45UWZ0391shAsm6m7gduyrRpI94vAHmZfOR4i3tFiJxs9D
+         bebO+ScyDX3GckTOjTmkpbDykCtBywwDRyhjH4XLqAvN0NUQEnYSUl5xyPoptVSgHI
+         HI+nKWVkGqvqpof/bXESWrjRBGIaMoWU0EtNpRxudZqJvTaTtJTEvhoY2VbkybVAbL
+         0b/iIbkUtyhLw==
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     keescook@chromium.org, Ard Biesheuvel <ardb@kernel.org>,
+        thomas.preudhomme@celest.fr, adhemerval.zanella@linaro.org,
+        Qing Zhao <qing.zhao@oracle.com>,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        gcc-patches@gcc.gnu.org
+Subject: [RFC PATCH 0/1] implement TLS register based stack canary for ARM
+Date:   Thu, 21 Oct 2021 12:23:26 +0200
+Message-Id: <20211021102327.1415789-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20211020200039.170424-1-keescook@chromium.org>
- <CANpmjNMPaLpw_FoMzmShLSEBNq_Cn6t86tO_FiYLR2eD001=4Q@mail.gmail.com> <202110210141.18C98C4@keescook>
-In-Reply-To: <202110210141.18C98C4@keescook>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 21 Oct 2021 10:46:39 +0200
-Message-ID: <CANpmjNNwEXH2=mp4RS6UUU7U9az7_zgVM223w-NJgqw1Zp-4xQ@mail.gmail.com>
-Subject: Re: [PATCH] compiler-gcc.h: Define __SANITIZE_ADDRESS__ under
- hwaddress sanitizer
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>, llvm@lists.linux.dev,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 21 Oct 2021 at 10:43, Kees Cook <keescook@chromium.org> wrote:
+Bugzilla: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102352
 
-> > Other than that,
-> >
-> >   Reviewed-by: Marco Elver <elver@google.com>
->
-> Thanks! (Oh, BTW, it seems "b4" won't include your Reviewed-by: tag if
-> it is indented like this.)
+In the Linux kernel, user processes calling into the kernel are
+essentially threads running in the same address space, of a program that
+never terminates. This means that using a global variable for the stack
+protector canary value is problematic on SMP systems, as we can never
+change it unless we reboot the system. (Processes that sleep for any
+reason will do so on a call into the kernel, which means that there will
+always be live kernel stack frames carrying copies of the canary taken
+when the function was entered)
 
-Ah, I'll stop doing that then -- or can we make b4 play along?
+AArch64 implements -mstack-protector-guard=sysreg for this purpose, as
+this permits the kernel to use different memory addresses for the stack
+canary for each CPU, and context switch the chosen system register with
+the rest of the process, allowing each process to use its own unique
+value for the stack canary.
 
-Thanks,
--- Marco
+This patch implements something similar, but for the 32-bit ARM kernel,
+which will start using the user space TLS register TPIDRURO to index
+per-process metadata while running in the kernel. This means we can just
+add an offset to TPIDRURO to obtain the address from which to load the
+canary value.
+
+The patch is a bit rough around the edges, but produces the correct
+results as far as I can tell. However, I couldn't quite figure out how
+to modify the patterns so that the offset will be moved into the
+immediate offset field of the LDR instructions, so currently, the ADD of
+the offset is always a distinct instruction.
+
+As for the spilling issues that have been fixed in this code in the
+past: I suppose a register carrying the TLS register value will never
+get spilled to begin with? How about a register that carries TLS+<n>?
+
+Comments/suggestions welcome.
+
+Cc: thomas.preudhomme@celest.fr
+Cc: adhemerval.zanella@linaro.org
+Cc: Qing Zhao <qing.zhao@oracle.com>
+Cc: Richard Sandiford <richard.sandiford@arm.com>
+Cc: gcc-patches@gcc.gnu.org
+
+Ard Biesheuvel (1):
+  [ARM] Add support for TLS register based stack protector canary access
+
+ gcc/config/arm/arm-opts.h |  6 +++
+ gcc/config/arm/arm.c      | 39 +++++++++++++++++
+ gcc/config/arm/arm.md     | 44 ++++++++++++++++++--
+ gcc/config/arm/arm.opt    | 22 ++++++++++
+ gcc/doc/invoke.texi       |  9 ++++
+ 5 files changed, 116 insertions(+), 4 deletions(-)
+
+-- 
+2.30.2
+
+$ cat |arm-linux-gnueabihf-gcc -march=armv7-a -mstack-protector-guard=tls -mstack-protector-guard-offset=10 -mtp=cp15 -S -o - -xc - -fstack-protector-all -O3
+int foo(void *);
+int bar(void)
+{
+
+	return foo(__builtin_thread_pointer()) + 1;
+}
+	.arch armv7-a
+	.fpu softvfp
+	.eabi_attribute 20, 1
+	.eabi_attribute 21, 1
+	.eabi_attribute 23, 3
+	.eabi_attribute 24, 1
+	.eabi_attribute 25, 1
+	.eabi_attribute 26, 2
+	.eabi_attribute 30, 2
+	.eabi_attribute 34, 1
+	.eabi_attribute 18, 4
+	.file	"<stdin>"
+	.text
+	.align	2
+	.global	bar
+	.syntax unified
+	.arm
+	.type	bar, %function
+bar:
+	@ args = 0, pretend = 0, frame = 8
+	@ frame_needed = 0, uses_anonymous_args = 0
+	push	{r4, lr}
+	mrc	p15, 0, r4, c13, c0, 3	@ load_tp_hard
+	add	r3, r4, #10
+	sub	sp, sp, #8
+	mov	r0, r4
+	add	r4, r4, #10
+	ldr	r3, [r3]
+	str	r3, [sp, #4]
+	mov	r3, #0
+	bl	foo
+	ldr	r3, [r4]
+	ldr	r4, [sp, #4]
+	eors	r3, r4, r3
+	mov	r4, #0
+	bne	.L5
+	add	r0, r0, #1
+	add	sp, sp, #8
+	@ sp needed
+	pop	{r4, pc}
+.L5:
+	bl	__stack_chk_fail
+	.size	bar, .-bar
+	.ident	"GCC: (GNU) 12.0.0 20211019 (experimental)"
+	.section	.note.GNU-stack,"",%progbits
+
