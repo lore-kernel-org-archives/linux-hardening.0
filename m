@@ -2,98 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9865DC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 10:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9AFC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 13:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F2B60EBB
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 10:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6B46112D
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 13:51:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbhJUKaq (ORCPT
+        id S231293AbhJUNxP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Oct 2021 06:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230077AbhJUKah (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Oct 2021 06:30:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 874596120C;
-        Thu, 21 Oct 2021 10:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634812101;
-        bh=XZqwcRi8eGbcHfTa8FsBo0CyV+VMmanZEXSL34v2xNA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LSIZboXeBiM2XeY8Wt+EdS5vzOT0y1ZBbT9bRqQsj3JP7BP/yWGDJFdQJDSckB09B
-         7uqGgy/9ZJHs5HkWP1mzK+b4YDPzJqFGxOwtsNXcSuJd++RJzuPnbSBghUV5uvPrQr
-         48FXQ0hb3XPEUFdAkHZ8go/OfpfNzL7Oi+qwtMWOwsIoe54SPCBCf3WNrap+GInr0V
-         yGABj0eWy+Oy4uHPhX+84IqzwjRnnFriSooLwDn9DdP3ldmXSfRxTG8Sqpob+snAai
-         xloBuBSX8vt6kna/4iXumpsepFj39VfqjUz5ICYwwc7ll2r4XouRi6EbQQOqDpLgmh
-         FssfdAsIY4+8g==
-Received: by mail-oi1-f170.google.com with SMTP id o83so295125oif.4;
-        Thu, 21 Oct 2021 03:28:21 -0700 (PDT)
-X-Gm-Message-State: AOAM532DDyVNWD56Lze+VMe2j0wrKXyHFoz1vzJF7HGTawJ3pxUd+IoB
-        fsnsREcnrxDYexSext4MlwHcM8cep6MuXn6B43k=
-X-Google-Smtp-Source: ABdhPJwJS57ISbZcVKqBAD81WN0NdiqSiFCaDg4V8so9PFGuh1YHfNT+etwlr7CUC37Bkxt5mEwG0tXwsqwrLAT+eTk=
-X-Received: by 2002:aca:4bc4:: with SMTP id y187mr3602617oia.174.1634812100804;
- Thu, 21 Oct 2021 03:28:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211020173554.38122-1-keescook@chromium.org>
-In-Reply-To: <20211020173554.38122-1-keescook@chromium.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 21 Oct 2021 12:28:09 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEw2P+Q2Nd-+vf6U5apx+v5Q4TTW6y0m-MFaB1O2OAehQ@mail.gmail.com>
-Message-ID: <CAMj1kXEw2P+Q2Nd-+vf6U5apx+v5Q4TTW6y0m-MFaB1O2OAehQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] gcc-plugins: Explicitly document purpose and
- deprecation schedule
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Dan Li <ashimida@linux.alibaba.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
+        Thu, 21 Oct 2021 09:53:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231331AbhJUNxJ (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 21 Oct 2021 09:53:09 -0400
+Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8575AC061224
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 06:50:53 -0700 (PDT)
+Received: by mail-qk1-x736.google.com with SMTP id bl14so1542211qkb.4
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 06:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=X627hdV4ApujpQUUoEd4GytdquRpFSDxi4GbRHWgN6w=;
+        b=Z+oMjis/ZipjIr5vTe+hVa0eMETxOPNSk9m/G9sJp1pi52o1QPJGeWvVm+MTdxMJBn
+         GKFaN0OU+7E5H4WbFyjLmmJp+luref7Tsa0bGnUHytQUNMIb78o8CJnie3BgXbz0/fMb
+         99kNq2E54BieCWqFnlQtRzm/MGigLNX0bX/qg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=X627hdV4ApujpQUUoEd4GytdquRpFSDxi4GbRHWgN6w=;
+        b=dHgK7wrk6nM2yJaDvCqa7AqJlv8sWaDX4bhEJHL8HRTeb9pTWRliEwrZRVfh+1sNCB
+         BRX4F2cp0bvPVqfFWfK++w7RYokb5BDY7TmMUCTlcA7Do0rT759OABJOybkh/UkG+FI8
+         FBlH+1omrkUi8TFhLS1Y7j2QJ18V+iov5Sqe9TVV6nsH8zm90ij0UXxBkQXoGQG0lAhb
+         YMtorzP5jb3Kur0F7jPQRig1NiPJvfTBOtHKGRCH8Vmaam99o0CFsDy/tMLwuaxGXdzf
+         VHVMz6pVvFXlwQTKrUN4qCUFDAzns/0dac4IJxeBcygOa+vzw+z124WWpDTauhl61pXQ
+         2lww==
+X-Gm-Message-State: AOAM532Zb1W+4iYxtvDNnxu+tUVChPbEk7VToQ6dHooNo50iOK0tfUi6
+        xAwCxz+QoavIZocZ4a148FM5eA==
+X-Google-Smtp-Source: ABdhPJwqW44ZpMxik6TDzwJfex2I8L3bKqq5BfFwqJLkmT76/W23bk6UkpQChFWN95mIjNDXH8TynA==
+X-Received: by 2002:a05:620a:1a28:: with SMTP id bk40mr4577765qkb.224.1634824252613;
+        Thu, 21 Oct 2021 06:50:52 -0700 (PDT)
+Received: from meerkat.local (bras-base-mtrlpq5031w-grc-32-216-209-220-181.dsl.bell.ca. [216.209.220.181])
+        by smtp.gmail.com with ESMTPSA id 12sm2656131qty.9.2021.10.21.06.50.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Oct 2021 06:50:52 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 09:50:50 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, Miguel Ojeda <ojeda@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Nathan Chancellor <nathan@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Masahiro Yamada <masahiroy@kernel.org>, llvm@lists.linux.dev,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH] compiler-gcc.h: Define __SANITIZE_ADDRESS__ under
+ hwaddress sanitizer
+Message-ID: <20211021135050.vmangeqpl7ahidus@meerkat.local>
+References: <20211020200039.170424-1-keescook@chromium.org>
+ <CANpmjNMPaLpw_FoMzmShLSEBNq_Cn6t86tO_FiYLR2eD001=4Q@mail.gmail.com>
+ <202110210141.18C98C4@keescook>
+ <CANpmjNNwEXH2=mp4RS6UUU7U9az7_zgVM223w-NJgqw1Zp-4xQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANpmjNNwEXH2=mp4RS6UUU7U9az7_zgVM223w-NJgqw1Zp-4xQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 20 Oct 2021 at 19:35, Kees Cook <keescook@chromium.org> wrote:
->
-> Hi,
->
-> GCC plugins should only exist when some compiler feature needs to be
-> proven but does not exist in either GCC nor Clang. For example, if a
-> desired feature is already in Clang, it should be added to GCC upstream.
-> Document this explicitly.
->
-> I'll put this in -next unless there are objections. :)
->
-> Thanks!
->
-> -Kees
->
->
-> Kees Cook (2):
->   gcc-plugins: Explicitly document purpose and deprecation schedule
->   gcc-plugins: Remove cyc_complexity
->
+On Thu, Oct 21, 2021 at 10:46:39AM +0200, Marco Elver wrote:
+> > >   Reviewed-by: Marco Elver <elver@google.com>
+> >
+> > Thanks! (Oh, BTW, it seems "b4" won't include your Reviewed-by: tag if
+> > it is indented like this.)
+> 
+> Ah, I'll stop doing that then -- or can we make b4 play along?
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+I'd rather not allow for that, as this can lead to increased false-positive
+rates. It's already a bit too much of a cross-your-fingers kind of thing.
 
->  Documentation/kbuild/gcc-plugins.rst        | 28 ++++++++-
->  scripts/Makefile.gcc-plugins                |  2 -
->  scripts/gcc-plugins/Kconfig                 | 20 +-----
->  scripts/gcc-plugins/cyc_complexity_plugin.c | 69 ---------------------
->  security/Kconfig.hardening                  |  9 ++-
->  5 files changed, 34 insertions(+), 94 deletions(-)
->  delete mode 100644 scripts/gcc-plugins/cyc_complexity_plugin.c
->
-> --
-> 2.30.2
->
+-K
