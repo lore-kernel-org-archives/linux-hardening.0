@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7560C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 00:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCE9C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 00:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E7160FDA
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 00:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93BA613A0
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 00:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232013AbhJUAZj (ORCPT
+        id S232543AbhJUA0W (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Oct 2021 20:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44056 "EHLO mail.kernel.org"
+        Wed, 20 Oct 2021 20:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231863AbhJUAYz (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Oct 2021 20:24:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9EF3C60FDA;
-        Thu, 21 Oct 2021 00:22:39 +0000 (UTC)
+        id S232112AbhJUAZX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 20 Oct 2021 20:25:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F4C0613A2;
+        Thu, 21 Oct 2021 00:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634775760;
-        bh=qEYQFf0VxEija/mw0Byd80LlBxff9kFHIH+fV2S1Zzo=;
+        s=k20201202; t=1634775788;
+        bh=pNZwSpSFEOCU7NUQbTWtrABmKlokw4WqU2KF4TizP0M=;
         h=From:To:Cc:Subject:Date:From;
-        b=IzW+oBztTwdosMTnKkuLxL+hsd3cYuNaNNMTlkqoW3vpWl1kFZpFkJIcdcwJtgdpl
-         3mGVehtrc4rRdQwjfDEiNQZ6l7CSSSwF3nQ/a2sL3SwjCUF0iyp0UcVbJ472w6yxPm
-         gXmGLTKIJDAr3eSCMi3g3vG48VDW01gC7DBr07W+DAa76qRb4HQDifKYQre2kCx1pP
-         wzUsJDoPMNUtiq3b3q7zSGMUPf302V8j10WuVDf2w5zNjNbiLXgQjuhPs/YMlI7sbJ
-         yExvcHeQlD86em2wyRH9orgkNJuSYG9hGzRyYrxuvxEawAB547GKQ2mDHEfx+TQhtV
-         EebBWpzDbsInw==
+        b=T6aD2R0XRkBx6qQZ2spbuuPmpGrdv5RlO2Z4cfFpD8SI9WFMrqHxB8joQXlNq44kh
+         +TeJ7W+9KnVpG6Yx9kFqHwz3+AYrxpfpnx90vjM+HRoCsN6d6Mfx8zEVxynJOfVmRe
+         CmEs03ZTVbkTZhFaFsNJ1v0kWyn5qOmDdxx5unN+F5eAD/lwm6vXngcKZpMnBYRuvB
+         tRxAa0jioCB6CIe5WCWe5UmoWjk5LqbYfEatn0Qmqrig/8F37xGTStW/+cDNtWt3b7
+         M4kErU3XiLPrlE19bYULXVR8G1yJ3OKrTJ5DCNd6e4hbwKvk5YZNgjHY+XSVmexduc
+         nKCfYGEaAldGw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Brendan Higgins <brendanhiggins@google.com>,
@@ -36,9 +36,9 @@ Cc:     Brendan Higgins <brendanhiggins@google.com>,
         Sasha Levin <sashal@kernel.org>, masahiroy@kernel.org,
         michal.lkml@markovi.net, linux-hardening@vger.kernel.org,
         linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/11] gcc-plugins/structleak: add makefile var for disabling structleak
-Date:   Wed, 20 Oct 2021 20:22:27 -0400
-Message-Id: <20211021002238.1129482-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 01/10] gcc-plugins/structleak: add makefile var for disabling structleak
+Date:   Wed, 20 Oct 2021 20:22:56 -0400
+Message-Id: <20211021002305.1129633-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
 X-stable: review
@@ -66,11 +66,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-index 5f7df50cfe7a..63d21489216b 100644
+index 0a482f341576..93ca13e4f8f9 100644
 --- a/scripts/Makefile.gcc-plugins
 +++ b/scripts/Makefile.gcc-plugins
-@@ -19,6 +19,10 @@ gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF)		\
- 		+= -fplugin-arg-structleak_plugin-byref
+@@ -17,6 +17,10 @@ gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE)	\
+ 		+= -fplugin-arg-structleak_plugin-verbose
  gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL)	\
  		+= -fplugin-arg-structleak_plugin-byref-all
 +ifdef CONFIG_GCC_PLUGIN_STRUCTLEAK
