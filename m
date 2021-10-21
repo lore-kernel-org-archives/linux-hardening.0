@@ -2,169 +2,96 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63404C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 06:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137C4C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 08:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 373C6610A2
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 06:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3639610D0
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 08:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229765AbhJUGD2 (ORCPT
+        id S231133AbhJUIns (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Oct 2021 02:03:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35100 "EHLO
+        Thu, 21 Oct 2021 04:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbhJUGD1 (ORCPT
+        with ESMTP id S230440AbhJUIns (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Oct 2021 02:03:27 -0400
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A67C06161C
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Oct 2021 23:01:12 -0700 (PDT)
-Received: by mail-oi1-x230.google.com with SMTP id v77so12498444oie.1
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Oct 2021 23:01:12 -0700 (PDT)
+        Thu, 21 Oct 2021 04:43:48 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13257C061749
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 01:41:33 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id y7so5264290pfg.8
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 01:41:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xTVsi87T0lDEPgn8Tsk62laBFA4FkXChR4d7SeUQje8=;
-        b=tHM/UYL427rxn2tWoiTDXd3iQU9Vke57HC8n9OC5xFSWoVyx3H19wemimQ2tb9JgS5
-         O48FSxpozzSGE3zWCEfm7lI5xW+pkbJw7X8J76GrAU8IvvHyy5myTDlKMJb3LyVUsbql
-         ScqdyvZztT1r5Fg6yBOBmi6ux0phlBlJulSKvqsZ8dzhH7Mxf+cwFxjpn2qOsl/ZhtCH
-         zCmqZo/TkkQroeaRE5mn+01i8Sw30eWgkDtNMn3vMdJ9NzIccHKFQX+OtYFncQU0VFh0
-         QM0EnDM9wrGPiIKr4JCGt0Q66ezaRLNPuAXHD8TR8IbTNmtkYZhnwlJeQ3P5MvS8n3yS
-         Lw5Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2szSRJSYc8e5G8aReqvAdlYT615SY5Xyth2O0S9i5EA=;
+        b=R/JFIIO71DC4B8FZT8SFlh35ESr/rDqgqIK6hU47HaqbrWmM/nlRmVrw1TliFJaQGp
+         yiLgscqGcddHyPxF2hDyQyG0PnwyOc/NOGVUOzkeiiki0GFxNvps5YgUTC7bFxHAmz9o
+         RENSzgGLKiClC4kSVQcVmr146m4MfifdzsQ+8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xTVsi87T0lDEPgn8Tsk62laBFA4FkXChR4d7SeUQje8=;
-        b=JbyecLcH0YQSoqskT6wZtFiTpUH0KXEi7bD2hapTf0wpbb2N4tsgVnZPMVjCQQX7Zn
-         LhOwunwd92a0nJsid+is5D4GHLRowns2oVzQlOOcJmuAX3hoWz5Jn5yjSxeoKCloChCE
-         gktj/JEhy3EBJsGR9KFtPzrdt4nkMTLJcihpilakGXJg0T/h62AhZl7A8AW2ET2MsZGJ
-         y+fVHeEdNCpIwESTnINsBncIKdGztD8L0hSY3dxdBJNmuHQkqhRZIy2nZDOdAP70n+4D
-         vTnBK1j0iV05d5Vy1jSeZVhfW56rJLOlPksYaWN+NJIrKd/dVzlSL9X+Rjc2q6wBVKRu
-         PzxA==
-X-Gm-Message-State: AOAM531SoeGRUYrhJjz71Z8vz+MtWOl2Wciaj5DIFcP1e9xKYXpaw+PU
-        vhp3SONXlnC5xc1IMOmQAippZBPYM18T86m2c35fTQ==
-X-Google-Smtp-Source: ABdhPJwGFC+eFxB6m0uGX0odIKSz8vkUWojqWACh17vlZYW2V2z1SF2UA06xoIDbCHBQvL5YgwuA40IwKit0r2F0wRM=
-X-Received: by 2002:a05:6808:118c:: with SMTP id j12mr2641330oil.65.1634796071409;
- Wed, 20 Oct 2021 23:01:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211020200039.170424-1-keescook@chromium.org>
-In-Reply-To: <20211020200039.170424-1-keescook@chromium.org>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 21 Oct 2021 08:00:00 +0200
-Message-ID: <CANpmjNMPaLpw_FoMzmShLSEBNq_Cn6t86tO_FiYLR2eD001=4Q@mail.gmail.com>
-Subject: Re: [PATCH] compiler-gcc.h: Define __SANITIZE_ADDRESS__ under
- hwaddress sanitizer
-To:     Kees Cook <keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2szSRJSYc8e5G8aReqvAdlYT615SY5Xyth2O0S9i5EA=;
+        b=Iwml7sXH5UMccNucSLcu0fUoGJppSTv3aj+TYZMcfL2fzeApJBZ13RFkM6RacMB8tw
+         iCvWnD0XUCXdOmlRJK0lsAEgHlJQYdmEmnjk50dt0oIMamOcWM+Cw+/NxsrgrElsMtBH
+         BZd/oYX0BtbIGycUfo+zb5DCxF00cg6ylmWyKQ0EbhggQdb5ciqiCpkzzBdp/2cbEEIT
+         Wwdj3h9spIVxb/WbvxDszlZZhGU1NF8T8XwZnwRi9NKwCssvV79snsWHf8NISfsYbKSq
+         Yg+eMD1yraz9WByXuWg/oyItXyD7FJ5i2sptOXPHC3dvbTxCP2f90GwZJc2hqhKo2jLO
+         b2+w==
+X-Gm-Message-State: AOAM533JjI7ic49iXeCRu9Q3Xc+nu8n5KDZEb/aTKkmhARLKL1n9gU/J
+        199SfWtPa2YzIE/gX3BxGMrDgQ==
+X-Google-Smtp-Source: ABdhPJzZ0IduZ0HmTOr2ADCd2Oyhef9o1xjVVfDk02WNxKb9rfMRhGXQNRmXtjIPZWN7AdZYyRQUMA==
+X-Received: by 2002:a63:d60a:: with SMTP id q10mr3402711pgg.335.1634805692575;
+        Thu, 21 Oct 2021 01:41:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h13sm4441922pgf.14.2021.10.21.01.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Oct 2021 01:41:32 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 01:41:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Cc:     Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
+        Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Masahiro Yamada <masahiroy@kernel.org>, llvm@lists.linux.dev,
         Ard Biesheuvel <ardb@kernel.org>,
         Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] compiler-gcc.h: Define __SANITIZE_ADDRESS__ under
+ hwaddress sanitizer
+Message-ID: <202110210140.D42185CAC@keescook>
+References: <20211020200039.170424-1-keescook@chromium.org>
+ <CANiq72ncBda6WE6ZTF9WDssHkMmM+JC5q8vkdNwiXFXTsSrnwA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72ncBda6WE6ZTF9WDssHkMmM+JC5q8vkdNwiXFXTsSrnwA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 20 Oct 2021 at 22:00, Kees Cook <keescook@chromium.org> wrote:
-> When Clang is using the hwaddress sanitizer, it sets __SANITIZE_ADDRESS__
-> explicitly:
->
->  #if __has_feature(address_sanitizer) || __has_feature(hwaddress_sanitizer)
->  /* Emulate GCC's __SANITIZE_ADDRESS__ flag */
->  #define __SANITIZE_ADDRESS__
->  #endif
+On Thu, Oct 21, 2021 at 12:45:02AM +0200, Miguel Ojeda wrote:
+> On Wed, Oct 20, 2021 at 10:00 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > I'm intending to take this via my overflow series, since that is what introduces
+> > the compile-test regression tests (which found this legitimate bug). :)
+> 
+> Not sure if there is a particular reason I was in the `To` field
+> (please let me know if so), but the patch sounds good to me!
 
-Hmm, the comment is a little inaccurate if hwaddress sanitizer is on,
-but I certainly wouldn't want compiler-clang.h to start emulating gcc
-here and start defining __SANITIZE_HWADDRESS__ if the places where we
-check it are the same as __SANITIZE_ADDRESS__. So this patch is the
-right approach.
+Well, I didn't want the "To" to be me, and IIRC, you had sent a review
+for Arnd's prior version.
 
-> Once hwaddress sanitizer was added to GCC, however, a separate define
-> was created, __SANITIZE_HWADDRESS__. The kernel is expecting to find
-> __SANITIZE_ADDRESS__ in either case, though, and the existing string
-> macros break on supported architectures:
->
->  #if (defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)) && \
->           !defined(__SANITIZE_ADDRESS__)
->
-> where as other architectures (like arm32) have no idea about hwaddress
-> sanitizer and just check for __SANITIZE_ADDRESS__:
->
->  #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
 
-arm32 doesn't support KASAN_SW_TAGS, so I think the bit about arm32 is
-irrelevant.
-
-Only arm64 can, and the reason that arm64 doesn't check against
-"defined(CONFIG_KASAN)" is because we also have KASAN_HW_TAGS (no
-compiler instrumentation).
-
-> This would lead to compiler foritfy self-test warnings when building
-> with CONFIG_KASAN_SW_TAGS=y:
->
-> warning: unsafe memmove() usage lacked '__read_overflow2' symbol in lib/test_fortify/read_overflow2-memmove.c
-> warning: unsafe memcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-memcpy.c
-> ...
->
-> Sort this out by also defining __SANITIZE_ADDRESS__ in GCC under the
-> hwaddress sanitizer.
->
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Arvind Sankar <nivedita@alum.mit.edu>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Other than that,
-
-  Reviewed-by: Marco Elver <elver@google.com>
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
 Thanks!
 
-> ---
-> I'm intending to take this via my overflow series, since that is what introduces
-> the compile-test regression tests (which found this legitimate bug). :)
->
-> -Kees
-> ---
->  include/linux/compiler-gcc.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index 6f24eb8c5dda..ccbbd31b3aae 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -121,6 +121,14 @@
->  #define __no_sanitize_coverage
->  #endif
->
-> +/*
-> + * Treat __SANITIZE_HWADDRESS__ the same as __SANITIZE_ADDRESS__ in the kernel,
-> + * matching the defines used by Clang.
-> + */
-> +#ifdef __SANITIZE_HWADDRESS__
-> +#define __SANITIZE_ADDRESS__
-> +#endif
-> +
->  /*
->   * Turn individual warnings and errors on and off locally, depending
->   * on version.
-> --
-> 2.30.2
->
+-- 
+Kees Cook
