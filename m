@@ -2,122 +2,133 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57570C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 20:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDB1C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 00:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 418DA6136F
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Oct 2021 20:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4EFF61213
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 00:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232109AbhJUUOs (ORCPT
+        id S232179AbhJVAmR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Oct 2021 16:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232017AbhJUUOr (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Oct 2021 16:14:47 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3515FC0613B9
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 13:12:31 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id y1so1179900plk.10
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 13:12:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0Ek7RgOwQo6oJqpx6aSl8YI4w/pI0VmvGrf1HSIb4ek=;
-        b=BEnza5xUZ93dogoSka391+0wAiJJYs7DOiH9ZvJxE1u+ayGaphHREY8GNQQxw0s0Eo
-         x1XUuYeagK0f7K7X3kixjzOmzucZbivYTd/n4qxF5/h7qr831kDXBZ3lKlXPBQvFiUFh
-         MsmUPi3fl10giw3oyPPj5r7fVWTmI+vKy73TE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0Ek7RgOwQo6oJqpx6aSl8YI4w/pI0VmvGrf1HSIb4ek=;
-        b=jREgjAbsygPHnuBwgP4JcHnA8ZqE8RQBXxRs6EggtxEZG73NEdqIzm4FMxA3Mv/rTj
-         JTcrRlA018PakIWR+nfJAPbnrrTIrkbHTKiNFT6jtb5AKW1VJaVX5vZzpDDzjlVqn2Yv
-         G/aNcWPylij4URxeVljv5nvaIdPVrmG+FsuDVlKJfkyEN2tx5HmaHiFAZHZOZiIgxCba
-         J19yd0HFrVabVz6GdE77QmI97JDUCf7ZW5XYJxErkZSVqFeDNWPmOxQ/2nHO+IoLXhCG
-         7iE/qP1gunv5aAo4ZtbJBkg3yR8zBtMcRiTxs4MMhetL+bnlhiX/9LUKgFfHuC3DqIJi
-         9tgw==
-X-Gm-Message-State: AOAM531mMk5M348T0JwQ3TsLSZuzCJft2NXOUqw2podKTtRGtvmgoe3H
-        pOYm6bfgo8IH/QMVqjhhBV9vDA==
-X-Google-Smtp-Source: ABdhPJw9SrHBTtasS3Bfmsb5CfE2diIVE50no/cuh2ZoFTd2ifa2y4aRKorwhx2paF9Otm/4I696tQ==
-X-Received: by 2002:a17:902:ba85:b0:13e:c846:c92e with SMTP id k5-20020a170902ba8500b0013ec846c92emr7110023pls.57.1634847150794;
-        Thu, 21 Oct 2021 13:12:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z15sm7192276pfr.92.2021.10.21.13.12.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 13:12:30 -0700 (PDT)
-Date:   Thu, 21 Oct 2021 13:12:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andy Lutomirski <luto@kernel.org>
+        Thu, 21 Oct 2021 20:42:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229512AbhJVAmR (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 21 Oct 2021 20:42:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D0FB8610EA;
+        Fri, 22 Oct 2021 00:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634863200;
+        bh=YI8Zfk561ht2DkhBm2zzblKrdL784Q8av/3a0SxfxXc=;
+        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
+        b=s8Cz1wmAB35qNsxrGaFdbqCdJHmaHNmBY2pu9w9cF7px4iooPgT50aUBBqr0YgYti
+         eNuy0f/P8dUen5MvshVVNUF3rWomGVm4kNVvnFkizAJYu8MoBFIFJxNm2LnOpAzm94
+         t0KDbnWohwGpy17FeraKvU9uCp/zKmFb9R3JMi6c3+rNdmZU3o1zaBcm/PdQWK7+Yr
+         I7TVlGAmQ93n83hfV4xXpPo2aMVqDl9lvrmdUFuYtIsYXrpZvGaKhoU6hHMSJnbLMa
+         Fq/S9QA/YBgC/0BO2ayXlhv6xgSNjgDiy/k2yt+4fWC2Wlhn3e7r5KHN5e3wwYHMm9
+         Wd/ZWeNmR+qCw==
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id D859327C0054;
+        Thu, 21 Oct 2021 20:39:58 -0400 (EDT)
+Received: from imap48 ([10.202.2.98])
+  by compute6.internal (MEProxy); Thu, 21 Oct 2021 20:39:58 -0400
+X-ME-Sender: <xms:XghyYaxyvIKOMaP_EH57t97R9DagA-k4zckZYeJFEJsUbfuUBZqbHQ>
+    <xme:XghyYWR3yR9ki283whP371kkLedZn54ouEqGvxF9blxpudAgAa4DQ5Qz6tuuyUZF2
+    2uZIzjYrZZG7tlExWE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrvddvjedgfeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    hicunfhuthhomhhirhhskhhifdcuoehluhhtoheskhgvrhhnvghlrdhorhhgqeenucggtf
+    frrghtthgvrhhnpedthfehtedtvdetvdetudfgueeuhfdtudegvdelveelfedvteelfffg
+    fedvkeegfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpegrnhguhidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudduiedukeeh
+    ieefvddqvdeifeduieeitdekqdhluhhtoheppehkvghrnhgvlhdrohhrgheslhhinhhugi
+    drlhhuthhordhush
+X-ME-Proxy: <xmx:XghyYcUFnEl3ZYBNKtdQR2ehojaCfY0HZV4td2aRVePURlGVXSAfaQ>
+    <xmx:XghyYQjfHPFbgPewSmrYYDvhK5GCNIchFzVev0n3yMQb1wd5ryGiqg>
+    <xmx:XghyYcDqT2FkHNmNQeQ_D8aXZVfoB4jf54T8n_jRIJ1A2ep91_N4Sg>
+    <xmx:XghyYe3aG8ybYAbE99wvJynMxzQM6tFUCPxAymFtFRHStGMK_hzHPw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 7512D21E006E; Thu, 21 Oct 2021 20:39:58 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1369-gd055fb5e7c-fm-20211018.002-gd055fb5e
+Mime-Version: 1.0
+Message-Id: <08669c29-a19e-44a8-a53e-acfa773d4680@www.fastmail.com>
+In-Reply-To: <202110211310.634B74A@keescook>
+References: <20211008235504.2957528-1-keescook@chromium.org>
+ <f4b83c21-4e73-45b6-ae3a-17659be512c0@www.fastmail.com>
+ <202110211310.634B74A@keescook>
+Date:   Thu, 21 Oct 2021 17:39:38 -0700
+From:   "Andy Lutomirski" <luto@kernel.org>
+To:     "Kees Cook" <keescook@chromium.org>
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Shuah Khan" <shuah@kernel.org>,
+        "Alexey Dobriyan" <adobriyan@gmail.com>,
         linux-kselftest@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Alexey Gladkov" <gladkov.alexey@gmail.com>,
+        "Jann Horn" <jannh@google.com>,
+        "Vito Caputo" <vcaputo@pengaru.com>,
+        "Ingo Molnar" <mingo@redhat.com>, juri.lelli@redhat.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, mgorman@suse.de,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Ben Segall" <bsegall@google.com>, mgorman@suse.de,
         bristot@redhat.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Christian Brauner" <christian.brauner@ubuntu.com>,
         amistry@google.com, Kenta.Tada@sony.com, legion@kernel.org,
-        michael.weiss@aisec.fraunhofer.de, Michal Hocko <mhocko@suse.com>,
-        deller@gmx.de, Qi Zheng <zhengqi.arch@bytedance.com>, me@tobin.cc,
-        tycho@tycho.pizza, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        metze@samba.org, Lai Jiangshan <laijs@linux.alibaba.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        michael.weiss@aisec.fraunhofer.de,
+        "Michal Hocko" <mhocko@suse.com>, deller@gmx.de,
+        "Qi Zheng" <zhengqi.arch@bytedance.com>, me@tobin.cc,
+        tycho@tycho.pizza, "Thomas Gleixner" <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Jens Axboe" <axboe@kernel.dk>, metze@samba.org,
+        "Lai Jiangshan" <laijs@linux.alibaba.com>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         ohoono.kwon@samsung.com, kaleshsingh@google.com,
         yifeifz2@illinois.edu, linux-arch@vger.kernel.org,
         vgupta@kernel.org, "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>, guoren@kernel.org,
+        "Will Deacon" <will@kernel.org>, guoren@kernel.org,
         bcain@codeaurora.org, monstr@monstr.eu, tsbogend@alpha.franken.de,
         nickhu@andestech.com, jonas@southpole.se,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>, hca@linux.ibm.com,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>, hca@linux.ibm.com,
         ysato@users.sourceforge.jp, davem@davemloft.net, chris@zankel.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
         linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] selftests: proc: Make sure wchan works when it exists
-Message-ID: <202110211310.634B74A@keescook>
-References: <20211008235504.2957528-1-keescook@chromium.org>
- <f4b83c21-4e73-45b6-ae3a-17659be512c0@www.fastmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4b83c21-4e73-45b6-ae3a-17659be512c0@www.fastmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 01:03:33PM -0700, Andy Lutomirski wrote:
-> 
-> 
-> On Fri, Oct 8, 2021, at 4:55 PM, Kees Cook wrote:
-> > This makes sure that wchan contains a sensible symbol when a process is
-> > blocked. Specifically this calls the sleep() syscall, and expects the
-> > architecture to have called schedule() from a function that has "sleep"
-> > somewhere in its name. For example, on the architectures I tested
-> > (x86_64, arm64, arm, mips, and powerpc) this is "hrtimer_nanosleep":
-> 
-> Is this really better than admitting that the whole mechanism is nonsense and disabling it?
-> 
-> We could have a fixed string for each task state and call it a day.
 
-I consider this to be "future work". In earlier discussions it came up,
-but there wasn't an obvious clean cost-free way to do this, so instead
-we're just fixing the broken corner and keeping the mostly working rest
-of it while cleaning up the weird edges. :)
 
--- 
-Kees Cook
+On Thu, Oct 21, 2021, at 1:12 PM, Kees Cook wrote:
+> On Thu, Oct 21, 2021 at 01:03:33PM -0700, Andy Lutomirski wrote:
+>> 
+>> 
+>> On Fri, Oct 8, 2021, at 4:55 PM, Kees Cook wrote:
+>> > This makes sure that wchan contains a sensible symbol when a process is
+>> > blocked. Specifically this calls the sleep() syscall, and expects the
+>> > architecture to have called schedule() from a function that has "sleep"
+>> > somewhere in its name. For example, on the architectures I tested
+>> > (x86_64, arm64, arm, mips, and powerpc) this is "hrtimer_nanosleep":
+>> 
+>> Is this really better than admitting that the whole mechanism is nonsense and disabling it?
+>> 
+>> We could have a fixed string for each task state and call it a day.
+>
+> I consider this to be "future work". In earlier discussions it came up,
+> but there wasn't an obvious clean cost-free way to do this, so instead
+> we're just fixing the broken corner and keeping the mostly working rest
+> of it while cleaning up the weird edges. :)
+
+True, but we have the caveat that wchan is currently broken, so in some sense we have an easier time killing it now as compared to later.  But if we don't have a fully-fleshed-out idea for how to kill it, then I'm fine with waiting.
+
+>
+> -- 
+> Kees Cook
