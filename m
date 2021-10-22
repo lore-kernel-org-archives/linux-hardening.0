@@ -2,51 +2,51 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A95C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 22:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0024CC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 22:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4C4D6109E
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 22:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F366109E
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 22:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234486AbhJVWky (ORCPT
+        id S234489AbhJVWkz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 22 Oct 2021 18:40:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51696 "EHLO
+        Fri, 22 Oct 2021 18:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234465AbhJVWkx (ORCPT
+        with ESMTP id S234467AbhJVWkx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 22 Oct 2021 18:40:53 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE42C061220
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64FFC061224
         for <linux-hardening@vger.kernel.org>; Fri, 22 Oct 2021 15:38:35 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id f5so4533808pgc.12
+Received: by mail-pl1-x633.google.com with SMTP id w17so3726214plg.9
         for <linux-hardening@vger.kernel.org>; Fri, 22 Oct 2021 15:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A4v03Dq8rJnp2emUyjLLIYPOR/r+cJwb6i4GsGFOI3E=;
-        b=mxDJiNxec6TVrFZmoJlMDdG2TzWAATb8LuQP2YucauFIPYK2hJ3AN2eDH0KAnLekdJ
-         csndqVPqIG84nt62c5o82Mmns3j1k/0LyTN0Y0NDu/uYpIT6ifwyDKOb5c7g1WVWZFGg
-         5rLb8PZNKIlQ86pHNP3cnjGLarqKbTzCyXKeY=
+        bh=VhP6k2Ptbi7uCRsPURWI/pJVVcmD5lbioz9gtAtZ1ig=;
+        b=Pf8qWPlOj2elRq79FtuDFpwrlId3NjX+NBYrabhdvxWQMtM6CIeJbqJYM6/vtXX1cf
+         ftnv1ge5eVo/dCwXN58kz0flviZ1i7dNtXjo6B+m38UoFWpBdslQOewNvmdW7bgrWDTr
+         5X/NqfIlMH0USas7A/PSmaZMHPn7uHyxgY9rg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=A4v03Dq8rJnp2emUyjLLIYPOR/r+cJwb6i4GsGFOI3E=;
-        b=fMrc63sqhlKYL5dn7e/Hb5Gewud9kwjwuj7skLD+4IsfZYSmNLJ5fo+XnmafKs2ybz
-         n48sAABek+d8LyLFsN1iVnKWLXGmnvRDNs0E79sRGYlvf8IXahmGAZN7hfQI8EB84rCt
-         7GIC6xhRubfxurdWB7sbvy/IzEU+wN3JpvnvtJH2lQH0Qwwo+xcLthcgwu/rwpMKX30/
-         fgGdXWLpvz67ZSjG04Z4VWfAFkQgxhbYZaQBlRgCS0en0fgG94IFymNM2WKscBoXeEz1
-         xa82EVCM+VuV36/wmxYjnyPsI2FnUFpsFTdBLWK7Crtqz3cZEseDDD+XGny03eZRRztp
-         uaqA==
-X-Gm-Message-State: AOAM532WY5iQazV2J/+G/qWukK8g6mmyPYuzZbn1369OSCjVi2jfawFT
-        kble+eic4zO6UTXxLawKvvmMKQ==
-X-Google-Smtp-Source: ABdhPJylAPHzu6WrwxpDAXOo4JnVlN1LpYv0YLDCaUU1pzLwefU4HRMEpDaVgnhmLyt39ohRrKUlZg==
-X-Received: by 2002:a63:6a05:: with SMTP id f5mr1888819pgc.97.1634942315011;
+        bh=VhP6k2Ptbi7uCRsPURWI/pJVVcmD5lbioz9gtAtZ1ig=;
+        b=XlH4udFpMYfD18Ip48FG6FuxJeMr/pSqmJnZ6VCIOpxVyJkElgrK7NW3lXUHItZY4a
+         K5pvuwMZNGKM1ldseVL+HnT3288Wz1SGFG+6dLfpvX6Noi/DdedryL16e6CmRL07nXj/
+         x1LkqZameFBUFU8bqKvmVRZaQpquyzuBLYVjtyNCtLrnf0EbA9yVieNlmMJ2SpaEyQo9
+         Kqkf9jkIALA+wLwasabjsKXwPCd1TTS2shAVyu4a+ETFBjseGZw8evbK35rOfQ4HdDbI
+         AZ8I3pT4+rIZcN0cU7PR+1b4qEvMJZkNJdMc14gBcXcrIo1Cy2AdECxwTWRwPvcggrA9
+         JgPg==
+X-Gm-Message-State: AOAM532wGp19H4Ez/WzTts3bkuD17JZsqnwp7jaoKI+CBckFPueztO5J
+        cJ44ULd3Mhrq7H4ynoifXt0xXw==
+X-Google-Smtp-Source: ABdhPJxZaYw7iwxMsd6qWzzFw9KMbHqpMeg8bdlw5gtZ24LK8HXzXpBKY+7Hxx/oYRy7fLc26A0R+Q==
+X-Received: by 2002:a17:902:82c4:b0:13f:fa72:4b4f with SMTP id u4-20020a17090282c400b0013ffa724b4fmr2489653plz.18.1634942315178;
         Fri, 22 Oct 2021 15:38:35 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id oj5sm8235pjb.45.2021.10.22.15.38.34
+        by smtp.gmail.com with ESMTPSA id l6sm71827pfc.126.2021.10.22.15.38.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 22 Oct 2021 15:38:34 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -56,61 +56,170 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 1/2] selftests/lkdtm: Add way to repeat a test
-Date:   Fri, 22 Oct 2021 15:38:25 -0700
-Message-Id: <20211022223826.330653-2-keescook@chromium.org>
+Subject: [PATCH 2/2] lkdtm/bugs: Check that a per-task stack canary exists
+Date:   Fri, 22 Oct 2021 15:38:26 -0700
+Message-Id: <20211022223826.330653-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211022223826.330653-1-keescook@chromium.org>
 References: <20211022223826.330653-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1597; h=from:subject; bh=UVZsTcO0+dkUDOoZKZ0wsUf6jiITa/KlLtRjLgC+IcE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhcz1hnP4vY/kMhAbyukzou7Lmmlyx3ymfw/9MbmKU WEremomJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYXM9YQAKCRCJcvTf3G3AJoauEA CiXWYCjzhG4dZybCOGZwMn97gQLCmmbZHIKleA6A/neFv1N2L47+XWkNDAgiSDozOBaXjzJFKLYjSV jLxyTEkjahF5Xof1SMFbn997fo8Yv8MsgZyhQnflUG/RxyFUKGRGmihYdfSShaETnXBLpTGQC2jGaA aD0UGaP9WeXqOmnQ74/+LaxFxqaGx3LbxsfEqA0bS6HcM82XhoZoizTe+aAkSI7oWrNRphIx1mXGbv d9zM+nmMs8hf6XxBhUAedls/m7ba5WRbJMLWfQN3Iz33l0S0BAFBUZOtvZCbD1Asgn99wgBSI8gTe6 TDiCzMrmvadEm1rqmzaocxQO0Cnk89qJsNTsanHKwnvQKM+V/BvbWJZgQw742lUGKcF/OVsWCrOSSg gP/kOSqO4K2jNYMpaEoJFzKE4JEPjjoX5PqIjbDuWb6W2vPBPtJZTL6E6y6bU3u6PlVEAmcGjJxjUG dwQ3QMReVamNncGr+5ThpNWPH2kww86py4KqRXgUQKjNEr00HLF3RXh0e4SiHWe4vDABl8S7jpMxZn LGLzeQwR7r2mwxluUzCJpbZte578Yofs+Gil1zdtWKRE7IHzje9xs8J7aXXxh1IWRcKqjN971QLFIK f66hYw7vzoreDQqdmQjTzyQ6goj4EBmhePXwSeOVE2XX8SGiBue1HlXnURAg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5525; h=from:subject; bh=lFob2SpNOd7JioxJ+tKziNQRUDdHLjyUqAKU0YX5xYw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhcz1hVQtS3LUL2AUyeIS59y3JAiez/OuPxCzOHRBp IRmdLiaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYXM9YQAKCRCJcvTf3G3AJonqEA Cmp0FF89pmJoM7uNrr6aQdyv6i6tmr6ZJIntqUq9HrTLYUzzUIr8HVIRuQeY4z/HXshYK+oSOcI7Bu +EFfwvmuEuyRnyprP4PE8d12Qr30B6MoN/ed0rkoq9kEn/OK+RQbbLo7+oArTAgvlYYbC+U+rV+05d 0mxcnlY32VReNXEVDr5cFavsvJ48icYkEfrTLZbgp4xnqZqF7hIQY2/DInokgrufoCrfid3Zj8kKnc y6U+Al4JRSVat3BEL+we5HvF+rudWFW8rwV2pVyiuoNEjD44r20v4V899GtlUB3F5rhggYaQK8ljbd eoCbqy9ihl+zRD9ZSHgjlRulrGFWiSp/oUHZZO/gsgw9UUGO5eB9cEYbwkRCHCa5wJTXsPSpVPg/EF iEmZ3/lAOgUC514G3T2yk77AhUC5qobWfQApsIbNpNWDEQPTpffzJHT6ipWgKlrYuEKK+yhGv6g9E1 A7QKxsMqA8F3ttOZNcSIevp3etMdqwIlyjlRMWxsZb6D3oFgPF5Oz9avUNk1LuqGWWLz02Jyve2l1W fvnEMJ28Vh8CGKkmKj/YjlawvGEzhMDI4/h0a4hlRe/5mMGVKyCSwZvmptLC+kRfMxoB3NDZxSArHR 3UWzbyaRB+sjY50cMekmCzncSJBk7E97KuySQ9Rgqf4hU0MDFi4TKqpQGWNQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Some LKDTM tests need to be run more than once (usually to setup and
-then later trigger). Until now, the only case was the SOFT_LOCKUP test,
-which wasn't useful to run in the bulk selftests. The coming stack canary
-checking needs to run twice, so support this with a new test output prefix
-"repeat".
+Introduce REPORT_STACK_CANARY to check for differing stack canaries
+between two processes (i.e. that an architecture is correctly implementing
+per-task stack canaries), using the task_struct canary as the hint to
+locate in the stack. Requires that one of the processes being tested
+not be pid 1.
 
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- tools/testing/selftests/lkdtm/run.sh | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/misc/lkdtm/bugs.c               | 77 +++++++++++++++++++++++++
+ drivers/misc/lkdtm/core.c               |  1 +
+ drivers/misc/lkdtm/lkdtm.h              |  1 +
+ tools/testing/selftests/lkdtm/config    |  1 +
+ tools/testing/selftests/lkdtm/tests.txt |  1 +
+ 5 files changed, 81 insertions(+)
 
-diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-index e95e79bd3126..95e904959207 100755
---- a/tools/testing/selftests/lkdtm/run.sh
-+++ b/tools/testing/selftests/lkdtm/run.sh
-@@ -56,8 +56,14 @@ if echo "$test" | grep -q '^#' ; then
- fi
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 41fa558675c4..f21854ac5cc2 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -153,6 +153,83 @@ void lkdtm_REPORT_STACK(void)
+ 	pr_info("Stack offset: %d\n", (int)(stack_addr - (uintptr_t)&magic));
+ }
  
- # If no expected output given, assume an Oops with back trace is success.
-+repeat=1
- if [ -z "$expect" ]; then
- 	expect="call trace:"
-+else
-+	if echo "$expect" | grep -q '^repeat:' ; then
-+		repeat=$(echo "$expect" | cut -d' ' -f1 | cut -d: -f2)
-+		expect=$(echo "$expect" | cut -d' ' -f2-)
-+	fi
- fi
- 
- # Prepare log for report checking
-@@ -83,7 +89,9 @@ dmesg > "$DMESG"
- # the signal that killed the subprocess, we must ignore the failure and
- # continue. However we don't silence stderr since there might be other
- # useful details reported there in the case of other unexpected conditions.
--echo "$test" | cat >"$TRIGGER" || true
-+for i in $(seq 1 $repeat); do
-+	echo "$test" | cat >"$TRIGGER" || true
-+done
- 
- # Record and dump the results
- dmesg | comm --nocheck-order -13 "$DMESG" - > "$LOG" || true
++static pid_t stack_canary_pid;
++static unsigned long stack_canary;
++static unsigned long stack_canary_offset;
++
++static noinline void __lkdtm_REPORT_STACK_CANARY(void *stack)
++{
++	int i = 0;
++	pid_t pid = task_pid_nr(current);
++	unsigned long *canary = (unsigned long *)stack;
++	unsigned long current_offset = 0, init_offset = 0;
++
++	/* Do our best to find the canary in a 16 word window ... */
++	for (i = 1; i < 16; i++) {
++		canary = (unsigned long *)stack + i;
++#ifdef CONFIG_STACKPROTECTOR
++		if (*canary == current->stack_canary)
++			current_offset = i;
++		if (*canary == init_task.stack_canary)
++			init_offset = i;
++#endif
++	}
++
++	if (current_offset == 0) {
++		/*
++		 * If the canary doesn't match what's in the task_struct,
++		 * we're either using a global canary or the stack frame
++		 * layout changed.
++		 */
++		if (init_offset != 0) {
++			pr_err("FAIL: global stack canary found at offset %ld (canary for pid %d matches init_task's)!\n",
++			       init_offset, pid);
++		} else {
++			pr_warn("FAIL: did not correctly locate stack canary :(\n");
++			pr_expected_config(CONFIG_STACKPROTECTOR);
++		}
++
++		return;
++	} else if (init_offset != 0) {
++		pr_warn("WARNING: found both current and init_task canaries nearby?!\n");
++	}
++
++	canary = (unsigned long *)stack + current_offset;
++	if (stack_canary_pid == 0) {
++		stack_canary = *canary;
++		stack_canary_pid = pid;
++		stack_canary_offset = current_offset;
++		pr_info("Recorded stack canary for pid %d at offset %ld\n",
++			stack_canary_pid, stack_canary_offset);
++	} else if (pid == stack_canary_pid) {
++		pr_warn("ERROR: saw pid %d again -- please use a new pid\n", pid);
++	} else {
++		if (current_offset != stack_canary_offset) {
++			pr_warn("ERROR: canary offset changed from %ld to %ld!?\n",
++				stack_canary_offset, current_offset);
++			return;
++		}
++
++		if (*canary == stack_canary) {
++			pr_warn("FAIL: canary identical for pid %d and pid %d at offset %ld!\n",
++				stack_canary_pid, pid, current_offset);
++		} else {
++			pr_info("ok: stack canaries differ between pid %d and pid %d at offset %ld.\n",
++				stack_canary_pid, pid, current_offset);
++			/* Reset the test. */
++			stack_canary_pid = 0;
++		}
++	}
++}
++
++void lkdtm_REPORT_STACK_CANARY(void)
++{
++	/* Use default char array length that triggers stack protection. */
++	char data[8] __aligned(sizeof(void *)) = { };
++
++	__lkdtm_REPORT_STACK_CANARY((void *)&data);
++}
++
+ void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void)
+ {
+ 	static u8 data[5] __attribute__((aligned(4))) = {1, 2, 3, 4, 5};
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index e99db37e56d5..d4c6cdced37b 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -111,6 +111,7 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(CORRUPT_STACK),
+ 	CRASHTYPE(CORRUPT_STACK_STRONG),
+ 	CRASHTYPE(REPORT_STACK),
++	CRASHTYPE(REPORT_STACK_CANARY),
+ 	CRASHTYPE(CORRUPT_LIST_ADD),
+ 	CRASHTYPE(CORRUPT_LIST_DEL),
+ 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index c212a253edde..d6137c70ebbe 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -69,6 +69,7 @@ void lkdtm_EXHAUST_STACK(void);
+ void lkdtm_CORRUPT_STACK(void);
+ void lkdtm_CORRUPT_STACK_STRONG(void);
+ void lkdtm_REPORT_STACK(void);
++void lkdtm_REPORT_STACK_CANARY(void);
+ void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void);
+ void lkdtm_SOFTLOCKUP(void);
+ void lkdtm_HARDLOCKUP(void);
+diff --git a/tools/testing/selftests/lkdtm/config b/tools/testing/selftests/lkdtm/config
+index 38edea25631b..a26a3fa9e925 100644
+--- a/tools/testing/selftests/lkdtm/config
++++ b/tools/testing/selftests/lkdtm/config
+@@ -8,3 +8,4 @@ CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
+ CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y
+ CONFIG_UBSAN_BOUNDS=y
+ CONFIG_UBSAN_TRAP=y
++CONFIG_STACKPROTECTOR_STRONG=y
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+index 09f7bfa383cc..6b36b7f5dcf9 100644
+--- a/tools/testing/selftests/lkdtm/tests.txt
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -12,6 +12,7 @@ CORRUPT_LIST_ADD list_add corruption
+ CORRUPT_LIST_DEL list_del corruption
+ STACK_GUARD_PAGE_LEADING
+ STACK_GUARD_PAGE_TRAILING
++REPORT_STACK_CANARY repeat:2 ok: stack canaries differ
+ UNSET_SMEP pinned CR4 bits changed:
+ DOUBLE_FAULT
+ CORRUPT_PAC
 -- 
 2.30.2
 
