@@ -2,66 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6067FC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 02:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D54DC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 03:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37701613A9
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 02:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3D1619F9
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 03:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232564AbhJVCza (ORCPT
+        id S232685AbhJVDh2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Oct 2021 22:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232556AbhJVCz3 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Oct 2021 22:55:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B5D266135E;
-        Fri, 22 Oct 2021 02:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1634871193;
-        bh=ZOyHbxAA1KVGEYcWxP49OLWHjX0kWfehynxD5OBUUVw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MYl6fk548La85NrwC/69S4sKIJvdsbVdNXs9wgOfrX7zVeEh/JVjMuVJBaPLdbpOv
-         yHO9iNYMoEIeXZ4Knv8ctrzbhv+1IHA7gfgUii2lsO4Z1rDVMBq+9Vt7vQ5kaYqlcd
-         ZuG4B+l/nqSUKKafT4TqvA0ZbCZUdliClZeG8epA=
-Date:   Thu, 21 Oct 2021 19:53:11 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Jordy Zomer <jordy@jordyzomer.github.io>, linux-mm@kvack.org,
-        Dmitry Vyukov <dvyukov@google.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mm/secretmem: Avoid letting secretmem_users drop to
- zero
-Message-Id: <20211021195311.6058b90f573641542605dae4@linux-foundation.org>
-In-Reply-To: <20211021154046.880251-1-keescook@chromium.org>
-References: <20211021154046.880251-1-keescook@chromium.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 21 Oct 2021 23:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230425AbhJVDh0 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 21 Oct 2021 23:37:26 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B770C061766
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 20:35:09 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id t184so2498696pfd.0
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Oct 2021 20:35:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Tq9TCe4y+2LqaSR/LbffoUfOqYJ6qwVCCAjmIO9uNDk=;
+        b=itmmIgzvxM8wXh+qClv/FuIhUtp1Nm1143qNgs888P9h+1O1yy/7m6jy7pS2ZdYm7E
+         RXz0Gt2o+piigjSht0ERLCqpV9wq4YY0eMFNgb4xVtenegaLjeipk6T+G4EsH1e2qD1x
+         EYQwlw9vrtWJ/doggqlzwhSU0agNIWQCOM9B0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Tq9TCe4y+2LqaSR/LbffoUfOqYJ6qwVCCAjmIO9uNDk=;
+        b=zhDMszCyYtTvt35vVJoBtLf1J7bQ8iCZSBOzcYjnifplmZ8wt+GrfQySclS3nCtpvP
+         Im2tU5o0jGn7vYHPTar48vmi9VbENCssvBiSFbEmHb1ndhmcu41N2USeHr6jQMbeGMvc
+         YG5nRQr/e2pgIT6x/fCiKEkm4umQNyvXmWf7ow/rKM+HHYfMSiBhWxGo6eGpWP9a4T7s
+         zzbqnNfL2BUN6Zr5OEMUFKVpNV6qQ0Wj51fQ4ccZrAjCYEtHG0XCWfDA9poBUiyZ6Ga7
+         wtsKjtfZRC6cOfpBUyvncvS/xRk2r2foqYJKT2ojTJ4UcyaGQo3d3tconZ7UYQ18ORaI
+         R57w==
+X-Gm-Message-State: AOAM533dTJS9qHM0Mc7EWv694ONT86miPs/S3MCESSQ7IWqO7e//8ZKS
+        0g2aakAc4F5v1LID3k3vke09dA==
+X-Google-Smtp-Source: ABdhPJyxeuRxg63B7FyG23NoOKG14eUyr0a2vpGwzlC5uabse4lMnbVid3Jwws+S/HwS9oP844u1HA==
+X-Received: by 2002:a62:7850:0:b0:44c:5b71:2506 with SMTP id t77-20020a627850000000b0044c5b712506mr9697381pfc.37.1634873709085;
+        Thu, 21 Oct 2021 20:35:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m4sm26011pjl.11.2021.10.21.20.35.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Oct 2021 20:35:08 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 20:35:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-kselftest@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, mgorman@suse.de,
+        bristot@redhat.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        amistry@google.com, Kenta.Tada@sony.com, legion@kernel.org,
+        michael.weiss@aisec.fraunhofer.de, Michal Hocko <mhocko@suse.com>,
+        deller@gmx.de, Qi Zheng <zhengqi.arch@bytedance.com>, me@tobin.cc,
+        tycho@tycho.pizza, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
+        metze@samba.org, Lai Jiangshan <laijs@linux.alibaba.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        ohoono.kwon@samsung.com, kaleshsingh@google.com,
+        yifeifz2@illinois.edu, linux-arch@vger.kernel.org,
+        vgupta@kernel.org, "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>, guoren@kernel.org,
+        bcain@codeaurora.org, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        nickhu@andestech.com, jonas@southpole.se,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Walmsley <paul.walmsley@sifive.com>, hca@linux.ibm.com,
+        ysato@users.sourceforge.jp, davem@davemloft.net, chris@zankel.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] selftests: proc: Make sure wchan works when it exists
+Message-ID: <202110212033.D533BAF@keescook>
+References: <20211008235504.2957528-1-keescook@chromium.org>
+ <f4b83c21-4e73-45b6-ae3a-17659be512c0@www.fastmail.com>
+ <202110211310.634B74A@keescook>
+ <08669c29-a19e-44a8-a53e-acfa773d4680@www.fastmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08669c29-a19e-44a8-a53e-acfa773d4680@www.fastmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 21 Oct 2021 08:40:46 -0700 Kees Cook <keescook@chromium.org> wrote:
+On Thu, Oct 21, 2021 at 05:39:38PM -0700, Andy Lutomirski wrote:
+> 
+> 
+> On Thu, Oct 21, 2021, at 1:12 PM, Kees Cook wrote:
+> > On Thu, Oct 21, 2021 at 01:03:33PM -0700, Andy Lutomirski wrote:
+> >> 
+> >> 
+> >> On Fri, Oct 8, 2021, at 4:55 PM, Kees Cook wrote:
+> >> > This makes sure that wchan contains a sensible symbol when a process is
+> >> > blocked. Specifically this calls the sleep() syscall, and expects the
+> >> > architecture to have called schedule() from a function that has "sleep"
+> >> > somewhere in its name. For example, on the architectures I tested
+> >> > (x86_64, arm64, arm, mips, and powerpc) this is "hrtimer_nanosleep":
+> >> 
+> >> Is this really better than admitting that the whole mechanism is nonsense and disabling it?
+> >> 
+> >> We could have a fixed string for each task state and call it a day.
+> >
+> > I consider this to be "future work". In earlier discussions it came up,
+> > but there wasn't an obvious clean cost-free way to do this, so instead
+> > we're just fixing the broken corner and keeping the mostly working rest
+> > of it while cleaning up the weird edges. :)
+> 
+> True, but we have the caveat that wchan is currently broken, so in some sense we have an easier time killing it now as compared to later.  But if we don't have a fully-fleshed-out idea for how to kill it, then I'm fine with waiting.
 
-> Quoting Dmitry: "refcount_inc() needs to be done before fd_install().
-> After fd_install() finishes, the fd can be used by userspace and we can
-> have secret data in memory before the refcount_inc().
-> 
-> A straightforward mis-use where a user will predict the returned fd
-> in another thread before the syscall returns and will use it to store
-> secret data is somewhat dubious because such a user just shoots themself
-> in the foot.
-> 
-> But a more interesting mis-use would be to close the predicted fd and
-> decrement the refcount before the corresponding refcount_inc, this way
-> one can briefly drop the refcount to zero while there are other users
-> of secretmem."
-> 
-> Move fd_install() after refcount_inc().
+It's not actually that broken. Only ORC was fully broken, so all the
+other architectures (and non-ORC x86) have been fine. But given the
+method of fixing ORC vs wchan, it turns out we could further clean up
+the other architectures. But yes, no real plan to remove it, but the
+current series fixes things pretty well. :)
 
-I added cc:stable.  Or doesn't the benefit/risk ratio justify that?
+-Kees
+
+> 
+> >
+> > -- 
+> > Kees Cook
+
+-- 
+Kees Cook
