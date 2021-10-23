@@ -2,59 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94149C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 14:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF65C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 20:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6471360FC4
-	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 14:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1266060F6F
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 20:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbhJWObT (ORCPT
+        id S230444AbhJWUMM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 23 Oct 2021 10:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbhJWObS (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 23 Oct 2021 10:31:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA77C061714;
-        Sat, 23 Oct 2021 07:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/GpXbf5mv36tQwc/bTcJYuehy8KVgYrO7OXGBic3rVM=; b=WfeKEetaNauyIRfLFF7zoE+sHK
-        1H4TQQkf2An5p+RXqSoPLo5BLKlbbnXCsIItwbd8NbTMgId+cUl0mSwcf3rYPUX8ZnK6ctn83nOV4
-        bxoImy/LlrzcAk6TuixjAckaSkze/SVieW1iC9LHGKt/v90lNjxNPI3Q4R0DzHQSDPkmDsohsknFA
-        Huxj5mX2ZPjY5F4zh0DMdAqn08uGogkUP23NUCP6H5OHeqdFUVFiOy+yKibozozmJKRWROEeuA5+X
-        rKT3WKQD9VqZTbbJLIO119L4QqUsaFdgwlfU07M6vcE47TqsAjDeBtvLBbAimgeiEKfa2DZA/FS6x
-        a8J4s35A==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1meHzR-00EgNJ-Tf; Sat, 23 Oct 2021 14:27:37 +0000
-Date:   Sat, 23 Oct 2021 15:27:17 +0100
-From:   Matthew Wilcox <willy@infradead.org>
+        Sat, 23 Oct 2021 16:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229954AbhJWUML (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 23 Oct 2021 16:12:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BF86D60F8F;
+        Sat, 23 Oct 2021 20:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635019792;
+        bh=Z2UnwJI+9oAgRIyuriM6ZijPMHqaj6ZBWEKOVaGHMWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MI+Ep3nBT4owULahLaCWGl9KL8jzCcBz/ZEosBSx7FLahUdwTcQNw3Wu4g5YhLNtz
+         V3KzXIiGsv61oCtvhyWPNGUyGxhlDRycHGnafuUibektssYpNCNqihcJUuG8QbU7Bh
+         D6TYdVMecKhdz90iTBabrAv/Fmztee4QjsE9G35wFA5rmeRjiELxwH9nhfa9TyiHKg
+         3CdQVNgKWekds4RqZSoSq25DI3eiDyh7G3N8HNZe5zlnn4Oo2iUAcys2cdm2RtrYGK
+         QaboQ9+tbgRb9U5glvxoLoryoksyEEjsq6Y4gk3dZc6RHA+gNcCMfpUg2NO4bZUnON
+         NssDCtkbzUIDQ==
+Date:   Sat, 23 Oct 2021 15:14:38 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Len Baker <len.baker@gmx.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
         Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2][next] sysctl: Avoid open coded arithmetic in memory
- allocator functions
-Message-ID: <YXQbxSSw9qan87cm@casper.infradead.org>
-References: <20211023105414.7316-1-len.baker@gmx.com>
+Subject: Re: [PATCH] nvmet: prefer struct_size over open coded arithmetic
+Message-ID: <20211023201438.GA1405616@embeddedor>
+References: <20211017095650.3718-1-len.baker@gmx.com>
+ <20211017172357.GA1214270@embeddedor>
+ <20211023112838.GB4145@titan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211023105414.7316-1-len.baker@gmx.com>
+In-Reply-To: <20211023112838.GB4145@titan>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 23, 2021 at 12:54:14PM +0200, Len Baker wrote:
-> Changelog v1 -> v2
-> - Remove the new_dir_size function and its use (Matthew Wilcox).
+On Sat, Oct 23, 2021 at 01:28:38PM +0200, Len Baker wrote:
+> Hi Gustavo,
+> 
+> first of all, thanks for this review (and all others reviews as
+> well) ;)
 
-Why do you think the other functions are any different?  Please
-provide reasoning.
+No problem. :)
+
+> I think that it is better to use the dynamic allocation since in the
+> future the struct size could be dynamic.
+
+Yep; that seems sensible.
+
+> it's not one single element. The "sizeof(struct nvme_ana_group_desc)" is
+> multiplied by "ctrl->nanagrpid" and then added "ctrl->max_namespaces * sizeof(__le32)".
+
+You're right. The whole expression got me a bit confused.
+
+> > drivers/nvme/target/admin-cmd.c:267:    return sizeof(struct nvme_ana_group_desc) + count * sizeof(__le32);
+> 
+> Ok. I forgot it. Apologies.
+
+No apologies. Thanks for your patches. 
+
+> Again, thanks for your time and advises,
+
+Anytime.
+
+Thanks
+--
+Gustavo
