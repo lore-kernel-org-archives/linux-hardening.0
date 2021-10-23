@@ -2,248 +2,216 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A1BC433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 10:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65885C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 11:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB85A60FD8
-	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 10:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8B360FE7
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 11:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbhJWK5I (ORCPT
+        id S230037AbhJWLbT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 23 Oct 2021 06:57:08 -0400
-Received: from mout.gmx.net ([212.227.17.22]:44689 "EHLO mout.gmx.net"
+        Sat, 23 Oct 2021 07:31:19 -0400
+Received: from mout.gmx.net ([212.227.15.18]:51903 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229721AbhJWK5H (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 23 Oct 2021 06:57:07 -0400
+        id S229778AbhJWLbS (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 23 Oct 2021 07:31:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1634986475;
-        bh=COO6dpoiujzVMnoUVgte956/CCfp4GDzWhe8zXEti5Q=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=URRFlir+kXtgwyTlzC/iYsQ+oqYmX1/VZlxKsAdPWkAySHEyrunSrXiEcPfILunuI
-         N/DnLsMXLievdlcKiq/N22mtBrAkyF9NpzbrmFGqnxK7v8LRnu5aiBE9S1S/XZo47C
-         //Z/ziVGe36iBlunaberdxUVwvk8e0sBQocdJHeY=
+        s=badeba3b8450; t=1634988521;
+        bh=yOKngPoCbu6DtsIx/xx/DKQtmpvJ/9ZOA1akkMZBYws=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=NcqsTAJ7H5m0zzWJDLvHnqFK8axb/sQMfcin60R0GffAM51o3jXG91d6xqL+CVfZo
+         8s9h5B0TJZK7FuvBHhYxfPmt29zRgTpMvklPH729l6tEnHcNaGEAzxH/vxrbnXitnO
+         ELRoJIo8OLWk2HalQzjdcgtiAshBkZ3MQf3RzvsE=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MIwz4-1mOD9V00YE-00KRl8; Sat, 23 Oct 2021 12:54:35 +0200
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MiaY9-1n9ARb2eX9-00fmqG; Sat, 23
+ Oct 2021 13:28:40 +0200
+Date:   Sat, 23 Oct 2021 13:28:38 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Len Baker <len.baker@gmx.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
         Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>
-Cc:     Len Baker <len.baker@gmx.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2][next] sysctl: Avoid open coded arithmetic in memory allocator functions
-Date:   Sat, 23 Oct 2021 12:54:14 +0200
-Message-Id: <20211023105414.7316-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH] nvmet: prefer struct_size over open coded arithmetic
+Message-ID: <20211023112838.GB4145@titan>
+References: <20211017095650.3718-1-len.baker@gmx.com>
+ <20211017172357.GA1214270@embeddedor>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211017172357.GA1214270@embeddedor>
+X-Provags-ID: V03:K1:q24hAsdZyZkzGXssf6uzzfSQUq54U9TAyYd0Z7aXuiRoUaczvVn
+ S+DngOWqw4Q+T0ZTVoMD9ZYLb5Pv6EnSNEvaMohvt2iOI7jkIcipVtLI71UveHcGCdt7XUC
+ XRifiSwxP26fft2hT0k2gnOy2ZKALSmC0PNmaIb4GL1nd7fBdT8XbkMyGAFgW4mzkPDDI/M
+ Otq+WHQJvhvRUrTEBrBUg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VS8SjNB1WTk=:sCNZLkoktU7b6nNoMVOEIO
+ FsBuE498TTiJ6l0SbwDSTOvZdhkAmaJngBWfzoyL2BMKdtjqOHqUjtonXprBJZGEMQGLYk5zw
+ BzlpJDno1v0CWbjCAwC4wMo+DLKMMpXVbh8bm85RGJy7OXOFtud132IACBvMmMCv6JS7z3ovz
+ qIX3Ftb+1LaNT7dro5mP+KguvkI5tXOcny7yOPTsleg4SLFcspfQ0s2Oww40cpzYzsmOXMVJw
+ eVP0846Tr9VE54s9SD1GonfX1xtJahKrolZgxvVh7o7BfwAlCtMPt02WSEf0vfQden+aqC6u4
+ W6Bnf8K88EzP3Rje3raFGymFYjYeQq1SRaozREfuwJSo5LRDLo+71/rZ4doVPKpqkPgm26/rE
+ J18jEGVBPFhSP1LBqEPUoIO4lGtf0Fu+h9j0KNboWFiz9unsJAVUK92J0afvhguk9Yp2Q3ieD
+ 6XAWO+IG+OSYEEj+RiHdp+WWJ/w5XP4Q9ZMbnTbe21iHrPNVSnLyFhbn73E4OtXOd1NvLpOxF
+ CBcaNGODccwzAPCSEfOVMMU7/2z18Z64TtHH87CFHMEqnWU1TNvnwFILqcZp0xA/GKSPWhzpe
+ 44q7hSbUii8BT1T0kYt3ZTDVgkdivvDQyAwAM2BM0RevUhIXJ54zHe4PJDiTT9a0R7Y3e3VOe
+ UkYC7XXt0QkKakBH0/8ffm8Xmcn2bWf5g1Cj7FFzwoLrHp6p5YIL5tKERjRCeFwnmZvANplNI
+ yXuEYxKXTZBChtE8ruXSUSkgWltFuL/iBVG50Nr77QZaVSO1PEicr7zxPsXd+F59k+qXdJ5VZ
+ UooAg6v+65O33xWe0KVZZlN7IuOOLqMG2FRjl3GfwxZ7uA4nVkiuga/ts9ZG6h1TGdwSoLHF+
+ pCZlc1ICkFr7BNil6VdmDif8hkcjErciReoX97cGBJrJxpwx78T9yV6dbRpaERqcoVz+AlHfA
+ Q12DQcYneAemFfNfcKYSbOq0z2SprvgIYKtjmRZQ4/sHEzVrjrIC4ZBs23rvl+V6FkDPrcYLu
+ mdEzhZ1b0m8AidYHIxfZHc/KLTKBn/qZigcMP4+MiM1yPvYlKgUDcl7GzoPdvtzWnE4+nQ4Fs
+ DtFYEyn7xXX9bI=
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:F+DT2aLDpJrmlZpG2V+TQYlDzxnApio7nZw40lIN2aby5QiyLZU
- 6WBvxuH6OaOsIK8sityQpXvAl5wFpb7fV8qu402o19i92zEKl0L5Iijmbrd0B59Xln4ylys
- BzSWuf9WS2GLFAu3GQzihGDzWQxl0opzXLPyYPf1GFWQTG7ecoDgt7V0BNPno4cctLGW9QC
- TgPJ2S+y6d3de0qLNwWjQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Wnbhp08dKoY=:sjETeixsBVJ0AQ1ykKUq3t
- 7F727P0Rf6IRsKMGqqD1qZIV1rS3XDDJl1u8VkDc/HU30lon3kO75mAv+xIRHM43Un5/je05k
- OZt+4dBBb7xXvFkq/qahYfT2tKmCE0N5xwVkS7g9iY55H3Wg9c3rKBy407Uc8ube7I4667IwY
- jMS8nnfLp/nstIs9tpYPjulSbvXaJJF5VvQNMjEsnGpDXVZdqnozc1cjetQ3gitvrnMEmZFQc
- tqzgm8FmLTC/qON2cZLt6ytJ3R9+rmshOcND5grxAvEM0v1+OmiIt6pivWQkVU9P8BDDGIRcs
- pgFzv9vVD7HhKN5nY27MRKhuPIHMa7F0f2DGN34nVa8aBTs/KSVuggyxkKUTEYAeCbxtzIjDE
- x8y/1EhbjeUKq3nYerEb55IGnWVIfHyt3T4U3ATjL3zU/pg+iYh9VdWiOhCOw+H4YxuBQcbRd
- AoY3rZVQThQVASXkuNMeP6CVIw8QRMpNqo+ZoQ5khjgab8nj1FVaq/JgsQlQma1RVsk8SqkKr
- YwyoBJB/N2fGOGfkP87TWPhE0HVA8S8SgQI7bEGxytFzO5nTfgTib5LzK30d4ZUoFh6d4dIFV
- apdkdTYVTbVGpJTWAZELmvaoDt5PoLw4dL2izXCE/bmCPTyzh9YJVOt+cDpBStq76JTk8xelO
- 3LOetXm4/j7aFVrv3Rqp5LWNncv4ZiI00pQTaUvIY1PGD7t3Adf70YdRU7HmqKXdC7/owx6Nv
- oDtrZE5m7jWvNQubKoUvToqKEcghYMeskCa6EyhXLtyHj9txFIDt45GGM8zDamwm72KhQtwJE
- 484vUVzzkcaC/TbM90SWz2Erc0oTsXqo5sQivnqkV+OCtbdJJqFgZFpnBV9yLUpTnfVOnN95O
- 6oiEtHfAQglGAcHMfDZhpK9xSrFUCwZMHkzfuuh4B9RZ9+yOLKfRb8pHR4WZbIb4IeWG+RZpo
- Mx6dEV4jwdAswhNejBAsAkp7MkpPTQ+2W1nKb0l3TZ3gsqxgDNicZP4eJRHA4Tdtkm1ZX9WNL
- l4hQhdLwk/eyrnT4EajKCwV+corNXeD3FZraqPD3B0Kw6AWccJaNCKWzGFI4TY0qP8ZG6vhOL
- K6Ws8EAnE6F9Wg=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+Hi Gustavo,
 
-So, add some functions to calculate the size used in memory allocator
-function arguments, saturating to SIZE_MAX on overflow. Here it is not
-possible to use the struct_size() helper since the memory layouts used
-when the memory is allocated are not simple ones.
+first of all, thanks for this review (and all others reviews as
+well) ;)
 
-However, for the kcalloc() case, don't define a new function and check
-for overflow before its call.
+More below.
 
-This code was detected with the help of Coccinelle and audited and fixed
-manually.
+On Sun, Oct 17, 2021 at 12:23:57PM -0500, Gustavo A. R. Silva wrote:
+> On Sun, Oct 17, 2021 at 11:56:50AM +0200, Len Baker wrote:
+> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> > and Conventions" documentation [1], size calculations (especially
+> > multiplication) should not be performed in memory allocator (or simila=
+r)
+> > function arguments due to the risk of them overflowing. This could lea=
+d
+> > to values wrapping around and a smaller allocation being made than the
+> > caller was expecting. Using those allocations could lead to linear
+> > overflows of heap memory and other misbehaviors.
+> >
+> > In this case this is not actually dynamic size: all the operands
+> > involved in the calculation are constant values. However it is better =
+to
+> > refactor this anyway, just to keep the open-coded math idiom out of
+> > code.
+> >
+> > So, use the struct_size() helper to do the arithmetic instead of the
+> > argument "size + count * size" in the kmalloc() function.
+> >
+> > This code was detected with the help of Coccinelle and audited and fix=
+ed
+> > manually.
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#ope=
+n-coded-arithmetic-in-allocator-arguments
+> >
+> > Signed-off-by: Len Baker <len.baker@gmx.com>
+> > ---
+> > Hi,
+> >
+> > this patch is built against the linux-next tree (tag next-20211015).
+>
+> You don't need to include these lines in every patch. Just add [next]
+> to the subject line, like this:
+>
+> 	[PATCH][next] nvmet: prefer struct_size over open coded arithmetic
+>
+> It should be clear enough for people that you are talking about
+> linux-next. And in case someone asks, then you proceed to clarify. :)
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-co=
-ded-arithmetic-in-allocator-arguments
+Ok, understood. Thanks for the advise.
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
-Changelog v1 -> v2
-- Remove the new_dir_size function and its use (Matthew Wilcox).
+> > Regards,
+> > Len
+> >
+> >  drivers/nvme/target/admin-cmd.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/adm=
+in-cmd.c
+> > index aa6d84d8848e..4aa71625c86a 100644
+> > --- a/drivers/nvme/target/admin-cmd.c
+> > +++ b/drivers/nvme/target/admin-cmd.c
+> > @@ -278,8 +278,8 @@ static void nvmet_execute_get_log_page_ana(struct =
+nvmet_req *req)
+> >  	u16 status;
+> >
+> >  	status =3D NVME_SC_INTERNAL;
+> > -	desc =3D kmalloc(sizeof(struct nvme_ana_group_desc) +
+> > -			NVMET_MAX_NAMESPACES * sizeof(__le32), GFP_KERNEL);
+> > +	desc =3D kmalloc(struct_size(desc, nsids, NVMET_MAX_NAMESPACES),
+> > +		       GFP_KERNEL);
+>
+> It might be worth exploring if the flexible array is actually needed,
+> once the allocation is always determined by NVMET_MAX_NAMESPACES. Maybe
+> it can be changed to the following and remove the dynamic allocation
+> entirely?
+>
+> 	struct nvme_ana_group_desc {
+> 		__le32  grpid;
+> 		__le32  nnsids;
+> 		__le64  chgcnt;
+> 		__u8    state;
+> 		__u8    rsvd17[15];
+> 		__le32  nsids[NVMET_MAX_NAMESPACES];
+> 	};
 
-The previous version can be found here [1]
+What's the size limit for dynamic allocation vs stack allocation? I think
+that NVMET_MAX_NAMESPACES * sizeof(__le32) =3D 1024 * 4 =3D 4096 bytes is =
+big
+enough (but I don't know if it is the correct way to think).
 
-[1] https://lore.kernel.org/linux-hardening/20211016152829.9836-1-len.bake=
-r@gmx.com/
+However, due to the following comment in the NVMET_MAX_NAMESPACES macro
+definition:
 
- fs/proc/proc_sysctl.c | 84 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 73 insertions(+), 11 deletions(-)
+/*
+ * Nice round number that makes a list of nsids fit into a page.
+ * Should become tunable at some point in the future.
+ */
+#define NVMET_MAX_NAMESPACES	1024
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 5d66faecd4ef..0b3b3f11ca11 100644
-=2D-- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -1146,6 +1146,26 @@ static int sysctl_check_table(const char *path, str=
-uct ctl_table *table)
- 	return err;
- }
+I think that it is better to use the dynamic allocation since in the
+future the struct size could be dynamic.
 
-+static size_t new_links_size(size_t nr_entries, size_t name_bytes)
-+{
-+	size_t bytes;
-+
-+	if (check_add_overflow(nr_entries, (size_t)1, &bytes))
-+		return SIZE_MAX;
-+	if (check_add_overflow(sizeof(struct ctl_table_header),
-+			       array_size(sizeof(struct ctl_node), nr_entries),
-+			       &bytes))
-+		return SIZE_MAX;
-+	if (check_add_overflow(bytes, array_size(sizeof(struct ctl_table),
-+						 nr_entries + 1),
-+			       &bytes))
-+		return SIZE_MAX;
-+	if (check_add_overflow(bytes, name_bytes, &bytes))
-+		return SIZE_MAX;
-+
-+	return bytes;
-+}
-+
- static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl=
-_table *table,
- 	struct ctl_table_root *link_root)
- {
-@@ -1162,11 +1182,15 @@ static struct ctl_table_header *new_links(struct c=
-tl_dir *dir, struct ctl_table
- 		name_bytes +=3D strlen(entry->procname) + 1;
- 	}
+>
+> If the above is possible then (at least) these lines should be audited:
+>
+> drivers/nvme/host/multipath.c-551-              if (WARN_ON_ONCE(offset =
+> ctrl->ana_log_size - sizeof(*desc)))
+>
+> drivers/nvme/host/multipath.c-566-              offset +=3D sizeof(*desc=
+);
+> drivers/nvme/host/multipath.c-567-              if (WARN_ON_ONCE(offset =
+> ctrl->ana_log_size - nsid_buf_size))
+>
+> If the flexible array remains, then this line could use
+> flex_array_size():
+>
+> drivers/nvme/host/multipath.c-555-              nsid_buf_size =3D nr_nsi=
+ds * sizeof(__le32);
 
--	links =3D kzalloc(sizeof(struct ctl_table_header) +
--			sizeof(struct ctl_node)*nr_entries +
--			sizeof(struct ctl_table)*(nr_entries + 1) +
--			name_bytes,
--			GFP_KERNEL);
-+	/*
-+	 * Allocation layout in bytes:
-+	 *
-+	 * sizeof(struct ctl_table_header) +
-+	 * sizeof(struct ctl_node) * nr_entries +
-+	 * sizeof(struct ctl_table) * (nr_entries + 1) +
-+	 * name_bytes
-+	 */
-+	links =3D kzalloc(new_links_size(nr_entries, name_bytes), GFP_KERNEL);
+Ok. I didn't see it.
+>
+> struct_size() could be used here, as well:
+>
+> drivers/nvme/host/multipath.c-847-      ana_log_size =3D sizeof(struct n=
+vme_ana_rsp_hdr) +
+> drivers/nvme/host/multipath.c:848:              ctrl->nanagrpid * sizeof=
+(struct nvme_ana_group_desc) +
+> drivers/nvme/host/multipath.c-849-              ctrl->max_namespaces * s=
+izeof(__le32);
 
- 	if (!links)
- 		return NULL;
-@@ -1258,6 +1282,18 @@ static int insert_links(struct ctl_table_header *he=
-ad)
- 	return err;
- }
+Sorry, but here it's not possible to use struct_size() due to
 
-+static inline size_t sysctl_table_size(int nr_entries)
-+{
-+	size_t bytes;
-+
-+	if (check_add_overflow(sizeof(struct ctl_table_header),
-+			       array_size(sizeof(struct ctl_node), nr_entries),
-+			       &bytes))
-+		return SIZE_MAX;
-+
-+	return bytes;
-+}
-+
- /**
-  * __register_sysctl_table - register a leaf sysctl table
-  * @set: Sysctl tree to register on
-@@ -1315,8 +1351,13 @@ struct ctl_table_header *__register_sysctl_table(
- 	for (entry =3D table; entry->procname; entry++)
- 		nr_entries++;
+sizeof(struct nvme_ana_group_desc) + ctrl->max_namespaces * sizeof(__le32)
 
--	header =3D kzalloc(sizeof(struct ctl_table_header) +
--			 sizeof(struct ctl_node)*nr_entries, GFP_KERNEL);
-+	/*
-+	 * Allocation layout in bytes:
-+	 *
-+	 * sizeof(struct ctl_table_header) +
-+	 * sizeof(struct ctl_node) * nr_entries
-+	 */
-+	header =3D kzalloc(sysctl_table_size(nr_entries), GFP_KERNEL);
- 	if (!header)
- 		return NULL;
+it's not one single element. The "sizeof(struct nvme_ana_group_desc)" is
+multiplied by "ctrl->nanagrpid" and then added "ctrl->max_namespaces * siz=
+eof(__le32)".
 
-@@ -1437,8 +1478,11 @@ static int register_leaf_sysctl_tables(const char *=
-path, char *pos,
- 	/* If there are mixed files and directories we need a new table */
- 	if (nr_dirs && nr_files) {
- 		struct ctl_table *new;
--		files =3D kcalloc(nr_files + 1, sizeof(struct ctl_table),
--				GFP_KERNEL);
-+		int n;
-+
-+		if (unlikely(check_add_overflow(nr_files, 1, &n)))
-+			goto out;
-+		files =3D kcalloc(n, sizeof(struct ctl_table), GFP_KERNEL);
- 		if (!files)
- 			goto out;
+> drivers/nvme/target/admin-cmd.c:267:    return sizeof(struct nvme_ana_gr=
+oup_desc) + count * sizeof(__le32);
 
-@@ -1490,6 +1534,19 @@ static int register_leaf_sysctl_tables(const char *=
-path, char *pos,
- 	return err;
- }
+Ok. I forgot it. Apologies.
 
-+static inline size_t sysctl_paths_size(int nr_subheaders)
-+{
-+	size_t bytes;
-+
-+	if (check_add_overflow(sizeof(struct ctl_table_header),
-+			       array_size(sizeof(struct ctl_table_header *),
-+					  nr_subheaders),
-+			       &bytes))
-+		return SIZE_MAX;
-+
-+	return bytes;
-+}
-+
- /**
-  * __register_sysctl_paths - register a sysctl table hierarchy
-  * @set: Sysctl tree to register on
-@@ -1532,8 +1589,13 @@ struct ctl_table_header *__register_sysctl_paths(
- 		if (header)
- 			header->ctl_table_arg =3D ctl_table_arg;
- 	} else {
--		header =3D kzalloc(sizeof(*header) +
--				 sizeof(*subheaders)*nr_subheaders, GFP_KERNEL);
-+		/*
-+		 * Allocation layout in bytes:
-+		 *
-+		 * sizeof(struct ctl_table_header) +
-+		 * sizeof(struct ctl_table_header *) * nr_subheaders
-+		 */
-+		header =3D kzalloc(sysctl_paths_size(nr_subheaders), GFP_KERNEL);
- 		if (!header)
- 			goto out;
-
-=2D-
-2.25.1
-
+Again, thanks for your time and advises,
+Len
