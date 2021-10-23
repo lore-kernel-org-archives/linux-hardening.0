@@ -2,224 +2,172 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0024CC433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 22:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76ADC433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 10:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F366109E
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Oct 2021 22:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C530A60FC4
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Oct 2021 10:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234489AbhJVWkz (ORCPT
+        id S230143AbhJWKSt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 22 Oct 2021 18:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234467AbhJVWkx (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 22 Oct 2021 18:40:53 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64FFC061224
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Oct 2021 15:38:35 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id w17so3726214plg.9
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Oct 2021 15:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VhP6k2Ptbi7uCRsPURWI/pJVVcmD5lbioz9gtAtZ1ig=;
-        b=Pf8qWPlOj2elRq79FtuDFpwrlId3NjX+NBYrabhdvxWQMtM6CIeJbqJYM6/vtXX1cf
-         ftnv1ge5eVo/dCwXN58kz0flviZ1i7dNtXjo6B+m38UoFWpBdslQOewNvmdW7bgrWDTr
-         5X/NqfIlMH0USas7A/PSmaZMHPn7uHyxgY9rg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VhP6k2Ptbi7uCRsPURWI/pJVVcmD5lbioz9gtAtZ1ig=;
-        b=XlH4udFpMYfD18Ip48FG6FuxJeMr/pSqmJnZ6VCIOpxVyJkElgrK7NW3lXUHItZY4a
-         K5pvuwMZNGKM1ldseVL+HnT3288Wz1SGFG+6dLfpvX6Noi/DdedryL16e6CmRL07nXj/
-         x1LkqZameFBUFU8bqKvmVRZaQpquyzuBLYVjtyNCtLrnf0EbA9yVieNlmMJ2SpaEyQo9
-         Kqkf9jkIALA+wLwasabjsKXwPCd1TTS2shAVyu4a+ETFBjseGZw8evbK35rOfQ4HdDbI
-         AZ8I3pT4+rIZcN0cU7PR+1b4qEvMJZkNJdMc14gBcXcrIo1Cy2AdECxwTWRwPvcggrA9
-         JgPg==
-X-Gm-Message-State: AOAM532wGp19H4Ez/WzTts3bkuD17JZsqnwp7jaoKI+CBckFPueztO5J
-        cJ44ULd3Mhrq7H4ynoifXt0xXw==
-X-Google-Smtp-Source: ABdhPJxZaYw7iwxMsd6qWzzFw9KMbHqpMeg8bdlw5gtZ24LK8HXzXpBKY+7Hxx/oYRy7fLc26A0R+Q==
-X-Received: by 2002:a17:902:82c4:b0:13f:fa72:4b4f with SMTP id u4-20020a17090282c400b0013ffa724b4fmr2489653plz.18.1634942315178;
-        Fri, 22 Oct 2021 15:38:35 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l6sm71827pfc.126.2021.10.22.15.38.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Oct 2021 15:38:34 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2] lkdtm/bugs: Check that a per-task stack canary exists
-Date:   Fri, 22 Oct 2021 15:38:26 -0700
-Message-Id: <20211022223826.330653-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211022223826.330653-1-keescook@chromium.org>
-References: <20211022223826.330653-1-keescook@chromium.org>
+        Sat, 23 Oct 2021 06:18:49 -0400
+Received: from mout.gmx.net ([212.227.17.22]:60789 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230126AbhJWKSs (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 23 Oct 2021 06:18:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1634984181;
+        bh=oep7kxr70n/pnf3VV48pUPfgMoW9MV5wqciBsVib+dw=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Dj/Cek8aC0QGqsa24y68Kj94T4yUQPmI4HOY2ZTpc2YiAdVv7VZVsed6uOJZw9l/n
+         ve+Nwp2cvRxTX/EVWyyxNg/GdyF45yAMRVHc7sTSJueDtOCTkwAH0ImqwwcI7I1JY5
+         d+cExm9SqFCCTsbY1iDrPPnnS6vH/gyXfIJf+TYQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1Ml6m4-1n7lST0HUa-00lV9k; Sat, 23 Oct 2021 12:16:21 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Fei Li <fei1.li@intel.com>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2][next] virt: acrn: Prefer array_size and struct_size over open coded arithmetic
+Date:   Sat, 23 Oct 2021 12:15:54 +0200
+Message-Id: <20211023101554.4064-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5525; h=from:subject; bh=lFob2SpNOd7JioxJ+tKziNQRUDdHLjyUqAKU0YX5xYw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhcz1hVQtS3LUL2AUyeIS59y3JAiez/OuPxCzOHRBp IRmdLiaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYXM9YQAKCRCJcvTf3G3AJonqEA Cmp0FF89pmJoM7uNrr6aQdyv6i6tmr6ZJIntqUq9HrTLYUzzUIr8HVIRuQeY4z/HXshYK+oSOcI7Bu +EFfwvmuEuyRnyprP4PE8d12Qr30B6MoN/ed0rkoq9kEn/OK+RQbbLo7+oArTAgvlYYbC+U+rV+05d 0mxcnlY32VReNXEVDr5cFavsvJ48icYkEfrTLZbgp4xnqZqF7hIQY2/DInokgrufoCrfid3Zj8kKnc y6U+Al4JRSVat3BEL+we5HvF+rudWFW8rwV2pVyiuoNEjD44r20v4V899GtlUB3F5rhggYaQK8ljbd eoCbqy9ihl+zRD9ZSHgjlRulrGFWiSp/oUHZZO/gsgw9UUGO5eB9cEYbwkRCHCa5wJTXsPSpVPg/EF iEmZ3/lAOgUC514G3T2yk77AhUC5qobWfQApsIbNpNWDEQPTpffzJHT6ipWgKlrYuEKK+yhGv6g9E1 A7QKxsMqA8F3ttOZNcSIevp3etMdqwIlyjlRMWxsZb6D3oFgPF5Oz9avUNk1LuqGWWLz02Jyve2l1W fvnEMJ28Vh8CGKkmKj/YjlawvGEzhMDI4/h0a4hlRe/5mMGVKyCSwZvmptLC+kRfMxoB3NDZxSArHR 3UWzbyaRB+sjY50cMekmCzncSJBk7E97KuySQ9Rgqf4hU0MDFi4TKqpQGWNQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8VE2EjEa9nY/CWKaFWJPCS7+H/zsiaXSooVyTAkJD2/Un8vDX7O
+ Qk6bB7fjdBWSSlhnXaZnPDcPqx7Idb8lPIjGJV0ws6epfi57AWtWywOjLCydm6gO+5kb+9/
+ lq2xts0o1sydcogyWD4QbuDfo2VjeglEBlbIdbyuKYvoF8RhGd/3y5y4aGuzHSyfoB5/jQr
+ tyuMxKEvo6e6H0do77PJQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4PuItPGevMM=:4TK7U2BwOnm01HJRXdywxG
+ LSFaIk1W79A6gtk3bfKlm6o+/u3N2z3rSbasaY1RrgOIqfyivDkdAO2WZ1kfxH4qnZnTzlkbR
+ r9oMSQbWT8ZY8nPBHdO7buwvYqS6ugoeNnMAszzB6tn6NWQLOc5HgJorAwuUt3CzxfTb9gobu
+ ip5b9Yc6dXoP8ud2RyYOxVn013qRB4TAUiVPqmRp9j2Ydk4Yi48eBftYI3wNn2uK9vqYOZF+M
+ +1+mH0DZE6Ra/QeE39DtOlmISw+TTOpBOTidUFO/1OpE+mANjTE9+uBF82k0kN4EZJl7reMFx
+ gPh9OmUzrqdJntQdiAZzzC2S+2VCzFzIpIpfNEV8H9a/fJV3wT8KpZUsstC8nATqbs5F9AbfE
+ eWAi/UJpN2ieFMBkT0QaA3G2lHGHfNmx7+Y7HuwBslFSj3mzZWDNsVsMPyGkK10Ych1Lk+NYI
+ ZxI3zZT2IkwJ6eQLNCJb4B+dtWE2pInX5nwUVGKg7/C6+iFxVfCoC80ob6qNkWMJVls+avYoG
+ 6LGrpoIeh7+82DczwK63zoycGVygl4mc061nGuwxxhU2inVPHWgPi+FSsuh+VuHm6d17HxOQD
+ 8qJZCa+JPodIoSuQ0nnAm7mB7HP/ursglwkalNiffW2R+WcfBlIPG/DfVhxpap4KGI7SQNqnR
+ FEqSWmAWGfnyls+zL90ycreqjbSZ9GGMvFP9Hvc2arcD36blI0qsa4UbMe5mpI2016tr1BFEm
+ 3QR4YETQ5ibqd9z5QJf2x8DFUOiFP9/ghC8uSJXMArsSPzVTTXkvF7rzbtsWzsHf3o3ZO/Pzl
+ iVkObKfQVfpXkzmuCKZAzOXuqCHBnSr3MVZmFVkv+p6I8hBAOdQSVBv5yOyRuOkSwC+/ZOi3e
+ eqAwKzFGTNCkTfPKSx74/YDwCdmCsgpFLUBf942roNlb0Vdlkls+Wr7AdCkRXFUYASgIjlMWf
+ 0IB3pu15RGYFzgmUl4x9ivFzX2Z77GHwaupQ0aas/Foqzh41BoNvvVUVib4eF6qldH16XmUQk
+ RWdG2RkPcT8M0TjxM1bgkZUTrC1SVZs+KqOeLwpawPDj2R5mBEZ6aMskKzLSrSZDlcz1Z6Gnz
+ w9jVJIX93V/rHs=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Introduce REPORT_STACK_CANARY to check for differing stack canaries
-between two processes (i.e. that an architecture is correctly implementing
-per-task stack canaries), using the task_struct canary as the hint to
-locate in the stack. Requires that one of the processes being tested
-not be pid 1.
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/misc/lkdtm/bugs.c               | 77 +++++++++++++++++++++++++
- drivers/misc/lkdtm/core.c               |  1 +
- drivers/misc/lkdtm/lkdtm.h              |  1 +
- tools/testing/selftests/lkdtm/config    |  1 +
- tools/testing/selftests/lkdtm/tests.txt |  1 +
- 5 files changed, 81 insertions(+)
+So, use the array_size() helper to do the arithmetic instead of the
+argument "count * size" in the vzalloc() function.
 
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index 41fa558675c4..f21854ac5cc2 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -153,6 +153,83 @@ void lkdtm_REPORT_STACK(void)
- 	pr_info("Stack offset: %d\n", (int)(stack_addr - (uintptr_t)&magic));
- }
- 
-+static pid_t stack_canary_pid;
-+static unsigned long stack_canary;
-+static unsigned long stack_canary_offset;
-+
-+static noinline void __lkdtm_REPORT_STACK_CANARY(void *stack)
-+{
-+	int i = 0;
-+	pid_t pid = task_pid_nr(current);
-+	unsigned long *canary = (unsigned long *)stack;
-+	unsigned long current_offset = 0, init_offset = 0;
-+
-+	/* Do our best to find the canary in a 16 word window ... */
-+	for (i = 1; i < 16; i++) {
-+		canary = (unsigned long *)stack + i;
-+#ifdef CONFIG_STACKPROTECTOR
-+		if (*canary == current->stack_canary)
-+			current_offset = i;
-+		if (*canary == init_task.stack_canary)
-+			init_offset = i;
-+#endif
-+	}
-+
-+	if (current_offset == 0) {
-+		/*
-+		 * If the canary doesn't match what's in the task_struct,
-+		 * we're either using a global canary or the stack frame
-+		 * layout changed.
-+		 */
-+		if (init_offset != 0) {
-+			pr_err("FAIL: global stack canary found at offset %ld (canary for pid %d matches init_task's)!\n",
-+			       init_offset, pid);
-+		} else {
-+			pr_warn("FAIL: did not correctly locate stack canary :(\n");
-+			pr_expected_config(CONFIG_STACKPROTECTOR);
-+		}
-+
-+		return;
-+	} else if (init_offset != 0) {
-+		pr_warn("WARNING: found both current and init_task canaries nearby?!\n");
-+	}
-+
-+	canary = (unsigned long *)stack + current_offset;
-+	if (stack_canary_pid == 0) {
-+		stack_canary = *canary;
-+		stack_canary_pid = pid;
-+		stack_canary_offset = current_offset;
-+		pr_info("Recorded stack canary for pid %d at offset %ld\n",
-+			stack_canary_pid, stack_canary_offset);
-+	} else if (pid == stack_canary_pid) {
-+		pr_warn("ERROR: saw pid %d again -- please use a new pid\n", pid);
-+	} else {
-+		if (current_offset != stack_canary_offset) {
-+			pr_warn("ERROR: canary offset changed from %ld to %ld!?\n",
-+				stack_canary_offset, current_offset);
-+			return;
-+		}
-+
-+		if (*canary == stack_canary) {
-+			pr_warn("FAIL: canary identical for pid %d and pid %d at offset %ld!\n",
-+				stack_canary_pid, pid, current_offset);
-+		} else {
-+			pr_info("ok: stack canaries differ between pid %d and pid %d at offset %ld.\n",
-+				stack_canary_pid, pid, current_offset);
-+			/* Reset the test. */
-+			stack_canary_pid = 0;
-+		}
-+	}
-+}
-+
-+void lkdtm_REPORT_STACK_CANARY(void)
-+{
-+	/* Use default char array length that triggers stack protection. */
-+	char data[8] __aligned(sizeof(void *)) = { };
-+
-+	__lkdtm_REPORT_STACK_CANARY((void *)&data);
-+}
-+
- void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void)
- {
- 	static u8 data[5] __attribute__((aligned(4))) = {1, 2, 3, 4, 5};
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index e99db37e56d5..d4c6cdced37b 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -111,6 +111,7 @@ static const struct crashtype crashtypes[] = {
- 	CRASHTYPE(CORRUPT_STACK),
- 	CRASHTYPE(CORRUPT_STACK_STRONG),
- 	CRASHTYPE(REPORT_STACK),
-+	CRASHTYPE(REPORT_STACK_CANARY),
- 	CRASHTYPE(CORRUPT_LIST_ADD),
- 	CRASHTYPE(CORRUPT_LIST_DEL),
- 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index c212a253edde..d6137c70ebbe 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -69,6 +69,7 @@ void lkdtm_EXHAUST_STACK(void);
- void lkdtm_CORRUPT_STACK(void);
- void lkdtm_CORRUPT_STACK_STRONG(void);
- void lkdtm_REPORT_STACK(void);
-+void lkdtm_REPORT_STACK_CANARY(void);
- void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void);
- void lkdtm_SOFTLOCKUP(void);
- void lkdtm_HARDLOCKUP(void);
-diff --git a/tools/testing/selftests/lkdtm/config b/tools/testing/selftests/lkdtm/config
-index 38edea25631b..a26a3fa9e925 100644
---- a/tools/testing/selftests/lkdtm/config
-+++ b/tools/testing/selftests/lkdtm/config
-@@ -8,3 +8,4 @@ CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
- CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y
- CONFIG_UBSAN_BOUNDS=y
- CONFIG_UBSAN_TRAP=y
-+CONFIG_STACKPROTECTOR_STRONG=y
-diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-index 09f7bfa383cc..6b36b7f5dcf9 100644
---- a/tools/testing/selftests/lkdtm/tests.txt
-+++ b/tools/testing/selftests/lkdtm/tests.txt
-@@ -12,6 +12,7 @@ CORRUPT_LIST_ADD list_add corruption
- CORRUPT_LIST_DEL list_del corruption
- STACK_GUARD_PAGE_LEADING
- STACK_GUARD_PAGE_TRAILING
-+REPORT_STACK_CANARY repeat:2 ok: stack canaries differ
- UNSET_SMEP pinned CR4 bits changed:
- DOUBLE_FAULT
- CORRUPT_PAC
--- 
-2.30.2
+Also, take the opportunity to add a flexible array member of struct
+vm_memory_region_op to the vm_memory_region_batch structure. And then,
+change the code accordingly and use the struct_size() helper to do the
+arithmetic instead of the argument "size + size * count" in the kzalloc
+function.
+
+This code was detected with the help of Coccinelle and audited and fixed
+manually.
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments
+
+Acked-by: Fei Li <fei1.li@intel.com>
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+Changelog v1 -> v2
+- Fix the typo "syze -> size" in the subject (Kees Cook).
+- Reduce the number of tabs in the definition of the structure
+  vm_memory_region_batch (Fei Li).
+- Add the "Acked-by" tag.
+
+Hi Gustavo,
+
+If there are no more comments in this version, can you take this patch?
+
+Thanks,
+Len
+
+ drivers/virt/acrn/acrn_drv.h | 10 ++++++----
+ drivers/virt/acrn/mm.c       |  9 ++++-----
+ 2 files changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+index 1be54efa666c..5663c17ad37c 100644
+=2D-- a/drivers/virt/acrn/acrn_drv.h
++++ b/drivers/virt/acrn/acrn_drv.h
+@@ -48,6 +48,7 @@ struct vm_memory_region_op {
+  * @reserved:		Reserved.
+  * @regions_num:	The number of vm_memory_region_op.
+  * @regions_gpa:	Physical address of a vm_memory_region_op array.
++ * @regions_op:		Flexible array of vm_memory_region_op.
+  *
+  * HC_VM_SET_MEMORY_REGIONS uses this structure to manage EPT mappings of
+  * multiple memory regions of a User VM. A &struct vm_memory_region_batch
+@@ -55,10 +56,11 @@ struct vm_memory_region_op {
+  * ACRN Hypervisor.
+  */
+ struct vm_memory_region_batch {
+-	u16	vmid;
+-	u16	reserved[3];
+-	u32	regions_num;
+-	u64	regions_gpa;
++	u16			   vmid;
++	u16			   reserved[3];
++	u32			   regions_num;
++	u64			   regions_gpa;
++	struct vm_memory_region_op regions_op[];
+ };
+
+ /**
+diff --git a/drivers/virt/acrn/mm.c b/drivers/virt/acrn/mm.c
+index c4f2e15c8a2b..a881742cd48d 100644
+=2D-- a/drivers/virt/acrn/mm.c
++++ b/drivers/virt/acrn/mm.c
+@@ -168,7 +168,7 @@ int acrn_vm_ram_map(struct acrn_vm *vm, struct acrn_vm=
+_memmap *memmap)
+
+ 	/* Get the page number of the map region */
+ 	nr_pages =3D memmap->len >> PAGE_SHIFT;
+-	pages =3D vzalloc(nr_pages * sizeof(struct page *));
++	pages =3D vzalloc(array_size(nr_pages, sizeof(struct page *)));
+ 	if (!pages)
+ 		return -ENOMEM;
+
+@@ -220,16 +220,15 @@ int acrn_vm_ram_map(struct acrn_vm *vm, struct acrn_=
+vm_memmap *memmap)
+ 	}
+
+ 	/* Prepare the vm_memory_region_batch */
+-	regions_info =3D kzalloc(sizeof(*regions_info) +
+-			       sizeof(*vm_region) * nr_regions,
+-			       GFP_KERNEL);
++	regions_info =3D kzalloc(struct_size(regions_info, regions_op,
++					   nr_regions), GFP_KERNEL);
+ 	if (!regions_info) {
+ 		ret =3D -ENOMEM;
+ 		goto unmap_kernel_map;
+ 	}
+
+ 	/* Fill each vm_memory_region_op */
+-	vm_region =3D (struct vm_memory_region_op *)(regions_info + 1);
++	vm_region =3D regions_info->regions_op;
+ 	regions_info->vmid =3D vm->vmid;
+ 	regions_info->regions_num =3D nr_regions;
+ 	regions_info->regions_gpa =3D virt_to_phys(vm_region);
+=2D-
+2.25.1
 
