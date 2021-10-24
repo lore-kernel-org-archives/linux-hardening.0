@@ -2,140 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD29C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 24 Oct 2021 16:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6945FC433EF
+	for <linux-hardening@archiver.kernel.org>; Sun, 24 Oct 2021 17:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAEA60F6F
-	for <linux-hardening@archiver.kernel.org>; Sun, 24 Oct 2021 16:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4513E60F9B
+	for <linux-hardening@archiver.kernel.org>; Sun, 24 Oct 2021 17:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231484AbhJXRBk (ORCPT
+        id S231627AbhJXRc1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 24 Oct 2021 13:01:40 -0400
-Received: from mout.gmx.net ([212.227.17.22]:39047 "EHLO mout.gmx.net"
+        Sun, 24 Oct 2021 13:32:27 -0400
+Received: from mout.gmx.net ([212.227.15.18]:38393 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229755AbhJXRBk (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 24 Oct 2021 13:01:40 -0400
+        id S231290AbhJXRc0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 24 Oct 2021 13:32:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1635094731;
-        bh=yyqnnF1pA1oiTEWv7jqmS1u+g29rW0YaZQRATIp5BBM=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=FWdSpG6JvGfsXFFIqKu/wHhWw2xv7aTzILC2+WJ4GtFMKMBS/I/2tTzPsewAuifoe
-         63ok3Ww90ouUwJdRicdR1nsxYPG8DCcpdjBb7sbT6+qroIi5YRkouH82LlxQAc0/I2
-         ciRfL89rNRTj4yaDwg6mtj3KHGzfdBvtfRELA3jA=
+        s=badeba3b8450; t=1635096586;
+        bh=eJf292/lZFzvszJXQLPbd7P/v4bSpcZvX7PKS7XhsKs=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ReDfyYeo49apVvB0odLLK/7xdF6Vcb/lxo8dsBEA7LGY8iQ2E28Dt8nodhXG9b/bu
+         uQ63tAT8mf2St+ZvdWp3XXPmhCrv/Lp6ONk0Mw92ohYZ2ETOevVBrOtBlV6qNzhR7/
+         2Isf8OwdSXP0kO2lS4bKy2Z3+CZ4M43ZMxetZOww=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MuUjC-1mwlsf0FdK-00ra88; Sun, 24
- Oct 2021 18:58:51 +0200
-Date:   Sun, 24 Oct 2021 18:58:38 +0200
+Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MLiCo-1mNASn3W7c-00HcSB; Sun, 24 Oct 2021 19:29:46 +0200
 From:   Len Baker <len.baker@gmx.com>
-To:     Matthew Wilcox <willy@infradead.org>,
+To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <kch@nvidia.com>
+Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2][next] sysctl: Avoid open coded arithmetic in memory
- allocator functions
-Message-ID: <20211024165838.GA2347@titan>
-References: <20211023105414.7316-1-len.baker@gmx.com>
- <YXQbxSSw9qan87cm@casper.infradead.org>
- <20211024091328.GA2912@titan>
+Subject: [PATCH] nvmet: prefer flex_array_size and struct_size over open coded arithmetic
+Date:   Sun, 24 Oct 2021 19:29:21 +0200
+Message-Id: <20211024172921.4110-1-len.baker@gmx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211024091328.GA2912@titan>
-X-Provags-ID: V03:K1:+U3sdvB6WXlvapI04bmnM1r0ixdY76yc5bUl1lBzkoomXBfOdiU
- 0uBM+LwV+/b8DsiddmrWcfYHvKUBa6mGbjS0rpXqF9nMFyJ0e4vxxz5CAGLDQG2lvLReQQz
- QajPx8XGzfqFZKtCLphSD0XU6nHBaxs3LCCO+w5URArsWmVlDLHkv7AM9lfIW6sW1Rci+kR
- LaujWFoCdkUE87vSt+xhA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M/xM1uCOQts=:+3/dlM61TnUBnljTWWtdO1
- M9DcUAb91kJHkcY6AuK0t8Icescrmd423kB9FxPpcpq+EaU5I9Xkf9srNrFH97S0VFcKf/Oau
- WIwbRspeAAeNz8ps5TYUb1ZMwpk8tT7ARcqgg48xLI7KGIDeJzs8F3htzXp9kImDd2dAdswfN
- 9/9uwl07jREODSuZyQY1kI8HmAZHkFc+dz0djV2SZujyc9TvTPAhVgjbK0pHnNm80wh6f3qiU
- m7xKIW5JjIETpV9D7gy0D9JSfgBV8LDBrkAPo8XHvvr0ZH2WC7qRI5s2t0S7kw0kaNLCGkUCj
- pGm9VT6L0huUKdSC6LwHbo93Nuw/ZREY+Beay5HiNjFkMDU1c9JOrKwswFCFRV6l8X/Umdqw6
- QDYakjy7Avr9c6Mur1L8OjTYXKYlSmu7zKjk10po5zoQ/Dxht9kvoglAqPptoKKj6w/Xx7klb
- y+lk3X7qXLdyrqFp1+fJU8GWDIphpgsQjqDe0YXlpLkOQ9BRnLGAD0SLqu4MYCo1mfSf6Rpq6
- xK5QPvYAt6PSXltX7gG3vZlVZkE4C5cF1ZfI8b4rPlKTUB6scnCCBqBLFqiGqsnV0DULwTNxS
- KbNBmwQW57VLdG2/VPOWGTPY5KKQwOiShui+8U+kEL/L8TVf7sZdF0T4qRhLTlDPJ6lTARL1T
- si+O/J5zoCxTuYkghz5aSbgWU88TTq7OHl4sWkRXQy6YT0KEnhak3fEg8jBVZC8JTe4EHj01f
- qRSqkufd1lICel8n2PKwAmX3Ab8RRTZS0BBNw9AJfHckglhj0mqJ4ZBnj4YYcOTJMMz9XPKn+
- Z0U5nIsilFiEIpXThOTebSK/GVEF1JTll3vZSc3eRTJiHAAKBWwBMOYgwsgZOFnPwNgwbWnFk
- 3pqzPIB7+pr4df1ZHZOOu2D1fKJpezys8uExNKAgHykU5r7SOJ3GKp3T7XZrYp0T+c3t64v9J
- 474TIFSUAqP7iP4FPwSfk4QhrUQc1j8WiX76Uwj4FV8XYwZ7vc75FtVk7QxCUebwbIRTJSyM/
- JXvMimibutoppPVSpSmkXmyrlfvdV7Ubt4tJb9WgLix2B5SqKJKmmAyFZOPl/TSWEAzpTO/iy
- Is9iZnSud4BbvQ=
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nXvwuaFef6387OyRsR8ktRo9t1nVZlLvmGBWTQ0LCcys0NB7oV2
+ qnV0JRZ0zDT9ZS1nL1szZ7q7Dp5lL4+sLpwFvqzVbc8OSxH9MYTlFLgcahgxkbEkAdLOVCA
+ sWDRal7DUONvR0VCtwYsrFyLwxR62POK59fPUFFhlewU7yUypeps05E0uBtaY1H5eiv0zuy
+ bZw5EgrNujNCCitXsqhbA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6AN4P+IrtkM=:klp7il6T9/RgIJo2pQzhDA
+ Mgsqnwf6pFMkXXq/+OwTSBeMu3TLa1ts+7cPFySclV6wz6S2qJcrhiUqrhiYiclkcOBoJKyaS
+ YGLGm5jE5fnkIOWk9p2NQiB6xXHjSdP3UElHyKgTWJBHmYJh4GUeqnJEE3FavfJ5SLykWJHQm
+ p8JgLexZZ1A5V29n7L0nC3JogfKw7A7OdpsMtzhu3ApZICS+6RxcVwMjkLSbLVjofK3j/g/xg
+ /ZdBwkAjFaWHdXtw6B0+MzBRheYUPntEuTHXPdq2+WVLefp9HQklAGHDwwezcXRtcXzxY6Z98
+ JhgNc8k2ECFviYpOKdBbfAcDXuHFjN6dFRKNlIFfoo2bwxOVaWdW4DVIZzY4l6d/59byxn0P7
+ YlEDewFj4ZoRenpGC594bWZw+PlwhkchN9gdtbuyL6WoDhpItTM31IdbuH995dFFKuALnGHIu
+ m0ha4eGaH1jsXuH5zlQW1touUPHgw9UKUN8c6nKVI9YlBZAuycHkZE7RvEUKgxPSfGY2r+uFZ
+ cMEqXfG6vNnyDNWOAWeWkZ/l4YnZ1O/cQMHi2pJ0Eo6XzlL8Zvb0fFOhSX1YCbGV+j0WbdAoq
+ sNCNCYkag4s/Vnu/glsUAQuvjviIaLv2i+Y+9nx7CukS404PJRIPnOHbz6DoK0xaDiiXuId0+
+ g6pgq4vkxb783A7zM4ya3KT8JYt82vMh16eAib/9Wr2rqzaFg3txTjdfv7OJLejEx28rpYKJM
+ /RByiebfAs0u+T3Di+K6gzGnputTx5VIXD3dGPXiTsZACqXHqgxhtThnhZt1Ek4iJFIoA3Yha
+ VmRvDKw/PtM8bTDoo55rajW1w6vGHBViV5HKpecRlldYLFAHKJg2RbDIWXWeQGv1dXj427sPa
+ D6oh1+8zaC7NHJu4E1guWow+6ZZ+kjUE+RntjzZMZBdS2skQa4ZKrnUOPdtB07//oZ8PWap/j
+ tdENU/dCMV+8u7loj0+CVX9WHZvwJonhn79FHiLR/yvYwkjtw+vEg+RxS5A0g8GAaoOJK7585
+ 9EyNztWi0VTEyzdgmGLaIyXTWQeHiWJoxql4TJB1Ob5LlGXKHm8yCTg1sS5UQ0uvalBXrMYYH
+ 3U19DJxPaIkXMw=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all, some additions below :)
+In an effort to avoid open-coded arithmetic in the kernel [1], use the
+flex_array_size() and struct_size() helpers instead of an open-coded
+calculation.
 
-On Sun, Oct 24, 2021 at 11:13:28AM +0200, Len Baker wrote:
-> Hi Matthew,
->
-> thanks for looking at this. More below.
->
-> On Sat, Oct 23, 2021 at 03:27:17PM +0100, Matthew Wilcox wrote:
-> > On Sat, Oct 23, 2021 at 12:54:14PM +0200, Len Baker wrote:
-> > > Changelog v1 -> v2
-> > > - Remove the new_dir_size function and its use (Matthew Wilcox).
-> >
-> > Why do you think the other functions are any different?  Please
-> > provide reasoning.
->
-> I think it is better to be defensive. IMHO I believe that if the
-> struct_size() helper could be used in this patch, it would be more
-> easy to ACK. But it is not possible due to the complex memory
-> layouts. However, there are a lot of code in the kernel that uses the
-> struct_size() helper for memory allocator arguments where we know
-> that it don't overflow. For example:
->
-> 1.- Function imx8mm_tmu_probe()
->     Uses: struct_size(tmu, sensors, data->num_sensors)
->     Where: tmu has a sizeof(struct imx8mm_tmu) -> Not very big
-             sensors is an array of struct tmu_sensor and the
-	     sizeof(struct tmu_sensor) is small enough
->            data->num_sensors -> A little number
->
->     So, almost certainly it doesn't overflow.
->
-> 2.- Function igb_alloc_q_vector()
->     Uses: struct_size(q_vector, ring, ring_count)
->     Where: q_vector has a sizeof(struct igb_q_vector) -> Not very big
-             ring is an array of struct igb_ring and the
-	     sizeof(struct igb_ring) is not small but also no very big.
->            ring_count -> At most two.
->
->     So, almost certainly it doesn't overflow.
->
-> 3.- And so on...
->
-> So, I think that these new functions for the size calculation are
-> helpers like struct_size (but specific due to the memory layouts).
-> I don't see any difference here. Also, I think that to be defensive
-> in memory allocation arguments it is better than a possible heap
-> overflow ;)
->
-> Also, under the KSPP [1][2][3] there is an effort to keep out of
-> code all the open-coded arithmetic (To avoid unwanted overflows).
->
-> [1] https://github.com/KSPP/linux/issues/83
-> [2] https://github.com/KSPP/linux/issues/92
-> [3] https://github.com/KSPP/linux/issues/160
->
-> Moreover, after writing these reasons and thinking for a while, I
-> think that the v1 it is correct patch to apply. This is my opinion
-> but I'm open minded. Any other solution that makes the code more
-> secure is welcome.
->
-> As a last point I would like to know the opinion of Kees and
-> Gustavo since they are also working on this task.
->
-> Kees and Gustavo, what do you think?
->
-> Regards,
-> Len
+[1] https://github.com/KSPP/linux/issues/160
+
+Signed-off-by: Len Baker <len.baker@gmx.com>
+=2D--
+ drivers/nvme/host/multipath.c   | 2 +-
+ drivers/nvme/target/admin-cmd.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 954e84df6eb7..7f2071f2460c 100644
+=2D-- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -562,7 +562,7 @@ static int nvme_parse_ana_log(struct nvme_ctrl *ctrl, =
+void *data,
+ 			return -EINVAL;
+
+ 		nr_nsids =3D le32_to_cpu(desc->nnsids);
+-		nsid_buf_size =3D nr_nsids * sizeof(__le32);
++		nsid_buf_size =3D flex_array_size(desc, nsids, nr_nsids);
+
+ 		if (WARN_ON_ONCE(desc->grpid =3D=3D 0))
+ 			return -EINVAL;
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-c=
+md.c
+index 403de678fd06..6fb24746de06 100644
+=2D-- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -264,7 +264,7 @@ static u32 nvmet_format_ana_group(struct nvmet_req *re=
+q, u32 grpid,
+ 	desc->chgcnt =3D cpu_to_le64(nvmet_ana_chgcnt);
+ 	desc->state =3D req->port->ana_state[grpid];
+ 	memset(desc->rsvd17, 0, sizeof(desc->rsvd17));
+-	return sizeof(struct nvme_ana_group_desc) + count * sizeof(__le32);
++	return struct_size(desc, nsids, count);
+ }
+
+ static void nvmet_execute_get_log_page_ana(struct nvmet_req *req)
+=2D-
+2.25.1
+
