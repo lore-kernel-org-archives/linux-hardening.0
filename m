@@ -2,111 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6945FC433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 24 Oct 2021 17:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5D3C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun, 24 Oct 2021 17:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4513E60F9B
-	for <linux-hardening@archiver.kernel.org>; Sun, 24 Oct 2021 17:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B2260F0F
+	for <linux-hardening@archiver.kernel.org>; Sun, 24 Oct 2021 17:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231627AbhJXRc1 (ORCPT
+        id S229813AbhJXR7n (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 24 Oct 2021 13:32:27 -0400
-Received: from mout.gmx.net ([212.227.15.18]:38393 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231290AbhJXRc0 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 24 Oct 2021 13:32:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1635096586;
-        bh=eJf292/lZFzvszJXQLPbd7P/v4bSpcZvX7PKS7XhsKs=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=ReDfyYeo49apVvB0odLLK/7xdF6Vcb/lxo8dsBEA7LGY8iQ2E28Dt8nodhXG9b/bu
-         uQ63tAT8mf2St+ZvdWp3XXPmhCrv/Lp6ONk0Mw92ohYZ2ETOevVBrOtBlV6qNzhR7/
-         2Isf8OwdSXP0kO2lS4bKy2Z3+CZ4M43ZMxetZOww=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MLiCo-1mNASn3W7c-00HcSB; Sun, 24 Oct 2021 19:29:46 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <kch@nvidia.com>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Sun, 24 Oct 2021 13:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229527AbhJXR7n (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 24 Oct 2021 13:59:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1643BC061745;
+        Sun, 24 Oct 2021 10:57:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1owrIlrp7QuBS7qUG1k8fP6sKZZoIWNREotivRjTego=; b=tDdrpGRDcR2fZMb6A1NZfP2lzA
+        9nUukj1JE/B7h5Fhe7f9FPnNmROgMH/50L+iNfpN0ENPPMv245cfAKIIuEcVly86Dzt9TGGxEwEeh
+        kJ+Jr6kEiAe3XTzHDsL5QAhSzUARKITsL9iR8fpil8ouiG9CgB2c+5qJ028+rhlz6klMQqnkBnKWk
+        OtaFZKmJnx2TZRTTU9W1gUOFkXN0TEBY3aQU5xMV7IE0nsdozwtk//IX0qggMSYc0ZaB8h1u8H+BZ
+        pYQtGH7xbBl7wabKs0BGUp0MBxQ1Uuypt3rovQANDhy7wIPm5sx1oZJL4WoFKwcVEBJZ8RjWIkZny
+        2IJCQhRw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mehiD-00FWjz-AL; Sun, 24 Oct 2021 17:55:52 +0000
+Date:   Sun, 24 Oct 2021 18:55:13 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmet: prefer flex_array_size and struct_size over open coded arithmetic
-Date:   Sun, 24 Oct 2021 19:29:21 +0200
-Message-Id: <20211024172921.4110-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH v2][next] sysctl: Avoid open coded arithmetic in memory
+ allocator functions
+Message-ID: <YXWeAdsMRcR5tInN@casper.infradead.org>
+References: <20211023105414.7316-1-len.baker@gmx.com>
+ <YXQbxSSw9qan87cm@casper.infradead.org>
+ <20211024091328.GA2912@titan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nXvwuaFef6387OyRsR8ktRo9t1nVZlLvmGBWTQ0LCcys0NB7oV2
- qnV0JRZ0zDT9ZS1nL1szZ7q7Dp5lL4+sLpwFvqzVbc8OSxH9MYTlFLgcahgxkbEkAdLOVCA
- sWDRal7DUONvR0VCtwYsrFyLwxR62POK59fPUFFhlewU7yUypeps05E0uBtaY1H5eiv0zuy
- bZw5EgrNujNCCitXsqhbA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6AN4P+IrtkM=:klp7il6T9/RgIJo2pQzhDA
- Mgsqnwf6pFMkXXq/+OwTSBeMu3TLa1ts+7cPFySclV6wz6S2qJcrhiUqrhiYiclkcOBoJKyaS
- YGLGm5jE5fnkIOWk9p2NQiB6xXHjSdP3UElHyKgTWJBHmYJh4GUeqnJEE3FavfJ5SLykWJHQm
- p8JgLexZZ1A5V29n7L0nC3JogfKw7A7OdpsMtzhu3ApZICS+6RxcVwMjkLSbLVjofK3j/g/xg
- /ZdBwkAjFaWHdXtw6B0+MzBRheYUPntEuTHXPdq2+WVLefp9HQklAGHDwwezcXRtcXzxY6Z98
- JhgNc8k2ECFviYpOKdBbfAcDXuHFjN6dFRKNlIFfoo2bwxOVaWdW4DVIZzY4l6d/59byxn0P7
- YlEDewFj4ZoRenpGC594bWZw+PlwhkchN9gdtbuyL6WoDhpItTM31IdbuH995dFFKuALnGHIu
- m0ha4eGaH1jsXuH5zlQW1touUPHgw9UKUN8c6nKVI9YlBZAuycHkZE7RvEUKgxPSfGY2r+uFZ
- cMEqXfG6vNnyDNWOAWeWkZ/l4YnZ1O/cQMHi2pJ0Eo6XzlL8Zvb0fFOhSX1YCbGV+j0WbdAoq
- sNCNCYkag4s/Vnu/glsUAQuvjviIaLv2i+Y+9nx7CukS404PJRIPnOHbz6DoK0xaDiiXuId0+
- g6pgq4vkxb783A7zM4ya3KT8JYt82vMh16eAib/9Wr2rqzaFg3txTjdfv7OJLejEx28rpYKJM
- /RByiebfAs0u+T3Di+K6gzGnputTx5VIXD3dGPXiTsZACqXHqgxhtThnhZt1Ek4iJFIoA3Yha
- VmRvDKw/PtM8bTDoo55rajW1w6vGHBViV5HKpecRlldYLFAHKJg2RbDIWXWeQGv1dXj427sPa
- D6oh1+8zaC7NHJu4E1guWow+6ZZ+kjUE+RntjzZMZBdS2skQa4ZKrnUOPdtB07//oZ8PWap/j
- tdENU/dCMV+8u7loj0+CVX9WHZvwJonhn79FHiLR/yvYwkjtw+vEg+RxS5A0g8GAaoOJK7585
- 9EyNztWi0VTEyzdgmGLaIyXTWQeHiWJoxql4TJB1Ob5LlGXKHm8yCTg1sS5UQ0uvalBXrMYYH
- 3U19DJxPaIkXMw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211024091328.GA2912@titan>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In an effort to avoid open-coded arithmetic in the kernel [1], use the
-flex_array_size() and struct_size() helpers instead of an open-coded
-calculation.
+On Sun, Oct 24, 2021 at 11:13:28AM +0200, Len Baker wrote:
+> I think it is better to be defensive. IMHO I believe that if the
+> struct_size() helper could be used in this patch, it would be more
+> easy to ACK. But it is not possible due to the complex memory
+> layouts.
 
-[1] https://github.com/KSPP/linux/issues/160
+I think it's better for code to be understandable.  Your patch makes
+the code less readable in the name of "security", which is a poor
+justification.
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/nvme/host/multipath.c   | 2 +-
- drivers/nvme/target/admin-cmd.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> However, there are a lot of code in the kernel that uses the
+> struct_size() helper for memory allocator arguments where we know
+> that it don't overflow. For example:
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 954e84df6eb7..7f2071f2460c 100644
-=2D-- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -562,7 +562,7 @@ static int nvme_parse_ana_log(struct nvme_ctrl *ctrl, =
-void *data,
- 			return -EINVAL;
+Well, yes.  That's because struct_size() actually makes code more
+readable as well as more secure.
 
- 		nr_nsids =3D le32_to_cpu(desc->nnsids);
--		nsid_buf_size =3D nr_nsids * sizeof(__le32);
-+		nsid_buf_size =3D flex_array_size(desc, nsids, nr_nsids);
+> As a last point I would like to know the opinion of Kees and
+> Gustavo since they are also working on this task.
+> 
+> Kees and Gustavo, what do you think?
 
- 		if (WARN_ON_ONCE(desc->grpid =3D=3D 0))
- 			return -EINVAL;
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-c=
-md.c
-index 403de678fd06..6fb24746de06 100644
-=2D-- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -264,7 +264,7 @@ static u32 nvmet_format_ana_group(struct nvmet_req *re=
-q, u32 grpid,
- 	desc->chgcnt =3D cpu_to_le64(nvmet_ana_chgcnt);
- 	desc->state =3D req->port->ana_state[grpid];
- 	memset(desc->rsvd17, 0, sizeof(desc->rsvd17));
--	return sizeof(struct nvme_ana_group_desc) + count * sizeof(__le32);
-+	return struct_size(desc, nsids, count);
- }
-
- static void nvmet_execute_get_log_page_ana(struct nvmet_req *req)
-=2D-
-2.25.1
-
+You might want to check who was co-author on 610b15c50e86 before
+discarding my opinion.
