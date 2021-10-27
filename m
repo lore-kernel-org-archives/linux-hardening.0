@@ -2,211 +2,213 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70335C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Oct 2021 22:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8042C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Oct 2021 23:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 465D9610CA
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Oct 2021 22:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90A361073
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Oct 2021 23:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbhJ0Wa2 (ORCPT
+        id S229480AbhJ0Xe7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Oct 2021 18:30:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbhJ0Wa1 (ORCPT
+        Wed, 27 Oct 2021 19:34:59 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:34743 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229437AbhJ0Xe7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Oct 2021 18:30:27 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283FFC061570
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Oct 2021 15:28:01 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id v20so3017329plo.7
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Oct 2021 15:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jae7JHz3fsHp1np2WTzig06OqkVGhD1se7e/YK5ZIMg=;
-        b=M4YCj3mJPGwDGQ4dlWbp4ni9Fgf/V609Qbgn18EPyaS9OQRYcNswWhUsjGvFr0a8rx
-         CWu9xHpM8rsTl8idzIzCG/kQqqdwfRIY3f+F1zX7MIx91AmGSosqBI6ta6YI1TACtKIv
-         UMq8Fsn1BCDnGd0LwXMpZ7sWuB2iHsHNYQWVE=
+        Wed, 27 Oct 2021 19:34:59 -0400
+Received: by mail-wm1-f47.google.com with SMTP id o4-20020a1c7504000000b0032cab7473caso3679769wmc.1;
+        Wed, 27 Oct 2021 16:32:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jae7JHz3fsHp1np2WTzig06OqkVGhD1se7e/YK5ZIMg=;
-        b=KJNGdAl7+elq7V+97D7fUw843kTzXNbCKWK84Hr/8d1rerGDxPexK+f8dbNByeoDhZ
-         Kvb7ySEftLOYJEZwtZUagbt7J1ledPjuqgQNGFjRaKxZ8BlajH+8JjCY90WINkVY+Wve
-         y+Na236KvgyfsVb+1ZCqQvpYku2A+ahDEs/NJhrRC6J91clWJxbKetzQ9ndxF1Msho7U
-         p/opMHEg0ASNBqjkn1fpAB8Mb/D7z+tNQN8o/yYNmULtyBNl+XJaKSwBz7scU25zv/Pa
-         Q3eWaqa0NM5UOjr/GwH9Zx/oThUEZB17LJVzoBJjdpsOCaGiaqomUUeYxWSwm25NvZcu
-         dsrg==
-X-Gm-Message-State: AOAM533lE3Grx/zdE8mLTEUcUuUFTCqn4hfnZjRzlrouLE+Ry2Fo0XzZ
-        JQmey8ItrbOMero3fqZJes6nNg==
-X-Google-Smtp-Source: ABdhPJxjdNhgB24uT6ZvfhBd0yRjrsH9/d13XTDrvTSAEYHq8dBa1bDDmgC6szG/BwnCAAPj7PrMYA==
-X-Received: by 2002:a17:90b:3141:: with SMTP id ip1mr8680700pjb.234.1635373680579;
-        Wed, 27 Oct 2021 15:28:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d14sm674321pgt.64.2021.10.27.15.28.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gGvRlwy1hKPSRe6UF/gEOA6Zs7pqAF2R7y94ByLf0fc=;
+        b=V70icanAhmAgsDLoIqa/NExiNCZlvioQ1R74St1gs3N+iUPb/BaB3k2mOFqbUGvZGF
+         s0+gFRqjkKidAKEwg8kOvawMCJV7w9GVdDQ8uINFBbq1UnJCgOIKRHRgZv4SSBBUe/19
+         O3on3D/vBK1A5tOlNeIfWYlCe6CxVz0ScNfnKSGrASjGUEiOdG9wi1vVrPpY/6qUHvWD
+         iXuGifYePMUmVBJs98ZrNcJm0g6fTED6QUPHmS8RX4exYahI6pyXp6X9htzbY3nNM6XA
+         QdZbDVdlRtoLTeL2BjLT0q8vEzLCL1QOPLa3U3IU8QjN20HiUBY35aLj3poYJfsnz1AV
+         +Amg==
+X-Gm-Message-State: AOAM532C22K7rUEszf39deOYPym6Qci5b//cWkn8b/m2RMZCiZXMv7Pn
+        q5SnM90zBHtTCfZkfGCaqOw=
+X-Google-Smtp-Source: ABdhPJyj9WWwmhPoreFXZQ7aB4YrttTeEGCd1+PRHxnVW+etewoW2O0IcbL3FlSqY563+nnOXCWjlw==
+X-Received: by 2002:a1c:9d82:: with SMTP id g124mr775917wme.160.1635377551711;
+        Wed, 27 Oct 2021 16:32:31 -0700 (PDT)
+Received: from hackbase.. ([46.166.133.199])
+        by smtp.gmail.com with ESMTPSA id m3sm1199032wrx.52.2021.10.27.16.32.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 15:28:00 -0700 (PDT)
-Date:   Wed, 27 Oct 2021 15:27:59 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Wed, 27 Oct 2021 16:32:31 -0700 (PDT)
+From:   Alexander Popov <alex.popov@linux.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul McKenney <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v5 00/15] x86: Add support for Clang CFI
-Message-ID: <202110271430.2A3980217@keescook>
-References: <20211013181658.1020262-1-samitolvanen@google.com>
- <20211026201622.GG174703@worktop.programming.kicks-ass.net>
- <20211027120515.GC54628@C02TD0UTHF1T.local>
- <CAMj1kXEx10gC8eH7rV-GbZZj2M3uDue6HYsKb+A5J01zOxm_FA@mail.gmail.com>
- <20211027124852.GK174703@worktop.programming.kicks-ass.net>
- <YXlOd1lyKZKAcJfA@hirez.programming.kicks-ass.net>
- <202110270939.F5C79CC@keescook>
- <YXnC1jqwR2ZKfMdk@hirez.programming.kicks-ass.net>
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Laura Abbott <labbott@kernel.org>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Scull <ascull@google.com>,
+        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
+        Mathieu Chouquet-Stringer <me@mathieu.digital>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mike Rapoport <rppt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexander Popov <alex.popov@linux.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     notify@kernel.org
+Subject: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
+Date:   Thu, 28 Oct 2021 02:32:13 +0300
+Message-Id: <20211027233215.306111-1-alex.popov@linux.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YXnC1jqwR2ZKfMdk@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 27, 2021 at 11:21:26PM +0200, Peter Zijlstra wrote:
-> On Wed, Oct 27, 2021 at 10:11:28AM -0700, Kees Cook wrote:
-> > On Wed, Oct 27, 2021 at 03:04:55PM +0200, Peter Zijlstra wrote:
-> > > [...]
-> > > cold_function()
-> > > {
-> > > 	...
-> > > 	global_foo->func1(args1);
-> > > 	...
-> > > }
-> > 
-> > If global_foo is non-const, then the static call stuff is just an
-> > obfuscated indirect call.
-> 
-> It is not. The target is determined once, at boot time, depending on the
-> hardware, it then never changes. The static_call() results in a direct
-> call to that function.
+Hello! This is the v2 of pkill_on_warn.
+Changes from v1 and tricks for testing are described below.
 
-Right, I mean it is _effectively_ an indirect call in the sense that the
-call destination is under the control of a writable memory location.
-Yes, static_call_update() must be called to make the change, hence why I
-didn't wave my arms around when static_call was originally added. It's a
-net benefit for the kernel: actual indirect calls now become updatable
-direct calls. This means reachability becomes much harder for attackers;
-I'm totally a fan. :)
+Rationale
+=========
 
-> > If static_call_update() accepts an arbitrary function argument, then it
-> > needs to perform the same validation that is currently being injected
-> > at indirect call sites to avoid having static calls weaken CFI.
-> 
-> static_call_update() is a macro and has compile time signature checks,
-> the actual function is __static_call_update() and someone can go add
-> extra validation in there if they so desire.
-> 
-> I did have this patch:
-> 
->   https://lkml.kernel.org/r/20210904105529.GA5106@worktop.programming.kicks-ass.net
-> 
-> but I never did get around to finishing it. Although looking at it now,
-> I suppose static_call_seal() might be a better name.
+Currently, the Linux kernel provides two types of reaction to kernel
+warnings:
+ 1. Do nothing (by default),
+ 2. Call panic() if panic_on_warn is set. That's a very strong reaction,
+    so panic_on_warn is usually disabled on production systems.
 
-Right -- though wouldn't just adding __ro_after_init do the same?
+From a safety point of view, the Linux kernel misses a middle way of
+handling kernel warnings:
+ - The kernel should stop the activity that provokes a warning,
+ - But the kernel should avoid complete denial of service.
 
-DEFINE_STATIC_CALL(static_call_name, func_a) __ro_after_init;
+From a security point of view, kernel warning messages provide a lot of
+useful information for attackers. Many GNU/Linux distributions allow
+unprivileged users to read the kernel log, so attackers use kernel
+warning infoleak in vulnerability exploits. See the examples:
+https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html
+https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
 
-If you wanted the clean WARN_ON, __static_call_update() could check if
-the struct static_call_key is in a non-writable region.
+Let's introduce the pkill_on_warn sysctl.
+If this parameter is set, the kernel kills all threads in a process that
+provoked a kernel warning. This behavior is reasonable from a safety point of
+view described above. It is also useful for kernel security hardening because
+the system kills an exploit process that hits a kernel warning.
 
-> And you're worried about __static_call_update() over text_poke_bp()
-> because?
+Moreover, bugs usually don't come alone, and a kernel warning may be
+followed by memory corruption or other bad effects. So pkill_on_warn allows
+the kernel to stop the process when the first signs of wrong behavior
+are detected.
 
-Both have a meaningful lack of exposure to common attacker-reachable
-code paths (e.g., it's likely rare that there are ways attackers can
-control the target/content of a text_poke_bp(): alternatives and ftrace,
-both of which tend to use read-only content).
 
-static_call_update() is limited per-site with a fixed set of hardcoded
-targets (i.e. any place static_call() is used), but the content
-is effectively arbitrary (coming from writable memory). AIUI, it's
-intended to be used more widely than text_poke_bp(), and it seems like
-call sites using static_call_update() will become less rare in future
-kernels. (Currently it seems mostly focused on sched and pmu, which
-don't traditionally have much userspace control).
+Changes from v1
+===============
 
-So, they're kind of opposite, but for me the question is for examining
-the changes to reachability and what kind of primitives their existence
-provides an attacker. IMO, static_calls are a net gain over indirect
-calls (from some usually writable function pointer) because it becomes
-a direct call. It's risk doesn't match a "real" direct call, though,
-since they do still have the (much more narrow) risk of having something
-call static_call_update() from a writable function pointer as in your
-example, but that's still a defensively better position than an regular
-indirect call.
+1) Introduce do_pkill_on_warn() and call it in all warning handling paths.
 
-What I'm hoping to see from static_calls is maybe defaulting to being
-ro_after_init, and explicitly marking those that can't be, which makes
-auditing easier and put things into a default-safe state (i.e. both
-fixed targets and fixed content).
+2) Do refactoring without functional changes in a separate patch.
 
-> > Getting a "jump table to actual function" primitive only avoids the added
-> > jump -- all the CFI checking remains bypassed.
-> 
-> Exactly, so the extra jump serves no purpose and needs to go. Doubly so
-> because people are looking at static_call() to undo some of the
-> performance damage introduced by CFI :-)
+3) Avoid killing init and kthreads.
 
-Well, sure, it's inefficient, not _broken_. :) And can you point to the
-"use static_calls because CFI is slow" discussion? I'd be curious to read
-through that; the past performance testing had shown that CFI performance
-overhead tends to be less than the gains of LTO. So compared to a "stock"
-kernel, things should be about the same if not faster.
+4) Use do_send_sig_info() instead of do_group_exit().
 
-That said, I understand I'm talking to you, and you're paying very close
-attention to the scheduler, etc. :) I'm sure there are specific
-workloads that look terrible under CFI!
+5) Introduce sysctl instead of using core_param().
 
-> > If static call function
-> > address storage isn't const, for CFI to work as expected the update()
-> > routine will need to do the same checking that is done at indirect call
-> > sites when extracting the "real" function for writing into a direct call.
-> 
-> I've mentioned static_call like a hundred times in these CFI threads..
-> if you want to do CFI on them, go ahead. I'm just not sure the C type
-> system is up for that, you'll have to somehow frob the signature symbol
-> into __static_call_update(), something like __builtin_type_symbol().
-> 
-> > To avoid all of this, though, it'd be better if static calls only
-> > switched between one of a per-site const list of possible functions,
-> > which would make it a much tighter hand-rolled CFI system itself. :)
-> > (i.e. it would operate from a specific and short list of expected
-> > functions rather than the "best effort" approach of matching function
-> > prototypes as done by Clang CFI.)
-> 
-> That sounds like a ton of painful ugly.
 
-Right, I know. That's why I'm saying that I see these features as
-certainly related, but not at odds with each other. CFI doesn't protect
-static_call sites, but static_call sites are already more well protected
-than their earlier indirect calls.
+Tricks for testing
+==================
 
-The only note I had was that if static_call wants to dig into the jump
-table, it likely needs to static_call-specific: we don't want a general
-way to do that without knowing we have some reasonable bounds on the
-behavior of the code using it. I think it's fine to have static_calls
-do this, though it'd be nice if they could be a little more defensive
-(generally) at the same time.
+1) This patch series was tested on x86_64 using CONFIG_LKDTM.
+The kernel kills a process that performs this:
+  echo WARNING > /sys/kernel/debug/provoke-crash/DIRECT
+
+2) The warn_slowpath_fmt() path was tested using this trick:
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index 84b87538a15d..3106c203ebb6 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -73,7 +73,7 @@ do {                                                          \
+  * were to trigger, we'd rather wreck the machine in an attempt to get the
+  * message out than not know about it.
+  */
+-#define __WARN_FLAGS(flags)                                    \
++#define ___WARN_FLAGS(flags)                                   \
+ do {                                                           \
+        instrumentation_begin();                                \
+        _BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));           \
+
+3) Testing pkill_on_warn with kthreads was done using this trick:
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index bce848e50512..13c56f472681 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2133,6 +2133,8 @@ static int __noreturn rcu_gp_kthread(void *unused)
+                WRITE_ONCE(rcu_state.gp_state, RCU_GP_CLEANUP);
+                rcu_gp_cleanup();
+                WRITE_ONCE(rcu_state.gp_state, RCU_GP_CLEANED);
++
++               WARN_ONCE(1, "hello from kthread\n");
+        }
+ }
+
+4) Changing drivers/misc/lkdtm/bugs.c:lkdtm_WARNING() allowed me
+to test all warning flavours:
+ - WARN_ON()
+ - WARN()
+ - WARN_TAINT()
+ - WARN_ON_ONCE()
+ - WARN_ONCE()
+ - WARN_TAINT_ONCE()
+
+Thanks!
+
+Alexander Popov (2):
+  bug: do refactoring allowing to add a warning handling action
+  sysctl: introduce kernel.pkill_on_warn
+
+ Documentation/admin-guide/sysctl/kernel.rst | 14 ++++++++
+ include/asm-generic/bug.h                   | 37 +++++++++++++++------
+ include/linux/panic.h                       |  3 ++
+ kernel/panic.c                              | 22 +++++++++++-
+ kernel/sysctl.c                             |  9 +++++
+ lib/bug.c                                   | 22 ++++++++----
+ 6 files changed, 90 insertions(+), 17 deletions(-)
 
 -- 
-Kees Cook
+2.31.1
+
