@@ -2,77 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEBBC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Oct 2021 11:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1E1C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Oct 2021 12:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 327E861040
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Oct 2021 11:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36AC60F70
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Oct 2021 12:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239623AbhJ0LYI (ORCPT
+        id S234316AbhJ0MHs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Oct 2021 07:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237212AbhJ0LYI (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Oct 2021 07:24:08 -0400
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee2:21ea])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD142C061570;
-        Wed, 27 Oct 2021 04:21:42 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4HfR911HlKz4xbr;
-        Wed, 27 Oct 2021 22:21:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1635333701;
-        bh=mxhJiJHxAE3DqN+NxMq3fawT9A/Z2lD9DWzQe94QgD8=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=pJM+SS2ik7o+BzLNcB0GdrKDSrYG6qQUlvRlcWVfQprhCc23GZGzjXApzNnuK27vY
-         H6+CwoBbUI5rq/StD16Wp9gLljy66Cy2t1jK3Hn44FR9N2KdvtBIFLoT1hFu4x3NzI
-         0DcVej+SunyHb6jgahrvrhYStINA0rxGAy5hLsMiFKQkxf2zp2OMHMWL86MkeQWF+g
-         +iwf8tAa7zpys+KMBOWAR00iKDWgB537E6fqe68rp350GFh9bjAgIhaPgwgA7915cj
-         eW8VYeG1ESHe+3XrHVMfY+XNXIOtyGk06ZCOTjBHlJbYmldAPWbWTCx2FFJFX4AvFR
-         7+zM4Ead586dg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Haren Myneni <haren@linux.ibm.com>,
-        linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] powerpc/vas: Fix potential NULL pointer dereference
-In-Reply-To: <20211026224016.GA1488461@embeddedor>
-References: <20211015050345.GA1161918@embeddedor>
- <97c42e43-15b9-5db6-d460-dbb16f31954d@linux.ibm.com>
- <20211026184201.GB1457721@embeddedor> <87h7d3beqq.fsf@mpe.ellerman.id.au>
- <20211026224016.GA1488461@embeddedor>
-Date:   Wed, 27 Oct 2021 22:21:39 +1100
-Message-ID: <87v91iaf24.fsf@mpe.ellerman.id.au>
+        Wed, 27 Oct 2021 08:07:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:42596 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237257AbhJ0MHr (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 27 Oct 2021 08:07:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 892C31FB;
+        Wed, 27 Oct 2021 05:05:21 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.72.240])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71BEA3F73D;
+        Wed, 27 Oct 2021 05:05:18 -0700 (PDT)
+Date:   Wed, 27 Oct 2021 13:05:15 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>, x86@kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, ardb@kernel.org
+Subject: Re: [PATCH v5 00/15] x86: Add support for Clang CFI
+Message-ID: <20211027120515.GC54628@C02TD0UTHF1T.local>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211026201622.GG174703@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211026201622.GG174703@worktop.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
-> On Wed, Oct 27, 2021 at 09:30:53AM +1100, Michael Ellerman wrote:
-> [..]
->> > I think I'll take this in my tree.
->> 
->> I've already put it in powerpc/next:
->> 
->>   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commit/?h=next&id=61cb9ac66b30374c7fd8a8b2a3c4f8f432c72e36
->
-> Oh, great. :)
->
->> If you need to pick it up as well for some reason that's fine.
->
-> I just didn't  want it to get lost somehow. I'll drop it from tree now.
+On Tue, Oct 26, 2021 at 10:16:22PM +0200, Peter Zijlstra wrote:
+> On Wed, Oct 13, 2021 at 11:16:43AM -0700, Sami Tolvanen wrote:
+> > This series adds support for Clang's Control-Flow Integrity (CFI)
+> > checking to x86_64. With CFI, the compiler injects a runtime
+> > check before each indirect function call to ensure the target is
+> > a valid function with the correct static type. This restricts
+> > possible call targets and makes it more difficult for an attacker
+> > to exploit bugs that allow the modification of stored function
+> > pointers. For more details, see:
+> > 
+> >   https://clang.llvm.org/docs/ControlFlowIntegrity.html
+> 
+> So, if I understand this right, the compiler emits, for every function
+> two things: 1) the actual funcion and 2) a jump-table entry.
+> 
+> Then, every time the address of a function is taken, 2) is given instead
+> of the expected 1), right?
 
-No worries, sorry I've been so slow lately.
+Yes, and we had to bodge around this with function_nocfi() to get the
+actual function address.
 
-cheers
+Really there should be a compiler intrinsic or attribute for this, given
+the compiler has all the releveant information available. On arm64 we
+had to us inine asm to generate the addres...
+
+Taking a step back, it'd be nicer if we didn't have the jump-table shim
+at all, and had some SW landing pad (e.g. a NOP with some magic bytes)
+in the callees that the caller could check for. Then function pointers
+would remain callable in call cases, and we could explcitly add landing
+pads to asm to protect those. I *think* that's what the grsecurity folk
+do, but I could be mistaken.
+
+> But how does this work with things like static_call(), which we give a
+> function address (now a jump-table entry) and use that to write direct
+> call instructions?
+> 
+> Should not this jump-table thingy get converted to an actual function
+> address somewhere around arch_static_call_transform() ? This also seems
+> relevant for arm64 (which already has CLANG_CFI supported) given:
+> 
+>   https://lkml.kernel.org/r/20211025122102.46089-3-frederic@kernel.org
+
+Ugh, yeah, we'll need to do the function_nocfi() dance somewhere...
+
+Thanks,
+Mark.
