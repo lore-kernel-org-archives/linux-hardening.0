@@ -2,97 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18422C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 00:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF4EC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99AD610CA
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 00:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9983260041
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbhJ1AiC (ORCPT
+        id S229946AbhJ1LOn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Oct 2021 20:38:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41650 "EHLO
+        Thu, 28 Oct 2021 07:14:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbhJ1AiB (ORCPT
+        with ESMTP id S229578AbhJ1LOn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Oct 2021 20:38:01 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF846C061570;
-        Wed, 27 Oct 2021 17:35:35 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id v16so3191695ple.9;
-        Wed, 27 Oct 2021 17:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3UTHkAsYPEB52f7zz17R8yc9UXkkpLLy9VQI7Ai275w=;
-        b=g7gWwpxrpAjLZub1aBALSl+itvh+KuKGGlFvXmzADflMh5wsnGZjR/I1alqmy2qALL
-         AYMs7yharJz2u/37nMbLrSjNgLnM4+ivDXzDp0/ZrNUsXSM/VRDYWqg/D5llL2/lHVkj
-         cmVU+yRTzlSIxxN3Z+Y+G1+cf/lmxLMkRNQB5pjsHzgE5X0GHESTbXi8DyngptgNSETR
-         1qAhCvCxgrd4JYrXPU1/e0j0wFNRGcej68HbTQq7j6PS4qHCEOJ6EbYPmKOoyQFZ1nZ7
-         cirpVipcR0JuQ9BAxSdClnWN/O6JALxeRapxy/8kgLn8yFaHlQ44OWm7+7v9+XAHT4eh
-         ZTjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3UTHkAsYPEB52f7zz17R8yc9UXkkpLLy9VQI7Ai275w=;
-        b=zxmYqKsAl0a28x2JGMvDjvA4aAV1SkBph99PLer98AqbxgRngyJQFECdwNsNIIndub
-         VIeNcfFbrutY8XJLl4h1Vpr+wiMtYLt7QtZo8hFh0pKgPPsiE679AlrfncWmE1Tz5lPq
-         OKCEiuvqre2lYDo9I5oDWEgAdDn566zaV39mtWnBgnrBdc3vk5fL4cfdYfzrHHYkmqzt
-         8DD2ioNxkoOfq4zHt4UPOxxgPEPrYneooQgzQFHKOrdBjfmm1fS3mw9sC/R+yq7g9f2+
-         UXCeg6Chhll2rGZ60UHx7N81V6qpC3pZ3kyp8AYBuKGdXRtM1RdlPGRzUJwJkWVQNsmx
-         DblQ==
-X-Gm-Message-State: AOAM533b2gk1B2RXRt2DeT23nVExGEfukoOgFuK10jmeCEu8R/xEgX+n
-        i2fxXF+b2pXlPhSAf6B9BmA=
-X-Google-Smtp-Source: ABdhPJzKiXxM74Zu2RbieygcX+4cu/ZPHrI2bJ6FHwS60+w0cGs3FspRFSJLdyLk3rkXrE7/De+NDA==
-X-Received: by 2002:a17:90a:ae18:: with SMTP id t24mr1038803pjq.92.1635381335317;
-        Wed, 27 Oct 2021 17:35:35 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id on17sm5546605pjb.47.2021.10.27.17.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 17:35:35 -0700 (PDT)
-From:   Yang Guang <cgel.zte@gmail.com>
-X-Google-Original-From: Yang Guang <yang.guang5@zte.com.cn>
+        Thu, 28 Oct 2021 07:14:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1D2C061570;
+        Thu, 28 Oct 2021 04:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=N7GZ22gb+iGao7JNthfhMzqUFJ1nHCbCiKPouEv2QCE=; b=uNQphv4X1bK24WiK/EUb2sc1Ne
+        HL0dtPCjNqlc3UAfHG3D3Djn9F66Zh1WlD5+wgguWUHBmtdIRxW2TWe8cltP3lXclj/GKV7AtWIWI
+        7zJAsFhlpPsxGNzdZnSVjE6mUmBsl71qoFuektruFPCHZXqIXw2TAi+4AAf6CD26MgIN0YHEcEt9m
+        R+G/Zr2/CtzLdNxT93UGDUQ1dhF0gl+XmGIYEHJDJmzGnynEUqVEMe8e/jaDMmvB7Jn0f0iWlYZKC
+        ZR5qrUnGUc/r9lwPZdHLkv7+ODh93R9EG6a49w7nitY8fFFavnc2Abe4a6A7FR8GVaHzgis3hzQy9
+        dhF6OxFA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mg3Hx-000ilK-VV; Thu, 28 Oct 2021 11:10:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92F8430022C;
+        Thu, 28 Oct 2021 13:09:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5622C20D903DE; Thu, 28 Oct 2021 13:09:39 +0200 (CEST)
+Date:   Thu, 28 Oct 2021 13:09:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Yang Guang <yang.guang5@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gcc-plugins: use swap() to make code cleaner
-Date:   Thu, 28 Oct 2021 00:35:26 +0000
-Message-Id: <20211028003526.7117-1-yang.guang5@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v5 00/15] x86: Add support for Clang CFI
+Message-ID: <YXqE82jQh4S79uVL@hirez.programming.kicks-ass.net>
+References: <20211013181658.1020262-1-samitolvanen@google.com>
+ <20211026201622.GG174703@worktop.programming.kicks-ass.net>
+ <20211027120515.GC54628@C02TD0UTHF1T.local>
+ <CAMj1kXEx10gC8eH7rV-GbZZj2M3uDue6HYsKb+A5J01zOxm_FA@mail.gmail.com>
+ <20211027124852.GK174703@worktop.programming.kicks-ass.net>
+ <YXlOd1lyKZKAcJfA@hirez.programming.kicks-ass.net>
+ <202110270939.F5C79CC@keescook>
+ <YXnC1jqwR2ZKfMdk@hirez.programming.kicks-ass.net>
+ <202110271430.2A3980217@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202110271430.2A3980217@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Using swap() make it more readable.
+On Wed, Oct 27, 2021 at 03:27:59PM -0700, Kees Cook wrote:
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Yang Guang <yang.guang5@zte.com.cn>
----
- scripts/gcc-plugins/randomize_layout_plugin.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> Right -- though wouldn't just adding __ro_after_init do the same?
+> 
+> DEFINE_STATIC_CALL(static_call_name, func_a) __ro_after_init;
 
-diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
-index 334741a31d0a..feee5ba8fa2b 100644
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -244,11 +244,8 @@ static void full_shuffle(tree *newtree, unsigned long length, ranctx *prng_state
- 	unsigned long i, randnum;
- 
- 	for (i = length - 1; i > 0; i--) {
--		tree tmp;
- 		randnum = ranval(prng_state) % (i + 1);
--		tmp = newtree[i];
--		newtree[i] = newtree[randnum];
--		newtree[randnum] = tmp;
-+		swap(newtree[i], newtree[randnum]);
- 	}
- }
- 
--- 
-2.30.2
+That breaks modules (and your jump_label patch doing the same is
+similarly broken).
 
+When a module is loaded that uses the static_call(), it needs to
+register it's .static_call_sites range with the static_call_key which
+requires modifying it.
