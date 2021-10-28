@@ -2,75 +2,240 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C61C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 17:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E10CC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 18:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 184F760F38
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 17:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A99610E5
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 18:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbhJ1Rfn (ORCPT
+        id S231151AbhJ1SuR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 28 Oct 2021 13:35:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229610AbhJ1Rfn (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 28 Oct 2021 13:35:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D018960296;
-        Thu, 28 Oct 2021 17:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635442395;
-        bh=XA/MQSlcp4ctFJUiuMolr/e1TlKVq0ib84LjTsjf758=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o7XIZfpN2EylO/+qIscP2AHoQB9g3JvcZrrardPff+9HfiskvhjPMQauRhzlW3UYG
-         cNbFIC23oli5Auqe810O/50v2jeE+zNHs7rilp/CR2W+FCX/FUqRXvlfHZp57+HxfF
-         rjD1UqiKBJluiiDrWKejRw+ZY05fnlHUyFzP7jikxzEnTMchN8mgVgpMusJBW/30DV
-         5yBDLl0xsRs2VNfhnlQ048kWZnl2dWYdKellWu94RdPm7EUb8ac3GB96lrqf5Ymugw
-         5WX1IZAsZihK4y4GnymYjnoNmaNohl4DEY5aTdAZJ6aKKnDhj3wzam5Kc67cNI0nE3
-         7jCqUgmR8LeXA==
-Date:   Thu, 28 Oct 2021 12:38:13 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Karol Herbst <kherbst@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] nouveau/svm: Use kvcalloc() instead of kvzalloc()
-Message-ID: <20211028173813.GA1507412@embeddedor>
-References: <20210928222513.GA294575@embeddedor>
- <CACO55tsD98dNzw8fP=CiKLsdbnn2Vg78+wTRM90kutHtv1RZ5A@mail.gmail.com>
- <202110211002.CB975695@keescook>
+        Thu, 28 Oct 2021 14:50:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230517AbhJ1SuR (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 28 Oct 2021 14:50:17 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0589DC061348
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Oct 2021 11:47:49 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id m26so6848828pff.3
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Oct 2021 11:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OVU9szkq61aNLb2lvzFxnap0kX1k7Tq4ULR6zE1UQeA=;
+        b=JhzxYSWISXsDoknoTCT5nmTH4RRJulSB1Z9lahh/ZTXx4d4gioMrgqswO8/VYuE+GL
+         uTMcpMs9GnlYYgE8fyW79aM/M3HNcJR6IINXi2Cr2HpJoNnLX2FgIGH8po0lCth0yQ2M
+         DkaEnizVNx0xEvzdLz5QigtPDn2z/jCMKZQZU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OVU9szkq61aNLb2lvzFxnap0kX1k7Tq4ULR6zE1UQeA=;
+        b=63UQgf55JAsBQiIw+XMZNuoB5nC3G2bg2ev9fD54EQZuZZg4uHS8OS6dIfXLRo+S+m
+         1O3q5AcqqwWDQzroTbZ0htNpwvAZvqAEoz3Ll5IXFiihbdkHnvPxvVoT9S6SUrl8PFGr
+         b+rw/mt2UgjJvoh7MEgIapTilBatcDjaWPw6x23J0aU/epu14FeTSeKt5uO3AOuuTezu
+         9h6DqqqepsFQFv/wvFjBKVVQTaHRJGXddkY7pn7waYeZ+nLe7kxO1fwemHs+hm2KqOn9
+         UZfI2ubsna7routxX+JrKPsS+IBwy3UxpsuFNQrYVqyErOg6HwHIImphJP6i6yuFKVpi
+         ooRQ==
+X-Gm-Message-State: AOAM532CEX3q75OiyWfsMjRSpG15jbg3gmS7VAOWT3acb370cDLXgYxT
+        UsNKsBMoOOP2O59i3oOyYihfag==
+X-Google-Smtp-Source: ABdhPJzgpftfzQqh6cQkfQwpqB9kCGWUYUkdWrI6OS+lGu7a8shSi/eg1Ixn5ahdw0frC07JSH/3jQ==
+X-Received: by 2002:aa7:8a0e:0:b0:47c:1116:3ce with SMTP id m14-20020aa78a0e000000b0047c111603cemr5964030pfa.76.1635446869394;
+        Thu, 28 Oct 2021 11:47:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ls6sm144127pjb.53.2021.10.28.11.47.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Oct 2021 11:47:49 -0700 (PDT)
+Date:   Thu, 28 Oct 2021 11:47:48 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Andrea Righi <andrea.righi@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: selftests: seccomp_bpf failure on 5.15
+Message-ID: <202110281136.5CE65399A7@keescook>
+References: <YXrN+Hnl9pSOsWlA@arighi-desktop>
+ <202110280955.B18CB67@keescook>
+ <878rydm56l.fsf@disp2133>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202110211002.CB975695@keescook>
+In-Reply-To: <878rydm56l.fsf@disp2133>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 10:03:19AM -0700, Kees Cook wrote:
-> On Wed, Sep 29, 2021 at 05:28:47AM +0200, Karol Herbst wrote:
-> > Lack of documentation inside Linux here is a bit annoying, but do I
-> > understand it correctly, that the main (and probably only) difference
-> > is that kvcalloc checks whether the multiplication overflows and
-> > returns NULL in this case?
+On Thu, Oct 28, 2021 at 12:26:26PM -0500, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
 > 
-> That's correct. :)
+> > On Thu, Oct 28, 2021 at 06:21:12PM +0200, Andrea Righi wrote:
+> >> The following sub-tests are failing in seccomp_bpf selftest:
+> >> 
+> >> 18:56:54 DEBUG| [stdout] # selftests: seccomp: seccomp_bpf
+> >> ...
+> >> 18:56:57 DEBUG| [stdout] # #  RUN           TRACE_syscall.ptrace.kill_after ...
+> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (1) == msg (0)
+> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (2) == msg (1)
+> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (1) == msg (2)
+> >> 18:56:57 DEBUG| [stdout] # # kill_after: Test exited normally instead of by signal (code: 12)
+> >> 18:56:57 DEBUG| [stdout] # #          FAIL  TRACE_syscall.ptrace.kill_after
+> >> ...
+> >> 18:56:57 DEBUG| [stdout] # #  RUN           TRACE_syscall.seccomp.kill_after ...
+> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:1547:kill_after:Expected !ptrace_syscall (1) == IS_SECCOMP_EVENT(status) (0)
+> >> 18:56:57 DEBUG| [stdout] # # kill_after: Test exited normally instead of by signal (code: 0)
+> >> 18:56:57 DEBUG| [stdout] # #          FAIL  TRACE_syscall.seccomp.kill_after
+> >> 18:56:57 DEBUG| [stdout] # not ok 80 TRACE_syscall.seccomp.kill_after
+> >> ...
+> >> 18:56:57 DEBUG| [stdout] # # FAILED: 85 / 87 tests passed.
+> >> 18:56:57 DEBUG| [stdout] # # Totals: pass:85 fail:2 xfail:0 xpass:0 skip:0 error:0
+> >> 18:56:57 DEBUG| [stdout] not ok 1 selftests: seccomp: seccomp_bpf # exit=1
+> >> 
+> >> I did some bisecting and found that the failures started to happen with:
+> >> 
+> >>  307d522f5eb8 ("signal/seccomp: Refactor seccomp signal and coredump generation")
+> >> 
+> >> Not sure if the test needs to be fixed after this commit, or if the
+> >> commit is actually introducing an issue. I'll investigate more, unless
+> >> someone knows already what's going on.
+> >
+> > Ah thanks for noticing; I will investigate...
 > 
-> > On Wed, Sep 29, 2021 at 12:21 AM Gustavo A. R. Silva
-> > <gustavoars@kernel.org> wrote:
-> > >
-> > > Use 2-factor argument form kvcalloc() instead of kvzalloc().
-> > >
-> > > Link: https://github.com/KSPP/linux/issues/162
-> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> I just did a quick read through of the test and while
+> I don't understand everything having a failure seems
+> very weird.
+> 
+> I don't understand the comment:
+> /* Tracer will redirect getpid to getppid, and we should die. */
+> 
+> As I think what happens is it the bpf programs loads the signal
+> number.  Tests to see if the signal number if GETPPID and allows
+> that system call and causes any other system call to be terminated.
 
-I'll take this in my -next tree.
+The test suite runs a series of seccomp filter vs syscalls under tracing,
+either with ptrace or with seccomp SECCOMP_RET_TRACE, to validate the
+expected behavioral states. It seems that what's happened is that the
+SIGSYS has suddenly become non-killing:
 
-Thanks
---
-Gustavo
+#  RUN           TRACE_syscall.ptrace.kill_after ...
+# seccomp_bpf.c:1555:kill_after:Expected WSTOPSIG(status) & 0x80 (0) == 0x80 (128)
+# seccomp_bpf.c:1556:kill_after:WSTOPSIG: 31
+# kill_after: Test exited normally instead of by signal (code: 12)
+#          FAIL  TRACE_syscall.ptrace.kill_after
+
+i.e. the ptracer no longer sees a dead tracee, which would pass through
+here:
+
+                if (WIFSIGNALED(status) || WIFEXITED(status))
+                        /* Child is dead. Time to go. */
+                        return;
+
+So the above saw a SIG_TRAP|SIGSYS rather than a killing SIGSYS. i.e.
+instead of WIFSIGNALED(stauts) being true, it instead catches a
+PTRACE_EVENT_STOP for SIGSYS, which should be impossible (the process
+should be getting killed).
+
+> Which being single threaded would seem to cause the kernel  to execute
+> the changed code.
+> 
+> How there kernel at that point is having the process exit with anything
+> except SIGSYS I am not immediately seeing.
+
+I've run out of time at the moment to debug further, but I've appended
+my changes to the test, and a brute-force change to kernel/seccomp.c to
+restore original behavior (though I haven't tested if coredumping works
+still). I'll return to this in a few hours...
+
+> 
+> The logic is the same as that for SECCOMP_RET_TRAP is there a test for
+> that, that is also failing?
+> 
+> How do you run that test anyway?
+
+cd tools/testing/selftests/seccomp
+make seccomp_bpf
+scp seccomp_bpf target:
+ssh target ./seccomp_bpf
+
+
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 4d8f44a17727..b6c8c8f8bd69 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -1269,10 +1269,12 @@ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
+ 			syscall_rollback(current, current_pt_regs());
+ 			/* Trigger a coredump with SIGSYS */
+ 			force_sig_seccomp(this_syscall, data, true);
+-		} else {
+-			do_exit(SIGSYS);
++			do_group_exit(SIGSYS);
+ 		}
+-		return -1; /* skip the syscall go directly to signal handling */
++		if (action == SECCOMP_RET_KILL_THREAD)
++			do_exit(SIGSYS);
++		else
++			do_group_exit(SIGSYS);
+ 	}
+ 
+ 	unreachable();
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 1d64891e6492..8f8c1df885d6 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -1487,7 +1487,7 @@ TEST_F(precedence, log_is_fifth_in_any_order)
+ #define PTRACE_EVENT_SECCOMP 7
+ #endif
+ 
+-#define IS_SECCOMP_EVENT(status) ((status >> 16) == PTRACE_EVENT_SECCOMP)
++#define PTRACE_EVENT_MASK(status) ((status) >> 16)
+ bool tracer_running;
+ void tracer_stop(int sig)
+ {
+@@ -1536,17 +1536,34 @@ void start_tracer(struct __test_metadata *_metadata, int fd, pid_t tracee,
+ 	/* Run until we're shut down. Must assert to stop execution. */
+ 	while (tracer_running) {
+ 		int status;
++		bool run_callback = true;
+ 
+ 		if (wait(&status) != tracee)
+ 			continue;
++
+ 		if (WIFSIGNALED(status) || WIFEXITED(status))
+ 			/* Child is dead. Time to go. */
+ 			return;
+ 
+-		/* Check if this is a seccomp event. */
+-		ASSERT_EQ(!ptrace_syscall, IS_SECCOMP_EVENT(status));
++		/* Check if we got an expected event. */
++		ASSERT_EQ(WIFCONTINUED(status), false);
++		ASSERT_EQ(WIFSTOPPED(status), true);
++		ASSERT_EQ(WSTOPSIG(status) & SIGTRAP, SIGTRAP) {
++			TH_LOG("WSTOPSIG: %d", WSTOPSIG(status));
++		}
++		if (ptrace_syscall) {
++			EXPECT_EQ(WSTOPSIG(status) & 0x80, 0x80) {
++				TH_LOG("WSTOPSIG: %d", WSTOPSIG(status));
++				run_callback = false;
++			};
++		} else {
++			EXPECT_EQ(PTRACE_EVENT_MASK(status), PTRACE_EVENT_SECCOMP) {
++				run_callback = false;
++			};
++		}
+ 
+-		tracer_func(_metadata, tracee, status, args);
++		if (run_callback)
++			tracer_func(_metadata, tracee, status, args);
+ 
+ 		ret = ptrace(ptrace_syscall ? PTRACE_SYSCALL : PTRACE_CONT,
+ 			     tracee, NULL, 0);
+
+-- 
+Kees Cook
