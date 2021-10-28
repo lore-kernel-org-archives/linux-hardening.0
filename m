@@ -2,126 +2,146 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B495C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 20:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423CBC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 22:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2BD60E8B
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 20:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1653E610C8
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 22:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231258AbhJ1Uoi (ORCPT
+        id S231124AbhJ1WJ5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 28 Oct 2021 16:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231206AbhJ1Uoh (ORCPT
+        Thu, 28 Oct 2021 18:09:57 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:53954 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230264AbhJ1WJ5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 28 Oct 2021 16:44:37 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE9DAC061745
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Oct 2021 13:42:09 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id n11so5297682plf.4
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Oct 2021 13:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mb/mWw8HAiK6lwVPCHL9I1kcRE7UYBim01+6DNM+U2o=;
-        b=VmGwAq85nazzr23K6C1YnUPNR0Nc4o4CCUMv8SS811F81xRod2iIlDfsYm9jQL6wGo
-         OkDnRt0mjseEgenzNWKb4WcrDpZQj633Qwjjvc08WOiptim/r+0uHf/uftiGGWXghcju
-         CiY/p5U300wCXKVlPjGWpByMryqXfSRBHBlhw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mb/mWw8HAiK6lwVPCHL9I1kcRE7UYBim01+6DNM+U2o=;
-        b=r5gLJkZiranzuc9mugDm0eakht244knRIo8Om8oluRF4udWb7V29hAPDT2IXe1ymnw
-         YWtlyEwuvYGzpCYJI9pPfPp2UF0QECPS5/8Xgzuo1F+6h82mZW/vbWwEhgwunXg6ZKsr
-         HGtQB4f6+zMj9GtAi4b7UhxErooIq4pcvcnUu1Obj3KrIWx3638A2hMmgXQosVRSZK9i
-         VT2x0NUS06TfNO2aZZga1mSrkDxMYc7qkARCPJkhSytww6pPfl0UH8wSqiOJqiU86Vgt
-         nJbtV99FniYEfprUyJHOdiSghNpVUSk2dw91Z4I5AIsGBO3I/iwo0OXV1n7sRIWvuct4
-         4NBw==
-X-Gm-Message-State: AOAM530qnt6jkzPeLmlUS6yec3ntNPIPpSgZmD/uH3y3yNPq6vehVWoq
-        sTVy0DJ6oniwSjVCa2wnqeQdMw==
-X-Google-Smtp-Source: ABdhPJyacBcVTIrxQhqzTVhzpHTjk/+EXzvPVleAxcwhFltK0MGOmvy8hS1Z3zuaGutm0mZ0uPb2YA==
-X-Received: by 2002:a17:902:a412:b0:140:a4a:4ba with SMTP id p18-20020a170902a41200b001400a4a04bamr5906072plq.52.1635453728984;
-        Thu, 28 Oct 2021 13:42:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 125sm4230631pfv.155.2021.10.28.13.42.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Oct 2021 13:42:08 -0700 (PDT)
-Date:   Thu, 28 Oct 2021 13:42:07 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chomium.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        Arnd Bergmann <arnd@arndb.de>, Marco Elver <elver@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Patricia Alfonso <trishalfonso@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] kasan: test: use underlying string helpers
-Message-ID: <202110281341.8479EC4759@keescook>
-References: <20211013150025.2875883-1-arnd@kernel.org>
- <b35768f5-8e06-ebe6-1cdd-65f7fe67ff7a@arm.com>
- <721BDA47-9998-4F0B-80B4-F4E4765E4885@chromium.org>
- <20211028131526.d63d1074a8faa20e1de5e209@linux-foundation.org>
+        Thu, 28 Oct 2021 18:09:57 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52]:41874)
+        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1mgDYW-001UqF-TD; Thu, 28 Oct 2021 16:07:28 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:53464 helo=email.xmission.com)
+        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1mgDYU-003102-Oy; Thu, 28 Oct 2021 16:07:28 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrea Righi <andrea.righi@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <YXrN+Hnl9pSOsWlA@arighi-desktop> <202110280955.B18CB67@keescook>
+        <878rydm56l.fsf@disp2133> <202110281136.5CE65399A7@keescook>
+Date:   Thu, 28 Oct 2021 17:06:53 -0500
+In-Reply-To: <202110281136.5CE65399A7@keescook> (Kees Cook's message of "Thu,
+        28 Oct 2021 11:47:48 -0700")
+Message-ID: <8735okls76.fsf@disp2133>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211028131526.d63d1074a8faa20e1de5e209@linux-foundation.org>
+Content-Type: text/plain
+X-XM-SPF: eid=1mgDYU-003102-Oy;;;mid=<8735okls76.fsf@disp2133>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/GE8vE6FsfUV0q1XYNQ1Vhe88bv9TKu1Y=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: selftests: seccomp_bpf failure on 5.15
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 28, 2021 at 01:15:26PM -0700, Andrew Morton wrote:
-> On Thu, 14 Oct 2021 19:40:45 -0700 Kees Cook <keescook@chromium.org> wrote:
-> 
-> > 
-> > 
-> > On October 14, 2021 1:12:54 AM PDT, Vincenzo Frascino <vincenzo.frascino@arm.com> wrote:
-> > >
-> > >
-> > >On 10/13/21 5:00 PM, Arnd Bergmann wrote:
-> > >> From: Arnd Bergmann <arnd@arndb.de>
-> > >> 
-> > >> Calling memcmp() and memchr() with an intentional buffer overflow
-> > >> is now caught at compile time:
-> > >> 
-> > >> In function 'memcmp',
-> > >>     inlined from 'kasan_memcmp' at lib/test_kasan.c:897:2:
-> > >> include/linux/fortify-string.h:263:25: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter)
-> > >>   263 |                         __read_overflow();
-> > >>       |                         ^~~~~~~~~~~~~~~~~
-> > >> In function 'memchr',
-> > >>     inlined from 'kasan_memchr' at lib/test_kasan.c:872:2:
-> > >> include/linux/fortify-string.h:277:17: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter)
-> > >>   277 |                 __read_overflow();
-> > >>       |                 ^~~~~~~~~~~~~~~~~
-> > >> 
-> > >> Change the kasan tests to wrap those inside of a noinline function
-> > >> to prevent the compiler from noticing the bug and let kasan find
-> > >> it at runtime.
-> > >> 
-> > >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > >
-> > >Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > 
-> > How about just explicitly making the size invisible to the compiler?
-> > 
-> > I did this for similar issues in the same source:
-> > 
-> > https://lore.kernel.org/linux-hardening/20211006181544.1670992-1-keescook@chromium.org/T/#u
+Kees Cook <keescook@chromium.org> writes:
 
-This is already fixed in your tree with:
+> On Thu, Oct 28, 2021 at 12:26:26PM -0500, Eric W. Biederman wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>> 
+>> > On Thu, Oct 28, 2021 at 06:21:12PM +0200, Andrea Righi wrote:
+>> >> The following sub-tests are failing in seccomp_bpf selftest:
+>> >> 
+>> >> 18:56:54 DEBUG| [stdout] # selftests: seccomp: seccomp_bpf
+>> >> ...
+>> >> 18:56:57 DEBUG| [stdout] # #  RUN           TRACE_syscall.ptrace.kill_after ...
+>> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (1) == msg (0)
+>> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (2) == msg (1)
+>> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (1) == msg (2)
+>> >> 18:56:57 DEBUG| [stdout] # # kill_after: Test exited normally instead of by signal (code: 12)
+>> >> 18:56:57 DEBUG| [stdout] # #          FAIL  TRACE_syscall.ptrace.kill_after
+>> >> ...
+>> >> 18:56:57 DEBUG| [stdout] # #  RUN           TRACE_syscall.seccomp.kill_after ...
+>> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:1547:kill_after:Expected !ptrace_syscall (1) == IS_SECCOMP_EVENT(status) (0)
+>> >> 18:56:57 DEBUG| [stdout] # # kill_after: Test exited normally instead of by signal (code: 0)
+>> >> 18:56:57 DEBUG| [stdout] # #          FAIL  TRACE_syscall.seccomp.kill_after
+>> >> 18:56:57 DEBUG| [stdout] # not ok 80 TRACE_syscall.seccomp.kill_after
+>> >> ...
+>> >> 18:56:57 DEBUG| [stdout] # # FAILED: 85 / 87 tests passed.
+>> >> 18:56:57 DEBUG| [stdout] # # Totals: pass:85 fail:2 xfail:0 xpass:0 skip:0 error:0
+>> >> 18:56:57 DEBUG| [stdout] not ok 1 selftests: seccomp: seccomp_bpf # exit=1
+>> >> 
+>> >> I did some bisecting and found that the failures started to happen with:
+>> >> 
+>> >>  307d522f5eb8 ("signal/seccomp: Refactor seccomp signal and coredump generation")
+>> >> 
+>> >> Not sure if the test needs to be fixed after this commit, or if the
+>> >> commit is actually introducing an issue. I'll investigate more, unless
+>> >> someone knows already what's going on.
+>> >
+>> > Ah thanks for noticing; I will investigate...
+>> 
+>> 
+>> I just did a quick read through of the test and while
+>> I don't understand everything having a failure seems
+>> very weird.
+>> 
+>> I don't understand the comment:
+>> /* Tracer will redirect getpid to getppid, and we should die. */
+>> 
+>> As I think what happens is it the bpf programs loads the signal
+>> number.  Tests to see if the signal number if GETPPID and allows
+>> that system call and causes any other system call to be terminated.
+>
+> The test suite runs a series of seccomp filter vs syscalls under tracing,
+> either with ptrace or with seccomp SECCOMP_RET_TRACE, to validate the
+> expected behavioral states. It seems that what's happened is that the
+> SIGSYS has suddenly become non-killing:
+>
+> #  RUN           TRACE_syscall.ptrace.kill_after ...
+> # seccomp_bpf.c:1555:kill_after:Expected WSTOPSIG(status) & 0x80 (0) == 0x80 (128)
+> # seccomp_bpf.c:1556:kill_after:WSTOPSIG: 31
+> # kill_after: Test exited normally instead of by signal (code: 12)
+> #          FAIL  TRACE_syscall.ptrace.kill_after
+>
+> i.e. the ptracer no longer sees a dead tracee, which would pass through
+> here:
+>
+>                 if (WIFSIGNALED(status) || WIFEXITED(status))
+>                         /* Child is dead. Time to go. */
+>                         return;
+>
+> So the above saw a SIG_TRAP|SIGSYS rather than a killing SIGSYS. i.e.
+> instead of WIFSIGNALED(stauts) being true, it instead catches a
+> PTRACE_EVENT_STOP for SIGSYS, which should be impossible (the process
+> should be getting killed).
 
-"kasan: test: consolidate workarounds for unwanted __alloc_size() protection"
+Oh.  This is being ptraced as part of the test?
 
-which was based on this original patch (and my comments).
+Yes.  The signal started being delivered.  As far as that goes that
+sounds correct.
 
--- 
-Kees Cook
+Ptrace is allowed to intercept even fatal signals.  Everything except
+SIGKILL.
+
+Is this a condition we don't want even ptrace to be able to catch?
+
+I think we can arrange it so that even ptrace can't intercept this
+signal.  I need to sit this problem on the back burner for a few
+minutes.  It is an angle I had not considered.
+
+Is it a problem that the debugger can see the signal if the process does
+not?
+
+Eric
