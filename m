@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D329EC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39918C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1D6061039
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216C260FF2
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229868AbhJ1L3m (ORCPT
+        id S230170AbhJ1L3p (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 28 Oct 2021 07:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33306 "EHLO mail.kernel.org"
+        Thu, 28 Oct 2021 07:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230093AbhJ1L3m (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 28 Oct 2021 07:29:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 51EFA60FF2;
-        Thu, 28 Oct 2021 11:27:13 +0000 (UTC)
+        id S230191AbhJ1L3o (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 28 Oct 2021 07:29:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EA695610F8;
+        Thu, 28 Oct 2021 11:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635420435;
-        bh=mqqAUASEXEmeWPuWjveulgd7wWvfrjhXUvHaL7rogI0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QyM7gKNNuOakif3nBnIxTvjt/cjVRucMiUO0WqaGrf+99AvebwH9CJu8DEuzy3LnJ
-         h+CoB5osS7RtklFyKzQ112SwDwSqzkcYi2UFoiIP6Q414d5azVw8BGZerw+ZIOql4N
-         D3+Y/6yUk4MAWKbBzwuaa45pfcUqRCyJcJ8VTHP917nAK5OiLwyDuRiOYfMLknBVY7
-         lTrbXrbtWHkMeDzJbaQUyp5zmTU2XSvDbBwpQOYAcU7T368Xmlv+2Y/lXML4r2gNDd
-         YQ7wucQJUZHGB3ZFGcC+J8gPFtv7DSaZK4C86LcNQIJy6IlxqXQ1t35i5tG6oFPp/l
-         iWRKfnHc3ZfdQ==
+        s=k20201202; t=1635420438;
+        bh=PViNNmBxw+7esC1+PJxjb/6fS4SVca2o2PUUioL5F9o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IcCHavFkuk+yjo0jdWFObnl+ff1e08SCZyErEboymYJVUT4mZtvm9I2wuXEfk9yOX
+         RyUSKBbsDgCG4R4VcN7LtPX5T9MnZNJu/e/njNawAIa1qrTgy2rLva0ybduriNPLcm
+         UUefH8g6jvSmqYwtH4kYIixaq3IVnRScLX44hYI6v/HxPNiY7lAkOKNjldGTp/fSH4
+         rmkL4ExdJ5dGYhCLyqdkHU2EO2ef+nByfBzXpCh7o62dDoUinuT8Y/zDCdeH+61o95
+         eQh19wnJvv1DkJttnZ6dSQEd2rXFC5xX0T2lNZMsohaYgL4PU2lElnsSPCEtX/USSN
+         /h/xCOLIuo8YA==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     keescook@chromium.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -35,59 +35,53 @@ Cc:     keescook@chromium.org, Ard Biesheuvel <ardb@kernel.org>,
         Qing Zhao <qing.zhao@oracle.com>,
         Richard Sandiford <richard.sandiford@arm.com>,
         gcc-patches@gcc.gnu.org
-Subject: [PATCH v4 0/1] implement TLS register based stack canary for ARM
-Date:   Thu, 28 Oct 2021 13:27:02 +0200
-Message-Id: <20211028112703.1120709-1-ardb@kernel.org>
+Subject: [PATCH v4 1/1] [ARM] Add support for TLS register based stack protector canary access
+Date:   Thu, 28 Oct 2021 13:27:03 +0200
+Message-Id: <20211028112703.1120709-2-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20211028112703.1120709-1-ardb@kernel.org>
+References: <20211028112703.1120709-1-ardb@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Bugzilla: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102352
+Add support for accessing the stack canary value via the TLS register,
+so that multiple threads running in the same address space can use
+distinct canary values. This is intended for the Linux kernel running in
+SMP mode, where processes entering the kernel are essentially threads
+running the same program concurrently: using a global variable for the
+canary in that context is problematic because it can never be rotated,
+and so the OS is forced to use the same value as long as it remains up.
 
-In the Linux kernel, user processes calling into the kernel are
-essentially threads running in the same address space, of a program that
-never terminates. This means that using a global variable for the stack
-protector canary value is problematic on SMP systems, as we can never
-change it unless we reboot the system. (Processes that sleep for any
-reason will do so on a call into the kernel, which means that there will
-always be live kernel stack frames carrying copies of the canary taken
-when the function was entered)
+Using the TLS register to index the stack canary helps with this, as it
+allows each CPU to context switch the TLS register along with the rest
+of the process, permitting each process to use its own value for the
+stack canary.
 
-AArch64 implements -mstack-protector-guard=sysreg for this purpose, as
-this permits the kernel to use different memory addresses for the stack
-canary for each CPU, and context switch the chosen system register with
-the rest of the process, allowing each process to use its own unique
-value for the stack canary.
+2021-10-28 Ard Biesheuvel <ardb@kernel.org>
 
-This patch implements something similar, but for the 32-bit ARM kernel,
-which will start using the user space TLS register TPIDRURO to index
-per-process metadata while running in the kernel. This means we can just
-add an offset to TPIDRURO to obtain the address from which to load the
-canary value.
+	* config/arm/arm-opts.h (enum stack_protector_guard): New
+	* config/arm/arm-protos.h (arm_stack_protect_tls_canary_mem):
+	New
+	* config/arm/arm.c (TARGET_STACK_PROTECT_GUARD): Define
+	(arm_option_override_internal): Handle and put in error checks
+	for stack protector guard options.
+	(arm_option_reconfigure_globals): Likewise
+	(arm_stack_protect_tls_canary_mem): New
+	(arm_stack_protect_guard): New
+	* config/arm/arm.md (stack_protect_set): New
+	(stack_protect_set_tls): Likewise
+	(stack_protect_test): Likewise
+	(stack_protect_test_tls): Likewise
+	(reload_tp_hard): Likewise
+	* config/arm/arm.opt (-mstack-protector-guard): New
+	(-mstack-protector-guard-offset): New.
+	* doc/invoke.texi: Document new options
 
-Changes since v3:
-- force a reload of the TLS register before performing the stack
-  protector check, so that we never rely on the stack for the address of
-  the canary 
-Changes since v2:
-- fix the template for stack_protect_test_tls so it correctly conveys
-  the fact that it sets the Z flag
-
-Comments/suggestions welcome.
-
-Cc: Keith Packard <keithpac@amazon.com>
-Cc: thomas.preudhomme@celest.fr
-Cc: adhemerval.zanella@linaro.org
-Cc: Qing Zhao <qing.zhao@oracle.com>
-Cc: Richard Sandiford <richard.sandiford@arm.com>
-Cc: gcc-patches@gcc.gnu.org
-
-Ard Biesheuvel (1):
-  [ARM] Add support for TLS register based stack protector canary access
-
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
  gcc/config/arm/arm-opts.h   |  6 ++
  gcc/config/arm/arm-protos.h |  2 +
  gcc/config/arm/arm.c        | 55 +++++++++++++++
@@ -96,6 +90,288 @@ Ard Biesheuvel (1):
  gcc/doc/invoke.texi         |  9 +++
  6 files changed, 163 insertions(+), 2 deletions(-)
 
+diff --git a/gcc/config/arm/arm-opts.h b/gcc/config/arm/arm-opts.h
+index 5c4b62f404f7..581ba3c4fbbb 100644
+--- a/gcc/config/arm/arm-opts.h
++++ b/gcc/config/arm/arm-opts.h
+@@ -69,4 +69,10 @@ enum arm_tls_type {
+   TLS_GNU,
+   TLS_GNU2
+ };
++
++/* Where to get the canary for the stack protector.  */
++enum stack_protector_guard {
++  SSP_TLSREG,                  /* per-thread canary in TLS register */
++  SSP_GLOBAL                   /* global canary */
++};
+ #endif
+diff --git a/gcc/config/arm/arm-protos.h b/gcc/config/arm/arm-protos.h
+index 9b1f61394ad7..d8d605920c97 100644
+--- a/gcc/config/arm/arm-protos.h
++++ b/gcc/config/arm/arm-protos.h
+@@ -195,6 +195,8 @@ extern void arm_split_atomic_op (enum rtx_code, rtx, rtx, rtx, rtx, rtx, rtx);
+ extern rtx arm_load_tp (rtx);
+ extern bool arm_coproc_builtin_available (enum unspecv);
+ extern bool arm_coproc_ldc_stc_legitimate_address (rtx);
++extern rtx arm_stack_protect_tls_canary_mem (bool);
++
+ 
+ #if defined TREE_CODE
+ extern void arm_init_cumulative_args (CUMULATIVE_ARGS *, tree, rtx, tree);
+diff --git a/gcc/config/arm/arm.c b/gcc/config/arm/arm.c
+index c4ff06b087eb..6a659d81a6fe 100644
+--- a/gcc/config/arm/arm.c
++++ b/gcc/config/arm/arm.c
+@@ -829,6 +829,9 @@ static const struct attribute_spec arm_attribute_table[] =
+ 
+ #undef TARGET_MD_ASM_ADJUST
+ #define TARGET_MD_ASM_ADJUST arm_md_asm_adjust
++
++#undef TARGET_STACK_PROTECT_GUARD
++#define TARGET_STACK_PROTECT_GUARD arm_stack_protect_guard
+ 
+ /* Obstack for minipool constant handling.  */
+ static struct obstack minipool_obstack;
+@@ -3155,6 +3158,26 @@ arm_option_override_internal (struct gcc_options *opts,
+   if (TARGET_THUMB2_P (opts->x_target_flags))
+     opts->x_inline_asm_unified = true;
+ 
++  if (arm_stack_protector_guard == SSP_GLOBAL
++      && opts->x_arm_stack_protector_guard_offset_str)
++    {
++      error ("incompatible options %'-mstack-protector-guard=global%' and"
++	     "%'-mstack-protector-guard-offset=%qs%'",
++	     arm_stack_protector_guard_offset_str);
++    }
++
++  if (opts->x_arm_stack_protector_guard_offset_str)
++    {
++      char *end;
++      const char *str = arm_stack_protector_guard_offset_str;
++      errno = 0;
++      long offs = strtol (arm_stack_protector_guard_offset_str, &end, 0);
++      if (!*str || *end || errno)
++	error ("%qs is not a valid offset in %qs", str,
++	       "-mstack-protector-guard-offset=");
++      arm_stack_protector_guard_offset = offs;
++    }
++
+ #ifdef SUBTARGET_OVERRIDE_INTERNAL_OPTIONS
+   SUBTARGET_OVERRIDE_INTERNAL_OPTIONS;
+ #endif
+@@ -3822,6 +3845,10 @@ arm_option_reconfigure_globals (void)
+       else
+ 	target_thread_pointer = TP_SOFT;
+     }
++
++  if (arm_stack_protector_guard == SSP_TLSREG
++      && target_thread_pointer != TP_CP15)
++    error("%'-mstack-protector-guard=tls%' needs a hardware TLS register");
+ }
+ 
+ /* Perform some validation between the desired architecture and the rest of the
+@@ -8087,6 +8114,22 @@ legitimize_pic_address (rtx orig, machine_mode mode, rtx reg, rtx pic_reg,
+ }
+ 
+ 
++rtx
++arm_stack_protect_tls_canary_mem (bool reload)
++{
++  rtx tp = gen_reg_rtx (SImode);
++  if (reload)
++    emit_insn (gen_reload_tp_hard (tp));
++  else
++    emit_insn (gen_load_tp_hard (tp));
++
++  rtx reg = gen_reg_rtx (SImode);
++  rtx offset = GEN_INT (arm_stack_protector_guard_offset);
++  emit_set_insn (reg, gen_rtx_PLUS (SImode, tp, offset));
++  return gen_rtx_MEM (SImode, reg);
++}
++
++
+ /* Whether a register is callee saved or not.  This is necessary because high
+    registers are marked as caller saved when optimizing for size on Thumb-1
+    targets despite being callee saved in order to avoid using them.  */
+@@ -34054,6 +34097,18 @@ arm_run_selftests (void)
+ #define TARGET_RUN_TARGET_SELFTESTS selftest::arm_run_selftests
+ #endif /* CHECKING_P */
+ 
++/* Implement TARGET_STACK_PROTECT_GUARD. In case of a
++   global variable based guard use the default else
++   return a null tree.  */
++static tree
++arm_stack_protect_guard (void)
++{
++  if (arm_stack_protector_guard == SSP_GLOBAL)
++    return default_stack_protect_guard ();
++
++  return NULL_TREE;
++}
++
+ /* Worker function for TARGET_MD_ASM_ADJUST, while in thumb1 mode.
+    Unlike the arm version, we do NOT implement asm flag outputs.  */
+ 
+diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
+index 4adc976b8b67..d31349cd2614 100644
+--- a/gcc/config/arm/arm.md
++++ b/gcc/config/arm/arm.md
+@@ -9183,7 +9183,7 @@ (define_expand "stack_protect_combined_set"
+ 		      UNSPEC_SP_SET))
+       (clobber (match_scratch:SI 2 ""))
+       (clobber (match_scratch:SI 3 ""))])]
+-  ""
++  "arm_stack_protector_guard == SSP_GLOBAL"
+   ""
+ )
+ 
+@@ -9267,7 +9267,7 @@ (define_expand "stack_protect_combined_test"
+       (clobber (match_scratch:SI 3 ""))
+       (clobber (match_scratch:SI 4 ""))
+       (clobber (reg:CC CC_REGNUM))])]
+-  ""
++  "arm_stack_protector_guard == SSP_GLOBAL"
+   ""
+ )
+ 
+@@ -9361,6 +9361,64 @@ (define_insn "arm_stack_protect_test_insn"
+    (set_attr "arch" "t,32")]
+ )
+ 
++(define_expand "stack_protect_set"
++  [(match_operand:SI 0 "memory_operand")
++   (match_operand:SI 1 "memory_operand")]
++  "arm_stack_protector_guard == SSP_TLSREG"
++  "
++{
++  operands[1] = arm_stack_protect_tls_canary_mem (false /* reload */);
++  emit_insn (gen_stack_protect_set_tls (operands[0], operands[1]));
++  DONE;
++}"
++)
++
++;; DO NOT SPLIT THIS PATTERN.  It is important for security reasons that the
++;; canary value does not live beyond the life of this sequence.
++(define_insn "stack_protect_set_tls"
++  [(set (match_operand:SI 0 "memory_operand" "=m")
++       (unspec:SI [(match_operand:SI 1 "memory_operand" "m")]
++        UNSPEC_SP_SET))
++   (set (match_scratch:SI 2 "=&r") (const_int 0))]
++  ""
++  "ldr\\t%2, %1\;str\\t%2, %0\;mov\t%2, #0"
++  [(set_attr "length" "12")
++   (set_attr "conds" "nocond")
++   (set_attr "type" "multiple")]
++)
++
++(define_expand "stack_protect_test"
++  [(match_operand:SI 0 "memory_operand")
++   (match_operand:SI 1 "memory_operand")
++   (match_operand:SI 2)]
++  "arm_stack_protector_guard == SSP_TLSREG"
++  "
++{
++  operands[1] = arm_stack_protect_tls_canary_mem (true /* reload */);
++  emit_insn (gen_stack_protect_test_tls (operands[0], operands[1]));
++
++  rtx cc_reg = gen_rtx_REG (CC_Zmode, CC_REGNUM);
++  rtx eq = gen_rtx_EQ (CC_Zmode, cc_reg, const0_rtx);
++  emit_jump_insn (gen_arm_cond_branch (operands[2], eq, cc_reg));
++  DONE;
++}"
++)
++
++(define_insn "stack_protect_test_tls"
++  [(set (reg:CC_Z CC_REGNUM)
++	(compare:CC_Z (unspec:SI [(match_operand:SI 0 "memory_operand" "m")
++				  (match_operand:SI 1 "memory_operand" "m")]
++				 UNSPEC_SP_TEST)
++		      (const_int 0)))
++   (clobber (match_scratch:SI 2 "=&r"))
++   (clobber (match_scratch:SI 3 "=&r"))]
++  ""
++  "ldr\t%2, %0\;ldr\t%3, %1\;eors\t%2, %3, %2\;mov\t%3, #0"
++  [(set_attr "length" "16")
++   (set_attr "conds" "set")
++   (set_attr "type" "multiple")]
++)
++
+ (define_expand "casesi"
+   [(match_operand:SI 0 "s_register_operand")	; index to jump on
+    (match_operand:SI 1 "const_int_operand")	; lower bound
+@@ -12133,6 +12191,15 @@ (define_insn "load_tp_hard"
+    (set_attr "type" "mrs")]
+ )
+ 
++;; Used by the TLS register based stack protector
++(define_insn "reload_tp_hard"
++  [(set (match_operand:SI 0 "register_operand" "=r")
++	(unspec_volatile [(const_int 0)] VUNSPEC_MRC))]
++  "TARGET_HARD_TP"
++  "mrc\\tp15, 0, %0, c13, c0, 3\\t@ reload_tp_hard"
++  [(set_attr "type" "mrs")]
++)
++
+ ;; Doesn't clobber R1-R3.  Must use r0 for the first operand.
+ (define_insn "load_tp_soft_fdpic"
+   [(set (reg:SI 0) (unspec:SI [(const_int 0)] UNSPEC_TLS))
+diff --git a/gcc/config/arm/arm.opt b/gcc/config/arm/arm.opt
+index a7677eeb45c8..4b3e17bc319c 100644
+--- a/gcc/config/arm/arm.opt
++++ b/gcc/config/arm/arm.opt
+@@ -311,3 +311,25 @@ Generate code which uses the core registers only (r0-r14).
+ mfdpic
+ Target Mask(FDPIC)
+ Enable Function Descriptor PIC mode.
++
++mstack-protector-guard=
++Target RejectNegative Joined Enum(stack_protector_guard) Var(arm_stack_protector_guard) Init(SSP_GLOBAL)
++Use given stack-protector guard.
++
++Enum
++Name(stack_protector_guard) Type(enum stack_protector_guard)
++Valid arguments to -mstack-protector-guard=:
++
++EnumValue
++Enum(stack_protector_guard) String(tls) Value(SSP_TLSREG)
++
++EnumValue
++Enum(stack_protector_guard) String(global) Value(SSP_GLOBAL)
++
++mstack-protector-guard-offset=
++Target Joined RejectNegative String Var(arm_stack_protector_guard_offset_str)
++Use an immediate to offset from the TLS register. This option is for use with
++fstack-protector-guard=tls and not for use in user-land code.
++
++TargetVariable
++long arm_stack_protector_guard_offset = 0
+diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+index 71992b8c5974..46d009376018 100644
+--- a/gcc/doc/invoke.texi
++++ b/gcc/doc/invoke.texi
+@@ -810,6 +810,7 @@ Objective-C and Objective-C++ Dialects}.
+ -mpure-code @gol
+ -mcmse @gol
+ -mfix-cmse-cve-2021-35465 @gol
++-mstack-protector-guard=@var{guard} -mstack-protector-guard-offset=@var{offset} @gol
+ -mfdpic}
+ 
+ @emph{AVR Options}
+@@ -20946,6 +20947,14 @@ enabled by default when the option @option{-mcpu=} is used with
+ @code{cortex-m33}, @code{cortex-m35p} or @code{cortex-m55}.  The option
+ @option{-mno-fix-cmse-cve-2021-35465} can be used to disable the mitigation.
+ 
++@item -mstack-protector-guard=@var{guard}
++@itemx -mstack-protector-guard-offset=@var{offset}
++@opindex mstack-protector-guard
++@opindex mstack-protector-guard-offset
++Generate stack protection code using canary at @var{guard}.  Supported
++locations are @samp{global} for a global canary or @samp{tls} for a
++canary accessible via the TLS register.
++
+ @item -mfdpic
+ @itemx -mno-fdpic
+ @opindex mfdpic
 -- 
 2.30.2
 
