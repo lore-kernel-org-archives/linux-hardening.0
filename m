@@ -2,86 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF4EC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D329EC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9983260041
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D6061039
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Oct 2021 11:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229946AbhJ1LOn (ORCPT
+        id S229868AbhJ1L3m (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 28 Oct 2021 07:14:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbhJ1LOn (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 28 Oct 2021 07:14:43 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1D2C061570;
-        Thu, 28 Oct 2021 04:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=N7GZ22gb+iGao7JNthfhMzqUFJ1nHCbCiKPouEv2QCE=; b=uNQphv4X1bK24WiK/EUb2sc1Ne
-        HL0dtPCjNqlc3UAfHG3D3Djn9F66Zh1WlD5+wgguWUHBmtdIRxW2TWe8cltP3lXclj/GKV7AtWIWI
-        7zJAsFhlpPsxGNzdZnSVjE6mUmBsl71qoFuektruFPCHZXqIXw2TAi+4AAf6CD26MgIN0YHEcEt9m
-        R+G/Zr2/CtzLdNxT93UGDUQ1dhF0gl+XmGIYEHJDJmzGnynEUqVEMe8e/jaDMmvB7Jn0f0iWlYZKC
-        ZR5qrUnGUc/r9lwPZdHLkv7+ODh93R9EG6a49w7nitY8fFFavnc2Abe4a6A7FR8GVaHzgis3hzQy9
-        dhF6OxFA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mg3Hx-000ilK-VV; Thu, 28 Oct 2021 11:10:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92F8430022C;
-        Thu, 28 Oct 2021 13:09:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5622C20D903DE; Thu, 28 Oct 2021 13:09:39 +0200 (CEST)
-Date:   Thu, 28 Oct 2021 13:09:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        X86 ML <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v5 00/15] x86: Add support for Clang CFI
-Message-ID: <YXqE82jQh4S79uVL@hirez.programming.kicks-ass.net>
-References: <20211013181658.1020262-1-samitolvanen@google.com>
- <20211026201622.GG174703@worktop.programming.kicks-ass.net>
- <20211027120515.GC54628@C02TD0UTHF1T.local>
- <CAMj1kXEx10gC8eH7rV-GbZZj2M3uDue6HYsKb+A5J01zOxm_FA@mail.gmail.com>
- <20211027124852.GK174703@worktop.programming.kicks-ass.net>
- <YXlOd1lyKZKAcJfA@hirez.programming.kicks-ass.net>
- <202110270939.F5C79CC@keescook>
- <YXnC1jqwR2ZKfMdk@hirez.programming.kicks-ass.net>
- <202110271430.2A3980217@keescook>
+        Thu, 28 Oct 2021 07:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230093AbhJ1L3m (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 28 Oct 2021 07:29:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 51EFA60FF2;
+        Thu, 28 Oct 2021 11:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635420435;
+        bh=mqqAUASEXEmeWPuWjveulgd7wWvfrjhXUvHaL7rogI0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QyM7gKNNuOakif3nBnIxTvjt/cjVRucMiUO0WqaGrf+99AvebwH9CJu8DEuzy3LnJ
+         h+CoB5osS7RtklFyKzQ112SwDwSqzkcYi2UFoiIP6Q414d5azVw8BGZerw+ZIOql4N
+         D3+Y/6yUk4MAWKbBzwuaa45pfcUqRCyJcJ8VTHP917nAK5OiLwyDuRiOYfMLknBVY7
+         lTrbXrbtWHkMeDzJbaQUyp5zmTU2XSvDbBwpQOYAcU7T368Xmlv+2Y/lXML4r2gNDd
+         YQ7wucQJUZHGB3ZFGcC+J8gPFtv7DSaZK4C86LcNQIJy6IlxqXQ1t35i5tG6oFPp/l
+         iWRKfnHc3ZfdQ==
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     keescook@chromium.org, Ard Biesheuvel <ardb@kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        thomas.preudhomme@celest.fr, adhemerval.zanella@linaro.org,
+        Qing Zhao <qing.zhao@oracle.com>,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        gcc-patches@gcc.gnu.org
+Subject: [PATCH v4 0/1] implement TLS register based stack canary for ARM
+Date:   Thu, 28 Oct 2021 13:27:02 +0200
+Message-Id: <20211028112703.1120709-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202110271430.2A3980217@keescook>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 27, 2021 at 03:27:59PM -0700, Kees Cook wrote:
+Bugzilla: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102352
 
-> Right -- though wouldn't just adding __ro_after_init do the same?
-> 
-> DEFINE_STATIC_CALL(static_call_name, func_a) __ro_after_init;
+In the Linux kernel, user processes calling into the kernel are
+essentially threads running in the same address space, of a program that
+never terminates. This means that using a global variable for the stack
+protector canary value is problematic on SMP systems, as we can never
+change it unless we reboot the system. (Processes that sleep for any
+reason will do so on a call into the kernel, which means that there will
+always be live kernel stack frames carrying copies of the canary taken
+when the function was entered)
 
-That breaks modules (and your jump_label patch doing the same is
-similarly broken).
+AArch64 implements -mstack-protector-guard=sysreg for this purpose, as
+this permits the kernel to use different memory addresses for the stack
+canary for each CPU, and context switch the chosen system register with
+the rest of the process, allowing each process to use its own unique
+value for the stack canary.
 
-When a module is loaded that uses the static_call(), it needs to
-register it's .static_call_sites range with the static_call_key which
-requires modifying it.
+This patch implements something similar, but for the 32-bit ARM kernel,
+which will start using the user space TLS register TPIDRURO to index
+per-process metadata while running in the kernel. This means we can just
+add an offset to TPIDRURO to obtain the address from which to load the
+canary value.
+
+Changes since v3:
+- force a reload of the TLS register before performing the stack
+  protector check, so that we never rely on the stack for the address of
+  the canary 
+Changes since v2:
+- fix the template for stack_protect_test_tls so it correctly conveys
+  the fact that it sets the Z flag
+
+Comments/suggestions welcome.
+
+Cc: Keith Packard <keithpac@amazon.com>
+Cc: thomas.preudhomme@celest.fr
+Cc: adhemerval.zanella@linaro.org
+Cc: Qing Zhao <qing.zhao@oracle.com>
+Cc: Richard Sandiford <richard.sandiford@arm.com>
+Cc: gcc-patches@gcc.gnu.org
+
+Ard Biesheuvel (1):
+  [ARM] Add support for TLS register based stack protector canary access
+
+ gcc/config/arm/arm-opts.h   |  6 ++
+ gcc/config/arm/arm-protos.h |  2 +
+ gcc/config/arm/arm.c        | 55 +++++++++++++++
+ gcc/config/arm/arm.md       | 71 +++++++++++++++++++-
+ gcc/config/arm/arm.opt      | 22 ++++++
+ gcc/doc/invoke.texi         |  9 +++
+ 6 files changed, 163 insertions(+), 2 deletions(-)
+
+-- 
+2.30.2
+
