@@ -2,169 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DBEC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 29 Oct 2021 15:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D195C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Oct 2021 16:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93ADA6117A
-	for <linux-hardening@archiver.kernel.org>; Fri, 29 Oct 2021 15:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855C360E8B
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Oct 2021 16:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229662AbhJ2PUC (ORCPT
+        id S230022AbhJ2RBH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Oct 2021 11:20:02 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:40102 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbhJ2PUB (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Oct 2021 11:20:01 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52]:47698)
-        by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1mgTdM-006yR9-Qh; Fri, 29 Oct 2021 09:17:32 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:54620 helo=email.xmission.com)
-        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1mgTdL-004TUH-1A; Fri, 29 Oct 2021 09:17:32 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrea Righi <andrea.righi@canonical.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <YXrN+Hnl9pSOsWlA@arighi-desktop> <202110280955.B18CB67@keescook>
-        <878rydm56l.fsf@disp2133> <202110281136.5CE65399A7@keescook>
-        <8735okls76.fsf@disp2133> <202110290755.451B036CE9@keescook>
-Date:   Fri, 29 Oct 2021 10:17:24 -0500
-In-Reply-To: <202110290755.451B036CE9@keescook> (Kees Cook's message of "Fri,
-        29 Oct 2021 07:58:02 -0700")
-Message-ID: <87ilxfj1x7.fsf@disp2133>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 29 Oct 2021 13:01:07 -0400
+Received: from mout.gmx.net ([212.227.17.20]:33695 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229837AbhJ2RBH (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 29 Oct 2021 13:01:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1635526680;
+        bh=PQSF2kwc9XvAbcPw1umV4sRijG9uQxe85svQW+ye6D8=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=A6fMe1SD/QfY/u7RUeUTIQShp8S2JAOReGKF6lgJ661TeynVAvxrDUPzD3WFFQWJt
+         GvWNJbOPAPjRWbMLc9SILU4h5OaWJQChMPrbLieqmEHBFcx8EFgoJjW8oNiKMaO6iI
+         kks4QrU3CGGtKORiyfgN6n6SQ/EdB7V2LlpEAcno=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MDQeU-1mX7ok0ucI-00AUNu; Fri, 29
+ Oct 2021 18:58:00 +0200
+Date:   Fri, 29 Oct 2021 18:57:47 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Len Baker <len.baker@gmx.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2][next] sysctl: Avoid open coded arithmetic in memory
+ allocator functions
+Message-ID: <20211029165723.GA2124@titan>
+References: <20211023105414.7316-1-len.baker@gmx.com>
+ <YXQbxSSw9qan87cm@casper.infradead.org>
+ <20211024091328.GA2912@titan>
+ <YXWeAdsMRcR5tInN@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1mgTdL-004TUH-1A;;;mid=<87ilxfj1x7.fsf@disp2133>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+MRm42NTtDoYFpFqFtDfcEyt5GdSQ63Sk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: selftests: seccomp_bpf failure on 5.15
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YXWeAdsMRcR5tInN@casper.infradead.org>
+X-Provags-ID: V03:K1:uhxsTK0y1/L3ecQyfEpCS0Dknh7g0VfMMUnqrACWVyGnY3LDzWz
+ 9mG41Orf2n8PelbSEivjj+1X0kRaRw3AINkibV51cpEB4ke7B6xKgrpKap806ZtV4ukT5qw
+ tvf4pNzzyg/Tp14fDbrEftJPoyCpeoWdW9wIbL5IccxVU0pdL5dg3dAZTx9YMbrUiFBnp8p
+ vPQ4vN3yp5Mq4FYoPIQ9Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/1VxPLEeB00=:1T9BStBiezKzzXnnRRImlx
+ LC1bLzUKmCbrfCvHxY6i+Mm9FpHnhntPz0nFTkW+JPpoQ6MjJI4dTVH7STLshzB28ampH8hhr
+ ILgeTv9ylXsaS8sA6MLCDErb1lNFMnq9qft64W5PUi47XadYmiIkq975Kcr/T+NiK8VPUbonb
+ qEu8TD3CmChx1vBilnXWrrONUjtpu0H3rFRDAenf5rjEhSh4zTLlebAC0up2ojYHOvNxQjXV3
+ 85hByIiLvEnyZ8s63u4PTfvT0cwSAUyCX/yQEP6PPvJGdTNQ8N1jaB2L6QbzFrG6YgQlpvKr1
+ JIf5yKf0f4/X/Jo6ZHxy30te58sHDh29FyFnZrNT40UWUmy15qJD9LpkUI/Bnr9sycYM1XPwx
+ a4J3D7eYuKHWoysy+eJUPTBN7TE1cXoSlH2RM6qC0/sorU2aUq6iaYSMvZJDCIU91pM8aCsff
+ 3N4+foHo/1MHpZxYIyognia6RaPcpQtUZKapo54sO6w/u7gn/e1Xl5yDTlbqwdWPYpGrw5xU/
+ Amf57ZBeSS9GGPpBeMRSp8tbQnaHUSu3j5ThuwjMMZwOLgSIPSr5HHXxuI2ijPmffxOUPqrt+
+ UlnMIOawWp20+e3VyaIu0REjIl7TX4AiNBQZ9znBwx+FF5qxIuhCfDzm2p2vmFLSrULfrseVc
+ is3B9kBgJrSU4ohO9JcRsofO0yE1qYznu31T8GCSESlUrZkabNW0O6pKaYOEoodnsQlGnllgA
+ HQVu1vxgwJWX0PcDJTctxRXYsEfU6Rfl6Eqt6zCydLB/z3KM2hY9LcO6weHsS7qsGNzxazEWt
+ Z5klipWv85BG/u9+Oi1UwvJGAWQOa8o1cOqnxK4L/5lkcoJVq8uPumAEpE07brwtNuUCUsdwa
+ 22acGEEetMAVvv08degDwKGri897zPk9MBJCYx7/FYd8ihzVWC38xlfOO2cmzkrj6F+driaU9
+ OydBS48s0Oq+Qoj3A6H0yeWJyX70ocxAkNMDdxxrPnVceozO58d4OoHp+tqUvcipBIczlzDNZ
+ 8TwqOCi37kTbDvpbC4PedsB9sIvPU2aSMrTnivbnCwvLlUP1cO+mT3Eu8rIcV2sVqseVU15J5
+ QoHxZm9looDrmE=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+Hi Matthew,
 
-> On Thu, Oct 28, 2021 at 05:06:53PM -0500, Eric W. Biederman wrote:
->> Kees Cook <keescook@chromium.org> writes:
->> 
->> > On Thu, Oct 28, 2021 at 12:26:26PM -0500, Eric W. Biederman wrote:
->> >> Kees Cook <keescook@chromium.org> writes:
->> >> 
->> >> > On Thu, Oct 28, 2021 at 06:21:12PM +0200, Andrea Righi wrote:
->> >> >> The following sub-tests are failing in seccomp_bpf selftest:
->> >> >> 
->> >> >> 18:56:54 DEBUG| [stdout] # selftests: seccomp: seccomp_bpf
->> >> >> ...
->> >> >> 18:56:57 DEBUG| [stdout] # #  RUN           TRACE_syscall.ptrace.kill_after ...
->> >> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (1) == msg (0)
->> >> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (2) == msg (1)
->> >> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:2023:kill_after:Expected entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY : PTRACE_EVENTMSG_SYSCALL_EXIT (1) == msg (2)
->> >> >> 18:56:57 DEBUG| [stdout] # # kill_after: Test exited normally instead of by signal (code: 12)
->> >> >> 18:56:57 DEBUG| [stdout] # #          FAIL  TRACE_syscall.ptrace.kill_after
->> >> >> ...
->> >> >> 18:56:57 DEBUG| [stdout] # #  RUN           TRACE_syscall.seccomp.kill_after ...
->> >> >> 18:56:57 DEBUG| [stdout] # # seccomp_bpf.c:1547:kill_after:Expected !ptrace_syscall (1) == IS_SECCOMP_EVENT(status) (0)
->> >> >> 18:56:57 DEBUG| [stdout] # # kill_after: Test exited normally instead of by signal (code: 0)
->> >> >> 18:56:57 DEBUG| [stdout] # #          FAIL  TRACE_syscall.seccomp.kill_after
->> >> >> 18:56:57 DEBUG| [stdout] # not ok 80 TRACE_syscall.seccomp.kill_after
->> >> >> ...
->> >> >> 18:56:57 DEBUG| [stdout] # # FAILED: 85 / 87 tests passed.
->> >> >> 18:56:57 DEBUG| [stdout] # # Totals: pass:85 fail:2 xfail:0 xpass:0 skip:0 error:0
->> >> >> 18:56:57 DEBUG| [stdout] not ok 1 selftests: seccomp: seccomp_bpf # exit=1
->> >> >> 
->> >> >> I did some bisecting and found that the failures started to happen with:
->> >> >> 
->> >> >>  307d522f5eb8 ("signal/seccomp: Refactor seccomp signal and coredump generation")
->> >> >> 
->> >> >> Not sure if the test needs to be fixed after this commit, or if the
->> >> >> commit is actually introducing an issue. I'll investigate more, unless
->> >> >> someone knows already what's going on.
->> >> >
->> >> > Ah thanks for noticing; I will investigate...
->> >> 
->> >> 
->> >> I just did a quick read through of the test and while
->> >> I don't understand everything having a failure seems
->> >> very weird.
->> >> 
->> >> I don't understand the comment:
->> >> /* Tracer will redirect getpid to getppid, and we should die. */
->> >> 
->> >> As I think what happens is it the bpf programs loads the signal
->> >> number.  Tests to see if the signal number if GETPPID and allows
->> >> that system call and causes any other system call to be terminated.
->> >
->> > The test suite runs a series of seccomp filter vs syscalls under tracing,
->> > either with ptrace or with seccomp SECCOMP_RET_TRACE, to validate the
->> > expected behavioral states. It seems that what's happened is that the
->> > SIGSYS has suddenly become non-killing:
->> >
->> > #  RUN           TRACE_syscall.ptrace.kill_after ...
->> > # seccomp_bpf.c:1555:kill_after:Expected WSTOPSIG(status) & 0x80 (0) == 0x80 (128)
->> > # seccomp_bpf.c:1556:kill_after:WSTOPSIG: 31
->> > # kill_after: Test exited normally instead of by signal (code: 12)
->> > #          FAIL  TRACE_syscall.ptrace.kill_after
->> >
->> > i.e. the ptracer no longer sees a dead tracee, which would pass through
->> > here:
->> >
->> >                 if (WIFSIGNALED(status) || WIFEXITED(status))
->> >                         /* Child is dead. Time to go. */
->> >                         return;
->> >
->> > So the above saw a SIG_TRAP|SIGSYS rather than a killing SIGSYS. i.e.
->> > instead of WIFSIGNALED(stauts) being true, it instead catches a
->> > PTRACE_EVENT_STOP for SIGSYS, which should be impossible (the process
->> > should be getting killed).
->> 
->> Oh.  This is being ptraced as part of the test?
->> 
->> Yes.  The signal started being delivered.  As far as that goes that
->> sounds correct.
->> 
->> Ptrace is allowed to intercept even fatal signals.  Everything except
->> SIGKILL.
->> 
->> Is this a condition we don't want even ptrace to be able to catch?
->> 
->> I think we can arrange it so that even ptrace can't intercept this
->> signal.  I need to sit this problem on the back burner for a few
->> minutes.  It is an angle I had not considered.
->> 
->> Is it a problem that the debugger can see the signal if the process does
->> not?
+On Sun, Oct 24, 2021 at 06:55:13PM +0100, Matthew Wilcox wrote:
+> On Sun, Oct 24, 2021 at 11:13:28AM +0200, Len Baker wrote:
 >
-> Right, I'm trying to understand that too. However, my neighbor just lost
-> power. :|
+> > As a last point I would like to know the opinion of Kees and
+> > Gustavo since they are also working on this task.
+> >
+> > Kees and Gustavo, what do you think?
 >
-> What I was in the middle of checking was what ptrace "sees" going
-> through a fatal SIGSYS; my initial debugging attempts were weird.
+> You might want to check who was co-author on 610b15c50e86 before
+> discarding my opinion.
 
-If we don't allow ptrace to see these signals, then it makes it possible
-for complete_signal to short circuit deliver them and ignore ptrace
-later on.  Which seems nice, and allows for not needing to change
-sigaction at all in the future.
+That was not my intention. I apologize if you have been offended. My
+intention was to involve Kees and Gustavo (who are working actively
+on this task) to add new points of view (if possible). I'm so sorry.
 
-I don't know if it is strictly necessary.  It is not like people using
-debuggers have complained yet.
-
-I just posted a patch that solves this by setting an extra flag called
-SA_IMMUTABLE and disabling sigaction and ptrace when the flag is set.
-
-I think that is a simple patch that sorts this out.
-
-Eric
+Again apologies,
+Len
