@@ -2,188 +2,120 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A69C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 30 Oct 2021 07:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2611CC433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 30 Oct 2021 07:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1820860FC0
-	for <linux-hardening@archiver.kernel.org>; Sat, 30 Oct 2021 07:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23546101E
+	for <linux-hardening@archiver.kernel.org>; Sat, 30 Oct 2021 07:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231693AbhJ3HxM (ORCPT
+        id S231548AbhJ3Hy5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 30 Oct 2021 03:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231654AbhJ3HxL (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 30 Oct 2021 03:53:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E4EC061570;
-        Sat, 30 Oct 2021 00:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bJjYWtjn/5fwmGiuLlxKjwbWp2U0O7ABgFR/V2MAWLY=; b=fpxxBRgje51u1gz8I/h1bSawIU
-        ptgwfqJ1NKoZFChG85eYCef0TVD0cni+Jo87tykK0tTkXhOzXrIwpsljmXtR6R4FviEwVqDhedqbE
-        ieQPgExB+YA3jpdmQ8oGyofWssOg1Y/c7IoALNuHagL7O5bhqpmKlJvd3QAolemjTpo/EjmcaMtSc
-        SgiwrAEi8wHt+8GAZiYigK4LdJFLub7zJb0sH9DekwVro4h+ybcehoLFvz+wK3oxoFf0BmhevTwb1
-        Opm7rBueBxnB0QnB8bTcqqi4dzPmSHGi0ZOLB3/L9drDgCzMpMX/eUEnLZzSXqThkcR7Ip4LNTALa
-        LQhtmbEg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mgj5q-002ILL-HC; Sat, 30 Oct 2021 07:48:11 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 23EE8986247; Sat, 30 Oct 2021 09:47:58 +0200 (CEST)
-Date:   Sat, 30 Oct 2021 09:47:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, X86 ML <x86@kernel.org>,
+        Sat, 30 Oct 2021 03:54:57 -0400
+Received: from mout.gmx.net ([212.227.17.22]:43547 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230365AbhJ3Hy5 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sat, 30 Oct 2021 03:54:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1635580322;
+        bh=tRYXYZmrS5UzHZaytjPgUmYfGMtddVsiz5chbN/g1nE=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=ZS/ODmCs482V3SpxH25vrML4x5dds+3uYEe8wvjip6cW1O8r3AvRXIgJZXxFTMwYT
+         WJM8Vo/8XuHBe7Qu1rRO6qeQgpyS5TfmjZVONae5xkarCCHl50UIPPRT0HHQNKTqMa
+         yRkkEimwCBtutUcU3+E47yivnvxfN95l2uOZDtWg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from titan ([79.150.72.99]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MEm27-1mS5tp1Wup-00GKuV; Sat, 30
+ Oct 2021 09:52:02 +0200
+Date:   Sat, 30 Oct 2021 09:51:50 +0200
+From:   Len Baker <len.baker@gmx.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Len Baker <len.baker@gmx.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
         Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Subject: [PATCH] static_call,x86: Robustify trampoline patching
-Message-ID: <20211030074758.GT174703@worktop.programming.kicks-ass.net>
-References: <20211026201622.GG174703@worktop.programming.kicks-ass.net>
- <20211027120515.GC54628@C02TD0UTHF1T.local>
- <CAMj1kXEx10gC8eH7rV-GbZZj2M3uDue6HYsKb+A5J01zOxm_FA@mail.gmail.com>
- <20211027124852.GK174703@worktop.programming.kicks-ass.net>
- <YXlOd1lyKZKAcJfA@hirez.programming.kicks-ass.net>
- <CAMj1kXHKh7wv6JqusVnoiQDMm7ApFq2ujzbfWmM9AzLKFehhAA@mail.gmail.com>
- <YXlcMluaysPBF92J@hirez.programming.kicks-ass.net>
- <CAMj1kXECTdDLVMk2JduU5mV2TR0Cv=hZ9QOpYRsRM1jfvvNikw@mail.gmail.com>
- <CABCJKufpS4jJxHqk8=bd1JCNbKfmLDKBbjbhjrar2+YQJFiprg@mail.gmail.com>
- <20211029200324.GR174703@worktop.programming.kicks-ass.net>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/i915: Prefer struct_size over open coded arithmetic
+Message-ID: <20211030075150.GA3486@titan>
+References: <20211003104258.18550-1-len.baker@gmx.com>
+ <20211011092304.GA5790@titan>
+ <87k0ihxj56.fsf@intel.com>
+ <YWbIQmD1TGikpRm2@phenom.ffwll.local>
+ <20211016111602.GA1996@titan>
+ <877deatzz2.fsf@intel.com>
+ <20211023115020.GC4145@titan>
+ <87ee86h5hn.fsf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211029200324.GR174703@worktop.programming.kicks-ass.net>
+In-Reply-To: <87ee86h5hn.fsf@intel.com>
+X-Provags-ID: V03:K1:nJ+E6kO3kOeE/a6RCjnW0DGdYOtTwFmROUmXqmeyhKg0w81ta51
+ UWWXofq+Ois/ee5qtQOAXJfYrZMkixOzgipT0KsyAQOf64vsMWexSTylpDka0dxCArAJupy
+ HSPyTUZ2L2NdgWYuuEo6P2Fq17hx2GeoNrRfvO0XBGRegmpb1Rac3A2H6RRJ7SeHW6egZ1f
+ LZsO/+fVFR+K8WaBlLhUw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+wnPXYv7YIc=:80wL/GovvA07EHIiq5dqX0
+ Gf3hHtnGYTiBu/a0boBPCpKGGLBOkbqL6p4GqfvwsMjMDynTlkEYplRtuVRlqHXuargyItWot
+ kIV7prFDNMHaNYiC0IY5xRyC1shRJSHUlKU4qQ35yamZ/A3ipdX31UqGTJSMriSeRLBwgGWAy
+ ZWz6MvaHkM+hl+RRa0ZNj+qX2dxCb0nfsaQHCqYyUKzFN2wDSClr8Y17PV5FfPgCc3uQGLBeH
+ R5Fjp7se7sB++gInzHkMB38hYCqDJy3CcSrjyN1vqbyl12wDEDYd8PTgHF/lYV5aunwqpD6qH
+ psGyekfWSpVO8JMwvHTOG2EracReQV3WtC+hffLgWbACY/h/kL2dEDZwOtFs+LfE3yRJounjR
+ FotQWpLaaWCxdcYpNYN5BUb84y9F9yguZZ/9HggzyhZo00ZGxRcG+3KxGdMp+3KuMAFFObmlJ
+ e6r7zKsoV/VRuZS5FAWmUIHSnT9w2b0POgiTF+nopvjclbvWpwNoyULfGAUVf2KjCrrOqD2pI
+ 29HL3p/p2xPF2sCsGFRpwUtVJfVRZhZpAjFt9t0C5f3NNdmGwKbkMUeBJp/J7vmb0/+4nyY6O
+ L9IvO4NRpPTIUGz6fwf1wWndwMJt4YtiiNuN6HolzUg////3BxQJIxXiYG4Cz3LnI18uYX4E9
+ 1CycwSqjVT2CKw/7+FS8Z7krPTUur1eXRTKS0cJkMF63E4ZM6f7ArpAfp+kxO3kAKzQPyfZy6
+ O08Ku9WP/aThUMpcfqY4yBjGeM9UpFQ9Sjve2UJVjoA5xf6tjgSWbYk9soIphseOKBEzdTXJ4
+ maOZ62AZBeDwLY3i1RrT1+22Av2hZMuhK/Z8jwEoCJILYjapTV36uAYL6t4liZT1NnxmKryP2
+ KXh0fEDqXzciMo2Iik4R5bbHbR2b+QPPiY2JQXvA8yU0OUzrnDVs9bHJjPvtEOnucnneJBp+k
+ qjXWkgsUyUSxbJQiml4QAEs/EILlTTpkANXQr9mdAeN+SShK9wgdcq9Gf43FLuw2IQ/Yg6a/U
+ SwzkBbK/s2JQ8X+zKG0iOt1UIBLIpMrOJnhdCl+EhnVIlHj8WPSmJB6si6P5iO0zATrE91BS2
+ 1GeaKat8KIQbZQ=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 10:03:24PM +0200, Peter Zijlstra wrote:
+Hi,
 
-> So I had a bit of a peek at what clang generates:
-> 
->     3fa4:       48 c7 c7 00 00 00 00    mov    $0x0,%rdi        3fa7: R_X86_64_32S      __SCK__x86_pmu_handle_irq
->     3fab:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi        3fae: R_X86_64_32S      __SCT__x86_pmu_handle_irq.cfi_jt
->     3fb2:       e8 00 00 00 00          call   3fb7 <init_hw_perf_events+0x1dc> 3fb3: R_X86_64_PLT32    __static_call_update-0x4
-> 
-> So this then gives the trampoline jump table entry to
-> __static_call_update(), with the result that it will rewrite the
-> jump-table entry, not the trampoline!
-> 
-> Now it so happens that the trampoline looks *exactly* like the
-> jump-table entry (one jmp.d32 instruction), so in that regards it'll
-> again 'work'.
-> 
-> But this is all really, as in *really*, wrong. And I'm really sad I'm
-> the one to have to discover this, even though I've mentioned
-> static_call()s being tricky in previous reviews.
+On Wed, Oct 27, 2021 at 06:06:28PM +0300, Jani Nikula wrote:
+> On Sat, 23 Oct 2021, Len Baker <len.baker@gmx.com> wrote:
+> > Sorry, but I'm missing something here. In linux-next this is the commi=
+t
+> > history of include/linux/stddef.h file:
+> >
+> > 3080ea5553cc stddef: Introduce DECLARE_FLEX_ARRAY() helper
+> > 50d7bd38c3aa stddef: Introduce struct_group() helper macro
+> > e7f18c22e6be stddef: Fix kerndoc for sizeof_field() and offsetofend()
+> > 4229a470175b stddef.h: Introduce sizeof_field()
+> > ...
+> >
+> > But in drm-tip this is the commit history:
+> >
+> > 4229a470175b stddef.h: Introduce sizeof_field()
+> > ...
+> >
+> > For this patch the DECLARE_FLEX_ARRAY() helper is needed. But the buil=
+d
+> > fails due to the last tree commits for stddef.h file are not present.
+> > So, if I understand correctly, drm-tip is not up to date with linux-ne=
+xt.
+>
+> linux-next is an ephemeral integration branch for most arch, subsystem
+> and driver -next branches.
+>
+> drm-tip is an ephemeral integration branch for drm subsystem and driver
+> -next branches.
+>
+> They contain different sets of branches. They are constantly
+> rebuilt. They are not the end result or end goal.
+>
+> If a problem (or a solution, for that matter) only exists in the merge
+> of some of those branches, you can't actually fix it until such a merge
+> exists somewhere more permanent than an ephemeral integration branch.
 
-The below makes the clang-cfi build properly sick:
+Ok, understood. Thanks for the clarification.
 
-[    0.000000] trampoline signature fail
-[    0.000000] ------------[ cut here ]------------
-[    0.000000] kernel BUG at arch/x86/kernel/static_call.c:65!
-
----
-Subject: static_call,x86: Robustify trampoline patching
-
-Add a few signature bytes after the static call trampoline and verify
-those bytes match before patching the trampoline. This avoids patching
-random other JMPs (such as CFI jump-table entries) instead.
-
-These bytes decode as:
-
-   d:   53                      push   %rbx
-   e:   43 54                   rex.XB push %r12
-
-And happen to spell "SCT".
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/static_call.h |  1 +
- arch/x86/kernel/static_call.c      | 14 ++++++++++----
- tools/objtool/check.c              |  3 +++
- 3 files changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/static_call.h b/arch/x86/include/asm/static_call.h
-index cbb67b6030f9..39ebe0511869 100644
---- a/arch/x86/include/asm/static_call.h
-+++ b/arch/x86/include/asm/static_call.h
-@@ -27,6 +27,7 @@
- 	    ".globl " STATIC_CALL_TRAMP_STR(name) "		\n"	\
- 	    STATIC_CALL_TRAMP_STR(name) ":			\n"	\
- 	    insns "						\n"	\
-+	    ".byte 0x53, 0x43, 0x54				\n"	\
- 	    ".type " STATIC_CALL_TRAMP_STR(name) ", @function	\n"	\
- 	    ".size " STATIC_CALL_TRAMP_STR(name) ", . - " STATIC_CALL_TRAMP_STR(name) " \n" \
- 	    ".popsection					\n")
-diff --git a/arch/x86/kernel/static_call.c b/arch/x86/kernel/static_call.c
-index ea028e736831..9c407a33a774 100644
---- a/arch/x86/kernel/static_call.c
-+++ b/arch/x86/kernel/static_call.c
-@@ -56,10 +56,15 @@ static void __ref __static_call_transform(void *insn, enum insn_type type, void
- 	text_poke_bp(insn, code, size, emulate);
- }
- 
--static void __static_call_validate(void *insn, bool tail)
-+static void __static_call_validate(void *insn, bool tail, bool tramp)
- {
- 	u8 opcode = *(u8 *)insn;
- 
-+	if (tramp && memcmp(insn+5, "SCT", 3)) {
-+		pr_err("trampoline signature fail");
-+		BUG();
-+	}
-+
- 	if (tail) {
- 		if (opcode == JMP32_INSN_OPCODE ||
- 		    opcode == RET_INSN_OPCODE)
-@@ -74,7 +79,8 @@ static void __static_call_validate(void *insn, bool tail)
- 	/*
- 	 * If we ever trigger this, our text is corrupt, we'll probably not live long.
- 	 */
--	WARN_ONCE(1, "unexpected static_call insn opcode 0x%x at %pS\n", opcode, insn);
-+	pr_err("unexpected static_call insn opcode 0x%x at %pS\n", opcode, insn);
-+	BUG();
- }
- 
- static inline enum insn_type __sc_insn(bool null, bool tail)
-@@ -97,12 +103,12 @@ void arch_static_call_transform(void *site, void *tramp, void *func, bool tail)
- 	mutex_lock(&text_mutex);
- 
- 	if (tramp) {
--		__static_call_validate(tramp, true);
-+		__static_call_validate(tramp, true, true);
- 		__static_call_transform(tramp, __sc_insn(!func, true), func);
- 	}
- 
- 	if (IS_ENABLED(CONFIG_HAVE_STATIC_CALL_INLINE) && site) {
--		__static_call_validate(site, tail);
-+		__static_call_validate(site, tail, false);
- 		__static_call_transform(site, __sc_insn(!func, tail), func);
- 	}
- 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index fb3f251ea021..6d5951113d53 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3310,6 +3310,9 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
- 	if (!insn->func)
- 		return false;
- 
-+	if (insn->func->static_call_tramp)
-+		return true;
-+
- 	/*
- 	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
- 	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
+Regards,
+Len
