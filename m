@@ -2,198 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0605AC433FE
-	for <linux-hardening@archiver.kernel.org>; Sun, 31 Oct 2021 17:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DA3C433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 31 Oct 2021 20:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D00A761101
-	for <linux-hardening@archiver.kernel.org>; Sun, 31 Oct 2021 17:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C9860F4A
+	for <linux-hardening@archiver.kernel.org>; Sun, 31 Oct 2021 20:12:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbhJaRnD (ORCPT
+        id S229946AbhJaUOt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 31 Oct 2021 13:43:03 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:46968
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230185AbhJaRnA (ORCPT
+        Sun, 31 Oct 2021 16:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229939AbhJaUOt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 31 Oct 2021 13:43:00 -0400
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+        Sun, 31 Oct 2021 16:14:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0654C061570;
+        Sun, 31 Oct 2021 13:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=OW5ANKTELS4/Aqv77rAWcip0XRuLRuzAugVfabAVKQc=; b=eNFWK3G4bwmB14XaQrXIvSMW1f
+        PdSYpdhYYUuAc84UDg5jz3ejRlnl1XNm8wfgH4eT8vgg/f736jKT8ghTEodQXsj0TLEuCTYvCgOPG
+        +bnnwxP9zYkrUheSfcKwtKZFRhrTb2FbR77abGWs1QSa8Nnef0cnGx7d5BnlKw86ohUudlPwTrtF1
+        Evmcz7DRAUvFkWB3Lm0TRX+ljtIuHxLH4CB5KdLiJciuCEUwDnj7CQUCNTUocE2uOOTPcuB48RNJA
+        zgS4tg7oJ+T62KeegFL34bkODuNiPuiqD04eSkhfGpyOvwApV6BFHR51QjsIgcL0taMyu9Smqkvh7
+        BN3597nA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mhH9I-003HDw-Cz; Sun, 31 Oct 2021 20:10:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D42E83F1AE
-        for <linux-hardening@vger.kernel.org>; Sun, 31 Oct 2021 17:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1635702021;
-        bh=CRAiFS1cKz+cJsqMGNZZJACSB/KL6YFLVva91SNe05Y=;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-         Content-Type:In-Reply-To;
-        b=v4pXO7t4Jmet2uBFpNpcZxF8Kf+vJo+XydC/oW8wz/g90s1k76Aa5VDpV3weKDp+r
-         khcKkMIuvmVuP2TiXipv7qNZRFwEoIC8imIMPAu4RYB8naCfjq/G0odaHxiOb8GeVr
-         18Ufqd4BFVZCYC7wZdD9KLjQ8ZJmz4IXdsx15lU6cbqzxLafFs/L57vM49M/+UNZOW
-         7VLUZKDa9abbNLGftZYPTmTVYaxvGoKpkB8Wh3pZO409ybldyUs7L4SUgtVhO/0/VE
-         QOv4FHfijjdLFbUdGB1b+JZXpuBbnNrjqOlmVbxvG/yjRRDBz4rzXvMXJtFH3sAHCa
-         RyK2Ud+5i2XcQ==
-Received: by mail-ed1-f71.google.com with SMTP id r25-20020a05640216d900b003dca3501ab4so13477040edx.15
-        for <linux-hardening@vger.kernel.org>; Sun, 31 Oct 2021 10:40:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CRAiFS1cKz+cJsqMGNZZJACSB/KL6YFLVva91SNe05Y=;
-        b=5xv8cgZD3pPHi6W/hyu1iOQMvB2g8We3wWlPnkkhR79Uqgnff4aja3xXUfW0ZdUfOF
-         xVaMlWNirzNZRnGOWMMBNBBflD0Pmj1ZrlxXthslpHta+yJtNNs+9Efg9n6CGRL7jqct
-         9OKwg0JBNuwM5WNIcrGaauMbFuLEHcr8bTypUx+c0eDaB6d+/jDzN+2/9YqnHIxc8v11
-         UxqwCqVbUE71P9fSkFku0GyHiVFc0MOLhmjWeud2oLrqwE6BMMUZY/tIz2wk260KKIa0
-         uyCpOQXxZpKjDM37HmowmDf3R0mjhLI4gc7XRrKKv1HsoCrQOxxifaQd+c1xbjl4J8VI
-         yGSQ==
-X-Gm-Message-State: AOAM532OZHnalZURzCCXqH0BHrEFJV1/vW/YY6R8EklZM6kabDfdthcz
-        zKOfFJOmrW66ij8hv9HNpwLW4yAnSTzNUw3mtfKwon2IQXOGg1+agIOEpLlBAbAhS+YsqPN3iv9
-        u4/liU+n656/TXyvJXFvfeLZ+UhMqTWcM4tqRNrXwz/cxPA==
-X-Received: by 2002:a05:6402:3512:: with SMTP id b18mr33560111edd.15.1635702021473;
-        Sun, 31 Oct 2021 10:40:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwxtZsccnVYGZSxvzQx65pspDj7+afH+kZC2jBUN05hv/1SGDsw94p/ES6HAcpn2odiZ0W8Tg==
-X-Received: by 2002:a05:6402:3512:: with SMTP id b18mr33560092edd.15.1635702021288;
-        Sun, 31 Oct 2021 10:40:21 -0700 (PDT)
-Received: from localhost ([2001:67c:1560:8007::aac:c1b6])
-        by smtp.gmail.com with ESMTPSA id t25sm1766673edv.31.2021.10.31.10.40.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Oct 2021 10:40:20 -0700 (PDT)
-Date:   Sun, 31 Oct 2021 18:40:19 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] signal: Add SA_IMMUTABLE to ensure forced siganls do not
- get changed
-Message-ID: <YX7VA1JZaYkTQeSi@arighi-desktop>
-References: <YXrN+Hnl9pSOsWlA@arighi-desktop>
- <202110280955.B18CB67@keescook>
- <878rydm56l.fsf@disp2133>
- <202110281136.5CE65399A7@keescook>
- <87k0hvkgvj.fsf_-_@disp2133>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 712FA300243;
+        Sun, 31 Oct 2021 21:09:46 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5250625F3BD9C; Sun, 31 Oct 2021 21:09:46 +0100 (CET)
+Date:   Sun, 31 Oct 2021 21:09:46 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, X86 ML <x86@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH] static_call,x86: Robustify trampoline patching
+Message-ID: <YX74Ch9/DtvYxzh/@hirez.programming.kicks-ass.net>
+References: <CAMj1kXECTdDLVMk2JduU5mV2TR0Cv=hZ9QOpYRsRM1jfvvNikw@mail.gmail.com>
+ <CABCJKufpS4jJxHqk8=bd1JCNbKfmLDKBbjbhjrar2+YQJFiprg@mail.gmail.com>
+ <20211029200324.GR174703@worktop.programming.kicks-ass.net>
+ <20211030074758.GT174703@worktop.programming.kicks-ass.net>
+ <CAMj1kXEJd5=3A_6Jhd4UU-TBGarnHo5+U76Zxxt7SzXsWp4CcA@mail.gmail.com>
+ <20211030180249.GU174703@worktop.programming.kicks-ass.net>
+ <CAMj1kXF4ZNAvdC8tP_H=v1Dn_Zcv=La11Ok43ceQOyb1Xo1jXQ@mail.gmail.com>
+ <CAMj1kXEvemVOWf4M_0vsduN_kiCsGVmM92cE7KPMoNKViKp=RQ@mail.gmail.com>
+ <20211031163920.GV174703@worktop.programming.kicks-ass.net>
+ <CAMj1kXHk5vbrT49yRCivX3phrEkN6Xbb+g8WEmavL_d1iE0OxQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k0hvkgvj.fsf_-_@disp2133>
+In-Reply-To: <CAMj1kXHk5vbrT49yRCivX3phrEkN6Xbb+g8WEmavL_d1iE0OxQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 10:09:04AM -0500, Eric W. Biederman wrote:
-> 
-> As Andy pointed out that there are races between
-> force_sig_info_to_task and sigaction[1] when force_sig_info_task.  As
-> Kees discovered[2] ptrace is also able to change these signals.
-> 
-> In the case of seeccomp killing a process with a signal it is a
-> security violation to allow the signal to be caught or manipulated.
-> 
-> Solve this problem by introducing a new flag SA_IMMUTABLE that
-> prevents sigaction and ptrace from modifying these forced signals.
-> This flag is carefully made kernel internal so that no new ABI is
-> introduced.
-> 
-> Longer term I think this can be solved by guaranteeing short circuit
-> delivery of signals in this case.  Unfortunately reliable and
-> guaranteed short circuit delivery of these signals is still a ways off
-> from being implemented, tested, and merged.  So I have implemented a much
-> simpler alternative for now.
-> 
-> [1] https://lkml.kernel.org/r/b5d52d25-7bde-4030-a7b1-7c6f8ab90660@www.fastmail.com
-> [2] https://lkml.kernel.org/r/202110281136.5CE65399A7@keescook
-> Cc: stable@vger.kernel.org
-> Fixes: 307d522f5eb8 ("signal/seccomp: Refactor seccomp signal and coredump generation")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
+On Sun, Oct 31, 2021 at 05:44:04PM +0100, Ard Biesheuvel wrote:
 
-FWIW I've tested this patch and I confirm that it fixes the failure that
-I reported with the seccomp_bpf selftest.
+> > Is is also a terriblly gross hack. I really want the clang-cfi stuff to
+> > improve, not add layers of hacks on top of it.
+> 
+> I'm just as annoyed as you are about the apparent need for this.
+> However, emitting an alias at build time is far better IMHO than
+> adding a magic byte sequence and having to check it at runtime.
 
-Tested-by: Andrea Righi <andrea.righi@canonical.com>
+Oh, I'm keeping that magic sequence :-) That's hardening in general, and
+I don't want to ever want to debug a wrong poke like that again.
 
-Thanks!
--Andrea
+Adding an extra label fixes this thing, but there's still the other
+cases where we need/want/desire a *real* function pointer.
 
-> 
-> I have tested this patch and this changed works for me to fix the issue.
-> 
-> I believe this closes all of the races that force_sig_info_to_task
-> has when sigdfl is specified.  So this should be enough for anything
-> that needs a guaranteed that userspace can not race with the kernel
-> is handled.
-> 
-> Can folks look this over and see if I missed something?
-> Thank you,
-> Eric
-> 
-> 
->  include/linux/signal_types.h           | 3 +++
->  include/uapi/asm-generic/signal-defs.h | 1 +
->  kernel/signal.c                        | 8 +++++++-
->  3 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/signal_types.h b/include/linux/signal_types.h
-> index 34cb28b8f16c..927f7c0e5bff 100644
-> --- a/include/linux/signal_types.h
-> +++ b/include/linux/signal_types.h
-> @@ -70,6 +70,9 @@ struct ksignal {
->  	int sig;
->  };
->  
-> +/* Used to kill the race between sigaction and forced signals */
-> +#define SA_IMMUTABLE		0x008000000
-> +
->  #ifndef __ARCH_UAPI_SA_FLAGS
->  #ifdef SA_RESTORER
->  #define __ARCH_UAPI_SA_FLAGS	SA_RESTORER
-> diff --git a/include/uapi/asm-generic/signal-defs.h b/include/uapi/asm-generic/signal-defs.h
-> index fe929e7b77ca..7572f2f46ee8 100644
-> --- a/include/uapi/asm-generic/signal-defs.h
-> +++ b/include/uapi/asm-generic/signal-defs.h
-> @@ -45,6 +45,7 @@
->  #define SA_UNSUPPORTED	0x00000400
->  #define SA_EXPOSE_TAGBITS	0x00000800
->  /* 0x00010000 used on mips */
-> +/* 0x00800000 used for internal SA_IMMUTABLE */
->  /* 0x01000000 used on x86 */
->  /* 0x02000000 used on x86 */
->  /*
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 6a5e1802b9a2..056a107e3cbc 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1336,6 +1336,7 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t, bool
->  	blocked = sigismember(&t->blocked, sig);
->  	if (blocked || ignored || sigdfl) {
->  		action->sa.sa_handler = SIG_DFL;
-> +		action->sa.sa_flags |= SA_IMMUTABLE;
->  		if (blocked) {
->  			sigdelset(&t->blocked, sig);
->  			recalc_sigpending_and_wake(t);
-> @@ -2760,7 +2761,8 @@ bool get_signal(struct ksignal *ksig)
->  		if (!signr)
->  			break; /* will return 0 */
->  
-> -		if (unlikely(current->ptrace) && signr != SIGKILL) {
-> +		if (unlikely(current->ptrace) && (signr != SIGKILL) &&
-> +		    !(sighand->action[signr -1].sa.sa_flags & SA_IMMUTABLE)) {
->  			signr = ptrace_signal(signr, &ksig->info);
->  			if (!signr)
->  				continue;
-> @@ -4110,6 +4112,10 @@ int do_sigaction(int sig, struct k_sigaction *act, struct k_sigaction *oact)
->  	k = &p->sighand->action[sig-1];
->  
->  	spin_lock_irq(&p->sighand->siglock);
-> +	if (k->sa.sa_flags & SA_IMMUTABLE) {
-> +		spin_unlock_irq(&p->sighand->siglock);
-> +		return -EINVAL;
-> +	}
->  	if (oact)
->  		*oact = *k;
->  
-> -- 
-> 2.20.1
+I'm very close to saying that anything that mucks up function pointers
+like this is a complete non-starter. Let's start re-start this whole CFI
+endeavour from the start.
