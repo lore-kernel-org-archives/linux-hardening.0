@@ -2,84 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA5AC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 18:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B718C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 18:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2EB760F70
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 18:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E454860720
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 18:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232211AbhKBSZF (ORCPT
+        id S229844AbhKBSot (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 2 Nov 2021 14:25:05 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:57560 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbhKBSZE (ORCPT
+        Tue, 2 Nov 2021 14:44:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232288AbhKBSor (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Nov 2021 14:25:04 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52]:38068)
-        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1mhyQW-00AJ67-Tr; Tue, 02 Nov 2021 12:22:28 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:37228 helo=email.xmission.com)
-        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1mhyQV-00EizZ-01; Tue, 02 Nov 2021 12:22:28 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrea Righi <andrea.righi@canonical.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <YXrN+Hnl9pSOsWlA@arighi-desktop> <202110280955.B18CB67@keescook>
-        <878rydm56l.fsf@disp2133> <202110281136.5CE65399A7@keescook>
-        <8735okls76.fsf@disp2133> <202110290755.451B036CE9@keescook>
-Date:   Tue, 02 Nov 2021 13:22:19 -0500
-In-Reply-To: <202110290755.451B036CE9@keescook> (Kees Cook's message of "Fri,
-        29 Oct 2021 07:58:02 -0700")
-Message-ID: <87y2665sf8.fsf@disp2133>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 2 Nov 2021 14:44:47 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67817C061714
+        for <linux-hardening@vger.kernel.org>; Tue,  2 Nov 2021 11:42:12 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id 17so33322399ljq.0
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Nov 2021 11:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZU3IvN447Oa6v5SNMQuatsfSqvi8zqVqEBJCQz6Y79c=;
+        b=gWkxjg0fvMNOhRMLGeDwvOaGHpVXqjiA+pezg7rnoJkLSIuZBpMIrPRbF8VK3yPMEi
+         YYsJl29gKNejq4JXqRnnmUP8zuXl4kvDiLCka3etP4jMcL6VoJ2C7XPnYDJNvzRJD/cb
+         yU6jaOdXdM6xR9RTwHFn/JjATv4A7g2IajvHYM6U5EMHogI1BnSTSShQbdJhwjY1m5qG
+         sFPeA2wluRvPbnxcuvmcUvYZ+gdZZVde/uGCOVP/o3bM/WSYv/El4l4LIBD4FwZdXavi
+         ttUelSB3bKqp92i8UfN7oTfaq4wiwKG2vUXykD7ZLyad/u6Uw5982q1jFWunOXZDZyQt
+         qksQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZU3IvN447Oa6v5SNMQuatsfSqvi8zqVqEBJCQz6Y79c=;
+        b=Ek6dahVCB7feSNFcXfX1sd8e5hj/5JMwjiXaEFuZnkmP4uv2ymlAkNZpzv0DAV5zUr
+         wVfnN8MMkU6MbvEoTIaw8LPwquevvPtoXi0KQUcmei0QGSukHd4qeWZ3xlG+QHSWirub
+         HB9OfslTcYLqkj3Z946nXRtHBz4WdPs1g5J01hhfiSe20xeYeG40naMBQY9TGZr7a/6O
+         HayrP9vVBmkFkwi53dGfHm+fxu8YHjAI/HhTDBK3m+91+TdKYspGlamHaD8vv3uEfe21
+         3rCUoF0URicNS0lS+bARCzYZeznJKmsOx87U1RpolJxfcW8hXxNT08iAWjIdAcvqCSNB
+         V8Vw==
+X-Gm-Message-State: AOAM533jjwGR3+CN08lhUQurhYqXNcfe4520BoSLi30NKl0yXq80U24N
+        o46Cku63+Naw+uB8wkyfPk/3rA9cDq0fm30HKU4jfg==
+X-Google-Smtp-Source: ABdhPJyth7OBnD3MT86OZMx0g95k9WZ5Co7iL1GSxnJLlaed3WKLJYSW7PCdXUdm/Y8qssU/BeYv4Itr17n2YTUuJZw=
+X-Received: by 2002:a2e:8183:: with SMTP id e3mr6909932ljg.526.1635878530498;
+ Tue, 02 Nov 2021 11:42:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1mhyQV-00EizZ-01;;;mid=<87y2665sf8.fsf@disp2133>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/dOLwlXmVI7aCH/YYnczuKSEUIah1vXvg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: selftests: seccomp_bpf failure on 5.15
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <20211102075812.122715-1-ashimida@linux.alibaba.com> <CANiq72meBX1g6z2-vfNpMw2C8S-BavuA4CTyPLpD4zUcX193Sw@mail.gmail.com>
+In-Reply-To: <CANiq72meBX1g6z2-vfNpMw2C8S-BavuA4CTyPLpD4zUcX193Sw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 2 Nov 2021 11:41:58 -0700
+Message-ID: <CAKwvOd=0GpX59U1ndzahJ8mh26C-Gb54pjwUk4eYigb0ZoCiwg@mail.gmail.com>
+Subject: Re: [PATCH] [RFC/RFT] AARCH64: Add gcc Shadow Call Stack support
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Dan Li <ashimida@linux.alibaba.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, frederic@kernel.org,
+        yifeifz2@illinois.edu, Steven Rostedt <rostedt@goodmis.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, andreyknvl@gmail.com,
+        Colin King <colin.king@canonical.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Marco Elver <elver@google.com>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-
-> On Thu, Oct 28, 2021 at 05:06:53PM -0500, Eric W. Biederman wrote:
->> Kees Cook <keescook@chromium.org> writes:
->> 
->> > On Thu, Oct 28, 2021 at 12:26:26PM -0500, Eric W. Biederman wrote:
->> 
->> Is it a problem that the debugger can see the signal if the process does
->> not?
+On Tue, Nov 2, 2021 at 2:52 AM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> Right, I'm trying to understand that too. However, my neighbor just lost
-> power. :|
+> On Tue, Nov 2, 2021 at 8:58 AM Dan Li <ashimida@linux.alibaba.com> wrote:
+> >
+> > I tried to submit a patch[1] to add compiler's SCS support on gcc-11.1.0.
 >
-> What I was in the middle of checking was what ptrace "sees" going
-> through a fatal SIGSYS; my initial debugging attempts were weird.
+> This would go into GCC 12, right?
+>
+> > [1] https://gcc.gnu.org/pipermail/gcc-patches/2021-November/583062.html
+>
+> Nit: you can use the `Link: ` tag for this.
+>
+> >  # Supported by clang >= 7.0
+>
+> We should add a comment here saying the minimum version too, e.g. GCC
+> >= 12 (assuming it will be merged)
+>
+> >  config CC_HAVE_SHADOW_CALL_STACK
+> > -       def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
+> > +       def_bool CC_IS_CLANG || $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
+>
+> This is changing the default for Clang (which looks fine due to our
+> minimum Clang version), but if the test for GCC works the same way,
+> why not just keep the line as it was since it covers both?
 
-Kees have you regained power and had a chance to see my SA_IMMUTABLE
-patch?
+Yeah, let's just have the cc-option check used for both toolchains.
 
-Does what I implemented seem like it will work for you?
+> > +#if __has_attribute(__no_sanitize_shadow_call_stack__)
+> > +#define __noscs __attribute__((no_sanitize_shadow_call_stack))
+> > +#else
+> > +#define __noscs
+> > +#endif
+>
+> No need for the `else` branch here, it is done in `compiler_types.h`
+> (to be consistent with Clang).
 
-I think it is a solid and simple solution to a pair of problems with my
-change to use the ordinary coredump path for seccomp.  But I would very
-much love to hear it seems reasonable to you, as you were looking at the
-problem as well.
+Do we want to move this to include/linux/compiler_attributes.h?
+Respecifying these repeatedly in each include/linux/compiler-*.h feels
+excessively redundant.
 
-Eric
+> Also, I hope one day GCC and Clang doing the same for these
+> sanitize-related bits...
+
+...
+-- 
+Thanks,
+~Nick Desaulniers
