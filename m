@@ -2,133 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29646C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 07:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08DDC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 09:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7C061051
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 07:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1B9660F24
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 09:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230497AbhKBIA7 (ORCPT
+        id S229924AbhKBJsL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 2 Nov 2021 04:00:59 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:36522 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230451AbhKBIA7 (ORCPT
+        Tue, 2 Nov 2021 05:48:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27187 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229770AbhKBJsH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Nov 2021 04:00:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0Uuj7Ztb_1635839894;
-Received: from localhost(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0Uuj7Ztb_1635839894)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 02 Nov 2021 15:58:21 +0800
-From:   Dan Li <ashimida@linux.alibaba.com>
-To:     catalin.marinas@arm.com, will@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, keescook@chromium.org, tglx@linutronix.de,
-        akpm@linux-foundation.org, peterz@infradead.org,
-        samitolvanen@google.com, masahiroy@kernel.org, rppt@kernel.org,
-        mark.rutland@arm.com, frederic@kernel.org, yifeifz2@illinois.edu,
-        rostedt@goodmis.org, viresh.kumar@linaro.org, andreyknvl@gmail.com,
-        colin.king@canonical.com, ojeda@kernel.org, arnd@arndb.de,
-        luc.vanoostenryck@gmail.com, nivedita@alum.mit.edu,
-        elver@google.com
-Cc:     linux-hardening@vger.kernel.org,
-        Dan Li <ashimida@linux.alibaba.com>
-Subject: [PATCH] [RFC/RFT] AARCH64: Add gcc Shadow Call Stack support
-Date:   Tue,  2 Nov 2021 00:58:12 -0700
-Message-Id: <20211102075812.122715-1-ashimida@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Nov 2021 05:48:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635846332;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nYxvqfKyKtI4tu/9sa2DOgaLzeCCe5kytXHcdT7EDvU=;
+        b=CPCWVN6fACV1mC3xIu4Uy1VVC7xrOCWoKUYxcVI7XBxY7XpjYlcA2guxLdUIvR0ti0Kjkj
+        nJjtcqpNMSSxGMCVVtUCGw2gKKZhzx/E+uWkt2IaBtYAdg8X8oSN/EMBV31X4Wny2XO2BM
+        kvVllde/20hF6DUXdRGTQpwgCayZgw8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-4x6F5WCcPPyxkNENe6Mihg-1; Tue, 02 Nov 2021 05:45:27 -0400
+X-MC-Unique: 4x6F5WCcPPyxkNENe6Mihg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40EBE1006AA2;
+        Tue,  2 Nov 2021 09:45:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.144])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A3F4A60D30;
+        Tue,  2 Nov 2021 09:45:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20210919094432.30510-1-len.baker@gmx.com>
+References: <20210919094432.30510-1-len.baker@gmx.com>
+To:     Len Baker <len.baker@gmx.com>
+Cc:     dhowells@redhat.com, Marc Dionne <marc.dionne@auristor.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-afs@lists.infradead.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] afs: Prefer struct_size over open coded arithmetic
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4028804.1635846297.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 02 Nov 2021 09:44:57 +0000
+Message-ID: <4028805.1635846297@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-I tried to submit a patch[1] to add compiler's SCS support on gcc-11.1.0.
+Len Baker <len.baker@gmx.com> wrote:
 
-Kernel can enable SCS under gcc based on this patch, commands as follows:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> =
 
-make ARCH=arm64 defconfig
-./scripts/config -e CONFIG_SHADOW_CALL_STACK
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+> So, use the struct_size() helper to do the arithmetic instead of the
+> argument "size + size * count" in the kzalloc() function.
+> =
 
-[1] https://gcc.gnu.org/pipermail/gcc-patches/2021-November/583062.html
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-=
+coded-arithmetic-in-allocator-arguments
+> =
 
-Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 
----
-This function can be used to test whether the shadow stack is effective:
-//noinline void __noscs scs_test(void)
-noinline void scs_test(void)
-{
-            register unsigned long *sp asm("sp");
-                unsigned long * lr = sp + 1;
-
-                    asm volatile("":::"x30");
-                        *lr = 0;
-}
-
-ffff800010012710 <scs_test>:
-ffff800010012710:       d503245f        bti     c
-ffff800010012714:       d503233f        paciasp
-ffff800010012718:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-ffff80001001271c:       910003fd        mov     x29, sp
-ffff800010012720:       910003e0        mov     x0, sp
-ffff800010012724:       f900041f        str     xzr, [x0, #8]
-ffff800010012728:       a8c17bfd        ldp     x29, x30, [sp], #16
-ffff80001001272c:       d50323bf        autiasp
-ffff800010012730:       d65f03c0        ret
-
- arch/Kconfig                 | 6 +++---
- arch/arm64/Kconfig           | 2 +-
- include/linux/compiler-gcc.h | 6 ++++++
- 3 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 98db63496bab..35b27be0d7ee 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -593,11 +593,11 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
- 	  switching.
- 
- config SHADOW_CALL_STACK
--	bool "Clang Shadow Call Stack"
--	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
-+	bool "Shadow Call Stack"
-+	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
- 	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
- 	help
--	  This option enables Clang's Shadow Call Stack, which uses a
-+	  This option enables Clang/GCC's Shadow Call Stack, which uses a
- 	  shadow stack to protect function return addresses from being
- 	  overwritten by an attacker. More information can be found in
- 	  Clang's documentation:
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 62c3c1d2190f..5d49c0c89645 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1062,7 +1062,7 @@ config ARCH_HAS_FILTER_PGPROT
- 
- # Supported by clang >= 7.0
- config CC_HAVE_SHADOW_CALL_STACK
--	def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
-+	def_bool CC_IS_CLANG || $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
- 
- config PARAVIRT
- 	bool "Enable paravirtualization code"
-diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-index cb9217fc60af..917c3bb6aa43 100644
---- a/include/linux/compiler-gcc.h
-+++ b/include/linux/compiler-gcc.h
-@@ -104,6 +104,12 @@
- #define KASAN_ABI_VERSION 3
- #endif
- 
-+#if __has_attribute(__no_sanitize_shadow_call_stack__)
-+#define __noscs __attribute__((no_sanitize_shadow_call_stack))
-+#else
-+#define __noscs
-+#endif
-+
- #if __has_attribute(__no_sanitize_address__)
- #define __no_sanitize_address __attribute__((no_sanitize_address))
- #else
--- 
-2.17.1
+Acked-by: David Howells <dhowells@redhat.com>
 
