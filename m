@@ -2,116 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E6DC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 18:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA5AC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 18:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD26260EB9
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 18:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2EB760F70
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 18:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234908AbhKBSYF (ORCPT
+        id S232211AbhKBSZF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 2 Nov 2021 14:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232211AbhKBSYE (ORCPT
+        Tue, 2 Nov 2021 14:25:05 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:57560 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230230AbhKBSZE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Nov 2021 14:24:04 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6C0C061714;
-        Tue,  2 Nov 2021 11:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=K0rz7LT+kgomD5KRNtzJy6G/J+BhWbgnVLi0ic650I0=; b=dJ9VibV9ZrIwDjTaMbTXmZwZJX
-        bQdjfemLebGdpEQOacA+0IGSYwxaZ2EEsxlDJoBA/7WGVPPvXM28251CmPRdMYAXDntAQNHhHO0qV
-        v/AZ3mS1k2WDG6fuSg4lrISg4c/IUw87Hr9DHet8l6dnXtycetIdmRuQ3dbe7aG2MIJsAKg8Ln/wf
-        Du1BBQbjLlOkUWucCwT04KkXyBGzzx/FlqeOdprJT4oNWi1klCNgmOcCmpXjuv6DpERZKM5fcoUJt
-        3oWDqrb1qRK9nZQLnZGbk05TaWcsdWVfoTW1vBCysM9Zo3gH79uPwio2TEtFo2kUGosnxE9/JPTiS
-        k3is7y+Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mhyKF-004g3M-IV; Tue, 02 Nov 2021 18:16:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C7A2630022C;
-        Tue,  2 Nov 2021 19:15:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B704E2D53269D; Tue,  2 Nov 2021 19:15:58 +0100 (CET)
-Date:   Tue, 2 Nov 2021 19:15:58 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
+        Tue, 2 Nov 2021 14:25:04 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52]:38068)
+        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1mhyQW-00AJ67-Tr; Tue, 02 Nov 2021 12:22:28 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:37228 helo=email.xmission.com)
+        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1mhyQV-00EizZ-01; Tue, 02 Nov 2021 12:22:28 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, X86 ML <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev, joao@overdrivepizza.com
-Subject: Re: [PATCH] static_call,x86: Robustify trampoline patching
-Message-ID: <YYGAXtequQDQeP0R@hirez.programming.kicks-ass.net>
-References: <20211027124852.GK174703@worktop.programming.kicks-ass.net>
- <YXlOd1lyKZKAcJfA@hirez.programming.kicks-ass.net>
- <CAMj1kXHKh7wv6JqusVnoiQDMm7ApFq2ujzbfWmM9AzLKFehhAA@mail.gmail.com>
- <YXlcMluaysPBF92J@hirez.programming.kicks-ass.net>
- <CAMj1kXECTdDLVMk2JduU5mV2TR0Cv=hZ9QOpYRsRM1jfvvNikw@mail.gmail.com>
- <CABCJKufpS4jJxHqk8=bd1JCNbKfmLDKBbjbhjrar2+YQJFiprg@mail.gmail.com>
- <20211029200324.GR174703@worktop.programming.kicks-ass.net>
- <20211030074758.GT174703@worktop.programming.kicks-ass.net>
- <20211030081631.GF174730@worktop.programming.kicks-ass.net>
- <202111021029.79D81E590@keescook>
+Cc:     Andrea Righi <andrea.righi@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <YXrN+Hnl9pSOsWlA@arighi-desktop> <202110280955.B18CB67@keescook>
+        <878rydm56l.fsf@disp2133> <202110281136.5CE65399A7@keescook>
+        <8735okls76.fsf@disp2133> <202110290755.451B036CE9@keescook>
+Date:   Tue, 02 Nov 2021 13:22:19 -0500
+In-Reply-To: <202110290755.451B036CE9@keescook> (Kees Cook's message of "Fri,
+        29 Oct 2021 07:58:02 -0700")
+Message-ID: <87y2665sf8.fsf@disp2133>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202111021029.79D81E590@keescook>
+Content-Type: text/plain
+X-XM-SPF: eid=1mhyQV-00EizZ-01;;;mid=<87y2665sf8.fsf@disp2133>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/dOLwlXmVI7aCH/YYnczuKSEUIah1vXvg=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: selftests: seccomp_bpf failure on 5.15
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 02, 2021 at 10:35:30AM -0700, Kees Cook wrote:
-> On Sat, Oct 30, 2021 at 10:16:31AM +0200, Peter Zijlstra wrote:
-> > foo.cfi:
-> > 	endbr
-> > 	xorl $0xdeadbeef, %r10d
-> > 	jz foo
-> > 	ud2
-> > 	nop	# make it an even 16 bytes
-> > foo:
-> > 	# actual function text
-> > 
-> > 
-> > Then have the address of foo, be the address of foo, like any normal
-> > sane person would expect. Have direct calls to foo, go to foo, again, as
-> > expected.
-> > 
-> > When doing an indirect call (to r11, as clang does), then, and only
-> > then, do:
-> > 
-> > 	movl $0xdeadbeef, %r10d
-> > 	subq $0x10, %r11
-> > 	call *%r11
-> > 
-> > 	# if the r11 lives, add:
-> > 	addq $0x10, %r11
-> > 
-> > 
-> > Then only when caller and callee agree 0xdeadbeef is the password, does
-> > the indirect call go through.
-> > 
-> > Why isn't this a suitable CFI scheme even without IBT?
-> 
-> The trouble is that the callee is doing the verification. There's no
-> protection against calling into a callee that doesn't perform a check
-> (e.g. BPF JIT, or otherwise constructed executable memory, etc). The
-> caller needs to do the verification that what they're calling into is
-> safe before it makes the call.
+Kees Cook <keescook@chromium.org> writes:
 
-Right, Ard said the same, see new crackpot scheme here:
+> On Thu, Oct 28, 2021 at 05:06:53PM -0500, Eric W. Biederman wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>> 
+>> > On Thu, Oct 28, 2021 at 12:26:26PM -0500, Eric W. Biederman wrote:
+>> 
+>> Is it a problem that the debugger can see the signal if the process does
+>> not?
+>
+> Right, I'm trying to understand that too. However, my neighbor just lost
+> power. :|
+>
+> What I was in the middle of checking was what ptrace "sees" going
+> through a fatal SIGSYS; my initial debugging attempts were weird.
 
-  https://lkml.kernel.org/r/YYE1yPClPMHvyvIt@hirez.programming.kicks-ass.net
+Kees have you regained power and had a chance to see my SA_IMMUTABLE
+patch?
+
+Does what I implemented seem like it will work for you?
+
+I think it is a solid and simple solution to a pair of problems with my
+change to use the ordinary coredump path for seccomp.  But I would very
+much love to hear it seems reasonable to you, as you were looking at the
+problem as well.
+
+Eric
