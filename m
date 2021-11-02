@@ -2,136 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9410C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 15:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF6AC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 16:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81AC160F36
-	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 15:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918CB610FC
+	for <linux-hardening@archiver.kernel.org>; Tue,  2 Nov 2021 16:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234250AbhKBPS3 (ORCPT
+        id S234895AbhKBQP3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 2 Nov 2021 11:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234185AbhKBPS2 (ORCPT
+        Tue, 2 Nov 2021 12:15:29 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54509 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234662AbhKBQG7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Nov 2021 11:18:28 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05A3C061714;
-        Tue,  2 Nov 2021 08:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Lji0Q0mKscbCR4s6xv/OULJVtCJGnkPpvCozvtfPKyM=; b=rQyjFmdABWfQuxVIFtBoZm6409
-        f7Q8mBnnIbnhARKu8AfsBA+4oU06whRCygb0Kmatd7/iZv1bYZsEWfsGsixFCGVYvb84ZDTeWPrCp
-        Q6jCl/jLsDBIJ0mcDOI6pJvQ8RlkyBRHWj8FjpOu/YcCrGs13flAN4Igvu4smCRzFdUkiQYzuSUb1
-        6es1pUMYkJOvoNjyCsH0ehnNGvmn8bAy43xYzwsGy3VH+5/D/uiBNNq0DomJQKUaKqwYD21X2okrq
-        VEuxt2Gfwz+P27cZgCnyOIvyi6YhiZE/m01nwh44rhuizmTlrOLtuZ0qOfiu//1K+/L7/4sth9g6M
-        5L7zz5Wg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mhvVb-00DluO-H2; Tue, 02 Nov 2021 15:15:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 989D1300366;
-        Tue,  2 Nov 2021 16:15:30 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7D7AA2D5FE2D6; Tue,  2 Nov 2021 16:15:30 +0100 (CET)
-Date:   Tue, 2 Nov 2021 16:15:30 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, X86 ML <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tue, 2 Nov 2021 12:06:59 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0Uumn27h_1635868998;
+Received: from ashimida.local(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0Uumn27h_1635868998)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 03 Nov 2021 00:03:20 +0800
+Subject: Re: [PATCH] [RFC/RFT] AARCH64: Add gcc Shadow Call Stack support
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev, joao@overdrivepizza.com
-Subject: Re: [PATCH] static_call,x86: Robustify trampoline patching
-Message-ID: <YYFWEnBb/UaZKGzz@hirez.programming.kicks-ass.net>
-References: <CAMj1kXEvemVOWf4M_0vsduN_kiCsGVmM92cE7KPMoNKViKp=RQ@mail.gmail.com>
- <20211031163920.GV174703@worktop.programming.kicks-ass.net>
- <CAMj1kXHk5vbrT49yRCivX3phrEkN6Xbb+g8WEmavL_d1iE0OxQ@mail.gmail.com>
- <YX74Ch9/DtvYxzh/@hirez.programming.kicks-ass.net>
- <CAMj1kXG+MuGaG3BHk8pnE1MKVmRf5E+nRNoFMHxOA1y84eGikg@mail.gmail.com>
- <YX8AQJqyB+H3PF1d@hirez.programming.kicks-ass.net>
- <CAMj1kXF3n-oQ1WP8=asb60K6UjSYOtz5RVhrcoCoNq3v7mZdQg@mail.gmail.com>
- <20211101090155.GW174703@worktop.programming.kicks-ass.net>
- <CAMj1kXGhRmdM3om289Q2-s1Pzfob3D2iSDMorzggfhSk1oj53A@mail.gmail.com>
- <YYE1yPClPMHvyvIt@hirez.programming.kicks-ass.net>
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, frederic@kernel.org,
+        yifeifz2@illinois.edu, Steven Rostedt <rostedt@goodmis.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, andreyknvl@gmail.com,
+        Colin King <colin.king@canonical.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Marco Elver <elver@google.com>, linux-hardening@vger.kernel.org
+References: <20211102075812.122715-1-ashimida@linux.alibaba.com>
+ <CANiq72meBX1g6z2-vfNpMw2C8S-BavuA4CTyPLpD4zUcX193Sw@mail.gmail.com>
+From:   Dan Li <ashimida@linux.alibaba.com>
+Message-ID: <b08a94af-f7a4-c228-0ec8-24709385f1d5@linux.alibaba.com>
+Date:   Wed, 3 Nov 2021 00:03:24 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YYE1yPClPMHvyvIt@hirez.programming.kicks-ass.net>
+In-Reply-To: <CANiq72meBX1g6z2-vfNpMw2C8S-BavuA4CTyPLpD4zUcX193Sw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 02, 2021 at 01:57:44PM +0100, Peter Zijlstra wrote:
 
-> So how insane is something like this, have each function:
-> 
-> foo.cfi:
-> 	endbr64
-> 	xorl $0xdeadbeef, %r10d
-> 	jz foo
-> 	ud2
-> 	nop	# make it 16 bytes
-> foo:
-> 	# actual function text goes here
-> 
-> 
-> And for each hash have two thunks:
-> 
-> 
-> 	# arg: r11
-> 	# clobbers: r10, r11
-> __x86_indirect_cfi_deadbeef:
-> 	movl -9(%r11), %r10		# immediate in foo.cfi
-> 	xorl $0xdeadbeef, %r10		# our immediate
-> 	jz 1f
-> 	ud2
-> 1:	ALTERNATIVE_2	"jmp *%r11",
-> 			"jmp __x86_indirect_thunk_r11", X86_FEATURE_RETPOLINE
-> 			"lfence; jmp *%r11", X86_FEATURE_RETPOLINE_AMD
-> 
-> 
-> 
-> 	# arg: r11
-> 	# clobbers: r10, r11
-> __x86_indirect_ibt_deadbeef:
-> 	movl $0xdeadbeef, %r10
-> 	subq $0x10, %r11
-> 	ALTERNATIVE "", "lfence", X86_FEATURE_RETPOLINE
-> 	jmp *%r11
-> 
 
-These two thunks could of course be one big alternative.
+On 11/2/21 5:51 PM, Miguel Ojeda wrote:
+> On Tue, Nov 2, 2021 at 8:58 AM Dan Li <ashimida@linux.alibaba.com> wrote:
+>>
+>> I tried to submit a patch[1] to add compiler's SCS support on gcc-11.1.0.
+> 
+> This would go into GCC 12, right?
+>
+Oh, yes, gcc-11.1.0 is the version I used to test this patch.
 
-> And have the actual indirect callsite look like:
+>> [1] https://gcc.gnu.org/pipermail/gcc-patches/2021-November/583062.html
 > 
-> 	# r11 - &foo
-> 	ALTERNATIVE_2	"cs call __x86_indirect_thunk_r11",
-> 			"cs call __x86_indirect_cfi_deadbeef", X86_FEATURE_CFI
-> 			"cs call __x86_indirect_ibt_deadbeef", X86_FEATURE_IBT
+> Nit: you can use the `Link: ` tag for this.
+>
+Thanks, Miguel :)
 
-Also simplifying this.
+>>   # Supported by clang >= 7.0
+> 
+> We should add a comment here saying the minimum version too, e.g. GCC
+>> = 12 (assuming it will be merged)
+> 
+Ok, I will add a comment in the next version, if this patch will be merged.
 
-> Although if the compiler were to emit:
+>>   config CC_HAVE_SHADOW_CALL_STACK
+>> -       def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
+>> +       def_bool CC_IS_CLANG || $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
 > 
-> 	cs call __x86_indirect_cfi_deadbeef
+> This is changing the default for Clang (which looks fine due to our
+> minimum Clang version), but if the test for GCC works the same way,
+> why not just keep the line as it was since it covers both?
+>
+That sounds reasonable, keep this line unchanged is fine.
+
+>> +#if __has_attribute(__no_sanitize_shadow_call_stack__)
+>> +#define __noscs __attribute__((no_sanitize_shadow_call_stack))
+>> +#else
+>> +#define __noscs
+>> +#endif
 > 
-> we could probaly fix it up from there.
+> No need for the `else` branch here, it is done in `compiler_types.h`
+> (to be consistent with Clang).
 > 
+Oh, I see, thanks.
+
+> Also, I hope one day GCC and Clang doing the same for these
+> sanitize-related bits...
 > 
-> Then we can at runtime decide between:
-> 
->   {!cfi, cfi, ibt} x {!retpoline, retpoline, retpoline-amd}
+> Cheers,
+> Miguel
 > 
