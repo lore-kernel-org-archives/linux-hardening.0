@@ -2,98 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223FFC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 16:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC1AC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 18:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE9361167
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 16:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7511F60F5A
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 18:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232901AbhKCQd0 (ORCPT
+        id S230460AbhKCSjF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 3 Nov 2021 12:33:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232905AbhKCQdV (ORCPT
+        Wed, 3 Nov 2021 14:39:05 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:59636 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230229AbhKCSjF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 3 Nov 2021 12:33:21 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB97C06120E
-        for <linux-hardening@vger.kernel.org>; Wed,  3 Nov 2021 09:30:45 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id y1so2806063plk.10
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Nov 2021 09:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CFrgwsciqhLigy2EU/AaRm6zFzZu/RmdM4V9EloceVA=;
-        b=kC4xV5MjH6bk8I4nye8+YYZO33K6/+6Z/bWF9Txp4X6wgkAFlE0J8Kga7Pf8GNfoi5
-         alI3GfSrK1HVOWD0pQg9mNNETqPQG3ptR7FvS/hOk3qwBGJSyZj3hrxzWanQbiHqlRzp
-         gqI0x/48tbduRDdBENe8sTqZprAUyuGhlAyzQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CFrgwsciqhLigy2EU/AaRm6zFzZu/RmdM4V9EloceVA=;
-        b=tgEVXnZUvp/zak6y05nBgOHWijejgzshkSYuEx1xPxrQaShII+7CJtAKZna+bRe4F3
-         hjOCLBY+X6I7qRq8Kq6W2D55zDniFRb6Z2/Nhtn0/0Ed6+0bZaXj1bAt2lN6CHBiiwla
-         uXi1iUI/B1+u8QbD3goJL/kB6fcFS+lqHoIDGGb2tF+Q1253j/p35BGBeWchuZj08oTC
-         t4NeXoGlqORA9Y+I4qP/Bg87I3PQusfRAort3OX9cTHhd/QC0qU2nSg477QITgmPiNXI
-         +FOECWMQ67fBy29FSTDJu6gUQ3xh3I8u1bFKEQC77u9J1yvuLzKyPSyGtAOOtp+vB0xR
-         Mr0Q==
-X-Gm-Message-State: AOAM530UybpNKNvJKFqQ0JgxmVZUK0Pw2hMbzi0NTye18qzK4LNAwvnb
-        sqADsqFHXgndlxEWH+a103nXGQ==
-X-Google-Smtp-Source: ABdhPJwntl7sqqQ2NBbzrrk48f0sWS+yqWMG1/TpRv2Og9bPfhSZEMY+Gd4Y+dpMUoPl3H+9JRKy0g==
-X-Received: by 2002:a17:903:2348:b0:141:d60b:ee90 with SMTP id c8-20020a170903234800b00141d60bee90mr24191927plh.15.1635957044320;
-        Wed, 03 Nov 2021 09:30:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id pj3sm5868301pjb.18.2021.11.03.09.30.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Nov 2021 09:30:43 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Wed, 3 Nov 2021 14:39:05 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52]:56630)
+        by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1miL7b-00DM2D-Hu; Wed, 03 Nov 2021 12:36:27 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:53194 helo=email.xmission.com)
+        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1miL7a-0029m0-8a; Wed, 03 Nov 2021 12:36:26 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrea Righi <andrea.righi@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
         Andy Lutomirski <luto@amacapital.net>,
         Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 1/2] selftests/seccomp: Stop USER_NOTIF test if kcmp() fails
-Date:   Wed,  3 Nov 2021 09:30:38 -0700
-Message-Id: <20211103163039.2104830-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211103163039.2104830-1-keescook@chromium.org>
-References: <20211103163039.2104830-1-keescook@chromium.org>
+        linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <YXrN+Hnl9pSOsWlA@arighi-desktop> <202110280955.B18CB67@keescook>
+        <878rydm56l.fsf@disp2133> <202110281136.5CE65399A7@keescook>
+        <8735okls76.fsf@disp2133> <202110290755.451B036CE9@keescook>
+        <87y2665sf8.fsf@disp2133> <202111030838.CB201E4@keescook>
+Date:   Wed, 03 Nov 2021 13:35:56 -0500
+In-Reply-To: <202111030838.CB201E4@keescook> (Kees Cook's message of "Wed, 3
+        Nov 2021 09:14:47 -0700")
+Message-ID: <87v9193x4j.fsf@disp2133>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=970; h=from:subject; bh=5SGA6vKk/iwU4HRpuPNInhIqcJf9yybUaBe2IOL9GDc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhgrkuqYShFRe385bb2uQbzI3gBZtUefB10tmQnNTj WC2v2uyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYYK5LgAKCRCJcvTf3G3AJhiiD/ 4hgs0gemdqJuv8tsoUrd/l5QUSScsyFWkKOv1E73CDe+bkMxBVfQ03PAkh6EavU552ourVPL+H+NLq 0LZvSYqP53sGQ3Rq6924Pd5reqIGA0V9DjHr6Sr928rFBF6CyGiUbxrzsp6QXoIaRgJz+Q329EYskF AxKo4Z/upnLxG8wlQbYNqnOZHFQmljScM3PXqe088L/0Hci7l1TpCJfIVjYxLF6h6HFPX6qPfx1tmj /X4CXoz2ucEJy9ZwDHyiWTryA+Y37w21SI8h/tuSlLVnHKRi/zSQcthgSNIJqJvnTp55be27rr42cO Br8U/OY5W05/wr4Jrc3CujYuPAldQXChHw30HIxNYG5/hvPMwtO3/bbws+JfvWFMvj9Krql5mW/ssb f/YvQPXXXDJ39+SxVUNDA5yMh8/mgOb9KbMupFxghWCkCqW7x4TDl5C69mwjrPpNcfrARyy3G8xOhl YDhweHbvvR3KOLizlEKuy+4O9YTezjcznepCizMotBusB/DaCaxlqrPKC44OWer0LY4AV87dQIlWtP +dCfFHcRqEFVlHUJPORDaeHvqhOiH7ktKsO14Bi1KDA5q6h6TeL/HSQ2hPoIr+8ozP2IC4P8JI2lLx qi35wJYNSKkXDYoGtE3R5tfk0eZfEoyUlLJGJn4UEM7OgbXwl16GqYARbeqg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1miL7a-0029m0-8a;;;mid=<87v9193x4j.fsf@disp2133>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+0WoLFfWI4hGhEwAzgOXd2H2MNf3iKiEU=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: selftests: seccomp_bpf failure on 5.15
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-If kcmp() fails during the USER_NOTIF test, the test is likely to hang,
-so switch from EXPECT to ASSERT.
+Kees Cook <keescook@chromium.org> writes:
 
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Will Drewry <wad@chromium.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, Nov 02, 2021 at 01:22:19PM -0500, Eric W. Biederman wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>> 
+>> > On Thu, Oct 28, 2021 at 05:06:53PM -0500, Eric W. Biederman wrote:
+>> >> Kees Cook <keescook@chromium.org> writes:
+>> >> 
+>> >> > On Thu, Oct 28, 2021 at 12:26:26PM -0500, Eric W. Biederman wrote:
+>> >> 
+>> >> Is it a problem that the debugger can see the signal if the process does
+>> >> not?
+>> >
+>> > Right, I'm trying to understand that too. However, my neighbor just lost
+>> > power. :|
+>> >
+>> > What I was in the middle of checking was what ptrace "sees" going
+>> > through a fatal SIGSYS; my initial debugging attempts were weird.
+>> 
+>> Kees have you regained power and had a chance to see my SA_IMMUTABLE
+>> patch?
+>
+> Apologies; I got busy with other stuff, but I've tested this now. It's
+> happy and I see the expected behaviors again. Note that I used the patch
+> with this change:
+>
+> -#define SA_IMMUTABLE           0x008000000
+> +#define SA_IMMUTABLE           0x00800000
+>
+> Tested-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 1d64891e6492..d999643d577c 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -4087,7 +4087,7 @@ TEST(user_notification_addfd)
- 	 * lowest available fd to be assigned here.
- 	 */
- 	EXPECT_EQ(fd, nextfd++);
--	EXPECT_EQ(filecmp(getpid(), pid, memfd, fd), 0);
-+	ASSERT_EQ(filecmp(getpid(), pid, memfd, fd), 0);
- 
- 	/*
- 	 * This sets the ID of the ADD FD to the last request plus 1. The
--- 
-2.30.2
+Thanks.
 
+And I see you have written a test as well that should keep
+this kind of bug from happening again.
+
+Eric
