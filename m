@@ -2,88 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC45FC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 19:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBD2C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 19:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2CDA6023F
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 19:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C985760FC2
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 19:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbhKCTUm (ORCPT
+        id S230243AbhKCTe7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 3 Nov 2021 15:20:42 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:37974 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbhKCTUm (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 3 Nov 2021 15:20:42 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51]:33588)
-        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1miLls-00DxQz-FN; Wed, 03 Nov 2021 13:18:04 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:54326 helo=email.xmission.com)
-        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1miLlr-00C4qx-1b; Wed, 03 Nov 2021 13:18:04 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20211103163039.2104830-1-keescook@chromium.org>
-        <87lf253x1c.fsf@disp2133> <202111031139.80CE97C532@keescook>
-Date:   Wed, 03 Nov 2021 14:17:56 -0500
-In-Reply-To: <202111031139.80CE97C532@keescook> (Kees Cook's message of "Wed,
-        3 Nov 2021 11:40:23 -0700")
-Message-ID: <871r3xyrob.fsf@disp2133>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 3 Nov 2021 15:34:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229697AbhKCTe7 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 3 Nov 2021 15:34:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0119D60E98;
+        Wed,  3 Nov 2021 19:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635967942;
+        bh=4qyxgIZ8GahpT4Sx5VxjvY6yAitch4aqfKANRfXfzMI=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=EKzUbtoGqYXQueNAw9ZofMWdyM20C6hoDsDrIihAbSiPwPBiAixcBRRgEW+61eaVs
+         eDLg9Bnxx08k5drs1IIe6VTgd16lttUteHvP1KTcQz6AevIViqmgpqsd1VAkOhZVvh
+         XMMPP1gjStSmb3Gn2GL9nnEIVNUMDF/qH4q9kYm+eq43WmaNB4fVS0yNtVyz2VmHud
+         aPI1adU/N6rIUQhNP6WQUt9cZpbyX156mJDG7vlBM8qbQa0movjufKGwSLuNpz8oqk
+         S7aoSwSj3Lf70aPD7Rd62uIqhDZuZ8ldy468agzN0Ree8DVkZy0rMxj3xsZJ9vv44x
+         96etEcHyZSo3w==
+Message-ID: <b996958f-eb69-c96c-b978-944ac5151e9a@kernel.org>
+Date:   Wed, 3 Nov 2021 12:32:20 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1miLlr-00C4qx-1b;;;mid=<871r3xyrob.fsf@disp2133>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19nUrYSaq7CXOROhJQdhgL44ZtdIJWIAUE=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 0/2] selftests/seccomp: Report event mismatches more clearly
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH] static_call,x86: Robustify trampoline patching
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev
+References: <CAMj1kXG+MuGaG3BHk8pnE1MKVmRf5E+nRNoFMHxOA1y84eGikg@mail.gmail.com>
+ <YX8AQJqyB+H3PF1d@hirez.programming.kicks-ass.net>
+ <CAMj1kXF3n-oQ1WP8=asb60K6UjSYOtz5RVhrcoCoNq3v7mZdQg@mail.gmail.com>
+ <20211101090155.GW174703@worktop.programming.kicks-ass.net>
+ <CAMj1kXGhRmdM3om289Q2-s1Pzfob3D2iSDMorzggfhSk1oj53A@mail.gmail.com>
+ <YYE1yPClPMHvyvIt@hirez.programming.kicks-ass.net>
+ <202111021040.6570189A5@keescook>
+ <90a14299-ce56-41d5-9df9-f625aae1ac70@www.fastmail.com>
+ <202111021603.EDE5780FE@keescook>
+ <bbde172b-2dae-fdc0-fbb5-edec6752c740@kernel.org>
+ <20211103083559.GB174703@worktop.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@kernel.org>
+In-Reply-To: <20211103083559.GB174703@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+On 11/3/21 01:35, Peter Zijlstra wrote:
+> On Tue, Nov 02, 2021 at 05:20:05PM -0700, Andy Lutomirski wrote:
+>> I think that's a big mistake -- any sane ENDBR-using scheme would
+>> really prefer that ENDBR to be right next to the actual function body,
+>> and really any scheme would benefit due to better cache locality.
+> 
+> Agreed, IBT/BTI want the landing pad in front of the actual function.
+> 
+>> But, more importantly, IMO any sane ENDBR-using scheme wants to
+>> generate the indirect stub as part of code gen for the actual
+>> function.
+> 
+> Sorta, I really want to be able to not have a landing pad for functions
+> whose address is never taken. At that point it doesn't matter if it gets
+> generated along with the function and then stripped/poisoned later, or
+> generated later.
 
-> On Wed, Nov 03, 2021 at 01:37:51PM -0500, Eric W. Biederman wrote:
->> Kees Cook <keescook@chromium.org> writes:
->> 
->> > Hi,
->> >
->> > This expands the seccomp selftests slightly to add additional debug
->> > reporting detail and a new "immediate fatal SIGSYS under tracing" test.
->> > I expect to be taking these via my seccomp tree.
->> 
->> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> 
->> I am a little fuzzy on the details but I understand what and why
->> you are testing (I broken it).  So this is my 10,000 foot ack.
->
-> Thanks! Yeah, and the other tests did catch it, but it was kind of a
-> "side effect", so I added the specific "direct" case where it can be
-> seen more clearly.
+Stripping is conceptually straightforward even without LTO.
 
-Hey.  Did you happen to understand the bit about racing with sigaction?
+foo.indirect:
+  ENDBR
+foo:
+  ...
 
-As much as I care about not braking ptrace.  What really decided me was
-the on SA_IMMUTABLE was closing the race with sigaction changing the
-signal handler.  Especially for something like seccomp.
+and the linker learns (using magic function sections?) that, if 
+foo.indirect is not referenced, then it should not be generated.  Or a 
+very straightforward walk over all the relocations in an object to 
+poison the unused .indirect entries could be done.  Making this work 
+with DSOs, EXPORT_SYMBOL, etc will be somewhat nontrivial, but not 
+impossible.
 
-It is a race so probably very fickle to write a test for, but if we can
-figure out how to write a reliable test I expect it will be a good idea.
-Do you have any ideas?
-
-I am concerned there is some threaded program somewhere using seccomp
-that is allowed to call sigaction, can use sigaction to keep from
-being killed (before I send the fix to Linus). 
-
-Eric
-
+--Andy
