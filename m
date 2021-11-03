@@ -2,112 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B469C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 16:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6071BC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 16:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE5960F58
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 16:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43FA560F10
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Nov 2021 16:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232833AbhKCQR0 (ORCPT
+        id S232880AbhKCQdW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 3 Nov 2021 12:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54510 "EHLO
+        Wed, 3 Nov 2021 12:33:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232830AbhKCQR0 (ORCPT
+        with ESMTP id S232869AbhKCQdV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 3 Nov 2021 12:17:26 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12068C061203
-        for <linux-hardening@vger.kernel.org>; Wed,  3 Nov 2021 09:14:49 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id r5so2847935pls.1
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Nov 2021 09:14:49 -0700 (PDT)
+        Wed, 3 Nov 2021 12:33:21 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17BAC061203
+        for <linux-hardening@vger.kernel.org>; Wed,  3 Nov 2021 09:30:44 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id b13so2879260plg.2
+        for <linux-hardening@vger.kernel.org>; Wed, 03 Nov 2021 09:30:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Gcc0EUM1EauKNq+43vPpaFdtVYVD7iAXZHWErocDtp0=;
-        b=GerNQsh9cv7fbDFjWov4KivBQdKjB2oHp6+hu5L0IzSuHrFf7yC9nsNjEK4mKa1thg
-         lIef1g1Q5waG3Bo27dyQD9IGceZ5FdA0UnVr/ZFrZRZrTE5L/cCOMJ3+Ap+sF3V9itpe
-         xd7YTDezqpu5NUNKOUXH5YXvAc+giJbRz+574=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=odA894FizgYT2uqpjfguRRE1S63B/axih7mjOQLAm08=;
+        b=OIpDm1ALg/qwvFARnuZVOvXmKYt6SVIv/XuBIQNPjQujjPo3LX/hxSqAtcr6anQ+9b
+         FgUgp7sSi1NWDQJWcA0USotmuadaVFW3OdifnNjeY1fbDbAMtz0xWjCSMgO26Pqv17kg
+         72g01cfgXQLlCFk3PAIjbt0GQHa0S4ZlCZDUo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Gcc0EUM1EauKNq+43vPpaFdtVYVD7iAXZHWErocDtp0=;
-        b=lfu3SxSLWTQz9Tw/8Rihh0JCeVE1SX+MrYwB5bhW3O0xzRx+H9OmrijRFHhIXHc2L0
-         7dt1tYFKOkQdc7CUA6U3QQmN1R2xSTfaKWxS1xh0kdUsk+WwxYUaeY9by73PJ86NYXhh
-         Tq9pi8rKGL7mWFsbM9IT1eSu23fAlYtTjGyEPEEyxKFz2bTGX/ifhIuqpEbEhcqAomKw
-         XC6HFLskmRLD7YBXVvRD2/y5ESNd65qBk4XmAcdMQy2Ohs4DZiahm99ujFztteTPG1dg
-         ha7gBmGx54YlgI8SrZADl/S6MDR5LEv5L8kGhlDupQGCq4jgcEBO4GwLNNaSadBkx+Jh
-         rarw==
-X-Gm-Message-State: AOAM530xgSOtN1hd3lKlvrTMd2MRN7NhPYeU4QFNEo7l/VkDgLZxXGPu
-        SLDW5M/u/akiJusayt6XukzyHw==
-X-Google-Smtp-Source: ABdhPJwfVfLAFqcLr/+fzW2AVuq4++yVTWfgk5KQYqUOGtMy5pycxzm1sypp4lVosI+3B8C3SbUzIg==
-X-Received: by 2002:a17:90b:124d:: with SMTP id gx13mr15668790pjb.106.1635956088496;
-        Wed, 03 Nov 2021 09:14:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=odA894FizgYT2uqpjfguRRE1S63B/axih7mjOQLAm08=;
+        b=5f913jgnn5u45GidXIiL91AzKB7zB9DAz+UTIqvRATHm8MmD3cmoCbPFhwL7348Dmx
+         7e/FMPNPe8JlCw3upmCm65LhxVCAgm1t8LmX3nbven5YiHbEZBWeADuM6QGbpGcgoeH2
+         y945jU0FY5F7E7WTRoS4hWmkgvNm71oO0PTNlnxvG6+MlNCiRLMUrnFvMiYi9JIPi8oL
+         e0t05CnPYEoawYdNtwT1qZVusBko97kLi/dnANrI5G5G0S52tOP5bmPBxg+8dG4ozmlL
+         HVyez+wNW6WRyUOMmPnHvuc3cn/vcMFsPvDP255rLD3bP4LSuP9JUmZlhJHzKvKLri7B
+         Z4bw==
+X-Gm-Message-State: AOAM533nHqSlydVzmUEUxBNSyA7rPZksnXVtUzUWYPewOqEKVMnsavzV
+        Mu34I0HF5/d4lMwQi760l25ERg==
+X-Google-Smtp-Source: ABdhPJxqHPFG+x4rwiV8Mgj3grtvz42LF03NLpAtBBMNOAXSQoeECLEJUC/OA5E0KQz31slWgI4bOw==
+X-Received: by 2002:a17:90b:390e:: with SMTP id ob14mr9186031pjb.44.1635957044237;
+        Wed, 03 Nov 2021 09:30:44 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u33sm3296082pfg.0.2021.11.03.09.14.48
+        by smtp.gmail.com with ESMTPSA id p14sm2250717pjb.9.2021.11.03.09.30.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Nov 2021 09:14:48 -0700 (PDT)
-Date:   Wed, 3 Nov 2021 09:14:47 -0700
+        Wed, 03 Nov 2021 09:30:43 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Andrea Righi <andrea.righi@canonical.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>,
         Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: selftests: seccomp_bpf failure on 5.15
-Message-ID: <202111030838.CB201E4@keescook>
-References: <YXrN+Hnl9pSOsWlA@arighi-desktop>
- <202110280955.B18CB67@keescook>
- <878rydm56l.fsf@disp2133>
- <202110281136.5CE65399A7@keescook>
- <8735okls76.fsf@disp2133>
- <202110290755.451B036CE9@keescook>
- <87y2665sf8.fsf@disp2133>
+        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH 0/2] selftests/seccomp: Report event mismatches more clearly
+Date:   Wed,  3 Nov 2021 09:30:37 -0700
+Message-Id: <20211103163039.2104830-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2665sf8.fsf@disp2133>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=496; h=from:subject; bh=bBcjzOR1RktEnR+WvZ1blWW2pvGaJgCZ/HftjhRG4ng=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhgrku01EHfrhMdq4hLtNKWO/m2RdoO65pi/ftqDp6 UFbzSbmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYYK5LgAKCRCJcvTf3G3AJtTZD/ 4o1jD+SyQTsbUKkFJbgto1xyzQMiDwRrCEovTQfixmizO0VQchPSDeZOIcKUhJhRg2h1AJ9fJ0nHEP 4KcS+MHoGO7ZWRYdNDI/k1xGZ9uYwp2Ir/E6DI+FfAYDDGaXWlUnipQ+ITqPCZ6Qw0TC8GYrXebcm8 fxhevz+e1cScBY+Ze/2ESESVSNa6GfWF2Et52tbPCOM53jv0Ni96BqiAM2vDeZPgicP4pYuPD4IVLC gGgpX8M1i8bnmRU9bgBg8QDoyry8soLa2jBy3p6JQmA62YoPNcdpwEPe/iQZ0sAYlP+vHIafzVYKw9 JhbQ0PYy9aPrUdC4FOLDf0nvEVbFn0oVA262dshM2mR/8oVj/GoE1o8zTl0V9G0rR3cCVZmW/nZaSL ckokBw9Wt0gIDLgbNjCbYfLESxEXBYLfIaGQ03bPaL/oAxK7knZGLs6CT5P6NHnUYeW64V8soQp0VW NtkMVfDXoiw7jRmch7Y1M6yUMwwXYNfhwSm31tWt2KqMSTlYZtjaBTENd0hxmH/dr9dAs7ICzB1VhT uHCYZM4++xnkbVCvTIAWTJFoYoMHsaWsKDsfoyU65peKPOMceRRlooh/Tv+dr/pHM+yyZSXuemduxt 7fM+N55zkew0PoEsrtr7vKLCssy3AItHKHD3m5BvZOEUTJf9z9IcG5wppt4A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 02, 2021 at 01:22:19PM -0500, Eric W. Biederman wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> 
-> > On Thu, Oct 28, 2021 at 05:06:53PM -0500, Eric W. Biederman wrote:
-> >> Kees Cook <keescook@chromium.org> writes:
-> >> 
-> >> > On Thu, Oct 28, 2021 at 12:26:26PM -0500, Eric W. Biederman wrote:
-> >> 
-> >> Is it a problem that the debugger can see the signal if the process does
-> >> not?
-> >
-> > Right, I'm trying to understand that too. However, my neighbor just lost
-> > power. :|
-> >
-> > What I was in the middle of checking was what ptrace "sees" going
-> > through a fatal SIGSYS; my initial debugging attempts were weird.
-> 
-> Kees have you regained power and had a chance to see my SA_IMMUTABLE
-> patch?
+Hi,
 
-Apologies; I got busy with other stuff, but I've tested this now. It's
-happy and I see the expected behaviors again. Note that I used the patch
-with this change:
+This expands the seccomp selftests slightly to add additional debug
+reporting detail and a new "immediate fatal SIGSYS under tracing" test.
+I expect to be taking these via my seccomp tree.
 
--#define SA_IMMUTABLE           0x008000000
-+#define SA_IMMUTABLE           0x00800000
-
-Tested-by: Kees Cook <keescook@chromium.org>
-
-Thanks!
+Thanks,
 
 -Kees
 
+Kees Cook (2):
+  selftests/seccomp: Stop USER_NOTIF test if kcmp() fails
+  selftests/seccomp: Report event mismatches more clearly
+
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 56 +++++++++++++++++--
+ 1 file changed, 50 insertions(+), 6 deletions(-)
+
 -- 
-Kees Cook
+2.30.2
+
