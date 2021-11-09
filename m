@@ -2,419 +2,510 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA9CC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 Nov 2021 20:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9327C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 Nov 2021 22:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8EFC61208
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 Nov 2021 20:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9268F61177
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 Nov 2021 22:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244625AbhKIUr7 (ORCPT
+        id S235173AbhKIWFr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 9 Nov 2021 15:47:59 -0500
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:49280 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244654AbhKIUry (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 9 Nov 2021 15:47:54 -0500
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1A9KigdF031697;
-        Tue, 9 Nov 2021 20:44:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=6QboXqzBPJyQxOj4hREHGhvcvm8jHcP++jii8zFjva0=;
- b=ZvySib8hYNqchroWwyb7RCmYGVS049/zoj4uJs0B5b2kVQYqgHAXSvh9h2T79qXyxJ2U
- OQNoGDN7Z/i6vYfXoWyTsJktLLUQTouZ2UlULeaKB1T2/Q/DLr8Tf9Lw/o10cHYg/PjS
- PDuMj63oVqGRZWsjdJYD8NrqQsgtLqD82MQFrYSV6w2SjsDPK7x0WTZfFKSXH0dKh5EU
- RsEmkWOBLvxSl1cC/PoxfLB4SNsOzNy8GwbV68Q7/yf0gT+AjCuv+0c8Pl0pHoHPcIB2
- dto6meJbtkrrMjEeTfI/Gu/fdb2VQWVJlU1SWOleaz1Ys4SRwQSCcro74RhNON1bfMeZ jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3c6st8xq7r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Nov 2021 20:44:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1A9KUvqY180508;
-        Tue, 9 Nov 2021 20:44:29 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
-        by userp3020.oracle.com with ESMTP id 3c63ftk673-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Nov 2021 20:44:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h1lMYYf+lpMMzuBbf17PhQ2+n4AAAuTM+1u6hXyXu1o8hL68SnopJP+Rc40ZQaq8fdwkBMYxqv3rQtGku2K7jV4ytJ8QU5ieJNL5aMgSeT1FbjKFXXHei5w9zwfTpIXRqghHmCLQzzoEgnh5CXP3mtsbZgFccfl0BeAVgeu6IbjcYMVSI2x5WkBDJDc6uBr1KuKHBWoyUIyZbD95rt915OJJRpz7w0oqqbqaNNb5FljWN+ZwOuQxCEXJviLE6GZyca/vcLN08eKZooO942KXAfLoN6oiLwcQntisLUNeZcS878II7PFyGFzxiUW7iEdy9DQtTnqp84IsKdejnFmkfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6QboXqzBPJyQxOj4hREHGhvcvm8jHcP++jii8zFjva0=;
- b=NidtqbPHpN/4Br2i3mcyKEWR4qRdV0x9EUUYTKCDXtm6xMNrkh0QYHEpoHcJsyVA0wCiyGiVFcm5aUQb22o+o00lAFD68h7XFm97RWdE8oVSDZpB/oAEVtDOGR1t3JXsRfeYRVifH6AJaMbzdwXD4q22RCVj93F1dQ7Yzr4wBFVMOcxyuTO+wt8AyaUN5FvhjVCBs23hEtox4i2GvCjrU3uvt45mG7LW/II/55yHxZs2KzeacIhlfZlf+RjNOxB/N/8zYG8agN11aDxfBJDgeLW+B9WJUehDLZePZgHCPuWxo6VsMurD7YrJcfVEzshCJTscFLvA84nI3EjO+Hv48A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6QboXqzBPJyQxOj4hREHGhvcvm8jHcP++jii8zFjva0=;
- b=t7cExti5q8Ru0OYbYA3ut94NoxqLZzGZSOsfECmbpgWH5aoHgR7cnZk8WgyrBxYutIGPa3Ck0jSjwfcivJk6SEciBwqzQaylaZhpHx5Axnz8jTJE6SB2Wb78bYiECF4uROY0UL2pBoIdMtUycIkr5SU0V8JGuvwBxrBpEyGd1bE=
-Received: from CH2PR10MB4344.namprd10.prod.outlook.com (2603:10b6:610:af::19)
- by CH0PR10MB4892.namprd10.prod.outlook.com (2603:10b6:610:dd::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.11; Tue, 9 Nov
- 2021 20:44:26 +0000
-Received: from CH2PR10MB4344.namprd10.prod.outlook.com
- ([fe80::8dd2:f5a2:23e8:1a7c]) by CH2PR10MB4344.namprd10.prod.outlook.com
- ([fe80::8dd2:f5a2:23e8:1a7c%7]) with mapi id 15.20.4669.016; Tue, 9 Nov 2021
- 20:44:26 +0000
-From:   Qing Zhao <qing.zhao@oracle.com>
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        "ramana.radhakrishnan@arm.com" <ramana.radhakrishnan@arm.com>
-CC:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        Tue, 9 Nov 2021 17:05:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235025AbhKIWFq (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 9 Nov 2021 17:05:46 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6DD1961186
+        for <linux-hardening@vger.kernel.org>; Tue,  9 Nov 2021 22:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636495380;
+        bh=rSQM4NBC5ZnEIU/vlRGLOgpj6FaR5nrElIbjJ+KPNyU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BISE8R5wnKSwKWtklNxtUgn6rpmWxs6tAMmtG/ev3/BxDV/dDJVrXympI3rdPTAL/
+         PruOMzvEVqu/IPHsdKXBB8LqkRKaVq0q34QaZ2Xu+JdruyC+gcaAQEjp/qphqcprC9
+         +dos4G0byT3UE2seyzWE0/ANuTMTvhtMhSd92t+3kAyhVQN77eDjPw1/I+NrywII9W
+         ChPvP7THhd/PMkesCIFnGYe10ADcyO8lWdnTDoYRTGjxs/EgJ6PznPTv2GTXSMIfI0
+         dCXH1lPs4j1/dHPqWZMEuV36cXdT5BFtm5adcAtdvsd95ZCfbrHuFm0OalVsHeF19Z
+         kWMVXK3xRMqJw==
+Received: by mail-oi1-f176.google.com with SMTP id bl27so1458010oib.0
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Nov 2021 14:03:00 -0800 (PST)
+X-Gm-Message-State: AOAM5313PAIdIdMKARvlo8jUUhcjaRelyL+pqXVq2NE1kuVCe1op7w7a
+        FYvCAq0ebnX68PtQPnXhE5iERplFJSBuPPmzjnM=
+X-Google-Smtp-Source: ABdhPJyJXhttwMOm4Wyml0uaLzrcVyk6SdiO6SYU/RNuN1rAF5AlUaaclANK8A3Die9IOjgBQ8QG04iJHeo7s0hLJAI=
+X-Received: by 2002:aca:ad95:: with SMTP id w143mr7731058oie.47.1636495379545;
+ Tue, 09 Nov 2021 14:02:59 -0800 (PST)
+MIME-Version: 1.0
+References: <20211028112703.1120709-1-ardb@kernel.org> <20211028112703.1120709-2-ardb@kernel.org>
+ <B1E5C5B0-C135-4518-80B2-CB4544C246F0@oracle.com>
+In-Reply-To: <B1E5C5B0-C135-4518-80B2-CB4544C246F0@oracle.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 9 Nov 2021 23:02:48 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEkcTzhvUG0Y7XQoeny+WFcANt6KwZPmziRT4SoY6F2XQ@mail.gmail.com>
+Message-ID: <CAMj1kXEkcTzhvUG0Y7XQoeny+WFcANt6KwZPmziRT4SoY6F2XQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] [ARM] Add support for TLS register based stack
+ protector canary access
+To:     Qing Zhao <qing.zhao@oracle.com>
+Cc:     "ramana.radhakrishnan@arm.com" <ramana.radhakrishnan@arm.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
         kees Cook <keescook@chromium.org>,
         Keith Packard <keithpac@amazon.com>,
         "thomas.preudhomme@celest.fr" <thomas.preudhomme@celest.fr>,
         "adhemerval.zanella@linaro.org" <adhemerval.zanella@linaro.org>,
         Richard Sandiford <richard.sandiford@arm.com>,
         "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
-Subject: Re: [PATCH v4 1/1] [ARM] Add support for TLS register based stack
- protector canary access
-Thread-Topic: [PATCH v4 1/1] [ARM] Add support for TLS register based stack
- protector canary access
-Thread-Index: AQHXy+7GiDeUQZ4J8E6sjIPs5qpcLKv7vUyA
-Date:   Tue, 9 Nov 2021 20:44:26 +0000
-Message-ID: <B1E5C5B0-C135-4518-80B2-CB4544C246F0@oracle.com>
-References: <20211028112703.1120709-1-ardb@kernel.org>
- <20211028112703.1120709-2-ardb@kernel.org>
-In-Reply-To: <20211028112703.1120709-2-ardb@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.120.23.2.7)
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oracle.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 172f9c84-be0b-499c-9e8d-08d9a3c1b878
-x-ms-traffictypediagnostic: CH0PR10MB4892:
-x-microsoft-antispam-prvs: <CH0PR10MB48923C5A8E8DC7BD774B5C4A80929@CH0PR10MB4892.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2733;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: B0C4nVEWS7x7uVJbiyf/VWd7tcF8G20EspZgLCRsiXEmGWrHYdtYwTHBh55Nz2gTsu5KmpIlp1F9nXJpXEbXmSYzeebAEyQYAHPMm9JatvydYnq1f95L5L0qOqqoKFEc/bkQfRX/PMbdeP485VxhNVXeI1Y1GIFKGM5TNgnN91WshcKIMOVferLhuhE1F09NJMACqa1MVs28liEFMly+Jnyc17M9sNGrF4uro6AyRJpTnsYuj/t2O1hS1wJTcGP8mg/djAgKBUIHdGrJk64q3cd3+Kvl1F6qOKnGIWEugmiAuTUU7k2tcx9g2Zyt5XC9Un2hm3RlpAgN9qt6EFV1XaLcVw5a0a49ts36iBeJOBA53Xruny78ie2Tan+2Q+ai0/r96FEF6WqTTtiVFUVxehATlZ8wv8uY/JmlyPKnh2+7kFlEQaXKncD5gyvxJDMdHWIMa1AG3x8yQ+W96W79oE4J7JAlgmlPHs2KUVH3J0mRmoZZ1htGeD2DBylQSMzCZcVDXc/Cw7eaqBX9o5/s54O8YAKs7cv5YqeEbG+yarywarIa1rp6M9gZqR6RaRcsDWwGH1pEn0TGTwE4M+4MFXB3f8gcJ5AGl11IUPIHkO1bXBhayc8UD/bXtpLlrI6pgr5oemCH3Q9CTgjFNnHSFMLZwD24bfquxerifPkvdo2LNqr9AfVQNQ1IWAWQJp1sTnGUHM1aX/mfZNSemm1HHpyTBMPLmvpOUlgCZWsUkUlD5xql0wOHZBK6ADdpnBNH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR10MB4344.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(38100700002)(83380400001)(36756003)(76116006)(4001150100001)(54906003)(66476007)(316002)(122000001)(38070700005)(2906002)(66556008)(66446008)(186003)(64756008)(5660300002)(2616005)(30864003)(6486002)(53546011)(6506007)(8936002)(44832011)(8676002)(508600001)(66946007)(6512007)(91956017)(4326008)(86362001)(33656002)(71200400001)(110136005)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YWU3TTZhYU9ZM1I0dkRLUXY1bm1GU0JVaGpiMkx3eWtrdzBoei9JTUk0RUYr?=
- =?utf-8?B?V2g4WmJzTGNrZk13aFlpdVhmVGRteEd2aXdqVFpoYmlZYUlRNjJpVDJTbVk1?=
- =?utf-8?B?OWxQYUp3RFZRRFF5dUowKytMRXNWSFdLRnRKRUF2ckVvVmhWdWdoWSthR0RR?=
- =?utf-8?B?YWIwRXRxQ1pGNElTckJaa0dTbVl3aHZzaVpWOC91dm5WYm9nMDRHVmZ0OVQ1?=
- =?utf-8?B?SUhQZWE3NHdZVXFQRjdxUDZlUFBLdHRqa0JYY1FIZXdwMldsUTdIZUNhZ0dt?=
- =?utf-8?B?aDlORlpPR3kzdFJyQnlXams3M2cyZ3BhWGZ5QTlIVWNvTXlxYnU5RVNrSWt3?=
- =?utf-8?B?WmhVemQzYjdnUHlDZUxpSHlMb2xZYTBlOTB5SC85aFVIcnRxWU84U0lmaVlU?=
- =?utf-8?B?Y0pEU3hySU1wWkJYNDEyTW1xTVJ2R3dCVUtVQkY1aHIxMlZmRW1YUk9NWkVv?=
- =?utf-8?B?bG5YWnUxR3JMM1RGdVpMb2lDcHRFTE9YZjJLS2Fkckp5R3pDNlJ2TDRodWE1?=
- =?utf-8?B?OW5HdC9QY3I2SXNXMW9jOW8yRTVGT0p4UTVnNk9hdDg0S1JyVS9nZHFsa1Vm?=
- =?utf-8?B?amRTbWQ2cEM4ZlBlc0VEd09FYnROVVowcFVYdjgyZXZPYXR4WEkwUm1qY3hI?=
- =?utf-8?B?WEJRZm9Ba1lVNFBmSnBQaFpmbjhjdzVmTDBtbWR2S01QWEhsU1dLVWxYU25Y?=
- =?utf-8?B?MFc0dmhMV3A4a2U0UHg0WDRWUzNtL2NHZUFKWVJ6cGwwY0pGWlZVZDgySm9y?=
- =?utf-8?B?LzV4T1NHVWorSE1tUnUrd2JZMDFJSlJkZEZLdmJ3T1RWVEhPb05WVXYxdUpn?=
- =?utf-8?B?cWlLc2o1SEZmYlRtaFpDNTFxVEN3Z3MxbjZDMHNReGtPQ2tBUmhxTWp1VjFV?=
- =?utf-8?B?SnpGYkNPRWtaSysyU2pVdWJmT2Y3ZGVQaFBBaExIbG5TWnE3Vjl0SVk3cEFs?=
- =?utf-8?B?cm9qNUtnK0xUcEtlNGY0M3I2Uk9ZdUd2RGx6OFJtTFgvNGpYM09NekVaNFBh?=
- =?utf-8?B?SjJMc2ZHTldxcjlMSzFPWmVTOVFHamMzUW56WCtONTBqMTIwbzRpY1FEdUI0?=
- =?utf-8?B?bEJoWlBWeE1XVWpRUGd6TnY4RHhjQnMyQ1JHNFZweHNzVnlRTjRvNm5Ob2FZ?=
- =?utf-8?B?cWZBMnZubWIxcVhCSDBWYnByeEhlb2xtV1VWU290eDFiUS9GUWRFK28zaUtz?=
- =?utf-8?B?NU5meERiYkkzcngvelI2YmJCVWhTOFhTME1rbEpkSEljb240M3ZDNENseCtx?=
- =?utf-8?B?UnlzNExTQ3ZZVWdyUWY5ZmQ3QTAxVHNRUE80Kzl3eEtXcHVyU2pLZXE4RGFG?=
- =?utf-8?B?ZllGaGZVV3BTR0FIWThMNHp2dmtJSjQzUW9HVW1DeFdDSk82NHpaRnBFbkh1?=
- =?utf-8?B?OTg5bUFtU1VsMnFXUmRxU2pxNU1Cc1huc2RGY0x0UFp4TS93bERqSUdKSFhs?=
- =?utf-8?B?QkE0WE9lVDk2QmV0aWY0ZlV2cnJrV1FucG5uRDMraFNqRVRyRFFla0NmZHBs?=
- =?utf-8?B?S0VMUDdwY3ZPaElxUE9uZlVKaFdSa2FiODV4d0t5ZzlmUUFJVHBoemM1WExh?=
- =?utf-8?B?NjFxK285elhneHk4TXpqV05FaGxyUjVZUHdrWUtndEFTeXRlUEJpdjh5K3Rq?=
- =?utf-8?B?aERGam0wWm9WK2U5aE5HdVdYdFYwdlQ2UEhSZEJqYmRjak44UVA1MHEyNzhu?=
- =?utf-8?B?ZnZPbmI0ZDRyU0RFYUJKWExsTTMxTXJLYjNmUmZCdGJYWmpUWlNIYzZtZHl1?=
- =?utf-8?B?N3krNXVzbFdHbTdUeDRHL1l5amRCRDhyM2FkUUtwYXJZWVg2R3pWU1BYb3Zq?=
- =?utf-8?B?SVZEMThlVGYxTjluWDl5Um8yMXdpc1dXRUo1M2tNQVJ0RWphSTRyK2o5aHAy?=
- =?utf-8?B?TDlMam5xN0p3NldWdlhldHczSzNwaXpXYUUrdERUejk3UnpHSURWMWxUcjJZ?=
- =?utf-8?B?QXhXM2FNZjRYT1V0UVM5TTMwOVJ1N1RzeVlsMmdocE4zOTN0ajNoeFdkZnhS?=
- =?utf-8?B?MHNXcXF5S2ZzY25waGJIb0tLd3hvMXhEU24rWmh5TTY1TzdHenN1bWhaQ3Vy?=
- =?utf-8?B?alBRUXpFTFlrSkxhcWsyNzNjVVpXd1BmRkFGUkJVbUV6NjRXNG9kaXYvZmJO?=
- =?utf-8?B?Z2Z5RDFrSVE5M3Jud1ZhQmhVMzZJRXJSMFRDOEJEQlFjTFlCcGxBM1BSNXhm?=
- =?utf-8?B?NDRtUmxlOFpxeDE4alFmMEVyNndCV1BBMktSNkZyQWY4OUYwMXFTSUozOGl3?=
- =?utf-8?B?cE50MitkclZHM0JEMWFCVWZYRlpBPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8F98DD01AC43B64F8A8ADF2A6323F103@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR10MB4344.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 172f9c84-be0b-499c-9e8d-08d9a3c1b878
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2021 20:44:26.7359
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BwZ+pgMqg3qeHm2muKy/nK52T5I6jz98UMD/LBy2XcE/frSOWSgsjYaTircTVkSUcNYc7loKYOlq9xIJVHBimQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4892
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10163 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- bulkscore=0 phishscore=0 suspectscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2111090114
-X-Proofpoint-ORIG-GUID: ACIZ4vVeSFjcOAEg4WLHIuLu1rBZuvRm
-X-Proofpoint-GUID: ACIZ4vVeSFjcOAEg4WLHIuLu1rBZuvRm
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-SGksIEFyZCwNCg0KU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5IChzaW5jZSBJIGRvbuKAmXQgaGF2
-ZSB0aGUgcmlnaHQgdG8gYXBwcm92ZSBhIHBhdGNoLCBJIGhhcyBiZWVuIHdhaXRpbmcgZm9yIGFu
-eSBhcm0gcG9ydCBtYWludGFpbmVyIHRvIHJldmlldyB0aGlzIHBhdGNoKS4NClRoZSBmb2xsb3dp
-bmcgaXMgdGhlIGFybSBwb3J0IG1haW50YWluZXIgaW5mb3JtYXRpb24gSSBnb3QgZnJvbSBNQUlO
-VEFJTkVSUyBmaWxlICh5b3UgbWlnaHQgd2FudCB0byBleHBsaWNpdGx5IGNj4oCZaW5nIG9uZSBv
-ZiB0aGVtIGZvciBhIHJldmlldykNCg0KYXJtIHBvcnQgICAgICAgICAgICAgICAgTmljayBDbGlm
-dG9uICAgICAgICAgICAgPG5pY2tjQHJlZGhhdC5jb20+DQphcm0gcG9ydCAgICAgICAgICAgICAg
-ICBSaWNoYXJkIEVhcm5zaGF3ICAgICAgICA8cmljaGFyZC5lYXJuc2hhd0Bhcm0uY29tPg0KYXJt
-IHBvcnQgICAgICAgICAgICAgICAgUmFtYW5hIFJhZGhha3Jpc2huYW4gICAgPHJhbWFuYS5yYWRo
-YWtyaXNobmFuQGFybS5jb20+DQphcm0gcG9ydCAgICAgICAgICAgICAgICBLeXJ5bG8gVGthY2hv
-diAgICAgICAgICA8a3lyeWxvLnRrYWNob3ZAYXJtLmNvbT4NCg0KSSBzZWUgdGhhdCBSYW1hbmEg
-aW1wbGVtZW50ZWQgdGhlIHNpbWlsYXIgcGF0Y2ggZm9yIGFhcmNoNjQgKGNvbW1pdCBjZDBiMmQz
-NjFkZjgyYzg0OGRjN2UxYzMwNzg2NTFiYjA2MjRjM2M2KSwgU28sIEkgYW0gQ0NpbmcgaGltIHdp
-dGggdGhpcyBlbWFpbC4gSG9wZWZ1bGx5IGhlIHdpbGwgcmV2aWV3IHRoaXMgcGF0Y2guDQoNCkFu
-eXdheSwgSSBicmllZmx5IHJlYWQgeW91ciBwYXRjaCAodmVyc2lvbiA0KSwgYW5kIGhhdmUgdGhl
-IGZvbGxvd2luZyBxdWVzdGlvbnMgYW5kIGNvbW1lbnRzOg0KDQoxLiAgV2hlbiB0aGUgb3B0aW9u
-IC1tc3RhY2stcHJvdGVjdG9yLWd1YXJkPXRscyBwcmVzZW50cywgIHNob3VsZCB0aGUgb3B0aW9u
-IG1zdGFjay1wcm90ZWN0b3ItZ3VhcmQtb2Zmc2V0PS4uIGJlIHJlcXVpcmVkIHRvIHByZXNlbnQ/
-IA0KICAgICBJZiBpdOKAmXMgcmVxdWlyZWQgdG8gcHJlc2VudCwgeW91IG1pZ2h0IHdhbnQgdG8g
-YWRkIHN1Y2ggcmVxdWlyZW1lbnQgdG8gdGhlIGRvY3VtZW50YXRpb24sIGFuZCBhbHNvIGlzc3Vl
-IGVycm9ycyB3aGVuIGl04oCZcyBub3QgcHJlc2VudC4NCiAgICAgSXTigJlzIG5vdCBjbGVhciBy
-aWdodCBub3cgZnJvbSB0aGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiwgc28sIHlvdSBtaWdodCBu
-ZWVkIHRvIHVwZGF0ZSBib3RoICJhcm1fb3B0aW9uX292ZXJyaWRlX2ludGVybmFsIOKAnCBpbiBh
-cm0uYw0KICAgICBhbmQgZG9jL2ludm9rZS50ZXhpIHRvIG1ha2UgdGhpcyBjbGVhci4NCg0KMi4g
-Rm9yIGFybSwgaXMgdGhlcmUgb25seSBvbmUgc3lzdGVtIHJlZ2lzdGVyIGNhbiBiZSB1c2VkIGZv
-ciB0aGlzIHB1cnBvc2U/IA0KDQozLiBGb3IgdGhlIGZ1bmN0aW9uYWxpdHkgeW91IGFkZGVkLCBJ
-IGRpZG7igJl0IHNlZSBhbnkgdGVzdGluZyBjYXNlcyBhZGRlZCwgSSB0aGluayB0ZXN0aW5nIGNh
-c2VzIGFyZSBuZWVkZWQuDQoNCk1vcmUgY29tbWVudHMgYXJlIGVtYmVkZGVkIGJlbG93Og0KDQo+
-IE9uIE9jdCAyOCwgMjAyMSwgYXQgNjoyNyBBTSwgQXJkIEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVs
-Lm9yZz4gd3JvdGU6DQo+IA0KPiBBZGQgc3VwcG9ydCBmb3IgYWNjZXNzaW5nIHRoZSBzdGFjayBj
-YW5hcnkgdmFsdWUgdmlhIHRoZSBUTFMgcmVnaXN0ZXIsDQo+IHNvIHRoYXQgbXVsdGlwbGUgdGhy
-ZWFkcyBydW5uaW5nIGluIHRoZSBzYW1lIGFkZHJlc3Mgc3BhY2UgY2FuIHVzZQ0KPiBkaXN0aW5j
-dCBjYW5hcnkgdmFsdWVzLiBUaGlzIGlzIGludGVuZGVkIGZvciB0aGUgTGludXgga2VybmVsIHJ1
-bm5pbmcgaW4NCj4gU01QIG1vZGUsIHdoZXJlIHByb2Nlc3NlcyBlbnRlcmluZyB0aGUga2VybmVs
-IGFyZSBlc3NlbnRpYWxseSB0aHJlYWRzDQo+IHJ1bm5pbmcgdGhlIHNhbWUgcHJvZ3JhbSBjb25j
-dXJyZW50bHk6IHVzaW5nIGEgZ2xvYmFsIHZhcmlhYmxlIGZvciB0aGUNCj4gY2FuYXJ5IGluIHRo
-YXQgY29udGV4dCBpcyBwcm9ibGVtYXRpYyBiZWNhdXNlIGl0IGNhbiBuZXZlciBiZSByb3RhdGVk
-LA0KPiBhbmQgc28gdGhlIE9TIGlzIGZvcmNlZCB0byB1c2UgdGhlIHNhbWUgdmFsdWUgYXMgbG9u
-ZyBhcyBpdCByZW1haW5zIHVwLg0KPiANCj4gVXNpbmcgdGhlIFRMUyByZWdpc3RlciB0byBpbmRl
-eCB0aGUgc3RhY2sgY2FuYXJ5IGhlbHBzIHdpdGggdGhpcywgYXMgaXQNCj4gYWxsb3dzIGVhY2gg
-Q1BVIHRvIGNvbnRleHQgc3dpdGNoIHRoZSBUTFMgcmVnaXN0ZXIgYWxvbmcgd2l0aCB0aGUgcmVz
-dA0KPiBvZiB0aGUgcHJvY2VzcywgcGVybWl0dGluZyBlYWNoIHByb2Nlc3MgdG8gdXNlIGl0cyBv
-d24gdmFsdWUgZm9yIHRoZQ0KPiBzdGFjayBjYW5hcnkuDQo+IA0KPiAyMDIxLTEwLTI4IEFyZCBC
-aWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+IA0KPiAJKiBjb25maWcvYXJtL2FybS1vcHRz
-LmggKGVudW0gc3RhY2tfcHJvdGVjdG9yX2d1YXJkKTogTmV3DQo+IAkqIGNvbmZpZy9hcm0vYXJt
-LXByb3Rvcy5oIChhcm1fc3RhY2tfcHJvdGVjdF90bHNfY2FuYXJ5X21lbSk6DQo+IAlOZXcNCj4g
-CSogY29uZmlnL2FybS9hcm0uYyAoVEFSR0VUX1NUQUNLX1BST1RFQ1RfR1VBUkQpOiBEZWZpbmUN
-Cj4gCShhcm1fb3B0aW9uX292ZXJyaWRlX2ludGVybmFsKTogSGFuZGxlIGFuZCBwdXQgaW4gZXJy
-b3IgY2hlY2tzDQo+IAlmb3Igc3RhY2sgcHJvdGVjdG9yIGd1YXJkIG9wdGlvbnMuDQo+IAkoYXJt
-X29wdGlvbl9yZWNvbmZpZ3VyZV9nbG9iYWxzKTogTGlrZXdpc2UNCj4gCShhcm1fc3RhY2tfcHJv
-dGVjdF90bHNfY2FuYXJ5X21lbSk6IE5ldw0KPiAJKGFybV9zdGFja19wcm90ZWN0X2d1YXJkKTog
-TmV3DQo+IAkqIGNvbmZpZy9hcm0vYXJtLm1kIChzdGFja19wcm90ZWN0X3NldCk6IE5ldw0KPiAJ
-KHN0YWNrX3Byb3RlY3Rfc2V0X3Rscyk6IExpa2V3aXNlDQo+IAkoc3RhY2tfcHJvdGVjdF90ZXN0
-KTogTGlrZXdpc2UNCj4gCShzdGFja19wcm90ZWN0X3Rlc3RfdGxzKTogTGlrZXdpc2UNCj4gCShy
-ZWxvYWRfdHBfaGFyZCk6IExpa2V3aXNlDQo+IAkqIGNvbmZpZy9hcm0vYXJtLm9wdCAoLW1zdGFj
-ay1wcm90ZWN0b3ItZ3VhcmQpOiBOZXcNCj4gCSgtbXN0YWNrLXByb3RlY3Rvci1ndWFyZC1vZmZz
-ZXQpOiBOZXcuDQo+IAkqIGRvYy9pbnZva2UudGV4aTogRG9jdW1lbnQgbmV3IG9wdGlvbnMNCj4g
-DQo+IFNpZ25lZC1vZmYtYnk6IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+IC0t
-LQ0KPiBnY2MvY29uZmlnL2FybS9hcm0tb3B0cy5oICAgfCAgNiArKw0KPiBnY2MvY29uZmlnL2Fy
-bS9hcm0tcHJvdG9zLmggfCAgMiArDQo+IGdjYy9jb25maWcvYXJtL2FybS5jICAgICAgICB8IDU1
-ICsrKysrKysrKysrKysrKw0KPiBnY2MvY29uZmlnL2FybS9hcm0ubWQgICAgICAgfCA3MSArKysr
-KysrKysrKysrKysrKysrLQ0KPiBnY2MvY29uZmlnL2FybS9hcm0ub3B0ICAgICAgfCAyMiArKysr
-KysNCj4gZ2NjL2RvYy9pbnZva2UudGV4aSAgICAgICAgIHwgIDkgKysrDQo+IDYgZmlsZXMgY2hh
-bmdlZCwgMTYzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvZ2NjL2NvbmZpZy9hcm0vYXJtLW9wdHMuaCBiL2djYy9jb25maWcvYXJtL2FybS1vcHRzLmgN
-Cj4gaW5kZXggNWM0YjYyZjQwNGY3Li41ODFiYTNjNGZiYmIgMTAwNjQ0DQo+IC0tLSBhL2djYy9j
-b25maWcvYXJtL2FybS1vcHRzLmgNCj4gKysrIGIvZ2NjL2NvbmZpZy9hcm0vYXJtLW9wdHMuaA0K
-PiBAQCAtNjksNCArNjksMTAgQEAgZW51bSBhcm1fdGxzX3R5cGUgew0KPiAgIFRMU19HTlUsDQo+
-ICAgVExTX0dOVTINCj4gfTsNCj4gKw0KPiArLyogV2hlcmUgdG8gZ2V0IHRoZSBjYW5hcnkgZm9y
-IHRoZSBzdGFjayBwcm90ZWN0b3IuICAqLw0KPiArZW51bSBzdGFja19wcm90ZWN0b3JfZ3VhcmQg
-ew0KPiArICBTU1BfVExTUkVHLCAgICAgICAgICAgICAgICAgIC8qIHBlci10aHJlYWQgY2FuYXJ5
-IGluIFRMUyByZWdpc3RlciAqLw0KPiArICBTU1BfR0xPQkFMICAgICAgICAgICAgICAgICAgIC8q
-IGdsb2JhbCBjYW5hcnkgKi8NCj4gK307DQo+ICNlbmRpZg0KPiBkaWZmIC0tZ2l0IGEvZ2NjL2Nv
-bmZpZy9hcm0vYXJtLXByb3Rvcy5oIGIvZ2NjL2NvbmZpZy9hcm0vYXJtLXByb3Rvcy5oDQo+IGlu
-ZGV4IDliMWY2MTM5NGFkNy4uZDhkNjA1OTIwYzk3IDEwMDY0NA0KPiAtLS0gYS9nY2MvY29uZmln
-L2FybS9hcm0tcHJvdG9zLmgNCj4gKysrIGIvZ2NjL2NvbmZpZy9hcm0vYXJtLXByb3Rvcy5oDQo+
-IEBAIC0xOTUsNiArMTk1LDggQEAgZXh0ZXJuIHZvaWQgYXJtX3NwbGl0X2F0b21pY19vcCAoZW51
-bSBydHhfY29kZSwgcnR4LCBydHgsIHJ0eCwgcnR4LCBydHgsIHJ0eCk7DQo+IGV4dGVybiBydHgg
-YXJtX2xvYWRfdHAgKHJ0eCk7DQo+IGV4dGVybiBib29sIGFybV9jb3Byb2NfYnVpbHRpbl9hdmFp
-bGFibGUgKGVudW0gdW5zcGVjdik7DQo+IGV4dGVybiBib29sIGFybV9jb3Byb2NfbGRjX3N0Y19s
-ZWdpdGltYXRlX2FkZHJlc3MgKHJ0eCk7DQo+ICtleHRlcm4gcnR4IGFybV9zdGFja19wcm90ZWN0
-X3Rsc19jYW5hcnlfbWVtIChib29sKTsNCj4gKw0KPiANCj4gI2lmIGRlZmluZWQgVFJFRV9DT0RF
-DQo+IGV4dGVybiB2b2lkIGFybV9pbml0X2N1bXVsYXRpdmVfYXJncyAoQ1VNVUxBVElWRV9BUkdT
-ICosIHRyZWUsIHJ0eCwgdHJlZSk7DQo+IGRpZmYgLS1naXQgYS9nY2MvY29uZmlnL2FybS9hcm0u
-YyBiL2djYy9jb25maWcvYXJtL2FybS5jDQo+IGluZGV4IGM0ZmYwNmIwODdlYi4uNmE2NTlkODFh
-NmZlIDEwMDY0NA0KPiAtLS0gYS9nY2MvY29uZmlnL2FybS9hcm0uYw0KPiArKysgYi9nY2MvY29u
-ZmlnL2FybS9hcm0uYw0KPiBAQCAtODI5LDYgKzgyOSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-YXR0cmlidXRlX3NwZWMgYXJtX2F0dHJpYnV0ZV90YWJsZVtdID0NCj4gDQo+ICN1bmRlZiBUQVJH
-RVRfTURfQVNNX0FESlVTVA0KPiAjZGVmaW5lIFRBUkdFVF9NRF9BU01fQURKVVNUIGFybV9tZF9h
-c21fYWRqdXN0DQo+ICsNCj4gKyN1bmRlZiBUQVJHRVRfU1RBQ0tfUFJPVEVDVF9HVUFSRA0KPiAr
-I2RlZmluZSBUQVJHRVRfU1RBQ0tfUFJPVEVDVF9HVUFSRCBhcm1fc3RhY2tfcHJvdGVjdF9ndWFy
-ZA0KPiANCj4gLyogT2JzdGFjayBmb3IgbWluaXBvb2wgY29uc3RhbnQgaGFuZGxpbmcuICAqLw0K
-PiBzdGF0aWMgc3RydWN0IG9ic3RhY2sgbWluaXBvb2xfb2JzdGFjazsNCj4gQEAgLTMxNTUsNiAr
-MzE1OCwyNiBAQCBhcm1fb3B0aW9uX292ZXJyaWRlX2ludGVybmFsIChzdHJ1Y3QgZ2NjX29wdGlv
-bnMgKm9wdHMsDQo+ICAgaWYgKFRBUkdFVF9USFVNQjJfUCAob3B0cy0+eF90YXJnZXRfZmxhZ3Mp
-KQ0KPiAgICAgb3B0cy0+eF9pbmxpbmVfYXNtX3VuaWZpZWQgPSB0cnVlOw0KPiANCj4gKyAgaWYg
-KGFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmQgPT0gU1NQX0dMT0JBTA0KPiArICAgICAgJiYgb3B0
-cy0+eF9hcm1fc3RhY2tfcHJvdGVjdG9yX2d1YXJkX29mZnNldF9zdHIpDQo+ICsgICAgew0KPiAr
-ICAgICAgZXJyb3IgKCJpbmNvbXBhdGlibGUgb3B0aW9ucyAlJy1tc3RhY2stcHJvdGVjdG9yLWd1
-YXJkPWdsb2JhbCUnIGFuZCINCg0KQXJlIHRoZSB0d28gIOKAnCXigJ0gaW4gdGhlIGFib3ZlIG5l
-ZWRlZD8NCg0KPiArCSAgICAgIiUnLW1zdGFjay1wcm90ZWN0b3ItZ3VhcmQtb2Zmc2V0PSVxcyXi
-gJnigJ0sDQpBcmUgdGhlIHR3byDigJwl4oCdIGluIHRoZSBhYm92ZSBuZWVkZWQ/DQoNCj4gKwkg
-ICAgIGFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmRfb2Zmc2V0X3N0cik7DQo+ICsgICAgfQ0KDQoN
-Cj4gKw0KPiArICBpZiAob3B0cy0+eF9hcm1fc3RhY2tfcHJvdGVjdG9yX2d1YXJkX29mZnNldF9z
-dHIpDQo+ICsgICAgew0KPiArICAgICAgY2hhciAqZW5kOw0KPiArICAgICAgY29uc3QgY2hhciAq
-c3RyID0gYXJtX3N0YWNrX3Byb3RlY3Rvcl9ndWFyZF9vZmZzZXRfc3RyOw0KPiArICAgICAgZXJy
-bm8gPSAwOw0KPiArICAgICAgbG9uZyBvZmZzID0gc3RydG9sIChhcm1fc3RhY2tfcHJvdGVjdG9y
-X2d1YXJkX29mZnNldF9zdHIsICZlbmQsIDApOw0KPiArICAgICAgaWYgKCEqc3RyIHx8ICplbmQg
-fHwgZXJybm8pDQo+ICsJZXJyb3IgKCIlcXMgaXMgbm90IGEgdmFsaWQgb2Zmc2V0IGluICVxcyIs
-IHN0ciwNCj4gKwkgICAgICAgIi1tc3RhY2stcHJvdGVjdG9yLWd1YXJkLW9mZnNldD0iKTsNCj4g
-KyAgICAgIGFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmRfb2Zmc2V0ID0gb2ZmczsNCj4gKyAgICB9
-DQo+ICsNCj4gI2lmZGVmIFNVQlRBUkdFVF9PVkVSUklERV9JTlRFUk5BTF9PUFRJT05TDQo+ICAg
-U1VCVEFSR0VUX09WRVJSSURFX0lOVEVSTkFMX09QVElPTlM7DQo+ICNlbmRpZg0KPiBAQCAtMzgy
-Miw2ICszODQ1LDEwIEBAIGFybV9vcHRpb25fcmVjb25maWd1cmVfZ2xvYmFscyAodm9pZCkNCj4g
-ICAgICAgZWxzZQ0KPiAJdGFyZ2V0X3RocmVhZF9wb2ludGVyID0gVFBfU09GVDsNCj4gICAgIH0N
-Cj4gKw0KPiArICBpZiAoYXJtX3N0YWNrX3Byb3RlY3Rvcl9ndWFyZCA9PSBTU1BfVExTUkVHDQo+
-ICsgICAgICAmJiB0YXJnZXRfdGhyZWFkX3BvaW50ZXIgIT0gVFBfQ1AxNSkNCj4gKyAgICBlcnJv
-cigiJSctbXN0YWNrLXByb3RlY3Rvci1ndWFyZD10bHMlJyBuZWVkcyBhIGhhcmR3YXJlIFRMUyBy
-ZWdpc3RlciIpOw0KDQpVbmRlciB3aGF0IHNpdHVhdGlvbiwgdGhpcyBtaWdodCBoYXBwZW4/IA0K
-DQo+IH0NCj4gDQo+IC8qIFBlcmZvcm0gc29tZSB2YWxpZGF0aW9uIGJldHdlZW4gdGhlIGRlc2ly
-ZWQgYXJjaGl0ZWN0dXJlIGFuZCB0aGUgcmVzdCBvZiB0aGUNCj4gQEAgLTgwODcsNiArODExNCwy
-MiBAQCBsZWdpdGltaXplX3BpY19hZGRyZXNzIChydHggb3JpZywgbWFjaGluZV9tb2RlIG1vZGUs
-IHJ0eCByZWcsIHJ0eCBwaWNfcmVnLA0KPiB9DQo+IA0KPiANCj4gK3J0eA0KPiArYXJtX3N0YWNr
-X3Byb3RlY3RfdGxzX2NhbmFyeV9tZW0gKGJvb2wgcmVsb2FkKQ0KPiArew0KPiArICBydHggdHAg
-PSBnZW5fcmVnX3J0eCAoU0ltb2RlKTsNCj4gKyAgaWYgKHJlbG9hZCkNCj4gKyAgICBlbWl0X2lu
-c24gKGdlbl9yZWxvYWRfdHBfaGFyZCAodHApKTsNCj4gKyAgZWxzZQ0KPiArICAgIGVtaXRfaW5z
-biAoZ2VuX2xvYWRfdHBfaGFyZCAodHApKTsNCj4gKw0KPiArICBydHggcmVnID0gZ2VuX3JlZ19y
-dHggKFNJbW9kZSk7DQo+ICsgIHJ0eCBvZmZzZXQgPSBHRU5fSU5UIChhcm1fc3RhY2tfcHJvdGVj
-dG9yX2d1YXJkX29mZnNldCk7DQo+ICsgIGVtaXRfc2V0X2luc24gKHJlZywgZ2VuX3J0eF9QTFVT
-IChTSW1vZGUsIHRwLCBvZmZzZXQpKTsNCj4gKyAgcmV0dXJuIGdlbl9ydHhfTUVNIChTSW1vZGUs
-IHJlZyk7DQo+ICt9DQoNCkNvdWxkIHlvdSBhZGQgYSBjb21tZW50IGZvciB0aGUgYWJvdmUgcm91
-dGluZT8NCg0KPiArDQo+ICsNCj4gLyogV2hldGhlciBhIHJlZ2lzdGVyIGlzIGNhbGxlZSBzYXZl
-ZCBvciBub3QuICBUaGlzIGlzIG5lY2Vzc2FyeSBiZWNhdXNlIGhpZ2gNCj4gICAgcmVnaXN0ZXJz
-IGFyZSBtYXJrZWQgYXMgY2FsbGVyIHNhdmVkIHdoZW4gb3B0aW1pemluZyBmb3Igc2l6ZSBvbiBU
-aHVtYi0xDQo+ICAgIHRhcmdldHMgZGVzcGl0ZSBiZWluZyBjYWxsZWUgc2F2ZWQgaW4gb3JkZXIg
-dG8gYXZvaWQgdXNpbmcgdGhlbS4gICovDQo+IEBAIC0zNDA1NCw2ICszNDA5NywxOCBAQCBhcm1f
-cnVuX3NlbGZ0ZXN0cyAodm9pZCkNCj4gI2RlZmluZSBUQVJHRVRfUlVOX1RBUkdFVF9TRUxGVEVT
-VFMgc2VsZnRlc3Q6OmFybV9ydW5fc2VsZnRlc3RzDQo+ICNlbmRpZiAvKiBDSEVDS0lOR19QICov
-DQo+IA0KPiArLyogSW1wbGVtZW50IFRBUkdFVF9TVEFDS19QUk9URUNUX0dVQVJELiBJbiBjYXNl
-IG9mIGENCj4gKyAgIGdsb2JhbCB2YXJpYWJsZSBiYXNlZCBndWFyZCB1c2UgdGhlIGRlZmF1bHQg
-ZWxzZQ0KPiArICAgcmV0dXJuIGEgbnVsbCB0cmVlLiAgKi8NCj4gK3N0YXRpYyB0cmVlDQo+ICth
-cm1fc3RhY2tfcHJvdGVjdF9ndWFyZCAodm9pZCkNCj4gK3sNCj4gKyAgaWYgKGFybV9zdGFja19w
-cm90ZWN0b3JfZ3VhcmQgPT0gU1NQX0dMT0JBTCkNCj4gKyAgICByZXR1cm4gZGVmYXVsdF9zdGFj
-a19wcm90ZWN0X2d1YXJkICgpOw0KPiArDQo+ICsgIHJldHVybiBOVUxMX1RSRUU7DQo+ICt9DQo+
-ICsNCj4gLyogV29ya2VyIGZ1bmN0aW9uIGZvciBUQVJHRVRfTURfQVNNX0FESlVTVCwgd2hpbGUg
-aW4gdGh1bWIxIG1vZGUuDQo+ICAgIFVubGlrZSB0aGUgYXJtIHZlcnNpb24sIHdlIGRvIE5PVCBp
-bXBsZW1lbnQgYXNtIGZsYWcgb3V0cHV0cy4gICovDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZ2NjL2Nv
-bmZpZy9hcm0vYXJtLm1kIGIvZ2NjL2NvbmZpZy9hcm0vYXJtLm1kDQo+IGluZGV4IDRhZGM5NzZi
-OGI2Ny4uZDMxMzQ5Y2QyNjE0IDEwMDY0NA0KPiAtLS0gYS9nY2MvY29uZmlnL2FybS9hcm0ubWQN
-Cj4gKysrIGIvZ2NjL2NvbmZpZy9hcm0vYXJtLm1kDQo+IEBAIC05MTgzLDcgKzkxODMsNyBAQCAo
-ZGVmaW5lX2V4cGFuZCAic3RhY2tfcHJvdGVjdF9jb21iaW5lZF9zZXQiDQo+IAkJICAgICAgVU5T
-UEVDX1NQX1NFVCkpDQo+ICAgICAgIChjbG9iYmVyIChtYXRjaF9zY3JhdGNoOlNJIDIgIiIpKQ0K
-PiAgICAgICAoY2xvYmJlciAobWF0Y2hfc2NyYXRjaDpTSSAzICIiKSldKV0NCj4gLSAgIiINCj4g
-KyAgImFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmQgPT0gU1NQX0dMT0JBTCINCj4gICAiIg0KPiAp
-DQo+IA0KPiBAQCAtOTI2Nyw3ICs5MjY3LDcgQEAgKGRlZmluZV9leHBhbmQgInN0YWNrX3Byb3Rl
-Y3RfY29tYmluZWRfdGVzdCINCj4gICAgICAgKGNsb2JiZXIgKG1hdGNoX3NjcmF0Y2g6U0kgMyAi
-IikpDQo+ICAgICAgIChjbG9iYmVyIChtYXRjaF9zY3JhdGNoOlNJIDQgIiIpKQ0KPiAgICAgICAo
-Y2xvYmJlciAocmVnOkNDIENDX1JFR05VTSkpXSldDQo+IC0gICIiDQo+ICsgICJhcm1fc3RhY2tf
-cHJvdGVjdG9yX2d1YXJkID09IFNTUF9HTE9CQUwiDQo+ICAgIiINCj4gKQ0KPiANCj4gQEAgLTkz
-NjEsNiArOTM2MSw2NCBAQCAoZGVmaW5lX2luc24gImFybV9zdGFja19wcm90ZWN0X3Rlc3RfaW5z
-biINCj4gICAgKHNldF9hdHRyICJhcmNoIiAidCwzMiIpXQ0KPiApDQo+IA0KPiArKGRlZmluZV9l
-eHBhbmQgInN0YWNrX3Byb3RlY3Rfc2V0Ig0KPiArICBbKG1hdGNoX29wZXJhbmQ6U0kgMCAibWVt
-b3J5X29wZXJhbmQiKQ0KPiArICAgKG1hdGNoX29wZXJhbmQ6U0kgMSAibWVtb3J5X29wZXJhbmQi
-KV0NCj4gKyAgImFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmQgPT0gU1NQX1RMU1JFRyINCj4gKyAg
-Ig0KPiArew0KPiArICBvcGVyYW5kc1sxXSA9IGFybV9zdGFja19wcm90ZWN0X3Rsc19jYW5hcnlf
-bWVtIChmYWxzZSAvKiByZWxvYWQgKi8pOw0KPiArICBlbWl0X2luc24gKGdlbl9zdGFja19wcm90
-ZWN0X3NldF90bHMgKG9wZXJhbmRzWzBdLCBvcGVyYW5kc1sxXSkpOw0KPiArICBET05FOw0KPiAr
-fSINCj4gKykNCj4gKw0KPiArOzsgRE8gTk9UIFNQTElUIFRISVMgUEFUVEVSTi4gIEl0IGlzIGlt
-cG9ydGFudCBmb3Igc2VjdXJpdHkgcmVhc29ucyB0aGF0IHRoZQ0KPiArOzsgY2FuYXJ5IHZhbHVl
-IGRvZXMgbm90IGxpdmUgYmV5b25kIHRoZSBsaWZlIG9mIHRoaXMgc2VxdWVuY2UuDQo+ICsoZGVm
-aW5lX2luc24gInN0YWNrX3Byb3RlY3Rfc2V0X3RscyINCj4gKyAgWyhzZXQgKG1hdGNoX29wZXJh
-bmQ6U0kgMCAibWVtb3J5X29wZXJhbmQiICI9bSIpDQo+ICsgICAgICAgKHVuc3BlYzpTSSBbKG1h
-dGNoX29wZXJhbmQ6U0kgMSAibWVtb3J5X29wZXJhbmQiICJtIildDQo+ICsgICAgICAgIFVOU1BF
-Q19TUF9TRVQpKQ0KPiArICAgKHNldCAobWF0Y2hfc2NyYXRjaDpTSSAyICI9JnIiKSAoY29uc3Rf
-aW50IDApKV0NCj4gKyAgIiINCj4gKyAgImxkclxcdCUyLCAlMVw7c3RyXFx0JTIsICUwXDttb3Zc
-dCUyLCAjMCINCj4gKyAgWyhzZXRfYXR0ciAibGVuZ3RoIiAiMTIiKQ0KPiArICAgKHNldF9hdHRy
-ICJjb25kcyIgIm5vY29uZCIpDQo+ICsgICAoc2V0X2F0dHIgInR5cGUiICJtdWx0aXBsZSIpXQ0K
-PiArKQ0KPiArDQo+ICsoZGVmaW5lX2V4cGFuZCAic3RhY2tfcHJvdGVjdF90ZXN0Ig0KPiArICBb
-KG1hdGNoX29wZXJhbmQ6U0kgMCAibWVtb3J5X29wZXJhbmQiKQ0KPiArICAgKG1hdGNoX29wZXJh
-bmQ6U0kgMSAibWVtb3J5X29wZXJhbmQiKQ0KPiArICAgKG1hdGNoX29wZXJhbmQ6U0kgMildDQo+
-ICsgICJhcm1fc3RhY2tfcHJvdGVjdG9yX2d1YXJkID09IFNTUF9UTFNSRUciDQo+ICsgICINCj4g
-K3sNCj4gKyAgb3BlcmFuZHNbMV0gPSBhcm1fc3RhY2tfcHJvdGVjdF90bHNfY2FuYXJ5X21lbSAo
-dHJ1ZSAvKiByZWxvYWQgKi8pOw0KPiArICBlbWl0X2luc24gKGdlbl9zdGFja19wcm90ZWN0X3Rl
-c3RfdGxzIChvcGVyYW5kc1swXSwgb3BlcmFuZHNbMV0pKTsNCj4gKw0KPiArICBydHggY2NfcmVn
-ID0gZ2VuX3J0eF9SRUcgKENDX1ptb2RlLCBDQ19SRUdOVU0pOw0KPiArICBydHggZXEgPSBnZW5f
-cnR4X0VRIChDQ19abW9kZSwgY2NfcmVnLCBjb25zdDBfcnR4KTsNCj4gKyAgZW1pdF9qdW1wX2lu
-c24gKGdlbl9hcm1fY29uZF9icmFuY2ggKG9wZXJhbmRzWzJdLCBlcSwgY2NfcmVnKSk7DQo+ICsg
-IERPTkU7DQo+ICt9Ig0KPiArKQ0KPiArDQo+ICsoZGVmaW5lX2luc24gInN0YWNrX3Byb3RlY3Rf
-dGVzdF90bHMiDQo+ICsgIFsoc2V0IChyZWc6Q0NfWiBDQ19SRUdOVU0pDQo+ICsJKGNvbXBhcmU6
-Q0NfWiAodW5zcGVjOlNJIFsobWF0Y2hfb3BlcmFuZDpTSSAwICJtZW1vcnlfb3BlcmFuZCIgIm0i
-KQ0KPiArCQkJCSAgKG1hdGNoX29wZXJhbmQ6U0kgMSAibWVtb3J5X29wZXJhbmQiICJtIildDQo+
-ICsJCQkJIFVOU1BFQ19TUF9URVNUKQ0KPiArCQkgICAgICAoY29uc3RfaW50IDApKSkNCj4gKyAg
-IChjbG9iYmVyIChtYXRjaF9zY3JhdGNoOlNJIDIgIj0mciIpKQ0KPiArICAgKGNsb2JiZXIgKG1h
-dGNoX3NjcmF0Y2g6U0kgMyAiPSZyIikpXQ0KPiArICAiIg0KPiArICAibGRyXHQlMiwgJTBcO2xk
-clx0JTMsICUxXDtlb3JzXHQlMiwgJTMsICUyXDttb3ZcdCUzLCAjMCINCj4gKyAgWyhzZXRfYXR0
-ciAibGVuZ3RoIiAiMTYiKQ0KPiArICAgKHNldF9hdHRyICJjb25kcyIgInNldCIpDQo+ICsgICAo
-c2V0X2F0dHIgInR5cGUiICJtdWx0aXBsZSIpXQ0KPiArKQ0KPiArDQo+IChkZWZpbmVfZXhwYW5k
-ICJjYXNlc2kiDQo+ICAgWyhtYXRjaF9vcGVyYW5kOlNJIDAgInNfcmVnaXN0ZXJfb3BlcmFuZCIp
-CTsgaW5kZXggdG8ganVtcCBvbg0KPiAgICAobWF0Y2hfb3BlcmFuZDpTSSAxICJjb25zdF9pbnRf
-b3BlcmFuZCIpCTsgbG93ZXIgYm91bmQNCj4gQEAgLTEyMTMzLDYgKzEyMTkxLDE1IEBAIChkZWZp
-bmVfaW5zbiAibG9hZF90cF9oYXJkIg0KPiAgICAoc2V0X2F0dHIgInR5cGUiICJtcnMiKV0NCj4g
-KQ0KPiANCj4gKzs7IFVzZWQgYnkgdGhlIFRMUyByZWdpc3RlciBiYXNlZCBzdGFjayBwcm90ZWN0
-b3INCj4gKyhkZWZpbmVfaW5zbiAicmVsb2FkX3RwX2hhcmQiDQo+ICsgIFsoc2V0IChtYXRjaF9v
-cGVyYW5kOlNJIDAgInJlZ2lzdGVyX29wZXJhbmQiICI9ciIpDQo+ICsJKHVuc3BlY192b2xhdGls
-ZSBbKGNvbnN0X2ludCAwKV0gVlVOU1BFQ19NUkMpKV0NCj4gKyAgIlRBUkdFVF9IQVJEX1RQIg0K
-PiArICAibXJjXFx0cDE1LCAwLCAlMCwgYzEzLCBjMCwgM1xcdEAgcmVsb2FkX3RwX2hhcmQiDQo+
-ICsgIFsoc2V0X2F0dHIgInR5cGUiICJtcnMiKV0NCj4gKykNCj4gKw0KPiA7OyBEb2Vzbid0IGNs
-b2JiZXIgUjEtUjMuICBNdXN0IHVzZSByMCBmb3IgdGhlIGZpcnN0IG9wZXJhbmQuDQo+IChkZWZp
-bmVfaW5zbiAibG9hZF90cF9zb2Z0X2ZkcGljIg0KPiAgIFsoc2V0IChyZWc6U0kgMCkgKHVuc3Bl
-YzpTSSBbKGNvbnN0X2ludCAwKV0gVU5TUEVDX1RMUykpDQo+IGRpZmYgLS1naXQgYS9nY2MvY29u
-ZmlnL2FybS9hcm0ub3B0IGIvZ2NjL2NvbmZpZy9hcm0vYXJtLm9wdA0KPiBpbmRleCBhNzY3N2Vl
-YjQ1YzguLjRiM2UxN2JjMzE5YyAxMDA2NDQNCj4gLS0tIGEvZ2NjL2NvbmZpZy9hcm0vYXJtLm9w
-dA0KPiArKysgYi9nY2MvY29uZmlnL2FybS9hcm0ub3B0DQo+IEBAIC0zMTEsMyArMzExLDI1IEBA
-IEdlbmVyYXRlIGNvZGUgd2hpY2ggdXNlcyB0aGUgY29yZSByZWdpc3RlcnMgb25seSAocjAtcjE0
-KS4NCj4gbWZkcGljDQo+IFRhcmdldCBNYXNrKEZEUElDKQ0KPiBFbmFibGUgRnVuY3Rpb24gRGVz
-Y3JpcHRvciBQSUMgbW9kZS4NCj4gKw0KPiArbXN0YWNrLXByb3RlY3Rvci1ndWFyZD0NCj4gK1Rh
-cmdldCBSZWplY3ROZWdhdGl2ZSBKb2luZWQgRW51bShzdGFja19wcm90ZWN0b3JfZ3VhcmQpIFZh
-cihhcm1fc3RhY2tfcHJvdGVjdG9yX2d1YXJkKSBJbml0KFNTUF9HTE9CQUwpDQo+ICtVc2UgZ2l2
-ZW4gc3RhY2stcHJvdGVjdG9yIGd1YXJkLg0KPiArDQo+ICtFbnVtDQo+ICtOYW1lKHN0YWNrX3By
-b3RlY3Rvcl9ndWFyZCkgVHlwZShlbnVtIHN0YWNrX3Byb3RlY3Rvcl9ndWFyZCkNCj4gK1ZhbGlk
-IGFyZ3VtZW50cyB0byAtbXN0YWNrLXByb3RlY3Rvci1ndWFyZD06DQo+ICsNCj4gK0VudW1WYWx1
-ZQ0KPiArRW51bShzdGFja19wcm90ZWN0b3JfZ3VhcmQpIFN0cmluZyh0bHMpIFZhbHVlKFNTUF9U
-TFNSRUcpDQo+ICsNCj4gK0VudW1WYWx1ZQ0KPiArRW51bShzdGFja19wcm90ZWN0b3JfZ3VhcmQp
-IFN0cmluZyhnbG9iYWwpIFZhbHVlKFNTUF9HTE9CQUwpDQo+ICsNCj4gK21zdGFjay1wcm90ZWN0
-b3ItZ3VhcmQtb2Zmc2V0PQ0KPiArVGFyZ2V0IEpvaW5lZCBSZWplY3ROZWdhdGl2ZSBTdHJpbmcg
-VmFyKGFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmRfb2Zmc2V0X3N0cikNCj4gK1VzZSBhbiBpbW1l
-ZGlhdGUgdG8gb2Zmc2V0IGZyb20gdGhlIFRMUyByZWdpc3Rlci4gVGhpcyBvcHRpb24gaXMgZm9y
-IHVzZSB3aXRoDQo+ICtmc3RhY2stcHJvdGVjdG9yLWd1YXJkPXRscyBhbmQgbm90IGZvciB1c2Ug
-aW4gdXNlci1sYW5kIGNvZGUuDQo+ICsNCj4gK1RhcmdldFZhcmlhYmxlDQo+ICtsb25nIGFybV9z
-dGFja19wcm90ZWN0b3JfZ3VhcmRfb2Zmc2V0ID0gMA0KPiBkaWZmIC0tZ2l0IGEvZ2NjL2RvYy9p
-bnZva2UudGV4aSBiL2djYy9kb2MvaW52b2tlLnRleGkNCj4gaW5kZXggNzE5OTJiOGM1OTc0Li40
-NmQwMDkzNzYwMTggMTAwNjQ0DQo+IC0tLSBhL2djYy9kb2MvaW52b2tlLnRleGkNCj4gKysrIGIv
-Z2NjL2RvYy9pbnZva2UudGV4aQ0KPiBAQCAtODEwLDYgKzgxMCw3IEBAIE9iamVjdGl2ZS1DIGFu
-ZCBPYmplY3RpdmUtQysrIERpYWxlY3RzfS4NCj4gLW1wdXJlLWNvZGUgQGdvbA0KPiAtbWNtc2Ug
-QGdvbA0KPiAtbWZpeC1jbXNlLWN2ZS0yMDIxLTM1NDY1IEBnb2wNCj4gKy1tc3RhY2stcHJvdGVj
-dG9yLWd1YXJkPUB2YXJ7Z3VhcmR9IC1tc3RhY2stcHJvdGVjdG9yLWd1YXJkLW9mZnNldD1AdmFy
-e29mZnNldH0gQGdvbA0KPiAtbWZkcGljfQ0KPiANCj4gQGVtcGh7QVZSIE9wdGlvbnN9DQo+IEBA
-IC0yMDk0Niw2ICsyMDk0NywxNCBAQCBlbmFibGVkIGJ5IGRlZmF1bHQgd2hlbiB0aGUgb3B0aW9u
-IEBvcHRpb257LW1jcHU9fSBpcyB1c2VkIHdpdGgNCj4gQGNvZGV7Y29ydGV4LW0zM30sIEBjb2Rl
-e2NvcnRleC1tMzVwfSBvciBAY29kZXtjb3J0ZXgtbTU1fS4gIFRoZSBvcHRpb24NCj4gQG9wdGlv
-bnstbW5vLWZpeC1jbXNlLWN2ZS0yMDIxLTM1NDY1fSBjYW4gYmUgdXNlZCB0byBkaXNhYmxlIHRo
-ZSBtaXRpZ2F0aW9uLg0KPiANCj4gK0BpdGVtIC1tc3RhY2stcHJvdGVjdG9yLWd1YXJkPUB2YXJ7
-Z3VhcmR9DQo+ICtAaXRlbXggLW1zdGFjay1wcm90ZWN0b3ItZ3VhcmQtb2Zmc2V0PUB2YXJ7b2Zm
-c2V0fQ0KPiArQG9waW5kZXggbXN0YWNrLXByb3RlY3Rvci1ndWFyZA0KPiArQG9waW5kZXggbXN0
-YWNrLXByb3RlY3Rvci1ndWFyZC1vZmZzZXQNCj4gK0dlbmVyYXRlIHN0YWNrIHByb3RlY3Rpb24g
-Y29kZSB1c2luZyBjYW5hcnkgYXQgQHZhcntndWFyZH0uICBTdXBwb3J0ZWQNCj4gK2xvY2F0aW9u
-cyBhcmUgQHNhbXB7Z2xvYmFsfSBmb3IgYSBnbG9iYWwgY2FuYXJ5IG9yIEBzYW1we3Rsc30gZm9y
-IGENCj4gK2NhbmFyeSBhY2Nlc3NpYmxlIHZpYSB0aGUgVExTIHJlZ2lzdGVyLg0KPiArDQoNCg0K
-VGhlcmUgaXMgbm8gZG9jdW1lbnRhdGlvbiBmb3IgLW1zdGFjay1wcm90ZWN0b3ItZ3VhcmQtb2Zm
-c2V0IGhlcmUsIGFuZCB5b3UgbWlnaHQgd2FudCB0byBleHBsYWluIHRoZSByZWxhdGlvbnNoaXAg
-YmV0d2VlbiAtbXN0YWNrLXByb3RlY3Rvci1ndWFyZD0gYW5kIGl0Lg0KDQpUaGFua3MuDQoNClFp
-bmcNCj4gQGl0ZW0gLW1mZHBpYw0KPiBAaXRlbXggLW1uby1mZHBpYw0KPiBAb3BpbmRleCBtZmRw
-aWMNCj4gLS0gDQo+IDIuMzAuMg0KPiANCg0K
+On Tue, 9 Nov 2021 at 21:45, Qing Zhao <qing.zhao@oracle.com> wrote:
+>
+> Hi, Ard,
+>
+> Sorry for the late reply (since I don=E2=80=99t have the right to approve=
+ a patch, I has been waiting for any arm port maintainer to review this pat=
+ch).
+> The following is the arm port maintainer information I got from MAINTAINE=
+RS file (you might want to explicitly cc=E2=80=99ing one of them for a revi=
+ew)
+>
+> arm port                Nick Clifton            <nickc@redhat.com>
+> arm port                Richard Earnshaw        <richard.earnshaw@arm.com=
+>
+> arm port                Ramana Radhakrishnan    <ramana.radhakrishnan@arm=
+.com>
+> arm port                Kyrylo Tkachov          <kyrylo.tkachov@arm.com>
+>
+> I see that Ramana implemented the similar patch for aarch64 (commit cd0b2=
+d361df82c848dc7e1c3078651bb0624c3c6), So, I am CCing him with this email. H=
+opefully he will review this patch.
+>
+
+Thank you Qing. But I know Ramana well, and I know he no longer works
+on GCC. I collaborated with him on the AArch64 implementation at the
+time (but he wrote all the code)
+
+> Anyway, I briefly read your patch (version 4), and have the following que=
+stions and comments:
+>
+> 1.  When the option -mstack-protector-guard=3Dtls presents,  should the o=
+ption mstack-protector-guard-offset=3D.. be required to present?
+>      If it=E2=80=99s required to present, you might want to add such requ=
+irement to the documentation, and also issue errors when it=E2=80=99s not p=
+resent.
+>      It=E2=80=99s not clear right now from the current implementation, so=
+, you might need to update both "arm_option_override_internal =E2=80=9C in =
+arm.c
+>      and doc/invoke.texi to make this clear.
+>
+
+An  offset of 0x0 is a reasonable default, so I don't think it is
+necessary to require the offset param to be passed in that case.
+
+> 2. For arm, is there only one system register can be used for this purpos=
+e?
+>
+
+There are other registers that might be used in the same way, but the
+TLS register is the obvious choice. On AArch64, we decided to use
+'sysreg' and permit the user to specify the register because the Linux
+kernel uses the user space stack pointer (SP_EL0), which is kind of
+odd so we did not want to hard code that.
+
+> 3. For the functionality you added, I didn=E2=80=99t see any testing case=
+s added, I think testing cases are needed.
+>
+
+Yes, I am aware of that. I'm just not sure I know how to proceed here:
+any pointers?
+
+> More comments are embedded below:
+>
+> > On Oct 28, 2021, at 6:27 AM, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > Add support for accessing the stack canary value via the TLS register,
+> > so that multiple threads running in the same address space can use
+> > distinct canary values. This is intended for the Linux kernel running i=
+n
+> > SMP mode, where processes entering the kernel are essentially threads
+> > running the same program concurrently: using a global variable for the
+> > canary in that context is problematic because it can never be rotated,
+> > and so the OS is forced to use the same value as long as it remains up.
+> >
+> > Using the TLS register to index the stack canary helps with this, as it
+> > allows each CPU to context switch the TLS register along with the rest
+> > of the process, permitting each process to use its own value for the
+> > stack canary.
+> >
+> > 2021-10-28 Ard Biesheuvel <ardb@kernel.org>
+> >
+> >       * config/arm/arm-opts.h (enum stack_protector_guard): New
+> >       * config/arm/arm-protos.h (arm_stack_protect_tls_canary_mem):
+> >       New
+> >       * config/arm/arm.c (TARGET_STACK_PROTECT_GUARD): Define
+> >       (arm_option_override_internal): Handle and put in error checks
+> >       for stack protector guard options.
+> >       (arm_option_reconfigure_globals): Likewise
+> >       (arm_stack_protect_tls_canary_mem): New
+> >       (arm_stack_protect_guard): New
+> >       * config/arm/arm.md (stack_protect_set): New
+> >       (stack_protect_set_tls): Likewise
+> >       (stack_protect_test): Likewise
+> >       (stack_protect_test_tls): Likewise
+> >       (reload_tp_hard): Likewise
+> >       * config/arm/arm.opt (-mstack-protector-guard): New
+> >       (-mstack-protector-guard-offset): New.
+> >       * doc/invoke.texi: Document new options
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> > gcc/config/arm/arm-opts.h   |  6 ++
+> > gcc/config/arm/arm-protos.h |  2 +
+> > gcc/config/arm/arm.c        | 55 +++++++++++++++
+> > gcc/config/arm/arm.md       | 71 +++++++++++++++++++-
+> > gcc/config/arm/arm.opt      | 22 ++++++
+> > gcc/doc/invoke.texi         |  9 +++
+> > 6 files changed, 163 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/gcc/config/arm/arm-opts.h b/gcc/config/arm/arm-opts.h
+> > index 5c4b62f404f7..581ba3c4fbbb 100644
+> > --- a/gcc/config/arm/arm-opts.h
+> > +++ b/gcc/config/arm/arm-opts.h
+> > @@ -69,4 +69,10 @@ enum arm_tls_type {
+> >   TLS_GNU,
+> >   TLS_GNU2
+> > };
+> > +
+> > +/* Where to get the canary for the stack protector.  */
+> > +enum stack_protector_guard {
+> > +  SSP_TLSREG,                  /* per-thread canary in TLS register */
+> > +  SSP_GLOBAL                   /* global canary */
+> > +};
+> > #endif
+> > diff --git a/gcc/config/arm/arm-protos.h b/gcc/config/arm/arm-protos.h
+> > index 9b1f61394ad7..d8d605920c97 100644
+> > --- a/gcc/config/arm/arm-protos.h
+> > +++ b/gcc/config/arm/arm-protos.h
+> > @@ -195,6 +195,8 @@ extern void arm_split_atomic_op (enum rtx_code, rtx=
+, rtx, rtx, rtx, rtx, rtx);
+> > extern rtx arm_load_tp (rtx);
+> > extern bool arm_coproc_builtin_available (enum unspecv);
+> > extern bool arm_coproc_ldc_stc_legitimate_address (rtx);
+> > +extern rtx arm_stack_protect_tls_canary_mem (bool);
+> > +
+> >
+> > #if defined TREE_CODE
+> > extern void arm_init_cumulative_args (CUMULATIVE_ARGS *, tree, rtx, tre=
+e);
+> > diff --git a/gcc/config/arm/arm.c b/gcc/config/arm/arm.c
+> > index c4ff06b087eb..6a659d81a6fe 100644
+> > --- a/gcc/config/arm/arm.c
+> > +++ b/gcc/config/arm/arm.c
+> > @@ -829,6 +829,9 @@ static const struct attribute_spec arm_attribute_ta=
+ble[] =3D
+> >
+> > #undef TARGET_MD_ASM_ADJUST
+> > #define TARGET_MD_ASM_ADJUST arm_md_asm_adjust
+> > +
+> > +#undef TARGET_STACK_PROTECT_GUARD
+> > +#define TARGET_STACK_PROTECT_GUARD arm_stack_protect_guard
+> >
+> > /* Obstack for minipool constant handling.  */
+> > static struct obstack minipool_obstack;
+> > @@ -3155,6 +3158,26 @@ arm_option_override_internal (struct gcc_options=
+ *opts,
+> >   if (TARGET_THUMB2_P (opts->x_target_flags))
+> >     opts->x_inline_asm_unified =3D true;
+> >
+> > +  if (arm_stack_protector_guard =3D=3D SSP_GLOBAL
+> > +      && opts->x_arm_stack_protector_guard_offset_str)
+> > +    {
+> > +      error ("incompatible options %'-mstack-protector-guard=3Dglobal%=
+' and"
+>
+> Are the two  =E2=80=9C%=E2=80=9D in the above needed?
+>
+
+I get warnings about bare quotes otherwise, so yes AFAICT.
+
+> > +          "%'-mstack-protector-guard-offset=3D%qs%=E2=80=99=E2=80=9D,
+> Are the two =E2=80=9C%=E2=80=9D in the above needed?
+>
+> > +          arm_stack_protector_guard_offset_str);
+> > +    }
+>
+>
+> > +
+> > +  if (opts->x_arm_stack_protector_guard_offset_str)
+> > +    {
+> > +      char *end;
+> > +      const char *str =3D arm_stack_protector_guard_offset_str;
+> > +      errno =3D 0;
+> > +      long offs =3D strtol (arm_stack_protector_guard_offset_str, &end=
+, 0);
+> > +      if (!*str || *end || errno)
+> > +     error ("%qs is not a valid offset in %qs", str,
+> > +            "-mstack-protector-guard-offset=3D");
+> > +      arm_stack_protector_guard_offset =3D offs;
+> > +    }
+> > +
+> > #ifdef SUBTARGET_OVERRIDE_INTERNAL_OPTIONS
+> >   SUBTARGET_OVERRIDE_INTERNAL_OPTIONS;
+> > #endif
+> > @@ -3822,6 +3845,10 @@ arm_option_reconfigure_globals (void)
+> >       else
+> >       target_thread_pointer =3D TP_SOFT;
+> >     }
+> > +
+> > +  if (arm_stack_protector_guard =3D=3D SSP_TLSREG
+> > +      && target_thread_pointer !=3D TP_CP15)
+> > +    error("%'-mstack-protector-guard=3Dtls%' needs a hardware TLS regi=
+ster");
+>
+> Under what situation, this might happen?
+>
+
+If the user passes -mtp=3Dsoft -mstack-protector-guard=3Dtls, we get in
+the paradoxical situation where the stack protector uses the MRC
+instruction directly, whereas the TLS variable accesses will call
+__aeabi_read_tp to read the same value. This is sub-optimal at the
+very least, but also unlikely to be what the user intended.
+
+> > }
+> >
+> > /* Perform some validation between the desired architecture and the res=
+t of the
+> > @@ -8087,6 +8114,22 @@ legitimize_pic_address (rtx orig, machine_mode m=
+ode, rtx reg, rtx pic_reg,
+> > }
+> >
+> >
+> > +rtx
+> > +arm_stack_protect_tls_canary_mem (bool reload)
+> > +{
+> > +  rtx tp =3D gen_reg_rtx (SImode);
+> > +  if (reload)
+> > +    emit_insn (gen_reload_tp_hard (tp));
+> > +  else
+> > +    emit_insn (gen_load_tp_hard (tp));
+> > +
+> > +  rtx reg =3D gen_reg_rtx (SImode);
+> > +  rtx offset =3D GEN_INT (arm_stack_protector_guard_offset);
+> > +  emit_set_insn (reg, gen_rtx_PLUS (SImode, tp, offset));
+> > +  return gen_rtx_MEM (SImode, reg);
+> > +}
+>
+> Could you add a comment for the above routine?
+>
+
+Yes.
+
+> > +
+> > +
+> > /* Whether a register is callee saved or not.  This is necessary becaus=
+e high
+> >    registers are marked as caller saved when optimizing for size on Thu=
+mb-1
+> >    targets despite being callee saved in order to avoid using them.  */
+> > @@ -34054,6 +34097,18 @@ arm_run_selftests (void)
+> > #define TARGET_RUN_TARGET_SELFTESTS selftest::arm_run_selftests
+> > #endif /* CHECKING_P */
+> >
+> > +/* Implement TARGET_STACK_PROTECT_GUARD. In case of a
+> > +   global variable based guard use the default else
+> > +   return a null tree.  */
+> > +static tree
+> > +arm_stack_protect_guard (void)
+> > +{
+> > +  if (arm_stack_protector_guard =3D=3D SSP_GLOBAL)
+> > +    return default_stack_protect_guard ();
+> > +
+> > +  return NULL_TREE;
+> > +}
+> > +
+> > /* Worker function for TARGET_MD_ASM_ADJUST, while in thumb1 mode.
+> >    Unlike the arm version, we do NOT implement asm flag outputs.  */
+> >
+> > diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
+> > index 4adc976b8b67..d31349cd2614 100644
+> > --- a/gcc/config/arm/arm.md
+> > +++ b/gcc/config/arm/arm.md
+> > @@ -9183,7 +9183,7 @@ (define_expand "stack_protect_combined_set"
+> >                     UNSPEC_SP_SET))
+> >       (clobber (match_scratch:SI 2 ""))
+> >       (clobber (match_scratch:SI 3 ""))])]
+> > -  ""
+> > +  "arm_stack_protector_guard =3D=3D SSP_GLOBAL"
+> >   ""
+> > )
+> >
+> > @@ -9267,7 +9267,7 @@ (define_expand "stack_protect_combined_test"
+> >       (clobber (match_scratch:SI 3 ""))
+> >       (clobber (match_scratch:SI 4 ""))
+> >       (clobber (reg:CC CC_REGNUM))])]
+> > -  ""
+> > +  "arm_stack_protector_guard =3D=3D SSP_GLOBAL"
+> >   ""
+> > )
+> >
+> > @@ -9361,6 +9361,64 @@ (define_insn "arm_stack_protect_test_insn"
+> >    (set_attr "arch" "t,32")]
+> > )
+> >
+> > +(define_expand "stack_protect_set"
+> > +  [(match_operand:SI 0 "memory_operand")
+> > +   (match_operand:SI 1 "memory_operand")]
+> > +  "arm_stack_protector_guard =3D=3D SSP_TLSREG"
+> > +  "
+> > +{
+> > +  operands[1] =3D arm_stack_protect_tls_canary_mem (false /* reload */=
+);
+> > +  emit_insn (gen_stack_protect_set_tls (operands[0], operands[1]));
+> > +  DONE;
+> > +}"
+> > +)
+> > +
+> > +;; DO NOT SPLIT THIS PATTERN.  It is important for security reasons th=
+at the
+> > +;; canary value does not live beyond the life of this sequence.
+> > +(define_insn "stack_protect_set_tls"
+> > +  [(set (match_operand:SI 0 "memory_operand" "=3Dm")
+> > +       (unspec:SI [(match_operand:SI 1 "memory_operand" "m")]
+> > +        UNSPEC_SP_SET))
+> > +   (set (match_scratch:SI 2 "=3D&r") (const_int 0))]
+> > +  ""
+> > +  "ldr\\t%2, %1\;str\\t%2, %0\;mov\t%2, #0"
+> > +  [(set_attr "length" "12")
+> > +   (set_attr "conds" "nocond")
+> > +   (set_attr "type" "multiple")]
+> > +)
+> > +
+> > +(define_expand "stack_protect_test"
+> > +  [(match_operand:SI 0 "memory_operand")
+> > +   (match_operand:SI 1 "memory_operand")
+> > +   (match_operand:SI 2)]
+> > +  "arm_stack_protector_guard =3D=3D SSP_TLSREG"
+> > +  "
+> > +{
+> > +  operands[1] =3D arm_stack_protect_tls_canary_mem (true /* reload */)=
+;
+> > +  emit_insn (gen_stack_protect_test_tls (operands[0], operands[1]));
+> > +
+> > +  rtx cc_reg =3D gen_rtx_REG (CC_Zmode, CC_REGNUM);
+> > +  rtx eq =3D gen_rtx_EQ (CC_Zmode, cc_reg, const0_rtx);
+> > +  emit_jump_insn (gen_arm_cond_branch (operands[2], eq, cc_reg));
+> > +  DONE;
+> > +}"
+> > +)
+> > +
+> > +(define_insn "stack_protect_test_tls"
+> > +  [(set (reg:CC_Z CC_REGNUM)
+> > +     (compare:CC_Z (unspec:SI [(match_operand:SI 0 "memory_operand" "m=
+")
+> > +                               (match_operand:SI 1 "memory_operand" "m=
+")]
+> > +                              UNSPEC_SP_TEST)
+> > +                   (const_int 0)))
+> > +   (clobber (match_scratch:SI 2 "=3D&r"))
+> > +   (clobber (match_scratch:SI 3 "=3D&r"))]
+> > +  ""
+> > +  "ldr\t%2, %0\;ldr\t%3, %1\;eors\t%2, %3, %2\;mov\t%3, #0"
+> > +  [(set_attr "length" "16")
+> > +   (set_attr "conds" "set")
+> > +   (set_attr "type" "multiple")]
+> > +)
+> > +
+> > (define_expand "casesi"
+> >   [(match_operand:SI 0 "s_register_operand")  ; index to jump on
+> >    (match_operand:SI 1 "const_int_operand")   ; lower bound
+> > @@ -12133,6 +12191,15 @@ (define_insn "load_tp_hard"
+> >    (set_attr "type" "mrs")]
+> > )
+> >
+> > +;; Used by the TLS register based stack protector
+> > +(define_insn "reload_tp_hard"
+> > +  [(set (match_operand:SI 0 "register_operand" "=3Dr")
+> > +     (unspec_volatile [(const_int 0)] VUNSPEC_MRC))]
+> > +  "TARGET_HARD_TP"
+> > +  "mrc\\tp15, 0, %0, c13, c0, 3\\t@ reload_tp_hard"
+> > +  [(set_attr "type" "mrs")]
+> > +)
+> > +
+> > ;; Doesn't clobber R1-R3.  Must use r0 for the first operand.
+> > (define_insn "load_tp_soft_fdpic"
+> >   [(set (reg:SI 0) (unspec:SI [(const_int 0)] UNSPEC_TLS))
+> > diff --git a/gcc/config/arm/arm.opt b/gcc/config/arm/arm.opt
+> > index a7677eeb45c8..4b3e17bc319c 100644
+> > --- a/gcc/config/arm/arm.opt
+> > +++ b/gcc/config/arm/arm.opt
+> > @@ -311,3 +311,25 @@ Generate code which uses the core registers only (=
+r0-r14).
+> > mfdpic
+> > Target Mask(FDPIC)
+> > Enable Function Descriptor PIC mode.
+> > +
+> > +mstack-protector-guard=3D
+> > +Target RejectNegative Joined Enum(stack_protector_guard) Var(arm_stack=
+_protector_guard) Init(SSP_GLOBAL)
+> > +Use given stack-protector guard.
+> > +
+> > +Enum
+> > +Name(stack_protector_guard) Type(enum stack_protector_guard)
+> > +Valid arguments to -mstack-protector-guard=3D:
+> > +
+> > +EnumValue
+> > +Enum(stack_protector_guard) String(tls) Value(SSP_TLSREG)
+> > +
+> > +EnumValue
+> > +Enum(stack_protector_guard) String(global) Value(SSP_GLOBAL)
+> > +
+> > +mstack-protector-guard-offset=3D
+> > +Target Joined RejectNegative String Var(arm_stack_protector_guard_offs=
+et_str)
+> > +Use an immediate to offset from the TLS register. This option is for u=
+se with
+> > +fstack-protector-guard=3Dtls and not for use in user-land code.
+> > +
+> > +TargetVariable
+> > +long arm_stack_protector_guard_offset =3D 0
+> > diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+> > index 71992b8c5974..46d009376018 100644
+> > --- a/gcc/doc/invoke.texi
+> > +++ b/gcc/doc/invoke.texi
+> > @@ -810,6 +810,7 @@ Objective-C and Objective-C++ Dialects}.
+> > -mpure-code @gol
+> > -mcmse @gol
+> > -mfix-cmse-cve-2021-35465 @gol
+> > +-mstack-protector-guard=3D@var{guard} -mstack-protector-guard-offset=
+=3D@var{offset} @gol
+> > -mfdpic}
+> >
+> > @emph{AVR Options}
+> > @@ -20946,6 +20947,14 @@ enabled by default when the option @option{-mc=
+pu=3D} is used with
+> > @code{cortex-m33}, @code{cortex-m35p} or @code{cortex-m55}.  The option
+> > @option{-mno-fix-cmse-cve-2021-35465} can be used to disable the mitiga=
+tion.
+> >
+> > +@item -mstack-protector-guard=3D@var{guard}
+> > +@itemx -mstack-protector-guard-offset=3D@var{offset}
+> > +@opindex mstack-protector-guard
+> > +@opindex mstack-protector-guard-offset
+> > +Generate stack protection code using canary at @var{guard}.  Supported
+> > +locations are @samp{global} for a global canary or @samp{tls} for a
+> > +canary accessible via the TLS register.
+> > +
+>
+>
+> There is no documentation for -mstack-protector-guard-offset here, and yo=
+u might want to explain the relationship between -mstack-protector-guard=3D=
+ and it.
+>
+
+OK, got it.
+
+Thanks a lot for the review!
+
+--=20
+Ard.
