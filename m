@@ -2,43 +2,43 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C0AC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 Nov 2021 01:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F010DC43219
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 Nov 2021 01:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1EC611BF
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 Nov 2021 01:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0E3610A3
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 Nov 2021 01:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239285AbhKIBTo (ORCPT
+        id S241940AbhKIB12 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 8 Nov 2021 20:19:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44354 "EHLO mail.kernel.org"
+        Mon, 8 Nov 2021 20:27:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243103AbhKIBPF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 8 Nov 2021 20:15:05 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A0AC161989;
-        Tue,  9 Nov 2021 01:06:03 +0000 (UTC)
+        id S241710AbhKIBTM (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 8 Nov 2021 20:19:12 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C96C361288;
+        Tue,  9 Nov 2021 01:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636419964;
-        bh=gSKZ8ZQS1zDIh541hS5ZMLEVK9bKopB7UiB0BBGvPEQ=;
+        s=k20201202; t=1636420051;
+        bh=LWheMsac2MLhKOBfcd9MAnPJyZJjzi9UNrW/13Um3tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FLnA0B33ofx7TT3AkS1K5IKHDbS2rkonmiCN0CbdHGe2O0lBdSendh7mBe+X/acDN
-         +nl8qV4qFYapiwDo2ykR2K9mJhnmt/0QhXdLt/UYvE2gN61spsFXyTFQku3ZwOx3fw
-         84IDiiQGP95Se51aEntfp2LOpWhepiutKy11F0aJ4bIpywrUEP4HcS3EWCpSRnlKNu
-         I4N7cDA8dSyAnGTw+x8dP94DfFBzUvzycUUSn6zCQNQd5aXhi83ceJZ6MTvd5FAvw5
-         r6Q+78+Dmotz2ExomR0W8FuMk8QDRcyKvp0JFBw50QN+XcO5KL9MPqSGcFLxJV5Mfh
-         5pMrISYk/gUrQ==
+        b=jCF1+EyFG2jEpTY4NEWn+8osVfdHH8zeUivrwkkJ6A7HXIuYWW051QcXMal6LXmqe
+         TWCP6uGqNSlSLt0Z8gdlUE7CUzMk/TnfvqOXO0nm9mKtHlHzTGkyVrIUlxXBToASkg
+         KhAPfB4AW7d/B5VFF6NtBFgHMuohBTtatOcG7fl35krp5AZkUc9ncURu8sObBkyYNK
+         jCmjCAmwjub8kSYaoyh0XF0uVGpPYSes6eQAn0iqUd9xaFhCPOw4MsliU0vn5GuIP+
+         4sam9Y4BoxPeECiOonFfv4xJMMF1HTSqguSWVAiZZOoNfzymMNZCUEMtL4xQ1F3AWz
+         FDmFG39E+4mqg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>, me@tobin.cc,
         tycho@tycho.pizza, linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 28/47] leaking_addresses: Always print a trailing newline
-Date:   Mon,  8 Nov 2021 12:50:12 -0500
-Message-Id: <20211108175031.1190422-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 24/39] leaking_addresses: Always print a trailing newline
+Date:   Mon,  8 Nov 2021 20:06:34 -0500
+Message-Id: <20211109010649.1191041-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211108175031.1190422-1-sashal@kernel.org>
-References: <20211108175031.1190422-1-sashal@kernel.org>
+In-Reply-To: <20211109010649.1191041-1-sashal@kernel.org>
+References: <20211109010649.1191041-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,10 +69,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
-index 6a897788f5a7e..6e4b0f7ae38cf 100755
+index 2977371b29563..de5196c08943a 100755
 --- a/scripts/leaking_addresses.pl
 +++ b/scripts/leaking_addresses.pl
-@@ -456,8 +456,9 @@ sub parse_file
+@@ -262,8 +262,9 @@ sub parse_file
  
  	open my $fh, "<", $file or return;
  	while ( <$fh> ) {
