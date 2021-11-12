@@ -2,52 +2,28 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248F4C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Nov 2021 18:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ABAC43217
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Nov 2021 21:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEB661057
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 Nov 2021 18:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE7D61076
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 Nov 2021 21:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235655AbhKLSzn (ORCPT
+        id S235766AbhKLV1c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 12 Nov 2021 13:55:43 -0500
-Received: from mail-ed1-f47.google.com ([209.85.208.47]:35504 "EHLO
-        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235656AbhKLSzm (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 12 Nov 2021 13:55:42 -0500
-Received: by mail-ed1-f47.google.com with SMTP id g14so41444226edz.2;
-        Fri, 12 Nov 2021 10:52:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:reply-to
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Iawy8hM8eRyCMBEMC4y1moygOWRTeool6h66VnaFg/k=;
-        b=mk6+zpysjmFtbDhz3YmEP43UMP5XlulmrJiguYG+ErK5MzVXRVX53gOnKGI4PB317U
-         uLdPppJpm8GjU29VD4pDhne5ZiO0x0kLx+Y/dow1uxvTROFd+ucTzzDQUy2lH8fr4T/r
-         z5H4iR5qNzNAuLWOx/lV+ZY3gwCwPFFVGKYnaG671Vk3AUnF6usWBlCnoMBMr8tay4Bi
-         Vi2jyQkkzezG5JsT510QqM4MBoUdI6wJ3tGBwW/+SmjKgi/tYCehMwK07Z8hWHbvlD8l
-         1f4gRxcH1/bP3aJg1/dnR1CXnNRw3u63ynOuOjehIYCEkdpT/0HML6Q/2v9UrS3at8tw
-         bN3A==
-X-Gm-Message-State: AOAM531eq3J+cbVMzH722ok6FYiwOemQZ1pT0Qrr8S1wsInsN3HHpAUj
-        vgiTkz0kkEAyCp+MsE3Wexw=
-X-Google-Smtp-Source: ABdhPJwoNfruuYTvSVpxsn9iT2utV+KOqOD0XFVXh8/k9BMPHVsZUaxfTQcSxhRcSsx36Ytc7ut/oA==
-X-Received: by 2002:a50:e608:: with SMTP id y8mr23538543edm.39.1636743169660;
-        Fri, 12 Nov 2021 10:52:49 -0800 (PST)
-Received: from [10.9.0.26] ([46.166.133.199])
-        by smtp.gmail.com with ESMTPSA id cz7sm3348384edb.55.2021.11.12.10.52.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Nov 2021 10:52:49 -0800 (PST)
-Message-ID: <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
-Date:   Fri, 12 Nov 2021 21:52:42 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
-Content-Language: en-US
-To:     Jonathan Corbet <corbet@lwn.net>,
+        Fri, 12 Nov 2021 16:27:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235714AbhKLV1b (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 12 Nov 2021 16:27:31 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEB196108B;
+        Fri, 12 Nov 2021 21:24:35 +0000 (UTC)
+Date:   Fri, 12 Nov 2021 16:24:33 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Paul McKenney <paulmck@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -72,7 +48,6 @@ To:     Jonathan Corbet <corbet@lwn.net>,
         Mark Rutland <mark.rutland@arm.com>,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will@kernel.org>,
         Ard Biesheuvel <ardb@kernel.org>,
         Laura Abbott <labbott@kernel.org>,
@@ -94,132 +69,219 @@ To:     Jonathan Corbet <corbet@lwn.net>,
         kernel-hardening@lists.openwall.com,
         linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     notify@kernel.org
+        linux-fsdevel@vger.kernel.org, notify@kernel.org
+Subject: Re: [PATCH v2 2/2] sysctl: introduce kernel.pkill_on_warn
+Message-ID: <20211112162433.3ebbd7c7@gandalf.local.home>
+In-Reply-To: <20211027233215.306111-3-alex.popov@linux.com>
 References: <20211027233215.306111-1-alex.popov@linux.com>
-From:   Alexander Popov <alex.popov@linux.com>
-In-Reply-To: <20211027233215.306111-1-alex.popov@linux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        <20211027233215.306111-3-alex.popov@linux.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 28.10.2021 02:32, Alexander Popov wrote:
-> Hello! This is the v2 of pkill_on_warn.
-> Changes from v1 and tricks for testing are described below.
+On Thu, 28 Oct 2021 02:32:15 +0300
+Alexander Popov <alex.popov@linux.com> wrote:
 
-Hello everyone!
-Friendly ping for your feedback.
-
-Thanks.
-Alexander
-
-> Rationale
-> =========
+> Signed-off-by: Alexander Popov <alex.popov@linux.com>
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst | 14 +++++++++++++
+>  include/asm-generic/bug.h                   | 12 ++++++++---
+>  include/linux/panic.h                       |  3 +++
+>  kernel/panic.c                              | 22 ++++++++++++++++++++-
+>  kernel/sysctl.c                             |  9 +++++++++
+>  lib/bug.c                                   |  3 +++
+>  6 files changed, 59 insertions(+), 4 deletions(-)
 > 
-> Currently, the Linux kernel provides two types of reaction to kernel
-> warnings:
->   1. Do nothing (by default),
->   2. Call panic() if panic_on_warn is set. That's a very strong reaction,
->      so panic_on_warn is usually disabled on production systems.
-> 
->  From a safety point of view, the Linux kernel misses a middle way of
-> handling kernel warnings:
->   - The kernel should stop the activity that provokes a warning,
->   - But the kernel should avoid complete denial of service.
-> 
->  From a security point of view, kernel warning messages provide a lot of
-> useful information for attackers. Many GNU/Linux distributions allow
-> unprivileged users to read the kernel log, so attackers use kernel
-> warning infoleak in vulnerability exploits. See the examples:
-> https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html
-> https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
-> https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
-> 
-> Let's introduce the pkill_on_warn sysctl.
-> If this parameter is set, the kernel kills all threads in a process that
-> provoked a kernel warning. This behavior is reasonable from a safety point of
-> view described above. It is also useful for kernel security hardening because
-> the system kills an exploit process that hits a kernel warning.
-> 
-> Moreover, bugs usually don't come alone, and a kernel warning may be
-> followed by memory corruption or other bad effects. So pkill_on_warn allows
-> the kernel to stop the process when the first signs of wrong behavior
-> are detected.
-> 
-> 
-> Changes from v1
-> ===============
-> 
-> 1) Introduce do_pkill_on_warn() and call it in all warning handling paths.
-> 
-> 2) Do refactoring without functional changes in a separate patch.
-> 
-> 3) Avoid killing init and kthreads.
-> 
-> 4) Use do_send_sig_info() instead of do_group_exit().
-> 
-> 5) Introduce sysctl instead of using core_param().
-> 
-> 
-> Tricks for testing
-> ==================
-> 
-> 1) This patch series was tested on x86_64 using CONFIG_LKDTM.
-> The kernel kills a process that performs this:
->    echo WARNING > /sys/kernel/debug/provoke-crash/DIRECT
-> 
-> 2) The warn_slowpath_fmt() path was tested using this trick:
-> diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-> index 84b87538a15d..3106c203ebb6 100644
-> --- a/arch/x86/include/asm/bug.h
-> +++ b/arch/x86/include/asm/bug.h
-> @@ -73,7 +73,7 @@ do {                                                          \
->    * were to trigger, we'd rather wreck the machine in an attempt to get the
->    * message out than not know about it.
->    */
-> -#define __WARN_FLAGS(flags)                                    \
-> +#define ___WARN_FLAGS(flags)                                   \
->   do {                                                           \
->          instrumentation_begin();                                \
->          _BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));           \
-> 
-> 3) Testing pkill_on_warn with kthreads was done using this trick:
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index bce848e50512..13c56f472681 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -2133,6 +2133,8 @@ static int __noreturn rcu_gp_kthread(void *unused)
->                  WRITE_ONCE(rcu_state.gp_state, RCU_GP_CLEANUP);
->                  rcu_gp_cleanup();
->                  WRITE_ONCE(rcu_state.gp_state, RCU_GP_CLEANED);
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 426162009ce9..5faf395fdf8f 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -921,6 +921,20 @@ lives in) pid namespace. When selecting a pid for a next task on fork
+>  kernel tries to allocate a number starting from this one.
+>  
+>  
+> +pkill_on_warn
+> +=============
 > +
-> +               WARN_ONCE(1, "hello from kthread\n");
->          }
->   }
-> 
-> 4) Changing drivers/misc/lkdtm/bugs.c:lkdtm_WARNING() allowed me
-> to test all warning flavours:
->   - WARN_ON()
->   - WARN()
->   - WARN_TAINT()
->   - WARN_ON_ONCE()
->   - WARN_ONCE()
->   - WARN_TAINT_ONCE()
-> 
-> Thanks!
-> 
-> Alexander Popov (2):
->    bug: do refactoring allowing to add a warning handling action
->    sysctl: introduce kernel.pkill_on_warn
-> 
->   Documentation/admin-guide/sysctl/kernel.rst | 14 ++++++++
->   include/asm-generic/bug.h                   | 37 +++++++++++++++------
->   include/linux/panic.h                       |  3 ++
->   kernel/panic.c                              | 22 +++++++++++-
->   kernel/sysctl.c                             |  9 +++++
->   lib/bug.c                                   | 22 ++++++++----
->   6 files changed, 90 insertions(+), 17 deletions(-)
-> 
+> +Kills all threads in a process that provoked a kernel warning.
+> +That allows the kernel to stop the process when the first signs
+> +of wrong behavior are detected.
+> +
+> += =====================================================================
+> +0 Allows a process to proceed execution after hitting a kernel warning,
+> +  this is the default behavior.
+> +1 Kills all threads in a process that provoked a kernel warning.
+> += =====================================================================
+> +
+> +
+>  powersave-nap (PPC only)
+>  ========================
+>  
+> diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+> index 881aeaf5a2d5..959000b5856a 100644
+> --- a/include/asm-generic/bug.h
+> +++ b/include/asm-generic/bug.h
+> @@ -94,8 +94,10 @@ void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
+>  #ifndef WARN_ON_ONCE
+>  #define WARN_ON_ONCE(condition) ({					\
+>  	int __ret_warn_on = !!(condition);				\
+> -	if (unlikely(__ret_warn_on))					\
+> +	if (unlikely(__ret_warn_on)) {					\
+>  		DO_ONCE_LITE(__WARN_printf, TAINT_WARN, NULL);		\
+> +		do_pkill_on_warn();					\
+
+Should this be a config option so that those that do not want this do not
+need to have the added overhead of a function call embedded at every
+WARN*() in their code?
+
+That is, do_pkill_on_warn() should be defined as do { } while (0), and not
+add any I$ overhead when compiled out?
+
+> +	}								\
+>  	unlikely(__ret_warn_on);					\
+>  })
+>  #endif
+> @@ -151,15 +153,19 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+>  
+>  #define WARN_ONCE(condition, format...) ({				\
+>  	int __ret_warn_on = !!(condition);				\
+> -	if (unlikely(__ret_warn_on))					\
+> +	if (unlikely(__ret_warn_on)) {					\
+>  		DO_ONCE_LITE(__WARN_printf, TAINT_WARN, format);	\
+> +		do_pkill_on_warn();					\
+> +	}								\
+>  	unlikely(__ret_warn_on);					\
+>  })
+>  
+>  #define WARN_TAINT_ONCE(condition, taint, format...) ({			\
+>  	int __ret_warn_on = !!(condition);				\
+> -	if (unlikely(__ret_warn_on))					\
+> +	if (unlikely(__ret_warn_on)) {					\
+>  		DO_ONCE_LITE(__WARN_printf, taint, format);		\
+> +		do_pkill_on_warn();					\
+> +	}								\
+>  	unlikely(__ret_warn_on);					\
+>  })
+>  
+> diff --git a/include/linux/panic.h b/include/linux/panic.h
+> index f5844908a089..f79c69279859 100644
+> --- a/include/linux/panic.h
+> +++ b/include/linux/panic.h
+> @@ -27,6 +27,9 @@ extern int panic_on_oops;
+>  extern int panic_on_unrecovered_nmi;
+>  extern int panic_on_io_nmi;
+>  extern int panic_on_warn;
+> +extern int pkill_on_warn;
+> +
+> +extern void do_pkill_on_warn(void);
+>  
+>  extern unsigned long panic_on_taint;
+>  extern bool panic_on_taint_nousertaint;
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index cefd7d82366f..1323c9e2630f 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -53,6 +53,7 @@ static int pause_on_oops_flag;
+>  static DEFINE_SPINLOCK(pause_on_oops_lock);
+>  bool crash_kexec_post_notifiers;
+>  int panic_on_warn __read_mostly;
+> +int pkill_on_warn __read_mostly;
+>  unsigned long panic_on_taint;
+>  bool panic_on_taint_nousertaint = false;
+>  
+> @@ -625,13 +626,16 @@ void warn_slowpath_fmt(const char *file, int line, unsigned taint,
+>  	if (!fmt) {
+>  		__warn(file, line, __builtin_return_address(0), taint,
+>  		       NULL, NULL);
+> -		return;
+> +		goto out;
+>  	}
+>  
+>  	args.fmt = fmt;
+>  	va_start(args.args, fmt);
+>  	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
+>  	va_end(args.args);
+> +
+> +out:
+> +	do_pkill_on_warn();
+>  }
+>  EXPORT_SYMBOL(warn_slowpath_fmt);
+>  #else
+> @@ -732,3 +736,19 @@ static int __init panic_on_taint_setup(char *s)
+>  	return 0;
+>  }
+>  early_param("panic_on_taint", panic_on_taint_setup);
+> +
+> +void do_pkill_on_warn(void)
+> +{
+> +	if (!pkill_on_warn)
+> +		return;
+> +
+> +	if (is_global_init(current))
+> +		return;
+> +
+> +	if (current->flags & PF_KTHREAD)
+> +		return;
+> +
+> +	if (system_state >= SYSTEM_RUNNING)
+> +		do_send_sig_info(SIGKILL, SEND_SIG_PRIV, current, PIDTYPE_TGID);
+
+I believe this was mentioned before. I'm not sure how safe it is to call
+do_send_sig_info() in random areas of the kernel, as that could possibly
+cause a deadlock with the locking that is taken.
+
+Best to use irq_work() and have a irq_work interrupt handle the
+do_sig_info, because then you know you are safe to call this. Of course,
+then you need some way to pass the task to the handler.
+
+Could do some kind of clever trick, where we add a PF_KILL_ME flag to the
+task, and the irq worker just loops over all the tasks kill all those with
+it set?
+
+
+> +}
+> +EXPORT_SYMBOL(do_pkill_on_warn);
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 083be6af29d7..7fe6f0aaad2b 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -2656,6 +2656,15 @@ static struct ctl_table kern_table[] = {
+>  		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_ONE,
+>  	},
+> +		{
+
+extra tab?
+
+-- Steve
+
+> +		.procname	= "pkill_on_warn",
+> +		.data		= &pkill_on_warn,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+>  #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+>  	{
+>  		.procname	= "timer_migration",
+> diff --git a/lib/bug.c b/lib/bug.c
+> index 1a91f01412b8..28cc8a5b2ee0 100644
+> --- a/lib/bug.c
+> +++ b/lib/bug.c
+> @@ -214,6 +214,9 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+>  	bug_type = BUG_TRAP_TYPE_BUG;
+>  
+>  out:
+> +	if (bug_type == BUG_TRAP_TYPE_WARN)
+> +		do_pkill_on_warn();
+> +
+>  	return bug_type;
+>  }
+>  
 
