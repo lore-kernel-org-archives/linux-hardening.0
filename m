@@ -2,129 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97D3C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 14 Nov 2021 21:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D73C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun, 14 Nov 2021 21:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD6B160F93
-	for <linux-hardening@archiver.kernel.org>; Sun, 14 Nov 2021 21:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DBF60FDA
+	for <linux-hardening@archiver.kernel.org>; Sun, 14 Nov 2021 21:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236388AbhKNVWR (ORCPT
+        id S236332AbhKNV2z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 14 Nov 2021 16:22:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236359AbhKNVWG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 14 Nov 2021 16:22:06 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BA96360FD7;
-        Sun, 14 Nov 2021 21:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636924726;
-        bh=7CMV186gSCO8E+nCRakwqBJkxf3Tw9FjEUFL+OmYcQ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PZiW2izJn9VHflJM/TKCR7OC6vsHFzJiIfO2x1o7OqTZ4ZWLSm7psoE7fdbWQZ7ND
-         3Sjcbb8AqSCGssaf0cZctS+FP1h21SA/5kK74/2E5vPUNLX8UIbdfRF/3RGQf3ZUu3
-         ACGvuAdxTcrU00MYzu/Z4/ZSbCtWn1T1LmfK8GbcYoR0DQcR6gVfJZkqxSnXMKBGJC
-         mCscIb/Kjp1vU4yLUuq/SGVROQ8bfBeDreMtORsy6Tbm2w5LQ7AgXGyVnxjnJIO54q
-         uJ66dY9lqYiOchfZyyXgX0WIaXmYuc4c7YRnIZaeZvaZhOUZ1iGskMHm6YeQCA5boU
-         6y53muTwMwTlQ==
-Date:   Sun, 14 Nov 2021 14:18:41 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sun, 14 Nov 2021 16:28:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236359AbhKNV2r (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 14 Nov 2021 16:28:47 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C25C061767
+        for <linux-hardening@vger.kernel.org>; Sun, 14 Nov 2021 13:25:52 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id z5so2916887edd.3
+        for <linux-hardening@vger.kernel.org>; Sun, 14 Nov 2021 13:25:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tZSSynsKcz8SQQ9wlQiwyLd1LjN5A0/Q7Az2vBog8fs=;
+        b=f/viiwPOa9QV59R4dkB8sPRey//vAi2MFsdmXxOnQDPgzBE5u6TsL8/xevZYp8DEoj
+         E9DBrfwFkIxLTkn+Ciwp2Pk5aalk/Tl6op7yjcFs+9R219irGePGGHcCsQImGNUgixv8
+         J51bTeoO3LyQrNlcHCfVtoFUoRdWd7B/iriEQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tZSSynsKcz8SQQ9wlQiwyLd1LjN5A0/Q7Az2vBog8fs=;
+        b=7evk5X/BOILOu8Y/ni54nx7GmVUH6Qe3b1SBrxukzFXKlemKoXrEtL1df2b17kX2nz
+         DTVZicTFF3nL4Qsh5jiOklGNnfbkIRq4NevQqJ6bhxCsdrS9yyIE5uSCj38jMxvSMmgb
+         DwB7U0Dv+5exLyubk4vMd5u12Buy9Qs3hhi0zBk0nSO5qVXEYfbspo1PH9TV4u7xvNfK
+         H5bf8DII0Ivht5+7F6qyN58xYYpmf/NQW1jMGAlonjGttXSCgIFLjbWm03Qlv2OlD+lJ
+         kXeZLSkGdgALYXGrG1MpiqYY7QwJiMm16ngOwSxsdBdfZ00iS8z86hgS11rvz7HOSii9
+         ma3Q==
+X-Gm-Message-State: AOAM533hMBH97nKK4WhWwr4CfWK62jvqGiLjiDdkKSQuzWoaaotmv6XI
+        BJgLbCerss+94DtO+0OjVcD+tc2HfWIWYcyd
+X-Google-Smtp-Source: ABdhPJyy1GpQq+uIUa631wLZq7RyhY1eZfprzIwkOuRg19Le3gnTK9g5CC5JsDwkBc1C/J72D+2WcA==
+X-Received: by 2002:a17:907:8a12:: with SMTP id sc18mr43419024ejc.274.1636925150473;
+        Sun, 14 Nov 2021 13:25:50 -0800 (PST)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id w24sm5446516ejk.0.2021.11.14.13.25.48
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Nov 2021 13:25:49 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id n33-20020a05600c502100b0032fb900951eso8930866wmr.4
+        for <linux-hardening@vger.kernel.org>; Sun, 14 Nov 2021 13:25:48 -0800 (PST)
+X-Received: by 2002:a1c:7405:: with SMTP id p5mr51964221wmc.152.1636925148688;
+ Sun, 14 Nov 2021 13:25:48 -0800 (PST)
+MIME-Version: 1.0
+References: <20211114005725.GA27075@embeddedor> <YZF9MY6rRLQwdTgM@archlinux-ax161>
+In-Reply-To: <YZF9MY6rRLQwdTgM@archlinux-ax161>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 14 Nov 2021 13:25:32 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgqEfw1wFcj98VxyvnoDsUhmYm_P_KuFOpEWe5zmYAp1w@mail.gmail.com>
+Message-ID: <CAHk-=wgqEfw1wFcj98VxyvnoDsUhmYm_P_KuFOpEWe5zmYAp1w@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: Add support for -Wimplicit-fallthrough
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         llvm@lists.linux.dev
-Subject: Re: [PATCH] kconfig: Add support for -Wimplicit-fallthrough
-Message-ID: <YZF9MY6rRLQwdTgM@archlinux-ax161>
-References: <20211114005725.GA27075@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211114005725.GA27075@embeddedor>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Nov 13, 2021 at 06:57:25PM -0600, Gustavo A. R. Silva wrote:
-> Add Kconfig support for -Wimplicit-fallthrough for both GCC and Clang.
-> 
-> The compiler option is under configuration CC_IMPLICIT_FALLTHROUGH,
-> which is enabled by default.
-> 
-> Special thanks to Nathan Chancellor who fixed the Clang bug[1][2]. This
-> bugfix only appears in Clang 14.0.0, so older versions still contain
-> the bug and -Wimplicit-fallthrough won't be enabled for them, for now.
-> 
-> This concludes a long journey and now we are finally getting rid
-> of the unintentional fallthrough bug-class in the kernel, entirely. :)
-> 
-> [1] https://github.com/llvm/llvm-project/commit/9ed4a94d6451046a51ef393cd62f00710820a7e8
-> [2] https://bugs.llvm.org/show_bug.cgi?id=51094
-> 
-> Link: https://github.com/KSPP/linux/issues/115
-> Link: https://github.com/ClangBuiltLinux/linux/issues/236
-> Co-developed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Co-developed-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Sun, Nov 14, 2021 at 1:18 PM Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> It feels a little odd to have this in Kconfig but if it works and gets
+> the warning enabled, then so be it.
 
-This appears to do the right thing with both clang-13 and clang-14.
+We've actually been actively moving more and more of the compiler
+flags configuration to Kconfig time.
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
+The Kconfig language makes it fairly easy and natural to do these
+days, and in some cases the compiler flags end up having a number of
+other dependencies (not in this case, but look at things like
+CC_HAS_KASAN_GENERIC etc, where the existence of some compiler flag
+ends up then also affecting whether other options can be enabled).
 
-It feels a little odd to have this in Kconfig but if it works and gets
-the warning enabled, then so be it.
+So the whole "move it to config time" ends up being the direction
+we've been going, and the only really unusual case here is that it
+ends up being done as a string config rather than as a boolean.
 
-> ---
->  Makefile     | 6 +-----
->  init/Kconfig | 5 +++++
->  2 files changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 30c7c81d0437..f18a50daad00 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -786,7 +786,7 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
->  KBUILD_CFLAGS += $(stackp-flags-y)
->  
->  KBUILD_CFLAGS-$(CONFIG_WERROR) += -Werror
-> -KBUILD_CFLAGS += $(KBUILD_CFLAGS-y)
-> +KBUILD_CFLAGS += $(KBUILD_CFLAGS-y) $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
->  
->  ifdef CONFIG_CC_IS_CLANG
->  KBUILD_CPPFLAGS += -Qunused-arguments
-> @@ -798,10 +798,6 @@ KBUILD_CFLAGS += -Wno-gnu
->  KBUILD_CFLAGS += -mno-global-merge
->  else
->  
-> -# Warn about unmarked fall-throughs in switch statement.
-> -# Disabled for clang while comment to attribute conversion happens and
-> -# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
-> -KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough=5,)
->  # gcc inanely warns about local variables called 'main'
->  KBUILD_CFLAGS += -Wno-main
->  endif
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 11f8a845f259..b0582cd3e096 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -885,6 +885,11 @@ config ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
->  config CC_HAS_INT128
->  	def_bool !$(cc-option,$(m64-flag) -D__SIZEOF_INT128__=0) && 64BIT
->  
-> +config CC_IMPLICIT_FALLTHROUGH
-> +	string
-> +	default "-Wimplicit-fallthrough=5" if CC_IS_GCC
-> +	default "-Wimplicit-fallthrough" if CC_IS_CLANG && $(cc-option,-Wunreachable-code-fallthrough)
-> +
->  #
->  # For architectures that know their GCC __int128 support is sound
->  #
-> -- 
-> 2.27.0
-> 
-> 
+And that's just because the different compilers also have different
+flags in this case ;(
+
+              Linus
