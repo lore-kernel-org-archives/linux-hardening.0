@@ -2,151 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431B1C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 14 Nov 2021 14:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97D3C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun, 14 Nov 2021 21:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2768761027
-	for <linux-hardening@archiver.kernel.org>; Sun, 14 Nov 2021 14:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6B160F93
+	for <linux-hardening@archiver.kernel.org>; Sun, 14 Nov 2021 21:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230314AbhKNOY2 (ORCPT
+        id S236388AbhKNVWR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 14 Nov 2021 09:24:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbhKNOY1 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 14 Nov 2021 09:24:27 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BAAC061746
-        for <linux-hardening@vger.kernel.org>; Sun, 14 Nov 2021 06:21:31 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id d3so25168762wrh.8
-        for <linux-hardening@vger.kernel.org>; Sun, 14 Nov 2021 06:21:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p8lk+q4Y2CquVO9sqmu4dSc1gvfHGQ8MpCynAwi+U0M=;
-        b=tmyGi86bjZW/7vtxIzqiUXXSul5Ye8VTLY6C1i8poScsrQmwey4pUrTupOUd2E5T/O
-         U6eX0di3bcDtRIs3BuWvdCD++Z4pOHXG2V7/QjHQvO431WlrLRjiIwM9WemrClq0gXC7
-         +Xwgxx1lTobE+ZE2jpjTNbPkawHwTRWgGn7pR4xCufUfAXa+44eXTTKOtS99KaHF6/+R
-         X8NSkvmce0zWcaFSbInWCw47Cpi/bqA/D2uBq+Lg4zTA1l4KCZa5rfTWtLhA0NbTHWly
-         iswWc8J+xnA9MCX3kJHw267Gkq+v0ts2CP9PZtr0/CC3u0DB5j2rE/ahsAFpiporeeH8
-         D3iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p8lk+q4Y2CquVO9sqmu4dSc1gvfHGQ8MpCynAwi+U0M=;
-        b=pgFPQA19PADAXmXcezmlZIjd7PHU5rQEQC/5ibo+txAY7UCxdGG3xa5eTVSM80qduP
-         KZbdLBF0GYEY44w2d6t78EWAtxpRPO3E3NfzNBCxuZfu2sJvJNg+HANSIxnBf4/eM/eU
-         BXgUkYmxTazZBfRwHZZAMWkfZLRaf7v+ERLotUpUy6lxcEI7m0nZQqJjh6sVWEw2Q0FO
-         2lFny8AVzvGp3aR+SgxkOTnGcEVMy8kHRoFqSkK91XOAURD2t0eHkeCZ1IZTXYfhplwH
-         /kxC557AASJ0YpdWF6n79U0YqCieVA/Auj8qEC8RR2LBQpAEbN2fcTxXIGlA3aPSpdHX
-         UApA==
-X-Gm-Message-State: AOAM533Vl1HFJdx2X8OOK/YBpVnMmml9E/FWxGPBttU9ADQfReB2rvg2
-        cSCq19q0VLRhnd19WJmDL/ywEQ==
-X-Google-Smtp-Source: ABdhPJz1rGJhN4paD+q9e5k6x6AlTsEg1AdYORqZcrmrG1v2dBBnBwDrylK3vuq8tZdXbfsQe80dtQ==
-X-Received: by 2002:adf:f042:: with SMTP id t2mr38984084wro.180.1636899689743;
-        Sun, 14 Nov 2021 06:21:29 -0800 (PST)
-Received: from elver.google.com ([2a00:79e0:15:13:48e0:47e8:1868:a12e])
-        by smtp.gmail.com with ESMTPSA id 9sm14717028wry.0.2021.11.14.06.21.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Nov 2021 06:21:29 -0800 (PST)
-Date:   Sun, 14 Nov 2021 15:21:22 +0100
-From:   Marco Elver <elver@google.com>
-To:     Alexander Popov <alex.popov@linux.com>
+        Sun, 14 Nov 2021 16:22:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236359AbhKNVWG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 14 Nov 2021 16:22:06 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BA96360FD7;
+        Sun, 14 Nov 2021 21:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636924726;
+        bh=7CMV186gSCO8E+nCRakwqBJkxf3Tw9FjEUFL+OmYcQ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PZiW2izJn9VHflJM/TKCR7OC6vsHFzJiIfO2x1o7OqTZ4ZWLSm7psoE7fdbWQZ7ND
+         3Sjcbb8AqSCGssaf0cZctS+FP1h21SA/5kK74/2E5vPUNLX8UIbdfRF/3RGQf3ZUu3
+         ACGvuAdxTcrU00MYzu/Z4/ZSbCtWn1T1LmfK8GbcYoR0DQcR6gVfJZkqxSnXMKBGJC
+         mCscIb/Kjp1vU4yLUuq/SGVROQ8bfBeDreMtORsy6Tbm2w5LQ7AgXGyVnxjnJIO54q
+         uJ66dY9lqYiOchfZyyXgX0WIaXmYuc4c7YRnIZaeZvaZhOUZ1iGskMHm6YeQCA5boU
+         6y53muTwMwTlQ==
+Date:   Sun, 14 Nov 2021 14:18:41 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paul McKenney <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Laura Abbott <labbott@kernel.org>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Scull <ascull@google.com>,
-        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
-        Mathieu Chouquet-Stringer <me@mathieu.digital>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mike Rapoport <rppt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
-        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
-        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>, glider@google.com
-Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
-Message-ID: <YZEbYmzy64uai7Af@elver.google.com>
-References: <20211027233215.306111-1-alex.popov@linux.com>
- <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
- <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
- <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
- <CAHk-=wg+UMNYrR59Z31MhxMzdUEiZMQ1RF9jQvAb6HGBO5EyEA@mail.gmail.com>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH] kconfig: Add support for -Wimplicit-fallthrough
+Message-ID: <YZF9MY6rRLQwdTgM@archlinux-ax161>
+References: <20211114005725.GA27075@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg+UMNYrR59Z31MhxMzdUEiZMQ1RF9jQvAb6HGBO5EyEA@mail.gmail.com>
-User-Agent: Mutt/2.0.5 (2021-01-21)
+In-Reply-To: <20211114005725.GA27075@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Nov 13, 2021 at 11:58AM -0800, Linus Torvalds wrote:
-> On Sat, Nov 13, 2021 at 10:14 AM Alexander Popov <alex.popov@linux.com> wrote:
-[...]
-> Honestly, if the intent is to not have to parse the dmesg output, then
-> I think it would be much better to introduce a new /proc file to read
-> the kernel tainting state, and then some test manager process could be
-> able to poll() that file or something. Not sending a signal to random
-> targets, but have a much more explicit model.
+On Sat, Nov 13, 2021 at 06:57:25PM -0600, Gustavo A. R. Silva wrote:
+> Add Kconfig support for -Wimplicit-fallthrough for both GCC and Clang.
 > 
-> That said, I'm not convinced that "just read the kernel message log"
-> is in any way wrong either.
+> The compiler option is under configuration CC_IMPLICIT_FALLTHROUGH,
+> which is enabled by default.
+> 
+> Special thanks to Nathan Chancellor who fixed the Clang bug[1][2]. This
+> bugfix only appears in Clang 14.0.0, so older versions still contain
+> the bug and -Wimplicit-fallthrough won't be enabled for them, for now.
+> 
+> This concludes a long journey and now we are finally getting rid
+> of the unintentional fallthrough bug-class in the kernel, entirely. :)
+> 
+> [1] https://github.com/llvm/llvm-project/commit/9ed4a94d6451046a51ef393cd62f00710820a7e8
+> [2] https://bugs.llvm.org/show_bug.cgi?id=51094
+> 
+> Link: https://github.com/KSPP/linux/issues/115
+> Link: https://github.com/ClangBuiltLinux/linux/issues/236
+> Co-developed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Co-developed-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-We had this problem of "need to get errors/warnings that appear in the
-kernel log" without actually polling the kernel log all the time. Since
-5.12 there's the 'error_report' tracepoint for exactly this purpose [1].
+This appears to do the right thing with both clang-13 and clang-14.
 
-Right now it only generates events on KASAN and KFENCE reports, but we
-imagined it's easy enough to extend with more types. Like WARN, should
-the need arise (you'd have to add it if you decide to go down that
-route).
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-So you could implement a close-enough variant of the whole thing in
-userspace using what tracepoints give you by just monitoring the trace
-pipe. It'd be much easier to experiment with different policies as well.
+It feels a little odd to have this in Kconfig but if it works and gets
+the warning enabled, then so be it.
 
-[1] https://git.kernel.org/torvalds/c/9c0dee54eb91d48cca048bd7bd2c1f4a166e0252 
+> ---
+>  Makefile     | 6 +-----
+>  init/Kconfig | 5 +++++
+>  2 files changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 30c7c81d0437..f18a50daad00 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -786,7 +786,7 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
+>  KBUILD_CFLAGS += $(stackp-flags-y)
+>  
+>  KBUILD_CFLAGS-$(CONFIG_WERROR) += -Werror
+> -KBUILD_CFLAGS += $(KBUILD_CFLAGS-y)
+> +KBUILD_CFLAGS += $(KBUILD_CFLAGS-y) $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
+>  
+>  ifdef CONFIG_CC_IS_CLANG
+>  KBUILD_CPPFLAGS += -Qunused-arguments
+> @@ -798,10 +798,6 @@ KBUILD_CFLAGS += -Wno-gnu
+>  KBUILD_CFLAGS += -mno-global-merge
+>  else
+>  
+> -# Warn about unmarked fall-throughs in switch statement.
+> -# Disabled for clang while comment to attribute conversion happens and
+> -# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
+> -KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough=5,)
+>  # gcc inanely warns about local variables called 'main'
+>  KBUILD_CFLAGS += -Wno-main
+>  endif
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 11f8a845f259..b0582cd3e096 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -885,6 +885,11 @@ config ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+>  config CC_HAS_INT128
+>  	def_bool !$(cc-option,$(m64-flag) -D__SIZEOF_INT128__=0) && 64BIT
+>  
+> +config CC_IMPLICIT_FALLTHROUGH
+> +	string
+> +	default "-Wimplicit-fallthrough=5" if CC_IS_GCC
+> +	default "-Wimplicit-fallthrough" if CC_IS_CLANG && $(cc-option,-Wunreachable-code-fallthrough)
+> +
+>  #
+>  # For architectures that know their GCC __int128 support is sound
+>  #
+> -- 
+> 2.27.0
+> 
+> 
