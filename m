@@ -2,412 +2,236 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F36C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 18:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613E3C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 22:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31CF4632EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 18:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A09A6321B
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 22:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241772AbhKOSmx (ORCPT
+        id S236888AbhKOW7Y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Nov 2021 13:42:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242020AbhKOSkq (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Nov 2021 13:40:46 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5EE186328B;
-        Mon, 15 Nov 2021 18:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636999466;
-        bh=GXEzhh0w0izJ6tUmN8x7ZhPkbRJV0yZ8D+kRM9ENu8M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EXmrEzpdpzQ9r8eveQPXIRVJul5zcmJbxLkjldnkecT6zQH9Q6AWWnoD91cC+mxYD
-         ZvLFRaqKXLs+UgYVESbcnr+K28dLR6RXzezcToQ6GJU0CwLxBzfponvBMAOtzf0hks
-         kdY8hkQBoEIRQ/7uqRS2esmMUsMPjQMdrtr5wvWzb7gsM8nXtPp9A7rIpOUK8Wf3oI
-         hPMUX0vLAp0/fNb3TI7qp5mHPsEXg2OQKcPnTm8BSRt78xVoaFO+viCyObfXUZ1DIj
-         s4S/UMjVl3W/LhkF9TME9WSNPWbqGg4f7qgyRsYAGrCDodtwh0KAH6dVzPNmrrtPwe
-         MEi/ppl2WoqVg==
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-hardening@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Keith Packard <keithpac@amazon.com>,
-        thomas.preudhomme@celest.fr, adhemerval.zanella@linaro.org,
-        Qing Zhao <qing.zhao@oracle.com>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Kyrylo Tkachov <kyryo.tkachov@arm.com>, gcc-patches@gcc.gnu.org
-Subject: [PATCH v5 1/1] [ARM] Add support for TLS register based stack protector canary access
-Date:   Mon, 15 Nov 2021 19:04:10 +0100
-Message-Id: <20211115180410.5272-2-ardb@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211115180410.5272-1-ardb@kernel.org>
-References: <20211115180410.5272-1-ardb@kernel.org>
+        Mon, 15 Nov 2021 17:59:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347515AbhKOW4f (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 15 Nov 2021 17:56:35 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F23CC0337CA
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Nov 2021 14:06:43 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id p17so15770483pgj.2
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Nov 2021 14:06:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+75pOgzRSIiee94ABsrf5glhvGlXlViH0+WT5j4L0aw=;
+        b=dS8Un6tSdNnk9Z4kmfDP4XsUZOMSVFQw3q3GTGh5sr8XmLWMkM07MuC1+dT12/ptHP
+         8r4FauaE6OQMmNCZkBtn866ZhTNqnOWvSfGwr5K3/jo8deQAcP6hs392bnEV+AReAEVH
+         V9uj6x0kL07NJEinAldy4HwU/0bSkPFxwZmfQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+75pOgzRSIiee94ABsrf5glhvGlXlViH0+WT5j4L0aw=;
+        b=iDQituwqoI6oYZNTU/31DhscRMgDjBxLfAnpnrDxdy2C9jnvfcf2FbYHCrnrRC7cdX
+         01rqKyb59EJwDcZpi+at4pJnO1RUFOj0YsSiRY0Kh4ObwgZtTbYysgF9sPsg9L1mwnnk
+         0Mned3LTn3TjwXQG+OTCrSGh5rPTIojgmBKxw4XayXa62uxAGg5ygpoXISUfvmV8GnLP
+         lH3yV/VoWVloIhO+6q0/7+hG7579MEhIQTTsUiFk6+JRR9kJOjaTcvzZ5ZdNRzRTej/k
+         IIq1gqSDJGfRbqFbbpN6NhPfijwbxJkD49gYZdey9jEL55yKsDPe98D1tuvN3e7qXOi0
+         fHiw==
+X-Gm-Message-State: AOAM533nPnZDGi10dfzr/O39u/i7ja9x9rzIvgzHwcvlPGl+Un9F2GVW
+        AdMT6MPp1yfRuH8F66ZvBZSqVQ==
+X-Google-Smtp-Source: ABdhPJxbI3NOtgyO8DBjqkXVe/gYAMuaxOIkr7hH2fyzLDr8HfWh0griJts14SzHJ0idri2HBcFqDg==
+X-Received: by 2002:aa7:8151:0:b0:480:9d40:8e38 with SMTP id d17-20020aa78151000000b004809d408e38mr35382844pfn.72.1637014002929;
+        Mon, 15 Nov 2021 14:06:42 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id rm10sm277789pjb.29.2021.11.15.14.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Nov 2021 14:06:42 -0800 (PST)
+Date:   Mon, 15 Nov 2021 14:06:41 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul McKenney <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Laura Abbott <labbott@kernel.org>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Scull <ascull@google.com>,
+        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
+        Mathieu Chouquet-Stringer <me@mathieu.digital>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mike Rapoport <rppt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-hardening@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
+        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
+        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
+Message-ID: <202111151116.933184F716@keescook>
+References: <20211027233215.306111-1-alex.popov@linux.com>
+ <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
+ <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
+ <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
+ <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
+ <20211115110649.4f9cb390@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211115110649.4f9cb390@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add support for accessing the stack canary value via the TLS register,
-so that multiple threads running in the same address space can use
-distinct canary values. This is intended for the Linux kernel running in
-SMP mode, where processes entering the kernel are essentially threads
-running the same program concurrently: using a global variable for the
-canary in that context is problematic because it can never be rotated,
-and so the OS is forced to use the same value as long as it remains up.
+On Mon, Nov 15, 2021 at 11:06:49AM -0500, Steven Rostedt wrote:
+> On Mon, 15 Nov 2021 14:59:57 +0100
+> Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> 
+> > 1. Allow a reasonably configured kernel to boot and run with
+> > panic_on_warn set. Warnings should only be raised when something is
+> > not configured as the developers expect it or the kernel is put into a
+> > state that generally is _unexpected_ and has been exposed little to
+> > the critical thought of the developer, to testing efforts and use in
+> > other systems in the wild. Warnings should not be used for something
+> > informative, which still allows the kernel to continue running in a
+> > proper way in a generally expected environment. Up to my knowledge,
+> > there are some kernels in production that run with panic_on_warn; so,
+> > IMHO, this requirement is generally accepted (we might of course
+> 
+> To me, WARN*() is the same as BUG*(). If it gets hit, it's a bug in the
+> kernel and needs to be fixed. I have several WARN*() calls in my code, and
+> it's all because the algorithms used is expected to prevent the condition
+> in the warning from happening. If the warning triggers, it means either that
+> the algorithm is wrong or my assumption about the algorithm is wrong. In
+> either case, the kernel needs to be updated. All my tests fail if a WARN*()
+> gets hit (anywhere in the kernel, not just my own).
+> 
+> After reading all the replies and thinking about this more, I find the
+> pkill_on_warning actually worse than not doing anything. If you are
+> concerned about exploits from warnings, the only real solution is a
+> panic_on_warning. Yes, it brings down the system, but really, it has to be
+> brought down anyway, because it is in need of a kernel update.
 
-Using the TLS register to index the stack canary helps with this, as it
-allows each CPU to context switch the TLS register along with the rest
-of the process, permitting each process to use its own value for the
-stack canary.
+Hmm, yes. What it originally boiled down to, which is why Linus first
+objected to BUG(), was that we don't know what other parts of the system
+have been disrupted. The best example is just that of locking: if we
+BUG() or do_exit() in the middle of holding a lock, we'll wreck whatever
+subsystem that was attached to. Without a deterministic system state
+unwinder, there really isn't a "safe" way to just stop a kernel thread.
 
-2021-11-15 Ard Biesheuvel <ardb@kernel.org>
+With this pkill_on_warn, we avoid the BUG problem (since the thread of
+execution continues and stops at an 'expected' place: the signal
+handler).
 
-	* config/arm/arm-opts.h (enum stack_protector_guard): New
-	* config/arm/arm-protos.h (arm_stack_protect_tls_canary_mem):
-	New
-	* config/arm/arm.c (TARGET_STACK_PROTECT_GUARD): Define
-	(arm_option_override_internal): Handle and put in error checks
-	for stack protector guard options.
-	(arm_option_reconfigure_globals): Likewise
-	(arm_stack_protect_tls_canary_mem): New
-	(arm_stack_protect_guard): New
-	* config/arm/arm.md (stack_protect_set): New
-	(stack_protect_set_tls): Likewise
-	(stack_protect_test): Likewise
-	(stack_protect_test_tls): Likewise
-	(reload_tp_hard): Likewise
-	* config/arm/arm.opt (-mstack-protector-guard): New
-	(-mstack-protector-guard-offset): New.
-	* doc/invoke.texi: Document new options
+However, now we have the newer objection from Linus, which is one of
+attribution: the WARN might be hit during an "unrelated" thread of
+execution and "current" gets blamed, etc. And beyond that, if we take
+down a portion of userspace, what in userspace may be destabilized? In
+theory, we get a case where any required daemons would be restarted by
+init, but that's not "known".
 
-gcc/testsuite/ChangeLog:
+The safest version of this I can think of is for processes to opt into
+this mitigation. That would also cover the "special cases" we've seen
+exposed too. i.e. init and kthreads would not opt in.
 
-	* gcc.target/arm/stack-protector-7.c: New test.
-	* gcc.target/arm/stack-protector-8.c: New test.
+However, that's a lot to implement when Marco's tracing suggestion might
+be sufficient and policy could be entirely implemented in userspace. It
+could be as simple as this (totally untested):
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- gcc/config/arm/arm-opts.h                        |  6 ++
- gcc/config/arm/arm-protos.h                      |  2 +
- gcc/config/arm/arm.c                             | 55 +++++++++++++++
- gcc/config/arm/arm.md                            | 71 +++++++++++++++++++-
- gcc/config/arm/arm.opt                           | 22 ++++++
- gcc/doc/invoke.texi                              | 11 +++
- gcc/testsuite/gcc.target/arm/stack-protector-7.c | 10 +++
- gcc/testsuite/gcc.target/arm/stack-protector-8.c |  5 ++
- 8 files changed, 180 insertions(+), 2 deletions(-)
 
-diff --git a/gcc/config/arm/arm-opts.h b/gcc/config/arm/arm-opts.h
-index 5c4b62f404f7..581ba3c4fbbb 100644
---- a/gcc/config/arm/arm-opts.h
-+++ b/gcc/config/arm/arm-opts.h
-@@ -69,4 +69,10 @@ enum arm_tls_type {
-   TLS_GNU,
-   TLS_GNU2
+diff --git a/include/trace/events/error_report.h b/include/trace/events/error_report.h
+index 96f64bf218b2..129d22eb8b6e 100644
+--- a/include/trace/events/error_report.h
++++ b/include/trace/events/error_report.h
+@@ -16,6 +16,8 @@
+ #define __ERROR_REPORT_DECLARE_TRACE_ENUMS_ONCE_ONLY
+ 
+ enum error_detector {
++	ERROR_DETECTOR_WARN,
++	ERROR_DETECTOR_BUG,
+ 	ERROR_DETECTOR_KFENCE,
+ 	ERROR_DETECTOR_KASAN
  };
-+
-+/* Where to get the canary for the stack protector.  */
-+enum stack_protector_guard {
-+  SSP_TLSREG,                  /* per-thread canary in TLS register */
-+  SSP_GLOBAL                   /* global canary */
-+};
- #endif
-diff --git a/gcc/config/arm/arm-protos.h b/gcc/config/arm/arm-protos.h
-index 9b1f61394ad7..d8d605920c97 100644
---- a/gcc/config/arm/arm-protos.h
-+++ b/gcc/config/arm/arm-protos.h
-@@ -195,6 +195,8 @@ extern void arm_split_atomic_op (enum rtx_code, rtx, rtx, rtx, rtx, rtx, rtx);
- extern rtx arm_load_tp (rtx);
- extern bool arm_coproc_builtin_available (enum unspecv);
- extern bool arm_coproc_ldc_stc_legitimate_address (rtx);
-+extern rtx arm_stack_protect_tls_canary_mem (bool);
-+
+@@ -23,6 +25,8 @@ enum error_detector {
+ #endif /* __ERROR_REPORT_DECLARE_TRACE_ENUMS_ONCE_ONLY */
  
- #if defined TREE_CODE
- extern void arm_init_cumulative_args (CUMULATIVE_ARGS *, tree, rtx, tree);
-diff --git a/gcc/config/arm/arm.c b/gcc/config/arm/arm.c
-index a5b403eb3e49..e5077348ce07 100644
---- a/gcc/config/arm/arm.c
-+++ b/gcc/config/arm/arm.c
-@@ -829,6 +829,9 @@ static const struct attribute_spec arm_attribute_table[] =
+ #define error_detector_list	\
++	EM(ERROR_DETECTOR_WARN, "warn")	\
++	EM(ERROR_DETECTOR_BUG, "bug")	\
+ 	EM(ERROR_DETECTOR_KFENCE, "kfence")	\
+ 	EMe(ERROR_DETECTOR_KASAN, "kasan")
+ /* Always end the list with an EMe. */
+diff --git a/lib/bug.c b/lib/bug.c
+index 45a0584f6541..201b4070bbbc 100644
+--- a/lib/bug.c
++++ b/lib/bug.c
+@@ -48,6 +48,7 @@
+ #include <linux/sched.h>
+ #include <linux/rculist.h>
+ #include <linux/ftrace.h>
++#include <trace/events/error_report.h>
  
- #undef TARGET_MD_ASM_ADJUST
- #define TARGET_MD_ASM_ADJUST arm_md_asm_adjust
-+
-+#undef TARGET_STACK_PROTECT_GUARD
-+#define TARGET_STACK_PROTECT_GUARD arm_stack_protect_guard
- 
- /* Obstack for minipool constant handling.  */
- static struct obstack minipool_obstack;
-@@ -3176,6 +3179,26 @@ arm_option_override_internal (struct gcc_options *opts,
-   if (TARGET_THUMB2_P (opts->x_target_flags))
-     opts->x_inline_asm_unified = true;
+ extern struct bug_entry __start___bug_table[], __stop___bug_table[];
  
-+  if (arm_stack_protector_guard == SSP_GLOBAL
-+      && opts->x_arm_stack_protector_guard_offset_str)
-+    {
-+      error ("incompatible options %'-mstack-protector-guard=global%' and"
-+	     "%'-mstack-protector-guard-offset=%qs%'",
-+	     arm_stack_protector_guard_offset_str);
-+    }
-+
-+  if (opts->x_arm_stack_protector_guard_offset_str)
-+    {
-+      char *end;
-+      const char *str = arm_stack_protector_guard_offset_str;
-+      errno = 0;
-+      long offs = strtol (arm_stack_protector_guard_offset_str, &end, 0);
-+      if (!*str || *end || errno)
-+	error ("%qs is not a valid offset in %qs", str,
-+	       "-mstack-protector-guard-offset=");
-+      arm_stack_protector_guard_offset = offs;
-+    }
-+
- #ifdef SUBTARGET_OVERRIDE_INTERNAL_OPTIONS
-   SUBTARGET_OVERRIDE_INTERNAL_OPTIONS;
- #endif
-@@ -3843,6 +3866,9 @@ arm_option_reconfigure_globals (void)
-       else
- 	target_thread_pointer = TP_SOFT;
-     }
-+
-+  if (!TARGET_HARD_TP && arm_stack_protector_guard == SSP_TLSREG)
-+    error("%'-mstack-protector-guard=tls%' needs a hardware TLS register");
+@@ -198,6 +199,7 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+ 		/* this is a WARN_ON rather than BUG/BUG_ON */
+ 		__warn(file, line, (void *)bugaddr, BUG_GET_TAINT(bug), regs,
+ 		       NULL);
++		trace_error_report_end(ERROR_DETECTOR_WARN, bugaddr);
+ 		return BUG_TRAP_TYPE_WARN;
+ 	}
+ 
+@@ -206,6 +208,7 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+ 	else
+ 		pr_crit("Kernel BUG at %pB [verbose debug info unavailable]\n",
+ 			(void *)bugaddr);
++	trace_error_report_end(ERROR_DETECTOR_BUG, bugaddr);
+ 
+ 	return BUG_TRAP_TYPE_BUG;
  }
- 
- /* Perform some validation between the desired architecture and the rest of the
-@@ -8108,6 +8134,23 @@ legitimize_pic_address (rtx orig, machine_mode mode, rtx reg, rtx pic_reg,
- }
- 
- 
-+/* Generate insns that produce the address of the stack canary */
-+rtx
-+arm_stack_protect_tls_canary_mem (bool reload)
-+{
-+  rtx tp = gen_reg_rtx (SImode);
-+  if (reload)
-+    emit_insn (gen_reload_tp_hard (tp));
-+  else
-+    emit_insn (gen_load_tp_hard (tp));
-+
-+  rtx reg = gen_reg_rtx (SImode);
-+  rtx offset = GEN_INT (arm_stack_protector_guard_offset);
-+  emit_set_insn (reg, gen_rtx_PLUS (SImode, tp, offset));
-+  return gen_rtx_MEM (SImode, reg);
-+}
-+
-+
- /* Whether a register is callee saved or not.  This is necessary because high
-    registers are marked as caller saved when optimizing for size on Thumb-1
-    targets despite being callee saved in order to avoid using them.  */
-@@ -34075,6 +34118,18 @@ arm_run_selftests (void)
- #define TARGET_RUN_TARGET_SELFTESTS selftest::arm_run_selftests
- #endif /* CHECKING_P */
- 
-+/* Implement TARGET_STACK_PROTECT_GUARD. In case of a
-+   global variable based guard use the default else
-+   return a null tree.  */
-+static tree
-+arm_stack_protect_guard (void)
-+{
-+  if (arm_stack_protector_guard == SSP_GLOBAL)
-+    return default_stack_protect_guard ();
-+
-+  return NULL_TREE;
-+}
-+
- /* Worker function for TARGET_MD_ASM_ADJUST, while in thumb1 mode.
-    Unlike the arm version, we do NOT implement asm flag outputs.  */
- 
-diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
-index 4adc976b8b67..45a54d63f5b3 100644
---- a/gcc/config/arm/arm.md
-+++ b/gcc/config/arm/arm.md
-@@ -9183,7 +9183,7 @@ (define_expand "stack_protect_combined_set"
- 		      UNSPEC_SP_SET))
-       (clobber (match_scratch:SI 2 ""))
-       (clobber (match_scratch:SI 3 ""))])]
--  ""
-+  "arm_stack_protector_guard == SSP_GLOBAL"
-   ""
- )
- 
-@@ -9267,7 +9267,7 @@ (define_expand "stack_protect_combined_test"
-       (clobber (match_scratch:SI 3 ""))
-       (clobber (match_scratch:SI 4 ""))
-       (clobber (reg:CC CC_REGNUM))])]
--  ""
-+  "arm_stack_protector_guard == SSP_GLOBAL"
-   ""
- )
- 
-@@ -9361,6 +9361,64 @@ (define_insn "arm_stack_protect_test_insn"
-    (set_attr "arch" "t,32")]
- )
- 
-+(define_expand "stack_protect_set"
-+  [(match_operand:SI 0 "memory_operand")
-+   (match_operand:SI 1 "memory_operand")]
-+  "arm_stack_protector_guard == SSP_TLSREG"
-+  "
-+{
-+  operands[1] = arm_stack_protect_tls_canary_mem (false /* reload */);
-+  emit_insn (gen_stack_protect_set_tls (operands[0], operands[1]));
-+  DONE;
-+}"
-+)
-+
-+;; DO NOT SPLIT THIS PATTERN.  It is important for security reasons that the
-+;; canary value does not live beyond the life of this sequence.
-+(define_insn "stack_protect_set_tls"
-+  [(set (match_operand:SI 0 "memory_operand" "=m")
-+       (unspec:SI [(match_operand:SI 1 "memory_operand" "m")]
-+        UNSPEC_SP_SET))
-+   (set (match_scratch:SI 2 "=&r") (const_int 0))]
-+  ""
-+  "ldr\\t%2, %1\;str\\t%2, %0\;mov\t%2, #0"
-+  [(set_attr "length" "12")
-+   (set_attr "conds" "unconditional")
-+   (set_attr "type" "multiple")]
-+)
-+
-+(define_expand "stack_protect_test"
-+  [(match_operand:SI 0 "memory_operand")
-+   (match_operand:SI 1 "memory_operand")
-+   (match_operand:SI 2)]
-+  "arm_stack_protector_guard == SSP_TLSREG"
-+  "
-+{
-+  operands[1] = arm_stack_protect_tls_canary_mem (true /* reload */);
-+  emit_insn (gen_stack_protect_test_tls (operands[0], operands[1]));
-+
-+  rtx cc_reg = gen_rtx_REG (CC_Zmode, CC_REGNUM);
-+  rtx eq = gen_rtx_EQ (CC_Zmode, cc_reg, const0_rtx);
-+  emit_jump_insn (gen_arm_cond_branch (operands[2], eq, cc_reg));
-+  DONE;
-+}"
-+)
-+
-+(define_insn "stack_protect_test_tls"
-+  [(set (reg:CC_Z CC_REGNUM)
-+	(compare:CC_Z (unspec:SI [(match_operand:SI 0 "memory_operand" "m")
-+				  (match_operand:SI 1 "memory_operand" "m")]
-+				 UNSPEC_SP_TEST)
-+		      (const_int 0)))
-+   (clobber (match_scratch:SI 2 "=&r"))
-+   (clobber (match_scratch:SI 3 "=&r"))]
-+  ""
-+  "ldr\t%2, %0\;ldr\t%3, %1\;eors\t%2, %3, %2\;mov\t%3, #0"
-+  [(set_attr "length" "16")
-+   (set_attr "conds" "set")
-+   (set_attr "type" "multiple")]
-+)
-+
- (define_expand "casesi"
-   [(match_operand:SI 0 "s_register_operand")	; index to jump on
-    (match_operand:SI 1 "const_int_operand")	; lower bound
-@@ -12133,6 +12191,15 @@ (define_insn "load_tp_hard"
-    (set_attr "type" "mrs")]
- )
- 
-+;; Used by the TLS register based stack protector
-+(define_insn "reload_tp_hard"
-+  [(set (match_operand:SI 0 "register_operand" "=r")
-+	(unspec_volatile:SI [(const_int 0)] VUNSPEC_MRC))]
-+  "TARGET_HARD_TP"
-+  "mrc\\tp15, 0, %0, c13, c0, 3\\t@ reload_tp_hard"
-+  [(set_attr "type" "mrs")]
-+)
-+
- ;; Doesn't clobber R1-R3.  Must use r0 for the first operand.
- (define_insn "load_tp_soft_fdpic"
-   [(set (reg:SI 0) (unspec:SI [(const_int 0)] UNSPEC_TLS))
-diff --git a/gcc/config/arm/arm.opt b/gcc/config/arm/arm.opt
-index a7677eeb45c8..4b3e17bc319c 100644
---- a/gcc/config/arm/arm.opt
-+++ b/gcc/config/arm/arm.opt
-@@ -311,3 +311,25 @@ Generate code which uses the core registers only (r0-r14).
- mfdpic
- Target Mask(FDPIC)
- Enable Function Descriptor PIC mode.
-+
-+mstack-protector-guard=
-+Target RejectNegative Joined Enum(stack_protector_guard) Var(arm_stack_protector_guard) Init(SSP_GLOBAL)
-+Use given stack-protector guard.
-+
-+Enum
-+Name(stack_protector_guard) Type(enum stack_protector_guard)
-+Valid arguments to -mstack-protector-guard=:
-+
-+EnumValue
-+Enum(stack_protector_guard) String(tls) Value(SSP_TLSREG)
-+
-+EnumValue
-+Enum(stack_protector_guard) String(global) Value(SSP_GLOBAL)
-+
-+mstack-protector-guard-offset=
-+Target Joined RejectNegative String Var(arm_stack_protector_guard_offset_str)
-+Use an immediate to offset from the TLS register. This option is for use with
-+fstack-protector-guard=tls and not for use in user-land code.
-+
-+TargetVariable
-+long arm_stack_protector_guard_offset = 0
-diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index 6070288856c0..13bebbcbf0fb 100644
---- a/gcc/doc/invoke.texi
-+++ b/gcc/doc/invoke.texi
-@@ -816,6 +816,7 @@ Objective-C and Objective-C++ Dialects}.
- -mpure-code @gol
- -mcmse @gol
- -mfix-cmse-cve-2021-35465 @gol
-+-mstack-protector-guard=@var{guard} -mstack-protector-guard-offset=@var{offset} @gol
- -mfdpic}
- 
- @emph{AVR Options}
-@@ -21099,6 +21100,16 @@ enabled by default when the option @option{-mcpu=} is used with
- @code{cortex-m33}, @code{cortex-m35p} or @code{cortex-m55}.  The option
- @option{-mno-fix-cmse-cve-2021-35465} can be used to disable the mitigation.
- 
-+@item -mstack-protector-guard=@var{guard}
-+@itemx -mstack-protector-guard-offset=@var{offset}
-+@opindex mstack-protector-guard
-+@opindex mstack-protector-guard-offset
-+Generate stack protection code using canary at @var{guard}.  Supported
-+locations are @samp{global} for a global canary or @samp{tls} for a
-+canary accessible via the TLS register. The option
-+@option{-mstack-protector-guard-offset=} is for use with
-+@option{-fstack-protector-guard=tls} and not for use in user-land code.
-+
- @item -mfdpic
- @itemx -mno-fdpic
- @opindex mfdpic
-diff --git a/gcc/testsuite/gcc.target/arm/stack-protector-7.c b/gcc/testsuite/gcc.target/arm/stack-protector-7.c
-new file mode 100644
-index 000000000000..874648060d8d
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/arm/stack-protector-7.c
-@@ -0,0 +1,10 @@
-+/* { dg-do compile } */
-+/* { dg-options "-march=armv7-a -mfpu=vfp -fstack-protector-all -Os -mstack-protector-guard=tls -mstack-protector-guard-offset=1296 -mtp=cp15" } */
-+
-+#include "stack-protector-5.c"
-+
-+/* See the comment in stack-protector-5.c.  */
-+/* { dg-final { scan-assembler-times {\tstr\t} 1 } } */
-+/* Expect two TLS register accesses and two occurrences of the offset */
-+/* { dg-final { scan-assembler-times {\tmrc\t} 2 } } */
-+/* { dg-final { scan-assembler-times {1296} 2 } } */
-diff --git a/gcc/testsuite/gcc.target/arm/stack-protector-8.c b/gcc/testsuite/gcc.target/arm/stack-protector-8.c
-new file mode 100644
-index 000000000000..bcb2f6b82bdf
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/arm/stack-protector-8.c
-@@ -0,0 +1,5 @@
-+/* { dg-do compile } */
-+/* { dg-error "needs a hardware TLS register" "missing error when using TLS stack protector without hardware TLS register" { target *-*-* } 0 } */
-+/* { dg-options "-fstack-protector-all -Os -mstack-protector-guard=tls -mtp=soft" } */
-+
-+int foo;
--- 
-2.30.2
 
+
+Marco, is this the full version of monitoring this from the userspace
+side?
+
+	perf record -e error_report:error_report_end
+
+-- 
+Kees Cook
