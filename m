@@ -2,41 +2,41 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5919AC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 01:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EC8C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 02:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E28E61077
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 01:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E646B6112E
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 02:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230139AbhKOBLM (ORCPT
+        id S229544AbhKOCFw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 14 Nov 2021 20:11:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50124 "EHLO mail.kernel.org"
+        Sun, 14 Nov 2021 21:05:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229627AbhKOBLF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 14 Nov 2021 20:11:05 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1893261077;
-        Mon, 15 Nov 2021 01:08:10 +0000 (UTC)
+        id S229453AbhKOCFv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 14 Nov 2021 21:05:51 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EC25F60EE4;
+        Mon, 15 Nov 2021 02:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636938490;
-        bh=SGPyHKvcUXM3KqJN65/6F5Fnr0nYxnSm265J17My0h4=;
+        s=k20201202; t=1636941776;
+        bh=gamnwl3/BbdVhfTdUJRNc/R6U6SsPm6TpC/P8BwAaT8=;
         h=Date:From:To:Cc:Subject:From;
-        b=WaM2gn8fLJIAC5QoFSn2e/3WjK44EB1qpG9ezoXY7S1KMQFWByj6L0Wq1WAWsB3fQ
-         ADxVQsO/Rt3s06lM3si0XFYOStbvcP7nJfByP8PB868WxlYdz4jfTsOSiI8+UwASbH
-         jkDu6aBa1bLDfc9npYHMYDRD6bEamyMPxf+un+WbEKip4bToiC63BMcx+UYRZp8TI2
-         QjkMKH1G8yCGpMHpvohcgyCEEqqlLnEjGZ+CKctNGvB0fr53HyCfYnIfmv4WNOnz+M
-         sN3XVNGthY9/ePgxeNXFDdpK91QpduTzQnR0jE4AfsWGXuuUO9qbwpcKRb9fjYTgIu
-         VDc0N8G0j2pzA==
-Date:   Sun, 14 Nov 2021 19:13:13 -0600
+        b=igNZKwkW8QAeWY0BTmmmPenXtgZKFxjMhd1ehoHeGzfaKSsVGwzlv3/a23eqW+6Nn
+         BguURcm/pqD2Ho3dVHeeGrRwMFmnK6AL/hNTJUJMK5OVNsXvHGCZkBGZ+vUs1yYGDK
+         EYXiUIC4aThzNIl2omodn35S2zSlemf99cQME4LfzKm3ho1mAz8AOBbN7BmSS7XmWN
+         jvbH+1I8MhOFBBANIqBq4TCfKZEOe1mStm3RsnhPpu6OoTDhLZA+bM+OlKUdM9BVOw
+         4VTGDeJFbQvyqQyalLj+l+e4pLlpvVb+v9gcNDAhQ6rZMybBsQd1QUflYOVy0VGt4Z
+         Dvc2ZvGzJ+ovg==
+Date:   Sun, 14 Nov 2021 20:07:58 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] kbuild: Fix -Wimplicit-fallthrough=5 error for GCC 5.x and
- 6.x
-Message-ID: <20211115011313.GA43897@embeddedor>
+        linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: [PATCH v2] kbuild: Fix -Wimplicit-fallthrough=5 error for GCC 5.x
+ and 6.x
+Message-ID: <20211115020758.GA45022@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -53,11 +53,15 @@ did you mean '-Wno-fallthrough'?
 
 Fix this by moving -Wimplicit-fallthrough=5 under cc-option.
 
+Fixes: dee2b702bcf0 ("kconfig: Add support for -Wimplicit-fallthrough")
 Reported-by: Nathan Chancellor <nathan@kernel.org>
 Co-developed-by: Nathan Chancellor <nathan@kernel.org>
 Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
+Changes in v2:
+ - Add Fixes tag.
+
  init/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
