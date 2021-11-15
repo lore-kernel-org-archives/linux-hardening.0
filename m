@@ -2,236 +2,217 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613E3C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 22:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6F6C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 23:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A09A6321B
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 22:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7782B6187F
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 Nov 2021 23:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236888AbhKOW7Y (ORCPT
+        id S232213AbhKOXQi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Nov 2021 17:59:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54940 "EHLO
+        Mon, 15 Nov 2021 18:16:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347515AbhKOW4f (ORCPT
+        with ESMTP id S1350095AbhKOXOb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Nov 2021 17:56:35 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F23CC0337CA
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Nov 2021 14:06:43 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id p17so15770483pgj.2
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Nov 2021 14:06:43 -0800 (PST)
+        Mon, 15 Nov 2021 18:14:31 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F055AC04EFB7
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Nov 2021 14:16:16 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id q12so4100058pgh.5
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Nov 2021 14:16:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+75pOgzRSIiee94ABsrf5glhvGlXlViH0+WT5j4L0aw=;
-        b=dS8Un6tSdNnk9Z4kmfDP4XsUZOMSVFQw3q3GTGh5sr8XmLWMkM07MuC1+dT12/ptHP
-         8r4FauaE6OQMmNCZkBtn866ZhTNqnOWvSfGwr5K3/jo8deQAcP6hs392bnEV+AReAEVH
-         V9uj6x0kL07NJEinAldy4HwU/0bSkPFxwZmfQ=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q5Q7mjWxHvomA4joFyHp8gbW0OzP0GYKgcSZNkWKQbw=;
+        b=GfFI7XvVt8YFksskvqmrQ3qPuEuVeXEYjSmuZkGA5xMMXxFy564PrMeBNc7Y8WH5PL
+         yt5GdFT0FW445phxmH69+fTSi0opmzSp0MKM1Su7LpWaODpHqJOvO/AjHDC3wXOmrXDe
+         2wLMSbl2QDTBiMGmIPaGGEJJB0n0X5+1Qk2gI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+75pOgzRSIiee94ABsrf5glhvGlXlViH0+WT5j4L0aw=;
-        b=iDQituwqoI6oYZNTU/31DhscRMgDjBxLfAnpnrDxdy2C9jnvfcf2FbYHCrnrRC7cdX
-         01rqKyb59EJwDcZpi+at4pJnO1RUFOj0YsSiRY0Kh4ObwgZtTbYysgF9sPsg9L1mwnnk
-         0Mned3LTn3TjwXQG+OTCrSGh5rPTIojgmBKxw4XayXa62uxAGg5ygpoXISUfvmV8GnLP
-         lH3yV/VoWVloIhO+6q0/7+hG7579MEhIQTTsUiFk6+JRR9kJOjaTcvzZ5ZdNRzRTej/k
-         IIq1gqSDJGfRbqFbbpN6NhPfijwbxJkD49gYZdey9jEL55yKsDPe98D1tuvN3e7qXOi0
-         fHiw==
-X-Gm-Message-State: AOAM533nPnZDGi10dfzr/O39u/i7ja9x9rzIvgzHwcvlPGl+Un9F2GVW
-        AdMT6MPp1yfRuH8F66ZvBZSqVQ==
-X-Google-Smtp-Source: ABdhPJxbI3NOtgyO8DBjqkXVe/gYAMuaxOIkr7hH2fyzLDr8HfWh0griJts14SzHJ0idri2HBcFqDg==
-X-Received: by 2002:aa7:8151:0:b0:480:9d40:8e38 with SMTP id d17-20020aa78151000000b004809d408e38mr35382844pfn.72.1637014002929;
-        Mon, 15 Nov 2021 14:06:42 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q5Q7mjWxHvomA4joFyHp8gbW0OzP0GYKgcSZNkWKQbw=;
+        b=8FAhYpjC7JFgzZz4sbthYjTKs1SPGeKlQfEz6XFeXiuGw8SAQwYB7bn4RTjFRMf8Vr
+         GKf8j0r1iajAdj96mxhc08m8YicMhmeJHFgT04oDFITpbn+P+clzRsvCXnLEqP3ZUMkQ
+         RsfY93tnBEPtZ36v7TPqoWNuEVz/idWLqr91ZHGL4LRpLvBwPToXHW2uMlbm2LCb7huX
+         A84Dy71aSVveVmKYLTPwzvAYqg3A8z6iQ1AZE3lV6DVUNAaIZM2Aj23aZ9ZLZZX9T2gV
+         Z//+R0S/7Rgk+O7FZf1GDHXGLU8oHkU24jRWUtBf30PaPJ2o/70yTO37bl8wkGbd5Ka2
+         8HDA==
+X-Gm-Message-State: AOAM533w+ILxWl+ESmzlz0r4pVEDYTX2H0kdC6e8LkI0xATEo/KggQla
+        G0KiV9FRj6sPS8zIMoWf2TpiSw==
+X-Google-Smtp-Source: ABdhPJz3d1Fm6DVmJXDnQcSZ6XVqy1YGkg+bK+EhRM29LMp3+iWkEpRfouWPgP5TqiLJ0sYBVy/rdA==
+X-Received: by 2002:a63:1d13:: with SMTP id d19mr1556417pgd.383.1637014576434;
+        Mon, 15 Nov 2021 14:16:16 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id rm10sm277789pjb.29.2021.11.15.14.06.42
+        by smtp.gmail.com with ESMTPSA id oc10sm293770pjb.26.2021.11.15.14.16.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Nov 2021 14:06:42 -0800 (PST)
-Date:   Mon, 15 Nov 2021 14:06:41 -0800
+        Mon, 15 Nov 2021 14:16:16 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paul McKenney <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Laura Abbott <labbott@kernel.org>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Scull <ascull@google.com>,
-        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
-        Mathieu Chouquet-Stringer <me@mathieu.digital>,
+To:     Saeed Mahameed <saeedm@nvidia.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mike Rapoport <rppt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-hardening@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
-        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
-        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
-Message-ID: <202111151116.933184F716@keescook>
-References: <20211027233215.306111-1-alex.popov@linux.com>
- <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
- <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
- <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
- <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
- <20211115110649.4f9cb390@gandalf.local.home>
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] net/mlx5e: Avoid field-overflowing memcpy()
+Date:   Mon, 15 Nov 2021 14:16:13 -0800
+Message-Id: <20211115221613.2791637-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211115110649.4f9cb390@gandalf.local.home>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5948; h=from:subject; bh=0WIZ0LaG1CrIgiauMUryZqkW+d9Y9QkDjTEtreWu41w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhktwsH+KBpNKg9y8K0YobbeqSLF6d2fuY7VTbl+5Z Uh4uM5yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZLcLAAKCRCJcvTf3G3AJmobD/ 4yvXZ4YCp0KjHJMvrX51CQUEcJK+sRXEh/r1W+abkDL4ueQ+6QV3vWeVSrhqJESh+XpSxMLwszT+IF xrIH7gRb+kRPp3AXQaL8Eh4rC3NpFmtrhyo5tKR1FTkRViKY1ziXYvytN3tnVhL+btoLMt69UWKA4M rH0wA3BuMNWUIK1yxE7SHdVTs9H0FZ1M9qPaWt9a+uq6DLPTP3iJUKRM12850xYCvVzdFbbf7mIg+m pXUDLunfMEj2Vc3jg5LwpL/ow9rH2Q+9RU9Nx0hiUlNfQA+4m75yhlsDP81nmQv9aLkoHTuSvowmGT dGJOEUZep0TZp09tQJTgrb+6rJNPIQM5KD2uj/+6ks2FeGu1ADL6WQIlRJpKGRhZZFwJW9lDx4BuIk kK9RfAVMz9bw0QJSeX8iq7Wmx5cro599decAtm8SwF0Pku/UhCALalcV5AlXHgINCFYldUYDNTJ+KY RdLLm3HGfN22x6hoP7AqbCJvIYEsmf2qlBuzHH6vSD8PjHelqMKzw3F2d470UfxUDtlzI5lMNMsAj3 GYLomDbvaxl11/Z2MJeb0SnUHTnFzbHFeYkCZQylS9lAiycVZ9AkxDIch7PQTVW/TSO8uAtuTeXnDS 4oiEm5xtKVE2kUINM+5T3E6lXmFCmBmSV7z5qTKv6zt2wbuQPEOHPukS7IIQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 11:06:49AM -0500, Steven Rostedt wrote:
-> On Mon, 15 Nov 2021 14:59:57 +0100
-> Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> 
-> > 1. Allow a reasonably configured kernel to boot and run with
-> > panic_on_warn set. Warnings should only be raised when something is
-> > not configured as the developers expect it or the kernel is put into a
-> > state that generally is _unexpected_ and has been exposed little to
-> > the critical thought of the developer, to testing efforts and use in
-> > other systems in the wild. Warnings should not be used for something
-> > informative, which still allows the kernel to continue running in a
-> > proper way in a generally expected environment. Up to my knowledge,
-> > there are some kernels in production that run with panic_on_warn; so,
-> > IMHO, this requirement is generally accepted (we might of course
-> 
-> To me, WARN*() is the same as BUG*(). If it gets hit, it's a bug in the
-> kernel and needs to be fixed. I have several WARN*() calls in my code, and
-> it's all because the algorithms used is expected to prevent the condition
-> in the warning from happening. If the warning triggers, it means either that
-> the algorithm is wrong or my assumption about the algorithm is wrong. In
-> either case, the kernel needs to be updated. All my tests fail if a WARN*()
-> gets hit (anywhere in the kernel, not just my own).
-> 
-> After reading all the replies and thinking about this more, I find the
-> pkill_on_warning actually worse than not doing anything. If you are
-> concerned about exploits from warnings, the only real solution is a
-> panic_on_warning. Yes, it brings down the system, but really, it has to be
-> brought down anyway, because it is in need of a kernel update.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-Hmm, yes. What it originally boiled down to, which is why Linus first
-objected to BUG(), was that we don't know what other parts of the system
-have been disrupted. The best example is just that of locking: if we
-BUG() or do_exit() in the middle of holding a lock, we'll wreck whatever
-subsystem that was attached to. Without a deterministic system state
-unwinder, there really isn't a "safe" way to just stop a kernel thread.
+Use flexible arrays instead of zero-element arrays (which look like they
+are always overflowing) and split the cross-field memcpy() into two halves
+that can be appropriately bounds-checked by the compiler.
 
-With this pkill_on_warn, we avoid the BUG problem (since the thread of
-execution continues and stops at an 'expected' place: the signal
-handler).
+We were doing:
 
-However, now we have the newer objection from Linus, which is one of
-attribution: the WARN might be hit during an "unrelated" thread of
-execution and "current" gets blamed, etc. And beyond that, if we take
-down a portion of userspace, what in userspace may be destabilized? In
-theory, we get a case where any required daemons would be restarted by
-init, but that's not "known".
+	#define ETH_HLEN  14
+	#define VLAN_HLEN  4
+	...
+	#define MLX5E_XDP_MIN_INLINE (ETH_HLEN + VLAN_HLEN)
+	...
+        struct mlx5e_tx_wqe      *wqe  = mlx5_wq_cyc_get_wqe(wq, pi);
+	...
+        struct mlx5_wqe_eth_seg  *eseg = &wqe->eth;
+        struct mlx5_wqe_data_seg *dseg = wqe->data;
+	...
+	memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
 
-The safest version of this I can think of is for processes to opt into
-this mitigation. That would also cover the "special cases" we've seen
-exposed too. i.e. init and kthreads would not opt in.
+target is wqe->eth.inline_hdr.start (which the compiler sees as being
+2 bytes in size), but copying 18, intending to write across start
+(really vlan_tci, 2 bytes). The remaining 16 bytes get written into
+wqe->data[0], covering byte_count (4 bytes), lkey (4 bytes), and addr
+(8 bytes).
 
-However, that's a lot to implement when Marco's tracing suggestion might
-be sufficient and policy could be entirely implemented in userspace. It
-could be as simple as this (totally untested):
+struct mlx5e_tx_wqe {
+        struct mlx5_wqe_ctrl_seg   ctrl;                 /*     0    16 */
+        struct mlx5_wqe_eth_seg    eth;                  /*    16    16 */
+        struct mlx5_wqe_data_seg   data[];               /*    32     0 */
 
+        /* size: 32, cachelines: 1, members: 3 */
+        /* last cacheline: 32 bytes */
+};
 
-diff --git a/include/trace/events/error_report.h b/include/trace/events/error_report.h
-index 96f64bf218b2..129d22eb8b6e 100644
---- a/include/trace/events/error_report.h
-+++ b/include/trace/events/error_report.h
-@@ -16,6 +16,8 @@
- #define __ERROR_REPORT_DECLARE_TRACE_ENUMS_ONCE_ONLY
- 
- enum error_detector {
-+	ERROR_DETECTOR_WARN,
-+	ERROR_DETECTOR_BUG,
- 	ERROR_DETECTOR_KFENCE,
- 	ERROR_DETECTOR_KASAN
+struct mlx5_wqe_eth_seg {
+        u8                         swp_outer_l4_offset;  /*     0     1 */
+        u8                         swp_outer_l3_offset;  /*     1     1 */
+        u8                         swp_inner_l4_offset;  /*     2     1 */
+        u8                         swp_inner_l3_offset;  /*     3     1 */
+        u8                         cs_flags;             /*     4     1 */
+        u8                         swp_flags;            /*     5     1 */
+        __be16                     mss;                  /*     6     2 */
+        __be32                     flow_table_metadata;  /*     8     4 */
+        union {
+                struct {
+                        __be16     sz;                   /*    12     2 */
+                        u8         start[2];             /*    14     2 */
+                } inline_hdr;                            /*    12     4 */
+                struct {
+                        __be16     type;                 /*    12     2 */
+                        __be16     vlan_tci;             /*    14     2 */
+                } insert;                                /*    12     4 */
+                __be32             trailer;              /*    12     4 */
+        };                                               /*    12     4 */
+
+        /* size: 16, cachelines: 1, members: 9 */
+        /* last cacheline: 16 bytes */
+};
+
+struct mlx5_wqe_data_seg {
+        __be32                     byte_count;           /*     0     4 */
+        __be32                     lkey;                 /*     4     4 */
+        __be64                     addr;                 /*     8     8 */
+
+        /* size: 16, cachelines: 1, members: 3 */
+        /* last cacheline: 16 bytes */
+};
+
+So, split the memcpy() so the compiler can reason about the buffer
+sizes.
+
+"pahole" shows no size nor member offset changes to struct mlx5e_tx_wqe
+nor struct mlx5e_umr_wqe. "objdump -d" shows no meaningful object
+code changes (i.e. only source line number induced differences and
+optimizations).
+
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en.h     | 6 +++---
+ drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c | 4 +++-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index f0ac6b0d9653..0925092211ce 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -225,7 +225,7 @@ static inline int mlx5e_get_max_num_channels(struct mlx5_core_dev *mdev)
+ struct mlx5e_tx_wqe {
+ 	struct mlx5_wqe_ctrl_seg ctrl;
+ 	struct mlx5_wqe_eth_seg  eth;
+-	struct mlx5_wqe_data_seg data[0];
++	struct mlx5_wqe_data_seg data[];
  };
-@@ -23,6 +25,8 @@ enum error_detector {
- #endif /* __ERROR_REPORT_DECLARE_TRACE_ENUMS_ONCE_ONLY */
  
- #define error_detector_list	\
-+	EM(ERROR_DETECTOR_WARN, "warn")	\
-+	EM(ERROR_DETECTOR_BUG, "bug")	\
- 	EM(ERROR_DETECTOR_KFENCE, "kfence")	\
- 	EMe(ERROR_DETECTOR_KASAN, "kasan")
- /* Always end the list with an EMe. */
-diff --git a/lib/bug.c b/lib/bug.c
-index 45a0584f6541..201b4070bbbc 100644
---- a/lib/bug.c
-+++ b/lib/bug.c
-@@ -48,6 +48,7 @@
- #include <linux/sched.h>
- #include <linux/rculist.h>
- #include <linux/ftrace.h>
-+#include <trace/events/error_report.h>
+ struct mlx5e_rx_wqe_ll {
+@@ -242,8 +242,8 @@ struct mlx5e_umr_wqe {
+ 	struct mlx5_wqe_umr_ctrl_seg   uctrl;
+ 	struct mlx5_mkey_seg           mkc;
+ 	union {
+-		struct mlx5_mtt inline_mtts[0];
+-		struct mlx5_klm inline_klms[0];
++		DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
++		DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
+ 	};
+ };
  
- extern struct bug_entry __start___bug_table[], __stop___bug_table[];
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+index 2f0df5cc1a2d..efae2444c26f 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+@@ -341,8 +341,10 @@ mlx5e_xmit_xdp_frame(struct mlx5e_xdpsq *sq, struct mlx5e_xmit_data *xdptxd,
  
-@@ -198,6 +199,7 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
- 		/* this is a WARN_ON rather than BUG/BUG_ON */
- 		__warn(file, line, (void *)bugaddr, BUG_GET_TAINT(bug), regs,
- 		       NULL);
-+		trace_error_report_end(ERROR_DETECTOR_WARN, bugaddr);
- 		return BUG_TRAP_TYPE_WARN;
- 	}
- 
-@@ -206,6 +208,7 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
- 	else
- 		pr_crit("Kernel BUG at %pB [verbose debug info unavailable]\n",
- 			(void *)bugaddr);
-+	trace_error_report_end(ERROR_DETECTOR_BUG, bugaddr);
- 
- 	return BUG_TRAP_TYPE_BUG;
- }
-
-
-Marco, is this the full version of monitoring this from the userspace
-side?
-
-	perf record -e error_report:error_report_end
-
+ 	/* copy the inline part if required */
+ 	if (sq->min_inline_mode != MLX5_INLINE_MODE_NONE) {
+-		memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
++		memcpy(eseg->inline_hdr.start, xdptxd->data, sizeof(eseg->inline_hdr.start));
+ 		eseg->inline_hdr.sz = cpu_to_be16(MLX5E_XDP_MIN_INLINE);
++		memcpy(dseg, xdptxd->data + sizeof(eseg->inline_hdr.start),
++		       MLX5E_XDP_MIN_INLINE - sizeof(eseg->inline_hdr.start));
+ 		dma_len  -= MLX5E_XDP_MIN_INLINE;
+ 		dma_addr += MLX5E_XDP_MIN_INLINE;
+ 		dseg++;
 -- 
-Kees Cook
+2.30.2
+
