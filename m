@@ -2,139 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C23C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 14:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9D0C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 18:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8FD061BF5
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 14:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3273561A79
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 18:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237146AbhKPONh (ORCPT
+        id S239318AbhKPSTF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Nov 2021 09:13:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35404 "EHLO
+        Tue, 16 Nov 2021 13:19:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233147AbhKPONg (ORCPT
+        with ESMTP id S239334AbhKPSTF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Nov 2021 09:13:36 -0500
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0552C061570;
-        Tue, 16 Nov 2021 06:10:39 -0800 (PST)
-Received: by mail-il1-x132.google.com with SMTP id h2so20471129ili.11;
-        Tue, 16 Nov 2021 06:10:39 -0800 (PST)
+        Tue, 16 Nov 2021 13:19:05 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5EC1C061764
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Nov 2021 10:16:07 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso3022162pji.0
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Nov 2021 10:16:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M/UEt3LXFYRGol9LnZjoBsvjbD91zGyozW9PiMcjgf0=;
-        b=o5UmTOXKA65tzr3sMzbcDq563C2rXE/lBvpcrCHhReu4wZxYiEBpOhkq5XzxDzTdyn
-         uiz2fnRi8F3kW8UqfVkRjPMfBNQAYf8Aol9xeDhVSPQUjgNCab3Z0SOvHwW4P0ovEiqL
-         AuUW7UwtzH6zO42W8W+jJ26ffQ0G7LBpR1cCK7gA6duyqvUAfAc+tiLk/Bd0foV/meIO
-         8zGj3vlkOo71fm9q6+IRvfuzDh9W8hYJSsFbErC/33i+90P4trAXX1iIXXQk72Z07Yt2
-         IKtao8WVZhpFd4DsULHXJn3q/qjrZlFdN9/z/jAyp/weyd55bv+/VIGeYnN3568ZDaQl
-         K20w==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jZwVIrUtt66FvkTYvH2h4rOOrPwYYNizZZ68EuMUgBw=;
+        b=ecCi+3H53VF27o66R95NXZnJLqToFP6UPKVKFDj0YaRXB/RSuRb+mgk/Hqzc2lxRhD
+         QD7/orHAhcq2SlU/HtnFNLhSUdKFFyV1/LRBpYv5JIh1u/q8tF1ed8ZHlAmRw4pe21o5
+         vDhDtAkkMID7ceMXENJ+zUxyjVtqZg22wQ1hc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M/UEt3LXFYRGol9LnZjoBsvjbD91zGyozW9PiMcjgf0=;
-        b=pfmfasZjmd5zcHkoQXeHChkW78uLMK5RdUOmA8JsME/OrK3k1cl7Y3CyddWKfemi7l
-         gj9jjKGoHx7H9OmYN/bF0OMmMJjli0k1m/5hM2yvIEiTBHTntUMTLl1J1AXb4QRB7lnr
-         xgseaWhVqmVCSiUF2FDu7NAA63ai8I9qp3BIEkSInJoLT4ej6uDZp193K6yoiXrIOdeW
-         Hu5yKslJb8n0505jlzdouxOoNl0MoX69kxvf8fTsM+2s2UJZoQllEzUmwAOsc5FkIx/o
-         YDSw0DmjJA/6Vmm/EQ7LUu5CP48nldVF892ALaQdA8G8GbzIgCl8RPxYINdqughRKS47
-         9nTA==
-X-Gm-Message-State: AOAM533yRFB210fDoHS7pBVlZerctQ1OKa0XVsIj+Mi3UOlOABCPAudw
-        539dzDo55U+vnccO7xA8kmMZZtCJ3PXrxhhG4Is=
-X-Google-Smtp-Source: ABdhPJz66c5fvd9boDQLu+2/Phx8msnTwkVmy2kGrvo652sefGuia5YaUinvm6SdqqX4xEk8wQ+a2lr8s+Ys7HUXBUY=
-X-Received: by 2002:a05:6e02:15c9:: with SMTP id q9mr4825161ilu.28.1637071839309;
- Tue, 16 Nov 2021 06:10:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20211116004111.3171781-1-keescook@chromium.org>
-In-Reply-To: <20211116004111.3171781-1-keescook@chromium.org>
-From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Tue, 16 Nov 2021 15:10:28 +0100
-Message-ID: <CA+fCnZcZ0eCPEjaLoQWc5a7pVHDKzYLL9ZbOQXv4wE5qA1NwoQ@mail.gmail.com>
-Subject: Re: [PATCH] kasan: test: Silence intentional read overflow warnings
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Marco Elver <elver@google.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jZwVIrUtt66FvkTYvH2h4rOOrPwYYNizZZ68EuMUgBw=;
+        b=oGbUewuaN8xJ57VxJyZrha09t34Z8g0RHl9zJroSjqhdfD8eensdxdXV35Kooz6UrS
+         52euCBIxP2ocNGkrSPqSoNC2100P871MgGy3bXKfgKjJQr2l3cRjYQ2yN/jaC7TtsgFv
+         CvK7XP3tX33BwBdxdNz8Fj9vzMHChcJd0XdSQX36sPdbwgUmOQiwvxKLzd8ghA98nuRl
+         UIrP9f8RXe80LH5YoSbRyvDbquJ+l+zXyMcU1bcAyLFv8vd0oSWIWdfabd0f4EWbp7FD
+         M9A8Vx0o7OdWPH7P+OXzIH1yW32brVsU7YkLDgSkGt+EqkDTd66uyAnFeTqt4EU/fatM
+         LS6g==
+X-Gm-Message-State: AOAM532jEQgyeDtNN4f3WRPycJjcSpyyNo2ym1+rUTBKB8XydoFRmznP
+        c4OcGgtfS813UFq8dRn40/qMHg==
+X-Google-Smtp-Source: ABdhPJxCE1msMxKhPNjRopniMrwQqm91A1A8Fz9sAnrkiGY+2lB8N/PQviwa4bKwlFNhGo70T1pD6Q==
+X-Received: by 2002:a17:90a:a083:: with SMTP id r3mr1299426pjp.55.1637086567311;
+        Tue, 16 Nov 2021 10:16:07 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k6sm575416pjt.14.2021.11.16.10.16.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Nov 2021 10:16:06 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
+        stable@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] Revert "mark pstore-blk as broken"
+Date:   Tue, 16 Nov 2021 10:15:59 -0800
+Message-Id: <20211116181559.3975566-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=817; h=from:subject; bh=0GcyUqnzth9aOQtAkuCBec83+pRmmuCDo+1R3cjV9uk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhk/VfTIYSW380RAAY7SEI0Q0t90crm0ZHl+mhTfAs cQxRNkmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZP1XwAKCRCJcvTf3G3AJr7VD/ 4nHpwyYGst9SCigK4WFnSp+MCI+9zL+t4UCfdIqDcMz/XluArydZXgzO6TU18k/MTrdhuD7pio7T+0 9rV0xtpI43n1qNdKgIDuHTbu1PqDm2z8BhX+xgIZxnUnEP9rtAJyWq7tB/ThDtHzM6+mht3HJAwY9r ll3Ft2BC2GdM2YVW1biN9DLRWzETY34ctG5OJW7O4z9DlPoLGCRec9o4xz4JyK+gmowN9rQAPrYUmd 2XNVgYLebFwfVkhkwHsLotyvBU2YGfuh9Yz535x2Q8Ks9Fedzp9zvER7ltt2ubxylyAKv/CnbPiEaM Y0CHbJHFIwiKN/wyfNMglq48mMLZ0CQ+Ji/6AUeXnVj4zh5yxFcDMHm4g5Tx6x/ApSBnQ81fJiulQ6 HhpIkW5S2K6YcbWK1iO2LrQR61AcebRvG+iU5d95D8+c3Pg3aHUo9n6BDI7flDA/SmXHVjWQP5bKCO 2wLOzhaU9kuWLu6j/9C3HAmYAr1ovxaBiBPCFrPyTRhpuvHMS/JbKLM7V69jOPb+xMxMrE/TzcZSlK sQaoyBW6bXUhlziKfBn96R/wUHYkmxHmBKOM9sRcv78gkLQO7pB9yhrdtCLCA9EOWPHiof8WjrSvXa 0E2XlIDowb+1elXiT7aKvTpBtkes56xzrrHRHWxkkYoYAOFYlN+n7EUnwJkw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 1:41 AM Kees Cook <keescook@chromium.org> wrote:
->
-> As done in commit d73dad4eb5ad ("kasan: test: bypass __alloc_size checks")
-> for __write_overflow warnings, also silence some more cases that trip
-> the __read_overflow warnings seen in 5.16-rc1[1]:
->
-> In file included from /kisskb/src/include/linux/string.h:253,
->                  from /kisskb/src/include/linux/bitmap.h:10,
->                  from /kisskb/src/include/linux/cpumask.h:12,
->                  from /kisskb/src/include/linux/mm_types_task.h:14,
->                  from /kisskb/src/include/linux/mm_types.h:5,
->                  from /kisskb/src/include/linux/page-flags.h:13,
->                  from /kisskb/src/arch/arm64/include/asm/mte.h:14,
->                  from /kisskb/src/arch/arm64/include/asm/pgtable.h:12,
->                  from /kisskb/src/include/linux/pgtable.h:6,
->                  from /kisskb/src/include/linux/kasan.h:29,
->                  from /kisskb/src/lib/test_kasan.c:10:
-> In function 'memcmp',
->     inlined from 'kasan_memcmp' at /kisskb/src/lib/test_kasan.c:897:2:
-> /kisskb/src/include/linux/fortify-string.h:263:25: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter)
->   263 |                         __read_overflow();
->       |                         ^~~~~~~~~~~~~~~~~
-> In function 'memchr',
->     inlined from 'kasan_memchr' at /kisskb/src/lib/test_kasan.c:872:2:
-> /kisskb/src/include/linux/fortify-string.h:277:17: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter)
->   277 |                 __read_overflow();
->       |                 ^~~~~~~~~~~~~~~~~
->
-> [1] http://kisskb.ellerman.id.au/kisskb/buildresult/14660585/log/
->
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: kasan-dev@googlegroups.com
-> Fixes: d73dad4eb5ad ("kasan: test: bypass __alloc_size checks")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  lib/test_kasan.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 67ed689a0b1b..0643573f8686 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -869,6 +869,7 @@ static void kasan_memchr(struct kunit *test)
->         ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
->
-> +       OPTIMIZER_HIDE_VAR(size);
->         KUNIT_EXPECT_KASAN_FAIL(test,
->                 kasan_ptr_result = memchr(ptr, '1', size + 1));
->
-> @@ -894,6 +895,7 @@ static void kasan_memcmp(struct kunit *test)
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
->         memset(arr, 0, sizeof(arr));
->
-> +       OPTIMIZER_HIDE_VAR(size);
->         KUNIT_EXPECT_KASAN_FAIL(test,
->                 kasan_int_result = memcmp(ptr, arr, size+1));
->         kfree(ptr);
-> --
-> 2.30.2
->
+This reverts commit d07f3b081ee632268786601f55e1334d1f68b997.
 
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+pstore-blk was fixed to avoid the unwanted APIs in commit 7bb9557b48fc
+("pstore/blk: Use the normal block device I/O path"), which landed in
+the same release as the commit adding BROKEN.
 
-Thanks!
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/pstore/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index 328da35da390..8adabde685f1 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -173,7 +173,6 @@ config PSTORE_BLK
+ 	tristate "Log panic/oops to a block device"
+ 	depends on PSTORE
+ 	depends on BLOCK
+-	depends on BROKEN
+ 	select PSTORE_ZONE
+ 	default n
+ 	help
+-- 
+2.30.2
+
