@@ -2,98 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9D0C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 18:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC205C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 18:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3273561A79
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 18:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC07C61BC1
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 18:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239318AbhKPSTF (ORCPT
+        id S239593AbhKPSou (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Nov 2021 13:19:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36048 "EHLO
+        Tue, 16 Nov 2021 13:44:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239334AbhKPSTF (ORCPT
+        with ESMTP id S239588AbhKPSor (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Nov 2021 13:19:05 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5EC1C061764
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Nov 2021 10:16:07 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso3022162pji.0
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Nov 2021 10:16:07 -0800 (PST)
+        Tue, 16 Nov 2021 13:44:47 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88A5C061570
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Nov 2021 10:41:50 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id c4so238030pfj.2
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Nov 2021 10:41:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZwVIrUtt66FvkTYvH2h4rOOrPwYYNizZZ68EuMUgBw=;
-        b=ecCi+3H53VF27o66R95NXZnJLqToFP6UPKVKFDj0YaRXB/RSuRb+mgk/Hqzc2lxRhD
-         QD7/orHAhcq2SlU/HtnFNLhSUdKFFyV1/LRBpYv5JIh1u/q8tF1ed8ZHlAmRw4pe21o5
-         vDhDtAkkMID7ceMXENJ+zUxyjVtqZg22wQ1hc=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rpZo5Ukhloxpo3t6te7xJnWQRrow3d4oIhzJ9wNY//s=;
+        b=VSNC43P14WmPSZmUrPilJ+DgGj5eVm+rYneRkINAieo4BCqCLBy5QiE+yxx4dMJHrP
+         ofgb/NWCMtHijcLBbRJZt2srQLA+UEZ3FYMnXTi4zhVU59bazntvLi1ZB9x1FOAMm3MU
+         zC1NqI7P7FvTEoA0kb6E30B9MNDZ7w/u4TNWQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZwVIrUtt66FvkTYvH2h4rOOrPwYYNizZZ68EuMUgBw=;
-        b=oGbUewuaN8xJ57VxJyZrha09t34Z8g0RHl9zJroSjqhdfD8eensdxdXV35Kooz6UrS
-         52euCBIxP2ocNGkrSPqSoNC2100P871MgGy3bXKfgKjJQr2l3cRjYQ2yN/jaC7TtsgFv
-         CvK7XP3tX33BwBdxdNz8Fj9vzMHChcJd0XdSQX36sPdbwgUmOQiwvxKLzd8ghA98nuRl
-         UIrP9f8RXe80LH5YoSbRyvDbquJ+l+zXyMcU1bcAyLFv8vd0oSWIWdfabd0f4EWbp7FD
-         M9A8Vx0o7OdWPH7P+OXzIH1yW32brVsU7YkLDgSkGt+EqkDTd66uyAnFeTqt4EU/fatM
-         LS6g==
-X-Gm-Message-State: AOAM532jEQgyeDtNN4f3WRPycJjcSpyyNo2ym1+rUTBKB8XydoFRmznP
-        c4OcGgtfS813UFq8dRn40/qMHg==
-X-Google-Smtp-Source: ABdhPJxCE1msMxKhPNjRopniMrwQqm91A1A8Fz9sAnrkiGY+2lB8N/PQviwa4bKwlFNhGo70T1pD6Q==
-X-Received: by 2002:a17:90a:a083:: with SMTP id r3mr1299426pjp.55.1637086567311;
-        Tue, 16 Nov 2021 10:16:07 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rpZo5Ukhloxpo3t6te7xJnWQRrow3d4oIhzJ9wNY//s=;
+        b=wFXjuau/3hzueHIn0YhPL4g19gSrxrp4k6CieNePPm3wazrL/uUHGY0D+7X6DKwZT9
+         6BpKpP4NqJsGkTUsFH7Zj8HlN55IMFOhPO21uPm/od5/I5OsAxBK1lCN3eCgPhMaYdZz
+         EN8FUV4nHWky70RoN9pqZiG8ygb0hKrOcMOH8JsPoWXLy72tiit1L9lXLL8X01KWWLI3
+         QlrTHEVmZoSQYan4lB7pq5Qx3LThO6UpH7nVoUSG0TcotdBoQHYJmm2xeqH6heyTrHEo
+         Mfb1fIpQl+JlTUzh/EK0A1TmiN3TK4ND644wwqg2XqLr1Mr13pOoykK6Ju07Y5a7qXHb
+         bHCg==
+X-Gm-Message-State: AOAM533wBXgkCv5UlqJsUUfhpAQ1A9ON4CDXyc5INLqH8JAwlL7W6TxD
+        hbgoJNz20chmZFi7/YYEQyHsTQ==
+X-Google-Smtp-Source: ABdhPJwwvQRQ7H1L7erOMj0WCwxaWTV8d2CBQFnkm/BoZWo9AQPZdRvAdBwwSZAEqBBMD7kMUEk6Tw==
+X-Received: by 2002:a63:b502:: with SMTP id y2mr798068pge.214.1637088110275;
+        Tue, 16 Nov 2021 10:41:50 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k6sm575416pjt.14.2021.11.16.10.16.06
+        by smtp.gmail.com with ESMTPSA id m6sm14550926pgc.17.2021.11.16.10.41.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 10:16:06 -0800 (PST)
+        Tue, 16 Nov 2021 10:41:49 -0800 (PST)
+Date:   Tue, 16 Nov 2021 10:41:49 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
-        stable@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] Revert "mark pstore-blk as broken"
-Date:   Tue, 16 Nov 2021 10:15:59 -0800
-Message-Id: <20211116181559.3975566-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul McKenney <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Laura Abbott <labbott@kernel.org>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Scull <ascull@google.com>,
+        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
+        Mathieu Chouquet-Stringer <me@mathieu.digital>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mike Rapoport <rppt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-hardening@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
+        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
+        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
+Message-ID: <202111161037.7456C981@keescook>
+References: <20211027233215.306111-1-alex.popov@linux.com>
+ <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
+ <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
+ <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
+ <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
+ <20211115110649.4f9cb390@gandalf.local.home>
+ <202111151116.933184F716@keescook>
+ <59534db5-b251-c0c8-791f-58aca5c00a2b@linux.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=817; h=from:subject; bh=0GcyUqnzth9aOQtAkuCBec83+pRmmuCDo+1R3cjV9uk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhk/VfTIYSW380RAAY7SEI0Q0t90crm0ZHl+mhTfAs cQxRNkmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZP1XwAKCRCJcvTf3G3AJr7VD/ 4nHpwyYGst9SCigK4WFnSp+MCI+9zL+t4UCfdIqDcMz/XluArydZXgzO6TU18k/MTrdhuD7pio7T+0 9rV0xtpI43n1qNdKgIDuHTbu1PqDm2z8BhX+xgIZxnUnEP9rtAJyWq7tB/ThDtHzM6+mht3HJAwY9r ll3Ft2BC2GdM2YVW1biN9DLRWzETY34ctG5OJW7O4z9DlPoLGCRec9o4xz4JyK+gmowN9rQAPrYUmd 2XNVgYLebFwfVkhkwHsLotyvBU2YGfuh9Yz535x2Q8Ks9Fedzp9zvER7ltt2ubxylyAKv/CnbPiEaM Y0CHbJHFIwiKN/wyfNMglq48mMLZ0CQ+Ji/6AUeXnVj4zh5yxFcDMHm4g5Tx6x/ApSBnQ81fJiulQ6 HhpIkW5S2K6YcbWK1iO2LrQR61AcebRvG+iU5d95D8+c3Pg3aHUo9n6BDI7flDA/SmXHVjWQP5bKCO 2wLOzhaU9kuWLu6j/9C3HAmYAr1ovxaBiBPCFrPyTRhpuvHMS/JbKLM7V69jOPb+xMxMrE/TzcZSlK sQaoyBW6bXUhlziKfBn96R/wUHYkmxHmBKOM9sRcv78gkLQO7pB9yhrdtCLCA9EOWPHiof8WjrSvXa 0E2XlIDowb+1elXiT7aKvTpBtkes56xzrrHRHWxkkYoYAOFYlN+n7EUnwJkw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59534db5-b251-c0c8-791f-58aca5c00a2b@linux.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This reverts commit d07f3b081ee632268786601f55e1334d1f68b997.
+On Tue, Nov 16, 2021 at 12:12:16PM +0300, Alexander Popov wrote:
+> What if the Linux kernel had a LSM module responsible for error handling policy?
+> That would require adding LSM hooks to BUG*(), WARN*(), KERN_EMERG, etc.
+> In such LSM policy we can decide immediately how to react on the kernel error.
+> We can even decide depending on the subsystem and things like that.
 
-pstore-blk was fixed to avoid the unwanted APIs in commit 7bb9557b48fc
-("pstore/blk: Use the normal block device I/O path"), which landed in
-the same release as the commit adding BROKEN.
+That would solve the "atomicity" issue the WARN tracepoint solution has,
+and it would allow for very flexible userspace policy.
 
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/pstore/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+I actually wonder if the existing panic_on_* sites should serve as a
+guide for where to put the hooks. The current sysctls could be replaced
+by the hooks and a simple LSM.
 
-diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index 328da35da390..8adabde685f1 100644
---- a/fs/pstore/Kconfig
-+++ b/fs/pstore/Kconfig
-@@ -173,7 +173,6 @@ config PSTORE_BLK
- 	tristate "Log panic/oops to a block device"
- 	depends on PSTORE
- 	depends on BLOCK
--	depends on BROKEN
- 	select PSTORE_ZONE
- 	default n
- 	help
 -- 
-2.30.2
-
+Kees Cook
