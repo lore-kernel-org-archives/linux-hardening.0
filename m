@@ -2,139 +2,139 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C745CC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 13:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C23C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 14:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA1E63222
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 13:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FD061BF5
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 14:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236628AbhKPNYA (ORCPT
+        id S237146AbhKPONh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Nov 2021 08:24:00 -0500
-Received: from bedivere.hansenpartnership.com ([96.44.175.130]:46646 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230471AbhKPNYA (ORCPT
+        Tue, 16 Nov 2021 09:13:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233147AbhKPONg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Nov 2021 08:24:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=hansenpartnership.com; s=20151216; t=1637068863;
-        bh=Sl6WuLnqTU5TtnSO/QxFeyGJuRtLYuKL8EqqmhmDJXE=;
-        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-        b=MPT0whG2bQpz0Y8+0rTOzk/Lt9c8RRm7MpZUKNOWWeP09PrTuZbxrGsGMCDBVFtIB
-         73aZZDq3UHdFL++Ub3OxRSnL3yZgntpKyZsNEZe8JaDLPYS2yUL+Vf9WsvhhtP0pGY
-         tjqCDNMkJTzaDuHazCXWjzVHrqqtiLkYOTTXFlu0=
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0286C1280119;
-        Tue, 16 Nov 2021 08:21:03 -0500 (EST)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dfdi4ZtKv-8E; Tue, 16 Nov 2021 08:21:02 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=hansenpartnership.com; s=20151216; t=1637068862;
-        bh=Sl6WuLnqTU5TtnSO/QxFeyGJuRtLYuKL8EqqmhmDJXE=;
-        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-        b=Gh53x5MAbxqanSOf9Z+qToC4xT79AG5yx757N80jyZsGwNIA803bfe57ViasAsXQi
-         4z92/voDtClOm88EHF5A+G0dQSjdu5NI1LOynI7X+wrinp8pr0XgpF0ALZd0R3BPPB
-         joY1Qno04GjG9pkA6f892MOy/dAQoO90oGkz0myw=
-Received: from jarvis.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4300:c551::527])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 2C450128010E;
-        Tue, 16 Nov 2021 08:20:58 -0500 (EST)
-Message-ID: <d751a5dd17550b21f890e3efcf70d5228451767d.camel@HansenPartnership.com>
-Subject: Re: [ELISA Safety Architecture WG] [PATCH v2 0/2] Introduce the
- pkill_on_warn parameter
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Petr Mladek <pmladek@suse.com>,
-        Alexander Popov <alex.popov@linux.com>
-Cc:     Gabriele Paoloni <gpaoloni@redhat.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Robert Krutsch <krutsch@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paul McKenney <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Laura Abbott <labbott@kernel.org>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Scull <ascull@google.com>,
-        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
-        Mathieu Chouquet-Stringer <me@mathieu.digital>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mike Rapoport <rppt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-hardening@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
-        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
-        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>
-Date:   Tue, 16 Nov 2021 08:20:57 -0500
-In-Reply-To: <YZNuyssYsAB0ogUD@alley>
-References: <20211027233215.306111-1-alex.popov@linux.com>
-         <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
-         <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
-         <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
-         <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
-         <22828e84-b34f-7132-c9e9-bb42baf9247b@redhat.com>
-         <cf57fb34-460c-3211-840f-8a5e3d88811a@linux.com> <YZNuyssYsAB0ogUD@alley>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 
+        Tue, 16 Nov 2021 09:13:36 -0500
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0552C061570;
+        Tue, 16 Nov 2021 06:10:39 -0800 (PST)
+Received: by mail-il1-x132.google.com with SMTP id h2so20471129ili.11;
+        Tue, 16 Nov 2021 06:10:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M/UEt3LXFYRGol9LnZjoBsvjbD91zGyozW9PiMcjgf0=;
+        b=o5UmTOXKA65tzr3sMzbcDq563C2rXE/lBvpcrCHhReu4wZxYiEBpOhkq5XzxDzTdyn
+         uiz2fnRi8F3kW8UqfVkRjPMfBNQAYf8Aol9xeDhVSPQUjgNCab3Z0SOvHwW4P0ovEiqL
+         AuUW7UwtzH6zO42W8W+jJ26ffQ0G7LBpR1cCK7gA6duyqvUAfAc+tiLk/Bd0foV/meIO
+         8zGj3vlkOo71fm9q6+IRvfuzDh9W8hYJSsFbErC/33i+90P4trAXX1iIXXQk72Z07Yt2
+         IKtao8WVZhpFd4DsULHXJn3q/qjrZlFdN9/z/jAyp/weyd55bv+/VIGeYnN3568ZDaQl
+         K20w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M/UEt3LXFYRGol9LnZjoBsvjbD91zGyozW9PiMcjgf0=;
+        b=pfmfasZjmd5zcHkoQXeHChkW78uLMK5RdUOmA8JsME/OrK3k1cl7Y3CyddWKfemi7l
+         gj9jjKGoHx7H9OmYN/bF0OMmMJjli0k1m/5hM2yvIEiTBHTntUMTLl1J1AXb4QRB7lnr
+         xgseaWhVqmVCSiUF2FDu7NAA63ai8I9qp3BIEkSInJoLT4ej6uDZp193K6yoiXrIOdeW
+         Hu5yKslJb8n0505jlzdouxOoNl0MoX69kxvf8fTsM+2s2UJZoQllEzUmwAOsc5FkIx/o
+         YDSw0DmjJA/6Vmm/EQ7LUu5CP48nldVF892ALaQdA8G8GbzIgCl8RPxYINdqughRKS47
+         9nTA==
+X-Gm-Message-State: AOAM533yRFB210fDoHS7pBVlZerctQ1OKa0XVsIj+Mi3UOlOABCPAudw
+        539dzDo55U+vnccO7xA8kmMZZtCJ3PXrxhhG4Is=
+X-Google-Smtp-Source: ABdhPJz66c5fvd9boDQLu+2/Phx8msnTwkVmy2kGrvo652sefGuia5YaUinvm6SdqqX4xEk8wQ+a2lr8s+Ys7HUXBUY=
+X-Received: by 2002:a05:6e02:15c9:: with SMTP id q9mr4825161ilu.28.1637071839309;
+ Tue, 16 Nov 2021 06:10:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20211116004111.3171781-1-keescook@chromium.org>
+In-Reply-To: <20211116004111.3171781-1-keescook@chromium.org>
+From:   Andrey Konovalov <andreyknvl@gmail.com>
+Date:   Tue, 16 Nov 2021 15:10:28 +0100
+Message-ID: <CA+fCnZcZ0eCPEjaLoQWc5a7pVHDKzYLL9ZbOQXv4wE5qA1NwoQ@mail.gmail.com>
+Subject: Re: [PATCH] kasan: test: Silence intentional read overflow warnings
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Marco Elver <elver@google.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2021-11-16 at 09:41 +0100, Petr Mladek wrote:
-[...]
-> If I wanted to implement a super-reliable panic() I would
-> use some external device that would cause power-reset when
-> the watched device is not responding.
+On Tue, Nov 16, 2021 at 1:41 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> As done in commit d73dad4eb5ad ("kasan: test: bypass __alloc_size checks")
+> for __write_overflow warnings, also silence some more cases that trip
+> the __read_overflow warnings seen in 5.16-rc1[1]:
+>
+> In file included from /kisskb/src/include/linux/string.h:253,
+>                  from /kisskb/src/include/linux/bitmap.h:10,
+>                  from /kisskb/src/include/linux/cpumask.h:12,
+>                  from /kisskb/src/include/linux/mm_types_task.h:14,
+>                  from /kisskb/src/include/linux/mm_types.h:5,
+>                  from /kisskb/src/include/linux/page-flags.h:13,
+>                  from /kisskb/src/arch/arm64/include/asm/mte.h:14,
+>                  from /kisskb/src/arch/arm64/include/asm/pgtable.h:12,
+>                  from /kisskb/src/include/linux/pgtable.h:6,
+>                  from /kisskb/src/include/linux/kasan.h:29,
+>                  from /kisskb/src/lib/test_kasan.c:10:
+> In function 'memcmp',
+>     inlined from 'kasan_memcmp' at /kisskb/src/lib/test_kasan.c:897:2:
+> /kisskb/src/include/linux/fortify-string.h:263:25: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter)
+>   263 |                         __read_overflow();
+>       |                         ^~~~~~~~~~~~~~~~~
+> In function 'memchr',
+>     inlined from 'kasan_memchr' at /kisskb/src/lib/test_kasan.c:872:2:
+> /kisskb/src/include/linux/fortify-string.h:277:17: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter)
+>   277 |                 __read_overflow();
+>       |                 ^~~~~~~~~~~~~~~~~
+>
+> [1] http://kisskb.ellerman.id.au/kisskb/buildresult/14660585/log/
+>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: kasan-dev@googlegroups.com
+> Fixes: d73dad4eb5ad ("kasan: test: bypass __alloc_size checks")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  lib/test_kasan.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> index 67ed689a0b1b..0643573f8686 100644
+> --- a/lib/test_kasan.c
+> +++ b/lib/test_kasan.c
+> @@ -869,6 +869,7 @@ static void kasan_memchr(struct kunit *test)
+>         ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
+>         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+>
+> +       OPTIMIZER_HIDE_VAR(size);
+>         KUNIT_EXPECT_KASAN_FAIL(test,
+>                 kasan_ptr_result = memchr(ptr, '1', size + 1));
+>
+> @@ -894,6 +895,7 @@ static void kasan_memcmp(struct kunit *test)
+>         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+>         memset(arr, 0, sizeof(arr));
+>
+> +       OPTIMIZER_HIDE_VAR(size);
+>         KUNIT_EXPECT_KASAN_FAIL(test,
+>                 kasan_int_result = memcmp(ptr, arr, size+1));
+>         kfree(ptr);
+> --
+> 2.30.2
+>
 
-They're called watchdog timers.  We have a whole subsystem full of
-them:
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
 
-drivers/watchdog
-
-We used them in old cluster HA systems to guarantee successful recovery
-of shared state from contaminated cluster members, but I think they'd
-serve the reliable panic need equally well.  Most server class systems
-today have them built in (on the BMC if they don't have a separate
-mechanism), they're just not usually activated.
-
-James
-
-
+Thanks!
