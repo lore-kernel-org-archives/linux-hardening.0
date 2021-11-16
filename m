@@ -2,84 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16675C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 03:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EB3C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 06:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCCB661BF8
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 03:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E652863292
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 06:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238463AbhKPEC2 (ORCPT
+        id S234471AbhKPGks (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Nov 2021 23:02:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238288AbhKPEC0 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Nov 2021 23:02:26 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB5D3C1F317B;
-        Mon, 15 Nov 2021 16:47:39 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id g191-20020a1c9dc8000000b0032fbf912885so1081688wme.4;
-        Mon, 15 Nov 2021 16:47:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a7Zpl/DXdhG00ea4QY24UUqjABtDhWhOn+Yu7tlYVgg=;
-        b=DDAcr2gsJ09hWMFGvzP3SCIik8Ot9gHLzhRzFB/JBY6bue7cOQ0KfNt1jpGHwbrmZJ
-         0Aqqt59vOfNv6TOQ2dQLXJhKdFbZmcBf8SrO63LJZlVuTQoNItLu+WhJP+F2ja2pL4LK
-         WDQhBXxr00BpgEge7yBuPUGwCeTQDtj1l4FpKKzFEsq4jF0OnLVnjU4EjgFqJw0RbNvC
-         v+9sh+s5V8oImiPF/qR70MR9Rn4AfGqofzaU5ksou7C/x7PFE+DrvFbGsaxTs4cj+O/n
-         DI6u+smh7iwCyXsiQEFadW6naLON9qMAGlmpJHbEj4jjlrzC8MGtHjD2MPn0Bn9MU1J5
-         8IWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a7Zpl/DXdhG00ea4QY24UUqjABtDhWhOn+Yu7tlYVgg=;
-        b=G3B3uclaBUmQoKXGpT0KuFinO/wftEf7/wB5teJLu2xt/aRyG/Qghsx4TBmvZ11iYs
-         SUi8g0qPRCEV9ood2nhRlT016mG2kxLebC7OdbTnZsIP9voHjycUshzhne9W8wAn4KQZ
-         iLJ6sQvKO/ckJxfSacjhEN3JZGRzLmU3NeaBKuaQ2Zr9GtM6IpL+f83qRnhZpcUgvL7r
-         +Hru/JNBBJaTxHFekVlbeCZcLv65nnmfSViS73hf/UYnpdVF/9fIa9V6nN+hsBu4m/Uh
-         XFhKE7Oyi9VWLLK08YPQ/zH2y71xCmKwvI310dOovEQPQeGvR3BhyqNRWtB1nZKvS0xj
-         Dv5w==
-X-Gm-Message-State: AOAM530mqzD02Ni6Kk7JAht7hYjC0a5d+6XaDPm48vNmP8qV/sn744WP
-        MOuJOf+T+4TzHhGkuBFlPyVZq8ExWxu3ccGj96A=
-X-Google-Smtp-Source: ABdhPJxVNCaPU/aUukWSdSMMsjLAdKYDfnvDUeXfun4RqT4loLAMWitSH1BZt3ZVWHm01xMLz6Eyz5RfWhiutR0W4TE=
-X-Received: by 2002:a05:600c:2246:: with SMTP id a6mr63786688wmm.5.1637023658559;
- Mon, 15 Nov 2021 16:47:38 -0800 (PST)
+        Tue, 16 Nov 2021 01:40:48 -0500
+Received: from pegase2.c-s.fr ([93.17.235.10]:44381 "EHLO pegase2.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234438AbhKPGkd (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 16 Nov 2021 01:40:33 -0500
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+        by localhost (Postfix) with ESMTP id 4Htbvw6xyhz9sSH;
+        Tue, 16 Nov 2021 07:37:32 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YIPFZjdwqqfE; Tue, 16 Nov 2021 07:37:32 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4Htbvw5wGbz9sSC;
+        Tue, 16 Nov 2021 07:37:32 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B49D48B77A;
+        Tue, 16 Nov 2021 07:37:32 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id EAtlP181_aWQ; Tue, 16 Nov 2021 07:37:32 +0100 (CET)
+Received: from [192.168.234.8] (unknown [192.168.234.8])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3DDAF8B763;
+        Tue, 16 Nov 2021 07:37:30 +0100 (CET)
+Message-ID: <380a8fd0-d7c3-2487-7cd5-e6fc6e7693d9@csgroup.eu>
+Date:   Tue, 16 Nov 2021 07:37:29 +0100
 MIME-Version: 1.0
-References: <CACXcFmnOeHwuu4N=WiGrMB+NNgGer9oCLoG0JAORN03gv1y+HQ@mail.gmail.com>
- <YTG9fAQTha7ZP/kh@kroah.com>
-In-Reply-To: <YTG9fAQTha7ZP/kh@kroah.com>
-From:   Sandy Harris <sandyinchina@gmail.com>
-Date:   Tue, 16 Nov 2021 08:47:26 +0800
-Message-ID: <CACXcFmkwRi9+guXc0v_t=pP6nMidKprD1EJdGTmEsU4puyit-A@mail.gmail.com>
-Subject: Re: memset() in crypto code
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
+Content-Language: fr-FR
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Alexander Popov <alex.popov@linux.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul McKenney <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Laura Abbott <labbott@kernel.org>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Scull <ascull@google.com>,
+        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
+        Mathieu Chouquet-Stringer <me@mathieu.digital>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mike Rapoport <rppt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-hardening@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
+        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
+        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>
+References: <20211027233215.306111-1-alex.popov@linux.com>
+ <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
+ <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
+ <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
+ <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
+ <20211115110649.4f9cb390@gandalf.local.home>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20211115110649.4f9cb390@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 3, 2021 at 2:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Sep 03, 2021 at 09:13:43AM +0800, Sandy Harris wrote:
-> > Doing this the crypto directory:
-> > grep memset *.c | wc -l
-> > I get 137 results.
-> >
-> > The compiler may optimise memset() away, subverting the intent of
-> > these operations. We have memzero_explicit() to avoid that problem.
-> >
-> > Should most or all those memset() calls be replaced?
->
-> The ones that are determined to actually need this, sure, but a simple
-> grep like that does not actually show that.  You need to read the code
-> itself to determine the need or not, please do so.
 
-Done. Patches to follow. I ended up making about a dozen changes
-in eight files. Of course, while I did read the code, I do not know it
-deeply so I may have misjudged some.
+
+Le 15/11/2021 à 17:06, Steven Rostedt a écrit :
+> On Mon, 15 Nov 2021 14:59:57 +0100
+> Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> 
+>> 1. Allow a reasonably configured kernel to boot and run with
+>> panic_on_warn set. Warnings should only be raised when something is
+>> not configured as the developers expect it or the kernel is put into a
+>> state that generally is _unexpected_ and has been exposed little to
+>> the critical thought of the developer, to testing efforts and use in
+>> other systems in the wild. Warnings should not be used for something
+>> informative, which still allows the kernel to continue running in a
+>> proper way in a generally expected environment. Up to my knowledge,
+>> there are some kernels in production that run with panic_on_warn; so,
+>> IMHO, this requirement is generally accepted (we might of course
+> 
+> To me, WARN*() is the same as BUG*(). If it gets hit, it's a bug in the
+> kernel and needs to be fixed. I have several WARN*() calls in my code, and
+> it's all because the algorithms used is expected to prevent the condition
+> in the warning from happening. If the warning triggers, it means either that
+> the algorithm is wrong or my assumption about the algorithm is wrong. In
+> either case, the kernel needs to be updated. All my tests fail if a WARN*()
+> gets hit (anywhere in the kernel, not just my own).
+> 
+> After reading all the replies and thinking about this more, I find the
+> pkill_on_warning actually worse than not doing anything. If you are
+> concerned about exploits from warnings, the only real solution is a
+> panic_on_warning. Yes, it brings down the system, but really, it has to be
+> brought down anyway, because it is in need of a kernel update.
+> 
+
+We also have LIVEPATCH to avoid bringing down the system for a kernel 
+update, don't we ? So I wouldn't expect bringing down a vital system 
+just for a WARN.
+
+As far as I understand from 
+https://www.kernel.org/doc/html/latest/process/deprecated.html#bug-and-bug-on, 
+WARN() and WARN_ON() are meant to deal with those situations as 
+gracefull as possible, allowing the system to continue running the best 
+it can until a human controled action is taken.
+
+So I'd expect the WARN/WARN_ON to be handled and I agree that that 
+pkill_on_warning seems dangerous and unrelevant, probably more dangerous 
+than doing nothing, especially as the WARN may trigger for a reason 
+which has nothing to do with the running thread.
+
+Christophe
