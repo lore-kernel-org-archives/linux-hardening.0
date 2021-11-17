@@ -2,59 +2,59 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85D5C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 19:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA80C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 19:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCB761B6F
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 19:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5039D61AFD
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 19:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240326AbhKQTJI (ORCPT
+        id S240359AbhKQTMa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Nov 2021 14:09:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36412 "EHLO
+        Wed, 17 Nov 2021 14:12:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240321AbhKQTJH (ORCPT
+        with ESMTP id S239371AbhKQTMa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Nov 2021 14:09:07 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987FCC061200
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 11:06:08 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id g14so15722334edz.2
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 11:06:08 -0800 (PST)
+        Wed, 17 Nov 2021 14:12:30 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628DDC061767
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 11:09:31 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id t5so15966884edd.0
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 11:09:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kylehuey.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6F06jbeyt9mOtQ/ejGOdNSiaeOgainiDjsIp/GYxA8k=;
-        b=Gbvyge049vFVIpoykKRpTf08urXrlJlaXoMyMCZAPDYfeFcVS6KIJKOKWEPRHtT8Gc
-         pYdbbmJq98pqqk3639W6LrIb7iZ5bCQ3ybAeoYT1+zY6EnzIU5IJRlC1O/ZJdDSWlebe
-         Hs8sVftP80dj2Wse/RxMYNv20bC/un1qSZ4to9bt1+q8GFuq8MnGnC7aPtUIHO6uu+4j
-         twY1VhWYCnhP6JXqCI0VSKlS7I+Nc7CLzHJO2MWHevisbz0UAagNXGScIVdY4Zzr4h1i
-         OJvaVh1b2hYbFzwIo4TJyLmGrQNaCD1nKQh4urU/Y90yIZdR3f3/MMX/XHJT8Egt1/yj
-         YOCQ==
+        bh=nAnJBXzy+j+SKp6UpMgT2UvLgTzhaItKFp8lDVP8bOI=;
+        b=D/3ogEfrPySNe/eJXcy3nGapEBgOa+bO4XpTO1fHqcR4gIHauBxVp2s2PTCG9AaMaK
+         6HWXJWr8+wvWMSmhSClExdjqN7fIaWTvI88IJ4lZYAdC8nYnUZjTmKgMelEW/vM09ccU
+         Qks8YqTAJMBzwsuPvYilwCulORTIf0cXhHfvOl1OhxuXmyIY27x1FpiDzKLUaqgkYwKB
+         C4v3tbaU8kPkutz5A52B6ixWVsBCyKtWU+GHbDqkM/8L0FIBtcnKvUHfdrsn54sJNHuv
+         M4Jx0a+DRZ3mZ/77iFaGAc4PDOLRQcqNNvk+V2hm+kIow9E02xqjp0Qbp8qHiPFiZ+qY
+         E0/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6F06jbeyt9mOtQ/ejGOdNSiaeOgainiDjsIp/GYxA8k=;
-        b=Ppkt4hJf1pKrxj2s/tbzaRraJZiE+8idorU4gMKo0kWuqcWjhdPouAWjVikTD2CdVL
-         0O8dvY0H6+60RNkdg8Hh4gfPTeimvAfkBfdF6norNFeJWp1CyVE320zTVV3s398JV6Rw
-         z7iZKW7wUTdKZRKUPRGF7O0vRYXHWvJZXBAJankjGeYwrU9ZSO3Cs5Nbwec/zuvKQGIX
-         0vw0PFkl/mXc1vAaUilVrC1wbMYxjmDjlp6P1eBSTKiDpK766z9D6rNOo67WvoeqE3uj
-         s9fOQcsXwdEu4E96nF6IahNDfvYIjtGCB0iFIUAoKwpxYpHTBmXehHA30zSJ2qkmEF89
-         xItA==
-X-Gm-Message-State: AOAM532CO408M8rzGnyMyGEcc7IusU7LHghgJ/oGC6A3NOf/LeyhHNXb
-        y/QQu9nOf5LdXxJCWZzbI4AC2K0KnrQZy5qh2oYi0Q==
-X-Google-Smtp-Source: ABdhPJxWlFOYJ0DB220x9oOZG7JB4Dhm+0+i6l+k2Fo8gixNzexi1o1ISJkCnmAF6U2ntzqhoR7b5XKlCilOASfM8tk=
-X-Received: by 2002:a17:906:140b:: with SMTP id p11mr24651600ejc.116.1637175966957;
- Wed, 17 Nov 2021 11:06:06 -0800 (PST)
+        bh=nAnJBXzy+j+SKp6UpMgT2UvLgTzhaItKFp8lDVP8bOI=;
+        b=mpwTYYHsfvtVJ1i38nxFJlJuaE7+AhN90eN7Shd8AwJsKK2Hc7eJUgGfyK4U/XeCRb
+         ENjvG2iXN63AdyK/upSJ1wGKqcAFq61HnMw1v33UPrAduOiQHWk1qv+MuI9JDfmYiQxR
+         fCrjMvRE+6oCLve7UC+5dqpDDhz9SapZoJhDgfo1TvxzqsY01YTNt9Dg8wzG13ULDzsP
+         MX5D3+1C/P/CqknYAviFUP7+aUzGgpscc+AT3wkV7hE7V5yiHyehAH9sUPKMFcxC4gIf
+         qCJLAiQvnunVUiI/x3gN3ChjQgHTb+sFUZwTZOeS5UHF6XcYDO9SRs4zExEf10+H2l3L
+         wi5g==
+X-Gm-Message-State: AOAM533Yje+42D+OuDJTT0CbkjWIhB55VXxOo/KarRDsH8GlcormvBcL
+        wqf4cdnZ0u7GGg8KaPFuY9SGUUCblEbyE1rmWXdhFw==
+X-Google-Smtp-Source: ABdhPJwIlcvt3E3+hGdYyhRGnWjeE/5pkW4ELjc8AjM1yuatRjqoO/EXVWvQGxDOJO05Ugr9afaP14IXrq92digDejs=
+X-Received: by 2002:a05:6402:1a58:: with SMTP id bf24mr1604937edb.16.1637176169875;
+ Wed, 17 Nov 2021 11:09:29 -0800 (PST)
 MIME-Version: 1.0
 References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
- <202111171049.3F9C5F1@keescook>
-In-Reply-To: <202111171049.3F9C5F1@keescook>
+ <202111171049.3F9C5F1@keescook> <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
+In-Reply-To: <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
 From:   Kyle Huey <me@kylehuey.com>
-Date:   Wed, 17 Nov 2021 11:05:51 -0800
-Message-ID: <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
+Date:   Wed, 17 Nov 2021 11:09:14 -0800
+Message-ID: <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
 Subject: Re: [REGRESSION] 5.16rc1: SA_IMMUTABLE breaks debuggers
 To:     Kees Cook <keescook@chromium.org>
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -74,33 +74,39 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 10:51 AM Kees Cook <keescook@chromium.org> wrote:
+On Wed, Nov 17, 2021 at 11:05 AM Kyle Huey <me@kylehuey.com> wrote:
 >
-> On Wed, Nov 17, 2021 at 10:47:13AM -0800, Kyle Huey wrote:
-> > rr, a userspace record and replay debugger[0], is completely broken on
-> > 5.16rc1. I bisected this to 00b06da29cf9dc633cdba87acd3f57f4df3fd5c7.
+> On Wed, Nov 17, 2021 at 10:51 AM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > That patch makes two changes, it blocks sigaction from changing signal
-> > handlers once the kernel has decided to force the program to take a
-> > signal and it also stops notifying ptracers of the signal in the same
-> > circumstances. The latter behavior is just wrong. There's no reason
-> > that ptrace should not be able to observe and even change
-> > (non-SIGKILL) forced signals.  It should be reverted.
+> > On Wed, Nov 17, 2021 at 10:47:13AM -0800, Kyle Huey wrote:
+> > > rr, a userspace record and replay debugger[0], is completely broken on
+> > > 5.16rc1. I bisected this to 00b06da29cf9dc633cdba87acd3f57f4df3fd5c7.
+> > >
+> > > That patch makes two changes, it blocks sigaction from changing signal
+> > > handlers once the kernel has decided to force the program to take a
+> > > signal and it also stops notifying ptracers of the signal in the same
+> > > circumstances. The latter behavior is just wrong. There's no reason
+> > > that ptrace should not be able to observe and even change
+> > > (non-SIGKILL) forced signals.  It should be reverted.
+> > >
+> > > This behavior change is also observable in gdb. If you take a program
+> > > that sets SIGSYS to SIG_IGN and then raises a SIGSYS via
+> > > SECCOMP_RET_TRAP and run it under gdb on a good kernel gdb will stop
+> > > when the SIGSYS is raised, let you inspect program state, etc. After
+> > > the SA_IMMUTABLE change gdb won't stop until the program has already
+> > > died of SIGSYS.
 > >
-> > This behavior change is also observable in gdb. If you take a program
-> > that sets SIGSYS to SIG_IGN and then raises a SIGSYS via
-> > SECCOMP_RET_TRAP and run it under gdb on a good kernel gdb will stop
-> > when the SIGSYS is raised, let you inspect program state, etc. After
-> > the SA_IMMUTABLE change gdb won't stop until the program has already
-> > died of SIGSYS.
+> > Ah, hm, this was trying to fix the case where a program trips
+> > SECCOMP_RET_KILL (which is a "fatal SIGSYS"), and had been unobservable
+> > before. I guess the fix was too broad...
 >
-> Ah, hm, this was trying to fix the case where a program trips
-> SECCOMP_RET_KILL (which is a "fatal SIGSYS"), and had been unobservable
-> before. I guess the fix was too broad...
+> Perhaps I don't understand precisely what you mean by this, but gdb's
+> behavior for a program that is SECCOMP_RET_KILLed was not changed by
+> this patch (the SIGSYS is not observed until after program exit before
+> or after this change).
 
-Perhaps I don't understand precisely what you mean by this, but gdb's
-behavior for a program that is SECCOMP_RET_KILLed was not changed by
-this patch (the SIGSYS is not observed until after program exit before
-or after this change).
+Ah, maybe that behavior changed in 5.15 (my "before" here is a 5.14
+kernel).  I would argue that the debugger seeing the SIGSYS for
+SECCOMP_RET_KILL is desirable though ...
 
 - Kyle
