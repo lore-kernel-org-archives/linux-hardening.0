@@ -2,163 +2,274 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55828C4321E
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 22:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A52C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 22:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF44619EA
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 22:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4348961B72
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 22:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240895AbhKQWEw (ORCPT
+        id S241279AbhKQWdO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Nov 2021 17:04:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47784 "EHLO
+        Wed, 17 Nov 2021 17:33:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240960AbhKQWEv (ORCPT
+        with ESMTP id S241277AbhKQWdF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Nov 2021 17:04:51 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F13C061202
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 14:01:52 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id d64so1422431pgc.7
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 14:01:52 -0800 (PST)
+        Wed, 17 Nov 2021 17:33:05 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3091DC061767
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 14:30:06 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id z5so17862555edd.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 14:30:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NrftdzRJB+iZXhfybj3wXjLC5DBwV9iU14DUg7paL24=;
-        b=eBLjeWMGVqkF82f+ZTunl/5cPTL6s9LC1GIM2m29eHFzvFNKcBpgZYcng81TfXgUyt
-         2Sk/PCTAChxnm4vANMcdfsEayCJ2EUOmPIIkJEwV2q67UPGWVq+c14pvSbyxVvy9LbPV
-         FdxyxiAIRDJF4rof3OAUXlmdML5i9wTxnKiSw=
+        d=kylehuey.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/dbCdpFMMa63XSMKyMFWQhocelYW9Pi1PBQWlvxTsug=;
+        b=ObaRcTnhtplTRGzScpGB7fdNOCVwBaZbweGKJhnPwOQoppmt4/L7czLDRFB2DwTnM/
+         K0TzYgu2fGU3JYykOTCWKC5KTZ/BHnjhsvVRk8JLyk+hJuM06wi6fkXTAaX99/JyyCEY
+         w4fCnQ3yJNoZssKTgpIGcylSmmOK07bBT8XmkR2IaWIZHQmy61xLFzlvQzesMqaK15qw
+         0Kho8hyS91sJwuZsUR07r+3cFmc56FSI8IMt2XQnvgp+JopZ5zUP4BoVssqhnsP7+her
+         0WSXatbzrhFaPt1NSFZoNcHXtA5Azwm2VsVqEAH0v4NSOXzgetIJg0oPJwUTOkG7JqEF
+         QZ2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NrftdzRJB+iZXhfybj3wXjLC5DBwV9iU14DUg7paL24=;
-        b=ike1olb1cJJCkQRU15EgBe4WAXhdWPKzm8U5+KtNN25qHKYp15r6PNITCm+1PSe3aT
-         mA7G36PsJY+EOoRawORb0KHFBF+1s08W8bSAs2QGPzJJDmiH42rITGfkrswOX+6vdA+o
-         9a4asFVLPIZKHEjxX4SGX+emCnqsT/Mz/rWBHnz3Zpr381YY2jjBCddGl0sfhN4bdovb
-         H4ihDLovKblHUY/nA3oQdMyi/UW3CcEzfM3WiktGmz8DpDzCiupOsPSVgKg5n+S/m8pA
-         czlKd2kEkp/ktDDJgU4qRVUIqL29+gt5UwQzI/UePGOAEURkY+enWtamcaYNQSZhEC9y
-         ywVw==
-X-Gm-Message-State: AOAM5319F2da1QWSyfBJv1dGO2AuUHS6wh8UUIBZ16yVB4Ho4woUnQqo
-        9h2PJL4yJfeAc/3O1djB6ctfJHhn5k8bTQ==
-X-Google-Smtp-Source: ABdhPJytb4QuGhE0Dp5hS2yGoJ5gdfGFvXD2UKBYYQ+FwETV1QxzSJKBdU6XMk2BDAY7E94T1Ku81w==
-X-Received: by 2002:a63:1125:: with SMTP id g37mr7864577pgl.118.1637186511589;
-        Wed, 17 Nov 2021 14:01:51 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q18sm605060pfj.46.2021.11.17.14.01.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Nov 2021 14:01:51 -0800 (PST)
-Date:   Wed, 17 Nov 2021 14:01:50 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Dinh Nguyen <dinguyen@kernel.org>,
-        "Ivan T . Ivanov" <iivanov@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ARM: socfpga: Fix crash with CONFIG_FORTIRY_SOURCE
-Message-ID: <202111171400.618456DCE9@keescook>
-References: <20211117193244.31162-1-tiwai@suse.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/dbCdpFMMa63XSMKyMFWQhocelYW9Pi1PBQWlvxTsug=;
+        b=J8xkbk484PB1C2uRTUSKOYkTcKSn/LUr6P1fZgiLT1doGE7x5iYROVL5J/5pnBWhfY
+         sSIMCK0GpGJJbp/OR8+rt3E7H1/sQt/B9hqpp/Fvzohx9YcdZyqBdyP0gzDFq6n7xMIW
+         VwzPAQ1YsYUwP1u0Eau83246tTtAspG0vs5cM/p/WsET4UXkAmwecAxzeK4pvG3mDsdm
+         czKOtAYnil3eNvEuckritAXQ99UMmUvPFXLYfbOZU0P0ehBjeNV192ryBAYCsK+PyN8c
+         xBjh8czh7lmicQmcAgT6X6Dw9P9tavLOB8aLQyaERUAeAEG9meZu32IyGd77bOL+LNgg
+         z7QA==
+X-Gm-Message-State: AOAM531PMiJZGYnjBCDywL/dZKnofA5xMY/lVwiU8FxfqoLbtvWr3Q+h
+        35ghEqPM9mzhd/XHgiN0POPS7h3OY0La4344OKmXfg==
+X-Google-Smtp-Source: ABdhPJyn59BQm41DfYh6GNKdmsbDn3XuE6GIPwQRfQZe7cJQlxXegYj155Z4J3iyTzG3Diq+flRBzAbqWrZKJ6F/Gfc=
+X-Received: by 2002:a50:e608:: with SMTP id y8mr3389833edm.39.1637188204599;
+ Wed, 17 Nov 2021 14:30:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211117193244.31162-1-tiwai@suse.de>
+References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
+ <202111171049.3F9C5F1@keescook> <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
+ <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com> <87k0h6334w.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <87k0h6334w.fsf@email.froward.int.ebiederm.org>
+From:   Kyle Huey <me@kylehuey.com>
+Date:   Wed, 17 Nov 2021 14:29:53 -0800
+Message-ID: <CAP045AqeXdZpSicKmQ_VU0SkA-igJ-VKM0E=VF+-gzgNS=ckdw@mail.gmail.com>
+Subject: Re: [REGRESSION] 5.16rc1: SA_IMMUTABLE breaks debuggers
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, bpf@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Robert O'Callahan" <rocallahan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 08:32:44PM +0100, Takashi Iwai wrote:
-> When CONFIG_FORTIFY_SOURCE is set, memcpy() checks the potential
-> buffer overflow and panics.  The code in sofcpga bootstrapping
-> contains the memcpy() calls are mistakenly translated as the shorter
-> size, hence it triggers a panic as if it were overflowing.
-> 
-> This patch adds the __NO_FORTIFY define for avoiding the
-> false-positive crash.
-> 
-> Buglink: https://bugzilla.suse.com/show_bug.cgi?id=1192473
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> ---
-> 
-> I took an easier path for now, as the attempt with a foced cast
-> failed.  If there is a better way to handle, let me know, I'd happily
-> resubmit.  Thanks!
-> 
+On Wed, Nov 17, 2021 at 1:05 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Kyle Huey <me@kylehuey.com> writes:
+>
+> > On Wed, Nov 17, 2021 at 11:05 AM Kyle Huey <me@kylehuey.com> wrote:
+> >>
+> >> On Wed, Nov 17, 2021 at 10:51 AM Kees Cook <keescook@chromium.org> wrote:
+> >> >
+> >> > On Wed, Nov 17, 2021 at 10:47:13AM -0800, Kyle Huey wrote:
+> >> > > rr, a userspace record and replay debugger[0], is completely broken on
+> >> > > 5.16rc1. I bisected this to 00b06da29cf9dc633cdba87acd3f57f4df3fd5c7.
+> >> > >
+> >> > > That patch makes two changes, it blocks sigaction from changing signal
+> >> > > handlers once the kernel has decided to force the program to take a
+> >> > > signal and it also stops notifying ptracers of the signal in the same
+> >> > > circumstances. The latter behavior is just wrong. There's no reason
+> >> > > that ptrace should not be able to observe and even change
+> >> > > (non-SIGKILL) forced signals.  It should be reverted.
+> >> > >
+> >> > > This behavior change is also observable in gdb. If you take a program
+> >> > > that sets SIGSYS to SIG_IGN and then raises a SIGSYS via
+> >> > > SECCOMP_RET_TRAP and run it under gdb on a good kernel gdb will stop
+> >> > > when the SIGSYS is raised, let you inspect program state, etc. After
+> >> > > the SA_IMMUTABLE change gdb won't stop until the program has already
+> >> > > died of SIGSYS.
+> >> >
+> >> > Ah, hm, this was trying to fix the case where a program trips
+> >> > SECCOMP_RET_KILL (which is a "fatal SIGSYS"), and had been unobservable
+> >> > before. I guess the fix was too broad...
+> >>
+> >> Perhaps I don't understand precisely what you mean by this, but gdb's
+> >> behavior for a program that is SECCOMP_RET_KILLed was not changed by
+> >> this patch (the SIGSYS is not observed until after program exit before
+> >> or after this change).
+> >
+> > Ah, maybe that behavior changed in 5.15 (my "before" here is a 5.14
+> > kernel).  I would argue that the debugger seeing the SIGSYS for
+> > SECCOMP_RET_KILL is desirable though ...
+>
+> This is definitely worth discussing, and probably in need of fixing (aka
+> something in rr seems to have broken).
 
-The way these have been fixed in the past is to declare these as char
-arrays (see include/asm-generic/sections.h). I'd prefer something like
-this (totally untested):
+I mean this in the nicest possible way: fixing this is not optional.
 
-diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
-index fc2608b18a0d..18f01190dcfd 100644
---- a/arch/arm/mach-socfpga/core.h
-+++ b/arch/arm/mach-socfpga/core.h
-@@ -33,7 +33,7 @@ extern void __iomem *sdr_ctl_base_addr;
- u32 socfpga_sdram_self_refresh(u32 sdr_base);
- extern unsigned int socfpga_sdram_self_refresh_sz;
- 
--extern char secondary_trampoline, secondary_trampoline_end;
-+extern char secondary_trampoline[], secondary_trampoline_end[];
- 
- extern unsigned long socfpga_cpu1start_addr;
- 
-diff --git a/arch/arm/mach-socfpga/platsmp.c b/arch/arm/mach-socfpga/platsmp.c
-index fbb80b883e5d..201191cf68f3 100644
---- a/arch/arm/mach-socfpga/platsmp.c
-+++ b/arch/arm/mach-socfpga/platsmp.c
-@@ -20,14 +20,14 @@
- 
- static int socfpga_boot_secondary(unsigned int cpu, struct task_struct *idle)
- {
--	int trampoline_size = &secondary_trampoline_end - &secondary_trampoline;
-+	int trampoline_size = secondary_trampoline_end - secondary_trampoline;
- 
- 	if (socfpga_cpu1start_addr) {
- 		/* This will put CPU #1 into reset. */
- 		writel(RSTMGR_MPUMODRST_CPU1,
- 		       rst_manager_base_addr + SOCFPGA_RSTMGR_MODMPURST);
- 
--		memcpy(phys_to_virt(0), &secondary_trampoline, trampoline_size);
-+		memcpy(phys_to_virt(0), secondary_trampoline, trampoline_size);
- 
- 		writel(__pa_symbol(secondary_startup),
- 		       sys_manager_base_addr + (socfpga_cpu1start_addr & 0x000000ff));
-@@ -45,12 +45,12 @@ static int socfpga_boot_secondary(unsigned int cpu, struct task_struct *idle)
- 
- static int socfpga_a10_boot_secondary(unsigned int cpu, struct task_struct *idle)
- {
--	int trampoline_size = &secondary_trampoline_end - &secondary_trampoline;
-+	int trampoline_size = secondary_trampoline_end - secondary_trampoline;
- 
- 	if (socfpga_cpu1start_addr) {
- 		writel(RSTMGR_MPUMODRST_CPU1, rst_manager_base_addr +
- 		       SOCFPGA_A10_RSTMGR_MODMPURST);
--		memcpy(phys_to_virt(0), &secondary_trampoline, trampoline_size);
-+		memcpy(phys_to_virt(0), secondary_trampoline, trampoline_size);
- 
- 		writel(__pa_symbol(secondary_startup),
- 		       sys_manager_base_addr + (socfpga_cpu1start_addr & 0x00000fff));
+> We definitely need protection against the race with sigaction.
 
->  arch/arm/mach-socfpga/platsmp.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/mach-socfpga/platsmp.c b/arch/arm/mach-socfpga/platsmp.c
-> index fbb80b883e5d..d46b1af96a8a 100644
-> --- a/arch/arm/mach-socfpga/platsmp.c
-> +++ b/arch/arm/mach-socfpga/platsmp.c
-> @@ -5,6 +5,9 @@
->   * Based on platsmp.c, Copyright (C) 2002 ARM Ltd.
->   * Copyright (C) 2012 Altera Corporation
->   */
-> +
-> +#define __NO_FORTIFY /* need to avoid the crash with memcpy() calls */
-> +
->  #include <linux/delay.h>
->  #include <linux/init.h>
->  #include <linux/smp.h>
-> -- 
-> 2.26.2
-> 
+Sure, no argument here, and that doesn't cause any problems for us.
 
--- 
-Kees Cook
+> The fundamental question becomes does it make sense and is it safe
+> to allow a debugger to stop at, and possibly change these signals.
+
+And the answer is yes, because at least some of these signals are
+generated by actions of the debugger (e.g. setting a breakpoint).
+
+> Stopping at something SA_IMMUTABLE as long as the signal is allowed to
+> continue and kill the process when PTRACE_CONT happens seems harmless.
+>
+> Allowing the debugger to change the signal, or change it's handling
+> I don't know.
+
+This is required to support breakpoints.
+
+> All of this is channeled through the following function.
+>
+> > static int
+> > force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t, bool sigdfl)
+> > {
+> >       unsigned long int flags;
+> >       int ret, blocked, ignored;
+> >       struct k_sigaction *action;
+> >       int sig = info->si_signo;
+> >
+> >       spin_lock_irqsave(&t->sighand->siglock, flags);
+> >       action = &t->sighand->action[sig-1];
+> >       ignored = action->sa.sa_handler == SIG_IGN;
+> >       blocked = sigismember(&t->blocked, sig);
+> >       if (blocked || ignored || sigdfl) {
+> >               action->sa.sa_handler = SIG_DFL;
+> >               action->sa.sa_flags |= SA_IMMUTABLE;
+> >               if (blocked) {
+> >                       sigdelset(&t->blocked, sig);
+> >                       recalc_sigpending_and_wake(t);
+> >               }
+> >       }
+> >       /*
+> >        * Don't clear SIGNAL_UNKILLABLE for traced tasks, users won't expect
+> >        * debugging to leave init killable.
+> >        */
+> >       if (action->sa.sa_handler == SIG_DFL && !t->ptrace)
+> >               t->signal->flags &= ~SIGNAL_UNKILLABLE;
+> >       ret = send_signal(sig, info, t, PIDTYPE_PID);
+> >       spin_unlock_irqrestore(&t->sighand->siglock, flags);
+> >
+> >       return ret;
+> > }
+>
+> Right now we have 3 conditions that trigger SA_IMMUTABLE.
+> - The sigdfl parameter is passed asking that userspace not be able to
+>   change the handling of the signal.
+>
+> - A synchronous exception is taken and the signal is blocked.
+>
+> - A synchronous exception is taken and the signal is ignored.
+
+Delivering signals to a ptracee in the latter two cases is simply not
+optional. As it stands with your change, a program that blocks SIGTRAP
+or sets its SIGTRAP handler to SIG_IGN becomes undebuggable.  If a
+debugger injects a breakpoint or uses PTRACE_SINGLESTEP on a tracee
+the delivery of that signal can't be controlled by the tracee's signal
+state.
+
+> Today because of how things are implemented the code most change the
+> userspace state to allow the signal to kill the process.  I really want
+> to get rid of that, because that has other side effects.  As part of
+> getting rid of changing the state it is my plan to get rid of
+> SA_IMMUTABLE as well.  If I don't have to allow the debugger to stop and
+> observe what is happening with the signal that change is much easier to
+> implement.
+>
+> The classic trigger of sigdfl is a recursive SIGSEGV.
+>
+> However we have other cases like SECCOMP_RET_KILL where the kernel
+> has never allowed userspace to intercept the killing of the
+> process.  Things that have messages like: "seccomp tried to change
+> syscall nr or ip"
+>
+> My brain is drawing a blank on how to analyze those.
+>
+> Kees I am back to asking the question I had before I figured out
+> SA_IMMUTABLE.  Are there security concerns with debuggers intercepting
+> SECCOMP_RET_KILL.
+>
+> I think I can modify dequeue_synchronous_signal so that we can perform
+> the necessary logic in get_signal rather than hack up the signal
+> handling state in force_sig_info_to_task.
+>
+> Except for the cases like SECCOMP_RET_KILL where the kernel has never
+> allowed userspace to intercept the handling.  I don't see any
+> fundamental reason why ptrace could not intercept the signal.  The
+> handling is overriden to force the process to die, because the way
+> userspace is currently configured to handle the signal does not work so
+> it is necessary to kill the process.
+>
+> I think there are cases where the userspace state is known to be
+> sufficiently wrong that the kernel can not safely allow anything more
+> than inspecting the state.
+>
+> I can revisit the code to see if the kernel will get confused if
+> something more is allowed.  Still I really like the current semantics of
+> SA_IMMUTABLE because these are cases where something wrong.  If someone
+> miscalculates how things are wrong it could result in the kernel getting
+> confused and doing the wrong thing.  Allowing the debugger to intercept
+> the signal requires we risk miscalculating what is wrong.
+>
+> Kyle how exactly is rr broken?  Certainly a historical usage does not
+> work.  How does this affect actual real world debugging sessions?
+
+rr is broken across the board because of specific things related to
+its handling of exit_group (namely we first block all signals in the
+tracee, so that we don't catch a signal during our handling of it,
+then we hijack the tracee to do some cleanup before exit_group is
+really allowed to execute, and we use e.g. PTRACE_SINGLESTEP that
+expects to punch through the signal blocking). But even if I fixed
+that, I expect there would be other issues. The expectation that these
+signals will be delivered is deeply embedded.
+
+> You noticed this and bisected the change quickly so I fully expect
+> this does affect real world debugging sessions.  I just want to know
+> exactly how so that exactly what is wrong can be fixed.
+
+I noticed this because we have a test suite we run against new kernel
+releases precisely to catch regressions like this.
+
+You don't need rr to reproduce the underlying issue though.  Compile
+the following
+
+```
+#include <signal.h>
+#include <stdio.h>
+
+int main() {
+  signal(SIGTRAP, SIG_IGN);
+  printf("Hello World\n");
+  return 0;
+}
+```
+
+And try to break on the printf under gdb.  After you fix that (and the
+equivalent where SIGTRAP is blocked) rr should be fine.
+
+- Kyle
+
+> As far as I can tell SA_IMMUTABLE has only been backported to v5.15.x
+> where in cleaning things up I made SECCOMP_RET_KILL susceptible to races
+> with sigaction, and ptrace.  Those races need to be closed or we need to
+> decide that we don't actually care if the debugger does things.
+>
+> Eric
