@@ -2,152 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C395C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 19:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22989C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 00:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 064546321A
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Nov 2021 19:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C71C61547
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 00:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239670AbhKPTDf (ORCPT
+        id S231470AbhKQA0o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Nov 2021 14:03:35 -0500
-Received: from sonic315-27.consmr.mail.ne1.yahoo.com ([66.163.190.153]:44114
-        "EHLO sonic315-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239072AbhKPTDd (ORCPT
+        Tue, 16 Nov 2021 19:26:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229544AbhKQA0n (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Nov 2021 14:03:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1637089236; bh=iKZCNnZA8mKurfY2xcDf1xTfNga+uLdl6MyBXJlz4uc=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=IlCH7UXbsHb3z0KtV0Zi4KsaknBcLvperNnezhGl15qcbrSpimDo2BPd7gXIGNguliYf/M4D0X1AjPtZTJctdwl2U+kd2cp7OZA+hCyrBiLKWjVEBgAAeKgkscCQ4VeaPUaW4OrEFXvVnmBs15uCKVRuErwj1ObCyugITDDdxNZgnOqjmB82Nm/BKF+p60ZCbiChcx7EolKMZ8cbeFI4F0ZHxwdm0zH/ZsIM33XEz2OP68BpuJReaA0apJJaQM7gm+85vO/UpRZlv9XG8aDknpNhP+FzngUfsLzv9byuq1RUPiWVNyMWdaHDQK4i5ZY72A82yaJJngVs2NDDy3OB/A==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1637089236; bh=KakOMrcQOYQF6zPpoNGmpyCyNEzOa7vc472gsuuEvx9=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=aeJjUhU40xCYdNvg8nvLqVqSoO0xFZ4rXoxf2hgziY/Krx0JCEXxnQS6XAF1ZvL8fDnWdU3xAyA+0DTJDfGSW74zCDiI0DeRIu5S57lCyO8wlaja64DrQ+kYkcxR+Bdk8Zn/SO3/U/LgI7ZC+u9x6srlnMv+av371HY5b5uqWtvJ2VHEIxQZcAjOq4hnvcE8oUbNRzyYEKuaXadHLEVpYkcSLX50BxHZAltxjpgVRu8gfVe1gs5AzZ+g5wyBqjFm5Smx+PjtcWJ+4L2/PrBguWMKWjxxFbazCk8dFvr8F12wjy7poaQPu2lAFiw0/PMBNdkioOBliCMhaesXQB2qaw==
-X-YMail-OSG: dfV4KL4VM1kt.GaOicztohoLnrgWtyS2u7sPmOPbByL_RitHu.lxaIsY1XJM0Ez
- mdcuj1dEhSXoO9oU1cBoSLUC6Zt27CBqCzkbx4dIimfdMAa2pyu_Tjvma2w6JddoUFXzusdUcOsn
- 0osUUmRf5W0KMjIEocy_SQmW6d37YsgYK0wUHxvH9ie473oa5X0N3AUy8wD6bd.qQAvqfacokBtp
- UVxbyopGr8SdJHn8p.Psog.4FyHKpeli2J9Sa16JwEcN3beeYXiPRMkaYqd9RfMOQ1S4rOBGa_QY
- yFVY_P603FArpIViHnkM3YhVZ6zQL_.UbrKE_qIgTkM.rX3we9jpGhRejh9bEIQkeZUYR8tashVQ
- ewpN2.bC8uEPuycHdbPCzK_54tKszy51Z58lUSp5wsl0pOLNq91sJO9v51.sC21uQkIHOCRA.t3_
- UrCT7wYwGMJoEOBvDxN.6T0GP0ta6oKz8Co2kf78GsZs3H5B5O7LQUxaNs21sYM9WG1Ub5oytsvJ
- tmF.16CyUDwIG99CzudDrzBRVeu0BTGn2J03_smiqE3mBL84HbFEqNjKOoHYXrxGO1yBG4j_FYYn
- ioBwy8KpvFsHLonOWaEW4LYa6IkzqUtLD86YKd9IIt2DDWcKCSsg_Sgo24eYB6M.FWoM8_eCplzr
- 4w1lGJku1G0zJtQZRGMvXfHGpcxTg24CvPQ23j8ZZ7AM_c5gaOL25gpoVsi399.KhybBfUDIuoNP
- fsaeJ1EQCr3Y1qc1mmy9KkQk1En6sca6v9huAOT5MVzHDk67HbvnLaMhfMOmcKbzvE9TKIZ1BofN
- p4erxAni31xY7WQSAf.TZ1vhqkMYsejVBSous_rmKBmBK8wzZ_6O6chyetspDAVi6nfeSRQXxOqF
- Jvas9RcspTI6AwAsN2LKH9ByoMFOHNRxi0K.MgC1r2AQmI20nkDwrM45jyGaV7egh4cyhhQtU.0E
- 8xSgF7J9.KFzrpNgIo8Uy1SgBJkjds8amBCypHUDG0pn6J3aBUJSE5MHR.S0V02oHbuiFiHsS8wH
- C0z7RQ4W9Izz7nJUIRcGMnfAtuC.0ZmGFxu.Qs.dNjKWUd4oZdRCht_QjlO0OKaptnioNkIF_NQh
- T2DIBSFfMKxpmxrDKtJQn25_vnbu1nzAsXJAfPpXVlCuAe.0Cri0JBTgIZ9BomSjre_wM.kfGOOg
- qm4ZVbdqPYj7PkV8FZkhYgGnHI4I25iDyHyMNakkjsM8MIwrdyWstJKoaHA3mYiI.s4HgLGFqE4E
- nn5WT4SQfFunyou.h.HCoq0Lkzzcqnn.gc7MHxYOqGrrUf25lA0JEkVAgvCt_kCiDnnfaC3AxLT1
- OjSqV0r0w6mcbl_USL5fzd28vp4kc0ePGL5OuMVVaFf8a9kA0nDChaSAxFzd64pnqUg_DoKZGKlF
- Yf26tACFNBYFeegkD.BQJdvZMzk__qgQrOlUQNyc_UREopzbfgsqvoE9lJw5wvV8AUjapuj36ffb
- TC8jQq2o9H6M0H.FerhJMNECzowd4oh1y6XdBc2nkLUtQ1SaJh7dIFBxo8IUQ1pH.ges_xMFVyUy
- aB4DEzUGYmwrTxxlu1ERd18Rx6_YNXym7L4OlLD0NwkQoN8YUX.uUzmiBSbCLutyXO3CFxxDHpZQ
- XrG02UD8KN44_5CKT7EzNEjs0vYSxXESNald3nnJpGq_l9rLOY2C8CMcOrlg5RDM6PZX69pk9WYc
- cHYjA4GDLJQRweZmKFXCqEgsIRRcb0OEJ_EqHEbzOXjA4AntlQr6.UFODumf7wVvBX9e.J0icsnF
- Lp7tNKQUMADr3sWwjUyh7fMOBeJN0mPtLp5Gz2qsJwNiiOa0Gj5hUMCrtDmVKsKyy8C7jcxaeiLn
- mt8N2Z4tpkcpeVJXss6qZrcj8Se9nQZY2C0iDtKgVrzP18lP0ipp1UH7jku0kmW6C2.QUv296xD.
- dBKbXREiJfTkrwhNAGU3oOQf7EAH3GXTuPuSFB8C4tgZ1DYcwwTUW230Qs7rUHXEyx.lTa56GJz6
- _hsATdtKFC1sy5xYkmcPtvVrkNJASjY5nU6anyAct_tiu7tJM2kUdpzRnn.XTcRvShzcdq4qot5k
- n9MZrEpAsGAwDBA.RC1tSUq6y6_F9IU9XDIyWdDX07svYEyrsAxr6Jd6bwYLK9sJ2eMBZCtL0M4M
- Lx91ER7ORK0MDTPpQRbdaqt5Do0LeDuRq8q3217c4.JKP.JtlH5BGL909INx6R8O4mga53VWNUCr
- qjyeFOmSqSq067BWooNhEXr3mJ9PH_9WLz20-
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Tue, 16 Nov 2021 19:00:36 +0000
-Received: by kubenode523.mail-prod1.omega.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 16992bd20597bf90782469ca1b8ad7d7;
-          Tue, 16 Nov 2021 19:00:31 +0000 (UTC)
-Message-ID: <fd86a05b-feca-c0a9-c6b0-b2e69c650021@schaufler-ca.com>
-Date:   Tue, 16 Nov 2021 11:00:23 -0800
+        Tue, 16 Nov 2021 19:26:43 -0500
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC69C061746
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Nov 2021 16:23:46 -0800 (PST)
+Received: by mail-io1-xd31.google.com with SMTP id w22so876861ioa.1
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Nov 2021 16:23:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:in-reply-to:references:subject:message-id:date
+         :mime-version:content-transfer-encoding;
+        bh=zsadljEAoTW1O/e6cBvAvPdWibAzK1CvOl83K6umqDA=;
+        b=Cw5MV68s67fj6e6eunrAfI8H7rqe/BTcJGJBpr6DRoKSdSqEtBsi5ls/9TuKBbVI8J
+         q1K1VTKED0cHapqbe+bwWL4K9RJ6plgB0OgwkiebykgvzpQILjZF1+wf9nn8ti+FB7tC
+         hw5rLPDHB0l6iWz53ihirPji06SIRyVp0ZYQRhj7UhHj3gQWUbHH9VPwXIxSvmGO2p9F
+         w8OxFY+bNSm++4n/GikcCV0uz41W+BAQXjlSgckec0cGDAEQbk0asp2DVrY4DBm6UUiw
+         5rjCx71CF5RtjbJTwM768S8xDO+Rx2ykNiOIRBc5BAGdLGbThM2lARm8VjiFKmwt/KhA
+         VsSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
+         :message-id:date:mime-version:content-transfer-encoding;
+        bh=zsadljEAoTW1O/e6cBvAvPdWibAzK1CvOl83K6umqDA=;
+        b=p63a3EiVlekltusKW7w3dGH+UVIvpJ46LX8oXQm7AzBBWt9A3huUZ3j0cPi7e9M1Oo
+         q+hcSqAvb1PfA/sEVuB8HMQBEEzao2PckCj9Gb9owbhDVMCUN8iA53wUFEhM148uRrzd
+         wRZTf9DmW6/6fe/HNGm7uLoHd8HVzePsGjMBW++NRkjZZhavs7z0AJ2uoeNd04nNGjgW
+         N0GhbB//FSgmXMZst1vi+3r7UImLe4ry0yzs3LPtGC99CRPkQEtLPsSZ5AbL/V3e+2vc
+         DNUDL1XsahyG5fvgh6b6i8d50aROp0zgqJ43I+aWpttMz9JBqeLbwUp26jBslmMex8Xs
+         14lA==
+X-Gm-Message-State: AOAM532TvP68t6oc33WazG4ufqsys7rn/FtLk4x4Cj0R7YTwGLO+Jxvt
+        7ErTX8M8XVswsRYPoE7E7CDJCw==
+X-Google-Smtp-Source: ABdhPJyD3SUnIXbcZ9FIm143ErrNjM4H/LvjYDgSMsBFswHxvwmWNYHdOuryNqeFN5/zGT/1kSbgDQ==
+X-Received: by 2002:a6b:ea0a:: with SMTP id m10mr7997067ioc.91.1637108625356;
+        Tue, 16 Nov 2021 16:23:45 -0800 (PST)
+Received: from [127.0.1.1] ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id h19sm13701133ila.37.2021.11.16.16.23.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Nov 2021 16:23:45 -0800 (PST)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Colin Cross <ccross@android.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-hardening@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <20211116181559.3975566-1-keescook@chromium.org>
+References: <20211116181559.3975566-1-keescook@chromium.org>
+Subject: Re: [PATCH] Revert "mark pstore-blk as broken"
+Message-Id: <163710862474.168539.12611066078131838062.b4-ty@kernel.dk>
+Date:   Tue, 16 Nov 2021 17:23:44 -0700
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Alexander Popov <alex.popov@linux.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paul McKenney <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Laura Abbott <labbott@kernel.org>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Scull <ascull@google.com>,
-        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
-        Mathieu Chouquet-Stringer <me@mathieu.digital>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mike Rapoport <rppt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-hardening@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
-        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
-        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20211027233215.306111-1-alex.popov@linux.com>
- <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
- <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
- <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
- <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
- <20211115110649.4f9cb390@gandalf.local.home>
- <202111151116.933184F716@keescook>
- <59534db5-b251-c0c8-791f-58aca5c00a2b@linux.com>
- <202111161037.7456C981@keescook>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <202111161037.7456C981@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.19306 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/16/2021 10:41 AM, Kees Cook wrote:
-> On Tue, Nov 16, 2021 at 12:12:16PM +0300, Alexander Popov wrote:
->> What if the Linux kernel had a LSM module responsible for error handling policy?
->> That would require adding LSM hooks to BUG*(), WARN*(), KERN_EMERG, etc.
->> In such LSM policy we can decide immediately how to react on the kernel error.
->> We can even decide depending on the subsystem and things like that.
-> That would solve the "atomicity" issue the WARN tracepoint solution has,
-> and it would allow for very flexible userspace policy.
->
-> I actually wonder if the existing panic_on_* sites should serve as a
-> guide for where to put the hooks. The current sysctls could be replaced
-> by the hooks and a simple LSM.
+On Tue, 16 Nov 2021 10:15:59 -0800, Kees Cook wrote:
+> This reverts commit d07f3b081ee632268786601f55e1334d1f68b997.
+> 
+> pstore-blk was fixed to avoid the unwanted APIs in commit 7bb9557b48fc
+> ("pstore/blk: Use the normal block device I/O path"), which landed in
+> the same release as the commit adding BROKEN.
+> 
+> 
+> [...]
 
-Do you really want to make error handling a "security" issue?
-If you add security_bug(), security_warn_on() and the like
-you're begging that they be included in SELinux (AppArmor) policy.
-BPF, too, come to think of it. Is that what you want?
+Applied, thanks!
+
+[1/1] Revert "mark pstore-blk as broken"
+      commit: d1faacbf67b1944f0e0c618dc581d929263f6fe9
+
+Best regards,
+-- 
+Jens Axboe
+
 
