@@ -2,163 +2,163 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849EBC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 21:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55828C4321E
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 22:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 656246152B
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 21:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF44619EA
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 22:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240763AbhKQV5P (ORCPT
+        id S240895AbhKQWEw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Nov 2021 16:57:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46048 "EHLO
+        Wed, 17 Nov 2021 17:04:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240822AbhKQV5P (ORCPT
+        with ESMTP id S240960AbhKQWEv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Nov 2021 16:57:15 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B72C061767
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 13:54:16 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id fv9-20020a17090b0e8900b001a6a5ab1392so3775103pjb.1
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 13:54:16 -0800 (PST)
+        Wed, 17 Nov 2021 17:04:51 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F13C061202
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 14:01:52 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id d64so1422431pgc.7
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 14:01:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TyflncBo4THYgrqhCPbCdrMH0wmAnukogB9h7+aZLPc=;
-        b=LD3wx/0WsV+K5ZaVvJGk4B58b755LoG9yNHQCbOtNiqYXf1JDa0B+6STmSNAX7UiAb
-         a3bbZGG3lI8FB7Pl+jZRC+07aI4FLb75KMMbKB0dR/ZKgf6bHAM460JE2ur0VB+b1BaR
-         zFUCpk6hp28mvlZ/CRH8MbCstWvltcN1qAWsc=
+        bh=NrftdzRJB+iZXhfybj3wXjLC5DBwV9iU14DUg7paL24=;
+        b=eBLjeWMGVqkF82f+ZTunl/5cPTL6s9LC1GIM2m29eHFzvFNKcBpgZYcng81TfXgUyt
+         2Sk/PCTAChxnm4vANMcdfsEayCJ2EUOmPIIkJEwV2q67UPGWVq+c14pvSbyxVvy9LbPV
+         FdxyxiAIRDJF4rof3OAUXlmdML5i9wTxnKiSw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TyflncBo4THYgrqhCPbCdrMH0wmAnukogB9h7+aZLPc=;
-        b=TyTRtznQDslimef5V2Vguj7ipARPvPqO8M0BtuumAMY/EpJg+w0IbCdNkuhDGcWce6
-         SzOJem1usZVIiDHY7F1SLQ/8+RFoAsIXZjVTcAwT5qBWBDvS/jiao2HgD8+b9OiOI0IU
-         VdzEfmXSYC2x0WeyooWDVteytm1UutqvwHdYuALCURKkEDks72UVcEiSS5Sdk1AbGUgO
-         6It32/ch63olZRxZB13xrw5FWVdD/Cuyu0ty10vmcu+m3w7aM92DaBPuHuYj7tRNgJXP
-         3THjMOGhvpM5B+bK9tDLrUuGbiUm6ZbIEYQ2lvQylpBg3ZS5dqyXNuy4daH3T0SoJ0R2
-         yQ5w==
-X-Gm-Message-State: AOAM533Uc2tX4CFICJm08DrUpkr+9++rmnLqnCR1XOyYf/KpyYKfN6WU
-        wAXH8KVGy+EP/VKswvYGqONL1g==
-X-Google-Smtp-Source: ABdhPJzcvx+Omftengr4Y3I++Ne+CRyHy9ruaviogn9sbmiRhSOCY96nnx7Ca6k41hOfhn1CeyD3VQ==
-X-Received: by 2002:a17:90b:4f45:: with SMTP id pj5mr3890617pjb.70.1637186055666;
-        Wed, 17 Nov 2021 13:54:15 -0800 (PST)
+        bh=NrftdzRJB+iZXhfybj3wXjLC5DBwV9iU14DUg7paL24=;
+        b=ike1olb1cJJCkQRU15EgBe4WAXhdWPKzm8U5+KtNN25qHKYp15r6PNITCm+1PSe3aT
+         mA7G36PsJY+EOoRawORb0KHFBF+1s08W8bSAs2QGPzJJDmiH42rITGfkrswOX+6vdA+o
+         9a4asFVLPIZKHEjxX4SGX+emCnqsT/Mz/rWBHnz3Zpr381YY2jjBCddGl0sfhN4bdovb
+         H4ihDLovKblHUY/nA3oQdMyi/UW3CcEzfM3WiktGmz8DpDzCiupOsPSVgKg5n+S/m8pA
+         czlKd2kEkp/ktDDJgU4qRVUIqL29+gt5UwQzI/UePGOAEURkY+enWtamcaYNQSZhEC9y
+         ywVw==
+X-Gm-Message-State: AOAM5319F2da1QWSyfBJv1dGO2AuUHS6wh8UUIBZ16yVB4Ho4woUnQqo
+        9h2PJL4yJfeAc/3O1djB6ctfJHhn5k8bTQ==
+X-Google-Smtp-Source: ABdhPJytb4QuGhE0Dp5hS2yGoJ5gdfGFvXD2UKBYYQ+FwETV1QxzSJKBdU6XMk2BDAY7E94T1Ku81w==
+X-Received: by 2002:a63:1125:: with SMTP id g37mr7864577pgl.118.1637186511589;
+        Wed, 17 Nov 2021 14:01:51 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id oc10sm6963920pjb.26.2021.11.17.13.54.15
+        by smtp.gmail.com with ESMTPSA id q18sm605060pfj.46.2021.11.17.14.01.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Nov 2021 13:54:15 -0800 (PST)
-Date:   Wed, 17 Nov 2021 13:54:14 -0800
+        Wed, 17 Nov 2021 14:01:51 -0800 (PST)
+Date:   Wed, 17 Nov 2021 14:01:50 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Kyle Huey <me@kylehuey.com>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, bpf@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Robert O'Callahan <rocallahan@gmail.com>
-Subject: Re: [REGRESSION] 5.16rc1: SA_IMMUTABLE breaks debuggers
-Message-ID: <202111171341.41053845C3@keescook>
-References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
- <202111171049.3F9C5F1@keescook>
- <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
- <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
- <87k0h6334w.fsf@email.froward.int.ebiederm.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Dinh Nguyen <dinguyen@kernel.org>,
+        "Ivan T . Ivanov" <iivanov@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ARM: socfpga: Fix crash with CONFIG_FORTIRY_SOURCE
+Message-ID: <202111171400.618456DCE9@keescook>
+References: <20211117193244.31162-1-tiwai@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k0h6334w.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <20211117193244.31162-1-tiwai@suse.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 03:04:31PM -0600, Eric W. Biederman wrote:
-> Kyle Huey <me@kylehuey.com> writes:
+On Wed, Nov 17, 2021 at 08:32:44PM +0100, Takashi Iwai wrote:
+> When CONFIG_FORTIFY_SOURCE is set, memcpy() checks the potential
+> buffer overflow and panics.  The code in sofcpga bootstrapping
+> contains the memcpy() calls are mistakenly translated as the shorter
+> size, hence it triggers a panic as if it were overflowing.
 > 
-> > On Wed, Nov 17, 2021 at 11:05 AM Kyle Huey <me@kylehuey.com> wrote:
-> >>
-> >> On Wed, Nov 17, 2021 at 10:51 AM Kees Cook <keescook@chromium.org> wrote:
-> >> >
-> >> > On Wed, Nov 17, 2021 at 10:47:13AM -0800, Kyle Huey wrote:
-> >> > > rr, a userspace record and replay debugger[0], is completely broken on
-> >> > > 5.16rc1. I bisected this to 00b06da29cf9dc633cdba87acd3f57f4df3fd5c7.
-> >> > >
-> >> > > That patch makes two changes, it blocks sigaction from changing signal
-> >> > > handlers once the kernel has decided to force the program to take a
-> >> > > signal and it also stops notifying ptracers of the signal in the same
-> >> > > circumstances. The latter behavior is just wrong. There's no reason
-> >> > > that ptrace should not be able to observe and even change
-> >> > > (non-SIGKILL) forced signals.  It should be reverted.
-> >> > >
-> >> > > This behavior change is also observable in gdb. If you take a program
-> >> > > that sets SIGSYS to SIG_IGN and then raises a SIGSYS via
-> >> > > SECCOMP_RET_TRAP and run it under gdb on a good kernel gdb will stop
-> >> > > when the SIGSYS is raised, let you inspect program state, etc. After
-> >> > > the SA_IMMUTABLE change gdb won't stop until the program has already
-> >> > > died of SIGSYS.
-> >> >
-> >> > Ah, hm, this was trying to fix the case where a program trips
-> >> > SECCOMP_RET_KILL (which is a "fatal SIGSYS"), and had been unobservable
-> >> > before. I guess the fix was too broad...
-> >>
-> >> Perhaps I don't understand precisely what you mean by this, but gdb's
-> >> behavior for a program that is SECCOMP_RET_KILLed was not changed by
-> >> this patch (the SIGSYS is not observed until after program exit before
-> >> or after this change).
-
-The SA_IMMUTABLE change was to deal with failures seen in the seccomp
-test suite after the recent fatal signal refactoring. Mainly that a
-process that should have effectively performed do_exit() was suddenly
-visible to the tracer.
-
-> > Ah, maybe that behavior changed in 5.15 (my "before" here is a 5.14
-> > kernel).  I would argue that the debugger seeing the SIGSYS for
-> > SECCOMP_RET_KILL is desirable though ...
+> This patch adds the __NO_FORTIFY define for avoiding the
+> false-positive crash.
 > 
-> This is definitely worth discussing, and probably in need of fixing (aka
-> something in rr seems to have broken).
+> Buglink: https://bugzilla.suse.com/show_bug.cgi?id=1192473
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> ---
 > 
-> We definitely need protection against the race with sigaction.
+> I took an easier path for now, as the attempt with a foced cast
+> failed.  If there is a better way to handle, let me know, I'd happily
+> resubmit.  Thanks!
 > 
-> The fundamental question becomes does it make sense and is it safe
-> to allow a debugger to stop at, and possibly change these signals.
 
-I have no problem with a debugger getting notified about a fatal
-(SECCOMP_RET_KILL*-originated) SIGSYS. But whatever happens, the kernel
-needs to make sure the process does not continue. (i.e. signal can't be
-changed/removed/etc.)
+The way these have been fixed in the past is to declare these as char
+arrays (see include/asm-generic/sections.h). I'd prefer something like
+this (totally untested):
 
-> Stopping at something SA_IMMUTABLE as long as the signal is allowed to
-> continue and kill the process when PTRACE_CONT happens seems harmless.
+diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
+index fc2608b18a0d..18f01190dcfd 100644
+--- a/arch/arm/mach-socfpga/core.h
++++ b/arch/arm/mach-socfpga/core.h
+@@ -33,7 +33,7 @@ extern void __iomem *sdr_ctl_base_addr;
+ u32 socfpga_sdram_self_refresh(u32 sdr_base);
+ extern unsigned int socfpga_sdram_self_refresh_sz;
+ 
+-extern char secondary_trampoline, secondary_trampoline_end;
++extern char secondary_trampoline[], secondary_trampoline_end[];
+ 
+ extern unsigned long socfpga_cpu1start_addr;
+ 
+diff --git a/arch/arm/mach-socfpga/platsmp.c b/arch/arm/mach-socfpga/platsmp.c
+index fbb80b883e5d..201191cf68f3 100644
+--- a/arch/arm/mach-socfpga/platsmp.c
++++ b/arch/arm/mach-socfpga/platsmp.c
+@@ -20,14 +20,14 @@
+ 
+ static int socfpga_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ {
+-	int trampoline_size = &secondary_trampoline_end - &secondary_trampoline;
++	int trampoline_size = secondary_trampoline_end - secondary_trampoline;
+ 
+ 	if (socfpga_cpu1start_addr) {
+ 		/* This will put CPU #1 into reset. */
+ 		writel(RSTMGR_MPUMODRST_CPU1,
+ 		       rst_manager_base_addr + SOCFPGA_RSTMGR_MODMPURST);
+ 
+-		memcpy(phys_to_virt(0), &secondary_trampoline, trampoline_size);
++		memcpy(phys_to_virt(0), secondary_trampoline, trampoline_size);
+ 
+ 		writel(__pa_symbol(secondary_startup),
+ 		       sys_manager_base_addr + (socfpga_cpu1start_addr & 0x000000ff));
+@@ -45,12 +45,12 @@ static int socfpga_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 
+ static int socfpga_a10_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ {
+-	int trampoline_size = &secondary_trampoline_end - &secondary_trampoline;
++	int trampoline_size = secondary_trampoline_end - secondary_trampoline;
+ 
+ 	if (socfpga_cpu1start_addr) {
+ 		writel(RSTMGR_MPUMODRST_CPU1, rst_manager_base_addr +
+ 		       SOCFPGA_A10_RSTMGR_MODMPURST);
+-		memcpy(phys_to_virt(0), &secondary_trampoline, trampoline_size);
++		memcpy(phys_to_virt(0), secondary_trampoline, trampoline_size);
+ 
+ 		writel(__pa_symbol(secondary_startup),
+ 		       sys_manager_base_addr + (socfpga_cpu1start_addr & 0x00000fff));
+
+>  arch/arm/mach-socfpga/platsmp.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Allowing the debugger to change the signal, or change it's handling
-> I don't know.
-
-Right -- I'm fine with a visibility change (the seccomp test suite is
-just checking for various expected state machine changes across the
-various signal/death cases: as long as it _dies_, that's what we want.
-If a extra notification appears before it dies, that's okay, it just
-needs the test suite to change).
-
-> [...]
-> Kees I am back to asking the question I had before I figured out
-> SA_IMMUTABLE.  Are there security concerns with debuggers intercepting
-> SECCOMP_RET_KILL.
-
-I see no problem with allowing a tracer to observe the signal, but the
-signalled process must have no way to continue running. If we end up in
-such a state, then a seccomp process with access to clone() and
-ptrace() can escape the seccomp sandbox. This is why seccomp had been
-using the big do_exit() hammer -- I really want to absolutely never have
-a bug manifest with a bypassed SECCOMP_RET_KILL: having a completely
-unavoidable "dying" state is needed.
+> diff --git a/arch/arm/mach-socfpga/platsmp.c b/arch/arm/mach-socfpga/platsmp.c
+> index fbb80b883e5d..d46b1af96a8a 100644
+> --- a/arch/arm/mach-socfpga/platsmp.c
+> +++ b/arch/arm/mach-socfpga/platsmp.c
+> @@ -5,6 +5,9 @@
+>   * Based on platsmp.c, Copyright (C) 2002 ARM Ltd.
+>   * Copyright (C) 2012 Altera Corporation
+>   */
+> +
+> +#define __NO_FORTIFY /* need to avoid the crash with memcpy() calls */
+> +
+>  #include <linux/delay.h>
+>  #include <linux/init.h>
+>  #include <linux/smp.h>
+> -- 
+> 2.26.2
+> 
 
 -- 
 Kees Cook
