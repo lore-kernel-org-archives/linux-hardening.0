@@ -2,154 +2,202 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F69C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 23:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B834C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 23:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4DC961A8A
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 23:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F225F61279
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 23:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232956AbhKRXnB (ORCPT
+        id S233350AbhKRXzY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 18:43:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57316 "EHLO
+        Thu, 18 Nov 2021 18:55:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231403AbhKRXnB (ORCPT
+        with ESMTP id S232987AbhKRXzX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 18:43:01 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C72C06173E
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 15:40:00 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id r132so6894812pgr.9
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 15:40:00 -0800 (PST)
+        Thu, 18 Nov 2021 18:55:23 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B45EC06173E
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 15:52:23 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id np6-20020a17090b4c4600b001a90b011e06so7235783pjb.5
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 15:52:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=oXVLgn7Fm48aBJFzNVOVlXR9OEHonO1R9lF3Un+NrdE=;
-        b=adean6vy4yeH/XRaSWPDn2eF5HEXAskqbiJ4tLKSBOb1kEyQu9T00sNYEWyuZYH2gk
-         BuF3Urre/F4ibEf37iZjBvW4IZEl0BMap4ubCE63aePPvfePIQAiI+s9xh6cRSH/QQrU
-         BDvNCfnznWgz+Gl09t2mFIMIKWsWkcTIDmIKI=
+        bh=5csrtvGfUTJpKF36Wio1zVqY+YzQi+hNlntFmMAP5yg=;
+        b=g2lurF0Wk+tsvpUW7wbChUs+KopNziAVGrGyEwWVUi1JL40npMY/P45frOYQltqlkN
+         HzbTpOa+CSf20GXvlzUwZ8r1nWk4P/Ny/5RI7MKoq5WedFas/awujDCP280w60AFULjw
+         YMWA+8q4b3wlhHjXQIyMkcJCsDB9rkL7L5vqc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=oXVLgn7Fm48aBJFzNVOVlXR9OEHonO1R9lF3Un+NrdE=;
-        b=CJ9pmluk0AavKkx4p8Jb1W12mqq4Ws3bAbqok6m+2yVsJc7R7QrwjcPVq7ujWbtJw8
-         PbL4VQ7wqOhPAuRhHiEwKn0GE0vGifOat+9A6Cc8kqaiAmyZgZ8p85iS2AsrJSkol8bp
-         cmnxU9D6n+wNk/U9zDwKdqiUeNrU5ibhAPPJqOmOf47VtnEnBornwkQCiOys49EVkfGS
-         6L/8ns8bU+0kJb9uh4QoN7OOWp3qKuAj85BXmEz3/duS68sjKAaSRO7C4w0k2Uu2jUA9
-         ReCVfeqZTRDXjShnoWhzWSmXkk7A5YSBStV663oTTp4zQ9+iN0pgVA9/ca2j2Niylv98
-         gCKA==
-X-Gm-Message-State: AOAM532jhpgXBizFGikkaSDClBOF2eqXdhmIytS1sdS5CunKR0KYaqQG
-        nhzGW7ej+AujDFPVuVu5VuhRHA==
-X-Google-Smtp-Source: ABdhPJzhq8/zLZS54halfY22K3R0DFf+8t9M9mL7GrX7pO1LuSwDghC9VZ8n/iGRKAxpPjjpRv4NSg==
-X-Received: by 2002:a63:e216:: with SMTP id q22mr14105524pgh.3.1637278800301;
-        Thu, 18 Nov 2021 15:40:00 -0800 (PST)
+        bh=5csrtvGfUTJpKF36Wio1zVqY+YzQi+hNlntFmMAP5yg=;
+        b=drwfQBStdL8Sb+vG6ndZc0EDxEO2cKNEdjv2iavHgGHFuyu+EAC6Vxv6q9Srz/dYnb
+         z8FFLUC7g/93gdykA6OiwCg9qbwOuqJKVybTa51uFYqZtgbFShxNj36NZ0zXUXHLCPxo
+         ansBcxHn6pryMNoibi/fb9rFElOOqtkQVvCJQlMfoeDJ4YGZQKAVSlDPZtETeAgV58BA
+         RqH+kI1Wmb+Aczq/7w6R+R+H/xDZ0FXbinDYJURW1YqCu/Uu+ENe7CKpXgFJ/H9x0Qwv
+         RQZoGr81yZJPgr4XHQF8jqeoqrzQS3baGnQwm04kqOjeHUCmKt0m+sQAX6MjmRILv1Mz
+         1T8Q==
+X-Gm-Message-State: AOAM532ZvI3o4STI9ilLsVLvfUBlzrEEXH1j7IGYd3iCIZ2JmRHmosCH
+        wT/fifKObHAEpRFi29oGANIq0Q==
+X-Google-Smtp-Source: ABdhPJyCkMcnVji2etMSb9tSf8G2lX6aXR4fLRsukFT9YdqZmATb5ELAUMXF/+B7nHJtvSt9Daa/CA==
+X-Received: by 2002:a17:903:1105:b0:143:a593:dc6e with SMTP id n5-20020a170903110500b00143a593dc6emr68520805plh.6.1637279542582;
+        Thu, 18 Nov 2021 15:52:22 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k3sm680152pff.211.2021.11.18.15.39.59
+        by smtp.gmail.com with ESMTPSA id oc10sm10128805pjb.26.2021.11.18.15.52.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 15:40:00 -0800 (PST)
-Date:   Thu, 18 Nov 2021 15:39:59 -0800
+        Thu, 18 Nov 2021 15:52:22 -0800 (PST)
+Date:   Thu, 18 Nov 2021 15:52:21 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sata_fsl: Use struct_group() for memcpy() region
-Message-ID: <202111181533.2D90E391@keescook>
-References: <20211118183807.1283332-1-keescook@chromium.org>
- <0dd24142-a5e6-b146-9315-d2680ef4ed35@opensource.wdc.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        Oliver Sang <oliver.sang@intel.com>, lkp@lists.01.org,
+        lkp@intel.com
+Subject: Re: [PATCH 1/2] signal: Don't always set SA_IMMUTABLE for forced
+ signals
+Message-ID: <202111181551.FE7B4825B0@keescook>
+References: <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
+ <87k0h6334w.fsf@email.froward.int.ebiederm.org>
+ <202111171341.41053845C3@keescook>
+ <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
+ <CAP045ApYXxhiAfmn=fQM7_hD58T-yx724ctWFHO4UAWCD+QapQ@mail.gmail.com>
+ <CAHk-=wiCRbSvUi_TnQkokLeM==_+Tow0GsQXnV3UYwhsxirPwg@mail.gmail.com>
+ <CAP045AoqssLTKOqse1t1DG1HgK9h+goG8C3sqgOyOV3Wwq+LDA@mail.gmail.com>
+ <202111171728.D85A4E2571@keescook>
+ <87h7c9qg7p.fsf_-_@email.froward.int.ebiederm.org>
+ <877dd5qfw5.fsf_-_@email.froward.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0dd24142-a5e6-b146-9315-d2680ef4ed35@opensource.wdc.com>
+In-Reply-To: <877dd5qfw5.fsf_-_@email.froward.int.ebiederm.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 08:17:14AM +0900, Damien Le Moal wrote:
-> On 2021/11/19 3:38, Kees Cook wrote:
-> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > field bounds checking for memcpy(), memmove(), and memset(), avoid
-> > intentionally writing across neighboring fields.
-> > 
-> > Use struct_group() in struct command_desc around members acmd and fill,
-> > so they can be referenced together. This will allow memset(), memcpy(),
-> > and sizeof() to more easily reason about sizes, improve readability,
-> > and avoid future warnings about writing beyond the end of acmd:
-> > 
-> > In function 'fortify_memset_chk',
-> >     inlined from 'sata_fsl_qc_prep' at drivers/ata/sata_fsl.c:534:3:
-> > ./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-> >   199 |    __write_overflow_field();
-> >       |    ^~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+On Thu, Nov 18, 2021 at 04:04:58PM -0600, Eric W. Biederman wrote:
 > 
-> This lacks some context with regard to FORTIFY_SOURCE and struct_group(). Is
-> that already in 5.16 ? It sounds like it is not. Do you want a ack ? Or do you
-> want me to queue this up for 5.17 ?
+> Recently to prevent issues with SECCOMP_RET_KILL and similar signals
+> being changed before they are delivered SA_IMMUTABLE was added.
+> 
+> Unfortunately this broke debuggers[1][2] which reasonably expect to be
+> able to trap synchronous SIGTRAP and SIGSEGV even when the target
+> process is not configured to handle those signals.
+> 
+> Update force_sig_to_task to support both the case when we can
+> allow the debugger to intercept and possibly ignore the
+> signal and the case when it is not safe to let userspace
+> known about the signal until the process has exited.
+> 
+> Reported-by: Kyle Huey <me@kylehuey.com>
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Cc: stable@vger.kernel.org
+> [1] https://lkml.kernel.org/r/CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com
+> [2] https://lkml.kernel.org/r/20211117150258.GB5403@xsang-OptiPlex-902
+> Fixes: 00b06da29cf9 ("signal: Add SA_IMMUTABLE to ensure forced siganls do not get changed")
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Ah yes, some details are here in the earlier "big" series cover letter
-here:
-https://lore.kernel.org/linux-hardening/20210818060533.3569517-1-keescook@chromium.org/
+Thanks! This passes the seccomp self-tests.
 
-One of the requests from earlier review was to split it up for separate
-trees for the maintainers that wanted to take stuff via their trees
-directly.
-
-The new helpers are landed as of v5.16-rc1, so it can go either way, but
-given that the merge window is closed, I would expect this to be for
-v5.17.
-
-I am happy to to carry it in my fortify topic branch that I'm expecting
-to send for 5.17, but totally up to you. Some folks like to take these
-changes via their trees, others would rather not be bothered with it. :)
-
-Thanks!
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
+> ---
+>  kernel/signal.c | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
 > 
-> Cheers.
-> 
-> > ---
-> >  drivers/ata/sata_fsl.c | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
-> > index e5838b23c9e0..fec3c9032606 100644
-> > --- a/drivers/ata/sata_fsl.c
-> > +++ b/drivers/ata/sata_fsl.c
-> > @@ -246,8 +246,10 @@ enum {
-> >  struct command_desc {
-> >  	u8 cfis[8 * 4];
-> >  	u8 sfis[8 * 4];
-> > -	u8 acmd[4 * 4];
-> > -	u8 fill[4 * 4];
-> > +	struct_group(cdb,
-> > +		u8 acmd[4 * 4];
-> > +		u8 fill[4 * 4];
-> > +	);
-> >  	u32 prdt[SATA_FSL_MAX_PRD_DIRECT * 4];
-> >  	u32 prdt_indirect[(SATA_FSL_MAX_PRD - SATA_FSL_MAX_PRD_DIRECT) * 4];
-> >  };
-> > @@ -531,8 +533,8 @@ static enum ata_completion_errors sata_fsl_qc_prep(struct ata_queued_cmd *qc)
-> >  	/* setup "ACMD - atapi command" in cmd. desc. if this is ATAPI cmd */
-> >  	if (ata_is_atapi(qc->tf.protocol)) {
-> >  		desc_info |= ATAPI_CMD;
-> > -		memset((void *)&cd->acmd, 0, 32);
-> > -		memcpy((void *)&cd->acmd, qc->cdb, qc->dev->cdb_len);
-> > +		memset(&cd->cdb, 0, sizeof(cd->cdb));
-> > +		memcpy(&cd->cdb, qc->cdb, qc->dev->cdb_len);
-> >  	}
-> >  
-> >  	if (qc->flags & ATA_QCFLAG_DMAMAP)
-> > 
-> 
-> 
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 7c4b7ae714d4..02058c983bd6 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1298,6 +1298,12 @@ int do_send_sig_info(int sig, struct kernel_siginfo *info, struct task_struct *p
+>  	return ret;
+>  }
+>  
+> +enum sig_handler {
+> +	HANDLER_CURRENT, /* If reachable use the current handler */
+> +	HANDLER_SIG_DFL, /* Always use SIG_DFL handler semantics */
+> +	HANDLER_EXIT,	 /* Only visible as the proces exit code */
+> +};
+> +
+>  /*
+>   * Force a signal that the process can't ignore: if necessary
+>   * we unblock the signal and change any SIG_IGN to SIG_DFL.
+> @@ -1310,7 +1316,8 @@ int do_send_sig_info(int sig, struct kernel_siginfo *info, struct task_struct *p
+>   * that is why we also clear SIGNAL_UNKILLABLE.
+>   */
+>  static int
+> -force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t, bool sigdfl)
+> +force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t,
+> +	enum sig_handler handler)
+>  {
+>  	unsigned long int flags;
+>  	int ret, blocked, ignored;
+> @@ -1321,9 +1328,10 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t, bool
+>  	action = &t->sighand->action[sig-1];
+>  	ignored = action->sa.sa_handler == SIG_IGN;
+>  	blocked = sigismember(&t->blocked, sig);
+> -	if (blocked || ignored || sigdfl) {
+> +	if (blocked || ignored || (handler != HANDLER_CURRENT)) {
+>  		action->sa.sa_handler = SIG_DFL;
+> -		action->sa.sa_flags |= SA_IMMUTABLE;
+> +		if (handler == HANDLER_EXIT)
+> +			action->sa.sa_flags |= SA_IMMUTABLE;
+>  		if (blocked) {
+>  			sigdelset(&t->blocked, sig);
+>  			recalc_sigpending_and_wake(t);
+> @@ -1343,7 +1351,7 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t, bool
+>  
+>  int force_sig_info(struct kernel_siginfo *info)
+>  {
+> -	return force_sig_info_to_task(info, current, false);
+> +	return force_sig_info_to_task(info, current, HANDLER_CURRENT);
+>  }
+>  
+>  /*
+> @@ -1660,7 +1668,7 @@ void force_fatal_sig(int sig)
+>  	info.si_code = SI_KERNEL;
+>  	info.si_pid = 0;
+>  	info.si_uid = 0;
+> -	force_sig_info_to_task(&info, current, true);
+> +	force_sig_info_to_task(&info, current, HANDLER_SIG_DFL);
+>  }
+>  
+>  /*
+> @@ -1693,7 +1701,7 @@ int force_sig_fault_to_task(int sig, int code, void __user *addr
+>  	info.si_flags = flags;
+>  	info.si_isr = isr;
+>  #endif
+> -	return force_sig_info_to_task(&info, t, false);
+> +	return force_sig_info_to_task(&info, t, HANDLER_CURRENT);
+>  }
+>  
+>  int force_sig_fault(int sig, int code, void __user *addr
+> @@ -1813,7 +1821,8 @@ int force_sig_seccomp(int syscall, int reason, bool force_coredump)
+>  	info.si_errno = reason;
+>  	info.si_arch = syscall_get_arch(current);
+>  	info.si_syscall = syscall;
+> -	return force_sig_info_to_task(&info, current, force_coredump);
+> +	return force_sig_info_to_task(&info, current,
+> +		force_coredump ? HANDLER_EXIT : HANDLER_CURRENT);
+>  }
+>  
+>  /* For the crazy architectures that include trap information in
 > -- 
-> Damien Le Moal
-> Western Digital Research
+> 2.20.1
 
 -- 
 Kees Cook
