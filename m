@@ -2,54 +2,55 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD20C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 07:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD8DC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 14:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF02E61A3D
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 07:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9FE610FB
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 14:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243507AbhKRHa2 (ORCPT
+        id S233009AbhKRO0i (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 02:30:28 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:52098 "EHLO
+        Thu, 18 Nov 2021 09:26:38 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:47682 "EHLO
         smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243448AbhKRHa1 (ORCPT
+        with ESMTP id S232240AbhKRO0h (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 02:30:27 -0500
+        Thu, 18 Nov 2021 09:26:37 -0500
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id D00401FD35;
-        Thu, 18 Nov 2021 07:27:26 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTP id A3FF61FD37;
+        Thu, 18 Nov 2021 14:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1637220446; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1637245416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=6lR2NN1KvVP4Jy99ruifaDovy1lCX/AMdZlr3TKX9DI=;
-        b=1HpnTCZ9U/GMu7P3LSTPoQh3w21KE35/2v8sT4qxlCHO5NbkgNJMlIOwWMQda+6TtnaX9g
-        YqfPmOV5BQZ6PXArGLXJWU+W+7qhXVVdfwhCVGXoptrSgCpyqE5QbwAmX3U1agR3mAnN7x
-        8knUGlla/ypu+zjraFUsmJPyJYMuNNI=
+        bh=XQ7S370u56PYYcYru8FBgIGLQ2VXa6TYzeYoYk1u7i8=;
+        b=vuGt2d2dTG3b/BiaLTpC78o1LtpFBIdThgx1C8X9wPXzgY3blar2TcK8cUt/0q/oK/5wQf
+        s2ctUz6/ISkiKZxAgkM3xlPYCqcdYLLj2ztwYF310TEczI9tZd0PObWCDNUV8NqZH3NEYF
+        MDThQhZUUU6iRfT9j7pjc07J2OQoDJ0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1637220446;
+        s=susede2_ed25519; t=1637245416;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=6lR2NN1KvVP4Jy99ruifaDovy1lCX/AMdZlr3TKX9DI=;
-        b=WL01u1cV8AlwnIgEoh8zaUvwYS9usF7MNUWALOFGFm5BcZBf9Sc5AtO/SJDMqDHTdpDs2/
-        aV5z9BUNE0T/Q1Cw==
+        bh=XQ7S370u56PYYcYru8FBgIGLQ2VXa6TYzeYoYk1u7i8=;
+        b=oki7CYYKrTAGb9Ad2aK+lqrWJw7InO/bSxT2YQ9Tf42gMipYV0YhF68amSk97NDVvInZLx
+        fINGEVys7xC0+xBg==
 Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
-        by relay2.suse.de (Postfix) with ESMTP id C755EA3B85;
-        Thu, 18 Nov 2021 07:27:26 +0000 (UTC)
-Date:   Thu, 18 Nov 2021 08:27:26 +0100
-Message-ID: <s5hsfvtkjoh.wl-tiwai@suse.de>
+        by relay2.suse.de (Postfix) with ESMTP id 98D38A3B84;
+        Thu, 18 Nov 2021 14:23:36 +0000 (UTC)
+Date:   Thu, 18 Nov 2021 15:23:36 +0100
+Message-ID: <s5hee7diluf.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Takashi Iwai <tiwai@suse.de>, Dinh Nguyen <dinguyen@kernel.org>,
+Cc:     Dinh Nguyen <dinguyen@kernel.org>,
         "Ivan T . Ivanov" <iivanov@suse.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] ARM: socfpga: Fix crash with CONFIG_FORTIRY_SOURCE
-In-Reply-To: <202111171400.618456DCE9@keescook>
+In-Reply-To: <s5hsfvtkjoh.wl-tiwai@suse.de>
 References: <20211117193244.31162-1-tiwai@suse.de>
         <202111171400.618456DCE9@keescook>
+        <s5hsfvtkjoh.wl-tiwai@suse.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -59,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 17 Nov 2021 23:01:50 +0100,
-Kees Cook wrote:
+On Thu, 18 Nov 2021 08:27:26 +0100,
+Takashi Iwai wrote:
 > 
-> On Wed, Nov 17, 2021 at 08:32:44PM +0100, Takashi Iwai wrote:
-> > When CONFIG_FORTIFY_SOURCE is set, memcpy() checks the potential
-> > buffer overflow and panics.  The code in sofcpga bootstrapping
-> > contains the memcpy() calls are mistakenly translated as the shorter
-> > size, hence it triggers a panic as if it were overflowing.
+> On Wed, 17 Nov 2021 23:01:50 +0100,
+> Kees Cook wrote:
 > > 
-> > This patch adds the __NO_FORTIFY define for avoiding the
-> > false-positive crash.
+> > On Wed, Nov 17, 2021 at 08:32:44PM +0100, Takashi Iwai wrote:
+> > > When CONFIG_FORTIFY_SOURCE is set, memcpy() checks the potential
+> > > buffer overflow and panics.  The code in sofcpga bootstrapping
+> > > contains the memcpy() calls are mistakenly translated as the shorter
+> > > size, hence it triggers a panic as if it were overflowing.
+> > > 
+> > > This patch adds the __NO_FORTIFY define for avoiding the
+> > > false-positive crash.
+> > > 
+> > > Buglink: https://bugzilla.suse.com/show_bug.cgi?id=1192473
+> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > ---
+> > > 
+> > > I took an easier path for now, as the attempt with a foced cast
+> > > failed.  If there is a better way to handle, let me know, I'd happily
+> > > resubmit.  Thanks!
+> > > 
 > > 
-> > Buglink: https://bugzilla.suse.com/show_bug.cgi?id=1192473
-> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> > ---
-> > 
-> > I took an easier path for now, as the attempt with a foced cast
-> > failed.  If there is a better way to handle, let me know, I'd happily
-> > resubmit.  Thanks!
-> > 
+> > The way these have been fixed in the past is to declare these as char
+> > arrays (see include/asm-generic/sections.h). I'd prefer something like
+> > this (totally untested):
+> (snip)
 > 
-> The way these have been fixed in the past is to declare these as char
-> arrays (see include/asm-generic/sections.h). I'd prefer something like
-> this (totally untested):
-(snip)
+> That looks better, indeed.  I'll rebuild the kernel with it and ask
+> the bug reporter for testing it.
 
-That looks better, indeed.  I'll rebuild the kernel with it and ask
-the bug reporter for testing it.
+Confirmed to work.  Will resubmit the v2 patch.
 
 
-Thanks!
+thanks,
 
 Takashi
