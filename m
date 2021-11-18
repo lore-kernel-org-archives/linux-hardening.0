@@ -2,306 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F9DC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 22:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAEBC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 23:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 148D6610FC
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 22:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F29B61A86
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 23:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbhKRWIo (ORCPT
+        id S233115AbhKRXUT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 17:08:44 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:39486 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbhKRWIn (ORCPT
+        Thu, 18 Nov 2021 18:20:19 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:22440 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232831AbhKRXUT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 17:08:43 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52]:38218)
-        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1mnpXK-00E39T-6Z; Thu, 18 Nov 2021 15:05:42 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95]:52906 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1mnpXH-00Av0p-Bt; Thu, 18 Nov 2021 15:05:41 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     Kyle Huey <me@kylehuey.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        "open list\:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Oliver Sang <oliver.sang@intel.com>, lkp@lists.01.org,
-        lkp@intel.com
-References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
-        <202111171049.3F9C5F1@keescook>
-        <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
-        <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
-        <87k0h6334w.fsf@email.froward.int.ebiederm.org>
-        <202111171341.41053845C3@keescook>
-        <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
-        <CAP045ApYXxhiAfmn=fQM7_hD58T-yx724ctWFHO4UAWCD+QapQ@mail.gmail.com>
-        <CAHk-=wiCRbSvUi_TnQkokLeM==_+Tow0GsQXnV3UYwhsxirPwg@mail.gmail.com>
-        <CAP045AoqssLTKOqse1t1DG1HgK9h+goG8C3sqgOyOV3Wwq+LDA@mail.gmail.com>
-        <202111171728.D85A4E2571@keescook>
-        <87h7c9qg7p.fsf_-_@email.froward.int.ebiederm.org>
-Date:   Thu, 18 Nov 2021 16:05:31 -0600
-In-Reply-To: <87h7c9qg7p.fsf_-_@email.froward.int.ebiederm.org> (Eric
-        W. Biederman's message of "Thu, 18 Nov 2021 15:58:02 -0600")
-Message-ID: <871r3dqfv8.fsf_-_@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 18 Nov 2021 18:20:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1637277438; x=1668813438;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3FRxLZFQ1ant8RvQeCMXpMeGccsTGL1wsogxaW4rxA0=;
+  b=AW+LiVzlWu9KE9IWoMklP21Nfw1wYxzhoSaXAPPn2ORllslm+RtT2l1/
+   Tz2nB2Yo/4AyeJGmfMJ3jUGiVDvUEpIskfK1je9kpA+pED9g4Wvt7giHN
+   i5hug+FecYvpD2ss8mN5y1xLTUKJ75pe3Kp1V+5CmCNGYTqUT106sdyzP
+   oCycZbpriwqJvJIZ9gCwP1cGKxT6exsq5vzSO3fgwtJpuRT88B3W1a1yc
+   sqj9Yz8IlDQelIJMX8DWahxvB2VDJF+rh/TTxfLg8tqvJUhtVs3sAby0S
+   V/55zUf7WO1S7IcBBN2hSQ2kVPB7js1AiuuovBjMOmbOE/KN71ItfCMPg
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.87,246,1631548800"; 
+   d="scan'208";a="289953271"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Nov 2021 07:17:18 +0800
+IronPort-SDR: KYrrNeE0plZSO3Q3ezcltJdoIAQWIYrb8k087/PPSksbVbhxNgPLR2QI9Ox7wGgXrCqMAil2y+
+ LyyYJJDPT96J2zNXmdA+CQYnu0MxjVAXSevh5Ep//VvuD/Cn5DvEjK4/hXYBk/L8yRq92o6zlx
+ IDoM+bvWTpM/R/mAwt1rmSy4vTkOpCisk4IsUrQ2jm33OXmn0wC3bBWlNX73vlJuDSOWDnu15z
+ v7MZN8oY5dK+g1C8aaR4dKutNCY0d3FsMitt9qD83Lu4gYjQ4yDybAIwRJ9Lpi0HH0jKu54yYh
+ Mb5j6qtCDkuAyLsqqwVD4e7l
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 14:50:45 -0800
+IronPort-SDR: 1lZAII99+Ja7+7waijRhmgu7dbUZ00xsZzrzvNlGp5HBYzUJBAcj/M9hB6WQOd9cTvjqEQMb8e
+ P+QMEPb//zsPbF1ghOUILxW7Tn7Z0hcNf8qPCw+9OxV/DDXspo5ZzdUkuiVajeZtVpkSP7EsfV
+ r/dE+dGgNY7Mog2gGhl5LlK34KcVZfpW31Ez0Pr7TR+PH4AN6EsEB3tnAW5OlSR+Xv3TNNlQCO
+ SG8BeuRxGttnLZ2VL9+FenhQdVsFCUgiNN2eiCSJY7SLWbfHC9Q+4ACuuu5vXd/zIzg6wIVtdJ
+ kS4=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 15:17:19 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4HwG0Y4Lxbz1RtVv
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 15:17:17 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1637277437; x=1639869438; bh=3FRxLZFQ1ant8RvQeCMXpMeGccsTGL1wsog
+        xaW4rxA0=; b=RcO4PLrxhZ9Wtq3TCyoGYca+66VQkzklFDz3HvLl6yp7oPdVqgG
+        B1RGsUrh9UpZ3xY3+f4U4FiqxGnHa6KqbMIvLanqGZmf0J65/OAHzDtd9U4w5A40
+        93I0hDHugPyNGSK/zI9jHuB9xdiXFFHGRaMGvBagm143cuC24TKkt4zO5mk6bP90
+        Q23lWKC1ssZtWj8x+nfF5uO2aI/URl/up3v/6vb6MkwfkScsZDV041fdaWyk5xsf
+        X58ICeGA0hYYXBkFlyHsYCjp0O2ZWbJs+5FYtO1M2xv2V2KC9oxeh1t0SGVxH2+q
+        t1/UI7VWp6b91KEA59xCwVb9MCCZrjEtHww==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id p_7VKKkPqDPy for <linux-hardening@vger.kernel.org>;
+        Thu, 18 Nov 2021 15:17:17 -0800 (PST)
+Received: from [10.225.54.48] (unknown [10.225.54.48])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4HwG0X20ylz1RtVl;
+        Thu, 18 Nov 2021 15:17:16 -0800 (PST)
+Message-ID: <0dd24142-a5e6-b146-9315-d2680ef4ed35@opensource.wdc.com>
+Date:   Fri, 19 Nov 2021 08:17:14 +0900
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1mnpXH-00Av0p-Bt;;;mid=<871r3dqfv8.fsf_-_@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19ee9ZQZjXSCESInoDhJZjCrjsKA+I5xtg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 2/2] signal: Replace force_fatal_sig with force_exit_sig when in doubt
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.1
+Subject: Re: [PATCH] sata_fsl: Use struct_group() for memcpy() region
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20211118183807.1283332-1-keescook@chromium.org>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital
+In-Reply-To: <20211118183807.1283332-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On 2021/11/19 3:38, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.
+> 
+> Use struct_group() in struct command_desc around members acmd and fill,
+> so they can be referenced together. This will allow memset(), memcpy(),
+> and sizeof() to more easily reason about sizes, improve readability,
+> and avoid future warnings about writing beyond the end of acmd:
+> 
+> In function 'fortify_memset_chk',
+>     inlined from 'sata_fsl_qc_prep' at drivers/ata/sata_fsl.c:534:3:
+> ./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+>   199 |    __write_overflow_field();
+>       |    ^~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Recently to prevent issues with SECCOMP_RET_KILL and similar signals
-being changed before they are delivered SA_IMMUTABLE was added.
+This lacks some context with regard to FORTIFY_SOURCE and struct_group(). Is
+that already in 5.16 ? It sounds like it is not. Do you want a ack ? Or do you
+want me to queue this up for 5.17 ?
 
-Unfortunately this broke debuggers[1][2] which reasonably expect
-to be able to trap synchronous SIGTRAP and SIGSEGV even when
-the target process is not configured to handle those signals.
+Cheers.
 
-Add force_exit_sig and use it instead of force_fatal_sig where
-historically the code has directly called do_exit.  This has the
-implementation benefits of going through the signal exit path
-(including generating core dumps) without the danger of allowing
-userspace to ignore or change these signals.
+> ---
+>  drivers/ata/sata_fsl.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
+> index e5838b23c9e0..fec3c9032606 100644
+> --- a/drivers/ata/sata_fsl.c
+> +++ b/drivers/ata/sata_fsl.c
+> @@ -246,8 +246,10 @@ enum {
+>  struct command_desc {
+>  	u8 cfis[8 * 4];
+>  	u8 sfis[8 * 4];
+> -	u8 acmd[4 * 4];
+> -	u8 fill[4 * 4];
+> +	struct_group(cdb,
+> +		u8 acmd[4 * 4];
+> +		u8 fill[4 * 4];
+> +	);
+>  	u32 prdt[SATA_FSL_MAX_PRD_DIRECT * 4];
+>  	u32 prdt_indirect[(SATA_FSL_MAX_PRD - SATA_FSL_MAX_PRD_DIRECT) * 4];
+>  };
+> @@ -531,8 +533,8 @@ static enum ata_completion_errors sata_fsl_qc_prep(struct ata_queued_cmd *qc)
+>  	/* setup "ACMD - atapi command" in cmd. desc. if this is ATAPI cmd */
+>  	if (ata_is_atapi(qc->tf.protocol)) {
+>  		desc_info |= ATAPI_CMD;
+> -		memset((void *)&cd->acmd, 0, 32);
+> -		memcpy((void *)&cd->acmd, qc->cdb, qc->dev->cdb_len);
+> +		memset(&cd->cdb, 0, sizeof(cd->cdb));
+> +		memcpy(&cd->cdb, qc->cdb, qc->dev->cdb_len);
+>  	}
+>  
+>  	if (qc->flags & ATA_QCFLAG_DMAMAP)
+> 
 
-This avoids userspace regressions as older kernels exited with do_exit
-which debuggers also can not intercept.
 
-In the future is should be possible to improve the quality of
-implementation of the kernel by changing some of these force_exit_sig
-calls to force_fatal_sig.  That can be done where it matters on
-a case-by-case basis with careful analysis.
-
-Reported-by: Kyle Huey <me@kylehuey.com>
-Reported-by: kernel test robot <oliver.sang@intel.com>
-[1] https://lkml.kernel.org/r/CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com
-[2] https://lkml.kernel.org/r/20211117150258.GB5403@xsang-OptiPlex-902
-Fixes: 00b06da29cf9 ("signal: Add SA_IMMUTABLE to ensure forced siganls do not get changed")
-Fixes: a3616a3c0272 ("signal/m68k: Use force_sigsegv(SIGSEGV) in fpsp040_die")
-Fixes: 83a1f27ad773 ("signal/powerpc: On swapcontext failure force SIGSEGV")
-Fixes: 9bc508cf0791 ("signal/s390: Use force_sigsegv in default_trap_handler")
-Fixes: 086ec444f866 ("signal/sparc32: In setup_rt_frame and setup_fram use force_fatal_sig")
-Fixes: c317d306d550 ("signal/sparc32: Exit with a fatal signal when try_to_clear_window_buffer fails")
-Fixes: 695dd0d634df ("signal/x86: In emulate_vsyscall force a signal instead of calling do_exit")
-Fixes: 1fbd60df8a85 ("signal/vm86_32: Properly send SIGSEGV when the vm86 state cannot be saved.")
-Fixes: 941edc5bf174 ("exit/syscall_user_dispatch: Send ordinary signals on failure")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- arch/m68k/kernel/traps.c              |  2 +-
- arch/powerpc/kernel/signal_32.c       |  2 +-
- arch/powerpc/kernel/signal_64.c       |  4 ++--
- arch/s390/kernel/traps.c              |  2 +-
- arch/sparc/kernel/signal_32.c         |  4 ++--
- arch/sparc/kernel/windows.c           |  2 +-
- arch/x86/entry/vsyscall/vsyscall_64.c |  2 +-
- arch/x86/kernel/vm86_32.c             |  2 +-
- include/linux/sched/signal.h          |  1 +
- kernel/entry/syscall_user_dispatch.c  |  4 ++--
- kernel/signal.c                       | 13 +++++++++++++
- 11 files changed, 26 insertions(+), 12 deletions(-)
-
-diff --git a/arch/m68k/kernel/traps.c b/arch/m68k/kernel/traps.c
-index 99058a6da956..34d6458340b0 100644
---- a/arch/m68k/kernel/traps.c
-+++ b/arch/m68k/kernel/traps.c
-@@ -1145,7 +1145,7 @@ asmlinkage void set_esp0(unsigned long ssp)
-  */
- asmlinkage void fpsp040_die(void)
- {
--	force_fatal_sig(SIGSEGV);
-+	force_exit_sig(SIGSEGV);
- }
- 
- #ifdef CONFIG_M68KFPU_EMU
-diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
-index 00a9c9cd6d42..3e053e2fd6b6 100644
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -1063,7 +1063,7 @@ SYSCALL_DEFINE3(swapcontext, struct ucontext __user *, old_ctx,
- 	 * We kill the task with a SIGSEGV in this situation.
- 	 */
- 	if (do_setcontext(new_ctx, regs, 0)) {
--		force_fatal_sig(SIGSEGV);
-+		force_exit_sig(SIGSEGV);
- 		return -EFAULT;
- 	}
- 
-diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
-index ef518535d436..d1e1fc0acbea 100644
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -704,7 +704,7 @@ SYSCALL_DEFINE3(swapcontext, struct ucontext __user *, old_ctx,
- 	 */
- 
- 	if (__get_user_sigset(&set, &new_ctx->uc_sigmask)) {
--		force_fatal_sig(SIGSEGV);
-+		force_exit_sig(SIGSEGV);
- 		return -EFAULT;
- 	}
- 	set_current_blocked(&set);
-@@ -713,7 +713,7 @@ SYSCALL_DEFINE3(swapcontext, struct ucontext __user *, old_ctx,
- 		return -EFAULT;
- 	if (__unsafe_restore_sigcontext(current, NULL, 0, &new_ctx->uc_mcontext)) {
- 		user_read_access_end();
--		force_fatal_sig(SIGSEGV);
-+		force_exit_sig(SIGSEGV);
- 		return -EFAULT;
- 	}
- 	user_read_access_end();
-diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
-index 035705c9f23e..2b780786fc68 100644
---- a/arch/s390/kernel/traps.c
-+++ b/arch/s390/kernel/traps.c
-@@ -84,7 +84,7 @@ static void default_trap_handler(struct pt_regs *regs)
- {
- 	if (user_mode(regs)) {
- 		report_user_fault(regs, SIGSEGV, 0);
--		force_fatal_sig(SIGSEGV);
-+		force_exit_sig(SIGSEGV);
- 	} else
- 		die(regs, "Unknown program exception");
- }
-diff --git a/arch/sparc/kernel/signal_32.c b/arch/sparc/kernel/signal_32.c
-index cd677bc564a7..ffab16369bea 100644
---- a/arch/sparc/kernel/signal_32.c
-+++ b/arch/sparc/kernel/signal_32.c
-@@ -244,7 +244,7 @@ static int setup_frame(struct ksignal *ksig, struct pt_regs *regs,
- 		get_sigframe(ksig, regs, sigframe_size);
- 
- 	if (invalid_frame_pointer(sf, sigframe_size)) {
--		force_fatal_sig(SIGILL);
-+		force_exit_sig(SIGILL);
- 		return -EINVAL;
- 	}
- 
-@@ -336,7 +336,7 @@ static int setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs,
- 	sf = (struct rt_signal_frame __user *)
- 		get_sigframe(ksig, regs, sigframe_size);
- 	if (invalid_frame_pointer(sf, sigframe_size)) {
--		force_fatal_sig(SIGILL);
-+		force_exit_sig(SIGILL);
- 		return -EINVAL;
- 	}
- 
-diff --git a/arch/sparc/kernel/windows.c b/arch/sparc/kernel/windows.c
-index bbbd40cc6b28..8f20862ccc83 100644
---- a/arch/sparc/kernel/windows.c
-+++ b/arch/sparc/kernel/windows.c
-@@ -122,7 +122,7 @@ void try_to_clear_window_buffer(struct pt_regs *regs, int who)
- 		if ((sp & 7) ||
- 		    copy_to_user((char __user *) sp, &tp->reg_window[window],
- 				 sizeof(struct reg_window32))) {
--			force_fatal_sig(SIGILL);
-+			force_exit_sig(SIGILL);
- 			return;
- 		}
- 	}
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index 0b6b277ee050..fd2ee9408e91 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -226,7 +226,7 @@ bool emulate_vsyscall(unsigned long error_code,
- 	if ((!tmp && regs->orig_ax != syscall_nr) || regs->ip != address) {
- 		warn_bad_vsyscall(KERN_DEBUG, regs,
- 				  "seccomp tried to change syscall nr or ip");
--		force_fatal_sig(SIGSYS);
-+		force_exit_sig(SIGSYS);
- 		return true;
- 	}
- 	regs->orig_ax = -1;
-diff --git a/arch/x86/kernel/vm86_32.c b/arch/x86/kernel/vm86_32.c
-index cce1c89cb7df..c21bcd668284 100644
---- a/arch/x86/kernel/vm86_32.c
-+++ b/arch/x86/kernel/vm86_32.c
-@@ -160,7 +160,7 @@ void save_v86_state(struct kernel_vm86_regs *regs, int retval)
- 	user_access_end();
- Efault:
- 	pr_alert("could not access userspace vm86 info\n");
--	force_fatal_sig(SIGSEGV);
-+	force_exit_sig(SIGSEGV);
- 	goto exit_vm86;
- }
- 
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index 23505394ef70..33a50642cf41 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -352,6 +352,7 @@ extern __must_check bool do_notify_parent(struct task_struct *, int);
- extern void __wake_up_parent(struct task_struct *p, struct task_struct *parent);
- extern void force_sig(int);
- extern void force_fatal_sig(int);
-+extern void force_exit_sig(int);
- extern int send_sig(int, struct task_struct *, int);
- extern int zap_other_threads(struct task_struct *p);
- extern struct sigqueue *sigqueue_alloc(void);
-diff --git a/kernel/entry/syscall_user_dispatch.c b/kernel/entry/syscall_user_dispatch.c
-index 4508201847d2..0b6379adff6b 100644
---- a/kernel/entry/syscall_user_dispatch.c
-+++ b/kernel/entry/syscall_user_dispatch.c
-@@ -48,7 +48,7 @@ bool syscall_user_dispatch(struct pt_regs *regs)
- 		 * the selector is loaded by userspace.
- 		 */
- 		if (unlikely(__get_user(state, sd->selector))) {
--			force_fatal_sig(SIGSEGV);
-+			force_exit_sig(SIGSEGV);
- 			return true;
- 		}
- 
-@@ -56,7 +56,7 @@ bool syscall_user_dispatch(struct pt_regs *regs)
- 			return false;
- 
- 		if (state != SYSCALL_DISPATCH_FILTER_BLOCK) {
--			force_fatal_sig(SIGSYS);
-+			force_exit_sig(SIGSYS);
- 			return true;
- 		}
- 	}
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 02058c983bd6..fe7ba05145d4 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1671,6 +1671,19 @@ void force_fatal_sig(int sig)
- 	force_sig_info_to_task(&info, current, HANDLER_SIG_DFL);
- }
- 
-+void force_exit_sig(int sig)
-+{
-+	struct kernel_siginfo info;
-+
-+	clear_siginfo(&info);
-+	info.si_signo = sig;
-+	info.si_errno = 0;
-+	info.si_code = SI_KERNEL;
-+	info.si_pid = 0;
-+	info.si_uid = 0;
-+	force_sig_info_to_task(&info, current, HANDLER_EXIT);
-+}
-+
- /*
-  * When things go south during signal handling, we
-  * will force a SIGSEGV. And if the signal that caused
 -- 
-2.20.1
-
+Damien Le Moal
+Western Digital Research
