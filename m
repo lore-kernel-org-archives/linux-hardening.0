@@ -2,66 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62097C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34BEC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44F9961288
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FB56126A
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233039AbhKRUfo (ORCPT
+        id S232710AbhKRUhK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 15:35:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43508 "EHLO
+        Thu, 18 Nov 2021 15:37:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232975AbhKRUfn (ORCPT
+        with ESMTP id S231732AbhKRUhK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 15:35:43 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F7DC06173E
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:32:43 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id y14-20020a17090a2b4e00b001a5824f4918so9200955pjc.4
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:32:43 -0800 (PST)
+        Thu, 18 Nov 2021 15:37:10 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86D0C061748
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:34:09 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id u17so6287217plg.9
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:34:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KYX4Z2exB3jwtaqcfI8gZcFYfqs7exom+PHX0M7oQsE=;
-        b=WtS8ExWj/v7fj4+FuOYEI4WmiHmOEsDoSEqfWE+gOpcnWHPw5lUtiGgsIT5v07RaI8
-         YkB+DyBIFcQBFAi/+aFHWUkQHa1dlrlcFvTMm8Dr/r0zMgz6J4KzIk2PBZIFrzUVmoEv
-         XPS13oYdYcZJsYJkoZISyaT83c2uHEwCV16Mg=
+        bh=Rr6pVb1kreHii7h3owvqhylogoz7efHCoA5piVhQdcM=;
+        b=HrsvfUCXT0gBKwJkPUg1l03es9F4vmWH0F+oP580ZvRXFAV+QGSgA7gQ/ZYmGl0tY3
+         1MPcWdu49JSDL87rftHbpJ+2ivLnmNOW0WalVevz64uUyLr8bKO3sKaGwsoRLrfXC5MP
+         zWk3muyC/y7MkqtZFsjDuf0BeVWxedFrwBkw4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KYX4Z2exB3jwtaqcfI8gZcFYfqs7exom+PHX0M7oQsE=;
-        b=Y0KqvZcx8rllHpOIG1Vl1j1fEnyWOwN3ffQH8MRAV5PoOy+/qZF0pWbw2U+XrYWfWs
-         h7sSw2mWBuWDdDWKGLqoi6SzBVK6yo+DVPfLVua0vZsD5L5jlEOtzGXQKOViVG0Wma6I
-         BkpK440jHgUjCLGagd2E+WpLv0apQb68gDU5wJJjyWsnQ34mwvT8uzAynZSq1v9UNsJE
-         e0dW0p2f2eHtfZQRDYHRi5d7lJr3iJUwjlrkfW2OSY1530ouy9Fjjv8zWvrkmiXZMWlZ
-         W8LQVLoa664H6J7hDsPfJxpnFji7j+izuxXBCgM9poySuhKl9KXVlbQebPT/A5hEkWG5
-         DGNA==
-X-Gm-Message-State: AOAM532xGotAM/8bbb2HIZaQnznQJFcX6WW6tyu1LWNCgcoMfkkcOWAC
-        nDaRK+x2PdR9NjfM7J0S8q03PA==
-X-Google-Smtp-Source: ABdhPJz+6CMtLisvghnTrLjCObiLbIPTpDt7QNLisEDJycYs13b/WcjKuguDRYR+9vb7ucQ/c706AA==
-X-Received: by 2002:a17:90b:351:: with SMTP id fh17mr14200484pjb.19.1637267562836;
-        Thu, 18 Nov 2021 12:32:42 -0800 (PST)
+        bh=Rr6pVb1kreHii7h3owvqhylogoz7efHCoA5piVhQdcM=;
+        b=xS/QyIoECv42K68u2FiYbq7oypZopicib3P0foJnSPbqBUisybFRvlVKjmpM/RBBbR
+         bJOi1qr5VR0fYXSINxUVf9qT+rBr379N/iLlC3Ar/213+cgAYW49AJxfnh4G9kiPzqy9
+         u+z8Lc96PibiG4LWDr/5WQijn6pI/cKb4SIIaZanTGpgqf7IZShVGYsnnuZH0HTqtQ0z
+         J3+9UBSRalofcL2figjEAU0z6lmPy20ySmLn2NZBURhXtG7+CNT2ozDE9WNkbHqU0OcO
+         6UP3/kjyOQs7puWb/quEOsWz8YU+efyTxPMhaY39zsmv1qH/XYrgAf5bHUbGemwwH55d
+         DU3g==
+X-Gm-Message-State: AOAM531GfHuxrrIaFnSPStNHjaY6ynDkhCs+sI/OFzXtnz+hE1p2N1f4
+        tI+1LncuzJS89aXRWNxcIDmXX4aPqghrxw==
+X-Google-Smtp-Source: ABdhPJzi9Z8Wro0uG9DSk6dqAdfOvApTISmjQgGDVRnaiJ1C0pp5+zl2nN2g/iIJMJLetNb9Q3ENYA==
+X-Received: by 2002:a17:903:2004:b0:142:6344:2c08 with SMTP id s4-20020a170903200400b0014263442c08mr69671413pla.51.1637267649182;
+        Thu, 18 Nov 2021 12:34:09 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y8sm472069pfi.56.2021.11.18.12.32.42
+        by smtp.gmail.com with ESMTPSA id c1sm526468pfv.54.2021.11.18.12.34.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 12:32:42 -0800 (PST)
+        Thu, 18 Nov 2021 12:34:08 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     "David S. Miller" <davem@davemloft.net>
+To:     Julian Wiedmann <jwi@linux.ibm.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] ipv6: Use memset_after() to zero rt6_info
-Date:   Thu, 18 Nov 2021 12:32:41 -0800
-Message-Id: <20211118203241.1287533-1-keescook@chromium.org>
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] net/af_iucv: Use struct_group() to zero struct iucv_sock region
+Date:   Thu, 18 Nov 2021 12:34:07 -0800
+Message-Id: <20211118203407.1287756-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=847; h=from:subject; bh=yNLj0JvA8w3tbHCKTH2NRjDpod/tQGXj33yCFFSnwHs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlrhovJJ6+6q/2apZn6MVU1adP4a3K12BQjadQKIF rqvdvuGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa4aAAKCRCJcvTf3G3AJj28EA CzOjycg1txLJwXW53E9yu8IMaRzAevuaRC5WjA8Ml179IkuCXmybvPChwJTjIa3zdqOS+J4+Udh6KF Kb/79IcZw+tE53TMesKftH/xEW3QMIpdGvP8jlv9EllD+HQI0Gbn0v8HDmou21qYz2suowm7wPJQBP ymEUEkmkykB77NjbiC18qeP0sWfPjP4S51Nt80NeId0Dxo54mxFGs6ophDiX6IWMrnktpDSRvlmLJe YJKvQU/AXJkZYY9YcSEGmfKTIzr93Y1RSR6NFxtHfoeOq5QcdJGpNXOTP7MrfxU557TtdjoQHEamW1 OJi2MoGayWzqDU+9vC2/qmfhGN1Iiu7h1rZhe+Q6IOgs8vn2YTxqLpQSxaqQH1v3nrq9rT9TGSAhuy o8gumzFGqLSg1/tM+1rKUtwylRPvHcql4vV99B41szGLp85RsfJy8eZwZxpqrcTpY3bXiL8MKvuy32 LUmfFHhVjrp5cylQq43MvXL2rtyHhQjePzlsiBH8i/grQUGV5FngU4XMK66aKalDO9l8HJgz8nzcsD Rqm7kYy7aSMK92fQxjthHk2m9Nwg5aRLOOri+FhtMdUskIu5iaT7hDm8gKhp1jlYXk0OXYOTRk5rTA /g73bZ27I7cjY/QGMmWFsdCKgN1WNA+uSrN654B5xKDqGIr72b1qpQ09QM1Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2141; h=from:subject; bh=VmpjIxRv8nvqUNUz90kONYh3X1XPNBqPtO7KlwDBGYg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlri+9C59IrgIZordTCohSomw5OzihK4DRxTC1FsR SEo58EeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa4vgAKCRCJcvTf3G3AJnRKD/ 92nDQMb68IMNKv8eGnelNS0HG0pPS+ROK4Yq0KZVVW9WCoirh/ef6Z5ZvfNz99jfcduDPDfdeirKlq j6rgokttc3qliSt4wBGROehNHaTC9x3j2aVuqN9l+Ys5C4mBdrr9MrgZ8hyW532l6bP6II8s1v4S4U w3+1KVOSQNs5y+x53gNpkS1BupPwj+kefq121UR+Ve6LOgU340uFCsWWzNXg65q6elV64otBDLSv2o ZhZLZbNiNQxD3s7ChpwtSzugWdQgFLx/Ba/a8vTU4RLtggIqBTvqh4Eeqz+lgAlkp1JBRMUsBVW1Ha kplo7xablxQHAFohYlA//or4tU92bQ97BizASRzyYWp0m0oPWC5PdC8EzuK1q5sNtAxPbowayDhXGG ncYShLB0Kz4W66ACA5ZEkOik1zdMmYIdGroKUX92RQClWZWsjuzCTtpV6pJBEllI+r5q8tSPgsp4aR PhxwL/be8b+0zWywXHEYRvlaz+1Dhylb3nvv8C8C+UJ83xDiksdovLacG7ML5cKMCGRAk+ubaux41Y 2/1sR3SatiHEPnqtgEjS84UOPTTPgIZQSXfLwtj0HJyE2q7k+SNJgTA4RfFXTUATPYYblQXxpPPzQs ps9qxyVstw220it3ImpG1NzYuI3CjsUxKXDyKwD357shHTcU0SEM2toz/4JQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -72,29 +73,57 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Use memset_after() to clear everything after the dst_entry member of
-struct rt6_info.
+Add struct_group() to mark the region of struct iucv_sock that gets
+initialized to zero. Avoid the future warning:
 
+In function 'fortify_memset_chk',
+    inlined from 'iucv_sock_alloc' at net/iucv/af_iucv.c:476:2:
+./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+  199 |    __write_overflow_field(p_size_field, size);
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Acked-by: Karsten Graul <kgraul@linux.ibm.com>
+Link: https://lore.kernel.org/lkml/19ff61a0-0cda-6000-ce56-dc6b367c00d6@linux.ibm.com/
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- net/ipv6/route.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ include/net/iucv/af_iucv.h | 10 ++++++----
+ net/iucv/af_iucv.c         |  2 +-
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-index 3ae25b8ffbd6..0cf616b2d013 100644
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -328,9 +328,7 @@ static const struct rt6_info ip6_blk_hole_entry_template = {
+diff --git a/include/net/iucv/af_iucv.h b/include/net/iucv/af_iucv.h
+index ff06246dbbb9..df85d19fbf84 100644
+--- a/include/net/iucv/af_iucv.h
++++ b/include/net/iucv/af_iucv.h
+@@ -112,10 +112,12 @@ enum iucv_tx_notify {
  
- static void rt6_info_init(struct rt6_info *rt)
- {
--	struct dst_entry *dst = &rt->dst;
--
--	memset(dst + 1, 0, sizeof(*rt) - sizeof(*dst));
-+	memset_after(rt, 0, dst);
- 	INIT_LIST_HEAD(&rt->rt6i_uncached);
- }
- 
+ struct iucv_sock {
+ 	struct sock		sk;
+-	char			src_user_id[8];
+-	char			src_name[8];
+-	char			dst_user_id[8];
+-	char			dst_name[8];
++	struct_group(init,
++		char		src_user_id[8];
++		char		src_name[8];
++		char		dst_user_id[8];
++		char		dst_name[8];
++	);
+ 	struct list_head	accept_q;
+ 	spinlock_t		accept_q_lock;
+ 	struct sock		*parent;
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index 18316ee3c692..9446e2771d31 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -473,7 +473,7 @@ static struct sock *iucv_sock_alloc(struct socket *sock, int proto, gfp_t prio,
+ 	atomic_set(&iucv->msg_recv, 0);
+ 	iucv->path = NULL;
+ 	iucv->sk_txnotify = afiucv_hs_callback_txnotify;
+-	memset(&iucv->src_user_id , 0, 32);
++	memset(&iucv->init, 0, sizeof(iucv->init));
+ 	if (pr_iucv)
+ 		iucv->transport = AF_IUCV_TRANS_IUCV;
+ 	else
 -- 
 2.30.2
 
