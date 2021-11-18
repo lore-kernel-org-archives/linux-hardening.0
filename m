@@ -2,63 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09687C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA5FC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0E0B610C8
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081CC6120F
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233845AbhKRUZU (ORCPT
+        id S231166AbhKRU0i (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 15:25:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40926 "EHLO
+        Thu, 18 Nov 2021 15:26:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233836AbhKRUZU (ORCPT
+        with ESMTP id S229911AbhKRU0i (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 15:25:20 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08960C061574
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:22:20 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id h63so6426318pgc.12
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:22:20 -0800 (PST)
+        Thu, 18 Nov 2021 15:26:38 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C839C061748
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:23:38 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id v19so6258142plo.7
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:23:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5NN+1nK45BHSkImYf6ZodrZEc2yKCKofH6gEEO0/JrA=;
-        b=Hhu4lPecOWYqSDmCEtuCIv9aoB7v58qsCp5npK+joXCK1vErdgAydRN0rnIgMZ0jKy
-         LWxOM4gipBBrs0s1n+yw8QWm1M5kwEsLxxwBenmXR07glvDR2phzg5lB07Xg8MtoyX8X
-         H4u48vBszumbfva6YQivX0MIcwgplnPBtANJI=
+        bh=IQNsqAqVViEU3XvBO/CRhKayo7Uy9hYK0KAzIytsmBA=;
+        b=HooZPLmEmuWp0i73mi2Xmp58mGSg0YRZRUfaTTR8lk/sRwRpp6XrfKzpRO/kMQHO7l
+         f9Lwg74kAODtdQvYU2rGt0M1rYl0JffCJwA9YijRev1D/7yvXJlslbRyJgjAH32wwAZR
+         B/b0NKEfnM/5U8v359vYnvEUV/ozCefq0OTGQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5NN+1nK45BHSkImYf6ZodrZEc2yKCKofH6gEEO0/JrA=;
-        b=TQ5vKUlmMrvx57FKLhZFHMvt9Cn0IlnIxqcEkja3FTNq4lZgBTWKtVS5guLH2JkHoT
-         ryfdJXwXxfb/oGSuleYuWEgGd7H76cPCvHN3BsA7FUoEwHeoIhYMU/VsKiY37F6hQFje
-         cOK1W6C1afcHo6DvX9w32qfLE35woOMDAwesW9HbIF4yeQYTts700P1VYwrVEJsCCHKA
-         8vbaktvKM9CHONgvLKhQGjsRKCH1krJoJJSuwdSYS6dY+046WZ0m/hxYLF0tGQGStc/n
-         z8GABMfK4H1dF8MZP4bfXRgErVtfjQ18yY1IRKsl941rmrTUkeGbr2GvhxeDVwsJI47J
-         UXVg==
-X-Gm-Message-State: AOAM533kd6wP7ocu0B26Tdi0fdE8x6FlQvSq03SpSVCiqCvZksUZZXnL
-        gb/L6l8d/OsluWsfAMp/J2NjmJDIZu1gkA==
-X-Google-Smtp-Source: ABdhPJxnlerFWtMMvQznBjcjaOTIWk+vb2WlXHeUEB4sKBD875o+SosCQnWomCv9gGMS9/cK1Pgp2Q==
-X-Received: by 2002:a63:8ac3:: with SMTP id y186mr13439232pgd.444.1637266939652;
-        Thu, 18 Nov 2021 12:22:19 -0800 (PST)
+        bh=IQNsqAqVViEU3XvBO/CRhKayo7Uy9hYK0KAzIytsmBA=;
+        b=uOY3TEQxTHmExz7CxYhDRMKn0dP7nQqdzzzeg1nbpHvfF8nr8kQQWpwnENGnQBLaYg
+         JWUWo80E5C3i2304kaV6fbTtEKMbv4CJ7C1Ko4fP+aU9pC14Ny0AfEaVPyQLMd23LEsn
+         sMioVMHspGaH6KmKgqUZz9Lws0C10zn4Uv0N7s0HvL8S8vN2XeNmB13YYHBrhxsnNg/H
+         E+KQ+3kXsmenJ/U2La0dDSAwYOfMaYynILWs+OwygfQFVLbws3vOezMPLtyjSOVhEd1a
+         dIZpXxOzlLiQt4vlEPsFl6QchmoV4FRN+YeuV+AdCB+EA186QsDcK4LgWzzB14GKcb8E
+         3IIw==
+X-Gm-Message-State: AOAM532afBzn8R2JOm6UadBrkisaJOP7BNkGlurpINy0URnskTcjvrwR
+        fzZ0le2iwvUUoGPzmNFR49ZSPw==
+X-Google-Smtp-Source: ABdhPJypqzdGLd0A00SSS7G3WjBvbGDWJFvBCPFhTOnBO9Zy8s/HE2BF+uUxaJp1pxzcyn9aKmUXmQ==
+X-Received: by 2002:a17:90b:4b09:: with SMTP id lx9mr14063965pjb.100.1637267017586;
+        Thu, 18 Nov 2021 12:23:37 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t8sm384779pgk.66.2021.11.18.12.22.19
+        by smtp.gmail.com with ESMTPSA id y8sm461344pfi.56.2021.11.18.12.23.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 12:22:19 -0800 (PST)
+        Thu, 18 Nov 2021 12:23:37 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] tracing: Use memset_startat() to zero struct trace_iterator
-Date:   Thu, 18 Nov 2021 12:22:17 -0800
-Message-Id: <20211118202217.1285588-1-keescook@chromium.org>
+To:     Potnuri Bharat Teja <bharat@chelsio.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] iw_cxgb4: Use memset_startat() for cpl_t5_pass_accept_rpl
+Date:   Thu, 18 Nov 2021 12:23:35 -0800
+Message-Id: <20211118202335.1285836-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=959; h=from:subject; bh=Or3Zz/FgWlK+lUON8T4CDH2/5TJ3uqemt7E5bllyab4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlrX4AxQyT+rUJsTyDxvi/eHEapUCKtkKsFBEtfT8 Sdx77Y2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa1+AAKCRCJcvTf3G3AJi/aEA CMGD3cq8RZKap2de38j9tpuhhpskiCG+hDT0vKa5qSFmoDNRV/RxfJP7+mHHpaTBttUVfkCYaY7Exo kFqF7/M7219agIwGswmRogk7vcNAdJdJ1PjjkVTHv6mNfJ0Vi9GZa9diLFyoN4ZhXX3DgMV6c5BJQI 5HIJEZbU7bBvSHWL7f2l3pqn0kncWj0ifsOcXM01QRiozID6T/zogR8EZX49jWJNwqTAsaSmTiUF68 POybeb3iYyVH3WI0wutv/L28abFwq4hD02Lkn+RIcaZ3S1khaJWxpjz8vFPE7VCcMc4BKQ5mqbaSwH niZ/lFPN8et7i2z1S64TWtRzYlysHgsGgLnfaVPqd3r0hwUXHuwRAGyZJY66bQgb2DWEtywn17WNH+ 3k+a4mSJEh78aTtIakEefSCBiZJiTpV5Cek19kpjakGMmu8TNz/g/dxAYa+evdDt9oOafHThkQ+BiP 5BbLqy1QePQNaJa9Sxmra/T4zwVH9EmGZWwFtOsRxuLIxN9Yyr5MVZ2kZSMssJ6rma1YI+IkUNl5+c Q21Feu8znWKUFqtaWuwnOPoS5TuioH5mV58BLZxSy9zvZdQbgF2yTz7ioijGEoEfT+CA2Eww6DxvhR ZxYlb1LjTiDSRWrEx5smnAUyzIIwGUURNWdorXV13OKdGk/8HNsfHxz+TaTg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2101; h=from:subject; bh=r0RjNW1nt8hO6RUISrpRK9oSUV76aQP0ukBh+E6zpXY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlrZHk5MDbm9O/fZR6Lin9O4U7uvALO7jxjVNquJ+ nX+c/BGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa2RwAKCRCJcvTf3G3AJtLoD/ 0VMGNmHYtW3sXAkw7Jp68P4uEZynPoPbYo+O7pExC/ORBNQ5LW+o2sSbBuNdf6eokFzIAbbC7h7ICk NxU/WzUJAcRUTXyDDIns8RorZCTZdXlIN2s/M2qUuQ0ARja4ngwvvVkq9Rmy6v5vn5aJ1We3vTQdiU BEVvE+Shy5Drh2cwZkOCVkvnkdv1lIXgjcueAV+Ugh1qTpnCsG/ymoeMsaOxeal5Bns0kerpAMsX7N zh2/OePfy/6C0VYeL5fczA434KVY6g2kg77hxxZH5inhE1bn9+lLAHLYliAEJzsriuV5kIeCMYVmZO IV4JmFxsrB19LnGF5t3p59UjxIBweNfw3ced7MF8PI9GBkQfRGNeMipEUvhXfQcTFg/fH6n5xHgPaQ HjKQckFssw2aJWJ0/lxDWN7BkLaTHgM/WfevzpljjNmsQ13ByOIQMLrEFcRu47Wj1FppcCSA7bB5wW K8dsdcfXUmBLKnWYC9FVH8+/CQRwX5QOU9/qFTAgoCOWpso8n5tBeky/DNNMtHgLh3tQbsFz+tQLpr EVj9J07u13wziRTjKbUUDCoSigImU24zYnWqyGyIxI0PokOHwphNpTrw0jP4ertITdfff0SI7KKek5 bTPcNg4b7lj7qH54hf0m4DJLIBngP3HKk6vZ0PJ0viFDFT01pw0rcCmsoSPw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -69,29 +75,55 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Use memset_startat() to avoid confusing memset() about writing beyond
-the target struct member.
+Use memset_startat() so memset() doesn't get confused about writing
+beyond the destination member that is intended to be the starting point
+of zeroing through the end of the struct. Additionally, since everything
+appears to perform a roundup (including allocation), just change the
+size of the struct itself and add a build-time check to validate the
+expected size.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- kernel/trace/trace.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/infiniband/hw/cxgb4/cm.c            | 5 +++--
+ drivers/net/ethernet/chelsio/cxgb4/t4_msg.h | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index f9139dc1262c..e3c80cfd4eec 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6706,9 +6706,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 		cnt = PAGE_SIZE - 1;
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index 913f39ee4416..c16017f6e8db 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -2471,7 +2471,8 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
+ 	skb_get(skb);
+ 	rpl = cplhdr(skb);
+ 	if (!is_t4(adapter_type)) {
+-		skb_trim(skb, roundup(sizeof(*rpl5), 16));
++		BUILD_BUG_ON(sizeof(*rpl5) != roundup(sizeof(*rpl5), 16));
++		skb_trim(skb, sizeof(*rpl5));
+ 		rpl5 = (void *)rpl;
+ 		INIT_TP_WR(rpl5, ep->hwtid);
+ 	} else {
+@@ -2487,7 +2488,7 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
+ 		opt2 |= CONG_CNTRL_V(CONG_ALG_TAHOE);
+ 		opt2 |= T5_ISS_F;
+ 		rpl5 = (void *)rpl;
+-		memset(&rpl5->iss, 0, roundup(sizeof(*rpl5)-sizeof(*rpl), 16));
++		memset_after(rpl5, 0, iss);
+ 		if (peer2peer)
+ 			isn += 4;
+ 		rpl5->iss = cpu_to_be32(isn);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h b/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
+index fed5f93bf620..26433a62d7f0 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
+@@ -497,7 +497,7 @@ struct cpl_t5_pass_accept_rpl {
+ 	__be32 opt2;
+ 	__be64 opt0;
+ 	__be32 iss;
+-	__be32 rsvd;
++	__be32 rsvd[3];
+ };
  
- 	/* reset all but tr, trace, and overruns */
--	memset(&iter->seq, 0,
--	       sizeof(struct trace_iterator) -
--	       offsetof(struct trace_iterator, seq));
-+	memset_startat(iter, 0, seq);
- 	cpumask_clear(iter->started);
- 	trace_seq_init(&iter->seq);
- 	iter->pos = -1;
+ struct cpl_act_open_req {
 -- 
 2.30.2
 
