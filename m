@@ -2,70 +2,56 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410CBC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 23:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E436FC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 00:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA0E61B3A
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Nov 2021 23:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFAC61B98
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 00:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241589AbhKQX1o (ORCPT
+        id S240524AbhKRAIK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Nov 2021 18:27:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38142 "EHLO
+        Wed, 17 Nov 2021 19:08:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241569AbhKQX1m (ORCPT
+        with ESMTP id S239785AbhKRAIE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Nov 2021 18:27:42 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2104FC061570
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 15:24:43 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id y13so18118128edd.13
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 15:24:43 -0800 (PST)
+        Wed, 17 Nov 2021 19:08:04 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B41EC061570
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 16:05:05 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id m24so3621354pls.10
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 16:05:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Rq1p7FgqjQgLj6wWCnFTWOkKeEiQAkvoX+FiUPaLW4=;
-        b=YPCr00kDBxh/itERVSRooieksGZWtLMe/RdKR3aooxI8lobYRND0Mg50ayCY7r9TWr
-         3amekzEnVXhAZqAGNhFMSZ/ZDbuCr8jH9a9ExaHWadzVgWJ17upYM+lUM07qt0D6194p
-         dYHbGUQG2vLoKGnH58h11FwDhffXU7NWQ5oU0=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ChZgIpzUfYvijuqUqtVoWtSMGD31N+GQgxAh+7fMbp8=;
+        b=Di7J6TOX33+B9dU/u9WC+7YP4svglgu9OaaCXscWh0VBycwGYItmVIlA8AmTeuV18o
+         Ql+ctrzRstL3Ps98BFm9H5xAWIlVjEP2ZcF50hSpogiz1bbsJthGKWpsdpG7mxr8AQ2N
+         TltTSDGJ0iypzFDJFD+OmPYrGHr3DocGqc9rM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Rq1p7FgqjQgLj6wWCnFTWOkKeEiQAkvoX+FiUPaLW4=;
-        b=fudd7jaODBbCvc2wcBmGbRY9rdOVCBX6RuFlwBLcQaLOvpYlHwlw0ljf084yVp3Urq
-         OKJO3wFDRpWjaEUxpvxbxu5zrFJF/sPL245P+1FyLtiRtbYrB36NUodVNi3/TfXh6t0c
-         sv34Lu3fppShw0Uni3YhmLX8rO1/h7BZXgB3Egdch+ollsYZuL5SYaY08x/Ll2Mqy18o
-         iqk3lX0bigUsK94h190INWwoHv8vhCMy+mloSgAY3EPcUXlp0Tc/jeJ1Hhd9gi9zl+Q7
-         9tlknl+hoDCBRSzmXYe/C1BZSUxXe9LdqgrcbO9pZ8djIV63Z49dAB7zn3wpHYuMlhOY
-         REKQ==
-X-Gm-Message-State: AOAM533Kf5NMfqrx33DH0VuVTU+z/sknnrmxm7Lt0k/CLOsafF8CVL7c
-        vWLKA8eSLXZu8AvBkrzB979LqI4whthotReC
-X-Google-Smtp-Source: ABdhPJxHkXiWn2JzbbLV0w8oIbLT48C67rjPRPa8bqG5jZU/6Qa7smJmnskRI2Tx23NPATuAh6gWEw==
-X-Received: by 2002:a17:907:9152:: with SMTP id l18mr27220334ejs.382.1637191481419;
-        Wed, 17 Nov 2021 15:24:41 -0800 (PST)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
-        by smtp.gmail.com with ESMTPSA id w7sm664909ede.66.2021.11.17.15.24.40
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Nov 2021 15:24:40 -0800 (PST)
-Received: by mail-wm1-f47.google.com with SMTP id f7-20020a1c1f07000000b0032ee11917ceso3386812wmf.0
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 15:24:40 -0800 (PST)
-X-Received: by 2002:a1c:7405:: with SMTP id p5mr4139475wmc.152.1637191480450;
- Wed, 17 Nov 2021 15:24:40 -0800 (PST)
-MIME-Version: 1.0
-References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
- <202111171049.3F9C5F1@keescook> <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
- <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
- <87k0h6334w.fsf@email.froward.int.ebiederm.org> <202111171341.41053845C3@keescook>
-In-Reply-To: <202111171341.41053845C3@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 17 Nov 2021 15:24:24 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
-Message-ID: <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
-Subject: Re: [REGRESSION] 5.16rc1: SA_IMMUTABLE breaks debuggers
-To:     Kees Cook <keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ChZgIpzUfYvijuqUqtVoWtSMGD31N+GQgxAh+7fMbp8=;
+        b=QNp3qXkhEsMYvY2h3ac4XvW8JV15FL99HAfnlnS+NH6YlWIesMBb2SLU0ZRlr/390n
+         zDfnBSLJ1LkTMTXvnphl5EY7l+FOEfRLQC2nGOhO5rZIKNsmSvxDjh2fYx+YffIhb4MN
+         YGA0TeKGr6Z3GUS0oDlmI8AE9Q/gvDN8KkGEusO9ImeL2obSxQ4J/ib8xSl4WdLpDWzZ
+         M6k1GvnLYtSiFdsu8lC27r4/d8As5TfwxIxwBGhMeD+hINu7tQKqq+1p5s9du6w3dMr/
+         whGcnb6B2jxoSdIyzjB6nFhE90VWRiQriEN+1YPKVb7tYnb0bGx+LhCDrWEtg3a1Ynh8
+         eTKg==
+X-Gm-Message-State: AOAM531GSMJnMW1F6xJpAkCc8nLwwqq3M8P2ljnIZd32EnQi3A1dCUz1
+        Qg+Sjwj57hvWy7bj7ssBMipR7AHAQDM74Q==
+X-Google-Smtp-Source: ABdhPJz5YJBDbTERTvTg1d9Or3fJnBADZp93ACWVfY67SpTH3thC82aRTj9OrDJXtWSOM4jCjovwkA==
+X-Received: by 2002:a17:90b:3508:: with SMTP id ls8mr4819396pjb.51.1637193904941;
+        Wed, 17 Nov 2021 16:05:04 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q89sm699960pjk.50.2021.11.17.16.05.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Nov 2021 16:05:04 -0800 (PST)
+Date:   Wed, 17 Nov 2021 16:05:03 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         Kyle Huey <me@kylehuey.com>,
         Andrea Righi <andrea.righi@canonical.com>,
@@ -77,42 +63,61 @@ Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org,
-        "Robert O'Callahan" <rocallahan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Robert O'Callahan <rocallahan@gmail.com>
+Subject: Re: [REGRESSION] 5.16rc1: SA_IMMUTABLE breaks debuggers
+Message-ID: <202111171603.34F36D0E01@keescook>
+References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
+ <202111171049.3F9C5F1@keescook>
+ <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
+ <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
+ <87k0h6334w.fsf@email.froward.int.ebiederm.org>
+ <202111171341.41053845C3@keescook>
+ <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 1:54 PM Kees Cook <keescook@chromium.org> wrote:
->
-> The SA_IMMUTABLE change was to deal with failures seen in the seccomp
-> test suite after the recent fatal signal refactoring. Mainly that a
-> process that should have effectively performed do_exit() was suddenly
-> visible to the tracer.
+On Wed, Nov 17, 2021 at 03:24:24PM -0800, Linus Torvalds wrote:
+> On Wed, Nov 17, 2021 at 1:54 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > The SA_IMMUTABLE change was to deal with failures seen in the seccomp
+> > test suite after the recent fatal signal refactoring. Mainly that a
+> > process that should have effectively performed do_exit() was suddenly
+> > visible to the tracer.
+> 
+> I think this basically shows that the conversion from do_exit() to
+> fatal_signal() was just wrong. The "do_exit()" wasn't really a signal,
+> and can't be treated as such.
+> 
+> That said, instead of reverting, maybe we can just mark the cases
+> where it really is about sending a synchronous signal, vs sending an
+> explicitly fatal signal.
+> 
+> It's basically the "true" condition to force_sig_info_to_task(), so
+> the fix might be just
+> 
+>   @@ -1323,7 +1323,8 @@ force_sig_info_to_task(struct kernel_siginfo
+> *info, struct task_struct *t, bool
+>         blocked = sigismember(&t->blocked, sig);
+>         if (blocked || ignored || sigdfl) {
+>                 action->sa.sa_handler = SIG_DFL;
+>   -             action->sa.sa_flags |= SA_IMMUTABLE;
+>   +             if (sigdfl)
+>   +                     action->sa.sa_flags |= SA_IMMUTABLE;
+>                 if (blocked) {
+>                         sigdelset(&t->blocked, sig);
+>                         recalc_sigpending_and_wake(t);
+> 
+> Kyle, does that fix your test-case? And Kees - yours?
 
-I think this basically shows that the conversion from do_exit() to
-fatal_signal() was just wrong. The "do_exit()" wasn't really a signal,
-and can't be treated as such.
+Yup, the correct behavior is retained for me with this change.
 
-That said, instead of reverting, maybe we can just mark the cases
-where it really is about sending a synchronous signal, vs sending an
-explicitly fatal signal.
+(nit: should the "sigdfl" argument be renamed "immutable" for clarity
+in this function?)
 
-It's basically the "true" condition to force_sig_info_to_task(), so
-the fix might be just
-
-  @@ -1323,7 +1323,8 @@ force_sig_info_to_task(struct kernel_siginfo
-*info, struct task_struct *t, bool
-        blocked = sigismember(&t->blocked, sig);
-        if (blocked || ignored || sigdfl) {
-                action->sa.sa_handler = SIG_DFL;
-  -             action->sa.sa_flags |= SA_IMMUTABLE;
-  +             if (sigdfl)
-  +                     action->sa.sa_flags |= SA_IMMUTABLE;
-                if (blocked) {
-                        sigdelset(&t->blocked, sig);
-                        recalc_sigpending_and_wake(t);
-
-Kyle, does that fix your test-case? And Kees - yours?
-
-               Linus
+-- 
+Kees Cook
