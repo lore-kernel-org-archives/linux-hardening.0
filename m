@@ -2,171 +2,189 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D730C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E35AC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9C0461526
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8656141B
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233119AbhKRSdn (ORCPT
+        id S233424AbhKRSj3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 13:33:43 -0500
-Received: from sonic315-26.consmr.mail.ne1.yahoo.com ([66.163.190.152]:44370
-        "EHLO sonic315-26.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233083AbhKRSdm (ORCPT
+        Thu, 18 Nov 2021 13:39:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233564AbhKRSj2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 13:33:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1637260241; bh=XafFedPH7s43+MtcyjIXwoQYQrKIPGHG2kyqdRzE+fM=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=U2BXMRNBinflz+OQvA9utqPlOSrDwpQ0thgapaUmGwvZS4Td4PeqY/6H3ouTUGg3/GuMO7/ohYcAKTOyAPJHpbHziZ9YXs9RyrRMEyL5l4vlg4KQHX0jhM9jRXnexyA14BnR5B5Mi60d6ygeIoQjRrcTIVDQbxXPKHmQYaHMhBlyRUgcEmfJRwRjYC0II/KMnGM8iYSucj1YBvg0yfzMDYoXAO+n8tv0CDMUBB3awbygJsJKB3/3CFVVl7Zd4rIZZHLfPrKxJWLogbO1Z1yooY1dhhnYtJmw7FEZcTpNa1/1xAYRjDV+LC3lx+xlPOLJBis9ijNrGTUSBMfnds4Ujw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1637260241; bh=WD/iKJ8YVCq+L7cGsdVhIU7GY77lZO0y8QorIJr7UAt=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=UL64Zxn1GUtQTE2Fc7NPBQAEs+xiOXt6gJwElTOobHfMLEZ7WFgRu1M4JQ0VBCZItFrC4KgIBxl/caZO/ETLrnIFAOQBuhhyBJqGHRQT7hNir0UOLwubmEavEqWLAoY1712ZIpcawFoZIOzClmu1aVBmPXzgZoklKvVgR8Ojp755p9u9APDI2vrKT592vaPbDUBecZHeq28F+vhmSGXyKMxtLLRdwGG/wEcPYyJEpa3qM+Adszn+oWT8TofgKck0q5qNNJlM24HA6+nKpXFuLam7XzGvxN85LaKH+2UPsNrDNK5WHC6YHc6zYqZ6GmNNFLq36gTAMtIZaX0+FAkHzQ==
-X-YMail-OSG: VTULgO8VM1lMyNXM5G7EqDOwioUiaYihIBA0G7qJmHC8uK2xpplkZhesWLKtIEC
- yvoVAcyHa8_3iRybnGoJae4.T1r1ZtDuWsDUCvQIDGjqJKN19QfgMYumqdUJxYK_OVKJtsi35Uhq
- 8MjDwF2CscAE_RZJA.EcNfaLHTrlwBYach8zGymjimhmY9sEoOyf0DrMum09PjPmaYZDHIp7lUGl
- YlOohDVUYGI.xAlkotn.UgGjvLw4givru8z.WJLH9hLTlzK_aNJJffWNjhfjlLgsthpJNUXlA6P4
- xLbI6Rz9IAbIQ1R6NhowpbG_3kYtEXFeORxBYr0hXnoxEGhkcKn9.PwOj7wUnCo1VEYxnCDYNoGo
- NpgUowPRT_lCFoLGPnHIYcB1Xub7DIxtZ6deoS9Zvq9776PnYpSTecm8UN0BKbIxQ11ngk6BXkT.
- YUVyrER5yeHbRWU8JLz8eZxsBT.5zgi.tjNI9Zfb.CXLLmKBh0lBSuud6I7FdZ.zc26WC0G5UItU
- GqgNLC0kRfxlDGKBACuhvCMIpxgaOqJ2pBAbpoxE8R16yILN0vwsGL3NL7Q1p4r.2gOs6K1Si8hI
- sGd.T2DztJA8gptoVJVTpvd72GBa9g7IMClI0LJKXVxQSa0wunZPmDnpXJTxnKjT_jtjIE7IanTU
- 2M73OACHdw.2Lm3NiZ2zhRbCyPZXHZ8eBxioPSOlJllUX3Ji5dUE.UHii1GIZ4UBgkc_9qQa7iaf
- NrorRfAi9TsDEcQc8jOH_5QW2OgBxYEQzvhdjivEhO38cb6l2q4JwY7.riFu5m6alBvRFOZRUNH4
- 5e9Ki3RzkZRgFrb8VtAddDjcd6BNIwunBYRhlIrPxVnFK6c9jtLotDhvKE9ZPVYFgrwFOudTcull
- AvAZ9E28a.Y0Bi_avSyaCQTz1ATUgZhGzTk1lG10bSi7pp3JAWnUHoSeUVIIVwebTNdHxfSJYNrq
- tfg8qbaF8sI2iv1IY75tIf0jWFOaPOsinN3RW40Zn.m8Afba.0PzFHL9yU7T7xrGTETORoHoFXrU
- jYVI755uMdlFwCYh2Os.CKQTx8vIGCHVeD4FfWJcs2ysy7SqLDYLiNuouh3Z0merZdAJoiVqOchj
- 2ZNChFtHnWAKX6UU1IDP4fEt52zOfY4QwqysoeZUiU7v_l3mgo8ZJE1p1nkwzR_4vi4wPJP1mD5c
- 2aM47prDB.V_SvzSYgHWUNFSwo.ehYtr3V2YpqHJuoLK4Mz3A5TyTFGKMrV6aP9qIONwqGhlahcR
- 1elIf474odUG1kX6PyPmFUtyoZuO55_Tl4._g7WR2ICtulvSPkpt7qTWR0dUajtddQCJ8gvbQiQD
- oo5fLKKS0FczCkb3xXJszK8yS.Vk9VL3tcnz6KQq_EpQuOhK1fvNAVzlOltdi3emdSRDd4yNwXhr
- XuHMTfkrxZm0LEKjoDUUDA8C5sk.XAJikb0WYVIt8ebsU0xIVdLfSrad5nPAtktr30YiuPT9OykV
- FclwVRt6ZDLYpOHDVJIog5iYEDYrc0wSHtF22YT0mkvg.d8mmu_HXCcCYsvxRZsjbLNWfm_xL6Lk
- F4Cv4xonLujQ_uAbRKTa51KFm3d5zhyRLhmgrGB8dTNDFVASCAC1aHtSVmAsjQYDNmlIagvMTnAG
- mxyBlk0TstaQknaQbONWuiW6wFEJ6Bt3EeauGAOaPBKGYtIydXo4rL3HG5szkA3b.f2yDxJ_.4Pq
- 0clG4AGVAzzMdhglv6tNiQXKZtAN4iGHi2vHjm4RAQ3HTyp_WxpnGBy_6BLCB2c6ptRlmA35MEUb
- GfM9L1RzBTa62.aSt1rxLvburWnbTxhMdkhXmqVjVxbB3B_rwuJ1PGNKpnXMXjCrGBRerGihbbKO
- gd3vdSJFy_AmtKGcupmq78KsJIBrqrqdZBul4V8d3M4HPe6GjfWpZvxZ89KzVqetM_LhHlx.PgYt
- u87JEw9uLqrJrxGznHBXkTCJhDHVt6TqicfmaFqYh3mufJS7dK_Xgjw1BOGsz0eRNbZJHaq76OFS
- gghT8gtEVhpszJUINlokLt5O3WWw3MEvQxariE0jYsZ2SK1E_3d5s9yV4FUoHv5sFuhjXMJGLDQl
- oYV6_13wCxXRV829WQ1gme_Nkd31piHKyJlYhLNvrbGscBAFkJYiZL_n85oxaq8kQjDgmzDLaxgx
- 9kfvl6l_Pv084jFsjo2fQLhto.QHJi_CStEFSxsNqW_7lmL5HpCTUSI12_OLXpeKUM8uyewMa7rk
- 3vTWcFgZ5KxrF4Z_UyWg6lw--
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Thu, 18 Nov 2021 18:30:41 +0000
-Received: by kubenode503.mail-prod1.omega.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID e5e3fbfab78e6684116fbc0b425b72ea;
-          Thu, 18 Nov 2021 18:30:40 +0000 (UTC)
-Message-ID: <16baa1f4-972d-c781-2d57-508296a83bfb@schaufler-ca.com>
-Date:   Thu, 18 Nov 2021 10:30:32 -0800
+        Thu, 18 Nov 2021 13:39:28 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F72C061748
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:36:28 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id h24so5849531pjq.2
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:36:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YlTzf9HvsnD/SJ7tagvq7ACsKvenWN0xKNiM3KMMUjI=;
+        b=L2m0yzLSotnm5qOw5oEC310OpEIX/1/G2/HPA/hzE+S5RgUXU9+wCDsM/XsCbk/xjf
+         Gv3SAVMRWjvbh1g6nSdg4zAIl2Oh4KD46+RtrTs5zUI4iE2Y0a6r0M1g/VKN+URZBIf9
+         vTlgMQCrR3lJWcmG2s4wbCbQQywSkYRphwksI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YlTzf9HvsnD/SJ7tagvq7ACsKvenWN0xKNiM3KMMUjI=;
+        b=GxH9NW+TI2C6MRfH/bN3mKN7GWce+VHYc/KyqdmEWZ7IkXeT3D9vQkHeBOxlWEJluq
+         bhWDN7fdC8dumtbaZdHTI0mTuStCPUMN6Q7hsWfEMkPf0iXnxfouP1SXgmEoMShxGn2N
+         IM8Bqo/Mq2iuqRE+M2PZRbv6dB82MsyRT2+iRvdbPhl3/7VnyxCJlRyrb18WWO27RsgF
+         /yx9MjNTBLtKlZcraCi97K9+P/t1DCsR4NIl3MlfwPFp8jEoALCsGC6Q8JZ9BDGlASg9
+         uYC6CCJp5s6p1seKBuuYVj364FgfbaoKEo37w1JDwNFtXAoh/Kjc8EHC0VRELcICwuS6
+         pjuQ==
+X-Gm-Message-State: AOAM5334sDimh3iRYX0CfmEh2zcF/JG2o2ymAWfJEa00ebAdlcUNELxb
+        11PU7AIfkiN2sGJRLYqNoFoXkQ==
+X-Google-Smtp-Source: ABdhPJwLw/Z+NiFLVitVLmhyKbYnnP+vsm8CyogXNh3orPUSnIpPrvpiL3fuFgJdsJZuPmgJoaHZAw==
+X-Received: by 2002:a17:902:c245:b0:141:f279:1c72 with SMTP id 5-20020a170902c24500b00141f2791c72mr67786012plg.18.1637260587856;
+        Thu, 18 Nov 2021 10:36:27 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a11sm314924pfh.108.2021.11.18.10.36.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 10:36:27 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Alexander Lobakin <alobakin@pm.me>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Marco Elver <elver@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Talal Ahmad <talalahmad@google.com>,
+        Kevin Hao <haokexin@gmail.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        linux-kernel@vger.kernel.org, wireguard@lists.zx2c4.com,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] skbuff: Switch structure bounds to struct_group()
+Date:   Thu, 18 Nov 2021 10:36:15 -0800
+Message-Id: <20211118183615.1281978-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexander Popov <alex.popov@linux.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paul McKenney <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Laura Abbott <labbott@kernel.org>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Scull <ascull@google.com>,
-        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
-        Mathieu Chouquet-Stringer <me@mathieu.digital>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mike Rapoport <rppt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-hardening@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
-        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
-        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20211027233215.306111-1-alex.popov@linux.com>
- <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
- <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
- <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
- <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
- <20211115110649.4f9cb390@gandalf.local.home>
- <202111151116.933184F716@keescook>
- <59534db5-b251-c0c8-791f-58aca5c00a2b@linux.com>
- <202111161037.7456C981@keescook>
- <fd86a05b-feca-c0a9-c6b0-b2e69c650021@schaufler-ca.com>
- <202111180930.5FA3EF0F59@keescook>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <202111180930.5FA3EF0F59@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.19306 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4061; h=from:subject; bh=eLrpED7FZqUoJk+VlPqZr/4GZEqJGGaAVIJQscuOOaA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlp0fyYfop8bO0CmUbw53UxC0mPage9gmgeRuKkzh 5o9H7xKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZadHwAKCRCJcvTf3G3AJvQSEA CbhDo0mTa0pyUIROF4KRjFgnwaE6Q6O9STI5LWIwL9s5/YFPFrHJQS7Pkhsnh24AYdYYG9vSiFZc75 jzk9C6S/YPGf2Vih3hjo8xBmYGPU2nX5VniojXu0bGk898GpLwnxBlHWyMNypy/f+w/rutgR1VlEWJ V9uTEapdU891FoF5pGnfINzN7r+lFb+aSunXyVBnlyL/8zL469x749ZxC0e71XwYseQX7RN0sl6241 tMdh0Mmn+5jaKnReK6BmUqM45ACZ9Mr7qq7lqb+DJOHBpykmo7vBCZZY9ASOo0rjleM5j7SFcugteI vJj9PQywHLn1Up+d/K0CXsuqqILFwG543GFlPYK6orIoVTH8ArnkTnzyueFDqGSmWzwOtzt8jbQGq0 eFebclVzxo2Qhx13FwNeZRPMUcVp0ZRjnbwvqMKOuTRYGMlcsnHjK+WJGy6yu2jnOPsM77XsYiTQhS e78+TXl+pz00Qk3f4uNH/eMlG3vBWBuDy/jPMkLvbydZnZxpCl3TbDa1ig/J4i+E3SXifNsRYYvMOl V2kzgpxP8QnA8mhtQ8RCGRHk65eBpWGKmtx7rmIUD28KnrzdvHOwtGxNFmJF+Vdq2istdyctGyGsQU HYJ+DKF8jDxz9wMjquNNDyLClqKt1ZcDmn8A18Jtti8okrpLyZ5drZWI+cUQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/18/2021 9:32 AM, Kees Cook wrote:
-> On Tue, Nov 16, 2021 at 11:00:23AM -0800, Casey Schaufler wrote:
->> On 11/16/2021 10:41 AM, Kees Cook wrote:
->>> On Tue, Nov 16, 2021 at 12:12:16PM +0300, Alexander Popov wrote:
->>>> What if the Linux kernel had a LSM module responsible for error handling policy?
->>>> That would require adding LSM hooks to BUG*(), WARN*(), KERN_EMERG, etc.
->>>> In such LSM policy we can decide immediately how to react on the kernel error.
->>>> We can even decide depending on the subsystem and things like that.
->>> That would solve the "atomicity" issue the WARN tracepoint solution has,
->>> and it would allow for very flexible userspace policy.
->>>
->>> I actually wonder if the existing panic_on_* sites should serve as a
->>> guide for where to put the hooks. The current sysctls could be replaced
->>> by the hooks and a simple LSM.
->> Do you really want to make error handling a "security" issue?
->> If you add security_bug(), security_warn_on() and the like
->> you're begging that they be included in SELinux (AppArmor) policy.
->> BPF, too, come to think of it. Is that what you want?
-> Yeah, that is what I was thinking. This would give the LSM a view into
-> kernel state, which seems a reasonable thing to do. If system integrity
-> is compromised, an LSM may want to stop trusting things.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-How are you planning to communicate the security relevance of the
-warning to the LSM? I don't think that __FILE__, __LINE__ or __func__
-is great information to base security policy on. Nor is a backtrace.
+Replace the existing empty member position markers "headers_start" and
+"headers_end" with a struct_group(). This will allow memcpy() and sizeof()
+to more easily reason about sizes, and improve readability.
 
-> A dedicated error-handling LSM could be added for those hooks that
-> implemented the existing default panic_on_* sysctls, and could expand on
-> that logic for other actions.
+"pahole" shows no size nor member offset changes to struct sk_buff.
+"objdump -d" shows no object code changes (outside of WARNs affected by
+source line number changes).
 
-I can see having an interface like LSM for choosing a bug/warn policy.
-I worry about expanding the LSM hook list for a case where I would
-hope no existing LSM would use them, and the new LSM doesn't use any
-of the existing hooks.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com> # drivers/net/wireguard/*
+---
+ drivers/net/wireguard/queueing.h |  4 +---
+ include/linux/skbuff.h           | 10 +++-------
+ net/core/skbuff.c                | 14 +++++---------
+ 3 files changed, 9 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
+index 4ef2944a68bc..52da5e963003 100644
+--- a/drivers/net/wireguard/queueing.h
++++ b/drivers/net/wireguard/queueing.h
+@@ -79,9 +79,7 @@ static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
+ 	u8 sw_hash = skb->sw_hash;
+ 	u32 hash = skb->hash;
+ 	skb_scrub_packet(skb, true);
+-	memset(&skb->headers_start, 0,
+-	       offsetof(struct sk_buff, headers_end) -
+-		       offsetof(struct sk_buff, headers_start));
++	memset(&skb->headers, 0, sizeof(skb->headers));
+ 	if (encapsulating) {
+ 		skb->l4_hash = l4_hash;
+ 		skb->sw_hash = sw_hash;
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 686a666d073d..875adfd056b6 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -808,12 +808,10 @@ struct sk_buff {
+ 	__u8			active_extensions;
+ #endif
+ 
+-	/* fields enclosed in headers_start/headers_end are copied
++	/* Fields enclosed in headers group are copied
+ 	 * using a single memcpy() in __copy_skb_header()
+ 	 */
+-	/* private: */
+-	__u32			headers_start[0];
+-	/* public: */
++	struct_group(headers,
+ 
+ /* if you move pkt_type around you also must adapt those constants */
+ #ifdef __BIG_ENDIAN_BITFIELD
+@@ -932,9 +930,7 @@ struct sk_buff {
+ 	u64			kcov_handle;
+ #endif
+ 
+-	/* private: */
+-	__u32			headers_end[0];
+-	/* public: */
++	); /* end headers group */
+ 
+ 	/* These elements must be at the end, see alloc_skb() for details.  */
+ 	sk_buff_data_t		tail;
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index ba2f38246f07..3a42b2a3a571 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -992,12 +992,10 @@ void napi_consume_skb(struct sk_buff *skb, int budget)
+ }
+ EXPORT_SYMBOL(napi_consume_skb);
+ 
+-/* Make sure a field is enclosed inside headers_start/headers_end section */
++/* Make sure a field is contained by headers group */
+ #define CHECK_SKB_FIELD(field) \
+-	BUILD_BUG_ON(offsetof(struct sk_buff, field) <		\
+-		     offsetof(struct sk_buff, headers_start));	\
+-	BUILD_BUG_ON(offsetof(struct sk_buff, field) >		\
+-		     offsetof(struct sk_buff, headers_end));	\
++	BUILD_BUG_ON(offsetof(struct sk_buff, field) !=		\
++		     offsetof(struct sk_buff, headers.field));	\
+ 
+ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
+ {
+@@ -1009,14 +1007,12 @@ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
+ 	__skb_ext_copy(new, old);
+ 	__nf_copy(new, old, false);
+ 
+-	/* Note : this field could be in headers_start/headers_end section
++	/* Note : this field could be in the headers group.
+ 	 * It is not yet because we do not want to have a 16 bit hole
+ 	 */
+ 	new->queue_mapping = old->queue_mapping;
+ 
+-	memcpy(&new->headers_start, &old->headers_start,
+-	       offsetof(struct sk_buff, headers_end) -
+-	       offsetof(struct sk_buff, headers_start));
++	memcpy(&new->headers, &old->headers, sizeof(new->headers));
+ 	CHECK_SKB_FIELD(protocol);
+ 	CHECK_SKB_FIELD(csum);
+ 	CHECK_SKB_FIELD(hash);
+-- 
+2.30.2
 
