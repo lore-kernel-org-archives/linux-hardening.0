@@ -2,67 +2,65 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1FAC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E2CC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8BF461526
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83B7613DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233672AbhKRSkv (ORCPT
+        id S234403AbhKRSlM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 13:40:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
+        Thu, 18 Nov 2021 13:41:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234383AbhKRSkv (ORCPT
+        with ESMTP id S234434AbhKRSlL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 13:40:51 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4634C06173E
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:37:50 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id 206so1153479pgb.4
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:37:50 -0800 (PST)
+        Thu, 18 Nov 2021 13:41:11 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B514C06174A
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:38:10 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id b11so5988543pld.12
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:38:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=hmolre7Okhy+2RfWXyND/uy2w4i4I9jFJ+ihj69aXDA=;
-        b=H2VVy+98VZb3T/nxecceRPaS4zE5Oz+cewzsaZHfm9eEsv3XRjc+DZ9njtbvTiIV9v
-         J3uSabI9Zn1CjpwWGCCmAjBS+t2u97WQlEQMjNpnEkhOLklQ8XH185Q78ublW5dzZJwg
-         7NXk/C4Z7m2WT6IK7nQoYb89NQ/9+XXt5CJ1Q=
+        bh=67r8F0/sx9q+LGM+Wt7NDN9RqixdzHVjgcdUmlc55vY=;
+        b=X5xGc74onqJ3Mnmz3GFI9VwuiV1dU0VR/iZk1apwAKikDZddfQ3iqIwNhODPuPVbIb
+         nQOjtH7yxVhzxgaouhfVI1zpr8COiM/Q5PLkB+/rXcrgI/s9keHuefDr2z2MojYwS6Ku
+         nrdvGlTfurlo/2gJfJe4zoxmzhrhU4wWTPKyA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=hmolre7Okhy+2RfWXyND/uy2w4i4I9jFJ+ihj69aXDA=;
-        b=ve33u6MszbgjClC6QH1Xqo+ZYd7O/kht9W/FyPFHZZWzRC8k0eHerXQ7F/zE1ORnBL
-         VB1yEkGgThpDYqRxqgZ7sBSlXyKjASKNElVvYli9o1j4DhJ4LilC0QuJpFBr0PY6CU5r
-         VjGjEl0LOgIc/xBUm7sXQCtTh0UAXUeNnrRfx+W3hL9+JxgLmMa4klGpMyiAzCOsP6Jj
-         OW+QgBJGZoUuFL50oic2/X+8LnPIMsU92F4IxoZS/s329DwOu3GIaQHd9ZNVLaCn7ikM
-         V6h9m9btllwDXVuFCxAzKgnisMkcbh9Tb7HVFNFsN6FH00lK1HZIxn6npRqHDS7+saXK
-         /JLA==
-X-Gm-Message-State: AOAM533Hai54ActX2x2/kk+Q8b2CN81aJoVH4NtvroiLN+NLw1a+0MCI
-        IBklIOya3upFhup6nl0BY/T/QQ==
-X-Google-Smtp-Source: ABdhPJyGMYhMNijolBn3fPZucIoXtbuuMs7SP0RN0sabR7T56FvS5htc77aeK768uABZmy/8W3JFMA==
-X-Received: by 2002:a63:e214:: with SMTP id q20mr12662707pgh.442.1637260670241;
-        Thu, 18 Nov 2021 10:37:50 -0800 (PST)
+        bh=67r8F0/sx9q+LGM+Wt7NDN9RqixdzHVjgcdUmlc55vY=;
+        b=6CuHIfWmLFfjGAFmxXtyWdzjGtTed6UFig8CAmnQSNODBe19IyMODHLgtgwlxW0e1F
+         6S6HsapB24MDBLqVlhpPylLLXXHnQwVCfFPbypokij7858F5NzAWH/dt2kVwkaYwj67D
+         J3jPZ/rdZLWxsBLVKkczH+3AAC/K3ldHjTqooaXuLwU7ZmrTboA85dP8b6Va2jO5OqKo
+         ThlJlOItvQi7lt34DUv9yMxF3DrF4lXmtiO7krwv2UX9izW/yP0bt6zEaIoWB6BSHOQV
+         QPIZ0wE9W/wX1sjGaWxRrMyPV01EVQsRMULxkwWbRzsGGLEp8dtv7YB/LBBPRyIML498
+         z73g==
+X-Gm-Message-State: AOAM533Ww9x0TR8QpB7EfPNFBhQXfchcRlgkaC7cKL6T2S1Uu7YHgf+M
+        imtU8quPV1oS21QwMhX9mGXAWw==
+X-Google-Smtp-Source: ABdhPJzxZJhkgk3/UTN/PTa3qc95MynPtxwFJgrX8FIc9hGFvqkb/ak+LE/E7bVC7uHBfZVQybKL1A==
+X-Received: by 2002:a17:903:10d:b0:142:6343:a48e with SMTP id y13-20020a170903010d00b001426343a48emr68148113plc.29.1637260689750;
+        Thu, 18 Nov 2021 10:38:09 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v10sm313376pfg.162.2021.11.18.10.37.49
+        by smtp.gmail.com with ESMTPSA id o1sm8838800pjs.30.2021.11.18.10.38.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 10:37:49 -0800 (PST)
+        Thu, 18 Nov 2021 10:38:09 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Saeed Mahameed <saeedm@nvidia.com>
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] net/mlx5e: Use struct_group() for memcpy() region
-Date:   Thu, 18 Nov 2021 10:37:48 -0800
-Message-Id: <20211118183748.1283069-1-keescook@chromium.org>
+Subject: [PATCH] sata_fsl: Use struct_group() for memcpy() region
+Date:   Thu, 18 Nov 2021 10:38:07 -0800
+Message-Id: <20211118183807.1283332-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2065; h=from:subject; bh=5h1/OCbcMC9fSZGebngnGdh+E0sfjUIlmjyL7n2bbX0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlp171Vyvp59PAA8HQAbsKsvjRM9PHtYPsKBL4acu CDa8lw+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZadewAKCRCJcvTf3G3AJjJyD/ 4nVg1irFelKvdZ02Th2MFSO4WzpimbnUZGifMbJ9L4pb52/n77LB3drjD6NSKlGtEaFlVyvNB/q0RH +t/6kzu/hCv25FLpy+J6YbtieBUc8Z7Kg7lW8weJX68+CWq+x3l0WyLhvkf9HlFZYWmrJBvC3AC6x5 dI0QXV4svrZEPVbYXsPfvAzX+4EDWdU9s7zA09cEH/a9lZdqyBvDoDQiTEEColX1wlqh13LZ3/n0Zq XOB4CCOqJCMlVnO9zINDvQYcH54PDqtqs4V9c9oZMVHbbyqELLtqCye3Ro0gFCi84RQ9pBtgBS+VDy mznZ3n6bPNcfnTfsA1Dihx8wWa6thbBI5S86q35YSkZxyiUnTU45jLBdYBhVE4I1oXDAVq/LpKYGv6 sgtYOkpjTGovnUhqboAgs8hfQQmAiZzzzKPq+86NsanzBWMWd3maqAMUNHYJPdJaqA6Uibnjke/1UI S5rQgcUS7i6Hbe3b2xk9hPo847RY/mh+MSUZHI4DPJAtgX0uxEfcLKoTZsGJFL+Qbe/MnmV8mTQ1RP 2oyRGggP9SLnZ1SNPIbbNbkpVYjgfgvMFseD5DfdK7/VdtmUkgFcwOc6uk6dy/cJF3dDOzAnHEhi1+ LbRyBwkAWgx7RJYydaCeTzzcKygH91nEK0WjuQja6ADP01c168owKfL4arnQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1986; h=from:subject; bh=6F3Hbtl0qNeNG8U8V+w5sB9aTa4zVRLFY4AiTt0tp9g=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlp2Px6D/hRDhXYVtZDKrKpJoBeWgsIp4owxiTf+2 R2mhhzeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZadjwAKCRCJcvTf3G3AJhTSD/ 9gAVFmbAytcjL9YYE9+bRQqgtVOevbPlQvD/AI//SohjvY+B2WMdCpteORsPNGagz3VtVWyzLmNmZu BxYhzRmmq5pHiQHZDHIBu//MCiHRjBA5g2AXAauWUZIv7pRFe5m/Y1OPrS+NV283NuPiE8B/0aNVEu WjS7dHIPQLdyxTPq4VBtQqQVkPyPuPtVEl7BoWD4kGGb15YRVR8kHIw8FcBj++4TIrOpLs+yXdoOXK v30S/4/p9Ml1OzkjwLs5hx7+V3J36EfzGog2zaeasmHJdg25GK2QVxeYU2u00Czhww4x2LNh5Lx0ya KmaXrzhTh99hJlIeWnuhpk7pqnweHD0K3ppCZ/rblNd+H6s32872o7uytzFvdrA/Cx6DdTR131AKeA 8ctfNY3KjipThrZy62aq80W0YSpGtqFPLLztzN87Iun6eFz471J78VJOEL6KCwAYDhkWMFt5Hf59VA mmHw1cyBlOf8pJt7Vhe/WRGawqEM3Ijks24mCNiijPlI8kALQdE8EB1DwL3hf3lp/ibU4gi2KcAdgN S3RLvyWfQP9o187CJY4M09m54H+GfWQl5NETdJ1BCju/yz+VqhiqEeDDULXLPvQYjtgqVPOJtK3UD8 nRrZWY2H9xx/h8+LKr8h9m58RtfPGkQmNRDKPMHQS3B6UFqaq+e9ClLjwZXw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -73,50 +71,50 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memcpy(), memmove(), and memset(), avoid
 intentionally writing across neighboring fields.
 
-Use struct_group() in struct vlan_ethhdr around members h_dest and
-h_source, so they can be referenced together. This will allow memcpy()
+Use struct_group() in struct command_desc around members acmd and fill,
+so they can be referenced together. This will allow memset(), memcpy(),
 and sizeof() to more easily reason about sizes, improve readability,
-and avoid future warnings about writing beyond the end of h_dest.
+and avoid future warnings about writing beyond the end of acmd:
 
-"pahole" shows no size nor member offset changes to struct vlan_ethhdr.
-"objdump -d" shows no object code changes.
+In function 'fortify_memset_chk',
+    inlined from 'sata_fsl_qc_prep' at drivers/ata/sata_fsl.c:534:3:
+./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+  199 |    __write_overflow_field();
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 2 +-
- include/linux/if_vlan.h                         | 6 ++++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/ata/sata_fsl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-index 7fd33b356cc8..ee7ecb88adc1 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-@@ -208,7 +208,7 @@ static inline void mlx5e_insert_vlan(void *start, struct sk_buff *skb, u16 ihs)
- 	int cpy1_sz = 2 * ETH_ALEN;
- 	int cpy2_sz = ihs - cpy1_sz;
- 
--	memcpy(vhdr, skb->data, cpy1_sz);
-+	memcpy(&vhdr->addrs, skb->data, cpy1_sz);
- 	vhdr->h_vlan_proto = skb->vlan_proto;
- 	vhdr->h_vlan_TCI = cpu_to_be16(skb_vlan_tag_get(skb));
- 	memcpy(&vhdr->h_vlan_encapsulated_proto, skb->data + cpy1_sz, cpy2_sz);
-diff --git a/include/linux/if_vlan.h b/include/linux/if_vlan.h
-index 41a518336673..45aad461aa34 100644
---- a/include/linux/if_vlan.h
-+++ b/include/linux/if_vlan.h
-@@ -46,8 +46,10 @@ struct vlan_hdr {
-  *	@h_vlan_encapsulated_proto: packet type ID or len
-  */
- struct vlan_ethhdr {
--	unsigned char	h_dest[ETH_ALEN];
--	unsigned char	h_source[ETH_ALEN];
-+	struct_group(addrs,
-+		unsigned char	h_dest[ETH_ALEN];
-+		unsigned char	h_source[ETH_ALEN];
+diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
+index e5838b23c9e0..fec3c9032606 100644
+--- a/drivers/ata/sata_fsl.c
++++ b/drivers/ata/sata_fsl.c
+@@ -246,8 +246,10 @@ enum {
+ struct command_desc {
+ 	u8 cfis[8 * 4];
+ 	u8 sfis[8 * 4];
+-	u8 acmd[4 * 4];
+-	u8 fill[4 * 4];
++	struct_group(cdb,
++		u8 acmd[4 * 4];
++		u8 fill[4 * 4];
 +	);
- 	__be16		h_vlan_proto;
- 	__be16		h_vlan_TCI;
- 	__be16		h_vlan_encapsulated_proto;
+ 	u32 prdt[SATA_FSL_MAX_PRD_DIRECT * 4];
+ 	u32 prdt_indirect[(SATA_FSL_MAX_PRD - SATA_FSL_MAX_PRD_DIRECT) * 4];
+ };
+@@ -531,8 +533,8 @@ static enum ata_completion_errors sata_fsl_qc_prep(struct ata_queued_cmd *qc)
+ 	/* setup "ACMD - atapi command" in cmd. desc. if this is ATAPI cmd */
+ 	if (ata_is_atapi(qc->tf.protocol)) {
+ 		desc_info |= ATAPI_CMD;
+-		memset((void *)&cd->acmd, 0, 32);
+-		memcpy((void *)&cd->acmd, qc->cdb, qc->dev->cdb_len);
++		memset(&cd->cdb, 0, sizeof(cd->cdb));
++		memcpy(&cd->cdb, qc->cdb, qc->dev->cdb_len);
+ 	}
+ 
+ 	if (qc->flags & ATA_QCFLAG_DMAMAP)
 -- 
 2.30.2
 
