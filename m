@@ -2,79 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1191AC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 19:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099A5C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E721E619BB
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 19:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA40B610C8
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232814AbhKRTtY (ORCPT
+        id S232600AbhKRUYa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 14:49:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32892 "EHLO
+        Thu, 18 Nov 2021 15:24:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233448AbhKRTtW (ORCPT
+        with ESMTP id S232380AbhKRUYa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 14:49:22 -0500
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8021C061574;
-        Thu, 18 Nov 2021 11:46:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=A0kpxeX3ux8Zs3KSSdktR+Xma0rIOEQOzFaFM8BnP6Q=;
-        t=1637264782; x=1638474382; b=WLtDSZd4KMnCQM2rCOr7Bgh66/jcy0qZRYucCmmolj7yEBK
-        1uupnbQQswUWGaEkfjDqswzcCvgrQd3S40nZ5ClLJMTfXob0wvC7D8dvxmXb/3A0Sx/nIpg3QGb+b
-        stWWufkR7LN51UJaBLLV88gPWA8+KAGE8yk3W/gDVmUvyX9SxRAhZ0YUvar+9sYLBKGRwZH7o++ZB
-        5T0YMPuG7iagZsxAYRjBUMb0jiQkaBYEoFhq0aydEttjT4bGwWfEDUVBJEfnejQbBB/Soff5XHkdY
-        Prltm/UqXDcX1cTwfqcNHSY+xANSL7KmOcRug3vFKIdB9OqijYqU4dpOPEfMsQww==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.95)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1mnnML-00H8SF-9L;
-        Thu, 18 Nov 2021 20:46:13 +0100
-Message-ID: <c5d8c214b5df75b5b77450d71c7aec9f3bd97a67.camel@sipsolutions.net>
-Subject: Re: [PATCH] intersil: Use struct_group() for memcpy() region
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Kees Cook <keescook@chromium.org>, Jouni Malinen <j@w1.fi>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Thu, 18 Nov 2021 20:46:11 +0100
-In-Reply-To: <20211118184158.1284180-1-keescook@chromium.org>
-References: <20211118184158.1284180-1-keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.1 (3.42.1-1.fc35) 
+        Thu, 18 Nov 2021 15:24:30 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2822DC061574
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:21:30 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id 200so6481125pga.1
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:21:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NPtDKY3zQHIrhlifOBQrVsDaP/5HgYzaYhUSwrSVsRg=;
+        b=nAdORjdK6MXlng6B14U7W9bMVwCkxUdc44HjUZYWokmn+o9Fruy78RMIi0EuKfh2fr
+         yH3U186Qu019Tlr4jlAH0fAQKcXKSMASCHYYuzbcryaNN5yDg9zCprj+9pXNQOovUn0Q
+         L3r3jbL/ZztL2IWiGyK2BjW+l4wBxDpJICc+Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NPtDKY3zQHIrhlifOBQrVsDaP/5HgYzaYhUSwrSVsRg=;
+        b=wonLDnCGHPz8XpzGj/7N2GENc0WSWdteotwxoVp/L5gtlF42hnT9/BzK42XhgWtp8s
+         +lQ6v8USlxgTD+HZOFpbO66MiyDLHzguvANg2HG0W6RJYLJDIgQnw/VrpidIMrKByxVR
+         T5P3pd1Jyyn17Re4WCFf/ipQIRiP6LuwVvGkiBFnBJpG6JofoAOHRebVzcVZnWR+w4ik
+         WxJ8MD3HRjnKEDGVgKcZw/esQN6a5u10h8xVpVtw5RyXOWKyjntTjg0EjNzb5rPblNhl
+         ZkNum8JrdNwalLr7nhgO0EOPRhm6d6WK5GUFNaXJLJP0UParHkHgx9DXorxr/4PRR6FI
+         3k7w==
+X-Gm-Message-State: AOAM532TAMoHTtU1//X1+jklNV/HOMxzbT+X4uX1pgMPHGGC+NTlnlKG
+        VplswWJ45iQ3Zx/McioVabvmJU8WpOnYUA==
+X-Google-Smtp-Source: ABdhPJyKrWvKRcJ3pyV+ombqFhaMRamBg42UFc7f5jzTlmLWTdD9qb1CTIEAY3Xyim7RVp2/+p4T5A==
+X-Received: by 2002:a05:6a00:234f:b0:3eb:3ffd:6da2 with SMTP id j15-20020a056a00234f00b003eb3ffd6da2mr58477427pfj.15.1637266889691;
+        Thu, 18 Nov 2021 12:21:29 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u2sm429035pfi.120.2021.11.18.12.21.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 12:21:29 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Doug Ledford <dledford@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Max Gurtovoy <maxg@mellanox.com>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] IB/mthca: Use memset_startat() for clearing mpt_entry
+Date:   Thu, 18 Nov 2021 12:21:26 -0800
+Message-Id: <20211118202126.1285376-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-malware-bazaar: not-scanned
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1127; h=from:subject; bh=2Oxvu1fYS+Nd7p7Top4F6FCD5kXJlWjbh4cJzd7nFgI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlrXFiwg0OSPG9eDsUlPRIabyANFH36YdFsJ8apQT R6jmUeiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa1xQAKCRCJcvTf3G3AJvS6EA Cuybx5qm56ctjo8osQI7GQCDUkeL1CwbycpT/pu+c6lmOxuL8ilwqtEdsZMe1VHwAmD+7GbThsnn/y aSNRhNH1099AO6aDrK8VpLgGjwtlun1KfxWsnLqaNPjSWTjMQIfGpc2v34/v5g2Cl0Q/Xjk5S+MnSA y/gVw0FLU/WHM47DoxRSkhj1hpEGFmktOETdfw9e4j6Jktf+6d4r5DYvQoobVwaovIt9jlcx4c89d1 Yi3wD+VbjUj2aYwRirNv2vravL2GJBicutD2nD3dX6oBgnL/FBhNECzhg6ipA9do73z8x4LdUaX3D5 Cv9G0DrfWU62UfdU/56LPpq0mVKLkEsgJJaocRSXsRuscU11pT3xIWnjZS6/AaXQJqvJF0WKVp1JQM W333vNY9X9AkZonl0bB3d3GozsNYnrDNpL2jhZHYuKlG8mX46SPy0AbFt5kfj029g++JpLVpcRjIhj eFbu/1PR9/9e/eYzJA0dXurbFP19rZDS0ORYe1rBsefFDs1+SFwZ2gvGoImPTKFI3POjQfvlN8s152 neY+IqfUBXBmjAOUSPf6ZR+8C/CYeAy3QRBUai4BrPvM5l1S57LWmHLzrMDx6WPZcTSDMyzg5RpANw GYkPX7DWOAtbubOJrAYLZv3uWtpH8IiA7F5psyETzFcGK4ognxCBcHCHoH+A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2021-11-18 at 10:41 -0800, Kees Cook wrote:
-> 
->  	/* 802.11 */
-> -	__le16 frame_control; /* parts not used */
-> -	__le16 duration_id;
-> -	u8 addr1[ETH_ALEN];
-> -	u8 addr2[ETH_ALEN]; /* filled by firmware */
-> -	u8 addr3[ETH_ALEN];
-> -	__le16 seq_ctrl; /* filled by firmware */
-> +	struct_group(frame,
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memset(), avoid intentionally writing across
+neighboring fields.
 
-Arguably, that should be 'header' rather than 'frame' :)
+Use memset_startat() so memset() doesn't get confused about writing
+beyond the destination member that is intended to be the starting point
+of zeroing through the end of the struct.
 
-johannes
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/infiniband/hw/mthca/mthca_mr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/infiniband/hw/mthca/mthca_mr.c b/drivers/infiniband/hw/mthca/mthca_mr.c
+index ce0e0867e488..1208e92ca3d3 100644
+--- a/drivers/infiniband/hw/mthca/mthca_mr.c
++++ b/drivers/infiniband/hw/mthca/mthca_mr.c
+@@ -469,8 +469,7 @@ int mthca_mr_alloc(struct mthca_dev *dev, u32 pd, int buffer_size_shift,
+ 	mpt_entry->start     = cpu_to_be64(iova);
+ 	mpt_entry->length    = cpu_to_be64(total_size);
+ 
+-	memset(&mpt_entry->lkey, 0,
+-	       sizeof *mpt_entry - offsetof(struct mthca_mpt_entry, lkey));
++	memset_startat(mpt_entry, 0, lkey);
+ 
+ 	if (mr->mtt)
+ 		mpt_entry->mtt_seg =
+-- 
+2.30.2
 
