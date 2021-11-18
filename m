@@ -2,73 +2,65 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06739C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFA3C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7FBC6128C
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE9061037
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231639AbhKRUjH (ORCPT
+        id S231304AbhKRUjn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 15:39:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44324 "EHLO
+        Thu, 18 Nov 2021 15:39:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231562AbhKRUjH (ORCPT
+        with ESMTP id S231186AbhKRUjn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 15:39:07 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC16C06173E
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:36:06 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id iq11so6095722pjb.3
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:36:06 -0800 (PST)
+        Thu, 18 Nov 2021 15:39:43 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E28C061574
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:36:42 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id r5so6502975pgi.6
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:36:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lVkmmvG/j7pAxwD3ZkAKM2VobhK3Up8KSyZejtIse54=;
-        b=PPEK73YjIZ+zZ041dY75YBSx5UtWt6K5MgviG4QHxEGeyCZYxwFP/0FoKTcDhNwWHC
-         DjxZfKR0TwBk1ezwU++Gp3NdN8T4UpAE1jftPiLiojqArr4Bk4saT/OECZiSBnn9rMX+
-         5YllHgwKvZv6KkYUv+yIEa5C6M5sCoUb0pPY0=
+        bh=1P1IVsOV4eoi9h8VVG0W3l3nv1to2b9fsVwdeB/1IV0=;
+        b=XnWmnVXy8Au21CmkY8y/BtMpDkPQMhuND3K3CNzihjJfcVFLPT5/u2HN5WJyQSG9Te
+         OSdrBqfq+ja1YN0mFXR+PiF7a7wdmZArkA8mBRo2bNG0I8JhKJo7Oc5ONVIz5QGfaz3w
+         aw4fLdiay++w9XiZIzeW3JcQqQAcO8cFK0g64=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lVkmmvG/j7pAxwD3ZkAKM2VobhK3Up8KSyZejtIse54=;
-        b=qrE5dABpF7QYFY/2FqnlbLvnQvRzW8qUd3rtT3InF/51/DTzI4mXe7BldL9pz5pN+U
-         tgyN2I++9bfnAsKixraI/lFkwN7IEI73ss2YFSKCuSiK2Kg2FlS8pQWR1JWRCiWgxzuv
-         XgP9ZFrH9AUuUe8ilaErfu3iQ7UJtuZmPTGfmWHtVpmwSIIbdJitCNuRmE3UhmVvKgpK
-         g7UkgN5DindMebRlSzrB23Q5e0TC4bH8SghgOdCG5Tt7xEUVQg8bUCutLWewGFUo9gGk
-         eJv/EmgsK/JDXNVToem65Pd5YGUdhODtPWW/pv8/5VVg75VDvqTvdXjAmRWUFnPZgkTJ
-         pudQ==
-X-Gm-Message-State: AOAM533xSyK0h0/n5Zr18Iu21rGcgbw85qZBOeEH98vQICwvXE+XFTFa
-        pTjAEtHSyxOTU0OmUigYSma6Bw==
-X-Google-Smtp-Source: ABdhPJxMwU1fSwD50NTL/ixCZzNZiTT9wK+rF5Dat8y+lnVThvSBnIvaT6qSQYGBMA8U9DmIJMZ29A==
-X-Received: by 2002:a17:90a:7ac8:: with SMTP id b8mr13874273pjl.206.1637267766535;
-        Thu, 18 Nov 2021 12:36:06 -0800 (PST)
+        bh=1P1IVsOV4eoi9h8VVG0W3l3nv1to2b9fsVwdeB/1IV0=;
+        b=eUd9dGbrouzlYQs2zZrt2JUrKmWRfEIYdY6UovJnRb5J1mQoppOYPmQ0HFVgGEYpNK
+         KjQJcZ7PfIpogD9fP1JN77spIUbnVbIalSpllSxAj4/CnuBrWbQjU0TTxlVQdXjqci8U
+         Y8GV/06wTomLobJ2yVt/L9ozlsa2VIzIJy3WBOfLASZg1Hu5A/VH0UXxKwHAg7L2sJXc
+         GloN52unNuWQVl98ZNzN/IVmwoBFy8vdChbPqBFK5v1xK7tmOO8mQSKqDBuEpfy2MgTV
+         8DmvRIqdNvkTr9ADZxCznuDr4QVeDF5S6/Hqa2IJGK9vm65XDj1ZvmtuqgMr+2w+xtrX
+         WS/Q==
+X-Gm-Message-State: AOAM532jlZrmr5n4y6F7k7J8BoME2VqDFeA1/OMCkQjGKT+RhYEEGq5c
+        rU3OwJEnsoUKokL0nu+sUe7jxA==
+X-Google-Smtp-Source: ABdhPJx1PH3y3dE/DIYW2gw2KrkrLlgBWpuT41Q8G2aCVm7V4ETphnEr76qWFLI2NdrftFNHjpCBRA==
+X-Received: by 2002:a63:e216:: with SMTP id q22mr13302659pgh.3.1637267802207;
+        Thu, 18 Nov 2021 12:36:42 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id gc22sm8900753pjb.57.2021.11.18.12.36.06
+        by smtp.gmail.com with ESMTPSA id d9sm7177789pjs.2.2021.11.18.12.36.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 12:36:06 -0800 (PST)
+        Thu, 18 Nov 2021 12:36:41 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
+To:     Alasdair Kergon <agk@redhat.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mike Snitzer <snitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] powerpc/signal32: Use struct_group() to zero spe regs
-Date:   Thu, 18 Nov 2021 12:36:04 -0800
-Message-Id: <20211118203604.1288379-1-keescook@chromium.org>
+Subject: [PATCH] dm integrity: Use struct_group() to zero struct journal_sector
+Date:   Thu, 18 Nov 2021 12:36:40 -0800
+Message-Id: <20211118203640.1288585-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3131; h=from:subject; bh=Nd4ePfUzckpA23dYadFOEde2uR/aV7RLm1vyTElA6rM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlrkzlK5F2t3ltvzRwjCkTmaKG7QFHzINoff+dGs2 EAsb07CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa5MwAKCRCJcvTf3G3AJsaxEA CdO3ZJYc4b0R3BTvkb66wG6EJaEgsRZ85XsSStLG9iLH8wNFFNYQaU2QY37x0PV8Hld/mIQjl0s24m OamYw0ox0n67RvD21GiL6V6fBuzBIqLl//8XKH1HuXVmUR5KP8FpuugmilDvAaXHyVkHmaI9Ft+d2G W5tB+zXf3G5PwWLJBU6dt7fAJYGjJUkGXZE8TdBUdRcS5yXKd5VkLYvB6wr+eN79xCZPzW2jhCqPH8 w7E0lW9r+wt4BjmCQ1q4pp/mHYkJcQFkSdzoiBWWIOnZoGQSDhfaROvr7cNOL2ampq9sNvcrsV15Yt +FD1hU5ZmX8dzFDk2iAqhMxTYIaHHxhFm+yeyZd8CKrZReuCECztiTNoUTpfnMiwcZd5pkrJjjnGAU 2EKQLvWqqK1LVKzR3rcm6MnyNhVduUwF3hqkS632N8ZvuQ1+IsXctxfBiN4icsN9LnYmigrZ2Ojuh8 uuq6hpntjT9q1kqSJMVZkFCOo97YS1i+J0QhIOlCOqR4eabzITemH7qSirg0sm5QIMiR8/Bpfk8i2h Ds5O48/TYaLwyz9TCCGtYCSbAYZTl7LXFpl3ShVhl9+RoYqbxQ9f2LTVI7TRBMk6W6BfzDylb8Skvj T9oPd1+dRKTkj2RX7oH+CzFt3t98ieoJmtPy2h+SXNBcrI7KOfnOvuhfLadA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1561; h=from:subject; bh=uXt5rNLQK/+BGfgY+/0jxuDI0+majyoEH4AYy0/HEDA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlrlXhAwJnh6qzFr/hBevLetAK90Djl1nlk7eJu89 EwRtAbaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa5VwAKCRCJcvTf3G3AJlZuD/ 93cSna6doQ+jybq9Xil1PjrHssaJTkfcyQskeukUC9phbJym57uJK7TxVu3nfT3aYuBX29jiRcS6Gx mXu3VoOCukFyuNI1APYwhsdti5kZia/z6i+2MvlmiISfwTkUTdpvcplLXwSHnWeVTxPGkiK9sMDTf+ 2faBizMacRLwlmqfJUdPnN5Dr9JbyiwAFC+TJ93lGrtWXq9UDrR3okl6vFKMT662AD47jV8qFMimyW +3Ue45vPThhY0F4TCtCrrQRhGnChqyJQF0FWs+Sb4JnwXN3L3dqpF+9/+bOMlxjQ+A46h+nPm6x6Yv o7ybTYRSOKnxKh8r+iKNhRIZwrbu7Z5RKPxzPR1/G6wH0uGOM6mem/bI55KrqM14lPbR0LFdDBv67l zHoThoTesPcmeMY9/mkQqZk1CLmNzuT6q++UiCtGiA6scWPLtgXqo8RTHmISh9fT+NCCMaszqqY53H 2m2HyvrU3/lYOfgDxVkBcw/iCDcnVcdASzU0KMmeJw8dGFzu2Fc0po0hJSHYoHy6nF6JYYuByhPyp0 X+VSsMBiIuCIOOeVg46DXEp2VaHkL1/DjgCYQEjTe+NVU3bfB6/c9FkTyd/vzwyu10TMZNp1u49ijH BLEijZDKf1e4J2W0D9CydNOtpfllzMsjDyOOkgpwP9PIxR0X2Vyc7+5W8hIA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -79,69 +71,41 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Add a struct_group() for the spe registers so that memset() can correctly reason
-about the size:
+Add struct_group() to mark region of struct journal_sector that should be
+initialized to zero.
 
-   In function 'fortify_memset_chk',
-       inlined from 'restore_user_regs.part.0' at arch/powerpc/kernel/signal_32.c:539:3:
-   >> include/linux/fortify-string.h:195:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
-     195 |    __write_overflow_field();
-         |    ^~~~~~~~~~~~~~~~~~~~~~~~
-
-Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/powerpc/include/asm/processor.h |  6 ++++--
- arch/powerpc/kernel/signal_32.c      | 14 +++++++++-----
- 2 files changed, 13 insertions(+), 7 deletions(-)
+ drivers/md/dm-integrity.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-index e39bd0ff69f3..978a80308466 100644
---- a/arch/powerpc/include/asm/processor.h
-+++ b/arch/powerpc/include/asm/processor.h
-@@ -191,8 +191,10 @@ struct thread_struct {
- 	int		used_vsr;	/* set if process has used VSX */
- #endif /* CONFIG_VSX */
- #ifdef CONFIG_SPE
--	unsigned long	evr[32];	/* upper 32-bits of SPE regs */
--	u64		acc;		/* Accumulator */
-+	struct_group(spe,
-+		unsigned long	evr[32];	/* upper 32-bits of SPE regs */
-+		u64		acc;		/* Accumulator */
+diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
+index 6319deccbe09..163c94ca4e5c 100644
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -121,8 +121,10 @@ struct journal_entry {
+ #define JOURNAL_MAC_SIZE		(JOURNAL_MAC_PER_SECTOR * JOURNAL_BLOCK_SECTORS)
+ 
+ struct journal_sector {
+-	__u8 entries[JOURNAL_SECTOR_DATA - JOURNAL_MAC_PER_SECTOR];
+-	__u8 mac[JOURNAL_MAC_PER_SECTOR];
++	struct_group(sectors,
++		__u8 entries[JOURNAL_SECTOR_DATA - JOURNAL_MAC_PER_SECTOR];
++		__u8 mac[JOURNAL_MAC_PER_SECTOR];
 +	);
- 	unsigned long	spefscr;	/* SPE & eFP status */
- 	unsigned long	spefscr_last;	/* SPEFSCR value on last prctl
- 					   call or trap return */
-diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
-index 00a9c9cd6d42..5e1664b501e4 100644
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -527,16 +527,20 @@ static long restore_user_regs(struct pt_regs *regs,
- 	regs_set_return_msr(regs, regs->msr & ~(MSR_FP | MSR_FE0 | MSR_FE1));
+ 	commit_id_t commit_id;
+ };
  
- #ifdef CONFIG_SPE
--	/* force the process to reload the spe registers from
--	   current->thread when it next does spe instructions */
-+	/*
-+	 * Force the process to reload the spe registers from
-+	 * current->thread when it next does spe instructions.
-+	 * Since this is user ABI, we must enforce the sizing.
-+	 */
-+	BUILD_BUG_ON(sizeof(current->thread.spe) != ELF_NEVRREG * sizeof(u32));
- 	regs_set_return_msr(regs, regs->msr & ~MSR_SPE);
- 	if (msr & MSR_SPE) {
- 		/* restore spe registers from the stack */
--		unsafe_copy_from_user(current->thread.evr, &sr->mc_vregs,
--				      ELF_NEVRREG * sizeof(u32), failed);
-+		unsafe_copy_from_user(&current->thread.spe, &sr->mc_vregs,
-+				      sizeof(current->thread.spe), failed);
- 		current->thread.used_spe = true;
- 	} else if (current->thread.used_spe)
--		memset(current->thread.evr, 0, ELF_NEVRREG * sizeof(u32));
-+		memset(&current->thread.spe, 0, sizeof(current->thread.spe));
- 
- 	/* Always get SPEFSCR back */
- 	unsafe_get_user(current->thread.spefscr, (u32 __user *)&sr->mc_vregs + ELF_NEVRREG, failed);
+@@ -2870,7 +2872,8 @@ static void init_journal(struct dm_integrity_c *ic, unsigned start_section,
+ 		wraparound_section(ic, &i);
+ 		for (j = 0; j < ic->journal_section_sectors; j++) {
+ 			struct journal_sector *js = access_journal(ic, i, j);
+-			memset(&js->entries, 0, JOURNAL_SECTOR_DATA);
++			BUILD_BUG_ON(sizeof(js->sectors) != JOURNAL_SECTOR_DATA);
++			memset(&js->sectors, 0, sizeof(js->sectors));
+ 			js->commit_id = dm_integrity_commit_id(ic, i, j, commit_seq);
+ 		}
+ 		for (j = 0; j < ic->journal_section_entries; j++) {
 -- 
 2.30.2
 
