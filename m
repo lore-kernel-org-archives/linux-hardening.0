@@ -2,73 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B76C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 00:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BDBC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 00:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC5EC61BA2
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 00:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145FB61B72
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 00:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241847AbhKRASn (ORCPT
+        id S242002AbhKRAke (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Nov 2021 19:18:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49616 "EHLO
+        Wed, 17 Nov 2021 19:40:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241841AbhKRASk (ORCPT
+        with ESMTP id S241997AbhKRAkd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Nov 2021 19:18:40 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B61C061764
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 16:15:41 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id r11so18686253edd.9
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 16:15:41 -0800 (PST)
+        Wed, 17 Nov 2021 19:40:33 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57573C061764
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 16:37:34 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id y13so18750864edd.13
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 16:37:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=kylehuey.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=K+58f0SyQ3Lb12arfHudpznsJpM8EH8QJRhqC+3D+/o=;
-        b=GIK/XZDC7ZNVXEqtZ+tcRvrXQwqh/3lJY4yq2xqMR5g4v4WHdHdxBBddnKCXAxjOPb
-         D4LDriIwmMmUqzawd5iS2gHre59nN6Ls/L0plgWyRkjMH6wccNzKmXtgD3O8sgwqJg2Q
-         rLVrPCOoHEuMVi4eKbaeBXjnaPlOpyQXvrK0A=
+        bh=CHmkZszPR6EELtxyc0tZ5ImEP6GCMXNuKUoNO1WLl4A=;
+        b=G+Az4leoYHWjXC176OT/xR8EoiNodE3UlIl9ddIYba1/nV7CORra7HBL4DptBg3QUq
+         NQlFUVejndDpvLty7d7Y4RcDcpHvTbW1v7DnxyzRovMW+0YIbEspfZSRLWm2omOMY9qc
+         HAF2aebOm9RxOWip8Q0KjhFqmJLXYB5d8//Asua/4C7ZC5vLsCLyryEoleJlsMlZ7dRz
+         ylVcglAE2EsGVjRPzcSKPmtJOh9HcKD6S4gdoW18AFzzikJhLefle9XYW7rHu7NQuLER
+         ZVGAW8frokLTzFAA6CclBHmM9iz9n0+9unpWLnA0WBwsH0w9XP8gaZKsQoR6NI5w6ecr
+         TjJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=K+58f0SyQ3Lb12arfHudpznsJpM8EH8QJRhqC+3D+/o=;
-        b=vhCq9BMIxGgqN7ze8h1rytSPT3LvYctW8jTPUJswH16vN3x1EbIrVLsWYVnHuPhVrC
-         jg5AD/ag33zJe2mzv/41v2VaSWwGn4Vh5QrpkdX85Q78DsYRHW/hwU5TzDae31bsGg3p
-         feoFmw/pvWpy9Jgza6PKzjiNjieCWKbdUeZQe9K1lr8P+xFy50rSIymLBodMEv2K1LKW
-         NCsAcNgSqvnrejr7ZfsVfL2TX2ghu3DeShOHkjd+OtE/gLsuLxEwzAJVmV8M/MmhiaLH
-         vRJmfQyCBu5W3NxloVjGe54FQG+HIK3nAKHXv7WhARIzZONYPQif7o+J0jGLyJ8XtS66
-         SL0g==
-X-Gm-Message-State: AOAM533aJ4iCocIG/uTPCxyR+pXqfvtoxVP0GMiHYRIkPHWQMGUhCUky
-        NJIWFft6TVuC7tJ/e2AsQVlt3kUTDB0yLcNl
-X-Google-Smtp-Source: ABdhPJyWbxO+6vOkkYvxiv1POsPE/pUlJ1f4MUFkQIPR5fsBW/j6yD0WT+KC9Qiig9yQFH0FZqis/g==
-X-Received: by 2002:a05:6402:270b:: with SMTP id y11mr4523861edd.29.1637194539227;
-        Wed, 17 Nov 2021 16:15:39 -0800 (PST)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id k23sm684595edv.22.2021.11.17.16.15.37
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Nov 2021 16:15:37 -0800 (PST)
-Received: by mail-wr1-f41.google.com with SMTP id s13so7954406wrb.3
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Nov 2021 16:15:37 -0800 (PST)
-X-Received: by 2002:adf:d082:: with SMTP id y2mr24843502wrh.214.1637194537139;
- Wed, 17 Nov 2021 16:15:37 -0800 (PST)
+        bh=CHmkZszPR6EELtxyc0tZ5ImEP6GCMXNuKUoNO1WLl4A=;
+        b=5C73h6ycMhb8c5inuAaRnd0OSjVrXsdXn6dgmKZO5dfrxtQwjOxzQGvIrnDqiCXWTJ
+         qQToBPrA0oW4RKtvUE+rarNivPXkwFflZxNOBfZePK3IrEc+zSeUU8OheJCoZFtYHhWM
+         e85E/nHqdbDVA2HbK3ur6yH4G1SlUUZG1Ms3/nfeLOmSxnmlS22pssanM0pxEgDRlVZg
+         96DzwLGQzqI79YCD7Xf6JEDMF5aZ83w9LeuVOGGPYEB6NOpxlDisa/nqocu8xGO9+UUV
+         jglySlz9q/F6fnDWFCShJbD/BJzNpuZwVEpF/DHi/aNE35taKROynBG+++CgflchhgSt
+         m2Yw==
+X-Gm-Message-State: AOAM531FLi7VxC4oHv4EiPPmA7bAESU4L8AusEcjyOs3jrV/+6lpMH84
+        twBwhYVK77H8dtFMgjSlgJYBvi/aJV/4dc4K5hzXlA==
+X-Google-Smtp-Source: ABdhPJxYJytp1pKphdFW2jBHyU5wMlXwFvI1+mIFO9dA4MYHB84eYMqVfc/KNHGNV9du6PqVFrN9mH2uwzEDhLGEmA8=
+X-Received: by 2002:a17:906:8699:: with SMTP id g25mr27232161ejx.271.1637195852821;
+ Wed, 17 Nov 2021 16:37:32 -0800 (PST)
 MIME-Version: 1.0
 References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
  <202111171049.3F9C5F1@keescook> <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
  <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
  <87k0h6334w.fsf@email.froward.int.ebiederm.org> <202111171341.41053845C3@keescook>
- <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com> <202111171603.34F36D0E01@keescook>
-In-Reply-To: <202111171603.34F36D0E01@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 17 Nov 2021 16:15:21 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjsyDcohs=i0XGu0GRb6AkXUNyWCE_f6JMy0RY9wdXUXg@mail.gmail.com>
-Message-ID: <CAHk-=wjsyDcohs=i0XGu0GRb6AkXUNyWCE_f6JMy0RY9wdXUXg@mail.gmail.com>
+ <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
+From:   Kyle Huey <me@kylehuey.com>
+Date:   Wed, 17 Nov 2021 16:37:21 -0800
+Message-ID: <CAP045ApYXxhiAfmn=fQM7_hD58T-yx724ctWFHO4UAWCD+QapQ@mail.gmail.com>
 Subject: Re: [REGRESSION] 5.16rc1: SA_IMMUTABLE breaks debuggers
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kyle Huey <me@kylehuey.com>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Andrea Righi <andrea.righi@canonical.com>,
         Shuah Khan <shuah@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -84,35 +77,45 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 4:05 PM Kees Cook <keescook@chromium.org> wrote:
+On Wed, Nov 17, 2021 at 3:24 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> (nit: should the "sigdfl" argument be renamed "immutable" for clarity
-> in this function?)
+> On Wed, Nov 17, 2021 at 1:54 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > The SA_IMMUTABLE change was to deal with failures seen in the seccomp
+> > test suite after the recent fatal signal refactoring. Mainly that a
+> > process that should have effectively performed do_exit() was suddenly
+> > visible to the tracer.
+>
+> I think this basically shows that the conversion from do_exit() to
+> fatal_signal() was just wrong. The "do_exit()" wasn't really a signal,
+> and can't be treated as such.
+>
+> That said, instead of reverting, maybe we can just mark the cases
+> where it really is about sending a synchronous signal, vs sending an
+> explicitly fatal signal.
+>
+> It's basically the "true" condition to force_sig_info_to_task(), so
+> the fix might be just
+>
+>   @@ -1323,7 +1323,8 @@ force_sig_info_to_task(struct kernel_siginfo
+> *info, struct task_struct *t, bool
+>         blocked = sigismember(&t->blocked, sig);
+>         if (blocked || ignored || sigdfl) {
+>                 action->sa.sa_handler = SIG_DFL;
+>   -             action->sa.sa_flags |= SA_IMMUTABLE;
+>   +             if (sigdfl)
+>   +                     action->sa.sa_flags |= SA_IMMUTABLE;
+>                 if (blocked) {
+>                         sigdelset(&t->blocked, sig);
+>                         recalc_sigpending_and_wake(t);
+>
+> Kyle, does that fix your test-case? And Kees - yours?
 
-I don't think that would necessarily clarify anything. Neither
-"sigdfl" nor "immutable" makes at least me go "Ahh, that explains
-things".
+This fixes most of the issues with rr, but it still changes the ptrace
+behavior for the double-SIGSEGV case (yes, we have a test for that
+too). The second SIGSEGV isn't reported to the ptracer and the program
+just skips straight to the PTRACE_EVENT_EXIT. This is visible in gdb
+as well (only the first SIGSEGV is caught).
 
-Both "sigdfl" and "immutable" are about random internal implementation
-choices ("force SIGDFL" and "set SA_IMMUTABLE" respectively).
-
-I think naming things by random internal implementation things is
-questionable in general, but it's particularly questionable when they
-aren't even some really fundamental thing.
-
-I think you generally want to name things not by how they do
-something, but by *WHAT* they do.
-
-So I think the proper name for it would be "fatal" or something like
-that. It's basically saying "This signal is fatal, even if you have a
-handler for it or not". That "set it to SIGDFL" just happens to be how
-we made it fatal.
-
-And then we should perhaps also make such a signal uncatchable by the
-debugger (rather than just "debugger cannot undo or modify it" like
-the SA_IMMUTABLE bit does).
-
-Anybody want to take on that renaming / uncatchable part? Please take
-my (now at least tested by Kees) patch and make it your own.
-
-              Linus
+- Kyle
