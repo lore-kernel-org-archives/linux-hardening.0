@@ -2,67 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117E9C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1FAC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC644613DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BF461526
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 18:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233652AbhKRSkZ (ORCPT
+        id S233672AbhKRSkv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 13:40:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45220 "EHLO
+        Thu, 18 Nov 2021 13:40:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233618AbhKRSkZ (ORCPT
+        with ESMTP id S234383AbhKRSkv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 13:40:25 -0500
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DB7C061748
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:37:24 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id p17so6210273pgj.2
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:37:24 -0800 (PST)
+        Thu, 18 Nov 2021 13:40:51 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4634C06173E
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:37:50 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id 206so1153479pgb.4
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 10:37:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=clRlkcTWzJOWdb6SjT1HZu+AyElzVwLtoYPXziOiXRE=;
-        b=oY7fVIiTAYnTqInaucomXlnqySq5BwBRW6KXZQ3tAe5Nt/jzBPxEe7HGtHgSYSpsMx
-         JL6AqOkxn9t+v9dhiUB01lWZYqrcjU9G3FBe9rg0WC4TfNPviTGHoq/+6qp1W6aFlTOF
-         dvujVBx27nX0gWVuYqTfJfZTge+VWgImT1aqY=
+        bh=hmolre7Okhy+2RfWXyND/uy2w4i4I9jFJ+ihj69aXDA=;
+        b=H2VVy+98VZb3T/nxecceRPaS4zE5Oz+cewzsaZHfm9eEsv3XRjc+DZ9njtbvTiIV9v
+         J3uSabI9Zn1CjpwWGCCmAjBS+t2u97WQlEQMjNpnEkhOLklQ8XH185Q78ublW5dzZJwg
+         7NXk/C4Z7m2WT6IK7nQoYb89NQ/9+XXt5CJ1Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=clRlkcTWzJOWdb6SjT1HZu+AyElzVwLtoYPXziOiXRE=;
-        b=JEQr8s4HmKIohn1xGhjpgLIcVU/NsrQYhj/oU3R9/gv/AVTnmWkBd1+UTYhqXsyQl6
-         GinmHP5kXltILKVZMdvewi6ErCCHkuqyz1BPodiA+H9ptqbC8vX0Re1ZN8QCGBK8jygO
-         s4Ws26AnMhADbaKeO8STaHn1yOY3mgFqy7/k1FYMaF6RbuQWUWOv15AbGH6QpF6I7gf3
-         KDOpVTZd6iam5wvG+SIyfmY4hpIClMAnZfgD3haYaD3TEqHyIxnexmNTSU/x0dVvwEr6
-         W36VcLrhxOYWAzl7Au8baF8bMvQt9lhUKoe5CV9BHMGOiiw89586OcwKZuy12pJZ4Mvt
-         /MTA==
-X-Gm-Message-State: AOAM532IWz802x5b3SqvZTAforLmjeLX8j4UQdUFpeY+aJqd8nG0Jxp/
-        gHMPLZ6Tn6I1L5tv9AFNwc+nQw==
-X-Google-Smtp-Source: ABdhPJzvGy5Q9eb8Ms7CI5ZHNFdwzG8O5AFw8vmp2OUM5bltybpyQ2T/sTVs4ZaHR76fdd6ospb1zg==
-X-Received: by 2002:a05:6a00:26e3:b0:49f:c0ca:850e with SMTP id p35-20020a056a0026e300b0049fc0ca850emr57893944pfw.4.1637260643129;
-        Thu, 18 Nov 2021 10:37:23 -0800 (PST)
+        bh=hmolre7Okhy+2RfWXyND/uy2w4i4I9jFJ+ihj69aXDA=;
+        b=ve33u6MszbgjClC6QH1Xqo+ZYd7O/kht9W/FyPFHZZWzRC8k0eHerXQ7F/zE1ORnBL
+         VB1yEkGgThpDYqRxqgZ7sBSlXyKjASKNElVvYli9o1j4DhJ4LilC0QuJpFBr0PY6CU5r
+         VjGjEl0LOgIc/xBUm7sXQCtTh0UAXUeNnrRfx+W3hL9+JxgLmMa4klGpMyiAzCOsP6Jj
+         OW+QgBJGZoUuFL50oic2/X+8LnPIMsU92F4IxoZS/s329DwOu3GIaQHd9ZNVLaCn7ikM
+         V6h9m9btllwDXVuFCxAzKgnisMkcbh9Tb7HVFNFsN6FH00lK1HZIxn6npRqHDS7+saXK
+         /JLA==
+X-Gm-Message-State: AOAM533Hai54ActX2x2/kk+Q8b2CN81aJoVH4NtvroiLN+NLw1a+0MCI
+        IBklIOya3upFhup6nl0BY/T/QQ==
+X-Google-Smtp-Source: ABdhPJyGMYhMNijolBn3fPZucIoXtbuuMs7SP0RN0sabR7T56FvS5htc77aeK768uABZmy/8W3JFMA==
+X-Received: by 2002:a63:e214:: with SMTP id q20mr12662707pgh.442.1637260670241;
+        Thu, 18 Nov 2021 10:37:50 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b9sm324100pfm.127.2021.11.18.10.37.22
+        by smtp.gmail.com with ESMTPSA id v10sm313376pfg.162.2021.11.18.10.37.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 10:37:22 -0800 (PST)
+        Thu, 18 Nov 2021 10:37:49 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Zhang Rui <rui.zhang@intel.com>
+To:     Saeed Mahameed <saeedm@nvidia.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] thermal: intel: int340x_thermal: Use struct_group() for memcpy() region
-Date:   Thu, 18 Nov 2021 10:37:20 -0800
-Message-Id: <20211118183720.1282540-1-keescook@chromium.org>
+Subject: [PATCH] net/mlx5e: Use struct_group() for memcpy() region
+Date:   Thu, 18 Nov 2021 10:37:48 -0800
+Message-Id: <20211118183748.1283069-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3277; h=from:subject; bh=FXb9nQQ+9raXNRheCnPL/rsMtfpVZSmOVeEiPUzBx+k=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlp1g97boEQtghYWjunVAHXryqRBeKslQ/U0/9Z2K SuHsN8WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZadYAAKCRCJcvTf3G3AJq6KEA Cq20Gf/+Ej92Sxr7ZbNW+QKWeFJDk56z7sNHE0roxks3ZGfeYa/gixYUjrdl6IAQKl553wzRaKoYwY tx7WMeOtV/opd/xq6vYTaMM/zBgEJuNdR/fF9bNGgaiswLzZWisgIBchzD+XwIuhtiewP1m5dE/8bq bsA97zyTEtdrsX8gqAhTzXY3Dm6A1rgfQWe1rlfd5RAgnz0WEmV7nnDl2sCA9M7fumTk6svQw5RWpC ae806DJbuzjNrJmp2d9XaEapK3XNMHKY5lpV6puNAVEubCdhkz9SC8Jd6vd7r6TWPNkj5ntZikzbd5 QU1Ut8w+ttz7GXA0mjxkVkhyQ+AMgfU9vFjx0Xmjdqv5pvuNXmBrs9CH2pVxMJHZLV3g79ksaJdYAG dnJn5FSQ5ICsVGR9rdhqvpJDJCCkBJnNbNpSA9jbnMT5jAofGeRCj/pIfr6s6l+pz838LVgXiFQGii DDXsL3pc1zeu7bi9xkTNAMA0f5PjTGmxntTPps2kKqrzgluV3j+/+YbxE0Iy4Lo60VZxlHjeVf6HFY DzYj2vOCiCqNRBFNxGSnv6g6tifRyiLCF3ruA8UUOWNgT+5EBJvL3uhIZnImNYu2sHIabEsiQtwK5I BvbJzO+4AIU6UPwZzzNcZL2MHlcVwNY27JEk00SqHgwvKHPKkGWXcAbSo5AA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2065; h=from:subject; bh=5h1/OCbcMC9fSZGebngnGdh+E0sfjUIlmjyL7n2bbX0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlp171Vyvp59PAA8HQAbsKsvjRM9PHtYPsKBL4acu CDa8lw+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZadewAKCRCJcvTf3G3AJjJyD/ 4nVg1irFelKvdZ02Th2MFSO4WzpimbnUZGifMbJ9L4pb52/n77LB3drjD6NSKlGtEaFlVyvNB/q0RH +t/6kzu/hCv25FLpy+J6YbtieBUc8Z7Kg7lW8weJX68+CWq+x3l0WyLhvkf9HlFZYWmrJBvC3AC6x5 dI0QXV4svrZEPVbYXsPfvAzX+4EDWdU9s7zA09cEH/a9lZdqyBvDoDQiTEEColX1wlqh13LZ3/n0Zq XOB4CCOqJCMlVnO9zINDvQYcH54PDqtqs4V9c9oZMVHbbyqELLtqCye3Ro0gFCi84RQ9pBtgBS+VDy mznZ3n6bPNcfnTfsA1Dihx8wWa6thbBI5S86q35YSkZxyiUnTU45jLBdYBhVE4I1oXDAVq/LpKYGv6 sgtYOkpjTGovnUhqboAgs8hfQQmAiZzzzKPq+86NsanzBWMWd3maqAMUNHYJPdJaqA6Uibnjke/1UI S5rQgcUS7i6Hbe3b2xk9hPo847RY/mh+MSUZHI4DPJAtgX0uxEfcLKoTZsGJFL+Qbe/MnmV8mTQ1RP 2oyRGggP9SLnZ1SNPIbbNbkpVYjgfgvMFseD5DfdK7/VdtmUkgFcwOc6uk6dy/cJF3dDOzAnHEhi1+ LbRyBwkAWgx7RJYydaCeTzzcKygH91nEK0WjuQja6ADP01c168owKfL4arnQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -70,106 +70,53 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), avoid intentionally writing across
-neighboring fields.
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-Use struct_group() in struct art around members weight, and ac[0-9]_max,
-so they can be referenced together. This will allow memcpy() and sizeof()
-to more easily reason about sizes, improve readability, and avoid future
-warnings about writing beyond the end of weight.
+Use struct_group() in struct vlan_ethhdr around members h_dest and
+h_source, so they can be referenced together. This will allow memcpy()
+and sizeof() to more easily reason about sizes, improve readability,
+and avoid future warnings about writing beyond the end of h_dest.
 
-"pahole" shows no size nor member offset changes to struct art.
-"objdump -d" shows no meaningful object code changes (i.e. only source
-line number induced differences).
+"pahole" shows no size nor member offset changes to struct vlan_ethhdr.
+"objdump -d" shows no object code changes.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- .../intel/int340x_thermal/acpi_thermal_rel.c  |  5 +-
- .../intel/int340x_thermal/acpi_thermal_rel.h  | 48 ++++++++++---------
- 2 files changed, 29 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 2 +-
+ include/linux/if_vlan.h                         | 6 ++++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
-index a478cff8162a..e90690a234c4 100644
---- a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
-+++ b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
-@@ -250,8 +250,9 @@ static int fill_art(char __user *ubuf)
- 		get_single_name(arts[i].source, art_user[i].source_device);
- 		get_single_name(arts[i].target, art_user[i].target_device);
- 		/* copy the rest int data in addition to source and target */
--		memcpy(&art_user[i].weight, &arts[i].weight,
--			sizeof(u64) * (ACPI_NR_ART_ELEMENTS - 2));
-+		BUILD_BUG_ON(sizeof(art_user[i].data) !=
-+			     sizeof(u64) * (ACPI_NR_ART_ELEMENTS - 2));
-+		memcpy(&art_user[i].data, &arts[i].data, sizeof(art_user[i].data));
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index 7fd33b356cc8..ee7ecb88adc1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -208,7 +208,7 @@ static inline void mlx5e_insert_vlan(void *start, struct sk_buff *skb, u16 ihs)
+ 	int cpy1_sz = 2 * ETH_ALEN;
+ 	int cpy2_sz = ihs - cpy1_sz;
  
- 	if (copy_to_user(ubuf, art_user, art_len))
-diff --git a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.h b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.h
-index 58822575fd54..78d942477035 100644
---- a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.h
-+++ b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.h
-@@ -17,17 +17,19 @@
- struct art {
- 	acpi_handle source;
- 	acpi_handle target;
--	u64 weight;
--	u64 ac0_max;
--	u64 ac1_max;
--	u64 ac2_max;
--	u64 ac3_max;
--	u64 ac4_max;
--	u64 ac5_max;
--	u64 ac6_max;
--	u64 ac7_max;
--	u64 ac8_max;
--	u64 ac9_max;
-+	struct_group(data,
-+		u64 weight;
-+		u64 ac0_max;
-+		u64 ac1_max;
-+		u64 ac2_max;
-+		u64 ac3_max;
-+		u64 ac4_max;
-+		u64 ac5_max;
-+		u64 ac6_max;
-+		u64 ac7_max;
-+		u64 ac8_max;
-+		u64 ac9_max;
+-	memcpy(vhdr, skb->data, cpy1_sz);
++	memcpy(&vhdr->addrs, skb->data, cpy1_sz);
+ 	vhdr->h_vlan_proto = skb->vlan_proto;
+ 	vhdr->h_vlan_TCI = cpu_to_be16(skb_vlan_tag_get(skb));
+ 	memcpy(&vhdr->h_vlan_encapsulated_proto, skb->data + cpy1_sz, cpy2_sz);
+diff --git a/include/linux/if_vlan.h b/include/linux/if_vlan.h
+index 41a518336673..45aad461aa34 100644
+--- a/include/linux/if_vlan.h
++++ b/include/linux/if_vlan.h
+@@ -46,8 +46,10 @@ struct vlan_hdr {
+  *	@h_vlan_encapsulated_proto: packet type ID or len
+  */
+ struct vlan_ethhdr {
+-	unsigned char	h_dest[ETH_ALEN];
+-	unsigned char	h_source[ETH_ALEN];
++	struct_group(addrs,
++		unsigned char	h_dest[ETH_ALEN];
++		unsigned char	h_source[ETH_ALEN];
 +	);
- } __packed;
- 
- struct trt {
-@@ -47,17 +49,19 @@ union art_object {
- 	struct {
- 		char source_device[8]; /* ACPI single name */
- 		char target_device[8]; /* ACPI single name */
--		u64 weight;
--		u64 ac0_max_level;
--		u64 ac1_max_level;
--		u64 ac2_max_level;
--		u64 ac3_max_level;
--		u64 ac4_max_level;
--		u64 ac5_max_level;
--		u64 ac6_max_level;
--		u64 ac7_max_level;
--		u64 ac8_max_level;
--		u64 ac9_max_level;
-+		struct_group(data,
-+			u64 weight;
-+			u64 ac0_max_level;
-+			u64 ac1_max_level;
-+			u64 ac2_max_level;
-+			u64 ac3_max_level;
-+			u64 ac4_max_level;
-+			u64 ac5_max_level;
-+			u64 ac6_max_level;
-+			u64 ac7_max_level;
-+			u64 ac8_max_level;
-+			u64 ac9_max_level;
-+		);
- 	};
- 	u64 __data[ACPI_NR_ART_ELEMENTS];
- };
+ 	__be16		h_vlan_proto;
+ 	__be16		h_vlan_TCI;
+ 	__be16		h_vlan_encapsulated_proto;
 -- 
 2.30.2
 
