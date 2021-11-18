@@ -2,66 +2,68 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8136BC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1C9C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C4661037
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A0461037
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Nov 2021 20:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233525AbhKRUkU (ORCPT
+        id S233674AbhKRUlm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 15:40:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44638 "EHLO
+        Thu, 18 Nov 2021 15:41:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232373AbhKRUkT (ORCPT
+        with ESMTP id S233425AbhKRUlm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 15:40:19 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69834C061748
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:37:19 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id cq22-20020a17090af99600b001a9550a17a5so9229348pjb.2
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:37:19 -0800 (PST)
+        Thu, 18 Nov 2021 15:41:42 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1206C06173E
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:38:41 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id b13so6319427plg.2
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 12:38:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=UpKEU9gOqfvpEX1zLR0OD1H7EtCWXuiTrgjD+XT34I8=;
-        b=R+1m1D6WSDAveSWf8mGH2LJwf3a5tDgWus88PZ10Eh7GwFNALR3iZZ1ojAD4Am6sFF
-         gpM0qfFwkKaaqws+PRZjconRDSqpVv2fKcuu+kUZ+bOH2J9Tr/HYNMPupACtfkoA3aze
-         w5+cd3vH8G1cfZUXZKrUE1OvAZlI0nd62jBPM=
+        bh=3w1lwxCP95sWJVy1gUV6TvdAB6g68qOdIbQs324040g=;
+        b=lZjMwsI6T3g6KvuG95KpwFg/qZZU1kb0j1V3u4+rp6rAJa14wJPkKMGnhRRCbwVj2Z
+         NZ9JyqZG+EfHmVbDexaHv4g7WQFZR/qC8QJPcxvf7EjkA5PDQuLvdVpHJQz+CkO4zySr
+         tDbIc/l2u6jEvv5/MQ9DY8eawozRlxW5Q+hqM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=UpKEU9gOqfvpEX1zLR0OD1H7EtCWXuiTrgjD+XT34I8=;
-        b=y/w6Ap89ccSwtwCj7TTZwURSD748qgwMkves2GEQJu4vAqBRXWzbe42hyrfywuEdzg
-         2HCf3mINI5cMP76gLbIH1T6TZvWr5v2Had/GoiID5H8CWNROuho2WhhPRAzSWS6nqK20
-         qUN+wj9JU7lwtfpiA1l62p1bejvvnjcaq+2lmJ7lae1ULKdxCrbXW+N4D0wjddCpxkec
-         VZ3rEff7z9CWdN5SoFguR2ZqxIb68ewezUqeooN0RBe2UnUQvioHv/b4Y8/lqfZMDYfe
-         MYtGffbfJRhQtEKNvfAeHfeij5yPrHBydpVHnlQSD4tyN9Phg7PkHRG5jp8UOVNZ7QTx
-         MPWA==
-X-Gm-Message-State: AOAM53073mF4UbGnJZ4q8PuH8tvDGqvAamuIH7/pwebaSnU1TYBJycuf
-        szp1gYgG9YpkP48j7bS+0uvj1Q==
-X-Google-Smtp-Source: ABdhPJyvr6dOBoCsdCLuznP18VaTSieGKyUbLiWPka5uyvKQ1sTcUsC8Axur06Ov496YBDH/0d3Z1A==
-X-Received: by 2002:a17:902:b28a:b0:142:3e17:38d8 with SMTP id u10-20020a170902b28a00b001423e1738d8mr70551412plr.56.1637267838977;
-        Thu, 18 Nov 2021 12:37:18 -0800 (PST)
+        bh=3w1lwxCP95sWJVy1gUV6TvdAB6g68qOdIbQs324040g=;
+        b=EdvZwkFH8vD9b7XJyxo8WVDo65NCjVMwU8+67issl780zbGiD5UaRSwJ8BGGkRkHT6
+         MKN1YyyB8+r+TLbfkMwtsFOlCW42MxTZHydpvRjMGE3IMqt7CBuxUs2aeMOeGYBYM6K7
+         0aQlG1LH3fNGoSKtVEHNPM1FaHrSvoJbEfp+IfwN4BW04BEeIQmrgrLjsCp/EzA3GwbL
+         OgxXJRrT4y1TbOvQ9kZMBiTpIPnfrmnZhnVJEZKrawqV40V+M2wmzOXJXJjp7sSh2MUB
+         3mbgTtJvW4IlFZBe6dPBZvDaxfUh4w2tlCVtcvSlf8Y0f0xPAdadLUFE5tYuAXS9jU/0
+         VA5Q==
+X-Gm-Message-State: AOAM5333ERd8rrNMqpdxSX3tMN7THEpNZmJd5O5BNmrMrrzIEN2X/zR4
+        QCaNLTf71CH2hFDP970YqYLfBw==
+X-Google-Smtp-Source: ABdhPJx97It3R/kqm2LNlIoVuWVCpwYYElzsxAv4u+IBf/mlhP9ILXNF4Py/QGGCz/+1ZgeM3++Ajw==
+X-Received: by 2002:a17:90a:df83:: with SMTP id p3mr13883234pjv.145.1637267921429;
+        Thu, 18 Nov 2021 12:38:41 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y125sm392495pgy.84.2021.11.18.12.37.18
+        by smtp.gmail.com with ESMTPSA id oj11sm9983727pjb.46.2021.11.18.12.38.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 12:37:18 -0800 (PST)
+        Thu, 18 Nov 2021 12:38:41 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Philipp Reisner <philipp.reisner@linbit.com>
+To:     Johannes Berg <johannes@sipsolutions.net>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] drbd: Use struct_group() to zero algs
-Date:   Thu, 18 Nov 2021 12:37:12 -0800
-Message-Id: <20211118203712.1288866-1-keescook@chromium.org>
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] mac80211: Use memset_after() to clear tx status
+Date:   Thu, 18 Nov 2021 12:38:39 -0800
+Message-Id: <20211118203839.1289276-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2322; h=from:subject; bh=POb7PrfE8/q5lcxwV1OSdP+6fpGjaVyNi9ZgFcWFgnA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlrl4OdEVtA0tl6G4Riz1e1Wo3tkR/aeBekUhqX4H EHW6oV+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa5eAAKCRCJcvTf3G3AJucnD/ 9i/p4zjPSQUtzrXfJjayE8yTZPj9lEIeSnKn+3HD+helAkDJxMYkOOAnoJHOFuxa1UNAW9a9tVI+Iv FBkhl7jz/TmufVRFgDpiyO2zGT49vUIPvEt5QccmtoAFL3+miUK0dThj8a4JO0jn3acArE2i2iaMVJ 9UG94frM2x1Xkl4xRGWPYEsBeJwahnjILwugNuMJeUgu4uuljeQgFAFk4hIA9dCK438hMCXKipxfz6 wEwp0lTHzskbg901uVzZ0J+gNmQ2d7vAwoTy5s97E6PI592mg1vqomdgb4Cu6tJnIrH7elmcfBiTtI Fu2SeBCOPyUOrdDfjvAqvRLry5bRmgWomKl/56vgXFF8TX/L/GNjZOu7dPLQqGd2hG8tlvwmKX2gtC e9x6vglpJYvG/GegTlicEetqpE0Wu9cWQnkw4Rff4AbSWOsur61x2oiYMpCuqqp2kzzzwfAt8gpJev lRljlKfOTucMbwUNtwm9IAzSXSye6KvVH9QXgv6awbRDRUrqgNMJ6vnazSiTfCt8SkY9v/XNTHzSxt wSZSFrunoycDaOQc9Is5BBGp6kWPdgAAS4KcK9qNwzrEhx4bQVh9tO3AqueROomYRqXhvGUejYf10O 8FgLzk4WntfMhPeDDOJGsvwg3B1wOd19HvdOLApPXuLYUcjeVU2kvom7DKNw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3387; h=from:subject; bh=eedQlyh5N+iyZvYtfYqL/0jwZDtmiHDhrCAfLi1SlBc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhlrnOj3IyvlyhPJQP3Xh7qw7ZfZ1D8/+TLTir9jfd 4m7aIBKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZa5zgAKCRCJcvTf3G3AJiDoD/ 9kgxSBoiQtqRH70xmtElRI7iwlL/NrEuYmC89nwYPe664+48nU9/3PYP8fm/c5cHMWY2RNs2yucDS4 nrsLk7YziWHMEsUN6H8ARqQpRkYMHO4FNSNoZ9wxDPSuxsUv4TWElfshGTT1eKNz09MrRbOBwIYHJ6 XRdXMffjZsERppD+N17asCFU0atrJLgRhD4axFSpBlrsnL54WZRvTgYJhpAOvqI1GpPBmsg2k1l1W+ 7jZrQZ7gFjELdn2MvaC1q7gdE28YWVzaxciHNVPqolxLL0/5+I+ZRfocM8kyaZuB0+ZA2jIZwodJw1 9w97hnyUc0o27yftfv1Y/hJoeP8wa5BBGnH2J8sXDf0Jb/cZbXRBdaiGnPXWu+NwS7RJ34h4g41YuT tv5tIeUIbuFIZCmgDMwJxQHll2Gd8git+z2l4UelZP/04mHPb7JL4nY9tJwO+ZxUcBPdDcODOxWfAh 4kn+imPIlnONXlQE8peovTsUcW0ojhmSD0LxbIvqn/imnG9UJ5IsjMvqiFPmfMzy4Nxo67wYVSVIih 1zoqBID2jIJAKkik6QgYXcCgb2jvXN7yWQDx4V4FMajThrWfB/oBy1opofAdCGzWfXgJH9uyaKWqph 32X7RZeoCHHhVbdY9cVC2Fq00xPLq31ET4A+UDKTESOGtutYxPuqr9sBQcQw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -72,61 +74,83 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Add a struct_group() for the algs so that memset() can correctly reason
-about the size.
+Use memset_after() so memset() doesn't get confused about writing
+beyond the destination member that is intended to be the starting point
+of zeroing through the end of the struct.
+
+Additionally fix the common helper, ieee80211_tx_info_clear_status(),
+which was not clearing ack_signal, but the open-coded versions
+did. Johannes Berg points out this bug was introduced by commit
+e3e1a0bcb3f1 ("mac80211: reduce IEEE80211_TX_MAX_RATES") but was harmless.
+
+Also drops the associated unneeded BUILD_BUG_ON()s, and adds a note to
+carl9170 about usage.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/block/drbd/drbd_main.c     | 3 ++-
- drivers/block/drbd/drbd_protocol.h | 6 ++++--
- drivers/block/drbd/drbd_receiver.c | 3 ++-
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/carl9170/tx.c   | 12 ++++++------
+ drivers/net/wireless/intersil/p54/txrx.c |  6 +-----
+ include/net/mac80211.h                   |  7 +------
+ 3 files changed, 8 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 53ba2dddba6e..feac72e323bd 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -729,7 +729,8 @@ int drbd_send_sync_param(struct drbd_peer_device *peer_device)
- 	cmd = apv >= 89 ? P_SYNC_PARAM89 : P_SYNC_PARAM;
+diff --git a/drivers/net/wireless/ath/carl9170/tx.c b/drivers/net/wireless/ath/carl9170/tx.c
+index 88444fe6d1c6..1b76f4434c06 100644
+--- a/drivers/net/wireless/ath/carl9170/tx.c
++++ b/drivers/net/wireless/ath/carl9170/tx.c
+@@ -275,12 +275,12 @@ static void carl9170_tx_release(struct kref *ref)
+ 	if (WARN_ON_ONCE(!ar))
+ 		return;
  
- 	/* initialize verify_alg and csums_alg */
--	memset(p->verify_alg, 0, 2 * SHARED_SECRET_MAX);
-+	BUILD_BUG_ON(sizeof(p->algs) != 2 * SHARED_SECRET_MAX);
-+	memset(&p->algs, 0, sizeof(p->algs));
+-	BUILD_BUG_ON(
+-	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
+-
+-	memset(&txinfo->status.ack_signal, 0,
+-	       sizeof(struct ieee80211_tx_info) -
+-	       offsetof(struct ieee80211_tx_info, status.ack_signal));
++	/*
++	 * This does not call ieee80211_tx_info_clear_status() because
++	 * carl9170_tx_fill_rateinfo() has filled the rate information
++	 * before we get to this point.
++	 */
++	memset_after(&txinfo->status, 0, rates);
  
- 	if (get_ldev(peer_device->device)) {
- 		dc = rcu_dereference(peer_device->device->ldev->disk_conf);
-diff --git a/drivers/block/drbd/drbd_protocol.h b/drivers/block/drbd/drbd_protocol.h
-index dea59c92ecc1..a882b65ab5d2 100644
---- a/drivers/block/drbd/drbd_protocol.h
-+++ b/drivers/block/drbd/drbd_protocol.h
-@@ -283,8 +283,10 @@ struct p_rs_param_89 {
+ 	if (atomic_read(&ar->tx_total_queued))
+ 		ar->tx_schedule = true;
+diff --git a/drivers/net/wireless/intersil/p54/txrx.c b/drivers/net/wireless/intersil/p54/txrx.c
+index 873fea59894f..8414aa208655 100644
+--- a/drivers/net/wireless/intersil/p54/txrx.c
++++ b/drivers/net/wireless/intersil/p54/txrx.c
+@@ -431,11 +431,7 @@ static void p54_rx_frame_sent(struct p54_common *priv, struct sk_buff *skb)
+ 	 * Clear manually, ieee80211_tx_info_clear_status would
+ 	 * clear the counts too and we need them.
+ 	 */
+-	memset(&info->status.ack_signal, 0,
+-	       sizeof(struct ieee80211_tx_info) -
+-	       offsetof(struct ieee80211_tx_info, status.ack_signal));
+-	BUILD_BUG_ON(offsetof(struct ieee80211_tx_info,
+-			      status.ack_signal) != 20);
++	memset_after(&info->status, 0, rates);
  
- struct p_rs_param_95 {
- 	u32 resync_rate;
--	char verify_alg[SHARED_SECRET_MAX];
--	char csums_alg[SHARED_SECRET_MAX];
-+	struct_group(algs,
-+		char verify_alg[SHARED_SECRET_MAX];
-+		char csums_alg[SHARED_SECRET_MAX];
-+	);
- 	u32 c_plan_ahead;
- 	u32 c_delay_target;
- 	u32 c_fill_target;
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 1f740e42e457..6df2539e215b 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -3921,7 +3921,8 @@ static int receive_SyncParam(struct drbd_connection *connection, struct packet_i
+ 	if (entry_hdr->flags & cpu_to_le16(P54_HDR_FLAG_DATA_ALIGN))
+ 		pad = entry_data->align[0];
+diff --git a/include/net/mac80211.h b/include/net/mac80211.h
+index dd757f0987b0..a648484bde33 100644
+--- a/include/net/mac80211.h
++++ b/include/net/mac80211.h
+@@ -1205,12 +1205,7 @@ ieee80211_tx_info_clear_status(struct ieee80211_tx_info *info)
+ 	/* clear the rate counts */
+ 	for (i = 0; i < IEEE80211_TX_MAX_RATES; i++)
+ 		info->status.rates[i].count = 0;
+-
+-	BUILD_BUG_ON(
+-	    offsetof(struct ieee80211_tx_info, status.ack_signal) != 20);
+-	memset(&info->status.ampdu_ack_len, 0,
+-	       sizeof(struct ieee80211_tx_info) -
+-	       offsetof(struct ieee80211_tx_info, status.ampdu_ack_len));
++	memset_after(&info->status, 0, rates);
+ }
  
- 	/* initialize verify_alg and csums_alg */
- 	p = pi->data;
--	memset(p->verify_alg, 0, 2 * SHARED_SECRET_MAX);
-+	BUILD_BUG_ON(sizeof(p->algs) != 2 * SHARED_SECRET_MAX);
-+	memset(&p->algs, 0, sizeof(p->algs));
  
- 	err = drbd_recv_all(peer_device->connection, p, header_size);
- 	if (err)
 -- 
 2.30.2
 
