@@ -2,143 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96980C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 19:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF5DC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 19:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0C560F4F
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 19:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7492761B27
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 19:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235940AbhKSTb4 (ORCPT
+        id S236282AbhKSTtU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 19 Nov 2021 14:31:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235147AbhKSTbz (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 19 Nov 2021 14:31:55 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6B4C06173E
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 11:28:53 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id b68so10153394pfg.11
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 11:28:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=inEVTtx9dg780b45QDw2zmi3tLaKJ0sVb3YOqvqO6Sg=;
-        b=Ilad5Flc374k2I5x+I91zJu9Tii8adfRVPu97UrQozOjQ7AUektnlWF+At3TFTPSm4
-         pvIZCzHuSBC7LFq+rQeKud5buRxfGqyM/fdheiFAXOctBT45bzvGDCl2oCO81sKEfoa1
-         C2UstnT3lg/f6F4NY1D/zYiN/uLX9IBmxtsaA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=inEVTtx9dg780b45QDw2zmi3tLaKJ0sVb3YOqvqO6Sg=;
-        b=NnBw7Skx6ZoEipmHkbjOKXPwOtv76tZmOb3126yiZZCf55/GiH8bvsUVnUpoiP4HcT
-         7WvObXusUIGYpQ3qTXjSpxwPVhB8wH4KBNGUp29ZztfD1LJXeLrOoSMeyRuO+6x+IGbO
-         W0wzHOzEPVmK5OFFUjCZMrzgB97a1o0BMeOwOkfaMpDdAQUfo2pb9wP93SAxFC6z7joB
-         p4MkgmcNf3CruslmNFdrRS30iH+582gKB75r1qOzWC3qKw4EORAk6qk3TkUXEOG8bUKz
-         DFPsxH4+rGPb2AgiR5Ged4CnYL5uwrttB8rWq9aSM/bGFamE496d5lXOJR8fqBGf2Hvp
-         UGcA==
-X-Gm-Message-State: AOAM5336CjSaxglqZR+asM9mwp33ESBZYjVlUgvyTfCZSi1bfgvqkezJ
-        PWzRkLN2MJX2vVXHaOR+/rElzg==
-X-Google-Smtp-Source: ABdhPJweh3pTn1evOXD3uFsGXSY2PwZdgKvvYq0xO4ybAoL3tHBX2EipzAOM8xwxinUGzRYK23qpRg==
-X-Received: by 2002:a05:6a00:1a56:b0:4a3:3c0c:11c0 with SMTP id h22-20020a056a001a5600b004a33c0c11c0mr13015115pfv.42.1637350133097;
-        Fri, 19 Nov 2021 11:28:53 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f29sm357733pgf.34.2021.11.19.11.28.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Nov 2021 11:28:52 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] hfsplus: Use struct_group_attr() for memcpy() region
-Date:   Fri, 19 Nov 2021 11:28:51 -0800
-Message-Id: <20211119192851.1046717-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2620; h=from:subject; bh=SCJbRPRIgSrbgcI0+anP4QpGg3OM58wHZmhAt7+/j14=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhl/ry4/8jGV6MXqmu/7C8vq8DKE761j4O7Dvj4ee+ +UHR6j2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZf68gAKCRCJcvTf3G3AJsyLEA CxlpW5BfTUERCVzkLeA4yk5WzpRqsHUnTNs3g3dZCWt39oCeTmDnNFr/Wbj1Pth9za402aDi4w5r4Z dnQHlIiVSvELxTNHFZ+KSpsztpoq7HWHyg6Y1K/5nN8W50Njcyx2IzDxNs6QpR+7hatTugOjenFiPv lVwARpl20w3hr22bWuG3qIyTWFSwijfBrzkaSmnVHCro+svaPQhewrucv6ekl5oMBBPKLhVr2W85nE PfpwLFPitagoQCLyDMYjud9b6cuuD/1PCtieuenR5NUtYnRInM3eyLldUqpryj/o9o4+M9eBwSU8fV NAgdvCB1DgdvC81wcnm7ZMaF6T4E+uXySyGjtDnr0R+83UV5/ZZ5dNOEO3rl8aBcUlz+dHfFsvdXGT YyP6JQ4hBxQpw6uQsIYwrBrRF0yuq/PEQW53aVG04Mp6PUMMirV75kxhHJYCfqnA583z6PFdnx+aAL z44OfBB6XzwqQXDwwPWK8EgBVylrT4AgD6LVMOMTEkEPfuAYR1Lv3ayE02jx3ABLL2Afu1z9wy4N9e os2GcQRNh8b3nw294oQ/O9woIHZzLIYTLBZRsqwQLiKjdy430bS1Jd/wHoSOdo8vDZn2l4DDvyoZIV LSBm0gNRIwIn7BhjuV8cGCoCtiXxJgE+cgQq7Ouq7Fy0yXQss/bkjzDjM/Xw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+        Fri, 19 Nov 2021 14:49:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236232AbhKSTtT (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 19 Nov 2021 14:49:19 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 2CD4961A58;
+        Fri, 19 Nov 2021 19:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637351177;
+        bh=4ZRhkhKQzjMc0Aq2r6UVZumAqiBxVZvS+ST/nhZP81Q=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=jkfI7pMiXM+i3scSJZFYVlA7BQLyQ8LJlGVhU2EeddX/fSbLFz+ohfiwCVSMRb+X/
+         rUckzn0gIl7TyS5XYo0K4EO88ENNXDfdlYUPIE6Oc347Wmd86v8dR5PQlykvwanyxD
+         YQqqLXRe+mvNPSQ478wAMWF9l233yPL6IGBXRWArmQYeAO7EFRMlNhSp8pOxBDckKo
+         13bc41FtACOz2Y88xBNB8fG6OsC6OoRAHuqsk0xXD6MT8+/ZWHWjbPUtNEJlyERrbX
+         G+yKXEsvk+ouxmT0fxf7xkInVnCD59U1CGgsqb+6fN0cgMPL2mfWw+dKgIf6Xl9hTH
+         ahTu0vHOyVbNw==
+Subject: Re: [GIT PULL] SA_IMMUTABLE fixes for v5.16-rc2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <87r1bcnoea.fsf_-_@email.froward.int.ebiederm.org>
+References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
+        <202111171049.3F9C5F1@keescook>
+        <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
+        <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
+        <87k0h6334w.fsf@email.froward.int.ebiederm.org>
+        <202111171341.41053845C3@keescook>
+        <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
+        <CAP045ApYXxhiAfmn=fQM7_hD58T-yx724ctWFHO4UAWCD+QapQ@mail.gmail.com>
+        <CAHk-=wiCRbSvUi_TnQkokLeM==_+Tow0GsQXnV3UYwhsxirPwg@mail.gmail.com>
+        <CAP045AoqssLTKOqse1t1DG1HgK9h+goG8C3sqgOyOV3Wwq+LDA@mail.gmail.com>
+        <202111171728.D85A4E2571@keescook>
+        <87h7c9qg7p.fsf_-_@email.froward.int.ebiederm.org>
+        <CAP045Ap=1U07er7Y2XO9wmiRtKLoKL4u8zek48ROU668=G9D3A@mail.gmail.com> <87r1bcnoea.fsf_-_@email.froward.int.ebiederm.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <87r1bcnoea.fsf_-_@email.froward.int.ebiederm.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git SA_IMMUTABLE-fixes-for-v5.16-rc2
+X-PR-Tracked-Commit-Id: fcb116bc43c8c37c052530ead79872f8b2615711
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7af959b5d5c8497b423e802e2b0ad847cb29b3d3
+Message-Id: <163735117714.2946.16511312928809475443.pr-tracker-bot@kernel.org>
+Date:   Fri, 19 Nov 2021 19:46:17 +0000
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andrea Righi <andrea.righi@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Oliver Sang <oliver.sang@intel.com>, lkp@lists.01.org,
+        kbuild test robot <lkp@intel.com>,
+        Kyle Huey <me@kylehuey.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memset(), avoid intentionally writing across
-neighboring fields.
+The pull request you sent on Fri, 19 Nov 2021 09:41:49 -0600:
 
-Add struct_group() to mark the "info" region (containing struct DInfo
-and struct DXInfo structs) in struct hfsplus_cat_folder and struct
-hfsplus_cat_file that are written into directly, so the compiler can
-correctly reason about the expected size of the writes.
+> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git SA_IMMUTABLE-fixes-for-v5.16-rc2
 
-"pahole" shows no size nor member offset changes to struct
-hfsplus_cat_folder nor struct hfsplus_cat_file.  "objdump -d" shows no
-object code changes.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7af959b5d5c8497b423e802e2b0ad847cb29b3d3
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/hfsplus/hfsplus_raw.h | 12 ++++++++----
- fs/hfsplus/xattr.c       |  4 ++--
- 2 files changed, 10 insertions(+), 6 deletions(-)
+Thank you!
 
-diff --git a/fs/hfsplus/hfsplus_raw.h b/fs/hfsplus/hfsplus_raw.h
-index 456e87aec7fd..68b4240c6191 100644
---- a/fs/hfsplus/hfsplus_raw.h
-+++ b/fs/hfsplus/hfsplus_raw.h
-@@ -260,8 +260,10 @@ struct hfsplus_cat_folder {
- 	__be32 access_date;
- 	__be32 backup_date;
- 	struct hfsplus_perm permissions;
--	struct DInfo user_info;
--	struct DXInfo finder_info;
-+	struct_group_attr(info, __packed,
-+		struct DInfo user_info;
-+		struct DXInfo finder_info;
-+	);
- 	__be32 text_encoding;
- 	__be32 subfolders;	/* Subfolder count in HFSX. Reserved in HFS+. */
- } __packed;
-@@ -294,8 +296,10 @@ struct hfsplus_cat_file {
- 	__be32 access_date;
- 	__be32 backup_date;
- 	struct hfsplus_perm permissions;
--	struct FInfo user_info;
--	struct FXInfo finder_info;
-+	struct_group_attr(info, __packed,
-+		struct FInfo user_info;
-+		struct FXInfo finder_info;
-+	);
- 	__be32 text_encoding;
- 	u32 reserved2;
- 
-diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
-index e2855ceefd39..49891b12c415 100644
---- a/fs/hfsplus/xattr.c
-+++ b/fs/hfsplus/xattr.c
-@@ -296,7 +296,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
- 					sizeof(hfsplus_cat_entry));
- 		if (be16_to_cpu(entry.type) == HFSPLUS_FOLDER) {
- 			if (size == folder_finderinfo_len) {
--				memcpy(&entry.folder.user_info, value,
-+				memcpy(&entry.folder.info, value,
- 						folder_finderinfo_len);
- 				hfs_bnode_write(cat_fd.bnode, &entry,
- 					cat_fd.entryoffset,
-@@ -309,7 +309,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
- 			}
- 		} else if (be16_to_cpu(entry.type) == HFSPLUS_FILE) {
- 			if (size == file_finderinfo_len) {
--				memcpy(&entry.file.user_info, value,
-+				memcpy(&entry.file.info, value,
- 						file_finderinfo_len);
- 				hfs_bnode_write(cat_fd.bnode, &entry,
- 					cat_fd.entryoffset,
 -- 
-2.30.2
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
