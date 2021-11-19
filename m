@@ -2,43 +2,43 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA9FC433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7586AC4321E
 	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 12:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC8961545
+	by mail.kernel.org (Postfix) with ESMTP id 55A7B61A56
 	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 12:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234618AbhKSMD0 (ORCPT
+        id S234437AbhKSMDZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 19 Nov 2021 07:03:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53974 "EHLO mail.kernel.org"
+        Fri, 19 Nov 2021 07:03:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234665AbhKSMDO (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        id S234673AbhKSMDO (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 19 Nov 2021 07:03:14 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 0CAC861AA3;
+Received: by mail.kernel.org (Postfix) with ESMTPS id 1BFDA61B39;
         Fri, 19 Nov 2021 12:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1637323213;
-        bh=OUAe1Pb1sQuHDgq/6kYeATO52RwFgt62DiQhofN0138=;
+        bh=lqpchPmBXslRMIKYieGaGSpYCK20b7OSc4a8O58jBnE=;
         h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ARVf4ZN5eSTqR38OFBpHblS1qZ/Sv87cqA1Cxr59cgIpcv1cY0oylkuNXsuaQQlSL
-         xjDy2Oe2BbJb4ujQzIh3Bve6mU4xkPby+KHA0gM54QzSwV2adYdAzegO6Ao+X4yWy9
-         vdMFGJpMKG2ifAWFvAeiawkIgwFRE3GPsJCw2YuA5I+P/IX6XOTMrKSsKJNOhGHFMr
-         ULvw6+85JJEzHD7k2ixebRu5z8njxy6yoLO3oYeVqOdcBqpInlYlH9j0uORMQm9qWL
-         gZHyGPW2hyScAKwTsCu/JopmKirewZ+Robv3y9majg4WWaZy55vRDHrOjMMTIa/zsE
-         baImecm3092qA==
+        b=NtyBMrkJcOzPxmdjVu4nSvHKDG8aFfh04dr+G1N4skGjqUiBnLBuNJj9SmWAm/wZB
+         Z/S76G4rwwPwGH2wdr5uhsHtmOZEors0f9nhnhyL4rUKniVcc4avHSD10BXKuSFbIa
+         xn+RAGy7LUvqHZszLT7O0khHHjd+m7APF62jYbhqfvBdwaG9bbD1JlJAQVbu5Y2nBU
+         BHJ7CzFBkkqxI/brzjwTtq1S6lgPXHQCekeQD5+MiGjdJg43WxyNCVN9uurZokkIcb
+         iXGDqdfjG/vsoSsrWPZaXs0na9jxUR77LydGEMuLNxcaVi/4XFPnlnpbtTZ1M8iMzW
+         FB2Djn86B/IYw==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] ipv6: Use memset_after() to zero rt6_info
+Subject: Re: [PATCH] ethtool: stats: Use struct_group() to clear all stats at once
 From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <163732321298.14736.16066190721054866054.git-patchwork-notify@kernel.org>
-Date:   Fri, 19 Nov 2021 12:00:12 +0000
-References: <20211118203241.1287533-1-keescook@chromium.org>
-In-Reply-To: <20211118203241.1287533-1-keescook@chromium.org>
+Message-Id: <163732321308.14736.7365949386575823100.git-patchwork-notify@kernel.org>
+Date:   Fri, 19 Nov 2021 12:00:13 +0000
+References: <20211118203456.1288056-1-keescook@chromium.org>
+In-Reply-To: <20211118203456.1288056-1-keescook@chromium.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     davem@davemloft.net, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
+Cc:     davem@davemloft.net, kuba@kernel.org, idosch@nvidia.com,
+        yuehaibing@huawei.com, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
@@ -49,19 +49,19 @@ Hello:
 This patch was applied to netdev/net-next.git (master)
 by David S. Miller <davem@davemloft.net>:
 
-On Thu, 18 Nov 2021 12:32:41 -0800 you wrote:
+On Thu, 18 Nov 2021 12:34:56 -0800 you wrote:
 > In preparation for FORTIFY_SOURCE performing compile-time and run-time
 > field bounds checking for memset(), avoid intentionally writing across
 > neighboring fields.
 > 
-> Use memset_after() to clear everything after the dst_entry member of
-> struct rt6_info.
+> Add struct_group() to mark region of struct stats_reply_data that should
+> be initialized, which can now be done in a single memset() call.
 > 
 > [...]
 
 Here is the summary with links:
-  - ipv6: Use memset_after() to zero rt6_info
-    https://git.kernel.org/netdev/net-next/c/8f2a83b454c9
+  - ethtool: stats: Use struct_group() to clear all stats at once
+    https://git.kernel.org/netdev/net-next/c/812ad3d270cb
 
 You are awesome, thank you!
 -- 
