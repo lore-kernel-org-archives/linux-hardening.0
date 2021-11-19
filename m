@@ -2,90 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7494BC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 16:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A87AC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 16:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5FB61B43
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 16:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDDB6137F
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 16:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235957AbhKSQpN (ORCPT
+        id S236357AbhKSRBn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 19 Nov 2021 11:45:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33742 "EHLO
+        Fri, 19 Nov 2021 12:01:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233832AbhKSQpN (ORCPT
+        with ESMTP id S236309AbhKSRBm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 19 Nov 2021 11:45:13 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D2C0C061574
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 08:42:11 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id j5-20020a17090a318500b001a6c749e697so9220063pjb.1
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 08:42:11 -0800 (PST)
+        Fri, 19 Nov 2021 12:01:42 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB6BC061748
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 08:58:40 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id y13so45126728edd.13
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 08:58:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6usG8MiQSxUWW8t4LIS6CwwnjV4gadMypuBMhJfOTXg=;
-        b=SJ/5hd7oOStu335XYv6nQAV6FVZqLIf9hAnFjiCDZVNARjObPclqPpfkPEbcoEKEcw
-         UL7tgGQ7+lX1lEDpzzXPu1KfbxDez6M63n1J7dtwKmWViDnGvVnQc++e3Ymsvm2kDgpJ
-         Vk6m5PtLG9oteHM0/wRxT6/CxDWmhUxiO3Bjk=
+        d=kylehuey.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ErEg5lH429+YsanJojZrUh0d3Z7cACpSQZvZBHsD9aM=;
+        b=gHr/2RgEtdOpErOyPDZJcCcSeofSSueWvK1Gfx8uT/hKpyS19T+uOdZRQndugSs/JL
+         KUgewbkMC1HIXARDMGn/NhLLyYOcArTvlm0XSfpZnx468ig2jb1/IwKczWH2d+MDGlvv
+         SbV4gwUgLZ4ZflXxnrD5a5v8CRg1Maib65SwwknmkSoOMLMGzQtaGyrqSbxacY7ZZGLY
+         LhSL2UK6eqbSa/NpDeESxZNHOxkKHgCWECMr7xpyIJ1+RnNTHOScEG36IeoaaiYFT28w
+         zyuiDH/3ReGX3xplGxCk/+zuQEwa9nIf46f6Kw5v/QhIjqHrJ1oWcm97n9ux2SYWpGQz
+         dA3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6usG8MiQSxUWW8t4LIS6CwwnjV4gadMypuBMhJfOTXg=;
-        b=w8yhX+9lfK+tmDumgGlAuigy7gqoORXR+Y24evKCWLwb8AYIRoE77qS8XrtP4aaagR
-         Sfo3bcdY6apL31UNCPRMF/RTEtMIfFxGc0V3jeX4Dt08L0guvn+T4arsLf6kiX/PnqZy
-         O1wF3MBH4NALjkADfY1oNsBrY+0Ls1qR3Od/FeW3/H+Ce+34nISMzlQswyIHpI7qExpw
-         ikdby/6iTnp9eSOgzim/+hWdkXE552HPB9Ft/hMGUsXqg8GfeVRr3bymTYYIsjExBFB9
-         fG/bMlawL+XaY4+R6dMFRnc7XzgYBHRJvRWXojgzaRgm6EfS1bUXTfhDhyCe1KEtEd3m
-         bVeA==
-X-Gm-Message-State: AOAM531+bEVSHjgRRxd75CmPmIGeNzDvxi9sdl5q3SqfRDYhrzOfrvEh
-        KgNU8gEcIFNee0XZTHvTmPEsNw==
-X-Google-Smtp-Source: ABdhPJxJ0yfws7sNNKBoF+QxKvxIZXPDJEJBvkkmJPuM3LXNvCkaPrbM3z7R/EkI+PBoP+BKqrRXXA==
-X-Received: by 2002:a17:902:cb8a:b0:141:f601:d5f1 with SMTP id d10-20020a170902cb8a00b00141f601d5f1mr79797842ply.77.1637340131104;
-        Fri, 19 Nov 2021 08:42:11 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t12sm11083635pjo.44.2021.11.19.08.42.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Nov 2021 08:42:10 -0800 (PST)
-Date:   Fri, 19 Nov 2021 08:42:08 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        kernel test robot <lkp@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] powerpc/signal32: Use struct_group() to zero spe regs
-Message-ID: <202111190839.B6EC699B1@keescook>
-References: <20211118203604.1288379-1-keescook@chromium.org>
- <1e312cbd-cd52-ddce-f839-db765173c526@csgroup.eu>
- <202111190824.AEBBE1328@keescook>
- <7f4e7d24-6eb0-5ecf-3497-61c3633046bd@csgroup.eu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ErEg5lH429+YsanJojZrUh0d3Z7cACpSQZvZBHsD9aM=;
+        b=Vid/hvOxk2iLOvigNqknu6H9C93TqBTOyH7BEUaqsA+xAArnVS/VVmPLj38edQeEAZ
+         4f88QvGw9nRsF1/4FtEpTIXFpZHIUqz3MX2+eOcjwxjEP+PhVVRW+a1ng5F4iuo9x7Ng
+         09VfLMWXv7JCf+dpeQZPTUaVHtIXIxkzwB5tKyxmWlyAnukog+ZvVUKue+7qRl4eEcfa
+         Xs68fDgsDTunCuJQ3mxAVE3uSlvcRDBYv1/5XnoRw4f4+W1BMqD/EhwTyxqjFQGpu+Rs
+         e3rwBEKE/qeJZRjy72/OjhXw+IMl3iPRpDjMSb32C045BvWo9myeO8gq33yuczvzZgCd
+         D54g==
+X-Gm-Message-State: AOAM5314i0lkXv+6W9Qh4EgNLyF1HKnnBh1N1gO/Q+H88k8mR2C2pFEx
+        kSurdS8SGlkc0Mksfu5RCONpPplVHEeLMlfCN+OyBA==
+X-Google-Smtp-Source: ABdhPJwjwYFQF5TH1tiK/c/KeHtkYUZ2Q17dm1zRuaodp9PMZ8lS3WsNKveiq1lhKT/gzcOUbADx50wPsTEZO1po6ic=
+X-Received: by 2002:a17:906:4791:: with SMTP id cw17mr9656058ejc.493.1637341119226;
+ Fri, 19 Nov 2021 08:58:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f4e7d24-6eb0-5ecf-3497-61c3633046bd@csgroup.eu>
+References: <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
+ <87k0h6334w.fsf@email.froward.int.ebiederm.org> <202111171341.41053845C3@keescook>
+ <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
+ <CAP045ApYXxhiAfmn=fQM7_hD58T-yx724ctWFHO4UAWCD+QapQ@mail.gmail.com>
+ <CAHk-=wiCRbSvUi_TnQkokLeM==_+Tow0GsQXnV3UYwhsxirPwg@mail.gmail.com>
+ <CAP045AoqssLTKOqse1t1DG1HgK9h+goG8C3sqgOyOV3Wwq+LDA@mail.gmail.com>
+ <202111171728.D85A4E2571@keescook> <875ysp1m39.fsf@email.froward.int.ebiederm.org>
+ <CAP045Aq06LV_jbXVc85bYU62h5EoVQ=rD9pDn+nGaUJ+iWe62w@mail.gmail.com> <202111190829.C0B365D4@keescook>
+In-Reply-To: <202111190829.C0B365D4@keescook>
+From:   Kyle Huey <me@kylehuey.com>
+Date:   Fri, 19 Nov 2021 08:58:24 -0800
+Message-ID: <CAP045Aq6SvnBpOsTKkwprYSdae1eppJhbhkYrxn_-vcFvzoPgQ@mail.gmail.com>
+Subject: Re: [REGRESSION] 5.16rc1: SA_IMMUTABLE breaks debuggers
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        "Robert O'Callahan" <rocallahan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 05:35:00PM +0100, Christophe Leroy wrote:
-> Neither do I. I was just scared by what I saw while reviewing your patch. A
-> cleanup is probably required but it can be another patch.
+On Fri, Nov 19, 2021 at 8:36 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Nov 19, 2021 at 08:07:36AM -0800, Kyle Huey wrote:
+> > On Thu, Nov 18, 2021 at 8:12 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > > Kyle thank you for your explanation of what breaks.  For future kernels
+> > > I do need to do some work in this area and I will copy on the patches
+> > > going forward.  In particular I strongly suspect that changing the
+> > > sigaction and blocked state of the signal for these synchronous signals
+> > > is the wrong thing to do, especially if the process is not killed.  I
+> > > want to find another solution that does not break things but that also
+> > > does not change the program state behind the programs back so things
+> > > work differently under the debugger.
+> >
+> > The heads up in the future is appreciated, thanks.
+>
+> Yeah, I wonder if we could add you as a Reviewer in the MAINTAINERS file
+> for ptrace/signal stuff? Then anyone using scripts/get_maintainers.pl
+> would have a CC to you added.
 
-Heh, understood! For my end, my objective with the fortify work is to
-either split cross-member memcpy() calls (which is usually undesirable) or
-add a struct group so it can be seen as a "single member" memcpy again
-(and usually results in 0 differences in binary output). :)
+I don't object to that. I guess we'll see how manageable the email load is.
 
--- 
-Kees Cook
+> Also, are there more instructions about running the rr tests? When the
+> execve refactoring was happening, I tried it[1], but the results were
+> unclear (there seemed to be a lot of warnings and it made me think I'd
+> done something wrong on my end).
+
+It's a standard cmake test suite. The easiest way to run it is just to
+run `make check`, wait a while, and see what gets printed out at the
+end as failing.  There's a couple thousand tests that run and they
+print all sorts of output ... some of them even crash intentionally to
+make sure we can record specific types of crashes, so the ctest
+pass/fail output at the very end is the only reliable indicator.
+
+If you have specific issues you're seeing I'm happy to follow up here
+or off list.
+
+- Kyle
+
+> -Kees
+>
+> [1] https://github.com/rr-debugger/rr/wiki/Building-And-Installing#tests
+>
+> --
+> Kees Cook
