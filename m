@@ -2,198 +2,167 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A46C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 01:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 399C8C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 03:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 353FE611C7
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 01:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BAC60EE0
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 03:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232046AbhKSBRJ (ORCPT
+        id S233553AbhKSDjo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Nov 2021 20:17:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232854AbhKSBRI (ORCPT
+        Thu, 18 Nov 2021 22:39:44 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:14955 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229457AbhKSDjo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Nov 2021 20:17:08 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61943C061748
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 17:14:06 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id y12so35279761eda.12
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Nov 2021 17:14:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tMATBO9ysyU+08F7274xPF36JtWrj7gJdRWN8Esowvw=;
-        b=F0lg0ofqm2qN554EDAxroXtEceDC2I4ZmYURRw8rXQxDtOCoIFd8d6ygxiIoG4nDe5
-         3OWfqc7R0+RUvEDtOhpqR9Bz085xgPeHHM0vFmQtlJUG6OZjfiz0aQMl8HYYz02pNKwz
-         fcTG4kc4N1i5eBs6HReWnVO/IK49E21rqICDyWAydaxneAbLLn+kOIon3+jkeRyrYh/4
-         NRj3k7nyY9c8NrnvtVfpI2xnscq1yvmXcpI7rBKKw4ghI2LhGQiGgMzCR0vARYTC76Dp
-         YWK98gBSKy3ZUxnoNbu7soBe/DV9E5oTfTopVDtKkhK0uAMy+OzOw914pFcUWVEZzZLh
-         3+6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tMATBO9ysyU+08F7274xPF36JtWrj7gJdRWN8Esowvw=;
-        b=y9jz+c2bIOakah3Tw1nF7luI26w9ibBqnBPf1Ss3zQGw3iGl7hCGn9SPUCHdXMcnY4
-         HDFFGo+5JZybFpab3VC+D6fMF8//3gfawtke1UbMODavvaehSWi8q7FdXYs+eu/MKkRe
-         sD/zI0a1win6CQW4v3U39CAFXKU4ZrQTtZCf+UwDkzMeVcWfVJGvcF6IM+lWlPKqPtJs
-         B3GtUMbgRsfne88yWGzqAVl3jP3ZhBZ1jm8zJQCXgtTRzlhtrfJjOzLGXC4BdHLwXs7F
-         l2uLfrAL/TEawfw7hxDgTD08lZkM00NHqtu6lV5cxb+9FRpOXURXqUdLmEbKKN85z/mY
-         wVaA==
-X-Gm-Message-State: AOAM532e00FexYG+oRM8uIVEG2VNyHQfLHd9oMcfqwqv+xt9foKOVx6I
-        GxwOEYQ2Bwj+57rLCm/xqVXX6AWWfoIXtO5ysv8ltg==
-X-Google-Smtp-Source: ABdhPJz5derP9yku9LYM7aE9l5YVII8m00Gkd3fLlekKm1DPilHAhQrEpyIBHBt3pBboGZQAsvQAq6I1GlGsoiHuAR8=
-X-Received: by 2002:a17:906:390:: with SMTP id b16mr2562163eja.123.1637284444878;
- Thu, 18 Nov 2021 17:14:04 -0800 (PST)
+        Thu, 18 Nov 2021 22:39:44 -0500
+Received: from dggeme756-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HwMj31H9szZd8V;
+        Fri, 19 Nov 2021 11:34:15 +0800 (CST)
+Received: from [10.67.102.221] (10.67.102.221) by
+ dggeme756-chm.china.huawei.com (10.3.19.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.20; Fri, 19 Nov 2021 11:36:40 +0800
+Message-ID: <788619cc-93f9-0eaf-202c-50d49487ee0c@huawei.com>
+Date:   Fri, 19 Nov 2021 11:36:40 +0800
 MIME-Version: 1.0
-References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
- <202111171049.3F9C5F1@keescook> <CAP045Apg9AUZN_WwDd6AwxovGjCA++mSfzrWq-mZ7kXYS+GCfA@mail.gmail.com>
- <CAP045AqjHRL=bcZeQ-O+-Yh4nS93VEW7Mu-eE2GROjhKOa-VxA@mail.gmail.com>
- <87k0h6334w.fsf@email.froward.int.ebiederm.org> <202111171341.41053845C3@keescook>
- <CAHk-=wgkOGmkTu18hJQaJ4mk8hGZc16=gzGMgGGOd=uwpXsdyw@mail.gmail.com>
- <CAP045ApYXxhiAfmn=fQM7_hD58T-yx724ctWFHO4UAWCD+QapQ@mail.gmail.com>
- <CAHk-=wiCRbSvUi_TnQkokLeM==_+Tow0GsQXnV3UYwhsxirPwg@mail.gmail.com>
- <CAP045AoqssLTKOqse1t1DG1HgK9h+goG8C3sqgOyOV3Wwq+LDA@mail.gmail.com>
- <202111171728.D85A4E2571@keescook> <87h7c9qg7p.fsf_-_@email.froward.int.ebiederm.org>
- <877dd5qfw5.fsf_-_@email.froward.int.ebiederm.org>
-In-Reply-To: <877dd5qfw5.fsf_-_@email.froward.int.ebiederm.org>
-From:   Kyle Huey <me@kylehuey.com>
-Date:   Thu, 18 Nov 2021 17:13:52 -0800
-Message-ID: <CAP045Aose7Lg_OE0-MijGBg27gWo+Sk3hbxuN3AtQ8OPC9w9+w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] signal: Don't always set SA_IMMUTABLE for forced signals
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        "Robert O'Callahan" <rocallahan@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Oliver Sang <oliver.sang@intel.com>, lkp@lists.01.org,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH] net: hns: Prefer struct_size over open coded arithmetic
+To:     Yonglong Liu <liuyonglong@huawei.com>,
+        Len Baker <len.baker@gmx.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        <netdev@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20211011090100.5727-1-len.baker@gmx.com>
+ <a04c3709-20e6-f816-d535-5db6ef898616@huawei.com>
+From:   "lipeng (Y)" <lipeng321@huawei.com>
+In-Reply-To: <a04c3709-20e6-f816-d535-5db6ef898616@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.221]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggeme756-chm.china.huawei.com (10.3.19.102)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 2:05 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
->
-> Recently to prevent issues with SECCOMP_RET_KILL and similar signals
-> being changed before they are delivered SA_IMMUTABLE was added.
->
-> Unfortunately this broke debuggers[1][2] which reasonably expect to be
-> able to trap synchronous SIGTRAP and SIGSEGV even when the target
-> process is not configured to handle those signals.
->
-> Update force_sig_to_task to support both the case when we can
-> allow the debugger to intercept and possibly ignore the
-> signal and the case when it is not safe to let userspace
-> known about the signal until the process has exited.
 
-s/known/know/
 
+  On 2021/10/11 17:01, Len Baker wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
 >
-> Reported-by: Kyle Huey <me@kylehuey.com>
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Cc: stable@vger.kernel.org
-> [1] https://lkml.kernel.org/r/CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com
-> [2] https://lkml.kernel.org/r/20211117150258.GB5403@xsang-OptiPlex-902
-
-This link doesn't work.
-
-> Fixes: 00b06da29cf9 ("signal: Add SA_IMMUTABLE to ensure forced siganls do not get changed")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> So, take the opportunity to refactor the hnae_handle structure to switch
+> the last member to flexible array, changing the code accordingly. Also,
+> fix the comment in the hnae_vf_cb structure to inform that the ae_handle
+> member must be the last member.
+>
+> Then, use the struct_size() helper to do the arithmetic instead of the
+> argument "size + count * size" in the kzalloc() function.
+>
+> This code was detected with the help of Coccinelle and audited and fixed
+> manually.
+>
+> [1] 
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments 
+>
+>
+> Signed-off-by: Len Baker <len.baker@gmx.com>
 > ---
->  kernel/signal.c | 23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
+>   drivers/net/ethernet/hisilicon/hns/hnae.h          | 2 +-
+>   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c  | 5 ++---
+>   drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h | 2 +-
+>   3 files changed, 4 insertions(+), 5 deletions(-)
 >
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 7c4b7ae714d4..02058c983bd6 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1298,6 +1298,12 @@ int do_send_sig_info(int sig, struct kernel_siginfo *info, struct task_struct *p
->         return ret;
->  }
+> diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.h 
+> b/drivers/net/ethernet/hisilicon/hns/hnae.h
+> index 2b7db1c22321..d46e8f999019 100644
+> --- a/drivers/net/ethernet/hisilicon/hns/hnae.h
+> +++ b/drivers/net/ethernet/hisilicon/hns/hnae.h
+> @@ -558,7 +558,7 @@ struct hnae_handle {
+>       enum hnae_media_type media_type;
+>       struct list_head node;    /* list to hnae_ae_dev->handle_list */
+>       struct hnae_buf_ops *bops; /* operation for the buffer */
+> -    struct hnae_queue **qs;  /* array base of all queues */
+> +    struct hnae_queue *qs[];  /* flexible array of all queues */
+>   };
 >
-> +enum sig_handler {
-> +       HANDLER_CURRENT, /* If reachable use the current handler */
-> +       HANDLER_SIG_DFL, /* Always use SIG_DFL handler semantics */
-> +       HANDLER_EXIT,    /* Only visible as the proces exit code */
-> +};
-> +
->  /*
->   * Force a signal that the process can't ignore: if necessary
->   * we unblock the signal and change any SIG_IGN to SIG_DFL.
-> @@ -1310,7 +1316,8 @@ int do_send_sig_info(int sig, struct kernel_siginfo *info, struct task_struct *p
->   * that is why we also clear SIGNAL_UNKILLABLE.
->   */
->  static int
-> -force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t, bool sigdfl)
-> +force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t,
-> +       enum sig_handler handler)
->  {
->         unsigned long int flags;
->         int ret, blocked, ignored;
-> @@ -1321,9 +1328,10 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t, bool
->         action = &t->sighand->action[sig-1];
->         ignored = action->sa.sa_handler == SIG_IGN;
->         blocked = sigismember(&t->blocked, sig);
-> -       if (blocked || ignored || sigdfl) {
-> +       if (blocked || ignored || (handler != HANDLER_CURRENT)) {
->                 action->sa.sa_handler = SIG_DFL;
-> -               action->sa.sa_flags |= SA_IMMUTABLE;
-> +               if (handler == HANDLER_EXIT)
-> +                       action->sa.sa_flags |= SA_IMMUTABLE;
->                 if (blocked) {
->                         sigdelset(&t->blocked, sig);
->                         recalc_sigpending_and_wake(t);
-> @@ -1343,7 +1351,7 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t, bool
+>   #define ring_to_dev(ring) ((ring)->q->dev->dev)
+> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c 
+> b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+> index 75e4ec569da8..e81116ad9bdf 100644
+> --- a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+> +++ b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+> @@ -81,8 +81,8 @@ static struct hnae_handle *hns_ae_get_handle(struct 
+> hnae_ae_dev *dev,
+>       vfnum_per_port = hns_ae_get_vf_num_per_port(dsaf_dev, port_id);
+>       qnum_per_vf = hns_ae_get_q_num_per_vf(dsaf_dev, port_id);
 >
->  int force_sig_info(struct kernel_siginfo *info)
->  {
-> -       return force_sig_info_to_task(info, current, false);
-> +       return force_sig_info_to_task(info, current, HANDLER_CURRENT);
->  }
+> -    vf_cb = kzalloc(sizeof(*vf_cb) +
+> -            qnum_per_vf * sizeof(struct hnae_queue *), GFP_KERNEL);
+> +    vf_cb = kzalloc(struct_size(vf_cb, ae_handle.qs, qnum_per_vf),
+> +            GFP_KERNEL);
+>       if (unlikely(!vf_cb)) {
+>           dev_err(dsaf_dev->dev, "malloc vf_cb fail!\n");
+>           ae_handle = ERR_PTR(-ENOMEM);
+> @@ -108,7 +108,6 @@ static struct hnae_handle 
+> *hns_ae_get_handle(struct hnae_ae_dev *dev,
+>           goto vf_id_err;
+>       }
 >
->  /*
-> @@ -1660,7 +1668,7 @@ void force_fatal_sig(int sig)
->         info.si_code = SI_KERNEL;
->         info.si_pid = 0;
->         info.si_uid = 0;
-> -       force_sig_info_to_task(&info, current, true);
-> +       force_sig_info_to_task(&info, current, HANDLER_SIG_DFL);
->  }
->
->  /*
-> @@ -1693,7 +1701,7 @@ int force_sig_fault_to_task(int sig, int code, void __user *addr
->         info.si_flags = flags;
->         info.si_isr = isr;
->  #endif
-> -       return force_sig_info_to_task(&info, t, false);
-> +       return force_sig_info_to_task(&info, t, HANDLER_CURRENT);
->  }
->
->  int force_sig_fault(int sig, int code, void __user *addr
-> @@ -1813,7 +1821,8 @@ int force_sig_seccomp(int syscall, int reason, bool force_coredump)
->         info.si_errno = reason;
->         info.si_arch = syscall_get_arch(current);
->         info.si_syscall = syscall;
-> -       return force_sig_info_to_task(&info, current, force_coredump);
-> +       return force_sig_info_to_task(&info, current,
-> +               force_coredump ? HANDLER_EXIT : HANDLER_CURRENT);
->  }
->
->  /* For the crazy architectures that include trap information in
-> --
-> 2.20.1
+> -    ae_handle->qs = (struct hnae_queue **)(&ae_handle->qs + 1);
+> 
 
-- Kyle
+
+  This line can not delete. ae_handle->qs is for PF.
+
+
+
+> 
+>       for (i = 0; i < qnum_per_vf; i++) {
+> 
+
+
+
+  This loop actually start from &ae_handle->qs + 1, which is the queue
+  offset for VF.
+
+
+> 
+>           ae_handle->qs[i] = &ring_pair_cb->q;
+>           ae_handle->qs[i]->rx_ring.q = ae_handle->qs[i];
+> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h 
+> b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
+> index cba04bfa0b3f..5526a10caac5 100644
+> --- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
+> +++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
+> @@ -210,7 +210,7 @@ struct hnae_vf_cb {
+>       u8 port_index;
+>       struct hns_mac_cb *mac_cb;
+>       struct dsaf_device *dsaf_dev;
+> -    struct hnae_handle  ae_handle; /* must be the last number */
+> +    struct hnae_handle  ae_handle; /* must be the last member */
+>   };
+>
+>   struct dsaf_int_xge_src {
+> -- 
+> 2.25.1
+>
+>
+> .
+>
+> 
+> .
