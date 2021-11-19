@@ -2,167 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81384C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 19:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96980C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 19:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE7C61A0C
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 19:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0C560F4F
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Nov 2021 19:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234456AbhKSTZh (ORCPT
+        id S235940AbhKSTb4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 19 Nov 2021 14:25:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41998 "EHLO
+        Fri, 19 Nov 2021 14:31:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbhKSTZh (ORCPT
+        with ESMTP id S235147AbhKSTbz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 19 Nov 2021 14:25:37 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B4F6C061574
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 11:22:35 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id m24so8848258pls.10
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 11:22:35 -0800 (PST)
+        Fri, 19 Nov 2021 14:31:55 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6B4C06173E
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 11:28:53 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id b68so10153394pfg.11
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Nov 2021 11:28:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GejJnaPkSdrFBUEbq1HDLo/AXrHzrj+OVR/ih9nOsZI=;
-        b=PSHqGmKsG+m7qQBnw3EW0+1KOv87ZgTDhqln7oOivL6UFHMBY7l4TfW2O2fsVfXGcI
-         s7bR4NUYnR2fH5y/GrcRhm7fRAbJS2tMpPr4AyyxrJy7CAQ4n3Ytx9lbX+HuCeZE8Acn
-         9uvPNWdAWVvsaoF+zv5Jcq8iiMx7tgsOVECII=
+        bh=inEVTtx9dg780b45QDw2zmi3tLaKJ0sVb3YOqvqO6Sg=;
+        b=Ilad5Flc374k2I5x+I91zJu9Tii8adfRVPu97UrQozOjQ7AUektnlWF+At3TFTPSm4
+         pvIZCzHuSBC7LFq+rQeKud5buRxfGqyM/fdheiFAXOctBT45bzvGDCl2oCO81sKEfoa1
+         C2UstnT3lg/f6F4NY1D/zYiN/uLX9IBmxtsaA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GejJnaPkSdrFBUEbq1HDLo/AXrHzrj+OVR/ih9nOsZI=;
-        b=5g3N8zKpj+hxBOZCwRxCgHNTFcREUn0YocnNQnsYJ3Gl+1MuZm894uyX00tVnn95ZG
-         jpyvmV1WtCmg7u5NePrY2+ZKv7xaSLcTgIAzsOjg5LCvEd+xSZ3IsE2SVFQsj5QfKDNk
-         9BlzXnCy3bd26zdRxW1oIZH5+nmw8iiU8VCHte5TDcc3T91nD3ag4mo4WQ5xOihnaslG
-         xmD5vG7XbT9wG+yKbU16pRy+CDzV1+omjYwJehC6bIwI+oWPtkVd4RvpSEB8PS2rYxt0
-         pK+Oe4js7eGsyxBey72Rd1/rD/wIeemt5ktAlbCUyAq0mutepXnHH7BdG5L1OBSFZiS6
-         /59Q==
-X-Gm-Message-State: AOAM532LF26YFf/NBcY58ujdVXFoYDlF66h3dVUZE9tI+SiBNSPQDlcn
-        tTdDH4IQ5Lp5zTN9UpiLkLg11Q==
-X-Google-Smtp-Source: ABdhPJyKHIxH8p0bpnGSbVWFIXipL9g/p5kYWTvl/90i/NpfNdV1nleVUk34JWHLVyovxNwrMJzVNQ==
-X-Received: by 2002:a17:90a:d995:: with SMTP id d21mr2595804pjv.154.1637349754891;
-        Fri, 19 Nov 2021 11:22:34 -0800 (PST)
+        bh=inEVTtx9dg780b45QDw2zmi3tLaKJ0sVb3YOqvqO6Sg=;
+        b=NnBw7Skx6ZoEipmHkbjOKXPwOtv76tZmOb3126yiZZCf55/GiH8bvsUVnUpoiP4HcT
+         7WvObXusUIGYpQ3qTXjSpxwPVhB8wH4KBNGUp29ZztfD1LJXeLrOoSMeyRuO+6x+IGbO
+         W0wzHOzEPVmK5OFFUjCZMrzgB97a1o0BMeOwOkfaMpDdAQUfo2pb9wP93SAxFC6z7joB
+         p4MkgmcNf3CruslmNFdrRS30iH+582gKB75r1qOzWC3qKw4EORAk6qk3TkUXEOG8bUKz
+         DFPsxH4+rGPb2AgiR5Ged4CnYL5uwrttB8rWq9aSM/bGFamE496d5lXOJR8fqBGf2Hvp
+         UGcA==
+X-Gm-Message-State: AOAM5336CjSaxglqZR+asM9mwp33ESBZYjVlUgvyTfCZSi1bfgvqkezJ
+        PWzRkLN2MJX2vVXHaOR+/rElzg==
+X-Google-Smtp-Source: ABdhPJweh3pTn1evOXD3uFsGXSY2PwZdgKvvYq0xO4ybAoL3tHBX2EipzAOM8xwxinUGzRYK23qpRg==
+X-Received: by 2002:a05:6a00:1a56:b0:4a3:3c0c:11c0 with SMTP id h22-20020a056a001a5600b004a33c0c11c0mr13015115pfv.42.1637350133097;
+        Fri, 19 Nov 2021 11:28:53 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q30sm350921pgl.46.2021.11.19.11.22.34
+        by smtp.gmail.com with ESMTPSA id f29sm357733pgf.34.2021.11.19.11.28.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Nov 2021 11:22:34 -0800 (PST)
+        Fri, 19 Nov 2021 11:28:52 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Ping-Ke Shih <pkshih@realtek.com>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        Colin Ian King <colin.king@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Kaixu Xia <kaixuxia@tencent.com>, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v3] rtlwifi: rtl8192de: Style clean-ups
-Date:   Fri, 19 Nov 2021 11:22:33 -0800
-Message-Id: <20211119192233.1021063-1-keescook@chromium.org>
+Subject: [PATCH] hfsplus: Use struct_group_attr() for memcpy() region
+Date:   Fri, 19 Nov 2021 11:28:51 -0800
+Message-Id: <20211119192851.1046717-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3433; h=from:subject; bh=eEEiVQZ8A0ttuPc+NS1yMiJkzEQSZvVCMArXF7UacbE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhl/l45aCKMNhG3EDjrpaJL8xAaPqrQt/Q38fyqPMr 0+roXumJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZf5eAAKCRCJcvTf3G3AJoTHEA CXQ5lFUssY2ECMJpO/wfh4002jlaJUm83BkQxBB1fHFsOfHoekMLh+iHH+dASVqHPWevbroCK8EUKP DC5iIonTvUkWKz8KTkMgFSCbptvpzDtjB4rtBswsrDPaIUJS9efI4f5Rgkmk03jRY0RoKq+LFKrN9y xTpX1Dip9B6CrFHZkkNKOf8nuA01t0tpn4yYArxP+alkdDgJQS6Nr4u3TKSEjH62fmqLnvZPgokztf WzvcEHABcQylkSIWw5uZ5+5ayBJo3OE2xW5hOissCM6mXvBh2cghrYTjlan0QNSWrHxo8BTsObm4Jv A6xmrsGwlzodq73Ardg5k91FpGfAOMo3PbxY8gH7JU+Y8DihuMxU1ruj7+6RefBHLEhXTZbCH90kZq C/cN1hNWt1wYtLDGRSxdHtrvLl6vPaFfJtX+HotWq4e1r2OTl9ikOgYcKKM1kh5wwWkwM8JeOdOdPM Xe/JD+rBsXhx0ERcs+yhqsAyWgBlfR3j4j76DzqW380ECf5ENK38FG40dWf7/Q92pgEReF/pz/p81e Ig9BQCb38qvxxufBc7Ke2gBpSXjyhUqatsi05pxRSsXHn5/PrPfooeO6/GKzGwI0dw5qxfoDtMoxw5 5lXGoo1iT3TSAZ9/c0P/HQSO+DpwmNJBh0eB0rTUgifemH2AsulWo5NA5SZQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2620; h=from:subject; bh=SCJbRPRIgSrbgcI0+anP4QpGg3OM58wHZmhAt7+/j14=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhl/ry4/8jGV6MXqmu/7C8vq8DKE761j4O7Dvj4ee+ +UHR6j2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZf68gAKCRCJcvTf3G3AJsyLEA CxlpW5BfTUERCVzkLeA4yk5WzpRqsHUnTNs3g3dZCWt39oCeTmDnNFr/Wbj1Pth9za402aDi4w5r4Z dnQHlIiVSvELxTNHFZ+KSpsztpoq7HWHyg6Y1K/5nN8W50Njcyx2IzDxNs6QpR+7hatTugOjenFiPv lVwARpl20w3hr22bWuG3qIyTWFSwijfBrzkaSmnVHCro+svaPQhewrucv6ekl5oMBBPKLhVr2W85nE PfpwLFPitagoQCLyDMYjud9b6cuuD/1PCtieuenR5NUtYnRInM3eyLldUqpryj/o9o4+M9eBwSU8fV NAgdvCB1DgdvC81wcnm7ZMaF6T4E+uXySyGjtDnr0R+83UV5/ZZ5dNOEO3rl8aBcUlz+dHfFsvdXGT YyP6JQ4hBxQpw6uQsIYwrBrRF0yuq/PEQW53aVG04Mp6PUMMirV75kxhHJYCfqnA583z6PFdnx+aAL z44OfBB6XzwqQXDwwPWK8EgBVylrT4AgD6LVMOMTEkEPfuAYR1Lv3ayE02jx3ABLL2Afu1z9wy4N9e os2GcQRNh8b3nw294oQ/O9woIHZzLIYTLBZRsqwQLiKjdy430bS1Jd/wHoSOdo8vDZn2l4DDvyoZIV LSBm0gNRIwIn7BhjuV8cGCoCtiXxJgE+cgQq7Ouq7Fy0yXQss/bkjzDjM/Xw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Clean up some style issues:
-- Use ARRAY_SIZE() even though it's a u8 array.
-- Remove redundant CHANNEL_MAX_NUMBER_2G define.
-Additionally fix some dead code WARNs.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memset(), avoid intentionally writing across
+neighboring fields.
 
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://lore.kernel.org/lkml/57d0d1b6064342309f680f692192556c@realtek.com/
+Add struct_group() to mark the "info" region (containing struct DInfo
+and struct DXInfo structs) in struct hfsplus_cat_folder and struct
+hfsplus_cat_file that are written into directly, so the compiler can
+correctly reason about the expected size of the writes.
+
+"pahole" shows no size nor member offset changes to struct
+hfsplus_cat_folder nor struct hfsplus_cat_file.  "objdump -d" shows no
+object code changes.
+
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-v2->v3: rebase, add ack
----
- .../wireless/realtek/rtlwifi/rtl8192de/phy.c    | 17 +++++++----------
- drivers/net/wireless/realtek/rtlwifi/wifi.h     |  1 -
- 2 files changed, 7 insertions(+), 11 deletions(-)
+ fs/hfsplus/hfsplus_raw.h | 12 ++++++++----
+ fs/hfsplus/xattr.c       |  4 ++--
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-index 9b83c710c9b8..51fe51bb0504 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c
-@@ -899,7 +899,7 @@ static u8 _rtl92c_phy_get_rightchnlplace(u8 chnl)
- 	u8 place = chnl;
+diff --git a/fs/hfsplus/hfsplus_raw.h b/fs/hfsplus/hfsplus_raw.h
+index 456e87aec7fd..68b4240c6191 100644
+--- a/fs/hfsplus/hfsplus_raw.h
++++ b/fs/hfsplus/hfsplus_raw.h
+@@ -260,8 +260,10 @@ struct hfsplus_cat_folder {
+ 	__be32 access_date;
+ 	__be32 backup_date;
+ 	struct hfsplus_perm permissions;
+-	struct DInfo user_info;
+-	struct DXInfo finder_info;
++	struct_group_attr(info, __packed,
++		struct DInfo user_info;
++		struct DXInfo finder_info;
++	);
+ 	__be32 text_encoding;
+ 	__be32 subfolders;	/* Subfolder count in HFSX. Reserved in HFS+. */
+ } __packed;
+@@ -294,8 +296,10 @@ struct hfsplus_cat_file {
+ 	__be32 access_date;
+ 	__be32 backup_date;
+ 	struct hfsplus_perm permissions;
+-	struct FInfo user_info;
+-	struct FXInfo finder_info;
++	struct_group_attr(info, __packed,
++		struct FInfo user_info;
++		struct FXInfo finder_info;
++	);
+ 	__be32 text_encoding;
+ 	u32 reserved2;
  
- 	if (chnl > 14) {
--		for (place = 14; place < sizeof(channel5g); place++) {
-+		for (place = 14; place < ARRAY_SIZE(channel5g); place++) {
- 			if (channel5g[place] == chnl) {
- 				place++;
- 				break;
-@@ -1366,7 +1366,7 @@ u8 rtl92d_get_rightchnlplace_for_iqk(u8 chnl)
- 	u8 place;
- 
- 	if (chnl > 14) {
--		for (place = 14; place < sizeof(channel_all); place++) {
-+		for (place = 14; place < ARRAY_SIZE(channel_all); place++) {
- 			if (channel_all[place] == chnl)
- 				return place - 13;
- 		}
-@@ -2428,7 +2428,7 @@ static bool _rtl92d_is_legal_5g_channel(struct ieee80211_hw *hw, u8 channel)
- 
- 	int i;
- 
--	for (i = 0; i < sizeof(channel5g); i++)
-+	for (i = 0; i < ARRAY_SIZE(channel5g); i++)
- 		if (channel == channel5g[i])
- 			return true;
- 	return false;
-@@ -2692,9 +2692,8 @@ void rtl92d_phy_reset_iqk_result(struct ieee80211_hw *hw)
- 	u8 i;
- 
- 	rtl_dbg(rtlpriv, COMP_INIT, DBG_LOUD,
--		"settings regs %d default regs %d\n",
--		(int)(sizeof(rtlphy->iqk_matrix) /
--		      sizeof(struct iqk_matrix_regs)),
-+		"settings regs %zu default regs %d\n",
-+		ARRAY_SIZE(rtlphy->iqk_matrix),
- 		IQK_MATRIX_REG_NUM);
- 	/* 0xe94, 0xe9c, 0xea4, 0xeac, 0xeb4, 0xebc, 0xec4, 0xecc */
- 	for (i = 0; i < IQK_MATRIX_SETTINGS_NUM; i++) {
-@@ -2861,16 +2860,14 @@ u8 rtl92d_phy_sw_chnl(struct ieee80211_hw *hw)
- 	case BAND_ON_5G:
- 		/* Get first channel error when change between
- 		 * 5G and 2.4G band. */
--		if (channel <= 14)
-+		if (WARN_ONCE(channel <= 14, "rtl8192de: 5G but channel<=14\n"))
- 			return 0;
--		WARN_ONCE((channel <= 14), "rtl8192de: 5G but channel<=14\n");
- 		break;
- 	case BAND_ON_2_4G:
- 		/* Get first channel error when change between
- 		 * 5G and 2.4G band. */
--		if (channel > 14)
-+		if (WARN_ONCE(channel > 14, "rtl8192de: 2G but channel>14\n"))
- 			return 0;
--		WARN_ONCE((channel > 14), "rtl8192de: 2G but channel>14\n");
- 		break;
- 	default:
- 		WARN_ONCE(true, "rtl8192de: Invalid WirelessMode(%#x)!!\n",
-diff --git a/drivers/net/wireless/realtek/rtlwifi/wifi.h b/drivers/net/wireless/realtek/rtlwifi/wifi.h
-index aa07856411b1..31f9e9e5c680 100644
---- a/drivers/net/wireless/realtek/rtlwifi/wifi.h
-+++ b/drivers/net/wireless/realtek/rtlwifi/wifi.h
-@@ -108,7 +108,6 @@
- #define	CHANNEL_GROUP_IDX_5GM		6
- #define	CHANNEL_GROUP_IDX_5GH		9
- #define	CHANNEL_GROUP_MAX_5G		9
--#define CHANNEL_MAX_NUMBER_2G		14
- #define AVG_THERMAL_NUM			8
- #define AVG_THERMAL_NUM_88E		4
- #define AVG_THERMAL_NUM_8723BE		4
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index e2855ceefd39..49891b12c415 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -296,7 +296,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
+ 					sizeof(hfsplus_cat_entry));
+ 		if (be16_to_cpu(entry.type) == HFSPLUS_FOLDER) {
+ 			if (size == folder_finderinfo_len) {
+-				memcpy(&entry.folder.user_info, value,
++				memcpy(&entry.folder.info, value,
+ 						folder_finderinfo_len);
+ 				hfs_bnode_write(cat_fd.bnode, &entry,
+ 					cat_fd.entryoffset,
+@@ -309,7 +309,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
+ 			}
+ 		} else if (be16_to_cpu(entry.type) == HFSPLUS_FILE) {
+ 			if (size == file_finderinfo_len) {
+-				memcpy(&entry.file.user_info, value,
++				memcpy(&entry.file.info, value,
+ 						file_finderinfo_len);
+ 				hfs_bnode_write(cat_fd.bnode, &entry,
+ 					cat_fd.entryoffset,
 -- 
 2.30.2
 
