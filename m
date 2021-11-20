@@ -2,223 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D59C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 20 Nov 2021 12:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E65C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 20 Nov 2021 15:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237199AbhKTMU0 (ORCPT
+        id S236254AbhKTPUj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 20 Nov 2021 07:20:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38782 "EHLO
+        Sat, 20 Nov 2021 10:20:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237186AbhKTMUV (ORCPT
+        with ESMTP id S230245AbhKTPUj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 20 Nov 2021 07:20:21 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C7DC06173E
-        for <linux-hardening@vger.kernel.org>; Sat, 20 Nov 2021 04:17:17 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id n33-20020a05600c502100b0032fb900951eso12575120wmr.4
-        for <linux-hardening@vger.kernel.org>; Sat, 20 Nov 2021 04:17:17 -0800 (PST)
+        Sat, 20 Nov 2021 10:20:39 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC36C061574;
+        Sat, 20 Nov 2021 07:17:35 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id b184-20020a1c1bc1000000b0033140bf8dd5so9787493wmb.5;
+        Sat, 20 Nov 2021 07:17:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YaZx2Y1Vt1Ut2aTw36wNCypRpJkUbfgmQVTDZ0VmVgg=;
-        b=G0DspSlupKx4AUg5ZT7ltXNlBHPMlfmebwsWLEI0fjNTzN8FF+OAjnHjjkowTA3YTz
-         Y5DGUFU1RqZBdH04tC0xC/avnxq/1+skZ0VCOq1mgUIzCnpJtEHJO9HK7/LIwnRXoRp+
-         rQz4achBubaElapoI9/Vm6An/nbj7zuytcNNa5DhyFwX7BkkRnuS8Iy3LlaG3ID6GztZ
-         YpZ8RDsV1eLdYDx5VL7v/6AvQ5yHQGI/Q2ZK570uO4q6u0byapqvyd9zlkeZnOLpkU1l
-         Bk8c8Y3m+sCLMdxBlSNTFQ2wLo1WPxZZmXJqgWQbyyzXvjmZnY54fmRSKov6jhnyPm7k
-         mNEA==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=SAdJR3WopYIrbK2mVVoGCJPSAiaXWVlXMd62fQtue4A=;
+        b=PSsn0O6gtR5fOZ4JoHKXHRExmTVUfBZ5OOy95GUS+1D7W4Y513R+9liuNOAg9FsMKl
+         xNsOErhQnz3D2jcojL2/BJdMSbNbCEYfBAZgkxIlwA8i5ZFpR2i434Ylw4lq4KPK8jSO
+         /EWxii2/DcaApGquGOeuiCyVBaKyDAGdTc6qq/egiLItRyDTIUyUaMMoIx3cDjCRiTtR
+         xE95rCgXO3CxmngCFNgm4G4/lGrECmdiaByQcrIsHTpHKEmu0/M5v6s0Za7OHeh9icaH
+         X5FFPS1DkeQwNBwHB+5KzywAEAPJ2gSvo+oGQzZWDE7sT45q+T+R8F4mHn6NBjdtSAcR
+         tL4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YaZx2Y1Vt1Ut2aTw36wNCypRpJkUbfgmQVTDZ0VmVgg=;
-        b=IFIjqRrFzeeRHJPiMyfSsRnXLfjFaR0BICFFFzyXWqY/VAdImZCYwN4Rv7tbTXCKtp
-         9R+rq3TlNQkIDAxJwv/iXI04QQtL61WUDA39bV/ThMM4b0liADpxC7l0XjnjHL/baiMW
-         98qcr/c8fbzDu/tUdarn4cEFSzYu5lk/1DbvMX4yejo4IsMFPgltM1GrxljSuyTIxr5A
-         l40WRb0g3aPK6fgJCY2oReBKoEDqwx4reUKPqOpMWFJnQRDEYUeKYD+XG6Wzw59USphK
-         qm6AbAan4iwEWxDhRrSXg/9X50q+a5fkfftTxmJzuu0yh24wyT1sVkAPhH1CLCd7aq/j
-         9yyw==
-X-Gm-Message-State: AOAM533HseLx9gZ0v3lZobt3VQdkFBWklufe78QI8ll2GCj169bF3zmT
-        crlENkgDIRyi8EPU0L9N58V/CQ==
-X-Google-Smtp-Source: ABdhPJwhl1qUNp/ARRgHBsOEZYB2zBIGB9ymLIhCgmSIMnKiuQtGzmOMF1KU2l9Kmdis+/qTqfvOjQ==
-X-Received: by 2002:a05:600c:3486:: with SMTP id a6mr9590995wmq.32.1637410635476;
-        Sat, 20 Nov 2021 04:17:15 -0800 (PST)
-Received: from elver.google.com ([2a00:79e0:15:13:847c:11cc:32b2:b152])
-        by smtp.gmail.com with ESMTPSA id az15sm2620938wmb.0.2021.11.20.04.17.13
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=SAdJR3WopYIrbK2mVVoGCJPSAiaXWVlXMd62fQtue4A=;
+        b=kTB8DsnVdYTK6dSDNLL2wZvZ/WVNbWf155NQnxuQEiMyvO4ctWOxRCNvY/HbMDKypz
+         y1gf0JipE2LxJNqnHpH7LPiuDkJVeqcj4zF5DqwJT/U+xjvunTnaON7py8U2SHBHOuDY
+         Isbb6RIO5pd/cfAEaKOrnyv6oNRwDMjobAD1Yua/oyszIjU1Yd4TvIlGAlA/Dsf5PV7E
+         hXvH0MIeMBOC2uQ1J6rV8wXaOPX7pfGI/J8KGKkch58CArWZkd8niLn0/zDX2Rd22FOC
+         1tLCvh7PrdNbxOwlz7MFfd2z6ZZS1OBG5Q8GvtPVwRLJs/GWl3rvpLfi384NGbv95Fo6
+         GbdQ==
+X-Gm-Message-State: AOAM533LneBdXSa8DRkGHUTt0OmI6VAVf13TFrbI3ettsbKKMjddpDY9
+        sd+387HL02aJyyj3EhjU7Lk=
+X-Google-Smtp-Source: ABdhPJzusnSUU9G8Bbwwvx4W0Wszg8PyY3GAgQQd9zVKOT7CM/P2i3nUjbJW0qJJN69eQ6svoeCzBw==
+X-Received: by 2002:a05:600c:6006:: with SMTP id az6mr11505759wmb.5.1637421454335;
+        Sat, 20 Nov 2021 07:17:34 -0800 (PST)
+Received: from debian64.daheim (p4fd09ac4.dip0.t-ipconnect.de. [79.208.154.196])
+        by smtp.gmail.com with ESMTPSA id l21sm3239781wrb.38.2021.11.20.07.17.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Nov 2021 04:17:14 -0800 (PST)
-Date:   Sat, 20 Nov 2021 13:17:08 +0100
-From:   Marco Elver <elver@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paul McKenney <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Maciej Rozycki <macro@orcam.me.uk>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Laura Abbott <labbott@kernel.org>,
-        David S Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Scull <ascull@google.com>,
-        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
-        Mathieu Chouquet-Stringer <me@mathieu.digital>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mike Rapoport <rppt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-hardening@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
-        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
-        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
-Message-ID: <YZjnREFGhEO9pX6O@elver.google.com>
-References: <20211027233215.306111-1-alex.popov@linux.com>
- <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
- <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
- <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
- <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
- <20211115110649.4f9cb390@gandalf.local.home>
- <202111151116.933184F716@keescook>
+        Sat, 20 Nov 2021 07:17:33 -0800 (PST)
+Received: from localhost.daheim ([127.0.0.1])
+        by debian64.daheim with esmtp (Exim 4.95)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1moRyV-0001WH-Mj;
+        Sat, 20 Nov 2021 16:17:33 +0100
+Message-ID: <75be2d3b-99c4-f84b-4da5-da0f4c220359@gmail.com>
+Date:   Sat, 20 Nov 2021 16:17:33 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202111151116.933184F716@keescook>
-User-Agent: Mutt/2.0.5 (2021-01-21)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] mac80211: Use memset_after() to clear tx status
+Content-Language: de-DE
+To:     Kees Cook <keescook@chromium.org>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20211118203839.1289276-1-keescook@chromium.org>
+From:   Christian Lamparter <chunkeey@gmail.com>
+In-Reply-To: <20211118203839.1289276-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 02:06PM -0800, Kees Cook wrote:
-[...]
-> However, that's a lot to implement when Marco's tracing suggestion might
-> be sufficient and policy could be entirely implemented in userspace. It
-> could be as simple as this (totally untested):
-[...]
+On 18/11/2021 21:38, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 > 
-> Marco, is this the full version of monitoring this from the userspace
-> side?
-
-Sorry I completely missed this email (I somehow wasn't Cc'd... I just
-saw it by chance re-reading this thread).
-
-I've sent a patch to add WARN:
-
-	https://lkml.kernel.org/r/20211115085630.1756817-1-elver@google.com
-
-Not sure how useful BUG is, but I have no objection to it also being
-traced if you think it's useful.
-
-(I added it to kernel/panic.c, because lib/bug.c requires
-CONFIG_GENERIC_BUG.)
-
-> 	perf record -e error_report:error_report_end
-
-I think userspace would want something other than perf tool to handle it
-of course.  There are several options:
-
-	1. Open trace pipe to be notified (/sys/kernel/tracing/trace_pipe).
-	   This already includes the pid.
-
-	2. As you suggest, use perf events globally (but the handling
-	   would be done by some system process).
-
-	3. As of 5.13 there's actually a new perf feature to
-	   synchronously SIGTRAP the exact task where an event occurred
-	   (see perf_event_attr::sigtrap). This would very closely mimic
-	   pkill_on_warn (because the SIGTRAP is synchronous), but lets the
-	   process being SIGTRAP'd decide what to do. Not sure how to
-	   deploy this though, because a) only root user can create this
-	   perf event (because exclude_kernel=0), and b) sigtrap perf
-	   events deliberately won't propagate beyond an exec
-	   (must remove_on_exec=1 if sigtrap=1) because who knows if
-	   the exec'd process has the right SIGTRAP handler.
-
-I think #3 is hard to deploy right, but below is an example program I
-played with.
-
-Thanks,
--- Marco
-
------- >8 ------
-
-#define _GNU_SOURCE
-#include <assert.h>
-#include <stdio.h>
-#include <linux/perf_event.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <sys/syscall.h>
-#include <unistd.h>
-
-static void sigtrap_handler(int signum, siginfo_t *info, void *ucontext)
-{
-	// FIXME: check event is error_report_end
-	printf("Kernel error in this task!\n");
-}
-static void generate_warning(void)
-{
-	... do something to generate a warning ...
-}
-int main()
-{
-	struct perf_event_attr attr = {
-		.type		= PERF_TYPE_TRACEPOINT,
-		.size		= sizeof(attr),
-		.config		= 189, // FIXME: error_report_end
-		.sample_period	= 1,
-		.inherit	= 1, /* Children inherit events ... */
-		.remove_on_exec = 1, /* Required by sigtrap. */
-		.sigtrap	= 1, /* Request synchronous SIGTRAP on event. */
-		.sig_data	= 189, /* FIXME: use to identify error_report_end */
-	};
-	struct sigaction action = {};
-	struct sigaction oldact;
-	int fd;
-	action.sa_flags = SA_SIGINFO | SA_NODEFER;
-	action.sa_sigaction = sigtrap_handler;
-	sigemptyset(&action.sa_mask);
-	assert(sigaction(SIGTRAP, &action, &oldact) == 0);
-	fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, PERF_FLAG_FD_CLOEXEC);
-	assert(fd != -1);
-	sleep(5); /* Try to generate a warning from elsewhere, nothing will be printed. */
-	generate_warning(); /* Warning from this process. */
-	sigaction(SIGTRAP, &oldact, NULL);
-	close(fd);
-	return 0;
-}
+> Use memset_after() so memset() doesn't get confused about writing
+> beyond the destination member that is intended to be the starting point
+> of zeroing through the end of the struct.
+> 
+> Additionally fix the common helper, ieee80211_tx_info_clear_status(),
+> which was not clearing ack_signal, but the open-coded versions
+> did. Johannes Berg points out this bug was introduced by commit
+> e3e1a0bcb3f1 ("mac80211: reduce IEEE80211_TX_MAX_RATES") but was harmless.
+> 
+> Also drops the associated unneeded BUILD_BUG_ON()s, and adds a note to
+> carl9170 about usage.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+Tested-by: Christian Lamparter <chunkeey@gmail.com> [both CARL9170+P54USB on real HW]
