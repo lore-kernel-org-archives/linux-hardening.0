@@ -2,63 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051EDC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 20 Nov 2021 18:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AF5C433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 21 Nov 2021 00:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231445AbhKTSjg (ORCPT
+        id S236901AbhKUAe6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 20 Nov 2021 13:39:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36780 "EHLO
+        Sat, 20 Nov 2021 19:34:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbhKTSjg (ORCPT
+        with ESMTP id S232500AbhKUAe5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 20 Nov 2021 13:39:36 -0500
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C6FC061574;
-        Sat, 20 Nov 2021 10:36:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=YvwJssbaAyTslCx3DhKGNQjtnLdAiUgVayMdjTkNBt8=;
-        t=1637433392; x=1638642992; b=EGDP4M3P7Tj2LNvV/6pcZVnoq9Wrn58oxwbvGPMsO3KCc1A
-        sZoar+gmXLoSD3V/5eSbCrmXF4IFwzlmU9JQXy079iW9tEKy66R5hNoCEp8lZ+X7R4PJCu4+8jBjU
-        hrMz8BDxDcYt2/wcXCr0xUL85VFavBZ+KwfZ9gr9ue4VXUD17MqhHoaJEaqlkXW0q9aFe4UlvedHp
-        u1uKG0ovcCg61kVsZDW/jLH7SgX2XgDPKU7kXbk4G6dn0ljAbkkYhAJY38BPMOk5qBkhI1DKLN5ys
-        WiM2tO+z+l+F0dZJNIujqE7dD0JTuGP6YsduDDHq8fS/VAOFq7K4z1hm42G3Uiaw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.95)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1moVDr-000PtP-O6;
-        Sat, 20 Nov 2021 19:36:23 +0100
-Message-ID: <5e53fc5d2dc65c1d151d0adad1b1d6d1534c48ce.camel@sipsolutions.net>
-Subject: Re: [PATCH] mac80211: Use memset_after() to clear tx status
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Christian Lamparter <chunkeey@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Sat, 20 Nov 2021 19:36:22 +0100
-In-Reply-To: <75be2d3b-99c4-f84b-4da5-da0f4c220359@gmail.com>
-References: <20211118203839.1289276-1-keescook@chromium.org>
-         <75be2d3b-99c4-f84b-4da5-da0f4c220359@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.1 (3.42.1-1.fc35) 
+        Sat, 20 Nov 2021 19:34:57 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D85EC061574
+        for <linux-hardening@vger.kernel.org>; Sat, 20 Nov 2021 16:31:53 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id n26so12549098pff.3
+        for <linux-hardening@vger.kernel.org>; Sat, 20 Nov 2021 16:31:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XxGWmTZwHsm0RN01kjRmL3HzDw86SFLpP/0ZpXpaZRc=;
+        b=mqLPe+mzN9Dl/E2s2wRLW9ghNZxzkxV9cQ7rzDcRi9/vEWM/1M/T9ZtHoNE4KsrZ5j
+         0dUrpsPnoEXXwUde09T2wZxbStgM88DZvGgmc0978ncxOd0TJDgINT5vSKtNkNjbTJUo
+         9aK6twgJ7kHLOHU+XH7Ad1bYAiBkodz9okdE0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XxGWmTZwHsm0RN01kjRmL3HzDw86SFLpP/0ZpXpaZRc=;
+        b=BYivZcTB128DxgPzrXjDeEBBWwle4fIYah3IZgeIQRmAdZ1Cum7O5Y9c5S5PaT3Fax
+         bN29IT+hKjqRj46aVFg+0qRSkCREmj8rNSmZHX+IHfP79Zby7T36w+QVhzUX3K8HJYsc
+         1s6zpEAlrpJ3ijuQ6kg9cAfJIXkdCWA569XZjHqdEdCdO+g29iPCXaBW5B8cyp2TesXI
+         ReFW/gFRk0yV2VDOAbcB9KqUl/upkutwt/FRxPfj7BMxZ7muy70TdSF3JT8dddMOPHl6
+         y3fNSY1BdcuALcH5KqJu6JVEjR1MWOHqgoLHX12HWbrBSI6s9zdeApeSaXxuGS1ArufO
+         JWeQ==
+X-Gm-Message-State: AOAM530/Q96vcf8TuPK1iumfZ62m/yiUQMMyU3NuaQzqUG0hxXemPf8A
+        LzJc5GpqJVOfnq+g3SLx98GTOQ==
+X-Google-Smtp-Source: ABdhPJx48K+tBtBfbJQf3sSRXIucI8Y6zCrUy5h3//aCrSN9nw8UbzVlU9gBgDoTvSGJtDP7M2mUdg==
+X-Received: by 2002:a05:6a00:2351:b0:47b:d092:d2e4 with SMTP id j17-20020a056a00235100b0047bd092d2e4mr73088775pfj.76.1637454712802;
+        Sat, 20 Nov 2021 16:31:52 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j127sm3932775pfg.14.2021.11.20.16.31.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Nov 2021 16:31:52 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Alexander Lobakin <alobakin@pm.me>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Marco Elver <elver@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Talal Ahmad <talalahmad@google.com>,
+        Kevin Hao <haokexin@gmail.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        linux-kernel@vger.kernel.org, wireguard@lists.zx2c4.com,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2 net-next 0/2] skbuff: Switch structure bounds to struct_group()
+Date:   Sat, 20 Nov 2021 16:31:47 -0800
+Message-Id: <20211121003149.28397-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-malware-bazaar: not-scanned
+X-Developer-Signature: v=1; a=openpgp-sha256; l=654; h=from:subject; bh=JyIoux+3mSqRrP5c5yAm1k2PCuE3ujZ9X+hh+TTSdkw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhmZN06M3ei451eaMBJ4tlO/hieAlz+BhYFDkIdlX1 eX61FpWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZmTdAAKCRCJcvTf3G3AJtbrD/ 9eR2KNvgCn/YPwypnUGU/RNNqA4O4bYEFLj4ElzB1qqQlG2RgJdcz+rq2yQisqqs16klI6tC11SBhN W7udXMhGJ+Py7w1vVEBAjVNZmGKGlJXE5U8WAHjfZcQac0sOe4DaoyxEKDhZ4dVEtfM9n+INWySh7M uDr1c3vaP+cgXlX5lMFiVoFtjG416sLde9ZZ8i/AAoEtj13SqOYM69cCvB3ZV5sD6z171ju8LuL8V0 0/gPsQggl4r2PI9mSi0ATgA4nL9uxPXZ+WimwvtpoW3euJOXl3R5qx7YEJpMVEhQb+h7bsHU8+554G Mr/5XtAumV32/xkgbaaZzuXsqDpE7wlAaVucANa3AQEj21s9tjkelAJu7HA0AlFNxD1vdytn7CWZlk pZMaqvAW5drzcrEzYLOo+fXRjVbz/qGY1eHIl8O1AdM1Yl5bxOyoHeJ6+Bh5Bgajfi3DtMZFSy3y9b OpoS11g+KF4T5o4t9R3wBjQCyP+hGBmGNCpm6N3kBHTnOLW1hoF9P7WSGHblOL5gn/lWS1rXatOn5H Vacu7NXyluL8MFDh6ynTM7+DGECqimJOIry6vmwHNkpv8jjqqF+jTWDoJGkFAn2/aA49Zpg/XonIcy 94jGLJObRNcJnXtDPIWtQUQA7/UNnVofu/gJMtbIHUh4j4L/74FL/AmwVMfg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, 2021-11-20 at 16:17 +0100, Christian Lamparter wrote:
-> 
-> Tested-by: Christian Lamparter <chunkeey@gmail.com> [both CARL9170+P54USB on real HW]
-> 
-Thanks!
+Hi,
 
-johannes
+This is a pair of patches to add struct_group() to struct sk_buff. The
+first is needed to work around sparse-specific complaints, and is new
+for v2. The second patch is the same as originally sent as v1.
+
+-Kees
+
+Kees Cook (2):
+  skbuff: Move conditional preprocessor directives out of struct sk_buff
+  skbuff: Switch structure bounds to struct_group()
+
+ drivers/net/wireguard/queueing.h |  4 +--
+ include/linux/skbuff.h           | 46 +++++++++++++++-----------------
+ net/core/filter.c                | 10 +++----
+ net/core/skbuff.c                | 14 ++++------
+ 4 files changed, 33 insertions(+), 41 deletions(-)
+
+-- 
+2.30.2
+
