@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D99CC433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C53EC43217
 	for <linux-hardening@archiver.kernel.org>; Sun, 21 Nov 2021 00:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236940AbhKUAe6 (ORCPT
+        id S236988AbhKUAe7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 20 Nov 2021 19:34:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57020 "EHLO
+        Sat, 20 Nov 2021 19:34:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233946AbhKUAe5 (ORCPT
+        with ESMTP id S236840AbhKUAe5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Sat, 20 Nov 2021 19:34:57 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E981C061758
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB6DCC06175C
         for <linux-hardening@vger.kernel.org>; Sat, 20 Nov 2021 16:31:53 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id n8so10996400plf.4
+Received: by mail-pl1-x636.google.com with SMTP id n8so10996401plf.4
         for <linux-hardening@vger.kernel.org>; Sat, 20 Nov 2021 16:31:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ziSoN8dNTceS+AEUygeTrOZSFAzOgkmX+sW8rsZZX2w=;
-        b=K2jrqp914UOf51IOtnx+ES8SuLk84CXMFaJ6goSwfc+PK5+O8tuf52wIHCBXzOUYNr
-         Qafjbc08V1SmTxzjKePvB4ra4AmSvGL6+45zFxMD+H+yqURo0YK6ksgOIdKa12x8AgKg
-         Qc7iLfBbBG+eEXRPkrB+nQWJsdecnAvL9J6ts=
+        bh=zvyY56mMfwm+louWVWWja3u9QKO9HWFeYdYezwBPDys=;
+        b=IWk4xWSDi8fNeHr1spA+s5EGlZeHlbb82q7/Cv9QDSjX6O10zuoTydWjKBHeiHDQsq
+         tGWMYhhs5aVhpxmAqyw6vfoWrTJt00kNgqR6rNSwm6trLpoUHCHSfR3IFgAIbx0JNKCT
+         AnkUn29WRrFLUgQCm2S1egt7AU7/iWuOo4Ewc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ziSoN8dNTceS+AEUygeTrOZSFAzOgkmX+sW8rsZZX2w=;
-        b=GcL+dSGEr0UJAYZbi4QgzyU+7vqR9IRfCkfPohUicb2NmA+HkGJhj2PCmI9PBIANzH
-         DjEeLKKcUKME62OhDwbh/wXmvBOc+bUc2LcBtceqv6JiPDNr9FbJ0UICkWtDXpD0xZu7
-         pPr5wNxIqedaLyhKU2wSyYNGAswdu+QYjbpDOgQHBYdwgcrGk96QtIEgworZtJ6REGox
-         gg9VBvDPvvXZu8LKZRPvw75UC4X9M2CN4DcRvnkCX5r+28S4Zg5HZZTo83uT+7/oKqNb
-         Zsu0Qe4ZH3Dd8PYwaOQpz+2BcAX4EPK/A9yKCDBpaIng2rANP6GdDdR1CijFHC/ZAghH
-         o5Lw==
-X-Gm-Message-State: AOAM5306FW8oMMwkeMxRpOECzzNotdzZ4jhi1ot9tOsKx+4R2v4W49gw
-        0gwU8qZOQH5YZenUdMxmZOAEnw==
-X-Google-Smtp-Source: ABdhPJwtMZ92/dYN7hihllIt1ACZWTsLct1CuRYKNAiK29ayUtRZdAjrEg0xA/gTSg8nQ+4Yc3eRPA==
-X-Received: by 2002:a17:90b:4c44:: with SMTP id np4mr15742633pjb.195.1637454712968;
-        Sat, 20 Nov 2021 16:31:52 -0800 (PST)
+        bh=zvyY56mMfwm+louWVWWja3u9QKO9HWFeYdYezwBPDys=;
+        b=Zda7kNvtn8OEPTlSKhUmEJsxwoS1caTZwRTHSzZb9dJFUd57BZTOF1Ts5UFCw65UOJ
+         lffZbS0ll8YhD1WjjVG8X8Ei/rEXvf9yuRNTYIJyXoXvpgQugm5ZMlMUkL2Ef9pO02KN
+         8m/6si14LvtZva2E4L0brhtK6ZXdoEouXtTywiZpYIcbYU4kzGshoDCLSE/r4QXRlA2v
+         cmGvzJXLyimilp+iYeCQdncffdXY0W1jYitHwg0xapLfisXOKgUA5DM73cfp+v86kURH
+         u7en0J2fESXaxCFc9SHSdzF2+xPfKn/9a/yrN4mWB0ZmzTTaopNJtke7CKGkj18/euY2
+         9Jzw==
+X-Gm-Message-State: AOAM531y7HzJva0K8tFenCw59oYohOYTg2Pe3vkYQKl3Atwf9TEwx9xL
+        48nQKDZJ1DS3Xj7gXMRgwHghyQ==
+X-Google-Smtp-Source: ABdhPJzmap4vuMp21lhxM6eyokTFTwYGURGq6nlmluLmTZzhCJ9JMng7kY12kkIWK+ypaWoGAYU0pA==
+X-Received: by 2002:a17:90b:4b01:: with SMTP id lx1mr15753957pjb.38.1637454713131;
+        Sat, 20 Nov 2021 16:31:53 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s16sm4126910pfu.109.2021.11.20.16.31.52
+        by smtp.gmail.com with ESMTPSA id p66sm2830788pga.31.2021.11.20.16.31.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sat, 20 Nov 2021 16:31:52 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Jakub Kicinski <kuba@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jonathan Lemon <jonathan.lemon@gmail.com>,
         Alexander Lobakin <alobakin@pm.me>,
         Jakub Sitnicki <jakub@cloudflare.com>,
         Marco Elver <elver@google.com>,
         Willem de Bruijn <willemb@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andrii@kernel.org>,
@@ -76,124 +76,167 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-kernel@vger.kernel.org, wireguard@lists.zx2c4.com,
         netdev@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 net-next 2/2] skbuff: Switch structure bounds to struct_group()
-Date:   Sat, 20 Nov 2021 16:31:49 -0800
-Message-Id: <20211121003149.28397-3-keescook@chromium.org>
+Subject: [PATCH v2 net-next 1/2] skbuff: Move conditional preprocessor directives out of struct sk_buff
+Date:   Sat, 20 Nov 2021 16:31:48 -0800
+Message-Id: <20211121003149.28397-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211121003149.28397-1-keescook@chromium.org>
 References: <20211121003149.28397-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4078; h=from:subject; bh=GSZPhgjWW3B9MzgyBC2UjZ6Pa5ou1yWYffBCU3Ae8jA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhmZN01fgOnpPDIcoXNed116FooNZAuWH2eq6S2dJy IKvF8u2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZmTdAAKCRCJcvTf3G3AJpHoEA Ch0DB7A1NdB6ZjJfCYrbvm+IHUj6kHrbk6J4qKihWmzX5YmKOmCNROTiYQK7EoSvv9FBFZYQSGCYEv pmgvsTW8a5BosVEKtNI3ccV8WS6sak1hPxXfgabUzNiuhsatQdgdhICdfXRg1rjwpkUTmyT145OqIm 4VE0LEE2LXLsxN2jVJNSDm1uJ7P3YUsRmD/2vvfqdVwlfx/yQTUK8xQ/wTZDzz2ZW6P35EP/fwXTp/ 3ia72u+3vvHfP3GdOK6jA6dd1Bc7mtp4aP20yIlsG5PqbSjvBcgAm664u6df648QAAq3qXErO0XNhy 9sKjihs72YDfrUEyYAyGik+N4+GDq+FpmO9M59geeCeM4aZnAwVMy97JrHNy3XoE/SRk3xs2yFgfBL ReNlS9sO7l2WgPb+bNCA+fqNxvvf+bOwNRddnUxbmVidk50A33WWBp2gVAw88uNzXfGENjlL7EyHia ztp0fpngFJlI1+Y3gJHPV5Y8Sdbzfz6njlzrqYh4Zr/NdW1+4KILvtunZohUA7y2isAvBnUJ7fjvWW jf+tWy6YAP217qnnrj7I97SHaepBUtc9K35GfDk07FPBick+BENiVwLVgjNa5oMobveBZ18PEXUXd4 GOR8VPxhzRdawreEtuNJ67AwvQvaTzEZ0z4JbT6lOAkU+D7wp7FKyn6UVfBA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5726; h=from:subject; bh=F+mLsC6sVzx5ppQsH/LkJpts9lo79LZh5jTZx7uIYfI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhmZN06AVceoJlGStDjxotQeULvVB0r0DGx7YKGN4u oUMuFAuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYZmTdAAKCRCJcvTf3G3AJrZkEA CGJquJaalgqiOXOJuDhkP2Gu5E2S6CaNEb0R1zHR0waZ+xYT57sXec/QJFaHBpFfqqJ/9txR1zWY0w yjXDirL1McQ7YucXbBrAlgHaLSUPJSVKRkMJadU2Jt+gqKH7MPRZHE8arBjJhh9SIFcUIooHn/XjeV +mfMCPU6LpHmJ/WJbfCvPbby0cW72uoIFErm1zYa+zdCWmBsNxzNlighr83K0L5ioN9T1nnAcGp1Kl ZJJmEyC4hTafQrSpewa1QO1hxgIw4qeUCMBRy3tlqXVRgPa8830tjCwq6bQVKA29uoxAVDb8ctkDoI YkzdbkTq/Bt31DNyJ0Z8IBImhrf3e6YUFWxXotGP1gzHWEduBOZ1wSI123vFMmgQGIzInGI4b03yIS c5yfOhTVLfQu8lGip1LFn10ofXAYyDQ6K3esCUVbrQcRWdusnaDkLoj8q7RizM15tTD8EaEXd4q90b KWGxUuyl4Sm7jdnBRacl1Wd6Ok4CB/XNnY+1d0iVKLRQh3hDb375+zXS0yamPih75HCuxvSV8WHmHA Ssl2foTomivKATHFtf5tjK++nIPETFrPT+2ybBTPla5i1g+zJaACH+Tz4ClAohKZeJmbK/+a7sMTmE wm/Uy6ix+yqSFRlbg+mmLNlQjjnWBOqco5kATVLG54LczOFiuyIXAETmIxeg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+In preparation for using the struct_group() macro in struct sk_buff,
+move the conditional preprocessor directives out of the region of struct
+sk_buff that will be enclosed by struct_group(). While GCC and Clang are
+happy with conditional preprocessor directives here, sparse is not, even
+under -Wno-directive-within-macro[1], as would be seen under a C=1 build:
 
-Replace the existing empty member position markers "headers_start" and
-"headers_end" with a struct_group(). This will allow memcpy() and sizeof()
-to more easily reason about sizes, and improve readability.
+net/core/filter.c: note: in included file (through include/linux/netlink.h, include/linux/sock_diag.h):
+./include/linux/skbuff.h:820:1: warning: directive in macro's argument list
+./include/linux/skbuff.h:822:1: warning: directive in macro's argument list
+./include/linux/skbuff.h:846:1: warning: directive in macro's argument list
+./include/linux/skbuff.h:848:1: warning: directive in macro's argument list
 
-"pahole" shows no size nor member offset changes to struct sk_buff.
-"objdump -d" shows no object code changes (outside of WARNs affected by
-source line number changes).
+Additionally remove empty macro argument definitions and usage.
+
+"objdump -d" shows no object code differences.
+
+[1] https://www.spinics.net/lists/linux-sparse/msg10857.html
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com> # drivers/net/wireguard/*
-Link: https://lore.kernel.org/lkml/20210728035006.GD35706@embeddedor
 ---
- drivers/net/wireguard/queueing.h |  4 +---
- include/linux/skbuff.h           | 10 +++-------
- net/core/skbuff.c                | 14 +++++---------
- 3 files changed, 9 insertions(+), 19 deletions(-)
+ include/linux/skbuff.h | 36 +++++++++++++++++++-----------------
+ net/core/filter.c      | 10 +++++-----
+ 2 files changed, 24 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
-index 4ef2944a68bc..52da5e963003 100644
---- a/drivers/net/wireguard/queueing.h
-+++ b/drivers/net/wireguard/queueing.h
-@@ -79,9 +79,7 @@ static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
- 	u8 sw_hash = skb->sw_hash;
- 	u32 hash = skb->hash;
- 	skb_scrub_packet(skb, true);
--	memset(&skb->headers_start, 0,
--	       offsetof(struct sk_buff, headers_end) -
--		       offsetof(struct sk_buff, headers_start));
-+	memset(&skb->headers, 0, sizeof(skb->headers));
- 	if (encapsulating) {
- 		skb->l4_hash = l4_hash;
- 		skb->sw_hash = sw_hash;
 diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 0bce88ac799a..b474e5bd71cf 100644
+index 686a666d073d..0bce88ac799a 100644
 --- a/include/linux/skbuff.h
 +++ b/include/linux/skbuff.h
-@@ -808,12 +808,10 @@ struct sk_buff {
- 	__u8			active_extensions;
+@@ -792,7 +792,7 @@ struct sk_buff {
+ #else
+ #define CLONED_MASK	1
  #endif
- 
--	/* fields enclosed in headers_start/headers_end are copied
-+	/* Fields enclosed in headers group are copied
- 	 * using a single memcpy() in __copy_skb_header()
- 	 */
--	/* private: */
--	__u32			headers_start[0];
--	/* public: */
-+	struct_group(headers,
+-#define CLONED_OFFSET()		offsetof(struct sk_buff, __cloned_offset)
++#define CLONED_OFFSET		offsetof(struct sk_buff, __cloned_offset)
  
  	/* private: */
+ 	__u8			__cloned_offset[0];
+@@ -815,18 +815,10 @@ struct sk_buff {
+ 	__u32			headers_start[0];
+ 	/* public: */
+ 
+-/* if you move pkt_type around you also must adapt those constants */
+-#ifdef __BIG_ENDIAN_BITFIELD
+-#define PKT_TYPE_MAX	(7 << 5)
+-#else
+-#define PKT_TYPE_MAX	7
+-#endif
+-#define PKT_TYPE_OFFSET()	offsetof(struct sk_buff, __pkt_type_offset)
+-
+ 	/* private: */
  	__u8			__pkt_type_offset[0];
-@@ -918,9 +916,7 @@ struct sk_buff {
- 	u64			kcov_handle;
+ 	/* public: */
+-	__u8			pkt_type:3;
++	__u8			pkt_type:3; /* see PKT_TYPE_MAX */
+ 	__u8			ignore_df:1;
+ 	__u8			nf_trace:1;
+ 	__u8			ip_summed:2;
+@@ -842,16 +834,10 @@ struct sk_buff {
+ 	__u8			encap_hdr_csum:1;
+ 	__u8			csum_valid:1;
+ 
+-#ifdef __BIG_ENDIAN_BITFIELD
+-#define PKT_VLAN_PRESENT_BIT	7
+-#else
+-#define PKT_VLAN_PRESENT_BIT	0
+-#endif
+-#define PKT_VLAN_PRESENT_OFFSET()	offsetof(struct sk_buff, __pkt_vlan_present_offset)
+ 	/* private: */
+ 	__u8			__pkt_vlan_present_offset[0];
+ 	/* public: */
+-	__u8			vlan_present:1;
++	__u8			vlan_present:1;	/* See PKT_VLAN_PRESENT_BIT */
+ 	__u8			csum_complete_sw:1;
+ 	__u8			csum_level:2;
+ 	__u8			csum_not_inet:1;
+@@ -950,6 +936,22 @@ struct sk_buff {
  #endif
+ };
  
--	/* private: */
--	__u32			headers_end[0];
--	/* public: */
-+	); /* end headers group */
++/* if you move pkt_type around you also must adapt those constants */
++#ifdef __BIG_ENDIAN_BITFIELD
++#define PKT_TYPE_MAX	(7 << 5)
++#else
++#define PKT_TYPE_MAX	7
++#endif
++#define PKT_TYPE_OFFSET		offsetof(struct sk_buff, __pkt_type_offset)
++
++/* if you move pkt_vlan_present around you also must adapt these constants */
++#ifdef __BIG_ENDIAN_BITFIELD
++#define PKT_VLAN_PRESENT_BIT	7
++#else
++#define PKT_VLAN_PRESENT_BIT	0
++#endif
++#define PKT_VLAN_PRESENT_OFFSET	offsetof(struct sk_buff, __pkt_vlan_present_offset)
++
+ #ifdef __KERNEL__
+ /*
+  *	Handling routines are only of interest to the kernel
+diff --git a/net/core/filter.c b/net/core/filter.c
+index e471c9b09670..0bf912a44099 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -301,7 +301,7 @@ static u32 convert_skb_access(int skb_field, int dst_reg, int src_reg,
+ 		break;
  
- 	/* These elements must be at the end, see alloc_skb() for details.  */
- 	sk_buff_data_t		tail;
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index ba2f38246f07..3a42b2a3a571 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -992,12 +992,10 @@ void napi_consume_skb(struct sk_buff *skb, int budget)
- }
- EXPORT_SYMBOL(napi_consume_skb);
- 
--/* Make sure a field is enclosed inside headers_start/headers_end section */
-+/* Make sure a field is contained by headers group */
- #define CHECK_SKB_FIELD(field) \
--	BUILD_BUG_ON(offsetof(struct sk_buff, field) <		\
--		     offsetof(struct sk_buff, headers_start));	\
--	BUILD_BUG_ON(offsetof(struct sk_buff, field) >		\
--		     offsetof(struct sk_buff, headers_end));	\
-+	BUILD_BUG_ON(offsetof(struct sk_buff, field) !=		\
-+		     offsetof(struct sk_buff, headers.field));	\
- 
- static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
- {
-@@ -1009,14 +1007,12 @@ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
- 	__skb_ext_copy(new, old);
- 	__nf_copy(new, old, false);
- 
--	/* Note : this field could be in headers_start/headers_end section
-+	/* Note : this field could be in the headers group.
- 	 * It is not yet because we do not want to have a 16 bit hole
+ 	case SKF_AD_PKTTYPE:
+-		*insn++ = BPF_LDX_MEM(BPF_B, dst_reg, src_reg, PKT_TYPE_OFFSET());
++		*insn++ = BPF_LDX_MEM(BPF_B, dst_reg, src_reg, PKT_TYPE_OFFSET);
+ 		*insn++ = BPF_ALU32_IMM(BPF_AND, dst_reg, PKT_TYPE_MAX);
+ #ifdef __BIG_ENDIAN_BITFIELD
+ 		*insn++ = BPF_ALU32_IMM(BPF_RSH, dst_reg, 5);
+@@ -323,7 +323,7 @@ static u32 convert_skb_access(int skb_field, int dst_reg, int src_reg,
+ 				      offsetof(struct sk_buff, vlan_tci));
+ 		break;
+ 	case SKF_AD_VLAN_TAG_PRESENT:
+-		*insn++ = BPF_LDX_MEM(BPF_B, dst_reg, src_reg, PKT_VLAN_PRESENT_OFFSET());
++		*insn++ = BPF_LDX_MEM(BPF_B, dst_reg, src_reg, PKT_VLAN_PRESENT_OFFSET);
+ 		if (PKT_VLAN_PRESENT_BIT)
+ 			*insn++ = BPF_ALU32_IMM(BPF_RSH, dst_reg, PKT_VLAN_PRESENT_BIT);
+ 		if (PKT_VLAN_PRESENT_BIT < 7)
+@@ -8027,7 +8027,7 @@ static int bpf_unclone_prologue(struct bpf_insn *insn_buf, bool direct_write,
+ 	 * (Fast-path, otherwise approximation that we might be
+ 	 *  a clone, do the rest in helper.)
  	 */
- 	new->queue_mapping = old->queue_mapping;
+-	*insn++ = BPF_LDX_MEM(BPF_B, BPF_REG_6, BPF_REG_1, CLONED_OFFSET());
++	*insn++ = BPF_LDX_MEM(BPF_B, BPF_REG_6, BPF_REG_1, CLONED_OFFSET);
+ 	*insn++ = BPF_ALU32_IMM(BPF_AND, BPF_REG_6, CLONED_MASK);
+ 	*insn++ = BPF_JMP_IMM(BPF_JEQ, BPF_REG_6, 0, 7);
  
--	memcpy(&new->headers_start, &old->headers_start,
--	       offsetof(struct sk_buff, headers_end) -
--	       offsetof(struct sk_buff, headers_start));
-+	memcpy(&new->headers, &old->headers, sizeof(new->headers));
- 	CHECK_SKB_FIELD(protocol);
- 	CHECK_SKB_FIELD(csum);
- 	CHECK_SKB_FIELD(hash);
+@@ -8615,7 +8615,7 @@ static u32 bpf_convert_ctx_access(enum bpf_access_type type,
+ 	case offsetof(struct __sk_buff, pkt_type):
+ 		*target_size = 1;
+ 		*insn++ = BPF_LDX_MEM(BPF_B, si->dst_reg, si->src_reg,
+-				      PKT_TYPE_OFFSET());
++				      PKT_TYPE_OFFSET);
+ 		*insn++ = BPF_ALU32_IMM(BPF_AND, si->dst_reg, PKT_TYPE_MAX);
+ #ifdef __BIG_ENDIAN_BITFIELD
+ 		*insn++ = BPF_ALU32_IMM(BPF_RSH, si->dst_reg, 5);
+@@ -8640,7 +8640,7 @@ static u32 bpf_convert_ctx_access(enum bpf_access_type type,
+ 	case offsetof(struct __sk_buff, vlan_present):
+ 		*target_size = 1;
+ 		*insn++ = BPF_LDX_MEM(BPF_B, si->dst_reg, si->src_reg,
+-				      PKT_VLAN_PRESENT_OFFSET());
++				      PKT_VLAN_PRESENT_OFFSET);
+ 		if (PKT_VLAN_PRESENT_BIT)
+ 			*insn++ = BPF_ALU32_IMM(BPF_RSH, si->dst_reg, PKT_VLAN_PRESENT_BIT);
+ 		if (PKT_VLAN_PRESENT_BIT < 7)
 -- 
 2.30.2
 
