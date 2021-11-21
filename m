@@ -2,85 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E54C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 21 Nov 2021 13:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E58C433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 21 Nov 2021 17:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238248AbhKUN6E (ORCPT
+        id S238443AbhKURti (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 21 Nov 2021 08:58:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234993AbhKUN6E (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 21 Nov 2021 08:58:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B5C7D603E8;
-        Sun, 21 Nov 2021 13:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637502899;
-        bh=RcfZsnPLw3rO0pzRMpMxv5KHNSIfG8d0yKgbcOFOweY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Pbf1oXEoNHcmssqp70xEBLJOTJXQBnEKAx8gL70kRgC0wfOPdhXXWH4ZurF/vNM/5
-         6TgMA5jx/YAtwkFZkg3RHYbaEEBN2T5z3AfqS1LQGH9DEjPgX0VrJx4lzG6QQsq+/N
-         FzS0/m2C2Z4W2WiW9cY7hnxbAu8aDzm3rIvO++zTpA4sW3OMj31dud1tpZBboGzYSL
-         aKiPcZdwmGdepd4gVCQ6ZSLevrTn3F/Nrlh1kAMmQDJHOP8CQEj/UBLGgAXZCsjs76
-         YMu0uqUfEq5xjM7pt4lXur0Y9R8qljO9KMDYOOzB8hXTY9NplL5mAgTDRmR4+k+vdP
-         +w9DbtLq2ZBlA==
-Date:   Sun, 21 Nov 2021 15:54:55 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] RDMA/mlx5: Use memset_after() to zero struct mlx5_ib_mr
-Message-ID: <YZpPr2P11LJNtrIm@unreal>
-References: <20211118203138.1287134-1-keescook@chromium.org>
+        Sun, 21 Nov 2021 12:49:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238408AbhKURti (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 21 Nov 2021 12:49:38 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C96C061574
+        for <linux-hardening@vger.kernel.org>; Sun, 21 Nov 2021 09:46:33 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id g14so66539191edb.8
+        for <linux-hardening@vger.kernel.org>; Sun, 21 Nov 2021 09:46:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VSsN2HX9wYE+1anh5i16IzKQM5BVIaPiR81SjlOBpzI=;
+        b=I42O535hVim3UE7KiZiLXxrha1EwFKyLmyYcmz4MaD8vjKbIZ6R0k0BrPTlH/HYmmD
+         74kbJJODdbr70lMWg2CovoNLbdLxtCamhlo6cJtBUV9ljwzKUeqK4IUlZNOjdP5iQ5il
+         PhVe4pMzqJCvxi8Qn8ER/TlX3oxgNOW4TAII4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VSsN2HX9wYE+1anh5i16IzKQM5BVIaPiR81SjlOBpzI=;
+        b=nOh2UYtreX0NwkSu+16EOR1o0dCrA6oaJYf9KLhNScozrLdM4oDNNFuoypnh3WuHxk
+         ptP5HUfo85lf/vv6WCh7nuYpyNu6wo0562EQLwHguze68X+aRQfHYmmvkg4nFgGVExWa
+         PD5ySMmrV6UlDyrzDCX8hMEPCjJmCjXBcDxNhzkhcWat0oyYpvQ5eBjY74BKTv0dS3sG
+         0cMPQ4dhsc3q8K9C7KxoNFI8IVA+4rXtoVVwETKTOtC5/h9/O+ghbRJAAUaxIeIRz47n
+         bf7+twmAoMhpYBS81pa0roc0wnYCdefABCh+v5LhZv0NLeBWK2Ct2Xe9EUZOHBraVtpz
+         +c8Q==
+X-Gm-Message-State: AOAM5337d4YevR3CIjyuF+HPGtn4IGw+NTgdBCatrrneXAgC6qyytg6r
+        iONOGf4DvF34wTsNsZ1ShCyx+tr0eEnRwNlr
+X-Google-Smtp-Source: ABdhPJw5M6PfAcoxla9LnAG9QFuBkoKQoAvq93coHAcw+N+5VKxixnNqcyLncwh9URstOXX+MqcW9g==
+X-Received: by 2002:a17:906:b055:: with SMTP id bj21mr31394264ejb.292.1637516791625;
+        Sun, 21 Nov 2021 09:46:31 -0800 (PST)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
+        by smtp.gmail.com with ESMTPSA id aq6sm2624861ejc.41.2021.11.21.09.46.29
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 21 Nov 2021 09:46:30 -0800 (PST)
+Received: by mail-wr1-f45.google.com with SMTP id t30so28210988wra.10
+        for <linux-hardening@vger.kernel.org>; Sun, 21 Nov 2021 09:46:29 -0800 (PST)
+X-Received: by 2002:adf:dcd0:: with SMTP id x16mr29652752wrm.229.1637516789746;
+ Sun, 21 Nov 2021 09:46:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211118203138.1287134-1-keescook@chromium.org>
+References: <20211116181559.3975566-1-keescook@chromium.org>
+ <163710862474.168539.12611066078131838062.b4-ty@kernel.dk>
+ <202111181026.D7EF6BCED@keescook> <CAMuHMdX6Su_4G4H5GEjy17a0xkZrqPj0kh9Tg++-2-=SGSsj_Q@mail.gmail.com>
+ <f278c6c4-dca2-fd8e-57ba-1568e13db156@kernel.dk>
+In-Reply-To: <f278c6c4-dca2-fd8e-57ba-1568e13db156@kernel.dk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 21 Nov 2021 09:46:13 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgCMwdrsFv=jvpX8Krgiq49PeiQbMeUB-WA0JKS2LHkGw@mail.gmail.com>
+Message-ID: <CAHk-=wgCMwdrsFv=jvpX8Krgiq49PeiQbMeUB-WA0JKS2LHkGw@mail.gmail.com>
+Subject: Re: [PATCH] Revert "mark pstore-blk as broken"
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Colin Cross <ccross@android.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 12:31:38PM -0800, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memset(), avoid intentionally writing across
-> neighboring fields.
-> 
-> Use memset_after() to zero the end of struct mlx5_ib_mr that should
-> be initialized.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/infiniband/hw/mlx5/mlx5_ib.h | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-> index e636e954f6bf..af94c9fe8753 100644
-> --- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
-> +++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-> @@ -665,8 +665,7 @@ struct mlx5_ib_mr {
->  	/* User MR data */
->  	struct mlx5_cache_ent *cache_ent;
->  	struct ib_umem *umem;
-> -
-> -	/* This is zero'd when the MR is allocated */
-> +	/* Everything after umem is zero'd when the MR is allocated */
->  	union {
->  		/* Used only while the MR is in the cache */
->  		struct {
-> @@ -718,7 +717,7 @@ struct mlx5_ib_mr {
->  /* Zero the fields in the mr that are variant depending on usage */
->  static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
->  {
-> -	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
-> +	memset_after(mr, 0, umem);
+On Sun, Nov 21, 2021 at 5:36 AM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> Sorry, missed this reply. Kees, can you just send this one to Linus
+> directly?
 
-I think that it is not equivalent change and you need "memset_after(mr, 0, cache_ent);"
-to clear umem pointer too.
+I took it from that thread.
 
->  }
->  
->  static inline bool is_odp_mr(struct mlx5_ib_mr *mr)
-> -- 
-> 2.30.2
-> 
+Thanks,
+             Linus
