@@ -2,83 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888E3C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 22 Nov 2021 15:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3956C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 22 Nov 2021 16:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234636AbhKVPnQ (ORCPT
+        id S239334AbhKVQYW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 Nov 2021 10:43:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
+        Mon, 22 Nov 2021 11:24:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231697AbhKVPnQ (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 Nov 2021 10:43:16 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 4EADC60273;
-        Mon, 22 Nov 2021 15:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637595609;
-        bh=cZfewvS5PAlcJFDY0Eq/GWJt9fC6OHF87EZvnel4SM8=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=fMkWVy/mTr0j7q3xu3b26dtnE550OSHSUJAQH/chzdvoT2iDzsA8ajZjHcleXe89z
-         lQFvcRoKRinudp9oKSG3V3zh+isSAjBi8zr73/JCmMnv77dxZ0fpG2Mp8fgaYVDYD0
-         GFeVzCxUTQC8cK/ETd5jWXJZWC/WbCaf2vnrQX4w8rcDG4xoFnik3zuvWsQ2xAs7MK
-         whuafjatQiXzTc8pmPpSSCI5yh6u4iAHFbaMUHrYjAgNv6nkPrlN9fmdfAksdvxxOn
-         f/mU5WraWhUr5GjoSRGhqWC+oX/QiFh3mP9nFrSyLBLwL29iWpHKwRqWr9uMvR5MRz
-         MBKb1ZfwYFaPw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 3F250609D9;
-        Mon, 22 Nov 2021 15:40:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S233052AbhKVQYU (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 22 Nov 2021 11:24:20 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 710B160D42;
+        Mon, 22 Nov 2021 16:21:08 +0000 (UTC)
+Date:   Mon, 22 Nov 2021 11:21:06 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul McKenney <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Maciej Rozycki <macro@orcam.me.uk>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, Wei Liu <wl@xen.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Laura Abbott <labbott@kernel.org>,
+        David S Miller <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Scull <ascull@google.com>,
+        Marc Zyngier <maz@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wang Qing <wangqing@vivo.com>, Mel Gorman <mgorman@suse.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andrew Klychkov <andrew.a.klychkov@gmail.com>,
+        Mathieu Chouquet-Stringer <me@mathieu.digital>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Kitt <steve@sk2.org>, Stephen Boyd <sboyd@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mike Rapoport <rppt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-hardening@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>, notify@kernel.org,
+        main@lists.elisa.tech, safety-architecture@lists.elisa.tech,
+        devel@lists.elisa.tech, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v2 0/2] Introduce the pkill_on_warn parameter
+Message-ID: <20211122112106.5fa656bc@gandalf.local.home>
+In-Reply-To: <YZjnREFGhEO9pX6O@elver.google.com>
+References: <20211027233215.306111-1-alex.popov@linux.com>
+        <ac989387-3359-f8da-23f9-f5f6deca4db8@linux.com>
+        <CAHk-=wgRmjkP3+32XPULMLTkv24AkA=nNLa7xxvSg-F0G1sJ9g@mail.gmail.com>
+        <77b79f0c-48f2-16dd-1d00-22f3a1b1f5a6@linux.com>
+        <CAKXUXMx5Oi-dNVKB+8E-pdrz+ooELMZf=oT_oGXKFrNWejz=fg@mail.gmail.com>
+        <20211115110649.4f9cb390@gandalf.local.home>
+        <202111151116.933184F716@keescook>
+        <YZjnREFGhEO9pX6O@elver.google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 net-next 0/2] skbuff: Switch structure bounds to
- struct_group()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <163759560925.30526.865099452539818028.git-patchwork-notify@kernel.org>
-Date:   Mon, 22 Nov 2021 15:40:09 +0000
-References: <20211121003149.28397-1-keescook@chromium.org>
-In-Reply-To: <20211121003149.28397-1-keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kuba@kernel.org, davem@davemloft.net, jonathan.lemon@gmail.com,
-        alobakin@pm.me, jakub@cloudflare.com, elver@google.com,
-        willemb@google.com, gustavoars@kernel.org, Jason@zx2c4.com,
-        ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, edumazet@google.com,
-        cong.wang@bytedance.com, pabeni@redhat.com, talalahmad@google.com,
-        haokexin@gmail.com, ilias.apalodimas@linaro.org, vvs@virtuozzo.com,
-        linux-kernel@vger.kernel.org, wireguard@lists.zx2c4.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+On Sat, 20 Nov 2021 13:17:08 +0100
+Marco Elver <elver@google.com> wrote:
 
-This series was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
 
-On Sat, 20 Nov 2021 16:31:47 -0800 you wrote:
-> Hi,
+> I think userspace would want something other than perf tool to handle it
+> of course.  There are several options:
 > 
-> This is a pair of patches to add struct_group() to struct sk_buff. The
-> first is needed to work around sparse-specific complaints, and is new
-> for v2. The second patch is the same as originally sent as v1.
-> 
-> -Kees
-> 
-> [...]
+> 	1. Open trace pipe to be notified (/sys/kernel/tracing/trace_pipe).
+> 	   This already includes the pid.
 
-Here is the summary with links:
-  - [v2,net-next,1/2] skbuff: Move conditional preprocessor directives out of struct sk_buff
-    https://git.kernel.org/netdev/net-next/c/fba84957e2e2
-  - [v2,net-next,2/2] skbuff: Switch structure bounds to struct_group()
-    https://git.kernel.org/netdev/net-next/c/03f61041c179
+I would suggest using /sys/kernel/tracing/per_cpu/cpu*/trace_pipe_raw
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+and use libtracefs[1] to read it.
 
+-- Steve
 
+[1] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/
