@@ -2,105 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91196C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 Nov 2021 14:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32096C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 Nov 2021 17:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356668AbhKXOiI (ORCPT
+        id S1349696AbhKXRMK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 24 Nov 2021 09:38:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350936AbhKXOiF (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 24 Nov 2021 09:38:05 -0500
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B7EC1E9D8C;
-        Wed, 24 Nov 2021 05:33:50 -0800 (PST)
-Received: by mail-ot1-x335.google.com with SMTP id 35-20020a9d08a6000000b00579cd5e605eso4357929otf.0;
-        Wed, 24 Nov 2021 05:33:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=091FqIUggUob/ZEgOD1UGmSVx8eqHMlVt+VyvTQhn6A=;
-        b=5alA6/f+UhETRaXz3Ziw0Mbfo79WBHXEc9krzNgtd01IqyNVmRhY/0lZB/P6eLDJQW
-         eoZjcdR6rFE3pNseQfZ/D4cF20VQuAdK9siwpsGXViPdZGdSZj5I7hCVl20qAoKihTGU
-         9Y2cOZqzkmtsFqHF2VURZQn4cJm3wj70y+AFGjSq6Sge2gQczR5OFVvJJdJ6IFzUWzxq
-         IVi22hsX9WOChk0ReYeUTGW+sRirou0ll7bhp3yZtfxQJtiPER1ed37a6y9j3340xgjb
-         ErontMp+30VXcxUe44s8V4vCUHh05Mex6eQ39n7jGM/fHZcBKylMk53BPCN8cbtkTZqx
-         +ZjA==
-X-Gm-Message-State: AOAM531TyN2EynZbSlLf7LBYl1nok7NN7r4Hxj4bx77v+XJxg7AIKRGn
-        uytjIbBVqRFhWWLNCZpA+SzEgd93DpVRF3YhMW0=
-X-Google-Smtp-Source: ABdhPJzQoNI/Fsb1RYaYMIo8ITBU8mCa/gSsaWPVLoUcuICuMNXnffh1kRK/Zt6rxw8a35LfxbFQ+4vJZ0v59kljSMQ=
-X-Received: by 2002:a05:6830:348f:: with SMTP id c15mr13170421otu.254.1637760829265;
- Wed, 24 Nov 2021 05:33:49 -0800 (PST)
+        Wed, 24 Nov 2021 12:12:10 -0500
+Received: from m43-7.mailgun.net ([69.72.43.7]:35027 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1349593AbhKXRMD (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 24 Nov 2021 12:12:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1637773733; h=Date: Message-ID: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=yxb1QCPPnimeUoylr8y1OsQSAvXk+mRQpEio9CtKgTA=;
+ b=oYlribzSA+XnL0vHBhlx/H2lUz1WcxICm0kpZ9U26p3JYsAR/626swTOocqJB0Ke3sXRSJuC
+ mEWX2AfyNqf137MfM81XQXFbdwJGUyuaz5Eu73Hq156kYFR5O1F066WAbkfwKqc738wV9c1S
+ uB1hBbszzhZcHHnVHiWnFOdi5ig=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyIyNzljNCIsICJsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 619e71a54fca5da46d3ff62f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 24 Nov 2021 17:08:53
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5B497C4360D; Wed, 24 Nov 2021 17:08:53 +0000 (UTC)
+Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9483CC43616;
+        Wed, 24 Nov 2021 17:08:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 9483CC43616
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20210818060533.3569517-1-keescook@chromium.org>
- <20210818060533.3569517-13-keescook@chromium.org> <CAJZ5v0iS3qMgdab1S-NzGfeLLXV=S6p5Qx8AaqJ50rsUngS=LA@mail.gmail.com>
- <c5d1ee1f3b59bf18591a164c185650c77ec8aba7.camel@linux.intel.com>
-In-Reply-To: <c5d1ee1f3b59bf18591a164c185650c77ec8aba7.camel@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 24 Nov 2021 14:33:38 +0100
-Message-ID: <CAJZ5v0i61F9SpwfER8o5J_Kf=J9dJUv-qd+bG9hcL42X2eMRtw@mail.gmail.com>
-Subject: Re: [PATCH v2 12/63] thermal: intel: int340x_thermal: Use
- struct_group() for memcpy() region
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:NETWORKING DRIVERS (WIRELESS)" 
-        <linux-wireless@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-staging@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath11k: Use memset_startat() for clearing queue
+ descriptors
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20211118202416.1286046-1-keescook@chromium.org>
+References: <20211118202416.1286046-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <163777372886.11557.5551795598856429949.kvalo@codeaurora.org>
+Date:   Wed, 24 Nov 2021 17:08:53 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 24, 2021 at 12:53 AM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Tue, 2021-11-23 at 14:19 +0100, Rafael J. Wysocki wrote:
-> > On Wed, Aug 18, 2021 at 8:08 AM Kees Cook <keescook@chromium.org>
-> > wrote:
-> > >
-> > > In preparation for FORTIFY_SOURCE performing compile-time and run-
-> > > time
-> > > field bounds checking for memcpy(), avoid intentionally writing
-> > > across
-> > > neighboring fields.
-> > >
-> > > Use struct_group() in struct art around members weight, and ac[0-
-> > > 9]_max,
-> > > so they can be referenced together. This will allow memcpy() and
-> > > sizeof()
-> > > to more easily reason about sizes, improve readability, and avoid
-> > > future
-> > > warnings about writing beyond the end of weight.
-> > >
-> > > "pahole" shows no size nor member offset changes to struct art.
-> > > "objdump -d" shows no meaningful object code changes (i.e. only
-> > > source
-> > > line number induced differences).
-> > >
-> > > Cc: Zhang Rui <rui.zhang@intel.com>
-> > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > Cc: Amit Kucheria <amitk@kernel.org>
-> > > Cc: linux-pm@vger.kernel.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> >
-> > Rui, Srinivas, any comments here?
-> Looks good.
-> Reviewed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Kees Cook <keescook@chromium.org> wrote:
 
-Applied as 5.17 material, thank you!
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
+> 
+> Use memset_startat() so memset() doesn't get confused about writing
+> beyond the destination member that is intended to be the starting point
+> of zeroing through the end of the struct. Additionally split up a later
+> field-spanning memset() so that memset() can reason about the size.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+
+Patch applied to ath-next branch of ath.git, thanks.
+
+d5549e9a6b86 ath11k: Use memset_startat() for clearing queue descriptors
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20211118202416.1286046-1-keescook@chromium.org/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
