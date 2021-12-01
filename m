@@ -2,92 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB4BC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Dec 2021 17:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037D0C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Dec 2021 18:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351898AbhLARgH (ORCPT
+        id S232094AbhLAS62 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Dec 2021 12:36:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
+        Wed, 1 Dec 2021 13:58:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351885AbhLARgD (ORCPT
+        with ESMTP id S232026AbhLAS61 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Dec 2021 12:36:03 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2CBC061756
-        for <linux-hardening@vger.kernel.org>; Wed,  1 Dec 2021 09:32:42 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id n8so18272267plf.4
-        for <linux-hardening@vger.kernel.org>; Wed, 01 Dec 2021 09:32:42 -0800 (PST)
+        Wed, 1 Dec 2021 13:58:27 -0500
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C2FC061748
+        for <linux-hardening@vger.kernel.org>; Wed,  1 Dec 2021 10:55:06 -0800 (PST)
+Received: by mail-pj1-x102b.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso500781pji.0
+        for <linux-hardening@vger.kernel.org>; Wed, 01 Dec 2021 10:55:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tajQG2IXpUHOG7d+miPPm5Ju3aS6NAnj/QtfwuMOwXg=;
-        b=GEL1WBg4yORHo7VkJOAeMBB68Lc3oYTCpp7roLVtCyZazxTQ5exS58YJMD+3XHstP6
-         dyxhIbalDDAC3n2NLc+UptdNFwQnPXWs3I1Rb67dIOwgSocvl63YMcdwMzivL6q5YbdH
-         ueNoGNlUIsnf7qyM5ONAc0fTmX4dcj//t3y+s=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=1ExD0+swPLV06IbML+nCZJEqWUERlwvAbaLR0RlV1zc=;
+        b=hPT+ALqXUH21V1OTdW/CVBcm8UuReC0RQCOoVzZAuEuSo7UXydXVha4iByMVdYpzPp
+         a52o4jnAAwZQTe8/ecpvLke2XmvpALeHXtUVJX6bh+izeRwW5h6xVxfIdohu6zmKH5cX
+         l8mKvxHnOxlgMu8ipJKZFKooxAwMuoRwm/N3s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tajQG2IXpUHOG7d+miPPm5Ju3aS6NAnj/QtfwuMOwXg=;
-        b=rFF4oOjXVtrH7e+RHP88Bg5BG8ScK2xRRZl1GQPEprrKC8I09Aw6vYAVa7t6WFEvQ4
-         CkjHKZTQ6RGu5q2etNMJIyxEKjiNboBoLJJw0q5ZUuSIpMRoGblLX4cmabYj4gRMa7R+
-         x6dwoRBGut0jQzzl2A5etXTA76WO2yIUEm9qXLzRLwY35VcxnYBJHjaGMkQNmu7OAufo
-         MJydIj/jYzVzxVr4YY1iM6l6/EQP5YNkzm1b9c9z8x38KfJKgvGvkbkEIgRnY2x2/IaW
-         kbhhT0Z6QGStAeRinX77vCX5e6LrhNJmyzabMCVdmhP6CwtWwvT9Q1zuKQSuab7d1JiY
-         yMdw==
-X-Gm-Message-State: AOAM5330vaJ4hSDhwR9VZB8H7+16xhhYMmFbYQZZools+orWPERY6ms/
-        FN0Qy23lg9Ps7dx7ITqaJiin7A==
-X-Google-Smtp-Source: ABdhPJw377FYs7Bam0Ge86fDRJS0060N6Ojrxv+gWS71vLLMRkZQUD+oAORaFCnKrokjw9+mXK1qLA==
-X-Received: by 2002:a17:90a:7e10:: with SMTP id i16mr9129659pjl.185.1638379961966;
-        Wed, 01 Dec 2021 09:32:41 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1ExD0+swPLV06IbML+nCZJEqWUERlwvAbaLR0RlV1zc=;
+        b=MGpqrzIXvolNOEZAHbbPMF3sO6VljgM+nBaJS/QXAii4LOoBDOdD5E1C93VBgAVw0Q
+         U09PC2z650d+QrWSXCqsugwGeI4kJcl1SwICWInItJxLCYUzynCfHGOaNKNCeyrXEbFo
+         XC0He9Aeknm1NgxPgIHYl277T0he/0Gcc5b6o7fecywwLWXv1eCVZSXWizGi+mrGf4w9
+         G8V5AmBLO8xcHQ1ANkhE8fV809EGYONbLe4yszvKrvmaIOFiJHfEw0mimRzHVoovIPGl
+         gj2DzSH3Hk5SasDE6ADQVIc16OIxXNVbItpXNKYTRQgXamX+brrCSeba9eqpQrm4CV33
+         3x7g==
+X-Gm-Message-State: AOAM531Dd61+NzKrwXT90Si7sMSy8DP5ofVs0CkCKnREhAWCz2s8sGKz
+        42vqeqeDpcQeoF0kEaDvA9MdOA==
+X-Google-Smtp-Source: ABdhPJxdJgDipzr13GjjKK+mcG6VZupIMvd7jkwDOMulpxoCb5Q+dZ8GKmNt/zAr2B85xjLqNTUxLQ==
+X-Received: by 2002:a17:90a:e40f:: with SMTP id hv15mr32741pjb.5.1638384906215;
+        Wed, 01 Dec 2021 10:55:06 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 11sm421586pfl.41.2021.12.01.09.32.41
+        by smtp.gmail.com with ESMTPSA id f4sm575538pfj.61.2021.12.01.10.55.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Dec 2021 09:32:41 -0800 (PST)
+        Wed, 01 Dec 2021 10:55:05 -0800 (PST)
+Date:   Wed, 1 Dec 2021 10:55:05 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Kees Cook <keescook@chromium.org>,
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     LEROY Christophe <christophe.leroy@csgroup.eu>,
         kernel test robot <lkp@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wan Jiabing <wanjiabing@vivo.com>,
-        "John W. Linville" <linville@tuxdriver.com>,
-        Luis Carlos Cobo <luisca@cozybit.com>,
-        linux-kernel@vger.kernel.org, libertas-dev@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 0/2] libertas: Add missing __packed annotations
-Date:   Wed,  1 Dec 2021 09:32:32 -0800
-Message-Id: <20211201173234.578124-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] powerpc/signal32: Use struct_group() to zero spe regs
+Message-ID: <202112011054.B56B09FEF@keescook>
+References: <20211118203604.1288379-1-keescook@chromium.org>
+ <1e312cbd-cd52-ddce-f839-db765173c526@csgroup.eu>
+ <87ilwkrbhz.fsf@mpe.ellerman.id.au>
+ <202111221247.B385EA2A8@keescook>
+ <8735nmquti.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=518; h=from:subject; bh=+kcRJJV1GaFXSrqsIlMFvUEF240ydaxafS7OunQQo9g=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhp7Gxc8kO30ddGOKhJj3+ChMvNemOr3iGJfWUrQ39 FGOcDQKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYaexsQAKCRCJcvTf3G3AJoRND/ 9z9BEZhmtixAwSO2m5O0kiScfiEPDQCeZ2RdC9s9F1cwnMedyQ7s3oeOxMqidTCYmiNhhqwL7DjImG 1JzZN2ZQlawe3lZQP/hcbEMTuWatbW0DtHTX+hs/pqz3YWrQJeX1ZIZnMq+Oeb9GKv2JHME9AFcB7D /ti6vP+H08K7t039k0jkL52vhipzi3kvbhmetbtfJS/nx0cKB/rNpAIHai4MRxT+SdVXbB7+cye3wd j/mEXg4cyElDDB4srOXRFqk9E391MTL4RDlgGtgqpnXA516uaIng3zrY9e/VnwEfIozwGtVcRlnuEv c4/Ap+xghhcCc8dj81mcc4jr/JPjC7Edkb09x34kvKqQomR1fvbsTjGydlqXSV3DBWFASTo5SxG9Ak 03gmuoZTRC5uWhATuV3A2yMQ9Rkk8FVzoG70iHyIoZw7IYooIdfe+Vk6ZotnJLbZ2GNzQmUHHvozOA v81upMXs6oHPOJAcTl+TeGCzzhZ/OjEIhdBDwEcUOT3X7zQdlrZlXpvtq+WQmMJdz0HSsxiDpZgVsz 544/LqsMTlIITiwIN7nMuPDpbZHOAj26AE9z6EDKiinMxLh8ltInulYs7GNSzdES/Xc5V6aLNLv6TW kS1M0itYLY1VckSbw+LlzmoW3ORGzrDWxSMoPZKw4le0ZgZzJqqN923LgaRQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8735nmquti.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Wed, Nov 24, 2021 at 11:08:25AM +1100, Michael Ellerman wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> > On Mon, Nov 22, 2021 at 04:43:36PM +1100, Michael Ellerman wrote:
+> >> LEROY Christophe <christophe.leroy@csgroup.eu> writes:
+> >> > Le 18/11/2021 à 21:36, Kees Cook a écrit :
+> >> >> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> >> >> field bounds checking for memset(), avoid intentionally writing across
+> >> >> neighboring fields.
+> >> >> 
+> >> >> Add a struct_group() for the spe registers so that memset() can correctly reason
+> >> >> about the size:
+> >> >> 
+> >> >>     In function 'fortify_memset_chk',
+> >> >>         inlined from 'restore_user_regs.part.0' at arch/powerpc/kernel/signal_32.c:539:3:
+> >> >>     >> include/linux/fortify-string.h:195:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+> >> >>       195 |    __write_overflow_field();
+> >> >>           |    ^~~~~~~~~~~~~~~~~~~~~~~~
+> >> >> 
+> >> >> Reported-by: kernel test robot <lkp@intel.com>
+> >> >> Signed-off-by: Kees Cook <keescook@chromium.org>
+> >> >
+> >> > Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> >> 
+> >> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+> >
+> > Thanks! Should I take this via my tree, or do you want to take it via
+> > ppc?
+> 
+> I don't mind. If it's easier for you to take it as part of an existing
+> series then do that, otherwise I can pick it up.
 
-This fixes the missing __packed annotations in libertas and libertas_af
-noticed by lkp:
-https://lore.kernel.org/linux-mm/202111302102.apaePz2J-lkp@intel.com
+Most of the other patches are going via other maintainers, so I'd love
+it if ppc could snag this one too. :)
 
 Thanks!
 
 -Kees
 
-Kees Cook (2):
-  libertas: Add missing __packed annotation with struct_group()
-  libertas_tf: Add missing __packed annotations
-
- drivers/net/wireless/marvell/libertas/host.h  |  2 +-
- .../marvell/libertas_tf/libertas_tf.h         | 28 +++++++++----------
- 2 files changed, 15 insertions(+), 15 deletions(-)
-
 -- 
-2.30.2
-
+Kees Cook
