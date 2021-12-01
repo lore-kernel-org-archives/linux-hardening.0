@@ -2,48 +2,48 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE7DC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Dec 2021 17:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB4BC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Dec 2021 17:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351909AbhLARgF (ORCPT
+        id S1351898AbhLARgH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Dec 2021 12:36:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
+        Wed, 1 Dec 2021 12:36:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351890AbhLARgE (ORCPT
+        with ESMTP id S1351885AbhLARgD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Dec 2021 12:36:04 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9748C06175A
+        Wed, 1 Dec 2021 12:36:03 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2CBC061756
         for <linux-hardening@vger.kernel.org>; Wed,  1 Dec 2021 09:32:42 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id n26so25254398pff.3
+Received: by mail-pl1-x62b.google.com with SMTP id n8so18272267plf.4
         for <linux-hardening@vger.kernel.org>; Wed, 01 Dec 2021 09:32:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FzyE9HFngcWzXGJ+JVnIrmxG1xx/EuzgUUTbOa+7gYU=;
-        b=lQRoGsMb8BnKx/YWkYkML4540gVv9fz6kmXXHWXRgVHR1T7lPDpydrc52ygvnu27cw
-         Nf8oTR/7J0J3QoAKEH+NZZS7HfZqcW3ypo72iyn7g2Ye/tjnp9xEGdmMfZogcpq5E5f5
-         DNSRmv5MdgAV+Jc6cAWNQgtYpHYX789vOupvc=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tajQG2IXpUHOG7d+miPPm5Ju3aS6NAnj/QtfwuMOwXg=;
+        b=GEL1WBg4yORHo7VkJOAeMBB68Lc3oYTCpp7roLVtCyZazxTQ5exS58YJMD+3XHstP6
+         dyxhIbalDDAC3n2NLc+UptdNFwQnPXWs3I1Rb67dIOwgSocvl63YMcdwMzivL6q5YbdH
+         ueNoGNlUIsnf7qyM5ONAc0fTmX4dcj//t3y+s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FzyE9HFngcWzXGJ+JVnIrmxG1xx/EuzgUUTbOa+7gYU=;
-        b=YAZUrUnNSILYacafj6sBXNGY/DzyrG5PTp4pxVNOSompDp2GAWatLAiYfkQADUyrKQ
-         DsGKyksmffVVSTteStokiQWX69mNWTkqKDGvyOsGAy/OHwwxDteG+J6g/O2PXcuDPLPk
-         UE3EutVr+IqlGoIsficzIRhmWzMyWv8xd/XuVyYUl6Kx55meAZc0JTJM4LlLv4e8t5Lg
-         4VvSMobY4tJrMpvXzT6XkuaTO1xfw9m7cv6Gv94NMOkE7z4AqWWbfhBw5nwCbQgF+TNr
-         /0kPrpBwmsyhiwEtN0Fl7QdSZGlPpIjwRxQIzlQqGbsa6SRMmEFqND+Gv3dn/9eP8KZB
-         oJxQ==
-X-Gm-Message-State: AOAM531QUX6/LoKASaW/Wvuv9J8sAlfq4E7sv9U/ZUQWmArxZsdFCZv/
-        xCqakx0Ql6pB8pUXRMcQKBsKOw==
-X-Google-Smtp-Source: ABdhPJz4A7LJfnLMUj+4iQ5zPOYMTFU15+euUd/GNHT0BiCxqBmAqWC7rBjUyX3tUTSrXDeVa46wbw==
-X-Received: by 2002:aa7:8883:0:b0:49f:f87a:95de with SMTP id z3-20020aa78883000000b0049ff87a95demr7319034pfe.53.1638379962272;
-        Wed, 01 Dec 2021 09:32:42 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tajQG2IXpUHOG7d+miPPm5Ju3aS6NAnj/QtfwuMOwXg=;
+        b=rFF4oOjXVtrH7e+RHP88Bg5BG8ScK2xRRZl1GQPEprrKC8I09Aw6vYAVa7t6WFEvQ4
+         CkjHKZTQ6RGu5q2etNMJIyxEKjiNboBoLJJw0q5ZUuSIpMRoGblLX4cmabYj4gRMa7R+
+         x6dwoRBGut0jQzzl2A5etXTA76WO2yIUEm9qXLzRLwY35VcxnYBJHjaGMkQNmu7OAufo
+         MJydIj/jYzVzxVr4YY1iM6l6/EQP5YNkzm1b9c9z8x38KfJKgvGvkbkEIgRnY2x2/IaW
+         kbhhT0Z6QGStAeRinX77vCX5e6LrhNJmyzabMCVdmhP6CwtWwvT9Q1zuKQSuab7d1JiY
+         yMdw==
+X-Gm-Message-State: AOAM5330vaJ4hSDhwR9VZB8H7+16xhhYMmFbYQZZools+orWPERY6ms/
+        FN0Qy23lg9Ps7dx7ITqaJiin7A==
+X-Google-Smtp-Source: ABdhPJw377FYs7Bam0Ge86fDRJS0060N6Ojrxv+gWS71vLLMRkZQUD+oAORaFCnKrokjw9+mXK1qLA==
+X-Received: by 2002:a17:90a:7e10:: with SMTP id i16mr9129659pjl.185.1638379961966;
+        Wed, 01 Dec 2021 09:32:41 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ml24sm191408pjb.16.2021.12.01.09.32.41
+        by smtp.gmail.com with ESMTPSA id 11sm421586pfl.41.2021.12.01.09.32.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 01 Dec 2021 09:32:41 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
@@ -58,159 +58,36 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-kernel@vger.kernel.org, libertas-dev@lists.infradead.org,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2] libertas_tf: Add missing __packed annotations
-Date:   Wed,  1 Dec 2021 09:32:34 -0800
-Message-Id: <20211201173234.578124-3-keescook@chromium.org>
+Subject: [PATCH 0/2] libertas: Add missing __packed annotations
+Date:   Wed,  1 Dec 2021 09:32:32 -0800
+Message-Id: <20211201173234.578124-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211201173234.578124-1-keescook@chromium.org>
-References: <20211201173234.578124-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3543; h=from:subject; bh=2tGVFx8Insnm3c0UY7JXrxmXYfUn1BDPwA2uzEQkk94=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhp7Gy5qOMgVEOvMQuG8T64wdYryY5VwpNynjJn43H kbDhSn6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYaexsgAKCRCJcvTf3G3AJsHwD/ 990Bey9pUtkfjcJomJzp7SfME2jkcVLPDwof+Fbu4OLxOC7pAz2sbGTNpVHkwA/cxz9lwMtPi0akGt QUtMW6QlZJAkiIijvHETej7YIAXMK7XEg5TefmjCUWypw5qVJBrY1BxcL6rlpTUAs8hVfTGHqLGxTq 4BNpysfs5kgjAt4v16mRj42S6SMU11tzNUVVPKVy1iv8LzV02nXfAyIIfHUpjgnQRUGUMJKSi95QPN W/3v0W4vL/95UQA9OPtTkMpXx/5ZGsQ4SJCB4EGPiYMX0aZCdyNM7OWCQnHNKnypP1VrAmHuiYdJze M7I7Q+VQD+rVVaj9DVlL/V/lJdI456tCcVj4ejFEm4LsybKoBtGFMPJo9YOFOu+Mfz8yjmUhYB07+/ xoDAwiQrrsezUhMy+ccbCI6LxlkX3PF9Nfl5xAFW8HAW0YZ3l5HrOg2dnn6+gJskYsHm5Ztd6b/bYy kU5Gl4eJDn9sq1KX3R4U04szWwKlQVqXzaSPP4T4gBaxrtNDsrYLXefofk7E40KJ990RxiThbr4eqx XllVocubnCL1WvKVS4AHGxmQOlK77yqLqJq9ZqdXYtC4biuL5J0v7QYNBzx7VgiSuTth2M+0RZCgK4 J2uUY2bpEPIe45yBdmyhKNG5ZeuN4bdiDPPNTAW0AVji1AWuH83q2Dp2Z5DA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=518; h=from:subject; bh=+kcRJJV1GaFXSrqsIlMFvUEF240ydaxafS7OunQQo9g=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhp7Gxc8kO30ddGOKhJj3+ChMvNemOr3iGJfWUrQ39 FGOcDQKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYaexsQAKCRCJcvTf3G3AJoRND/ 9z9BEZhmtixAwSO2m5O0kiScfiEPDQCeZ2RdC9s9F1cwnMedyQ7s3oeOxMqidTCYmiNhhqwL7DjImG 1JzZN2ZQlawe3lZQP/hcbEMTuWatbW0DtHTX+hs/pqz3YWrQJeX1ZIZnMq+Oeb9GKv2JHME9AFcB7D /ti6vP+H08K7t039k0jkL52vhipzi3kvbhmetbtfJS/nx0cKB/rNpAIHai4MRxT+SdVXbB7+cye3wd j/mEXg4cyElDDB4srOXRFqk9E391MTL4RDlgGtgqpnXA516uaIng3zrY9e/VnwEfIozwGtVcRlnuEv c4/Ap+xghhcCc8dj81mcc4jr/JPjC7Edkb09x34kvKqQomR1fvbsTjGydlqXSV3DBWFASTo5SxG9Ak 03gmuoZTRC5uWhATuV3A2yMQ9Rkk8FVzoG70iHyIoZw7IYooIdfe+Vk6ZotnJLbZ2GNzQmUHHvozOA v81upMXs6oHPOJAcTl+TeGCzzhZ/OjEIhdBDwEcUOT3X7zQdlrZlXpvtq+WQmMJdz0HSsxiDpZgVsz 544/LqsMTlIITiwIN7nMuPDpbZHOAj26AE9z6EDKiinMxLh8ltInulYs7GNSzdES/Xc5V6aLNLv6TW kS1M0itYLY1VckSbw+LlzmoW3ORGzrDWxSMoPZKw4le0ZgZzJqqN923LgaRQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The earlier __packed annotations added in commit d71038c05970 ("libertas:
-Fix alignment issues in libertas core") were not duplicated when
-libertas_af was added in commit 7670e62c7ed6 ("libertas_tf: header file"),
-even though they share several structure definitions. Add the missing
-annotations which commit 642a57475b30 ("libertas_tf: Use struct_group()
-for memcpy() region") exposed. Quoting the prior libertas fix: "Data
-structures that come over the wire from the WLAN firmware must be
-packed."
+Hi,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/linux-mm/202111302102.apaePz2J-lkp@intel.com
-Fixes: 642a57475b30 ("libertas_tf: Use struct_group() for memcpy() region")
-Fixes: 7670e62c7ed6 ("libertas_tf: header file")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
+This fixes the missing __packed annotations in libertas and libertas_af
+noticed by lkp:
+https://lore.kernel.org/linux-mm/202111302102.apaePz2J-lkp@intel.com
+
+Thanks!
+
+-Kees
+
+Kees Cook (2):
+  libertas: Add missing __packed annotation with struct_group()
+  libertas_tf: Add missing __packed annotations
+
+ drivers/net/wireless/marvell/libertas/host.h  |  2 +-
  .../marvell/libertas_tf/libertas_tf.h         | 28 +++++++++----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas_tf/libertas_tf.h b/drivers/net/wireless/marvell/libertas_tf/libertas_tf.h
-index b2af2ddb6bc4..631b5da09f86 100644
---- a/drivers/net/wireless/marvell/libertas_tf/libertas_tf.h
-+++ b/drivers/net/wireless/marvell/libertas_tf/libertas_tf.h
-@@ -268,7 +268,7 @@ struct txpd {
- 	__le32 tx_packet_location;
- 	/* Tx packet length */
- 	__le16 tx_packet_length;
--	struct_group(tx_dest_addr,
-+	struct_group_attr(tx_dest_addr, __packed,
- 		/* First 2 byte of destination MAC address */
- 		u8 tx_dest_addr_high[2];
- 		/* Last 4 byte of destination MAC address */
-@@ -282,7 +282,7 @@ struct txpd {
- 	u8 pktdelay_2ms;
- 	/* reserved */
- 	u8 reserved1;
--};
-+} __packed;
- 
- /* RxPD Descriptor */
- struct rxpd {
-@@ -313,7 +313,7 @@ struct rxpd {
- 	/* Pkt Priority */
- 	u8 priority;
- 	u8 reserved[3];
--};
-+} __packed;
- 
- struct cmd_header {
- 	__le16 command;
-@@ -379,14 +379,14 @@ struct cmd_ds_mac_control {
- 	struct cmd_header hdr;
- 	__le16 action;
- 	u16 reserved;
--};
-+} __packed;
- 
- struct cmd_ds_802_11_mac_address {
- 	struct cmd_header hdr;
- 
- 	__le16 action;
- 	uint8_t macadd[ETH_ALEN];
--};
-+} __packed;
- 
- struct cmd_ds_mac_multicast_addr {
- 	struct cmd_header hdr;
-@@ -394,27 +394,27 @@ struct cmd_ds_mac_multicast_addr {
- 	__le16 action;
- 	__le16 nr_of_adrs;
- 	u8 maclist[ETH_ALEN * MRVDRV_MAX_MULTICAST_LIST_SIZE];
--};
-+} __packed;
- 
- struct cmd_ds_set_mode {
- 	struct cmd_header hdr;
- 
- 	__le16 mode;
--};
-+} __packed;
- 
- struct cmd_ds_set_bssid {
- 	struct cmd_header hdr;
- 
- 	u8 bssid[6];
- 	u8 activate;
--};
-+} __packed;
- 
- struct cmd_ds_802_11_radio_control {
- 	struct cmd_header hdr;
- 
- 	__le16 action;
- 	__le16 control;
--};
-+} __packed;
- 
- 
- struct cmd_ds_802_11_rf_channel {
-@@ -425,20 +425,20 @@ struct cmd_ds_802_11_rf_channel {
- 	__le16 rftype;      /* unused */
- 	__le16 reserved;    /* unused */
- 	u8 channellist[32]; /* unused */
--};
-+} __packed;
- 
- struct cmd_ds_set_boot2_ver {
- 	struct cmd_header hdr;
- 
- 	__le16 action;
- 	__le16 version;
--};
-+} __packed;
- 
- struct cmd_ds_802_11_reset {
- 	struct cmd_header hdr;
- 
- 	__le16 action;
--};
-+} __packed;
- 
- struct cmd_ds_802_11_beacon_control {
- 	struct cmd_header hdr;
-@@ -446,14 +446,14 @@ struct cmd_ds_802_11_beacon_control {
- 	__le16 action;
- 	__le16 beacon_enable;
- 	__le16 beacon_period;
--};
-+} __packed;
- 
- struct cmd_ds_802_11_beacon_set {
- 	struct cmd_header hdr;
- 
- 	__le16 len;
- 	u8 beacon[MRVL_MAX_BCN_SIZE];
--};
-+} __packed;
- 
- struct cmd_ctrl_node;
- 
 -- 
 2.30.2
 
