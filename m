@@ -2,119 +2,166 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037D0C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Dec 2021 18:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D9CC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Dec 2021 19:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232094AbhLAS62 (ORCPT
+        id S1376827AbhLBT0y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Dec 2021 13:58:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51458 "EHLO
+        Thu, 2 Dec 2021 14:26:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232026AbhLAS61 (ORCPT
+        with ESMTP id S1376837AbhLBT0v (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Dec 2021 13:58:27 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C2FC061748
-        for <linux-hardening@vger.kernel.org>; Wed,  1 Dec 2021 10:55:06 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso500781pji.0
-        for <linux-hardening@vger.kernel.org>; Wed, 01 Dec 2021 10:55:06 -0800 (PST)
+        Thu, 2 Dec 2021 14:26:51 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F164C06174A
+        for <linux-hardening@vger.kernel.org>; Thu,  2 Dec 2021 11:23:28 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id 200so757007pga.1
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Dec 2021 11:23:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=1ExD0+swPLV06IbML+nCZJEqWUERlwvAbaLR0RlV1zc=;
-        b=hPT+ALqXUH21V1OTdW/CVBcm8UuReC0RQCOoVzZAuEuSo7UXydXVha4iByMVdYpzPp
-         a52o4jnAAwZQTe8/ecpvLke2XmvpALeHXtUVJX6bh+izeRwW5h6xVxfIdohu6zmKH5cX
-         l8mKvxHnOxlgMu8ipJKZFKooxAwMuoRwm/N3s=
+         :content-disposition:in-reply-to;
+        bh=wHXIIvuoYAHZrBVWauQEqPWbcxtgWE/NXQOKZMGBwXU=;
+        b=ngfmJbU+ZekCv1aLGMmEoKgODpS7TbPHwSiYGNktfucik37Qtr8kru//RXnU59lszW
+         3G9D0rJDetlaOfsxYkFrOeFdnJTiQLImHj2wyHMy5ViRpG+lYYPFcHmarAlUpH2lA9Il
+         kD5ElmOrab9qAOdqf9qmVRjqCdN03lmE8dqqo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1ExD0+swPLV06IbML+nCZJEqWUERlwvAbaLR0RlV1zc=;
-        b=MGpqrzIXvolNOEZAHbbPMF3sO6VljgM+nBaJS/QXAii4LOoBDOdD5E1C93VBgAVw0Q
-         U09PC2z650d+QrWSXCqsugwGeI4kJcl1SwICWInItJxLCYUzynCfHGOaNKNCeyrXEbFo
-         XC0He9Aeknm1NgxPgIHYl277T0he/0Gcc5b6o7fecywwLWXv1eCVZSXWizGi+mrGf4w9
-         G8V5AmBLO8xcHQ1ANkhE8fV809EGYONbLe4yszvKrvmaIOFiJHfEw0mimRzHVoovIPGl
-         gj2DzSH3Hk5SasDE6ADQVIc16OIxXNVbItpXNKYTRQgXamX+brrCSeba9eqpQrm4CV33
-         3x7g==
-X-Gm-Message-State: AOAM531Dd61+NzKrwXT90Si7sMSy8DP5ofVs0CkCKnREhAWCz2s8sGKz
-        42vqeqeDpcQeoF0kEaDvA9MdOA==
-X-Google-Smtp-Source: ABdhPJxdJgDipzr13GjjKK+mcG6VZupIMvd7jkwDOMulpxoCb5Q+dZ8GKmNt/zAr2B85xjLqNTUxLQ==
-X-Received: by 2002:a17:90a:e40f:: with SMTP id hv15mr32741pjb.5.1638384906215;
-        Wed, 01 Dec 2021 10:55:06 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to;
+        bh=wHXIIvuoYAHZrBVWauQEqPWbcxtgWE/NXQOKZMGBwXU=;
+        b=HF3PIa7UlJFqpNi5/1fWkTW8uAARCS5adF1uRfEJGD8qtfS+Vmkxkp2xddws1d9o8W
+         3q1VuA7XIS52y33lUb/2Mz5bBKT227Q4As9l4bm2ZZp0MB2kqVDCx+4XRrVxaMos0R/q
+         Bcpd4XweoHuaIF06do814Pc+oNtdd3aAp2sN2C0+siNa75nTKiS2FBXP7X9Y+KHLj0sO
+         HHBTW+7Z02SUZrnU8AxURKb+g6rukC7O4nY7e01ccng2QZbZOQP/vreJhPUL5RrHY8CR
+         L4Ht/y3Tq/m368HbBSR7/XfPSJaTrpW1RBCOqth9Y69T5qdLb2K9HsF82zMB1IHbq9U4
+         ljyg==
+X-Gm-Message-State: AOAM531DHeF7scXEPY8yM+ObEDY3Verr/DM8Nk44DqDQceGbWqS7ok9z
+        mV9oj5yEcofkWH2UPysbdvxh4vbQ+qUTUQ==
+X-Google-Smtp-Source: ABdhPJyIkoe0j9eMC19m5ws5v8Pf44+FFaH/FvbVfneo2Zw9LO0Kc6ebuM3i6LkIHUQlqxR1VFOUIQ==
+X-Received: by 2002:a63:f43:: with SMTP id 3mr883306pgp.33.1638473007610;
+        Thu, 02 Dec 2021 11:23:27 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f4sm575538pfj.61.2021.12.01.10.55.05
+        by smtp.gmail.com with ESMTPSA id b14sm592254pfv.65.2021.12.02.11.23.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Dec 2021 10:55:05 -0800 (PST)
-Date:   Wed, 1 Dec 2021 10:55:05 -0800
+        Thu, 02 Dec 2021 11:23:27 -0800 (PST)
+Date:   Thu, 2 Dec 2021 11:23:26 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     LEROY Christophe <christophe.leroy@csgroup.eu>,
-        kernel test robot <lkp@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] powerpc/signal32: Use struct_group() to zero spe regs
-Message-ID: <202112011054.B56B09FEF@keescook>
-References: <20211118203604.1288379-1-keescook@chromium.org>
- <1e312cbd-cd52-ddce-f839-db765173c526@csgroup.eu>
- <87ilwkrbhz.fsf@mpe.ellerman.id.au>
- <202111221247.B385EA2A8@keescook>
- <8735nmquti.fsf@mpe.ellerman.id.au>
+To:     Steffen Maier <maier@linux.ibm.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.de>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Javed Hasan <jhasan@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Neerav Parikh <neerav.parikh@intel.com>,
+        Ross Brattain <ross.b.brattain@intel.com>,
+        Robert Love <robert.w.love@intel.com>
+Subject: Re: [PATCH][next] scsi: Replace one-element arrays with
+ flexible-array members
+Message-ID: <202112021113.D71F11B70@keescook>
+References: <20211105091102.GA126301@embeddedor>
+ <22139a80-3f64-1f21-6b5c-65d250bafe09@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8735nmquti.fsf@mpe.ellerman.id.au>
+In-Reply-To: <22139a80-3f64-1f21-6b5c-65d250bafe09@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 24, 2021 at 11:08:25AM +1100, Michael Ellerman wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> > On Mon, Nov 22, 2021 at 04:43:36PM +1100, Michael Ellerman wrote:
-> >> LEROY Christophe <christophe.leroy@csgroup.eu> writes:
-> >> > Le 18/11/2021 à 21:36, Kees Cook a écrit :
-> >> >> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> >> >> field bounds checking for memset(), avoid intentionally writing across
-> >> >> neighboring fields.
-> >> >> 
-> >> >> Add a struct_group() for the spe registers so that memset() can correctly reason
-> >> >> about the size:
-> >> >> 
-> >> >>     In function 'fortify_memset_chk',
-> >> >>         inlined from 'restore_user_regs.part.0' at arch/powerpc/kernel/signal_32.c:539:3:
-> >> >>     >> include/linux/fortify-string.h:195:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
-> >> >>       195 |    __write_overflow_field();
-> >> >>           |    ^~~~~~~~~~~~~~~~~~~~~~~~
-> >> >> 
-> >> >> Reported-by: kernel test robot <lkp@intel.com>
-> >> >> Signed-off-by: Kees Cook <keescook@chromium.org>
-> >> >
-> >> > Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> >> 
-> >> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-> >
-> > Thanks! Should I take this via my tree, or do you want to take it via
-> > ppc?
+On Fri, Nov 05, 2021 at 12:24:13PM +0100, Steffen Maier wrote:
+> On 11/5/21 10:11, Gustavo A. R. Silva wrote:
+> > Use flexible-array members in struct fc_fdmi_attr_entry and
+> > fs_fdmi_attrs instead of one-element arrays, and refactor the
+> > code accordingly.
+> > 
+> > Also, turn the one-element array _port_ in struct fc_fdmi_rpl
+> > into a simple object of type struct fc_fdmi_port_name, as it
+> > seems there is no more than just one port expected:
+> > 
+> > $ git grep -nw numport drivers/scsi/
+> > drivers/scsi/csiostor/csio_lnode.c:447: reg_pl->numport = htonl(1);
+> > drivers/scsi/libfc/fc_encode.h:232:             put_unaligned_be32(1, &ct->payload.rhba.port.numport);
+> > 
+> > Also, this helps with the ongoing efforts to globally enable
+> > -Warray-bounds and get us closer to being able to tighten the
+> > FORTIFY_SOURCE routines on memcpy().
+> > 
+> > https://github.com/KSPP/linux/issues/79
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >   drivers/scsi/csiostor/csio_lnode.c | 2 +-
+> >   drivers/scsi/libfc/fc_encode.h     | 4 ++--
+> >   include/scsi/fc/fc_ms.h            | 6 +++---
+> >   3 files changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
+> > index d5ac93897023..cf9dd79ee488 100644
+> > --- a/drivers/scsi/csiostor/csio_lnode.c
+> > +++ b/drivers/scsi/csiostor/csio_lnode.c
+> > @@ -445,7 +445,7 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
+> >   	/* Register one port per hba */
+> >   	reg_pl = (struct fc_fdmi_rpl *)pld;
+> >   	reg_pl->numport = htonl(1);
+> > -	memcpy(&reg_pl->port[0].portname, csio_ln_wwpn(ln), 8);
+> > +	memcpy(&reg_pl->port.portname, csio_ln_wwpn(ln), 8);
+> >   	pld += sizeof(*reg_pl);
+> > 
+> >   	/* Start appending HBA attributes hba */
+> > diff --git a/drivers/scsi/libfc/fc_encode.h b/drivers/scsi/libfc/fc_encode.h
+> > index 74ae7fd15d8d..5806f99e4061 100644
+> > --- a/drivers/scsi/libfc/fc_encode.h
+> > +++ b/drivers/scsi/libfc/fc_encode.h
+> > @@ -232,7 +232,7 @@ static inline int fc_ct_ms_fill(struct fc_lport *lport,
+> >   		put_unaligned_be32(1, &ct->payload.rhba.port.numport);
+> >   		/* Port Name */
+> >   		put_unaligned_be64(lport->wwpn,
+> > -				   &ct->payload.rhba.port.port[0].portname);
+> > +				   &ct->payload.rhba.port.port.portname);
+> > 
+> >   		/* HBA Attributes */
+> >   		put_unaligned_be32(numattrs,
 > 
-> I don't mind. If it's easier for you to take it as part of an existing
-> series then do that, otherwise I can pick it up.
+> > diff --git a/include/scsi/fc/fc_ms.h b/include/scsi/fc/fc_ms.h
+> > index 00191695233a..44fbe84fa664 100644
+> > --- a/include/scsi/fc/fc_ms.h
+> > +++ b/include/scsi/fc/fc_ms.h
+> 
+> > @@ -174,7 +174,7 @@ struct fs_fdmi_attrs {
+> 
+> /*
+>  * Registered Port List
+> 
+> >    */
+> >   struct fc_fdmi_rpl {
+> >   	__be32				numport;
+> > -	struct fc_fdmi_port_name	port[1];
+> > +	struct fc_fdmi_port_name	port;
+> >   } __attribute__((__packed__));
+> 
+> While I'm not affected by the change, it feels to me as if these are
+> protocol definitions originating in a T11 Fibre Channel standard FC-GS. It's
+> a port *list*. Can you "modify" the standard here?
+> 
+> The fact, that currently existing code users only ever seem to use one
+> single port in the list, would be an independent thing to me.
 
-Most of the other patches are going via other maintainers, so I'd love
-it if ppc could snag this one too. :)
+There are three changes made here, and I suspect it might make sense to
+split them up.
 
-Thanks!
+In a quick look, I see "struct fc_fdmi_attr_entry" has a sizeof() call
+against it, so it's not clear if it's safe to switch it to a flexible
+array without other changes.
 
--Kees
+The change to struct fs_fdmi_attrs looks okay, since it appears to be
+used only in casts, but it might make sense to use diffoscope on the
+changed .o files to validate nothing weird has happened.
+
+For struct fc_dmi_rpl, as long as "numport" is always set/validated to
+1, I think this change is fine.
 
 -- 
 Kees Cook
