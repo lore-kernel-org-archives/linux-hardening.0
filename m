@@ -2,138 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48C3C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 16:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DC3C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 16:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382209AbhLCQzJ (ORCPT
+        id S1352889AbhLCQ4x (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 11:55:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58136 "EHLO
+        Fri, 3 Dec 2021 11:56:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382228AbhLCQzF (ORCPT
+        with ESMTP id S239800AbhLCQ4w (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 11:55:05 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB0CC061751;
-        Fri,  3 Dec 2021 08:51:41 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id x131so3413112pfc.12;
-        Fri, 03 Dec 2021 08:51:41 -0800 (PST)
+        Fri, 3 Dec 2021 11:56:52 -0500
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63D90C061353
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 08:53:27 -0800 (PST)
+Received: by mail-ot1-x334.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso4103955otj.1
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 08:53:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gwi5v9qtUWNkWjS5o3WH11GAvDMXz6rWxjTjENaT30s=;
-        b=LZeUpNxTPd0EXcLHcrWRi/2ayZQyrQjvM+/qr0rP8vFQqb4dFzLJtXIAS8fhWqfz9f
-         u1oWDEobPzQQtl4sAxYhAzVcUlTaSIdS/RN3TsMo2tPjWsg6/O5irwdrxi/yr89yu50E
-         6zskiZouyvljrobD5PWLduCSy0zTsly404ZX7IJBw2DNkxnYqZeUyRBRrsWpTcMd+ZOe
-         u1/GkzbymXp1qYCuYPt3RFusJEn7GGYcymFLp6jRYiwZj4ZIHFEnMEUeMVwsO29ud72z
-         rJ/Dqy8ky6YIag0E1te+Aq274vMY7wxxiQdKiWqUxQ3ikCW0Z7IXRKTPyUha8nqjTSIW
-         8OeA==
+         :cc:content-transfer-encoding;
+        bh=qpCvSmXosx1WH8jKO1/esH6bI+63Y23SrI45rVdnNE8=;
+        b=dsc1rSwQ61xSHEZWCXJkzlb8DGemiMujE7SoQTc9e5sfDFaOeWc9lXtcTAk6LJlkO8
+         0aVZZaWz6NKE85HP1zrt0BUvRtsB4oITNjqOuO6pOxaBfRsgNHKx0+L9PTvL8FPBUPwh
+         dm1OIaR7ShKERlxpc5okWaiJiueamY3UII8HTxM74lIQ7fnVxwjN22sfeK9FlPq31iI0
+         0DbGqMs2H6wjAXZCvNpsdOqpa6IUEMksy/5qS3d3GSN6s8fgIm5Mrx+1dJvZ9JieuY7K
+         wcq6ZRtIIp/9D9PaKMxLSyMjCks66on3dPfnQPV3s5ikujBaQvDeva/dhkubjFHchYi5
+         u45Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gwi5v9qtUWNkWjS5o3WH11GAvDMXz6rWxjTjENaT30s=;
-        b=gzbjgFArWs1Qxj1waaoepUjE2bz2mfzgwQS6rhQNdBCnqSdpm0L1BcV1ekefod3QFe
-         zDmo7KRfLzebPTpOGKU6J5+OVsj8GvGnE6dd5E9DNaIAXTOkN3Rt3lI9YDTcNhoc8eEr
-         oFRdsEUy1NvY2uQd/HgsJCS6fbYmi5KUPDA2dmkm/Bt83b8v84tVp6tCUgwXzOD5Wf2u
-         2Zvy9cKJHTlxVf00+ZMYfgxq6NWfypTNfKSLP9QYUxZ6GTG7opDVB4F7cix+drVYe3zn
-         RUh438/1mE9/1CupBKFt8iA+jfp9kUk+B7lE/Cs6sDUPh8lQrHaJaUf6U0Z7+Wx713fU
-         grEQ==
-X-Gm-Message-State: AOAM533bO6UQAOHPsujvF3g1/o8CT6x00IE1C1dlG6setguDhW2OH/2T
-        B+c3Qk2l6rd9fX0fjL7Aic9fzYCcSqabKCwxI38=
-X-Google-Smtp-Source: ABdhPJzpOHOaaZjZjKrJWMwkfziEkarJeedQt9d36XOYqS8Ki8b+NdSRElS4KnL2lchHl3m6MaWEIlKOo0gdxOnjdrc=
-X-Received: by 2002:a63:4f42:: with SMTP id p2mr5374964pgl.381.1638550300680;
- Fri, 03 Dec 2021 08:51:40 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qpCvSmXosx1WH8jKO1/esH6bI+63Y23SrI45rVdnNE8=;
+        b=ZYp7+6MJH6Eh5Z9zhn+8lt717OuH1E5xy1et++qxye/V5s1s4MyqlGsm+UOEwU22oM
+         Je/7O+UN3b6XdOxSZKI094B6D2ysWGUAMHb70RnY/3Pl5cNEDWEWIWTeLcjDYimw95BF
+         Nyk7L31MuYeRmKJkI6RXmrfxXJRHeY6MkkyhkakxU+kclRRrDtx2IjQ7dt7nO/j+tAkT
+         ptwWyWLXRWPZYYSkD5svASwzOUHDnVI2Wieeet5p4Wb8M1qO/Z24c/IUWTzQdmL3OUsj
+         Y0icKpfthSL0owYsKt7DaaVJQC5ohKS3XHxXopAw+UHcJ9NkVvqvMcJVIT1YHCt0nFFQ
+         2I/A==
+X-Gm-Message-State: AOAM533jrFipKb7CWM359ZzeQBBO9Kl7ii9Ruu8kXSqp93qKjd67Omi5
+        1laZpQ61CY4B6NdnSW3WkvI33oTGEFByB6U5mmEKlA==
+X-Google-Smtp-Source: ABdhPJzRAC70hV/vdXCu824GJhpmhteP0JzcwqqihmbC7A5owodohjiSu47SEwBa1GAo9AMopTEOhXq/48Rqtq3cVGQ=
+X-Received: by 2002:a9d:2ae1:: with SMTP id e88mr13032680otb.157.1638550406487;
+ Fri, 03 Dec 2021 08:53:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
- <20211202223214.72888-6-alexandr.lobakin@intel.com> <Yanm6tJ2obi1aKv6@hirez.programming.kicks-ass.net>
- <20211203141051.82467-1-alexandr.lobakin@intel.com> <20211203163424.GK16608@worktop.programming.kicks-ass.net>
-In-Reply-To: <20211203163424.GK16608@worktop.programming.kicks-ass.net>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Fri, 3 Dec 2021 08:51:04 -0800
-Message-ID: <CAMe9rOrVnb3oVRn5igjwimBbE6QH-v0tuHk-kjRz7osbJMQd1w@mail.gmail.com>
-Subject: Re: [PATCH v8 05/14] x86: conditionally place regular ASM functions
- into separate sections
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
-        linux-hardening@vger.kernel.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
+References: <20211203093000.3714620-1-keescook@chromium.org>
+ <CANpmjNPCjXp_0iQjdznpvS2vF-VvDkxJrtWnBAoj6TAU488VAQ@mail.gmail.com> <CE7F1A95-67C7-4BDA-B803-D93901EC2378@chromium.org>
+In-Reply-To: <CE7F1A95-67C7-4BDA-B803-D93901EC2378@chromium.org>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 3 Dec 2021 17:53:15 +0100
+Message-ID: <CANpmjNMCrLU0J3W+-=wihEaHXMytSfNy=iu-8-oO8JDvEUYAJw@mail.gmail.com>
+Subject: Re: [PATCH] lib/test_ubsan: Silence compile-time array bounds warnings
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        live-patching@vger.kernel.org, llvm@lists.linux.dev
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 3, 2021 at 8:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, 3 Dec 2021 at 17:21, Kees Cook <keescook@chromium.org> wrote:
+> On December 3, 2021 2:49:53 AM PST, Marco Elver <elver@google.com> wrote:
+[...]
+> >Are there other warnings or only the one for the fsanitize=3Dobject-size
+> >test? I think this is fine if there are other warnings.
 >
-> On Fri, Dec 03, 2021 at 03:10:51PM +0100, Alexander Lobakin wrote:
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > Date: Fri, 3 Dec 2021 10:44:10 +0100
-> >
-> > > On Thu, Dec 02, 2021 at 11:32:05PM +0100, Alexander Lobakin wrote:
-> > > > Use the newly introduces macros to create unique separate sections
-> > > > for (almost) every "regular" ASM function (i.e. for those which
-> > > > aren't explicitly put into a specific one).
-> > > > There should be no leftovers as input .text will be size-asserted
-> > > > in the LD script generated for FG-KASLR.
-> > >
-> > > *groan*...
-> > >
-> > > Please, can't we do something like:
-> > >
-> > > #define SYM_PUSH_SECTION(name)      \
-> > > .if section == .text                \
-> > > .push_section .text.##name  \
-> > > .else                               \
-> > > .push_section .text         \
-> > > .endif
-> > >
-> > > #define SYM_POP_SECTION()   \
-> > > .pop_section
-> > >
-> > > and wrap that inside the existing SYM_FUNC_START*() SYM_FUNC_END()
-> > > macros.
-> >
-> > Ah I see. I asked about this in my previous mail and you replied
-> > already (: Cool stuff, I'll use it, it simplifies things a lot.
+> I will double check, but I think it's only the object-size test, which se=
+ems to confirm my suspicion that -Warray-bounds provides sufficient coverag=
+e and object-size can be removed.
 >
-> Note, I've no idea if it works. GAS and me aren't really on speaking
-> terms. It would be my luck for that to be totally impossible, hjl?
+> I have another patch I intend to send today for the sk_buff/sk_buff_head =
+issue, as -Warray-bounds warns for that as well.
 
-What exactly do you want assembler to do?
+Nice.
 
--- 
-H.J.
+Do you want to send the patch removing UBSAN_OBJECT_SIZE, or shall I
+do it? Perhaps it ties in better with the rest of your patches which I
+have no state of.
+
+> >But, if it's only about the fsanitize=3Dobject-size test, I'm going to
+> >propose something more drastic. :-)
+>
+> Are there any cases where object-size does a run-time check that couldn't=
+ be done at compile time? That's the only reason I could see to keep it at =
+this point, as -Warray-bounds can do the compile time checks.
+
+No, I don't think so.
+
+I stared at the LLVM code several times now, because I still couldn't
+quite believe it myself, but I think it really doesn't do any dynamic
+checks. Hence, why below I say it should have been a compiler warning.
+As mentioned in the bugzilla bug, there's a FIXME in the LLVM code to
+do a dynamic check with the help of fsanitize=3Daddress, but that never
+happened. And that doesn't make much sense anyway if fsanitize=3Daddress
+(viz. KASAN for us) is already on and does checking itself.
+
+> >I had wanted to wait a bit and dig a little deeper, but I just posted
+> >part of my analysis here:
+> >https://bugzilla.kernel.org/show_bug.cgi?id=3D214861#c4
+>
+> Thanks, I'll refer to that in my sk_buff patch. It seems -Warray-bounds s=
+uffers from the same conservativism about object casts, which is frustratin=
+g on the one hand since the warning can be a false positive (cast vs access=
+), but on the other, it does call attention to fragile arrangements which m=
+aybe could do with adjustment.
+>
+> >My proposal is to remove UBSAN_OBJECT_SIZE and its related tests. The
+> >bugzilla bug goes into the details, but the TLDR is:
+> >1. fsanitize=3Dobject-size is incomplete,
+> >2. it should have been a compiler warning,
+> >3. for everything else there is KASAN which detects real OOB,
+> >4. for GCC we already disable UBSAN_OBJECT_SIZE.
+>
+> And maybe:
+> 5. -Warray-bounds provides the same coverage and is about to be enabled g=
+lobally.
+
+Yup, in which case the compiler warning already exists and point #2
+above is moot.
+
+Thanks,
+-- Marco
