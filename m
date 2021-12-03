@@ -2,206 +2,152 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E3DC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 09:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335D5C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 09:25:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351401AbhLCJWs (ORCPT
+        id S1379568AbhLCJ2o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 04:22:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38294 "EHLO
+        Fri, 3 Dec 2021 04:28:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351316AbhLCJWr (ORCPT
+        with ESMTP id S1351316AbhLCJ2n (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 04:22:47 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D83C06173E;
-        Fri,  3 Dec 2021 01:19:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hLPFdIqBYpspMlwIAo7jkm6f1I6lI75Wr7yBFCGECog=; b=dlLwOKJiwBv02wti0blm0rr6CF
-        L0ZFM5qwxblWVSbBC4msE5YdoO7xva5p6Y5N2vU5zvUdcVoI2DpVvtcfMxt6umFaszPUHVkDp4dkP
-        XgiJIDS0lrEhp2DyOihYCETjTJ8kljja5mnwowi2BygcSEQsjHXElKyy6LH6P+e/HH9Gum0cT+HoN
-        OUgAOy70n7gACzwta1Qq20rT2ta/8KpCkXJ7l0iAwexXzet1HMdY3Vs6IMUUjm5z87vHjZbz9yqot
-        4W1kTFE5WO5MDqLcwUxIY7ZbiFANYg33gG1eF6MZZ4ns1Oxaa+q0KS6r0cf9OOCgNptZKgiEOIKpp
-        iblFSLWA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mt4iP-007yPM-Ua; Fri, 03 Dec 2021 09:18:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A78433002C5;
-        Fri,  3 Dec 2021 10:18:47 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8F62D2B35A5A4; Fri,  3 Dec 2021 10:18:47 +0100 (CET)
-Date:   Fri, 3 Dec 2021 10:18:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Lobakin <alexandr.lobakin@intel.com>
-Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v8 03/14] x86: Add support for function granular KASLR
-Message-ID: <Yang97SFfwuqTNzK@hirez.programming.kicks-ass.net>
-References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
- <20211202223214.72888-4-alexandr.lobakin@intel.com>
+        Fri, 3 Dec 2021 04:28:43 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E58AC06173E
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 01:25:20 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id j11so2475890pgs.2
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 01:25:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ay7XRE2rD2I+7gg1x2EDf6O3JoxM77TpfPU8SOa5edA=;
+        b=i3XxHF+gHaRCpRZmAYCifGU00eO9bKCbebuWYQI5dC2+HdNurJEGT/zgRSGxLuWkn9
+         ZTeaLmsGhm4PQu2Mc+A1nQD1VS+0wqe/I+IlLJu2Kx/FnsEvmOJqqrXDc6zPiq+3F2I9
+         VbUgc4nouQdgnY/5XBVOtUeBjonoxTnLiIl7Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ay7XRE2rD2I+7gg1x2EDf6O3JoxM77TpfPU8SOa5edA=;
+        b=Irn8WlZFi7e8DUbTmqVs6ttcFWilIlKnIW5mRhp+XbBSurEcc6Zih2UoHrMEue4v6g
+         hMe5wQm+VPAfDj+dIhppSCYqhNLosT5FIp9pLBYD9zHXR/VZ5tClj65dDzaqBRXUn5WI
+         KjRU0CTx2PvoxWE29NycDaBskjufeAb4+ZqpMCoozGNZalkj+ezO6T1cWZ2zFOXnL3ng
+         2VbBxKfjVUNw53PKUZCrWiLODITMl915vkFCJAR7vIIWyg48ckRTzRYrR1H3rIw9Dh4v
+         8qIO2qeQXTzXZv/p1oBoGw97BjACmp8pwyVZiqvd7EUz0RVr2pR3cm5NAKou9WHME3BI
+         l/Vg==
+X-Gm-Message-State: AOAM530vkUY11mNC80lB8rfQh4yHou1UN6zdRLfUD/Vy4ky5lEPcRJsa
+        vsooqwl3wZ0oPt7L+gX+xCyjFA==
+X-Google-Smtp-Source: ABdhPJwJi+OcMzlYRpc4XdvGNKEi1tFSpvHjpF8caac+kl7RhNRGyW9zE8g4Wn2j5nvvy6Si+3F7AA==
+X-Received: by 2002:a05:6a00:22d2:b0:4a0:93a:e165 with SMTP id f18-20020a056a0022d200b004a0093ae165mr18055631pfj.68.1638523519678;
+        Fri, 03 Dec 2021 01:25:19 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w186sm1844630pgb.80.2021.12.03.01.25.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Dec 2021 01:25:19 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Imre Deak <imre.deak@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lyude Paul <lyude@redhat.com>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2] drm/dp: Actually read Adjust Request Post Cursor2 register
+Date:   Fri,  3 Dec 2021 01:25:17 -0800
+Message-Id: <20211203092517.3592532-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211202223214.72888-4-alexandr.lobakin@intel.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2990; h=from:subject; bh=EDL54WuXbUixxVch1YJlggYbmNuBFOLBhCWw5v5p1Yk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhqeJ8s17VDWgb8AUyVOeH19b0QFsCGC/PP9t5ifhw Fjt6sAeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYanifAAKCRCJcvTf3G3AJsyjD/ 9kUFZ6QVigvhYHljTPsjOw7rSBaK61jBsu9yB/fgaQ9kLZwGgimnLY5rQAOlbn8Qjh17GJnibI+3N9 d86iwJb86SR438UrqeBcB88DaZ+tq5qO8KXZRasDBJjMrJxRrTDDrFj729jL2rnw2pjuSlYD/qjT3q QjnM5ypttORxdG8AO8/RmTlL/VaqGHOwE/q0zUI4BFm3hNhI+5LfyGXlhPcOKqEKQBmHM9Ctdfb2Po Tpb4UtvClUal0jP8cz5zxxloSVoMpanOi7DYZ5YdiwG9eBDEO9kMlSPAUVRzSvocRLftWgIitpxUFe yLqqXLs5xf7UhbgdpUuUIsXikNPReqemZI/qFqI98IrK9bOxKXaJ3FkGkap+itUc1nUVKpfMuEdI2H aqkKrQRpKqYPpIR7EXvwacLC/NXvzbO2MFcOhxtvtzoq0crXSPYVmKey+NGAp9wiTb1hDkqDiKGbu8 VZU26m70TADkJyMHkaA/4HRAvb3hYh9V9T4PWgW1iloeRbopjURYfo0lc1Rx7ACr8AX+XuvjlgarcG EgVZ0qI7j3cFD91FananEbQAy+x66ezF+wtmFKSpt4uR6SlWodA15diBD7+y8XotGGJx2hY8teWHc4 rog0jpgf6wdIqD0CcbzekT5lAKTU0hMOPemXXH3Lx2mBrM0wQPwGGxRslu1A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 02, 2021 at 11:32:03PM +0100, Alexander Lobakin wrote:
-> From: Kristen Carlson Accardi <kristen@linux.intel.com>
-> 
-> This commit contains the changes required to re-layout the kernel text
-> sections generated by -ffunction-sections shortly after decompression.
-> Documentation of the feature is also added.
-> 
-> After decompression, the decompressed image's elf headers are parsed.
-> In order to manually update certain data structures that are built with
-> relative offsets during the kernel build process, certain symbols are
-> not stripped by objdump and their location is retained in the elf symbol
-> tables. These addresses are saved.
-> 
-> If the image was built with -ffunction-sections, there will be ELF section
-> headers present which contain information about the address range of each
-> section. Anything that is not broken out into function sections (i.e. is
-> consolidated into .text) is left in it's original location, but any other
-> executable section which begins with ".text." is located and shuffled
-> randomly within the remaining text segment address range.
-> 
-> After the sections have been copied to their new locations, but before
-> relocations have been applied, the kallsyms tables must be updated to
-> reflect the new symbol locations. Because it is expected that these tables
-> will be sorted by address, the kallsyms tables will need to be sorted
-> after the update.
-> 
-> When applying relocations, the address of the relocation needs to be
-> adjusted by the offset from the original location of the section that was
-> randomized to it's new location. In addition, if a value at that relocation
-> was a location in the text segment that was randomized, it's value will be
-> adjusted to a new location.
-> 
-> After relocations have been applied, the exception table must be updated
-> with new symbol locations, and then re-sorted by the new address. The
-> orc table will have been updated as part of applying relocations, but since
-> it is expected to be sorted by address, it will need to be resorted.
+The link_status array was not large enough to read the Adjust Request
+Post Cursor2 register. Adjust the size to include it. Found with a
+-Warray-bounds build:
 
+drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
+drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
+   59 |         return link_status[r - DP_LANE0_1_STATUS];
+      |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
+  147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+      |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-> +static long addr_kallsyms_names;
-> +static long addr_kallsyms_offsets;
-> +static long addr_kallsyms_num_syms;
-> +static long addr_kallsyms_relative_base;
-> +static long addr_kallsyms_markers;
-> +static long addr___start___ex_table;
-> +static long addr___stop___ex_table;
-> +static long addr___altinstr_replacement;
-> +static long addr___altinstr_replacement_end;
-> +static long addr__stext;
-> +static long addr__etext;
-> +static long addr__sinittext;
-> +static long addr__einittext;
-> +static long addr___start_orc_unwind_ip;
-> +static long addr___stop_orc_unwind_ip;
-> +static long addr___start_orc_unwind;
+Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: Fix missed array size change in intel_dp_check_mst_status()
+---
+ drivers/gpu/drm/i915/display/intel_dp.c |  8 ++++----
+ include/drm/drm_dp_helper.h             | 10 +++++++++-
+ 2 files changed, 13 insertions(+), 5 deletions(-)
 
-> +void post_relocations_cleanup(unsigned long map)
-> +{
-> +	if (!nofgkaslr) {
-> +		update_ex_table(map);
-> +		sort_ex_table(map);
-> +		update_orc_table(map);
-> +		sort_orc_table(map);
-> +	}
-> +
-> +	/*
-> +	 * maybe one day free will do something. So, we "free" this memory
-> +	 * in either case
-> +	 */
-> +	free(sections);
-> +	free(sechdrs);
-> +}
-> +
-> +void pre_relocations_cleanup(unsigned long map)
-> +{
-> +	if (nofgkaslr)
-> +		return;
-> +
-> +	sort_kallsyms(map);
-> +}
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+index 5a8206298691..97367afc7243 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -3647,17 +3647,17 @@ intel_dp_check_mst_status(struct intel_dp *intel_dp)
+ 
+ 	for (;;) {
+ 		/*
+-		 * The +2 is because DP_DPRX_ESI_LEN is 14, but we then
++		 * The +10 is because while DP_DPRX_ESI_LEN is 14, we then
+ 		 * pass in "esi+10" to drm_dp_channel_eq_ok(), which
+-		 * takes a 6-byte array. So we actually need 16 bytes
+-		 * here.
++		 * takes a DP_LINK_STATUS_SIZE array. So we actually need
++		 * 10 bytes more than DP_LINK_STATUS_SIZE.
+ 		 *
+ 		 * Somebody who knows what the limits actually are
+ 		 * should check this, but for now this is at least
+ 		 * harmless and avoids a valid compiler warning about
+ 		 * using more of the array than we have allocated.
+ 		 */
+-		u8 esi[DP_DPRX_ESI_LEN+2] = {};
++		u8 esi[DP_LINK_STATUS_SIZE + 10] = {};
+ 		bool handled;
+ 		int retry;
+ 
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 472dac376284..277643d2fe2c 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -1517,7 +1517,15 @@ enum drm_dp_phy {
+ #define DP_MST_LOGICAL_PORT_0 8
+ 
+ #define DP_LINK_CONSTANT_N_VALUE 0x8000
+-#define DP_LINK_STATUS_SIZE	   6
++/*
++ * DPCD registers in link_status:
++ * Link Status:		0x202 through 0x204
++ * Sink Status:		0x205
++ * Adjust Request:	0x206 through 0x207
++ * Training Score:	0x208 through 0x20b
++ * AR Post Cursor2:	0x20c
++ */
++#define DP_LINK_STATUS_SIZE	   11
+ bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
+ 			  int lane_count);
+ bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
+-- 
+2.30.2
 
-> diff --git a/arch/x86/boot/compressed/vmlinux.symbols b/arch/x86/boot/compressed/vmlinux.symbols
-> new file mode 100644
-> index 000000000000..da41f3ee153c
-> --- /dev/null
-> +++ b/arch/x86/boot/compressed/vmlinux.symbols
-> @@ -0,0 +1,19 @@
-> +kallsyms_offsets
-> +kallsyms_addresses
-> +kallsyms_num_syms
-> +kallsyms_relative_base
-> +kallsyms_names
-> +kallsyms_token_table
-> +kallsyms_token_index
-> +kallsyms_markers
-> +__start___ex_table
-> +__stop___ex_table
-> +__altinstr_replacement
-> +__altinstr_replacement_end
-> +_sinittext
-> +_einittext
-> +_stext
-> +_etext
-> +__start_orc_unwind_ip
-> +__stop_orc_unwind_ip
-> +__start_orc_unwind
-
-So please don't make it hard to add sections; the above has far too much
-duplication. For example you can trivially generate the addr_ symbol and
-the .symbol file from a common include file and a bit of macro wrappery,
-ideally that macro wrappery would also specify the sort location and
-function such that you can also generate those pre_ and post_ functions.
-
-And this is only for sections that need to be sorted right? There's
-currently a patch in flight to also pre-sort the ftrace table.
-
-All unsorted or runtime sorted sections are fine since they're fixed up
-by the relocations?
-
-Is it at all feasible to share the comparison functions between the
-various sorters?
