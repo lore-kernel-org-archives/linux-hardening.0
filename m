@@ -2,116 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9580FC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 16:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504F0C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 16:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352831AbhLCQiL (ORCPT
+        id S1352963AbhLCQl2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 11:38:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54128 "EHLO
+        Fri, 3 Dec 2021 11:41:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240590AbhLCQiJ (ORCPT
+        with ESMTP id S1382105AbhLCQl0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 11:38:09 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60110C061751;
-        Fri,  3 Dec 2021 08:34:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mssU0G/cXzs1xJenEusQw6HC5DMSHqKWJ4UVhHrgEwc=; b=pCYe9RfzBZe7t3b1I2jJLkuuWw
-        YJ/2D+8XG3yafWSbVxsoa4cuaPpSNW3yRaMq2r/QTcoCtNsGbzYnj8J8f5qjGA8Q2V/pXKfwO5Kl4
-        k+56WsTiE8v5nSkxjDzB8mYzdZwlwayGbV0S/XDI/SQScXxNeEZ3u76Zfu7RMn3sbz2fP91hmok6j
-        urZYeHgDnYURlSyzZWxnfhRDmNjcgxpQ8WKSsRlbeWnRvfyMY7DqTT4BZ+jBkaw/4LRusumTvZ11V
-        n2jt8oTpXsB8gMKCvnQdygj7+E+qFaIl2K3TYWPTp4zB7hpoUu3z9PZ4CkXn2EmJVjnwxyPY3wYlL
-        8xbev1uA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mtBVv-009Oew-TO; Fri, 03 Dec 2021 16:34:24 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2B2979810D4; Fri,  3 Dec 2021 17:34:24 +0100 (CET)
-Date:   Fri, 3 Dec 2021 17:34:24 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Lobakin <alexandr.lobakin@intel.com>
-Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev, hjl.tools@gmail.com
-Subject: Re: [PATCH v8 05/14] x86: conditionally place regular ASM functions
- into separate sections
-Message-ID: <20211203163424.GK16608@worktop.programming.kicks-ass.net>
-References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
- <20211202223214.72888-6-alexandr.lobakin@intel.com>
- <Yanm6tJ2obi1aKv6@hirez.programming.kicks-ass.net>
- <20211203141051.82467-1-alexandr.lobakin@intel.com>
+        Fri, 3 Dec 2021 11:41:26 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E96BC061A83
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 08:38:02 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id q16so3563523pgq.10
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 08:38:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:user-agent:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=1Os1YXl4la47axxJ9jJm6JnaqNSY09GwFIn2TEKSK34=;
+        b=NV71F2dXvhAuV9ngT//koygUCamIjyG074O/+3MMVdIx+Yrhh/OnKnrG+HjuqzGIz+
+         aeYkCReWJtBYO6vuOUAsjmD0fcNg8qtxl2sMMZeWUuIE/S9WJaj/2HM20Xy4WjfZeK/l
+         74fXHGLaHvuzhM8OW+vtoVP7MKYRZVcTs7djM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
+         :references:message-id:mime-version:content-transfer-encoding;
+        bh=1Os1YXl4la47axxJ9jJm6JnaqNSY09GwFIn2TEKSK34=;
+        b=JyuGANi81lL+R6Yq2QWfRyKXY2p7OfP8GCZoPPXHJzrDTGEcvbK6dyX9F48deUXpQE
+         1W1OFNsbJhF5WqcNBreMQQrQSDyEOJ0C/r9iPzM/4s5uuo3vl9UA8F1whNI7caFKcytn
+         FVkfRSMnnQQrinFeCiK4kMLlign2SeUACe1tKQOs0keV5ZIOI3f+bDFEux5c4VZtDJPD
+         k5eAX2IH/eoKtvRir5nHqgwroZNDxBDKCtR/J+RYdZwJlLDnvlhHKeLH4kJjIrXr0hiN
+         0lQ/tkwuGVeiJuz4q/MNo31k+eTNgVm9MPT8nVwMwh+OAbsR86VFCJvfQFe8OOr6/vcl
+         X9Lw==
+X-Gm-Message-State: AOAM530PzZVS5to4e+QJsmG1DFyTneT1ETNHypmiG4A6/+12hA0uK6au
+        FzUYzmZesuKPoO+vgzs4KpzR7Q6hZoVV+w==
+X-Google-Smtp-Source: ABdhPJwQAjEynTS1Zy+kiMxhN1859sy4nV6Hn4qhyUmIOr2nCUvQ1+gveQ8Sp1GCosQcJ/NzZwgNlQ==
+X-Received: by 2002:a62:5215:0:b0:49f:a996:b724 with SMTP id g21-20020a625215000000b0049fa996b724mr20111647pfb.3.1638549481618;
+        Fri, 03 Dec 2021 08:38:01 -0800 (PST)
+Received: from [127.0.0.1] (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id np1sm6453482pjb.22.2021.12.03.08.38.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Dec 2021 08:38:01 -0800 (PST)
+Date:   Fri, 03 Dec 2021 08:37:59 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_find=3A_Do_not_read_beyon?= =?US-ASCII?Q?d_variable_boundaries_on_small_sizes?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <YaoN6wnNezMvyyd5@smile.fi.intel.com>
+References: <20211203100846.3977195-1-keescook@chromium.org> <YaoN6wnNezMvyyd5@smile.fi.intel.com>
+Message-ID: <E1A4953A-8801-48FA-A744-63DA548C5924@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211203141051.82467-1-alexandr.lobakin@intel.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 03, 2021 at 03:10:51PM +0100, Alexander Lobakin wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Fri, 3 Dec 2021 10:44:10 +0100
-> 
-> > On Thu, Dec 02, 2021 at 11:32:05PM +0100, Alexander Lobakin wrote:
-> > > Use the newly introduces macros to create unique separate sections
-> > > for (almost) every "regular" ASM function (i.e. for those which
-> > > aren't explicitly put into a specific one).
-> > > There should be no leftovers as input .text will be size-asserted
-> > > in the LD script generated for FG-KASLR.
-> > 
-> > *groan*...
-> > 
-> > Please, can't we do something like:
-> > 
-> > #define SYM_PUSH_SECTION(name)	\
-> > .if section == .text		\
-> > .push_section .text.##name	\
-> > .else				\
-> > .push_section .text		\
-> > .endif
-> > 
-> > #define SYM_POP_SECTION()	\
-> > .pop_section
-> > 
-> > and wrap that inside the existing SYM_FUNC_START*() SYM_FUNC_END()
-> > macros.
-> 
-> Ah I see. I asked about this in my previous mail and you replied
-> already (: Cool stuff, I'll use it, it simplifies things a lot.
 
-Note, I've no idea if it works. GAS and me aren't really on speaking
-terms. It would be my luck for that to be totally impossible, hjl?
+
+On December 3, 2021 4:30:35 AM PST, Andy Shevchenko <andriy=2Eshevchenko@l=
+inux=2Eintel=2Ecom> wrote:
+>On Fri, Dec 03, 2021 at 02:08:46AM -0800, Kees Cook wrote:
+>> It's common practice to cast small variable arguments to the find_*_bit=
+()
+>
+>It's a bad practice and should be fixed accordingly, no?
+
+There's an argument to be made that the first arg should be void * but tha=
+t's a pretty invasive change at this point (and orthogonal to this fix)=2E
+
+I'd be happy to send a treewide change for that too, if folks wanted?
+
+>
+>> helpers to unsigned long and then use a size argument smaller than
+>> sizeof(unsigned long):
+>>=20
+>> 	unsigned int bits;
+>> 	=2E=2E=2E
+>> 	out =3D find_first_bit((unsigned long *)&bits, 32);
+>>=20
+>> This leads to the find helper dereferencing a full unsigned long,
+>> regardless of the size of the actual variable=2E The unwanted bits
+>> get masked away, but strictly speaking, a read beyond the end of
+>> the target variable happens=2E Builds under -Warray-bounds complain
+>> about this situation, for example:
+>>=20
+>> In file included from =2E/include/linux/bitmap=2Eh:9,
+>>                  from drivers/iommu/intel/iommu=2Ec:17:
+>> drivers/iommu/intel/iommu=2Ec: In function 'domain_context_mapping_one'=
+:
+>> =2E/include/linux/find=2Eh:119:37: error: array subscript 'long unsigne=
+d int[0]' is partly outside array bounds of 'int[1]' [-Werror=3Darray-bound=
+s]
+>>   119 |                 unsigned long val =3D *addr & GENMASK(size - 1,=
+ 0);
+>>       |                                     ^~~~~
+>> drivers/iommu/intel/iommu=2Ec:2115:18: note: while referencing 'max_pde=
+'
+>>  2115 |         int pds, max_pde;
+>>       |                  ^~~~~~~
+>>=20
+>> Instead, just carefully read the correct variable size, all of which
+>> happens at compile time since small_const_nbits(size) has already
+>> determined that arguments are constant expressions=2E
+>
+>What is the performance impact?
+
+There should be none=2E It's entirely using constant expressions, so all o=
+f it gets reduce at compile time to a single path without conditionals=2E T=
+he spot checks I did on the machine code showed no differences either (sinc=
+e I think optimization was doing the masking vis smaller width dereference)=
+=2E
+
+
+>
+
+--=20
+Kees Cook
