@@ -2,137 +2,222 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B11BC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 20:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302E8C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 22:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383120AbhLCUwZ (ORCPT
+        id S1359100AbhLCWhU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 15:52:25 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:47886 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239909AbhLCUwZ (ORCPT
+        Fri, 3 Dec 2021 17:37:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354083AbhLCWhT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 15:52:25 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B71CFB82920;
-        Fri,  3 Dec 2021 20:48:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 908B4C53FCD;
-        Fri,  3 Dec 2021 20:48:57 +0000 (UTC)
-Date:   Fri, 3 Dec 2021 15:48:55 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] find: Do not read beyond variable boundaries on small
- sizes
-Message-ID: <20211203154855.43d4f0e6@gandalf.local.home>
-In-Reply-To: <20211203182638.GA450223@lapt>
-References: <20211203100846.3977195-1-keescook@chromium.org>
-        <YaoN6wnNezMvyyd5@smile.fi.intel.com>
-        <20211203182638.GA450223@lapt>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 3 Dec 2021 17:37:19 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC243C061354
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 14:33:54 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id k4so3052119plx.8
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 14:33:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wxn3E5FIZrGG1Dek5TMCFjZeoamV2W9EP0jmGacPohA=;
+        b=McDPtM9zZvo+F5JE9K+RkNtlp5CDtBqgXSmfQQDk0O9NCPxxo63BAs0bWfybRqyxve
+         m0KamXXLSvq066I2Thy3ztetrACxknOpSLQGPQqIYIOKSCKStWDkbRu13K/nFW0VRQtY
+         KR/wygMBw0bm9/bVGZm5bgwQYTHvVg53fd8G8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wxn3E5FIZrGG1Dek5TMCFjZeoamV2W9EP0jmGacPohA=;
+        b=1ptmIEOEEBB7bi4fjCdEQi3ruGP41VS11Pl/w/2hXaHlNZFlaCEaLkQTe4q0iUCI5b
+         Yc08ldDVtz/mCtGKIuY47it24Dy6jKCatyoqQSpITUvxTs9AHhDwaIbz0Y/wHcQV7Ufh
+         tpqfhVmyliZ16yym1txrPmJwq3oHxMkVvoYREGsOM69qhmJk/GefpIF0sLm93bszZdb3
+         SeUxgSVD0y+CHtAw2qalL+/jaNq++7wW3YGFkqeoHP3unrQlUjy7khOUgoun6HrPj3T/
+         CSY+lwLJNAVFisZaTggkObaohPAhBGrqJI+0O+yzL2nMeR3zK2kNr7b1qo/9fWTYCA1l
+         yBRQ==
+X-Gm-Message-State: AOAM533JSpyNCK9IV84lS3lLTzUOnYKJ6INPhvdAY6lCJettCKgF4GK1
+        e6iBNU76UzYHOYc3X7yV6byf3w==
+X-Google-Smtp-Source: ABdhPJx+5dMhzqSKbSCTXdtrBIbYG1TjgBmVrqJ39tkxMQfbp9lexskmG+JM+fqN8uuKe4B6mAbOhA==
+X-Received: by 2002:a17:90a:c58f:: with SMTP id l15mr17401146pjt.168.1638570834131;
+        Fri, 03 Dec 2021 14:33:54 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o2sm4325544pfu.206.2021.12.03.14.33.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Dec 2021 14:33:53 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     James Smart <james.smart@broadcom.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] scsi: lpfc: Use struct_group to isolate cast to larger object
+Date:   Fri,  3 Dec 2021 14:33:51 -0800
+Message-Id: <20211203223351.107323-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4935; h=from:subject; bh=3ujeJ853GEHrNwcPROcKZGxG4bNcGgUY38A0ST8Z0Q8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhqptPDw5GHAHawCc3G5drUz/gYi6RXd5eODsGaYJq LFHLDrGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYaqbTwAKCRCJcvTf3G3AJnlgD/ wK0qWSUalSbhJNesL0o31XLqpdq6zXARTcteXsknu6QgrUbVQgbH9ir7fvt+ZJMlZ3gh6kuktYqVHt n5e0lRg3Z3+IdzAf78JyJCfGOEtSAT7i3ZzY3POreqORI89IZoDKatZSglw5r8JDwcXGteYUtKhHDW 9AtAWFwqfdTUTXqY6icRDvNoEDg0c/KShS1yx7aeZc2GmMTT4YF70ffRe3yqQ9JVjtqRHPKjK4YLXp 8AooLfkj/nOHkRSNzXzZNZ8zpbIo79Gpg4px4Lrxr4fkPwhU0vtSQJhVqlpaR65PcVVVCl6NWZWOc4 efntlxoCcMiWLxfO2x2jYQmTZCR4FPWjYc1uGiZklT3WJ3NKXoKBeR7hsnYDqRX4OQe+3n1abN663+ 7yZpbm/EsWEjXbKjC1E6nODSNHiZx9lkQ5hau1E95eYnrG9+Mv10o2QGY0h2Akeh0Ipidlh37blv0c cj84UtCqT5tvZS7bwUQSQGTJkTN/YRKGHs7hQOhRSDoHGg+qw17ONoLYPVagogRsoXRY+KrNYtynQ2 cZQESquYcvHR4xsLEhTi/lAtHY8hiayp22D3bdTejWyPDjF9FQFk/ATt5JNMZoH3SOByNI9zgYdgrb hQGHLMZaZByseQEz8NNYB6RxlBhIrUTTxngAUlLxDi8cmiBvNRhIkjQJDpHw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 3 Dec 2021 10:26:38 -0800
-Yury Norov <yury.norov@gmail.com> wrote:
+When building under -Warray-bounds, a warning is generated when casting
+a u32 into MAILBOX_t (which is larger). This warning is conservative, but
+it's not an unreasonable change to make to improve future robustness. Use
+a tagged struct_group that can refer to either the specific fields or
+the first u32 separately, silencing this warning:
 
-> On Fri, Dec 03, 2021 at 02:30:35PM +0200, Andy Shevchenko wrote:
-> > On Fri, Dec 03, 2021 at 02:08:46AM -0800, Kees Cook wrote:  
-> > > It's common practice to cast small variable arguments to the find_*_bit()  
-> 
-> Not that common - I found 19 examples of this cast, and most of them
-> are in drivers. The only non-driver case is kernel/trace/pid_list.c:
-> 
->         static inline bool upper_empty(union upper_chunk *chunk)
->         {
->                 /*
->                  * If chunk->data has no lower chunks, it will be the same
->                  * as a zeroed bitmask. Use find_first_bit() to test it
->                  * and if it doesn't find any bits set, then the array
->                  * is empty.
->                  */
->                 int bit = find_first_bit((unsigned long *)chunk->data,
->                                          sizeof(chunk->data) * 8);
->                 return bit >= sizeof(chunk->data) * 8;
->         }
-> 
-> And it's OK wrt type conversion because chunk->data is:
-> 
->         union lower_chunk {
->                 union lower_chunk               *next;
->                 unsigned long                   data[LOWER_SIZE]; // 2K in size
->         };
-> 
-> Although, this function should use bitmap_empty(), probably like this:
-> 
->         static inline bool upper_empty(union upper_chunk *chunk)
->         {
->                 return bitmap_empty(chunk->data->data[0], BITS_PER_LONG);
->         }
-> 
-> Steven, can you comment on this?
-> 
-> > It's a bad practice and should be fixed accordingly, no?  
-> 
-> Yes.
+drivers/scsi/lpfc/lpfc_sli.c: In function 'lpfc_reset_barrier':
+drivers/scsi/lpfc/lpfc_sli.c:4787:29: error: array subscript 'MAILBOX_t[0]' is partly outside array bounds of 'volatile uint32_t[1]' {aka 'volatile unsigned int[1]'} [-Werror=array-bounds]
+ 4787 |         ((MAILBOX_t *)&mbox)->mbxCommand = MBX_KILL_BOARD;
+      |                             ^~
+drivers/scsi/lpfc/lpfc_sli.c:4752:27: note: while referencing 'mbox'
+ 4752 |         volatile uint32_t mbox;
+      |                           ^~~~
 
-You are probably right and that should be bitmap_empty(), but the above is
-incorrect.
+There is no change to the resulting executable instruction code.
 
-This is emulating a sparse bitmask in a tree.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/scsi/lpfc/lpfc_hw.h  | 27 +++++++++++++++++----------
+ drivers/scsi/lpfc/lpfc_sli.c | 32 +++++++++++++++-----------------
+ 2 files changed, 32 insertions(+), 27 deletions(-)
 
-trace_pid_list {
-	union upper_chunk	upper[256];
-};
-
-union upper_chunk {
-	union upper_chunk	*next; // when freed used as free list pointer
-	union lower_chunk	data[256];
-};
-
-union lower_chunk {
-	union lower_chunk	*next; // for free list
-	unsigned long		data[512]; // for 64 bit
-//				data[1024]; for 32 bit
-};
-
-The code is initialized where we allocate some structures to fill the above
-tree, but when the sparse bitmask is empty, the upper pointers are null.
-That is, the pointers are only assigned *if and only if* there's a bit set
-in the lower structure. That way, we can quickly skip over large sections
-without having to look deeper into the tree if there's nothing set.
-
-Because the upper_chunk has an array of pointers, and the pointers are
-only allocated if the lower chunk they point to has a bit set, and are NULL
-otherwise. In order to find the first chunk to look at, or know if a chunk
-is empty, we scan the pointers as if they were long words, and if nothing
-is set, we know it is empty.
-
-The above is an abuse of find_first_bit() to scan the pointers.
-
-The equivalence of:
-
-                 int bit = find_first_bit((unsigned long *)chunk->data,
-                                          sizeof(chunk->data) * 8);
-                 return bit >= sizeof(chunk->data) * 8;
-
-would then actually be:
-
-		return bitmap_empty((unsigned long *)chunk->data,
-			sizeof(chunk->data) * 8);
-
-Not what you wrote.
-
--- Steve
-
+diff --git a/drivers/scsi/lpfc/lpfc_hw.h b/drivers/scsi/lpfc/lpfc_hw.h
+index 634f8fff7425..f0ce8404223a 100644
+--- a/drivers/scsi/lpfc/lpfc_hw.h
++++ b/drivers/scsi/lpfc/lpfc_hw.h
+@@ -3675,19 +3675,26 @@ union sli_var {
+ };
+ 
+ typedef struct {
++	struct_group_tagged(MAILBOX_word0, bits,
++		union {
++			struct {
+ #ifdef __BIG_ENDIAN_BITFIELD
+-	uint16_t mbxStatus;
+-	uint8_t mbxCommand;
+-	uint8_t mbxReserved:6;
+-	uint8_t mbxHc:1;
+-	uint8_t mbxOwner:1;	/* Low order bit first word */
++				uint16_t mbxStatus;
++				uint8_t mbxCommand;
++				uint8_t mbxReserved:6;
++				uint8_t mbxHc:1;
++				uint8_t mbxOwner:1;	/* Low order bit first word */
+ #else	/*  __LITTLE_ENDIAN_BITFIELD */
+-	uint8_t mbxOwner:1;	/* Low order bit first word */
+-	uint8_t mbxHc:1;
+-	uint8_t mbxReserved:6;
+-	uint8_t mbxCommand;
+-	uint16_t mbxStatus;
++				uint8_t mbxOwner:1;	/* Low order bit first word */
++				uint8_t mbxHc:1;
++				uint8_t mbxReserved:6;
++				uint8_t mbxCommand;
++				uint16_t mbxStatus;
+ #endif
++			};
++			u32 word0;
++		};
++	);
+ 
+ 	MAILVARIANTS un;
+ 	union sli_var us;
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 77dfe293bf23..8b3698032570 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -4749,7 +4749,7 @@ void lpfc_reset_barrier(struct lpfc_hba *phba)
+ {
+ 	uint32_t __iomem *resp_buf;
+ 	uint32_t __iomem *mbox_buf;
+-	volatile uint32_t mbox;
++	volatile struct MAILBOX_word0 mbox;
+ 	uint32_t hc_copy, ha_copy, resp_data;
+ 	int  i;
+ 	uint8_t hdrtype;
+@@ -4783,13 +4783,13 @@ void lpfc_reset_barrier(struct lpfc_hba *phba)
+ 		phba->pport->stopped = 1;
+ 	}
+ 
+-	mbox = 0;
+-	((MAILBOX_t *)&mbox)->mbxCommand = MBX_KILL_BOARD;
+-	((MAILBOX_t *)&mbox)->mbxOwner = OWN_CHIP;
++	mbox.word0 = 0;
++	mbox.mbxCommand = MBX_KILL_BOARD;
++	mbox.mbxOwner = OWN_CHIP;
+ 
+ 	writel(BARRIER_TEST_PATTERN, (resp_buf + 1));
+ 	mbox_buf = phba->MBslimaddr;
+-	writel(mbox, mbox_buf);
++	writel(mbox.word0, mbox_buf);
+ 
+ 	for (i = 0; i < 50; i++) {
+ 		if (lpfc_readl((resp_buf + 1), &resp_data))
+@@ -4810,12 +4810,12 @@ void lpfc_reset_barrier(struct lpfc_hba *phba)
+ 			goto clear_errat;
+ 	}
+ 
+-	((MAILBOX_t *)&mbox)->mbxOwner = OWN_HOST;
++	mbox.mbxOwner = OWN_HOST;
+ 	resp_data = 0;
+ 	for (i = 0; i < 500; i++) {
+ 		if (lpfc_readl(resp_buf, &resp_data))
+ 			return;
+-		if (resp_data != mbox)
++		if (resp_data != mbox.word0)
+ 			mdelay(1);
+ 		else
+ 			break;
+@@ -5091,9 +5091,8 @@ lpfc_sli4_brdreset(struct lpfc_hba *phba)
+ static int
+ lpfc_sli_brdrestart_s3(struct lpfc_hba *phba)
+ {
+-	MAILBOX_t *mb;
++	volatile struct MAILBOX_word0 mb;
+ 	struct lpfc_sli *psli;
+-	volatile uint32_t word0;
+ 	void __iomem *to_slim;
+ 	uint32_t hba_aer_enabled;
+ 
+@@ -5110,24 +5109,23 @@ lpfc_sli_brdrestart_s3(struct lpfc_hba *phba)
+ 			(phba->pport) ? phba->pport->port_state : 0,
+ 			psli->sli_flag);
+ 
+-	word0 = 0;
+-	mb = (MAILBOX_t *) &word0;
+-	mb->mbxCommand = MBX_RESTART;
+-	mb->mbxHc = 1;
++	mb.word0 = 0;
++	mb.mbxCommand = MBX_RESTART;
++	mb.mbxHc = 1;
+ 
+ 	lpfc_reset_barrier(phba);
+ 
+ 	to_slim = phba->MBslimaddr;
+-	writel(*(uint32_t *) mb, to_slim);
++	writel(mb.word0, to_slim);
+ 	readl(to_slim); /* flush */
+ 
+ 	/* Only skip post after fc_ffinit is completed */
+ 	if (phba->pport && phba->pport->port_state)
+-		word0 = 1;	/* This is really setting up word1 */
++		mb.word0 = 1;	/* This is really setting up word1 */
+ 	else
+-		word0 = 0;	/* This is really setting up word1 */
++		mb.word0 = 0;	/* This is really setting up word1 */
+ 	to_slim = phba->MBslimaddr + sizeof (uint32_t);
+-	writel(*(uint32_t *) mb, to_slim);
++	writel(mb.word0, to_slim);
+ 	readl(to_slim); /* flush */
+ 
+ 	lpfc_sli_brdreset(phba);
+-- 
+2.30.2
 
