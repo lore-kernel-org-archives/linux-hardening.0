@@ -2,301 +2,206 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23197C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 09:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E3DC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 09:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379463AbhLCJRu (ORCPT
+        id S1351401AbhLCJWs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 04:17:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37074 "EHLO
+        Fri, 3 Dec 2021 04:22:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351331AbhLCJRu (ORCPT
+        with ESMTP id S1351316AbhLCJWr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 04:17:50 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECD6C06173E
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 01:14:26 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id cq22-20020a17090af99600b001a9550a17a5so4669056pjb.2
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 01:14:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=saVuQhzixBwsqDYRywfLCa1HkOX8bignwBCsRWI1qEU=;
-        b=SlTpIt8ZNCqW/9A4VUbaR83S1wMyfqdCewD6rXm+VJsVUfcmFju+i0rgDaRiL3X2FO
-         FvKdIsYob7oyCjWrkpN2Etf1mA576MDr/cDygoeRNe3vedQHKPRj//TxFYNAA/qvT+1P
-         2I2hQ0gXFqqEWsBI5TrldoZYGyyce4VvGqP6U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=saVuQhzixBwsqDYRywfLCa1HkOX8bignwBCsRWI1qEU=;
-        b=ESeXiRid0Ks3chxHejM6QTkk7KEVhbcimYJd4NGJzYGU+8NM+ueY57Of/i2z+Puc1I
-         +V3c7g9vkj35xMPA+WR5MTh4cKhc64TrUXi/ys2dfo+gkCRkqi8aXebIMomXXQWWDeKL
-         S/3Tz++ckNnMEmJ/FzOjRjXoqHz5Br1OUCnuvPYt6elCZw1O/7+bDZjSYJYrZ9ipzyPc
-         8qQ1HQD3r3LYmIkCF9WyogAMfKWNcKU413LN7kVeTjrhxKlENHXEdIauCQpYpIbM0GS6
-         hBxzFA7+qdfYa5pCc9ho9/Fe+KKET2i3ftjk/q0v96w0HsiUT89K+qW+hFWdiy21I5ON
-         iYkw==
-X-Gm-Message-State: AOAM533JtD+ytxsRVBFmlgVJZAHiQNxAY8dIwEXQPjyJDdWtpyaMs7Ts
-        RoFafCkuf70At7C9l2ZhwKMbUyJn2ZfBIQ==
-X-Google-Smtp-Source: ABdhPJz8RnRahBC15FlwjjPsKlZ+CpQcH75sjsinaHiphr+fFlXgxA/jx9yn9VYUsmsMio1yEUacIw==
-X-Received: by 2002:a17:903:248c:b0:142:9bf:8b0 with SMTP id p12-20020a170903248c00b0014209bf08b0mr21371502plw.70.1638522866265;
-        Fri, 03 Dec 2021 01:14:26 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s15sm1814024pjs.51.2021.12.03.01.14.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Dec 2021 01:14:26 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, megaraidlinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: megaraid: Avoid mismatched storage type sizes
-Date:   Fri,  3 Dec 2021 01:14:24 -0800
-Message-Id: <20211203091424.3355371-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Fri, 3 Dec 2021 04:22:47 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D83C06173E;
+        Fri,  3 Dec 2021 01:19:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=hLPFdIqBYpspMlwIAo7jkm6f1I6lI75Wr7yBFCGECog=; b=dlLwOKJiwBv02wti0blm0rr6CF
+        L0ZFM5qwxblWVSbBC4msE5YdoO7xva5p6Y5N2vU5zvUdcVoI2DpVvtcfMxt6umFaszPUHVkDp4dkP
+        XgiJIDS0lrEhp2DyOihYCETjTJ8kljja5mnwowi2BygcSEQsjHXElKyy6LH6P+e/HH9Gum0cT+HoN
+        OUgAOy70n7gACzwta1Qq20rT2ta/8KpCkXJ7l0iAwexXzet1HMdY3Vs6IMUUjm5z87vHjZbz9yqot
+        4W1kTFE5WO5MDqLcwUxIY7ZbiFANYg33gG1eF6MZZ4ns1Oxaa+q0KS6r0cf9OOCgNptZKgiEOIKpp
+        iblFSLWA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mt4iP-007yPM-Ua; Fri, 03 Dec 2021 09:18:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A78433002C5;
+        Fri,  3 Dec 2021 10:18:47 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F62D2B35A5A4; Fri,  3 Dec 2021 10:18:47 +0100 (CET)
+Date:   Fri, 3 Dec 2021 10:18:47 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Lobakin <alexandr.lobakin@intel.com>
+Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v8 03/14] x86: Add support for function granular KASLR
+Message-ID: <Yang97SFfwuqTNzK@hirez.programming.kicks-ass.net>
+References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
+ <20211202223214.72888-4-alexandr.lobakin@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7024; h=from:subject; bh=LkdLDRS96rJJ+hsAnyw+nSek/NN70rsR6NXpE1WqNL0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhqd/vtwMNKerswTCQUH/RzzThOHW470nn5B9vB56H GLxt2qSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYanf7wAKCRCJcvTf3G3AJjzbEA CJgny2oO/KaCl8l/C0HuShj6t+Kya+5RGbj776BKxjzVP8r12CulsTYnPWCFTLiXIM2CgzhHgZ/hhF uUIbLHncQ2M0UG/bOvuzqqBDLa8lc9XllLmTSxgXgRL3C2rnWHZ9mOjXpDvm+AzeZMBrOzkWhnMp53 k8IBu/HZcFuHDvLjTChZNmJxU0Owbrcrkns4KUqp7heH0gHLC5ZUCI7L4rmihEz0lQzr/RHKpjwy3i +phfAd+Eh853oaRCtg/TYI5bIzCnZQtUjwEmcF7kCv8uSqKuLLGAS+rUB5o60pxQIk7HrfuUGKNZV1 hahWnk48CPCLhDlLOb9cqeg2ObYrOitbaD2HNmxacySFe4t6EpfGTLd9vGYxxL37QDObmCYJI4ykzN OFYwNT/jpa4Z3zlGlu+hkmJ13Y+827pGXaoZ2ze9Z2knbOIn5jlSK4WO3ljhhduNIo1e/bttTwf3zE PTI4gNz7lylHPOb4lnJuEZKWyek4EPmEF3Yh0ToAyI8bkpbltSfqotzITyuWBXaerWh/UxpmdgQIVM 14vo61cj+l+Xw6JZIteOkCHIIeRKu7csJkNYaSDpMyErO5vFnbTWsUUwO7GVT4s8EueZyI0HR5andj V6cZu/c97mcCHEg0I4vTNF9087WaCDsgEnq4D9TJU4qii8BwRbsrvwKHGtiw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211202223214.72888-4-alexandr.lobakin@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Remove needless use of mbox_t, replacing with just struct
-mbox_out. Silences compiler warnings under a -Warray-bounds build:
+On Thu, Dec 02, 2021 at 11:32:03PM +0100, Alexander Lobakin wrote:
+> From: Kristen Carlson Accardi <kristen@linux.intel.com>
+> 
+> This commit contains the changes required to re-layout the kernel text
+> sections generated by -ffunction-sections shortly after decompression.
+> Documentation of the feature is also added.
+> 
+> After decompression, the decompressed image's elf headers are parsed.
+> In order to manually update certain data structures that are built with
+> relative offsets during the kernel build process, certain symbols are
+> not stripped by objdump and their location is retained in the elf symbol
+> tables. These addresses are saved.
+> 
+> If the image was built with -ffunction-sections, there will be ELF section
+> headers present which contain information about the address range of each
+> section. Anything that is not broken out into function sections (i.e. is
+> consolidated into .text) is left in it's original location, but any other
+> executable section which begins with ".text." is located and shuffled
+> randomly within the remaining text segment address range.
+> 
+> After the sections have been copied to their new locations, but before
+> relocations have been applied, the kallsyms tables must be updated to
+> reflect the new symbol locations. Because it is expected that these tables
+> will be sorted by address, the kallsyms tables will need to be sorted
+> after the update.
+> 
+> When applying relocations, the address of the relocation needs to be
+> adjusted by the offset from the original location of the section that was
+> randomized to it's new location. In addition, if a value at that relocation
+> was a location in the text segment that was randomized, it's value will be
+> adjusted to a new location.
+> 
+> After relocations have been applied, the exception table must be updated
+> with new symbol locations, and then re-sorted by the new address. The
+> orc table will have been updated as part of applying relocations, but since
+> it is expected to be sorted by address, it will need to be resorted.
 
-drivers/scsi/megaraid.c: In function 'megaraid_probe_one':
-drivers/scsi/megaraid.c:3615:30: error: array subscript 'mbox_t[0]' is partly outside array bounds of 'unsigned char[15]' [-Werror=array-bounds]
- 3615 |         mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-      |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/megaraid.c:3599:23: note: while referencing 'raw_mbox'
- 3599 |         unsigned char raw_mbox[sizeof(struct mbox_out)];
-      |                       ^~~~~~~~
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/scsi/megaraid.c | 84 +++++++++++++++++------------------------
- 1 file changed, 34 insertions(+), 50 deletions(-)
+> +static long addr_kallsyms_names;
+> +static long addr_kallsyms_offsets;
+> +static long addr_kallsyms_num_syms;
+> +static long addr_kallsyms_relative_base;
+> +static long addr_kallsyms_markers;
+> +static long addr___start___ex_table;
+> +static long addr___stop___ex_table;
+> +static long addr___altinstr_replacement;
+> +static long addr___altinstr_replacement_end;
+> +static long addr__stext;
+> +static long addr__etext;
+> +static long addr__sinittext;
+> +static long addr__einittext;
+> +static long addr___start_orc_unwind_ip;
+> +static long addr___stop_orc_unwind_ip;
+> +static long addr___start_orc_unwind;
 
-diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
-index 0d31d7a5e335..bf987f3a7f3f 100644
---- a/drivers/scsi/megaraid.c
-+++ b/drivers/scsi/megaraid.c
-@@ -192,23 +192,21 @@ mega_query_adapter(adapter_t *adapter)
- {
- 	dma_addr_t	prod_info_dma_handle;
- 	mega_inquiry3	*inquiry3;
--	u8	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
-+	struct mbox_out	mbox;
-+	u8	*raw_mbox = (u8 *)&mbox;
- 	int	retval;
- 
- 	/* Initialize adapter inquiry mailbox */
- 
--	mbox = (mbox_t *)raw_mbox;
--
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	/*
- 	 * Try to issue Inquiry3 command
- 	 * if not succeeded, then issue MEGA_MBOXCMD_ADAPTERINQ command and
- 	 * update enquiry3 structure
- 	 */
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	inquiry3 = (mega_inquiry3 *)adapter->mega_buffer;
- 
-@@ -232,10 +230,10 @@ mega_query_adapter(adapter_t *adapter)
- 
- 		inq = &ext_inq->raid_inq;
- 
--		mbox->m_out.xferaddr = (u32)dma_handle;
-+		mbox.xferaddr = (u32)dma_handle;
- 
- 		/*issue old 0x04 command to adapter */
--		mbox->m_out.cmd = MEGA_MBOXCMD_ADPEXTINQ;
-+		mbox.cmd = MEGA_MBOXCMD_ADPEXTINQ;
- 
- 		issue_scb_block(adapter, raw_mbox);
- 
-@@ -262,7 +260,7 @@ mega_query_adapter(adapter_t *adapter)
- 						      sizeof(mega_product_info),
- 						      DMA_FROM_DEVICE);
- 
--		mbox->m_out.xferaddr = prod_info_dma_handle;
-+		mbox.xferaddr = prod_info_dma_handle;
- 
- 		raw_mbox[0] = FC_NEW_CONFIG;	/* i.e. mbox->cmd=0xA1 */
- 		raw_mbox[2] = NC_SUBOP_PRODUCT_INFO;	/* i.e. 0x0E */
-@@ -3569,16 +3567,14 @@ mega_n_to_m(void __user *arg, megacmd_t *mc)
- static int
- mega_is_bios_enabled(adapter_t *adapter)
- {
--	unsigned char	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
--
--	mbox = (mbox_t *)raw_mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	raw_mbox[0] = IS_BIOS_ENABLED;
- 	raw_mbox[2] = GET_BIOS;
-@@ -3600,13 +3596,11 @@ mega_is_bios_enabled(adapter_t *adapter)
- static void
- mega_enum_raid_scsi(adapter_t *adapter)
- {
--	unsigned char raw_mbox[sizeof(struct mbox_out)];
--	mbox_t *mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 	int i;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	/*
- 	 * issue command to find out what channels are raid/scsi
-@@ -3616,7 +3610,7 @@ mega_enum_raid_scsi(adapter_t *adapter)
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	/*
- 	 * Non-ROMB firmware fail this command, so all channels
-@@ -3655,23 +3649,21 @@ static void
- mega_get_boot_drv(adapter_t *adapter)
- {
- 	struct private_bios_data	*prv_bios_data;
--	unsigned char	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 	u16	cksum = 0;
- 	u8	*cksum_p;
- 	u8	boot_pdrv;
- 	int	i;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	raw_mbox[0] = BIOS_PVT_DATA;
- 	raw_mbox[2] = GET_BIOS_PVT_DATA;
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	adapter->boot_ldrv_enabled = 0;
- 	adapter->boot_ldrv = 0;
-@@ -3721,13 +3713,11 @@ mega_get_boot_drv(adapter_t *adapter)
- static int
- mega_support_random_del(adapter_t *adapter)
- {
--	unsigned char raw_mbox[sizeof(struct mbox_out)];
--	mbox_t *mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 	int rval;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	/*
- 	 * issue command
-@@ -3750,13 +3740,11 @@ mega_support_random_del(adapter_t *adapter)
- static int
- mega_support_ext_cdb(adapter_t *adapter)
- {
--	unsigned char raw_mbox[sizeof(struct mbox_out)];
--	mbox_t *mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 	int rval;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 	/*
- 	 * issue command to find out if controller supports extended CDBs.
- 	 */
-@@ -3865,16 +3853,14 @@ mega_do_del_logdrv(adapter_t *adapter, int logdrv)
- static void
- mega_get_max_sgl(adapter_t *adapter)
- {
--	unsigned char	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
-+	struct mbox_out	mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(mbox, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	raw_mbox[0] = MAIN_MISC_OPCODE;
- 	raw_mbox[2] = GET_MAX_SG_SUPPORT;
-@@ -3888,7 +3874,7 @@ mega_get_max_sgl(adapter_t *adapter)
- 	}
- 	else {
- 		adapter->sglen = *((char *)adapter->mega_buffer);
--		
-+
- 		/*
- 		 * Make sure this is not more than the resources we are
- 		 * planning to allocate
-@@ -3910,16 +3896,14 @@ mega_get_max_sgl(adapter_t *adapter)
- static int
- mega_support_cluster(adapter_t *adapter)
- {
--	unsigned char	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
--
--	mbox = (mbox_t *)raw_mbox;
-+	struct mbox_out	mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 
--	memset(mbox, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	/*
- 	 * Try to get the initiator id. This command will succeed iff the
--- 
-2.30.2
+> +void post_relocations_cleanup(unsigned long map)
+> +{
+> +	if (!nofgkaslr) {
+> +		update_ex_table(map);
+> +		sort_ex_table(map);
+> +		update_orc_table(map);
+> +		sort_orc_table(map);
+> +	}
+> +
+> +	/*
+> +	 * maybe one day free will do something. So, we "free" this memory
+> +	 * in either case
+> +	 */
+> +	free(sections);
+> +	free(sechdrs);
+> +}
+> +
+> +void pre_relocations_cleanup(unsigned long map)
+> +{
+> +	if (nofgkaslr)
+> +		return;
+> +
+> +	sort_kallsyms(map);
+> +}
 
+> diff --git a/arch/x86/boot/compressed/vmlinux.symbols b/arch/x86/boot/compressed/vmlinux.symbols
+> new file mode 100644
+> index 000000000000..da41f3ee153c
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/vmlinux.symbols
+> @@ -0,0 +1,19 @@
+> +kallsyms_offsets
+> +kallsyms_addresses
+> +kallsyms_num_syms
+> +kallsyms_relative_base
+> +kallsyms_names
+> +kallsyms_token_table
+> +kallsyms_token_index
+> +kallsyms_markers
+> +__start___ex_table
+> +__stop___ex_table
+> +__altinstr_replacement
+> +__altinstr_replacement_end
+> +_sinittext
+> +_einittext
+> +_stext
+> +_etext
+> +__start_orc_unwind_ip
+> +__stop_orc_unwind_ip
+> +__start_orc_unwind
+
+So please don't make it hard to add sections; the above has far too much
+duplication. For example you can trivially generate the addr_ symbol and
+the .symbol file from a common include file and a bit of macro wrappery,
+ideally that macro wrappery would also specify the sort location and
+function such that you can also generate those pre_ and post_ functions.
+
+And this is only for sections that need to be sorted right? There's
+currently a patch in flight to also pre-sort the ftrace table.
+
+All unsorted or runtime sorted sections are fine since they're fixed up
+by the relocations?
+
+Is it at all feasible to share the comparison functions between the
+various sorters?
