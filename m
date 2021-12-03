@@ -2,99 +2,188 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34536C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 09:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44858C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 09:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238986AbhLCJd1 (ORCPT
+        id S1349767AbhLCJfO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 04:33:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40810 "EHLO
+        Fri, 3 Dec 2021 04:35:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234623AbhLCJd0 (ORCPT
+        with ESMTP id S237826AbhLCJfO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 04:33:26 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE45C06173E
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 01:30:03 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id n8so1703846plf.4
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 01:30:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uUViAsD6NRYfhJU+LUNpde1GdyoQcY6mfcuaaublo/c=;
-        b=jwBbaKkHG7YHCKYgOsAbOeepZGdhKtgseIOn3BAxtb7fsm04ujk9kCpvKV6iduYgob
-         YaZwCEWFEwq/eR4Xz/7TiS0CcRu766Se4BxbezU1XdIqsuaax9PpQgOe7M6BI8sP6sss
-         /NpJvjUtxFXx1ooKR91z7mHLIhNWvoCemCTZE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uUViAsD6NRYfhJU+LUNpde1GdyoQcY6mfcuaaublo/c=;
-        b=UUHzYNClioEBs9Se+4e/UzZyk/XAHZgTR/XiuGqnSG8eaWi3QFQeAW4pp75l5QBKvR
-         qSB4O9l10pZ7Torvt1cJhIuQVwZKCGpetEnhiTp1vyIi5AGXGXl/X4AEQA9Ychn4pEX1
-         FFmI4pbKWvEn+W+A6jCg4CRwBflWHxXmNE2uapMoyGOSvksPA3RI/b0kiFTr8wrD3G0W
-         gBu7/Y6IxDPVKgLzPNhuThxSVUFmSVMQ/3Q6NG3NqEsmA9IiKghbgzXd/6zsXh3qa5Rx
-         Rgj1jBIug6GyEsXrMrOcZzTtknn+5FZzSECEnhPLDiinYckSNan1jCnZGM+GmZAh3dLz
-         jHpw==
-X-Gm-Message-State: AOAM5335RCI5NgMSiDQraihbLY5v3CtKaCWY2Ns+aDT6Vj2cU5LTyo7o
-        wYNYb2Obw/psBkiY+iVGe6EsRg==
-X-Google-Smtp-Source: ABdhPJx7Ib3/rDAq1/Hx5O/1z/J0eEazZA9IxyTe+2+tC6Oqk2t7gKRn0V5Zu6ra91DZQcc0cmDksA==
-X-Received: by 2002:a17:90a:4212:: with SMTP id o18mr12672794pjg.154.1638523802697;
-        Fri, 03 Dec 2021 01:30:02 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a1sm2860175pfv.99.2021.12.03.01.30.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Dec 2021 01:30:02 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Marco Elver <elver@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] lib/test_ubsan: Silence compile-time array bounds warnings
-Date:   Fri,  3 Dec 2021 01:30:00 -0800
-Message-Id: <20211203093000.3714620-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Fri, 3 Dec 2021 04:35:14 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D69C06173E;
+        Fri,  3 Dec 2021 01:31:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+F+jn348o8c0+qkMFF271zNvg0ImzfMnYeCjnhYAoLQ=; b=muH0znyR10BD3npxHrYXsKEwzs
+        GyQkCrO8EFZ0wkALDDoo+iVtexP20q1O1LlTVxr+ktg+Q8kfrPl+0c5szhG2OE/Fm1yAikUoMHq+v
+        GxY3jyStH0ykuomRP+jNm1YcicCzif8hfv6aiTrtfwPXeSNjnmGpQj1QOobYuinhNEbW6lymcNzTr
+        5X6FM6AzzDIJOubFGy9z6hjf2+6mmKfaZhkLLxmlI3IzsqjlAZjNtF6XELXFU0yq1eQT38q4yU9EK
+        AykHR64nIOaeOyO6MS8sK0WvpgtZ+JJWZ3OCSQyTb0xAvjMEcze0bHAjPaAZ0PU9HpJNxU6Xbrhx9
+        rjDl4lsw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mt4uh-00815V-6J; Fri, 03 Dec 2021 09:31:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 75BAD300243;
+        Fri,  3 Dec 2021 10:31:30 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5F8E62B36B3A8; Fri,  3 Dec 2021 10:31:30 +0100 (CET)
+Date:   Fri, 3 Dec 2021 10:31:30 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Lobakin <alexandr.lobakin@intel.com>
+Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v8 04/14] linkage: add macros for putting ASM functions
+ into own sections
+Message-ID: <Yanj8qvo3Wj4ePyV@hirez.programming.kicks-ass.net>
+References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
+ <20211202223214.72888-5-alexandr.lobakin@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1200; h=from:subject; bh=qCMa5JNOB+3jQdARk3lO6y4bjj6mfwNGhHZcapl1AXc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhqeOYDNFA6uNwCAp2Pt6DA+UTkyqEFhnI3TI7hmPQ l2CjTbmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYanjmAAKCRCJcvTf3G3AJmYQEA CrPQB28oEdf+Duotk6AWzNp8seuGPThvn63T/8YoAt4POrc6aLmxWXgDwpgw8uBeSZi3DhS8dbHe8R ecNal1CFHSP4l3EHyJ/tm83s1cJJidqj0y+9LH8aImNcQoc670640hfEHzqAtqPnNxV6cKQsVNlKzu NkUSjAypxMK+SzcG+033457s6GD+/JtkwnICd77j42v1w4/5oB81MCcy0ucjLRVX0nCoExiF25+nIP MR5A/S/tnkU7VCdsZmfcetLrMBzaKH6sLpxnmkPMMAx4gikRolXK3x/b6A/dcCGjtofCyhH+L38NuI /zbMwEoEb6xRpFeWlSAvhNvZA33664imhZhmyCUaS54DUAxtYFzQdFJrtLK8u9ldZjqHQlgVE6NOKN ZInaBPFI47dANAy7vMtS95YPSk5ooPxVG6X5EImMAMR6KP9P0U3QUJmg/RvfAJ4bXOl33G2O7g7pOF z+D2DO/AlInq3zKFHVBNNOChOdESzbz/PaFL7e8KCOa1FHTr+kmL89Z6D7Kwj9mgyaHW+e80YKlxpw bcakVGqtDIPqe5ZjLpbjwhaO3cvizryu+LsYqQ+/oeOqoUKPUPMpGUfV+LCRVEColZ0H+H0Bhy21/5 O5OvIh2fLMVEMxtwKGBril6XB8z6IPKxj6KGCz5cjXG9+Lhbl6TwBHK4tDRw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211202223214.72888-5-alexandr.lobakin@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The UBSAN tests intentionally operate beyond array bounds, so silence
-the warning visible with a -Warray-bounds build:
+On Thu, Dec 02, 2021 at 11:32:04PM +0100, Alexander Lobakin wrote:
 
-lib/test_ubsan.c: In function 'test_ubsan_object_size_mismatch':
-lib/test_ubsan.c:109:16: error: array subscript 'long long int[0]' is partly outside array bounds of 'volatile int[1]' [-Werror=array-bounds]
-  109 |         val2 = *ptr;
-      |                ^~~~
-lib/test_ubsan.c:104:22: note: while referencing 'val'
-  104 |         volatile int val __aligned(8) = 4;
-      |                      ^~~
+> diff --git a/include/linux/linkage.h b/include/linux/linkage.h
+> index dbf8506decca..baaab7dece08 100644
+> --- a/include/linux/linkage.h
+> +++ b/include/linux/linkage.h
+> @@ -355,4 +355,86 @@
+>  
+>  #endif /* __ASSEMBLY__ */
+>  
+> +/*
+> + * Allow ASM symbols to have their own unique sections if they are being
+> + * generated by the compiler for C functions (DCE, FG-KASLR, LTO).
+> + */
+> +#if (defined(CONFIG_LD_DEAD_CODE_DATA_ELIMINATION) && !defined(MODULE)) || \
+> +    (defined(CONFIG_FG_KASLR) && !defined(MODULE)) || \
+> +    (defined(CONFIG_MODULE_FG_KASLR) && defined(MODULE)) || \
+> +    (defined(CONFIG_LTO_CLANG))
+> +
+> +#define SYM_TEXT_SECTION(name)				\
+> +	.pushsection .text.##name, "ax"
+> +
+> +#define ASM_TEXT_SECTION(name)				\
+> +	".text." #name
+> +
+> +#define ASM_PUSH_SECTION(name)				\
+> +	".pushsection .text." #name ", \"ax\""
+> +
+> +#else /* just .text */
+> +
+> +#define SYM_TEXT_SECTION(name)				\
+> +	.pushsection .text, "ax"
+> +
+> +#define ASM_TEXT_SECTION(name)				\
+> +	".text"
+> +
+> +#define ASM_PUSH_SECTION(name)				\
+> +	".pushsection .text, \"ax\""
+> +
+> +#endif /* just .text */
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- lib/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+That's terribly inconsistent, SYM_TEXT_SECTION is in fact
+PUSH_TEXT_SECTION, ASM_PUSH_SECTION is in fact ASM_PUSH_TEXT_SECTION and
+should be stringify(PUSH_TEXT_SECTION()) or something, and they're all
+repeating that ASM_TEXT_SECTION thing :/
 
-diff --git a/lib/Makefile b/lib/Makefile
-index 08959b10bac9..2742a54a4275 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -70,6 +70,7 @@ obj-$(CONFIG_KASAN_MODULE_TEST) += test_kasan_module.o
- CFLAGS_test_kasan_module.o += -fno-builtin
- obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
- CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
-+CFLAGS_test_ubsan.o += $(call cc-disable-warning, array-bounds)
- UBSAN_SANITIZE_test_ubsan.o := y
- obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
- obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
--- 
-2.30.2
 
+> +
+> +#ifdef __ASSEMBLY__
+> +
+> +#define SYM_TEXT_END_SECTION				\
+> +	.popsection
+> +
+> +#define SYM_FUNC_START_LOCAL_ALIAS_SECTION(name)	\
+> +	SYM_TEXT_SECTION(name) ASM_NL			\
+> +	SYM_FUNC_START_LOCAL_ALIAS(name)
+> +
+> +#define SYM_FUNC_START_LOCAL_SECTION(name)		\
+> +	SYM_TEXT_SECTION(name) ASM_NL			\
+> +	SYM_FUNC_START_LOCAL(name)
+> +
+> +#define SYM_FUNC_START_NOALIGN_SECTION(name)		\
+> +	SYM_TEXT_SECTION(name) ASM_NL			\
+> +	SYM_FUNC_START_NOALIGN(name)
+> +
+> +#define SYM_FUNC_START_WEAK_SECTION(name)		\
+> +	SYM_TEXT_SECTION(name) ASM_NL			\
+> +	SYM_FUNC_START_WEAK(name)
+> +
+> +#define SYM_FUNC_START_SECTION(name)			\
+> +	SYM_TEXT_SECTION(name) ASM_NL			\
+> +	SYM_FUNC_START(name)
+> +
+> +#define SYM_CODE_START_LOCAL_NOALIGN_SECTION(name)	\
+> +	SYM_TEXT_SECTION(name) ASM_NL			\
+> +	SYM_CODE_START_LOCAL_NOALIGN(name)
+> +
+> +#define SYM_CODE_START_NOALIGN_SECTION(name)		\
+> +	SYM_TEXT_SECTION(name) ASM_NL			\
+> +	SYM_CODE_START_NOALIGN(name)
+> +
+> +#define SYM_CODE_START_SECTION(name)			\
+> +	SYM_TEXT_SECTION(name) ASM_NL			\
+> +	SYM_CODE_START(name)
+> +
+> +#define SYM_FUNC_END_ALIAS_SECTION(name)		\
+> +	SYM_FUNC_END_ALIAS(name) ASM_NL			\
+> +	SYM_TEXT_END_SECTION
+> +
+> +#define SYM_FUNC_END_SECTION(name)			\
+> +	SYM_FUNC_END(name) ASM_NL			\
+> +	SYM_TEXT_END_SECTION
+> +
+> +#define SYM_CODE_END_SECTION(name)			\
+> +	SYM_CODE_END(name) ASM_NL			\
+> +	SYM_TEXT_END_SECTION
+> +
+> +#endif /* __ASSEMBLY__ */
+
+*URGH* why do we have to have new macros for this? SYM_FUNC_START*()
+already takes the name as argument.
