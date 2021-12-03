@@ -2,102 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C088C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 08:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B912BC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 08:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379257AbhLCIpd (ORCPT
+        id S1379268AbhLCIrA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 03:45:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57986 "EHLO
+        Fri, 3 Dec 2021 03:47:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379252AbhLCIpd (ORCPT
+        with ESMTP id S1351247AbhLCIrA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 03:45:33 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9526BC06174A
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 00:42:09 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id r5so2363280pgi.6
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 00:42:09 -0800 (PST)
+        Fri, 3 Dec 2021 03:47:00 -0500
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 855FEC06174A
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 00:43:36 -0800 (PST)
+Received: by mail-pf1-x431.google.com with SMTP id x5so2284111pfr.0
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 00:43:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=oNl1dPsoonmN0wsntitOn+ywp8tL5gZtZEHtz49A/+A=;
-        b=dpRsKXdhMLY+7J369KC/2xcL+pc75roCldPVjIPMO3zy+hyxM1Pxdiu4I77GR9ZqIQ
-         VFzh48VFnezn3FvHBU2lHnmGhv+AHqCbvRbctg0EMtFwaW4q6Y/baZP567PH6nHPADKm
-         hVz9kLZwP36rkdTQxClon+HMpqlc2CrG1EmwI=
+        bh=ZE+eyVTlgGs9+AIP2vmWrN/5/319nQUIDXkWbwr6YtE=;
+        b=VDbYfoQXRs9UHxCEK9S7OW6FTx6guHxJyZPP8BKTaq0BFlv1ouM9tI/H+QI2QIkmUK
+         vgNlj4Ue10IZAYAlk/k49AlI32/okqaqbppNdQK7LogVZRyeh01/lzK3NNuCqwX+eMPD
+         rsCM4drqg2NnCzdiVRNfrrH8YCSrmsLck/IT0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=oNl1dPsoonmN0wsntitOn+ywp8tL5gZtZEHtz49A/+A=;
-        b=AJw7SeOrZogrhs7+XDv3CSPXwh7iWGypJiBh4MF/W+lSKLe7e9h4bQoFhw3KM+Yn2d
-         +NbbAOWAwhbyX4wEC8sbH402DnCp6MOv+jUEqCtO4QaTv1vlfTqyUZM/bU031NbnWq1N
-         LPNluNuGaZ7hCvwmJwQl3/xhuNXPu6H16ymN2XGwYtWanQ9rYvI+WGVViVxPUeNvzyhP
-         mhpUg6qgIz+h+i+QtZZNQ865Zc6NVEkal1vrvPFv1Wsk7WmR0kz06u2C5Bzi6rq5oaVo
-         jZaYosxmZX+R6PztKHfYE4+n/MKDLjNvzXxRNo2vPUc+tMOqtL7qXfY9U7919u58+n8p
-         YksA==
-X-Gm-Message-State: AOAM5302u13toIGqJksh0Adr1NmdtSUj+MmYbkC+gW9c6UhWKfidjPIU
-        ZaVU38zlOXxDtF8LTzQVvC1vsWh1o9NcZQ==
-X-Google-Smtp-Source: ABdhPJyOy8ffZZnS+s5ovtWMxYJu6Vzj9ztrrcFa0AOJOrmQvAq2vmGVBsOci68ApP5tbeSnFIYuAg==
-X-Received: by 2002:a63:e4f:: with SMTP id 15mr3592692pgo.336.1638520929127;
-        Fri, 03 Dec 2021 00:42:09 -0800 (PST)
+        bh=ZE+eyVTlgGs9+AIP2vmWrN/5/319nQUIDXkWbwr6YtE=;
+        b=YV1dk9kKxN+L0ApbuQrFatQLlL7vYr0T/FJtBxao6F7nDVf1R+QwdtcXMsitxSu2A7
+         C5gBPSzTpIC59VwHLbkhyLvrVNeJcAsgJ4G/HlMZ1UOwy6kZqOslgac8WrGYWRsYUL/k
+         2pyBMzXOz5k+vEHlfWQVWlVlAJNVWzlneuAfXLC6yMh4/NDTQbImVGs89niZ0Hio3Pmo
+         zrw+WGduzR46alzRpG8FLJ4pqT0MJL0kbHGCstUCvzWEhSjLhgbdcuT/8Xt2Hu7QuLyC
+         BEjicQgJed3ApZ3lJHkhrHUBN5ADlvFHlIpxYxzJ0NLJ5YUEYhqjjCV63qf1wE2s37Za
+         jcgw==
+X-Gm-Message-State: AOAM532KPT8StZMPUZZ6Ty2i8MrIfAvsd0bC7e9LebZjz83P0sAfF+0B
+        +AFHLxjLX9SMteQKn5Hdgry4hg==
+X-Google-Smtp-Source: ABdhPJwQfA/hRvvynLK4rv8xy6QfeakwaLWnL/8X265xiYrZ7weDjYz9N+w5NMQ2McIaic7OerHAMA==
+X-Received: by 2002:a63:2542:: with SMTP id l63mr3502793pgl.431.1638521016128;
+        Fri, 03 Dec 2021 00:43:36 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i191sm1767486pgd.90.2021.12.03.00.42.08
+        by smtp.gmail.com with ESMTPSA id g20sm2838048pfj.12.2021.12.03.00.43.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Dec 2021 00:42:08 -0800 (PST)
+        Fri, 03 Dec 2021 00:43:35 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] char/mwave: Adjust io port register size
-Date:   Fri,  3 Dec 2021 00:42:06 -0800
-Message-Id: <20211203084206.3104326-1-keescook@chromium.org>
+Subject: [PATCH] drm/dp: Fix off-by-one in register cache size
+Date:   Fri,  3 Dec 2021 00:43:33 -0800
+Message-Id: <20211203084333.3105038-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1884; h=from:subject; bh=5T/cb6qBbQUM3Yq2Kyl3dwrDm/iPoU3ceF6IrYcyUWc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhqdhdV8aZb3Pa0k+gkAxlBz7ZOATIJYlBCUcs0gjH jZo/Ky6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYanYXQAKCRCJcvTf3G3AJlUkD/ 9FJHxNsM5brHv0iTkRs5cQf2XcRsTnhCb3zlFsIbloaJKIs/LId8HcpBvhLD5srf0sGO+rkH8qSWZ2 D+Q2xUXXcd7VceJpWU+8rvqf8nudvR+cx8FtGnQ/EDj0EP+2CM6q1OnwxRy02u5NQpuQQAXo4izkmR t57W18HeKbaVPU9IYVY68rCvYFM49HrbPGO1d+d6IL7Th/smpVndSMmM+EKdsDkZo4ydxWT6zpxGIj eofAQ+PkMANDh+rvyFxQ1I42enGMC2zklWfy/L4tZVXTCZo09gBMkg4N7kTPwUssN+UGlBr81O4oxy DF3GFivbKldbEAnjIEXA1nJmim9f9BCYQ0badB4Goh/hlYCsJHs06F28gAGyt2fbh6He4iTM9Zoqm2 kAYfM+3fU34/C5ANTLXJCwQmTaxxlnMfj9ZJgPfBjuTHddRkNPuNw2AimqqQgv9xXaIpCyL1pjehaq qp6UmB8M7ndbJE6g7TpOBq+xYqnndthOUO9WJSberG8uq7xU9IgeVRinyNIM4kzLN1snzM028+uXSD Au2l8AHwkVRf5ZxqzGMU+UbhJiGZaYLYcoozn/B/AzUayQP5OPUnlJTAE+bGbAfTdGh4NWrnuJqMhU p9rVuel7wR04sHDU9yGz4cz0s7ZZlcrkw2WdUBrIn1tZ47n9nov30kA14UqQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1934; h=from:subject; bh=rsrmXkTfjT0xKWn6tW4v+AFF+Qh9FSj0rQAAqFtZsnE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhqdi1VB8a7JgU9iVrIiez0JAFg3QRkKnyojAvpfmk xGJenGaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYanYtQAKCRCJcvTf3G3AJqDrD/ 0Q+WlLCtIOelpAxkp8i+3mzggF/AKL3hGb0fhgFfr9eL9oxCO1iQd/QVz2OFadF0kFQnNrCXYxSJs8 1/B1Bzi03yQGmwxPIuwwbg9ptXI7iFNa+s80WXYT/HVmQ5YhLMiRE/TyY3AQBt9xDgYWpHRD97reQr 49WW92g7ss6Q4EU6rXL3s3iooH1ZRsg6dueYFAzVgOO8O7YIjMRPKFwhquL9zdU3fjZqzYmKEwLt22 tkERTbWN82Q6g0k+SVAeLR1iTI4tPwFr3Vy9FzAf+USQA2EAG/v9EQilBmGbRgmjDMXr+4EXqyqTie 7904y4yhNPlflKyU/Y34LYTBQTddQWL7QjK78RtgwFjtKptCyj+WMnHReEExsZnfGLeiKW/KmN8IhW l7ftFOGMzOUiwOQQkdEuveoUoxciBZFbzpwsqoA4uwwMajShbSLtO/c1JP/x+/A/XTHdz3bsussdV1 ehpcCbWNIN1WZJnX3GHM/K4eUT6ESl1ZWnkex/7KfwKXmwOydgLLuzhVjEYGXWhT30kj7HSIaZp6WI Xbk10bTyszsaJunW6tdhjRtB4FjbGYT0Y0KuAbKTHqkihlqeXUv7Ss0zJJ9u5EU/FWY9YKHE6NrLIg 077Wg3pDM8XyeZ6VIeYvaqhsWd0ceqfxO2gwgpDqf6WJwg/Gm7y1dFUxnofg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Using MKWORD() on a byte-sized variable results in OOB read. Expand the
-size of the reserved area so both MKWORD and MKBYTE continue to work
-without overflow. Silences this warning on a -Warray-bounds build:
+The pcon_dsc_dpcd array holds 13 registers (0x92 through 0x9E). Fix the
+math to calculate the max size. Found from a -Warray-bounds build:
 
-drivers/char/mwave/3780i.h:346:22: error: array subscript 'short unsigned int[0]' is partly outside array bounds of 'DSP_ISA_SLAVE_CONTROL[1]' [-Werror=array-bounds]
-  346 | #define MKWORD(var) (*((unsigned short *)(&var)))
-      |                     ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/char/mwave/3780i.h:356:40: note: in definition of macro 'OutWordDsp'
-  356 | #define OutWordDsp(index,value)   outw(value,usDspBaseIO+index)
-      |                                        ^~~~~
-drivers/char/mwave/3780i.c:373:41: note: in expansion of macro 'MKWORD'
-  373 |         OutWordDsp(DSP_IsaSlaveControl, MKWORD(rSlaveControl));
-      |                                         ^~~~~~
-drivers/char/mwave/3780i.c:358:31: note: while referencing 'rSlaveControl'
-  358 |         DSP_ISA_SLAVE_CONTROL rSlaveControl;
-      |                               ^~~~~~~~~~~~~
+drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_pcon_dsc_bpp_incr':
+drivers/gpu/drm/drm_dp_helper.c:3130:28: error: array subscript 12 is outside array bounds of 'const u8[12]' {aka 'const unsigned char[12]'} [-Werror=array-bounds]
+ 3130 |         buf = pcon_dsc_dpcd[DP_PCON_DSC_BPP_INCR - DP_PCON_DSC_ENCODER];
+      |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/drm_dp_helper.c:3126:39: note: while referencing 'pcon_dsc_dpcd'
+ 3126 | int drm_dp_pcon_dsc_bpp_incr(const u8 pcon_dsc_dpcd[DP_PCON_DSC_ENCODER_CAP_SIZE])
+      |                              ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: e2e16da398d9 ("drm/dp_helper: Add support for Configuring DSC for HDMI2.1 Pcon")
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/char/mwave/3780i.h | 2 +-
+ include/drm/drm_dp_helper.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/mwave/3780i.h b/drivers/char/mwave/3780i.h
-index 9ccb6b270b07..95164246afd1 100644
---- a/drivers/char/mwave/3780i.h
-+++ b/drivers/char/mwave/3780i.h
-@@ -68,7 +68,7 @@ typedef struct {
- 	unsigned char ClockControl:1;	/* RW: Clock control: 0=normal, 1=stop 3780i clocks */
- 	unsigned char SoftReset:1;	/* RW: Soft reset 0=normal, 1=soft reset active */
- 	unsigned char ConfigMode:1;	/* RW: Configuration mode, 0=normal, 1=config mode */
--	unsigned char Reserved:5;	/* 0: Reserved */
-+	unsigned short Reserved:13;	/* 0: Reserved */
- } DSP_ISA_SLAVE_CONTROL;
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 30359e434c3f..472dac376284 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -456,7 +456,7 @@ struct drm_panel;
+ #define DP_FEC_CAPABILITY_1			0x091   /* 2.0 */
  
- 
+ /* DP-HDMI2.1 PCON DSC ENCODER SUPPORT */
+-#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xC	/* 0x9E - 0x92 */
++#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xD	/* 0x92 through 0x9E */
+ #define DP_PCON_DSC_ENCODER                 0x092
+ # define DP_PCON_DSC_ENCODER_SUPPORTED      (1 << 0)
+ # define DP_PCON_DSC_PPS_ENC_OVERRIDE       (1 << 1)
 -- 
 2.30.2
 
