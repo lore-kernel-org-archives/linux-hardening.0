@@ -2,148 +2,133 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E686FC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 16:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCD3C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Dec 2021 16:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245444AbhLCQZS (ORCPT
+        id S1381927AbhLCQgi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 11:25:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
+        Fri, 3 Dec 2021 11:36:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245119AbhLCQZR (ORCPT
+        with ESMTP id S240590AbhLCQgi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 11:25:17 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9526C061751
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 08:21:53 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id p18-20020a17090ad31200b001a78bb52876so5551650pju.3
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 08:21:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=j/5ecamC7ddvajilWR2KuZ9hro3rMRRJOO4sN6pkOcw=;
-        b=BA379woLXMV7sunjp3DYGTcEgY85D/pwf0ebSsGDvzGFrpwmd6tXkfGcIMdZF3IxuJ
-         X2kvHP3VuMckYgEGKqbzoCwsLISUbp6zokE30CnN28VLSGJSlNa8AxOvPlf7RJhSn/Wb
-         RLkWOWjgy6HImjnkHp2T4H3Nhx7abjWR2Tf8Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=j/5ecamC7ddvajilWR2KuZ9hro3rMRRJOO4sN6pkOcw=;
-        b=lF/tRlGlQ0rVZOkgkfjsw8clsOa/zvDQ0u3Z77S5QzbF8nrk0ld1ZUQ+6LCtjRfUfn
-         TyWjTiwZLcQbqJqK8xBmAzAAMiPvN6Wy3RBK7XFpLtNCc5BnqShFZE6O1eCJAqnTajcD
-         q0SooMP1Uex7cTDAcLg+mNW0tGAJ5APOwRL2G5kZLtGyEI2g5qLx58H5Qn9Th/tNnFPP
-         EB+o6afnm8BudgBj16cYkCbZfrgm1BKekjblHDDz50Zv/iHA3vExIfD4XO+CmMvFPuMY
-         jWpa1D99DXExyEkh1oEcc4VH+1/UIzrW2nnJs39PLkIYcIaptf0geQ+69+wTUu3Fd/C0
-         Mz8Q==
-X-Gm-Message-State: AOAM532WizcNfp9l0BPQwuy19BbAsxA0uIjaBgLHNxRYPh5fI59/dhG9
-        fWGXsLe3IWRjZuzyVsbehkmFFYiyXjyu8g==
-X-Google-Smtp-Source: ABdhPJyLipV9EiNWJaJhwEI7+g6PZlOABwHuSVKHcZHj7Sc3iBWtSBamTSBa/OhhzE8rmPqEPh2dFg==
-X-Received: by 2002:a17:90a:1283:: with SMTP id g3mr15316290pja.174.1638548513291;
-        Fri, 03 Dec 2021 08:21:53 -0800 (PST)
-Received: from [127.0.0.1] (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g17sm3808219pfv.136.2021.12.03.08.21.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Dec 2021 08:21:52 -0800 (PST)
-Date:   Fri, 03 Dec 2021 08:21:50 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Marco Elver <elver@google.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
+        Fri, 3 Dec 2021 11:36:38 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9D7C061751;
+        Fri,  3 Dec 2021 08:33:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QjwBqRRkSrixSh/IDyfbmaebOro1hr1dDZ0gMoqAxDY=; b=filV5mfIAXvfm0uzdKd9gxn+Ac
+        /Z+Bd/HBfONMrS6Ywwq2Z1V9I2sh7rZnRhXrZb+mLZf65ChTQzrJUzraRuiPZrarIhntiH3mwAljC
+        BLpVdZnwOqd0WZVg9w1rzQnTT7SZJzrZ3SB4ic9vMTZx47mGfdxhg6qjQOmTQ1RurUee0ohGp6MrC
+        46nDrNFg0zbkY2BN0n0ou4kE11nRCvkPZiZsLAOE2bhH4e4V9FDaIUuJiNh54VF+CW2y5W8kS79v9
+        ZVzvesXBl8G8PJYmPI6bdsJ6+T/Gavx2XwBzBd0urakpY2UvJY15R/ay4wJJ1JSgCfCn4qqb8Z5wF
+        fhXW5HFQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mtBUA-009OIf-6T; Fri, 03 Dec 2021 16:32:35 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 37CEC9810D4; Fri,  3 Dec 2021 17:32:34 +0100 (CET)
+Date:   Fri, 3 Dec 2021 17:32:34 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Lobakin <alexandr.lobakin@intel.com>
+Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_lib/test=5Fubsan=3A_Silence?= =?US-ASCII?Q?_compile-time_array_bounds_warnings?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CANpmjNPCjXp_0iQjdznpvS2vF-VvDkxJrtWnBAoj6TAU488VAQ@mail.gmail.com>
-References: <20211203093000.3714620-1-keescook@chromium.org> <CANpmjNPCjXp_0iQjdznpvS2vF-VvDkxJrtWnBAoj6TAU488VAQ@mail.gmail.com>
-Message-ID: <CE7F1A95-67C7-4BDA-B803-D93901EC2378@chromium.org>
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v8 00/14] Function Granular KASLR
+Message-ID: <20211203163234.GJ16608@worktop.programming.kicks-ass.net>
+References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
+ <YanzpvmaX1JWYf9t@hirez.programming.kicks-ass.net>
+ <20211203144136.82915-1-alexandr.lobakin@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211203144136.82915-1-alexandr.lobakin@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, Dec 03, 2021 at 03:41:36PM +0100, Alexander Lobakin wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Fri, 3 Dec 2021 11:38:30 +0100
+> 
+> > On Thu, Dec 02, 2021 at 11:32:00PM +0100, Alexander Lobakin wrote:
+> > 
+> > > feat        make -j65 boot    vmlinux.o vmlinux  bzImage  bogoops/s
+> > > Relocatable 4m38.478s 24.440s 72014208  58579520  9396192 57640.39
+> > > KASLR       4m39.344s 24.204s 72020624  87805776  9740352 57393.80
+> > > FG-K 16 fps 6m16.493s 25.429s 83759856  87194160 10885632 57784.76
+> > > FG-K 8 fps  6m20.190s 25.094s 83759856  88741328 10985248 56625.84
+> > > FG-K 1 fps  7m09.611s 25.922s 83759856  95681128 11352192 56953.99
+> > 
+> > :sadface: so at best it makes my kernel compiles ~50% slower. Who would
+> > ever consider doing that? It's like retpolines weren't bad enough; lets
+> > heap on the fail?
+> 
+> I was waiting for that :D
+> 
+> I know it's horrible for now, but there are some points to consider:
+>  - folks who are placing hardening over everything don't mind
+>    compile times most likely;
+>  - linkers choking on huge LD scripts is actually a bug in their
+>    code. They process 40k sections as orphans (without a generated
+>    LD script) for a split second, so they're likely able to do the
+>    same with it. Our position here is that after FG-KASLR landing
+>    we'll report it and probably look into linkers' code to see if
+>    that can be addressed (Kees et al are on this AFAIU);
+>  - ClangLTO (at least "Fat", not sure about Thin as I didn't used
+>    it) thinks on vmlinux.o for ~5 minutes on 8-core Skylake. Still,
+>    it is here in mainline and is widely (relatively) used.
+>    I know FG-KASLR stuff is way more exotic, but anyways.
+>  - And the last one: I wouldn't consider FG-KASLR production ready
+>    as Kees would like to see it. Apart from compilation time, you
+>    get random performance {in,de}creases here-and-there all over
+>    the kernel and modules you can't predict at all.
+>    I guess it would become better later on when/if we introduce
+>    profiling-based function placement (there are some discussions
+>    around that and one related article is referred in the orig
+>    cover letter), but dunno for now.
+>    There's one issue in the current code as well -- PTI switching
+>    code is in .entry.text which doesn't currently get randomized.
+>    So it can probably be hunted using gadget collectors I guess?
 
+Oooh, so those compile times are not, as one would expect the compile
+times for a set .config but with different kernel, but instead for a
+varying .config on the same kernel?
 
-On December 3, 2021 2:49:53 AM PST, Marco Elver <elver@google=2Ecom> wrote=
-:
->On Fri, 3 Dec 2021 at 10:30, Kees Cook <keescook@chromium=2Eorg> wrote:
->> The UBSAN tests intentionally operate beyond array bounds, so silence
->> the warning visible with a -Warray-bounds build:
->>
->> lib/test_ubsan=2Ec: In function 'test_ubsan_object_size_mismatch':
->> lib/test_ubsan=2Ec:109:16: error: array subscript 'long long int[0]' is=
- partly outside array bounds of 'volatile int[1]' [-Werror=3Darray-bounds]
->>   109 |         val2 =3D *ptr;
->>       |                ^~~~
->> lib/test_ubsan=2Ec:104:22: note: while referencing 'val'
->>   104 |         volatile int val __aligned(8) =3D 4;
->>       |                      ^~~
->>
->> Signed-off-by: Kees Cook <keescook@chromium=2Eorg>
->> ---
->>  lib/Makefile | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/lib/Makefile b/lib/Makefile
->> index 08959b10bac9=2E=2E2742a54a4275 100644
->> --- a/lib/Makefile
->> +++ b/lib/Makefile
->> @@ -70,6 +70,7 @@ obj-$(CONFIG_KASAN_MODULE_TEST) +=3D test_kasan_modul=
-e=2Eo
->>  CFLAGS_test_kasan_module=2Eo +=3D -fno-builtin
->>  obj-$(CONFIG_TEST_UBSAN) +=3D test_ubsan=2Eo
->>  CFLAGS_test_ubsan=2Eo +=3D $(call cc-disable-warning, vla)
->> +CFLAGS_test_ubsan=2Eo +=3D $(call cc-disable-warning, array-bounds)
->>  UBSAN_SANITIZE_test_ubsan=2Eo :=3D y
->>  obj-$(CONFIG_TEST_KSTRTOX) +=3D test-kstrtox=2Eo
->>  obj-$(CONFIG_TEST_LIST_SORT) +=3D test_list_sort=2Eo
->
->Are there other warnings or only the one for the fsanitize=3Dobject-size
->test? I think this is fine if there are other warnings=2E
+IOW, they don't represent the run-time overhead of this thing, but
+merely the toolchain overhead of all this.
 
-I will double check, but I think it's only the object-size test, which see=
-ms to confirm my suspicion that -Warray-bounds provides sufficient coverage=
- and object-size can be removed=2E
-
-I have another patch I intend to send today for the sk_buff/sk_buff_head i=
-ssue, as -Warray-bounds warns for that as well=2E
-
->But, if it's only about the fsanitize=3Dobject-size test, I'm going to
->propose something more drastic=2E :-)
-
-Are there any cases where object-size does a run-time check that couldn't =
-be done at compile time? That's the only reason I could see to keep it at t=
-his point, as -Warray-bounds can do the compile time checks=2E
-
->I had wanted to wait a bit and dig a little deeper, but I just posted
->part of my analysis here:
->https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D214861#c4
-
-Thanks, I'll refer to that in my sk_buff patch=2E It seems -Warray-bounds =
-suffers from the same conservativism about object casts, which is frustrati=
-ng on the one hand since the warning can be a false positive (cast vs acces=
-s), but on the other, it does call attention to fragile arrangements which =
-maybe could do with adjustment=2E
-
->My proposal is to remove UBSAN_OBJECT_SIZE and its related tests=2E The
->bugzilla bug goes into the details, but the TLDR is:
->1=2E fsanitize=3Dobject-size is incomplete,
->2=2E it should have been a compiler warning,
->3=2E for everything else there is KASAN which detects real OOB,
->4=2E for GCC we already disable UBSAN_OBJECT_SIZE=2E
-
-And maybe:
-5=2E -Warray-bounds provides the same coverage and is about to be enabled =
-globally=2E
-
-
-
---=20
-Kees Cook
+So what is the actual runtime overhead of all this?
