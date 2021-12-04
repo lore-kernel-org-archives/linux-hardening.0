@@ -2,131 +2,145 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A65AC433FE
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Dec 2021 00:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EC7C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Dec 2021 08:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354494AbhLDAdk (ORCPT
+        id S1384300AbhLDIfQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Dec 2021 19:33:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48796 "EHLO
+        Sat, 4 Dec 2021 03:35:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354124AbhLDAdi (ORCPT
+        with ESMTP id S1384278AbhLDIfP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Dec 2021 19:33:38 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC317C061751
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Dec 2021 16:30:13 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id w33-20020a17090a6ba400b001a722a06212so6138134pjj.0
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Dec 2021 16:30:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y4bA6B58sO/DZFiWQPyn2M4tT+W9TdiU/GNQ/jYac3Y=;
-        b=dONWm8orH3rHUYSth5Iu/7D5o9GfvJHjytD1XASds1m9DG5Iu2xtV+VIJqFns9+sCW
-         gtVXtQ+X75glpuBDyjZuBrz5E2x65R67MRUHyYgMxoRbtj2iT7FB4LVqbxZaCTcsZp/N
-         XgqXSY5G2qAHh4XaPeq45yLBcfhCQFiswdF4I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y4bA6B58sO/DZFiWQPyn2M4tT+W9TdiU/GNQ/jYac3Y=;
-        b=mURDLjyLcDyV9sKdUCT3U2pTB0YT7GSdPCayJQtVR34BsdliVcDsMczdNlZ1vp0ZhH
-         MdSpNhiDUImRUdMEngbJByhpt0oFq/cuObc7Ysb6wQzCQ2MDB/HGiXeO5wlbOfSvbg90
-         qQBkoy1SLH1u5NuhD2t5bRpAV51Uo8ErXoNI/ohloFEJSbfi5irg0CFFygEAPOAXg1bz
-         /0D+dBkP5SalxDdiWUxkhGdAShlwQimqSYcc+VOZyFDhqrEkJNMI4/HMN419f+fOULyr
-         Ty11b8NEMISFDeuYlqZIGQQOdgZiseUgCuMKHYWr3LiXRLRway2p/D07iHj7gPW+U9f7
-         gJ9A==
-X-Gm-Message-State: AOAM5331MKdGZ4bUv2dgXBie5Xjwuz2SU204SXIaGnDc/6A6ZlpPZe5o
-        yYqNWyV4dFIgScIV9nDeUmIelw==
-X-Google-Smtp-Source: ABdhPJy5+D2oCiE3ykyx5Czt8xcCI64YJaODeOVQrz0mW/Nu4udeXpuxcyGClFdtOCvXH6jCy9Bo8w==
-X-Received: by 2002:a17:90b:2251:: with SMTP id hk17mr18109616pjb.31.1638577813403;
-        Fri, 03 Dec 2021 16:30:13 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i67sm4367649pfg.189.2021.12.03.16.30.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Dec 2021 16:30:12 -0800 (PST)
-Date:   Fri, 3 Dec 2021 16:30:12 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Thierry Reding <treding@nvidia.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Imre Deak <imre.deak@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
-        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Lyude Paul <lyude@redhat.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] drm/dp: Actually read Adjust Request Post Cursor2
- register
-Message-ID: <202112031627.C312CCDD0@keescook>
-References: <20211203092517.3592532-1-keescook@chromium.org>
- <Yao3uMmXM+IvrVrF@orome.fritz.box>
+        Sat, 4 Dec 2021 03:35:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F516C061751;
+        Sat,  4 Dec 2021 00:31:49 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3C83AB807E4;
+        Sat,  4 Dec 2021 08:31:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E97A2C341DD;
+        Sat,  4 Dec 2021 08:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638606707;
+        bh=sjxIy15k4SzsvZ32dYqzU6rAx1xmDB5EFetzASD4t8Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AO5+j9PPnG3pZTh7eQqBRXgGWXRfdKfANVZmZzYPBGST3AiaWOuZZAmrGej/JC000
+         S9adzJQ0yWZxgZnTtFpgzPBCV3LOt3UqGXa0wQ0oiNe7xzU5/dneblUpSWPPux74t5
+         nSGM6SL5MLvep7TCSpU4usx0a4m8Jf5X+1tUw2Gh2g8oThQ9DD/76BkB+zZwGOERsZ
+         G16/r7EsWJBQR4SqTNUlfC0D+21VAEUddGcD+g4OynQIwbEA3iqMl9K5d0JZE6YKCc
+         QUfoWyU+yAt6iMuzzQZZbsvYOA/2IOeqH2CfjYIh/gCXfVnY3PM770wZxbbMVd1bbd
+         t4uWVgZZA0tGQ==
+Received: by mail-oi1-f179.google.com with SMTP id be32so10635509oib.11;
+        Sat, 04 Dec 2021 00:31:46 -0800 (PST)
+X-Gm-Message-State: AOAM533AIha0bNRtuxlmXfxTGLTseLawaCTO7b218uyjQTftDMFzq21F
+        DeVIU61usP9FXAXFP9ub/VJW4nKaH0E+5gWOT6g=
+X-Google-Smtp-Source: ABdhPJyn4NdGHzLPLyNqpl1/AkUOXDqgnkodOajUO6/cACrbmxliVgYb+PBdbCBD0mfwx7JzHi4Aryi8jeqgWKgstGY=
+X-Received: by 2002:a05:6808:1919:: with SMTP id bf25mr14503710oib.33.1638606705790;
+ Sat, 04 Dec 2021 00:31:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yao3uMmXM+IvrVrF@orome.fritz.box>
+References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
+ <20211202223214.72888-6-alexandr.lobakin@intel.com> <Yanm6tJ2obi1aKv6@hirez.programming.kicks-ass.net>
+ <20211203141051.82467-1-alexandr.lobakin@intel.com> <20211203163424.GK16608@worktop.programming.kicks-ass.net>
+ <28856p61-r54s-791n-q6s1-27575s62r2q9@syhkavp.arg>
+In-Reply-To: <28856p61-r54s-791n-q6s1-27575s62r2q9@syhkavp.arg>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 4 Dec 2021 09:31:34 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXG-+d-ak9od9z-VxOk9Y+fp_KDSbLP=ns_ZfVEXjrzKsg@mail.gmail.com>
+Message-ID: <CAMj1kXG-+d-ak9od9z-VxOk9Y+fp_KDSbLP=ns_ZfVEXjrzKsg@mail.gmail.com>
+Subject: Re: [PATCH v8 05/14] x86: conditionally place regular ASM functions
+ into separate sections
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexander Lobakin <alexandr.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, X86 ML <x86@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        live-patching@vger.kernel.org, llvm@lists.linux.dev,
+        hjl.tools@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 03, 2021 at 04:28:56PM +0100, Thierry Reding wrote:
-> On Fri, Dec 03, 2021 at 01:25:17AM -0800, Kees Cook wrote:
-> > The link_status array was not large enough to read the Adjust Request
-> > Post Cursor2 register. Adjust the size to include it. Found with a
-> > -Warray-bounds build:
-> > 
-> > drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
-> > drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
-> >    59 |         return link_status[r - DP_LANE0_1_STATUS];
-> >       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
-> >   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > v2: Fix missed array size change in intel_dp_check_mst_status()
-> > ---
-> >  drivers/gpu/drm/i915/display/intel_dp.c |  8 ++++----
-> >  include/drm/drm_dp_helper.h             | 10 +++++++++-
-> >  2 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> This sounds very familiar and I vaguely recall typing up a patch like
-> that a long time ago. But I obviously failed because that never seems
-> to have made it upstream.
-> 
-> Or perhaps I'm misremembering and was thinking about this instead:
-> 
-> 	https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/338590/
+On Fri, 3 Dec 2021 at 20:46, Nicolas Pitre <nico@fluxnic.net> wrote:
+>
+> On Fri, 3 Dec 2021, Peter Zijlstra wrote:
+>
+> > On Fri, Dec 03, 2021 at 03:10:51PM +0100, Alexander Lobakin wrote:
+> > > From: Peter Zijlstra <peterz@infradead.org>
+> > > Date: Fri, 3 Dec 2021 10:44:10 +0100
+> > >
+> > > > On Thu, Dec 02, 2021 at 11:32:05PM +0100, Alexander Lobakin wrote:
+> > > > > Use the newly introduces macros to create unique separate sections
+> > > > > for (almost) every "regular" ASM function (i.e. for those which
+> > > > > aren't explicitly put into a specific one).
+> > > > > There should be no leftovers as input .text will be size-asserted
+> > > > > in the LD script generated for FG-KASLR.
+> > > >
+> > > > *groan*...
+> > > >
+> > > > Please, can't we do something like:
+> > > >
+> > > > #define SYM_PUSH_SECTION(name)    \
+> > > > .if section == .text              \
+> > > > .push_section .text.##name        \
+> > > > .else                             \
+> > > > .push_section .text               \
+> > > > .endif
+> > > >
+> > > > #define SYM_POP_SECTION() \
+> > > > .pop_section
+> > > >
+> > > > and wrap that inside the existing SYM_FUNC_START*() SYM_FUNC_END()
+> > > > macros.
+> > >
+> > > Ah I see. I asked about this in my previous mail and you replied
+> > > already (: Cool stuff, I'll use it, it simplifies things a lot.
+> >
+> > Note, I've no idea if it works. GAS and me aren't really on speaking
+> > terms. It would be my luck for that to be totally impossible, hjl?
+>
+> Surely this would do it:
+>
+> http://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=451133cefa839104
+>
 
-Oh! Yeah, that's the same thing. Looks like that never made its way
-upstream. :(
-
-> 
-> Bonus points for adding that comment with background information on why
-> we need this.
-
-Thanks! Yeah, I needed to really convince myself everything added up and
-made sense, and figured I should try to capture that research. ;)
-
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-
-Thanks!
-
--Kees
-
--- 
-Kees Cook
+That seems rather useful, actually. It will also fix a problem with
+subsections, which are sometimes difficult to construct from a macro,
+as they cannot be created using pushsection/popsection unless you know
+the current section name, and the alternative syntax (.subsection /
+.previous) does not permit nesting. This makes their use from a macro
+risky, given that it may not be obvious to the macro's caller that it
+uses a subsection under the hood.
