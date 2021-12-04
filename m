@@ -2,93 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1888DC433FE
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Dec 2021 08:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59291C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Dec 2021 17:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384350AbhLDI7N (ORCPT
+        id S1355675AbhLDRRx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Dec 2021 03:59:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45170 "EHLO
+        Sat, 4 Dec 2021 12:17:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354761AbhLDI7N (ORCPT
+        with ESMTP id S1345154AbhLDRRw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Dec 2021 03:59:13 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02908C061751;
-        Sat,  4 Dec 2021 00:55:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Vwdl1xKa4HYu9irhFaCnjVvl+U+9xbF06W/a7qens7k=; b=vfPGu83j2gIsLgLE3DxB3r9q9/
-        dbtwfJyG9lDZtbNYQGVmVKocVsH2s9u0wX0ATvcJHRY2i/ueC7uoief9HZrymphH9VddBvVkWXUt1
-        XnEiRvUqWKLajju+56+0EXRIX1Gn6KmdV+QivZcC5SgysDZoqTnwaTqbDjF2o/QgKisFGSbHUrrwq
-        4TkW84iHfLM1ke2YdGrB5rOc8pvI+YuYx3DgIU8nYsZFAk9oDk8YMaMvwdHJeD9mKOxOhdrVOnZIf
-        w5g5jFMajbIyO1Avs7hHiBcvmQ1DKcYAx1a9IuDAejtXgGNiltk3qGyvkQcbNPhgEb6YBIX/qPMmR
-        /1LPU4jQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mtQov-00CL1l-IB; Sat, 04 Dec 2021 08:55:02 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0FB8998106D; Sat,  4 Dec 2021 09:55:01 +0100 (CET)
-Date:   Sat, 4 Dec 2021 09:55:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
-        linux-hardening@vger.kernel.org, x86@kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev, hjl.tools@gmail.com
-Subject: Re: [PATCH v8 05/14] x86: conditionally place regular ASM functions
- into separate sections
-Message-ID: <20211204085500.GL16608@worktop.programming.kicks-ass.net>
-References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
- <20211202223214.72888-6-alexandr.lobakin@intel.com>
- <Yanm6tJ2obi1aKv6@hirez.programming.kicks-ass.net>
- <20211203141051.82467-1-alexandr.lobakin@intel.com>
- <20211203163424.GK16608@worktop.programming.kicks-ass.net>
- <28856p61-r54s-791n-q6s1-27575s62r2q9@syhkavp.arg>
+        Sat, 4 Dec 2021 12:17:52 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D0CC061751;
+        Sat,  4 Dec 2021 09:14:26 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id d9so12798813wrw.4;
+        Sat, 04 Dec 2021 09:14:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/cksNdFZj9IWFAKVJL2S+JO52BCjhptq1rRTsh39hwU=;
+        b=hDkp38Hh5EL0JAbauIY7IrYLaUFIMb2J4WxSWavCR0/NMFUkQswvhavyBvH0Xhmr65
+         hT646y40uhe90P6mM9+QwIF0UgGfQhtPf7M9HH8prcEgoduOae0QeHKbuOF+2SzQpUKE
+         LWdbd3HfEbQzzu/k1Z8Ot2PeTPSOztxBWbpDticprF7d+Tlwv7HoaMz3sysO+Vuasebj
+         RKzcTIJBqNejda+yMZGuNE7mNbWWap4zkLHwKrtyThPJXQ8uVF93thxI9Am15jPsjU3e
+         09VeM7aFt+UKrrWRaY4OGlJvgamgXlrjz037CYX/0Ic2tUzXgPEGehiwazukuSVDEMmu
+         m/Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/cksNdFZj9IWFAKVJL2S+JO52BCjhptq1rRTsh39hwU=;
+        b=JOGh5fxFiYwkGisYwJ4rEFaLkBlcdjO7WXV8RjiiPchBNO4bVWREiA6C6eh4VnzJ3y
+         0zwI+hTwcCNnnEQo2lcQ9lx3GqXS7+w2dZnnCHqMPqU1rbNlV0nhNInxUZC3w6v4R65u
+         2AQu8OMVnj4fDg4Xk6nxf7MGJXnftljZqIHuZoLDuoJYuAtij5HGW1t95A/1OhLAe4K0
+         OBHFLsPwFA4dmSSSMsnQO5O1/ePmjiz0Fu58RLZUlY4g7ssxEec+67TwJUtu5nQsuflu
+         DvSF0ahzgwF/92jkkiH+Tc6MC1XJ2J61R2zQ89i631Dwl1cZW/D7VMiET++VF9a5Q0T9
+         eHMQ==
+X-Gm-Message-State: AOAM533Jzw3s+94h9fRfhTy4cXOYagQoFfLlv+AqedeKdCBTndL+etMz
+        Rp6FuIzOc6TY6pQhnFdN01J1ZYzAbWQ=
+X-Google-Smtp-Source: ABdhPJzrI2rcwOxTlv1tvwELn9+hzWwa9IDuSn8C7BHPXcI4Rul83GKkIdn2/l/7qHb0tWVXpNgnrQ==
+X-Received: by 2002:adf:f189:: with SMTP id h9mr31297571wro.463.1638638065263;
+        Sat, 04 Dec 2021 09:14:25 -0800 (PST)
+Received: from localhost.localdomain ([217.113.240.86])
+        by smtp.gmail.com with ESMTPSA id h13sm6122049wrx.82.2021.12.04.09.14.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Dec 2021 09:14:24 -0800 (PST)
+From:   =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+To:     tchornyi@marvell.com
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, gustavoars@kernel.org,
+        =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Subject: [PATCH] net: prestera: replace zero-length array with flexible-array member
+Date:   Sat,  4 Dec 2021 18:13:49 +0100
+Message-Id: <20211204171349.22776-1-jose.exposito89@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <28856p61-r54s-791n-q6s1-27575s62r2q9@syhkavp.arg>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 03, 2021 at 02:46:39PM -0500, Nicolas Pitre wrote:
+One-element and zero-length arrays are deprecated and should be
+replaced with flexible-array members:
+https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 
-> Surely this would do it:
-> 
-> http://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=451133cefa839104
+Replace zero-length array with flexible-array member and make use
+of the struct_size() helper.
 
-Ooh, yes, excellent that, thanks!
+Link: https://github.com/KSPP/linux/issues/78
+Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+---
+ drivers/net/ethernet/marvell/prestera/prestera_hw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/prestera/prestera_hw.c b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
+index 92cb5e9099c6..6282c9822e2b 100644
+--- a/drivers/net/ethernet/marvell/prestera/prestera_hw.c
++++ b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
+@@ -443,7 +443,7 @@ struct prestera_msg_counter_resp {
+ 	__le32 offset;
+ 	__le32 num_counters;
+ 	__le32 done;
+-	struct prestera_msg_counter_stats stats[0];
++	struct prestera_msg_counter_stats stats[];
+ };
+ 
+ struct prestera_msg_span_req {
+@@ -1900,7 +1900,7 @@ int prestera_hw_counters_get(struct prestera_switch *sw, u32 idx,
+ 		.block_id = __cpu_to_le32(idx),
+ 		.num_counters = __cpu_to_le32(*len),
+ 	};
+-	size_t size = sizeof(*resp) + sizeof(*resp->stats) * (*len);
++	size_t size = struct_size(resp, stats, *len);
+ 	int err, i;
+ 
+ 	resp = kmalloc(size, GFP_KERNEL);
+-- 
+2.25.1
+
