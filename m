@@ -2,89 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A143C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 08:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13F0C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 12:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231902AbhLGIEZ (ORCPT
+        id S236071AbhLGMHI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Dec 2021 03:04:25 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:50966 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231896AbhLGIEZ (ORCPT
+        Tue, 7 Dec 2021 07:07:08 -0500
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:33599 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236069AbhLGMHH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Dec 2021 03:04:25 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 5FA5E1FD2F;
-        Tue,  7 Dec 2021 08:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1638864054; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WunL9IcKom/g+o4e32dvibfGKSiyLe40+462fTACWsg=;
-        b=t3tHG/HoiLkECGDJLM3HxfPNdiujFEaWRR03HAESaWzxmQ2K3mnDTXv4lqoafzWwRukfbC
-        jngbEbjsnrQVLRA2/R6E7dcM8434jDSaF77jIVaJnxzvwqimUtKxUzaox3om5NRMEswtZo
-        auAFpC3bwx4s53pZd81Q/PgLw2edJGA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1638864054;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WunL9IcKom/g+o4e32dvibfGKSiyLe40+462fTACWsg=;
-        b=wMjgm9fEeBB6NJnAYeotB2CiqLCX5ZgF8f3A+zXSJ+Ql8mDUNrRbuXodmS9mx6ulXGoDYB
-        Q2UllJTop6ILVMAg==
-Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
-        by relay2.suse.de (Postfix) with ESMTP id 548E4A3B87;
-        Tue,  7 Dec 2021 08:00:54 +0000 (UTC)
-Date:   Tue, 07 Dec 2021 09:00:54 +0100
-Message-ID: <s5hzgpcond5.wl-tiwai@suse.de>
-From:   Takashi Iwai <tiwai@suse.de>
+        Tue, 7 Dec 2021 07:07:07 -0500
+Received: by mail-wr1-f52.google.com with SMTP id d24so29148554wra.0;
+        Tue, 07 Dec 2021 04:03:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WOUkRvk8md0qXXeJWUBaI3pWBezAEcrjYlSaZ1Cva6A=;
+        b=IJ9JvEIdZjVPaXmiQuBDDuypRCU4M2pzREewawCznlMR3VhnKVBatXB+JIpXdWhLut
+         bb/HyAWzYmyqMu2f2KHjcQ6XjsUJS2i8nHQtj6ANFnM9n4Y3WREEUPAyUbxkIW6mVxbc
+         c/gceWEczq2UAWCVKnLuUT5cC12BZ6Qfk7AobzIFfWQ4FRJvZrb5eADBskSsMnj6Qkbc
+         PkEDgiLYEHG1atWkVjU21I8mQ3D7sUgzKpyAxfQ7CpEoU+04rDgRCzXn0QhR4A4u7bnd
+         o39UjtaQ9yNbX9w0RfRUGmIl094cdnMpRf+TJMUXPPoDBVEtMOjk+1pmmhPRbRNKcBsn
+         OruA==
+X-Gm-Message-State: AOAM532BY5WO1fwZxye7Ju0Dn8FYaqz4GwgCQHmC71IZVDiCzeAPCp4O
+        Xj+DVfjYVxeWGxwLTMYzhts=
+X-Google-Smtp-Source: ABdhPJzMzHrPwjx1q6wcjSgllaGFav30b9QtgoVVc3D8PMFLIs2P8l6Us9wMV4IxRbCko1NRKBiujw==
+X-Received: by 2002:adf:f947:: with SMTP id q7mr50874696wrr.260.1638878616067;
+        Tue, 07 Dec 2021 04:03:36 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id g18sm3074323wmq.4.2021.12.07.04.03.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 04:03:34 -0800 (PST)
+Date:   Tue, 7 Dec 2021 12:03:33 +0000
+From:   Wei Liu <wei.liu@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ALSA: mixart: Reduce size of mixart_timer_notify
-In-Reply-To: <20211207062941.2413679-1-keescook@chromium.org>
-References: <20211207062941.2413679-1-keescook@chromium.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
- (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH] hv_sock: Extract hvs_send_data() helper that takes only
+ header
+Message-ID: <20211207120333.rmq3mmla5js7kpuj@liuwe-devbox-debian-v2>
+References: <20211207063217.2591451-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211207063217.2591451-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 07 Dec 2021 07:29:41 +0100,
-Kees Cook wrote:
+On Mon, Dec 06, 2021 at 10:32:17PM -0800, Kees Cook wrote:
+> When building under -Warray-bounds, the compiler is especially
+> conservative when faced with casts from a smaller object to a larger
+> object. While this has found many real bugs, there are some cases that
+> are currently false positives (like here). With this as one of the last
+> few instances of the warning in the kernel before -Warray-bounds can be
+> enabled globally, rearrange the functions so that there is a header-only
+> version of hvs_send_data(). Silences this warning:
 > 
-> The mixart_timer_notify structure was larger than could be represented
-> by the mixart_msg_data array storage. Adjust the size to as large as
-> possible to fix the warning seen with -Warray-bounds builds:
+> net/vmw_vsock/hyperv_transport.c: In function 'hvs_shutdown_lock_held.constprop':
+> net/vmw_vsock/hyperv_transport.c:231:32: warning: array subscript 'struct hvs_send_buf[0]' is partly outside array bounds of 'struct vmpipe_proto_header[1]' [-Warray-bounds]
+>   231 |         send_buf->hdr.pkt_type = 1;
+>       |         ~~~~~~~~~~~~~~~~~~~~~~~^~~
+> net/vmw_vsock/hyperv_transport.c:465:36: note: while referencing 'hdr'
+>   465 |         struct vmpipe_proto_header hdr;
+>       |                                    ^~~
 > 
-> sound/pci/mixart/mixart_core.c: In function 'snd_mixart_threaded_irq':
-> sound/pci/mixart/mixart_core.c:447:50: error: array subscript 'struct mixart_timer_notify[0]' is partly outside array bounds of 'u32[128]' {aka 'unsigned int[128]'} [-Werror=array-bounds]
->   447 |                                 for(i=0; i<notify->stream_count; i++) {
->       |                                                  ^~
-> sound/pci/mixart/mixart_core.c:328:12: note: while referencing 'mixart_msg_data'
->   328 | static u32 mixart_msg_data[MSG_DEFAULT_SIZE / 4];
->       |            ^~~~~~~~~~~~~~~
+> This change results in no executable instruction differences.
 > 
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Thanks, applied now.
-
-> @@ -444,6 +442,7 @@ irqreturn_t snd_mixart_threaded_irq(int irq, void *dev_id)
->  				struct mixart_timer_notify *notify;
->  				notify = (struct mixart_timer_notify *)mixart_msg_data;
->  
-> +				BUILD_BUG_ON(sizeof(notify) > sizeof(mixart_msg_data));
->  				for(i=0; i<notify->stream_count; i++) {
->  
->  					u32 buffer_id = notify->streams[i].buffer_id;
-
-I guess we should add the array boundary check of
-notify->stream_count, instead of fully relying on the hardware reply,
-too.  Will submit the additional check.
-
-
-Takashi
+Acked-by: Wei Liu <wei.liu@kernel.org>
