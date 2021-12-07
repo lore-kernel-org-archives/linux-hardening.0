@@ -2,58 +2,62 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EA4C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Dec 2021 16:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452FCC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 00:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233166AbhLFQs5 (ORCPT
+        id S1378563AbhLGAnm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Dec 2021 11:48:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235806AbhLFQsz (ORCPT
+        Mon, 6 Dec 2021 19:43:42 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:34146 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1351468AbhLGAnl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Dec 2021 11:48:55 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86466C061359;
-        Mon,  6 Dec 2021 08:45:26 -0800 (PST)
+        Mon, 6 Dec 2021 19:43:41 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C160ACE16D9;
-        Mon,  6 Dec 2021 16:45:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF9DC341C5;
-        Mon,  6 Dec 2021 16:45:20 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1BFE8B81644;
+        Tue,  7 Dec 2021 00:40:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D9692C341CD;
+        Tue,  7 Dec 2021 00:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638809122;
-        bh=m3M8uY2+kP2ZKD7cGq6xWJYvnMzaJ2UYIeThKg6oHT4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VuEcUz7l6mG7LtkTDIxRYynQ9UlN9gCYu4Qe3HFH2e7TvrUmPw6fj/vcWxy518PfR
-         bjXvc6p9exjS/wSZb03bxLM/cxsj7ImXo+YWNvC5dzifoNS7VxsQ/eLkA6HCsRmcCh
-         9q7taZhdFdW2uPkrjjSE71vqQVWj/AVqD4x/lPpddvfVidincZJvY67jOeRIEM7Mjt
-         6H6+4BsqT3v6Ww930ZUen5fB7cEEfPn1cqy3p1GSaybVmWB4Tbpl67voe3KO3iNULs
-         4wuMVqYNNvS9o5nMmqqVB9Mu7dl9rhw0J/6RckTSgTIlEqE0pCWh9PPXIElWmxI8Xp
-         0sKVaDZvdD1uQ==
-Date:   Mon, 6 Dec 2021 10:50:50 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+        s=k20201202; t=1638837609;
+        bh=B1VP9aKvVrC9MoNBK1NK+od8ypE7G0li6i9pIJat0sU=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=iHyFioOoBkwE/8kBLe2fqk6Lj/YKw6o3VdJokq/HuOUouG6orBI6FgQH9hoyBE+rb
+         zdF/52MjpLbKw105fPRvsDfzUugZhg9gbUPIhA3wcPrApODlbHEiQpkANEfEbFwiDX
+         cmo3sHyN/rr4m0NZEJt5iu67shF2A4KuEzR5RFGcTsi9e5ZCjySpEhtpki7+6DEK2C
+         0aHas4fCeN5Cq6kwEKbqyqk8CTtUvojoFZy/jsUZV7uFuPp/dOHhanqsHpSE3BSFQr
+         0+Jsbi9egAaYtCE+4iEkNnTeWrnHr4Ik9suicjYs1r2IrX3VzIukkXiO/wnCKTHqR+
+         Gw2qFmnTw/ypg==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id B93C960A4D;
+        Tue,  7 Dec 2021 00:40:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] net: prestera: replace zero-length array with flexible-array
+ member
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <163883760975.11691.18220065065431409581.git-patchwork-notify@kernel.org>
+Date:   Tue, 07 Dec 2021 00:40:09 +0000
+References: <20211204171349.22776-1-jose.exposito89@gmail.com>
+In-Reply-To: <20211204171349.22776-1-jose.exposito89@gmail.com>
+To:     =?utf-8?b?Sm9zw6kgRXhww7NzaXRvIDxqb3NlLmV4cG9zaXRvODlAZ21haWwuY29tPg==?=@ci.codeaurora.org
 Cc:     tchornyi@marvell.com, davem@davemloft.net, kuba@kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH] net: prestera: replace zero-length array with
- flexible-array member
-Message-ID: <20211206165050.GA48639@embeddedor>
-References: <20211204171349.22776-1-jose.exposito89@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211204171349.22776-1-jose.exposito89@gmail.com>
+        kernel-hardening@lists.openwall.com, gustavoars@kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Dec 04, 2021 at 06:13:49PM +0100, José Expósito wrote:
+Hello:
+
+This patch was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Sat,  4 Dec 2021 18:13:49 +0100 you wrote:
 > One-element and zero-length arrays are deprecated and should be
 > replaced with flexible-array members:
 > https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
@@ -61,41 +65,15 @@ On Sat, Dec 04, 2021 at 06:13:49PM +0100, José Expósito wrote:
 > Replace zero-length array with flexible-array member and make use
 > of the struct_size() helper.
 > 
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> [...]
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Here is the summary with links:
+  - net: prestera: replace zero-length array with flexible-array member
+    https://git.kernel.org/netdev/net-next/c/01081be1ea8c
 
-Thanks
---
-Gustavo
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> ---
->  drivers/net/ethernet/marvell/prestera/prestera_hw.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/prestera/prestera_hw.c b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-> index 92cb5e9099c6..6282c9822e2b 100644
-> --- a/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-> +++ b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-> @@ -443,7 +443,7 @@ struct prestera_msg_counter_resp {
->  	__le32 offset;
->  	__le32 num_counters;
->  	__le32 done;
-> -	struct prestera_msg_counter_stats stats[0];
-> +	struct prestera_msg_counter_stats stats[];
->  };
->  
->  struct prestera_msg_span_req {
-> @@ -1900,7 +1900,7 @@ int prestera_hw_counters_get(struct prestera_switch *sw, u32 idx,
->  		.block_id = __cpu_to_le32(idx),
->  		.num_counters = __cpu_to_le32(*len),
->  	};
-> -	size_t size = sizeof(*resp) + sizeof(*resp->stats) * (*len);
-> +	size_t size = struct_size(resp, stats, *len);
->  	int err, i;
->  
->  	resp = kmalloc(size, GFP_KERNEL);
-> -- 
-> 2.25.1
-> 
+
