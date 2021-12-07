@@ -2,132 +2,162 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D51BC43219
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 05:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA2CC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 06:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232346AbhLGFfW (ORCPT
+        id S235004AbhLGGbb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Dec 2021 00:35:22 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:37700 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234784AbhLGFfW (ORCPT
+        Tue, 7 Dec 2021 01:31:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233234AbhLGGbb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Dec 2021 00:35:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638855112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=e4ghYP9B13gGvmZuLKDuOchy2naysfKvbuf3lUvYkHc=;
-        b=fSwGXEVFDBlaaG+EJmt918dn6ge1D4mcHBIcIOf/0o6WKAapQ2aOUjPTfU9y8bzIDVOfv1
-        7z1+waZU2qgOcThuVnlwnPNw3cpO74vcdZF1U0J49lQMi4aBkN/UDXkehvl0bH0KY4cQi5
-        a1Wm6IiZ4RwT2yEd/1Pm3GGeB+tyXXY=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-357-cKJt0alXM8SEbiejVNYuiA-1; Tue, 07 Dec 2021 00:31:49 -0500
-X-MC-Unique: cKJt0alXM8SEbiejVNYuiA-1
-Received: by mail-qk1-f197.google.com with SMTP id bi22-20020a05620a319600b00468606d7e7fso14123006qkb.10
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Dec 2021 21:31:48 -0800 (PST)
+        Tue, 7 Dec 2021 01:31:31 -0500
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BDD6C061354
+        for <linux-hardening@vger.kernel.org>; Mon,  6 Dec 2021 22:28:01 -0800 (PST)
+Received: by mail-pj1-x102b.google.com with SMTP id p18-20020a17090ad31200b001a78bb52876so1133353pju.3
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Dec 2021 22:28:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R5Y9u2OO66361g2mHGUqWuP377UIs3AjqyFA9deFMrw=;
+        b=nVn2qF7PnzXvUNYzDChcoFN+3SQOcCoAffhmyMNEkjaRUXv8gY28i8R4clmuySDyUl
+         A+ngsto77scLc1JwvRHGqeO9t/u5DhZhqRouCxorD1BuTS7Rs5BSuOmYNyxW2HzxRwj8
+         BUvGoGP/ZW6v0HoKuamTuvg7+D/Rr5NOJ4vWs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=e4ghYP9B13gGvmZuLKDuOchy2naysfKvbuf3lUvYkHc=;
-        b=eOfPR3LdODMB05oM3twjCekZJOIQMU/oUj5PSDpr27JWCl8pj3CMOV/H6hQ3zWtaIR
-         WgGxw247r9wiqW7duTTBT+1P/bzbyeBRpRF/v2RLMuh3S/jeWASQTfQYW/h3+qF4D6iV
-         de9MU1MUtH0hiu8Rvo6DpfgyMhg2Qme+L/8BXlQ0XWkvn1/p8JdnV57zz8fdhwmq+cNX
-         ikqYerovTcwGGQW5D5A65CQy7AqSujxKbZVsv4QHQHZrHZLQLH8zew8tJN4FkIarkbFS
-         zdQ7c1OewFReWcfESI29Q/jp3eUxMRnK5qLAK+D48jcF23Jgun5yQ7cw5LV9ditFx5Bk
-         8Luw==
-X-Gm-Message-State: AOAM532qJT7qt6ZiHQSfbghZfMrJxMjWMboLbCvPIhakxHRdm5SRH26N
-        /R3TGj6Qbi6SVClH9Cu90vE/P8hfFGSa+Z0Nvnf//r2039JedVzUrDdYUL1zOz6VQHHV0zq+whF
-        uSmYrfCV7f/1FpH/At2fM3JQR3KPd
-X-Received: by 2002:ac8:5b51:: with SMTP id n17mr19545781qtw.182.1638855108532;
-        Mon, 06 Dec 2021 21:31:48 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz454uO8EitNs/c6PtV9eniUKNKiTCgR5+N8W4WMPq1f0ryP+2pFiwPH4C3lFPQ4hkn9zJMiQ==
-X-Received: by 2002:ac8:5b51:: with SMTP id n17mr19545750qtw.182.1638855108304;
-        Mon, 06 Dec 2021 21:31:48 -0800 (PST)
-Received: from treble ([2600:1700:6e32:6c00::45])
-        by smtp.gmail.com with ESMTPSA id s12sm8814877qtk.61.2021.12.06.21.31.44
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R5Y9u2OO66361g2mHGUqWuP377UIs3AjqyFA9deFMrw=;
+        b=61O2sDlBFXmLleFslsPPXWhYZgbmgUbgLJZoNUAJatnPH5dknyi+9gZoMTE4aPK0hT
+         SdB7C4F4qi7cE4+hs8g8+x9yVBRKAv7u7bMKCAplqqkno/TgU50C03+usWPCC5Im+V+p
+         w7ulba6GjrCqZ+4Y3uO+3F1LjrRG6ozgFS2V3p8lJC41jUhyqOazgedYYWiRbjS1CS0X
+         xvUbuC1JI9le0DhMkokHp6Qt971BwKJlmzCK1dQm5IYPcP9v8isO20T8XDSkhc3/gmoW
+         6gWRfvIEmqPtJr7tXkEBrLMMDZdha9WLsre7c3ZZMNmWKvdpknDmMQxIfKiMp7qY2+nA
+         ikZg==
+X-Gm-Message-State: AOAM533oU3VON23RoDfsavhJeOzqKCBylN697HT5ONc+I1sKtT7plQmW
+        B1iqRYs+pPwuv9TWmQv+nIwghm3SVeG8JA==
+X-Google-Smtp-Source: ABdhPJyRS1qegf7dZ9aGTu7oy8A6JYIDT7SPYcjpU/uDiMHuVmRRYJ3W7WiayPqjZC08t/YW6cDuQQ==
+X-Received: by 2002:a17:902:c412:b0:141:f710:2a94 with SMTP id k18-20020a170902c41200b00141f7102a94mr49535975plk.1.1638858480887;
+        Mon, 06 Dec 2021 22:28:00 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id me7sm1606618pjb.9.2021.12.06.22.28.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 21:31:47 -0800 (PST)
-Date:   Mon, 6 Dec 2021 21:31:42 -0800
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
-        linux-hardening@vger.kernel.org, X86 ML <x86@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mon, 06 Dec 2021 22:28:00 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        live-patching@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v8 07/14] kallsyms: Hide layout
-Message-ID: <20211207053142.d4xvkqs57zob2v2i@treble>
-References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
- <20211202223214.72888-8-alexandr.lobakin@intel.com>
- <Yanqz7o4IH5MkDp8@hirez.programming.kicks-ass.net>
- <CAMj1kXFLJcfUqEoz0NAb49=XJG=5LAwEPSwCQ-y7sN31C1U6AQ@mail.gmail.com>
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Marco Elver <elver@google.com>,
+        Alexander Lobakin <alobakin@pm.me>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Talal Ahmad <talalahmad@google.com>,
+        Kevin Hao <haokexin@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] skbuff: Extract list pointers to silence compiler warnings
+Date:   Mon,  6 Dec 2021 22:27:58 -0800
+Message-Id: <20211207062758.2324338-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXFLJcfUqEoz0NAb49=XJG=5LAwEPSwCQ-y7sN31C1U6AQ@mail.gmail.com>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3388; h=from:subject; bh=dXKs2BUKHTDgnZIaKltd8Y//V8LOLmO8lOlbliutHeQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhrv7tXeCUMNqOZ1Dkxzdct9reZXr/lhU0kG2AEqgL akeXvW2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYa7+7QAKCRCJcvTf3G3AJirREA CnHZaI+OtJvVYYAO/Pka/AeD3zTJ88dEp7V+BJ9DggP7LB3qfCVxYdG7GG2/GWsqLmpJBjwQEcdJPV nJK4BDxoNMuJ11A+VM4OlqKFgqsf48SHBTKQ8ecH/C3P2duqVHgEHaSkp4c3onmB1f5jVlsf0lI5Z3 M9D2meaKBplsq647GUZX2tLZDLMkIoBLpjtxMpGcmBfuDFQvGlVHtH6x9tTCmjn4aTHvOQR6/aTsDb hM8hwjKFTf5oEP+ALhINHkHmNtgUbMM2PO+VuGQ3gPt0PraVGaksHmgxkFx8V/SBFCdPMrWFqZAZFO j57kKOTQeflgAXgsSKwYH5HmgGt7hxW7oNlQTvm/CaviXJQwi4XcDLDRQ2/vOrjpyxLJfg2tI3vmuH 9bINIyAKuQSysCitsSHXqnPzwsk99ueTVqC+BncNzdYcazKGvcPYz06g+tAD4aDTKNf519f2eETEaB K0GbGzagMQFAfx7ACix7XhPmwTD17Pcet/kaN9UjJKoF8AYA+Qez1u5v1Kn9T9GYWlQVYpE8Xo4QaJ bPZwBH2TvFDybdhjpctgXsBGDEcLEsZRhvb9eAOlE9/mlU1tjKPCpyYmN9eF74YkpgxqiS7hU9wHPZ gY1WI0Fy9pvbr2vI9Gl028pwSgdECom7WxR4EErkNZbe7VPSa70YTuurCWUQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 03, 2021 at 11:03:35AM +0100, Ard Biesheuvel wrote:
-> On Fri, 3 Dec 2021 at 11:01, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Dec 02, 2021 at 11:32:07PM +0100, Alexander Lobakin wrote:
-> > > From: Kristen Carlson Accardi <kristen@linux.intel.com>
-> > >
-> > > This patch makes /proc/kallsyms display in a random order, rather
-> > > than sorted by address in order to hide the newly randomized address
-> > > layout.
-> >
-> > Is there a reason to not always do this? That is, why are we keeping two
-> > copies of this code around? Less code is more better etc..
-> 
-> +1.
-> 
-> IIRC I made the exact same point when this patch was sent out by
-> Kristen a while ago.
+Under both -Warray-bounds and the object_size sanitizer, the compiler is
+upset about accessing prev/next of sk_buff when the object it thinks it
+is coming from is sk_buff_head. The warning is a false positive due to
+the compiler taking a conservative approach, opting to warn at casting
+time rather than access time.
 
-Yes.  Alexander, I'd recommend going back to the review comments from
-Kristen's last posting, they may have been missed.
+However, in support of enabling -Warray-bounds globally (which has
+found many real bugs), arrange things for sk_buff so that the compiler
+can unambiguously see that there is no intention to access anything
+except prev/next.  Introduce and cast to a separate struct sk_buff_list,
+which contains _only_ the first two fields, silencing the warnings:
 
+In file included from ./include/net/net_namespace.h:39,
+                 from ./include/linux/netdevice.h:37,
+                 from net/core/netpoll.c:17:
+net/core/netpoll.c: In function 'refill_skbs':
+./include/linux/skbuff.h:2086:9: warning: array subscript 'struct sk_buff[0]' is partly outside array bounds of 'struct sk_buff_head[1]' [-Warray-bounds]
+ 2086 |         __skb_insert(newsk, next->prev, next, list);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+net/core/netpoll.c:49:28: note: while referencing 'skb_pool'
+   49 | static struct sk_buff_head skb_pool;
+      |                            ^~~~~~~~
+
+This change results in no executable instruction differences.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/skbuff.h | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index eae4bd3237a4..ec71b45b62b0 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -292,9 +292,11 @@ struct tc_skb_ext {
+ #endif
+ 
+ struct sk_buff_head {
+-	/* These two members must be first. */
+-	struct sk_buff	*next;
+-	struct sk_buff	*prev;
++	/* These two members must be first to match sk_buff. */
++	struct_group_tagged(sk_buff_list, list,
++		struct sk_buff	*next;
++		struct sk_buff	*prev;
++	);
+ 
+ 	__u32		qlen;
+ 	spinlock_t	lock;
+@@ -730,7 +732,7 @@ typedef unsigned char *sk_buff_data_t;
+ struct sk_buff {
+ 	union {
+ 		struct {
+-			/* These two members must be first. */
++			/* These two members must be first to match sk_buff_head. */
+ 			struct sk_buff		*next;
+ 			struct sk_buff		*prev;
+ 
+@@ -1976,8 +1978,8 @@ static inline void __skb_insert(struct sk_buff *newsk,
+ 	 */
+ 	WRITE_ONCE(newsk->next, next);
+ 	WRITE_ONCE(newsk->prev, prev);
+-	WRITE_ONCE(next->prev, newsk);
+-	WRITE_ONCE(prev->next, newsk);
++	WRITE_ONCE(((struct sk_buff_list *)next)->prev, newsk);
++	WRITE_ONCE(((struct sk_buff_list *)prev)->next, newsk);
+ 	WRITE_ONCE(list->qlen, list->qlen + 1);
+ }
+ 
+@@ -2073,7 +2075,7 @@ static inline void __skb_queue_after(struct sk_buff_head *list,
+ 				     struct sk_buff *prev,
+ 				     struct sk_buff *newsk)
+ {
+-	__skb_insert(newsk, prev, prev->next, list);
++	__skb_insert(newsk, prev, ((struct sk_buff_list *)prev)->next, list);
+ }
+ 
+ void skb_append(struct sk_buff *old, struct sk_buff *newsk,
+@@ -2083,7 +2085,7 @@ static inline void __skb_queue_before(struct sk_buff_head *list,
+ 				      struct sk_buff *next,
+ 				      struct sk_buff *newsk)
+ {
+-	__skb_insert(newsk, next->prev, next, list);
++	__skb_insert(newsk, ((struct sk_buff_list *)next)->prev, next, list);
+ }
+ 
+ /**
 -- 
-Josh
+2.30.2
 
