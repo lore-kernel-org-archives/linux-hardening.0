@@ -2,136 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD8AC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 06:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6874EC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 06:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236055AbhLGGdO (ORCPT
+        id S236457AbhLGGft (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Dec 2021 01:33:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44008 "EHLO
+        Tue, 7 Dec 2021 01:35:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234244AbhLGGdO (ORCPT
+        with ESMTP id S236178AbhLGGfs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Dec 2021 01:33:14 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A7BC061354
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Dec 2021 22:29:44 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id l64so7319283pgl.9
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Dec 2021 22:29:44 -0800 (PST)
+        Tue, 7 Dec 2021 01:35:48 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 367D6C0611F7
+        for <linux-hardening@vger.kernel.org>; Mon,  6 Dec 2021 22:32:19 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id gf14-20020a17090ac7ce00b001a7a2a0b5c3so1131689pjb.5
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Dec 2021 22:32:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=f+udiqaZ67AekRJsfuEVb5uj3ROe2vP5ghr0oV195W0=;
-        b=J/GkOY2JatD7FBAKkj7zo7qm0zu83gr3gssEcq7tECGOevoO4it7Y04ne6Pp3FnK0H
-         zsGa0Q8F3qsvT6I4+YPKlNUfN4AUrxlPRJLNc4bitT7GsWdPgyBy5X6Nz9QXCwIMWniZ
-         rEetwE3QNb+HZei31v9cbKSlBOd55Mtp6/JL0=
+        bh=Cods9WyaktA6BF6JbbixG/DZf7V5gCMolIBwnRIBsoA=;
+        b=MMD41CtxbBzB9YAAnCbHieIqVxNNB7RXyBlaQGRrHSeyJzYxkZgp4SmWmDhqYNerxg
+         MprUuKqQAdg87VjPx7xnn5SuRVIZ4iMi7flp+RPD7CksU6Va8ZAaqdNdm1cV5SSwSrLo
+         tc/PwmOJa5JD+CExp35BTRQAXpR6U5Ek4JuVc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=f+udiqaZ67AekRJsfuEVb5uj3ROe2vP5ghr0oV195W0=;
-        b=4XLktqHbWC5UlHgQ29CFGpLT/Kyyjao/NknJzMTrMQQgvORlSpFuZ3h8F3MwK3pIf9
-         lFLrxNMvxVFizS50nGYMQiueRp/sIbIkJjt0GTBZdFLrX7I+hneetD5UoHTe6ChlsOlE
-         h8G6SYvq2aJn7AUxEtt2Kyu5/yhkQPtkGWMKUmzVAjkhkNWtBNiwHNQEr2LWcElCebbM
-         xhWZSbE1hMQEdBqJKgdBNJuCdOiuQ2zmHS9kr9ZVvsflWsy7KNiBzGnHUBzH29OZO01Z
-         tF9m01nyWV1jyfZxALXQ0QvF4Bd+p5mkQIIqGlyDsRhfkHzD7woFihj0Iw5dxRtJ85HK
-         h0Tw==
-X-Gm-Message-State: AOAM530EwNQA7ut36aLSFnVgm7Ts5v6yw6Ljysd2/Hsbq9tC5dvNzr8x
-        HHtqQqLOIgj6/AfY93aQ8Pluuw==
-X-Google-Smtp-Source: ABdhPJyZvwNoT4oSGFb3KwxVMh+6xEESFDRswigiC1MShWxc/lpwRffNVSSyabXgOqaqPo9je5cC7w==
-X-Received: by 2002:aa7:9438:0:b0:4a2:c941:9ac4 with SMTP id y24-20020aa79438000000b004a2c9419ac4mr40707651pfo.12.1638858583943;
-        Mon, 06 Dec 2021 22:29:43 -0800 (PST)
+        bh=Cods9WyaktA6BF6JbbixG/DZf7V5gCMolIBwnRIBsoA=;
+        b=jCk2gZOLvZcJQ1o4SRcG5dg0L1lFxemwvqJ6nGNqpT06+SxUw5U4kutCW4zFTHDzEc
+         aZYY0/EXWZYsraWXGE9xHGs5JDy/m4CM1V/WptJEW3Eap16kDaeEh5Xx+BGhTAmVaZya
+         M9ORfLisaH/LGIYyLySSMnIyxzAah7QOf0maFHLxV5ar8MmjLENdDVbT/Y04anIpRZTU
+         ErXc66xgb0HqQ6m58WxOqexc0YOohNKQmetqmEx0o/5BEJMtcgB/EaO2ZDZlGMv8E1li
+         rE1QzZ2vfkOVOkTEO9al4gs3zfdViU2F8I3s+EtqRt8SuikgTdeRL5RURcZoBIz23ot6
+         NHzg==
+X-Gm-Message-State: AOAM5300g/ynIpmO9uayGv03koPtmHWuXFNE2n5ckgdfIqmWG9u0Up4T
+        DwD7p+caJtSsIEqXF9ZxFTJgQw==
+X-Google-Smtp-Source: ABdhPJyp1UxglPEqmBhAA0mHlqJZn71XaypcbZcnECd4iiPFthtfrShdVlCTDQxxiafiXeZrE7GRMg==
+X-Received: by 2002:a17:90b:17cc:: with SMTP id me12mr4322891pjb.179.1638858738693;
+        Mon, 06 Dec 2021 22:32:18 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t13sm14347377pfl.98.2021.12.06.22.29.43
+        by smtp.gmail.com with ESMTPSA id y6sm15487110pfi.154.2021.12.06.22.32.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 22:29:43 -0800 (PST)
+        Mon, 06 Dec 2021 22:32:18 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Jaroslav Kysela <perex@perex.cz>
-Cc:     Kees Cook <keescook@chromium.org>, Takashi Iwai <tiwai@suse.com>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+To:     "K. Y. Srinivasan" <kys@microsoft.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] ALSA: mixart: Reduce size of mixart_timer_notify
-Date:   Mon,  6 Dec 2021 22:29:41 -0800
-Message-Id: <20211207062941.2413679-1-keescook@chromium.org>
+Subject: [PATCH] hv_sock: Extract hvs_send_data() helper that takes only header
+Date:   Mon,  6 Dec 2021 22:32:17 -0800
+Message-Id: <20211207063217.2591451-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3108; h=from:subject; bh=Bxtg+Md4Tx2O3zfguW43xRX6QWLK3nr94r5jvTZ6XgY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhrv9VWCfHEI86ECNtov7rQKCtIX1smQa5Ihsv4FCj 5Fqfs7KJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYa7/VQAKCRCJcvTf3G3AJoAZD/ 9I4Bg7/tASi7/MTVYDZ2OFnqA7LGqGWzz6D1FZaf1OaIyQ7gz6QVCW+qLJQHpISRu7Z+vbvnEESekZ /qMW/R7pzdFdXaRWK2+XUIxBHgEo145KJOnnMI2qfmhsKgEWiThjnktZ53fZumZwQD/IylG4KOdrGO 1mu+8wuNxCLXj9wAZn3MoawwpPwZwkAkAx4PSK1hqmXFtW6p+bK8AmSdukZJkZE4J3Zpx5x/Zy4sHU he4eUP/OdqVsQ+DsznpT2xT6DFLHO3PrSDol+dKyzNoNKaDsWTmclO6fYG0zY7+EeYAxIBOVk6oWJ9 5XGK3CRaJU9LzoWiW27o1nRExmRCmWPO5dMpKTT62BxFzl+GsNljCaPCtyyFrQWSud8imTFzuuzz95 key5HrZkeMwpHeT6H5LxTDVkBjw0exV6ajR8MXsjxyOlXS5JAa1jc3yCZ07Sk7hNMarx+VVgLmIa5g aS9ZQJCLqg2u5qX07BddMQNGu2K6g6RjicdGWxlFNPjquU0B2wtq0/G7cswcx2PVycAui9Pv96hAuH c0DNtqpb5uH3d4ctWK0rOjK4Ba22wacYENz2WJkQcQnQGWMV0gfllH4QhMmntSXjyfXD9NR/53xKov m407NkStVJqCGCut2aywT/IyRhZmtPESfh94Kx8hkLX93rqdItGmwdip/QZg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2572; h=from:subject; bh=48lY+W7yxU1t+Az6SdjP5/a959EClqgZo8+U7ONH7iw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhrv/woEdF1Rs69O+MuGiyQRAPdwunWIkJe1PXhimt WEGXogyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYa7/8AAKCRCJcvTf3G3AJoBLD/ 0ULE05fML+vI6+/LCIG9Ks4prnpoPtcUsW4eIvsa59c015zp36rvqreqIxD63DBa64rs8r4MgskEc9 WFVuih/7jWmW9P0kl6Wpb1qpRJxTTg85WPn53QptwU4zIbYVjo8u3om7OU8/ZSzD0oCDo7QRQDR8sq vu1hEZ6KZRPmdx0RguKp1+TgiUdYRDRRVcSAB977TwcutxZ3U1JNZy53y+ze3DanRCy5HW+qNFly9D ZyYFmUZxGcMNc+4v5B36dIKkRmJrHLZK5xrbUnrpxpCC/iXfR2DsJeHQVFrc7ejRYe0qjtSb2TWZlf 2Hondoefq+t1yBc0iL1SZBn8y/V9E6Qy0cWhF8zO89pX96X+hAZzEJKceL1hD/r1nNbfwlJl4I9t4F Cwu1o1EQSktmt/Cs2kUNx9HsTUiGBY3IaQ2EwDDiLHSJZRFCty/eOH7zKT1BDwNmIdUH0wytq+dma+ 1w+fUpV+dA3wpd+XqK/IgwIY5xKby/V+mUZVhz4GT+WQaRib/yeVFrVRdy3iue/rpBnsqq31xiXOdi WN3gjAK/DLqn0KCr9zObiXuiRdVbWoIVXXFsrbEOmiMZM+mC9VfVRNAIjxRfPhWoYSaEhsxfNjQViZ fPHEZ/ZDNNJ9EGqpcRzaJIuGKy++T3K+6nLXpcl7XsjqOZ7XQCiuvWaa0Wsw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The mixart_timer_notify structure was larger than could be represented
-by the mixart_msg_data array storage. Adjust the size to as large as
-possible to fix the warning seen with -Warray-bounds builds:
+When building under -Warray-bounds, the compiler is especially
+conservative when faced with casts from a smaller object to a larger
+object. While this has found many real bugs, there are some cases that
+are currently false positives (like here). With this as one of the last
+few instances of the warning in the kernel before -Warray-bounds can be
+enabled globally, rearrange the functions so that there is a header-only
+version of hvs_send_data(). Silences this warning:
 
-sound/pci/mixart/mixart_core.c: In function 'snd_mixart_threaded_irq':
-sound/pci/mixart/mixart_core.c:447:50: error: array subscript 'struct mixart_timer_notify[0]' is partly outside array bounds of 'u32[128]' {aka 'unsigned int[128]'} [-Werror=array-bounds]
-  447 |                                 for(i=0; i<notify->stream_count; i++) {
-      |                                                  ^~
-sound/pci/mixart/mixart_core.c:328:12: note: while referencing 'mixart_msg_data'
-  328 | static u32 mixart_msg_data[MSG_DEFAULT_SIZE / 4];
-      |            ^~~~~~~~~~~~~~~
+net/vmw_vsock/hyperv_transport.c: In function 'hvs_shutdown_lock_held.constprop':
+net/vmw_vsock/hyperv_transport.c:231:32: warning: array subscript 'struct hvs_send_buf[0]' is partly outside array bounds of 'struct vmpipe_proto_header[1]' [-Warray-bounds]
+  231 |         send_buf->hdr.pkt_type = 1;
+      |         ~~~~~~~~~~~~~~~~~~~~~~~^~~
+net/vmw_vsock/hyperv_transport.c:465:36: note: while referencing 'hdr'
+  465 |         struct vmpipe_proto_header hdr;
+      |                                    ^~~
+
+This change results in no executable instruction differences.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- sound/pci/mixart/mixart_core.c |  3 +--
- sound/pci/mixart/mixart_core.h | 10 +++++++++-
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ net/vmw_vsock/hyperv_transport.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/sound/pci/mixart/mixart_core.c b/sound/pci/mixart/mixart_core.c
-index fb8895af0363..853083dd4bad 100644
---- a/sound/pci/mixart/mixart_core.c
-+++ b/sound/pci/mixart/mixart_core.c
-@@ -23,8 +23,6 @@
- #define MSG_DESCRIPTOR_SIZE         0x24
- #define MSG_HEADER_SIZE             (MSG_DESCRIPTOR_SIZE + 4)
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index 19189cf30a72..e111e13b6660 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -225,14 +225,20 @@ static size_t hvs_channel_writable_bytes(struct vmbus_channel *chan)
+ 	return round_down(ret, 8);
+ }
  
--#define MSG_DEFAULT_SIZE            512
--
- #define MSG_TYPE_MASK               0x00000003    /* mask for following types */
- #define MSG_TYPE_NOTIFY             0             /* embedded -> driver (only notification, do not get_msg() !) */
- #define MSG_TYPE_COMMAND            1             /* driver <-> embedded (a command has no answer) */
-@@ -444,6 +442,7 @@ irqreturn_t snd_mixart_threaded_irq(int irq, void *dev_id)
- 				struct mixart_timer_notify *notify;
- 				notify = (struct mixart_timer_notify *)mixart_msg_data;
- 
-+				BUILD_BUG_ON(sizeof(notify) > sizeof(mixart_msg_data));
- 				for(i=0; i<notify->stream_count; i++) {
- 
- 					u32 buffer_id = notify->streams[i].buffer_id;
-diff --git a/sound/pci/mixart/mixart_core.h b/sound/pci/mixart/mixart_core.h
-index fbf4731a276d..2f0e29ed5d63 100644
---- a/sound/pci/mixart/mixart_core.h
-+++ b/sound/pci/mixart/mixart_core.h
-@@ -49,6 +49,7 @@ enum mixart_message_id {
- 	MSG_CLOCK_SET_PROPERTIES             = 0x200002,
- };
- 
-+#define MSG_DEFAULT_SIZE            512
- 
- struct mixart_msg
++static int __hvs_send_data(struct vmbus_channel *chan,
++			   struct vmpipe_proto_header *hdr,
++			   size_t to_write)
++{
++	hdr->pkt_type = 1;
++	hdr->data_size = to_write;
++	return vmbus_sendpacket(chan, hdr, sizeof(*hdr) + to_write,
++				0, VM_PKT_DATA_INBAND, 0);
++}
++
+ static int hvs_send_data(struct vmbus_channel *chan,
+ 			 struct hvs_send_buf *send_buf, size_t to_write)
  {
-@@ -251,10 +252,17 @@ struct mixart_sample_pos
- 	u32   sample_pos_low_part;
- } __attribute__((packed));
+-	send_buf->hdr.pkt_type = 1;
+-	send_buf->hdr.data_size = to_write;
+-	return vmbus_sendpacket(chan, &send_buf->hdr,
+-				sizeof(send_buf->hdr) + to_write,
+-				0, VM_PKT_DATA_INBAND, 0);
++	return __hvs_send_data(chan, &send_buf->hdr, to_write);
+ }
  
-+/*
-+ * This structure is limited by the size of MSG_DEFAULT_SIZE. Instead of
-+ * having MIXART_MAX_STREAM_PER_CARD * MIXART_MAX_CARDS many streams,
-+ * this is capped to have a total size below MSG_DEFAULT_SIZE.
-+ */
-+#define MIXART_MAX_TIMER_NOTIFY_STREAMS				\
-+	((MSG_DEFAULT_SIZE - sizeof(u32)) / sizeof(struct mixart_sample_pos))
- struct mixart_timer_notify
- {
- 	u32                  stream_count;
--	struct mixart_sample_pos  streams[MIXART_MAX_STREAM_PER_CARD * MIXART_MAX_CARDS];
-+	struct mixart_sample_pos  streams[MIXART_MAX_TIMER_NOTIFY_STREAMS];
- } __attribute__((packed));
+ static void hvs_channel_cb(void *ctx)
+@@ -468,7 +474,7 @@ static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
+ 		return;
  
+ 	/* It can't fail: see hvs_channel_writable_bytes(). */
+-	(void)hvs_send_data(hvs->chan, (struct hvs_send_buf *)&hdr, 0);
++	(void)__hvs_send_data(hvs->chan, &hdr, 0);
+ 	hvs->fin_sent = true;
+ }
  
 -- 
 2.30.2
