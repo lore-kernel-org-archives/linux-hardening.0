@@ -2,105 +2,132 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B75C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 01:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D51BC43219
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 05:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236354AbhLGB6A (ORCPT
+        id S232346AbhLGFfW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Dec 2021 20:58:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236471AbhLGB54 (ORCPT
+        Tue, 7 Dec 2021 00:35:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:37700 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234784AbhLGFfW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Dec 2021 20:57:56 -0500
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDC5C0613F8
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Dec 2021 17:54:27 -0800 (PST)
-Received: by mail-io1-xd2b.google.com with SMTP id q72so10603057iod.12
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Dec 2021 17:54:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8GCfs3UIWYheIdOcXQxitSGok4TtBWFHvnOhGvwh4LU=;
-        b=EJPgQEgeubJfZbHmJT+ml4muCB9PM20VpdG8wGJniHE0bGeY3FD0kxAK49lCQDtaN/
-         c9RubZAQFKlfJft+x9GcWe2k8R4GLCJw8aC+uWAZujXFa+FQ2OHp6/GVBGyMoeDyOaxh
-         YbQgyFIGjS0Kv9cK2z8rBcaH5o950iDBlH4BPFCdBi8Y/z4n6uAQQXyXln5423emXYaY
-         WXtWlcablEGXFLzbJzWiKvlmC7bWD756LZ/7FPR/+YyEin0MNq45sHiiSHH3DKg9Bhuu
-         IGOkO2r0avMCnseKZx7Gu8jEZ3D5IIVeT0tRml2C3G6f6cRQPz7nqLWuEntfYpz2S1TK
-         l2VQ==
+        Tue, 7 Dec 2021 00:35:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638855112;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e4ghYP9B13gGvmZuLKDuOchy2naysfKvbuf3lUvYkHc=;
+        b=fSwGXEVFDBlaaG+EJmt918dn6ge1D4mcHBIcIOf/0o6WKAapQ2aOUjPTfU9y8bzIDVOfv1
+        7z1+waZU2qgOcThuVnlwnPNw3cpO74vcdZF1U0J49lQMi4aBkN/UDXkehvl0bH0KY4cQi5
+        a1Wm6IiZ4RwT2yEd/1Pm3GGeB+tyXXY=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-357-cKJt0alXM8SEbiejVNYuiA-1; Tue, 07 Dec 2021 00:31:49 -0500
+X-MC-Unique: cKJt0alXM8SEbiejVNYuiA-1
+Received: by mail-qk1-f197.google.com with SMTP id bi22-20020a05620a319600b00468606d7e7fso14123006qkb.10
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Dec 2021 21:31:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8GCfs3UIWYheIdOcXQxitSGok4TtBWFHvnOhGvwh4LU=;
-        b=Xbpmbc/UK5Be0iZr03Rd6RgJblz8JIdI0txurFKkBjmVhHGdOps+qnjte/sz/jzlIR
-         sPcuvCHge68R7774FsrsnQdR0Ips2NK60KQ2PW7kd0fqg5cTappG+t8TrgpAW6sWz6wW
-         v55Zylec9TdTxgUqQGrfBxHpClf/3idytyp4o+fd0OqQP30ntZ1y8+6oRsjrUewIqDIj
-         2BtF+F8Mngmnz8L07gvG5S9gKe3OA3f3Hc0AYNVb2kVDfXXj09z0/xnutY2GM1Zs327U
-         1tLIpMGiKFGPxRs0bweAvR2QiIVYbAQwB0AfAz1JKGY0QmXq2AdewsDiDE00pf3M7zEt
-         71kg==
-X-Gm-Message-State: AOAM5305BEfrUGJVIB2vnjTe3hvUMGXKLeYurGUY0SU2SZBxrmFCLmRe
-        zsX7OKtz+RkgeXFnOG0VSXwxshH72rbBALoXM+85Ug==
-X-Google-Smtp-Source: ABdhPJyQjwGuVEpanwRxhs05NMKibfDWQCJJpGsPeH8foH3M53khXDQmMTwCV/a+WLqELyEiS/7cVz+m5Tuka3bF1/w=
-X-Received: by 2002:a6b:ea0a:: with SMTP id m10mr36636252ioc.91.1638842066584;
- Mon, 06 Dec 2021 17:54:26 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=e4ghYP9B13gGvmZuLKDuOchy2naysfKvbuf3lUvYkHc=;
+        b=eOfPR3LdODMB05oM3twjCekZJOIQMU/oUj5PSDpr27JWCl8pj3CMOV/H6hQ3zWtaIR
+         WgGxw247r9wiqW7duTTBT+1P/bzbyeBRpRF/v2RLMuh3S/jeWASQTfQYW/h3+qF4D6iV
+         de9MU1MUtH0hiu8Rvo6DpfgyMhg2Qme+L/8BXlQ0XWkvn1/p8JdnV57zz8fdhwmq+cNX
+         ikqYerovTcwGGQW5D5A65CQy7AqSujxKbZVsv4QHQHZrHZLQLH8zew8tJN4FkIarkbFS
+         zdQ7c1OewFReWcfESI29Q/jp3eUxMRnK5qLAK+D48jcF23Jgun5yQ7cw5LV9ditFx5Bk
+         8Luw==
+X-Gm-Message-State: AOAM532qJT7qt6ZiHQSfbghZfMrJxMjWMboLbCvPIhakxHRdm5SRH26N
+        /R3TGj6Qbi6SVClH9Cu90vE/P8hfFGSa+Z0Nvnf//r2039JedVzUrDdYUL1zOz6VQHHV0zq+whF
+        uSmYrfCV7f/1FpH/At2fM3JQR3KPd
+X-Received: by 2002:ac8:5b51:: with SMTP id n17mr19545781qtw.182.1638855108532;
+        Mon, 06 Dec 2021 21:31:48 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz454uO8EitNs/c6PtV9eniUKNKiTCgR5+N8W4WMPq1f0ryP+2pFiwPH4C3lFPQ4hkn9zJMiQ==
+X-Received: by 2002:ac8:5b51:: with SMTP id n17mr19545750qtw.182.1638855108304;
+        Mon, 06 Dec 2021 21:31:48 -0800 (PST)
+Received: from treble ([2600:1700:6e32:6c00::45])
+        by smtp.gmail.com with ESMTPSA id s12sm8814877qtk.61.2021.12.06.21.31.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Dec 2021 21:31:47 -0800 (PST)
+Date:   Mon, 6 Dec 2021 21:31:42 -0800
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexander Lobakin <alexandr.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, X86 ML <x86@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        live-patching@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v8 07/14] kallsyms: Hide layout
+Message-ID: <20211207053142.d4xvkqs57zob2v2i@treble>
+References: <20211202223214.72888-1-alexandr.lobakin@intel.com>
+ <20211202223214.72888-8-alexandr.lobakin@intel.com>
+ <Yanqz7o4IH5MkDp8@hirez.programming.kicks-ass.net>
+ <CAMj1kXFLJcfUqEoz0NAb49=XJG=5LAwEPSwCQ-y7sN31C1U6AQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20211203065647.2819707-1-keescook@chromium.org>
-In-Reply-To: <20211203065647.2819707-1-keescook@chromium.org>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Mon, 6 Dec 2021 17:54:15 -0800
-Message-ID: <CAHS8izMqjZqK9h42pXaAxfD=Spdwem8PEAgErDhXSBtLBO8eCA@mail.gmail.com>
-Subject: Re: [PATCH] hugetlb/cgroup: Fix copy/paste array assignment
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMj1kXFLJcfUqEoz0NAb49=XJG=5LAwEPSwCQ-y7sN31C1U6AQ@mail.gmail.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 2, 2021 at 10:56 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Fix mismatched array assignment, reported by an -Warray-bounds build:
->
-> mm/hugetlb_cgroup.c: In function '__hugetlb_cgroup_file_legacy_init':
-> mm/hugetlb_cgroup.c:850:35: error: array subscript 8 is above array bounds of 'struct cftype[8]' [-Werror=array-bounds ]
->   850 |         cft = &h->cgroup_files_dfl[8];
->       |                ~~~~~~~~~~~~~~~~~~~^~~
-> In file included from mm/hugetlb_cgroup.c:23:
-> ./include/linux/hugetlb.h:625:23: note: while referencing 'cgroup_files_dfl'
->   625 |         struct cftype cgroup_files_dfl[8];
->       |                       ^~~~~~~~~~~~~~~~
->
-> Fixes: e45f4726bcad ("hugetlb: add hugetlb.*.numa_stat file")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Fri, Dec 03, 2021 at 11:03:35AM +0100, Ard Biesheuvel wrote:
+> On Fri, 3 Dec 2021 at 11:01, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Thu, Dec 02, 2021 at 11:32:07PM +0100, Alexander Lobakin wrote:
+> > > From: Kristen Carlson Accardi <kristen@linux.intel.com>
+> > >
+> > > This patch makes /proc/kallsyms display in a random order, rather
+> > > than sorted by address in order to hide the newly randomized address
+> > > layout.
+> >
+> > Is there a reason to not always do this? That is, why are we keeping two
+> > copies of this code around? Less code is more better etc..
+> 
+> +1.
+> 
+> IIRC I made the exact same point when this patch was sent out by
+> Kristen a while ago.
 
-Sorry about that and thanks for the fix!
+Yes.  Alexander, I'd recommend going back to the review comments from
+Kristen's last posting, they may have been missed.
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
+-- 
+Josh
 
-> ---
->  mm/hugetlb_cgroup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-> index 9eebe8df3c39..f9942841df18 100644
-> --- a/mm/hugetlb_cgroup.c
-> +++ b/mm/hugetlb_cgroup.c
-> @@ -847,7 +847,7 @@ static void __init __hugetlb_cgroup_file_legacy_init(int idx)
->         cft->read_u64 = hugetlb_cgroup_read_u64;
->
->         /* Add the numa stat file */
-> -       cft = &h->cgroup_files_dfl[8];
-> +       cft = &h->cgroup_files_legacy[8];
->         snprintf(cft->name, MAX_CFTYPE_NAME, "%s.numa_stat", buf);
->         cft->private = MEMFILE_PRIVATE(idx, 1);
->         cft->seq_show = hugetlb_cgroup_read_numa_stat;
-> --
-> 2.30.2
->
