@@ -2,65 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42555C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 12:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FA1C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Dec 2021 13:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231821AbhLGMYv (ORCPT
+        id S237135AbhLGNcF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Dec 2021 07:24:51 -0500
-Received: from mga11.intel.com ([192.55.52.93]:4084 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230107AbhLGMYv (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Dec 2021 07:24:51 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="235077040"
-X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
-   d="scan'208";a="235077040"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 04:21:21 -0800
-X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
-   d="scan'208";a="679424774"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 04:21:14 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 07 Dec 2021 14:21:05 +0200
-Date:   Tue, 7 Dec 2021 14:21:05 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] thunderbolt: xdomain: Avoid potential stack OOB read
-Message-ID: <Ya9Rsfos46i8Rcpc@lahna>
-References: <20211207063413.2698788-1-keescook@chromium.org>
+        Tue, 7 Dec 2021 08:32:05 -0500
+Received: from gandalf.ozlabs.org ([150.107.74.76]:36883 "EHLO
+        gandalf.ozlabs.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237143AbhLGNcD (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Tue, 7 Dec 2021 08:32:03 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4J7h2R0c6qz4xh5;
+        Wed,  8 Dec 2021 00:28:31 +1100 (AEDT)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-hardening@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        kernel test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20211118203604.1288379-1-keescook@chromium.org>
+References: <20211118203604.1288379-1-keescook@chromium.org>
+Subject: Re: [PATCH] powerpc/signal32: Use struct_group() to zero spe regs
+Message-Id: <163888363674.3690807.16904122616287532498.b4-ty@ellerman.id.au>
+Date:   Wed, 08 Dec 2021 00:27:16 +1100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211207063413.2698788-1-keescook@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Dec 06, 2021 at 10:34:13PM -0800, Kees Cook wrote:
-> tb_xdp_properties_changed_request() was calling tb_xdp_handle_error() with
-> a struct tb_xdp_properties_changed_response on the stack, which does not
-> have the "error" field present when cast to struct tb_xdp_error_response.
-> This was detected when building with -Warray-bounds:
+On Thu, 18 Nov 2021 12:36:04 -0800, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 > 
-> drivers/thunderbolt/xdomain.c: In function 'tb_xdomain_properties_changed':
-> drivers/thunderbolt/xdomain.c:226:22: error: array subscript 'const struct tb_xdp_error_response[0]' is partly outside array bounds of 'struct tb_xdp_properties_changed_response[1]' [-Werror=array-bounds]
->   226 |         switch (error->error) {
->       |                 ~~~~~^~~~~~~
-> drivers/thunderbolt/xdomain.c:448:51: note: while referencing 'res'
->   448 |         struct tb_xdp_properties_changed_response res;
->       |                                                   ^~~
+> Add a struct_group() for the spe registers so that memset() can correctly reason
+> about the size:
 > 
-> Add union containing struct tb_xdp_error_response to structures passed
-> to tb_xdp_handle_error(), so that the "error" field will be present.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> [...]
 
-Applied, thanks!
+Applied to powerpc/next.
+
+[1/1] powerpc/signal32: Use struct_group() to zero spe regs
+      https://git.kernel.org/powerpc/c/62ea67e31981bca95ec16c37e2a1fba68f3dd8c5
+
+cheers
