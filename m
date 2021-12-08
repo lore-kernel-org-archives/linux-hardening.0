@@ -2,84 +2,68 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505CBC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 06:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E852C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 08:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237390AbhLHGNq (ORCPT
+        id S229817AbhLHIz3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Dec 2021 01:13:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237259AbhLHGNn (ORCPT
+        Wed, 8 Dec 2021 03:55:29 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:55308 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229489AbhLHIz2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Dec 2021 01:13:43 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4613EC061574;
-        Tue,  7 Dec 2021 22:10:12 -0800 (PST)
+        Wed, 8 Dec 2021 03:55:28 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0FF05B81FBA;
-        Wed,  8 Dec 2021 06:10:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C9101C341CB;
-        Wed,  8 Dec 2021 06:10:09 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id C9B82CE2035;
+        Wed,  8 Dec 2021 08:51:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC1A9C00446;
+        Wed,  8 Dec 2021 08:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638943809;
-        bh=INhacVaG4P5HzQ777ODVJupf9ZDf/A1ZZhWB3yOJM8E=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=RZFN26Hk+TjOeGuMOaIydIfybrrvGDeBnyvTCE/oOyXmCiDhjp/NvrvqlHDFm/mb9
-         pNh6xV7utvhGUQknLe/bHCcHbBwDOh3vhgH7mzzDZU9FnVwVZpjtN2QWL5MIyiJ+ia
-         /2qvD309mO+c+F33ggk0FNLqbRGBOPYxW/7B6ITlVRMO5+PnaZor+VLBd6nxZJUJlr
-         04TzZI4AySNj0cTDtHagMgXq254LESHrLU4PafWQEbPHKLYKy+EXrG8PHiEmRBdfZI
-         w5s7ySIxJMl5nkLkF1RKc0wW8h9T4pPNstMgys1TTSA7+U2CQYk4rHrVyzC7WrxHsd
-         gGi/NGg15C9GQ==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id A9B3C60BCF;
-        Wed,  8 Dec 2021 06:10:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] hv_sock: Extract hvs_send_data() helper that takes only
- header
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <163894380969.19666.8744296090351862087.git-patchwork-notify@kernel.org>
-Date:   Wed, 08 Dec 2021 06:10:09 +0000
-References: <20211207063217.2591451-1-keescook@chromium.org>
-In-Reply-To: <20211207063217.2591451-1-keescook@chromium.org>
+        s=k20201202; t=1638953513;
+        bh=k0/iRYw9sAEphki+MpMMu8A7CabxSrg6Rqnu0nbmdt8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FB/HDc8fTf7RkQu6ldFbUIE3p1+623xFX+fhldnqRWPltg+CaiaAf8b8ZfHcrl7bn
+         6g8nHPvNJ6y/Q4EWGRtR/bfBJSwJ+gwYBwhifLXs2cg2Yz/lL+g7DdLFgpOA7osn9+
+         MN46Oe0u68KxU+Hw11uXP51eoiVZKzqi7qK7QQ4Efmld3rG+WFRpNRlAJAQ8quTDb5
+         Xx3kg8RHerDE4K6/53v5jwgtFJL4phm73JUBZUBlxJvBYXYYBeC5guiKSDAwiEYiTI
+         4esAg9fthDFDApKLrfuN4jR29oAVeqg6/6j/DwkS94mg3sJ0cT+n1Uq7ULUflzILtu
+         sqnfrtEyOW+Ng==
+Date:   Wed, 8 Dec 2021 10:51:49 +0200
+From:   Leon Romanovsky <leon@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, sgarzare@redhat.com,
-        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] RDMA/mlx5: Use memset_after() to zero struct
+ mlx5_ib_mr
+Message-ID: <YbByJSkBgLRp5S8V@unreal>
+References: <20211207212022.364703-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211207212022.364703-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
-
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon,  6 Dec 2021 22:32:17 -0800 you wrote:
-> When building under -Warray-bounds, the compiler is especially
-> conservative when faced with casts from a smaller object to a larger
-> object. While this has found many real bugs, there are some cases that
-> are currently false positives (like here). With this as one of the last
-> few instances of the warning in the kernel before -Warray-bounds can be
-> enabled globally, rearrange the functions so that there is a header-only
-> version of hvs_send_data(). Silences this warning:
+On Tue, Dec 07, 2021 at 01:20:22PM -0800, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 > 
-> [...]
+> Use memset_after() to zero the end of struct mlx5_ib_mr that should
+> be initialized.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v2: rebased, umem moved into the union and is expected to be wiped
+>     https://lore.kernel.org/lkml/20211207194525.GL6385@nvidia.com
+> ---
+>  drivers/infiniband/hw/mlx5/mlx5_ib.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Here is the summary with links:
-  - hv_sock: Extract hvs_send_data() helper that takes only header
-    https://git.kernel.org/netdev/net-next/c/c0e084e342a8
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Acked-by: Leon Romanovsky <leonro@nvidia.com>
