@@ -2,51 +2,51 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D70C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 19:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB03C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 19:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231534AbhLHTX0 (ORCPT
+        id S239651AbhLHThe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Dec 2021 14:23:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53910 "EHLO
+        Wed, 8 Dec 2021 14:37:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231480AbhLHTX0 (ORCPT
+        with ESMTP id S239689AbhLHThe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Dec 2021 14:23:26 -0500
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11503C0617A1
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 11:19:54 -0800 (PST)
-Received: by mail-pg1-x533.google.com with SMTP id f125so2950251pgc.0
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 11:19:54 -0800 (PST)
+        Wed, 8 Dec 2021 14:37:34 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D86DC0617A1
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 11:34:02 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id i12so3330043pfd.6
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 11:34:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=fiV3SooUB/32JJTITL+mPBqPfWfpat3lRw3V23Hza2M=;
-        b=JgRfy44mQ8AleVBvEo4YVLO+SVZruhEnT70qtxc2H2yTddGuynAwOcHmUkpoAp8vsE
-         R5xxaWjydBe1Ccok4e7HJIROXFNNznmvV6REvSYUKbB4R4y7+B4xaPTnnuUtOWcoznll
-         an2C3ZPTtQlD9XxlIrC5EpAxkUiWK3r0dlY5w=
+        bh=jSyNpPfNL4nv3Nl83ASritesFLf9KF/N3krCSnAdabQ=;
+        b=bMWE1jjtcEd3GyI6Fva9foJZbVg/olBS/RBGK3oLaGOZ6RQzFIQIlnJZXMeC7Y6VBM
+         VH+yw7rAzPbBrS/Yy/kNSbKRDec9NOzG6PX9Ub8ChObF8OfbDEPypZuCuayiIllcNR3D
+         p3TpK3IQMVbFVvlAlNGNoDDU1XTBYAQXTDUqI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=fiV3SooUB/32JJTITL+mPBqPfWfpat3lRw3V23Hza2M=;
-        b=To+m1pypOW0pZsXKpASyGKkooz7zCVsguG5d5YTnF8hsH0zJoAcZ8GTSQgNMOQe+N/
-         vb9AZw/Vv4ytlNh1gVsx3L0tYqTlV/TT/75ZynoMLBxDJX8MFavAOjMt8mBvVELM9oGp
-         M8YELJzXfqA6SJBKdEcmplWW/YRHZabzs62ITLJXuBQgQu1N/LRQqLaI6oEfTgE34A4+
-         njMVb3xOREQetpTU+Y7VXxuvp0f9BEeVIht/hOW81MO0Zrl6FFRUUVmqv5Z2v7b8IqXZ
-         i41x/F1PIyQ/MopYbReVsFy9mC8VAc772WX57hc5MqLDvL193TyKSfft/cUypVZyHHGi
-         bvOg==
-X-Gm-Message-State: AOAM5337S533kpKRff5VkbFPyt6eBhRmW06fu16jduVZat2Ni67KFcHz
-        MciObHNifvlGpHbK2CTXhL7aPQ==
-X-Google-Smtp-Source: ABdhPJz1we00WF6hm8MuqpqUiPezlj6zhYoPMtWoYO/1fRqzLahY8pP9UK7D6i/3sxTjVqEElH2OjA==
-X-Received: by 2002:a05:6a00:16cc:b0:4a8:2ea1:1df0 with SMTP id l12-20020a056a0016cc00b004a82ea11df0mr7506402pfc.62.1638991193572;
-        Wed, 08 Dec 2021 11:19:53 -0800 (PST)
+        bh=jSyNpPfNL4nv3Nl83ASritesFLf9KF/N3krCSnAdabQ=;
+        b=k+7BImPbADdl4HrMT9qHBXm27OfIjijmR556tfNoQEo7sqeeOjK6vRyZorTUoFw1KD
+         dy5ESSzm35oXaHm3NAcSxE+qag6YNFWYfLp0wKlwEzBAqTUHl9d65XjXAKmuM+YmlBe7
+         baLjfoA0tbe0NUQHhdI2GM/tYQ/Lz+/9KtSp/tENFCP14Evbf+o9ntG8ivICL/t2W2c+
+         J8cowTueK+VEK08NU4LLKNw5Gfq2NdceBrvD8tyiGgOrwMD92GCgEZ3ZmXhB19Hz33PR
+         EyAOZvJ3LrrzCVEkcyQxpDPQOhE6mz9zG1w0Cwyy+UJZ9cwbIIi1ki/HduIUsPN6+qnu
+         m3Mw==
+X-Gm-Message-State: AOAM532lE9Nr69DYAwrEcL5ymQDxIJbelTOXATS9NeenrM3tMlfjko9d
+        GDNDSPy1v1WY5lKvE67DkvzgVg==
+X-Google-Smtp-Source: ABdhPJwfrmO6OuC4sSleROZVDgGz/w8i3eLzLrZ/yRIIlrGfRu+NcjCkwWuRt2QOUlIgndclg1Ga5A==
+X-Received: by 2002:aa7:979a:0:b0:4a7:e510:ac1c with SMTP id o26-20020aa7979a000000b004a7e510ac1cmr7386686pfp.71.1638992041775;
+        Wed, 08 Dec 2021 11:34:01 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t38sm4552392pfg.218.2021.12.08.11.19.53
+        by smtp.gmail.com with ESMTPSA id m24sm3333830pgk.39.2021.12.08.11.34.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 11:19:53 -0800 (PST)
-Date:   Wed, 8 Dec 2021 11:19:52 -0800
+        Wed, 08 Dec 2021 11:34:01 -0800 (PST)
+Date:   Wed, 8 Dec 2021 11:34:00 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Yury Norov <yury.norov@gmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -56,7 +56,7 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Steven Rostedt <rostedt@goodmis.org>
 Subject: Re: [PATCH] find: Do not read beyond variable boundaries on small
  sizes
-Message-ID: <202112081104.958EC2E6@keescook>
+Message-ID: <202112081128.08F5C41F8@keescook>
 References: <20211203100846.3977195-1-keescook@chromium.org>
  <YaoN6wnNezMvyyd5@smile.fi.intel.com>
  <20211203182638.GA450223@lapt>
@@ -71,39 +71,128 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 On Tue, Dec 07, 2021 at 03:39:30PM -0800, Yury Norov wrote:
-> Bitmap functions work identically for all sizes from 0 to INT_MAX - 1. 
-> Users don't 'choose between functions based on the size of their target'.
-> [...]
-> for_each_*_bit() requires a pointer to an array of unsigned longs. If
-> it's provided with something else, this is an error on a caller side.
+> I'm all for enabling -Warray-bounds, but the warnings that it spots
+> only convinced me that bitmap API is used wrongly, and it should be
+> fixed. Can you please share the list of bitmap-related issues found
+> with -Warray-bounds that concerned you? I'll take a look and try to
+> make a patch that fixes it.
 
-I have a sense we're both talking past each other. Let me try to show
-what I'm seeing: the code in the bitmap API chooses one of two paths:
+On an x86 allmodconfig with -Warray-bounds, here are the bitmap
+warnings:
 
-- if "size" is a constant expression and is sizeof(unsigned long) or
-  smaller, mask to "size" and call into ff*() built-ins.
-- else, use a dynamic sized loop against a series of unsigned longs.
 
-For the dynamic size case, yes, absolutely, things must stay unsigned
-long aligned, etc, that makes sense. I don't want to change anything
-there.
+In file included from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+                 from ./arch/x86/include/asm/processor.h:22,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:60,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:55,
+                 from ./include/linux/wait.h:9,
+                 from ./include/linux/wait_bit.h:8,
+                 from ./include/linux/fs.h:6,
+                 from ./include/linux/debugfs.h:15,
+                 from drivers/bus/mhi/core/init.c:7:
+drivers/bus/mhi/core/init.c: In function 'to_mhi_pm_state_str':
+./include/linux/find.h:187:37: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'enum mhi_pm_state[1]' [-Warray-bounds]
+  187 |                 unsigned long val = *addr & GENMASK(size - 1, 0);
+      |                                     ^~~~~
+drivers/bus/mhi/core/init.c:80:51: note: while referencing 'state'
+   80 | const char *to_mhi_pm_state_str(enum mhi_pm_state state)
+      |                                 ~~~~~~~~~~~~~~~~~~^~~~~
 
-For the constant-expression size, this requirement does not hold. Every
-helper performs a constant expression sized mask of the argument before
-using ff*(), for example:
+In file included from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./include/linux/smp.h:13,
+                 from ./include/linux/lockdep.h:14,
+                 from ./include/linux/mutex.h:17,
+                 from ./include/linux/notifier.h:14,
+                 from ./include/linux/clk.h:14,
+                 from drivers/irqchip/irq-ingenic-tcu.c:7:
+drivers/irqchip/irq-ingenic-tcu.c: In function 'ingenic_tcu_intc_cascade':
+./include/linux/find.h:40:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'uint32_t[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
+   40 |                 val = *addr & GENMASK(size - 1, offset);
+      |                       ^~~~~
+drivers/irqchip/irq-ingenic-tcu.c:30:18: note: while referencing 'irq_reg'
+   30 |         uint32_t irq_reg, irq_mask;
+      |                  ^~~~~~~
 
-                unsigned long val;
+In file included from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./include/linux/smp.h:13,
+                 from ./include/linux/lockdep.h:14,
+                 from ./include/linux/mutex.h:17,
+                 from ./include/linux/notifier.h:14,
+                 from ./include/linux/clk.h:14,
+                 from drivers/irqchip/irq-ingenic-tcu.c:7:
+./include/linux/find.h:40:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'uint32_t[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
+   40 |                 val = *addr & GENMASK(size - 1, offset);
+      |                       ^~~~~
+drivers/irqchip/irq-ingenic-tcu.c:30:18: note: while referencing 'irq_reg'
+   30 |         uint32_t irq_reg, irq_mask;
+      |                  ^~~~~~~
 
-                if (unlikely(offset >= size))
-                        return size;
+In file included from ./include/linux/bitmap.h:9,
+                 from drivers/iommu/intel/iommu.c:17:
+drivers/iommu/intel/iommu.c: In function 'domain_context_mapping_one':
+./include/linux/find.h:119:37: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'int[1]' [-Warray-bounds]
+  119 |                 unsigned long val = *addr & GENMASK(size - 1, 0);
+      |                                     ^~~~~
+drivers/iommu/intel/iommu.c:2115:18: note: while referencing 'max_pde'
+ 2115 |         int pds, max_pde;
+      |                  ^~~~~~~
 
-                val = *addr & GENMASK(size - 1, offset);
-                return val ? __ffs(val) : size;
+In file included from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+                 from ./arch/x86/include/asm/processor.h:22,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:60,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:55,
+                 from ./include/linux/swait.h:7,
+                 from ./include/linux/completion.h:12,
+                 from drivers/iio/adc/stmpe-adc.c:10:
+drivers/iio/adc/stmpe-adc.c: In function 'stmpe_adc_probe':
+./include/linux/find.h:98:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
+   98 |                 val = *addr | ~GENMASK(size - 1, offset);
+      |                       ^~~~~
+drivers/iio/adc/stmpe-adc.c:258:13: note: while referencing 'norequest_mask'
+  258 |         u32 norequest_mask = 0;
+      |             ^~~~~~~~~~~~~~
 
-In this case, the argument does _not_ need to be a pointer to native
-unsigned long. And this is seen in the many many places in the kernel
-using non-unsigned-long arguments with a constant-expression size. (e.g.
-an int with size 32).
+In file included from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+                 from ./arch/x86/include/asm/processor.h:22,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:60,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:55,
+                 from ./include/linux/swait.h:7,
+                 from ./include/linux/completion.h:12,
+                 from drivers/iio/adc/stmpe-adc.c:10:
+./include/linux/find.h:98:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
+   98 |                 val = *addr | ~GENMASK(size - 1, offset);
+      |                       ^~~~~
+drivers/iio/adc/stmpe-adc.c:258:13: note: while referencing 'norequest_mask'
+  258 |         u32 norequest_mask = 0;
+      |             ^~~~~~~~~~~~~~
+
+
+I expect there are more outside of x86 allmodconfig. I still think it
+makes sense to have a single API that is forgiving with its inputs. We
+can change the API in one place and solve this for all callers.
 
 -- 
 Kees Cook
