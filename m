@@ -2,209 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9EDC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 20:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0274C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 23:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239925AbhLHUDe (ORCPT
+        id S237893AbhLHX0q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Dec 2021 15:03:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
+        Wed, 8 Dec 2021 18:26:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229991AbhLHUDc (ORCPT
+        with ESMTP id S235172AbhLHX0q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Dec 2021 15:03:32 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01ECDC061746
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 12:00:00 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id np3so2698556pjb.4
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 11:59:59 -0800 (PST)
+        Wed, 8 Dec 2021 18:26:46 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695C5C0617A1
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 15:23:13 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id x6so13785530edr.5
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 15:23:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ryG9F0cNdfUlgVrF/NxUIt+Pz0m+Oe9K2Svfx8D1tX0=;
-        b=cDUnluAwhgjxqTXxu1GCbqv9CC0ZQ5kLYOOY+cn9oMhL1vM0WWfP/ZxBG6WVLXmXrX
-         odZlg/eOsFeiLHPsF1ZruSdyDu6bjyyX2ZoMcBCO5qDLG/CKOLAb+FZOA8sGEqXUDKky
-         SRqYDI21j9C72i6pn/ZSKtO6UKbhSy5P2sCwQ=
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=12eYC9cttLky1xiGkzKZrN85X2r4m8IpTalt9bP6nHY=;
+        b=QlyaI3Ku1W5hlIPYgHKuslvFHFWzLFTdq423Ieu6TH5hTrBvHrZGQLiAA0Y2A3UqnQ
+         TG2uu6OZ6sCgGywg71Nlh1wTAbDV+IsC6OIoD9k0ezM3qWuscU/NNrsWdyyPvA/FdN3v
+         hLMfADD24WDkzP3M92kz41O29cuWzDgIwUnAc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ryG9F0cNdfUlgVrF/NxUIt+Pz0m+Oe9K2Svfx8D1tX0=;
-        b=mr3/s12OK5bvwtFdVxiEkewAB6dlpyBneOUIUeL+Laq7N5PC1/Xc15nLenhwJfyFSX
-         Rp8khMr2Y/tj/a2Wr1PvPAqIkUY6ZjVa/jH9ewMZaMUfwEia1HTAccwUmVBmwixWpZUx
-         sDdp6VvbUiIvZ7W1zXohddID4GwPrB7he/g9JrWuE/nljLn5iD5jH5Ilfwm53QzDsH1K
-         WYGlI8t96pYcKSaj5UmjlW4V95nzmGOO2DjEG9yds5OSBCRsdJWIgotviA521e3Stnfl
-         RaGc0VyeCLjPn8MdInLtgYn4mSgQOL1WXyMECXzQm2dDw59GL5W82dinkGBVhUtLBJOQ
-         CQ7g==
-X-Gm-Message-State: AOAM531BsWcrfrGp/mYNL1OrEHkzTTzQPQhzt6if59oOCeAb7KZ+I1kl
-        jnwadxzkbcrbj/XYK5EbGUaHow==
-X-Google-Smtp-Source: ABdhPJzeUr1CLAgmwx46mEtMKfG5fRMmsYrQUKjNklA67PYofq5cYsVuaX/QUYGHSWwHr/4NlPqJTw==
-X-Received: by 2002:a17:90a:7004:: with SMTP id f4mr9649105pjk.156.1638993599536;
-        Wed, 08 Dec 2021 11:59:59 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w17sm4486734pfu.58.2021.12.08.11.59.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 11:59:59 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     James Smart <james.smart@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: lpfc: Use struct_group() to initialize struct lpfc_cgn_info
-Date:   Wed,  8 Dec 2021 11:59:57 -0800
-Message-Id: <20211208195957.1603092-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        bh=12eYC9cttLky1xiGkzKZrN85X2r4m8IpTalt9bP6nHY=;
+        b=ugxCSaISsbaDxKGeJXDIr5zzBiZUUfeaHx54t5PJ3Dcgvllsu9BGGidjjTJ4c8PloB
+         nri1mbiqM04EWjwm0OLmvoWuROd0FQ90YTRaPasxhsWHKUUMAAtZgIZ1JIs3BggXvR6X
+         /i5VDwYd6wU6OGSRH92A/zI0G8J9X16upqvDd07NqadL56wZDfRNo7hpP56Otc1yWTHc
+         0d/XXQD+lHMJ0w/gbn7HAJeXGE0wSrpw7pGSI3ZaHHZn/pe8fLYk+vxYGuSdU0E+Rf8+
+         g8Mws6JZ2uNzuGe5A2vfXVr8a3feLHYDVySfGzY9Uiabvly0A+Ej5Y5CT0ULG3i/ivgx
+         apGQ==
+X-Gm-Message-State: AOAM532yzVLIEtxvC15lxaKmtsW3050+f9yVuwysuzqT123lgys1t0XR
+        mMI0UPYNq70wLd9mJLYOh9N6NjLS1HgcaNe7
+X-Google-Smtp-Source: ABdhPJwMP2aotTKfhTbOOW19RqP4FL6+EYSjrQ6GDEnSdFMsqfAKIE6z7H9WLhPIVqkR19LBd6CRYg==
+X-Received: by 2002:a05:6402:d05:: with SMTP id eb5mr22956922edb.345.1639005791724;
+        Wed, 08 Dec 2021 15:23:11 -0800 (PST)
+Received: from [192.168.1.149] ([80.208.69.72])
+        by smtp.gmail.com with ESMTPSA id y15sm2701371edr.35.2021.12.08.15.23.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Dec 2021 15:23:11 -0800 (PST)
+Subject: Re: [PATCH] find: Do not read beyond variable boundaries on small
+ sizes
+To:     Kees Cook <keescook@chromium.org>,
+        Yury Norov <yury.norov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20211203100846.3977195-1-keescook@chromium.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <037c44cb-c5bc-9a9a-0c16-219bdf858ea7@rasmusvillemoes.dk>
+Date:   Thu, 9 Dec 2021 00:23:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4744; h=from:subject; bh=ifCLUxbQxASo1tR1Zxws2L+owBAIVDqaIZyrnGtvuy0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhsQ693IFoh1y1lBK3oIqiJvkk0IV5I8DRUAJFiKYR SxqH3kiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbEOvQAKCRCJcvTf3G3AJnnkD/ 0botSCPgrvcWjq7Dpou8O9qkYgwJRZU6M208ALcvF9jQPOIOe/RxvCUDjCpl8PFtp3R8RxwmiT1UPD 2AyrUApSHxbq7g+W6fNU3W+G2WkSPXNVxTvkdc2d+YQ6Lve+yDXNMbIHlRrcbvXzJWYgvURgSVexmV PsEAYn7DAB1zNr9Z8Dq3QqjFSkl/3C1L+0wtYtK+UFK+vAEmR2kKk408yJ+5KLBFmbolS/AkTym86N CuXhzko6b7WQd9HaAz+dKMvw5+9/nOT6AoMDt0/hIwjUUs6+uESBYgQUcSXXEJXduxdVg9fPj+9LW6 FyODub+v7dyp0n+zKyi8j+vbsgkjYryoP/Rue9lMHrdoLJoC5tYtc9aXG3nXrwe4lLZr9FOHoaHC7n /KMoFKPBRSbI6j/F+YZtRqZsGQZeGNTSiTznUs6I5weo23FMOwpl/1gmTnGImO4MfejOAxVcV9bYxh s0geN6I1DZoC8Cs4OKoahy+QbJXtMn6aFFT7eA5BNiR797oUXn5RQvb6veJxRGHqnSCLoBa5UNQAOn tXfJ1DjkxGiC38Vw6AzHmh2CjrUqaPtkI8+YfdTIjN1tIh+vmriksJgafUtO+V/MFaF9ihhUBWhs4n S11aybSO9yNCu1zHSeo73ZYe5I5Tmmohff8odqqRPp0VhjUTDRVA4tCBkr6A==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211203100846.3977195-1-keescook@chromium.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memset(), avoid intentionally writing across
-neighboring fields.
+On 03/12/2021 11.08, Kees Cook wrote:
+> It's common practice to cast small variable arguments to the find_*_bit()
+> helpers to unsigned long and then use a size argument smaller than
+> sizeof(unsigned long):
+> 
+> 	unsigned int bits;
+> 	...
+> 	out = find_first_bit((unsigned long *)&bits, 32);
 
-Add struct_group() to mark "stat" region of struct lpfc_cgn_info that
-should be initialized to zero, and refactor the "data" region memset()
-to wipe everything up to the cgn_stats region.
+Those call sites need to be fixed, they are broken on BE anyway. And
+your __find_bits_deref does nothing to fix (paper over) that if, say,
+the caller uses an u32 to store an 8-bit bitmap.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Also, ping, Re: https://lore.kernel.org/lkml/20211203223351.107323-1-keescook@chromium.org/
----
- drivers/scsi/lpfc/lpfc.h      | 90 +++++++++++++++++------------------
- drivers/scsi/lpfc/lpfc_init.c |  4 +-
- 2 files changed, 46 insertions(+), 48 deletions(-)
+So NAK.
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 3faadcfcdcbb..4878c94761f9 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -496,52 +496,50 @@ struct lpfc_cgn_info {
- 	__le32   cgn_alarm_hr[24];
- 	__le32   cgn_alarm_day[LPFC_MAX_CGN_DAYS];
- 
--	/* Start of congestion statistics */
--	uint8_t  cgn_stat_npm;		/* Notifications per minute */
--
--	/* Start Time */
--	uint8_t  cgn_stat_month;
--	uint8_t  cgn_stat_day;
--	uint8_t  cgn_stat_year;
--	uint8_t  cgn_stat_hour;
--	uint8_t  cgn_stat_minute;
--	uint8_t  cgn_pad2[2];
--
--	__le32   cgn_notification;
--	__le32   cgn_peer_notification;
--	__le32   link_integ_notification;
--	__le32   delivery_notification;
--
--	uint8_t  cgn_stat_cgn_month; /* Last congestion notification FPIN */
--	uint8_t  cgn_stat_cgn_day;
--	uint8_t  cgn_stat_cgn_year;
--	uint8_t  cgn_stat_cgn_hour;
--	uint8_t  cgn_stat_cgn_min;
--	uint8_t  cgn_stat_cgn_sec;
--
--	uint8_t  cgn_stat_peer_month; /* Last peer congestion FPIN */
--	uint8_t  cgn_stat_peer_day;
--	uint8_t  cgn_stat_peer_year;
--	uint8_t  cgn_stat_peer_hour;
--	uint8_t  cgn_stat_peer_min;
--	uint8_t  cgn_stat_peer_sec;
--
--	uint8_t  cgn_stat_lnk_month; /* Last link integrity FPIN */
--	uint8_t  cgn_stat_lnk_day;
--	uint8_t  cgn_stat_lnk_year;
--	uint8_t  cgn_stat_lnk_hour;
--	uint8_t  cgn_stat_lnk_min;
--	uint8_t  cgn_stat_lnk_sec;
--
--	uint8_t  cgn_stat_del_month; /* Last delivery notification FPIN */
--	uint8_t  cgn_stat_del_day;
--	uint8_t  cgn_stat_del_year;
--	uint8_t  cgn_stat_del_hour;
--	uint8_t  cgn_stat_del_min;
--	uint8_t  cgn_stat_del_sec;
--#define LPFC_CGN_STAT_SIZE	48
--#define LPFC_CGN_DATA_SIZE	(sizeof(struct lpfc_cgn_info) -  \
--				LPFC_CGN_STAT_SIZE - sizeof(uint32_t))
-+	struct_group(cgn_stat,
-+		uint8_t  cgn_stat_npm;		/* Notifications per minute */
-+
-+		/* Start Time */
-+		uint8_t  cgn_stat_month;
-+		uint8_t  cgn_stat_day;
-+		uint8_t  cgn_stat_year;
-+		uint8_t  cgn_stat_hour;
-+		uint8_t  cgn_stat_minute;
-+		uint8_t  cgn_pad2[2];
-+
-+		__le32   cgn_notification;
-+		__le32   cgn_peer_notification;
-+		__le32   link_integ_notification;
-+		__le32   delivery_notification;
-+
-+		uint8_t  cgn_stat_cgn_month; /* Last congestion notification FPIN */
-+		uint8_t  cgn_stat_cgn_day;
-+		uint8_t  cgn_stat_cgn_year;
-+		uint8_t  cgn_stat_cgn_hour;
-+		uint8_t  cgn_stat_cgn_min;
-+		uint8_t  cgn_stat_cgn_sec;
-+
-+		uint8_t  cgn_stat_peer_month; /* Last peer congestion FPIN */
-+		uint8_t  cgn_stat_peer_day;
-+		uint8_t  cgn_stat_peer_year;
-+		uint8_t  cgn_stat_peer_hour;
-+		uint8_t  cgn_stat_peer_min;
-+		uint8_t  cgn_stat_peer_sec;
-+
-+		uint8_t  cgn_stat_lnk_month; /* Last link integrity FPIN */
-+		uint8_t  cgn_stat_lnk_day;
-+		uint8_t  cgn_stat_lnk_year;
-+		uint8_t  cgn_stat_lnk_hour;
-+		uint8_t  cgn_stat_lnk_min;
-+		uint8_t  cgn_stat_lnk_sec;
-+
-+		uint8_t  cgn_stat_del_month; /* Last delivery notification FPIN */
-+		uint8_t  cgn_stat_del_day;
-+		uint8_t  cgn_stat_del_year;
-+		uint8_t  cgn_stat_del_hour;
-+		uint8_t  cgn_stat_del_min;
-+		uint8_t  cgn_stat_del_sec;
-+	);
- 
- 	__le32   cgn_info_crc;
- #define LPFC_CGN_CRC32_MAGIC_NUMBER	0x1EDC6F41
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 2fe7d9d885d9..c18000d05379 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -13483,7 +13483,7 @@ lpfc_init_congestion_buf(struct lpfc_hba *phba)
- 	phba->cgn_evt_minute = 0;
- 	phba->hba_flag &= ~HBA_CGN_DAY_WRAP;
- 
--	memset(cp, 0xff, LPFC_CGN_DATA_SIZE);
-+	memset(cp, 0xff, offsetof(struct lpfc_cgn_info, cgn_stat));
- 	cp->cgn_info_size = cpu_to_le16(LPFC_CGN_INFO_SZ);
- 	cp->cgn_info_version = LPFC_CGN_INFO_V3;
- 
-@@ -13542,7 +13542,7 @@ lpfc_init_congestion_stat(struct lpfc_hba *phba)
- 		return;
- 
- 	cp = (struct lpfc_cgn_info *)phba->cgn_i->virt;
--	memset(&cp->cgn_stat_npm, 0, LPFC_CGN_STAT_SIZE);
-+	memset(&cp->cgn_stat, 0, sizeof(cp->cgn_stat));
- 
- 	ktime_get_real_ts64(&cmpl_time);
- 	time64_to_tm(cmpl_time.tv_sec, 0, &broken);
--- 
-2.30.2
-
+Rasmus
