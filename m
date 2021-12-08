@@ -2,68 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E852C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 08:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2517EC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 10:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbhLHIz3 (ORCPT
+        id S231403AbhLHK1F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Dec 2021 03:55:29 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:55308 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbhLHIz2 (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Dec 2021 03:55:28 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C9B82CE2035;
-        Wed,  8 Dec 2021 08:51:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC1A9C00446;
-        Wed,  8 Dec 2021 08:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638953513;
-        bh=k0/iRYw9sAEphki+MpMMu8A7CabxSrg6Rqnu0nbmdt8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FB/HDc8fTf7RkQu6ldFbUIE3p1+623xFX+fhldnqRWPltg+CaiaAf8b8ZfHcrl7bn
-         6g8nHPvNJ6y/Q4EWGRtR/bfBJSwJ+gwYBwhifLXs2cg2Yz/lL+g7DdLFgpOA7osn9+
-         MN46Oe0u68KxU+Hw11uXP51eoiVZKzqi7qK7QQ4Efmld3rG+WFRpNRlAJAQ8quTDb5
-         Xx3kg8RHerDE4K6/53v5jwgtFJL4phm73JUBZUBlxJvBYXYYBeC5guiKSDAwiEYiTI
-         4esAg9fthDFDApKLrfuN4jR29oAVeqg6/6j/DwkS94mg3sJ0cT+n1Uq7ULUflzILtu
-         sqnfrtEyOW+Ng==
-Date:   Wed, 8 Dec 2021 10:51:49 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] RDMA/mlx5: Use memset_after() to zero struct
- mlx5_ib_mr
-Message-ID: <YbByJSkBgLRp5S8V@unreal>
-References: <20211207212022.364703-1-keescook@chromium.org>
+        Wed, 8 Dec 2021 05:27:05 -0500
+Received: from mga06.intel.com ([134.134.136.31]:62057 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230050AbhLHK1E (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 8 Dec 2021 05:27:04 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="298596959"
+X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
+   d="scan'208";a="298596959"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 02:23:33 -0800
+X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
+   d="scan'208";a="606248476"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 02:23:30 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1muu5n-003bY5-4m;
+        Wed, 08 Dec 2021 12:22:31 +0200
+Date:   Wed, 8 Dec 2021 12:22:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] find: Do not read beyond variable boundaries on small
+ sizes
+Message-ID: <YbCHZmyfS7aXGuIx@smile.fi.intel.com>
+References: <20211203100846.3977195-1-keescook@chromium.org>
+ <YaoN6wnNezMvyyd5@smile.fi.intel.com>
+ <20211203182638.GA450223@lapt>
+ <202112031450.EFE7B7B4A@keescook>
+ <20211207233930.GA3955@lapt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211207212022.364703-1-keescook@chromium.org>
+In-Reply-To: <20211207233930.GA3955@lapt>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 01:20:22PM -0800, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memset(), avoid intentionally writing across
-> neighboring fields.
+On Tue, Dec 07, 2021 at 03:39:30PM -0800, Yury Norov wrote:
+> On Fri, Dec 03, 2021 at 03:01:30PM -0800, Kees Cook wrote:
+> > On Fri, Dec 03, 2021 at 10:26:38AM -0800, Yury Norov wrote:
+> > > On Fri, Dec 03, 2021 at 02:30:35PM +0200, Andy Shevchenko wrote:
+> > > > On Fri, Dec 03, 2021 at 02:08:46AM -0800, Kees Cook wrote:
+> > > > > It's common practice to cast small variable arguments to the find_*_bit()
+> > > 
+> > > Not that common - I found 19 examples of this cast, and most of them
+> > > are in drivers.
+> > 
+> > I find 51 (most are in the for_each_* wrappers):
+> > 
+> > $ RE=$(echo '\b('$(echo $(grep -E '^(unsigned long find|#define for_each)_' include/linux/find.h | cut -d'(' -f1 | awk '{print $NF}') | tr ' ' '|')')\(.*\(unsigned long \*\)')
+> > $ git grep -E "$RE" | wc -l
+> > 51
+> > 
+> > > > > This leads to the find helper dereferencing a full unsigned long,
+> > > > > regardless of the size of the actual variable. The unwanted bits
+> > > > > get masked away, but strictly speaking, a read beyond the end of
+> > > > > the target variable happens. Builds under -Warray-bounds complain
+> > > > > about this situation, for example:
+> > > > > 
+> > > > > In file included from ./include/linux/bitmap.h:9,
+> > > > >                  from drivers/iommu/intel/iommu.c:17:
+> > > > > drivers/iommu/intel/iommu.c: In function 'domain_context_mapping_one':
+> > > > > ./include/linux/find.h:119:37: error: array subscript 'long unsigned int[0]' is partly outside array bounds of 'int[1]' [-Werror=array-bounds]
+> > > > >   119 |                 unsigned long val = *addr & GENMASK(size - 1, 0);
+> > > > >       |                                     ^~~~~
+> > > > > drivers/iommu/intel/iommu.c:2115:18: note: while referencing 'max_pde'
+> > > > >  2115 |         int pds, max_pde;
+> > > > >       |                  ^~~~~~~
+> > > 
+> > > The driver should be fixed. I would suggest using one of ffs/fls/ffz from
+> > > include/asm/bitops.h
+> > 
+> > I don't think it's a good API design to make developers choose between
+> > functions based on the size of their target.
 > 
-> Use memset_after() to zero the end of struct mlx5_ib_mr that should
-> be initialized.
+> Bitmap functions work identically for all sizes from 0 to INT_MAX - 1. 
+> Users don't 'choose between functions based on the size of their target'.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: rebased, umem moved into the union and is expected to be wiped
->     https://lore.kernel.org/lkml/20211207194525.GL6385@nvidia.com
-> ---
->  drivers/infiniband/hw/mlx5/mlx5_ib.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+> Can you explain more what you mean?
 
-Thanks,
-Acked-by: Leon Romanovsky <leonro@nvidia.com>
+I believe it was a reaction to your suggestion about ffs/ffz/etc.
+
+Kees, if we _know_ that the size of the value in question will always
+fit 32/64-bit, then ffs/ffz/etc is okay to use. OTOH, if the type of
+that value is unsigned long [] and bitmap APIs() is used, then of
+course the consistent use of bitmap APIs is preferable.
+
+I.o.w.
+ uXX: ffX()/etc is fine.
+ unsigned long: bitmap API.
+
+I believe that's what Yury meant.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
