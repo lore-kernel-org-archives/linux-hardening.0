@@ -2,197 +2,209 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB03C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 19:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9EDC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 20:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239651AbhLHThe (ORCPT
+        id S239925AbhLHUDe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Dec 2021 14:37:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
+        Wed, 8 Dec 2021 15:03:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239689AbhLHThe (ORCPT
+        with ESMTP id S229991AbhLHUDc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Dec 2021 14:37:34 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D86DC0617A1
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 11:34:02 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id i12so3330043pfd.6
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 11:34:02 -0800 (PST)
+        Wed, 8 Dec 2021 15:03:32 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01ECDC061746
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 12:00:00 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id np3so2698556pjb.4
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 11:59:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jSyNpPfNL4nv3Nl83ASritesFLf9KF/N3krCSnAdabQ=;
-        b=bMWE1jjtcEd3GyI6Fva9foJZbVg/olBS/RBGK3oLaGOZ6RQzFIQIlnJZXMeC7Y6VBM
-         VH+yw7rAzPbBrS/Yy/kNSbKRDec9NOzG6PX9Ub8ChObF8OfbDEPypZuCuayiIllcNR3D
-         p3TpK3IQMVbFVvlAlNGNoDDU1XTBYAQXTDUqI=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ryG9F0cNdfUlgVrF/NxUIt+Pz0m+Oe9K2Svfx8D1tX0=;
+        b=cDUnluAwhgjxqTXxu1GCbqv9CC0ZQ5kLYOOY+cn9oMhL1vM0WWfP/ZxBG6WVLXmXrX
+         odZlg/eOsFeiLHPsF1ZruSdyDu6bjyyX2ZoMcBCO5qDLG/CKOLAb+FZOA8sGEqXUDKky
+         SRqYDI21j9C72i6pn/ZSKtO6UKbhSy5P2sCwQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jSyNpPfNL4nv3Nl83ASritesFLf9KF/N3krCSnAdabQ=;
-        b=k+7BImPbADdl4HrMT9qHBXm27OfIjijmR556tfNoQEo7sqeeOjK6vRyZorTUoFw1KD
-         dy5ESSzm35oXaHm3NAcSxE+qag6YNFWYfLp0wKlwEzBAqTUHl9d65XjXAKmuM+YmlBe7
-         baLjfoA0tbe0NUQHhdI2GM/tYQ/Lz+/9KtSp/tENFCP14Evbf+o9ntG8ivICL/t2W2c+
-         J8cowTueK+VEK08NU4LLKNw5Gfq2NdceBrvD8tyiGgOrwMD92GCgEZ3ZmXhB19Hz33PR
-         EyAOZvJ3LrrzCVEkcyQxpDPQOhE6mz9zG1w0Cwyy+UJZ9cwbIIi1ki/HduIUsPN6+qnu
-         m3Mw==
-X-Gm-Message-State: AOAM532lE9Nr69DYAwrEcL5ymQDxIJbelTOXATS9NeenrM3tMlfjko9d
-        GDNDSPy1v1WY5lKvE67DkvzgVg==
-X-Google-Smtp-Source: ABdhPJwfrmO6OuC4sSleROZVDgGz/w8i3eLzLrZ/yRIIlrGfRu+NcjCkwWuRt2QOUlIgndclg1Ga5A==
-X-Received: by 2002:aa7:979a:0:b0:4a7:e510:ac1c with SMTP id o26-20020aa7979a000000b004a7e510ac1cmr7386686pfp.71.1638992041775;
-        Wed, 08 Dec 2021 11:34:01 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ryG9F0cNdfUlgVrF/NxUIt+Pz0m+Oe9K2Svfx8D1tX0=;
+        b=mr3/s12OK5bvwtFdVxiEkewAB6dlpyBneOUIUeL+Laq7N5PC1/Xc15nLenhwJfyFSX
+         Rp8khMr2Y/tj/a2Wr1PvPAqIkUY6ZjVa/jH9ewMZaMUfwEia1HTAccwUmVBmwixWpZUx
+         sDdp6VvbUiIvZ7W1zXohddID4GwPrB7he/g9JrWuE/nljLn5iD5jH5Ilfwm53QzDsH1K
+         WYGlI8t96pYcKSaj5UmjlW4V95nzmGOO2DjEG9yds5OSBCRsdJWIgotviA521e3Stnfl
+         RaGc0VyeCLjPn8MdInLtgYn4mSgQOL1WXyMECXzQm2dDw59GL5W82dinkGBVhUtLBJOQ
+         CQ7g==
+X-Gm-Message-State: AOAM531BsWcrfrGp/mYNL1OrEHkzTTzQPQhzt6if59oOCeAb7KZ+I1kl
+        jnwadxzkbcrbj/XYK5EbGUaHow==
+X-Google-Smtp-Source: ABdhPJzeUr1CLAgmwx46mEtMKfG5fRMmsYrQUKjNklA67PYofq5cYsVuaX/QUYGHSWwHr/4NlPqJTw==
+X-Received: by 2002:a17:90a:7004:: with SMTP id f4mr9649105pjk.156.1638993599536;
+        Wed, 08 Dec 2021 11:59:59 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m24sm3333830pgk.39.2021.12.08.11.34.01
+        by smtp.gmail.com with ESMTPSA id w17sm4486734pfu.58.2021.12.08.11.59.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 11:34:01 -0800 (PST)
-Date:   Wed, 8 Dec 2021 11:34:00 -0800
+        Wed, 08 Dec 2021 11:59:59 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] find: Do not read beyond variable boundaries on small
- sizes
-Message-ID: <202112081128.08F5C41F8@keescook>
-References: <20211203100846.3977195-1-keescook@chromium.org>
- <YaoN6wnNezMvyyd5@smile.fi.intel.com>
- <20211203182638.GA450223@lapt>
- <202112031450.EFE7B7B4A@keescook>
- <20211207233930.GA3955@lapt>
+To:     James Smart <james.smart@broadcom.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] scsi: lpfc: Use struct_group() to initialize struct lpfc_cgn_info
+Date:   Wed,  8 Dec 2021 11:59:57 -0800
+Message-Id: <20211208195957.1603092-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211207233930.GA3955@lapt>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4744; h=from:subject; bh=ifCLUxbQxASo1tR1Zxws2L+owBAIVDqaIZyrnGtvuy0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhsQ693IFoh1y1lBK3oIqiJvkk0IV5I8DRUAJFiKYR SxqH3kiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbEOvQAKCRCJcvTf3G3AJnnkD/ 0botSCPgrvcWjq7Dpou8O9qkYgwJRZU6M208ALcvF9jQPOIOe/RxvCUDjCpl8PFtp3R8RxwmiT1UPD 2AyrUApSHxbq7g+W6fNU3W+G2WkSPXNVxTvkdc2d+YQ6Lve+yDXNMbIHlRrcbvXzJWYgvURgSVexmV PsEAYn7DAB1zNr9Z8Dq3QqjFSkl/3C1L+0wtYtK+UFK+vAEmR2kKk408yJ+5KLBFmbolS/AkTym86N CuXhzko6b7WQd9HaAz+dKMvw5+9/nOT6AoMDt0/hIwjUUs6+uESBYgQUcSXXEJXduxdVg9fPj+9LW6 FyODub+v7dyp0n+zKyi8j+vbsgkjYryoP/Rue9lMHrdoLJoC5tYtc9aXG3nXrwe4lLZr9FOHoaHC7n /KMoFKPBRSbI6j/F+YZtRqZsGQZeGNTSiTznUs6I5weo23FMOwpl/1gmTnGImO4MfejOAxVcV9bYxh s0geN6I1DZoC8Cs4OKoahy+QbJXtMn6aFFT7eA5BNiR797oUXn5RQvb6veJxRGHqnSCLoBa5UNQAOn tXfJ1DjkxGiC38Vw6AzHmh2CjrUqaPtkI8+YfdTIjN1tIh+vmriksJgafUtO+V/MFaF9ihhUBWhs4n S11aybSO9yNCu1zHSeo73ZYe5I5Tmmohff8odqqRPp0VhjUTDRVA4tCBkr6A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 03:39:30PM -0800, Yury Norov wrote:
-> I'm all for enabling -Warray-bounds, but the warnings that it spots
-> only convinced me that bitmap API is used wrongly, and it should be
-> fixed. Can you please share the list of bitmap-related issues found
-> with -Warray-bounds that concerned you? I'll take a look and try to
-> make a patch that fixes it.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memset(), avoid intentionally writing across
+neighboring fields.
 
-On an x86 allmodconfig with -Warray-bounds, here are the bitmap
-warnings:
+Add struct_group() to mark "stat" region of struct lpfc_cgn_info that
+should be initialized to zero, and refactor the "data" region memset()
+to wipe everything up to the cgn_stats region.
 
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Also, ping, Re: https://lore.kernel.org/lkml/20211203223351.107323-1-keescook@chromium.org/
+---
+ drivers/scsi/lpfc/lpfc.h      | 90 +++++++++++++++++------------------
+ drivers/scsi/lpfc/lpfc_init.c |  4 +-
+ 2 files changed, 46 insertions(+), 48 deletions(-)
 
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:22,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:60,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:55,
-                 from ./include/linux/wait.h:9,
-                 from ./include/linux/wait_bit.h:8,
-                 from ./include/linux/fs.h:6,
-                 from ./include/linux/debugfs.h:15,
-                 from drivers/bus/mhi/core/init.c:7:
-drivers/bus/mhi/core/init.c: In function 'to_mhi_pm_state_str':
-./include/linux/find.h:187:37: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'enum mhi_pm_state[1]' [-Warray-bounds]
-  187 |                 unsigned long val = *addr & GENMASK(size - 1, 0);
-      |                                     ^~~~~
-drivers/bus/mhi/core/init.c:80:51: note: while referencing 'state'
-   80 | const char *to_mhi_pm_state_str(enum mhi_pm_state state)
-      |                                 ~~~~~~~~~~~~~~~~~~^~~~~
-
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./include/linux/smp.h:13,
-                 from ./include/linux/lockdep.h:14,
-                 from ./include/linux/mutex.h:17,
-                 from ./include/linux/notifier.h:14,
-                 from ./include/linux/clk.h:14,
-                 from drivers/irqchip/irq-ingenic-tcu.c:7:
-drivers/irqchip/irq-ingenic-tcu.c: In function 'ingenic_tcu_intc_cascade':
-./include/linux/find.h:40:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'uint32_t[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
-   40 |                 val = *addr & GENMASK(size - 1, offset);
-      |                       ^~~~~
-drivers/irqchip/irq-ingenic-tcu.c:30:18: note: while referencing 'irq_reg'
-   30 |         uint32_t irq_reg, irq_mask;
-      |                  ^~~~~~~
-
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./include/linux/smp.h:13,
-                 from ./include/linux/lockdep.h:14,
-                 from ./include/linux/mutex.h:17,
-                 from ./include/linux/notifier.h:14,
-                 from ./include/linux/clk.h:14,
-                 from drivers/irqchip/irq-ingenic-tcu.c:7:
-./include/linux/find.h:40:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'uint32_t[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
-   40 |                 val = *addr & GENMASK(size - 1, offset);
-      |                       ^~~~~
-drivers/irqchip/irq-ingenic-tcu.c:30:18: note: while referencing 'irq_reg'
-   30 |         uint32_t irq_reg, irq_mask;
-      |                  ^~~~~~~
-
-In file included from ./include/linux/bitmap.h:9,
-                 from drivers/iommu/intel/iommu.c:17:
-drivers/iommu/intel/iommu.c: In function 'domain_context_mapping_one':
-./include/linux/find.h:119:37: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'int[1]' [-Warray-bounds]
-  119 |                 unsigned long val = *addr & GENMASK(size - 1, 0);
-      |                                     ^~~~~
-drivers/iommu/intel/iommu.c:2115:18: note: while referencing 'max_pde'
- 2115 |         int pds, max_pde;
-      |                  ^~~~~~~
-
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:22,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:60,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:55,
-                 from ./include/linux/swait.h:7,
-                 from ./include/linux/completion.h:12,
-                 from drivers/iio/adc/stmpe-adc.c:10:
-drivers/iio/adc/stmpe-adc.c: In function 'stmpe_adc_probe':
-./include/linux/find.h:98:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
-   98 |                 val = *addr | ~GENMASK(size - 1, offset);
-      |                       ^~~~~
-drivers/iio/adc/stmpe-adc.c:258:13: note: while referencing 'norequest_mask'
-  258 |         u32 norequest_mask = 0;
-      |             ^~~~~~~~~~~~~~
-
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:22,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:60,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:55,
-                 from ./include/linux/swait.h:7,
-                 from ./include/linux/completion.h:12,
-                 from drivers/iio/adc/stmpe-adc.c:10:
-./include/linux/find.h:98:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
-   98 |                 val = *addr | ~GENMASK(size - 1, offset);
-      |                       ^~~~~
-drivers/iio/adc/stmpe-adc.c:258:13: note: while referencing 'norequest_mask'
-  258 |         u32 norequest_mask = 0;
-      |             ^~~~~~~~~~~~~~
-
-
-I expect there are more outside of x86 allmodconfig. I still think it
-makes sense to have a single API that is forgiving with its inputs. We
-can change the API in one place and solve this for all callers.
-
+diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
+index 3faadcfcdcbb..4878c94761f9 100644
+--- a/drivers/scsi/lpfc/lpfc.h
++++ b/drivers/scsi/lpfc/lpfc.h
+@@ -496,52 +496,50 @@ struct lpfc_cgn_info {
+ 	__le32   cgn_alarm_hr[24];
+ 	__le32   cgn_alarm_day[LPFC_MAX_CGN_DAYS];
+ 
+-	/* Start of congestion statistics */
+-	uint8_t  cgn_stat_npm;		/* Notifications per minute */
+-
+-	/* Start Time */
+-	uint8_t  cgn_stat_month;
+-	uint8_t  cgn_stat_day;
+-	uint8_t  cgn_stat_year;
+-	uint8_t  cgn_stat_hour;
+-	uint8_t  cgn_stat_minute;
+-	uint8_t  cgn_pad2[2];
+-
+-	__le32   cgn_notification;
+-	__le32   cgn_peer_notification;
+-	__le32   link_integ_notification;
+-	__le32   delivery_notification;
+-
+-	uint8_t  cgn_stat_cgn_month; /* Last congestion notification FPIN */
+-	uint8_t  cgn_stat_cgn_day;
+-	uint8_t  cgn_stat_cgn_year;
+-	uint8_t  cgn_stat_cgn_hour;
+-	uint8_t  cgn_stat_cgn_min;
+-	uint8_t  cgn_stat_cgn_sec;
+-
+-	uint8_t  cgn_stat_peer_month; /* Last peer congestion FPIN */
+-	uint8_t  cgn_stat_peer_day;
+-	uint8_t  cgn_stat_peer_year;
+-	uint8_t  cgn_stat_peer_hour;
+-	uint8_t  cgn_stat_peer_min;
+-	uint8_t  cgn_stat_peer_sec;
+-
+-	uint8_t  cgn_stat_lnk_month; /* Last link integrity FPIN */
+-	uint8_t  cgn_stat_lnk_day;
+-	uint8_t  cgn_stat_lnk_year;
+-	uint8_t  cgn_stat_lnk_hour;
+-	uint8_t  cgn_stat_lnk_min;
+-	uint8_t  cgn_stat_lnk_sec;
+-
+-	uint8_t  cgn_stat_del_month; /* Last delivery notification FPIN */
+-	uint8_t  cgn_stat_del_day;
+-	uint8_t  cgn_stat_del_year;
+-	uint8_t  cgn_stat_del_hour;
+-	uint8_t  cgn_stat_del_min;
+-	uint8_t  cgn_stat_del_sec;
+-#define LPFC_CGN_STAT_SIZE	48
+-#define LPFC_CGN_DATA_SIZE	(sizeof(struct lpfc_cgn_info) -  \
+-				LPFC_CGN_STAT_SIZE - sizeof(uint32_t))
++	struct_group(cgn_stat,
++		uint8_t  cgn_stat_npm;		/* Notifications per minute */
++
++		/* Start Time */
++		uint8_t  cgn_stat_month;
++		uint8_t  cgn_stat_day;
++		uint8_t  cgn_stat_year;
++		uint8_t  cgn_stat_hour;
++		uint8_t  cgn_stat_minute;
++		uint8_t  cgn_pad2[2];
++
++		__le32   cgn_notification;
++		__le32   cgn_peer_notification;
++		__le32   link_integ_notification;
++		__le32   delivery_notification;
++
++		uint8_t  cgn_stat_cgn_month; /* Last congestion notification FPIN */
++		uint8_t  cgn_stat_cgn_day;
++		uint8_t  cgn_stat_cgn_year;
++		uint8_t  cgn_stat_cgn_hour;
++		uint8_t  cgn_stat_cgn_min;
++		uint8_t  cgn_stat_cgn_sec;
++
++		uint8_t  cgn_stat_peer_month; /* Last peer congestion FPIN */
++		uint8_t  cgn_stat_peer_day;
++		uint8_t  cgn_stat_peer_year;
++		uint8_t  cgn_stat_peer_hour;
++		uint8_t  cgn_stat_peer_min;
++		uint8_t  cgn_stat_peer_sec;
++
++		uint8_t  cgn_stat_lnk_month; /* Last link integrity FPIN */
++		uint8_t  cgn_stat_lnk_day;
++		uint8_t  cgn_stat_lnk_year;
++		uint8_t  cgn_stat_lnk_hour;
++		uint8_t  cgn_stat_lnk_min;
++		uint8_t  cgn_stat_lnk_sec;
++
++		uint8_t  cgn_stat_del_month; /* Last delivery notification FPIN */
++		uint8_t  cgn_stat_del_day;
++		uint8_t  cgn_stat_del_year;
++		uint8_t  cgn_stat_del_hour;
++		uint8_t  cgn_stat_del_min;
++		uint8_t  cgn_stat_del_sec;
++	);
+ 
+ 	__le32   cgn_info_crc;
+ #define LPFC_CGN_CRC32_MAGIC_NUMBER	0x1EDC6F41
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 2fe7d9d885d9..c18000d05379 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -13483,7 +13483,7 @@ lpfc_init_congestion_buf(struct lpfc_hba *phba)
+ 	phba->cgn_evt_minute = 0;
+ 	phba->hba_flag &= ~HBA_CGN_DAY_WRAP;
+ 
+-	memset(cp, 0xff, LPFC_CGN_DATA_SIZE);
++	memset(cp, 0xff, offsetof(struct lpfc_cgn_info, cgn_stat));
+ 	cp->cgn_info_size = cpu_to_le16(LPFC_CGN_INFO_SZ);
+ 	cp->cgn_info_version = LPFC_CGN_INFO_V3;
+ 
+@@ -13542,7 +13542,7 @@ lpfc_init_congestion_stat(struct lpfc_hba *phba)
+ 		return;
+ 
+ 	cp = (struct lpfc_cgn_info *)phba->cgn_i->virt;
+-	memset(&cp->cgn_stat_npm, 0, LPFC_CGN_STAT_SIZE);
++	memset(&cp->cgn_stat, 0, sizeof(cp->cgn_stat));
+ 
+ 	ktime_get_real_ts64(&cmpl_time);
+ 	time64_to_tm(cmpl_time.tv_sec, 0, &broken);
 -- 
-Kees Cook
+2.30.2
+
