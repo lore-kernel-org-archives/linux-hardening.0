@@ -2,165 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79D7C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 06:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731C5C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 08:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbhLIG0e (ORCPT
+        id S234162AbhLIIEC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Dec 2021 01:26:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33580 "EHLO
+        Thu, 9 Dec 2021 03:04:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbhLIG0e (ORCPT
+        with ESMTP id S229590AbhLIIEC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Dec 2021 01:26:34 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1443C061746
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 22:23:01 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id g18so4504012pfk.5
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 22:23:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZB6EumHZfLPmCBlB1+11VhhFb2CYopwmNO5zELXp+vw=;
-        b=n5dCX+a1yr/v0ySJVni9m4p2Mondq/yRCq0RnttRSxKNjQdkseZiEzzsE2LWPtcOd2
-         Moz+moSUGcCLD7tbLvK7+1KzpTRYiFolwru/SzAYIAyfkQnMbQOWyztHfrBIyCOuGSoN
-         vSyzd3Uq5WVJuq1snUUEn72FsjeLpykHWDxIw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZB6EumHZfLPmCBlB1+11VhhFb2CYopwmNO5zELXp+vw=;
-        b=05G+/iwL7jB4gNccHuscJzgwYAt63Au7XFe7k584kpxeOEk849GxSBRaRiH5K5SisR
-         oBiCw56IwgvcrtGAB7r9f0xHgonpczJgankQl7KSjyIPxwXQQ9Cjs4H64rKw+vSxaRbc
-         A2Dz/Pn1QNKY3cF16b+6FNroon+DvZFWwSaIsDZgUnvC64yT4amhsZqONrYZDpQEj2S0
-         g/o8aKDh00up2awgZSIA9dvDRBbvLTiKbX2JlVDxJPksoScvgvSkSZ2QLL0EUz3Fxz9R
-         sWCRP8KeKvY7/ZcfjI7rdYJX4b+ia8bZ9D9Bf0nkNPdPYWC9HLGYb+wubKp86EUoEog0
-         80Qg==
-X-Gm-Message-State: AOAM53290EGMUBRGRMSFzeqHt3ieh6G0PAY9OsEbWX1NnfuukFqIVQv7
-        17z8tzzYTHADVhcB3tkZ/blBBA==
-X-Google-Smtp-Source: ABdhPJxA46OA9bE4pj9ZiILs+26cF+O6BpoLWGmAIVpD76RtUu0B9bGNU1ILev+x50q54U/+11hxHQ==
-X-Received: by 2002:a05:6a00:1583:b0:49f:dc1c:a0fe with SMTP id u3-20020a056a00158300b0049fdc1ca0femr9943229pfk.46.1639030981150;
-        Wed, 08 Dec 2021 22:23:01 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j22sm5689636pfj.130.2021.12.08.22.23.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 22:23:00 -0800 (PST)
-Date:   Wed, 8 Dec 2021 22:23:00 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH] drm/dp: Actually read Adjust Request Post Cursor2
- register
-Message-ID: <202112082220.81ECDC63D@keescook>
-References: <20211203084354.3105253-1-keescook@chromium.org>
- <87o85r4a4f.fsf@intel.com>
+        Thu, 9 Dec 2021 03:04:02 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC54C061746;
+        Thu,  9 Dec 2021 00:00:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EA57FB8235C;
+        Thu,  9 Dec 2021 08:00:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0AAAC341C8;
+        Thu,  9 Dec 2021 08:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639036826;
+        bh=q8TudegaWlJbIRiG/KH/x6Pllk5BBrnfUfWzUhhSnpI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=tYgfBsfMSP7ePJBz01USbUmB+h7cn1kiJMAxltd5f4a3W+dEAisDAwgJfQcbnuy2D
+         yA9RcuHlHf25RnyjyW1S89VqTT390L5DySgXbRZq0apyfFT7Iirh7bEQ4T+KLavslz
+         2u5fcSjQ/bDnfh4hYiW/7R5xxikUabW8HTuHj/kix4HNLUFuwCGg8l3BVVF3IJDZKX
+         C4ohUMjlDuIEqnAXXrtRSoOXAELjCKdxPEGIIFfZaS/shSHHgRowOVHU05ul3kuJ8d
+         Cpeoqp8L4/4pRlFO0cKdzqHP5NoA7yynfRt7fNL7qggWd0vfXM/Qk6klD5st+nF9Qd
+         4KlWVXN9iv8CA==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o85r4a4f.fsf@intel.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath6kl: Use struct_group() to avoid size-mismatched
+ casting
+From:   Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20211207063538.2767954-1-keescook@chromium.org>
+References: <20211207063538.2767954-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <163903682322.20904.826653912822578576.kvalo@kernel.org>
+Date:   Thu,  9 Dec 2021 08:00:24 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 01:19:28PM +0200, Jani Nikula wrote:
-> On Fri, 03 Dec 2021, Kees Cook <keescook@chromium.org> wrote:
-> > The link_status array was not large enough to read the Adjust Request
-> > Post Cursor2 register. Adjust the size to include it. Found with a
-> > -Warray-bounds build:
-> >
-> > drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
-> > drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
-> >    59 |         return link_status[r - DP_LANE0_1_STATUS];
-> >       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
-> >   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+Kees Cook <keescook@chromium.org> wrote:
+
+> In builds with -Warray-bounds, casts from smaller objects to larger
+> objects will produce warnings. These can be overly conservative, but since
+> -Warray-bounds has been finding legitimate bugs, it is desirable to turn
+> it on globally. Instead of casting a u32 to a larger object, redefine
+> the u32 portion of the header to a separate struct that can be used for
+> both u32 operations and the distinct header fields. Silences this warning:
 > 
-> Using DP_ADJUST_REQUEST_POST_CURSOR2 has been deprecated since DP 1.3
-> published in 2014, and Tegra is the only user of
-> drm_dp_get_adjust_request_post_cursor().
+> drivers/net/wireless/ath/ath6kl/htc_mbox.c: In function 'htc_wait_for_ctrl_msg':
+> drivers/net/wireless/ath/ath6kl/htc_mbox.c:2275:20: error: array subscript 'struct htc_frame_hdr[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Werror=array-bounds]
+>  2275 |         if (htc_hdr->eid != ENDPOINT_0)
+>       |                    ^~
+> drivers/net/wireless/ath/ath6kl/htc_mbox.c:2264:13: note: while referencing 'look_ahead'
+>  2264 |         u32 look_ahead;
+>       |             ^~~~~~~~~~
+> 
+> This change results in no executable instruction differences.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-I see POST_CURSOR2 is used here too:
+Patch applied to ath-next branch of ath.git, thanks.
 
-drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-
-Here's a version of that for tegra (untested):
-
-
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 23f9073bc473..c9528aa62c9c 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -144,16 +144,6 @@ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
- }
- EXPORT_SYMBOL(drm_dp_get_adjust_tx_ffe_preset);
- 
--u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
--					 unsigned int lane)
--{
--	unsigned int offset = DP_ADJUST_REQUEST_POST_CURSOR2;
--	u8 value = dp_link_status(link_status, offset);
--
--	return (value >> (lane << 1)) & 0x3;
--}
--EXPORT_SYMBOL(drm_dp_get_adjust_request_post_cursor);
--
- static int __8b10b_clock_recovery_delay_us(const struct drm_dp_aux *aux, u8 rd_interval)
- {
- 	if (rd_interval > 4)
-diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
-index 70dfb7d1dec5..f5535eb04c6b 100644
---- a/drivers/gpu/drm/tegra/dp.c
-+++ b/drivers/gpu/drm/tegra/dp.c
-@@ -549,6 +549,15 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
- {
- 	struct drm_dp_link_train_set *adjust = &link->train.adjust;
- 	unsigned int i;
-+	u8 post_cursor;
-+	int err;
-+
-+	err = drm_dp_dpcd_read(link->aux, DP_ADJUST_REQUEST_POST_CURSOR2,
-+			       &post_cursor, sizeof(post_cursor));
-+	if (err < 0) {
-+		DRM_ERROR("failed to read post_cursor2: %d\n", err);
-+		post_cursor = 0;
-+	}
- 
- 	for (i = 0; i < link->lanes; i++) {
- 		adjust->voltage_swing[i] =
-@@ -560,7 +569,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
- 				DP_TRAIN_PRE_EMPHASIS_SHIFT;
- 
- 		adjust->post_cursor[i] =
--			drm_dp_get_adjust_request_post_cursor(status, i);
-+			(post_cursor >> (i << 1)) & 0x3;
- 	}
- }
- 
-diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 30359e434c3f..28378db676c8 100644
---- a/include/drm/drm_dp_helper.h
-+++ b/include/drm/drm_dp_helper.h
-@@ -1528,8 +1528,6 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
- 					  int lane);
- u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
- 				   int lane);
--u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
--					 unsigned int lane);
- 
- #define DP_BRANCH_OUI_HEADER_SIZE	0xc
- #define DP_RECEIVER_CAP_SIZE		0xf
-
-
-Is that the right way to go?
+e3128a9d482c ath6kl: Use struct_group() to avoid size-mismatched casting
 
 -- 
-Kees Cook
+https://patchwork.kernel.org/project/linux-wireless/patch/20211207063538.2767954-1-keescook@chromium.org/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
