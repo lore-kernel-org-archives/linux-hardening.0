@@ -2,86 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0274C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Dec 2021 23:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E69C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 04:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237893AbhLHX0q (ORCPT
+        id S229903AbhLIEjL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Dec 2021 18:26:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
+        Wed, 8 Dec 2021 23:39:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235172AbhLHX0q (ORCPT
+        with ESMTP id S229846AbhLIEjL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Dec 2021 18:26:46 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695C5C0617A1
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 15:23:13 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id x6so13785530edr.5
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 15:23:13 -0800 (PST)
+        Wed, 8 Dec 2021 23:39:11 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E41C0617A1
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 20:35:38 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id g18so4308688pfk.5
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 20:35:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=12eYC9cttLky1xiGkzKZrN85X2r4m8IpTalt9bP6nHY=;
-        b=QlyaI3Ku1W5hlIPYgHKuslvFHFWzLFTdq423Ieu6TH5hTrBvHrZGQLiAA0Y2A3UqnQ
-         TG2uu6OZ6sCgGywg71Nlh1wTAbDV+IsC6OIoD9k0ezM3qWuscU/NNrsWdyyPvA/FdN3v
-         hLMfADD24WDkzP3M92kz41O29cuWzDgIwUnAc=
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OTnH146W1h2tRqN4JJ2cRB6UCxYgrVEb9ej66jz/hvo=;
+        b=N9rptxSRnfF0MLgUuQ6pniD9NY0xD5gmN9NJ7q7nYIWlGUP0fj+D8bni97+3KJBESg
+         YTDJakMn80kzpqKS5vbuzleqCKcNAbRDoV5rKpWPOaKKoANlS3Y3HOLQUCPqmKekZD5N
+         DzMUZAR0D2WT1NFLrwnRVJ8pdQaeOC0bE3SbE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=12eYC9cttLky1xiGkzKZrN85X2r4m8IpTalt9bP6nHY=;
-        b=ugxCSaISsbaDxKGeJXDIr5zzBiZUUfeaHx54t5PJ3Dcgvllsu9BGGidjjTJ4c8PloB
-         nri1mbiqM04EWjwm0OLmvoWuROd0FQ90YTRaPasxhsWHKUUMAAtZgIZ1JIs3BggXvR6X
-         /i5VDwYd6wU6OGSRH92A/zI0G8J9X16upqvDd07NqadL56wZDfRNo7hpP56Otc1yWTHc
-         0d/XXQD+lHMJ0w/gbn7HAJeXGE0wSrpw7pGSI3ZaHHZn/pe8fLYk+vxYGuSdU0E+Rf8+
-         g8Mws6JZ2uNzuGe5A2vfXVr8a3feLHYDVySfGzY9Uiabvly0A+Ej5Y5CT0ULG3i/ivgx
-         apGQ==
-X-Gm-Message-State: AOAM532yzVLIEtxvC15lxaKmtsW3050+f9yVuwysuzqT123lgys1t0XR
-        mMI0UPYNq70wLd9mJLYOh9N6NjLS1HgcaNe7
-X-Google-Smtp-Source: ABdhPJwMP2aotTKfhTbOOW19RqP4FL6+EYSjrQ6GDEnSdFMsqfAKIE6z7H9WLhPIVqkR19LBd6CRYg==
-X-Received: by 2002:a05:6402:d05:: with SMTP id eb5mr22956922edb.345.1639005791724;
-        Wed, 08 Dec 2021 15:23:11 -0800 (PST)
-Received: from [192.168.1.149] ([80.208.69.72])
-        by smtp.gmail.com with ESMTPSA id y15sm2701371edr.35.2021.12.08.15.23.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Dec 2021 15:23:11 -0800 (PST)
-Subject: Re: [PATCH] find: Do not read beyond variable boundaries on small
- sizes
-To:     Kees Cook <keescook@chromium.org>,
-        Yury Norov <yury.norov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20211203100846.3977195-1-keescook@chromium.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <037c44cb-c5bc-9a9a-0c16-219bdf858ea7@rasmusvillemoes.dk>
-Date:   Thu, 9 Dec 2021 00:23:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        bh=OTnH146W1h2tRqN4JJ2cRB6UCxYgrVEb9ej66jz/hvo=;
+        b=OeiMHJp7nPJBwbCugtt/c3tM7wslEPKXq2c4Blm77Lxq5QvN+e2x8uV4/sTYU6yBKZ
+         qz9U6e+zMIb3LMzntDL7PFdkm+FlrCPU9xtG+u0T982ZRDnsu2FF/5aCx1ZySsZy6GHp
+         YvzFknc31hrbeDdXAZQoUnWHwx+0+7g9AxlehRwc8OSpg47fsyjSLILmpBXse7GdpxWG
+         m1zDXEFBhvGQEJKUZgH/UZTxtMf4Q3nciUA4NCl6Uu4VgeKpR5PxXY8fH4gCa7u4cOOZ
+         dE/8DRlGM5ccQdV+GedboS/1KMEii+o3E0nbzMeVttmfWVZ+L5lhtL/QPfQkivRKqToX
+         QRNw==
+X-Gm-Message-State: AOAM533553YGW9fO+4IJpVNFnB5F/ntAkJtm5QXYUA5ZctWdp1K4/v1B
+        DcJhbJ5ugudCnbkt6BbsTaP5Ug==
+X-Google-Smtp-Source: ABdhPJySi11U26fyrl+v1mQbCHqtQHoohp4ZDdBFMGnKAY4y2rJnvnEeVrvpPP2RjYxbn2uGWN4Mxg==
+X-Received: by 2002:a63:1b02:: with SMTP id b2mr31784110pgb.263.1639024537867;
+        Wed, 08 Dec 2021 20:35:37 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p49sm4871738pfw.43.2021.12.08.20.35.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 20:35:37 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] x86/uaccess: Move variable into switch case statement
+Date:   Wed,  8 Dec 2021 20:34:56 -0800
+Message-Id: <20211209043456.1377875-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <20211203100846.3977195-1-keescook@chromium.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1283; h=from:subject; bh=CQ9kD+xEuCd2isJBoD5npKFBg9v/JSWJJPAtzMVJS04=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhsYdwZw0rJHtAVcR94cnaDCxyjWyuuqFcZGv3g4c/ hLnWAcSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbGHcAAKCRCJcvTf3G3AJv9SEA CP/7AJxBiaUjVDBOGfIIJpFgNWQf4HuttbJHMmPFyRwMXVG/0joQz8bEc4a850KZE+zJoTqQ9iMhqg gJQTFpLjzbJZh2NnYyZ8dlkvlGz9S4EGShw0WCExxwK1A5iu952CUR22xpgQl39N56Lu0Q1hxSbRdv Fv0YjMhNkckU3pwWjVHb0loOrGSVQHzijkGVvsf2F8noQNiR6gRCHMFaJbGG42aqP6ESpaer0jx7mU AXolO4e5ZOO7jI54h1veFFvQR7OcFGDhDcg2Ywt9CMDqhRaLB4rvDIeZ3RefIsyaw5I4+ZFS5Vw5SJ ztfQKD0GJyPqE2fsautriZzYqkO+qXokvFYwWRg9BN0zgFOZflToTKF6mODp980yOOy33eLFxloWRd r+cl0Vuwze/1CLOE2DvQSozQaOVDRnzbcYqVkm3F9wYodFHdYoEx6PBr2mqjfONDfebverxAIs+yY5 Y04fu4t/HzFTJLmbhPxOSxuKtkUM9U6D7ksvxJC5MQR4pL97Ju3aBGcGLrPjN/fng8RlDEjIkckHad pKzXTKi8eqRwbtpBc/2KIMAvr0Pl47BzP4eTdD+L4FeujC7eC0xjgRy0wFEvlhltfpvCv/oQYBzxqm 8ZSRnmZEt/H/AOpMx4lkaKlYLRgujleG5NwJXE28Na0HSnILtIFrSG7ED25Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 03/12/2021 11.08, Kees Cook wrote:
-> It's common practice to cast small variable arguments to the find_*_bit()
-> helpers to unsigned long and then use a size argument smaller than
-> sizeof(unsigned long):
-> 
-> 	unsigned int bits;
-> 	...
-> 	out = find_first_bit((unsigned long *)&bits, 32);
+When building with automatic stack variable initialization, GCC 12
+complains about variables defined outside of switch case statements.
+Move the variable into the case that uses it, which silences the warning:
 
-Those call sites need to be fixed, they are broken on BE anyway. And
-your __find_bits_deref does nothing to fix (paper over) that if, say,
-the caller uses an u32 to store an 8-bit bitmap.
+./arch/x86/include/asm/uaccess.h:317:23: warning: statement will never be executed [-Wswitch-unreachable]
+  317 |         unsigned char x_u8__; \
+      |                       ^~~~~~
 
-So NAK.
+Fixes: 865c50e1d279 ("x86/uaccess: utilize CONFIG_CC_HAS_ASM_GOTO_OUTPUT")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/include/asm/uaccess.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Rasmus
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 33a68407def3..8ab9e79abb2b 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -314,11 +314,12 @@ do {									\
+ do {									\
+ 	__chk_user_ptr(ptr);						\
+ 	switch (size) {							\
+-	unsigned char x_u8__;						\
+-	case 1:								\
++	case 1:	{							\
++		unsigned char x_u8__;					\
+ 		__get_user_asm(x_u8__, ptr, "b", "=q", label);		\
+ 		(x) = x_u8__;						\
+ 		break;							\
++	}								\
+ 	case 2:								\
+ 		__get_user_asm(x, ptr, "w", "=r", label);		\
+ 		break;							\
+-- 
+2.30.2
+
