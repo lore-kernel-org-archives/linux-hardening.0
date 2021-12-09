@@ -2,66 +2,62 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E69C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 04:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2569C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 04:39:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbhLIEjL (ORCPT
+        id S229937AbhLIEmv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Dec 2021 23:39:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37502 "EHLO
+        Wed, 8 Dec 2021 23:42:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229846AbhLIEjL (ORCPT
+        with ESMTP id S229445AbhLIEmv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Dec 2021 23:39:11 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E41C0617A1
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 20:35:38 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id g18so4308688pfk.5
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 20:35:38 -0800 (PST)
+        Wed, 8 Dec 2021 23:42:51 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0EDC0617A2
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 20:39:18 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id 133so3969421pgc.12
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 20:39:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=OTnH146W1h2tRqN4JJ2cRB6UCxYgrVEb9ej66jz/hvo=;
-        b=N9rptxSRnfF0MLgUuQ6pniD9NY0xD5gmN9NJ7q7nYIWlGUP0fj+D8bni97+3KJBESg
-         YTDJakMn80kzpqKS5vbuzleqCKcNAbRDoV5rKpWPOaKKoANlS3Y3HOLQUCPqmKekZD5N
-         DzMUZAR0D2WT1NFLrwnRVJ8pdQaeOC0bE3SbE=
+        bh=jCZfo737eIqYymDvP2I0a5WbCi1C4zoedhtPvFUy+O0=;
+        b=N97S/VMMCfDqXQNGlOXuKapXV8DMeCT2OBm2ulgE+iNP8dKiGt2vva0mkRz1GCPaU1
+         Jnud/ZRXYi2MNgP7UJ+uYpqPBUjS8uDSRui8CUn9uVUobKxowV/xCaeY63KOKoJlQ4Kf
+         TbAZ9wLVq6jjQcCex2gjb7nqAswsziNd2jkck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=OTnH146W1h2tRqN4JJ2cRB6UCxYgrVEb9ej66jz/hvo=;
-        b=OeiMHJp7nPJBwbCugtt/c3tM7wslEPKXq2c4Blm77Lxq5QvN+e2x8uV4/sTYU6yBKZ
-         qz9U6e+zMIb3LMzntDL7PFdkm+FlrCPU9xtG+u0T982ZRDnsu2FF/5aCx1ZySsZy6GHp
-         YvzFknc31hrbeDdXAZQoUnWHwx+0+7g9AxlehRwc8OSpg47fsyjSLILmpBXse7GdpxWG
-         m1zDXEFBhvGQEJKUZgH/UZTxtMf4Q3nciUA4NCl6Uu4VgeKpR5PxXY8fH4gCa7u4cOOZ
-         dE/8DRlGM5ccQdV+GedboS/1KMEii+o3E0nbzMeVttmfWVZ+L5lhtL/QPfQkivRKqToX
-         QRNw==
-X-Gm-Message-State: AOAM533553YGW9fO+4IJpVNFnB5F/ntAkJtm5QXYUA5ZctWdp1K4/v1B
-        DcJhbJ5ugudCnbkt6BbsTaP5Ug==
-X-Google-Smtp-Source: ABdhPJySi11U26fyrl+v1mQbCHqtQHoohp4ZDdBFMGnKAY4y2rJnvnEeVrvpPP2RjYxbn2uGWN4Mxg==
-X-Received: by 2002:a63:1b02:: with SMTP id b2mr31784110pgb.263.1639024537867;
-        Wed, 08 Dec 2021 20:35:37 -0800 (PST)
+        bh=jCZfo737eIqYymDvP2I0a5WbCi1C4zoedhtPvFUy+O0=;
+        b=60R6xdGqkVfFHVLez2XpwsQ+WNXY5JIS4g2/3bwHWN8S3UEqX36kxwL7x0WClMEb71
+         yRRzAybOz+BnmuTGSarDkbUNBwbS8Q7Y4FzrmKGKGMknaGt0wSGEYOK0lC9RZQCnD9kD
+         DqdPjOYex/DcAt15NXQhSOyKBmjUp9qJ2xV0uY4PIHcI0YmGizPxKqliWbxjHrETQYKP
+         8QbzitysJPkCOOrDekNCZi2lHBDSbTx/qO4CKRhuV4bojI5MlJI+0OY4X0o4i7Bl6M/H
+         AJqW7L3Uk1KuHu3ifpA0qlaSC1Gj+TIR7+yw1lvgSBTSKmNkDwD6eWNJMTOlNPsHBcn4
+         mUsA==
+X-Gm-Message-State: AOAM530mJLl6ZJ06JzhoRppG250Fhqi9bjI9KqQi1cNVf7R2zvkbIioj
+        TQuPj45y/2E3vlve9jnQ/U4w7A==
+X-Google-Smtp-Source: ABdhPJzYe1fOfNQQBb1cYonbf00InuoSvc6ETHSvTbgQnaWCy/3tiBy9ZBX1+4LZXqDyuX0VjaPskA==
+X-Received: by 2002:a05:6a00:a23:b0:4a4:e9f5:d890 with SMTP id p35-20020a056a000a2300b004a4e9f5d890mr9750599pfh.82.1639024757920;
+        Wed, 08 Dec 2021 20:39:17 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p49sm4871738pfw.43.2021.12.08.20.35.37
+        by smtp.gmail.com with ESMTPSA id h8sm5566432pfh.10.2021.12.08.20.39.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 20:35:37 -0800 (PST)
+        Wed, 08 Dec 2021 20:39:17 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
+To:     Alessandro Zummo <a.zummo@towertech.it>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] x86/uaccess: Move variable into switch case statement
-Date:   Wed,  8 Dec 2021 20:34:56 -0800
-Message-Id: <20211209043456.1377875-1-keescook@chromium.org>
+Subject: [PATCH] rtc: Move variable into switch case statement
+Date:   Wed,  8 Dec 2021 20:39:15 -0800
+Message-Id: <20211209043915.1378393-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1283; h=from:subject; bh=CQ9kD+xEuCd2isJBoD5npKFBg9v/JSWJJPAtzMVJS04=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhsYdwZw0rJHtAVcR94cnaDCxyjWyuuqFcZGv3g4c/ hLnWAcSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbGHcAAKCRCJcvTf3G3AJv9SEA CP/7AJxBiaUjVDBOGfIIJpFgNWQf4HuttbJHMmPFyRwMXVG/0joQz8bEc4a850KZE+zJoTqQ9iMhqg gJQTFpLjzbJZh2NnYyZ8dlkvlGz9S4EGShw0WCExxwK1A5iu952CUR22xpgQl39N56Lu0Q1hxSbRdv Fv0YjMhNkckU3pwWjVHb0loOrGSVQHzijkGVvsf2F8noQNiR6gRCHMFaJbGG42aqP6ESpaer0jx7mU AXolO4e5ZOO7jI54h1veFFvQR7OcFGDhDcg2Ywt9CMDqhRaLB4rvDIeZ3RefIsyaw5I4+ZFS5Vw5SJ ztfQKD0GJyPqE2fsautriZzYqkO+qXokvFYwWRg9BN0zgFOZflToTKF6mODp980yOOy33eLFxloWRd r+cl0Vuwze/1CLOE2DvQSozQaOVDRnzbcYqVkm3F9wYodFHdYoEx6PBr2mqjfONDfebverxAIs+yY5 Y04fu4t/HzFTJLmbhPxOSxuKtkUM9U6D7ksvxJC5MQR4pL97Ju3aBGcGLrPjN/fng8RlDEjIkckHad pKzXTKi8eqRwbtpBc/2KIMAvr0Pl47BzP4eTdD+L4FeujC7eC0xjgRy0wFEvlhltfpvCv/oQYBzxqm 8ZSRnmZEt/H/AOpMx4lkaKlYLRgujleG5NwJXE28Na0HSnILtIFrSG7ED25Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1446; h=from:subject; bh=/Ww8OLLJSU5aHz7DArexGdWzbipcRlVe6LRWYhdbeaw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhsYhyueeQ9MVmpMGYuq8gt1pQqFSIQKjCzzjQUAdP 8E0C8JaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbGIcgAKCRCJcvTf3G3AJikgD/ 9/3GdVzi9NR+fpDE5+GBglcW+YcyEC9++7ry5SzE1bwcWsia8DrCVNV41CTWcPJw3xvnaZ2Svf57rN HuZEEKLXVzpdivG5NuY6l0etIGiRKdxz4ylUOwImJPJbin230ih8QzMryTTMEd8/uH8F+4v+eVCqft jmE9oRTybhhd2FbH9PuFoeNNV7vf2wt6L0Fv6HhvJ4oo9MJ4stF4TVm+8z0Fwo27gFbcPFGcBdDMtQ LWSSJiHfan72yqGcvdlm5ruu7sXjQI8VVPoR0RwFHS2fPj+cM8bbb/a4jhEBk06Tqvre9ilMBXB34g QmC9BiL3ZGrP4GZWU990JjXnZt+9zsluNofrXJO1Yvod+nQBjTRrFEu4SHHKCev3JEpyBJdzgDs8Gv spAMBKeO0xzJpqyVC8JNdkQ5dEvVnWKusGzCTYR6mXPLnxPIczx20LdHS9vvgyYbCcoaVC2AG2yDHx HjULEnhqYG/LlfqdwQYW4e0mdF4+L4ucUxtj8puwKnYOFThWXRrfvfdcMXAIa7JLCSmeYH/h/+RB00 3q+rokaYKKWCEjjyCzxjLRSYIxeXSbGF8zr/d19b3gksEqdTTHU5+b3JXjwzS4wKQIE+HlXgdtmNgh 3ggTF8ziCSAdIYjghZWklOsmSSgxOzbLsySgNzJFWDpF0lWkbSte9BBEaN2g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -72,36 +68,47 @@ When building with automatic stack variable initialization, GCC 12
 complains about variables defined outside of switch case statements.
 Move the variable into the case that uses it, which silences the warning:
 
-./arch/x86/include/asm/uaccess.h:317:23: warning: statement will never be executed [-Wswitch-unreachable]
-  317 |         unsigned char x_u8__; \
-      |                       ^~~~~~
+drivers/rtc/dev.c: In function 'rtc_dev_ioctl':
+drivers/rtc/dev.c:394:30: warning: statement will never be executed [-Wswitch-unreachable]
+  394 |                         long offset;
+      |                              ^~~~~~
 
-Fixes: 865c50e1d279 ("x86/uaccess: utilize CONFIG_CC_HAS_ASM_GOTO_OUTPUT")
-Cc: stable@vger.kernel.org
+Fixes: 6a8af1b6568a ("rtc: add parameter ioctl")
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/uaccess.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/rtc/dev.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 33a68407def3..8ab9e79abb2b 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -314,11 +314,12 @@ do {									\
- do {									\
- 	__chk_user_ptr(ptr);						\
- 	switch (size) {							\
--	unsigned char x_u8__;						\
--	case 1:								\
-+	case 1:	{							\
-+		unsigned char x_u8__;					\
- 		__get_user_asm(x_u8__, ptr, "b", "=q", label);		\
- 		(x) = x_u8__;						\
- 		break;							\
-+	}								\
- 	case 2:								\
- 		__get_user_asm(x, ptr, "w", "=r", label);		\
- 		break;							\
+diff --git a/drivers/rtc/dev.c b/drivers/rtc/dev.c
+index e104972a28fd..69325aeede1a 100644
+--- a/drivers/rtc/dev.c
++++ b/drivers/rtc/dev.c
+@@ -391,14 +391,14 @@ static long rtc_dev_ioctl(struct file *file,
+ 		}
+ 
+ 		switch(param.param) {
+-			long offset;
+ 		case RTC_PARAM_FEATURES:
+ 			if (param.index != 0)
+ 				err = -EINVAL;
+ 			param.uvalue = rtc->features[0];
+ 			break;
+ 
+-		case RTC_PARAM_CORRECTION:
++		case RTC_PARAM_CORRECTION: {
++			long offset;
+ 			mutex_unlock(&rtc->ops_lock);
+ 			if (param.index != 0)
+ 				return -EINVAL;
+@@ -407,7 +407,7 @@ static long rtc_dev_ioctl(struct file *file,
+ 			if (err == 0)
+ 				param.svalue = offset;
+ 			break;
+-
++		}
+ 		default:
+ 			if (rtc->ops->param_get)
+ 				err = rtc->ops->param_get(rtc->dev.parent, &param);
 -- 
 2.30.2
 
