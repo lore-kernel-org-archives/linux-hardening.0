@@ -2,208 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6365EC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 05:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69815C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 05:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232214AbhLIFhi (ORCPT
+        id S232573AbhLIF5z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Dec 2021 00:37:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50780 "EHLO
+        Thu, 9 Dec 2021 00:57:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232147AbhLIFhh (ORCPT
+        with ESMTP id S229448AbhLIF5z (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Dec 2021 00:37:37 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28CB5C061746
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 21:34:05 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id k4so4092648pgb.8
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 21:34:05 -0800 (PST)
+        Thu, 9 Dec 2021 00:57:55 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5243CC0617A1
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 21:54:22 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id f125so4189914pgc.0
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 21:54:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TEdQ7xqbUh9nZ2fpYSrjLmJge99wiwbPJrNcrQ2+9GU=;
-        b=Cglcz+jiZOL3ZlvU9ShHERJBngWOh7gT0onZCe3CJOPB9uQwomxgEX9LHHDI66XdQ6
-         Z83lfA5VDywJFMjFW6ydMk9qeYoNg6DIKR2fAgpK4IOJVILBxPeivDAYcrPonbr3gqou
-         kGI3TbT/w9Y9ERpoCZdXvmAHkpaHSiYjr8n2I=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VrQSge7TRWDKkJ/NvI+IySV465glHv+ZocrZlO0KKLc=;
+        b=GwxsWc9TXhDApOFEL/JXhjsV9zSbjJeT0oLyTkyB6ZihumuUGdydtg8KBz0U/BPemU
+         PjDBnSYoxW96WhtWCFQwAdCivrglko3agPb3OzbCtWAbWnKytB1JimtDtnP6iU+ujBL+
+         LTT9w4xm2Xv0YXmzAgJZkFs6RDlsEZ3C7BHoc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TEdQ7xqbUh9nZ2fpYSrjLmJge99wiwbPJrNcrQ2+9GU=;
-        b=xb+x+UNNoSrK+O88NJnHM11SEjpjMKaDIyelweDlYkXWUd1zcEsimzbHMN+UwlDaB6
-         MAYvd49YRvCxZJhwhnCbKBKjZI5ov9s0zWR49FZa/uQcfl7iTh99ADm+e02BN4MKZhNz
-         1bWF1WoPQZM8aBpfOCzdt+zURyXFG1gmwYUzuFhn1uj4jhljJp1Djc2guzs1WUrKVDSG
-         JbzOhiMDdUfa6l5RFyaCqHtsOaJPl4jktoSwjFjsCyyGHd7DElwOzJDUHp1XB/szHNA/
-         FnMFTFB1VZHzh67BIghs8GvUNW8ukyVG5tbP8iqFByXq7EMMfD0aII0GIQfjbm56h6DM
-         eGOA==
-X-Gm-Message-State: AOAM531YQAUljewmm2dQWjlVHf2z60TBLct8CLC/80Wrpq9vUjqXq+Ez
-        zDpQ6Rimv4HmEwYd6AtD+p40fA==
-X-Google-Smtp-Source: ABdhPJy/gv/9wFDJIqnWANj9Of3Dd3TIdKAwJAzw7FVWsOpzpQGelsoyMuALbUiFVB/qX9tASwUQUw==
-X-Received: by 2002:a05:6a00:2349:b0:4a8:d87:e8ad with SMTP id j9-20020a056a00234900b004a80d87e8admr9860982pfj.15.1639028044328;
-        Wed, 08 Dec 2021 21:34:04 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VrQSge7TRWDKkJ/NvI+IySV465glHv+ZocrZlO0KKLc=;
+        b=QyNcIqYiyEQBvyDUFPmD79aLwPx+Cxlp97tFSkRWRqMfcEam4wbOj91P+c6SV6/xdw
+         iSPvHDsexKjtpgUM4zhRSShLc0dSWZyW+rsGBDSg0K2au46nYdNGZ21jkPFlLig0g5KF
+         OVr5Sds4BfPk5ENJI1JACxgrTgRZpH5Ka3MsNW+QsNfNB1b9nLSxmno9C3IJQO1p5FGA
+         wZQMuzahxcFdNUoEHMo1Qnpfn930anvK9eHCA3OtD8Z186fnpr3iVgcQEDQ9tCpEo5UF
+         Px03dgYYXsQNRfrWis4cybNTMbio0wNdPsdVWcMmgyCBWWdsYC8OgaBsnSdPan97yxpo
+         20Rg==
+X-Gm-Message-State: AOAM53077qeMvTAGNf1YvnJcNZ2rHl+zK9STaQ2zOZZoxy45Fqf2GLY3
+        QM53Gu3FKzD249m3uUcmNZKQ6Q==
+X-Google-Smtp-Source: ABdhPJw8fMNaqi867+Q0o7P8PwLjqLLz+a8UL0QwyJXwzAIkjkGfkpnsGWaw+UK72GiByB5F9hC9CQ==
+X-Received: by 2002:a63:2212:: with SMTP id i18mr32303736pgi.586.1639029261855;
+        Wed, 08 Dec 2021 21:54:21 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g7sm5447044pfv.159.2021.12.08.21.34.03
+        by smtp.gmail.com with ESMTPSA id i185sm5416946pfg.80.2021.12.08.21.54.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 21:34:03 -0800 (PST)
+        Wed, 08 Dec 2021 21:54:21 -0800 (PST)
+Date:   Wed, 8 Dec 2021 21:54:20 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Saeed Mahameed <saeedm@nvidia.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] net/mlx5e: Avoid field-overflowing memcpy()
-Date:   Wed,  8 Dec 2021 21:34:02 -0800
-Message-Id: <20211209053402.2202206-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH] drm/dp: Actually read Adjust Request Post Cursor2
+ register
+Message-ID: <202112082143.3BE8ABAE@keescook>
+References: <20211203084354.3105253-1-keescook@chromium.org>
+ <87o85r4a4f.fsf@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6133; h=from:subject; bh=bv/kclJVqFfpYqF/u9SUVEA+zaU84TcD4WE+rVi9g7I=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhsZVJjU+25rXmRi5WzcuerZqRLJN3iCPc/8qQNiPO Nprb0GeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbGVSQAKCRCJcvTf3G3AJrCfEA CRXNU40blLLe6OTK0SA98KhXyyxeBIQuxWn0vrx/6plzA5pkFJU01hiWbzFzzrK44fIJx9ojwbWob/ 1PvJtG9DRazZ+DH/Tf1UsB1K9ok18bNmsgtep7WCRG3yDXzDX4Pa0u7GCeOm609BmybNZ2Atut04i/ YUVJiAXy4XeFqOYV95lmdprWo1SHHOdggJsYCYqGyvuB195O9jSugqNJc3nHrWcXJ2CWsp4MGPiqrM fd65E6vDnZbFB+pi69pum2aWs7poTUv/BwzBibVQoGlmsOHAyAs3LGEWX/5o/9waEp8UuLfIdC1xq6 jXouklbBXMHT+oIvzXDxFWmOhA/geM7gRNcIG3FAbtOdrpzKw3ztMYcYttAsqtjEEYgBUXgUSldLdR JH80zRFweQQJjOEwyBo33h+UiL8yGslJtqQIEm1c4XgGPg+AxpAivsqIwt+VTyy8GEXvlXrd2yjNpq t0ZMYnSc7obDLnCqETUtrRIDMHB+gSY9HmjGw262XlyT0R0HXTVo2k1j8KrTkykE+B5CWT02V3ZQSX /y3Sdb4trXXDZIioacxpz64YsJDPa9eyrl7xZSrrvJ9YXYEhiVi2t+MZFhKqLDYUQsihqI/pL7QAIm LC/BeDATgM79wa4G5wB9FVkpCMC5Xbue/KLqgoKOvH89a7ngoA72lHt7/JPg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o85r4a4f.fsf@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+On Wed, Dec 08, 2021 at 01:19:28PM +0200, Jani Nikula wrote:
+> On Fri, 03 Dec 2021, Kees Cook <keescook@chromium.org> wrote:
+> > The link_status array was not large enough to read the Adjust Request
+> > Post Cursor2 register. Adjust the size to include it. Found with a
+> > -Warray-bounds build:
+> >
+> > drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
+> > drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
+> >    59 |         return link_status[r - DP_LANE0_1_STATUS];
+> >       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
+> >   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+> >       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Using DP_ADJUST_REQUEST_POST_CURSOR2 has been deprecated since DP 1.3
+> published in 2014, and Tegra is the only user of
+> drm_dp_get_adjust_request_post_cursor().
+> 
+> Instead of bumping the link status read size from 6 to 11 for all
+> drivers I'd much rather see some other (maybe Tegra specific) solution
+> to this.
 
-Use flexible arrays instead of zero-element arrays (which look like they
-are always overflowing) and split the cross-field memcpy() into two halves
-that can be appropriately bounds-checked by the compiler.
+Hmmm... Well given this is currently non-functional on Tegra (and is an
+OOB memory read), how about just removing it entirely?
 
-We were doing:
-
-	#define ETH_HLEN  14
-	#define VLAN_HLEN  4
-	...
-	#define MLX5E_XDP_MIN_INLINE (ETH_HLEN + VLAN_HLEN)
-	...
-        struct mlx5e_tx_wqe      *wqe  = mlx5_wq_cyc_get_wqe(wq, pi);
-	...
-        struct mlx5_wqe_eth_seg  *eseg = &wqe->eth;
-        struct mlx5_wqe_data_seg *dseg = wqe->data;
-	...
-	memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
-
-target is wqe->eth.inline_hdr.start (which the compiler sees as being
-2 bytes in size), but copying 18, intending to write across start
-(really vlan_tci, 2 bytes). The remaining 16 bytes get written into
-wqe->data[0], covering byte_count (4 bytes), lkey (4 bytes), and addr
-(8 bytes).
-
-struct mlx5e_tx_wqe {
-        struct mlx5_wqe_ctrl_seg   ctrl;                 /*     0    16 */
-        struct mlx5_wqe_eth_seg    eth;                  /*    16    16 */
-        struct mlx5_wqe_data_seg   data[];               /*    32     0 */
-
-        /* size: 32, cachelines: 1, members: 3 */
-        /* last cacheline: 32 bytes */
-};
-
-struct mlx5_wqe_eth_seg {
-        u8                         swp_outer_l4_offset;  /*     0     1 */
-        u8                         swp_outer_l3_offset;  /*     1     1 */
-        u8                         swp_inner_l4_offset;  /*     2     1 */
-        u8                         swp_inner_l3_offset;  /*     3     1 */
-        u8                         cs_flags;             /*     4     1 */
-        u8                         swp_flags;            /*     5     1 */
-        __be16                     mss;                  /*     6     2 */
-        __be32                     flow_table_metadata;  /*     8     4 */
-        union {
-                struct {
-                        __be16     sz;                   /*    12     2 */
-                        u8         start[2];             /*    14     2 */
-                } inline_hdr;                            /*    12     4 */
-                struct {
-                        __be16     type;                 /*    12     2 */
-                        __be16     vlan_tci;             /*    14     2 */
-                } insert;                                /*    12     4 */
-                __be32             trailer;              /*    12     4 */
-        };                                               /*    12     4 */
-
-        /* size: 16, cachelines: 1, members: 9 */
-        /* last cacheline: 16 bytes */
-};
-
-struct mlx5_wqe_data_seg {
-        __be32                     byte_count;           /*     0     4 */
-        __be32                     lkey;                 /*     4     4 */
-        __be64                     addr;                 /*     8     8 */
-
-        /* size: 16, cachelines: 1, members: 3 */
-        /* last cacheline: 16 bytes */
-};
-
-So, split the memcpy() so the compiler can reason about the buffer
-sizes.
-
-"pahole" shows no size nor member offset changes to struct mlx5e_tx_wqe
-nor struct mlx5e_umr_wqe. "objdump -d" shows no meaningful object
-code changes (i.e. only source line number induced differences and
-optimizations).
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Hi, this is a rebase, and I can now address questions from
-https://lore.kernel.org/lkml/b5f1c558fef468fe8550ebb5e77d36bf1d0971a7.camel@kernel.org/
-
-- performance change? none: there is no executable code differences
-  except that the compiler chooses different temporary registers.
-
-- why aren't the other cases a problem? The others are dynamically sized
-  copies, and the first phase of the memcpy tightening is only handling
-  the constant expression sizes. The runtime size checking will come next,
-  where those other cases will need to be handled as well. But one thing
-  at a time. :)
-
----
- drivers/net/ethernet/mellanox/mlx5/core/en.h     | 6 +++---
- drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c | 4 +++-
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index e77c4159713f..5d8e0a712313 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -225,7 +225,7 @@ static inline int mlx5e_get_max_num_channels(struct mlx5_core_dev *mdev)
- struct mlx5e_tx_wqe {
- 	struct mlx5_wqe_ctrl_seg ctrl;
- 	struct mlx5_wqe_eth_seg  eth;
--	struct mlx5_wqe_data_seg data[0];
-+	struct mlx5_wqe_data_seg data[];
- };
+diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+index 23f9073bc473..c9528aa62c9c 100644
+--- a/drivers/gpu/drm/drm_dp_helper.c
++++ b/drivers/gpu/drm/drm_dp_helper.c
+@@ -144,16 +144,6 @@ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
+ }
+ EXPORT_SYMBOL(drm_dp_get_adjust_tx_ffe_preset);
  
- struct mlx5e_rx_wqe_ll {
-@@ -242,8 +242,8 @@ struct mlx5e_umr_wqe {
- 	struct mlx5_wqe_umr_ctrl_seg   uctrl;
- 	struct mlx5_mkey_seg           mkc;
- 	union {
--		struct mlx5_mtt inline_mtts[0];
--		struct mlx5_klm inline_klms[0];
-+		DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
-+		DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
- 	};
- };
+-u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+-					 unsigned int lane)
+-{
+-	unsigned int offset = DP_ADJUST_REQUEST_POST_CURSOR2;
+-	u8 value = dp_link_status(link_status, offset);
+-
+-	return (value >> (lane << 1)) & 0x3;
+-}
+-EXPORT_SYMBOL(drm_dp_get_adjust_request_post_cursor);
+-
+ static int __8b10b_clock_recovery_delay_us(const struct drm_dp_aux *aux, u8 rd_interval)
+ {
+ 	if (rd_interval > 4)
+diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
+index 70dfb7d1dec5..bb5bfa93950f 100644
+--- a/drivers/gpu/drm/tegra/dp.c
++++ b/drivers/gpu/drm/tegra/dp.c
+@@ -559,8 +559,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
+ 			drm_dp_get_adjust_request_pre_emphasis(status, i) >>
+ 				DP_TRAIN_PRE_EMPHASIS_SHIFT;
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
-index 2f0df5cc1a2d..efae2444c26f 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
-@@ -341,8 +341,10 @@ mlx5e_xmit_xdp_frame(struct mlx5e_xdpsq *sq, struct mlx5e_xmit_data *xdptxd,
+-		adjust->post_cursor[i] =
+-			drm_dp_get_adjust_request_post_cursor(status, i);
++		adjust->post_cursor[i] = 0;
+ 	}
+ }
  
- 	/* copy the inline part if required */
- 	if (sq->min_inline_mode != MLX5_INLINE_MODE_NONE) {
--		memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
-+		memcpy(eseg->inline_hdr.start, xdptxd->data, sizeof(eseg->inline_hdr.start));
- 		eseg->inline_hdr.sz = cpu_to_be16(MLX5E_XDP_MIN_INLINE);
-+		memcpy(dseg, xdptxd->data + sizeof(eseg->inline_hdr.start),
-+		       MLX5E_XDP_MIN_INLINE - sizeof(eseg->inline_hdr.start));
- 		dma_len  -= MLX5E_XDP_MIN_INLINE;
- 		dma_addr += MLX5E_XDP_MIN_INLINE;
- 		dseg++;
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 30359e434c3f..28378db676c8 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -1528,8 +1528,6 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
+ 					  int lane);
+ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
+ 				   int lane);
+-u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+-					 unsigned int lane);
+ 
+ #define DP_BRANCH_OUI_HEADER_SIZE	0xc
+ #define DP_RECEIVER_CAP_SIZE		0xf
+
+
+Or maybe do a long link status read in Tegra only?
+
 -- 
-2.30.2
-
+Kees Cook
