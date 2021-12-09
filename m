@@ -2,120 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0530C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 23:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECD8C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 23:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234517AbhLIXpC (ORCPT
+        id S234663AbhLIX6I (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Dec 2021 18:45:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234497AbhLIXpC (ORCPT
+        Thu, 9 Dec 2021 18:58:08 -0500
+Received: from relay034.a.hostedemail.com ([64.99.140.34]:39861 "EHLO
+        relay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234640AbhLIX6I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Dec 2021 18:45:02 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31063C061746
-        for <linux-hardening@vger.kernel.org>; Thu,  9 Dec 2021 15:41:28 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id gt5so5622090pjb.1
-        for <linux-hardening@vger.kernel.org>; Thu, 09 Dec 2021 15:41:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=r5IxUk7IoRTtrl9b80LUZD9vVdZvTnVgPepWlX6Ohsg=;
-        b=jdweGnXL6ND3BiYR6OrJRdg5Np7KCGmUX0f6pWmIZofXaOe97M4P6exXy9VtmzFCIx
-         98frCoSGt4fnj1kVXOYDRhRccWPuK0L10zo03sxW2Kic2fIoxAYQ3fFXW9fWADAswkgK
-         UG/ty3h235tjYAvc3RVKU0nlEccy7zoJpzcGE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r5IxUk7IoRTtrl9b80LUZD9vVdZvTnVgPepWlX6Ohsg=;
-        b=NaNaJMLfc6xMq87Na5Qx46+SMmLnS6EeJBLrWVpv1xSBOzQJwQSP2IsL4zpXqwFf5A
-         s5md69usLNXwYLGPawrI7pZgNYjVohWoecjLqUd9lRx7zBgIzj3utGsazEqwdTVxKiMD
-         YaFtH/03IzY1y+cPppXlEsw9NMkIPI1hNsOmJztNN/FOB27k0Dtz9/mJyt6tyEgx7nze
-         3jonybEzUejmo4pG6Uyj6Zvbv3vbh5quiFQj2znT21wfRl8oLGntbro+vTXzNZ4mkyUZ
-         fxY5TCVEFWUyGHBmN30JzcWFVljNqjaP2fC/MdE/VDkkBCeZsZtJgY9UgxJm7W3IlzPo
-         GiNg==
-X-Gm-Message-State: AOAM531Lgbpab2sVPZSNolNiV8qOFXLrNzoVbhOtovryQvE9k/o9Z+8N
-        zPh1Ik5lygyG3fBwXdGaCe8kGA==
-X-Google-Smtp-Source: ABdhPJzyk4sf1WNPIubTmnLyaDj9YqUyzvUL41XvKfsOUs2io7OX0emxdLtUfl9UQJ01SI14m51qjw==
-X-Received: by 2002:a17:90b:3ecd:: with SMTP id rm13mr19136275pjb.157.1639093287759;
-        Thu, 09 Dec 2021 15:41:27 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id mu4sm11720860pjb.8.2021.12.09.15.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Dec 2021 15:41:27 -0800 (PST)
-Date:   Thu, 9 Dec 2021 15:41:26 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Harry Wentland <harry.wentland@amd.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH] drm/dp: Actually read Adjust Request Post Cursor2
- register
-Message-ID: <202112091539.6B349AC@keescook>
-References: <20211203084354.3105253-1-keescook@chromium.org>
- <87o85r4a4f.fsf@intel.com>
- <202112082220.81ECDC63D@keescook>
- <2b7d760c-9ab8-b607-efc6-1ed276d67668@amd.com>
+        Thu, 9 Dec 2021 18:58:08 -0500
+X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Dec 2021 18:58:08 EST
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay13.hostedemail.com (Postfix) with ESMTP id E837C6082C;
+        Thu,  9 Dec 2021 23:47:52 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf16.hostedemail.com (Postfix) with ESMTPA id 07D282001F;
+        Thu,  9 Dec 2021 23:47:49 +0000 (UTC)
+Message-ID: <e825dec01f6ffd19fd5487f04280583c673b7f1d.camel@perches.com>
+Subject: Re: [PATCH] x86/boot/string: Add missing function declarations
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-hardening@vger.kernel.org
+Date:   Thu, 09 Dec 2021 15:47:49 -0800
+In-Reply-To: <202112091536.2DDF0DF@keescook>
+References: <20211119175325.3668419-1-keescook@chromium.org>
+         <202112091536.2DDF0DF@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b7d760c-9ab8-b607-efc6-1ed276d67668@amd.com>
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 07D282001F
+X-Stat-Signature: ymgujoy4iod5yp57rr3zq4pmgb7u6uq8
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/XrvaolBHOzQqrS/4GCMzj+bty3i2Kj3U=
+X-HE-Tag: 1639093669-239949
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 09, 2021 at 05:20:45PM -0500, Harry Wentland wrote:
-> 
-> 
-> On 2021-12-09 01:23, Kees Cook wrote:
-> > On Wed, Dec 08, 2021 at 01:19:28PM +0200, Jani Nikula wrote:
-> >> On Fri, 03 Dec 2021, Kees Cook <keescook@chromium.org> wrote:
-> >>> The link_status array was not large enough to read the Adjust Request
-> >>> Post Cursor2 register. Adjust the size to include it. Found with a
-> >>> -Warray-bounds build:
-> >>>
-> >>> drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
-> >>> drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
-> >>>    59 |         return link_status[r - DP_LANE0_1_STATUS];
-> >>>       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-> >>> drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
-> >>>   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >>>       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>>
-> >>> Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
-> >>> Signed-off-by: Kees Cook <keescook@chromium.org>
-> >>
-> >> Using DP_ADJUST_REQUEST_POST_CURSOR2 has been deprecated since DP 1.3
-> >> published in 2014, and Tegra is the only user of
-> >> drm_dp_get_adjust_request_post_cursor().
+On Thu, 2021-12-09 at 15:37 -0800, Kees Cook wrote:
+> On Fri, Nov 19, 2021 at 09:53:25AM -0800, Kees Cook wrote:
+> > Silence "missing function declaration" warnings from string.h when
+> > building under W=1.
 > > 
-> > I see POST_CURSOR2 is used here too:
-> > 
-> > drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
 > 
-> Looks like we read and parse that in the admgpu driver without
-> using drm_dp_get_adjust_request_post_cursor.
+> Hi, just a quick ping on this little fix.
+[]
+> > diff --git a/arch/x86/boot/string.h b/arch/x86/boot/string.h
+[]
+> > @@ -8,8 +8,10 @@
+> >  #undef memcmp
+> >  
+> >  void *memcpy(void *dst, const void *src, size_t len);
+> > +void *memmove(void *dst, const void *src, size_t len);
+> >  void *memset(void *dst, int c, size_t len);
+> >  int memcmp(const void *s1, const void *s2, size_t len);
+> > +int bcmp(const void *s1, const void *s2, size_t len);
 
-Right, and probably that could be switched to use it, but I'm not sure
-what the impact of the larger link_status read is.
+Unrelated trivia:
 
-> 
-> I don't have a strong feeling but I liked your original
-> patch a bit better. I'm not sure what it means when part
-> of a spec is deprecated. Once a spec is written display
-> vendors might implement it. We should make sure that
-> displays like that are always handled in a sane manner.
+Is bcmp still used anywhere in the kernel?
 
-Jani, Dave, any guidance here? I'm fine with whatever, but the current
-code is for sure broken. ;)
+confdata.c is a user-mode program right?
 
--Kees
+$ git grep -w bcmp
+arch/x86/boot/string.c: * Clang may lower `memcmp == 0` to `bcmp == 0`.
+arch/x86/boot/string.c:int bcmp(const void *s1, const void *s2, size_t len)
+include/linux/string.h:extern int bcmp(const void *,const void *,__kernel_size_t);
+lib/Makefile:# Prevent the compiler from calling builtins like memcmp() or bcmp() from this
+lib/string.c: * bcmp - returns 0 if and only if the buffers have identical contents.
+lib/string.c: * meaning, and architectures may implement their own more efficient bcmp(). So
+lib/string.c:int bcmp(const void *a, const void *b, size_t len)
+lib/string.c:EXPORT_SYMBOL(bcmp);
+scripts/kconfig/confdata.c:     if (bcmp(map1, map2, st1.st_size))
 
--- 
-Kees Cook
+
