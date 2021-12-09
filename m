@@ -2,51 +2,51 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69815C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 05:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79D7C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Dec 2021 06:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232573AbhLIF5z (ORCPT
+        id S229604AbhLIG0e (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Dec 2021 00:57:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55378 "EHLO
+        Thu, 9 Dec 2021 01:26:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbhLIF5z (ORCPT
+        with ESMTP id S229711AbhLIG0e (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Dec 2021 00:57:55 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5243CC0617A1
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 21:54:22 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id f125so4189914pgc.0
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 21:54:22 -0800 (PST)
+        Thu, 9 Dec 2021 01:26:34 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1443C061746
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Dec 2021 22:23:01 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id g18so4504012pfk.5
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Dec 2021 22:23:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=VrQSge7TRWDKkJ/NvI+IySV465glHv+ZocrZlO0KKLc=;
-        b=GwxsWc9TXhDApOFEL/JXhjsV9zSbjJeT0oLyTkyB6ZihumuUGdydtg8KBz0U/BPemU
-         PjDBnSYoxW96WhtWCFQwAdCivrglko3agPb3OzbCtWAbWnKytB1JimtDtnP6iU+ujBL+
-         LTT9w4xm2Xv0YXmzAgJZkFs6RDlsEZ3C7BHoc=
+        bh=ZB6EumHZfLPmCBlB1+11VhhFb2CYopwmNO5zELXp+vw=;
+        b=n5dCX+a1yr/v0ySJVni9m4p2Mondq/yRCq0RnttRSxKNjQdkseZiEzzsE2LWPtcOd2
+         Moz+moSUGcCLD7tbLvK7+1KzpTRYiFolwru/SzAYIAyfkQnMbQOWyztHfrBIyCOuGSoN
+         vSyzd3Uq5WVJuq1snUUEn72FsjeLpykHWDxIw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=VrQSge7TRWDKkJ/NvI+IySV465glHv+ZocrZlO0KKLc=;
-        b=QyNcIqYiyEQBvyDUFPmD79aLwPx+Cxlp97tFSkRWRqMfcEam4wbOj91P+c6SV6/xdw
-         iSPvHDsexKjtpgUM4zhRSShLc0dSWZyW+rsGBDSg0K2au46nYdNGZ21jkPFlLig0g5KF
-         OVr5Sds4BfPk5ENJI1JACxgrTgRZpH5Ka3MsNW+QsNfNB1b9nLSxmno9C3IJQO1p5FGA
-         wZQMuzahxcFdNUoEHMo1Qnpfn930anvK9eHCA3OtD8Z186fnpr3iVgcQEDQ9tCpEo5UF
-         Px03dgYYXsQNRfrWis4cybNTMbio0wNdPsdVWcMmgyCBWWdsYC8OgaBsnSdPan97yxpo
-         20Rg==
-X-Gm-Message-State: AOAM53077qeMvTAGNf1YvnJcNZ2rHl+zK9STaQ2zOZZoxy45Fqf2GLY3
-        QM53Gu3FKzD249m3uUcmNZKQ6Q==
-X-Google-Smtp-Source: ABdhPJw8fMNaqi867+Q0o7P8PwLjqLLz+a8UL0QwyJXwzAIkjkGfkpnsGWaw+UK72GiByB5F9hC9CQ==
-X-Received: by 2002:a63:2212:: with SMTP id i18mr32303736pgi.586.1639029261855;
-        Wed, 08 Dec 2021 21:54:21 -0800 (PST)
+        bh=ZB6EumHZfLPmCBlB1+11VhhFb2CYopwmNO5zELXp+vw=;
+        b=05G+/iwL7jB4gNccHuscJzgwYAt63Au7XFe7k584kpxeOEk849GxSBRaRiH5K5SisR
+         oBiCw56IwgvcrtGAB7r9f0xHgonpczJgankQl7KSjyIPxwXQQ9Cjs4H64rKw+vSxaRbc
+         A2Dz/Pn1QNKY3cF16b+6FNroon+DvZFWwSaIsDZgUnvC64yT4amhsZqONrYZDpQEj2S0
+         g/o8aKDh00up2awgZSIA9dvDRBbvLTiKbX2JlVDxJPksoScvgvSkSZ2QLL0EUz3Fxz9R
+         sWCRP8KeKvY7/ZcfjI7rdYJX4b+ia8bZ9D9Bf0nkNPdPYWC9HLGYb+wubKp86EUoEog0
+         80Qg==
+X-Gm-Message-State: AOAM53290EGMUBRGRMSFzeqHt3ieh6G0PAY9OsEbWX1NnfuukFqIVQv7
+        17z8tzzYTHADVhcB3tkZ/blBBA==
+X-Google-Smtp-Source: ABdhPJxA46OA9bE4pj9ZiILs+26cF+O6BpoLWGmAIVpD76RtUu0B9bGNU1ILev+x50q54U/+11hxHQ==
+X-Received: by 2002:a05:6a00:1583:b0:49f:dc1c:a0fe with SMTP id u3-20020a056a00158300b0049fdc1ca0femr9943229pfk.46.1639030981150;
+        Wed, 08 Dec 2021 22:23:01 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i185sm5416946pfg.80.2021.12.08.21.54.21
+        by smtp.gmail.com with ESMTPSA id j22sm5689636pfj.130.2021.12.08.22.23.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 21:54:21 -0800 (PST)
-Date:   Wed, 8 Dec 2021 21:54:20 -0800
+        Wed, 08 Dec 2021 22:23:00 -0800 (PST)
+Date:   Wed, 8 Dec 2021 22:23:00 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Jani Nikula <jani.nikula@linux.intel.com>
 Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -56,7 +56,7 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Thierry Reding <treding@nvidia.com>
 Subject: Re: [PATCH] drm/dp: Actually read Adjust Request Post Cursor2
  register
-Message-ID: <202112082143.3BE8ABAE@keescook>
+Message-ID: <202112082220.81ECDC63D@keescook>
 References: <20211203084354.3105253-1-keescook@chromium.org>
  <87o85r4a4f.fsf@intel.com>
 MIME-Version: 1.0
@@ -87,13 +87,13 @@ On Wed, Dec 08, 2021 at 01:19:28PM +0200, Jani Nikula wrote:
 > Using DP_ADJUST_REQUEST_POST_CURSOR2 has been deprecated since DP 1.3
 > published in 2014, and Tegra is the only user of
 > drm_dp_get_adjust_request_post_cursor().
-> 
-> Instead of bumping the link status read size from 6 to 11 for all
-> drivers I'd much rather see some other (maybe Tegra specific) solution
-> to this.
 
-Hmmm... Well given this is currently non-functional on Tegra (and is an
-OOB memory read), how about just removing it entirely?
+I see POST_CURSOR2 is used here too:
+
+drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+
+Here's a version of that for tegra (untested):
+
 
 diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
 index 23f9073bc473..c9528aa62c9c 100644
@@ -117,16 +117,31 @@ index 23f9073bc473..c9528aa62c9c 100644
  {
  	if (rd_interval > 4)
 diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
-index 70dfb7d1dec5..bb5bfa93950f 100644
+index 70dfb7d1dec5..f5535eb04c6b 100644
 --- a/drivers/gpu/drm/tegra/dp.c
 +++ b/drivers/gpu/drm/tegra/dp.c
-@@ -559,8 +559,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
- 			drm_dp_get_adjust_request_pre_emphasis(status, i) >>
+@@ -549,6 +549,15 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
+ {
+ 	struct drm_dp_link_train_set *adjust = &link->train.adjust;
+ 	unsigned int i;
++	u8 post_cursor;
++	int err;
++
++	err = drm_dp_dpcd_read(link->aux, DP_ADJUST_REQUEST_POST_CURSOR2,
++			       &post_cursor, sizeof(post_cursor));
++	if (err < 0) {
++		DRM_ERROR("failed to read post_cursor2: %d\n", err);
++		post_cursor = 0;
++	}
+ 
+ 	for (i = 0; i < link->lanes; i++) {
+ 		adjust->voltage_swing[i] =
+@@ -560,7 +569,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
  				DP_TRAIN_PRE_EMPHASIS_SHIFT;
  
--		adjust->post_cursor[i] =
+ 		adjust->post_cursor[i] =
 -			drm_dp_get_adjust_request_post_cursor(status, i);
-+		adjust->post_cursor[i] = 0;
++			(post_cursor >> (i << 1)) & 0x3;
  	}
  }
  
@@ -145,7 +160,7 @@ index 30359e434c3f..28378db676c8 100644
  #define DP_RECEIVER_CAP_SIZE		0xf
 
 
-Or maybe do a long link status read in Tegra only?
+Is that the right way to go?
 
 -- 
 Kees Cook
