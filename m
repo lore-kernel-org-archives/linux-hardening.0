@@ -2,105 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1035FC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Dec 2021 09:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219DAC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Dec 2021 10:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239472AbhLJJoG (ORCPT
+        id S239918AbhLJKKG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Dec 2021 04:44:06 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:55051 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232524AbhLJJoF (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Dec 2021 04:44:05 -0500
-Received: from mail-wr1-f53.google.com ([209.85.221.53]) by
- mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MacjC-1mODZv1B5m-00c70u; Fri, 10 Dec 2021 10:40:29 +0100
-Received: by mail-wr1-f53.google.com with SMTP id t9so13910212wrx.7;
-        Fri, 10 Dec 2021 01:40:29 -0800 (PST)
-X-Gm-Message-State: AOAM530X19LHUa/It40fWECxnIDEb/Mh9yjm3bOT+Uu7K0taXQ4m7xC8
-        wn62entpbhqtFpkuxaSsIRB3ue8eb3h/KlbUizo=
-X-Google-Smtp-Source: ABdhPJyu9erI7/CFsc2u//RX9hAEbTl60kQfjsJfA51uOVvtblju3dkQViDgpap2rqrDxF4TL+uXBa+raqJFihLoBb8=
-X-Received: by 2002:adf:d091:: with SMTP id y17mr13364299wrh.418.1639129228855;
- Fri, 10 Dec 2021 01:40:28 -0800 (PST)
+        Fri, 10 Dec 2021 05:10:06 -0500
+Received: from mga05.intel.com ([192.55.52.43]:30553 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236504AbhLJKKF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 10 Dec 2021 05:10:05 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="324582779"
+X-IronPort-AV: E=Sophos;i="5.88,195,1635231600"; 
+   d="scan'208";a="324582779"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 02:06:30 -0800
+X-IronPort-AV: E=Sophos;i="5.88,195,1635231600"; 
+   d="scan'208";a="602070300"
+Received: from mpcorrig-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.4.173])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 02:06:27 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Harry Wentland <harry.wentland@amd.com>
+Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH] drm/dp: Actually read Adjust Request Post Cursor2 register
+In-Reply-To: <202112091539.6B349AC@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211203084354.3105253-1-keescook@chromium.org>
+ <87o85r4a4f.fsf@intel.com> <202112082220.81ECDC63D@keescook>
+ <2b7d760c-9ab8-b607-efc6-1ed276d67668@amd.com>
+ <202112091539.6B349AC@keescook>
+Date:   Fri, 10 Dec 2021 12:06:20 +0200
+Message-ID: <87a6h83hb7.fsf@intel.com>
 MIME-Version: 1.0
-References: <20211210000910.3597609-1-keescook@chromium.org>
-In-Reply-To: <20211210000910.3597609-1-keescook@chromium.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 10 Dec 2021 10:40:12 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3wOVdds2-qz365LoBNGtrx6ksCzCHp7T+qSev+R3ZRPQ@mail.gmail.com>
-Message-ID: <CAK8P3a3wOVdds2-qz365LoBNGtrx6ksCzCHp7T+qSev+R3ZRPQ@mail.gmail.com>
-Subject: Re: [PATCH] Kconfig.debug: Make DEBUG_INFO selectable from a choice
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:W0Zdjqsc7rPIeTOL2FYSoQpTWZoqEvrVBLxS55cgoeMl+bX85QF
- UPq4ETc19eDLOiQBBEETlV+kxwHDaOSPfxmBE3goe9+4zmmQ3PzXnjD86dWUHKbf64vY4aB
- UzpUiS3toX9edbRAMTRULdszcfnFq/9GZFhUCy6PL37qTkb+QHJHWVJ/+kr7hV53qlrM1w4
- 9ApUnWELIyQAXvcUKlLWA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gaWyBOcWEeY=:iYCiGNX3+nPJMxOtfLiLdO
- wQqvjr24wUcj6lzSFQET2pkRykM4mphMq8KooLDZdjuLsplN4jQtp5+naK1rP55in7KdEZxGj
- HXMYwdYg/ZN9jTILo4Sb2MCanxgrGnSdMubvDV3bxmQB4NTWdiOvyVx0BKVm8MWxNsZlunvEW
- z6fYpnU5XdX6CpsYfl7H0ucc3bpPi3hPASmJ8QAeVzckd6tEVdsWBAYgzo6AanGldcWXDr459
- pRoDcilgTrb6vMs9sbHhKMuMtfnzJu0d4QSI4EN0Mts6mSA9tJ5mpoU/NrtwbM7h/mUQOMTNa
- 57OWKUJFUzlfZgBhOaqZ5P7W32wlYnuzbo0LcuNmy/KFAaRI8qDf0RHGFLUuLaYIR3KDi7OgO
- efpxQVMdDVaBHzBloXAAP5+YgCve1wPUxOUC3O5VxytlgTZ+fXXJbobA1vFdKZybELsGIWD43
- 2/725O2VB1OhRj80Cgb0r3bgeDkocgScs9vqZzRRFy1Bn85IpSy6XVxTidf4ITnbEt5JTqPlW
- 8MpUNIbd1ikb3pOVb9HdNe/OuAIg1723bcymfwQllyZWmiLMnxr2g0eo7fg29q/z1hzB3J0NZ
- Fz4eVcCn/bVpe3wjkKxEpJUiYQku1Z9pRfZEvFVIsh/McsT0M7LYe30YbcLg/9JFYHe0Y+fCh
- RkxVRfCpKNXkvbbJONUCElq9WA4c26Dw81KDkk6yS7yYDaCGIbOKmaJbrEDMENb9pKwvaal7y
- gv6886HxRE4Z1xiRO7jksI/NWWKciixokqwruTCRCsbe9Gj4SYxxUMnPI0queWClT8SP9d3Yn
- TjdrV9gM0pzwlV0qYt2ZOebKH9X2QVZbZGwBkU/yVZaqpnSCDY=
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 1:09 AM Kees Cook <keescook@chromium.org> wrote:
+On Thu, 09 Dec 2021, Kees Cook <keescook@chromium.org> wrote:
+> On Thu, Dec 09, 2021 at 05:20:45PM -0500, Harry Wentland wrote:
+>> 
+>> 
+>> On 2021-12-09 01:23, Kees Cook wrote:
+>> > On Wed, Dec 08, 2021 at 01:19:28PM +0200, Jani Nikula wrote:
+>> >> On Fri, 03 Dec 2021, Kees Cook <keescook@chromium.org> wrote:
+>> >>> The link_status array was not large enough to read the Adjust Request
+>> >>> Post Cursor2 register. Adjust the size to include it. Found with a
+>> >>> -Warray-bounds build:
+>> >>>
+>> >>> drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
+>> >>> drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
+>> >>>    59 |         return link_status[r - DP_LANE0_1_STATUS];
+>> >>>       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+>> >>> drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
+>> >>>   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+>> >>>       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> >>>
+>> >>> Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
+>> >>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> >>
+>> >> Using DP_ADJUST_REQUEST_POST_CURSOR2 has been deprecated since DP 1.3
+>> >> published in 2014, and Tegra is the only user of
+>> >> drm_dp_get_adjust_request_post_cursor().
+>> > 
+>> > I see POST_CURSOR2 is used here too:
+>> > 
+>> > drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+>> > 
+>> 
+>> Looks like we read and parse that in the admgpu driver without
+>> using drm_dp_get_adjust_request_post_cursor.
 >
-> Currently it's not possible to enable DEBUG_INFO for an all*config
-> build, since it is marked as "depends on !COMPILE_TEST". This generally
-> makes sense because a debug build of an all*config target ends up taking
-> much longer and the output is much larger. Having this be "default off"
-> makes sense. However, there are cases where enabling DEBUG_INFO for such
-> builds is useful for doing treewide A/B comparisons of build options,
-> etc.
+> Right, and probably that could be switched to use it, but I'm not sure
+> what the impact of the larger link_status read is.
 >
-> Make DEBUG_INFO selectable from any of the DWARF version choice options,
-> with DEBUG_INFO_NONE being the default for COMPILE_TEST. The mutually
-> exclusive relationship between DWARF5 and BTF must be inverted, but the
-> result remains the same. Additionally moves DEBUG_KERNEL and DEBUG_MISC
-> up to the top of the menu because was enabling features _above_ it,
-> making it weird to navigate menuconfig.
+>> 
+>> I don't have a strong feeling but I liked your original
+>> patch a bit better. I'm not sure what it means when part
+>> of a spec is deprecated. Once a spec is written display
+>> vendors might implement it. We should make sure that
+>> displays like that are always handled in a sane manner.
 >
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Jani, Dave, any guidance here? I'm fine with whatever, but the current
+> code is for sure broken. ;)
 
-Looks good to me,
+Post Cursor2 was completely optional for the transmitter even before it
+was deprecated.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+And now we'd be adding 5 bytes extra to all link status reads. To fix
+the only user of drm_dp_get_adjust_request_post_cursor() that apparently
+has never worked as intended. I'm just not convinced.
 
-One detail:
+I was trying to look through the implications of DP_LINK_STATUS_SIZE
+increase, and at least drm_dp_dpcd_read_phy_link_status() comes across
+as something probably needing attention.
 
-> +choice
-> +       prompt "Debug information"
-> +       depends on DEBUG_KERNEL
-> +       default DEBUG_INFO_NONE if COMPILE_TEST
-> +       default DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT if DEBUG_KERNEL
 
-I think this line should be simplified to
+BR,
+Jani.
 
-          default DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
-
-since DEBUG_KERNEL is always enabled at this point. You can also consider
-turning the 'menu' into 'menuconfig DEBUG_KERNEL' and dropping the 'depends
-on DEBUG_KERNEL' in favor of the implied dependency.
-
-       Arnd
+-- 
+Jani Nikula, Intel Open Source Graphics Center
