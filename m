@@ -2,108 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219DAC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Dec 2021 10:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D73C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Dec 2021 11:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239918AbhLJKKG (ORCPT
+        id S236862AbhLJLFS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Dec 2021 05:10:06 -0500
-Received: from mga05.intel.com ([192.55.52.43]:30553 "EHLO mga05.intel.com"
+        Fri, 10 Dec 2021 06:05:18 -0500
+Received: from mga04.intel.com ([192.55.52.120]:62189 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236504AbhLJKKF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Dec 2021 05:10:05 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="324582779"
+        id S234606AbhLJLFS (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 10 Dec 2021 06:05:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639134103; x=1670670103;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=EBain5rvAuM0ab2ClY+MBBH0nuRkV+7ToR7QQbmwcnQ=;
+  b=fyHnR0rV98IWI7DyUobpD6PzwYJuPoaXLM34NsO2K4bhRGCwI8ZrZDL+
+   AVZRNWffcZ7H9Hpu4PubFDBc6+dM2CK7IYcJtJuCHvGydHpuQz8wfcquu
+   1ZevKgTxVG7tkFS4RKFGk7r0hEEO8MwMSMTRY4VI5N1JCDWsUy6TSGZIH
+   fHmPZHGCKN2DejZ74m6L+GYHOZtp4b31ChYM7lo/9iyNKXzv9rNoiumtj
+   2kK959X7QxKOdz5FyfnfmwnD5CPFC+5Zk/H3yYIXuLeyErKhNgYpN7dWo
+   Nj8AjzDuYIvV80WfEIK7FeLaL3OIdU/2IyfCki6XtxeZmy03JLMZ8EJjJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="237062193"
 X-IronPort-AV: E=Sophos;i="5.88,195,1635231600"; 
-   d="scan'208";a="324582779"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 02:06:30 -0800
+   d="scan'208";a="237062193"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 03:01:43 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,195,1635231600"; 
-   d="scan'208";a="602070300"
-Received: from mpcorrig-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.4.173])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 02:06:27 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Harry Wentland <harry.wentland@amd.com>
-Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH] drm/dp: Actually read Adjust Request Post Cursor2 register
-In-Reply-To: <202112091539.6B349AC@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20211203084354.3105253-1-keescook@chromium.org>
- <87o85r4a4f.fsf@intel.com> <202112082220.81ECDC63D@keescook>
- <2b7d760c-9ab8-b607-efc6-1ed276d67668@amd.com>
- <202112091539.6B349AC@keescook>
-Date:   Fri, 10 Dec 2021 12:06:20 +0200
-Message-ID: <87a6h83hb7.fsf@intel.com>
+   d="scan'208";a="612893140"
+Received: from irvmail001.ir.intel.com ([10.43.11.63])
+  by orsmga004.jf.intel.com with ESMTP; 10 Dec 2021 03:01:34 -0800
+Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 1BAB1WjI016878;
+        Fri, 10 Dec 2021 11:01:32 GMT
+From:   Alexander Lobakin <alexandr.lobakin@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, x86@kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "H . J . Lu" <hjl.tools@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v8 05/14] x86: conditionally place regular ASM functions into separate sections
+Date:   Fri, 10 Dec 2021 12:01:02 +0100
+Message-Id: <20211210110102.707759-1-alexandr.lobakin@intel.com>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <Yanm6tJ2obi1aKv6@hirez.programming.kicks-ass.net>
+References: <20211202223214.72888-1-alexandr.lobakin@intel.com> <20211202223214.72888-6-alexandr.lobakin@intel.com> <Yanm6tJ2obi1aKv6@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 09 Dec 2021, Kees Cook <keescook@chromium.org> wrote:
-> On Thu, Dec 09, 2021 at 05:20:45PM -0500, Harry Wentland wrote:
->> 
->> 
->> On 2021-12-09 01:23, Kees Cook wrote:
->> > On Wed, Dec 08, 2021 at 01:19:28PM +0200, Jani Nikula wrote:
->> >> On Fri, 03 Dec 2021, Kees Cook <keescook@chromium.org> wrote:
->> >>> The link_status array was not large enough to read the Adjust Request
->> >>> Post Cursor2 register. Adjust the size to include it. Found with a
->> >>> -Warray-bounds build:
->> >>>
->> >>> drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
->> >>> drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
->> >>>    59 |         return link_status[r - DP_LANE0_1_STATUS];
->> >>>       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
->> >>> drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
->> >>>   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
->> >>>       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> >>>
->> >>> Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
->> >>> Signed-off-by: Kees Cook <keescook@chromium.org>
->> >>
->> >> Using DP_ADJUST_REQUEST_POST_CURSOR2 has been deprecated since DP 1.3
->> >> published in 2014, and Tegra is the only user of
->> >> drm_dp_get_adjust_request_post_cursor().
->> > 
->> > I see POST_CURSOR2 is used here too:
->> > 
->> > drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
->> > 
->> 
->> Looks like we read and parse that in the admgpu driver without
->> using drm_dp_get_adjust_request_post_cursor.
->
-> Right, and probably that could be switched to use it, but I'm not sure
-> what the impact of the larger link_status read is.
->
->> 
->> I don't have a strong feeling but I liked your original
->> patch a bit better. I'm not sure what it means when part
->> of a spec is deprecated. Once a spec is written display
->> vendors might implement it. We should make sure that
->> displays like that are always handled in a sane manner.
->
-> Jani, Dave, any guidance here? I'm fine with whatever, but the current
-> code is for sure broken. ;)
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri, 3 Dec 2021 10:44:10 +0100
 
-Post Cursor2 was completely optional for the transmitter even before it
-was deprecated.
+> On Thu, Dec 02, 2021 at 11:32:05PM +0100, Alexander Lobakin wrote:
+> > Use the newly introduces macros to create unique separate sections
+> > for (almost) every "regular" ASM function (i.e. for those which
+> > aren't explicitly put into a specific one).
+> > There should be no leftovers as input .text will be size-asserted
+> > in the LD script generated for FG-KASLR.
+> 
+> *groan*...
+> 
+> Please, can't we do something like:
+> 
+> #define SYM_PUSH_SECTION(name)	\
+> .if section == .text		\
+> .push_section .text.##name	\
+> .else				\
+> .push_section .text		\
+> .endif
 
-And now we'd be adding 5 bytes extra to all link status reads. To fix
-the only user of drm_dp_get_adjust_request_post_cursor() that apparently
-has never worked as intended. I'm just not convinced.
+This condition
 
-I was trying to look through the implications of DP_LINK_STATUS_SIZE
-increase, and at least drm_dp_dpcd_read_phy_link_status() comes across
-as something probably needing attention.
+.pushsection .text
+.if section == .text
+# do something
+.endif
+.popsection
 
+doesn't really works. `do something` doesn't happen.
+This works only when
 
-BR,
-Jani.
+.pushsection .text
+.equ section, .text
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+but it's not really okayish I'd say to find all .{,push}section
+occurences and replace them with a macro (which would also do .equ).
+
+I don't really know how %S with --sectname-subst should help me as
+
+.if %S == .text
+# do something
+.endif
+
+doesn't work at all (syntax error) -- and it shouldn't, %S is
+supposed to work only inside .{,push}section directives.
+
+I could do unconditional
+
+.pushsection %S.##name
+                ^^^^^^ function name
+
+but this would involve changing LDS scripts (and vmlinux.lds.h) to
+let's say replace *(.noinstr.text) with *(.noinstr.text*).
+
+So I hope there is a way to get current section name? If not, then
+the last option is the least harmful I suppose.
+At least not as harmful as current approach with alternative macros,
+far from it lol.
+
+> 
+> #define SYM_POP_SECTION()	\
+> .pop_section
+> 
+> and wrap that inside the existing SYM_FUNC_START*() SYM_FUNC_END()
+> macros.
+
+Thanks,
+Al
