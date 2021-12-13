@@ -2,214 +2,285 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A70C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EC5C433F5
 	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243677AbhLMWjH (ORCPT
+        id S243647AbhLMWjI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 17:39:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42540 "EHLO
+        Mon, 13 Dec 2021 17:39:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243649AbhLMWjF (ORCPT
+        with ESMTP id S243651AbhLMWjF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Mon, 13 Dec 2021 17:39:05 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE475C061748
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:39:04 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id r130so16261287pfc.1
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:39:04 -0800 (PST)
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA68C061756
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:39:05 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id i12so16215730pfd.6
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:39:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0MT/vHE1ydzFe9PN6Wp2UZVjSoHcS4dYEtLHlHKEEAM=;
-        b=YGvnvAuqro151EfwgJKAALvz+kJyqgCsgO5oXMZXTc4McLwsP+2Tt2nK/DxNVgXIAe
-         88rUvAL023ldcNApa6EZUZZQCMnNDs8r5Ga8v5HlbnaHudKIDV+KjxVwtgN7uOXFaIbQ
-         a7dRHSLnBFZJQxNZRAjXvCiVr8o65n5n0D94g=
+        bh=AA279o1BLd1IPMvrElk1qRQp3NwWnxyLqgW1QfH2RSA=;
+        b=CisEAwRc7YBWG4xLa3phyPxxBAXkceqQrDqmiiNUoGG9uT3iGaIcQW/MWHHULH3+Qa
+         Q/EyHNAn+tC9WnDly31FLv4ZoNg3A/Ww4sejWBMGcaabTVSbBlnSu+0jbunK4/ptp2pg
+         SkF0PoCsoWMmnj6MDZE8uVSWO378opDUA1kr8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0MT/vHE1ydzFe9PN6Wp2UZVjSoHcS4dYEtLHlHKEEAM=;
-        b=UykwGTSuQH3titGxuEOcl89MK97X2KebX0fYIGXFrAeQolR2QO3GNgPDnDrH6bI/Vs
-         s5nTzC9jl9hAwWUNW3L0VNcfHutw8k/1TTFnB3rmWhKGUKG+/WbrG85QMIfAaSTXChC4
-         4rKaHEolRyhulftBlCBfeYOKXL6Z9lV1axR9vaw69urlogaLRSXIzWawVczfdW7SP7Ye
-         iXMD71oxnxDmteqgXEy99qM/SU+kT0NqYhBhE3yRspAO9syp9e3Zptnk/3dCUslNEpK3
-         eySFkyMHbvhK9KwXq7oqFlk0AblTzDdtO3+AAY9B2jc8yEx6StJMAgzPyP4Qr+ImJFtI
-         EA4w==
-X-Gm-Message-State: AOAM530edo0wP6TZ0MWPsMNMpJcd7e4ptHsAn3YqHdnes/KD+JoQNwGt
-        EcwV24hbUhhw8RGpIPXzw5d2VA==
-X-Google-Smtp-Source: ABdhPJyA0kifmlmp09ULzUkVNS3B5zsL46YKdL6X5gUXjzYwPTvQUN8jwmFIq+nNLfPBsfjYFryetQ==
-X-Received: by 2002:aa7:9a04:0:b0:4a2:ebcd:89a with SMTP id w4-20020aa79a04000000b004a2ebcd089amr981317pfj.60.1639435144258;
+        bh=AA279o1BLd1IPMvrElk1qRQp3NwWnxyLqgW1QfH2RSA=;
+        b=rfHSPfTuggSP2cjPyHz57qzzUTO/WEPC1tD1r7tqBUtEud7BoeNNu0Fx6Z3zp5Adt3
+         8CNVTSfdfKQDsZwGGSyfcS5IQkMXu/HToFtkpahKwOqdWmpR073AlD+ufO3CFxvVllnR
+         +mSWleOFGISLfhLFDh8ilqAgf05Uv8kQbt60+MntkoM9XVV2wNeXpxG2XG8UybOxSc5P
+         OJvqKvBbuC1tQhbNyuoYQzm5lNVggtcD9q2y7YM3gdY1JHk7R3xseH26Q50ZrBj5qo0q
+         SluEJFrtOErZ1AF+Oa+rdVsmfUxO5J+pWPdXtxy8IJjFukAeW8q+84amg6y3ckXfdtnW
+         3aJg==
+X-Gm-Message-State: AOAM530jOUQYWCFNrzm39nnbGMCxmlgaV5OohwwbPb+Ejj1L7NzySwV3
+        DRahziC7Y4Z0K1AMgr+v8et3Wg==
+X-Google-Smtp-Source: ABdhPJyqYBM9zQd5T7wkCm0WBCdXKJbo+rqvd4vfTzrQwvZhGfZWPDfpu/dFPiIuFk7Tk3eG2caZjA==
+X-Received: by 2002:a63:5754:: with SMTP id h20mr1019576pgm.475.1639435144385;
         Mon, 13 Dec 2021 14:39:04 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t13sm13181529pfl.98.2021.12.13.14.39.03
+        by smtp.gmail.com with ESMTPSA id a12sm11205193pgg.28.2021.12.13.14.39.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 13 Dec 2021 14:39:03 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 15/17] scsi: lpfc: Use struct_group() to initialize struct lpfc_cgn_info
-Date:   Mon, 13 Dec 2021 14:33:29 -0800
-Message-Id: <20211213223331.135412-16-keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 17/17] fortify: Work around Clang inlining bugs
+Date:   Mon, 13 Dec 2021 14:33:31 -0800
+Message-Id: <20211213223331.135412-18-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211213223331.135412-1-keescook@chromium.org>
 References: <20211213223331.135412-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4872; h=from:subject; bh=b7Gop8YkIsZSGaBsGHz+xW8brMLq6H3enGBmwNbBTro=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o6LbqKmAkUNnfmlrw0b7QUEamBgQovX0V9gsVd 8MY1kVOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOgAKCRCJcvTf3G3AJtVLD/ 4k62/NuNCnXqabCvHr68q+AQ5zUtY0Xz+S6EU7HgUfTO6Qj6pdWIgl8Mai8sy4Taa+YO0pHT6Gq+hl HTnevazuz76atJOM+gpoVzm0wMuthUzVGIGM9nEv+tB97wdj60ofuJDubae4PNalUR/ttfanHLDefZ JX8TPos1tsLQhPIaKPabzrILLazhZfO0ZagZXPvF45qVuRzLBzjZG0jR+LIvNEw0kuSGcgrFgNnYND 9Lb6hWwrfE8wqnKpcO/JliZ7eXMe8tfVaeZ7KgKwqgCuOMVvSuQJ+bygomAZCCT2jluKGyBpy41bf5 4AhWN1xssa9laAbpaK2Ma/5cMhcWSmHrDZ4gkqHrtpufJjetO1nTDTQRjNMPHlZWx7PUZZd+Gzyb6n lh6bZpRFit8dBAutA2Mi76C0o/qMZxe4L2BumDDP/ycfl5DIzRYgKreOS7iYuatlSM2EqbT3K8+j0f QqxtlMHGeq/MKQ0jCUTP/cztyBExbc5PMJBJnx/K9voPhhTuTT71YXFG4wIpBFTJRoVTgANamLxDAk rA7jLMZV+mzP5jLjaZn5SCyhXb5h3/IHo3wTpYMHM6YmQXK1tj8aLJwk0doq88iT5pdE1r7bfbNNj2 IvJvSrVVaBmMQAg1qmmgy47/ukFQ3EgACgaCJvChAxaaCJpvq8brRmRGhUNQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9699; h=from:subject; bh=jXLxaUJlSk/ETX1ZNQLV/wX5VA7T09i8avo3sLZcDF4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o6A6CMjd4NskEB5NElq3z8H/O+hUvqKNBNdXHZ XMlSjuqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOgAKCRCJcvTf3G3AJsa5D/ 0Sq1OFk+3IOsTieRd5IS/E7SMhJEUUNfrRstkjkpW7WL7hqcfqVtgIACnTRje6pZhtzMs5Ymbt+N1o hDZiXe7aWAOq5DITmYLxyZ/j23uW07cwgLwk4fMtmMyHi2anA3PoVGmFSRWNAeLVbiw3RrvzBaWI8O qmoMEGml1WJSMSZbaDsSv1OgbNm3ZLQerbiTaXMz6MGs21hmk6m3t4jXww0d5g97zgTC1p4pmeisg9 sd2ZLjLho3AkIS1gtxxJOr9m1NNOybA750DhngDUDMncNuftaNkqvtkfU4CDnJYMR05KkWkk4vRMpJ PY93xDjW8w2gxNwbrXI8/5GlbND0UT9UdCmoQSRxluki71bFQcOlQEF3TpDed5e6W1y3li6be4+KS7 LBMo0mPGbyxotzA3Ig2CgQb8VB8dCfE4cgLRGLQiqoWBJstpvnzA2AHrczKt6wf29WNII+eWTjjDWj 8xJgVa5sraKmKyoucmmI6Kn6OD6upZm2CXGVyjkanle+Q6YOiHDbTae9ypdkiS49z2anhApIALPSjD TkNbnIQm+mjydW7hjiuuYhuSqc+3gW3Nix653wxS4YnG3pvHUyCyohJvIp/YBzB7/V9Lsoi0nmbBmo o67i3Ns4bexzjkurRfEWMEs5GtK73Irq2IbMM5w+HVPGqlL+AujM5mTxQLRA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memset(), avoid intentionally writing across
-neighboring fields.
+To enable FORTIFY_SOURCE support for Clang, the kernel must work around
+a pair of bugs, related to Clang's inlining.
 
-Add struct_group() to mark "stat" region of struct lpfc_cgn_info that
-should be initialized to zero, and refactor the "data" region memset()
-to wipe everything up to the cgn_stats region.
+Change all the fortified APIs into macros with different inline names to
+bypass Clang's broken inline-of-a-builtin detection:
+https://bugs.llvm.org/show_bug.cgi?id=50322
 
-Cc: James Smart <james.smart@broadcom.com>
-Cc: Dick Kennedy <dick.kennedy@broadcom.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
+Lift all misbehaving __builtin_object_size() calls into the macros to
+bypass Clang's broken __builtin_object_size() arguments-of-an-inline
+visibility:
+https://github.com/ClangBuiltLinux/linux/issues/1401
+
+Thankfully, due to how the inlining already behaves in GCC, this change
+has no effect on GCC builds, but allows Clang to finally gain full
+FORTIFY coverage.
+
+However, because of a third bug which had no work-arounds, FORTIFY_SOURCE
+will only work with Clang version 13 and later. Update the Kconfig to
+reflect the new requirements.
+
+Clang 14 introduced compiletime_assert() support, so also adjust the
+compile-time warning test to catch Clang's variant of the warning text.
+
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/scsi/lpfc/lpfc.h      | 90 +++++++++++++++++------------------
- drivers/scsi/lpfc/lpfc_init.c |  4 +-
- 2 files changed, 46 insertions(+), 48 deletions(-)
+ include/linux/fortify-string.h | 65 +++++++++++++++++++++-------------
+ scripts/test_fortify.sh        |  8 +++--
+ security/Kconfig               |  2 +-
+ 3 files changed, 48 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 3faadcfcdcbb..4878c94761f9 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -496,52 +496,50 @@ struct lpfc_cgn_info {
- 	__le32   cgn_alarm_hr[24];
- 	__le32   cgn_alarm_day[LPFC_MAX_CGN_DAYS];
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index c45159dbdaa1..04bcf8307f16 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -50,10 +50,10 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
+ #define __underlying_strncpy	__builtin_strncpy
+ #endif
  
--	/* Start of congestion statistics */
--	uint8_t  cgn_stat_npm;		/* Notifications per minute */
+-__FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
++#define strncpy(p, q, s) __fortify_strncpy(p, q, s, __builtin_object_size(p, 1))
++__FORTIFY_INLINE char *__fortify_strncpy(char *p, const char *q,
++					 __kernel_size_t size, size_t p_size)
+ {
+-	size_t p_size = __builtin_object_size(p, 1);
 -
--	/* Start Time */
--	uint8_t  cgn_stat_month;
--	uint8_t  cgn_stat_day;
--	uint8_t  cgn_stat_year;
--	uint8_t  cgn_stat_hour;
--	uint8_t  cgn_stat_minute;
--	uint8_t  cgn_pad2[2];
--
--	__le32   cgn_notification;
--	__le32   cgn_peer_notification;
--	__le32   link_integ_notification;
--	__le32   delivery_notification;
--
--	uint8_t  cgn_stat_cgn_month; /* Last congestion notification FPIN */
--	uint8_t  cgn_stat_cgn_day;
--	uint8_t  cgn_stat_cgn_year;
--	uint8_t  cgn_stat_cgn_hour;
--	uint8_t  cgn_stat_cgn_min;
--	uint8_t  cgn_stat_cgn_sec;
--
--	uint8_t  cgn_stat_peer_month; /* Last peer congestion FPIN */
--	uint8_t  cgn_stat_peer_day;
--	uint8_t  cgn_stat_peer_year;
--	uint8_t  cgn_stat_peer_hour;
--	uint8_t  cgn_stat_peer_min;
--	uint8_t  cgn_stat_peer_sec;
--
--	uint8_t  cgn_stat_lnk_month; /* Last link integrity FPIN */
--	uint8_t  cgn_stat_lnk_day;
--	uint8_t  cgn_stat_lnk_year;
--	uint8_t  cgn_stat_lnk_hour;
--	uint8_t  cgn_stat_lnk_min;
--	uint8_t  cgn_stat_lnk_sec;
--
--	uint8_t  cgn_stat_del_month; /* Last delivery notification FPIN */
--	uint8_t  cgn_stat_del_day;
--	uint8_t  cgn_stat_del_year;
--	uint8_t  cgn_stat_del_hour;
--	uint8_t  cgn_stat_del_min;
--	uint8_t  cgn_stat_del_sec;
--#define LPFC_CGN_STAT_SIZE	48
--#define LPFC_CGN_DATA_SIZE	(sizeof(struct lpfc_cgn_info) -  \
--				LPFC_CGN_STAT_SIZE - sizeof(uint32_t))
-+	struct_group(cgn_stat,
-+		uint8_t  cgn_stat_npm;		/* Notifications per minute */
-+
-+		/* Start Time */
-+		uint8_t  cgn_stat_month;
-+		uint8_t  cgn_stat_day;
-+		uint8_t  cgn_stat_year;
-+		uint8_t  cgn_stat_hour;
-+		uint8_t  cgn_stat_minute;
-+		uint8_t  cgn_pad2[2];
-+
-+		__le32   cgn_notification;
-+		__le32   cgn_peer_notification;
-+		__le32   link_integ_notification;
-+		__le32   delivery_notification;
-+
-+		uint8_t  cgn_stat_cgn_month; /* Last congestion notification FPIN */
-+		uint8_t  cgn_stat_cgn_day;
-+		uint8_t  cgn_stat_cgn_year;
-+		uint8_t  cgn_stat_cgn_hour;
-+		uint8_t  cgn_stat_cgn_min;
-+		uint8_t  cgn_stat_cgn_sec;
-+
-+		uint8_t  cgn_stat_peer_month; /* Last peer congestion FPIN */
-+		uint8_t  cgn_stat_peer_day;
-+		uint8_t  cgn_stat_peer_year;
-+		uint8_t  cgn_stat_peer_hour;
-+		uint8_t  cgn_stat_peer_min;
-+		uint8_t  cgn_stat_peer_sec;
-+
-+		uint8_t  cgn_stat_lnk_month; /* Last link integrity FPIN */
-+		uint8_t  cgn_stat_lnk_day;
-+		uint8_t  cgn_stat_lnk_year;
-+		uint8_t  cgn_stat_lnk_hour;
-+		uint8_t  cgn_stat_lnk_min;
-+		uint8_t  cgn_stat_lnk_sec;
-+
-+		uint8_t  cgn_stat_del_month; /* Last delivery notification FPIN */
-+		uint8_t  cgn_stat_del_day;
-+		uint8_t  cgn_stat_del_year;
-+		uint8_t  cgn_stat_del_hour;
-+		uint8_t  cgn_stat_del_min;
-+		uint8_t  cgn_stat_del_sec;
-+	);
+ 	if (__builtin_constant_p(size) && p_size < size)
+ 		__write_overflow();
+ 	if (p_size < size)
+@@ -73,9 +73,10 @@ __FORTIFY_INLINE char *strcat(char *p, const char *q)
+ }
  
- 	__le32   cgn_info_crc;
- #define LPFC_CGN_CRC32_MAGIC_NUMBER	0x1EDC6F41
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 2fe7d9d885d9..c18000d05379 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -13483,7 +13483,7 @@ lpfc_init_congestion_buf(struct lpfc_hba *phba)
- 	phba->cgn_evt_minute = 0;
- 	phba->hba_flag &= ~HBA_CGN_DAY_WRAP;
+ extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
+-__FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
++#define strnlen(p, s) __fortify_strnlen(p, s, __builtin_object_size(p, 1))
++__FORTIFY_INLINE __kernel_size_t __fortify_strnlen(const char *p, size_t maxlen,
++						   size_t p_size)
+ {
+-	size_t p_size = __builtin_object_size(p, 1);
+ 	size_t p_len = __compiletime_strlen(p);
+ 	size_t ret;
  
--	memset(cp, 0xff, LPFC_CGN_DATA_SIZE);
-+	memset(cp, 0xff, offsetof(struct lpfc_cgn_info, cgn_stat));
- 	cp->cgn_info_size = cpu_to_le16(LPFC_CGN_INFO_SZ);
- 	cp->cgn_info_version = LPFC_CGN_INFO_V3;
+@@ -94,10 +95,10 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
+ }
  
-@@ -13542,7 +13542,7 @@ lpfc_init_congestion_stat(struct lpfc_hba *phba)
- 		return;
+ /* defined after fortified strnlen to reuse it. */
+-__FORTIFY_INLINE __kernel_size_t strlen(const char *p)
++#define strlen(p) __fortify_strlen(p, __builtin_object_size(p, 1))
++__FORTIFY_INLINE __kernel_size_t __fortify_strlen(const char *p, const size_t p_size)
+ {
+ 	__kernel_size_t ret;
+-	size_t p_size = __builtin_object_size(p, 1);
  
- 	cp = (struct lpfc_cgn_info *)phba->cgn_i->virt;
--	memset(&cp->cgn_stat_npm, 0, LPFC_CGN_STAT_SIZE);
-+	memset(&cp->cgn_stat, 0, sizeof(cp->cgn_stat));
+ 	/* Give up if we don't know how large p is. */
+ 	if (p_size == (size_t)-1)
+@@ -110,10 +111,14 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
  
- 	ktime_get_real_ts64(&cmpl_time);
- 	time64_to_tm(cmpl_time.tv_sec, 0, &broken);
+ /* defined after fortified strlen to reuse it */
+ extern size_t __real_strlcpy(char *, const char *, size_t) __RENAME(strlcpy);
+-__FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
++#define strlcpy(p, q, s) __fortify_strlcpy(p, q, s,			\
++					   __builtin_object_size(p, 1),	\
++					   __builtin_object_size(q, 1))
++__FORTIFY_INLINE size_t __fortify_strlcpy(char *p, const char *q,
++					  size_t size,
++					  const size_t p_size,
++					  const size_t q_size)
+ {
+-	size_t p_size = __builtin_object_size(p, 1);
+-	size_t q_size = __builtin_object_size(q, 1);
+ 	size_t q_len;	/* Full count of source string length. */
+ 	size_t len;	/* Count of characters going into destination. */
+ 
+@@ -137,12 +142,15 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
+ 
+ /* defined after fortified strnlen to reuse it */
+ extern ssize_t __real_strscpy(char *, const char *, size_t) __RENAME(strscpy);
+-__FORTIFY_INLINE ssize_t strscpy(char *p, const char *q, size_t size)
++#define strscpy(p, q, s) __fortify_strscpy(p, q, s,			\
++					   __builtin_object_size(p, 1),	\
++					   __builtin_object_size(q, 1))
++__FORTIFY_INLINE ssize_t __fortify_strscpy(char *p, const char *q,
++					   size_t size,
++					   const size_t p_size,
++					   const size_t q_size)
+ {
+ 	size_t len;
+-	/* Use string size rather than possible enclosing struct size. */
+-	size_t p_size = __builtin_object_size(p, 1);
+-	size_t q_size = __builtin_object_size(q, 1);
+ 
+ 	/* If we cannot get size of p and q default to call strscpy. */
+ 	if (p_size == (size_t) -1 && q_size == (size_t) -1)
+@@ -183,11 +191,13 @@ __FORTIFY_INLINE ssize_t strscpy(char *p, const char *q, size_t size)
+ }
+ 
+ /* defined after fortified strlen and strnlen to reuse them */
+-__FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
++#define strncat(p, q, count)	__fortify_strncat(p, q, count, \
++						  __builtin_object_size(p, 1), \
++						  __builtin_object_size(q, 1))
++__FORTIFY_INLINE char *__fortify_strncat(char *p, const char *q, size_t count,
++					 size_t p_size, size_t q_size)
+ {
+ 	size_t p_len, copy_len;
+-	size_t p_size = __builtin_object_size(p, 1);
+-	size_t q_size = __builtin_object_size(q, 1);
+ 
+ 	if (p_size == (size_t)-1 && q_size == (size_t)-1)
+ 		return __underlying_strncat(p, q, count);
+@@ -354,7 +364,8 @@ __FORTIFY_INLINE void fortify_memcpy_chk(__kernel_size_t size,
+ 		memmove)
+ 
+ extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memscan);
+-__FORTIFY_INLINE void *memscan(void *p, int c, __kernel_size_t size)
++#define memscan(p, c, s) __fortify_memscan(p, c, s)
++__FORTIFY_INLINE void *__fortify_memscan(void *p, int c, __kernel_size_t size)
+ {
+ 	size_t p_size = __builtin_object_size(p, 0);
+ 
+@@ -365,7 +376,8 @@ __FORTIFY_INLINE void *memscan(void *p, int c, __kernel_size_t size)
+ 	return __real_memscan(p, c, size);
+ }
+ 
+-__FORTIFY_INLINE int memcmp(const void *p, const void *q, __kernel_size_t size)
++#define memcmp(p, q, s) __fortify_memcmp(p, q, s)
++__FORTIFY_INLINE int __fortify_memcmp(const void *p, const void *q, __kernel_size_t size)
+ {
+ 	size_t p_size = __builtin_object_size(p, 0);
+ 	size_t q_size = __builtin_object_size(q, 0);
+@@ -381,7 +393,8 @@ __FORTIFY_INLINE int memcmp(const void *p, const void *q, __kernel_size_t size)
+ 	return __underlying_memcmp(p, q, size);
+ }
+ 
+-__FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
++#define memchr(p, c, s) __fortify_memchr(p, c, s)
++__FORTIFY_INLINE void *__fortify_memchr(const void *p, int c, __kernel_size_t size)
+ {
+ 	size_t p_size = __builtin_object_size(p, 0);
+ 
+@@ -393,7 +406,8 @@ __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
+ }
+ 
+ void *__real_memchr_inv(const void *s, int c, size_t n) __RENAME(memchr_inv);
+-__FORTIFY_INLINE void *memchr_inv(const void *p, int c, size_t size)
++#define memchr_inv(p, c, s) __fortify_memchr_inv(p, c, s)
++__FORTIFY_INLINE void *__fortify_memchr_inv(const void *p, int c, size_t size)
+ {
+ 	size_t p_size = __builtin_object_size(p, 0);
+ 
+@@ -417,10 +431,13 @@ __FORTIFY_INLINE void *kmemdup(const void *p, size_t size, gfp_t gfp)
+ }
+ 
+ /* Defined after fortified strlen to reuse it. */
+-__FORTIFY_INLINE char *strcpy(char *p, const char *q)
++#define strcpy(p, q) __fortify_strcpy(p, q,				\
++				      __builtin_object_size(p, 1),	\
++				      __builtin_object_size(q, 1))
++__FORTIFY_INLINE char *__fortify_strcpy(char *p, const char *q,
++					const size_t p_size,
++					const size_t q_size)
+ {
+-	size_t p_size = __builtin_object_size(p, 1);
+-	size_t q_size = __builtin_object_size(q, 1);
+ 	size_t size;
+ 
+ 	/* If neither buffer size is known, immediately give up. */
+diff --git a/scripts/test_fortify.sh b/scripts/test_fortify.sh
+index a4da365508f0..c2688ab8281d 100644
+--- a/scripts/test_fortify.sh
++++ b/scripts/test_fortify.sh
+@@ -46,8 +46,12 @@ if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
+ 		status="warning: unsafe ${FUNC}() usage lacked '$WANT' symbol in $IN"
+ 	fi
+ else
+-	# If the build failed, check for the warning in the stderr (gcc).
+-	if ! grep -q -m1 "error: call to .\b${WANT}\b." "$TMP" ; then
++	# If the build failed, check for the warning in the stderr.
++	# GCC:
++	# ./include/linux/fortify-string.h:316:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
++	# Clang 14:
++	# ./include/linux/fortify-string.h:316:4: error: call to __write_overflow_field declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
++	if ! grep -Eq -m1 "error: call to .?\b${WANT}\b.?" "$TMP" ; then
+ 		status="warning: unsafe ${FUNC}() usage lacked '$WANT' warning in $IN"
+ 	fi
+ fi
+diff --git a/security/Kconfig b/security/Kconfig
+index 0b847f435beb..1a25a567965f 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -179,7 +179,7 @@ config FORTIFY_SOURCE
+ 	depends on ARCH_HAS_FORTIFY_SOURCE
+ 	# https://bugs.llvm.org/show_bug.cgi?id=50322
+ 	# https://bugs.llvm.org/show_bug.cgi?id=41459
+-	depends on !CC_IS_CLANG
++	depends on !CC_IS_CLANG || CLANG_VERSION >= 130000
+ 	help
+ 	  Detect overflows of buffers in common string and memory functions
+ 	  where the compiler can determine and validate the buffer sizes.
 -- 
 2.30.2
 
