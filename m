@@ -2,62 +2,68 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911C7C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F52C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243659AbhLMWds (ORCPT
+        id S243682AbhLMWd5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 17:33:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41084 "EHLO
+        Mon, 13 Dec 2021 17:33:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243599AbhLMWdj (ORCPT
+        with ESMTP id S243680AbhLMWdu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 17:33:39 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56313C06173F
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:39 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id f18-20020a17090aa79200b001ad9cb23022so14519223pjq.4
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:39 -0800 (PST)
+        Mon, 13 Dec 2021 17:33:50 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3092AC061D76
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:42 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id o14so12201244plg.5
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VZNwW/9OvsTV+qiT9UTy8s+5iJpx7ikW0euH58EBkfg=;
-        b=NH3Cm+/syr/5xH9ERMY6nynRgidgBKfGUOPYwvA0S8g5losLW55MQ15c9wEJ1GIsLw
-         6udRqMoOIYxmjEV5xF/iD03rdu5qnPxmCpemrM4PdQkAt9aFzaji7xKckzWKA11a5B7X
-         CZODHSGzhf7pxXXCxuQcEcSNDS8YsXPVy6EcU=
+        bh=I3eqcTIWiC+KHyQNr9D4gbvRaeijCgA+zD3SwshilTo=;
+        b=bSotBO1SifpAEcn65dx6taJwcyVfz70TuvaLmRPzGaoK9y1HTyzmxWlb/dtNfrgYEQ
+         8epiPZSD71JVyY8D/Nwlrsil5OLe5OWwJmyUOOCx+9P0CSr7rJHBN/vWbZq9dbLt/pXb
+         8iiXLz+CqQlt+qI4AGu7Dtxt9SHIHEV7m8T9I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VZNwW/9OvsTV+qiT9UTy8s+5iJpx7ikW0euH58EBkfg=;
-        b=16hPKK/5P7cQOnT+a2wDxl8Uw8s90eIsJkTyorC/bkxsthu5yDe4dNiRd3yn2P43UC
-         60rsBiZFb7jSW+dT0UO3Owm4cCRUGF3mpVDeuUFICl4yx2rdcJObrf3l6meH//jJad5u
-         LF6CEDr7XfMKnxr9/wrDWe75IbP27e7JG3FIrBp8/y2wAG3FuIFOBRnrfY5cPJTu2OaS
-         KnKp/oGnt6Q9XoH6/3Vmdxjh+8IW0tONE1h1BY3UF9VmU4+On84tbChzsCSObK7cmUjw
-         WuTruJ/r0CgbpiybZR5UBjJ4jy016XIXcIXOcADO+C0a94LYvBPywNDMQ344MEhwRhL1
-         H/BA==
-X-Gm-Message-State: AOAM531p86JkcmilGjV4865d0EQ3YGLoGigmUCT91KDUrHzhWog3/KYK
-        Mvpju45bN49psaN9knL435OeRzfhi6ogeg==
-X-Google-Smtp-Source: ABdhPJwKT+0xgRk2d57afPpPfd4FYioMYH89TzHnCO2B2FQX5nKanmNkPh07nocEglnADxkKKkkfVA==
-X-Received: by 2002:a17:90b:4f84:: with SMTP id qe4mr1293960pjb.102.1639434818728;
-        Mon, 13 Dec 2021 14:33:38 -0800 (PST)
+        bh=I3eqcTIWiC+KHyQNr9D4gbvRaeijCgA+zD3SwshilTo=;
+        b=gWOWu3bxzPyE/WM8nrXyhWcvqkwgUez6mjP7DaryXV+FmpHiJTOxeVR2ACwcgEwxwp
+         joQZZuD84kZ8uIbnzhio6nMxRomxA+QgscFxMUYaV/eW8xJCj+7/Om73VMPSveGj77Yu
+         Hxfd/SeXbfomWZEA7saPdvw30XVt5KoaxTFSiGn/d94ydcT8FIwcrFuLnu8pyCXKleDj
+         SCTR8Q9sJC0eltJqusJ1sV2iaqLKfUupbpMOGMEg5kVKY34vvQA/fUUide6JuQPWbJEB
+         r10bBeJ9Pvfg5AOVOjiLQUTjfN1kAw1WURKrzzuFwWRn7LWGQVoABcQ5UZ2h8gVqfWvB
+         sUww==
+X-Gm-Message-State: AOAM5306nr5k9el/RQ3H+Ki1VRf+GkwwlHBCiIFj8ZWB3Ml40RbSwr3V
+        Ra/37PuHvN4OPv4uBeW9LI4jkg==
+X-Google-Smtp-Source: ABdhPJydJaUt968ItHIsV+C+S8DmxMrxQt/Lk2QzQLpgJNl2hHaYMZ8aIZwavexDYTU8q4oLhCgpOw==
+X-Received: by 2002:a17:90b:e83:: with SMTP id fv3mr1153098pjb.115.1639434821738;
+        Mon, 13 Dec 2021 14:33:41 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k2sm14588219pfc.53.2021.12.13.14.33.37
+        by smtp.gmail.com with ESMTPSA id q17sm14966913pfu.117.2021.12.13.14.33.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 14:33:37 -0800 (PST)
+        Mon, 13 Dec 2021 14:33:40 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 05/17] sata_fsl: Use struct_group() for memcpy() region
-Date:   Mon, 13 Dec 2021 14:33:19 -0800
-Message-Id: <20211213223331.135412-6-keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 12/17] iw_cxgb4: Use memset_startat() for cpl_t5_pass_accept_rpl
+Date:   Mon, 13 Dec 2021 14:33:26 -0800
+Message-Id: <20211213223331.135412-13-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211213223331.135412-1-keescook@chromium.org>
 References: <20211213223331.135412-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2051; h=from:subject; bh=xjmOZ6hvD4alrAJgxUmOWZ9wXhl8T0JJv7fV13v9FkM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o3LdWv0XJ6IO5ViP/ddJkOmEUD9tsspbNlh28V CdXNcV2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKNwAKCRCJcvTf3G3AJkGkD/ 0fbKX1w+xTbyOLXyjwIZ4ymK2oxp713yRgI8PwrtAgZyhbm+wteIcDOEKpj2oZfrUv6KolOyCp/NSw ptVZnx8vr6WOJ3CQpClqS1QAd1t7gx27Ml/aZMaT3xvNNRD/R/qk+fkmjPok8vNBrDLSqqdNYRajZy OOD2Rfoq5GjZjTKMA0sYDSir/Sv9vYm1n4YYLlhDFTX+S0ufYDF2DyUDWtWh+7mbT4cTicdPymoZcq aUXD7W7ggQGeEH8+PLVfwwKgwdTFNsJ8KIvunT0BZNSgje1C28UiUb4nLnZdn14ra2u+FmNY3k2WEU 1/bbgAjZ42QM4vNdtQ7NBdhfaqS7yBLwLDR2991hxuUXQcAFGBDitD7yy1J3fRPtcqZg8Xv8V7EMA9 8KpQBg9I8VKFk7Ks17mAz5x+crM9pLZXGLHIY3F0D7oZ1SGILs2q6FPz5CIdiXtONI46dn0zjWlzJB t2aZo9V0Hg/gcJbuQNRAagsY1bSfwFEm6pxLX0MFwTxMzvIXxkn8P1IFAIeIUVHbweeEpCm1wN94cc ois/y9GcQ6ZTw9+BtD/JF9U5c5gdEcu08ZFyY5iXMuVTe1zQVeYIIau+boAu/cpSsRAftxXwft3Yj6 xl6TTEN1YVdYj+e9F5GC7rhvP7Kmk/9hESx3E5ZhCgGhyjUMypOtCgz2G4Uw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2404; h=from:subject; bh=NRZzV2Wm+qN1hLpw7oPDOvO2yOStk7XcopUutjYf66w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o5I5L7op6wxBNo8ZoE2HZhjRGQ3UxHlr8nNIus yAqJvR6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOQAKCRCJcvTf3G3AJp1zD/ 9jAFtNeIQm4EewUKA78ifdR6IkV6fNLr41dqbxD0xSgeQS7WokCTQXDEw8OfoPXzLUR0Jdi66DbXNg KG+CiCejrRqs6r08bnPj02LGJEyYzQ7ZwUShJC7B1rJ4Tn7NIVLWlKK29Wbi+eocXdHhSFKezYG3SQ 6Ltml+Nij5zu1T9ZZk09JiJg8zP3JekDyjIq7BGuZWAhddAU/l/C4eLIFQcFaF7huoImo3aXgVVVyI H19k9KJR9zQPTsr8wrHwCVVmlaQISb3Wy8DXFFBwFHz6K7L4mse4I3HxL64l/wJzZbpqVfJ4OXiyyU eIk2EekyUx8315bGoYkRryWNwIlFmiwOJsx9ZGX4HDKGqCGbrOFfAVUzn3rvJEjiBVCoqXxoU47qFq DW6AMqHa4Z2J5I+fsEdrarF+6Rs9MWFeOlPvt0KMsLCCDAgqiKiwK+RYNpR23zuSxXCUi5LjZbIySf OLs7o0i5LHW5129oVTW+uQELXJbUBN/EW9FJEd9GmR6USXdaFAK5+nbAJVZBuC33NIKnkwN09UcGMr LYIkrtghJWNmsCfcZXFJH/ZnAkh07XbcEjVILyAt2qfoTTD4zTJbBGjMdUumewIKLCurQoVF4LvpDL IJu5l+8Fr4zZRE80JbW+hvIlyij8sNL/K7c+cvFvR39dgMXtliIXLXRzui3g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -65,55 +71,66 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+field bounds checking for memset(), avoid intentionally writing across
+neighboring fields.
 
-Use struct_group() in struct command_desc around members acmd and fill,
-so they can be referenced together. This will allow memset(), memcpy(),
-and sizeof() to more easily reason about sizes, improve readability,
-and avoid future warnings about writing beyond the end of acmd:
+Use memset_startat() so memset() doesn't get confused about writing
+beyond the destination member that is intended to be the starting point
+of zeroing through the end of the struct. Additionally, since everything
+appears to perform a roundup (including allocation), just change the
+size of the struct itself and add a build-time check to validate the
+expected size.
 
-In function 'fortify_memset_chk',
-    inlined from 'sata_fsl_qc_prep' at drivers/ata/sata_fsl.c:534:3:
-./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-  199 |    __write_overflow_field();
-      |    ^~~~~~~~~~~~~~~~~~~~~~~~
-
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: linux-ide@vger.kernel.org
+Cc: Potnuri Bharat Teja <bharat@chelsio.com>
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Raju Rangoju <rajur@chelsio.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-rdma@vger.kernel.org
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/ata/sata_fsl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/cxgb4/cm.c            | 5 +++--
+ drivers/net/ethernet/chelsio/cxgb4/t4_msg.h | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
-index 3b31a4f596d8..c5a2c1e9ed6b 100644
---- a/drivers/ata/sata_fsl.c
-+++ b/drivers/ata/sata_fsl.c
-@@ -246,8 +246,10 @@ enum {
- struct command_desc {
- 	u8 cfis[8 * 4];
- 	u8 sfis[8 * 4];
--	u8 acmd[4 * 4];
--	u8 fill[4 * 4];
-+	struct_group(cdb,
-+		u8 acmd[4 * 4];
-+		u8 fill[4 * 4];
-+	);
- 	u32 prdt[SATA_FSL_MAX_PRD_DIRECT * 4];
- 	u32 prdt_indirect[(SATA_FSL_MAX_PRD - SATA_FSL_MAX_PRD_DIRECT) * 4];
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index 913f39ee4416..c16017f6e8db 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -2471,7 +2471,8 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
+ 	skb_get(skb);
+ 	rpl = cplhdr(skb);
+ 	if (!is_t4(adapter_type)) {
+-		skb_trim(skb, roundup(sizeof(*rpl5), 16));
++		BUILD_BUG_ON(sizeof(*rpl5) != roundup(sizeof(*rpl5), 16));
++		skb_trim(skb, sizeof(*rpl5));
+ 		rpl5 = (void *)rpl;
+ 		INIT_TP_WR(rpl5, ep->hwtid);
+ 	} else {
+@@ -2487,7 +2488,7 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
+ 		opt2 |= CONG_CNTRL_V(CONG_ALG_TAHOE);
+ 		opt2 |= T5_ISS_F;
+ 		rpl5 = (void *)rpl;
+-		memset(&rpl5->iss, 0, roundup(sizeof(*rpl5)-sizeof(*rpl), 16));
++		memset_after(rpl5, 0, iss);
+ 		if (peer2peer)
+ 			isn += 4;
+ 		rpl5->iss = cpu_to_be32(isn);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h b/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
+index fed5f93bf620..26433a62d7f0 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
+@@ -497,7 +497,7 @@ struct cpl_t5_pass_accept_rpl {
+ 	__be32 opt2;
+ 	__be64 opt0;
+ 	__be32 iss;
+-	__be32 rsvd;
++	__be32 rsvd[3];
  };
-@@ -531,8 +533,8 @@ static enum ata_completion_errors sata_fsl_qc_prep(struct ata_queued_cmd *qc)
- 	/* setup "ACMD - atapi command" in cmd. desc. if this is ATAPI cmd */
- 	if (ata_is_atapi(qc->tf.protocol)) {
- 		desc_info |= ATAPI_CMD;
--		memset((void *)&cd->acmd, 0, 32);
--		memcpy((void *)&cd->acmd, qc->cdb, qc->dev->cdb_len);
-+		memset(&cd->cdb, 0, sizeof(cd->cdb));
-+		memcpy(&cd->cdb, qc->cdb, qc->dev->cdb_len);
- 	}
  
- 	if (qc->flags & ATA_QCFLAG_DMAMAP)
+ struct cpl_act_open_req {
 -- 
 2.30.2
 
