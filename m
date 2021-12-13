@@ -2,61 +2,62 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534C9C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911C7C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243601AbhLMWdj (ORCPT
+        id S243659AbhLMWds (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 17:33:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41062 "EHLO
+        Mon, 13 Dec 2021 17:33:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243591AbhLMWdi (ORCPT
+        with ESMTP id S243599AbhLMWdj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 17:33:38 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47146C0613FE
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:38 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id n8so12212704plf.4
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:38 -0800 (PST)
+        Mon, 13 Dec 2021 17:33:39 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56313C06173F
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:39 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id f18-20020a17090aa79200b001ad9cb23022so14519223pjq.4
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Fn4qb4VpnpL9cHIDHm8PVw/axI2OCAjJYGYPjq+lmCU=;
-        b=MGrKvzUiWWYOkeqn57fgoFY4N5BmaLdmwhcqxBB90I1icKBQeZyY42PsaYvBVzBQsg
-         tF8YXsB1j3coRnNIxTN4s15iw2HqBBo0iuLUCNWl1r1Zco1OV2jna5iOFQUFTtvXXUn/
-         YPxigWjO9EcNwOHY7xZRDDyrvZ7i3me+Mi/lY=
+        bh=VZNwW/9OvsTV+qiT9UTy8s+5iJpx7ikW0euH58EBkfg=;
+        b=NH3Cm+/syr/5xH9ERMY6nynRgidgBKfGUOPYwvA0S8g5losLW55MQ15c9wEJ1GIsLw
+         6udRqMoOIYxmjEV5xF/iD03rdu5qnPxmCpemrM4PdQkAt9aFzaji7xKckzWKA11a5B7X
+         CZODHSGzhf7pxXXCxuQcEcSNDS8YsXPVy6EcU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Fn4qb4VpnpL9cHIDHm8PVw/axI2OCAjJYGYPjq+lmCU=;
-        b=5i41SJ9+n1rAcOpnVCFhpeXEcdLFZXauXVLUOpa4l2gVpPaBc7bG/EVvbrDxP1iB6k
-         Qmv47bVbOruN21BcGUN3FQpH6MpErdokIKa+6hTH4FiniZX66NNbcJ2vpq/JSyxi7zal
-         BaY4H1/YdjZJNAb2NU+YX7D6B4aNMZnX9KLhcz5rJvUYuoWgQ0+MZAR6jMGu2fg5956H
-         RyPdKSo5OeAELBR8J69qbaJCQQkGT2yEDPi1M4bP/HlpUDQAq25bNnJFKOXe7tDFmr3I
-         LP8kd+sZFjSuEOnwjIZ1q86xbqRxBywmtn6xXx9+QhOzLGn+lNWD7Jb5ulevVZBz9ovA
-         qMzw==
-X-Gm-Message-State: AOAM531ljvvJUAQ0gvszS4J/lY2q4ukBDhjMMmx+/0vIAFJH8flkS9Vj
-        uk211uDXkr2JgpiNiO5SnXj1eA==
-X-Google-Smtp-Source: ABdhPJzmw78A+daFoOvnev4exAfarxyzvjBiG71x9KHt11gUHMBmgFvCAzgFQCBRvUvUx2gTZtsohg==
-X-Received: by 2002:a17:90b:1d91:: with SMTP id pf17mr1170087pjb.230.1639434817765;
-        Mon, 13 Dec 2021 14:33:37 -0800 (PST)
+        bh=VZNwW/9OvsTV+qiT9UTy8s+5iJpx7ikW0euH58EBkfg=;
+        b=16hPKK/5P7cQOnT+a2wDxl8Uw8s90eIsJkTyorC/bkxsthu5yDe4dNiRd3yn2P43UC
+         60rsBiZFb7jSW+dT0UO3Owm4cCRUGF3mpVDeuUFICl4yx2rdcJObrf3l6meH//jJad5u
+         LF6CEDr7XfMKnxr9/wrDWe75IbP27e7JG3FIrBp8/y2wAG3FuIFOBRnrfY5cPJTu2OaS
+         KnKp/oGnt6Q9XoH6/3Vmdxjh+8IW0tONE1h1BY3UF9VmU4+On84tbChzsCSObK7cmUjw
+         WuTruJ/r0CgbpiybZR5UBjJ4jy016XIXcIXOcADO+C0a94LYvBPywNDMQ344MEhwRhL1
+         H/BA==
+X-Gm-Message-State: AOAM531p86JkcmilGjV4865d0EQ3YGLoGigmUCT91KDUrHzhWog3/KYK
+        Mvpju45bN49psaN9knL435OeRzfhi6ogeg==
+X-Google-Smtp-Source: ABdhPJwKT+0xgRk2d57afPpPfd4FYioMYH89TzHnCO2B2FQX5nKanmNkPh07nocEglnADxkKKkkfVA==
+X-Received: by 2002:a17:90b:4f84:: with SMTP id qe4mr1293960pjb.102.1639434818728;
+        Mon, 13 Dec 2021 14:33:38 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f19sm13254844pfv.76.2021.12.13.14.33.36
+        by smtp.gmail.com with ESMTPSA id k2sm14588219pfc.53.2021.12.13.14.33.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 14:33:36 -0800 (PST)
+        Mon, 13 Dec 2021 14:33:37 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/17] media: omap3isp: Use struct_group() for memcpy() region
-Date:   Mon, 13 Dec 2021 14:33:18 -0800
-Message-Id: <20211213223331.135412-5-keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 05/17] sata_fsl: Use struct_group() for memcpy() region
+Date:   Mon, 13 Dec 2021 14:33:19 -0800
+Message-Id: <20211213223331.135412-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211213223331.135412-1-keescook@chromium.org>
 References: <20211213223331.135412-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4159; h=from:subject; bh=N8+9iw8eqkBRgOadkosB8PfBprAVHbU1wOrwAnD7q94=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o3kQlqNDs1/r/+sQ/zvIpk0El6fooUUdbkO+q+ oXwrSJ6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKNwAKCRCJcvTf3G3AJjCYD/ 9D3jU3IhaQXXacX0dcrEEz/l+hhTkwbzBkFV5oKBBTe8yn0EIeHoBoSplsiNSK7qMppTkqrTig0R6J So7n62bKE0Rp01Yo0T8XbnFxh1O/On3ETblixOtcx0AoPmyLEGDAKptWWcPn4vQrAhuZlxh2+Phq/G nKaKc04HShNAM6qECpbU9xrjp7jf5mcvDpiF80qEKlsNXNfINehdfkXML10YaYhed8AkzTD/Uc+TU4 IEQd5yU6Y87oXemlhbD8+nB6d7Hxu6aDVda10ZAE0x+8r4xzIRdlDa+TuLw5owVQIIVbSW7ku8gDC9 M8T9iajSZ/wwOuqGMLEH0a0OfFAjbCf9Mvg7hZhdY5T7scV4oV0f6vRp9QgBj6U8ShPil5wbQ14PrK bn16CwTKbPVK3gGbNzK/HiS16n4Pw4Ny4no6eYWWk+ZM7xzM3jFEJXpWjCxt5Q6Vy98McS5d40xjSB Z/+FskVG7cZ47Tbxw/tZi2MJP8J+PzT6L931KE89GwQfVdtVndIB6P2t3j/agm54RecP2kkl3NRsSr LKgy8SeQqNKnkcbQppLx3x83TNYsXD/yurpKpv1jOBR89F9SIpkSR8hoozE/1+V2fLxDCPIMtTU7JY MRD8GGSP5Leltli1d5SEEQiuzU7VdpVNBUnbSt4+JntubgShWwQNM8AC4vqg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2051; h=from:subject; bh=xjmOZ6hvD4alrAJgxUmOWZ9wXhl8T0JJv7fV13v9FkM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o3LdWv0XJ6IO5ViP/ddJkOmEUD9tsspbNlh28V CdXNcV2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKNwAKCRCJcvTf3G3AJkGkD/ 0fbKX1w+xTbyOLXyjwIZ4ymK2oxp713yRgI8PwrtAgZyhbm+wteIcDOEKpj2oZfrUv6KolOyCp/NSw ptVZnx8vr6WOJ3CQpClqS1QAd1t7gx27Ml/aZMaT3xvNNRD/R/qk+fkmjPok8vNBrDLSqqdNYRajZy OOD2Rfoq5GjZjTKMA0sYDSir/Sv9vYm1n4YYLlhDFTX+S0ufYDF2DyUDWtWh+7mbT4cTicdPymoZcq aUXD7W7ggQGeEH8+PLVfwwKgwdTFNsJ8KIvunT0BZNSgje1C28UiUb4nLnZdn14ra2u+FmNY3k2WEU 1/bbgAjZ42QM4vNdtQ7NBdhfaqS7yBLwLDR2991hxuUXQcAFGBDitD7yy1J3fRPtcqZg8Xv8V7EMA9 8KpQBg9I8VKFk7Ks17mAz5x+crM9pLZXGLHIY3F0D7oZ1SGILs2q6FPz5CIdiXtONI46dn0zjWlzJB t2aZo9V0Hg/gcJbuQNRAagsY1bSfwFEm6pxLX0MFwTxMzvIXxkn8P1IFAIeIUVHbweeEpCm1wN94cc ois/y9GcQ6ZTw9+BtD/JF9U5c5gdEcu08ZFyY5iXMuVTe1zQVeYIIau+boAu/cpSsRAftxXwft3Yj6 xl6TTEN1YVdYj+e9F5GC7rhvP7Kmk/9hESx3E5ZhCgGhyjUMypOtCgz2G4Uw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -65,118 +66,54 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields. Wrap the target region
-in struct_group(). This additionally fixes a theoretical misalignment
-of the copy (since the size of "buf" changes between 64-bit and 32-bit,
-but this is likely never built for 64-bit).
+intentionally writing across neighboring fields.
 
-FWIW, I think this code is totally broken on 64-bit (which appears to
-not be a "real" build configuration): it would either always fail (with
-an uninitialized data->buf_size) or would cause corruption in userspace
-due to the copy_to_user() in the call path against an uninitialized
-data->buf value:
+Use struct_group() in struct command_desc around members acmd and fill,
+so they can be referenced together. This will allow memset(), memcpy(),
+and sizeof() to more easily reason about sizes, improve readability,
+and avoid future warnings about writing beyond the end of acmd:
 
-omap3isp_stat_request_statistics_time32(...)
-    struct omap3isp_stat_data data64;
-    ...
-    omap3isp_stat_request_statistics(stat, &data64);
+In function 'fortify_memset_chk',
+    inlined from 'sata_fsl_qc_prep' at drivers/ata/sata_fsl.c:534:3:
+./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+  199 |    __write_overflow_field();
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~
 
-int omap3isp_stat_request_statistics(struct ispstat *stat,
-                                     struct omap3isp_stat_data *data)
-    ...
-    buf = isp_stat_buf_get(stat, data);
-
-static struct ispstat_buffer *isp_stat_buf_get(struct ispstat *stat,
-                                               struct omap3isp_stat_data *data)
-...
-    if (buf->buf_size > data->buf_size) {
-            ...
-            return ERR_PTR(-EINVAL);
-    }
-    ...
-    rval = copy_to_user(data->buf,
-                        buf->virt_addr,
-                        buf->buf_size);
-
-Regardless, additionally initialize data64 to be zero-filled to avoid
-undefined behavior.
-
-Fixes: 378e3f81cb56 ("media: omap3isp: support 64-bit version of omap3isp_stat_data")
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/media/platform/omap3isp/ispstat.c |  5 +++--
- include/uapi/linux/omap3isp.h             | 21 +++++++++++++--------
- 2 files changed, 16 insertions(+), 10 deletions(-)
+ drivers/ata/sata_fsl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
-index 5b9b57f4d9bf..68cf68dbcace 100644
---- a/drivers/media/platform/omap3isp/ispstat.c
-+++ b/drivers/media/platform/omap3isp/ispstat.c
-@@ -512,7 +512,7 @@ int omap3isp_stat_request_statistics(struct ispstat *stat,
- int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
- 					struct omap3isp_stat_data_time32 *data)
- {
--	struct omap3isp_stat_data data64;
-+	struct omap3isp_stat_data data64 = { };
- 	int ret;
- 
- 	ret = omap3isp_stat_request_statistics(stat, &data64);
-@@ -521,7 +521,8 @@ int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
- 
- 	data->ts.tv_sec = data64.ts.tv_sec;
- 	data->ts.tv_usec = data64.ts.tv_usec;
--	memcpy(&data->buf, &data64.buf, sizeof(*data) - sizeof(data->ts));
-+	data->buf = (uintptr_t)data64.buf;
-+	memcpy(&data->frame, &data64.frame, sizeof(data->frame));
- 
- 	return 0;
- }
-diff --git a/include/uapi/linux/omap3isp.h b/include/uapi/linux/omap3isp.h
-index 87b55755f4ff..d9db7ad43890 100644
---- a/include/uapi/linux/omap3isp.h
-+++ b/include/uapi/linux/omap3isp.h
-@@ -162,6 +162,7 @@ struct omap3isp_h3a_aewb_config {
-  * struct omap3isp_stat_data - Statistic data sent to or received from user
-  * @ts: Timestamp of returned framestats.
-  * @buf: Pointer to pass to user.
-+ * @buf_size: Size of buffer.
-  * @frame_number: Frame number of requested stats.
-  * @cur_frame: Current frame number being processed.
-  * @config_counter: Number of the configuration associated with the data.
-@@ -176,10 +177,12 @@ struct omap3isp_stat_data {
- 	struct timeval ts;
- #endif
- 	void __user *buf;
--	__u32 buf_size;
--	__u16 frame_number;
--	__u16 cur_frame;
--	__u16 config_counter;
-+	__struct_group(/* no tag */, frame, /* no attrs */,
-+		__u32 buf_size;
-+		__u16 frame_number;
-+		__u16 cur_frame;
-+		__u16 config_counter;
+diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
+index 3b31a4f596d8..c5a2c1e9ed6b 100644
+--- a/drivers/ata/sata_fsl.c
++++ b/drivers/ata/sata_fsl.c
+@@ -246,8 +246,10 @@ enum {
+ struct command_desc {
+ 	u8 cfis[8 * 4];
+ 	u8 sfis[8 * 4];
+-	u8 acmd[4 * 4];
+-	u8 fill[4 * 4];
++	struct_group(cdb,
++		u8 acmd[4 * 4];
++		u8 fill[4 * 4];
 +	);
+ 	u32 prdt[SATA_FSL_MAX_PRD_DIRECT * 4];
+ 	u32 prdt_indirect[(SATA_FSL_MAX_PRD - SATA_FSL_MAX_PRD_DIRECT) * 4];
  };
+@@ -531,8 +533,8 @@ static enum ata_completion_errors sata_fsl_qc_prep(struct ata_queued_cmd *qc)
+ 	/* setup "ACMD - atapi command" in cmd. desc. if this is ATAPI cmd */
+ 	if (ata_is_atapi(qc->tf.protocol)) {
+ 		desc_info |= ATAPI_CMD;
+-		memset((void *)&cd->acmd, 0, 32);
+-		memcpy((void *)&cd->acmd, qc->cdb, qc->dev->cdb_len);
++		memset(&cd->cdb, 0, sizeof(cd->cdb));
++		memcpy(&cd->cdb, qc->cdb, qc->dev->cdb_len);
+ 	}
  
- #ifdef __KERNEL__
-@@ -189,10 +192,12 @@ struct omap3isp_stat_data_time32 {
- 		__s32	tv_usec;
- 	} ts;
- 	__u32 buf;
--	__u32 buf_size;
--	__u16 frame_number;
--	__u16 cur_frame;
--	__u16 config_counter;
-+	__struct_group(/* no tag */, frame, /* no attrs */,
-+		__u32 buf_size;
-+		__u16 frame_number;
-+		__u16 cur_frame;
-+		__u16 config_counter;
-+	);
- };
- #endif
- 
+ 	if (qc->flags & ATA_QCFLAG_DMAMAP)
 -- 
 2.30.2
 
