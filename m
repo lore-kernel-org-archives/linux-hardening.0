@@ -2,70 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF4CC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 13:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED6EC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 13:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233117AbhLMN15 (ORCPT
+        id S238316AbhLMNyT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 08:27:57 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:29188 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231784AbhLMN1z (ORCPT
+        Mon, 13 Dec 2021 08:54:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231211AbhLMNyT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 08:27:55 -0500
-Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4JCMhP43nxz972c;
-        Mon, 13 Dec 2021 21:25:41 +0800 (CST)
-Received: from ubuntu1804.huawei.com (10.67.174.58) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Mon, 13 Dec 2021 21:27:52 +0800
-From:   Xiu Jianfeng <xiujianfeng@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
-        <longman@redhat.com>, <boqun.feng@gmail.com>
-CC:     <wangweiyang2@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <keescook@chromium.org>
-Subject: [PATCH -next] lockdep: Use memset_startat() helper in reinit_class()
-Date:   Mon, 13 Dec 2021 21:26:18 +0800
-Message-ID: <20211213132618.105737-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Dec 2021 08:54:19 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46686C061574
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 05:54:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D0AF9B80EC1
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 13:54:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93027C34602
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 13:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639403656;
+        bh=UaGChbXAvxs5XfH4yX3u3Nh9h6RmDa0yGal7bOYVp+I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M3cm9TzQreAXNjwp+g5N14Dd4OSTKPhMe9MmF+mPvPAyWLkTC7ggc1Km7SabJ7627
+         gj1g3BqWX8lK6NYiRlRTEsdoleyH8zqQYIynEUuCBG6ctZJPZ7jps369eBu1l/eQ9c
+         8AqbnZiYBoquYsTgBrQktI5Gc2BiAsMbNg0ZIqr9FMgRu/6r5J3mI9uNhkqlw8Ju0I
+         XsLivcFXEPewVC0PTC/PrxMcVF7Dezdq5Y+lLZNUevipS6Ex3rVwB/33u26P6MVTbD
+         nT/Rv8oU8b5BA3brSUJBW+qFD0057fzJKyH8W515fZWRUkmL315ZXXev4gNv7w+V+T
+         7xj/gipmKXplg==
+Received: by mail-ot1-f51.google.com with SMTP id v15-20020a9d604f000000b0056cdb373b82so17472093otj.7
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 05:54:16 -0800 (PST)
+X-Gm-Message-State: AOAM530lQvrxpy1tvcJ2qV3J3KXmUPmJJXAYTqKE1XPJHadv2d8eYreN
+        wnvhUwnScNpujjJ0RaLb9oB8linOz5qpjjK1m28=
+X-Google-Smtp-Source: ABdhPJyiRlXYrxvlL1OZsFzm5NzrQs4xQE/QJja7avhQwE5HkZcYZiWoJqw3mJoZ5pU/fRvw/eaVUbts10GHGsSKSF8=
+X-Received: by 2002:a05:6830:1514:: with SMTP id k20mr24538052otp.147.1639403655843;
+ Mon, 13 Dec 2021 05:54:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.58]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
+References: <20211028112703.1120709-1-ardb@kernel.org> <20211028112703.1120709-2-ardb@kernel.org>
+ <B1E5C5B0-C135-4518-80B2-CB4544C246F0@oracle.com> <CAMj1kXEkcTzhvUG0Y7XQoeny+WFcANt6KwZPmziRT4SoY6F2XQ@mail.gmail.com>
+ <PAXPR08MB7172910A0629F9A7CC0DB8A7819A9@PAXPR08MB7172.eurprd08.prod.outlook.com>
+In-Reply-To: <PAXPR08MB7172910A0629F9A7CC0DB8A7819A9@PAXPR08MB7172.eurprd08.prod.outlook.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 13 Dec 2021 14:54:04 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHX0C8d_FYDTZ4biCpEyvn-Z33B6vx2DmH6ePa-R5N72w@mail.gmail.com>
+Message-ID: <CAMj1kXHX0C8d_FYDTZ4biCpEyvn-Z33B6vx2DmH6ePa-R5N72w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] [ARM] Add support for TLS register based stack
+ protector canary access
+To:     Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>
+Cc:     Qing Zhao <qing.zhao@oracle.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        kees Cook <keescook@chromium.org>,
+        Keith Packard <keithpac@amazon.com>,
+        "thomas.preudhomme@celest.fr" <thomas.preudhomme@celest.fr>,
+        "adhemerval.zanella@linaro.org" <adhemerval.zanella@linaro.org>,
+        Richard Sandiford <Richard.Sandiford@arm.com>,
+        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
+        nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-use memset_startat() helper to simplify the code, there is no functional
-change in this patch.
+On Wed, 17 Nov 2021 at 10:09, Ramana Radhakrishnan
+<Ramana.Radhakrishnan@arm.com> wrote:
+>
+> Thanks Ard and Qing.
+>
+>
+>
+> I have been busy with other things in the last few weeks and I don=E2=80=
+=99t work on GCC as part of my day job : however I=E2=80=99ll try to find s=
+ome time to review this patch set in the coming days.
+>
+>
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- kernel/locking/lockdep.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Hello Ramana,
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4a882f83aeb9..89b3df51fd98 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -6011,13 +6011,10 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
- 
- static void reinit_class(struct lock_class *class)
- {
--	void *const p = class;
--	const unsigned int offset = offsetof(struct lock_class, key);
--
- 	WARN_ON_ONCE(!class->lock_entry.next);
- 	WARN_ON_ONCE(!list_empty(&class->locks_after));
- 	WARN_ON_ONCE(!list_empty(&class->locks_before));
--	memset(p + offset, 0, sizeof(*class) - offset);
-+	memset_startat(class, 0, key);
- 	WARN_ON_ONCE(!class->lock_entry.next);
- 	WARN_ON_ONCE(!list_empty(&class->locks_after));
- 	WARN_ON_ONCE(!list_empty(&class->locks_before));
--- 
-2.17.1
+Please let us know if you will be able to spend time on this. I fully
+understand if not, as you moved on quite a while ago, but in that
+case, let's just own up to it, and I will go and badger someone else
+to get this reviewed :-)
 
+--=20
+Ard.
