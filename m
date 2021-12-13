@@ -2,64 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B639EC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 14:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE0EC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 16:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239167AbhLMOck (ORCPT
+        id S236632AbhLMQb5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 09:32:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235399AbhLMOcj (ORCPT
+        Mon, 13 Dec 2021 11:31:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:39029 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240919AbhLMQbx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 09:32:39 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6539C061574;
-        Mon, 13 Dec 2021 06:32:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3gP32EIV2oFStmGwYN5WhcnN2qmz98po9WQv+pzygO0=; b=lJ1zms/Vznlgw1yhv4MNArNbCZ
-        08TpCGVuZDGwUwmexea4dghLqKmKyfKvykhTyKe4E5vn3ZPTjcj9+B4eOELGG0N06T+yxRyzh+fG9
-        DNlGWf2ePZnbqjkg3Ewc4HD43XQNKLyUWof8PIpqc99/3m9isGgPKlHQMoCkFDznuZ7s6mIVLoPCR
-        xLvfXAp9JaxzuLF6BB9P3LNDkq1EH/DdvVg+8gEbZiSC8x0bsBYgk0OjNCCaeDxi/zbxkOSoWK2il
-        9w4V1TGvYVQa3AS9W4aZu4UzOZ3Z+cSkc7Ko++4VZNF8bFFHEB892IqaeLJ+IbfbynVJ+QHlYWRrz
-        vcUgomTw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mwmNL-0018YB-83; Mon, 13 Dec 2021 14:32:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 91A0B3001D0;
-        Mon, 13 Dec 2021 15:32:22 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7AA052D57ABA3; Mon, 13 Dec 2021 15:32:22 +0100 (CET)
-Date:   Mon, 13 Dec 2021 15:32:22 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc:     mingo@redhat.com, will@kernel.org, longman@redhat.com,
-        boqun.feng@gmail.com, wangweiyang2@huawei.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        keescook@chromium.org
+        Mon, 13 Dec 2021 11:31:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639413112;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MT4/b2QPfJ4jW4cPiNaQ4X6156JfED28RbUoF2jZNtA=;
+        b=IU02dd91EGe57RYJ5UG49fBXMO32oPHhXklmNliEfzMfV8ElxsX+tvYpRiU8C/DLhvxpuP
+        ddRaSo94vYrKC83s+qSyVOxETV6KlzbxLja7ppyAXWk9xy+Xwu+gYMtfnNZzdrOsjo+Mz3
+        hPKZq1mgB4mPo+8kAhCnxzSOKa3ImT4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-201-GBD0qURQN5eGKu3jfMKAFg-1; Mon, 13 Dec 2021 11:31:47 -0500
+X-MC-Unique: GBD0qURQN5eGKu3jfMKAFg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39715100F942;
+        Mon, 13 Dec 2021 16:31:46 +0000 (UTC)
+Received: from [10.22.18.158] (unknown [10.22.18.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 18798100164A;
+        Mon, 13 Dec 2021 16:31:45 +0000 (UTC)
+Message-ID: <383e4f24-8165-7aab-40af-52340c09de46@redhat.com>
+Date:   Mon, 13 Dec 2021 11:31:44 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
 Subject: Re: [PATCH -next] lockdep: Use memset_startat() helper in
  reinit_class()
-Message-ID: <YbdZdu0DvPR45EH8@hirez.programming.kicks-ass.net>
+Content-Language: en-US
+To:     Xiu Jianfeng <xiujianfeng@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Cc:     wangweiyang2@huawei.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, keescook@chromium.org
 References: <20211213132618.105737-1-xiujianfeng@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From:   Waiman Long <longman@redhat.com>
 In-Reply-To: <20211213132618.105737-1-xiujianfeng@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 09:26:18PM +0800, Xiu Jianfeng wrote:
+On 12/13/21 08:26, Xiu Jianfeng wrote:
 > use memset_startat() helper to simplify the code, there is no functional
 > change in this patch.
-> 
+>
 > Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> ---
+>   kernel/locking/lockdep.c | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 4a882f83aeb9..89b3df51fd98 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -6011,13 +6011,10 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
+>   
+>   static void reinit_class(struct lock_class *class)
+>   {
+> -	void *const p = class;
+> -	const unsigned int offset = offsetof(struct lock_class, key);
+> -
+>   	WARN_ON_ONCE(!class->lock_entry.next);
+>   	WARN_ON_ONCE(!list_empty(&class->locks_after));
+>   	WARN_ON_ONCE(!list_empty(&class->locks_before));
+> -	memset(p + offset, 0, sizeof(*class) - offset);
+> +	memset_startat(class, 0, key);
+>   	WARN_ON_ONCE(!class->lock_entry.next);
+>   	WARN_ON_ONCE(!list_empty(&class->locks_after));
+>   	WARN_ON_ONCE(!list_empty(&class->locks_before));
 
-Thanks!
+LGTM
+
+Acked-by: Waiman Long <longman@redhat.com>
+
