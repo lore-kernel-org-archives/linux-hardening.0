@@ -2,158 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB02C433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA265C433FE
 	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243524AbhLMWdi (ORCPT
+        id S233234AbhLMWdj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 17:33:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
+        Mon, 13 Dec 2021 17:33:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239311AbhLMWdh (ORCPT
+        with ESMTP id S240049AbhLMWdh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Mon, 13 Dec 2021 17:33:37 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF2CC061751
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56CA2C0613F8
         for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:37 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id np6-20020a17090b4c4600b001a90b011e06so14510288pjb.5
+Received: by mail-pj1-x102f.google.com with SMTP id h24so12915756pjq.2
         for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cNRoX2Q5eG84v1KKqWC/pAWv5+ytHkK7Pi2rzc9j+W8=;
-        b=ZIZ1200E7NRcHOqudUbF/08LxAnlIQ8OuG2CU75sqi2R95UGUPD96DC+S9u6BpJDty
-         RrburO2PAqxjE9N1LWf5GRt05iAr7VRe4gDrV+ZiMZekA7B7Gg6fcY1MpBkzZRKXJadM
-         aGxKvFKjIEHlbPGS0eNrvuLaHAb39OyZ0Mg1I=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4bkqPa5+Ktpxtos0MYkwoNtsvY+HIiLFlbmVBq0YkWw=;
+        b=MBlykbBxOAieabEWRlcUkZ7ADNdkwpOll3kPEPaJbOR9r+t99gWbbKLFIGL6Nfg3EQ
+         QNUne00smyhup8NaWJOE76H9nf4zLCERNghqsJEPCYIT0XJ5uYrqT2URRSIBWjZaJtVM
+         heygDiET5C8ueggw3nysByIUql8bRYHKAioaw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cNRoX2Q5eG84v1KKqWC/pAWv5+ytHkK7Pi2rzc9j+W8=;
-        b=kAR92DWZNu3NQN7kkMf0czyTJIz0ImeBGiZnUlpcAkricCjc9/lp/vizqJwmVFYI8J
-         VJc1sV711xhOeyfVwPU/vfLClorWTTCOfQYUcNm/2Z+WnMFsCO/0NRL6052XAltwteuu
-         HoNUI+zg1xmB/gGl8bxNhBJeIamZBTJwvvkMIgXhS0fF4rKLlcjaN6op3IKVpk9rYbcX
-         tYK52iYArfZte+pGAn/aVYrTwZhfXgwi+oebwEC0hm486aZ40YVRe/mAKTJ6NopPPatz
-         y4MrId8x3nlm6pwWtRRXklM0lsxspbdLsRAktspPUSv+SqENujWfiLbzx7TgA9RorJvM
-         4+tQ==
-X-Gm-Message-State: AOAM533Ob7PQzj+1ew+GJ9ztiSdvyMwKA9Gro6PReTWSxv0CieuV1gwE
-        yMIVXfaWBgfvr322hTRoGy0UhQ==
-X-Google-Smtp-Source: ABdhPJzAEQkO0JB9lSLQ0zAyukzPVjgctysuKOughUVvG64FQ+gCYJrmTfmhH/pFqH6KE/Z5F6Useg==
-X-Received: by 2002:a17:903:2445:b0:142:830:ea8e with SMTP id l5-20020a170903244500b001420830ea8emr1057879pls.54.1639434816697;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4bkqPa5+Ktpxtos0MYkwoNtsvY+HIiLFlbmVBq0YkWw=;
+        b=gU5ouPYmMEFg5rmLkRMOS9b0mKKhk19o8wpI9+GAp8uCeS1tEOwP9A5eOKvVevqWSv
+         VS8US8OKWMijiobRO2qlexQXXJv42fmY4rbfBYzSWjnhMYXK//jxGIXF7fMJpYGBBsTE
+         1C3uyiGxG76peoepmwlmMibUx5qLHQ1j414BB9CT/2b5B0BMwHeKnWHnpugxLSPDoHuW
+         TdtLtBQJyXO7d3a4fjJXtQL8TkJ4uRZsLgRYyEvgnfHVsdCcTYXLE0LA+Zm2CHPlunPF
+         27ph9MUHlED+tn+vt3/ZjGKx92+JbA53M0B+XRS2VaEhBtcc+hYuaQdqDwR+VEfPg0kL
+         dpng==
+X-Gm-Message-State: AOAM533ejEyeIDQuQkcJFHB0mngIDhhvGNZoXvN+p141JT4CMt+EO+mz
+        rUPSXrY4KpIXn5Bpe/hibAPwbA==
+X-Google-Smtp-Source: ABdhPJx1qqoV0XGU1WVOFExvUHODI2fWad6Iak6tx3i1lyRZxrGzfPwZ+cJNIeZNRONzKmfiWnOwDA==
+X-Received: by 2002:a17:903:2341:b0:142:1b63:98f3 with SMTP id c1-20020a170903234100b001421b6398f3mr1713349plh.49.1639434816842;
         Mon, 13 Dec 2021 14:33:36 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x3sm3889626pgl.79.2021.12.13.14.33.36
+        by smtp.gmail.com with ESMTPSA id e7sm14175293pfv.156.2021.12.13.14.33.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 13 Dec 2021 14:33:36 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 00/17] Enable strict compile-time memcpy() fortify checks
-Date:   Mon, 13 Dec 2021 14:33:14 -0800
-Message-Id: <20211213223331.135412-1-keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 03/17] net/mlx5e: Use struct_group() for memcpy() region
+Date:   Mon, 13 Dec 2021 14:33:17 -0800
+Message-Id: <20211213223331.135412-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20211213223331.135412-1-keescook@chromium.org>
+References: <20211213223331.135412-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5182; h=from:subject; bh=rNT/QIX5ecDglR0ljeFNH2woOLGFYihwPD7eHSWoACw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o2RZ29iQX29tv9x7BLMw90tL3TRphdmxRiQm+H Itt1c/aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKNgAKCRCJcvTf3G3AJpElD/ 4gR5Dfxq8M7EJh81EJtv0DuadRnp5hEkg4ffAzLKR6o1bL6H1uC57d2Wgwb3OIszQlZncoOmCl/xAE YH43cIOmwio4EeiqfRS4dIvy7m6MWvPjspKAQ22PaHC7d/Ub1+V2faWdk2elAxM9vLV/MsRkvBnY5S vp6eTrC7sdFL4L6XWeSdELOub6XnBWOovpxXzBXvBd4NL7eZBnPpZKN0z52IswDA89/7NaxgQkkVSl EtGsvIfw4qi7sAHpd3FoNlWIAKczOXEuhAsCgONC/C6pkVVp7WFa+Obd0aUw80ZjlL56fx+8qpUXvq VEXWlMWjlrTeF65fv6oklzsT8a0Fu9IC3N6CGFiS4d9ji2C21P+aAjo2HVwlkG7t96SmCTS/TjBu2l Xkzq4h3zK7kdQAip5qZPMkv8XtUp80V4zWIU28xupgvMDKA39Oc0YjNKKEzKSKNHcVp8+gPQSYP8LF HZ1xhoba4UM045mKZVUHpbPwajSbLT4K/0fvK7IJZLGno7R7qgMw5azEjoo9aIvsD5UTR0p8Doo4Pw XdKtoIoqtiQCE3juzu2c/e6lf5mumRQy5PqVDAM1klovY2N6VkU9saEj7KVa6c9ZdGwnOBF9SQY9sf 4P9h/1Stc7Z1oRCXRqhRsf3gk/D+CLqh2tY5+P45P87+nuoE2XVcR46RP9jQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2287; h=from:subject; bh=OaTySCpzbualzTuqfaDVo6TEbTw1SrH4/1grMMVMAOU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o3n0yHs835iLP0P72OIiKJhRSEeeeGmdv+JOgE 9MITmIOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKNwAKCRCJcvTf3G3AJpaXD/ 9CNj5QslKehgQ8H2nPibxNCF8YU91qx7MKpMxDTDXfrqh36B+W5xXgXY5QGrDtq0SJQAG88pTFS+qT 9gfW91800wi6dElkC925OsUr2olg2LHNnlmqPGnqkelGEymlpNUu6CR2whTRH1NDV8dkb0u8YpyC5L eg7gszBN9zVCfq6zLvzb/JVD1NWwcMW0dQhscxPzf3sGbofM29HuMeZFBh6finNCIA9Zsbz3qc3pkp OxRsBW3oJmUNqY5NZhcMrZonnT0lyZ0/ByGzHYR02KeXYDTSnofZmz9keYy3M2q5uHoSP1cWV/tL5t kCwyI9Pwan8qWhfer0M1QlkUs/oTYw9Ngeu8Q49TmIOa7H/c+It8xdc/JZvPLAFppv2Asc0GELnuHT mFoXDntUx/i4phgnNtgujOg35gvY6Srq19WewjfbINMDYyA9E+d2bm/Sr4qoutnecerI7sPY8R5UOg zlDhia4TLkSLuP0UtktzlS6//YzG5YU2a9+5eDiuVxoJiUnk6Q+djirT8N6zR0xzLubU1tzMtnyV95 WLIlKMI14VJa2A3rJX1p+ayJhzB08l65LaA60C56dI4GdcmZuWIuLTsGblHx+yZy5FPvyV5o5ax1iQ YkaOC/B8NBg5NkIK9+CskK8jVJnQyfq2NRgRWsfqvFGe6zp5dJsTdjoL1Bhg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-This is "phase 2" (of several phases) to hardening the kernel against
-memcpy-based buffer overflows. With nearly all compile-time fixes
-landed, the next step is to turn on the warning globally to keep future
-compile-time issues from happening, and let us take the step towards
-run-time checking (and towards a new API for flexible array structures).
+Use struct_group() in struct vlan_ethhdr around members h_dest and
+h_source, so they can be referenced together. This will allow memcpy()
+and sizeof() to more easily reason about sizes, improve readability,
+and avoid future warnings about writing beyond the end of h_dest.
 
-This series is based on latest linux-next, and several patches here
-have already been taken by subsystem maintainers but haven't appeared
-in linux-next yet, and are noted below.
+"pahole" shows no size nor member offset changes to struct vlan_ethhdr.
+"objdump -d" shows no object code changes.
 
--Kees
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 2 +-
+ include/linux/if_vlan.h                         | 6 ++++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-refactoring patches expected to be going via subsystem trees:
-    sata_fsl: Use struct_group() for memcpy() region
-	https://lore.kernel.org/lkml/23527f89-d098-ab6b-f3c9-a8a395e32df5@opensource.wdc.com/
-    ath11k: Use memset_startat() for clearing queue descriptors
-	https://lore.kernel.org/lkml/163777372886.11557.5551795598856429949.kvalo@codeaurora.org/
-
-refactoring patches going via my topic tree due to having no current response:
-    net/mlx5e: Use struct_group() for memcpy() region
-	https://lore.kernel.org/lkml/20211118183748.1283069-1-keescook@chromium.org/
-    net/mlx5e: Avoid field-overflowing memcpy()
-	https://lore.kernel.org/lkml/20211209053402.2202206-1-keescook@chromium.org/
-    media: omap3isp: Use struct_group() for memcpy() region
-	https://lore.kernel.org/lkml/20211118184352.1284792-1-keescook@chromium.org/
-    drbd: Use struct_group() to zero algs
-	https://lore.kernel.org/lkml/20211118203712.1288866-1-keescook@chromium.org/
-    dm integrity: Use struct_group() to zero struct journal_sector
-	https://lore.kernel.org/lkml/20211118203640.1288585-1-keescook@chromium.org/
-    iw_cxgb4: Use memset_startat() for cpl_t5_pass_accept_rpl
-	https://lore.kernel.org/lkml/20211118202335.1285836-1-keescook@chromium.org/
-
-refactoring patches going via my topic tree due to Acks:
-    KVM: x86: Replace memset() "optimization" with normal per-field writes
-	https://lore.kernel.org/lkml/202108181605.44C504C@keescook/
-    RDMA/mlx5: Use memset_after() to zero struct mlx5_ib_mr
-	https://lore.kernel.org/lkml/YbByJSkBgLRp5S8V@unreal/
-    intel_th: msu: Use memset_startat() for clearing hw header
-	https://lore.kernel.org/lkml/87sfyzi97l.fsf@ashishki-desk.ger.corp.intel.com/
-    IB/mthca: Use memset_startat() for clearing mpt_entry
-	https://lore.kernel.org/lkml/20211118202126.1285376-1-keescook@chromium.org/
-    scsi: lpfc: Use struct_group() to initialize struct lpfc_cgn_info
-	https://lore.kernel.org/lkml/1164349c-93a5-ebb8-94aa-dbe03957c40f@gmail.com/
-
-fortify changes going via my topic tree:
-    fortify: Detect struct member overflows in memcpy() at compile-time
-    fortify: Detect struct member overflows in memmove() at compile-time
-    fortify: Detect struct member overflows in memset() at compile-time
-    fortify: Work around Clang inlining bugs
-
-
- arch/x86/boot/compressed/misc.c               |   3 +-
- arch/x86/kvm/emulate.c                        |   9 +-
- arch/x86/kvm/kvm_emulate.h                    |   6 +-
- arch/x86/lib/memcpy_32.c                      |   1 +
- drivers/ata/sata_fsl.c                        |  10 +-
- drivers/block/drbd/drbd_main.c                |   3 +-
- drivers/block/drbd/drbd_protocol.h            |   6 +-
- drivers/block/drbd/drbd_receiver.c            |   3 +-
- drivers/hwtracing/intel_th/msu.c              |   4 +-
- drivers/infiniband/hw/cxgb4/cm.c              |   5 +-
- drivers/infiniband/hw/mlx5/mlx5_ib.h          |   4 +-
- drivers/infiniband/hw/mthca/mthca_mr.c        |   3 +-
- drivers/md/dm-integrity.c                     |   9 +-
- drivers/media/platform/omap3isp/ispstat.c     |   5 +-
- drivers/net/ethernet/chelsio/cxgb4/t4_msg.h   |   2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en.h  |   6 +-
- .../net/ethernet/mellanox/mlx5/core/en/xdp.c  |   4 +-
- .../net/ethernet/mellanox/mlx5/core/en_tx.c   |   2 +-
- drivers/net/wireless/ath/ath11k/hal_rx.c      |  13 +-
- drivers/scsi/lpfc/lpfc.h                      |  90 ++++---
- drivers/scsi/lpfc/lpfc_init.c                 |   4 +-
- include/linux/fortify-string.h                | 245 +++++++++++++-----
- include/linux/if_vlan.h                       |   6 +-
- include/uapi/linux/omap3isp.h                 |  21 +-
- lib/Makefile                                  |   3 +-
- lib/string_helpers.c                          |   6 +
- .../read_overflow2_field-memcpy.c             |   5 +
- .../read_overflow2_field-memmove.c            |   5 +
- .../write_overflow_field-memcpy.c             |   5 +
- .../write_overflow_field-memmove.c            |   5 +
- .../write_overflow_field-memset.c             |   5 +
- scripts/test_fortify.sh                       |   8 +-
- security/Kconfig                              |   2 +-
- 33 files changed, 344 insertions(+), 164 deletions(-)
- create mode 100644 lib/test_fortify/read_overflow2_field-memcpy.c
- create mode 100644 lib/test_fortify/read_overflow2_field-memmove.c
- create mode 100644 lib/test_fortify/write_overflow_field-memcpy.c
- create mode 100644 lib/test_fortify/write_overflow_field-memmove.c
- create mode 100644 lib/test_fortify/write_overflow_field-memset.c
-
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index 7fd33b356cc8..ee7ecb88adc1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -208,7 +208,7 @@ static inline void mlx5e_insert_vlan(void *start, struct sk_buff *skb, u16 ihs)
+ 	int cpy1_sz = 2 * ETH_ALEN;
+ 	int cpy2_sz = ihs - cpy1_sz;
+ 
+-	memcpy(vhdr, skb->data, cpy1_sz);
++	memcpy(&vhdr->addrs, skb->data, cpy1_sz);
+ 	vhdr->h_vlan_proto = skb->vlan_proto;
+ 	vhdr->h_vlan_TCI = cpu_to_be16(skb_vlan_tag_get(skb));
+ 	memcpy(&vhdr->h_vlan_encapsulated_proto, skb->data + cpy1_sz, cpy2_sz);
+diff --git a/include/linux/if_vlan.h b/include/linux/if_vlan.h
+index 8420fe504927..2be4dd7e90a9 100644
+--- a/include/linux/if_vlan.h
++++ b/include/linux/if_vlan.h
+@@ -46,8 +46,10 @@ struct vlan_hdr {
+  *	@h_vlan_encapsulated_proto: packet type ID or len
+  */
+ struct vlan_ethhdr {
+-	unsigned char	h_dest[ETH_ALEN];
+-	unsigned char	h_source[ETH_ALEN];
++	struct_group(addrs,
++		unsigned char	h_dest[ETH_ALEN];
++		unsigned char	h_source[ETH_ALEN];
++	);
+ 	__be16		h_vlan_proto;
+ 	__be16		h_vlan_TCI;
+ 	__be16		h_vlan_encapsulated_proto;
 -- 
 2.30.2
 
