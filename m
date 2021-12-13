@@ -2,65 +2,65 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5701C43217
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75151C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243624AbhLMWd7 (ORCPT
+        id S243756AbhLMWeC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 17:33:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
+        Mon, 13 Dec 2021 17:34:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243631AbhLMWdm (ORCPT
+        with ESMTP id S243619AbhLMWdl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 17:33:42 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1067C06115E
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:41 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id r130so16252269pfc.1
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:41 -0800 (PST)
+        Mon, 13 Dec 2021 17:33:41 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0057C06173F
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:40 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id u17so12196425plg.9
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H18NXfK/bjqmSrlgsrOjG9VSgAOPaQTZdlxtzpyzsKU=;
-        b=YK9Rp9QUr5GNXLR/LrK9JhjX0JHk8f2RdWEXjvqR7Kt7PYX4IBVWFsmJLncA1QLbpl
-         G9rcYMoGKaYeOteZeN/RAczvlvnTWzetUGxsOnh95Qo+JAgFlri+SZ42zcQ/uQH/Ecdz
-         dd/5eG6IrZNananuc+wLz+JCdTfjHrBOLGrPQ=
+        bh=JBrnYBdN57EoO3+g1W9Yge7xcXyekmtEM1h0EZo2kY8=;
+        b=eARJjq7XJszaMczlFn5jgZvZcSDXQXUrOCZYsx809qFqbE5oot7LUTLpKsKwE3rPC5
+         xtzFlR0r+1O5x6ORmle5Z1ZPwLkmR3mPBRDEcc0tbYNiOUNZY+k44IADAdzMVeDtWesq
+         WXdfYLSyn3KpUkOB70V/sqzVf12W5IOAIj8cY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H18NXfK/bjqmSrlgsrOjG9VSgAOPaQTZdlxtzpyzsKU=;
-        b=VwwyCrcmn98F/IRhhFlAi2hmkZrSDgAvczGQZlPDmNVCLtoXrYf7unHpnunYySlQcq
-         eCCQ9MkIVc0YW+LIkeXtvJfrf2Xd5pTvbZtLRfYLVIronTAo+dAX/LBBKh03KJH30E58
-         mU7qcozuIdSossEjjxDtyifKzvW2IcZRk6J1GSWh37aqHVEP80Bs4VXfdpD1wJqnRBXN
-         zfD4hEircye6qBydPNjcGaqwonRvi+a2MSLzo1D2MtpL6ycbh3awSyPHkrDaHg762Y0H
-         44j0JzOtx9uZqAvYmhf6ea1NOUSP+oR7eQIwHncpaATvV45yN+5PFnHrH6U9QTrQFknL
-         zTbA==
-X-Gm-Message-State: AOAM532JbQxCaeWoBBQo2rMe7P6Y8XFCVldnkJeKMNHNJRXyjmiRsJrj
-        ZUFoDHoodfo7WwECX88XNFG49pVvpkb9gg==
-X-Google-Smtp-Source: ABdhPJz14xIXX2kGfXl8gyTxbCTpoifJhXNd0GGbEO4+OpopT3ZSB0VqAQQANM5PEykiGhDNwF365Q==
-X-Received: by 2002:a63:2c8e:: with SMTP id s136mr1007041pgs.431.1639434821443;
-        Mon, 13 Dec 2021 14:33:41 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g19sm13874418pfc.145.2021.12.13.14.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=JBrnYBdN57EoO3+g1W9Yge7xcXyekmtEM1h0EZo2kY8=;
+        b=VZTOwmWHKzYzNbrpUUZWjSKhmfTGXv6TGo6fY/I4cn2bOjGAIZaXBcM5cceY8Ttx8j
+         dTB2cAmHJLVebqYl8uzss3EDpEeecaA4RHULNukHhRdEInWxskeDWhCuU5wPps/o1UUD
+         UdUqpGY+ezmUkTbKVezEykAAdo9WjUEcpxu7bxoTFy3arF1xPB1ZdEh58GMHL55Di3Kt
+         Uk7ZYKju8XkJJBjG1syOepgdJ/7R6vho/iaBQJW6Y91qgZT1wg1VQl8AIhHLnAMi8Y0W
+         yFC+UaEWpwW2HWFQO+FpLG81fgs03gWOFenOb22ytOY8irEDHR7t9QnSsdsBwu9ZuFdx
+         bGjA==
+X-Gm-Message-State: AOAM531FaN7XqBa12F/2uDaS7oUPtIS25LCNroZ+CnjRataE6CNTzw5O
+        4rwoAPYcLadeHtwn7M1HVQ/RFQ==
+X-Google-Smtp-Source: ABdhPJxe6o4hOFNGN6tkza4eHukpb5VYQzgGFvNJG64zJBWEIjooblWbxwzQ9Y8VbxpS6IcLW+ABAw==
+X-Received: by 2002:a17:90b:3a85:: with SMTP id om5mr1179078pjb.108.1639434820151;
         Mon, 13 Dec 2021 14:33:40 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k5sm7007688pgm.94.2021.12.13.14.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Dec 2021 14:33:37 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Max Gurtovoy <maxg@mellanox.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 14/17] IB/mthca: Use memset_startat() for clearing mpt_entry
-Date:   Mon, 13 Dec 2021 14:33:28 -0800
-Message-Id: <20211213223331.135412-15-keescook@chromium.org>
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 10/17] drbd: Use struct_group() to zero algs
+Date:   Mon, 13 Dec 2021 14:33:24 -0800
+Message-Id: <20211213223331.135412-11-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211213223331.135412-1-keescook@chromium.org>
 References: <20211213223331.135412-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1273; h=from:subject; bh=CV20v1MQywYF1pj6PK6kDL4NryK+fx8i1kaxeE/OwZY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o5w0TL2V5kLLzewuU+wu+r1+X368UfQYM+9S1i XMpTg/WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOQAKCRCJcvTf3G3AJr7ID/ 9mkrNCeI2WFCLh079AeP1+U5QNSmbqnVVSdFsaQDiX1da0O0vzJBjpHdHvSKNabcKXR/qOCVGIjiYH hihMd1my8FQjQOejGolDH1/9D19C4Yjug7wYxWEPGmeez/bpDkD/lBQ0t43rdGVm6Q286+0oSi/s7K gOt5oheZoRveZDWibbq/Tl7WQA9ysGrSdKpZmRiV92W9+cZq98dDWmuG79vGin/OjNnArcy1UK+rSk G+LYNm28IBh8LGag/brGRStXhvEsEi41YvRvrIw3GX77BT1wj8aNKyaQiIL+36UtpelTOy+XpEi9ol TQrkNJaZzqz+N1nNQS74wWibegWSyNPkalXaHJ3+PcqWFLVbnvPzjFlTabIs985nUSGkhBxmvA2cCc 82PUBzdztKLjKatMywXaf8Ro2+obpnZKtotAC3so1oD+USjYfRhZ/sOVkjzj9mN1MTyXWF/MKPBHJN UqQOXE+Mj9jfnLVYBbj54QFkshXXY47TkukQFrlpd9UHjIiShHMTZLWS48MAEOa684AufNY9E7NKFH 1D3jzgKTxFf3lOUSLgHCe0Wa5xT/BtJJBKXllSJQDKFdUcUGXxh75Df1Eq+oin+igUmudrGrsMCzIz fd3d/QmBG+2db0DT7uNCjBiGh3/8tRV/0aCrCbXOckjyjYxkEHWMCwRy/waw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2581; h=from:subject; bh=t2kEV0qyDDwEqGOOcKtmt4HKQwDSfEhGz4Ec2s2rQhk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o5ttmUrgv272ZEuKN3uNPCU+YVuXyy31dW6tyg 6v3qUZSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOQAKCRCJcvTf3G3AJtsdEA CuG2SKVJaoKduvJ0fedusEp7JCfmREAhrfqmgjlsmxKbBlTuRSOlqMu5m+sn5NqqrYHdYdUzOJLjMj zIfASffWaGBS5406hCj75rRaABBwIyS6NZ/GawLEDPs6JJkurBCFoj1rqutTzXEkSgXWVcCwMvLELj ZOGASNONISKukk+wV4kuBgPqorR9mu58RyTouYjQJQUgcuUYL7roCJpOSekAjj5tc3TKqHSLW06ubP 63u2PshlQkvbxCG9rplXwxhFyBVNjNe1gk49r/TPN40XINzpHd/kMCRF5JTGkIsgadjWnTESMGwjmI e3oNjiIkpi27eT9i404SF/5HfIc+A6PJla/3OrUFVD4IDqu7L71l4zwMD+71OTmzI7SrSiLEcbiTRM eJr+uJce4HIrM/kwfBlSpep/hGUE41gfxquEBmaY7ExgofG5d7HmH45LtJhE5F9NfnxKyA4jnOiKU/ E3gV7dOcdG7UKphzp5kriupm1sABfzJZ/y+3+AbkgrZCyzmJ9JhkAJqXtZY+sex6nLMzZiMtfjJ1p2 P2MdtC5n17ycfxD2Tgo9/oGi92W5ecMFrJIyFoFFt86F+MNLZAMAfmfh3v9PoZWOEFMPx0YliQiNqC otRg0xK33NjN0aQiVHTn+/WQuGIAS34i2tZst0z8HKkYBZEYvHYfh2Z4dIxg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -71,33 +71,67 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Use memset_startat() so memset() doesn't get confused about writing
-beyond the destination member that is intended to be the starting point
-of zeroing through the end of the struct.
+Add a struct_group() for the algs so that memset() can correctly reason
+about the size. "objdump -d" shows no changes to the executable
+instructions.
 
-Cc: Doug Ledford <dledford@redhat.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Max Gurtovoy <maxg@mellanox.com>
-Cc: linux-rdma@vger.kernel.org
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: drbd-dev@lists.linbit.com
+Cc: linux-block@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/infiniband/hw/mthca/mthca_mr.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/block/drbd/drbd_main.c     | 3 ++-
+ drivers/block/drbd/drbd_protocol.h | 6 ++++--
+ drivers/block/drbd/drbd_receiver.c | 3 ++-
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mthca/mthca_mr.c b/drivers/infiniband/hw/mthca/mthca_mr.c
-index a59100c496b4..192f83fd7c8a 100644
---- a/drivers/infiniband/hw/mthca/mthca_mr.c
-+++ b/drivers/infiniband/hw/mthca/mthca_mr.c
-@@ -467,8 +467,7 @@ int mthca_mr_alloc(struct mthca_dev *dev, u32 pd, int buffer_size_shift,
- 	mpt_entry->start     = cpu_to_be64(iova);
- 	mpt_entry->length    = cpu_to_be64(total_size);
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 07b3c6093e7d..6f450816c4fa 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -729,7 +729,8 @@ int drbd_send_sync_param(struct drbd_peer_device *peer_device)
+ 	cmd = apv >= 89 ? P_SYNC_PARAM89 : P_SYNC_PARAM;
  
--	memset(&mpt_entry->lkey, 0,
--	       sizeof *mpt_entry - offsetof(struct mthca_mpt_entry, lkey));
-+	memset_startat(mpt_entry, 0, lkey);
+ 	/* initialize verify_alg and csums_alg */
+-	memset(p->verify_alg, 0, 2 * SHARED_SECRET_MAX);
++	BUILD_BUG_ON(sizeof(p->algs) != 2 * SHARED_SECRET_MAX);
++	memset(&p->algs, 0, sizeof(p->algs));
  
- 	if (mr->mtt)
- 		mpt_entry->mtt_seg =
+ 	if (get_ldev(peer_device->device)) {
+ 		dc = rcu_dereference(peer_device->device->ldev->disk_conf);
+diff --git a/drivers/block/drbd/drbd_protocol.h b/drivers/block/drbd/drbd_protocol.h
+index dea59c92ecc1..a882b65ab5d2 100644
+--- a/drivers/block/drbd/drbd_protocol.h
++++ b/drivers/block/drbd/drbd_protocol.h
+@@ -283,8 +283,10 @@ struct p_rs_param_89 {
+ 
+ struct p_rs_param_95 {
+ 	u32 resync_rate;
+-	char verify_alg[SHARED_SECRET_MAX];
+-	char csums_alg[SHARED_SECRET_MAX];
++	struct_group(algs,
++		char verify_alg[SHARED_SECRET_MAX];
++		char csums_alg[SHARED_SECRET_MAX];
++	);
+ 	u32 c_plan_ahead;
+ 	u32 c_delay_target;
+ 	u32 c_fill_target;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 1f740e42e457..6df2539e215b 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -3921,7 +3921,8 @@ static int receive_SyncParam(struct drbd_connection *connection, struct packet_i
+ 
+ 	/* initialize verify_alg and csums_alg */
+ 	p = pi->data;
+-	memset(p->verify_alg, 0, 2 * SHARED_SECRET_MAX);
++	BUILD_BUG_ON(sizeof(p->algs) != 2 * SHARED_SECRET_MAX);
++	memset(&p->algs, 0, sizeof(p->algs));
+ 
+ 	err = drbd_recv_all(peer_device->connection, p, header_size);
+ 	if (err)
 -- 
 2.30.2
 
