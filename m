@@ -2,63 +2,65 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1A2C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17E2C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243781AbhLMWeF (ORCPT
+        id S243806AbhLMWeG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 17:34:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41174 "EHLO
+        Mon, 13 Dec 2021 17:34:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243693AbhLMWdw (ORCPT
+        with ESMTP id S243614AbhLMWdk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 17:33:52 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF0AC0698C4
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:42 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id 133so15760322pgc.12
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:42 -0800 (PST)
+        Mon, 13 Dec 2021 17:33:40 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C93C061372
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:39 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id u17so12196400plg.9
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=y8+A8j+rHqGqyjhORZtmUC3k/Ykd9LwWvt9gM1sSL4w=;
-        b=kPXWVDA0OJANDtqdXFbmdQsXPuuCRUljPLu9jVDUb27KhXMUSfnQ7NszvriWJ6IMK7
-         SMbL1Z3QHK4YewylqF0YKv1c6t5cOcKNtzpz6y0rDbz/iAPpR5/jLjq24IjoB2sBbvub
-         vwTy8UEhHG7pBH4ZajunTO2Wud8RYIN0fm2LU=
+        bh=2QF7GtMPgeovGkn/Um2s+IAYrZXWu92GGIBGeTuNd0g=;
+        b=D+azZllfG6Hnp0tbGVmfDafUxIigk3rYUYjjqPQ2VSzfBBPhVdIQmsR7RDW6bHnoeu
+         oGkp8ZAXw9HssYxoaBs8VV/+9XVjNOqWzr8j3tRu8Eja6Jp1MR7ynC5HlHGrQUJG795M
+         1wsIddaY0RcyVwTTH1e8V0WT9SwTdhkcaldoU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=y8+A8j+rHqGqyjhORZtmUC3k/Ykd9LwWvt9gM1sSL4w=;
-        b=sb1oBTG40hO9w5gRhFZxs7Noj8/PxHpqZdTiYuNRyHx5BmmqYeb0euNlnxgeKmk99O
-         FGAlWJ4IpJD1o8K98yjMjZTqV/zCBYBe7RBvEpKp6OrT2k2NPdjJJnBahPRxXfEiKwm9
-         KyZNJTR42CyC+k4Vqj/EFZJYX9oi2K9cYglJ4AvMnX0nm6kqWpnRZ3L1/XzU/s+EBTfJ
-         fThL12v1jlcI5ug8G7XLenuN4oMmUfEv+Zyf49RZgCr/CS/UbaywxL8cOb74tZPhIFny
-         7kR8Xy63WywHEnE705Wo+En+BTRu6cTpqceyCrCqq+P9G0SXweBJD45jzJYCUDgKFw1Z
-         fA2w==
-X-Gm-Message-State: AOAM530Y0zeX8dHIUm2yar5eQtrEu0DhQwrhvQQ4U5khUYKErLfVi3iB
-        2hyBiJxOJ18jtLdgcdxZ8N7amw==
-X-Google-Smtp-Source: ABdhPJwBI2iaQHFjGvjj4FyJPu+fMCNUjCFJGq92nzr+YvN+bE7msvk3+bvx25fGOD7/kc5Kh0YxMw==
-X-Received: by 2002:a63:5558:: with SMTP id f24mr1048941pgm.484.1639434822054;
-        Mon, 13 Dec 2021 14:33:42 -0800 (PST)
+        bh=2QF7GtMPgeovGkn/Um2s+IAYrZXWu92GGIBGeTuNd0g=;
+        b=kydd3AgsXf9AYhFGNIO8dCCKu4I1juOe/Vt8VFHYNpDzO5V/KzD8YK4Uvlm2dnvebe
+         dAzvUvBhBb966rXJG7AjJjGV9Nj9UOrGqhPnYJIHsasUlKyq3Nj8lmHc9w18DJiiaGp2
+         qIPQaC2qpOAtgmBeW71x/k0vt3KdK81Y4S2cEbNECQg5jXi6jDDmvfDTCrhq8yknkPrK
+         MI8L86HEqn/j6QXDfbYYMi5QwGq9/LoXe5bw6BK4GYxV4cdZpqho45VcCtyKM9jfU6Js
+         c2ZszGXvm5+juaHZWHBjV3aPwJXHMHPokSzBhbIuJmnUNBvVTOC2xegDl5d0QLM0Ge/b
+         VbFw==
+X-Gm-Message-State: AOAM532328D85EvHduO5qEs5xT0agjWw8yUxAOflmoEOXDiHPepna+IM
+        MGUxuK8km/i9vKTbGTGX1qtASNGdFzKsGw==
+X-Google-Smtp-Source: ABdhPJw/heRlxL9p9MafpKPpU+aOX/8aQldq2ikYRg4gpnEqC+p3RlEcTY7uzjlt0iiAzHzPVVVY4A==
+X-Received: by 2002:a17:90b:34b:: with SMTP id fh11mr1299850pjb.14.1639434819283;
+        Mon, 13 Dec 2021 14:33:39 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m14sm12033100pfh.71.2021.12.13.14.33.38
+        by smtp.gmail.com with ESMTPSA id m3sm10922153pgj.25.2021.12.13.14.33.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 14:33:40 -0800 (PST)
+        Mon, 13 Dec 2021 14:33:37 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@nvidia.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 13/17] intel_th: msu: Use memset_startat() for clearing hw header
-Date:   Mon, 13 Dec 2021 14:33:27 -0800
-Message-Id: <20211213223331.135412-14-keescook@chromium.org>
+Subject: [PATCH 09/17] RDMA/mlx5: Use memset_after() to zero struct mlx5_ib_mr
+Date:   Mon, 13 Dec 2021 14:33:23 -0800
+Message-Id: <20211213223331.135412-10-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211213223331.135412-1-keescook@chromium.org>
 References: <20211213223331.135412-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1329; h=from:subject; bh=qzlGCD27XMuNH9MVQmXMgZG1FIe/7icBY6kWSF3V5Ls=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o5GcgQhBrn1k+xwCA75oPF9uYLmzGzqWG3IWZz 8oqbDWKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOQAKCRCJcvTf3G3AJu1aD/ wPFTMglugeDMGxl4jGeZRJ/NtSXFKSP8H8O6u4BzjwNShgpWo84ekZkJHheNvk8CnoSn5FNLus5e3P mWktIcs3jp+xez1X8a9VuYSaRjG5spFUfLE9bS6okbk4cmD3H4lMnaPXiF8NZ5OiTZdTKYrccea7cv N7/rQFDiXxTbe5nwr1lGVqjIvzwWuOPsT5QUyg2+02zYQEkO6TWmIkx1j95pFze7sWjJMH57+6Cpce x5QTIBlq8GNtsboZyZmAwV497VvlHhXa1MuiDMTrwDca4A8Mi/Sjj+mDg6KZyMHjYA5VYm00iX6I2A vfGv9smEkypeG0dx/5V38r+xiL4baYddhUfmUkuRyamtvP4ElAstVFFxu8qeQr3WNBXSIrHN0VWWRc dytgrygPt7Z2skMjD45Q7/GM3Yt7PhwSrdm4wMmAvRYnG4wZUjUVfdVshDjpvSm1u+WA0GvW9oFpWe B64AjsAARw/NpTXLPt6WS8mor+Csq00TPXGO9hYyVvfevnS/wY3Yk+uSI/Yhwyaa5fbzE7tSbXmBHQ 34TGvaigWLvczP+2AiwfxEFAUtZUAh8lNywtM/mAizXQ5kYldCY9AdLftI2a3ttOBNE7dxcp/KV0AN nYi+zhnaL80KM9EUoYT9D5bEdDqElZh5yoNDPl9xAzG+i2HscRBS8uD7bYSQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1489; h=from:subject; bh=ci7qDUSQ7qxfbgt9mwXtWi+IdiOxq4CPa5QMzuuRbIM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o4c9gG5dEjAyZVb2YGUUu1WKghUR8yjX2IwA14 lNycyx+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOAAKCRCJcvTf3G3AJmCgD/ 94y/49uzwy2o4ceIgt9+LabsLgQ83nyWbVWzKF7S+FkPF2fdPgUnZo1u9AUKHX0NfCIEEUhu2QpFLt lD6tuJUJhfURZriu7JD241xMcFM+tk8XapHBoUEgDV5I6DuxCKANkWFsIcLgOkDbaUPkoG4D43qzBg CYWMgZmg/6c7JaDkP3M6vnTFxmh+X3HECy+9ucC46uKNwVm1jaz9L51AqtpYpXdM8s6ckqRLskpydz vh8Zvvu9c909q1aMS6twz0Y4QovPGZkcqBI9C4C289/ekn4BTrEOX84wXntPOMmVrdYSiuWY8D6DYP hrolXMIdtsk9pGuSWT5Hm6oKImFOUWVoxxtsciKQXkaCGe8H32gHQlH7FWBAQQ3f1cs4C7zgTi5lqb 74R6nJXU/yxFmXvHKIYhoid8VaogMVj+DKMOZtscumAjD3jY9XweYiCBvdu87kwtetw2Pk5qBBGQtf umEkP+SIFK3hQsPRUQUVjL5dH3JT3gFxmQMab9Iql8GfYGNAAQUPTnBbR7jIpOiFuewqgotfBhAQdq j0XwcevUQx/JF3i4DsLsVWTPD07eYKmRzsHZmRoFMkGrnMgVEHL04p3So0NNoHEXupSRfSfsgzca/8 npTJ0Rg2JkPh/NgMyrhGq+IYI7SL6gJr8j0vQxoX442T1P8h8uEzDWglsLUA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -69,36 +71,42 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Use memset_startat() so memset() doesn't get confused about writing
-beyond the destination member that is intended to be the starting point
-of zeroing through the end of the struct.
+Use memset_after() to zero the end of struct mlx5_ib_mr that should
+be initialized.
 
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Link: https://lore.kernel.org/lkml/87sfyzi97l.fsf@ashishki-desk.ger.corp.intel.com
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-rdma@vger.kernel.org
+Acked-by: Leon Romanovsky <leonro@nvidia.com>
+Link: https://lore.kernel.org/lkml/YbByJSkBgLRp5S8V@unreal
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/hwtracing/intel_th/msu.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/infiniband/hw/mlx5/mlx5_ib.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
-index 432ade0842f6..70a07b4e9967 100644
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -658,13 +658,11 @@ static void msc_buffer_clear_hw_header(struct msc *msc)
+diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+index 4a7a56ed740b..ded10719b643 100644
+--- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
++++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+@@ -664,8 +664,8 @@ struct mlx5_ib_mr {
  
- 	list_for_each_entry(win, &msc->win_list, entry) {
- 		unsigned int blk;
--		size_t hw_sz = sizeof(struct msc_block_desc) -
--			offsetof(struct msc_block_desc, hw_tag);
+ 	/* User MR data */
+ 	struct mlx5_cache_ent *cache_ent;
++	/* Everything after cache_ent is zero'd when MR allocated */
  
- 		for_each_sg(win->sgt->sgl, sg, win->nr_segs, blk) {
- 			struct msc_block_desc *bdesc = sg_virt(sg);
- 
--			memset(&bdesc->hw_tag, 0, hw_sz);
-+			memset_startat(bdesc, 0, hw_tag);
- 		}
- 	}
+-	/* This is zero'd when the MR is allocated */
+ 	union {
+ 		/* Used only while the MR is in the cache */
+ 		struct {
+@@ -718,7 +718,7 @@ struct mlx5_ib_mr {
+ /* Zero the fields in the mr that are variant depending on usage */
+ static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
+ {
+-	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
++	memset_after(mr, 0, cache_ent);
  }
+ 
+ static inline bool is_odp_mr(struct mlx5_ib_mr *mr)
 -- 
 2.30.2
 
