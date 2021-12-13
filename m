@@ -2,185 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6983FC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 23:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CDDC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 23:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243967AbhLMXSm (ORCPT
+        id S243871AbhLMXUD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 18:18:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243871AbhLMXSm (ORCPT
+        Mon, 13 Dec 2021 18:20:03 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:47386 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237678AbhLMXUC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 18:18:42 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDB5C061574;
-        Mon, 13 Dec 2021 15:18:41 -0800 (PST)
+        Mon, 13 Dec 2021 18:20:02 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 66DE9B816E1;
-        Mon, 13 Dec 2021 23:18:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8922AC34600;
-        Mon, 13 Dec 2021 23:18:37 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7ADF0B8113F;
+        Mon, 13 Dec 2021 23:20:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0534CC34601;
+        Mon, 13 Dec 2021 23:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639437519;
-        bh=Z80p1A+c7fVAB/CaA/qq8wArc2yUp77Z05L1Jot+bdE=;
+        s=k20201202; t=1639437600;
+        bh=LXBAgXWC4CE1LuoXiQe0EXbBe+2RLdZAmgUgAX2atR8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=geQ8GJP7yM5QJRI/uDH+qvxlOz23r8gwJeWPPEXDoEUhgQ+FPbejV65NBdsvxsldl
-         tGnbSStsG4uxcYm0n8RDalA+r5YjYh+WTpNSffAT60QIiKqHxYPnwUZVAHzgG0ptMk
-         eNwN/IGHFd9rh6k0E3BBZOo9/U6O4PaoTC6JmP4mVmO0nwtn/y+CabTv7kS0jsdlCw
-         +q0vn2StlpwmkpVGvoVA1KQORDP88fhwdS+ri8jHGQKm6t3uGZfpg+WqlJDZuB8Smk
-         sMkEO+seRBnqLyWzvM2tiiBkfIYB0w4sYlNawBNP5b7h1Cg7oR+Jykuq3jiRUFDuT2
-         OC1hRArNQlo8g==
-Date:   Mon, 13 Dec 2021 17:24:16 -0600
+        b=N6R0gUaFiE+qp5gGl3FeH55cOVEEacDVrDhO7LK8470B9iPNq8VIDfCQ4zoRBVKVK
+         LFU1Vml15yxFl62xT1DpemS4JOLAcW2VeWDqBBGrkUcEmHZcU8iJT7c3pBVdqLpP91
+         QO1Si2WiwszPgFWg5lQ3OwDgI+U/92f1uu55O3tHriZrmvzFItZIoDJuIdKrhyiVki
+         sb0+hSy/gY7/aiwU3NKExdRt8Fpkf551Z8G96YHFhsZutGHvWno/HPelVx3N1rZxrx
+         VPm6xA8IdzO8yT8H+r+lfiUlCy5VtLe+ZUp6vZfJHr7Jrw8gZg7HHUHQ9xdT7bCi+S
+         sDTlF2DcYVcVA==
+Date:   Mon, 13 Dec 2021 17:25:38 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH] media: omap3isp: Use struct_group() for memcpy() region
-Message-ID: <20211213232416.GA60133@embeddedor>
-References: <20211118184352.1284792-1-keescook@chromium.org>
+Cc:     Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
+        linux-hardening@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [dm-devel] [PATCH] dm integrity: Use struct_group() to zero
+ struct journal_sector
+Message-ID: <20211213232538.GB60133@embeddedor>
+References: <20211118203640.1288585-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211118184352.1284792-1-keescook@chromium.org>
+In-Reply-To: <20211118203640.1288585-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 10:43:52AM -0800, Kees Cook wrote:
+On Thu, Nov 18, 2021 at 12:36:40PM -0800, Kees Cook wrote:
 > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), memmove(), and memset(), avoid
-> intentionally writing across neighboring fields. Wrap the target region
-> in struct_group(). This additionally fixes a theoretical misalignment
-> of the copy (since the size of "buf" changes between 64-bit and 32-bit,
-> but this is likely never built for 64-bit).
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 > 
-> FWIW, I think this code is totally broken on 64-bit (which appears to
-> not be a "real" build configuration): it would either always fail (with
-> an uninitialized data->buf_size) or would cause corruption in userspace
-> due to the copy_to_user() in the call path against an uninitialized
-> data->buf value:
+> Add struct_group() to mark region of struct journal_sector that should be
+> initialized to zero.
 > 
-> omap3isp_stat_request_statistics_time32(...)
->     struct omap3isp_stat_data data64;
->     ...
->     omap3isp_stat_request_statistics(stat, &data64);
-> 
-> int omap3isp_stat_request_statistics(struct ispstat *stat,
->                                      struct omap3isp_stat_data *data)
->     ...
->     buf = isp_stat_buf_get(stat, data);
-> 
-> static struct ispstat_buffer *isp_stat_buf_get(struct ispstat *stat,
->                                                struct omap3isp_stat_data *data)
-> ...
->     if (buf->buf_size > data->buf_size) {
->             ...
->             return ERR_PTR(-EINVAL);
->     }
->     ...
->     rval = copy_to_user(data->buf,
->                         buf->virt_addr,
->                         buf->buf_size);
-> 
-> Regardless, additionally initialize data64 to be zero-filled to avoid
-> undefined behavior.
-> 
-> Fixes: 378e3f81cb56 ("media: omap3isp: support 64-bit version of omap3isp_stat_data")
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/media/platform/omap3isp/ispstat.c |  5 +++--
->  include/uapi/linux/omap3isp.h             | 21 +++++++++++++--------
->  2 files changed, 16 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
-> index 5b9b57f4d9bf..68cf68dbcace 100644
-> --- a/drivers/media/platform/omap3isp/ispstat.c
-> +++ b/drivers/media/platform/omap3isp/ispstat.c
-> @@ -512,7 +512,7 @@ int omap3isp_stat_request_statistics(struct ispstat *stat,
->  int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
->  					struct omap3isp_stat_data_time32 *data)
->  {
-> -	struct omap3isp_stat_data data64;
-> +	struct omap3isp_stat_data data64 = { };
->  	int ret;
->  
->  	ret = omap3isp_stat_request_statistics(stat, &data64);
-> @@ -521,7 +521,8 @@ int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
->  
->  	data->ts.tv_sec = data64.ts.tv_sec;
->  	data->ts.tv_usec = data64.ts.tv_usec;
-> -	memcpy(&data->buf, &data64.buf, sizeof(*data) - sizeof(data->ts));
-> +	data->buf = (uintptr_t)data64.buf;
 
-Shouldn't this be
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-	data->buf = (uintptr_t)(void *)data64.buf;
-
-instead?
-
+Thanks
 --
 Gustavo
 
-> +	memcpy(&data->frame, &data64.frame, sizeof(data->frame));
+> ---
+>  drivers/md/dm-integrity.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
+> index 6319deccbe09..163c94ca4e5c 100644
+> --- a/drivers/md/dm-integrity.c
+> +++ b/drivers/md/dm-integrity.c
+> @@ -121,8 +121,10 @@ struct journal_entry {
+>  #define JOURNAL_MAC_SIZE		(JOURNAL_MAC_PER_SECTOR * JOURNAL_BLOCK_SECTORS)
 >  
->  	return 0;
->  }
-> diff --git a/include/uapi/linux/omap3isp.h b/include/uapi/linux/omap3isp.h
-> index 87b55755f4ff..9a6b3ed11455 100644
-> --- a/include/uapi/linux/omap3isp.h
-> +++ b/include/uapi/linux/omap3isp.h
-> @@ -162,6 +162,7 @@ struct omap3isp_h3a_aewb_config {
->   * struct omap3isp_stat_data - Statistic data sent to or received from user
->   * @ts: Timestamp of returned framestats.
->   * @buf: Pointer to pass to user.
-> + * @buf_size: Size of buffer.
->   * @frame_number: Frame number of requested stats.
->   * @cur_frame: Current frame number being processed.
->   * @config_counter: Number of the configuration associated with the data.
-> @@ -176,10 +177,12 @@ struct omap3isp_stat_data {
->  	struct timeval ts;
->  #endif
->  	void __user *buf;
-> -	__u32 buf_size;
-> -	__u16 frame_number;
-> -	__u16 cur_frame;
-> -	__u16 config_counter;
-> +	__struct_group(/* no type */, frame, /* no attrs */,
-> +		__u32 buf_size;
-> +		__u16 frame_number;
-> +		__u16 cur_frame;
-> +		__u16 config_counter;
+>  struct journal_sector {
+> -	__u8 entries[JOURNAL_SECTOR_DATA - JOURNAL_MAC_PER_SECTOR];
+> -	__u8 mac[JOURNAL_MAC_PER_SECTOR];
+> +	struct_group(sectors,
+> +		__u8 entries[JOURNAL_SECTOR_DATA - JOURNAL_MAC_PER_SECTOR];
+> +		__u8 mac[JOURNAL_MAC_PER_SECTOR];
 > +	);
+>  	commit_id_t commit_id;
 >  };
 >  
->  #ifdef __KERNEL__
-> @@ -189,10 +192,12 @@ struct omap3isp_stat_data_time32 {
->  		__s32	tv_usec;
->  	} ts;
->  	__u32 buf;
-> -	__u32 buf_size;
-> -	__u16 frame_number;
-> -	__u16 cur_frame;
-> -	__u16 config_counter;
-> +	__struct_group(/* no type */, frame, /* no attrs */,
-> +		__u32 buf_size;
-> +		__u16 frame_number;
-> +		__u16 cur_frame;
-> +		__u16 config_counter;
-> +	);
->  };
->  #endif
->  
+> @@ -2870,7 +2872,8 @@ static void init_journal(struct dm_integrity_c *ic, unsigned start_section,
+>  		wraparound_section(ic, &i);
+>  		for (j = 0; j < ic->journal_section_sectors; j++) {
+>  			struct journal_sector *js = access_journal(ic, i, j);
+> -			memset(&js->entries, 0, JOURNAL_SECTOR_DATA);
+> +			BUILD_BUG_ON(sizeof(js->sectors) != JOURNAL_SECTOR_DATA);
+> +			memset(&js->sectors, 0, sizeof(js->sectors));
+>  			js->commit_id = dm_integrity_commit_id(ic, i, j, commit_seq);
+>  		}
+>  		for (j = 0; j < ic->journal_section_entries; j++) {
 > -- 
 > 2.30.2
+> 
+> --
+> dm-devel mailing list
+> dm-devel@redhat.com
+> https://listman.redhat.com/mailman/listinfo/dm-devel
 > 
 > 
 > 
