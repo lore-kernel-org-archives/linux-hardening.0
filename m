@@ -2,65 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17E2C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A70C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 22:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243806AbhLMWeG (ORCPT
+        id S243677AbhLMWjH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 17:34:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41108 "EHLO
+        Mon, 13 Dec 2021 17:39:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243614AbhLMWdk (ORCPT
+        with ESMTP id S243649AbhLMWjF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 17:33:40 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C93C061372
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:39 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id u17so12196400plg.9
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:33:39 -0800 (PST)
+        Mon, 13 Dec 2021 17:39:05 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE475C061748
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:39:04 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id r130so16261287pfc.1
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 14:39:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2QF7GtMPgeovGkn/Um2s+IAYrZXWu92GGIBGeTuNd0g=;
-        b=D+azZllfG6Hnp0tbGVmfDafUxIigk3rYUYjjqPQ2VSzfBBPhVdIQmsR7RDW6bHnoeu
-         oGkp8ZAXw9HssYxoaBs8VV/+9XVjNOqWzr8j3tRu8Eja6Jp1MR7ynC5HlHGrQUJG795M
-         1wsIddaY0RcyVwTTH1e8V0WT9SwTdhkcaldoU=
+        bh=0MT/vHE1ydzFe9PN6Wp2UZVjSoHcS4dYEtLHlHKEEAM=;
+        b=YGvnvAuqro151EfwgJKAALvz+kJyqgCsgO5oXMZXTc4McLwsP+2Tt2nK/DxNVgXIAe
+         88rUvAL023ldcNApa6EZUZZQCMnNDs8r5Ga8v5HlbnaHudKIDV+KjxVwtgN7uOXFaIbQ
+         a7dRHSLnBFZJQxNZRAjXvCiVr8o65n5n0D94g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2QF7GtMPgeovGkn/Um2s+IAYrZXWu92GGIBGeTuNd0g=;
-        b=kydd3AgsXf9AYhFGNIO8dCCKu4I1juOe/Vt8VFHYNpDzO5V/KzD8YK4Uvlm2dnvebe
-         dAzvUvBhBb966rXJG7AjJjGV9Nj9UOrGqhPnYJIHsasUlKyq3Nj8lmHc9w18DJiiaGp2
-         qIPQaC2qpOAtgmBeW71x/k0vt3KdK81Y4S2cEbNECQg5jXi6jDDmvfDTCrhq8yknkPrK
-         MI8L86HEqn/j6QXDfbYYMi5QwGq9/LoXe5bw6BK4GYxV4cdZpqho45VcCtyKM9jfU6Js
-         c2ZszGXvm5+juaHZWHBjV3aPwJXHMHPokSzBhbIuJmnUNBvVTOC2xegDl5d0QLM0Ge/b
-         VbFw==
-X-Gm-Message-State: AOAM532328D85EvHduO5qEs5xT0agjWw8yUxAOflmoEOXDiHPepna+IM
-        MGUxuK8km/i9vKTbGTGX1qtASNGdFzKsGw==
-X-Google-Smtp-Source: ABdhPJw/heRlxL9p9MafpKPpU+aOX/8aQldq2ikYRg4gpnEqC+p3RlEcTY7uzjlt0iiAzHzPVVVY4A==
-X-Received: by 2002:a17:90b:34b:: with SMTP id fh11mr1299850pjb.14.1639434819283;
-        Mon, 13 Dec 2021 14:33:39 -0800 (PST)
+        bh=0MT/vHE1ydzFe9PN6Wp2UZVjSoHcS4dYEtLHlHKEEAM=;
+        b=UykwGTSuQH3titGxuEOcl89MK97X2KebX0fYIGXFrAeQolR2QO3GNgPDnDrH6bI/Vs
+         s5nTzC9jl9hAwWUNW3L0VNcfHutw8k/1TTFnB3rmWhKGUKG+/WbrG85QMIfAaSTXChC4
+         4rKaHEolRyhulftBlCBfeYOKXL6Z9lV1axR9vaw69urlogaLRSXIzWawVczfdW7SP7Ye
+         iXMD71oxnxDmteqgXEy99qM/SU+kT0NqYhBhE3yRspAO9syp9e3Zptnk/3dCUslNEpK3
+         eySFkyMHbvhK9KwXq7oqFlk0AblTzDdtO3+AAY9B2jc8yEx6StJMAgzPyP4Qr+ImJFtI
+         EA4w==
+X-Gm-Message-State: AOAM530edo0wP6TZ0MWPsMNMpJcd7e4ptHsAn3YqHdnes/KD+JoQNwGt
+        EcwV24hbUhhw8RGpIPXzw5d2VA==
+X-Google-Smtp-Source: ABdhPJyA0kifmlmp09ULzUkVNS3B5zsL46YKdL6X5gUXjzYwPTvQUN8jwmFIq+nNLfPBsfjYFryetQ==
+X-Received: by 2002:aa7:9a04:0:b0:4a2:ebcd:89a with SMTP id w4-20020aa79a04000000b004a2ebcd089amr981317pfj.60.1639435144258;
+        Mon, 13 Dec 2021 14:39:04 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m3sm10922153pgj.25.2021.12.13.14.33.37
+        by smtp.gmail.com with ESMTPSA id t13sm13181529pfl.98.2021.12.13.14.39.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 14:33:37 -0800 (PST)
+        Mon, 13 Dec 2021 14:39:03 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@nvidia.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 09/17] RDMA/mlx5: Use memset_after() to zero struct mlx5_ib_mr
-Date:   Mon, 13 Dec 2021 14:33:23 -0800
-Message-Id: <20211213223331.135412-10-keescook@chromium.org>
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 15/17] scsi: lpfc: Use struct_group() to initialize struct lpfc_cgn_info
+Date:   Mon, 13 Dec 2021 14:33:29 -0800
+Message-Id: <20211213223331.135412-16-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211213223331.135412-1-keescook@chromium.org>
 References: <20211213223331.135412-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1489; h=from:subject; bh=ci7qDUSQ7qxfbgt9mwXtWi+IdiOxq4CPa5QMzuuRbIM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o4c9gG5dEjAyZVb2YGUUu1WKghUR8yjX2IwA14 lNycyx+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOAAKCRCJcvTf3G3AJmCgD/ 94y/49uzwy2o4ceIgt9+LabsLgQ83nyWbVWzKF7S+FkPF2fdPgUnZo1u9AUKHX0NfCIEEUhu2QpFLt lD6tuJUJhfURZriu7JD241xMcFM+tk8XapHBoUEgDV5I6DuxCKANkWFsIcLgOkDbaUPkoG4D43qzBg CYWMgZmg/6c7JaDkP3M6vnTFxmh+X3HECy+9ucC46uKNwVm1jaz9L51AqtpYpXdM8s6ckqRLskpydz vh8Zvvu9c909q1aMS6twz0Y4QovPGZkcqBI9C4C289/ekn4BTrEOX84wXntPOMmVrdYSiuWY8D6DYP hrolXMIdtsk9pGuSWT5Hm6oKImFOUWVoxxtsciKQXkaCGe8H32gHQlH7FWBAQQ3f1cs4C7zgTi5lqb 74R6nJXU/yxFmXvHKIYhoid8VaogMVj+DKMOZtscumAjD3jY9XweYiCBvdu87kwtetw2Pk5qBBGQtf umEkP+SIFK3hQsPRUQUVjL5dH3JT3gFxmQMab9Iql8GfYGNAAQUPTnBbR7jIpOiFuewqgotfBhAQdq j0XwcevUQx/JF3i4DsLsVWTPD07eYKmRzsHZmRoFMkGrnMgVEHL04p3So0NNoHEXupSRfSfsgzca/8 npTJ0Rg2JkPh/NgMyrhGq+IYI7SL6gJr8j0vQxoX442T1P8h8uEzDWglsLUA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4872; h=from:subject; bh=b7Gop8YkIsZSGaBsGHz+xW8brMLq6H3enGBmwNbBTro=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBht8o6LbqKmAkUNnfmlrw0b7QUEamBgQovX0V9gsVd 8MY1kVOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbfKOgAKCRCJcvTf3G3AJtVLD/ 4k62/NuNCnXqabCvHr68q+AQ5zUtY0Xz+S6EU7HgUfTO6Qj6pdWIgl8Mai8sy4Taa+YO0pHT6Gq+hl HTnevazuz76atJOM+gpoVzm0wMuthUzVGIGM9nEv+tB97wdj60ofuJDubae4PNalUR/ttfanHLDefZ JX8TPos1tsLQhPIaKPabzrILLazhZfO0ZagZXPvF45qVuRzLBzjZG0jR+LIvNEw0kuSGcgrFgNnYND 9Lb6hWwrfE8wqnKpcO/JliZ7eXMe8tfVaeZ7KgKwqgCuOMVvSuQJ+bygomAZCCT2jluKGyBpy41bf5 4AhWN1xssa9laAbpaK2Ma/5cMhcWSmHrDZ4gkqHrtpufJjetO1nTDTQRjNMPHlZWx7PUZZd+Gzyb6n lh6bZpRFit8dBAutA2Mi76C0o/qMZxe4L2BumDDP/ycfl5DIzRYgKreOS7iYuatlSM2EqbT3K8+j0f QqxtlMHGeq/MKQ0jCUTP/cztyBExbc5PMJBJnx/K9voPhhTuTT71YXFG4wIpBFTJRoVTgANamLxDAk rA7jLMZV+mzP5jLjaZn5SCyhXb5h3/IHo3wTpYMHM6YmQXK1tj8aLJwk0doq88iT5pdE1r7bfbNNj2 IvJvSrVVaBmMQAg1qmmgy47/ukFQ3EgACgaCJvChAxaaCJpvq8brRmRGhUNQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -71,42 +72,144 @@ In preparation for FORTIFY_SOURCE performing compile-time and run-time
 field bounds checking for memset(), avoid intentionally writing across
 neighboring fields.
 
-Use memset_after() to zero the end of struct mlx5_ib_mr that should
-be initialized.
+Add struct_group() to mark "stat" region of struct lpfc_cgn_info that
+should be initialized to zero, and refactor the "data" region memset()
+to wipe everything up to the cgn_stats region.
 
-Cc: Doug Ledford <dledford@redhat.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-rdma@vger.kernel.org
-Acked-by: Leon Romanovsky <leonro@nvidia.com>
-Link: https://lore.kernel.org/lkml/YbByJSkBgLRp5S8V@unreal
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Dick Kennedy <dick.kennedy@broadcom.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/infiniband/hw/mlx5/mlx5_ib.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc.h      | 90 +++++++++++++++++------------------
+ drivers/scsi/lpfc/lpfc_init.c |  4 +-
+ 2 files changed, 46 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-index 4a7a56ed740b..ded10719b643 100644
---- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
-+++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-@@ -664,8 +664,8 @@ struct mlx5_ib_mr {
+diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
+index 3faadcfcdcbb..4878c94761f9 100644
+--- a/drivers/scsi/lpfc/lpfc.h
++++ b/drivers/scsi/lpfc/lpfc.h
+@@ -496,52 +496,50 @@ struct lpfc_cgn_info {
+ 	__le32   cgn_alarm_hr[24];
+ 	__le32   cgn_alarm_day[LPFC_MAX_CGN_DAYS];
  
- 	/* User MR data */
- 	struct mlx5_cache_ent *cache_ent;
-+	/* Everything after cache_ent is zero'd when MR allocated */
+-	/* Start of congestion statistics */
+-	uint8_t  cgn_stat_npm;		/* Notifications per minute */
+-
+-	/* Start Time */
+-	uint8_t  cgn_stat_month;
+-	uint8_t  cgn_stat_day;
+-	uint8_t  cgn_stat_year;
+-	uint8_t  cgn_stat_hour;
+-	uint8_t  cgn_stat_minute;
+-	uint8_t  cgn_pad2[2];
+-
+-	__le32   cgn_notification;
+-	__le32   cgn_peer_notification;
+-	__le32   link_integ_notification;
+-	__le32   delivery_notification;
+-
+-	uint8_t  cgn_stat_cgn_month; /* Last congestion notification FPIN */
+-	uint8_t  cgn_stat_cgn_day;
+-	uint8_t  cgn_stat_cgn_year;
+-	uint8_t  cgn_stat_cgn_hour;
+-	uint8_t  cgn_stat_cgn_min;
+-	uint8_t  cgn_stat_cgn_sec;
+-
+-	uint8_t  cgn_stat_peer_month; /* Last peer congestion FPIN */
+-	uint8_t  cgn_stat_peer_day;
+-	uint8_t  cgn_stat_peer_year;
+-	uint8_t  cgn_stat_peer_hour;
+-	uint8_t  cgn_stat_peer_min;
+-	uint8_t  cgn_stat_peer_sec;
+-
+-	uint8_t  cgn_stat_lnk_month; /* Last link integrity FPIN */
+-	uint8_t  cgn_stat_lnk_day;
+-	uint8_t  cgn_stat_lnk_year;
+-	uint8_t  cgn_stat_lnk_hour;
+-	uint8_t  cgn_stat_lnk_min;
+-	uint8_t  cgn_stat_lnk_sec;
+-
+-	uint8_t  cgn_stat_del_month; /* Last delivery notification FPIN */
+-	uint8_t  cgn_stat_del_day;
+-	uint8_t  cgn_stat_del_year;
+-	uint8_t  cgn_stat_del_hour;
+-	uint8_t  cgn_stat_del_min;
+-	uint8_t  cgn_stat_del_sec;
+-#define LPFC_CGN_STAT_SIZE	48
+-#define LPFC_CGN_DATA_SIZE	(sizeof(struct lpfc_cgn_info) -  \
+-				LPFC_CGN_STAT_SIZE - sizeof(uint32_t))
++	struct_group(cgn_stat,
++		uint8_t  cgn_stat_npm;		/* Notifications per minute */
++
++		/* Start Time */
++		uint8_t  cgn_stat_month;
++		uint8_t  cgn_stat_day;
++		uint8_t  cgn_stat_year;
++		uint8_t  cgn_stat_hour;
++		uint8_t  cgn_stat_minute;
++		uint8_t  cgn_pad2[2];
++
++		__le32   cgn_notification;
++		__le32   cgn_peer_notification;
++		__le32   link_integ_notification;
++		__le32   delivery_notification;
++
++		uint8_t  cgn_stat_cgn_month; /* Last congestion notification FPIN */
++		uint8_t  cgn_stat_cgn_day;
++		uint8_t  cgn_stat_cgn_year;
++		uint8_t  cgn_stat_cgn_hour;
++		uint8_t  cgn_stat_cgn_min;
++		uint8_t  cgn_stat_cgn_sec;
++
++		uint8_t  cgn_stat_peer_month; /* Last peer congestion FPIN */
++		uint8_t  cgn_stat_peer_day;
++		uint8_t  cgn_stat_peer_year;
++		uint8_t  cgn_stat_peer_hour;
++		uint8_t  cgn_stat_peer_min;
++		uint8_t  cgn_stat_peer_sec;
++
++		uint8_t  cgn_stat_lnk_month; /* Last link integrity FPIN */
++		uint8_t  cgn_stat_lnk_day;
++		uint8_t  cgn_stat_lnk_year;
++		uint8_t  cgn_stat_lnk_hour;
++		uint8_t  cgn_stat_lnk_min;
++		uint8_t  cgn_stat_lnk_sec;
++
++		uint8_t  cgn_stat_del_month; /* Last delivery notification FPIN */
++		uint8_t  cgn_stat_del_day;
++		uint8_t  cgn_stat_del_year;
++		uint8_t  cgn_stat_del_hour;
++		uint8_t  cgn_stat_del_min;
++		uint8_t  cgn_stat_del_sec;
++	);
  
--	/* This is zero'd when the MR is allocated */
- 	union {
- 		/* Used only while the MR is in the cache */
- 		struct {
-@@ -718,7 +718,7 @@ struct mlx5_ib_mr {
- /* Zero the fields in the mr that are variant depending on usage */
- static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
- {
--	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
-+	memset_after(mr, 0, cache_ent);
- }
+ 	__le32   cgn_info_crc;
+ #define LPFC_CGN_CRC32_MAGIC_NUMBER	0x1EDC6F41
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 2fe7d9d885d9..c18000d05379 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -13483,7 +13483,7 @@ lpfc_init_congestion_buf(struct lpfc_hba *phba)
+ 	phba->cgn_evt_minute = 0;
+ 	phba->hba_flag &= ~HBA_CGN_DAY_WRAP;
  
- static inline bool is_odp_mr(struct mlx5_ib_mr *mr)
+-	memset(cp, 0xff, LPFC_CGN_DATA_SIZE);
++	memset(cp, 0xff, offsetof(struct lpfc_cgn_info, cgn_stat));
+ 	cp->cgn_info_size = cpu_to_le16(LPFC_CGN_INFO_SZ);
+ 	cp->cgn_info_version = LPFC_CGN_INFO_V3;
+ 
+@@ -13542,7 +13542,7 @@ lpfc_init_congestion_stat(struct lpfc_hba *phba)
+ 		return;
+ 
+ 	cp = (struct lpfc_cgn_info *)phba->cgn_i->virt;
+-	memset(&cp->cgn_stat_npm, 0, LPFC_CGN_STAT_SIZE);
++	memset(&cp->cgn_stat, 0, sizeof(cp->cgn_stat));
+ 
+ 	ktime_get_real_ts64(&cmpl_time);
+ 	time64_to_tm(cmpl_time.tv_sec, 0, &broken);
 -- 
 2.30.2
 
