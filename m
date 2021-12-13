@@ -2,69 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD95BC433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 09:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF4CC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 13:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234372AbhLMJib (ORCPT
+        id S233117AbhLMN15 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 04:38:31 -0500
-Received: from mga05.intel.com ([192.55.52.43]:13602 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234830AbhLMJhE (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 04:37:04 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10196"; a="324966583"
-X-IronPort-AV: E=Sophos;i="5.88,202,1635231600"; 
-   d="scan'208";a="324966583"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 01:34:15 -0800
-X-IronPort-AV: E=Sophos;i="5.88,202,1635231600"; 
-   d="scan'208";a="464555913"
-Received: from ppolasze-mobl.ger.corp.intel.com (HELO localhost) ([10.252.20.7])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 01:34:12 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH] drm/dp: Actually read Adjust Request Post Cursor2 register
-In-Reply-To: <202112100853.FDB294B86@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20211203084354.3105253-1-keescook@chromium.org>
- <87o85r4a4f.fsf@intel.com> <202112082220.81ECDC63D@keescook>
- <2b7d760c-9ab8-b607-efc6-1ed276d67668@amd.com>
- <202112091539.6B349AC@keescook> <87a6h83hb7.fsf@intel.com>
- <202112100853.FDB294B86@keescook>
-Date:   Mon, 13 Dec 2021 11:34:09 +0200
-Message-ID: <87y24o7sry.fsf@intel.com>
+        Mon, 13 Dec 2021 08:27:57 -0500
+Received: from szxga03-in.huawei.com ([45.249.212.189]:29188 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231784AbhLMN1z (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 13 Dec 2021 08:27:55 -0500
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4JCMhP43nxz972c;
+        Mon, 13 Dec 2021 21:25:41 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.174.58) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Mon, 13 Dec 2021 21:27:52 +0800
+From:   Xiu Jianfeng <xiujianfeng@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
+        <longman@redhat.com>, <boqun.feng@gmail.com>
+CC:     <wangweiyang2@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <keescook@chromium.org>
+Subject: [PATCH -next] lockdep: Use memset_startat() helper in reinit_class()
+Date:   Mon, 13 Dec 2021 21:26:18 +0800
+Message-ID: <20211213132618.105737-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.67.174.58]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 10 Dec 2021, Kees Cook <keescook@chromium.org> wrote:
-> On Fri, Dec 10, 2021 at 12:06:20PM +0200, Jani Nikula wrote:
->> Post Cursor2 was completely optional for the transmitter even before it
->> was deprecated.
->> 
->> And now we'd be adding 5 bytes extra to all link status reads. To fix
->> the only user of drm_dp_get_adjust_request_post_cursor() that apparently
->> has never worked as intended. I'm just not convinced.
->> 
->> I was trying to look through the implications of DP_LINK_STATUS_SIZE
->> increase, and at least drm_dp_dpcd_read_phy_link_status() comes across
->> as something probably needing attention.
->
-> Okay, it sounds like you'd prefer the "make it tegra-specific" patch I
-> proposed. I will work that up as a proper patch and send it.
+use memset_startat() helper to simplify the code, there is no functional
+change in this patch.
 
-Yes. Of course, I'd like to hear Thierry's view as well.
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ kernel/locking/lockdep.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-BR,
-Jani.
-
-
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 4a882f83aeb9..89b3df51fd98 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -6011,13 +6011,10 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
+ 
+ static void reinit_class(struct lock_class *class)
+ {
+-	void *const p = class;
+-	const unsigned int offset = offsetof(struct lock_class, key);
+-
+ 	WARN_ON_ONCE(!class->lock_entry.next);
+ 	WARN_ON_ONCE(!list_empty(&class->locks_after));
+ 	WARN_ON_ONCE(!list_empty(&class->locks_before));
+-	memset(p + offset, 0, sizeof(*class) - offset);
++	memset_startat(class, 0, key);
+ 	WARN_ON_ONCE(!class->lock_entry.next);
+ 	WARN_ON_ONCE(!list_empty(&class->locks_after));
+ 	WARN_ON_ONCE(!list_empty(&class->locks_before));
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.17.1
+
