@@ -2,90 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED6EC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 13:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6C9C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 14:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238316AbhLMNyT (ORCPT
+        id S235523AbhLMO1J (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 08:54:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59808 "EHLO
+        Mon, 13 Dec 2021 09:27:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231211AbhLMNyT (ORCPT
+        with ESMTP id S239371AbhLMO1I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 08:54:19 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46686C061574
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 05:54:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D0AF9B80EC1
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 13:54:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93027C34602
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 13:54:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639403656;
-        bh=UaGChbXAvxs5XfH4yX3u3Nh9h6RmDa0yGal7bOYVp+I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M3cm9TzQreAXNjwp+g5N14Dd4OSTKPhMe9MmF+mPvPAyWLkTC7ggc1Km7SabJ7627
-         gj1g3BqWX8lK6NYiRlRTEsdoleyH8zqQYIynEUuCBG6ctZJPZ7jps369eBu1l/eQ9c
-         8AqbnZiYBoquYsTgBrQktI5Gc2BiAsMbNg0ZIqr9FMgRu/6r5J3mI9uNhkqlw8Ju0I
-         XsLivcFXEPewVC0PTC/PrxMcVF7Dezdq5Y+lLZNUevipS6Ex3rVwB/33u26P6MVTbD
-         nT/Rv8oU8b5BA3brSUJBW+qFD0057fzJKyH8W515fZWRUkmL315ZXXev4gNv7w+V+T
-         7xj/gipmKXplg==
-Received: by mail-ot1-f51.google.com with SMTP id v15-20020a9d604f000000b0056cdb373b82so17472093otj.7
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 05:54:16 -0800 (PST)
-X-Gm-Message-State: AOAM530lQvrxpy1tvcJ2qV3J3KXmUPmJJXAYTqKE1XPJHadv2d8eYreN
-        wnvhUwnScNpujjJ0RaLb9oB8linOz5qpjjK1m28=
-X-Google-Smtp-Source: ABdhPJyiRlXYrxvlL1OZsFzm5NzrQs4xQE/QJja7avhQwE5HkZcYZiWoJqw3mJoZ5pU/fRvw/eaVUbts10GHGsSKSF8=
-X-Received: by 2002:a05:6830:1514:: with SMTP id k20mr24538052otp.147.1639403655843;
- Mon, 13 Dec 2021 05:54:15 -0800 (PST)
+        Mon, 13 Dec 2021 09:27:08 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56627C061574
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 06:27:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=FaGT0W88prg5rCbGEk97JZKHxNwNL3WzIICgEAogG4E=; b=mtLnrhgjys1pqoGO33djIsde2C
+        8HmUctiwvH5oR5DW9wWo0s0HdWUgQ1mJbtegHveMzx0s3U1pZQP5gNSDCVFu261pmWunSPKgOFcA1
+        ysU1GynwW/iXshue2VuFpeTg+2lftBEbO4V2gZvT3LmeSEIoi3H7rlXnWQ2FXa0BiGkQq2aksrbTO
+        0e5WZmown/Qp2+9cgPieU6JasAZ/UOB/CipIcx6WEFz2htWixAfE9nQKUriINXvCIGcSMkk4MdM94
+        IC3k8tBonM7R+pNu8CsILjWvb2nFyBQh6PPRJ9DTzYqvk8pxWqUGHrXUoS1PZGe/wbwtlyUUQNiWE
+        N9wujDPw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mwmID-00Crlv-8z; Mon, 13 Dec 2021 14:27:05 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v3 2/3] mm/usercopy: Detect vmalloc overruns
+Date:   Mon, 13 Dec 2021 14:27:02 +0000
+Message-Id: <20211213142703.3066590-3-willy@infradead.org>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211213142703.3066590-1-willy@infradead.org>
+References: <20211213142703.3066590-1-willy@infradead.org>
 MIME-Version: 1.0
-References: <20211028112703.1120709-1-ardb@kernel.org> <20211028112703.1120709-2-ardb@kernel.org>
- <B1E5C5B0-C135-4518-80B2-CB4544C246F0@oracle.com> <CAMj1kXEkcTzhvUG0Y7XQoeny+WFcANt6KwZPmziRT4SoY6F2XQ@mail.gmail.com>
- <PAXPR08MB7172910A0629F9A7CC0DB8A7819A9@PAXPR08MB7172.eurprd08.prod.outlook.com>
-In-Reply-To: <PAXPR08MB7172910A0629F9A7CC0DB8A7819A9@PAXPR08MB7172.eurprd08.prod.outlook.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 13 Dec 2021 14:54:04 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHX0C8d_FYDTZ4biCpEyvn-Z33B6vx2DmH6ePa-R5N72w@mail.gmail.com>
-Message-ID: <CAMj1kXHX0C8d_FYDTZ4biCpEyvn-Z33B6vx2DmH6ePa-R5N72w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] [ARM] Add support for TLS register based stack
- protector canary access
-To:     Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>
-Cc:     Qing Zhao <qing.zhao@oracle.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        kees Cook <keescook@chromium.org>,
-        Keith Packard <keithpac@amazon.com>,
-        "thomas.preudhomme@celest.fr" <thomas.preudhomme@celest.fr>,
-        "adhemerval.zanella@linaro.org" <adhemerval.zanella@linaro.org>,
-        Richard Sandiford <Richard.Sandiford@arm.com>,
-        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-        nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 17 Nov 2021 at 10:09, Ramana Radhakrishnan
-<Ramana.Radhakrishnan@arm.com> wrote:
->
-> Thanks Ard and Qing.
->
->
->
-> I have been busy with other things in the last few weeks and I don=E2=80=
-=99t work on GCC as part of my day job : however I=E2=80=99ll try to find s=
-ome time to review this patch set in the coming days.
->
->
+If you have a vmalloc() allocation, or an address from calling vmap(),
+you cannot overrun the vm_area which describes it, regardless of the
+size of the underlying allocation.  This probably doesn't do much for
+security because vmalloc comes with guard pages these days, but it
+prevents usercopy aborts when copying to a vmap() of smaller pages.
 
-Hello Ramana,
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+---
+ mm/usercopy.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Please let us know if you will be able to spend time on this. I fully
-understand if not, as you moved on quite a while ago, but in that
-case, let's just own up to it, and I will go and badger someone else
-to get this reviewed :-)
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index 8c039302465f..63476e1506e0 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -17,6 +17,7 @@
+ #include <linux/sched/task.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/thread_info.h>
++#include <linux/vmalloc.h>
+ #include <linux/atomic.h>
+ #include <linux/jump_label.h>
+ #include <asm/sections.h>
+@@ -237,6 +238,21 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
+ 		return;
+ 	}
+ 
++	if (is_vmalloc_addr(ptr)) {
++		struct vm_struct *vm = find_vm_area(ptr);
++		unsigned long offset;
++
++		if (!vm) {
++			usercopy_abort("vmalloc", "no area", to_user, 0, n);
++			return;
++		}
++
++		offset = ptr - vm->addr;
++		if (offset + n > vm->size)
++			usercopy_abort("vmalloc", NULL, to_user, offset, n);
++		return;
++	}
++
+ 	page = virt_to_head_page(ptr);
+ 
+ 	if (PageSlab(page)) {
+-- 
+2.33.0
 
---=20
-Ard.
