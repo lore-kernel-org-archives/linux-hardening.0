@@ -2,78 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F7CC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Dec 2021 06:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047E4C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Dec 2021 11:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230206AbhLNGCR (ORCPT
+        id S233697AbhLNLsD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Dec 2021 01:02:17 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:53450 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbhLNGCR (ORCPT
+        Tue, 14 Dec 2021 06:48:03 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:28315 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231233AbhLNLsB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Dec 2021 01:02:17 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D393AB817EF;
-        Tue, 14 Dec 2021 06:02:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB2DFC34604;
-        Tue, 14 Dec 2021 06:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639461734;
-        bh=Oq5F1xHhWQuZdW7GcGz5FwKlog+bk0yd8vL+ePHpJJ4=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=tXvyQZkCcSalVqCzkdwWo3wNvFc34NsOSSgePKISQ3XtY7koXbk7dCcf6JkuVGG4v
-         PpeleWiLti4NoptanODNt6iIaC0B8hkGPov1b9ReOmmJAguG/qhcyTJ/IN+xLN9xGT
-         GgAhXd+A3hZcygSqfr3IIRrmFEY8gC3EYgVrd+dsoyRUtkgZq2d/wXhPZWK/Y4LXHV
-         wVNBHlrNrw34oNFQi1ceSO3g43JGdiO0dFCyihFtY3mF14dp9i9PkNsoAEu3LgBdnk
-         IsL/nA9gvhGQyrkS1tebRNzOv/a4HfBYUjRpCxfinIfumbLferTnAaSvbTuoiUQXFM
-         H0PIeG9vIgKOg==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/17] ath11k: Use memset_startat() for clearing queue descriptors
-References: <20211213223331.135412-1-keescook@chromium.org>
-        <20211213223331.135412-9-keescook@chromium.org>
-Date:   Tue, 14 Dec 2021 08:02:07 +0200
-In-Reply-To: <20211213223331.135412-9-keescook@chromium.org> (Kees Cook's
-        message of "Mon, 13 Dec 2021 14:33:22 -0800")
-Message-ID: <87v8zriv1c.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 14 Dec 2021 06:48:01 -0500
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4JCxSt3tTGzbjRL;
+        Tue, 14 Dec 2021 19:47:42 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.174.58) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 14 Dec 2021 19:47:59 +0800
+From:   Xiu Jianfeng <xiujianfeng@huawei.com>
+To:     <paul@paul-moore.com>, <eparis@redhat.com>, <keescook@chromium.org>
+CC:     <linux-audit@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <wangweiyang2@huawei.com>, <linux-hardening@vger.kernel.org>
+Subject: [PATCH -next] audit: use struct_size() helper in kmalloc()
+Date:   Tue, 14 Dec 2021 19:48:54 +0800
+Message-ID: <20211214114854.133328-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.67.174.58]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+Make use of struct_size() helper instead of an open-coded calucation.
 
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memset(), avoid intentionally writing across
-> neighboring fields.
->
-> Use memset_startat() so memset() doesn't get confused about writing
-> beyond the destination member that is intended to be the starting point
-> of zeroing through the end of the struct. Additionally split up a later
-> field-spanning memset() so that memset() can reason about the size.
->
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: ath11k@lists.infradead.org
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://github.com/KSPP/linux/issues/160
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ kernel/audit.c       | 2 +-
+ kernel/audit_tree.c  | 2 +-
+ kernel/auditfilter.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-What's the plan for this patch? I would like to take this via my ath
-tree to avoid conflicts.
-
+diff --git a/kernel/audit.c b/kernel/audit.c
+index d4084751cfe6..f33028578c60 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1446,7 +1446,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 			if (err)
+ 				return err;
+ 		}
+-		sig_data = kmalloc(sizeof(*sig_data) + len, GFP_KERNEL);
++		sig_data = kmalloc(struct_size(sig_data, ctx, len), GFP_KERNEL);
+ 		if (!sig_data) {
+ 			if (audit_sig_sid)
+ 				security_release_secctx(ctx, len);
+diff --git a/kernel/audit_tree.c b/kernel/audit_tree.c
+index 72324afcffef..e7315d487163 100644
+--- a/kernel/audit_tree.c
++++ b/kernel/audit_tree.c
+@@ -94,7 +94,7 @@ static struct audit_tree *alloc_tree(const char *s)
+ {
+ 	struct audit_tree *tree;
+ 
+-	tree = kmalloc(sizeof(struct audit_tree) + strlen(s) + 1, GFP_KERNEL);
++	tree = kmalloc(struct_size(tree, pathname, strlen(s) + 1), GFP_KERNEL);
+ 	if (tree) {
+ 		refcount_set(&tree->count, 1);
+ 		tree->goner = 0;
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index 4173e771650c..19352820b274 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -637,7 +637,7 @@ static struct audit_rule_data *audit_krule_to_data(struct audit_krule *krule)
+ 	void *bufp;
+ 	int i;
+ 
+-	data = kmalloc(sizeof(*data) + krule->buflen, GFP_KERNEL);
++	data = kmalloc(struct_size(data, buf, krule->buflen), GFP_KERNEL);
+ 	if (unlikely(!data))
+ 		return NULL;
+ 	memset(data, 0, sizeof(*data));
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.17.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
