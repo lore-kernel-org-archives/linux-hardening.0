@@ -2,86 +2,62 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C0FC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Dec 2021 00:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B07C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Dec 2021 00:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242347AbhLNANP (ORCPT
+        id S236812AbhLNAde (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 19:13:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235853AbhLNANO (ORCPT
+        Mon, 13 Dec 2021 19:33:34 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:42158 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244480AbhLNAde (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 19:13:14 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCAAC061574;
-        Mon, 13 Dec 2021 16:13:14 -0800 (PST)
+        Mon, 13 Dec 2021 19:33:34 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 07727B811E0;
-        Tue, 14 Dec 2021 00:13:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E44C34600;
-        Tue, 14 Dec 2021 00:13:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9658EB81619;
+        Tue, 14 Dec 2021 00:33:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9429C34603;
+        Tue, 14 Dec 2021 00:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639440791;
-        bh=amJgLdWIZOt98JM4XfKKdY2rx8uE3I1QvBy2rLEOECQ=;
+        s=k20201202; t=1639442011;
+        bh=zFNGboipQ1592Lv07PmnoI02FEeo+/VUT+TzrTjhCgg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lABwMARzbxF5ADfS9X6lyyf67QZvfOmvlF/Id6/NFtpHo4wc1J3QPVTerbV6Ik6LU
-         76MZX2JZm2VYpaWoRrCA8guCS2xpHWtCOegnj8XzoHOER+/e+sAu8eyvL8qLOxeB/H
-         Q4bhBosMTDzzFG5YC4IcLONid5nI0/feyurk0ESNoyG75u0H7JGDx4IHnp7XlqeHw8
-         nG7FQDOFSxK1M8B17htBcKUZ++TATkaVDaYbn0TBtVjH0KLMrzqJ+tnEtfcO6TZNJH
-         ow1twsGiSftYCa2tMtliz9quSVof5Phq2jfDxMuPUBjpT6G5PGA+ylwtHwqZVggeB1
-         ACNL4C1luEtNw==
-Date:   Mon, 13 Dec 2021 18:18:49 -0600
+        b=dyAWrLQ9HqcB2okyP/HqJl6QWHJCesEL/7bIHMVaK/KBgFM+AC2JQJGh4767arhDJ
+         4avnCtN2gq4yjDvAtpPpBW3fM0Lmr2CnoCDve/VIpI5jQ4HI51w2aLAF7PszCGIM3K
+         Ary9sxsaYPwDIofvbaXIbLSJr2P2+Go0nsgAbr3pQXgKabasc3D5AEioB3dAlkEyFq
+         4ClQo0xIx/yq+pW45JTTPL+n9pRDmWWsFKPtl345480pfwp2xMUxZTHn2VhC6NpI6y
+         qkgIB1OOBbTIP34tD83aqdj3kY/hfNFaQA9tnB2t0AsspuH3WcrlHAw6z4aawbn3l2
+         R6cEMNN5h3a1g==
+Date:   Mon, 13 Dec 2021 18:39:09 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH] drm/dp: Fix off-by-one in register cache size
-Message-ID: <20211214001849.GA62559@embeddedor>
-References: <20211203084333.3105038-1-keescook@chromium.org>
+Subject: Re: [PATCH v2] RDMA/mlx5: Use memset_after() to zero struct
+ mlx5_ib_mr
+Message-ID: <20211214003909.GA74268@embeddedor>
+References: <20211207212022.364703-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211203084333.3105038-1-keescook@chromium.org>
+In-Reply-To: <20211207212022.364703-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 03, 2021 at 12:43:33AM -0800, Kees Cook wrote:
-> The pcon_dsc_dpcd array holds 13 registers (0x92 through 0x9E). Fix the
-> math to calculate the max size. Found from a -Warray-bounds build:
+On Tue, Dec 07, 2021 at 01:20:22PM -0800, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memset(), avoid intentionally writing across
+> neighboring fields.
 > 
-> drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_pcon_dsc_bpp_incr':
-> drivers/gpu/drm/drm_dp_helper.c:3130:28: error: array subscript 12 is outside array bounds of 'const u8[12]' {aka 'const unsigned char[12]'} [-Werror=array-bounds]
->  3130 |         buf = pcon_dsc_dpcd[DP_PCON_DSC_BPP_INCR - DP_PCON_DSC_ENCODER];
->       |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/drm_dp_helper.c:3126:39: note: while referencing 'pcon_dsc_dpcd'
->  3126 | int drm_dp_pcon_dsc_bpp_incr(const u8 pcon_dsc_dpcd[DP_PCON_DSC_ENCODER_CAP_SIZE])
->       |                              ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> Use memset_after() to zero the end of struct mlx5_ib_mr that should
+> be initialized.
 > 
-> Fixes: e2e16da398d9 ("drm/dp_helper: Add support for Configuring DSC for HDMI2.1 Pcon")
-
-This should be tagged for -stable:
-
-Cc: stable@vger.kernel.org
-
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -91,22 +67,38 @@ Thanks
 Gustavo
 
 > ---
->  include/drm/drm_dp_helper.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v2: rebased, umem moved into the union and is expected to be wiped
+>     https://lore.kernel.org/lkml/20211207194525.GL6385@nvidia.com
+> ---
+>  drivers/infiniband/hw/mlx5/mlx5_ib.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> index 30359e434c3f..472dac376284 100644
-> --- a/include/drm/drm_dp_helper.h
-> +++ b/include/drm/drm_dp_helper.h
-> @@ -456,7 +456,7 @@ struct drm_panel;
->  #define DP_FEC_CAPABILITY_1			0x091   /* 2.0 */
+> diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+> index 4a7a56ed740b..ded10719b643 100644
+> --- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
+> +++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+> @@ -664,8 +664,8 @@ struct mlx5_ib_mr {
 >  
->  /* DP-HDMI2.1 PCON DSC ENCODER SUPPORT */
-> -#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xC	/* 0x9E - 0x92 */
-> +#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xD	/* 0x92 through 0x9E */
->  #define DP_PCON_DSC_ENCODER                 0x092
->  # define DP_PCON_DSC_ENCODER_SUPPORTED      (1 << 0)
->  # define DP_PCON_DSC_PPS_ENC_OVERRIDE       (1 << 1)
+>  	/* User MR data */
+>  	struct mlx5_cache_ent *cache_ent;
+> +	/* Everything after cache_ent is zero'd when MR allocated */
+>  
+> -	/* This is zero'd when the MR is allocated */
+>  	union {
+>  		/* Used only while the MR is in the cache */
+>  		struct {
+> @@ -718,7 +718,7 @@ struct mlx5_ib_mr {
+>  /* Zero the fields in the mr that are variant depending on usage */
+>  static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
+>  {
+> -	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
+> +	memset_after(mr, 0, cache_ent);
+>  }
+>  
+>  static inline bool is_odp_mr(struct mlx5_ib_mr *mr)
 > -- 
 > 2.30.2
+> 
+> 
+> 
 > 
