@@ -2,91 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B971C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Dec 2021 23:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C0FC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Dec 2021 00:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232396AbhLMXug (ORCPT
+        id S242347AbhLNANP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Dec 2021 18:50:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59216 "EHLO
+        Mon, 13 Dec 2021 19:13:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232649AbhLMXug (ORCPT
+        with ESMTP id S235853AbhLNANO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Dec 2021 18:50:36 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F5CC061574
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 15:50:36 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id cq22-20020a17090af99600b001a9550a17a5so15836611pjb.2
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Dec 2021 15:50:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M8qzJ3yaQUt3fhw0wDUyieRIIV2hCPg9kOjRhn0IYfc=;
-        b=DU/1gqEDAUmFc3BsWsCuKmEQA89OevyS+ZE+fe4SLlcos56JGBYPiJf6MsEUPJQva4
-         zy9Len7mjkFDNE/Z2jR+fLdaZDDbpMbjjPNNP0n/YYXwEXHc0CMRZugZUIL453f9YVgd
-         tmlb9EmU7ynUiOn/vW6c33uallsvC7pcPngho=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M8qzJ3yaQUt3fhw0wDUyieRIIV2hCPg9kOjRhn0IYfc=;
-        b=DsH21Z6EgAHkmtnmJmxAmL0ObRPTOTFNdTfKcz7YFY7iT1q56hT6dfdj8J4RsXcCKp
-         Dp4acjw8a78ViiITDMRWCW6H5OhaJFdk2FkdogufeZmKwkRp0SJ4X4p4rxA7g/VPcC0n
-         ZdleoKzPGd8/AC99/5dGJk/zT0GqMH5uyh5FhLXVqxGgaNZ+GoMEAr/TkRVNOYUTIXIF
-         ICfna47mmtSwBCp3wBjooTvPueOtNo1wUQ5Bv04n28KHEERvkFzcE9nzEAD6OXAXhSHV
-         QvSHoIG4rhy302TLtoJsTPuBtMCclVdyrwIaXIzweDn+/dK24aM0++u47i0NRtTuws7Q
-         /BMg==
-X-Gm-Message-State: AOAM530v++QolbRXvG+1Srjweg3Cour/U9NDKIgczzD+igRCOlCP3e6n
-        YAIugZPMF9vUM9462MQlyrUyzw==
-X-Google-Smtp-Source: ABdhPJylvEaXH/dky2c6rIorneQNExvenDLG1q1Irh5hq0K925DayU5WBzMG3XvTheYRhJJ1NymI3g==
-X-Received: by 2002:a17:902:e5d0:b0:141:cdfe:97d7 with SMTP id u16-20020a170902e5d000b00141cdfe97d7mr2075999plf.65.1639439435597;
-        Mon, 13 Dec 2021 15:50:35 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y9sm201232pjt.27.2021.12.13.15.50.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 15:50:35 -0800 (PST)
-Date:   Mon, 13 Dec 2021 15:50:34 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] mm/usercopy: Detect compound page overruns
-Message-ID: <202112131548.F76CB37@keescook>
-References: <20211213142703.3066590-1-willy@infradead.org>
- <20211213142703.3066590-4-willy@infradead.org>
- <202112131249.0D2A4A2C7@keescook>
- <Ybfa4RV4fRkgjh8D@casper.infradead.org>
+        Mon, 13 Dec 2021 19:13:14 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCAAC061574;
+        Mon, 13 Dec 2021 16:13:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 07727B811E0;
+        Tue, 14 Dec 2021 00:13:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E44C34600;
+        Tue, 14 Dec 2021 00:13:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639440791;
+        bh=amJgLdWIZOt98JM4XfKKdY2rx8uE3I1QvBy2rLEOECQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lABwMARzbxF5ADfS9X6lyyf67QZvfOmvlF/Id6/NFtpHo4wc1J3QPVTerbV6Ik6LU
+         76MZX2JZm2VYpaWoRrCA8guCS2xpHWtCOegnj8XzoHOER+/e+sAu8eyvL8qLOxeB/H
+         Q4bhBosMTDzzFG5YC4IcLONid5nI0/feyurk0ESNoyG75u0H7JGDx4IHnp7XlqeHw8
+         nG7FQDOFSxK1M8B17htBcKUZ++TATkaVDaYbn0TBtVjH0KLMrzqJ+tnEtfcO6TZNJH
+         ow1twsGiSftYCa2tMtliz9quSVof5Phq2jfDxMuPUBjpT6G5PGA+ylwtHwqZVggeB1
+         ACNL4C1luEtNw==
+Date:   Mon, 13 Dec 2021 18:18:49 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH] drm/dp: Fix off-by-one in register cache size
+Message-ID: <20211214001849.GA62559@embeddedor>
+References: <20211203084333.3105038-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Ybfa4RV4fRkgjh8D@casper.infradead.org>
+In-Reply-To: <20211203084333.3105038-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 11:44:33PM +0000, Matthew Wilcox wrote:
-> On Mon, Dec 13, 2021 at 12:52:22PM -0800, Kees Cook wrote:
-> > On Mon, Dec 13, 2021 at 02:27:03PM +0000, Matthew Wilcox (Oracle) wrote:
-> > > Move the compound page overrun detection out of
-> > > CONFIG_HARDENED_USERCOPY_PAGESPAN so it's enabled for more people.
-> > 
-> > I'd argue that everything else enabled by USERCOPY_PAGESPAN could be
-> > removed now too. Do you want to add a 4th patch to rip that out?
-> > 
-> > https://github.com/KSPP/linux/issues/163
+On Fri, Dec 03, 2021 at 12:43:33AM -0800, Kees Cook wrote:
+> The pcon_dsc_dpcd array holds 13 registers (0x92 through 0x9E). Fix the
+> math to calculate the max size. Found from a -Warray-bounds build:
 > 
-> I don't mind ... is it your assessment that it's not worth checking for
-> a copy_to/from_user that spans a boundary between a reserved and
-> !reserved page, or overlaps the boundary of rodata/bss/data/CMA?
+> drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_pcon_dsc_bpp_incr':
+> drivers/gpu/drm/drm_dp_helper.c:3130:28: error: array subscript 12 is outside array bounds of 'const u8[12]' {aka 'const unsigned char[12]'} [-Werror=array-bounds]
+>  3130 |         buf = pcon_dsc_dpcd[DP_PCON_DSC_BPP_INCR - DP_PCON_DSC_ENCODER];
+>       |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/drm_dp_helper.c:3126:39: note: while referencing 'pcon_dsc_dpcd'
+>  3126 | int drm_dp_pcon_dsc_bpp_incr(const u8 pcon_dsc_dpcd[DP_PCON_DSC_ENCODER_CAP_SIZE])
+>       |                              ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> I have no basis on which to judge that, so it's really up to you.
+> Fixes: e2e16da398d9 ("drm/dp_helper: Add support for Configuring DSC for HDMI2.1 Pcon")
 
-It's always been a problem because some arch mark the kernel as reserved,
-so we have to do all the allow-listing first, which is tedious. I'd
-certainly like to add all the checks possible, but rationally, we need
-to keep only the stuff that is fast, useful, or both. PAGESPAN has been
-disabled almost everywhere, too, so I don't think it's a loss.
+This should be tagged for -stable:
 
--- 
-Kees Cook
+Cc: stable@vger.kernel.org
+
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+--
+Gustavo
+
+> ---
+>  include/drm/drm_dp_helper.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+> index 30359e434c3f..472dac376284 100644
+> --- a/include/drm/drm_dp_helper.h
+> +++ b/include/drm/drm_dp_helper.h
+> @@ -456,7 +456,7 @@ struct drm_panel;
+>  #define DP_FEC_CAPABILITY_1			0x091   /* 2.0 */
+>  
+>  /* DP-HDMI2.1 PCON DSC ENCODER SUPPORT */
+> -#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xC	/* 0x9E - 0x92 */
+> +#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xD	/* 0x92 through 0x9E */
+>  #define DP_PCON_DSC_ENCODER                 0x092
+>  # define DP_PCON_DSC_ENCODER_SUPPORTED      (1 << 0)
+>  # define DP_PCON_DSC_PPS_ENC_OVERRIDE       (1 << 1)
+> -- 
+> 2.30.2
+> 
