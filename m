@@ -2,145 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95BCC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Dec 2021 18:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B601C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Dec 2021 22:47:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236870AbhLNSFM (ORCPT
+        id S234342AbhLNWrm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Dec 2021 13:05:12 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:35266 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236881AbhLNSFC (ORCPT
+        Tue, 14 Dec 2021 17:47:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234333AbhLNWrl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Dec 2021 13:05:02 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DE3A761666;
-        Tue, 14 Dec 2021 18:05:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DD9DC34600;
-        Tue, 14 Dec 2021 18:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639505101;
-        bh=38BfpnLT7pSh5gg1tbVifrBHY3fyw+pgfV+46h0GvJc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bh2kFuPEDPBA3egL9WEH4Lb/0bjnQuzJGpLEx+cjS0XZRFDDJ5s8v0B5ePioWrBp1
-         NMBM2fHlVbaeVu9RxDureOm7jlcXauk/Egg5E4e9jV24w1udV4RDkj7a7SrDCxxhej
-         zbBeubJLYH9kOCDK1mblmSWaPuaSbuywtyaCC/BbdivRG9Q0iWDGlBRoa6DOqpIvDI
-         0eSnwfFTP6lzIp4Hf//v0s2Kql0RKTU9eoKAbp6P49Zo4LvgaR7yl8PxOoZt9KVp5N
-         ijSNHagXa8K7hzBXB/xCpxrZ03lj7UHJ/2L/DXX5pwEEWsEZ7SC3cu246SBjEX/UAw
-         rG8cRAzdehUBw==
-Date:   Tue, 14 Dec 2021 12:10:40 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc:     paul@paul-moore.com, eparis@redhat.com, keescook@chromium.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
-        wangweiyang2@huawei.com, linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH -next] audit: use struct_size() helper in kmalloc()
-Message-ID: <20211214181040.GA13575@embeddedor>
-References: <20211214114854.133328-1-xiujianfeng@huawei.com>
- <20211214175448.GA13107@embeddedor>
+        Tue, 14 Dec 2021 17:47:41 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F29C061574
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Dec 2021 14:47:41 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id e3so69115112edu.4
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Dec 2021 14:47:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xCX8/Hqkkmsc7s8OoncQ2ygzJ7gumAwZl1sLrK9wpaE=;
+        b=B7tL5v1bMp+BDC5s8TZoUSFQG4zXAQcv5FngmioPcul/1hnbkkO9E8ewfR4MOh1dJr
+         LExoG5vgcs3iAf3RZW9XhlT3zMFTEZ0vOq9INnzos+zrPiS0vO3bJPVFmL/hqe5EZvrJ
+         vG4ulmzleaIAFvXcpfbX2GTGVADiDU1Fr6SA/EMPSfEZW/hUzB9BbEqnYG4ytcnHRfBW
+         E1dWSUNAEceRIHA+sU37056AlSN3u2qF5OpoHCixEszEN+HvQdTs+ORygh3aCvQc+xrR
+         NdGb2SKb5y8oOewin1ak1+nY3gVbawin4eTo2D8qdyfGL3unRbEI79DhFPjXuOmG+ilU
+         EIMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xCX8/Hqkkmsc7s8OoncQ2ygzJ7gumAwZl1sLrK9wpaE=;
+        b=ji8EVpDWZ6PCCLiCvmt7sVzfmsq1hdgqFOR89dhLVSmolJtB0mv9AZKfKF4JUQvdlr
+         SjGoaUQcxEVjPzdqcvQfTp7vO62TD3oD/90PAuJVre7yWtinMi/reWkJXRYzJspnnggE
+         HEzmzBzZfPFD5gAEvniCdtRPfpx4hQyrs1bwsyJQ3LWsx+Yh6B7LNkffltQlyLraP11z
+         KuUoLCDKwjCOnA5Yi3X8H/xnwDcHwic3fC107W33BxBKkHyJCtE9t6oLvi0IWTUn/PVB
+         50UWSJP0EHoXuKd+qVLJjKk9UOsaVyTgrhAlkgMRVnOc1RjKwReLHa4U2NipuH8CdYkS
+         DLyw==
+X-Gm-Message-State: AOAM531xos0Ft5xHgJ19PjN+SrlBnFgJ49F9BKOpb7KR95qx0rn04VHj
+        1lC1kL6bCWOo+ntNYIgPNBTbPNgdkT1oj60DKFav
+X-Google-Smtp-Source: ABdhPJzIcu0cK8oFwIMlnj2GOKq7A90qrnk+9/eDShno+/EyDaHfWZQyD4u4EBk7RpLdqrkLyWgJHG51AdwmapcggB4=
+X-Received: by 2002:a17:907:e8e:: with SMTP id ho14mr8724777ejc.12.1639522059848;
+ Tue, 14 Dec 2021 14:47:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211214175448.GA13107@embeddedor>
+References: <20211214114854.133328-1-xiujianfeng@huawei.com>
+In-Reply-To: <20211214114854.133328-1-xiujianfeng@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 14 Dec 2021 17:47:29 -0500
+Message-ID: <CAHC9VhRYZgDLsouVYkecHK1208dAHwLoGZ56sSTf1zBJ00R0ag@mail.gmail.com>
+Subject: Re: [PATCH -next] audit: use struct_size() helper in kmalloc()
+To:     Xiu Jianfeng <xiujianfeng@huawei.com>
+Cc:     eparis@redhat.com, keescook@chromium.org, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org, wangweiyang2@huawei.com,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Dec 14, 2021 at 11:54:48AM -0600, Gustavo A. R. Silva wrote:
-> On Tue, Dec 14, 2021 at 07:48:54PM +0800, Xiu Jianfeng wrote:
-> > Make use of struct_size() helper instead of an open-coded calucation.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/160
-> > Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-> > ---
-> >  kernel/audit.c       | 2 +-
-> >  kernel/audit_tree.c  | 2 +-
-> >  kernel/auditfilter.c | 2 +-
-> >  3 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index d4084751cfe6..f33028578c60 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
+On Tue, Dec 14, 2021 at 6:48 AM Xiu Jianfeng <xiujianfeng@huawei.com> wrote:
+>
+> Make use of struct_size() helper instead of an open-coded calucation.
+>
+> Link: https://github.com/KSPP/linux/issues/160
+> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> ---
+>  kernel/audit.c       | 2 +-
+>  kernel/audit_tree.c  | 2 +-
+>  kernel/auditfilter.c | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 
-This could use struct_size(), too:
+Merged into audit/next, thanks!
 
-1461                 audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO, 0, 0,
-1462                                  sig_data, sizeof(*sig_data) + len);
-
-> > @@ -1446,7 +1446,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
-> >  			if (err)
-> >  				return err;
-> >  		}
-> > -		sig_data = kmalloc(sizeof(*sig_data) + len, GFP_KERNEL);
-> > +		sig_data = kmalloc(struct_size(sig_data, ctx, len), GFP_KERNEL);
-> >  		if (!sig_data) {
-> >  			if (audit_sig_sid)
-> >  				security_release_secctx(ctx, len);
-> > diff --git a/kernel/audit_tree.c b/kernel/audit_tree.c
-> > index 72324afcffef..e7315d487163 100644
-> > --- a/kernel/audit_tree.c
-> > +++ b/kernel/audit_tree.c
-> > @@ -94,7 +94,7 @@ static struct audit_tree *alloc_tree(const char *s)
-> >  {
-> >  	struct audit_tree *tree;
-> >  
-> > -	tree = kmalloc(sizeof(struct audit_tree) + strlen(s) + 1, GFP_KERNEL);
-> > +	tree = kmalloc(struct_size(tree, pathname, strlen(s) + 1), GFP_KERNEL);
-> >  	if (tree) {
-> >  		refcount_set(&tree->count, 1);
-> >  		tree->goner = 0;
-> > diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-> > index 4173e771650c..19352820b274 100644
-> > --- a/kernel/auditfilter.c
-> > +++ b/kernel/auditfilter.c
-
-Also, in this same file the following piece of code could use
-struct_size(), too:
-
-1093                         skb = audit_make_reply(seq, AUDIT_LIST_RULES, 0, 1,
-1094                                                data,
-1095                                                sizeof(*data) + data->buflen);
-
-Thanks
---
-Gustavo
-
-> > @@ -637,7 +637,7 @@ static struct audit_rule_data *audit_krule_to_data(struct audit_krule *krule)
-> >  	void *bufp;
-> >  	int i;
-> >  
-> > -	data = kmalloc(sizeof(*data) + krule->buflen, GFP_KERNEL);
-> > +	data = kmalloc(struct_size(data, buf, krule->buflen), GFP_KERNEL);
-> 
-> Why don't you also transform the zero-length array in struct
-> audit_rule_data into a flexible-array member:
-> 
-> 508 struct audit_rule_data {
-> 509         __u32           flags;  /* AUDIT_PER_{TASK,CALL}, AUDIT_PREPEND */
-> 510         __u32           action; /* AUDIT_NEVER, AUDIT_POSSIBLE, AUDIT_ALWAYS */
-> 511         __u32           field_count;
-> 512         __u32           mask[AUDIT_BITMASK_SIZE]; /* syscall(s) affected */
-> 513         __u32           fields[AUDIT_MAX_FIELDS];
-> 514         __u32           values[AUDIT_MAX_FIELDS];
-> 515         __u32           fieldflags[AUDIT_MAX_FIELDS];
-> 516         __u32           buflen; /* total length of string fields */
-> 517         char            buf[0]; /* string fields buffer */
-> 518 };
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> >  	if (unlikely(!data))
-> >  		return NULL;
-> >  	memset(data, 0, sizeof(*data));
-> > -- 
-> > 2.17.1
-> > 
-> > 
-> > 
-> > 
+-- 
+paul moore
+www.paul-moore.com
