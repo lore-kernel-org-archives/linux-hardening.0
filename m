@@ -2,124 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F9C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 22:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6B8C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 23:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231597AbhLOW4B (ORCPT
+        id S231875AbhLOXXY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Dec 2021 17:56:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56762 "EHLO
+        Wed, 15 Dec 2021 18:23:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbhLOW4B (ORCPT
+        with ESMTP id S230214AbhLOXXY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Dec 2021 17:56:01 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA2AC06173E
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 14:56:01 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id q16so21302947pgq.10
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 14:56:01 -0800 (PST)
+        Wed, 15 Dec 2021 18:23:24 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC300C061574
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 15:23:23 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id r130so22071233pfc.1
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 15:23:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+yDdWM1yXl+0uRGP+ii65Qcqo9uZymJOI1yKvjKO5Bo=;
-        b=nfAQR8261KPTU/DmR/cBzNRbjAa09R2mWOcDWtVgrihXVScenl4gegVn9oFlX67f4d
-         mtQTuIY10AeskZxY1z1B4OpBOmOl6WuOoku2BsrIOyONUWErkjHg0gabeXByrMjz5jRX
-         N6dwZMMBNsk5fmNae4TYunWL99rZvITISbxII=
+        bh=CUP5pV4LbjbL6ChpTJEV6t+0KAeGUNhk4yeQuFtZ/xA=;
+        b=Ws+rXqdD6928Ay/PkMMSzT9wQHS0j5pi/XTU6+k+VIqcxZBLkmWpp5S+Y9esKdsNkk
+         W7ehpnlaeyFNppGMujWC0hLvjEZHmI7k8iO6sce67sw+hJ0VikA0/af6PIjqMYWfIqm9
+         6TO+YBPwY5vWJ+CV60DZX2tXReWXtwDvUz5jg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+yDdWM1yXl+0uRGP+ii65Qcqo9uZymJOI1yKvjKO5Bo=;
-        b=0SyqrZ2ZbPgoqeLY52AWwazdBN55J+LN9Wa/9Cx1ZLYXbruRrE4z2wX0d791oeJ2jH
-         +akkOZFltUbmQm8/LFKvIcP9wBFBUa91yLF2FwQASqkAd7TXVj50/mx156Si+5enwyQL
-         wH9hlwHTA08o1drJWdk9EOYGxXGGZvkQnopHYNn6fzAFsXBH3Xw1M5An4ZYfak8xvcMt
-         ILiI5nzwnqp5sYf8utA2HEORkhcSjAX2XGdTuCI0goee6PRi315HWCTMwhDWcsF87YD5
-         zXjhd8dyXERqb6QQ3EYnXbrFhOJOrk0HMQ+werGuX8dL4ALwhW52z3Y9uawq7GUz7OPx
-         ZxSA==
-X-Gm-Message-State: AOAM531GAFO8EMtE36TwUP2+bysdUbCd4KLtud9jv35tLy1YgHyvO2vg
-        9loDEopKg/oo84D1hzmW6D10c9a1KDu3bQ==
-X-Google-Smtp-Source: ABdhPJztqkoNURW5JbBJ/LJVnZlKutO225EVHf0VyNSmqU7HtLHqCbI57tLKulVHLvFMUAPEBU49Mw==
-X-Received: by 2002:a05:6a00:248a:b0:4b0:b882:dfc4 with SMTP id c10-20020a056a00248a00b004b0b882dfc4mr11094178pfv.37.1639608960561;
-        Wed, 15 Dec 2021 14:56:00 -0800 (PST)
+        bh=CUP5pV4LbjbL6ChpTJEV6t+0KAeGUNhk4yeQuFtZ/xA=;
+        b=AUXaeqLp3D4yP1U7CwILi73jBSWQpq6+porSl252Fj5ypalvQBLGmVwyNS7u04Wpzy
+         GTn89Kgx20kkK58LgvNKSNqexuvpoov7c3ExeS+7Hvu+roDdn8wxrO8PHGHCkqrsEZf9
+         QXo9CPDNHv9AP1HkQgyqLWX7vYT4fuFc3eXTxqoEkDbDl/e7Bvsv1N11hSiyaB/7EAoW
+         WLfskW/o99aGrNGIv9wQcCPynhiQxDC/ZiFum090lklLO3pFcRpjNnr1pF/8xHEYfTq+
+         ODEb/3fLTzQQ9HfJXKUnNMGDQVpP8jdxt1vWjee6LHz6rUJsQMUu9MJTaIH1MaM7pzeB
+         UGpg==
+X-Gm-Message-State: AOAM530zZ6+yT6KDCtlPExyGQnC+nW6Z+4+qKGjElw0eagCAoWidr9V3
+        +hzdLG9qA9XtvQ8SjBaGKBGQyQ==
+X-Google-Smtp-Source: ABdhPJzqO0/IPXNwz2AlY7ytkYuVi/RaN7Jxgnt3LGSyOxd9ozEXsC2NQNtE2BU7fgql2RtkN7zJfA==
+X-Received: by 2002:a63:db14:: with SMTP id e20mr9656006pgg.177.1639610603355;
+        Wed, 15 Dec 2021 15:23:23 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n15sm3353053pgs.59.2021.12.15.14.56.00
+        by smtp.gmail.com with ESMTPSA id l14sm3166142pgj.16.2021.12.15.15.23.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 14:56:00 -0800 (PST)
+        Wed, 15 Dec 2021 15:23:23 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
+To:     Lars-Peter Clausen <lars@metafoo.de>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Arnaud Ebalard <arno@natisbad.org>,
-        Srujana Challa <schalla@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Suheil Chandran <schandran@marvell.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Lukasz Bartosik <lbartosik@marvell.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] crypto: octeontx2 - Avoid stack variable overflow
-Date:   Wed, 15 Dec 2021 14:55:58 -0800
-Message-Id: <20211215225558.1995027-1-keescook@chromium.org>
+Subject: [PATCH] iio: addac: Do not reference negative array offsets
+Date:   Wed, 15 Dec 2021 15:23:20 -0800
+Message-Id: <20211215232321.2069314-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2736; h=from:subject; bh=w5Fv0a995X+d0i79FZ0Vl+vUson7Nirz5CGVRqYWg1c=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhunJ+Obd9sKybjgpf3E8a1GCX6bhw4M1GOPGBONoK MpK7F2OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbpyfgAKCRCJcvTf3G3AJkF7D/ 45d5PbP9WE+p8E63nh8IAwiCfTQJl0YUHe7/aOf+4NDLpjfqlhJ0qsw8fmRxygV99Z4qdw1ao308HZ BCg/jtmD3bfsMqthOs6/XxmnN2UMhLf5e0FcfXOEyoMVphARYJKeLZRmiiVnsO78t1FLStl+Pfui4O B3qKvcBct/A5hy+MNMVxQQU9wzD5ZTSoyEkG0GJ21CXBarWuDdCE3rJyjhq8hlRuhp8BBbD2LIEHAT SxMS2oPefB7uHzwkbGw9Y6xv5rdwjcHlKyVXtJEy6L7SiKUwRnaYTZFiX+QvYXkY+p1eoi1nT49H7u tEHagcp1e0j9Tfi++PJQU6a+EpxcP/eXzpu8KIPWQe4agawiKe8t98uoUBp14HBsd1OsLozEOwJRaE 1CmVx83xcvxD2/UDjP/WxiGrWkK07EZKBRfLUhQOGPP76FpjJSuBwfFJ8hIAyeuKLfrFE55lHJZ33a XdvGgsH9cikVINQ/NYFSKgMm/Ylsc8eBKWG9rbmP5oR13pP+l/l0Aifi2uQCLwR0zttZRP7B9qYcX0 PkTe5Au+FOyb3L2t2+gEMbMCv3HJCxf4l6knhTgu6Ja99rJYSxKeoDkm6t+/hXK8nGQ9MEL1xsE32C xFz5A56QSAHCE1im/v61tGb8Knf1VvLuQEo5bb/nWvGSufez0gocPmK7CxsA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2147; h=from:subject; bh=Ug++7VdcHQcDDwReQr4ZZ2ULLBwyzvNrHrJYpH65vb8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhunjokBc4G+Gp61s8YXcf4TMtGIMymQWs9kymrw0s eVyhA6SJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbp46AAKCRCJcvTf3G3AJoGwD/ 9Hyty00effkGKmBLJYH8X7GwBl/3KmCr8nA4gf+PRO19CR/YrVhsIitp4v+RuqxsMvuRk2h+ZEYfSR +O46ycFY77Adcs1fTLdmHvNrl+swH0cfnnubMkQmc4TFVJQtyrrG8PWi7rIy4Qyj8RNuKiZQljDu8m VJC+uKkRd6oaayIJYWGjNJrlN73qASgk82bdFMo0YtvOPvNZYXngctZ545RpWGf/jh1hLV+mMsM41d CRE7iegJUpPEOHEamFn/pVRAs/aZ6YW1hdo9W/qGY8aYIJu45Dgy+f+Dcg9UU//QCy+HYmukHX9017 yhKssf9r5WQAM0TYWCMhqb3NaRERQBPZ17C+PO1IkSv2GZG6Eg+r/iFa2Ixsi5f6u+KpX2X29K2M+e PlzC92z9DpXHVdeOQ954dP5nVmn12JlrWwC4hieW+y3tibw76MbSBEjiqWBHjf5NtuH2GMG2wtnAa2 kCQe7GCmcUUc5PZFWlcJy5CK4S39C/pgWb5v+n/dHjMBjpnZmqrvz83zkNeNwfyKMxBY/iVIcOjhOx VlJ/zUYaem2f85axHsfd0octFuSXyWTrfrtDql/qror9JBtwoS8A30Zf5t5xvN9+oEkjKFftYeJSyJ m3rUzjl75PgfjPGWt+Qj5BlVWado8vMvbh2X6MYhwdBeboXXOr8H+c7kuCsA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Building with -Warray-bounds showed a stack variable array index
-overflow. Increase the expected size of the array to avoid the warning:
+Instead of aiming rx_buf at an invalid array-boundary-crossing location,
+just skip the first assignment. Seen when building with -Warray-bounds:
 
-In file included from ./include/linux/printk.h:555,
-                 from ./include/asm-generic/bug.h:22,
-                 from ./arch/x86/include/asm/bug.h:84,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/mmdebug.h:5,
-                 from ./include/linux/gfp.h:5,
-                 from ./include/linux/firmware.h:7,
-                 from drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:5:
-drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c: In function 'otx2_cpt_print_uc_dbg_info':
-./include/linux/dynamic_debug.h:162:33: warning: array subscript 4 is above array bounds of 'u32[4]' {aka 'unsigned int[4]'} [-Warray-bounds]
-  162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
-      |                                 ^
-./include/linux/dynamic_debug.h:134:17: note: in definition of macro '__dynamic_func_call'
-  134 |                 func(&id, ##__VA_ARGS__);               \
-      |                 ^~~~
-./include/linux/dynamic_debug.h:162:9: note: in expansion of macro '_dynamic_func_call'
-  162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
-      |         ^~~~~~~~~~~~~~~~~~
-./include/linux/printk.h:570:9: note: in expansion of macro 'dynamic_pr_debug'
-  570 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
-      |         ^~~~~~~~~~~~~~~~
-drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1807:41: note: in expansion of macro 'pr_debug'
- 1807 |                                         pr_debug("Mask: %8.8x %8.8x %8.8x %8.8x %8.8x",
-      |                                         ^~~~~~~~
-drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1765:13: note: while referencing 'mask'
- 1765 |         u32 mask[4];
-      |             ^~~~
+drivers/iio/addac/ad74413r.c: In function 'ad74413r_update_scan_mode':
+drivers/iio/addac/ad74413r.c:843:22: warning: array subscript -4 is below array bounds of 'u8[16]' { aka 'unsigned char[16]'} [-Warray-bounds]
+  843 |         u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 * AD74413R_FRAME_SIZE];
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/iio/addac/ad74413r.c:84:20: note: while referencing 'rx_buf'
+   84 |                 u8 rx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX];
+      |                    ^~~~~~
 
-Fixes: d9d7749773e8 ("crypto: octeontx2 - add apis for custom engine groups")
+Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/addac/ad74413r.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
-index 57307eac541c..7ed3c18eca19 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
-@@ -1762,7 +1762,7 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
- 	char engs_info[2 * OTX2_CPT_NAME_LENGTH];
- 	struct otx2_cpt_eng_grp_info *grp;
- 	struct otx2_cpt_engs_rsvd *engs;
--	u32 mask[4];
-+	u32 mask[5];
- 	int i, j;
+diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
+index cbd9aa9b399a..b0a6d8ee5133 100644
+--- a/drivers/iio/addac/ad74413r.c
++++ b/drivers/iio/addac/ad74413r.c
+@@ -840,7 +840,7 @@ static int ad74413r_update_scan_mode(struct iio_dev *indio_dev,
+ {
+ 	struct ad74413r_state *st = iio_priv(indio_dev);
+ 	struct spi_transfer *xfer = st->adc_samples_xfer;
+-	u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 * AD74413R_FRAME_SIZE];
++	u8 *rx_buf = st->adc_samples_buf.rx_buf;
+ 	u8 *tx_buf = st->adc_samples_tx_buf;
+ 	unsigned int channel;
+ 	int ret;
+@@ -877,9 +877,8 @@ static int ad74413r_update_scan_mode(struct iio_dev *indio_dev,
+ 		if (ret)
+ 			goto out;
  
- 	pr_debug("Engine groups global info");
+-		st->adc_active_channels++;
+ 
+-		if (xfer == st->adc_samples_xfer)
++		if (xfer == st->adc_samples_xfer || st->adc_active_channels == 0)
+ 			xfer->rx_buf = NULL;
+ 		else
+ 			xfer->rx_buf = rx_buf;
+@@ -896,7 +895,10 @@ static int ad74413r_update_scan_mode(struct iio_dev *indio_dev,
+ 
+ 		xfer++;
+ 		tx_buf += AD74413R_FRAME_SIZE;
+-		rx_buf += AD74413R_FRAME_SIZE;
++		if (st->adc_active_channels)
++			rx_buf += AD74413R_FRAME_SIZE;
++
++		st->adc_active_channels++;
+ 	}
+ 
+ 	xfer->rx_buf = rx_buf;
 -- 
 2.30.2
 
