@@ -2,143 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0553AC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 21:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68A2C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 21:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbhLOVyZ (ORCPT
+        id S230289AbhLOV70 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Dec 2021 16:54:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbhLOVyZ (ORCPT
+        Wed, 15 Dec 2021 16:59:26 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:58334 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230116AbhLOV7Z (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Dec 2021 16:54:25 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB2D2C061574;
-        Wed, 15 Dec 2021 13:54:24 -0800 (PST)
+        Wed, 15 Dec 2021 16:59:25 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 48AE161B05;
-        Wed, 15 Dec 2021 21:54:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67352C36AE4;
-        Wed, 15 Dec 2021 21:54:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3BC0861ADD;
+        Wed, 15 Dec 2021 21:59:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B94AC36AE2;
+        Wed, 15 Dec 2021 21:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639605263;
-        bh=1oN5MbiWr8ncJJISL0YeC2irLttfEL4nIXiN8arS9kg=;
+        s=k20201202; t=1639605564;
+        bh=DVg54QbMWu+0DdObQKJN9dF5Q1puv+DkorrIi0OFPFw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Fpb7hXGwN2dX+Kwe//hSaynEpB9Ur4A6oXW4ZZJcZ6ZN3NK2AZTuvCgQC4OR2bp/i
-         4hhNG+BXhPpL3WScjLW4+gUUatMwp3+B86/BnL2afS6Nt+YSTsf+0fseMwkMuoP2w0
-         O7kEQjMc7HU9o0CoojLop73+Mfo3zWeDSriOhjip3RaYE85SZKGQV3xA97WAG9hY9f
-         7+4ugxvE7Ro4ymnwGVUpQUztJMNCGXSIhktEoaCP+2BoSz0PEsVXy01tGYhpBJ62mh
-         d11dmRFKnY2vmIaxkB/MRNqwvivAN5GdO2MOHphh0XeWCHEib1UFatwGT31oBjLMKu
-         Qy+pkK56XxNEQ==
-Date:   Wed, 15 Dec 2021 16:00:04 -0600
+        b=VZkjPXSi+PKmQfTY3OXjEFGlXW2uD/kzBLrimazVJbPzcfud+jl81BX41iCcMEd8s
+         cVR8upjEpWY577HmriQTkSCzTyR5DPqJFW6+h0xGRMa0jhXa+egPUl44MkKcUUuYMp
+         oHZ4bZJgFgy+I1zPjCynd7G2J/GneX5J+SvysYv4rfVDmaZHWZYF3lg8wCZcmNSfBz
+         +6TQScSMXyclEt318c9dWMBNkHxov8H43aFqm5eB7mqd7ovh7/5kAR/V0EWGUEvz/n
+         ucpIZOe7c1pcX8DaI4R4Xx8Q5cL8M1P+WdGJGs50NTmu9j7izUvksfr1cEeugES6CI
+         mvrp+V7gD5sRw==
+Date:   Wed, 15 Dec 2021 16:05:05 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc:     paul@paul-moore.com, eparis@redhat.com, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH -next, v2] audit: use struct_size() helper in kmalloc()
-Message-ID: <20211215220004.GA21862@embeddedor>
-References: <20211215030420.72324-1-xiujianfeng@huawei.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] media: omap3isp: Use struct_group() for memcpy() region
+Message-ID: <20211215220505.GB21862@embeddedor>
+References: <20211118184352.1284792-1-keescook@chromium.org>
+ <20211213232416.GA60133@embeddedor>
+ <202112150937.8E4974D35@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211215030420.72324-1-xiujianfeng@huawei.com>
+In-Reply-To: <202112150937.8E4974D35@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 11:04:20AM +0800, Xiu Jianfeng wrote:
-> Make use of struct_size() helper instead of an open-coded calculation.
+On Wed, Dec 15, 2021 at 09:38:55AM -0800, Kees Cook wrote:
+> On Mon, Dec 13, 2021 at 05:24:16PM -0600, Gustavo A. R. Silva wrote:
+> > On Thu, Nov 18, 2021 at 10:43:52AM -0800, Kees Cook wrote:
+> > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > > field bounds checking for memcpy(), memmove(), and memset(), avoid
+> > > intentionally writing across neighboring fields. Wrap the target region
+> > > in struct_group(). This additionally fixes a theoretical misalignment
+> > > of the copy (since the size of "buf" changes between 64-bit and 32-bit,
+> > > but this is likely never built for 64-bit).
+> > > 
+> > > FWIW, I think this code is totally broken on 64-bit (which appears to
+> > > not be a "real" build configuration): it would either always fail (with
+> > > an uninitialized data->buf_size) or would cause corruption in userspace
+> > > due to the copy_to_user() in the call path against an uninitialized
+> > > data->buf value:
+> > > 
+> > > omap3isp_stat_request_statistics_time32(...)
+> > >     struct omap3isp_stat_data data64;
+> > >     ...
+> > >     omap3isp_stat_request_statistics(stat, &data64);
+> > > 
+> > > int omap3isp_stat_request_statistics(struct ispstat *stat,
+> > >                                      struct omap3isp_stat_data *data)
+> > >     ...
+> > >     buf = isp_stat_buf_get(stat, data);
+> > > 
+> > > static struct ispstat_buffer *isp_stat_buf_get(struct ispstat *stat,
+> > >                                                struct omap3isp_stat_data *data)
+> > > ...
+> > >     if (buf->buf_size > data->buf_size) {
+> > >             ...
+> > >             return ERR_PTR(-EINVAL);
+> > >     }
+> > >     ...
+> > >     rval = copy_to_user(data->buf,
+> > >                         buf->virt_addr,
+> > >                         buf->buf_size);
+> > > 
+> > > Regardless, additionally initialize data64 to be zero-filled to avoid
+> > > undefined behavior.
+> > > 
+> > > Fixes: 378e3f81cb56 ("media: omap3isp: support 64-bit version of omap3isp_stat_data")
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I think you should also mention the flexible array transformation in
-struct audit_rule_data.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+> > > ---
+> > >  drivers/media/platform/omap3isp/ispstat.c |  5 +++--
+> > >  include/uapi/linux/omap3isp.h             | 21 +++++++++++++--------
+> > >  2 files changed, 16 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
+> > > index 5b9b57f4d9bf..68cf68dbcace 100644
+> > > --- a/drivers/media/platform/omap3isp/ispstat.c
+> > > +++ b/drivers/media/platform/omap3isp/ispstat.c
+> > > @@ -512,7 +512,7 @@ int omap3isp_stat_request_statistics(struct ispstat *stat,
+> > >  int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
+> > >  					struct omap3isp_stat_data_time32 *data)
+> > >  {
+> > > -	struct omap3isp_stat_data data64;
+> > > +	struct omap3isp_stat_data data64 = { };
+> > >  	int ret;
+> > >  
+> > >  	ret = omap3isp_stat_request_statistics(stat, &data64);
+> > > @@ -521,7 +521,8 @@ int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
+> > >  
+> > >  	data->ts.tv_sec = data64.ts.tv_sec;
+> > >  	data->ts.tv_usec = data64.ts.tv_usec;
+> > > -	memcpy(&data->buf, &data64.buf, sizeof(*data) - sizeof(data->ts));
+> > > +	data->buf = (uintptr_t)data64.buf;
+> > 
+> > Shouldn't this be
+> > 
+> > 	data->buf = (uintptr_t)(void *)data64.buf;
+> > 
+> > instead?
+> 
+> This is already a void *:
+> 
+> struct omap3isp_stat_data {
+> 	...
+>         void __user *buf;
+> };
+> 
+> But I agree, the mix of structures in here is confusing! :)
+
+Yep; you're right. :)
 
 Thanks
 --
 Gustavo
-
-> 
-> Link: https://github.com/KSPP/linux/issues/160
-> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-> ---
->  include/uapi/linux/audit.h | 2 +-
->  kernel/audit.c             | 4 ++--
->  kernel/audit_tree.c        | 2 +-
->  kernel/auditfilter.c       | 4 ++--
->  4 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> index 9176a095fefc..8eda133ca4c1 100644
-> --- a/include/uapi/linux/audit.h
-> +++ b/include/uapi/linux/audit.h
-> @@ -514,7 +514,7 @@ struct audit_rule_data {
->  	__u32		values[AUDIT_MAX_FIELDS];
->  	__u32		fieldflags[AUDIT_MAX_FIELDS];
->  	__u32		buflen;	/* total length of string fields */
-> -	char		buf[0];	/* string fields buffer */
-> +	char		buf[];	/* string fields buffer */
->  };
->  
->  #endif /* _UAPI_LINUX_AUDIT_H_ */
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index d4084751cfe6..7778eca34837 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -1446,7 +1446,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->  			if (err)
->  				return err;
->  		}
-> -		sig_data = kmalloc(sizeof(*sig_data) + len, GFP_KERNEL);
-> +		sig_data = kmalloc(struct_size(sig_data, ctx, len), GFP_KERNEL);
->  		if (!sig_data) {
->  			if (audit_sig_sid)
->  				security_release_secctx(ctx, len);
-> @@ -1459,7 +1459,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->  			security_release_secctx(ctx, len);
->  		}
->  		audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO, 0, 0,
-> -				 sig_data, sizeof(*sig_data) + len);
-> +				 sig_data, struct_size(sig_data, ctx, len));
->  		kfree(sig_data);
->  		break;
->  	case AUDIT_TTY_GET: {
-> diff --git a/kernel/audit_tree.c b/kernel/audit_tree.c
-> index 72324afcffef..e7315d487163 100644
-> --- a/kernel/audit_tree.c
-> +++ b/kernel/audit_tree.c
-> @@ -94,7 +94,7 @@ static struct audit_tree *alloc_tree(const char *s)
->  {
->  	struct audit_tree *tree;
->  
-> -	tree = kmalloc(sizeof(struct audit_tree) + strlen(s) + 1, GFP_KERNEL);
-> +	tree = kmalloc(struct_size(tree, pathname, strlen(s) + 1), GFP_KERNEL);
->  	if (tree) {
->  		refcount_set(&tree->count, 1);
->  		tree->goner = 0;
-> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-> index 4173e771650c..42d99896e7a6 100644
-> --- a/kernel/auditfilter.c
-> +++ b/kernel/auditfilter.c
-> @@ -637,7 +637,7 @@ static struct audit_rule_data *audit_krule_to_data(struct audit_krule *krule)
->  	void *bufp;
->  	int i;
->  
-> -	data = kmalloc(sizeof(*data) + krule->buflen, GFP_KERNEL);
-> +	data = kmalloc(struct_size(data, buf, krule->buflen), GFP_KERNEL);
->  	if (unlikely(!data))
->  		return NULL;
->  	memset(data, 0, sizeof(*data));
-> @@ -1092,7 +1092,7 @@ static void audit_list_rules(int seq, struct sk_buff_head *q)
->  				break;
->  			skb = audit_make_reply(seq, AUDIT_LIST_RULES, 0, 1,
->  					       data,
-> -					       sizeof(*data) + data->buflen);
-> +					       struct_size(data, buf, data->buflen));
->  			if (skb)
->  				skb_queue_tail(q, skb);
->  			kfree(data);
-> -- 
-> 2.17.1
-> 
