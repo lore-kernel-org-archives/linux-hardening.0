@@ -2,95 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF721C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 22:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F9C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 22:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230358AbhLOWYa (ORCPT
+        id S231597AbhLOW4B (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Dec 2021 17:24:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49376 "EHLO
+        Wed, 15 Dec 2021 17:56:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230345AbhLOWYa (ORCPT
+        with ESMTP id S229906AbhLOW4B (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Dec 2021 17:24:30 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 364E6C061574
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 14:24:30 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id m24so17740298pls.10
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 14:24:30 -0800 (PST)
+        Wed, 15 Dec 2021 17:56:01 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA2AC06173E
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 14:56:01 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id q16so21302947pgq.10
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 14:56:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ycDsmx3PyCZ6frecumpmSuFIqgxs7vNgPaQ/w3kiJEc=;
-        b=DR7M8QbZ1tBnbdUmI6yi7VcT3mNXhvl8LO66qDfb0Jt1VZvST/nR9enfI7qM6YkPCX
-         P3dWIwzZSQDuMU45iFz4vsXeSnxV6xjhP2MFIt9SQicS5/xLLAcA4JU2j2YqeUltjs5/
-         HNEy0BuooiU7ZULR4tJ3QXZ6tRwyInfC3DA+A=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+yDdWM1yXl+0uRGP+ii65Qcqo9uZymJOI1yKvjKO5Bo=;
+        b=nfAQR8261KPTU/DmR/cBzNRbjAa09R2mWOcDWtVgrihXVScenl4gegVn9oFlX67f4d
+         mtQTuIY10AeskZxY1z1B4OpBOmOl6WuOoku2BsrIOyONUWErkjHg0gabeXByrMjz5jRX
+         N6dwZMMBNsk5fmNae4TYunWL99rZvITISbxII=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ycDsmx3PyCZ6frecumpmSuFIqgxs7vNgPaQ/w3kiJEc=;
-        b=P8i1fHG7zqJ6y6WC8rSVjiPu8TF5Z4lX5YctJMQsXYJKBYrcyZkAoJ/Zm9A//Y6j4N
-         DJPLmYGkirNs94zbwy8EKXomfgLHnJ1Nr2mC6ReN0b5YqNRnWY4BDtZl+NXJiFia3yZQ
-         4cBFG/AilPgpGvytsu3M3rHggUMzm7FwAQfqvFsMiCWx/YZB3G7/ntxUUoPznWupALvN
-         dpJRnsvm9JidmwdJ/U86v37BAwVShYNk3deyg6MU+A37Ywr51pm1vwaWrMuK2cObaPiw
-         ZRXLFYxrh8KhvwFBWRPWZPTBUeCnFh00OEymnGbPKjKbo+HO2BMyqFW+wrUAJeb0TSqu
-         HXMg==
-X-Gm-Message-State: AOAM531ugYQwxfNJxxEaXVbUXBkcrJDCBvgwaZjzJe9enC/E/IBGdSIs
-        6bMRcv4g9g2Rx8haebeeblz9qg==
-X-Google-Smtp-Source: ABdhPJyPaKZPEyh99xkYURqN/PIzlVuqSRGBt2Np9ALE4Ou+FS1gPA5SR9cPXBOtOgKmZVaNLESR0w==
-X-Received: by 2002:a17:903:41ca:b0:142:1dff:1cb7 with SMTP id u10-20020a17090341ca00b001421dff1cb7mr12924238ple.37.1639607069738;
-        Wed, 15 Dec 2021 14:24:29 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+yDdWM1yXl+0uRGP+ii65Qcqo9uZymJOI1yKvjKO5Bo=;
+        b=0SyqrZ2ZbPgoqeLY52AWwazdBN55J+LN9Wa/9Cx1ZLYXbruRrE4z2wX0d791oeJ2jH
+         +akkOZFltUbmQm8/LFKvIcP9wBFBUa91yLF2FwQASqkAd7TXVj50/mx156Si+5enwyQL
+         wH9hlwHTA08o1drJWdk9EOYGxXGGZvkQnopHYNn6fzAFsXBH3Xw1M5An4ZYfak8xvcMt
+         ILiI5nzwnqp5sYf8utA2HEORkhcSjAX2XGdTuCI0goee6PRi315HWCTMwhDWcsF87YD5
+         zXjhd8dyXERqb6QQ3EYnXbrFhOJOrk0HMQ+werGuX8dL4ALwhW52z3Y9uawq7GUz7OPx
+         ZxSA==
+X-Gm-Message-State: AOAM531GAFO8EMtE36TwUP2+bysdUbCd4KLtud9jv35tLy1YgHyvO2vg
+        9loDEopKg/oo84D1hzmW6D10c9a1KDu3bQ==
+X-Google-Smtp-Source: ABdhPJztqkoNURW5JbBJ/LJVnZlKutO225EVHf0VyNSmqU7HtLHqCbI57tLKulVHLvFMUAPEBU49Mw==
+X-Received: by 2002:a05:6a00:248a:b0:4b0:b882:dfc4 with SMTP id c10-20020a056a00248a00b004b0b882dfc4mr11094178pfv.37.1639608960561;
+        Wed, 15 Dec 2021 14:56:00 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o4sm6289739pjq.23.2021.12.15.14.24.29
+        by smtp.gmail.com with ESMTPSA id n15sm3353053pgs.59.2021.12.15.14.56.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 14:24:29 -0800 (PST)
-Date:   Wed, 15 Dec 2021 14:24:28 -0800
+        Wed, 15 Dec 2021 14:56:00 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/dp: Fix off-by-one in register cache size
-Message-ID: <202112151424.A44D2B7A@keescook>
-References: <20211203084333.3105038-1-keescook@chromium.org>
- <20211214001849.GA62559@embeddedor>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Arnaud Ebalard <arno@natisbad.org>,
+        Srujana Challa <schalla@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Suheil Chandran <schandran@marvell.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Lukasz Bartosik <lbartosik@marvell.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] crypto: octeontx2 - Avoid stack variable overflow
+Date:   Wed, 15 Dec 2021 14:55:58 -0800
+Message-Id: <20211215225558.1995027-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211214001849.GA62559@embeddedor>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2736; h=from:subject; bh=w5Fv0a995X+d0i79FZ0Vl+vUson7Nirz5CGVRqYWg1c=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhunJ+Obd9sKybjgpf3E8a1GCX6bhw4M1GOPGBONoK MpK7F2OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbpyfgAKCRCJcvTf3G3AJkF7D/ 45d5PbP9WE+p8E63nh8IAwiCfTQJl0YUHe7/aOf+4NDLpjfqlhJ0qsw8fmRxygV99Z4qdw1ao308HZ BCg/jtmD3bfsMqthOs6/XxmnN2UMhLf5e0FcfXOEyoMVphARYJKeLZRmiiVnsO78t1FLStl+Pfui4O B3qKvcBct/A5hy+MNMVxQQU9wzD5ZTSoyEkG0GJ21CXBarWuDdCE3rJyjhq8hlRuhp8BBbD2LIEHAT SxMS2oPefB7uHzwkbGw9Y6xv5rdwjcHlKyVXtJEy6L7SiKUwRnaYTZFiX+QvYXkY+p1eoi1nT49H7u tEHagcp1e0j9Tfi++PJQU6a+EpxcP/eXzpu8KIPWQe4agawiKe8t98uoUBp14HBsd1OsLozEOwJRaE 1CmVx83xcvxD2/UDjP/WxiGrWkK07EZKBRfLUhQOGPP76FpjJSuBwfFJ8hIAyeuKLfrFE55lHJZ33a XdvGgsH9cikVINQ/NYFSKgMm/Ylsc8eBKWG9rbmP5oR13pP+l/l0Aifi2uQCLwR0zttZRP7B9qYcX0 PkTe5Au+FOyb3L2t2+gEMbMCv3HJCxf4l6knhTgu6Ja99rJYSxKeoDkm6t+/hXK8nGQ9MEL1xsE32C xFz5A56QSAHCE1im/v61tGb8Knf1VvLuQEo5bb/nWvGSufez0gocPmK7CxsA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 06:18:49PM -0600, Gustavo A. R. Silva wrote:
-> On Fri, Dec 03, 2021 at 12:43:33AM -0800, Kees Cook wrote:
-> > The pcon_dsc_dpcd array holds 13 registers (0x92 through 0x9E). Fix the
-> > math to calculate the max size. Found from a -Warray-bounds build:
-> > 
-> > drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_pcon_dsc_bpp_incr':
-> > drivers/gpu/drm/drm_dp_helper.c:3130:28: error: array subscript 12 is outside array bounds of 'const u8[12]' {aka 'const unsigned char[12]'} [-Werror=array-bounds]
-> >  3130 |         buf = pcon_dsc_dpcd[DP_PCON_DSC_BPP_INCR - DP_PCON_DSC_ENCODER];
-> >       |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/drm_dp_helper.c:3126:39: note: while referencing 'pcon_dsc_dpcd'
-> >  3126 | int drm_dp_pcon_dsc_bpp_incr(const u8 pcon_dsc_dpcd[DP_PCON_DSC_ENCODER_CAP_SIZE])
-> >       |                              ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Fixes: e2e16da398d9 ("drm/dp_helper: Add support for Configuring DSC for HDMI2.1 Pcon")
-> 
-> This should be tagged for -stable:
-> 
-> Cc: stable@vger.kernel.org
+Building with -Warray-bounds showed a stack variable array index
+overflow. Increase the expected size of the array to avoid the warning:
 
-Ah yes, thank you! :)
+In file included from ./include/linux/printk.h:555,
+                 from ./include/asm-generic/bug.h:22,
+                 from ./arch/x86/include/asm/bug.h:84,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/gfp.h:5,
+                 from ./include/linux/firmware.h:7,
+                 from drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:5:
+drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c: In function 'otx2_cpt_print_uc_dbg_info':
+./include/linux/dynamic_debug.h:162:33: warning: array subscript 4 is above array bounds of 'u32[4]' {aka 'unsigned int[4]'} [-Warray-bounds]
+  162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
+      |                                 ^
+./include/linux/dynamic_debug.h:134:17: note: in definition of macro '__dynamic_func_call'
+  134 |                 func(&id, ##__VA_ARGS__);               \
+      |                 ^~~~
+./include/linux/dynamic_debug.h:162:9: note: in expansion of macro '_dynamic_func_call'
+  162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
+      |         ^~~~~~~~~~~~~~~~~~
+./include/linux/printk.h:570:9: note: in expansion of macro 'dynamic_pr_debug'
+  570 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~
+drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1807:41: note: in expansion of macro 'pr_debug'
+ 1807 |                                         pr_debug("Mask: %8.8x %8.8x %8.8x %8.8x %8.8x",
+      |                                         ^~~~~~~~
+drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1765:13: note: while referencing 'mask'
+ 1765 |         u32 mask[4];
+      |             ^~~~
 
+Fixes: d9d7749773e8 ("crypto: octeontx2 - add apis for custom engine groups")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
+index 57307eac541c..7ed3c18eca19 100644
+--- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
++++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
+@@ -1762,7 +1762,7 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
+ 	char engs_info[2 * OTX2_CPT_NAME_LENGTH];
+ 	struct otx2_cpt_eng_grp_info *grp;
+ 	struct otx2_cpt_engs_rsvd *engs;
+-	u32 mask[4];
++	u32 mask[5];
+ 	int i, j;
+ 
+ 	pr_debug("Engine groups global info");
 -- 
-Kees Cook
+2.30.2
+
