@@ -2,61 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DB8C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 23:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593E8C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 23:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231959AbhLOXZA (ORCPT
+        id S231971AbhLOXZP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Dec 2021 18:25:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35050 "EHLO
+        Wed, 15 Dec 2021 18:25:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231860AbhLOXZA (ORCPT
+        with ESMTP id S231952AbhLOXZP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Dec 2021 18:25:00 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DB1C06173E
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 15:25:00 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id np3so18834640pjb.4
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 15:25:00 -0800 (PST)
+        Wed, 15 Dec 2021 18:25:15 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE4FC06173E
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 15:25:15 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id v23so18822098pjr.5
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 15:25:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lOr9C9xGp11EEnMY3mMNWnNiJYgAxYlemMxGk2HFuRg=;
-        b=lytFoHtl0Lj32T5InjYLVfxQZpi2WKgvEyhVMgT1fI8y84D6tHBNzP2H6nWgdcqK3N
-         8Q+vb5MLG21B7TUEc5BQ6PqqSIr73XjfrIE6XGlg3dEZTiDafUr625Fj5zwbf88NLuT8
-         RzFSK+dzcaGBASN30uynT15pcz545Ls0qCol8=
+        bh=vDUcxi+1vGmZblRbJ1Sm9A93/BTFWuWvpCJG8LRDqkk=;
+        b=DXYPMTYBbhpvhrxDXuuENJokIN1C4FOkTY68o9ZdjY2X0pGgYoeO8rgMJaLTIsJsrs
+         hmhV7bxWtULdRgZPqxLDrtgFNOXSv0KV8oWxGpMGFNLqSmTy7fmcHkQ1kpl4yEeKFaCQ
+         UoJ3WJjaqxJiystBa+XimfZjMEBdQR3ZC1UQg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lOr9C9xGp11EEnMY3mMNWnNiJYgAxYlemMxGk2HFuRg=;
-        b=1UZlyzooDUUoriv5cAGHJ4NGfCv2jcJefkEtfY2YGz+IG6c3jw4K6KrkicwhGrt6hW
-         /uN/qyA8phE03fhx2uNCKdrZCIr3W3bheBpNYYxFWeIaufHov7tod+VkdId/cCDJjlpx
-         pZCRm4AYMQFWSeMkeA2cYUmJ3mqw2ClveukAEtvpYoFjY61ra40qhsBtoqlDz5lGdvTg
-         3jMwUR0L5EEEHZEO8Iq3XhMEkM3PuSlS5pHc81OzaIKE+6REfR8lBYMJq5xGWUsJ73qQ
-         OTnACAAGJ6cDtaG8wFZ7gBNHN6mW9bsmUCSl72O3A6gUDbyo6e6TTJp6S518JQ5PvI42
-         woiw==
-X-Gm-Message-State: AOAM5314P/H7csrjqevYnXnTCMKZmJIRe58B3rdg3qEV7LtskyUd2I5p
-        PjznDAIXjNXSCn6cxwpnongEEA==
-X-Google-Smtp-Source: ABdhPJzWEzTUG8xEzsrfCljx5peyqWkmmblcXXzUthtaiwkcoc9pZyhh5uOifCLoK13xyFngR5KyTg==
-X-Received: by 2002:a17:90a:6fc2:: with SMTP id e60mr2518511pjk.207.1639610699761;
-        Wed, 15 Dec 2021 15:24:59 -0800 (PST)
+        bh=vDUcxi+1vGmZblRbJ1Sm9A93/BTFWuWvpCJG8LRDqkk=;
+        b=mWUC5Ee4D3DMII1/2IuFY5K3otp6hy9VSZxnsBhptS/qm4xvgg5bIhYSf/3hJOdPsx
+         cHbBHDsx26ty3Id7o0ZXmetK98f6im7fsFiK6fiskkYrp9zk9MmFJQTCk0qHvhcZ868D
+         tv//U67Ffle2emWetjV18qU2bphQdIWqgMOq9EKvvZPqNwesogUkgo5yE/WclXy1Gf2Z
+         5FeOCm4T5meXQeiSmOOR8oiTD6iGsLelB/OBuiFtOkpMPYF66woXqbbd9hnb/k6Xmt/w
+         e631tYto1hhJOA2ChoNZFP53NE3vpAvnSwg7LIOHPjMzvaUiyhT7X+hx0sW2lDFs7IS/
+         NbIQ==
+X-Gm-Message-State: AOAM533b0kgOA4wS2Sq/L99Pl8HTBmqhOLnBS9rpQstFNiyR7XnaWf80
+        FC/9o3g1hD9i9Z8iFjXCsQYj8eGrXEcX+Q==
+X-Google-Smtp-Source: ABdhPJy5py/792S478eMSZrNlgV3972pgHifUoF5SICCwYNK+P2sBeyjHIvi7Ls6eSNJ7zV9Rq3Hlg==
+X-Received: by 2002:a17:902:b712:b0:143:72b7:4096 with SMTP id d18-20020a170902b71200b0014372b74096mr13995974pls.25.1639610714881;
+        Wed, 15 Dec 2021 15:25:14 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j8sm3236014pgf.21.2021.12.15.15.24.59
+        by smtp.gmail.com with ESMTPSA id b18sm3120925pjo.31.2021.12.15.15.25.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 15:24:59 -0800 (PST)
+        Wed, 15 Dec 2021 15:25:14 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>, Marc Zyngier <maz@kernel.org>,
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Yury Norov <yury.norov@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] irqchip: Use correctly sized arguments for bit field
-Date:   Wed, 15 Dec 2021 15:24:57 -0800
-Message-Id: <20211215232457.2069969-1-keescook@chromium.org>
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] iio: stmpe-adc: Use correctly sized arguments for bit field
+Date:   Wed, 15 Dec 2021 15:25:13 -0800
+Message-Id: <20211215232513.2070158-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2200; h=from:subject; bh=I5WDSOsav2JhZZJmDTlc6oPqCbgqurX0/oC9QsVqu7I=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhunlJSnbmL3ZFf+n4wr1+7GmFEXHGYrRsE7Q8E7L9 /lzhAIKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbp5SQAKCRCJcvTf3G3AJozvD/ 9GyRwY3NUXGkDc/Q4t0UwRNQico29xfXJltIzBTh6tlvI7Biv8/ruDgWE70+c+a7kC4/1A+NdotwIv lQdb+4QCzYClI5CTvxH0kPJ/b11FIh40lGWCnRKqNHXHOJ0ecy7BbE0X07BQ8xwd3M4IXoYjSx6FeX G4ToOFW0FRfAm11n2yLD+55iykcvj13VU270+zWTvQqguzHp6Oz6Be763MpCTDOjAnCzxGkXYTN57z xun+YfYZp/gLKUeyKDn4WMNusAhyQKWTSCAXgy55PxOH+RP/bgPglm/DtZfE/u0Lw0odUDlgrqhg8G 64C8c3pwHSLKYSIQen2HvyEQMYFA3t+adusVD7uuwSCF1i/nv3mW6F4xUy5Z5SL/VtgV/SbeMejNdF cikyDiACgF6WTERpVdpyKAQ9FTXG2LTI9yf4Euk367u/3oaAejNmjspB5tqwLhqcg4hjkt0NpyD9Kh XCHWAi6+BsUZFr7LaJr3BaCwh+trqI8SoJJySRRSImbVvWz/UzDZcGg/xoRwtVJqr5kfJ2j0wpxAWq lR1pZ8BsOyriLEOT1hYXWfUqCFx538qX1tVSByGdiJngbG2I8bUF0hKtCvUANm00D5C54GlfAt1PWk XFs/ugvJqjEZlrYlGB2V/BHSNl1Qp1JdN/+utLfM/rYPNdh20qRbd9UAXmbA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2545; h=from:subject; bh=S+yja+ZH2OmWXK3ijI5wGcAm/sNwDDcR7CmSYgsRQzo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhunlYeGsDYpcqYmqKGq1gspbWZM1i9uJh+lhO3VSQ FHREJxSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbp5WAAKCRCJcvTf3G3AJlBiD/ 9NL3ZLujTHevof7dlDGHJPmKwu+YtML22gc59bhFYHNlrW1bYIyk8TVkzq+kmWec+iWtOk61RpCSXS Z0k7OnyjFshW0V/lqBxlh9J5enIY+QUpyTtjZItLHc+peGRRmKU3uDXa8yjTgmYevNLvTHfOipZRzz YX5h1sDytZpE3iLSCyn/6iQF51ttub/xD2LyDYPWCVRhJxhfyqNNLqMT9ieTj7XSNP7ho0xpLojXtG tYWFm1l7YezgqMr59jAE6fQpMkolVM6/jLRvwm94HRifQWDQlVIJz2D/fE/HI8uMpMN9h/dj3lWqCz b4ueQOnKzDV9J1CjKjjZzWHmB+YITuSkqr1zsPTHvccwOfdpBMTwPqh9G2MRm0jUXjYh5wbbdX0RnY JVZy4dPkxUArpoQx+Xv4Tfh8F/WXlRyqbV/+GBScF9djq6yabzoTpogdl8ms5SWTD/qQZalMX7vnQS b71qchU1Q+2z06VaTVhRZQ/+9b0CpOQNr0Dwnp7anmFBJ+HiWBzxsh5MK6pgbk4EDXUwePl6dA/RyO nVDXPwtQGKzNPzhRAFRnnBCAqowSzkQzNAUNtmHVyPfmg5yUjLgG9QlaoTPq/J+G5/qAgZv8HMan4Q g/nbEXYvBPu9ipCueVOY3evU+0zo1CFssLloRyC7DBje0O6J/hslJrPUKIfw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -70,48 +76,54 @@ which we'd like to enable globally:
 
 In file included from ./include/linux/bitmap.h:9,
                  from ./include/linux/cpumask.h:12,
-                 from ./include/linux/smp.h:13,
-                 from ./include/linux/lockdep.h:14,
-                 from ./include/linux/mutex.h:17,
-                 from ./include/linux/notifier.h:14,
-                 from ./include/linux/clk.h:14,
-                 from drivers/irqchip/irq-ingenic-tcu.c:7:
-drivers/irqchip/irq-ingenic-tcu.c: In function 'ingenic_tcu_intc_cascade':
-./include/linux/find.h:40:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'uint32_t[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
-   40 |                 val = *addr & GENMASK(size - 1, offset);
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+                 from ./arch/x86/include/asm/processor.h:22,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:60,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:55,
+                 from ./include/linux/swait.h:7,
+                 from ./include/linux/completion.h:12,
+                 from drivers/iio/adc/stmpe-adc.c:10:
+drivers/iio/adc/stmpe-adc.c: In function 'stmpe_adc_probe':
+./include/linux/find.h:98:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
+   98 |                 val = *addr | ~GENMASK(size - 1, offset);
       |                       ^~~~~
-drivers/irqchip/irq-ingenic-tcu.c:30:18: note: while referencing 'irq_reg'
-   30 |         uint32_t irq_reg, irq_mask;
-      |                  ^~~~~~~
+drivers/iio/adc/stmpe-adc.c:258:13: note: while referencing 'norequest_mask'
+  258 |         u32 norequest_mask = 0;
+      |             ^~~~~~~~~~~~~~
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/irqchip/irq-ingenic-tcu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/adc/stmpe-adc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-ingenic-tcu.c b/drivers/irqchip/irq-ingenic-tcu.c
-index 34a7d261b710..3363f83bd7e9 100644
---- a/drivers/irqchip/irq-ingenic-tcu.c
-+++ b/drivers/irqchip/irq-ingenic-tcu.c
-@@ -28,6 +28,7 @@ static void ingenic_tcu_intc_cascade(struct irq_desc *desc)
- 	struct irq_chip_generic *gc = irq_get_domain_generic_chip(domain, 0);
- 	struct regmap *map = gc->private;
- 	uint32_t irq_reg, irq_mask;
+diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
+index fba659bfdb40..d2d405388499 100644
+--- a/drivers/iio/adc/stmpe-adc.c
++++ b/drivers/iio/adc/stmpe-adc.c
+@@ -256,6 +256,7 @@ static int stmpe_adc_probe(struct platform_device *pdev)
+ 	struct stmpe_adc *info;
+ 	struct device_node *np;
+ 	u32 norequest_mask = 0;
 +	unsigned long bits;
- 	unsigned int i;
+ 	int irq_temp, irq_adc;
+ 	int num_chan = 0;
+ 	int i = 0;
+@@ -309,8 +310,8 @@ static int stmpe_adc_probe(struct platform_device *pdev)
  
- 	regmap_read(map, TCU_REG_TFR, &irq_reg);
-@@ -36,8 +37,9 @@ static void ingenic_tcu_intc_cascade(struct irq_desc *desc)
- 	chained_irq_enter(irq_chip, desc);
+ 	of_property_read_u32(np, "st,norequest-mask", &norequest_mask);
  
- 	irq_reg &= ~irq_mask;
-+	bits = irq_reg;
- 
--	for_each_set_bit(i, (unsigned long *)&irq_reg, 32)
-+	for_each_set_bit(i, &bits, 32)
- 		generic_handle_domain_irq(domain, i);
- 
- 	chained_irq_exit(irq_chip, desc);
+-	for_each_clear_bit(i, (unsigned long *) &norequest_mask,
+-			   (STMPE_ADC_LAST_NR + 1)) {
++	bits = norequest_mask;
++	for_each_clear_bit(i, &bits, (STMPE_ADC_LAST_NR + 1)) {
+ 		stmpe_adc_voltage_chan(&info->stmpe_adc_iio_channels[num_chan], i);
+ 		num_chan++;
+ 	}
 -- 
 2.30.2
 
