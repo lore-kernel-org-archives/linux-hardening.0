@@ -2,128 +2,145 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593E8C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Dec 2021 23:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95D3C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 02:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231971AbhLOXZP (ORCPT
+        id S232759AbhLPCFZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Dec 2021 18:25:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231952AbhLOXZP (ORCPT
+        Wed, 15 Dec 2021 21:05:25 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:28322 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232752AbhLPCFX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Dec 2021 18:25:15 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE4FC06173E
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 15:25:15 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id v23so18822098pjr.5
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Dec 2021 15:25:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vDUcxi+1vGmZblRbJ1Sm9A93/BTFWuWvpCJG8LRDqkk=;
-        b=DXYPMTYBbhpvhrxDXuuENJokIN1C4FOkTY68o9ZdjY2X0pGgYoeO8rgMJaLTIsJsrs
-         hmhV7bxWtULdRgZPqxLDrtgFNOXSv0KV8oWxGpMGFNLqSmTy7fmcHkQ1kpl4yEeKFaCQ
-         UoJ3WJjaqxJiystBa+XimfZjMEBdQR3ZC1UQg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vDUcxi+1vGmZblRbJ1Sm9A93/BTFWuWvpCJG8LRDqkk=;
-        b=mWUC5Ee4D3DMII1/2IuFY5K3otp6hy9VSZxnsBhptS/qm4xvgg5bIhYSf/3hJOdPsx
-         cHbBHDsx26ty3Id7o0ZXmetK98f6im7fsFiK6fiskkYrp9zk9MmFJQTCk0qHvhcZ868D
-         tv//U67Ffle2emWetjV18qU2bphQdIWqgMOq9EKvvZPqNwesogUkgo5yE/WclXy1Gf2Z
-         5FeOCm4T5meXQeiSmOOR8oiTD6iGsLelB/OBuiFtOkpMPYF66woXqbbd9hnb/k6Xmt/w
-         e631tYto1hhJOA2ChoNZFP53NE3vpAvnSwg7LIOHPjMzvaUiyhT7X+hx0sW2lDFs7IS/
-         NbIQ==
-X-Gm-Message-State: AOAM533b0kgOA4wS2Sq/L99Pl8HTBmqhOLnBS9rpQstFNiyR7XnaWf80
-        FC/9o3g1hD9i9Z8iFjXCsQYj8eGrXEcX+Q==
-X-Google-Smtp-Source: ABdhPJy5py/792S478eMSZrNlgV3972pgHifUoF5SICCwYNK+P2sBeyjHIvi7Ls6eSNJ7zV9Rq3Hlg==
-X-Received: by 2002:a17:902:b712:b0:143:72b7:4096 with SMTP id d18-20020a170902b71200b0014372b74096mr13995974pls.25.1639610714881;
-        Wed, 15 Dec 2021 15:25:14 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b18sm3120925pjo.31.2021.12.15.15.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 15:25:14 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] iio: stmpe-adc: Use correctly sized arguments for bit field
-Date:   Wed, 15 Dec 2021 15:25:13 -0800
-Message-Id: <20211215232513.2070158-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Wed, 15 Dec 2021 21:05:23 -0500
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4JDwRg36LLzbhsX;
+        Thu, 16 Dec 2021 10:05:03 +0800 (CST)
+Received: from [10.67.110.112] (10.67.110.112) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Thu, 16 Dec 2021 10:05:21 +0800
+Subject: Re: [PATCH -next, v2] audit: use struct_size() helper in kmalloc()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     <paul@paul-moore.com>, <eparis@redhat.com>,
+        <keescook@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20211215030420.72324-1-xiujianfeng@huawei.com>
+ <20211215220004.GA21862@embeddedor>
+From:   xiujianfeng <xiujianfeng@huawei.com>
+Message-ID: <ade6655d-a62e-1d57-d623-4bfc93ebbc57@huawei.com>
+Date:   Thu, 16 Dec 2021 10:05:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2545; h=from:subject; bh=S+yja+ZH2OmWXK3ijI5wGcAm/sNwDDcR7CmSYgsRQzo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhunlYeGsDYpcqYmqKGq1gspbWZM1i9uJh+lhO3VSQ FHREJxSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYbp5WAAKCRCJcvTf3G3AJlBiD/ 9NL3ZLujTHevof7dlDGHJPmKwu+YtML22gc59bhFYHNlrW1bYIyk8TVkzq+kmWec+iWtOk61RpCSXS Z0k7OnyjFshW0V/lqBxlh9J5enIY+QUpyTtjZItLHc+peGRRmKU3uDXa8yjTgmYevNLvTHfOipZRzz YX5h1sDytZpE3iLSCyn/6iQF51ttub/xD2LyDYPWCVRhJxhfyqNNLqMT9ieTj7XSNP7ho0xpLojXtG tYWFm1l7YezgqMr59jAE6fQpMkolVM6/jLRvwm94HRifQWDQlVIJz2D/fE/HI8uMpMN9h/dj3lWqCz b4ueQOnKzDV9J1CjKjjZzWHmB+YITuSkqr1zsPTHvccwOfdpBMTwPqh9G2MRm0jUXjYh5wbbdX0RnY JVZy4dPkxUArpoQx+Xv4Tfh8F/WXlRyqbV/+GBScF9djq6yabzoTpogdl8ms5SWTD/qQZalMX7vnQS b71qchU1Q+2z06VaTVhRZQ/+9b0CpOQNr0Dwnp7anmFBJ+HiWBzxsh5MK6pgbk4EDXUwePl6dA/RyO nVDXPwtQGKzNPzhRAFRnnBCAqowSzkQzNAUNtmHVyPfmg5yUjLgG9QlaoTPq/J+G5/qAgZv8HMan4Q g/nbEXYvBPu9ipCueVOY3evU+0zo1CFssLloRyC7DBje0O6J/hslJrPUKIfw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+In-Reply-To: <20211215220004.GA21862@embeddedor>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.110.112]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The find.h APIs are designed to be used only on unsigned long arguments.
-This can technically result in a over-read, but it is harmless in this
-case. Regardless, fix it to avoid the warning seen under -Warray-bounds,
-which we'd like to enable globally:
 
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:22,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:60,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:55,
-                 from ./include/linux/swait.h:7,
-                 from ./include/linux/completion.h:12,
-                 from drivers/iio/adc/stmpe-adc.c:10:
-drivers/iio/adc/stmpe-adc.c: In function 'stmpe_adc_probe':
-./include/linux/find.h:98:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
-   98 |                 val = *addr | ~GENMASK(size - 1, offset);
-      |                       ^~~~~
-drivers/iio/adc/stmpe-adc.c:258:13: note: while referencing 'norequest_mask'
-  258 |         u32 norequest_mask = 0;
-      |             ^~~~~~~~~~~~~~
+在 2021/12/16 6:00, Gustavo A. R. Silva 写道:
+> On Wed, Dec 15, 2021 at 11:04:20AM +0800, Xiu Jianfeng wrote:
+>> Make use of struct_size() helper instead of an open-coded calculation.
+> I think you should also mention the flexible array transformation in
+> struct audit_rule_data.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/iio/adc/stmpe-adc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+thanks,  and due to the previous patch has been merged into linux-next, 
+a diff patch about struct_size() and
 
-diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-index fba659bfdb40..d2d405388499 100644
---- a/drivers/iio/adc/stmpe-adc.c
-+++ b/drivers/iio/adc/stmpe-adc.c
-@@ -256,6 +256,7 @@ static int stmpe_adc_probe(struct platform_device *pdev)
- 	struct stmpe_adc *info;
- 	struct device_node *np;
- 	u32 norequest_mask = 0;
-+	unsigned long bits;
- 	int irq_temp, irq_adc;
- 	int num_chan = 0;
- 	int i = 0;
-@@ -309,8 +310,8 @@ static int stmpe_adc_probe(struct platform_device *pdev)
- 
- 	of_property_read_u32(np, "st,norequest-mask", &norequest_mask);
- 
--	for_each_clear_bit(i, (unsigned long *) &norequest_mask,
--			   (STMPE_ADC_LAST_NR + 1)) {
-+	bits = norequest_mask;
-+	for_each_clear_bit(i, &bits, (STMPE_ADC_LAST_NR + 1)) {
- 		stmpe_adc_voltage_chan(&info->stmpe_adc_iio_channels[num_chan], i);
- 		num_chan++;
- 	}
--- 
-2.30.2
+a seperate patch about flexible array will be send.
 
+>
+> Thanks
+> --
+> Gustavo
+>
+>> Link: https://github.com/KSPP/linux/issues/160
+>> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+>> ---
+>>   include/uapi/linux/audit.h | 2 +-
+>>   kernel/audit.c             | 4 ++--
+>>   kernel/audit_tree.c        | 2 +-
+>>   kernel/auditfilter.c       | 4 ++--
+>>   4 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+>> index 9176a095fefc..8eda133ca4c1 100644
+>> --- a/include/uapi/linux/audit.h
+>> +++ b/include/uapi/linux/audit.h
+>> @@ -514,7 +514,7 @@ struct audit_rule_data {
+>>   	__u32		values[AUDIT_MAX_FIELDS];
+>>   	__u32		fieldflags[AUDIT_MAX_FIELDS];
+>>   	__u32		buflen;	/* total length of string fields */
+>> -	char		buf[0];	/* string fields buffer */
+>> +	char		buf[];	/* string fields buffer */
+>>   };
+>>   
+>>   #endif /* _UAPI_LINUX_AUDIT_H_ */
+>> diff --git a/kernel/audit.c b/kernel/audit.c
+>> index d4084751cfe6..7778eca34837 100644
+>> --- a/kernel/audit.c
+>> +++ b/kernel/audit.c
+>> @@ -1446,7 +1446,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+>>   			if (err)
+>>   				return err;
+>>   		}
+>> -		sig_data = kmalloc(sizeof(*sig_data) + len, GFP_KERNEL);
+>> +		sig_data = kmalloc(struct_size(sig_data, ctx, len), GFP_KERNEL);
+>>   		if (!sig_data) {
+>>   			if (audit_sig_sid)
+>>   				security_release_secctx(ctx, len);
+>> @@ -1459,7 +1459,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+>>   			security_release_secctx(ctx, len);
+>>   		}
+>>   		audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO, 0, 0,
+>> -				 sig_data, sizeof(*sig_data) + len);
+>> +				 sig_data, struct_size(sig_data, ctx, len));
+>>   		kfree(sig_data);
+>>   		break;
+>>   	case AUDIT_TTY_GET: {
+>> diff --git a/kernel/audit_tree.c b/kernel/audit_tree.c
+>> index 72324afcffef..e7315d487163 100644
+>> --- a/kernel/audit_tree.c
+>> +++ b/kernel/audit_tree.c
+>> @@ -94,7 +94,7 @@ static struct audit_tree *alloc_tree(const char *s)
+>>   {
+>>   	struct audit_tree *tree;
+>>   
+>> -	tree = kmalloc(sizeof(struct audit_tree) + strlen(s) + 1, GFP_KERNEL);
+>> +	tree = kmalloc(struct_size(tree, pathname, strlen(s) + 1), GFP_KERNEL);
+>>   	if (tree) {
+>>   		refcount_set(&tree->count, 1);
+>>   		tree->goner = 0;
+>> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+>> index 4173e771650c..42d99896e7a6 100644
+>> --- a/kernel/auditfilter.c
+>> +++ b/kernel/auditfilter.c
+>> @@ -637,7 +637,7 @@ static struct audit_rule_data *audit_krule_to_data(struct audit_krule *krule)
+>>   	void *bufp;
+>>   	int i;
+>>   
+>> -	data = kmalloc(sizeof(*data) + krule->buflen, GFP_KERNEL);
+>> +	data = kmalloc(struct_size(data, buf, krule->buflen), GFP_KERNEL);
+>>   	if (unlikely(!data))
+>>   		return NULL;
+>>   	memset(data, 0, sizeof(*data));
+>> @@ -1092,7 +1092,7 @@ static void audit_list_rules(int seq, struct sk_buff_head *q)
+>>   				break;
+>>   			skb = audit_make_reply(seq, AUDIT_LIST_RULES, 0, 1,
+>>   					       data,
+>> -					       sizeof(*data) + data->buflen);
+>> +					       struct_size(data, buf, data->buflen));
+>>   			if (skb)
+>>   				skb_queue_tail(q, skb);
+>>   			kfree(data);
+>> -- 
+>> 2.17.1
+>>
+> .
