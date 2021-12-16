@@ -2,119 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8384EC433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 12:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BDFC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 13:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237065AbhLPM5O (ORCPT
+        id S236205AbhLPNup (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Dec 2021 07:57:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237047AbhLPM5G (ORCPT
+        Thu, 16 Dec 2021 08:50:45 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:42256 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236139AbhLPNug (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Dec 2021 07:57:06 -0500
-X-Greylist: delayed 1547 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Dec 2021 04:57:05 PST
-Received: from haggis.mythic-beasts.com (haggis.mythic-beasts.com [IPv6:2a00:1098:0:86:1000:0:2:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD81C061401
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Dec 2021 04:57:05 -0800 (PST)
-Received: from [81.101.6.87] (port=52570 helo=jic23-huawei)
-        by haggis.mythic-beasts.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <jic23@jic23.retrosnub.co.uk>)
-        id 1mxpuh-0005Cz-Dz; Thu, 16 Dec 2021 12:31:11 +0000
-Date:   Thu, 16 Dec 2021 12:36:27 +0000
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+        Thu, 16 Dec 2021 08:50:36 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6DEF3B8242A;
+        Thu, 16 Dec 2021 13:50:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714ACC36AE8;
+        Thu, 16 Dec 2021 13:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639662633;
+        bh=AbhvMEHMWIrh7e9CWfIY2JYFJ5gwFAB2jgOuFsthmyo=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=TKA/FRmozr/tU9ROOvxVLYg3DipKuXOctyxmMbr+Y00XEedVcaedz+AU3/dozv3sZ
+         q/M2W8KveteIB15BVbsnZLQ6iMY1tlu0jZWs9oQSP5GS5wJE9aMLirA8VC7YaohsLa
+         rH6wpHX2MzlsX0T1V5qucjcz0zP91IkE3JwYNgWOis9h3wBVm8qRhejoeolUgVIfDy
+         PcKZ0bByGv1gqQ23Cu+HhYblN5jtReKBHx9BIKLqwRXj17EKkW5WJsaHOYmSCyQEsr
+         XkXQuKDFrinrS6WR7DTFRLraLADZUOa5Prd6/wxzbNH9cYLsziwhiZA9bILnWhCl/r
+         /Dz/zMWeaYFDw==
+From:   Kalle Valo <kvalo@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: stmpe-adc: Use correctly sized arguments for bit
- field
-Message-ID: <20211216123615.3e311c2b@jic23-huawei>
-In-Reply-To: <20211215232513.2070158-1-keescook@chromium.org>
-References: <20211215232513.2070158-1-keescook@chromium.org>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
+Cc:     linux-hardening@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/17] ath11k: Use memset_startat() for clearing queue descriptors
+References: <20211213223331.135412-1-keescook@chromium.org>
+        <20211213223331.135412-9-keescook@chromium.org>
+        <87v8zriv1c.fsf@codeaurora.org> <877dc7i3zc.fsf@codeaurora.org>
+        <202112140904.2D64E570@keescook>
+Date:   Thu, 16 Dec 2021 15:50:25 +0200
+In-Reply-To: <202112140904.2D64E570@keescook> (Kees Cook's message of "Tue, 14
+        Dec 2021 09:05:37 -0800")
+Message-ID: <875yrod5ge.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-BlackCat-Spam-Score: 19
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 15 Dec 2021 15:25:13 -0800
-Kees Cook <keescook@chromium.org> wrote:
+Kees Cook <keescook@chromium.org> writes:
 
-> The find.h APIs are designed to be used only on unsigned long arguments.
-> This can technically result in a over-read, but it is harmless in this
-> case. Regardless, fix it to avoid the warning seen under -Warray-bounds,
-> which we'd like to enable globally:
-> 
-> In file included from ./include/linux/bitmap.h:9,
->                  from ./include/linux/cpumask.h:12,
->                  from ./arch/x86/include/asm/cpumask.h:5,
->                  from ./arch/x86/include/asm/msr.h:11,
->                  from ./arch/x86/include/asm/processor.h:22,
->                  from ./arch/x86/include/asm/cpufeature.h:5,
->                  from ./arch/x86/include/asm/thread_info.h:53,
->                  from ./include/linux/thread_info.h:60,
->                  from ./arch/x86/include/asm/preempt.h:7,
->                  from ./include/linux/preempt.h:78,
->                  from ./include/linux/spinlock.h:55,
->                  from ./include/linux/swait.h:7,
->                  from ./include/linux/completion.h:12,
->                  from drivers/iio/adc/stmpe-adc.c:10:
-> drivers/iio/adc/stmpe-adc.c: In function 'stmpe_adc_probe':
-> ./include/linux/find.h:98:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
->    98 |                 val = *addr | ~GENMASK(size - 1, offset);
->       |                       ^~~~~
-> drivers/iio/adc/stmpe-adc.c:258:13: note: while referencing 'norequest_mask'
->   258 |         u32 norequest_mask = 0;
->       |             ^~~~~~~~~~~~~~
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> On Tue, Dec 14, 2021 at 05:46:31PM +0200, Kalle Valo wrote:
+>> Kalle Valo <kvalo@kernel.org> writes:
+>> 
+>> > Kees Cook <keescook@chromium.org> writes:
+>> >
+>> >> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+>> >> field bounds checking for memset(), avoid intentionally writing across
+>> >> neighboring fields.
+>> >>
+>> >> Use memset_startat() so memset() doesn't get confused about writing
+>> >> beyond the destination member that is intended to be the starting point
+>> >> of zeroing through the end of the struct. Additionally split up a later
+>> >> field-spanning memset() so that memset() can reason about the size.
+>> >>
+>> >> Cc: Kalle Valo <kvalo@codeaurora.org>
+>> >> Cc: "David S. Miller" <davem@davemloft.net>
+>> >> Cc: Jakub Kicinski <kuba@kernel.org>
+>> >> Cc: ath11k@lists.infradead.org
+>> >> Cc: linux-wireless@vger.kernel.org
+>> >> Cc: netdev@vger.kernel.org
+>> >> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> >
+>> > What's the plan for this patch? I would like to take this via my ath
+>> > tree to avoid conflicts.
+>> 
+>> Actually this has been already applied:
+>> 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=ath-next&id=d5549e9a6b86
+>> 
+>> Why are you submitting the same patch twice?
+>
+> These are all part of a topic branch, and the cover letter mentioned
+> that a set of them have already been taken but haven't appeared in -next
+> (which was delayed).
 
-Applied to the togreg branch of iio.git and pushed out as testing to let
-0-day have a first poke at it.
+Do note that some wireless drivers (at least ath, mt76 and iwlwifi) are
+maintained in separate trees, so don't be surprised if it takes several
+weeks before they are visible in linux-next.
 
-I took the view this one was trivial, but if anyone else wants to add
-tags there will be a few days before this goes out in a form I'm not happy
-to rebase.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/stmpe-adc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-> index fba659bfdb40..d2d405388499 100644
-> --- a/drivers/iio/adc/stmpe-adc.c
-> +++ b/drivers/iio/adc/stmpe-adc.c
-> @@ -256,6 +256,7 @@ static int stmpe_adc_probe(struct platform_device *pdev)
->  	struct stmpe_adc *info;
->  	struct device_node *np;
->  	u32 norequest_mask = 0;
-> +	unsigned long bits;
->  	int irq_temp, irq_adc;
->  	int num_chan = 0;
->  	int i = 0;
-> @@ -309,8 +310,8 @@ static int stmpe_adc_probe(struct platform_device *pdev)
->  
->  	of_property_read_u32(np, "st,norequest-mask", &norequest_mask);
->  
-> -	for_each_clear_bit(i, (unsigned long *) &norequest_mask,
-> -			   (STMPE_ADC_LAST_NR + 1)) {
-> +	bits = norequest_mask;
-> +	for_each_clear_bit(i, &bits, (STMPE_ADC_LAST_NR + 1)) {
->  		stmpe_adc_voltage_chan(&info->stmpe_adc_iio_channels[num_chan], i);
->  		num_chan++;
->  	}
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
