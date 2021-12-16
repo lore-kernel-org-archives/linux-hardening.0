@@ -2,97 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEE9C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 11:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8384EC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 12:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbhLPLWI (ORCPT
+        id S237065AbhLPM5O (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Dec 2021 06:22:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:42374 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236635AbhLPLWA (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Dec 2021 06:22:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E4CD1474;
-        Thu, 16 Dec 2021 03:22:00 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.67.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C2CA3F774;
-        Thu, 16 Dec 2021 03:21:59 -0800 (PST)
-Date:   Thu, 16 Dec 2021 11:21:56 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
+        Thu, 16 Dec 2021 07:57:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237047AbhLPM5G (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 16 Dec 2021 07:57:06 -0500
+X-Greylist: delayed 1547 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Dec 2021 04:57:05 PST
+Received: from haggis.mythic-beasts.com (haggis.mythic-beasts.com [IPv6:2a00:1098:0:86:1000:0:2:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD81C061401
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Dec 2021 04:57:05 -0800 (PST)
+Received: from [81.101.6.87] (port=52570 helo=jic23-huawei)
+        by haggis.mythic-beasts.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <jic23@jic23.retrosnub.co.uk>)
+        id 1mxpuh-0005Cz-Dz; Thu, 16 Dec 2021 12:31:11 +0000
+Date:   Thu, 16 Dec 2021 12:36:27 +0000
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/17] fortify: Detect struct member overflows in
- memcpy() at compile-time
-Message-ID: <YbshVApl8kBYtCzZ@FVFF77S0Q05N>
-References: <20211213223331.135412-1-keescook@chromium.org>
- <20211213223331.135412-7-keescook@chromium.org>
- <YbseKuBwHEfvzykO@FVFF77S0Q05N>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iio: stmpe-adc: Use correctly sized arguments for bit
+ field
+Message-ID: <20211216123615.3e311c2b@jic23-huawei>
+In-Reply-To: <20211215232513.2070158-1-keescook@chromium.org>
+References: <20211215232513.2070158-1-keescook@chromium.org>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YbseKuBwHEfvzykO@FVFF77S0Q05N>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-BlackCat-Spam-Score: 19
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 11:08:26AM +0000, Mark Rutland wrote:
-> On Mon, Dec 13, 2021 at 02:33:20PM -0800, Kees Cook wrote:
-> > memcpy() is dead; long live memcpy()
-> > 
-> > tl;dr: In order to eliminate a large class of common buffer overflow
-> > flaws that continue to persist in the kernel, have memcpy() (under
-> > CONFIG_FORTIFY_SOURCE) perform bounds checking of the destination struct
-> > member when they have a known size. This would have caught all of the
-> > memcpy()-related buffer write overflow flaws identified in at least the
-> > last three years.
-> > 
-> 
-> Hi Kees,
-> 
-> Since there's a *lot* of context below, it's very easy to miss some key details
-> (e.g. that the compile-time warnings are limited to W=1 builds). It would be
-> really nice if the summary above could say something like:
-> 
->   This patch makes it possible to detect when memcpy() of a struct member may
->   go past the bounds of that member. When CONFIG_FORTIFY_SOURCE=y, runtime
->   checks are always emitted where the compiler cannot guarantee a memcpy() is
->   safely bounded, and compile-time warnings are enabled for W=1 builds.
-> 
->   This catches a large class of common buffer overflow flaws, and would have
->   caught all of the memcpy()-related buffer write overflow flaws identified in
->   the last three years.
-> 
-> As an aside, since W=1 is chock-full of (IMO useless) warnings, is there any
-> way to enable *just* the FORTIFY_SOURCE warnings?
-> 
-> [...]
-> 
-> > Implementation:
-> > 
-> > Tighten the memcpy() destination buffer size checking to use the actual
-> > ("mode 1") target buffer size as the bounds check instead of their
-> > enclosing structure's ("mode 0") size. Use a common inline for memcpy()
-> > (and memmove() in a following patch), since all the tests are the
-> > same. All new cross-field memcpy() uses must use the struct_group() macro
-> > or similar to target a specific range of fields, so that FORTIFY_SOURCE
-> > can reason about the size and safety of the copy.
-> > 
-> > For now, cross-member "mode 1" read detection at compile-time will be
-> > limited to W=1 builds, since it is, unfortunately, very common. As the
-> > priority is solving write overflows, read overflows can be part of the
-> > next phase.
-> 
-> I had a go at testing this on arm64, and could get build-time warnings from GCC
-> 11.1.0, but not from Clang 13.0.0.
+On Wed, 15 Dec 2021 15:25:13 -0800
+Kees Cook <keescook@chromium.org> wrote:
 
-Looking again, I see this is down to __compiletime_warning() only being usable
-from clang 14.0 onwards (and the final patch mentions that in passing), so I
-guess that's expected.
+> The find.h APIs are designed to be used only on unsigned long arguments.
+> This can technically result in a over-read, but it is harmless in this
+> case. Regardless, fix it to avoid the warning seen under -Warray-bounds,
+> which we'd like to enable globally:
+> 
+> In file included from ./include/linux/bitmap.h:9,
+>                  from ./include/linux/cpumask.h:12,
+>                  from ./arch/x86/include/asm/cpumask.h:5,
+>                  from ./arch/x86/include/asm/msr.h:11,
+>                  from ./arch/x86/include/asm/processor.h:22,
+>                  from ./arch/x86/include/asm/cpufeature.h:5,
+>                  from ./arch/x86/include/asm/thread_info.h:53,
+>                  from ./include/linux/thread_info.h:60,
+>                  from ./arch/x86/include/asm/preempt.h:7,
+>                  from ./include/linux/preempt.h:78,
+>                  from ./include/linux/spinlock.h:55,
+>                  from ./include/linux/swait.h:7,
+>                  from ./include/linux/completion.h:12,
+>                  from drivers/iio/adc/stmpe-adc.c:10:
+> drivers/iio/adc/stmpe-adc.c: In function 'stmpe_adc_probe':
+> ./include/linux/find.h:98:23: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Warray-bounds]
+>    98 |                 val = *addr | ~GENMASK(size - 1, offset);
+>       |                       ^~~~~
+> drivers/iio/adc/stmpe-adc.c:258:13: note: while referencing 'norequest_mask'
+>   258 |         u32 norequest_mask = 0;
+>       |             ^~~~~~~~~~~~~~
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-It would be nice to call that out somewhere in this patch (e.g. in that
-introductory paragraph), since it's very each to miss that and get confused...
-;)
+Applied to the togreg branch of iio.git and pushed out as testing to let
+0-day have a first poke at it.
+
+I took the view this one was trivial, but if anyone else wants to add
+tags there will be a few days before this goes out in a form I'm not happy
+to rebase.
 
 Thanks,
-Mark.
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/stmpe-adc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
+> index fba659bfdb40..d2d405388499 100644
+> --- a/drivers/iio/adc/stmpe-adc.c
+> +++ b/drivers/iio/adc/stmpe-adc.c
+> @@ -256,6 +256,7 @@ static int stmpe_adc_probe(struct platform_device *pdev)
+>  	struct stmpe_adc *info;
+>  	struct device_node *np;
+>  	u32 norequest_mask = 0;
+> +	unsigned long bits;
+>  	int irq_temp, irq_adc;
+>  	int num_chan = 0;
+>  	int i = 0;
+> @@ -309,8 +310,8 @@ static int stmpe_adc_probe(struct platform_device *pdev)
+>  
+>  	of_property_read_u32(np, "st,norequest-mask", &norequest_mask);
+>  
+> -	for_each_clear_bit(i, (unsigned long *) &norequest_mask,
+> -			   (STMPE_ADC_LAST_NR + 1)) {
+> +	bits = norequest_mask;
+> +	for_each_clear_bit(i, &bits, (STMPE_ADC_LAST_NR + 1)) {
+>  		stmpe_adc_voltage_chan(&info->stmpe_adc_iio_channels[num_chan], i);
+>  		num_chan++;
+>  	}
+
