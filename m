@@ -2,179 +2,192 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E11C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 10:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D0AC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 11:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233605AbhLPKyX convert rfc822-to-8bit (ORCPT
+        id S236414AbhLPLId (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Dec 2021 05:54:23 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:8530 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231500AbhLPKyW (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Dec 2021 05:54:22 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BG487NN011583;
-        Thu, 16 Dec 2021 05:54:08 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3cyrbx9uxr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Dec 2021 05:54:08 -0500
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 1BGAs67r016336
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Dec 2021 05:54:06 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 16 Dec
- 2021 05:54:05 -0500
-Received: from ASHBMBX9.ad.analog.com ([fe80::ec36:89cb:a387:866]) by
- ASHBMBX9.ad.analog.com ([fe80::ec36:89cb:a387:866%20]) with mapi id
- 15.02.0986.014; Thu, 16 Dec 2021 05:54:05 -0500
-From:   "Tanislav, Cosmin" <Cosmin.Tanislav@analog.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
-CC:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] iio: addac: Do not reference negative array offsets
-Thread-Topic: [PATCH] iio: addac: Do not reference negative array offsets
-Thread-Index: AQHX8grEUPh7+C22Y0mYZUFxEOgun6w08ZMA
-Date:   Thu, 16 Dec 2021 10:54:05 +0000
-Message-ID: <43682e2c485a48deb8f40c9ee060d45c@analog.com>
-References: <20211215232321.2069314-1-keescook@chromium.org>
-In-Reply-To: <20211215232321.2069314-1-keescook@chromium.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY3RhbmlzbGFc?=
- =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
- =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy03YmZkOThkNS01ZTVlLTExZWMtYjZjZi00MTU2?=
- =?us-ascii?Q?NDUwMDAwMzBcYW1lLXRlc3RcN2JmZDk4ZDctNWU1ZS0xMWVjLWI2Y2YtNDE1?=
- =?us-ascii?Q?NjQ1MDAwMDMwYm9keS50eHQiIHN6PSIzMDYzIiB0PSIxMzI4NDEyNTY0NTE5?=
- =?us-ascii?Q?NjY4MzEiIGg9Ik4xS040OXVFeUQvaXVVWTdJME11VjlvNTVibz0iIGlkPSIi?=
- =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUVvQ0FB?=
- =?us-ascii?Q?QnZCMVkrYS9MWEFhL2VFbytPcks5RHI5NFNqNDZzcjBNREFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQURhQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFRQUJBQUFBVklFdm9RQUFBQUFBQUFBQUFBQUFBSjRBQUFCaEFHUUFh?=
- =?us-ascii?Q?UUJmQUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QUc4QWFnQmxBR01BZEFCekFG?=
- =?us-ascii?Q?OEFaZ0JoQUd3QWN3QmxBRjhBWmdCdkFITUFhUUIwQUdrQWRnQmxBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR0VBWkFCcEFGOEFjd0JsQUdNQWRR?=
- =?us-ascii?Q?QnlBR1VBWHdCd0FISUFid0JxQUdVQVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURF?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
- =?us-ascii?Q?QUFBQUNlQUFBQVlRQmtBR2tBWHdCekFHVUFZd0IxQUhJQVpRQmZBSEFBY2dC?=
- =?us-ascii?Q?dkFHb0FaUUJqQUhRQWN3QmZBSFFBYVFCbEFISUFNZ0FBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFBPT0iLz48L21l?=
- =?us-ascii?Q?dGE+?=
-x-dg-rorf: true
-x-originating-ip: [10.32.224.39]
-x-adiruleop-newscl: Rule Triggered
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 16 Dec 2021 06:08:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:42070 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229995AbhLPLIc (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 16 Dec 2021 06:08:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 684CF1474;
+        Thu, 16 Dec 2021 03:08:32 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.67.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC0433F774;
+        Thu, 16 Dec 2021 03:08:31 -0800 (PST)
+Date:   Thu, 16 Dec 2021 11:08:26 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/17] fortify: Detect struct member overflows in
+ memcpy() at compile-time
+Message-ID: <YbseKuBwHEfvzykO@FVFF77S0Q05N>
+References: <20211213223331.135412-1-keescook@chromium.org>
+ <20211213223331.135412-7-keescook@chromium.org>
 MIME-Version: 1.0
-X-Proofpoint-GUID: -vgUyfpi36K0G3BB9fepXcpi6R6iG3vw
-X-Proofpoint-ORIG-GUID: -vgUyfpi36K0G3BB9fepXcpi6R6iG3vw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-16_04,2021-12-16_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 bulkscore=0 clxscore=1011 lowpriorityscore=0 suspectscore=0
- phishscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2112160062
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211213223331.135412-7-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> -----Original Message-----
-> From: Kees Cook <keescook@chromium.org>
-> Sent: Thursday, December 16, 2021 1:23 AM
-> To: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Kees Cook <keescook@chromium.org>; Hennerich, Michael
-> <Michael.Hennerich@analog.com>; Tanislav, Cosmin
-> <Cosmin.Tanislav@analog.com>; Jonathan Cameron <jic23@kernel.org>;
-> Linus Walleij <linus.walleij@linaro.org>; linux-kernel@vger.kernel.org; linux-
-> iio@vger.kernel.org; linux-hardening@vger.kernel.org
-> Subject: [PATCH] iio: addac: Do not reference negative array offsets
+On Mon, Dec 13, 2021 at 02:33:20PM -0800, Kees Cook wrote:
+> memcpy() is dead; long live memcpy()
 > 
-> [External]
+> tl;dr: In order to eliminate a large class of common buffer overflow
+> flaws that continue to persist in the kernel, have memcpy() (under
+> CONFIG_FORTIFY_SOURCE) perform bounds checking of the destination struct
+> member when they have a known size. This would have caught all of the
+> memcpy()-related buffer write overflow flaws identified in at least the
+> last three years.
 > 
-> Instead of aiming rx_buf at an invalid array-boundary-crossing location,
-> just skip the first assignment. Seen when building with -Warray-bounds:
-> 
-> drivers/iio/addac/ad74413r.c: In function 'ad74413r_update_scan_mode':
-> drivers/iio/addac/ad74413r.c:843:22: warning: array subscript -4 is below
-> array bounds of 'u8[16]' { aka 'unsigned char[16]'} [-Warray-bounds]
->   843 |         u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
-> AD74413R_FRAME_SIZE];
->       |
-> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/iio/addac/ad74413r.c:84:20: note: while referencing 'rx_buf'
->    84 |                 u8 rx_buf[AD74413R_FRAME_SIZE *
-> AD74413R_CHANNEL_MAX];
->       |                    ^~~~~~
-> 
-> Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/iio/addac/ad74413r.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
-> index cbd9aa9b399a..b0a6d8ee5133 100644
-> --- a/drivers/iio/addac/ad74413r.c
-> +++ b/drivers/iio/addac/ad74413r.c
-> @@ -840,7 +840,7 @@ static int ad74413r_update_scan_mode(struct iio_dev
-> *indio_dev,
->  {
->  	struct ad74413r_state *st = iio_priv(indio_dev);
->  	struct spi_transfer *xfer = st->adc_samples_xfer;
-> -	u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
-> AD74413R_FRAME_SIZE];
-> +	u8 *rx_buf = st->adc_samples_buf.rx_buf;
->  	u8 *tx_buf = st->adc_samples_tx_buf;
->  	unsigned int channel;
->  	int ret;
-> @@ -877,9 +877,8 @@ static int ad74413r_update_scan_mode(struct iio_dev
-> *indio_dev,
->  		if (ret)
->  			goto out;
-> 
-> -		st->adc_active_channels++;
-> 
-> -		if (xfer == st->adc_samples_xfer)
-> +		if (xfer == st->adc_samples_xfer || st->adc_active_channels
-> == 0)
 
-You can probably keep only one of the checks. Both xfer and adc_active_channels
-will be incremented after your changes anyway.
+Hi Kees,
 
->  			xfer->rx_buf = NULL;
->  		else
->  			xfer->rx_buf = rx_buf;
-> @@ -896,7 +895,10 @@ static int ad74413r_update_scan_mode(struct
-> iio_dev *indio_dev,
-> 
->  		xfer++;
->  		tx_buf += AD74413R_FRAME_SIZE;
-> -		rx_buf += AD74413R_FRAME_SIZE;
-> +		if (st->adc_active_channels)
-> +			rx_buf += AD74413R_FRAME_SIZE;
-> +
-> +		st->adc_active_channels++;
->  	}
-> 
->  	xfer->rx_buf = rx_buf;
-> --
-> 2.30.2
+Since there's a *lot* of context below, it's very easy to miss some key details
+(e.g. that the compile-time warnings are limited to W=1 builds). It would be
+really nice if the summary above could say something like:
 
+  This patch makes it possible to detect when memcpy() of a struct member may
+  go past the bounds of that member. When CONFIG_FORTIFY_SOURCE=y, runtime
+  checks are always emitted where the compiler cannot guarantee a memcpy() is
+  safely bounded, and compile-time warnings are enabled for W=1 builds.
+
+  This catches a large class of common buffer overflow flaws, and would have
+  caught all of the memcpy()-related buffer write overflow flaws identified in
+  the last three years.
+
+As an aside, since W=1 is chock-full of (IMO useless) warnings, is there any
+way to enable *just* the FORTIFY_SOURCE warnings?
+
+[...]
+
+> Implementation:
+> 
+> Tighten the memcpy() destination buffer size checking to use the actual
+> ("mode 1") target buffer size as the bounds check instead of their
+> enclosing structure's ("mode 0") size. Use a common inline for memcpy()
+> (and memmove() in a following patch), since all the tests are the
+> same. All new cross-field memcpy() uses must use the struct_group() macro
+> or similar to target a specific range of fields, so that FORTIFY_SOURCE
+> can reason about the size and safety of the copy.
+> 
+> For now, cross-member "mode 1" read detection at compile-time will be
+> limited to W=1 builds, since it is, unfortunately, very common. As the
+> priority is solving write overflows, read overflows can be part of the
+> next phase.
+
+I had a go at testing this on arm64, and could get build-time warnings from GCC
+11.1.0, but not from Clang 13.0.0.
+
+I picked the series from:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=memcpy/step2/next-20211213
+
+I prepped a tree with that branch and a deliberate bug:
+
+| [mark@lakrids:~/src/linux]% git checkout -f kernel-org-kees/memcpy/step2/next-20211213
+| [mark@lakrids:~/src/linux]% git clean -qfdx
+| [mark@lakrids:~/src/linux]% cat <<EOF >> arch/arm64/kernel/setup.c
+| 
+| struct foo {
+|        int a;
+|        int b;
+| } foo1, foo2;
+| 
+| void foo_copy(void);
+| void foo_copy(void)
+| {
+|        memcpy(&foo1.a, &foo2.a, sizeof(foo1));
+| }
+| EOF
+
+When building with GCC 11.1.0:
+
+| [mark@lakrids:~/src/linux]% usekorg 11.1.0 make ARCH=arm64 CROSS_COMPILE=aarch64-linux- -s defconfig
+| [mark@lakrids:~/src/linux]% ./scripts/config -e FORTIFY_SOURCE                                      
+| [mark@lakrids:~/src/linux]% grep FORTIFY_SOURCE .config       
+| CONFIG_ARCH_HAS_FORTIFY_SOURCE=y
+| CONFIG_FORTIFY_SOURCE=y
+| [mark@lakrids:~/src/linux]% usekorg 11.1.0 make ARCH=arm64 CROSS_COMPILE=aarch64-linux- -s arch/arm64/kernel/setup.o
+| In file included from ./include/linux/string.h:253,
+|                  from ./include/linux/bitmap.h:11,
+|                  from ./include/linux/cpumask.h:12,
+|                  from ./include/linux/smp.h:13,
+|                  from ./include/linux/lockdep.h:14,
+|                  from ./include/linux/mutex.h:17,
+|                  from ./include/linux/kernfs.h:12,
+|                  from ./include/linux/sysfs.h:16,
+|                  from ./include/linux/kobject.h:20,
+|                  from ./include/linux/of.h:17,
+|                  from ./include/linux/irqdomain.h:35,
+|                  from ./include/linux/acpi.h:13,
+|                  from arch/arm64/kernel/setup.c:9:
+| In function 'fortify_memcpy_chk',
+|     inlined from 'foo_copy' at arch/arm64/kernel/setup.c:457:8:
+| ./include/linux/fortify-string.h:316:25: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+|   316 |                         __write_overflow_field(p_size_field, size);
+|       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| ./include/linux/fortify-string.h:324:25: warning: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Wattribute-warning]
+|   324 |                         __read_overflow2_field(q_size_field, size);
+|       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When building with clang 13.0.0 (the vdso bits can be ignored):
+
+| [mark@lakrids:~/src/linux]% usellvm 13.0.0 make ARCH=arm64 CROSS_COMPILE=aarch64-linux- LLVM=1 -s defconfig                    
+| [mark@lakrids:~/src/linux]% ./scripts/config -e FORTIFY_SOURCE                                             
+| [mark@lakrids:~/src/linux]% grep FORTIFY_SOURCE .config       
+| CONFIG_ARCH_HAS_FORTIFY_SOURCE=y
+| CONFIG_FORTIFY_SOURCE=y
+| [mark@lakrids:~/src/linux]% usellvm 13.0.0 make ARCH=arm64 CROSS_COMPILE=aarch64-linux- LLVM=1 W=1 -s arch/arm64/kernel/setup.o
+| arch/arm64/kernel/vdso/vgettimeofday.c:9:5: warning: no previous prototype for function '__kernel_clock_gettime' [-Wmissing-prototypes]
+| int __kernel_clock_gettime(clockid_t clock,
+|     ^
+| arch/arm64/kernel/vdso/vgettimeofday.c:9:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+| int __kernel_clock_gettime(clockid_t clock,
+| ^
+| static 
+| arch/arm64/kernel/vdso/vgettimeofday.c:15:5: warning: no previous prototype for function '__kernel_gettimeofday' [-Wmissing-prototypes]
+| int __kernel_gettimeofday(struct __kernel_old_timeval *tv,
+|     ^
+| arch/arm64/kernel/vdso/vgettimeofday.c:15:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+| int __kernel_gettimeofday(struct __kernel_old_timeval *tv,
+| ^
+| static 
+| arch/arm64/kernel/vdso/vgettimeofday.c:21:5: warning: no previous prototype for function '__kernel_clock_getres' [-Wmissing-prototypes]
+| int __kernel_clock_getres(clockid_t clock_id,
+|     ^
+| arch/arm64/kernel/vdso/vgettimeofday.c:21:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+| int __kernel_clock_getres(clockid_t clock_id,
+| ^
+| static 
+| 3 warnings generated.
+
+No relevant warnings, but code was generated for runtime warnings:
+
+| 0000000000000000 <foo_copy>:
+|    0:   d503233f        paciasp
+|    4:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
+|    8:   910003fd        mov     x29, sp
+|    c:   52800080        mov     w0, #0x4                        // #4
+|   10:   52800101        mov     w1, #0x8                        // #8
+|   14:   94000000        bl      0 <__write_overflow_field>
+|   18:   52800080        mov     w0, #0x4                        // #4
+|   1c:   52800101        mov     w1, #0x8                        // #8
+|   20:   94000000        bl      0 <__read_overflow2_field>
+|   24:   90000008        adrp    x8, 8 <foo_copy+0x8>
+|   28:   f9400108        ldr     x8, [x8]
+|   2c:   90000009        adrp    x9, 0 <foo_copy>
+|   30:   f9000128        str     x8, [x9]
+|   34:   a8c17bfd        ldp     x29, x30, [sp], #16
+|   38:   d50323bf        autiasp
+|   3c:   d65f03c0        ret
+
+Have I misunderstood how that's meant to work, or am I doing something wrong?
+
+Thanks,
+Mark.
