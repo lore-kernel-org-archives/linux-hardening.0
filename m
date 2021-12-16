@@ -2,121 +2,179 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9030C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 06:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E11C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Dec 2021 10:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234162AbhLPGlP (ORCPT
+        id S233605AbhLPKyX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Dec 2021 01:41:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231971AbhLPGlP (ORCPT
+        Thu, 16 Dec 2021 05:54:23 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:8530 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231500AbhLPKyW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Dec 2021 01:41:15 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C644C061574;
-        Wed, 15 Dec 2021 22:41:15 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id v13so750486pfi.3;
-        Wed, 15 Dec 2021 22:41:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ArBZty9F8manrgCKxo2XVUz8HSojtN8IjPyjuiPK50E=;
-        b=Bu2ruXLj4/tHxkppDKDaPtP8Yj99YwwDFRpFRMWeIvWBbdE9ZxR8foipinySOJGntK
-         asmrPte/BoFmm1SBWwrhsX/9DLi5mW9zS8/dFii7r487OoaY2MP0i8t/VR6A/LsXaOx0
-         gBDiBOD43gKHhGB1jIv3CIgf8zm5jJ19bjOdXhhQwARURYtwf/6XAIbwnlh105N9m9SS
-         BBVnn0Nn8p6wBpi/5OWGP7ExEqbXLBz58zszxbzq7EHtk2aoCB1F2JtBJX4v6YSTVfmN
-         4Anhnmg6V+ENC6TeiWoF5IleLcfWmNI4idCmTe9/gB7sBRsaQHXHhweUxBQpsr++d3MF
-         /KAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ArBZty9F8manrgCKxo2XVUz8HSojtN8IjPyjuiPK50E=;
-        b=UfC9xFk+VlszrmwoJA5rS05K1eLdo/rPZfl7ThcYYXam5Il5CJnaZCloCTXI6qwPqw
-         7Gr8goB9chNmoU491BvxKViHD+7WjJBbHe8doxIR1RwhpB5qbVfbGu3AESvaKjq5g+kO
-         L9h+G9vZ/KL61OqAXmhqHtXdsM+V5Sl203m/Ok34dWSwvMBzzDHaANBQowxdnhwv+k86
-         FDM3sdYBJS7X7eybmSBQXAqSsuTMfk2fGGD4nvVa/KB+xqdQ1DRU4Mja10vIy8Lh+6RZ
-         aiglvjt1ooRorDsl3faykqLXRfy+n2er7N/L4LHxCtBuR0Krpam2EJAztCdTXo5rOLC0
-         0yAA==
-X-Gm-Message-State: AOAM531L5SKkUDE0asB8HS5rw2QdJPAqBSkiFrnGibzYPkw5URgx1wYJ
-        +nagMqM7VkwXO5BFnF4KtMMFGzf4PXtw7ca9dBE=
-X-Google-Smtp-Source: ABdhPJz0EsLxdA66bhXO5hjCGuSToPtFicyMLgWAaL1gxxOAbM4QqdwTNyHfXIy3tmkY6y9BXpVF60sogkFf77Ql3TE=
-X-Received: by 2002:a63:2a0d:: with SMTP id q13mr10954563pgq.513.1639636874555;
- Wed, 15 Dec 2021 22:41:14 -0800 (PST)
+        Thu, 16 Dec 2021 05:54:22 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BG487NN011583;
+        Thu, 16 Dec 2021 05:54:08 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3cyrbx9uxr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Dec 2021 05:54:08 -0500
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 1BGAs67r016336
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Dec 2021 05:54:06 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 16 Dec
+ 2021 05:54:05 -0500
+Received: from ASHBMBX9.ad.analog.com ([fe80::ec36:89cb:a387:866]) by
+ ASHBMBX9.ad.analog.com ([fe80::ec36:89cb:a387:866%20]) with mapi id
+ 15.02.0986.014; Thu, 16 Dec 2021 05:54:05 -0500
+From:   "Tanislav, Cosmin" <Cosmin.Tanislav@analog.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>
+CC:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH] iio: addac: Do not reference negative array offsets
+Thread-Topic: [PATCH] iio: addac: Do not reference negative array offsets
+Thread-Index: AQHX8grEUPh7+C22Y0mYZUFxEOgun6w08ZMA
+Date:   Thu, 16 Dec 2021 10:54:05 +0000
+Message-ID: <43682e2c485a48deb8f40c9ee060d45c@analog.com>
+References: <20211215232321.2069314-1-keescook@chromium.org>
+In-Reply-To: <20211215232321.2069314-1-keescook@chromium.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY3RhbmlzbGFc?=
+ =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
+ =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy03YmZkOThkNS01ZTVlLTExZWMtYjZjZi00MTU2?=
+ =?us-ascii?Q?NDUwMDAwMzBcYW1lLXRlc3RcN2JmZDk4ZDctNWU1ZS0xMWVjLWI2Y2YtNDE1?=
+ =?us-ascii?Q?NjQ1MDAwMDMwYm9keS50eHQiIHN6PSIzMDYzIiB0PSIxMzI4NDEyNTY0NTE5?=
+ =?us-ascii?Q?NjY4MzEiIGg9Ik4xS040OXVFeUQvaXVVWTdJME11VjlvNTVibz0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUVvQ0FB?=
+ =?us-ascii?Q?QnZCMVkrYS9MWEFhL2VFbytPcks5RHI5NFNqNDZzcjBNREFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQURhQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBVklFdm9RQUFBQUFBQUFBQUFBQUFBSjRBQUFCaEFHUUFh?=
+ =?us-ascii?Q?UUJmQUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QUc4QWFnQmxBR01BZEFCekFG?=
+ =?us-ascii?Q?OEFaZ0JoQUd3QWN3QmxBRjhBWmdCdkFITUFhUUIwQUdrQWRnQmxBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR0VBWkFCcEFGOEFjd0JsQUdNQWRR?=
+ =?us-ascii?Q?QnlBR1VBWHdCd0FISUFid0JxQUdVQVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURF?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVlRQmtBR2tBWHdCekFHVUFZd0IxQUhJQVpRQmZBSEFBY2dC?=
+ =?us-ascii?Q?dkFHb0FaUUJqQUhRQWN3QmZBSFFBYVFCbEFISUFNZ0FBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFBPT0iLz48L21l?=
+ =?us-ascii?Q?dGE+?=
+x-dg-rorf: true
+x-originating-ip: [10.32.224.39]
+x-adiruleop-newscl: Rule Triggered
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20211215232432.2069605-1-keescook@chromium.org>
-In-Reply-To: <20211215232432.2069605-1-keescook@chromium.org>
-From:   Yury Norov <yury.norov@gmail.com>
-Date:   Wed, 15 Dec 2021 22:41:04 -0800
-Message-ID: <CAAH8bW9e_O_3DSjZvN3YENCkNB9oa63bMb93PaOCwZ6AxbfTHA@mail.gmail.com>
-Subject: Re: [PATCH] iommu: Use correctly sized arguments for bit field
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-GUID: -vgUyfpi36K0G3BB9fepXcpi6R6iG3vw
+X-Proofpoint-ORIG-GUID: -vgUyfpi36K0G3BB9fepXcpi6R6iG3vw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-16_04,2021-12-16_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 bulkscore=0 clxscore=1011 lowpriorityscore=0 suspectscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2112160062
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 3:24 PM Kees Cook <keescook@chromium.org> wrote:
->
-> The find.h APIs are designed to be used only on unsigned long arguments.
-> This can technically result in a over-read, but it is harmless in this
-> case. Regardless, fix it to avoid the warning seen under -Warray-bounds,
-> which we'd like to enable globally:
->
-> In file included from ./include/linux/bitmap.h:9,
->                  from drivers/iommu/intel/iommu.c:17:
-> drivers/iommu/intel/iommu.c: In function 'domain_context_mapping_one':
-> ./include/linux/find.h:119:37: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'int[1]' [-Warray-bounds]
->   119 |                 unsigned long val = *addr & GENMASK(size - 1, 0);
->       |                                     ^~~~~
-> drivers/iommu/intel/iommu.c:2115:18: note: while referencing 'max_pde'
->  2115 |         int pds, max_pde;
->       |                  ^~~~~~~
->
+> -----Original Message-----
+> From: Kees Cook <keescook@chromium.org>
+> Sent: Thursday, December 16, 2021 1:23 AM
+> To: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Kees Cook <keescook@chromium.org>; Hennerich, Michael
+> <Michael.Hennerich@analog.com>; Tanislav, Cosmin
+> <Cosmin.Tanislav@analog.com>; Jonathan Cameron <jic23@kernel.org>;
+> Linus Walleij <linus.walleij@linaro.org>; linux-kernel@vger.kernel.org; linux-
+> iio@vger.kernel.org; linux-hardening@vger.kernel.org
+> Subject: [PATCH] iio: addac: Do not reference negative array offsets
+> 
+> [External]
+> 
+> Instead of aiming rx_buf at an invalid array-boundary-crossing location,
+> just skip the first assignment. Seen when building with -Warray-bounds:
+> 
+> drivers/iio/addac/ad74413r.c: In function 'ad74413r_update_scan_mode':
+> drivers/iio/addac/ad74413r.c:843:22: warning: array subscript -4 is below
+> array bounds of 'u8[16]' { aka 'unsigned char[16]'} [-Warray-bounds]
+>   843 |         u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
+> AD74413R_FRAME_SIZE];
+>       |
+> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/iio/addac/ad74413r.c:84:20: note: while referencing 'rx_buf'
+>    84 |                 u8 rx_buf[AD74413R_FRAME_SIZE *
+> AD74413R_CHANNEL_MAX];
+>       |                    ^~~~~~
+> 
+> Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-For all patches in this (not a) series
-Acked-by: Yury Norov <yury.norov@gmail.com>
-
-But can you explain, what for did you split this change? The
-Documentation/process says: "Solve only one problem per patch.",
-but here one problem is solved per 4 patches with identical
-description.
-
-I think it would be more logical to move-in this change as a single
-commitment rather than random scattered patches.
-
-Thanks,
-Yury
-
 > ---
->  drivers/iommu/intel/iommu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index b6a8f3282411..99f9e8229384 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -2112,10 +2112,10 @@ static void domain_exit(struct dmar_domain *domain)
->   */
->  static inline unsigned long context_get_sm_pds(struct pasid_table *table)
+>  drivers/iio/addac/ad74413r.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
+> index cbd9aa9b399a..b0a6d8ee5133 100644
+> --- a/drivers/iio/addac/ad74413r.c
+> +++ b/drivers/iio/addac/ad74413r.c
+> @@ -840,7 +840,7 @@ static int ad74413r_update_scan_mode(struct iio_dev
+> *indio_dev,
 >  {
-> -       int pds, max_pde;
-> +       unsigned long pds, max_pde;
->
->         max_pde = table->max_pasid >> PASID_PDE_SHIFT;
-> -       pds = find_first_bit((unsigned long *)&max_pde, MAX_NR_PASID_BITS);
-> +       pds = find_first_bit(&max_pde, MAX_NR_PASID_BITS);
->         if (pds < 7)
->                 return 0;
->
+>  	struct ad74413r_state *st = iio_priv(indio_dev);
+>  	struct spi_transfer *xfer = st->adc_samples_xfer;
+> -	u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
+> AD74413R_FRAME_SIZE];
+> +	u8 *rx_buf = st->adc_samples_buf.rx_buf;
+>  	u8 *tx_buf = st->adc_samples_tx_buf;
+>  	unsigned int channel;
+>  	int ret;
+> @@ -877,9 +877,8 @@ static int ad74413r_update_scan_mode(struct iio_dev
+> *indio_dev,
+>  		if (ret)
+>  			goto out;
+> 
+> -		st->adc_active_channels++;
+> 
+> -		if (xfer == st->adc_samples_xfer)
+> +		if (xfer == st->adc_samples_xfer || st->adc_active_channels
+> == 0)
+
+You can probably keep only one of the checks. Both xfer and adc_active_channels
+will be incremented after your changes anyway.
+
+>  			xfer->rx_buf = NULL;
+>  		else
+>  			xfer->rx_buf = rx_buf;
+> @@ -896,7 +895,10 @@ static int ad74413r_update_scan_mode(struct
+> iio_dev *indio_dev,
+> 
+>  		xfer++;
+>  		tx_buf += AD74413R_FRAME_SIZE;
+> -		rx_buf += AD74413R_FRAME_SIZE;
+> +		if (st->adc_active_channels)
+> +			rx_buf += AD74413R_FRAME_SIZE;
+> +
+> +		st->adc_active_channels++;
+>  	}
+> 
+>  	xfer->rx_buf = rx_buf;
 > --
 > 2.30.2
->
+
