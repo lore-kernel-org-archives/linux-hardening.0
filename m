@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78E7C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 04:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446E8C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 08:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229834AbhLQEwI (ORCPT
+        id S231229AbhLQIFh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Dec 2021 23:52:08 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:58058 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231953AbhLQEwI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Dec 2021 23:52:08 -0500
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1my5Di-0006xU-Io; Fri, 17 Dec 2021 15:51:51 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 17 Dec 2021 15:51:50 +1100
-Date:   Fri, 17 Dec 2021 15:51:50 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
+        Fri, 17 Dec 2021 03:05:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229895AbhLQIFg (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 17 Dec 2021 03:05:36 -0500
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8176FC061574;
+        Fri, 17 Dec 2021 00:05:36 -0800 (PST)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id D441136D; Fri, 17 Dec 2021 09:05:33 +0100 (CET)
+Date:   Fri, 17 Dec 2021 09:05:32 +0100
+From:   Joerg Roedel <joro@8bytes.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Arnaud Ebalard <arno@natisbad.org>,
-        Srujana Challa <schalla@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Suheil Chandran <schandran@marvell.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Lukasz Bartosik <lbartosik@marvell.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: octeontx2 - Avoid stack variable overflow
-Message-ID: <20211217045150.GA20345@gondor.apana.org.au>
-References: <20211215225558.1995027-1-keescook@chromium.org>
+Subject: Re: [PATCH] iommu: Use correctly sized arguments for bit field
+Message-ID: <YbxEzHVdvzCiProP@8bytes.org>
+References: <20211215232432.2069605-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211215225558.1995027-1-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20211215232432.2069605-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 02:55:58PM -0800, Kees Cook wrote:
->> @@ -1762,7 +1762,7 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
->  	char engs_info[2 * OTX2_CPT_NAME_LENGTH];
->  	struct otx2_cpt_eng_grp_info *grp;
->  	struct otx2_cpt_engs_rsvd *engs;
-> -	u32 mask[4];
-> +	u32 mask[5];
+On Wed, Dec 15, 2021 at 03:24:32PM -0800, Kees Cook wrote:
+> The find.h APIs are designed to be used only on unsigned long arguments.
+> This can technically result in a over-read, but it is harmless in this
+> case. Regardless, fix it to avoid the warning seen under -Warray-bounds,
+> which we'd like to enable globally:
+> 
+> In file included from ./include/linux/bitmap.h:9,
+>                  from drivers/iommu/intel/iommu.c:17:
+> drivers/iommu/intel/iommu.c: In function 'domain_context_mapping_one':
+> ./include/linux/find.h:119:37: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'int[1]' [-Warray-bounds]
+>   119 |                 unsigned long val = *addr & GENMASK(size - 1, 0);
+>       |                                     ^~~~~
+> drivers/iommu/intel/iommu.c:2115:18: note: while referencing 'max_pde'
+>  2115 |         int pds, max_pde;
+>       |                  ^~~~~~~
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/iommu/intel/iommu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Are you sure 144 bits will overflow u32[4]? If not then shouldn't
-the fix be to remove the bogus print on mask[4]?
-
-On another note, the debug code looks like crap if engs_num is
-less than the maximum of 144 as it will print random data from
-the kernel stack.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Applied, thanks.
