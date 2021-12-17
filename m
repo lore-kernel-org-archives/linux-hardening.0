@@ -2,33 +2,35 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566CDC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 01:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB75BC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 01:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231449AbhLQBBW (ORCPT
+        id S231484AbhLQBBd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Dec 2021 20:01:22 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:30136 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229899AbhLQBBV (ORCPT
+        Thu, 16 Dec 2021 20:01:33 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:29137 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231487AbhLQBBc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Dec 2021 20:01:21 -0500
+        Thu, 16 Dec 2021 20:01:32 -0500
 Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4JFVx50bhMz8vxL;
-        Fri, 17 Dec 2021 08:59:05 +0800 (CST)
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4JFVwP0S1Nz1DJwl;
+        Fri, 17 Dec 2021 08:58:29 +0800 (CST)
 Received: from ubuntu1804.huawei.com (10.67.174.58) by
  dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 17 Dec 2021 09:01:19 +0800
+ 15.1.2308.20; Fri, 17 Dec 2021 09:01:30 +0800
 From:   Xiu Jianfeng <xiujianfeng@huawei.com>
 To:     <paul@paul-moore.com>, <eparis@redhat.com>,
         <gustavoars@kernel.org>, <keescook@chromium.org>
 CC:     <linux-audit@redhat.com>, <linux-kernel@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>
-Subject: [PATCH -next, v3 1/2] audit: use struct_size() helper in audit_[send|make]_reply()
-Date:   Fri, 17 Dec 2021 09:01:51 +0800
-Message-ID: <20211217010152.61796-1-xiujianfeng@huawei.com>
+Subject: [PATCH -next, v3 2/2] audit: replace zero-length array with flexible-array member
+Date:   Fri, 17 Dec 2021 09:01:52 +0800
+Message-ID: <20211217010152.61796-2-xiujianfeng@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20211217010152.61796-1-xiujianfeng@huawei.com>
+References: <20211217010152.61796-1-xiujianfeng@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.174.58]
@@ -39,41 +41,28 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of struct_size() helper instead of an open-coded calculation.
+Zero-length arrays are deprecated and should be replaced with
+flexible-array members.
 
-Link: https://github.com/KSPP/linux/issues/160
+Link: https://github.com/KSPP/linux/issues/78
 Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
- kernel/audit.c       | 2 +-
- kernel/auditfilter.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/uapi/linux/audit.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index f33028578c60..7778eca34837 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1459,7 +1459,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 			security_release_secctx(ctx, len);
- 		}
- 		audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO, 0, 0,
--				 sig_data, sizeof(*sig_data) + len);
-+				 sig_data, struct_size(sig_data, ctx, len));
- 		kfree(sig_data);
- 		break;
- 	case AUDIT_TTY_GET: {
-diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-index 19352820b274..42d99896e7a6 100644
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -1092,7 +1092,7 @@ static void audit_list_rules(int seq, struct sk_buff_head *q)
- 				break;
- 			skb = audit_make_reply(seq, AUDIT_LIST_RULES, 0, 1,
- 					       data,
--					       sizeof(*data) + data->buflen);
-+					       struct_size(data, buf, data->buflen));
- 			if (skb)
- 				skb_queue_tail(q, skb);
- 			kfree(data);
+diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+index 9176a095fefc..8eda133ca4c1 100644
+--- a/include/uapi/linux/audit.h
++++ b/include/uapi/linux/audit.h
+@@ -514,7 +514,7 @@ struct audit_rule_data {
+ 	__u32		values[AUDIT_MAX_FIELDS];
+ 	__u32		fieldflags[AUDIT_MAX_FIELDS];
+ 	__u32		buflen;	/* total length of string fields */
+-	char		buf[0];	/* string fields buffer */
++	char		buf[];	/* string fields buffer */
+ };
+ 
+ #endif /* _UAPI_LINUX_AUDIT_H_ */
 -- 
 2.17.1
 
