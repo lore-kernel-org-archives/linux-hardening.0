@@ -2,86 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B41C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 04:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78E7C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 04:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232630AbhLQEFA (ORCPT
+        id S229834AbhLQEwI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Dec 2021 23:05:00 -0500
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:40466 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232624AbhLQEEw (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Dec 2021 23:04:52 -0500
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BH2X4T8004122;
-        Fri, 17 Dec 2021 04:04:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2021-07-09;
- bh=47mkUn5AIE/gaIz5Xk8dghf/d3/VjCK/LqtvQA/k/gk=;
- b=vBORmk6TUjVAe/N3VTkmAn1iUXC3E5PjTb/8pkip43+Fe4IRWclzawYLlu1X7HtsLZoB
- 89Z9NetZghoKJsAJ7C+/6mxj6as5cIj2EeQDq32/VjF4j3fm18at3uaTVgIG+92eKr5b
- cL89kCTyCpoPrlgRxBOJq7EnHwHYahOoVctAVY7107rjz5/m/mGOobd8eJb29XTtUHMM
- rwKBjUkThPyUWxR05DMlszcGVtOwi/6uiIJq4UMNpPhAD7c5GHMqPkzs9i6fgLNq/y+v
- NYUgzTFfVZrDR7I30/ybBqd2n0dtVutgBT8XuhdiVTnm6uR81Sb7oVgahsgyBe+hCmpR Pw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3cykmcmkgf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Dec 2021 04:04:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1BH40jfb154622;
-        Fri, 17 Dec 2021 04:04:46 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 3cvh436dvk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Dec 2021 04:04:46 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 1BH44icm167096;
-        Fri, 17 Dec 2021 04:04:46 GMT
-Received: from ca-mkp.mkp.ca.oracle.com (ca-mkp.ca.oracle.com [10.156.108.201])
-        by userp3030.oracle.com with ESMTP id 3cvh436duh-3;
-        Fri, 17 Dec 2021 04:04:46 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     James Smart <james.smart@broadcom.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Thu, 16 Dec 2021 23:52:08 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:58058 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231953AbhLQEwI (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 16 Dec 2021 23:52:08 -0500
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1my5Di-0006xU-Io; Fri, 17 Dec 2021 15:51:51 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 17 Dec 2021 15:51:50 +1100
+Date:   Fri, 17 Dec 2021 15:51:50 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Arnaud Ebalard <arno@natisbad.org>,
+        Srujana Challa <schalla@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Suheil Chandran <schandran@marvell.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Lukasz Bartosik <lbartosik@marvell.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: lpfc: Use struct_group() to initialize struct lpfc_cgn_info
-Date:   Thu, 16 Dec 2021 23:04:42 -0500
-Message-Id: <163971367435.637.14441712327828336248.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211208195957.1603092-1-keescook@chromium.org>
-References: <20211208195957.1603092-1-keescook@chromium.org>
+Subject: Re: [PATCH] crypto: octeontx2 - Avoid stack variable overflow
+Message-ID: <20211217045150.GA20345@gondor.apana.org.au>
+References: <20211215225558.1995027-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: 6yjbvYlfNEKDGgBhzbA7FIUKZnHGi540
-X-Proofpoint-GUID: 6yjbvYlfNEKDGgBhzbA7FIUKZnHGi540
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211215225558.1995027-1-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 8 Dec 2021 11:59:57 -0800, Kees Cook wrote:
+On Wed, Dec 15, 2021 at 02:55:58PM -0800, Kees Cook wrote:
+>> @@ -1762,7 +1762,7 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
+>  	char engs_info[2 * OTX2_CPT_NAME_LENGTH];
+>  	struct otx2_cpt_eng_grp_info *grp;
+>  	struct otx2_cpt_engs_rsvd *engs;
+> -	u32 mask[4];
+> +	u32 mask[5];
 
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memset(), avoid intentionally writing across
-> neighboring fields.
-> 
-> Add struct_group() to mark "stat" region of struct lpfc_cgn_info that
-> should be initialized to zero, and refactor the "data" region memset()
-> to wipe everything up to the cgn_stats region.
-> 
-> [...]
+Are you sure 144 bits will overflow u32[4]? If not then shouldn't
+the fix be to remove the bogus print on mask[4]?
 
-Applied to 5.17/scsi-queue, thanks!
+On another note, the debug code looks like crap if engs_num is
+less than the maximum of 144 as it will print random data from
+the kernel stack.
 
-[1/1] scsi: lpfc: Use struct_group() to initialize struct lpfc_cgn_info
-      https://git.kernel.org/mkp/scsi/c/532adda9f405
-
+Thanks,
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
