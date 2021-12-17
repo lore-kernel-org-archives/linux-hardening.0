@@ -2,103 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4297AC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 13:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80570C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 19:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234338AbhLQNey (ORCPT
+        id S236751AbhLQTdN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Dec 2021 08:34:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:57510 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231836AbhLQNey (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Dec 2021 08:34:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1455012FC;
-        Fri, 17 Dec 2021 05:34:54 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.67.184])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56E973F5A1;
-        Fri, 17 Dec 2021 05:34:53 -0800 (PST)
-Date:   Fri, 17 Dec 2021 13:34:50 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/17] fortify: Detect struct member overflows in
- memcpy() at compile-time
-Message-ID: <YbyR+gt0ku65NJrM@FVFF77S0Q05N>
-References: <20211213223331.135412-1-keescook@chromium.org>
- <20211213223331.135412-7-keescook@chromium.org>
- <YbseKuBwHEfvzykO@FVFF77S0Q05N>
- <202112160942.01254B408@keescook>
+        Fri, 17 Dec 2021 14:33:13 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57544 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236701AbhLQTdJ (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 17 Dec 2021 14:33:09 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: usama.anjum)
+        with ESMTPSA id BAF2B1F4733D
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=collabora.com; s=mail;
+        t=1639769588; bh=KrnOUAIPOi7q0Qlr6MnB41M+auYvt6kDtqVNTxI/rvs=;
+        h=Cc:Subject:To:References:From:Date:In-Reply-To:From;
+        b=BTNP3d6HOs2i+XKHOJP8N/iA7MPFiiueRpd+/UBIb7l3KPRFStTBvIOe22/grns4j
+         GfOViALk8rEGyuWdoAGCbuEMEhdF8xTt2B+PbwhjZWeOAt04EF84gJZ7YliF83g4Lq
+         ZgRTxgXBGfTCj3FqKfDO7oQ8gMzydBYBqfnr0La3CsWBTA2BK3kNvoCPGoY3/fzmC5
+         J9MplW9+iJe/Pdg7py/hdOlS1+1dkW93+IdOUhdhXxuoHOoFXHBknpcCoAJLhRrJzt
+         NvUoYU+IMROTgotnTj6Yg+G9+zWJxHzLK9zeDl81BS1WGECkcCb6rGbyBuYY15e56D
+         tGqcbyhJm9bKQ==
+Cc:     usama.anjum@collabora.com, Kroah-Hartman <greg@kroah.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "foersleo@amazon.de" <foersleo@amazon.de>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        "Gustavo A. R. Silva" <garsilva@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-hardening@vger.kernel.org,
+        Norbert Manthey <nmanthey@amazon.de>
+Subject: Re: Coverity Scan model file, license, public access
+To:     Kees Cook <keescook@chromium.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dave Jones <davej@codemonkey.org.uk>
+References: <d7f096ee-7a9b-684e-433a-f8f3f0e6288d@amazon.de>
+ <YOSKuEcPoy/dw0st@kroah.com> <a41221c8-86e5-494d-68fd-0a0b87c99e83@amazon.de>
+ <202107151111.23BA48F99@keescook>
+From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
+Message-ID: <1bce95f4-ddf8-2081-57c8-67cd9d4dd3d4@collabora.com>
+Date:   Sat, 18 Dec 2021 00:32:59 +0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202112160942.01254B408@keescook>
+In-Reply-To: <202107151111.23BA48F99@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 10:00:09AM -0800, Kees Cook wrote:
-> On Thu, Dec 16, 2021 at 11:08:26AM +0000, Mark Rutland wrote:
-> > On Mon, Dec 13, 2021 at 02:33:20PM -0800, Kees Cook wrote:
-> > > memcpy() is dead; long live memcpy()
-> > > 
-> > > tl;dr: In order to eliminate a large class of common buffer overflow
-> > > flaws that continue to persist in the kernel, have memcpy() (under
-> > > CONFIG_FORTIFY_SOURCE) perform bounds checking of the destination struct
-> > > member when they have a known size. This would have caught all of the
-> > > memcpy()-related buffer write overflow flaws identified in at least the
-> > > last three years.
-> > > 
-> > 
-> > Hi Kees,
-> > 
-> > Since there's a *lot* of context below, it's very easy to miss some key details
-> > (e.g. that the compile-time warnings are limited to W=1 builds). It would be
-> > really nice if the summary above could say something like:
+> As far as I know, the model was written originally by Dave Jones, with
+> further changes from myself and, I think, Colin Ian King.
 > 
-> Hm, I do need to write a better summary! I think there's still some
-> misunderstanding, and I will attempt some clarity here... :)
-
-Thanks! Sorry if that came across as a complaint; this looks really useful and
-I just couldn't figure out if I was holding things wrong or whether I was
-hitting an unexpected issue. :)
-
-> >   This patch makes it possible to detect when memcpy() of a struct member may
-> >   go past the bounds of that member. When CONFIG_FORTIFY_SOURCE=y, runtime
-> >   checks are always emitted where the compiler cannot guarantee a memcpy() is
-> >   safely bounded, and compile-time warnings are enabled for W=1 builds.
+> I thought it was visible through the Coverity dashboard, once you're
+> logged in:
+> https://scan.coverity.com/projects/linux-next-weekly-scan?tab=analysis_settings
+> (See 'Modeling file loaded [View]')
 > 
-> For GCC and Clang 14, compile-time _write_ overflow warnings are meant
-> to be emitted under FORTIFY_SOURCE. _read_ overflow warnings are meant
-> to be emitted under FORTIFY_SOURCE + W=1 (or when the same statement
-> also has a write overflow).
-
-Cool.
-
-I'll await a clang 14 release, or go build my own copy in the mean time.
-
-> >   This catches a large class of common buffer overflow flaws, and would have
-> >   caught all of the memcpy()-related buffer write overflow flaws identified in
-> >   the last three years.
-> > 
-> > As an aside, since W=1 is chock-full of (IMO useless) warnings, is there any
-> > way to enable *just* the FORTIFY_SOURCE warnings?
-> 
-> To see them all (i.e. not shove some into W=1), you can remove the "W=1
-> or write overflow" part of the read overflow test in fortify-string.h.
-> e.g.:
-> 
-> -                if ((IS_ENABLED(KBUILD_EXTRA_WARN1) || p_size_field < size) &&
-> -                    q_size_field < size)
-> +                if (q_size_field < size)
-> 
-> > I had a go at testing this on arm64, and could get build-time warnings from GCC
-> > 11.1.0, but not from Clang 13.0.0.
-> 
-> This is correct and expected due to Clang 13's lack of support for
-> compiletime_warning().
-
-Thanks for confirming!
-
-Thanks,
-Mark.
+I've sent the request to join the dashboard. Who is the maintainer of
+this free Coverity dashboard? Can anyone use these results to fix the
+bugs without the permission of anyone?
