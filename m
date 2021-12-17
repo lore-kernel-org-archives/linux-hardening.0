@@ -2,81 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44D5C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 13:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4297AC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Dec 2021 13:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234017AbhLQNHU (ORCPT
+        id S234338AbhLQNey (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Dec 2021 08:07:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232106AbhLQNHU (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Dec 2021 08:07:20 -0500
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC1BC061574
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Dec 2021 05:07:20 -0800 (PST)
-Received: by mail-ua1-x92e.google.com with SMTP id p2so4128941uad.11
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Dec 2021 05:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WyqG449HouzDrScaDmK4P0UvJlEZr892cvhoYjqoY2E=;
-        b=hvGxrBVo4h1TtoF26FhhGuoXXzZPdyShcCUytRzlM0Plw/HIyV9EWBK9uuEcCUBaiA
-         FjSfTgV5upRko9I/ISHfWOBIEZn/7Bj4xRj3+Uk61XJYehFUldayfuLrW1vzSwNBJ1mb
-         aLrCzQFvchmaEFjJ/+lqwZoxMEput4J49+4bz3biqvjrTiCa8r0mucECwYnH3S0HFWgg
-         Jfai72cAdPDr17AvYdISwKUUeWv9xyWTPGb0yVWHWV9zqb5p9cYB9esRs/z+DT+9bVHU
-         g7M4eYBe3Wph3hx5iaIC3C9TQX0bXpYVQ8jfX9MwG20INdBHiOrvWr+n6v49NIZVs5Hm
-         DFug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WyqG449HouzDrScaDmK4P0UvJlEZr892cvhoYjqoY2E=;
-        b=PRS+Y6pwarCq2DoD4Egc9HKszC6K9hVr72RP2svnYHnuUcFl6H+eCuVi5RAeFir1CS
-         y5eWlnUoJr+dwcq/wkEiA4CtSZSZTZCoq5ctcZlKxv6YaRgkx75G4lbge/wYgt1dTjf8
-         D7B9/Ycx2rItF1ePxv3nsiNy4KDqCqBYs/wohSNZ/84yDXvzKL+D6zmupCxvjnWdrZdZ
-         /liKXfxSHrDerMMPu2Wn5wQn0WPlZGPcJfeoxTlz1cR6iHoZWHYGrSnm3caim0BUF2r8
-         KyKXWMzBpLUcZmt64hl+hcwUZ1Lw5BcUbB5KsqlH6XjF7c88CUpyFKtiG9mdNwt4PShf
-         pzkA==
-X-Gm-Message-State: AOAM533v9mg/SLieY5EYUE92vSbmo0qcHIsVBjrxutZvKO88SztqfZi6
-        onYXTDts0RiTpGJH4MKgf5iD1E8QcHCjQl7eK/tL30gn
-X-Google-Smtp-Source: ABdhPJxNr69laEuDs+e3NnuABtF1GjS2Z66JFSpWl632oLphdf/8tC8oOYcybPOSrok5yqD2RzqH6uIgEkl6lkc0XxI=
-X-Received: by 2002:a05:6102:1613:: with SMTP id cu19mr852254vsb.25.1639746438811;
- Fri, 17 Dec 2021 05:07:18 -0800 (PST)
+        Fri, 17 Dec 2021 08:34:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:57510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231836AbhLQNey (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 17 Dec 2021 08:34:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1455012FC;
+        Fri, 17 Dec 2021 05:34:54 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.67.184])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56E973F5A1;
+        Fri, 17 Dec 2021 05:34:53 -0800 (PST)
+Date:   Fri, 17 Dec 2021 13:34:50 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/17] fortify: Detect struct member overflows in
+ memcpy() at compile-time
+Message-ID: <YbyR+gt0ku65NJrM@FVFF77S0Q05N>
+References: <20211213223331.135412-1-keescook@chromium.org>
+ <20211213223331.135412-7-keescook@chromium.org>
+ <YbseKuBwHEfvzykO@FVFF77S0Q05N>
+ <202112160942.01254B408@keescook>
 MIME-Version: 1.0
-References: <20211216215351.3811471-1-willy@infradead.org> <20211216215351.3811471-3-willy@infradead.org>
-In-Reply-To: <20211216215351.3811471-3-willy@infradead.org>
-From:   Mark Hemment <markhemm@googlemail.com>
-Date:   Fri, 17 Dec 2021 13:07:07 +0000
-Message-ID: <CANe_+Uj6cU3k5Xu9o43H7PosmS0ptXQOVkhgLB3OJCwFBnkCiA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] mm/usercopy: Detect vmalloc overruns
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org,
-        William Kucharski <william.kucharski@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202112160942.01254B408@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 16 Dec 2021 at 21:55, Matthew Wilcox (Oracle)
-<willy@infradead.org> wrote:
->
-> If you have a vmalloc() allocation, or an address from calling vmap(),
-> you cannot overrun the vm_area which describes it, regardless of the
-> size of the underlying allocation.  This probably doesn't do much for
-> security because vmalloc comes with guard pages these days, but it
-> prevents usercopy aborts when copying to a vmap() of smaller pages.
-...
-> +               offset = ptr - vm->addr;
-> +               if (offset + n > vm->size)
-> +                       usercopy_abort("vmalloc", NULL, to_user, offset, n);
-> +               return;
-> +       }
+On Thu, Dec 16, 2021 at 10:00:09AM -0800, Kees Cook wrote:
+> On Thu, Dec 16, 2021 at 11:08:26AM +0000, Mark Rutland wrote:
+> > On Mon, Dec 13, 2021 at 02:33:20PM -0800, Kees Cook wrote:
+> > > memcpy() is dead; long live memcpy()
+> > > 
+> > > tl;dr: In order to eliminate a large class of common buffer overflow
+> > > flaws that continue to persist in the kernel, have memcpy() (under
+> > > CONFIG_FORTIFY_SOURCE) perform bounds checking of the destination struct
+> > > member when they have a known size. This would have caught all of the
+> > > memcpy()-related buffer write overflow flaws identified in at least the
+> > > last three years.
+> > > 
+> > 
+> > Hi Kees,
+> > 
+> > Since there's a *lot* of context below, it's very easy to miss some key details
+> > (e.g. that the compile-time warnings are limited to W=1 builds). It would be
+> > really nice if the summary above could say something like:
+> 
+> Hm, I do need to write a better summary! I think there's still some
+> misunderstanding, and I will attempt some clarity here... :)
 
-Instead of vm->size, call get_vm_area_size() so any guard page is
-trimmed from the length.
+Thanks! Sorry if that came across as a complaint; this looks really useful and
+I just couldn't figure out if I was holding things wrong or whether I was
+hitting an unexpected issue. :)
 
-Mark
+> >   This patch makes it possible to detect when memcpy() of a struct member may
+> >   go past the bounds of that member. When CONFIG_FORTIFY_SOURCE=y, runtime
+> >   checks are always emitted where the compiler cannot guarantee a memcpy() is
+> >   safely bounded, and compile-time warnings are enabled for W=1 builds.
+> 
+> For GCC and Clang 14, compile-time _write_ overflow warnings are meant
+> to be emitted under FORTIFY_SOURCE. _read_ overflow warnings are meant
+> to be emitted under FORTIFY_SOURCE + W=1 (or when the same statement
+> also has a write overflow).
+
+Cool.
+
+I'll await a clang 14 release, or go build my own copy in the mean time.
+
+> >   This catches a large class of common buffer overflow flaws, and would have
+> >   caught all of the memcpy()-related buffer write overflow flaws identified in
+> >   the last three years.
+> > 
+> > As an aside, since W=1 is chock-full of (IMO useless) warnings, is there any
+> > way to enable *just* the FORTIFY_SOURCE warnings?
+> 
+> To see them all (i.e. not shove some into W=1), you can remove the "W=1
+> or write overflow" part of the read overflow test in fortify-string.h.
+> e.g.:
+> 
+> -                if ((IS_ENABLED(KBUILD_EXTRA_WARN1) || p_size_field < size) &&
+> -                    q_size_field < size)
+> +                if (q_size_field < size)
+> 
+> > I had a go at testing this on arm64, and could get build-time warnings from GCC
+> > 11.1.0, but not from Clang 13.0.0.
+> 
+> This is correct and expected due to Clang 13's lack of support for
+> compiletime_warning().
+
+Thanks for confirming!
+
+Thanks,
+Mark.
