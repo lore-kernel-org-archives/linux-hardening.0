@@ -2,80 +2,133 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02966C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Dec 2021 21:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C5BC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Dec 2021 23:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230422AbhLTVU3 (ORCPT
+        id S237503AbhLUXeA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Dec 2021 16:20:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230135AbhLTVU3 (ORCPT
+        Tue, 21 Dec 2021 18:34:00 -0500
+Received: from condef-06.nifty.com ([202.248.20.71]:38553 "EHLO
+        condef-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234517AbhLUXeA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Dec 2021 16:20:29 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1049C06173E
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Dec 2021 13:20:28 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id w16so15280732edc.11
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Dec 2021 13:20:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AG8LZjz52Sv3bsHubNvrikDmWB0tVzADFuwGdiqWvyo=;
-        b=22WHJSlCMTrpOAICG5PI5lyOLWmzi0uGmUfYBn7sj6sp5gibXCbtCafklaYzH9+GqJ
-         BH6TCQQSA7Fg4Clbdh+OmySsPyvtNAJvIMvklJwL3jLVqzX5iBjt5M/N0q64UDbDf+5F
-         /TS6OA1Oh/JhRFKXmFhFgJ7cXvXcrzA4ix5iR6pA+yW6GRC7+rt2hGmM3JYE+og0l3Qh
-         8jLmgbF5vekjC+rfKccTwd6CiO3rRiYjJEowrHH+GZNwzq29rCawHfsRl+F1OWppZQ4w
-         5jagWh0qPOWP0kBf8t9/UxXa8cp1pOxLYelCwpvOpprQU9nDUVJNVbJ6LkX4rnkhbg1H
-         rPDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AG8LZjz52Sv3bsHubNvrikDmWB0tVzADFuwGdiqWvyo=;
-        b=5XZ0jwZA3bBuqeViALkd/E1tV4BrlycN9LcohM/4VoVi55MJN/RHmv+mQudgtAyWOh
-         o00Bl9uDX2btlcZtNhIjXXfb1zZFac9OIIDiyRKVukLZ6VqTvAG/vXCC52FPAKfoW0E/
-         hQMKzkF2yhPyvLlLA8r1LaFSuVt0dOD8teIcnL7oTCPRdn6Z7on20o6GshqkvlWW+IrF
-         9IEiNLwYb03jzSzHNiFJxGvzhe2e9WXjxA0ObMGOpev2JfTwli+c4VsJHDWi7EH43a18
-         xd8AzoqvkTafN7l+9ygHDABlStE9Dl/RC0Bu/0KLi/R7W2a77OPPHJuFKujufr05I5sr
-         FR6g==
-X-Gm-Message-State: AOAM533YicU5yiZTliNNLnhXM0/fWWImz5JO6khIGo/wM9dZZ8DHie54
-        WSrKh4gCeV1zTGFw6OXhP82fuyTD5BJocRSS3Ljy
-X-Google-Smtp-Source: ABdhPJxzBK00qdQqBlLshB1f8MtmoklomCDL2RS0BNvCZuGS/NNrdOTim0zxPybOFYWJlZNuUidGfMSIyMJptGcecn8=
-X-Received: by 2002:a17:907:1b0d:: with SMTP id mp13mr42794ejc.29.1640035227186;
- Mon, 20 Dec 2021 13:20:27 -0800 (PST)
+        Tue, 21 Dec 2021 18:34:00 -0500
+X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Dec 2021 18:34:00 EST
+Received: from conssluserg-05.nifty.com ([10.126.8.84])by condef-06.nifty.com with ESMTP id 1BLNNi9H032162
+        for <linux-hardening@vger.kernel.org>; Wed, 22 Dec 2021 08:23:44 +0900
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 1BLNNHa4005092;
+        Wed, 22 Dec 2021 08:23:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 1BLNNHa4005092
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1640128998;
+        bh=Mgwd2xi548VgomBDJet/kbCBxCGaN8Xhh3/n4lkHahM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LrWfPJoVZRGIhRU5n/jMRU1cqD1zm583R/R85ZTGbPuJg61VFgDLIANHHPGyk2ECf
+         Exdwu1N7lnRl6QgkpfBx0n539cXjsCuvjDnGYLrRtfsd8W4M8Qt6rt18IQyuc5feS7
+         aQyQJMvfOt7iR1MVUJT+rpgyY9iyJwyPkGatZJOJ0RQ+btwZSm9D2XY+EBbj5v62uI
+         HFr311HllLcnf2Cs4p3uGXeL44cf+Du9oFgZWisNL2ygB9K33y4inQHazJMLQurifR
+         MwAau89f9cr7JX2fHmQMv42R3loB5KBjNrKJlIPB4GLSBN2muyg+OAQOnzwc2hfpXP
+         t+z4RpIQUx1jA==
+X-Nifty-SrcIP: [209.85.210.170]
+Received: by mail-pf1-f170.google.com with SMTP id t123so599800pfc.13;
+        Tue, 21 Dec 2021 15:23:18 -0800 (PST)
+X-Gm-Message-State: AOAM530xwl3K1GB23ZmNBHIsE1rhYJh49IisHAkq72zk1eSKemGWkiPK
+        2Q968sqWAwsG/vkp0W0dHzg1uQbFeDKbqJ/2o6w=
+X-Google-Smtp-Source: ABdhPJyGOHJM1AVFJy0VcI6dJ1gzmzrWkdpdnhYXzUwfdAqGc6KCiJHHC9WrMEso8fb5p6Xth3nknwHdEJXuywXLMpw=
+X-Received: by 2002:a63:1947:: with SMTP id 7mr512348pgz.616.1640128997165;
+ Tue, 21 Dec 2021 15:23:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20211217010152.61796-1-xiujianfeng@huawei.com> <20211217010152.61796-2-xiujianfeng@huawei.com>
-In-Reply-To: <20211217010152.61796-2-xiujianfeng@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 20 Dec 2021 16:20:16 -0500
-Message-ID: <CAHC9VhRP_6XcAkuAv92uPaPuxO4TgSnXe_+o=q3uvni9kEndmA@mail.gmail.com>
-Subject: Re: [PATCH -next, v3 2/2] audit: replace zero-length array with
- flexible-array member
-To:     Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc:     eparis@redhat.com, gustavoars@kernel.org, keescook@chromium.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
+References: <20211210000910.3597609-1-keescook@chromium.org> <CAK8P3a3wOVdds2-qz365LoBNGtrx6ksCzCHp7T+qSev+R3ZRPQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a3wOVdds2-qz365LoBNGtrx6ksCzCHp7T+qSev+R3ZRPQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 22 Dec 2021 08:22:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS6po1Zj0QnFkaKZbDw8P3YD7Z2-20zsp_HBrUfmeEaWw@mail.gmail.com>
+Message-ID: <CAK7LNAS6po1Zj0QnFkaKZbDw8P3YD7Z2-20zsp_HBrUfmeEaWw@mail.gmail.com>
+Subject: Re: [PATCH] Kconfig.debug: Make DEBUG_INFO selectable from a choice
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 8:01 PM Xiu Jianfeng <xiujianfeng@huawei.com> wrote:
+On Fri, Dec 10, 2021 at 6:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> Zero-length arrays are deprecated and should be replaced with
-> flexible-array members.
+> On Fri, Dec 10, 2021 at 1:09 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Currently it's not possible to enable DEBUG_INFO for an all*config
+> > build, since it is marked as "depends on !COMPILE_TEST". This generally
+> > makes sense because a debug build of an all*config target ends up taking
+> > much longer and the output is much larger. Having this be "default off"
+> > makes sense. However, there are cases where enabling DEBUG_INFO for such
+> > builds is useful for doing treewide A/B comparisons of build options,
+> > etc.
+> >
+> > Make DEBUG_INFO selectable from any of the DWARF version choice options,
+> > with DEBUG_INFO_NONE being the default for COMPILE_TEST. The mutually
+> > exclusive relationship between DWARF5 and BTF must be inverted, but the
+> > result remains the same. Additionally moves DEBUG_KERNEL and DEBUG_MISC
+> > up to the top of the menu because was enabling features _above_ it,
+> > making it weird to navigate menuconfig.
+> >
+> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
 >
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-> ---
->  include/uapi/linux/audit.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Looks good to me,
+>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>
+> One detail:
+>
+> > +choice
+> > +       prompt "Debug information"
+> > +       depends on DEBUG_KERNEL
+> > +       default DEBUG_INFO_NONE if COMPILE_TEST
+> > +       default DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT if DEBUG_KERNEL
+>
+> I think this line should be simplified to
+>
+>           default DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
 
-It doesn't look like this shouldn't impact the UAPI so I've also
-merged into audit/next, thanks!
+Indeed.
+
+It can be simplified into:
+
+           default DEBUG_INFO_NONE if COMPILE_TEST
+           default DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
+
+The first entry of the choice is the default.
+So, it can be further simplified to:
+
+          default DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT if !COMPILE_TEST
+
+
+
+Another way is to move DEBUG_INFO_NONE to the last entry of the choice,
+then
+
+        default DEBUG_INFO_NONE if COMPILE_TEST
+
+
+
+
+
+> since DEBUG_KERNEL is always enabled at this point. You can also consider
+> turning the 'menu' into 'menuconfig DEBUG_KERNEL' and dropping the 'depends
+> on DEBUG_KERNEL' in favor of the implied dependency.
+>
+>        Arnd
+
+
 
 -- 
-paul moore
-www.paul-moore.com
+Best Regards
+Masahiro Yamada
