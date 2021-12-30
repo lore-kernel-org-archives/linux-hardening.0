@@ -2,45 +2,36 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61231C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Dec 2021 17:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ECEC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Dec 2021 09:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236165AbhL1RFG (ORCPT
+        id S237995AbhL3JA2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Dec 2021 12:05:06 -0500
-Received: from mga09.intel.com ([134.134.136.24]:23840 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233280AbhL1RFF (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Dec 2021 12:05:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640711105; x=1672247105;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KHhXdEfIwTp7IIrrW70KmlJrU5+AcMwf8sgzb0u1BTQ=;
-  b=BQDV12zufIn3y7kViZ5Jpt3ulVBzf1xgHYmdvpui4sYL++yBRhMLLgZl
-   +In54oVBpemChMdhPSSao9SBGGuQnw129cutz7Qf/nNUzRCAFu7YWz9R2
-   GxD3zZn3E64NTF62bjny9/LAO6irwQAZcUtaMYwEa2FUmSNP83yXJQxHU
-   0Z9wgDM+bnvLBFseQ3FQ4ne1jZh4VKaDmMBeEuEKGlgQCkglp0egUZOAw
-   Uc7z7Dlj7IfP9sX+k+2BvvismjYilXtXFrvVgBSma1hHoodEN3fhtyl1j
-   cgprRmSQTooX90qS62YE/hsf/m7imZoI75H3rmwRsPJBt8R2BRSmon1qS
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10211"; a="241195850"
-X-IronPort-AV: E=Sophos;i="5.88,242,1635231600"; 
-   d="scan'208";a="241195850"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2021 09:05:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,242,1635231600"; 
-   d="scan'208";a="572369723"
-Received: from irvmail001.ir.intel.com ([10.43.11.63])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Dec 2021 09:04:56 -0800
-Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
-        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 1BSH4sNa000463;
-        Tue, 28 Dec 2021 17:04:54 GMT
-From:   Alexander Lobakin <alexandr.lobakin@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        Thu, 30 Dec 2021 04:00:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229567AbhL3JA2 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 30 Dec 2021 04:00:28 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52BC2C061574;
+        Thu, 30 Dec 2021 01:00:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vFgwQFGnP1+nZeL5xidq9k2TiaD3WdltS2FPFb0c2qA=; b=hSaUvXVYJLH2XhksKFosQF2YHU
+        dGP5innnv/tBj7GGtJdnhhYyL6mWSDOrz1NIx6rv4mYjbHi7dEyC4CPSPe4JlCgVOyo9rYxQdsD8q
+        EQ8XSLZ5mZRJVuVC5qyz5p9S2SzO0De2a5XnNwxaI0dz1ksfOmZ0YqcwaYGQfKRR1FaxYxnIktniK
+        LSsuBJ9c8O5Bw+3/8Fo5/U5wkfG0lR9oDKlVz9GxIjrQhq2DOKWmaIivzRsc+z3/wCSt2kSTNgWaS
+        SnJjoKqTvyOarGUHx025oaka8eR1wQ0Cxieh8IWOHBM+LfioMEXHdnMqa3mKdC8jNPLJLi0q63zpo
+        LCfE3baA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1n2rIM-0046EG-3y; Thu, 30 Dec 2021 09:00:22 +0000
+Date:   Thu, 30 Dec 2021 01:00:22 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alexander Lobakin <alexandr.lobakin@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
         linux-hardening@vger.kernel.org, x86@kernel.org,
         Jesse Brandeburg <jesse.brandeburg@intel.com>,
         Kristen Carlson Accardi <kristen@linux.intel.com>,
@@ -61,6 +52,7 @@ Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Thomas Gleixner <tglx@linutronix.de>,
         Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         Andy Lutomirski <luto@kernel.org>,
@@ -74,77 +66,37 @@ Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
         "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
         linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
         linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH v9 01/15] modpost: fix removing numeric suffixes
-Date:   Tue, 28 Dec 2021 18:03:08 +0100
-Message-Id: <20211228170308.1454063-1-alexandr.lobakin@intel.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <YcovajZkEd0WY8p4@zn.tnic>
-References: <20211223002209.1092165-1-alexandr.lobakin@intel.com> <20211223002209.1092165-2-alexandr.lobakin@intel.com> <YcShenJgaOeOdbIj@zn.tnic> <20211227182246.1447062-1-alexandr.lobakin@intel.com> <YcovajZkEd0WY8p4@zn.tnic>
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v9 00/15] Function Granular KASLR
+Message-ID: <Yc11JrelnWJgV7KX@infradead.org>
+References: <20211223002209.1092165-1-alexandr.lobakin@intel.com>
+ <YcVq1pMHWvPFHH5g@infradead.org>
+ <20211227183318.1447690-1-alexandr.lobakin@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211227183318.1447690-1-alexandr.lobakin@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Borislav Petkov <bp@alien8.de>
-Date: Mon, 27 Dec 2021 22:26:02 +0100
+On Mon, Dec 27, 2021 at 07:33:18PM +0100, Alexander Lobakin wrote:
+> From: Christoph Hellwig <hch@infradead.org>
+> Date: Thu, 23 Dec 2021 22:38:14 -0800
+> 
+> > On Thu, Dec 23, 2021 at 01:21:54AM +0100, Alexander Lobakin wrote:
+> > > This is a massive rework and a respin of Kristen Accardi's marvellous
+> > > FG-KASLR series (v5).
+> > 
+> > Here would be the place to explain what this series actually does and
+> > why it is marvellous.
+> 
+> As I took this project over from another developer/team, I decided
+> to preserve the original cover letter and append it to the end of
+> mine, as well as to keep most of the original code in the separate
+> commits from mine.
+> For sure I could redo this if needed, is it really so?
 
-> On Mon, Dec 27, 2021 at 07:22:46PM +0100, Alexander Lobakin wrote:
-> > It's just a couple lines below. I trigger this using `-z uniq-symbol`
-> > which uses numeric suffixes for globals as well.
-> 
-> Aha, so that's for the fgkaslr purposes now.
-
-Well, linking using unique names is meant to be used always
-when available and livepatching is enabled, at least I hope so.
-
-> 
-> > It fixes a commit dated 2014, thus Cc:stable. Although the
-> > remove_dot() might've been introduced for neverlanded GCC LTO, but
-> > in fact numeric suffixes are used a lot by the toolchains in regular
-> > builds as well. Just not for globals, that's why it's "well hidden".
-> 
-> Does "well hidden" warrant a stable backport then? Because if no
-> toolchain is using numeric suffixes for globals, then no need for the
-> stable tag, I'd say.
-
-Hmm, makes sense. The fact that I haven't seen any similar reports
-or issues (even on LTO builds) sorta says there are no benefits from
-backporting this.
-Ok, I'll drop the tag. It's never too late anyway to port this in
-case someone will face it.
-
-> 
-> > I thought it's a common saying in commit messages, isn't it?
-> 
-> Lemme give you my canned and a lot more eloquent explanation for that:
-> 
-> "Please use passive voice in your commit message: no "we" or "I", etc,
-> and describe your changes in imperative mood.
-> 
-> Also, pls read section "2) Describe your changes" in
-> Documentation/process/submitting-patches.rst for more details.
-> 
-> Also, see section "Changelog" in
-> Documentation/process/maintainer-tip.rst
-> 
-> Bottom line is: personal pronouns are ambiguous in text, especially with
-> so many parties/companies/etc developing the kernel so let's avoid them
-> please."
-> 
-> Thx.
-
-Ah, you're right. "Common used" doesn't mean "correct". I'll fix it
-in the next spin being published after accumulating a bunch more
-comments.
-Thanks!
-
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
-Al
+A cover letter needs to explain what you're doing for the reader.
+No one is going to page forever to look for that.
