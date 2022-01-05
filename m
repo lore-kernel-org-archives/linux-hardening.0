@@ -2,171 +2,311 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75E8C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 17:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC3DC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 17:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242338AbiAERfP (ORCPT
+        id S242363AbiAERgg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Jan 2022 12:35:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56486 "EHLO
+        Wed, 5 Jan 2022 12:36:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242337AbiAERfK (ORCPT
+        with ESMTP id S242359AbiAERgf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Jan 2022 12:35:10 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C869C061245
-        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 09:35:10 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id c9-20020a17090a1d0900b001b2b54bd6c5so5083276pjd.1
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 09:35:10 -0800 (PST)
+        Wed, 5 Jan 2022 12:36:35 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD86C061201
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 09:36:35 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id h6so117655plf.6
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 09:36:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=tIC6uuWRKMlRN9gOImOZjC9PBybxdHFz2/AlVg+R3sY=;
-        b=fBowwtQbsu73vuHnIg7R/ykQmzlw/+8OVSY9nwq6n+84ZwzOsAoT7/3Shi8yJJihUG
-         nX/KVRrtC1VYWRKzdLjCEeBDcQ6RMINgkcbXR81zczv46VzZDKHirlx6R2V9pece747z
-         7K3pyw434Japsntzij0eDiNxsM9+9/01ABdt0=
+        bh=UlDyQSfZH97+YSOXX0OoVP/OqcWQnYb38Gvp9Yo2/W0=;
+        b=CYToiqUrNG3t3x39vLyMisao1WjgLJw0g2VmSXl2v82QK8IjZKQltcCkddvWZrhsJ0
+         uGlpnBLdlTrJp7gEpD1vVsfLfU/sNu+CLemkhe6qrqOxkPhYGtO7IFWXkqk5eXFSw34v
+         P3UucZWCN39FnL4LzccNJ5nbXrXuRxXcQLMRY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=tIC6uuWRKMlRN9gOImOZjC9PBybxdHFz2/AlVg+R3sY=;
-        b=4pRc5uO1PfJ7ywaz3bdVQyGRLn/SDGvmlbQDoEC9u2G1RaLqbPxthW27Vhout45Jbh
-         Kwckj5DzaiR9ln6wtT99qHHamE/hEXYVoUCGS50vj7eBB4p+jtCtUFE/SGnnA04xG+BQ
-         fp2U/PXDzeX1F0JOV39pwaDAtJ6ilDDjrIjZt/tyg41Mo7lIoRCfFLjYqzmyf56XGil5
-         MId4JVmDnkbcTzCAGr3yNtuWnvJONbdH+pkXnH112iyYI7a1hPbsaXeoOePtQlkU9MEY
-         E5hid4RcbXqWkDW7P3cNvBvSY6883JaTpCbPsczSGPORndp2Zopu4cSG2R7gm6IzsEv5
-         8C1Q==
-X-Gm-Message-State: AOAM533kNST/cWjLFYY9pFsOjbkU2hfe3j62IlpOUz6J9uxRDUau0sH4
-        2nq2W0C3vOD4Hr3NFceuMTEUSQ==
-X-Google-Smtp-Source: ABdhPJyTlrJsuhPVaJ6QnXY+UarEB//h1AKJBq8kF/RN4mCbv5Z6bn36JXuY0ndfaNEEDahv+61z7A==
-X-Received: by 2002:a17:90a:8543:: with SMTP id a3mr938028pjw.108.1641404109952;
-        Wed, 05 Jan 2022 09:35:09 -0800 (PST)
+        bh=UlDyQSfZH97+YSOXX0OoVP/OqcWQnYb38Gvp9Yo2/W0=;
+        b=V3xYWjgjjbniShhd8zw9zdHCcOtrG16vx6PNe75zj1Hua48hoDiRlC1JQ+bo85gVv0
+         6yWuOmNnxjg8xzMMMfnJ3jMjGqXabKV/UjgOKizaL8YsLrmFgEXCzKtNmr1z6JyoSzB4
+         FNmK1pzoshhVQIqF9XznmTHPftgvEGkUkBw2LtZGeotlPQD4qy8jj/DADnL1xnU4flu7
+         CnBpLVTYc0VvLNTiM9NPu6hBr81fKkb1fExnyarojjbAspw3S3hvfNf0bRSjvBEP7qPF
+         cYjz/0MRiR/tUgucQ+yaCMr34KzkRnHZ/JGjxBMh+vUGfbwcEULsSwAf7ZI+nVM88PaK
+         5uXw==
+X-Gm-Message-State: AOAM531OGUsafPv2xfrQ62r8abvsTCbGNOUm8ymHQCp1YU2I2dHDNsbK
+        ILhjpK560O/q1mw+EPqES6nzAw==
+X-Google-Smtp-Source: ABdhPJxRAvesKc77wiFyz23fyuXHgHsmrfIZycg9eOtRUOAcEQtVNM/mW0s1X/aWw9HMHp0TJM/6RQ==
+X-Received: by 2002:a17:902:ea02:b0:149:473f:ca35 with SMTP id s2-20020a170902ea0200b00149473fca35mr55049525plg.99.1641404195156;
+        Wed, 05 Jan 2022 09:36:35 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ls7sm3372767pjb.11.2022.01.05.09.35.09
+        by smtp.gmail.com with ESMTPSA id o34sm22926834pgl.33.2022.01.05.09.36.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jan 2022 09:35:09 -0800 (PST)
+        Wed, 05 Jan 2022 09:36:34 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+To:     Kashyap Desai <kashyap.desai@broadcom.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lyude Paul <lyude@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] drm/dp: Remove common Post Cursor2 register handling
-Date:   Wed,  5 Jan 2022 09:35:07 -0800
-Message-Id: <20220105173507.2420910-1-keescook@chromium.org>
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH][RESEND] scsi: megaraid: Avoid mismatched storage type sizes
+Date:   Wed,  5 Jan 2022 09:36:33 -0800
+Message-Id: <20220105173633.2421129-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4014; h=from:subject; bh=73h6EjWgnCSmfmbkSfUNBCV9VTZTOb7XCwDmD6zlz6w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh1dbKi5OtSAWBzj/YGWn/GazhxEKMlTtqWjeRoBDb 1G0KF4eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdXWygAKCRCJcvTf3G3AJjq4D/ 0VBFZ9LHP9VPZi909vPYapIM1Z4FjlvzBIAMQNjv+TO2UZRrOfKRvJnkm9mGEnEIpuajucKKXHxioO Qb2S081y9bbvPupYTU2SQ5BaLxhsY7ZOcNQEiwUUcYm/ugMDUF3ADmfq8YMxXmqByq9GALz07o+K2E XfWsw3/3gBHWry66zEw8KLi2mBisi+ukr1VtaWWsTiSw4MJgbTpnQkE/2+sQ9mo6cDzZPc5tSsvm5R 1iU8uEQtba9jMuRKFuVzr38IBR6ka+5Lw16l5mYJp746H4zqcAeVNAT0nhGKflUyj/8gtxYH0G5qyz 252nhRhVk96LyXdNw2VLk0j4AOJbOXxI2FuTcu0aL5DRzVzSdYMU+C35v9DWDCA5a5wfdh2/Y9tL9U ACnjusJpNNxoWRdV0pJDHB+htNxSJrZTK9CK7SShMn+ZBozu4e67vX0ePgh+DxdhGFR4j0cQT/OSGS hvenaq0nuEdSH9ECIFL/q9WFICFiPNNGx/bKcdMyWFsqo2JDn5c+Gg/z4CIZrR6iCaIohKkKCtlb3B KzIEhimkSDq3I2mLl/pS8d8FI9gGomVVtpa5bGqvMDRdsooVv+efWATl37Kl/6iUVrJ0E6sgXAwOhx WqKpGtxYsBAz0KKbBLe0xaNMcpIXJr5TLfV4tVJKOKpzoGTDHj4qijBJ/3tA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7461; h=from:subject; bh=yCVF/dR75zh7pN1scPMv4U3tXSsTcbBV/KYX9KngEWY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh1dcgvp5F9LNf7Zt07G6F92kvoKo8Do3EicDHawzQ Z02EgniJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdXXIAAKCRCJcvTf3G3AJsYxD/ 9TmyIV365IN5cHqKQsIt3+8vCbIV+iJQlKSIz8zTcIYFM9Az9UKzROZa4HgsUVsrfYbS7HxxE4YNvk SNbwBWUD/yk6M5nX7mzgeiqYy7x80aBH4+nFwr9IjQXuBeqTiHBdHa6uB2RK6ar0jfwMspijvPIMRW 6xDVNRgfAxsudy0yyufNPhfuJDdo2y/gII3FKafq62MklNbGXrZlzSQdN9SXIIc9h9gx/a5Uxvxdhg 9uxPrKyY2NcPVnANztsgW5MGDR64jr/VAWopirT9QagpgojMPD0wtmaWvZAR4wUHQ7qIyUTm7RGbQv YY34QvAVpdUZ5QcrCt5azihTurS2ilZTjII8wsggEWp2PsFD8x1iWsQ441Jd95FHZ805Y1SM7bxB0n i2nWNwneedallbaK9xICcfPC6hyPKBQceGOV+ZVw4PnNqTzbwkP3yBemxH8kkLjj1RaduMucQwZvEv 5dpscpuaBBqyOlGHcReCIwBcOH/gMlgi+mcWLXyLccH70RNOHk7aawrw39TJqQ79RGpP1BbR89GVlA Yg2k/8XvjBWIxiBLruCupRqauQEAazc0rp/EAt6GzXKGxawhMYSvjwxNC5lv3gIxeFBWS54b+APPQ7 xfpb1hPg820N8pcroNGZZ1C0d1RdDhBE+jl8NE3LP4DBDC5Mu64KafG+7Njg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The link_status array was not large enough to read the Adjust Request
-Post Cursor2 register, so remove the common helper function to avoid
-an OOB read, found with a -Warray-bounds build:
+Remove needless use of mbox_t, replacing with just struct
+mbox_out. Silences compiler warnings under a -Warray-bounds build:
 
-drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
-drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
-   59 |         return link_status[r - DP_LANE0_1_STATUS];
-      |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
-  147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-      |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/megaraid.c: In function 'megaraid_probe_one':
+drivers/scsi/megaraid.c:3615:30: error: array subscript 'mbox_t[0]' is partly outside array bounds of 'unsigned char[15]' [-Werror=array-bounds]
+ 3615 |         mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
+      |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/megaraid.c:3599:23: note: while referencing 'raw_mbox'
+ 3599 |         unsigned char raw_mbox[sizeof(struct mbox_out)];
+      |                       ^~~~~~~~
 
-Replace the only user of the helper with an open-coded fetch and decode,
-similar to drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c.
-
-Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
+Cc: Kashyap Desai <kashyap.desai@broadcom.com>
+Cc: Sumit Saxena <sumit.saxena@broadcom.com>
+Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: megaraidlinux.pdl@broadcom.com
+Cc: linux-scsi@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-This is the alternative to:
-https://lore.kernel.org/lkml/20211203084354.3105253-1-keescook@chromium.org/
+Original patch sent here:
+https://lore.kernel.org/lkml/20211203091424.3355371-1-keescook@chromium.org/
 ---
- drivers/gpu/drm/drm_dp_helper.c | 10 ----------
- drivers/gpu/drm/tegra/dp.c      | 11 ++++++++++-
- include/drm/drm_dp_helper.h     |  2 --
- 3 files changed, 10 insertions(+), 13 deletions(-)
+ drivers/scsi/megaraid.c | 84 +++++++++++++++++------------------------
+ 1 file changed, 34 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 23f9073bc473..c9528aa62c9c 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -144,16 +144,6 @@ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
- }
- EXPORT_SYMBOL(drm_dp_get_adjust_tx_ffe_preset);
- 
--u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
--					 unsigned int lane)
--{
--	unsigned int offset = DP_ADJUST_REQUEST_POST_CURSOR2;
--	u8 value = dp_link_status(link_status, offset);
--
--	return (value >> (lane << 1)) & 0x3;
--}
--EXPORT_SYMBOL(drm_dp_get_adjust_request_post_cursor);
--
- static int __8b10b_clock_recovery_delay_us(const struct drm_dp_aux *aux, u8 rd_interval)
+diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
+index 0d31d7a5e335..bf987f3a7f3f 100644
+--- a/drivers/scsi/megaraid.c
++++ b/drivers/scsi/megaraid.c
+@@ -192,23 +192,21 @@ mega_query_adapter(adapter_t *adapter)
  {
- 	if (rd_interval > 4)
-diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
-index 70dfb7d1dec5..f5535eb04c6b 100644
---- a/drivers/gpu/drm/tegra/dp.c
-+++ b/drivers/gpu/drm/tegra/dp.c
-@@ -549,6 +549,15 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
+ 	dma_addr_t	prod_info_dma_handle;
+ 	mega_inquiry3	*inquiry3;
+-	u8	raw_mbox[sizeof(struct mbox_out)];
+-	mbox_t	*mbox;
++	struct mbox_out	mbox;
++	u8	*raw_mbox = (u8 *)&mbox;
+ 	int	retval;
+ 
+ 	/* Initialize adapter inquiry mailbox */
+ 
+-	mbox = (mbox_t *)raw_mbox;
+-
+ 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
+-	memset(&mbox->m_out, 0, sizeof(raw_mbox));
++	memset(&mbox, 0, sizeof(mbox));
+ 
+ 	/*
+ 	 * Try to issue Inquiry3 command
+ 	 * if not succeeded, then issue MEGA_MBOXCMD_ADAPTERINQ command and
+ 	 * update enquiry3 structure
+ 	 */
+-	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
++	mbox.xferaddr = (u32)adapter->buf_dma_handle;
+ 
+ 	inquiry3 = (mega_inquiry3 *)adapter->mega_buffer;
+ 
+@@ -232,10 +230,10 @@ mega_query_adapter(adapter_t *adapter)
+ 
+ 		inq = &ext_inq->raid_inq;
+ 
+-		mbox->m_out.xferaddr = (u32)dma_handle;
++		mbox.xferaddr = (u32)dma_handle;
+ 
+ 		/*issue old 0x04 command to adapter */
+-		mbox->m_out.cmd = MEGA_MBOXCMD_ADPEXTINQ;
++		mbox.cmd = MEGA_MBOXCMD_ADPEXTINQ;
+ 
+ 		issue_scb_block(adapter, raw_mbox);
+ 
+@@ -262,7 +260,7 @@ mega_query_adapter(adapter_t *adapter)
+ 						      sizeof(mega_product_info),
+ 						      DMA_FROM_DEVICE);
+ 
+-		mbox->m_out.xferaddr = prod_info_dma_handle;
++		mbox.xferaddr = prod_info_dma_handle;
+ 
+ 		raw_mbox[0] = FC_NEW_CONFIG;	/* i.e. mbox->cmd=0xA1 */
+ 		raw_mbox[2] = NC_SUBOP_PRODUCT_INFO;	/* i.e. 0x0E */
+@@ -3569,16 +3567,14 @@ mega_n_to_m(void __user *arg, megacmd_t *mc)
+ static int
+ mega_is_bios_enabled(adapter_t *adapter)
  {
- 	struct drm_dp_link_train_set *adjust = &link->train.adjust;
- 	unsigned int i;
-+	u8 post_cursor;
-+	int err;
-+
-+	err = drm_dp_dpcd_read(link->aux, DP_ADJUST_REQUEST_POST_CURSOR2,
-+			       &post_cursor, sizeof(post_cursor));
-+	if (err < 0) {
-+		DRM_ERROR("failed to read post_cursor2: %d\n", err);
-+		post_cursor = 0;
-+	}
+-	unsigned char	raw_mbox[sizeof(struct mbox_out)];
+-	mbox_t	*mbox;
+-
+-	mbox = (mbox_t *)raw_mbox;
++	struct mbox_out mbox;
++	unsigned char	*raw_mbox = (u8 *)&mbox;
  
- 	for (i = 0; i < link->lanes; i++) {
- 		adjust->voltage_swing[i] =
-@@ -560,7 +569,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
- 				DP_TRAIN_PRE_EMPHASIS_SHIFT;
+-	memset(&mbox->m_out, 0, sizeof(raw_mbox));
++	memset(&mbox, 0, sizeof(mbox));
  
- 		adjust->post_cursor[i] =
--			drm_dp_get_adjust_request_post_cursor(status, i);
-+			(post_cursor >> (i << 1)) & 0x3;
+ 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
+ 
+-	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
++	mbox.xferaddr = (u32)adapter->buf_dma_handle;
+ 
+ 	raw_mbox[0] = IS_BIOS_ENABLED;
+ 	raw_mbox[2] = GET_BIOS;
+@@ -3600,13 +3596,11 @@ mega_is_bios_enabled(adapter_t *adapter)
+ static void
+ mega_enum_raid_scsi(adapter_t *adapter)
+ {
+-	unsigned char raw_mbox[sizeof(struct mbox_out)];
+-	mbox_t *mbox;
++	struct mbox_out mbox;
++	unsigned char	*raw_mbox = (u8 *)&mbox;
+ 	int i;
+ 
+-	mbox = (mbox_t *)raw_mbox;
+-
+-	memset(&mbox->m_out, 0, sizeof(raw_mbox));
++	memset(&mbox, 0, sizeof(mbox));
+ 
+ 	/*
+ 	 * issue command to find out what channels are raid/scsi
+@@ -3616,7 +3610,7 @@ mega_enum_raid_scsi(adapter_t *adapter)
+ 
+ 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
+ 
+-	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
++	mbox.xferaddr = (u32)adapter->buf_dma_handle;
+ 
+ 	/*
+ 	 * Non-ROMB firmware fail this command, so all channels
+@@ -3655,23 +3649,21 @@ static void
+ mega_get_boot_drv(adapter_t *adapter)
+ {
+ 	struct private_bios_data	*prv_bios_data;
+-	unsigned char	raw_mbox[sizeof(struct mbox_out)];
+-	mbox_t	*mbox;
++	struct mbox_out mbox;
++	unsigned char	*raw_mbox = (u8 *)&mbox;
+ 	u16	cksum = 0;
+ 	u8	*cksum_p;
+ 	u8	boot_pdrv;
+ 	int	i;
+ 
+-	mbox = (mbox_t *)raw_mbox;
+-
+-	memset(&mbox->m_out, 0, sizeof(raw_mbox));
++	memset(&mbox, 0, sizeof(mbox));
+ 
+ 	raw_mbox[0] = BIOS_PVT_DATA;
+ 	raw_mbox[2] = GET_BIOS_PVT_DATA;
+ 
+ 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
+ 
+-	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
++	mbox.xferaddr = (u32)adapter->buf_dma_handle;
+ 
+ 	adapter->boot_ldrv_enabled = 0;
+ 	adapter->boot_ldrv = 0;
+@@ -3721,13 +3713,11 @@ mega_get_boot_drv(adapter_t *adapter)
+ static int
+ mega_support_random_del(adapter_t *adapter)
+ {
+-	unsigned char raw_mbox[sizeof(struct mbox_out)];
+-	mbox_t *mbox;
++	struct mbox_out mbox;
++	unsigned char	*raw_mbox = (u8 *)&mbox;
+ 	int rval;
+ 
+-	mbox = (mbox_t *)raw_mbox;
+-
+-	memset(&mbox->m_out, 0, sizeof(raw_mbox));
++	memset(&mbox, 0, sizeof(mbox));
+ 
+ 	/*
+ 	 * issue command
+@@ -3750,13 +3740,11 @@ mega_support_random_del(adapter_t *adapter)
+ static int
+ mega_support_ext_cdb(adapter_t *adapter)
+ {
+-	unsigned char raw_mbox[sizeof(struct mbox_out)];
+-	mbox_t *mbox;
++	struct mbox_out mbox;
++	unsigned char	*raw_mbox = (u8 *)&mbox;
+ 	int rval;
+ 
+-	mbox = (mbox_t *)raw_mbox;
+-
+-	memset(&mbox->m_out, 0, sizeof(raw_mbox));
++	memset(&mbox, 0, sizeof(mbox));
+ 	/*
+ 	 * issue command to find out if controller supports extended CDBs.
+ 	 */
+@@ -3865,16 +3853,14 @@ mega_do_del_logdrv(adapter_t *adapter, int logdrv)
+ static void
+ mega_get_max_sgl(adapter_t *adapter)
+ {
+-	unsigned char	raw_mbox[sizeof(struct mbox_out)];
+-	mbox_t	*mbox;
++	struct mbox_out	mbox;
++	unsigned char	*raw_mbox = (u8 *)&mbox;
+ 
+-	mbox = (mbox_t *)raw_mbox;
+-
+-	memset(mbox, 0, sizeof(raw_mbox));
++	memset(&mbox, 0, sizeof(mbox));
+ 
+ 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
+ 
+-	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
++	mbox.xferaddr = (u32)adapter->buf_dma_handle;
+ 
+ 	raw_mbox[0] = MAIN_MISC_OPCODE;
+ 	raw_mbox[2] = GET_MAX_SG_SUPPORT;
+@@ -3888,7 +3874,7 @@ mega_get_max_sgl(adapter_t *adapter)
  	}
- }
+ 	else {
+ 		adapter->sglen = *((char *)adapter->mega_buffer);
+-		
++
+ 		/*
+ 		 * Make sure this is not more than the resources we are
+ 		 * planning to allocate
+@@ -3910,16 +3896,14 @@ mega_get_max_sgl(adapter_t *adapter)
+ static int
+ mega_support_cluster(adapter_t *adapter)
+ {
+-	unsigned char	raw_mbox[sizeof(struct mbox_out)];
+-	mbox_t	*mbox;
+-
+-	mbox = (mbox_t *)raw_mbox;
++	struct mbox_out	mbox;
++	unsigned char	*raw_mbox = (u8 *)&mbox;
  
-diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 472dac376284..fdf3cf6ccc02 100644
---- a/include/drm/drm_dp_helper.h
-+++ b/include/drm/drm_dp_helper.h
-@@ -1528,8 +1528,6 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
- 					  int lane);
- u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
- 				   int lane);
--u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
--					 unsigned int lane);
+-	memset(mbox, 0, sizeof(raw_mbox));
++	memset(&mbox, 0, sizeof(mbox));
  
- #define DP_BRANCH_OUI_HEADER_SIZE	0xc
- #define DP_RECEIVER_CAP_SIZE		0xf
+ 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
+ 
+-	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
++	mbox.xferaddr = (u32)adapter->buf_dma_handle;
+ 
+ 	/*
+ 	 * Try to get the initiator id. This command will succeed iff the
 -- 
 2.30.2
 
