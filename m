@@ -2,160 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5127AC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 03:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273F6C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 17:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbiAEDZE (ORCPT
+        id S242307AbiAERdU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Jan 2022 22:25:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
+        Wed, 5 Jan 2022 12:33:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229809AbiAEDZD (ORCPT
+        with ESMTP id S242300AbiAERdU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Jan 2022 22:25:03 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B47C061785
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Jan 2022 19:25:03 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id y9so5854365pgr.11
-        for <linux-hardening@vger.kernel.org>; Tue, 04 Jan 2022 19:25:03 -0800 (PST)
+        Wed, 5 Jan 2022 12:33:20 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 115F7C061245
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 09:33:20 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id s1so34574985pga.5
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 09:33:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=wkuN5scY3yiYZRl2fRuA4WGrOv7r3w+Jln9UFNacBQM=;
-        b=sMREvPRxGZUwa08eFtR2hiuXSNQvK2z3b4UkIDQKPgoibmig3YKSC5pe3mtAttY7h4
-         XwK6GVkzJlAQFD2wxzX0eBRmZPIqCLwyrJwVVyBuYbzzF8v1N7MwQVj3P7PuIuTVvo0A
-         rEP82aGHqFCbL7ltVQA9rwNIlRiurCUsJqIQJ75u9fKPGEUjWr+Bd51S25yKt9bNwyWq
-         rcSVy1OCjWXA6fj3PLmN+GdKcNL6LzYc5Ao8OxtZok7AYQCkWdnX56ev9cPw3c3+UGgs
-         dVVe/F8gBmvEA8sYC1WCJBKNz2MM65RNUa7GnJFiSHqVSKWr0g4rG/r7YmFBeeHCDHyO
-         Sfog==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Nmndt0VkOAtLY1ci31WXQCy4a4STYE251ahE/JdWZjQ=;
+        b=eGxZrueRzdgW6cCKEy5n7l9h9+Trx6i1sxweYwIV+uq3y7jPGFmZO3nxIQTLbWZVZR
+         NVt1H/t6VulG15QjjsQa1aqGYU2ihZMcCEuPKygXC22IOj7s8C+wFjdzyYPaExyW16ol
+         NY+4RPtFN5b3SHVtUAEuSa2IZvZ4cs6FbOqTs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wkuN5scY3yiYZRl2fRuA4WGrOv7r3w+Jln9UFNacBQM=;
-        b=scDxX6nFOX0wqSsDlA7rkeZOSdLc5HAJ7fpE70gKHx9CKHfSkT01yREI9QLDO9MAJM
-         k9WGdjRvShzUpM0I7DnMAQMjPo5HubJpbxf16O1qPpKg+YxyhnJ+tJdQa2f30kVXdrFz
-         MMqPfjd5yVbNRzVyMKHV/6abbTFnUSfaLvxSmSitI64md3DZMtJZ89lOqJfQza5qRvbT
-         BN0v37bibJo1KI44I668xcP6GBXROXBr5+vLtONxwftWQnv11IcV2EslrkVyNDWbeJlU
-         VuoI3QlrW/Du2QsC567OyODMef/w29L8QNdDJoVcXWrtrY+f575TW5lknTzPqjtmZNc2
-         lGCQ==
-X-Gm-Message-State: AOAM530R/VCkMoJGgf15xwKdzuTU+8pxznJ1i043QJ0trBTTN3H29Dvw
-        KDbV6IkT5WzOHP3ZcOnsNnijjQ==
-X-Google-Smtp-Source: ABdhPJwILBGPaWIQmEOPR6iQ9ZbM+KK4UsIg1jEugYbcKOG7KIm+OYdMXveHNWvOBlsyyUCtrfOdgA==
-X-Received: by 2002:a63:8149:: with SMTP id t70mr46472429pgd.71.1641353102364;
-        Tue, 04 Jan 2022 19:25:02 -0800 (PST)
-Received: from google.com ([2620:15c:2ce:200:b78:5a0b:6f2e:23e9])
-        by smtp.gmail.com with ESMTPSA id a15sm663138pjo.49.2022.01.04.19.24.59
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Nmndt0VkOAtLY1ci31WXQCy4a4STYE251ahE/JdWZjQ=;
+        b=SvhEM6R2wftu6tTtc/yPCw0EkB7X9Ic74RkL2hy1qFR/JN+4+qBLc/zt+GgeMiVcai
+         YGjGQc6G9BXqjCPUigCjCCFokZfOgH2M16Bv2NG1QrFwGWD8N2gafJAfuixwjC3/UAZT
+         Un1W+olSq1vG3y8OYhpiLaE8VpnOor06prw/H6zXBDC9gdKce2qv5ukGJwDzbKCPXbna
+         aZzgKL4rGvMxBz0ALbSZuHz0sFaJ9uCncNADRtuzpQr3RxzMYA9164Cfs474H6j4nD0X
+         PkxS1ojdCxzvK1hWu8za+jd12fxDZvxvAWlU4rwgLx91rcCsM4Ych5mmdYRY53pFyLa6
+         +9aA==
+X-Gm-Message-State: AOAM532Nzb/fJhyiQaTNBJDn9jNVsyd6WFK1kv0ZOt0qtqbprJUR0nkG
+        sWapG3tbQgqOuQrykX12bamKzg==
+X-Google-Smtp-Source: ABdhPJwvWsluov2M3xQQOKdxaYmcA3f5D7ugC6+xoOxa4jnEW4fDKXegJU9tgmb/4zVjisJ12Eip3A==
+X-Received: by 2002:a63:8148:: with SMTP id t69mr49651559pgd.318.1641403999583;
+        Wed, 05 Jan 2022 09:33:19 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f125sm35804175pfa.28.2022.01.05.09.33.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jan 2022 19:25:02 -0800 (PST)
-Date:   Tue, 4 Jan 2022 19:24:56 -0800
-From:   =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
-To:     Alexander Lobakin <alexandr.lobakin@intel.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>, Borislav Petkov <bp@alien8.de>,
-        linux-hardening@vger.kernel.org, x86@kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v9 02/15] livepatch: use `-z unique-symbol` if available
- to nuke pos-based search
-Message-ID: <20220105032456.hs3od326sdl4zjv4@google.com>
-References: <20211223002209.1092165-1-alexandr.lobakin@intel.com>
- <20211223002209.1092165-3-alexandr.lobakin@intel.com>
- <Yc2Tqc69W9ukKDI1@zn.tnic>
- <CAFP8O3K1mkiCGMTEeuSifZtr2piHsKTjP5TOA25nqpv2SrbzYQ@mail.gmail.com>
- <alpine.LSU.2.21.2201031447140.15051@pobox.suse.cz>
- <20220103160615.7904-1-alexandr.lobakin@intel.com>
+        Wed, 05 Jan 2022 09:33:19 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] drm/dp: Fix off-by-one in register cache size
+Date:   Wed,  5 Jan 2022 09:33:10 -0800
+Message-Id: <20220105173310.2420598-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2221; h=from:subject; bh=FKzoP1+Ajq0adEYhRP1CewNZxc4TZAiLM0jC2P8yyAU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh1dZWy/nQqWmat0jak1V87p/MQZdy6f8jwBwkG+sK M0Gs7VmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdXWVgAKCRCJcvTf3G3AJsg9EA CWwI79Dlno4hKxtgvfxb3hGWq5EXAlfZTvAB90dWpess3EFCDDOE5cMKYQKou0opRccmgGwFu0fsPU xTl46z/W9IbbXs5vyTBOJCydBaNUjj/lwR9P7bgXfa0gBoI6WnmZ7gohQ49+LZNEZ4wNJXWFlYzAQ/ s21o7BKnGXrawgnBMpfwz5cUx+rH6xDhJVUZlyJkv4XaRM5iRpLRUB0ViymOvZWZ0iKybHiQcIY8uT QquwLVd/s6X0FmjUuDCbyUbPbgoejl2eVJ6Ugl8cYkm7DwwnJCvG59i6zh+ScjR67ys0ROtApqK7qq NV+g9WC2LY1I+/pAgkTDQqqMD8DUQoKB1hi4qM9o4f9B7bAQW6u98q7bSh55IysN3PSacybx5c+S5g xd920HE37gmARNaJPxZrLm+gVsU3vWtzP4j1FGDZ/hhXb7L+MR5b6iQJl9z/n1Sw9eZRDtz7SdkVOT nmbCgSFtZFyAVGqR3rv9u7KggNppfVXjT+sFCu9UwvwF+uqMWyCHJq0uHEgurEzSFCt25qnartDo2x qxdPe7pjfWgdLa3pGKC4q9FtscpvfXBS/zuuAABJ5sj2Hxhcq8D7Ql0JnuyFTzJexzA8q9iX3gDjBC 2HgLW/d4RUMU9gJcxXqGMY9iXVgEro5Ko3q6xKzx+RkyOZ0SOZ1shTquvgNw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220103160615.7904-1-alexandr.lobakin@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2022-01-03, Alexander Lobakin wrote:
->From: Miroslav Benes <mbenes@suse.cz>
->Date: Mon, 3 Jan 2022 14:55:42 +0100 (CET)
->
->> On Thu, 30 Dec 2021, Fāng-ruì Sòng wrote:
->>
->> > On Thu, Dec 30, 2021 at 3:11 AM Borislav Petkov <bp@alien8.de> wrote:
->> > >
->> > > On Thu, Dec 23, 2021 at 01:21:56AM +0100, Alexander Lobakin wrote:
->> > > > [PATCH v9 02/15] livepatch: use `-z unique-symbol` if available to nuke pos-based search
->>
->> ...
->>
->> > Apologies since I haven't read the patch series.
->> >
->> > The option does not exist in ld.lld and I am a bit concerning about
->> > its semantics: https://maskray.me/blog/2020-11-15-explain-gnu-linker-options#z-unique-symbol
->> >
->> > I thought that someone forwarded my comments (originally posted months
->> > on a feature request ago) here but seems not.
->> > (I am a ld.lld maintainer.)
->>
->> Do you mean
->> https://lore.kernel.org/all/20210123225928.z5hkmaw6qjs2gu5g@google.com/T/#u
->> ?
->>
->> Unfortunately, it did not lead anywhere. I think that '-z unique-symbol'
->> option should work fine as long as the live patching is concerned. Maybe I
->> misunderstood but your concerns mentioned at the blog do not apply. The
->> stability is not an issue for us since we (KLP) always work with already
->> built and fixed kernel. And(at least) GCC already uses number suffices for
->> IPA clones and it has not been a problem anywhere.
+The pcon_dsc_dpcd array holds 13 registers (0x92 through 0x9E). Fix the
+math to calculate the max size. Found from a -Warray-bounds build:
 
-The stability problem may not happen frequently but is possible if the
-compiler performs some IPA with new code.
+drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_pcon_dsc_bpp_incr':
+drivers/gpu/drm/drm_dp_helper.c:3130:28: error: array subscript 12 is outside array bounds of 'const u8[12]' {aka 'const unsigned char[12]'} [-Werror=array-bounds]
+ 3130 |         buf = pcon_dsc_dpcd[DP_PCON_DSC_BPP_INCR - DP_PCON_DSC_ENCODER];
+      |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/drm_dp_helper.c:3126:39: note: while referencing 'pcon_dsc_dpcd'
+ 3126 | int drm_dp_pcon_dsc_bpp_incr(const u8 pcon_dsc_dpcd[DP_PCON_DSC_ENCODER_CAP_SIZE])
+      |                              ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Such disturbence is probably more likely with LTO or PGO.
-For Clang LTO, Makefile currently specifies -mllvm -import-instr-limit=5.
-If a function close to the boundary happens to cross the boundary,
-if inlined into other translation units, the stability issue may affect
-many translation units.
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Fixes: e2e16da398d9 ("drm/dp_helper: Add support for Configuring DSC for HDMI2.1 Pcon")
+Cc: stable@vger.kernel.org
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://lore.kernel.org/lkml/20211214001849.GA62559@embeddedor/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v1: https://lore.kernel.org/lkml/20211203084333.3105038-1-keescook@chromium.org/
+v2:
+ - add reviewed-by
+ - add cc:stable
+---
+ include/drm/drm_dp_helper.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->LLD doesn't have such an option, so FG-KASLR + livepatching builds
->wouldn't be available for LLVM with the current approach (or we'd
->still need a stub that prints "FG-KASLR is not compatible with
->sympos != 0").
->Unfortunately, I discovered this a bit late, just after sending this
->revision.
->
->OTOH, there's no easy alternative. <file + function> pair looks
->appealing, but is it even possible for now to implement in the
->kernel without much refactoring?
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 30359e434c3f..472dac376284 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -456,7 +456,7 @@ struct drm_panel;
+ #define DP_FEC_CAPABILITY_1			0x091   /* 2.0 */
+ 
+ /* DP-HDMI2.1 PCON DSC ENCODER SUPPORT */
+-#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xC	/* 0x9E - 0x92 */
++#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xD	/* 0x92 through 0x9E */
+ #define DP_PCON_DSC_ENCODER                 0x092
+ # define DP_PCON_DSC_ENCODER_SUPPORTED      (1 << 0)
+ # define DP_PCON_DSC_PPS_ENC_OVERRIDE       (1 << 1)
+-- 
+2.30.2
 
-<file + symbol> pair looks good to me and will solve the stability problem.
