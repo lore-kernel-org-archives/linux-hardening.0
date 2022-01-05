@@ -2,175 +2,194 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C13C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 18:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C10C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 22:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243169AbiAESqG (ORCPT
+        id S244755AbiAEWM1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Jan 2022 13:46:06 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:37122 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238501AbiAESqG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Jan 2022 13:46:06 -0500
-Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AA3301EC0409;
-        Wed,  5 Jan 2022 19:45:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1641408359;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=fEZIiIW8f9y+YhRxy3dl8vhei2PQdN236Vujn7RBTdY=;
-        b=pSCYqwvRR+jUpjU5YwAa8zN64Y5dn0sO3OHpyZf1+yxRZ18xu5tPEhOKWwUz+wGg1ynCeV
-        srFP8tI2NsIn+W3JysHUBTIqtFvLXC3aA5kU9TejCQRlI7MqcHt/QI0jlXIK7G6/i2VYZj
-        H3B6FMt0oByYncE3nPCCef6orbqe1Vo=
-Date:   Wed, 5 Jan 2022 19:46:01 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Alexander Lobakin <alexandr.lobakin@intel.com>
-Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v9 03/15] kallsyms: Hide layout
-Message-ID: <YdXnaYM9P3Grwz/C@zn.tnic>
-References: <20211223002209.1092165-1-alexandr.lobakin@intel.com>
- <20211223002209.1092165-4-alexandr.lobakin@intel.com>
+        Wed, 5 Jan 2022 17:12:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244850AbiAEWLx (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 5 Jan 2022 17:11:53 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CACC034001
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 14:11:51 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id y16-20020a17090a6c9000b001b13ffaa625so5817188pjj.2
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 14:11:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=23epZgha1vduYGwfVlyJXoEQeuHeRLa9G6BF3JRJdSs=;
+        b=bfeddHzRv9HtJY5mtsQRXVAOEmYWMs7ngEG2ATROmYEtn24O+nonhf7KXPUwBbWEoo
+         Wdhdhi1DkRY1Ss9sS4fVkhXWyStKlzF3BgmTaRXF8RixyXt4QlFk/ZjxDMkUfcSZLAkI
+         Yaai59wXJJwwANPPLgBNPHaBM5LgVDD4YPl+E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=23epZgha1vduYGwfVlyJXoEQeuHeRLa9G6BF3JRJdSs=;
+        b=ImpOS+nvFnj4g1YBsnV+xqAQb1k/vCKvj9o4ZmzGpn/Ubjc5vgyMhdRV4ZfXcSxgTS
+         0mV/9ba+gRrNT2TY7cf5MEtAekLJasCRv+HeCsvLezJ8ObDMOxtG8l+7EWKjSb05Vqv/
+         GugpRtsIxcS3bBeCFErEZ/QCA76tyzSLjxT7HvDd13DPZ4fnrR+nshXkaK0S5JnFZyLj
+         rjK7hNns01CaEuWgLNOwleY/jQRD5tNf9+furXayQ+cWL/Xz9KtCmOdB6jq2gIKN+dZU
+         JvVWd2Eejd+VIVa/JfX+ou7g0rIk4E/RRw+YuBXO/NrO1ka0l+LiDsZt+nMoNs08lHz5
+         hARA==
+X-Gm-Message-State: AOAM5322VsLm2LXeDUCKCdyO7JnPFOKKydc3AjiUEll1L/5XX75tcQIo
+        awwzlRMiXoJKVkFAwgbFzBaXBA==
+X-Google-Smtp-Source: ABdhPJzA1QQolIAGWUj/J4KwNJXn9ApDguH+fthMfPH6jJn1bm/a3nte3k2RSaxKz4wYYdX6DKcLWQ==
+X-Received: by 2002:a17:902:d507:b0:149:e668:e340 with SMTP id b7-20020a170902d50700b00149e668e340mr2314029plg.66.1641420711267;
+        Wed, 05 Jan 2022 14:11:51 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ot7sm4268637pjb.12.2022.01.05.14.11.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jan 2022 14:11:51 -0800 (PST)
+Date:   Wed, 5 Jan 2022 14:11:50 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lyude Paul <lyude@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] drm/dp: Remove common Post Cursor2 register handling
+Message-ID: <202201051410.8F65E4E0@keescook>
+References: <20220105173507.2420910-1-keescook@chromium.org>
+ <878rvujc4t.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211223002209.1092165-4-alexandr.lobakin@intel.com>
+In-Reply-To: <878rvujc4t.fsf@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 23, 2021 at 01:21:57AM +0100, Alexander Lobakin wrote:
-> @@ -687,11 +697,12 @@ static void reset_iter(struct kallsym_iter *iter, loff_t new_pos)
->  	iter->name[0] = '\0';
->  	iter->nameoff = get_symbol_offset(new_pos);
->  	iter->pos = new_pos;
-> -	if (new_pos == 0) {
+On Wed, Jan 05, 2022 at 08:00:50PM +0200, Jani Nikula wrote:
+> On Wed, 05 Jan 2022, Kees Cook <keescook@chromium.org> wrote:
+> > The link_status array was not large enough to read the Adjust Request
+> > Post Cursor2 register, so remove the common helper function to avoid
+> > an OOB read, found with a -Warray-bounds build:
+> >
+> > drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
+> > drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
+> >    59 |         return link_status[r - DP_LANE0_1_STATUS];
+> >       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
+> >   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+> >       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Replace the only user of the helper with an open-coded fetch and decode,
+> > similar to drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c.
+> >
+> > Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
+> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > Cc: Maxime Ripard <mripard@kernel.org>
+> > Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > This is the alternative to:
+> > https://lore.kernel.org/lkml/20211203084354.3105253-1-keescook@chromium.org/
+> > ---
+> >  drivers/gpu/drm/drm_dp_helper.c | 10 ----------
+> >  drivers/gpu/drm/tegra/dp.c      | 11 ++++++++++-
+> >  include/drm/drm_dp_helper.h     |  2 --
+> >  3 files changed, 10 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+> > index 23f9073bc473..c9528aa62c9c 100644
+> > --- a/drivers/gpu/drm/drm_dp_helper.c
+> > +++ b/drivers/gpu/drm/drm_dp_helper.c
+> > @@ -144,16 +144,6 @@ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
+> >  }
+> >  EXPORT_SYMBOL(drm_dp_get_adjust_tx_ffe_preset);
+> >  
+> > -u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+> > -					 unsigned int lane)
+> > -{
+> > -	unsigned int offset = DP_ADJUST_REQUEST_POST_CURSOR2;
+> > -	u8 value = dp_link_status(link_status, offset);
+> > -
+> > -	return (value >> (lane << 1)) & 0x3;
+> > -}
+> > -EXPORT_SYMBOL(drm_dp_get_adjust_request_post_cursor);
+> > -
+> >  static int __8b10b_clock_recovery_delay_us(const struct drm_dp_aux *aux, u8 rd_interval)
+> >  {
+> >  	if (rd_interval > 4)
+> > diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
+> > index 70dfb7d1dec5..f5535eb04c6b 100644
+> > --- a/drivers/gpu/drm/tegra/dp.c
+> > +++ b/drivers/gpu/drm/tegra/dp.c
+> > @@ -549,6 +549,15 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
+> >  {
+> >  	struct drm_dp_link_train_set *adjust = &link->train.adjust;
+> >  	unsigned int i;
+> > +	u8 post_cursor;
+> > +	int err;
+> > +
+> > +	err = drm_dp_dpcd_read(link->aux, DP_ADJUST_REQUEST_POST_CURSOR2,
+> > +			       &post_cursor, sizeof(post_cursor));
+> 
+> There's a drm_dp_dpcd_readb() for the common 1-byte reads. Other than
+> that,
+> 
+> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
 
-	if (!iter->show_layout)
-		return;
+Thanks!
 
-> +	if (iter->show_layout && new_pos == 0) {
->  		iter->pos_arch_end = 0;
->  		iter->pos_mod_end = 0;
->  		iter->pos_ftrace_mod_end = 0;
->  		iter->pos_bpf_end = 0;
-> +		iter->pos_end = 0;
->  	}
->  }
+> 
+> Though obviously that's not enough to actually merge to tegra.
 
-...
+As in, "a review by Jani isn't sufficient to land via the tegra tree"?
 
-> @@ -838,16 +860,54 @@ static int kallsyms_open(struct inode *inode, struct file *file)
->  	 * using get_symbol_offset for every symbol.
->  	 */
->  	struct kallsym_iter *iter;
-> -	iter = __seq_open_private(file, &kallsyms_op, sizeof(*iter));
-> -	if (!iter)
-> -		return -ENOMEM;
-> -	reset_iter(iter, 0);
-> +	/*
-> +	 * This fake iter is needed for the cases with unprivileged
-> +	 * access. We need to know the exact number of symbols to
-> +	 * randomize the display layout.
-> +	 */
-> +	struct kallsym_iter fake;
-> +	size_t size = sizeof(*iter);
-> +	loff_t pos;
-> +
-> +	fake.show_layout = true;
-> +	reset_iter(&fake, 0);
->  
->  	/*
->  	 * Instead of checking this on every s_show() call, cache
->  	 * the result here at open time.
->  	 */
-> -	iter->show_value = kallsyms_show_value(file->f_cred);
-> +	fake.show_layout = kallsyms_show_value(file->f_cred);
-> +	if (fake.show_layout)
-> +		goto open;
+What should next steps be?
 
-There are those silly labels again:
+-Kees
 
-	if (!fake.show_layout) {
-		for (... )
-			;
-		size = ...
-	}
-
-	iter = __seq_open_private(...
-
-> +
-> +	for (pos = kallsyms_num_syms; update_iter_mod(&fake, pos); pos++)
-> +		;
-> +
-> +	size = struct_size(iter, shuffled_pos, fake.pos_end + 1);
-> +
-> +open:
-> +	iter = __seq_open_private(file, &kallsyms_op, size);
-> +	if (!iter)
-> +		return -ENOMEM;
-> +
-> +	iter->show_layout = fake.show_layout;
-> +	reset_iter(iter, 0);
-> +
-> +	if (iter->show_layout)
-> +		return 0;
-> +
-> +	/* Copy the bounds since they were already discovered above */
-> +	iter->pos_arch_end = fake.pos_arch_end;
-> +	iter->pos_mod_end = fake.pos_mod_end;
-> +	iter->pos_ftrace_mod_end = fake.pos_ftrace_mod_end;
-> +	iter->pos_bpf_end = fake.pos_bpf_end;
-> +	iter->pos_end = fake.pos_end;
-> +
-> +	for (pos = 0; pos <= iter->pos_end; pos++)
-> +		iter->shuffled_pos[pos] = pos;
-> +
-> +	shuffle_array(iter->shuffled_pos, iter->pos_end + 1);
-> +
->  	return 0;
->  }
-
-Thx.
+> 
+> > +	if (err < 0) {
+> > +		DRM_ERROR("failed to read post_cursor2: %d\n", err);
+> > +		post_cursor = 0;
+> > +	}
+> >  
+> >  	for (i = 0; i < link->lanes; i++) {
+> >  		adjust->voltage_swing[i] =
+> > @@ -560,7 +569,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
+> >  				DP_TRAIN_PRE_EMPHASIS_SHIFT;
+> >  
+> >  		adjust->post_cursor[i] =
+> > -			drm_dp_get_adjust_request_post_cursor(status, i);
+> > +			(post_cursor >> (i << 1)) & 0x3;
+> >  	}
+> >  }
+> >  
+> > diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+> > index 472dac376284..fdf3cf6ccc02 100644
+> > --- a/include/drm/drm_dp_helper.h
+> > +++ b/include/drm/drm_dp_helper.h
+> > @@ -1528,8 +1528,6 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
+> >  					  int lane);
+> >  u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
+> >  				   int lane);
+> > -u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+> > -					 unsigned int lane);
+> >  
+> >  #define DP_BRANCH_OUI_HEADER_SIZE	0xc
+> >  #define DP_RECEIVER_CAP_SIZE		0xf
+> 
+> -- 
+> Jani Nikula, Intel Open Source Graphics Center
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Kees Cook
