@@ -2,311 +2,155 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC3DC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 17:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F1BC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 17:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242363AbiAERgg (ORCPT
+        id S242527AbiAERt7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Jan 2022 12:36:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
+        Wed, 5 Jan 2022 12:49:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242359AbiAERgf (ORCPT
+        with ESMTP id S242524AbiAERt4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Jan 2022 12:36:35 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD86C061201
-        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 09:36:35 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id h6so117655plf.6
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 09:36:35 -0800 (PST)
+        Wed, 5 Jan 2022 12:49:56 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0F2C061201
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 09:49:55 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id d10-20020a17090a498a00b001b33bc40d01so113882pjh.1
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 09:49:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=UlDyQSfZH97+YSOXX0OoVP/OqcWQnYb38Gvp9Yo2/W0=;
-        b=CYToiqUrNG3t3x39vLyMisao1WjgLJw0g2VmSXl2v82QK8IjZKQltcCkddvWZrhsJ0
-         uGlpnBLdlTrJp7gEpD1vVsfLfU/sNu+CLemkhe6qrqOxkPhYGtO7IFWXkqk5eXFSw34v
-         P3UucZWCN39FnL4LzccNJ5nbXrXuRxXcQLMRY=
+        bh=avw5HSrXY0Vlq51idfwQnJ2MBQ3Q9JHHhfd/FHxvDQA=;
+        b=O23DmkMTAnO55Ze2LqGoBS8Pagi8aGpW0waPSaCpjGuIydNewyEh9vByfs23we2pA2
+         QvgmKsU7HR/7OuLU8CsTCQjneLrigA0mAuDIniyg2dZj+XpI4mmCBkdohPITC/opVdQV
+         1UnbUjV4wxPgYQPpQ+QemLIukL8cI7txLwB+k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=UlDyQSfZH97+YSOXX0OoVP/OqcWQnYb38Gvp9Yo2/W0=;
-        b=V3xYWjgjjbniShhd8zw9zdHCcOtrG16vx6PNe75zj1Hua48hoDiRlC1JQ+bo85gVv0
-         6yWuOmNnxjg8xzMMMfnJ3jMjGqXabKV/UjgOKizaL8YsLrmFgEXCzKtNmr1z6JyoSzB4
-         FNmK1pzoshhVQIqF9XznmTHPftgvEGkUkBw2LtZGeotlPQD4qy8jj/DADnL1xnU4flu7
-         CnBpLVTYc0VvLNTiM9NPu6hBr81fKkb1fExnyarojjbAspw3S3hvfNf0bRSjvBEP7qPF
-         cYjz/0MRiR/tUgucQ+yaCMr34KzkRnHZ/JGjxBMh+vUGfbwcEULsSwAf7ZI+nVM88PaK
-         5uXw==
-X-Gm-Message-State: AOAM531OGUsafPv2xfrQ62r8abvsTCbGNOUm8ymHQCp1YU2I2dHDNsbK
-        ILhjpK560O/q1mw+EPqES6nzAw==
-X-Google-Smtp-Source: ABdhPJxRAvesKc77wiFyz23fyuXHgHsmrfIZycg9eOtRUOAcEQtVNM/mW0s1X/aWw9HMHp0TJM/6RQ==
-X-Received: by 2002:a17:902:ea02:b0:149:473f:ca35 with SMTP id s2-20020a170902ea0200b00149473fca35mr55049525plg.99.1641404195156;
-        Wed, 05 Jan 2022 09:36:35 -0800 (PST)
+        bh=avw5HSrXY0Vlq51idfwQnJ2MBQ3Q9JHHhfd/FHxvDQA=;
+        b=6UaEqHczsYSXfcHl+LGrIWWy06JfZ5dmyg19B2Lhjju6MIrCCIgQvUj8QKqcC+ZitF
+         7l/Un3+jt4TvU256nGRKXhgwU4oQ5Z04d9TQmh8AGmMRQAwIF1mwvQFhZXq4Z26nYdSR
+         NOBCdpDM7uzN7i4G//CsZg8Uc/mSUxB2EmB7G02Q54fUa8vsrVOL1gpVA2dNaW8MgXYF
+         /h3yFRdZjI1S4qjtpo27oEO0T92lIArVU2rpdjUpS+B+d+EXHMHtECvJP7JCFrNx89Rr
+         Cvc8R4Gj8D6GG6fsI4k2odgraekfRkBTOcT93WAffHv62SumFC1jpc5czR5AP32949ti
+         yZvg==
+X-Gm-Message-State: AOAM533uS2ifElg2e/Er9UPxzxMmmQVbeo+nTsyd8G/qqy4mSIv2NAUn
+        E+/VrOTyJWq0FyHAZlukJWMulQ==
+X-Google-Smtp-Source: ABdhPJz/dxRRRh4uPw6QnXdozlZ9uMNkiwOK9hyg7OhOyJ5idyGSBpiy/K0VcdePtHbUTugZT6cH/A==
+X-Received: by 2002:a17:90b:4b0e:: with SMTP id lx14mr5384530pjb.132.1641404995383;
+        Wed, 05 Jan 2022 09:49:55 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o34sm22926834pgl.33.2022.01.05.09.36.34
+        by smtp.gmail.com with ESMTPSA id p15sm31852199pfh.86.2022.01.05.09.49.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jan 2022 09:36:34 -0800 (PST)
+        Wed, 05 Jan 2022 09:49:55 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Arnaud Ebalard <arno@natisbad.org>,
+        Srujana Challa <schalla@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Suheil Chandran <schandran@marvell.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Lukasz Bartosik <lbartosik@marvell.com>,
+        linux-crypto@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH][RESEND] scsi: megaraid: Avoid mismatched storage type sizes
-Date:   Wed,  5 Jan 2022 09:36:33 -0800
-Message-Id: <20220105173633.2421129-1-keescook@chromium.org>
+Subject: [PATCH v2] crypto: octeontx2 - Avoid stack variable overflow
+Date:   Wed,  5 Jan 2022 09:49:53 -0800
+Message-Id: <20220105174953.2433019-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7461; h=from:subject; bh=yCVF/dR75zh7pN1scPMv4U3tXSsTcbBV/KYX9KngEWY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh1dcgvp5F9LNf7Zt07G6F92kvoKo8Do3EicDHawzQ Z02EgniJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdXXIAAKCRCJcvTf3G3AJsYxD/ 9TmyIV365IN5cHqKQsIt3+8vCbIV+iJQlKSIz8zTcIYFM9Az9UKzROZa4HgsUVsrfYbS7HxxE4YNvk SNbwBWUD/yk6M5nX7mzgeiqYy7x80aBH4+nFwr9IjQXuBeqTiHBdHa6uB2RK6ar0jfwMspijvPIMRW 6xDVNRgfAxsudy0yyufNPhfuJDdo2y/gII3FKafq62MklNbGXrZlzSQdN9SXIIc9h9gx/a5Uxvxdhg 9uxPrKyY2NcPVnANztsgW5MGDR64jr/VAWopirT9QagpgojMPD0wtmaWvZAR4wUHQ7qIyUTm7RGbQv YY34QvAVpdUZ5QcrCt5azihTurS2ilZTjII8wsggEWp2PsFD8x1iWsQ441Jd95FHZ805Y1SM7bxB0n i2nWNwneedallbaK9xICcfPC6hyPKBQceGOV+ZVw4PnNqTzbwkP3yBemxH8kkLjj1RaduMucQwZvEv 5dpscpuaBBqyOlGHcReCIwBcOH/gMlgi+mcWLXyLccH70RNOHk7aawrw39TJqQ79RGpP1BbR89GVlA Yg2k/8XvjBWIxiBLruCupRqauQEAazc0rp/EAt6GzXKGxawhMYSvjwxNC5lv3gIxeFBWS54b+APPQ7 xfpb1hPg820N8pcroNGZZ1C0d1RdDhBE+jl8NE3LP4DBDC5Mu64KafG+7Njg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3920; h=from:subject; bh=TAb+RjlCN1zMWQVj1GkCs/zmVHixIJXI70KMPnc0yjA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh1dpBUQ47BXPtqm+Ra117gf9RyNvDqxFztuIfpAis XR/PcHiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdXaQQAKCRCJcvTf3G3AJrDED/ 9D+LJxsDS9TLmkWXQLJQOs7R7T1lKCChisZoQP8qL59/raHyHD1eamIDLpFnJK3XMq9u9iRRuJjHfm kZotmq5ofVo/C6Hi7OSl3fTPzyAkwkZ7k0wIU9zvevlOzy1aiMK8GvqqvSi/J1gVk+8kGCXEyUYk2u r4XaawMyP2zk4TI5dcXTxZzd6kRsiTNsav79ueWGKDFVq4THMg9TW6ed0HRuMGKgDZ8ZAc+yRQx73m 1bEoXpGe+SLSOkXMKQq6vE9uFrKHNM8rj5T8xqk/vcQGqzlvHY4Ux8eYxq2sbZ86l4obQvLReof17k 22eVZScMddmMt1ce0WO3PXigZRECI6UlPH6TVS/91axJjfAXBF7+6gxT5SlpdTv4S0ro2enT/O+BBC /+f7FmjCeYZmyZupnR7qIwEn5fA8N2o7LD32Z8UfrkXY0uE1iVxw+bHBKBFrNzuPbn5yPZ5zDPsI1i 574wMDMDYBBOXN3uwMY7iq/tZf2dEvD5avJRtXt4mtcgcS/dL2QcXsma0tv4h41QcGaGkxxX1Np/Gq bqYSmpA6fZ7WB3J2cA+2qTxFYWSzCCycRjMkn9bwT/I/4vk0dibj/CJQIPy4/9sdWM/0O43d7TqHID iFv6gJkVJNi5u1hAFOZPVC7XyiOSll9E3YDw2PyC0kynz8vTw/IiUQIyBBWQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Remove needless use of mbox_t, replacing with just struct
-mbox_out. Silences compiler warnings under a -Warray-bounds build:
+Building with -Warray-bounds showed a stack variable array index
+overflow. Increase the expected size of the array to avoid the warning:
 
-drivers/scsi/megaraid.c: In function 'megaraid_probe_one':
-drivers/scsi/megaraid.c:3615:30: error: array subscript 'mbox_t[0]' is partly outside array bounds of 'unsigned char[15]' [-Werror=array-bounds]
- 3615 |         mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-      |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/megaraid.c:3599:23: note: while referencing 'raw_mbox'
- 3599 |         unsigned char raw_mbox[sizeof(struct mbox_out)];
-      |                       ^~~~~~~~
+In file included from ./include/linux/printk.h:555,
+                 from ./include/asm-generic/bug.h:22,
+                 from ./arch/x86/include/asm/bug.h:84,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/gfp.h:5,
+                 from ./include/linux/firmware.h:7,
+                 from drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:5:
+drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c: In function 'otx2_cpt_print_uc_dbg_info':
+./include/linux/dynamic_debug.h:162:33: warning: array subscript 4 is above array bounds of 'u32[4]' {aka 'unsigned int[4]'} [-Warray-bounds]
+  162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
+      |                                 ^
+./include/linux/dynamic_debug.h:134:17: note: in definition of macro '__dynamic_func_call'
+  134 |                 func(&id, ##__VA_ARGS__);               \
+      |                 ^~~~
+./include/linux/dynamic_debug.h:162:9: note: in expansion of macro '_dynamic_func_call'
+  162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
+      |         ^~~~~~~~~~~~~~~~~~
+./include/linux/printk.h:570:9: note: in expansion of macro 'dynamic_pr_debug'
+  570 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~
+drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1807:41: note: in expansion of macro 'pr_debug'
+ 1807 |                                         pr_debug("Mask: %8.8x %8.8x %8.8x %8.8x %8.8x",
+      |                                         ^~~~~~~~
+drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1765:13: note: while referencing 'mask'
+ 1765 |         u32 mask[4];
+      |             ^~~~
 
-Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-Cc: Sumit Saxena <sumit.saxena@broadcom.com>
-Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: megaraidlinux.pdl@broadcom.com
-Cc: linux-scsi@vger.kernel.org
+This is justified because the mask size (eng_grps->engs_num) can be at
+most 144 (OTX2_CPT_MAX_ENGINES bits), which is larger than available
+storage. 4 * 32 == 128, so this must be 5: 5 * 32bit = 150.
+
+Additionally clear the mask before conversion so trailing bits are zero.
+
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Arnaud Ebalard <arno@natisbad.org>
+Cc: Srujana Challa <schalla@marvell.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Suheil Chandran <schandran@marvell.com>
+Cc: Shijith Thotton <sthotton@marvell.com>
+Cc: Lukasz Bartosik <lbartosik@marvell.com>
+Cc: linux-crypto@vger.kernel.org
+Fixes: d9d7749773e8 ("crypto: octeontx2 - add apis for custom engine groups")
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Original patch sent here:
-https://lore.kernel.org/lkml/20211203091424.3355371-1-keescook@chromium.org/
+v1: https://lore.kernel.org/lkml/20211215225558.1995027-1-keescook@chromium.org/
+v2:
+ - expliticly zero "mask"
+ - explain math in commit log
+ - move definition into local context
 ---
- drivers/scsi/megaraid.c | 84 +++++++++++++++++------------------------
- 1 file changed, 34 insertions(+), 50 deletions(-)
+ drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
-index 0d31d7a5e335..bf987f3a7f3f 100644
---- a/drivers/scsi/megaraid.c
-+++ b/drivers/scsi/megaraid.c
-@@ -192,23 +192,21 @@ mega_query_adapter(adapter_t *adapter)
- {
- 	dma_addr_t	prod_info_dma_handle;
- 	mega_inquiry3	*inquiry3;
--	u8	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
-+	struct mbox_out	mbox;
-+	u8	*raw_mbox = (u8 *)&mbox;
- 	int	retval;
+diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
+index 4c8ebdf671ca..1b4d425bbf0e 100644
+--- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
++++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
+@@ -1753,7 +1753,6 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
+ 	char engs_info[2 * OTX2_CPT_NAME_LENGTH];
+ 	struct otx2_cpt_eng_grp_info *grp;
+ 	struct otx2_cpt_engs_rsvd *engs;
+-	u32 mask[4];
+ 	int i, j;
  
- 	/* Initialize adapter inquiry mailbox */
- 
--	mbox = (mbox_t *)raw_mbox;
--
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	/*
- 	 * Try to issue Inquiry3 command
- 	 * if not succeeded, then issue MEGA_MBOXCMD_ADAPTERINQ command and
- 	 * update enquiry3 structure
- 	 */
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	inquiry3 = (mega_inquiry3 *)adapter->mega_buffer;
- 
-@@ -232,10 +230,10 @@ mega_query_adapter(adapter_t *adapter)
- 
- 		inq = &ext_inq->raid_inq;
- 
--		mbox->m_out.xferaddr = (u32)dma_handle;
-+		mbox.xferaddr = (u32)dma_handle;
- 
- 		/*issue old 0x04 command to adapter */
--		mbox->m_out.cmd = MEGA_MBOXCMD_ADPEXTINQ;
-+		mbox.cmd = MEGA_MBOXCMD_ADPEXTINQ;
- 
- 		issue_scb_block(adapter, raw_mbox);
- 
-@@ -262,7 +260,7 @@ mega_query_adapter(adapter_t *adapter)
- 						      sizeof(mega_product_info),
- 						      DMA_FROM_DEVICE);
- 
--		mbox->m_out.xferaddr = prod_info_dma_handle;
-+		mbox.xferaddr = prod_info_dma_handle;
- 
- 		raw_mbox[0] = FC_NEW_CONFIG;	/* i.e. mbox->cmd=0xA1 */
- 		raw_mbox[2] = NC_SUBOP_PRODUCT_INFO;	/* i.e. 0x0E */
-@@ -3569,16 +3567,14 @@ mega_n_to_m(void __user *arg, megacmd_t *mc)
- static int
- mega_is_bios_enabled(adapter_t *adapter)
- {
--	unsigned char	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
--
--	mbox = (mbox_t *)raw_mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	raw_mbox[0] = IS_BIOS_ENABLED;
- 	raw_mbox[2] = GET_BIOS;
-@@ -3600,13 +3596,11 @@ mega_is_bios_enabled(adapter_t *adapter)
- static void
- mega_enum_raid_scsi(adapter_t *adapter)
- {
--	unsigned char raw_mbox[sizeof(struct mbox_out)];
--	mbox_t *mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 	int i;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	/*
- 	 * issue command to find out what channels are raid/scsi
-@@ -3616,7 +3610,7 @@ mega_enum_raid_scsi(adapter_t *adapter)
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	/*
- 	 * Non-ROMB firmware fail this command, so all channels
-@@ -3655,23 +3649,21 @@ static void
- mega_get_boot_drv(adapter_t *adapter)
- {
- 	struct private_bios_data	*prv_bios_data;
--	unsigned char	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 	u16	cksum = 0;
- 	u8	*cksum_p;
- 	u8	boot_pdrv;
- 	int	i;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	raw_mbox[0] = BIOS_PVT_DATA;
- 	raw_mbox[2] = GET_BIOS_PVT_DATA;
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	adapter->boot_ldrv_enabled = 0;
- 	adapter->boot_ldrv = 0;
-@@ -3721,13 +3713,11 @@ mega_get_boot_drv(adapter_t *adapter)
- static int
- mega_support_random_del(adapter_t *adapter)
- {
--	unsigned char raw_mbox[sizeof(struct mbox_out)];
--	mbox_t *mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 	int rval;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	/*
- 	 * issue command
-@@ -3750,13 +3740,11 @@ mega_support_random_del(adapter_t *adapter)
- static int
- mega_support_ext_cdb(adapter_t *adapter)
- {
--	unsigned char raw_mbox[sizeof(struct mbox_out)];
--	mbox_t *mbox;
-+	struct mbox_out mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 	int rval;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(&mbox->m_out, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 	/*
- 	 * issue command to find out if controller supports extended CDBs.
- 	 */
-@@ -3865,16 +3853,14 @@ mega_do_del_logdrv(adapter_t *adapter, int logdrv)
- static void
- mega_get_max_sgl(adapter_t *adapter)
- {
--	unsigned char	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
-+	struct mbox_out	mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 
--	mbox = (mbox_t *)raw_mbox;
--
--	memset(mbox, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	raw_mbox[0] = MAIN_MISC_OPCODE;
- 	raw_mbox[2] = GET_MAX_SG_SUPPORT;
-@@ -3888,7 +3874,7 @@ mega_get_max_sgl(adapter_t *adapter)
- 	}
- 	else {
- 		adapter->sglen = *((char *)adapter->mega_buffer);
--		
+ 	pr_debug("Engine groups global info");
+@@ -1785,6 +1784,8 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
+ 		for (j = 0; j < OTX2_CPT_MAX_ETYPES_PER_GRP; j++) {
+ 			engs = &grp->engs[j];
+ 			if (engs->type) {
++				u32 mask[5] = { };
 +
- 		/*
- 		 * Make sure this is not more than the resources we are
- 		 * planning to allocate
-@@ -3910,16 +3896,14 @@ mega_get_max_sgl(adapter_t *adapter)
- static int
- mega_support_cluster(adapter_t *adapter)
- {
--	unsigned char	raw_mbox[sizeof(struct mbox_out)];
--	mbox_t	*mbox;
--
--	mbox = (mbox_t *)raw_mbox;
-+	struct mbox_out	mbox;
-+	unsigned char	*raw_mbox = (u8 *)&mbox;
- 
--	memset(mbox, 0, sizeof(raw_mbox));
-+	memset(&mbox, 0, sizeof(mbox));
- 
- 	memset((void *)adapter->mega_buffer, 0, MEGA_BUFFER_SIZE);
- 
--	mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
-+	mbox.xferaddr = (u32)adapter->buf_dma_handle;
- 
- 	/*
- 	 * Try to get the initiator id. This command will succeed iff the
+ 				get_engs_info(grp, engs_info,
+ 					      2 * OTX2_CPT_NAME_LENGTH, j);
+ 				pr_debug("Slot%d: %s", j, engs_info);
 -- 
 2.30.2
 
