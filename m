@@ -2,50 +2,50 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273F6C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 17:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75E8C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 17:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242307AbiAERdU (ORCPT
+        id S242338AbiAERfP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Jan 2022 12:33:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56066 "EHLO
+        Wed, 5 Jan 2022 12:35:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242300AbiAERdU (ORCPT
+        with ESMTP id S242337AbiAERfK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Jan 2022 12:33:20 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 115F7C061245
-        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 09:33:20 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id s1so34574985pga.5
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 09:33:20 -0800 (PST)
+        Wed, 5 Jan 2022 12:35:10 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C869C061245
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 09:35:10 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id c9-20020a17090a1d0900b001b2b54bd6c5so5083276pjd.1
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 09:35:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Nmndt0VkOAtLY1ci31WXQCy4a4STYE251ahE/JdWZjQ=;
-        b=eGxZrueRzdgW6cCKEy5n7l9h9+Trx6i1sxweYwIV+uq3y7jPGFmZO3nxIQTLbWZVZR
-         NVt1H/t6VulG15QjjsQa1aqGYU2ihZMcCEuPKygXC22IOj7s8C+wFjdzyYPaExyW16ol
-         NY+4RPtFN5b3SHVtUAEuSa2IZvZ4cs6FbOqTs=
+        bh=tIC6uuWRKMlRN9gOImOZjC9PBybxdHFz2/AlVg+R3sY=;
+        b=fBowwtQbsu73vuHnIg7R/ykQmzlw/+8OVSY9nwq6n+84ZwzOsAoT7/3Shi8yJJihUG
+         nX/KVRrtC1VYWRKzdLjCEeBDcQ6RMINgkcbXR81zczv46VzZDKHirlx6R2V9pece747z
+         7K3pyw434Japsntzij0eDiNxsM9+9/01ABdt0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Nmndt0VkOAtLY1ci31WXQCy4a4STYE251ahE/JdWZjQ=;
-        b=SvhEM6R2wftu6tTtc/yPCw0EkB7X9Ic74RkL2hy1qFR/JN+4+qBLc/zt+GgeMiVcai
-         YGjGQc6G9BXqjCPUigCjCCFokZfOgH2M16Bv2NG1QrFwGWD8N2gafJAfuixwjC3/UAZT
-         Un1W+olSq1vG3y8OYhpiLaE8VpnOor06prw/H6zXBDC9gdKce2qv5ukGJwDzbKCPXbna
-         aZzgKL4rGvMxBz0ALbSZuHz0sFaJ9uCncNADRtuzpQr3RxzMYA9164Cfs474H6j4nD0X
-         PkxS1ojdCxzvK1hWu8za+jd12fxDZvxvAWlU4rwgLx91rcCsM4Ych5mmdYRY53pFyLa6
-         +9aA==
-X-Gm-Message-State: AOAM532Nzb/fJhyiQaTNBJDn9jNVsyd6WFK1kv0ZOt0qtqbprJUR0nkG
-        sWapG3tbQgqOuQrykX12bamKzg==
-X-Google-Smtp-Source: ABdhPJwvWsluov2M3xQQOKdxaYmcA3f5D7ugC6+xoOxa4jnEW4fDKXegJU9tgmb/4zVjisJ12Eip3A==
-X-Received: by 2002:a63:8148:: with SMTP id t69mr49651559pgd.318.1641403999583;
-        Wed, 05 Jan 2022 09:33:19 -0800 (PST)
+        bh=tIC6uuWRKMlRN9gOImOZjC9PBybxdHFz2/AlVg+R3sY=;
+        b=4pRc5uO1PfJ7ywaz3bdVQyGRLn/SDGvmlbQDoEC9u2G1RaLqbPxthW27Vhout45Jbh
+         Kwckj5DzaiR9ln6wtT99qHHamE/hEXYVoUCGS50vj7eBB4p+jtCtUFE/SGnnA04xG+BQ
+         fp2U/PXDzeX1F0JOV39pwaDAtJ6ilDDjrIjZt/tyg41Mo7lIoRCfFLjYqzmyf56XGil5
+         MId4JVmDnkbcTzCAGr3yNtuWnvJONbdH+pkXnH112iyYI7a1hPbsaXeoOePtQlkU9MEY
+         E5hid4RcbXqWkDW7P3cNvBvSY6883JaTpCbPsczSGPORndp2Zopu4cSG2R7gm6IzsEv5
+         8C1Q==
+X-Gm-Message-State: AOAM533kNST/cWjLFYY9pFsOjbkU2hfe3j62IlpOUz6J9uxRDUau0sH4
+        2nq2W0C3vOD4Hr3NFceuMTEUSQ==
+X-Google-Smtp-Source: ABdhPJyTlrJsuhPVaJ6QnXY+UarEB//h1AKJBq8kF/RN4mCbv5Z6bn36JXuY0ndfaNEEDahv+61z7A==
+X-Received: by 2002:a17:90a:8543:: with SMTP id a3mr938028pjw.108.1641404109952;
+        Wed, 05 Jan 2022 09:35:09 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f125sm35804175pfa.28.2022.01.05.09.33.19
+        by smtp.gmail.com with ESMTPSA id ls7sm3372767pjb.11.2022.01.05.09.35.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jan 2022 09:33:19 -0800 (PST)
+        Wed, 05 Jan 2022 09:35:09 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -53,68 +53,120 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] drm/dp: Fix off-by-one in register cache size
-Date:   Wed,  5 Jan 2022 09:33:10 -0800
-Message-Id: <20220105173310.2420598-1-keescook@chromium.org>
+        dri-devel@lists.freedesktop.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lyude Paul <lyude@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] drm/dp: Remove common Post Cursor2 register handling
+Date:   Wed,  5 Jan 2022 09:35:07 -0800
+Message-Id: <20220105173507.2420910-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2221; h=from:subject; bh=FKzoP1+Ajq0adEYhRP1CewNZxc4TZAiLM0jC2P8yyAU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh1dZWy/nQqWmat0jak1V87p/MQZdy6f8jwBwkG+sK M0Gs7VmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdXWVgAKCRCJcvTf3G3AJsg9EA CWwI79Dlno4hKxtgvfxb3hGWq5EXAlfZTvAB90dWpess3EFCDDOE5cMKYQKou0opRccmgGwFu0fsPU xTl46z/W9IbbXs5vyTBOJCydBaNUjj/lwR9P7bgXfa0gBoI6WnmZ7gohQ49+LZNEZ4wNJXWFlYzAQ/ s21o7BKnGXrawgnBMpfwz5cUx+rH6xDhJVUZlyJkv4XaRM5iRpLRUB0ViymOvZWZ0iKybHiQcIY8uT QquwLVd/s6X0FmjUuDCbyUbPbgoejl2eVJ6Ugl8cYkm7DwwnJCvG59i6zh+ScjR67ys0ROtApqK7qq NV+g9WC2LY1I+/pAgkTDQqqMD8DUQoKB1hi4qM9o4f9B7bAQW6u98q7bSh55IysN3PSacybx5c+S5g xd920HE37gmARNaJPxZrLm+gVsU3vWtzP4j1FGDZ/hhXb7L+MR5b6iQJl9z/n1Sw9eZRDtz7SdkVOT nmbCgSFtZFyAVGqR3rv9u7KggNppfVXjT+sFCu9UwvwF+uqMWyCHJq0uHEgurEzSFCt25qnartDo2x qxdPe7pjfWgdLa3pGKC4q9FtscpvfXBS/zuuAABJ5sj2Hxhcq8D7Ql0JnuyFTzJexzA8q9iX3gDjBC 2HgLW/d4RUMU9gJcxXqGMY9iXVgEro5Ko3q6xKzx+RkyOZ0SOZ1shTquvgNw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4014; h=from:subject; bh=73h6EjWgnCSmfmbkSfUNBCV9VTZTOb7XCwDmD6zlz6w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh1dbKi5OtSAWBzj/YGWn/GazhxEKMlTtqWjeRoBDb 1G0KF4eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdXWygAKCRCJcvTf3G3AJjq4D/ 0VBFZ9LHP9VPZi909vPYapIM1Z4FjlvzBIAMQNjv+TO2UZRrOfKRvJnkm9mGEnEIpuajucKKXHxioO Qb2S081y9bbvPupYTU2SQ5BaLxhsY7ZOcNQEiwUUcYm/ugMDUF3ADmfq8YMxXmqByq9GALz07o+K2E XfWsw3/3gBHWry66zEw8KLi2mBisi+ukr1VtaWWsTiSw4MJgbTpnQkE/2+sQ9mo6cDzZPc5tSsvm5R 1iU8uEQtba9jMuRKFuVzr38IBR6ka+5Lw16l5mYJp746H4zqcAeVNAT0nhGKflUyj/8gtxYH0G5qyz 252nhRhVk96LyXdNw2VLk0j4AOJbOXxI2FuTcu0aL5DRzVzSdYMU+C35v9DWDCA5a5wfdh2/Y9tL9U ACnjusJpNNxoWRdV0pJDHB+htNxSJrZTK9CK7SShMn+ZBozu4e67vX0ePgh+DxdhGFR4j0cQT/OSGS hvenaq0nuEdSH9ECIFL/q9WFICFiPNNGx/bKcdMyWFsqo2JDn5c+Gg/z4CIZrR6iCaIohKkKCtlb3B KzIEhimkSDq3I2mLl/pS8d8FI9gGomVVtpa5bGqvMDRdsooVv+efWATl37Kl/6iUVrJ0E6sgXAwOhx WqKpGtxYsBAz0KKbBLe0xaNMcpIXJr5TLfV4tVJKOKpzoGTDHj4qijBJ/3tA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The pcon_dsc_dpcd array holds 13 registers (0x92 through 0x9E). Fix the
-math to calculate the max size. Found from a -Warray-bounds build:
+The link_status array was not large enough to read the Adjust Request
+Post Cursor2 register, so remove the common helper function to avoid
+an OOB read, found with a -Warray-bounds build:
 
-drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_pcon_dsc_bpp_incr':
-drivers/gpu/drm/drm_dp_helper.c:3130:28: error: array subscript 12 is outside array bounds of 'const u8[12]' {aka 'const unsigned char[12]'} [-Werror=array-bounds]
- 3130 |         buf = pcon_dsc_dpcd[DP_PCON_DSC_BPP_INCR - DP_PCON_DSC_ENCODER];
-      |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/drm_dp_helper.c:3126:39: note: while referencing 'pcon_dsc_dpcd'
- 3126 | int drm_dp_pcon_dsc_bpp_incr(const u8 pcon_dsc_dpcd[DP_PCON_DSC_ENCODER_CAP_SIZE])
-      |                              ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
+drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
+   59 |         return link_status[r - DP_LANE0_1_STATUS];
+      |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
+  147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+      |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Replace the only user of the helper with an open-coded fetch and decode,
+similar to drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c.
+
+Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 Cc: Maxime Ripard <mripard@kernel.org>
 Cc: Thomas Zimmermann <tzimmermann@suse.de>
 Cc: David Airlie <airlied@linux.ie>
 Cc: Daniel Vetter <daniel@ffwll.ch>
 Cc: dri-devel@lists.freedesktop.org
-Fixes: e2e16da398d9 ("drm/dp_helper: Add support for Configuring DSC for HDMI2.1 Pcon")
-Cc: stable@vger.kernel.org
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Link: https://lore.kernel.org/lkml/20211214001849.GA62559@embeddedor/
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-v1: https://lore.kernel.org/lkml/20211203084333.3105038-1-keescook@chromium.org/
-v2:
- - add reviewed-by
- - add cc:stable
+This is the alternative to:
+https://lore.kernel.org/lkml/20211203084354.3105253-1-keescook@chromium.org/
 ---
- include/drm/drm_dp_helper.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_helper.c | 10 ----------
+ drivers/gpu/drm/tegra/dp.c      | 11 ++++++++++-
+ include/drm/drm_dp_helper.h     |  2 --
+ 3 files changed, 10 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+index 23f9073bc473..c9528aa62c9c 100644
+--- a/drivers/gpu/drm/drm_dp_helper.c
++++ b/drivers/gpu/drm/drm_dp_helper.c
+@@ -144,16 +144,6 @@ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
+ }
+ EXPORT_SYMBOL(drm_dp_get_adjust_tx_ffe_preset);
+ 
+-u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+-					 unsigned int lane)
+-{
+-	unsigned int offset = DP_ADJUST_REQUEST_POST_CURSOR2;
+-	u8 value = dp_link_status(link_status, offset);
+-
+-	return (value >> (lane << 1)) & 0x3;
+-}
+-EXPORT_SYMBOL(drm_dp_get_adjust_request_post_cursor);
+-
+ static int __8b10b_clock_recovery_delay_us(const struct drm_dp_aux *aux, u8 rd_interval)
+ {
+ 	if (rd_interval > 4)
+diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
+index 70dfb7d1dec5..f5535eb04c6b 100644
+--- a/drivers/gpu/drm/tegra/dp.c
++++ b/drivers/gpu/drm/tegra/dp.c
+@@ -549,6 +549,15 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
+ {
+ 	struct drm_dp_link_train_set *adjust = &link->train.adjust;
+ 	unsigned int i;
++	u8 post_cursor;
++	int err;
++
++	err = drm_dp_dpcd_read(link->aux, DP_ADJUST_REQUEST_POST_CURSOR2,
++			       &post_cursor, sizeof(post_cursor));
++	if (err < 0) {
++		DRM_ERROR("failed to read post_cursor2: %d\n", err);
++		post_cursor = 0;
++	}
+ 
+ 	for (i = 0; i < link->lanes; i++) {
+ 		adjust->voltage_swing[i] =
+@@ -560,7 +569,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
+ 				DP_TRAIN_PRE_EMPHASIS_SHIFT;
+ 
+ 		adjust->post_cursor[i] =
+-			drm_dp_get_adjust_request_post_cursor(status, i);
++			(post_cursor >> (i << 1)) & 0x3;
+ 	}
+ }
+ 
 diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 30359e434c3f..472dac376284 100644
+index 472dac376284..fdf3cf6ccc02 100644
 --- a/include/drm/drm_dp_helper.h
 +++ b/include/drm/drm_dp_helper.h
-@@ -456,7 +456,7 @@ struct drm_panel;
- #define DP_FEC_CAPABILITY_1			0x091   /* 2.0 */
+@@ -1528,8 +1528,6 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
+ 					  int lane);
+ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
+ 				   int lane);
+-u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
+-					 unsigned int lane);
  
- /* DP-HDMI2.1 PCON DSC ENCODER SUPPORT */
--#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xC	/* 0x9E - 0x92 */
-+#define DP_PCON_DSC_ENCODER_CAP_SIZE        0xD	/* 0x92 through 0x9E */
- #define DP_PCON_DSC_ENCODER                 0x092
- # define DP_PCON_DSC_ENCODER_SUPPORTED      (1 << 0)
- # define DP_PCON_DSC_PPS_ENC_OVERRIDE       (1 << 1)
+ #define DP_BRANCH_OUI_HEADER_SIZE	0xc
+ #define DP_RECEIVER_CAP_SIZE		0xf
 -- 
 2.30.2
 
