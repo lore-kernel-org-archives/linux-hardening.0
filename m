@@ -2,123 +2,175 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB00C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 18:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C13C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 18:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242676AbiAESCU (ORCPT
+        id S243169AbiAESqG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Jan 2022 13:02:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242668AbiAESCR (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Jan 2022 13:02:17 -0500
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A87C061212
-        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 10:02:16 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id t19so38913pfg.9
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 10:02:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S4xBlIXwe6Ivsos8VDAdi5+QbDpQQkpq7vuCWanUwHM=;
-        b=DKpykNKzFqpD6wtU0kd3SCoVApdmj+8Wn9hZhJEynVJTQrApPdzCUzY9RdRRhPQcTJ
-         Jmu2AjPiza5T60QeIidYoh6wiQb+SzvyIf8eMj2yYz/b1fTtjeWpZrG0zy1yBI5xtH9o
-         J1UsO9XHjtSONDmqzVt3dchS5BCZ/sZvxQ9ao=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S4xBlIXwe6Ivsos8VDAdi5+QbDpQQkpq7vuCWanUwHM=;
-        b=X2Jw68kuafkf8D5CK+u5dvCNhEZtdliRt3tedzgiCnrLI76bqTwjViiliL1TVRrANQ
-         MZCNFBXQA+Rab8fWLa6thLHCV0dgP7JRM8HYnqPudwXyWJFczO/tA6DIaU/tojJSfEsv
-         2otUwv4E0o++01uzy7Boiegz4kKkqmsC+0Lg3umjlF11O8JjWrCNSsn8w1S7Jf5oFtk8
-         KovKxo0SVb2zesYDbuExN45VexLV9xxo8tYKkuDfmIg+zZa+AGAE2H78DdYyS2NNyTWf
-         e8WVkEF0jQ4JiQmxD7VTgZQk3GMzYXPBFIUz6Cvbv2EZ6ih7Eaf2P594P9UWgiE8gWH5
-         iauw==
-X-Gm-Message-State: AOAM530iitLaVihBGPqjZKmxxupfq1gQ0NWsHzWP/KrcaS+ol/6uC2Wk
-        l7p5njv2sdErTbHiekFRSlycIw==
-X-Google-Smtp-Source: ABdhPJxKtkiY2qS8/bDmJwa91au0gi21nej2Y/DnGQWFiHtISxkCmRgUbXb7Cb3ILaJKV3U+pFy7WQ==
-X-Received: by 2002:a63:8042:: with SMTP id j63mr50086308pgd.292.1641405736461;
-        Wed, 05 Jan 2022 10:02:16 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c24sm28499040pgj.57.2022.01.05.10.02.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jan 2022 10:02:16 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] iio: addac: Do not reference negative array offsets
-Date:   Wed,  5 Jan 2022 10:02:14 -0800
-Message-Id: <20220105180214.2435001-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Wed, 5 Jan 2022 13:46:06 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:37122 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238501AbiAESqG (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 5 Jan 2022 13:46:06 -0500
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AA3301EC0409;
+        Wed,  5 Jan 2022 19:45:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1641408359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=fEZIiIW8f9y+YhRxy3dl8vhei2PQdN236Vujn7RBTdY=;
+        b=pSCYqwvRR+jUpjU5YwAa8zN64Y5dn0sO3OHpyZf1+yxRZ18xu5tPEhOKWwUz+wGg1ynCeV
+        srFP8tI2NsIn+W3JysHUBTIqtFvLXC3aA5kU9TejCQRlI7MqcHt/QI0jlXIK7G6/i2VYZj
+        H3B6FMt0oByYncE3nPCCef6orbqe1Vo=
+Date:   Wed, 5 Jan 2022 19:46:01 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Alexander Lobakin <alexandr.lobakin@intel.com>
+Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v9 03/15] kallsyms: Hide layout
+Message-ID: <YdXnaYM9P3Grwz/C@zn.tnic>
+References: <20211223002209.1092165-1-alexandr.lobakin@intel.com>
+ <20211223002209.1092165-4-alexandr.lobakin@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2254; h=from:subject; bh=sGHoQxGNcT2Kv4+f7h+VZ51sTNIi0mtsXNE1v+t3ApI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh1d0lM+4aPs0jyUT1zIY3p2331EZ11B0G+kBU0nyj Jcsj1AWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdXdJQAKCRCJcvTf3G3AJvGfD/ 0Ut8I5/wxM912CDP+SrbegTwNbdz3eNsh2P4jKCPXaOmJ8sY8BBFtUAqEnWjGwWq2CVRKstBsYiAZl /+NwcXCNPt5VrLaEUI+GtZOGiTN8qml6bh0/LN+VF1iFGqTmXr8MgT0/dK///ubvK2gcVZfecWhoX8 7L3vHNHmSb3pwcbHyrMQMvoHa3jGjj8sjNr6v/F12SOfGFB7boVa87MVcNIDcng14m4bGQY0LamHlO ecKlMRMMBJSCDMFk0CzFWIWqg4yBT0ggv+n52uKlMBvCNHMoudn0gv3ld3EWuUSNV4kOHVJfLY+He+ vbiRN3Wy+AOIT5taUrYH50SqGp9Rk4Nx5Tz+HAHU+67CsBNmBLcRytkkujt7v2/9UZ/IQ3nW7vLvOf 2GlaGJ5eLCwCwKCnPnIyfSjyoeHgLeSbGRwzaQkjjU8uURk6eEP0oRgbUS0CUs1EIBPB7ODEI5AKW6 zs1E5JseyeKBsjVi8S6AwyYDoH6XWQrwqTqh/1p1FKbyRNIBKe7ykQjxfH/xTtx1H5GAaQU104tY3u eEDzC0AR6WV/sSRw8nIQWbHhb6tURMGErU6hqRKXFM0dY6x5Pcs5XgROqRe66RGmmzGpz6LWK3Kdn1 +pAtH455SfdNcYuFLILhyAWfNiRpYKAuKMV4kX0Uy5UozDVsUe4uyllFkLoA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211223002209.1092165-4-alexandr.lobakin@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Instead of aiming rx_buf at an invalid array-boundary-crossing location,
-just skip the first increment. Fixes this warning seen when building
-with -Warray-bounds:
+On Thu, Dec 23, 2021 at 01:21:57AM +0100, Alexander Lobakin wrote:
+> @@ -687,11 +697,12 @@ static void reset_iter(struct kallsym_iter *iter, loff_t new_pos)
+>  	iter->name[0] = '\0';
+>  	iter->nameoff = get_symbol_offset(new_pos);
+>  	iter->pos = new_pos;
+> -	if (new_pos == 0) {
 
-drivers/iio/addac/ad74413r.c: In function 'ad74413r_update_scan_mode':
-drivers/iio/addac/ad74413r.c:843:22: warning: array subscript -4 is below array bounds of 'u8[16]' { aka 'unsigned char[16]'} [-Warray-bounds]
-  843 |         u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 * AD74413R_FRAME_SIZE];
-      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/iio/addac/ad74413r.c:84:20: note: while referencing 'rx_buf'
-   84 |                 u8 rx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX];
-      |                    ^~~~~~
+	if (!iter->show_layout)
+		return;
 
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-iio@vger.kernel.org
-Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v1: https://lore.kernel.org/lkml/20211215232321.2069314-1-keescook@chromium.org/
-v2:
- - use "xfer" for checking "first through the loop"
----
- drivers/iio/addac/ad74413r.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> +	if (iter->show_layout && new_pos == 0) {
+>  		iter->pos_arch_end = 0;
+>  		iter->pos_mod_end = 0;
+>  		iter->pos_ftrace_mod_end = 0;
+>  		iter->pos_bpf_end = 0;
+> +		iter->pos_end = 0;
+>  	}
+>  }
 
-diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
-index 5271073bb74e..aba9a643a4ca 100644
---- a/drivers/iio/addac/ad74413r.c
-+++ b/drivers/iio/addac/ad74413r.c
-@@ -840,7 +840,7 @@ static int ad74413r_update_scan_mode(struct iio_dev *indio_dev,
- {
- 	struct ad74413r_state *st = iio_priv(indio_dev);
- 	struct spi_transfer *xfer = st->adc_samples_xfer;
--	u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 * AD74413R_FRAME_SIZE];
-+	u8 *rx_buf = st->adc_samples_buf.rx_buf;
- 	u8 *tx_buf = st->adc_samples_tx_buf;
- 	unsigned int channel;
- 	int ret = -EINVAL;
-@@ -894,9 +894,10 @@ static int ad74413r_update_scan_mode(struct iio_dev *indio_dev,
- 
- 		spi_message_add_tail(xfer, &st->adc_samples_msg);
- 
--		xfer++;
- 		tx_buf += AD74413R_FRAME_SIZE;
--		rx_buf += AD74413R_FRAME_SIZE;
-+		if (xfer != st->adc_samples_xfer)
-+			rx_buf += AD74413R_FRAME_SIZE;
-+		xfer++;
- 	}
- 
- 	xfer->rx_buf = rx_buf;
+...
+
+> @@ -838,16 +860,54 @@ static int kallsyms_open(struct inode *inode, struct file *file)
+>  	 * using get_symbol_offset for every symbol.
+>  	 */
+>  	struct kallsym_iter *iter;
+> -	iter = __seq_open_private(file, &kallsyms_op, sizeof(*iter));
+> -	if (!iter)
+> -		return -ENOMEM;
+> -	reset_iter(iter, 0);
+> +	/*
+> +	 * This fake iter is needed for the cases with unprivileged
+> +	 * access. We need to know the exact number of symbols to
+> +	 * randomize the display layout.
+> +	 */
+> +	struct kallsym_iter fake;
+> +	size_t size = sizeof(*iter);
+> +	loff_t pos;
+> +
+> +	fake.show_layout = true;
+> +	reset_iter(&fake, 0);
+>  
+>  	/*
+>  	 * Instead of checking this on every s_show() call, cache
+>  	 * the result here at open time.
+>  	 */
+> -	iter->show_value = kallsyms_show_value(file->f_cred);
+> +	fake.show_layout = kallsyms_show_value(file->f_cred);
+> +	if (fake.show_layout)
+> +		goto open;
+
+There are those silly labels again:
+
+	if (!fake.show_layout) {
+		for (... )
+			;
+		size = ...
+	}
+
+	iter = __seq_open_private(...
+
+> +
+> +	for (pos = kallsyms_num_syms; update_iter_mod(&fake, pos); pos++)
+> +		;
+> +
+> +	size = struct_size(iter, shuffled_pos, fake.pos_end + 1);
+> +
+> +open:
+> +	iter = __seq_open_private(file, &kallsyms_op, size);
+> +	if (!iter)
+> +		return -ENOMEM;
+> +
+> +	iter->show_layout = fake.show_layout;
+> +	reset_iter(iter, 0);
+> +
+> +	if (iter->show_layout)
+> +		return 0;
+> +
+> +	/* Copy the bounds since they were already discovered above */
+> +	iter->pos_arch_end = fake.pos_arch_end;
+> +	iter->pos_mod_end = fake.pos_mod_end;
+> +	iter->pos_ftrace_mod_end = fake.pos_ftrace_mod_end;
+> +	iter->pos_bpf_end = fake.pos_bpf_end;
+> +	iter->pos_end = fake.pos_end;
+> +
+> +	for (pos = 0; pos <= iter->pos_end; pos++)
+> +		iter->shuffled_pos[pos] = pos;
+> +
+> +	shuffle_array(iter->shuffled_pos, iter->pos_end + 1);
+> +
+>  	return 0;
+>  }
+
+Thx.
+
 -- 
-2.30.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
