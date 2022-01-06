@@ -2,194 +2,181 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C10C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jan 2022 22:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D056C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jan 2022 06:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244755AbiAEWM1 (ORCPT
+        id S234952AbiAFGcN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Jan 2022 17:12:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244850AbiAEWLx (ORCPT
+        Thu, 6 Jan 2022 01:32:13 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:41884 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231416AbiAFGcM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Jan 2022 17:11:53 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CACC034001
-        for <linux-hardening@vger.kernel.org>; Wed,  5 Jan 2022 14:11:51 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id y16-20020a17090a6c9000b001b13ffaa625so5817188pjj.2
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Jan 2022 14:11:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=23epZgha1vduYGwfVlyJXoEQeuHeRLa9G6BF3JRJdSs=;
-        b=bfeddHzRv9HtJY5mtsQRXVAOEmYWMs7ngEG2ATROmYEtn24O+nonhf7KXPUwBbWEoo
-         Wdhdhi1DkRY1Ss9sS4fVkhXWyStKlzF3BgmTaRXF8RixyXt4QlFk/ZjxDMkUfcSZLAkI
-         Yaai59wXJJwwANPPLgBNPHaBM5LgVDD4YPl+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=23epZgha1vduYGwfVlyJXoEQeuHeRLa9G6BF3JRJdSs=;
-        b=ImpOS+nvFnj4g1YBsnV+xqAQb1k/vCKvj9o4ZmzGpn/Ubjc5vgyMhdRV4ZfXcSxgTS
-         0mV/9ba+gRrNT2TY7cf5MEtAekLJasCRv+HeCsvLezJ8ObDMOxtG8l+7EWKjSb05Vqv/
-         GugpRtsIxcS3bBeCFErEZ/QCA76tyzSLjxT7HvDd13DPZ4fnrR+nshXkaK0S5JnFZyLj
-         rjK7hNns01CaEuWgLNOwleY/jQRD5tNf9+furXayQ+cWL/Xz9KtCmOdB6jq2gIKN+dZU
-         JvVWd2Eejd+VIVa/JfX+ou7g0rIk4E/RRw+YuBXO/NrO1ka0l+LiDsZt+nMoNs08lHz5
-         hARA==
-X-Gm-Message-State: AOAM5322VsLm2LXeDUCKCdyO7JnPFOKKydc3AjiUEll1L/5XX75tcQIo
-        awwzlRMiXoJKVkFAwgbFzBaXBA==
-X-Google-Smtp-Source: ABdhPJzA1QQolIAGWUj/J4KwNJXn9ApDguH+fthMfPH6jJn1bm/a3nte3k2RSaxKz4wYYdX6DKcLWQ==
-X-Received: by 2002:a17:902:d507:b0:149:e668:e340 with SMTP id b7-20020a170902d50700b00149e668e340mr2314029plg.66.1641420711267;
-        Wed, 05 Jan 2022 14:11:51 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ot7sm4268637pjb.12.2022.01.05.14.11.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jan 2022 14:11:51 -0800 (PST)
-Date:   Wed, 5 Jan 2022 14:11:50 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lyude Paul <lyude@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/dp: Remove common Post Cursor2 register handling
-Message-ID: <202201051410.8F65E4E0@keescook>
-References: <20220105173507.2420910-1-keescook@chromium.org>
- <878rvujc4t.fsf@intel.com>
+        Thu, 6 Jan 2022 01:32:12 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 205N3SQf020873;
+        Thu, 6 Jan 2022 01:31:58 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3ddmnwrwq6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Jan 2022 01:31:58 -0500
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 2066Vvck059707
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 6 Jan 2022 01:31:57 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 6 Jan 2022
+ 01:31:56 -0500
+Received: from ASHBMBX9.ad.analog.com ([fe80::5d54:bde3:ae3a:70bb]) by
+ ASHBMBX9.ad.analog.com ([fe80::5d54:bde3:ae3a:70bb%20]) with mapi id
+ 15.02.0986.014; Thu, 6 Jan 2022 01:31:56 -0500
+From:   "Tanislav, Cosmin" <Cosmin.Tanislav@analog.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>
+CC:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH v2] iio: addac: Do not reference negative array offsets
+Thread-Topic: [PATCH v2] iio: addac: Do not reference negative array offsets
+Thread-Index: AQHYAl5iQ0D4qAsx9EqoEy4dPgT2w6xViS3w
+Date:   Thu, 6 Jan 2022 06:31:55 +0000
+Message-ID: <b87576f4e44e459bba4d3bd3c0b38693@analog.com>
+References: <20220105180214.2435001-1-keescook@chromium.org>
+In-Reply-To: <20220105180214.2435001-1-keescook@chromium.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY3RhbmlzbGFc?=
+ =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
+ =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy01NWVhNWU5ZC02ZWJhLTExZWMtYjZkMi00MTU2?=
+ =?us-ascii?Q?NDUwMDAwMzBcYW1lLXRlc3RcNTVlYTVlOWYtNmViYS0xMWVjLWI2ZDItNDE1?=
+ =?us-ascii?Q?NjQ1MDAwMDMwYm9keS50eHQiIHN6PSIzMjgxIiB0PSIxMzI4NTkyNDMxMzYx?=
+ =?us-ascii?Q?OTMxNjciIGg9Ii9OTGxDUXN3RnBPMHd5ZHNGZHlwZk1rRXZkdz0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUVvQ0FB?=
+ =?us-ascii?Q?Q1Bra0lZeHdMWUFYZGZYMzQ0RkxUdmQxOWZmamdVdE84REFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQURhQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBVklFdm9RQUFBQUFBQUFBQUFBQUFBSjRBQUFCaEFHUUFh?=
+ =?us-ascii?Q?UUJmQUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QUc4QWFnQmxBR01BZEFCekFG?=
+ =?us-ascii?Q?OEFaZ0JoQUd3QWN3QmxBRjhBWmdCdkFITUFhUUIwQUdrQWRnQmxBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR0VBWkFCcEFGOEFjd0JsQUdNQWRR?=
+ =?us-ascii?Q?QnlBR1VBWHdCd0FISUFid0JxQUdVQVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURF?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVlRQmtBR2tBWHdCekFHVUFZd0IxQUhJQVpRQmZBSEFBY2dC?=
+ =?us-ascii?Q?dkFHb0FaUUJqQUhRQWN3QmZBSFFBYVFCbEFISUFNZ0FBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFBPT0iLz48L21l?=
+ =?us-ascii?Q?dGE+?=
+x-dg-rorf: true
+x-originating-ip: [10.32.224.39]
+x-adiruleop-newscl: Rule Triggered
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878rvujc4t.fsf@intel.com>
+X-Proofpoint-ORIG-GUID: iZAsWMvjMV3eOQ6VpTA8YrNUwfTkSOW5
+X-Proofpoint-GUID: iZAsWMvjMV3eOQ6VpTA8YrNUwfTkSOW5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-01-06_02,2022-01-04_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501
+ mlxscore=0 clxscore=1015 adultscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2112160000 definitions=main-2201060043
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 05, 2022 at 08:00:50PM +0200, Jani Nikula wrote:
-> On Wed, 05 Jan 2022, Kees Cook <keescook@chromium.org> wrote:
-> > The link_status array was not large enough to read the Adjust Request
-> > Post Cursor2 register, so remove the common helper function to avoid
-> > an OOB read, found with a -Warray-bounds build:
-> >
-> > drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
-> > drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
-> >    59 |         return link_status[r - DP_LANE0_1_STATUS];
-> >       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
-> >   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > Replace the only user of the helper with an open-coded fetch and decode,
-> > similar to drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c.
-> >
-> > Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Maxime Ripard <mripard@kernel.org>
-> > Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > This is the alternative to:
-> > https://lore.kernel.org/lkml/20211203084354.3105253-1-keescook@chromium.org/
-> > ---
-> >  drivers/gpu/drm/drm_dp_helper.c | 10 ----------
-> >  drivers/gpu/drm/tegra/dp.c      | 11 ++++++++++-
-> >  include/drm/drm_dp_helper.h     |  2 --
-> >  3 files changed, 10 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-> > index 23f9073bc473..c9528aa62c9c 100644
-> > --- a/drivers/gpu/drm/drm_dp_helper.c
-> > +++ b/drivers/gpu/drm/drm_dp_helper.c
-> > @@ -144,16 +144,6 @@ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >  }
-> >  EXPORT_SYMBOL(drm_dp_get_adjust_tx_ffe_preset);
-> >  
-> > -u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> > -					 unsigned int lane)
-> > -{
-> > -	unsigned int offset = DP_ADJUST_REQUEST_POST_CURSOR2;
-> > -	u8 value = dp_link_status(link_status, offset);
-> > -
-> > -	return (value >> (lane << 1)) & 0x3;
-> > -}
-> > -EXPORT_SYMBOL(drm_dp_get_adjust_request_post_cursor);
-> > -
-> >  static int __8b10b_clock_recovery_delay_us(const struct drm_dp_aux *aux, u8 rd_interval)
-> >  {
-> >  	if (rd_interval > 4)
-> > diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
-> > index 70dfb7d1dec5..f5535eb04c6b 100644
-> > --- a/drivers/gpu/drm/tegra/dp.c
-> > +++ b/drivers/gpu/drm/tegra/dp.c
-> > @@ -549,6 +549,15 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
-> >  {
-> >  	struct drm_dp_link_train_set *adjust = &link->train.adjust;
-> >  	unsigned int i;
-> > +	u8 post_cursor;
-> > +	int err;
-> > +
-> > +	err = drm_dp_dpcd_read(link->aux, DP_ADJUST_REQUEST_POST_CURSOR2,
-> > +			       &post_cursor, sizeof(post_cursor));
+Reviewed-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
+
+Put "iio: addac: ad74413r:" in patch title, maybe?
+
+> -----Original Message-----
+> From: Kees Cook <keescook@chromium.org>
+> Sent: Wednesday, January 5, 2022 8:02 PM
+> To: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Kees Cook <keescook@chromium.org>; Hennerich, Michael
+> <Michael.Hennerich@analog.com>; Tanislav, Cosmin
+> <Cosmin.Tanislav@analog.com>; Jonathan Cameron <jic23@kernel.org>;
+> linux-iio@vger.kernel.org; Linus Walleij <linus.walleij@linaro.org>; linux-
+> kernel@vger.kernel.org; linux-hardening@vger.kernel.org
+> Subject: [PATCH v2] iio: addac: Do not reference negative array offsets
 > 
-> There's a drm_dp_dpcd_readb() for the common 1-byte reads. Other than
-> that,
+> [External]
 > 
-> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-
-Thanks!
-
+> Instead of aiming rx_buf at an invalid array-boundary-crossing location,
+> just skip the first increment. Fixes this warning seen when building
+> with -Warray-bounds:
 > 
-> Though obviously that's not enough to actually merge to tegra.
-
-As in, "a review by Jani isn't sufficient to land via the tegra tree"?
-
-What should next steps be?
-
--Kees
-
+> drivers/iio/addac/ad74413r.c: In function 'ad74413r_update_scan_mode':
+> drivers/iio/addac/ad74413r.c:843:22: warning: array subscript -4 is below
+> array bounds of 'u8[16]' { aka 'unsigned char[16]'} [-Warray-bounds]
+>   843 |         u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
+> AD74413R_FRAME_SIZE];
+>       |
+> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/iio/addac/ad74413r.c:84:20: note: while referencing 'rx_buf'
+>    84 |                 u8 rx_buf[AD74413R_FRAME_SIZE *
+> AD74413R_CHANNEL_MAX];
+>       |                    ^~~~~~
 > 
-> > +	if (err < 0) {
-> > +		DRM_ERROR("failed to read post_cursor2: %d\n", err);
-> > +		post_cursor = 0;
-> > +	}
-> >  
-> >  	for (i = 0; i < link->lanes; i++) {
-> >  		adjust->voltage_swing[i] =
-> > @@ -560,7 +569,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
-> >  				DP_TRAIN_PRE_EMPHASIS_SHIFT;
-> >  
-> >  		adjust->post_cursor[i] =
-> > -			drm_dp_get_adjust_request_post_cursor(status, i);
-> > +			(post_cursor >> (i << 1)) & 0x3;
-> >  	}
-> >  }
-> >  
-> > diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> > index 472dac376284..fdf3cf6ccc02 100644
-> > --- a/include/drm/drm_dp_helper.h
-> > +++ b/include/drm/drm_dp_helper.h
-> > @@ -1528,8 +1528,6 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
-> >  					  int lane);
-> >  u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >  				   int lane);
-> > -u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> > -					 unsigned int lane);
-> >  
-> >  #define DP_BRANCH_OUI_HEADER_SIZE	0xc
-> >  #define DP_RECEIVER_CAP_SIZE		0xf
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-iio@vger.kernel.org
+> Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v1:
+> https://urldefense.com/v3/__https://lore.kernel.org/lkml/20211215232321.
+> 2069314-1-
+> keescook@chromium.org/__;!!A3Ni8CS0y2Y!vadcwdERjyNVz3vFIp5m5S2ms
+> oFHro8aKzH9ulwPevCKHpev6D53gibZrv5U9mPHGcoB$
+> v2:
+>  - use "xfer" for checking "first through the loop"
+> ---
+>  drivers/iio/addac/ad74413r.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> -- 
-> Jani Nikula, Intel Open Source Graphics Center
+> diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
+> index 5271073bb74e..aba9a643a4ca 100644
+> --- a/drivers/iio/addac/ad74413r.c
+> +++ b/drivers/iio/addac/ad74413r.c
+> @@ -840,7 +840,7 @@ static int ad74413r_update_scan_mode(struct iio_dev
+> *indio_dev,
+>  {
+>  	struct ad74413r_state *st = iio_priv(indio_dev);
+>  	struct spi_transfer *xfer = st->adc_samples_xfer;
+> -	u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
+> AD74413R_FRAME_SIZE];
+> +	u8 *rx_buf = st->adc_samples_buf.rx_buf;
+>  	u8 *tx_buf = st->adc_samples_tx_buf;
+>  	unsigned int channel;
+>  	int ret = -EINVAL;
+> @@ -894,9 +894,10 @@ static int ad74413r_update_scan_mode(struct
+> iio_dev *indio_dev,
+> 
+>  		spi_message_add_tail(xfer, &st->adc_samples_msg);
+> 
+> -		xfer++;
+>  		tx_buf += AD74413R_FRAME_SIZE;
+> -		rx_buf += AD74413R_FRAME_SIZE;
+> +		if (xfer != st->adc_samples_xfer)
+> +			rx_buf += AD74413R_FRAME_SIZE;
+> +		xfer++;
+>  	}
+> 
+>  	xfer->rx_buf = rx_buf;
+> --
+> 2.30.2
 
--- 
-Kees Cook
