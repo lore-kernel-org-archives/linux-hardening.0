@@ -2,133 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E722C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Jan 2022 23:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB069C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat,  8 Jan 2022 09:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231503AbiAGX1u (ORCPT
+        id S233957AbiAHJ2j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Jan 2022 18:27:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
+        Sat, 8 Jan 2022 04:28:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230285AbiAGX1u (ORCPT
+        with ESMTP id S231347AbiAHJ2i (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Jan 2022 18:27:50 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E28C061574
-        for <linux-hardening@vger.kernel.org>; Fri,  7 Jan 2022 15:27:49 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id y9so6925330pgr.11
-        for <linux-hardening@vger.kernel.org>; Fri, 07 Jan 2022 15:27:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6Gm2/5HnEXFIxSdkPzjXZQKOU+LWmT6qpXAHCEvGO7U=;
-        b=bYLC3+tD1xZ8RuuhpF8gh7ly6f8+HHlRPcRcwotINN7eSLgj+T+hk7koQtcheiDVZe
-         ENtIZEZ7FmtoC2rkmYPOUJM086bRcykmjhqPCKpM0fV2FrHtTr9PFhtej3PrLM4beYdQ
-         llM/shaf8FknoJfeSOrUrv7+VM7iLQOc7pVVY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6Gm2/5HnEXFIxSdkPzjXZQKOU+LWmT6qpXAHCEvGO7U=;
-        b=5Io3+ep8A8fXuYHUBc22tlthxzVdm5r/cX73n54uwrMOT+J7Y7TiEs0ssMNOr9nRpK
-         biyj/MLWXJN8bcXCH5YCI6i1/EXhiPRCy2XYE6ANIl9rH25yhqc/6wTGequaMgyTt/2C
-         YNLYlA/Bj991fsgYouIgl3xxz94/NESO44DpCTPbuUet/ba7uxTq4EpEypuV5NMUttMy
-         bKetWMuvg+v0vqRwL6aCViHf/xlHTGJDi9zMspLT/kxql8dpiRiEGrw5S2/gTeQVygyP
-         8wbskNtJwI825FAjv2c9yQ2xlNrhshBbJ2qX63Q5Zwfpd5YCvmKslwaBMbXkA0Ici7ne
-         pPnQ==
-X-Gm-Message-State: AOAM531JgFBoEcpjMUrahF9uq3dHtH0C0fSPtZ9VrpF5SCFRp4ecskZ4
-        St8GY1wN7E6uz+oEGxqIBhh9xn6QHQExnA==
-X-Google-Smtp-Source: ABdhPJxkDgZCqGiDKCf+UvMXdHbCz0HH/CZI6YKoT+aZI04YLxIT48GaCscg6c62MbkVCjQEd4hQWA==
-X-Received: by 2002:a62:8f51:0:b0:4bb:9d8:86cf with SMTP id n78-20020a628f51000000b004bb09d886cfmr66061197pfd.55.1641598069056;
-        Fri, 07 Jan 2022 15:27:49 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k9sm23343pgr.47.2022.01.07.15.27.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jan 2022 15:27:48 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] arm64: atomics: Dereference matching size
-Date:   Fri,  7 Jan 2022 15:27:46 -0800
-Message-Id: <20220107232746.1540130-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Sat, 8 Jan 2022 04:28:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BBD7C061574;
+        Sat,  8 Jan 2022 01:28:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C669AB80761;
+        Sat,  8 Jan 2022 09:28:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B30FC36AF3;
+        Sat,  8 Jan 2022 09:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641634115;
+        bh=y4ep/F5PBEWZUrYeJuA0/XjOUSWGAFc4NcKBSn7/XHA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=N69OittcDHFsKRVNTdEd4hgh4lOrW37sEYnQxnPKlWMdYJbuqH1hABOLImzSXp85w
+         WfjVJn+nZgKH0rHlLggoHcuwCpZqBcSIn15vVQwgyC4z3ih8kzsN3xUHChBVRrFa5b
+         zWoT5buC9prSdeu0ifvSBsLhXtFsX2nAaSdlgM6iDPGv4rtJ71JCxAgNv9JxgGSfCT
+         64OOQTIZPxzaQQGt+B+4tQJlcXs7LMnQWxHFfGb2YoOwxSKV9UBvdHJvMWHIhZ2oC+
+         3e69Klikw81LIHkHrQJA+auXL1ywytPzPjl3xaziDP+ZVq09qUihULL6b7rnheHkGr
+         Wr+hmDMyZhGDA==
+Received: by mail-wr1-f51.google.com with SMTP id w20so15816447wra.9;
+        Sat, 08 Jan 2022 01:28:35 -0800 (PST)
+X-Gm-Message-State: AOAM53356z8gG4FrqqPXUP8Txj2Iv5b2Q3lmA1t8JNG14f6NTywRjtLE
+        ieIL0w6IKrE8CHRDJKTHX/xqGzOz7CNb0RIsYR8=
+X-Google-Smtp-Source: ABdhPJyukHr4M5a6n/vBvBkRTI+74AD5T6HuJpUY4GGoeQfjhVfDWc17TiBkifGIHuX1VaYsc3hUH5MF6ZqGBR1YiuE=
+X-Received: by 2002:adf:fe08:: with SMTP id n8mr1294483wrr.417.1641634113765;
+ Sat, 08 Jan 2022 01:28:33 -0800 (PST)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3016; h=from:subject; bh=47ond1j5oGNg2bOUtQPmTXc41W+OJBUy48YiocxEN4U=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh2MxxvccpCaBRI64wFu4HGOYd1RAGYXBxjWnsjXy5 R2rn/yGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYdjMcQAKCRCJcvTf3G3AJryvD/ 9sp7vs3pCbVfOzxQ7kLuD+kKELqKNUVCexpGQpaRgthUhlpLMkl4o/uCUdhMl/8vFmoj+trO/gg2ri U2nAztuCZRepyX55YXnD9oP9a91Lj0yUuEC+QBdFqEpzf4vZpWtuzSlVSdvCs0m687FxhhDoOAGrRb DwQeZsnpHSHKCYSr4TXVqXWN/+sU/QjOYShyGXirFcDyJc2oiqfmfwtTcIfjqHHJmWVh2g5bszWkca JJ+8tfXnb25k5CfBP6CX32ltb2OfTUZA5k6PGODdLQoGyR/wstI5izT3Nj6K2CJBLcxiMoxYCzk+jw M1rj0lO4940pou6msREP+yejU4zsqF6asUmFTSDEzr8gSRVyB0ucovrkAwwcd5NA//o2VloyJEgOLz Ie7sP0j0Zo1VAzOGCPOmASBHEGLRHi6yqC9bAsdLLUNCcAArW0M8XKyTptmjQKf3O7nCKh4DrDqyiy KmACPWY5vP6j3FdK94iaYm7JO9QoGbpSLAZ3LQ9L0eOcCmpv29zvGQ7pP2UGCIofiq9my6R+y6WbED 3t0uJb6Ssgy8Y8XVwmakBhmIvA8D2zUuQi80BZcdAO33q9bZDLTSnnoUTDdIESOPH7FqR+9dacRaUF IDbsjMCLcE1xplrSEuaxzIdXt0/59nKJdJaAPohTH59jmZE3FOkOeKr6arEw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20220105174953.2433019-1-keescook@chromium.org>
+In-Reply-To: <20220105174953.2433019-1-keescook@chromium.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 8 Jan 2022 10:28:22 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFi=A+QZWom_CYDQ0UVPrB10MkxJFtQ=KT0HQNprgrUjw@mail.gmail.com>
+Message-ID: <CAMj1kXFi=A+QZWom_CYDQ0UVPrB10MkxJFtQ=KT0HQNprgrUjw@mail.gmail.com>
+Subject: Re: [PATCH v2] crypto: octeontx2 - Avoid stack variable overflow
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Arnaud Ebalard <arno@natisbad.org>,
+        Srujana Challa <schalla@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Suheil Chandran <schandran@marvell.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Lukasz Bartosik <lbartosik@marvell.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When building with -Warray-bounds (which is desired to be enabled
-globally), the following warning is generated:
+On Wed, 5 Jan 2022 at 18:50, Kees Cook <keescook@chromium.org> wrote:
+>
+> Building with -Warray-bounds showed a stack variable array index
+> overflow. Increase the expected size of the array to avoid the warning:
+>
+> In file included from ./include/linux/printk.h:555,
+>                  from ./include/asm-generic/bug.h:22,
+>                  from ./arch/x86/include/asm/bug.h:84,
+>                  from ./include/linux/bug.h:5,
+>                  from ./include/linux/mmdebug.h:5,
+>                  from ./include/linux/gfp.h:5,
+>                  from ./include/linux/firmware.h:7,
+>                  from drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:5:
+> drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c: In function 'otx2_cpt_print_uc_dbg_info':
+> ./include/linux/dynamic_debug.h:162:33: warning: array subscript 4 is above array bounds of 'u32[4]' {aka 'unsigned int[4]'} [-Warray-bounds]
+>   162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
+>       |                                 ^
+> ./include/linux/dynamic_debug.h:134:17: note: in definition of macro '__dynamic_func_call'
+>   134 |                 func(&id, ##__VA_ARGS__);               \
+>       |                 ^~~~
+> ./include/linux/dynamic_debug.h:162:9: note: in expansion of macro '_dynamic_func_call'
+>   162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
+>       |         ^~~~~~~~~~~~~~~~~~
+> ./include/linux/printk.h:570:9: note: in expansion of macro 'dynamic_pr_debug'
+>   570 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
+>       |         ^~~~~~~~~~~~~~~~
+> drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1807:41: note: in expansion of macro 'pr_debug'
+>  1807 |                                         pr_debug("Mask: %8.8x %8.8x %8.8x %8.8x %8.8x",
+>       |                                         ^~~~~~~~
+> drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1765:13: note: while referencing 'mask'
+>  1765 |         u32 mask[4];
+>       |             ^~~~
+>
+> This is justified because the mask size (eng_grps->engs_num) can be at
+> most 144 (OTX2_CPT_MAX_ENGINES bits), which is larger than available
+> storage. 4 * 32 == 128, so this must be 5: 5 * 32bit = 150.
+>
 
-In file included from ./arch/arm64/include/asm/lse.h:16,
-                 from ./arch/arm64/include/asm/cmpxchg.h:14,
-                 from ./arch/arm64/include/asm/atomic.h:16,
-                 from ./include/linux/atomic.h:7,
-                 from ./include/asm-generic/bitops/atomic.h:5,
-                 from ./arch/arm64/include/asm/bitops.h:25,
-                 from ./include/linux/bitops.h:33,
-                 from ./include/linux/kernel.h:22,
-                 from kernel/printk/printk.c:22:
-./arch/arm64/include/asm/atomic_lse.h:247:9: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'atomic_t[1]' [-Warray-bounds]
-  247 |         asm volatile(                                                   \
-      |         ^~~
-./arch/arm64/include/asm/atomic_lse.h:266:1: note: in expansion of macro '__CMPXCHG_CASE'
-  266 | __CMPXCHG_CASE(w,  , acq_, 32,  a, "memory")
-      | ^~~~~~~~~~~~~~
-kernel/printk/printk.c:3606:17: note: while referencing 'printk_cpulock_owner'
- 3606 | static atomic_t printk_cpulock_owner = ATOMIC_INIT(-1);
-      |                 ^~~~~~~~~~~~~~~~~~~~
+160
 
-This is due to the compiler seeing an unsigned long * cast against
-something (atomic_t) that is int sized. Replace the cast with the
-matching size cast. This results in no change in binary output.
+> Additionally clear the mask before conversion so trailing bits are zero.
+>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: Boris Brezillon <bbrezillon@kernel.org>
+> Cc: Arnaud Ebalard <arno@natisbad.org>
+> Cc: Srujana Challa <schalla@marvell.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Suheil Chandran <schandran@marvell.com>
+> Cc: Shijith Thotton <sthotton@marvell.com>
+> Cc: Lukasz Bartosik <lbartosik@marvell.com>
+> Cc: linux-crypto@vger.kernel.org
+> Fixes: d9d7749773e8 ("crypto: octeontx2 - add apis for custom engine groups")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/include/asm/atomic_lse.h | 2 +-
- arch/arm64/include/asm/cmpxchg.h    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-index d955ade5df7c..5d460f6b7675 100644
---- a/arch/arm64/include/asm/atomic_lse.h
-+++ b/arch/arm64/include/asm/atomic_lse.h
-@@ -249,7 +249,7 @@ __lse__cmpxchg_case_##name##sz(volatile void *ptr,			\
- 	"	mov	%" #w "[tmp], %" #w "[old]\n"			\
- 	"	cas" #mb #sfx "\t%" #w "[tmp], %" #w "[new], %[v]\n"	\
- 	"	mov	%" #w "[ret], %" #w "[tmp]"			\
--	: [ret] "+r" (x0), [v] "+Q" (*(unsigned long *)ptr),		\
-+	: [ret] "+r" (x0), [v] "+Q" (*(u##sz *)ptr),			\
- 	  [tmp] "=&r" (tmp)						\
- 	: [old] "r" (x1), [new] "r" (x2)				\
- 	: cl);								\
-diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
-index f9bef42c1411..497acf134d99 100644
---- a/arch/arm64/include/asm/cmpxchg.h
-+++ b/arch/arm64/include/asm/cmpxchg.h
-@@ -243,7 +243,7 @@ static inline void __cmpwait_case_##sz(volatile void *ptr,		\
- 	"	cbnz	%" #w "[tmp], 1f\n"				\
- 	"	wfe\n"							\
- 	"1:"								\
--	: [tmp] "=&r" (tmp), [v] "+Q" (*(unsigned long *)ptr)		\
-+	: [tmp] "=&r" (tmp), [v] "+Q" (*(u##sz *)ptr)			\
- 	: [val] "r" (val));						\
- }
- 
--- 
-2.30.2
-
+> ---
+> v1: https://lore.kernel.org/lkml/20211215225558.1995027-1-keescook@chromium.org/
+> v2:
+>  - expliticly zero "mask"
+>  - explain math in commit log
+>  - move definition into local context
+> ---
+>  drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
+> index 4c8ebdf671ca..1b4d425bbf0e 100644
+> --- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
+> +++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
+> @@ -1753,7 +1753,6 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
+>         char engs_info[2 * OTX2_CPT_NAME_LENGTH];
+>         struct otx2_cpt_eng_grp_info *grp;
+>         struct otx2_cpt_engs_rsvd *engs;
+> -       u32 mask[4];
+>         int i, j;
+>
+>         pr_debug("Engine groups global info");
+> @@ -1785,6 +1784,8 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
+>                 for (j = 0; j < OTX2_CPT_MAX_ETYPES_PER_GRP; j++) {
+>                         engs = &grp->engs[j];
+>                         if (engs->type) {
+> +                               u32 mask[5] = { };
+> +
+>                                 get_engs_info(grp, engs_info,
+>                                               2 * OTX2_CPT_NAME_LENGTH, j);
+>                                 pr_debug("Slot%d: %s", j, engs_info);
+> --
+> 2.30.2
+>
