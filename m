@@ -2,58 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B757C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat,  8 Jan 2022 09:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129FBC433F5
+	for <linux-hardening@archiver.kernel.org>; Sat,  8 Jan 2022 11:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234026AbiAHJb2 (ORCPT
+        id S231420AbiAHLgu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 8 Jan 2022 04:31:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43722 "EHLO
+        Sat, 8 Jan 2022 06:36:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231347AbiAHJb2 (ORCPT
+        with ESMTP id S230135AbiAHLgu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 8 Jan 2022 04:31:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 028B9C061574;
-        Sat,  8 Jan 2022 01:31:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6B12560B61;
-        Sat,  8 Jan 2022 09:31:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF2DC36AF4;
-        Sat,  8 Jan 2022 09:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641634286;
-        bh=jjD+NJPlawSx/AlIpPp/NXrmxDO2bZYxDhuTS6IqXlU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nXYn+P8OQrwu9P3f4K7G0ug1hT7+QGfHEzWTs/lAN5DSFFFYWu6FBiOvr06Xts/mQ
-         3qzxE1Nr31jlmNNvIbHS4hPcnBrPJW7F+ORGgtoTSnwokM9xTigMnOoJjoC+u3335B
-         2o/P9P/LYUa8LE2JPJa+k4hjCLUrEGetpEP0H1DPkKtdark8XDVz9SHg5DO3kdZByI
-         koGBiizop7a1ZNQJt2PijPssbshloMy5fHvNNfVAxoBx7J3jeqmv9NKO+qzy2qkWM7
-         dLBmchBvz63OE6vZh1jjyy0KFjLu41oS2cAfXoSYVy6d7NJ1JiDIzkY2hyWI+fDORS
-         K6yjyPvc5bxhw==
-Received: by mail-wr1-f46.google.com with SMTP id q8so15777477wra.12;
-        Sat, 08 Jan 2022 01:31:26 -0800 (PST)
-X-Gm-Message-State: AOAM532wNVb9wjoPNGZwVqb5NPsmMu4RNkLci8u06+/7QxMtxH7nml+a
-        MM/xrM/XqERqy1xf8FxT4HQMZ4GAfdDE156saBA=
-X-Google-Smtp-Source: ABdhPJxx2qmdR7NAzQD9V8jeJxYPy2vtISFzIOMS3FjflpBZ9EvhrL6zKLbCx5As2Kj2V3TQfjjrkP6hm71LtFvwKGk=
-X-Received: by 2002:a05:6000:154c:: with SMTP id 12mr57379330wry.447.1641634285039;
- Sat, 08 Jan 2022 01:31:25 -0800 (PST)
+        Sat, 8 Jan 2022 06:36:50 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC0EC061574;
+        Sat,  8 Jan 2022 03:36:49 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id a18so31430084edj.7;
+        Sat, 08 Jan 2022 03:36:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EYRn/Fp3acdQ41ODnQ1cE0XJd0M/Kvs9MRUomdtJDaw=;
+        b=OS3F2rWU17CcZI0zRB4Xfk3Z8cVgMU/A2YX9Bb3gW/AiFRn2Tqb97ZGj+NX5FxG8bz
+         KHw0/U+j74Asg2mDLQJePjhcACT86AlZD0MN0EPgc5ArBUHzBeTqJxBBBZwO5XIP0IHh
+         4i9nY28n0BQGALOEPdyPgcEPxOwlJWFLaN0mLhw4Uhq2StpyAPtS2fXD9TbUB/glyidA
+         CYBPdqhFQz0n45JCP1MbM79CNNO8eKpdj0Eo/DLYi8PlQR9gQtPJJd1eKZ7gUcFzU3nm
+         ueyqFnzq2a0ayxjTg5/5C88dE27Ywltsm5MZx1CN+H25dR4KqMr06qoS7lIX33Ueqk5p
+         aaog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EYRn/Fp3acdQ41ODnQ1cE0XJd0M/Kvs9MRUomdtJDaw=;
+        b=Jfzj1Q6cGlRG2onoQFaigHoqiEzw2WxLDvBjEYJhyff/kg8ah9WRl8SiEYRulKCZjz
+         JYv9U6lwtcDGKpPkYlsCLEyBt42+/F3Pb/YzhvRWlNBSHuCFkXecWJBjAsLTF/+WPz7k
+         6kyhLC3auKmKusOZAEjKOrPNJLLLGtIc7hAVUBcvZVdhIovBXawftbZLlPXhawnVQARd
+         GpHWzVH2lvfvLjuySelnPsNs9imTo4HpuY63MKJ/p6TrKJrn8f4F4pSGZGZRNxE1fmva
+         IC5rq0hb4kVQodN0KYXnz20OqI3fe1b/LG5B4ZBLsEd1SBYYL90XgL8JTADgiNoFvKKQ
+         2KRw==
+X-Gm-Message-State: AOAM533M7mai0O+fSP+tmfCFtrGf9d0t/H67vb4PqXysZbieNXTBNQXz
+        mdoMHy3JEYjYETKMqH+v7T+aO91aXsU5gHnaAqVN96SA5j8y2Q==
+X-Google-Smtp-Source: ABdhPJxPORkzyKOY44ccsJlQq+uFWr7Ezt47t6pPKg+cmSNUXdTnP9uu0M+OcNWvro3oIUcTVd4Z0xhN/U11GYQjpsY=
+X-Received: by 2002:a17:907:968c:: with SMTP id hd12mr5079745ejc.639.1641641808269;
+ Sat, 08 Jan 2022 03:36:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20220107232746.1540130-1-keescook@chromium.org>
-In-Reply-To: <20220107232746.1540130-1-keescook@chromium.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 8 Jan 2022 10:31:13 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFOqUuSUG=9g0Dd+m3yUfbtf7JG=CR2VP6i6AGXPPAa8Q@mail.gmail.com>
-Message-ID: <CAMj1kXFOqUuSUG=9g0Dd+m3yUfbtf7JG=CR2VP6i6AGXPPAa8Q@mail.gmail.com>
-Subject: Re: [PATCH] arm64: atomics: Dereference matching size
+References: <20220107232409.1331599-1-keescook@chromium.org>
+In-Reply-To: <20220107232409.1331599-1-keescook@chromium.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 8 Jan 2022 13:36:12 +0200
+Message-ID: <CAHp75VdqK7h63fz-cPaQ2MGaVdaR2f1Fb5kKCZidUG3RwLsAVA@mail.gmail.com>
+Subject: Re: [PATCH] eeprom: at25: Restore missing allocation
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jiri Prchal <jiri.prchal@aksignal.cz>,
+        Ralph Siemsen <ralph.siemsen@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -61,79 +66,91 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, 8 Jan 2022 at 00:28, Kees Cook <keescook@chromium.org> wrote:
+On Sat, Jan 8, 2022 at 1:01 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> When building with -Warray-bounds (which is desired to be enabled
-> globally), the following warning is generated:
+> Building under CONFIG_FORTIFY_SOURCE=y and -Warray-bounds complained about
+> strncpy() being used against an empty object. It turns out this was due to
+> the at25 allocation going missing during a conflict resolution. Restore
+> this, and while we're here take the opportunity to do another strncpy()
+> replacement, since it's use is deprecated[1].
 >
-> In file included from ./arch/arm64/include/asm/lse.h:16,
->                  from ./arch/arm64/include/asm/cmpxchg.h:14,
->                  from ./arch/arm64/include/asm/atomic.h:16,
->                  from ./include/linux/atomic.h:7,
->                  from ./include/asm-generic/bitops/atomic.h:5,
->                  from ./arch/arm64/include/asm/bitops.h:25,
->                  from ./include/linux/bitops.h:33,
->                  from ./include/linux/kernel.h:22,
->                  from kernel/printk/printk.c:22:
-> ./arch/arm64/include/asm/atomic_lse.h:247:9: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'atomic_t[1]' [-Warray-bounds]
->   247 |         asm volatile(                                                   \
->       |         ^~~
-> ./arch/arm64/include/asm/atomic_lse.h:266:1: note: in expansion of macro '__CMPXCHG_CASE'
->   266 | __CMPXCHG_CASE(w,  , acq_, 32,  a, "memory")
->       | ^~~~~~~~~~~~~~
-> kernel/printk/printk.c:3606:17: note: while referencing 'printk_cpulock_owner'
->  3606 | static atomic_t printk_cpulock_owner = ATOMIC_INIT(-1);
->       |                 ^~~~~~~~~~~~~~~~~~~~
+> Seen as:
 >
-> This is due to the compiler seeing an unsigned long * cast against
-> something (atomic_t) that is int sized. Replace the cast with the
-> matching size cast. This results in no change in binary output.
+> In function 'strncpy',
+>     inlined from 'at25_fw_to_chip.constprop' at drivers/misc/eeprom/at25.c:312:2:
+> ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
+>    48 | #define __underlying_strncpy    __builtin_strncpy
+>       |                                 ^
+> ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
+>    59 |         return __underlying_strncpy(p, q, size);
+>       |                ^~~~~~~~~~~~~~~~~~~~
+> In function 'strncpy',
+>     inlined from 'at25_fram_to_chip' at drivers/misc/eeprom/at25.c:373:2,
+>     inlined from 'at25_probe' at drivers/misc/eeprom/at25.c:453:10:
+> ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
+>    48 | #define __underlying_strncpy    __builtin_strncpy
+>       |                                 ^
+> ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
+>    59 |         return __underlying_strncpy(p, q, size);
+>       |                ^~~~~~~~~~~~~~~~~~~~
 >
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+
+Thanks!
+With or without the below comment being addressed
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Fixes: af40d16042d6 ("Merge v5.15-rc5 into char-misc-next")
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Jiri Prchal <jiri.prchal@aksignal.cz>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-
 > ---
->  arch/arm64/include/asm/atomic_lse.h | 2 +-
->  arch/arm64/include/asm/cmpxchg.h    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  drivers/misc/eeprom/at25.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-> index d955ade5df7c..5d460f6b7675 100644
-> --- a/arch/arm64/include/asm/atomic_lse.h
-> +++ b/arch/arm64/include/asm/atomic_lse.h
-> @@ -249,7 +249,7 @@ __lse__cmpxchg_case_##name##sz(volatile void *ptr,                  \
->         "       mov     %" #w "[tmp], %" #w "[old]\n"                   \
->         "       cas" #mb #sfx "\t%" #w "[tmp], %" #w "[new], %[v]\n"    \
->         "       mov     %" #w "[ret], %" #w "[tmp]"                     \
-> -       : [ret] "+r" (x0), [v] "+Q" (*(unsigned long *)ptr),            \
-> +       : [ret] "+r" (x0), [v] "+Q" (*(u##sz *)ptr),                    \
->           [tmp] "=&r" (tmp)                                             \
->         : [old] "r" (x1), [new] "r" (x2)                                \
->         : cl);                                                          \
-> diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
-> index f9bef42c1411..497acf134d99 100644
-> --- a/arch/arm64/include/asm/cmpxchg.h
-> +++ b/arch/arm64/include/asm/cmpxchg.h
-> @@ -243,7 +243,7 @@ static inline void __cmpwait_case_##sz(volatile void *ptr,          \
->         "       cbnz    %" #w "[tmp], 1f\n"                             \
->         "       wfe\n"                                                  \
->         "1:"                                                            \
-> -       : [tmp] "=&r" (tmp), [v] "+Q" (*(unsigned long *)ptr)           \
-> +       : [tmp] "=&r" (tmp), [v] "+Q" (*(u##sz *)ptr)                   \
->         : [val] "r" (val));                                             \
->  }
+> diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
+> index c3305bdda69c..1a19fa5728c8 100644
+> --- a/drivers/misc/eeprom/at25.c
+> +++ b/drivers/misc/eeprom/at25.c
+> @@ -309,7 +309,7 @@ static int at25_fw_to_chip(struct device *dev, struct spi_eeprom *chip)
+>         u32 val;
+>         int err;
 >
+> -       strncpy(chip->name, "at25", sizeof(chip->name));
+> +       strscpy(chip->name, "at25", sizeof(chip->name));
+>
+>         err = device_property_read_u32(dev, "size", &val);
+>         if (err)
+> @@ -370,7 +370,7 @@ static int at25_fram_to_chip(struct device *dev, struct spi_eeprom *chip)
+>         u8 id[FM25_ID_LEN];
+>         int i;
+>
+> -       strncpy(chip->name, "fm25", sizeof(chip->name));
+> +       strscpy(chip->name, "fm25", sizeof(chip->name));
+>
+>         /* Get ID of chip */
+>         fm25_aux_read(at25, id, FM25_RDID, FM25_ID_LEN);
+> @@ -440,6 +440,10 @@ static int at25_probe(struct spi_device *spi)
+>                 return -ENXIO;
+>         }
+>
+> +       at25 = devm_kzalloc(&spi->dev, sizeof(struct at25_data), GFP_KERNEL);
+
+I would use sizeof(*at25) but I think you restored the exact context.
+
+> +       if (!at25)
+> +               return -ENOMEM;
+> +
+>         mutex_init(&at25->lock);
+>         at25->spi = spi;
+>         spi_set_drvdata(spi, at25);
 > --
 > 2.30.2
 >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
