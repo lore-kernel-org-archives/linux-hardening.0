@@ -2,64 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176C4C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jan 2022 16:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D587BC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jan 2022 16:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236937AbiAJQHC (ORCPT
+        id S237047AbiAJQLr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 10 Jan 2022 11:07:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236935AbiAJQHC (ORCPT
+        Mon, 10 Jan 2022 11:11:47 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:42798 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236654AbiAJQLr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 10 Jan 2022 11:07:02 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B48C06173F;
-        Mon, 10 Jan 2022 08:07:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=B6V65xnVE+/ksl9Jg9xACdnGIOxOGXV3q9QJQLCOkuU=; b=RgcH6DWTW1PbwRaIAMDLji5Oyv
-        oa86BLd/mI3oc0gTa4yjMojxl071NbJEC9ozQmQ/caW3fuLgBfBa93IFBKmscMnEKlAkeiDMbMNCF
-        DPam5YHSzAbQ7OJL8InJ3OVxSe63Rz9t3q5j2GHbW5hwpYqfnx+Kz1qqKvTNYGblVK7Qt5eCb/QiK
-        83C5FEKWwMCtGnLqfKENX/cUtRGwpm/1jI2ErwRLtygHZ+0ZQbcQewuPqOo4RjeP9GxJIPYurBIHx
-        UC93LZgjBF95XtCWUEOkuXQXydj87l5lju9cbQkDUf7nPqNCyHhVOm2o4epPdyeSgogs9HbecafoT
-        ZX55gZcQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1n6xBp-000QCH-48; Mon, 10 Jan 2022 16:06:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 58214300079;
-        Mon, 10 Jan 2022 17:06:30 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3489B20244CDF; Mon, 10 Jan 2022 17:06:30 +0100 (CET)
-Date:   Mon, 10 Jan 2022 17:06:30 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        Mon, 10 Jan 2022 11:11:47 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D4A16B81661;
+        Mon, 10 Jan 2022 16:11:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614E3C36AE5;
+        Mon, 10 Jan 2022 16:11:43 +0000 (UTC)
+Date:   Mon, 10 Jan 2022 11:11:42 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Xiu Jianfeng <xiujianfeng@huawei.com>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
         bristot@redhat.com, gustavoars@kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH -next] sched: Use struct_size() helper in
  task_numa_group()
-Message-ID: <YdxZhsQ2NQ3dpUVR@hirez.programming.kicks-ass.net>
+Message-ID: <20220110111142.7900913e@gandalf.local.home>
+In-Reply-To: <YdxZhsQ2NQ3dpUVR@hirez.programming.kicks-ass.net>
 References: <20220107025212.177040-1-xiujianfeng@huawei.com>
+        <YdxZhsQ2NQ3dpUVR@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220107025212.177040-1-xiujianfeng@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 07, 2022 at 10:52:12AM +0800, Xiu Jianfeng wrote:
-> Make use of struct_size() helper instead of an open-coded calculation.
-> There is no functional change in this patch.
+On Mon, 10 Jan 2022 17:06:30 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Why ?!? This makes something that was trivial to read into something
-weird.
+> On Fri, Jan 07, 2022 at 10:52:12AM +0800, Xiu Jianfeng wrote:
+> > Make use of struct_size() helper instead of an open-coded calculation.
+> > There is no functional change in this patch.  
+> 
+> Why ?!? This makes something that was trivial to read into something
+> weird.
+
+Please take his last patch (which only modifies the update to size) and
+makes it more robust.
+
+  https://lore.kernel.org/all/20220110012354.144394-1-xiujianfeng@huawei.com/
+
+Which is much easier to read.
+
+We should really replace all open coded struct_size() code.
+
+-- Steve
