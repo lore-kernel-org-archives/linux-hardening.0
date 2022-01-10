@@ -2,63 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D587BC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jan 2022 16:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75073C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jan 2022 22:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237047AbiAJQLr (ORCPT
+        id S1345141AbiAJWFA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 10 Jan 2022 11:11:47 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:42798 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236654AbiAJQLr (ORCPT
+        Mon, 10 Jan 2022 17:05:00 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:23724 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1345138AbiAJWE4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 10 Jan 2022 11:11:47 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D4A16B81661;
-        Mon, 10 Jan 2022 16:11:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614E3C36AE5;
-        Mon, 10 Jan 2022 16:11:43 +0000 (UTC)
-Date:   Mon, 10 Jan 2022 11:11:42 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Xiu Jianfeng <xiujianfeng@huawei.com>, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, gustavoars@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH -next] sched: Use struct_size() helper in
- task_numa_group()
-Message-ID: <20220110111142.7900913e@gandalf.local.home>
-In-Reply-To: <YdxZhsQ2NQ3dpUVR@hirez.programming.kicks-ass.net>
-References: <20220107025212.177040-1-xiujianfeng@huawei.com>
-        <YdxZhsQ2NQ3dpUVR@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 10 Jan 2022 17:04:56 -0500
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20AJlWkx020711;
+        Mon, 10 Jan 2022 22:04:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2021-07-09;
+ bh=N7Dxf+DcwX9/Y/Jtfs2m8P2aqSA45sl7OZmw324ZcVA=;
+ b=E885sKdeaP/MrpylFeeO9IYgaE04mVwhv9KPEN6yflg9LGTC1+ntpkRfR5ZAlHr3IBMf
+ 3Wl21UuOOfsBMqgen3Yfbyb3Y5XIRGOH8UkotK8PJmgOyKFbUJXwAkM4a6lHhlz397b+
+ DVsvd9ARnJmelehoNHRdbNesb36QrQmDMhUuND6qlkgPEvwHNuaEJqnTQ1CTcrreuavY
+ STT/A4RSqdi4dySsciu5w4I+9eywhpS4yHm76mWPfvt/mM8+Rtu7awbOMsoIOYO9rcZI
+ Y7mr8MUC3dUJ6S8Dx6shBEdVWPMx9OLZu5FRfxfDHcGryRUgbyAtkOLXP78tEodaq3Qi cg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3dgmk99hhq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jan 2022 22:04:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20ALtw6V139092;
+        Mon, 10 Jan 2022 22:04:52 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 3df2e3vqwd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jan 2022 22:04:52 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 20AM4iCA174082;
+        Mon, 10 Jan 2022 22:04:52 GMT
+Received: from ca-mkp.mkp.ca.oracle.com (ca-mkp.ca.oracle.com [10.156.108.201])
+        by aserp3020.oracle.com with ESMTP id 3df2e3vqp8-7;
+        Mon, 10 Jan 2022 22:04:51 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-hardening@vger.kernel.org,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        megaraidlinux.pdl@broadcom.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][RESEND] scsi: megaraid: Avoid mismatched storage type sizes
+Date:   Mon, 10 Jan 2022 17:04:39 -0500
+Message-Id: <164182835586.13635.12443651708409705777.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220105173633.2421129-1-keescook@chromium.org>
+References: <20220105173633.2421129-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: wYHm0wyjssySoI76BHzSt0AUqnoe7zVd
+X-Proofpoint-ORIG-GUID: wYHm0wyjssySoI76BHzSt0AUqnoe7zVd
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 10 Jan 2022 17:06:30 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, 5 Jan 2022 09:36:33 -0800, Kees Cook wrote:
 
-> On Fri, Jan 07, 2022 at 10:52:12AM +0800, Xiu Jianfeng wrote:
-> > Make use of struct_size() helper instead of an open-coded calculation.
-> > There is no functional change in this patch.  
+> Remove needless use of mbox_t, replacing with just struct
+> mbox_out. Silences compiler warnings under a -Warray-bounds build:
 > 
-> Why ?!? This makes something that was trivial to read into something
-> weird.
+> drivers/scsi/megaraid.c: In function 'megaraid_probe_one':
+> drivers/scsi/megaraid.c:3615:30: error: array subscript 'mbox_t[0]' is partly outside array bounds of 'unsigned char[15]' [-Werror=array-bounds]
+>  3615 |         mbox->m_out.xferaddr = (u32)adapter->buf_dma_handle;
+>       |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/scsi/megaraid.c:3599:23: note: while referencing 'raw_mbox'
+>  3599 |         unsigned char raw_mbox[sizeof(struct mbox_out)];
+>       |                       ^~~~~~~~
+> 
+> [...]
 
-Please take his last patch (which only modifies the update to size) and
-makes it more robust.
+Applied to 5.17/scsi-queue, thanks!
 
-  https://lore.kernel.org/all/20220110012354.144394-1-xiujianfeng@huawei.com/
+[1/1] scsi: megaraid: Avoid mismatched storage type sizes
+      https://git.kernel.org/mkp/scsi/c/315d049ad195
 
-Which is much easier to read.
-
-We should really replace all open coded struct_size() code.
-
--- Steve
+-- 
+Martin K. Petersen	Oracle Linux Engineering
