@@ -2,75 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D88C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jan 2022 23:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14068C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jan 2022 00:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242836AbiAJXPs (ORCPT
+        id S242982AbiAKAcC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 10 Jan 2022 18:15:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241981AbiAJXPr (ORCPT
+        Mon, 10 Jan 2022 19:32:02 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:37112 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242941AbiAKAcC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 10 Jan 2022 18:15:47 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2785C06173F
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Jan 2022 15:15:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=gkLyQW+6Ycdwdc+pNLLo7lhLSJHZ64K0RTb7J06MeVI=; b=eUeTG0xNkuY1sWiCq8xs6o+qzL
-        ZknC/MqaeLBJOt/ELt02bb+ICarfDB97zD6FoOsY7CGypcinxzEgGSW142+kmCBzgWPtmIpNb7XME
-        u12tOhe2QWv9YxEt154MjEiv30jO8jsGuW/vbkNmHE+9CbK32TIvOHLfOmTIODMVMlolg3TWI0iHI
-        I9PW6215jJxlpSQ/dr4W8g4C/eiyxdn6ZhZHLmDrJp9agJ5pHvY2b6+7wd3awbK8jndQzsUYH9Cwc
-        2s/WGytDuXLoIos1HG6E12/IwMFKR+m4Vqc7GsbCCIhLnC/QHRErpc845QqJj2VeFaAuPC8Z9leUd
-        FwAubJZA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1n73sy-002nGD-AF; Mon, 10 Jan 2022 23:15:32 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 0/4] Assorted improvements to usercopy
-Date:   Mon, 10 Jan 2022 23:15:26 +0000
-Message-Id: <20220110231530.665970-1-willy@infradead.org>
-X-Mailer: git-send-email 2.31.1
+        Mon, 10 Jan 2022 19:32:02 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D9C33614D0;
+        Tue, 11 Jan 2022 00:32:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0192C36AE9;
+        Tue, 11 Jan 2022 00:31:59 +0000 (UTC)
+Date:   Mon, 10 Jan 2022 19:31:58 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Xiu Jianfeng <xiujianfeng@huawei.com>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, gustavoars@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH -next, v2] sched: Use struct_size() helper in
+ task_numa_group()
+Message-ID: <20220110193158.31e1eaea@gandalf.local.home>
+In-Reply-To: <Ydy3N577YD0JJr2N@hirez.programming.kicks-ass.net>
+References: <20220110012354.144394-1-xiujianfeng@huawei.com>
+        <Ydy3N577YD0JJr2N@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The HARDENED_USERCOPY_PAGESPAN config option is hard to turn on because
-much of the kernel uses non-compound high-order page allocations.
-This patchset extracts the valuable parts of HARDENED_USERCOPY_PAGESPAN
-and then removes the remainder.
+On Mon, 10 Jan 2022 23:46:15 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-v5:
- - Use get_vm_area_size() instead of ->size directly (Mark Hemment)
- - Rebase to current Linus (the slab merge changed a lot of code)
-v4:
- - Add the fourth patch to remove HARDENED_USERCOPY_PAGESPAN
-v3:
- - Remove a now-unused variable
-v2:
- - Prevent a NULL pointer dereference when a vmalloc-range pointer
-   doesn't have an associated allocation (me)
- - Report better offsets than "0" (Kees)
+> On Mon, Jan 10, 2022 at 09:23:54AM +0800, Xiu Jianfeng wrote:
+> > Make use of struct_size() helper instead of an open-coded calculation.
+> > There is no functional change in this patch.
+> > 
+> > Link: https://github.com/KSPP/linux/issues/160
+> > Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> > ---
+> >  kernel/sched/fair.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 095b0aa378df..af933a7f9e5d 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -2437,9 +2437,8 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
+> >  	int i;
+> >  
+> >  	if (unlikely(!deref_curr_numa_group(p))) {
+> > -		unsigned int size = sizeof(struct numa_group) +
+> > -				    NR_NUMA_HINT_FAULT_STATS *
+> > -				    nr_node_ids * sizeof(unsigned long);
+> > +		unsigned int size = struct_size(grp, faults,
+> > +						NR_NUMA_HINT_FAULT_STATS * nr_node_ids);  
+> 
+> Again, why?! The old code was perfectly readable, this, not so much.
 
-Matthew Wilcox (Oracle) (4):
-  mm/usercopy: Check kmap addresses properly
-  mm/usercopy: Detect vmalloc overruns
-  mm/usercopy: Detect large folio overruns
-  usercopy: Remove HARDENED_USERCOPY_PAGESPAN
+Because it is unsafe, and there is an effort to get rid of all open coded
+struct_size() code. Linus has told me to do the same with my code.
 
- arch/x86/include/asm/highmem.h   |  1 +
- include/linux/highmem-internal.h | 10 ++++
- mm/usercopy.c                    | 97 +++++++++-----------------------
- security/Kconfig                 | 13 +----
- 4 files changed, 39 insertions(+), 82 deletions(-)
+  https://lore.kernel.org/all/CAHk-=wiGWjxs7EVUpccZEi6esvjpHJdgHQ=vtUeJ5crL62hx9A@mail.gmail.com/
 
--- 
-2.33.0
+And to be honest, the new change is a lot easier to read than the original
+code.
 
+struct_size() lets you know the field "faults" and the number of elements.
+You don't need to know the size of "faults". Whereas the original code,
+how is that readable? From that code, how do you know what the
+sizeof(unsigned long) is for?
+
+-- Steve
