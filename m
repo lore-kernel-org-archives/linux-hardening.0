@@ -2,45 +2,42 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4B8C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jan 2022 19:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FF1C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jan 2022 19:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243316AbiAKTIf (ORCPT
+        id S236213AbiAKTcd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Jan 2022 14:08:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243166AbiAKTIf (ORCPT
+        Tue, 11 Jan 2022 14:32:33 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:46968 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236203AbiAKTcc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Jan 2022 14:08:35 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D70C06173F;
-        Tue, 11 Jan 2022 11:08:35 -0800 (PST)
+        Tue, 11 Jan 2022 14:32:32 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1C492B81D0D;
-        Tue, 11 Jan 2022 19:08:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D26E3C36AE3;
-        Tue, 11 Jan 2022 19:08:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5CEF061790;
+        Tue, 11 Jan 2022 19:32:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB5CC36AE3;
+        Tue, 11 Jan 2022 19:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641928112;
-        bh=dy0dLXK/jHyplFwGggXfIGmjaaHPWjJoW2Ch06lbWYo=;
+        s=k20201202; t=1641929551;
+        bh=hNjDIPGNlujdRSSf1NQl1cSefZrieuOyQlyWDWXEdgM=;
         h=Date:From:To:Cc:Subject:From;
-        b=twg7MIxF76JoxIXiMuGHZ3gwJ+FKFAN85pmsEsrcFZssN8URCI0dLZIVUxqvU1KMS
-         6099w54d7SSc2+PRtfeO3Zdjkmh3fzCPW4/BVlCUNFlD9XrXbZ+WbwwxGNqGjT4YVp
-         9KPmtxxmlk6qxyP0To1wH6SRYcPxnYugQ4hg/MD1F6Iwk7Utz9tgLJv198QYEoCkTW
-         J+DJUshJ1EFFG8Cxs2Lludt4AabfyC2O2LfnWG5OBCVnTE9dMOnz8qyvZtCiMcYsbz
-         JVpwyilVcX8uLH9v6Vb+aE03wPfTBHbYvJwiotyPm7ceqt1rqM/wZZMi31sPAl1U2h
-         SQ9xYf0UKN1Uw==
-Date:   Tue, 11 Jan 2022 13:14:56 -0600
+        b=uqQF/MTxMsB8G39DUL/jWy1HBonrCwkf43V3fACYidyPbQ0CQEnzCt3FbvZuMF5fX
+         7HSLfmxBuqPvnNhoSBJmOi7JIgSP+hd8mYTO2hn+II2JMuHvgnuuM23w447Ge2IDFn
+         hyl4jwdgevv1jCj2FUmFnXjuz/8b9EY5weU6fHsKFHbse7SCPnb6cCLxveqYjOtBfY
+         Kx7INo1U0HURapy2STfgTip8pb5cZk4KnzL1RcEcQi+7tYudw/PCxXxoaC3+rJ4dxP
+         /ewj0l+L8oyjP8C2UquPZ0eF0BScz0gs/A53jjIjyZF/etNPLZph4x31AMH905CYWk
+         M3Asjwe1wmQ2g==
+Date:   Tue, 11 Jan 2022 13:38:55 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [GIT PULL] fallthrough fixes for Clang for 5.17-rc1
-Message-ID: <20220111191456.GA11976@embeddedor>
+Subject: [GIT PULL] Enable -Wcast-function-type for 5.17-rc1
+Message-ID: <20220111193855.GA13612@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -48,25 +45,29 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The following changes since commit 136057256686de39cc3a07c2e39ef6bc43003ff6:
+The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
 
-  Linux 5.16-rc2 (2021-11-21 13:47:39 -0800)
+  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/fallthrough-fixes-clang-5.17-rc1
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wcast-function-type-5.17-rc1
 
-for you to fetch changes up to ceec16f8fd660c7827e72aec74021f1acc1f7240:
+for you to fetch changes up to 552a23a0e5d0a84cecd4687043d8030673981d30:
 
-  fbdev: sh7760fb: document fallthrough cases (2021-11-22 18:43:20 -0600)
+  Makefile: Enable -Wcast-function-type (2021-11-15 13:45:12 -0600)
 
 ----------------------------------------------------------------
-fallthrough fixes for Clang for 5.17-rc1
+Enable -Wcast-function-type
 
 Hi Linus,
 
-Please, pull the following patches that fix some fall-through warnings
-when building with Clang and -Wimplicit-fallthrough.
+Please, pull the following patch that globally enables
+-Wcast-function-type.
+
+We need to make sure new function cast mismatches are not
+introduced in the kernel in order to avoid tripping CFI
+checking.
 
 Thanks!
 --
@@ -74,11 +75,7 @@ Gustavo
 
 ----------------------------------------------------------------
 Gustavo A. R. Silva (1):
-      MIPS: mm: tlbex: Fix fall-through warning for Clang
+      Makefile: Enable -Wcast-function-type
 
-Randy Dunlap (1):
-      fbdev: sh7760fb: document fallthrough cases
-
- arch/mips/mm/tlbex.c           | 1 +
- drivers/video/fbdev/sh7760fb.c | 2 ++
- 2 files changed, 3 insertions(+)
+ Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
