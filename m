@@ -2,82 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB62C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jan 2022 07:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19080C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jan 2022 11:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348651AbiAKHsv (ORCPT
+        id S1349486AbiAKLbJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Jan 2022 02:48:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49440 "EHLO
+        Tue, 11 Jan 2022 06:31:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235691AbiAKHsu (ORCPT
+        with ESMTP id S1349484AbiAKLbJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Jan 2022 02:48:50 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EAA6C06173F;
-        Mon, 10 Jan 2022 23:48:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4BADEB81616;
-        Tue, 11 Jan 2022 07:48:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3CABC36AE9;
-        Tue, 11 Jan 2022 07:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641887328;
-        bh=9JOkw+VWeYPNxcZNuDRsaZ8ozRwtIHSZxm6gsaTaUyI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TNhvLTHpyAAJ3FnB3MXuQ//gM8c7OGEdO7A+CY2p73E14yUWFwNWAZlkq6+jyX7v4
-         ZVG5rxR3LjTDnrqn1zbTHqCkeckZJhnMPsfvZ0iRPUVqYT8hKXCU+FRPl2xQ6JQWj+
-         P1g72VEsjI2gShpXVyZbxW8Yekk7u0gU2m3c/OedeEUXcyqJeEd6NRtND6Fzo78vXi
-         pu6IhJ2LJO+yVyi8Ip9Jgvwh2vOqhTqut+59fROvHi8bOA1aj7EkEG4KZfE+k2Rn/9
-         mIoGVgoFhuMTE54icuSnZqCDnFXtNRGP/SCWhnHMuf6rGHVpB/IkwowJsNplXsL9Lx
-         /Jh4SDlZBjr+Q==
-Date:   Tue, 11 Jan 2022 01:55:13 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] usb: dwc2: Use flex_array_size() helper
-Message-ID: <20220111075513.GA76424@embeddedor>
+        Tue, 11 Jan 2022 06:31:09 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DAEC06173F;
+        Tue, 11 Jan 2022 03:31:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7+j+AxKostCxVUtXLZt7JDj+KZ88UAuuQ1PDCxlP8hs=; b=dGAndzN2gj9PDgu88wWrGeBQ0K
+        p9d9PTKyO0my3R4SYNnYNovGZyA9hXogQzdIo0H7dfkVLJQcLF8tql5VgEmCCNTzujVad5+fRmDfl
+        GxCdFJ+fJDKkheapfviCTJPFXk2VUmZSSJPq/1N3I1fFl93H4NfNFZbHqERgjtrrZug70tSHCARjm
+        DKw75CfgLtjbV2+2uPSavB05qgp1J0c9Vl9twyiD0T8Pi2YYwKS9Eok0KevWd2oaKB6CxraMr+Ao2
+        PvSAeMbXM/qacraFN7mKhkqvTAVWA+TmqaPdaEXaGJF3uOkpUK59yRKm29gX26LGDtATQZq0qG5z4
+        4YeAIWiA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1n7FMR-000bDY-Mg; Tue, 11 Jan 2022 11:30:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 94D033000E6;
+        Tue, 11 Jan 2022 12:30:42 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6E8C2201BD824; Tue, 11 Jan 2022 12:30:42 +0100 (CET)
+Date:   Tue, 11 Jan 2022 12:30:42 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Xiu Jianfeng <xiujianfeng@huawei.com>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, gustavoars@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH -next, v2] sched: Use struct_size() helper in
+ task_numa_group()
+Message-ID: <Yd1qYsFcgcp/uHSa@hirez.programming.kicks-ass.net>
+References: <20220110012354.144394-1-xiujianfeng@huawei.com>
+ <Ydy3N577YD0JJr2N@hirez.programming.kicks-ass.net>
+ <20220110193158.31e1eaea@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20220110193158.31e1eaea@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the flex_array_size() helper to calculate the size of a
-flexible array member within an enclosing structure.
+On Mon, Jan 10, 2022 at 07:31:58PM -0500, Steven Rostedt wrote:
+> On Mon, 10 Jan 2022 23:46:15 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Mon, Jan 10, 2022 at 09:23:54AM +0800, Xiu Jianfeng wrote:
+> > > Make use of struct_size() helper instead of an open-coded calculation.
+> > > There is no functional change in this patch.
+> > > 
+> > > Link: https://github.com/KSPP/linux/issues/160
+> > > Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> > > ---
+> > >  kernel/sched/fair.c | 5 ++---
+> > >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index 095b0aa378df..af933a7f9e5d 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -2437,9 +2437,8 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
+> > >  	int i;
+> > >  
+> > >  	if (unlikely(!deref_curr_numa_group(p))) {
+> > > -		unsigned int size = sizeof(struct numa_group) +
+> > > -				    NR_NUMA_HINT_FAULT_STATS *
+> > > -				    nr_node_ids * sizeof(unsigned long);
+> > > +		unsigned int size = struct_size(grp, faults,
+> > > +						NR_NUMA_HINT_FAULT_STATS * nr_node_ids);  
+> > 
+> > Again, why?! The old code was perfectly readable, this, not so much.
+> 
+> Because it is unsafe,
 
-This helper offers defense-in-depth against potential integer
-overflows, while at the same time makes it explicitly clear that
-we are dealing with a flexible array member.
+Unsafe how? Changelog doesn't mention anything, nor do you. In fact,
+Changelog says there is no functional change, which makes me hate the
+thing for obscuring something that was simple.
 
-Link: https://github.com/KSPP/linux/issues/160
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/usb/dwc2/hcd.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> And to be honest, the new change is a lot easier to read than the original
+> code.
 
-diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-index f63a27d11fac..2c21498662cd 100644
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -4054,8 +4054,9 @@ struct dwc2_tt *dwc2_host_get_tt_info(struct dwc2_hsotg *hsotg, void *context,
- 			 * For single_tt we need one schedule.  For multi_tt
- 			 * we need one per port.
- 			 */
--			bitmap_size = DWC2_ELEMENTS_PER_LS_BITMAP *
--				      sizeof(dwc_tt->periodic_bitmaps[0]);
-+			bitmap_size =
-+				flex_array_size(dwc_tt, periodic_bitmaps,
-+						DWC2_ELEMENTS_PER_LS_BITMAP);
- 			if (urb->dev->tt->multi)
- 				bitmap_size *= urb->dev->tt->hub->maxchild;
- 
--- 
-2.27.0
-
+I find it the other way around, because now I need to find and untangle
+the unholy mess that is struct_size(), whereas currently it is trivial
+C.
