@@ -2,70 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40E2C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jan 2022 18:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4B8C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jan 2022 19:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344644AbiAKSTH (ORCPT
+        id S243316AbiAKTIf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Jan 2022 13:19:07 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:48949 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1344537AbiAKSTF (ORCPT
+        Tue, 11 Jan 2022 14:08:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243166AbiAKTIf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Jan 2022 13:19:05 -0500
-Received: (qmail 209967 invoked by uid 1000); 11 Jan 2022 13:19:04 -0500
-Date:   Tue, 11 Jan 2022 13:19:04 -0500
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] usb: host: ehci-sched: Use struct_size() in
- kzalloc()
-Message-ID: <Yd3KGMSb7vBIwH+j@rowland.harvard.edu>
-References: <20220111075427.GA76390@embeddedor>
+        Tue, 11 Jan 2022 14:08:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D70C06173F;
+        Tue, 11 Jan 2022 11:08:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1C492B81D0D;
+        Tue, 11 Jan 2022 19:08:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D26E3C36AE3;
+        Tue, 11 Jan 2022 19:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641928112;
+        bh=dy0dLXK/jHyplFwGggXfIGmjaaHPWjJoW2Ch06lbWYo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=twg7MIxF76JoxIXiMuGHZ3gwJ+FKFAN85pmsEsrcFZssN8URCI0dLZIVUxqvU1KMS
+         6099w54d7SSc2+PRtfeO3Zdjkmh3fzCPW4/BVlCUNFlD9XrXbZ+WbwwxGNqGjT4YVp
+         9KPmtxxmlk6qxyP0To1wH6SRYcPxnYugQ4hg/MD1F6Iwk7Utz9tgLJv198QYEoCkTW
+         J+DJUshJ1EFFG8Cxs2Lludt4AabfyC2O2LfnWG5OBCVnTE9dMOnz8qyvZtCiMcYsbz
+         JVpwyilVcX8uLH9v6Vb+aE03wPfTBHbYvJwiotyPm7ceqt1rqM/wZZMi31sPAl1U2h
+         SQ9xYf0UKN1Uw==
+Date:   Tue, 11 Jan 2022 13:14:56 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [GIT PULL] fallthrough fixes for Clang for 5.17-rc1
+Message-ID: <20220111191456.GA11976@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220111075427.GA76390@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 11, 2022 at 01:54:27AM -0600, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version,
-> in order to avoid any potential type mistakes or integer overflows that,
-> in the worse scenario, could lead to heap overflows.
-> 
-> Also, address the following sparse warning:
-> drivers/usb/host/ehci-sched.c:1168:40: warning: using sizeof on a flexible structure
-> 
-> Link: https://github.com/KSPP/linux/issues/160
-> Link: https://github.com/KSPP/linux/issues/174
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
+The following changes since commit 136057256686de39cc3a07c2e39ef6bc43003ff6:
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+  Linux 5.16-rc2 (2021-11-21 13:47:39 -0800)
 
->  drivers/usb/host/ehci-sched.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ehci-sched.c b/drivers/usb/host/ehci-sched.c
-> index 0f85aa9b2fb1..bd542b6fc46b 100644
-> --- a/drivers/usb/host/ehci-sched.c
-> +++ b/drivers/usb/host/ehci-sched.c
-> @@ -1165,10 +1165,8 @@ static struct ehci_iso_sched *
->  iso_sched_alloc(unsigned packets, gfp_t mem_flags)
->  {
->  	struct ehci_iso_sched	*iso_sched;
-> -	int			size = sizeof(*iso_sched);
->  
-> -	size += packets * sizeof(struct ehci_iso_packet);
-> -	iso_sched = kzalloc(size, mem_flags);
-> +	iso_sched = kzalloc(struct_size(iso_sched, packet, packets), mem_flags);
->  	if (likely(iso_sched != NULL))
->  		INIT_LIST_HEAD(&iso_sched->td_list);
->  
-> -- 
-> 2.27.0
-> 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/fallthrough-fixes-clang-5.17-rc1
+
+for you to fetch changes up to ceec16f8fd660c7827e72aec74021f1acc1f7240:
+
+  fbdev: sh7760fb: document fallthrough cases (2021-11-22 18:43:20 -0600)
+
+----------------------------------------------------------------
+fallthrough fixes for Clang for 5.17-rc1
+
+Hi Linus,
+
+Please, pull the following patches that fix some fall-through warnings
+when building with Clang and -Wimplicit-fallthrough.
+
+Thanks!
+--
+Gustavo
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      MIPS: mm: tlbex: Fix fall-through warning for Clang
+
+Randy Dunlap (1):
+      fbdev: sh7760fb: document fallthrough cases
+
+ arch/mips/mm/tlbex.c           | 1 +
+ drivers/video/fbdev/sh7760fb.c | 2 ++
+ 2 files changed, 3 insertions(+)
