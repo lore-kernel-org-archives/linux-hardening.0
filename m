@@ -2,149 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8077FC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93514C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357613AbiALUXG (ORCPT
+        id S232991AbiALUe7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jan 2022 15:23:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45692 "EHLO
+        Wed, 12 Jan 2022 15:34:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357599AbiALUXC (ORCPT
+        with ESMTP id S231593AbiALUe7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jan 2022 15:23:02 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CDAC06173F
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:23:01 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id l16-20020a17090a409000b001b2e9628c9cso7174928pjg.4
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:23:01 -0800 (PST)
+        Wed, 12 Jan 2022 15:34:59 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD1DBC061748
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:34:58 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id h1so5882444pls.11
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:34:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kyeO5jAOJdChlXYzuArHFJYM20XwVYT6ewBuU6tSnEk=;
-        b=iU/HPNlmqwZKQb1EGerVoy9HMT4JRzhQA58pLUj1JB2yD/8TPMS1TcZad/aGIyHZ/I
-         peueVi6maGSvxJY/JMUl3CDVK5GVntK6yC9YNxZAzoMbsutxp+cSQww8TI42dbu2ejOP
-         nCaka1sP3E6c3TFAKS2RQ6jU7DOnBpUFUE2Vw=
+        bh=6jDDgCX9OvErfDo0sNKvxQeO5BPJwOLC25cUpXEISow=;
+        b=WEJrrjrDGKgN6WKHJvR22ZzEZZYMQWoAuiJsHjNOTmPXQJJM1hu50yzxEL2mJwbKMj
+         kuskicM94dyirD2g8djy+mSjkwiuI3j9CnWbgRKPQvN1iuQGg4CRo9t+MpCQ1+Tljajt
+         Upm8H14dDk9BxCalC9yifPIz7zZZlHSVS3pNs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kyeO5jAOJdChlXYzuArHFJYM20XwVYT6ewBuU6tSnEk=;
-        b=nblfXT6jjW0vnqddzOUf35dI3IQpmgrAYGopy8pnppyK74kFByc6QNv9MRNRvgI4/L
-         BM098zvIkXnl9k6ZK3y2QD1JVJytcnvIMAsoSpmwABIEtflsRcBXPEIPCvOWSZI4PsyS
-         dv0p2ClKntVrB9kcFdKEcN5rU4xdbVlHzDAYRzpOnxfATEL1Q9aRwGsIUcFYV4G7wpZr
-         vcybZ7QyFXQJVexmnjHe2bHhP3fxdGG4GSwJd1AMq25jLF8vQ4ZRTZ+98Silm+BG7KYo
-         fnHNHGvyM7C0f0JGrSLMuVn3J2QUYMPf6OQqlK9xb/k6Gsx9457RfFa98/mINitCxuWX
-         17YQ==
-X-Gm-Message-State: AOAM533H0vig6wNkqQCQGHa4FRioJMKsjkq9ou8vsc7Au3SIN+OhE8rA
-        qkN9WpimINAlZsJqBOq9MBfOJw==
-X-Google-Smtp-Source: ABdhPJyZjdTV0zXe3g3zFlkAMX8/LEfO88nLyAZVfDyT0b2SaHPprLA/iniwsIk7PogBpr+ZJLJaPw==
-X-Received: by 2002:aa7:8394:0:b0:4be:ab79:fcfa with SMTP id u20-20020aa78394000000b004beab79fcfamr964541pfm.3.1642018981496;
-        Wed, 12 Jan 2022 12:23:01 -0800 (PST)
+        bh=6jDDgCX9OvErfDo0sNKvxQeO5BPJwOLC25cUpXEISow=;
+        b=S2QuElbjc9J5GSEZ8Kt0lKNDQWLHTVXcgN1b7ZMfYbLsy0VsuWAn3T5uaGXpdNtCmH
+         NPyyJh2WI1ujCuAE8Em9rQFnEy03TPrxEcvfdy5pNolQ1YpWC+vYtTV4U7dVCKfOm6M0
+         4GtN8Ik7EW1YfZSDcenG9E/BFAyXoQDVcLKwyjd7ijxAKiIb4B8wElSV8JwsaJ/Eqgnq
+         omu68vfuDYJ6dx+0vTZo9lfJo/I3+j1PjnWvDIV0o0viShLenu5g9KdiDl7R8PCj9ASD
+         myUuy6itPwKC1rJjm4Zf4rCHh+e6fgg6aTD1/sKrv5fiG6W4A2g56BineEH+tCjW0VVX
+         WxYw==
+X-Gm-Message-State: AOAM532UUG2oCgHJsXB99TNId9CVt3U4pYq+pyDfF7qbif9r9FvTLY74
+        lrRtxNFSxtaqzXH3NbvslEHSIg==
+X-Google-Smtp-Source: ABdhPJyc986VGK1/tWy2VwCYPK+iZqHGOPSkQ8Ke2/L3TXwh0uC6VuS/ix0bPpwYTXODQDwren+DvQ==
+X-Received: by 2002:aa7:85c7:0:b0:4bc:ac23:64a2 with SMTP id z7-20020aa785c7000000b004bcac2364a2mr1069592pfn.20.1642019698324;
+        Wed, 12 Jan 2022 12:34:58 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p32sm431337pgb.49.2022.01.12.12.23.01
+        by smtp.gmail.com with ESMTPSA id om3sm6560331pjb.49.2022.01.12.12.34.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 12:23:01 -0800 (PST)
+        Wed, 12 Jan 2022 12:34:58 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
+To:     Lars-Peter Clausen <lars@metafoo.de>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] arm64: atomics: lse: Dereference matching size
-Date:   Wed, 12 Jan 2022 12:22:59 -0800
-Message-Id: <20220112202259.3950286-1-keescook@chromium.org>
+Subject: [PATCH v2] iio: addac: ad74413r: Do not reference negative array offsets
+Date:   Wed, 12 Jan 2022 12:34:56 -0800
+Message-Id: <20220112203456.3950884-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3442; h=from:subject; bh=oOwW4jx5gA/RGKQRqzif6SbAYCT+soAWNmUjugUOT3Q=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh3zii9PBOaz2aBemP1Fh4uV3xUdnNVoe/fhkMFASn 7GenXEqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYd84ogAKCRCJcvTf3G3AJjf0D/ 0ak4X2+4espIyHP4TJxhJvqzKcmq0KaWjrbazHS1CEMseM7st+naGnUA5rL8Nac5xpRu1H4775aW+4 L5cNTC60OQjRw2jtaPqDT1KmnXkowS/M9IHCiysyo7wwraZ3nuFBu04NS9ml6zmQFYIRAi45E9K5MX WJyXuLK9vIJ7p2okyrTFRrVZqWx0J/6jAKD8wmRtvfOKI7rdAX7gVo1Mz6Vn1r8NjRTYOK9eCSNnyq U9OwPBjtwAZ3GGHoLrvgYzq4rHia/ieeIVXtIhwFisEx7FA8EPMFw+S+xG0tE55U0UboLSxrX1CKjA WrYnD3oLHycHNUNeU4vJpW38iPz1sgjdp7tNna26b5aj7BHxfj74+0Pnzh/bI7wS17Ajg1xOlj+ClF 88J9t6a3B9OLPfrpt2/pULrnIVd6ljldIs81LX1uUo1tScnRL7dwRMcUfHvZ1xpbLSgTP5V4lQPpcA GvdlszxX57MWWpclWmJYM9l4PnbPiQGqavWY/CtzCiAUPIEnqtiALBKcEVg0zgfh21YXHdWQGL0VpT octk58wMrCEweFPCqc+CGllKr1h2YdEi9FJ/mbcZEpujNmiUKzhSAVzD8i96GZ3YK6tbuO+KzMGLXj CzfhgWnxJr9/jsT9YIgwof8zQF2flazZyuSOrhLuMlZ2LSrz6a1vwmQZ2BKw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2254; h=from:subject; bh=T/VuYtrE+Zt/PY/+kp4xexy+JkQW2hb1pk9GvgcIsOs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh3ztv7XuKKcljesSZX4Nm689wxj+gHrJWsAVcQijC JPh7ZrGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYd87bwAKCRCJcvTf3G3AJu3DD/ 4qVt7NtX1kbPTQ6jg8hM60eZkMdnsSM455gEWBym18G3rPYTM/wOUQXJ66qL9o88an8M4aGT+eWyXo pTibOQuTpb+e/8kn1qzw/a/bWjYIXv6W+/gpDYIhoe21V74qp1mqmkr/m0Dkuynbalhoq6Lhvuesty 2/qbxwSh4SldgirghIV6mA3zqLcd6qsVuSEF2vtq7JtAw92YRof4AMXLv2FyPUMFsMpPy7lOg+5NMF z6Af/vEq9plw41Iw1Ubgh41JBl3zkRJbHN8PshqrkAwE02qzE5NDtHhXr6QXNP8WcYSQL2c7QuICb7 FvRfgg0JvBQgutuw9W2q197GL4oYIKRHZ5hxcouqZHwdnUHQmxzF1dDzZGhXaGe/7YtW7BLzUeBlfA petKfrz1IHl95Mth9ZMinCcZmdIc3y8ojuU5/RUD7ej3Mw/oVxMoJ2uXI20OhVjG62Y+B/e8Rmtb2A A9D/c1IqtoSwssLUX39UXzNJk/z8aYH6khqc8BGKVrVp3ZytYDFh8q0oMkULvXyBJpCUtB0TBADy4b zn1sEEqMUYcK31VF6NeKNYFzPdB4Ed3gvmZHW51xG8GpFoVzn1GjQnFNO7rfDE19J3PbWuTUO/dEtm X0L730AOgjU4Zdchml3N/3mVJ5iLP6diCvN+8TZbUEEjTkIWrWfIRee8R1vQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When building with -Warray-bounds, the following warning is generated:
+Instead of aiming rx_buf at an invalid array-boundary-crossing location,
+just skip the first increment. Seen when building with -Warray-bounds:
 
-In file included from ./arch/arm64/include/asm/lse.h:16,
-                 from ./arch/arm64/include/asm/cmpxchg.h:14,
-                 from ./arch/arm64/include/asm/atomic.h:16,
-                 from ./include/linux/atomic.h:7,
-                 from ./include/asm-generic/bitops/atomic.h:5,
-                 from ./arch/arm64/include/asm/bitops.h:25,
-                 from ./include/linux/bitops.h:33,
-                 from ./include/linux/kernel.h:22,
-                 from kernel/printk/printk.c:22:
-./arch/arm64/include/asm/atomic_lse.h:247:9: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'atomic_t[1]' [-Warray-bounds]
-  247 |         asm volatile(                                                   \
-      |         ^~~
-./arch/arm64/include/asm/atomic_lse.h:266:1: note: in expansion of macro '__CMPXCHG_CASE'
-  266 | __CMPXCHG_CASE(w,  , acq_, 32,  a, "memory")
-      | ^~~~~~~~~~~~~~
-kernel/printk/printk.c:3606:17: note: while referencing 'printk_cpulock_owner'
- 3606 | static atomic_t printk_cpulock_owner = ATOMIC_INIT(-1);
-      |                 ^~~~~~~~~~~~~~~~~~~~
+drivers/iio/addac/ad74413r.c: In function 'ad74413r_update_scan_mode':
+drivers/iio/addac/ad74413r.c:843:22: warning: array subscript -4 is below array bounds of 'u8[16]' { aka 'unsigned char[16]'} [-Warray-bounds]
+  843 |         u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 * AD74413R_FRAME_SIZE];
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/iio/addac/ad74413r.c:84:20: note: while referencing 'rx_buf'
+   84 |                 u8 rx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX];
+      |                    ^~~~~~
 
-This is due to the compiler seeing an unsigned long * cast against
-something (atomic_t) that is int sized. Replace the cast with the
-matching size cast. This results in no change in binary output.
-
-Note that __ll_sc__cmpxchg_case_##name##sz already uses the same
-constraint:
-
-	[v] "+Q" (*(u##sz *)ptr
-
-Which is why only the LSE form needs updating and not the
-LL/SC form, so this change is unlikely to be problematic.
-
-Cc: Will Deacon <will@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org
+Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
+Reviewed-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-v1: https://lore.kernel.org/linux-hardening/20220107232746.1540130-1-keescook@chromium.org/
+v1: https://lore.kernel.org/linux-hardening/20220105180214.2435001-1-keescook@chromium.org/
 v2:
- - add Acks
- - note the existing LL/SC form
+ - Update commit Subject prefix
+ - add Reviewed-by
 ---
- arch/arm64/include/asm/atomic_lse.h | 2 +-
- arch/arm64/include/asm/cmpxchg.h    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/addac/ad74413r.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-index d955ade5df7c..5d460f6b7675 100644
---- a/arch/arm64/include/asm/atomic_lse.h
-+++ b/arch/arm64/include/asm/atomic_lse.h
-@@ -249,7 +249,7 @@ __lse__cmpxchg_case_##name##sz(volatile void *ptr,			\
- 	"	mov	%" #w "[tmp], %" #w "[old]\n"			\
- 	"	cas" #mb #sfx "\t%" #w "[tmp], %" #w "[new], %[v]\n"	\
- 	"	mov	%" #w "[ret], %" #w "[tmp]"			\
--	: [ret] "+r" (x0), [v] "+Q" (*(unsigned long *)ptr),		\
-+	: [ret] "+r" (x0), [v] "+Q" (*(u##sz *)ptr),			\
- 	  [tmp] "=&r" (tmp)						\
- 	: [old] "r" (x1), [new] "r" (x2)				\
- 	: cl);								\
-diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
-index f9bef42c1411..497acf134d99 100644
---- a/arch/arm64/include/asm/cmpxchg.h
-+++ b/arch/arm64/include/asm/cmpxchg.h
-@@ -243,7 +243,7 @@ static inline void __cmpwait_case_##sz(volatile void *ptr,		\
- 	"	cbnz	%" #w "[tmp], 1f\n"				\
- 	"	wfe\n"							\
- 	"1:"								\
--	: [tmp] "=&r" (tmp), [v] "+Q" (*(unsigned long *)ptr)		\
-+	: [tmp] "=&r" (tmp), [v] "+Q" (*(u##sz *)ptr)			\
- 	: [val] "r" (val));						\
- }
+diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
+index 5271073bb74e..aba9a643a4ca 100644
+--- a/drivers/iio/addac/ad74413r.c
++++ b/drivers/iio/addac/ad74413r.c
+@@ -840,7 +840,7 @@ static int ad74413r_update_scan_mode(struct iio_dev *indio_dev,
+ {
+ 	struct ad74413r_state *st = iio_priv(indio_dev);
+ 	struct spi_transfer *xfer = st->adc_samples_xfer;
+-	u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 * AD74413R_FRAME_SIZE];
++	u8 *rx_buf = st->adc_samples_buf.rx_buf;
+ 	u8 *tx_buf = st->adc_samples_tx_buf;
+ 	unsigned int channel;
+ 	int ret = -EINVAL;
+@@ -894,9 +894,10 @@ static int ad74413r_update_scan_mode(struct iio_dev *indio_dev,
  
+ 		spi_message_add_tail(xfer, &st->adc_samples_msg);
+ 
+-		xfer++;
+ 		tx_buf += AD74413R_FRAME_SIZE;
+-		rx_buf += AD74413R_FRAME_SIZE;
++		if (xfer != st->adc_samples_xfer)
++			rx_buf += AD74413R_FRAME_SIZE;
++		xfer++;
+ 	}
+ 
+ 	xfer->rx_buf = rx_buf;
 -- 
 2.30.2
 
