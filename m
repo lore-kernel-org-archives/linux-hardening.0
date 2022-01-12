@@ -2,172 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34357C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23106C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357698AbiALUlk (ORCPT
+        id S1357763AbiALUuB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jan 2022 15:41:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49770 "EHLO
+        Wed, 12 Jan 2022 15:50:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357700AbiALUl3 (ORCPT
+        with ESMTP id S1357782AbiALUtP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jan 2022 15:41:29 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCBC0C061748
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:41:28 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id i8-20020a17090a138800b001b3936fb375so14674499pja.1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:41:28 -0800 (PST)
+        Wed, 12 Jan 2022 15:49:15 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67692C061759
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:49:15 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id pf13so7536215pjb.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:49:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=HNujz4kMn/4ZYTwXUR+Cc+AqJUJ4Ie/adlWgWAXYdZk=;
-        b=SmJAOBbclolNCR4/WQY3wyRsLI85oupsTeOu9LOt9vSC5HiQAMxNXfzvA7yy3FBCGB
-         35X6KTCaN31AAH6idR4U8F7uMgnqLiGqgGWsrmjEPPmLzriTAUcLerL8wEkUYje3WbHR
-         uM5yTYIoJrmMhJUCdoWwnqh8mvprQEZEm9S/o=
+        bh=7W9xjq/mp4aCvm206IRSxrwEOD/OCQl74SQ0cZUg6Zk=;
+        b=G3BfIgpjh8dLLN9x19avToNGSRfF/ePsf9nlDhPAc0Ehj3HS5/gMO/ZXBJxrXL201M
+         +DW1BQ1fSpf8G9JpajYzKjS7Ofsy4kTGeWUF1yCcL4lszLSl0wx9Ok6rPUAGhaII5Kfx
+         /FLCIJVVW9fE4ObKwgK7nNjhDytHcS1l5nc2g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=HNujz4kMn/4ZYTwXUR+Cc+AqJUJ4Ie/adlWgWAXYdZk=;
-        b=ec9qjpM+yennZAEv/Pa2PcStoCO+ldX1cq2pGvwp1QuCbfmjmG3bbp/Y5KWB87/TVA
-         ZAu7cIRsuBhCZ59tu7QeDCFSu8aKxISEODvnatj1jtSyONKCtCH2iCZ+P9iQ3MDQRU3M
-         3Z9i+me4MejNJbde76iYFxXQhsDcRBF38K8dDqjHH/uZ8FKroBc0YrNrYKCLHKmMLqzR
-         zO84fXso7AGPqdeCPnZBgb8gmP3jeUTNGxG2felxUf280nsAX1IBYaghqISscztLbIUv
-         aLZSKnu/0IHz0xC9Qh4srD7om+jEcCRzjeJ76o8cLVu6u91IlomHAip8JfszreXGCJR3
-         eYjA==
-X-Gm-Message-State: AOAM5337hVqu8/g7EC1NrkqSkEvY8z+vqteu7NNmqk9VkZMzVLJvZCUw
-        AXX4STEnBgJWNXSpmuEhRgqysw==
-X-Google-Smtp-Source: ABdhPJxGbGIvRCR4uqhdWUJhCVeb456pVbNeu0tJOoom887A81IdKzyVCWxxFk0xewSvT4GkX/QL8A==
-X-Received: by 2002:aa7:93ba:0:b0:4bd:bbca:1936 with SMTP id x26-20020aa793ba000000b004bdbbca1936mr1056122pff.43.1642020088302;
-        Wed, 12 Jan 2022 12:41:28 -0800 (PST)
+        bh=7W9xjq/mp4aCvm206IRSxrwEOD/OCQl74SQ0cZUg6Zk=;
+        b=QggkTBoCs4Nkx7NE+zS9mBb3HCxTIb8s/Ghb2w8R6tE429swhdelhCWAaTBxETUwYN
+         9mOJm37EuUKx+srCsE045rB0HcZmUykVL04gQtn2jrQxnE2O7kv415ThL2sOHsjNYuz9
+         nZXLmeJQSVWtluZdxhN5uEbHD1pZj4yCeTUKkolPsVVhAOwYAm8bEK0m4W4QpR07mS7U
+         TPqGgHI8d4IlI1kAEFDcRg4ls/m1d+gLCEVf+ugZpzHRjP2uPRYebLySNsDc1UplK2cr
+         lOpl76Bei9qDuVWpeRaxa9HC0n0W2WhHvRDA35b/c8HY2e8awRNxiXIK3+JzssLZrU24
+         xYdg==
+X-Gm-Message-State: AOAM530OEE9ZLoceoYSmhbGcYrYICozC8rRUChc2/FoOPK4Nbg8roJX6
+        1ygeMUhaN3LL1/pSLDYQ5Z09dRM8NXhOFA==
+X-Google-Smtp-Source: ABdhPJy/L9qAeACUYTmweyUFS9pNNxRrKwqLON0XCFhLcLmffYCohvW4vQnr/k0oyGFlb3Kr0h84uQ==
+X-Received: by 2002:a17:902:b201:b0:149:4b25:332d with SMTP id t1-20020a170902b20100b001494b25332dmr1201061plr.17.1642020554893;
+        Wed, 12 Jan 2022 12:49:14 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id on16sm486616pjb.9.2022.01.12.12.41.27
+        by smtp.gmail.com with ESMTPSA id mw8sm487817pjb.42.2022.01.12.12.49.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 12:41:27 -0800 (PST)
-Date:   Wed, 12 Jan 2022 12:41:27 -0800
+        Wed, 12 Jan 2022 12:49:14 -0800 (PST)
+Date:   Wed, 12 Jan 2022 12:49:13 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jiri Prchal <jiri.prchal@aksignal.cz>,
-        Ralph Siemsen <ralph.siemsen@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] eeprom: at25: Restore missing allocation
-Message-ID: <202201121240.C9A4613D36@keescook>
-References: <20220107232409.1331599-1-keescook@chromium.org>
- <CAHp75VdqK7h63fz-cPaQ2MGaVdaR2f1Fb5kKCZidUG3RwLsAVA@mail.gmail.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Leon Romanovsky <leon@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] RDMA/mlx5: Use memset_after() to zero struct mlx5_ib_mr
+Message-ID: <202201121247.BB9F6E9@keescook>
+References: <20211118203138.1287134-1-keescook@chromium.org>
+ <YZpPr2P11LJNtrIm@unreal>
+ <20211207184729.GA118570@nvidia.com>
+ <202112071138.64C168D@keescook>
+ <20211207194525.GL6385@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdqK7h63fz-cPaQ2MGaVdaR2f1Fb5kKCZidUG3RwLsAVA@mail.gmail.com>
+In-Reply-To: <20211207194525.GL6385@nvidia.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Jan 08, 2022 at 01:36:12PM +0200, Andy Shevchenko wrote:
-> On Sat, Jan 8, 2022 at 1:01 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Building under CONFIG_FORTIFY_SOURCE=y and -Warray-bounds complained about
-> > strncpy() being used against an empty object. It turns out this was due to
-> > the at25 allocation going missing during a conflict resolution. Restore
-> > this, and while we're here take the opportunity to do another strncpy()
-> > replacement, since it's use is deprecated[1].
-> >
-> > Seen as:
-> >
-> > In function 'strncpy',
-> >     inlined from 'at25_fw_to_chip.constprop' at drivers/misc/eeprom/at25.c:312:2:
-> > ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
-> >    48 | #define __underlying_strncpy    __builtin_strncpy
-> >       |                                 ^
-> > ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
-> >    59 |         return __underlying_strncpy(p, q, size);
-> >       |                ^~~~~~~~~~~~~~~~~~~~
-> > In function 'strncpy',
-> >     inlined from 'at25_fram_to_chip' at drivers/misc/eeprom/at25.c:373:2,
-> >     inlined from 'at25_probe' at drivers/misc/eeprom/at25.c:453:10:
-> > ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
-> >    48 | #define __underlying_strncpy    __builtin_strncpy
-> >       |                                 ^
-> > ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
-> >    59 |         return __underlying_strncpy(p, q, size);
-> >       |                ^~~~~~~~~~~~~~~~~~~~
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+On Tue, Dec 07, 2021 at 03:45:25PM -0400, Jason Gunthorpe wrote:
+> On Tue, Dec 07, 2021 at 11:41:07AM -0800, Kees Cook wrote:
+> > On Tue, Dec 07, 2021 at 02:47:29PM -0400, Jason Gunthorpe wrote:
+> > > On Sun, Nov 21, 2021 at 03:54:55PM +0200, Leon Romanovsky wrote:
+> > > > On Thu, Nov 18, 2021 at 12:31:38PM -0800, Kees Cook wrote:
+> > > > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> > > > > field bounds checking for memset(), avoid intentionally writing across
+> > > > > neighboring fields.
+> > > > > 
+> > > > > Use memset_after() to zero the end of struct mlx5_ib_mr that should
+> > > > > be initialized.
+> > > > > 
+> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > >  drivers/infiniband/hw/mlx5/mlx5_ib.h | 5 ++---
+> > > > >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+> > > > > index e636e954f6bf..af94c9fe8753 100644
+> > > > > +++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+> > > > > @@ -665,8 +665,7 @@ struct mlx5_ib_mr {
+> > > > >  	/* User MR data */
+> > > > >  	struct mlx5_cache_ent *cache_ent;
+> > > > >  	struct ib_umem *umem;
+> > > > > -
+> > > > > -	/* This is zero'd when the MR is allocated */
+> > > > > +	/* Everything after umem is zero'd when the MR is allocated */
+> > > > >  	union {
+> > > > >  		/* Used only while the MR is in the cache */
+> > > > >  		struct {
+> > > > > @@ -718,7 +717,7 @@ struct mlx5_ib_mr {
+> > > > >  /* Zero the fields in the mr that are variant depending on usage */
+> > > > >  static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
+> > > > >  {
+> > > > > -	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
+> > > > > +	memset_after(mr, 0, umem);
+> > > > 
+> > > > I think that it is not equivalent change and you need "memset_after(mr, 0, cache_ent);"
+> > > > to clear umem pointer too.
+> > > 
+> > > Kees?
+> > 
+> > Oops, sorry, I missed the ealrier reply!
+> > 
+> > I don't think that matches -- the original code wipes from the start of
+> > "out" to the end of the struct. "out" is the first thing in the union
+> > after "umem", so "umem" was not wiped before. I retained that behavior
+> > ("wipe everything after umem").
+> > 
+> > Am I misunderstanding the desired behavior here?
 > 
-> Thanks!
-> With or without the below comment being addressed
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Thanks!
-
+> Ah, it is this patch:
 > 
-> > Fixes: af40d16042d6 ("Merge v5.15-rc5 into char-misc-next")
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Jiri Prchal <jiri.prchal@aksignal.cz>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  drivers/misc/eeprom/at25.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-> > index c3305bdda69c..1a19fa5728c8 100644
-> > --- a/drivers/misc/eeprom/at25.c
-> > +++ b/drivers/misc/eeprom/at25.c
-> > @@ -309,7 +309,7 @@ static int at25_fw_to_chip(struct device *dev, struct spi_eeprom *chip)
-> >         u32 val;
-> >         int err;
-> >
-> > -       strncpy(chip->name, "at25", sizeof(chip->name));
-> > +       strscpy(chip->name, "at25", sizeof(chip->name));
-> >
-> >         err = device_property_read_u32(dev, "size", &val);
-> >         if (err)
-> > @@ -370,7 +370,7 @@ static int at25_fram_to_chip(struct device *dev, struct spi_eeprom *chip)
-> >         u8 id[FM25_ID_LEN];
-> >         int i;
-> >
-> > -       strncpy(chip->name, "fm25", sizeof(chip->name));
-> > +       strscpy(chip->name, "fm25", sizeof(chip->name));
-> >
-> >         /* Get ID of chip */
-> >         fm25_aux_read(at25, id, FM25_RDID, FM25_ID_LEN);
-> > @@ -440,6 +440,10 @@ static int at25_probe(struct spi_device *spi)
-> >                 return -ENXIO;
-> >         }
-> >
-> > +       at25 = devm_kzalloc(&spi->dev, sizeof(struct at25_data), GFP_KERNEL);
+> commit f0ae4afe3d35e67db042c58a52909e06262b740f
+> Author: Alaa Hleihel <alaa@nvidia.com>
+> Date:   Mon Nov 22 13:41:51 2021 +0200
 > 
-> I would use sizeof(*at25) but I think you restored the exact context.
-
-Yeah, I just restore the chunk exactly as it was.
-
-Greg, should I send a v2 with this adjusted?
-
--Kees
-
+>     RDMA/mlx5: Fix releasing unallocated memory in dereg MR flow
 > 
-> > +       if (!at25)
-> > +               return -ENOMEM;
-> > +
-> >         mutex_init(&at25->lock);
-> >         at25->spi = spi;
-> >         spi_set_drvdata(spi, at25);
-> > --
-> > 2.30.2
-> >
+> Which moved umem into the union that is causing the confusion
 > 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> It hasn't quite made it to a rc release yet, so I suppose the answer
+> is to rebase this on that then it is as Leon  says about cache_ent
+
+The umem patch appears to have been reverted. Should I send an updated
+patch for memset_after()? I think it would simply be:
+
+diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+index e3c33be9c5a0..a58f69b19705 100644
+--- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
++++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+@@ -667,7 +667,7 @@ struct mlx5_ib_mr {
+ 	struct mlx5_cache_ent *cache_ent;
+ 	struct ib_umem *umem;
+ 
+-	/* This is zero'd when the MR is allocated */
++	/* Everything after umem is zero'd when MR allocated */
+ 	union {
+ 		/* Used only while the MR is in the cache */
+ 		struct {
+@@ -719,7 +719,7 @@ struct mlx5_ib_mr {
+ /* Zero the fields in the mr that are variant depending on usage */
+ static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
+ {
+-	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
++	memset_after(mr, 0, umem);
+ }
+ 
+ static inline bool is_odp_mr(struct mlx5_ib_mr *mr)
 
 -- 
 Kees Cook
