@@ -2,156 +2,172 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0425FC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34357C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357658AbiALUiR (ORCPT
+        id S1357698AbiALUlk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jan 2022 15:38:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49030 "EHLO
+        Wed, 12 Jan 2022 15:41:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357653AbiALUiO (ORCPT
+        with ESMTP id S1357700AbiALUl3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jan 2022 15:38:14 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27DCAC061748
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:38:14 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id i8-20020a17090a138800b001b3936fb375so14659464pja.1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:38:14 -0800 (PST)
+        Wed, 12 Jan 2022 15:41:29 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCBC0C061748
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:41:28 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id i8-20020a17090a138800b001b3936fb375so14674499pja.1
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:41:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TXEuA78tHa8OG6WX+svmtO4V0nZdM7kQVDQ3t8swxFM=;
-        b=Gb+bKoQcu9s52iCDHmppZrE5eenmKqfYetcUMYRDayPX4js2rVPhDF2q23JETt+hNl
-         902UexZOvk4dn5i+yL2sFG1zR8N6fA3eftxL+QONpDARKm+pp2eg5KHc7LlqfcOpMDrV
-         /Tycp4FTjw6qiw8SMmcLXM+cbT7owZBWfx8SM=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HNujz4kMn/4ZYTwXUR+Cc+AqJUJ4Ie/adlWgWAXYdZk=;
+        b=SmJAOBbclolNCR4/WQY3wyRsLI85oupsTeOu9LOt9vSC5HiQAMxNXfzvA7yy3FBCGB
+         35X6KTCaN31AAH6idR4U8F7uMgnqLiGqgGWsrmjEPPmLzriTAUcLerL8wEkUYje3WbHR
+         uM5yTYIoJrmMhJUCdoWwnqh8mvprQEZEm9S/o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TXEuA78tHa8OG6WX+svmtO4V0nZdM7kQVDQ3t8swxFM=;
-        b=NBH+ifa/66oG7vIrUkXJkAZ1uKx10WexoZdHIgoejPLe421MVf5tOVd1IQLSkM2a30
-         Qru193E273AEAWrc0vziyweKjEd7zafmxpA9w4+c/lWmNX20XD/SXtzSobgrauNIJ7oG
-         ds+TyfZhCEVrbAjTs0DpvYBs4rOca960OFXreByH0B7Kgx/XrmIxHvmmhL4IFqC8kl47
-         RiSC2zNj0ExRL3HeWMTd/cC2BE0LOsW4rum5wnxgMS+jqdfRwgtO7B5S8jsgRTTJeq0E
-         rPEKkU4X0HO1T/rxBvSPmtgihecMLeIMxYE8mPdp02ks7ehZOPvn1Mnlqm1mh6NhDOWZ
-         6kAw==
-X-Gm-Message-State: AOAM532hV5CkO6zjASP4b37JDYMdwez6PqCS16nF3pTV2aeXW94qnbCS
-        3MtwROONdDaTadiPdAPisIApVGgzywrexw==
-X-Google-Smtp-Source: ABdhPJxU/y2DtjYkNXrpmMymPd6+q28hpSkRbKDXEZbkXIJQIffEdPMetF3V+BBu7/jnEVudB0CQTQ==
-X-Received: by 2002:a05:6a00:1309:b0:4bc:c640:73f9 with SMTP id j9-20020a056a00130900b004bcc64073f9mr1279526pfu.50.1642019893730;
-        Wed, 12 Jan 2022 12:38:13 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HNujz4kMn/4ZYTwXUR+Cc+AqJUJ4Ie/adlWgWAXYdZk=;
+        b=ec9qjpM+yennZAEv/Pa2PcStoCO+ldX1cq2pGvwp1QuCbfmjmG3bbp/Y5KWB87/TVA
+         ZAu7cIRsuBhCZ59tu7QeDCFSu8aKxISEODvnatj1jtSyONKCtCH2iCZ+P9iQ3MDQRU3M
+         3Z9i+me4MejNJbde76iYFxXQhsDcRBF38K8dDqjHH/uZ8FKroBc0YrNrYKCLHKmMLqzR
+         zO84fXso7AGPqdeCPnZBgb8gmP3jeUTNGxG2felxUf280nsAX1IBYaghqISscztLbIUv
+         aLZSKnu/0IHz0xC9Qh4srD7om+jEcCRzjeJ76o8cLVu6u91IlomHAip8JfszreXGCJR3
+         eYjA==
+X-Gm-Message-State: AOAM5337hVqu8/g7EC1NrkqSkEvY8z+vqteu7NNmqk9VkZMzVLJvZCUw
+        AXX4STEnBgJWNXSpmuEhRgqysw==
+X-Google-Smtp-Source: ABdhPJxGbGIvRCR4uqhdWUJhCVeb456pVbNeu0tJOoom887A81IdKzyVCWxxFk0xewSvT4GkX/QL8A==
+X-Received: by 2002:aa7:93ba:0:b0:4bd:bbca:1936 with SMTP id x26-20020aa793ba000000b004bdbbca1936mr1056122pff.43.1642020088302;
+        Wed, 12 Jan 2022 12:41:28 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g14sm430492pgp.76.2022.01.12.12.38.13
+        by smtp.gmail.com with ESMTPSA id on16sm486616pjb.9.2022.01.12.12.41.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 12:38:13 -0800 (PST)
+        Wed, 12 Jan 2022 12:41:27 -0800 (PST)
+Date:   Wed, 12 Jan 2022 12:41:27 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Arnaud Ebalard <arno@natisbad.org>,
-        Srujana Challa <schalla@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Suheil Chandran <schandran@marvell.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Lukasz Bartosik <lbartosik@marvell.com>,
-        linux-crypto@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3] crypto: octeontx2 - Avoid stack variable overflow
-Date:   Wed, 12 Jan 2022 12:38:11 -0800
-Message-Id: <20220112203811.3951406-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jiri Prchal <jiri.prchal@aksignal.cz>,
+        Ralph Siemsen <ralph.siemsen@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] eeprom: at25: Restore missing allocation
+Message-ID: <202201121240.C9A4613D36@keescook>
+References: <20220107232409.1331599-1-keescook@chromium.org>
+ <CAHp75VdqK7h63fz-cPaQ2MGaVdaR2f1Fb5kKCZidUG3RwLsAVA@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3990; h=from:subject; bh=24l0V2SW4hG2ReYs2bH4yrryloA0CF7/+v3/Mn8IdFk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh3zwzSlJZlf/2YQT57WwROp5xjXUdokUVP82L8vDu udHFTueJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYd88MwAKCRCJcvTf3G3AJpdWEA CIfVU8vLjPvokqNqy4WQTJ5pwoNW4g777CwcSRlGvIqYT6TMsHTaX1Z5ziGqiaD1wsWH5Oa2R22kaK 4KBGnoaYP4YOa8qHTIEebqYPwPO5VKekhnt41eRqU/Tt4Pm2VtwlsPR38dx0NE4YxHseu7eEXsOMKr qdPsvjzKYiGoD68e577avJ+KX91tyG01Ix0p0U+hM9A/SivRP5GKojF6GWdlNBgyVz7DXAi4M3Me8U HIXoOiheDpiB+v/+tdC+QBuEM2K56R5hDAxUVcoq1xNNj4YfzQ/Ze2xCAFqXO8vB9/kBHeEYoFhBP7 20c0Uk6c0b2GIS9xu33rqld81u1zjoRdfqeEj6Lh5zEG3e/MoqpwQHWc3skrDJ+qh9eGe9kkMs3YlW bQNuI2o6K4MH6aH1JsOohfE2xeaSVTCgzU9aEHcI6rYO4WHM6+8Srbs6b9SJcp/EdmHGQh1QKy1qNc Zqh1H99M9bBmzvNOHqWu+eJNdkrAw3re+RizZNW1RxXqNc3rzQWQRasauRLRx07NDnvLiJqwte4bDc eYr1cRQtJ7//Ctjm7JB6y03sWJLw2l5VXYAF7cvwkmCcvH6x0yJ03+uEITrUucdNJ4nqIPNVZtnOlJ +NQ3TtNORhl2h0JU/1SLM8YdGthh6kmIBNTjLPvi3l4aWCvainrPv83D49Wg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdqK7h63fz-cPaQ2MGaVdaR2f1Fb5kKCZidUG3RwLsAVA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Building with -Warray-bounds showed a stack variable array index
-overflow. Increase the expected size of the array to avoid the warning:
+On Sat, Jan 08, 2022 at 01:36:12PM +0200, Andy Shevchenko wrote:
+> On Sat, Jan 8, 2022 at 1:01 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Building under CONFIG_FORTIFY_SOURCE=y and -Warray-bounds complained about
+> > strncpy() being used against an empty object. It turns out this was due to
+> > the at25 allocation going missing during a conflict resolution. Restore
+> > this, and while we're here take the opportunity to do another strncpy()
+> > replacement, since it's use is deprecated[1].
+> >
+> > Seen as:
+> >
+> > In function 'strncpy',
+> >     inlined from 'at25_fw_to_chip.constprop' at drivers/misc/eeprom/at25.c:312:2:
+> > ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
+> >    48 | #define __underlying_strncpy    __builtin_strncpy
+> >       |                                 ^
+> > ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
+> >    59 |         return __underlying_strncpy(p, q, size);
+> >       |                ^~~~~~~~~~~~~~~~~~~~
+> > In function 'strncpy',
+> >     inlined from 'at25_fram_to_chip' at drivers/misc/eeprom/at25.c:373:2,
+> >     inlined from 'at25_probe' at drivers/misc/eeprom/at25.c:453:10:
+> > ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
+> >    48 | #define __underlying_strncpy    __builtin_strncpy
+> >       |                                 ^
+> > ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
+> >    59 |         return __underlying_strncpy(p, q, size);
+> >       |                ^~~~~~~~~~~~~~~~~~~~
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+> 
+> Thanks!
+> With or without the below comment being addressed
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-In file included from ./include/linux/printk.h:555,
-                 from ./include/asm-generic/bug.h:22,
-                 from ./arch/x86/include/asm/bug.h:84,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/mmdebug.h:5,
-                 from ./include/linux/gfp.h:5,
-                 from ./include/linux/firmware.h:7,
-                 from drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:5:
-drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c: In function 'otx2_cpt_print_uc_dbg_info':
-./include/linux/dynamic_debug.h:162:33: warning: array subscript 4 is above array bounds of 'u32[4]' {aka 'unsigned int[4]'} [-Warray-bounds]
-  162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
-      |                                 ^
-./include/linux/dynamic_debug.h:134:17: note: in definition of macro '__dynamic_func_call'
-  134 |                 func(&id, ##__VA_ARGS__);               \
-      |                 ^~~~
-./include/linux/dynamic_debug.h:162:9: note: in expansion of macro '_dynamic_func_call'
-  162 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
-      |         ^~~~~~~~~~~~~~~~~~
-./include/linux/printk.h:570:9: note: in expansion of macro 'dynamic_pr_debug'
-  570 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
-      |         ^~~~~~~~~~~~~~~~
-drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1807:41: note: in expansion of macro 'pr_debug'
- 1807 |                                         pr_debug("Mask: %8.8x %8.8x %8.8x %8.8x %8.8x",
-      |                                         ^~~~~~~~
-drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c:1765:13: note: while referencing 'mask'
- 1765 |         u32 mask[4];
-      |             ^~~~
+Thanks!
 
-This is justified because the mask size (eng_grps->engs_num) can be at
-most 144 (OTX2_CPT_MAX_ENGINES bits), which is larger than available
-storage. 4 * 32 == 128, so this must be 5: 5 * 32bit = 160.
+> 
+> > Fixes: af40d16042d6 ("Merge v5.15-rc5 into char-misc-next")
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Jiri Prchal <jiri.prchal@aksignal.cz>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/misc/eeprom/at25.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
+> > index c3305bdda69c..1a19fa5728c8 100644
+> > --- a/drivers/misc/eeprom/at25.c
+> > +++ b/drivers/misc/eeprom/at25.c
+> > @@ -309,7 +309,7 @@ static int at25_fw_to_chip(struct device *dev, struct spi_eeprom *chip)
+> >         u32 val;
+> >         int err;
+> >
+> > -       strncpy(chip->name, "at25", sizeof(chip->name));
+> > +       strscpy(chip->name, "at25", sizeof(chip->name));
+> >
+> >         err = device_property_read_u32(dev, "size", &val);
+> >         if (err)
+> > @@ -370,7 +370,7 @@ static int at25_fram_to_chip(struct device *dev, struct spi_eeprom *chip)
+> >         u8 id[FM25_ID_LEN];
+> >         int i;
+> >
+> > -       strncpy(chip->name, "fm25", sizeof(chip->name));
+> > +       strscpy(chip->name, "fm25", sizeof(chip->name));
+> >
+> >         /* Get ID of chip */
+> >         fm25_aux_read(at25, id, FM25_RDID, FM25_ID_LEN);
+> > @@ -440,6 +440,10 @@ static int at25_probe(struct spi_device *spi)
+> >                 return -ENXIO;
+> >         }
+> >
+> > +       at25 = devm_kzalloc(&spi->dev, sizeof(struct at25_data), GFP_KERNEL);
+> 
+> I would use sizeof(*at25) but I think you restored the exact context.
 
-Additionally clear the mask before conversion so trailing bits are zero.
+Yeah, I just restore the chunk exactly as it was.
 
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Arnaud Ebalard <arno@natisbad.org>
-Cc: Srujana Challa <schalla@marvell.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Suheil Chandran <schandran@marvell.com>
-Cc: Shijith Thotton <sthotton@marvell.com>
-Cc: Lukasz Bartosik <lbartosik@marvell.com>
-Cc: linux-crypto@vger.kernel.org
-Fixes: d9d7749773e8 ("crypto: octeontx2 - add apis for custom engine groups")
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v1: https://lore.kernel.org/lkml/20211215225558.1995027-1-keescook@chromium.org/
-v2: https://lore.kernel.org/lkml/20220105174953.2433019-1-keescook@chromium.org/
-v3:
- - Fix commit log math typo
- - Add Ack
----
- drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Greg, should I send a v2 with this adjusted?
 
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
-index 4c8ebdf671ca..1b4d425bbf0e 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_ucode.c
-@@ -1753,7 +1753,6 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
- 	char engs_info[2 * OTX2_CPT_NAME_LENGTH];
- 	struct otx2_cpt_eng_grp_info *grp;
- 	struct otx2_cpt_engs_rsvd *engs;
--	u32 mask[4];
- 	int i, j;
- 
- 	pr_debug("Engine groups global info");
-@@ -1785,6 +1784,8 @@ void otx2_cpt_print_uc_dbg_info(struct otx2_cptpf_dev *cptpf)
- 		for (j = 0; j < OTX2_CPT_MAX_ETYPES_PER_GRP; j++) {
- 			engs = &grp->engs[j];
- 			if (engs->type) {
-+				u32 mask[5] = { };
-+
- 				get_engs_info(grp, engs_info,
- 					      2 * OTX2_CPT_NAME_LENGTH, j);
- 				pr_debug("Slot%d: %s", j, engs_info);
+-Kees
+
+> 
+> > +       if (!at25)
+> > +               return -ENOMEM;
+> > +
+> >         mutex_init(&at25->lock);
+> >         at25->spi = spi;
+> >         spi_set_drvdata(spi, at25);
+> > --
+> > 2.30.2
+> >
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+
 -- 
-2.30.2
-
+Kees Cook
