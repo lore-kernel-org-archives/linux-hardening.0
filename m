@@ -2,158 +2,120 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23106C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42061C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 22:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357763AbiALUuB (ORCPT
+        id S230352AbiALWG6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jan 2022 15:50:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51536 "EHLO
+        Wed, 12 Jan 2022 17:06:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357782AbiALUtP (ORCPT
+        with ESMTP id S229562AbiALWG6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jan 2022 15:49:15 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67692C061759
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:49:15 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id pf13so7536215pjb.0
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:49:15 -0800 (PST)
+        Wed, 12 Jan 2022 17:06:58 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8720CC06173F
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 14:06:57 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id i6so6612354pla.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 14:06:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7W9xjq/mp4aCvm206IRSxrwEOD/OCQl74SQ0cZUg6Zk=;
-        b=G3BfIgpjh8dLLN9x19avToNGSRfF/ePsf9nlDhPAc0Ehj3HS5/gMO/ZXBJxrXL201M
-         +DW1BQ1fSpf8G9JpajYzKjS7Ofsy4kTGeWUF1yCcL4lszLSl0wx9Ok6rPUAGhaII5Kfx
-         /FLCIJVVW9fE4ObKwgK7nNjhDytHcS1l5nc2g=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q/Rw7FotPPkrKYndyOgdWEBeHtrt7+KjvpPJ57SkSzc=;
+        b=M2mZSobf4d4eeVcxQP1Jrxt7Id2BeGFwVA3ITVbXbOhUJdYhdxHFX40oE6DioWGl4O
+         g/l8qcZbSvAtB8cMQpkVOdgLnnUbLiqaj3FU21EKb1oXAbzpD2UFk7Fmktd8w4/GULgX
+         XbH0nixftmqlzHW6zqOjsUdS7n0u0Zuhdedns=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7W9xjq/mp4aCvm206IRSxrwEOD/OCQl74SQ0cZUg6Zk=;
-        b=QggkTBoCs4Nkx7NE+zS9mBb3HCxTIb8s/Ghb2w8R6tE429swhdelhCWAaTBxETUwYN
-         9mOJm37EuUKx+srCsE045rB0HcZmUykVL04gQtn2jrQxnE2O7kv415ThL2sOHsjNYuz9
-         nZXLmeJQSVWtluZdxhN5uEbHD1pZj4yCeTUKkolPsVVhAOwYAm8bEK0m4W4QpR07mS7U
-         TPqGgHI8d4IlI1kAEFDcRg4ls/m1d+gLCEVf+ugZpzHRjP2uPRYebLySNsDc1UplK2cr
-         lOpl76Bei9qDuVWpeRaxa9HC0n0W2WhHvRDA35b/c8HY2e8awRNxiXIK3+JzssLZrU24
-         xYdg==
-X-Gm-Message-State: AOAM530OEE9ZLoceoYSmhbGcYrYICozC8rRUChc2/FoOPK4Nbg8roJX6
-        1ygeMUhaN3LL1/pSLDYQ5Z09dRM8NXhOFA==
-X-Google-Smtp-Source: ABdhPJy/L9qAeACUYTmweyUFS9pNNxRrKwqLON0XCFhLcLmffYCohvW4vQnr/k0oyGFlb3Kr0h84uQ==
-X-Received: by 2002:a17:902:b201:b0:149:4b25:332d with SMTP id t1-20020a170902b20100b001494b25332dmr1201061plr.17.1642020554893;
-        Wed, 12 Jan 2022 12:49:14 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q/Rw7FotPPkrKYndyOgdWEBeHtrt7+KjvpPJ57SkSzc=;
+        b=bmjT08xCOJbhpkUnY+wybvOJj1qzKq4A3XssKK1MQ3JHzVXIfafge2ipBkfm7SGDQV
+         LOvHVjGTU/HFiMJdds3FCsTnw/xxdxyBqb+xMDKwU/Lcp8IJM0NVZ+T/DRE0mzz5TB7s
+         yzk0ntZWwrjcc1MZXOpXnG4GssTEDALHnrlb23tz7AGr/c3Kj1crBV3LAg+I5DOEUGhS
+         9ZMNMWT2waSJqOtngE6L3ExlLzAHZI0oF1F0Q+/QrZhzXFKYPbg1QgmOj5B8NV+z9IEw
+         pqDnXrQiUOv91OXu1XEoETERgNU4O3HtDaNoCCMhgKHQvZglvrWmwTihjr2TzKwAaxbf
+         SSqQ==
+X-Gm-Message-State: AOAM532uMSvPJrR/zSK0Moc2cpQXeZd9URwexyZtAvDrIkRukw9Bk0Iz
+        XoVuOSYv5yuXXRXjrLMi+PUX0g==
+X-Google-Smtp-Source: ABdhPJxHS1d3NtDu9tsgszKg+aLDICclfZW7VSrDCu8GTyU3Rp0cYM7PBRDsjzh2cNHCIDRJt3t5ZA==
+X-Received: by 2002:a17:90b:4b4d:: with SMTP id mi13mr11421553pjb.48.1642025216967;
+        Wed, 12 Jan 2022 14:06:56 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id mw8sm487817pjb.42.2022.01.12.12.49.14
+        by smtp.gmail.com with ESMTPSA id z3sm570609pjq.32.2022.01.12.14.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 12:49:14 -0800 (PST)
-Date:   Wed, 12 Jan 2022 12:49:13 -0800
+        Wed, 12 Jan 2022 14:06:56 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Leon Romanovsky <leon@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] RDMA/mlx5: Use memset_after() to zero struct mlx5_ib_mr
-Message-ID: <202201121247.BB9F6E9@keescook>
-References: <20211118203138.1287134-1-keescook@chromium.org>
- <YZpPr2P11LJNtrIm@unreal>
- <20211207184729.GA118570@nvidia.com>
- <202112071138.64C168D@keescook>
- <20211207194525.GL6385@nvidia.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kees Cook <keescook@chromium.org>, linux-ide@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH][RESEND] sata_fsl: Use struct_group() for memcpy() region
+Date:   Wed, 12 Jan 2022 14:06:52 -0800
+Message-Id: <20220112220652.3952944-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211207194525.GL6385@nvidia.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2183; h=from:subject; bh=5p121XAzQa6qN5E6EhVnf7REcLupYKUuIK7FpZN6ZM4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh31D8twxgwYJUCIhYXTXOl2rV+4GHrPs7/ZvQKKBy +ARWDKqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYd9Q/AAKCRCJcvTf3G3AJjzpD/ 0Xo3PYXRnkZQETy6n35GeZuDyC+Ugk2TK/R73XlSmpkKy04rQ8vVL0Xo5tqtyJMN2cHsmx1TWPdLW5 geORAPhsd/9iTzUnJ3AyTHloTYg1EqRG+N/HZt96lfbgo4M9dKO8PitIoiuYB2IlkdWWNXyROeeZvh EEx4vNPTFuG4jWVBCo+3tTf84940m8tTtYJy4iOoBt7Yhl7G9kbovJ7DRuyLzW9jmdFlT7Yx5AnNfr We3OO0gK6HZz/XAs5BKJZo/VvscsvDv4ugVKLILZ82OU/ymjXxWxct5dAZpl2NjdNDfrUvVZo1YETk gJys9zx6eBBpmYuVUCoJJ9WvmOocpIEgygzQrhtMMi5GK15BNF7F04Gi6nK4gjXPaIL5p6FiE0QcTG kqCapgEIJ3NXyKRlkW1tCcs6Fw81MZN6uz7XbL8vQP1H6dlsXQ+u6qRPNpSmi4pqetB49WO8OcI5Np 1d+XGX9T2huW6tKidhAlchxvksyLvWZ8TBZ53eUco115XjZHXbH4th4StPdtCZLPdnrTpSFZYAe9EM w4brwIav9TWKYyiCDIVoFmC5JkG4BDzFWdlc0G/Lr9amltMMlx3jJjA+XeLNuwBW0ctcX9cUNzMJZm l0CWyNvLLkkW6fsyXbdI0xX4TgunorbferXwwKCawdNmUHcoz/yN2wOdjinw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 03:45:25PM -0400, Jason Gunthorpe wrote:
-> On Tue, Dec 07, 2021 at 11:41:07AM -0800, Kees Cook wrote:
-> > On Tue, Dec 07, 2021 at 02:47:29PM -0400, Jason Gunthorpe wrote:
-> > > On Sun, Nov 21, 2021 at 03:54:55PM +0200, Leon Romanovsky wrote:
-> > > > On Thu, Nov 18, 2021 at 12:31:38PM -0800, Kees Cook wrote:
-> > > > > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > > > > field bounds checking for memset(), avoid intentionally writing across
-> > > > > neighboring fields.
-> > > > > 
-> > > > > Use memset_after() to zero the end of struct mlx5_ib_mr that should
-> > > > > be initialized.
-> > > > > 
-> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > >  drivers/infiniband/hw/mlx5/mlx5_ib.h | 5 ++---
-> > > > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-> > > > > index e636e954f6bf..af94c9fe8753 100644
-> > > > > +++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-> > > > > @@ -665,8 +665,7 @@ struct mlx5_ib_mr {
-> > > > >  	/* User MR data */
-> > > > >  	struct mlx5_cache_ent *cache_ent;
-> > > > >  	struct ib_umem *umem;
-> > > > > -
-> > > > > -	/* This is zero'd when the MR is allocated */
-> > > > > +	/* Everything after umem is zero'd when the MR is allocated */
-> > > > >  	union {
-> > > > >  		/* Used only while the MR is in the cache */
-> > > > >  		struct {
-> > > > > @@ -718,7 +717,7 @@ struct mlx5_ib_mr {
-> > > > >  /* Zero the fields in the mr that are variant depending on usage */
-> > > > >  static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
-> > > > >  {
-> > > > > -	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
-> > > > > +	memset_after(mr, 0, umem);
-> > > > 
-> > > > I think that it is not equivalent change and you need "memset_after(mr, 0, cache_ent);"
-> > > > to clear umem pointer too.
-> > > 
-> > > Kees?
-> > 
-> > Oops, sorry, I missed the ealrier reply!
-> > 
-> > I don't think that matches -- the original code wipes from the start of
-> > "out" to the end of the struct. "out" is the first thing in the union
-> > after "umem", so "umem" was not wiped before. I retained that behavior
-> > ("wipe everything after umem").
-> > 
-> > Am I misunderstanding the desired behavior here?
-> 
-> Ah, it is this patch:
-> 
-> commit f0ae4afe3d35e67db042c58a52909e06262b740f
-> Author: Alaa Hleihel <alaa@nvidia.com>
-> Date:   Mon Nov 22 13:41:51 2021 +0200
-> 
->     RDMA/mlx5: Fix releasing unallocated memory in dereg MR flow
-> 
-> Which moved umem into the union that is causing the confusion
-> 
-> It hasn't quite made it to a rc release yet, so I suppose the answer
-> is to rebase this on that then it is as Leon  says about cache_ent
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-The umem patch appears to have been reverted. Should I send an updated
-patch for memset_after()? I think it would simply be:
+Use struct_group() in struct command_desc around members acmd and fill,
+so they can be referenced together. This will allow memset(), memcpy(),
+and sizeof() to more easily reason about sizes, improve readability,
+and avoid future warnings about writing beyond the end of acmd:
 
-diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-index e3c33be9c5a0..a58f69b19705 100644
---- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
-+++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-@@ -667,7 +667,7 @@ struct mlx5_ib_mr {
- 	struct mlx5_cache_ent *cache_ent;
- 	struct ib_umem *umem;
+In function 'fortify_memset_chk',
+    inlined from 'sata_fsl_qc_prep' at drivers/ata/sata_fsl.c:534:3:
+./include/linux/fortify-string.h:199:4: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+  199 |    __write_overflow_field();
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~
+
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Jens, can you take (or Ack) this? It's a dependency for the FORTIFY_SOURCE
+improvements that are close to being finished. :)
+---
+ drivers/ata/sata_fsl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
+index 3b31a4f596d8..c5a2c1e9ed6b 100644
+--- a/drivers/ata/sata_fsl.c
++++ b/drivers/ata/sata_fsl.c
+@@ -246,8 +246,10 @@ enum {
+ struct command_desc {
+ 	u8 cfis[8 * 4];
+ 	u8 sfis[8 * 4];
+-	u8 acmd[4 * 4];
+-	u8 fill[4 * 4];
++	struct_group(cdb,
++		u8 acmd[4 * 4];
++		u8 fill[4 * 4];
++	);
+ 	u32 prdt[SATA_FSL_MAX_PRD_DIRECT * 4];
+ 	u32 prdt_indirect[(SATA_FSL_MAX_PRD - SATA_FSL_MAX_PRD_DIRECT) * 4];
+ };
+@@ -531,8 +533,8 @@ static enum ata_completion_errors sata_fsl_qc_prep(struct ata_queued_cmd *qc)
+ 	/* setup "ACMD - atapi command" in cmd. desc. if this is ATAPI cmd */
+ 	if (ata_is_atapi(qc->tf.protocol)) {
+ 		desc_info |= ATAPI_CMD;
+-		memset((void *)&cd->acmd, 0, 32);
+-		memcpy((void *)&cd->acmd, qc->cdb, qc->dev->cdb_len);
++		memset(&cd->cdb, 0, sizeof(cd->cdb));
++		memcpy(&cd->cdb, qc->cdb, qc->dev->cdb_len);
+ 	}
  
--	/* This is zero'd when the MR is allocated */
-+	/* Everything after umem is zero'd when MR allocated */
- 	union {
- 		/* Used only while the MR is in the cache */
- 		struct {
-@@ -719,7 +719,7 @@ struct mlx5_ib_mr {
- /* Zero the fields in the mr that are variant depending on usage */
- static inline void mlx5_clear_mr(struct mlx5_ib_mr *mr)
- {
--	memset(mr->out, 0, sizeof(*mr) - offsetof(struct mlx5_ib_mr, out));
-+	memset_after(mr, 0, umem);
- }
- 
- static inline bool is_odp_mr(struct mlx5_ib_mr *mr)
-
+ 	if (qc->flags & ATA_QCFLAG_DMAMAP)
 -- 
-Kees Cook
+2.30.2
+
