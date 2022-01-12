@@ -2,174 +2,149 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0562C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8077FC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jan 2022 20:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357463AbiALUTF (ORCPT
+        id S1357613AbiALUXG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jan 2022 15:19:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44762 "EHLO
+        Wed, 12 Jan 2022 15:23:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357461AbiALUTB (ORCPT
+        with ESMTP id S1357599AbiALUXC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jan 2022 15:19:01 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB0BCC061748
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:18:59 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id 59-20020a17090a09c100b001b34a13745eso14502242pjo.5
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:18:59 -0800 (PST)
+        Wed, 12 Jan 2022 15:23:02 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CDAC06173F
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:23:01 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id l16-20020a17090a409000b001b2e9628c9cso7174928pjg.4
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 12:23:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cWg9oGmX5VjzwBIpzlyYG0aMpDjKGVxhDdmjr+TTfSE=;
-        b=Wvl5veJvVOxAEEqXRfAlq3EFmvwi1k+5HEmL903UUIkAXm0sRZlwm/KBWwfxggotD9
-         nSE2A51iCWC2SwhO0m7e4BYIOh/W7C/TOBh1bCV/0MEuwdfnL0c2cAijoGKgBa+t9wYA
-         3zA/m12UZ+/zfgcxV00ab7JXCYBA8/HQXZKN4=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kyeO5jAOJdChlXYzuArHFJYM20XwVYT6ewBuU6tSnEk=;
+        b=iU/HPNlmqwZKQb1EGerVoy9HMT4JRzhQA58pLUj1JB2yD/8TPMS1TcZad/aGIyHZ/I
+         peueVi6maGSvxJY/JMUl3CDVK5GVntK6yC9YNxZAzoMbsutxp+cSQww8TI42dbu2ejOP
+         nCaka1sP3E6c3TFAKS2RQ6jU7DOnBpUFUE2Vw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cWg9oGmX5VjzwBIpzlyYG0aMpDjKGVxhDdmjr+TTfSE=;
-        b=i8U5Z+kY5GStZya4vY/Ll+KtTtM0TX5qYgCPnXVHExWKoAFSOJVyzXHqE01YFKn75V
-         /ZnobdPPYUvU1Bo2UD+mi0hvKv57VUsIwiz67YuQf7P6osRH9hX3J+g01Sqaq6tGCDxe
-         JxTnopocQSF4qbkQ5tMe+IESZaFtq6tcHqR9u1iG1aHsF9Fh+0Yp/gecrDMxc32hA15q
-         l8Gh3BhWC0TNOx+QqL2iTYbIn4AGRLL6su/raYwRs4cPWt129hEHap3p5JfCk2nIfvVK
-         y4CpWpZlqx2yekZdEob8AiPni3fbxeSZK4D9NtnO7tTRIYilXG1H3qRbSba5AoaX2UW8
-         bZzA==
-X-Gm-Message-State: AOAM531jOfUYT4WwXEjcys1EmRsr0+WrGUMtah0TcF39LAyOHAilaWWj
-        jKfQoYwuP+ZZXF13d3e878D/qw==
-X-Google-Smtp-Source: ABdhPJxO2Q9IGXVDG75qeMUDFvdczT7RHBGhaxNrz76IxGxWNBohSOWl8G2Wtv7gTZPEKYr34aTyVA==
-X-Received: by 2002:aa7:8592:0:b0:4be:2691:bb88 with SMTP id w18-20020aa78592000000b004be2691bb88mr1214917pfn.20.1642018739352;
-        Wed, 12 Jan 2022 12:18:59 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kyeO5jAOJdChlXYzuArHFJYM20XwVYT6ewBuU6tSnEk=;
+        b=nblfXT6jjW0vnqddzOUf35dI3IQpmgrAYGopy8pnppyK74kFByc6QNv9MRNRvgI4/L
+         BM098zvIkXnl9k6ZK3y2QD1JVJytcnvIMAsoSpmwABIEtflsRcBXPEIPCvOWSZI4PsyS
+         dv0p2ClKntVrB9kcFdKEcN5rU4xdbVlHzDAYRzpOnxfATEL1Q9aRwGsIUcFYV4G7wpZr
+         vcybZ7QyFXQJVexmnjHe2bHhP3fxdGG4GSwJd1AMq25jLF8vQ4ZRTZ+98Silm+BG7KYo
+         fnHNHGvyM7C0f0JGrSLMuVn3J2QUYMPf6OQqlK9xb/k6Gsx9457RfFa98/mINitCxuWX
+         17YQ==
+X-Gm-Message-State: AOAM533H0vig6wNkqQCQGHa4FRioJMKsjkq9ou8vsc7Au3SIN+OhE8rA
+        qkN9WpimINAlZsJqBOq9MBfOJw==
+X-Google-Smtp-Source: ABdhPJyZjdTV0zXe3g3zFlkAMX8/LEfO88nLyAZVfDyT0b2SaHPprLA/iniwsIk7PogBpr+ZJLJaPw==
+X-Received: by 2002:aa7:8394:0:b0:4be:ab79:fcfa with SMTP id u20-20020aa78394000000b004beab79fcfamr964541pfm.3.1642018981496;
+        Wed, 12 Jan 2022 12:23:01 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x25sm422555pfu.113.2022.01.12.12.18.58
+        by smtp.gmail.com with ESMTPSA id p32sm431337pgb.49.2022.01.12.12.23.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 12:18:59 -0800 (PST)
-Date:   Wed, 12 Jan 2022 12:18:58 -0800
+        Wed, 12 Jan 2022 12:23:01 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
+To:     Will Deacon <will@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Boqun Feng <boqun.feng@gmail.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] arm64: atomics: Dereference matching size
-Message-ID: <202201121217.FB408C2362@keescook>
-References: <20220107232746.1540130-1-keescook@chromium.org>
- <YdwKLwvDRfc59c8U@FVFF77S0Q05N>
+        linux-arm-kernel@lists.infradead.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] arm64: atomics: lse: Dereference matching size
+Date:   Wed, 12 Jan 2022 12:22:59 -0800
+Message-Id: <20220112202259.3950286-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YdwKLwvDRfc59c8U@FVFF77S0Q05N>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3442; h=from:subject; bh=oOwW4jx5gA/RGKQRqzif6SbAYCT+soAWNmUjugUOT3Q=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh3zii9PBOaz2aBemP1Fh4uV3xUdnNVoe/fhkMFASn 7GenXEqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYd84ogAKCRCJcvTf3G3AJjf0D/ 0ak4X2+4espIyHP4TJxhJvqzKcmq0KaWjrbazHS1CEMseM7st+naGnUA5rL8Nac5xpRu1H4775aW+4 L5cNTC60OQjRw2jtaPqDT1KmnXkowS/M9IHCiysyo7wwraZ3nuFBu04NS9ml6zmQFYIRAi45E9K5MX WJyXuLK9vIJ7p2okyrTFRrVZqWx0J/6jAKD8wmRtvfOKI7rdAX7gVo1Mz6Vn1r8NjRTYOK9eCSNnyq U9OwPBjtwAZ3GGHoLrvgYzq4rHia/ieeIVXtIhwFisEx7FA8EPMFw+S+xG0tE55U0UboLSxrX1CKjA WrYnD3oLHycHNUNeU4vJpW38iPz1sgjdp7tNna26b5aj7BHxfj74+0Pnzh/bI7wS17Ajg1xOlj+ClF 88J9t6a3B9OLPfrpt2/pULrnIVd6ljldIs81LX1uUo1tScnRL7dwRMcUfHvZ1xpbLSgTP5V4lQPpcA GvdlszxX57MWWpclWmJYM9l4PnbPiQGqavWY/CtzCiAUPIEnqtiALBKcEVg0zgfh21YXHdWQGL0VpT octk58wMrCEweFPCqc+CGllKr1h2YdEi9FJ/mbcZEpujNmiUKzhSAVzD8i96GZ3YK6tbuO+KzMGLXj CzfhgWnxJr9/jsT9YIgwof8zQF2flazZyuSOrhLuMlZ2LSrz6a1vwmQZ2BKw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 10:27:59AM +0000, Mark Rutland wrote:
-> Hi Kees,
-> 
-> On Fri, Jan 07, 2022 at 03:27:46PM -0800, Kees Cook wrote:
-> > When building with -Warray-bounds (which is desired to be enabled
-> > globally), the following warning is generated:
-> > 
-> > In file included from ./arch/arm64/include/asm/lse.h:16,
-> >                  from ./arch/arm64/include/asm/cmpxchg.h:14,
-> >                  from ./arch/arm64/include/asm/atomic.h:16,
-> >                  from ./include/linux/atomic.h:7,
-> >                  from ./include/asm-generic/bitops/atomic.h:5,
-> >                  from ./arch/arm64/include/asm/bitops.h:25,
-> >                  from ./include/linux/bitops.h:33,
-> >                  from ./include/linux/kernel.h:22,
-> >                  from kernel/printk/printk.c:22:
-> > ./arch/arm64/include/asm/atomic_lse.h:247:9: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'atomic_t[1]' [-Warray-bounds]
-> >   247 |         asm volatile(                                                   \
-> >       |         ^~~
-> > ./arch/arm64/include/asm/atomic_lse.h:266:1: note: in expansion of macro '__CMPXCHG_CASE'
-> >   266 | __CMPXCHG_CASE(w,  , acq_, 32,  a, "memory")
-> >       | ^~~~~~~~~~~~~~
-> > kernel/printk/printk.c:3606:17: note: while referencing 'printk_cpulock_owner'
-> >  3606 | static atomic_t printk_cpulock_owner = ATOMIC_INIT(-1);
-> >       |                 ^~~~~~~~~~~~~~~~~~~~
-> > 
-> > This is due to the compiler seeing an unsigned long * cast against
-> > something (atomic_t) that is int sized. Replace the cast with the
-> > matching size cast. This results in no change in binary output.
-> 
-> Just to check, I assume both GCC and Clang are happy with this applied?
-> 
-> I recall that (historically at least) clang would warn about size mismatches
-> for inline assembly and would sometimes require more care. I don't see anythign
-> for which that would matter, but I just want to check.
+When building with -Warray-bounds, the following warning is generated:
 
-Yup, Clang is happy with this AFAICT.
+In file included from ./arch/arm64/include/asm/lse.h:16,
+                 from ./arch/arm64/include/asm/cmpxchg.h:14,
+                 from ./arch/arm64/include/asm/atomic.h:16,
+                 from ./include/linux/atomic.h:7,
+                 from ./include/asm-generic/bitops/atomic.h:5,
+                 from ./arch/arm64/include/asm/bitops.h:25,
+                 from ./include/linux/bitops.h:33,
+                 from ./include/linux/kernel.h:22,
+                 from kernel/printk/printk.c:22:
+./arch/arm64/include/asm/atomic_lse.h:247:9: warning: array subscript 'long unsigned int[0]' is partly outside array bounds of 'atomic_t[1]' [-Warray-bounds]
+  247 |         asm volatile(                                                   \
+      |         ^~~
+./arch/arm64/include/asm/atomic_lse.h:266:1: note: in expansion of macro '__CMPXCHG_CASE'
+  266 | __CMPXCHG_CASE(w,  , acq_, 32,  a, "memory")
+      | ^~~~~~~~~~~~~~
+kernel/printk/printk.c:3606:17: note: while referencing 'printk_cpulock_owner'
+ 3606 | static atomic_t printk_cpulock_owner = ATOMIC_INIT(-1);
+      |                 ^~~~~~~~~~~~~~~~~~~~
 
-> 
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Boqun Feng <boqun.feng@gmail.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/arm64/include/asm/atomic_lse.h | 2 +-
-> >  arch/arm64/include/asm/cmpxchg.h    | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-> > index d955ade5df7c..5d460f6b7675 100644
-> > --- a/arch/arm64/include/asm/atomic_lse.h
-> > +++ b/arch/arm64/include/asm/atomic_lse.h
-> > @@ -249,7 +249,7 @@ __lse__cmpxchg_case_##name##sz(volatile void *ptr,			\
-> >  	"	mov	%" #w "[tmp], %" #w "[old]\n"			\
-> >  	"	cas" #mb #sfx "\t%" #w "[tmp], %" #w "[new], %[v]\n"	\
-> >  	"	mov	%" #w "[ret], %" #w "[tmp]"			\
-> > -	: [ret] "+r" (x0), [v] "+Q" (*(unsigned long *)ptr),		\
-> > +	: [ret] "+r" (x0), [v] "+Q" (*(u##sz *)ptr),			\
-> >  	  [tmp] "=&r" (tmp)						\
-> >  	: [old] "r" (x1), [new] "r" (x2)				\
-> >  	: cl);								\
-> 
-> It might be worth nothing that __ll_sc__cmpxchg_case_##name##sz already uses
-> the same constraint:
-> 
-> 	[v] "+Q" (*(u##sz *)ptr
-> 
-> ... since that explains why we only need to update the LSE form and not the
-> LL/SC form, and indicates that this is unlikely to be problematic.
+This is due to the compiler seeing an unsigned long * cast against
+something (atomic_t) that is int sized. Replace the cast with the
+matching size cast. This results in no change in binary output.
 
-Good idea, I'll note that in a v2.
+Note that __ll_sc__cmpxchg_case_##name##sz already uses the same
+constraint:
 
-> 
-> Either way:
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+	[v] "+Q" (*(u##sz *)ptr
 
-Thanks!
+Which is why only the LSE form needs updating and not the
+LL/SC form, so this change is unlikely to be problematic.
 
--Kees
+Cc: Will Deacon <will@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v1: https://lore.kernel.org/linux-hardening/20220107232746.1540130-1-keescook@chromium.org/
+v2:
+ - add Acks
+ - note the existing LL/SC form
+---
+ arch/arm64/include/asm/atomic_lse.h | 2 +-
+ arch/arm64/include/asm/cmpxchg.h    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> Thanks,
-> Mark.
-> 
-> > diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
-> > index f9bef42c1411..497acf134d99 100644
-> > --- a/arch/arm64/include/asm/cmpxchg.h
-> > +++ b/arch/arm64/include/asm/cmpxchg.h
-> > @@ -243,7 +243,7 @@ static inline void __cmpwait_case_##sz(volatile void *ptr,		\
-> >  	"	cbnz	%" #w "[tmp], 1f\n"				\
-> >  	"	wfe\n"							\
-> >  	"1:"								\
-> > -	: [tmp] "=&r" (tmp), [v] "+Q" (*(unsigned long *)ptr)		\
-> > +	: [tmp] "=&r" (tmp), [v] "+Q" (*(u##sz *)ptr)			\
-> >  	: [val] "r" (val));						\
-> >  }
-> >  
-> > -- 
-> > 2.30.2
-> > 
-
+diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
+index d955ade5df7c..5d460f6b7675 100644
+--- a/arch/arm64/include/asm/atomic_lse.h
++++ b/arch/arm64/include/asm/atomic_lse.h
+@@ -249,7 +249,7 @@ __lse__cmpxchg_case_##name##sz(volatile void *ptr,			\
+ 	"	mov	%" #w "[tmp], %" #w "[old]\n"			\
+ 	"	cas" #mb #sfx "\t%" #w "[tmp], %" #w "[new], %[v]\n"	\
+ 	"	mov	%" #w "[ret], %" #w "[tmp]"			\
+-	: [ret] "+r" (x0), [v] "+Q" (*(unsigned long *)ptr),		\
++	: [ret] "+r" (x0), [v] "+Q" (*(u##sz *)ptr),			\
+ 	  [tmp] "=&r" (tmp)						\
+ 	: [old] "r" (x1), [new] "r" (x2)				\
+ 	: cl);								\
+diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
+index f9bef42c1411..497acf134d99 100644
+--- a/arch/arm64/include/asm/cmpxchg.h
++++ b/arch/arm64/include/asm/cmpxchg.h
+@@ -243,7 +243,7 @@ static inline void __cmpwait_case_##sz(volatile void *ptr,		\
+ 	"	cbnz	%" #w "[tmp], 1f\n"				\
+ 	"	wfe\n"							\
+ 	"1:"								\
+-	: [tmp] "=&r" (tmp), [v] "+Q" (*(unsigned long *)ptr)		\
++	: [tmp] "=&r" (tmp), [v] "+Q" (*(u##sz *)ptr)			\
+ 	: [val] "r" (val));						\
+ }
+ 
 -- 
-Kees Cook
+2.30.2
+
