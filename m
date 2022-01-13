@@ -2,129 +2,170 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0170C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 18:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED0DC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 21:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237646AbiAMSvb (ORCPT
+        id S235103AbiAMVTl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Jan 2022 13:51:31 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:37830 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234118AbiAMSv2 (ORCPT
+        Thu, 13 Jan 2022 16:19:41 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30176 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235144AbiAMVTj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Jan 2022 13:51:28 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9606D61D38;
-        Thu, 13 Jan 2022 18:51:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A315C36AE9;
-        Thu, 13 Jan 2022 18:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1642099888;
-        bh=N3+9p+4jyeYRxCvXQcf91ZlSqIklpUkeObUtYJy0Ong=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xS0uBDoTFOc9I45x3Zku8TDPUMFpewBN2sjPX4wH95pz5+7k1aLbtoR8qArn1k32q
-         oH2Cj+L5wg8h4INFHrzvxW5TztRv9qJOxtI0tXnlnd1RJqbelHOOVM8+2Ely2RIgZY
-         +o/NHntjCjQuZNoRS7NLrQsdtdbG3GRSzkP7NH6M=
-Date:   Thu, 13 Jan 2022 19:51:24 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Phillip Potter <phil@philpotter.co.uk>,
-        Michael Straube <straube.linux@gmail.com>,
-        Fabio Aiuto <fabioaiuto83@gmail.com>,
-        linux-staging@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Marco Cesati <marcocesati@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Check for NULL header value
-Message-ID: <YeB0rP7KXtbIKr6I@kroah.com>
-References: <20220113002001.3498383-1-keescook@chromium.org>
- <Yd/tSpnpb4vWp6OP@kroah.com>
- <202201131027.FCAC3072E4@keescook>
+        Thu, 13 Jan 2022 16:19:39 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20DKS908012145;
+        Thu, 13 Jan 2022 21:19:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=gglTjkJQfUQeW1de/xy1Uu37Ciw6EQP2ZvTjwgTy8g8=;
+ b=Pn+xY/c0IJINFihRCVKn6Bcv2cZD1xtU+ilXssjX57BMGpsk82WltbrXBPLceEHH3t0n
+ XK/4BM3taLSTqdsxGKp/bte4pauyJ1q3VX2ElUnL1dDLHO1JLSn5aBKpNsgpCQ3+QAiO
+ e2rLaQSbvhG/XvYb7228Nxghkx45mqkfoUiXLgzMJGn3LJXdl5t+2rvWWlJZ2DSgRvha
+ SEvv4uOdUVBNSP89zmcsJHSYg07ERt+dus4GVMiWD1ATbSus96cSCdB5i9Iba8ij25g7
+ NFbessQqN3BZI8h+yGmbhW/J2mxKqDrtMGasgKB9/ral1FnPzGgkY3aesoeBQcuM5u9K 1Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3dju55h1fn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jan 2022 21:19:35 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 20DLDuhc031078;
+        Thu, 13 Jan 2022 21:19:35 GMT
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3dju55h1fe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jan 2022 21:19:35 +0000
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20DLHwQX019673;
+        Thu, 13 Jan 2022 21:19:34 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02dal.us.ibm.com with ESMTP id 3df28cnncj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jan 2022 21:19:34 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20DLJXQU33292630
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jan 2022 21:19:33 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 83D3913604F;
+        Thu, 13 Jan 2022 21:19:33 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C2E37136061;
+        Thu, 13 Jan 2022 21:19:32 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Jan 2022 21:19:32 +0000 (GMT)
+Message-ID: <4b59d305-6858-1514-751a-37853ad777be@linux.ibm.com>
+Date:   Thu, 13 Jan 2022 16:19:32 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202201131027.FCAC3072E4@keescook>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] tpm: vtpm_proxy: Avoid device-originated buffer overflow
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Peter Huewe <peterhuewe@gmx.de>
+Cc:     Jarkko Sakkinen <jarkko@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20220113002727.3709495-1-keescook@chromium.org>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20220113002727.3709495-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: uN_XodsZ-6rQp0VYokR1dUX0tyVpPSlM
+X-Proofpoint-GUID: wApIpmcjT2Lfp7eHeYAXTbKLYI-eziLm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-01-13_09,2022-01-13_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ suspectscore=0 phishscore=0 clxscore=1011 spamscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2201130129
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 13, 2022 at 10:29:04AM -0800, Kees Cook wrote:
-> On Thu, Jan 13, 2022 at 10:13:46AM +0100, Greg Kroah-Hartman wrote:
-> > On Wed, Jan 12, 2022 at 04:20:01PM -0800, Kees Cook wrote:
-> > > When building with -Warray-bounds, the following warning is emitted:
-> > > 
-> > > In file included from ./include/linux/string.h:253,
-> > >                  from ./arch/x86/include/asm/page_32.h:22,
-> > >                  from ./arch/x86/include/asm/page.h:14,
-> > >                  from ./arch/x86/include/asm/thread_info.h:12,
-> > >                  from ./include/linux/thread_info.h:60,
-> > >                  from ./arch/x86/include/asm/preempt.h:7,
-> > >                  from ./include/linux/preempt.h:78,
-> > >                  from ./include/linux/rcupdate.h:27,
-> > >                  from ./include/linux/rculist.h:11,
-> > >                  from ./include/linux/sched/signal.h:5,
-> > >                  from ./drivers/staging/rtl8723bs/include/drv_types.h:17,
-> > >                  from drivers/staging/rtl8723bs/core/rtw_recv.c:7:
-> > > In function 'memcpy',
-> > >     inlined from 'wlanhdr_to_ethhdr' at drivers/staging/rtl8723bs/core/rtw_recv.c:1554:2:
-> > > ./include/linux/fortify-string.h:41:33: warning: '__builtin_memcpy' offset [0, 5] is out of the bounds [0, 0] [-Warray-bounds]
-> > >    41 | #define __underlying_memcpy     __builtin_memcpy
-> > >       |                                 ^
-> > > 
-> > > This is because the compiler sees it is possible for "ptr" to be a NULL
-> > > value, and concludes that it has zero size and attempts to copy to it
-> > > would overflow. Instead, detect the NULL return and error out early.
-> > > 
-> > > Cc: Larry Finger <Larry.Finger@lwfinger.net>
-> > > Cc: Phillip Potter <phil@philpotter.co.uk>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Michael Straube <straube.linux@gmail.com>
-> > > Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
-> > > Cc: linux-staging@lists.linux.dev
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  drivers/staging/rtl8723bs/core/rtw_recv.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > index 41bfca549c64..61135c49322b 100644
-> > > --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > @@ -1513,6 +1513,9 @@ static signed int wlanhdr_to_ethhdr(union recv_frame *precvframe)
-> > >  	u8 *ptr = get_recvframe_data(precvframe) ; /*  point to frame_ctrl field */
-> > >  	struct rx_pkt_attrib *pattrib = &precvframe->u.hdr.attrib;
-> > >  
-> > > +	if (!ptr)
-> > > +		return _FAIL;
-> > 
-> > This will never happen, so let's not paper over compiler issues with
-> > stuff like this please.
-> > 
-> > As the call to get_recvframe_data() is only done in one place in this
-> > driver (in all drivers that look like this as well), it can just be
-> > replaced with the real code instead of the nonsensical test for NULL and
-> > then the compiler should be happy.
-> > 
-> > I'll gladly take that fix instead of this one, as that would be the
-> > correct solution here.
-> 
-> I changed it around, but it doesn't help. I assume this is because we
-> build with -fno-delete-null-pointer-checks, so the compiler continues
-> to assume it's possible for the incoming argument to be NULL.
 
-That's a broken compiler then.
+On 1/12/22 19:27, Kees Cook wrote:
+> When building with -Warray-bounds, this warning was emitted:
+>
+> In function 'memset',
+>      inlined from 'vtpm_proxy_fops_read' at drivers/char/tpm/tpm_vtpm_proxy.c:102:2:
+> ./include/linux/fortify-string.h:43:33: warning: '__builtin_memset' pointer overflow between offset 164 and size [2147483648, 4294967295]
+> [-Warray-bounds]
+>     43 | #define __underlying_memset     __builtin_memset
+>        |                                 ^
+>
+> There was no checking of the req_len value from the device. A malicious
+> (or buggy) device could end up leaking (and when wiping) memory contents
+> beyond the end of the proxy buffer.
+>
+> Cc: Peter Huewe <peterhuewe@gmx.de>
+> Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: linux-integrity@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   drivers/char/tpm/tpm_vtpm_proxy.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
+> index 91c772e38bb5..5c865987ba5c 100644
+> --- a/drivers/char/tpm/tpm_vtpm_proxy.c
+> +++ b/drivers/char/tpm/tpm_vtpm_proxy.c
+> @@ -91,7 +91,7 @@ static ssize_t vtpm_proxy_fops_read(struct file *filp, char __user *buf,
+>   
+>   	len = proxy_dev->req_len;
+>   
+> -	if (count < len) {
+> +	if (count < len || len > sizeof(proxy_dev->buffer)) {
+>   		mutex_unlock(&proxy_dev->buf_lock);
+>   		pr_debug("Invalid size in recv: count=%zd, req_len=%zd\n",
+>   			 count, len);
 
-> Should I rearrange this to do a NULL check for precvframe before all the
-> assignments in addition to removing get_recvframe_data()?
 
-If you walk the call-chain back, you will see that precvframe can't ever
-be NULL here (which is why this code doesn't crash), so don't check for
-something that is impossible to ever hit please just because the
-compiler is broken.
+Thanks for this patch.
 
-thanks,
+I just want to clarify this. In vtpm_proxy_tpm_op_send() we have the 
+only place that sets req_len to a value larger than 0:
 
-greg k-h
+static int vtpm_proxy_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t 
+count)
+{
+     struct proxy_dev *proxy_dev = dev_get_drvdata(&chip->dev);
+
+     if (count > sizeof(proxy_dev->buffer)) {
+         dev_err(&chip->dev,
+             "Invalid size in send: count=%zd, buffer size=%zd\n",
+             count, sizeof(proxy_dev->buffer));
+         return -EIO;
+     }
+
+[...]
+
+     proxy_dev->req_len = count;
+     memcpy(proxy_dev->buffer, buf, count);
+
+[...]
+
+}
+
+
+The above makes sure that we cannot copy more bytes into the 
+proxy_dev->buffer than the what the buffer has bytes for.
+
+It then sets req_len to a valid value that is less or equal to the 
+buffer size.
+
+Considering this your check above seems to only be there to make the 
+compiler happy but otherwise I don't see that this is a real problem 
+with a buffer overflow?!
+
+Nevertheless, let all those compilers be happy:
+
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+
+
