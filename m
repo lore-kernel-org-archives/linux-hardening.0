@@ -2,101 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC98C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 09:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5EAC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 09:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230040AbiAMJPi (ORCPT
+        id S233799AbiAMJTe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Jan 2022 04:15:38 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:58078 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233868AbiAMJON (ORCPT
+        Thu, 13 Jan 2022 04:19:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230223AbiAMJT3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Jan 2022 04:14:13 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2240761ADE;
-        Thu, 13 Jan 2022 09:14:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC344C36AE9;
-        Thu, 13 Jan 2022 09:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1642065251;
-        bh=LJtbUSGwM4wxW/dO+RjsUM6nIXC1v7DVBzKecDlu4Vk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XY0KuFTcfYqTV5fty2JXdq8KUdN6gESStr/sv1UmR0NHhCDXG0O/zfSEJjEZ8CjTj
-         FwrphoeUjiaXAcVjYctGDsYwzi5jKH134tG6lWfdWVULI07yzYjV+1pBv0gR3OC1qF
-         39rx5aQ6M26WivHGSvvAOr2i3dR3FNJKAgVGBn5w=
-Date:   Thu, 13 Jan 2022 10:14:08 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Phillip Potter <phil@philpotter.co.uk>,
-        Michael Straube <straube.linux@gmail.com>,
-        Fabio Aiuto <fabioaiuto83@gmail.com>,
-        linux-staging@lists.linux.dev, Martin Kaiser <martin@kaiser.cx>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] staging: r8188eu: Check for NULL header value
-Message-ID: <Yd/tYOJZ3rhxsHBY@kroah.com>
-References: <20220113001934.3455851-1-keescook@chromium.org>
+        Thu, 13 Jan 2022 04:19:29 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE10C06173F;
+        Thu, 13 Jan 2022 01:19:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=r2/88PY3CELroJwlxZy5NPooVbIHDs4v124Txrn+jhs=; b=rbKQHhV+vic4k+qq7XvubgV/Yo
+        feRrrWSc0daH5KbJS4IXfoqIyNGe/dFaiNtU0NomTRg5fdOX4q8qlQHUVTbiCpuYxaobBOQKiH2sV
+        fgmrtTW0R7DpmpKDY8sYyl03ehyr1CpJP8yH68WdAg3YW8lYIgy3H0bfDQdvFDBeBaf3pPYLJl8og
+        t6lIoxzinEp+hmDWLtwWZOLu9Uu4uGBLPG9e0zIV2YsGQjCmsr9qkMureuqKi7kDCTmiaqNeUR5yH
+        TavCLk6sxDPCFCA+Rd/kQOlabAdVQJO0QK6unh/f65cqKug2G9LBrV0fc5OPykkTplaATTefI/9J5
+        kZrBI+/w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1n7wG4-000wrA-PK; Thu, 13 Jan 2022 09:19:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 20E1D300222;
+        Thu, 13 Jan 2022 10:18:58 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EC613264EE459; Thu, 13 Jan 2022 10:18:57 +0100 (CET)
+Date:   Thu, 13 Jan 2022 10:18:57 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Xiu Jianfeng <xiujianfeng@huawei.com>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, gustavoars@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH -next, v2] sched: Use struct_size() helper in
+ task_numa_group()
+Message-ID: <Yd/ugQ8kUmcceuex@hirez.programming.kicks-ass.net>
+References: <20220110012354.144394-1-xiujianfeng@huawei.com>
+ <Ydy3N577YD0JJr2N@hirez.programming.kicks-ass.net>
+ <20220110193158.31e1eaea@gandalf.local.home>
+ <Yd1qYsFcgcp/uHSa@hirez.programming.kicks-ass.net>
+ <20220111101425.7c59de5b@rorschach.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220113001934.3455851-1-keescook@chromium.org>
+In-Reply-To: <20220111101425.7c59de5b@rorschach.local.home>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 04:19:34PM -0800, Kees Cook wrote:
-> When building with -Warray-bounds, the following warning is emitted:
+On Tue, Jan 11, 2022 at 10:14:25AM -0500, Steven Rostedt wrote:
+> On Tue, 11 Jan 2022 12:30:42 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> In file included from ./include/linux/string.h:253,
->                  from ./arch/x86/include/asm/page_32.h:22,
->                  from ./arch/x86/include/asm/page.h:14,
->                  from ./arch/x86/include/asm/thread_info.h:12,
->                  from ./include/linux/thread_info.h:60,
->                  from ./arch/x86/include/asm/preempt.h:7,
->                  from ./include/linux/preempt.h:78,
->                  from ./include/linux/rcupdate.h:27,
->                  from ./include/linux/rculist.h:11,
->                  from ./include/linux/sched/signal.h:5,
->                  from ./drivers/staging/rtl8723bs/include/drv_types.h:17,
->                  from drivers/staging/rtl8723bs/core/rtw_recv.c:7:
-> In function 'memcpy',
->     inlined from 'wlanhdr_to_ethhdr' at drivers/staging/rtl8723bs/core/rtw_recv.c:1554:2:
-> ./include/linux/fortify-string.h:41:33: warning: '__builtin_memcpy' offset [0, 5] is out of the bounds [0, 0] [-Warray-bounds]
->    41 | #define __underlying_memcpy     __builtin_memcpy
->       |                                 ^
+> > > > >  	if (unlikely(!deref_curr_numa_group(p))) {
+> > > > > -		unsigned int size = sizeof(struct numa_group) +
+> > > > > -				    NR_NUMA_HINT_FAULT_STATS *
+> > > > > -				    nr_node_ids * sizeof(unsigned long);
+> > > > > +		unsigned int size = struct_size(grp, faults,
+> > > > > +						NR_NUMA_HINT_FAULT_STATS * nr_node_ids);    
+> > > > 
+> > > > Again, why?! The old code was perfectly readable, this, not so much.  
+> > > 
+> > > Because it is unsafe,  
+> > 
+> > Unsafe how? Changelog doesn't mention anything, nor do you. In fact,
+> > Changelog says there is no functional change, which makes me hate the
+> > thing for obscuring something that was simple.
 > 
-> This is because the compiler sees it is possible for "ptr" to be a NULL
-> value, and concludes that it has zero size and attempts to copy to it
-> would overflow. Instead, detect the NULL return and error out early.
-> 
-> Cc: Larry Finger <Larry.Finger@lwfinger.net>
-> Cc: Phillip Potter <phil@philpotter.co.uk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Michael Straube <straube.linux@gmail.com>
-> Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
-> Cc: linux-staging@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/staging/r8188eu/core/rtw_recv.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/staging/r8188eu/core/rtw_recv.c b/drivers/staging/r8188eu/core/rtw_recv.c
-> index 51a13262a226..93b0aa5688e3 100644
-> --- a/drivers/staging/r8188eu/core/rtw_recv.c
-> +++ b/drivers/staging/r8188eu/core/rtw_recv.c
-> @@ -1191,6 +1191,9 @@ static int wlanhdr_to_ethhdr(struct recv_frame *precvframe)
->  	u8	*ptr = get_recvframe_data(precvframe); /*  point to frame_ctrl field */
->  	struct rx_pkt_attrib *pattrib = &precvframe->attrib;
->  
-> +	if (!ptr)
-> +		return _FAIL;
+> If for some reason faults changes in size, the original code must be
+> updated whereas the new code is robust enough to not need changing.
 
-Same objection as on the other staging driver change, this is not the
-correct way to solve this.
+Then I would still much prefer something like:
 
-thanks,
+	unsigned int size = sizeof(*grp) +
+			    NR_NUMA_HINT_FAULT_STATS * numa_node_ids * sizeof(gfp->faults);
 
-greg k-h
+Which is still far more readable than some obscure macro. But again, the
+Changelog doesn't mention any actual benefit of the patch and makes the
+code less clear.
+
+> It's a C hack and far from trivial. Maybe to you as you are use to
+> these hacks. But seriously, this is not something the average C coder
+> is use to, as variable length structures are rather unique to the
+> kernel.
+
+That's just not true, I've used them in userspace too (even before I
+started tinkering with the kernel). I've even used this pattern in other
+languages.
+
+It is a fairly useful and common pattern to have a small structure and
+an array in the same memory allocation.
+
+Think hash-tables, the structure contains the size of the table and some
+other things, like for example a seed for the hash function or a lock,
+and then the table itself as an array.
+
+I can't, nor do I want to, remember all these stupid little macros. Esp.
+not for trivial things like this.
