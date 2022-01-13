@@ -2,122 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3212CC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 00:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A49C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 00:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbiAMAUF (ORCPT
+        id S229600AbiAMA1b (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jan 2022 19:20:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42106 "EHLO
+        Wed, 12 Jan 2022 19:27:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbiAMAUE (ORCPT
+        with ESMTP id S229592AbiAMA1a (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jan 2022 19:20:04 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8906C06173F
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 16:20:03 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id rj2-20020a17090b3e8200b001b1944bad25so8177919pjb.5
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 16:20:03 -0800 (PST)
+        Wed, 12 Jan 2022 19:27:30 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0FBC061748
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 16:27:30 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id i8-20020a17090a138800b001b3936fb375so15819959pja.1
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jan 2022 16:27:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=uaHXL0g0eKQR6hRmhIzmoxXK0XO1p+VEaXguQt2Tkks=;
-        b=JVNXCkvrxBESUN0CKJrgF0SJzNWzpaIBfJkeuFdHCgA/d1BXVhIs25ErIZTYLSxNtA
-         nmx9OSpv437Jx5CU0rCZ3iDGdwJdQ0kbwub7YBF0Ul3cLmBUEwwq8XMBwP0G/O5a/oeP
-         7HLQmmVLSVY2Xb49NyNDlMjEZP20md1l0Jkrc=
+        bh=BnWdHb/O4tg2rZy0DeOCwdDNZkf1ttSr6PBlJ/VLHgk=;
+        b=e6XWspE1KVaal2tHOEmNdeId93XRO18ynm35iGb6jMs0XmVKjWv8XAyXQFI3rRFrbj
+         LQVptWt+OY61VaozdFa6MV593rWbu3A7qRXeiLp5fkCOuocoJVDdAWhCZx65+fmIFiuG
+         DSOb8PSq4bZbrXkRq7TPlKD2anrZfuqMfofJU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=uaHXL0g0eKQR6hRmhIzmoxXK0XO1p+VEaXguQt2Tkks=;
-        b=k3F6g4gVbvqaGprLzAN7XGAm0T0MMurs3wX18AWl2e9YzQy/6KDyyMXrurO8BEvewU
-         7SxDU2zTqCmsGhfLjHH6wN5W2IonT8VO0IkhFh/SkkeKBOBVoRRBpPGEYmv3NHhSkczB
-         mJftMGXNS3G+FuoMcq2ongB4CKpAZblXOPw4bJBC7qZyBOyz3rO6+bArFunv064iyRuX
-         zRy3EpXlQJjIRk3BdgDnr+7/RCAZlSG5WBq7aXIjlqCE/oaAGkwDoK7vDVhXlKH/Wnby
-         FSEk4wBWrNAVKC8kE422AwSCpfgEL49+vGjG3FVnjzAPx8kKgXaRRrVBJ4DvWFnY1+y4
-         UiQw==
-X-Gm-Message-State: AOAM532vaDoQpKJpfVkAhvpjs8LcbzVPGc9e2hjO39Tv3aTbn6FpBatP
-        906IWhs3PGt6RhOt5GEPlrdmAg==
-X-Google-Smtp-Source: ABdhPJwOYD9vshi0Ef8EpsArms2vdaSwLTGVCrtUcdc4kAN6XpVcPubs6RW23KUYpshWYnXBB/VUug==
-X-Received: by 2002:a17:90a:bf0d:: with SMTP id c13mr794809pjs.163.1642033203378;
-        Wed, 12 Jan 2022 16:20:03 -0800 (PST)
+        bh=BnWdHb/O4tg2rZy0DeOCwdDNZkf1ttSr6PBlJ/VLHgk=;
+        b=SCwIsPTCxSN9mB07LBZoi1vSxQ4i2w/rQ+LdpUt5e8YqsNPqNI9cb2EHMPyRdFV2jS
+         HRtEJc58p1hOWS2bFUndpbbYoyeru1IXLxOXjgvLuxH+S1B580bIbQnVGoH9ZlM1eNEW
+         JUYCFtq2SnTmWpSU1t9WcTYXAewcLxCqTyMbmyleEQ4R3RaXjccMdAnkmTW15+G8uJSa
+         drrAOc0eyw+Uele7XNcLl6RwVogGK0W57fA3Fo23ZZuIM23+9niYAS5q+g8lpN0WmzbD
+         7LS8xSvpY4UaZgdspYhQjvEiljS1Ge9f2paCk+S22ld5jJFglfHE1IfcWiwd7rDOXKnf
+         T5NA==
+X-Gm-Message-State: AOAM532ZF5o5nt5kyWaMW22pjzAnXKMctBYQ0g4/PcmMYeZeMwwF/PU9
+        Ob/spoJNwSmw4CD3153nykYXUw==
+X-Google-Smtp-Source: ABdhPJwH9+x+rvKqh/pxtdiEk+Bph9GI+MIDGw2BkHfsOYUgQm8RXBA8sZZmZ7eYjFQSKgZ86re+yQ==
+X-Received: by 2002:a17:902:8345:b0:14a:1a98:4288 with SMTP id z5-20020a170902834500b0014a1a984288mr2172148pln.79.1642033649636;
+        Wed, 12 Jan 2022 16:27:29 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d13sm709919pfj.135.2022.01.12.16.20.03
+        by smtp.gmail.com with ESMTPSA id l21sm666438pgk.41.2022.01.12.16.27.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 16:20:03 -0800 (PST)
+        Wed, 12 Jan 2022 16:27:29 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
+To:     Peter Huewe <peterhuewe@gmx.de>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Phillip Potter <phil@philpotter.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        Fabio Aiuto <fabioaiuto83@gmail.com>,
-        linux-staging@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Marco Cesati <marcocesati@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: Check for NULL header value
-Date:   Wed, 12 Jan 2022 16:20:01 -0800
-Message-Id: <20220113002001.3498383-1-keescook@chromium.org>
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] tpm: vtpm_proxy: Avoid device-originated buffer overflow
+Date:   Wed, 12 Jan 2022 16:27:27 -0800
+Message-Id: <20220113002727.3709495-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2355; h=from:subject; bh=eZoIMIPDEwovbeMilW7xqcbbc0G/FfamXhovBEiFFuI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh33AwJm5wI02T1wLY2ibgKRRU1VCKSQ05kH2jPHr4 P6w5YDaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYd9wMAAKCRCJcvTf3G3AJmMkD/ 4/KAPImvAVAfBWfs6pD4KryQTF0ClSiEXSUIF7/J8A7QmvwZxmZTSW0J6MvDTdAqk+eLGU9wVN//vG 6kUvTKY54H7k35r0p3V2+7FLYQ7rXp1aSikZfv6OnYLsXVkUJCOdjlNH2kpGYPj8qHvwuhLFBQjW5c qkTVsx561ft+zf3rFg88/hJILjC5jtc967bZ2WxVC68LyPsqP362PffqBfgQU/4FPLNDC0sg85KxLf B8f1D71iC9LwnNq4Z9oyVs8xXgHXL+1A9kSIB4BX9fcDHJGgTlPfyxAFc7ZBqxru1+HcdpIrIV71yB 5c/oWHUOayBYNW/HzAhcqX/XNcgHK95KoLy7p4znQGGkbH6fSjHihrZFOx3n5beGjgrpsUGaBoOhDX h6mAHxT+SFAPO5youTJcyLiVhVzsrf8MFar/Ggq2Xie9+ZAdBTmv+vmefR1N63KGdFB3iNh066X9Wr P+AsOjG2o396jQEVi7/FP+D1FV2uMHFK2dBmnx4sf72rMp9fdV7XLFMDASSCSeUF2n4DAMTCdmz48y 4GempSyetrAOY/F6z5/vzwOjwYUa+sfRJ16O/lQnqOabMNhczxp6Of8VRmhf0Uq3d0WWIKuH9+XLeS okKTJ9k4NPzlnF4Y8zazLiuoSuXPzxEoCECICvY78oDGdxLLIZlr8+Omt+oQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1465; h=from:subject; bh=/0wOI/ECBPLd8YZPRwoi2hotPW3s6qwXwBX0NNQI6Ig=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh33Hv5dMkyjt5VdVIF846gjbAf8rxOtNrn4wK2JlU yiUqQcCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYd9x7wAKCRCJcvTf3G3AJgewD/ 42BxF4A8IwxjMvJ+KeG4mIf/ZKbHUEJcblSgWPbvnI6gZ4o64fFPYuS8ftfl+HScbhDdJ8lpu45CKP y8kRbESOrriCvGILlgRqUvbONa4B+LkRNI0vBdC8Ei8+98SBdfxu2XSd8D9lI/QIlS1ggzaj+G1hjq e7Qx7jnoyxkyGeiZX041f3fZ/tNVFMColUoTywf1TrydJuGr3p91zjn8h8H40PNMTiQzPQqPJqxO2X x5Cwyd7d9Ra3zXhjdakphZd0FQGSIUlKjh4NW7j9H8WijwkQHYZ/reFNUveuA+PapEwU9AwFKDNYex 4AyMFEFpTa48K8bfgkqZSGkcDdpJMMZx+Z7j7woe9acA/UQMC+VhXrFdYfbOheZZSCl5ghz0T8psIw Tz0hVnIUWtidc67EHRDqSoVv5FGaC4V9OQuq6/IG1HhEUJOI/ZLQhOMVKyB0heOl2QvAikKr/hv4nW XTrpgcB67Qk93LD1qKCTloRrwgSQMRFY0WNxFUoiixcpFaM+vMui11RwiC+ZaU7O/M7nE0FL9oJe6F pysduZHlM1spUk5yE/eZz9S70N3oks9HRnKQOwaM00irRHnFVR2gBPNIV9Rpbu47OQBWoM2hDWoTv2 alVJANPvn6XP/cF/evAcbOhrCUBdiBie0UnC9J1MKP8rWctjgppuF7AaF0zg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When building with -Warray-bounds, the following warning is emitted:
+When building with -Warray-bounds, this warning was emitted:
 
-In file included from ./include/linux/string.h:253,
-                 from ./arch/x86/include/asm/page_32.h:22,
-                 from ./arch/x86/include/asm/page.h:14,
-                 from ./arch/x86/include/asm/thread_info.h:12,
-                 from ./include/linux/thread_info.h:60,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/rcupdate.h:27,
-                 from ./include/linux/rculist.h:11,
-                 from ./include/linux/sched/signal.h:5,
-                 from ./drivers/staging/rtl8723bs/include/drv_types.h:17,
-                 from drivers/staging/rtl8723bs/core/rtw_recv.c:7:
-In function 'memcpy',
-    inlined from 'wlanhdr_to_ethhdr' at drivers/staging/rtl8723bs/core/rtw_recv.c:1554:2:
-./include/linux/fortify-string.h:41:33: warning: '__builtin_memcpy' offset [0, 5] is out of the bounds [0, 0] [-Warray-bounds]
-   41 | #define __underlying_memcpy     __builtin_memcpy
+In function 'memset',
+    inlined from 'vtpm_proxy_fops_read' at drivers/char/tpm/tpm_vtpm_proxy.c:102:2:
+./include/linux/fortify-string.h:43:33: warning: '__builtin_memset' pointer overflow between offset 164 and size [2147483648, 4294967295]
+[-Warray-bounds]
+   43 | #define __underlying_memset     __builtin_memset
       |                                 ^
 
-This is because the compiler sees it is possible for "ptr" to be a NULL
-value, and concludes that it has zero size and attempts to copy to it
-would overflow. Instead, detect the NULL return and error out early.
+There was no checking of the req_len value from the device. A malicious
+(or buggy) device could end up leaking (and when wiping) memory contents
+beyond the end of the proxy buffer.
 
-Cc: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Phillip Potter <phil@philpotter.co.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michael Straube <straube.linux@gmail.com>
-Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
-Cc: linux-staging@lists.linux.dev
+Cc: Peter Huewe <peterhuewe@gmx.de>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-integrity@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/staging/rtl8723bs/core/rtw_recv.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/char/tpm/tpm_vtpm_proxy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
-index 41bfca549c64..61135c49322b 100644
---- a/drivers/staging/rtl8723bs/core/rtw_recv.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
-@@ -1513,6 +1513,9 @@ static signed int wlanhdr_to_ethhdr(union recv_frame *precvframe)
- 	u8 *ptr = get_recvframe_data(precvframe) ; /*  point to frame_ctrl field */
- 	struct rx_pkt_attrib *pattrib = &precvframe->u.hdr.attrib;
+diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
+index 91c772e38bb5..5c865987ba5c 100644
+--- a/drivers/char/tpm/tpm_vtpm_proxy.c
++++ b/drivers/char/tpm/tpm_vtpm_proxy.c
+@@ -91,7 +91,7 @@ static ssize_t vtpm_proxy_fops_read(struct file *filp, char __user *buf,
  
-+	if (!ptr)
-+		return _FAIL;
-+
- 	if (pattrib->encrypt)
- 		recvframe_pull_tail(precvframe, pattrib->icv_len);
+ 	len = proxy_dev->req_len;
  
+-	if (count < len) {
++	if (count < len || len > sizeof(proxy_dev->buffer)) {
+ 		mutex_unlock(&proxy_dev->buf_lock);
+ 		pr_debug("Invalid size in recv: count=%zd, req_len=%zd\n",
+ 			 count, len);
 -- 
 2.30.2
 
