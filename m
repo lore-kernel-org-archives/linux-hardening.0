@@ -2,54 +2,52 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA9AC4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 09:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC98C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 09:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229870AbiAMJPh (ORCPT
+        id S230040AbiAMJPi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Jan 2022 04:15:37 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56368 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230224AbiAMJNv (ORCPT
+        Thu, 13 Jan 2022 04:15:38 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:58078 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233868AbiAMJON (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Jan 2022 04:13:51 -0500
+        Thu, 13 Jan 2022 04:14:13 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 50A94B81EFB;
-        Thu, 13 Jan 2022 09:13:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85ED7C36AE3;
-        Thu, 13 Jan 2022 09:13:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2240761ADE;
+        Thu, 13 Jan 2022 09:14:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC344C36AE9;
+        Thu, 13 Jan 2022 09:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1642065229;
-        bh=RW4DozPOxlNI92jF6lBPdvOqnuQ/ZzGN/UAe58oV+eg=;
+        s=korg; t=1642065251;
+        bh=LJtbUSGwM4wxW/dO+RjsUM6nIXC1v7DVBzKecDlu4Vk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K4dL/XHGr472oceoPwK418OamfSTy6sXTEBZyBLOSUC9WDd1h15zxDee6x9Rx2KpK
-         +M6uixytBwvn8wbTG7AQfc0Erao4AbQPXnSvij/3DQ8Nnlun1QeLIOKzezgeN2CQ0F
-         7xMVsqVgszFZ1QSj94nA+z+FH0C9ogay5S6qgrSw=
-Date:   Thu, 13 Jan 2022 10:13:46 +0100
+        b=XY0KuFTcfYqTV5fty2JXdq8KUdN6gESStr/sv1UmR0NHhCDXG0O/zfSEJjEZ8CjTj
+         FwrphoeUjiaXAcVjYctGDsYwzi5jKH134tG6lWfdWVULI07yzYjV+1pBv0gR3OC1qF
+         39rx5aQ6M26WivHGSvvAOr2i3dR3FNJKAgVGBn5w=
+Date:   Thu, 13 Jan 2022 10:14:08 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
         Phillip Potter <phil@philpotter.co.uk>,
         Michael Straube <straube.linux@gmail.com>,
         Fabio Aiuto <fabioaiuto83@gmail.com>,
-        linux-staging@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Marco Cesati <marcocesati@gmail.com>,
+        linux-staging@lists.linux.dev, Martin Kaiser <martin@kaiser.cx>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Check for NULL header value
-Message-ID: <Yd/tSpnpb4vWp6OP@kroah.com>
-References: <20220113002001.3498383-1-keescook@chromium.org>
+Subject: Re: [PATCH] staging: r8188eu: Check for NULL header value
+Message-ID: <Yd/tYOJZ3rhxsHBY@kroah.com>
+References: <20220113001934.3455851-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220113002001.3498383-1-keescook@chromium.org>
+In-Reply-To: <20220113001934.3455851-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 04:20:01PM -0800, Kees Cook wrote:
+On Wed, Jan 12, 2022 at 04:19:34PM -0800, Kees Cook wrote:
 > When building with -Warray-bounds, the following warning is emitted:
 > 
 > In file included from ./include/linux/string.h:253,
@@ -82,30 +80,22 @@ On Wed, Jan 12, 2022 at 04:20:01PM -0800, Kees Cook wrote:
 > Cc: linux-staging@lists.linux.dev
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  drivers/staging/rtl8723bs/core/rtw_recv.c | 3 +++
+>  drivers/staging/r8188eu/core/rtw_recv.c | 3 +++
 >  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
-> index 41bfca549c64..61135c49322b 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
-> @@ -1513,6 +1513,9 @@ static signed int wlanhdr_to_ethhdr(union recv_frame *precvframe)
->  	u8 *ptr = get_recvframe_data(precvframe) ; /*  point to frame_ctrl field */
->  	struct rx_pkt_attrib *pattrib = &precvframe->u.hdr.attrib;
+> diff --git a/drivers/staging/r8188eu/core/rtw_recv.c b/drivers/staging/r8188eu/core/rtw_recv.c
+> index 51a13262a226..93b0aa5688e3 100644
+> --- a/drivers/staging/r8188eu/core/rtw_recv.c
+> +++ b/drivers/staging/r8188eu/core/rtw_recv.c
+> @@ -1191,6 +1191,9 @@ static int wlanhdr_to_ethhdr(struct recv_frame *precvframe)
+>  	u8	*ptr = get_recvframe_data(precvframe); /*  point to frame_ctrl field */
+>  	struct rx_pkt_attrib *pattrib = &precvframe->attrib;
 >  
 > +	if (!ptr)
 > +		return _FAIL;
 
-This will never happen, so let's not paper over compiler issues with
-stuff like this please.
-
-As the call to get_recvframe_data() is only done in one place in this
-driver (in all drivers that look like this as well), it can just be
-replaced with the real code instead of the nonsensical test for NULL and
-then the compiler should be happy.
-
-I'll gladly take that fix instead of this one, as that would be the
-correct solution here.
+Same objection as on the other staging driver change, this is not the
+correct way to solve this.
 
 thanks,
 
