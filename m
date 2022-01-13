@@ -2,170 +2,190 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED0DC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 21:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43E5C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jan 2022 21:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235103AbiAMVTl (ORCPT
+        id S233297AbiAMV5s convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Jan 2022 16:19:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30176 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235144AbiAMVTj (ORCPT
+        Thu, 13 Jan 2022 16:57:48 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:5638 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232985AbiAMV5r (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Jan 2022 16:19:39 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20DKS908012145;
-        Thu, 13 Jan 2022 21:19:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=gglTjkJQfUQeW1de/xy1Uu37Ciw6EQP2ZvTjwgTy8g8=;
- b=Pn+xY/c0IJINFihRCVKn6Bcv2cZD1xtU+ilXssjX57BMGpsk82WltbrXBPLceEHH3t0n
- XK/4BM3taLSTqdsxGKp/bte4pauyJ1q3VX2ElUnL1dDLHO1JLSn5aBKpNsgpCQ3+QAiO
- e2rLaQSbvhG/XvYb7228Nxghkx45mqkfoUiXLgzMJGn3LJXdl5t+2rvWWlJZ2DSgRvha
- SEvv4uOdUVBNSP89zmcsJHSYg07ERt+dus4GVMiWD1ATbSus96cSCdB5i9Iba8ij25g7
- NFbessQqN3BZI8h+yGmbhW/J2mxKqDrtMGasgKB9/ral1FnPzGgkY3aesoeBQcuM5u9K 1Q== 
+        Thu, 13 Jan 2022 16:57:47 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20DKUdsR027614;
+        Thu, 13 Jan 2022 16:57:26 -0500
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3dju55h1fn-1
+        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3dj0k5vjcr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jan 2022 21:19:35 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 20DLDuhc031078;
-        Thu, 13 Jan 2022 21:19:35 GMT
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3dju55h1fe-1
+        Thu, 13 Jan 2022 16:57:25 -0500
+Received: from m0167089.ppops.net (m0167089.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 20DLse1P009765;
+        Thu, 13 Jan 2022 16:57:25 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3dj0k5vjcn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jan 2022 21:19:35 +0000
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20DLHwQX019673;
-        Thu, 13 Jan 2022 21:19:34 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02dal.us.ibm.com with ESMTP id 3df28cnncj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jan 2022 21:19:34 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20DLJXQU33292630
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jan 2022 21:19:33 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83D3913604F;
-        Thu, 13 Jan 2022 21:19:33 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2E37136061;
-        Thu, 13 Jan 2022 21:19:32 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Jan 2022 21:19:32 +0000 (GMT)
-Message-ID: <4b59d305-6858-1514-751a-37853ad777be@linux.ibm.com>
-Date:   Thu, 13 Jan 2022 16:19:32 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH] tpm: vtpm_proxy: Avoid device-originated buffer overflow
+        Thu, 13 Jan 2022 16:57:25 -0500
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 20DLvNZT041894
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Jan 2022 16:57:23 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 13 Jan
+ 2022 16:57:22 -0500
+Received: from ASHBMBX9.ad.analog.com ([fe80::5d54:bde3:ae3a:70bb]) by
+ ASHBMBX9.ad.analog.com ([fe80::5d54:bde3:ae3a:70bb%20]) with mapi id
+ 15.02.0986.014; Thu, 13 Jan 2022 16:57:22 -0500
+From:   "Tanislav, Cosmin" <Cosmin.Tanislav@analog.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>
+CC:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH v2] iio: addac: ad74413r: Do not reference negative array
+ offsets
+Thread-Topic: [PATCH v2] iio: addac: ad74413r: Do not reference negative array
+ offsets
+Thread-Index: AQHYB/PhZsR0gqWiSk2h2Z3Z9M1zDqxhgPYg
+Date:   Thu, 13 Jan 2022 21:57:22 +0000
+Message-ID: <8e6a081daeb54be38fdd658c796ec120@analog.com>
+References: <20220112203456.3950884-1-keescook@chromium.org>
+In-Reply-To: <20220112203456.3950884-1-keescook@chromium.org>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Peter Huewe <peterhuewe@gmx.de>
-Cc:     Jarkko Sakkinen <jarkko@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20220113002727.3709495-1-keescook@chromium.org>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20220113002727.3709495-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: uN_XodsZ-6rQp0VYokR1dUX0tyVpPSlM
-X-Proofpoint-GUID: wApIpmcjT2Lfp7eHeYAXTbKLYI-eziLm
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY3RhbmlzbGFc?=
+ =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
+ =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy1jNzkwNDViNi03NGJiLTExZWMtYjZkNS00MTU2?=
+ =?us-ascii?Q?NDUwMDAwMzBcYW1lLXRlc3RcYzc5MDQ1YjgtNzRiYi0xMWVjLWI2ZDUtNDE1?=
+ =?us-ascii?Q?NjQ1MDAwMDMwYm9keS50eHQiIHN6PSIzMzAwIiB0PSIxMzI4NjU4NDY0MDc2?=
+ =?us-ascii?Q?MjkyMjciIGg9IlNSTHM4N0wyQksrZk5aOERuYmFtbVpMSUlTVT0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUVvQ0FB?=
+ =?us-ascii?Q?Q3JpZWlKeUFqWUFlOStWYi9VQTRWTDczNVZ2OVFEaFVzREFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQURhQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBVklFdm9RQUFBQUFBQUFBQUFBQUFBSjRBQUFCaEFHUUFh?=
+ =?us-ascii?Q?UUJmQUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QUc4QWFnQmxBR01BZEFCekFG?=
+ =?us-ascii?Q?OEFaZ0JoQUd3QWN3QmxBRjhBWmdCdkFITUFhUUIwQUdrQWRnQmxBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR0VBWkFCcEFGOEFjd0JsQUdNQWRR?=
+ =?us-ascii?Q?QnlBR1VBWHdCd0FISUFid0JxQUdVQVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURF?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVlRQmtBR2tBWHdCekFHVUFZd0IxQUhJQVpRQmZBSEFBY2dC?=
+ =?us-ascii?Q?dkFHb0FaUUJqQUhRQWN3QmZBSFFBYVFCbEFISUFNZ0FBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFBPT0iLz48L21l?=
+ =?us-ascii?Q?dGE+?=
+x-dg-rorf: true
+x-originating-ip: [10.32.224.39]
+x-adiruleop-newscl: Rule Triggered
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-Proofpoint-GUID: WVOoT-p8GNM3EipZlYpV3JAPzINjmD0q
+X-Proofpoint-ORIG-GUID: woJTYeWF4q6t1m8UWy_euaXCo5cicPKi
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-13_09,2022-01-13_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- bulkscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- suspectscore=0 phishscore=0 clxscore=1011 spamscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2201130129
+ definitions=2022-01-13_10,2022-01-13_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2201130135
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Reviewed-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
 
-On 1/12/22 19:27, Kees Cook wrote:
-> When building with -Warray-bounds, this warning was emitted:
->
-> In function 'memset',
->      inlined from 'vtpm_proxy_fops_read' at drivers/char/tpm/tpm_vtpm_proxy.c:102:2:
-> ./include/linux/fortify-string.h:43:33: warning: '__builtin_memset' pointer overflow between offset 164 and size [2147483648, 4294967295]
-> [-Warray-bounds]
->     43 | #define __underlying_memset     __builtin_memset
->        |                                 ^
->
-> There was no checking of the req_len value from the device. A malicious
-> (or buggy) device could end up leaking (and when wiping) memory contents
-> beyond the end of the proxy buffer.
->
-> Cc: Peter Huewe <peterhuewe@gmx.de>
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: linux-integrity@vger.kernel.org
+> -----Original Message-----
+> From: Kees Cook <keescook@chromium.org>
+> Sent: Wednesday, January 12, 2022 10:35 PM
+> To: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Kees Cook <keescook@chromium.org>; Hennerich, Michael
+> <Michael.Hennerich@analog.com>; Jonathan Cameron <jic23@kernel.org>;
+> linux-iio@vger.kernel.org; Tanislav, Cosmin <Cosmin.Tanislav@analog.com>;
+> Jonathan Cameron <Jonathan.Cameron@huawei.com>; Linus Walleij
+> <linus.walleij@linaro.org>; linux-kernel@vger.kernel.org; linux-
+> hardening@vger.kernel.org
+> Subject: [PATCH v2] iio: addac: ad74413r: Do not reference negative array
+> offsets
+> 
+> [External]
+> 
+> Instead of aiming rx_buf at an invalid array-boundary-crossing location,
+> just skip the first increment. Seen when building with -Warray-bounds:
+> 
+> drivers/iio/addac/ad74413r.c: In function 'ad74413r_update_scan_mode':
+> drivers/iio/addac/ad74413r.c:843:22: warning: array subscript -4 is below
+> array bounds of 'u8[16]' { aka 'unsigned char[16]'} [-Warray-bounds]
+>   843 |         u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
+> AD74413R_FRAME_SIZE];
+>       |
+> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/iio/addac/ad74413r.c:84:20: note: while referencing 'rx_buf'
+>    84 |                 u8 rx_buf[AD74413R_FRAME_SIZE *
+> AD74413R_CHANNEL_MAX];
+>       |                    ^~~~~~
+> 
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-iio@vger.kernel.org
+> Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
+> Reviewed-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->   drivers/char/tpm/tpm_vtpm_proxy.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
-> index 91c772e38bb5..5c865987ba5c 100644
-> --- a/drivers/char/tpm/tpm_vtpm_proxy.c
-> +++ b/drivers/char/tpm/tpm_vtpm_proxy.c
-> @@ -91,7 +91,7 @@ static ssize_t vtpm_proxy_fops_read(struct file *filp, char __user *buf,
->   
->   	len = proxy_dev->req_len;
->   
-> -	if (count < len) {
-> +	if (count < len || len > sizeof(proxy_dev->buffer)) {
->   		mutex_unlock(&proxy_dev->buf_lock);
->   		pr_debug("Invalid size in recv: count=%zd, req_len=%zd\n",
->   			 count, len);
-
-
-Thanks for this patch.
-
-I just want to clarify this. In vtpm_proxy_tpm_op_send() we have the 
-only place that sets req_len to a value larger than 0:
-
-static int vtpm_proxy_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t 
-count)
-{
-     struct proxy_dev *proxy_dev = dev_get_drvdata(&chip->dev);
-
-     if (count > sizeof(proxy_dev->buffer)) {
-         dev_err(&chip->dev,
-             "Invalid size in send: count=%zd, buffer size=%zd\n",
-             count, sizeof(proxy_dev->buffer));
-         return -EIO;
-     }
-
-[...]
-
-     proxy_dev->req_len = count;
-     memcpy(proxy_dev->buffer, buf, count);
-
-[...]
-
-}
-
-
-The above makes sure that we cannot copy more bytes into the 
-proxy_dev->buffer than the what the buffer has bytes for.
-
-It then sets req_len to a valid value that is less or equal to the 
-buffer size.
-
-Considering this your check above seems to only be there to make the 
-compiler happy but otherwise I don't see that this is a real problem 
-with a buffer overflow?!
-
-Nevertheless, let all those compilers be happy:
-
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-
+> v1: https://urldefense.com/v3/__https://lore.kernel.org/linux-
+> hardening/20220105180214.2435001-1-
+> keescook@chromium.org/__;!!A3Ni8CS0y2Y!oWs0KcGPANFn-
+> L0qJPZgP47AQIYpBXJxg5LHiLDFGa_-SI2DwmSMzjgl3ehyu-8JYPgq$
+> v2:
+>  - Update commit Subject prefix
+>  - add Reviewed-by
+> ---
+>  drivers/iio/addac/ad74413r.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
+> index 5271073bb74e..aba9a643a4ca 100644
+> --- a/drivers/iio/addac/ad74413r.c
+> +++ b/drivers/iio/addac/ad74413r.c
+> @@ -840,7 +840,7 @@ static int ad74413r_update_scan_mode(struct iio_dev
+> *indio_dev,
+>  {
+>  	struct ad74413r_state *st = iio_priv(indio_dev);
+>  	struct spi_transfer *xfer = st->adc_samples_xfer;
+> -	u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
+> AD74413R_FRAME_SIZE];
+> +	u8 *rx_buf = st->adc_samples_buf.rx_buf;
+>  	u8 *tx_buf = st->adc_samples_tx_buf;
+>  	unsigned int channel;
+>  	int ret = -EINVAL;
+> @@ -894,9 +894,10 @@ static int ad74413r_update_scan_mode(struct
+> iio_dev *indio_dev,
+> 
+>  		spi_message_add_tail(xfer, &st->adc_samples_msg);
+> 
+> -		xfer++;
+>  		tx_buf += AD74413R_FRAME_SIZE;
+> -		rx_buf += AD74413R_FRAME_SIZE;
+> +		if (xfer != st->adc_samples_xfer)
+> +			rx_buf += AD74413R_FRAME_SIZE;
+> +		xfer++;
+>  	}
+> 
+>  	xfer->rx_buf = rx_buf;
+> --
+> 2.30.2
 
