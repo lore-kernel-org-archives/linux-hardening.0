@@ -2,437 +2,209 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A48EC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jan 2022 10:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A025C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jan 2022 18:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234060AbiANKFU (ORCPT
+        id S239575AbiANSvB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Jan 2022 05:05:20 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:47820 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231187AbiANKFT (ORCPT
+        Fri, 14 Jan 2022 13:51:01 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:53454 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236181AbiANSvA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Jan 2022 05:05:19 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Fri, 14 Jan 2022 13:51:00 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client CN "mailhost.synopsys.com", Issuer "SNPSica2" (verified OK))
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1547AC0162;
+        Fri, 14 Jan 2022 18:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1642186260; bh=9vSSYDdVaJckCvfRs6DlfIxQnGZ+9LbcTT3BgOvp16k=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=WFBU9j4hhne5O+4E8tpCforN0poNohNWU4e8hxvA5F1lcUXPGb0OjeIp0hvyYQ6gb
+         9xlNKS1mh34bFnpycAQEFcH3oXCPOJov1roloQDeKUJXiPr3taR3WjIvR/Ilk1AXb9
+         5ID8qeW39GmkuJTXD/+acaqdy/qGkXfTRRDAQfM4wJ+bhibW4A0+5eW/0Y7WUn+anz
+         vNluXYb2UKdgXFlnytc06mlMJ8oh91STPSrQB5klfq+Mw67FFO2B9hzyunz4jWKh4e
+         erhOVrSAwm1AM0KdsVx67h3DysgEcoZTATvRSazw8yCjp7C9JOpNY25XbPn6CONAiX
+         0Qyr5KN/yUqgw==
+Received: from o365relay-in.synopsys.com (us03-o365relay1.synopsys.com [10.4.161.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client CN "o365relay-in.synopsys.com", Issuer "Entrust Certification Authority - L1K" (verified OK))
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5E83AA0079;
+        Fri, 14 Jan 2022 18:50:59 +0000 (UTC)
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6981F61EA7
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 10:05:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C59F1C36AF3
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 10:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642154718;
-        bh=vPvtbGZFPK5gxWzwGYJIUnQ+d9rKl8i/Smh9Nfw3hOQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=B9aRQb1V3qRhJdmnjzs5hi3k1KXjAoVz9QpSeDoH7Lu1yYdC8ObmoLBakq9cWwuuq
-         P+ZL6rjwlYk6S7GlncKIqMa5kimrIQgixqlysd4nA/IPXKWeIM1Ho8HhYNKD4ryAl7
-         rBRI7CaCyWVeyvBUqVTu7cl8Yodt+j5BUhlVEKKQvu9cJCRSed3HvoEkzlcnTat6CU
-         uc5gB6maDb4RBH0oSwobvxboGaZut52W621A5v/m5gyww7xsozZzcb3pMG2nb2prIp
-         t2ORV2UnjxU5TQN5QoZaRUbQRH/WnBO1xkINCz51Ex8MYXyg3OEeSYXSb20faadKBV
-         iCg4tO/Z2sdxQ==
-Received: by mail-wr1-f48.google.com with SMTP id v6so14674291wra.8
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 02:05:18 -0800 (PST)
-X-Gm-Message-State: AOAM5338kdSfKAlXXL5U2FWzj8Z/Y8KBLKTja4bW3WhClkPTztnfyp6V
-        Je6fqaJP62wqri65kDpg+l+l0bp+4PMO9yVckS4=
-X-Google-Smtp-Source: ABdhPJwej3X8Ow1WxPlgT8Tv2lycTF7XUwqRpBiAp0bJZxdmY9SKIpmAIdmBSJLeKvfjAXceopQofupVPBDSchktjRY=
-X-Received: by 2002:a5d:6541:: with SMTP id z1mr5180083wrv.550.1642154716881;
- Fri, 14 Jan 2022 02:05:16 -0800 (PST)
+        (Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 1FBC381496;
+        Fri, 14 Jan 2022 18:50:57 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=thinhn@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="VZQhjXBb";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mFpSl6oiFIR5x5wS3oNGzen9WAxiY2dhUWkFFEhvKYDQwJYhHvoO7CUo6OfoqrpflNce7Z5cMOS1Bj3u2e4jOzjQuBfAu8SIQHpBYEzKbubB37kfCI3HF2NlV7a7Dfj0cffHUhBWHJJk2+qT66k1lTr6jhlMllrQsPFXYYGKiXfnz/gY097Ra9XBYrDxXGTYOywHxcrSCq7D/otO1OnqTXqhlU0ZaCllYbCvBhuBJjIrsb0NZ/cXADjOjCvehFvI9cGGaLxXtllhKwCFw3csNHSVkzInO6IzBN9RNx0K2jil1fymP8OiZ0SL1QtO9PIHOGMmjSIGwi1wZdCCPijkzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9vSSYDdVaJckCvfRs6DlfIxQnGZ+9LbcTT3BgOvp16k=;
+ b=JtryHasMxTEbqPfVmHWZgJkzsBgcHIoHk6hPw57h1azzLYGxLk3eQIW5nokpwrHS9yBIQ1l2Q7xTgW1qdhozALHfWyyom+YCTW/LBYY2wNx1umnrXZSYBmOj0h8gWecbzFJyeXouWkw74C0WoUlTYofWURsrqTpjBujMlZhAlFYZuewotY+fu4yQOiZ23GlAxJjDfcS7m/nqifnx7QimTqaeW9aC5kjBQI91aDwFY5xbj6/I5lXWI3WnKYoDDyOuCRBnjjCTZpfVnT6+EJmtJWGZ8wNLr20Vb1m6Hdq4vdPIr7ieJ+on6xnb60+/eOy5AVCAC8Wrze9GewY9zmgUcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9vSSYDdVaJckCvfRs6DlfIxQnGZ+9LbcTT3BgOvp16k=;
+ b=VZQhjXBbUSPASpQht6W+2UP0y75xyHl/OsRfxQJE623ZadgHml0zr0/3XqsNjsSnqU7cgZ79+qhaCp7ZwcefJM301aoRa0A7aFGgJ9dKl8hxHoGDNeV0HcsIXNjihru6wde9gf90jVkuJgSYYbg/M78WhSBr/iud97YqIDJdEPQ=
+Received: from BYAPR12MB4791.namprd12.prod.outlook.com (2603:10b6:a03:10a::12)
+ by CY4PR12MB1799.namprd12.prod.outlook.com (2603:10b6:903:11c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.11; Fri, 14 Jan
+ 2022 18:50:54 +0000
+Received: from BYAPR12MB4791.namprd12.prod.outlook.com
+ ([fe80::8983:6493:8c38:d34a]) by BYAPR12MB4791.namprd12.prod.outlook.com
+ ([fe80::8983:6493:8c38:d34a%3]) with mapi id 15.20.4888.011; Fri, 14 Jan 2022
+ 18:50:54 +0000
+X-SNPS-Relay: synopsys.com
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH][next] usb: dwc2: Use flex_array_size() helper
+Thread-Topic: [PATCH][next] usb: dwc2: Use flex_array_size() helper
+Thread-Index: AQHYBr+zu79I9xAKMUG6shqTZFpNVKxi4c8A
+Date:   Fri, 14 Jan 2022 18:50:54 +0000
+Message-ID: <d1ec4e8a-574a-d841-850c-3f136e404d1a@synopsys.com>
+References: <20220111075513.GA76424@embeddedor>
+In-Reply-To: <20220111075513.GA76424@embeddedor>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=synopsys.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8e9bf014-9e01-417a-23bc-08d9d78ecb34
+x-ms-traffictypediagnostic: CY4PR12MB1799:EE_
+x-microsoft-antispam-prvs: <CY4PR12MB17995A33741FE92416868F6AAA549@CY4PR12MB1799.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BKBIws43uQ+Nbq2RIZ+3p8g8kk+lM5FIPC328KnEBkTenm6PIL10uKMUPZppw/TaJ5a0LC1LC1Aen7AUJzbELCWZo9O3tdcqanroJeUEMrivI08RR02knS/ZOC+KdGlD0xKdwDdYZ47izLl9pM4bcgBNi+iFivLn5rw+Wdfg50gX9qv/2/eYp7uDvLe34jEbgBxi9ziIwBrYRC1rTRulwsE55A9UTlyzYR/5ojclr+AEXSXIx+8aNtx/SfEWI6HL9cP0wsbLLCVexCJ4+27Vyl76JsrmH94woLTGRou2fIq539coVHsLSlKWGxOy0g2KKQcJvTSUzKxc+5ZC5wqW65m9CnDI8ctJMbPjG7qedJ8o1rv3hfskIuvAc/h7IS5yz4PqKS/tFHkZsWHV6DtFp/3t7TE6Uu6IMFOcLTYnUIX6PH5+JbsKso//vVwQ58JIKifgb002Wn7lYceN8rhPK34F2vpaFJjtrBUyNFtpx86KpxGxiuis6RMRkE6u6XTl4XD7+/o1FrDFmN3MJC69y2aZ3N3k9ybMaRyEWHxZ5JqzsTAY84umXCAtDJk+FZM+pmz6mZ+F2PgHHrdPQCRuWMHf8XVfJUIwwaMmWgsoDdsuGFuxBn00rkRghJLhidYQmiV4sVeB1ktpYTw3hgPL1imKpXt9xXZpftztfZcARH7vieFe+x5rPqczGZZKwvJpOaESRlClUTvRbLo2S/S0P3MdP2+Kt+x5idqJvZ3XrWoLjJsI9RmvjNW1VlTuUrMzF49PnapfZ+GAitwabRfg/PLqQybF/3iX6VvnYDNtxAYQLZVkRDEfzyuRrG8i8taEBzMptZgXwgSxjfI4n6RvWMn+LK5nf2zN1nS5QGsheVM=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4791.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(54906003)(76116006)(316002)(6486002)(31696002)(2906002)(31686004)(36756003)(4326008)(110136005)(6512007)(66946007)(86362001)(8676002)(38070700005)(122000001)(83380400001)(5660300002)(38100700002)(2616005)(66476007)(66556008)(71200400001)(966005)(508600001)(64756008)(66446008)(186003)(6506007)(26005)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VjREbUFyU1dkVlVhK09YbWdXNk9kT3l6WHpnNU41L0R4R1kvTC9wdXhMeHFR?=
+ =?utf-8?B?TkpyTGtYMHRqa1kvQTF5OU9zNHRrWFRMQ3Z3WUlXWVFLeVZZSC8ySHhVcURO?=
+ =?utf-8?B?cDBRRExiMU5XamRFK08xUzRlRk12TCt2YzdYNXcvMDZMRWlKcVZuNXB6N2R2?=
+ =?utf-8?B?WXNSS2pWM0JlVmRFUVNNa0wxVUU1Zm9rRDRQdDZkQXpVUmt1RnVMbnlidnFt?=
+ =?utf-8?B?UFh0NjMvZENuRE9ScTBBRGdVdldWd0JlLzVmbTE0OURGc3pEQjNwbFVTWVA0?=
+ =?utf-8?B?K0N2L3IwRVFINGQyRGlyYit2U2gwYnBXcWpBOGNYRnhjMlBCZmNCdWJZVG1M?=
+ =?utf-8?B?SEEvaUpacVNFYURmcWQyWW9icFVpdUowN21PKzFjYU5sblE4a0tEMERvZ05M?=
+ =?utf-8?B?M0xsdkMvdXdZTDVMVlJFVTNsQlA4dm1lM0kwdnRRd2t0OCtGa1VnZmlYRTZp?=
+ =?utf-8?B?R01CdStxWFhQeGEzM0l4blF0U2djclhoYVF2enBqMDZuRVYzNXJ2Qk5QSW8v?=
+ =?utf-8?B?VVhOdUpyZ1F0L3BndDVIQ09xT3FLRXN4RU9xSDcrZlh3T0ZOMFJGRG14aUh5?=
+ =?utf-8?B?bm40ckRZR0grYVg2R1J1OEExQWt5bXJNVFNDajExWFdkZWNybnlRM0pWQWo0?=
+ =?utf-8?B?YkZ0eXpNSSt3NXZiNzBSaVoxUVNpejBjVkxOY2hlRjZ0NWQyNnFnVERaL2Zx?=
+ =?utf-8?B?YjhrZ24yam9ydEFGcFBvV1hXWDBUNnZhS21PbFdnRW1zR0FVdVZ3cHd4TUVU?=
+ =?utf-8?B?ZFg5ZUwxYTUrVndha1BmYVBXUTFQQ1FhSVcyKzA1VjdiSnozRU9XMzBNRUJP?=
+ =?utf-8?B?cnBiNDJDS2JCZ2JvWEpmS0dwd1Y1NHI2aW9JTjlmakpnSUNQK081YzZGNTVp?=
+ =?utf-8?B?cnZFNDdOV2R5TEZtakpnTldEc1ZGNTZvTUU0UUhaY1pNV20wNU9RYUJOM0Z6?=
+ =?utf-8?B?Ly9BaTNYNmNkK0g1L3ZVWGQyc1p1K1ZGYkZMcFNrOVUxRElTREFYR3NnWkE1?=
+ =?utf-8?B?ZEk2MnZZanV6VzVrQ3hub3BSRnRUWnQyZVEzSHJjM2RkeWFQRm9jMmJERGNP?=
+ =?utf-8?B?UXJzc1BobGxCSUVESmxDbFF6ZmJUY3Z0Nmd6WmQvcXU1RjVWVFc4VzV5WEhM?=
+ =?utf-8?B?NnNYK1pNcXN6ejRBcTN5SFh1eUpIcE9Jc1FiODYzTHRvOFF2Z0J0TVRFUytu?=
+ =?utf-8?B?anJEb042NERLcnMzMnplSXFDdmZyeDdBbytvekNkbHpSVHA5cmplQ2d6ZWN6?=
+ =?utf-8?B?VmNqYVo5ZnlJemlRYjVkc3FscHZJcm1qZlFTWUhqdnhCeVNQRm9BanNuQ1FX?=
+ =?utf-8?B?cXBNYUNVc0M5U0dXYjFOK3JwSTNCVm9tL1RLbHpGT1JCK3FLaDdHaVdYMHh2?=
+ =?utf-8?B?Y2NLeGxraDJzMGE2bGtJMUdDeXpkQmM0Sm50alBaTndWUCtGcmtVOEgvUndD?=
+ =?utf-8?B?VTI5Z2psSkt0V0l2MjFpaXNYSmVJWEl1TElta2lRdjlzMC93TEVJVWsxcFlP?=
+ =?utf-8?B?SVQ4bkVsYlR1VTJtWW53aFJGWnBSb3dzOWI5SVRHMUdoQWJ0VjY2TFNVeWc2?=
+ =?utf-8?B?WUw4cWZBYVNkdGliSlcyNmpoaFdGZDY3dkJzK2VMODVzM3FrNFNHamlvWGxC?=
+ =?utf-8?B?VkIxNEdHbExXb2xCZE9SWW5LVDRJNC9rcEN0aXpMWjA3UlpuZXU3MXVYYUZp?=
+ =?utf-8?B?dnB6T1JVS1htdzRxNDRhRUZGZXJOcHhFUnRhdGxoUU41RmdxNkRPd21yK3ZH?=
+ =?utf-8?B?alJTUDBMdkVsOURDVGM5V25LV0tSb1lUeWxhTTEwUXovRkJoako1WVBiWXNK?=
+ =?utf-8?B?eWRjMW5ZODdkYU1yd0NwdVlNZFIxMGtFUlJWZHk0REp0ZnArQjluY0tqUitj?=
+ =?utf-8?B?NWl1TWFUZHdvbzJmRWZ2Q1BPMTFuekxHOXNQV2N2S3VpbWQzbFk1K1RXR3hj?=
+ =?utf-8?B?ZUpxUEJlNlhqUlV6ZjRPTVNyTUpJNkU5Wm0zL3IvaThUUFBCMk1rMGlLdHBE?=
+ =?utf-8?B?a0xKcFg2RmhSNnBXOFQzb3p0SzAzcFgraWZMa0trdDdsVVVHM2cxb1JicGZP?=
+ =?utf-8?B?dmtxWWsxaHlqbUY1eEg0eWZkaW54R0QxNXU3azFaVVBqdlVxZFREcWhlSSt1?=
+ =?utf-8?B?VGhKQzdQN3Z3bmxndHIyei9wbTE0MWE0c0dqYUJmOXF0aXNuSGVzU1ByRHN4?=
+ =?utf-8?B?eVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <358B3E440A6E1A41B34D18DB369DD857@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20211115180410.5272-1-ardb@kernel.org> <20211115180410.5272-2-ardb@kernel.org>
- <CAMj1kXEgHCT4Z_T70QXtoYg1jMrrmw7AmpZu3DDmmXqe9CiB+Q@mail.gmail.com> <CAMj1kXHf+AAui_FRDj1=B9d5Y__pCFxkwc+2MFA02XnoNcRHFA@mail.gmail.com>
-In-Reply-To: <CAMj1kXHf+AAui_FRDj1=B9d5Y__pCFxkwc+2MFA02XnoNcRHFA@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 14 Jan 2022 11:05:04 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH8x=OLESpJZvR2yS8GZ9YAa6uy2rcfxryYgFnj6SiUhw@mail.gmail.com>
-Message-ID: <CAMj1kXH8x=OLESpJZvR2yS8GZ9YAa6uy2rcfxryYgFnj6SiUhw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] [ARM] Add support for TLS register based stack
- protector canary access
-To:     linux-hardening@vger.kernel.org,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        richard.earnshaw@arm.com, Kyrylo Tkachov <kyryo.tkachov@arm.com>
-Cc:     Keith Packard <keithpac@amazon.com>, thomas.preudhomme@celest.fr,
-        adhemerval.zanella@linaro.org, Qing Zhao <qing.zhao@oracle.com>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        gcc-patches@gcc.gnu.org, spender@grsecurity.net
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4791.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e9bf014-9e01-417a-23bc-08d9d78ecb34
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2022 18:50:54.0562
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: v5b7fmtVRqJKGbqZrBiGBuM+25uJKIypmwOY8JVhnlO7Y7nKpRS8PJB5EHfYGCW79YrA3In5unUOMcx+1CEcDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1799
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-(+ Richard Earnshaw)
-
-On Wed, 12 Jan 2022 at 19:29, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 17 Nov 2021 at 18:12, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > (+ Ramana)
-> >
->
-> Ping?
->
-> > On Mon, 15 Nov 2021 at 19:04, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > Add support for accessing the stack canary value via the TLS register,
-> > > so that multiple threads running in the same address space can use
-> > > distinct canary values. This is intended for the Linux kernel running in
-> > > SMP mode, where processes entering the kernel are essentially threads
-> > > running the same program concurrently: using a global variable for the
-> > > canary in that context is problematic because it can never be rotated,
-> > > and so the OS is forced to use the same value as long as it remains up.
-> > >
-> > > Using the TLS register to index the stack canary helps with this, as it
-> > > allows each CPU to context switch the TLS register along with the rest
-> > > of the process, permitting each process to use its own value for the
-> > > stack canary.
-> > >
-> > > 2021-11-15 Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > >         * config/arm/arm-opts.h (enum stack_protector_guard): New
-> > >         * config/arm/arm-protos.h (arm_stack_protect_tls_canary_mem):
-> > >         New
-> > >         * config/arm/arm.c (TARGET_STACK_PROTECT_GUARD): Define
-> > >         (arm_option_override_internal): Handle and put in error checks
-> > >         for stack protector guard options.
-> > >         (arm_option_reconfigure_globals): Likewise
-> > >         (arm_stack_protect_tls_canary_mem): New
-> > >         (arm_stack_protect_guard): New
-> > >         * config/arm/arm.md (stack_protect_set): New
-> > >         (stack_protect_set_tls): Likewise
-> > >         (stack_protect_test): Likewise
-> > >         (stack_protect_test_tls): Likewise
-> > >         (reload_tp_hard): Likewise
-> > >         * config/arm/arm.opt (-mstack-protector-guard): New
-> > >         (-mstack-protector-guard-offset): New.
-> > >         * doc/invoke.texi: Document new options
-> > >
-> > > gcc/testsuite/ChangeLog:
-> > >
-> > >         * gcc.target/arm/stack-protector-7.c: New test.
-> > >         * gcc.target/arm/stack-protector-8.c: New test.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >  gcc/config/arm/arm-opts.h                        |  6 ++
-> > >  gcc/config/arm/arm-protos.h                      |  2 +
-> > >  gcc/config/arm/arm.c                             | 55 +++++++++++++++
-> > >  gcc/config/arm/arm.md                            | 71 +++++++++++++++++++-
-> > >  gcc/config/arm/arm.opt                           | 22 ++++++
-> > >  gcc/doc/invoke.texi                              | 11 +++
-> > >  gcc/testsuite/gcc.target/arm/stack-protector-7.c | 10 +++
-> > >  gcc/testsuite/gcc.target/arm/stack-protector-8.c |  5 ++
-> > >  8 files changed, 180 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/gcc/config/arm/arm-opts.h b/gcc/config/arm/arm-opts.h
-> > > index 5c4b62f404f7..581ba3c4fbbb 100644
-> > > --- a/gcc/config/arm/arm-opts.h
-> > > +++ b/gcc/config/arm/arm-opts.h
-> > > @@ -69,4 +69,10 @@ enum arm_tls_type {
-> > >    TLS_GNU,
-> > >    TLS_GNU2
-> > >  };
-> > > +
-> > > +/* Where to get the canary for the stack protector.  */
-> > > +enum stack_protector_guard {
-> > > +  SSP_TLSREG,                  /* per-thread canary in TLS register */
-> > > +  SSP_GLOBAL                   /* global canary */
-> > > +};
-> > >  #endif
-> > > diff --git a/gcc/config/arm/arm-protos.h b/gcc/config/arm/arm-protos.h
-> > > index 9b1f61394ad7..d8d605920c97 100644
-> > > --- a/gcc/config/arm/arm-protos.h
-> > > +++ b/gcc/config/arm/arm-protos.h
-> > > @@ -195,6 +195,8 @@ extern void arm_split_atomic_op (enum rtx_code, rtx, rtx, rtx, rtx, rtx, rtx);
-> > >  extern rtx arm_load_tp (rtx);
-> > >  extern bool arm_coproc_builtin_available (enum unspecv);
-> > >  extern bool arm_coproc_ldc_stc_legitimate_address (rtx);
-> > > +extern rtx arm_stack_protect_tls_canary_mem (bool);
-> > > +
-> > >
-> > >  #if defined TREE_CODE
-> > >  extern void arm_init_cumulative_args (CUMULATIVE_ARGS *, tree, rtx, tree);
-> > > diff --git a/gcc/config/arm/arm.c b/gcc/config/arm/arm.c
-> > > index a5b403eb3e49..e5077348ce07 100644
-> > > --- a/gcc/config/arm/arm.c
-> > > +++ b/gcc/config/arm/arm.c
-> > > @@ -829,6 +829,9 @@ static const struct attribute_spec arm_attribute_table[] =
-> > >
-> > >  #undef TARGET_MD_ASM_ADJUST
-> > >  #define TARGET_MD_ASM_ADJUST arm_md_asm_adjust
-> > > +
-> > > +#undef TARGET_STACK_PROTECT_GUARD
-> > > +#define TARGET_STACK_PROTECT_GUARD arm_stack_protect_guard
-> > >
-> > >  /* Obstack for minipool constant handling.  */
-> > >  static struct obstack minipool_obstack;
-> > > @@ -3176,6 +3179,26 @@ arm_option_override_internal (struct gcc_options *opts,
-> > >    if (TARGET_THUMB2_P (opts->x_target_flags))
-> > >      opts->x_inline_asm_unified = true;
-> > >
-> > > +  if (arm_stack_protector_guard == SSP_GLOBAL
-> > > +      && opts->x_arm_stack_protector_guard_offset_str)
-> > > +    {
-> > > +      error ("incompatible options %'-mstack-protector-guard=global%' and"
-> > > +            "%'-mstack-protector-guard-offset=%qs%'",
-> > > +            arm_stack_protector_guard_offset_str);
-> > > +    }
-> > > +
-> > > +  if (opts->x_arm_stack_protector_guard_offset_str)
-> > > +    {
-> > > +      char *end;
-> > > +      const char *str = arm_stack_protector_guard_offset_str;
-> > > +      errno = 0;
-> > > +      long offs = strtol (arm_stack_protector_guard_offset_str, &end, 0);
-> > > +      if (!*str || *end || errno)
-> > > +       error ("%qs is not a valid offset in %qs", str,
-> > > +              "-mstack-protector-guard-offset=");
-> > > +      arm_stack_protector_guard_offset = offs;
-> > > +    }
-> > > +
-> > >  #ifdef SUBTARGET_OVERRIDE_INTERNAL_OPTIONS
-> > >    SUBTARGET_OVERRIDE_INTERNAL_OPTIONS;
-> > >  #endif
-> > > @@ -3843,6 +3866,9 @@ arm_option_reconfigure_globals (void)
-> > >        else
-> > >         target_thread_pointer = TP_SOFT;
-> > >      }
-> > > +
-> > > +  if (!TARGET_HARD_TP && arm_stack_protector_guard == SSP_TLSREG)
-> > > +    error("%'-mstack-protector-guard=tls%' needs a hardware TLS register");
-> > >  }
-> > >
-> > >  /* Perform some validation between the desired architecture and the rest of the
-> > > @@ -8108,6 +8134,23 @@ legitimize_pic_address (rtx orig, machine_mode mode, rtx reg, rtx pic_reg,
-> > >  }
-> > >
-> > >
-> > > +/* Generate insns that produce the address of the stack canary */
-> > > +rtx
-> > > +arm_stack_protect_tls_canary_mem (bool reload)
-> > > +{
-> > > +  rtx tp = gen_reg_rtx (SImode);
-> > > +  if (reload)
-> > > +    emit_insn (gen_reload_tp_hard (tp));
-> > > +  else
-> > > +    emit_insn (gen_load_tp_hard (tp));
-> > > +
-> > > +  rtx reg = gen_reg_rtx (SImode);
-> > > +  rtx offset = GEN_INT (arm_stack_protector_guard_offset);
-> > > +  emit_set_insn (reg, gen_rtx_PLUS (SImode, tp, offset));
-> > > +  return gen_rtx_MEM (SImode, reg);
-> > > +}
-> > > +
-> > > +
-> > >  /* Whether a register is callee saved or not.  This is necessary because high
-> > >     registers are marked as caller saved when optimizing for size on Thumb-1
-> > >     targets despite being callee saved in order to avoid using them.  */
-> > > @@ -34075,6 +34118,18 @@ arm_run_selftests (void)
-> > >  #define TARGET_RUN_TARGET_SELFTESTS selftest::arm_run_selftests
-> > >  #endif /* CHECKING_P */
-> > >
-> > > +/* Implement TARGET_STACK_PROTECT_GUARD. In case of a
-> > > +   global variable based guard use the default else
-> > > +   return a null tree.  */
-> > > +static tree
-> > > +arm_stack_protect_guard (void)
-> > > +{
-> > > +  if (arm_stack_protector_guard == SSP_GLOBAL)
-> > > +    return default_stack_protect_guard ();
-> > > +
-> > > +  return NULL_TREE;
-> > > +}
-> > > +
-> > >  /* Worker function for TARGET_MD_ASM_ADJUST, while in thumb1 mode.
-> > >     Unlike the arm version, we do NOT implement asm flag outputs.  */
-> > >
-> > > diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
-> > > index 4adc976b8b67..45a54d63f5b3 100644
-> > > --- a/gcc/config/arm/arm.md
-> > > +++ b/gcc/config/arm/arm.md
-> > > @@ -9183,7 +9183,7 @@ (define_expand "stack_protect_combined_set"
-> > >                       UNSPEC_SP_SET))
-> > >        (clobber (match_scratch:SI 2 ""))
-> > >        (clobber (match_scratch:SI 3 ""))])]
-> > > -  ""
-> > > +  "arm_stack_protector_guard == SSP_GLOBAL"
-> > >    ""
-> > >  )
-> > >
-> > > @@ -9267,7 +9267,7 @@ (define_expand "stack_protect_combined_test"
-> > >        (clobber (match_scratch:SI 3 ""))
-> > >        (clobber (match_scratch:SI 4 ""))
-> > >        (clobber (reg:CC CC_REGNUM))])]
-> > > -  ""
-> > > +  "arm_stack_protector_guard == SSP_GLOBAL"
-> > >    ""
-> > >  )
-> > >
-> > > @@ -9361,6 +9361,64 @@ (define_insn "arm_stack_protect_test_insn"
-> > >     (set_attr "arch" "t,32")]
-> > >  )
-> > >
-> > > +(define_expand "stack_protect_set"
-> > > +  [(match_operand:SI 0 "memory_operand")
-> > > +   (match_operand:SI 1 "memory_operand")]
-> > > +  "arm_stack_protector_guard == SSP_TLSREG"
-> > > +  "
-> > > +{
-> > > +  operands[1] = arm_stack_protect_tls_canary_mem (false /* reload */);
-> > > +  emit_insn (gen_stack_protect_set_tls (operands[0], operands[1]));
-> > > +  DONE;
-> > > +}"
-> > > +)
-> > > +
-> > > +;; DO NOT SPLIT THIS PATTERN.  It is important for security reasons that the
-> > > +;; canary value does not live beyond the life of this sequence.
-> > > +(define_insn "stack_protect_set_tls"
-> > > +  [(set (match_operand:SI 0 "memory_operand" "=m")
-> > > +       (unspec:SI [(match_operand:SI 1 "memory_operand" "m")]
-> > > +        UNSPEC_SP_SET))
-> > > +   (set (match_scratch:SI 2 "=&r") (const_int 0))]
-> > > +  ""
-> > > +  "ldr\\t%2, %1\;str\\t%2, %0\;mov\t%2, #0"
-> > > +  [(set_attr "length" "12")
-> > > +   (set_attr "conds" "unconditional")
-> > > +   (set_attr "type" "multiple")]
-> > > +)
-> > > +
-> > > +(define_expand "stack_protect_test"
-> > > +  [(match_operand:SI 0 "memory_operand")
-> > > +   (match_operand:SI 1 "memory_operand")
-> > > +   (match_operand:SI 2)]
-> > > +  "arm_stack_protector_guard == SSP_TLSREG"
-> > > +  "
-> > > +{
-> > > +  operands[1] = arm_stack_protect_tls_canary_mem (true /* reload */);
-> > > +  emit_insn (gen_stack_protect_test_tls (operands[0], operands[1]));
-> > > +
-> > > +  rtx cc_reg = gen_rtx_REG (CC_Zmode, CC_REGNUM);
-> > > +  rtx eq = gen_rtx_EQ (CC_Zmode, cc_reg, const0_rtx);
-> > > +  emit_jump_insn (gen_arm_cond_branch (operands[2], eq, cc_reg));
-> > > +  DONE;
-> > > +}"
-> > > +)
-> > > +
-> > > +(define_insn "stack_protect_test_tls"
-> > > +  [(set (reg:CC_Z CC_REGNUM)
-> > > +       (compare:CC_Z (unspec:SI [(match_operand:SI 0 "memory_operand" "m")
-> > > +                                 (match_operand:SI 1 "memory_operand" "m")]
-> > > +                                UNSPEC_SP_TEST)
-> > > +                     (const_int 0)))
-> > > +   (clobber (match_scratch:SI 2 "=&r"))
-> > > +   (clobber (match_scratch:SI 3 "=&r"))]
-> > > +  ""
-> > > +  "ldr\t%2, %0\;ldr\t%3, %1\;eors\t%2, %3, %2\;mov\t%3, #0"
-> > > +  [(set_attr "length" "16")
-> > > +   (set_attr "conds" "set")
-> > > +   (set_attr "type" "multiple")]
-> > > +)
-> > > +
-> > >  (define_expand "casesi"
-> > >    [(match_operand:SI 0 "s_register_operand")   ; index to jump on
-> > >     (match_operand:SI 1 "const_int_operand")    ; lower bound
-> > > @@ -12133,6 +12191,15 @@ (define_insn "load_tp_hard"
-> > >     (set_attr "type" "mrs")]
-> > >  )
-> > >
-> > > +;; Used by the TLS register based stack protector
-> > > +(define_insn "reload_tp_hard"
-> > > +  [(set (match_operand:SI 0 "register_operand" "=r")
-> > > +       (unspec_volatile:SI [(const_int 0)] VUNSPEC_MRC))]
-> > > +  "TARGET_HARD_TP"
-> > > +  "mrc\\tp15, 0, %0, c13, c0, 3\\t@ reload_tp_hard"
-> > > +  [(set_attr "type" "mrs")]
-> > > +)
-> > > +
-> > >  ;; Doesn't clobber R1-R3.  Must use r0 for the first operand.
-> > >  (define_insn "load_tp_soft_fdpic"
-> > >    [(set (reg:SI 0) (unspec:SI [(const_int 0)] UNSPEC_TLS))
-> > > diff --git a/gcc/config/arm/arm.opt b/gcc/config/arm/arm.opt
-> > > index a7677eeb45c8..4b3e17bc319c 100644
-> > > --- a/gcc/config/arm/arm.opt
-> > > +++ b/gcc/config/arm/arm.opt
-> > > @@ -311,3 +311,25 @@ Generate code which uses the core registers only (r0-r14).
-> > >  mfdpic
-> > >  Target Mask(FDPIC)
-> > >  Enable Function Descriptor PIC mode.
-> > > +
-> > > +mstack-protector-guard=
-> > > +Target RejectNegative Joined Enum(stack_protector_guard) Var(arm_stack_protector_guard) Init(SSP_GLOBAL)
-> > > +Use given stack-protector guard.
-> > > +
-> > > +Enum
-> > > +Name(stack_protector_guard) Type(enum stack_protector_guard)
-> > > +Valid arguments to -mstack-protector-guard=:
-> > > +
-> > > +EnumValue
-> > > +Enum(stack_protector_guard) String(tls) Value(SSP_TLSREG)
-> > > +
-> > > +EnumValue
-> > > +Enum(stack_protector_guard) String(global) Value(SSP_GLOBAL)
-> > > +
-> > > +mstack-protector-guard-offset=
-> > > +Target Joined RejectNegative String Var(arm_stack_protector_guard_offset_str)
-> > > +Use an immediate to offset from the TLS register. This option is for use with
-> > > +fstack-protector-guard=tls and not for use in user-land code.
-> > > +
-> > > +TargetVariable
-> > > +long arm_stack_protector_guard_offset = 0
-> > > diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-> > > index 6070288856c0..13bebbcbf0fb 100644
-> > > --- a/gcc/doc/invoke.texi
-> > > +++ b/gcc/doc/invoke.texi
-> > > @@ -816,6 +816,7 @@ Objective-C and Objective-C++ Dialects}.
-> > >  -mpure-code @gol
-> > >  -mcmse @gol
-> > >  -mfix-cmse-cve-2021-35465 @gol
-> > > +-mstack-protector-guard=@var{guard} -mstack-protector-guard-offset=@var{offset} @gol
-> > >  -mfdpic}
-> > >
-> > >  @emph{AVR Options}
-> > > @@ -21099,6 +21100,16 @@ enabled by default when the option @option{-mcpu=} is used with
-> > >  @code{cortex-m33}, @code{cortex-m35p} or @code{cortex-m55}.  The option
-> > >  @option{-mno-fix-cmse-cve-2021-35465} can be used to disable the mitigation.
-> > >
-> > > +@item -mstack-protector-guard=@var{guard}
-> > > +@itemx -mstack-protector-guard-offset=@var{offset}
-> > > +@opindex mstack-protector-guard
-> > > +@opindex mstack-protector-guard-offset
-> > > +Generate stack protection code using canary at @var{guard}.  Supported
-> > > +locations are @samp{global} for a global canary or @samp{tls} for a
-> > > +canary accessible via the TLS register. The option
-> > > +@option{-mstack-protector-guard-offset=} is for use with
-> > > +@option{-fstack-protector-guard=tls} and not for use in user-land code.
-> > > +
-> > >  @item -mfdpic
-> > >  @itemx -mno-fdpic
-> > >  @opindex mfdpic
-> > > diff --git a/gcc/testsuite/gcc.target/arm/stack-protector-7.c b/gcc/testsuite/gcc.target/arm/stack-protector-7.c
-> > > new file mode 100644
-> > > index 000000000000..874648060d8d
-> > > --- /dev/null
-> > > +++ b/gcc/testsuite/gcc.target/arm/stack-protector-7.c
-> > > @@ -0,0 +1,10 @@
-> > > +/* { dg-do compile } */
-> > > +/* { dg-options "-march=armv7-a -mfpu=vfp -fstack-protector-all -Os -mstack-protector-guard=tls -mstack-protector-guard-offset=1296 -mtp=cp15" } */
-> > > +
-> > > +#include "stack-protector-5.c"
-> > > +
-> > > +/* See the comment in stack-protector-5.c.  */
-> > > +/* { dg-final { scan-assembler-times {\tstr\t} 1 } } */
-> > > +/* Expect two TLS register accesses and two occurrences of the offset */
-> > > +/* { dg-final { scan-assembler-times {\tmrc\t} 2 } } */
-> > > +/* { dg-final { scan-assembler-times {1296} 2 } } */
-> > > diff --git a/gcc/testsuite/gcc.target/arm/stack-protector-8.c b/gcc/testsuite/gcc.target/arm/stack-protector-8.c
-> > > new file mode 100644
-> > > index 000000000000..bcb2f6b82bdf
-> > > --- /dev/null
-> > > +++ b/gcc/testsuite/gcc.target/arm/stack-protector-8.c
-> > > @@ -0,0 +1,5 @@
-> > > +/* { dg-do compile } */
-> > > +/* { dg-error "needs a hardware TLS register" "missing error when using TLS stack protector without hardware TLS register" { target *-*-* } 0 } */
-> > > +/* { dg-options "-fstack-protector-all -Os -mstack-protector-guard=tls -mtp=soft" } */
-> > > +
-> > > +int foo;
-> > > --
-> > > 2.30.2
-> > >
+SGksDQoNCkd1c3Rhdm8gQS4gUi4gU2lsdmEgd3JvdGU6DQo+IE1ha2UgdXNlIG9mIHRoZSBmbGV4
+X2FycmF5X3NpemUoKSBoZWxwZXIgdG8gY2FsY3VsYXRlIHRoZSBzaXplIG9mIGENCj4gZmxleGli
+bGUgYXJyYXkgbWVtYmVyIHdpdGhpbiBhbiBlbmNsb3Npbmcgc3RydWN0dXJlLg0KPiANCj4gVGhp
+cyBoZWxwZXIgb2ZmZXJzIGRlZmVuc2UtaW4tZGVwdGggYWdhaW5zdCBwb3RlbnRpYWwgaW50ZWdl
+cg0KPiBvdmVyZmxvd3MsIHdoaWxlIGF0IHRoZSBzYW1lIHRpbWUgbWFrZXMgaXQgZXhwbGljaXRs
+eSBjbGVhciB0aGF0DQo+IHdlIGFyZSBkZWFsaW5nIHdpdGggYSBmbGV4aWJsZSBhcnJheSBtZW1i
+ZXIuDQo+IA0KPiBMaW5rOiBodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9naXRo
+dWIuY29tL0tTUFAvbGludXgvaXNzdWVzLzE2MF9fOyEhQTRGMlI5R19wZyFMOHA3VGxmYkgwc05w
+TDlndHNWdVdFWlZuUDhldU1adEpLcGM3MXNYeHpFdzRNQUtXdVEyOGRKSmMwY0pUSTNiV1hMbSQg
+DQo+IFNpZ25lZC1vZmYtYnk6IEd1c3Rhdm8gQS4gUi4gU2lsdmEgPGd1c3Rhdm9hcnNAa2VybmVs
+Lm9yZz4NCj4gLS0tDQo+ICBkcml2ZXJzL3VzYi9kd2MyL2hjZC5jIHwgNSArKystLQ0KPiAgMSBm
+aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL3VzYi9kd2MyL2hjZC5jIGIvZHJpdmVycy91c2IvZHdjMi9oY2QuYw0K
+PiBpbmRleCBmNjNhMjdkMTFmYWMuLjJjMjE0OTg2NjJjZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy91c2IvZHdjMi9oY2QuYw0KPiArKysgYi9kcml2ZXJzL3VzYi9kd2MyL2hjZC5jDQo+IEBAIC00
+MDU0LDggKzQwNTQsOSBAQCBzdHJ1Y3QgZHdjMl90dCAqZHdjMl9ob3N0X2dldF90dF9pbmZvKHN0
+cnVjdCBkd2MyX2hzb3RnICpoc290Zywgdm9pZCAqY29udGV4dCwNCj4gIAkJCSAqIEZvciBzaW5n
+bGVfdHQgd2UgbmVlZCBvbmUgc2NoZWR1bGUuICBGb3IgbXVsdGlfdHQNCj4gIAkJCSAqIHdlIG5l
+ZWQgb25lIHBlciBwb3J0Lg0KPiAgCQkJICovDQo+IC0JCQliaXRtYXBfc2l6ZSA9IERXQzJfRUxF
+TUVOVFNfUEVSX0xTX0JJVE1BUCAqDQo+IC0JCQkJICAgICAgc2l6ZW9mKGR3Y190dC0+cGVyaW9k
+aWNfYml0bWFwc1swXSk7DQo+ICsJCQliaXRtYXBfc2l6ZSA9DQo+ICsJCQkJZmxleF9hcnJheV9z
+aXplKGR3Y190dCwgcGVyaW9kaWNfYml0bWFwcywNCj4gKwkJCQkJCURXQzJfRUxFTUVOVFNfUEVS
+X0xTX0JJVE1BUCk7DQo+ICAJCQlpZiAodXJiLT5kZXYtPnR0LT5tdWx0aSkNCj4gIAkJCQliaXRt
+YXBfc2l6ZSAqPSB1cmItPmRldi0+dHQtPmh1Yi0+bWF4Y2hpbGQ7DQo+ICANCg0KVGhpcyBkb2Vz
+bid0IGxvb2sgcmlnaHQgZXZlbiB0aG91Z2ggdGhlIHJlc3VsdCB3aWxsIGJlIHRoZSBzYW1lLiBU
+aGUNCnJldHVybiB2YWx1ZSBmcm9tIGZsZXhfYXJyYXlfc2l6ZSgpIG1heSBub3QgYmUgdGhlIGZp
+bmFsIGFycmF5IHNpemUgYXMgeW91DQpjYW4gc2VlIHRoYXQgYml0bWFwX3NpemUgZ2V0cyB1cGRh
+dGVkIGFnYWluIGEgY291cGxlIGxpbmVzIGRvd24uDQoNCkhvdyBhYm91dCB0aGlzIGluc3RlYWQ6
+DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9kd2MyL2hjZC5jIGIvZHJpdmVycy91c2IvZHdj
+Mi9oY2QuYw0KaW5kZXggZjYzYTI3ZDExZmFjLi4wOTM2ZmY4YjU3ZGIgMTAwNjQ0DQotLS0gYS9k
+cml2ZXJzL3VzYi9kd2MyL2hjZC5jDQorKysgYi9kcml2ZXJzL3VzYi9kd2MyL2hjZC5jDQpAQCAt
+NDA0OCwxOCArNDA0OCwxNyBAQCBzdHJ1Y3QgZHdjMl90dCAqZHdjMl9ob3N0X2dldF90dF9pbmZv
+KHN0cnVjdCBkd2MyX2hzb3RnICpoc290Zywgdm9pZCAqY29udGV4dCwNCiANCiAgICAgICAgICAg
+ICAgICBkd2NfdHQgPSB1cmItPmRldi0+dHQtPmhjcHJpdjsNCiAgICAgICAgICAgICAgICBpZiAo
+IWR3Y190dCkgew0KLSAgICAgICAgICAgICAgICAgICAgICAgc2l6ZV90IGJpdG1hcF9zaXplOw0K
+KyAgICAgICAgICAgICAgICAgICAgICAgaW50IGNvdW50Ow0KIA0KICAgICAgICAgICAgICAgICAg
+ICAgICAgLyoNCiAgICAgICAgICAgICAgICAgICAgICAgICAqIEZvciBzaW5nbGVfdHQgd2UgbmVl
+ZCBvbmUgc2NoZWR1bGUuICBGb3IgbXVsdGlfdHQNCiAgICAgICAgICAgICAgICAgICAgICAgICAq
+IHdlIG5lZWQgb25lIHBlciBwb3J0Lg0KICAgICAgICAgICAgICAgICAgICAgICAgICovDQotICAg
+ICAgICAgICAgICAgICAgICAgICBiaXRtYXBfc2l6ZSA9IERXQzJfRUxFTUVOVFNfUEVSX0xTX0JJ
+VE1BUCAqDQotICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZihkd2Nf
+dHQtPnBlcmlvZGljX2JpdG1hcHNbMF0pOw0KKyAgICAgICAgICAgICAgICAgICAgICAgY291bnQg
+PSBEV0MyX0VMRU1FTlRTX1BFUl9MU19CSVRNQVA7DQogICAgICAgICAgICAgICAgICAgICAgICBp
+ZiAodXJiLT5kZXYtPnR0LT5tdWx0aSkNCi0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+Yml0bWFwX3NpemUgKj0gdXJiLT5kZXYtPnR0LT5odWItPm1heGNoaWxkOw0KKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBjb3VudCAqPSB1cmItPmRldi0+dHQtPmh1Yi0+bWF4Y2hpbGQ7
+DQogDQotICAgICAgICAgICAgICAgICAgICAgICBkd2NfdHQgPSBremFsbG9jKHNpemVvZigqZHdj
+X3R0KSArIGJpdG1hcF9zaXplLA0KKyAgICAgICAgICAgICAgICAgICAgICAgZHdjX3R0ID0ga3ph
+bGxvYyhzdHJ1Y3Rfc2l6ZShkd2NfdHQsIHBlcmlvZGljX2JpdG1hcHMsIGNvdW50KSwNCiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbWVtX2ZsYWdzKTsNCiAgICAgICAg
+ICAgICAgICAgICAgICAgIGlmICghZHdjX3R0KQ0KICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICByZXR1cm4gTlVMTDsNCg0KDQpCUiwNClRoaW5oDQo=
