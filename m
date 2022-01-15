@@ -2,140 +2,179 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D43DC433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 15 Jan 2022 03:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8B1C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 15 Jan 2022 04:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232305AbiAODuu (ORCPT
+        id S232374AbiAOEOF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Jan 2022 22:50:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34018 "EHLO
+        Fri, 14 Jan 2022 23:14:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230494AbiAODuu (ORCPT
+        with ESMTP id S232311AbiAOEOF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Jan 2022 22:50:50 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C01C061574
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 19:50:50 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id e8so1155588plh.8
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 19:50:50 -0800 (PST)
+        Fri, 14 Jan 2022 23:14:05 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF143C061574
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 20:14:04 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id w12-20020a17090a528c00b001b276aa3aabso484428pjh.0
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 20:14:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=glwqqOEdn91POaZx9czNGi+z/EIMYXyhx0ZODvWOkR0=;
-        b=PXUM6ip1gn1+Z5jW8swrOLF3BV9itUCEcLYQCp2orcK9jlHRTk3DxMwbP1tpEoV8cM
-         OFw2h/5ar5N+aZNXlFTMqh6v4aXrZYK2X6tWvJECiz81Gi4v9qKd/dIO6eQ0KiGWpTef
-         +hkdnHieyMv2NqxMz8B9Kz3n90NaG333FbQgE=
+        bh=mfIrzj6cPcGzWR/gN8R7LyeEpSY521Rk0SIcNjAgQwo=;
+        b=D4zpVPRtkIQYIqolRPih/thQZjac99N1tHrhrQcT4NLSu6zjJXH4rmRWaNBUL6gGa0
+         2McD+Nc+1QM0Nu586VyP4uNHqGirwrAj4JTypaa/zSdMaac6wmocNYLr/pOUsC1KtWQw
+         x/6LRvnryvaGPECwPHL7/hu/JGK/oBFCuipqQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=glwqqOEdn91POaZx9czNGi+z/EIMYXyhx0ZODvWOkR0=;
-        b=dCp5DiO1OV50uP2nEcn2nejKLHkJD5hjAvy6ioKvNFvLf6lNFe6iHxyKVV4nwAhJDP
-         dsJ3xPN696sTNxPsT96L0eLDdkdrgsbd/uDOdZeJEHSf81utxZWhlX6zDsSb6yJP6vuJ
-         gIDKyZXSh5S9lDqihfVu7OLxUpNTILqOqZYNUAk6hCdfmJzF2aW25wWbmlv9cYVb3bH7
-         BpRAe+hmv7jawIfIAgGAtmyUO/AF6HJ/XoWC2NNs3UY4+yijVA6Oy0i1yjtbwjo+jVVu
-         g8pgdUholES5tg/HWdVrK2ORwurfrNXl9HX9TdoEM0DqzRaivWhfA+PNDE78/0XDT6ed
-         JIbA==
-X-Gm-Message-State: AOAM5312wdRsGCbzcihMn+11/ubkZ3HHlF2/fo/YAtZVA0oX9StvwAbc
-        HV8B4X3F/FIStyQ/lU2C6cefsg==
-X-Google-Smtp-Source: ABdhPJxT6ZBYuQcmSXlrAijE8o8SdFMgz49AbsQ0GuEiNixlYic8K09k0PM5BtkBV5vPPez4AxqUVw==
-X-Received: by 2002:a17:90a:bb86:: with SMTP id v6mr23685422pjr.152.1642218648520;
-        Fri, 14 Jan 2022 19:50:48 -0800 (PST)
+        bh=mfIrzj6cPcGzWR/gN8R7LyeEpSY521Rk0SIcNjAgQwo=;
+        b=5ftFLhFDQrr7Rxa8pzoS7mcNTnv7fR2N3SExs8WyNgfKeoEM6uhhI59jLcasgpoISk
+         Bxok8dTzpJ4+QQM4n4mAytHDWyipuhz1/oqgu/kiE+q1N8pwepxy2DqKhmiSjpn8Wax2
+         53ksSCNhERzZqqYwO85LT0Nxl9saOjst4U7gtbcRaPkMAJ71r3YQEVO+jPCS3C0dbsZv
+         zSKTXv2XDTunVmrE/8Oy1WBmBm6JzUQ5VCoScQbKkYFtGe8f94Ty9w0L61IrPz9mJeQn
+         FA1tDADqsl7ezCbMT/003iQQjgkZEGXZCPf9bLGnT8yuTO8Zlydw/HNCVxtRnTQH21NI
+         FxMA==
+X-Gm-Message-State: AOAM530h443/APduEjTK6T0ey2O+mQl92lYhbDpMCBBwgZhr/jThqBZW
+        CSJCS0onEyzXJsfUcwoGLPLTSg==
+X-Google-Smtp-Source: ABdhPJxUkgWJzQPhcFWbWuR/K659eJVHLeC9GLGXuxaI75I5X0fvvZfdu3tleS0bdLQyXvQPZxcrvg==
+X-Received: by 2002:a17:902:6bc7:b0:149:9004:ca04 with SMTP id m7-20020a1709026bc700b001499004ca04mr12535270plt.43.1642220044226;
+        Fri, 14 Jan 2022 20:14:04 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w4sm11628101pjq.7.2022.01.14.19.50.47
+        by smtp.gmail.com with ESMTPSA id oj6sm9671328pjb.18.2022.01.14.20.14.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jan 2022 19:50:48 -0800 (PST)
-Date:   Fri, 14 Jan 2022 19:50:47 -0800
+        Fri, 14 Jan 2022 20:14:03 -0800 (PST)
+Date:   Fri, 14 Jan 2022 20:14:03 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, gustavoars@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH -next, v2] sched: Use struct_size() helper in
- task_numa_group()
-Message-ID: <202201141935.A3F2ED1CF@keescook>
-References: <20220110012354.144394-1-xiujianfeng@huawei.com>
- <Ydy3N577YD0JJr2N@hirez.programming.kicks-ass.net>
- <20220110193158.31e1eaea@gandalf.local.home>
- <Yd1qYsFcgcp/uHSa@hirez.programming.kicks-ass.net>
- <20220111101425.7c59de5b@rorschach.local.home>
- <Yd/ugQ8kUmcceuex@hirez.programming.kicks-ass.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Michael Straube <straube.linux@gmail.com>,
+        Fabio Aiuto <fabioaiuto83@gmail.com>,
+        linux-staging@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Marco Cesati <marcocesati@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8723bs: Check for NULL header value
+Message-ID: <202201141958.5864A3ABD@keescook>
+References: <20220113002001.3498383-1-keescook@chromium.org>
+ <Yd/tSpnpb4vWp6OP@kroah.com>
+ <202201131027.FCAC3072E4@keescook>
+ <YeB0rP7KXtbIKr6I@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yd/ugQ8kUmcceuex@hirez.programming.kicks-ass.net>
+In-Reply-To: <YeB0rP7KXtbIKr6I@kroah.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 13, 2022 at 10:18:57AM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 11, 2022 at 10:14:25AM -0500, Steven Rostedt wrote:
-> > On Tue, 11 Jan 2022 12:30:42 +0100
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > > > >  	if (unlikely(!deref_curr_numa_group(p))) {
-> > > > > > -		unsigned int size = sizeof(struct numa_group) +
-> > > > > > -				    NR_NUMA_HINT_FAULT_STATS *
-> > > > > > -				    nr_node_ids * sizeof(unsigned long);
-> > > > > > +		unsigned int size = struct_size(grp, faults,
-> > > > > > +						NR_NUMA_HINT_FAULT_STATS * nr_node_ids);    
-> > > > > 
-> > > > > Again, why?! The old code was perfectly readable, this, not so much.  
+On Thu, Jan 13, 2022 at 07:51:24PM +0100, Greg Kroah-Hartman wrote:
+> On Thu, Jan 13, 2022 at 10:29:04AM -0800, Kees Cook wrote:
+> > On Thu, Jan 13, 2022 at 10:13:46AM +0100, Greg Kroah-Hartman wrote:
+> > > On Wed, Jan 12, 2022 at 04:20:01PM -0800, Kees Cook wrote:
+> > > > When building with -Warray-bounds, the following warning is emitted:
 > > > > 
-> > > > Because it is unsafe,  
+> > > > In file included from ./include/linux/string.h:253,
+> > > >                  from ./arch/x86/include/asm/page_32.h:22,
+> > > >                  from ./arch/x86/include/asm/page.h:14,
+> > > >                  from ./arch/x86/include/asm/thread_info.h:12,
+> > > >                  from ./include/linux/thread_info.h:60,
+> > > >                  from ./arch/x86/include/asm/preempt.h:7,
+> > > >                  from ./include/linux/preempt.h:78,
+> > > >                  from ./include/linux/rcupdate.h:27,
+> > > >                  from ./include/linux/rculist.h:11,
+> > > >                  from ./include/linux/sched/signal.h:5,
+> > > >                  from ./drivers/staging/rtl8723bs/include/drv_types.h:17,
+> > > >                  from drivers/staging/rtl8723bs/core/rtw_recv.c:7:
+> > > > In function 'memcpy',
+> > > >     inlined from 'wlanhdr_to_ethhdr' at drivers/staging/rtl8723bs/core/rtw_recv.c:1554:2:
+> > > > ./include/linux/fortify-string.h:41:33: warning: '__builtin_memcpy' offset [0, 5] is out of the bounds [0, 0] [-Warray-bounds]
+> > > >    41 | #define __underlying_memcpy     __builtin_memcpy
+> > > >       |                                 ^
+> > > > 
+> > > > This is because the compiler sees it is possible for "ptr" to be a NULL
+> > > > value, and concludes that it has zero size and attempts to copy to it
+> > > > would overflow. Instead, detect the NULL return and error out early.
+> > > > 
+> > > > Cc: Larry Finger <Larry.Finger@lwfinger.net>
+> > > > Cc: Phillip Potter <phil@philpotter.co.uk>
+> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Cc: Michael Straube <straube.linux@gmail.com>
+> > > > Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
+> > > > Cc: linux-staging@lists.linux.dev
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > >  drivers/staging/rtl8723bs/core/rtw_recv.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > index 41bfca549c64..61135c49322b 100644
+> > > > --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > @@ -1513,6 +1513,9 @@ static signed int wlanhdr_to_ethhdr(union recv_frame *precvframe)
+> > > >  	u8 *ptr = get_recvframe_data(precvframe) ; /*  point to frame_ctrl field */
+> > > >  	struct rx_pkt_attrib *pattrib = &precvframe->u.hdr.attrib;
+> > > >  
+> > > > +	if (!ptr)
+> > > > +		return _FAIL;
 > > > 
-> > > Unsafe how? Changelog doesn't mention anything, nor do you. In fact,
-> > > Changelog says there is no functional change, which makes me hate the
-> > > thing for obscuring something that was simple.
+> > > This will never happen, so let's not paper over compiler issues with
+> > > stuff like this please.
+> > > 
+> > > As the call to get_recvframe_data() is only done in one place in this
+> > > driver (in all drivers that look like this as well), it can just be
+> > > replaced with the real code instead of the nonsensical test for NULL and
+> > > then the compiler should be happy.
+> > > 
+> > > I'll gladly take that fix instead of this one, as that would be the
+> > > correct solution here.
 > > 
-> > If for some reason faults changes in size, the original code must be
-> > updated whereas the new code is robust enough to not need changing.
-
-I think this alone is reason enough. :)
-
-> Then I would still much prefer something like:
+> > I changed it around, but it doesn't help. I assume this is because we
+> > build with -fno-delete-null-pointer-checks, so the compiler continues
+> > to assume it's possible for the incoming argument to be NULL.
 > 
-> 	unsigned int size = sizeof(*grp) +
-> 			    NR_NUMA_HINT_FAULT_STATS * numa_node_ids * sizeof(gfp->faults);
+> That's a broken compiler then.
 > 
-> Which is still far more readable than some obscure macro. But again, the
-
-I'm not sure it's _obscure_, but it is relatively new. It's even
-documented. ;)
-https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-
-That said, the original patch is incomplete: it should be using size_t
-for "size".
-
-> It is a fairly useful and common pattern to have a small structure and
-> an array in the same memory allocation.
+> > Should I rearrange this to do a NULL check for precvframe before all the
+> > assignments in addition to removing get_recvframe_data()?
 > 
-> Think hash-tables, the structure contains the size of the table and some
-> other things, like for example a seed for the hash function or a lock,
-> and then the table itself as an array.
+> If you walk the call-chain back, you will see that precvframe can't ever
+> be NULL here (which is why this code doesn't crash), so don't check for
+> something that is impossible to ever hit please just because the
+> compiler is broken.
 
-Right, the use of flexible arrays is very common in the kernel. So much
-so that we've spent years fixing all the ancient "fake flexible arrays"
-scattered around the kernel messing up all kinds of compile-time and
-run-time flaw mitigations. Flexible array manipulations are notoriously
-prone to mistakes (overflows in allocation, mismatched bounds storage
-sizes, array index overflows, etc). These helpers (with more to come)
-help remove some of the foot-guns that C would normally impart to them.
+I agree that the _original_ precvframe is always non-NULL, but the pointer
+landing at memcpy() gets updated along the way. It seems the new problem
+is that recvframe_pull() may return NULL and nothing is checking for that.
+Adding this silences the warning:
 
-> I can't, nor do I want to, remember all these stupid little macros. Esp.
-> not for trivial things like this.
+diff --git a/drivers/staging/r8188eu/core/rtw_recv.c b/drivers/staging/r8188eu/core/rtw_recv.c
+index 49a02d6239d6..946e659ae97a 100644
+--- a/drivers/staging/r8188eu/core/rtw_recv.c
++++ b/drivers/staging/r8188eu/core/rtw_recv.c
+@@ -1223,10 +1223,14 @@ static int wlanhdr_to_ethhdr(struct recv_frame *precvframe)
+ 		eth_type = 0x8712;
+ 		/*  append rx status for mp test packets */
+ 		ptr = recvframe_pull(precvframe, (rmv_len - sizeof(struct ethhdr) + 2) - 24);
++		if (!ptr)
++			return _FAIL;
+ 		memcpy(ptr, get_rxmem(precvframe), 24);
+ 		ptr += 24;
+ 	} else {
+ 		ptr = recvframe_pull(precvframe, (rmv_len - sizeof(struct ethhdr) + (bsnaphdr ? 2 : 0)));
++		if (!ptr)
++			return _FAIL;
+ 	}
+ 
+ 	memcpy(ptr, pattrib->dst, ETH_ALEN);
 
-Well, the good news is that other folks will (and are) fixing them for
-you. :) Even if you never make mistakes with flexible arrays, other
-people do, and so we need to take on some improvements to the robustness
-of the kernel source tree-wide.
-
--Kees
+> 
+> thanks,
+> 
+> greg k-h
 
 -- 
 Kees Cook
