@@ -2,48 +2,48 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25438C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 15 Jan 2022 04:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328F2C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 15 Jan 2022 04:26:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231253AbiAOEYn (ORCPT
+        id S230491AbiAOE0e (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Jan 2022 23:24:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41302 "EHLO
+        Fri, 14 Jan 2022 23:26:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231337AbiAOEYb (ORCPT
+        with ESMTP id S231357AbiAOEYb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 14 Jan 2022 23:24:31 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDFEC06173F
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 20:24:30 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id h23so4417789pgk.11
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 20:24:30 -0800 (PST)
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11DE8C061747
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 20:24:31 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id g2so4422388pgo.9
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Jan 2022 20:24:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cfHd7InBKggohreeo6TzAmVAoKc+zClbIDJTEU/k7sE=;
-        b=SX9u92+/2fJvDeBP2v8rFZN7fVMouG3mSDO3/wvSgAKaHI7Sv4H5a3JXMMJYqtZqqN
-         3LwAuXYOJpDOspW7oaqoPw4VnQQ+fwj7zTQbA05VfYMvECM4M/vY/vs++jrmO0kOjILC
-         +CHQZIp6+AEjd4vB2HXahvrW+QCb/eSagFd7g=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MkesN9KWjSVv/K/BwDv4IWH7+poIeTrqlxSPCmZ0Qp4=;
+        b=OvtNBGAIw/KZDU1aYaf2wr6DUwwH76kziXBSgSi1C/Soc4HBS2mLNv36xO96AoA1Jg
+         y50BYGjmv64cF1L3VhGrDvxK5jfpH0tb5+v5g9/rcgaKvrb24ehk4+f3tO62mrDCokTO
+         xPXZJiaC7nAmMWdvqZ9sT8Qv0V5VFCoKyOSw0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cfHd7InBKggohreeo6TzAmVAoKc+zClbIDJTEU/k7sE=;
-        b=7oarOLCNH8xpW8WVfPyK+Sv9KeTP0BR5d0N5IUqNMYdACnnmPMTxWOHCLdipFgaI/T
-         Shlvaf+vRrTumeeHg30gS4iUAghN9baJ7SnVjiDQ89YCCkC6WjYARtcTvLfHKlo/sI7T
-         9sHd82lc8Q0CFNFe2plc3BG/KeqrxteO36DKnSvnHLnXoYp6PxbAMdRXdo6qCbxnyU3F
-         ek4GkOG5DAgyEn4M2zXEgj9BW6y1XigQTm8Yjh1RpUgGhkzt0xK6F2brJRYGZ0KOkD6H
-         zRshJ3s7UqTO9sq3H6C1zlsUeK1xXr5f4X+MsdljfkfqSPFpJNKp1d8Rtm3X4CGlHyQ2
-         AMew==
-X-Gm-Message-State: AOAM5331o+jK8V7YDOC0XWghFuc31uCRBFRJsDepCECmdtPwf+4Lqt3z
-        0ddvxpQ73iOF2BEc9ASO9u8Aqg==
-X-Google-Smtp-Source: ABdhPJz9ih5ar8BWOxTELabdEWwF47rVOKy8bBcgJeO3O07v8K/TCocM/wzrxtuBchFZGqNxpR41LQ==
-X-Received: by 2002:a63:ad0e:: with SMTP id g14mr10490719pgf.408.1642220669588;
-        Fri, 14 Jan 2022 20:24:29 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MkesN9KWjSVv/K/BwDv4IWH7+poIeTrqlxSPCmZ0Qp4=;
+        b=Cj0NPZadSITBQxK/Enei5UIJo9jeK3MVJ/PmHEd5I9kjzsWZ7Crb8hcIVldW2rP4cL
+         Fy6wXCfNLWOHAOhpTdCohQI1yEXY7FCrjO5vnUBboGiq61AMKpK+l9CNS5WKAHhZRUAz
+         RGa/iWr71HXnvO1LMB2RJH5qxruQAxHiFibYkp6CeqbkelHRMmUuBaAtuPZEpZrzQmKi
+         A58ep9QVCNYwUf/bBUCGgtOm7NoBjlUHwRBXkCbauPZGBfCp69IgVYemWLcG4ArWhwf3
+         sFHcF4fwIOskzAuFqoOTwL1R97g2jsy+9hgqPLmmyYC+LcVlh0TrU9l3Pwc17D94d2qp
+         PLHQ==
+X-Gm-Message-State: AOAM530H4HKpqZKmt5G7zhIOrK6yZsROCqpgmWzYCGmjXDFW40/Fl/NK
+        pURtS41MJJe4v9qeTGVL5UIiww==
+X-Google-Smtp-Source: ABdhPJxSuLNJa9YR5ljfxzcuGsLA96PC4Kf+o9mQ9v2a6LmQr3n605NBmESGzo5iKBOC28izNz/bpA==
+X-Received: by 2002:a63:9249:: with SMTP id s9mr10748342pgn.124.1642220670598;
+        Fri, 14 Jan 2022 20:24:30 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f8sm12177412pjs.47.2022.01.14.20.24.29
+        by smtp.gmail.com with ESMTPSA id gm2sm12289154pjb.21.2022.01.14.20.24.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 14 Jan 2022 20:24:29 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
@@ -53,6 +53,7 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Phillip Potter <phil@philpotter.co.uk>,
         Michael Straube <straube.linux@gmail.com>,
         Fabio Aiuto <fabioaiuto83@gmail.com>,
+        linux-staging@lists.linux.dev,
         Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Zhansaya Bagdauletkyzy <zhansayabagdaulet@gmail.com>,
@@ -65,21 +66,20 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Marco Cesati <marcocesati@gmail.com>,
         Joe Perches <joe@perches.com>,
         "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 0/3 v2] staging: rtl*: Check for NULL header value
-Date:   Fri, 14 Jan 2022 20:24:24 -0800
-Message-Id: <20220115042427.824542-1-keescook@chromium.org>
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH 2/3 v2] staging: rtl8723bs: Drop get_recvframe_data()
+Date:   Fri, 14 Jan 2022 20:24:26 -0800
+Message-Id: <20220115042427.824542-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220115042427.824542-1-keescook@chromium.org>
+References: <20220115042427.824542-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2346; h=from:subject; bh=0//lkO/0wFXg2CJ7H8evHpq6JQek92k7+udPsATuwMQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh4kx6IoojX1My8JDm3s8RTZJRNnwTPi665D4rHLZS ZBQR7imJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYeJMegAKCRCJcvTf3G3AJv+9D/ 9Ynz91Nz2s14j7d43+u9u8iqDnSN9MWomqbv810lPS7N8T8hC5EZlnk1nbFxvrPDhHw+uPR9PuiKxr t2WRtrzegBAU64+lA5YZdq2ruByk9frXDx/+1pi8eitLVZwUIQJbtYZO2o3XQ0R+EHmoAerTXpdnXS Y+llUjStu73BkWFtMg4AVRC4jagtnF2R0xVXT8LlAzp6z6RHj1LggNlPT+MB1PS7KDb6HmfMtz1Adu b1cDSLqFv2jZWJfzXf2UUCB9BsXMOkNsnT7iPPLN96osQN9U/TVNXqG3IUdtn4X7iBMjcmMowpaXTr 677AZM9KHQJYsJfCcCp6xPHzd7ueJwlAKcXH9kE+hw7/NZV82AWRpuaMcQwiSqfpWIAj03PVKEMbI9 wnpPnBWDPK/8XH+gYuCWYKr1HDgEHmUsR3Ej287pXviHivGPUwJ88v5yWPMjKGQr+Z/2EAIgh1yurq wS1HLipnYH30uQlf1fbQOFA9Cc3UnQ26Vle1WrZH/Qrxjw8rUSdUUbfJxs/oR5gQMlM+VZ0/tS5V13 iMqZTpVjbmAa6+x4kHRZS6/4vr1HMqOCGUhGdtv2aSWSqcz4m6RKLnQ+D68bpENAIXv//dMdLkcN5Y rUDjxw0tlTTkJjXCm5ZTUBXLhJ2OmxJOSLrQdiex/hK0KQ5iHqNRqNrWZjvA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5267; h=from:subject; bh=Z6Wfwf6J3jPxC9N20ooqglvng7tGlFpo9yMXY4ONGgY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh4kx6rMJrMC8W6yDUxFp3e6Z57hAL5JlEjMqwbMfu kf+UFhiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYeJMegAKCRCJcvTf3G3AJlkjEA CN3vYikUMRVE1xXmmwivQxstd/0eGne+wIQ8+LnWOwICl8klblpN1AFhgS3Y/9hgjAS5x57pVHmCRx av8TgSTDdrseku8EpUGz/ljcMWrxLNMMKpIXznB1RUzXihOdbCB0ivOpbPZWcxtUruGf/WaQHGDMx1 0FA7jJrzJqr6HTIJni65+NxZAsnxr0Qm7FMFbqmk57Iu1PfFN3Q3L8UqQsDLHeZ49ZUKntwxk0l445 1a2KS0Bq9HBnDOvUlF2k7199hZx6KWlF/FCwqaif350logcFak5t7TZic6Wk/aH/4KuLf95Tfto6yn P+bvZvEsZBCbTLJXcA0g222Rj0w6vd3GuZJn4sND0kLN/STj8cVQZJL6K6I1s7K+5oTSmNi7h9zCzY 26u1cRWYThdRbK4IyWxfYBfzlRP2kCwFUmhwx8CeHObDk6hu1LE6fz7hP8B+TGxd+hk/u7Qc3JYkNW WO3QK5gjydWXyZfch1Fho8xmjPf9QvbJKk3Q7nSUURiXKXthQzj2DpkVqh25x+PMkgb/prjw7BrTHT TGoppmDZ8RVlx5vwDpS8v0XnqAQ+LJPxUXS4cIqC49eMjOHx3/dgcGQmED5ACd8YfDtvSRAKB2jvoS iaM74RSQP6mtEgk2fPhOcaLO4WBObxhAyQHw44WpMWddwxgRDusr/rQPAGBA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
-
-Hi,
 
 When building with -Warray-bounds, the following warning is emitted:
 
@@ -101,35 +101,109 @@ In function 'memcpy',
    41 | #define __underlying_memcpy     __builtin_memcpy
       |                                 ^
 
-This is due to various paths to the memcpy() where the compile could
-see the destination buffer having a NULL value. This series fixes this
-by both eliminating cases where NULL returns were impossible and adding
-missing NULL checks where values were possible.
+This is because the compiler sees it is possible for "ptr" to be a NULL
+value, and concludes that it has zero size and attempts to copy to it
+would overflow. Instead, remove the get_recvframe_data() entirely, as
+it's not possible for this to ever be NULL.
 
-Thanks!
+Additionally add missing NULL checks after recvframe_pull() (which are
+present in the rtl8712 driver).
 
--Kees
-
-v1: https://lore.kernel.org/lkml/20220113002001.3498383-1-keescook@chromium.org/
-v2:
- - drop get_recvframe_data()
- - add missing NULL checks to r8188eu and rtl8723bs (already present in rtl8712)
-
-Kees Cook (3):
-  staging: r8188eu: Drop get_recvframe_data()
-  staging: rtl8723bs: Drop get_recvframe_data()
-  staging: rtl8712: Drop get_recvframe_data()
-
- drivers/staging/r8188eu/core/rtw_recv.c        |  6 +++++-
- drivers/staging/r8188eu/hal/rtl8188e_rxdesc.c  |  4 +---
- drivers/staging/r8188eu/include/rtw_recv.h     |  9 ---------
- drivers/staging/rtl8712/rtl871x_recv.c         |  4 ++--
- drivers/staging/rtl8712/rtl871x_recv.h         |  8 --------
+Cc: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Phillip Potter <phil@philpotter.co.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michael Straube <straube.linux@gmail.com>
+Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
+Cc: linux-staging@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
  drivers/staging/rtl8723bs/core/rtw_recv.c      | 11 ++++++++---
  drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c |  3 +--
  drivers/staging/rtl8723bs/include/rtw_recv.h   | 11 -----------
- 8 files changed, 17 insertions(+), 39 deletions(-)
+ 3 files changed, 9 insertions(+), 16 deletions(-)
 
+diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
+index 41bfca549c64..ffb455688a7d 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_recv.c
++++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+@@ -465,7 +465,7 @@ static union recv_frame *portctrl(struct adapter *adapter, union recv_frame *pre
+ 
+ 	auth_alg = adapter->securitypriv.dot11AuthAlgrthm;
+ 
+-	ptr = get_recvframe_data(precv_frame);
++	ptr = precvframe->u.hdr.rx_data;
+ 	pfhdr = &precv_frame->u.hdr;
+ 	pattrib = &pfhdr->attrib;
+ 	psta_addr = pattrib->ta;
+@@ -1510,7 +1510,7 @@ static signed int wlanhdr_to_ethhdr(union recv_frame *precvframe)
+ 	__be16 be_tmp;
+ 	struct adapter			*adapter = precvframe->u.hdr.adapter;
+ 	struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
+-	u8 *ptr = get_recvframe_data(precvframe) ; /*  point to frame_ctrl field */
++	u8 *ptr = precvframe->u.hdr.rx_data; /*  point to frame_ctrl field */
+ 	struct rx_pkt_attrib *pattrib = &precvframe->u.hdr.attrib;
+ 
+ 	if (pattrib->encrypt)
+@@ -1546,10 +1546,15 @@ static signed int wlanhdr_to_ethhdr(union recv_frame *precvframe)
+ 		eth_type = 0x8712;
+ 		/*  append rx status for mp test packets */
+ 		ptr = recvframe_pull(precvframe, (rmv_len-sizeof(struct ethhdr)+2)-24);
++		if (!ptr)
++			return _FAIL;
+ 		memcpy(ptr, get_rxmem(precvframe), 24);
+ 		ptr += 24;
+-	} else
++	} else {
+ 		ptr = recvframe_pull(precvframe, (rmv_len-sizeof(struct ethhdr) + (bsnaphdr?2:0)));
++		if (!ptr)
++			return _FAIL;
++	}
+ 
+ 	memcpy(ptr, pattrib->dst, ETH_ALEN);
+ 	memcpy(ptr+ETH_ALEN, pattrib->src, ETH_ALEN);
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+index c0a1a6fbeb91..74e75dc970f7 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+@@ -81,7 +81,7 @@ static void update_recvframe_phyinfo(union recv_frame *precvframe,
+ 	struct odm_phy_info *p_phy_info =
+ 		(struct odm_phy_info *)(&pattrib->phy_info);
+ 
+-	u8 *wlanhdr;
++	u8 *wlanhdr = precvframe->u.hdr.rx_data;
+ 	u8 *my_bssid;
+ 	u8 *rx_bssid;
+ 	u8 *rx_ra;
+@@ -100,7 +100,6 @@ static void update_recvframe_phyinfo(union recv_frame *precvframe,
+ 	struct sta_priv *pstapriv;
+ 	struct sta_info *psta;
+ 
+-	wlanhdr = get_recvframe_data(precvframe);
+ 	my_bssid = get_bssid(&padapter->mlmepriv);
+ 	rx_bssid = get_hdr_bssid(wlanhdr);
+ 	pkt_info.bssid_match = ((!IsFrameTypeCtrl(wlanhdr)) &&
+diff --git a/drivers/staging/rtl8723bs/include/rtw_recv.h b/drivers/staging/rtl8723bs/include/rtw_recv.h
+index a88b7c088a86..44f67103503a 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_recv.h
++++ b/drivers/staging/rtl8723bs/include/rtw_recv.h
+@@ -385,17 +385,6 @@ static inline u8 *get_rxmem(union recv_frame *precvframe)
+ 	return precvframe->u.hdr.rx_head;
+ }
+ 
+-static inline u8 *get_recvframe_data(union recv_frame *precvframe)
+-{
+-
+-	/* alwasy return rx_data */
+-	if (precvframe == NULL)
+-		return NULL;
+-
+-	return precvframe->u.hdr.rx_data;
+-
+-}
+-
+ static inline u8 *recvframe_pull(union recv_frame *precvframe, signed int sz)
+ {
+ 	/*  rx_data += sz; move rx_data sz bytes  hereafter */
 -- 
 2.30.2
 
