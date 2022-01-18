@@ -2,71 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364B0C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jan 2022 01:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1963EC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jan 2022 08:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244429AbiARBjv (ORCPT
+        id S1345086AbiARI6S (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Jan 2022 20:39:51 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:16719 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244464AbiARBjL (ORCPT
+        Tue, 18 Jan 2022 03:58:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240431AbiARI6S (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Jan 2022 20:39:11 -0500
-Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JdBDG1mSTzZcw4;
-        Tue, 18 Jan 2022 09:35:26 +0800 (CST)
-Received: from ubuntu1804.huawei.com (10.67.174.58) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 18 Jan 2022 09:39:09 +0800
-From:   Xiu Jianfeng <xiujianfeng@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
-        <bsegall@google.com>, <mgorman@suse.de>, <bristot@redhat.com>,
-        <gustavoars@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: [PATCH -next, v3] sched: Use struct_size() helper in task_numa_group()
-Date:   Tue, 18 Jan 2022 09:39:37 +0800
-Message-ID: <20220118013937.129318-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Jan 2022 03:58:18 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE31CC061574;
+        Tue, 18 Jan 2022 00:58:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GPIVl475f8UFddNg+OludgqDGQTkzKzQzuYcVSAcSw4=; b=NWXtUzOr08XMubwhSysdp0GKYD
+        /1LjawvPEUyvMgVvCkIXnCt5NDZghDo5DbURPwhKBGygjb5+SXXsfhuSwIhSJw2NEQUaNz3gyVZ83
+        HkWIZsvV9Sio3eMt2RNnlajwJgxeR5K0cdgzsyT4p8k+E+H3RFQKlbNDBOOCdWusCPelXhHC7cRCH
+        FHsnFHllKXuopliB1VQSJDtKtMnaGPD4FyXqTF6OFkSEv4/KwuTkxpW3rzA/T003rtok5LEnCZZ6x
+        m10TwSHMNy9WDBA4IwFRd4vSdUb7wx41OSLZZW7dYMeEzwTeL3hQDSAHD8E3NaCFOkCKDYL9HJo62
+        Bolm4ylA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1n9kJI-001odZ-8t; Tue, 18 Jan 2022 08:57:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6E293001C0;
+        Tue, 18 Jan 2022 09:57:45 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A068020168646; Tue, 18 Jan 2022 09:57:45 +0100 (CET)
+Date:   Tue, 18 Jan 2022 09:57:45 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, gustavoars@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH -next, v2] sched: Use struct_size() helper in
+ task_numa_group()
+Message-ID: <YeaBCYiTM/mxtBDU@hirez.programming.kicks-ass.net>
+References: <20220110012354.144394-1-xiujianfeng@huawei.com>
+ <Ydy3N577YD0JJr2N@hirez.programming.kicks-ass.net>
+ <20220110193158.31e1eaea@gandalf.local.home>
+ <Yd1qYsFcgcp/uHSa@hirez.programming.kicks-ass.net>
+ <20220111101425.7c59de5b@rorschach.local.home>
+ <Yd/ugQ8kUmcceuex@hirez.programming.kicks-ass.net>
+ <202201141935.A3F2ED1CF@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.58]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202201141935.A3F2ED1CF@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version,
-in order to avoid any potential type mistakes or integer overflows that,
-in the worse scenario, could lead to heap overflows.
+On Fri, Jan 14, 2022 at 07:50:47PM -0800, Kees Cook wrote:
+> On Thu, Jan 13, 2022 at 10:18:57AM +0100, Peter Zijlstra wrote:
 
-Link: https://github.com/KSPP/linux/issues/160
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- kernel/sched/fair.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> > Then I would still much prefer something like:
+> > 
+> > 	unsigned int size = sizeof(*grp) +
+> > 			    NR_NUMA_HINT_FAULT_STATS * numa_node_ids * sizeof(gfp->faults);
+> > 
+> > Which is still far more readable than some obscure macro. But again, the
+> 
+> I'm not sure it's _obscure_, but it is relatively new. It's even
+> documented. ;)
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 095b0aa378df..1a21bb33a4b2 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2437,9 +2437,8 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
- 	int i;
- 
- 	if (unlikely(!deref_curr_numa_group(p))) {
--		unsigned int size = sizeof(struct numa_group) +
--				    NR_NUMA_HINT_FAULT_STATS *
--				    nr_node_ids * sizeof(unsigned long);
-+		size_t size = struct_size(grp, faults,
-+					  NR_NUMA_HINT_FAULT_STATS * nr_node_ids);
- 
- 		grp = kzalloc(size, GFP_KERNEL | __GFP_NOWARN);
- 		if (!grp)
--- 
-2.17.1
+I'm one of those people who doesn't read documentation, I read code.
 
+I also flat out refuse to read any documentation that isn't plain text.
+
+> > I can't, nor do I want to, remember all these stupid little macros. Esp.
+> > not for trivial things like this.
+> 
+> Well, the good news is that other folks will (and are) fixing them for
+> you. :) Even if you never make mistakes with flexible arrays, other
+> people do, and so we need to take on some improvements to the robustness
+> of the kernel source tree-wide.
+
+But nobody helps me read the code when I trip over crap like this :/ Why
+do we have to have endless silly helpers for things that can be
+trivially expressed in regular C? I appreciate things like
+container_of() because if you write that out it's a mess, but this, very
+much not so.
+
+	struct_size(grp, faults, NR_NUMA_HINT_FAULTS_STATS * numa_node_ids);
+
+vs
+
+	sizeof(*gfp) + sizeof(grp->faults) * NR_NUMA_HINT_FAULT_STATS * nr_node_ids;
+
+The latter wins hands down, instantly obvious what it does while with
+the former I'd have to look up the macro.
