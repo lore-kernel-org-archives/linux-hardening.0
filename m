@@ -2,197 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EDBC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jan 2022 21:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E229C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jan 2022 23:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344402AbiARVh7 (ORCPT
+        id S1350299AbiARXd4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Jan 2022 16:37:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43320 "EHLO
+        Tue, 18 Jan 2022 18:33:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344168AbiARVh7 (ORCPT
+        with ESMTP id S1350293AbiARXd4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Jan 2022 16:37:59 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8E6C06161C
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jan 2022 13:37:59 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id c3so185882pls.5
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jan 2022 13:37:58 -0800 (PST)
+        Tue, 18 Jan 2022 18:33:56 -0500
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA8EC06173E
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jan 2022 15:33:56 -0800 (PST)
+Received: by mail-qt1-x832.google.com with SMTP id bb9so644018qtb.5
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jan 2022 15:33:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=iDq8s3Xs74YiCluh75TJCVZjxCkYXlG1IQO+4atrnQE=;
-        b=XB8triqqGfvX+MO0SSSjLfGgRehuRrHKUWfwNz7JRRAL7zL/jvR9IdcA2oKx+QQ2b1
-         FlCs5XAQ28WT27EUO0eMeXMWvxKe4n/gR4ui/AEfIr9gPj92S262VYORvL2bVr3+1wTi
-         gRg5YKMCipALu1ghGGEYMrmk5/pKyHrt+iRLo=
+        bh=e+S41aLkIpofGd7A0yy9q0Ab7HtB9JJVBC8F1jt0b6c=;
+        b=clXDUcIffYjfb/7+GCLMpj70X6Kklr2CvyZNAkDfKeordPqgZ7dr9uCnFSrH0Z8fNs
+         nmu5FARUH6TejAfwX1Fo1rkfkvv8bHFh1+lKS0R1ZwnoUYhfYHagawuBgwKHXbDdVc3m
+         4Db6OhnkKoyHGtNaFJBJ5564aHLLpnUzY4xMIUvW8eAGLf/GJSLVcLBise9Zd80I64/K
+         RIBYXpNrGLn8HYX1HYAz4w7JMc+dJ3cWNwnZf6IkPxz+nGqHNtZ3Q2ioa2U0Wlqj6mz1
+         djYy1SByRU3VgMqUewD00DzXvQRjSABtx5QUsawfNM0EneTw0gUpbM3B5vw/hBes8ns9
+         v1jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=iDq8s3Xs74YiCluh75TJCVZjxCkYXlG1IQO+4atrnQE=;
-        b=bQLIFSvmbOE2jMPfpR2stT0dCHyHqc4IbfjD5qcdhgdNp2Pu7IvpxZiEIhQUJjOAOs
-         QBWwzQn5k3o0iK1/DDMjApfev87LBBo3/C8qQNE1KhGx3WkoNZDCq3YJ5rwAUHcSswDb
-         dWm/fvTmK1zxI7IorLm7c3yGRpVRZ5QSM9JpKxWQwq9zL/bLoY/4fzi1L8pgYgRsS8g4
-         zmQaFartXX5G9xA18qgkJQgjptKC9+Y6f4qw7oYtxKwhRatd6eADaVKlxgCy0XkBwz+z
-         ive0rkY+UWnivuqExD+tVIGb1CFo7YTbkIKHJ7xyPyfYqXVw71wDotwaQWRkYd2Y2DUJ
-         GQXQ==
-X-Gm-Message-State: AOAM530RO4l9nqXYt92Ru4YqP9fDXBalKTxah2j2lV7v6VA/DOXx4WZ1
-        uqPmBHuU8E/0q0fxjliVaS4HCA==
-X-Google-Smtp-Source: ABdhPJyfv4KZZskiJBhrdXMXSByEal1AQQYqMHNrmQ693fDkqhxfNsbSSrhpRFMiZRPF9DT6sng7rA==
-X-Received: by 2002:a17:90b:3906:: with SMTP id ob6mr607002pjb.170.1642541878457;
-        Tue, 18 Jan 2022 13:37:58 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h3sm14566341pfg.18.2022.01.18.13.37.58
+        bh=e+S41aLkIpofGd7A0yy9q0Ab7HtB9JJVBC8F1jt0b6c=;
+        b=YztQ0/+iyyVmYyra5QQOfCnLd2IYKCfp6gxqOL5beb6ia8vIG3qk9yD8ABRJDIvV15
+         OSXiriLWEyoAadOf3qusYaQGUY/dsL+3+FdZ/iVJGM6j+A3DA+BweyXoMcPgX0p9y9Oa
+         RA73Nb4TdyQeaqCXi+wgTkd0B2/3yJcSPB5qt37IE0Aj8ctWrPpdEmlM+0Oo33ZZHO57
+         5Eqj77SPolepqsIt9zr4JbpV1cwPt41LI9oqGMSs4uBIt1gUF821zjouZcB5Zk0q/1et
+         cqWJxXsX/w/eQLDqBKi1go+UbyOY3n/3qW+BYQiQ9HjxT4j58m5STgX8v1KeH8ghTXwr
+         GCbQ==
+X-Gm-Message-State: AOAM5315007JvAzjktVqC5KKiQxG1V54pw3tXm5pr8g2tSzkQAjR8yDb
+        dHV+8kztzgkv8kLHZTr4C6somg==
+X-Google-Smtp-Source: ABdhPJwOjbDopS98863TEW7dj+SfAWZdlKugbYoHHCkjP2gsnGQo+88ZrJWCdi88DSmGi6fc93r3ZA==
+X-Received: by 2002:a05:622a:587:: with SMTP id c7mr22863235qtb.354.1642548835231;
+        Tue, 18 Jan 2022 15:33:55 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id w85sm8204142qkb.3.2022.01.18.15.33.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jan 2022 13:37:58 -0800 (PST)
-Date:   Tue, 18 Jan 2022 13:37:57 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lyude Paul <lyude@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/dp: Remove common Post Cursor2 register handling
-Message-ID: <202201181337.3EE7821@keescook>
-References: <20220105173507.2420910-1-keescook@chromium.org>
- <cae904f1-21f4-426f-8831-e122d965b131@embeddedor.com>
+        Tue, 18 Jan 2022 15:33:54 -0800 (PST)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1n9xz7-0016WR-P2; Tue, 18 Jan 2022 19:33:53 -0400
+Date:   Tue, 18 Jan 2022 19:33:53 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jann Horn <jannh@google.com>, Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] tpm: vtpm_proxy: Double-check to avoid buffer overflow
+Message-ID: <20220118233353.GI8034@ziepe.ca>
+References: <20220118183650.3386989-1-keescook@chromium.org>
+ <CAG48ez00FFW-n_Pi=+ya1xY5QuB3q2mPr8++scVe3h3ROeF_mg@mail.gmail.com>
+ <20220118193931.GH8034@ziepe.ca>
+ <202201181255.DB5D38F6AA@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cae904f1-21f4-426f-8831-e122d965b131@embeddedor.com>
+In-Reply-To: <202201181255.DB5D38F6AA@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 01:11:48PM -0600, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 1/5/22 11:35, Kees Cook wrote:
-> > The link_status array was not large enough to read the Adjust Request
-> > Post Cursor2 register, so remove the common helper function to avoid
-> > an OOB read, found with a -Warray-bounds build:
-> > 
-> > drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
-> > drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
-> >    59 |         return link_status[r - DP_LANE0_1_STATUS];
-> >       |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
-> >   147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >       |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Replace the only user of the helper with an open-coded fetch and decode,
-> > similar to drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c.
-> > 
-> > Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
-> 
-> This should be tagged for -stable:
-> 
-> Cc: stable@vger.kernel.org
+On Tue, Jan 18, 2022 at 01:20:40PM -0800, Kees Cook wrote:
 
-Ah yeah, good point. Added.
+> I haven't been able to reproduce the specific cause of why GCC decided to
+> do the bounds checking, but it's not an unreasonable thing to check for,
+> just for robustness.
 
-> 
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Maxime Ripard <mripard@kernel.org>
-> > Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Well, the commit message should explain this is to silence a compiler
+bug and maybe put some colour on what version(s) are actually buggy..
 
-Thanks!
-
--Kees
-
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> > ---
-> > This is the alternative to:
-> > https://lore.kernel.org/lkml/20211203084354.3105253-1-keescook@chromium.org/
-> > ---
-> >  drivers/gpu/drm/drm_dp_helper.c | 10 ----------
-> >  drivers/gpu/drm/tegra/dp.c      | 11 ++++++++++-
-> >  include/drm/drm_dp_helper.h     |  2 --
-> >  3 files changed, 10 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-> > index 23f9073bc473..c9528aa62c9c 100644
-> > --- a/drivers/gpu/drm/drm_dp_helper.c
-> > +++ b/drivers/gpu/drm/drm_dp_helper.c
-> > @@ -144,16 +144,6 @@ u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >  }
-> >  EXPORT_SYMBOL(drm_dp_get_adjust_tx_ffe_preset);
-> >  
-> > -u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> > -					 unsigned int lane)
-> > -{
-> > -	unsigned int offset = DP_ADJUST_REQUEST_POST_CURSOR2;
-> > -	u8 value = dp_link_status(link_status, offset);
-> > -
-> > -	return (value >> (lane << 1)) & 0x3;
-> > -}
-> > -EXPORT_SYMBOL(drm_dp_get_adjust_request_post_cursor);
-> > -
-> >  static int __8b10b_clock_recovery_delay_us(const struct drm_dp_aux *aux, u8 rd_interval)
-> >  {
-> >  	if (rd_interval > 4)
-> > diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
-> > index 70dfb7d1dec5..f5535eb04c6b 100644
-> > --- a/drivers/gpu/drm/tegra/dp.c
-> > +++ b/drivers/gpu/drm/tegra/dp.c
-> > @@ -549,6 +549,15 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
-> >  {
-> >  	struct drm_dp_link_train_set *adjust = &link->train.adjust;
-> >  	unsigned int i;
-> > +	u8 post_cursor;
-> > +	int err;
-> > +
-> > +	err = drm_dp_dpcd_read(link->aux, DP_ADJUST_REQUEST_POST_CURSOR2,
-> > +			       &post_cursor, sizeof(post_cursor));
-> > +	if (err < 0) {
-> > +		DRM_ERROR("failed to read post_cursor2: %d\n", err);
-> > +		post_cursor = 0;
-> > +	}
-> >  
-> >  	for (i = 0; i < link->lanes; i++) {
-> >  		adjust->voltage_swing[i] =
-> > @@ -560,7 +569,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
-> >  				DP_TRAIN_PRE_EMPHASIS_SHIFT;
-> >  
-> >  		adjust->post_cursor[i] =
-> > -			drm_dp_get_adjust_request_post_cursor(status, i);
-> > +			(post_cursor >> (i << 1)) & 0x3;
-> >  	}
-> >  }
-> >  
-> > diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> > index 472dac376284..fdf3cf6ccc02 100644
-> > --- a/include/drm/drm_dp_helper.h
-> > +++ b/include/drm/drm_dp_helper.h
-> > @@ -1528,8 +1528,6 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
-> >  					  int lane);
-> >  u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
-> >  				   int lane);
-> > -u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-> > -					 unsigned int lane);
-> >  
-> >  #define DP_BRANCH_OUI_HEADER_SIZE	0xc
-> >  #define DP_RECEIVER_CAP_SIZE		0xf
-> > 
-
--- 
-Kees Cook
+Jason
