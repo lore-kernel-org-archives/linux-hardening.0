@@ -2,81 +2,196 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107B8C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jan 2022 19:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3251C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jan 2022 19:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343537AbiARTdN (ORCPT
+        id S1348501AbiARTda (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Jan 2022 14:33:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43088 "EHLO
+        Tue, 18 Jan 2022 14:33:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244478AbiARTdN (ORCPT
+        with ESMTP id S1348760AbiARTda (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Jan 2022 14:33:13 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C776CC061574
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jan 2022 11:33:12 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id x11so49273814lfa.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jan 2022 11:33:12 -0800 (PST)
+        Tue, 18 Jan 2022 14:33:30 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28DDC06173F
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jan 2022 11:33:29 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id n16-20020a17090a091000b001b46196d572so263242pjn.5
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jan 2022 11:33:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3bBy3CYfuqFnCx19HkSiY69nlsVaIO8zSqvCrUbGJzY=;
-        b=RjAQS+KyvgKkaoHdBY2N3PbAm/v/bKvuVFQNdVRXI7Kp3tlMojLprMh/stW/djIQh0
-         0KV4Wa79IPFP0qCWrUtcEO5xJ+8faGi1s7dGhhI2SmUg77bhyLBTRrsYjOtx8UTi0nXn
-         F3YBlrbedzBkw2Nyg2T2cnBzoyfhRbdfGya8luZjl+xej0SA9VD4XZ3Q0WhE6mim0k52
-         gc/lTJBG1bNpyWhgxP3ucWqs3x26JW7F89dYKtzJ93mPVInp8VtPkd7v3oxun/wj4x68
-         FwldQs1jy6Kgh6dl5Uhhsmz1MmGUu6uiWwvuvx0pxTF5ak/S3e2LWK6ZTL0WhPFkiz76
-         F0IQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EtNhvDKyXQZ6Jo36sZZYMctRg/Y7isVGvsp0Av2OLNI=;
+        b=BdL5H9cYY+49MxXn/iNc78kLpAnP1DypS2/R4UfayzZ09NM0ONhgKl+LRx0Gu3cakI
+         K2K8w8c1rNuqroSg3BXmfl7zGIaeGTmES1D0niOyRHVWEoDGR3RzsWZGNO/sigNlPpwV
+         thDIWoCH/zMpN59d549rmUf5ock/JsxhOy67o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3bBy3CYfuqFnCx19HkSiY69nlsVaIO8zSqvCrUbGJzY=;
-        b=Wo0Oz7St42LhRPjGvuJLoduEZ+zLQszpaLELUIHlS+zh0FYSrnxikP4USm0osiY21M
-         qI40rMHY4KNFPogr/4aVIpRFxfoGKJuSVciPVZDp2KaMgbN+V3yEmzQ5aCeAMs5q8Vgj
-         KtJ6yfGTRYt5cL8gFS9K2wsjgcY0BJzU1luiaRWmpsb9KmlA1Mm/Sqj9mFU97crGMsgw
-         nArErk+V/5LhM2iS69+N8s1uRbbQCQ0o6aREXkXJZcU011XraEDGVsKdh3oM4pTi7SUz
-         cj/I/mAOobR4PM/+SfTXXJmyt/8kxCOWejN67GQtIoZ1x2nO4pllvI/254WMM6iD+iOy
-         /vxA==
-X-Gm-Message-State: AOAM5308wUW7JYIC2PBOZwNaeuH9vKFL4CXCUpL6xTc11lwSpwutj23O
-        N3I5p9IyrJFHloaNlUN3VQiONSCf2G4vScG4t9Kazg==
-X-Google-Smtp-Source: ABdhPJx/1UJf3FwrXqsd++NEyd+vbL+s17UyRGF3V/2G6UNi5FHvEJ4oqMuue0/l/pMgKjeZHcKeZClk+PFpp4wYCQ8=
-X-Received: by 2002:a2e:964e:: with SMTP id z14mr14936557ljh.375.1642534390901;
- Tue, 18 Jan 2022 11:33:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20220118183650.3386989-1-keescook@chromium.org>
-In-Reply-To: <20220118183650.3386989-1-keescook@chromium.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 18 Jan 2022 20:32:43 +0100
-Message-ID: <CAG48ez00FFW-n_Pi=+ya1xY5QuB3q2mPr8++scVe3h3ROeF_mg@mail.gmail.com>
-Subject: Re: [PATCH v2] tpm: vtpm_proxy: Double-check to avoid buffer overflow
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EtNhvDKyXQZ6Jo36sZZYMctRg/Y7isVGvsp0Av2OLNI=;
+        b=53QRwT5hVT70fc2wxF8LrWc2O/TYyo4dZ1s1jq1P2bmXEvvE1lkSmJxKNeY0n73ass
+         WyaTKfuKS0ut39RB50oVd4nJe3ephxs4gHiD0KqfYT9Sgcj6v9pNj2jKmpcSf8awdPt+
+         AaJh0K+WJbaQpmluYkMlAgJ7tIlTvkJ1eW0CABOMdTYeYOqnjZUX9Xi3imT3x/XDaZIR
+         dsRGU3Pse3i025+F3rlQ4p3rLqgiU4GU6+2dZuCDcQDtsIhN1786QnIdqocUWpE9COjd
+         BjHJ4IHq12GEsWj+sYfZSQd/lTSXwB5lVT1UdNlae/xAaeDCB37DPY8qbE/sluyjtUaR
+         6vjg==
+X-Gm-Message-State: AOAM533dz7S0ZTGvdpo3HwlE/OfBfNqduVriFcVTGwKd3PFBudnPDwF6
+        irRdJ2E26zGtMqXgHNYGUFZNOg==
+X-Google-Smtp-Source: ABdhPJwgE8jcCT3labTDwao+nHGvfWqRwKzFNqt9hExsgXilGxYF0m09Y3u3MTDb4o9vay68AQtaOw==
+X-Received: by 2002:a17:902:aa4b:b0:14a:cff4:19ec with SMTP id c11-20020a170902aa4b00b0014acff419ecmr5946219plr.60.1642534409435;
+        Tue, 18 Jan 2022 11:33:29 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 25sm3508985pje.22.2022.01.18.11.33.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jan 2022 11:33:29 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Michael Straube <straube.linux@gmail.com>,
+        Fabio Aiuto <fabioaiuto83@gmail.com>,
+        linux-staging@lists.linux.dev,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Zhansaya Bagdauletkyzy <zhansayabagdaulet@gmail.com>,
+        Ivan Safonov <insafonov@gmail.com>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Yang Li <yang.lee@linux.alibaba.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Marco Cesati <marcocesati@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v3 1/3] staging: r8188eu: Drop get_recvframe_data()
+Date:   Tue, 18 Jan 2022 11:33:25 -0800
+Message-Id: <20220118193327.2822099-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220118193327.2822099-1-keescook@chromium.org>
+References: <20220118193327.2822099-1-keescook@chromium.org>
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4934; h=from:subject; bh=91pfgNSNKQZ90Z5sOLt9nzmWsWo2UUEN0XKGD4U7vGE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh5xYFlQv2coVuKsjKL2V15ndg7Erkujlv2Soj3VY3 WBrgQfuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYecWBQAKCRCJcvTf3G3AJnjaEA CynCag1EmCrN2PCAl/92wBGlf4AvWgcHIHj6wnKvOw5aWiYVAqAo1X8Qwi+EKTR5MZUut7Q5EMdIHW uJ9QmMBEn3KKzX7RPfIWkz5winwPnvc7Xbue6U01mHxVkSjoh/aBuI8Whk4xxHll/onynWc9S3NwTR ciSzWlzxLnjr5FD4FLKHTvn3Ma8ggFIY+Hduqjud3Xyhpp74zl3dS7nt3YD1Zy/cAIq4RwXjkEqrgZ qVdnn/CZezaCzhRqkkRMA8x50L3spzYIK+1J9HxHDNkRuXWTv4Y8cznBKyzXPKmlNN0TMYU36RADnz SZc3tBVZeWsz9TWOFrEqfh/zCf7VdN51lJF63PljlnOHi3LOgvVlKHLDwpjPDThBwTX17uvKqdnAFE xTHa/z83bIofJg3uHxPOiF9eTP/O6rX4k/ggqxipSX0ow0xiDVVHIc17ypBm7SfunZFrYF3wRUttiB cqQENioI3v+tVIo996Y4NrODehhbe10kuEYQ2PQVnW8L4pHprLF6wjHVx8pMK4J+PANzx1I1xMihtO h6QaBVEeK+MD0imfaKC8ZlFG687xOOogHzI/TlYP2/fhLBRwJJtuiID1hhZ4zELVH3E1fYSmkVJ2gp VQ02QBXboNpzL+1REJ+FQn45ylj2NyFBAv27HMc56y3ATUMeX7fOGCHW6GvQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 7:37 PM Kees Cook <keescook@chromium.org> wrote:
-> When building with -Warray-bounds, this warning was emitted:
->
-> In function 'memset',
->     inlined from 'vtpm_proxy_fops_read' at drivers/char/tpm/tpm_vtpm_proxy.c:102:2:
-> ./include/linux/fortify-string.h:43:33: warning: '__builtin_memset' pointer overflow between offset 164 and size [2147483648, 4294967295]
-> [-Warray-bounds]
->    43 | #define __underlying_memset     __builtin_memset
->       |                                 ^
+When building with -Warray-bounds, the following warning is emitted:
 
-Can you explain what that compiler warning actually means, and which
-compiler it is from? Is this from a 32-bit or a 64-bit architecture?
+In file included from ./include/linux/string.h:253,
+                 from ./arch/x86/include/asm/page_32.h:22,
+                 from ./arch/x86/include/asm/page.h:14,
+                 from ./arch/x86/include/asm/thread_info.h:12,
+                 from ./include/linux/thread_info.h:60,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/rcupdate.h:27,
+                 from ./include/linux/rculist.h:11,
+                 from ./include/linux/sched/signal.h:5,
+                 from ./drivers/staging/rtl8723bs/include/drv_types.h:17,
+                 from drivers/staging/rtl8723bs/core/rtw_recv.c:7:
+In function 'memcpy',
+    inlined from 'wlanhdr_to_ethhdr' at drivers/staging/rtl8723bs/core/rtw_recv.c:1554:2:
+./include/linux/fortify-string.h:41:33: warning: '__builtin_memcpy' offset [0, 5] is out of the bounds [0, 0] [-Warray-bounds]
+   41 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
 
-It sounds like the compiler (GCC?) is hallucinating a codepath on
-which "len" is guaranteed to be >=2147483648, right? Why is it doing
-that? Is this some kinda side effect from the fortify code?
+This is because the compiler sees it is possible for "ptr" to be a NULL
+value, and concludes that it has zero size and attempts to copy to it
+would overflow. Instead, remove the get_recvframe_data() entirely, as
+it's not possible for this to ever be NULL.
+
+Additionally add missing NULL checks after recvframe_pull() (which are
+present in the rtl8712 driver).
+
+Cc: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Phillip Potter <phil@philpotter.co.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michael Straube <straube.linux@gmail.com>
+Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
+Cc: linux-staging@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/staging/r8188eu/core/rtw_recv.c       | 6 +++++-
+ drivers/staging/r8188eu/hal/rtl8188e_rxdesc.c | 4 +---
+ drivers/staging/r8188eu/include/rtw_recv.h    | 9 ---------
+ 3 files changed, 6 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/staging/r8188eu/core/rtw_recv.c b/drivers/staging/r8188eu/core/rtw_recv.c
+index 51a13262a226..946e659ae97a 100644
+--- a/drivers/staging/r8188eu/core/rtw_recv.c
++++ b/drivers/staging/r8188eu/core/rtw_recv.c
+@@ -1188,7 +1188,7 @@ static int wlanhdr_to_ethhdr(struct recv_frame *precvframe)
+ 	struct adapter			*adapter = precvframe->adapter;
+ 	struct mlme_priv	*pmlmepriv = &adapter->mlmepriv;
+ 
+-	u8	*ptr = get_recvframe_data(precvframe); /*  point to frame_ctrl field */
++	u8	*ptr = precvframe->rx_data; /*  point to frame_ctrl field */
+ 	struct rx_pkt_attrib *pattrib = &precvframe->attrib;
+ 
+ 	if (pattrib->encrypt)
+@@ -1223,10 +1223,14 @@ static int wlanhdr_to_ethhdr(struct recv_frame *precvframe)
+ 		eth_type = 0x8712;
+ 		/*  append rx status for mp test packets */
+ 		ptr = recvframe_pull(precvframe, (rmv_len - sizeof(struct ethhdr) + 2) - 24);
++		if (!ptr)
++			return _FAIL;
+ 		memcpy(ptr, get_rxmem(precvframe), 24);
+ 		ptr += 24;
+ 	} else {
+ 		ptr = recvframe_pull(precvframe, (rmv_len - sizeof(struct ethhdr) + (bsnaphdr ? 2 : 0)));
++		if (!ptr)
++			return _FAIL;
+ 	}
+ 
+ 	memcpy(ptr, pattrib->dst, ETH_ALEN);
+diff --git a/drivers/staging/r8188eu/hal/rtl8188e_rxdesc.c b/drivers/staging/r8188eu/hal/rtl8188e_rxdesc.c
+index 90d426199f52..bf93ff3af140 100644
+--- a/drivers/staging/r8188eu/hal/rtl8188e_rxdesc.c
++++ b/drivers/staging/r8188eu/hal/rtl8188e_rxdesc.c
+@@ -128,7 +128,7 @@ void update_recvframe_phyinfo_88e(struct recv_frame *precvframe, struct phy_stat
+ 	struct rx_pkt_attrib *pattrib = &precvframe->attrib;
+ 	struct hal_data_8188e *pHalData = &padapter->haldata;
+ 	struct phy_info *pPHYInfo  = &pattrib->phy_info;
+-	u8 *wlanhdr;
++	u8 *wlanhdr = precvframe->rx_data;
+ 	struct odm_per_pkt_info	pkt_info;
+ 	u8 *sa = NULL;
+ 	struct sta_priv *pstapriv;
+@@ -138,8 +138,6 @@ void update_recvframe_phyinfo_88e(struct recv_frame *precvframe, struct phy_stat
+ 	pkt_info.bPacketToSelf = false;
+ 	pkt_info.bPacketBeacon = false;
+ 
+-	wlanhdr = get_recvframe_data(precvframe);
+-
+ 	pkt_info.bPacketMatchBSSID = ((!IsFrameTypeCtrl(wlanhdr)) &&
+ 		!pattrib->icv_err && !pattrib->crc_err &&
+ 		!memcmp(get_hdr_bssid(wlanhdr),
+diff --git a/drivers/staging/r8188eu/include/rtw_recv.h b/drivers/staging/r8188eu/include/rtw_recv.h
+index b43a46887343..920f33235e00 100644
+--- a/drivers/staging/r8188eu/include/rtw_recv.h
++++ b/drivers/staging/r8188eu/include/rtw_recv.h
+@@ -296,15 +296,6 @@ static inline u8 *get_rx_status(struct recv_frame *precvframe)
+ 	return get_rxmem(precvframe);
+ }
+ 
+-static inline u8 *get_recvframe_data(struct recv_frame *precvframe)
+-{
+-	/* always return rx_data */
+-	if (precvframe == NULL)
+-		return NULL;
+-
+-	return precvframe->rx_data;
+-}
+-
+ static inline u8 *recvframe_push(struct recv_frame *precvframe, int sz)
+ {
+ 	/*  append data before rx_data */
+-- 
+2.30.2
+
