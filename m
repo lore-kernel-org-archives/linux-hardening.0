@@ -2,120 +2,140 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEA6C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jan 2022 18:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F96C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jan 2022 19:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356878AbiASSn7 (ORCPT
+        id S231851AbiASTBi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Jan 2022 13:43:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47634 "EHLO
+        Wed, 19 Jan 2022 14:01:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356832AbiASSn6 (ORCPT
+        with ESMTP id S230169AbiASTBi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Jan 2022 13:43:58 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB01DC061574
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Jan 2022 10:43:57 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id w12-20020a17090a528c00b001b276aa3aabso7413627pjh.0
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Jan 2022 10:43:57 -0800 (PST)
+        Wed, 19 Jan 2022 14:01:38 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAA0C061574
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Jan 2022 11:01:37 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id s61-20020a17090a69c300b001b4d0427ea2so7107008pjj.4
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Jan 2022 11:01:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jf8NqUotnPuLOWKkBWsY7N81hJI6QC97c/XS/gK1dQY=;
-        b=N11ilHklzSQ0WWZfPdc6FtRUXJEdv0DcNOeFFxW6n8UwZ6OBlsA41AZ5W6YfGpPZie
-         hLnDFxME2FPL8SCyEnpHfiMyvAjK5WJYQUeLgwO5x4P3hj4gOVSl1jCZxc+tP2mBGdnQ
-         nOiQWgORh9ni/MDeF86SNSP9VS0es0qqzEmjU=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nnXdclxtwo8kug9xsiXZGzqrqIG9VlNEk6H+ZSlfrgY=;
+        b=fbVCXUVMVjmFbOu3aJkxKVjM4o3W1lCX4t8iTfXH7YIe1N+9muwxo/g+Shdy/L//Oi
+         UYcIQw1Fzh5GREOPexJ5m1I5TveOkc0Tc8n73RW15SzUkuTdvznNTRwnUa8rCA4B2aHU
+         97gX7VTGEl3/znrbrWOSaisKMURWT86qs/SB0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jf8NqUotnPuLOWKkBWsY7N81hJI6QC97c/XS/gK1dQY=;
-        b=4+ACY+2mv+StYmqCNvCOgONqXN9ee2zYZmRMjfCbaEUP6uxtgxsRcJN/JXbxFQOlxZ
-         K9yjywTObtmkzXMuUGGpvSgiTEI6S+0A6VaakhqWbAavzvQySnJyTMI7ZDaJ+0VJ7mSu
-         +aE2onoezUpiMYikDQ43rEgR/TKkkqyIlpHAVlOHC7fr4x2eWOUg3UF5T8iZGLRs32E9
-         u4EIamZSxG4nX4VkfSgc8bkVXVJHsIZxx8wb9W+XpfC6yWQydm2Wrc3iFkLDfPA+MCFK
-         aPXLV/QYZPh4wr+CCcXofY40jj0hkGeheK1QOwyHH6gBgVGN/JN7jq0nch8amSl+Sfht
-         WX1A==
-X-Gm-Message-State: AOAM531Px6koZmlJA9dMwwRK4KY/1Yv6iunYn6S6+yGMSVtAgVzWeSTg
-        52Wj82lXGz84OfteYP4gWNxQWbYUFF5jcw==
-X-Google-Smtp-Source: ABdhPJyj7rW9pev+19vkk1VY5IFms56pLKvuPJZzE3rnS4Rp81EcueRnKnSBiRJV3777NFMGoInxwA==
-X-Received: by 2002:a17:90a:77c6:: with SMTP id e6mr5873335pjs.41.1642617837196;
-        Wed, 19 Jan 2022 10:43:57 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nnXdclxtwo8kug9xsiXZGzqrqIG9VlNEk6H+ZSlfrgY=;
+        b=gTqAhxVfywK48D5n0cpaBcwlBSsJDLrtK2Lhv5Vp/vGLgMCQ4hMArxWJ/uQavGr4Sq
+         plA7EJYiZPm/wrydfguD4sgh7eZxY0MXkrBNHyesiLUsbH9ioJTBOdWLd9tD3mEU+G54
+         Gbp8d5Ed8BsMKeS77w4mfX+3Tf5EKaBykV7mvYEJvtxhJsJV3tJUu+StiA1loO6OEzRC
+         6OWiZwymATMdFLuJZALXzlUzGGC5NvtHZEqR8lfF+FLb5OF4xNSzLaUWFvA8oZNPCp6n
+         1rGPMsc4Ie+FMaLrLShLf3pjgQI5mz8+TwoUBZy8S/37orRPk9PNzpL4iVLmwdl8eYPx
+         fEwA==
+X-Gm-Message-State: AOAM530aWYdtaz1Kg67ofCwYpD1gFOyE+Xt+HvWWXihcb95OsKsI2bAu
+        yjGU97yTmv0GBD93XRL1GhdzLA==
+X-Google-Smtp-Source: ABdhPJyOcsSg3W+RSjgAWuAteuR2ceGEMAm2W1rpFakq7uK5lf6Ou6wXyI5YbzdeSRcSjhVi7c9pww==
+X-Received: by 2002:a17:902:70c3:b0:149:a78f:54ea with SMTP id l3-20020a17090270c300b00149a78f54eamr33517021plt.114.1642618897432;
+        Wed, 19 Jan 2022 11:01:37 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z13sm430620pfe.20.2022.01.19.10.43.56
+        by smtp.gmail.com with ESMTPSA id p10sm418292pgr.5.2022.01.19.11.01.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jan 2022 10:43:56 -0800 (PST)
+        Wed, 19 Jan 2022 11:01:37 -0800 (PST)
+Date:   Wed, 19 Jan 2022 11:01:36 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Peter Huewe <peterhuewe@gmx.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v3] tpm: vtpm_proxy: Check length to avoid compiler warning
-Date:   Wed, 19 Jan 2022 10:43:54 -0800
-Message-Id: <20220119184354.3367603-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, gustavoars@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH -next, v2] sched: Use struct_size() helper in
+ task_numa_group()
+Message-ID: <202201191057.FAEAF1F94@keescook>
+References: <20220110012354.144394-1-xiujianfeng@huawei.com>
+ <Ydy3N577YD0JJr2N@hirez.programming.kicks-ass.net>
+ <20220110193158.31e1eaea@gandalf.local.home>
+ <Yd1qYsFcgcp/uHSa@hirez.programming.kicks-ass.net>
+ <20220111101425.7c59de5b@rorschach.local.home>
+ <Yd/ugQ8kUmcceuex@hirez.programming.kicks-ass.net>
+ <202201141935.A3F2ED1CF@keescook>
+ <YeaBCYiTM/mxtBDU@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2200; h=from:subject; bh=FIuPYqfJGsu4u4fPlDiJiKGwPnqpxta/IfVuwmIgSHA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh6FvpqUwHqXWWTKf52yeH1LE75+2AeiESR7YMnXap ySxSr4eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYehb6QAKCRCJcvTf3G3AJnOOD/ kBaMTOE3rFxJhqQiUJQqXi842KK2oyPTv7vXm9evBfQQ869APWfk/2BMgwO+jwdCl74tn9O0zWVg8z V+QnZSbLG4OLBXpn37q9PkB6cX06ZBiEeNNXor6nFEisZ3mOu25ecEaDsS3vUdTYcObjFKA9+/qHo9 KmRU1hBolXTp59eoCGkt9fWWDEMNXfcnz/O8a50cjOFMWI05O/0m2x9Q+JzVRpCKhmqH31mGNAJz3U mT3qYf/lKuUWnK5JZX/1pivFIzm3R8F3+SiQPSzlmPmmjI/XnEsjqo6lSvFZyYEfwSYkv7LJiqfAy5 ztIGElJRu+U+kL9cuaDxpUXP9IyNR+aDrdU4INhOyfjSbUS4ct+4xIv7YjOFyqI/9U3Jx/CalcYHet fDSFRVR+yklGYhHeiVDVmNA9kuwRWq97/IveqifJ71fJE7RK9TmO+GrD/5B9rewgjs8iL5WSGpetaU 5wuoV0W3L8oj5rim+ADX/c+xh/7V906rk2UJzcobRmjg/IzUPxYMPZjtxK0hQEJKlPk81KbwDconmS NVc+WN7KgkgL384tnmByElenJG41lFW5oy8pHSnnezm2g0Tfeo+kzFWYRw5RvoPQ7EBtb1uvmMmKEo yRfVCvq8hErY4dKJns87ys7J3CdF5Vnem5UDKkLVFir5+mD2VaPbTiBJ04tw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YeaBCYiTM/mxtBDU@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When building with -Warray-bounds under GCC 11.2, this warning was
-emitted:
+On Tue, Jan 18, 2022 at 09:57:45AM +0100, Peter Zijlstra wrote:
+> On Fri, Jan 14, 2022 at 07:50:47PM -0800, Kees Cook wrote:
+> > On Thu, Jan 13, 2022 at 10:18:57AM +0100, Peter Zijlstra wrote:
+> 
+> > > Then I would still much prefer something like:
+> > > 
+> > > 	unsigned int size = sizeof(*grp) +
+> > > 			    NR_NUMA_HINT_FAULT_STATS * numa_node_ids * sizeof(gfp->faults);
+> > > 
+> > > Which is still far more readable than some obscure macro. But again, the
+> > 
+> > I'm not sure it's _obscure_, but it is relatively new. It's even
+> > documented. ;)
+> > https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> I'm one of those people who doesn't read documentation, I read code.
+> 
+> I also flat out refuse to read any documentation that isn't plain text.
 
-In function 'memset',
-    inlined from 'vtpm_proxy_fops_read' at drivers/char/tpm/tpm_vtpm_proxy.c:102:2:
-./include/linux/fortify-string.h:43:33: warning: '__builtin_memset' pointer overflow between offset 164 and size [2147483648, 4294967295]
-[-Warray-bounds]
-   43 | #define __underlying_memset     __builtin_memset
-      |                                 ^
+Sure, which is why it's in the tree:
+Documentation/process/deprecated.rst
 
-This warning appears to be triggered due to the "count < len"
-check in vtpm_proxy_fops_read() splitting the CFG[1], and the compiler
-attempting to reason about the possible value range in len compared
-to the buffer size.
+> 
+> > > I can't, nor do I want to, remember all these stupid little macros. Esp.
+> > > not for trivial things like this.
+> > 
+> > Well, the good news is that other folks will (and are) fixing them for
+> > you. :) Even if you never make mistakes with flexible arrays, other
+> > people do, and so we need to take on some improvements to the robustness
+> > of the kernel source tree-wide.
+> 
+> But nobody helps me read the code when I trip over crap like this :/ Why
+> do we have to have endless silly helpers for things that can be
+> trivially expressed in regular C? I appreciate things like
+> container_of() because if you write that out it's a mess, but this, very
+> much not so.
+> 
+> 	struct_size(grp, faults, NR_NUMA_HINT_FAULTS_STATS * numa_node_ids);
+> 
+> vs
+> 
+> 	sizeof(*gfp) + sizeof(grp->faults) * NR_NUMA_HINT_FAULT_STATS * nr_node_ids;
+> 
+> The latter wins hands down, instantly obvious what it does while with
+> the former I'd have to look up the macro.
 
-In order to silence this warning, and to keep this code robust if the
-use of proxy_dev->req_len ever changes in the future, explicitly check
-the size of len before reaching the memset().
+One of the drivers is general robustness. The open-coded version can
+have bugs slowly drift in, especially with the sizeof() ends up naming
+a structs like:
 
-[1] https://lore.kernel.org/lkml/CAG48ez1iTF9KegKJrW5a3WzXgCPZJ73nS2_e5esKJRppdzvv8g@mail.gmail.com
+ 	sizeof(struct object) + sizeof(struct element) * NR_NUMA_HINT_FAULT_STATS * nr_node_ids;
 
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-integrity@vger.kernel.org
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Link: https://lore.kernel.org/lkml/4b59d305-6858-1514-751a-37853ad777be@linux.ibm.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v1: https://lore.kernel.org/lkml/20220113002727.3709495-1-keescook@chromium.org
-v2: https://lore.kernel.org/lkml/20220118183650.3386989-1-keescook@chromium.org
-v3: Add more details to the commit log, including a link to Jann's analysis
----
- drivers/char/tpm/tpm_vtpm_proxy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+One of the points of struct_size() is to include the semantic sanity
+checking that the compiler can do (i.e. making sure "faults" is a member
+of "grp", correctly sizing them both, avoiding overflows, etc, etc).
 
-diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
-index 91c772e38bb5..5c865987ba5c 100644
---- a/drivers/char/tpm/tpm_vtpm_proxy.c
-+++ b/drivers/char/tpm/tpm_vtpm_proxy.c
-@@ -91,7 +91,7 @@ static ssize_t vtpm_proxy_fops_read(struct file *filp, char __user *buf,
- 
- 	len = proxy_dev->req_len;
- 
--	if (count < len) {
-+	if (count < len || len > sizeof(proxy_dev->buffer)) {
- 		mutex_unlock(&proxy_dev->buf_lock);
- 		pr_debug("Invalid size in recv: count=%zd, req_len=%zd\n",
- 			 count, len);
+I know what you mean about not liking looking up new macros, but given
+C's fragility in these areas, it's been important for us to swap stuff
+out shift the burdens to the compiler as much as possible.
+
+-Kees
+
 -- 
-2.30.2
-
+Kees Cook
