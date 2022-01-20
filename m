@@ -2,44 +2,47 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CE2C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 00:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572F9C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 01:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357871AbiATAsl (ORCPT
+        id S1358114AbiATBtQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Jan 2022 19:48:41 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:47094 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345135AbiATAsl (ORCPT
+        Wed, 19 Jan 2022 20:49:16 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:44948 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231600AbiATBtQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Jan 2022 19:48:41 -0500
+        Wed, 19 Jan 2022 20:49:16 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 54977CE1F62;
-        Thu, 20 Jan 2022 00:48:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76843C004E1;
-        Thu, 20 Jan 2022 00:48:36 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F3314B81BFA;
+        Thu, 20 Jan 2022 01:49:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA429C004E1;
+        Thu, 20 Jan 2022 01:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642639717;
-        bh=O5FhCiqGotWkfKuDJzbML+belVqsTNSDZFAhG2uKTxI=;
+        s=k20201202; t=1642643353;
+        bh=XVNGFC1UcemnELjzQ0k/YD0qA9SM3qfudnkbbNl7eqE=;
         h=Date:From:To:Cc:Subject:From;
-        b=O6UsfJaBweTRb3E3PL6BEQkoHr3kW3cWWhSip+v/0YG/LgbVC2IC/yo1nyygZS07Y
-         XEEVSuL1eJAM+ZfR7DwV5czgR4uojE6Vmmima7k9PXH5SgtWqOzZcHPJ46DxqfJy5M
-         KhXHYam7I2JqZmtLuWFCI+5IHmMTfL+/Bb5a3Wq/b+5wNil77kxiCW3vXuxwoX4rKG
-         gBqbrlGr3tW0Lfg6qUNYfayK/jfk8Py0GD9nUSPu25tkl6cd+bhX053wHrLnpxIGoI
-         dktVFQd7LfFvNqGrApnNy+H6xHvVP0g7vsTSkkNBGOTYKyRA5it8OcA8V8xHSnyjxR
-         V4oBicQ8D/Kgw==
-Date:   Wed, 19 Jan 2022 18:55:12 -0600
+        b=Oj4rKPsIwX2nhI+KKfEncfk32rHuyVRxiOhLR9sN7mCedxrBAwxOAM2S+04QZMvhB
+         2CFyfb2nqjwRG07Cy5TBeYDYr+OyZPzT/iYrNE1PdXdgN9E5+VSCaae7NVr4AO8keo
+         /qw9pRpUTEbG6ies/dSh05mnFpX6+imOb1VihoEPx/jwqhTzy5ABSzbDSvyrFLq0r5
+         XjOR9rtiS4xskS7WywYM0GtizrXQ7tskiwY/01yU9o+CXn0xhWOc+p8yhr2UWNcM/y
+         yOEPvut2r8wd/fGyQ2RGyjc4f7E83DO37cArweQKwB1HGMXGuLwm4aZJC0PI4pkZPe
+         xBxI9A5LMmjYw==
+Date:   Wed, 19 Jan 2022 19:55:46 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] USB: serial: garmin_gps: Use struct_size() and
- flex_array_size() helpers in pkt_add()
-Message-ID: <20220120005512.GA72984@embeddedor>
+Subject: [PATCH][next] usb: xhci-mtk: Use struct_size() helper in
+ create_sch_ep()
+Message-ID: <20220120015546.GA75917@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -47,41 +50,45 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() and flex_array_size() helpers instead of
-an open-coded version, in order to avoid any potential type mistakes
-or integer overflows that, in the worst scenario, could lead to heap
-overflows.
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows that,
+in the worst scenario, could lead to heap overflows.
 
 Also, address the following sparse warnings:
-drivers/usb/serial/garmin_gps.c:270:31: warning: using sizeof on a flexible structure
+drivers/usb/host/xhci-mtk-sch.c:265:20: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/160
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/usb/serial/garmin_gps.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-mtk-sch.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/serial/garmin_gps.c b/drivers/usb/serial/garmin_gps.c
-index e5c75944ebb7..1d806c108efb 100644
---- a/drivers/usb/serial/garmin_gps.c
-+++ b/drivers/usb/serial/garmin_gps.c
-@@ -267,13 +267,12 @@ static int pkt_add(struct garmin_data *garmin_data_p,
+diff --git a/drivers/usb/host/xhci-mtk-sch.c b/drivers/usb/host/xhci-mtk-sch.c
+index edbfa82c6565..f3139ce7b0a9 100644
+--- a/drivers/usb/host/xhci-mtk-sch.c
++++ b/drivers/usb/host/xhci-mtk-sch.c
+@@ -248,7 +248,6 @@ create_sch_ep(struct xhci_hcd_mtk *mtk, struct usb_device *udev,
+ 	struct mu3h_sch_bw_info *bw_info;
+ 	struct mu3h_sch_tt *tt = NULL;
+ 	u32 len_bw_budget_table;
+-	size_t mem_size;
  
- 	/* process only packets containing data ... */
- 	if (data_length) {
--		pkt = kmalloc(sizeof(struct garmin_packet)+data_length,
--								GFP_ATOMIC);
-+		pkt = kmalloc(struct_size(pkt, data, data_length), GFP_ATOMIC);
- 		if (!pkt)
- 			return 0;
+ 	bw_info = get_bw_info(mtk, udev, ep);
+ 	if (!bw_info)
+@@ -262,9 +261,9 @@ create_sch_ep(struct xhci_hcd_mtk *mtk, struct usb_device *udev,
+ 	else
+ 		len_bw_budget_table = 1;
  
- 		pkt->size = data_length;
--		memcpy(pkt->data, data, data_length);
-+		memcpy(pkt->data, data, flex_array_size(pkt, data, pkt->size));
+-	mem_size = sizeof(struct mu3h_sch_ep_info) +
+-			len_bw_budget_table * sizeof(u32);
+-	sch_ep = kzalloc(mem_size, GFP_KERNEL);
++	sch_ep = kzalloc(struct_size(sch_ep, bw_budget_table,
++				     len_bw_budget_table),
++			 GFP_KERNEL);
+ 	if (!sch_ep)
+ 		return ERR_PTR(-ENOMEM);
  
- 		spin_lock_irqsave(&garmin_data_p->lock, flags);
- 		garmin_data_p->flags |= FLAGS_QUEUING;
 -- 
 2.27.0
 
