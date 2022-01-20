@@ -2,43 +2,47 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FECC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 22:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53307C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 22:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378030AbiATWOJ (ORCPT
+        id S1378055AbiATWXB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 20 Jan 2022 17:14:09 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:58870 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378018AbiATWOI (ORCPT
+        Thu, 20 Jan 2022 17:23:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238984AbiATWXB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 20 Jan 2022 17:14:08 -0500
+        Thu, 20 Jan 2022 17:23:01 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45457C061574;
+        Thu, 20 Jan 2022 14:23:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7042A618F8;
-        Thu, 20 Jan 2022 22:14:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C30C340E0;
-        Thu, 20 Jan 2022 22:14:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9FB67B81E66;
+        Thu, 20 Jan 2022 22:22:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FCDC340E0;
+        Thu, 20 Jan 2022 22:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642716847;
-        bh=/BYzlmSc3EXhLhUP/zTY4q87ax/HPCgh9lWXojPLRd4=;
+        s=k20201202; t=1642717378;
+        bh=Oc+tuApp+4Mu9kKJflp51DXGJYPh3CtLlHInz98uJnw=;
         h=Date:From:To:Cc:Subject:From;
-        b=ZQN+YTUBpg91uyZ4bbhz/gPU24X+VcANisoz6Xzwjj7exgzwzpFuPyNh9aOP5ILfA
-         Att5HhsxsvrDFeAorzVYvh5YHhlRhIQZ7tH6ZGsEYMBr8MAYsKQ7e35m1XpdYBMjEL
-         5f+yXOSDkRsE3/2Ozd1YYy6TRAU1IVeZFkIVuSUn/hijW7H3d+AlubZ4BunU6YzFHU
-         9sp1EemqRLM5t5G4+510U04QQjcEKeO7wUfoSu08I1Q3ozNy4qDpwDrfhB1+P8FvRm
-         QQwEAWA2WojQQPvBvp4iPtfEisc5EkidFe5VJN9aBqFyFGfz6psr4r+lq0pg7wFNpF
-         +QboktrrfJS6w==
-Date:   Thu, 20 Jan 2022 16:20:43 -0600
+        b=UdzqSMq9/oit3xhOkbUmT65YfIvT9mAEvqK/AEqnWGl67Yx4MoauRg+0dcYMNHTDb
+         /UHz9pENgdPM2kELo6lrjwKmKyxLVrW3ZQ6G1nbOvTk7kkFNgFaL6VVpp4iFxveBWy
+         1g9ge+fNHGWLDWFpXV5OUfLdTFfZsZCu7JKMqXUM1ba4HLEG8PByPth61Pb7jzuc6t
+         kTYcrS2bCNC5UGyVETwAd1HZDrRLHMTrJTZWMPe+IQ3GDD7OGAgkpW227GUnbFTP7f
+         iIMMKuiSd7aJEtN3AQ5Y8ifUyDGvNHmu+DKd1Xx4vY/Jgsp678lpRCiIl75Ee1RpPm
+         QNndOvDPzrhYw==
+Date:   Thu, 20 Jan 2022 16:29:33 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] usb: host: fotg210: Use struct_size() helper in
- kzalloc()
-Message-ID: <20220120222043.GA33559@embeddedor>
+Subject: [PATCH][next] usb: gadget: f_fs: Use struct_size() and
+ flex_array_size() helpers
+Message-ID: <20220120222933.GA35155@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -46,35 +50,39 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version,
-in order to avoid any potential type mistakes or integer overflows that,
-in the worst scenario, could lead to heap overflows.
+Make use of the struct_size() and flex_array_size() helpers instead of
+an open-coded version, in order to avoid any potential type mistakes
+or integer overflows that, in the worst scenario, could lead to heap
+overflows.
 
 Also, address the following sparse warnings:
-drivers/usb/host/fotg210-hcd.c:4017:20: warning: using sizeof on a flexible structure
+drivers/usb/gadget/function/f_fs.c:922:23: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/usb/host/fotg210-hcd.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
-index 7af17c8e069b..c3fd375b4778 100644
---- a/drivers/usb/host/fotg210-hcd.c
-+++ b/drivers/usb/host/fotg210-hcd.c
-@@ -4014,10 +4014,8 @@ static struct fotg210_iso_sched *iso_sched_alloc(unsigned packets,
- 		gfp_t mem_flags)
- {
- 	struct fotg210_iso_sched *iso_sched;
--	int size = sizeof(*iso_sched);
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 25ad1e97a458..7461d27e9604 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -919,12 +919,12 @@ static ssize_t __ffs_epfile_read_data(struct ffs_epfile *epfile,
+ 		data_len, ret);
  
--	size += packets * sizeof(struct fotg210_iso_packet);
--	iso_sched = kzalloc(size, mem_flags);
-+	iso_sched = kzalloc(struct_size(iso_sched, packet, packets), mem_flags);
- 	if (likely(iso_sched != NULL))
- 		INIT_LIST_HEAD(&iso_sched->td_list);
+ 	data_len -= ret;
+-	buf = kmalloc(sizeof(*buf) + data_len, GFP_KERNEL);
++	buf = kmalloc(struct_size(buf, storage, data_len), GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 	buf->length = data_len;
+ 	buf->data = buf->storage;
+-	memcpy(buf->storage, data + ret, data_len);
++	memcpy(buf->storage, data + ret, flex_array_size(buf, storage, data_len));
  
+ 	/*
+ 	 * At this point read_buffer is NULL or READ_BUFFER_DROP (if
 -- 
 2.27.0
 
