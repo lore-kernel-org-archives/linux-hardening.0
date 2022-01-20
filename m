@@ -2,54 +2,54 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5AC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 03:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23BFC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 04:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbiATD2w (ORCPT
+        id S1358489AbiATE34 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Jan 2022 22:28:52 -0500
-Received: from mga11.intel.com ([192.55.52.93]:58590 "EHLO mga11.intel.com"
+        Wed, 19 Jan 2022 23:29:56 -0500
+Received: from mga07.intel.com ([134.134.136.100]:39618 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235637AbiATD2v (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Jan 2022 22:28:51 -0500
+        id S233536AbiATE3z (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 19 Jan 2022 23:29:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642649331; x=1674185331;
+  t=1642652995; x=1674188995;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=B5/FzjUBtbwFrNLYg6TNbg4+9zrFPepNxQzS9vWuG7I=;
-  b=kLSYbKiLexqYLbmgILWeLCyrIvsmS0nTmXztKd54TCfG7TvRTim7NFy2
-   8Etpztb+B14hSGlPN6eDbucOYJrnzZFo+oIqes2aQ4QuBbX/8Rx0K3d6q
-   FJcLds5jlJOdCDg7zhb1dxtrjDcYnDuRefQP1ONxg6To4xqCMfUHn/yW1
-   RfBwvyw7M7pXYcDCFlmgPNSny+8d0q29Pl/XTgMwb+dLQppKOZVVFx1tB
-   FmY5Iow4Vyhgh2/ixmMM1liVnWFtvdseB57OjdlUJduz+f4I7jJzuolqa
-   XvjyvBSeubqjXlEXT4fNKnQAacM5dRQgw3R+onmaRg6ArwjuC0qo4NeFB
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10232"; a="242822985"
+  bh=zBZPPpHMTgU+TRACFDuOmDezIH1hCkMSxXLYLVKMJZc=;
+  b=ZwSKLsnLiJZGCdUGx0w5DMIEU0pepY38cdpfUujAbQYFzW0p5AiJSVvt
+   Z3QhV24r9c1tRa5SzqEYzV/1IUwDAOrllIPWDDUi68YtOVrsmky0nRAM/
+   Cm2sVZ32YtL68hibcgVZaC0MTITlgS0b55Uj5TtL0OX7JXNptgMV3RB84
+   smmmr4sn9eJ0oJ73x2Tj+BpEwXYJL3+J14ot5My4cvYaKLY52B7jvrgP4
+   L75t+AJb6gcwie4tcYWwxOBabDk7cV2kNnNfY0nXCCTfQIzCNUs187u1g
+   vJb2tXVmVmOYs7M3Q7IimMR24ICCClH+9BsU8gNs4+jopH2K5Tr7ovPkq
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10232"; a="308603722"
 X-IronPort-AV: E=Sophos;i="5.88,301,1635231600"; 
-   d="scan'208";a="242822985"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 19:28:50 -0800
+   d="scan'208";a="308603722"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 20:29:52 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,301,1635231600"; 
-   d="scan'208";a="532594612"
+   d="scan'208";a="475391627"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 19 Jan 2022 19:28:48 -0800
+  by orsmga003.jf.intel.com with ESMTP; 19 Jan 2022 20:29:49 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nAO7z-000Dxl-Ib; Thu, 20 Jan 2022 03:28:47 +0000
-Date:   Thu, 20 Jan 2022 11:28:00 +0800
+        id 1nAP52-000E03-L9; Thu, 20 Jan 2022 04:29:48 +0000
+Date:   Thu, 20 Jan 2022 12:29:07 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         "Geoffrey D. Bennett" <g@b4.vu>, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>
-Cc:     kbuild-all@lists.01.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH][next] ALSA: usb-audio: scarlett2: Use struct_size()
  helper in scarlett2_usb()
-Message-ID: <202201201043.0reWtM98-lkp@intel.com>
+Message-ID: <202201201212.O8wvhLQc-lkp@intel.com>
 References: <20220120001423.GA69878@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -72,8 +72,8 @@ https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/0day-ci/linux/commits/Gustavo-A-R-Silva/ALSA-usb-audio-scarlett2-Use-struct_size-helper-in-scarlett2_usb/20220120-080908
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git for-next
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20220120/202201201043.0reWtM98-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 11.2.0
+config: i386-randconfig-a003-20220117 (https://download.01.org/0day-ci/archive/20220120/202201201212.O8wvhLQc-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project f7b7138a62648f4019c55e4671682af1f851f295)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
@@ -83,36 +83,29 @@ reproduce (this is a W=1 build):
         git checkout 1696152f12c0a7d23ccd5e228f9d08f7bd2da83a
         # save the config file to linux build tree
         mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=m68k SHELL=/bin/bash sound/usb/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash sound/usb/
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
 All warnings (new ones prefixed by >>):
 
-   In file included from include/linux/device.h:15,
-                    from include/linux/usb/ch9.h:36,
-                    from include/linux/usb.h:6,
-                    from sound/usb/mixer_scarlett_gen2.c:126:
-   sound/usb/mixer_scarlett_gen2.c: In function 'scarlett2_usb':
->> sound/usb/mixer_scarlett_gen2.c:1113:25: warning: format '%lu' expects argument of type 'long unsigned int', but argument 5 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
-    1113 |                         "Scarlett Gen 2/3 USB response result cmd %x was %d "
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                              ^~~
-   include/linux/dev_printk.h:144:56: note: in expansion of macro 'dev_fmt'
-     144 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                                                        ^~~~~~~
-   sound/usb/usbaudio.h:67:9: note: in expansion of macro 'dev_err'
-      67 |         dev_err(&(chip)->dev->dev, fmt, ##args)
-         |         ^~~~~~~
-   sound/usb/mixer_scarlett_gen2.c:1111:17: note: in expansion of macro 'usb_audio_err'
-    1111 |                 usb_audio_err(
-         |                 ^~~~~~~~~~~~~
+>> sound/usb/mixer_scarlett_gen2.c:1115:14: warning: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+                           cmd, err, resp_buf_size);
+                                     ^~~~~~~~~~~~~
+   sound/usb/usbaudio.h:67:36: note: expanded from macro 'usb_audio_err'
+           dev_err(&(chip)->dev->dev, fmt, ##args)
+                                      ~~~    ^~~~
+   include/linux/dev_printk.h:144:65: note: expanded from macro 'dev_err'
+           dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+                                                                  ~~~     ^~~~~~~~~~~
+   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+                   _p_func(dev, fmt, ##__VA_ARGS__);                       \
+                                ~~~    ^~~~~~~~~~~
+   1 warning generated.
 
 
-vim +1113 sound/usb/mixer_scarlett_gen2.c
+vim +1115 sound/usb/mixer_scarlett_gen2.c
 
 1f7fa6e5afbf20 Geoffrey D. Bennett 2021-06-22  1056  
 9e4d5c1be21f0c Geoffrey D. Bennett 2019-07-29  1057  /* Send a proprietary format request to the Scarlett interface */
@@ -171,9 +164,9 @@ b677b6c6d82248 Geoffrey D. Bennett 2021-06-21  1067  	int err;
 9e4d5c1be21f0c Geoffrey D. Bennett 2019-07-29  1110  	if (err != resp_buf_size) {
 9e4d5c1be21f0c Geoffrey D. Bennett 2019-07-29  1111  		usb_audio_err(
 9e4d5c1be21f0c Geoffrey D. Bennett 2019-07-29  1112  			mixer->chip,
-4be47798d76e6e Geoffrey D. Bennett 2021-06-23 @1113  			"Scarlett Gen 2/3 USB response result cmd %x was %d "
+4be47798d76e6e Geoffrey D. Bennett 2021-06-23  1113  			"Scarlett Gen 2/3 USB response result cmd %x was %d "
 1696152f12c0a7 Gustavo A. R. Silva 2022-01-19  1114  			"expected %lu\n",
-acf91b8122c7f6 Geoffrey D. Bennett 2021-06-22  1115  			cmd, err, resp_buf_size);
+acf91b8122c7f6 Geoffrey D. Bennett 2021-06-22 @1115  			cmd, err, resp_buf_size);
 9e4d5c1be21f0c Geoffrey D. Bennett 2019-07-29  1116  		err = -EINVAL;
 9e4d5c1be21f0c Geoffrey D. Bennett 2019-07-29  1117  		goto unlock;
 9e4d5c1be21f0c Geoffrey D. Bennett 2019-07-29  1118  	}
