@@ -2,47 +2,44 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A90C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 00:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CE2C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 00:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345064AbiATAHy (ORCPT
+        id S1357871AbiATAsl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Jan 2022 19:07:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344841AbiATAHu (ORCPT
+        Wed, 19 Jan 2022 19:48:41 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:47094 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345135AbiATAsl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Jan 2022 19:07:50 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB08C061574;
-        Wed, 19 Jan 2022 16:07:50 -0800 (PST)
+        Wed, 19 Jan 2022 19:48:41 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BE8C6150D;
-        Thu, 20 Jan 2022 00:07:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368AAC004E1;
-        Thu, 20 Jan 2022 00:07:48 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 54977CE1F62;
+        Thu, 20 Jan 2022 00:48:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76843C004E1;
+        Thu, 20 Jan 2022 00:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642637269;
-        bh=+jNT40e3buQeCRmePpis8mqyA1ni74XkL1YM5TAbY54=;
+        s=k20201202; t=1642639717;
+        bh=O5FhCiqGotWkfKuDJzbML+belVqsTNSDZFAhG2uKTxI=;
         h=Date:From:To:Cc:Subject:From;
-        b=JTBcBHa4acX3Q639wJcpmIl4rnYEQ4aqTdDa0uzXy352Ey77I+vv5EgILkPaOlmhs
-         I7yXrmWPRaiuW8lI3BHv7+oaDLTnIR+VZpoRQecr8XTCVkzCn8Dic0SDn0D9tW6Ucc
-         HYaBtZdKYyXhFDzQZIG/2yqG0W+4c3bfm+kInN6MvMSqvGLWJWN4CHK6Qo//93Nh5g
-         lqR4IAxkXOCBVqku2XIPqNZ3EPsSIzAOoyrssTsz+BjdJKlPXfc4jouHvQlRehPbxR
-         dg0ZH4w+oxp1Cki/BaZkb226l/9MhbMEIK6eV1y0NWwsP+biM8Th0OOxP0aryLex7r
-         cREtjeb16Guaw==
-Date:   Wed, 19 Jan 2022 18:14:23 -0600
+        b=O6UsfJaBweTRb3E3PL6BEQkoHr3kW3cWWhSip+v/0YG/LgbVC2IC/yo1nyygZS07Y
+         XEEVSuL1eJAM+ZfR7DwV5czgR4uojE6Vmmima7k9PXH5SgtWqOzZcHPJ46DxqfJy5M
+         KhXHYam7I2JqZmtLuWFCI+5IHmMTfL+/Bb5a3Wq/b+5wNil77kxiCW3vXuxwoX4rKG
+         gBqbrlGr3tW0Lfg6qUNYfayK/jfk8Py0GD9nUSPu25tkl6cd+bhX053wHrLnpxIGoI
+         dktVFQd7LfFvNqGrApnNy+H6xHvVP0g7vsTSkkNBGOTYKyRA5it8OcA8V8xHSnyjxR
+         V4oBicQ8D/Kgw==
+Date:   Wed, 19 Jan 2022 18:55:12 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Geoffrey D. Bennett" <g@b4.vu>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ALSA: usb-audio: scarlett2: Use struct_size() helper
- in scarlett2_usb()
-Message-ID: <20220120001423.GA69878@embeddedor>
+Subject: [PATCH][next] USB: serial: garmin_gps: Use struct_size() and
+ flex_array_size() helpers in pkt_add()
+Message-ID: <20220120005512.GA72984@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -50,46 +47,41 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version,
-in order to avoid any potential type mistakes or integer overflows that,
-in the worst scenario, could lead to heap overflows.
+Make use of the struct_size() and flex_array_size() helpers instead of
+an open-coded version, in order to avoid any potential type mistakes
+or integer overflows that, in the worst scenario, could lead to heap
+overflows.
 
 Also, address the following sparse warnings:
-sound/usb/mixer_scarlett_gen2.c:1064:28: warning: using sizeof on a flexible structure
-sound/usb/mixer_scarlett_gen2.c:1065:29: warning: using sizeof on a flexible structure
+drivers/usb/serial/garmin_gps.c:270:31: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/160
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- sound/usb/mixer_scarlett_gen2.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/serial/garmin_gps.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/sound/usb/mixer_scarlett_gen2.c b/sound/usb/mixer_scarlett_gen2.c
-index 53ebabf42472..311413f015f0 100644
---- a/sound/usb/mixer_scarlett_gen2.c
-+++ b/sound/usb/mixer_scarlett_gen2.c
-@@ -1061,9 +1061,9 @@ static int scarlett2_usb(
- {
- 	struct scarlett2_data *private = mixer->private_data;
- 	struct usb_device *dev = mixer->chip->dev;
--	u16 req_buf_size = sizeof(struct scarlett2_usb_packet) + req_size;
--	u16 resp_buf_size = sizeof(struct scarlett2_usb_packet) + resp_size;
- 	struct scarlett2_usb_packet *req, *resp = NULL;
-+	size_t req_buf_size = struct_size(req, data, req_size);
-+	size_t resp_buf_size = struct_size(resp, data, resp_size);
- 	int err;
+diff --git a/drivers/usb/serial/garmin_gps.c b/drivers/usb/serial/garmin_gps.c
+index e5c75944ebb7..1d806c108efb 100644
+--- a/drivers/usb/serial/garmin_gps.c
++++ b/drivers/usb/serial/garmin_gps.c
+@@ -267,13 +267,12 @@ static int pkt_add(struct garmin_data *garmin_data_p,
  
- 	req = kmalloc(req_buf_size, GFP_KERNEL);
-@@ -1111,7 +1111,7 @@ static int scarlett2_usb(
- 		usb_audio_err(
- 			mixer->chip,
- 			"Scarlett Gen 2/3 USB response result cmd %x was %d "
--			"expected %d\n",
-+			"expected %lu\n",
- 			cmd, err, resp_buf_size);
- 		err = -EINVAL;
- 		goto unlock;
+ 	/* process only packets containing data ... */
+ 	if (data_length) {
+-		pkt = kmalloc(sizeof(struct garmin_packet)+data_length,
+-								GFP_ATOMIC);
++		pkt = kmalloc(struct_size(pkt, data, data_length), GFP_ATOMIC);
+ 		if (!pkt)
+ 			return 0;
+ 
+ 		pkt->size = data_length;
+-		memcpy(pkt->data, data, data_length);
++		memcpy(pkt->data, data, flex_array_size(pkt, data, pkt->size));
+ 
+ 		spin_lock_irqsave(&garmin_data_p->lock, flags);
+ 		garmin_data_p->flags |= FLAGS_QUEUING;
 -- 
 2.27.0
 
