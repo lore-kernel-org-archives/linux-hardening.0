@@ -2,47 +2,47 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CB0C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jan 2022 23:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A90C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 00:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344381AbiASXbd (ORCPT
+        id S1345064AbiATAHy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Jan 2022 18:31:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55962 "EHLO
+        Wed, 19 Jan 2022 19:07:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbiASXbc (ORCPT
+        with ESMTP id S1344841AbiATAHu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Jan 2022 18:31:32 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D31C061574;
-        Wed, 19 Jan 2022 15:31:31 -0800 (PST)
+        Wed, 19 Jan 2022 19:07:50 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB08C061574;
+        Wed, 19 Jan 2022 16:07:50 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5FFB3B81C34;
-        Wed, 19 Jan 2022 23:31:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B425AC004E1;
-        Wed, 19 Jan 2022 23:31:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BE8C6150D;
+        Thu, 20 Jan 2022 00:07:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368AAC004E1;
+        Thu, 20 Jan 2022 00:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642635089;
-        bh=wpaaWCiYZyAnyuuz1kY2kggtn4GBEDvuWq+07dNMQFk=;
+        s=k20201202; t=1642637269;
+        bh=+jNT40e3buQeCRmePpis8mqyA1ni74XkL1YM5TAbY54=;
         h=Date:From:To:Cc:Subject:From;
-        b=io84APfNHqLHI5kNhwUZT5KvdPqWANNRAbPOvSh61dNTzPetytlYU00E1zQE/cWTD
-         GUdBTOkcTVNXtdT1qWKdd59Yb8+PGAWbq1FG/ehBWJPAydk4k784MxWwMFyS8OCiSf
-         qR75YfkvTTJ8jBSOtYClNRIrQt3Et4UF2MKkpzSbN/hY8XcJWwLu98o2F33BE9y8zT
-         5aDGPKY/g4U+jhWacZ8wAU7xQrisL3IZ6gdDgKn3JkYhuXlz18EZrobRPdbSk8JMJ8
-         qUuWPsPP0wQClq67t1lxzH0pt/b+aIqUks8NBm6ERdf8TQhs6mSe/WHbfBkwe9LHTM
-         bf3fSvEio+49w==
-Date:   Wed, 19 Jan 2022 17:38:03 -0600
+        b=JTBcBHa4acX3Q639wJcpmIl4rnYEQ4aqTdDa0uzXy352Ey77I+vv5EgILkPaOlmhs
+         I7yXrmWPRaiuW8lI3BHv7+oaDLTnIR+VZpoRQecr8XTCVkzCn8Dic0SDn0D9tW6Ucc
+         HYaBtZdKYyXhFDzQZIG/2yqG0W+4c3bfm+kInN6MvMSqvGLWJWN4CHK6Qo//93Nh5g
+         lqR4IAxkXOCBVqku2XIPqNZ3EPsSIzAOoyrssTsz+BjdJKlPXfc4jouHvQlRehPbxR
+         dg0ZH4w+oxp1Cki/BaZkb226l/9MhbMEIK6eV1y0NWwsP+biM8Th0OOxP0aryLex7r
+         cREtjeb16Guaw==
+Date:   Wed, 19 Jan 2022 18:14:23 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     "Geoffrey D. Bennett" <g@b4.vu>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] tpm: xen-tpmfront: Use struct_size() helper
-Message-ID: <20220119233803.GA66829@embeddedor>
+Subject: [PATCH][next] ALSA: usb-audio: scarlett2: Use struct_size() helper
+ in scarlett2_usb()
+Message-ID: <20220120001423.GA69878@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -52,51 +52,44 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 Make use of the struct_size() helper instead of an open-coded version,
 in order to avoid any potential type mistakes or integer overflows that,
-in the worse scenario, could lead to heap overflows.
+in the worst scenario, could lead to heap overflows.
 
-Also, address the following sparse warning:
-drivers/char/tpm/xen-tpmfront.c:131:16: warning: using sizeof on a flexible structure
+Also, address the following sparse warnings:
+sound/usb/mixer_scarlett_gen2.c:1064:28: warning: using sizeof on a flexible structure
+sound/usb/mixer_scarlett_gen2.c:1065:29: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/160
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/char/tpm/xen-tpmfront.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/usb/mixer_scarlett_gen2.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/char/tpm/xen-tpmfront.c b/drivers/char/tpm/xen-tpmfront.c
-index da5b30771418..f53e0cf1ec7e 100644
---- a/drivers/char/tpm/xen-tpmfront.c
-+++ b/drivers/char/tpm/xen-tpmfront.c
-@@ -126,16 +126,16 @@ static void vtpm_cancel(struct tpm_chip *chip)
- 	notify_remote_via_evtchn(priv->evtchn);
- }
- 
--static unsigned int shr_data_offset(struct vtpm_shared_page *shr)
-+static size_t shr_data_offset(struct vtpm_shared_page *shr)
+diff --git a/sound/usb/mixer_scarlett_gen2.c b/sound/usb/mixer_scarlett_gen2.c
+index 53ebabf42472..311413f015f0 100644
+--- a/sound/usb/mixer_scarlett_gen2.c
++++ b/sound/usb/mixer_scarlett_gen2.c
+@@ -1061,9 +1061,9 @@ static int scarlett2_usb(
  {
--	return sizeof(*shr) + sizeof(u32) * shr->nr_extra_pages;
-+	return struct_size(shr, extra_pages, shr->nr_extra_pages);
- }
+ 	struct scarlett2_data *private = mixer->private_data;
+ 	struct usb_device *dev = mixer->chip->dev;
+-	u16 req_buf_size = sizeof(struct scarlett2_usb_packet) + req_size;
+-	u16 resp_buf_size = sizeof(struct scarlett2_usb_packet) + resp_size;
+ 	struct scarlett2_usb_packet *req, *resp = NULL;
++	size_t req_buf_size = struct_size(req, data, req_size);
++	size_t resp_buf_size = struct_size(resp, data, resp_size);
+ 	int err;
  
- static int vtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
- {
- 	struct tpm_private *priv = dev_get_drvdata(&chip->dev);
- 	struct vtpm_shared_page *shr = priv->shr;
--	unsigned int offset = shr_data_offset(shr);
-+	size_t offset = shr_data_offset(shr);
- 
- 	u32 ordinal;
- 	unsigned long duration;
-@@ -177,7 +177,7 @@ static int vtpm_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- {
- 	struct tpm_private *priv = dev_get_drvdata(&chip->dev);
- 	struct vtpm_shared_page *shr = priv->shr;
--	unsigned int offset = shr_data_offset(shr);
-+	size_t offset = shr_data_offset(shr);
- 	size_t length = shr->length;
- 
- 	if (shr->state == VTPM_STATE_IDLE)
+ 	req = kmalloc(req_buf_size, GFP_KERNEL);
+@@ -1111,7 +1111,7 @@ static int scarlett2_usb(
+ 		usb_audio_err(
+ 			mixer->chip,
+ 			"Scarlett Gen 2/3 USB response result cmd %x was %d "
+-			"expected %d\n",
++			"expected %lu\n",
+ 			cmd, err, resp_buf_size);
+ 		err = -EINVAL;
+ 		goto unlock;
 -- 
 2.27.0
 
