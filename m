@@ -2,46 +2,46 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52596C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 22:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE012C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Jan 2022 22:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378107AbiATWqL (ORCPT
+        id S1378121AbiATW4P (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 20 Jan 2022 17:46:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60352 "EHLO
+        Thu, 20 Jan 2022 17:56:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237405AbiATWqK (ORCPT
+        with ESMTP id S1378120AbiATW4P (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 20 Jan 2022 17:46:10 -0500
+        Thu, 20 Jan 2022 17:56:15 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18BFC061574;
-        Thu, 20 Jan 2022 14:46:10 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B9CC061574;
+        Thu, 20 Jan 2022 14:56:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6F2D1B81E89;
-        Thu, 20 Jan 2022 22:46:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA52C340E0;
-        Thu, 20 Jan 2022 22:46:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 92867B81E83;
+        Thu, 20 Jan 2022 22:56:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031DAC340E0;
+        Thu, 20 Jan 2022 22:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642718768;
-        bh=fdSAFRvqmhbMcbD/TihbFGAN81CMJEMp6Widv9tEMRQ=;
+        s=k20201202; t=1642719372;
+        bh=cXJtDj1YNLbncmpLB50LEfCErflNhAbOSSXX6jCg2tI=;
         h=Date:From:To:Cc:Subject:From;
-        b=JFhkN479sXx1J9LQsgx+M1Vg8kuj6cGz6XxwjqEFvYfEcd3ClfMhtiuxLlDPXVtUH
-         /GD2Jd2BIL4EKOvvPTsMu3QPOikvobu6Bx9R7ENvYNW/MuPBkYyGwU72srIhibTJZf
-         jGJzOgGSR3sxdtx1FtWPih+25ed9nUDTTAYo4tAHnTswPs+iLeuPReN7+tKBAaqEEy
-         cIgzBa3tOBF9D0ciaNh6zrefe9PdZ7tnqySXatThfVe6UkoGxq5Mk5aQLXY/c5Z0cI
-         CwyrsfstB3oh8jlYur642lvHAEVQKRtxr7Y4GRcLwZ2JxwPCVkhQ2NnnrkVlOKonB3
-         BURD6097dlfsg==
-Date:   Thu, 20 Jan 2022 16:52:43 -0600
+        b=fNnxkcmY5MoltXFUt/UFWtw6pVtYS56y2qi3xfoTI99Ehq7YFaYABxAa6admBSGxH
+         BIXJXC1A6kgt/S4hYMIYytAHpT1ndR58ovxhI5fOkA7J6mMuC6cOJO9d8XFvVio80c
+         cbGbXj9xMH1Uuq0FHeBRO58l4n1raNNoyKyJSkh/5JzybfXB0qutkjYbJwpRLRaFJu
+         DA8jIalmLHNUJfIw0uFy3sBkzXM+1fiEZR+tU8RCQI9U/rQP21oukNkScIm5Xf//UW
+         uF+ihxLaDBCt2PzQcTibhCBYsrJx679hP8uvKU9OhfwgvafJwJXsFWs/NG99+9Q1Yd
+         m12H15zMlyoHA==
+Date:   Thu, 20 Jan 2022 17:02:47 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>
+Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] iio: hw_consumer: Use struct_size() helper in kzalloc()
-Message-ID: <20220120225243.GA37225@embeddedor>
+Subject: [PATCH][next] NTB/msi: Use struct_size() helper in devm_kzalloc()
+Message-ID: <20220120230247.GA40182@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -54,35 +54,37 @@ in order to avoid any potential type mistakes or integer overflows that,
 in the worst scenario, could lead to heap overflows.
 
 Also, address the following sparse warnings:
-drivers/iio/buffer/industrialio-hw-consumer.c:63:23: warning: using sizeof on a flexible structure
+drivers/ntb/msi.c:46:23: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/iio/buffer/industrialio-hw-consumer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/ntb/msi.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/buffer/industrialio-hw-consumer.c b/drivers/iio/buffer/industrialio-hw-consumer.c
-index 87d9aabd20c7..fb58f599a80b 100644
---- a/drivers/iio/buffer/industrialio-hw-consumer.c
-+++ b/drivers/iio/buffer/industrialio-hw-consumer.c
-@@ -52,7 +52,6 @@ static const struct iio_buffer_access_funcs iio_hw_buf_access = {
- static struct hw_consumer_buffer *iio_hw_consumer_get_buffer(
- 	struct iio_hw_consumer *hwc, struct iio_dev *indio_dev)
+diff --git a/drivers/ntb/msi.c b/drivers/ntb/msi.c
+index dd683cb58d09..6295e55ef85e 100644
+--- a/drivers/ntb/msi.c
++++ b/drivers/ntb/msi.c
+@@ -33,7 +33,6 @@ int ntb_msi_init(struct ntb_dev *ntb,
  {
--	size_t mask_size = BITS_TO_LONGS(indio_dev->masklength) * sizeof(long);
- 	struct hw_consumer_buffer *buf;
+ 	phys_addr_t mw_phys_addr;
+ 	resource_size_t mw_size;
+-	size_t struct_size;
+ 	int peer_widx;
+ 	int peers;
+ 	int ret;
+@@ -43,9 +42,8 @@ int ntb_msi_init(struct ntb_dev *ntb,
+ 	if (peers <= 0)
+ 		return -EINVAL;
  
- 	list_for_each_entry(buf, &hwc->buffers, head) {
-@@ -60,7 +59,8 @@ static struct hw_consumer_buffer *iio_hw_consumer_get_buffer(
- 			return buf;
- 	}
- 
--	buf = kzalloc(sizeof(*buf) + mask_size, GFP_KERNEL);
-+	buf = kzalloc(struct_size(buf, scan_mask, BITS_TO_LONGS(indio_dev->masklength)),
-+		      GFP_KERNEL);
- 	if (!buf)
- 		return NULL;
+-	struct_size = sizeof(*ntb->msi) + sizeof(*ntb->msi->peer_mws) * peers;
+-
+-	ntb->msi = devm_kzalloc(&ntb->dev, struct_size, GFP_KERNEL);
++	ntb->msi = devm_kzalloc(&ntb->dev, struct_size(ntb->msi, peer_mws, peers),
++				GFP_KERNEL);
+ 	if (!ntb->msi)
+ 		return -ENOMEM;
  
 -- 
 2.27.0
