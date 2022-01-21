@@ -2,482 +2,459 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02726C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 21 Jan 2022 10:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB19C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 21 Jan 2022 12:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234794AbiAUKuf (ORCPT
+        id S235054AbiAUMPY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Jan 2022 05:50:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234688AbiAUKuf (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Jan 2022 05:50:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA6CC061574
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Jan 2022 02:50:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8FEB761A3C
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Jan 2022 10:50:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B10C340E7
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Jan 2022 10:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642762234;
-        bh=L0K11p8DpA63O+GQ+c6J1QrN3Xd5jS/mwhX/3lI6ais=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ec2RbRm3vOoCK6MBP8gjdQuU3TO44z2LQ9mFxp1Y3Ul/yhFszF+LLgnHN0J57dWvS
-         HWUSovGrNzXIJMl1dG4FslLKDzYebHvLiPqiQFIiBpVtWBL/KK+DF5Mtm7wa82+Qxf
-         lPPGgCaCwzZE+hKCM2TgQ8Gkb09xRYn2q2ii2KNWcwNoIeChpLdxaCyWx8tJaceuTe
-         HAvM7rY1D7gHMlZ+sLypD/1cAGlH5Rjzc0KWbbnuk33zss0j7T7XDoaRahdxiYMM9H
-         yDyi82Sg8yFyD76eH53WEzQBel9D3fol6NcJ0UAvWQNP4zPtMB+U+/eE1KK7A2RhgR
-         dQrdL1sYxnV3w==
-Received: by mail-wm1-f43.google.com with SMTP id q9-20020a7bce89000000b00349e697f2fbso28164896wmj.0
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Jan 2022 02:50:33 -0800 (PST)
-X-Gm-Message-State: AOAM532TZ1oiT8UEBhPdG54DDzBPlJtir43pfjn9JBiLdqT96gMk6K3p
-        jdzp4fLG5qYJtQ3e7heRqPDDa1luWFQfHE3iC5A=
-X-Google-Smtp-Source: ABdhPJy1PJ8VzzQckzFLmHwxdulnil19JgKJyuZXBGXrm4ATHI8Ah8W1zs0tAnZpCblcla/qlKud/uKCn7l3WguVZAM=
-X-Received: by 2002:a5d:4944:: with SMTP id r4mr3434568wrs.550.1642762232154;
- Fri, 21 Jan 2022 02:50:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20220119174353.213723-1-ardb@kernel.org> <20220119174353.213723-2-ardb@kernel.org>
- <PAXPR08MB69262E195F0EAAC0B3B85B47935B9@PAXPR08MB6926.eurprd08.prod.outlook.com>
-In-Reply-To: <PAXPR08MB69262E195F0EAAC0B3B85B47935B9@PAXPR08MB6926.eurprd08.prod.outlook.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 21 Jan 2022 11:50:20 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXG8xH7iP3TVN9TwmkJ_xjY_rpwDe+DoJ4KBJR9hpF9Hag@mail.gmail.com>
-Message-ID: <CAMj1kXG8xH7iP3TVN9TwmkJ_xjY_rpwDe+DoJ4KBJR9hpF9Hag@mail.gmail.com>
-Subject: Re: [PATCH v6 1/1] [ARM] Add support for TLS register based stack
- protector canary access
-To:     Kyrylo Tkachov <Kyrylo.Tkachov@arm.com>
-Cc:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        Fri, 21 Jan 2022 07:15:24 -0500
+Received: from mail-eopbgr130040.outbound.protection.outlook.com ([40.107.13.40]:47345
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231983AbiAUMPX (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 21 Jan 2022 07:15:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7v2K2DBCWZSsqLGwh6X6z8Vd42ZCE+SpPPrqOcXE928=;
+ b=DpofwSz5FhCKokwayYgOdZSIwZZ6hy4gx4VHs4Au75iPObEE8VOu/tLN6sIUZrZFPcSXD3Np/kH6xW0zSBIHdiH2rOuVD7untUlX7g+gGpRlvGHEFysT3HxxCw2uCT8Fc0b8ZwTDxcfI2XQ6ybZ+csK0wkt9egwyFhRUF3dNvHU=
+Received: from AS8PR04CA0203.eurprd04.prod.outlook.com (2603:10a6:20b:2f3::28)
+ by AM0PR08MB3716.eurprd08.prod.outlook.com (2603:10a6:208:106::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.11; Fri, 21 Jan
+ 2022 12:15:19 +0000
+Received: from AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:2f3:cafe::b8) by AS8PR04CA0203.outlook.office365.com
+ (2603:10a6:20b:2f3::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.12 via Frontend
+ Transport; Fri, 21 Jan 2022 12:15:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT057.mail.protection.outlook.com (10.152.17.44) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4909.7 via Frontend Transport; Fri, 21 Jan 2022 12:15:19 +0000
+Received: ("Tessian outbound 63bb5eb69ee8:v113"); Fri, 21 Jan 2022 12:15:18 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from 1d186ac3052c.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 17377BD7-EDBF-4E96-9803-61A12D0F5199.1;
+        Fri, 21 Jan 2022 12:15:09 +0000
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 1d186ac3052c.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 21 Jan 2022 12:15:09 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EiIcMMFZDzXCUH0eLCSNlC6+zGcbkyXEuVoSUT+6/LZgUK1FAkASBr4na811/QuZwCc4q7jpJxVLaW4Iss6rVdzdppKeh0YvvEm4kQtcL/oa/OU11TTOJBHQI7MG8jpXxsQgCwmQsLEMhYJSul1X4BqQ8C/kPpTiOTUOf135Lm6su3y7ysDIKgMXzHD6QDPUtb7e4bYltqe48wlL38ya5vu6NGhoNKI98RfYURn567tqZknLHu7VFyOuwNcddSaFXgjBqzSj26qIjnt0Zf+eFeOOt5DYXU4gFXtP3YmHOhF7OYBYNiMmaosOJ2XlKwgNTSF9isAftgd81INR+ven/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7v2K2DBCWZSsqLGwh6X6z8Vd42ZCE+SpPPrqOcXE928=;
+ b=aoWA90LeYLKqxdAkvdr2Caoe1aQfRM3hIFPjuh52ObzI3zc9IrnKi8rkyRKCg9I3O4vR9TcSK5GDAwMyrfauFOi1lNVupVWcv34ijGUH3LVBT/OX1Ks4gkGSi+raeQsNZylVeeCa08WjIRO+ebl6xYkmH5feGBtaVKA0cLhVJq6K5UskIYT2Y1Z1IdotQZNwhEw4E7Gucr3MYqz/LiA2PH1PcyM3LOEsvGmV4ZFm0zkvfd4rYpjdn2g6f1tkIBO4MH6/x+u6rjj2mEmw+UBaIEGqrX3ZBBHik/xJ2z8UVZmyRut6OisYCOs84bcOwYWN53pBqE85hkuDmZP2lcXwoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7v2K2DBCWZSsqLGwh6X6z8Vd42ZCE+SpPPrqOcXE928=;
+ b=DpofwSz5FhCKokwayYgOdZSIwZZ6hy4gx4VHs4Au75iPObEE8VOu/tLN6sIUZrZFPcSXD3Np/kH6xW0zSBIHdiH2rOuVD7untUlX7g+gGpRlvGHEFysT3HxxCw2uCT8Fc0b8ZwTDxcfI2XQ6ybZ+csK0wkt9egwyFhRUF3dNvHU=
+Received: from PAXPR08MB6926.eurprd08.prod.outlook.com (2603:10a6:102:138::24)
+ by DB9PR08MB6588.eurprd08.prod.outlook.com (2603:10a6:10:25a::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.10; Fri, 21 Jan
+ 2022 12:15:07 +0000
+Received: from PAXPR08MB6926.eurprd08.prod.outlook.com
+ ([fe80::69:f417:b4df:c313]) by PAXPR08MB6926.eurprd08.prod.outlook.com
+ ([fe80::69:f417:b4df:c313%5]) with mapi id 15.20.4888.014; Fri, 21 Jan 2022
+ 12:15:07 +0000
+From:   Kyrylo Tkachov <Kyrylo.Tkachov@arm.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+CC:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
         Richard Earnshaw <Richard.Earnshaw@arm.com>,
         Richard Sandiford <Richard.Sandiford@arm.com>,
         "thomas.preudhomme@celest.fr" <thomas.preudhomme@celest.fr>,
         Keith Packard <keithpac@amazon.com>,
         "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: RE: [PATCH v6 1/1] [ARM] Add support for TLS register based stack
+ protector canary access
+Thread-Topic: [PATCH v6 1/1] [ARM] Add support for TLS register based stack
+ protector canary access
+Thread-Index: AQHYDVyTu09SEowbika0K1U793GypKxtTTSwgAABcACAABdVgA==
+Date:   Fri, 21 Jan 2022 12:15:06 +0000
+Message-ID: <PAXPR08MB6926674EE105AD05225F07B0935B9@PAXPR08MB6926.eurprd08.prod.outlook.com>
+References: <20220119174353.213723-1-ardb@kernel.org>
+ <20220119174353.213723-2-ardb@kernel.org>
+ <PAXPR08MB69262E195F0EAAC0B3B85B47935B9@PAXPR08MB6926.eurprd08.prod.outlook.com>
+ <CAMj1kXG8xH7iP3TVN9TwmkJ_xjY_rpwDe+DoJ4KBJR9hpF9Hag@mail.gmail.com>
+In-Reply-To: <CAMj1kXG8xH7iP3TVN9TwmkJ_xjY_rpwDe+DoJ4KBJR9hpF9Hag@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: 102039C478AC424F8F5FE083884C640D.0
+x-checkrecipientchecked: true
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+X-MS-Office365-Filtering-Correlation-Id: 7018e31d-1a04-462d-1d7e-08d9dcd7b0bb
+x-ms-traffictypediagnostic: DB9PR08MB6588:EE_|AM5EUR03FT057:EE_|AM0PR08MB3716:EE_
+X-Microsoft-Antispam-PRVS: <AM0PR08MB37168ED4467E8A925F957236935B9@AM0PR08MB3716.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: kbjluQgTDxuQbqgVawphdOlb4fzj+uNgYzA7rjIWlfEL3slcnPisy9lQK67FH3JqS7LQTRlvuIcGyDjtbr5WLEnwL1B2JzUHo+tksQ/DlLJSbKUBcw4vQ6DIfcVzaQN3XJU73ZDC/med0dBBWZToWmPV9yo0WODpKe+qq5AeCAyYSXRn0uPnib5BgqEnm3AQJKsfbIVIjQIyL3n4k9rXKfmXqjLcZHk7ssNoG1i+FohIVbutg9GtEptxGJDggGs8sjL2FaIVdoZBoxaEfLBMdGmNPI1Dx9fGhlXCqD2bMW+G2W0G4oCdKlQyve4EUQN41HYSbQCWLiV8nbhCGhnh+YyaUXesCG5ZUNnSVWtwNSoL9D3lckbf1uSfPrcYqmNaIzyNO1J1yPiZRyhgh9AdaqSDCvcUyhtW668cBN1AxD3wXlhiplI5QzUvyelOQlWKZ6iBbT7EaG2CbP2XvC1NxD6epCBJTX9957xMD3EMlUlsbfPQM+lhIPdsCPGUPdACXG4MuzrRPM0JeNIZ43O1J4uBRRxvoezVY2jXDThlm3BVk0NuHx+xDNeCwRHGMaADxHxGI8S4p76mBE6mhPULa7nzlLNLyYQ6b4Z/Nn/jpm0R9d+6cbGZN4l4ME/pZ2pgbTHjjgNg9HrDntYnQFQYbD7LJTgqeHdxwl/mqcX/PkNfHknbs1d+bcIqYjpA+JlyBhB3Km4iN2ffs2W7wmRiECU4vOBHCeP7II/2gQwCRQBMasd+w2pfrS67e3DuWlE4/sSMGy0Z4YooazqOVEc+uws6HWmwnZbH1hj1Zh1Nkonv8ccj2aPj7KcNaDA6ZjHy706k6T/QkR4YFfdZF6i25g==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6926.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(316002)(9686003)(66946007)(66476007)(54906003)(76116006)(4326008)(66556008)(64756008)(66446008)(83380400001)(8676002)(38070700005)(122000001)(55016003)(38100700002)(33656002)(6506007)(8936002)(71200400001)(55236004)(53546011)(52536014)(966005)(508600001)(86362001)(186003)(26005)(2906002)(30864003)(5660300002)(7696005)(84970400001)(6916009);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB6588
+Original-Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 1514800a-ab65-4429-51d2-08d9dcd7a98e
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jbUAF93DRdE9Zd5nIn9dv/GKaD/PDO2hhcdxmsh/oYOgWfG5dh34Abmvm+v9+gw145Iql7yqT2Li0XUs3xl2v6gkFsoigVJgHFU4Qad/+xK5CuUA6OVyXTardH/F8/Al4JJwBivZSs6RVzjLLZhp+t5k3VUdwncyFAdf3Za2wDBxfhWZipjXlU1kjuhXrAt90TbVqe/FFQT+4I4vbW8KaT3IMTvaRkE06vu4FYgnB8GzP4dQGUtURliJYxaChU4NFvQcQf39Qw+UDfhMQC5+w8Hz8lIH2Euxcha7exEpPKr9dpIrx8G5WrIj1496ag81oY69JlR9sEEhrsNqwT8pCzvXG/O3IlMNwIplU5rlvMO8Zv009mcNxYzu/7NREpgTadYKh16z7MMzvSb1QfMkc4cttJUPz0aOkvOP06WThD/77vRI7T5smxg/fG+oy3Zj+IO5WVH2MlfJstzGGcuAKxJuw7pcy7XQXjPwESStLFIFDfbASWy+8PRMvn33eVtB/fz7pXEZD+HhguOceR3tdK+rKokuAOJwc7hk+t4THnb+OnRkGWyr5SyQVdBKiq1yk+N2sbKwRFC/4Oqtn2qFhQNHxY6fedThwSBJ7IS1XrfTLhLwBoyOOurCut4SmuCXDsh/7ixxA0vpAJHfxoiXyCHyg/prAW+XbVsRiy4rEqTirtadxYjI07q/2xyPEDr7pWh5qztOz9sNlqjZZl1TqSC15tre4OoP35jBW+lK5jvTQoF2YLY0Ra0rbXlqXb5N9f3DBExgtaMLMArbxvvCk1zFbixK4/7fkH+5gVIXELm0tky4DGGlGD2bTvB58CnqIw6N5CQzWD0HN0vaVRuk9A==
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(4326008)(54906003)(316002)(508600001)(30864003)(7696005)(33656002)(5660300002)(52536014)(336012)(9686003)(86362001)(6862004)(2906002)(84970400001)(82310400004)(70586007)(186003)(8676002)(356005)(26005)(53546011)(966005)(8936002)(6506007)(70206006)(83380400001)(36860700001)(47076005)(55016003)(81166007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2022 12:15:19.0143
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7018e31d-1a04-462d-1d7e-08d9dcd7b0bb
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3716
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 21 Jan 2022 at 11:47, Kyrylo Tkachov <Kyrylo.Tkachov@arm.com> wrote:
->
-> > -----Original Message-----
-> > From: Gcc-patches <gcc-patches-
-> > bounces+kyrylo.tkachov=arm.com@gcc.gnu.org> On Behalf Of Ard
-> > Biesheuvel via Gcc-patches
-> > Sent: Wednesday, January 19, 2022 5:44 PM
-> > To: linux-hardening@vger.kernel.org
-> > Cc: Richard Earnshaw <Richard.Earnshaw@arm.com>; Richard Sandiford
-> > <Richard.Sandiford@arm.com>; thomas.preudhomme@celest.fr; Keith
-> > Packard <keithpac@amazon.com>; gcc-patches@gcc.gnu.org; Kyrylo Tkachov
-> > <kyryo.tkachov@arm.com>; Ard Biesheuvel <ardb@kernel.org>
-> > Subject: [PATCH v6 1/1] [ARM] Add support for TLS register based stack
-> > protector canary access
-> >
-> > Add support for accessing the stack canary value via the TLS register,
-> > so that multiple threads running in the same address space can use
-> > distinct canary values. This is intended for the Linux kernel running in
-> > SMP mode, where processes entering the kernel are essentially threads
-> > running the same program concurrently: using a global variable for the
-> > canary in that context is problematic because it can never be rotated,
-> > and so the OS is forced to use the same value as long as it remains up.
-> >
-> > Using the TLS register to index the stack canary helps with this, as it
-> > allows each CPU to context switch the TLS register along with the rest
-> > of the process, permitting each process to use its own value for the
-> > stack canary.
-> >
-> > 2022-01-19 Ard Biesheuvel <ardb@kernel.org>
-> >
-> >       * config/arm/arm-opts.h (enum stack_protector_guard): New
-> >       * config/arm/arm-protos.h (arm_stack_protect_tls_canary_mem):
-> >       New
-> >       * config/arm/arm.cc (TARGET_STACK_PROTECT_GUARD): Define
-> >       (arm_option_override_internal): Handle and put in error checks
-> >       for stack protector guard options.
-> >       (arm_option_reconfigure_globals): Likewise
-> >       (arm_stack_protect_tls_canary_mem): New
-> >       (arm_stack_protect_guard): New
-> >       * config/arm/arm.md (stack_protect_set): New
-> >       (stack_protect_set_tls): Likewise
-> >       (stack_protect_test): Likewise
-> >       (stack_protect_test_tls): Likewise
-> >       (reload_tp_hard): Likewise
-> >       * config/arm/arm.opt (-mstack-protector-guard): New
-> >       (-mstack-protector-guard-offset): New.
-> >       * doc/invoke.texi: Document new options
-> >
-> > gcc/testsuite/ChangeLog:
-> >
-> >       * gcc.target/arm/stack-protector-7.c: New test.
-> >       * gcc.target/arm/stack-protector-8.c: New test.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->
-> Thanks. One final bit. Given that you're using the Signed-off-by tag this means that you're contributing this patch under the DCO rules.
-> Can you please confirm that you intend to contribute this patch under the rules in https://gcc.gnu.org/dco.html
-
-Yes, I am making this contribution under DCO 1.1 terms.
-
-> If you're happy with that I'll push the patch for you.
-> Thanks,
-> Kyrill
->
-
-Thanks!
-
-
-> > ---
-> >  gcc/config/arm/arm-opts.h                        |  6 ++
-> >  gcc/config/arm/arm-protos.h                      |  2 +
-> >  gcc/config/arm/arm.cc                            | 55 +++++++++++++++
-> >  gcc/config/arm/arm.md                            | 71 +++++++++++++++++++-
-> >  gcc/config/arm/arm.opt                           | 22 ++++++
-> >  gcc/doc/invoke.texi                              | 11 +++
-> >  gcc/testsuite/gcc.target/arm/stack-protector-7.c | 12 ++++
-> >  gcc/testsuite/gcc.target/arm/stack-protector-8.c |  7 ++
-> >  8 files changed, 184 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/gcc/config/arm/arm-opts.h b/gcc/config/arm/arm-opts.h
-> > index c50d5e56a181..24d12fafdec8 100644
-> > --- a/gcc/config/arm/arm-opts.h
-> > +++ b/gcc/config/arm/arm-opts.h
-> > @@ -69,4 +69,10 @@ enum arm_tls_type {
-> >    TLS_GNU,
-> >    TLS_GNU2
-> >  };
-> > +
-> > +/* Where to get the canary for the stack protector.  */
-> > +enum stack_protector_guard {
-> > +  SSP_TLSREG,                  /* per-thread canary in TLS register */
-> > +  SSP_GLOBAL                   /* global canary */
-> > +};
-> >  #endif
-> > diff --git a/gcc/config/arm/arm-protos.h b/gcc/config/arm/arm-protos.h
-> > index cd55a9f6ca54..881c72c988bd 100644
-> > --- a/gcc/config/arm/arm-protos.h
-> > +++ b/gcc/config/arm/arm-protos.h
-> > @@ -195,6 +195,8 @@ extern void arm_split_atomic_op (enum rtx_code,
-> > rtx, rtx, rtx, rtx, rtx, rtx);
-> >  extern rtx arm_load_tp (rtx);
-> >  extern bool arm_coproc_builtin_available (enum unspecv);
-> >  extern bool arm_coproc_ldc_stc_legitimate_address (rtx);
-> > +extern rtx arm_stack_protect_tls_canary_mem (bool);
-> > +
-> >
-> >  #if defined TREE_CODE
-> >  extern void arm_init_cumulative_args (CUMULATIVE_ARGS *, tree, rtx, tree);
-> > diff --git a/gcc/config/arm/arm.cc b/gcc/config/arm/arm.cc
-> > index 7825e364c01e..c192894ff33e 100644
-> > --- a/gcc/config/arm/arm.cc
-> > +++ b/gcc/config/arm/arm.cc
-> > @@ -829,6 +829,9 @@ static const struct attribute_spec
-> > arm_attribute_table[] =
-> >
-> >  #undef TARGET_MD_ASM_ADJUST
-> >  #define TARGET_MD_ASM_ADJUST arm_md_asm_adjust
-> > +
-> > +#undef TARGET_STACK_PROTECT_GUARD
-> > +#define TARGET_STACK_PROTECT_GUARD arm_stack_protect_guard
-> >
-> >
-> >
-> >  /* Obstack for minipool constant handling.  */
-> >  static struct obstack minipool_obstack;
-> > @@ -3176,6 +3179,26 @@ arm_option_override_internal (struct
-> > gcc_options *opts,
-> >    if (TARGET_THUMB2_P (opts->x_target_flags))
-> >      opts->x_inline_asm_unified = true;
-> >
-> > +  if (arm_stack_protector_guard == SSP_GLOBAL
-> > +      && opts->x_arm_stack_protector_guard_offset_str)
-> > +    {
-> > +      error ("incompatible options %'-mstack-protector-guard=global%' and"
-> > +          "%'-mstack-protector-guard-offset=%qs%'",
-> > +          arm_stack_protector_guard_offset_str);
-> > +    }
-> > +
-> > +  if (opts->x_arm_stack_protector_guard_offset_str)
-> > +    {
-> > +      char *end;
-> > +      const char *str = arm_stack_protector_guard_offset_str;
-> > +      errno = 0;
-> > +      long offs = strtol (arm_stack_protector_guard_offset_str, &end, 0);
-> > +      if (!*str || *end || errno)
-> > +     error ("%qs is not a valid offset in %qs", str,
-> > +            "-mstack-protector-guard-offset=");
-> > +      arm_stack_protector_guard_offset = offs;
-> > +    }
-> > +
-> >  #ifdef SUBTARGET_OVERRIDE_INTERNAL_OPTIONS
-> >    SUBTARGET_OVERRIDE_INTERNAL_OPTIONS;
-> >  #endif
-> > @@ -3843,6 +3866,9 @@ arm_option_reconfigure_globals (void)
-> >        else
-> >       target_thread_pointer = TP_SOFT;
-> >      }
-> > +
-> > +  if (!TARGET_HARD_TP && arm_stack_protector_guard == SSP_TLSREG)
-> > +    error("%'-mstack-protector-guard=tls%' needs a hardware TLS register");
-> >  }
-> >
-> >  /* Perform some validation between the desired architecture and the rest of
-> > the
-> > @@ -8108,6 +8134,23 @@ legitimize_pic_address (rtx orig, machine_mode
-> > mode, rtx reg, rtx pic_reg,
-> >  }
-> >
-> >
-> > +/* Generate insns that produce the address of the stack canary */
-> > +rtx
-> > +arm_stack_protect_tls_canary_mem (bool reload)
-> > +{
-> > +  rtx tp = gen_reg_rtx (SImode);
-> > +  if (reload)
-> > +    emit_insn (gen_reload_tp_hard (tp));
-> > +  else
-> > +    emit_insn (gen_load_tp_hard (tp));
-> > +
-> > +  rtx reg = gen_reg_rtx (SImode);
-> > +  rtx offset = GEN_INT (arm_stack_protector_guard_offset);
-> > +  emit_set_insn (reg, gen_rtx_PLUS (SImode, tp, offset));
-> > +  return gen_rtx_MEM (SImode, reg);
-> > +}
-> > +
-> > +
-> >  /* Whether a register is callee saved or not.  This is necessary because high
-> >     registers are marked as caller saved when optimizing for size on Thumb-1
-> >     targets despite being callee saved in order to avoid using them.  */
-> > @@ -34075,6 +34118,18 @@ arm_run_selftests (void)
-> >  #define TARGET_RUN_TARGET_SELFTESTS selftest::arm_run_selftests
-> >  #endif /* CHECKING_P */
-> >
-> > +/* Implement TARGET_STACK_PROTECT_GUARD. In case of a
-> > +   global variable based guard use the default else
-> > +   return a null tree.  */
-> > +static tree
-> > +arm_stack_protect_guard (void)
-> > +{
-> > +  if (arm_stack_protector_guard == SSP_GLOBAL)
-> > +    return default_stack_protect_guard ();
-> > +
-> > +  return NULL_TREE;
-> > +}
-> > +
-> >  /* Worker function for TARGET_MD_ASM_ADJUST, while in thumb1 mode.
-> >     Unlike the arm version, we do NOT implement asm flag outputs.  */
-> >
-> > diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
-> > index 90756fbfa3af..60468f6182c3 100644
-> > --- a/gcc/config/arm/arm.md
-> > +++ b/gcc/config/arm/arm.md
-> > @@ -9183,7 +9183,7 @@ (define_expand "stack_protect_combined_set"
-> >                     UNSPEC_SP_SET))
-> >        (clobber (match_scratch:SI 2 ""))
-> >        (clobber (match_scratch:SI 3 ""))])]
-> > -  ""
-> > +  "arm_stack_protector_guard == SSP_GLOBAL"
-> >    ""
-> >  )
-> >
-> > @@ -9267,7 +9267,7 @@ (define_expand "stack_protect_combined_test"
-> >        (clobber (match_scratch:SI 3 ""))
-> >        (clobber (match_scratch:SI 4 ""))
-> >        (clobber (reg:CC CC_REGNUM))])]
-> > -  ""
-> > +  "arm_stack_protector_guard == SSP_GLOBAL"
-> >    ""
-> >  )
-> >
-> > @@ -9361,6 +9361,64 @@ (define_insn "arm_stack_protect_test_insn"
-> >     (set_attr "arch" "t,32")]
-> >  )
-> >
-> > +(define_expand "stack_protect_set"
-> > +  [(match_operand:SI 0 "memory_operand")
-> > +   (match_operand:SI 1 "memory_operand")]
-> > +  "arm_stack_protector_guard == SSP_TLSREG"
-> > +  "
-> > +{
-> > +  operands[1] = arm_stack_protect_tls_canary_mem (false /* reload */);
-> > +  emit_insn (gen_stack_protect_set_tls (operands[0], operands[1]));
-> > +  DONE;
-> > +}"
-> > +)
-> > +
-> > +;; DO NOT SPLIT THIS PATTERN.  It is important for security reasons that the
-> > +;; canary value does not live beyond the life of this sequence.
-> > +(define_insn "stack_protect_set_tls"
-> > +  [(set (match_operand:SI 0 "memory_operand" "=m")
-> > +       (unspec:SI [(match_operand:SI 1 "memory_operand" "m")]
-> > +        UNSPEC_SP_SET))
-> > +   (set (match_scratch:SI 2 "=&r") (const_int 0))]
-> > +  ""
-> > +  "ldr\\t%2, %1\;str\\t%2, %0\;mov\t%2, #0"
-> > +  [(set_attr "length" "12")
-> > +   (set_attr "conds" "unconditional")
-> > +   (set_attr "type" "multiple")]
-> > +)
-> > +
-> > +(define_expand "stack_protect_test"
-> > +  [(match_operand:SI 0 "memory_operand")
-> > +   (match_operand:SI 1 "memory_operand")
-> > +   (match_operand:SI 2)]
-> > +  "arm_stack_protector_guard == SSP_TLSREG"
-> > +  "
-> > +{
-> > +  operands[1] = arm_stack_protect_tls_canary_mem (true /* reload */);
-> > +  emit_insn (gen_stack_protect_test_tls (operands[0], operands[1]));
-> > +
-> > +  rtx cc_reg = gen_rtx_REG (CC_Zmode, CC_REGNUM);
-> > +  rtx eq = gen_rtx_EQ (CC_Zmode, cc_reg, const0_rtx);
-> > +  emit_jump_insn (gen_arm_cond_branch (operands[2], eq, cc_reg));
-> > +  DONE;
-> > +}"
-> > +)
-> > +
-> > +(define_insn "stack_protect_test_tls"
-> > +  [(set (reg:CC_Z CC_REGNUM)
-> > +     (compare:CC_Z (unspec:SI [(match_operand:SI 0 "memory_operand"
-> > "m")
-> > +                               (match_operand:SI 1 "memory_operand"
-> > "m")]
-> > +                              UNSPEC_SP_TEST)
-> > +                   (const_int 0)))
-> > +   (clobber (match_scratch:SI 2 "=&r"))
-> > +   (clobber (match_scratch:SI 3 "=&r"))]
-> > +  ""
-> > +  "ldr\t%2, %0\;ldr\t%3, %1\;eors\t%2, %3, %2\;mov\t%3, #0"
-> > +  [(set_attr "length" "16")
-> > +   (set_attr "conds" "set")
-> > +   (set_attr "type" "multiple")]
-> > +)
-> > +
-> >  (define_expand "casesi"
-> >    [(match_operand:SI 0 "s_register_operand") ; index to jump on
-> >     (match_operand:SI 1 "const_int_operand")  ; lower bound
-> > @@ -12133,6 +12191,15 @@ (define_insn "load_tp_hard"
-> >     (set_attr "type" "mrs")]
-> >  )
-> >
-> > +;; Used by the TLS register based stack protector
-> > +(define_insn "reload_tp_hard"
-> > +  [(set (match_operand:SI 0 "register_operand" "=r")
-> > +     (unspec_volatile:SI [(const_int 0)] VUNSPEC_MRC))]
-> > +  "TARGET_HARD_TP"
-> > +  "mrc\\tp15, 0, %0, c13, c0, 3\\t@ reload_tp_hard"
-> > +  [(set_attr "type" "mrs")]
-> > +)
-> > +
-> >  ;; Doesn't clobber R1-R3.  Must use r0 for the first operand.
-> >  (define_insn "load_tp_soft_fdpic"
-> >    [(set (reg:SI 0) (unspec:SI [(const_int 0)] UNSPEC_TLS))
-> > diff --git a/gcc/config/arm/arm.opt b/gcc/config/arm/arm.opt
-> > index 587fc932f969..e342a0df4def 100644
-> > --- a/gcc/config/arm/arm.opt
-> > +++ b/gcc/config/arm/arm.opt
-> > @@ -311,3 +311,25 @@ Generate code which uses the core registers only
-> > (r0-r14).
-> >  mfdpic
-> >  Target Mask(FDPIC)
-> >  Enable Function Descriptor PIC mode.
-> > +
-> > +mstack-protector-guard=
-> > +Target RejectNegative Joined Enum(stack_protector_guard)
-> > Var(arm_stack_protector_guard) Init(SSP_GLOBAL)
-> > +Use given stack-protector guard.
-> > +
-> > +Enum
-> > +Name(stack_protector_guard) Type(enum stack_protector_guard)
-> > +Valid arguments to -mstack-protector-guard=:
-> > +
-> > +EnumValue
-> > +Enum(stack_protector_guard) String(tls) Value(SSP_TLSREG)
-> > +
-> > +EnumValue
-> > +Enum(stack_protector_guard) String(global) Value(SSP_GLOBAL)
-> > +
-> > +mstack-protector-guard-offset=
-> > +Target Joined RejectNegative String
-> > Var(arm_stack_protector_guard_offset_str)
-> > +Use an immediate to offset from the TLS register. This option is for use with
-> > +fstack-protector-guard=tls and not for use in user-land code.
-> > +
-> > +TargetVariable
-> > +long arm_stack_protector_guard_offset = 0
-> > diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-> > index 58751c48b8e9..e7c9400c0ccd 100644
-> > --- a/gcc/doc/invoke.texi
-> > +++ b/gcc/doc/invoke.texi
-> > @@ -821,6 +821,7 @@ Objective-C and Objective-C++ Dialects}.
-> >  -mpure-code @gol
-> >  -mcmse @gol
-> >  -mfix-cmse-cve-2021-35465 @gol
-> > +-mstack-protector-guard=@var{guard} -mstack-protector-guard-
-> > offset=@var{offset} @gol
-> >  -mfdpic}
-> >
-> >  @emph{AVR Options}
-> > @@ -21355,6 +21356,16 @@ enabled by default when the option @option{-
-> > mcpu=} is used with
-> >  @code{cortex-m33}, @code{cortex-m35p} or @code{cortex-m55}.  The
-> > option
-> >  @option{-mno-fix-cmse-cve-2021-35465} can be used to disable the
-> > mitigation.
-> >
-> > +@item -mstack-protector-guard=@var{guard}
-> > +@itemx -mstack-protector-guard-offset=@var{offset}
-> > +@opindex mstack-protector-guard
-> > +@opindex mstack-protector-guard-offset
-> > +Generate stack protection code using canary at @var{guard}.  Supported
-> > +locations are @samp{global} for a global canary or @samp{tls} for a
-> > +canary accessible via the TLS register. The option
-> > +@option{-mstack-protector-guard-offset=} is for use with
-> > +@option{-fstack-protector-guard=tls} and not for use in user-land code.
-> > +
-> >  @item -mfdpic
-> >  @itemx -mno-fdpic
-> >  @opindex mfdpic
-> > diff --git a/gcc/testsuite/gcc.target/arm/stack-protector-7.c
-> > b/gcc/testsuite/gcc.target/arm/stack-protector-7.c
-> > new file mode 100644
-> > index 000000000000..2173bc5a35a0
-> > --- /dev/null
-> > +++ b/gcc/testsuite/gcc.target/arm/stack-protector-7.c
-> > @@ -0,0 +1,12 @@
-> > +/* { dg-require-effective-target arm_hard_vfp_ok }  */
-> > +/* { dg-require-effective-target arm_arch_v7a_ok } */
-> > +/* { dg-do compile } */
-> > +/* { dg-options "-march=armv7-a -mfpu=vfp -fstack-protector-all -Os -
-> > mstack-protector-guard=tls -mstack-protector-guard-offset=1296 -mtp=cp15"
-> > } */
-> > +
-> > +#include "stack-protector-5.c"
-> > +
-> > +/* See the comment in stack-protector-5.c.  */
-> > +/* { dg-final { scan-assembler-times {\tstr\t} 1 } } */
-> > +/* Expect two TLS register accesses and two occurrences of the offset */
-> > +/* { dg-final { scan-assembler-times {\tmrc\t} 2 } } */
-> > +/* { dg-final { scan-assembler-times {1296} 2 } } */
-> > diff --git a/gcc/testsuite/gcc.target/arm/stack-protector-8.c
-> > b/gcc/testsuite/gcc.target/arm/stack-protector-8.c
-> > new file mode 100644
-> > index 000000000000..ea5ef3211678
-> > --- /dev/null
-> > +++ b/gcc/testsuite/gcc.target/arm/stack-protector-8.c
-> > @@ -0,0 +1,7 @@
-> > +/* { dg-require-effective-target arm_hard_vfp_ok }  */
-> > +/* { dg-require-effective-target arm_arch_v7a_ok } */
-> > +/* { dg-do compile } */
-> > +/* { dg-error "needs a hardware TLS register" "missing error when using TLS
-> > stack protector without hardware TLS register" { target *-*-* } 0 } */
-> > +/* { dg-options "-fstack-protector-all -Os -mstack-protector-guard=tls -
-> > mtp=soft" } */
-> > +
-> > +int foo;
-> > --
-> > 2.30.2
->
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJkIEJpZXNoZXV2ZWwg
+PGFyZGJAa2VybmVsLm9yZz4NCj4gU2VudDogRnJpZGF5LCBKYW51YXJ5IDIxLCAyMDIyIDEwOjUw
+IEFNDQo+IFRvOiBLeXJ5bG8gVGthY2hvdiA8S3lyeWxvLlRrYWNob3ZAYXJtLmNvbT4NCj4gQ2M6
+IGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmc7IFJpY2hhcmQgRWFybnNoYXcNCj4gPFJp
+Y2hhcmQuRWFybnNoYXdAYXJtLmNvbT47IFJpY2hhcmQgU2FuZGlmb3JkDQo+IDxSaWNoYXJkLlNh
+bmRpZm9yZEBhcm0uY29tPjsgdGhvbWFzLnByZXVkaG9tbWVAY2VsZXN0LmZyOyBLZWl0aA0KPiBQ
+YWNrYXJkIDxrZWl0aHBhY0BhbWF6b24uY29tPjsgZ2NjLXBhdGNoZXNAZ2NjLmdudS5vcmcNCj4g
+U3ViamVjdDogUmU6IFtQQVRDSCB2NiAxLzFdIFtBUk1dIEFkZCBzdXBwb3J0IGZvciBUTFMgcmVn
+aXN0ZXIgYmFzZWQgc3RhY2sNCj4gcHJvdGVjdG9yIGNhbmFyeSBhY2Nlc3MNCj4gDQo+IE9uIEZy
+aSwgMjEgSmFuIDIwMjIgYXQgMTE6NDcsIEt5cnlsbyBUa2FjaG92IDxLeXJ5bG8uVGthY2hvdkBh
+cm0uY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj4gPiA+IEZyb206IEdjYy1wYXRjaGVzIDxnY2MtcGF0Y2hlcy0NCj4gPiA+IGJvdW5jZXMra3ly
+eWxvLnRrYWNob3Y9YXJtLmNvbUBnY2MuZ251Lm9yZz4gT24gQmVoYWxmIE9mIEFyZA0KPiA+ID4g
+Qmllc2hldXZlbCB2aWEgR2NjLXBhdGNoZXMNCj4gPiA+IFNlbnQ6IFdlZG5lc2RheSwgSmFudWFy
+eSAxOSwgMjAyMiA1OjQ0IFBNDQo+ID4gPiBUbzogbGludXgtaGFyZGVuaW5nQHZnZXIua2VybmVs
+Lm9yZw0KPiA+ID4gQ2M6IFJpY2hhcmQgRWFybnNoYXcgPFJpY2hhcmQuRWFybnNoYXdAYXJtLmNv
+bT47IFJpY2hhcmQgU2FuZGlmb3JkDQo+ID4gPiA8UmljaGFyZC5TYW5kaWZvcmRAYXJtLmNvbT47
+IHRob21hcy5wcmV1ZGhvbW1lQGNlbGVzdC5mcjsgS2VpdGgNCj4gPiA+IFBhY2thcmQgPGtlaXRo
+cGFjQGFtYXpvbi5jb20+OyBnY2MtcGF0Y2hlc0BnY2MuZ251Lm9yZzsgS3lyeWxvDQo+IFRrYWNo
+b3YNCj4gPiA+IDxreXJ5by50a2FjaG92QGFybS5jb20+OyBBcmQgQmllc2hldXZlbCA8YXJkYkBr
+ZXJuZWwub3JnPg0KPiA+ID4gU3ViamVjdDogW1BBVENIIHY2IDEvMV0gW0FSTV0gQWRkIHN1cHBv
+cnQgZm9yIFRMUyByZWdpc3RlciBiYXNlZCBzdGFjaw0KPiA+ID4gcHJvdGVjdG9yIGNhbmFyeSBh
+Y2Nlc3MNCj4gPiA+DQo+ID4gPiBBZGQgc3VwcG9ydCBmb3IgYWNjZXNzaW5nIHRoZSBzdGFjayBj
+YW5hcnkgdmFsdWUgdmlhIHRoZSBUTFMgcmVnaXN0ZXIsDQo+ID4gPiBzbyB0aGF0IG11bHRpcGxl
+IHRocmVhZHMgcnVubmluZyBpbiB0aGUgc2FtZSBhZGRyZXNzIHNwYWNlIGNhbiB1c2UNCj4gPiA+
+IGRpc3RpbmN0IGNhbmFyeSB2YWx1ZXMuIFRoaXMgaXMgaW50ZW5kZWQgZm9yIHRoZSBMaW51eCBr
+ZXJuZWwgcnVubmluZyBpbg0KPiA+ID4gU01QIG1vZGUsIHdoZXJlIHByb2Nlc3NlcyBlbnRlcmlu
+ZyB0aGUga2VybmVsIGFyZSBlc3NlbnRpYWxseSB0aHJlYWRzDQo+ID4gPiBydW5uaW5nIHRoZSBz
+YW1lIHByb2dyYW0gY29uY3VycmVudGx5OiB1c2luZyBhIGdsb2JhbCB2YXJpYWJsZSBmb3IgdGhl
+DQo+ID4gPiBjYW5hcnkgaW4gdGhhdCBjb250ZXh0IGlzIHByb2JsZW1hdGljIGJlY2F1c2UgaXQg
+Y2FuIG5ldmVyIGJlIHJvdGF0ZWQsDQo+ID4gPiBhbmQgc28gdGhlIE9TIGlzIGZvcmNlZCB0byB1
+c2UgdGhlIHNhbWUgdmFsdWUgYXMgbG9uZyBhcyBpdCByZW1haW5zIHVwLg0KPiA+ID4NCj4gPiA+
+IFVzaW5nIHRoZSBUTFMgcmVnaXN0ZXIgdG8gaW5kZXggdGhlIHN0YWNrIGNhbmFyeSBoZWxwcyB3
+aXRoIHRoaXMsIGFzIGl0DQo+ID4gPiBhbGxvd3MgZWFjaCBDUFUgdG8gY29udGV4dCBzd2l0Y2gg
+dGhlIFRMUyByZWdpc3RlciBhbG9uZyB3aXRoIHRoZSByZXN0DQo+ID4gPiBvZiB0aGUgcHJvY2Vz
+cywgcGVybWl0dGluZyBlYWNoIHByb2Nlc3MgdG8gdXNlIGl0cyBvd24gdmFsdWUgZm9yIHRoZQ0K
+PiA+ID4gc3RhY2sgY2FuYXJ5Lg0KPiA+ID4NCj4gPiA+IDIwMjItMDEtMTkgQXJkIEJpZXNoZXV2
+ZWwgPGFyZGJAa2VybmVsLm9yZz4NCj4gPiA+DQo+ID4gPiAgICAgICAqIGNvbmZpZy9hcm0vYXJt
+LW9wdHMuaCAoZW51bSBzdGFja19wcm90ZWN0b3JfZ3VhcmQpOiBOZXcNCj4gPiA+ICAgICAgICog
+Y29uZmlnL2FybS9hcm0tcHJvdG9zLmggKGFybV9zdGFja19wcm90ZWN0X3Rsc19jYW5hcnlfbWVt
+KToNCj4gPiA+ICAgICAgIE5ldw0KPiA+ID4gICAgICAgKiBjb25maWcvYXJtL2FybS5jYyAoVEFS
+R0VUX1NUQUNLX1BST1RFQ1RfR1VBUkQpOiBEZWZpbmUNCj4gPiA+ICAgICAgIChhcm1fb3B0aW9u
+X292ZXJyaWRlX2ludGVybmFsKTogSGFuZGxlIGFuZCBwdXQgaW4gZXJyb3IgY2hlY2tzDQo+ID4g
+PiAgICAgICBmb3Igc3RhY2sgcHJvdGVjdG9yIGd1YXJkIG9wdGlvbnMuDQo+ID4gPiAgICAgICAo
+YXJtX29wdGlvbl9yZWNvbmZpZ3VyZV9nbG9iYWxzKTogTGlrZXdpc2UNCj4gPiA+ICAgICAgIChh
+cm1fc3RhY2tfcHJvdGVjdF90bHNfY2FuYXJ5X21lbSk6IE5ldw0KPiA+ID4gICAgICAgKGFybV9z
+dGFja19wcm90ZWN0X2d1YXJkKTogTmV3DQo+ID4gPiAgICAgICAqIGNvbmZpZy9hcm0vYXJtLm1k
+IChzdGFja19wcm90ZWN0X3NldCk6IE5ldw0KPiA+ID4gICAgICAgKHN0YWNrX3Byb3RlY3Rfc2V0
+X3Rscyk6IExpa2V3aXNlDQo+ID4gPiAgICAgICAoc3RhY2tfcHJvdGVjdF90ZXN0KTogTGlrZXdp
+c2UNCj4gPiA+ICAgICAgIChzdGFja19wcm90ZWN0X3Rlc3RfdGxzKTogTGlrZXdpc2UNCj4gPiA+
+ICAgICAgIChyZWxvYWRfdHBfaGFyZCk6IExpa2V3aXNlDQo+ID4gPiAgICAgICAqIGNvbmZpZy9h
+cm0vYXJtLm9wdCAoLW1zdGFjay1wcm90ZWN0b3ItZ3VhcmQpOiBOZXcNCj4gPiA+ICAgICAgICgt
+bXN0YWNrLXByb3RlY3Rvci1ndWFyZC1vZmZzZXQpOiBOZXcuDQo+ID4gPiAgICAgICAqIGRvYy9p
+bnZva2UudGV4aTogRG9jdW1lbnQgbmV3IG9wdGlvbnMNCj4gPiA+DQo+ID4gPiBnY2MvdGVzdHN1
+aXRlL0NoYW5nZUxvZzoNCj4gPiA+DQo+ID4gPiAgICAgICAqIGdjYy50YXJnZXQvYXJtL3N0YWNr
+LXByb3RlY3Rvci03LmM6IE5ldyB0ZXN0Lg0KPiA+ID4gICAgICAgKiBnY2MudGFyZ2V0L2FybS9z
+dGFjay1wcm90ZWN0b3ItOC5jOiBOZXcgdGVzdC4NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5
+OiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPg0KPiA+DQo+ID4gVGhhbmtzLiBPbmUg
+ZmluYWwgYml0LiBHaXZlbiB0aGF0IHlvdSdyZSB1c2luZyB0aGUgU2lnbmVkLW9mZi1ieSB0YWcg
+dGhpcw0KPiBtZWFucyB0aGF0IHlvdSdyZSBjb250cmlidXRpbmcgdGhpcyBwYXRjaCB1bmRlciB0
+aGUgRENPIHJ1bGVzLg0KPiA+IENhbiB5b3UgcGxlYXNlIGNvbmZpcm0gdGhhdCB5b3UgaW50ZW5k
+IHRvIGNvbnRyaWJ1dGUgdGhpcyBwYXRjaCB1bmRlciB0aGUNCj4gcnVsZXMgaW4gaHR0cHM6Ly9n
+Y2MuZ251Lm9yZy9kY28uaHRtbA0KPiANCj4gWWVzLCBJIGFtIG1ha2luZyB0aGlzIGNvbnRyaWJ1
+dGlvbiB1bmRlciBEQ08gMS4xIHRlcm1zLg0KPiANCj4gPiBJZiB5b3UncmUgaGFwcHkgd2l0aCB0
+aGF0IEknbGwgcHVzaCB0aGUgcGF0Y2ggZm9yIHlvdS4NCj4gPiBUaGFua3MsDQo+ID4gS3lyaWxs
+DQo+ID4NCj4gDQo+IFRoYW5rcyENCg0KSSd2ZSBub3cgcHVzaGVkIGl0IHRvIHRydW5rLg0KVGhh
+bmsgeW91IGZvciB5b3VyIHBhdGllbmNlIGFuZCByZXNwb25zaXZlbmVzcyBhbmQgYXBvbG9naWVz
+IGZvciB0aGUgZGVsYXkgaW4gdGhlIHJldmlld3MuDQoNClRoYW5rcywNCkt5cmlsbA0KDQo+IA0K
+PiANCj4gPiA+IC0tLQ0KPiA+ID4gIGdjYy9jb25maWcvYXJtL2FybS1vcHRzLmggICAgICAgICAg
+ICAgICAgICAgICAgICB8ICA2ICsrDQo+ID4gPiAgZ2NjL2NvbmZpZy9hcm0vYXJtLXByb3Rvcy5o
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKw0KPiA+ID4gIGdjYy9jb25maWcvYXJtL2FybS5j
+YyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDU1ICsrKysrKysrKysrKysrKw0KPiA+ID4g
+IGdjYy9jb25maWcvYXJtL2FybS5tZCAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDcxICsr
+KysrKysrKysrKysrKysrKystDQo+ID4gPiAgZ2NjL2NvbmZpZy9hcm0vYXJtLm9wdCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgMjIgKysrKysrDQo+ID4gPiAgZ2NjL2RvYy9pbnZva2UudGV4
+aSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTEgKysrDQo+ID4gPiAgZ2NjL3Rlc3Rz
+dWl0ZS9nY2MudGFyZ2V0L2FybS9zdGFjay1wcm90ZWN0b3ItNy5jIHwgMTIgKysrKw0KPiA+ID4g
+IGdjYy90ZXN0c3VpdGUvZ2NjLnRhcmdldC9hcm0vc3RhY2stcHJvdGVjdG9yLTguYyB8ICA3ICsr
+DQo+ID4gPiAgOCBmaWxlcyBjaGFuZ2VkLCAxODQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvZ2NjL2NvbmZpZy9hcm0vYXJtLW9wdHMuaCBi
+L2djYy9jb25maWcvYXJtL2FybS1vcHRzLmgNCj4gPiA+IGluZGV4IGM1MGQ1ZTU2YTE4MS4uMjRk
+MTJmYWZkZWM4IDEwMDY0NA0KPiA+ID4gLS0tIGEvZ2NjL2NvbmZpZy9hcm0vYXJtLW9wdHMuaA0K
+PiA+ID4gKysrIGIvZ2NjL2NvbmZpZy9hcm0vYXJtLW9wdHMuaA0KPiA+ID4gQEAgLTY5LDQgKzY5
+LDEwIEBAIGVudW0gYXJtX3Rsc190eXBlIHsNCj4gPiA+ICAgIFRMU19HTlUsDQo+ID4gPiAgICBU
+TFNfR05VMg0KPiA+ID4gIH07DQo+ID4gPiArDQo+ID4gPiArLyogV2hlcmUgdG8gZ2V0IHRoZSBj
+YW5hcnkgZm9yIHRoZSBzdGFjayBwcm90ZWN0b3IuICAqLw0KPiA+ID4gK2VudW0gc3RhY2tfcHJv
+dGVjdG9yX2d1YXJkIHsNCj4gPiA+ICsgIFNTUF9UTFNSRUcsICAgICAgICAgICAgICAgICAgLyog
+cGVyLXRocmVhZCBjYW5hcnkgaW4gVExTIHJlZ2lzdGVyICovDQo+ID4gPiArICBTU1BfR0xPQkFM
+ICAgICAgICAgICAgICAgICAgIC8qIGdsb2JhbCBjYW5hcnkgKi8NCj4gPiA+ICt9Ow0KPiA+ID4g
+ICNlbmRpZg0KPiA+ID4gZGlmZiAtLWdpdCBhL2djYy9jb25maWcvYXJtL2FybS1wcm90b3MuaCBi
+L2djYy9jb25maWcvYXJtL2FybS1wcm90b3MuaA0KPiA+ID4gaW5kZXggY2Q1NWE5ZjZjYTU0Li44
+ODFjNzJjOTg4YmQgMTAwNjQ0DQo+ID4gPiAtLS0gYS9nY2MvY29uZmlnL2FybS9hcm0tcHJvdG9z
+LmgNCj4gPiA+ICsrKyBiL2djYy9jb25maWcvYXJtL2FybS1wcm90b3MuaA0KPiA+ID4gQEAgLTE5
+NSw2ICsxOTUsOCBAQCBleHRlcm4gdm9pZCBhcm1fc3BsaXRfYXRvbWljX29wIChlbnVtDQo+IHJ0
+eF9jb2RlLA0KPiA+ID4gcnR4LCBydHgsIHJ0eCwgcnR4LCBydHgsIHJ0eCk7DQo+ID4gPiAgZXh0
+ZXJuIHJ0eCBhcm1fbG9hZF90cCAocnR4KTsNCj4gPiA+ICBleHRlcm4gYm9vbCBhcm1fY29wcm9j
+X2J1aWx0aW5fYXZhaWxhYmxlIChlbnVtIHVuc3BlY3YpOw0KPiA+ID4gIGV4dGVybiBib29sIGFy
+bV9jb3Byb2NfbGRjX3N0Y19sZWdpdGltYXRlX2FkZHJlc3MgKHJ0eCk7DQo+ID4gPiArZXh0ZXJu
+IHJ0eCBhcm1fc3RhY2tfcHJvdGVjdF90bHNfY2FuYXJ5X21lbSAoYm9vbCk7DQo+ID4gPiArDQo+
+ID4gPg0KPiA+ID4gICNpZiBkZWZpbmVkIFRSRUVfQ09ERQ0KPiA+ID4gIGV4dGVybiB2b2lkIGFy
+bV9pbml0X2N1bXVsYXRpdmVfYXJncyAoQ1VNVUxBVElWRV9BUkdTICosIHRyZWUsIHJ0eCwNCj4g
+dHJlZSk7DQo+ID4gPiBkaWZmIC0tZ2l0IGEvZ2NjL2NvbmZpZy9hcm0vYXJtLmNjIGIvZ2NjL2Nv
+bmZpZy9hcm0vYXJtLmNjDQo+ID4gPiBpbmRleCA3ODI1ZTM2NGMwMWUuLmMxOTI4OTRmZjMzZSAx
+MDA2NDQNCj4gPiA+IC0tLSBhL2djYy9jb25maWcvYXJtL2FybS5jYw0KPiA+ID4gKysrIGIvZ2Nj
+L2NvbmZpZy9hcm0vYXJtLmNjDQo+ID4gPiBAQCAtODI5LDYgKzgyOSw5IEBAIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgYXR0cmlidXRlX3NwZWMNCj4gPiA+IGFybV9hdHRyaWJ1dGVfdGFibGVbXSA9DQo+
+ID4gPg0KPiA+ID4gICN1bmRlZiBUQVJHRVRfTURfQVNNX0FESlVTVA0KPiA+ID4gICNkZWZpbmUg
+VEFSR0VUX01EX0FTTV9BREpVU1QgYXJtX21kX2FzbV9hZGp1c3QNCj4gPiA+ICsNCj4gPiA+ICsj
+dW5kZWYgVEFSR0VUX1NUQUNLX1BST1RFQ1RfR1VBUkQNCj4gPiA+ICsjZGVmaW5lIFRBUkdFVF9T
+VEFDS19QUk9URUNUX0dVQVJEIGFybV9zdGFja19wcm90ZWN0X2d1YXJkDQo+ID4gPg0KPiA+ID4N
+Cj4gPiA+DQo+ID4gPiAgLyogT2JzdGFjayBmb3IgbWluaXBvb2wgY29uc3RhbnQgaGFuZGxpbmcu
+ICAqLw0KPiA+ID4gIHN0YXRpYyBzdHJ1Y3Qgb2JzdGFjayBtaW5pcG9vbF9vYnN0YWNrOw0KPiA+
+ID4gQEAgLTMxNzYsNiArMzE3OSwyNiBAQCBhcm1fb3B0aW9uX292ZXJyaWRlX2ludGVybmFsIChz
+dHJ1Y3QNCj4gPiA+IGdjY19vcHRpb25zICpvcHRzLA0KPiA+ID4gICAgaWYgKFRBUkdFVF9USFVN
+QjJfUCAob3B0cy0+eF90YXJnZXRfZmxhZ3MpKQ0KPiA+ID4gICAgICBvcHRzLT54X2lubGluZV9h
+c21fdW5pZmllZCA9IHRydWU7DQo+ID4gPg0KPiA+ID4gKyAgaWYgKGFybV9zdGFja19wcm90ZWN0
+b3JfZ3VhcmQgPT0gU1NQX0dMT0JBTA0KPiA+ID4gKyAgICAgICYmIG9wdHMtPnhfYXJtX3N0YWNr
+X3Byb3RlY3Rvcl9ndWFyZF9vZmZzZXRfc3RyKQ0KPiA+ID4gKyAgICB7DQo+ID4gPiArICAgICAg
+ZXJyb3IgKCJpbmNvbXBhdGlibGUgb3B0aW9ucyAlJy1tc3RhY2stcHJvdGVjdG9yLWd1YXJkPWds
+b2JhbCUnDQo+IGFuZCINCj4gPiA+ICsgICAgICAgICAgIiUnLW1zdGFjay1wcm90ZWN0b3ItZ3Vh
+cmQtb2Zmc2V0PSVxcyUnIiwNCj4gPiA+ICsgICAgICAgICAgYXJtX3N0YWNrX3Byb3RlY3Rvcl9n
+dWFyZF9vZmZzZXRfc3RyKTsNCj4gPiA+ICsgICAgfQ0KPiA+ID4gKw0KPiA+ID4gKyAgaWYgKG9w
+dHMtPnhfYXJtX3N0YWNrX3Byb3RlY3Rvcl9ndWFyZF9vZmZzZXRfc3RyKQ0KPiA+ID4gKyAgICB7
+DQo+ID4gPiArICAgICAgY2hhciAqZW5kOw0KPiA+ID4gKyAgICAgIGNvbnN0IGNoYXIgKnN0ciA9
+IGFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmRfb2Zmc2V0X3N0cjsNCj4gPiA+ICsgICAgICBlcnJu
+byA9IDA7DQo+ID4gPiArICAgICAgbG9uZyBvZmZzID0gc3RydG9sIChhcm1fc3RhY2tfcHJvdGVj
+dG9yX2d1YXJkX29mZnNldF9zdHIsICZlbmQsIDApOw0KPiA+ID4gKyAgICAgIGlmICghKnN0ciB8
+fCAqZW5kIHx8IGVycm5vKQ0KPiA+ID4gKyAgICAgZXJyb3IgKCIlcXMgaXMgbm90IGEgdmFsaWQg
+b2Zmc2V0IGluICVxcyIsIHN0ciwNCj4gPiA+ICsgICAgICAgICAgICAiLW1zdGFjay1wcm90ZWN0
+b3ItZ3VhcmQtb2Zmc2V0PSIpOw0KPiA+ID4gKyAgICAgIGFybV9zdGFja19wcm90ZWN0b3JfZ3Vh
+cmRfb2Zmc2V0ID0gb2ZmczsNCj4gPiA+ICsgICAgfQ0KPiA+ID4gKw0KPiA+ID4gICNpZmRlZiBT
+VUJUQVJHRVRfT1ZFUlJJREVfSU5URVJOQUxfT1BUSU9OUw0KPiA+ID4gICAgU1VCVEFSR0VUX09W
+RVJSSURFX0lOVEVSTkFMX09QVElPTlM7DQo+ID4gPiAgI2VuZGlmDQo+ID4gPiBAQCAtMzg0Myw2
+ICszODY2LDkgQEAgYXJtX29wdGlvbl9yZWNvbmZpZ3VyZV9nbG9iYWxzICh2b2lkKQ0KPiA+ID4g
+ICAgICAgIGVsc2UNCj4gPiA+ICAgICAgIHRhcmdldF90aHJlYWRfcG9pbnRlciA9IFRQX1NPRlQ7
+DQo+ID4gPiAgICAgIH0NCj4gPiA+ICsNCj4gPiA+ICsgIGlmICghVEFSR0VUX0hBUkRfVFAgJiYg
+YXJtX3N0YWNrX3Byb3RlY3Rvcl9ndWFyZCA9PSBTU1BfVExTUkVHKQ0KPiA+ID4gKyAgICBlcnJv
+cigiJSctbXN0YWNrLXByb3RlY3Rvci1ndWFyZD10bHMlJyBuZWVkcyBhIGhhcmR3YXJlIFRMUw0K
+PiByZWdpc3RlciIpOw0KPiA+ID4gIH0NCj4gPiA+DQo+ID4gPiAgLyogUGVyZm9ybSBzb21lIHZh
+bGlkYXRpb24gYmV0d2VlbiB0aGUgZGVzaXJlZCBhcmNoaXRlY3R1cmUgYW5kIHRoZQ0KPiByZXN0
+IG9mDQo+ID4gPiB0aGUNCj4gPiA+IEBAIC04MTA4LDYgKzgxMzQsMjMgQEAgbGVnaXRpbWl6ZV9w
+aWNfYWRkcmVzcyAocnR4IG9yaWcsDQo+IG1hY2hpbmVfbW9kZQ0KPiA+ID4gbW9kZSwgcnR4IHJl
+ZywgcnR4IHBpY19yZWcsDQo+ID4gPiAgfQ0KPiA+ID4NCj4gPiA+DQo+ID4gPiArLyogR2VuZXJh
+dGUgaW5zbnMgdGhhdCBwcm9kdWNlIHRoZSBhZGRyZXNzIG9mIHRoZSBzdGFjayBjYW5hcnkgKi8N
+Cj4gPiA+ICtydHgNCj4gPiA+ICthcm1fc3RhY2tfcHJvdGVjdF90bHNfY2FuYXJ5X21lbSAoYm9v
+bCByZWxvYWQpDQo+ID4gPiArew0KPiA+ID4gKyAgcnR4IHRwID0gZ2VuX3JlZ19ydHggKFNJbW9k
+ZSk7DQo+ID4gPiArICBpZiAocmVsb2FkKQ0KPiA+ID4gKyAgICBlbWl0X2luc24gKGdlbl9yZWxv
+YWRfdHBfaGFyZCAodHApKTsNCj4gPiA+ICsgIGVsc2UNCj4gPiA+ICsgICAgZW1pdF9pbnNuIChn
+ZW5fbG9hZF90cF9oYXJkICh0cCkpOw0KPiA+ID4gKw0KPiA+ID4gKyAgcnR4IHJlZyA9IGdlbl9y
+ZWdfcnR4IChTSW1vZGUpOw0KPiA+ID4gKyAgcnR4IG9mZnNldCA9IEdFTl9JTlQgKGFybV9zdGFj
+a19wcm90ZWN0b3JfZ3VhcmRfb2Zmc2V0KTsNCj4gPiA+ICsgIGVtaXRfc2V0X2luc24gKHJlZywg
+Z2VuX3J0eF9QTFVTIChTSW1vZGUsIHRwLCBvZmZzZXQpKTsNCj4gPiA+ICsgIHJldHVybiBnZW5f
+cnR4X01FTSAoU0ltb2RlLCByZWcpOw0KPiA+ID4gK30NCj4gPiA+ICsNCj4gPiA+ICsNCj4gPiA+
+ICAvKiBXaGV0aGVyIGEgcmVnaXN0ZXIgaXMgY2FsbGVlIHNhdmVkIG9yIG5vdC4gIFRoaXMgaXMg
+bmVjZXNzYXJ5IGJlY2F1c2UNCj4gaGlnaA0KPiA+ID4gICAgIHJlZ2lzdGVycyBhcmUgbWFya2Vk
+IGFzIGNhbGxlciBzYXZlZCB3aGVuIG9wdGltaXppbmcgZm9yIHNpemUgb24NCj4gVGh1bWItMQ0K
+PiA+ID4gICAgIHRhcmdldHMgZGVzcGl0ZSBiZWluZyBjYWxsZWUgc2F2ZWQgaW4gb3JkZXIgdG8g
+YXZvaWQgdXNpbmcgdGhlbS4gICovDQo+ID4gPiBAQCAtMzQwNzUsNiArMzQxMTgsMTggQEAgYXJt
+X3J1bl9zZWxmdGVzdHMgKHZvaWQpDQo+ID4gPiAgI2RlZmluZSBUQVJHRVRfUlVOX1RBUkdFVF9T
+RUxGVEVTVFMgc2VsZnRlc3Q6OmFybV9ydW5fc2VsZnRlc3RzDQo+ID4gPiAgI2VuZGlmIC8qIENI
+RUNLSU5HX1AgKi8NCj4gPiA+DQo+ID4gPiArLyogSW1wbGVtZW50IFRBUkdFVF9TVEFDS19QUk9U
+RUNUX0dVQVJELiBJbiBjYXNlIG9mIGENCj4gPiA+ICsgICBnbG9iYWwgdmFyaWFibGUgYmFzZWQg
+Z3VhcmQgdXNlIHRoZSBkZWZhdWx0IGVsc2UNCj4gPiA+ICsgICByZXR1cm4gYSBudWxsIHRyZWUu
+ICAqLw0KPiA+ID4gK3N0YXRpYyB0cmVlDQo+ID4gPiArYXJtX3N0YWNrX3Byb3RlY3RfZ3VhcmQg
+KHZvaWQpDQo+ID4gPiArew0KPiA+ID4gKyAgaWYgKGFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmQg
+PT0gU1NQX0dMT0JBTCkNCj4gPiA+ICsgICAgcmV0dXJuIGRlZmF1bHRfc3RhY2tfcHJvdGVjdF9n
+dWFyZCAoKTsNCj4gPiA+ICsNCj4gPiA+ICsgIHJldHVybiBOVUxMX1RSRUU7DQo+ID4gPiArfQ0K
+PiA+ID4gKw0KPiA+ID4gIC8qIFdvcmtlciBmdW5jdGlvbiBmb3IgVEFSR0VUX01EX0FTTV9BREpV
+U1QsIHdoaWxlIGluIHRodW1iMQ0KPiBtb2RlLg0KPiA+ID4gICAgIFVubGlrZSB0aGUgYXJtIHZl
+cnNpb24sIHdlIGRvIE5PVCBpbXBsZW1lbnQgYXNtIGZsYWcgb3V0cHV0cy4gICovDQo+ID4gPg0K
+PiA+ID4gZGlmZiAtLWdpdCBhL2djYy9jb25maWcvYXJtL2FybS5tZCBiL2djYy9jb25maWcvYXJt
+L2FybS5tZA0KPiA+ID4gaW5kZXggOTA3NTZmYmZhM2FmLi42MDQ2OGY2MTgyYzMgMTAwNjQ0DQo+
+ID4gPiAtLS0gYS9nY2MvY29uZmlnL2FybS9hcm0ubWQNCj4gPiA+ICsrKyBiL2djYy9jb25maWcv
+YXJtL2FybS5tZA0KPiA+ID4gQEAgLTkxODMsNyArOTE4Myw3IEBAIChkZWZpbmVfZXhwYW5kICJz
+dGFja19wcm90ZWN0X2NvbWJpbmVkX3NldCINCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgVU5T
+UEVDX1NQX1NFVCkpDQo+ID4gPiAgICAgICAgKGNsb2JiZXIgKG1hdGNoX3NjcmF0Y2g6U0kgMiAi
+IikpDQo+ID4gPiAgICAgICAgKGNsb2JiZXIgKG1hdGNoX3NjcmF0Y2g6U0kgMyAiIikpXSldDQo+
+ID4gPiAtICAiIg0KPiA+ID4gKyAgImFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmQgPT0gU1NQX0dM
+T0JBTCINCj4gPiA+ICAgICIiDQo+ID4gPiAgKQ0KPiA+ID4NCj4gPiA+IEBAIC05MjY3LDcgKzky
+NjcsNyBAQCAoZGVmaW5lX2V4cGFuZA0KPiAic3RhY2tfcHJvdGVjdF9jb21iaW5lZF90ZXN0Ig0K
+PiA+ID4gICAgICAgIChjbG9iYmVyIChtYXRjaF9zY3JhdGNoOlNJIDMgIiIpKQ0KPiA+ID4gICAg
+ICAgIChjbG9iYmVyIChtYXRjaF9zY3JhdGNoOlNJIDQgIiIpKQ0KPiA+ID4gICAgICAgIChjbG9i
+YmVyIChyZWc6Q0MgQ0NfUkVHTlVNKSldKV0NCj4gPiA+IC0gICIiDQo+ID4gPiArICAiYXJtX3N0
+YWNrX3Byb3RlY3Rvcl9ndWFyZCA9PSBTU1BfR0xPQkFMIg0KPiA+ID4gICAgIiINCj4gPiA+ICAp
+DQo+ID4gPg0KPiA+ID4gQEAgLTkzNjEsNiArOTM2MSw2NCBAQCAoZGVmaW5lX2luc24gImFybV9z
+dGFja19wcm90ZWN0X3Rlc3RfaW5zbiINCj4gPiA+ICAgICAoc2V0X2F0dHIgImFyY2giICJ0LDMy
+IildDQo+ID4gPiAgKQ0KPiA+ID4NCj4gPiA+ICsoZGVmaW5lX2V4cGFuZCAic3RhY2tfcHJvdGVj
+dF9zZXQiDQo+ID4gPiArICBbKG1hdGNoX29wZXJhbmQ6U0kgMCAibWVtb3J5X29wZXJhbmQiKQ0K
+PiA+ID4gKyAgIChtYXRjaF9vcGVyYW5kOlNJIDEgIm1lbW9yeV9vcGVyYW5kIildDQo+ID4gPiAr
+ICAiYXJtX3N0YWNrX3Byb3RlY3Rvcl9ndWFyZCA9PSBTU1BfVExTUkVHIg0KPiA+ID4gKyAgIg0K
+PiA+ID4gK3sNCj4gPiA+ICsgIG9wZXJhbmRzWzFdID0gYXJtX3N0YWNrX3Byb3RlY3RfdGxzX2Nh
+bmFyeV9tZW0gKGZhbHNlIC8qIHJlbG9hZCAqLyk7DQo+ID4gPiArICBlbWl0X2luc24gKGdlbl9z
+dGFja19wcm90ZWN0X3NldF90bHMgKG9wZXJhbmRzWzBdLCBvcGVyYW5kc1sxXSkpOw0KPiA+ID4g
+KyAgRE9ORTsNCj4gPiA+ICt9Ig0KPiA+ID4gKykNCj4gPiA+ICsNCj4gPiA+ICs7OyBETyBOT1Qg
+U1BMSVQgVEhJUyBQQVRURVJOLiAgSXQgaXMgaW1wb3J0YW50IGZvciBzZWN1cml0eSByZWFzb25z
+IHRoYXQNCj4gdGhlDQo+ID4gPiArOzsgY2FuYXJ5IHZhbHVlIGRvZXMgbm90IGxpdmUgYmV5b25k
+IHRoZSBsaWZlIG9mIHRoaXMgc2VxdWVuY2UuDQo+ID4gPiArKGRlZmluZV9pbnNuICJzdGFja19w
+cm90ZWN0X3NldF90bHMiDQo+ID4gPiArICBbKHNldCAobWF0Y2hfb3BlcmFuZDpTSSAwICJtZW1v
+cnlfb3BlcmFuZCIgIj1tIikNCj4gPiA+ICsgICAgICAgKHVuc3BlYzpTSSBbKG1hdGNoX29wZXJh
+bmQ6U0kgMSAibWVtb3J5X29wZXJhbmQiICJtIildDQo+ID4gPiArICAgICAgICBVTlNQRUNfU1Bf
+U0VUKSkNCj4gPiA+ICsgICAoc2V0IChtYXRjaF9zY3JhdGNoOlNJIDIgIj0mciIpIChjb25zdF9p
+bnQgMCkpXQ0KPiA+ID4gKyAgIiINCj4gPiA+ICsgICJsZHJcXHQlMiwgJTFcO3N0clxcdCUyLCAl
+MFw7bW92XHQlMiwgIzAiDQo+ID4gPiArICBbKHNldF9hdHRyICJsZW5ndGgiICIxMiIpDQo+ID4g
+PiArICAgKHNldF9hdHRyICJjb25kcyIgInVuY29uZGl0aW9uYWwiKQ0KPiA+ID4gKyAgIChzZXRf
+YXR0ciAidHlwZSIgIm11bHRpcGxlIildDQo+ID4gPiArKQ0KPiA+ID4gKw0KPiA+ID4gKyhkZWZp
+bmVfZXhwYW5kICJzdGFja19wcm90ZWN0X3Rlc3QiDQo+ID4gPiArICBbKG1hdGNoX29wZXJhbmQ6
+U0kgMCAibWVtb3J5X29wZXJhbmQiKQ0KPiA+ID4gKyAgIChtYXRjaF9vcGVyYW5kOlNJIDEgIm1l
+bW9yeV9vcGVyYW5kIikNCj4gPiA+ICsgICAobWF0Y2hfb3BlcmFuZDpTSSAyKV0NCj4gPiA+ICsg
+ICJhcm1fc3RhY2tfcHJvdGVjdG9yX2d1YXJkID09IFNTUF9UTFNSRUciDQo+ID4gPiArICAiDQo+
+ID4gPiArew0KPiA+ID4gKyAgb3BlcmFuZHNbMV0gPSBhcm1fc3RhY2tfcHJvdGVjdF90bHNfY2Fu
+YXJ5X21lbSAodHJ1ZSAvKiByZWxvYWQgKi8pOw0KPiA+ID4gKyAgZW1pdF9pbnNuIChnZW5fc3Rh
+Y2tfcHJvdGVjdF90ZXN0X3RscyAob3BlcmFuZHNbMF0sIG9wZXJhbmRzWzFdKSk7DQo+ID4gPiAr
+DQo+ID4gPiArICBydHggY2NfcmVnID0gZ2VuX3J0eF9SRUcgKENDX1ptb2RlLCBDQ19SRUdOVU0p
+Ow0KPiA+ID4gKyAgcnR4IGVxID0gZ2VuX3J0eF9FUSAoQ0NfWm1vZGUsIGNjX3JlZywgY29uc3Qw
+X3J0eCk7DQo+ID4gPiArICBlbWl0X2p1bXBfaW5zbiAoZ2VuX2FybV9jb25kX2JyYW5jaCAob3Bl
+cmFuZHNbMl0sIGVxLCBjY19yZWcpKTsNCj4gPiA+ICsgIERPTkU7DQo+ID4gPiArfSINCj4gPiA+
+ICspDQo+ID4gPiArDQo+ID4gPiArKGRlZmluZV9pbnNuICJzdGFja19wcm90ZWN0X3Rlc3RfdGxz
+Ig0KPiA+ID4gKyAgWyhzZXQgKHJlZzpDQ19aIENDX1JFR05VTSkNCj4gPiA+ICsgICAgIChjb21w
+YXJlOkNDX1ogKHVuc3BlYzpTSSBbKG1hdGNoX29wZXJhbmQ6U0kgMCAibWVtb3J5X29wZXJhbmQi
+DQo+ID4gPiAibSIpDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIChtYXRj
+aF9vcGVyYW5kOlNJIDEgIm1lbW9yeV9vcGVyYW5kIg0KPiA+ID4gIm0iKV0NCj4gPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBVTlNQRUNfU1BfVEVTVCkNCj4gPiA+ICsgICAgICAg
+ICAgICAgICAgICAgKGNvbnN0X2ludCAwKSkpDQo+ID4gPiArICAgKGNsb2JiZXIgKG1hdGNoX3Nj
+cmF0Y2g6U0kgMiAiPSZyIikpDQo+ID4gPiArICAgKGNsb2JiZXIgKG1hdGNoX3NjcmF0Y2g6U0kg
+MyAiPSZyIikpXQ0KPiA+ID4gKyAgIiINCj4gPiA+ICsgICJsZHJcdCUyLCAlMFw7bGRyXHQlMywg
+JTFcO2VvcnNcdCUyLCAlMywgJTJcO21vdlx0JTMsICMwIg0KPiA+ID4gKyAgWyhzZXRfYXR0ciAi
+bGVuZ3RoIiAiMTYiKQ0KPiA+ID4gKyAgIChzZXRfYXR0ciAiY29uZHMiICJzZXQiKQ0KPiA+ID4g
+KyAgIChzZXRfYXR0ciAidHlwZSIgIm11bHRpcGxlIildDQo+ID4gPiArKQ0KPiA+ID4gKw0KPiA+
+ID4gIChkZWZpbmVfZXhwYW5kICJjYXNlc2kiDQo+ID4gPiAgICBbKG1hdGNoX29wZXJhbmQ6U0kg
+MCAic19yZWdpc3Rlcl9vcGVyYW5kIikgOyBpbmRleCB0byBqdW1wIG9uDQo+ID4gPiAgICAgKG1h
+dGNoX29wZXJhbmQ6U0kgMSAiY29uc3RfaW50X29wZXJhbmQiKSAgOyBsb3dlciBib3VuZA0KPiA+
+ID4gQEAgLTEyMTMzLDYgKzEyMTkxLDE1IEBAIChkZWZpbmVfaW5zbiAibG9hZF90cF9oYXJkIg0K
+PiA+ID4gICAgIChzZXRfYXR0ciAidHlwZSIgIm1ycyIpXQ0KPiA+ID4gICkNCj4gPiA+DQo+ID4g
+PiArOzsgVXNlZCBieSB0aGUgVExTIHJlZ2lzdGVyIGJhc2VkIHN0YWNrIHByb3RlY3Rvcg0KPiA+
+ID4gKyhkZWZpbmVfaW5zbiAicmVsb2FkX3RwX2hhcmQiDQo+ID4gPiArICBbKHNldCAobWF0Y2hf
+b3BlcmFuZDpTSSAwICJyZWdpc3Rlcl9vcGVyYW5kIiAiPXIiKQ0KPiA+ID4gKyAgICAgKHVuc3Bl
+Y192b2xhdGlsZTpTSSBbKGNvbnN0X2ludCAwKV0gVlVOU1BFQ19NUkMpKV0NCj4gPiA+ICsgICJU
+QVJHRVRfSEFSRF9UUCINCj4gPiA+ICsgICJtcmNcXHRwMTUsIDAsICUwLCBjMTMsIGMwLCAzXFx0
+QCByZWxvYWRfdHBfaGFyZCINCj4gPiA+ICsgIFsoc2V0X2F0dHIgInR5cGUiICJtcnMiKV0NCj4g
+PiA+ICspDQo+ID4gPiArDQo+ID4gPiAgOzsgRG9lc24ndCBjbG9iYmVyIFIxLVIzLiAgTXVzdCB1
+c2UgcjAgZm9yIHRoZSBmaXJzdCBvcGVyYW5kLg0KPiA+ID4gIChkZWZpbmVfaW5zbiAibG9hZF90
+cF9zb2Z0X2ZkcGljIg0KPiA+ID4gICAgWyhzZXQgKHJlZzpTSSAwKSAodW5zcGVjOlNJIFsoY29u
+c3RfaW50IDApXSBVTlNQRUNfVExTKSkNCj4gPiA+IGRpZmYgLS1naXQgYS9nY2MvY29uZmlnL2Fy
+bS9hcm0ub3B0IGIvZ2NjL2NvbmZpZy9hcm0vYXJtLm9wdA0KPiA+ID4gaW5kZXggNTg3ZmM5MzJm
+OTY5Li5lMzQyYTBkZjRkZWYgMTAwNjQ0DQo+ID4gPiAtLS0gYS9nY2MvY29uZmlnL2FybS9hcm0u
+b3B0DQo+ID4gPiArKysgYi9nY2MvY29uZmlnL2FybS9hcm0ub3B0DQo+ID4gPiBAQCAtMzExLDMg
+KzMxMSwyNSBAQCBHZW5lcmF0ZSBjb2RlIHdoaWNoIHVzZXMgdGhlIGNvcmUgcmVnaXN0ZXJzDQo+
+IG9ubHkNCj4gPiA+IChyMC1yMTQpLg0KPiA+ID4gIG1mZHBpYw0KPiA+ID4gIFRhcmdldCBNYXNr
+KEZEUElDKQ0KPiA+ID4gIEVuYWJsZSBGdW5jdGlvbiBEZXNjcmlwdG9yIFBJQyBtb2RlLg0KPiA+
+ID4gKw0KPiA+ID4gK21zdGFjay1wcm90ZWN0b3ItZ3VhcmQ9DQo+ID4gPiArVGFyZ2V0IFJlamVj
+dE5lZ2F0aXZlIEpvaW5lZCBFbnVtKHN0YWNrX3Byb3RlY3Rvcl9ndWFyZCkNCj4gPiA+IFZhcihh
+cm1fc3RhY2tfcHJvdGVjdG9yX2d1YXJkKSBJbml0KFNTUF9HTE9CQUwpDQo+ID4gPiArVXNlIGdp
+dmVuIHN0YWNrLXByb3RlY3RvciBndWFyZC4NCj4gPiA+ICsNCj4gPiA+ICtFbnVtDQo+ID4gPiAr
+TmFtZShzdGFja19wcm90ZWN0b3JfZ3VhcmQpIFR5cGUoZW51bSBzdGFja19wcm90ZWN0b3JfZ3Vh
+cmQpDQo+ID4gPiArVmFsaWQgYXJndW1lbnRzIHRvIC1tc3RhY2stcHJvdGVjdG9yLWd1YXJkPToN
+Cj4gPiA+ICsNCj4gPiA+ICtFbnVtVmFsdWUNCj4gPiA+ICtFbnVtKHN0YWNrX3Byb3RlY3Rvcl9n
+dWFyZCkgU3RyaW5nKHRscykgVmFsdWUoU1NQX1RMU1JFRykNCj4gPiA+ICsNCj4gPiA+ICtFbnVt
+VmFsdWUNCj4gPiA+ICtFbnVtKHN0YWNrX3Byb3RlY3Rvcl9ndWFyZCkgU3RyaW5nKGdsb2JhbCkg
+VmFsdWUoU1NQX0dMT0JBTCkNCj4gPiA+ICsNCj4gPiA+ICttc3RhY2stcHJvdGVjdG9yLWd1YXJk
+LW9mZnNldD0NCj4gPiA+ICtUYXJnZXQgSm9pbmVkIFJlamVjdE5lZ2F0aXZlIFN0cmluZw0KPiA+
+ID4gVmFyKGFybV9zdGFja19wcm90ZWN0b3JfZ3VhcmRfb2Zmc2V0X3N0cikNCj4gPiA+ICtVc2Ug
+YW4gaW1tZWRpYXRlIHRvIG9mZnNldCBmcm9tIHRoZSBUTFMgcmVnaXN0ZXIuIFRoaXMgb3B0aW9u
+IGlzIGZvciB1c2UNCj4gd2l0aA0KPiA+ID4gK2ZzdGFjay1wcm90ZWN0b3ItZ3VhcmQ9dGxzIGFu
+ZCBub3QgZm9yIHVzZSBpbiB1c2VyLWxhbmQgY29kZS4NCj4gPiA+ICsNCj4gPiA+ICtUYXJnZXRW
+YXJpYWJsZQ0KPiA+ID4gK2xvbmcgYXJtX3N0YWNrX3Byb3RlY3Rvcl9ndWFyZF9vZmZzZXQgPSAw
+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvZ2NjL2RvYy9pbnZva2UudGV4aSBiL2djYy9kb2MvaW52b2tl
+LnRleGkNCj4gPiA+IGluZGV4IDU4NzUxYzQ4YjhlOS4uZTdjOTQwMGMwY2NkIDEwMDY0NA0KPiA+
+ID4gLS0tIGEvZ2NjL2RvYy9pbnZva2UudGV4aQ0KPiA+ID4gKysrIGIvZ2NjL2RvYy9pbnZva2Uu
+dGV4aQ0KPiA+ID4gQEAgLTgyMSw2ICs4MjEsNyBAQCBPYmplY3RpdmUtQyBhbmQgT2JqZWN0aXZl
+LUMrKyBEaWFsZWN0c30uDQo+ID4gPiAgLW1wdXJlLWNvZGUgQGdvbA0KPiA+ID4gIC1tY21zZSBA
+Z29sDQo+ID4gPiAgLW1maXgtY21zZS1jdmUtMjAyMS0zNTQ2NSBAZ29sDQo+ID4gPiArLW1zdGFj
+ay1wcm90ZWN0b3ItZ3VhcmQ9QHZhcntndWFyZH0gLW1zdGFjay1wcm90ZWN0b3ItZ3VhcmQtDQo+
+ID4gPiBvZmZzZXQ9QHZhcntvZmZzZXR9IEBnb2wNCj4gPiA+ICAtbWZkcGljfQ0KPiA+ID4NCj4g
+PiA+ICBAZW1waHtBVlIgT3B0aW9uc30NCj4gPiA+IEBAIC0yMTM1NSw2ICsyMTM1NiwxNiBAQCBl
+bmFibGVkIGJ5IGRlZmF1bHQgd2hlbiB0aGUgb3B0aW9uDQo+IEBvcHRpb257LQ0KPiA+ID4gbWNw
+dT19IGlzIHVzZWQgd2l0aA0KPiA+ID4gIEBjb2Rle2NvcnRleC1tMzN9LCBAY29kZXtjb3J0ZXgt
+bTM1cH0gb3IgQGNvZGV7Y29ydGV4LW01NX0uICBUaGUNCj4gPiA+IG9wdGlvbg0KPiA+ID4gIEBv
+cHRpb257LW1uby1maXgtY21zZS1jdmUtMjAyMS0zNTQ2NX0gY2FuIGJlIHVzZWQgdG8gZGlzYWJs
+ZSB0aGUNCj4gPiA+IG1pdGlnYXRpb24uDQo+ID4gPg0KPiA+ID4gK0BpdGVtIC1tc3RhY2stcHJv
+dGVjdG9yLWd1YXJkPUB2YXJ7Z3VhcmR9DQo+ID4gPiArQGl0ZW14IC1tc3RhY2stcHJvdGVjdG9y
+LWd1YXJkLW9mZnNldD1AdmFye29mZnNldH0NCj4gPiA+ICtAb3BpbmRleCBtc3RhY2stcHJvdGVj
+dG9yLWd1YXJkDQo+ID4gPiArQG9waW5kZXggbXN0YWNrLXByb3RlY3Rvci1ndWFyZC1vZmZzZXQN
+Cj4gPiA+ICtHZW5lcmF0ZSBzdGFjayBwcm90ZWN0aW9uIGNvZGUgdXNpbmcgY2FuYXJ5IGF0IEB2
+YXJ7Z3VhcmR9LiAgU3VwcG9ydGVkDQo+ID4gPiArbG9jYXRpb25zIGFyZSBAc2FtcHtnbG9iYWx9
+IGZvciBhIGdsb2JhbCBjYW5hcnkgb3IgQHNhbXB7dGxzfSBmb3IgYQ0KPiA+ID4gK2NhbmFyeSBh
+Y2Nlc3NpYmxlIHZpYSB0aGUgVExTIHJlZ2lzdGVyLiBUaGUgb3B0aW9uDQo+ID4gPiArQG9wdGlv
+bnstbXN0YWNrLXByb3RlY3Rvci1ndWFyZC1vZmZzZXQ9fSBpcyBmb3IgdXNlIHdpdGgNCj4gPiA+
+ICtAb3B0aW9uey1mc3RhY2stcHJvdGVjdG9yLWd1YXJkPXRsc30gYW5kIG5vdCBmb3IgdXNlIGlu
+IHVzZXItbGFuZCBjb2RlLg0KPiA+ID4gKw0KPiA+ID4gIEBpdGVtIC1tZmRwaWMNCj4gPiA+ICBA
+aXRlbXggLW1uby1mZHBpYw0KPiA+ID4gIEBvcGluZGV4IG1mZHBpYw0KPiA+ID4gZGlmZiAtLWdp
+dCBhL2djYy90ZXN0c3VpdGUvZ2NjLnRhcmdldC9hcm0vc3RhY2stcHJvdGVjdG9yLTcuYw0KPiA+
+ID4gYi9nY2MvdGVzdHN1aXRlL2djYy50YXJnZXQvYXJtL3N0YWNrLXByb3RlY3Rvci03LmMNCj4g
+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjIxNzNi
+YzVhMzVhMA0KPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gKysrIGIvZ2NjL3Rlc3RzdWl0ZS9n
+Y2MudGFyZ2V0L2FybS9zdGFjay1wcm90ZWN0b3ItNy5jDQo+ID4gPiBAQCAtMCwwICsxLDEyIEBA
+DQo+ID4gPiArLyogeyBkZy1yZXF1aXJlLWVmZmVjdGl2ZS10YXJnZXQgYXJtX2hhcmRfdmZwX29r
+IH0gICovDQo+ID4gPiArLyogeyBkZy1yZXF1aXJlLWVmZmVjdGl2ZS10YXJnZXQgYXJtX2FyY2hf
+djdhX29rIH0gKi8NCj4gPiA+ICsvKiB7IGRnLWRvIGNvbXBpbGUgfSAqLw0KPiA+ID4gKy8qIHsg
+ZGctb3B0aW9ucyAiLW1hcmNoPWFybXY3LWEgLW1mcHU9dmZwIC1mc3RhY2stcHJvdGVjdG9yLWFs
+bCAtT3MgLQ0KPiA+ID4gbXN0YWNrLXByb3RlY3Rvci1ndWFyZD10bHMgLW1zdGFjay1wcm90ZWN0
+b3ItZ3VhcmQtb2Zmc2V0PTEyOTYgLQ0KPiBtdHA9Y3AxNSINCj4gPiA+IH0gKi8NCj4gPiA+ICsN
+Cj4gPiA+ICsjaW5jbHVkZSAic3RhY2stcHJvdGVjdG9yLTUuYyINCj4gPiA+ICsNCj4gPiA+ICsv
+KiBTZWUgdGhlIGNvbW1lbnQgaW4gc3RhY2stcHJvdGVjdG9yLTUuYy4gICovDQo+ID4gPiArLyog
+eyBkZy1maW5hbCB7IHNjYW4tYXNzZW1ibGVyLXRpbWVzIHtcdHN0clx0fSAxIH0gfSAqLw0KPiA+
+ID4gKy8qIEV4cGVjdCB0d28gVExTIHJlZ2lzdGVyIGFjY2Vzc2VzIGFuZCB0d28gb2NjdXJyZW5j
+ZXMgb2YgdGhlIG9mZnNldCAqLw0KPiA+ID4gKy8qIHsgZGctZmluYWwgeyBzY2FuLWFzc2VtYmxl
+ci10aW1lcyB7XHRtcmNcdH0gMiB9IH0gKi8NCj4gPiA+ICsvKiB7IGRnLWZpbmFsIHsgc2Nhbi1h
+c3NlbWJsZXItdGltZXMgezEyOTZ9IDIgfSB9ICovDQo+ID4gPiBkaWZmIC0tZ2l0IGEvZ2NjL3Rl
+c3RzdWl0ZS9nY2MudGFyZ2V0L2FybS9zdGFjay1wcm90ZWN0b3ItOC5jDQo+ID4gPiBiL2djYy90
+ZXN0c3VpdGUvZ2NjLnRhcmdldC9hcm0vc3RhY2stcHJvdGVjdG9yLTguYw0KPiA+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZWE1ZWYzMjExNjc4DQo+
+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiArKysgYi9nY2MvdGVzdHN1aXRlL2djYy50YXJnZXQv
+YXJtL3N0YWNrLXByb3RlY3Rvci04LmMNCj4gPiA+IEBAIC0wLDAgKzEsNyBAQA0KPiA+ID4gKy8q
+IHsgZGctcmVxdWlyZS1lZmZlY3RpdmUtdGFyZ2V0IGFybV9oYXJkX3ZmcF9vayB9ICAqLw0KPiA+
+ID4gKy8qIHsgZGctcmVxdWlyZS1lZmZlY3RpdmUtdGFyZ2V0IGFybV9hcmNoX3Y3YV9vayB9ICov
+DQo+ID4gPiArLyogeyBkZy1kbyBjb21waWxlIH0gKi8NCj4gPiA+ICsvKiB7IGRnLWVycm9yICJu
+ZWVkcyBhIGhhcmR3YXJlIFRMUyByZWdpc3RlciIgIm1pc3NpbmcgZXJyb3Igd2hlbiB1c2luZw0K
+PiBUTFMNCj4gPiA+IHN0YWNrIHByb3RlY3RvciB3aXRob3V0IGhhcmR3YXJlIFRMUyByZWdpc3Rl
+ciIgeyB0YXJnZXQgKi0qLSogfSAwIH0gKi8NCj4gPiA+ICsvKiB7IGRnLW9wdGlvbnMgIi1mc3Rh
+Y2stcHJvdGVjdG9yLWFsbCAtT3MgLW1zdGFjay1wcm90ZWN0b3ItZ3VhcmQ9dGxzIC0NCj4gPiA+
+IG10cD1zb2Z0IiB9ICovDQo+ID4gPiArDQo+ID4gPiAraW50IGZvbzsNCj4gPiA+IC0tDQo+ID4g
+PiAyLjMwLjINCj4gPg0K
