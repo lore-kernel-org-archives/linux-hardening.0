@@ -2,80 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68034C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 22 Jan 2022 03:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FD4C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 22 Jan 2022 16:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230409AbiAVDkN (ORCPT
+        id S234461AbiAVQun (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Jan 2022 22:40:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52168 "EHLO
+        Sat, 22 Jan 2022 11:50:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbiAVDkM (ORCPT
+        with ESMTP id S231697AbiAVQun (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Jan 2022 22:40:12 -0500
+        Sat, 22 Jan 2022 11:50:43 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65919C06173B;
-        Fri, 21 Jan 2022 19:40:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64712C06173B;
+        Sat, 22 Jan 2022 08:50:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E0E8D61B05;
-        Sat, 22 Jan 2022 03:40:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F06AC340E4;
-        Sat, 22 Jan 2022 03:40:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 13A3060C8A;
+        Sat, 22 Jan 2022 16:50:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABF7C004E1;
+        Sat, 22 Jan 2022 16:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642822810;
-        bh=5nPrRQxVOAj/qv9D1fN4iOkzeZZgJo5G6vEXoTa4yQw=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ab0RniSxwvqxQZPVpBO4VKpkkZD5JQQUyCGNGdTM/3e25TjUlpmxWq3zjJ6lqfLTz
-         zz14pnuKIjxWd39hObQBHx/bx06v+LiSiINFwBhsR5hlVE12PI8+A1kOMISwJeTtAK
-         /P3xywjw8QgF3AvDxH1YDvu2EzCyQ3y9KAS1RGSAd5eIJJXULM6WDR3qkq0umDGTJU
-         5WQ1hmjaEyeVjt+RfDtohxoqd+i+BcIfK3snJ5XXkLiIe6ttZWX2zyw5u0brVfezZ7
-         kf2H2ruio5cKPB5A64bzIz6XZrND+V73+NG+8BqllnZyV0A7lEFCyQfGotC8MLoaxF
-         cpLmqJp29Iixw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 32D1CF60796;
-        Sat, 22 Jan 2022 03:40:10 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] mptcp: Use struct_group() to avoid cross-field memset()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164282281020.32276.3955066233217706965.git-patchwork-notify@kernel.org>
-Date:   Sat, 22 Jan 2022 03:40:10 +0000
-References: <20220121073935.1154263-1-keescook@chromium.org>
-In-Reply-To: <20220121073935.1154263-1-keescook@chromium.org>
+        s=k20201202; t=1642870241;
+        bh=ai0bdkmLLaUZQn85MEo6wjda/B1Gn0TYIt50xX7bav8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=a1WB4UCC3y3FTy844pQGgaXTRuTQKxiha1wcVBV+APvTA5S6Pzs12czlWURM9+Gyx
+         IIn774d4IUkBgLqmGUe6FWxkFbJmgDAmCQdt+9rzlDc5C+YfO1v0YKig01cWZeSqRO
+         rQB5MDYGyT2eQDj5hSTE7/XK20aUNqsOx/8o46VhHwKrktxo+i5zLsajdMJpFNonX7
+         XllWDkmWZqg8/EIbvsXMFBJb/5zJQPP+uku9iK4LhuoyEigqU36QnQHCZWi7hqVo7D
+         2EBsRzOW+UDkkpvfe8pbeliIh6VADIgduSsvAVbXYm6Dyzh/K1nF8OAkX7p7b+ox7O
+         UgY7ucYVDly+A==
+Date:   Sat, 22 Jan 2022 16:56:49 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] iio: hw_consumer: Use struct_size() helper in
+ kzalloc()
+Message-ID: <20220122165649.4c3a3f9e@jic23-huawei>
+In-Reply-To: <202201201532.1F9C5BD@keescook>
+References: <20220120225243.GA37225@embeddedor>
+        <202201201532.1F9C5BD@keescook>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+On Thu, 20 Jan 2022 15:33:14 -0800
+Kees Cook <keescook@chromium.org> wrote:
 
-This patch was applied to netdev/net.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 20 Jan 2022 23:39:35 -0800 you wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), memmove(), and memset(), avoid
-> intentionally writing across neighboring fields.
+> On Thu, Jan 20, 2022 at 04:52:43PM -0600, Gustavo A. R. Silva wrote:
+> > Make use of the struct_size() helper instead of an open-coded version,
+> > in order to avoid any potential type mistakes or integer overflows that,
+> > in the worst scenario, could lead to heap overflows.
+> > 
+> > Also, address the following sparse warnings:
+> > drivers/iio/buffer/industrialio-hw-consumer.c:63:23: warning: using sizeof on a flexible structure
+> > 
+> > Link: https://github.com/KSPP/linux/issues/174
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>  
 > 
-> Use struct_group() to capture the fields to be reset, so that memset()
-> can be appropriately bounds-checked by the compiler.
+> Looks good to me.
 > 
-> [...]
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+Good thing to tidy up, but I'm a little curious why I'm not
+seeing these reports with latest sparse?
+Ah. Found it via the report linked
+CF='-Wflexible-array-sizeof'
 
-Here is the summary with links:
-  - mptcp: Use struct_group() to avoid cross-field memset()
-    https://git.kernel.org/netdev/net/c/63ec72bd5848
+Probably worth mentioned that in the patch descriptions. I've added it
+to this one. 
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I'm still setting the sparse report even with this patch.
 
+What am I missing?
+
+Jonathan
 
