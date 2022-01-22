@@ -2,81 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE6CC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 21 Jan 2022 22:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68034C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 22 Jan 2022 03:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231216AbiAUWQQ (ORCPT
+        id S230409AbiAVDkN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Jan 2022 17:16:16 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:40240 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229657AbiAUWQP (ORCPT
+        Fri, 21 Jan 2022 22:40:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229598AbiAVDkM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Jan 2022 17:16:15 -0500
+        Fri, 21 Jan 2022 22:40:12 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65919C06173B;
+        Fri, 21 Jan 2022 19:40:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 567F8B820E3;
-        Fri, 21 Jan 2022 22:16:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69CA1C340E1;
-        Fri, 21 Jan 2022 22:16:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E0E8D61B05;
+        Sat, 22 Jan 2022 03:40:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F06AC340E4;
+        Sat, 22 Jan 2022 03:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642803373;
-        bh=OYCTY6mYYqGyq46xX5k/Wa4Dv6rOx+5pvjKpAGsRp24=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FRnPNsvltvoh2BGl5bCUGgetbbZ730rbs2ZcCbMpYkPPZ6yFU80O51YaATBcV1ri7
-         sqxzLVvTD+ioqbBRm3NfkDR+mujYVp9wPbEf4DyvbN+oO6CJ0QfxZqXcXtfQumnzU5
-         bSAAe03qRCOxYcWg/B45y7a7qlk4xW/38IPOQN+Sd9mVUlZ8URIPJz3B9m+gzf+tWW
-         7YtXRrXsEkLxeyZZWfpSqY3iBw3bnC2MguqijDK3ZumDLvcHsGlk8KamXIJY66jxrp
-         1Z/2An8DdBuWIPYfYZIuptc5q285hK7qzxTKeETKu93ALHaT7/KpiBusFqrsOWxQJG
-         ilV6lXAWtgxiA==
-Date:   Fri, 21 Jan 2022 16:22:50 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] staging: greybus: i2c: Use struct_size() helper in
- gb_i2c_operation_create()
-Message-ID: <20220121222250.GA73021@embeddedor>
+        s=k20201202; t=1642822810;
+        bh=5nPrRQxVOAj/qv9D1fN4iOkzeZZgJo5G6vEXoTa4yQw=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=ab0RniSxwvqxQZPVpBO4VKpkkZD5JQQUyCGNGdTM/3e25TjUlpmxWq3zjJ6lqfLTz
+         zz14pnuKIjxWd39hObQBHx/bx06v+LiSiINFwBhsR5hlVE12PI8+A1kOMISwJeTtAK
+         /P3xywjw8QgF3AvDxH1YDvu2EzCyQ3y9KAS1RGSAd5eIJJXULM6WDR3qkq0umDGTJU
+         5WQ1hmjaEyeVjt+RfDtohxoqd+i+BcIfK3snJ5XXkLiIe6ttZWX2zyw5u0brVfezZ7
+         kf2H2ruio5cKPB5A64bzIz6XZrND+V73+NG+8BqllnZyV0A7lEFCyQfGotC8MLoaxF
+         cpLmqJp29Iixw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 32D1CF60796;
+        Sat, 22 Jan 2022 03:40:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] mptcp: Use struct_group() to avoid cross-field memset()
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <164282281020.32276.3955066233217706965.git-patchwork-notify@kernel.org>
+Date:   Sat, 22 Jan 2022 03:40:10 +0000
+References: <20220121073935.1154263-1-keescook@chromium.org>
+In-Reply-To: <20220121073935.1154263-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version,
-in order to avoid any potential type mistakes or integer overflows that,
-in the worst scenario, could lead to heap overflows.
+Hello:
 
-Also, address the following sparse warnings:
-drivers/staging/greybus/i2c.c:111:24: warning: using sizeof on a flexible structure
+This patch was applied to netdev/net.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Link: https://github.com/KSPP/linux/issues/174
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/staging/greybus/i2c.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On Thu, 20 Jan 2022 23:39:35 -0800 you wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.
+> 
+> Use struct_group() to capture the fields to be reset, so that memset()
+> can be appropriately bounds-checked by the compiler.
+> 
+> [...]
 
-diff --git a/drivers/staging/greybus/i2c.c b/drivers/staging/greybus/i2c.c
-index de2f6516da09..9dfc6791c20e 100644
---- a/drivers/staging/greybus/i2c.c
-+++ b/drivers/staging/greybus/i2c.c
-@@ -108,9 +108,7 @@ gb_i2c_operation_create(struct gb_connection *connection,
- 		else
- 			data_out_size += (u32)msg->len;
- 
--	request_size = sizeof(*request);
--	request_size += msg_count * sizeof(*op);
--	request_size += data_out_size;
-+	request_size = struct_size(request, ops, msg_count) + data_out_size;
- 
- 	/* Response consists only of incoming data */
- 	operation = gb_operation_create(connection, GB_I2C_TYPE_TRANSFER,
+Here is the summary with links:
+  - mptcp: Use struct_group() to avoid cross-field memset()
+    https://git.kernel.org/netdev/net/c/63ec72bd5848
+
+You are awesome, thank you!
 -- 
-2.27.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
