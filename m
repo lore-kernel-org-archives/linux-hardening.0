@@ -2,197 +2,215 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91E7C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930DBC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232302AbiAXR3z (ORCPT
+        id S241189AbiAXRr5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:29:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244455AbiAXR3z (ORCPT
+        Mon, 24 Jan 2022 12:47:57 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:49812 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240939AbiAXRr4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 12:29:55 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC72C061401
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:29:55 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id q63so12445984pja.1
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:29:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DgXlun9btBBSUmiix9Clp2ASfQHzqDBGv3T/rV7kA6I=;
-        b=JkumDcRfVORGI60Me6r9fp0pjugDK3oZgO25wFWH/YEXPurm8Fe6n5j18sH9Sl/ie1
-         vWyrA8CYQftFH7g3nJopJLp8uMliN4dKpSolzj08mg3/1J96ACuGwC7iHZSOoUOtcIGP
-         jC3/4buu9+q+Mbd6+aJDI07lPkJB0Mcc/dlWo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DgXlun9btBBSUmiix9Clp2ASfQHzqDBGv3T/rV7kA6I=;
-        b=ChQ5+2v8AQbiZ/EcJ2vpAiBZ17kn1PFfwe7pD/CoCo6dhokmrTv9Ql0rjjWC85KxzE
-         /jFlZTm1LhC97gQAi0Bd2GjM8CRETKDmDV7Fj69ugBMRuFBtLEd1Nnu6ukc39GRF9Mhe
-         1bNiG9iewd2w+q5wSAiCX5IVW02n84REfi4oWq2o3CoB5XxdKCKNFpu+whthc64YbIrR
-         KeavZMRwtj/Jm7HZ2gULU6kpcXkdfKc7j6eJQXNV+mmztSaCqiMwV3xpydVb3ciytDrb
-         BtkpH2C3xhgDvcMSpSs314bEbHNQvdmDB5NUGZfj4l8jQMFyigv34rBUtpOzIJLcJZe4
-         D4jA==
-X-Gm-Message-State: AOAM533M+otOl53r5rOHLVoWRJU68fFQka4ygXMR5wY/amwvBMRC7P0w
-        BvGUgrSbMS3UCYFSC+jANASjrR1YHDUkdA==
-X-Google-Smtp-Source: ABdhPJw1hNa+nUhKIFuxRF9/rNyBIxX7tebJ+rW86YIOIZa0zebC4dL/dbia5M4QCW+YxCH+QwCb/w==
-X-Received: by 2002:a17:902:a408:b0:14a:d2ea:5a2b with SMTP id p8-20020a170902a40800b0014ad2ea5a2bmr14988773plq.115.1643045394651;
-        Mon, 24 Jan 2022 09:29:54 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m17sm17337679pfk.62.2022.01.24.09.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jan 2022 09:29:54 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mon, 24 Jan 2022 12:47:56 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7807EB811AC
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:47:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A247C340E5;
+        Mon, 24 Jan 2022 17:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643046474;
+        bh=/IveAmA8ac9oULy4Ym0yBni95GI5JyvOP4fHUItZRxU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IDAsthU7Q8zV5PTUfFfb38mCps9xbCZiXAT9RAkWeJVM/kr2b68wygOX7SlYLHQRn
+         6A+NYGWBycPV9HH6NXfC6HtbHsyn9MW9llyQcN200+TonHJamdaxikVRzZoahyiHpe
+         m7NTFd+4eAG1kGtWRxP1yMUkEcpQj6M3sosKyC8nBFY6dmjOSOW3F0FFIncKUUmeRC
+         MChv0SmsjfTRQp5eqMsZutk+VCo8beKCiD76FNIsnV9oarv7wk8umFZiI4R+x5NhVA
+         A0Pq4NrU8xzZuF/vUdBJHOB7iwAP/ATI/pP2bCqwCjKb418lteK1PWwuQPi7khqM32
+         tussZBL4x/ssg==
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
+Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
         Arnd Bergmann <arnd@arndb.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, stable@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH RESEND] media: omap3isp: Use struct_group() for memcpy() region
-Date:   Mon, 24 Jan 2022 09:29:52 -0800
-Message-Id: <20220124172952.2411764-1-keescook@chromium.org>
+        Kees Cook <keescook@chromium.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Jesse Taube <mr.bossman075@gmail.com>
+Subject: [PATCH v5 00/32] ARM vmap'ed and IRQ stacks roundup
+Date:   Mon, 24 Jan 2022 18:47:12 +0100
+Message-Id: <20220124174744.1054712-1-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4705; h=from:subject; bh=oa/cUXWpSfkCxLLoNQotX2hWIvBBQ2nEDbLhRiHg/WI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh7uIQfzKSQEGnylISh8uJvLEpO6KrYu+j+JmXGK0U KMX/pYqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYe7iEAAKCRCJcvTf3G3AJhJIEA CKE5Tih0LP/9wjDJ1lHDwtZWeWaNtsCb2YeF/Fauxgfc/i5vsuphJ3AIjY5r8dlJGf5r9/nUL91itR YWf+B0JLXk0y4tNbpupUpiZ+3wZ2kYCHkGaOB7SQWBrpLJGbhD2C+Q7K3LoijhJsxqQpP2gj6wwFc2 b9dqBsSXFalfJtl35JE88x7cizoyId34lN6AemDI5l58Hd2BTWInhTLhlVTbyge3hA3Rp6QWlmaoZi NBOfXwjIVHH6H4XOSg80i+SPrtQwLsRk8v/3GeCWVzeVlqN75VVzLIyp/mPWZ3srogmdlCN9PpN0Sz klWIwEu4YAzhleo4W4Rwwu7Y6W6cayH2zel6xaH+iRT0W90i4Pybh2ipwJEF3cIJodmoZVPilp+7Ya 4MqRgqtNJ2qfi8BZx7i+oXx468EnElS3oAE7gETDt2q90WUjAU15tQxV4Zz2FRsX7NFwP2Pe0y9UD2 AiWEFWDpbe3RImfxJvQussi/IMejMVb6AEFSpXS+0uJnxiXoEj+HrT2A9HqlU1FzR3ape+r1sTNA6E UcpA3EfGy7kvdUpDHAtRFSpsqw21lYoo7Ry3fwIZTkcwhFlbNobsMC//KW3OvRG9aEYH7Il0yUrUqI bMxQZ5MBsUeCuAJt2KsMZDuFntvD1ibeSXNFj3nbkLOuCpIcpESC7cAklhoQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8373; h=from:subject; bh=/IveAmA8ac9oULy4Ym0yBni95GI5JyvOP4fHUItZRxU=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYBaEmHO2Z6fQzbplvcXSC46n9ZaylWHmyGDoRk X396zhaJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mAQAKCRDDTyI5ktmPJG2pC/ 4q5HtUXH6Ip4DTiPjRpvkb5TU4a1qgC3AbOT2XuVmdt/AW0s4OoRIAoHlOv7busFLKYZFr8vAGoPzq yLvCQx1yBIC1y5jn7uUwBirbys2fcLyisLYl/PvyxuKIBn85BK0KpBv6vpyNap/vAJJiAbmocz71et ONeQs1Zsi6nX5/4u5g8r2pFGAXOOSm2sSWWGwvr2QwjWrDoXbQ7VM4/uM0r8mCZvU5EB3VXXQLbgOU V9KW1VZeIC63YKUM5IwGiuN0VwN76K5Up+5WzcpWCGy5r15RmQMbBjhNYR5WXmNcBkEQ6qKAdcbwSN YaNQ7/Qhqs7Mg+DSIA2Y0pc8F3oY1M+tRI6RumR9Z83+oF74uv9yAleGDAaeVnz18X0uJVhyqYyfH6 dvomzcVJb3QSnxIT1I+nLbsmZIXlzL049bQ/EF/tU8a7gMAMte0e9G9+t68q3jIbp10U42H+NkopXu WIoYkXAClmgbLj/2wnGZx2URcW0Zgf9/iC7ygZxLlepy4=
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields. Wrap the target region
-in struct_group(). This additionally fixes a theoretical misalignment
-of the copy (since the size of "buf" changes between 64-bit and 32-bit,
-but this is likely never built for 64-bit).
+This v5 series is a combined followup to
 
-FWIW, I think this code is totally broken on 64-bit (which appears to
-not be a "real" build configuration): it would either always fail (with
-an uninitialized data->buf_size) or would cause corruption in userspace
-due to the copy_to_user() in the call path against an uninitialized
-data->buf value:
+- IRQ stacks support for v7 SMP systems [0],
+- vmap'ed stacks support for v7 SMP systems[1],
+- extending support for both IRQ stacks and vmap'ed stacks for all
+  remaining configurations, including v6/v7 SMP multiplatform kernels
+  and uniprocessor configurations including v7-M [2]
 
-omap3isp_stat_request_statistics_time32(...)
-    struct omap3isp_stat_data data64;
-    ...
-    omap3isp_stat_request_statistics(stat, &data64);
+[0] https://lore.kernel.org/linux-arm-kernel/20211115084732.3704393-1-ardb@kernel.org/
+[1] https://lore.kernel.org/linux-arm-kernel/20211122092816.2865873-1-ardb@kernel.org/
+[2] https://lore.kernel.org/linux-arm-kernel/20211206164659.1495084-1-ardb@kernel.org/
 
-int omap3isp_stat_request_statistics(struct ispstat *stat,
-                                     struct omap3isp_stat_data *data)
-    ...
-    buf = isp_stat_buf_get(stat, data);
+This work was queued up in the ARM tree for a while, but due to problems
+with the vmap'ed stacks code, which was difficult to revert in
+isolation, the whole stack was dropped again.
 
-static struct ispstat_buffer *isp_stat_buf_get(struct ispstat *stat,
-                                               struct omap3isp_stat_data *data)
-...
-    if (buf->buf_size > data->buf_size) {
-            ...
-            return ERR_PTR(-EINVAL);
-    }
-    ...
-    rval = copy_to_user(data->buf,
-                        buf->virt_addr,
-                        buf->buf_size);
+In order to prevent similar problems from occurring this time around,
+the series was reorganized so that the vmap'ed stacks changes appear at
+the very end, which also results in a more natural progression of the
+changes.
 
-Regardless, additionally initialize data64 to be zero-filled to avoid
-undefined behavior.
+Changes since v4:
+- incorporate fixups to avoid build failures on Clang related to
+  literals in subsections,
+- switch from the ID map to swapper_pg_dir as early as possible when
+  onlining a CPU on !LPAE, to ensure that the stack is mapped,
+- use SMP_ON_UP patching to elide HWCAP_TLS tests on SMP+v6,
+- clean up __switch_to() for Thumb2 a bit more,
+- add patch to make the vmalloc_seq counter SMP safe,
+- use enter_lazy_tlb() hook on !LPAE to ensure that the active_mm used
+  by a kernel thread has a mapping for its vmap'ed stack,
 
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Code can be found under the arm-vmap-stacks-v5 tag at
+git://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git
+
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Nicolas Pitre <nico@fluxnic.net>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org
-Fixes: 378e3f81cb56 ("media: omap3isp: support 64-bit version of omap3isp_stat_data")
-Cc: stable@vger.kernel.org
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Link: https://lore.kernel.org/lkml/20211215220505.GB21862@embeddedor
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-I will carry this in my tree unless someone else wants to pick it up. It's
-one of the last remaining clean-ups needed for the next step in memcpy()
-hardening.
----
- drivers/media/platform/omap3isp/ispstat.c |  5 +++--
- include/uapi/linux/omap3isp.h             | 21 +++++++++++++--------
- 2 files changed, 16 insertions(+), 10 deletions(-)
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Keith Packard <keithpac@amazon.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Vladimir Murzin <vladimir.murzin@arm.com>
+Cc: Jesse Taube <mr.bossman075@gmail.com>
 
-diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
-index 5b9b57f4d9bf..68cf68dbcace 100644
---- a/drivers/media/platform/omap3isp/ispstat.c
-+++ b/drivers/media/platform/omap3isp/ispstat.c
-@@ -512,7 +512,7 @@ int omap3isp_stat_request_statistics(struct ispstat *stat,
- int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
- 					struct omap3isp_stat_data_time32 *data)
- {
--	struct omap3isp_stat_data data64;
-+	struct omap3isp_stat_data data64 = { };
- 	int ret;
- 
- 	ret = omap3isp_stat_request_statistics(stat, &data64);
-@@ -521,7 +521,8 @@ int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
- 
- 	data->ts.tv_sec = data64.ts.tv_sec;
- 	data->ts.tv_usec = data64.ts.tv_usec;
--	memcpy(&data->buf, &data64.buf, sizeof(*data) - sizeof(data->ts));
-+	data->buf = (uintptr_t)data64.buf;
-+	memcpy(&data->frame, &data64.frame, sizeof(data->frame));
- 
- 	return 0;
- }
-diff --git a/include/uapi/linux/omap3isp.h b/include/uapi/linux/omap3isp.h
-index 87b55755f4ff..d9db7ad43890 100644
---- a/include/uapi/linux/omap3isp.h
-+++ b/include/uapi/linux/omap3isp.h
-@@ -162,6 +162,7 @@ struct omap3isp_h3a_aewb_config {
-  * struct omap3isp_stat_data - Statistic data sent to or received from user
-  * @ts: Timestamp of returned framestats.
-  * @buf: Pointer to pass to user.
-+ * @buf_size: Size of buffer.
-  * @frame_number: Frame number of requested stats.
-  * @cur_frame: Current frame number being processed.
-  * @config_counter: Number of the configuration associated with the data.
-@@ -176,10 +177,12 @@ struct omap3isp_stat_data {
- 	struct timeval ts;
- #endif
- 	void __user *buf;
--	__u32 buf_size;
--	__u16 frame_number;
--	__u16 cur_frame;
--	__u16 config_counter;
-+	__struct_group(/* no tag */, frame, /* no attrs */,
-+		__u32 buf_size;
-+		__u16 frame_number;
-+		__u16 cur_frame;
-+		__u16 config_counter;
-+	);
- };
- 
- #ifdef __KERNEL__
-@@ -189,10 +192,12 @@ struct omap3isp_stat_data_time32 {
- 		__s32	tv_usec;
- 	} ts;
- 	__u32 buf;
--	__u32 buf_size;
--	__u16 frame_number;
--	__u16 cur_frame;
--	__u16 config_counter;
-+	__struct_group(/* no tag */, frame, /* no attrs */,
-+		__u32 buf_size;
-+		__u16 frame_number;
-+		__u16 cur_frame;
-+		__u16 config_counter;
-+	);
- };
- #endif
- 
+Ard Biesheuvel (26):
+  ARM: riscpc: drop support for IOMD_IRQREQC/IOMD_IRQREQD IRQ groups
+  ARM: decompressor: disable stack protector
+  ARM: stackprotector: prefer compiler for TLS based per-task protector
+  ARM: entry: preserve thread_info pointer in switch_to
+  ARM: module: implement support for PC-relative group relocations
+  ARM: assembler: add optimized ldr/str macros to load variables from
+    memory
+  ARM: percpu: add SMP_ON_UP support
+  ARM: use TLS register for 'current' on !SMP as well
+  ARM: smp: defer TPIDRURO update for SMP v6 configurations too
+  ARM: implement THREAD_INFO_IN_TASK for uniprocessor systems
+  ARM: assembler: introduce bl_r macro
+  ARM: unwind: support unwinding across multiple stacks
+  ARM: export dump_mem() to other objects
+  ARM: unwind: dump exception stack from calling frame
+  ARM: backtrace-clang: avoid crash on bogus frame pointer
+  ARM: implement IRQ stacks
+  ARM: call_with_stack: add unwind support
+  ARM: run softirqs on the per-CPU IRQ stack
+  ARM: memcpy: use frame pointer as unwind anchor
+  ARM: memmove: use frame pointer as unwind anchor
+  ARM: memset: clean up unwind annotations
+  ARM: unwind: disregard unwind info before stack frame is set up
+  ARM: entry: rework stack realignment code in svc_entry
+  ARM: switch_to: clean up Thumb2 code path
+  ARM: mm: prepare vmalloc_seq handling for use under SMP
+  ARM: implement support for vmap'ed stacks
+
+Arnd Bergmann (5):
+  ARM: riscpc: use GENERIC_IRQ_MULTI_HANDLER
+  ARM: footbridge: use GENERIC_IRQ_MULTI_HANDLER
+  ARM: iop32x: offset IRQ numbers by 1
+  ARM: iop32x: use GENERIC_IRQ_MULTI_HANDLER
+  ARM: remove old-style irq entry
+
+Vladimir Murzin (1):
+  irqchip: nvic: Use GENERIC_IRQ_MULTI_HANDLER
+
+ arch/arm/Kconfig                                    |  39 ++--
+ arch/arm/Makefile                                   |   9 +
+ arch/arm/boot/compressed/Makefile                   |   6 +-
+ arch/arm/boot/compressed/misc.c                     |   7 -
+ arch/arm/include/asm/assembler.h                    | 209 ++++++++++++++++----
+ arch/arm/include/asm/current.h                      |  47 +++--
+ arch/arm/include/asm/elf.h                          |   3 +
+ arch/arm/include/asm/entry-macro-multi.S            |  40 ----
+ arch/arm/include/asm/hardware/entry-macro-iomd.S    | 131 ------------
+ arch/arm/include/asm/insn.h                         |  17 ++
+ arch/arm/include/asm/irq.h                          |   1 -
+ arch/arm/include/asm/mach/arch.h                    |   2 -
+ arch/arm/include/asm/mmu.h                          |   2 +-
+ arch/arm/include/asm/mmu_context.h                  |  22 ++-
+ arch/arm/include/asm/page.h                         |   3 +
+ arch/arm/include/asm/percpu.h                       |  36 +++-
+ arch/arm/include/asm/smp.h                          |   5 -
+ arch/arm/include/asm/stacktrace.h                   |  12 ++
+ arch/arm/include/asm/switch_to.h                    |   3 +-
+ arch/arm/include/asm/thread_info.h                  |  35 +---
+ arch/arm/include/asm/tls.h                          |  30 ++-
+ arch/arm/include/asm/v7m.h                          |   3 +-
+ arch/arm/kernel/asm-offsets.c                       |   3 -
+ arch/arm/kernel/entry-armv.S                        | 208 +++++++++++++++----
+ arch/arm/kernel/entry-common.S                      |  16 +-
+ arch/arm/kernel/entry-header.S                      |  47 ++++-
+ arch/arm/kernel/entry-v7m.S                         |  39 ++--
+ arch/arm/kernel/head-common.S                       |   4 +-
+ arch/arm/kernel/head.S                              |   7 +
+ arch/arm/kernel/irq.c                               |  55 ++++--
+ arch/arm/kernel/module.c                            |  90 +++++++++
+ arch/arm/kernel/process.c                           |   7 +-
+ arch/arm/kernel/setup.c                             |   8 +-
+ arch/arm/kernel/sleep.S                             |  13 ++
+ arch/arm/kernel/smp.c                               |  11 +-
+ arch/arm/kernel/traps.c                             |  92 ++++++++-
+ arch/arm/kernel/unwind.c                            |  50 +++--
+ arch/arm/kernel/vmlinux.lds.S                       |   4 +-
+ arch/arm/lib/backtrace-clang.S                      |  13 +-
+ arch/arm/lib/backtrace.S                            |   7 +
+ arch/arm/lib/call_with_stack.S                      |  33 +++-
+ arch/arm/lib/copy_from_user.S                       |  13 +-
+ arch/arm/lib/copy_template.S                        |  67 +++----
+ arch/arm/lib/copy_to_user.S                         |  13 +-
+ arch/arm/lib/memcpy.S                               |  13 +-
+ arch/arm/lib/memmove.S                              |  60 ++----
+ arch/arm/lib/memset.S                               |   7 +-
+ arch/arm/mach-footbridge/common.c                   |  87 ++++++++
+ arch/arm/mach-footbridge/include/mach/entry-macro.S | 107 ----------
+ arch/arm/mach-iop32x/cp6.c                          |  10 +-
+ arch/arm/mach-iop32x/include/mach/entry-macro.S     |  31 ---
+ arch/arm/mach-iop32x/include/mach/irqs.h            |   2 +-
+ arch/arm/mach-iop32x/iop3xx.h                       |   1 +
+ arch/arm/mach-iop32x/irq.c                          |  29 ++-
+ arch/arm/mach-iop32x/irqs.h                         |  60 +++---
+ arch/arm/mach-rpc/fiq.S                             |   5 +-
+ arch/arm/mach-rpc/include/mach/entry-macro.S        |  13 --
+ arch/arm/mach-rpc/irq.c                             |  95 +++++++++
+ arch/arm/mm/Kconfig                                 |   1 +
+ arch/arm/mm/context.c                               |   3 +-
+ arch/arm/mm/ioremap.c                               |  18 +-
+ drivers/irqchip/Kconfig                             |   1 +
+ drivers/irqchip/irq-nvic.c                          |  22 +--
+ 63 files changed, 1270 insertions(+), 757 deletions(-)
+ delete mode 100644 arch/arm/include/asm/entry-macro-multi.S
+ delete mode 100644 arch/arm/include/asm/hardware/entry-macro-iomd.S
+ delete mode 100644 arch/arm/mach-footbridge/include/mach/entry-macro.S
+ delete mode 100644 arch/arm/mach-iop32x/include/mach/entry-macro.S
+ delete mode 100644 arch/arm/mach-rpc/include/mach/entry-macro.S
+
 -- 
 2.30.2
 
