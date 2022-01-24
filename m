@@ -2,87 +2,71 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FD4C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 22 Jan 2022 16:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4617C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 09:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234461AbiAVQun (ORCPT
+        id S233582AbiAXJ02 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 22 Jan 2022 11:50:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54248 "EHLO
+        Mon, 24 Jan 2022 04:26:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231697AbiAVQun (ORCPT
+        with ESMTP id S233534AbiAXJ0Y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 22 Jan 2022 11:50:43 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64712C06173B;
-        Sat, 22 Jan 2022 08:50:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 13A3060C8A;
-        Sat, 22 Jan 2022 16:50:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABF7C004E1;
-        Sat, 22 Jan 2022 16:50:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642870241;
-        bh=ai0bdkmLLaUZQn85MEo6wjda/B1Gn0TYIt50xX7bav8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=a1WB4UCC3y3FTy844pQGgaXTRuTQKxiha1wcVBV+APvTA5S6Pzs12czlWURM9+Gyx
-         IIn774d4IUkBgLqmGUe6FWxkFbJmgDAmCQdt+9rzlDc5C+YfO1v0YKig01cWZeSqRO
-         rQB5MDYGyT2eQDj5hSTE7/XK20aUNqsOx/8o46VhHwKrktxo+i5zLsajdMJpFNonX7
-         XllWDkmWZqg8/EIbvsXMFBJb/5zJQPP+uku9iK4LhuoyEigqU36QnQHCZWi7hqVo7D
-         2EBsRzOW+UDkkpvfe8pbeliIh6VADIgduSsvAVbXYm6Dyzh/K1nF8OAkX7p7b+ox7O
-         UgY7ucYVDly+A==
-Date:   Sat, 22 Jan 2022 16:56:49 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mon, 24 Jan 2022 04:26:24 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C414FC06173D;
+        Mon, 24 Jan 2022 01:26:23 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: kholk11)
+        with ESMTPSA id 679C51F4331D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1643016381;
+        bh=QKdfQZOdmYZJNu5RLWnu+T/Ig0eAu7tkYNWvSAxrBts=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CWLx9uGiQ9qmn3+wTYnZ8fnLYrAVsfuclNxMso2wH/ogXuiYbl/Yd5zNkXlhOg5fT
+         Z6d7EreNWMpdktOBbkSCNcDzgHZusFAZrtXb1EecMAa58pv+YHUM9B3MZGpNYIkg36
+         yACj2xPrGdnoe4xEow6BG+KtfT89CADGMbU+NUydmfFzv97QR15J5i1ONzZrxUAdjG
+         RmLmfI2FSUz7kSJYHlZmpfuUNgJ7B5X1k68YVglOL+2zfRmNBcluqCqzKvZQw02e2m
+         Lp4NqyCaIJDmD4+Bx8jmbsEKsnM6SYRx8vdH/yCfHlIB5/12LwjoeDETGF3hUDIEhq
+         gPE4tIC9b4LWA==
+Subject: Re: [PATCH][next] usb: xhci-mtk: Use struct_size() helper in
+ create_sch_ep()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] iio: hw_consumer: Use struct_size() helper in
- kzalloc()
-Message-ID: <20220122165649.4c3a3f9e@jic23-huawei>
-In-Reply-To: <202201201532.1F9C5BD@keescook>
-References: <20220120225243.GA37225@embeddedor>
-        <202201201532.1F9C5BD@keescook>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-pc-linux-gnu)
+References: <20220120015546.GA75917@embeddedor>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Message-ID: <1e41c2fe-38b2-e7db-ec71-cab1abb708f3@collabora.com>
+Date:   Mon, 24 Jan 2022 10:26:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20220120015546.GA75917@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 20 Jan 2022 15:33:14 -0800
-Kees Cook <keescook@chromium.org> wrote:
-
-> On Thu, Jan 20, 2022 at 04:52:43PM -0600, Gustavo A. R. Silva wrote:
-> > Make use of the struct_size() helper instead of an open-coded version,
-> > in order to avoid any potential type mistakes or integer overflows that,
-> > in the worst scenario, could lead to heap overflows.
-> > 
-> > Also, address the following sparse warnings:
-> > drivers/iio/buffer/industrialio-hw-consumer.c:63:23: warning: using sizeof on a flexible structure
-> > 
-> > Link: https://github.com/KSPP/linux/issues/174
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>  
+Il 20/01/22 02:55, Gustavo A. R. Silva ha scritto:
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows that,
+> in the worst scenario, could lead to heap overflows.
 > 
-> Looks good to me.
+> Also, address the following sparse warnings:
+> drivers/usb/host/xhci-mtk-sch.c:265:20: warning: using sizeof on a flexible structure
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-Good thing to tidy up, but I'm a little curious why I'm not
-seeing these reports with latest sparse?
-Ah. Found it via the report linked
-CF='-Wflexible-array-sizeof'
+> Link: https://github.com/KSPP/linux/issues/160
+> Link: https://github.com/KSPP/linux/issues/174
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Acked-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-Probably worth mentioned that in the patch descriptions. I've added it
-to this one. 
-
-I'm still setting the sparse report even with this patch.
-
-What am I missing?
-
-Jonathan
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
