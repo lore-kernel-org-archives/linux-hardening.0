@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE8CC43219
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E94C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244758AbiAXRsT (ORCPT
+        id S241412AbiAXRsY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:48:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56330 "EHLO
+        Mon, 24 Jan 2022 12:48:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244756AbiAXRsS (ORCPT
+        with ESMTP id S241414AbiAXRsX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 12:48:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A242C06173B
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:48:18 -0800 (PST)
+        Mon, 24 Jan 2022 12:48:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55DC7C06173B
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:48:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B14C61301
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:48:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E43DC36AE3;
-        Mon, 24 Jan 2022 17:48:14 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 11A06B811AC
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:48:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E216CC340E5;
+        Mon, 24 Jan 2022 17:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643046497;
-        bh=JfGRqkvVEJXcX89tKCRbEHW9dK4QL2euw/qDvAceXC0=;
+        s=k20201202; t=1643046500;
+        bh=7DENFUqX6QUcNqYG/pBBlPLnnfMOmgh0iQQhcDzMsQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iNdf4s3CsVpdnKFJNtIfJnOqXfWsYPuDWtgLBwbB/XF2QWG1xgNhat7H7QcVi0zRm
-         jt40XW1kgFdhvEATIImin2JBVXfsQZrMlXwPiN+ZEludUCQ9rvg1vFdlll4UanRjmH
-         70nK/YXHyspjj5n+Eu+sJ5LJiUTFrDen1Xss92N7b/3dsCbLOjzZEZZuqKhgYZh8dk
-         6MQA2m8T2r27y2UOA27EnH8zp4yE0elFaXqMLsXK9q33dniF7GfCw3H5ziqiWowQQT
-         9smGYAglF2/lAO3O4eeb7LWHBNj/vk+2Ugs5Zvs/w9kipt4okuZBtvHfYdSe+6ArCO
-         SAOOqlOjbkBOw==
+        b=jHOi4VRlkF2qKjHQzK6ewS5e/MKEYXnoQJP11Hjvb5UoI6uxipX3uUhzmM+G1TewU
+         3rGfaOwK7pJwGZ5qWLooUSoHTt/jUw9qjE/VofWimO15I6qS7O9jhjGp2WMz5OAVVG
+         XLHlHz+UTHuJhnxmuV1vJaZCpe1VZlkxj+MiKbYUCP6TezcntFzi0SdFRbGVTx6VY9
+         3pvO90WF5U0S00SQY7wLN78bmWf6wQX0vzD6S+waAyQWkjfG3gDI5qkxryVLTN6fFd
+         bGqU/bciDZiS0HdSEIYKq2HftS3F+rfpDFNFFZmegjDXv6KIIMT/xlb6n7f6TCmAz5
+         0bf3pezXKdH2w==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -45,138 +45,79 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Tony Lindgren <tony@atomide.com>,
         Marc Zyngier <maz@kernel.org>,
         Vladimir Murzin <vladimir.murzin@arm.com>,
-        Jesse Taube <mr.bossman075@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v5 07/32] irqchip: nvic: Use GENERIC_IRQ_MULTI_HANDLER
-Date:   Mon, 24 Jan 2022 18:47:19 +0100
-Message-Id: <20220124174744.1054712-8-ardb@kernel.org>
+        Jesse Taube <mr.bossman075@gmail.com>
+Subject: [PATCH v5 08/32] ARM: decompressor: disable stack protector
+Date:   Mon, 24 Jan 2022 18:47:20 +0100
+Message-Id: <20220124174744.1054712-9-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220124174744.1054712-1-ardb@kernel.org>
 References: <20220124174744.1054712-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3684; i=ardb@kernel.org; h=from:subject; bh=yam0h+eZOmjuxXtEw2mQ3PuK/kcsMmUqmzLUnVe0QVo=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYP31SMnZ6kRAIITxO41UnaJ8dod4MWPdmYDiKh X12A+ZCJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mDwAKCRDDTyI5ktmPJFfODA CgyhSSS4JK1OatfMKaqqNHnhF/f90kibT65G+oeEFOiodnHfhtNtQeBiI5p1eIX+ThafAt/2wsSkUW TvkS+mBMu1UC6gRDtbMGQebWw8Y7Prj1wtYQC5m7DpGERWkm3XEv6BEvcW3IxXcBep6H5OzZwHDkSt UrsphbMAwfFX/0ItqYtH7q8xng41WMaxLTqZQM0m9lgkBDEcSrN2mcURgP4/40vSeuQx18+L/pg2Rd RYI9c2uxJudvukhoPKqyods1ijNIuhZksh6K4YXpKMPqIzbrdjR3HQE/ch3p4ZiOnQOGbi2ZA/OAJT oeinhCQUQ3a/OKTSpnH1IhjmjpKhSgeWZ5Tm6tdUuGzt6cI2MNlEJFuXSd8QNHil9YodwxGXn/Z2FP STNoSb+3KuxeX4wUzvHIQdG8zaqRWUgbXJuTn7tymGrmoP3A0qGa9P9yfbxqTIePhfAty/9/zpBCHP N2iJJa9npHPjiZa8nNx0KtnkKGs8f4VKBoT45/hIIC9d8=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2287; h=from:subject; bh=7DENFUqX6QUcNqYG/pBBlPLnnfMOmgh0iQQhcDzMsQM=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYRw1vg9bTWrzxjXxct6bFRDnUedQU8GtMkJfgP H7BPCmmJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mEQAKCRDDTyI5ktmPJIbQC/ 9VmBkgyHhKLbiux61LpaifaTnN5QBo9JOHIzL2TlbP0QlVjuJIr7dj0ToJMb/dLZJWEeLaC9UL/yt8 hUq2Y48C6y3j8JmWAFa59MLb0ydXoc6wd9UydwmFTW2uCYoqYi45MxxJ7V8e+Ar/6TH2kRWRdp8HyX MRBVBWVtoQcozJzRBuSzljR+JwQX6DYZG5SeTMWe+jMqCT8y7i86hCL8AOi5MOrpv8rIzbyFjsCMom u0x9w1NXBL1y/ObHlW9c3CSags7XvEDYnAD9olWirLdgd/hbvSw7oX62A6otFbqMBCfyd8Lk/QYvsf Txb9aUiidG+R4ly0QZMbF+oosuQjIL1ygZXW0K4j8QSh+XlPs7Ezz5JlAFHlaacRKgET6418zAGUOy g7ut3zUs+aDF9iqw/mwNQwRpMiQjtWHZWUNdelfx8GXJM/5pKRocbZ++fnqzKGDJI8lbrcT9OD9EUz LSw/AzxQSFZFEvF9bwS8yJSaOnstLaSWOc1hmh5AAFv1o=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+Enabling the stack protector in the decompressor is of dubious value,
+given that it uses a fixed value for the canary, cannot print any output
+unless CONFIG_DEBUG_LL is enabled (which relies on board specific build
+time settings), and is already disabled for a good chunk of the code
+(libfdt).
 
-Rather then restructuring the ARMv7M entrly logic per TODO, just move
-NVIC to GENERIC_IRQ_MULTI_HANDLER.
+So let's just disable it in the decompressor. This will make it easier
+in the future to manage the command line options that would need to be
+removed again in this context for the TLS register based stack
+protector.
 
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Vladimir Murzin <vladimir.murzin@arm.com> # ARMv7M
 ---
- arch/arm/include/asm/v7m.h  |  3 ++-
- arch/arm/kernel/entry-v7m.S | 10 +++------
- drivers/irqchip/Kconfig     |  1 +
- drivers/irqchip/irq-nvic.c  | 22 +++++---------------
- 4 files changed, 11 insertions(+), 25 deletions(-)
+ arch/arm/boot/compressed/Makefile | 6 +-----
+ arch/arm/boot/compressed/misc.c   | 7 -------
+ 2 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/arch/arm/include/asm/v7m.h b/arch/arm/include/asm/v7m.h
-index 2cb00d15831b..4512f7e1918f 100644
---- a/arch/arm/include/asm/v7m.h
-+++ b/arch/arm/include/asm/v7m.h
-@@ -13,6 +13,7 @@
- #define V7M_SCB_ICSR_PENDSVSET			(1 << 28)
- #define V7M_SCB_ICSR_PENDSVCLR			(1 << 27)
- #define V7M_SCB_ICSR_RETTOBASE			(1 << 11)
-+#define V7M_SCB_ICSR_VECTACTIVE			0x000001ff
+diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+index 954eee8a785a..187a187706cb 100644
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -92,17 +92,13 @@ ifeq ($(CONFIG_USE_OF),y)
+ OBJS	+= $(libfdt_objs) fdt_check_mem_start.o
+ endif
  
- #define V7M_SCB_VTOR			0x08
- 
-@@ -38,7 +39,7 @@
- #define V7M_SCB_SHCSR_MEMFAULTENA		(1 << 16)
- 
- #define V7M_xPSR_FRAMEPTRALIGN			0x00000200
--#define V7M_xPSR_EXCEPTIONNO			0x000001ff
-+#define V7M_xPSR_EXCEPTIONNO			V7M_SCB_ICSR_VECTACTIVE
- 
- /*
-  * When branching to an address that has bits [31:28] == 0xf an exception return
-diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.S
-index 7bde93c10962..520dd43e7e08 100644
---- a/arch/arm/kernel/entry-v7m.S
-+++ b/arch/arm/kernel/entry-v7m.S
-@@ -39,14 +39,10 @@ __irq_entry:
- 	@
- 	@ Invoke the IRQ handler
- 	@
--	mrs	r0, ipsr
--	ldr	r1, =V7M_xPSR_EXCEPTIONNO
--	and	r0, r1
--	sub	r0, #16
--	mov	r1, sp
-+	mov	r0, sp
- 	stmdb	sp!, {lr}
--	@ routine called with r0 = irq number, r1 = struct pt_regs *
--	bl	nvic_handle_irq
-+	@ routine called with r0 = struct pt_regs *
-+	bl	generic_handle_arch_irq
- 
- 	pop	{lr}
- 	@
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 7038957f4a77..488eaa14d3a7 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -58,6 +58,7 @@ config ARM_NVIC
- 	bool
- 	select IRQ_DOMAIN_HIERARCHY
- 	select GENERIC_IRQ_CHIP
-+	select GENERIC_IRQ_MULTI_HANDLER
- 
- config ARM_VIC
- 	bool
-diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
-index ba4759b3e269..125f9c1cf0c3 100644
---- a/drivers/irqchip/irq-nvic.c
-+++ b/drivers/irqchip/irq-nvic.c
-@@ -37,25 +37,12 @@
- 
- static struct irq_domain *nvic_irq_domain;
- 
--static void __nvic_handle_irq(irq_hw_number_t hwirq)
-+static void __irq_entry nvic_handle_irq(struct pt_regs *regs)
- {
--	generic_handle_domain_irq(nvic_irq_domain, hwirq);
--}
-+	unsigned long icsr = readl_relaxed(BASEADDR_V7M_SCB + V7M_SCB_ICSR);
-+	irq_hw_number_t hwirq = (icsr & V7M_SCB_ICSR_VECTACTIVE) - 16;
- 
--/*
-- * TODO: restructure the ARMv7M entry logic so that this entry logic can live
-- * in arch code.
-- */
--asmlinkage void __exception_irq_entry
--nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
--{
--	struct pt_regs *old_regs;
+-# -fstack-protector-strong triggers protection checks in this code,
+-# but it is being used too early to link to meaningful stack_chk logic.
+-$(foreach o, $(libfdt_objs) atags_to_fdt.o fdt_check_mem_start.o, \
+-	$(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt -fno-stack-protector))
 -
--	irq_enter();
--	old_regs = set_irq_regs(regs);
--	__nvic_handle_irq(hwirq);
--	set_irq_regs(old_regs);
--	irq_exit();
-+	generic_handle_domain_irq(nvic_irq_domain, hwirq);
+ targets       := vmlinux vmlinux.lds piggy_data piggy.o \
+ 		 head.o $(OBJS)
+ 
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ 
+ ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
++	     -I$(srctree)/scripts/dtc/libfdt -fno-stack-protector \
+ 	     -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
+ ccflags-remove-$(CONFIG_FUNCTION_TRACER) += -pg
+ asflags-y := -DZIMAGE
+diff --git a/arch/arm/boot/compressed/misc.c b/arch/arm/boot/compressed/misc.c
+index e1e9a5dde853..c3c66ff2d696 100644
+--- a/arch/arm/boot/compressed/misc.c
++++ b/arch/arm/boot/compressed/misc.c
+@@ -128,13 +128,6 @@ asmlinkage void __div0(void)
+ 	error("Attempting division by 0!");
  }
  
- static int nvic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-@@ -141,6 +128,7 @@ static int __init nvic_of_init(struct device_node *node,
- 	for (i = 0; i < irqs; i += 4)
- 		writel_relaxed(0, nvic_base + NVIC_IPR + i);
+-const unsigned long __stack_chk_guard = 0x000a0dff;
+-
+-void __stack_chk_fail(void)
+-{
+-	error("stack-protector: Kernel stack is corrupted\n");
+-}
+-
+ extern int do_decompress(u8 *input, int len, u8 *output, void (*error)(char *x));
  
-+	set_handle_irq(nvic_handle_irq);
- 	return 0;
- }
- IRQCHIP_DECLARE(armv7m_nvic, "arm,armv7m-nvic", nvic_of_init);
+ 
 -- 
 2.30.2
 
